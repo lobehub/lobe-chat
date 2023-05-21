@@ -38,7 +38,7 @@
     "@vitest/coverage-c8": "latest",
     "eslint": "^8",
     "husky": "^8",
-    "jsdom": "^21",
+    "jsdom": "^22",
     "lint-staged": "^13",
     "next-pwa": "^5",
     "node-fetch": "^3",
