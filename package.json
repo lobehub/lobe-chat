@@ -1,18 +1,33 @@
 {
-  "name": "nextjs",
-  "version": "0.1.0",
+  "name": "@lobehub/web",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint && npm run ts-check",
+    "release": "semantic-release",
     "start": "next start",
-    "lint": "next lint"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:update": "vitest -u",
+    "ts-check": "tsc --noEmit"
   },
   "dependencies": {
-    "eslint": "8.40.0",
-    "eslint-config-next": "13.4.3",
-    "next": "13.4.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "@vercel/analytics": "^0.1",
+    "lobe-ui": "1.0.0",
+    "next": "^13",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^13",
+    "@testing-library/react": "^14",
+    "@types/chroma-js": "^2",
+    "@types/lodash.isempty": "^4",
+    "@types/uuid": "^9",
+    "@vitest/coverage-c8": "latest",
+    "next-pwa": "^5",
+    "node-fetch": "^3"
   }
 }
