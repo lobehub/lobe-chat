@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^1",
-    "lobe-ui": "1.0.0",
+    "lobe-ui": "^1",
     "next": "^13",
     "react": "^18",
     "react-dom": "^18"
