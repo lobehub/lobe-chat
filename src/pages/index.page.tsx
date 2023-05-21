@@ -6,9 +6,9 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>lobehub</title>
+        <title>lobechat</title>
       </Head>
-      lobehub
+      lobechat
     </>
   );
 };
