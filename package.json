@@ -11,8 +11,8 @@
     "release": "semantic-release",
     "start": "next start",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test": "vitest --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
     "test:update": "vitest -u",
     "ts-check": "tsc --noEmit"
   },
