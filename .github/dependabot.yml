@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "19:00"
+      timezone: 'Asia/Shanghai'
+    open-pull-requests-limit: 10
+    versioning-strategy: increase
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: monthly
+      time: "19:00"
+      timezone: 'Asia/Shanghai'

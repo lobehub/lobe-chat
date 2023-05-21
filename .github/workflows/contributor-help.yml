@@ -1,0 +1,28 @@
+name: Contributor Helper
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  contributor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: actions-cool/contributor-helper@v1
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          style: 'simple'
+          update-files: 'README.md, README-zh_CN.md'
+          update-places: '<!-- CONTRIBUTION GROUP -->/<!-- CONTRIBUTION END -->, <!-- CONTRIBUTION GROUP -->/<!-- CONTRIBUTION END -->'
+
+      - name: Commit and push if changed
+        run: |-
+          git diff
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions"
+          git pull
+          git add -A
+          git commit -m "🤖 docs: Auto update contributors" || exit 0
+          git push

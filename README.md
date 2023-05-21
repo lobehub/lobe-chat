@@ -106,8 +106,8 @@ This project is [MIT](./LICENSE) licensed.
 
 <!-- ciRelease -->
 
-[ci-release-shield]: https://github.com/lobehub/lobe-chat/actions/workflows/release.yml/badge.svg
-[ci-release-url]: https://github.com/lobehub/lobe-chat/actions/workflows/release.yml
+[ci-release-shield]: https://github.com/lobehub/lobe-chat/workflows/Release%20CI/badge.svg
+[ci-release-url]: https://github.com/lobehub/lobe-chat/actions?query=workflow%3ARelease%20CI
 
 <!-- contributors -->
 
