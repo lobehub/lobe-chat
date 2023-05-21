@@ -91,8 +91,8 @@ This project is [MIT](./LICENSE) licensed.
 
 <!-- release -->
 
-[release-shield]: https://img.shields.io/github/v/release/lobehub/lobe-chat?style=flat&sort=semver&logo=github
-[release-url]: https://github.com/lobehub/lobe-chat/releases
+[release-shield]: https://img.shields.io/npm/v/@lobehub/chat?label=%F0%9F%A4%AF%20NPM
+[release-url]: https://www.npmjs.com/package/@lobehub/chat
 
 <!-- releaseDate -->
 
@@ -106,7 +106,7 @@ This project is [MIT](./LICENSE) licensed.
 
 <!-- ciRelease -->
 
-[ci-release-shield]: https://github.com/lobehub/lobe-chat/workflows/Build%20and%20Release/badge.svg
+[ci-release-shield]: https://github.com/lobehub/lobe-chat/actions/workflows/release.yml/badge.svg
 [ci-release-url]: https://github.com/lobehub/lobe-chat/actions/workflows/release.yml
 
 <!-- contributors -->
