@@ -15,8 +15,8 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           style: 'simple'
-          update-files: 'README.md, README-zh_CN.md'
-          update-places: '<!-- CONTRIBUTION GROUP -->/<!-- CONTRIBUTION END -->, <!-- CONTRIBUTION GROUP -->/<!-- CONTRIBUTION END -->'
+          update-files: 'README.md'
+          update-places: '<!-- CONTRIBUTION GROUP -->/<!-- CONTRIBUTION END -->'
 
       - name: Commit and push if changed
         run: |-
