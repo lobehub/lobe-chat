@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "PORT=3010 next dev",
     "lint": "next lint && npm run ts-check && npm run stylelint",
     "prepare": "husky install",
     "prettier": "prettier -c --write \"**/**\"",
@@ -17,8 +17,8 @@
     "ts-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@lobehub/ui": "^1",
     "@vercel/analytics": "^1",
-    "lobe-ui": "^1",
     "next": "^13",
     "react": "^18",
     "react-dom": "^18"
