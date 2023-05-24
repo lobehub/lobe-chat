@@ -19,6 +19,7 @@
   "dependencies": {
     "@lobehub/ui": "^1",
     "@vercel/analytics": "^1",
+    "langchain": "latest",
     "next": "^13",
     "react": "^18",
     "react-dom": "^18"
