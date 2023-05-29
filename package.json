@@ -17,12 +17,31 @@
     "ts-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@ant-design/colors": "^7",
+    "@ant-design/icons": "^5",
+    "@dqbd/tiktoken": "^1",
     "@lobehub/ui": "^1",
     "@vercel/analytics": "^1",
+    "ahooks": "^3",
+    "antd": "^5",
+    "antd-style": "^3",
+    "brotli-wasm": "^1",
+    "chroma-js": "^2",
+    "fast-deep-equal": "^3",
+    "immer": "^10",
     "langchain": "latest",
+    "lodash-es": "^4",
+    "lucide-react": "latest",
     "next": "^13",
+    "polished": "^4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hotkeys-hook": "^4",
+    "react-layout-kit": "^1",
+    "swr": "^2",
+    "ts-md5": "^1",
+    "zustand": "^4",
+    "zustand-utils": "^1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13",
