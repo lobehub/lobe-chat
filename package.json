@@ -32,6 +32,7 @@
     "langchain": "latest",
     "lodash-es": "^4",
     "lucide-react": "latest",
+    "nanoid": "^2",
     "next": "^13",
     "polished": "^4",
     "react": "^18",

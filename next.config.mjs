@@ -4,7 +4,7 @@
 const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['page.tsx', 'api.ts'],
-  transpilePackages: ['@lobehub/ui'],
+  transpilePackages: ['@lobehub/ui', 'antd-style'],
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
