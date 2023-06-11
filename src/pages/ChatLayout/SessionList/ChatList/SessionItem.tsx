@@ -1,11 +1,9 @@
+import { Avatar, List } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { FC, memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import { Avatar, List } from '@lobehub/ui';
-
-import { useChatStore } from '@/store/session';
+import { chatSelectors, useChatStore } from '@/store/session';
 
 const useStyles = createStyles(({ css }) => {
   return {
@@ -24,21 +22,26 @@ interface SessionItemProps {
 
 const SessionItem: FC<SessionItemProps> = memo(({ id, active, simple = true, loading }) => {
   const { styles, theme } = useStyles();
-  const {
-    title,
-    content: systemRole,
-    avatar,
-    avatarBackground,
-    updateAt,
-  } = useChatStore((s) => s.agents[id] || {}, isEqual);
-  const [switchAgent] = useChatStore((s) => [s.switchAgent], shallow);
+  const [title, systemRole, avatar, avatarBackground, updateAt, switchAgent] = useChatStore((s) => {
+    const session = chatSelectors.getSessionById(id)(s);
+    const meta = session.meta;
 
-  const displayTitle = title || systemRole || '默认角色';
+    const systemRole = session.config.systemRole;
+
+    return [
+      meta.title || systemRole || '默认角色',
+      systemRole,
+      meta.avatar,
+      meta.backgroundColor,
+      session?.updateAt,
+      s.switchChat,
+    ];
+  }, shallow);
 
   return (
     <List.Item
       loading={loading}
-      title={displayTitle}
+      title={title}
       description={simple ? undefined : systemRole}
       active={active}
       date={updateAt}
@@ -48,7 +51,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active, simple = true, loa
           avatar={avatar}
           size={46}
           shape="circle"
-          title={displayTitle}
+          title={title}
           background={avatarBackground}
         />
       }

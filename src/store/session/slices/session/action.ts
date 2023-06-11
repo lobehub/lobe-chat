@@ -1,17 +1,19 @@
 import { produce } from 'immer';
 import Router from 'next/router';
-import { v4 as uuid } from 'uuid';
 import { StateCreator } from 'zustand/vanilla';
 
-import { ChatAgent, ChatContext, ChatSessionState, NewChatSession } from '@/types';
+import { ChatAgent, ChatSessionState } from '@/types';
+import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
 import { getSafeAgent } from '@/helpers/agent';
 import { genShareMessagesUrl } from '@/helpers/url';
 import { promptSummaryDescription, promptSummaryTitle } from '@/prompts/chat';
 import { fetchPresetTaskResult } from '@/utils/fetch';
+import { uuid } from '@/utils/uuid';
 
 import { SessionStore } from '@/store/session';
-import { HistoryDispatch, sessionsReducer } from './reducers/chats';
+import { LanguageModel } from '@/types/llm';
+import { SessionDispatch, sessionsReducer } from './reducers/session';
 import { chatSelectors } from './selectors';
 
 export interface SessionAction {
@@ -20,7 +22,7 @@ export interface SessionAction {
    * @param session - 会话信息
    * @returns void
    */
-  addChat: (session: NewChatSession) => Promise<void>;
+  createSession: () => Promise<void>;
   /**
    * @title 删除会话
    * @param index - 会话索引
@@ -39,7 +41,7 @@ export interface SessionAction {
    * 分发聊天记录
    * @param payload - 聊天记录
    */
-  dispatchChat: (payload: HistoryDispatch) => void;
+  dispatchSession: (payload: SessionDispatch) => void;
 
   /**
    * 生成压缩后的消息
@@ -64,41 +66,45 @@ export const createChatSlice: StateCreator<
   [],
   SessionAction
 > = (set, get) => ({
-  dispatchChat: (payload) => {
+  dispatchSession: (payload) => {
     const { type, ...res } = payload;
 
-    set({ chats: sessionsReducer(get().chats, payload) }, false, {
+    set({ sessions: sessionsReducer(get().sessions, payload) }, false, {
       type: `dispatchChat/${type}`,
       payload: res,
     });
   },
 
-  addChat: async ({ messages, agent }) => {
-    const { dispatchChat, switchChat, findOrCreateAgent } = get();
-
-    const uniqueAgent = findOrCreateAgent(agent);
+  createSession: async () => {
+    const { dispatchSession, switchChat } = get();
 
     const timestamp = Date.now();
 
-    const newSession: ChatContext = {
+    const newSession: LobeAgentSession = {
       id: uuid(),
-      messages,
-      agentId: uniqueAgent.id,
       createAt: timestamp,
       updateAt: timestamp,
+      type: LobeSessionType.Agent,
+      chats: [],
+      meta: {
+        title: '默认对话',
+      },
+      config: {
+        model: LanguageModel.GPT3_5,
+        systemRole: '',
+        params: {
+          temperature: 0.6,
+        },
+      },
     };
 
-    dispatchChat({ type: 'addChat', chat: newSession });
+    dispatchSession({ type: 'addSession', session: newSession });
 
     switchChat(newSession.id);
-
-    get().autocompleteAgentMetaInfo(uniqueAgent.id);
-
-    get().autoAddChatBasicInfo(newSession.id);
   },
 
   removeChat: (sessionId) => {
-    get().dispatchChat({ type: 'removeChat', id: sessionId });
+    get().dispatchSession({ type: 'removeSession', id: sessionId });
     get().switchChat();
   },
 
@@ -172,7 +178,7 @@ export const createChatSlice: StateCreator<
       let value = '';
       return (text: string) => {
         value += text;
-        get().dispatchChat({
+        get().dispatchSession({
           type: 'updateSessionChatContext',
           id: chatId,
           key,
@@ -213,7 +219,7 @@ export const createChatSlice: StateCreator<
       title: agent.title,
     });
 
-    get().dispatchChat({
+    get().dispatchSession({
       type: 'updateSessionChatContext',
       key: 'agentId',
       id: chatId,

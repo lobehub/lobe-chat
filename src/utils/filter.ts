@@ -1,6 +1,6 @@
-import { MetaData } from '@/types/meta';
+import { BaseDataModel } from '@/types/meta';
 
-export const filterWithKeywords = <T extends MetaData>(
+export const filterWithKeywords = <T extends BaseDataModel>(
   map: Record<string, T>,
   keywords: string,
   extraSearchStr?: (item: T) => string | string[],
@@ -9,7 +9,14 @@ export const filterWithKeywords = <T extends MetaData>(
 
   return Object.fromEntries(
     Object.entries(map).filter(([, item]) => {
-      const defaultSearchKey = `${item.title || ''}${item.description || ''}`;
+      const meta = item.meta;
+
+      const keyList = [meta.title, meta.description, meta.tag?.join('')].filter(
+        Boolean,
+      ) as string[];
+
+      const defaultSearchKey = keyList.join('');
+
       let extraSearchKey: string = '';
       if (extraSearchStr) {
         const searchStr = extraSearchStr(item);

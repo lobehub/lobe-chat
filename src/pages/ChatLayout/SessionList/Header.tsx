@@ -18,14 +18,17 @@ export const useStyles = createStyles(({ css }) => ({
 const Header = memo(() => {
   const { styles } = useStyles();
 
-  const [keywords] = useChatStore((s) => [s.searchKeywords], shallow);
+  const [keywords, createSession] = useChatStore(
+    (s) => [s.searchKeywords, s.createSession],
+    shallow,
+  );
 
   return (
     <Flexbox gap={16} padding={'16px 8px 0'} className={styles.top}>
       <Flexbox horizontal distribution={'space-between'}>
         <div>LobeHub</div>
         <Tooltip arrow={false} title={'新对话'} placement={'right'}>
-          <Button icon={<PlusOutlined />} style={{ minWidth: 32 }} />
+          <Button icon={<PlusOutlined />} style={{ minWidth: 32 }} onClick={createSession} />
         </Tooltip>
       </Flexbox>
       <SearchBar

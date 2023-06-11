@@ -1,6 +1,7 @@
 import { SessionStore } from '@/store/session';
 import { LobeAgentSession } from '@/types/session';
 
+import { MetaData } from '@/types/meta';
 import { filterWithKeywords } from '@/utils/filter';
 
 export const currentSessionSel = (s: SessionStore): LobeAgentSession | undefined => {
@@ -11,11 +12,37 @@ export const currentSessionSel = (s: SessionStore): LobeAgentSession | undefined
 
 export const chatListSel = (s: SessionStore) => {
   const filterChats = filterWithKeywords(s.sessions, s.searchKeywords, (item) => [
-    item.messages.join(''),
+    item.chats.map((c) => c.content).join(''),
   ]);
 
   return Object.values(filterChats).sort((a, b) => (b.updateAt || 0) - (a.updateAt || 0));
 };
+
+export const getSessionById =
+  (id: string) =>
+  (s: SessionStore): LobeAgentSession => {
+    const session = s.sessions[id];
+
+    if (!session)
+      return {
+        id: '',
+        config: {
+          params: {},
+        },
+        meta: {},
+        chats: [],
+      };
+    return session;
+  };
+
+export const getSessionMetaById =
+  (id: string) =>
+  (s: SessionStore): MetaData => {
+    const session = s.sessions[id];
+
+    if (!session) return {};
+    return session.meta;
+  };
 
 export const sessionTreeSel = (s: SessionStore) => {
   const sessionTree: SessionTree = [

@@ -1,4 +1,4 @@
-import { Conversation } from '@lobehub/ui';
+import { ChatList, Conversation } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 import { memo, useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import { useChatStore } from 'src/store/session';
+import { useChatStore } from '@/store/session';
 
-import ChatLayout from '@/layout/ChatLayout';
+import ChatLayout from '@/pages/ChatLayout';
 import { chatSelectors } from '@/store/session/selectors';
 
 const Chat = memo(() => {
@@ -23,62 +23,65 @@ const Chat = memo(() => {
 
   const context = useChatStore(chatSelectors.currentChat, isEqual);
   const [dispatchChat, dispatchAgent, addAgentToChat] = useChatStore(
-    (s) => [s.dispatchChat, s.dispatchAgent, s.addAgentToChat],
+    (s) => [s.dispatchSession, s.dispatchAgent, s.addAgentToChat],
     shallow,
   );
 
   return (
-    <Conversation
-      {...context}
-      title={context?.title || ''}
-      description={context?.description || ''}
-      onAgentChange={(agent, type) => {
-        switch (type) {
-          default:
-          case 'update':
-            // 没有 agent Id 的话，说明是新建，需要绑定 id
-            if (!agent.id) {
-              addAgentToChat(context!.id, agent);
-            } else {
-              dispatchAgent({
-                type: 'updateAgentData',
-                key: 'content',
-                value: agent.content,
-                id: agent.id,
+    <>
+      <ChatList data={[]}></ChatList>
+      <Conversation
+        {...context}
+        title={context?.title || ''}
+        description={context?.description || ''}
+        onAgentChange={(agent, type) => {
+          switch (type) {
+            default:
+            case 'update':
+              // 没有 agent Id 的话，说明是新建，需要绑定 id
+              if (!agent.id) {
+                addAgentToChat(context!.id, agent);
+              } else {
+                dispatchAgent({
+                  type: 'updateAgentData',
+                  key: 'content',
+                  value: agent.content,
+                  id: agent.id,
+                });
+              }
+              break;
+            case 'remove':
+              dispatchChat({
+                type: 'updateSessionChatContext',
+                key: 'agentId',
+                id: context!.id,
+                value: null,
               });
-            }
-            break;
-          case 'remove':
-            dispatchChat({
-              type: 'updateSessionChatContext',
-              key: 'agentId',
-              id: context!.id,
-              value: null,
-            });
-        }
-      }}
-      onMessagesChange={(value) => {
-        dispatchChat({
-          type: 'updateSessionChatContext',
-          id: id as string,
-          key: 'messages',
-          value,
-        });
-      }}
-    />
+          }
+        }}
+        onMessagesChange={(value) => {
+          dispatchChat({
+            type: 'updateSessionChatContext',
+            id: id as string,
+            key: 'messages',
+            value,
+          });
+        }}
+      />
+    </>
   );
 });
 
 const Session: NextPage = () => {
   const [title] = useChatStore((s) => {
     const context = chatSelectors.currentChat(s);
-    return [context?.title];
+    return [context?.meta.title];
   }, isEqual);
 
   return (
     <>
       <Head>
-        <title>{title ? `${title} - Chatbot` : 'Chatbot'}</title>
+        <title>{title ? `${title} - LobeChat` : 'LobeChat'}</title>
       </Head>
       <ChatLayout>
         {/*<Header shareable={hasMsg} onShare={genShareUrl} />*/}
