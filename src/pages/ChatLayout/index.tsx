@@ -3,9 +3,9 @@ import { createStyles, useResponsive } from 'antd-style';
 import { Album, MessageSquare, Settings2 } from 'lucide-react';
 import { ReactNode, memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { shallow } from 'zustand/shallow';
 
 import { useSettings } from '@/store/settings';
-import { shallow } from 'zustand/shallow';
 import { Sessions } from './SessionList';
 
 export const useStyles = createStyles(({ css }) => ({

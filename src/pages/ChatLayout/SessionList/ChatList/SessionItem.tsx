@@ -5,7 +5,7 @@ import { shallow } from 'zustand/shallow';
 
 import { Avatar, List } from '@lobehub/ui';
 
-import { useChatStore } from 'src/store/session';
+import { useChatStore } from '@/store/session';
 
 const useStyles = createStyles(({ css }) => {
   return {

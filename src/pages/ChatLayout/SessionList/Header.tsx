@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { useChatStore } from 'src/store/session';
+import { useChatStore } from '@/store/session';
 
 export const useStyles = createStyles(({ css }) => ({
   top: css`
