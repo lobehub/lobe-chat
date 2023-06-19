@@ -1,15 +1,11 @@
-import {
-  chatListSel,
-  currentSessionSel,
-  getSessionById,
-  getSessionMetaById,
-  sessionTreeSel,
-} from './list';
+import { getAgentAvatar } from './chat';
+import { chatListSel, currentSessionSel, getSessionById, getSessionMetaById } from './list';
 
-export const chatSelectors = {
+export const sessionSelectors = {
   currentChat: currentSessionSel,
   chatList: chatListSel,
-  sessionTree: sessionTreeSel,
+  // sessionTree: sessionTreeSel,
   getSessionMetaById,
   getSessionById,
+  getAgentAvatar,
 };

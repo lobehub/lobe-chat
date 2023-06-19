@@ -44,24 +44,24 @@ export const getSessionMetaById =
     return session.meta;
   };
 
-export const sessionTreeSel = (s: SessionStore) => {
-  const sessionTree: SessionTree = [
-    {
-      agentId: 'default',
-      chats: chatListSel(s)
-        .filter((s) => !s.agentId)
-        .map((c) => c.id),
-    },
-  ];
-
-  Object.values(s.agents).forEach((agent) => {
-    const chats = Object.values(s.chats).filter((s) => s.agentId === agent.id);
-
-    sessionTree.push({
-      agentId: agent.id,
-      chats: chats.map((c) => c.id),
-    });
-  });
-
-  return sessionTree;
-};
+// export const sessionTreeSel = (s: SessionStore) => {
+//   const sessionTree: SessionTree = [
+//     {
+//       agentId: 'default',
+//       chats: chatListSel(s)
+//         .filter((s) => !s.agentId)
+//         .map((c) => c.id),
+//     },
+//   ];
+//
+//   Object.values(s.agents).forEach((agent) => {
+//     const chats = Object.values(s.chats).filter((s) => s.agentId === agent.id);
+//
+//     sessionTree.push({
+//       agentId: agent.id,
+//       chats: chats.map((c) => c.id),
+//     });
+//   });
+//
+//   return sessionTree;
+// };

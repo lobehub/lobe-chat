@@ -1,20 +1,17 @@
-import { produce } from 'immer';
 import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
-import { ChatAgent, ChatSessionState } from '@/types';
-import { LobeAgentSession, LobeSessionType } from '@/types/session';
-
-import { getSafeAgent } from '@/helpers/agent';
 import { genShareMessagesUrl } from '@/helpers/url';
 import { promptSummaryDescription, promptSummaryTitle } from '@/prompts/chat';
+import { SessionStore } from '@/store/session';
+import { LanguageModel } from '@/types/llm';
+import { LobeAgentSession, LobeSessionType } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
 import { uuid } from '@/utils/uuid';
 
-import { SessionStore } from '@/store/session';
-import { LanguageModel } from '@/types/llm';
+import { SessionLoadingState } from './initialState';
 import { SessionDispatch, sessionsReducer } from './reducers/session';
-import { chatSelectors } from './selectors';
+import { sessionSelectors } from './selectors';
 
 export interface SessionAction {
   /**
@@ -49,18 +46,12 @@ export interface SessionAction {
    */
   genShareUrl: () => string;
 
-  /**
-   * 导入聊天记录
-   * @param chatSessions - 聊天记录状态
-   */
-  importChatSessions: (chatSessions: ChatSessionState) => void;
-
-  addAgentToChat: (chatId: string, agent: ChatAgent) => void;
-
   autoAddChatBasicInfo: (chatId: string) => void;
+
+  updateLoadingState: (key: keyof SessionLoadingState, value: boolean) => void;
 }
 
-export const createChatSlice: StateCreator<
+export const createSessionSlice: StateCreator<
   SessionStore,
   [['zustand/devtools', never]],
   [],
@@ -114,72 +105,25 @@ export const createChatSlice: StateCreator<
     set({ activeId: sessionId });
 
     // 新会话
-    if (!sessionId || sessionId === 'new') {
-      Router.push('/');
-    } else {
-      // 切换老会话
-      Router.push(`/chat/${sessionId}`);
-      return;
-    }
+    Router.push(`/chat/${sessionId}`);
   },
 
   genShareUrl: () => {
-    const context = chatSelectors.currentChat(get());
-    if (!context) return '';
+    const session = sessionSelectors.currentChat(get());
+    if (!session) return '';
 
-    const agent = getSafeAgent(get().agents, context.agentId);
-    return genShareMessagesUrl(context.messages, agent.content);
-  },
-
-  importChatSessions: ({ chats, agents }) => {
-    set(
-      produce((draft: ChatSessionState) => {
-        const sameHashAgents: Map<string, string> = new Map();
-
-        // 处理 agents
-        for (const agent of Object.values(agents)) {
-          const agentHash = agent.hash;
-          const existAgent = Object.values(draft.agents).find((a) => a.hash === agentHash);
-
-          if (!existAgent) {
-            draft.agents[agent.id] = agent;
-          } else {
-            sameHashAgents.set(agent.id, existAgent.id);
-          }
-        }
-
-        // 处理 chats
-        for (const [chatId, chat] of Object.entries(chats)) {
-          if (!draft.chats[chatId]) {
-            // 检查并替换 agentId
-            if (chat.agentId && sameHashAgents.has(chat.agentId)) {
-              chat.agentId = sameHashAgents.get(chat.agentId) as string;
-            }
-
-            draft.chats[chatId] = chat;
-          }
-        }
-      }),
-    );
-
-    // 自动添加描述和标题
-    Object.values(get().chats).forEach((c) => {
-      get().autoAddChatBasicInfo(c.id);
-    });
-
-    Object.values(get().agents).forEach((a) => {
-      get().autocompleteAgentMetaInfo(a.id);
-    });
+    const agent = session.config;
+    return genShareMessagesUrl(session.chats, agent.systemRole);
   },
 
   autoAddChatBasicInfo: (chatId) => {
-    const chat = get().chats[chatId];
+    const chat = sessionSelectors.getSessionById(chatId)(get());
     const updateMeta = (key: 'title' | 'description') => {
       let value = '';
       return (text: string) => {
         value += text;
         get().dispatchSession({
-          type: 'updateSessionChatContext',
+          type: 'updateSessionMeta',
           id: chatId,
           key,
           value,
@@ -188,42 +132,28 @@ export const createChatSlice: StateCreator<
     };
 
     if (!chat) return;
-    if (!chat.title) {
+    if (!chat.meta.title) {
       fetchPresetTaskResult({
-        params: promptSummaryTitle(chat.messages),
+        params: promptSummaryTitle(chat.chats),
         onLoadingChange: (loading) => {
-          set({ summarizingTitle: loading });
+          get().updateLoadingState('summarizingTitle', loading);
         },
         onMessageHandle: updateMeta('title'),
       });
     }
 
-    if (!chat.description) {
+    if (!chat.meta.description) {
       fetchPresetTaskResult({
-        params: promptSummaryDescription(chat.messages),
+        params: promptSummaryDescription(chat.chats),
         onLoadingChange: (loading) => {
-          set({ summarizingDescription: loading });
+          get().updateLoadingState('summarizingTitle', loading);
         },
         onMessageHandle: updateMeta('description'),
       });
     }
   },
 
-  addAgentToChat: (chatId, agent) => {
-    const uniqueAgent = get().findOrCreateAgent(agent);
-
-    get().dispatchAgent({
-      type: 'addAgent',
-      id: uniqueAgent.id,
-      content: agent.content,
-      title: agent.title,
-    });
-
-    get().dispatchSession({
-      type: 'updateSessionChatContext',
-      key: 'agentId',
-      id: chatId,
-      value: uniqueAgent.id,
-    });
+  updateLoadingState: (key, value) => {
+    set({ loading: { ...get().loading, [key]: value } });
   },
 });

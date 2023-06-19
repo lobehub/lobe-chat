@@ -1,5 +1,11 @@
 import { LobeAgentSession } from '@/types/session';
 
+export interface SessionLoadingState {
+  summarizingTitle: boolean;
+  summarizingDescription: boolean;
+  pickingEmojiAvatar: boolean;
+}
+
 export interface SessionState {
   sessions: Record<string, LobeAgentSession>;
   /**
@@ -9,12 +15,7 @@ export interface SessionState {
    */
   activeId: string | null;
   searchKeywords: string;
-
-  loading: {
-    summarizingTitle: boolean;
-    summarizingDescription: boolean;
-    pickingEmojiAvatar: boolean;
-  };
+  loading: SessionLoadingState;
 }
 
 export const initialSessionState: SessionState = {
