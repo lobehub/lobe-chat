@@ -28,6 +28,7 @@
     "brotli-wasm": "^1",
     "chroma-js": "^2",
     "fast-deep-equal": "^3",
+    "gpt-tokenizer": "^2",
     "immer": "^10",
     "langchain": "latest",
     "lodash-es": "^4",
