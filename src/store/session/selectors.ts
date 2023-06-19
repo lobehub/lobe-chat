@@ -1,2 +1,2 @@
 export { agentSelectors } from './slices/agentSettings';
-export { chatSelectors } from './slices/session';
+export { sessionSelectors } from './slices/session';
