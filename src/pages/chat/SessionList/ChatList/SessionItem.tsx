@@ -3,7 +3,8 @@ import { createStyles } from 'antd-style';
 import { FC, memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import { chatSelectors, useChatStore } from '@/store/session';
+import { sessionSelectors, useChatStore } from '@/store/session';
+import { getAgentAvatar } from '@/store/session/slices/session/selectors/chat';
 
 const useStyles = createStyles(({ css }) => {
   return {
@@ -23,7 +24,7 @@ interface SessionItemProps {
 const SessionItem: FC<SessionItemProps> = memo(({ id, active, simple = true, loading }) => {
   const { styles, theme } = useStyles();
   const [title, systemRole, avatar, avatarBackground, updateAt, switchAgent] = useChatStore((s) => {
-    const session = chatSelectors.getSessionById(id)(s);
+    const session = sessionSelectors.getSessionById(id)(s);
     const meta = session.meta;
 
     const systemRole = session.config.systemRole;
@@ -31,7 +32,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active, simple = true, loa
     return [
       meta.title || systemRole || '默认角色',
       systemRole,
-      meta.avatar,
+      getAgentAvatar(meta),
       meta.backgroundColor,
       session?.updateAt,
       s.switchChat,
