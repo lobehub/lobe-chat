@@ -1,15 +1,17 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { initialState } from './initialState';
+import { initialState, SessionStoreState } from './initialState';
 import { AgentAction, createAgentSlice } from './slices/agentSettings';
-import { SessionAction, SessionState, createChatSlice } from './slices/session';
+import { ChatAction, createChatSlice } from './slices/chat';
+import { createSessionSlice, SessionAction } from './slices/session';
 
-export type SessionStore = SessionAction & AgentAction & SessionState;
+export type SessionStore = SessionAction & AgentAction & ChatAction & SessionStoreState;
 
 export const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (
   ...params
 ) => ({
   ...initialState,
   ...createAgentSlice(...params),
+  ...createSessionSlice(...params),
   ...createChatSlice(...params),
 });

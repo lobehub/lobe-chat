@@ -1,5 +1,9 @@
+import { ChatState, initialChatState } from './slices/chat';
 import { SessionState, initialSessionState } from './slices/session';
 
-export const initialState: SessionState = {
+export type SessionStoreState = SessionState & ChatState;
+
+export const initialState: SessionStoreState = {
   ...initialSessionState,
+  ...initialChatState,
 };

@@ -8,6 +8,7 @@ export type SidebarTabKey = 'chat' | 'market';
 
 interface SettingsStore {
   sessionsWidth: number;
+  inputHeight: number;
   avatar?: string;
   sessionExpandable?: boolean;
   sidebarKey: SidebarTabKey;
@@ -20,6 +21,7 @@ export const useSettings = create<SettingsStore>()(
   persist<SettingsStore>(
     (set) => ({
       sessionsWidth: 320,
+      inputHeight: 200,
       sessionExpandable: true,
       sidebarKey: 'chat',
       importSettings: (settings) => {
