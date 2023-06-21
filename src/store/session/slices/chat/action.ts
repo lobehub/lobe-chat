@@ -21,7 +21,7 @@ export interface ChatAction {
    * @param index - 消息索引
    * @returns Promise<void>
    */
-  resendMessage: (index: number) => Promise<void>;
+  resendMessage: (id: string) => Promise<void>;
 
   generateMessage: (messages: ChatMessage[], options: FetchSSEOptions) => Promise<void>;
 
@@ -100,55 +100,66 @@ export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', n
     });
   },
 
-  resendMessage: async (index) => {
-    const { dispatchMessage, sendMessage, generateMessage, messages } = get();
-    const lastMessage = messages.at(-1);
+  resendMessage: async (id) => {
+    const {
+      sendMessage,
+      dispatchMessage,
+      // generateMessage
+    } = get();
+
+    const session = sessionSelectors.currentChat(get());
+
+    if (!session) return;
+
+    const index = session.chats.findIndex((s) => s.id === id);
+    if (index < 0) return;
+
+    const message = session.chats[index];
+
     // 用户通过手动删除，造成了他的问题是最后一条消息
     // 这种情况下，相当于用户重新发送消息
-    if (messages.length === index && lastMessage?.role === 'user') {
-      dispatchMessage({ type: 'deleteMessage', index: index - 1 });
-      set({ message: lastMessage.content });
-      await sendMessage();
+    if (session.chats.length === index && message.role === 'user') {
+      // 发送消息的时候会把传入的消息 message 新建一条，因此在发送前先把这条消息在记录中删除
+      dispatchMessage({ type: 'deleteMessage', id: message.id });
+      await sendMessage(message.content);
       return;
     }
 
     // 上下文消息就是当前消息之前的消息
-    const contextMessages = get().messages.slice(0, index);
+    const contextMessages = session.chats.slice(0, index);
 
     // 上下文消息中最后一条消息
     const userMessage = contextMessages.at(-1)?.content;
     if (!userMessage) return;
 
-    const targetMsg = messages[index];
+    const targetMsg = session.chats[index];
 
     // 如果不是 assistant 的消息，那么需要额外插入一条消息
     if (targetMsg.role !== 'assistant') {
-      dispatchMessage({
-        type: 'insertMessage',
-        index,
-        message: { role: 'assistant', content: LOADING_FLAT },
-      });
+      // dispatchMessage({
+      //   type: 'insertMessage',
+      //   index,
+      //   message: { role: 'assistant', content: LOADING_FLAT },
+      // });
     } else {
-      const botPrevMsg = targetMsg.content;
       // 保存之前的消息为历史消息
-      dispatchMessage({ type: 'updateMessageChoice', message: botPrevMsg, index });
-      dispatchMessage({ type: 'updateMessage', message: LOADING_FLAT, index });
+      // dispatchMessage({ type: 'updateMessage', message: botPrevMsg, index });
+      // dispatchMessage({ type: 'updateMessage', message: LOADING_FLAT, index });
     }
 
     // 重置错误信息
-    dispatchMessage({ type: 'setErrorMessage', error: undefined, index });
+    dispatchMessage({ type: 'updateMessage', value: undefined, key: 'error', id: targetMsg.id });
 
     // 开始更新消息
-    let currentResponse: string[] = [];
 
-    await generateMessage(userMessage, contextMessages, {
-      onMessageHandle: (text) => {
-        currentResponse = [...currentResponse, text];
-        dispatchMessage({ type: 'updateMessage', message: currentResponse.join(''), index });
-      },
-      onErrorHandle: (error) => {
-        dispatchMessage({ type: 'setErrorMessage', error, index });
-      },
-    });
+    // await generateMessage(userMessage, contextMessages, {
+    //   onMessageHandle: (text) => {
+    //     currentResponse = [...currentResponse, text];
+    //     dispatchMessage({ type: 'updateMessage', message: currentResponse.join(''), index });
+    //   },
+    //   onErrorHandle: (error) => {
+    //     dispatchMessage({ type: 'updateMessage' });
+    //   },
+    // });
   },
 });

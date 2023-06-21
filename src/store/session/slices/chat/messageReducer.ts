@@ -23,7 +23,7 @@ interface InsertMessage {
 
 interface DeleteMessage {
   type: 'deleteMessage';
-  index: number;
+  id: string;
 }
 
 interface ResetMessages {
@@ -37,12 +37,7 @@ interface UpdateMessage {
   value: ChatMessage[keyof ChatMessage];
 }
 
-export type MessageDispatch =
-  | AddMessage
-  | InsertMessage
-  | DeleteMessage
-  | ResetMessages
-  | UpdateMessage;
+export type MessageDispatch = AddMessage | InsertMessage | DeleteMessage | ResetMessages | UpdateMessage;
 
 export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch): ChatMessage[] => {
   switch (payload.type) {
@@ -66,7 +61,7 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
       });
 
     case 'deleteMessage':
-      return state.filter((_, i) => i !== payload.index);
+      return state.filter((msg) => msg.id !== payload.id);
 
     case 'updateMessage':
       return produce(state, (draftState) => {

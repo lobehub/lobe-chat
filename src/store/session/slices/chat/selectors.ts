@@ -1,33 +1,40 @@
+import { ChatMessage } from '@/types/chatMessage';
 import { encode } from 'gpt-tokenizer';
 
-import type { ChatStore } from './action';
+import type { SessionStore } from '../../store';
+import { sessionSelectors } from '../session';
 
-const disableInputSel = (s: ChatStore) => s.changingSystemRole;
+const currentChatsSel = (s: SessionStore): ChatMessage[] => {
+  const chat = sessionSelectors.currentChat(s);
 
-export const systemRoleSel = (s: ChatStore) => s.messages?.find((s) => s.role === 'system');
+  return chat?.chats || [];
+};
 
-export const agentContentSel = (s: ChatStore) => s.agent.content;
-export const agentTitleSel = (s: ChatStore) => s.agent.title;
+const systemRoleSel = (s: SessionStore): string | undefined => {
+  const systemRoleMessage = currentChatsSel(s);
 
-const messagesTokens = (s: ChatStore): number[] =>
-  encode(s.messages.map((m) => m.content).join(''));
+  return systemRoleMessage.find((s) => s.role === 'system')?.content;
+};
 
-const agentContentTokens = (s: ChatStore): number[] => encode(s.agent.content);
+const totalTokens = (s: SessionStore): number[] => {
+  const chats = currentChatsSel(s);
+  return encode(chats.map((m) => m.content).join(''));
+};
 
-const totalTokens = (s: ChatStore): number[] =>
-  encode([s.agent.content, ...s.messages.map((m) => m.content)].join(''));
+const systemRoleTokens = (s: SessionStore): number[] => {
+  const systemRole = systemRoleSel(s);
 
-const totalTokenCount = (s: ChatStore) => totalTokens(s).length;
-const agentTokenCount = (s: ChatStore) => agentContentTokens(s).length;
-const messagesTokenCount = (s: ChatStore) => messagesTokens(s).length;
+  return encode(systemRole || '');
+};
+
+const totalTokenCount = (s: SessionStore) => totalTokens(s).length;
+
+const systemRoleTokenCount = (s: SessionStore) => systemRoleTokens(s).length;
 
 export const chatSelectors = {
-  totalTokenCount,
-  agentTokenCount,
-  messagesTokenCount,
-
+  systemRole: systemRoleSel,
   totalTokens,
-  agentContentTokens,
-  messagesTokens,
-  disableInput: disableInputSel,
+  totalTokenCount,
+  systemRoleTokens,
+  systemRoleTokenCount,
 };
