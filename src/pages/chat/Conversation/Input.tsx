@@ -2,6 +2,7 @@ import { ActionIcon, ChatInputArea, DraggablePanel, Icon, TokenTag } from '@lobe
 import { Archive, Eraser, Languages } from 'lucide-react';
 import { memo, useState } from 'react';
 
+import { useChatStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 import { Button } from 'antd';
 import { NextPage } from 'next';
@@ -10,6 +11,7 @@ import { shallow } from 'zustand/shallow';
 const ChatInput: NextPage = () => {
   const [expand, setExpand] = useState<boolean>(false);
   const [inputHeight] = useSettings((s) => [s.inputHeight], shallow);
+  const [sendMessage] = useChatStore((s) => [s.sendMessage], shallow);
 
   return (
     <DraggablePanel
@@ -37,9 +39,7 @@ const ChatInput: NextPage = () => {
         footer={<Button icon={<Icon icon={Archive} />} />}
         minHeight={200}
         onExpandChange={setExpand}
-        onSend={(value) => {
-          console.log(value);
-        }}
+        onSend={sendMessage}
       />
     </DraggablePanel>
   );

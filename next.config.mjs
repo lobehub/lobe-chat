@@ -1,4 +1,5 @@
 // @ts-check
+const API_END_PORT_URL = process.env.API_END_PORT_URL || '';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,6 +13,19 @@ const nextConfig = {
     };
 
     return config;
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: '/api/openai-dev',
+        destination: `${API_END_PORT_URL}/api/openai`,
+      },
+      {
+        source: '/api/chain-dev',
+        destination: `${API_END_PORT_URL}/api/chain`,
+      },
+    ];
   },
 };
 

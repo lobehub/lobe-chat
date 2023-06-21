@@ -39,12 +39,10 @@ export interface ChatAction {
   handleMessageEditing: (messageId: string | undefined) => void;
 }
 
-export const createChatSlice: StateCreator<
-  SessionStore,
-  [['zustand/devtools', never]],
-  [],
-  ChatAction
-> = (set, get) => ({
+export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', never]], [], ChatAction> = (
+  set,
+  get,
+) => ({
   dispatchMessage: (payload) => {
     const { activeId } = get();
     const session = sessionSelectors.currentChat(get());
@@ -74,27 +72,21 @@ export const createChatSlice: StateCreator<
     const session = sessionSelectors.currentChat(get());
     if (!session || !message) return;
 
-    const messages = session.chats;
-
-    const aiMessageId = nanoid();
+    const assistantId = nanoid();
     dispatchMessage({ type: 'addMessage', role: 'user', message });
-    dispatchMessage({
-      type: 'addMessage',
-      role: 'assistant',
-      message: LOADING_FLAT,
-      id: aiMessageId,
-    });
-
     // 添加一个空的信息用于放置 ai 响应
+    dispatchMessage({ type: 'addMessage', role: 'assistant', message: LOADING_FLAT, id: assistantId });
 
     let output = '';
 
     // 生成 messages
-    await generateMessage(messages, {
+    const newSessions = sessionSelectors.currentChat(get())!;
+
+    await generateMessage(newSessions.chats, {
       onMessageHandle: (text) => {
         output += text;
 
-        dispatchMessage({ type: 'updateMessage', id: aiMessageId, key: 'content', value: output });
+        dispatchMessage({ type: 'updateMessage', id: assistantId, key: 'content', value: output });
 
         // 滚动到最后一条消息
         const item = document.getElementById('for-loading');
@@ -103,7 +95,7 @@ export const createChatSlice: StateCreator<
         item.scrollIntoView({ behavior: 'smooth' });
       },
       onErrorHandle: (error) => {
-        dispatchMessage({ type: 'updateMessage', id: aiMessageId, key: 'content', value: error });
+        dispatchMessage({ type: 'updateMessage', id: assistantId, key: 'error', value: error });
       },
     });
   },
