@@ -3,8 +3,8 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import FolderPanel from '@/features/FolderPanel';
-import { ChatList } from './ChatList';
 import Header from './Header';
+import SessionList from './List';
 
 export const useStyles = createStyles(({ css }) => ({
   center: css`
@@ -23,7 +23,7 @@ export const Sessions = memo(() => {
         <Header />
 
         <Flexbox className={cx(styles.center)}>
-          <ChatList />
+          <SessionList />
         </Flexbox>
       </Flexbox>
     </FolderPanel>

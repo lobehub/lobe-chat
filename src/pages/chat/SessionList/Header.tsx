@@ -1,14 +1,16 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { SearchBar } from '@lobehub/ui';
-import { Button, Tooltip } from 'antd';
+import { ActionIcon, Logo, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { Plus } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { useChatStore } from '@/store/session';
 
-export const useStyles = createStyles(({ css }) => ({
+export const useStyles = createStyles(({ css, token }) => ({
+  logo: css`
+    fill: ${token.colorText};
+  `,
   top: css`
     position: sticky;
     top: 0;
@@ -18,18 +20,13 @@ export const useStyles = createStyles(({ css }) => ({
 const Header = memo(() => {
   const { styles } = useStyles();
 
-  const [keywords, createSession] = useChatStore(
-    (s) => [s.searchKeywords, s.createSession],
-    shallow,
-  );
+  const [keywords, createSession] = useChatStore((s) => [s.searchKeywords, s.createSession], shallow);
 
   return (
-    <Flexbox gap={16} padding={'16px 8px 0'} className={styles.top}>
+    <Flexbox gap={16} padding={'16px 12px 0 16px'} className={styles.top}>
       <Flexbox horizontal distribution={'space-between'}>
-        <div>LobeHub</div>
-        <Tooltip arrow={false} title={'新对话'} placement={'right'}>
-          <Button icon={<PlusOutlined />} style={{ minWidth: 32 }} onClick={createSession} />
-        </Tooltip>
+        <Logo type={'text'} size={36} className={styles.logo} />
+        <ActionIcon title={'新对话'} icon={Plus} style={{ minWidth: 32 }} onClick={createSession} />
       </Flexbox>
       <SearchBar
         allowClear

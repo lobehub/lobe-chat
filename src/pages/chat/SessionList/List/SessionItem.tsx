@@ -47,15 +47,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active, simple = true, loa
       active={active}
       date={updateAt}
       classNames={{ time: styles.time }}
-      avatar={
-        <Avatar
-          avatar={avatar}
-          size={46}
-          shape="circle"
-          title={title}
-          background={avatarBackground}
-        />
-      }
+      avatar={<Avatar avatar={avatar} size={46} shape="circle" title={title} background={avatarBackground} />}
       onClick={() => {
         switchAgent(id);
       }}

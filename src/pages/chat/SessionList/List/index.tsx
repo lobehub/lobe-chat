@@ -4,11 +4,9 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { useChatStore } from '@/store/session';
+import { sessionSelectors, useChatStore } from '@/store/session';
 
 import SessionItem from './SessionItem';
-
-import { agentSelectors } from '@/store/session/selectors';
 
 export const useStyles = createStyles(({ css, token }) => ({
   button: css`
@@ -29,9 +27,9 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-export const ChatList = memo(() => {
+const SessionList = memo(() => {
   const [list, activeId, loading] = useChatStore(
-    (s) => [agentSelectors.agentList(s), s.activeId, s.loading.summarizingTitle],
+    (s) => [sessionSelectors.chatList(s), s.activeId, s.loading.summarizingTitle],
     shallow,
   );
 
@@ -39,15 +37,11 @@ export const ChatList = memo(() => {
     <>
       {list.map(({ id }) => (
         <Flexbox key={id} gap={4} paddingBlock={4}>
-          <SessionItem
-            active={activeId === id}
-            key={id}
-            id={id}
-            simple={false}
-            loading={loading && id === activeId}
-          />
+          <SessionItem active={activeId === id} key={id} id={id} simple={false} loading={loading && id === activeId} />
         </Flexbox>
       ))}
     </>
   );
 });
+
+export default SessionList;

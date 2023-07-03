@@ -1,14 +1,13 @@
 import { useSettings } from '@/store/settings';
 import { createStyles } from 'antd-style';
+import isEqual from 'fast-deep-equal';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { sessionSelectors, useChatStore } from '@/store/session';
-import isEqual from 'fast-deep-equal';
-import { NextPage } from 'next';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
 import Conversation from './Conversation';
 import Header from './Header';
 import { Sessions } from './SessionList';
@@ -28,7 +27,7 @@ export const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const ChatLayout: NextPage = () => {
+const ChatLayout = () => {
   const [title] = useChatStore((s) => {
     const context = sessionSelectors.currentChat(s);
     return [context?.meta.title];
