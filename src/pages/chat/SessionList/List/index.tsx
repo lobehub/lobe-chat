@@ -1,7 +1,6 @@
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { sessionSelectors, useChatStore } from '@/store/session';
@@ -36,9 +35,7 @@ const SessionList = memo(() => {
   return (
     <>
       {list.map(({ id }) => (
-        <Flexbox key={id} gap={4} paddingBlock={4}>
-          <SessionItem active={activeId === id} key={id} id={id} simple={false} loading={loading && id === activeId} />
-        </Flexbox>
+        <SessionItem key={id} active={activeId === id} id={id} simple={false} loading={loading && id === activeId} />
       ))}
     </>
   );

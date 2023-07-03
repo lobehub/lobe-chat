@@ -27,6 +27,8 @@ export interface ChatMessage extends BaseDataModel {
   content: string;
   error?: any;
 
+  archive?: boolean;
+
   parentId?: string;
   // 引用
   quotaId?: string;
@@ -40,3 +42,5 @@ export interface ChatMessage extends BaseDataModel {
     // 语音
   } & Record<string, any>;
 }
+
+export type ChatMessageMap = Record<string, ChatMessage>;

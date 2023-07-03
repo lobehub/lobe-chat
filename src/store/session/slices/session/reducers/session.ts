@@ -1,4 +1,4 @@
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessageMap } from '@/types/chatMessage';
 import { MetaData } from '@/types/meta';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { produce } from 'immer';
@@ -33,7 +33,7 @@ interface UpdateSessionChat {
    */
   id: string;
 
-  chats: ChatMessage[];
+  chats: ChatMessageMap;
 }
 
 interface UpdateSessionMeta {

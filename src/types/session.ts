@@ -1,4 +1,4 @@
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessageMap } from './chatMessage';
 import { LLMExample, LLMParams, LanguageModel } from './llm';
 import { BaseDataModel } from './meta';
 
@@ -22,7 +22,7 @@ interface LobeSessionBase extends BaseDataModel {
   /**
    * 聊天记录
    */
-  chats: ChatMessage[];
+  chats: ChatMessageMap;
 }
 
 /**

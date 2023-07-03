@@ -19,7 +19,6 @@
   "dependencies": {
     "@ant-design/colors": "^7",
     "@ant-design/icons": "^5",
-    "@dqbd/tiktoken": "^1",
     "@lobehub/ui": "^1",
     "@vercel/analytics": "^1",
     "ahooks": "^3",

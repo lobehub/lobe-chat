@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobehub/ui';
+import { ChatMessage } from '@/types/chatMessage';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { AIChatMessage, HumanChatMessage, SystemChatMessage } from 'langchain/schema';
 
@@ -84,6 +84,7 @@ export function OpenAIStream(payload: OpenAIStreamPayload) {
           ...params,
           // 暂时设定不重试 ，后续看是否需要支持重试
           maxRetries: 0,
+          verbose: true,
           callbacks: [
             {
               handleLLMNewToken(token) {

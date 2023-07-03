@@ -1,3 +1,4 @@
+import { LanguageModel } from '@/types/llm';
 import { LobeAgentSession } from '@/types/session';
 
 export interface SessionLoadingState {
@@ -17,6 +18,17 @@ export interface SessionState {
   searchKeywords: string;
   loading: SessionLoadingState;
 }
+
+export const initLobeSessionAgent: LobeAgentSession = {
+  id: '',
+  config: {
+    model: LanguageModel.GPT3_5,
+    systemRole: '',
+    params: { temperature: 0.6 },
+  },
+  meta: {},
+  chats: {},
+};
 
 export const initialSessionState: SessionState = {
   sessions: {},

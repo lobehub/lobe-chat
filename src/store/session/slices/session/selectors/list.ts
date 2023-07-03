@@ -4,6 +4,8 @@ import { LobeAgentSession } from '@/types/session';
 import { MetaData } from '@/types/meta';
 import { filterWithKeywords } from '@/utils/filter';
 
+import { initLobeSessionAgent } from '../initialState';
+
 export const currentSessionSel = (s: SessionStore): LobeAgentSession | undefined => {
   if (!s.activeId) return;
 
@@ -12,7 +14,9 @@ export const currentSessionSel = (s: SessionStore): LobeAgentSession | undefined
 
 export const chatListSel = (s: SessionStore) => {
   const filterChats = filterWithKeywords(s.sessions, s.searchKeywords, (item) => [
-    item.chats.map((c) => c.content).join(''),
+    Object.values(item.chats)
+      .map((c) => c.content)
+      .join(''),
   ]);
 
   return Object.values(filterChats).sort((a, b) => (b.updateAt || 0) - (a.updateAt || 0));
@@ -23,15 +27,7 @@ export const getSessionById =
   (s: SessionStore): LobeAgentSession => {
     const session = s.sessions[id];
 
-    if (!session)
-      return {
-        id: '',
-        config: {
-          params: {},
-        },
-        meta: {},
-        chats: [],
-      };
+    if (!session) return initLobeSessionAgent;
     return session;
   };
 

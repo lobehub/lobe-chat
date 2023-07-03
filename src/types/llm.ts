@@ -6,17 +6,19 @@ export enum LanguageModel {
    * GPT 3.5 Turbo
    */
   GPT3_5 = 'gpt-3.5-turbo',
+  GPT3_5_16K = 'gpt-3.5-turbo-16k',
   /**
    * GPT 4
    */
   GPT4 = 'gpt-4',
+  GPT4_32K = 'gpt-4-32k',
 }
 
 // 语言模型的设置参数
 export interface LLMParams {
   /**
    * 生成文本的随机度量，用于控制文本的创造性和多样性
-   * @default 0.8
+   * @default 0.6
    */
   temperature: number;
   /**

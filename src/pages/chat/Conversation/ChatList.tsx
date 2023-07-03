@@ -1,16 +1,11 @@
 import { ChatList } from '@lobehub/ui';
+import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 
-import { sessionSelectors, useChatStore } from '@/store/session';
-import { NextPage } from 'next';
-import { shallow } from 'zustand/shallow';
+import { chatSelectors, useChatStore } from '@/store/session';
 
-const List: NextPage = () => {
-  const data = useChatStore((s) => {
-    const chat = sessionSelectors.currentChat(s);
-
-    return chat?.chats || [];
-  }, shallow);
+const List = () => {
+  const data = useChatStore(chatSelectors.currentChats, isEqual);
 
   return <ChatList data={data} />;
 };

@@ -1,17 +1,24 @@
 import { ActionIcon, ChatInputArea, DraggablePanel, Icon, TokenTag } from '@lobehub/ui';
-import { Archive, Eraser, Languages } from 'lucide-react';
-import { memo, useState } from 'react';
-
-import { useChatStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 import { Button } from 'antd';
-import { NextPage } from 'next';
+import { encode } from 'gpt-tokenizer';
+import { Archive, Eraser, Languages } from 'lucide-react';
+import { memo, useMemo, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
-const ChatInput: NextPage = () => {
+import { ModelTokens } from '@/const/modelTokens';
+import { agentSelectors, chatSelectors, useChatStore } from '@/store/session';
+import { useSettings } from '@/store/settings';
+
+const ChatInput = () => {
   const [expand, setExpand] = useState<boolean>(false);
+  const [text, setText] = useState('');
+  const textTokenCount = useMemo(() => encode(text).length, [text]);
+
   const [inputHeight] = useSettings((s) => [s.inputHeight], shallow);
-  const [sendMessage] = useChatStore((s) => [s.sendMessage], shallow);
+  const [totalToken, model, sendMessage, clearMessage] = useChatStore(
+    (s) => [chatSelectors.totalTokenCount(s), agentSelectors.currentAgentModel(s), s.sendMessage, s.clearMessage],
+    shallow,
+  );
 
   return (
     <DraggablePanel
@@ -31,14 +38,15 @@ const ChatInput: NextPage = () => {
         actions={
           <>
             <ActionIcon icon={Languages} />
-            <ActionIcon icon={Eraser} />
-            <TokenTag maxValue={5000} value={1000} />
+            <ActionIcon icon={Eraser} onClick={clearMessage} />
+            <TokenTag maxValue={ModelTokens[model]} value={totalToken + textTokenCount} />
           </>
         }
         expand={expand}
         footer={<Button icon={<Icon icon={Archive} />} />}
         minHeight={200}
         onExpandChange={setExpand}
+        onInputChange={setText}
         onSend={sendMessage}
       />
     </DraggablePanel>

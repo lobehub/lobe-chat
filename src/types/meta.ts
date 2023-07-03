@@ -21,6 +21,6 @@ export interface MetaData {
 export interface BaseDataModel {
   id: string;
   meta: MetaData;
-  updateAt?: number;
-  createAt?: number;
+  updateAt: number;
+  createAt: number;
 }

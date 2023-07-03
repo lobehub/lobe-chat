@@ -4,7 +4,7 @@ import { fetchChatModel } from '@/services/chatModel';
 import { ChatMessage } from '@/types/chatMessage';
 import { FetchSSEOptions, fetchSSE } from '@/utils/fetch';
 
-import { SessionStore, sessionSelectors } from '@/store/session';
+import { SessionStore, chatSelectors, sessionSelectors } from '@/store/session';
 import { nanoid } from '@/utils/uuid';
 import { MessageDispatch, messagesReducer } from './messageReducer';
 
@@ -37,6 +37,8 @@ export interface ChatAction {
    * @returns void
    */
   handleMessageEditing: (messageId: string | undefined) => void;
+
+  clearMessage: () => void;
 }
 
 export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', never]], [], ChatAction> = (
@@ -72,17 +74,26 @@ export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', n
     const session = sessionSelectors.currentChat(get());
     if (!session || !message) return;
 
+    const userId = nanoid();
     const assistantId = nanoid();
-    dispatchMessage({ type: 'addMessage', role: 'user', message });
-    // 添加一个空的信息用于放置 ai 响应
-    dispatchMessage({ type: 'addMessage', role: 'assistant', message: LOADING_FLAT, id: assistantId });
+    dispatchMessage({ type: 'addMessage', role: 'user', message, id: userId });
+
+    // 先拿到当前的 messages
+    const messages = chatSelectors.currentChats(get());
+
+    // 再添加一个空的信息用于放置 ai 响应，注意顺序不能反
+    // 因为如果顺序反了，messages 中将包含新增的 ai message
+    dispatchMessage({
+      type: 'addMessage',
+      role: 'assistant',
+      message: LOADING_FLAT,
+      id: assistantId,
+      parentId: userId,
+    });
 
     let output = '';
-
-    // 生成 messages
-    const newSessions = sessionSelectors.currentChat(get())!;
-
-    await generateMessage(newSessions.chats, {
+    // 生成 ai message
+    await generateMessage(messages, {
       onMessageHandle: (text) => {
         output += text;
 
@@ -161,5 +172,9 @@ export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', n
     //     dispatchMessage({ type: 'updateMessage' });
     //   },
     // });
+  },
+
+  clearMessage: () => {
+    get().dispatchMessage({ type: 'resetMessages' });
   },
 });

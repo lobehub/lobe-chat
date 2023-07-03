@@ -1,14 +1,10 @@
-import Router from 'next/router';
-import { v4 as uuid } from 'uuid';
 import { StateCreator } from 'zustand/vanilla';
 
-import { ChatAgent } from '@/types';
-
-import { getSafeAgent, getUniqueAgent } from '@/helpers/agent';
 import { promptPickEmoji, promptSummaryAgentName } from '@/prompts/agent';
-import { SessionStore } from '@/store/session';
+import { SessionStore, sessionSelectors } from '@/store/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
 
+import { promptSummaryDescription, promptSummaryTitle } from '@/prompts/chat';
 import { AgentDispatch, agentsReducer } from './reducers/agents';
 
 export interface AgentAction {
@@ -19,29 +15,19 @@ export interface AgentAction {
   dispatchAgent: (payload: AgentDispatch) => void;
 
   /**
-   * 切换智能体
-   * @param [agentId] - 智能体 ID 或 'new'
-   */
-  switchAgent: (agentId?: string | 'new') => void;
-
-  /**
    * 自动添加智能体名称
    * @param agentId - 智能体 ID
    */
   autoAddAgentName: (agentId: string) => Promise<void>;
   autocompleteAgentMetaInfo: (agentId: string) => Promise<void>;
-  findOrCreateAgent: (agent: Omit<ChatAgent, 'id' | 'hash'>) => ChatAgent;
   autoPickEmoji: (id: string) => void;
-
-  removeAgent: (agentId: string) => void;
+  autoAddChatBasicInfo: (chatId: string) => void;
 }
 
-export const createAgentSlice: StateCreator<
-  SessionStore,
-  [['zustand/devtools', never]],
-  [],
-  AgentAction
-> = (set, get) => ({
+export const createAgentSlice: StateCreator<SessionStore, [['zustand/devtools', never]], [], AgentAction> = (
+  set,
+  get,
+) => ({
   dispatchAgent: (payload) => {
     const { type, ...res } = payload;
 
@@ -51,40 +37,6 @@ export const createAgentSlice: StateCreator<
     });
   },
 
-  findOrCreateAgent: (agent) => {
-    let agentId: string;
-    const { agent: uniqueAgent, isExist } = getUniqueAgent(get().agents, agent);
-
-    if (isExist) agentId = uniqueAgent.id;
-    else {
-      agentId = uuid();
-      // 只有存在，且有定义角色的时候才会添加
-      if (agent.content) {
-        get().dispatchAgent({ type: 'addAgent', content: agent.content, id: agentId });
-      }
-    }
-    const safeAgent = getSafeAgent(get().agents, agentId);
-
-    // 只有有定义角色的时候才会添加名称
-    if (!!safeAgent && !safeAgent.title) {
-      get().autoAddAgentName(agentId);
-    }
-
-    return safeAgent;
-  },
-
-  switchAgent: (agentId) => {
-    if (get().activeId === agentId) return;
-
-    set({ activeId: agentId });
-
-    if (agentId) {
-      Router.push(`/agent/${agentId}`);
-    }
-  },
-  removeAgent: (id) => {
-    get().dispatchAgent({ type: 'removeAgent', id });
-  },
   // 使用 AI 自动补齐 Agent 元信息
 
   autoAddAgentName: async (id) => {
@@ -143,6 +95,42 @@ export const createAgentSlice: StateCreator<
     // 没有 avatar 就自动挑选 emoji
     if (!agent.avatar) {
       get().autoPickEmoji(agent.id);
+    }
+  },
+  autoAddChatBasicInfo: (chatId) => {
+    const chat = sessionSelectors.getSessionById(chatId)(get());
+    const updateMeta = (key: 'title' | 'description') => {
+      let value = '';
+      return (text: string) => {
+        value += text;
+        get().dispatchSession({
+          type: 'updateSessionMeta',
+          id: chatId,
+          key,
+          value,
+        });
+      };
+    };
+
+    if (!chat) return;
+    if (!chat.meta.title) {
+      fetchPresetTaskResult({
+        params: promptSummaryTitle(chat.chats),
+        onLoadingChange: (loading) => {
+          get().updateLoadingState('summarizingTitle', loading);
+        },
+        onMessageHandle: updateMeta('title'),
+      });
+    }
+
+    if (!chat.meta.description) {
+      fetchPresetTaskResult({
+        params: promptSummaryDescription(chat.chats),
+        onLoadingChange: (loading) => {
+          get().updateLoadingState('summarizingTitle', loading);
+        },
+        onMessageHandle: updateMeta('description'),
+      });
     }
   },
 });

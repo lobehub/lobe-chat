@@ -2,11 +2,9 @@ import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
 import { genShareMessagesUrl } from '@/helpers/url';
-import { promptSummaryDescription, promptSummaryTitle } from '@/prompts/chat';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
-import { fetchPresetTaskResult } from '@/utils/fetch';
 import { uuid } from '@/utils/uuid';
 
 import { SessionLoadingState } from './initialState';
@@ -25,14 +23,14 @@ export interface SessionAction {
    * @param index - 会话索引
    * @returns void
    */
-  removeChat: (sessionId: string) => void;
+  removeSession: (sessionId: string) => void;
 
   /**
    * @title 切换会话
    * @param sessionId - 会话索引
    * @returns void
    */
-  switchChat: (sessionId?: string | 'new') => void;
+  switchSession: (sessionId?: string | 'new') => void;
 
   /**
    * 分发聊天记录
@@ -46,20 +44,15 @@ export interface SessionAction {
    */
   genShareUrl: () => string;
 
-  autoAddChatBasicInfo: (chatId: string) => void;
-
   updateLoadingState: (key: keyof SessionLoadingState, value: boolean) => void;
 }
 
-export const createSessionSlice: StateCreator<
-  SessionStore,
-  [['zustand/devtools', never]],
-  [],
-  SessionAction
-> = (set, get) => ({
+export const createSessionSlice: StateCreator<SessionStore, [['zustand/devtools', never]], [], SessionAction> = (
+  set,
+  get,
+) => ({
   dispatchSession: (payload) => {
     const { type, ...res } = payload;
-
     set({ sessions: sessionsReducer(get().sessions, payload) }, false, {
       type: `dispatchChat/${type}`,
       payload: res,
@@ -67,7 +60,7 @@ export const createSessionSlice: StateCreator<
   },
 
   createSession: async () => {
-    const { dispatchSession, switchChat } = get();
+    const { dispatchSession, switchSession } = get();
 
     const timestamp = Date.now();
 
@@ -76,7 +69,7 @@ export const createSessionSlice: StateCreator<
       createAt: timestamp,
       updateAt: timestamp,
       type: LobeSessionType.Agent,
-      chats: [],
+      chats: {},
       meta: {
         title: '默认对话',
       },
@@ -91,15 +84,15 @@ export const createSessionSlice: StateCreator<
 
     dispatchSession({ type: 'addSession', session: newSession });
 
-    switchChat(newSession.id);
+    switchSession(newSession.id);
   },
 
-  removeChat: (sessionId) => {
+  removeSession: (sessionId) => {
     get().dispatchSession({ type: 'removeSession', id: sessionId });
-    get().switchChat();
+    Router.push('/');
   },
 
-  switchChat: (sessionId) => {
+  switchSession: (sessionId) => {
     if (get().activeId === sessionId) return;
 
     set({ activeId: sessionId });
@@ -114,43 +107,6 @@ export const createSessionSlice: StateCreator<
 
     const agent = session.config;
     return genShareMessagesUrl(session.chats, agent.systemRole);
-  },
-
-  autoAddChatBasicInfo: (chatId) => {
-    const chat = sessionSelectors.getSessionById(chatId)(get());
-    const updateMeta = (key: 'title' | 'description') => {
-      let value = '';
-      return (text: string) => {
-        value += text;
-        get().dispatchSession({
-          type: 'updateSessionMeta',
-          id: chatId,
-          key,
-          value,
-        });
-      };
-    };
-
-    if (!chat) return;
-    if (!chat.meta.title) {
-      fetchPresetTaskResult({
-        params: promptSummaryTitle(chat.chats),
-        onLoadingChange: (loading) => {
-          get().updateLoadingState('summarizingTitle', loading);
-        },
-        onMessageHandle: updateMeta('title'),
-      });
-    }
-
-    if (!chat.meta.description) {
-      fetchPresetTaskResult({
-        params: promptSummaryDescription(chat.chats),
-        onLoadingChange: (loading) => {
-          get().updateLoadingState('summarizingTitle', loading);
-        },
-        onMessageHandle: updateMeta('description'),
-      });
-    }
   },
 
   updateLoadingState: (key, value) => {

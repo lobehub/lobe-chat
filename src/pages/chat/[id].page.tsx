@@ -69,7 +69,7 @@ const ChatLayout = () => {
           <Sessions />
         </Flexbox>
         <Header />
-        <Flexbox style={{ gridArea: 'main', position: 'relative' }}>
+        <Flexbox style={{ gridArea: 'main', position: 'relative', height: 'calc(100vh - 64px)' }}>
           <Conversation />
         </Flexbox>
       </div>

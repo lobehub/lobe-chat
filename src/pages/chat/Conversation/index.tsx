@@ -1,17 +1,28 @@
 import { memo } from 'react';
 
-import { NextPage } from 'next';
-
+import { createStyles } from 'antd-style';
+import { Flexbox } from 'react-layout-kit';
 import ChatList from './ChatList';
 import ChatInput from './Input';
 
-const Conversation: NextPage = () => {
+const useStyles = createStyles(({ css, token }) => ({
+  input: css`
+    position: sticky;
+    z-index: 10;
+    bottom: 0;
+    background: ${token.colorBgLayout};
+  `,
+}));
+const Conversation = () => {
+  const { styles } = useStyles();
   return (
     <>
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, overflowY: 'scroll' }}>
         <ChatList />
       </div>
-      <ChatInput />
+      <Flexbox className={styles.input}>
+        <ChatInput />
+      </Flexbox>
     </>
   );
 };
