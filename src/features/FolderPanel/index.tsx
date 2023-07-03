@@ -15,10 +15,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 export default ({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
-  const [sessionsWidth, sessionExpandable] = useSettings(
-    (s) => [s.sessionsWidth, s.sessionExpandable],
-    shallow,
-  );
+  const [sessionsWidth, sessionExpandable] = useSettings((s) => [s.sessionsWidth, s.sessionExpandable], shallow);
   const [tmpWidth, setWidth] = useState(sessionsWidth);
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
 
@@ -26,6 +23,7 @@ export default ({ children }: PropsWithChildren) => {
     <DraggablePanel
       placement="left"
       maxWidth={400}
+      minWidth={256}
       defaultSize={{ width: tmpWidth }}
       size={{ width: sessionsWidth, height: '100vh' }}
       onSizeChange={(_, size) => {

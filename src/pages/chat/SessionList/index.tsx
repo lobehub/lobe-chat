@@ -21,7 +21,6 @@ export const Sessions = memo(() => {
     <FolderPanel>
       <Flexbox gap={8} height={'100%'}>
         <Header />
-
         <Flexbox className={cx(styles.center)}>
           <SessionList />
         </Flexbox>

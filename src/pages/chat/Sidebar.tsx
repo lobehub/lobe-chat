@@ -9,20 +9,11 @@ const Sidebar = memo(() => {
   return (
     <SideNav
       avatar={<Logo size={40} />}
+      style={{ height: '100vh' }}
       topActions={
         <>
-          <ActionIcon
-            icon={MessageSquare}
-            size="large"
-            active={tab === 'chat'}
-            onClick={() => setTab('chat')}
-          />
-          <ActionIcon
-            icon={Album}
-            size="large"
-            active={tab === 'market'}
-            onClick={() => setTab('market')}
-          />
+          <ActionIcon icon={MessageSquare} size="large" active={tab === 'chat'} onClick={() => setTab('chat')} />
+          <ActionIcon icon={Album} size="large" active={tab === 'market'} onClick={() => setTab('market')} />
         </>
       }
       bottomActions={
@@ -30,7 +21,6 @@ const Sidebar = memo(() => {
           <ActionIcon icon={Settings2} />
         </>
       }
-      style={{ gridArea: 'sidebar' }}
     />
   );
 });
