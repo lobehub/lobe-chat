@@ -101,7 +101,7 @@
     "@types/testing-library__jest-dom": "^5",
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
-    "@vitest/coverage-c8": "latest",
+    "@vitest/coverage-v8": "latest",
     "commitlint": "^17",
     "eslint": "^8",
     "husky": "^8",
