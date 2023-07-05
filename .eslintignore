@@ -1,0 +1,32 @@
+# Eslintignore for LobeHub
+################################################################
+
+# dependencies
+node_modules
+
+# ci
+coverage
+.coverage
+
+# test
+jest*
+_test_
+__test__
+*.test.ts
+
+# umi
+.umi
+.umi-production
+.umi-test
+.dumi/tmp*
+!.dumirc.ts
+
+# production
+dist
+es
+lib
+logs
+
+# misc
+# add other ignore file below
+.next

@@ -1,6 +1,6 @@
-const config = require('@umijs/lint/dist/config/eslint');
+const config = require('@lobehub/lint').eslint;
 
-module.exports = {
-  ...config,
-  extends: ['plugin:@next/next/recommended'],
-};
+config.extends.push('plugin:@next/next/recommended');
+//config.extends.push('plugin:@next/next/core-web-vitals');
+
+module.exports = config;

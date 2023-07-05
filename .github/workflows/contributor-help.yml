@@ -2,7 +2,7 @@ name: Contributor Helper
 
 on:
   # 🌏 Think about the planet! No need to update stats too frequently
-  schedule: [{cron: "0 18 * * *"}]
+  schedule: [{ cron: '0 18 * * *' }]
   # 💡 The following line lets you run workflow manually from the action tab!
   workflow_dispatch:
 jobs:

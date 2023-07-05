@@ -1,4 +1,3 @@
-import { LangChainParams } from '@/types/langchain';
 import { LLMChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import {
@@ -8,7 +7,9 @@ import {
   SystemMessagePromptTemplate,
 } from 'langchain/prompts';
 
-const isDev = process.env.NODE_ENV === 'development';
+import { LangChainParams } from '@/types/langchain';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
 const OPENAI_PROXY_URL = process.env.OPENAI_PROXY_URL;
 
 export function LangChainStream(payload: LangChainParams) {
@@ -19,13 +20,16 @@ export function LangChainStream(payload: LangChainParams) {
     prompts.map((m) => {
       switch (m.role) {
         default:
-        case 'user':
+        case 'user': {
           return HumanMessagePromptTemplate.fromTemplate(m.content);
-        case 'system':
+        }
+        case 'system': {
           return SystemMessagePromptTemplate.fromTemplate(m.content);
+        }
 
-        case 'assistant':
+        case 'assistant': {
           return AIMessagePromptTemplate.fromTemplate(m.content);
+        }
       }
     }),
   );
@@ -43,8 +47,7 @@ export function LangChainStream(payload: LangChainParams) {
         {
           streaming: true,
           ...llm,
-          // 暂时设定不重试 ，后续看是否需要支持重试
-          maxRetries: 0,
+
           callbacks: [
             {
               handleLLMNewToken(token) {
@@ -60,30 +63,32 @@ export function LangChainStream(payload: LangChainParams) {
               },
             },
           ],
+          // 暂时设定不重试 ，后续看是否需要支持重试
+          maxRetries: 0,
         },
-        isDev && OPENAI_PROXY_URL ? { basePath: OPENAI_PROXY_URL } : undefined,
+        isDevelopment && OPENAI_PROXY_URL ? { basePath: OPENAI_PROXY_URL } : undefined,
       );
 
       const chain = new LLMChain({
-        prompt: chatPrompt,
-        llm: chat,
-        verbose: true,
         callbacks: [
           {
-            handleChainError(err: Error): Promise<void> | void {
-              console.log(err.message);
+            handleChainError(error: Error): Promise<void> | void {
+              console.log(error.message);
             },
           },
         ],
+        llm: chat,
+        prompt: chatPrompt,
+        verbose: true,
       });
       try {
         // 使用转换后的聊天消息作为输入开始聊天
         await chain.call(vars);
         // 完成后，关闭流
         controller.close();
-      } catch (e) {
+      } catch (error) {
         // 如果在执行过程中发生错误，向流发送错误
-        controller.error(e);
+        controller.error(error);
       }
     },
   });

@@ -1,4 +1,1 @@
-module.exports = {
-  extends: ['semantic-release-config-gitmoji'],
-  branches: ['master'],
-};
+module.exports = require('@lobehub/lint').semanticRelease;

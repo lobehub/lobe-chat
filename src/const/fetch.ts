@@ -1,0 +1,1 @@
+export const OPENAI_SERVICE_ERROR_CODE = 555;
