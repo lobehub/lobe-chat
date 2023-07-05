@@ -1,52 +1,59 @@
-import { LanguageModel } from '@/types/llm';
-import { LobeAgentSession } from '@/types/session';
 import { produce } from 'immer';
 import { Md5 } from 'ts-md5';
 import { v4 as uuid } from 'uuid';
 
+import { LanguageModel } from '@/types/llm';
+import { LobeAgentSession } from '@/types/session';
+
 interface AddAgentAction {
-  type: 'addAgent';
+  avatar?: string;
+  content: string;
   id?: string;
   title?: string;
-  content: string;
-  avatar?: string;
+  type: 'addAgent';
 }
 interface RemoveAgentAction {
-  type: 'removeAgent';
   id: string;
+  type: 'removeAgent';
 }
 interface UpdateAgentData {
-  type: 'updateAgentData';
   id: string;
   key: keyof Omit<LobeAgentSession, 'hash' | 'id' | 'model' | 'flow'>;
+  type: 'updateAgentData';
   value: any;
 }
 
 export type AgentDispatch = AddAgentAction | RemoveAgentAction | UpdateAgentData;
 
+// TODO: 临时修正 types
+type ChatAgentMap = any;
+type ChatAgent = any;
+
 export const agentsReducer = (state: ChatAgentMap, payload: AgentDispatch): ChatAgentMap => {
   switch (payload.type) {
-    case 'addAgent':
+    case 'addAgent': {
       return produce(state, (draft) => {
         const { avatar, id, content, title } = payload;
         const newAgent: ChatAgent = {
-          id: id ?? uuid(),
-          title,
+          avatar,
           content,
           hash: Md5.hashStr(content),
-          avatar,
+          id: id ?? uuid(),
           model: LanguageModel.GPT3_5,
+          title,
         };
 
         draft[newAgent.id] = newAgent;
       });
+    }
 
-    case 'removeAgent':
+    case 'removeAgent': {
       return produce(state, (draftState) => {
         delete draftState[payload.id];
       });
+    }
 
-    case 'updateAgentData':
+    case 'updateAgentData': {
       return produce(state, (draft) => {
         const { id, key, value } = payload;
         const agent = draft[id];
@@ -60,8 +67,10 @@ export const agentsReducer = (state: ChatAgentMap, payload: AgentDispatch): Chat
 
         agent.updateAt = Date.now();
       });
+    }
 
-    default:
-      throw Error('不存在的 type，请检查代码实现...');
+    default: {
+      throw new Error('不存在的 type，请检查代码实现...');
+    }
   }
 };

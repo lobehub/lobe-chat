@@ -1,6 +1,7 @@
 import { ChatMessage } from '@/types/chatMessage';
 import { LanguageModel } from '@/types/llm';
-import { LobeAgentSession, LobeSessions, LobeSessionType } from '@/types/session';
+import { LobeAgentSession, LobeSessionType, LobeSessions } from '@/types/session';
+
 import { SessionDispatch, sessionsReducer } from './session';
 
 describe('sessionsReducer', () => {
@@ -12,8 +13,7 @@ describe('sessionsReducer', () => {
 
   it('adds a session to the state', () => {
     const session: LobeAgentSession = {
-      id: '123',
-      type: LobeSessionType.Agent,
+      chats: [],
       config: {
         model: LanguageModel.GPT3_5,
         params: {
@@ -21,13 +21,14 @@ describe('sessionsReducer', () => {
         },
         systemRole: 'system',
       },
-      chats: [],
+      id: '123',
       meta: {},
+      type: LobeSessionType.Agent,
     };
 
     const action: SessionDispatch = {
-      type: 'addSession',
       session,
+      type: 'addSession',
     };
 
     const newState = sessionsReducer(initialState, action);
@@ -39,8 +40,7 @@ describe('sessionsReducer', () => {
 
   it('does not add a session if it already exists', () => {
     const session: LobeAgentSession = {
-      id: '123',
-      type: LobeSessionType.Agent,
+      chats: [],
       config: {
         model: LanguageModel.GPT3_5,
         params: {
@@ -48,8 +48,9 @@ describe('sessionsReducer', () => {
         },
         systemRole: 'system',
       },
-      chats: [],
+      id: '123',
       meta: {},
+      type: LobeSessionType.Agent,
     };
 
     initialState = {
@@ -57,8 +58,8 @@ describe('sessionsReducer', () => {
     };
 
     const action: SessionDispatch = {
-      type: 'addSession',
       session,
+      type: 'addSession',
     };
 
     const newState = sessionsReducer(initialState, action);
@@ -68,8 +69,7 @@ describe('sessionsReducer', () => {
 
   it('removes a session from the state', () => {
     const session: LobeAgentSession = {
-      id: '123',
-      type: LobeSessionType.Agent,
+      chats: [],
       config: {
         model: LanguageModel.GPT3_5,
         params: {
@@ -77,8 +77,9 @@ describe('sessionsReducer', () => {
         },
         systemRole: 'system',
       },
-      chats: [],
+      id: '123',
       meta: {},
+      type: LobeSessionType.Agent,
     };
 
     initialState = {
@@ -86,8 +87,8 @@ describe('sessionsReducer', () => {
     };
 
     const action: SessionDispatch = {
-      type: 'removeSession',
       id: session.id,
+      type: 'removeSession',
     };
 
     const newState = sessionsReducer(initialState, action);
@@ -97,8 +98,7 @@ describe('sessionsReducer', () => {
 
   it('does not remove a session if it does not exist', () => {
     const session: LobeAgentSession = {
-      id: '123',
-      type: LobeSessionType.Agent,
+      chats: [],
       config: {
         model: LanguageModel.GPT3_5,
         params: {
@@ -106,8 +106,9 @@ describe('sessionsReducer', () => {
         },
         systemRole: 'system',
       },
-      chats: [],
+      id: '123',
       meta: {},
+      type: LobeSessionType.Agent,
     };
 
     initialState = {
@@ -115,8 +116,8 @@ describe('sessionsReducer', () => {
     };
 
     const action: SessionDispatch = {
-      type: 'removeSession',
       id: '456',
+      type: 'removeSession',
     };
 
     const newState = sessionsReducer(initialState, action);
@@ -126,8 +127,7 @@ describe('sessionsReducer', () => {
 
   it('updates the chat for a session', () => {
     const session: LobeAgentSession = {
-      id: '123',
-      type: LobeSessionType.Agent,
+      chats: [],
       config: {
         model: LanguageModel.GPT3_5,
         params: {
@@ -135,8 +135,9 @@ describe('sessionsReducer', () => {
         },
         systemRole: 'system',
       },
-      chats: [],
+      id: '123',
       meta: {},
+      type: LobeSessionType.Agent,
     };
 
     initialState = {
@@ -145,25 +146,25 @@ describe('sessionsReducer', () => {
 
     const newChats: ChatMessage[] = [
       {
-        id: '123',
         content: 'Hello',
         createAt: Date.now(),
-        role: 'user',
+        id: '123',
         meta: {},
+        role: 'user',
       },
       {
-        id: '456',
         content: 'Hi there',
         createAt: Date.now(),
-        role: 'user',
+        id: '456',
         meta: {},
+        role: 'user',
       },
     ];
 
     const action: SessionDispatch = {
-      type: 'updateSessionChat',
-      id: session.id,
       chats: newChats,
+      id: session.id,
+      type: 'updateSessionChat',
     };
 
     const newState = sessionsReducer(initialState, action);
@@ -173,8 +174,7 @@ describe('sessionsReducer', () => {
 
   it('does not update the chat for a session if it does not exist', () => {
     const session: LobeAgentSession = {
-      id: '123',
-      type: LobeSessionType.Agent,
+      chats: [],
       config: {
         model: LanguageModel.GPT3_5,
         params: {
@@ -182,8 +182,9 @@ describe('sessionsReducer', () => {
         },
         systemRole: 'system',
       },
-      chats: [],
+      id: '123',
       meta: {},
+      type: LobeSessionType.Agent,
     };
 
     initialState = {
@@ -192,25 +193,25 @@ describe('sessionsReducer', () => {
 
     const newChats: ChatMessage[] = [
       {
-        id: '123',
         content: 'Hello',
         createAt: Date.now(),
-        role: 'user',
+        id: '123',
         meta: {},
+        role: 'user',
       },
       {
-        id: '456',
         content: 'Hi there',
         createAt: Date.now(),
-        role: 'user',
+        id: '456',
         meta: {},
+        role: 'user',
       },
     ];
 
     const action: SessionDispatch = {
-      type: 'updateSessionChat',
-      id: '456',
       chats: newChats,
+      id: '456',
+      type: 'updateSessionChat',
     };
 
     const newState = sessionsReducer(initialState, action);
@@ -220,8 +221,7 @@ describe('sessionsReducer', () => {
 
   it('updates the meta for a session', () => {
     const session: LobeAgentSession = {
-      id: '123',
-      type: LobeSessionType.Agent,
+      chats: [],
       config: {
         model: LanguageModel.GPT3_5,
         params: {
@@ -229,11 +229,12 @@ describe('sessionsReducer', () => {
         },
         systemRole: 'system',
       },
-      chats: [],
+      id: '123',
       meta: {
-        title: 'Session 1',
         description: 'This is session 1',
+        title: 'Session 1',
       },
+      type: LobeSessionType.Agent,
     };
 
     initialState = {
@@ -243,9 +244,9 @@ describe('sessionsReducer', () => {
     const newMetaValue = 'Session 2';
 
     const action: SessionDispatch = {
-      type: 'updateSessionMeta',
       id: session.id,
       key: 'title',
+      type: 'updateSessionMeta',
       value: newMetaValue,
     };
 
@@ -256,8 +257,7 @@ describe('sessionsReducer', () => {
 
   it('does not update the meta for a session if it does not exist', () => {
     const session: LobeAgentSession = {
-      id: '123',
-      type: LobeSessionType.Agent,
+      chats: [],
       config: {
         model: LanguageModel.GPT3_5,
         params: {
@@ -265,11 +265,12 @@ describe('sessionsReducer', () => {
         },
         systemRole: 'system',
       },
-      chats: [],
+      id: '123',
       meta: {
-        title: 'Session 1',
         description: 'This is session 1',
+        title: 'Session 1',
       },
+      type: LobeSessionType.Agent,
     };
 
     initialState = {
@@ -279,9 +280,9 @@ describe('sessionsReducer', () => {
     const newMetaValue = 'Session 2';
 
     const action: SessionDispatch = {
-      type: 'updateSessionMeta',
       id: '456',
       key: 'title',
+      type: 'updateSessionMeta',
       value: newMetaValue,
     };
 

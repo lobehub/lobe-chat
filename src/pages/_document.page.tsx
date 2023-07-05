@@ -1,9 +1,9 @@
-import { extractStaticStyle, StyleProvider } from 'antd-style';
+import { StyleProvider, extractStaticStyle } from 'antd-style';
 import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
 class MyDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
-    const page = await ctx.renderPage({
+  static async getInitialProps(context: DocumentContext) {
+    const page = await context.renderPage({
       enhanceApp: (App) => (props) =>
         (
           <StyleProvider cache={extractStaticStyle.cache}>
@@ -14,7 +14,7 @@ class MyDocument extends Document {
 
     const styles = extractStaticStyle(page.html).map((item) => item.style);
 
-    const initialProps = await Document.getInitialProps(ctx);
+    const initialProps = await Document.getInitialProps(context);
 
     return {
       ...initialProps,

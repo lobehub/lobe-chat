@@ -1,11 +1,12 @@
-import { Compressor } from '@/utils/compass';
-import { genChatMessages } from '@/utils/genChatMessages';
 import { ChatMessage } from '@lobehub/ui';
 
-export const genShareMessagesUrl = (messages: ChatMessage[], systemRole?: string) => {
-  const compassedMsg = genChatMessages({ messages, systemRole });
+import { Compressor } from '@/utils/compass';
+import { genChatMessages } from '@/utils/genChatMessages';
 
-  return `/share?messages=${Compressor.compress(JSON.stringify(compassedMsg))}`;
+export const genShareMessagesUrl = (messages: ChatMessage[], systemRole?: string) => {
+  const compassedMessage = genChatMessages({ messages, systemRole });
+
+  return `/share?messages=${Compressor.compress(JSON.stringify(compassedMessage))}`;
 };
 
 export const genSystemRoleQuery = async (content: string) => {

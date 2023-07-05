@@ -15,35 +15,38 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 export default ({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
-  const [sessionsWidth, sessionExpandable] = useSettings((s) => [s.sessionsWidth, s.sessionExpandable], shallow);
-  const [tmpWidth, setWidth] = useState(sessionsWidth);
-  if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
+  const [sessionsWidth, sessionExpandable] = useSettings(
+    (s) => [s.sessionsWidth, s.sessionExpandable],
+    shallow,
+  );
+  const [temporaryWidth, setWidth] = useState(sessionsWidth);
+  if (temporaryWidth !== sessionsWidth) setWidth(sessionsWidth);
 
   return (
     <DraggablePanel
-      placement="left"
+      className={styles.panel}
+      defaultSize={{ width: temporaryWidth }}
+      expand={sessionExpandable}
       maxWidth={400}
       minWidth={256}
-      defaultSize={{ width: tmpWidth }}
-      size={{ width: sessionsWidth, height: '100vh' }}
+      onExpandChange={(expand) => {
+        useSettings.setState({
+          sessionExpandable: expand,
+          sessionsWidth: expand ? 320 : 0,
+        });
+      }}
       onSizeChange={(_, size) => {
         if (!size) return;
 
-        const nextWidth = typeof size.width === 'string' ? parseInt(size.width) : size.width;
+        const nextWidth = typeof size.width === 'string' ? Number.parseInt(size.width) : size.width;
 
         if (isEqual(nextWidth, sessionsWidth)) return;
 
         setWidth(nextWidth);
         useSettings.setState({ sessionsWidth: nextWidth });
       }}
-      expand={sessionExpandable}
-      onExpandChange={(expand) => {
-        useSettings.setState({
-          sessionsWidth: expand ? 320 : 0,
-          sessionExpandable: expand,
-        });
-      }}
-      className={styles.panel}
+      placement="left"
+      size={{ height: '100vh', width: sessionsWidth }}
     >
       {children}
     </DraggablePanel>

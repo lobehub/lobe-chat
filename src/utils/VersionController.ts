@@ -4,15 +4,15 @@
  */
 export interface Migration<T = any> {
   /**
-   * 迁移版本号
-   */
-  version: number;
-  /**
    * 迁移数据
    * @param data - 迁移数据
    * @returns 迁移后的数据
    */
   migrate(data: MigrationData<T>): MigrationData;
+  /**
+   * 迁移版本号
+   */
+  version: number;
 }
 
 /**
@@ -45,13 +45,13 @@ export class VersionController<T> {
 
   migrate(data: MigrationData<T>): MigrationData<T> {
     let nextData = data;
-    const targetVersion = this.targetVersion || this.migrations.length;
-    if (typeof data.version === 'undefined') throw Error('导入数据缺少版本号，请检查文件后重试');
+    const targetVersion = this.targetVersion || this.migrations?.length > 0;
+    if (data.version === undefined) throw new Error('导入数据缺少版本号，请检查文件后重试');
     const currentVersion = data.version;
 
-    for (let i = currentVersion || 0; i < targetVersion; i++) {
-      const migration = this.migrations.find((m) => m.version === i);
-      if (!migration) throw Error('程序出错');
+    for (let index = currentVersion || 0; index < targetVersion; index++) {
+      const migration = this.migrations.find((m) => m.version === index);
+      if (!migration) throw new Error('程序出错');
 
       nextData = migration.migrate(nextData);
 

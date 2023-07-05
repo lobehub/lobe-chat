@@ -1,5 +1,7 @@
-import { ChatMessage } from '@/types/chatMessage';
 import { beforeEach, describe, expect, it } from 'vitest';
+
+import { ChatMessage } from '@/types/chatMessage';
+
 import { MessageDispatch, messagesReducer } from './messageReducer';
 
 describe('messagesReducer', () => {
@@ -7,67 +9,67 @@ describe('messagesReducer', () => {
 
   beforeEach(() => {
     initialState = [
-      { role: 'user', content: 'Hello!' },
-      { role: 'assistant', content: 'Hi there!' },
+      { content: 'Hello!', role: 'user' },
+      { content: 'Hi there!', role: 'assistant' },
     ];
   });
 
   it('should add a message', () => {
-    const newMessage: ChatMessage = { role: 'user', content: 'How are you?' };
-    const action: MessageDispatch = { type: 'addMessage', message: newMessage };
+    const newMessage: ChatMessage = { content: 'How are you?', role: 'user' };
+    const action: MessageDispatch = { message: newMessage, type: 'addMessage' };
     const newState = messagesReducer(initialState, action);
     expect(newState).toEqual([...initialState, newMessage]);
   });
 
   it('should delete a message', () => {
-    const action: MessageDispatch = { type: 'deleteMessage', index: 1 };
+    const action: MessageDispatch = { index: 1, type: 'deleteMessage' };
     const newState = messagesReducer(initialState, action);
-    expect(newState).toEqual([{ role: 'user', content: 'Hello!' }]);
+    expect(newState).toEqual([{ content: 'Hello!', role: 'user' }]);
   });
 
   it('should update a message', () => {
-    const action: MessageDispatch = { type: 'updateMessage', index: 1, message: 'I am fine!' };
+    const action: MessageDispatch = { index: 1, message: 'I am fine!', type: 'updateMessage' };
     const newState = messagesReducer(initialState, action);
     expect(newState).toEqual([
-      { role: 'user', content: 'Hello!' },
-      { role: 'assistant', content: 'I am fine!' },
+      { content: 'Hello!', role: 'user' },
+      { content: 'I am fine!', role: 'assistant' },
     ]);
   });
 
   it('should add a user message', () => {
-    const action: MessageDispatch = { type: 'addUserMessage', message: 'Goodbye!' };
+    const action: MessageDispatch = { message: 'Goodbye!', type: 'addUserMessage' };
     const newState = messagesReducer(initialState, action);
     expect(newState).toEqual([
-      { role: 'user', content: 'Hello!' },
-      { role: 'assistant', content: 'Hi there!' },
-      { role: 'user', content: 'Goodbye!' },
+      { content: 'Hello!', role: 'user' },
+      { content: 'Hi there!', role: 'assistant' },
+      { content: 'Goodbye!', role: 'user' },
     ]);
   });
 
   it('should set error message correctly', () => {
     const action: MessageDispatch = {
-      type: 'setErrorMessage',
       error: { message: 'Not Found', status: 404, type: 'chatbot' },
       index: 0,
+      type: 'setErrorMessage',
     };
     const newState = messagesReducer(initialState, action);
     expect(newState).toEqual([
       {
-        role: 'user',
         content: 'Hello!',
         error: { message: 'Not Found', status: 404, type: 'chatbot' },
+        role: 'user',
       },
-      { role: 'assistant', content: 'Hi there!' },
+      { content: 'Hi there!', role: 'assistant' },
     ]);
   });
 
   it('should update the latest bot message', () => {
     const responseStream = ['I', ' am', ' a', ' bot.'];
-    const action: MessageDispatch = { type: 'updateLatestBotMessage', responseStream };
+    const action: MessageDispatch = { responseStream, type: 'updateLatestBotMessage' };
     const newState = messagesReducer(initialState, action);
     expect(newState).toEqual([
-      { role: 'user', content: 'Hello!' },
-      { role: 'assistant', content: 'I am a bot.' },
+      { content: 'Hello!', role: 'user' },
+      { content: 'I am a bot.', role: 'assistant' },
     ]);
   });
 });

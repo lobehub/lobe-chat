@@ -1,3 +1,1 @@
-import Session from './chat/index.page';
-
-export default Session;
+export { default } from './chat/index.page';

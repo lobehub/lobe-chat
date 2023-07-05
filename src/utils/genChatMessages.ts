@@ -6,7 +6,7 @@ export const genChatMessages = ({
   message,
 }: Partial<OpenAIRequestParams>): ChatMessage[] =>
   [
-    systemRole ? { role: 'system', content: systemRole } : null,
-    ...messages.filter((i) => i).map((m) => ({ role: m.role, content: m.content })),
-    message ? { role: 'user', content: message } : null,
+    systemRole ? { content: systemRole, role: 'system' } : null,
+    ...messages.filter(Boolean).map((m) => ({ content: m.content, role: m.role })),
+    message ? { content: message, role: 'user' } : null,
   ].filter(Boolean) as ChatMessage[];

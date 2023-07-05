@@ -1,6 +1,6 @@
 import { SessionStore } from '@/store/session';
-
 import { LanguageModel } from '@/types/llm';
+
 import { sessionSelectors } from '../session';
 
 const currentAgentTitleSel = (s: SessionStore) => {

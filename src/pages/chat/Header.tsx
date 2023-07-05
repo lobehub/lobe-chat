@@ -1,4 +1,3 @@
-import { sessionSelectors, useChatStore } from '@/store/session';
 import { ActionIcon, Avatar } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { ArchiveIcon, MoreVerticalIcon, Share2Icon } from 'lucide-react';
@@ -6,14 +5,16 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { sessionSelectors, useChatStore } from '@/store/session';
+
 const useStyles = createStyles(({ css, token }) => ({
-  title: css`
-    font-weight: bold;
-    color: ${token.colorText};
-  `,
   desc: css`
     font-size: 12px;
     color: ${token.colorTextTertiary};
+  `,
+  title: css`
+    font-weight: bold;
+    color: ${token.colorText};
   `,
 }));
 const Header = memo(() => {
@@ -26,9 +27,9 @@ const Header = memo(() => {
   const { styles } = useStyles();
   return (
     <Flexbox
-      horizontal
       align={'center'}
       distribution={'space-between'}
+      horizontal
       padding={8}
       paddingInline={16}
       style={{
@@ -36,16 +37,16 @@ const Header = memo(() => {
         gridArea: 'header',
       }}
     >
-      <Flexbox horizontal align={'center'} gap={12}>
-        <Avatar size={40} title={'123'} avatar={meta && sessionSelectors.getAgentAvatar(meta)} />
+      <Flexbox align={'center'} gap={12} horizontal>
+        <Avatar avatar={meta && sessionSelectors.getAgentAvatar(meta)} size={40} title={'123'} />
         <Flexbox>
           <Flexbox className={styles.title}>{meta?.title}</Flexbox>
           <Flexbox className={styles.desc}>{meta?.description || '暂无描述'}</Flexbox>
         </Flexbox>
       </Flexbox>
-      <Flexbox horizontal gap={16}>
-        <ActionIcon title={'分享'} icon={Share2Icon} />
-        <ActionIcon title={'归档'} icon={ArchiveIcon} />
+      <Flexbox gap={16} horizontal>
+        <ActionIcon icon={Share2Icon} title={'分享'} />
+        <ActionIcon icon={ArchiveIcon} title={'归档'} />
         <ActionIcon icon={MoreVerticalIcon} />
       </Flexbox>
     </Flexbox>

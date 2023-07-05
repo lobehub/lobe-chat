@@ -19,6 +19,18 @@ export interface SessionAction {
    */
   createSession: () => Promise<void>;
   /**
+   * 分发聊天记录
+   * @param payload - 聊天记录
+   */
+  dispatchSession: (payload: SessionDispatch) => void;
+
+  /**
+   * 生成压缩后的消息
+   * @returns 压缩后的消息
+   */
+  genShareUrl: () => string;
+
+  /**
    * @title 删除会话
    * @param index - 会话索引
    * @returns void
@@ -32,63 +44,61 @@ export interface SessionAction {
    */
   switchSession: (sessionId?: string | 'new') => void;
 
-  /**
-   * 分发聊天记录
-   * @param payload - 聊天记录
-   */
-  dispatchSession: (payload: SessionDispatch) => void;
-
-  /**
-   * 生成压缩后的消息
-   * @returns 压缩后的消息
-   */
-  genShareUrl: () => string;
-
   updateLoadingState: (key: keyof SessionLoadingState, value: boolean) => void;
 }
 
-export const createSessionSlice: StateCreator<SessionStore, [['zustand/devtools', never]], [], SessionAction> = (
-  set,
-  get,
-) => ({
-  dispatchSession: (payload) => {
-    const { type, ...res } = payload;
-    set({ sessions: sessionsReducer(get().sessions, payload) }, false, {
-      type: `dispatchChat/${type}`,
-      payload: res,
-    });
-  },
-
+export const createSessionSlice: StateCreator<
+  SessionStore,
+  [['zustand/devtools', never]],
+  [],
+  SessionAction
+> = (set, get) => ({
   createSession: async () => {
     const { dispatchSession, switchSession } = get();
 
     const timestamp = Date.now();
 
     const newSession: LobeAgentSession = {
-      id: uuid(),
-      createAt: timestamp,
-      updateAt: timestamp,
-      type: LobeSessionType.Agent,
       chats: {},
-      meta: {
-        title: '默认对话',
-      },
       config: {
         model: LanguageModel.GPT3_5,
-        systemRole: '',
         params: {
           temperature: 0.6,
         },
+        systemRole: '',
       },
+      createAt: timestamp,
+      id: uuid(),
+      meta: {
+        title: '默认对话',
+      },
+      type: LobeSessionType.Agent,
+      updateAt: timestamp,
     };
 
-    dispatchSession({ type: 'addSession', session: newSession });
+    dispatchSession({ session: newSession, type: 'addSession' });
 
     switchSession(newSession.id);
   },
 
+  dispatchSession: (payload) => {
+    const { type, ...res } = payload;
+    set({ sessions: sessionsReducer(get().sessions, payload) }, false, {
+      payload: res,
+      type: `dispatchChat/${type}`,
+    });
+  },
+
+  genShareUrl: () => {
+    const session = sessionSelectors.currentChat(get());
+    if (!session) return '';
+
+    const agent = session.config;
+    return genShareMessagesUrl(session.chats, agent.systemRole);
+  },
+
   removeSession: (sessionId) => {
-    get().dispatchSession({ type: 'removeSession', id: sessionId });
+    get().dispatchSession({ id: sessionId, type: 'removeSession' });
     Router.push('/');
   },
 
@@ -99,14 +109,6 @@ export const createSessionSlice: StateCreator<SessionStore, [['zustand/devtools'
 
     // 新会话
     Router.push(`/chat/${sessionId}`);
-  },
-
-  genShareUrl: () => {
-    const session = sessionSelectors.currentChat(get());
-    if (!session) return '';
-
-    const agent = session.config;
-    return genShareMessagesUrl(session.chats, agent.systemRole);
   },
 
   updateLoadingState: (key, value) => {

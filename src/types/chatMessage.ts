@@ -14,11 +14,7 @@ export interface ChatMessageError {
 }
 
 export interface ChatMessage extends BaseDataModel {
-  /**
-   * 角色
-   * @description 消息发送者的角色
-   */
-  role: LLMRoleType;
+  archive?: boolean;
 
   /**
    * @title 内容
@@ -27,20 +23,24 @@ export interface ChatMessage extends BaseDataModel {
   content: string;
   error?: any;
 
-  archive?: boolean;
-
-  parentId?: string;
-  // 引用
-  quotaId?: string;
   // 扩展字段
   extra?: {
     // 翻译
     translate: {
-      to: string;
       target: string;
+      to: string;
     };
     // 语音
   } & Record<string, any>;
+
+  parentId?: string;
+  // 引用
+  quotaId?: string;
+  /**
+   * 角色
+   * @description 消息发送者的角色
+   */
+  role: LLMRoleType;
 }
 
 export type ChatMessageMap = Record<string, ChatMessage>;

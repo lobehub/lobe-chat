@@ -1,6 +1,6 @@
 export interface ChatState {
-  editingMessageId?: string;
   chatLoading: boolean;
+  editingMessageId?: string;
 }
 
 export const initialChatState: ChatState = {

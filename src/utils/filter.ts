@@ -3,7 +3,7 @@ import { BaseDataModel } from '@/types/meta';
 export const filterWithKeywords = <T extends BaseDataModel>(
   map: Record<string, T>,
   keywords: string,
-  extraSearchStr?: (item: T) => string | string[],
+  extraSearchString?: (item: T) => string | string[],
 ) => {
   if (!keywords) return map;
 
@@ -18,10 +18,9 @@ export const filterWithKeywords = <T extends BaseDataModel>(
       const defaultSearchKey = keyList.join('');
 
       let extraSearchKey: string = '';
-      if (extraSearchStr) {
-        const searchStr = extraSearchStr(item);
-        if (searchStr instanceof Array) extraSearchKey = searchStr.join('');
-        else extraSearchKey = searchStr;
+      if (extraSearchString) {
+        const searchString = extraSearchString(item);
+        extraSearchKey = Array.isArray(searchString) ? searchString.join('') : searchString;
       }
 
       return `${defaultSearchKey}${extraSearchKey}`.toLowerCase().includes(keywords.toLowerCase());

@@ -1,5 +1,6 @@
-import { ChatMessage } from '@/types/chatMessage';
 import { encode } from 'gpt-tokenizer';
+
+import { ChatMessage } from '@/types/chatMessage';
 
 import type { SessionStore } from '../../store';
 import { sessionSelectors } from '../session';
@@ -7,13 +8,13 @@ import { sessionSelectors } from '../session';
 const currentChatsSel = (s: SessionStore): ChatMessage[] => {
   const chat = sessionSelectors.currentChat(s);
   if (!chat) return [];
-  const chatArr = Object.values<ChatMessage>(chat.chats)
+  const chatArray = Object.values<ChatMessage>(chat.chats)
     // 首先按照时间顺序排序，越早的在越前面
     .sort((pre, next) => pre.createAt - next.createAt)
     // 过滤掉已归档的消息，归档消息不应该出现在聊天框中
     .filter((m) => !m.archive);
 
-  return chatArr;
+  return chatArray;
 };
 
 const systemRoleSel = (s: SessionStore): string | undefined => {
@@ -40,8 +41,8 @@ const systemRoleTokenCount = (s: SessionStore) => systemRoleTokens(s).length;
 export const chatSelectors = {
   currentChats: currentChatsSel,
   systemRole: systemRoleSel,
-  totalTokens,
-  totalTokenCount,
-  systemRoleTokens,
   systemRoleTokenCount,
+  systemRoleTokens,
+  totalTokenCount,
+  totalTokens,
 };

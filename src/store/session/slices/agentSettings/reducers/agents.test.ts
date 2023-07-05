@@ -1,5 +1,7 @@
-import { ChatAgentMap } from '@/types';
 import { Md5 } from 'ts-md5';
+
+import { ChatAgentMap } from '@/types';
+
 import { AgentDispatch, agentsReducer } from './agents';
 
 beforeEach(() => {
@@ -12,47 +14,47 @@ describe('agentsReducer', () => {
   it('should add a new agent', () => {
     const initialState = {
       '123': {
-        id: '123',
-        title: 'Default Agent',
+        avatar: '',
         content: '',
         hash: '',
-        avatar: '',
+        id: '123',
+        title: 'Default Agent',
       },
     };
 
     const next = agentsReducer(initialState, {
-      type: 'addAgent',
-      title: 'New Agent',
-      content: 'New Agent Content',
       avatar: 'New Agent Avatar',
+      content: 'New Agent Content',
+      title: 'New Agent',
+      type: 'addAgent',
     });
 
     expect(next).toEqual({
       ...initialState,
       'mocked-uuid': {
-        id: 'mocked-uuid',
-        title: 'New Agent',
+        avatar: 'New Agent Avatar',
         content: 'New Agent Content',
         hash: Md5.hashStr('New Agent Content'),
-        avatar: 'New Agent Avatar',
+        id: 'mocked-uuid',
         model: 'gpt-3.5-turbo',
+        title: 'New Agent',
       },
     });
   });
   it('should remove an agent', () => {
     const initialState = {
       default: {
-        id: 'default',
-        title: 'Default Agent',
+        avatar: '',
         content: '',
         hash: '',
-        avatar: '',
+        id: 'default',
+        title: 'Default Agent',
       },
     };
 
     const action: AgentDispatch = {
-      type: 'removeAgent',
       id: 'default',
+      type: 'removeAgent',
     };
 
     const expectedState: ChatAgentMap = {};
@@ -64,27 +66,27 @@ describe('agentsReducer', () => {
   it("should update an agent's avatar", () => {
     const initialState = {
       default: {
-        id: 'default',
-        title: 'Default Agent',
+        avatar: '',
         content: '',
         hash: '',
-        avatar: '',
+        id: 'default',
+        title: 'Default Agent',
       },
     };
     const action: AgentDispatch = {
-      type: 'updateAgentData',
       id: 'default',
       key: 'avatar',
+      type: 'updateAgentData',
       value: 'New Default Avatar',
     };
 
     const expectedState: ChatAgentMap = {
       default: {
-        id: 'default',
-        title: 'Default Agent',
+        avatar: 'New Default Avatar',
         content: '',
         hash: '',
-        avatar: 'New Default Avatar',
+        id: 'default',
+        title: 'Default Agent',
       },
     };
 
@@ -95,28 +97,28 @@ describe('agentsReducer', () => {
   it("should update an agent's title", () => {
     const initialState = {
       default: {
-        id: 'default',
-        title: 'Default Agent',
+        avatar: '',
         content: '',
         hash: '',
-        avatar: '',
+        id: 'default',
+        title: 'Default Agent',
       },
     };
 
     const action: AgentDispatch = {
-      type: 'updateAgentData',
       id: 'default',
       key: 'title',
+      type: 'updateAgentData',
       value: 'New Default Title',
     };
 
     const expectedState: ChatAgentMap = {
       default: {
-        id: 'default',
-        title: 'New Default Title',
+        avatar: '',
         content: '',
         hash: '',
-        avatar: '',
+        id: 'default',
+        title: 'New Default Title',
       },
     };
 
@@ -127,28 +129,28 @@ describe('agentsReducer', () => {
   it("should update an agent's content and hash", () => {
     const initialState = {
       default: {
-        id: 'default',
-        title: 'Default Agent',
+        avatar: '',
         content: '',
         hash: '',
-        avatar: '',
+        id: 'default',
+        title: 'Default Agent',
       },
     };
 
     const action: AgentDispatch = {
-      type: 'updateAgentData',
       id: 'default',
       key: 'content',
+      type: 'updateAgentData',
       value: 'New Default Content',
     };
 
     const expectedState: ChatAgentMap = {
       default: {
-        id: 'default',
-        title: 'Default Agent',
+        avatar: '',
         content: 'New Default Content',
         hash: Md5.hashStr('New Default Content'),
-        avatar: '',
+        id: 'default',
+        title: 'Default Agent',
       },
     };
 

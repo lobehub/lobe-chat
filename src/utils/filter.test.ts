@@ -1,4 +1,5 @@
 import { BaseDataModel } from '@/types/meta';
+
 import { filterWithKeywords } from './filter';
 
 describe('filterWithKeywords', () => {
@@ -6,17 +7,17 @@ describe('filterWithKeywords', () => {
     1: {
       id: '1',
       meta: {
-        title: 'hello world',
         description: 'test case',
         tag: ['a', 'b'],
+        title: 'hello world',
       },
     },
     2: {
       id: '2',
       meta: {
-        title: 'goodbye',
         description: 'hello world',
         tag: ['c', 'd'],
+        title: 'goodbye',
       },
     },
   };
@@ -37,17 +38,17 @@ describe('filterWithKeywords', () => {
       1: {
         id: '1',
         meta: {
-          title: 'hello world',
           description: 'test case',
           tag: ['a', 'b'],
+          title: 'hello world',
         },
       },
       2: {
         id: '2',
         meta: {
-          title: 'goodbye',
           description: 'hello world',
           tag: ['c', 'd'],
+          title: 'goodbye',
         },
       },
     });
@@ -59,48 +60,48 @@ describe('filterWithKeywords', () => {
       1: {
         id: '1',
         meta: {
-          title: 'hello world',
           description: 'test case',
           tag: ['a', 'b'],
+          title: 'hello world',
         },
       },
     });
   });
 
   it('should consider extraSearchStr in addition to title, description and tag properties if provided', () => {
-    const extraSearchStr = (item: BaseDataModel) => {
+    const extraSearchString = (item: BaseDataModel) => {
       return item.meta.avatar || '';
     };
     const data: Record<string, BaseDataModel> = {
       a: {
         id: 'a',
         meta: {
-          title: 'hello world',
+          avatar: 'xxx',
           description: 'test case',
           tag: ['a', 'b'],
-          avatar: 'xxx',
+          title: 'hello world',
         },
       },
       b: {
         id: 'b',
         meta: {
-          title: 'goodbye',
+          avatar: 'yyy',
           description: 'hello world',
           tag: ['c', 'd'],
-          avatar: 'yyy',
+          title: 'goodbye',
         },
       },
     };
 
-    const result = filterWithKeywords(data, 'yyy', extraSearchStr);
+    const result = filterWithKeywords(data, 'yyy', extraSearchString);
     expect(result).toEqual({
       b: {
         id: 'b',
         meta: {
-          title: 'goodbye',
+          avatar: 'yyy',
           description: 'hello world',
           tag: ['c', 'd'],
-          avatar: 'yyy',
+          title: 'goodbye',
         },
       },
     });
@@ -112,9 +113,9 @@ describe('filterWithKeywords', () => {
       1: {
         id: '1',
         meta: {
-          title: 'hello world',
           description: 'test case',
           tag: ['a', 'b'],
+          title: 'hello world',
         },
       },
     });

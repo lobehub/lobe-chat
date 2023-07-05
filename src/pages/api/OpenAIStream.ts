@@ -1,8 +1,9 @@
-import { ChatMessage } from '@/types/chatMessage';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { AIChatMessage, HumanChatMessage, SystemChatMessage } from 'langchain/schema';
 
-const isDev = process.env.NODE_ENV === 'development';
+import { ChatMessage } from '@/types/chatMessage';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
 const OPENAI_PROXY_URL = process.env.OPENAI_PROXY_URL;
 
 /**
@@ -10,13 +11,36 @@ const OPENAI_PROXY_URL = process.env.OPENAI_PROXY_URL;
  */
 export interface OpenAIStreamPayload {
   /**
-   * @title 模型名称
+   * @title 控制生成文本中的惩罚系数，用于减少重复性
+   * @default 0
    */
-  model: string;
+  frequency_penalty?: number;
+  /**
+   * @title 生成文本的最大长度
+   */
+  max_tokens?: number;
   /**
    * @title 聊天信息列表
    */
   messages: ChatMessage[];
+  /**
+   * @title 模型名称
+   */
+  model: string;
+  /**
+   * @title 返回的文本数量
+   */
+  n?: number;
+  /**
+   * @title 控制生成文本中的惩罚系数，用于减少主题的变化
+   * @default 0
+   */
+  presence_penalty?: number;
+  /**
+   * @title 是否开启流式请求
+   * @default true
+   */
+  stream?: boolean;
   /**
    * @title 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 0.5
@@ -27,45 +51,25 @@ export interface OpenAIStreamPayload {
    * @default 1
    */
   top_p?: number;
-  /**
-   * @title 控制生成文本中的惩罚系数，用于减少重复性
-   * @default 0
-   */
-  frequency_penalty?: number;
-  /**
-   * @title 控制生成文本中的惩罚系数，用于减少主题的变化
-   * @default 0
-   */
-  presence_penalty?: number;
-  /**
-   * @title 生成文本的最大长度
-   */
-  max_tokens?: number;
-  /**
-   * @title 是否开启流式请求
-   * @default true
-   */
-  stream?: boolean;
-  /**
-   * @title 返回的文本数量
-   */
-  n?: number;
 }
 
 export function OpenAIStream(payload: OpenAIStreamPayload) {
-  const { messages, ...params } = payload;
+  const { messages, ...parameters } = payload;
 
   // 将 payload 中的消息转换为 ChatOpenAI 所需的 HumanChatMessage、SystemChatMessage 和 AIChatMessage 类型
   const chatMessages = messages.map((m) => {
     switch (m.role) {
       default:
-      case 'user':
+      case 'user': {
         return new HumanChatMessage(m.content);
-      case 'system':
+      }
+      case 'system': {
         return new SystemChatMessage(m.content);
+      }
 
-      case 'assistant':
+      case 'assistant': {
         return new AIChatMessage(m.content);
+      }
     }
   });
 
@@ -81,10 +85,8 @@ export function OpenAIStream(payload: OpenAIStreamPayload) {
       const chat = new ChatOpenAI(
         {
           streaming: true,
-          ...params,
-          // 暂时设定不重试 ，后续看是否需要支持重试
-          maxRetries: 0,
-          verbose: true,
+          ...parameters,
+
           callbacks: [
             {
               handleLLMNewToken(token) {
@@ -100,8 +102,11 @@ export function OpenAIStream(payload: OpenAIStreamPayload) {
               },
             },
           ],
+          // 暂时设定不重试 ，后续看是否需要支持重试
+          maxRetries: 0,
+          verbose: true,
         },
-        isDev && OPENAI_PROXY_URL ? { basePath: OPENAI_PROXY_URL } : undefined,
+        isDevelopment && OPENAI_PROXY_URL ? { basePath: OPENAI_PROXY_URL } : undefined,
       );
 
       try {
@@ -109,9 +114,9 @@ export function OpenAIStream(payload: OpenAIStreamPayload) {
         await chat.call(chatMessages);
         // 完成后，关闭流
         controller.close();
-      } catch (e) {
+      } catch (error) {
         // 如果在执行过程中发生错误，向流发送错误
-        controller.error(e);
+        controller.error(error);
       }
     },
   });

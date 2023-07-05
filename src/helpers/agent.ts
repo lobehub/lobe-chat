@@ -1,6 +1,7 @@
+import { Md5 } from 'ts-md5';
+
 import { initialAgent } from '@/store/session/initialState';
 import { ChatAgent, ChatAgentMap } from '@/types';
-import { Md5 } from 'ts-md5';
 
 /**
  * 结合 agents 判断是否是已存在的 agent

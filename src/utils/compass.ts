@@ -3,13 +3,13 @@ import brotliPromise from 'brotli-wasm';
 /**
  * @title 字符串压缩器
  */
-export class StrCompressor {
+export class StringCompressor {
   /**
    * @ignore
    */
   private instance!: {
-    decompress(buf: Uint8Array): Uint8Array;
     compress(buf: Uint8Array, options?: any): Uint8Array;
+    decompress(buf: Uint8Array): Uint8Array;
   };
 
   async init(): Promise<void> {
@@ -21,8 +21,8 @@ export class StrCompressor {
    * @param str - 要压缩的字符串
    * @returns 压缩后的字符串
    */
-  compress(str: string): string {
-    const input = new TextEncoder().encode(str);
+  compress(string_: string): string {
+    const input = new TextEncoder().encode(string_);
 
     const compressedData = this.instance.compress(input);
 
@@ -34,8 +34,8 @@ export class StrCompressor {
    * @param str - 要解压缩的字符串
    * @returns 解压缩后的字符串
    */
-  decompress(str: string): string {
-    const compressedData = this.urlSafeBase64Decode(str);
+  decompress(string_: string): string {
+    const compressedData = this.urlSafeBase64Decode(string_);
 
     const decompressedData = this.instance.decompress(compressedData);
 
@@ -47,10 +47,10 @@ export class StrCompressor {
    * @param str - 要压缩的字符串
    * @returns Promise
    */
-  async compressAsync(str: string) {
+  async compressAsync(string_: string) {
     const brotli = await brotliPromise;
 
-    const input = new TextEncoder().encode(str);
+    const input = new TextEncoder().encode(string_);
 
     const compressedData = brotli.compress(input);
 
@@ -62,10 +62,10 @@ export class StrCompressor {
    * @param str - 要解压缩的字符串
    * @returns Promise
    */
-  async decompressAsync(str: string) {
+  async decompressAsync(string_: string) {
     const brotli = await brotliPromise;
 
-    const compressedData = this.urlSafeBase64Decode(str);
+    const compressedData = this.urlSafeBase64Decode(string_);
 
     const decompressedData = brotli.decompress(compressedData);
 
@@ -73,8 +73,8 @@ export class StrCompressor {
   }
 
   private urlSafeBase64Encode = (data: Uint8Array): string => {
-    const base64Str = btoa(String.fromCharCode(...data));
-    return base64Str.replaceAll('+', '_0_').replaceAll('/', '_').replace(/=+$/, '');
+    const base64String = btoa(String.fromCodePoint(...data));
+    return base64String.replaceAll('+', '_0_').replaceAll('/', '_').replace(/=+$/, '');
   };
 
   private urlSafeBase64Decode = (data: string): Uint8Array => {
@@ -83,12 +83,8 @@ export class StrCompressor {
       after += '=';
     }
 
-    return new Uint8Array(
-      atob(after)
-        .split('')
-        .map((c) => c.charCodeAt(0)),
-    );
+    return new Uint8Array([...atob(after)].map((c) => c.codePointAt(0)) as number[]);
   };
 }
 
-export const Compressor = new StrCompressor();
+export const Compressor = new StringCompressor();

@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import FolderPanel from '@/features/FolderPanel';
+
 import Header from './Header';
 import SessionList from './List';
 

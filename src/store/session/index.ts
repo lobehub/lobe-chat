@@ -1,27 +1,28 @@
 import { create } from 'zustand';
-import { devtools, persist, PersistOptions } from 'zustand/middleware';
+import { PersistOptions, devtools, persist } from 'zustand/middleware';
 
 import { Migration } from '@/migrations';
 
-import { createStore, SessionStore } from './store';
+import { SessionStore, createStore } from './store';
 
 type SessionPersist = Pick<SessionStore, 'sessions'>;
 
 const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
-  name: 'LOBE_CHAT',
-  version: Migration.targetVersion,
-
-  partialize: (s) => ({
-    sessions: s.sessions,
-  }),
-
   migrate: (persistedState: any, version) => {
     const { state } = Migration.migrate({ state: persistedState, version });
 
     return { ...persistedState, ...state };
   },
+  name: 'LOBE_CHAT',
+
+  partialize: (s) => ({
+    sessions: s.sessions,
+  }),
+
   // 手动控制 Hydration ，避免 ssr 报错
   skipHydration: true,
+
+  version: Migration.targetVersion,
 };
 
 export const useChatStore = create<SessionStore>()(
