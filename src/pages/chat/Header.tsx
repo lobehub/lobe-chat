@@ -19,9 +19,11 @@ const useStyles = createStyles(({ css, token }) => ({
 const Header = memo(() => {
   const theme = useTheme();
   const meta = useChatStore((s) => {
-    const chat = sessionSelectors.currentChat(s);
+    const chat = sessionSelectors.currentSession(s);
     return chat?.meta;
   }, shallow);
+
+  const [genShareUrl, toggleConfig] = useChatStore((s) => [s.genShareUrl, s.toggleConfig], shallow);
 
   const { styles } = useStyles();
   return (
@@ -44,9 +46,15 @@ const Header = memo(() => {
         </Flexbox>
       </Flexbox>
       <Flexbox horizontal gap={16}>
-        <ActionIcon title={'分享'} icon={Share2Icon} />
+        <ActionIcon
+          title={'分享'}
+          icon={Share2Icon}
+          onClick={() => {
+            genShareUrl();
+          }}
+        />
         <ActionIcon title={'归档'} icon={ArchiveIcon} />
-        <ActionIcon icon={MoreVerticalIcon} />
+        <ActionIcon icon={MoreVerticalIcon} onClick={toggleConfig} />
       </Flexbox>
     </Flexbox>
   );

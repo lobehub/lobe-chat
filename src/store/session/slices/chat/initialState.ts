@@ -9,10 +9,4 @@ export const initialChatState: ChatState = {
   // activeId: null,
   // searchKeywords: '',
   //
-  // // loading 中间态
-  // loading: {
-  //   summarizingTitle: false,
-  //   summarizingDescription: false,
-  //   pickingEmojiAvatar: false,
-  // },
 };

@@ -1,4 +1,4 @@
-import { ChatMessage } from '@/types/chatMessage';
+import { OpenAIChatMessage } from '@/types/openai';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { AIChatMessage, HumanChatMessage, SystemChatMessage } from 'langchain/schema';
 
@@ -16,7 +16,7 @@ export interface OpenAIStreamPayload {
   /**
    * @title 聊天信息列表
    */
-  messages: ChatMessage[];
+  messages: OpenAIChatMessage[];
   /**
    * @title 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 0.5
@@ -109,9 +109,9 @@ export function OpenAIStream(payload: OpenAIStreamPayload) {
         await chat.call(chatMessages);
         // 完成后，关闭流
         controller.close();
-      } catch (e) {
+      } catch (error) {
         // 如果在执行过程中发生错误，向流发送错误
-        controller.error(e);
+        controller.error(error);
       }
     },
   });

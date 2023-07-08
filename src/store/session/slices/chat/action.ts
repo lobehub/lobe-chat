@@ -1,21 +1,32 @@
 import { StateCreator } from 'zustand/vanilla';
 
 import { fetchChatModel } from '@/services/chatModel';
+import { SessionStore, chatSelectors, sessionSelectors } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
 import { FetchSSEOptions, fetchSSE } from '@/utils/fetch';
-
-import { SessionStore, chatSelectors, sessionSelectors } from '@/store/session';
 import { nanoid } from '@/utils/uuid';
+
 import { MessageDispatch, messagesReducer } from './messageReducer';
 
 const LOADING_FLAT = '...';
 
 export interface ChatAction {
+  clearMessage: () => void;
   /**
-   * @title 发送消息
-   * @returns Promise<void>
+   * @title 派发消息
+   * @param payload - 消息分发
+   * @returns void
    */
-  sendMessage: (text: string) => Promise<void>;
+  dispatchMessage: (payload: MessageDispatch) => void;
+
+  generateMessage: (messages: ChatMessage[], options: FetchSSEOptions) => Promise<void>;
+
+  /**
+   * @title 处理消息编辑
+   * @param index - 消息索引或空
+   * @returns void
+   */
+  handleMessageEditing: (messageId: string | undefined) => void;
   /**
    * @title 重发消息
    * @param index - 消息索引
@@ -23,40 +34,31 @@ export interface ChatAction {
    */
   resendMessage: (id: string) => Promise<void>;
 
-  generateMessage: (messages: ChatMessage[], options: FetchSSEOptions) => Promise<void>;
-
   /**
-   * @title 派发消息
-   * @param payload - 消息分发
-   * @returns void
+   * @title 发送消息
+   * @returns Promise<void>
    */
-  dispatchMessage: (payload: MessageDispatch) => void;
-  /**
-   * @title 处理消息编辑
-   * @param index - 消息索引或空
-   * @returns void
-   */
-  handleMessageEditing: (messageId: string | undefined) => void;
-
-  clearMessage: () => void;
+  sendMessage: (text: string) => Promise<void>;
 }
 
-export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', never]], [], ChatAction> = (
-  set,
-  get,
-) => ({
+export const createChatSlice: StateCreator<
+  SessionStore,
+  [['zustand/devtools', never]],
+  [],
+  ChatAction
+> = (set, get) => ({
+  clearMessage: () => {
+    get().dispatchMessage({ type: 'resetMessages' });
+  },
+
   dispatchMessage: (payload) => {
     const { activeId } = get();
-    const session = sessionSelectors.currentChat(get());
+    const session = sessionSelectors.currentSession(get());
     if (!activeId || !session) return;
 
     const chats = messagesReducer(session.chats, payload);
 
-    get().dispatchSession({ type: 'updateSessionChat', chats, id: activeId });
-  },
-
-  handleMessageEditing: (messageId) => {
-    set({ editingMessageId: messageId });
+    get().dispatchSession({ chats, id: activeId, type: 'updateSessionChat' });
   },
 
   generateMessage: async (messages, options) => {
@@ -69,46 +71,8 @@ export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', n
     set({ chatLoading: false });
   },
 
-  sendMessage: async (message) => {
-    const { dispatchMessage, generateMessage } = get();
-    const session = sessionSelectors.currentChat(get());
-    if (!session || !message) return;
-
-    const userId = nanoid();
-    const assistantId = nanoid();
-    dispatchMessage({ type: 'addMessage', role: 'user', message, id: userId });
-
-    // 先拿到当前的 messages
-    const messages = chatSelectors.currentChats(get());
-
-    // 再添加一个空的信息用于放置 ai 响应，注意顺序不能反
-    // 因为如果顺序反了，messages 中将包含新增的 ai message
-    dispatchMessage({
-      type: 'addMessage',
-      role: 'assistant',
-      message: LOADING_FLAT,
-      id: assistantId,
-      parentId: userId,
-    });
-
-    let output = '';
-    // 生成 ai message
-    await generateMessage(messages, {
-      onMessageHandle: (text) => {
-        output += text;
-
-        dispatchMessage({ type: 'updateMessage', id: assistantId, key: 'content', value: output });
-
-        // 滚动到最后一条消息
-        const item = document.getElementById('for-loading');
-        if (!item) return;
-
-        item.scrollIntoView({ behavior: 'smooth' });
-      },
-      onErrorHandle: (error) => {
-        dispatchMessage({ type: 'updateMessage', id: assistantId, key: 'error', value: error });
-      },
-    });
+  handleMessageEditing: (messageId) => {
+    set({ editingMessageId: messageId });
   },
 
   resendMessage: async (id) => {
@@ -118,7 +82,7 @@ export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', n
       // generateMessage
     } = get();
 
-    const session = sessionSelectors.currentChat(get());
+    const session = sessionSelectors.currentSession(get());
 
     if (!session) return;
 
@@ -131,7 +95,7 @@ export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', n
     // 这种情况下，相当于用户重新发送消息
     if (session.chats.length === index && message.role === 'user') {
       // 发送消息的时候会把传入的消息 message 新建一条，因此在发送前先把这条消息在记录中删除
-      dispatchMessage({ type: 'deleteMessage', id: message.id });
+      dispatchMessage({ id: message.id, type: 'deleteMessage' });
       await sendMessage(message.content);
       return;
     }
@@ -143,23 +107,28 @@ export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', n
     const userMessage = contextMessages.at(-1)?.content;
     if (!userMessage) return;
 
-    const targetMsg = session.chats[index];
+    const targetMessage = session.chats[index];
 
     // 如果不是 assistant 的消息，那么需要额外插入一条消息
-    if (targetMsg.role !== 'assistant') {
+    if (targetMessage.role === 'assistant') {
+      // 保存之前的消息为历史消息
+      // dispatchMessage({ type: 'updateMessage', message: botPrevMsg, index });
+      // dispatchMessage({ type: 'updateMessage', message: LOADING_FLAT, index });
+    } else {
       // dispatchMessage({
       //   type: 'insertMessage',
       //   index,
       //   message: { role: 'assistant', content: LOADING_FLAT },
       // });
-    } else {
-      // 保存之前的消息为历史消息
-      // dispatchMessage({ type: 'updateMessage', message: botPrevMsg, index });
-      // dispatchMessage({ type: 'updateMessage', message: LOADING_FLAT, index });
     }
 
     // 重置错误信息
-    dispatchMessage({ type: 'updateMessage', value: undefined, key: 'error', id: targetMsg.id });
+    dispatchMessage({
+      id: targetMessage.id,
+      key: 'error',
+      type: 'updateMessage',
+      value: undefined,
+    });
 
     // 开始更新消息
 
@@ -174,7 +143,45 @@ export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', n
     // });
   },
 
-  clearMessage: () => {
-    get().dispatchMessage({ type: 'resetMessages' });
+  sendMessage: async (message) => {
+    const { dispatchMessage, generateMessage } = get();
+    const session = sessionSelectors.currentSession(get());
+    if (!session || !message) return;
+
+    const userId = nanoid();
+    const assistantId = nanoid();
+    dispatchMessage({ id: userId, message, role: 'user', type: 'addMessage' });
+
+    // 先拿到当前的 messages
+    const messages = chatSelectors.currentChats(get());
+
+    // 再添加一个空的信息用于放置 ai 响应，注意顺序不能反
+    // 因为如果顺序反了，messages 中将包含新增的 ai message
+    dispatchMessage({
+      id: assistantId,
+      message: LOADING_FLAT,
+      parentId: userId,
+      role: 'assistant',
+      type: 'addMessage',
+    });
+
+    let output = '';
+    // 生成 ai message
+    await generateMessage(messages, {
+      onErrorHandle: (error) => {
+        dispatchMessage({ id: assistantId, key: 'error', type: 'updateMessage', value: error });
+      },
+      onMessageHandle: (text) => {
+        output += text;
+
+        dispatchMessage({ id: assistantId, key: 'content', type: 'updateMessage', value: output });
+
+        // 滚动到最后一条消息
+        const item = document.querySelector('#for-loading');
+        if (!item) return;
+
+        item.scrollIntoView({ behavior: 'smooth' });
+      },
+    });
   },
 });

@@ -4,12 +4,15 @@ import { LobeAgentSession } from '@/types/session';
 import { MetaData } from '@/types/meta';
 import { filterWithKeywords } from '@/utils/filter';
 
-import { initLobeSessionAgent } from '../initialState';
+import { initLobeSession } from '../initialState';
 
 export const currentSessionSel = (s: SessionStore): LobeAgentSession | undefined => {
   if (!s.activeId) return;
 
   return s.sessions[s.activeId];
+};
+export const currentSessionSafe = (s: SessionStore): LobeAgentSession => {
+  return currentSessionSel(s) || initLobeSession;
 };
 
 export const chatListSel = (s: SessionStore) => {
@@ -27,7 +30,7 @@ export const getSessionById =
   (s: SessionStore): LobeAgentSession => {
     const session = s.sessions[id];
 
-    if (!session) return initLobeSessionAgent;
+    if (!session) return initLobeSession;
     return session;
   };
 

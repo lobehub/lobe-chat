@@ -25,6 +25,26 @@ interface LobeSessionBase extends BaseDataModel {
   chats: ChatMessageMap;
 }
 
+export interface LobeAgentConfig {
+  /**
+   * 角色所使用的语言模型
+   * @default gpt-3.5-turbo
+   */
+  model: LanguageModel;
+  /**
+   * 语言模型参数
+   */
+  params: LLMParams;
+  /**
+   * 系统角色
+   */
+  systemRole: string;
+  /**
+   * 语言模型示例
+   */
+  example?: LLMExample;
+}
+
 /**
  * Lobe Agent会话
  */
@@ -33,25 +53,7 @@ export interface LobeAgentSession extends LobeSessionBase {
   /**
    * 语言模型角色设定
    */
-  config: {
-    /**
-     * 角色所使用的语言模型
-     * @default gpt-3.5-turbo
-     */
-    model: LanguageModel;
-    /**
-     * 语言模型参数
-     */
-    params: LLMParams;
-    /**
-     * 系统角色
-     */
-    systemRole: string;
-    /**
-     * 语言模型示例
-     */
-    example?: LLMExample;
-  };
+  config: LobeAgentConfig;
 }
 
 export type LobeSessions = Record<string, LobeAgentSession>;

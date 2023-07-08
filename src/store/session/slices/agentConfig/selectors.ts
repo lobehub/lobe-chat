@@ -4,13 +4,13 @@ import { LanguageModel } from '@/types/llm';
 import { sessionSelectors } from '../session';
 
 const currentAgentTitleSel = (s: SessionStore) => {
-  const session = sessionSelectors.currentChat(s);
+  const session = sessionSelectors.currentSession(s);
 
   return session?.meta.title;
 };
 
 const currentAgentConfig = (s: SessionStore) => {
-  const session = sessionSelectors.currentChat(s);
+  const session = sessionSelectors.currentSession(s);
 
   return session?.config;
 };

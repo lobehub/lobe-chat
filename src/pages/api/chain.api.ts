@@ -1,4 +1,5 @@
-import { LangChainParams } from '@/types/langchain';
+import { LangChainParameters } from '@/types/langchain';
+
 import { LangChainStream } from './LangChainStream';
 
 if (!process.env.OPENAI_API_KEY) {
@@ -10,7 +11,7 @@ export const config = {
 };
 
 export default async function handler(request: Request) {
-  const payload = (await request.json()) as LangChainParams;
+  const payload = (await request.json()) as LangChainParameters;
 
   return new Response(LangChainStream(payload));
 }

@@ -1,6 +1,6 @@
 import { ChatMessageMap } from '@/types/chatMessage';
 import { MetaData } from '@/types/meta';
-import { LobeAgentSession, LobeSessions } from '@/types/session';
+import { LobeAgentConfig, LobeAgentSession, LobeSessions } from '@/types/session';
 import { produce } from 'immer';
 
 /**
@@ -43,7 +43,18 @@ interface UpdateSessionMeta {
   value: any;
 }
 
-export type SessionDispatch = AddSession | UpdateSessionChat | RemoveSession | UpdateSessionMeta;
+interface UpdateSessionAgentConfig {
+  type: 'updateSessionConfig';
+  id: string;
+  config: Partial<LobeAgentConfig>;
+}
+
+export type SessionDispatch =
+  | AddSession
+  | UpdateSessionChat
+  | RemoveSession
+  | UpdateSessionMeta
+  | UpdateSessionAgentConfig;
 
 export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): LobeSessions => {
   switch (payload.type) {
@@ -73,6 +84,15 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
         if (!chat) return;
 
         chat.chats = payload.chats;
+      });
+
+    case 'updateSessionConfig':
+      return produce(state, (draft) => {
+        const { id, config } = payload;
+        const chat = draft[id];
+        if (!chat) return;
+
+        chat.config = { ...chat.config, ...config };
       });
 
     default:

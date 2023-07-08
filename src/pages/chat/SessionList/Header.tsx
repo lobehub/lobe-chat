@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { useChatStore } from '@/store/session';
+import Link from 'next/link';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
@@ -25,7 +26,9 @@ const Header = memo(() => {
   return (
     <Flexbox gap={16} padding={'16px 12px 0 16px'} className={styles.top}>
       <Flexbox horizontal distribution={'space-between'}>
-        <Logo type={'text'} size={36} className={styles.logo} />
+        <Link href={'/'}>
+          <Logo type={'text'} size={36} className={styles.logo} />
+        </Link>
         <ActionIcon title={'新对话'} icon={Plus} style={{ minWidth: 32 }} onClick={createSession} />
       </Flexbox>
       <SearchBar

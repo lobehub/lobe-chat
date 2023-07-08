@@ -5,7 +5,7 @@ import type { SessionStore } from '../../store';
 import { sessionSelectors } from '../session';
 
 const currentChatsSel = (s: SessionStore): ChatMessage[] => {
-  const chat = sessionSelectors.currentChat(s);
+  const chat = sessionSelectors.currentSession(s);
   if (!chat) return [];
   const chatArr = Object.values<ChatMessage>(chat.chats)
     // 首先按照时间顺序排序，越早的在越前面

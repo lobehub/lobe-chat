@@ -7,7 +7,7 @@ import { chatSelectors, useChatStore } from '@/store/session';
 const List = () => {
   const data = useChatStore(chatSelectors.currentChats, isEqual);
 
-  return <ChatList data={data} />;
+  return <ChatList data={data}   />;
 };
 
 export default memo(List);

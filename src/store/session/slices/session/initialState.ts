@@ -1,14 +1,7 @@
 import { LanguageModel } from '@/types/llm';
-import { LobeAgentSession } from '@/types/session';
-
-export interface SessionLoadingState {
-  summarizingTitle: boolean;
-  summarizingDescription: boolean;
-  pickingEmojiAvatar: boolean;
-}
+import { LobeAgentConfig, LobeAgentSession, LobeSessionType } from '@/types/session';
 
 export interface SessionState {
-  sessions: Record<string, LobeAgentSession>;
   /**
    * @title 当前活动的会话
    * @description 当前正在编辑或查看的会话
@@ -16,30 +9,28 @@ export interface SessionState {
    */
   activeId: string | null;
   searchKeywords: string;
-  loading: SessionLoadingState;
+  sessions: Record<string, LobeAgentSession>;
 }
 
-export const initLobeSessionAgent: LobeAgentSession = {
-  id: '',
-  config: {
-    model: LanguageModel.GPT3_5,
-    systemRole: '',
-    params: { temperature: 0.6 },
-  },
-  meta: {},
+export const initialLobeAgentConfig: LobeAgentConfig = {
+  model: LanguageModel.GPT3_5,
+  params: { temperature: 0.6 },
+  systemRole: '',
+};
+
+export const initLobeSession: LobeAgentSession = {
   chats: {},
+  config: initialLobeAgentConfig,
+  createAt: Date.now(),
+  id: '',
+  meta: {},
+  type: LobeSessionType.Agent,
+  updateAt: Date.now(),
 };
 
 export const initialSessionState: SessionState = {
-  sessions: {},
-
   activeId: null,
-  searchKeywords: '',
 
-  // loading 中间态
-  loading: {
-    summarizingTitle: false,
-    summarizingDescription: false,
-    pickingEmojiAvatar: false,
-  },
+  searchKeywords: '',
+  sessions: {},
 };

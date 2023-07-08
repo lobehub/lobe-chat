@@ -7,7 +7,6 @@ import { LanguageModel } from '@/types/llm';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 import { uuid } from '@/utils/uuid';
 
-import { SessionLoadingState } from './initialState';
 import { SessionDispatch, sessionsReducer } from './reducers/session';
 import { sessionSelectors } from './selectors';
 
@@ -43,8 +42,6 @@ export interface SessionAction {
    * @returns 压缩后的消息
    */
   genShareUrl: () => string;
-
-  updateLoadingState: (key: keyof SessionLoadingState, value: boolean) => void;
 }
 
 export const createSessionSlice: StateCreator<SessionStore, [['zustand/devtools', never]], [], SessionAction> = (
@@ -102,14 +99,10 @@ export const createSessionSlice: StateCreator<SessionStore, [['zustand/devtools'
   },
 
   genShareUrl: () => {
-    const session = sessionSelectors.currentChat(get());
+    const session = sessionSelectors.currentSession(get());
     if (!session) return '';
 
     const agent = session.config;
     return genShareMessagesUrl(session.chats, agent.systemRole);
-  },
-
-  updateLoadingState: (key, value) => {
-    set({ loading: { ...get().loading, [key]: value } });
   },
 });

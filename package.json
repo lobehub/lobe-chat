@@ -88,7 +88,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^17",
-    "@lobehub/lint": "latest",
+    "@lobehub/lint": "^1",
     "@next/eslint-plugin-next": "^13",
     "@testing-library/jest-dom": "^5",
     "@testing-library/react": "^14",

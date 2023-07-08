@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import Config from './Config';
 
 import { sessionSelectors, useChatStore } from '@/store/session';
 import Conversation from './Conversation';
@@ -13,7 +14,7 @@ import Sidebar from './Sidebar';
 
 const ChatLayout = () => {
   const [title] = useChatStore((s) => {
-    const context = sessionSelectors.currentChat(s);
+    const context = sessionSelectors.currentSession(s);
     return [context?.meta.title];
   }, isEqual);
 
@@ -41,8 +42,9 @@ const ChatLayout = () => {
         <Sessions />
         <Flexbox flex={1}>
           <Header />
-          <Flexbox style={{ position: 'relative', height: 'calc(100vh - 64px)' }}>
+          <Flexbox id={'lobe-conversion-container'} style={{ position: 'relative', height: 'calc(100vh - 64px)' }}>
             <Conversation />
+            <Config />
           </Flexbox>
         </Flexbox>
       </Flexbox>
