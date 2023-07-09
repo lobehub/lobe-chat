@@ -6,10 +6,9 @@ config.extends.push('plugin:@next/next/recommended');
 module.exports = {
   ...config,
   rules: {
+    ...config.rules,
     'typescript-sort-keys/interface': 'off',
     'unicorn/filename-case': 'off',
-    'unicorn/prevent-abbreviations': 'off',
     'unicorn/switch-case-braces': 'off',
-    'unicorn/prefer-module': 'off',
   },
 };
