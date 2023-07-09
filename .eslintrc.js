@@ -10,5 +10,6 @@ module.exports = {
     'react/jsx-sort-props': 'off',
     'sort-keys-fix/sort-keys-fix': 'off',
     'typescript-sort-keys/interface': 'off',
+    'unicorn/switch-case-braces': 'off',
   },
 };
