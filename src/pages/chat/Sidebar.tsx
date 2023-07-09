@@ -16,11 +16,7 @@ const Sidebar = memo(() => {
           <ActionIcon icon={Album} size="large" active={tab === 'market'} onClick={() => setTab('market')} />
         </>
       }
-      bottomActions={
-        <>
-          <ActionIcon icon={Settings2} />
-        </>
-      }
+      bottomActions={<ActionIcon icon={Settings2} />}
     />
   );
 });
