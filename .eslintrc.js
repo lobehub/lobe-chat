@@ -7,8 +7,8 @@ module.exports = {
   ...config,
   rules: {
     ...config.rules,
+    'react/jsx-sort-props': 'off',
+    'sort-keys-fix/sort-keys-fix': 'off',
     'typescript-sort-keys/interface': 'off',
-    'unicorn/filename-case': 'off',
-    'unicorn/switch-case-braces': 'off',
   },
 };
