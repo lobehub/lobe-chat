@@ -20,8 +20,7 @@ export const filterWithKeywords = <T extends BaseDataModel>(
       let extraSearchKey: string = '';
       if (extraSearchStr) {
         const searchStr = extraSearchStr(item);
-        if (searchStr instanceof Array) extraSearchKey = searchStr.join('');
-        else extraSearchKey = searchStr;
+        extraSearchKey = Array.isArray(searchStr) ? searchStr.join('') : searchStr;
       }
 
       return `${defaultSearchKey}${extraSearchKey}`.toLowerCase().includes(keywords.toLowerCase());

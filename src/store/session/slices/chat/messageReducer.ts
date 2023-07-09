@@ -71,6 +71,6 @@ export const messagesReducer = (state: ChatMessageMap, payload: MessageDispatch)
       return {};
 
     default:
-      throw Error('暂未实现的 type，请检查 reducer');
+      throw new Error('暂未实现的 type，请检查 reducer');
   }
 };

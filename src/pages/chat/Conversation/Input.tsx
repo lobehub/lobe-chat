@@ -30,7 +30,7 @@ const ChatInput = () => {
       onSizeChange={(_, size) => {
         if (!size) return;
         useSettings.setState({
-          inputHeight: typeof size.height === 'string' ? parseInt(size.height) : size.height,
+          inputHeight: typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
         });
       }}
     >

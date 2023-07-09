@@ -1,3 +1,5 @@
-import Session from './[id].page';
 
-export default Session;
+
+
+
+export {default} from './[id].page';

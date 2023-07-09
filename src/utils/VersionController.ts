@@ -46,12 +46,12 @@ export class VersionController<T> {
   migrate(data: MigrationData<T>): MigrationData<T> {
     let nextData = data;
     const targetVersion = this.targetVersion || this.migrations.length;
-    if (typeof data.version === 'undefined') throw Error('导入数据缺少版本号，请检查文件后重试');
+    if (data.version === undefined) throw new Error('导入数据缺少版本号，请检查文件后重试');
     const currentVersion = data.version;
 
     for (let i = currentVersion || 0; i < targetVersion; i++) {
       const migration = this.migrations.find((m) => m.version === i);
-      if (!migration) throw Error('程序出错');
+      if (!migration) throw new Error('程序出错');
 
       nextData = migration.migrate(nextData);
 

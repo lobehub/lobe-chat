@@ -1,12 +1,13 @@
-import { useSettings } from '@/store/settings';
 import isEqual from 'fast-deep-equal';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import Config from './Config';
 
 import { sessionSelectors, useChatStore } from '@/store/session';
+import { useSettings } from '@/store/settings';
+
+import Config from './Config';
 import Conversation from './Conversation';
 import Header from './Header';
 import { Sessions } from './SessionList';

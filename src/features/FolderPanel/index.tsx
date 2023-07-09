@@ -29,7 +29,7 @@ export default ({ children }: PropsWithChildren) => {
       onSizeChange={(_, size) => {
         if (!size) return;
 
-        const nextWidth = typeof size.width === 'string' ? parseInt(size.width) : size.width;
+        const nextWidth = typeof size.width === 'string' ? Number.parseInt(size.width) : size.width;
 
         if (isEqual(nextWidth, sessionsWidth)) return;
 

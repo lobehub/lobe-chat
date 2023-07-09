@@ -23,7 +23,17 @@ const Header = memo(() => {
     return chat?.meta;
   }, shallow);
 
-  const [genShareUrl, toggleConfig] = useChatStore((s) => [s.genShareUrl, s.toggleConfig], shallow);
+  const [
+    // genShareUrl,
+
+    toggleConfig,
+  ] = useChatStore(
+    (s) => [
+      // s.genShareUrl,
+      s.toggleConfig,
+    ],
+    shallow,
+  );
 
   const { styles } = useStyles();
   return (
@@ -50,7 +60,7 @@ const Header = memo(() => {
           title={'分享'}
           icon={Share2Icon}
           onClick={() => {
-            genShareUrl();
+            // genShareUrl();
           }}
         />
         <ActionIcon title={'归档'} icon={ArchiveIcon} />

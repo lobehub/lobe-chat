@@ -1,14 +1,12 @@
 import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
-import { genShareMessagesUrl } from '@/helpers/url';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 import { uuid } from '@/utils/uuid';
 
 import { SessionDispatch, sessionsReducer } from './reducers/session';
-import { sessionSelectors } from './selectors';
 
 export interface SessionAction {
   /**
@@ -41,7 +39,7 @@ export interface SessionAction {
    * 生成压缩后的消息
    * @returns 压缩后的消息
    */
-  genShareUrl: () => string;
+  // genShareUrl: () => string;
 }
 
 export const createSessionSlice: StateCreator<SessionStore, [['zustand/devtools', never]], [], SessionAction> = (
@@ -98,11 +96,11 @@ export const createSessionSlice: StateCreator<SessionStore, [['zustand/devtools'
     Router.push(`/chat/${sessionId}`);
   },
 
-  genShareUrl: () => {
-    const session = sessionSelectors.currentSession(get());
-    if (!session) return '';
-
-    const agent = session.config;
-    return genShareMessagesUrl(session.chats, agent.systemRole);
-  },
+  // genShareUrl: () => {
+  //   const session = sessionSelectors.currentSession(get());
+  //   if (!session) return '';
+  //
+  //   const agent = session.config;
+  //   return genShareMessagesUrl(session.chats, agent.systemRole);
+  // },
 });

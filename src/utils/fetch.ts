@@ -1,6 +1,6 @@
-import { notification } from '@/layout';
+// import { notification } from '@/layout';
 import { fetchChatModel } from '@/services/chatModel';
-import { ChatMessageError } from '@/types';
+import { ChatMessageError } from '@/types/chatMessage';
 
 const codeMessage: Record<number, string> = {
   200: '成功获取数据，服务已响应',
@@ -38,6 +38,7 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
     const chatMessageError: ChatMessageError = {
       message: codeMessage[response.status],
       status: response.status,
+      type: 'general',
     };
 
     options.onErrorHandle?.(chatMessageError);
@@ -91,26 +92,20 @@ interface FetchAITaskResultParams<T> {
 
 export const fetchAIFactory =
   <T>(fetcher: (params: T, signal?: AbortSignal) => Promise<Response>) =>
-  async ({
-    params,
-    onMessageHandle,
-    onError,
-    onLoadingChange,
-    abortController,
-  }: FetchAITaskResultParams<T>) => {
+  async ({ params, onMessageHandle, onError, onLoadingChange, abortController }: FetchAITaskResultParams<T>) => {
     const errorHandle = (error: Error) => {
       onLoadingChange?.(false);
       if (abortController?.signal.aborted) {
-        notification.primaryInfo({
-          message: '已中断当前节点的执行任务',
-        });
+        // notification.primaryInfo({
+        //   message: '已中断当前节点的执行任务',
+        // });
         return;
       }
 
-      notification?.error({
-        message: `请求失败(${error.message})`,
-        placement: 'bottomRight',
-      });
+      // notification?.error({
+      //   message: `请求失败(${error.message})`,
+      //   placement: 'bottomRight',
+      // });
       onError?.(error);
     };
 
