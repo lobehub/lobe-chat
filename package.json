@@ -51,7 +51,7 @@
     "semantic-release-config-gitmoji": "^1",
     "stylelint": "^15",
     "stylelint-config-clean-order": "^5",
-    "stylelint-config-recommended": "^12",
+    "stylelint-config-recommended": "^13",
     "stylelint-order": "^6",
     "typescript": "^5",
     "vitest": "latest"
