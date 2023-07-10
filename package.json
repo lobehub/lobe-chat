@@ -44,7 +44,7 @@
     "next-pwa": "^5",
     "node-fetch": "^3",
     "postcss-styled-syntax": "^0.4",
-    "prettier": "^2",
+    "prettier": "^3",
     "prettier-plugin-organize-imports": "^3",
     "prettier-plugin-packagejson": "^2",
     "semantic-release": "^21",
