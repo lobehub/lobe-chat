@@ -1,30 +1,45 @@
 <a name="readme-top"></a>
 
 <div align="center">
-  
-<img width="160" src="https://raw.githubusercontent.com/lobehub/.github/main/profile/Logo.webp">
+
+<img height="120" src="https://npm.elemecdn.com/@lobehub/assets-logo@1.0.0/assets/logo-3d.webp">
+<img height="120" src="https://gw.alipayobjects.com/zos/kitchen/qJ3l3EPsdW/split.svg">
+<img height="120" src="https://npm.elemecdn.com/fluentui-emoji/icons/modern/robot.svg">
 
 <h1>Lobe Chat</h1>
 
-Lobe Chat is an open-source chatgpt client
-  
+Lobe Chat is an open-source chatbot client using LangChain
+
+Typescript and Next.js
+
 [Changelog](./CHANGELOG.md) · [Report Bug][issues-url] · [Request Feature][issues-url]
-  
+
 <!-- SHIELD GROUP -->
 
 [![release][release-shield]][release-url]
 [![releaseDate][release-date-shield]][release-date-url]
 [![ciTest][ci-test-shield]][ci-test-url]
-[![ciRelease][ci-release-shield]][ci-release-url]
-<br/>
+[![ciRelease][ci-release-shield]][ci-release-url] <br/>
 [![contributors][contributors-shield]][contributors-url]
 [![forks][forks-shield]][forks-url]
 [![stargazers][stargazers-shield]][stargazers-url]
 [![issues][issues-shield]][issues-url]
-  
-![](https://github.com/othneildrew/Best-README-Template/raw/master/images/screenshot.png)
+
+![](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 </div>
+
+<details>
+<summary><kbd>Table of contents</kbd></summary>
+
+#### TOC
+
+- [⌨️ Local Development](#️-local-development)
+- [🤝 Contributing](#-contributing)
+
+####
+
+</details>
 
 ## ⌨️ Local Development
 
@@ -37,8 +52,8 @@ Or clone it for local development:
 ```bash
 $ git clone https://github.com/lobehub/lobe-chat.git
 $ cd canisminor-template
-$ npm install
-$ npm start
+$ pnpm install
+$ pnpm start
 ```
 
 <div align="right">
@@ -46,7 +61,6 @@ $ npm start
 [![][back-to-top]](#readme-top)
 
 </div>
-
 
 ## 🤝 Contributing
 
@@ -76,11 +90,11 @@ $ npm start
 </div>
 
 ---
+
 #### 📝 License
 
 Copyright © 2023 [LobeHub][profile-url]. <br />
-This project is [MIT](./LICENSE) licensed. 
-
+This project is [MIT](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 

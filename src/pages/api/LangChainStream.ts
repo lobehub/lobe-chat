@@ -81,9 +81,9 @@ export function LangChainStream(payload: LangChainParams) {
         await chain.call(vars);
         // 完成后，关闭流
         controller.close();
-      } catch (e) {
+      } catch (error) {
         // 如果在执行过程中发生错误，向流发送错误
-        controller.error(e);
+        controller.error(error);
       }
     },
   });

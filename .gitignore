@@ -1,29 +1,47 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Gitignore for LobeHub
+################################################################
+
+# general
+.DS_Store
+.idea
+.vscode
+.history
+.temp
+.env.local
+venv
+temp
+tmp
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+node_modules
+*.log
+*.lock
+package-lock.json
 
-# testing
-/coverage
-.idea
-
-# next.js
-/.next/
-/out/
+# ci
+coverage
+.coverage
+.eslintcache
+.stylelintcache
 
 # production
-/build
+dist
+es
+lib
+logs
+test-output
+
+# umi
+.umi
+.umi-production
+.umi-test
+.dumi/tmp*
+
+# husky
+.husky/prepare-commit-msg
 
 # misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# add other ignore file below
 
 # local env files
 .env*.local
@@ -34,3 +52,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.next
+.env

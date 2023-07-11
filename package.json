@@ -1,11 +1,31 @@
 {
   "name": "@lobehub/chat",
   "version": "1.1.0",
-  "private": true,
+  "description": "Lobe Chat is an open-source chatbot client using LangChain, Typescript and Next.js",
+  "keywords": [
+    "chatbot",
+    "ChatGPT",
+    "LangChain",
+    "typescript",
+    "Next.js"
+  ],
+  "homepage": "https://github.com/lobehub/lobe-chat",
+  "bugs": {
+    "url": "https://github.com/lobehub/lobe-chat/issues/new"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lobehub/lobe-chat.git"
+  },
+  "license": "MIT",
+  "author": "LobeHub <i@lobehub.com>",
+  "sideEffects": false,
   "scripts": {
     "build": "next build",
     "dev": "PORT=3010 next dev",
-    "lint": "next lint && npm run ts-check && npm run stylelint",
+    "lint": "eslint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
+    "lint:md": "remark . --quiet --frail --output",
+    "lint:style": "stylelint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
     "prepare": "husky install",
     "prettier": "prettier -c --write \"**/**\"",
     "release": "semantic-release",
@@ -14,17 +34,61 @@
     "test": "vitest --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "test:update": "vitest -u",
-    "ts-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit"
+  },
+  "lint-staged": {
+    "*.md": [
+      "remark --quiet --output --",
+      "prettier --write --no-error-on-unmatched-pattern"
+    ],
+    "*.json": [
+      "prettier --write --no-error-on-unmatched-pattern"
+    ],
+    "*.{js,jsx}": [
+      "prettier --write",
+      "stylelint --fix",
+      "eslint --fix"
+    ],
+    "*.{ts,tsx}": [
+      "prettier --parser=typescript --write",
+      "stylelint --fix",
+      "eslint --fix"
+    ]
   },
   "dependencies": {
-    "@lobehub/ui": "^1",
+    "@ant-design/colors": "^7",
+    "@ant-design/icons": "^5",
+    "@commitlint/cli": "^17",
+    "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",
+    "ahooks": "^3",
+    "antd": "^5",
+    "antd-style": "^3",
+    "brotli-wasm": "^1",
+    "chroma-js": "^2",
+    "fast-deep-equal": "^3",
+    "gpt-tokenizer": "^2",
+    "i18next": "^23",
+    "immer": "^10",
     "langchain": "latest",
-    "next": "^13",
+    "lodash-es": "^4",
+    "lucide-react": "latest",
+    "nanoid": "^4",
+    "next": "13.4.7",
+    "polished": "^4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hotkeys-hook": "^4",
+    "react-i18next": "^13",
+    "react-layout-kit": "^1",
+    "swr": "^2",
+    "ts-md5": "^1",
+    "zustand": "^4",
+    "zustand-utils": "^1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17",
+    "@lobehub/lint": "^1",
     "@next/eslint-plugin-next": "^13",
     "@testing-library/jest-dom": "^5",
     "@testing-library/react": "^14",
@@ -36,7 +100,8 @@
     "@types/testing-library__jest-dom": "^5",
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
-    "@vitest/coverage-c8": "latest",
+    "@vitest/coverage-v8": "latest",
+    "commitlint": "^17",
     "eslint": "^8",
     "husky": "^8",
     "jsdom": "^22",
@@ -50,9 +115,6 @@
     "semantic-release": "^21",
     "semantic-release-config-gitmoji": "^1",
     "stylelint": "^15",
-    "stylelint-config-clean-order": "^5",
-    "stylelint-config-recommended": "^12",
-    "stylelint-order": "^6",
     "typescript": "^5",
     "vitest": "latest"
   }
