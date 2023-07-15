@@ -123,5 +123,15 @@
     "stylelint": "^15",
     "typescript": "^5",
     "vitest": "latest"
+  },
+  "peerDependencies": {
+    "antd": ">=5",
+    "antd-style": ">=3",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   }
 }
