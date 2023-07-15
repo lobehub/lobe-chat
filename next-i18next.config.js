@@ -5,7 +5,7 @@ module.exports = {
   debug: process.env.NODE_ENV === 'development',
   i18n: {
     defaultLocale: i18n.entryLocale,
-    locales: [i18n.entryLocale, i18n.outputLocales],
+    locales: [i18n.entryLocale, ...i18n.outputLocales],
   },
   localePath:
     typeof window === 'undefined' ? require('node:path').resolve('./', i18n.output) : '/locales',
