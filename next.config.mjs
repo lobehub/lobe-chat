@@ -1,11 +1,22 @@
-// @ts-check
+import i18nConfig from './next-i18next.config.js';
+import utilsConfig from './next-utils.config.js';
+
 const API_END_PORT_URL = process.env.API_END_PORT_URL || '';
+
+const { esmExternals = false, tsconfigPath } = utilsConfig.loadCustomBuildParams();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    esmExternals, // https://nextjs.org/blog/next-11-1#es-modules-support
+  },
+  i18n: i18nConfig.i18n,
   reactStrictMode: true,
   pageExtensions: ['page.tsx', 'api.ts'],
   transpilePackages: ['@lobehub/ui', 'antd-style'],
+  typescript: {
+    tsconfigPath,
+  },
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,

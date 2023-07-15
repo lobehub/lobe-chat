@@ -1,6 +1,7 @@
 import { ActionIcon, Avatar } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { ArchiveIcon, MoreVerticalIcon, Share2Icon } from 'lucide-react';
+import { useTranslation } from 'next-i18next';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
@@ -19,6 +20,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 const Header = memo(() => {
   const theme = useTheme();
+  const { t } = useTranslation('common');
   const meta = useChatStore((s) => {
     const chat = sessionSelectors.currentSession(s);
     return chat?.meta;
@@ -62,7 +64,7 @@ const Header = memo(() => {
           onClick={() => {
             // genShareUrl();
           }}
-          title={'分享'}
+          title={t('share')}
         />
         <ActionIcon icon={ArchiveIcon} title={'归档'} />
         <ActionIcon icon={MoreVerticalIcon} onClick={toggleConfig} />
