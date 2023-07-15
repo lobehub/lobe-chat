@@ -1,5 +1,6 @@
-import type { OpenAIStreamPayload } from '@/pages/api/OpenAIStream';
 import { merge } from 'lodash-es';
+
+import type { OpenAIStreamPayload } from '@/pages/api/OpenAIStream';
 
 import { URLS } from './url';
 
@@ -13,18 +14,18 @@ export const fetchChatModel = (
   const payload = merge(
     {
       model: 'gpt-3.5-turbo',
-      temperature: 0.6,
       stream: true,
+      temperature: 0.6,
     },
     params,
   );
 
   return fetch(URLS.openai, {
-    method: 'POST',
+    body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
+    method: 'POST',
     signal,
   });
 };

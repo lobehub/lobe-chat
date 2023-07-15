@@ -1,7 +1,7 @@
-import { memo } from 'react';
-
 import { createStyles } from 'antd-style';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+
 import ChatList from './ChatList';
 import ChatInput from './Input';
 

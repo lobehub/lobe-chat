@@ -24,8 +24,13 @@ export type ConfigCellProps = ConfigItem;
 export const ConfigCell = memo<ConfigCellProps>(({ icon, label, value }) => {
   const { styles } = useStyles();
   return (
-    <Flexbox horizontal distribution={'space-between'} padding={'10px 12px'} className={styles.container}>
-      <Flexbox horizontal gap={8}>
+    <Flexbox
+      className={styles.container}
+      distribution={'space-between'}
+      horizontal
+      padding={'10px 12px'}
+    >
+      <Flexbox gap={8} horizontal>
         <Icon icon={icon} />
         <Flexbox>{label}</Flexbox>
       </Flexbox>
@@ -45,13 +50,13 @@ export const ConfigCellGroup = memo<CellGroupProps>(({ items }) => {
     <Flexbox className={styles.container}>
       {items.map(({ label, icon, value }, index) => (
         <Flexbox
-          key={label}
-          horizontal
-          distribution={'space-between'}
-          padding={'10px 12px'}
           className={items.length === index + 1 ? undefined : styles.split}
+          distribution={'space-between'}
+          horizontal
+          key={label}
+          padding={'10px 12px'}
         >
-          <Flexbox horizontal gap={8}>
+          <Flexbox gap={8} horizontal>
             <Icon icon={icon} />
             <Flexbox>{label}</Flexbox>
           </Flexbox>

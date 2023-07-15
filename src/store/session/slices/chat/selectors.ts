@@ -1,5 +1,6 @@
-import { ChatMessage } from '@/types/chatMessage';
 import { encode } from 'gpt-tokenizer';
+
+import { ChatMessage } from '@/types/chatMessage';
 
 import type { SessionStore } from '../../store';
 import { sessionSelectors } from '../session';
@@ -40,8 +41,8 @@ const systemRoleTokenCount = (s: SessionStore) => systemRoleTokens(s).length;
 export const chatSelectors = {
   currentChats: currentChatsSel,
   systemRole: systemRoleSel,
-  totalTokens,
-  totalTokenCount,
-  systemRoleTokens,
   systemRoleTokenCount,
+  systemRoleTokens,
+  totalTokenCount,
+  totalTokens,
 };

@@ -1,10 +1,11 @@
+import { ActionIcon, DraggablePanel } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { LucideEdit, LucideX } from 'lucide-react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { useChatStore } from '@/store/session';
-import { ActionIcon, DraggablePanel } from '@lobehub/ui';
-import { LucideEdit, LucideX } from 'lucide-react';
+
 import ReadMode from './ReadMode';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -18,29 +19,38 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const Config = () => {
   const { styles } = useStyles();
-  const [showAgentSettings, toggleConfig] = useChatStore((s) => [s.showAgentSettings, s.toggleConfig], shallow);
+  const [showAgentSettings, toggleConfig] = useChatStore(
+    (s) => [s.showAgentSettings, s.toggleConfig],
+    shallow,
+  );
 
   return (
     <DraggablePanel
+      className={styles.drawer}
+      expand={showAgentSettings}
       expandable={false}
-      placement={'right'}
+      minWidth={400}
       mode={'float'}
       pin
+      placement={'right'}
       resize={{ left: false }}
-      minWidth={400}
-      expand={showAgentSettings}
-      className={styles.drawer}
     >
-      <Flexbox padding={16} horizontal align={'center'} distribution={'space-between'} className={styles.header}>
+      <Flexbox
+        align={'center'}
+        className={styles.header}
+        distribution={'space-between'}
+        horizontal
+        padding={16}
+      >
         <Flexbox>会话设置</Flexbox>
         <Flexbox horizontal>
           <ActionIcon icon={LucideEdit} title={'编辑'} />
           <ActionIcon
             icon={LucideX}
-            title={'关闭'}
             onClick={() => {
               toggleConfig(false);
             }}
+            title={'关闭'}
           />
         </Flexbox>
       </Flexbox>

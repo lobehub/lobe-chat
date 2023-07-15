@@ -1,6 +1,6 @@
 import { SessionStore } from '@/store/session';
-
 import { LanguageModel } from '@/types/llm';
+
 import { sessionSelectors } from '../session';
 
 const currentAgentTitle = (s: SessionStore) => {
@@ -31,8 +31,8 @@ const currentAgentModel = (s: SessionStore): LanguageModel => {
 };
 
 export const agentSelectors = {
-  currentAgentConfig,
   currentAgentAvatar,
+  currentAgentConfig,
   currentAgentModel,
   currentAgentTitle,
 };

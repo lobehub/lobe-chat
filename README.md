@@ -51,7 +51,7 @@ Or clone it for local development:
 
 ```bash
 $ git clone https://github.com/lobehub/lobe-chat.git
-$ cd canisminor-template
+$ cd lobe-chat
 $ pnpm install
 $ pnpm start
 ```

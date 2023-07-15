@@ -38,12 +38,15 @@ const ChatLayout = () => {
       <Head>
         <title>{title ? `${title} - LobeChat` : 'LobeChat'}</title>
       </Head>
-      <Flexbox width={'100%'} horizontal>
+      <Flexbox horizontal width={'100%'}>
         <Sidebar />
         <Sessions />
         <Flexbox flex={1}>
           <Header />
-          <Flexbox id={'lobe-conversion-container'} style={{ position: 'relative', height: 'calc(100vh - 64px)' }}>
+          <Flexbox
+            id={'lobe-conversion-container'}
+            style={{ height: 'calc(100vh - 64px)', position: 'relative' }}
+          >
             <Conversation />
             <Config />
           </Flexbox>

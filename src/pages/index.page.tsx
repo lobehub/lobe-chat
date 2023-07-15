@@ -1,5 +1,1 @@
-
-
-
-
-export {default} from './chat/index.page';
+export { default } from './chat/index.page';

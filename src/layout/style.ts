@@ -16,7 +16,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     background-image: linear-gradient(
       180deg,
       ${token.colorBgContainer} 0%,
-      rgba(255, 255, 255, 0) 20%
+      rgba(255, 255, 255, 0%) 20%
     );
 
     :has(#ChatLayout, #FlowLayout) {

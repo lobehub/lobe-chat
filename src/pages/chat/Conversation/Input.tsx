@@ -16,7 +16,12 @@ const ChatInput = () => {
 
   const [inputHeight] = useSettings((s) => [s.inputHeight], shallow);
   const [totalToken, model, sendMessage, clearMessage] = useChatStore(
-    (s) => [chatSelectors.totalTokenCount(s), agentSelectors.currentAgentModel(s), s.sendMessage, s.clearMessage],
+    (s) => [
+      chatSelectors.totalTokenCount(s),
+      agentSelectors.currentAgentModel(s),
+      s.sendMessage,
+      s.clearMessage,
+    ],
     shallow,
   );
 
@@ -25,14 +30,14 @@ const ChatInput = () => {
       expandable={false}
       fullscreen={expand}
       minHeight={200}
-      placement="bottom"
-      size={{ width: '100%', height: inputHeight }}
       onSizeChange={(_, size) => {
         if (!size) return;
         useSettings.setState({
           inputHeight: typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
         });
       }}
+      placement="bottom"
+      size={{ height: inputHeight, width: '100%' }}
     >
       <ChatInputArea
         actions={

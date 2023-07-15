@@ -11,14 +11,17 @@ export const getChatPromptTemplate = (chatMessages: ChatMessage[]) =>
     chatMessages.map((m) => {
       switch (m.role) {
         default:
-        case 'user':
+        case 'user': {
           return HumanMessagePromptTemplate.fromTemplate(m.content);
+        }
 
-        case 'system':
+        case 'system': {
           return SystemMessagePromptTemplate.fromTemplate(m.content);
+        }
 
-        case 'assistant':
+        case 'assistant': {
           return AIMessagePromptTemplate.fromTemplate(m.content);
+        }
       }
     }),
   );

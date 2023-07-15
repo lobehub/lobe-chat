@@ -1,4 +1,3 @@
-import { agentSelectors, sessionSelectors, useChatStore } from '@/store/session';
 import { Avatar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
@@ -7,18 +6,20 @@ import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { agentSelectors, sessionSelectors, useChatStore } from '@/store/session';
+
 import { ConfigCell, ConfigCellGroup } from './ConfigCell';
 
 const useStyles = createStyles(({ css, token }) => ({
-  title: css`
-    font-size: ${token.fontSizeHeading4}px;
-    font-weight: bold;
-  `,
   desc: css`
     color: ${token.colorText};
   `,
   model: css`
     color: ${token.colorTextTertiary};
+  `,
+  title: css`
+    font-size: ${token.fontSizeHeading4}px;
+    font-weight: bold;
   `,
 }));
 
@@ -30,13 +31,13 @@ const ReadMode = memo(() => {
   const model = useChatStore(agentSelectors.currentAgentModel, shallow);
 
   return (
-    <Center style={{ marginTop: 8 }} gap={12} padding={'32px 16px'}>
-      <Avatar size={100} avatar={avatar} />
+    <Center gap={12} padding={'32px 16px'} style={{ marginTop: 8 }}>
+      <Avatar avatar={avatar} size={100} />
       <Flexbox className={styles.title}>{title || '默认对话'}</Flexbox>
       <Flexbox className={styles.model}>{model}</Flexbox>
       <Flexbox className={styles.desc}>{session.meta.description}</Flexbox>
 
-      <Flexbox gap={12} flex={1} width={'100%'}>
+      <Flexbox flex={1} gap={12} width={'100%'}>
         <ConfigCell icon={LucideBrain} label={'提示词'} />
 
         <ConfigCellGroup

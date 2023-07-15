@@ -1,5 +1,6 @@
-import { getInputVariablesFromMessages } from '@/helpers/prompt';
 import { ChatMessage } from '@lobehub/ui';
+
+import { getInputVariablesFromMessages } from '@/helpers/prompt';
 
 describe('getInputVariablesFromMessages 方法', () => {
   it('应当在输入为空数组时返回空数组', () => {

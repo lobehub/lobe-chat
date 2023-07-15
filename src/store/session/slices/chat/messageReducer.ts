@@ -6,18 +6,18 @@ import { MetaData } from '@/types/meta';
 import { nanoid } from '@/utils/uuid';
 
 interface AddMessage {
-  type: 'addMessage';
-  message: string;
-  role: LLMRoleType;
   id?: string;
-  quotaId?: string;
-  parentId?: string;
+  message: string;
   meta?: MetaData;
+  parentId?: string;
+  quotaId?: string;
+  role: LLMRoleType;
+  type: 'addMessage';
 }
 
 interface DeleteMessage {
-  type: 'deleteMessage';
   id: string;
+  type: 'deleteMessage';
 }
 
 interface ResetMessages {
@@ -25,38 +25,43 @@ interface ResetMessages {
 }
 
 interface UpdateMessage {
-  type: 'updateMessage';
   id: string;
   key: keyof ChatMessage;
+  type: 'updateMessage';
   value: ChatMessage[keyof ChatMessage];
 }
 
 export type MessageDispatch = AddMessage | DeleteMessage | ResetMessages | UpdateMessage;
 
-export const messagesReducer = (state: ChatMessageMap, payload: MessageDispatch): ChatMessageMap => {
+export const messagesReducer = (
+  state: ChatMessageMap,
+  payload: MessageDispatch,
+): ChatMessageMap => {
   switch (payload.type) {
-    case 'addMessage':
+    case 'addMessage': {
       return produce(state, (draftState) => {
         const mid = payload.id || nanoid();
 
         draftState[mid] = {
-          id: mid,
-          role: payload.role,
           content: payload.message,
-          meta: payload.meta || {},
-          quotaId: payload.quotaId,
-          parentId: payload.parentId,
-          updateAt: Date.now(),
           createAt: Date.now(),
+          id: mid,
+          meta: payload.meta || {},
+          parentId: payload.parentId,
+          quotaId: payload.quotaId,
+          role: payload.role,
+          updateAt: Date.now(),
         };
       });
+    }
 
-    case 'deleteMessage':
+    case 'deleteMessage': {
       return produce(state, (draftState) => {
         delete draftState[payload.id];
       });
+    }
 
-    case 'updateMessage':
+    case 'updateMessage': {
       return produce(state, (draftState) => {
         const { id, key, value } = payload;
         const message = draftState[id];
@@ -66,11 +71,14 @@ export const messagesReducer = (state: ChatMessageMap, payload: MessageDispatch)
         message[key] = value;
         message.updateAt = Date.now();
       });
+    }
 
-    case 'resetMessages':
+    case 'resetMessages': {
       return {};
+    }
 
-    default:
+    default: {
       throw new Error('暂未实现的 type，请检查 reducer');
+    }
   }
 };

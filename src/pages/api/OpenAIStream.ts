@@ -1,6 +1,7 @@
-import { OpenAIChatMessage } from '@/types/openai';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { AIChatMessage, HumanChatMessage, SystemChatMessage } from 'langchain/schema';
+
+import { OpenAIChatMessage } from '@/types/openai';
 
 const isDev = process.env.NODE_ENV === 'development';
 const OPENAI_PROXY_URL = process.env.OPENAI_PROXY_URL;
@@ -10,13 +11,36 @@ const OPENAI_PROXY_URL = process.env.OPENAI_PROXY_URL;
  */
 export interface OpenAIStreamPayload {
   /**
-   * @title 模型名称
+   * @title 控制生成文本中的惩罚系数，用于减少重复性
+   * @default 0
    */
-  model: string;
+  frequency_penalty?: number;
+  /**
+   * @title 生成文本的最大长度
+   */
+  max_tokens?: number;
   /**
    * @title 聊天信息列表
    */
   messages: OpenAIChatMessage[];
+  /**
+   * @title 模型名称
+   */
+  model: string;
+  /**
+   * @title 返回的文本数量
+   */
+  n?: number;
+  /**
+   * @title 控制生成文本中的惩罚系数，用于减少主题的变化
+   * @default 0
+   */
+  presence_penalty?: number;
+  /**
+   * @title 是否开启流式请求
+   * @default true
+   */
+  stream?: boolean;
   /**
    * @title 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 0.5
@@ -27,29 +51,6 @@ export interface OpenAIStreamPayload {
    * @default 1
    */
   top_p?: number;
-  /**
-   * @title 控制生成文本中的惩罚系数，用于减少重复性
-   * @default 0
-   */
-  frequency_penalty?: number;
-  /**
-   * @title 控制生成文本中的惩罚系数，用于减少主题的变化
-   * @default 0
-   */
-  presence_penalty?: number;
-  /**
-   * @title 生成文本的最大长度
-   */
-  max_tokens?: number;
-  /**
-   * @title 是否开启流式请求
-   * @default true
-   */
-  stream?: boolean;
-  /**
-   * @title 返回的文本数量
-   */
-  n?: number;
 }
 
 export function OpenAIStream(payload: OpenAIStreamPayload) {
@@ -59,13 +60,16 @@ export function OpenAIStream(payload: OpenAIStreamPayload) {
   const chatMessages = messages.map((m) => {
     switch (m.role) {
       default:
-      case 'user':
+      case 'user': {
         return new HumanChatMessage(m.content);
-      case 'system':
+      }
+      case 'system': {
         return new SystemChatMessage(m.content);
+      }
 
-      case 'assistant':
+      case 'assistant': {
         return new AIChatMessage(m.content);
+      }
     }
   });
 
@@ -82,9 +86,7 @@ export function OpenAIStream(payload: OpenAIStreamPayload) {
         {
           streaming: true,
           ...params,
-          // 暂时设定不重试 ，后续看是否需要支持重试
-          maxRetries: 0,
-          verbose: true,
+
           callbacks: [
             {
               handleLLMNewToken(token) {
@@ -100,6 +102,9 @@ export function OpenAIStream(payload: OpenAIStreamPayload) {
               },
             },
           ],
+          // 暂时设定不重试 ，后续看是否需要支持重试
+          maxRetries: 0,
+          verbose: true,
         },
         isDev && OPENAI_PROXY_URL ? { basePath: OPENAI_PROXY_URL } : undefined,
       );

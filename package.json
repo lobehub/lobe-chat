@@ -22,7 +22,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "next build",
-    "dev": "PORT=3010 next dev",
+    "dev": "next dev -p 3010",
     "lint": "eslint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
     "lint:md": "remark . --quiet --frail --output",
     "lint:style": "stylelint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
@@ -88,7 +88,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^17",
-    "@lobehub/lint": "^1",
+    "@lobehub/lint": "latest",
     "@next/eslint-plugin-next": "^13",
     "@testing-library/jest-dom": "^5",
     "@testing-library/react": "^14",
@@ -110,8 +110,8 @@
     "node-fetch": "^3",
     "postcss-styled-syntax": "^0.4",
     "prettier": "^2",
-    "prettier-plugin-organize-imports": "^3",
-    "prettier-plugin-packagejson": "^2",
+    "remark": "^14",
+    "remark-cli": "^11",
     "semantic-release": "^21",
     "semantic-release-config-gitmoji": "^1",
     "stylelint": "^15",

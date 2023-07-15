@@ -19,7 +19,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     justify-content: center;
 
     margin-top: 8px;
-    padding: 12px 12px;
+    padding: 12px;
 
     background: ${rgba(token.colorBgLayout, 0.5)};
     backdrop-filter: blur(8px);
@@ -35,7 +35,13 @@ const SessionList = memo(() => {
   return (
     <>
       {list.map(({ id }) => (
-        <SessionItem key={id} active={activeId === id} id={id} simple={false} loading={loading && id === activeId} />
+        <SessionItem
+          active={activeId === id}
+          id={id}
+          key={id}
+          loading={loading && id === activeId}
+          simple={false}
+        />
       ))}
     </>
   );

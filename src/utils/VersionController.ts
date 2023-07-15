@@ -4,15 +4,15 @@
  */
 export interface Migration<T = any> {
   /**
-   * 迁移版本号
-   */
-  version: number;
-  /**
    * 迁移数据
    * @param data - 迁移数据
    * @returns 迁移后的数据
    */
   migrate(data: MigrationData<T>): MigrationData;
+  /**
+   * 迁移版本号
+   */
+  version: number;
 }
 
 /**

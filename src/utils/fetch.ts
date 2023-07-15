@@ -21,8 +21,8 @@ const codeMessage: Record<number, string> = {
 };
 
 export interface FetchSSEOptions {
-  onMessageHandle?: (text: string) => void;
   onErrorHandle?: (error: ChatMessageError) => void;
+  onMessageHandle?: (text: string) => void;
 }
 
 /**
@@ -68,15 +68,7 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
 };
 
 interface FetchAITaskResultParams<T> {
-  /**
-   * 请求对象
-   */
-  params: T;
-  /**
-   * 消息处理函数
-   * @param text - 消息内容
-   */
-  onMessageHandle?: (text: string) => void;
+  abortController?: AbortController;
   /**
    * 错误处理函数
    */
@@ -86,13 +78,27 @@ interface FetchAITaskResultParams<T> {
    * @param loading - 是否处于加载状态
    */
   onLoadingChange?: (loading: boolean) => void;
+  /**
+   * 消息处理函数
+   * @param text - 消息内容
+   */
+  onMessageHandle?: (text: string) => void;
 
-  abortController?: AbortController;
+  /**
+   * 请求对象
+   */
+  params: T;
 }
 
 export const fetchAIFactory =
   <T>(fetcher: (params: T, signal?: AbortSignal) => Promise<Response>) =>
-  async ({ params, onMessageHandle, onError, onLoadingChange, abortController }: FetchAITaskResultParams<T>) => {
+  async ({
+    params,
+    onMessageHandle,
+    onError,
+    onLoadingChange,
+    abortController,
+  }: FetchAITaskResultParams<T>) => {
     const errorHandle = (error: Error) => {
       onLoadingChange?.(false);
       if (abortController?.signal.aborted) {
@@ -112,10 +118,10 @@ export const fetchAIFactory =
     onLoadingChange?.(true);
 
     const data = await fetchSSE(() => fetcher(params, abortController?.signal), {
-      onMessageHandle,
       onErrorHandle: (error) => {
         errorHandle(new Error(error.message));
       },
+      onMessageHandle,
     }).catch(errorHandle);
 
     onLoadingChange?.(false);

@@ -1,12 +1,12 @@
 import { ActionIcon, Logo, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Plus } from 'lucide-react';
+import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { useChatStore } from '@/store/session';
-import Link from 'next/link';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
@@ -21,22 +21,25 @@ export const useStyles = createStyles(({ css, token }) => ({
 const Header = memo(() => {
   const { styles } = useStyles();
 
-  const [keywords, createSession] = useChatStore((s) => [s.searchKeywords, s.createSession], shallow);
+  const [keywords, createSession] = useChatStore(
+    (s) => [s.searchKeywords, s.createSession],
+    shallow,
+  );
 
   return (
-    <Flexbox gap={16} padding={'16px 12px 0 16px'} className={styles.top}>
-      <Flexbox horizontal distribution={'space-between'}>
+    <Flexbox className={styles.top} gap={16} padding={'16px 12px 0 16px'}>
+      <Flexbox distribution={'space-between'} horizontal>
         <Link href={'/'}>
-          <Logo type={'text'} size={36} className={styles.logo} />
+          <Logo className={styles.logo} size={36} type={'text'} />
         </Link>
-        <ActionIcon title={'新对话'} icon={Plus} style={{ minWidth: 32 }} onClick={createSession} />
+        <ActionIcon icon={Plus} onClick={createSession} style={{ minWidth: 32 }} title={'新对话'} />
       </Flexbox>
       <SearchBar
         allowClear
-        value={keywords}
+        onChange={(e) => useChatStore.setState({ searchKeywords: e.target.value })}
         placeholder="Search..."
         type={'block'}
-        onChange={(e) => useChatStore.setState({ searchKeywords: e.target.value })}
+        value={keywords}
       />
     </Flexbox>
   );

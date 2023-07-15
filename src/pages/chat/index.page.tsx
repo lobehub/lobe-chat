@@ -1,5 +1,1 @@
-
-
-
-
-export {default} from './[id].page';
+export { default } from './[id].page';

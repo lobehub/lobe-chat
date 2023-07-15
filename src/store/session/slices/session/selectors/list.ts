@@ -1,7 +1,6 @@
 import { SessionStore } from '@/store/session';
-import { LobeAgentSession } from '@/types/session';
-
 import { MetaData } from '@/types/meta';
+import { LobeAgentSession } from '@/types/session';
 import { filterWithKeywords } from '@/utils/filter';
 
 import { initLobeSession } from '../initialState';

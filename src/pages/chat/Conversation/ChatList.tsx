@@ -7,20 +7,25 @@ import { chatSelectors, useChatStore } from '@/store/session';
 
 const List = () => {
   const data = useChatStore(chatSelectors.currentChats, isEqual);
-  const [deleteMessage, resendMessage] = useChatStore((s) => [s.deleteMessage, s.resendMessage], shallow);
+  const [deleteMessage, resendMessage] = useChatStore(
+    (s) => [s.deleteMessage, s.resendMessage],
+    shallow,
+  );
 
   return (
     <ChatList
       data={data}
       onActionClick={(key, id) => {
         switch (key) {
-          case 'delete':
+          case 'delete': {
             deleteMessage(id);
             break;
+          }
 
-          case 'regenerate':
+          case 'regenerate': {
             resendMessage(id);
             break;
+          }
         }
       }}
       style={{ marginTop: 24 }}

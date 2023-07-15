@@ -8,11 +8,11 @@ import { fetchAIFactory } from '@/utils/fetch';
 export const fetchLangChain = fetchAIFactory(
   (params: LangChainParams, signal?: AbortSignal | undefined) =>
     fetch(URLS.chain, {
-      method: 'POST',
+      body: JSON.stringify(params),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(params),
+      method: 'POST',
       signal,
     }),
 );

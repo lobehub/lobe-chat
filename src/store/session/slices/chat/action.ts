@@ -12,6 +12,8 @@ const LOADING_FLAT = '...';
 
 export interface ChatAction {
   clearMessage: () => void;
+  deleteMessage: (id: string) => void;
+
   /**
    * @title 派发消息
    * @param payload - 消息分发
@@ -20,34 +22,38 @@ export interface ChatAction {
   dispatchMessage: (payload: MessageDispatch) => void;
 
   generateMessage: (messages: ChatMessage[], options: FetchSSEOptions) => Promise<void>;
-
   /**
    * @title 处理消息编辑
    * @param index - 消息索引或空
    * @returns void
    */
   handleMessageEditing: (messageId: string | undefined) => void;
+
   /**
    * @title 重发消息
    * @param index - 消息索引
    * @returns Promise<void>
    */
   resendMessage: (id: string) => Promise<void>;
-
   /**
    * @title 发送消息
    * @returns Promise<void>
    */
   sendMessage: (text: string) => Promise<void>;
-  deleteMessage: (id: string) => void;
 }
 
-export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', never]], [], ChatAction> = (
-  set,
-  get,
-) => ({
+export const createChatSlice: StateCreator<
+  SessionStore,
+  [['zustand/devtools', never]],
+  [],
+  ChatAction
+> = (set, get) => ({
   clearMessage: () => {
     get().dispatchMessage({ type: 'resetMessages' });
+  },
+
+  deleteMessage: (id) => {
+    get().dispatchMessage({ id, type: 'deleteMessage' });
   },
 
   dispatchMessage: (payload) => {
@@ -182,9 +188,5 @@ export const createChatSlice: StateCreator<SessionStore, [['zustand/devtools', n
         item.scrollIntoView({ behavior: 'smooth' });
       },
     });
-  },
-
-  deleteMessage: (id) => {
-    get().dispatchMessage({ type: 'deleteMessage', id });
   },
 });
