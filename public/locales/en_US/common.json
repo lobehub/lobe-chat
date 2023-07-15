@@ -1,4 +1,16 @@
 {
+  "agentProfile": "Agent Profile",
+  "archive": "Archive",
+  "cancel": "Cancel",
+  "close": "Close",
+  "confirmRemoveSessionItemAlert": "You are about to remove this agent. Once removed, it cannot be recovered. Please confirm your action.",
+  "defaultAgent": "Default Agent",
+  "edit": "Edit",
+  "newAgent": "New Agent",
+  "noDescription": "No description",
+  "ok": "OK",
+  "searchAgentPlaceholder": "Search agents and conversations...",
+  "sessionSetting": "Session Setting",
   "setting": "Setting",
   "share": "Share"
 }

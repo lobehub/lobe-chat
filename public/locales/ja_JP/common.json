@@ -1,4 +1,16 @@
 {
+  "agentProfile": "エージェントプロファイル",
+  "archive": "アーカイブ",
+  "cancel": "キャンセル",
+  "close": "閉じる",
+  "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除後は元に戻すことはできません。操作を確認してください",
+  "defaultAgent": "デフォルトエージェント",
+  "edit": "編集",
+  "newAgent": "新しいエージェント",
+  "noDescription": "説明はありません",
+  "ok": "OK",
+  "searchAgentPlaceholder": "エージェントと会話を検索...",
+  "sessionSetting": "セッション設定",
   "setting": "設定",
   "share": "共有する"
 }

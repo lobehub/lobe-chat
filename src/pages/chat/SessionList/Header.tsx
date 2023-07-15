@@ -1,6 +1,7 @@
 import { ActionIcon, Logo, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Plus } from 'lucide-react';
+import { MessageSquarePlus } from 'lucide-react';
+import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -20,25 +21,32 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const Header = memo(() => {
   const { styles } = useStyles();
-
+  const { t } = useTranslation('common');
   const [keywords, createSession] = useChatStore(
     (s) => [s.searchKeywords, s.createSession],
     shallow,
   );
 
   return (
-    <Flexbox className={styles.top} gap={16} padding={'16px 12px 0 16px'}>
+    <Flexbox className={styles.top} gap={16} padding={16}>
       <Flexbox distribution={'space-between'} horizontal>
         <Link href={'/'}>
           <Logo className={styles.logo} size={36} type={'text'} />
         </Link>
-        <ActionIcon icon={Plus} onClick={createSession} style={{ minWidth: 32 }} title={'新对话'} />
+        <ActionIcon
+          icon={MessageSquarePlus}
+          onClick={createSession}
+          size={{ fontSize: 24 }}
+          style={{ flex: 'none' }}
+          title={t('newAgent')}
+        />
       </Flexbox>
       <SearchBar
         allowClear
         onChange={(e) => useChatStore.setState({ searchKeywords: e.target.value })}
-        placeholder="Search..."
-        type={'block'}
+        placeholder={t('searchAgentPlaceholder')}
+        spotlight
+        type={'ghost'}
         value={keywords}
       />
     </Flexbox>

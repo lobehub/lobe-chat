@@ -1,5 +1,5 @@
 import { ActionIcon, Logo, SideNav } from '@lobehub/ui';
-import { Album, MessageSquare, Settings2 } from 'lucide-react';
+import { MessageSquare, Settings2, Sticker } from 'lucide-react';
 import { memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
@@ -22,7 +22,7 @@ const Sidebar = memo(() => {
           />
           <ActionIcon
             active={tab === 'market'}
-            icon={Album}
+            icon={Sticker}
             onClick={() => setTab('market')}
             size="large"
           />

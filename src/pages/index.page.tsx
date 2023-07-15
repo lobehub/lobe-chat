@@ -1,5 +1,6 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { memo } from 'react';
 
 import Chat from './chat/index.page';
 
@@ -14,4 +15,4 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
   },
 });
 
-export default Index;
+export default memo(Index);

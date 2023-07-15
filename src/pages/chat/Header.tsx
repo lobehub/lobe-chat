@@ -44,8 +44,7 @@ const Header = memo(() => {
       align={'center'}
       distribution={'space-between'}
       horizontal
-      padding={8}
-      paddingInline={16}
+      padding="8px 8px 8px 16px"
       style={{
         borderBottom: `1px solid ${theme.colorSplit}`,
         gridArea: 'header',
@@ -54,20 +53,26 @@ const Header = memo(() => {
       <Flexbox align={'center'} gap={12} horizontal>
         <Avatar avatar={meta && sessionSelectors.getAgentAvatar(meta)} size={40} title={'123'} />
         <Flexbox>
-          <Flexbox className={styles.title}>{meta?.title}</Flexbox>
-          <Flexbox className={styles.desc}>{meta?.description || '暂无描述'}</Flexbox>
+          <Flexbox className={styles.title}>{meta?.title || t('defaultAgent')}</Flexbox>
+          <Flexbox className={styles.desc}>{meta?.description || t('noDescription')}</Flexbox>
         </Flexbox>
       </Flexbox>
-      <Flexbox gap={16} horizontal>
+      <Flexbox gap={8} horizontal>
         <ActionIcon
           icon={Share2Icon}
           onClick={() => {
             // genShareUrl();
           }}
+          size={{ fontSize: 24 }}
           title={t('share')}
         />
-        <ActionIcon icon={ArchiveIcon} title={'归档'} />
-        <ActionIcon icon={MoreVerticalIcon} onClick={toggleConfig} />
+        <ActionIcon icon={ArchiveIcon} size={{ fontSize: 24 }} title={t('archive')} />
+        <ActionIcon
+          icon={MoreVerticalIcon}
+          onClick={toggleConfig}
+          size={{ fontSize: 24 }}
+          title={t('sessionSetting')}
+        />
       </Flexbox>
     </Flexbox>
   );

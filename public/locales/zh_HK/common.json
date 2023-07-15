@@ -1,4 +1,16 @@
 {
+  "agentProfile": "助手資訊",
+  "archive": "歸檔",
+  "cancel": "取消",
+  "close": "關閉",
+  "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",
+  "defaultAgent": "默認助手",
+  "edit": "編輯",
+  "newAgent": "新建助手",
+  "noDescription": "暫無描述",
+  "ok": "確定",
+  "searchAgentPlaceholder": "搜索助手和對話...",
+  "sessionSetting": "會話設置",
   "setting": "設置",
   "share": "分享"
 }

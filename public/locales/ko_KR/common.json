@@ -1,4 +1,16 @@
 {
+  "agentProfile": "도우미 프로필",
+  "archive": "보관",
+  "cancel": "취소",
+  "close": "닫기",
+  "confirmRemoveSessionItemAlert": "이 도우미를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으므로 작업을 확인하십시오.",
+  "defaultAgent": "기본 도우미",
+  "edit": "편집",
+  "newAgent": "새 도우미",
+  "noDescription": "설명 없음",
+  "ok": "확인",
+  "searchAgentPlaceholder": "도우미 및 대화 검색...",
+  "sessionSetting": "세션 설정",
   "setting": "설정",
   "share": "공유"
 }

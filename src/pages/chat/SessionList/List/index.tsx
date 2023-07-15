@@ -1,49 +1,30 @@
-import { createStyles } from 'antd-style';
-import { rgba } from 'polished';
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { useStyles } from '@/pages/chat/SessionList/List/style';
 import { sessionSelectors, useChatStore } from '@/store/session';
 
 import SessionItem from './SessionItem';
 
-export const useStyles = createStyles(({ css, token }) => ({
-  button: css`
-    position: sticky;
-    z-index: 30;
-    bottom: 0;
-
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: center;
-
-    margin-top: 8px;
-    padding: 12px;
-
-    background: ${rgba(token.colorBgLayout, 0.5)};
-    backdrop-filter: blur(8px);
-  `,
-}));
-
 const SessionList = memo(() => {
+  const { styles, cx } = useStyles();
   const [list, activeId, loading] = useChatStore(
     (s) => [sessionSelectors.chatList(s), s.activeId, s.loading.summarizingTitle],
     shallow,
   );
 
   return (
-    <>
+    <Flexbox className={cx(styles.list)}>
       {list.map(({ id }) => (
         <SessionItem
           active={activeId === id}
           id={id}
           key={id}
           loading={loading && id === activeId}
-          simple={false}
         />
       ))}
-    </>
+    </Flexbox>
   );
 });
 
