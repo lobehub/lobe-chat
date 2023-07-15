@@ -1,3 +1,3 @@
 import { MetaData } from '@/types/meta';
 
-export const getAgentAvatar = (s: MetaData) => s.avatar || '😎';
+export const getAgentAvatar = (s: MetaData) => s.avatar || 'default';

@@ -1,3 +1,4 @@
+import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
@@ -9,8 +10,9 @@ import SessionItem from './SessionItem';
 
 const SessionList = memo(() => {
   const { styles, cx } = useStyles();
-  const [list, activeId, loading] = useChatStore(
-    (s) => [sessionSelectors.chatList(s), s.activeId, s.loading.summarizingTitle],
+  const list = useChatStore((s) => sessionSelectors.chatList(s), isEqual);
+  const [activeId, loading] = useChatStore(
+    (s) => [s.activeId, s.loading.summarizingTitle],
     shallow,
   );
 

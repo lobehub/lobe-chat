@@ -86,7 +86,7 @@
     "react-layout-kit": "^1",
     "swr": "^2",
     "ts-md5": "^1",
-    "zustand": "^4",
+    "zustand": "4.3.6",
     "zustand-utils": "^1"
   },
   "devDependencies": {
@@ -113,7 +113,6 @@
     "lint-staged": "^13",
     "next-pwa": "^5",
     "node-fetch": "^3",
-    "picocolors": "^1",
     "postcss-styled-syntax": "^0.4",
     "prettier": "^2",
     "remark": "^14",
