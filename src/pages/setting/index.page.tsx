@@ -31,7 +31,7 @@ const SettingLayout = memo(() => {
   );
 });
 
-export const getStaticProps = async (context: any) => ({
+export const getServerSideProps = async (context: any) => ({
   props: await serverSideTranslations(context.locale, ['common', 'setting']),
 });
 
