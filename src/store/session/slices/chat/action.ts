@@ -12,6 +12,8 @@ const LOADING_FLAT = '...';
 
 export interface ChatAction {
   clearMessage: () => void;
+  createOrSendMsg: (text: string) => Promise<void>;
+
   deleteMessage: (id: string) => void;
 
   /**
@@ -20,15 +22,14 @@ export interface ChatAction {
    * @returns void
    */
   dispatchMessage: (payload: MessageDispatch) => void;
-
   generateMessage: (messages: ChatMessage[], options: FetchSSEOptions) => Promise<void>;
+
   /**
    * @title 处理消息编辑
    * @param index - 消息索引或空
    * @returns void
    */
   handleMessageEditing: (messageId: string | undefined) => void;
-
   /**
    * @title 重发消息
    * @param index - 消息索引
@@ -50,6 +51,20 @@ export const createChatSlice: StateCreator<
 > = (set, get) => ({
   clearMessage: () => {
     get().dispatchMessage({ type: 'resetMessages' });
+  },
+
+  createOrSendMsg: async (message) => {
+    if (!message) return;
+
+    console.log(message);
+    const { sendMessage, createSession } = get();
+    const session = sessionSelectors.currentSession(get());
+
+    if (!session) {
+      await createSession();
+    }
+
+    sendMessage(message);
   },
 
   deleteMessage: (id) => {

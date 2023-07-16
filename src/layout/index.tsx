@@ -3,8 +3,9 @@ import { App, ConfigProvider } from 'antd';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
 import { PropsWithChildren, useEffect } from 'react';
-import { useSessionStore } from 'src/store/session';
 
+import { useSessionStore } from '@/store/session';
+import { useSettings } from '@/store/settings';
 import { GlobalStyle } from '@/styles';
 
 import { useStyles } from './style';
@@ -23,6 +24,7 @@ export default ({ children }: PropsWithChildren) => {
   useEffect(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
     useSessionStore.persist.rehydrate();
+    useSettings.persist.rehydrate();
   }, []);
 
   return (

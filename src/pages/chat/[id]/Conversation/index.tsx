@@ -2,8 +2,9 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import ChatInput from '@/pages/chat/[id]/Conversation/Input';
+
 import ChatList from './ChatList';
-import ChatInput from './Input';
 
 const useStyles = createStyles(({ css, token }) => ({
   input: css`

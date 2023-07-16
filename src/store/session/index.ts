@@ -14,7 +14,7 @@ const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
 
   // 手动控制 Hydration ，避免 ssr 报错
   skipHydration: true,
-
+  version: 0,
   // version: Migration.targetVersion,
 };
 

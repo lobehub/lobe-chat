@@ -9,18 +9,19 @@ import { uuid } from '@/utils/uuid';
 import { SessionDispatch, sessionsReducer } from './reducers/session';
 
 export interface SessionAction {
+  activeSession: (sessionId: string) => void;
   /**
    * @title 添加会话
    * @param session - 会话信息
    * @returns void
    */
-  createSession: () => Promise<void>;
+  createSession: () => Promise<string>;
+
   /**
    * 分发聊天记录
    * @param payload - 聊天记录
    */
   dispatchSession: (payload: SessionDispatch) => void;
-
   /**
    * @title 删除会话
    * @param index - 会话索引
@@ -33,7 +34,7 @@ export interface SessionAction {
    * @param sessionId - 会话索引
    * @returns void
    */
-  switchSession: (sessionId?: string | 'new') => void;
+  switchSession: (sessionId?: string | 'new') => Promise<void>;
 
   /**
    * 生成压缩后的消息
@@ -48,6 +49,10 @@ export const createSessionSlice: StateCreator<
   [],
   SessionAction
 > = (set, get) => ({
+  activeSession: (sessionId) => {
+    set({ activeId: sessionId });
+  },
+
   createSession: async () => {
     const { dispatchSession, switchSession } = get();
 
@@ -73,7 +78,9 @@ export const createSessionSlice: StateCreator<
 
     dispatchSession({ session: newSession, type: 'addSession' });
 
-    switchSession(newSession.id);
+    await switchSession(newSession.id);
+
+    return newSession.id;
   },
 
   dispatchSession: (payload) => {
@@ -92,13 +99,15 @@ export const createSessionSlice: StateCreator<
     }
   },
 
-  switchSession: (sessionId) => {
+  switchSession: async (sessionId) => {
     if (get().activeId === sessionId) return;
 
-    set({ activeId: sessionId });
+    if (sessionId) {
+      get().activeSession(sessionId);
+    }
 
     // 新会话
-    Router.push(`/chat/${sessionId}`);
+    await Router.push(`/chat/${sessionId}`);
   },
 
   // genShareUrl: () => {

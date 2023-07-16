@@ -19,7 +19,7 @@ const ChatInput = () => {
     (s) => [
       chatSelectors.totalTokenCount(s),
       agentSelectors.currentAgentModel(s),
-      s.sendMessage,
+      s.createOrSendMsg,
       s.clearMessage,
     ],
     shallow,
