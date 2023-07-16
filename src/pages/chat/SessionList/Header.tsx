@@ -7,7 +7,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { useChatStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
@@ -22,7 +22,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 const Header = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('common');
-  const [keywords, createSession] = useChatStore(
+  const [keywords, createSession] = useSessionStore(
     (s) => [s.searchKeywords, s.createSession],
     shallow,
   );
@@ -43,7 +43,7 @@ const Header = memo(() => {
       </Flexbox>
       <SearchBar
         allowClear
-        onChange={(e) => useChatStore.setState({ searchKeywords: e.target.value })}
+        onChange={(e) => useSessionStore.setState({ searchKeywords: e.target.value })}
         placeholder={t('searchAgentPlaceholder')}
         spotlight
         type={'ghost'}

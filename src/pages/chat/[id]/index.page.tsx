@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { sessionSelectors, useChatStore } from '@/store/session';
+import { sessionSelectors, useSessionStore } from '@/store/session';
 
 import Layout from '../layout';
 import Config from './Config';
@@ -12,7 +12,7 @@ import Conversation from './Conversation';
 import Header from './Header';
 
 const Chat = memo(() => {
-  const [title] = useChatStore((s) => {
+  const [title] = useSessionStore((s) => {
     const context = sessionSelectors.currentSession(s);
     return [context?.meta.title];
   }, isEqual);

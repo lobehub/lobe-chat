@@ -6,7 +6,7 @@ import Router from 'next/router';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { useChatStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
 
 import ReadMode from './ReadMode';
 
@@ -24,7 +24,7 @@ const useStyles = createStyles(({ css, token }) => ({
 const Config = () => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
-  const [showAgentSettings, toggleConfig, id] = useChatStore(
+  const [showAgentSettings, toggleConfig, id] = useSessionStore(
     (s) => [s.showAgentSettings, s.toggleConfig, s.activeId],
     shallow,
   );

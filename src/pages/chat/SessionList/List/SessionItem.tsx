@@ -6,7 +6,7 @@ import { FC, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { sessionSelectors, useChatStore } from '@/store/session';
+import { sessionSelectors, useSessionStore } from '@/store/session';
 
 import { useStyles } from './style';
 
@@ -21,7 +21,7 @@ interface SessionItemProps {
 const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) => {
   const { t } = useTranslation('common');
   const { styles, theme, cx } = useStyles();
-  const [title, systemRole, avatar, avatarBackground, updateAt, removeSession] = useChatStore(
+  const [title, systemRole, avatar, avatarBackground, updateAt, removeSession] = useSessionStore(
     (s) => {
       const session = sessionSelectors.getSessionById(id)(s);
       const meta = session.meta;

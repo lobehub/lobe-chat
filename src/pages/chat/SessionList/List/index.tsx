@@ -4,15 +4,15 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { sessionSelectors, useChatStore } from '@/store/session';
+import { sessionSelectors, useSessionStore } from '@/store/session';
 
 import SessionItem from './SessionItem';
 import { useStyles } from './style';
 
 const SessionList = memo(() => {
   const { styles, cx } = useStyles();
-  const list = useChatStore((s) => sessionSelectors.chatList(s), isEqual);
-  const [activeId, loading] = useChatStore(
+  const list = useSessionStore((s) => sessionSelectors.chatList(s), isEqual);
+  const [activeId, loading] = useSessionStore(
     (s) => [s.activeId, s.loading.summarizingTitle],
     shallow,
   );

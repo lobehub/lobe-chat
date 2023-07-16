@@ -6,7 +6,7 @@ import { memo, useMemo, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { ModelTokens } from '@/const/modelTokens';
-import { agentSelectors, chatSelectors, useChatStore } from '@/store/session';
+import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
 const ChatInput = () => {
@@ -15,7 +15,7 @@ const ChatInput = () => {
   const textTokenCount = useMemo(() => encode(text).length, [text]);
 
   const [inputHeight] = useSettings((s) => [s.inputHeight], shallow);
-  const [totalToken, model, sendMessage, clearMessage] = useChatStore(
+  const [totalToken, model, sendMessage, clearMessage] = useSessionStore(
     (s) => [
       chatSelectors.totalTokenCount(s),
       agentSelectors.currentAgentModel(s),

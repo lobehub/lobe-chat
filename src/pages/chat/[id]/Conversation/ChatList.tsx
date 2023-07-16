@@ -3,11 +3,11 @@ import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import { chatSelectors, useChatStore } from '@/store/session';
+import { chatSelectors, useSessionStore } from '@/store/session';
 
 const List = () => {
-  const data = useChatStore(chatSelectors.currentChats, isEqual);
-  const [deleteMessage, resendMessage] = useChatStore(
+  const data = useSessionStore(chatSelectors.currentChats, isEqual);
+  const [deleteMessage, resendMessage] = useSessionStore(
     (s) => [s.deleteMessage, s.resendMessage],
     shallow,
   );

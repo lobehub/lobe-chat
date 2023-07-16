@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { sessionSelectors, useChatStore } from '@/store/session';
+import { sessionSelectors, useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css, token }) => ({
   desc: css`
@@ -20,7 +20,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 const Header = memo(() => {
   const { t } = useTranslation('common');
-  const meta = useChatStore((s) => {
+  const meta = useSessionStore((s) => {
     const chat = sessionSelectors.currentSession(s);
     return chat?.meta;
   }, shallow);
@@ -29,7 +29,7 @@ const Header = memo(() => {
     // genShareUrl,
 
     toggleConfig,
-  ] = useChatStore(
+  ] = useSessionStore(
     (s) => [
       // s.genShareUrl,
       s.toggleConfig,

@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { agentSelectors, sessionSelectors, useChatStore } from '@/store/session';
+import { agentSelectors, sessionSelectors, useSessionStore } from '@/store/session';
 
 import { ConfigCell, ConfigCellGroup } from './ConfigCell';
 
@@ -25,10 +25,10 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const ReadMode = memo(() => {
   const { styles } = useStyles();
-  const session = useChatStore(sessionSelectors.currentSessionSafe, isEqual);
-  const avatar = useChatStore(agentSelectors.currentAgentAvatar, shallow);
-  const title = useChatStore(agentSelectors.currentAgentTitle, shallow);
-  const model = useChatStore(agentSelectors.currentAgentModel, shallow);
+  const session = useSessionStore(sessionSelectors.currentSessionSafe, isEqual);
+  const avatar = useSessionStore(agentSelectors.currentAgentAvatar, shallow);
+  const title = useSessionStore(agentSelectors.currentAgentTitle, shallow);
+  const model = useSessionStore(agentSelectors.currentAgentModel, shallow);
 
   return (
     <Center gap={12} padding={'32px 16px'} style={{ marginTop: 8 }}>

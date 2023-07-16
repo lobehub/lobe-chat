@@ -18,7 +18,7 @@ const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
   // version: Migration.targetVersion,
 };
 
-export const useChatStore = create<SessionStore>()(
+export const useSessionStore = create<SessionStore>()(
   persist(
     devtools(createStore, {
       name: 'LOBE_CHATS',

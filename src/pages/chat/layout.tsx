@@ -4,14 +4,14 @@ import { useRouter } from 'next/router';
 import { PropsWithChildren, memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { sessionSelectors, useChatStore } from '@/store/session';
+import { sessionSelectors, useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
 import Sidebar from '../Sidebar';
 import { Sessions } from './SessionList';
 
 const ChatLayout = memo<PropsWithChildren>(({ children }) => {
-  const [title] = useChatStore((s) => {
+  const [title] = useSessionStore((s) => {
     const context = sessionSelectors.currentSession(s);
     return [context?.meta.title];
   }, isEqual);
@@ -26,7 +26,7 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
 
   useEffect(() => {
     if (typeof id === 'string') {
-      useChatStore.setState({ activeId: id });
+      useSessionStore.setState({ activeId: id });
     }
   }, [id]);
 

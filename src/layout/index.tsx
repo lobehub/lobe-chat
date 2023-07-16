@@ -3,7 +3,7 @@ import { App, ConfigProvider } from 'antd';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
 import { PropsWithChildren, useEffect } from 'react';
-import { useChatStore } from 'src/store/session';
+import { useSessionStore } from 'src/store/session';
 
 import { GlobalStyle } from '@/styles';
 
@@ -22,7 +22,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 export default ({ children }: PropsWithChildren) => {
   useEffect(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
-    useChatStore.persist.rehydrate();
+    useSessionStore.persist.rehydrate();
   }, []);
 
   return (
