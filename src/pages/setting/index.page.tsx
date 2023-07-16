@@ -8,19 +8,23 @@ import { Sessions } from '@/pages/chat/SessionList';
 
 import Sidebar from '../Sidebar';
 import Header from './Header';
+import SettingForm from './SettingForm';
 
 const SettingLayout = memo(() => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('setting');
   return (
     <>
       <Head>
-        <title>{t('setting')} - LobeChat</title>
+        <title>{t('header')} - LobeChat</title>
       </Head>
       <Flexbox horizontal width={'100%'}>
         <Sidebar />
         <Sessions />
         <Flexbox flex={1}>
           <Header />
+          <Flexbox align={'center'} padding={24}>
+            <SettingForm />
+          </Flexbox>
         </Flexbox>
       </Flexbox>
     </>

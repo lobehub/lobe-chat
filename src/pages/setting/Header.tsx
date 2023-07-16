@@ -12,12 +12,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 const Header = memo(() => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('setting');
 
   const { styles } = useStyles();
   return (
     <ChatHeader
-      left={<div className={styles.title}>{t('setting')}</div>}
+      left={<div className={styles.title}>{t('header')}</div>}
       onBackClick={() => Router.back()}
       showBackButton
     />
