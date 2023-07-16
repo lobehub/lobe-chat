@@ -6,16 +6,6 @@ export default (token: Theme) => css`
     box-shadow: none;
   }
 
-  .ant-btn-default:not(:disabled):not(.ant-btn-dangerous) {
-    border-color: transparent;
-
-    &:hover {
-      color: ${token.colorText};
-      background: ${token.isDarkMode ? token.colorFill : token.colorFillTertiary};
-      border-color: transparent;
-    }
-  }
-
   .ant-popover {
     z-index: 1100;
   }

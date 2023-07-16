@@ -2,6 +2,7 @@ import { ActionIcon, DraggablePanel, DraggablePanelContainer } from '@lobehub/ui
 import { createStyles } from 'antd-style';
 import { LucideEdit, LucideX } from 'lucide-react';
 import { useTranslation } from 'next-i18next';
+import Router from 'next/router';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
@@ -23,8 +24,8 @@ const useStyles = createStyles(({ css, token }) => ({
 const Config = () => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
-  const [showAgentSettings, toggleConfig] = useChatStore(
-    (s) => [s.showAgentSettings, s.toggleConfig],
+  const [showAgentSettings, toggleConfig, id] = useChatStore(
+    (s) => [s.showAgentSettings, s.toggleConfig, s.activeId],
     shallow,
   );
 
@@ -53,6 +54,9 @@ const Config = () => {
           <Flexbox gap={4} horizontal>
             <ActionIcon
               icon={LucideEdit}
+              onClick={() => {
+                Router.push(`/chat/${id}/edit`);
+              }}
               size={{ blockSize: 32, fontSize: 20 }}
               title={t('edit')}
             />
