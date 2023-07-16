@@ -3,7 +3,7 @@ import { LanguageModel } from '@/types/llm';
 import { LobeAgentConfig } from '@/types/session';
 
 import { sessionSelectors } from '../session';
-import { defaultAvatar, initialLobeAgentConfig } from './initialState';
+import { DEFAULT_AVATAR, initialLobeAgentConfig } from './initialState';
 
 const currentAgentTitle = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
@@ -14,9 +14,9 @@ const currentAgentTitle = (s: SessionStore) => {
 const currentAgentAvatar = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
 
-  if (!session) return defaultAvatar;
+  if (!session) return DEFAULT_AVATAR;
 
-  return session.meta.avatar || defaultAvatar;
+  return session.meta.avatar || DEFAULT_AVATAR;
 };
 
 const currentAgentConfig = (s: SessionStore) => {

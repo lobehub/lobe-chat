@@ -1,34 +1,64 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { promptPickEmoji, promptSummaryAgentName } from '@/prompts/agent';
+import { promptPickEmoji } from '@/prompts/agent';
 import { promptSummaryDescription, promptSummaryTitle } from '@/prompts/chat';
 import { SessionStore, chatSelectors, sessionSelectors } from '@/store/session';
+import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
 
 import { SessionLoadingState } from './initialState';
 
+/**
+ * 代理行为接口
+ */
 export interface AgentAction {
   /**
-   * 自动添加智能体名称
-   * @param agentId - 智能体 ID
+   * 自动选择表情
+   * @param id - 表情的 ID
    */
-  autoAddAgentName: (agentId: string) => Promise<void>;
-
-  autoAddChatBasicInfo: (chatId: string) => void;
   autoPickEmoji: (id: string) => void;
-  autocompleteAgentMeta: (agentId: string) => Promise<void>;
+  /**
+   * 自动完成代理描述
+   * @param id - 代理的 ID
+   * @returns 一个 Promise，用于异步操作完成后的处理
+   */
+  autocompleteAgentDescription: (id: string) => Promise<void>;
+
+  /**
+   * 自动完成代理标题
+   * @param id - 代理的 ID
+   * @returns 一个 Promise，用于异步操作完成后的处理
+   */
+  autocompleteAgentTitle: (id: string) => Promise<void>;
+  /**
+   * 自动完成会话代理元数据
+   * @param id - 代理的 ID
+   */
+  autocompleteSessionAgentMeta: (id: string) => void;
+
+  /**
+   * 内部更新代理元数据
+   * @param id - 代理的 ID
+   * @returns 任意类型的返回值
+   */
+  internalUpdateAgentMeta: (id: string) => any;
   /**
    * 切换配置
-   * @param showPanel - 是否显示面板
+   * @param showPanel - 是否显示面板，默认为 true
    */
   toggleConfig: (showPanel?: boolean) => void;
 
   /**
-   * 分发智能体信息
-   * @param payload - 智能体信息
+   * 更新代理配置
+   * @param config - 部分 LobeAgentConfig 的配置
    */
   updateAgentConfig: (config: Partial<LobeAgentConfig>) => void;
+  /**
+   * 更新加载状态
+   * @param key - SessionLoadingState 的键
+   * @param value - 加载状态的值
+   */
   updateLoadingState: (key: keyof SessionLoadingState, value: boolean) => void;
 }
 
@@ -38,79 +68,6 @@ export const createAgentSlice: StateCreator<
   [],
   AgentAction
 > = (set, get) => ({
-  // 使用 AI 自动补齐 Agent 元信息
-  autoAddAgentName: async (id) => {
-    const { dispatchSession, updateLoadingState } = get();
-    const session = sessionSelectors.getSessionById(id)(get());
-    if (!session) return;
-
-    const previousTitle = session.meta.title;
-    const systemRole = session.config.systemRole;
-
-    // 替换为 ...
-    dispatchSession({ id, key: 'title', type: 'updateSessionMeta', value: '...' });
-
-    let title = '';
-
-    await fetchPresetTaskResult({
-      onError: () => {
-        dispatchSession({
-          id,
-          key: 'title',
-          type: 'updateSessionMeta',
-          value: previousTitle || systemRole,
-        });
-      },
-      onLoadingChange: (loading) => {
-        updateLoadingState('summarizingTitle', loading);
-      },
-      onMessageHandle: (text) => {
-        title += text;
-        dispatchSession({ id, key: 'title', type: 'updateSessionMeta', value: title });
-      },
-      params: promptSummaryAgentName(systemRole),
-    });
-  },
-
-  autoAddChatBasicInfo: (chatId) => {
-    const session = sessionSelectors.getSessionById(chatId)(get());
-    const updateMeta = (key: 'title' | 'description') => {
-      let value = '';
-      return (text: string) => {
-        value += text;
-        get().dispatchSession({
-          id: chatId,
-          key,
-          type: 'updateSessionMeta',
-          value,
-        });
-      };
-    };
-
-    const chats = chatSelectors.currentChats(get());
-
-    if (!session) return;
-    if (!session.meta.title) {
-      fetchPresetTaskResult({
-        onLoadingChange: (loading) => {
-          get().updateLoadingState('summarizingTitle', loading);
-        },
-        onMessageHandle: updateMeta('title'),
-        params: promptSummaryTitle(chats),
-      });
-    }
-
-    if (!session.meta.description) {
-      fetchPresetTaskResult({
-        onLoadingChange: (loading) => {
-          get().updateLoadingState('summarizingTitle', loading);
-        },
-        onMessageHandle: updateMeta('description'),
-        params: promptSummaryDescription(chats),
-      });
-    }
-  },
-
   autoPickEmoji: async (id) => {
     const { dispatchSession } = get();
     const session = sessionSelectors.getSessionById(id)(get());
@@ -129,19 +86,87 @@ export const createAgentSlice: StateCreator<
       dispatchSession({ id, key: 'avatar', type: 'updateSessionMeta', value: emoji });
     }
   },
-  autocompleteAgentMeta: async (id) => {
+
+  autocompleteAgentDescription: async (id) => {
+    const { dispatchSession, updateLoadingState, internalUpdateAgentMeta } = get();
     const session = sessionSelectors.getSessionById(id)(get());
     if (!session) return;
 
-    // 没有title 就补充 title
+    const chats = chatSelectors.currentChats(get());
+
+    if (chats.length <= 0) return;
+
+    const preValue = session.meta.description;
+
+    // 替换为 ...
+    dispatchSession({ id, key: 'description', type: 'updateSessionMeta', value: '...' });
+
+    fetchPresetTaskResult({
+      onError: () => {
+        dispatchSession({
+          id,
+          key: 'description',
+          type: 'updateSessionMeta',
+          value: preValue,
+        });
+      },
+      onLoadingChange: (loading) => {
+        updateLoadingState('summarizingDescription', loading);
+      },
+      onMessageHandle: internalUpdateAgentMeta(id)('description'),
+      params: promptSummaryDescription(chats),
+    });
+  },
+
+  autocompleteAgentTitle: async (id) => {
+    const { dispatchSession, updateLoadingState, internalUpdateAgentMeta } = get();
+    const session = sessionSelectors.getSessionById(id)(get());
+    if (!session) return;
+
+    const chats = chatSelectors.currentChats(get());
+
+    if (chats.length <= 0) return;
+
+    const previousTitle = session.meta.title;
+
+    // 替换为 ...
+    dispatchSession({ id, key: 'title', type: 'updateSessionMeta', value: '...' });
+
+    fetchPresetTaskResult({
+      onError: () => {
+        dispatchSession({ id, key: 'title', type: 'updateSessionMeta', value: previousTitle });
+      },
+      onLoadingChange: (loading) => {
+        updateLoadingState('summarizingTitle', loading);
+      },
+      onMessageHandle: internalUpdateAgentMeta(id)('title'),
+      params: promptSummaryTitle(chats),
+    });
+  },
+
+  autocompleteSessionAgentMeta: (id) => {
+    const session = sessionSelectors.getSessionById(id)(get());
+
+    if (!session) return;
     if (!session.meta.title) {
-      get().autoAddAgentName(id);
+      get().autocompleteAgentTitle(id);
     }
 
-    // 没有 avatar 就自动挑选 emoji
+    if (!session.meta.description) {
+      get().autocompleteAgentDescription(id);
+    }
+
     if (!session.meta.avatar) {
       get().autoPickEmoji(id);
     }
+  },
+
+  internalUpdateAgentMeta: (id: string) => (key: keyof MetaData) => {
+    let value = '';
+    return (text: string) => {
+      value += text;
+      get().dispatchSession({ id, key, type: 'updateSessionMeta', value });
+    };
   },
 
   toggleConfig: (newValue) => {

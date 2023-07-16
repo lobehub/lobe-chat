@@ -7,6 +7,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { agentSelectors, sessionSelectors, useSessionStore } from '@/store/session';
+import { DEFAULT_TITLE } from '@/store/session/slices/agentConfig';
 
 import { ConfigCell, ConfigCellGroup } from './ConfigCell';
 
@@ -33,7 +34,7 @@ const ReadMode = memo(() => {
   return (
     <Center gap={12} padding={'32px 16px'} style={{ marginTop: 8 }}>
       <Avatar avatar={avatar} size={100} />
-      <Flexbox className={styles.title}>{title || '默认对话'}</Flexbox>
+      <Flexbox className={styles.title}>{title || DEFAULT_TITLE}</Flexbox>
       <Flexbox className={styles.model}>{model}</Flexbox>
       <Flexbox className={styles.desc}>{session.meta.description}</Flexbox>
 

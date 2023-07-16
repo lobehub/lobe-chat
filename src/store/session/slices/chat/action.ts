@@ -157,7 +157,7 @@ export const createChatSlice: StateCreator<
   },
 
   sendMessage: async (message) => {
-    const { dispatchMessage, generateMessage } = get();
+    const { dispatchMessage, generateMessage, autocompleteSessionAgentMeta } = get();
     const session = sessionSelectors.currentSession(get());
     if (!session || !message) return;
 
@@ -201,5 +201,10 @@ export const createChatSlice: StateCreator<
         item.scrollIntoView({ behavior: 'smooth' });
       },
     });
+
+    const chats = chatSelectors.currentChats(get());
+    if (chats.length >= 4) {
+      autocompleteSessionAgentMeta(session.id);
+    }
   },
 });

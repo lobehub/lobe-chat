@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { sessionSelectors, useSessionStore } from '@/store/session';
+import { DEFAULT_TITLE } from '@/store/session/slices/agentConfig';
 
 import { useStyles } from './style';
 
@@ -21,22 +22,21 @@ interface SessionItemProps {
 const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) => {
   const { t } = useTranslation('common');
   const { styles, theme, cx } = useStyles();
-  const [title, systemRole, avatar, avatarBackground, updateAt, removeSession] = useSessionStore(
-    (s) => {
+  const [title, description, systemRole, avatar, avatarBackground, updateAt, removeSession] =
+    useSessionStore((s) => {
       const session = sessionSelectors.getSessionById(id)(s);
       const meta = session.meta;
       const systemRole = session.config.systemRole;
       return [
         meta.title,
+        meta.description,
         systemRole,
         sessionSelectors.getAgentAvatar(meta),
         meta.backgroundColor,
         session?.updateAt,
         s.removeSession,
       ];
-    },
-    shallow,
-  );
+    }, shallow);
 
   return (
     <Flexbox className={styles.container} style={{ position: 'relative' }}>
@@ -53,13 +53,13 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
         }
         classNames={{ time: cx('session-time', styles.time) }}
         date={updateAt}
-        description={title}
+        description={description || systemRole}
         loading={loading}
         style={{
           alignItems: 'center',
           color: theme.colorText,
         }}
-        title={systemRole}
+        title={title || DEFAULT_TITLE}
       />
       <Popconfirm
         arrow={false}

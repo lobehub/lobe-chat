@@ -12,7 +12,6 @@ const List = () => {
     shallow,
   );
 
-  console.log(data);
   return (
     <ChatList
       data={data}

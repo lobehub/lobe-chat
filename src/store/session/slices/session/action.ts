@@ -69,9 +69,7 @@ export const createSessionSlice: StateCreator<
       },
       createAt: timestamp,
       id: uuid(),
-      meta: {
-        title: '默认对话',
-      },
+      meta: {},
       type: LobeSessionType.Agent,
       updateAt: timestamp,
     };
