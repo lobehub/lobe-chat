@@ -38,6 +38,6 @@ const Chat = memo(() => {
 });
 export default Chat;
 
-export const getServerSideProps = async (context: any) => ({
+export const getStaticProps = async (context: any) => ({
   props: await serverSideTranslations(context.locale),
 });
