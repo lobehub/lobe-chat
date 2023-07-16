@@ -77,7 +77,7 @@
     "lodash-es": "^4",
     "lucide-react": "latest",
     "nanoid": "^4",
-    "next": "13.4.7",
+    "next": "13.4.10",
     "next-i18next": "^14",
     "openai-edge": "^1",
     "polished": "^4",
