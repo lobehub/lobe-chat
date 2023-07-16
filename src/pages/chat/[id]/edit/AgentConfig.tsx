@@ -1,5 +1,5 @@
 import { TextArea } from '@lobehub/ui';
-import { Button, Collapse, InputNumber, Segmented, Slider } from 'antd';
+import { Collapse, InputNumber, Segmented, Slider } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { useTranslation } from 'next-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -45,19 +45,20 @@ const AgentConfig = () => {
               value,
             }))}
             size={'large'}
+            value={config.model}
           />
         </FormItem>
         <FormItem label={t('agentPrompt')}>
           <Flexbox gap={16}>
             <TextArea
+              onChange={(e) => {
+                updateAgentConfig({ systemRole: e.target.value });
+              }}
               placeholder={t('agentPromptPlaceholder')}
               style={{ minHeight: 160 }}
               type={'block'}
               value={config.systemRole}
             />
-            <Flexbox direction={'horizontal-reverse'}>
-              <Button type={'primary'}>{t('updatePrompt')}</Button>
-            </Flexbox>
           </Flexbox>
         </FormItem>
         <Collapse

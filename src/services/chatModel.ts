@@ -1,6 +1,6 @@
 import { merge } from 'lodash-es';
 
-import type { OpenAIStreamPayload } from '@/pages/api/OpenAIStream';
+import type { OpenAIStreamPayload } from '@/types/openai';
 
 import { URLS } from './url';
 
@@ -13,9 +13,12 @@ export const fetchChatModel = (
 ) => {
   const payload = merge(
     {
+      frequency_penalty: 0,
       model: 'gpt-3.5-turbo',
+      presence_penalty: 0,
       stream: true,
       temperature: 0.6,
+      top_p: 1,
     },
     params,
   );

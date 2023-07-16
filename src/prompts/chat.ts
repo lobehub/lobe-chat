@@ -1,5 +1,4 @@
-import { OpenAIStreamPayload } from '@/pages/api/OpenAIStream';
-import { OpenAIChatMessage } from '@/types/openai';
+import { OpenAIChatMessage, OpenAIStreamPayload } from '@/types/openai';
 
 export const promptSummaryTitle = (
   messages: OpenAIChatMessage[],

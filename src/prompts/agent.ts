@@ -1,4 +1,4 @@
-import { OpenAIStreamPayload } from '@/pages/api/OpenAIStream';
+import { OpenAIStreamPayload } from '@/types/openai';
 
 // 自动起名
 export const promptSummaryAgentName = (content: string): Partial<OpenAIStreamPayload> => ({
