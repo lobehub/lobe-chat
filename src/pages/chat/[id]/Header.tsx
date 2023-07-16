@@ -58,18 +58,11 @@ const Header = memo(() => {
         </Flexbox>
       </Flexbox>
       <Flexbox gap={8} horizontal>
-        <ActionIcon
-          icon={Share2Icon}
-          onClick={() => {
-            // genShareUrl();
-          }}
-          size={{ fontSize: 24 }}
-          title={t('share')}
-        />
+        <ActionIcon icon={Share2Icon} size={{ fontSize: 24 }} title={t('share')} />
         <ActionIcon icon={ArchiveIcon} size={{ fontSize: 24 }} title={t('archive')} />
         <ActionIcon
           icon={MoreVerticalIcon}
-          onClick={toggleConfig}
+          onClick={() => toggleConfig()}
           size={{ fontSize: 24 }}
           title={t('sessionSetting')}
         />
