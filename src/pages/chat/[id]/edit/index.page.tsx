@@ -1,5 +1,5 @@
-import { Avatar, ChatHeader, Input, TextArea } from '@lobehub/ui';
-import { Button, Slider } from 'antd';
+import { ChatHeader } from '@lobehub/ui';
+import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -8,7 +8,8 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ChatLayout from '../../layout';
-import FormItem from './Form';
+import AgentConfig from './AgentConfig';
+import AgentMeta from './AgentMeta';
 
 const useStyles = createStyles(({ css, token }) => ({
   footer: css`
@@ -23,10 +24,6 @@ const useStyles = createStyles(({ css, token }) => ({
     background: ${token.colorBgContainer};
     border-bottom: 1px solid ${token.colorSplit};
   `,
-  profile: css`
-    font-size: 20px;
-    color: ${token.colorTextTertiary};
-  `,
   title: css`
     font-size: 16px;
     font-weight: 500;
@@ -36,13 +33,8 @@ const useStyles = createStyles(({ css, token }) => ({
 const EditPage = memo(() => {
   const { t } = useTranslation('common');
 
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
 
-  const basic = [
-    { label: t('agentName'), placeholder: t('agentNamePlaceholder') },
-    { label: t('agentDescription'), placeholder: t('agentDescriptionPlaceholder') },
-    { label: t('agentTag'), placeholder: t('agentTagPlaceholder') },
-  ];
   return (
     <ChatLayout>
       <Flexbox height={'100vh'} style={{ position: 'relative' }} width={'100%'}>
@@ -50,59 +42,18 @@ const EditPage = memo(() => {
         <ChatHeader
           left={<div className={styles.title}>{t('editAgentProfile')}</div>}
           onBackClick={() => Router.back()}
+          right={
+            <>
+              <Button>{t('share')}</Button>
+              <Button type={'primary'}>{t('export')}</Button>
+            </>
+          }
           showBackButton
         />
         {/*form*/}
         <Flexbox className={styles.form} flex={1} gap={10} padding={24}>
-          <FormItem label={t('agentPrompt')}>
-            <TextArea
-              placeholder={t('agentPromptPlaceholder')}
-              // style={{ minHeight: 64 }}
-              type={'block'}
-            />
-          </FormItem>
-
-          <Flexbox
-            align={'center'}
-            distribution={'space-between'}
-            horizontal
-            paddingBlock={12}
-            style={{
-              borderBottom: `1px solid ${theme.colorBorder}`,
-            }}
-          >
-            <Flexbox className={styles.profile}> {t('profile')}</Flexbox>
-            <Button size={'large'}>{t('autoGenerate')}</Button>
-          </Flexbox>
-          <Flexbox gap={80} horizontal style={{ marginTop: 16 }}>
-            <Flexbox flex={1} gap={24}>
-              {basic.map((item) => (
-                <FormItem key={item.label} label={item.label}>
-                  <Input placeholder={item.placeholder} type={'block'} />
-                </FormItem>
-              ))}
-
-              <Flexbox className={styles.profile}> {t('advanceSettings')}</Flexbox>
-
-              <FormItem label={t('modelTemperature')}>
-                <Slider />
-              </FormItem>
-            </Flexbox>
-            <FormItem label={t('agentAvatar')}>
-              <Avatar size={200} />
-            </FormItem>
-          </Flexbox>
-        </Flexbox>
-
-        {/*bottom*/}
-        <Flexbox
-          className={styles.footer}
-          direction={'horizontal-reverse'}
-          gap={8}
-          padding={'16px 24px'}
-        >
-          <Button type={'primary'}>{t('updateAgent')}</Button>
-          <Button>{t('reset')}</Button>
+          <AgentMeta />
+          <AgentConfig />
         </Flexbox>
       </Flexbox>
     </ChatLayout>

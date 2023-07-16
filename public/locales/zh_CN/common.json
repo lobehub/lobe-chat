@@ -3,6 +3,7 @@
   "agentAvatar": "头像",
   "agentDescription": "描述",
   "agentDescriptionPlaceholder": "请输入描述",
+  "agentModel": "模型",
   "agentName": "名称",
   "agentNamePlaceholder": "请输入名称",
   "agentProfile": "助手信息",
@@ -18,7 +19,12 @@
   "defaultAgent": "默认助手",
   "edit": "编辑",
   "editAgentProfile": "编辑助手信息",
-
+  "export": "导出",
+  "gpt-3.5-turbo": "GPT 3.5",
+  "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+  "gpt-4": "GPT 4",
+  "gpt-4-32k": "GPT 4 (32K)",
+  "modelConfig": "模型配置",
   "modelTemperature": "发散度",
   "newAgent": "新建助手",
   "noDescription": "暂无描述",
@@ -29,5 +35,6 @@
   "sessionSetting": "会话设置",
   "setting": "设置",
   "share": "分享",
-  "updateAgent": "更新助理信息"
+  "updateAgent": "更新助理信息",
+  "updatePrompt": "更新提示词"
 }

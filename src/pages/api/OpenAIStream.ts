@@ -86,7 +86,6 @@ export function OpenAIStream(payload: OpenAIStreamPayload) {
         {
           streaming: true,
           ...params,
-
           callbacks: [
             {
               handleLLMNewToken(token) {

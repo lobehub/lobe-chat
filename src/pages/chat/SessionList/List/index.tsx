@@ -13,7 +13,7 @@ const SessionList = memo(() => {
   const { styles, cx } = useStyles();
   const list = useSessionStore((s) => sessionSelectors.chatList(s), isEqual);
   const [activeId, loading] = useSessionStore(
-    (s) => [s.activeId, s.loading.summarizingTitle],
+    (s) => [s.activeId, s.autocompleteLoading.title],
     shallow,
   );
 

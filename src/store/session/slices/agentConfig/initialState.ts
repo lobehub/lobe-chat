@@ -1,13 +1,11 @@
 import { LanguageModel } from '@/types/llm';
+import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 
-export interface SessionLoadingState {
-  pickingEmojiAvatar: boolean;
-  summarizingDescription: boolean;
-  summarizingTitle: boolean;
-}
+export type SessionLoadingState = Record<Partial<keyof MetaData>, boolean>;
+
 export interface AgentConfigState {
-  loading: SessionLoadingState;
+  autocompleteLoading: SessionLoadingState;
 
   showAgentSettings: boolean;
 }
@@ -24,10 +22,12 @@ export const DEFAULT_TITLE = '默认对话';
 
 export const initialAgentConfigState: AgentConfigState = {
   // // loading 中间态
-  loading: {
-    pickingEmojiAvatar: false,
-    summarizingDescription: false,
-    summarizingTitle: false,
+  autocompleteLoading: {
+    avatar: false,
+    backgroundColor: false,
+    description: false,
+    tag: false,
+    title: false,
   },
 
   showAgentSettings: false,

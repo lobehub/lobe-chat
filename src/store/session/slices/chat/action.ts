@@ -1,7 +1,7 @@
 import { StateCreator } from 'zustand/vanilla';
 
 import { fetchChatModel } from '@/services/chatModel';
-import { SessionStore, chatSelectors, sessionSelectors } from '@/store/session';
+import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
 import { FetchSSEOptions, fetchSSE } from '@/utils/fetch';
 import { nanoid } from '@/utils/uuid';
@@ -83,8 +83,9 @@ export const createChatSlice: StateCreator<
 
   generateMessage: async (messages, options) => {
     set({ chatLoading: true });
+    const config = agentSelectors.currentAgentConfigSafe(get());
 
-    const fetcher = () => fetchChatModel({ messages });
+    const fetcher = () => fetchChatModel({ messages, model: config.model, ...config.params });
 
     await fetchSSE(fetcher, options);
 

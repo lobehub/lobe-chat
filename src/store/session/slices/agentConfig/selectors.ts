@@ -1,15 +1,18 @@
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
+import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 
 import { sessionSelectors } from '../session';
 import { DEFAULT_AVATAR, initialLobeAgentConfig } from './initialState';
 
-const currentAgentTitle = (s: SessionStore) => {
+const currentAgentMeta = (s: SessionStore): MetaData => {
   const session = sessionSelectors.currentSession(s);
 
-  return session?.meta.title;
+  return session?.meta || {};
 };
+
+const currentAgentTitle = (s: SessionStore) => currentAgentMeta(s)?.title;
 
 const currentAgentAvatar = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
@@ -39,6 +42,7 @@ export const agentSelectors = {
   currentAgentAvatar,
   currentAgentConfig,
   currentAgentConfigSafe,
+  currentAgentMeta,
   currentAgentModel,
   currentAgentTitle,
 };

@@ -24,13 +24,14 @@ export interface AgentAction {
    * @returns 一个 Promise，用于异步操作完成后的处理
    */
   autocompleteAgentDescription: (id: string) => Promise<void>;
-
   /**
    * 自动完成代理标题
    * @param id - 代理的 ID
    * @returns 一个 Promise，用于异步操作完成后的处理
    */
   autocompleteAgentTitle: (id: string) => Promise<void>;
+
+  autocompleteMeta: (key: keyof MetaData) => void;
   /**
    * 自动完成会话代理元数据
    * @param id - 代理的 ID
@@ -77,7 +78,7 @@ export const createAgentSlice: StateCreator<
 
     const emoji = await fetchPresetTaskResult({
       onLoadingChange: (loading) => {
-        get().updateLoadingState('pickingEmojiAvatar', loading);
+        get().updateLoadingState('avatar', loading);
       },
       params: promptPickEmoji(systemRole),
     });
@@ -111,7 +112,7 @@ export const createAgentSlice: StateCreator<
         });
       },
       onLoadingChange: (loading) => {
-        updateLoadingState('summarizingDescription', loading);
+        updateLoadingState('description', loading);
       },
       onMessageHandle: internalUpdateAgentMeta(id)('description'),
       params: promptSummaryDescription(chats),
@@ -137,11 +138,32 @@ export const createAgentSlice: StateCreator<
         dispatchSession({ id, key: 'title', type: 'updateSessionMeta', value: previousTitle });
       },
       onLoadingChange: (loading) => {
-        updateLoadingState('summarizingTitle', loading);
+        updateLoadingState('title', loading);
       },
       onMessageHandle: internalUpdateAgentMeta(id)('title'),
       params: promptSummaryTitle(chats),
     });
+  },
+
+  autocompleteMeta: (key) => {
+    const { activeId, autoPickEmoji, autocompleteAgentTitle, autocompleteAgentDescription } = get();
+    if (!activeId) return;
+
+    switch (key) {
+      case 'avatar': {
+        autoPickEmoji(activeId);
+        return;
+      }
+
+      case 'description': {
+        autocompleteAgentDescription(activeId);
+        return;
+      }
+
+      case 'title': {
+        autocompleteAgentTitle(activeId);
+      }
+    }
   },
 
   autocompleteSessionAgentMeta: (id) => {
@@ -160,7 +182,6 @@ export const createAgentSlice: StateCreator<
       get().autoPickEmoji(id);
     }
   },
-
   internalUpdateAgentMeta: (id: string) => (key: keyof MetaData) => {
     let value = '';
     return (text: string) => {
@@ -183,6 +204,6 @@ export const createAgentSlice: StateCreator<
     get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
   },
   updateLoadingState: (key, value) => {
-    set({ loading: { ...get().loading, [key]: value } });
+    set({ autocompleteLoading: { ...get().autocompleteLoading, [key]: value } });
   },
 });

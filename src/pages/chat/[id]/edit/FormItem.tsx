@@ -13,7 +13,8 @@ interface FormItemProps {
   children: ReactNode;
   label: string;
 }
-const FormItem = memo<FormItemProps>(({ label, children }) => {
+
+export const FormItem = memo<FormItemProps>(({ label, children }) => {
   const { styles } = useStyles();
 
   return (
@@ -23,5 +24,3 @@ const FormItem = memo<FormItemProps>(({ label, children }) => {
     </Flexbox>
   );
 });
-
-export default FormItem;
