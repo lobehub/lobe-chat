@@ -4,6 +4,8 @@ import Head from 'next/head';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { Sessions } from '@/pages/chat/SessionList';
+
 import Sidebar from '../Sidebar';
 import Header from './Header';
 
@@ -16,6 +18,7 @@ const SettingLayout = memo(() => {
       </Head>
       <Flexbox horizontal width={'100%'}>
         <Sidebar />
+        <Sessions />
         <Flexbox flex={1}>
           <Header />
         </Flexbox>
