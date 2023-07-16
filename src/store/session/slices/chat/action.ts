@@ -95,72 +95,65 @@ export const createChatSlice: StateCreator<
     set({ editingMessageId: messageId });
   },
 
-  resendMessage: async () => {
-    //   const {
-    //     sendMessage,
-    //     dispatchMessage,
-    //     // generateMessage
-    //   } = get();
-    //
-    //   const session = sessionSelectors.currentSession(get());
-    //
-    //   if (!session) return;
-    //
-    //   const index = session.chats.findIndex((s) => s.id === id);
-    //   if (index < 0) return;
-    //
-    //   const message = session.chats[index];
-    //
-    //   // 用户通过手动删除，造成了他的问题是最后一条消息
-    //   // 这种情况下，相当于用户重新发送消息
-    //   if (session.chats.length === index && message.role === 'user') {
-    //     // 发送消息的时候会把传入的消息 message 新建一条，因此在发送前先把这条消息在记录中删除
-    //     dispatchMessage({ id: message.id, type: 'deleteMessage' });
-    //     await sendMessage(message.content);
-    //     return;
-    //   }
-    //
-    //   // 上下文消息就是当前消息之前的消息
-    //   const contextMessages = session.chats.slice(0, index);
-    //
-    //   // 上下文消息中最后一条消息
-    //   const userMessage = contextMessages.at(-1)?.content;
-    //   if (!userMessage) return;
-    //
-    //   const targetMessage = session.chats[index];
-    //
-    //   // 如果不是 assistant 的消息，那么需要额外插入一条消息
-    //   if (targetMessage.role === 'assistant') {
-    //     // 保存之前的消息为历史消息
-    //     // dispatchMessage({ type: 'updateMessage', message: botPrevMsg, index });
-    //     // dispatchMessage({ type: 'updateMessage', message: LOADING_FLAT, index });
-    //   } else {
-    //     // dispatchMessage({
-    //     //   type: 'insertMessage',
-    //     //   index,
-    //     //   message: { role: 'assistant', content: LOADING_FLAT },
-    //     // });
-    //   }
-    //
-    //   // 重置错误信息
-    //   dispatchMessage({
-    //     id: targetMessage.id,
-    //     key: 'error',
-    //     type: 'updateMessage',
-    //     value: undefined,
-    //   });
-    //
-    //   // 开始更新消息
-    //
-    //   // await generateMessage(userMessage, contextMessages, {
-    //   //   onMessageHandle: (text) => {
-    //   //     currentResponse = [...currentResponse, text];
-    //   //     dispatchMessage({ type: 'updateMessage', message: currentResponse.join(''), index });
-    //   //   },
-    //   //   onErrorHandle: (error) => {
-    //   //     dispatchMessage({ type: 'updateMessage' });
-    //   //   },
-    //   // });
+  resendMessage: async (messageId) => {
+    const session = sessionSelectors.currentSession(get());
+
+    if (!session) return;
+
+    // 1. 构造所有相关的历史记录
+    const chats = chatSelectors.currentChats(get());
+
+    const currentIndex = chats.findIndex((c) => c.id === messageId);
+
+    const histories = chats
+      .slice(0, currentIndex + 1)
+      // 如果点击重新发送的 message 其 role 是 assistant，那么需要移除
+      // 如果点击重新发送的 message 其 role 是 user，则不需要移除
+      .filter((c) => !(c.role === 'assistant' && c.id === messageId));
+
+    if (histories.length <= 0) return;
+
+    const { generateMessage, dispatchMessage } = get();
+
+    // 再添加一个空的信息用于放置 ai 响应，注意顺序不能反
+    // 因为如果顺序反了，messages 中将包含新增的 ai message
+    const assistantId = nanoid();
+    const latestMsg = histories.filter((s) => s.role === 'user').at(-1);
+
+    if (!latestMsg) return;
+
+    dispatchMessage({
+      id: assistantId,
+      message: LOADING_FLAT,
+      parentId: latestMsg.id,
+      role: 'assistant',
+      type: 'addMessage',
+    });
+
+    let output = '';
+
+    // 生成 ai message
+    await generateMessage(histories, {
+      onErrorHandle: (error) => {
+        dispatchMessage({ id: assistantId, key: 'error', type: 'updateMessage', value: error });
+      },
+      onMessageHandle: (text) => {
+        output += text;
+
+        dispatchMessage({
+          id: assistantId,
+          key: 'content',
+          type: 'updateMessage',
+          value: output,
+        });
+
+        // 滚动到最后一条消息
+        const item = document.querySelector('#for-loading');
+        if (!item) return;
+
+        item.scrollIntoView({ behavior: 'smooth' });
+      },
+    });
   },
 
   sendMessage: async (message) => {
@@ -194,7 +187,12 @@ export const createChatSlice: StateCreator<
       onMessageHandle: (text) => {
         output += text;
 
-        dispatchMessage({ id: assistantId, key: 'content', type: 'updateMessage', value: output });
+        dispatchMessage({
+          id: assistantId,
+          key: 'content',
+          type: 'updateMessage',
+          value: output,
+        });
 
         // 滚动到最后一条消息
         const item = document.querySelector('#for-loading');

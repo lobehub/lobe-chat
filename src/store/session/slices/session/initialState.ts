@@ -1,5 +1,6 @@
-import { LanguageModel } from '@/types/llm';
-import { LobeAgentConfig, LobeAgentSession, LobeSessionType } from '@/types/session';
+import { LobeAgentSession, LobeSessionType } from '@/types/session';
+
+import { initialLobeAgentConfig } from '../agentConfig';
 
 export interface SessionState {
   /**
@@ -11,12 +12,6 @@ export interface SessionState {
   searchKeywords: string;
   sessions: Record<string, LobeAgentSession>;
 }
-
-export const initialLobeAgentConfig: LobeAgentConfig = {
-  model: LanguageModel.GPT3_5,
-  params: { temperature: 0.6 },
-  systemRole: '',
-};
 
 export const initLobeSession: LobeAgentSession = {
   chats: {},
