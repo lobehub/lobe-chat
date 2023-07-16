@@ -1,4 +1,5 @@
 import isEqual from 'fast-deep-equal';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { memo, useEffect } from 'react';
@@ -55,5 +56,15 @@ const ChatLayout = () => {
     </>
   );
 };
+
+export async function getServerSideProps(context: any) {
+  const { locale } = context;
+  return {
+    props: {
+      // pass the translation props to the page component
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+}
 
 export default memo(ChatLayout);
