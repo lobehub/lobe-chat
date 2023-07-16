@@ -61,7 +61,7 @@
     "@ant-design/colors": "^7",
     "@ant-design/icons": "^5",
     "@commitlint/cli": "^17",
-    "@lobehub/ui": "latest",
+    "@lobehub/ui": "^1",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
     "antd": "^5",
@@ -86,7 +86,7 @@
     "react-layout-kit": "^1",
     "swr": "^2",
     "ts-md5": "^1",
-    "zustand": "4.3.6",
+    "zustand": "4.3.7",
     "zustand-utils": "^1"
   },
   "devDependencies": {
