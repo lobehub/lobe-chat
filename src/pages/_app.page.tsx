@@ -4,13 +4,15 @@ import type { AppProps } from 'next/app';
 
 import Layout from '@/layout';
 
-function MyApp({ Component, pageProps }: AppProps) {
+const App = appWithTranslation(({ Component, pageProps }: AppProps) => (
+  <Component {...pageProps} />
+));
+
+export default (props: AppProps) => {
   return (
     <Layout>
-      <Component {...pageProps} />
+      <App {...props} />
       <Analytics />
     </Layout>
   );
-}
-
-export default appWithTranslation(MyApp);
+};
