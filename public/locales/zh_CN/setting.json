@@ -62,6 +62,7 @@
     "subTitle": "值越大，越有可能扩展到新话题"
   },
   "sendKey": "发送键",
+  "setting": "设置",
   "temperature": {
     "title": "随机性 (temperature)",
     "subTitle": "值越大，回复越随机"

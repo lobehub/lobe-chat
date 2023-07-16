@@ -62,7 +62,7 @@ const Header = memo(() => {
           <ActionIcon icon={ArchiveIcon} size={{ fontSize: 24 }} title={t('archive')} />
           <ActionIcon
             icon={MoreVerticalIcon}
-            onClick={toggleConfig}
+            onClick={() => toggleConfig()}
             size={{ fontSize: 24 }}
             title={t('sessionSetting')}
           />
