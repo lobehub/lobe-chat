@@ -61,7 +61,7 @@
     "@ant-design/colors": "^7",
     "@ant-design/icons": "^5",
     "@commitlint/cli": "^17",
-    "@lobehub/ui": "lastest",
+    "@lobehub/ui": "^1",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
     "antd": "^5",

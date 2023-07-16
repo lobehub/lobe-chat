@@ -8,11 +8,11 @@ import { Flexbox } from 'react-layout-kit';
 import { sessionSelectors, useChatStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
+import Sidebar from '../../Sidebar';
 import Config from '../Config';
 import Conversation from '../Conversation';
 import Header from '../Header';
 import { Sessions } from '../SessionList';
-import Sidebar from '../Sidebar';
 
 const ChatLayout = memo(() => {
   const [title] = useChatStore((s) => {
@@ -57,14 +57,7 @@ const ChatLayout = memo(() => {
   );
 });
 
-export async function getServerSideProps(context: any) {
-  const { locale } = context;
-  return {
-    props: {
-      // pass the translation props to the page component
-      ...(await serverSideTranslations(locale)),
-    },
-  };
-}
-
+export const getServerSideProps = async (context: any) => ({
+  props: await serverSideTranslations(context.locale),
+});
 export default ChatLayout;

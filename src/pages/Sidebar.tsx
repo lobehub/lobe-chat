@@ -1,5 +1,6 @@
 import { ActionIcon, Logo, SideNav } from '@lobehub/ui';
 import { MessageSquare, Settings2, Sticker } from 'lucide-react';
+import Router from 'next/router';
 import { memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
@@ -10,7 +11,7 @@ const Sidebar = memo(() => {
   return (
     <SideNav
       avatar={<Logo size={40} />}
-      bottomActions={<ActionIcon icon={Settings2} />}
+      bottomActions={<ActionIcon icon={Settings2} onClick={() => Router.push('/setting')} />}
       style={{ height: '100vh' }}
       topActions={
         <>
