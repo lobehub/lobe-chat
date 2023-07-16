@@ -8,13 +8,13 @@ import { Flexbox } from 'react-layout-kit';
 import { sessionSelectors, useChatStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
-import Config from './Config';
-import Conversation from './Conversation';
-import Header from './Header';
-import { Sessions } from './SessionList';
-import Sidebar from './Sidebar';
+import Config from '../Config';
+import Conversation from '../Conversation';
+import Header from '../Header';
+import { Sessions } from '../SessionList';
+import Sidebar from '../Sidebar';
 
-const ChatLayout = () => {
+const ChatLayout = memo(() => {
   const [title] = useChatStore((s) => {
     const context = sessionSelectors.currentSession(s);
     return [context?.meta.title];
@@ -55,7 +55,7 @@ const ChatLayout = () => {
       </Flexbox>
     </>
   );
-};
+});
 
 export async function getServerSideProps(context: any) {
   const { locale } = context;
@@ -67,4 +67,4 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-export default memo(ChatLayout);
+export default ChatLayout;

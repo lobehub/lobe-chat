@@ -86,7 +86,10 @@ export const createSessionSlice: StateCreator<
 
   removeSession: (sessionId) => {
     get().dispatchSession({ id: sessionId, type: 'removeSession' });
-    Router.push('/');
+
+    if (sessionId === get().activeId) {
+      Router.push('/');
+    }
   },
 
   switchSession: (sessionId) => {

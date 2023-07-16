@@ -1,12 +1,13 @@
 import isEqual from 'fast-deep-equal';
+import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { useStyles } from '@/pages/chat/SessionList/List/style';
 import { sessionSelectors, useChatStore } from '@/store/session';
 
 import SessionItem from './SessionItem';
+import { useStyles } from './style';
 
 const SessionList = memo(() => {
   const { styles, cx } = useStyles();
@@ -19,12 +20,9 @@ const SessionList = memo(() => {
   return (
     <Flexbox className={cx(styles.list)}>
       {list.map(({ id }) => (
-        <SessionItem
-          active={activeId === id}
-          id={id}
-          key={id}
-          loading={loading && id === activeId}
-        />
+        <Link href={`/chat/${id}`} key={id}>
+          <SessionItem active={activeId === id} id={id} loading={loading && id === activeId} />
+        </Link>
       ))}
     </Flexbox>
   );
