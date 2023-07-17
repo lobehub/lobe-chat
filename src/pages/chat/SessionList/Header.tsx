@@ -1,7 +1,7 @@
 import { ActionIcon, Logo, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { MessageSquarePlus } from 'lucide-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';

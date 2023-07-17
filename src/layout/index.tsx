@@ -8,10 +8,16 @@ import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 import { GlobalStyle } from '@/styles';
 
+import i18n from '../locales';
 import { useStyles } from './style';
 
 const Layout = ({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
+
+  useEffect(() => {
+    // 用一种比较奇怪的方式import 了 18n
+    i18n.finally(() => {});
+  }, []);
 
   return (
     <ConfigProvider locale={Zh_CN}>

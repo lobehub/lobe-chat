@@ -3,13 +3,21 @@ import { PropsWithChildren, memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { createI18nNext } from '@/locales/create';
+import { commonLocaleSet } from '@/locales/namespaces';
 import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
 import Sidebar from '../Sidebar';
 import { Sessions } from './SessionList';
 
+const initI18n = createI18nNext({ localSet: commonLocaleSet, namespace: 'common' });
+
 const ChatLayout = memo<PropsWithChildren>(({ children }) => {
+  useEffect(() => {
+    initI18n.finally();
+  }, []);
+
   const [activeSession] = useSessionStore((s) => {
     return [s.activeSession];
   }, shallow);

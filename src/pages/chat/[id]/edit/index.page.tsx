@@ -1,12 +1,10 @@
 import { ChatHeader } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
-import { useTranslation } from 'next-i18next';
 import Router from 'next/router';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-
-import { makeI18nProps } from '@/utils/makeI18nProps';
 
 import ChatLayout from '../../layout';
 import AgentConfig from './AgentConfig';
@@ -61,6 +59,4 @@ const EditPage = memo(() => {
   );
 });
 
-export { getStaticPaths } from '@/utils/makeI18nProps';
-export const getStaticProps = makeI18nProps(['common']);
 export default EditPage;

@@ -2,7 +2,7 @@ import { ActionIcon, Avatar, Input } from '@lobehub/ui';
 import { Button } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideSparkles } from 'lucide-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
