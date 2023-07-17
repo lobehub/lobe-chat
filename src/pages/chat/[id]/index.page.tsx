@@ -46,11 +46,4 @@ const Chat = memo(() => {
 });
 export default Chat;
 
-export const getStaticProps = makeI18nProps(['common']);
-
-export const getStaticPaths = async () => {
-  return {
-    fallback: 'blocking',
-    paths: [],
-  };
-};
+export const getServerSideProps = makeI18nProps(['common']);

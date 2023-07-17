@@ -2,10 +2,11 @@ import { ChatHeader } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Router from 'next/router';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+
+import { makeI18nProps } from '@/utils/makeI18nProps';
 
 import ChatLayout from '../../layout';
 import AgentConfig from './AgentConfig';
@@ -62,6 +63,4 @@ const EditPage = memo(() => {
 
 export default EditPage;
 
-export const getServerSideProps = async (context: any) => ({
-  props: await serverSideTranslations(context.locale),
-});
+export const getServerSideProps = makeI18nProps(['common']);
