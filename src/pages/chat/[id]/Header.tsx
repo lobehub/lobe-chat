@@ -1,8 +1,9 @@
 import { ActionIcon, Avatar, ChatHeader } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ArchiveIcon, MoreVerticalIcon, Share2Icon } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { ArchiveIcon, LucideEdit, MoreVerticalIcon, Share2Icon } from 'lucide-react';
+import Router from 'next/router';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
@@ -20,9 +21,9 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 const Header = memo(() => {
   const { t } = useTranslation('common');
-  const meta = useSessionStore((s) => {
+  const [meta, id] = useSessionStore((s) => {
     const chat = sessionSelectors.currentSession(s);
-    return chat?.meta;
+    return [chat?.meta, s.activeId];
   }, shallow);
 
   const [
@@ -50,23 +51,33 @@ const Header = memo(() => {
         </>
       }
       right={
-        <>
-          <ActionIcon
-            icon={Share2Icon}
-            onClick={() => {
-              // genShareUrl();
-            }}
-            size={{ fontSize: 24 }}
-            title={t('share')}
-          />
-          <ActionIcon icon={ArchiveIcon} size={{ fontSize: 24 }} title={t('archive')} />
-          <ActionIcon
-            icon={MoreVerticalIcon}
-            onClick={() => toggleConfig()}
-            size={{ fontSize: 24 }}
-            title={t('sessionSetting')}
-          />
-        </>
+        id && (
+          <>
+            <ActionIcon
+              icon={Share2Icon}
+              onClick={() => {
+                // genShareUrl();
+              }}
+              size={{ fontSize: 24 }}
+              title={t('share')}
+            />
+            <ActionIcon icon={ArchiveIcon} size={{ fontSize: 24 }} title={t('archive')} />
+            <ActionIcon
+              icon={LucideEdit}
+              onClick={() => {
+                Router.push(`/chat/${id}/edit`);
+              }}
+              size={{ blockSize: 32, fontSize: 20 }}
+              title={t('edit')}
+            />
+            <ActionIcon
+              icon={MoreVerticalIcon}
+              onClick={() => toggleConfig()}
+              size={{ fontSize: 24 }}
+              title={t('sessionSetting')}
+            />
+          </>
+        )
       }
     />
   );

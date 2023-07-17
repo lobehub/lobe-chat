@@ -18,6 +18,10 @@ export const useStyles = createStyles(({ css, token }) => ({
     font-weight: bold;
     color: ${token.colorText};
   `,
+  prompt: css`
+    padding: 12px;
+    background: ${token.colorFillTertiary};
+  `,
   title: css`
     font-size: 16px;
     font-weight: 500;

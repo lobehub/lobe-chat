@@ -1,4 +1,3 @@
-import { TextArea } from '@lobehub/ui';
 import { Collapse, InputNumber, Segmented, Slider } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import { agentSelectors, useSessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 
 import { FormItem } from './FormItem';
+import Prompt from './Prompt';
 import { useStyles } from './style';
 
 const AgentConfig = () => {
@@ -48,19 +48,7 @@ const AgentConfig = () => {
             value={config.model}
           />
         </FormItem>
-        <FormItem label={t('agentPrompt')}>
-          <Flexbox gap={16}>
-            <TextArea
-              onChange={(e) => {
-                updateAgentConfig({ systemRole: e.target.value });
-              }}
-              placeholder={t('agentPromptPlaceholder')}
-              style={{ minHeight: 160 }}
-              type={'block'}
-              value={config.systemRole}
-            />
-          </Flexbox>
-        </FormItem>
+        <Prompt />
         <Collapse
           activeKey={['advanceSettings']}
           bordered={false}
