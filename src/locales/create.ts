@@ -2,9 +2,11 @@ import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
+import { commonLocaleSet } from './namespaces';
+
 interface LocalSet {
-  ['en-US']: Record<string, string>;
-  ['zh-CN']: Record<string, string>;
+  ['en-US']: Record<string, any>;
+  ['zh-CN']: Record<string, any>;
 }
 
 interface I18NOptions {
@@ -16,9 +18,11 @@ export const createI18nNext = (options: I18NOptions) => {
   // 将语言包合并
   const resources = {
     'en-US': {
+      common: commonLocaleSet['en-US'],
       [options.namespace]: options.localSet['en-US'],
     },
     'zh-CN': {
+      common: commonLocaleSet['zh-CN'],
       [options.namespace]: options.localSet['zh-CN'],
     },
   };
@@ -33,7 +37,7 @@ export const createI18nNext = (options: I18NOptions) => {
       // init i18next
       // for all options read: https://www.i18next.com/overview/configuration-options
       .init({
-        debug: true,
+        debug: process.env.NODE_ENV === 'development',
         defaultNS: [options.namespace, 'common'],
         fallbackLng: 'zh-CN',
         interpolation: {
