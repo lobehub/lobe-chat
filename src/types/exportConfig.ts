@@ -8,6 +8,8 @@ export interface ConfigSettings {
   avatar?: string;
 }
 
+export type ConfigKeys = keyof ConfigSettings;
+
 export interface ConfigState {
   settings: ConfigSettings;
 }

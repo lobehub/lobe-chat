@@ -5,13 +5,20 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { settingsSelectors, useSettings } from '@/store/settings';
+import { ConfigKeys } from '@/types/exportConfig';
+
+type SettingItemGroup = ItemGroup & {
+  children: {
+    name: ConfigKeys;
+  }[];
+};
 
 const SettingForm = memo(() => {
   const settings = useSettings(settingsSelectors.currentSettings, isEqual);
 
   const { t } = useTranslation('setting');
 
-  const theme: ItemGroup = useMemo(
+  const theme: SettingItemGroup = useMemo(
     () => ({
       children: [
         {
