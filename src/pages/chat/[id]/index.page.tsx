@@ -23,10 +23,12 @@ const Chat = memo(() => {
     i18n.reloadResources(i18n.resolvedLanguage, ['common']);
   }, []);
 
+  const pageTitle = title ? `${title} - LobeChat` : 'LobeChat';
+
   return (
     <Layout>
       <Head>
-        <title>{title ? `${title} - LobeChat` : 'LobeChat'}</title>
+        <title>{pageTitle}</title>
       </Head>
 
       <Flexbox flex={1}>

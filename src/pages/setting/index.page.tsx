@@ -12,10 +12,11 @@ import SettingForm from './SettingForm';
 
 const SettingLayout = memo(() => {
   const { t } = useTranslation('setting');
+  const pageTitle = `${t('header')} - LobeChat`;
   return (
     <>
       <Head>
-        <title>{t('header')} - LobeChat</title>
+        <title>{pageTitle}</title>
       </Head>
       <Flexbox horizontal width={'100%'}>
         <Sidebar />
