@@ -11,5 +11,9 @@ module.exports = {
     defaultLocale: i18n.entryLocale,
     locales: [i18n.entryLocale, ...i18n.outputLocales],
   },
+  localePath:
+    typeof window === 'undefined' ? require('node:path').resolve('./', i18n.output) : '/locales',
+  react: { useSuspense: false },
   reloadOnPrerender: process.env.NODE_ENV === 'development',
+  strictMode: true,
 };

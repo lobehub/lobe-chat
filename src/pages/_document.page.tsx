@@ -4,7 +4,7 @@ import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/do
 import i18nextConfig from '../../next-i18next.config.js';
 
 class MyDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
+  static async getStaticProps(ctx: DocumentContext) {
     const page = await ctx.renderPage({
       enhanceApp: (App) => (props) =>
         (
