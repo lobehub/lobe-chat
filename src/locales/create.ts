@@ -7,10 +7,6 @@ interface LocalSet {
   ['zh-CN']: Record<string, string>;
 }
 
-type LocalKey<T extends LocalSet> = keyof T['zh-CN'];
-
-type I18N<T extends LocalSet> = (key: LocalKey<T>) => string;
-
 interface I18NOptions {
   localSet: LocalSet;
   namespace: string;
