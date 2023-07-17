@@ -4,7 +4,7 @@ const i18n = require('./.i18nrc');
 module.exports = {
   debug: process.env.NODE_ENV === 'development',
   fallbackLng: {
-    default: ['en'],
+    default: ['zh_CN'],
     zh_TW: ['zh_CN'],
   },
   i18n: {

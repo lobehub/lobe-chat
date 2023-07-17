@@ -38,6 +38,13 @@ const Chat = memo(() => {
 });
 export default Chat;
 
-export const getStaticPaths = async (context: any) => ({
+export const getStaticPaths = async () => {
+  return {
+    fallback: 'blocking',
+    paths: [],
+  };
+};
+
+export const getStaticProps = async (context: any) => ({
   props: await serverSideTranslations(context.locale),
 });
