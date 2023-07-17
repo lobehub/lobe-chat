@@ -35,7 +35,7 @@
     "test": "vitest --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "test:update": "vitest -u",
-    "toc": "i18next-resources-for-ts toc -i ./public/locales/zh_CN -o ./src/types/resources.ts",
+    "toc": "node scripts/toc.mjs",
     "type-check": "tsc --noEmit"
   },
   "lint-staged": {

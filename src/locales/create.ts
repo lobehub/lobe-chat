@@ -1,32 +1,29 @@
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import { isArray } from 'lodash-es';
 import { initReactI18next } from 'react-i18next';
 
-import { commonLocaleSet } from './namespaces';
+import type { Namespaces, Resources } from '@/types/locale';
 
-interface LocalSet {
-  ['en-US']: Record<string, any>;
-  ['zh-CN']: Record<string, any>;
-}
+import resources from './resources';
 
-interface I18NOptions {
-  localSet: LocalSet;
-  namespace: string;
-}
+const getRes = (res: Resources, namespace: Namespaces[]) => {
+  const newRes: any = {};
+  for (const [locale, value] of Object.entries(res)) {
+    newRes[locale] = {};
+    for (const ns of namespace) {
+      newRes[locale][ns] = value[ns];
+    }
+  }
+  return newRes;
+};
 
-export const createI18nNext = (options: I18NOptions) => {
-  // 将语言包合并
-  const resources = {
-    'en-US': {
-      common: commonLocaleSet['en-US'],
-      [options.namespace]: options.localSet['en-US'],
-    },
-    'zh-CN': {
-      common: commonLocaleSet['zh-CN'],
-      [options.namespace]: options.localSet['zh-CN'],
-    },
-  };
-
+export const createI18nNext = (namespace?: Namespaces[] | Namespaces) => {
+  const ns: Namespaces[] = namespace
+    ? isArray(namespace)
+      ? ['common', ...namespace]
+      : ['common', namespace]
+    : ['common'];
   return (
     i18n
       // detect user language
@@ -37,14 +34,15 @@ export const createI18nNext = (options: I18NOptions) => {
       // init i18next
       // for all options read: https://www.i18next.com/overview/configuration-options
       .init({
+        // @ts-ignore
         debug: process.env.NODE_ENV === 'development',
-        defaultNS: [options.namespace, 'common'],
+        defaultNS: ns,
         fallbackLng: 'zh-CN',
         interpolation: {
           escapeValue: false, // not needed for react as it escapes by default
         },
-        ns: [options.namespace, 'common'],
-        resources,
+        ns,
+        resources: getRes(resources, ns),
       })
   );
 };

@@ -4,14 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { createI18nNext } from '@/locales/create';
-import { settingsLocaleSet } from '@/locales/namespaces';
 import { Sessions } from '@/pages/chat/SessionList';
 
 import Sidebar from '../Sidebar';
 import Header from './Header';
 import SettingForm from './SettingForm';
 
-const initI18n = createI18nNext({ localSet: settingsLocaleSet, namespace: 'setting' });
+const initI18n = createI18nNext('setting');
 
 const SettingLayout = memo(() => {
   const { t } = useTranslation('setting');
