@@ -38,6 +38,11 @@ const currentAgentModel = (s: SessionStore): LanguageModel => {
   return config?.model || LanguageModel.GPT3_5;
 };
 
+const hasSystemRole = (s: SessionStore) => {
+  const config = currentAgentConfigSafe(s);
+
+  return !!config.systemRole;
+};
 export const agentSelectors = {
   currentAgentAvatar,
   currentAgentConfig,
@@ -45,4 +50,5 @@ export const agentSelectors = {
   currentAgentMeta,
   currentAgentModel,
   currentAgentTitle,
+  hasSystemRole,
 };

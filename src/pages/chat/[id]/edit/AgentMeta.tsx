@@ -1,5 +1,5 @@
-import { ActionIcon, Avatar, Input } from '@lobehub/ui';
-import { Button } from 'antd';
+import { ActionIcon, Avatar, Input, Tooltip } from '@lobehub/ui';
+import { Button, Collapse } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideSparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -18,8 +18,22 @@ const AgentMeta = () => {
 
   const metaData = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
 
-  const [autocompleteMeta, loading] = useSessionStore(
-    (s) => [s.autocompleteMeta, s.autocompleteLoading],
+  const [
+    autocompleteMeta,
+    autocompleteSessionAgentMeta,
+    loading,
+    updateAgentMeta,
+    id,
+    hasSystemRole,
+  ] = useSessionStore(
+    (s) => [
+      s.autocompleteMeta,
+      s.autocompleteSessionAgentMeta,
+      s.autocompleteLoading,
+      s.updateAgentMeta,
+      s.activeId,
+      agentSelectors.hasSystemRole(s),
+    ],
     shallow,
   );
 
@@ -34,50 +48,69 @@ const AgentMeta = () => {
   ];
 
   return (
-    <>
-      <Flexbox
-        align={'center'}
-        distribution={'space-between'}
-        horizontal
-        paddingBlock={12}
-        style={{
-          borderBottom: `1px solid ${theme.colorBorder}`,
-        }}
-      >
-        <Flexbox className={styles.profile}> {t('profile')}</Flexbox>
-        <Button size={'large'}>{t('autoGenerate')}</Button>
-      </Flexbox>
-      <Flexbox gap={80} horizontal style={{ marginTop: 16 }}>
-        <Flexbox flex={1} gap={24}>
-          {basic.map((item) => (
-            <FormItem key={item.key} label={item.label}>
-              <Input
-                placeholder={item.placeholder}
-                suffix={
-                  <ActionIcon
-                    icon={LucideSparkles}
-                    loading={loading[item.key as keyof typeof loading]}
-                    onClick={() => {
-                      autocompleteMeta(item.key as keyof typeof metaData);
-                    }}
-                    size={'small'}
-                    style={{
-                      color: theme.purple,
-                    }}
-                    title={t('autoGenerate')}
-                  />
-                }
-                type={'block'}
-                value={metaData[item.key as keyof typeof metaData]}
-              />
-            </FormItem>
-          ))}
-        </Flexbox>
-        <FormItem label={t('agentAvatar')}>
-          <Avatar avatar={metaData.avatar} size={200} />
-        </FormItem>
-      </Flexbox>
-    </>
+    <Collapse
+      defaultActiveKey={hasSystemRole ? ['meta'] : []}
+      items={[
+        {
+          children: (
+            <Flexbox gap={80} horizontal style={{ marginTop: 16 }}>
+              <Flexbox flex={1} gap={24}>
+                {basic.map((item) => (
+                  <FormItem key={item.key} label={item.label}>
+                    <Input
+                      onChange={(e) => {
+                        updateAgentMeta({ [item.key]: e.target.value });
+                      }}
+                      placeholder={item.placeholder}
+                      suffix={
+                        <ActionIcon
+                          icon={LucideSparkles}
+                          loading={loading[item.key as keyof typeof loading]}
+                          onClick={() => {
+                            autocompleteMeta(item.key as keyof typeof metaData);
+                          }}
+                          size={'small'}
+                          style={{
+                            color: theme.purple,
+                          }}
+                          title={t('autoGenerate')}
+                        />
+                      }
+                      type={'block'}
+                      value={metaData[item.key as keyof typeof metaData]}
+                    />
+                  </FormItem>
+                ))}
+              </Flexbox>
+              <FormItem label={t('agentAvatar')}>
+                <Avatar avatar={metaData.avatar} size={200} />
+              </FormItem>
+            </Flexbox>
+          ),
+          className: styles.collapseHeader,
+          extra: (
+            <Tooltip title={t('autoGenerateTooltip')}>
+              <Button
+                disabled={!hasSystemRole}
+                loading={Object.values(loading).some((i) => !!i)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log(id);
+                  if (!id) return;
+
+                  autocompleteSessionAgentMeta(id, true);
+                }}
+                size={'large'}
+              >
+                {t('autoGenerate')}
+              </Button>
+            </Tooltip>
+          ),
+          key: 'meta',
+          label: <Flexbox className={styles.profile}>{t('profile')}</Flexbox>,
+        },
+      ]}
+    />
   );
 };
 

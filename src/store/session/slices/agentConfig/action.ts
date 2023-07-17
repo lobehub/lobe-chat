@@ -1,8 +1,7 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { promptPickEmoji } from '@/prompts/agent';
-import { promptSummaryDescription, promptSummaryTitle } from '@/prompts/chat';
-import { SessionStore, chatSelectors, sessionSelectors } from '@/store/session';
+import { promptPickEmoji, promptSummaryAgentName, promptSummaryDescription } from '@/prompts/agent';
+import { SessionStore, sessionSelectors } from '@/store/session';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
@@ -36,7 +35,7 @@ export interface AgentAction {
    * 自动完成会话代理元数据
    * @param id - 代理的 ID
    */
-  autocompleteSessionAgentMeta: (id: string) => void;
+  autocompleteSessionAgentMeta: (id: string, replace?: boolean) => void;
 
   /**
    * 内部更新代理元数据
@@ -55,6 +54,7 @@ export interface AgentAction {
    * @param config - 部分 LobeAgentConfig 的配置
    */
   updateAgentConfig: (config: Partial<LobeAgentConfig>) => void;
+  updateAgentMeta: (meta: Partial<MetaData>) => void;
   /**
    * 更新加载状态
    * @param key - SessionLoadingState 的键
@@ -93,9 +93,9 @@ export const createAgentSlice: StateCreator<
     const session = sessionSelectors.getSessionById(id)(get());
     if (!session) return;
 
-    const chats = chatSelectors.currentChats(get());
+    const systemRole = session.config.systemRole;
 
-    if (chats.length <= 0) return;
+    if (!systemRole) return;
 
     const preValue = session.meta.description;
 
@@ -115,7 +115,7 @@ export const createAgentSlice: StateCreator<
         updateLoadingState('description', loading);
       },
       onMessageHandle: internalUpdateAgentMeta(id)('description'),
-      params: promptSummaryDescription(chats),
+      params: promptSummaryDescription(systemRole),
     });
   },
 
@@ -124,9 +124,9 @@ export const createAgentSlice: StateCreator<
     const session = sessionSelectors.getSessionById(id)(get());
     if (!session) return;
 
-    const chats = chatSelectors.currentChats(get());
+    const systemRole = session.config.systemRole;
 
-    if (chats.length <= 0) return;
+    if (!systemRole) return;
 
     const previousTitle = session.meta.title;
 
@@ -141,7 +141,7 @@ export const createAgentSlice: StateCreator<
         updateLoadingState('title', loading);
       },
       onMessageHandle: internalUpdateAgentMeta(id)('title'),
-      params: promptSummaryTitle(chats),
+      params: promptSummaryAgentName(systemRole),
     });
   },
 
@@ -166,19 +166,20 @@ export const createAgentSlice: StateCreator<
     }
   },
 
-  autocompleteSessionAgentMeta: (id) => {
+  autocompleteSessionAgentMeta: (id, replace) => {
     const session = sessionSelectors.getSessionById(id)(get());
 
     if (!session) return;
-    if (!session.meta.title) {
+
+    if (!session.meta.title || replace) {
       get().autocompleteAgentTitle(id);
     }
 
-    if (!session.meta.description) {
+    if (!session.meta.description || replace) {
       get().autocompleteAgentDescription(id);
     }
 
-    if (!session.meta.avatar) {
+    if (!session.meta.avatar || replace) {
       get().autoPickEmoji(id);
     }
   },
@@ -202,6 +203,22 @@ export const createAgentSlice: StateCreator<
     if (!activeId || !session) return;
 
     get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
+  },
+  updateAgentMeta: (meta) => {
+    const { activeId } = get();
+    const session = sessionSelectors.currentSession(get());
+    if (!activeId || !session) return;
+
+    for (const [key, value] of Object.entries(meta)) {
+      if (value !== undefined) {
+        get().dispatchSession({
+          id: activeId,
+          key: key as keyof MetaData,
+          type: 'updateSessionMeta',
+          value,
+        });
+      }
+    }
   },
   updateLoadingState: (key, value) => {
     set({ autocompleteLoading: { ...get().autocompleteLoading, [key]: value } });

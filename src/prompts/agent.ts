@@ -50,3 +50,16 @@ export const promptPickEmoji = (content: string): Partial<OpenAIStreamPayload> =
     },
   ],
 });
+
+export const promptSummaryDescription = (content: string): Partial<OpenAIStreamPayload> => ({
+  messages: [
+    {
+      content: '你是一名擅长会话的助理，你需要将用户的提示词做一个3句话以内的总结。',
+      role: 'system',
+    },
+    {
+      content: `输入:${content}`,
+      role: 'user',
+    },
+  ],
+});

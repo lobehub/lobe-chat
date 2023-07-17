@@ -1,6 +1,11 @@
 import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(({ css, token }) => ({
+  collapseHeader: css`
+    .ant-collapse-header {
+      align-items: center !important;
+    }
+  `,
   footer: css`
     position: sticky;
     bottom: 0;
