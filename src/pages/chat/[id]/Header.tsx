@@ -1,7 +1,7 @@
 import { ActionIcon, Avatar, ChatHeader } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArchiveIcon, MoreVerticalIcon, Share2Icon } from 'lucide-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';

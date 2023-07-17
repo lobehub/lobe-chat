@@ -1,7 +1,7 @@
 import { TextArea } from '@lobehub/ui';
 import { Collapse, InputNumber, Segmented, Slider } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 

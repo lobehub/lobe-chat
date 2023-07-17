@@ -1,8 +1,6 @@
 import { StyleProvider, extractStaticStyle } from 'antd-style';
 import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
-import i18nextConfig from '../../next-i18next.config.js';
-
 class MyDocument extends Document {
   static async getStaticProps(ctx: DocumentContext) {
     const page = await ctx.renderPage({
@@ -30,9 +28,8 @@ class MyDocument extends Document {
   }
 
   render() {
-    const currentLocale = this.props.__NEXT_DATA__.locale ?? i18nextConfig.i18n.defaultLocale;
     return (
-      <Html lang={currentLocale}>
+      <Html>
         <Head>
           <link
             href="https://npm.elemecdn.com/@lobehub/assets-favicons/assets/apple-touch-icon.png"

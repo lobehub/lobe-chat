@@ -1,10 +1,9 @@
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import Head from 'next/head';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { Sessions } from '@/pages/chat/SessionList';
-import { makeI18nProps } from '@/utils/makeI18nProps';
 
 import Sidebar from '../Sidebar';
 import Header from './Header';
@@ -31,7 +30,5 @@ const SettingLayout = memo(() => {
     </>
   );
 });
-
-export const getStaticProps = makeI18nProps(['common', 'setting']);
 
 export default SettingLayout;

@@ -1,7 +1,7 @@
 import { ActionIcon, Avatar, List } from '@lobehub/ui';
 import { Popconfirm } from 'antd';
 import { X } from 'lucide-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import { FC, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';

@@ -1,6 +1,6 @@
 import { ChatHeader } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import Router from 'next/router';
 import { memo } from 'react';
 
