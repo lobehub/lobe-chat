@@ -1,6 +1,4 @@
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { makeI18nProps } from '@/utils/makeI18nProps';
 
 export { default } from './chat/index.page';
-export const getStaticProps = async (context: any) => ({
-  props: await serverSideTranslations(context.locale, ['common', 'setting']),
-});
+export const getStaticProps = makeI18nProps(['common']);

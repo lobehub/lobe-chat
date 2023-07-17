@@ -5,8 +5,10 @@ import { SessionStore, createStore } from './store';
 
 type SessionPersist = Pick<SessionStore, 'sessions'>;
 
+export const LOBE_CHAT = 'LOBE_CHAT';
+
 const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
-  name: 'LOBE_CHAT',
+  name: LOBE_CHAT,
 
   partialize: (s) => ({
     sessions: s.sessions,
@@ -21,7 +23,7 @@ const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
 export const useSessionStore = create<SessionStore>()(
   persist(
     devtools(createStore, {
-      name: 'LOBE_CHATS',
+      name: LOBE_CHAT,
     }),
     persistOptions,
   ),

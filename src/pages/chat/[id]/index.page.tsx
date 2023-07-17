@@ -1,10 +1,11 @@
 import isEqual from 'fast-deep-equal';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { sessionSelectors, useSessionStore } from '@/store/session';
+import { makeI18nProps } from '@/utils/makeI18nProps';
 
 import Layout from '../layout';
 import Config from './Config';
@@ -12,6 +13,7 @@ import Conversation from './Conversation';
 import Header from './Header';
 
 const Chat = memo(() => {
+  useTranslation('common');
   const [title] = useSessionStore((s) => {
     const context = sessionSelectors.currentSession(s);
     return [context?.meta.title];
@@ -38,13 +40,4 @@ const Chat = memo(() => {
 });
 export default Chat;
 
-// export const getStaticPaths = async () => {
-//   return {
-//     fallback: 'blocking',
-//     paths: [],
-//   };
-// };
-
-export const getServerSideProps = async (context: any) => ({
-  props: await serverSideTranslations(context.locale),
-});
+export const getServerSideProps = makeI18nProps(['common']);
