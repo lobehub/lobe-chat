@@ -44,6 +44,7 @@ const Chat = memo(() => {
     </Layout>
   );
 });
-export default Chat;
 
-export const getServerSideProps = makeI18nProps(['common']);
+export { getStaticPaths } from '@/utils/makeI18nProps';
+export const getStaticProps = makeI18nProps(['common']);
+export default Chat;

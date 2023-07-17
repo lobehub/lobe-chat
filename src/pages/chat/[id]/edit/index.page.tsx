@@ -61,6 +61,6 @@ const EditPage = memo(() => {
   );
 });
 
+export { getStaticPaths } from '@/utils/makeI18nProps';
+export const getStaticProps = makeI18nProps(['common']);
 export default EditPage;
-
-export const getServerSideProps = makeI18nProps(['common']);
