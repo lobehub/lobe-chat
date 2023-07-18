@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Lobe Chat is an open-source chatbot client using LangChain, Typescript and Next.js",
   "keywords": [
     "chatbot",
