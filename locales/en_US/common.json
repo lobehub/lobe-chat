@@ -13,6 +13,7 @@
   "agentTagPlaceholder": "Please enter a tag",
   "archive": "Archive",
   "autoGenerate": "Auto Generate",
+  "autoGenerateTooltip": "Description of the autocomplete assistant based on prompts",
   "cancel": "Cancel",
   "close": "Close",
   "confirmRemoveSessionItemAlert": "You are about to remove this agent. Once removed, it cannot be recovered. Please confirm your action.",

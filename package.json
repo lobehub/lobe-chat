@@ -23,7 +23,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev -p 3010",
-    "i18n": "lobe-i18n",
+    "i18n": "npm run i18n:toc && lobe-i18n",
+    "i18n:toc": "ts-node --project ./tsconfig.json scripts/toc.ts",
     "lint": "eslint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
     "lint:md": "remark . --quiet --frail --output",
     "lint:style": "stylelint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
@@ -35,7 +36,6 @@
     "test": "vitest --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "test:update": "vitest -u",
-    "toc": "node scripts/toc.mjs",
     "type-check": "tsc --noEmit"
   },
   "lint-staged": {
@@ -107,6 +107,7 @@
     "@umijs/lint": "^4",
     "@vitest/coverage-v8": "latest",
     "commitlint": "^17",
+    "consola": "^3",
     "eslint": "^8",
     "husky": "^8",
     "i18next-browser-languagedetector": "^7",
@@ -122,6 +123,7 @@
     "semantic-release": "^21",
     "semantic-release-config-gitmoji": "^1",
     "stylelint": "^15",
+    "ts-node": "^10",
     "typescript": "^5",
     "vitest": "latest"
   },
