@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
 import AvatarWithUpload from '@/features/AvatarWithUpload';
+import SliderWithInput from '@/features/SliderWithInput';
 import { options } from '@/locales/options';
-import SliderWithInput from '@/pages/setting/SliderWithInput';
 import { settingsSelectors, useSettings } from '@/store/settings';
 import { DEFAULT_SETTINGS } from '@/store/settings/initialState';
 import { ConfigKeys } from '@/types/exportConfig';

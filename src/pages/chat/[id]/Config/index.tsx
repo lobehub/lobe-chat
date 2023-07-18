@@ -2,20 +2,23 @@ import { ActionIcon, DraggablePanel, DraggablePanelContainer } from '@lobehub/ui
 import { createStyles } from 'antd-style';
 import { LucideEdit, LucideX } from 'lucide-react';
 import Router from 'next/router';
+import { rgba } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { CHAT_SIDEBAR_WIDTH, HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useSessionStore } from '@/store/session';
 
 import ReadMode from './ReadMode';
 
-const WIDTH = 280;
-
-const useStyles = createStyles(({ css, token }) => ({
-  drawer: css`
-    background: ${token.colorBgLayout};
-  `,
+const useStyles = createStyles(({ cx, css, token, stylish }) => ({
+  drawer: cx(
+    stylish.blurStrong,
+    css`
+      background: ${rgba(token.colorBgLayout, 0.4)};
+    `,
+  ),
   header: css`
     border-bottom: 1px solid ${token.colorBorder};
   `,
@@ -34,14 +37,15 @@ const Config = () => {
       className={styles.drawer}
       expand={showAgentSettings}
       expandable={false}
-      maxWidth={WIDTH}
-      minWidth={WIDTH}
+      headerHeight={HEADER_HEIGHT}
+      maxWidth={CHAT_SIDEBAR_WIDTH}
+      minWidth={CHAT_SIDEBAR_WIDTH}
       mode={'float'}
       pin
       placement={'right'}
       resize={{ left: false }}
     >
-      <DraggablePanelContainer style={{ flex: 'none', minWidth: WIDTH }}>
+      <DraggablePanelContainer style={{ flex: 'none', minWidth: CHAT_SIDEBAR_WIDTH }}>
         <Flexbox
           align={'center'}
           className={styles.header}

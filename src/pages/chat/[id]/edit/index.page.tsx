@@ -6,6 +6,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import HeaderSpacing from '@/features/HeaderSpacing';
+
 import ChatLayout from '../../layout';
 import AgentConfig from './AgentConfig';
 import AgentMeta from './AgentMeta';
@@ -51,6 +53,7 @@ const EditPage = memo(() => {
         />
         {/*form*/}
         <Flexbox className={styles.form} flex={1} gap={10} padding={24}>
+          <HeaderSpacing />
           <AgentMeta />
           <AgentConfig />
         </Flexbox>

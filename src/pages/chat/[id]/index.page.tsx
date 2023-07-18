@@ -23,16 +23,10 @@ const Chat = memo(() => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-
-      <Flexbox flex={1} height={'100vh'} style={{ overflow: 'hidden', position: 'relative' }}>
+      <Flexbox id={'lobe-conversion-container'} style={{ height: '100vh', position: 'relative' }}>
         <Header />
-        <Flexbox
-          id={'lobe-conversion-container'}
-          style={{ height: 'calc(100vh - 64px)', position: 'relative' }}
-        >
-          <Conversation />
-          <Config />
-        </Flexbox>
+        <Conversation />
+        <Config />
       </Flexbox>
     </Layout>
   );

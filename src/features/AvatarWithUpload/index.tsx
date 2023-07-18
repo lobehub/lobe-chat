@@ -27,7 +27,7 @@ interface AvatarWithUploadProps {
   size?: number;
 }
 
-export default memo<AvatarWithUploadProps>(({ size = 40 }) => {
+const AvatarWithUpload = memo<AvatarWithUploadProps>(({ size = 40 }) => {
   const [avatar, setSettings] = useSettings((st) => [st.settings.avatar, st.setSettings], shallow);
   const { styles } = useStyle();
 
@@ -43,3 +43,5 @@ export default memo<AvatarWithUploadProps>(({ size = 40 }) => {
     </div>
   );
 });
+
+export default AvatarWithUpload;

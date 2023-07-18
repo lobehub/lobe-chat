@@ -14,7 +14,7 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-export default memo<PropsWithChildren>(({ children }) => {
+const FolderPanel = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   const [sessionsWidth, sessionExpandable] = useSettings(
     (s) => [s.sessionsWidth, s.sessionExpandable],
@@ -53,3 +53,5 @@ export default memo<PropsWithChildren>(({ children }) => {
     </DraggablePanel>
   );
 });
+
+export default FolderPanel;

@@ -3,6 +3,7 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import HeaderSpacing from '@/features/HeaderSpacing';
 import SideBar from '@/features/SideBar';
 import { createI18nNext } from '@/locales/create';
 import { Sessions } from '@/pages/chat/SessionList';
@@ -30,6 +31,7 @@ const SettingLayout = memo(() => {
         <Flexbox flex={1}>
           <Header />
           <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
+            <HeaderSpacing />
             <SettingForm />
           </Flexbox>
         </Flexbox>

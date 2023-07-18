@@ -5,6 +5,7 @@ import { Archive, Eraser, Languages } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
+import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
 import { ModelTokens } from '@/const/modelTokens';
 import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
@@ -29,7 +30,8 @@ const ChatInput = () => {
     <DraggablePanel
       expandable={false}
       fullscreen={expand}
-      minHeight={200}
+      headerHeight={HEADER_HEIGHT}
+      minHeight={CHAT_TEXTAREA_HEIGHT}
       onSizeChange={(_, size) => {
         if (!size) return;
         useSettings.setState({
@@ -38,6 +40,7 @@ const ChatInput = () => {
       }}
       placement="bottom"
       size={{ height: inputHeight, width: '100%' }}
+      style={{ zIndex: 10 }}
     >
       <ChatInputArea
         actions={
@@ -49,7 +52,7 @@ const ChatInput = () => {
         }
         expand={expand}
         footer={<Button icon={<Icon icon={Archive} />} />}
-        minHeight={200}
+        minHeight={CHAT_TEXTAREA_HEIGHT}
         onExpandChange={setExpand}
         onInputChange={setText}
         onSend={sendMessage}
