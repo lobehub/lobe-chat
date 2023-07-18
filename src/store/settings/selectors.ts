@@ -1,10 +1,10 @@
-import { merge } from 'lodash-es';
+import { defaults } from 'lodash-es';
 
 import { DEFAULT_SETTINGS } from '@/store/settings/initialState';
 
 import { SettingsStore } from './store';
 
-const currentSettings = (s: SettingsStore) => merge(DEFAULT_SETTINGS, s.settings);
+const currentSettings = (s: SettingsStore) => defaults(s.settings, DEFAULT_SETTINGS);
 
 const selecThemeMode = (s: SettingsStore) => ({
   setThemeMode: s.setThemeMode,

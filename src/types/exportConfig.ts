@@ -7,12 +7,26 @@ import { Locales } from './locale';
  * 配置设置
  */
 export interface ConfigSettings {
-  avatar?: string;
+  accessCode: string;
+  avatar: string;
+  compressThreshold: number;
+  enableCompressThreshold: boolean;
+  enableHistoryCount: boolean;
+  enableMaxTokens: boolean;
+  endpoint: string;
   fontSize: number;
+  frequencyPenalty: number;
+  historyCount: number;
   language: Locales;
-  neutralColor?: NeutralColors | '';
-  primaryColor?: PrimaryColors | '';
+  maxTokens: number;
+  model: string;
+  neutralColor: NeutralColors | '';
+  presencePenalty: number;
+  primaryColor: PrimaryColors | '';
+  temperature: number;
   themeMode: ThemeMode;
+  token: string;
+  topP: number;
 }
 
 export type ConfigKeys = keyof ConfigSettings;

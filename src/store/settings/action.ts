@@ -1,16 +1,16 @@
 import { ThemeMode } from 'antd-style';
-import { merge } from 'lodash-es';
 import type { StateCreator } from 'zustand/vanilla';
 
 import type { ConfigSettings } from '@/types/exportConfig';
 
 import type { SidebarTabKey } from './initialState';
-import { GlobalSettingsState } from './initialState';
+import { DEFAULT_SETTINGS, GlobalSettingsState } from './initialState';
 import type { SettingsStore } from './store';
 
 export interface SettingsAction {
+  resetSettings: () => void;
   setGlobalSettings: (settings: GlobalSettingsState) => void;
-  setSettings: (settings: { [keys in keyof ConfigSettings]?: any }) => void;
+  setSettings: (settings: Partial<ConfigSettings>) => void;
   setThemeMode: (themeMode: ThemeMode) => void;
   switchSideBar: (key: SidebarTabKey) => void;
 }
@@ -21,11 +21,15 @@ export const createSettings: StateCreator<
   [],
   SettingsAction
 > = (set, get) => ({
+  resetSettings: () => {
+    set({ settings: DEFAULT_SETTINGS });
+  },
   setGlobalSettings: (settings) => {
     set({ ...settings });
   },
   setSettings: (settings) => {
-    set({ settings: merge(get().settings, settings) });
+    const oldSetting = get().settings;
+    set({ settings: { ...oldSetting, ...settings } });
   },
   setThemeMode: (themeMode) => {
     get().setSettings({ themeMode });

@@ -20,6 +20,12 @@
       "desc": "当未压缩的历史消息超过该值时，将进行压缩",
       "title": "历史消息长度压缩阈值"
     },
+    "enableCompressThreshold": {
+      "title": "是否开启历史消息长度压缩阈值"
+    },
+    "enableHistoryCount": {
+      "title": "是否开启携带的历史消息数限制"
+    },
     "historyCount": {
       "desc": "每次请求携带的历史消息数",
       "title": "附带历史消息数"
@@ -28,45 +34,47 @@
       "desc": "用户最新的一条消息会填充到此模板",
       "title": "用户输入预处理"
     },
-    "maxTokens": {
-      "desc": "单次交互所用的最大 Token 数",
-      "title": "单次回复限制 (max_tokens)"
-    },
-    "sendKey": {
-      "title": "发送键"
-    },
     "title": "聊天设置"
   },
   "settingModel": {
+    "enableMaxTokens": {
+      "title": "开启单次回复限制"
+    },
     "frequencyPenalty": {
       "desc": "值越大，越有可能降低重复字词",
-      "title": "频率惩罚度 (frequency_penalty)"
+      "title": "频率惩罚度"
+    },
+    "maxTokens": {
+      "desc": "单次交互所用的最大 Token 数",
+      "title": "单次回复限制"
     },
     "model": {
+      "desc": "ChatGPT 模型",
       "title": "模型"
     },
     "presencePenalty": {
       "desc": "值越大，越有可能扩展到新话题",
-      "title": "话题新鲜度 (presence_penalty)"
+      "title": "话题新鲜度"
     },
     "temperature": {
       "desc": "值越大，回复越随机",
-      "title": "随机性 (temperature)"
+      "title": "随机性"
     },
     "title": "模型设置",
     "topP": {
       "desc": "与随机性类似，但不要和随机性一起更改",
-      "title": "核采样 (top_p)"
+      "title": "核采样"
     }
   },
   "settingOpenAI": {
     "endpoint": {
       "desc": "除默认地址外，必须包含 http(s)://",
-      "title": "接口地址"
+      "placeholder": "https://api.openai.com/v1",
+      "title": "接口代理地址"
     },
     "title": "OpenAI 设置",
     "token": {
-      "desc": "使用自己的 Key 可绕过密码访问限制",
+      "desc": "使用自己的 OpenAI Key",
       "placeholder": "OpenAI API Key",
       "title": "API Key"
     }

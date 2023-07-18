@@ -16,7 +16,7 @@ export default (token: Theme) => css`
     background: ${token.colorPrimary} !important;
   }
 
-  .ant-btn-primary {
+  .ant-btn-primary:not(.ant-btn-dangerous) {
     color: ${readableColor(token.colorPrimary)};
     background: ${token.colorPrimary};
 

@@ -24,12 +24,12 @@ const SettingLayout = memo(() => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Flexbox horizontal width={'100%'}>
+      <Flexbox height={'100vh'} horizontal width={'100%'}>
         <SideBar />
         <Sessions />
         <Flexbox flex={1}>
           <Header />
-          <Flexbox align={'center'} padding={24}>
+          <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
             <SettingForm />
           </Flexbox>
         </Flexbox>

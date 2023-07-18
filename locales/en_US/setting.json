@@ -20,60 +20,68 @@
       "desc": "When the uncompressed chat history exceeds this value, it will be compressed",
       "title": "Chat History Compression Threshold"
     },
+    "enableCompressThreshold": {
+      "title": "Enable Chat History Compression Threshold"
+    },
+    "enableHistoryCount": {
+      "title": "Enable History Message Count Limit"
+    },
     "historyCount": {
-      "desc": "Number of chat history messages carried in each request",
+      "desc": "Number of history messages to include in each request",
       "title": "History Message Count"
     },
     "inputTemplate": {
       "desc": "The latest user message will be filled into this template",
       "title": "User Input Preprocessing"
     },
-    "maxTokens": {
-      "desc": "Maximum number of tokens used for each interaction",
-      "title": "Reply Limit (max_tokens)"
-    },
-    "sendKey": {
-      "title": "Send Key"
-    },
     "title": "Chat Settings"
   },
   "settingModel": {
+    "enableMaxTokens": {
+      "title": "Enable Single Reply Limit"
+    },
     "frequencyPenalty": {
       "desc": "The higher the value, the more likely it is to reduce repeated words",
-      "title": "Frequency Penalty (frequency_penalty)"
+      "title": "Frequency Penalty"
+    },
+    "maxTokens": {
+      "desc": "Maximum number of tokens used in a single interaction",
+      "title": "Single Reply Limit"
     },
     "model": {
+      "desc": "ChatGPT Model",
       "title": "Model"
     },
     "presencePenalty": {
       "desc": "The higher the value, the more likely it is to expand to new topics",
-      "title": "Topic Freshness (presence_penalty)"
+      "title": "Topic Freshness"
     },
     "temperature": {
       "desc": "The higher the value, the more random the reply",
-      "title": "Randomness (temperature)"
+      "title": "Randomness"
     },
     "title": "Model Settings",
     "topP": {
       "desc": "Similar to randomness, but do not change together with randomness",
-      "title": "Nucleus Sampling (top_p)"
+      "title": "Top-p Sampling"
     }
   },
   "settingOpenAI": {
     "endpoint": {
       "desc": "Must include http(s)://, in addition to the default address",
-      "title": "API Endpoint"
+      "placeholder": "https://api.openai.com/v1",
+      "title": "API Proxy Endpoint"
     },
     "title": "OpenAI Settings",
     "token": {
-      "desc": "Use your own Key to bypass password access restrictions",
+      "desc": "Use your own OpenAI Key",
       "placeholder": "OpenAI API Key",
       "title": "API Key"
     }
   },
   "settingSystem": {
     "accessCode": {
-      "desc": "Encryption access has been enabled by the administrator",
+      "desc": "Encryption access is enabled by the administrator",
       "placeholder": "Please enter the access password",
       "title": "Access Password"
     },
@@ -91,7 +99,7 @@
       "title": "Language Settings"
     },
     "neutralColor": {
-      "desc": "Custom grayscale for different color tendencies",
+      "desc": "Custom grayscale for different color biases",
       "title": "Neutral Color"
     },
     "primaryColor": {
