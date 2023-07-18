@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.3.0](https://github.com/lobehub/lobe-chat/compare/v1.2.0...v1.3.0)
+
+<sup>Released on **2023-07-18**</sup>
+
+#### ✨ Features
+
+- **misc**: Implement settings and configuration functionality.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Implement settings and configuration functionality ([496c2d9](https://github.com/lobehub/lobe-chat/commit/496c2d9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.2.0](https://github.com/lobehub/lobe-chat/compare/v1.1.0...v1.2.0)
 
 <sup>Released on **2023-07-18**</sup>
