@@ -1,30 +1,36 @@
 import { InputNumber, Slider } from 'antd';
 import { SliderSingleProps } from 'antd/es/slider';
-import { memo } from 'react';
+import { isNull } from 'lodash-es';
+import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 const SliderWithInput = memo<SliderSingleProps>(
   ({ step, value, onChange, max, min, defaultValue, ...props }) => {
+    const handleOnchange = useCallback((value: number | null) => {
+      if (Number.isNaN(value) || isNull(value)) return;
+      onChange?.(value);
+    }, []);
+
     return (
       <Flexbox direction={'horizontal'} gap={8}>
         <Slider
           defaultValue={defaultValue}
           max={max}
           min={min}
-          onChange={onChange}
+          onChange={handleOnchange}
           step={step}
           style={{ flex: 1 }}
-          value={value}
+          value={typeof value === 'number' ? value : 0}
           {...props}
         />
         <InputNumber
           defaultValue={defaultValue}
           max={max}
           min={min}
-          onChange={onChange as any}
+          onChange={handleOnchange}
           step={Number(step)}
           style={{ flex: 1, maxWidth: 64 }}
-          value={value}
+          value={typeof value === 'number' ? value : 0}
         />
       </Flexbox>
     );
