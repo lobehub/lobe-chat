@@ -1,3 +1,4 @@
+test('placeholder', () => {});
 // describe('messagesReducer', () => {
 //   let initialState: ChatMessage[];
 //
