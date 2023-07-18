@@ -2,17 +2,16 @@
 
 # Changelog
 
-## [Version 0.1.0](https://github.com/lobehub/lobe-chat/compare/v1.2.0...v1.3.0)
+### [Version 0.1.6](https://github.com/lobehub/lobe-chat/compare/v0.1.5...v0.1.6)
 
 <sup>Released on **2023-07-18**</sup>
-
-#### ✨ Features
-
-- **misc**: Implement settings and configuration functionality，Add new components, modify import statements, and update CSS styles.
 
 <br/>
 
 <details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
 
 <div align="right">
 
