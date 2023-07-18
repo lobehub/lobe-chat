@@ -61,7 +61,10 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
   switch (payload.type) {
     case 'addSession': {
       return produce(state, (draft) => {
-        draft[payload.session.id] = payload.session;
+        const { session } = payload;
+        if (!session) return;
+
+        draft[session.id] = session;
       });
     }
 
@@ -78,7 +81,9 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
 
         const { key, value } = payload;
 
-        chat.meta[key] = value;
+        const validKeys = ['avatar', 'backgroundColor', 'description', 'tag', 'title'];
+
+        if (validKeys.includes(key)) chat.meta[key] = value;
       });
     }
 

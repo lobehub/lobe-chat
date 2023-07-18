@@ -32,7 +32,7 @@ export interface LLMParams {
    * 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 0.6
    */
-  temperature: number;
+  temperature?: number;
   /**
    * 控制生成文本中最高概率的单个 token
    */

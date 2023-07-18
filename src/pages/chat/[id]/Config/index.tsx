@@ -1,8 +1,8 @@
 import { ActionIcon, DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LucideEdit, LucideX } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import Router from 'next/router';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 

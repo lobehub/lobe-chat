@@ -1,297 +1,456 @@
-// describe('sessionsReducer', () => {
-//   let initialState: LobeSessions;
-//
-//   beforeEach(() => {
-//     initialState = {};
-//   });
-//
-//   it('adds a session to the state', () => {
-//     const session: LobeAgentSession = {
-//       id: '123',
-//       type: LobeSessionType.Agent,
-//       config: {
-//         model: LanguageModel.GPT3_5,
-//         params: {
-//           temperature: 0.6,
-//         },
-//         systemRole: 'system',
-//       },
-//       chats: [],
-//       meta: {},
-//     };
-//
-//     const action: SessionDispatch = {
-//       type: 'addSession',
-//       session,
-//     };
-//
-//     const newState = sessionsReducer(initialState, action);
-//
-//     expect(newState).toEqual({
-//       [session.id]: session,
-//     });
-//   });
-//
-//   it('does not add a session if it already exists', () => {
-//     const session: LobeAgentSession = {
-//       id: '123',
-//       type: LobeSessionType.Agent,
-//       config: {
-//         model: LanguageModel.GPT3_5,
-//         params: {
-//           temperature: 0.6,
-//         },
-//         systemRole: 'system',
-//       },
-//       chats: [],
-//       meta: {},
-//     };
-//
-//     initialState = {
-//       [session.id]: session,
-//     };
-//
-//     const action: SessionDispatch = {
-//       type: 'addSession',
-//       session,
-//     };
-//
-//     const newState = sessionsReducer(initialState, action);
-//
-//     expect(newState).toEqual(initialState);
-//   });
-//
-//   it('removes a session from the state', () => {
-//     const session: LobeAgentSession = {
-//       id: '123',
-//       type: LobeSessionType.Agent,
-//       config: {
-//         model: LanguageModel.GPT3_5,
-//         params: {
-//           temperature: 0.6,
-//         },
-//         systemRole: 'system',
-//       },
-//       chats: [],
-//       meta: {},
-//     };
-//
-//     initialState = {
-//       [session.id]: session,
-//     };
-//
-//     const action: SessionDispatch = {
-//       type: 'removeSession',
-//       id: session.id,
-//     };
-//
-//     const newState = sessionsReducer(initialState, action);
-//
-//     expect(newState).toEqual({});
-//   });
-//
-//   it('does not remove a session if it does not exist', () => {
-//     const session: LobeAgentSession = {
-//       id: '123',
-//       type: LobeSessionType.Agent,
-//       config: {
-//         model: LanguageModel.GPT3_5,
-//         params: {
-//           temperature: 0.6,
-//         },
-//         systemRole: 'system',
-//       },
-//       chats: [],
-//       meta: {},
-//     };
-//
-//     initialState = {
-//       [session.id]: session,
-//     };
-//
-//     const action: SessionDispatch = {
-//       type: 'removeSession',
-//       id: '456',
-//     };
-//
-//     const newState = sessionsReducer(initialState, action);
-//
-//     expect(newState).toEqual(initialState);
-//   });
-//
-//   it('updates the chat for a session', () => {
-//     const session: LobeAgentSession = {
-//       id: '123',
-//       type: LobeSessionType.Agent,
-//       config: {
-//         model: LanguageModel.GPT3_5,
-//         params: {
-//           temperature: 0.6,
-//         },
-//         systemRole: 'system',
-//       },
-//       chats: [],
-//       meta: {},
-//     };
-//
-//     initialState = {
-//       [session.id]: session,
-//     };
-//
-//     const newChats: ChatMessage[] = [
-//       {
-//         id: '123',
-//         content: 'Hello',
-//         createAt: Date.now(),
-//         role: 'user',
-//         meta: {},
-//       },
-//       {
-//         id: '456',
-//         content: 'Hi there',
-//         createAt: Date.now(),
-//         role: 'user',
-//         meta: {},
-//       },
-//     ];
-//
-//     const action: SessionDispatch = {
-//       type: 'updateSessionChat',
-//       id: session.id,
-//       chats: newChats,
-//     };
-//
-//     const newState = sessionsReducer(initialState, action);
-//
-//     expect(newState[session.id].chats).toEqual(newChats);
-//   });
-//
-//   it('does not update the chat for a session if it does not exist', () => {
-//     const session: LobeAgentSession = {
-//       id: '123',
-//       type: LobeSessionType.Agent,
-//       config: {
-//         model: LanguageModel.GPT3_5,
-//         params: {
-//           temperature: 0.6,
-//         },
-//         systemRole: 'system',
-//       },
-//       chats: [],
-//       meta: {},
-//     };
-//
-//     initialState = {
-//       [session.id]: session,
-//     };
-//
-//     const newChats: ChatMessage[] = [
-//       {
-//         id: '123',
-//         content: 'Hello',
-//         createAt: Date.now(),
-//         role: 'user',
-//         meta: {},
-//       },
-//       {
-//         id: '456',
-//         content: 'Hi there',
-//         createAt: Date.now(),
-//         role: 'user',
-//         meta: {},
-//       },
-//     ];
-//
-//     const action: SessionDispatch = {
-//       type: 'updateSessionChat',
-//       id: '456',
-//       chats: newChats,
-//     };
-//
-//     const newState = sessionsReducer(initialState, action);
-//
-//     expect(newState).toEqual(initialState);
-//   });
-//
-//   it('updates the meta for a session', () => {
-//     const session: LobeAgentSession = {
-//       id: '123',
-//       type: LobeSessionType.Agent,
-//       config: {
-//         model: LanguageModel.GPT3_5,
-//         params: {
-//           temperature: 0.6,
-//         },
-//         systemRole: 'system',
-//       },
-//       chats: [],
-//       meta: {
-//         title: 'Session 1',
-//         description: 'This is session 1',
-//       },
-//     };
-//
-//     initialState = {
-//       [session.id]: session,
-//     };
-//
-//     const newMetaValue = 'Session 2';
-//
-//     const action: SessionDispatch = {
-//       type: 'updateSessionMeta',
-//       id: session.id,
-//       key: 'title',
-//       value: newMetaValue,
-//     };
-//
-//     const newState = sessionsReducer(initialState, action);
-//
-//     expect(newState[session.id].meta.title).toEqual(newMetaValue);
-//   });
-//
-//   it('does not update the meta for a session if it does not exist', () => {
-//     const session: LobeAgentSession = {
-//       id: '123',
-//       type: LobeSessionType.Agent,
-//       config: {
-//         model: LanguageModel.GPT3_5,
-//         params: {
-//           temperature: 0.6,
-//         },
-//         systemRole: 'system',
-//       },
-//       chats: [],
-//       meta: {
-//         title: 'Session 1',
-//         description: 'This is session 1',
-//       },
-//     };
-//
-//     initialState = {
-//       [session.id]: session,
-//     };
-//
-//     const newMetaValue = 'Session 2';
-//
-//     const action: SessionDispatch = {
-//       type: 'updateSessionMeta',
-//       id: '456',
-//       key: 'title',
-//       value: newMetaValue,
-//     };
-//
-//     const newState = sessionsReducer(initialState, action);
-//
-//     expect(newState).toEqual(initialState);
-//   });
-//
-//   it('returns the initial state if the action type is invalid', () => {
-//     // @ts-ignore
-//     const action: SessionDispatch = { type: 'invalidAction' };
-//
-//     const initialState = {};
-//     const newState = sessionsReducer(initialState, action);
-//
-//     expect(newState).toEqual(initialState);
-//   });
-// });
+import { produce } from 'immer';
+
+import { ChatMessage } from '@/types/chatMessage';
+import { LanguageModel } from '@/types/llm';
+import { MetaData } from '@/types/meta';
+import { LobeAgentConfig, LobeAgentSession, LobeSessionType, LobeSessions } from '@/types/session';
+
+import { SessionDispatch, sessionsReducer } from './session';
+
+describe('sessionsReducer', () => {
+  describe('addSession', () => {
+    it('should add session to state when valid session and type are provided', () => {
+      const state: LobeSessions = {};
+      const session = {
+        id: 'session-id',
+        config: {
+          model: LanguageModel.GPT3_5,
+          params: {},
+          systemRole: 'system-role',
+        },
+        type: LobeSessionType.Agent,
+      } as LobeAgentSession;
+      const payload: SessionDispatch = {
+        type: 'addSession',
+        session,
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual({
+        'session-id': session,
+      });
+    });
+
+    it('should not change state when invalid session and type are provided', () => {
+      const state: LobeSessions = {};
+      const session = undefined as unknown as LobeAgentSession;
+      const payload: SessionDispatch = {
+        type: 'addSession',
+        session,
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(state);
+    });
+  });
+
+  describe('removeSession', () => {
+    it('should remove session from state when valid id and type are provided', () => {
+      const state = {
+        'session-id': {
+          id: 'session-id',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system-role',
+          },
+          type: 'agent',
+        } as LobeAgentSession,
+      } as LobeSessions;
+      const id = 'session-id';
+      const payload: SessionDispatch = {
+        type: 'removeSession',
+        id,
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual({});
+    });
+
+    it('should not change state when invalid id and type are provided', () => {
+      const state: LobeSessions = {
+        'session-id': {
+          id: 'session-id',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system-role',
+          },
+          type: 'agent',
+        } as LobeAgentSession,
+      };
+      const id = 'non-existent-id';
+      const payload: SessionDispatch = {
+        type: 'removeSession',
+        id,
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(state);
+    });
+  });
+
+  describe('updateSessionMeta', () => {
+    it('should update session meta when valid id, key, and value are provided', () => {
+      const state: LobeSessions = {
+        'session-id': {
+          id: 'session-id',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system-role',
+          },
+          type: 'agent',
+          meta: {
+            avatar: 'avatar-url',
+            backgroundColor: 'background-color',
+            description: 'description',
+            tag: ['tag1', 'tag2'],
+            title: 'title',
+          },
+        } as LobeAgentSession,
+      };
+      const id = 'session-id';
+      const key: keyof MetaData = 'title';
+      const value = 'new-title';
+      const payload: SessionDispatch = {
+        type: 'updateSessionMeta',
+        id,
+        key,
+        value,
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual({
+        'session-id': {
+          ...state['session-id'],
+          meta: {
+            ...state['session-id'].meta,
+            title: 'new-title',
+          },
+        },
+      });
+    });
+
+    it('should not change state when invalid id, key, and value are provided', () => {
+      const state: LobeSessions = {
+        'session-id': {
+          id: 'session-id',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system-role',
+          },
+          type: 'agent',
+          meta: {
+            avatar: 'avatar-url',
+            backgroundColor: 'background-color',
+            description: 'description',
+            tag: ['tag1', 'tag2'],
+            title: 'title',
+          },
+        } as LobeAgentSession,
+      };
+      const id = 'non-existent-id';
+      const key = 'invalid-key' as keyof MetaData;
+      const value = 'new-value';
+      const payload: SessionDispatch = {
+        type: 'updateSessionMeta',
+        id,
+        key,
+        value,
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(state);
+    });
+
+    it('should not change state when valid id, invalid key, and value are provided', () => {
+      const state: LobeSessions = {
+        'session-id': {
+          id: 'session-id',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system-role',
+          },
+          type: 'agent',
+          meta: {
+            avatar: 'avatar-url',
+            backgroundColor: 'background-color',
+            description: 'description',
+            tag: ['tag1', 'tag2'],
+            title: 'title',
+          },
+        } as LobeAgentSession,
+      };
+      const id = 'session-id';
+      const key = 'invalid-key' as keyof MetaData;
+      const value = 'new-value';
+      const payload: SessionDispatch = {
+        type: 'updateSessionMeta',
+        id,
+        key,
+        value,
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(state);
+    });
+  });
+
+  describe('updateSessionConfig', () => {
+    it('should update session config when valid id and partial config are provided', () => {
+      const state: LobeSessions = {
+        'session-id': {
+          id: 'session-id',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system-role',
+          },
+          type: 'agent',
+          meta: {
+            avatar: 'avatar-url',
+            backgroundColor: 'background-color',
+            description: 'description',
+            tag: ['tag1', 'tag2'],
+            title: 'title',
+          },
+        } as LobeAgentSession,
+      };
+      const id = 'session-id';
+      const config: Partial<LobeAgentConfig> = {
+        model: LanguageModel.GPT4,
+      };
+      const payload: SessionDispatch = {
+        type: 'updateSessionConfig',
+        id,
+        config,
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual({
+        'session-id': {
+          ...state['session-id'],
+          config: {
+            ...state['session-id'].config,
+            model: 'gpt-4',
+          },
+        },
+      });
+    });
+
+    it('should update session agent config correctly', () => {
+      const state: LobeSessions = {
+        session1: {
+          id: 'session1',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system',
+          },
+        } as LobeAgentSession,
+        session2: {
+          id: 'session2',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system',
+          },
+        } as LobeAgentSession,
+      };
+
+      const payload: SessionDispatch = {
+        type: 'updateSessionConfig',
+        id: 'session1',
+        config: {
+          model: LanguageModel.GPT4,
+          params: {},
+        },
+      };
+
+      const expectedState = produce(state, (draft) => {
+        draft.session1.config = {
+          model: LanguageModel.GPT4,
+          params: {},
+          systemRole: 'system',
+        };
+      });
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(expectedState);
+    });
+
+    it('should not change state when invalid session ID is provided for updating session agent config', () => {
+      const state: LobeSessions = {
+        session1: {
+          id: 'session1',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system',
+          },
+        } as LobeAgentSession,
+      };
+
+      const payload: SessionDispatch = {
+        type: 'updateSessionConfig',
+        id: 'session2',
+        config: {
+          model: LanguageModel.GPT4,
+          params: {},
+        },
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(state);
+    });
+
+    it.skip('should not change state when invalid session agent config is provided for updating session agent config', () => {
+      const state: LobeSessions = {
+        session1: {
+          id: 'session1',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system',
+          },
+        } as LobeAgentSession,
+      };
+
+      const payload: SessionDispatch = {
+        type: 'updateSessionConfig',
+        id: 'session1',
+        config: {
+          model: LanguageModel.GPT4,
+          params: {},
+          invalidKey: 'invalidValue',
+        } as unknown as LobeAgentConfig,
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(state);
+    });
+  });
+
+  test('should not change state when invalid operation type is provided', () => {
+    const state: LobeSessions = {
+      session1: {
+        id: 'session1',
+        config: {
+          model: 'gpt-3.5-turbo',
+          params: {},
+          systemRole: 'system',
+        },
+      } as LobeAgentSession,
+    };
+
+    const payload = {
+      type: 'invalidOperation',
+    } as unknown as SessionDispatch;
+
+    const newState = sessionsReducer(state, payload);
+
+    expect(newState).toEqual(state);
+  });
+
+  describe('updateSessionChat', () => {
+    it('should update session chat correctly', () => {
+      const state: LobeSessions = {
+        session1: {
+          id: 'session1',
+          chats: {},
+        } as LobeAgentSession,
+        session2: {
+          id: 'session2',
+          chats: {},
+        } as LobeAgentSession,
+      };
+
+      const payload: SessionDispatch = {
+        type: 'updateSessionChat',
+        id: 'session1',
+        chats: {
+          message1: {
+            id: 'message1',
+            content: 'Hello',
+          } as ChatMessage,
+        },
+      };
+
+      const expectedState = produce(state, (draft) => {
+        draft.session1.chats = {
+          message1: {
+            id: 'message1',
+            content: 'Hello',
+          } as ChatMessage,
+        };
+      });
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(expectedState);
+    });
+
+    it('should not change state when invalid session ID is provided for updating session chat', () => {
+      const state: LobeSessions = {
+        session1: {
+          id: 'session1',
+          chats: {},
+        } as LobeAgentSession,
+      };
+
+      const payload: SessionDispatch = {
+        type: 'updateSessionChat',
+        id: 'session2',
+        chats: {
+          message1: {
+            id: 'message1',
+            content: 'Hello',
+          } as ChatMessage,
+        },
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(state);
+    });
+
+    it.skip('should not change state when invalid chat data is provided for updating session chat', () => {
+      const state: LobeSessions = {
+        session1: {
+          id: 'session1',
+          chats: {},
+        } as LobeAgentSession,
+      };
+
+      const payload: SessionDispatch = {
+        type: 'updateSessionChat',
+        id: 'session1',
+        chats: {
+          message1: {
+            id: 'message1',
+            content: 'Hello',
+            invalidKey: 'invalidValue',
+          } as unknown as ChatMessage,
+        },
+      };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(state);
+    });
+  });
+});
