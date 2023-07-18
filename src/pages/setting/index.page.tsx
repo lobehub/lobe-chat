@@ -3,10 +3,10 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import SideBar from '@/features/SideBar';
 import { createI18nNext } from '@/locales/create';
 import { Sessions } from '@/pages/chat/SessionList';
 
-import Sidebar from '../Sidebar';
 import Header from './Header';
 import SettingForm from './SettingForm';
 
@@ -25,7 +25,7 @@ const SettingLayout = memo(() => {
         <title>{pageTitle}</title>
       </Head>
       <Flexbox horizontal width={'100%'}>
-        <Sidebar />
+        <SideBar />
         <Sessions />
         <Flexbox flex={1}>
           <Header />

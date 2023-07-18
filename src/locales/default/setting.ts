@@ -81,7 +81,6 @@ export default {
   },
   settingTheme: {
     avatar: {
-      desc: '支持 URL / Base64 / Emoji 表情符号',
       title: '头像',
     },
     fontSize: {
@@ -89,8 +88,21 @@ export default {
       title: '字体大小',
     },
     lang: {
-      all: '所有语言',
-      name: '语言设置',
+      title: '语言设置',
+    },
+    neutralColor: {
+      desc: '不同色彩倾向的灰阶自定义',
+      title: '中性色',
+    },
+    primaryColor: {
+      desc: '自定义主题色',
+      title: '主题色',
+    },
+    themeMode: {
+      auto: '自动',
+      dark: '深色',
+      light: '浅色',
+      title: '主题',
     },
     title: '主题设置',
   },

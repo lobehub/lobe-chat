@@ -1,8 +1,10 @@
-import { ThemeProvider } from '@lobehub/ui';
+import { ThemeProvider, lobeCustomTheme } from '@lobehub/ui';
 import { App, ConfigProvider } from 'antd';
+import { useThemeMode } from 'antd-style';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren, useCallback, useEffect } from 'react';
+import { shallow } from 'zustand/shallow';
 
 import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
@@ -27,14 +29,27 @@ const Layout = ({ children }: PropsWithChildren) => {
 };
 
 export default ({ children }: PropsWithChildren) => {
+  const themeMode = useSettings((s) => s.settings.themeMode, shallow);
+  const { primaryColor, neutralColor } = useSettings(
+    (s) => ({ neutralColor: s.settings.neutralColor, primaryColor: s.settings.primaryColor }),
+    shallow,
+  );
+  const { browserPrefers } = useThemeMode();
+  const isDarkMode = themeMode === 'auto' ? browserPrefers === 'dark' : themeMode === 'dark';
+
   useEffect(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
     useSessionStore.persist.rehydrate();
     useSettings.persist.rehydrate();
   }, []);
 
+  const genCustomToken: any = useCallback(
+    () => lobeCustomTheme({ isDarkMode, neutralColor, primaryColor }),
+    [primaryColor, neutralColor, isDarkMode],
+  );
+
   return (
-    <ThemeProvider themeMode={'auto'}>
+    <ThemeProvider customToken={genCustomToken || {}} themeMode={themeMode}>
       <GlobalStyle />
       <Layout>{children}</Layout>
     </ThemeProvider>

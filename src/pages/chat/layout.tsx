@@ -3,11 +3,11 @@ import { PropsWithChildren, memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import SideBar from '@/features/SideBar';
 import { createI18nNext } from '@/locales/create';
 import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
-import Sidebar from '../Sidebar';
 import { Sessions } from './SessionList';
 
 const initI18n = createI18nNext();
@@ -41,7 +41,7 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
 
   return (
     <Flexbox horizontal width={'100%'}>
-      <Sidebar />
+      <SideBar />
       <Sessions />
       {children}
     </Flexbox>

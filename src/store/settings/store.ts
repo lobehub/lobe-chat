@@ -1,9 +1,9 @@
 import { StateCreator } from 'zustand/vanilla';
 
 import { type SettingsAction, createSettings } from './action';
-import { type SettingsState, initialState } from './initialState';
+import { type GlobalSettingsState, initialState } from './initialState';
 
-export type SettingsStore = SettingsAction & SettingsState;
+export type SettingsStore = SettingsAction & GlobalSettingsState;
 
 export const createStore: StateCreator<SettingsStore, [['zustand/devtools', never]]> = (
   ...parameters

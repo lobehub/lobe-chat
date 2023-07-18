@@ -3,20 +3,20 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { isArray } from 'lodash-es';
 import { initReactI18next } from 'react-i18next';
 
-import type { Namespaces, Resources } from '@/types/locale';
+import type { Namespaces } from '@/types/locale';
 
 import resources from './resources';
 
-const getRes = (res: Resources, namespace: Namespaces[]) => {
-  const newRes: any = {};
-  for (const [locale, value] of Object.entries(res)) {
-    newRes[locale] = {};
-    for (const ns of namespace) {
-      newRes[locale][ns] = value[ns];
-    }
-  }
-  return newRes;
-};
+// const getRes = (res: Resources, namespace: Namespaces[]) => {
+//   const newRes: any = {};
+//   for (const [locale, value] of Object.entries(res)) {
+//     newRes[locale] = {};
+//     for (const ns of namespace) {
+//       newRes[locale][ns] = value[ns];
+//     }
+//   }
+//   return newRes;
+// };
 
 export const createI18nNext = (namespace?: Namespaces[] | Namespaces) => {
   const ns: Namespaces[] = namespace
@@ -42,7 +42,8 @@ export const createI18nNext = (namespace?: Namespaces[] | Namespaces) => {
           escapeValue: false, // not needed for react as it escapes by default
         },
         ns,
-        resources: getRes(resources, ns),
+        // resources: getRes(resources, ns),
+        resources,
       })
   );
 };

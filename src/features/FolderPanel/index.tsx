@@ -1,7 +1,7 @@
 import { DraggablePanel } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, memo, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { useSettings } from '@/store/settings';
@@ -14,7 +14,7 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-export default ({ children }: PropsWithChildren) => {
+export default memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   const [sessionsWidth, sessionExpandable] = useSettings(
     (s) => [s.sessionsWidth, s.sessionExpandable],
@@ -52,4 +52,4 @@ export default ({ children }: PropsWithChildren) => {
       {children}
     </DraggablePanel>
   );
-};
+});

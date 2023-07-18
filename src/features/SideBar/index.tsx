@@ -1,16 +1,17 @@
-import { ActionIcon, Logo, SideNav } from '@lobehub/ui';
+import { ActionIcon, SideNav } from '@lobehub/ui';
 import { MessageSquare, Settings2, Sticker } from 'lucide-react';
 import Router from 'next/router';
 import { memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
+import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { useSettings } from '@/store/settings';
 
-const Sidebar = memo(() => {
+export default memo(() => {
   const [tab, setTab] = useSettings((s) => [s.sidebarKey, s.switchSideBar], shallow);
   return (
     <SideNav
-      avatar={<Logo size={40} />}
+      avatar={<AvatarWithUpload />}
       bottomActions={<ActionIcon icon={Settings2} onClick={() => Router.push('/setting')} />}
       style={{ height: '100vh' }}
       topActions={
@@ -32,5 +33,3 @@ const Sidebar = memo(() => {
     />
   );
 });
-
-export default Sidebar;

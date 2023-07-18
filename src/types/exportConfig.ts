@@ -1,11 +1,18 @@
+import type { NeutralColors, PrimaryColors } from '@lobehub/ui';
+import { ThemeMode } from 'antd-style';
+
+import { Locales } from './locale';
+
 /**
  * 配置设置
  */
 export interface ConfigSettings {
-  /**
-   * 头像链接
-   */
   avatar?: string;
+  fontSize: number;
+  language: Locales;
+  neutralColor?: NeutralColors | '';
+  primaryColor?: PrimaryColors | '';
+  themeMode: ThemeMode;
 }
 
 export type ConfigKeys = keyof ConfigSettings;
