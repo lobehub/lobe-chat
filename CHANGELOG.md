@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.2.0](https://github.com/lobehub/lobe-chat/compare/v1.1.0...v1.2.0)
+
+<sup>Released on **2023-07-18**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new components, modify import statements, and update CSS styles.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new components, modify import statements, and update CSS styles ([9b261db](https://github.com/lobehub/lobe-chat/commit/9b261db))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.1.0](https://github.com/lobehub/lobe-chat/compare/v1.0.0...v1.1.0)
 
 <sup>Released on **2023-07-18**</sup>
