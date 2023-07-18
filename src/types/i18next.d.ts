@@ -1,8 +1,8 @@
-import resources from '@/types/resources';
+import { DefaultResources } from '@/types/locale';
 
 declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: 'common';
-    resources: typeof resources;
+    resources: DefaultResources;
   }
 }
