@@ -24,7 +24,7 @@ const Chat = memo(() => {
         <title>{pageTitle}</title>
       </Head>
 
-      <Flexbox flex={1}>
+      <Flexbox flex={1} height={'100vh'} style={{ overflow: 'hidden', position: 'relative' }}>
         <Header />
         <Flexbox
           id={'lobe-conversion-container'}
