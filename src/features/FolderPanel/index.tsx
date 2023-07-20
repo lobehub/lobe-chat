@@ -1,9 +1,10 @@
-import { DraggablePanel } from '@lobehub/ui';
+import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
+import { FOLDER_WIDTH } from '@/const/layoutTokens';
 import { useSettings } from '@/store/settings';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -29,7 +30,7 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
       defaultSize={{ width: tmpWidth }}
       expand={sessionExpandable}
       maxWidth={400}
-      minWidth={256}
+      minWidth={FOLDER_WIDTH}
       onExpandChange={(expand) => {
         useSettings.setState({
           sessionExpandable: expand,
@@ -49,7 +50,9 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
       placement="left"
       size={{ height: '100vh', width: sessionsWidth }}
     >
-      {children}
+      <DraggablePanelContainer style={{ flex: 'none', minWidth: FOLDER_WIDTH }}>
+        {children}
+      </DraggablePanelContainer>
     </DraggablePanel>
   );
 });

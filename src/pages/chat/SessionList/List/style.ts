@@ -1,7 +1,7 @@
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 
-export const useStyles = createStyles(({ css, token, cx, stylish }) => {
+export const useStyles = createStyles(({ css, token }) => {
   return {
     active: css`
       display: flex;
@@ -63,13 +63,6 @@ export const useStyles = createStyles(({ css, token, cx, stylish }) => {
         }
       }
     `,
-    list: cx(
-      stylish.noScrollbar,
-      css`
-        overflow-x: hidden;
-        overflow-y: scroll;
-      `,
-    ),
     time: css`
       align-self: flex-start;
     `,

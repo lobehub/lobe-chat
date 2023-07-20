@@ -1,7 +1,6 @@
 import { ActionIcon, Avatar, ChatHeader } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ArchiveIcon, LucideEdit, MoreVerticalIcon, Share2Icon } from 'lucide-react';
-import Router from 'next/router';
+import { ArchiveIcon, MoreVerticalIcon, Share2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -54,7 +53,7 @@ const Header = memo(() => {
         id && (
           <>
             <ActionIcon
-              icon={Share2Icon}
+              icon={Share2}
               onClick={() => {
                 // genShareUrl();
               }}
@@ -62,14 +61,6 @@ const Header = memo(() => {
               title={t('share')}
             />
             <ActionIcon icon={ArchiveIcon} size={{ fontSize: 24 }} title={t('archive')} />
-            <ActionIcon
-              icon={LucideEdit}
-              onClick={() => {
-                Router.push(`/chat/${id}/edit`);
-              }}
-              size={{ blockSize: 32, fontSize: 20 }}
-              title={t('edit')}
-            />
             <ActionIcon
               icon={MoreVerticalIcon}
               onClick={() => toggleConfig()}

@@ -1,6 +1,7 @@
-import { ChatHeader } from '@lobehub/ui';
-import { Button } from 'antd';
+import { ActionIcon, ChatHeader } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { Download, Share2 } from 'lucide-react';
+import Head from 'next/head';
 import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,29 +37,34 @@ const EditPage = memo(() => {
 
   const { styles } = useStyles();
 
+  const pageTitle = t('editAgentProfile');
+
   return (
-    <ChatLayout>
-      <Flexbox height={'100vh'} style={{ position: 'relative' }} width={'100%'}>
-        {/*header*/}
-        <ChatHeader
-          left={<div className={styles.title}>{t('editAgentProfile')}</div>}
-          onBackClick={() => Router.back()}
-          right={
-            <>
-              <Button>{t('share')}</Button>
-              <Button type={'primary'}>{t('export')}</Button>
-            </>
-          }
-          showBackButton
-        />
-        {/*form*/}
-        <Flexbox className={styles.form} flex={1} gap={10} padding={24}>
-          <HeaderSpacing />
-          <AgentMeta />
-          <AgentConfig />
+    <>
+      <Head>
+        <title>{pageTitle}</title>
+      </Head>
+      <ChatLayout>
+        <Flexbox height={'100vh'} style={{ position: 'relative' }} width={'100%'}>
+          <ChatHeader
+            left={<div className={styles.title}>{t('editAgentProfile')}</div>}
+            onBackClick={() => Router.back()}
+            right={
+              <>
+                <ActionIcon icon={Share2} size={{ fontSize: 24 }} title={t('share')} />
+                <ActionIcon icon={Download} size={{ fontSize: 24 }} title={t('export')} />
+              </>
+            }
+            showBackButton
+          />
+          <Flexbox className={styles.form} flex={1} gap={10} padding={24}>
+            <HeaderSpacing />
+            <AgentMeta />
+            <AgentConfig />
+          </Flexbox>
         </Flexbox>
-      </Flexbox>
-    </ChatLayout>
+      </ChatLayout>
+    </>
   );
 });
 

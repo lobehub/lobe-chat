@@ -1,5 +1,5 @@
+import { DraggablePanelBody } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import FolderPanel from '@/features/FolderPanel';
 
@@ -9,10 +9,10 @@ import SessionList from './List';
 export const Sessions = memo(() => {
   return (
     <FolderPanel>
-      <Flexbox gap={8} height={'100%'}>
-        <Header />
+      <Header />
+      <DraggablePanelBody>
         <SessionList />
-      </Flexbox>
+      </DraggablePanelBody>
     </FolderPanel>
   );
 });

@@ -22,7 +22,15 @@
     }
   },
   "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.d.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "vitest.config.ts",
+    "src",
+    "tests",
+    "**/*.ts",
+    "**/*.d.ts",
+    "**/*.tsx"
+  ],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"

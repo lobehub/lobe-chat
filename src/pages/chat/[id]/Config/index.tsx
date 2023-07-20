@@ -1,4 +1,9 @@
-import { ActionIcon, DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
+import {
+  ActionIcon,
+  DraggablePanel,
+  DraggablePanelBody,
+  DraggablePanelContainer,
+} from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LucideEdit, LucideX } from 'lucide-react';
 import Router from 'next/router';
@@ -7,7 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { CHAT_SIDEBAR_WIDTH, HEADER_HEIGHT } from '@/const/layoutTokens';
+import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
+import HeaderSpacing from '@/features/HeaderSpacing';
 import { useSessionStore } from '@/store/session';
 
 import ReadMode from './ReadMode';
@@ -36,15 +42,13 @@ const Config = () => {
     <DraggablePanel
       className={styles.drawer}
       expand={showAgentSettings}
-      expandable={false}
-      headerHeight={HEADER_HEIGHT}
       maxWidth={CHAT_SIDEBAR_WIDTH}
       minWidth={CHAT_SIDEBAR_WIDTH}
-      mode={'float'}
-      pin
+      onExpandChange={toggleConfig}
       placement={'right'}
-      resize={{ left: false }}
+      resize={false}
     >
+      <HeaderSpacing />
       <DraggablePanelContainer style={{ flex: 'none', minWidth: CHAT_SIDEBAR_WIDTH }}>
         <Flexbox
           align={'center'}
@@ -74,7 +78,9 @@ const Config = () => {
             />
           </Flexbox>
         </Flexbox>
-        <ReadMode />
+        <DraggablePanelBody>
+          <ReadMode />
+        </DraggablePanelBody>
       </DraggablePanelContainer>
     </DraggablePanel>
   );

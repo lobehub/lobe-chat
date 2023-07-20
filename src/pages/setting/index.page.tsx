@@ -4,9 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import HeaderSpacing from '@/features/HeaderSpacing';
-import SideBar from '@/features/SideBar';
 import { createI18nNext } from '@/locales/create';
-import { Sessions } from '@/pages/chat/SessionList';
+import ChatLayout from '@/pages/chat/layout';
 
 import Header from './Header';
 import SettingForm from './SettingForm';
@@ -25,9 +24,7 @@ const SettingLayout = memo(() => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Flexbox height={'100vh'} horizontal width={'100%'}>
-        <SideBar />
-        <Sessions />
+      <ChatLayout>
         <Flexbox flex={1}>
           <Header />
           <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
@@ -35,7 +32,7 @@ const SettingLayout = memo(() => {
             <SettingForm />
           </Flexbox>
         </Flexbox>
-      </Flexbox>
+      </ChatLayout>
     </>
   );
 });
