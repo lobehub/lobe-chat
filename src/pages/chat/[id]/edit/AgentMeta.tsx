@@ -93,7 +93,7 @@ const AgentMeta = () => {
               <Button
                 disabled={!hasSystemRole}
                 loading={Object.values(loading).some((i) => !!i)}
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   console.log(id);
                   if (!id) return;
