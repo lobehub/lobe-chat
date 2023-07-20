@@ -28,7 +28,7 @@ const SliderWithInput = memo<SliderSingleProps>(
           max={max}
           min={min}
           onChange={handleOnchange}
-          step={Number(step)}
+          step={Number.isNaN(step) || isNull(step) ? undefined : step}
           style={{ flex: 1, maxWidth: 64 }}
           value={typeof value === 'number' ? value : 0}
         />

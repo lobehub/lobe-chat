@@ -45,23 +45,21 @@ const EditPage = memo(() => {
         <title>{pageTitle}</title>
       </Head>
       <ChatLayout>
-        <Flexbox height={'100vh'} style={{ position: 'relative' }} width={'100%'}>
-          <ChatHeader
-            left={<div className={styles.title}>{t('editAgentProfile')}</div>}
-            onBackClick={() => Router.back()}
-            right={
-              <>
-                <ActionIcon icon={Share2} size={{ fontSize: 24 }} title={t('share')} />
-                <ActionIcon icon={Download} size={{ fontSize: 24 }} title={t('export')} />
-              </>
-            }
-            showBackButton
-          />
-          <Flexbox className={styles.form} flex={1} gap={10} padding={24}>
-            <HeaderSpacing />
-            <AgentMeta />
-            <AgentConfig />
-          </Flexbox>
+        <ChatHeader
+          left={<div className={styles.title}>{t('editAgentProfile')}</div>}
+          onBackClick={() => Router.back()}
+          right={
+            <>
+              <ActionIcon icon={Share2} size={{ fontSize: 24 }} title={t('share')} />
+              <ActionIcon icon={Download} size={{ fontSize: 24 }} title={t('export')} />
+            </>
+          }
+          showBackButton
+        />
+        <Flexbox className={styles.form} flex={1} gap={10} padding={24}>
+          <HeaderSpacing />
+          <AgentMeta />
+          <AgentConfig />
         </Flexbox>
       </ChatLayout>
     </>

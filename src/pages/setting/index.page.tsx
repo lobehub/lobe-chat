@@ -25,12 +25,10 @@ const SettingLayout = memo(() => {
         <title>{pageTitle}</title>
       </Head>
       <ChatLayout>
-        <Flexbox flex={1}>
-          <Header />
-          <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
-            <HeaderSpacing />
-            <SettingForm />
-          </Flexbox>
+        <Header />
+        <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
+          <HeaderSpacing />
+          <SettingForm />
         </Flexbox>
       </ChatLayout>
     </>

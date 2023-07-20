@@ -43,7 +43,9 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
     <Flexbox horizontal width={'100%'}>
       <SideBar />
       <Sessions />
-      <Flexbox flex={1}>{children}</Flexbox>
+      <Flexbox flex={1} height={'100vh'} style={{ position: 'relative' }}>
+        {children}
+      </Flexbox>
     </Flexbox>
   );
 });

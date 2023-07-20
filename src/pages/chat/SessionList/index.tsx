@@ -10,7 +10,7 @@ export const Sessions = memo(() => {
   return (
     <FolderPanel>
       <Header />
-      <DraggablePanelBody>
+      <DraggablePanelBody style={{ padding: 0 }}>
         <SessionList />
       </DraggablePanelBody>
     </FolderPanel>

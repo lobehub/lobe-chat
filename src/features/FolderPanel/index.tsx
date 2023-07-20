@@ -50,7 +50,7 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
       placement="left"
       size={{ height: '100vh', width: sessionsWidth }}
     >
-      <DraggablePanelContainer style={{ flex: 'none', minWidth: FOLDER_WIDTH }}>
+      <DraggablePanelContainer style={{ flex: 'none', height: '100%', minWidth: FOLDER_WIDTH }}>
         {children}
       </DraggablePanelContainer>
     </DraggablePanel>
