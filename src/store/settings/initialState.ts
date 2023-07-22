@@ -1,6 +1,8 @@
 import type { ConfigSettings } from '@/types/exportConfig';
+import { LanguageModel } from '@/types/llm';
 
 export type SidebarTabKey = 'chat' | 'market';
+
 export const DEFAULT_SETTINGS: ConfigSettings = {
   accessCode: '',
   avatar: '',
@@ -14,7 +16,7 @@ export const DEFAULT_SETTINGS: ConfigSettings = {
   historyCount: 24,
   language: 'zh-CN',
   maxTokens: 2000,
-  model: 'gpt-3.5-turbo',
+  model: LanguageModel.GPT3_5,
   neutralColor: '',
   presencePenalty: 0,
   primaryColor: '',

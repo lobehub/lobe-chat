@@ -1,6 +1,8 @@
 import type { NeutralColors, PrimaryColors } from '@lobehub/ui';
 import { ThemeMode } from 'antd-style';
 
+import { LanguageModel } from '@/types/llm';
+
 import { Locales } from './locale';
 
 /**
@@ -19,7 +21,7 @@ export interface ConfigSettings {
   historyCount: number;
   language: Locales;
   maxTokens: number;
-  model: string;
+  model: LanguageModel;
   neutralColor: NeutralColors | '';
   presencePenalty: number;
   primaryColor: PrimaryColors | '';
