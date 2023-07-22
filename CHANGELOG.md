@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.10.0](https://github.com/lobehub/lobe-chat/compare/v0.9.0...v0.10.0)
+
+<sup>Released on **2023-07-22**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持复制与编辑会话消息.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持复制与编辑会话消息 ([bebcf9f](https://github.com/lobehub/lobe-chat/commit/bebcf9f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.9.0](https://github.com/lobehub/lobe-chat/compare/v0.8.2...v0.9.0)
 
 <sup>Released on **2023-07-22**</sup>
