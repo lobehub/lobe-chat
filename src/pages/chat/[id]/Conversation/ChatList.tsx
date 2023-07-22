@@ -5,6 +5,8 @@ import { shallow } from 'zustand/shallow';
 
 import { chatSelectors, useSessionStore } from '@/store/session';
 
+import MessageExtra from './MessageExtra';
+
 const List = () => {
   const data = useSessionStore(chatSelectors.currentChats, isEqual);
   const [deleteMessage, resendMessage] = useSessionStore(
@@ -28,6 +30,7 @@ const List = () => {
           }
         }
       }}
+      renderMessageExtra={MessageExtra}
       style={{ marginTop: 24 }}
     />
   );

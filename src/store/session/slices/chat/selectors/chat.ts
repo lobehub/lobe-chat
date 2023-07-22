@@ -37,6 +37,7 @@ export const currentChats = (s: SessionStore): ChatMessage[] => {
     }
   };
 
+  // 基于添加逻辑进行重排序
   for (const item of basic) {
     // 先判存在与否，不存在就加入
     addItem(item);

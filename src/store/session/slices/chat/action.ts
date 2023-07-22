@@ -119,7 +119,7 @@ export const createChatSlice: StateCreator<
     const { dispatchMessage, generateMessage } = get();
 
     // 添加 systemRole
-    const { systemRole } = agentSelectors.currentAgentConfigSafe(get());
+    const { systemRole, model } = agentSelectors.currentAgentConfigSafe(get());
     if (systemRole) {
       messages.unshift({ content: systemRole, role: 'system' } as ChatMessage);
     }
@@ -135,6 +135,14 @@ export const createChatSlice: StateCreator<
       parentId: userId,
       role: 'assistant',
       type: 'addMessage',
+    });
+
+    // 为模型添加 fromModel 的额外信息
+    dispatchMessage({
+      id: assistantId,
+      key: 'fromModel',
+      type: 'updateMessageExtra',
+      value: model,
     });
 
     let output = '';
