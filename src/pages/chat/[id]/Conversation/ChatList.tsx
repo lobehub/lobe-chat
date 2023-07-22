@@ -9,8 +9,8 @@ import MessageExtra from './MessageExtra';
 
 const List = () => {
   const data = useSessionStore(chatSelectors.currentChats, isEqual);
-  const [deleteMessage, resendMessage] = useSessionStore(
-    (s) => [s.deleteMessage, s.resendMessage],
+  const [deleteMessage, resendMessage, dispatchMessage] = useSessionStore(
+    (s) => [s.deleteMessage, s.resendMessage, s.dispatchMessage],
     shallow,
   );
 
@@ -29,6 +29,9 @@ const List = () => {
             break;
           }
         }
+      }}
+      onMessageChange={(id, content) => {
+        dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
       }}
       renderMessageExtra={MessageExtra}
       style={{ marginTop: 24 }}
