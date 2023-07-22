@@ -8,7 +8,7 @@ import ChatList from './ChatList';
 
 const Conversation = () => {
   return (
-    <Flexbox flex={1}>
+    <Flexbox flex={1} style={{ position: 'relative' }}>
       <div style={{ flex: 1, overflowY: 'scroll' }}>
         <HeaderSpacing />
         <ChatList />
