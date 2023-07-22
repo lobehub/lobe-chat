@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 0.4.2](https://github.com/lobehub/lobe-chat/compare/v0.4.1...v0.4.2)
+
+<sup>Released on **2023-07-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix input style, fix layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix input style ([504bd64](https://github.com/lobehub/lobe-chat/commit/504bd64))
+- **misc**: Fix layout ([2d83aff](https://github.com/lobehub/lobe-chat/commit/2d83aff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.4.1](https://github.com/lobehub/lobe-chat/compare/v0.4.0...v0.4.1)
 
 <sup>Released on **2023-07-22**</sup>
