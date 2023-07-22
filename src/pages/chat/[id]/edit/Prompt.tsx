@@ -46,9 +46,10 @@ const Prompt = () => {
             updateAgentConfig({ systemRole: e });
           }}
           onEditingChange={setEditing}
+          showEditWhenEmpty
           value={systemRole}
         />
-        {!editing && (
+        {!editing && !!systemRole && (
           <Flexbox direction={'horizontal-reverse'}>
             <Button
               onClick={() => {
