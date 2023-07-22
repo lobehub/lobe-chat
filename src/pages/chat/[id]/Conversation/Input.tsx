@@ -1,8 +1,9 @@
-import { ActionIcon, ChatInputArea, DraggablePanel, Icon, TokenTag } from '@lobehub/ui';
-import { Button } from 'antd';
+import { ActionIcon, ChatInputArea, DraggablePanel, Icon, TokenTag, Tooltip } from '@lobehub/ui';
+import { Button, Popconfirm } from 'antd';
 import { encode } from 'gpt-tokenizer';
 import { Archive, Eraser, Languages } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
@@ -11,20 +12,24 @@ import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session'
 import { useSettings } from '@/store/settings';
 
 const ChatInput = () => {
+  const { t } = useTranslation();
   const [expand, setExpand] = useState<boolean>(false);
   const [text, setText] = useState('');
-  const textTokenCount = useMemo(() => encode(text).length, [text]);
+  const inputTokenCount = useMemo(() => encode(text).length, [text]);
 
   const [inputHeight] = useSettings((s) => [s.inputHeight], shallow);
-  const [totalToken, model, sendMessage, clearMessage] = useSessionStore(
-    (s) => [
-      chatSelectors.totalTokenCount(s),
-      agentSelectors.currentAgentModel(s),
-      s.createOrSendMsg,
-      s.clearMessage,
-    ],
-    shallow,
-  );
+  const [totalToken, systemRoleToken, chatsToken, model, sendMessage, clearMessage] =
+    useSessionStore(
+      (s) => [
+        chatSelectors.totalTokenCount(s),
+        chatSelectors.systemRoleTokenCount(s),
+        chatSelectors.chatsTokenCount(s),
+        agentSelectors.currentAgentModel(s),
+        s.createOrSendMsg,
+        s.clearMessage,
+      ],
+      shallow,
+    );
 
   return (
     <DraggablePanel
@@ -46,12 +51,16 @@ const ChatInput = () => {
         actions={
           <>
             <ActionIcon icon={Languages} />
-            <ActionIcon icon={Eraser} onClick={clearMessage} />
-            <TokenTag maxValue={ModelTokens[model]} value={totalToken + textTokenCount} />
+            <Popconfirm onConfirm={() => clearMessage()} title={t('confirmClearCurrentMessages')}>
+              <ActionIcon icon={Eraser} title={t('clearCurrentMessages')} />
+            </Popconfirm>
+            <Tooltip title={t('tokenDetail', { chatsToken, systemRoleToken })}>
+              <TokenTag maxValue={ModelTokens[model]} value={totalToken + inputTokenCount} />
+            </Tooltip>
           </>
         }
         expand={expand}
-        footer={<Button icon={<Icon icon={Archive} />} />}
+        footer={<Button icon={<Icon icon={Archive} title={t('archiveCurrentMessages')} />} />}
         minHeight={CHAT_TEXTAREA_HEIGHT}
         onExpandChange={setExpand}
         onInputChange={setText}
