@@ -57,6 +57,7 @@ class MyDocument extends Document {
           <meta content="LobeHub" name="application-name" />
           <meta content="#000000" name="msapplication-TileColor" />
           <meta content="#000000" name="theme-color" />
+          <link href="/manifest.json" rel="manifest" />
         </Head>
         <body>
           <Main />
