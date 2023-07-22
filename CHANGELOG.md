@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 0.8.2](https://github.com/lobehub/lobe-chat/compare/v0.8.1...v0.8.2)
+
+<sup>Released on **2023-07-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix miss manifest.json link, 优化 model tag 展示逻辑.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix miss manifest.json link ([ac4b2f3](https://github.com/lobehub/lobe-chat/commit/ac4b2f3))
+- **misc**: 优化 model tag 展示逻辑 ([3463ede](https://github.com/lobehub/lobe-chat/commit/3463ede))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.8.1](https://github.com/lobehub/lobe-chat/compare/v0.8.0...v0.8.1)
 
 <sup>Released on **2023-07-22**</sup>
