@@ -1,12 +1,13 @@
-const API_END_PORT_URL = process.env.API_END_PORT_URL || '';
+import nextPWA from 'next-pwa';
 
-const withPWA = require('next-pwa')({
+const withPWA = nextPWA({
   dest: 'public',
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
 });
 
+const API_END_PORT_URL = process.env.API_END_PORT_URL || '';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
