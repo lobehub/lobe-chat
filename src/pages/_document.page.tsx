@@ -2,7 +2,7 @@ import { StyleProvider, extractStaticStyle } from 'antd-style';
 import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
 class MyDocument extends Document {
-  static async getStaticProps(ctx: DocumentContext) {
+  static async getInitialProps(ctx: DocumentContext) {
     const page = await ctx.renderPage({
       enhanceApp: (App) => (props) =>
         (
