@@ -59,25 +59,24 @@ const systemRoleSel = (s: SessionStore): string => {
   return config.systemRole;
 };
 
-const totalTokens = (s: SessionStore): number[] => {
-  const chats = currentChats(s);
-  return encode(chats.map((m) => m.content).join(''));
-};
-
 const systemRoleTokens = (s: SessionStore): number[] => {
   const systemRole = systemRoleSel(s);
 
   return encode(systemRole || '');
 };
 
-const totalTokenCount = (s: SessionStore) => totalTokens(s).length;
+const chatsTokens = (s: SessionStore): number[] => {
+  const chats = currentChats(s);
+  return encode(chats.map((m) => m.content).join(''));
+};
 
 const systemRoleTokenCount = (s: SessionStore) => systemRoleTokens(s).length;
+
+const totalTokenCount = (s: SessionStore) => chatsTokens(s).length + systemRoleTokenCount(s);
 
 export const chatSelectors = {
   currentChats,
   systemRoleTokenCount,
   systemRoleTokens,
   totalTokenCount,
-  totalTokens,
 };
