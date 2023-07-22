@@ -71,6 +71,7 @@
     "antd-style": "^3",
     "brotli-wasm": "^1",
     "chroma-js": "^2",
+    "emoji-mart": "^5",
     "fast-deep-equal": "^3",
     "gpt-tokenizer": "^2",
     "i18next": "^23",
