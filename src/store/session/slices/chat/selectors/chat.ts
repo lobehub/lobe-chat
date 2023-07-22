@@ -1,7 +1,9 @@
 import { agentSelectors } from '@/store/session';
+import { useSettings } from '@/store/settings';
 import { ChatMessage } from '@/types/chatMessage';
 
 import type { SessionStore } from '../../../store';
+import { DEFAULT_AVATAR } from '../../agentConfig';
 import { sessionSelectors } from '../../session';
 
 // 展示在聊天框中的消息
@@ -23,6 +25,10 @@ export const currentChats = (s: SessionStore): ChatMessage[] => {
             ? {
                 avatar: agentSelectors.currentAgentAvatar(s),
                 title: session.meta.title,
+              }
+            : m.role === 'user'
+            ? {
+                avatar: useSettings.getState().settings.avatar || DEFAULT_AVATAR,
               }
             : m.meta,
       };
