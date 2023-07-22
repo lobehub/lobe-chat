@@ -1,13 +1,11 @@
-import { encode } from 'gpt-tokenizer';
-
 import { agentSelectors } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
 
-import type { SessionStore } from '../../store';
-import { sessionSelectors } from '../session';
+import type { SessionStore } from '../../../store';
+import { sessionSelectors } from '../../session';
 
 // 展示在聊天框中的消息
-const currentChats = (s: SessionStore): ChatMessage[] => {
+export const currentChats = (s: SessionStore): ChatMessage[] => {
   const session = sessionSelectors.currentSession(s);
   if (!session) return [];
 
@@ -53,30 +51,8 @@ const currentChats = (s: SessionStore): ChatMessage[] => {
   return finalList;
 };
 
-const systemRoleSel = (s: SessionStore): string => {
+export const systemRoleSel = (s: SessionStore): string => {
   const config = agentSelectors.currentAgentConfigSafe(s);
 
   return config.systemRole;
-};
-
-const systemRoleTokens = (s: SessionStore): number[] => {
-  const systemRole = systemRoleSel(s);
-
-  return encode(systemRole || '');
-};
-
-const chatsTokens = (s: SessionStore): number[] => {
-  const chats = currentChats(s);
-  return encode(chats.map((m) => m.content).join(''));
-};
-
-const systemRoleTokenCount = (s: SessionStore) => systemRoleTokens(s).length;
-
-const totalTokenCount = (s: SessionStore) => chatsTokens(s).length + systemRoleTokenCount(s);
-
-export const chatSelectors = {
-  currentChats,
-  systemRoleTokenCount,
-  systemRoleTokens,
-  totalTokenCount,
 };
