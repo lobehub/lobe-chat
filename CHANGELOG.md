@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 0.6.0](https://github.com/lobehub/lobe-chat/compare/v0.5.0...v0.6.0)
+
+<sup>Released on **2023-07-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 重构 selector 文件组织.
+
+#### ✨ Features
+
+- **misc**: 补充 token 详情.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 重构 selector 文件组织 ([2ad0ef9](https://github.com/lobehub/lobe-chat/commit/2ad0ef9))
+
+#### What's improved
+
+- **misc**: 补充 token 详情 ([098f7ff](https://github.com/lobehub/lobe-chat/commit/098f7ff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.5.0](https://github.com/lobehub/lobe-chat/compare/v0.4.3...v0.5.0)
 
 <sup>Released on **2023-07-22**</sup>
