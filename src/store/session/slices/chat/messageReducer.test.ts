@@ -1,70 +1,227 @@
-test('placeholder', () => {});
-// describe('messagesReducer', () => {
-//   let initialState: ChatMessage[];
-//
-//   beforeEach(() => {
-//     initialState = [
-//       { role: 'user', content: 'Hello!' },
-//       { role: 'assistant', content: 'Hi there!' },
-//     ];
-//   });
-//
-//   it('should add a message', () => {
-//     const newMessage: ChatMessage = { role: 'user', content: 'How are you?' };
-//     const action: MessageDispatch = { type: 'addMessage', message: newMessage };
-//     const newState = messagesReducer(initialState, action);
-//     expect(newState).toEqual([...initialState, newMessage]);
-//   });
-//
-//   it('should delete a message', () => {
-//     const action: MessageDispatch = { type: 'deleteMessage', index: 1 };
-//     const newState = messagesReducer(initialState, action);
-//     expect(newState).toEqual([{ role: 'user', content: 'Hello!' }]);
-//   });
-//
-//   it('should update a message', () => {
-//     const action: MessageDispatch = { type: 'updateMessage', index: 1, message: 'I am fine!' };
-//     const newState = messagesReducer(initialState, action);
-//     expect(newState).toEqual([
-//       { role: 'user', content: 'Hello!' },
-//       { role: 'assistant', content: 'I am fine!' },
-//     ]);
-//   });
-//
-//   it('should add a user message', () => {
-//     const action: MessageDispatch = { type: 'addUserMessage', message: 'Goodbye!' };
-//     const newState = messagesReducer(initialState, action);
-//     expect(newState).toEqual([
-//       { role: 'user', content: 'Hello!' },
-//       { role: 'assistant', content: 'Hi there!' },
-//       { role: 'user', content: 'Goodbye!' },
-//     ]);
-//   });
-//
-//   it('should set error message correctly', () => {
-//     const action: MessageDispatch = {
-//       type: 'setErrorMessage',
-//       error: { message: 'Not Found', status: 404, type: 'chatbot' },
-//       index: 0,
-//     };
-//     const newState = messagesReducer(initialState, action);
-//     expect(newState).toEqual([
-//       {
-//         role: 'user',
-//         content: 'Hello!',
-//         error: { message: 'Not Found', status: 404, type: 'chatbot' },
-//       },
-//       { role: 'assistant', content: 'Hi there!' },
-//     ]);
-//   });
-//
-//   it('should update the latest bot message', () => {
-//     const responseStream = ['I', ' am', ' a', ' bot.'];
-//     const action: MessageDispatch = { type: 'updateLatestBotMessage', responseStream };
-//     const newState = messagesReducer(initialState, action);
-//     expect(newState).toEqual([
-//       { role: 'user', content: 'Hello!' },
-//       { role: 'assistant', content: 'I am a bot.' },
-//     ]);
-//   });
-// });
+import { ChatMessageMap } from '@/types/chatMessage';
+
+import { MessageDispatch, messagesReducer } from './messageReducer';
+
+describe('messagesReducer', () => {
+  let initialState: ChatMessageMap;
+
+  beforeEach(() => {
+    initialState = {
+      message1: {
+        id: 'message1',
+        content: 'Hello World',
+        createAt: 1629264000000,
+        updateAt: 1629264000000,
+        role: 'user',
+      },
+      message2: {
+        id: 'message2',
+        content: 'How are you?',
+        createAt: 1629264000000,
+        updateAt: 1629264000000,
+        role: 'system',
+      },
+    } as unknown as ChatMessageMap;
+  });
+
+  describe('addMessage', () => {
+    it('should add a new message to the state', () => {
+      const payload: MessageDispatch = {
+        type: 'addMessage',
+        message: 'New Message',
+        role: 'user',
+        id: 'message3',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(Object.keys(newState)).toHaveLength(3);
+      expect(newState).toHaveProperty('message1');
+      expect(newState).toHaveProperty('message2');
+      expect(newState).toHaveProperty('message3');
+      expect(newState.message3).toEqual({
+        id: 'message3',
+        content: 'New Message',
+        meta: {},
+        createAt: expect.any(Number),
+        updateAt: expect.any(Number),
+        role: 'user',
+      });
+    });
+
+    it('should use the provided id when adding a new message', () => {
+      const payload: MessageDispatch = {
+        type: 'addMessage',
+        id: 'customId',
+        message: 'New Message',
+        role: 'user',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(Object.keys(newState)).toHaveLength(3);
+      expect(newState).toHaveProperty('message1');
+      expect(newState).toHaveProperty('message2');
+      expect(newState).toHaveProperty('customId');
+      expect(newState.customId).toEqual({
+        id: 'customId',
+        content: 'New Message',
+        meta: {},
+        createAt: expect.any(Number),
+        updateAt: expect.any(Number),
+        role: 'user',
+      });
+    });
+
+    it('should use the provided parentId when adding a new message', () => {
+      const payload: MessageDispatch = {
+        type: 'addMessage',
+        message: 'New Message',
+        id: 'message3',
+        role: 'user',
+        parentId: 'message1',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState.message3).toEqual({
+        id: 'message3',
+        content: 'New Message',
+        meta: {},
+        createAt: expect.any(Number),
+        updateAt: expect.any(Number),
+        role: 'user',
+        parentId: 'message1',
+      });
+    });
+
+    it('should use the provided quotaId when adding a new message', () => {
+      const payload: MessageDispatch = {
+        type: 'addMessage',
+        message: 'New Message',
+        id: 'message3',
+        role: 'user',
+        quotaId: 'message2',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState.message3).toEqual({
+        id: 'message3',
+        meta: {},
+        content: 'New Message',
+        createAt: expect.any(Number),
+        updateAt: expect.any(Number),
+        role: 'user',
+        quotaId: 'message2',
+      });
+    });
+  });
+
+  describe('deleteMessage', () => {
+    it('should remove the specified message from the state', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessage',
+        id: 'message1',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(Object.keys(newState)).toHaveLength(1);
+      expect(newState).not.toHaveProperty('message1');
+      expect(newState).toHaveProperty('message2');
+    });
+
+    it('should not modify the state if the specified message does not exist', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessage',
+        id: 'nonexistentMessage',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState).toEqual(initialState);
+    });
+  });
+
+  describe('updateMessage', () => {
+    it('should update the specified message with the provided value', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessage',
+        id: 'message1',
+        key: 'content',
+        value: 'Updated Message',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState.message1.content).toBe('Updated Message');
+      expect(newState.message1.updateAt).toBeGreaterThan(initialState.message1.updateAt);
+    });
+
+    it('should not modify the state if the specified message does not exist', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessage',
+        id: 'nonexistentMessage',
+        key: 'content',
+        value: 'Updated Message',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState).toEqual(initialState);
+    });
+  });
+
+  describe('updateMessageExtra', () => {
+    it('should update the specified message extra property with the provided value', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessageExtra',
+        id: 'message1',
+        key: 'translate',
+        value: { target: 'en', to: 'zh' },
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState.message1.extra!.translate).toEqual({ target: 'en', to: 'zh' });
+      expect(newState.message1.updateAt).toBeGreaterThan(initialState.message1.updateAt);
+    });
+
+    it('should not modify the state if the specified message does not exist', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessageExtra',
+        id: 'nonexistentMessage',
+        key: 'translate',
+        value: { target: 'en', to: 'zh' },
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState).toEqual(initialState);
+    });
+  });
+
+  describe('resetMessages', () => {
+    it('should reset the state to an empty object', () => {
+      const payload: MessageDispatch = {
+        type: 'resetMessages',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState).toEqual({});
+    });
+  });
+
+  describe('unimplemented type', () => {
+    it('should throw an error when an unimplemented type is provided', () => {
+      // @ts-ignore
+      const payload: MessageDispatch = { type: 'unimplementedType' };
+
+      expect(() => messagesReducer(initialState, payload)).toThrowError(
+        '暂未实现的 type，请检查 reducer',
+      );
+    });
+  });
+});

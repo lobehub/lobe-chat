@@ -30,8 +30,19 @@ interface UpdateMessage {
   type: 'updateMessage';
   value: ChatMessage[keyof ChatMessage];
 }
+interface UpdateMessageExtra {
+  id: string;
+  key: string;
+  type: 'updateMessageExtra';
+  value: any;
+}
 
-export type MessageDispatch = AddMessage | DeleteMessage | ResetMessages | UpdateMessage;
+export type MessageDispatch =
+  | AddMessage
+  | DeleteMessage
+  | ResetMessages
+  | UpdateMessage
+  | UpdateMessageExtra;
 
 export const messagesReducer = (
   state: ChatMessageMap,
@@ -69,6 +80,22 @@ export const messagesReducer = (
 
         // @ts-ignore
         message[key] = value;
+        message.updateAt = Date.now();
+      });
+    }
+
+    case 'updateMessageExtra': {
+      return produce(state, (draftState) => {
+        const { id, key, value } = payload;
+        const message = draftState[id];
+        if (!message) return;
+
+        if (!message.extra) {
+          message.extra = { [key]: value } as any;
+        } else {
+          message.extra[key] = value;
+        }
+
         message.updateAt = Date.now();
       });
     }
