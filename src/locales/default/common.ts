@@ -1,4 +1,5 @@
 export default {
+  'DefaultSession': '默认对话',
   'advanceSettings': '高级设置',
   'agentAvatar': '头像',
   'agentDescription': '描述',

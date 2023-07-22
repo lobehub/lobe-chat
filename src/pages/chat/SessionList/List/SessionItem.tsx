@@ -1,8 +1,8 @@
 import { ActionIcon, Avatar, List } from '@lobehub/ui';
-import { Popconfirm } from 'antd';
+import { Popconfirm, Tag } from 'antd';
 import { X } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { FC, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
@@ -22,7 +22,7 @@ interface SessionItemProps {
 const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) => {
   const { t } = useTranslation('common');
   const { styles, theme, cx } = useStyles();
-  const [title, description, systemRole, avatar, avatarBackground, updateAt, removeSession] =
+  const [title, description, systemRole, avatar, avatarBackground, updateAt, model, removeSession] =
     useSessionStore((s) => {
       const session = sessionSelectors.getSessionById(id)(s);
       const meta = session.meta;
@@ -34,6 +34,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
         sessionSelectors.getAgentAvatar(meta),
         meta.backgroundColor,
         session?.updateAt,
+        session.config.model,
         s.removeSession,
       ];
     }, shallow);
@@ -53,13 +54,17 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
         }
         classNames={{ time: cx('session-time', styles.time) }}
         date={updateAt}
-        description={description || systemRole}
+        description={
+          <Flexbox gap={4}>
+            <Flexbox>{description || systemRole}</Flexbox>
+            <Flexbox horizontal>
+              <Tag bordered={false}>{model}</Tag>
+            </Flexbox>
+          </Flexbox>
+        }
         loading={loading}
-        style={{
-          alignItems: 'center',
-          color: theme.colorText,
-        }}
-        title={title || DEFAULT_TITLE}
+        style={{ color: theme.colorText }}
+        title={title || t(DEFAULT_TITLE)}
       />
       <Popconfirm
         arrow={false}

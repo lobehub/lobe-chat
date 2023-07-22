@@ -25,12 +25,12 @@ export interface ChatMessage extends BaseDataModel {
 
   // 扩展字段
   extra?: {
+    fromModel?: string;
     // 翻译
-    translate: {
+    translate?: {
       target: string;
       to: string;
     };
-    // 语音
   } & Record<string, any>;
 
   parentId?: string;

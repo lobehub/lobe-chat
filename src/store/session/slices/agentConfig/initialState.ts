@@ -18,7 +18,7 @@ export const initialLobeAgentConfig: LobeAgentConfig = {
 
 export const DEFAULT_AVATAR = 'https://npm.elemecdn.com/@lobehub/assets-logo/assets/logo-3d.webp';
 
-export const DEFAULT_TITLE = '默认对话';
+export const DEFAULT_TITLE = 'DefaultSession';
 
 export const initialAgentConfigState: AgentConfigState = {
   // // loading 中间态

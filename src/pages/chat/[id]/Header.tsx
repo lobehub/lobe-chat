@@ -1,4 +1,5 @@
 import { ActionIcon, Avatar, ChatHeader } from '@lobehub/ui';
+import { Tag } from 'antd';
 import { createStyles } from 'antd-style';
 import { ArchiveIcon, MoreVerticalIcon, Share2 } from 'lucide-react';
 import { memo } from 'react';
@@ -6,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { sessionSelectors, useSessionStore } from '@/store/session';
+import { agentSelectors, sessionSelectors, useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css, token }) => ({
   desc: css`
@@ -18,8 +19,13 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorText};
   `,
 }));
+
 const Header = memo(() => {
   const { t } = useTranslation('common');
+  const [avatar, model] = useSessionStore(
+    (s) => [agentSelectors.currentAgentAvatar(s), agentSelectors.currentAgentModel(s)],
+    shallow,
+  );
   const [meta, id] = useSessionStore((s) => {
     const chat = sessionSelectors.currentSession(s);
     return [chat?.meta, s.activeId];
@@ -42,9 +48,12 @@ const Header = memo(() => {
     <ChatHeader
       left={
         <>
-          <Avatar avatar={meta && sessionSelectors.getAgentAvatar(meta)} size={40} title={'123'} />
+          <Avatar avatar={avatar} size={40} title={meta?.title} />
           <Flexbox>
-            <Flexbox className={styles.title}>{meta?.title || t('defaultAgent')}</Flexbox>
+            <Flexbox align={'center'} className={styles.title} gap={8} horizontal>
+              {meta?.title || t('defaultAgent')}
+              <Tag bordered={false}>{model}</Tag>
+            </Flexbox>
             <Flexbox className={styles.desc}>{meta?.description || t('noDescription')}</Flexbox>
           </Flexbox>
         </>
