@@ -18,20 +18,20 @@ const MessageExtra = ({ role, extra }: ChatMessage): ReactNode => {
 
   const [model] = useSessionStore((s) => [agentSelectors.currentAgentModel(s)], shallow);
 
-  // 只有 ai 的 message 才会需要展示
-  if (role !== 'assistant') return;
-  // 只有当 当前的 model 和 fromModel 不一致时，才需要展示
-  if (extra?.fromModel && model === extra?.fromModel) return;
-
-  return (
-    <Flexbox className={styles.container}>
-      <div>
-        <Tag bordered={false} style={{ borderRadius: 6 }}>
-          {extra?.fromModel}
-        </Tag>
-      </div>
-    </Flexbox>
-  );
+  // 1. 只有 ai 的 message
+  // 2. 且存在 fromModel
+  // 3. 且当前的 model 和 fromModel 不一致时
+  if (role === 'assistant' && extra?.fromModel && model !== extra?.fromModel)
+    // 才需要展示 model tag
+    return (
+      <Flexbox className={styles.container}>
+        <div>
+          <Tag bordered={false} style={{ borderRadius: 6 }}>
+            {extra?.fromModel}
+          </Tag>
+        </div>
+      </Flexbox>
+    );
 };
 
 export default MessageExtra;
