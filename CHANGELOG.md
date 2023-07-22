@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.4.3](https://github.com/lobehub/lobe-chat/compare/v0.4.2...v0.4.3)
+
+<sup>Released on **2023-07-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 优化 edit 代码结构.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 优化 edit 代码结构 ([fdb3a3f](https://github.com/lobehub/lobe-chat/commit/fdb3a3f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.4.2](https://github.com/lobehub/lobe-chat/compare/v0.4.1...v0.4.2)
 
 <sup>Released on **2023-07-22**</sup>
