@@ -8,8 +8,8 @@ import { shallow } from 'zustand/shallow';
 
 import { agentSelectors, useSessionStore } from '@/store/session';
 
-import { FormItem } from './FormItem';
-import { useStyles } from './style';
+import { FormItem } from '../FormItem';
+import { useStyles } from '../style';
 
 const AgentMeta = () => {
   const { t } = useTranslation('common');

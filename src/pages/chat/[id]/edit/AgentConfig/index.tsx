@@ -7,9 +7,9 @@ import { shallow } from 'zustand/shallow';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 
-import { FormItem } from './FormItem';
+import { FormItem } from '../FormItem';
+import { useStyles } from '../style';
 import Prompt from './Prompt';
-import { useStyles } from './style';
 
 const AgentConfig = () => {
   const { t } = useTranslation('common');

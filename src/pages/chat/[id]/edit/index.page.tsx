@@ -7,7 +7,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import HeaderSpacing from '@/features/HeaderSpacing';
+import HeaderSpacing from '@/components/HeaderSpacing';
 
 import ChatLayout from '../../layout';
 import AgentConfig from './AgentConfig';

@@ -3,7 +3,7 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import HeaderSpacing from '@/features/HeaderSpacing';
+import HeaderSpacing from '@/components/HeaderSpacing';
 import { createI18nNext } from '@/locales/create';
 import ChatLayout from '@/pages/chat/layout';
 

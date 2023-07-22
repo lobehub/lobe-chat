@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import HeaderSpacing from '@/features/HeaderSpacing';
+import HeaderSpacing from '@/components/HeaderSpacing';
 import ChatInput from '@/pages/chat/[id]/Conversation/Input';
 
 import ChatList from './ChatList';

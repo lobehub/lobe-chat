@@ -8,7 +8,7 @@ import { shallow } from 'zustand/shallow';
 
 import { agentSelectors, useSessionStore } from '@/store/session';
 
-import { FormItem } from './FormItem';
+import { FormItem } from '../FormItem';
 
 export const useStyles = createStyles(({ css, token }) => ({
   input: css`

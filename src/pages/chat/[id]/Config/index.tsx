@@ -12,8 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import HeaderSpacing from '@/components/HeaderSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
-import HeaderSpacing from '@/features/HeaderSpacing';
 import { useSessionStore } from '@/store/session';
 
 import ReadMode from './ReadMode';
