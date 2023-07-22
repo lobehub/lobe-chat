@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.7.0](https://github.com/lobehub/lobe-chat/compare/v0.6.1...v0.7.0)
+
+<sup>Released on **2023-07-22**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持展示来自模型的标记信息.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持展示来自模型的标记信息 ([e27fae9](https://github.com/lobehub/lobe-chat/commit/e27fae9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.6.1](https://github.com/lobehub/lobe-chat/compare/v0.6.0...v0.6.1)
 
 <sup>Released on **2023-07-22**</sup>
