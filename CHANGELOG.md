@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.6.1](https://github.com/lobehub/lobe-chat/compare/v0.6.0...v0.6.1)
+
+<sup>Released on **2023-07-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add deps.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add deps ([3dc45fe](https://github.com/lobehub/lobe-chat/commit/3dc45fe))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.6.0](https://github.com/lobehub/lobe-chat/compare/v0.5.0...v0.6.0)
 
 <sup>Released on **2023-07-22**</sup>
