@@ -61,6 +61,8 @@
     "@ant-design/colors": "^7",
     "@ant-design/icons": "^5",
     "@commitlint/cli": "^17",
+    "@emoji-mart/data": "^1",
+    "@emoji-mart/react": "^1",
     "@lobehub/ui": "^1",
     "@vercel/analytics": "^1",
     "ahooks": "^3",

@@ -35,14 +35,24 @@ export const promptSummaryAgentName = (content: string): Partial<OpenAIStreamPay
 export const promptPickEmoji = (content: string): Partial<OpenAIStreamPayload> => ({
   messages: [
     {
-      content: `你是一名非常懂设计与时尚的设计师，你需要从用户的描述中匹配一个合适的 emoji。
-输入:你是一名精通体验设计的设计系统设计师，设计系统存在诸多类别的 token，比如品牌色、成功色等，你需要为各个类别的 token 提供说明文案。
-输出: 💅
-
-输入:用户会输入一串 ts 代码，为了确保所有功能和分支的 100% 的覆盖率，你需要给出需要考虑哪些数据场景。
-输出: 🧪
-`,
+      content: '你是一名非常懂设计与时尚的设计师，你需要从用户的描述中匹配一个合适的 emoji。',
       role: 'system',
+    },
+    {
+      content: `输入:你是一名精通体验设计的设计系统设计师，设计系统存在诸多类别的 token，比如品牌色、成功色等，你需要为各个类别的 token 提供说明文案。`,
+      role: 'user',
+    },
+    {
+      content: `💅`,
+      role: 'assistant',
+    },
+    {
+      content: `输入:用户会输入一串 ts 代码，为了确保所有功能和分支的 100% 的覆盖率，你需要给出需要考虑哪些数据场景。`,
+      role: 'user',
+    },
+    {
+      content: `🧪`,
+      role: 'assistant',
     },
     {
       content: `输入:${content}`,
@@ -54,11 +64,12 @@ export const promptPickEmoji = (content: string): Partial<OpenAIStreamPayload> =
 export const promptSummaryDescription = (content: string): Partial<OpenAIStreamPayload> => ({
   messages: [
     {
-      content: '你是一名擅长会话的助理，你需要将用户的提示词做一个3句话以内的总结。',
+      content:
+        '你是一名擅长会话的助理，你需要将用户的输入的内容总结为一个专家的简介，不超过 20 个字',
       role: 'system',
     },
     {
-      content: `输入:${content}`,
+      content: `${content}`,
       role: 'user',
     },
   ],

@@ -1,4 +1,4 @@
-import { Collapse, InputNumber, Segmented, Slider } from 'antd';
+import { Collapse, ConfigProvider, InputNumber, Segmented, Slider } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -21,7 +21,15 @@ const AgentConfig = () => {
   const [updateAgentConfig] = useSessionStore((s) => [s.updateAgentConfig], shallow);
 
   return (
-    <>
+    <ConfigProvider
+      theme={{
+        components: {
+          Segmented: {
+            colorBgLayout: theme.isDarkMode ? '#111' : '#f1f1f1',
+          },
+        },
+      }}
+    >
       <Flexbox
         align={'center'}
         distribution={'space-between'}
@@ -87,8 +95,8 @@ const AgentConfig = () => {
             },
           ]}
         />
-      </Flexbox>
-    </>
+      </Flexbox>{' '}
+    </ConfigProvider>
   );
 };
 

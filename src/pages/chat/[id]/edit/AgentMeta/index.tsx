@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Input, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Input, Tooltip } from '@lobehub/ui';
 import { Button, Collapse } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideSparkles } from 'lucide-react';
@@ -10,6 +10,7 @@ import { agentSelectors, useSessionStore } from '@/store/session';
 
 import { FormItem } from '../FormItem';
 import { useStyles } from '../style';
+import EmojiPicker from './EmojiPicker';
 
 const AgentMeta = () => {
   const { t } = useTranslation('common');
@@ -83,7 +84,7 @@ const AgentMeta = () => {
                 ))}
               </Flexbox>
               <FormItem label={t('agentAvatar')}>
-                <Avatar avatar={metaData.avatar} size={200} />
+                <EmojiPicker />
               </FormItem>
             </Flexbox>
           ),
