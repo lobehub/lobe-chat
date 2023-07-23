@@ -30,13 +30,5 @@ export const useStyles = createStyles(({ css, token }) => ({
   title: css`
     font-size: 16px;
     font-weight: 500;
-
-    .ant-collapse-header {
-      padding: 0 !important;
-    }
-
-    .ant-collapse-content-box {
-      padding: 0 !important;
-    }
   `,
 }));

@@ -2,7 +2,7 @@ import runner from './runner';
 
 const schema = {
   description: '获取当前天气情况',
-  name: 'fetchWeather',
+  name: 'realtimeWeather',
   parameters: {
     properties: {
       city: {
@@ -15,6 +15,6 @@ const schema = {
   },
 };
 
-const getWeather = { name: 'fetchWeather', runner, schema };
+const getWeather = { avatar: '☂️', name: 'realtimeWeather', runner, schema };
 
 export default getWeather;

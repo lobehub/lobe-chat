@@ -1,3 +1,4 @@
+import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { promptPickEmoji, promptSummaryAgentName, promptSummaryDescription } from '@/prompts/agent';
@@ -43,12 +44,13 @@ export interface AgentAction {
    * @returns 任意类型的返回值
    */
   internalUpdateAgentMeta: (id: string) => any;
+  toggleAgentPlugin: (pluginId: string) => void;
+
   /**
    * 切换配置
    * @param showPanel - 是否显示面板，默认为 true
    */
   toggleConfig: (showPanel?: boolean) => void;
-
   /**
    * 更新代理配置
    * @param config - 部分 LobeAgentConfig 的配置
@@ -191,6 +193,27 @@ export const createAgentSlice: StateCreator<
     };
   },
 
+  toggleAgentPlugin: (id: string) => {
+    const { activeId } = get();
+    const session = sessionSelectors.currentSession(get());
+    if (!activeId || !session) return;
+
+    const config = produce(session.config, (draft) => {
+      if (draft.plugins === undefined) {
+        draft.plugins = [id];
+      } else {
+        const plugins = draft.plugins;
+        if (plugins.includes(id)) {
+          plugins.splice(plugins.indexOf(id), 1);
+        } else {
+          plugins.push(id);
+        }
+      }
+    });
+
+    get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
+  },
+
   toggleConfig: (newValue) => {
     const showAgentSettings = typeof newValue === 'boolean' ? newValue : !get().showAgentSettings;
 
@@ -204,6 +227,7 @@ export const createAgentSlice: StateCreator<
 
     get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
   },
+
   updateAgentMeta: (meta) => {
     const { activeId } = get();
     const session = sessionSelectors.currentSession(get());

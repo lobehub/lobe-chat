@@ -4,7 +4,7 @@ import { ChatCompletionFunctions, ChatCompletionRequestMessage } from 'openai-ed
 
 import { OpenAIStreamPayload } from '@/types/openai';
 
-import { plugins } from './plugins';
+import pluginList from '../../plugins';
 
 export const runtime = 'edge';
 
@@ -18,12 +18,28 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config, isDev && OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined);
 
-const functions: ChatCompletionFunctions[] = plugins.map((f) => f.schema);
-
 export default async function handler(req: Request) {
-  // Extract the `messages` from the body of the request
-  const { messages, ...params } = (await req.json()) as OpenAIStreamPayload;
+  const {
+    messages,
+    plugins: enabledPlugins,
+    ...params
+  } = (await req.json()) as OpenAIStreamPayload;
 
+  // ============  1. 前置处理 functions   ============ //
+
+  const filterFunctions: ChatCompletionFunctions[] = pluginList
+    .filter((p) => {
+      // 如果不存在 enabledPlugins，那么全部不启用
+      if (!enabledPlugins) return false;
+
+      // 如果存在 enabledPlugins，那么只启用 enabledPlugins 中的插件
+      return enabledPlugins.includes(p.name);
+    })
+    .map((f) => f.schema);
+
+  const functions = filterFunctions.length === 0 ? undefined : filterFunctions;
+
+  // ============  2. 前置处理 messages   ============ //
   const formatMessages = messages.map((m) => ({ content: m.content, role: m.role }));
 
   const response = await openai.createChatCompletion({
@@ -35,7 +51,9 @@ export default async function handler(req: Request) {
 
   const stream = OpenAIStream(response, {
     experimental_onFunctionCall: async ({ name, arguments: args }, createFunctionCallMessages) => {
-      const func = plugins.find((f) => f.name === name);
+      console.log(`执行 functionCall [${name}]`, 'args:', args);
+
+      const func = pluginList.find((f) => f.name === name);
 
       if (func) {
         const result = await func.runner(args as any);
@@ -51,5 +69,6 @@ export default async function handler(req: Request) {
       }
     },
   });
+
   return new StreamingTextResponse(stream);
 }

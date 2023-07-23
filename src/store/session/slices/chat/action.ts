@@ -104,7 +104,8 @@ export const createChatSlice: StateCreator<
     set({ chatLoading: true });
     const config = agentSelectors.currentAgentConfigSafe(get());
 
-    const fetcher = () => fetchChatModel({ messages, model: config.model, ...config.params });
+    const fetcher = () =>
+      fetchChatModel({ messages, model: config.model, ...config.params, plugins: config.plugins });
 
     await fetchSSE(fetcher, options);
 

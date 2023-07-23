@@ -40,6 +40,10 @@ export interface OpenAIStreamPayload {
    */
   n?: number;
   /**
+   * 开启的插件列表
+   */
+  plugins?: string[];
+  /**
    * @title 控制生成文本中的惩罚系数，用于减少主题的变化
    * @default 0
    */
@@ -54,6 +58,7 @@ export interface OpenAIStreamPayload {
    * @default 0.5
    */
   temperature: number;
+
   /**
    * @title 控制生成文本中最高概率的单个令牌
    * @default 1
