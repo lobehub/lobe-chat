@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { sessionSelectors, useSessionStore } from '@/store/session';
+import { chatSelectors, sessionSelectors, useSessionStore } from '@/store/session';
 import { DEFAULT_TITLE } from '@/store/session/slices/agentConfig';
+import { useSettings } from '@/store/settings';
 
 import { useStyles } from './style';
 
@@ -22,22 +23,37 @@ interface SessionItemProps {
 const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) => {
   const { t } = useTranslation('common');
   const { styles, theme, cx } = useStyles();
-  const [title, description, systemRole, avatar, avatarBackground, updateAt, model, removeSession] =
-    useSessionStore((s) => {
-      const session = sessionSelectors.getSessionById(id)(s);
-      const meta = session.meta;
-      const systemRole = session.config.systemRole;
-      return [
-        meta.title,
-        meta.description,
-        systemRole,
-        sessionSelectors.getAgentAvatar(meta),
-        meta.backgroundColor,
-        session?.updateAt,
-        session.config.model,
-        s.removeSession,
-      ];
-    }, shallow);
+  const [defaultModel] = useSettings((s) => [s.settings.model], shallow);
+
+  const [
+    title,
+    description,
+    systemRole,
+    avatar,
+    avatarBackground,
+    updateAt,
+    model,
+    chatLength,
+    removeSession,
+  ] = useSessionStore((s) => {
+    const session = sessionSelectors.getSessionById(id)(s);
+    const meta = session.meta;
+    const systemRole = session.config.systemRole;
+    return [
+      meta.title,
+      meta.description,
+      systemRole,
+      sessionSelectors.getAgentAvatar(meta),
+      meta.backgroundColor,
+      session?.updateAt,
+      session.config.model,
+      chatSelectors.currentChats(s).length,
+      s.removeSession,
+    ];
+  }, shallow);
+
+  const showModel = model !== defaultModel;
+  const showChatLength = chatLength > 0;
 
   return (
     <Flexbox className={styles.container} style={{ position: 'relative' }}>
@@ -57,9 +73,25 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
         description={
           <Flexbox gap={4}>
             <Flexbox>{description || systemRole}</Flexbox>
-            <Flexbox horizontal>
-              <Tag bordered={false}>{model}</Tag>
-            </Flexbox>
+
+            {!(showModel || showChatLength) ? undefined : (
+              <Flexbox horizontal>
+                {showModel && (
+                  <Tag bordered={false} style={{ color: theme.colorTextSecondary }}>
+                    {model}
+                  </Tag>
+                )}
+                {/*{showChatLength && (*/}
+                {/*  <Tag*/}
+                {/*    bordered={false}*/}
+                {/*    style={{ color: theme.colorTextSecondary, display: 'flex', gap: 4 }}*/}
+                {/*  >*/}
+                {/*    <Icon icon={LucideMessageCircle} />*/}
+                {/*    {chatLength}*/}
+                {/*  </Tag>*/}
+                {/*)}*/}
+              </Flexbox>
+            )}
           </Flexbox>
         }
         loading={loading}
