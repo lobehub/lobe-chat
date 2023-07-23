@@ -2,6 +2,49 @@
 
 # Changelog
 
+## [Version 0.11.0](https://github.com/lobehub/lobe-chat/compare/v0.10.2...v0.11.0)
+
+<sup>Released on **2023-07-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove langchain, 优化代码.
+
+#### ✨ Features
+
+- **misc**: 支持查询天气.
+
+#### 💄 Styles
+
+- **misc**: Update manifest, 增加国际化文案.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove langchain ([7b0f96c](https://github.com/lobehub/lobe-chat/commit/7b0f96c))
+- **misc**: 优化代码 ([6a8f7df](https://github.com/lobehub/lobe-chat/commit/6a8f7df))
+
+#### What's improved
+
+- **misc**: 支持查询天气 ([34bf285](https://github.com/lobehub/lobe-chat/commit/34bf285))
+
+#### Styles
+
+- **misc**: Update manifest ([ea9e8de](https://github.com/lobehub/lobe-chat/commit/ea9e8de))
+- **misc**: 增加国际化文案 ([f5e8d7c](https://github.com/lobehub/lobe-chat/commit/f5e8d7c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.10.2](https://github.com/lobehub/lobe-chat/compare/v0.10.1...v0.10.2)
 
 <sup>Released on **2023-07-23**</sup>
