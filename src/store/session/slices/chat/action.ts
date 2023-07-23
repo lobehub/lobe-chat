@@ -50,7 +50,7 @@ export interface ChatAction {
    * @param messages - 聊天消息数组
    * @param parentId - 父消息 ID，可选
    */
-  realFetchAIResponse: (messages: ChatMessage[], parentId?: string) => Promise<void>;
+  realFetchAIResponse: (messages: ChatMessage[], parentId: string) => Promise<void>;
   /**
    * 重新发送消息
    * @param id - 消息 ID
@@ -116,7 +116,7 @@ export const createChatSlice: StateCreator<
     set({ editingMessageId: messageId });
   },
 
-  realFetchAIResponse: async (messages: ChatMessage[], parentId?: string) => {
+  realFetchAIResponse: async (messages, userMessageId) => {
     const { dispatchMessage, generateMessage } = get();
 
     // 添加 systemRole
@@ -128,12 +128,11 @@ export const createChatSlice: StateCreator<
     // 再添加一个空的信息用于放置 ai 响应，注意顺序不能反
     // 因为如果顺序反了，messages 中将包含新增的 ai message
     const assistantId = nanoid();
-    const userId = parentId ?? nanoid();
 
     dispatchMessage({
       id: assistantId,
       message: LOADING_FLAT,
-      parentId: userId,
+      parentId: userMessageId,
       role: 'assistant',
       type: 'addMessage',
     });
@@ -209,7 +208,7 @@ export const createChatSlice: StateCreator<
     // 先拿到当前的 messages
     const messages = chatSelectors.currentChats(get());
 
-    await realFetchAIResponse(messages);
+    await realFetchAIResponse(messages, userId);
 
     const chats = chatSelectors.currentChats(get());
     if (chats.length >= 4) {
