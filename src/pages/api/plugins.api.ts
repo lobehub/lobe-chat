@@ -13,14 +13,15 @@ export default async function handler(req: Request) {
 
   const stream = await createChatCompletion(payload, (payload) => ({
     experimental_onFunctionCall: async ({ name, arguments: args }, createFunctionCallMessages) => {
-      console.log(`执行 functionCall [${name}]`, 'args:', args);
+      console.log(`检测到 functionCall: ${name}`);
 
       const func = pluginList.find((f) => f.name === name);
 
       if (func) {
         const result = await func.runner(args as any);
 
-        console.log(`[${name}] 执行结果:`, result);
+        console.log(`[${name}]`, 'args:', args);
+        console.log(`Result:`, JSON.stringify(result, null, 2));
 
         const newMessages = createFunctionCallMessages(result) as ChatCompletionRequestMessage[];
 
