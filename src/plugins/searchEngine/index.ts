@@ -1,6 +1,8 @@
+import { ChatCompletionFunctions } from 'openai-edge/types/api';
+
 import runner from './runner';
 
-const schema = {
+const schema: ChatCompletionFunctions = {
   description: '查询搜索引擎获取信息',
   name: 'searchEngine',
   parameters: {
@@ -15,6 +17,11 @@ const schema = {
   },
 };
 
-const searchEngine = { name: 'searchEngine', runner, schema };
+const searchEngine = {
+  avatar: '🔍',
+  name: 'searchEngine',
+  runner,
+  schema,
+};
 
 export default searchEngine;

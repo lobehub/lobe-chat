@@ -2,4 +2,6 @@ import searchEngine from '@/plugins/searchEngine';
 
 import getWeather from './weather';
 
-export const plugins = [getWeather, searchEngine];
+const pluginList = [getWeather, searchEngine];
+
+export default pluginList;

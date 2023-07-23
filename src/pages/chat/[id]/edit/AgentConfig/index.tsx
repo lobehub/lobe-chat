@@ -9,6 +9,7 @@ import { LanguageModel } from '@/types/llm';
 
 import { FormItem } from '../FormItem';
 import { useStyles } from '../style';
+import Plugin from './Plugin';
 import Prompt from './Prompt';
 
 const AgentConfig = () => {
@@ -58,8 +59,6 @@ const AgentConfig = () => {
         </FormItem>
         <Prompt />
         <Collapse
-          activeKey={['advanceSettings']}
-          bordered={false}
           className={styles.title}
           expandIconPosition={'end'}
           items={[
@@ -95,7 +94,19 @@ const AgentConfig = () => {
             },
           ]}
         />
-      </Flexbox>{' '}
+        <Flexbox
+          align={'center'}
+          distribution={'space-between'}
+          horizontal
+          paddingBlock={12}
+          style={{
+            borderBottom: `1px solid ${theme.colorBorder}`,
+          }}
+        >
+          <Flexbox className={styles.profile}> {t('pluginList')}</Flexbox>
+        </Flexbox>
+        <Plugin />
+      </Flexbox>
     </ConfigProvider>
   );
 };

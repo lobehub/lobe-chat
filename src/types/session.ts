@@ -40,6 +40,10 @@ export interface LobeAgentConfig {
    */
   params: LLMParams;
   /**
+   * 启用的插件
+   */
+  plugins?: string[];
+  /**
    * 系统角色
    */
   systemRole: string;
