@@ -1,4 +1,33 @@
-const BASE_URL = 'https://api.apify.com/v2/acts/apify~website-content-crawler/run-sync';
+export type DataResults = DataItem[];
+
+export interface DataItem {
+  crawl: Crawl;
+  markdown: string;
+  metadata: Metadata;
+  screenshotUrl: any;
+  text: string;
+  url: string;
+}
+
+export interface Crawl {
+  depth: number;
+  httpStatusCode: number;
+  loadedTime: string;
+  loadedUrl: string;
+  referrerUrl: string;
+}
+
+export interface Metadata {
+  author: any;
+  canonicalUrl: string;
+  description: string;
+  keywords: string;
+  languageCode: string;
+  title: string;
+}
+
+const BASE_URL =
+  'https://api.apify.com/v2/acts/apify~website-content-crawler/run-sync-get-dataset-items';
 const token = process.env.APIFY_API_KEY;
 
 const runner = async ({ url }: { url: string }) => {
@@ -7,6 +36,7 @@ const runner = async ({ url }: { url: string }) => {
     aggressivePrune: false,
     clickElementsCssSelector: '[aria-expanded="false"]',
     debugMode: false,
+    dynamicContentWaitSecs: 3,
     proxyConfiguration: {
       useApifyProxy: true,
     },
@@ -20,18 +50,26 @@ const runner = async ({ url }: { url: string }) => {
     startUrls: [{ url }],
   };
 
-  const data = await fetch(`${BASE_URL}?token=${token}`, {
-    body: JSON.stringify(input),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-  });
+  try {
+    const data = await fetch(`${BASE_URL}?token=${token}`, {
+      body: JSON.stringify(input),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+    const result = (await data.json()) as DataResults;
 
-  const result = await data.json();
-
-  console.log(result);
-  return { data: '没有发现内容' };
+    const item = result[0];
+    return {
+      content: item.markdown,
+      title: item.metadata.title,
+      url: item.url,
+    };
+  } catch (error) {
+    console.error(error);
+    return { content: '抓取失败', errorMessage: (error as any).message };
+  }
 };
 
 export default runner;
