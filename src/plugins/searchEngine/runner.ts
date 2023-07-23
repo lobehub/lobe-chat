@@ -1,4 +1,4 @@
-import querystring from 'qs';
+import querystring from 'query-string';
 
 const BASE_URL = 'https://serpapi.com/search';
 
