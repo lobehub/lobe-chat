@@ -3,7 +3,8 @@ import { StateCreator } from 'zustand/vanilla';
 import { fetchChatModel } from '@/services/chatModel';
 import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
-import { FetchSSEOptions, fetchSSE } from '@/utils/fetch';
+import { fetchSSE } from '@/utils/fetch';
+import { isFunctionMessage } from '@/utils/message';
 import { nanoid } from '@/utils/uuid';
 
 import { MessageDispatch, messagesReducer } from './messageReducer';
@@ -38,7 +39,11 @@ export interface ChatAction {
    * @param messages - 聊天消息数组
    * @param options - 获取 SSE 选项
    */
-  generateMessage: (messages: ChatMessage[], options: FetchSSEOptions) => Promise<void>;
+  generateMessage: (
+    messages: ChatMessage[],
+    assistantMessageId: string,
+    withPlugin?: boolean,
+  ) => Promise<{ isFunctionCall: boolean; output: string }>;
   /**
    * 处理消息编辑
    * @param messageId - 消息 ID，可选
@@ -100,16 +105,57 @@ export const createChatSlice: StateCreator<
     get().dispatchSession({ chats, id: activeId, type: 'updateSessionChat' });
   },
 
-  generateMessage: async (messages, options) => {
+  generateMessage: async (messages, assistantId, withPlugin) => {
+    const { dispatchMessage } = get();
     set({ chatLoading: true });
     const config = agentSelectors.currentAgentConfigSafe(get());
 
     const fetcher = () =>
-      fetchChatModel({ messages, model: config.model, ...config.params, plugins: config.plugins });
+      fetchChatModel(
+        { messages, model: config.model, ...config.params, plugins: config.plugins },
+        { withPlugin },
+      );
 
-    await fetchSSE(fetcher, options);
+    let output = '';
+    let isFunctionCall = false;
+
+    await fetchSSE(fetcher, {
+      onErrorHandle: (error) => {
+        dispatchMessage({ id: assistantId, key: 'error', type: 'updateMessage', value: error });
+      },
+      onMessageHandle: (text) => {
+        output += text;
+
+        dispatchMessage({
+          id: assistantId,
+          key: 'content',
+          type: 'updateMessage',
+          value: output,
+        });
+
+        // 如果是 function call
+        if (isFunctionMessage(output)) {
+          isFunctionCall = true;
+          // 设为 function
+          dispatchMessage({
+            id: assistantId,
+            key: 'role',
+            type: 'updateMessage',
+            value: 'function',
+          });
+        }
+
+        // 滚动到最后一条消息
+        const item = document.querySelector('#for-loading');
+        if (!item) return;
+
+        item.scrollIntoView({ behavior: 'smooth' });
+      },
+    });
 
     set({ chatLoading: false });
+
+    return { isFunctionCall, output };
   },
 
   handleMessageEditing: (messageId) => {
@@ -145,29 +191,36 @@ export const createChatSlice: StateCreator<
       value: model,
     });
 
-    let output = '';
     // 生成 ai message
-    await generateMessage(messages, {
-      onErrorHandle: (error) => {
-        dispatchMessage({ id: assistantId, key: 'error', type: 'updateMessage', value: error });
-      },
-      onMessageHandle: (text) => {
-        output += text;
+    const { output, isFunctionCall } = await generateMessage(messages, assistantId);
 
-        dispatchMessage({
-          id: assistantId,
-          key: 'content',
-          type: 'updateMessage',
-          value: output,
-        });
+    // 如果是 function，则发送函数调用方法
+    if (isFunctionCall) {
+      const { function_call } = JSON.parse(output);
 
-        // 滚动到最后一条消息
-        const item = document.querySelector('#for-loading');
-        if (!item) return;
+      dispatchMessage({
+        id: assistantId,
+        key: 'function_call',
+        type: 'updateMessage',
+        value: function_call,
+      });
 
-        item.scrollIntoView({ behavior: 'smooth' });
-      },
-    });
+      await generateMessage(
+        [
+          ...messages,
+          { content: '', function_call, id: assistantId, role: 'assistant' } as ChatMessage,
+        ],
+        assistantId,
+        true,
+      );
+
+      dispatchMessage({
+        id: assistantId,
+        key: 'role',
+        type: 'updateMessage',
+        value: 'assistant',
+      });
+    }
   },
 
   resendMessage: async (messageId) => {
@@ -182,7 +235,7 @@ export const createChatSlice: StateCreator<
 
     const histories = chats
       .slice(0, currentIndex + 1)
-      // 如果点击重新发送的 message 其 role 是 assistant，那么需要移除
+      // 如果点击重新发送的 message 其 role 是 assistant 或者 function，那么需要移除
       // 如果点击重新发送的 message 其 role 是 user，则不需要移除
       .filter((c) => !(c.role === 'assistant' && c.id === messageId));
 

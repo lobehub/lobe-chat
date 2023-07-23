@@ -13,7 +13,7 @@ const withPWA = nextPWA({
 const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['page.tsx', 'api.ts'],
-  transpilePackages: ['@lobehub/ui', 'antd-style'],
+  transpilePackages: ['@lobehub/ui'],
 
   webpack(config) {
     config.experiments = {
@@ -31,8 +31,8 @@ const nextConfig = {
         destination: `${API_END_PORT_URL}/api/openai`,
       },
       {
-        source: '/api/chain-dev',
-        destination: `${API_END_PORT_URL}/api/chain`,
+        source: '/api/plugins-dev',
+        destination: `${API_END_PORT_URL}/api/plugins`,
       },
     ];
   },

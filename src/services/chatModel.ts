@@ -9,7 +9,7 @@ import { URLS } from './url';
  */
 export const fetchChatModel = (
   params: Partial<OpenAIStreamPayload>,
-  signal?: AbortSignal | undefined,
+  options?: { signal?: AbortSignal | undefined; withPlugin?: boolean },
 ) => {
   const payload = merge(
     {
@@ -23,12 +23,12 @@ export const fetchChatModel = (
     params,
   );
 
-  return fetch(URLS.openai, {
+  return fetch(options?.withPlugin ? URLS.plugins : URLS.openai, {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
     },
     method: 'POST',
-    signal,
+    signal: options?.signal,
   });
 };
