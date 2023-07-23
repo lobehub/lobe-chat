@@ -20,6 +20,8 @@ export default async function handler(req: Request) {
       if (func) {
         const result = await func.runner(args as any);
 
+        console.log(`[${name}] 执行结果:`, result);
+
         const newMessages = createFunctionCallMessages(result) as ChatCompletionRequestMessage[];
 
         return openai.createChatCompletion({
