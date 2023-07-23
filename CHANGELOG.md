@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.13.0](https://github.com/lobehub/lobe-chat/compare/v0.12.1...v0.13.0)
+
+<sup>Released on **2023-07-23**</sup>
+
+#### ✨ Features
+
+- **misc**: 优化插件模式下的用户体验.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 优化插件模式下的用户体验, closes [#13](https://github.com/lobehub/lobe-chat/issues/13) ([4596f12](https://github.com/lobehub/lobe-chat/commit/4596f12))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.12.1](https://github.com/lobehub/lobe-chat/compare/v0.12.0...v0.12.1)
 
 <sup>Released on **2023-07-23**</sup>
