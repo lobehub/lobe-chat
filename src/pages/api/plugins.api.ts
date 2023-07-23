@@ -1,5 +1,4 @@
-import { streamToResponse } from 'ai';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { StreamingTextResponse } from 'ai';
 import { ChatCompletionRequestMessage } from 'openai-edge';
 
 import { OpenAIStreamPayload } from '@/types/openai';
@@ -7,8 +6,10 @@ import { OpenAIStreamPayload } from '@/types/openai';
 import pluginList from '../../plugins';
 import { createChatCompletion, openai } from './openai';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const payload = req.body as OpenAIStreamPayload;
+export const runtime = 'edge';
+
+export default async function handler(req: Request) {
+  const payload = (await req.json()) as OpenAIStreamPayload;
 
   const stream = await createChatCompletion(payload, (payload) => ({
     experimental_onFunctionCall: async ({ name, arguments: args }, createFunctionCallMessages) => {
@@ -31,5 +32,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     },
   }));
 
-  return streamToResponse(stream, res);
+  return new StreamingTextResponse(stream);
 }
