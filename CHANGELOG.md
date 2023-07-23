@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.13.1](https://github.com/lobehub/lobe-chat/compare/v0.13.0...v0.13.1)
+
+<sup>Released on **2023-07-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正搜索引擎插件的实现问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正搜索引擎插件的实现问题 ([d19a805](https://github.com/lobehub/lobe-chat/commit/d19a805))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.13.0](https://github.com/lobehub/lobe-chat/compare/v0.12.1...v0.13.0)
 
 <sup>Released on **2023-07-23**</sup>
