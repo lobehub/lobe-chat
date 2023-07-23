@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.12.0](https://github.com/lobehub/lobe-chat/compare/v0.11.0...v0.12.0)
+
+<sup>Released on **2023-07-23**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持插件列表 与 基于 Serpapi 的搜索引擎插件.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持插件列表 与 基于 Serpapi 的搜索引擎插件, closes [#12](https://github.com/lobehub/lobe-chat/issues/12) ([d89e06f](https://github.com/lobehub/lobe-chat/commit/d89e06f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.11.0](https://github.com/lobehub/lobe-chat/compare/v0.10.2...v0.11.0)
 
 <sup>Released on **2023-07-23**</sup>
