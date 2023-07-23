@@ -1,10 +1,12 @@
-import { ChatList } from '@lobehub/ui';
+import { ChatList, ChatMessage } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
+import { ReactNode, memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { chatSelectors, useSessionStore } from '@/store/session';
+import { isFunctionMessage } from '@/utils/message';
 
+import FunctionMessage from './FunctionMessage';
 import MessageExtra from './MessageExtra';
 
 const List = () => {
@@ -13,6 +15,13 @@ const List = () => {
     (s) => [s.deleteMessage, s.resendMessage, s.dispatchMessage],
     shallow,
   );
+
+  const renderMessage = (content: ReactNode, message: ChatMessage) => {
+    if (message.role === 'function')
+      return isFunctionMessage(message.content) ? <FunctionMessage /> : content;
+
+    return content;
+  };
 
   return (
     <ChatList
@@ -33,6 +42,7 @@ const List = () => {
       onMessageChange={(id, content) => {
         dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
       }}
+      renderMessage={renderMessage}
       renderMessageExtra={MessageExtra}
       style={{ marginTop: 24 }}
     />

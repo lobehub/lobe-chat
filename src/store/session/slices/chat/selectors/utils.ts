@@ -1,3 +1,4 @@
+import pluginList from '@/plugins';
 import { ChatMessage } from '@/types/chatMessage';
 import { LobeAgentSession } from '@/types/session';
 
@@ -5,6 +6,35 @@ export const organizeChats = (
   session: LobeAgentSession,
   avatar: { assistant: string; user: string },
 ) => {
+  const getMeta = (message: ChatMessage) => {
+    switch (message.role) {
+      case 'user': {
+        return {
+          avatar: avatar.user,
+        };
+      }
+
+      case 'system': {
+        return message.meta;
+      }
+
+      case 'assistant': {
+        return {
+          avatar: avatar.assistant,
+          title: session.meta.title,
+        };
+      }
+
+      case 'function': {
+        const plugin = pluginList.find((p) => p.name === message.function_call?.name);
+        return {
+          avatar: plugin?.avatar || '🧩',
+          title: plugin?.name || 'plugin-unknown',
+        };
+      }
+    }
+  };
+
   const basic = Object.values<ChatMessage>(session.chats)
     // 首先按照时间顺序排序，越早的在越前面
     .sort((pre, next) => pre.createAt - next.createAt)
@@ -14,17 +44,7 @@ export const organizeChats = (
     .map((m) => {
       return {
         ...m,
-        meta:
-          m.role === 'assistant'
-            ? {
-                avatar: avatar.assistant,
-                title: session.meta.title,
-              }
-            : m.role === 'user'
-            ? {
-                avatar: avatar.user,
-              }
-            : m.meta,
+        meta: getMeta(m),
       };
     });
 

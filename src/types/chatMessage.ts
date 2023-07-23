@@ -22,7 +22,6 @@ export interface ChatMessage extends BaseDataModel {
    */
   content: string;
   error?: any;
-
   // 扩展字段
   extra?: {
     fromModel?: string;
@@ -32,6 +31,9 @@ export interface ChatMessage extends BaseDataModel {
       to: string;
     };
   } & Record<string, any>;
+
+  function_call?: { arguments?: string; name: string };
+  name?: string;
 
   parentId?: string;
   // 引用

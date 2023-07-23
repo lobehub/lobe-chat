@@ -91,7 +91,7 @@ interface FetchAITaskResultParams<T> {
 }
 
 export const fetchAIFactory =
-  <T>(fetcher: (params: T, signal?: AbortSignal) => Promise<Response>) =>
+  <T>(fetcher: (params: T, options: { signal?: AbortSignal }) => Promise<Response>) =>
   async ({
     params,
     onMessageHandle,
@@ -117,7 +117,7 @@ export const fetchAIFactory =
 
     onLoadingChange?.(true);
 
-    const data = await fetchSSE(() => fetcher(params, abortController?.signal), {
+    const data = await fetchSSE(() => fetcher(params, { signal: abortController?.signal }), {
       onErrorHandle: (error) => {
         errorHandle(new Error(error.message));
       },
