@@ -69,7 +69,7 @@ const MessageExtra = ({ role, extra, function_call }: ChatMessage): ReactNode =>
       if (!(hasModelTag || hasFuncTag)) return;
 
       return (
-        <Flexbox className={styles.container}>
+        <Flexbox className={styles.container} horizontal>
           {hasFuncTag && funcTag}
           {hasModelTag && modelTag}
         </Flexbox>
