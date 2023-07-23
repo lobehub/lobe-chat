@@ -20,7 +20,7 @@ export default async function handler(req: Request) {
       if (func) {
         const result = await func.runner(args as any);
 
-        console.log(`[${name}]`, 'args:', args, `Result:`, JSON.stringify(result, null, 2));
+        console.log(`[${name}]`, args, `result:`, JSON.stringify(result, null, 2));
 
         const newMessages = createFunctionCallMessages(result) as ChatCompletionRequestMessage[];
 

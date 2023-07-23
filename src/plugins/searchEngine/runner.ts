@@ -76,9 +76,14 @@ export interface DetectedExtensions {
   month_ago: number;
 }
 
-const fetchResult = async (keywords: string) => {
+const fetchResult = async ({ keywords }: { keywords: string }) => {
   const params = {
     api_key: API_KEY,
+    engine: 'google',
+    gl: 'cn',
+    google_domain: 'google.com',
+    hl: 'zh-cn',
+    location: 'China',
     q: keywords,
   };
 
