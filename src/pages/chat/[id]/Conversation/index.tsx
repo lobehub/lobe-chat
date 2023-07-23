@@ -2,9 +2,9 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
-import ChatInput from '@/pages/chat/[id]/Conversation/Input';
 
 import ChatList from './ChatList';
+import ChatInput from './Input';
 
 const Conversation = () => {
   return (
