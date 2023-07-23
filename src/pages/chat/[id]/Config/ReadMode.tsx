@@ -3,6 +3,7 @@ import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { LucideBrain, LucideThermometer, WholeWord } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
@@ -31,26 +32,26 @@ const ReadMode = memo(() => {
   const title = useSessionStore(agentSelectors.currentAgentTitle, shallow);
   const model = useSessionStore(agentSelectors.currentAgentModel, shallow);
 
+  const { t } = useTranslation('common');
   return (
-    <Center gap={12} padding={'32px 16px'} style={{ marginTop: 8 }}>
+    <Center gap={12} paddingBlock={16} style={{ marginTop: 8 }}>
       <Avatar avatar={avatar} size={100} />
       <Flexbox className={styles.title}>{title || DEFAULT_TITLE}</Flexbox>
       <Flexbox className={styles.model}>{model}</Flexbox>
       <Flexbox className={styles.desc}>{session.meta.description}</Flexbox>
 
       <Flexbox flex={1} gap={12} width={'100%'}>
-        <ConfigCell icon={LucideBrain} label={'提示词'} />
-
+        <ConfigCell icon={LucideBrain} label={t('agentPrompt')} />
         <ConfigCellGroup
           items={[
             {
               icon: LucideThermometer,
-              label: '温度',
+              label: t('modelTemperature'),
               value: session.config.params.temperature,
             },
             {
               icon: WholeWord,
-              label: '会话最大长度',
+              label: t('agentMaxToken'),
               value: session.config.params.max_tokens,
             },
           ]}

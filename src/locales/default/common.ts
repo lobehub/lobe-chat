@@ -4,6 +4,7 @@ export default {
   'agentAvatar': '头像',
   'agentDescription': '描述',
   'agentDescriptionPlaceholder': '请输入描述',
+  'agentMaxToken': '会话最大长度',
   'agentModel': '模型',
   'agentName': '名称',
   'agentNamePlaceholder': '请输入名称',
