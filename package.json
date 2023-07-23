@@ -76,7 +76,6 @@
     "gpt-tokenizer": "^2",
     "i18next": "^23",
     "immer": "^10",
-    "langchain": "latest",
     "lodash-es": "^4",
     "lucide-react": "latest",
     "nanoid": "^4",

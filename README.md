@@ -8,9 +8,7 @@
 
 <h1>Lobe Chat</h1>
 
-Lobe Chat is an open-source chatbot client using LangChain
-
-Typescript and Next.js
+Lobe Chat is an open-source chatbot client using OpenAI and Next.js
 
 [Changelog](./CHANGELOG.md) · [Report Bug][issues-url] · [Request Feature][issues-url]
 
