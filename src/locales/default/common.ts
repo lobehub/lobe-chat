@@ -38,7 +38,7 @@ export default {
   'plugin-realtimeWeather': '实时天气预报',
   'plugin-searchEngine': '搜索引擎',
   'plugin-undefined': '插件检测中...',
-  'plugin-websiteCrawler': '网页内容总结',
+  'plugin-websiteCrawler': '网页内容提取',
   'pluginList': '插件列表',
   'pluginLoading': '插件运行中...',
   'profile': '助手身份',
