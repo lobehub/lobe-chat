@@ -4,7 +4,7 @@ import { ChatCompletionFunctions, ChatCompletionRequestMessage } from 'openai-ed
 
 import { OpenAIStreamPayload } from '@/types/openai';
 
-import { plugins } from './plugins';
+import { plugins } from '../../plugins';
 
 export const runtime = 'edge';
 
@@ -35,6 +35,8 @@ export default async function handler(req: Request) {
 
   const stream = OpenAIStream(response, {
     experimental_onFunctionCall: async ({ name, arguments: args }, createFunctionCallMessages) => {
+      console.log(`执行 functionCall [${name}]`, 'args:', args);
+
       const func = plugins.find((f) => f.name === name);
 
       if (func) {

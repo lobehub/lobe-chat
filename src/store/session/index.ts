@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { PersistOptions, devtools, persist } from 'zustand/middleware';
 
+import { isDev } from '@/utils/env';
+
 import { SessionStore, createStore } from './store';
 
 type SessionPersist = Pick<SessionStore, 'sessions'>;
@@ -23,7 +25,7 @@ const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
 export const useSessionStore = create<SessionStore>()(
   persist(
     devtools(createStore, {
-      name: LOBE_CHAT,
+      name: LOBE_CHAT + (isDev ? '_DEV' : ''),
     }),
     persistOptions,
   ),
