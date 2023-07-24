@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.18.2](https://github.com/lobehub/lobe-chat/compare/v0.18.1...v0.18.2)
+
+<sup>Released on **2023-07-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: 修正 markdown li 丢失的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: 修正 markdown li 丢失的问题 ([eb6e831](https://github.com/lobehub/lobe-chat/commit/eb6e831))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.18.1](https://github.com/lobehub/lobe-chat/compare/v0.18.0...v0.18.1)
 
 <sup>Released on **2023-07-24**</sup>
