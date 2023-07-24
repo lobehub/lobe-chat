@@ -2,8 +2,8 @@ import { Swatches, primaryColorsSwatches } from '@lobehub/ui';
 import { memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
+import { DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
 import { agentSelectors, useSessionStore } from '@/store/session';
-import { DEFAULT_BACKGROUND_COLOR } from '@/store/session/slices/agentConfig';
 
 const BackgroundSwatches = memo(() => {
   const [backgroundColor, updateAgentMeta] = useSessionStore(

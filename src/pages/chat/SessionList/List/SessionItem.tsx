@@ -7,7 +7,6 @@ import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { chatSelectors, sessionSelectors, useSessionStore } from '@/store/session';
-import { DEFAULT_TITLE } from '@/store/session/slices/agentConfig';
 import { useSettings } from '@/store/settings';
 
 import { useStyles } from './style';
@@ -96,7 +95,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
         }
         loading={loading}
         style={{ color: theme.colorText }}
-        title={title || t(DEFAULT_TITLE)}
+        title={title || t('defaultSession')}
       />
       <Popconfirm
         arrow={false}

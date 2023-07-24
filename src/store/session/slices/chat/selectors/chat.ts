@@ -1,9 +1,9 @@
+import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { agentSelectors } from '@/store/session';
 import { useSettings } from '@/store/settings';
 import { ChatMessage } from '@/types/chatMessage';
 
 import type { SessionStore } from '../../../store';
-import { DEFAULT_AVATAR } from '../../agentConfig';
 import { sessionSelectors } from '../../session';
 import { organizeChats } from './utils';
 
@@ -14,7 +14,7 @@ export const currentChats = (s: SessionStore): ChatMessage[] => {
 
   return organizeChats(session, {
     assistant: agentSelectors.currentAgentAvatar(s),
-    user: useSettings.getState().settings.avatar || DEFAULT_AVATAR,
+    user: useSettings.getState().settings.avatar || DEFAULT_USER_AVATAR,
   });
 };
 

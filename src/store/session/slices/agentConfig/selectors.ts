@@ -1,10 +1,11 @@
+import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 
 import { sessionSelectors } from '../session';
-import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR, initialLobeAgentConfig } from './initialState';
+import { initialLobeAgentConfig } from './initialState';
 
 const currentAgentMeta = (s: SessionStore): MetaData => {
   const session = sessionSelectors.currentSession(s);
