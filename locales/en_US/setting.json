@@ -1,4 +1,5 @@
 {
+  "agentHeader": "Edit Assistant Information",
   "danger": {
     "clear": {
       "action": "Clear Now",
@@ -15,6 +16,31 @@
     }
   },
   "header": "Settings",
+  "settingAgent": {
+    "avatar": {
+      "title": "Avatar"
+    },
+    "description": {
+      "placeholder": "Please enter assistant description",
+      "title": "Assistant Description"
+    },
+    "name": {
+      "placeholder": "Please enter assistant name",
+      "title": "Name"
+    },
+    "prompt": {
+      "placeholder": "Please enter AI prompt",
+      "title": "Assistant Role"
+    },
+    "tag": {
+      "placeholder": "Please enter tags",
+      "title": "Tags"
+    },
+    "title": "Assistant Information",
+    "backgroundColor": {
+      "title": "Background Color"
+    }
+  },
   "settingChat": {
     "compressThreshold": {
       "desc": "When the uncompressed chat history exceeds this value, it will be compressed",
@@ -27,12 +53,13 @@
       "title": "Enable History Message Count Limit"
     },
     "historyCount": {
-      "desc": "Number of history messages to include in each request",
+      "desc": "Number of history messages carried in each request",
       "title": "History Message Count"
     },
     "inputTemplate": {
       "desc": "The latest user message will be filled into this template",
-      "title": "User Input Preprocessing"
+      "title": "User Input Preprocessing",
+      "placeholder": "Enter pre-processing template, {text} will be replaced with real-time input information"
     },
     "title": "Chat Settings"
   },
@@ -50,6 +77,12 @@
     },
     "model": {
       "desc": "ChatGPT Model",
+      "list": {
+        "gpt-3.5-turbo": "GPT 3.5",
+        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+        "gpt-4": "GPT 4",
+        "gpt-4-32k": "GPT 4 (32K)"
+      },
       "title": "Model"
     },
     "presencePenalty": {
@@ -63,7 +96,7 @@
     "title": "Model Settings",
     "topP": {
       "desc": "Similar to randomness, but do not change together with randomness",
-      "title": "Top-p Sampling"
+      "title": "Nucleus Sampling"
     }
   },
   "settingOpenAI": {
@@ -79,10 +112,13 @@
       "title": "API Key"
     }
   },
+  "settingPlugin": {
+    "title": "Plugin List"
+  },
   "settingSystem": {
     "accessCode": {
-      "desc": "Encryption access is enabled by the administrator",
-      "placeholder": "Please enter the access password",
+      "desc": "Encrypted access has been enabled by the administrator",
+      "placeholder": "Please enter access password",
       "title": "Access Password"
     },
     "title": "System Settings"
@@ -99,7 +135,7 @@
       "title": "Language Settings"
     },
     "neutralColor": {
-      "desc": "Custom grayscale for different color biases",
+      "desc": "Custom grayscale for different color tendencies",
       "title": "Neutral Color"
     },
     "primaryColor": {

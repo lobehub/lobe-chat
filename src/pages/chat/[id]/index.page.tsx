@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { sessionSelectors, useSessionStore } from '@/store/session';
+import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import Layout from '../layout';
 import Config from './Config';
@@ -16,7 +17,7 @@ const Chat = memo(() => {
     return [context?.meta.title];
   }, isEqual);
 
-  const pageTitle = title ? `${title} - LobeChat` : 'LobeChat';
+  const pageTitle = genSiteHeadTitle(title);
 
   return (
     <>

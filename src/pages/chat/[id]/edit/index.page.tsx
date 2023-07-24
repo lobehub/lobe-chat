@@ -1,43 +1,23 @@
-import { ActionIcon, ChatHeader } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import { Download, Share2 } from 'lucide-react';
 import Head from 'next/head';
-import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
+import { HEADER_HEIGHT } from '@/const/layoutTokens';
+import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import ChatLayout from '../../layout';
 import AgentConfig from './AgentConfig';
 import AgentMeta from './AgentMeta';
-
-const useStyles = createStyles(({ css, token }) => ({
-  footer: css`
-    position: sticky;
-    bottom: 0;
-    border-top: 1px solid ${token.colorBorder};
-  `,
-  form: css`
-    overflow-y: auto;
-  `,
-  header: css`
-    background: ${token.colorBgContainer};
-    border-bottom: 1px solid ${token.colorSplit};
-  `,
-  title: css`
-    font-size: 16px;
-    font-weight: 500;
-  `,
-}));
+import AgentPlugin from './AgentPlugin';
+import AgentPrompt from './AgentPrompt';
+import Header from './Header';
 
 const EditPage = memo(() => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('setting');
 
-  const { styles } = useStyles();
-
-  const pageTitle = t('editAgentProfile');
+  const pageTitle = genSiteHeadTitle(t('header.session'));
 
   return (
     <>
@@ -45,21 +25,13 @@ const EditPage = memo(() => {
         <title>{pageTitle}</title>
       </Head>
       <ChatLayout>
-        <ChatHeader
-          left={<div className={styles.title}>{t('editAgentProfile')}</div>}
-          onBackClick={() => Router.back()}
-          right={
-            <>
-              <ActionIcon icon={Share2} size={{ fontSize: 24 }} title={t('share')} />
-              <ActionIcon icon={Download} size={{ fontSize: 24 }} title={t('export')} />
-            </>
-          }
-          showBackButton
-        />
-        <Flexbox className={styles.form} flex={1} gap={10} padding={24}>
-          <HeaderSpacing />
+        <Header />
+        <Flexbox align={'center'} flex={1} gap={16} padding={24} style={{ overflow: 'auto' }}>
+          <HeaderSpacing height={HEADER_HEIGHT - 16} />
+          <AgentPrompt />
           <AgentMeta />
           <AgentConfig />
+          <AgentPlugin />
         </Flexbox>
       </ChatLayout>
     </>

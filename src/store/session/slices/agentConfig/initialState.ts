@@ -16,9 +16,11 @@ export const initialLobeAgentConfig: LobeAgentConfig = {
   systemRole: '',
 };
 
-export const DEFAULT_AVATAR = 'https://npm.elemecdn.com/@lobehub/assets-logo/assets/logo-3d.webp';
+export const DEFAULT_AVATAR = '🤖';
 
-export const DEFAULT_TITLE = 'DefaultSession';
+export const DEFAULT_BACKGROUND_COLOR = 'rgba(0,0,0,0)';
+
+export const DEFAULT_TITLE = 'defaultSession';
 
 export const initialAgentConfigState: AgentConfigState = {
   // // loading 中间态
@@ -30,5 +32,5 @@ export const initialAgentConfigState: AgentConfigState = {
     title: false,
   },
 
-  showAgentSettings: false,
+  showAgentSettings: true,
 };

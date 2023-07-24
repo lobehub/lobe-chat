@@ -2,11 +2,12 @@ import { Form, type ItemGroup, ThemeSwitch } from '@lobehub/ui';
 import { Form as AntForm, Button, Input, Popconfirm, Select, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
-import { AppWindow, Bot, MessagesSquare, Palette, Webhook } from 'lucide-react';
+import { AppWindow, BrainCog, MessagesSquare, Palette, Webhook } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
+import { FORM_STYLE } from '@/const/layoutTokens';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import SliderWithInput from '@/features/SliderWithInput';
 import { options } from '@/locales/options';
@@ -99,7 +100,7 @@ const SettingForm = memo(() => {
     [settings],
   );
 
-  const OpenAI: SettingItemGroup = useMemo(
+  const openAI: SettingItemGroup = useMemo(
     () => ({
       children: [
         {
@@ -123,7 +124,7 @@ const SettingForm = memo(() => {
     [settings],
   );
 
-  const Chat: SettingItemGroup = useMemo(
+  const chat: SettingItemGroup = useMemo(
     () => ({
       children: [
         {
@@ -161,7 +162,7 @@ const SettingForm = memo(() => {
     [settings],
   );
 
-  const Model: SettingItemGroup = useMemo(
+  const model: SettingItemGroup = useMemo(
     () => ({
       children: [
         {
@@ -222,13 +223,13 @@ const SettingForm = memo(() => {
           tag: 'max_tokens',
         },
       ],
-      icon: Bot,
+      icon: BrainCog,
       title: t('settingModel.title'),
     }),
     [settings],
   );
 
-  const System: SettingItemGroup = useMemo(
+  const system: SettingItemGroup = useMemo(
     () => ({
       children: [
         {
@@ -282,16 +283,15 @@ const SettingForm = memo(() => {
     [settings],
   );
 
-  const items = useMemo(() => [theme, OpenAI, Chat, Model, System], [settings]);
+  const items = useMemo(() => [theme, openAI, chat, model, system], [settings]);
 
   return (
     <Form
       form={form}
       initialValues={settings}
-      itemMinWidth="max(30%,240px)"
       items={items}
       onValuesChange={debounce(setSettings, 100)}
-      style={{ maxWidth: 1024, width: '100%' }}
+      {...FORM_STYLE}
     />
   );
 });

@@ -1,113 +1,172 @@
-import { Collapse, ConfigProvider, InputNumber, Segmented, Slider } from 'antd';
+import { Form, ItemGroup } from '@lobehub/ui';
+import { Input, Segmented, Select, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
+import { debounce } from 'lodash-es';
+import { BrainCog, MessagesSquare } from 'lucide-react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { FORM_STYLE } from '@/const/layoutTokens';
+import SliderWithInput from '@/features/SliderWithInput';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
+import type { LobeAgentConfig } from '@/types/session';
 
-import { FormItem } from '../FormItem';
-import { useStyles } from '../style';
-import Plugin from './Plugin';
-import Prompt from './Prompt';
+type SettingItemGroup = ItemGroup & {
+  children: {
+    name?: keyof LobeAgentConfig;
+  }[];
+};
 
 const AgentConfig = () => {
-  const { t } = useTranslation('common');
-
-  const { styles, theme } = useStyles();
+  const { t } = useTranslation('setting');
 
   const config = useSessionStore(agentSelectors.currentAgentConfigSafe, isEqual);
 
   const [updateAgentConfig] = useSessionStore((s) => [s.updateAgentConfig], shallow);
 
-  return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Segmented: {
-            colorBgLayout: theme.isDarkMode ? '#111' : '#f1f1f1',
-          },
+  // TODO: setting 结构嵌套，现在是扁平的 params: { temperature: 0.6 }
+  // @ts-ignore
+  const chat: SettingItemGroup = useMemo(
+    () => ({
+      children: [
+        {
+          children: (
+            <Segmented
+              options={[
+                { label: t('settingChat.chatStyleType.type.bubble'), value: 'chat' },
+                { label: t('settingChat.chatStyleType.type.docs'), value: 'docs' },
+              ]}
+            />
+          ),
+          label: t('settingChat.chatStyleType.title'),
+          minWidth: undefined,
+          name: 'chatStyleType',
         },
-      }}
-    >
-      <Flexbox
-        align={'center'}
-        distribution={'space-between'}
-        horizontal
-        paddingBlock={12}
-        style={{
-          borderBottom: `1px solid ${theme.colorBorder}`,
-        }}
-      >
-        <Flexbox className={styles.profile}> {t('modelConfig')}</Flexbox>
-      </Flexbox>
-      <Flexbox gap={24}>
-        <FormItem label={t('agentModel')}>
-          <Segmented
-            block
-            onChange={(value) => {
-              updateAgentConfig({ model: value as LanguageModel });
-            }}
-            options={Object.values(LanguageModel).map((value) => ({
-              label: t(value),
-              value,
-            }))}
-            size={'large'}
-            value={config.model}
-          />
-        </FormItem>
-        <Prompt />
-        <Collapse
-          className={styles.title}
-          expandIconPosition={'end'}
-          items={[
-            {
-              children: (
-                <Flexbox paddingBlock={16}>
-                  <FormItem label={t('modelTemperature')}>
-                    <Flexbox gap={16} horizontal>
-                      <Slider
-                        max={1}
-                        min={0}
-                        onChange={(value) => {
-                          updateAgentConfig({ params: { temperature: value } });
-                        }}
-                        step={0.1}
-                        style={{ flex: 1 }}
-                        value={Number(config.params.temperature)}
-                      />
-                      <InputNumber
-                        max={1}
-                        min={0}
-                        onChange={(value) => {
-                          if (value) updateAgentConfig({ params: { temperature: value } });
-                        }}
-                        value={config.params.temperature}
-                      />
-                    </Flexbox>
-                  </FormItem>
-                </Flexbox>
-              ),
-              key: 'advanceSettings',
-              label: t('advanceSettings'),
-            },
-          ]}
-        />
-        <Flexbox
-          align={'center'}
-          distribution={'space-between'}
-          horizontal
-          paddingBlock={12}
-          style={{
-            borderBottom: `1px solid ${theme.colorBorder}`,
-          }}
-        >
-          <Flexbox className={styles.profile}> {t('pluginList')}</Flexbox>
-        </Flexbox>
-        <Plugin />
-      </Flexbox>
-    </ConfigProvider>
+        {
+          children: <Input placeholder={t('settingChat.inputTemplate.placeholder')} />,
+          desc: t('settingChat.inputTemplate.desc'),
+          label: t('settingChat.inputTemplate.title'),
+          name: 'enableHistoryCount',
+        },
+        {
+          children: <Switch />,
+          label: t('settingChat.enableHistoryCount.title'),
+          minWidth: undefined,
+          name: 'enableHistoryCount',
+          valuePropName: 'checked',
+        },
+        {
+          children: <SliderWithInput max={32} min={0} />,
+          desc: t('settingChat.historyCount.desc'),
+          // @ts-ignore
+          hidden: !config.params.enableHistoryCount,
+          label: t('settingChat.historyCount.title'),
+          name: 'historyCount',
+        },
+        {
+          children: <Switch />,
+          label: t('settingChat.enableCompressThreshold.title'),
+          minWidth: undefined,
+          name: 'enableCompressThreshold',
+          valuePropName: 'checked',
+        },
+        {
+          children: <SliderWithInput max={32} min={0} />,
+          desc: t('settingChat.compressThreshold.desc'),
+          // @ts-ignore
+          hidden: !config.params.enableCompressThreshold,
+          label: t('settingChat.compressThreshold.title'),
+          name: 'compressThreshold',
+        },
+      ],
+      icon: MessagesSquare,
+      title: t('settingChat.title'),
+    }),
+    [config],
+  );
+
+  // TODO: setting 结构嵌套，现在是扁平的 params: { temperature: 0.6 }
+  // @ts-ignore
+  const model: SettingItemGroup = useMemo(
+    () => ({
+      children: [
+        {
+          children: (
+            <Select
+              options={Object.values(LanguageModel).map((value) => ({
+                label: value,
+                value,
+              }))}
+            />
+          ),
+          desc: t('settingModel.model.desc'),
+          label: t('settingModel.model.title'),
+          name: 'model',
+          tag: 'model',
+        },
+        {
+          children: <SliderWithInput max={1} min={0} step={0.1} />,
+          desc: t('settingModel.temperature.desc'),
+          label: t('settingModel.temperature.title'),
+          name: 'temperature',
+          tag: 'temperature',
+        },
+        {
+          children: <SliderWithInput max={1} min={0} step={0.1} />,
+          desc: t('settingModel.topP.desc'),
+          label: t('settingModel.topP.title'),
+          name: 'topP',
+          tag: 'top_p',
+        },
+        {
+          children: <SliderWithInput max={2} min={-2} step={0.1} />,
+          desc: t('settingModel.presencePenalty.desc'),
+          label: t('settingModel.presencePenalty.title'),
+          name: 'presencePenalty',
+          tag: 'presence_penalty',
+        },
+        {
+          children: <SliderWithInput max={2} min={-2} step={0.1} />,
+          desc: t('settingModel.frequencyPenalty.desc'),
+          label: t('settingModel.frequencyPenalty.title'),
+          name: 'frequencyPenalty',
+          tag: 'frequency_penalty',
+        },
+        {
+          children: <Switch />,
+          label: t('settingModel.enableMaxTokens.title'),
+          minWidth: undefined,
+          name: 'enableMaxTokens',
+          valuePropName: 'checked',
+        },
+        {
+          children: <SliderWithInput max={32_000} min={0} step={100} />,
+          desc: t('settingModel.maxTokens.desc'),
+          // TODO
+          // @ts-ignore
+          hidden: !config?.params?.enableMaxTokens,
+          label: t('settingModel.maxTokens.title'),
+          name: 'params.maxTokens',
+          tag: 'max_tokens',
+        },
+      ],
+      icon: BrainCog,
+      title: t('settingModel.title'),
+    }),
+    [config],
+  );
+
+  const items = useMemo(() => [chat, model], [config]);
+
+  return (
+    <Form
+      initialValues={config}
+      items={items}
+      onValuesChange={debounce(updateAgentConfig, 100)}
+      {...FORM_STYLE}
+    />
   );
 };
 

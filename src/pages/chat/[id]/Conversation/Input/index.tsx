@@ -1,4 +1,4 @@
-import { ChatInputArea, DraggablePanel, Icon } from '@lobehub/ui';
+import { ChatInputArea, DraggablePanel, Icon, Tooltip } from '@lobehub/ui';
 import { Button } from 'antd';
 import { Archive } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
@@ -13,7 +13,7 @@ import InputActions from './Action';
 import Token from './Token';
 
 const ChatInput = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const [expand, setExpand] = useState<boolean>(false);
   const [text, setText] = useState('');
 
@@ -21,7 +21,11 @@ const ChatInput = () => {
   const [sendMessage] = useSessionStore((s) => [s.createOrSendMsg], shallow);
 
   const footer = useMemo(
-    () => <Button icon={<Icon icon={Archive} title={t('archiveCurrentMessages')} />} />,
+    () => (
+      <Tooltip title={t('archiveCurrentMessages')}>
+        <Button icon={<Icon icon={Archive} />} />
+      </Tooltip>
+    ),
     [],
   );
 
@@ -54,6 +58,10 @@ const ChatInput = () => {
         onExpandChange={setExpand}
         onInputChange={setText}
         onSend={sendMessage}
+        placeholder={t('sendPlaceholder')}
+        text={{
+          send: t('send'),
+        }}
       />
     </DraggablePanel>
   );

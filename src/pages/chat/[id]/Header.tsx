@@ -1,61 +1,45 @@
 import { ActionIcon, Avatar, ChatHeader } from '@lobehub/ui';
 import { Tag } from 'antd';
-import { createStyles } from 'antd-style';
-import { ArchiveIcon, MoreVerticalIcon, Share2 } from 'lucide-react';
+import { PanelRightClose, PanelRightOpen, Settings, Share2 } from 'lucide-react';
+import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { agentSelectors, sessionSelectors, useSessionStore } from '@/store/session';
-
-const useStyles = createStyles(({ css, token }) => ({
-  desc: css`
-    font-size: 12px;
-    color: ${token.colorTextTertiary};
-  `,
-  title: css`
-    font-weight: bold;
-    color: ${token.colorText};
-  `,
-}));
+import HeaderTitle from '@/components/HeaderTitle';
+import { agentSelectors, useSessionStore } from '@/store/session';
 
 const Header = memo(() => {
   const { t } = useTranslation('common');
-  const [avatar, model] = useSessionStore(
-    (s) => [agentSelectors.currentAgentAvatar(s), agentSelectors.currentAgentModel(s)],
+
+  const [meta, id, modle] = useSessionStore(
+    (s) => [agentSelectors.currentAgentMeta(s), s.activeId, agentSelectors.currentAgentModel(s)],
     shallow,
   );
-  const [meta, id] = useSessionStore((s) => {
-    const chat = sessionSelectors.currentSession(s);
-    return [chat?.meta, s.activeId];
-  }, shallow);
-
-  const [
-    // genShareUrl,
-
-    toggleConfig,
-  ] = useSessionStore(
-    (s) => [
-      // s.genShareUrl,
-      s.toggleConfig,
-    ],
+  const [showAgentSettings, toggleConfig] = useSessionStore(
+    (s) => [s.showAgentSettings, s.toggleConfig],
     shallow,
   );
 
-  const { styles } = useStyles();
   return (
     <ChatHeader
       left={
         <>
-          <Avatar avatar={avatar} size={40} title={meta?.title} />
-          <Flexbox>
-            <Flexbox align={'center'} className={styles.title} gap={8} horizontal>
-              {meta?.title || t('defaultAgent')}
-              <Tag bordered={false}>{model}</Tag>
-            </Flexbox>
-            <Flexbox className={styles.desc}>{meta?.description || t('noDescription')}</Flexbox>
-          </Flexbox>
+          <Avatar
+            avatar={meta?.avatar}
+            background={meta?.backgroundColor}
+            onClick={() => {
+              Router.push(`/chat/${id}/edit`);
+            }}
+            size={40}
+            style={{ cursor: 'pointer' }}
+            title={meta?.title}
+          />
+          <HeaderTitle
+            desc={meta?.description || t('noDescription')}
+            tag={<Tag>{modle}</Tag>}
+            title={meta?.title || t('defaultAgent')}
+          />
         </>
       }
       right={
@@ -69,12 +53,19 @@ const Header = memo(() => {
               size={{ fontSize: 24 }}
               title={t('share')}
             />
-            <ActionIcon icon={ArchiveIcon} size={{ fontSize: 24 }} title={t('archive')} />
             <ActionIcon
-              icon={MoreVerticalIcon}
+              icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
               onClick={() => toggleConfig()}
               size={{ fontSize: 24 }}
-              title={t('sessionSetting')}
+              title={t('roleAndArchive')}
+            />
+            <ActionIcon
+              icon={Settings}
+              onClick={() => {
+                Router.push(`/chat/${id}/edit`);
+              }}
+              size={{ fontSize: 24 }}
+              title={t('header.session', { ns: 'setting' })}
             />
           </>
         )

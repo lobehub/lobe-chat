@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { createI18nNext } from '@/locales/create';
 import ChatLayout from '@/pages/chat/layout';
+import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import Header from './Header';
 import SettingForm from './SettingForm';
@@ -14,7 +15,7 @@ const initI18n = createI18nNext('setting');
 
 const SettingLayout = memo(() => {
   const { t } = useTranslation('setting');
-  const pageTitle = `${t('header')} - LobeChat`;
+  const pageTitle = genSiteHeadTitle(t('header.global'));
 
   useEffect(() => {
     initI18n.finally();

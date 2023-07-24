@@ -16,7 +16,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 const FunctionMessage = memo(() => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('plugin');
   const { styles } = useStyles();
   return (
     <Flexbox className={styles.container} gap={8} horizontal>

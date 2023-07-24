@@ -14,8 +14,43 @@ export default {
       title: '重置所有设置',
     },
   },
-  header: '设置',
+  header: {
+    global: '全局设置',
+    session: '会话设置',
+  },
+  settingAgent: {
+    avatar: {
+      title: '头像',
+    },
+    backgroundColor: {
+      title: '背景色',
+    },
+    description: {
+      placeholder: '请输入助手描述',
+      title: '助手描述',
+    },
+    name: {
+      placeholder: '请输入助手名称',
+      title: '名称',
+    },
+    prompt: {
+      placeholder: '请输入 AI 提示词',
+      title: '助手角色',
+    },
+    tag: {
+      placeholder: '请输入标签',
+      title: '标签',
+    },
+    title: '助手信息',
+  },
   settingChat: {
+    chatStyleType: {
+      title: '聊天窗口样式',
+      type: {
+        bubble: '气泡模式',
+        docs: '文档模式',
+      },
+    },
     compressThreshold: {
       desc: '当未压缩的历史消息超过该值时，将进行压缩',
       title: '历史消息长度压缩阈值',
@@ -32,6 +67,7 @@ export default {
     },
     inputTemplate: {
       desc: '用户最新的一条消息会填充到此模板',
+      placeholder: '输入预处理模版，{text} 将替换为实时输入信息',
       title: '用户输入预处理',
     },
     title: '聊天设置',
@@ -50,6 +86,12 @@ export default {
     },
     model: {
       desc: 'ChatGPT 模型',
+      list: {
+        'gpt-3.5-turbo': 'GPT 3.5',
+        'gpt-3.5-turbo-16k': 'GPT 3.5 (16K)',
+        'gpt-4': 'GPT 4',
+        'gpt-4-32k': 'GPT 4 (32K)',
+      },
       title: '模型',
     },
     presencePenalty: {
@@ -78,6 +120,9 @@ export default {
       placeholder: 'OpenAI API Key',
       title: 'API Key',
     },
+  },
+  settingPlugin: {
+    title: '插件列表',
   },
   settingSystem: {
     accessCode: {

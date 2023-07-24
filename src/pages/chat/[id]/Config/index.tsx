@@ -1,22 +1,13 @@
-import {
-  ActionIcon,
-  DraggablePanel,
-  DraggablePanelBody,
-  DraggablePanelContainer,
-} from '@lobehub/ui';
+import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { LucideEdit, LucideX } from 'lucide-react';
-import Router from 'next/router';
 import { rgba } from 'polished';
-import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useSessionStore } from '@/store/session';
 
-import ReadMode from './ReadMode';
+import SideBar from './SideBar';
 
 const useStyles = createStyles(({ cx, css, token, stylish }) => ({
   drawer: cx(
@@ -31,10 +22,9 @@ const useStyles = createStyles(({ cx, css, token, stylish }) => ({
 }));
 
 const Config = () => {
-  const { t } = useTranslation('common');
   const { styles } = useStyles();
-  const [showAgentSettings, toggleConfig, id] = useSessionStore(
-    (s) => [s.showAgentSettings, s.toggleConfig, s.activeId],
+  const [showAgentSettings, toggleConfig] = useSessionStore(
+    (s) => [s.showAgentSettings, s.toggleConfig],
     shallow,
   );
 
@@ -50,37 +40,7 @@ const Config = () => {
     >
       <HeaderSpacing />
       <DraggablePanelContainer style={{ flex: 'none', minWidth: CHAT_SIDEBAR_WIDTH }}>
-        <Flexbox
-          align={'center'}
-          className={styles.header}
-          distribution={'space-between'}
-          horizontal
-          padding={12}
-          paddingInline={16}
-        >
-          <Flexbox>{t('agentProfile')}</Flexbox>
-          <Flexbox gap={4} horizontal>
-            <ActionIcon
-              icon={LucideEdit}
-              onClick={() => {
-                Router.push(`/chat/${id}/edit`);
-              }}
-              size={{ blockSize: 32, fontSize: 20 }}
-              title={t('edit')}
-            />
-            <ActionIcon
-              icon={LucideX}
-              onClick={() => {
-                toggleConfig(false);
-              }}
-              size={{ blockSize: 32, fontSize: 20 }}
-              title={t('close')}
-            />
-          </Flexbox>
-        </Flexbox>
-        <DraggablePanelBody>
-          <ReadMode />
-        </DraggablePanelBody>
+        <SideBar />
       </DraggablePanelContainer>
     </DraggablePanel>
   );

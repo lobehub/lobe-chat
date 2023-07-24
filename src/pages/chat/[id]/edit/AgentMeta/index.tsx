@@ -1,21 +1,20 @@
-import { ActionIcon, Input, Tooltip } from '@lobehub/ui';
-import { Button, Collapse } from 'antd';
+import { Form, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
+import { Button } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { LucideSparkles } from 'lucide-react';
+import { UserCircle, Wand2 } from 'lucide-react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { FORM_STYLE } from '@/const/layoutTokens';
 import { agentSelectors, useSessionStore } from '@/store/session';
 
-import { FormItem } from '../FormItem';
-import { useStyles } from '../style';
+import AutoGenerateInput from './AutoGenerateInput';
+import BackgroundSwatches from './BackgroundSwatches';
 import EmojiPicker from './EmojiPicker';
 
-const AgentMeta = () => {
-  const { t } = useTranslation('common');
-
-  const { styles, theme } = useStyles();
+const AgentMeta = memo(() => {
+  const { t } = useTranslation('setting');
 
   const metaData = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
 
@@ -39,80 +38,74 @@ const AgentMeta = () => {
   );
 
   const basic = [
-    { key: 'title', label: t('agentName'), placeholder: t('agentNamePlaceholder') },
+    {
+      key: 'title',
+      label: t('settingAgent.name.title'),
+      placeholder: t('settingAgent.name.placeholder'),
+    },
     {
       key: 'description',
-      label: t('agentDescription'),
-      placeholder: t('agentDescriptionPlaceholder'),
+      label: t('settingAgent.description.title'),
+      placeholder: t('settingAgent.description.placeholder'),
     },
     // { key: 'tag', label: t('agentTag'), placeholder: t('agentTagPlaceholder') },
   ];
 
-  return (
-    <Collapse
-      defaultActiveKey={hasSystemRole ? ['meta'] : []}
-      items={[
+  const meta: ItemGroup = useMemo(
+    () => ({
+      children: [
         {
-          children: (
-            <Flexbox gap={80} horizontal style={{ marginTop: 16 }}>
-              <Flexbox flex={1} gap={24}>
-                {basic.map((item) => (
-                  <FormItem key={item.key} label={item.label}>
-                    <Input
-                      onChange={(e) => {
-                        updateAgentMeta({ [item.key]: e.target.value });
-                      }}
-                      placeholder={item.placeholder}
-                      suffix={
-                        <ActionIcon
-                          icon={LucideSparkles}
-                          loading={loading[item.key as keyof typeof loading]}
-                          onClick={() => {
-                            autocompleteMeta(item.key as keyof typeof metaData);
-                          }}
-                          size={'small'}
-                          style={{
-                            color: theme.purple,
-                          }}
-                          title={t('autoGenerate')}
-                        />
-                      }
-                      type={'block'}
-                      value={metaData[item.key as keyof typeof metaData]}
-                    />
-                  </FormItem>
-                ))}
-              </Flexbox>
-              <FormItem label={t('agentAvatar')}>
-                <EmojiPicker />
-              </FormItem>
-            </Flexbox>
-          ),
-          className: styles.collapseHeader,
-          extra: (
-            <Tooltip title={t('autoGenerateTooltip')}>
-              <Button
-                disabled={!hasSystemRole}
-                loading={Object.values(loading).some((i) => !!i)}
-                onClick={(e: any) => {
-                  e.stopPropagation();
-                  console.log(id);
-                  if (!id) return;
-
-                  autocompleteSessionAgentMeta(id, true);
-                }}
-                size={'large'}
-              >
-                {t('autoGenerate')}
-              </Button>
-            </Tooltip>
-          ),
-          key: 'meta',
-          label: <Flexbox className={styles.profile}>{t('profile')}</Flexbox>,
+          children: <EmojiPicker />,
+          label: t('settingAgent.avatar.title'),
+          minWidth: undefined,
         },
-      ]}
-    />
+        {
+          children: <BackgroundSwatches />,
+          label: t('settingAgent.backgroundColor.title'),
+          minWidth: undefined,
+        },
+        ...basic.map((item) => ({
+          children: (
+            <AutoGenerateInput
+              loading={loading[item.key as keyof typeof loading]}
+              onChange={(e) => {
+                updateAgentMeta({ [item.key]: e.target.value });
+              }}
+              onGenerate={() => {
+                autocompleteMeta(item.key as keyof typeof metaData);
+              }}
+              placeholder={item.placeholder}
+              value={metaData[item.key as keyof typeof metaData]}
+            />
+          ),
+          label: item.label,
+        })),
+      ],
+      extra: (
+        <Tooltip title={t('autoGenerateTooltip', { ns: 'common' })}>
+          <Button
+            disabled={!hasSystemRole}
+            icon={<Icon icon={Wand2} />}
+            loading={Object.values(loading).some((i) => !!i)}
+            onClick={(e: any) => {
+              e.stopPropagation();
+              console.log(id);
+              if (!id) return;
+              autocompleteSessionAgentMeta(id, true);
+            }}
+            size={'small'}
+          >
+            {t('autoGenerate', { ns: 'common' })}
+          </Button>
+        </Tooltip>
+      ),
+      icon: UserCircle,
+      title: t('settingAgent.title'),
+    }),
+    [basic, metaData],
   );
-};
+
+  return <Form items={[meta]} {...FORM_STYLE} />;
+});
 
 export default AgentMeta;

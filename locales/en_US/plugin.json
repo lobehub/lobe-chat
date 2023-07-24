@@ -1,0 +1,10 @@
+{
+  "pluginList": "Plugin List",
+  "pluginLoading": "Plugin Loading...",
+  "plugins": {
+    "realtimeWeather": "Real-time Weather Forecast",
+    "searchEngine": "Search Engine",
+    "undefined": "Plugin Detection...",
+    "websiteCrawler": "Website Content Extraction"
+  }
+}

@@ -39,8 +39,12 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
 
 const EmojiPicker = () => {
   const { styles } = useStyles();
-  const [avatar, updateAgentMeta] = useSessionStore(
-    (s) => [agentSelectors.currentAgentAvatar(s), s.updateAgentMeta],
+  const [avatar, backgroundColor, updateAgentMeta] = useSessionStore(
+    (s) => [
+      agentSelectors.currentAgentAvatar(s),
+      agentSelectors.currentAgentBackgroundColor(s),
+      s.updateAgentMeta,
+    ],
     shallow,
   );
 
@@ -65,7 +69,7 @@ const EmojiPicker = () => {
       trigger={'click'}
     >
       <div className={styles.avatar} style={{ width: 'fit-content' }}>
-        <Avatar avatar={avatar} size={200} />
+        <Avatar avatar={avatar} background={backgroundColor} size={44} />
       </div>
     </Popover>
   );
