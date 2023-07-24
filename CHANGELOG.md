@@ -2,6 +2,40 @@
 
 # Changelog
 
+## [Version 0.19.0](https://github.com/lobehub/lobe-chat/compare/v0.18.2...v0.19.0)
+
+<sup>Released on **2023-07-24**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 将 message reducer 提取到独立文件夹中, 清理无用代码实现.
+
+#### ✨ Features
+
+- **misc**: 数据结构层完成 topic 模型改造.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 将 message reducer 提取到独立文件夹中 ([64f40ca](https://github.com/lobehub/lobe-chat/commit/64f40ca))
+- **misc**: 清理无用代码实现 ([3655b60](https://github.com/lobehub/lobe-chat/commit/3655b60))
+
+#### What's improved
+
+- **misc**: 数据结构层完成 topic 模型改造 ([99fa2a6](https://github.com/lobehub/lobe-chat/commit/99fa2a6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.18.2](https://github.com/lobehub/lobe-chat/compare/v0.18.1...v0.18.2)
 
 <sup>Released on **2023-07-24**</sup>
