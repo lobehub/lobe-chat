@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.18.1](https://github.com/lobehub/lobe-chat/compare/v0.18.0...v0.18.1)
+
+<sup>Released on **2023-07-24**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 优化新会话的创建逻辑 session.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 优化新会话的创建逻辑 session ([d70f22d](https://github.com/lobehub/lobe-chat/commit/d70f22d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.18.0](https://github.com/lobehub/lobe-chat/compare/v0.17.0...v0.18.0)
 
 <sup>Released on **2023-07-24**</sup>
