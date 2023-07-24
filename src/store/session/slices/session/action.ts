@@ -1,9 +1,9 @@
+import { merge } from 'lodash-es';
 import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
-import { SessionStore } from '@/store/session';
-import { LanguageModel } from '@/types/llm';
-import { LobeAgentSession, LobeSessionType } from '@/types/session';
+import { SessionStore, initLobeSession } from '@/store/session';
+import { LobeAgentSession } from '@/types/session';
 import { uuid } from '@/utils/uuid';
 
 import { SessionDispatch, sessionsReducer } from './reducers/session';
@@ -58,21 +58,12 @@ export const createSessionSlice: StateCreator<
 
     const timestamp = Date.now();
 
-    const newSession: LobeAgentSession = {
-      chats: {},
-      config: {
-        model: LanguageModel.GPT3_5,
-        params: {
-          temperature: 0.6,
-        },
-        systemRole: '',
-      },
+    // TODO: 等 settings 里的 defaultAgent 都改好以后，做个合并即可
+    const newSession: LobeAgentSession = merge({}, initLobeSession, {
       createAt: timestamp,
       id: uuid(),
-      meta: {},
-      type: LobeSessionType.Agent,
       updateAt: timestamp,
-    };
+    });
 
     dispatchSession({ session: newSession, type: 'addSession' });
 

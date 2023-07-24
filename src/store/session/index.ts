@@ -33,4 +33,5 @@ export const useSessionStore = create<SessionStore>()(
 
 export * from './selectors';
 export { initialLobeAgentConfig } from './slices/agentConfig';
+export { initLobeSession } from './slices/session';
 export type { SessionStore } from './store';
