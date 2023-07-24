@@ -7,7 +7,7 @@ import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessage } from '@/utils/message';
 import { nanoid } from '@/utils/uuid';
 
-import { MessageDispatch, messagesReducer } from './messageReducer';
+import { MessageDispatch, messagesReducer } from './reducers/message';
 
 const LOADING_FLAT = '...';
 
