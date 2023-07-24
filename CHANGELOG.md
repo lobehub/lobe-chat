@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.14.0](https://github.com/lobehub/lobe-chat/compare/v0.13.1...v0.14.0)
+
+<sup>Released on **2023-07-24**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持网页抓取.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持网页抓取, closes [#14](https://github.com/lobehub/lobe-chat/issues/14) ([9e933b0](https://github.com/lobehub/lobe-chat/commit/9e933b0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.13.1](https://github.com/lobehub/lobe-chat/compare/v0.13.0...v0.13.1)
 
 <sup>Released on **2023-07-23**</sup>
