@@ -17,6 +17,7 @@ export default {
   header: {
     global: '全局设置',
     session: '会话设置',
+    sessionWithName: '会话设置 · {{name}}',
   },
   settingAgent: {
     avatar: {

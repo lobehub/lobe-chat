@@ -2,9 +2,11 @@ import Head from 'next/head';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { shallow } from 'zustand/shallow';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
+import { agentSelectors, useSessionStore } from '@/store/session';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import ChatLayout from '../../layout';
@@ -17,7 +19,8 @@ import Header from './Header';
 const EditPage = memo(() => {
   const { t } = useTranslation('setting');
 
-  const pageTitle = genSiteHeadTitle(t('header.session'));
+  const title = useSessionStore(agentSelectors.currentAgentTitle, shallow);
+  const pageTitle = genSiteHeadTitle(t('header.sessionWithName', { name: title }));
 
   return (
     <>
