@@ -38,8 +38,8 @@ export const organizeChats = (
   const basic = Object.values<ChatMessage>(session.chats)
     // 首先按照时间顺序排序，越早的在越前面
     .sort((pre, next) => pre.createAt - next.createAt)
-    // 过滤掉已归档的消息，归档消息不应该出现在聊天框中
-    .filter((m) => !m.archive)
+    // 过滤掉包含 topicId 的消息，有主题的消息不应该出现在聊天框中
+    .filter((m) => !m.topicId)
     // 映射头像关系
     .map((m) => {
       return {

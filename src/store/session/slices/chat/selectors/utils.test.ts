@@ -67,7 +67,7 @@ describe('organizeChats', () => {
   });
 
   it('should filter out archived messages', () => {
-    session.chats['2'].archive = true;
+    session.chats['2'].topicId = '123';
     const result = organizeChats(session, { assistant: '', user: '' });
     expect(result.length).toBe(2);
     expect(result[0].id).toBe('1');

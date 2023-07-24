@@ -1,6 +1,7 @@
 import { ChatMessageMap } from './chatMessage';
 import { LLMExample, LLMParams, LanguageModel } from './llm';
 import { BaseDataModel } from './meta';
+import { ChatTopicMap } from './topic';
 
 export enum LobeSessionType {
   /**
@@ -18,7 +19,7 @@ interface LobeSessionBase extends BaseDataModel {
    * 聊天记录
    */
   chats: ChatMessageMap;
-
+  topics?: ChatTopicMap;
   /**
    * 每个会话的类别
    */

@@ -1,6 +1,6 @@
 import { ChatInputArea, DraggablePanel, Icon, Tooltip } from '@lobehub/ui';
 import { Button } from 'antd';
-import { Archive } from 'lucide-react';
+import { LucideGalleryVerticalEnd } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
@@ -22,8 +22,8 @@ const ChatInput = () => {
 
   const footer = useMemo(
     () => (
-      <Tooltip title={t('archiveCurrentMessages')}>
-        <Button icon={<Icon icon={Archive} />} />
+      <Tooltip title={t('topic.saveCurrentMessages')}>
+        <Button icon={<Icon icon={LucideGalleryVerticalEnd} />} />
       </Tooltip>
     ),
     [],

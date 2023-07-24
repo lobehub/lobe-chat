@@ -77,7 +77,7 @@ const SideBar = memo(() => {
         value={systemRole}
       />
       <Flexbox style={{ padding: 16 }}>
-        <SearchBar placeholder={t('archiveSearchPlaceholder')} />
+        <SearchBar placeholder={t('topic.searchPlaceholder')} type={'block'} />
       </Flexbox>
     </DraggablePanelBody>
   );

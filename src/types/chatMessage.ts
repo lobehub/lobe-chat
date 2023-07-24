@@ -14,8 +14,6 @@ export interface ChatMessageError {
 }
 
 export interface ChatMessage extends BaseDataModel {
-  archive?: boolean;
-
   /**
    * @title 内容
    * @description 消息内容
@@ -43,6 +41,10 @@ export interface ChatMessage extends BaseDataModel {
    * @description 消息发送者的角色
    */
   role: LLMRoleType;
+  /**
+   * 保存到主题的消息
+   */
+  topicId?: string;
 }
 
 export type ChatMessageMap = Record<string, ChatMessage>;

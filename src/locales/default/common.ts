@@ -4,8 +4,6 @@ export default {
   agentModel: '模型',
   agentProfile: '助手信息',
   archive: '归档',
-  archiveCurrentMessages: '归档当前会话',
-  archiveSearchPlaceholder: '搜索归档对话...',
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
   cancel: '取消',
@@ -28,6 +26,10 @@ export default {
   setting: '设置',
   share: '分享',
   tokenDetail: '系统设定: {{systemRoleToken}} 历史消息: {{chatsToken}}',
+  topic: {
+    saveCurrentMessages: '保存当前对话为话题',
+    searchPlaceholder: '搜索归档对话...',
+  },
   updateAgent: '更新助理信息',
   updatePrompt: '更新提示词',
 };
