@@ -44,11 +44,7 @@ export interface ChatAction {
     assistantMessageId: string,
     withPlugin?: boolean,
   ) => Promise<{ isFunctionCall: boolean; output: string }>;
-  /**
-   * 处理消息编辑
-   * @param messageId - 消息 ID，可选
-   */
-  handleMessageEditing: (messageId: string | undefined) => void;
+
   /**
    * 实际获取 AI 响应
    *
@@ -156,10 +152,6 @@ export const createChatSlice: StateCreator<
     set({ chatLoading: false });
 
     return { isFunctionCall, output };
-  },
-
-  handleMessageEditing: (messageId) => {
-    set({ editingMessageId: messageId });
   },
 
   realFetchAIResponse: async (messages, userMessageId) => {
