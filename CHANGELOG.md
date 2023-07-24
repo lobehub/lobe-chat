@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.18.0](https://github.com/lobehub/lobe-chat/compare/v0.17.0...v0.18.0)
+
+<sup>Released on **2023-07-24**</sup>
+
+#### ✨ Features
+
+- **misc**: 实现会话展示模式切换，并优化默认创建角色的配置.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 实现会话展示模式切换，并优化默认创建角色的配置 ([27ae82f](https://github.com/lobehub/lobe-chat/commit/27ae82f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.17.0](https://github.com/lobehub/lobe-chat/compare/v0.16.1...v0.17.0)
 
 <sup>Released on **2023-07-24**</sup>
