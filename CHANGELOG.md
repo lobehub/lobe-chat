@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.16.1](https://github.com/lobehub/lobe-chat/compare/v0.16.0...v0.16.1)
+
+<sup>Released on **2023-07-24**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 重构优化 selectors 实现.
+
+#### 💄 Styles
+
+- **misc**: 优化 document title.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 重构优化 selectors 实现 ([97fe1cd](https://github.com/lobehub/lobe-chat/commit/97fe1cd))
+
+#### Styles
+
+- **misc**: 优化 document title ([c3cda00](https://github.com/lobehub/lobe-chat/commit/c3cda00))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.16.0](https://github.com/lobehub/lobe-chat/compare/v0.15.1...v0.16.0)
 
 <sup>Released on **2023-07-24**</sup>
