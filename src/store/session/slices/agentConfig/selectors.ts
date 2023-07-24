@@ -1,3 +1,5 @@
+import { t } from 'i18next';
+
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
@@ -13,7 +15,7 @@ const currentAgentMeta = (s: SessionStore): MetaData => {
   return { avatar: DEFAULT_AVATAR, backgroundColor: DEFAULT_BACKGROUND_COLOR, ...session?.meta };
 };
 
-const currentAgentTitle = (s: SessionStore) => currentAgentMeta(s)?.title;
+const currentAgentTitle = (s: SessionStore) => currentAgentMeta(s)?.title || t('defaultSession');
 
 const currentAgentBackgroundColor = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
@@ -51,6 +53,10 @@ const hasSystemRole = (s: SessionStore) => {
 
   return !!config.systemRole;
 };
+
+export const getAvatar = (s: MetaData) => s.avatar || DEFAULT_AVATAR;
+export const getTitle = (s: MetaData) => s.title || t('defaultSession');
+
 export const agentSelectors = {
   currentAgentAvatar,
   currentAgentBackgroundColor,
@@ -60,5 +66,7 @@ export const agentSelectors = {
   currentAgentModel,
   currentAgentSystemRole,
   currentAgentTitle,
+  getAvatar,
+  getTitle,
   hasSystemRole,
 };

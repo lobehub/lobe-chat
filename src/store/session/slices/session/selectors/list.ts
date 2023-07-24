@@ -14,7 +14,7 @@ export const currentSessionSafe = (s: SessionStore): LobeAgentSession => {
   return currentSessionSel(s) || initLobeSession;
 };
 
-export const chatListSel = (s: SessionStore) => {
+export const sessionList = (s: SessionStore) => {
   const filterChats = filterWithKeywords(s.sessions, s.searchKeywords, (item) => [
     Object.values(item.chats)
       .map((c) => c.content)

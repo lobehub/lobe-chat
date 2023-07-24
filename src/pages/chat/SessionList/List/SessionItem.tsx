@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { chatSelectors, sessionSelectors, useSessionStore } from '@/store/session';
+import { agentSelectors, chatSelectors, sessionSelectors, useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
 import { useStyles } from './style';
@@ -39,10 +39,10 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
     const meta = session.meta;
     const systemRole = session.config.systemRole;
     return [
-      meta.title,
+      agentSelectors.getTitle(meta),
       meta.description,
       systemRole,
-      sessionSelectors.getAgentAvatar(meta),
+      agentSelectors.getAvatar(meta),
       meta.backgroundColor,
       session?.updateAt,
       session.config.model,
@@ -95,7 +95,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
         }
         loading={loading}
         style={{ color: theme.colorText }}
-        title={title || t('defaultSession')}
+        title={title}
       />
       <Popconfirm
         arrow={false}

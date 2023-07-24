@@ -8,7 +8,7 @@ import { sessionSelectors, useSessionStore } from '@/store/session';
 import SessionItem from './SessionItem';
 
 const SessionList = memo(() => {
-  const list = useSessionStore((s) => sessionSelectors.chatList(s), isEqual);
+  const list = useSessionStore((s) => sessionSelectors.sessionList(s), isEqual);
   const [activeId, loading] = useSessionStore(
     (s) => [s.activeId, s.autocompleteLoading.title],
     shallow,
