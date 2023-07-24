@@ -15,7 +15,7 @@ import type { LobeAgentConfig } from '@/types/session';
 
 type SettingItemGroup = ItemGroup & {
   children: {
-    name?: keyof LobeAgentConfig;
+    name?: keyof LobeAgentConfig | string[];
   }[];
 };
 
@@ -26,8 +26,6 @@ const AgentConfig = () => {
 
   const [updateAgentConfig] = useSessionStore((s) => [s.updateAgentConfig], shallow);
 
-  // TODO: setting 结构嵌套，现在是扁平的 params: { temperature: 0.6 }
-  // @ts-ignore
   const chat: SettingItemGroup = useMemo(
     () => ({
       children: [
@@ -42,13 +40,13 @@ const AgentConfig = () => {
           ),
           label: t('settingChat.chatStyleType.title'),
           minWidth: undefined,
-          name: 'chatStyleType',
+          name: 'displayMode',
         },
         {
           children: <Input placeholder={t('settingChat.inputTemplate.placeholder')} />,
           desc: t('settingChat.inputTemplate.desc'),
           label: t('settingChat.inputTemplate.title'),
-          name: 'enableHistoryCount',
+          name: 'inputTemplate',
         },
         {
           children: <Switch />,
@@ -60,8 +58,7 @@ const AgentConfig = () => {
         {
           children: <SliderWithInput max={32} min={0} />,
           desc: t('settingChat.historyCount.desc'),
-          // @ts-ignore
-          hidden: !config.params.enableHistoryCount,
+          hidden: !config.enableHistoryCount,
           label: t('settingChat.historyCount.title'),
           name: 'historyCount',
         },
@@ -75,8 +72,7 @@ const AgentConfig = () => {
         {
           children: <SliderWithInput max={32} min={0} />,
           desc: t('settingChat.compressThreshold.desc'),
-          // @ts-ignore
-          hidden: !config.params.enableCompressThreshold,
+          hidden: !config.enableCompressThreshold,
           label: t('settingChat.compressThreshold.title'),
           name: 'compressThreshold',
         },
@@ -87,8 +83,6 @@ const AgentConfig = () => {
     [config],
   );
 
-  // TODO: setting 结构嵌套，现在是扁平的 params: { temperature: 0.6 }
-  // @ts-ignore
   const model: SettingItemGroup = useMemo(
     () => ({
       children: [
@@ -110,28 +104,28 @@ const AgentConfig = () => {
           children: <SliderWithInput max={1} min={0} step={0.1} />,
           desc: t('settingModel.temperature.desc'),
           label: t('settingModel.temperature.title'),
-          name: 'temperature',
+          name: ['params', 'temperature'],
           tag: 'temperature',
         },
         {
           children: <SliderWithInput max={1} min={0} step={0.1} />,
           desc: t('settingModel.topP.desc'),
           label: t('settingModel.topP.title'),
-          name: 'topP',
+          name: ['params', 'top_p'],
           tag: 'top_p',
         },
         {
           children: <SliderWithInput max={2} min={-2} step={0.1} />,
           desc: t('settingModel.presencePenalty.desc'),
           label: t('settingModel.presencePenalty.title'),
-          name: 'presencePenalty',
+          name: ['params', 'presence_penalty'],
           tag: 'presence_penalty',
         },
         {
           children: <SliderWithInput max={2} min={-2} step={0.1} />,
           desc: t('settingModel.frequencyPenalty.desc'),
           label: t('settingModel.frequencyPenalty.title'),
-          name: 'frequencyPenalty',
+          name: ['params', 'frequency_penalty'],
           tag: 'frequency_penalty',
         },
         {
@@ -144,11 +138,9 @@ const AgentConfig = () => {
         {
           children: <SliderWithInput max={32_000} min={0} step={100} />,
           desc: t('settingModel.maxTokens.desc'),
-          // TODO
-          // @ts-ignore
-          hidden: !config?.params?.enableMaxTokens,
+          hidden: !config?.enableMaxTokens,
           label: t('settingModel.maxTokens.title'),
-          name: 'params.maxTokens',
+          name: ['params', 'max_tokens'],
           tag: 'max_tokens',
         },
       ],
@@ -158,12 +150,10 @@ const AgentConfig = () => {
     [config],
   );
 
-  const items = useMemo(() => [chat, model], [config]);
-
   return (
     <Form
       initialValues={config}
-      items={items}
+      items={[chat, model]}
       onValuesChange={debounce(updateAgentConfig, 100)}
       {...FORM_STYLE}
     />

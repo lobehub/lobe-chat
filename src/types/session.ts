@@ -26,10 +26,26 @@ interface LobeSessionBase extends BaseDataModel {
 }
 
 export interface LobeAgentConfig {
+  compressThreshold?: number;
+  displayMode?: 'chat' | 'docs';
+  /**
+   * 历史消息长度压缩阈值
+   */
+  enableCompressThreshold?: boolean;
+  /**
+   * 开启历史记录条数
+   */
+  enableHistoryCount?: boolean;
+  enableMaxTokens?: boolean;
   /**
    * 语言模型示例
    */
   example?: LLMExample;
+  /**
+   * 历史消息条数
+   */
+  historyCount?: number;
+  inputTemplate?: string;
   /**
    * 角色所使用的语言模型
    * @default gpt-3.5-turbo

@@ -102,7 +102,11 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
         const chat = draft[id];
         if (!chat) return;
 
-        chat.config = { ...chat.config, ...config };
+        chat.config = {
+          ...chat.config,
+          ...config,
+          params: { ...chat.config.params, ...config.params },
+        };
       });
     }
 
