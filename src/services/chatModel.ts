@@ -1,5 +1,6 @@
 import { merge } from 'lodash-es';
 
+import { initialLobeAgentConfig } from '@/store/session';
 import type { OpenAIStreamPayload } from '@/types/openai';
 
 import { URLS } from './url';
@@ -13,12 +14,9 @@ export const fetchChatModel = (
 ) => {
   const payload = merge(
     {
-      frequency_penalty: 0,
-      model: 'gpt-3.5-turbo',
-      presence_penalty: 0,
+      model: initialLobeAgentConfig.model,
       stream: true,
-      temperature: 0.6,
-      top_p: 1,
+      ...initialLobeAgentConfig.params,
     },
     params,
   );

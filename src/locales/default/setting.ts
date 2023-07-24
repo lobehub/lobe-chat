@@ -48,7 +48,7 @@ export default {
     chatStyleType: {
       title: '聊天窗口样式',
       type: {
-        bubble: '气泡模式',
+        chat: '对话模式',
         docs: '文档模式',
       },
     },

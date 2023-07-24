@@ -3,7 +3,7 @@ import isEqual from 'fast-deep-equal';
 import { ReactNode, memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import { chatSelectors, useSessionStore } from '@/store/session';
+import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
 import { isFunctionMessage } from '@/utils/message';
 
 import FunctionMessage from './FunctionMessage';
@@ -11,8 +11,13 @@ import MessageExtra from './MessageExtra';
 
 const List = () => {
   const data = useSessionStore(chatSelectors.currentChats, isEqual);
-  const [deleteMessage, resendMessage, dispatchMessage] = useSessionStore(
-    (s) => [s.deleteMessage, s.resendMessage, s.dispatchMessage],
+  const [displayMode, deleteMessage, resendMessage, dispatchMessage] = useSessionStore(
+    (s) => [
+      agentSelectors.currentAgentConfigSafe(s).displayMode,
+      s.deleteMessage,
+      s.resendMessage,
+      s.dispatchMessage,
+    ],
     shallow,
   );
 
@@ -45,6 +50,7 @@ const List = () => {
       renderMessage={renderMessage}
       renderMessageExtra={MessageExtra}
       style={{ marginTop: 24 }}
+      type={displayMode}
     />
   );
 };

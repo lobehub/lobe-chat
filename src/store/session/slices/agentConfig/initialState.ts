@@ -11,8 +11,15 @@ export interface AgentConfigState {
 }
 
 export const initialLobeAgentConfig: LobeAgentConfig = {
+  displayMode: 'chat',
   model: LanguageModel.GPT3_5,
-  params: { temperature: 0.6 },
+  params: {
+    frequency_penalty: 0,
+    presence_penalty: 0,
+    temperature: 0.6,
+    top_p: 1,
+  },
+  plugins: [],
   systemRole: '',
 };
 

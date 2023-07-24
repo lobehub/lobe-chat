@@ -1,5 +1,6 @@
 import { Form, ItemGroup } from '@lobehub/ui';
-import { Input, Segmented, Select, Switch } from 'antd';
+import { ConfigProvider, Input, Segmented, Select, Switch } from 'antd';
+import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { BrainCog, MessagesSquare } from 'lucide-react';
@@ -21,6 +22,7 @@ type SettingItemGroup = ItemGroup & {
 
 const AgentConfig = () => {
   const { t } = useTranslation('setting');
+  const theme = useTheme();
 
   const config = useSessionStore(agentSelectors.currentAgentConfigSafe, isEqual);
 
@@ -33,7 +35,7 @@ const AgentConfig = () => {
           children: (
             <Segmented
               options={[
-                { label: t('settingChat.chatStyleType.type.bubble'), value: 'chat' },
+                { label: t('settingChat.chatStyleType.type.chat'), value: 'chat' },
                 { label: t('settingChat.chatStyleType.type.docs'), value: 'docs' },
               ]}
             />
@@ -151,12 +153,22 @@ const AgentConfig = () => {
   );
 
   return (
-    <Form
-      initialValues={config}
-      items={[chat, model]}
-      onValuesChange={debounce(updateAgentConfig, 100)}
-      {...FORM_STYLE}
-    />
+    <ConfigProvider
+      theme={{
+        components: {
+          Segmented: {
+            colorBgLayout: theme.isDarkMode ? '#111' : '#f1f1f1',
+          },
+        },
+      }}
+    >
+      <Form
+        initialValues={config}
+        items={[chat, model]}
+        onValuesChange={debounce(updateAgentConfig, 100)}
+        {...FORM_STYLE}
+      />
+    </ConfigProvider>
   );
 };
 

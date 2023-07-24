@@ -18,6 +18,7 @@ export enum LanguageModel {
 export interface LLMParams {
   /**
    * 控制生成文本中的惩罚系数，用于减少重复性
+   * @default 0
    */
   frequency_penalty?: number;
   /**
@@ -26,6 +27,7 @@ export interface LLMParams {
   max_tokens?: number;
   /**
    * 控制生成文本中的惩罚系数，用于减少主题的变化
+   * @default 0
    */
   presence_penalty?: number;
   /**
@@ -35,6 +37,7 @@ export interface LLMParams {
   temperature?: number;
   /**
    * 控制生成文本中最高概率的单个 token
+   * @default 1
    */
   top_p?: number;
 }

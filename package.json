@@ -63,7 +63,7 @@
     "@commitlint/cli": "^17",
     "@emoji-mart/data": "^1",
     "@emoji-mart/react": "^1",
-    "@lobehub/ui": "^1",
+    "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
     "ai": "^2",
