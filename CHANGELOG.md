@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 0.15.0](https://github.com/lobehub/lobe-chat/compare/v0.14.0...v0.15.0)
+
+<sup>Released on **2023-07-24**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new features and improve user experience, Import and use constants from "meta.ts" instead of "agentConfig".
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new features and improve user experience ([64c8782](https://github.com/lobehub/lobe-chat/commit/64c8782))
+- **misc**: Import and use constants from "meta.ts" instead of "agentConfig" ([1eb6a17](https://github.com/lobehub/lobe-chat/commit/1eb6a17))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.14.0](https://github.com/lobehub/lobe-chat/compare/v0.13.1...v0.14.0)
 
 <sup>Released on **2023-07-24**</sup>
