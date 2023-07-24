@@ -16,8 +16,4 @@ export default () => css`
   p {
     margin-bottom: 0;
   }
-
-  li {
-    display: block;
-  }
 `;
