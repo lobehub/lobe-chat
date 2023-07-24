@@ -38,7 +38,7 @@ const MessageExtra = ({ role, extra, function_call }: ChatMessage): ReactNode =>
         ) : (
           <Icon icon={LucideToyBrick} />
         )}
-        {t(`plugin-${function_call?.name}` as any)}
+        {t(`plugins:${function_call?.name}` as any)}
       </Tag>
     </Tooltip>
   );
