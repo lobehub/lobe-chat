@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 0.21.0](https://github.com/lobehub/lobe-chat/compare/v0.20.0...v0.21.0)
+
+<sup>Released on **2023-07-25**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move component folder.
+
+#### ✨ Features
+
+- **misc**: 支持快捷配置模型、温度.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move component folder ([fb85d16](https://github.com/lobehub/lobe-chat/commit/fb85d16))
+
+#### What's improved
+
+- **misc**: 支持快捷配置模型、温度, closes [#19](https://github.com/lobehub/lobe-chat/issues/19) ([31daee1](https://github.com/lobehub/lobe-chat/commit/31daee1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.20.0](https://github.com/lobehub/lobe-chat/compare/v0.19.0...v0.20.0)
 
 <sup>Released on **2023-07-25**</sup>
