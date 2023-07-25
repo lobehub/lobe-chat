@@ -6,10 +6,10 @@ import { debounce } from 'lodash-es';
 import { BrainCog, MessagesSquare } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import SliderWithInput from 'src/components/SliderWithInput';
 import { shallow } from 'zustand/shallow';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import SliderWithInput from '@/features/SliderWithInput';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import type { LobeAgentConfig } from '@/types/session';

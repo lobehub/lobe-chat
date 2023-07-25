@@ -5,11 +5,11 @@ import { debounce } from 'lodash-es';
 import { AppWindow, BrainCog, MessagesSquare, Palette, Webhook } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import SliderWithInput from 'src/components/SliderWithInput';
 import { shallow } from 'zustand/shallow';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
-import SliderWithInput from '@/features/SliderWithInput';
 import { options } from '@/locales/options';
 import { settingsSelectors, useSettings } from '@/store/settings';
 import { DEFAULT_SETTINGS } from '@/store/settings/initialState';
