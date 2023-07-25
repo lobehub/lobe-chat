@@ -72,7 +72,13 @@ export const chatMessage: StateCreator<
   ChatMessageAction
 > = (set, get) => ({
   clearMessage: () => {
-    get().dispatchMessage({ type: 'resetMessages' });
+    const { dispatchMessage, activeTopicId, dispatchTopic } = get();
+
+    dispatchMessage({ topicId: activeTopicId, type: 'resetMessages' });
+
+    if (activeTopicId) {
+      dispatchTopic({ id: activeTopicId, type: 'deleteChatTopic' });
+    }
   },
 
   createOrSendMsg: async (message) => {
@@ -156,7 +162,7 @@ export const chatMessage: StateCreator<
   },
 
   realFetchAIResponse: async (messages, userMessageId) => {
-    const { dispatchMessage, generateMessage } = get();
+    const { dispatchMessage, generateMessage, activeTopicId } = get();
 
     // 添加 systemRole
     const { systemRole, model } = agentSelectors.currentAgentConfigSafe(get());
@@ -166,49 +172,46 @@ export const chatMessage: StateCreator<
 
     // 再添加一个空的信息用于放置 ai 响应，注意顺序不能反
     // 因为如果顺序反了，messages 中将包含新增的 ai message
-    const assistantId = nanoid();
+    const mid = nanoid();
 
     dispatchMessage({
-      id: assistantId,
+      id: mid,
       message: LOADING_FLAT,
       parentId: userMessageId,
       role: 'assistant',
       type: 'addMessage',
     });
 
+    // 如果有 activeTopicId，则添加 topicId
+    if (activeTopicId) {
+      dispatchMessage({ id: mid, key: 'topicId', type: 'updateMessage', value: activeTopicId });
+    }
+
     // 为模型添加 fromModel 的额外信息
-    dispatchMessage({
-      id: assistantId,
-      key: 'fromModel',
-      type: 'updateMessageExtra',
-      value: model,
-    });
+    dispatchMessage({ id: mid, key: 'fromModel', type: 'updateMessageExtra', value: model });
 
     // 生成 ai message
-    const { output, isFunctionCall } = await generateMessage(messages, assistantId);
+    const { output, isFunctionCall } = await generateMessage(messages, mid);
 
     // 如果是 function，则发送函数调用方法
     if (isFunctionCall) {
       const { function_call } = JSON.parse(output);
 
       dispatchMessage({
-        id: assistantId,
+        id: mid,
         key: 'function_call',
         type: 'updateMessage',
         value: function_call,
       });
 
       await generateMessage(
-        [
-          ...messages,
-          { content: '', function_call, id: assistantId, role: 'assistant' } as ChatMessage,
-        ],
-        assistantId,
+        [...messages, { content: '', function_call, id: mid, role: 'assistant' } as ChatMessage],
+        mid,
         true,
       );
 
       dispatchMessage({
-        id: assistantId,
+        id: mid,
         key: 'role',
         type: 'updateMessage',
         value: 'assistant',
@@ -244,12 +247,18 @@ export const chatMessage: StateCreator<
   },
 
   sendMessage: async (message) => {
-    const { dispatchMessage, realFetchAIResponse, autocompleteSessionAgentMeta } = get();
+    const { dispatchMessage, realFetchAIResponse, autocompleteSessionAgentMeta, activeTopicId } =
+      get();
     const session = sessionSelectors.currentSession(get());
     if (!session || !message) return;
 
     const userId = nanoid();
     dispatchMessage({ id: userId, message, role: 'user', type: 'addMessage' });
+
+    // 如果有 activeTopicId，则添加 topicId
+    if (activeTopicId) {
+      dispatchMessage({ id: userId, key: 'topicId', type: 'updateMessage', value: activeTopicId });
+    }
 
     // 先拿到当前的 messages
     const messages = chatSelectors.currentChats(get());

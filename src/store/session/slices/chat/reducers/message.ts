@@ -21,6 +21,7 @@ interface DeleteMessage {
 }
 
 interface ResetMessages {
+  topicId?: string;
   type: 'resetMessages';
 }
 
@@ -101,7 +102,21 @@ export const messagesReducer = (
     }
 
     case 'resetMessages': {
-      return {};
+      return produce(state, (draftState) => {
+        const { topicId } = payload;
+
+        const messages = Object.values(draftState).filter((message) => {
+          // 如果没有 topicId，说明是清空默认对话里的消息
+          if (!topicId) return !message.topicId;
+
+          return message.topicId === topicId;
+        });
+
+        // 删除上述找到的消息
+        for (const message of messages) {
+          delete draftState[message.id];
+        }
+      });
     }
 
     default: {

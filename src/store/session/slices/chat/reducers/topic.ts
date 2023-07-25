@@ -19,30 +19,7 @@ interface DeleteChatTopicAction {
   type: 'deleteChatTopic';
 }
 
-interface ToggleFavoriteAction {
-  id: string;
-  type: 'toggleFavorite';
-}
-
-interface AddChatAction {
-  chat: string;
-  id: string;
-  type: 'addChat';
-}
-
-interface DeleteChatAction {
-  id: string;
-  index: number;
-  type: 'deleteChat';
-}
-
-export type ChatTopicDispatch =
-  | AddChatTopicAction
-  | UpdateChatTopicAction
-  | DeleteChatTopicAction
-  | ToggleFavoriteAction
-  | AddChatAction
-  | DeleteChatAction;
+export type ChatTopicDispatch = AddChatTopicAction | UpdateChatTopicAction | DeleteChatTopicAction;
 
 export const topicReducer = (state: ChatTopicMap, payload: ChatTopicDispatch): ChatTopicMap => {
   switch (payload.type) {
@@ -63,6 +40,8 @@ export const topicReducer = (state: ChatTopicMap, payload: ChatTopicDispatch): C
         if (value !== undefined) {
           // @ts-ignore
           topic[key] = value;
+
+          topic.updateAt = Date.now();
         }
       });
     }
@@ -70,33 +49,6 @@ export const topicReducer = (state: ChatTopicMap, payload: ChatTopicDispatch): C
     case 'deleteChatTopic': {
       return produce(state, (draftState) => {
         delete draftState[payload.id];
-      });
-    }
-
-    case 'toggleFavorite': {
-      return produce(state, (draftState) => {
-        const topic = draftState[payload.id];
-        if (topic) {
-          topic.favorite = !topic.favorite;
-        }
-      });
-    }
-
-    case 'addChat': {
-      return produce(state, (draftState) => {
-        const topic = draftState[payload.id];
-        if (topic) {
-          topic.chats.push(payload.chat);
-        }
-      });
-    }
-
-    case 'deleteChat': {
-      return produce(state, (draftState) => {
-        const topic = draftState[payload.id];
-        if (topic) {
-          topic.chats.splice(payload.index, 1);
-        }
       });
     }
 

@@ -17,8 +17,8 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
     initI18n.finally();
   }, []);
 
-  const [activeSession] = useSessionStore((s) => {
-    return [s.activeSession];
+  const [activeSession, toggleTopic] = useSessionStore((s) => {
+    return [s.activeSession, s.toggleTopic];
   }, shallow);
 
   const router = useRouter();
@@ -26,10 +26,16 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
 
   useEffect(() => {
     const hasRehydrated = useSessionStore.persist.hasHydrated();
-    // 只有当水合完毕后，才能正常去激活会话
-    if (typeof id === 'string' && hasRehydrated) {
+    // 只有当水合完毕后再开始做操作
+    if (!hasRehydrated) return;
+
+    // 1. 正常激活会话
+    if (typeof id === 'string') {
       activeSession(id);
     }
+
+    // 将话题重置为默认值
+    toggleTopic();
   }, [id]);
 
   useEffect(() => {

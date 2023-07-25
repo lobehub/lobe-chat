@@ -7,20 +7,27 @@ import { nanoid } from '@/utils/uuid';
 
 import { ChatTopicDispatch, topicReducer } from '../reducers/topic';
 
-/**
- * 聊天操作
- */
 export interface ChatTopicAction {
+  /**
+   * 分发主题
+   * @param payload - 要分发的主题
+   */
   dispatchTopic: (payload: ChatTopicDispatch) => void;
-
   /**
    * 将当前消息保存为主题
    */
   saveToTopic: () => void;
+  /**
+   * 切换主题
+   * @param id - 要切换的主题的 ID
+   */
   toggleTopic: (id?: string) => void;
+  /**
+   * 更新主题加载状态
+   * @param id - 要更新的主题的 ID
+   */
   updateTopicLoading: (id?: string) => void;
 }
-
 export const chatTopic: StateCreator<
   SessionStore,
   [['zustand/devtools', never]],
@@ -48,7 +55,6 @@ export const chatTopic: StateCreator<
 
     const defaultTitle = '默认话题';
     const newTopic = {
-      chats: messages.map((m) => m.id),
       createAt: Date.now(),
       id: topicId,
       title: defaultTitle,
