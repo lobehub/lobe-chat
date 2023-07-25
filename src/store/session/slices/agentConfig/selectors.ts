@@ -17,6 +17,9 @@ const currentAgentMeta = (s: SessionStore): MetaData => {
 
 const currentAgentTitle = (s: SessionStore) => currentAgentMeta(s)?.title || t('defaultSession');
 
+const currentAgentDescription = (s: SessionStore) =>
+  currentAgentMeta(s)?.description || t('noDescription');
+
 const currentAgentBackgroundColor = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
   if (!session) return DEFAULT_BACKGROUND_COLOR;
@@ -62,6 +65,7 @@ export const agentSelectors = {
   currentAgentBackgroundColor,
   currentAgentConfig,
   currentAgentConfigSafe,
+  currentAgentDescription,
   currentAgentMeta,
   currentAgentModel,
   currentAgentSystemRole,

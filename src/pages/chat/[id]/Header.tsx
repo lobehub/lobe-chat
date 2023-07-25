@@ -12,10 +12,18 @@ import { agentSelectors, useSessionStore } from '@/store/session';
 const Header = memo(() => {
   const { t } = useTranslation('common');
 
-  const [meta, id, modle] = useSessionStore(
-    (s) => [agentSelectors.currentAgentMeta(s), s.activeId, agentSelectors.currentAgentModel(s)],
+  const [title, description, avatar, backgroundColor, id, model] = useSessionStore(
+    (s) => [
+      agentSelectors.currentAgentTitle(s),
+      agentSelectors.currentAgentDescription(s),
+      agentSelectors.currentAgentAvatar(s),
+      agentSelectors.currentAgentBackgroundColor(s),
+      s.activeId,
+      agentSelectors.currentAgentModel(s),
+    ],
     shallow,
   );
+
   const [showAgentSettings, toggleConfig] = useSessionStore(
     (s) => [s.showAgentSettings, s.toggleConfig],
     shallow,
@@ -26,20 +34,16 @@ const Header = memo(() => {
       left={
         <>
           <Avatar
-            avatar={meta?.avatar}
-            background={meta?.backgroundColor}
+            avatar={avatar}
+            background={backgroundColor}
             onClick={() => {
               Router.push(`/chat/${id}/edit`);
             }}
             size={40}
             style={{ cursor: 'pointer' }}
-            title={meta?.title}
+            title={title}
           />
-          <HeaderTitle
-            desc={meta?.description || t('noDescription')}
-            tag={<Tag>{modle}</Tag>}
-            title={meta?.title || t('defaultAgent')}
-          />
+          <HeaderTitle desc={description} tag={<Tag>{model}</Tag>} title={title} />
         </>
       }
       right={

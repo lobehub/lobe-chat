@@ -27,8 +27,8 @@ export default {
   share: '分享',
   tokenDetail: '系统设定: {{systemRoleToken}} 历史消息: {{chatsToken}}',
   topic: {
-    saveCurrentMessages: '保存当前对话为话题',
-    searchPlaceholder: '搜索归档对话...',
+    saveCurrentMessages: '将当前会话保存为话题',
+    searchPlaceholder: '搜索话题...',
   },
   updateAgent: '更新助理信息',
   updatePrompt: '更新提示词',

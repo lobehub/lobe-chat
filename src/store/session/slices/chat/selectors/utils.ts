@@ -5,6 +5,7 @@ import { LobeAgentSession } from '@/types/session';
 export const organizeChats = (
   session: LobeAgentSession,
   avatar: { assistant: string; user: string },
+  topicId?: string,
 ) => {
   const getMeta = (message: ChatMessage) => {
     switch (message.role) {
@@ -38,8 +39,13 @@ export const organizeChats = (
   const basic = Object.values<ChatMessage>(session.chats)
     // 首先按照时间顺序排序，越早的在越前面
     .sort((pre, next) => pre.createAt - next.createAt)
-    // 过滤掉包含 topicId 的消息，有主题的消息不应该出现在聊天框中
-    .filter((m) => !m.topicId)
+    .filter((m) => {
+      // 过滤掉包含 topicId 的消息，有主题的消息不应该出现在聊天框中
+      if (!topicId) return !m.topicId;
+
+      // 或者当话题 id 一致时，再展示话题
+      return m.topicId === topicId;
+    })
     // 映射头像关系
     .map((m) => {
       return {

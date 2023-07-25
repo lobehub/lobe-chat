@@ -7,14 +7,14 @@ import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessage } from '@/utils/message';
 import { nanoid } from '@/utils/uuid';
 
-import { MessageDispatch, messagesReducer } from './reducers/message';
+import { MessageDispatch, messagesReducer } from '../reducers/message';
 
 const LOADING_FLAT = '...';
 
 /**
  * 聊天操作
  */
-export interface ChatAction {
+export interface ChatMessageAction {
   /**
    * 清除消息
    */
@@ -57,6 +57,7 @@ export interface ChatAction {
    * @param id - 消息 ID
    */
   resendMessage: (id: string) => Promise<void>;
+
   /**
    * 发送消息
    * @param text - 消息文本
@@ -64,11 +65,11 @@ export interface ChatAction {
   sendMessage: (text: string) => Promise<void>;
 }
 
-export const createChatSlice: StateCreator<
+export const chatMessage: StateCreator<
   SessionStore,
   [['zustand/devtools', never]],
   [],
-  ChatAction
+  ChatMessageAction
 > = (set, get) => ({
   clearMessage: () => {
     get().dispatchMessage({ type: 'resetMessages' });
