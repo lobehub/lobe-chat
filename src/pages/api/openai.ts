@@ -9,20 +9,30 @@ import pluginList from '../../plugins';
 const isDev = process.env.NODE_ENV === 'development';
 const OPENAI_PROXY_URL = process.env.OPENAI_PROXY_URL;
 
-// Create an OpenAI API client (that's edge friendly!)
-const config = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// 创建 OpenAI 实例
+export const createOpenAI = (OPENAI_API_KEY: string | null) => {
+  const config = new Configuration({
+    apiKey: OPENAI_API_KEY ?? process.env.OPENAI_API_KEY,
+  });
 
-export const openai = new OpenAIApi(
-  config,
-  isDev && OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined,
-);
+  return new OpenAIApi(config, isDev && OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined);
+};
 
-export const createChatCompletion = async (
-  payload: OpenAIStreamPayload,
-  callbacks?: (payload: OpenAIStreamPayload) => OpenAIStreamCallbacks,
-) => {
+interface CreateChatCompletionOptions {
+  OPENAI_API_KEY: string | null;
+  callbacks?: (payload: OpenAIStreamPayload) => OpenAIStreamCallbacks;
+  payload: OpenAIStreamPayload;
+}
+
+export const createChatCompletion = async ({
+  payload,
+  callbacks,
+  OPENAI_API_KEY,
+}: CreateChatCompletionOptions) => {
+  // ============  0.创建 OpenAI 实例   ============ //
+
+  const openai = createOpenAI(OPENAI_API_KEY);
+
   const { messages, plugins: enabledPlugins, ...params } = payload;
 
   // ============  1. 前置处理 functions   ============ //
@@ -41,6 +51,8 @@ export const createChatCompletion = async (
 
   // ============  2. 前置处理 messages   ============ //
   const formatMessages = messages.map((m) => ({ content: m.content, role: m.role }));
+
+  // ============  3. 发送请求   ============ //
 
   const requestParams = { functions, messages: formatMessages, stream: true, ...params };
 

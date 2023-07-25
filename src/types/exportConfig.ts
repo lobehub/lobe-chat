@@ -9,7 +9,7 @@ import { Locales } from './locale';
  * 配置设置
  */
 export interface ConfigSettings {
-  accessCode: string;
+  OPENAI_API_KEY: string;
   avatar: string;
   compressThreshold: number;
   enableCompressThreshold: boolean;
@@ -23,11 +23,11 @@ export interface ConfigSettings {
   maxTokens: number;
   model: LanguageModel;
   neutralColor: NeutralColors | '';
+  password: string;
   presencePenalty: number;
   primaryColor: PrimaryColors | '';
   temperature: number;
   themeMode: ThemeMode;
-  token: string;
   topP: number;
 }
 

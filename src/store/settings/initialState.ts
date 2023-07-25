@@ -4,7 +4,7 @@ import { LanguageModel } from '@/types/llm';
 export type SidebarTabKey = 'chat' | 'market';
 
 export const DEFAULT_SETTINGS: ConfigSettings = {
-  accessCode: '',
+  OPENAI_API_KEY: '',
   avatar: '',
   compressThreshold: 24,
   enableCompressThreshold: false,
@@ -18,11 +18,11 @@ export const DEFAULT_SETTINGS: ConfigSettings = {
   maxTokens: 2000,
   model: LanguageModel.GPT3_5,
   neutralColor: '',
+  password: '',
   presencePenalty: 0,
   primaryColor: '',
   temperature: 0.5,
   themeMode: 'auto',
-  token: '',
   topP: 1,
 };
 

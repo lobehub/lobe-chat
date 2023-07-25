@@ -1,16 +1,23 @@
 import { merge } from 'lodash-es';
 
+import { OPENAI_API_KEY_HEADER_KEY } from '@/const/fetch';
 import { initialLobeAgentConfig } from '@/store/session';
+import { useSettings } from '@/store/settings';
 import type { OpenAIStreamPayload } from '@/types/openai';
 
 import { URLS } from './url';
+
+interface FetchChatModelOptions {
+  signal?: AbortSignal | undefined;
+  withPlugin?: boolean;
+}
 
 /**
  * 专门用于对话的 fetch
  */
 export const fetchChatModel = (
   params: Partial<OpenAIStreamPayload>,
-  options?: { signal?: AbortSignal | undefined; withPlugin?: boolean },
+  options?: FetchChatModelOptions,
 ) => {
   const payload = merge(
     {
@@ -25,6 +32,7 @@ export const fetchChatModel = (
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
+      [OPENAI_API_KEY_HEADER_KEY]: useSettings.getState().settings.OPENAI_API_KEY || '',
     },
     method: 'POST',
     signal: options?.signal,

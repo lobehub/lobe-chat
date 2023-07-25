@@ -1,1 +1,3 @@
 export const OPENAI_SERVICE_ERROR_CODE = 555;
+
+export const OPENAI_API_KEY_HEADER_KEY = 'X-OPENAI-API-KEY';

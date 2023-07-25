@@ -107,7 +107,7 @@ const SettingForm = memo(() => {
           children: <Input.Password placeholder={t('settingOpenAI.token.placeholder')} />,
           desc: t('settingOpenAI.token.desc'),
           label: t('settingOpenAI.token.title'),
-          name: 'token',
+          name: 'OPENAI_API_KEY',
         },
         {
           children: <Input placeholder={t('settingOpenAI.endpoint.placeholder')} />,
@@ -236,7 +236,7 @@ const SettingForm = memo(() => {
           children: <Input.Password placeholder={t('settingSystem.accessCode.placeholder')} />,
           desc: t('settingSystem.accessCode.desc'),
           label: t('settingSystem.accessCode.title'),
-          name: 'accessCode',
+          name: 'password',
         },
         {
           children: (
