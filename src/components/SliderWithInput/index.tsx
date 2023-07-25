@@ -20,6 +20,7 @@ const SliderWithInput = memo<SliderSingleProps>(
           onChange={handleOnchange}
           step={step}
           style={{ flex: 1 }}
+          tooltip={{ open: false }}
           value={typeof value === 'number' ? value : 0}
           {...props}
         />

@@ -102,6 +102,7 @@ export default {
     temperature: {
       desc: '值越大，回复越随机',
       title: '随机性',
+      titleWithValue: '随机性 {{value}}',
     },
     title: '模型设置',
     topP: {

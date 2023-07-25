@@ -1,21 +1,80 @@
 import { ActionIcon } from '@lobehub/ui';
-import { Popconfirm } from 'antd';
-import { BrainCog, Eraser, Thermometer, Timer } from 'lucide-react';
+import { Dropdown, Popconfirm, Popover } from 'antd';
+import { BrainCog, Eraser, Thermometer } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
-import { useSessionStore } from '@/store/session';
+import SliderWithInput from '@/components/SliderWithInput';
+import { agentSelectors, useSessionStore } from '@/store/session';
+import { LanguageModel } from '@/types/llm';
 
 const InputActions = memo(() => {
   const { t } = useTranslation('setting');
-  const [clearMessage] = useSessionStore((s) => [s.clearMessage], shallow);
+  const [clearMessage, updateAgentConfig] = useSessionStore(
+    (s) => [s.clearMessage, s.updateAgentConfig],
+    shallow,
+  );
+  const [model, temperature] = useSessionStore((s) => {
+    const config = agentSelectors.currentAgentConfigSafe(s);
+    return [
+      config.model,
+      config.params.temperature,
+      // config.historyCount
+    ];
+  }, shallow);
 
   return (
     <>
-      <ActionIcon icon={BrainCog} title={t('settingModel.model.title')} />
-      <ActionIcon icon={Thermometer} title={t('settingModel.temperature.title')} />
-      <ActionIcon icon={Timer} title={t('settingChat.historyCount.title')} />
+      <Dropdown
+        menu={{
+          activeKey: model,
+          items: Object.values(LanguageModel).map((i) => ({ key: i, label: i })),
+          onClick: (e) => {
+            updateAgentConfig({ model: e.key as LanguageModel });
+          },
+        }}
+        trigger={['click']}
+      >
+        <ActionIcon icon={BrainCog} title={t('settingModel.model.title')} />
+      </Dropdown>
+      <Popover
+        content={
+          <SliderWithInput
+            max={1}
+            min={0}
+            onChange={(v) => {
+              updateAgentConfig({ params: { temperature: v } });
+            }}
+            step={0.1}
+            style={{ width: 120 }}
+            value={temperature}
+          />
+        }
+        trigger={'click'}
+      >
+        <ActionIcon
+          icon={Thermometer}
+          title={t('settingModel.temperature.titleWithValue', { value: temperature })}
+        />
+      </Popover>
+      {/*TODO 历史记录功能实现 */}
+      {/*<Popover*/}
+      {/*  content={*/}
+      {/*    <SliderWithInput*/}
+      {/*      min={0}*/}
+      {/*      onChange={(v) => {*/}
+      {/*        updateAgentConfig({ historyCount: v });*/}
+      {/*      }}*/}
+      {/*      step={1}*/}
+      {/*      style={{ width: 120 }}*/}
+      {/*      value={historyCount}*/}
+      {/*    />*/}
+      {/*  }*/}
+      {/*  trigger={'click'}*/}
+      {/*>*/}
+      {/*  <ActionIcon icon={Timer} title={t('settingChat.historyCount.title')} />*/}
+      {/*</Popover>*/}
       <Popconfirm
         cancelText={t('cancel', { ns: 'common' })}
         okButtonProps={{ danger: true }}
