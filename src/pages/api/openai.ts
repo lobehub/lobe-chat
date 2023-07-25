@@ -12,7 +12,7 @@ const OPENAI_PROXY_URL = process.env.OPENAI_PROXY_URL;
 // 创建 OpenAI 实例
 export const createOpenAI = (OPENAI_API_KEY: string | null) => {
   const config = new Configuration({
-    apiKey: OPENAI_API_KEY ?? process.env.OPENAI_API_KEY,
+    apiKey: !OPENAI_API_KEY ? process.env.OPENAI_API_KEY : OPENAI_API_KEY,
   });
 
   return new OpenAIApi(config, isDev && OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined);
