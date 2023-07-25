@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.22.1](https://github.com/lobehub/lobe-chat/compare/v0.22.0...v0.22.1)
+
+<sup>Released on **2023-07-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正自定义 OpenAI API Key 的使用问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正自定义 OpenAI API Key 的使用问题 ([84475c0](https://github.com/lobehub/lobe-chat/commit/84475c0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.22.0](https://github.com/lobehub/lobe-chat/compare/v0.21.0...v0.22.0)
 
 <sup>Released on **2023-07-25**</sup>
