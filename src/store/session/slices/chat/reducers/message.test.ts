@@ -116,6 +116,30 @@ describe('messagesReducer', () => {
         quotaId: 'message2',
       });
     });
+
+    it('should use the provided parentId and quotaId when adding a new message', () => {
+      const payload: MessageDispatch = {
+        type: 'addMessage',
+        message: 'New Message',
+        id: 'message3',
+        role: 'user',
+        parentId: 'message1',
+        quotaId: 'message2',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState.message3).toEqual({
+        id: 'message3',
+        content: 'New Message',
+        meta: {},
+        createAt: expect.any(Number),
+        updateAt: expect.any(Number),
+        role: 'user',
+        parentId: 'message1',
+        quotaId: 'message2',
+      });
+    });
   });
 
   describe('deleteMessage', () => {
@@ -130,6 +154,17 @@ describe('messagesReducer', () => {
       expect(Object.keys(newState)).toHaveLength(1);
       expect(newState).not.toHaveProperty('message1');
       expect(newState).toHaveProperty('message2');
+    });
+
+    it('should not modify the state if the specified message does not exist', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessage',
+        id: 'nonexistentMessage',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState).toEqual(initialState);
     });
 
     it('should not modify the state if the specified message does not exist', () => {
@@ -157,6 +192,19 @@ describe('messagesReducer', () => {
 
       expect(newState.message1.content).toBe('Updated Message');
       expect(newState.message1.updateAt).toBeGreaterThan(initialState.message1.updateAt);
+    });
+
+    it('should not modify the state if the specified message does not exist', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessage',
+        id: 'nonexistentMessage',
+        key: 'content',
+        value: 'Updated Message',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState).toEqual(initialState);
     });
 
     it('should not modify the state if the specified message does not exist', () => {
@@ -200,6 +248,19 @@ describe('messagesReducer', () => {
 
       expect(newState).toEqual(initialState);
     });
+
+    it('should not modify the state if the specified message does not exist', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessageExtra',
+        id: 'nonexistentMessage',
+        key: 'translate',
+        value: { target: 'en', to: 'zh' },
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState).toEqual(initialState);
+    });
   });
 
   describe('resetMessages', () => {
@@ -211,6 +272,37 @@ describe('messagesReducer', () => {
       const newState = messagesReducer(initialState, payload);
 
       expect(newState).toEqual({});
+    });
+
+    it('should delete messages with the specified topicId', () => {
+      const initialState = {
+        message1: {
+          id: 'message1',
+          content: 'Hello World',
+          createAt: 1629264000000,
+          updateAt: 1629264000000,
+          role: 'user',
+          topicId: 'topic1',
+        },
+        message2: {
+          id: 'message2',
+          content: 'How are you?',
+          createAt: 1629264000000,
+          updateAt: 1629264000000,
+          role: 'system',
+        },
+      } as unknown as ChatMessageMap;
+
+      const payload: MessageDispatch = {
+        type: 'resetMessages',
+        topicId: 'topic1',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(Object.keys(newState)).toHaveLength(1);
+      expect(newState).not.toHaveProperty('message1');
+      expect(newState).toHaveProperty('message2');
     });
   });
 
