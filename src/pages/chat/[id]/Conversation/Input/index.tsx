@@ -18,12 +18,15 @@ const ChatInput = () => {
   const [text, setText] = useState('');
 
   const [inputHeight] = useSettings((s) => [s.inputHeight], shallow);
-  const [sendMessage] = useSessionStore((s) => [s.createOrSendMsg], shallow);
+  const [sendMessage, saveToTopic] = useSessionStore(
+    (s) => [s.createOrSendMsg, s.saveToTopic],
+    shallow,
+  );
 
   const footer = useMemo(
     () => (
       <Tooltip title={t('topic.saveCurrentMessages')}>
-        <Button icon={<Icon icon={LucideGalleryVerticalEnd} />} />
+        <Button icon={<Icon icon={LucideGalleryVerticalEnd} />} onClick={saveToTopic} />
       </Tooltip>
     ),
     [],

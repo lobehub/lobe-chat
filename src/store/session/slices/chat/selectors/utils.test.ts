@@ -1,5 +1,6 @@
-import { beforeEach } from 'vitest';
+import { beforeEach, describe } from 'vitest';
 
+import { ChatMessage } from '@/types/chatMessage';
 import { LobeAgentSession } from '@/types/session';
 
 import { organizeChats } from './utils';
@@ -260,5 +261,84 @@ describe('organizeChats', () => {
         role: 'user',
       },
     ]);
+  });
+
+  const avatar = {
+    assistant: 'assistant-avatar',
+    user: 'user-avatar',
+  };
+
+  it('should organize chats in chronological order when topicId is not provided', () => {
+    const result = organizeChats(session, avatar);
+
+    expect(result.length).toBe(3);
+    expect(result[0].id).toBe('1');
+    expect(result[1].id).toBe('2');
+    expect(result[2].id).toBe('3');
+  });
+
+  it('should only return chats with specified topicId when topicId is provided', () => {
+    const result = organizeChats(session, avatar, 'topic-id');
+
+    expect(result.length).toBe(0);
+  });
+
+  describe('user Meta', () => {
+    it('should return correct meta for user role', () => {
+      const result = organizeChats(session, avatar);
+      const meta = result[1].meta;
+
+      expect(meta.avatar).toBe(avatar.user);
+    });
+
+    it('should return correct meta for assistant role', () => {
+      const result = organizeChats(session, avatar);
+      const meta = result[0].meta;
+
+      expect(meta.avatar).toBe(avatar.assistant);
+      expect(meta.title).toBeUndefined();
+    });
+
+    describe('should return correct meta for function role', () => {
+      it('找不到插件', () => {
+        const message = {
+          id: '4',
+          createAt: 1927785600004,
+          updateAt: 1927785600004,
+          role: 'function',
+          function_call: {
+            name: 'plugin-name',
+          },
+        } as ChatMessage;
+
+        session.chats[message.id] = message;
+
+        const result = organizeChats(session, avatar);
+        const meta = result[3].meta;
+
+        expect(meta.avatar).toBe('🧩');
+        expect(meta.title).toBe('plugin-unknown');
+      });
+
+      it('找到的插件', () => {
+        const message = {
+          id: '4',
+          createAt: 1927785600004,
+          updateAt: 1927785600004,
+          role: 'function',
+          function_call: {
+            name: 'realtimeWeather',
+          },
+        } as ChatMessage;
+
+        session.chats[message.id] = message;
+
+        const result = organizeChats(session, avatar);
+        const meta = result[3].meta;
+
+        expect(meta.avatar).toBe('☂️');
+        expect(meta.title).toBe('realtimeWeather');
+      });
+    });
   });
 });

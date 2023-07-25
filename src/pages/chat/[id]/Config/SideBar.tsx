@@ -1,11 +1,12 @@
 import { ActionIcon, DraggablePanelBody, EditableMessage, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ChevronRight } from 'lucide-react';
+import { Maximize2Icon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { Topic } from '@/pages/chat/[id]/Config/Topic';
 import { agentSelectors, useSessionStore } from '@/store/session';
 
 import Header from './Header';
@@ -42,8 +43,10 @@ const useStyles = createStyles(({ css, token }) => ({
 const SideBar = memo(() => {
   const [openModal, setOpenModal] = useState(false);
   const { styles } = useStyles();
-  const [updateAgentConfig] = useSessionStore((s) => [s.updateAgentConfig], shallow);
-  const systemRole = useSessionStore(agentSelectors.currentAgentSystemRole, shallow);
+  const [systemRole, updateAgentConfig] = useSessionStore(
+    (s) => [agentSelectors.currentAgentSystemRole(s), s.updateAgentConfig],
+    shallow,
+  );
 
   const { t } = useTranslation('common');
   return (
@@ -51,7 +54,7 @@ const SideBar = memo(() => {
       <Header
         actions={
           <ActionIcon
-            icon={ChevronRight}
+            icon={Maximize2Icon}
             onClick={() => setOpenModal(true)}
             size="small"
             title={t('edit')}
@@ -76,8 +79,9 @@ const SideBar = memo(() => {
         }}
         value={systemRole}
       />
-      <Flexbox style={{ padding: 16 }}>
+      <Flexbox gap={12} style={{ padding: 16 }}>
         <SearchBar placeholder={t('topic.searchPlaceholder')} type={'block'} />
+        <Topic />
       </Flexbox>
     </DraggablePanelBody>
   );

@@ -12,10 +12,14 @@ export const currentChats = (s: SessionStore): ChatMessage[] => {
   const session = sessionSelectors.currentSession(s);
   if (!session) return [];
 
-  return organizeChats(session, {
-    assistant: agentSelectors.currentAgentAvatar(s),
-    user: useSettings.getState().settings.avatar || DEFAULT_USER_AVATAR,
-  });
+  return organizeChats(
+    session,
+    {
+      assistant: agentSelectors.currentAgentAvatar(s),
+      user: useSettings.getState().settings.avatar || DEFAULT_USER_AVATAR,
+    },
+    s.activeTopicId,
+  );
 };
 
 export const systemRoleSel = (s: SessionStore): string => {

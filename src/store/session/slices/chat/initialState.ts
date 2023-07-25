@@ -1,12 +1,9 @@
 export interface ChatState {
+  activeTopicId?: string;
   chatLoading: boolean;
-  editingMessageId?: string;
+  topicLoadingId?: string;
 }
 
 export const initialChatState: ChatState = {
   chatLoading: false,
-
-  // activeId: null,
-  // searchKeywords: '',
-  //
 };

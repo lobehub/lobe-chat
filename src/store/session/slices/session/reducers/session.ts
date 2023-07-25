@@ -3,6 +3,7 @@ import { produce } from 'immer';
 import { ChatMessageMap } from '@/types/chatMessage';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig, LobeAgentSession, LobeSessions } from '@/types/session';
+import { ChatTopicMap } from '@/types/topic';
 
 /**
  * @title 添加会话
@@ -37,6 +38,19 @@ interface UpdateSessionChat {
   type: 'updateSessionChat';
 }
 
+/**
+ * @title 更新会话聊天上下文
+ */
+interface UpdateSessionTopic {
+  /**
+   * 会话 ID
+   */
+  id: string;
+  topics: ChatTopicMap;
+
+  type: 'updateSessionTopic';
+}
+
 interface UpdateSessionMeta {
   id: string;
   key: keyof MetaData;
@@ -55,7 +69,8 @@ export type SessionDispatch =
   | UpdateSessionChat
   | RemoveSession
   | UpdateSessionMeta
-  | UpdateSessionAgentConfig;
+  | UpdateSessionAgentConfig
+  | UpdateSessionTopic;
 
 export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): LobeSessions => {
   switch (payload.type) {
@@ -93,6 +108,15 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
         if (!chat) return;
 
         chat.chats = payload.chats;
+      });
+    }
+
+    case 'updateSessionTopic': {
+      return produce(state, (draft) => {
+        const chat = draft[payload.id];
+        if (!chat) return;
+
+        chat.topics = payload.topics;
       });
     }
 
