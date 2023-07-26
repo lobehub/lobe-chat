@@ -2,6 +2,12 @@
 
 # Changelog
 
+# [0.23.0](https://github.com/lobehub/lobe-chat/compare/v0.22.2...v0.23.0) (2023-07-26)
+
+### ✨ Features
+
+- Add new features, update URLs, customize appearance, and implement components ([4b61bf4](https://github.com/lobehub/lobe-chat/commit/4b61bf4))
+
 ### [Version 0.22.2](https://github.com/lobehub/lobe-chat/compare/v0.22.1...v0.22.2)
 
 <sup>Released on **2023-07-26**</sup>
