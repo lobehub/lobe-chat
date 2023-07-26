@@ -2,6 +2,12 @@
 
 # Changelog
 
+# [0.25.0](https://github.com/lobehub/lobe-chat/compare/v0.24.0...v0.25.0) (2023-07-26)
+
+### ✨ Features
+
+- **sidebar**: Add import functionality and set labels and onClick functions ([03ea9bd](https://github.com/lobehub/lobe-chat/commit/03ea9bd))
+
 # [0.24.0](https://github.com/lobehub/lobe-chat/compare/v0.23.0...v0.24.0) (2023-07-26)
 
 ### ✨ Features
