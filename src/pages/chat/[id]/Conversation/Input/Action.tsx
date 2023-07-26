@@ -36,7 +36,7 @@ const InputActions = memo(() => {
         }}
         trigger={['click']}
       >
-        <ActionIcon icon={BrainCog} title={t('settingModel.model.title')} />
+        <ActionIcon icon={BrainCog} placement={'bottom'} title={t('settingModel.model.title')} />
       </Dropdown>
       <Popover
         content={
@@ -55,6 +55,7 @@ const InputActions = memo(() => {
       >
         <ActionIcon
           icon={Thermometer}
+          placement={'bottom'}
           title={t('settingModel.temperature.titleWithValue', { value: temperature })}
         />
       </Popover>
@@ -82,7 +83,11 @@ const InputActions = memo(() => {
         onConfirm={() => clearMessage()}
         title={t('confirmClearCurrentMessages', { ns: 'common' })}
       >
-        <ActionIcon icon={Eraser} title={t('clearCurrentMessages', { ns: 'common' })} />
+        <ActionIcon
+          icon={Eraser}
+          placement={'bottom'}
+          title={t('clearCurrentMessages', { ns: 'common' })}
+        />
       </Popconfirm>
     </>
   );
