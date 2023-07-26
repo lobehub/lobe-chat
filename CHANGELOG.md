@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.22.2](https://github.com/lobehub/lobe-chat/compare/v0.22.1...v0.22.2)
+
+<sup>Released on **2023-07-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: 优化 tooltip 显示.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: 优化 tooltip 显示 ([4ba0295](https://github.com/lobehub/lobe-chat/commit/4ba0295))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.22.1](https://github.com/lobehub/lobe-chat/compare/v0.22.0...v0.22.1)
 
 <sup>Released on **2023-07-25**</sup>
