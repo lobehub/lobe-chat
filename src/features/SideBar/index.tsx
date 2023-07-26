@@ -17,7 +17,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
-import { bugs, homepage } from '@/../package.json';
+import pkg from '@/../package.json';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { useSettings } from '@/store/settings';
 
@@ -63,29 +63,20 @@ export default memo(() => {
       {
         icon: <Icon icon={Feather} />,
         key: 'feedback',
-        label: (
-          <a href={bugs.url} rel="noreferrer" target={'_blank'}>
-            {t('feedback')}
-          </a>
-        ),
+        label: t('feedback'),
+        onClick: () => window.open(pkg.bugs.url, '__blank'),
       },
       {
         icon: <Icon icon={FileClock} />,
         key: 'changelog',
-        label: (
-          <a href={`${homepage}/blob/master/CHANGELOG.md`} rel="noreferrer" target={'_blank'}>
-            {t('changelog')}
-          </a>
-        ),
+        label: t('changelog'),
+        onClick: () => window.open(`${pkg.homepage}/blob/master/CHANGELOG.md`, '__blank'),
       },
       {
         icon: <Icon icon={Heart} />,
         key: 'about',
-        label: (
-          <a href={homepage} rel="noreferrer" target={'_blank'}>
-            {t('about')}
-          </a>
-        ),
+        label: t('about'),
+        onClick: () => window.open(pkg.homepage, '__blank'),
       },
       {
         type: 'divider',
@@ -93,7 +84,8 @@ export default memo(() => {
       {
         icon: <Icon icon={Settings} />,
         key: 'setting',
-        label: <div onClick={() => Router.push('/setting')}>{t('setting')}</div>,
+        label: t('setting'),
+        onClick: () => Router.push('/setting'),
       },
     ],
     [],
@@ -104,9 +96,7 @@ export default memo(() => {
       avatar={<AvatarWithUpload />}
       bottomActions={
         <>
-          <a href={homepage} rel="noreferrer" target={'_blank'}>
-            <ActionIcon icon={Github} />
-          </a>
+          <ActionIcon icon={Github} onClick={() => window.open(pkg.homepage, '__blank')} />
           <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
             <ActionIcon icon={Settings2} />
           </Dropdown>
