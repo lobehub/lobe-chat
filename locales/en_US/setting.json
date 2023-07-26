@@ -15,7 +15,11 @@
       "title": "Reset All Settings"
     }
   },
-  "header": "Settings",
+  "header": {
+    "global": "Global Settings",
+    "session": "Session Settings",
+    "sessionWithName": "Session Settings · {{name}}"
+  },
   "settingAgent": {
     "avatar": {
       "title": "Avatar"
@@ -61,7 +65,14 @@
       "title": "User Input Preprocessing",
       "placeholder": "Enter pre-processing template, {text} will be replaced with real-time input information"
     },
-    "title": "Chat Settings"
+    "title": "Chat Settings",
+    "chatStyleType": {
+      "title": "Chat Window Style",
+      "type": {
+        "chat": "Chat Mode",
+        "docs": "Document Mode"
+      }
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -91,7 +102,8 @@
     },
     "temperature": {
       "desc": "The higher the value, the more random the reply",
-      "title": "Randomness"
+      "title": "Randomness",
+      "titleWithValue": "Randomness {{value}}"
     },
     "title": "Model Settings",
     "topP": {

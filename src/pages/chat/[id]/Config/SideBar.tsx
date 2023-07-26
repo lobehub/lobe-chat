@@ -28,7 +28,7 @@ const useStyles = createStyles(({ css, token }) => ({
     opacity: 0.75;
     border-bottom: 1px solid ${token.colorBorder};
 
-    transition: 200ms ${token.motionEaseOut};
+    transition: opacity 200ms ${token.motionEaseOut};
 
     &:hover {
       opacity: 1;
@@ -79,8 +79,8 @@ const SideBar = memo(() => {
         }}
         value={systemRole}
       />
-      <Flexbox gap={12} style={{ padding: 16 }}>
-        <SearchBar placeholder={t('topic.searchPlaceholder')} type={'block'} />
+      <Flexbox gap={16} style={{ padding: 16 }}>
+        <SearchBar placeholder={t('topic.searchPlaceholder')} spotlight type={'ghost'} />
         <Topic />
       </Flexbox>
     </DraggablePanelBody>

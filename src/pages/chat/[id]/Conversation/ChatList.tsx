@@ -1,6 +1,7 @@
 import { ChatList, ChatMessage } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
 import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
@@ -10,6 +11,7 @@ import FunctionMessage from './FunctionMessage';
 import MessageExtra from './MessageExtra';
 
 const List = () => {
+  const { t } = useTranslation('common');
   const data = useSessionStore(chatSelectors.currentChats, isEqual);
   const [displayMode, deleteMessage, resendMessage, dispatchMessage] = useSessionStore(
     (s) => [
@@ -50,6 +52,15 @@ const List = () => {
       renderMessage={renderMessage}
       renderMessageExtra={MessageExtra}
       style={{ marginTop: 24 }}
+      text={{
+        cancel: t('cancel'),
+        confirm: t('ok'),
+        copy: t('copy'),
+        copySuccess: t('copySuccess'),
+        delete: t('delete'),
+        edit: t('edit'),
+        regenerate: t('regenerate'),
+      }}
       type={displayMode}
     />
   );

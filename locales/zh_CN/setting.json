@@ -1,5 +1,4 @@
 {
-  "agentHeader": "编辑助手信息",
   "danger": {
     "clear": {
       "action": "立即清除",
@@ -15,7 +14,11 @@
       "title": "重置所有设置"
     }
   },
-  "header": "设置",
+  "header": {
+    "global": "全局设置",
+    "session": "会话设置",
+    "sessionWithName": "会话设置 · {{name}}"
+  },
   "settingAgent": {
     "avatar": {
       "title": "头像"
@@ -42,6 +45,13 @@
     "title": "助手信息"
   },
   "settingChat": {
+    "chatStyleType": {
+      "title": "聊天窗口样式",
+      "type": {
+        "chat": "对话模式",
+        "docs": "文档模式"
+      }
+    },
     "compressThreshold": {
       "desc": "当未压缩的历史消息超过该值时，将进行压缩",
       "title": "历史消息长度压缩阈值"
@@ -91,7 +101,8 @@
     },
     "temperature": {
       "desc": "值越大，回复越随机",
-      "title": "随机性"
+      "title": "随机性",
+      "titleWithValue": "随机性 {{value}}"
     },
     "title": "模型设置",
     "topP": {

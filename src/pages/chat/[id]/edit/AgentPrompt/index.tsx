@@ -37,7 +37,7 @@ const AgentPrompt = memo(() => {
         }}
         placeholder={t('settingAgent.name.placeholder')}
         resize={false}
-        style={{ marginBottom: 16, marginTop: 16 }}
+        style={{ marginTop: 16 }}
         type={'pure'}
         value={systemRole}
       />

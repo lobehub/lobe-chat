@@ -24,7 +24,11 @@ const Token = memo<{ input: string }>(({ input }) => {
 
   return (
     <Tooltip title={t('tokenDetail', { chatsToken, systemRoleToken })}>
-      <TokenTag maxValue={ModelTokens[model]} value={totalToken + inputTokenCount} />
+      <TokenTag
+        maxValue={ModelTokens[model]}
+        text={{ overload: t('overload') }}
+        value={totalToken + inputTokenCount}
+      />
     </Tooltip>
   );
 });

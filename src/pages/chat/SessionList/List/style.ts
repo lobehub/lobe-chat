@@ -1,7 +1,7 @@
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 
-export const useStyles = createStyles(({ css, token }) => {
+export const useStyles = createStyles(({ css, token }, isHighlight: boolean) => {
   return {
     active: css`
       display: flex;
@@ -22,7 +22,6 @@ export const useStyles = createStyles(({ css, token }) => {
       background: ${rgba(token.colorBgLayout, 0.5)};
       backdrop-filter: blur(8px);
     `,
-
     container: css`
       position: relative;
 
@@ -32,24 +31,11 @@ export const useStyles = createStyles(({ css, token }) => {
         right: 16px;
         transform: translateY(-50%);
 
-        width: 16px;
-        height: 16px;
-
-        font-size: 10px;
-
-        opacity: 0;
-        background-color: ${token.colorFillTertiary};
-
-        transition: color 600ms ${token.motionEaseOut}, scale 400ms ${token.motionEaseOut},
-          background-color 100ms ${token.motionEaseOut}, opacity 100ms ${token.motionEaseOut};
-
-        &:hover {
-          background-color: ${token.colorFill};
-        }
+        opacity: ${isHighlight ? 1 : 0};
       }
 
       .session-time {
-        opacity: 1;
+        opacity: ${isHighlight ? 0 : 1};
         transition: opacity 100ms ${token.motionEaseOut};
       }
 
@@ -62,6 +48,12 @@ export const useStyles = createStyles(({ css, token }) => {
           opacity: 1;
         }
       }
+    `,
+    hover: css`
+      background-color: ${token.colorFillSecondary};
+    `,
+    pin: css`
+      background-color: ${token.colorFillTertiary};
     `,
     time: css`
       align-self: flex-start;
