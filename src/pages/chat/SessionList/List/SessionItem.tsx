@@ -1,7 +1,8 @@
 import { ActionIcon, Avatar, List } from '@lobehub/ui';
+import { useHover } from 'ahooks';
 import { Popconfirm, Tag } from 'antd';
 import { X } from 'lucide-react';
-import { FC, memo } from 'react';
+import { FC, memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
@@ -20,6 +21,8 @@ interface SessionItemProps {
 }
 
 const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) => {
+  const ref = useRef(null);
+  const isHovering = useHover(ref);
   const { t } = useTranslation('common');
   const { styles, theme, cx } = useStyles();
   const [defaultModel] = useSettings((s) => [s.settings.model], shallow);
@@ -55,71 +58,74 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
   const showChatLength = chatLength > 0;
 
   return (
-    <Flexbox className={styles.container} style={{ position: 'relative' }}>
-      <Item
-        active={active}
-        avatar={
-          <Avatar
-            avatar={avatar}
-            background={avatarBackground}
-            shape="circle"
-            size={46}
-            title={title}
-          />
-        }
-        classNames={{ time: cx('session-time', styles.time) }}
-        date={updateAt}
-        description={
-          <Flexbox gap={4}>
-            <Flexbox>{description || systemRole}</Flexbox>
+    <div ref={ref}>
+      <Flexbox className={styles.container} style={{ position: 'relative' }}>
+        <Item
+          active={active}
+          avatar={
+            <Avatar
+              animation={isHovering}
+              avatar={avatar}
+              background={avatarBackground}
+              shape="circle"
+              size={46}
+              title={title}
+            />
+          }
+          classNames={{ time: cx('session-time', styles.time) }}
+          date={updateAt}
+          description={
+            <Flexbox gap={4}>
+              <Flexbox>{description || systemRole}</Flexbox>
 
-            {!(showModel || showChatLength) ? undefined : (
-              <Flexbox horizontal>
-                {showModel && (
-                  <Tag bordered={false} style={{ color: theme.colorTextSecondary }}>
-                    {model}
-                  </Tag>
-                )}
-                {/*{showChatLength && (*/}
-                {/*  <Tag*/}
-                {/*    bordered={false}*/}
-                {/*    style={{ color: theme.colorTextSecondary, display: 'flex', gap: 4 }}*/}
-                {/*  >*/}
-                {/*    <Icon icon={LucideMessageCircle} />*/}
-                {/*    {chatLength}*/}
-                {/*  </Tag>*/}
-                {/*)}*/}
-              </Flexbox>
-            )}
-          </Flexbox>
-        }
-        loading={loading}
-        style={{ color: theme.colorText }}
-        title={title}
-      />
-      <Popconfirm
-        arrow={false}
-        cancelText={t('cancel')}
-        okButtonProps={{ danger: true }}
-        okText={t('ok')}
-        onConfirm={(e) => {
-          e?.stopPropagation();
-          removeSession(id);
-        }}
-        overlayStyle={{ width: 280 }}
-        title={t('confirmRemoveSessionItemAlert')}
-      >
-        <ActionIcon
-          className="session-remove"
-          icon={X}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          size={'small'}
+              {!(showModel || showChatLength) ? undefined : (
+                <Flexbox horizontal>
+                  {showModel && (
+                    <Tag bordered={false} style={{ color: theme.colorTextSecondary }}>
+                      {model}
+                    </Tag>
+                  )}
+                  {/*{showChatLength && (*/}
+                  {/*  <Tag*/}
+                  {/*    bordered={false}*/}
+                  {/*    style={{ color: theme.colorTextSecondary, display: 'flex', gap: 4 }}*/}
+                  {/*  >*/}
+                  {/*    <Icon icon={LucideMessageCircle} />*/}
+                  {/*    {chatLength}*/}
+                  {/*  </Tag>*/}
+                  {/*)}*/}
+                </Flexbox>
+              )}
+            </Flexbox>
+          }
+          loading={loading}
+          style={{ color: theme.colorText }}
+          title={title}
         />
-      </Popconfirm>
-    </Flexbox>
+        <Popconfirm
+          arrow={false}
+          cancelText={t('cancel')}
+          okButtonProps={{ danger: true }}
+          okText={t('ok')}
+          onConfirm={(e) => {
+            e?.stopPropagation();
+            removeSession(id);
+          }}
+          overlayStyle={{ width: 280 }}
+          title={t('confirmRemoveSessionItemAlert')}
+        >
+          <ActionIcon
+            className="session-remove"
+            icon={X}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            size={'small'}
+          />
+        </Popconfirm>
+      </Flexbox>
+    </div>
   );
 }, shallow);
 

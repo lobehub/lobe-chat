@@ -39,15 +39,18 @@ const InputActions = memo(() => {
         <ActionIcon icon={BrainCog} placement={'bottom'} title={t('settingModel.model.title')} />
       </Dropdown>
       <Popover
+        arrow={false}
         content={
           <SliderWithInput
+            controls={false}
             max={1}
             min={0}
             onChange={(v) => {
               updateAgentConfig({ params: { temperature: v } });
             }}
+            size={'small'}
             step={0.1}
-            style={{ width: 120 }}
+            style={{ width: 160 }}
             value={temperature}
           />
         }

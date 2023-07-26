@@ -1,36 +1,61 @@
-import { InputNumber, Slider } from 'antd';
+import { InputNumber, type InputNumberProps, Slider } from 'antd';
 import { SliderSingleProps } from 'antd/es/slider';
 import { isNull } from 'lodash-es';
 import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const SliderWithInput = memo<SliderSingleProps>(
-  ({ step, value, onChange, max, min, defaultValue, ...props }) => {
+export interface SliderWithInputProps extends SliderSingleProps {
+  controls?: InputNumberProps['controls'];
+  size?: InputNumberProps['size'];
+}
+
+const SliderWithInput = memo<SliderWithInputProps>(
+  ({
+    step,
+    value,
+    onChange,
+    max,
+    min,
+    defaultValue,
+    size,
+    controls,
+    style,
+    className,
+    ...props
+  }) => {
     const handleOnchange = useCallback((value: number | null) => {
       if (Number.isNaN(value) || isNull(value)) return;
       onChange?.(value);
     }, []);
 
     return (
-      <Flexbox direction={'horizontal'} gap={8}>
+      <Flexbox
+        align={'center'}
+        className={className}
+        direction={'horizontal'}
+        gap={8}
+        style={style}
+      >
         <Slider
           defaultValue={defaultValue}
           max={max}
           min={min}
           onChange={handleOnchange}
           step={step}
-          style={{ flex: 1 }}
-          tooltip={{ getPopupContainer: (triggerNode) => triggerNode }}
+          style={size === 'small' ? { flex: 1, margin: 0 } : { flex: 1 }}
+          tooltip={{ open: false }}
           value={typeof value === 'number' ? value : 0}
           {...props}
         />
         <InputNumber
+          controls={size !== 'small' || controls}
           defaultValue={defaultValue}
           max={max}
           min={min}
           onChange={handleOnchange}
+          size={size}
           step={Number.isNaN(step) || isNull(step) ? undefined : step}
-          style={{ flex: 1, maxWidth: 64 }}
+          style={{ flex: 1, maxWidth: size === 'small' ? 40 : 64 }}
           value={typeof value === 'number' ? value : 0}
         />
       </Flexbox>

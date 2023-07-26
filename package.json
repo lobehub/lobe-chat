@@ -11,7 +11,7 @@
   ],
   "homepage": "https://github.com/lobehub/lobe-chat",
   "bugs": {
-    "url": "https://github.com/lobehub/lobe-chat/issues/new"
+    "url": "https://github.com/lobehub/lobe-chat/issues/new/choose"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "lint:style": "stylelint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
     "prepare": "husky install",
     "prettier": "prettier -c --write \"**/**\"",
+    "pull": "git pull",
     "release": "semantic-release",
     "start": "next start",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
@@ -141,5 +142,6 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
-  }
+  },
+  "changelog": "https://github.com/lobehub/lobe-chat"
 }

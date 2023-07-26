@@ -36,7 +36,12 @@ const HeaderTitle = memo<HeaderTitleProps>(({ title, desc, tag }) => {
         </Flexbox>
       </Flexbox>
     );
-  return <div className={styles.title}>{title}</div>;
+  return (
+    <Flexbox align={'center'} className={styles.title} gap={8} horizontal>
+      {title}
+      {tag}
+    </Flexbox>
+  );
 });
 
 export default HeaderTitle;
