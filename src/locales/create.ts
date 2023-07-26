@@ -7,23 +7,12 @@ import type { Namespaces } from '@/types/locale';
 
 import resources from './resources';
 
-// const getRes = (res: Resources, namespace: Namespaces[]) => {
-//   const newRes: any = {};
-//   for (const [locale, value] of Object.entries(res)) {
-//     newRes[locale] = {};
-//     for (const ns of namespace) {
-//       newRes[locale][ns] = value[ns];
-//     }
-//   }
-//   return newRes;
-// };
-
 export const createI18nNext = (namespace?: Namespaces[] | Namespaces) => {
   const ns: Namespaces[] = namespace
     ? isArray(namespace)
-      ? ['common', ...namespace]
-      : ['common', namespace]
-    : ['common'];
+      ? ['error', 'common', ...namespace]
+      : ['error', 'common', namespace]
+    : ['error', 'common'];
   return (
     i18n
       // detect user language
