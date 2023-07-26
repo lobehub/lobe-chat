@@ -2,6 +2,12 @@
 
 # Changelog
 
+# [0.24.0](https://github.com/lobehub/lobe-chat/compare/v0.23.0...v0.24.0) (2023-07-26)
+
+### ✨ Features
+
+- Add new translations, update existing translations, add functionality to components, modify styling, and adjust placeholder text ([da4ae72](https://github.com/lobehub/lobe-chat/commit/da4ae72))
+
 # [0.23.0](https://github.com/lobehub/lobe-chat/compare/v0.22.2...v0.23.0) (2023-07-26)
 
 ### ✨ Features
