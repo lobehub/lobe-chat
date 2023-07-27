@@ -10,7 +10,17 @@ export default {
     503: '很抱歉，服务器当前无法处理您的请求，可能是由于过载或正在进行维护，请稍后再试',
     504: '很抱歉，服务器没有等到上游服务器的回应，请稍后再试',
 
-    InvalidAccessCode:
-      '密码不正确或为空，请前往<>登录页</>输入正确的访问密码，或者在<>设置页</>填入你自己的 OpenAI API Key。',
+    InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
+  },
+  unlock: {
+    apikey: {
+      description: '输入你的 OpenAI API Key 即可绕过密码验证。应用不会记录你的 API Key',
+      title: '使用自定义 API Key',
+    },
+    confirm: '确认并重试',
+    password: {
+      description: '管理员已开启应用加密，输入应用密码后即可解锁应用。密码只需填写一次',
+      title: '输入密码解锁应用',
+    },
   },
 };

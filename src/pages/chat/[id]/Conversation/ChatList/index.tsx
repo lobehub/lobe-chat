@@ -1,14 +1,31 @@
-import { ChatList, ChatMessage } from '@lobehub/ui';
+import { ChatList, RenderErrorMessage, RenderMessage } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { ReactNode, memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
 import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
+import { ErrorType } from '@/types/fetch';
 import { isFunctionMessage } from '@/utils/message';
 
 import FunctionMessage from './FunctionMessage';
+import InvalidAccess from './InvalidAccess';
 import MessageExtra from './MessageExtra';
+
+const renderMessage: RenderMessage = (content, message) => {
+  if (message.role === 'function')
+    return isFunctionMessage(message.content) ? <FunctionMessage /> : content;
+
+  return content;
+};
+
+const renderErrorMessage: RenderErrorMessage = (error, message) => {
+  switch (error.type as ErrorType) {
+    case 'InvalidAccessCode': {
+      return <InvalidAccess id={message.id} />;
+    }
+  }
+};
 
 const List = () => {
   const { t } = useTranslation('common');
@@ -24,13 +41,6 @@ const List = () => {
       ],
       shallow,
     );
-
-  const renderMessage = (content: ReactNode, message: ChatMessage) => {
-    if (message.role === 'function')
-      return isFunctionMessage(message.content) ? <FunctionMessage /> : content;
-
-    return content;
-  };
 
   return (
     <ChatList
@@ -52,6 +62,7 @@ const List = () => {
       onMessageChange={(id, content) => {
         dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
       }}
+      renderErrorMessage={renderErrorMessage}
       renderMessage={renderMessage}
       renderMessageExtra={MessageExtra}
       style={{ marginTop: 24 }}
