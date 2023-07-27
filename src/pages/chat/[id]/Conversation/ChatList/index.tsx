@@ -13,15 +13,17 @@ import MessageExtra from './MessageExtra';
 const List = () => {
   const { t } = useTranslation('common');
   const data = useSessionStore(chatSelectors.currentChats, isEqual);
-  const [displayMode, deleteMessage, resendMessage, dispatchMessage] = useSessionStore(
-    (s) => [
-      agentSelectors.currentAgentConfigSafe(s).displayMode,
-      s.deleteMessage,
-      s.resendMessage,
-      s.dispatchMessage,
-    ],
-    shallow,
-  );
+  const [displayMode, chatLoadingId, deleteMessage, resendMessage, dispatchMessage] =
+    useSessionStore(
+      (s) => [
+        agentSelectors.currentAgentConfigSafe(s).displayMode,
+        s.chatLoadingId,
+        s.deleteMessage,
+        s.resendMessage,
+        s.dispatchMessage,
+      ],
+      shallow,
+    );
 
   const renderMessage = (content: ReactNode, message: ChatMessage) => {
     if (message.role === 'function')
@@ -33,6 +35,7 @@ const List = () => {
   return (
     <ChatList
       data={data}
+      loadingId={chatLoadingId}
       onActionClick={(key, id) => {
         switch (key) {
           case 'delete': {

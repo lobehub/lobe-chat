@@ -110,7 +110,7 @@ export const chatMessage: StateCreator<
 
   generateMessage: async (messages, assistantId, withPlugin) => {
     const { dispatchMessage } = get();
-    set({ chatLoading: true });
+    set({ chatLoadingId: assistantId });
     const config = agentSelectors.currentAgentConfigSafe(get());
 
     const fetcher = () =>
@@ -156,7 +156,7 @@ export const chatMessage: StateCreator<
       },
     });
 
-    set({ chatLoading: false });
+    set({ chatLoadingId: undefined });
 
     return { isFunctionCall, output };
   },
