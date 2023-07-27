@@ -122,12 +122,10 @@
     "lint-staged": "^13",
     "next-pwa": "^5",
     "node-fetch": "^3",
-    "postcss-styled-syntax": "^0.4",
     "prettier": "^2",
     "remark": "^14",
     "remark-cli": "^11",
     "semantic-release": "^21",
-    "semantic-release-config-gitmoji": "^1",
     "stylelint": "^15",
     "ts-node": "^10",
     "typescript": "^5",
@@ -142,6 +140,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
-  },
-  "changelog": "https://github.com/lobehub/lobe-chat"
+  }
 }

@@ -2,23 +2,80 @@
 
 # Changelog
 
-# [0.25.0](https://github.com/lobehub/lobe-chat/compare/v0.24.0...v0.25.0) (2023-07-26)
+## [Version 0.25.0](https://github.com/lobehub/lobe-chat/compare/v0.24.0...v0.25.0)
 
-### ✨ Features
+<sup>Released on **2023-07-26**</sup>
+
+#### ✨ Features
+
+- **sidebar**: Add import functionality and set labels and onClick functions
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### ✨ Features
 
 - **sidebar**: Add import functionality and set labels and onClick functions ([03ea9bd](https://github.com/lobehub/lobe-chat/commit/03ea9bd))
 
-# [0.24.0](https://github.com/lobehub/lobe-chat/compare/v0.23.0...v0.24.0) (2023-07-26)
+</details>
 
-### ✨ Features
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.24.0](https://github.com/lobehub/lobe-chat/compare/v0.23.0...v0.24.0)
+
+<sup>Released on **2023-07-26**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new translations, update existing translations, add functionality to components, modify styling, and adjust placeholder text
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### ✨ Features
 
 - Add new translations, update existing translations, add functionality to components, modify styling, and adjust placeholder text ([da4ae72](https://github.com/lobehub/lobe-chat/commit/da4ae72))
 
-# [0.23.0](https://github.com/lobehub/lobe-chat/compare/v0.22.2...v0.23.0) (2023-07-26)
+</details>
 
-### ✨ Features
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.23.0](https://github.com/lobehub/lobe-chat/compare/v0.22.2...v0.23.0)
+
+<sup>Released on **2023-07-26**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new features, update URLs, customize appearance, and implement components
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### ✨ Features
 
 - Add new features, update URLs, customize appearance, and implement components ([4b61bf4](https://github.com/lobehub/lobe-chat/commit/4b61bf4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
 
 ### [Version 0.22.2](https://github.com/lobehub/lobe-chat/compare/v0.22.1...v0.22.2)
 
