@@ -5,13 +5,17 @@ const getStatus = (errorType: ErrorType) => {
     case ErrorType.InvalidAccessCode: {
       return 401;
     }
+
+    case ErrorType.OpenAIBizError: {
+      return 577;
+    }
   }
 };
 
-export const createErrorResponse = (errorType: ErrorType) => {
+export const createErrorResponse = (errorType: ErrorType, body?: any) => {
   const statusCode = getStatus(errorType);
 
-  const data: ErrorResponse = { errorType };
+  const data: ErrorResponse = { body, errorType };
 
   return new Response(JSON.stringify(data), { status: statusCode });
 };

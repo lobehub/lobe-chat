@@ -1,8 +1,10 @@
-import { OpenAIStream, OpenAIStreamCallbacks } from 'ai';
+import { OpenAIStream, OpenAIStreamCallbacks, StreamingTextResponse } from 'ai';
 import { Configuration, OpenAIApi } from 'openai-edge';
 import { ChatCompletionFunctions } from 'openai-edge/types/api';
 
 import { getServerConfig } from '@/config/server';
+import { createErrorResponse } from '@/pages/api/error';
+import { ErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
 
 import pluginList from '../../plugins';
@@ -60,5 +62,13 @@ export const createChatCompletion = async ({
 
   const response = await openai.createChatCompletion(requestParams);
 
-  return OpenAIStream(response, callbacks?.(requestParams));
+  if (!response.ok) {
+    const error = await response.json();
+
+    return createErrorResponse(ErrorType.OpenAIBizError, error);
+  }
+
+  const stream = OpenAIStream(response, callbacks?.(requestParams));
+
+  return new StreamingTextResponse(stream);
 };

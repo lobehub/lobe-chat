@@ -7,6 +7,7 @@ import { BaseDataModel } from './meta';
  * 聊天消息错误对象
  */
 export interface ChatMessageError {
+  body?: any;
   message: string;
   type: ErrorType;
 }

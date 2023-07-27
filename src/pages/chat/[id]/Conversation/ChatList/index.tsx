@@ -8,8 +8,9 @@ import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session'
 import { ErrorType } from '@/types/fetch';
 import { isFunctionMessage } from '@/utils/message';
 
+import InvalidAccess from './Error/InvalidAccess';
+import OpenAiBizError from './Error/OpenAiBizError';
 import FunctionMessage from './FunctionMessage';
-import InvalidAccess from './InvalidAccess';
 import MessageExtra from './MessageExtra';
 
 const renderMessage: RenderMessage = (content, message) => {
@@ -23,6 +24,11 @@ const renderErrorMessage: RenderErrorMessage = (error, message) => {
   switch (error.type as ErrorType) {
     case 'InvalidAccessCode': {
       return <InvalidAccess id={message.id} />;
+    }
+    case 'OpenAIBizError': {
+      return (
+        <OpenAiBizError content={JSON.stringify((error as any).body, null, 2)} id={message.id} />
+      );
     }
   }
 };

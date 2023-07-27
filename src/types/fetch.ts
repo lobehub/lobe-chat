@@ -3,6 +3,8 @@ export enum ErrorType {
 
   // 密码无效
   InvalidAccessCode = 'InvalidAccessCode',
+  // OpenAI 返回的业务错误
+  OpenAIBizError = 'OpenAIBizError',
 
   // ******* 客户端错误 ******* //
   BadRequest = 400,
@@ -19,5 +21,6 @@ export enum ErrorType {
 }
 
 export interface ErrorResponse {
+  body: any;
   errorType: ErrorType;
 }

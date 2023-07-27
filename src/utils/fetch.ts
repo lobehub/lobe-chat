@@ -25,6 +25,7 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
     try {
       const data = (await response.json()) as ErrorResponse;
       chatMessageError = {
+        body: data.body,
         message: t(`response.${data.errorType}`),
         type: data.errorType,
       };

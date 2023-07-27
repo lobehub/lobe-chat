@@ -10,11 +10,12 @@ import { shallow } from 'zustand/shallow';
 import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
-import OtpInput from './OTPInput';
+import OtpInput from '../OTPInput';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     background: ${token.colorBgContainer};
+    border: 1px solid ${token.colorSplit};
     border-radius: 8px;
   `,
   desc: css`
@@ -81,7 +82,7 @@ const InvalidAccess = memo<{ id: string }>(({ id }) => {
       />
       <Flexbox gap={24}>
         <Center gap={16} style={{ maxWidth: 300 }}>
-          <Avatar avatar={content.avatar} background={theme.colorText} gap={8} size={80} />
+          <Avatar avatar={content.avatar} background={theme.colorText} gap={12} size={80} />
           <Flexbox style={{ fontSize: 20 }}>{content.title}</Flexbox>
           <Flexbox className={styles.desc}>{content.desc}</Flexbox>
           {content.children}
