@@ -4,7 +4,7 @@ import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { version } from '@/../package.json';
+import pkg from '@/../package.json';
 import HeaderTitle from '@/components/HeaderTitle';
 
 const Header = memo(() => {
@@ -12,7 +12,7 @@ const Header = memo(() => {
 
   return (
     <ChatHeader
-      left={<HeaderTitle tag={<Tag>{`v${version}`}</Tag>} title={t('header.global')} />}
+      left={<HeaderTitle tag={<Tag>{`v${pkg.version}`}</Tag>} title={t('header.global')} />}
       onBackClick={() => Router.back()}
       showBackButton
     />

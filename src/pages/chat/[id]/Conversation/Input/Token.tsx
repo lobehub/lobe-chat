@@ -8,7 +8,7 @@ import { ModelTokens } from '@/const/modelTokens';
 import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
 
 const Token = memo<{ input: string }>(({ input }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   const inputTokenCount = useMemo(() => encode(input).length, [input]);
 

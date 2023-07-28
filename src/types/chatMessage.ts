@@ -1,3 +1,5 @@
+import { ErrorType } from '@/types/fetch';
+
 import { LLMRoleType } from './llm';
 import { BaseDataModel } from './meta';
 
@@ -5,12 +7,9 @@ import { BaseDataModel } from './meta';
  * 聊天消息错误对象
  */
 export interface ChatMessageError {
-  /**
-   * 错误信息
-   */
+  body?: any;
   message: string;
-  status: number;
-  type: 'general' | 'llm';
+  type: ErrorType;
 }
 
 export interface ChatMessage extends BaseDataModel {

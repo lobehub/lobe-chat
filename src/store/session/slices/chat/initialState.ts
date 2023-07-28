@@ -1,9 +1,7 @@
 export interface ChatState {
   activeTopicId?: string;
-  chatLoading: boolean;
+  chatLoadingId?: string;
   topicLoadingId?: string;
 }
 
-export const initialChatState: ChatState = {
-  chatLoading: false,
-};
+export const initialChatState: ChatState = {};

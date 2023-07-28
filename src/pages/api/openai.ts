@@ -1,18 +1,22 @@
-import { OpenAIStream, OpenAIStreamCallbacks } from 'ai';
+import { OpenAIStream, OpenAIStreamCallbacks, StreamingTextResponse } from 'ai';
 import { Configuration, OpenAIApi } from 'openai-edge';
 import { ChatCompletionFunctions } from 'openai-edge/types/api';
 
+import { getServerConfig } from '@/config/server';
+import { createErrorResponse } from '@/pages/api/error';
+import { ErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
 
 import pluginList from '../../plugins';
 
 const isDev = process.env.NODE_ENV === 'development';
-const OPENAI_PROXY_URL = process.env.OPENAI_PROXY_URL;
 
 // 创建 OpenAI 实例
-export const createOpenAI = (OPENAI_API_KEY: string | null) => {
+export const createOpenAI = (userApiKey: string | null) => {
+  const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
+
   const config = new Configuration({
-    apiKey: !OPENAI_API_KEY ? process.env.OPENAI_API_KEY : OPENAI_API_KEY,
+    apiKey: !userApiKey ? OPENAI_API_KEY : userApiKey,
   });
 
   return new OpenAIApi(config, isDev && OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined);
@@ -58,5 +62,13 @@ export const createChatCompletion = async ({
 
   const response = await openai.createChatCompletion(requestParams);
 
-  return OpenAIStream(response, callbacks?.(requestParams));
+  if (!response.ok) {
+    const error = await response.json();
+
+    return createErrorResponse(ErrorType.OpenAIBizError, error);
+  }
+
+  const stream = OpenAIStream(response, callbacks?.(requestParams));
+
+  return new StreamingTextResponse(stream);
 };

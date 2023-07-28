@@ -1,4 +1,3 @@
-import { StreamingTextResponse } from 'ai';
 import { ChatCompletionRequestMessage } from 'openai-edge';
 
 import { OPENAI_API_KEY_HEADER_KEY } from '@/const/fetch';
@@ -15,7 +14,7 @@ export default async function handler(req: Request) {
 
   const openai = createOpenAI(apiKey);
 
-  const stream = await createChatCompletion({
+  return await createChatCompletion({
     OPENAI_API_KEY: apiKey,
     callbacks: (payload) => ({
       experimental_onFunctionCall: async (
@@ -42,6 +41,4 @@ export default async function handler(req: Request) {
     }),
     payload,
   });
-
-  return new StreamingTextResponse(stream);
 }
