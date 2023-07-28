@@ -11,7 +11,7 @@ export default {
     504: '很抱歉，服务器没有等到上游服务器的回应，请稍后再试',
 
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
-    OpenAIBizError: '请求 OpenAI 服务出错，请根据以下错误信息进行排查',
+    OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
   },
   unlock: {
     apikey: {

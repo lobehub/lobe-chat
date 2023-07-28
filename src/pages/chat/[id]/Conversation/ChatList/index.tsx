@@ -26,9 +26,7 @@ const renderErrorMessage: RenderErrorMessage = (error, message) => {
       return <InvalidAccess id={message.id} />;
     }
     case 'OpenAIBizError': {
-      return (
-        <OpenAiBizError content={JSON.stringify((error as any).body, null, 2)} id={message.id} />
-      );
+      return <OpenAiBizError content={(error as any).body} id={message.id} />;
     }
   }
 };
