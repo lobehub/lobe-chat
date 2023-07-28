@@ -9,7 +9,6 @@ import { URLS } from './url';
 
 interface FetchChatModelOptions {
   signal?: AbortSignal | undefined;
-  withPlugin?: boolean;
 }
 
 /**
@@ -28,7 +27,7 @@ export const fetchChatModel = (
     params,
   );
 
-  return fetch(options?.withPlugin ? URLS.plugins : URLS.openai, {
+  return fetch(URLS.openai, {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',

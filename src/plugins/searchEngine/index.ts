@@ -1,6 +1,9 @@
 import { ChatCompletionFunctions } from 'openai-edge/types/api';
 
+import { PluginItem } from '@/plugins/type';
+
 import runner from './runner';
+import { Result } from './type';
 
 const schema: ChatCompletionFunctions = {
   description: '查询搜索引擎获取信息',
@@ -17,7 +20,7 @@ const schema: ChatCompletionFunctions = {
   },
 };
 
-const searchEngine = {
+const searchEngine: PluginItem<Result> = {
   avatar: '🔍',
   name: 'searchEngine',
   runner,

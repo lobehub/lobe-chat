@@ -1,8 +1,10 @@
 import { StateCreator } from 'zustand/vanilla';
 
+import { FUNCTION_LOADING } from '@/const/message';
 import { fetchChatModel } from '@/services/chatModel';
+import { fetchPlugin } from '@/services/plugin';
 import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@/store/session';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage, OpenAIFunctionCall } from '@/types/chatMessage';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessage } from '@/utils/message';
 import { nanoid } from '@/utils/uuid';
@@ -42,8 +44,7 @@ export interface ChatMessageAction {
   generateMessage: (
     messages: ChatMessage[],
     assistantMessageId: string,
-    withPlugin?: boolean,
-  ) => Promise<{ isFunctionCall: boolean; output: string }>;
+  ) => Promise<{ isFunctionCall: boolean }>;
 
   /**
    * 实际获取 AI 响应
@@ -63,6 +64,7 @@ export interface ChatMessageAction {
    * @param text - 消息文本
    */
   sendMessage: (text: string) => Promise<void>;
+  triggerFunctionCall: (id: string) => Promise<void>;
 }
 
 export const chatMessage: StateCreator<
@@ -108,16 +110,13 @@ export const chatMessage: StateCreator<
     get().dispatchSession({ chats, id: activeId, type: 'updateSessionChat' });
   },
 
-  generateMessage: async (messages, assistantId, withPlugin) => {
+  generateMessage: async (messages, assistantId) => {
     const { dispatchMessage } = get();
     set({ chatLoadingId: assistantId });
     const config = agentSelectors.currentAgentConfigSafe(get());
 
     const fetcher = () =>
-      fetchChatModel(
-        { messages, model: config.model, ...config.params, plugins: config.plugins },
-        { withPlugin },
-      );
+      fetchChatModel({ messages, model: config.model, ...config.params, plugins: config.plugins });
 
     let output = '';
     let isFunctionCall = false;
@@ -139,13 +138,6 @@ export const chatMessage: StateCreator<
         // 如果是 function call
         if (isFunctionMessage(output)) {
           isFunctionCall = true;
-          // 设为 function
-          dispatchMessage({
-            id: assistantId,
-            key: 'role',
-            type: 'updateMessage',
-            value: 'function',
-          });
         }
 
         // 滚动到最后一条消息
@@ -158,11 +150,11 @@ export const chatMessage: StateCreator<
 
     set({ chatLoadingId: undefined });
 
-    return { isFunctionCall, output };
+    return { isFunctionCall };
   },
 
   realFetchAIResponse: async (messages, userMessageId) => {
-    const { dispatchMessage, generateMessage, activeTopicId } = get();
+    const { dispatchMessage, generateMessage, triggerFunctionCall, activeTopicId } = get();
 
     // 添加 systemRole
     const { systemRole, model } = agentSelectors.currentAgentConfigSafe(get());
@@ -191,31 +183,11 @@ export const chatMessage: StateCreator<
     dispatchMessage({ id: mid, key: 'fromModel', type: 'updateMessageExtra', value: model });
 
     // 生成 ai message
-    const { output, isFunctionCall } = await generateMessage(messages, mid);
+    const { isFunctionCall } = await generateMessage(messages, mid);
 
     // 如果是 function，则发送函数调用方法
     if (isFunctionCall) {
-      const { function_call } = JSON.parse(output);
-
-      dispatchMessage({
-        id: mid,
-        key: 'function_call',
-        type: 'updateMessage',
-        value: function_call,
-      });
-
-      await generateMessage(
-        [...messages, { content: '', function_call, id: mid, role: 'assistant' } as ChatMessage],
-        mid,
-        true,
-      );
-
-      dispatchMessage({
-        id: mid,
-        key: 'role',
-        type: 'updateMessage',
-        value: 'assistant',
-      });
+      triggerFunctionCall(mid);
     }
   },
 
@@ -245,7 +217,6 @@ export const chatMessage: StateCreator<
 
     await realFetchAIResponse(histories, latestMsg.id);
   },
-
   sendMessage: async (message) => {
     const { dispatchMessage, realFetchAIResponse, autocompleteSessionAgentMeta, activeTopicId } =
       get();
@@ -269,5 +240,52 @@ export const chatMessage: StateCreator<
     if (chats.length >= 4) {
       autocompleteSessionAgentMeta(session.id);
     }
+  },
+
+  triggerFunctionCall: async (id) => {
+    const { dispatchMessage, generateMessage } = get();
+    const session = sessionSelectors.currentSession(get());
+
+    if (!session) return;
+
+    const message = session.chats[id];
+    if (!message) return;
+
+    let payload: OpenAIFunctionCall = { name: '' };
+    if (message.content) {
+      const { function_call } = JSON.parse(message.content);
+      dispatchMessage({ id, key: 'function_call', type: 'updateMessage', value: function_call });
+      dispatchMessage({ id, key: 'content', type: 'updateMessage', value: '' });
+      payload = function_call;
+    } else {
+      if (message.function_call) {
+        payload = message.function_call;
+      }
+    }
+
+    if (!payload.name) return;
+
+    const fid = nanoid();
+
+    dispatchMessage({
+      id: fid,
+      message: FUNCTION_LOADING,
+      parentId: id,
+      role: 'function',
+      type: 'addMessage',
+    });
+
+    const data = await fetchPlugin(payload);
+
+    dispatchMessage({ id: fid, key: 'name', type: 'updateMessage', value: payload.name });
+    dispatchMessage({ id: fid, key: 'content', type: 'updateMessage', value: data });
+
+    const mid = nanoid();
+
+    dispatchMessage({ id: mid, message: LOADING_FLAT, role: 'assistant', type: 'addMessage' });
+
+    const chats = chatSelectors.currentChats(get());
+
+    await generateMessage(chats, mid);
   },
 });

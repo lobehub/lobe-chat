@@ -1,4 +1,4 @@
-import { Avatar, Icon, Tooltip } from '@lobehub/ui';
+import { Avatar, Icon } from '@lobehub/ui';
 import { Tag } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideToyBrick } from 'lucide-react';
@@ -23,24 +23,23 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const MessageExtra = ({ role, extra, function_call }: ChatMessage): ReactNode => {
+const MessageExtra = ({ role, extra, name, function_call }: ChatMessage): ReactNode => {
   const { styles } = useStyles();
 
   const { t } = useTranslation();
   const [model] = useSessionStore((s) => [agentSelectors.currentAgentModel(s)], shallow);
 
-  const plugin = pluginList.find((p) => p.name === function_call?.name);
+  const plugin = pluginList.find((p) => p.name === name);
+
   const funcTag = (
-    <Tooltip title={function_call?.arguments}>
-      <Tag bordered={false} className={styles.plugin} style={{ borderRadius: 6 }}>
-        {plugin?.avatar ? (
-          <Avatar avatar={plugin?.avatar} size={18} />
-        ) : (
-          <Icon icon={LucideToyBrick} />
-        )}
-        {t(`plugins.${function_call?.name}` as any, { ns: 'plugin' })}
-      </Tag>
-    </Tooltip>
+    <Tag bordered={false} className={styles.plugin} style={{ borderRadius: 6 }}>
+      {plugin?.avatar ? (
+        <Avatar avatar={plugin?.avatar} size={18} />
+      ) : (
+        <Icon icon={LucideToyBrick} />
+      )}
+      {t(`plugins.${name}` as any, { ns: 'plugin' })}
+    </Tag>
   );
 
   const modelTag = (
@@ -69,10 +68,11 @@ const MessageExtra = ({ role, extra, function_call }: ChatMessage): ReactNode =>
       if (!(hasModelTag || hasFuncTag)) return;
 
       return (
-        <Flexbox className={styles.container} horizontal>
-          {hasFuncTag && funcTag}
-          {hasModelTag && modelTag}
-        </Flexbox>
+        hasModelTag && (
+          <Flexbox className={styles.container} horizontal>
+            {modelTag}
+          </Flexbox>
+        )
       );
     }
     case 'function': {

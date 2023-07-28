@@ -30,6 +30,9 @@ export default {
   },
   feedback: '反馈与建议',
   import: '导入配置',
+  message: {
+    function_loading: '插件请求中...',
+  },
   moreSetting: '更多设置...',
   newAgent: '新建助手',
   noDescription: '暂无描述',

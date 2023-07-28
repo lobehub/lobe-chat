@@ -54,7 +54,12 @@ export const createChatCompletion = async ({
   const functions = filterFunctions.length === 0 ? undefined : filterFunctions;
 
   // ============  2. 前置处理 messages   ============ //
-  const formatMessages = messages.map((m) => ({ content: m.content, role: m.role }));
+  const formatMessages = messages.map((m) => ({
+    content: m.content,
+    function_call: m.function_call,
+    name: m.name,
+    role: m.role,
+  }));
 
   // ============  3. 发送请求   ============ //
 

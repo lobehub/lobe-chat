@@ -1,7 +1,9 @@
+import type { PluginItem } from '@/plugins/type';
+
 import searchEngine from './searchEngine';
 import getWeather from './weather';
 import webCrawler from './webCrawler';
 
-const pluginList = [getWeather, searchEngine, webCrawler];
+const pluginList: PluginItem[] = [getWeather, searchEngine, webCrawler];
 
 export default pluginList;
