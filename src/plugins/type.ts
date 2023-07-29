@@ -4,10 +4,10 @@ import { ReactNode } from 'react';
 export interface PluginItem<Result = any, RunnerParams = any> {
   avatar: string;
   name: string;
-  render?: (props: PluginRenderProps) => ReactNode;
   runner: PluginRunner<RunnerParams, Result>;
   schema: ChatCompletionFunctions;
 }
+export type PluginRender = (props: PluginRenderProps) => ReactNode;
 
 export type PluginRunner<Params = object, Result = any> = (params: Params) => Promise<Result>;
 

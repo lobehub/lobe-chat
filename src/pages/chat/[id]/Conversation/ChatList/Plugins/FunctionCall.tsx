@@ -5,7 +5,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import pluginList from '@/plugins';
+import { PluginsMap } from '@/plugins';
 import { OpenAIFunctionCall } from '@/types/chatMessage';
 
 import { useStyles } from './style';
@@ -20,7 +20,7 @@ const FunctionCall = memo<FunctionCallProps>(({ function_call, loading }) => {
   const { styles } = useStyles();
   const [open, setOpen] = useState(false);
 
-  const plugin = pluginList.find((p) => p.name === function_call?.name);
+  const plugin = PluginsMap[function_call?.name || ''];
 
   const avatar = plugin?.avatar ? (
     <Avatar avatar={plugin?.avatar} size={32} />

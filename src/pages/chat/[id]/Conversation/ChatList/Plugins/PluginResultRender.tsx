@@ -4,21 +4,20 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ChatMessage } from '@/types/chatMessage';
-
 import { useStyles } from './style';
 
-export interface FunctionMessageProps extends ChatMessage {
-  loading?: boolean;
+export interface FunctionMessageProps {
+  content: string;
 }
 
-const FunctionMessage = memo<FunctionMessageProps>(({ content }) => {
+const PluginResult = memo<FunctionMessageProps>(({ content }) => {
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
 
   const [open, setOpen] = useState(false);
 
   let data;
+
   try {
     data = JSON.stringify(JSON.parse(content), null, 2);
   } catch {
@@ -49,4 +48,4 @@ const FunctionMessage = memo<FunctionMessageProps>(({ content }) => {
   );
 });
 
-export default FunctionMessage;
+export default PluginResult;

@@ -1,6 +1,6 @@
 import { OpenAIPluginPayload } from '@/types/plugin';
 
-import pluginList from '../../plugins';
+import { PluginsMap } from '../../plugins';
 
 export const runtime = 'edge';
 
@@ -9,7 +9,7 @@ export default async function handler(req: Request) {
 
   console.log(`检测到 functionCall: ${name}`);
 
-  const func = pluginList.find((f) => f.name === name);
+  const func = PluginsMap[name];
 
   if (func) {
     const data = JSON.parse(args);

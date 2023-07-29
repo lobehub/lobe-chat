@@ -1,9 +1,15 @@
-import type { PluginItem } from '@/plugins/type';
+import type { PluginItem, PluginRender } from '@/plugins/type';
 
 import searchEngine from './searchEngine';
-import getWeather from './weather';
+import getWeather, { WeatherRender } from './weather';
 import webCrawler from './webCrawler';
 
-const pluginList: PluginItem[] = [getWeather, searchEngine, webCrawler];
+export const PluginsMap: Record<string, PluginItem> = {
+  [getWeather.name]: getWeather,
+  [searchEngine.name]: searchEngine,
+  [webCrawler.name]: webCrawler,
+};
 
-export default pluginList;
+export const PluginsRender: Record<string, PluginRender> = {
+  [getWeather.name]: WeatherRender,
+};

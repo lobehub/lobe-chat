@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import pluginList from '@/plugins';
+import { PluginsMap } from '@/plugins';
 import { agentSelectors, useSessionStore } from '@/store/session';
 
 const PluginList = () => {
@@ -19,7 +19,7 @@ const PluginList = () => {
 
   const plugin: ItemGroup = useMemo(
     () => ({
-      children: pluginList.map((item) => ({
+      children: Object.values(PluginsMap).map((item) => ({
         avatar: <Avatar avatar={item.avatar} />,
         children: (
           <Switch

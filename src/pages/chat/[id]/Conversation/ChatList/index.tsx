@@ -44,7 +44,15 @@ const List = () => {
   const renderMessage: RenderMessage = useCallback(
     (content, message: ChatMessage) => {
       if (message.role === 'function')
-        return <PluginMessage loading={message.id === chatLoadingId} {...message} />;
+        return (
+          <>
+            <FunctionCall
+              function_call={message.function_call}
+              loading={message.id === chatLoadingId}
+            />
+            <PluginMessage loading={message.id === chatLoadingId} {...message} />
+          </>
+        );
 
       if (message.role === 'assistant') {
         return isFunctionMessage(message.content) || !!message.function_call ? (

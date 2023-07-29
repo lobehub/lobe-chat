@@ -1,6 +1,5 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { FUNCTION_LOADING } from '@/const/message';
 import { fetchChatModel } from '@/services/chatModel';
 import { fetchPlugin } from '@/services/plugin';
 import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@/store/session';
@@ -265,20 +264,22 @@ export const chatMessage: StateCreator<
 
     if (!payload.name) return;
 
-    const fid = nanoid();
+    // const fid = nanoid();
+    dispatchMessage({ id, key: 'role', type: 'updateMessage', value: 'function' });
+    dispatchMessage({ id, key: 'name', type: 'updateMessage', value: payload.name });
+    dispatchMessage({ id, key: 'function_call', type: 'updateMessage', value: payload });
 
-    dispatchMessage({
-      id: fid,
-      message: FUNCTION_LOADING,
-      parentId: id,
-      role: 'function',
-      type: 'addMessage',
-    });
+    // dispatchMessage({
+    //   id: id,
+    //   message: FUNCTION_LOADING,
+    //   parentId: message.,
+    //   role: 'function',
+    //   type: 'addMessage',
+    // });
 
     const data = await fetchPlugin(payload);
 
-    dispatchMessage({ id: fid, key: 'name', type: 'updateMessage', value: payload.name });
-    dispatchMessage({ id: fid, key: 'content', type: 'updateMessage', value: data });
+    dispatchMessage({ id, key: 'content', type: 'updateMessage', value: data });
 
     const mid = nanoid();
 
