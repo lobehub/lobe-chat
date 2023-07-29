@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.27.2](https://github.com/lobehub/lobe-chat/compare/v0.27.1...v0.27.2)
+
+<sup>Released on **2023-07-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 重构并优化文档抓取插件能力.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 重构并优化文档抓取插件能力 ([ff56348](https://github.com/lobehub/lobe-chat/commit/ff56348))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.27.1](https://github.com/lobehub/lobe-chat/compare/v0.27.0...v0.27.1)
 
 <sup>Released on **2023-07-29**</sup>
