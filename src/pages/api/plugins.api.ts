@@ -15,7 +15,7 @@ export default async function handler(req: Request) {
     const data = JSON.parse(args);
     const result = await func.runner(data);
 
-    console.log(`[${name}]`, args, `result:`, JSON.stringify(result, null, 2));
+    console.log(`[${name}]`, args, `result:`, JSON.stringify(result, null, 2).slice(0, 3600));
 
     return new Response(JSON.stringify(result));
   }
