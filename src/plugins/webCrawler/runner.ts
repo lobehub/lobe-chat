@@ -1,47 +1,40 @@
 import { PluginRunner } from '@/plugins/type';
 
-import { DataResults, Result } from './type';
+import { Result } from './type';
 
-const BASE_URL =
-  'https://api.apify.com/v2/acts/apify~website-content-crawler/run-sync-get-dataset-items';
-const token = process.env.APIFY_API_KEY;
+const BASE_URL = process.env.BROWSERLESS_URL ?? 'https://chrome.browserless.io';
+const BROWSERLESS_TOKEN = process.env.BROWSERLESS_TOKEN;
+
+// service from: https://github.com/lobehub/html-parser/tree/master
+const HTML_PARSER_URL = process.env.HTML_PARSER_URL;
 
 const runner: PluginRunner<{ url: string }, Result> = async ({ url }) => {
-  // Prepare Actor input
   const input = {
-    aggressivePrune: false,
-    clickElementsCssSelector: '[aria-expanded="false"]',
-    debugMode: false,
-    dynamicContentWaitSecs: 3,
-    proxyConfiguration: {
-      useApifyProxy: true,
-    },
-    removeCookieWarnings: true,
-    removeElementsCssSelector:
-      'nav, footer, script, style, noscript, svg,\n[role="alert"],\n[role="banner"],\n[role="dialog"],\n[role="alertdialog"],\n[role="region"][aria-label*="skip" i],\n[aria-modal="true"]',
-    saveFiles: false,
-    saveHtml: false,
-    saveMarkdown: true,
-    saveScreenshots: false,
-    startUrls: [{ url }],
+    gotoOptions: { waitUntil: 'networkidle2' },
+    url,
   };
 
   try {
-    const data = await fetch(`${BASE_URL}?token=${token}`, {
+    const res = await fetch(`${BASE_URL}/content?token=${BROWSERLESS_TOKEN}`, {
       body: JSON.stringify(input),
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'POST',
     });
-    const result = (await data.json()) as DataResults;
+    const html = await res.text();
 
-    const item = result[0];
-    return {
-      content: item.markdown,
-      title: item.metadata.title,
-      url: item.url,
-    };
+    const parserBody = { html, url };
+
+    const parseRes = await fetch(`${HTML_PARSER_URL}`, {
+      body: JSON.stringify(parserBody),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+
+    return await parseRes.json();
   } catch (error) {
     console.error(error);
     return { content: '抓取失败', errorMessage: (error as any).message };
