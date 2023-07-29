@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.27.3](https://github.com/lobehub/lobe-chat/compare/v0.27.2...v0.27.3)
+
+<sup>Released on **2023-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正返回结果导致插件无法正常识别的问题.
+
+#### 💄 Styles
+
+- **misc**: 优化样式.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正返回结果导致插件无法正常识别的问题 ([b183188](https://github.com/lobehub/lobe-chat/commit/b183188))
+
+#### Styles
+
+- **misc**: 优化样式 ([9ce5d1d](https://github.com/lobehub/lobe-chat/commit/9ce5d1d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.27.2](https://github.com/lobehub/lobe-chat/compare/v0.27.1...v0.27.2)
 
 <sup>Released on **2023-07-29**</sup>
