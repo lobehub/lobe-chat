@@ -24,6 +24,5 @@ const getWeather: PluginItem<WeatherResult> = {
   runner,
   schema,
 };
-export { default as WeatherRender } from './Render';
 
 export default getWeather;
