@@ -1,24 +1,20 @@
 import { ChatList, RenderErrorMessage, RenderMessage } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
+import { ChatMessage } from '@/types/chatMessage';
 import { ErrorType } from '@/types/fetch';
 import { isFunctionMessage } from '@/utils/message';
 
 import InvalidAccess from './Error/InvalidAccess';
 import OpenAiBizError from './Error/OpenAiBizError';
-import FunctionMessage from './FunctionMessage';
 import MessageExtra from './MessageExtra';
-
-const renderMessage: RenderMessage = (content, message) => {
-  if (message.role === 'function')
-    return isFunctionMessage(message.content) ? <FunctionMessage /> : content;
-
-  return content;
-};
+import FunctionCall from './Plugins/FunctionCall';
+import PluginMessage from './Plugins/PluginMessage';
 
 const renderErrorMessage: RenderErrorMessage = (error, message) => {
   switch (error.type as ErrorType) {
@@ -45,6 +41,35 @@ const List = () => {
       ],
       shallow,
     );
+
+  const renderMessage: RenderMessage = useCallback(
+    (content, message: ChatMessage) => {
+      if (message.role === 'function')
+        return (
+          <Flexbox gap={12}>
+            <FunctionCall
+              function_call={message.function_call}
+              loading={message.id === chatLoadingId}
+            />
+            <PluginMessage loading={message.id === chatLoadingId} {...message} />
+          </Flexbox>
+        );
+
+      if (message.role === 'assistant') {
+        return isFunctionMessage(message.content) || !!message.function_call ? (
+          <FunctionCall
+            function_call={message.function_call}
+            loading={message.id === chatLoadingId}
+          />
+        ) : (
+          content
+        );
+      }
+
+      return content;
+    },
+    [chatLoadingId],
+  );
 
   return (
     <ChatList

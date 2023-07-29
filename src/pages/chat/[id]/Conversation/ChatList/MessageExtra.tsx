@@ -1,13 +1,9 @@
-import { Avatar, Icon, Tooltip } from '@lobehub/ui';
 import { Tag } from 'antd';
 import { createStyles } from 'antd-style';
-import { LucideToyBrick } from 'lucide-react';
 import { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import pluginList from '@/plugins';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
 
@@ -23,25 +19,29 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const MessageExtra = ({ role, extra, function_call }: ChatMessage): ReactNode => {
+const MessageExtra = ({
+  role,
+  extra,
+  // name,
+  function_call,
+}: ChatMessage): ReactNode => {
   const { styles } = useStyles();
 
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const [model] = useSessionStore((s) => [agentSelectors.currentAgentModel(s)], shallow);
 
-  const plugin = pluginList.find((p) => p.name === function_call?.name);
-  const funcTag = (
-    <Tooltip title={function_call?.arguments}>
-      <Tag bordered={false} className={styles.plugin} style={{ borderRadius: 6 }}>
-        {plugin?.avatar ? (
-          <Avatar avatar={plugin?.avatar} size={18} />
-        ) : (
-          <Icon icon={LucideToyBrick} />
-        )}
-        {t(`plugins.${function_call?.name}` as any, { ns: 'plugin' })}
-      </Tag>
-    </Tooltip>
-  );
+  // const plugin = PluginsMap[name || ''];
+
+  // const funcTag = (
+  //   <Tag bordered={false} className={styles.plugin} style={{ borderRadius: 6 }}>
+  //     {plugin?.avatar ? (
+  //       <Avatar avatar={plugin?.avatar} size={18} />
+  //     ) : (
+  //       <Icon icon={LucideToyBrick} />
+  //     )}
+  //     {t(`plugins.${name}` as any, { ns: 'plugin' })}
+  //   </Tag>
+  // );
 
   const modelTag = (
     <div>
@@ -59,6 +59,7 @@ const MessageExtra = ({ role, extra, function_call }: ChatMessage): ReactNode =>
 
   switch (role) {
     case 'user':
+    case 'function':
     case 'system': {
       return;
     }
@@ -69,15 +70,16 @@ const MessageExtra = ({ role, extra, function_call }: ChatMessage): ReactNode =>
       if (!(hasModelTag || hasFuncTag)) return;
 
       return (
-        <Flexbox className={styles.container} horizontal>
-          {hasFuncTag && funcTag}
-          {hasModelTag && modelTag}
-        </Flexbox>
+        hasModelTag && (
+          <Flexbox className={styles.container} horizontal>
+            {modelTag}
+          </Flexbox>
+        )
       );
     }
-    case 'function': {
-      return <Flexbox className={styles.container}>{funcTag}</Flexbox>;
-    }
+    // case 'function': {
+    //   return <Flexbox className={styles.container}>{funcTag}</Flexbox>;
+    // }
   }
 };
 

@@ -11,6 +11,10 @@ export interface ChatMessageError {
   message: string;
   type: ErrorType;
 }
+export interface OpenAIFunctionCall {
+  arguments?: string;
+  name: string;
+}
 
 export interface ChatMessage extends BaseDataModel {
   /**
@@ -29,7 +33,7 @@ export interface ChatMessage extends BaseDataModel {
     };
   } & Record<string, any>;
 
-  function_call?: { arguments?: string; name: string };
+  function_call?: OpenAIFunctionCall;
   name?: string;
 
   parentId?: string;

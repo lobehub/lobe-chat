@@ -1,3 +1,4 @@
+import { OpenAIFunctionCall } from '@/types/chatMessage';
 import { LLMRoleType } from '@/types/llm';
 
 export interface OpenAIChatMessage {
@@ -7,6 +8,8 @@ export interface OpenAIChatMessage {
    */
   content: string;
 
+  function_call?: OpenAIFunctionCall;
+  name?: string;
   /**
    * 角色
    * @description 消息发送者的角色

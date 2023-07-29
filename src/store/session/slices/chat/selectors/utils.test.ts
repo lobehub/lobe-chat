@@ -295,7 +295,7 @@ describe('organizeChats', () => {
       const result = organizeChats(session, avatar);
       const meta = result[0].meta;
 
-      expect(meta.avatar).toBe(avatar.assistant);
+      expect(meta.avatar).toBe('assistant-avatar');
       expect(meta.title).toBeUndefined();
     });
 
@@ -329,6 +329,7 @@ describe('organizeChats', () => {
           function_call: {
             name: 'realtimeWeather',
           },
+          name: 'realtimeWeather',
         } as ChatMessage;
 
         session.chats[message.id] = message;
@@ -336,7 +337,7 @@ describe('organizeChats', () => {
         const result = organizeChats(session, avatar);
         const meta = result[3].meta;
 
-        expect(meta.avatar).toBe('☂️');
+        expect(meta.avatar).toBe('🧩');
         expect(meta.title).toBe('realtimeWeather');
       });
     });

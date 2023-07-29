@@ -4,10 +4,9 @@ import { ChatCompletionFunctions } from 'openai-edge/types/api';
 
 import { getServerConfig } from '@/config/server';
 import { createErrorResponse } from '@/pages/api/error';
+import { PluginsMap } from '@/plugins';
 import { ErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
-
-import pluginList from '../../plugins';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -41,7 +40,7 @@ export const createChatCompletion = async ({
 
   // ============  1. 前置处理 functions   ============ //
 
-  const filterFunctions: ChatCompletionFunctions[] = pluginList
+  const filterFunctions: ChatCompletionFunctions[] = Object.values(PluginsMap)
     .filter((p) => {
       // 如果不存在 enabledPlugins，那么全部不启用
       if (!enabledPlugins) return false;
@@ -54,7 +53,11 @@ export const createChatCompletion = async ({
   const functions = filterFunctions.length === 0 ? undefined : filterFunctions;
 
   // ============  2. 前置处理 messages   ============ //
-  const formatMessages = messages.map((m) => ({ content: m.content, role: m.role }));
+  const formatMessages = messages.map((m) => ({
+    content: m.content,
+    name: m.name,
+    role: m.role,
+  }));
 
   // ============  3. 发送请求   ============ //
 

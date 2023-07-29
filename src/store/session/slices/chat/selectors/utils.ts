@@ -1,4 +1,4 @@
-import pluginList from '@/plugins';
+import { PluginsMap } from '@/plugins';
 import { ChatMessage } from '@/types/chatMessage';
 import { LobeAgentSession } from '@/types/session';
 
@@ -27,9 +27,10 @@ export const organizeChats = (
       }
 
       case 'function': {
-        const plugin = pluginList.find((p) => p.name === message.function_call?.name);
+        const plugin = PluginsMap[message.name || ''];
+
         return {
-          avatar: plugin?.avatar || '🧩',
+          avatar: '🧩',
           title: plugin?.name || 'plugin-unknown',
         };
       }

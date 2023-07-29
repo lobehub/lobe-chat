@@ -1,3 +1,6 @@
+import { PluginItem } from '@/plugins/type';
+import { WeatherResult } from '@/plugins/weather/type';
+
 import runner from './runner';
 
 const schema = {
@@ -15,6 +18,11 @@ const schema = {
   },
 };
 
-const getWeather = { avatar: '☂️', name: 'realtimeWeather', runner, schema };
+const getWeather: PluginItem<WeatherResult> = {
+  avatar: '☂️',
+  name: 'realtimeWeather',
+  runner,
+  schema,
+};
 
 export default getWeather;

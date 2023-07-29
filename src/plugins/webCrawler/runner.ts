@@ -1,36 +1,12 @@
-export type DataResults = DataItem[];
+import { PluginRunner } from '@/plugins/type';
 
-export interface DataItem {
-  crawl: Crawl;
-  markdown: string;
-  metadata: Metadata;
-  screenshotUrl: any;
-  text: string;
-  url: string;
-}
-
-export interface Crawl {
-  depth: number;
-  httpStatusCode: number;
-  loadedTime: string;
-  loadedUrl: string;
-  referrerUrl: string;
-}
-
-export interface Metadata {
-  author: any;
-  canonicalUrl: string;
-  description: string;
-  keywords: string;
-  languageCode: string;
-  title: string;
-}
+import { DataResults, Result } from './type';
 
 const BASE_URL =
   'https://api.apify.com/v2/acts/apify~website-content-crawler/run-sync-get-dataset-items';
 const token = process.env.APIFY_API_KEY;
 
-const runner = async ({ url }: { url: string }) => {
+const runner: PluginRunner<{ url: string }, Result> = async ({ url }) => {
   // Prepare Actor input
   const input = {
     aggressivePrune: false,
