@@ -40,7 +40,7 @@ const PluginResult = memo<FunctionMessageProps>(({ content }) => {
         <Icon icon={open ? LucideChevronUp : LucideChevronDown} />
       </Flexbox>
       {open && (
-        <Highlighter language={'json'} style={{ maxHeight: 200 }}>
+        <Highlighter language={'json'} style={{ maxHeight: 200, maxWidth: 600 }}>
           {data}
         </Highlighter>
       )}
