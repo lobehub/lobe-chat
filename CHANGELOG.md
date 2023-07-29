@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 0.27.0](https://github.com/lobehub/lobe-chat/compare/v0.26.1...v0.27.0)
+
+<sup>Released on **2023-07-29**</sup>
+
+#### ✨ Features
+
+- **misc**: 优化搜索引擎插件交互展示.
+
+#### 💄 Styles
+
+- **misc**: 优化兜底结果展示.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 优化搜索引擎插件交互展示 ([4751084](https://github.com/lobehub/lobe-chat/commit/4751084))
+
+#### Styles
+
+- **misc**: 优化兜底结果展示 ([9da45d6](https://github.com/lobehub/lobe-chat/commit/9da45d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.26.1](https://github.com/lobehub/lobe-chat/compare/v0.26.0...v0.26.1)
 
 <sup>Released on **2023-07-29**</sup>
