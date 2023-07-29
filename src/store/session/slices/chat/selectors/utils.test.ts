@@ -295,7 +295,7 @@ describe('organizeChats', () => {
       const result = organizeChats(session, avatar);
       const meta = result[0].meta;
 
-      expect(meta.avatar).toBe(avatar.assistant);
+      expect(meta.avatar).toBe('🧩');
       expect(meta.title).toBeUndefined();
     });
 
