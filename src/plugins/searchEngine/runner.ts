@@ -30,6 +30,8 @@ const fetchResult: PluginRunner<{ keywords: string }, Result> = async ({ keyword
   return results.map((r) => ({
     content: r.snippet,
     date: r.date,
+    displayed_link: r.displayed_link,
+    favicon: r.favicon,
     link: r.link,
     source: r.source,
     title: r.title,

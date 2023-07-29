@@ -1,11 +1,13 @@
 export type OrganicResults = OrganicResult[];
 
 export interface SearchItem {
-  content?: string;
+  content: string;
   date?: string;
-  link?: string;
+  displayed_link?: string;
+  favicon?: string;
+  link: string;
   source?: string;
-  title?: string;
+  title: string;
 }
 export type Result = SearchItem[];
 
