@@ -49,7 +49,6 @@ const FunctionCall = memo<FunctionCallProps>(({ function_call, loading }) => {
           avatar
         )}
         {t(`plugins.${function_call?.name}` as any, { ns: 'plugin' })}
-        {loading ? `（${t('loading.plugin')}）` : null}
         <Icon icon={open ? LucideChevronUp : LucideChevronDown} />
       </Flexbox>
       {open && <Highlighter language={'json'}>{args}</Highlighter>}
