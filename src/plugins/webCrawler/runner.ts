@@ -1,6 +1,6 @@
 import { PluginRunner } from '@/plugins/type';
 
-import { Result } from './type';
+import { ParserResponse, Result } from './type';
 
 const BASE_URL = process.env.BROWSERLESS_URL ?? 'https://chrome.browserless.io';
 const BROWSERLESS_TOKEN = process.env.BROWSERLESS_TOKEN;
@@ -34,10 +34,12 @@ const runner: PluginRunner<{ url: string }, Result> = async ({ url }) => {
       method: 'POST',
     });
 
-    return await parseRes.json();
+    const { title, textContent, siteName } = (await parseRes.json()) as ParserResponse;
+
+    return { content: textContent, title, url, website: siteName };
   } catch (error) {
     console.error(error);
-    return { content: '抓取失败', errorMessage: (error as any).message };
+    return { content: '抓取失败', errorMessage: (error as any).message, url };
   }
 };
 
