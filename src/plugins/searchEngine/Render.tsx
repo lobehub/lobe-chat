@@ -41,44 +41,45 @@ const useStyles = createStyles(({ css, token, cx }) => {
 const Render = memo<PluginRenderProps<Result>>(({ content }) => {
   const { styles } = useStyles();
   return (
-    <Flexbox gap={8}>
-      <Flexbox>
-        {content.map((item) => (
-          <Flexbox
-            className={styles.container}
-            distribution={'space-between'}
-            horizontal
-            key={item.link}
-            padding={12}
-          >
-            <Flexbox>
-              <Link className={styles.link} href={item.link!} target={'_blank'}>
-                <Flexbox>
-                  <Flexbox align={'center'} gap={12} horizontal>
-                    {item.favicon && (
-                      <img
-                        alt={item.title || item.link}
-                        className={styles.favicon}
-                        height={24}
-                        src={item.favicon}
-                        width={24}
-                      />
-                    )}
-                    <Flexbox>
-                      <Flexbox className={styles.desc}>{item.source}</Flexbox>
-                      <Flexbox className={styles.displayLink}>{item.displayed_link}</Flexbox>
-                    </Flexbox>
+    <Flexbox>
+      {content.map((item, index) => (
+        <Flexbox
+          className={styles.container}
+          distribution={'space-between'}
+          horizontal
+          key={item.link}
+          padding={12}
+        >
+          <Flexbox>
+            <Link className={styles.link} href={item.link!} target={'_blank'}>
+              <Flexbox>
+                <Flexbox align={'center'} gap={12} horizontal>
+                  {item.favicon && (
+                    <img
+                      alt={item.title || item.link}
+                      className={styles.favicon}
+                      height={24}
+                      src={item.favicon}
+                      width={24}
+                    />
+                  )}
+                  <Flexbox>
+                    <Flexbox className={styles.desc}>{item.source}</Flexbox>
+                    <Flexbox className={styles.displayLink}>{item.displayed_link}</Flexbox>
                   </Flexbox>
+                </Flexbox>
+                <Flexbox align={'baseline'} gap={2} horizontal>
+                  <div>{index + 1}.</div>
                   <Flexbox className={styles.title}>{item.title}</Flexbox>
                 </Flexbox>
-              </Link>
-              <Flexbox className={styles.desc}>
-                {item.date ? `${item.date} - ${item.content}` : item.content}
               </Flexbox>
+            </Link>
+            <Flexbox className={styles.desc}>
+              {item.date ? `${item.date} - ${item.content}` : item.content}
             </Flexbox>
           </Flexbox>
-        ))}
-      </Flexbox>
+        </Flexbox>
+      ))}
     </Flexbox>
   );
 });
