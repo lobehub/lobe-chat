@@ -1,6 +1,9 @@
 export default {
+  loading: {
+    content: '数据获取中...',
+    plugin: '插件运行中...',
+  },
   pluginList: '插件列表',
-  pluginLoading: '插件运行中...',
   plugins: {
     realtimeWeather: '实时天气预报',
     searchEngine: '搜索引擎',
@@ -18,6 +21,8 @@ export default {
       nightwind: '夜间风速',
       week: '星期',
     },
+    title: '近7日天气数据（{{city}}）',
+    updateAt: '更新时间',
   },
   responseData: '返回数据',
 };

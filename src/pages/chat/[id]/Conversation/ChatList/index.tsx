@@ -2,6 +2,7 @@ import { ChatList, RenderErrorMessage, RenderMessage } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
@@ -45,13 +46,13 @@ const List = () => {
     (content, message: ChatMessage) => {
       if (message.role === 'function')
         return (
-          <>
+          <Flexbox gap={12}>
             <FunctionCall
               function_call={message.function_call}
               loading={message.id === chatLoadingId}
             />
             <PluginMessage loading={message.id === chatLoadingId} {...message} />
-          </>
+          </Flexbox>
         );
 
       if (message.role === 'assistant') {

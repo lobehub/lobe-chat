@@ -30,7 +30,7 @@ export const organizeChats = (
         const plugin = PluginsMap[message.name || ''];
 
         return {
-          avatar: plugin?.avatar || '🧩',
+          avatar: '🧩',
           title: plugin?.name || 'plugin-unknown',
         };
       }
