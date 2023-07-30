@@ -52,7 +52,7 @@ export const createSettings: StateCreator<
     setSettings({
       ...settings,
       // 如果用户存在用户头像，那么不做导入
-      avatar: get().settings.avatar ?? settings.avatar,
+      avatar: !get().settings.avatar ? settings.avatar : get().settings.avatar,
     });
   },
   resetSettings: () => {
