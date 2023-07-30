@@ -21,8 +21,19 @@ export const sessionList = (s: SessionStore) => {
       .map((c) => c.content)
       .join(''),
   ]);
-
-  return Object.values(filterChats).sort((a, b) => (b.updateAt || 0) - (a.updateAt || 0));
+  // 先按照 `pinned` 字段进行排序，置顶的会排在前面。然后，根据 `updateAt` 字段进行倒序排序。
+  return Object.values(filterChats).sort((a, b) => {
+    if (a.pinned && !b.pinned) {
+      return -1;
+    }
+    if (!a.pinned && b.pinned) {
+      return 1;
+    }
+    if (a.updateAt && b.updateAt) {
+      return b.updateAt - a.updateAt;
+    }
+    return 0;
+  });
 };
 
 export const getSessionById =

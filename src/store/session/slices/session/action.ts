@@ -32,6 +32,11 @@ export interface SessionAction {
   importSessions: (sessions: LobeSessions) => void;
 
   /**
+   * 置顶会话
+   * @param sessionId
+   */
+  pinSession: (sessionId: string, pinned?: boolean) => void;
+  /**
    * 生成压缩后的消息
    * @returns 压缩后的消息
    */
@@ -42,12 +47,13 @@ export interface SessionAction {
    * @returns void
    */
   removeSession: (sessionId: string) => void;
+
   /**
    * @title 切换会话
    * @param sessionId - 会话索引
    * @returns void
    */
-  switchSession: (sessionId?: string | 'new') => Promise<void>;
+  switchSession: (sessionId?: string) => Promise<void>;
 }
 
 export const createSessionSlice: StateCreator<
@@ -104,6 +110,19 @@ export const createSessionSlice: StateCreator<
       }),
     });
   },
+  // genShareUrl: () => {
+  //   const session = sessionSelectors.currentSession(get());
+  //   if (!session) return '';
+  //
+  //   const agent = session.config;
+  //   return genShareMessagesUrl(session.chats, agent.systemRole);
+  // },
+  pinSession: (sessionId, pinned) => {
+    const nextValue = typeof pinned === 'boolean' ? pinned : !get().sessions[sessionId].pinned;
+
+    get().dispatchSession({ id: sessionId, pinned: nextValue, type: 'toggleSessionPinned' });
+  },
+
   removeSession: (sessionId) => {
     get().dispatchSession({ id: sessionId, type: 'removeSession' });
 
@@ -122,11 +141,4 @@ export const createSessionSlice: StateCreator<
     // 新会话
     await Router.push(`/chat/${sessionId}`);
   },
-  // genShareUrl: () => {
-  //   const session = sessionSelectors.currentSession(get());
-  //   if (!session) return '';
-  //
-  //   const agent = session.config;
-  //   return genShareMessagesUrl(session.chats, agent.systemRole);
-  // },
 });

@@ -19,6 +19,13 @@ interface LobeSessionBase extends BaseDataModel {
    * 聊天记录
    */
   chats: ChatMessageMap;
+  /**
+   * 置顶
+   */
+  pinned?: boolean;
+  /**
+   * 主题
+   */
   topics?: ChatTopicMap;
   /**
    * 每个会话的类别
