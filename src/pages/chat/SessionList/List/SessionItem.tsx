@@ -19,10 +19,9 @@ interface SessionItemProps {
   active?: boolean;
   id: string;
   loading?: boolean;
-  pin?: boolean;
 }
 
-const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pin }) => {
+const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
 
@@ -33,6 +32,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pi
   const [defaultModel] = useSettings((s) => [s.settings.model], shallow);
 
   const [
+    pin,
     title,
     description,
     systemRole,
@@ -42,11 +42,13 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pi
     model,
     chatLength,
     removeSession,
+    pinSession,
   ] = useSessionStore((s) => {
     const session = sessionSelectors.getSessionById(id)(s);
     const meta = session.meta;
     const systemRole = session.config.systemRole;
     return [
+      session.pinned,
       agentSelectors.getTitle(meta),
       meta.description,
       systemRole,
@@ -56,6 +58,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pi
       session.config.model,
       chatSelectors.currentChats(s).length,
       s.removeSession,
+      s.pinSession,
     ];
   }, shallow);
 
@@ -66,8 +69,9 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pi
         icon: <Icon icon={pin ? PinOff : Pin} />,
         key: 'pin',
         label: t(pin ? 'pinOff' : 'pin'),
-        // TODO: 动作绑定
-        onClick: () => {},
+        onClick: () => {
+          pinSession(id, !pin);
+        },
       },
       {
         children: [
@@ -154,7 +158,16 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pi
           style={{ color: theme.colorText }}
           title={title}
         />
-        <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
+        <Dropdown
+          arrow={false}
+          menu={{
+            items,
+            onClick: ({ domEvent }) => {
+              domEvent.stopPropagation();
+            },
+          }}
+          trigger={['click']}
+        >
           <ActionIcon
             className="session-remove"
             icon={MoreVertical}

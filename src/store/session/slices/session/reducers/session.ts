@@ -63,6 +63,11 @@ interface UpdateSessionAgentConfig {
   id: string;
   type: 'updateSessionConfig';
 }
+interface ToggleSessionPinned {
+  id: string;
+  pinned: boolean;
+  type: 'toggleSessionPinned';
+}
 
 export type SessionDispatch =
   | AddSession
@@ -70,7 +75,8 @@ export type SessionDispatch =
   | RemoveSession
   | UpdateSessionMeta
   | UpdateSessionAgentConfig
-  | UpdateSessionTopic;
+  | UpdateSessionTopic
+  | ToggleSessionPinned;
 
 export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): LobeSessions => {
   switch (payload.type) {
@@ -86,6 +92,16 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
     case 'removeSession': {
       return produce(state, (draft) => {
         delete draft[payload.id];
+      });
+    }
+
+    case 'toggleSessionPinned': {
+      return produce(state, (draft) => {
+        const { pinned, id } = payload;
+        const session = draft[id];
+        if (!session) return;
+
+        session.pinned = pinned;
       });
     }
 
