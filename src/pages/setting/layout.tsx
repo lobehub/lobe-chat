@@ -5,6 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import SideBar from '@/features/SideBar';
 import { createI18nNext } from '@/locales/create';
+import { useSettings } from '@/store/settings';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 const initI18n = createI18nNext('setting');
@@ -15,6 +16,13 @@ const SettingLayout = memo<{ children: ReactNode }>(({ children }) => {
 
   useEffect(() => {
     initI18n.finally();
+  }, []);
+
+  useEffect(() => {
+    const hasRehydrated = useSettings.persist.hasHydrated();
+    if (hasRehydrated) {
+      useSettings.setState({ sidebarKey: 'setting' });
+    }
   }, []);
 
   return (

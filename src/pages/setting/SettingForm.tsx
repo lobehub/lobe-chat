@@ -13,8 +13,8 @@ import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { options } from '@/locales/options';
 import { settingsSelectors, useSettings } from '@/store/settings';
 import { DEFAULT_SETTINGS } from '@/store/settings/initialState';
-import { ConfigKeys } from '@/types/exportConfig';
 import { LanguageModel } from '@/types/llm';
+import { ConfigKeys } from '@/types/settings';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from './ThemeSwatches';
 
