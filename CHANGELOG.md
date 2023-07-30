@@ -2,6 +2,34 @@
 
 # Changelog
 
+## [Version 0.30.0](https://github.com/lobehub/lobe-chat/compare/v0.29.0...v0.30.0)
+
+<sup>Released on **2023-07-30**</sup>
+
+#### ✨ Features
+
+- **misc**: 优化保存为话题功能, 实现 Topic 重命名功能, 实现话题删除功能, 支持缓存角色面板的展开折叠状态.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 优化保存为话题功能 ([fdbe084](https://github.com/lobehub/lobe-chat/commit/fdbe084))
+- **misc**: 实现 Topic 重命名功能 ([5ef1685](https://github.com/lobehub/lobe-chat/commit/5ef1685))
+- **misc**: 实现话题删除功能 ([970889d](https://github.com/lobehub/lobe-chat/commit/970889d))
+- **misc**: 支持缓存角色面板的展开折叠状态 ([c241c4b](https://github.com/lobehub/lobe-chat/commit/c241c4b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.29.0](https://github.com/lobehub/lobe-chat/compare/v0.28.0...v0.29.0)
 
 <sup>Released on **2023-07-30**</sup>
