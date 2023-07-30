@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.32.0](https://github.com/lobehub/lobe-chat/compare/v0.31.0...v0.32.0)
+
+<sup>Released on **2023-07-30**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持会话置顶.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持会话置顶, closes [#32](https://github.com/lobehub/lobe-chat/issues/32) ([fc44b5d](https://github.com/lobehub/lobe-chat/commit/fc44b5d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.31.0](https://github.com/lobehub/lobe-chat/compare/v0.30.1...v0.31.0)
 
 <sup>Released on **2023-07-30**</sup>
