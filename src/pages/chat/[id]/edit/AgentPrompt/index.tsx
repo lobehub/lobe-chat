@@ -1,4 +1,4 @@
-import { CodeEditor, FormGroup } from '@lobehub/ui';
+import { CodeEditor, FormGroup, TokenTag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Bot } from 'lucide-react';
 import { memo } from 'react';
@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { agentSelectors, useSessionStore } from '@/store/session';
+import { ModelTokens } from '@/const/modelTokens';
+import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
 
 export const useStyles = createStyles(({ css, token }) => ({
   input: css`
@@ -24,12 +25,25 @@ export const useStyles = createStyles(({ css, token }) => ({
 const AgentPrompt = memo(() => {
   const { t } = useTranslation('setting');
 
-  const systemRole = useSessionStore(agentSelectors.currentAgentSystemRole, shallow);
-
-  const [updateAgentConfig] = useSessionStore((s) => [s.updateAgentConfig], shallow);
+  const [systemRole, model, systemTokenCount, updateAgentConfig] = useSessionStore(
+    (s) => [
+      agentSelectors.currentAgentSystemRole(s),
+      agentSelectors.currentAgentModel(s),
+      chatSelectors.systemRoleTokenCount(s),
+      s.updateAgentConfig,
+    ],
+    shallow,
+  );
 
   return (
-    <FormGroup icon={Bot} style={FORM_STYLE.style} title={t('settingAgent.prompt.title')}>
+    <FormGroup
+      extra={
+        <TokenTag displayMode={'used'} maxValue={ModelTokens[model]} value={systemTokenCount} />
+      }
+      icon={Bot}
+      style={FORM_STYLE.style}
+      title={t('settingAgent.prompt.title')}
+    >
       <CodeEditor
         language={'md'}
         onValueChange={(e) => {
