@@ -14,9 +14,8 @@ const useStyles = createStyles(({ css, token, cx }) => {
   `;
   return {
     container: css`
-      :not(:last-child) {
-        border-bottom: 1px solid ${token.colorBorder};
-      }
+      overflow: scroll;
+      max-height: 370px;
     `,
     desc: css`
       color: ${token.colorTextTertiary};
@@ -26,6 +25,11 @@ const useStyles = createStyles(({ css, token, cx }) => {
     `,
     favicon: css`
       border-radius: 50%;
+    `,
+    item: css`
+      :not(:last-child) {
+        border-bottom: 1px solid ${token.colorBorder};
+      }
     `,
     link: css`
       &:hover {
@@ -41,10 +45,10 @@ const useStyles = createStyles(({ css, token, cx }) => {
 const Render = memo<PluginRenderProps<Result>>(({ content }) => {
   const { styles } = useStyles();
   return (
-    <Flexbox>
+    <Flexbox className={styles.container}>
       {content.map((item, index) => (
         <Flexbox
-          className={styles.container}
+          className={styles.item}
           distribution={'space-between'}
           horizontal
           key={item.link}
