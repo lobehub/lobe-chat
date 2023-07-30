@@ -8,6 +8,7 @@ import { shallow } from 'zustand/shallow';
 
 import HeaderTitle from '@/components/HeaderTitle';
 import { agentSelectors, useSessionStore } from '@/store/session';
+import { useSettings } from '@/store/settings';
 
 const Header = memo(() => {
   const { t } = useTranslation('common');
@@ -24,8 +25,8 @@ const Header = memo(() => {
     shallow,
   );
 
-  const [showAgentSettings, toggleConfig] = useSessionStore(
-    (s) => [s.showAgentSettings, s.toggleConfig],
+  const [showAgentSettings, toggleConfig] = useSettings(
+    (s) => [s.showAgentConfig, s.toggleAgentPanel],
     shallow,
   );
 

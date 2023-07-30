@@ -215,6 +215,7 @@ export const chatMessage: StateCreator<
 
     await realFetchAIResponse(histories, latestMsg.id);
   },
+
   sendMessage: async (message) => {
     const { dispatchMessage, realFetchAIResponse, autocompleteSessionAgentMeta, activeTopicId } =
       get();

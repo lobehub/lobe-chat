@@ -5,7 +5,7 @@ import { shallow } from 'zustand/shallow';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
-import { useSessionStore } from '@/store/session';
+import { useSettings } from '@/store/settings';
 
 import SideBar from './SideBar';
 
@@ -23,8 +23,8 @@ const useStyles = createStyles(({ cx, css, token, stylish }) => ({
 
 const Config = () => {
   const { styles } = useStyles();
-  const [showAgentSettings, toggleConfig] = useSessionStore(
-    (s) => [s.showAgentSettings, s.toggleConfig],
+  const [showAgentSettings, toggleConfig] = useSettings(
+    (s) => [s.showAgentConfig, s.toggleAgentPanel],
     shallow,
   );
 

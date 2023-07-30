@@ -31,6 +31,7 @@ export interface SettingsState {
   sessionExpandable?: boolean;
   sessionsWidth: number;
   settings: GlobalSettings;
+  showAgentConfig?: boolean;
   sidebarKey: SidebarTabKey;
 }
 
@@ -39,5 +40,6 @@ export const initialState: SettingsState = {
   sessionExpandable: true,
   sessionsWidth: 320,
   settings: DEFAULT_SETTINGS,
+  showAgentConfig: true,
   sidebarKey: 'chat',
 };

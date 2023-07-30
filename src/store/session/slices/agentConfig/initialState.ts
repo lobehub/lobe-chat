@@ -6,8 +6,6 @@ export type SessionLoadingState = Record<Partial<keyof MetaData>, boolean>;
 
 export interface AgentConfigState {
   autocompleteLoading: SessionLoadingState;
-
-  showAgentSettings: boolean;
 }
 
 export const initialLobeAgentConfig: LobeAgentConfig = {
@@ -32,6 +30,4 @@ export const initialAgentConfigState: AgentConfigState = {
     tag: false,
     title: false,
   },
-
-  showAgentSettings: true,
 };
