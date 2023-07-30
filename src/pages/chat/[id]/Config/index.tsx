@@ -32,11 +32,9 @@ const Config = () => {
     <DraggablePanel
       className={styles.drawer}
       expand={showAgentSettings}
-      maxWidth={CHAT_SIDEBAR_WIDTH}
       minWidth={CHAT_SIDEBAR_WIDTH}
       onExpandChange={toggleConfig}
       placement={'right'}
-      resize={false}
     >
       <HeaderSpacing />
       <DraggablePanelContainer style={{ flex: 'none', minWidth: CHAT_SIDEBAR_WIDTH }}>

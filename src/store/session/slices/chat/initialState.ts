@@ -1,6 +1,7 @@
 export interface ChatState {
   activeTopicId?: string;
   chatLoadingId?: string;
+  renameTopicId?: string;
   topicLoadingId?: string;
 }
 
