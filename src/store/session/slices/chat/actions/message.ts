@@ -1,3 +1,4 @@
+import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -113,8 +114,41 @@ export const chatMessage: StateCreator<
     set({ chatLoadingId: assistantId });
     const config = agentSelectors.currentAgentConfigSafe(get());
 
+    const compiler = template(config.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
+
+    // 对 message 做统一预处理
+
+    // 1. 替换 inputMessage 模板
+    const postMessages = !config.inputTemplate
+      ? messages
+      : messages.map((m) => {
+          if (m.role === 'user') {
+            try {
+              return { ...m, content: compiler({ text: m.content }) };
+            } catch (error) {
+              console.error(error);
+
+              return m;
+            }
+          }
+          return m;
+        });
+
+    // 2. TODO 按参数设定截断长度
+
+    // 3. 添加 systemRole
+    const { systemRole } = agentSelectors.currentAgentConfigSafe(get());
+    if (systemRole) {
+      postMessages.unshift({ content: systemRole, role: 'system' } as ChatMessage);
+    }
+
     const fetcher = () =>
-      fetchChatModel({ messages, model: config.model, ...config.params, plugins: config.plugins });
+      fetchChatModel({
+        messages: postMessages,
+        model: config.model,
+        ...config.params,
+        plugins: config.plugins,
+      });
 
     let output = '';
     let isFunctionCall = false;
@@ -154,13 +188,9 @@ export const chatMessage: StateCreator<
   realFetchAIResponse: async (messages, userMessageId) => {
     const { dispatchMessage, generateMessage, triggerFunctionCall, activeTopicId } = get();
 
-    // 添加 systemRole
-    const { systemRole, model } = agentSelectors.currentAgentConfigSafe(get());
-    if (systemRole) {
-      messages.unshift({ content: systemRole, role: 'system' } as ChatMessage);
-    }
+    const { model } = agentSelectors.currentAgentConfigSafe(get());
 
-    // 再添加一个空的信息用于放置 ai 响应，注意顺序不能反
+    // 添加一个空的信息用于放置 ai 响应，注意顺序不能反
     // 因为如果顺序反了，messages 中将包含新增的 ai message
     const mid = nanoid();
 
@@ -283,9 +313,9 @@ export const chatMessage: StateCreator<
 
     const mid = nanoid();
 
-    dispatchMessage({ id: mid, message: LOADING_FLAT, role: 'assistant', type: 'addMessage' });
-
     const chats = chatSelectors.currentChats(get());
+
+    dispatchMessage({ id: mid, message: LOADING_FLAT, role: 'assistant', type: 'addMessage' });
 
     await generateMessage(chats, mid);
   },
