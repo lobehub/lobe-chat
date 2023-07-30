@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.31.0](https://github.com/lobehub/lobe-chat/compare/v0.30.1...v0.31.0)
+
+<sup>Released on **2023-07-30**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持展示 token 使用量.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持展示 token 使用量, closes [#31](https://github.com/lobehub/lobe-chat/issues/31) ([e4d4dac](https://github.com/lobehub/lobe-chat/commit/e4d4dac))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.30.1](https://github.com/lobehub/lobe-chat/compare/v0.30.0...v0.30.1)
 
 <sup>Released on **2023-07-30**</sup>
