@@ -1,40 +1,9 @@
-import type { NeutralColors, PrimaryColors } from '@lobehub/ui';
-import { ThemeMode } from 'antd-style';
-
-import { LanguageModel } from '@/types/llm';
-
-import { Locales } from './locale';
-
-/**
- * 配置设置
- */
-export interface ConfigSettings {
-  OPENAI_API_KEY: string;
-  avatar: string;
-  compressThreshold: number;
-  enableCompressThreshold: boolean;
-  enableHistoryCount: boolean;
-  enableMaxTokens: boolean;
-  endpoint: string;
-  fontSize: number;
-  frequencyPenalty: number;
-  historyCount: number;
-  language: Locales;
-  maxTokens: number;
-  model: LanguageModel;
-  neutralColor: NeutralColors | '';
-  password: string;
-  presencePenalty: number;
-  primaryColor: PrimaryColors | '';
-  temperature: number;
-  themeMode: ThemeMode;
-  topP: number;
-}
-
-export type ConfigKeys = keyof ConfigSettings;
+import { LobeSessions } from '@/types/session';
+import { GlobalSettings } from '@/types/settings';
 
 export interface ConfigState {
-  settings: ConfigSettings;
+  sessions: LobeSessions;
+  settings: GlobalSettings;
 }
 
 export interface ConfigFile {

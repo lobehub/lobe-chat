@@ -1,16 +1,17 @@
 import { ThemeMode } from 'antd-style';
 import type { StateCreator } from 'zustand/vanilla';
 
-import type { ConfigSettings } from '@/types/exportConfig';
+import type { GlobalSettings } from '@/types/settings';
 
 import type { SidebarTabKey } from './initialState';
-import { DEFAULT_SETTINGS, GlobalSettingsState } from './initialState';
+import { DEFAULT_SETTINGS, SettingsState } from './initialState';
 import type { SettingsStore } from './store';
 
 /**
  * 设置操作
  */
 export interface SettingsAction {
+  importSettings: (settings: GlobalSettings) => void;
   /**
    * 重置设置
    */
@@ -19,12 +20,12 @@ export interface SettingsAction {
    * 设置全局设置
    * @param settings - 全局设置
    */
-  setGlobalSettings: (settings: GlobalSettingsState) => void;
+  setGlobalSettings: (settings: SettingsState) => void;
   /**
    * 设置部分配置设置
    * @param settings - 部分配置设置
    */
-  setSettings: (settings: Partial<ConfigSettings>) => void;
+  setSettings: (settings: Partial<GlobalSettings>) => void;
   /**
    * 设置主题模式
    * @param themeMode - 主题模式
@@ -43,6 +44,13 @@ export const createSettings: StateCreator<
   [],
   SettingsAction
 > = (set, get) => ({
+  importSettings: (importSettings) => {
+    const { setSettings } = get();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { OPENAI_API_KEY: _, password: __, ...settings } = importSettings;
+
+    setSettings(settings);
+  },
   resetSettings: () => {
     set({ settings: DEFAULT_SETTINGS });
   },

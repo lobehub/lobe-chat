@@ -1,9 +1,9 @@
-import type { ConfigSettings } from '@/types/exportConfig';
 import { LanguageModel } from '@/types/llm';
+import type { GlobalSettings } from '@/types/settings';
 
-export type SidebarTabKey = 'chat' | 'market';
+export type SidebarTabKey = 'chat' | 'market' | 'setting';
 
-export const DEFAULT_SETTINGS: ConfigSettings = {
+export const DEFAULT_SETTINGS: GlobalSettings = {
   OPENAI_API_KEY: '',
   avatar: '',
   compressThreshold: 24,
@@ -26,15 +26,15 @@ export const DEFAULT_SETTINGS: ConfigSettings = {
   topP: 1,
 };
 
-export interface GlobalSettingsState {
+export interface SettingsState {
   inputHeight: number;
   sessionExpandable?: boolean;
   sessionsWidth: number;
-  settings: ConfigSettings;
+  settings: GlobalSettings;
   sidebarKey: SidebarTabKey;
 }
 
-export const initialState: GlobalSettingsState = {
+export const initialState: SettingsState = {
   inputHeight: 200,
   sessionExpandable: true,
   sessionsWidth: 320,
