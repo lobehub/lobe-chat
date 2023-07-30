@@ -5,13 +5,14 @@ import { filterWithKeywords } from '@/utils/filter';
 
 import { initLobeSession } from '../initialState';
 
-export const currentSessionSel = (s: SessionStore): LobeAgentSession | undefined => {
+export const currentSession = (s: SessionStore): LobeAgentSession | undefined => {
   if (!s.activeId) return;
 
   return s.sessions[s.activeId];
 };
+
 export const currentSessionSafe = (s: SessionStore): LobeAgentSession => {
-  return currentSessionSel(s) || initLobeSession;
+  return currentSession(s) || initLobeSession;
 };
 
 export const sessionList = (s: SessionStore) => {

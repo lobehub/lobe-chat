@@ -52,6 +52,9 @@ export const useStyles = createStyles(({ css, token }, isHighlight: boolean) => 
     hover: css`
       background-color: ${token.colorFillSecondary};
     `,
+    modalRoot: css`
+      z-index: 2000;
+    `,
     pin: css`
       background-color: ${token.colorFillTertiary};
     `,

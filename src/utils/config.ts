@@ -1,7 +1,15 @@
 import { notification } from 'antd';
 
 import { CURRENT_CONFIG_VERSION, Migration } from '@/migrations';
-import { ConfigFile } from '@/types/exportConfig';
+import {
+  ConfigFile,
+  ConfigFileAgents,
+  ConfigFileAll,
+  ConfigFileSessions,
+  ConfigFileSettings,
+  ConfigModelMap,
+  ExportType,
+} from '@/types/exportConfig';
 
 export const exportConfigFile = (config: object, fileName?: string) => {
   const file = `LobeChat-${fileName || '-config'}-v${CURRENT_CONFIG_VERSION}.json`;
@@ -47,4 +55,49 @@ export const importConfigFile = (info: any, onConfigImport: (config: ConfigFile)
   };
   //@ts-ignore file 类型不明确
   reader.readAsText(info.file.originFileObj, 'utf8');
+};
+
+type CreateConfigFileState<T extends ExportType> = ConfigModelMap[T]['state'];
+
+type CreateConfigFile<T extends ExportType> = ConfigModelMap[T]['file'];
+
+export const createConfigFile = <T extends ExportType>(
+  type: T,
+  state: CreateConfigFileState<T>,
+): CreateConfigFile<T> => {
+  switch (type) {
+    case 'agents': {
+      return {
+        exportType: 'agents',
+        state,
+        version: Migration.targetVersion,
+      } as ConfigFileAgents;
+    }
+
+    case 'sessions': {
+      return {
+        exportType: 'sessions',
+        state,
+        version: Migration.targetVersion,
+      } as ConfigFileSessions;
+    }
+
+    case 'settings': {
+      return {
+        exportType: 'settings',
+        state,
+        version: Migration.targetVersion,
+      } as ConfigFileSettings;
+    }
+
+    case 'all': {
+      return {
+        exportType: 'all',
+        state,
+        version: Migration.targetVersion,
+      } as ConfigFileAll;
+    }
+  }
+
+  throw new Error('缺少正确的导出类型，请检查实现...');
 };

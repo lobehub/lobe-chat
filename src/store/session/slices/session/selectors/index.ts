@@ -1,14 +1,18 @@
+import { exportAgents, exportSessions, getExportAgent } from './export';
 import {
+  currentSession,
   currentSessionSafe,
-  currentSessionSel,
   getSessionById,
   getSessionMetaById,
   sessionList,
 } from './list';
 
 export const sessionSelectors = {
-  currentSession: currentSessionSel,
+  currentSession,
   currentSessionSafe,
+  exportAgents,
+  exportSessions,
+  getExportAgent,
   getSessionById,
   getSessionMetaById,
   sessionList,

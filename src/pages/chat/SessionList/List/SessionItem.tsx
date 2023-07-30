@@ -1,12 +1,13 @@
 import { ActionIcon, Avatar, Icon, List } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { Dropdown, type MenuProps, Popconfirm, Tag } from 'antd';
+import { App, Dropdown, type MenuProps, Tag } from 'antd';
 import { FolderOutput, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
-import { FC, memo, useMemo, useRef, useState } from 'react';
+import { FC, memo, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { agentSelectors, chatSelectors, sessionSelectors, useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
@@ -24,10 +25,10 @@ interface SessionItemProps {
 const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pin }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
-  const [popOpen, setPopOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const { t } = useTranslation('common');
-  const isHighlight = isHovering || dropdownOpen;
+  const isHighlight = isHovering;
+
   const { styles, theme, cx } = useStyles(isHighlight);
   const [defaultModel] = useSettings((s) => [s.settings.model], shallow);
 
@@ -58,23 +59,31 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pi
     ];
   }, shallow);
 
-  // TODO: 动作绑定
+  const { modal } = App.useApp();
   const items: MenuProps['items'] = useMemo(
     () => [
       {
         icon: <Icon icon={pin ? PinOff : Pin} />,
         key: 'pin',
         label: t(pin ? 'pinOff' : 'pin'),
+        // TODO: 动作绑定
+        onClick: () => {},
       },
       {
         children: [
           {
             key: 'agent',
             label: <div>{t('exportType.agent')}</div>,
+            onClick: () => {
+              exportSingleAgent(id);
+            },
           },
           {
             key: 'agentWithMessage',
             label: <div>{t('exportType.agentWithMessage')}</div>,
+            onClick: () => {
+              exportSingleSession(id);
+            },
           },
         ],
         icon: <Icon icon={FolderOutput} />,
@@ -82,10 +91,24 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pi
         label: t('export'),
       },
       {
+        danger: true,
         icon: <Icon icon={Trash} />,
         key: 'delete',
         label: t('delete'),
-        onClick: () => setPopOpen(true),
+        onClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
+
+          modal.confirm({
+            centered: true,
+            okButtonProps: { danger: true },
+            okText: t('ok'),
+            onOk: () => {
+              removeSession(id);
+            },
+            rootClassName: styles.modalRoot,
+            title: t('confirmRemoveSessionItemAlert'),
+          });
+        },
       },
     ],
     [id],
@@ -123,15 +146,6 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pi
                       {model}
                     </Tag>
                   )}
-                  {/*{showChatLength && (*/}
-                  {/*  <Tag*/}
-                  {/*    bordered={false}*/}
-                  {/*    style={{ color: theme.colorTextSecondary, display: 'flex', gap: 4 }}*/}
-                  {/*  >*/}
-                  {/*    <Icon icon={LucideMessageCircle} />*/}
-                  {/*    {chatLength}*/}
-                  {/*  </Tag>*/}
-                  {/*)}*/}
                 </Flexbox>
               )}
             </Flexbox>
@@ -140,42 +154,20 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading, pi
           style={{ color: theme.colorText }}
           title={title}
         />
-        <Popconfirm
-          arrow={false}
-          cancelText={t('cancel')}
-          okButtonProps={{ danger: true }}
-          okText={t('ok')}
-          onCancel={() => setPopOpen(false)}
-          onConfirm={(e) => {
-            e?.stopPropagation();
-            removeSession(id);
-            setPopOpen(false);
-          }}
-          open={popOpen}
-          overlayStyle={{ width: 280 }}
-          title={t('confirmRemoveSessionItemAlert')}
-        >
-          <Dropdown
-            arrow={false}
-            menu={{ items }}
-            onOpenChange={setDropdownOpen}
-            open={dropdownOpen}
-            trigger={['click']}
-          >
-            <ActionIcon
-              className="session-remove"
-              icon={MoreVertical}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              size={{
-                blockSize: 28,
-                fontSize: 16,
-              }}
-            />
-          </Dropdown>
-        </Popconfirm>
+        <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
+          <ActionIcon
+            className="session-remove"
+            icon={MoreVertical}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            size={{
+              blockSize: 28,
+              fontSize: 16,
+            }}
+          />
+        </Dropdown>
       </Flexbox>
     </div>
   );
