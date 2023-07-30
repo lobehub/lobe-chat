@@ -2,6 +2,41 @@
 
 # Changelog
 
+## [Version 0.28.0](https://github.com/lobehub/lobe-chat/compare/v0.27.4...v0.28.0)
+
+<sup>Released on **2023-07-30**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 重构 settings 相关类型.
+
+#### ✨ Features
+
+- **misc**: 优化 SideBar 实现，激活态指示更加明确, 实现 session 导入功能, 实现配置导出功能.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 重构 settings 相关类型 ([6b7c0a0](https://github.com/lobehub/lobe-chat/commit/6b7c0a0))
+
+#### What's improved
+
+- **misc**: 优化 SideBar 实现，激活态指示更加明确 ([8a467df](https://github.com/lobehub/lobe-chat/commit/8a467df))
+- **misc**: 实现 session 导入功能 ([5650167](https://github.com/lobehub/lobe-chat/commit/5650167))
+- **misc**: 实现配置导出功能 ([c1f73fe](https://github.com/lobehub/lobe-chat/commit/c1f73fe))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.27.4](https://github.com/lobehub/lobe-chat/compare/v0.27.3...v0.27.4)
 
 <sup>Released on **2023-07-29**</sup>
