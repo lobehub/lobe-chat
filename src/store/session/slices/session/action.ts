@@ -1,9 +1,10 @@
+import { produce } from 'immer';
 import { merge } from 'lodash-es';
 import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
 import { SessionStore, initLobeSession } from '@/store/session';
-import { LobeAgentSession } from '@/types/session';
+import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { uuid } from '@/utils/uuid';
 
 import { SessionDispatch, sessionsReducer } from './reducers/session';
@@ -18,10 +19,22 @@ export interface SessionAction {
   createSession: () => Promise<string>;
 
   /**
-   * 分发聊天记录
+   * 变更session
    * @param payload - 聊天记录
    */
   dispatchSession: (payload: SessionDispatch) => void;
+  /**
+   * 导入会话
+   * @param sessions
+   */
+  importSessions: (sessions: LobeSessions) => void;
+
+  /**
+   * 生成压缩后的消息
+   * @returns 压缩后的消息
+   */
+  // genShareUrl: () => string;
+
   /**
    * @title 删除会话
    * @param index - 会话索引
@@ -35,12 +48,6 @@ export interface SessionAction {
    * @returns void
    */
   switchSession: (sessionId?: string | 'new') => Promise<void>;
-
-  /**
-   * 生成压缩后的消息
-   * @returns 压缩后的消息
-   */
-  // genShareUrl: () => string;
 }
 
 export const createSessionSlice: StateCreator<
@@ -80,6 +87,20 @@ export const createSessionSlice: StateCreator<
     });
   },
 
+  importSessions: (importSessions) => {
+    const { sessions } = get();
+    set({
+      sessions: produce(sessions, (draft) => {
+        for (const [id, session] of Object.entries(importSessions)) {
+          // 如果已经存在，则跳过
+          if (draft[id]) continue;
+
+          draft[id] = session;
+        }
+      }),
+    });
+  },
+
   removeSession: (sessionId) => {
     get().dispatchSession({ id: sessionId, type: 'removeSession' });
 
@@ -87,7 +108,6 @@ export const createSessionSlice: StateCreator<
       Router.push('/');
     }
   },
-
   switchSession: async (sessionId) => {
     if (get().activeId === sessionId) return;
 

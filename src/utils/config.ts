@@ -1,7 +1,7 @@
 import { notification } from 'antd';
 
 import { CURRENT_CONFIG_VERSION, Migration } from '@/migrations';
-import { ConfigState } from '@/types/exportConfig';
+import { ConfigFile } from '@/types/exportConfig';
 
 export const exportConfigFile = (config: object, fileName?: string) => {
   const file = `LobeChat-${fileName || '-config'}-v${CURRENT_CONFIG_VERSION}.json`;
@@ -26,7 +26,7 @@ export const exportConfigFile = (config: object, fileName?: string) => {
   a.remove();
 };
 
-export const handleImport = (info: any, onConfigImport: (config: ConfigState) => void) => {
+export const importConfigFile = (info: any, onConfigImport: (config: ConfigFile) => void) => {
   const reader = new FileReader();
   //读取完文件之后的回调函数
   reader.onloadend = function (evt) {
@@ -34,9 +34,10 @@ export const handleImport = (info: any, onConfigImport: (config: ConfigState) =>
     const fileJson = fileString as string;
 
     try {
-      const { state } = Migration.migrate(JSON.parse(fileJson));
+      const config = JSON.parse(fileJson);
+      const { state } = Migration.migrate(config);
 
-      onConfigImport(state);
+      onConfigImport({ ...config, state });
     } catch (error) {
       notification.error({
         description: `出错原因: ${(error as Error).message}`,

@@ -1,5 +1,5 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
-import { Dropdown, MenuProps } from 'antd';
+import { Dropdown, MenuProps, Upload } from 'antd';
 import {
   Feather,
   FileClock,
@@ -14,6 +14,7 @@ import { ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useExportConfig } from '@/hooks/useExportConfig';
+import { useImportConfig } from '@/hooks/useImportConfig';
 
 import pkg from '../../../package.json';
 
@@ -21,12 +22,18 @@ const BottomAction = memo<{ children: ReactNode }>(({ children }) => {
   const { t } = useTranslation('common');
 
   const { exportSessions, exportSettings, exportAll, exportAgents } = useExportConfig();
+
+  const { importConfig } = useImportConfig();
   const items: MenuProps['items'] = useMemo(
     () => [
       {
         icon: <Icon icon={FolderInput} />,
         key: 'import',
-        label: <div>{t('import')}</div>,
+        label: (
+          <Upload maxCount={1} onChange={importConfig} showUploadList={false}>
+            {t('import')}
+          </Upload>
+        ),
       },
       {
         children: [
