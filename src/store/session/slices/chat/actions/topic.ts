@@ -1,7 +1,8 @@
 import { StateCreator } from 'zustand/vanilla';
 
+import { LOADING_FLAT } from '@/const/message';
 import { promptSummaryTitle } from '@/prompts/chat';
-import { SessionStore, chatSelectors, sessionSelectors } from '@/store/session';
+import { SessionStore, chatSelectors, sessionSelectors, topicSelectors } from '@/store/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
 import { nanoid } from '@/utils/uuid';
 
@@ -13,6 +14,11 @@ export interface ChatTopicAction {
    * @param payload - 要分发的主题
    */
   dispatchTopic: (payload: ChatTopicDispatch) => void;
+  /**
+   * 移除话题
+   * @param id
+   */
+  removeTopic: (id: string) => void;
   /**
    * 将当前消息保存为主题
    */
@@ -28,6 +34,7 @@ export interface ChatTopicAction {
    */
   updateTopicLoading: (id?: string) => void;
 }
+
 export const chatTopic: StateCreator<
   SessionStore,
   [['zustand/devtools', never]],
@@ -42,6 +49,24 @@ export const chatTopic: StateCreator<
     const topics = topicReducer(session.topics || {}, payload);
 
     get().dispatchSession({ id: activeId, topics, type: 'updateSessionTopic' });
+  },
+  removeTopic: (id) => {
+    const { dispatchTopic, dispatchMessage, toggleTopic } = get();
+
+    // 移除关联的 message
+    const messages = topicSelectors.getTopicMessages(id)(get());
+    for (const m of messages) {
+      dispatchMessage({
+        id: m.id,
+        type: 'deleteMessage',
+      });
+    }
+
+    // 最后移除 topic
+    dispatchTopic({ id, type: 'deleteChatTopic' });
+
+    // 切换到默认 topic
+    toggleTopic();
   },
   saveToTopic: () => {
     const session = sessionSelectors.currentSession(get());
@@ -71,6 +96,8 @@ export const chatTopic: StateCreator<
       dispatchMessage({ id: m.id, key: 'topicId', type: 'updateMessage', value: topicId });
     }
 
+    dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: LOADING_FLAT });
+
     let output = '';
 
     // 自动总结话题标题
@@ -91,7 +118,6 @@ export const chatTopic: StateCreator<
   toggleTopic: (id) => {
     set({ activeTopicId: id });
   },
-
   updateTopicLoading: (id) => {
     set({ topicLoadingId: id });
   },

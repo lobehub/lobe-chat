@@ -1,8 +1,8 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
-import { Dropdown, type MenuProps, Tag, Typography } from 'antd';
+import { App, Dropdown, type MenuProps, Tag, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { MessageSquareDashed, MoreVertical, PencilLine, Share2, Star, Trash } from 'lucide-react';
-import { memo, useMemo, useState } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
@@ -52,17 +52,17 @@ export interface ConfigCellProps {
 }
 
 const TopicItem = memo<ConfigCellProps>(({ title, active, id, showFav, fav }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { styles, theme, cx } = useStyles();
   const { t } = useTranslation('common');
 
-  const [dispatchTopic, toggleTopic] = useSessionStore(
-    (s) => [s.dispatchTopic, s.toggleTopic],
+  const [dispatchTopic, toggleTopic, removeTopic] = useSessionStore(
+    (s) => [s.dispatchTopic, s.toggleTopic, s.removeTopic],
     shallow,
   );
 
+  const { modal } = App.useApp();
   // TODO: 动作绑定
-  const items: MenuProps['items'] = useMemo(
+  const items = useMemo<MenuProps['items']>(
     () => [
       {
         icon: <Icon icon={PencilLine} />,
@@ -75,9 +75,22 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, showFav, fav }) =>
         label: t('share'),
       },
       {
+        danger: true,
         icon: <Icon icon={Trash} />,
         key: 'delete',
         label: t('delete'),
+        onClick: () => {
+          if (!id) return;
+
+          modal.confirm({
+            centered: true,
+            okButtonProps: { danger: true },
+            onOk: () => {
+              removeTopic(id);
+            },
+            title: t('topic.confirmRemoveTopic'),
+          });
+        },
       },
     ],
     [],
@@ -105,7 +118,7 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, showFav, fav }) =>
             icon={Star}
             onClick={() => {
               if (!id) return;
-              dispatchTopic({ id, key: 'favorite', type: 'updateChatTopic', value: !fav });
+              dispatchTopic({ favorite: !fav, id, type: 'favorChatTopic' });
             }}
             size={'small'}
           />
@@ -115,20 +128,27 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, showFav, fav }) =>
         </Paragraph>
         {id ? '' : <Tag>{t('temp')}</Tag>}
       </Flexbox>
-      <Dropdown
-        arrow={false}
-        menu={{ items }}
-        onOpenChange={setDropdownOpen}
-        open={dropdownOpen}
-        trigger={['click']}
-      >
-        <ActionIcon
-          className="topic-more"
-          icon={MoreVertical}
-          size={'small'}
-          style={dropdownOpen ? { opacity: 1 } : {}}
-        />
-      </Dropdown>
+      {!id ? null : (
+        <Dropdown
+          arrow={false}
+          menu={{
+            items,
+            onClick: ({ domEvent }) => {
+              domEvent.stopPropagation();
+            },
+          }}
+          trigger={['click']}
+        >
+          <ActionIcon
+            className="topic-more"
+            icon={MoreVertical}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            size={'small'}
+          />
+        </Dropdown>
+      )}
     </Flexbox>
   );
 });

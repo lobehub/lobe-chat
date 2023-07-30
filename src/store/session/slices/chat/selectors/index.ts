@@ -1,6 +1,6 @@
 import { currentChats } from './chat';
 import { chatsTokenCount, systemRoleTokenCount, totalTokenCount } from './token';
-import { currentTopics } from './topic';
+import { currentTopics, getTopicMessages } from './topic';
 
 export const chatSelectors = {
   chatsTokenCount,
@@ -11,4 +11,5 @@ export const chatSelectors = {
 
 export const topicSelectors = {
   currentTopics,
+  getTopicMessages,
 };

@@ -14,12 +14,22 @@ interface UpdateChatTopicAction {
   value: any;
 }
 
+interface FavorChatTopicAction {
+  favorite: boolean;
+  id: string;
+  type: 'favorChatTopic';
+}
+
 interface DeleteChatTopicAction {
   id: string;
   type: 'deleteChatTopic';
 }
 
-export type ChatTopicDispatch = AddChatTopicAction | UpdateChatTopicAction | DeleteChatTopicAction;
+export type ChatTopicDispatch =
+  | AddChatTopicAction
+  | UpdateChatTopicAction
+  | DeleteChatTopicAction
+  | FavorChatTopicAction;
 
 export const topicReducer = (state: ChatTopicMap, payload: ChatTopicDispatch): ChatTopicMap => {
   switch (payload.type) {
@@ -43,6 +53,18 @@ export const topicReducer = (state: ChatTopicMap, payload: ChatTopicDispatch): C
 
           topic.updateAt = Date.now();
         }
+      });
+    }
+
+    case 'favorChatTopic': {
+      return produce(state, (draftState) => {
+        const { favorite, id } = payload;
+
+        if (!draftState[id]) return;
+
+        const topic = draftState[id];
+
+        topic.favorite = favorite;
       });
     }
 

@@ -1,5 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
+import { LOADING_FLAT } from '@/const/message';
 import { fetchChatModel } from '@/services/chatModel';
 import { fetchPlugin } from '@/services/plugin';
 import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@/store/session';
@@ -9,8 +10,6 @@ import { isFunctionMessage } from '@/utils/message';
 import { nanoid } from '@/utils/uuid';
 
 import { MessageDispatch, messagesReducer } from '../reducers/message';
-
-const LOADING_FLAT = '...';
 
 /**
  * 聊天操作
