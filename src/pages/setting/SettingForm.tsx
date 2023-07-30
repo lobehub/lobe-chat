@@ -1,5 +1,5 @@
 import { Form, type ItemGroup, ThemeSwitch } from '@lobehub/ui';
-import { Form as AntForm, Button, Input, Popconfirm, Select, Switch } from 'antd';
+import { Form as AntForm, App, Button, Input, Select, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { AppWindow, BrainCog, MessagesSquare, Palette, Webhook } from 'lucide-react';
@@ -11,6 +11,7 @@ import { shallow } from 'zustand/shallow';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { options } from '@/locales/options';
+import { useSessionStore } from '@/store/session';
 import { settingsSelectors, useSettings } from '@/store/settings';
 import { DEFAULT_SETTINGS } from '@/store/settings/initialState';
 import { LanguageModel } from '@/types/llm';
@@ -27,6 +28,7 @@ type SettingItemGroup = ItemGroup & {
 const SettingForm = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
+  const clearSessions = useSessionStore((s) => s.clearSessions);
   const settings = useSettings(settingsSelectors.currentSettings, isEqual);
   const { setThemeMode, setSettings, resetSettings } = useSettings(
     (s) => ({
@@ -37,14 +39,35 @@ const SettingForm = memo(() => {
     shallow,
   );
 
+  const { message, modal } = App.useApp();
   const handleReset = useCallback(() => {
-    resetSettings();
-    form.setFieldsValue(DEFAULT_SETTINGS);
+    modal.confirm({
+      cancelText: t('cancel', { ns: 'common' }),
+      centered: true,
+      okButtonProps: { danger: true },
+      okText: t('ok', { ns: 'common' }),
+      onOk: () => {
+        resetSettings();
+        form.setFieldsValue(DEFAULT_SETTINGS);
+      },
+      title: t('danger.reset.confirm'),
+    });
   }, []);
 
   const handleClear = useCallback(() => {
-    handleReset();
-    // TODO: 删除聊天记录
+    modal.confirm({
+      cancelText: t('cancel', { ns: 'common' }),
+      centered: true,
+      okButtonProps: {
+        danger: true,
+      },
+      okText: t('ok', { ns: 'common' }),
+      onOk: () => {
+        clearSessions();
+        message.success(t('danger.clear.success'));
+      },
+      title: t('danger.clear.confirm'),
+    });
   }, []);
 
   const theme: SettingItemGroup = useMemo(
@@ -240,18 +263,9 @@ const SettingForm = memo(() => {
         },
         {
           children: (
-            <Popconfirm
-              arrow={false}
-              cancelText={t('cancel', { ns: 'common' })}
-              okButtonProps={{ danger: true }}
-              okText={t('ok', { ns: 'common' })}
-              onConfirm={handleReset}
-              title={t('danger.reset.confirm')}
-            >
-              <Button danger type="primary">
-                {t('danger.reset.action')}
-              </Button>
-            </Popconfirm>
+            <Button danger onClick={handleReset} type="primary">
+              {t('danger.reset.action')}
+            </Button>
           ),
           desc: t('danger.reset.title'),
           label: t('danger.reset.desc'),
@@ -259,18 +273,9 @@ const SettingForm = memo(() => {
         },
         {
           children: (
-            <Popconfirm
-              arrow={false}
-              cancelText={t('cancel', { ns: 'common' })}
-              okButtonProps={{ danger: true }}
-              okText={t('ok', { ns: 'common' })}
-              onConfirm={handleClear}
-              title={t('danger.clear.confirm')}
-            >
-              <Button danger type="primary">
-                {t('danger.clear.action')}
-              </Button>
-            </Popconfirm>
+            <Button danger onClick={handleClear} type="primary">
+              {t('danger.clear.action')}
+            </Button>
           ),
           desc: t('danger.clear.title'),
           label: t('danger.clear.desc'),

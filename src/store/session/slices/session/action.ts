@@ -11,18 +11,20 @@ import { SessionDispatch, sessionsReducer } from './reducers/session';
 
 export interface SessionAction {
   activeSession: (sessionId: string) => void;
+  clearSessions: () => void;
+
   /**
    * @title 添加会话
    * @param session - 会话信息
    * @returns void
    */
   createSession: () => Promise<string>;
-
   /**
    * 变更session
    * @param payload - 聊天记录
    */
   dispatchSession: (payload: SessionDispatch) => void;
+
   /**
    * 导入会话
    * @param sessions
@@ -34,14 +36,12 @@ export interface SessionAction {
    * @returns 压缩后的消息
    */
   // genShareUrl: () => string;
-
   /**
    * @title 删除会话
    * @param index - 会话索引
    * @returns void
    */
   removeSession: (sessionId: string) => void;
-
   /**
    * @title 切换会话
    * @param sessionId - 会话索引
@@ -58,6 +58,10 @@ export const createSessionSlice: StateCreator<
 > = (set, get) => ({
   activeSession: (sessionId) => {
     set({ activeId: sessionId });
+  },
+
+  clearSessions: () => {
+    set({ sessions: {} });
   },
 
   createSession: async () => {
@@ -100,7 +104,6 @@ export const createSessionSlice: StateCreator<
       }),
     });
   },
-
   removeSession: (sessionId) => {
     get().dispatchSession({ id: sessionId, type: 'removeSession' });
 
@@ -108,6 +111,7 @@ export const createSessionSlice: StateCreator<
       Router.push('/');
     }
   },
+
   switchSession: async (sessionId) => {
     if (get().activeId === sessionId) return;
 
@@ -118,7 +122,6 @@ export const createSessionSlice: StateCreator<
     // 新会话
     await Router.push(`/chat/${sessionId}`);
   },
-
   // genShareUrl: () => {
   //   const session = sessionSelectors.currentSession(get());
   //   if (!session) return '';

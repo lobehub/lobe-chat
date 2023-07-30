@@ -2,9 +2,10 @@ export default {
   danger: {
     clear: {
       action: '立即清除',
-      confirm: '确认清除所有聊天、设置数据？',
-      desc: '清除所有聊天、设置数据',
-      title: '清除所有数据',
+      confirm: '确认清除所有聊天数据？',
+      desc: '清除所有会话数据',
+      success: '已清除所有会话消息',
+      title: '清除所有会话消息',
     },
     reset: {
       action: '立即重置',

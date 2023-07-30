@@ -49,7 +49,11 @@ export const createSettings: StateCreator<
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { OPENAI_API_KEY: _, password: __, ...settings } = importSettings;
 
-    setSettings(settings);
+    setSettings({
+      ...settings,
+      // 如果用户存在用户头像，那么不做导入
+      avatar: get().settings.avatar ?? settings.avatar,
+    });
   },
   resetSettings: () => {
     set({ settings: DEFAULT_SETTINGS });

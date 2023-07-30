@@ -22,8 +22,8 @@ const BottomAction = memo<{ children: ReactNode }>(({ children }) => {
   const { t } = useTranslation('common');
 
   const { exportSessions, exportSettings, exportAll, exportAgents } = useExportConfig();
-
   const { importConfig } = useImportConfig();
+
   const items: MenuProps['items'] = useMemo(
     () => [
       {
