@@ -36,6 +36,7 @@ export interface SettingsAction {
    * @param key - 选中的侧边栏选项
    */
   switchSideBar: (key: SidebarTabKey) => void;
+  toggleAgentPanel: (visible?: boolean) => void;
 }
 
 export const createSettings: StateCreator<
@@ -52,7 +53,7 @@ export const createSettings: StateCreator<
     setSettings({
       ...settings,
       // 如果用户存在用户头像，那么不做导入
-      avatar: get().settings.avatar ?? settings.avatar,
+      avatar: !get().settings.avatar ? settings.avatar : get().settings.avatar,
     });
   },
   resetSettings: () => {
@@ -70,5 +71,10 @@ export const createSettings: StateCreator<
   },
   switchSideBar: (key) => {
     set({ sidebarKey: key });
+  },
+  toggleAgentPanel: (newValue) => {
+    const showAgentConfig = typeof newValue === 'boolean' ? newValue : !get().showAgentConfig;
+
+    set({ showAgentConfig });
   },
 });

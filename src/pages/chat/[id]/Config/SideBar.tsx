@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { Topic } from '@/pages/chat/[id]/Config/Topic';
 import { agentSelectors, useSessionStore } from '@/store/session';
 
 import Header from './Header';
+import { Topic } from './Topic';
 
 const useStyles = createStyles(({ css, token }) => ({
   desc: css`

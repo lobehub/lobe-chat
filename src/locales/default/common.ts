@@ -52,6 +52,8 @@ export default {
   temp: '临时',
   tokenDetail: '系统设定: {{systemRoleToken}} 历史消息: {{chatsToken}}',
   topic: {
+    confirmRemoveTopic: '即将删除该话题，删除后将不可恢复，请谨慎操作。',
+    defaultTitle: '默认话题',
     saveCurrentMessages: '将当前会话保存为话题',
     searchPlaceholder: '搜索话题...',
   },

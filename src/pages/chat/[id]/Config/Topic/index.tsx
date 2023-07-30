@@ -13,14 +13,7 @@ export const Topic = () => {
       <TopicItem active={!activeTopicId} fav={false} title={'默认话题'} />
 
       {topics.map(({ id, favorite, title }) => (
-        <TopicItem
-          active={activeTopicId === id}
-          fav={favorite}
-          id={id}
-          key={id}
-          showFav
-          title={title}
-        />
+        <TopicItem active={activeTopicId === id} fav={favorite} id={id} key={id} title={title} />
       ))}
     </Flexbox>
   );

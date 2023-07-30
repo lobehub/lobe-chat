@@ -47,11 +47,6 @@ export interface AgentAction {
   toggleAgentPlugin: (pluginId: string) => void;
 
   /**
-   * 切换配置
-   * @param showPanel - 是否显示面板，默认为 true
-   */
-  toggleConfig: (showPanel?: boolean) => void;
-  /**
    * 更新代理配置
    * @param config - 部分 LobeAgentConfig 的配置
    */
@@ -212,12 +207,6 @@ export const createAgentSlice: StateCreator<
     });
 
     get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
-  },
-
-  toggleConfig: (newValue) => {
-    const showAgentSettings = typeof newValue === 'boolean' ? newValue : !get().showAgentSettings;
-
-    set({ showAgentSettings });
   },
 
   updateAgentConfig: (config) => {
