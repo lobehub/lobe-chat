@@ -13,11 +13,14 @@ import Router from 'next/router';
 import { ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useExportConfig } from '@/hooks/useExportConfig';
+
 import pkg from '../../../package.json';
 
 const BottomAction = memo<{ children: ReactNode }>(({ children }) => {
   const { t } = useTranslation('common');
 
+  const { exportSessions, exportSettings, exportAll, exportAgents } = useExportConfig();
   const items: MenuProps['items'] = useMemo(
     () => [
       {
@@ -30,14 +33,17 @@ const BottomAction = memo<{ children: ReactNode }>(({ children }) => {
           {
             key: 'allAgent',
             label: <div>{t('exportType.allAgent')}</div>,
+            onClick: exportAgents,
           },
           {
             key: 'allAgentWithMessage',
             label: <div>{t('exportType.allAgentWithMessage')}</div>,
+            onClick: exportSessions,
           },
           {
             key: 'globalSetting',
             label: <div>{t('exportType.globalSetting')}</div>,
+            onClick: exportSettings,
           },
           {
             type: 'divider',
@@ -45,6 +51,7 @@ const BottomAction = memo<{ children: ReactNode }>(({ children }) => {
           {
             key: 'all',
             label: <div>{t('exportType.all')}</div>,
+            onClick: exportAll,
           },
         ],
         icon: <Icon icon={FolderOutput} />,
