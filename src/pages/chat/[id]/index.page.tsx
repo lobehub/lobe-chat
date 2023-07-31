@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { sessionSelectors, useSessionStore } from '@/store/session';
+import { agentSelectors, useSessionStore } from '@/store/session';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import Layout from '../layout';
@@ -12,12 +12,12 @@ import Header from './Header';
 import Config from './Sidebar';
 
 const Chat = memo(() => {
-  const [title] = useSessionStore((s) => {
-    const context = sessionSelectors.currentSession(s);
-    return [context?.meta.title];
-  }, isEqual);
+  const [avatar, title] = useSessionStore(
+    (s) => [agentSelectors.currentAgentAvatar(s), agentSelectors.currentAgentTitle(s)],
+    isEqual,
+  );
 
-  const pageTitle = genSiteHeadTitle(title);
+  const pageTitle = genSiteHeadTitle([avatar, title].filter(Boolean).join(' '));
 
   return (
     <>

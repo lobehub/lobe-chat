@@ -2,7 +2,7 @@ import { ActionIcon, Avatar, Icon, List } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { App, Dropdown, type MenuProps, Tag } from 'antd';
 import { FolderOutput, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
-import { FC, memo, useMemo, useRef } from 'react';
+import { FC, memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
@@ -22,13 +22,13 @@ interface SessionItemProps {
 }
 
 const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) => {
+  const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const isHovering = useHover(ref);
 
   const { t } = useTranslation('common');
-  const isHighlight = isHovering;
 
-  const { styles, theme, cx } = useStyles(isHighlight);
+  const { styles, theme } = useStyles();
   const [defaultModel] = useSettings((s) => [s.settings.model], shallow);
 
   const [
@@ -50,7 +50,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
     return [
       session.pinned,
       agentSelectors.getTitle(meta),
-      meta.description,
+      agentSelectors.getDescription(meta),
       systemRole,
       agentSelectors.getAvatar(meta),
       meta.backgroundColor,
@@ -115,49 +115,15 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
         },
       },
     ],
-    [id],
+    [id, pin],
   );
 
   const showModel = model !== defaultModel;
   const showChatLength = chatLength > 0;
 
   return (
-    <div ref={ref}>
-      <Flexbox className={cx(styles.container, pin && styles.pin)} style={{ position: 'relative' }}>
-        <Item
-          active={active}
-          avatar={
-            <Avatar
-              animation={isHovering}
-              avatar={avatar}
-              background={avatarBackground}
-              shape="circle"
-              size={46}
-              title={title}
-            />
-          }
-          className={isHighlight ? styles.hover : undefined}
-          classNames={{ time: cx('session-time', styles.time) }}
-          date={updateAt}
-          description={
-            <Flexbox gap={4}>
-              <Flexbox>{description || systemRole}</Flexbox>
-
-              {!(showModel || showChatLength) ? undefined : (
-                <Flexbox horizontal>
-                  {showModel && (
-                    <Tag bordered={false} style={{ color: theme.colorTextSecondary }}>
-                      {model}
-                    </Tag>
-                  )}
-                </Flexbox>
-              )}
-            </Flexbox>
-          }
-          loading={loading}
-          style={{ color: theme.colorText }}
-          title={title}
-        />
+    <Item
+      actions={
         <Dropdown
           arrow={false}
           menu={{
@@ -166,23 +132,54 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
               domEvent.stopPropagation();
             },
           }}
+          onOpenChange={setOpen}
+          open={open}
           trigger={['click']}
         >
           <ActionIcon
-            className="session-remove"
             icon={MoreVertical}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
             size={{
               blockSize: 28,
               fontSize: 16,
             }}
           />
         </Dropdown>
-      </Flexbox>
-    </div>
+      }
+      active={active}
+      avatar={
+        <Avatar
+          animation={isHovering}
+          avatar={avatar}
+          background={avatarBackground}
+          shape="circle"
+          size={46}
+          title={title}
+        />
+      }
+      className={styles.container}
+      date={updateAt}
+      description={
+        <Flexbox gap={4}>
+          <Flexbox>{description || systemRole}</Flexbox>
+
+          {!(showModel || showChatLength) ? undefined : (
+            <Flexbox horizontal>
+              {showModel && (
+                <Tag bordered={false} style={{ color: theme.colorTextSecondary }}>
+                  {model}
+                </Tag>
+              )}
+            </Flexbox>
+          )}
+        </Flexbox>
+      }
+      loading={loading}
+      pin={pin}
+      ref={ref}
+      showAction={open || isHovering}
+      style={{ color: theme.colorText }}
+      title={title}
+    />
   );
 }, shallow);
 

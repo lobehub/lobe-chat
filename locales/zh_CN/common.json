@@ -37,7 +37,6 @@
   "newAgent": "新建助手",
   "noDescription": "暂无描述",
   "ok": "确定",
-  "overload": "超过限制",
   "pin": "置顶",
   "pinOff": "取消置顶",
   "regenerate": "重新生成",
@@ -54,7 +53,12 @@
     "market": "助手市场"
   },
   "temp": "临时",
-  "tokenDetail": "系统设定: {{systemRoleToken}} 历史消息: {{chatsToken}}",
+  "tokenDetail": "角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}",
+  "tokenTag": {
+    "overload": "超过限制",
+    "remained": "剩余",
+    "used": "使用"
+  },
   "topic": {
     "confirmRemoveTopic": "即将删除该话题，删除后将不可恢复，请谨慎操作。",
     "defaultTitle": "默认话题",

@@ -62,7 +62,10 @@ const hasSystemRole = (s: SessionStore) => {
 };
 
 export const getAvatar = (s: MetaData) => s.avatar || DEFAULT_AVATAR;
-export const getTitle = (s: MetaData) => s.title || t('defaultSession');
+export const getTitle = (s: MetaData) => s.title || t('defaultSession', { ns: 'common' });
+
+export const getDescription = (s: MetaData) =>
+  s.description || t('noDescription', { ns: 'common' });
 
 export const agentSelectors = {
   currentAgentAvatar,
@@ -75,6 +78,7 @@ export const agentSelectors = {
   currentAgentTitle,
   currentAutocomplete,
   getAvatar,
+  getDescription,
   getTitle,
   hasSystemRole,
 };

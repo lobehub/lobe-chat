@@ -1,11 +1,8 @@
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 
-export const useStyles = createStyles(({ css, token }, isHighlight: boolean) => {
+export const useStyles = createStyles(({ css, token }) => {
   return {
-    active: css`
-      display: flex;
-    `,
     button: css`
       position: sticky;
       z-index: 30;
@@ -24,34 +21,9 @@ export const useStyles = createStyles(({ css, token }, isHighlight: boolean) => 
     `,
     container: css`
       position: relative;
-
-      .session-remove {
-        position: absolute;
-        top: 50%;
-        right: 16px;
-        transform: translateY(-50%);
-
-        opacity: ${isHighlight ? 1 : 0};
-      }
-
-      .session-time {
-        opacity: ${isHighlight ? 0 : 1};
-        transition: opacity 100ms ${token.motionEaseOut};
-      }
-
-      &:hover {
-        .session-time {
-          opacity: 0;
-        }
-
-        .session-remove {
-          opacity: 1;
-        }
-      }
+      height: 72px;
     `,
-    hover: css`
-      background-color: ${token.colorFillSecondary};
-    `,
+
     modalRoot: css`
       z-index: 2000;
     `,

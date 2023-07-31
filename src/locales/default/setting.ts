@@ -36,8 +36,8 @@ export default {
       title: '名称',
     },
     prompt: {
-      placeholder: '请输入 AI 提示词',
-      title: '助手角色',
+      placeholder: '请输入角色 Prompt 提示词',
+      title: '角色设定',
     },
     tag: {
       placeholder: '请输入标签',

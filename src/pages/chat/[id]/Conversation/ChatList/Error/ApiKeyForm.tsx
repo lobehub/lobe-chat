@@ -19,10 +19,10 @@ const APIKeyForm = memo<{ onConfirm?: () => void }>(({ onConfirm }) => {
 
   return (
     <Center gap={16} style={{ maxWidth: 300 }}>
-      <Avatar avatar={'🔑'} background={theme.colorText} gap={12} size={80} />
+      <Avatar avatar={'🔑'} background={theme.colorFillContent} gap={12} size={80} />
       <Flexbox style={{ fontSize: 20 }}>{t('unlock.apikey.title')}</Flexbox>
       <Flexbox className={styles.desc}>{t('unlock.apikey.description')}</Flexbox>
-      <Input
+      <Input.Password
         onChange={(e) => {
           setSettings({ OPENAI_API_KEY: e.target.value });
         }}

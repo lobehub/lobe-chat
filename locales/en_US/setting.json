@@ -1,16 +1,15 @@
 {
-  "agentHeader": "Edit Assistant Information",
   "danger": {
     "clear": {
       "action": "Clear Now",
-      "confirm": "Are you sure you want to clear all chat and settings data?",
-      "desc": "Clear all chat and settings data",
-      "title": "Clear All Data",
-      "success": "All session messages have been cleared."
+      "confirm": "Confirm clearing all chat data?",
+      "desc": "Clear all session data",
+      "success": "All session messages have been cleared",
+      "title": "Clear All Session Messages"
     },
     "reset": {
       "action": "Reset Now",
-      "confirm": "Are you sure you want to reset all settings?",
+      "confirm": "Confirm resetting all settings?",
       "currentVersion": "Current Version",
       "desc": "Reset all settings to default values",
       "title": "Reset All Settings"
@@ -25,34 +24,41 @@
     "avatar": {
       "title": "Avatar"
     },
+    "backgroundColor": {
+      "title": "Background Color"
+    },
     "description": {
-      "placeholder": "Please enter assistant description",
+      "placeholder": "Enter assistant description",
       "title": "Assistant Description"
     },
     "name": {
-      "placeholder": "Please enter assistant name",
+      "placeholder": "Enter assistant name",
       "title": "Name"
     },
     "prompt": {
-      "placeholder": "Please enter AI prompt",
-      "title": "Assistant Role"
+      "placeholder": "Enter role prompt",
+      "title": "Role Prompt"
     },
     "tag": {
-      "placeholder": "Please enter tags",
-      "title": "Tags"
+      "placeholder": "Enter tag",
+      "title": "Tag"
     },
-    "title": "Assistant Information",
-    "backgroundColor": {
-      "title": "Background Color"
-    }
+    "title": "Assistant Information"
   },
   "settingChat": {
+    "chatStyleType": {
+      "title": "Chat Window Style",
+      "type": {
+        "chat": "Chat Mode",
+        "docs": "Document Mode"
+      }
+    },
     "compressThreshold": {
-      "desc": "When the uncompressed chat history exceeds this value, it will be compressed",
-      "title": "Chat History Compression Threshold"
+      "desc": "When the uncompressed history messages exceed this value, compression will be performed",
+      "title": "History Message Length Compression Threshold"
     },
     "enableCompressThreshold": {
-      "title": "Enable Chat History Compression Threshold"
+      "title": "Enable History Message Length Compression Threshold"
     },
     "enableHistoryCount": {
       "title": "Enable History Message Count Limit"
@@ -63,24 +69,17 @@
     },
     "inputTemplate": {
       "desc": "The latest user message will be filled into this template",
-      "title": "User Input Preprocessing",
-      "placeholder": "Enter pre-processing template, {text} will be replaced with real-time input information"
+      "placeholder": "Enter the input template, {text} will be replaced with real-time input",
+      "title": "User Input Preprocessing"
     },
-    "title": "Chat Settings",
-    "chatStyleType": {
-      "title": "Chat Window Style",
-      "type": {
-        "chat": "Chat Mode",
-        "docs": "Document Mode"
-      }
-    }
+    "title": "Chat Settings"
   },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Enable Single Reply Limit"
     },
     "frequencyPenalty": {
-      "desc": "The higher the value, the more likely it is to reduce repeated words",
+      "desc": "The larger the value, the more likely it is to reduce repeated words",
       "title": "Frequency Penalty"
     },
     "maxTokens": {
@@ -98,18 +97,18 @@
       "title": "Model"
     },
     "presencePenalty": {
-      "desc": "The higher the value, the more likely it is to expand to new topics",
+      "desc": "The larger the value, the more likely it is to expand to new topics",
       "title": "Topic Freshness"
     },
     "temperature": {
-      "desc": "The higher the value, the more random the reply",
+      "desc": "The larger the value, the more random the reply",
       "title": "Randomness",
       "titleWithValue": "Randomness {{value}}"
     },
     "title": "Model Settings",
     "topP": {
       "desc": "Similar to randomness, but do not change together with randomness",
-      "title": "Nucleus Sampling"
+      "title": "Top-p Sampling"
     }
   },
   "settingOpenAI": {
@@ -130,8 +129,8 @@
   },
   "settingSystem": {
     "accessCode": {
-      "desc": "Encrypted access has been enabled by the administrator",
-      "placeholder": "Please enter access password",
+      "desc": "Encryption access has been enabled by the administrator",
+      "placeholder": "Enter access password",
       "title": "Access Password"
     },
     "title": "System Settings"

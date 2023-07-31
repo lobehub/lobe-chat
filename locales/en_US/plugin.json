@@ -1,14 +1,13 @@
 {
   "loading": {
-    "content": "Loading...",
+    "content": "Loading data...",
     "plugin": "Plugin is running..."
   },
   "pluginList": "Plugin List",
-  "pluginLoading": "Plugin Loading...",
   "plugins": {
     "realtimeWeather": "Real-time Weather Forecast",
     "searchEngine": "Search Engine",
-    "undefined": "Plugin Detection...",
+    "undefined": "Plugin detection in progress...",
     "websiteCrawler": "Website Content Extraction"
   },
   "realtimeWeather": {

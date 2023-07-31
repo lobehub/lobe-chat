@@ -11,15 +11,11 @@ import { AgentAction } from '@/store/session/slices/agentConfig';
 import { LobeAgentConfig } from '@/types/session';
 
 export const useStyles = createStyles(({ css, token }) => ({
-  input: css`
-    padding: 12px;
-    background: ${token.colorFillTertiary};
-    border: 1px solid ${token.colorPrimaryBorder};
-    border-radius: 8px;
-  `,
-  markdown: css`
-    padding: 12px;
-    background: ${token.colorFillTertiary};
+  token: css`
+    padding-left: 8px;
+    background: ${token.colorBgLayout};
+    border: 1px solid ${token.colorBorder};
+    border-radius: ${token.borderRadiusSM}px;
   `,
 }));
 
@@ -30,14 +26,24 @@ export interface AgentPromptProps {
 
 const AgentPrompt = memo<AgentPromptProps>(({ config, updateConfig }) => {
   const { t } = useTranslation('setting');
-
+  const { styles } = useStyles();
   const { systemRole, model } = config;
   const systemTokenCount = useMemo(() => encode(systemRole || '').length, [systemRole]);
 
   return (
     <FormGroup
       extra={
-        <TokenTag displayMode={'used'} maxValue={ModelTokens[model]} value={systemTokenCount} />
+        <TokenTag
+          className={styles.token}
+          displayMode={'used'}
+          maxValue={ModelTokens[model]}
+          text={{
+            overload: t('tokenTag.overload', { ns: 'common' }),
+            remained: t('tokenTag.remained', { ns: 'common' }),
+            used: t('tokenTag.used', { ns: 'common' }),
+          }}
+          value={systemTokenCount}
+        />
       }
       icon={Bot}
       style={FORM_STYLE.style}
@@ -46,9 +52,9 @@ const AgentPrompt = memo<AgentPromptProps>(({ config, updateConfig }) => {
       <CodeEditor
         language={'md'}
         onValueChange={(e) => updateConfig({ systemRole: e })}
-        placeholder={t('settingAgent.name.placeholder')}
+        placeholder={t('settingAgent.prompt.placeholder')}
         resize={false}
-        style={{ marginTop: 16 }}
+        style={{ padding: '16px 0' }}
         type={'pure'}
         value={systemRole}
       />
