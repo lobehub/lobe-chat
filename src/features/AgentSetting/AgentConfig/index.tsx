@@ -59,6 +59,7 @@ const AgentConfig = memo<AgentConfigProps>(({ config, updateConfig }) => {
         {
           children: <SliderWithInput max={32} min={0} />,
           desc: t('settingChat.historyCount.desc'),
+          divider: false,
           hidden: !config.enableHistoryCount,
           label: t('settingChat.historyCount.title'),
           name: 'historyCount',
@@ -73,6 +74,7 @@ const AgentConfig = memo<AgentConfigProps>(({ config, updateConfig }) => {
         {
           children: <SliderWithInput max={32} min={0} />,
           desc: t('settingChat.compressThreshold.desc'),
+          divider: false,
           hidden: !config.enableCompressThreshold,
           label: t('settingChat.compressThreshold.title'),
           name: 'compressThreshold',
@@ -139,6 +141,7 @@ const AgentConfig = memo<AgentConfigProps>(({ config, updateConfig }) => {
         {
           children: <SliderWithInput max={32_000} min={0} step={100} />,
           desc: t('settingModel.maxTokens.desc'),
+          divider: false,
           hidden: !config?.enableMaxTokens,
           label: t('settingModel.maxTokens.title'),
           name: ['params', 'max_tokens'],

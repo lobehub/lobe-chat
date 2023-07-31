@@ -8,9 +8,12 @@ import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@
 import { ChatMessage, OpenAIFunctionCall } from '@/types/chatMessage';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessage } from '@/utils/message';
+import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
 import { MessageDispatch, messagesReducer } from '../reducers/message';
+
+const t = setNamespace('chat/message');
 
 /**
  * 聊天操作
@@ -111,7 +114,11 @@ export const chatMessage: StateCreator<
 
   generateMessage: async (messages, assistantId) => {
     const { dispatchMessage } = get();
-    set({ chatLoadingId: assistantId });
+    set(
+      { chatLoadingId: assistantId },
+      false,
+      t('generateMessage(start)', { assistantId, messages }),
+    );
     const config = agentSelectors.currentAgentConfig(get());
 
     const compiler = template(config.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
@@ -180,7 +187,7 @@ export const chatMessage: StateCreator<
       },
     });
 
-    set({ chatLoadingId: undefined });
+    set({ chatLoadingId: undefined }, false, t('generateMessage(end)'));
 
     return { isFunctionCall };
   },

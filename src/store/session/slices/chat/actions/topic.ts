@@ -4,10 +4,12 @@ import { LOADING_FLAT } from '@/const/message';
 import { promptSummaryTitle } from '@/prompts/chat';
 import { SessionStore, chatSelectors, sessionSelectors, topicSelectors } from '@/store/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
+import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
 import { ChatTopicDispatch, topicReducer } from '../reducers/topic';
 
+const t = setNamespace('chat/topic');
 export interface ChatTopicAction {
   /**
    * 分发主题
@@ -116,9 +118,9 @@ export const chatTopic: StateCreator<
     });
   },
   toggleTopic: (id) => {
-    set({ activeTopicId: id });
+    set({ activeTopicId: id }, false, t('toggleTopic'));
   },
   updateTopicLoading: (id) => {
-    set({ topicLoadingId: id });
+    set({ topicLoadingId: id }, false, t('updateTopicLoading'));
   },
 });

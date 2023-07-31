@@ -4,13 +4,17 @@ import { merge } from 'lodash-es';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_AGENT, DEFAULT_BASE_SETTINGS, DEFAULT_SETTINGS } from '@/const/settings';
+import { MetaData } from '@/types/meta';
 import type { LobeAgentSession } from '@/types/session';
 import { LobeAgentConfig } from '@/types/session';
 import type { GlobalSettings } from '@/types/settings';
+import { setNamespace } from '@/utils/storeDebug';
 
 import type { SidebarTabKey } from './initialState';
 import { AppSettingsState } from './initialState';
 import type { SettingsStore } from './store';
+
+const t = setNamespace('settings');
 
 /**
  * 设置操作
@@ -69,79 +73,79 @@ export const createSettings: StateCreator<
     });
   },
   resetAgentConfig: () => {
-    const settings = get().settings;
-    settings.defaultAgent.config = DEFAULT_AGENT.config;
-    set({ settings });
+    const settings = produce(get().settings, (draft: GlobalSettings) => {
+      draft.defaultAgent.config = DEFAULT_AGENT.config;
+    });
+    set({ settings }, false, t('resetAgentConfig'));
   },
   resetAgentMeta: () => {
-    const settings = get().settings;
-    settings.defaultAgent.meta = DEFAULT_AGENT.meta;
-    set({ settings });
+    const settings = produce(get().settings, (draft: GlobalSettings) => {
+      draft.defaultAgent.meta = DEFAULT_AGENT.meta;
+    });
+    set({ settings }, false, t('resetAgentMeta'));
   },
   resetBaseSettings: () => {
     const settings = get().settings;
 
-    set({ settings: { ...settings, ...DEFAULT_BASE_SETTINGS } });
+    set({ settings: { ...settings, ...DEFAULT_BASE_SETTINGS } }, false, t('resetBaseSettings'));
   },
   resetDefaultAgent: () => {
-    const settings = get().settings;
-    settings.defaultAgent = DEFAULT_AGENT;
-    set({ settings });
+    const settings = produce(get().settings, (draft: GlobalSettings) => {
+      draft.defaultAgent = DEFAULT_AGENT;
+    });
+    set({ settings }, false, t('resetDefaultAgent'));
   },
   resetSettings: () => {
-    set({ settings: DEFAULT_SETTINGS });
+    set({ settings: DEFAULT_SETTINGS }, false, t('resetSettings'));
   },
   setAgentConfig: (config) => {
-    const settings = get().settings;
-    const oldConfig = settings.defaultAgent.config;
-    settings.defaultAgent.config = merge(config, oldConfig);
+    const settings = produce(get().settings, (draft: GlobalSettings) => {
+      const oldConfig = draft.defaultAgent.config as LobeAgentConfig;
+      draft.defaultAgent.config = merge(oldConfig, config);
+    });
 
-    set({ settings });
+    set({ settings }, false, t('setAgentConfig', config));
   },
   setAgentMeta: (meta) => {
-    const settings = get().settings;
-    const oldMeta = settings.defaultAgent.meta;
-    settings.defaultAgent.meta = merge(meta, oldMeta);
+    const settings = produce(get().settings, (draft) => {
+      const oldMeta = draft.defaultAgent.meta as MetaData;
+      draft.defaultAgent.meta = merge(oldMeta, meta);
+    });
 
-    set({ settings });
+    set({ settings }, false, t('setAgentMeta', meta));
   },
   setAppSettings: (settings) => {
-    set({ ...settings });
+    set({ ...settings }, false, t('setAppSettings', settings));
   },
   setSettings: (settings) => {
     const oldSetting = get().settings;
-    set({ settings: merge(settings, oldSetting) });
+    set({ settings: merge(oldSetting, settings) }, false, t('setSettings', settings));
   },
   setThemeMode: (themeMode) => {
     get().setSettings({ themeMode });
   },
   switchSideBar: (key) => {
-    set({ sidebarKey: key });
+    set({ sidebarKey: key }, false, t('switchSideBar', key));
   },
   toggleAgentPanel: (newValue) => {
     const showAgentConfig = typeof newValue === 'boolean' ? newValue : !get().showAgentConfig;
 
-    set({ showAgentConfig });
+    set({ showAgentConfig }, false, t('toggleAgentPanel', newValue));
   },
   toggleAgentPlugin: (id: string) => {
-    const settings = get().settings;
-
-    settings.defaultAgent.config = produce(
-      settings.defaultAgent.config,
-      (draft: LobeAgentConfig) => {
-        if (draft.plugins === undefined) {
-          draft.plugins = [id];
+    const settings = produce(get().settings, (draft: GlobalSettings) => {
+      const oldConfig = draft.defaultAgent.config as LobeAgentConfig;
+      if (oldConfig.plugins === undefined) {
+        oldConfig.plugins = [id];
+      } else {
+        if (oldConfig.plugins.includes(id)) {
+          oldConfig.plugins.splice(oldConfig.plugins.indexOf(id), 1);
         } else {
-          const plugins = draft.plugins;
-          if (plugins.includes(id)) {
-            plugins.splice(plugins.indexOf(id), 1);
-          } else {
-            plugins.push(id);
-          }
+          oldConfig.plugins.push(id);
         }
-      },
-    );
+      }
+    });
 
-    set({ settings });
+    set({ settings }, false, t('toggleAgentPlugin', id));
   },
 });

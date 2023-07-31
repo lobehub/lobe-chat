@@ -109,6 +109,7 @@ const AgentMeta = memo<AgentMetaProps>(({ config, meta, updateMeta, autocomplete
               onChange={(backgroundColor) => updateMeta({ backgroundColor })}
             />
           ),
+          divider: false,
           label: t('settingAgent.backgroundColor.title'),
           minWidth: undefined,
         },
