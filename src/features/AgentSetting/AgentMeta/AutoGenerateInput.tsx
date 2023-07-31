@@ -6,8 +6,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface AutoGenerateInputProps extends InputProps {
-  loading: boolean;
-  onGenerate: () => void;
+  loading?: boolean;
+  onGenerate?: () => void;
 }
 
 const AutoGenerateInput = memo<AutoGenerateInputProps>(({ loading, onGenerate, ...props }) => {
@@ -17,18 +17,20 @@ const AutoGenerateInput = memo<AutoGenerateInputProps>(({ loading, onGenerate, .
   return (
     <Input
       suffix={
-        <ActionIcon
-          active
-          icon={Wand2}
-          loading={loading}
-          onClick={onGenerate}
-          size={'small'}
-          style={{
-            color: theme.colorInfo,
-            marginRight: -4,
-          }}
-          title={t('autoGenerate')}
-        />
+        onGenerate && (
+          <ActionIcon
+            active
+            icon={Wand2}
+            loading={loading}
+            onClick={onGenerate}
+            size={'small'}
+            style={{
+              color: theme.colorInfo,
+              marginRight: -4,
+            }}
+            title={t('autoGenerate')}
+          />
+        )
       }
       type={'block'}
       {...props}
