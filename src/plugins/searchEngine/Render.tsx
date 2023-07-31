@@ -1,4 +1,5 @@
 import { createStyles } from 'antd-style';
+import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -59,11 +60,12 @@ const Render = memo<PluginRenderProps<Result>>(({ content }) => {
               <Flexbox>
                 <Flexbox align={'center'} gap={12} horizontal>
                   {item.favicon && (
-                    <img
+                    <Image
                       alt={item.title || item.link}
                       className={styles.favicon}
                       height={24}
                       src={item.favicon}
+                      unoptimized
                       width={24}
                     />
                   )}
