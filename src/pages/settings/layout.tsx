@@ -21,7 +21,7 @@ const SettingLayout = memo<{ children: ReactNode }>(({ children }) => {
   useEffect(() => {
     const hasRehydrated = useSettings.persist.hasHydrated();
     if (hasRehydrated) {
-      useSettings.setState({ sidebarKey: 'setting' });
+      useSettings.setState({ sidebarKey: 'settings' });
     }
   }, []);
 

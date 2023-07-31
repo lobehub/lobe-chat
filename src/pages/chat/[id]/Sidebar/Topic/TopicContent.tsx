@@ -4,6 +4,7 @@ import { createStyles } from 'antd-style';
 import { MoreVertical, PencilLine, Star, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { useSessionStore } from '@/store/session';
@@ -82,7 +83,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
   );
 
   return (
-    <>
+    <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
       <ActionIcon
         color={fav ? theme.colorWarning : undefined}
         fill={fav ? theme.colorWarning : 'transparent'}
@@ -93,7 +94,6 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
         }}
         size={'small'}
       />
-
       {!editing ? (
         <Paragraph
           className={styles.title}
@@ -115,11 +115,9 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
           showEditIcon={false}
           size={'small'}
           style={{
-            background: theme.colorBgContainer,
-            borderRadius: 6,
             height: 28,
-            padding: '0 2px',
           }}
+          type={'pure'}
           value={title}
         />
       )}
@@ -144,7 +142,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
           />
         </Dropdown>
       )}
-    </>
+    </Flexbox>
   );
 });
 

@@ -1,13 +1,14 @@
 import { CodeEditor, FormGroup, TokenTag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { encode } from 'gpt-tokenizer';
 import { Bot } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { shallow } from 'zustand/shallow';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { ModelTokens } from '@/const/modelTokens';
-import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
+import { AgentAction } from '@/store/session/slices/agentConfig';
+import { LobeAgentConfig } from '@/types/session';
 
 export const useStyles = createStyles(({ css, token }) => ({
   input: css`
@@ -22,18 +23,16 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const AgentPrompt = memo(() => {
+export interface AgentPromptProps {
+  config: LobeAgentConfig;
+  updateConfig: AgentAction['updateAgentConfig'];
+}
+
+const AgentPrompt = memo<AgentPromptProps>(({ config, updateConfig }) => {
   const { t } = useTranslation('setting');
 
-  const [systemRole, model, systemTokenCount, updateAgentConfig] = useSessionStore(
-    (s) => [
-      agentSelectors.currentAgentSystemRole(s),
-      agentSelectors.currentAgentModel(s),
-      chatSelectors.systemRoleTokenCount(s),
-      s.updateAgentConfig,
-    ],
-    shallow,
-  );
+  const { systemRole, model } = config;
+  const systemTokenCount = useMemo(() => encode(systemRole || '').length, [systemRole]);
 
   return (
     <FormGroup
@@ -46,9 +45,7 @@ const AgentPrompt = memo(() => {
     >
       <CodeEditor
         language={'md'}
-        onValueChange={(e) => {
-          updateAgentConfig({ systemRole: e });
-        }}
+        onValueChange={(e) => updateConfig({ systemRole: e })}
         placeholder={t('settingAgent.name.placeholder')}
         resize={false}
         style={{ marginTop: 16 }}

@@ -8,9 +8,12 @@ import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@
 import { ChatMessage, OpenAIFunctionCall } from '@/types/chatMessage';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessage } from '@/utils/message';
+import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
 import { MessageDispatch, messagesReducer } from '../reducers/message';
+
+const t = setNamespace('chat/message');
 
 /**
  * 聊天操作
@@ -111,8 +114,12 @@ export const chatMessage: StateCreator<
 
   generateMessage: async (messages, assistantId) => {
     const { dispatchMessage } = get();
-    set({ chatLoadingId: assistantId });
-    const config = agentSelectors.currentAgentConfigSafe(get());
+    set(
+      { chatLoadingId: assistantId },
+      false,
+      t('generateMessage(start)', { assistantId, messages }),
+    );
+    const config = agentSelectors.currentAgentConfig(get());
 
     const compiler = template(config.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
 
@@ -137,7 +144,7 @@ export const chatMessage: StateCreator<
     // 2. TODO 按参数设定截断长度
 
     // 3. 添加 systemRole
-    const { systemRole } = agentSelectors.currentAgentConfigSafe(get());
+    const { systemRole } = agentSelectors.currentAgentConfig(get());
     if (systemRole) {
       postMessages.unshift({ content: systemRole, role: 'system' } as ChatMessage);
     }
@@ -180,7 +187,7 @@ export const chatMessage: StateCreator<
       },
     });
 
-    set({ chatLoadingId: undefined });
+    set({ chatLoadingId: undefined }, false, t('generateMessage(end)'));
 
     return { isFunctionCall };
   },
@@ -188,7 +195,7 @@ export const chatMessage: StateCreator<
   realFetchAIResponse: async (messages, userMessageId) => {
     const { dispatchMessage, generateMessage, triggerFunctionCall, activeTopicId } = get();
 
-    const { model } = agentSelectors.currentAgentConfigSafe(get());
+    const { model } = agentSelectors.currentAgentConfig(get());
 
     // 添加一个空的信息用于放置 ai 响应，注意顺序不能反
     // 因为如果顺序反了，messages 中将包含新增的 ai message

@@ -5,10 +5,12 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { SessionStore, initLobeSession } from '@/store/session';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
+import { setNamespace } from '@/utils/storeDebug';
 import { uuid } from '@/utils/uuid';
 
 import { SessionDispatch, sessionsReducer } from './reducers/session';
 
+const t = setNamespace('session');
 export interface SessionAction {
   activeSession: (sessionId: string) => void;
   clearSessions: () => void;
@@ -63,11 +65,11 @@ export const createSessionSlice: StateCreator<
   SessionAction
 > = (set, get) => ({
   activeSession: (sessionId) => {
-    set({ activeId: sessionId });
+    set({ activeId: sessionId }, false, t('activeSession'));
   },
 
   clearSessions: () => {
-    set({ sessions: {} });
+    set({ sessions: {} }, false, t('clearSessions'));
   },
 
   createSession: async () => {
@@ -91,24 +93,29 @@ export const createSessionSlice: StateCreator<
 
   dispatchSession: (payload) => {
     const { type, ...res } = payload;
-    set({ sessions: sessionsReducer(get().sessions, payload) }, false, {
-      payload: res,
-      type: `dispatchChat/${type}`,
-    });
+    set(
+      { sessions: sessionsReducer(get().sessions, payload) },
+      false,
+      t(`dispatchChat/${type}`, res),
+    );
   },
 
   importSessions: (importSessions) => {
     const { sessions } = get();
-    set({
-      sessions: produce(sessions, (draft) => {
-        for (const [id, session] of Object.entries(importSessions)) {
-          // 如果已经存在，则跳过
-          if (draft[id]) continue;
+    set(
+      {
+        sessions: produce(sessions, (draft) => {
+          for (const [id, session] of Object.entries(importSessions)) {
+            // 如果已经存在，则跳过
+            if (draft[id]) continue;
 
-          draft[id] = session;
-        }
-      }),
-    });
+            draft[id] = session;
+          }
+        }),
+      },
+      false,
+      t('importSessions', importSessions),
+    );
   },
   // genShareUrl: () => {
   //   const session = sessionSelectors.currentSession(get());

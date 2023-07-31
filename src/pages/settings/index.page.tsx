@@ -4,7 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import HeaderSpacing from '@/components/HeaderSpacing';
 
 import Header from './Header';
-import SettingForm from './SettingForm';
+import Settings from './Settings';
 import SettingLayout from './layout';
 
 const Setting = memo(() => {
@@ -13,7 +13,7 @@ const Setting = memo(() => {
       <Header />
       <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
         <HeaderSpacing />
-        <SettingForm />
+        <Settings />
       </Flexbox>
     </SettingLayout>
   );

@@ -23,7 +23,7 @@ export const currentChats = (s: SessionStore): ChatMessage[] => {
 };
 
 export const systemRoleSel = (s: SessionStore): string => {
-  const config = agentSelectors.currentAgentConfigSafe(s);
+  const config = agentSelectors.currentAgentConfig(s);
 
   return config.systemRole;
 };

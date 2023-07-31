@@ -6,8 +6,11 @@ import { SessionStore, sessionSelectors } from '@/store/session';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
+import { setNamespace } from '@/utils/storeDebug';
 
 import { SessionLoadingState } from './initialState';
+
+const t = setNamespace('agentConfig');
 
 /**
  * 代理行为接口
@@ -234,6 +237,10 @@ export const createAgentSlice: StateCreator<
     }
   },
   updateLoadingState: (key, value) => {
-    set({ autocompleteLoading: { ...get().autocompleteLoading, [key]: value } });
+    set(
+      { autocompleteLoading: { ...get().autocompleteLoading, [key]: value } },
+      false,
+      t('updateLoadingState', { key, value }),
+    );
   },
 });

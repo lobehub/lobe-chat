@@ -40,7 +40,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const SideBar = memo(() => {
+const Inner = memo(() => {
   const [openModal, setOpenModal] = useState(false);
   const { styles } = useStyles();
   const [systemRole, updateAgentConfig] = useSessionStore(
@@ -87,4 +87,4 @@ const SideBar = memo(() => {
   );
 });
 
-export default SideBar;
+export default Inner;

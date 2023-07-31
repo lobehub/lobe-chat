@@ -1,3 +1,4 @@
+import isEqual from 'fast-deep-equal';
 import Head from 'next/head';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,20 +7,28 @@ import { shallow } from 'zustand/shallow';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
+import { AgentConfig, AgentMeta, AgentPlugin, AgentPrompt } from '@/features/AgentSetting';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import ChatLayout from '../../layout';
-import AgentConfig from './AgentConfig';
-import AgentMeta from './AgentMeta';
-import AgentPlugin from './AgentPlugin';
-import AgentPrompt from './AgentPrompt';
 import Header from './Header';
 
 const EditPage = memo(() => {
   const { t } = useTranslation('setting');
+  const config = useSessionStore(agentSelectors.currentAgentConfig, isEqual);
+  const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
+  const autocomplete = useSessionStore(agentSelectors.currentAutocomplete, shallow);
+  const [updateAgentConfig, toggleAgentPlugin, updateAgentMeta, title] = useSessionStore(
+    (s) => [
+      s.updateAgentConfig,
+      s.toggleAgentPlugin,
+      s.updateAgentMeta,
+      agentSelectors.currentAgentTitle(s),
+    ],
+    shallow,
+  );
 
-  const title = useSessionStore(agentSelectors.currentAgentTitle, shallow);
   const pageTitle = genSiteHeadTitle(t('header.sessionWithName', { name: title }));
 
   return (
@@ -31,10 +40,15 @@ const EditPage = memo(() => {
         <Header />
         <Flexbox align={'center'} flex={1} gap={16} padding={24} style={{ overflow: 'auto' }}>
           <HeaderSpacing height={HEADER_HEIGHT - 16} />
-          <AgentPrompt />
-          <AgentMeta />
-          <AgentConfig />
-          <AgentPlugin />
+          <AgentPrompt config={config} updateConfig={updateAgentConfig} />
+          <AgentMeta
+            autocomplete={autocomplete}
+            config={config}
+            meta={meta}
+            updateMeta={updateAgentMeta}
+          />
+          <AgentConfig config={config} updateConfig={updateAgentConfig} />
+          <AgentPlugin config={config} updateConfig={toggleAgentPlugin} />
         </Flexbox>
       </ChatLayout>
     </>

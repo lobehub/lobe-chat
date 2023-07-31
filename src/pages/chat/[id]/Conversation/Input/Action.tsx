@@ -16,7 +16,7 @@ const InputActions = memo(() => {
     shallow,
   );
   const [model, temperature] = useSessionStore((s) => {
-    const config = agentSelectors.currentAgentConfigSafe(s);
+    const config = agentSelectors.currentAgentConfig(s);
     return [
       config.model,
       config.params.temperature,

@@ -33,7 +33,7 @@ const List = () => {
   const [displayMode, chatLoadingId, deleteMessage, resendMessage, dispatchMessage] =
     useSessionStore(
       (s) => [
-        agentSelectors.currentAgentConfigSafe(s).displayMode,
+        agentSelectors.currentAgentConfig(s).displayMode,
         s.chatLoadingId,
         s.deleteMessage,
         s.resendMessage,

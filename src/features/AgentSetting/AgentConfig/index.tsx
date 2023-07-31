@@ -1,16 +1,14 @@
 import { Form, ItemGroup } from '@lobehub/ui';
 import { ConfigProvider, Input, Segmented, Select, Switch } from 'antd';
 import { useTheme } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { BrainCog, MessagesSquare } from 'lucide-react';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import SliderWithInput from 'src/components/SliderWithInput';
-import { shallow } from 'zustand/shallow';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { agentSelectors, useSessionStore } from '@/store/session';
+import { AgentAction } from '@/store/session/slices/agentConfig';
 import { LanguageModel } from '@/types/llm';
 import type { LobeAgentConfig } from '@/types/session';
 
@@ -20,13 +18,14 @@ type SettingItemGroup = ItemGroup & {
   }[];
 };
 
-const AgentConfig = () => {
+export interface AgentConfigProps {
+  config: LobeAgentConfig;
+  updateConfig: AgentAction['updateAgentConfig'];
+}
+
+const AgentConfig = memo<AgentConfigProps>(({ config, updateConfig }) => {
   const { t } = useTranslation('setting');
   const theme = useTheme();
-
-  const config = useSessionStore(agentSelectors.currentAgentConfigSafe, isEqual);
-
-  const [updateAgentConfig] = useSessionStore((s) => [s.updateAgentConfig], shallow);
 
   const chat: SettingItemGroup = useMemo(
     () => ({
@@ -60,6 +59,7 @@ const AgentConfig = () => {
         {
           children: <SliderWithInput max={32} min={0} />,
           desc: t('settingChat.historyCount.desc'),
+          divider: false,
           hidden: !config.enableHistoryCount,
           label: t('settingChat.historyCount.title'),
           name: 'historyCount',
@@ -74,6 +74,7 @@ const AgentConfig = () => {
         {
           children: <SliderWithInput max={32} min={0} />,
           desc: t('settingChat.compressThreshold.desc'),
+          divider: false,
           hidden: !config.enableCompressThreshold,
           label: t('settingChat.compressThreshold.title'),
           name: 'compressThreshold',
@@ -140,6 +141,7 @@ const AgentConfig = () => {
         {
           children: <SliderWithInput max={32_000} min={0} step={100} />,
           desc: t('settingModel.maxTokens.desc'),
+          divider: false,
           hidden: !config?.enableMaxTokens,
           label: t('settingModel.maxTokens.title'),
           name: ['params', 'max_tokens'],
@@ -165,11 +167,11 @@ const AgentConfig = () => {
       <Form
         initialValues={config}
         items={[chat, model]}
-        onValuesChange={debounce(updateAgentConfig, 100)}
+        onValuesChange={debounce(updateConfig, 100)}
         {...FORM_STYLE}
       />
     </ConfigProvider>
   );
-};
+});
 
 export default AgentConfig;

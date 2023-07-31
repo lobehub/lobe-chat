@@ -1,23 +1,22 @@
 import { Form, type ItemGroup, ThemeSwitch } from '@lobehub/ui';
-import { Form as AntForm, App, Button, Input, Select, Switch } from 'antd';
+import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
-import { AppWindow, BrainCog, MessagesSquare, Palette, Webhook } from 'lucide-react';
+import { AppWindow, Palette, Webhook } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import SliderWithInput from 'src/components/SliderWithInput';
 import { shallow } from 'zustand/shallow';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { options } from '@/locales/options';
 import { useSessionStore } from '@/store/session';
 import { settingsSelectors, useSettings } from '@/store/settings';
-import { DEFAULT_SETTINGS } from '@/store/settings/initialState';
-import { LanguageModel } from '@/types/llm';
 import { ConfigKeys } from '@/types/settings';
 
-import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from './ThemeSwatches';
+import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../ThemeSwatches';
 
 type SettingItemGroup = ItemGroup & {
   children: {
@@ -25,7 +24,7 @@ type SettingItemGroup = ItemGroup & {
   }[];
 };
 
-const SettingForm = memo(() => {
+const Common = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
   const clearSessions = useSessionStore((s) => s.clearSessions);
@@ -147,111 +146,6 @@ const SettingForm = memo(() => {
     [settings],
   );
 
-  const chat: SettingItemGroup = useMemo(
-    () => ({
-      children: [
-        {
-          children: <Switch />,
-          label: t('settingChat.enableHistoryCount.title'),
-          minWidth: undefined,
-          name: 'enableHistoryCount',
-          valuePropName: 'checked',
-        },
-        {
-          children: <SliderWithInput max={32} min={0} />,
-          desc: t('settingChat.historyCount.desc'),
-          hidden: !settings.enableHistoryCount,
-          label: t('settingChat.historyCount.title'),
-          name: 'historyCount',
-        },
-        {
-          children: <Switch />,
-          label: t('settingChat.enableCompressThreshold.title'),
-          minWidth: undefined,
-          name: 'enableCompressThreshold',
-          valuePropName: 'checked',
-        },
-        {
-          children: <SliderWithInput max={32} min={0} />,
-          desc: t('settingChat.compressThreshold.desc'),
-          hidden: !settings.enableCompressThreshold,
-          label: t('settingChat.compressThreshold.title'),
-          name: 'compressThreshold',
-        },
-      ],
-      icon: MessagesSquare,
-      title: t('settingChat.title'),
-    }),
-    [settings],
-  );
-
-  const model: SettingItemGroup = useMemo(
-    () => ({
-      children: [
-        {
-          children: (
-            <Select
-              options={Object.values(LanguageModel).map((value) => ({
-                label: value,
-                value,
-              }))}
-            />
-          ),
-          desc: t('settingModel.model.desc'),
-          label: t('settingModel.model.title'),
-          name: 'model',
-          tag: 'model',
-        },
-        {
-          children: <SliderWithInput max={1} min={0} step={0.1} />,
-          desc: t('settingModel.temperature.desc'),
-          label: t('settingModel.temperature.title'),
-          name: 'temperature',
-          tag: 'temperature',
-        },
-        {
-          children: <SliderWithInput max={1} min={0} step={0.1} />,
-          desc: t('settingModel.topP.desc'),
-          label: t('settingModel.topP.title'),
-          name: 'topP',
-          tag: 'top_p',
-        },
-        {
-          children: <SliderWithInput max={2} min={-2} step={0.1} />,
-          desc: t('settingModel.presencePenalty.desc'),
-          label: t('settingModel.presencePenalty.title'),
-          name: 'presencePenalty',
-          tag: 'presence_penalty',
-        },
-        {
-          children: <SliderWithInput max={2} min={-2} step={0.1} />,
-          desc: t('settingModel.frequencyPenalty.desc'),
-          label: t('settingModel.frequencyPenalty.title'),
-          name: 'frequencyPenalty',
-          tag: 'frequency_penalty',
-        },
-        {
-          children: <Switch />,
-          label: t('settingModel.enableMaxTokens.title'),
-          minWidth: undefined,
-          name: 'enableMaxTokens',
-          valuePropName: 'checked',
-        },
-        {
-          children: <SliderWithInput max={32_000} min={0} step={100} />,
-          desc: t('settingModel.maxTokens.desc'),
-          hidden: !settings.enableMaxTokens,
-          label: t('settingModel.maxTokens.title'),
-          name: 'maxTokens',
-          tag: 'max_tokens',
-        },
-      ],
-      icon: BrainCog,
-      title: t('settingModel.title'),
-    }),
-    [settings],
-  );
-
   const system: SettingItemGroup = useMemo(
     () => ({
       children: [
@@ -288,7 +182,7 @@ const SettingForm = memo(() => {
     [settings],
   );
 
-  const items = useMemo(() => [theme, openAI, chat, model, system], [settings]);
+  const items = useMemo(() => [theme, openAI, system], [settings]);
 
   return (
     <Form
@@ -301,4 +195,4 @@ const SettingForm = memo(() => {
   );
 });
 
-export default SettingForm;
+export default Common;

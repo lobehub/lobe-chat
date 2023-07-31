@@ -1,4 +1,4 @@
-import { LanguageModel } from '@/types/llm';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 
@@ -8,18 +8,7 @@ export interface AgentConfigState {
   autocompleteLoading: SessionLoadingState;
 }
 
-export const initialLobeAgentConfig: LobeAgentConfig = {
-  displayMode: 'chat',
-  model: LanguageModel.GPT3_5,
-  params: {
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    temperature: 0.6,
-    top_p: 1,
-  },
-  plugins: [],
-  systemRole: '',
-};
+export const initialLobeAgentConfig: LobeAgentConfig = DEFAULT_AGENT_CONFIG;
 
 export const initialAgentConfigState: AgentConfigState = {
   // // loading 中间态
