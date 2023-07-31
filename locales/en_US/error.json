@@ -1,0 +1,26 @@
+{
+  "response": {
+    "400": "Sorry, the server doesn't understand your request. Please make sure your request parameters are correct.",
+    "401": "Sorry, the server has rejected your request. This may be due to insufficient permissions or invalid authentication.",
+    "403": "Sorry, the server has rejected your request. You do not have permission to access this content.",
+    "404": "Sorry, the server cannot find the page or resource you requested. Please make sure your URL is correct.",
+    "429": "Sorry, your request is too frequent and the server is a bit tired. Please try again later.",
+    "500": "Sorry, the server seems to be experiencing some difficulties and is temporarily unable to complete your request. Please try again later.",
+    "502": "Sorry, the server seems to be lost and is temporarily unable to provide service. Please try again later.",
+    "503": "Sorry, the server is currently unable to process your request. This may be due to overload or maintenance. Please try again later.",
+    "504": "Sorry, the server did not receive a response from the upstream server. Please try again later.",
+    "InvalidAccessCode": "The password is incorrect or empty. Please enter the correct access password or add a custom OpenAI API Key.",
+    "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information."
+  },
+  "unlock": {
+    "apikey": {
+      "description": "Enter your OpenAI API Key to bypass password verification. The application will not record your API Key.",
+      "title": "Use Custom API Key"
+    },
+    "confirm": "Confirm and Retry",
+    "password": {
+      "description": "The application encryption has been enabled by the administrator. Enter the application password to unlock the application. The password only needs to be filled in once.",
+      "title": "Enter Password to Unlock Application"
+    }
+  }
+}

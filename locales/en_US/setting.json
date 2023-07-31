@@ -5,7 +5,8 @@
       "action": "Clear Now",
       "confirm": "Are you sure you want to clear all chat and settings data?",
       "desc": "Clear all chat and settings data",
-      "title": "Clear All Data"
+      "title": "Clear All Data",
+      "success": "All session messages have been cleared."
     },
     "reset": {
       "action": "Reset Now",
@@ -161,5 +162,9 @@
       "title": "Theme"
     },
     "title": "Theme Settings"
+  },
+  "tab": {
+    "agent": "Default Assistant",
+    "common": "Common Settings"
   }
 }

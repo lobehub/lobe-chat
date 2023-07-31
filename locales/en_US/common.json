@@ -32,6 +32,10 @@
   },
   "feedback": "Feedback",
   "import": "Import Configuration",
+  "message": {
+    "function_loading": "Plugin request in progress..."
+  },
+  "moreSetting": "More settings...",
   "newAgent": "New Assistant",
   "noDescription": "No description available",
   "ok": "OK",
@@ -48,11 +52,17 @@
   "sessionSetting": "Session Settings",
   "setting": "Settings",
   "share": "Share",
+  "tab": {
+    "chat": "Chat",
+    "market": "Assistant Market"
+  },
   "temp": "Temporary",
   "tokenDetail": "System Role Token: {{systemRoleToken}} Chats Token: {{chatsToken}}",
   "topic": {
     "saveCurrentMessages": "Save Current Conversation as Topic",
-    "searchPlaceholder": "Search Topics..."
+    "searchPlaceholder": "Search Topics...",
+    "confirmRemoveTopic": "You are about to delete this topic. Once deleted, it cannot be recovered. Please proceed with caution.",
+    "defaultTitle": "Default Topic"
   },
   "updateAgent": "Update Assistant Profile",
   "updatePrompt": "Update Prompts"

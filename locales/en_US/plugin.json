@@ -1,4 +1,8 @@
 {
+  "loading": {
+    "content": "Loading...",
+    "plugin": "Plugin is running..."
+  },
   "pluginList": "Plugin List",
   "pluginLoading": "Plugin Loading...",
   "plugins": {
@@ -6,5 +10,20 @@
     "searchEngine": "Search Engine",
     "undefined": "Plugin Detection...",
     "websiteCrawler": "Website Content Extraction"
-  }
+  },
+  "realtimeWeather": {
+    "data": {
+      "date": "Date",
+      "daytemp_float": "Daytime Temperature",
+      "dayweather": "Daytime Weather",
+      "daywind": "Daytime Wind Speed",
+      "nighttemp_float": "Nighttime Temperature",
+      "nightweather": "Nighttime Weather",
+      "nightwind": "Nighttime Wind Speed",
+      "week": "Week"
+    },
+    "title": "Weather Data for the Past 7 Days ({{city}})",
+    "updateAt": "Last Updated"
+  },
+  "responseData": "Response Data"
 }
