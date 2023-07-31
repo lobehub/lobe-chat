@@ -13,13 +13,15 @@ import { LobeAgentConfig } from '@/types/session';
 import AutoGenerateInput from './AutoGenerateInput';
 import BackgroundSwatches from './BackgroundSwatches';
 
+export interface Autocomplete {
+  autocompleteMeta: AgentAction['autocompleteMeta'];
+  autocompleteSessionAgentMeta: AgentAction['autocompleteSessionAgentMeta'];
+  id: string | null;
+  loading: SessionLoadingState;
+}
+
 export interface AgentMetaProps {
-  autocomplete?: {
-    autocompleteMeta: AgentAction['autocompleteMeta'];
-    autocompleteSessionAgentMeta: AgentAction['autocompleteSessionAgentMeta'];
-    id: string | null;
-    loading: SessionLoadingState;
-  };
+  autocomplete?: Autocomplete;
   config: LobeAgentConfig;
   meta: MetaData;
   updateMeta: AgentAction['updateAgentMeta'];
@@ -46,22 +48,23 @@ const AgentMeta = memo<AgentMetaProps>(({ config, meta, updateMeta, autocomplete
     // { key: 'tag', label: t('agentTag'), placeholder: t('agentTagPlaceholder') },
   ];
 
-  const autocompleteItems: FormItemProps[] = basic.map((item) => ({
-    children: (
-      <AutoGenerateInput
-        loading={autocomplete?.loading[item.key as keyof SessionLoadingState]}
-        onChange={(e) => {
-          updateMeta({ [item.key]: e.target.value });
-        }}
-        onGenerate={() => {
-          autocomplete?.autocompleteMeta(item.key as keyof typeof meta);
-        }}
-        placeholder={item.placeholder}
-        value={meta[item.key as keyof typeof meta]}
-      />
-    ),
-    label: item.label,
-  }));
+  const autocompleteItems: FormItemProps[] = basic.map((item) => {
+    const handleGenerate = () => autocomplete?.autocompleteMeta(item.key as keyof typeof meta);
+    return {
+      children: (
+        <AutoGenerateInput
+          loading={autocomplete?.loading[item.key as keyof SessionLoadingState]}
+          onChange={(e) => {
+            updateMeta({ [item.key]: e.target.value });
+          }}
+          onGenerate={autocomplete ? handleGenerate : undefined}
+          placeholder={item.placeholder}
+          value={meta[item.key as keyof typeof meta]}
+        />
+      ),
+      label: item.label,
+    };
+  });
 
   if (autocomplete) {
     const { autocompleteSessionAgentMeta, loading, id } = autocomplete;

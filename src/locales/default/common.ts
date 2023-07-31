@@ -49,6 +49,10 @@ export default {
   sendPlaceholder: '输入聊天内容...',
   setting: '设置',
   share: '分享',
+  tab: {
+    chat: '会话',
+    market: '助手市场',
+  },
   temp: '临时',
   tokenDetail: '系统设定: {{systemRoleToken}} 历史消息: {{chatsToken}}',
   topic: {

@@ -7,7 +7,7 @@ import HeaderSpacing from '@/components/HeaderSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useSettings } from '@/store/settings';
 
-import SideBar from './SideBar';
+import Inner from './Inner';
 
 const useStyles = createStyles(({ cx, css, token, stylish }) => ({
   drawer: cx(
@@ -38,7 +38,7 @@ const Config = () => {
     >
       <HeaderSpacing />
       <DraggablePanelContainer style={{ flex: 'none', minWidth: CHAT_SIDEBAR_WIDTH }}>
-        <SideBar />
+        <Inner />
       </DraggablePanelContainer>
     </DraggablePanel>
   );

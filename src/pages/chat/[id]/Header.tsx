@@ -67,7 +67,7 @@ const Header = memo(() => {
             <ActionIcon
               icon={Settings}
               onClick={() => {
-                Router.push(`/chat/${id}/edit`);
+                Router.push(`/chat/${id}/setting`);
               }}
               size={{ fontSize: 24 }}
               title={t('header.session', { ns: 'setting' })}

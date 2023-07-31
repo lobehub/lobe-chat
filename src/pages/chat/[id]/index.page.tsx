@@ -7,9 +7,9 @@ import { sessionSelectors, useSessionStore } from '@/store/session';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import Layout from '../layout';
-import Config from './Config';
 import Conversation from './Conversation';
 import Header from './Header';
+import Config from './Sidebar';
 
 const Chat = memo(() => {
   const [title] = useSessionStore((s) => {

@@ -1,13 +1,11 @@
-import { NeutralColors, PrimaryColors } from '@lobehub/ui';
-import { ThemeMode } from 'antd-style';
+import type { NeutralColors, PrimaryColors } from '@lobehub/ui';
+import type { ThemeMode } from 'antd-style';
 
-import { Locales } from '@/locales/resources';
-import { LanguageModel } from '@/types/llm';
+import type { Locales } from '@/locales/resources';
+import type { LanguageModel } from '@/types/llm';
+import type { LobeAgentSession } from '@/types/session';
 
-/**
- * 配置设置
- */
-export interface GlobalSettings {
+export interface GlobalBaseSettings {
   OPENAI_API_KEY: string;
   avatar: string;
   compressThreshold: number;
@@ -29,4 +27,14 @@ export interface GlobalSettings {
   themeMode: ThemeMode;
   topP: number;
 }
+
+export type GlobalDefaultAgent = Partial<LobeAgentSession>;
+
+/**
+ * 配置设置
+ */
+export interface GlobalSettings extends GlobalBaseSettings {
+  defaultAgent: GlobalDefaultAgent;
+}
+
 export type ConfigKeys = keyof GlobalSettings;

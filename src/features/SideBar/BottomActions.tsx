@@ -8,17 +8,24 @@ import {
   Github,
   Heart,
   Settings,
+  Settings2,
 } from 'lucide-react';
 import Router from 'next/router';
-import { ReactNode, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
+import { SettingsStore } from '@/store/settings';
 
 import pkg from '../../../package.json';
 
-const BottomAction = memo<{ children: ReactNode }>(({ children }) => {
+export interface BottomActionProps {
+  setTab: SettingsStore['switchSideBar'];
+  tab: SettingsStore['sidebarKey'];
+}
+
+const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
   const { t } = useTranslation('common');
 
   const { exportSessions, exportSettings, exportAll, exportAgents } = useExportConfig();
@@ -93,7 +100,10 @@ const BottomAction = memo<{ children: ReactNode }>(({ children }) => {
         icon: <Icon icon={Settings} />,
         key: 'setting',
         label: t('setting'),
-        onClick: () => Router.push('/setting'),
+        onClick: () => {
+          setTab('settings');
+          Router.push('/settings');
+        },
       },
     ],
     [],
@@ -103,10 +113,10 @@ const BottomAction = memo<{ children: ReactNode }>(({ children }) => {
     <>
       <ActionIcon icon={Github} onClick={() => window.open(pkg.homepage, '__blank')} />
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
-        {children}
+        <ActionIcon active={tab === 'settings'} icon={Settings2} />
       </Dropdown>
     </>
   );
 });
 
-export default BottomAction;
+export default BottomActions;

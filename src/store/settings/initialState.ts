@@ -1,32 +1,9 @@
-import { LanguageModel } from '@/types/llm';
+import { DEFAULT_SETTINGS } from '@/const/settings';
 import type { GlobalSettings } from '@/types/settings';
 
-export type SidebarTabKey = 'chat' | 'market' | 'setting';
+export type SidebarTabKey = 'chat' | 'market' | 'settings';
 
-export const DEFAULT_SETTINGS: GlobalSettings = {
-  OPENAI_API_KEY: '',
-  avatar: '',
-  compressThreshold: 24,
-  enableCompressThreshold: false,
-  enableHistoryCount: false,
-  enableMaxTokens: true,
-  endpoint: '',
-  fontSize: 14,
-  frequencyPenalty: 0,
-  historyCount: 24,
-  language: 'zh-CN',
-  maxTokens: 2000,
-  model: LanguageModel.GPT3_5,
-  neutralColor: '',
-  password: '',
-  presencePenalty: 0,
-  primaryColor: '',
-  temperature: 0.5,
-  themeMode: 'auto',
-  topP: 1,
-};
-
-export interface SettingsState {
+export interface AppSettingsState {
   inputHeight: number;
   sessionExpandable?: boolean;
   sessionsWidth: number;
@@ -35,7 +12,7 @@ export interface SettingsState {
   sidebarKey: SidebarTabKey;
 }
 
-export const initialState: SettingsState = {
+export const initialState: AppSettingsState = {
   inputHeight: 200,
   sessionExpandable: true,
   sessionsWidth: 320,

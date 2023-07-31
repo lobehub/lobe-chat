@@ -1,3 +1,4 @@
+import { DEFAULT_AGENT_META } from '@/const/meta';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
 import { initialLobeAgentConfig } from '../agentConfig';
@@ -18,7 +19,7 @@ export const initLobeSession: LobeAgentSession = {
   config: initialLobeAgentConfig,
   createAt: Date.now(),
   id: '',
-  meta: {},
+  meta: DEFAULT_AGENT_META,
   type: LobeSessionType.Agent,
   updateAt: Date.now(),
 };

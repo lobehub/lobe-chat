@@ -162,4 +162,8 @@ export default {
     },
     title: '主题设置',
   },
+  tab: {
+    agent: '默认角色',
+    common: '通用设置',
+  },
 };

@@ -16,26 +16,14 @@ import Header from './Header';
 
 const EditPage = memo(() => {
   const { t } = useTranslation('setting');
-  const config = useSessionStore(agentSelectors.currentAgentConfigSafe, isEqual);
+  const config = useSessionStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
-  const [
-    updateAgentConfig,
-    toggleAgentPlugin,
-    autocompleteMeta,
-    autocompleteSessionAgentMeta,
-    loading,
-    updateAgentMeta,
-    id,
-    title,
-  ] = useSessionStore(
+  const autocomplete = useSessionStore(agentSelectors.currentAutocomplete, shallow);
+  const [updateAgentConfig, toggleAgentPlugin, updateAgentMeta, title] = useSessionStore(
     (s) => [
       s.updateAgentConfig,
       s.toggleAgentPlugin,
-      s.autocompleteMeta,
-      s.autocompleteSessionAgentMeta,
-      s.autocompleteLoading,
       s.updateAgentMeta,
-      s.activeId,
       agentSelectors.currentAgentTitle(s),
     ],
     shallow,
@@ -54,7 +42,7 @@ const EditPage = memo(() => {
           <HeaderSpacing height={HEADER_HEIGHT - 16} />
           <AgentPrompt config={config} updateConfig={updateAgentConfig} />
           <AgentMeta
-            autocomplete={{ autocompleteMeta, autocompleteSessionAgentMeta, id, loading }}
+            autocomplete={autocomplete}
             config={config}
             meta={meta}
             updateMeta={updateAgentMeta}

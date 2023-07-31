@@ -6,13 +6,13 @@ import { importConfigFile } from '@/utils/config';
 
 export const useImportConfig = () => {
   const importSessions = useSessionStore((s) => s.importSessions);
-  const importSettings = useSettings((s) => s.importSettings);
+  const importAppSettings = useSettings((s) => s.importAppSettings);
 
   const importConfig = (info: any) => {
     importConfigFile(info, (config) => {
       switch (config.exportType) {
         case 'settings': {
-          importSettings(config.state.settings);
+          importAppSettings(config.state.settings);
           break;
         }
 
@@ -24,7 +24,7 @@ export const useImportConfig = () => {
 
         case 'all': {
           importSessions(config.state.sessions);
-          importSettings(config.state.settings);
+          importAppSettings(config.state.settings);
 
           break;
         }
