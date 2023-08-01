@@ -1,29 +1,40 @@
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
-import { agentSelectors } from '@/store/session';
 import { useSettings } from '@/store/settings';
 import { ChatMessage } from '@/types/chatMessage';
 
 import type { SessionStore } from '../../../store';
+import { agentSelectors } from '../../agentConfig';
 import { sessionSelectors } from '../../session';
+import { getSlicedMessagesWithConfig } from '../utils';
 import { organizeChats } from './utils';
 
-// 展示在聊天框中的消息
-export const currentChats = (s: SessionStore): ChatMessage[] => {
-  const session = sessionSelectors.currentSession(s);
-  if (!session) return [];
+export const getChatsById =
+  (id: string) =>
+  (s: SessionStore): ChatMessage[] => {
+    const session = sessionSelectors.getSessionById(id)(s);
 
-  return organizeChats(
-    session,
-    {
-      assistant: agentSelectors.currentAgentAvatar(s),
-      user: useSettings.getState().settings.avatar || DEFAULT_USER_AVATAR,
-    },
-    s.activeTopicId,
-  );
+    if (!session) return [];
+
+    return organizeChats(
+      session,
+      {
+        assistant: agentSelectors.currentAgentAvatar(s),
+        user: useSettings.getState().settings.avatar || DEFAULT_USER_AVATAR,
+      },
+      s.activeTopicId,
+    );
+  };
+
+// 当前激活的消息列表
+export const currentChats = (s: SessionStore): ChatMessage[] => {
+  if (!s.activeId) return [];
+
+  return getChatsById(s.activeId)(s);
 };
 
-export const systemRoleSel = (s: SessionStore): string => {
+export const currentChatsWithHistoryConfig = (s: SessionStore): ChatMessage[] => {
+  const chats = currentChats(s);
   const config = agentSelectors.currentAgentConfig(s);
 
-  return config.systemRole;
+  return getSlicedMessagesWithConfig(chats, config);
 };

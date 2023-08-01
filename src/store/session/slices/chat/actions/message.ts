@@ -5,6 +5,7 @@ import { LOADING_FLAT } from '@/const/message';
 import { fetchChatModel } from '@/services/chatModel';
 import { fetchPlugin } from '@/services/plugin';
 import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@/store/session';
+import { getSlicedMessagesWithConfig } from '@/store/session/slices/chat/utils';
 import { ChatMessage, OpenAIFunctionCall } from '@/types/chatMessage';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessage } from '@/utils/message';
@@ -123,12 +124,17 @@ export const chatMessage: StateCreator<
 
     const compiler = template(config.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
 
-    // 对 message 做统一预处理
+    // ========================== //
+    //   对 messages 做统一预处理    //
+    // ========================== //
 
-    // 1. 替换 inputMessage 模板
+    // 1. 按参数设定截断长度
+    const slicedMessages = getSlicedMessagesWithConfig(messages, config);
+
+    // 2. 替换 inputMessage 模板
     const postMessages = !config.inputTemplate
-      ? messages
-      : messages.map((m) => {
+      ? slicedMessages
+      : slicedMessages.map((m) => {
           if (m.role === 'user') {
             try {
               return { ...m, content: compiler({ text: m.content }) };
@@ -141,12 +147,9 @@ export const chatMessage: StateCreator<
           return m;
         });
 
-    // 2. TODO 按参数设定截断长度
-
     // 3. 添加 systemRole
-    const { systemRole } = agentSelectors.currentAgentConfig(get());
-    if (systemRole) {
-      postMessages.unshift({ content: systemRole, role: 'system' } as ChatMessage);
+    if (config.systemRole) {
+      postMessages.unshift({ content: config.systemRole, role: 'system' } as ChatMessage);
     }
 
     const fetcher = () =>
