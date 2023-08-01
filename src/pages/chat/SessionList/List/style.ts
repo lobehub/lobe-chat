@@ -21,7 +21,6 @@ export const useStyles = createStyles(({ css, token }) => {
     `,
     container: css`
       position: relative;
-      height: 72px;
     `,
 
     modalRoot: css`

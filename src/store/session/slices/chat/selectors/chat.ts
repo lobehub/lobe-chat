@@ -22,6 +22,23 @@ export const currentChats = (s: SessionStore): ChatMessage[] => {
   );
 };
 
+export const getChatsById =
+  (id: string) =>
+  (s: SessionStore): ChatMessage[] => {
+    const session = sessionSelectors.getSessionById(id)(s);
+
+    if (!session) return [];
+
+    return organizeChats(
+      session,
+      {
+        assistant: agentSelectors.currentAgentAvatar(s),
+        user: useSettings.getState().settings.avatar || DEFAULT_USER_AVATAR,
+      },
+      s.activeTopicId,
+    );
+  };
+
 export const systemRoleSel = (s: SessionStore): string => {
   const config = agentSelectors.currentAgentConfig(s);
 

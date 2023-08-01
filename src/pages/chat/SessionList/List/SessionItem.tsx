@@ -56,7 +56,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
       meta.backgroundColor,
       session?.updateAt,
       session.config.model,
-      chatSelectors.currentChats(s).length,
+      chatSelectors.getChatsById(id)(s).length,
       s.removeSession,
       s.pinSession,
     ];
@@ -177,7 +177,6 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
       pin={pin}
       ref={ref}
       showAction={open || isHovering}
-      style={{ color: theme.colorText }}
       title={title}
     />
   );
