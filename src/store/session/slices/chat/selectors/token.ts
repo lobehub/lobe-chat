@@ -1,7 +1,15 @@
 import { encode } from 'gpt-tokenizer';
 
+import { agentSelectors } from '@/store/session';
+
 import type { SessionStore } from '../../../store';
-import { currentChats, systemRoleSel } from './chat';
+import { currentChatsWithHistoryConfig } from './chat';
+
+export const systemRoleSel = (s: SessionStore): string => {
+  const config = agentSelectors.currentAgentConfig(s);
+
+  return config.systemRole;
+};
 
 const systemRoleTokens = (s: SessionStore): number[] => {
   const systemRole = systemRoleSel(s);
@@ -10,7 +18,7 @@ const systemRoleTokens = (s: SessionStore): number[] => {
 };
 
 const chatsTokens = (s: SessionStore): number[] => {
-  const chats = currentChats(s);
+  const chats = currentChatsWithHistoryConfig(s);
   return encode(chats.map((m) => m.content).join(''));
 };
 

@@ -21,6 +21,7 @@ const SliderWithInput = memo<SliderWithInputProps>(
     controls,
     style,
     className,
+    disabled,
     ...props
   }) => {
     const handleOnchange = useCallback((value: number | null) => {
@@ -38,6 +39,7 @@ const SliderWithInput = memo<SliderWithInputProps>(
       >
         <Slider
           defaultValue={defaultValue}
+          disabled={disabled}
           max={max}
           min={min}
           onChange={handleOnchange}
@@ -50,6 +52,7 @@ const SliderWithInput = memo<SliderWithInputProps>(
         <InputNumber
           controls={size !== 'small' || controls}
           defaultValue={defaultValue}
+          disabled={disabled}
           max={max}
           min={min}
           onChange={handleOnchange}

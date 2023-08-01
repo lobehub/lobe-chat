@@ -1,8 +1,9 @@
 import { ActionIcon } from '@lobehub/ui';
-import { Dropdown, Popconfirm, Popover } from 'antd';
-import { BrainCog, Eraser, Thermometer } from 'lucide-react';
+import { Dropdown, Popover, Switch } from 'antd';
+import { BrainCog, Thermometer, Timer, TimerOff } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import SliderWithInput from '@/components/SliderWithInput';
@@ -11,16 +12,15 @@ import { LanguageModel } from '@/types/llm';
 
 const InputActions = memo(() => {
   const { t } = useTranslation('setting');
-  const [clearMessage, updateAgentConfig] = useSessionStore(
-    (s) => [s.clearMessage, s.updateAgentConfig],
-    shallow,
-  );
-  const [model, temperature] = useSessionStore((s) => {
+
+  const [model, temperature, historyCount, unlimited, updateAgentConfig] = useSessionStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
     return [
       config.model,
       config.params.temperature,
-      // config.historyCount
+      config.historyCount,
+      !config.enableHistoryCount,
+      s.updateAgentConfig,
     ];
   }, shallow);
 
@@ -54,6 +54,7 @@ const InputActions = memo(() => {
             value={temperature}
           />
         }
+        placement={'top'}
         trigger={'click'}
       >
         <ActionIcon
@@ -62,36 +63,47 @@ const InputActions = memo(() => {
           title={t('settingModel.temperature.titleWithValue', { value: temperature })}
         />
       </Popover>
-      {/*TODO 历史记录功能实现 */}
-      {/*<Popover*/}
-      {/*  content={*/}
-      {/*    <SliderWithInput*/}
-      {/*      min={0}*/}
-      {/*      onChange={(v) => {*/}
-      {/*        updateAgentConfig({ historyCount: v });*/}
-      {/*      }}*/}
-      {/*      step={1}*/}
-      {/*      style={{ width: 120 }}*/}
-      {/*      value={historyCount}*/}
-      {/*    />*/}
-      {/*  }*/}
-      {/*  trigger={'click'}*/}
-      {/*>*/}
-      {/*  <ActionIcon icon={Timer} title={t('settingChat.historyCount.title')} />*/}
-      {/*</Popover>*/}
-      <Popconfirm
-        cancelText={t('cancel', { ns: 'common' })}
-        okButtonProps={{ danger: true }}
-        okText={t('ok', { ns: 'common' })}
-        onConfirm={() => clearMessage()}
-        title={t('confirmClearCurrentMessages', { ns: 'common' })}
+      <Popover
+        arrow={false}
+        content={
+          <Flexbox align={'center'} gap={16} horizontal>
+            <SliderWithInput
+              disabled={unlimited}
+              max={30}
+              min={1}
+              onChange={(v) => {
+                updateAgentConfig({ historyCount: v });
+              }}
+              step={1}
+              style={{ width: 160 }}
+              value={historyCount}
+            />
+            <Flexbox align={'center'} gap={4} horizontal>
+              <Switch
+                checked={unlimited}
+                onChange={(checked) => {
+                  updateAgentConfig({ enableHistoryCount: !checked });
+                }}
+                size={'small'}
+              />
+              {t('settingChat.enableHistoryCount.alias')}
+            </Flexbox>
+          </Flexbox>
+        }
+        placement={'top'}
+        trigger={'click'}
       >
         <ActionIcon
-          icon={Eraser}
+          icon={unlimited ? TimerOff : Timer}
           placement={'bottom'}
-          title={t('clearCurrentMessages', { ns: 'common' })}
+          title={t(
+            unlimited
+              ? 'settingChat.enableHistoryCount.unlimited'
+              : 'settingChat.enableHistoryCount.limited',
+            { number: historyCount || 0 },
+          )}
         />
-      </Popconfirm>
+      </Popover>
     </>
   );
 });

@@ -10,6 +10,7 @@ import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
 import InputActions from './Action';
+import ActionsRight from './ActionRight';
 import Token from './Token';
 
 const ChatInput = () => {
@@ -52,6 +53,7 @@ const ChatInput = () => {
             <Token input={text} />
           </>
         }
+        actionsRight={<ActionsRight />}
         expand={expand}
         footer={footer}
         minHeight={CHAT_TEXTAREA_HEIGHT}

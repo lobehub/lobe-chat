@@ -61,7 +61,10 @@ export default {
       title: '是否开启历史消息长度压缩阈值',
     },
     enableHistoryCount: {
-      title: '是否开启携带的历史消息数限制',
+      alias: '不限制',
+      limited: '只包含 {{number}} 条会话消息',
+      title: '限制历史消息数',
+      unlimited: '不限历史消息数',
     },
     historyCount: {
       desc: '每次请求携带的历史消息数',
