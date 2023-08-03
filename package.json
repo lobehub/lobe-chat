@@ -93,7 +93,7 @@
     "swr": "^2",
     "ts-md5": "^1",
     "uuid": "^9",
-    "zustand": "^4",
+    "zustand": "^4.4",
     "zustand-utils": "^1"
   },
   "devDependencies": {

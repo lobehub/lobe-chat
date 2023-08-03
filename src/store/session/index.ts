@@ -1,5 +1,6 @@
-import { create } from 'zustand';
+import equal from 'fast-deep-equal';
 import { PersistOptions, devtools, persist } from 'zustand/middleware';
+import { createWithEqualityFn } from 'zustand/traditional';
 
 import { isDev } from '@/utils/env';
 
@@ -22,13 +23,14 @@ const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
   // version: Migration.targetVersion,
 };
 
-export const useSessionStore = create<SessionStore>()(
+export const useSessionStore = createWithEqualityFn<SessionStore>()(
   persist(
     devtools(createStore, {
       name: LOBE_CHAT + (isDev ? '_DEV' : ''),
     }),
     persistOptions,
   ),
+  equal,
 );
 
 export * from './selectors';
