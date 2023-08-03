@@ -85,3 +85,7 @@ export interface LobeAgentSession extends LobeSessionBase {
 }
 
 export type LobeSessions = Record<string, LobeAgentSession>;
+
+export type LobeAgentConfigKeys =
+  | keyof LobeAgentConfig
+  | ['params', keyof LobeAgentConfig['params']];

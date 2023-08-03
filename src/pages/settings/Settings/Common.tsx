@@ -20,7 +20,7 @@ import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../ThemeSwatches';
 
 type SettingItemGroup = ItemGroup & {
   children: {
-    name?: ConfigKeys;
+    name?: ConfigKeys | string;
   }[];
 };
 

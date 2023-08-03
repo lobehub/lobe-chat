@@ -11,10 +11,11 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { AgentAction } from '@/store/session/slices/agentConfig';
 import { LanguageModel } from '@/types/llm';
 import type { LobeAgentConfig } from '@/types/session';
+import { LobeAgentConfigKeys } from '@/types/session';
 
 type SettingItemGroup = ItemGroup & {
   children: {
-    name?: keyof LobeAgentConfig | string[];
+    name?: LobeAgentConfigKeys | string | string[];
   }[];
 };
 
