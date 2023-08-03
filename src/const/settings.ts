@@ -12,18 +12,12 @@ export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
   enableMaxTokens: true,
   endpoint: '',
   fontSize: 14,
-  frequencyPenalty: 0,
   historyCount: 24,
   language: 'zh-CN',
-  maxTokens: 2000,
-  model: LanguageModel.GPT3_5,
   neutralColor: '',
   password: '',
-  presencePenalty: 0,
   primaryColor: '',
-  temperature: 0.5,
   themeMode: 'auto',
-  topP: 1,
 };
 
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {

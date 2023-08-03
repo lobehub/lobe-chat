@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
 import { SessionStore, initLobeSession } from '@/store/session';
+import { useSettings } from '@/store/settings';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 import { uuid } from '@/utils/uuid';
@@ -77,8 +78,9 @@ export const createSessionSlice: StateCreator<
 
     const timestamp = Date.now();
 
-    // TODO: 等 settings 里的 defaultAgent 都改好以后，做个合并即可
-    const newSession: LobeAgentSession = merge({}, initLobeSession, {
+    // 合并 settings 里的 defaultAgent
+    const globalDefaultAgent = useSettings.getState().settings.defaultAgent;
+    const newSession: LobeAgentSession = merge({}, initLobeSession, globalDefaultAgent, {
       createAt: timestamp,
       id: uuid(),
       updateAt: timestamp,

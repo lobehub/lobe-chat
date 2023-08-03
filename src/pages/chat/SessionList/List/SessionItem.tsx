@@ -29,7 +29,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
   const { t } = useTranslation('common');
 
   const { styles, theme } = useStyles();
-  const [defaultModel] = useSettings((s) => [s.settings.model], shallow);
+  const [defaultModel] = useSettings((s) => [s.settings.defaultAgent.config?.model], shallow);
 
   const [
     pin,
