@@ -11,6 +11,7 @@ export enum ErrorType {
   Unauthorized = 401,
   Forbidden = 403,
   ContentNotFound = 404, // 没找到接口
+  MethodNotAllowed = 405, // 不支持
   TooManyRequests = 429,
 
   // ******* 服务端错误 ******* //

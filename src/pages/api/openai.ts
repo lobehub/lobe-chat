@@ -65,15 +65,20 @@ export const createChatCompletion = async ({
 
   const requestParams = { functions, messages: formatMessages, stream: true, ...params };
 
-  const response = await openai.createChatCompletion(requestParams);
+  try {
+    const response = await openai.createChatCompletion(requestParams);
 
-  if (!response.ok) {
-    const error = await response.json();
+    if (!response.ok) {
+      const error = await response.json();
 
-    return createErrorResponse(ErrorType.OpenAIBizError, error);
+      return createErrorResponse(ErrorType.OpenAIBizError, error);
+    }
+
+    const stream = OpenAIStream(response, callbacks?.(requestParams));
+
+    return new StreamingTextResponse(stream);
+  } catch (error) {
+    // 如果 await 超时报错，说明是 OpenAI 服务端的问题
+    return createErrorResponse(ErrorType.GatewayTimeout, { message: error });
   }
-
-  const stream = OpenAIStream(response, callbacks?.(requestParams));
-
-  return new StreamingTextResponse(stream);
 };
