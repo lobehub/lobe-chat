@@ -8,8 +8,6 @@ import { PluginsMap } from '@/plugins';
 import { ErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
 
-const isDev = process.env.NODE_ENV === 'development';
-
 // 创建 OpenAI 实例
 export const createOpenAI = (userApiKey: string | null, endpoint?: string | null) => {
   const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
@@ -18,10 +16,9 @@ export const createOpenAI = (userApiKey: string | null, endpoint?: string | null
     apiKey: !userApiKey ? OPENAI_API_KEY : userApiKey,
   });
 
-  return new OpenAIApi(
-    config,
-    endpoint ? endpoint : isDev && OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined,
-  );
+  const basePath = endpoint ? endpoint : OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined;
+
+  return new OpenAIApi(config, basePath);
 };
 
 interface CreateChatCompletionOptions {
