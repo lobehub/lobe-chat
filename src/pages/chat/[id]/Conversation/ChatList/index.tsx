@@ -48,6 +48,7 @@ const List = () => {
         return (
           <Flexbox gap={12}>
             <FunctionCall
+              content={message.content}
               function_call={message.function_call}
               loading={message.id === chatLoadingId}
             />
@@ -58,6 +59,7 @@ const List = () => {
       if (message.role === 'assistant') {
         return isFunctionMessage(message.content) || !!message.function_call ? (
           <FunctionCall
+            content={message.content}
             function_call={message.function_call}
             loading={message.id === chatLoadingId}
           />
