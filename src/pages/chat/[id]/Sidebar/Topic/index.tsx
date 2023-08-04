@@ -14,7 +14,7 @@ export const Topic = () => {
   const [activeTopicId] = useSessionStore((s) => [s.activeTopicId], shallow);
   const { t } = useTranslation('empty');
   return (
-    <Flexbox gap={8}>
+    <Flexbox gap={2}>
       {topics?.length === 0 && (
         <Empty
           cover={`/images/empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`}

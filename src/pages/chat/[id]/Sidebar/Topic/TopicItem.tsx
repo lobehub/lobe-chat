@@ -19,7 +19,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
   container: css`
     cursor: pointer;
-    padding: 12px 8px;
+    padding: 8px;
     border-radius: ${token.borderRadius}px;
 
     .topic-more {
