@@ -282,7 +282,7 @@ export const chatMessage: StateCreator<
   },
 
   triggerFunctionCall: async (id) => {
-    const { dispatchMessage, generateMessage } = get();
+    const { dispatchMessage, realFetchAIResponse } = get();
     const session = sessionSelectors.currentSession(get());
 
     if (!session) return;
@@ -321,12 +321,8 @@ export const chatMessage: StateCreator<
 
     dispatchMessage({ id, key: 'content', type: 'updateMessage', value: data });
 
-    const mid = nanoid();
-
     const chats = chatSelectors.currentChats(get());
 
-    dispatchMessage({ id: mid, message: LOADING_FLAT, role: 'assistant', type: 'addMessage' });
-
-    await generateMessage(chats, mid);
+    await realFetchAIResponse(chats, message.id);
   },
 });
