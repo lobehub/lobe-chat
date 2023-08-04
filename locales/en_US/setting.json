@@ -61,7 +61,10 @@
       "title": "Enable History Message Length Compression Threshold"
     },
     "enableHistoryCount": {
-      "title": "Enable History Message Count Limit"
+      "title": "Enable History Message Count Limit",
+      "alias": "Unlimited",
+      "limited": "Only include {{number}} chat messages",
+      "unlimited": "Unlimited chat history"
     },
     "historyCount": {
       "desc": "Number of history messages carried in each request",
