@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.39.2](https://github.com/lobehub/lobe-chat/compare/v0.39.1...v0.39.2)
+
+<sup>Released on **2023-08-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: 优化 topic 样式.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: 优化 topic 样式 ([75dc034](https://github.com/lobehub/lobe-chat/commit/75dc034))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.39.1](https://github.com/lobehub/lobe-chat/compare/v0.39.0...v0.39.1)
 
 <sup>Released on **2023-08-04**</sup>
