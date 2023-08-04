@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.39.3](https://github.com/lobehub/lobe-chat/compare/v0.39.2...v0.39.3)
+
+<sup>Released on **2023-08-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 优化 405 报错返回内容，并优化 openai 服务端超时处理逻辑.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 优化 405 报错返回内容，并优化 openai 服务端超时处理逻辑 ([0acc829](https://github.com/lobehub/lobe-chat/commit/0acc829))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.39.2](https://github.com/lobehub/lobe-chat/compare/v0.39.1...v0.39.2)
 
 <sup>Released on **2023-08-04**</sup>
