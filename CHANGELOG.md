@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.39.4](https://github.com/lobehub/lobe-chat/compare/v0.39.3...v0.39.4)
+
+<sup>Released on **2023-08-05**</sup>
+
+#### 💄 Styles
+
+- **misc**: 修正 assistant 消息没有 background 的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: 修正 assistant 消息没有 background 的问题, closes [#42](https://github.com/lobehub/lobe-chat/issues/42) ([812e976](https://github.com/lobehub/lobe-chat/commit/812e976))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.39.3](https://github.com/lobehub/lobe-chat/compare/v0.39.2...v0.39.3)
 
 <sup>Released on **2023-08-04**</sup>
