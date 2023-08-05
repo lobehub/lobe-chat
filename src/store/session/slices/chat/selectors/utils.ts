@@ -4,7 +4,7 @@ import { LobeAgentSession } from '@/types/session';
 
 export const organizeChats = (
   session: LobeAgentSession,
-  avatar: { assistant: string; user: string },
+  avatar: { assistant: string; assistantBackground?: string; user: string },
   topicId?: string,
 ) => {
   const getMeta = (message: ChatMessage) => {
@@ -22,6 +22,7 @@ export const organizeChats = (
       case 'assistant': {
         return {
           avatar: avatar.assistant,
+          backgroundColor: avatar.assistantBackground,
           title: session.meta.title,
         };
       }
