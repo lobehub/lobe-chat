@@ -19,6 +19,7 @@ export const getChatsById =
       session,
       {
         assistant: agentSelectors.currentAgentAvatar(s),
+        assistantBackground: agentSelectors.currentAgentBackgroundColor(s),
         user: useSettings.getState().settings.avatar || DEFAULT_USER_AVATAR,
       },
       s.activeTopicId,
