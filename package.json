@@ -64,6 +64,7 @@
     "@commitlint/cli": "^17",
     "@emoji-mart/data": "^1",
     "@emoji-mart/react": "^1",
+    "@icons-pack/react-simple-icons": "^8",
     "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",
     "ahooks": "^3",

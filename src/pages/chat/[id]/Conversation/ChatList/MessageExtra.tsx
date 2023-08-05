@@ -1,9 +1,9 @@
-import { Tag } from 'antd';
 import { createStyles } from 'antd-style';
 import { ReactNode } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import Tag from '@/components/Tag';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
 
@@ -45,8 +45,8 @@ const MessageExtra = ({
 
   const modelTag = (
     <div>
-      <Tag bordered={false} style={{ borderRadius: 6 }}>
-        {extra?.fromModel}
+      <Tag capitalize type={'openai'}>
+        {extra?.fromModel as string}
       </Tag>
     </div>
   );

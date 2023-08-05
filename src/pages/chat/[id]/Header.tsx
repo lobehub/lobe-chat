@@ -1,5 +1,4 @@
 import { ActionIcon, Avatar, ChatHeader } from '@lobehub/ui';
-import { Tag } from 'antd';
 import { PanelRightClose, PanelRightOpen, Settings, Share2 } from 'lucide-react';
 import Router from 'next/router';
 import { memo } from 'react';
@@ -7,13 +6,14 @@ import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
 import HeaderTitle from '@/components/HeaderTitle';
+import Tag, { PluginTag } from '@/components/Tag';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
 const Header = memo(() => {
   const { t } = useTranslation('common');
 
-  const [title, description, avatar, backgroundColor, id, model] = useSessionStore(
+  const [title, description, avatar, backgroundColor, id, model, plugins] = useSessionStore(
     (s) => [
       agentSelectors.currentAgentTitle(s),
       agentSelectors.currentAgentDescription(s),
@@ -21,6 +21,7 @@ const Header = memo(() => {
       agentSelectors.currentAgentBackgroundColor(s),
       s.activeId,
       agentSelectors.currentAgentModel(s),
+      agentSelectors.currentAgentPlugins(s),
     ],
     shallow,
   );
@@ -38,13 +39,24 @@ const Header = memo(() => {
             avatar={avatar}
             background={backgroundColor}
             onClick={() => {
-              Router.push(`/chat/${id}/edit`);
+              Router.push(`/chat/${id}/setting`);
             }}
             size={40}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', flex: 'none' }}
             title={title}
           />
-          <HeaderTitle desc={description} tag={<Tag>{model}</Tag>} title={title} />
+          <HeaderTitle
+            desc={description}
+            tag={
+              <>
+                <Tag capitalize type={'openai'}>
+                  {model}
+                </Tag>
+                {plugins?.length > 1 && <PluginTag plugins={plugins} />}
+              </>
+            }
+            title={title}
+          />
         </>
       }
       right={

@@ -1,21 +1,21 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, DivProps } from '@lobehub/ui';
 import { X } from 'lucide-react';
 import { memo, useState } from 'react';
 
 import { useStyles } from './style';
 
-interface EmptyProps {
+interface EmptyProps extends DivProps {
   cover: string;
   desc: string;
   title: string;
 }
 
-const Empty = memo<EmptyProps>(({ cover, title, desc }) => {
+const Empty = memo<EmptyProps>(({ cover, title, desc, ...props }) => {
   const [visiable, setVisiable] = useState(true);
   const { styles } = useStyles();
   if (!visiable) return null;
   return (
-    <div className={styles.container}>
+    <div className={styles.container} {...props}>
       <ActionIcon
         className={styles.close}
         icon={X}

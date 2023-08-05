@@ -19,6 +19,7 @@ export const Topic = () => {
         <Empty
           cover={`/images/empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`}
           desc={t('topic.desc')}
+          style={{ marginBottom: 6 }}
           title={t('topic.title')}
         />
       )}
