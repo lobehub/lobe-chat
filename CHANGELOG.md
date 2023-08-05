@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.40.0](https://github.com/lobehub/lobe-chat/compare/v0.39.4...v0.40.0)
+
+<sup>Released on **2023-08-05**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new dependency, add Tag and PluginTag components, update HeaderTitle.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new dependency, add Tag and PluginTag components, update HeaderTitle, closes [#56](https://github.com/lobehub/lobe-chat/issues/56) [#55](https://github.com/lobehub/lobe-chat/issues/55) [#54](https://github.com/lobehub/lobe-chat/issues/54) ([2812ea2](https://github.com/lobehub/lobe-chat/commit/2812ea2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.39.4](https://github.com/lobehub/lobe-chat/compare/v0.39.3...v0.39.4)
 
 <sup>Released on **2023-08-05**</sup>
