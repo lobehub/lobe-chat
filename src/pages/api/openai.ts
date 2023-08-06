@@ -65,20 +65,35 @@ export const createChatCompletion = async ({
 
   const requestParams = { functions, messages: formatMessages, stream: true, ...params };
 
+  let response: Response;
+
   try {
-    const response = await openai.createChatCompletion(requestParams);
-
-    if (!response.ok) {
-      const error = await response.json();
-
-      return createErrorResponse(ErrorType.OpenAIBizError, error);
-    }
-
-    const stream = OpenAIStream(response, callbacks?.(requestParams));
-
-    return new StreamingTextResponse(stream);
+    response = await openai.createChatCompletion(requestParams);
   } catch (error) {
     // 如果 await 超时报错，说明是 OpenAI 服务端的问题
     return createErrorResponse(ErrorType.GatewayTimeout, { message: error });
   }
+
+  // ============  4. 处理异常响应   ============ //
+  if (!response.ok) {
+    let error;
+
+    try {
+      // 正常情况下应该是 OpenAI 的 JSON
+      error = await response.clone().json();
+    } catch {
+      // 如果不是 JSON，那么可能是其他接口端的响应，读 text 为结果
+      const result = await response.text();
+
+      error = { message: result };
+    }
+
+    return createErrorResponse(ErrorType.OpenAIBizError, { ...error, endpoint });
+  }
+
+  // ============  5. 发送正常相应   ============ //
+
+  const stream = OpenAIStream(response, callbacks?.(requestParams));
+
+  return new StreamingTextResponse(stream);
 };

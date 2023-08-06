@@ -10,6 +10,7 @@ const getStatus = (errorType: ErrorType) => {
       return 577;
     }
   }
+  return errorType;
 };
 
 export const createErrorResponse = (errorType: ErrorType, body?: any) => {
