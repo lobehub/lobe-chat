@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.40.1](https://github.com/lobehub/lobe-chat/compare/v0.40.0...v0.40.1)
+
+<sup>Released on **2023-08-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 优化 openai 接口的错误处理逻辑.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 优化 openai 接口的错误处理逻辑 ([eae78fe](https://github.com/lobehub/lobe-chat/commit/eae78fe))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.40.0](https://github.com/lobehub/lobe-chat/compare/v0.39.4...v0.40.0)
 
 <sup>Released on **2023-08-05**</sup>
