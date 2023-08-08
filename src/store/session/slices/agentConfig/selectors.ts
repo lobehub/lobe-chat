@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import { defaults } from 'lodash-es';
+import { merge } from 'lodash-es';
 
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
 import { Autocomplete } from '@/features/AgentSetting/AgentMeta';
@@ -37,12 +37,13 @@ const currentAgentBackgroundColor = (s: SessionStore) => {
 const currentAgentAvatar = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
   if (!session) return DEFAULT_AVATAR;
+
   return session.meta.avatar || DEFAULT_AVATAR;
 };
 
 const currentAgentConfig = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
-  return defaults(session?.config, initialLobeAgentConfig);
+  return merge({}, initialLobeAgentConfig, session?.config);
 };
 
 const currentAgentSystemRole = (s: SessionStore) => {
@@ -67,8 +68,8 @@ const hasSystemRole = (s: SessionStore) => {
   return !!config.systemRole;
 };
 
-export const getAvatar = (s: MetaData) => s.avatar || DEFAULT_AVATAR;
-export const getTitle = (s: MetaData) => s.title || t('defaultSession', { ns: 'common' });
+const getAvatar = (s: MetaData) => s.avatar || DEFAULT_AVATAR;
+const getTitle = (s: MetaData) => s.title || t('defaultSession', { ns: 'common' });
 
 export const getDescription = (s: MetaData) =>
   s.description || t('noDescription', { ns: 'common' });
