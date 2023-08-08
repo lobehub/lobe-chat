@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.40.2](https://github.com/lobehub/lobe-chat/compare/v0.40.1...v0.40.2)
+
+<sup>Released on **2023-08-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正 defaults 造成的 config 报错.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正 defaults 造成的 config 报错 ([0857fa7](https://github.com/lobehub/lobe-chat/commit/0857fa7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.40.1](https://github.com/lobehub/lobe-chat/compare/v0.40.0...v0.40.1)
 
 <sup>Released on **2023-08-06**</sup>
