@@ -3,7 +3,13 @@ import type { GlobalSettings } from '@/types/settings';
 
 export type SidebarTabKey = 'chat' | 'market' | 'settings';
 
+export interface Guide {
+  // Topic 引导
+  topic?: boolean;
+}
+
 export interface AppSettingsState {
+  guide?: Guide;
   inputHeight: number;
   sessionExpandable?: boolean;
   sessionsWidth: number;
@@ -13,6 +19,7 @@ export interface AppSettingsState {
 }
 
 export const initialState: AppSettingsState = {
+  guide: {},
   inputHeight: 200,
   sessionExpandable: true,
   sessionsWidth: 320,

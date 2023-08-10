@@ -1,34 +1,60 @@
 import { ActionIcon, DivProps } from '@lobehub/ui';
 import { X } from 'lucide-react';
-import { memo, useState } from 'react';
+import Image from 'next/image';
+import { memo } from 'react';
+import useMergeState from 'use-merge-value';
 
 import { useStyles } from './style';
 
 interface EmptyProps extends DivProps {
+  alt: string;
   cover: string;
+  defaultVisible?: boolean;
   desc: string;
+  height?: number;
+  onVisibleChange?: (visible: boolean) => void;
   title: string;
+  visible?: boolean;
+  width?: number;
 }
 
-const Empty = memo<EmptyProps>(({ cover, title, desc, ...props }) => {
-  const [visiable, setVisiable] = useState(true);
-  const { styles } = useStyles();
-  if (!visiable) return null;
-  return (
-    <div className={styles.container} {...props}>
-      <ActionIcon
-        className={styles.close}
-        icon={X}
-        onClick={() => setVisiable(false)}
-        size={{ blockSize: 24, fontSize: 16 }}
-      />
-      {cover && <img alt="empty" src={cover} width="100%" />}
-      <div className={styles.content}>
-        {title && <h3>{title}</h3>}
-        {desc && <p className={styles.desc}>{desc}</p>}
+const Empty = memo<EmptyProps>(
+  ({
+    cover,
+    visible,
+    defaultVisible,
+    onVisibleChange,
+    alt,
+    title,
+    desc,
+    width,
+    height,
+    ...props
+  }) => {
+    const [value, setValue] = useMergeState(true, {
+      defaultValue: defaultVisible,
+      onChange: onVisibleChange,
+      value: visible,
+    });
+
+    const { styles } = useStyles();
+    if (!value) return null;
+    return (
+      <div className={styles.container} {...props}>
+        <ActionIcon
+          className={styles.close}
+          icon={X}
+          onClick={() => setValue(false)}
+          size={{ blockSize: 24, fontSize: 16 }}
+        />
+        {cover && <Image alt={alt} height={height} src={cover} width={width} />}
+        <div className={styles.content}>
+          {title && <h3>{title}</h3>}
+          {desc && <p className={styles.desc}>{desc}</p>}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 export default Empty;

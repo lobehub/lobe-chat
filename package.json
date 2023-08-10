@@ -93,6 +93,7 @@
     "serpapi": "^2",
     "swr": "^2",
     "ts-md5": "^1",
+    "use-merge-value": "^1",
     "uuid": "^9",
     "zustand": "^4.4",
     "zustand-utils": "^1"
