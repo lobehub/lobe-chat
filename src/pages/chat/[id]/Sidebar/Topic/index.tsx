@@ -16,10 +16,7 @@ export const Topic = () => {
   const [activeTopicId] = useSessionStore((s) => [s.activeTopicId], shallow);
   const { t } = useTranslation('empty');
 
-  const [visible, updateGuideState] = useSettings(
-    (s) => [s.guide?.topic, s.updateGuideState],
-    shallow,
-  );
+  const [visible, updateGuideState] = useSettings((s) => [s.guide?.topic, s.updateGuideState]);
 
   return (
     <Flexbox gap={2}>

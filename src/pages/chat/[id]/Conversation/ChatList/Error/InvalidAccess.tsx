@@ -16,7 +16,7 @@ import { ErrorActionContainer, FormAction } from './style';
 const InvalidAccess = memo<{ id: string }>(({ id }) => {
   const { t } = useTranslation('error');
   const [mode, setMode] = useState('password');
-  const [password, setSettings] = useSettings((s) => [s.settings.password, s.setSettings], shallow);
+  const [password, setSettings] = useSettings((s) => [s.settings.password, s.setSettings]);
   const [resend, deleteMessage] = useSessionStore(
     (s) => [s.resendMessage, s.deleteMessage],
     shallow,

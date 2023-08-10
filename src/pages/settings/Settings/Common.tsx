@@ -6,7 +6,6 @@ import { AppWindow, Palette, Webhook } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import SliderWithInput from 'src/components/SliderWithInput';
-import { shallow } from 'zustand/shallow';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
@@ -29,14 +28,11 @@ const Common = memo(() => {
   const [form] = AntForm.useForm();
   const clearSessions = useSessionStore((s) => s.clearSessions);
   const settings = useSettings(settingsSelectors.currentSettings, isEqual);
-  const { setThemeMode, setSettings, resetSettings } = useSettings(
-    (s) => ({
-      resetSettings: s.resetSettings,
-      setSettings: s.setSettings,
-      setThemeMode: s.setThemeMode,
-    }),
-    shallow,
-  );
+  const [setThemeMode, setSettings, resetSettings] = useSettings((s) => [
+    s.setThemeMode,
+    s.setSettings,
+    s.resetSettings,
+  ]);
 
   const { message, modal } = App.useApp();
   const handleReset = useCallback(() => {

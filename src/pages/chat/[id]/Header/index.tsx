@@ -32,10 +32,10 @@ const Header = memo(() => {
     shallow,
   );
 
-  const [showAgentSettings, toggleConfig] = useSettings(
-    (s) => [s.showAgentConfig, s.toggleAgentPanel],
-    shallow,
-  );
+  const [showAgentSettings, toggleConfig] = useSettings((s) => [
+    s.showAgentConfig,
+    s.toggleAgentPanel,
+  ]);
 
   return (
     <ChatHeader

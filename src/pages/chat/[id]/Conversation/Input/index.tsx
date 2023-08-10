@@ -18,7 +18,7 @@ const ChatInput = () => {
   const [expand, setExpand] = useState<boolean>(false);
   const [text, setText] = useState('');
 
-  const [inputHeight] = useSettings((s) => [s.inputHeight], shallow);
+  const [inputHeight] = useSettings((s) => [s.inputHeight]);
   const [sendMessage, hasTopic, saveToTopic] = useSessionStore(
     (s) => [s.createOrSendMsg, !!s.activeTopicId, s.saveToTopic],
     shallow,
