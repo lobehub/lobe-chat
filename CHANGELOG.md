@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 0.41.2](https://github.com/lobehub/lobe-chat/compare/v0.41.1...v0.41.2)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 将 sessionStore 默认 equalFn 改为 shallow, 将 settingStore 默认 equalFn 改为 shallow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 将 sessionStore 默认 equalFn 改为 shallow ([5c1b8d7](https://github.com/lobehub/lobe-chat/commit/5c1b8d7))
+- **misc**: 将 settingStore 默认 equalFn 改为 shallow ([1e72308](https://github.com/lobehub/lobe-chat/commit/1e72308))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.41.1](https://github.com/lobehub/lobe-chat/compare/v0.41.0...v0.41.1)
 
 <sup>Released on **2023-08-10**</sup>
