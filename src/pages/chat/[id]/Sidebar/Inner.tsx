@@ -86,7 +86,22 @@ const Inner = memo(() => {
       </Flexbox>
       <Flexbox className={styles.topic} gap={16} padding={16}>
         <SearchBar placeholder={t('topic.searchPlaceholder')} spotlight type={'ghost'} />
-        <Topic />
+        {!hydrated ? (
+          <Flexbox gap={8} style={{ marginTop: 12 }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton
+                active
+                avatar={false}
+                key={i}
+                paragraph={{ rows: 1, width: '100%' }}
+                round
+                title={false}
+              />
+            ))}
+          </Flexbox>
+        ) : (
+          <Topic />
+        )}
       </Flexbox>
     </DraggablePanelBody>
   );
