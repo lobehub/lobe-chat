@@ -3,7 +3,6 @@ import { Button } from 'antd';
 import { LucideGalleryVerticalEnd } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { shallow } from 'zustand/shallow';
 
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useSessionStore } from '@/store/session';
@@ -19,10 +18,11 @@ const ChatInput = () => {
   const [text, setText] = useState('');
 
   const [inputHeight] = useSettings((s) => [s.inputHeight]);
-  const [sendMessage, hasTopic, saveToTopic] = useSessionStore(
-    (s) => [s.createOrSendMsg, !!s.activeTopicId, s.saveToTopic],
-    shallow,
-  );
+  const [sendMessage, hasTopic, saveToTopic] = useSessionStore((s) => [
+    s.createOrSendMsg,
+    !!s.activeTopicId,
+    s.saveToTopic,
+  ]);
 
   const footer = hasTopic ? null : (
     <Tooltip title={t('topic.saveCurrentMessages')}>

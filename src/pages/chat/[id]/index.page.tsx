@@ -1,4 +1,3 @@
-import isEqual from 'fast-deep-equal';
 import Head from 'next/head';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -12,10 +11,10 @@ import Header from './Header';
 import Config from './Sidebar';
 
 const Chat = memo(() => {
-  const [avatar, title] = useSessionStore(
-    (s) => [agentSelectors.currentAgentAvatar(s), agentSelectors.currentAgentTitle(s)],
-    isEqual,
-  );
+  const [avatar, title] = useSessionStore((s) => [
+    agentSelectors.currentAgentAvatar(s),
+    agentSelectors.currentAgentTitle(s),
+  ]);
 
   const pageTitle = genSiteHeadTitle([avatar, title].filter(Boolean).join(' '));
 

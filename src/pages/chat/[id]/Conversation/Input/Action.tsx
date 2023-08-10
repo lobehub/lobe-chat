@@ -4,7 +4,6 @@ import { BrainCog, Thermometer, Timer, TimerOff } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import SliderWithInput from '@/components/SliderWithInput';
 import { agentSelectors, useSessionStore } from '@/store/session';
@@ -22,7 +21,7 @@ const InputActions = memo(() => {
       !config.enableHistoryCount,
       s.updateAgentConfig,
     ];
-  }, shallow);
+  });
 
   return (
     <>

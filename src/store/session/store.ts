@@ -1,5 +1,5 @@
-import equal from 'fast-deep-equal';
 import { PersistOptions, devtools, persist } from 'zustand/middleware';
+import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -49,5 +49,5 @@ export const useSessionStore = createWithEqualityFn<SessionStore>()(
     }),
     persistOptions,
   ),
-  equal,
+  shallow,
 );

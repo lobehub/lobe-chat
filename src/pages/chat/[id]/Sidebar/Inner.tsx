@@ -5,7 +5,6 @@ import { Maximize2Icon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import { agentSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
 
@@ -41,10 +40,10 @@ const useStyles = createStyles(({ css, token }) => ({
 const Inner = memo(() => {
   const [openModal, setOpenModal] = useState(false);
   const { styles } = useStyles();
-  const [systemRole, updateAgentConfig] = useSessionStore(
-    (s) => [agentSelectors.currentAgentSystemRole(s), s.updateAgentConfig],
-    shallow,
-  );
+  const [systemRole, updateAgentConfig] = useSessionStore((s) => [
+    agentSelectors.currentAgentSystemRole(s),
+    s.updateAgentConfig,
+  ]);
 
   const hydrated = useSessionHydrated();
   const { t } = useTranslation('common');

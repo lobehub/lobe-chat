@@ -6,7 +6,6 @@ import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import HeaderTitle from '@/components/HeaderTitle';
 import Tag from '@/components/Tag';
@@ -19,18 +18,15 @@ const Header = memo(() => {
   const init = useSessionHydrated();
   const { t } = useTranslation('common');
 
-  const [title, description, avatar, backgroundColor, id, model, plugins] = useSessionStore(
-    (s) => [
-      agentSelectors.currentAgentTitle(s),
-      agentSelectors.currentAgentDescription(s),
-      agentSelectors.currentAgentAvatar(s),
-      agentSelectors.currentAgentBackgroundColor(s),
-      s.activeId,
-      agentSelectors.currentAgentModel(s),
-      agentSelectors.currentAgentPlugins(s),
-    ],
-    shallow,
-  );
+  const [title, description, avatar, backgroundColor, id, model, plugins] = useSessionStore((s) => [
+    agentSelectors.currentAgentTitle(s),
+    agentSelectors.currentAgentDescription(s),
+    agentSelectors.currentAgentAvatar(s),
+    agentSelectors.currentAgentBackgroundColor(s),
+    s.activeId,
+    agentSelectors.currentAgentModel(s),
+    agentSelectors.currentAgentPlugins(s),
+  ]);
 
   const [showAgentSettings, toggleConfig] = useSettings((s) => [
     s.showAgentConfig,

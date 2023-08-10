@@ -5,7 +5,6 @@ import { MoreVertical, PencilLine, Star, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import { useSessionStore } from '@/store/session';
 
@@ -33,10 +32,11 @@ interface TopicContentProps {
 const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
   const { t } = useTranslation('common');
 
-  const [editing, dispatchTopic, removeTopic] = useSessionStore(
-    (s) => [s.renameTopicId === id, s.dispatchTopic, s.removeTopic],
-    shallow,
-  );
+  const [editing, dispatchTopic, removeTopic] = useSessionStore((s) => [
+    s.renameTopicId === id,
+    s.dispatchTopic,
+    s.removeTopic,
+  ]);
   const { styles, theme } = useStyles();
 
   const toggleEditing = (visible?: boolean) => {

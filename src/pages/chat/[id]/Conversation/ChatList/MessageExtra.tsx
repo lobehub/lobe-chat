@@ -1,7 +1,6 @@
 import { createStyles } from 'antd-style';
 import { ReactNode } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import Tag from '@/components/Tag';
 import { agentSelectors, useSessionStore } from '@/store/session';
@@ -28,7 +27,7 @@ const MessageExtra = ({
   const { styles } = useStyles();
 
   // const { t } = useTranslation();
-  const [model] = useSessionStore((s) => [agentSelectors.currentAgentModel(s)], shallow);
+  const [model] = useSessionStore((s) => [agentSelectors.currentAgentModel(s)]);
 
   // const plugin = PluginsMap[name || ''];
 

@@ -1,7 +1,6 @@
 import { Highlighter } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import { useSessionStore } from '@/store/session';
 
@@ -22,10 +21,7 @@ interface OpenAIErrorResponse {
 const OpenAiBizError = memo<{ content: OpenAIErrorResponse; id: string }>(({ content, id }) => {
   const { styles } = useStyles();
 
-  const [resend, deleteMessage] = useSessionStore(
-    (s) => [s.resendMessage, s.deleteMessage],
-    shallow,
-  );
+  const [resend, deleteMessage] = useSessionStore((s) => [s.resendMessage, s.deleteMessage]);
 
   const errorCode = content.error?.code;
 

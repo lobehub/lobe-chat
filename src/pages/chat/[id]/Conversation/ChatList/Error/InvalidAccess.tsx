@@ -4,7 +4,6 @@ import { KeySquare, SquareAsterisk } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
@@ -17,10 +16,7 @@ const InvalidAccess = memo<{ id: string }>(({ id }) => {
   const { t } = useTranslation('error');
   const [mode, setMode] = useState('password');
   const [password, setSettings] = useSettings((s) => [s.settings.password, s.setSettings]);
-  const [resend, deleteMessage] = useSessionStore(
-    (s) => [s.resendMessage, s.deleteMessage],
-    shallow,
-  );
+  const [resend, deleteMessage] = useSessionStore((s) => [s.resendMessage, s.deleteMessage]);
 
   return (
     <ErrorActionContainer>

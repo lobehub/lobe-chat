@@ -60,7 +60,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
       s.removeSession,
       s.pinSession,
     ];
-  }, shallow);
+  });
 
   const { modal } = App.useApp();
   const items: MenuProps['items'] = useMemo(

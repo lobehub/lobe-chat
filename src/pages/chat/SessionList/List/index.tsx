@@ -1,7 +1,6 @@
 import isEqual from 'fast-deep-equal';
 import Link from 'next/link';
 import { memo } from 'react';
-import { shallow } from 'zustand/shallow';
 
 import { sessionSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
 
@@ -10,10 +9,7 @@ import SkeletonItem from './SkeletonItem';
 
 const SessionList = memo(() => {
   const list = useSessionStore((s) => sessionSelectors.sessionList(s), isEqual);
-  const [activeId, loading] = useSessionStore(
-    (s) => [s.activeId, s.autocompleteLoading.title],
-    shallow,
-  );
+  const [activeId, loading] = useSessionStore((s) => [s.activeId, s.autocompleteLoading.title]);
 
   const isInit = useSessionHydrated();
 

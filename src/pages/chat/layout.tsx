@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { PropsWithChildren, memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import SideBar from '@/features/SideBar';
 import { createI18nNext } from '@/locales/create';
@@ -19,7 +18,7 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
 
   const [activeSession, toggleTopic] = useSessionStore((s) => {
     return [s.activeSession, s.toggleTopic];
-  }, shallow);
+  });
 
   const router = useRouter();
   const { id } = router.query;

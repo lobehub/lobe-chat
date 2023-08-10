@@ -2,7 +2,6 @@ import { useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import Empty from '@/components/Empty';
 import { topicSelectors, useSessionStore } from '@/store/session';
@@ -13,7 +12,7 @@ import TopicItem from './TopicItem';
 export const Topic = () => {
   const topics = useSessionStore(topicSelectors.currentTopics, isEqual);
   const { isDarkMode } = useThemeMode();
-  const [activeTopicId] = useSessionStore((s) => [s.activeTopicId], shallow);
+  const [activeTopicId] = useSessionStore((s) => [s.activeTopicId]);
   const { t } = useTranslation('empty');
 
   const [visible, updateGuideState] = useSettings((s) => [s.guide?.topic, s.updateGuideState]);
