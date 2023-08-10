@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 0.41.0](https://github.com/lobehub/lobe-chat/compare/v0.40.7...v0.41.0)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持持久化隐藏 Topic 功能.
+
+#### 💄 Styles
+
+- **misc**: 优化第一次水合逻辑.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持持久化隐藏 Topic 功能 ([9ea2778](https://github.com/lobehub/lobe-chat/commit/9ea2778))
+
+#### Styles
+
+- **misc**: 优化第一次水合逻辑 ([fefae61](https://github.com/lobehub/lobe-chat/commit/fefae61))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.40.7](https://github.com/lobehub/lobe-chat/compare/v0.40.6...v0.40.7)
 
 <sup>Released on **2023-08-10**</sup>
