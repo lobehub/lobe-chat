@@ -5,7 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
+import {
+  agentSelectors,
+  chatSelectors,
+  useSessionHydrated,
+  useSessionStore,
+} from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
 import { ErrorType } from '@/types/fetch';
 import { isFunctionMessage } from '@/utils/message';
@@ -29,7 +34,9 @@ const renderErrorMessage: RenderErrorMessage = (error, message) => {
 
 const List = () => {
   const { t } = useTranslation('common');
+  const hydrated = useSessionHydrated();
   const data = useSessionStore(chatSelectors.currentChats, isEqual);
+  console.log(hydrated, data);
   const [displayMode, chatLoadingId, deleteMessage, resendMessage, dispatchMessage] =
     useSessionStore(
       (s) => [

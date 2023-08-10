@@ -1,5 +1,6 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
 import { ActionIcon, Avatar, ChatHeader } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { PanelRightClose, PanelRightOpen, Settings } from 'lucide-react';
 import Router from 'next/router';
 import { memo } from 'react';
@@ -9,12 +10,13 @@ import { shallow } from 'zustand/shallow';
 
 import HeaderTitle from '@/components/HeaderTitle';
 import Tag from '@/components/Tag';
-import { agentSelectors, useSessionStore } from '@/store/session';
+import { agentSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
 import PluginTag from './PluginTag';
 
 const Header = memo(() => {
+  const init = useSessionHydrated();
   const { t } = useTranslation('common');
 
   const [title, description, avatar, backgroundColor, id, model, plugins] = useSessionStore(
@@ -38,31 +40,43 @@ const Header = memo(() => {
   return (
     <ChatHeader
       left={
-        <Flexbox align={'flex-start'} horizontal>
-          <Avatar
-            avatar={avatar}
-            background={backgroundColor}
-            onClick={() => {
-              Router.push(`/chat/${id}/setting`);
-            }}
-            size={40}
-            style={{ cursor: 'pointer', flex: 'none' }}
-            title={title}
-          />
-          <HeaderTitle
-            desc={description}
-            tag={
-              <>
-                <Tag>
-                  <SiOpenai size={'11px'} style={{ marginTop: 3 }} />
-                  {model}
-                </Tag>
-                {plugins?.length > 0 && <PluginTag plugins={plugins} />}
-              </>
-            }
-            title={title}
-          />
-        </Flexbox>
+        !init ? (
+          <Flexbox horizontal>
+            <Skeleton
+              active
+              avatar={{ shape: 'circle', size: 'default' }}
+              paragraph={false}
+              round
+              title={{ style: { margin: 0, marginTop: 8 }, width: 200 }}
+            />
+          </Flexbox>
+        ) : (
+          <Flexbox align={'flex-start'} gap={12} horizontal>
+            <Avatar
+              avatar={avatar}
+              background={backgroundColor}
+              onClick={() => {
+                Router.push(`/chat/${id}/setting`);
+              }}
+              size={40}
+              style={{ cursor: 'pointer', flex: 'none' }}
+              title={title}
+            />
+            <HeaderTitle
+              desc={description}
+              tag={
+                <>
+                  <Tag>
+                    <SiOpenai size={'11px'} style={{ marginTop: 3 }} />
+                    {model}
+                  </Tag>
+                  {plugins?.length > 0 && <PluginTag plugins={plugins} />}
+                </>
+              }
+              title={title}
+            />
+          </Flexbox>
+        )
       }
       right={
         id && (
