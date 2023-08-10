@@ -12,12 +12,7 @@ const Header = memo(() => {
 
   return (
     <ChatHeader
-      left={
-        <HeaderTitle
-          tag={<Tag type={'version'}>{`v${pkg.version}`}</Tag>}
-          title={t('header.global')}
-        />
-      }
+      left={<HeaderTitle tag={<Tag>{`v${pkg.version}`}</Tag>} title={t('header.global')} />}
       onBackClick={() => Router.back()}
       showBackButton
     />

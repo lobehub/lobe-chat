@@ -1,13 +1,12 @@
 import { ActionIcon, Avatar, Icon, List } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { App, Dropdown, type MenuProps } from 'antd';
+import { App, Dropdown, type MenuProps, Tag } from 'antd';
 import { FolderOutput, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
 import { FC, memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import Tag from '@/components/Tag';
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { agentSelectors, chatSelectors, sessionSelectors, useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
@@ -150,11 +149,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
       addon={
         !(showModel || showChatLength) ? undefined : (
           <Flexbox gap={4} horizontal style={{ flexWrap: 'wrap' }}>
-            {showModel && (
-              <Tag capitalize type={'openai'}>
-                {model}
-              </Tag>
-            )}
+            {showModel && <Tag bordered={false}>{model}</Tag>}
           </Flexbox>
         )
       }

@@ -74,6 +74,7 @@ const FunctionCall = memo<FunctionCallProps>(({ function_call, loading, content 
               label: t('debug.response'),
             },
           ]}
+          style={{ maxWidth: 800 }}
         />
       )}
     </Flexbox>

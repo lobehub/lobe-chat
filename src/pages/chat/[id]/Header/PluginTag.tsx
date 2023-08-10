@@ -1,12 +1,12 @@
-import { Avatar } from '@lobehub/ui';
+import { Avatar, Icon } from '@lobehub/ui';
 import type { MenuProps } from 'antd';
 import { Dropdown } from 'antd';
+import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Tag from '@/components/Tag';
 import { PluginsMap } from '@/plugins';
-
-import Tag from './index';
 
 export interface PluginTagProps {
   plugins: string[];
@@ -15,7 +15,7 @@ export interface PluginTagProps {
 const PluginTag = memo<PluginTagProps>(({ plugins }) => {
   const { t } = useTranslation('plugin');
 
-  if (plugins.length === 0) return <Tag type={'plugin'}>{t(`plugins.${plugins[0]}` as any)}</Tag>;
+  if (plugins.length === 0) return null;
 
   const items: MenuProps['items'] = plugins.map((id) => ({
     icon: (
@@ -24,11 +24,15 @@ const PluginTag = memo<PluginTagProps>(({ plugins }) => {
     key: id,
     label: t(`plugins.${id}` as any),
   }));
+  const count = plugins.length;
+
   return (
     <Dropdown menu={{ items }}>
-      <div style={{ height: 20 }}>
-        <Tag count={plugins.length} type={'plugin'}>
+      <div>
+        <Tag>
+          {<Icon icon={LucideToyBrick} />}
           {t(`plugins.${plugins[0]}` as any)}
+          {count > 1 && <div>({plugins.length - 1}+)</div>}
         </Tag>
       </div>
     </Dropdown>

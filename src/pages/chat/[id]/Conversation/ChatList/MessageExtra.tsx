@@ -45,9 +45,7 @@ const MessageExtra = ({
 
   const modelTag = (
     <div>
-      <Tag capitalize type={'openai'}>
-        {extra?.fromModel as string}
-      </Tag>
+      <Tag>{extra?.fromModel as string}</Tag>
     </div>
   );
 
