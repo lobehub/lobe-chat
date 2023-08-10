@@ -10,6 +10,8 @@ import { AgentAction, createAgentSlice } from './slices/agentConfig';
 import { ChatAction, createChatSlice } from './slices/chat';
 import { SessionAction, createSessionSlice } from './slices/session';
 
+//  ===============  聚合 createStoreFn ============ //
+
 export type SessionStore = SessionAction & AgentAction & ChatAction & SessionStoreState;
 
 const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (...parameters) => ({
@@ -18,6 +20,8 @@ const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (
   ...createSessionSlice(...parameters),
   ...createChatSlice(...parameters),
 });
+
+//  ===============  persist 本地缓存中间件配置 ============ //
 
 type SessionPersist = Pick<SessionStore, 'sessions'>;
 
@@ -35,6 +39,8 @@ const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
   version: 0,
   // version: Migration.targetVersion,
 };
+
+//  ===============  实装 useStore ============ //
 
 export const useSessionStore = createWithEqualityFn<SessionStore>()(
   persist(
