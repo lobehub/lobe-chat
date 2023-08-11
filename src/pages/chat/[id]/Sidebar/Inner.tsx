@@ -28,12 +28,27 @@ const useStyles = createStyles(({ css, token }) => ({
       opacity: 1;
     }
   `,
+  promptBox: css`
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid ${token.colorBorder};
+  `,
+  promptMask: css`
+    pointer-events: none;
+
+    position: absolute;
+    z-index: 10;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 32px;
+
+    background: linear-gradient(to bottom, transparent, ${token.colorBgLayout});
+  `,
   title: css`
     font-size: ${token.fontSizeHeading4}px;
     font-weight: bold;
-  `,
-  topic: css`
-    border-top: 1px solid ${token.colorBorder};
   `,
 }));
 
@@ -60,33 +75,36 @@ const Inner = memo(() => {
         }
         title={t('settingAgent.prompt.title', { ns: 'setting' })}
       />
-      <Flexbox height={200} padding={'0 16px 16px'}>
+      <Flexbox className={styles.promptBox} height={200} padding={'0 16px 16px'}>
         {hydrated ? (
-          <EditableMessage
-            classNames={{ markdown: styles.prompt }}
-            onChange={(e) => {
-              updateAgentConfig({ systemRole: e });
-            }}
-            onOpenChange={setOpenModal}
-            openModal={openModal}
-            placeholder={`${t('settingAgent.prompt.placeholder', { ns: 'setting' })}...`}
-            styles={{ markdown: systemRole ? {} : { opacity: 0.5 } }}
-            text={{
-              cancel: t('cancel'),
-              confirm: t('ok'),
-              edit: t('edit'),
-              title: t('settingAgent.prompt.title', { ns: 'setting' }),
-            }}
-            value={systemRole}
-          />
+          <>
+            <EditableMessage
+              classNames={{ markdown: styles.prompt }}
+              onChange={(e) => {
+                updateAgentConfig({ systemRole: e });
+              }}
+              onOpenChange={setOpenModal}
+              openModal={openModal}
+              placeholder={`${t('settingAgent.prompt.placeholder', { ns: 'setting' })}...`}
+              styles={{ markdown: systemRole ? {} : { opacity: 0.5 } }}
+              text={{
+                cancel: t('cancel'),
+                confirm: t('ok'),
+                edit: t('edit'),
+                title: t('settingAgent.prompt.title', { ns: 'setting' }),
+              }}
+              value={systemRole}
+            />
+            <div className={styles.promptMask} />
+          </>
         ) : (
           <Skeleton active avatar={false} style={{ marginTop: 12 }} title={false} />
         )}
       </Flexbox>
-      <Flexbox className={styles.topic} gap={16} padding={16}>
+      <Flexbox gap={16} padding={16}>
         <SearchBar placeholder={t('topic.searchPlaceholder')} spotlight type={'ghost'} />
         {!hydrated ? (
-          <Flexbox gap={8} style={{ marginTop: 12 }}>
+          <Flexbox gap={8} style={{ marginTop: 8 }}>
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton
                 active

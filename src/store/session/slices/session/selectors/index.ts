@@ -4,6 +4,7 @@ import {
   currentSessionSafe,
   getSessionById,
   getSessionMetaById,
+  hasSessionList,
   sessionList,
 } from './list';
 
@@ -15,5 +16,6 @@ export const sessionSelectors = {
   getExportAgent,
   getSessionById,
   getSessionMetaById,
+  hasSessionList,
   sessionList,
 };

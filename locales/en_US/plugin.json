@@ -1,4 +1,9 @@
 {
+  "debug": {
+    "arguments": "Arguments",
+    "function_call": "Function Call",
+    "response": "Response"
+  },
   "loading": {
     "content": "Loading data...",
     "plugin": "Plugin is running..."

@@ -36,6 +36,11 @@ export const sessionList = (s: SessionStore) => {
   });
 };
 
+export const hasSessionList = (s: SessionStore) => {
+  const list = sessionList(s);
+  return list?.length > 0;
+};
+
 export const getSessionById =
   (id: string) =>
   (s: SessionStore): LobeAgentSession => {

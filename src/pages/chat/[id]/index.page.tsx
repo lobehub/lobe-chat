@@ -5,10 +5,10 @@ import { Flexbox } from 'react-layout-kit';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
-import Layout from '../layout';
 import Conversation from './Conversation';
 import Header from './Header';
 import Config from './Sidebar';
+import Layout from './layout';
 
 const Chat = memo(() => {
   const [avatar, title] = useSessionStore((s) => [

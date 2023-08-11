@@ -1,0 +1,14 @@
+{
+  "button": {
+    "import": "Import Configuration",
+    "start": "Start Now"
+  },
+  "header": "Welcome",
+  "pickAgent": "Or choose from the following assistant templates",
+  "skip": "Skip Creation",
+  "slogan": {
+    "desc1": "Unlock the power of your brain and ignite your creativity. Your intelligent assistant is always here.",
+    "desc2": "Create your first assistant and let's get started~",
+    "title": "Give yourself a smarter brain"
+  }
+}

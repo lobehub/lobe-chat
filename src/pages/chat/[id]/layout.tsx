@@ -1,24 +1,18 @@
 import { useRouter } from 'next/router';
 import { PropsWithChildren, memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { shallow } from 'zustand/shallow';
 
-import SideBar from '@/features/SideBar';
-import { createI18nNext } from '@/locales/create';
+import AppLayout from '@/layout/AppLayout';
 import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
-import { Sessions } from './SessionList';
-
-const initI18n = createI18nNext();
+import { Sessions } from '../SessionList';
 
 const ChatLayout = memo<PropsWithChildren>(({ children }) => {
-  useEffect(() => {
-    initI18n.finally();
-  }, []);
-
   const [activeSession, toggleTopic] = useSessionStore((s) => {
     return [s.activeSession, s.toggleTopic];
-  });
+  }, shallow);
 
   const router = useRouter();
   const { id } = router.query;
@@ -45,13 +39,12 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
   }, []);
 
   return (
-    <Flexbox horizontal width={'100%'}>
-      <SideBar />
+    <AppLayout>
       <Sessions />
       <Flexbox flex={1} height={'100vh'} style={{ position: 'relative' }}>
         {children}
       </Flexbox>
-    </Flexbox>
+    </AppLayout>
   );
 });
 

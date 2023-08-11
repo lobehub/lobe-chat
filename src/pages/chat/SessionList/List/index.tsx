@@ -8,7 +8,7 @@ import SessionItem from './SessionItem';
 import SkeletonItem from './SkeletonItem';
 
 const SessionList = memo(() => {
-  const list = useSessionStore((s) => sessionSelectors.sessionList(s), isEqual);
+  const list = useSessionStore(sessionSelectors.sessionList, isEqual);
   const [activeId, loading] = useSessionStore((s) => [s.activeId, s.autocompleteLoading.title]);
 
   const isInit = useSessionHydrated();
