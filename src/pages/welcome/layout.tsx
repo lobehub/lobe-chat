@@ -3,13 +3,13 @@ import Link from 'next/link';
 import { PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import BaseLayout from '../chat/layout';
+import AppLayout from '../../layout/AppLayout';
 import { useStyles } from './style';
 
 const WelcomeLayout = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   return (
-    <BaseLayout>
+    <AppLayout>
       <Center
         className={styles.layout}
         flex={1}
@@ -24,7 +24,7 @@ const WelcomeLayout = memo<PropsWithChildren>(({ children }) => {
           {children}
         </Flexbox>
       </Center>
-    </BaseLayout>
+    </AppLayout>
   );
 });
 

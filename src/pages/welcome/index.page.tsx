@@ -11,6 +11,7 @@ import Layout from './layout';
 const Welcome = memo(() => {
   const { t } = useTranslation('welcome');
   const pageTitle = genSiteHeadTitle(t('header'));
+
   return (
     <>
       <Head>

@@ -31,8 +31,6 @@ const Hero = memo<{ width: number }>(({ width }) => {
       </div>
       <div className={styles.desc} style={{ fontSize: size.desc }}>
         {t('slogan.desc1')}
-        <br />
-        {t('slogan.desc2')}
       </div>
     </>
   );
