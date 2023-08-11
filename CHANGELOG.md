@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.42.0](https://github.com/lobehub/lobe-chat/compare/v0.41.2...v0.42.0)
+
+<sup>Released on **2023-08-11**</sup>
+
+#### ✨ Features
+
+- **misc**: Add `Welcome` page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add `Welcome` page, closes [#60](https://github.com/lobehub/lobe-chat/issues/60) ([810ab0f](https://github.com/lobehub/lobe-chat/commit/810ab0f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.41.2](https://github.com/lobehub/lobe-chat/compare/v0.41.1...v0.41.2)
 
 <sup>Released on **2023-08-10**</sup>
