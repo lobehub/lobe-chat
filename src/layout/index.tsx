@@ -4,7 +4,6 @@ import { useThemeMode } from 'antd-style';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
 import { PropsWithChildren, useCallback, useEffect } from 'react';
-import { shallow } from 'zustand/shallow';
 
 import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
@@ -29,11 +28,12 @@ const Layout = ({ children }: PropsWithChildren) => {
 };
 
 export default ({ children }: PropsWithChildren) => {
-  const themeMode = useSettings((s) => s.settings.themeMode, shallow);
-  const { primaryColor, neutralColor } = useSettings(
-    (s) => ({ neutralColor: s.settings.neutralColor, primaryColor: s.settings.primaryColor }),
-    shallow,
-  );
+  const themeMode = useSettings((s) => s.settings.themeMode);
+  const [primaryColor, neutralColor] = useSettings((s) => [
+    s.settings.primaryColor,
+    s.settings.neutralColor,
+  ]);
+
   const { browserPrefers } = useThemeMode();
   const isDarkMode = themeMode === 'auto' ? browserPrefers === 'dark' : themeMode === 'dark';
 

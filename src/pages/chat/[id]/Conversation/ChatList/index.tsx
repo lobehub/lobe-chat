@@ -3,7 +3,6 @@ import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
@@ -29,18 +28,16 @@ const renderErrorMessage: RenderErrorMessage = (error, message) => {
 
 const List = () => {
   const { t } = useTranslation('common');
+
   const data = useSessionStore(chatSelectors.currentChats, isEqual);
   const [displayMode, chatLoadingId, deleteMessage, resendMessage, dispatchMessage] =
-    useSessionStore(
-      (s) => [
-        agentSelectors.currentAgentConfig(s).displayMode,
-        s.chatLoadingId,
-        s.deleteMessage,
-        s.resendMessage,
-        s.dispatchMessage,
-      ],
-      shallow,
-    );
+    useSessionStore((s) => [
+      agentSelectors.currentAgentConfig(s).displayMode,
+      s.chatLoadingId,
+      s.deleteMessage,
+      s.resendMessage,
+      s.dispatchMessage,
+    ]);
 
   const renderMessage: RenderMessage = useCallback(
     (content, message: ChatMessage) => {

@@ -1,7 +1,6 @@
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import { useSessionStore } from '@/store/session';
 
@@ -50,7 +49,7 @@ export interface ConfigCellProps {
 const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
   const { styles, cx } = useStyles();
 
-  const [toggleTopic] = useSessionStore((s) => [s.toggleTopic], shallow);
+  const [toggleTopic] = useSessionStore((s) => [s.toggleTopic]);
 
   return (
     <Flexbox

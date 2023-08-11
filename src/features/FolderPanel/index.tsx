@@ -2,7 +2,6 @@ import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useState } from 'react';
-import { shallow } from 'zustand/shallow';
 
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
 import { useSettings } from '@/store/settings';
@@ -17,10 +16,10 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const FolderPanel = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
-  const [sessionsWidth, sessionExpandable] = useSettings(
-    (s) => [s.sessionsWidth, s.sessionExpandable],
-    shallow,
-  );
+  const [sessionsWidth, sessionExpandable] = useSettings((s) => [
+    s.sessionsWidth,
+    s.sessionExpandable,
+  ]);
   const [tmpWidth, setWidth] = useState(sessionsWidth);
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
 

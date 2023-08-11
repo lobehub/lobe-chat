@@ -2,6 +2,223 @@
 
 # Changelog
 
+### [Version 0.41.2](https://github.com/lobehub/lobe-chat/compare/v0.41.1...v0.41.2)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 将 sessionStore 默认 equalFn 改为 shallow, 将 settingStore 默认 equalFn 改为 shallow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 将 sessionStore 默认 equalFn 改为 shallow ([5c1b8d7](https://github.com/lobehub/lobe-chat/commit/5c1b8d7))
+- **misc**: 将 settingStore 默认 equalFn 改为 shallow ([1e72308](https://github.com/lobehub/lobe-chat/commit/1e72308))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.41.1](https://github.com/lobehub/lobe-chat/compare/v0.41.0...v0.41.1)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 重构 settings store 代码写法.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 重构 settings store 代码写法 ([4b6f917](https://github.com/lobehub/lobe-chat/commit/4b6f917))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.41.0](https://github.com/lobehub/lobe-chat/compare/v0.40.7...v0.41.0)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持持久化隐藏 Topic 功能.
+
+#### 💄 Styles
+
+- **misc**: 优化第一次水合逻辑.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持持久化隐藏 Topic 功能 ([9ea2778](https://github.com/lobehub/lobe-chat/commit/9ea2778))
+
+#### Styles
+
+- **misc**: 优化第一次水合逻辑 ([fefae61](https://github.com/lobehub/lobe-chat/commit/fefae61))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.40.7](https://github.com/lobehub/lobe-chat/compare/v0.40.6...v0.40.7)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: 优化 Topic 的水合加载效果.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: 优化 Topic 的水合加载效果 ([0cd0088](https://github.com/lobehub/lobe-chat/commit/0cd0088))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.40.6](https://github.com/lobehub/lobe-chat/compare/v0.40.5...v0.40.6)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 重构优化 hydrated 的判断逻辑.
+
+#### 💄 Styles
+
+- **misc**: 优化水合前的加载效果.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 重构优化 hydrated 的判断逻辑 ([1781119](https://github.com/lobehub/lobe-chat/commit/1781119))
+
+#### Styles
+
+- **misc**: 优化水合前的加载效果 ([6bbd978](https://github.com/lobehub/lobe-chat/commit/6bbd978))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.40.5](https://github.com/lobehub/lobe-chat/compare/v0.40.4...v0.40.5)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: 增加未初始化的 loading 态.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: 增加未初始化的 loading 态 ([dcb7c07](https://github.com/lobehub/lobe-chat/commit/dcb7c07))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.40.4](https://github.com/lobehub/lobe-chat/compare/v0.40.3...v0.40.4)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: 优化 Header 样式.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: 优化 Header 样式 ([edd148a](https://github.com/lobehub/lobe-chat/commit/edd148a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.40.3](https://github.com/lobehub/lobe-chat/compare/v0.40.2...v0.40.3)
+
+<sup>Released on **2023-08-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正没有 prompt 的编辑与保存按钮的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正没有 prompt 的编辑与保存按钮的问题 ([b7e1648](https://github.com/lobehub/lobe-chat/commit/b7e1648))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.40.2](https://github.com/lobehub/lobe-chat/compare/v0.40.1...v0.40.2)
 
 <sup>Released on **2023-08-08**</sup>

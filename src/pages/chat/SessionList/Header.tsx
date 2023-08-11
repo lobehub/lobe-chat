@@ -1,11 +1,10 @@
 import { ActionIcon, Logo, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { MessageSquarePlus } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import { useSessionStore } from '@/store/session';
 
@@ -22,10 +21,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 const Header = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('common');
-  const [keywords, createSession] = useSessionStore(
-    (s) => [s.searchKeywords, s.createSession],
-    shallow,
-  );
+  const [keywords, createSession] = useSessionStore((s) => [s.searchKeywords, s.createSession]);
 
   return (
     <Flexbox className={styles.top} gap={16} padding={16}>

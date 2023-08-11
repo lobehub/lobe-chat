@@ -7,5 +7,7 @@ config.rules['unicorn/prefer-type-error'] = 0;
 config.rules['unicorn/prefer-logical-operator-over-ternary'] = 0;
 config.rules['unicorn/no-null'] = 0;
 config.rules['unicorn/no-typeof-undefined'] = 0;
+config.rules['unicorn/explicit-length-check'] = 0;
+config.rules['unicorn/prefer-code-point'] = 0;
 
 module.exports = config;

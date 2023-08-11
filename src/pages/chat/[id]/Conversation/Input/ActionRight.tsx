@@ -3,13 +3,12 @@ import { Popconfirm } from 'antd';
 import { Eraser } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { shallow } from 'zustand/shallow';
 
 import { useSessionStore } from '@/store/session';
 
 const ActionsRight = memo(() => {
   const { t } = useTranslation('setting');
-  const [clearMessage] = useSessionStore((s) => [s.clearMessage, s.updateAgentConfig], shallow);
+  const [clearMessage] = useSessionStore((s) => [s.clearMessage, s.updateAgentConfig]);
 
   return (
     <Popconfirm

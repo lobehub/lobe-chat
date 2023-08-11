@@ -2,7 +2,6 @@ import { Avatar, Logo } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { shallow } from 'zustand/shallow';
 
 import { useSettings } from '@/store/settings';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
@@ -28,7 +27,7 @@ interface AvatarWithUploadProps {
 }
 
 const AvatarWithUpload = memo<AvatarWithUploadProps>(({ size = 40 }) => {
-  const [avatar, setSettings] = useSettings((st) => [st.settings.avatar, st.setSettings], shallow);
+  const [avatar, setSettings] = useSettings((st) => [st.settings.avatar, st.setSettings]);
   const { styles } = useStyle();
 
   const handleUploadAvatar = createUploadImageHandler((avatar) => {

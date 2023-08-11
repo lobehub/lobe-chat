@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { shallow } from 'zustand/shallow';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
@@ -18,16 +17,13 @@ const EditPage = memo(() => {
   const { t } = useTranslation('setting');
   const config = useSessionStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
-  const autocomplete = useSessionStore(agentSelectors.currentAutocomplete, shallow);
-  const [updateAgentConfig, toggleAgentPlugin, updateAgentMeta, title] = useSessionStore(
-    (s) => [
-      s.updateAgentConfig,
-      s.toggleAgentPlugin,
-      s.updateAgentMeta,
-      agentSelectors.currentAgentTitle(s),
-    ],
-    shallow,
-  );
+  const autocomplete = useSessionStore(agentSelectors.currentAutocomplete);
+  const [updateAgentConfig, toggleAgentPlugin, updateAgentMeta, title] = useSessionStore((s) => [
+    s.updateAgentConfig,
+    s.toggleAgentPlugin,
+    s.updateAgentMeta,
+    agentSelectors.currentAgentTitle(s),
+  ]);
 
   const pageTitle = genSiteHeadTitle(t('header.sessionWithName', { name: title }));
 
