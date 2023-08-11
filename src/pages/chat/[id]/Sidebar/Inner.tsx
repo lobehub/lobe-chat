@@ -50,9 +50,6 @@ const useStyles = createStyles(({ css, token }) => ({
     font-size: ${token.fontSizeHeading4}px;
     font-weight: bold;
   `,
-  topic: css`
-    border-top: 1px solid ${token.colorBorder};
-  `,
 }));
 
 const Inner = memo(() => {
@@ -104,10 +101,10 @@ const Inner = memo(() => {
           <Skeleton active avatar={false} style={{ marginTop: 12 }} title={false} />
         )}
       </Flexbox>
-      <Flexbox className={styles.topic} gap={16} padding={16}>
+      <Flexbox gap={16} padding={16}>
         <SearchBar placeholder={t('topic.searchPlaceholder')} spotlight type={'ghost'} />
         {!hydrated ? (
-          <Flexbox gap={8} style={{ marginTop: 12 }}>
+          <Flexbox gap={8} style={{ marginTop: 8 }}>
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton
                 active

@@ -3,11 +3,11 @@ import { PropsWithChildren, memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import AppLayout from '@/layout/AppLayout';
 import { useSessionStore } from '@/store/session';
 import { useSettings } from '@/store/settings';
 
 import { Sessions } from '../SessionList';
-import BaseLayout from '../layout';
 
 const ChatLayout = memo<PropsWithChildren>(({ children }) => {
   const [activeSession, toggleTopic] = useSessionStore((s) => {
@@ -39,12 +39,12 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
   }, []);
 
   return (
-    <BaseLayout>
+    <AppLayout>
       <Sessions />
       <Flexbox flex={1} height={'100vh'} style={{ position: 'relative' }}>
         {children}
       </Flexbox>
-    </BaseLayout>
+    </AppLayout>
   );
 });
 
