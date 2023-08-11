@@ -3,6 +3,7 @@ import empty from '../default/empty';
 import error from '../default/error';
 import plugin from '../default/plugin';
 import setting from '../default/setting';
+import welcome from '../default/welcome';
 
 const resources = {
   common,
@@ -10,6 +11,7 @@ const resources = {
   error,
   plugin,
   setting,
+  welcome,
 } as const;
 
 export default resources;

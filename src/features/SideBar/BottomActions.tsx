@@ -14,11 +14,11 @@ import Router from 'next/router';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import DiscordIcon from '@/components/DiscordIcon';
+import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB } from '@/const/url';
 import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { SettingsStore } from '@/store/settings';
-
-import pkg from '../../../package.json';
 
 export interface BottomActionProps {
   setTab: SettingsStore['switchSideBar'];
@@ -79,19 +79,19 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         icon: <Icon icon={Feather} />,
         key: 'feedback',
         label: t('feedback'),
-        onClick: () => window.open(pkg.bugs.url, '__blank'),
+        onClick: () => window.open(FEEDBACK, '__blank'),
       },
       {
         icon: <Icon icon={FileClock} />,
         key: 'changelog',
         label: t('changelog'),
-        onClick: () => window.open(`${pkg.homepage}/blob/master/CHANGELOG.md`, '__blank'),
+        onClick: () => window.open(CHANGELOG, '__blank'),
       },
       {
         icon: <Icon icon={Heart} />,
         key: 'about',
         label: t('about'),
-        onClick: () => window.open(pkg.homepage, '__blank'),
+        onClick: () => window.open(ABOUT, '__blank'),
       },
       {
         type: 'divider',
@@ -111,7 +111,8 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
 
   return (
     <>
-      <ActionIcon icon={Github} onClick={() => window.open(pkg.homepage, '__blank')} />
+      <ActionIcon icon={DiscordIcon} onClick={() => window.open(DISCORD, '__blank')} />
+      <ActionIcon icon={Github} onClick={() => window.open(GITHUB, '__blank')} />
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
         <ActionIcon active={tab === 'settings'} icon={Settings2} />
       </Dropdown>

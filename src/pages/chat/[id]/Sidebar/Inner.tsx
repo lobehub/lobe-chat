@@ -26,13 +26,30 @@ const useStyles = createStyles(({ css, token }) => ({
     padding: 0 16px 16px;
 
     opacity: 0.75;
-    border-bottom: 1px solid ${token.colorBorder};
 
     transition: opacity 200ms ${token.motionEaseOut};
 
     &:hover {
       opacity: 1;
     }
+  `,
+  promptBox: css`
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid ${token.colorBorder};
+  `,
+  promptMask: css`
+    pointer-events: none;
+
+    position: absolute;
+    z-index: 10;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 32px;
+
+    background: linear-gradient(to bottom, transparent, ${token.colorBgLayout});
   `,
   title: css`
     font-size: ${token.fontSizeHeading4}px;
@@ -62,23 +79,26 @@ const Inner = memo(() => {
         }
         title={t('settingAgent.prompt.title', { ns: 'setting' })}
       />
-      <EditableMessage
-        classNames={{ markdown: styles.prompt }}
-        onChange={(e) => {
-          updateAgentConfig({ systemRole: e });
-        }}
-        onOpenChange={setOpenModal}
-        openModal={openModal}
-        placeholder={`${t('settingAgent.prompt.placeholder', { ns: 'setting' })}...`}
-        styles={{ markdown: systemRole ? {} : { opacity: 0.5 } }}
-        text={{
-          cancel: t('cancel'),
-          confirm: t('ok'),
-          edit: t('edit'),
-          title: t('settingAgent.prompt.title', { ns: 'setting' }),
-        }}
-        value={systemRole}
-      />
+      <div className={styles.promptBox}>
+        <EditableMessage
+          classNames={{ markdown: styles.prompt }}
+          onChange={(e) => {
+            updateAgentConfig({ systemRole: e });
+          }}
+          onOpenChange={setOpenModal}
+          openModal={openModal}
+          placeholder={`${t('settingAgent.prompt.placeholder', { ns: 'setting' })}...`}
+          styles={{ markdown: systemRole ? {} : { opacity: 0.5 } }}
+          text={{
+            cancel: t('cancel'),
+            confirm: t('ok'),
+            edit: t('edit'),
+            title: t('settingAgent.prompt.title', { ns: 'setting' }),
+          }}
+          value={systemRole}
+        />
+        <div className={styles.promptMask} />
+      </div>
       <Flexbox gap={16} style={{ padding: 16 }}>
         <SearchBar placeholder={t('topic.searchPlaceholder')} spotlight type={'ghost'} />
         <Topic />
