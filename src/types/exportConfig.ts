@@ -1,20 +1,29 @@
-import { LobeSessions } from '@/types/session';
+import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { GlobalSettings } from '@/types/settings';
 
 // 存在4种导出方式
-export type ExportType = 'agents' | 'sessions' | 'settings' | 'all';
+export type ExportType = 'agents' | 'sessions' | 'singleSession' | 'settings' | 'all';
 
 // 4种方式对应的 state
-export interface ConfigStateAll {
-  sessions: LobeSessions;
-  settings: GlobalSettings;
-}
+
 export interface ConfigStateSettings {
   settings: GlobalSettings;
 }
-export interface ConfigStateSessions {
+
+export interface ConfigStateAgents {
   sessions: LobeSessions;
 }
+
+export interface ConfigStateSessions {
+  inbox: LobeAgentSession;
+  sessions: LobeSessions;
+}
+
+export interface ConfigStateSingleSession {
+  sessions: LobeSessions;
+}
+
+export interface ConfigStateAll extends ConfigStateSessions, ConfigStateSettings {}
 
 // 4种方式对应的 file
 export interface ConfigFileSettings {
@@ -22,16 +31,25 @@ export interface ConfigFileSettings {
   state: ConfigStateSettings;
   version: number;
 }
+
 export interface ConfigFileSessions {
   exportType: 'sessions';
   state: ConfigStateSessions;
   version: number;
 }
-export interface ConfigFileAgents {
-  exportType: 'agents';
-  state: ConfigStateSessions;
+
+export interface ConfigFileSingleSession {
+  exportType: 'sessions';
+  state: ConfigStateSingleSession;
   version: number;
 }
+
+export interface ConfigFileAgents {
+  exportType: 'agents';
+  state: ConfigStateAgents;
+  version: number;
+}
+
 export interface ConfigFileAll {
   exportType: 'all';
   state: ConfigStateAll;
@@ -44,7 +62,7 @@ export type ConfigFile = ConfigFileSettings | ConfigFileSessions | ConfigFileAll
 export interface ConfigModelMap {
   agents: {
     file: ConfigFileAgents;
-    state: ConfigStateSessions;
+    state: ConfigStateAgents;
   };
   all: {
     file: ConfigFileAll;
@@ -57,5 +75,9 @@ export interface ConfigModelMap {
   settings: {
     file: ConfigFileSettings;
     state: ConfigStateSettings;
+  };
+  singleSession: {
+    file: ConfigFileSingleSession;
+    state: ConfigStateSingleSession;
   };
 }

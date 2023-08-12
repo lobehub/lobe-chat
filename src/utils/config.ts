@@ -7,6 +7,7 @@ import {
   ConfigFileAll,
   ConfigFileSessions,
   ConfigFileSettings,
+  ConfigFileSingleSession,
   ConfigModelMap,
   ExportType,
 } from '@/types/exportConfig';
@@ -88,6 +89,14 @@ export const createConfigFile = <T extends ExportType>(
         state,
         version: Migration.targetVersion,
       } as ConfigFileSettings;
+    }
+
+    case 'singleSession': {
+      return {
+        exportType: 'sessions',
+        state,
+        version: Migration.targetVersion,
+      } as ConfigFileSingleSession;
     }
 
     case 'all': {
