@@ -11,7 +11,6 @@ import { Flexbox } from 'react-layout-kit';
 import { useImportConfig } from '@/hooks/useImportConfig';
 
 import { useStyles } from '../style';
-import AgentTemplate from './AgentTemplate';
 import Hero from './Hero';
 
 const Banner = memo(() => {
@@ -29,7 +28,7 @@ const Banner = memo(() => {
   }, []);
 
   return (
-    <>
+    <Flexbox height={'80vh'} style={{ marginTop: '10vh' }}>
       <GridShowcase>
         <div className={styles.container} ref={ref}>
           <Hero width={width} />
@@ -48,8 +47,9 @@ const Banner = memo(() => {
           </Upload>
         </Flexbox>
       </GridShowcase>
-      <AgentTemplate width={width} />
-    </>
+      {/*TODO：暂时隐藏，待模板完成后再补回*/}
+      {/*<AgentTemplate width={width} />*/}
+    </Flexbox>
   );
 });
 
