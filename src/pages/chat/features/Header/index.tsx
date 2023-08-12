@@ -14,7 +14,7 @@ import { agentSelectors, useSessionHydrated, useSessionStore } from '@/store/ses
 
 import PluginTag from './PluginTag';
 
-const Header = memo(() => {
+const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
   const init = useSessionHydrated();
   const { t } = useTranslation('common');
 
@@ -75,22 +75,22 @@ const Header = memo(() => {
         )
       }
       right={
-        id && (
-          <>
-            {/*<ActionIcon*/}
-            {/*  icon={Share2}*/}
-            {/*  onClick={() => {*/}
-            {/*    // genShareUrl();*/}
-            {/*  }}*/}
-            {/*  size={{ fontSize: 24 }}*/}
-            {/*  title={t('share')}*/}
-            {/*/>*/}
-            <ActionIcon
-              icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
-              onClick={() => toggleConfig()}
-              size={{ fontSize: 24 }}
-              title={t('roleAndArchive')}
-            />
+        <>
+          {/*<ActionIcon*/}
+          {/*  icon={Share2}*/}
+          {/*  onClick={() => {*/}
+          {/*    // genShareUrl();*/}
+          {/*  }}*/}
+          {/*  size={{ fontSize: 24 }}*/}
+          {/*  title={t('share')}*/}
+          {/*/>*/}
+          <ActionIcon
+            icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
+            onClick={() => toggleConfig()}
+            size={{ fontSize: 24 }}
+            title={t('roleAndArchive')}
+          />
+          {settings && (
             <ActionIcon
               icon={Settings}
               onClick={() => {
@@ -99,8 +99,8 @@ const Header = memo(() => {
               size={{ fontSize: 24 }}
               title={t('header.session', { ns: 'setting' })}
             />
-          </>
-        )
+          )}
+        </>
       }
     />
   );

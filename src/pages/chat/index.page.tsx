@@ -26,7 +26,7 @@ const Chat = memo(() => {
         <title>{pageTitle}</title>
       </Head>
       <Layout>
-        <Header />
+        <Header settings={false} />
         <Flexbox flex={1} height={'calc(100vh - 64px)'} horizontal>
           <Conversation />
           <SideBar systemRole={false} />
