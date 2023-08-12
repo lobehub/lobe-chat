@@ -2,6 +2,42 @@
 
 # Changelog
 
+### [Version 0.42.2](https://github.com/lobehub/lobe-chat/compare/v0.42.1...v0.42.2)
+
+<sup>Released on **2023-08-12**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 将 useSettings 更名为 useGlobalStore, 将原本的 settings 更名为 global, 收敛切换 SideBar 方法为 useSwitchSideBarOnInit, 重构需本地缓存的状态为 preference.
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正移除 session 时的路由跳转逻辑.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 将 useSettings 更名为 useGlobalStore ([bdde7df](https://github.com/lobehub/lobe-chat/commit/bdde7df))
+- **misc**: 将原本的 settings 更名为 global ([e42d34c](https://github.com/lobehub/lobe-chat/commit/e42d34c))
+- **misc**: 收敛切换 SideBar 方法为 useSwitchSideBarOnInit ([bbad38f](https://github.com/lobehub/lobe-chat/commit/bbad38f))
+- **misc**: 重构需本地缓存的状态为 preference ([8359b62](https://github.com/lobehub/lobe-chat/commit/8359b62))
+
+#### What's fixed
+
+- **misc**: 修正移除 session 时的路由跳转逻辑 ([8b7838d](https://github.com/lobehub/lobe-chat/commit/8b7838d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.42.1](https://github.com/lobehub/lobe-chat/compare/v0.42.0...v0.42.1)
 
 <sup>Released on **2023-08-12**</sup>
