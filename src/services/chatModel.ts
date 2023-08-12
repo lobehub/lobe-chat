@@ -1,8 +1,8 @@
 import { merge } from 'lodash-es';
+import { useSettings } from 'src/store/global';
 
 import { LOBE_CHAT_ACCESS_CODE, OPENAI_API_KEY_HEADER_KEY, OPENAI_END_POINT } from '@/const/fetch';
 import { initialLobeAgentConfig } from '@/store/session';
-import { useSettings } from '@/store/settings';
 import type { OpenAIStreamPayload } from '@/types/openai';
 
 import { URLS } from './url';

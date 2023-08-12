@@ -13,12 +13,12 @@ import {
 import Router from 'next/router';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SettingsStore } from 'src/store/global';
 
 import DiscordIcon from '@/components/DiscordIcon';
 import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB } from '@/const/url';
 import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
-import { SettingsStore } from '@/store/settings';
 
 export interface BottomActionProps {
   setTab: SettingsStore['switchSideBar'];

@@ -1,8 +1,8 @@
 import { SideNav } from '@lobehub/ui';
 import { memo } from 'react';
+import { useSettings } from 'src/store/global';
 
 import AvatarWithUpload from '@/features/AvatarWithUpload';
-import { useSettings } from '@/store/settings';
 
 import BottomActions from './BottomActions';
 import TopActions from './TopActions';

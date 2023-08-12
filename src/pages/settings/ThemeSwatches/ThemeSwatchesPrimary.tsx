@@ -6,8 +6,7 @@ import {
   primaryColorsSwatches,
 } from '@lobehub/ui';
 import { memo } from 'react';
-
-import { useSettings } from '@/store/settings';
+import { useSettings } from 'src/store/global';
 
 const ThemeSwatchesPrimary = memo(() => {
   const [primaryColor, setSettings] = useSettings((s) => [s.settings.primaryColor, s.setSettings]);

@@ -6,11 +6,11 @@ import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useSettings } from 'src/store/global';
 
 import HeaderTitle from '@/components/HeaderTitle';
 import Tag from '@/components/Tag';
 import { agentSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import PluginTag from './PluginTag';
 

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
+import { useSettings } from 'src/store/global';
 
 import { useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 import { importConfigFile } from '@/utils/config';
 
 export const useImportConfig = () => {

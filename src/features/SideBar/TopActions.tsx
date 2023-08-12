@@ -3,8 +3,7 @@ import { MessageSquare, Sticker } from 'lucide-react';
 import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { SettingsStore } from '@/store/settings';
+import { SettingsStore } from 'src/store/global';
 
 export interface TopActionProps {
   setTab: SettingsStore['switchSideBar'];

@@ -3,10 +3,10 @@ import { Button } from 'antd';
 import { LucideGalleryVerticalEnd } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSettings } from 'src/store/global';
 
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import InputActions from './Action';
 import ActionsRight from './ActionRight';

@@ -1,5 +1,6 @@
+import { settingsSelectors, useSettings } from 'src/store/global';
+
 import { sessionSelectors, useSessionStore } from '@/store/session';
-import { settingsSelectors, useSettings } from '@/store/settings';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
 
 const getAgents = () => sessionSelectors.exportAgents(useSessionStore.getState());

@@ -5,11 +5,11 @@ import { FolderOutput, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
 import { FC, memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useSettings } from 'src/store/global';
 import { shallow } from 'zustand/shallow';
 
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { agentSelectors, chatSelectors, sessionSelectors, useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import { useStyles } from './style';
 

@@ -1,5 +1,6 @@
+import { useSettings } from 'src/store/global';
+
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
-import { useSettings } from '@/store/settings';
 import { ChatMessage } from '@/types/chatMessage';
 
 import type { SessionStore } from '../../../store';

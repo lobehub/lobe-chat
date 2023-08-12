@@ -1,8 +1,8 @@
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
+import { settingsSelectors, useSettings } from 'src/store/global';
 
 import { AgentConfig, AgentMeta, AgentPlugin, AgentPrompt } from '@/features/AgentSetting';
-import { settingsSelectors, useSettings } from '@/store/settings';
 
 const Agent = memo(() => {
   const config = useSettings(settingsSelectors.currentAgentConfig, isEqual);

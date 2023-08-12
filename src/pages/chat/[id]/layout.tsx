@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import { PropsWithChildren, memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { useSettings } from 'src/store/global';
 import { shallow } from 'zustand/shallow';
 
 import AppLayout from '@/layout/AppLayout';
 import { useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import { Sessions } from '../SessionList';
 

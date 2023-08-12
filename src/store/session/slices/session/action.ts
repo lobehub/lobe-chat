@@ -1,10 +1,10 @@
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 import Router from 'next/router';
+import { useSettings } from 'src/store/global';
 import { StateCreator } from 'zustand/vanilla';
 
 import { SessionStore, initLobeSession } from '@/store/session';
-import { useSettings } from '@/store/settings';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 import { uuid } from '@/utils/uuid';

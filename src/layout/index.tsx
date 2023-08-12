@@ -4,9 +4,9 @@ import { useThemeMode } from 'antd-style';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
 import { PropsWithChildren, useCallback, useEffect } from 'react';
+import { useSettings } from 'src/store/global';
 
 import { useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 import { GlobalStyle } from '@/styles';
 
 import i18n from '../locales';

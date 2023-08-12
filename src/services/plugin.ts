@@ -1,5 +1,6 @@
+import { useSettings } from 'src/store/global';
+
 import { LOBE_CHAT_ACCESS_CODE } from '@/const/fetch';
-import { useSettings } from '@/store/settings';
 import { OpenAIPluginPayload } from '@/types/plugin';
 
 import { URLS } from './url';

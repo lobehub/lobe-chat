@@ -2,10 +2,10 @@ import { useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useSettings } from 'src/store/global';
 
 import Empty from '@/components/Empty';
 import { topicSelectors, useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import TopicItem from './TopicItem';
 

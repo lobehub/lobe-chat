@@ -6,13 +6,13 @@ import { AppWindow, Palette, Webhook } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import SliderWithInput from 'src/components/SliderWithInput';
+import { settingsSelectors, useSettings } from 'src/store/global';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { options } from '@/locales/options';
 import { useSessionStore } from '@/store/session';
-import { settingsSelectors, useSettings } from '@/store/settings';
 import { ConfigKeys } from '@/types/settings';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../ThemeSwatches';

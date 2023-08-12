@@ -4,9 +4,9 @@ import { KeySquare, SquareAsterisk } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useSettings } from 'src/store/global';
 
 import { useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import OtpInput from '../OTPInput';
 import APIKeyForm from './ApiKeyForm';

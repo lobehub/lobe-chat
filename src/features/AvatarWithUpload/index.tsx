@@ -2,8 +2,8 @@ import { Avatar, Logo } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { useSettings } from 'src/store/global';
 
-import { useSettings } from '@/store/settings';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
 
 const useStyle = createStyles(

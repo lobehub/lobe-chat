@@ -3,8 +3,7 @@ import { Button, Input } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-
-import { useSettings } from '@/store/settings';
+import { useSettings } from 'src/store/global';
 
 import { useStyles } from './style';
 

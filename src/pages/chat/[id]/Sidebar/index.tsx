@@ -1,10 +1,10 @@
 import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
+import { useSettings } from 'src/store/global';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
-import { useSettings } from '@/store/settings';
 
 import Inner from './Inner';
 
