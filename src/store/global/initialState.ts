@@ -8,22 +8,36 @@ export interface Guide {
   topic?: boolean;
 }
 
-export interface AppSettingsState {
-  guide?: Guide;
-  inputHeight: number;
-  sessionExpandable?: boolean;
-  sessionsWidth: number;
+export interface GlobalState {
+  /**
+   *  用户偏好的 UI 状态
+   *  @localStorage
+   */
+  preference: GlobalPreference;
+  /**
+   * @localStorage
+   * 用户设置
+   */
   settings: GlobalSettings;
-  showAgentConfig?: boolean;
   sidebarKey: SidebarTabKey;
 }
 
-export const initialState: AppSettingsState = {
-  guide: {},
-  inputHeight: 200,
-  sessionExpandable: true,
-  sessionsWidth: 320,
+export interface GlobalPreference {
+  guide?: Guide;
+  inputHeight: number;
+  sessionsWidth: number;
+  showChatSideBar?: boolean;
+  showSessionPanel?: boolean;
+}
+
+export const initialState: GlobalState = {
+  preference: {
+    guide: {},
+    inputHeight: 200,
+    sessionsWidth: 320,
+    showChatSideBar: true,
+    showSessionPanel: true,
+  },
   settings: DEFAULT_SETTINGS,
-  showAgentConfig: true,
   sidebarKey: 'chat',
 };

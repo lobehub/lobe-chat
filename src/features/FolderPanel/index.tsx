@@ -16,9 +16,10 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const FolderPanel = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
-  const [sessionsWidth, sessionExpandable] = useGlobalStore((s) => [
-    s.sessionsWidth,
-    s.sessionExpandable,
+  const [sessionsWidth, sessionExpandable, updatePreference] = useGlobalStore((s) => [
+    s.preference.sessionsWidth,
+    s.preference.showSessionPanel,
+    s.updatePreference,
   ]);
   const [tmpWidth, setWidth] = useState(sessionsWidth);
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
@@ -31,9 +32,9 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
       maxWidth={400}
       minWidth={FOLDER_WIDTH}
       onExpandChange={(expand) => {
-        useGlobalStore.setState({
-          sessionExpandable: expand,
+        updatePreference({
           sessionsWidth: expand ? 320 : 0,
+          showSessionPanel: expand,
         });
       }}
       onSizeChange={(_, size) => {
@@ -44,7 +45,7 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
         if (isEqual(nextWidth, sessionsWidth)) return;
 
         setWidth(nextWidth);
-        useGlobalStore.setState({ sessionsWidth: nextWidth });
+        updatePreference({ sessionsWidth: nextWidth });
       }}
       placement="left"
       size={{ height: '100vh', width: sessionsWidth }}

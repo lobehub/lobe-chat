@@ -29,8 +29,8 @@ const Header = memo(() => {
   ]);
 
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
-    s.showAgentConfig,
-    s.toggleAgentPanel,
+    s.preference.showChatSideBar,
+    s.toggleChatSideBar,
   ]);
 
   return (

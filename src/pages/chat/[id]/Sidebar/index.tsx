@@ -23,8 +23,8 @@ const useStyles = createStyles(({ cx, css, token, stylish }) => ({
 const Config = () => {
   const { styles } = useStyles();
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
-    s.showAgentConfig,
-    s.toggleAgentPanel,
+    s.preference.showChatSideBar,
+    s.toggleChatSideBar,
   ]);
 
   return (

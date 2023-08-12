@@ -15,7 +15,10 @@ export const Topic = () => {
   const [activeTopicId] = useSessionStore((s) => [s.activeTopicId]);
   const { t } = useTranslation('empty');
 
-  const [visible, updateGuideState] = useGlobalStore((s) => [s.guide?.topic, s.updateGuideState]);
+  const [visible, updateGuideState] = useGlobalStore((s) => [
+    s.preference.guide?.topic,
+    s.updateGuideState,
+  ]);
 
   return (
     <Flexbox gap={2}>

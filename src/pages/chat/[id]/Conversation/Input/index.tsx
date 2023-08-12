@@ -17,7 +17,10 @@ const ChatInput = () => {
   const [expand, setExpand] = useState<boolean>(false);
   const [text, setText] = useState('');
 
-  const [inputHeight] = useGlobalStore((s) => [s.inputHeight]);
+  const [inputHeight, updatePreference] = useGlobalStore((s) => [
+    s.preference.inputHeight,
+    s.updatePreference,
+  ]);
   const [sendMessage, hasTopic, saveToTopic] = useSessionStore((s) => [
     s.createOrSendMsg,
     !!s.activeTopicId,
@@ -38,7 +41,8 @@ const ChatInput = () => {
       minHeight={CHAT_TEXTAREA_HEIGHT}
       onSizeChange={(_, size) => {
         if (!size) return;
-        useGlobalStore.setState({
+
+        updatePreference({
           inputHeight: typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
         });
       }}
