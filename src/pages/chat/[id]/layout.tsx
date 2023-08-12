@@ -4,7 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import AppLayout from '@/layout/AppLayout';
-import { useGlobalStore } from '@/store/global';
+import { useSwitchSideBarOnInit } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
 import { Sessions } from '../SessionList';
@@ -31,12 +31,7 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
     toggleTopic();
   }, [id]);
 
-  useEffect(() => {
-    const hasRehydrated = useGlobalStore.persist.hasHydrated();
-    if (hasRehydrated) {
-      useGlobalStore.setState({ sidebarKey: 'chat' });
-    }
-  }, []);
+  useSwitchSideBarOnInit('chat');
 
   return (
     <AppLayout>

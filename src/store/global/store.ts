@@ -22,11 +22,14 @@ const createStore: StateCreator<GlobalStore, [['zustand/devtools', never]]> = (.
 });
 
 //  ===============  persist 本地缓存中间件配置 ============ //
+type GlobalPersist = Pick<GlobalStore, 'preference' | 'settings'>;
 
-const LOBE_SETTINGS = 'LOBE_SETTINGS';
-
-const persistOptions: PersistOptions<GlobalStore> = {
-  name: LOBE_SETTINGS,
+const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
+  name: 'LOBE_SETTINGS',
+  partialize: (s) => ({
+    preference: s.preference,
+    settings: s.settings,
+  }),
   skipHydration: true,
 };
 

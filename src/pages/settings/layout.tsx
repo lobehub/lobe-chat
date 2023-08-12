@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import SideBar from '@/features/SideBar';
 import { createI18nNext } from '@/locales/create';
-import { useGlobalStore } from '@/store/global';
+import { useSwitchSideBarOnInit } from '@/store/global';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 const initI18n = createI18nNext('setting');
@@ -18,12 +18,7 @@ const SettingLayout = memo<{ children: ReactNode }>(({ children }) => {
     initI18n.finally();
   }, []);
 
-  useEffect(() => {
-    const hasRehydrated = useGlobalStore.persist.hasHydrated();
-    if (hasRehydrated) {
-      useGlobalStore.setState({ sidebarKey: 'settings' });
-    }
-  }, []);
+  useSwitchSideBarOnInit('settings');
 
   return (
     <>
