@@ -136,7 +136,7 @@ export const createSessionSlice: StateCreator<
     get().dispatchSession({ id: sessionId, type: 'removeSession' });
 
     if (sessionId === get().activeId) {
-      Router.push('/');
+      Router.push('/chat');
     }
   },
 
