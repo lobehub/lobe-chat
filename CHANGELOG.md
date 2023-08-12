@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.43.0](https://github.com/lobehub/lobe-chat/compare/v0.42.3...v0.43.0)
+
+<sup>Released on **2023-08-12**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持切换语言.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持切换语言, closes [#67](https://github.com/lobehub/lobe-chat/issues/67) ([63ed8ec](https://github.com/lobehub/lobe-chat/commit/63ed8ec))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.42.3](https://github.com/lobehub/lobe-chat/compare/v0.42.2...v0.42.3)
 
 <sup>Released on **2023-08-12**</sup>
