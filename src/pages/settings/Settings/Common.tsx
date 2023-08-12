@@ -1,6 +1,7 @@
 import { Form, type ItemGroup, ThemeSwitch } from '@lobehub/ui';
 import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
+import { changeLanguage } from 'i18next';
 import { debounce } from 'lodash-es';
 import { AppWindow, Palette, Webhook } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
@@ -27,9 +28,10 @@ const Common = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
   const clearSessions = useSessionStore((s) => s.clearSessions);
+
   const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
   const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [
-    s.setThemeMode,
+    s.switchThemeMode,
     s.setSettings,
     s.resetSettings,
   ]);
@@ -89,7 +91,14 @@ const Common = memo(() => {
           label: t('settingTheme.themeMode.title'),
         },
         {
-          children: <Select options={options} />,
+          children: (
+            <Select
+              onChange={(e) => {
+                changeLanguage(e);
+              }}
+              options={options}
+            />
+          ),
           label: t('settingTheme.lang.title'),
           name: 'language',
         },

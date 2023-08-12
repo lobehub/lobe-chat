@@ -29,7 +29,7 @@ export interface SettingsAction {
    * 设置主题模式
    * @param themeMode - 主题模式
    */
-  setThemeMode: (themeMode: ThemeMode) => void;
+  switchThemeMode: (themeMode: ThemeMode) => void;
 }
 
 export const createSettingsSlice: StateCreator<
@@ -63,7 +63,7 @@ export const createSettingsSlice: StateCreator<
     const oldSetting = get().settings;
     set({ settings: merge(oldSetting, settings) }, false, t('setSettings', settings));
   },
-  setThemeMode: (themeMode) => {
+  switchThemeMode: (themeMode) => {
     get().setSettings({ themeMode });
   },
 });
