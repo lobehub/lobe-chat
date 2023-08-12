@@ -4,7 +4,7 @@ import { ChatMessage } from '@/types/chatMessage';
 
 import type { SessionStore } from '../../../store';
 import { agentSelectors } from '../../agentConfig';
-import { sessionSelectors } from '../../session';
+import { sessionSelectors } from '../../session/selectors';
 import { getSlicedMessagesWithConfig } from '../utils';
 import { organizeChats } from './utils';
 

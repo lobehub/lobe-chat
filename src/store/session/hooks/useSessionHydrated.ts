@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useSessionStore } from '@/store/session';
+import { useSessionStore } from '../store';
 
 export const useSessionHydrated = () => {
   // 根据 sessions 是否有值来判断是否已经初始化

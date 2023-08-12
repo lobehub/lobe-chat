@@ -1,6 +1,6 @@
 import { encode } from 'gpt-tokenizer';
 
-import { agentSelectors } from '@/store/session';
+import { agentSelectors } from '@/store/session/slices/agentConfig';
 
 import type { SessionStore } from '../../../store';
 import { currentChatsWithHistoryConfig } from './chat';

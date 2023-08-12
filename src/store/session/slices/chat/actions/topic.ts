@@ -2,12 +2,14 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT } from '@/const/message';
 import { promptSummaryTitle } from '@/prompts/chat';
-import { SessionStore, chatSelectors, sessionSelectors, topicSelectors } from '@/store/session';
+import { SessionStore } from '@/store/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
+import { sessionSelectors } from '../../session/selectors';
 import { ChatTopicDispatch, topicReducer } from '../reducers/topic';
+import { chatSelectors, topicSelectors } from '../selectors';
 
 const t = setNamespace('chat/topic');
 export interface ChatTopicAction {

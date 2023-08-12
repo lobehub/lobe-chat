@@ -4,11 +4,12 @@ import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
 import { useGlobalStore } from '@/store/global';
-import { SessionStore, initLobeSession } from '@/store/session';
+import { SessionStore } from '@/store/session';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 import { uuid } from '@/utils/uuid';
 
+import { initLobeSession } from './initialState';
 import { SessionDispatch, sessionsReducer } from './reducers/session';
 
 const t = setNamespace('session');

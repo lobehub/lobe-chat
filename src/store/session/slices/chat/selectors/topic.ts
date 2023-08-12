@@ -1,7 +1,9 @@
 // 展示在聊天框中的消息
-import { SessionStore, sessionSelectors } from '@/store/session';
-import { organizeChats } from '@/store/session/slices/chat/selectors/utils';
 import { ChatTopic } from '@/types/topic';
+
+import { SessionStore } from '../../../store';
+import { sessionSelectors } from '../../session/selectors';
+import { organizeChats } from './utils';
 
 export const currentTopics = (s: SessionStore): ChatTopic[] => {
   const session = sessionSelectors.currentSession(s);

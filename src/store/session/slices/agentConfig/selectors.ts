@@ -7,7 +7,7 @@ import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import { MetaData } from '@/types/meta';
 
-import { sessionSelectors } from '../session';
+import { sessionSelectors } from '../session/selectors';
 import { initialLobeAgentConfig } from './initialState';
 
 const currentAgentMeta = (s: SessionStore): MetaData => {

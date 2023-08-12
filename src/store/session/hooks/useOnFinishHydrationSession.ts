@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useSessionStore } from '@/store/session';
+import { useSessionStore } from '../store';
 
 /**
  * 当 Session 水合完毕后才会执行的 useEffect

@@ -1,7 +1,7 @@
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
-import { initialLobeAgentConfig } from '../agentConfig';
+import { initialLobeAgentConfig } from '../agentConfig/initialState';
 
 export interface SessionState {
   /**

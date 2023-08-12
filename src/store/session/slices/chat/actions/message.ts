@@ -4,15 +4,18 @@ import { StateCreator } from 'zustand/vanilla';
 import { LOADING_FLAT } from '@/const/message';
 import { fetchChatModel } from '@/services/chatModel';
 import { fetchPlugin } from '@/services/plugin';
-import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@/store/session';
-import { getSlicedMessagesWithConfig } from '@/store/session/slices/chat/utils';
+import { SessionStore } from '@/store/session';
 import { ChatMessage, OpenAIFunctionCall } from '@/types/chatMessage';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessage } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
+import { agentSelectors } from '../../agentConfig/selectors';
+import { sessionSelectors } from '../../session/selectors';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
+import { chatSelectors } from '../selectors';
+import { getSlicedMessagesWithConfig } from '../utils';
 
 const t = setNamespace('chat/message');
 

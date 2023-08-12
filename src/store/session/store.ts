@@ -6,9 +6,9 @@ import { StateCreator } from 'zustand/vanilla';
 import { isDev } from '@/utils/env';
 
 import { SessionStoreState, initialState } from './initialState';
-import { AgentAction, createAgentSlice } from './slices/agentConfig';
-import { ChatAction, createChatSlice } from './slices/chat';
-import { SessionAction, createSessionSlice } from './slices/session';
+import { AgentAction, createAgentSlice } from './slices/agentConfig/action';
+import { ChatAction, createChatSlice } from './slices/chat/actions';
+import { SessionAction, createSessionSlice } from './slices/session/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
