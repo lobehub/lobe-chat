@@ -10,6 +10,8 @@ export interface SessionState {
    * @default null
    */
   activeId: string | null;
+  // 默认会话
+  inbox: LobeAgentSession;
   searchKeywords: string;
   sessions: Record<string, LobeAgentSession>;
 }
@@ -26,6 +28,15 @@ export const initLobeSession: LobeAgentSession = {
 
 export const initialSessionState: SessionState = {
   activeId: null,
+
+  inbox: {
+    ...initLobeSession,
+    id: 'inbox',
+    meta: {
+      ...DEFAULT_AGENT_META,
+      title: 'Inbox',
+    },
+  },
 
   searchKeywords: '',
   sessions: {},

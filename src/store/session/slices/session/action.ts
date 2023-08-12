@@ -15,7 +15,6 @@ const t = setNamespace('session');
 export interface SessionAction {
   activeSession: (sessionId: string) => void;
   clearSessions: () => void;
-
   /**
    * @title 添加会话
    * @param session - 会话信息
@@ -27,7 +26,6 @@ export interface SessionAction {
    * @param payload - 聊天记录
    */
   dispatchSession: (payload: SessionDispatch) => void;
-
   /**
    * 导入会话
    * @param sessions
@@ -39,6 +37,7 @@ export interface SessionAction {
    * @param sessionId
    */
   pinSession: (sessionId: string, pinned?: boolean) => void;
+
   /**
    * 生成压缩后的消息
    * @returns 压缩后的消息
@@ -50,6 +49,7 @@ export interface SessionAction {
    * @returns void
    */
   removeSession: (sessionId: string) => void;
+  switchInbox: () => void;
 
   /**
    * @title 切换会话
@@ -138,6 +138,13 @@ export const createSessionSlice: StateCreator<
     if (sessionId === get().activeId) {
       Router.push('/chat');
     }
+  },
+
+  switchInbox: () => {
+    if (get().activeId === 'inbox') return;
+    get().activeSession('inbox');
+
+    Router.push('/chat');
   },
 
   switchSession: async (sessionId) => {
