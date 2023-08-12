@@ -1,7 +1,9 @@
-import { DEFAULT_AGENT_META } from '@/const/meta';
-import { LobeAgentSession, LobeSessionType } from '@/types/session';
+import { merge } from 'lodash-es';
 
-import { initialLobeAgentConfig } from '../agentConfig';
+import { DEFAULT_AGENT_META, DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import { LobeAgentConfig, LobeAgentSession, LobeSessionType } from '@/types/session';
+
+import { initialLobeAgentConfig } from '../agentConfig/initialState';
 
 export interface SessionState {
   /**
@@ -10,6 +12,8 @@ export interface SessionState {
    * @default null
    */
   activeId: string | null;
+  // 默认会话
+  inbox: LobeAgentSession;
   searchKeywords: string;
   sessions: Record<string, LobeAgentSession>;
 }
@@ -24,9 +28,19 @@ export const initLobeSession: LobeAgentSession = {
   updateAt: Date.now(),
 };
 
+export const initInbox = merge({}, initLobeSession, {
+  config: {
+    systemRole: '你是一名 AI 助理',
+  } as LobeAgentConfig,
+  id: 'inbox',
+  meta: {
+    avatar: DEFAULT_INBOX_AVATAR,
+  },
+} as Partial<LobeAgentSession>);
+
 export const initialSessionState: SessionState = {
   activeId: null,
-
+  inbox: initInbox,
   searchKeywords: '',
   sessions: {},
 };

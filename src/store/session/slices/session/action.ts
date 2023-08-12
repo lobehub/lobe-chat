@@ -3,19 +3,21 @@ import { merge } from 'lodash-es';
 import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
+import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
-import { SessionStore, initLobeSession } from '@/store/session';
+import { SessionStore } from '@/store/session';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 import { uuid } from '@/utils/uuid';
 
+import { initLobeSession } from './initialState';
 import { SessionDispatch, sessionsReducer } from './reducers/session';
 
 const t = setNamespace('session');
+
 export interface SessionAction {
   activeSession: (sessionId: string) => void;
   clearSessions: () => void;
-
   /**
    * @title 添加会话
    * @param session - 会话信息
@@ -27,7 +29,6 @@ export interface SessionAction {
    * @param payload - 聊天记录
    */
   dispatchSession: (payload: SessionDispatch) => void;
-
   /**
    * 导入会话
    * @param sessions
@@ -39,6 +40,7 @@ export interface SessionAction {
    * @param sessionId
    */
   pinSession: (sessionId: string, pinned?: boolean) => void;
+
   /**
    * 生成压缩后的消息
    * @returns 压缩后的消息
@@ -50,6 +52,7 @@ export interface SessionAction {
    * @returns void
    */
   removeSession: (sessionId: string) => void;
+  switchInbox: () => void;
 
   /**
    * @title 切换会话
@@ -95,11 +98,21 @@ export const createSessionSlice: StateCreator<
 
   dispatchSession: (payload) => {
     const { type, ...res } = payload;
-    set(
-      { sessions: sessionsReducer(get().sessions, payload) },
-      false,
-      t(`dispatchChat/${type}`, res),
-    );
+
+    // 如果是 inbox 类型的 session
+    if ('id' in res && res.id === INBOX_SESSION_ID) {
+      const nextInbox = sessionsReducer({ inbox: get().inbox }, payload) as {
+        inbox: LobeAgentSession;
+      };
+      set({ inbox: nextInbox.inbox }, false, t(`dispatchInbox/${type}`, res));
+    } else {
+      // 常规类型的session
+      set(
+        { sessions: sessionsReducer(get().sessions, payload) },
+        false,
+        t(`dispatchSessions/${type}`, res),
+      );
+    }
   },
 
   importSessions: (importSessions) => {
@@ -119,13 +132,7 @@ export const createSessionSlice: StateCreator<
       t('importSessions', importSessions),
     );
   },
-  // genShareUrl: () => {
-  //   const session = sessionSelectors.currentSession(get());
-  //   if (!session) return '';
-  //
-  //   const agent = session.config;
-  //   return genShareMessagesUrl(session.chats, agent.systemRole);
-  // },
+
   pinSession: (sessionId, pinned) => {
     const nextValue = typeof pinned === 'boolean' ? pinned : !get().sessions[sessionId].pinned;
 
@@ -138,6 +145,13 @@ export const createSessionSlice: StateCreator<
     if (sessionId === get().activeId) {
       Router.push('/chat');
     }
+  },
+
+  switchInbox: () => {
+    if (get().activeId === INBOX_SESSION_ID) return;
+    get().activeSession(INBOX_SESSION_ID);
+
+    Router.push('/chat');
   },
 
   switchSession: async (sessionId) => {

@@ -2,12 +2,13 @@ import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { promptPickEmoji, promptSummaryAgentName, promptSummaryDescription } from '@/prompts/agent';
-import { SessionStore, sessionSelectors } from '@/store/session';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { SessionStore } from '../../store';
+import { sessionSelectors } from '../session/selectors';
 import { SessionLoadingState } from './initialState';
 
 const t = setNamespace('agentConfig');

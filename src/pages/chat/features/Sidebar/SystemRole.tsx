@@ -1,4 +1,4 @@
-import { ActionIcon, DraggablePanelBody, EditableMessage, SearchBar } from '@lobehub/ui';
+import { ActionIcon, EditableMessage } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { Maximize2Icon } from 'lucide-react';
@@ -6,18 +6,10 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import Header from '@/pages/chat/features/Sidebar/Header';
 import { agentSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
 
-import Header from './Header';
-import { Topic } from './Topic';
-
 const useStyles = createStyles(({ css, token }) => ({
-  desc: css`
-    color: ${token.colorText};
-  `,
-  model: css`
-    color: ${token.colorTextTertiary};
-  `,
   prompt: css`
     overflow-x: hidden;
     overflow-y: auto;
@@ -46,14 +38,11 @@ const useStyles = createStyles(({ css, token }) => ({
 
     background: linear-gradient(to bottom, transparent, ${token.colorBgLayout});
   `,
-  title: css`
-    font-size: ${token.fontSizeHeading4}px;
-    font-weight: bold;
-  `,
 }));
 
-const Inner = memo(() => {
+const SystemRole = memo(() => {
   const [openModal, setOpenModal] = useState(false);
+
   const { styles } = useStyles();
   const [systemRole, updateAgentConfig] = useSessionStore((s) => [
     agentSelectors.currentAgentSystemRole(s),
@@ -63,7 +52,7 @@ const Inner = memo(() => {
   const hydrated = useSessionHydrated();
   const { t } = useTranslation('common');
   return (
-    <DraggablePanelBody style={{ padding: 0 }}>
+    <>
       <Header
         actions={
           <ActionIcon
@@ -101,27 +90,8 @@ const Inner = memo(() => {
           <Skeleton active avatar={false} style={{ marginTop: 12 }} title={false} />
         )}
       </Flexbox>
-      <Flexbox gap={16} padding={16}>
-        <SearchBar placeholder={t('topic.searchPlaceholder')} spotlight type={'ghost'} />
-        {!hydrated ? (
-          <Flexbox gap={8} style={{ marginTop: 8 }}>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton
-                active
-                avatar={false}
-                key={i}
-                paragraph={{ rows: 1, width: '100%' }}
-                round
-                title={false}
-              />
-            ))}
-          </Flexbox>
-        ) : (
-          <Topic />
-        )}
-      </Flexbox>
-    </DraggablePanelBody>
+    </>
   );
 });
 
-export default Inner;
+export default SystemRole;

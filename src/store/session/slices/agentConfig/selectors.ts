@@ -7,7 +7,7 @@ import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import { MetaData } from '@/types/meta';
 
-import { sessionSelectors } from '../session';
+import { sessionSelectors } from '../session/selectors';
 import { initialLobeAgentConfig } from './initialState';
 
 const currentAgentMeta = (s: SessionStore): MetaData => {
@@ -25,8 +25,17 @@ const currentAutocomplete = (s: SessionStore): Autocomplete => ({
 
 const currentAgentTitle = (s: SessionStore) => currentAgentMeta(s)?.title || t('defaultSession');
 
+const currentAgentConfig = (s: SessionStore) => {
+  const session = sessionSelectors.currentSession(s);
+  return merge({}, initialLobeAgentConfig, session?.config);
+};
+
+const currentAgentSystemRole = (s: SessionStore) => {
+  return currentAgentConfig(s).systemRole;
+};
+
 const currentAgentDescription = (s: SessionStore) =>
-  currentAgentMeta(s)?.description || t('noDescription');
+  currentAgentMeta(s)?.description || currentAgentSystemRole(s) || t('noDescription');
 
 const currentAgentBackgroundColor = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
@@ -39,15 +48,6 @@ const currentAgentAvatar = (s: SessionStore) => {
   if (!session) return DEFAULT_AVATAR;
 
   return session.meta.avatar || DEFAULT_AVATAR;
-};
-
-const currentAgentConfig = (s: SessionStore) => {
-  const session = sessionSelectors.currentSession(s);
-  return merge({}, initialLobeAgentConfig, session?.config);
-};
-
-const currentAgentSystemRole = (s: SessionStore) => {
-  return currentAgentConfig(s).systemRole;
 };
 
 const currentAgentModel = (s: SessionStore): LanguageModel => {

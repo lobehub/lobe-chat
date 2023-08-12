@@ -1,12 +1,15 @@
-import { SessionStore } from '@/store/session';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { MetaData } from '@/types/meta';
 import { LobeAgentSession } from '@/types/session';
 import { filterWithKeywords } from '@/utils/filter';
 
+import { SessionStore } from '../../../store';
 import { initLobeSession } from '../initialState';
 
 export const currentSession = (s: SessionStore): LobeAgentSession | undefined => {
   if (!s.activeId) return;
+
+  if (s.activeId === INBOX_SESSION_ID) return s.inbox;
 
   return s.sessions[s.activeId];
 };
@@ -17,7 +20,7 @@ export const currentSessionSafe = (s: SessionStore): LobeAgentSession => {
 
 export const sessionList = (s: SessionStore) => {
   const filterChats = filterWithKeywords(s.sessions, s.searchKeywords, (item) => [
-    Object.values(item.chats)
+    Object.values(item.chats || {})
       .map((c) => c.content)
       .join(''),
   ]);
@@ -44,6 +47,8 @@ export const hasSessionList = (s: SessionStore) => {
 export const getSessionById =
   (id: string) =>
   (s: SessionStore): LobeAgentSession => {
+    if (id === INBOX_SESSION_ID) return s.inbox;
+
     const session = s.sessions[id];
 
     if (!session) return initLobeSession;
@@ -53,7 +58,7 @@ export const getSessionById =
 export const getSessionMetaById =
   (id: string) =>
   (s: SessionStore): MetaData => {
-    const session = s.sessions[id];
+    const session = getSessionById(id)(s);
 
     if (!session) return {};
     return session.meta;

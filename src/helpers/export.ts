@@ -2,21 +2,24 @@ import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { sessionSelectors, useSessionStore } from '@/store/session';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
 
-const getAgents = () => sessionSelectors.exportAgents(useSessionStore.getState());
-const getAgent = (id: string) => sessionSelectors.getExportAgent(id)(useSessionStore.getState());
-
 const getSessions = () => sessionSelectors.exportSessions(useSessionStore.getState());
 const getSession = (id: string) => sessionSelectors.getSessionById(id)(useSessionStore.getState());
 
 const getSettings = () => settingsSelectors.exportSettings(useGlobalStore.getState());
 
-export const exportAgents = () => {
-  const sessions = getAgents();
+// =============   导出所有角色   ============= //
 
-  const config = createConfigFile('agents', { sessions });
+export const exportAgents = () => {
+  const agents = sessionSelectors.exportAgents(useSessionStore.getState());
+
+  const config = createConfigFile('agents', agents);
 
   exportConfigFile(config, 'agents');
 };
+
+// =============   导出单个角色   ============= //
+
+const getAgent = (id: string) => sessionSelectors.getExportAgent(id)(useSessionStore.getState());
 
 export const exportSingleAgent = (id: string) => {
   const agent = getAgent(id);
@@ -27,23 +30,26 @@ export const exportSingleAgent = (id: string) => {
   exportConfigFile(config, agent.meta?.title || 'agent');
 };
 
+// =============   导出所有会话   ============= //
+
 export const exportSessions = () => {
-  const sessions = getSessions();
-  const config = createConfigFile('sessions', { sessions });
+  const config = createConfigFile('sessions', getSessions());
 
   exportConfigFile(config, 'sessions');
 };
 
+// =============   导出单个会话   ============= //
 export const exportSingleSession = (id: string) => {
   const session = getSession(id);
   if (!session) return;
   const sessions = { [id]: session };
 
-  const config = createConfigFile('sessions', { sessions });
+  const config = createConfigFile('singleSession', { sessions });
 
   exportConfigFile(config, `${session.meta?.title}-session`);
 };
 
+// =============   导出设置会话   ============= //
 export const exportSettings = () => {
   const settings = getSettings();
 
@@ -56,7 +62,7 @@ export const exportAll = () => {
   const sessions = getSessions();
   const settings = getSettings();
 
-  const config = createConfigFile('all', { sessions, settings });
+  const config = createConfigFile('all', { ...sessions, settings });
 
   exportConfigFile(config, 'config');
 };

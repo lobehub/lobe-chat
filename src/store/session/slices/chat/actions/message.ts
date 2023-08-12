@@ -4,15 +4,18 @@ import { StateCreator } from 'zustand/vanilla';
 import { LOADING_FLAT } from '@/const/message';
 import { fetchChatModel } from '@/services/chatModel';
 import { fetchPlugin } from '@/services/plugin';
-import { SessionStore, agentSelectors, chatSelectors, sessionSelectors } from '@/store/session';
-import { getSlicedMessagesWithConfig } from '@/store/session/slices/chat/utils';
+import { SessionStore } from '@/store/session';
 import { ChatMessage, OpenAIFunctionCall } from '@/types/chatMessage';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessage } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
+import { agentSelectors } from '../../agentConfig/selectors';
+import { sessionSelectors } from '../../session/selectors';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
+import { chatSelectors } from '../selectors';
+import { getSlicedMessagesWithConfig } from '../utils';
 
 const t = setNamespace('chat/message');
 
@@ -24,11 +27,6 @@ export interface ChatMessageAction {
    * 清除消息
    */
   clearMessage: () => void;
-  /**
-   * 创建或发送消息
-   * @param text - 消息文本
-   */
-  createOrSendMsg: (text: string) => Promise<void>;
   /**
    * 删除消息
    * @param id - 消息 ID
@@ -84,19 +82,6 @@ export const chatMessage: StateCreator<
     if (activeTopicId) {
       dispatchTopic({ id: activeTopicId, type: 'deleteChatTopic' });
     }
-  },
-
-  createOrSendMsg: async (message) => {
-    if (!message) return;
-
-    const { sendMessage, createSession } = get();
-    const session = sessionSelectors.currentSession(get());
-
-    if (!session) {
-      await createSession();
-    }
-
-    sendMessage(message);
   },
 
   deleteMessage: (id) => {
@@ -325,4 +310,12 @@ export const chatMessage: StateCreator<
 
     await realFetchAIResponse(chats, message.id);
   },
+
+  // genShareUrl: () => {
+  //   const session = sessionSelectors.currentSession(get());
+  //   if (!session) return '';
+  //
+  //   const agent = session.config;
+  //   return genShareMessagesUrl(session.chats, agent.systemRole);
+  // },
 });

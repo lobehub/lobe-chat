@@ -6,9 +6,9 @@ import { StateCreator } from 'zustand/vanilla';
 import { isDev } from '@/utils/env';
 
 import { SessionStoreState, initialState } from './initialState';
-import { AgentAction, createAgentSlice } from './slices/agentConfig';
-import { ChatAction, createChatSlice } from './slices/chat';
-import { SessionAction, createSessionSlice } from './slices/session';
+import { AgentAction, createAgentSlice } from './slices/agentConfig/action';
+import { ChatAction, createChatSlice } from './slices/chat/actions';
+import { SessionAction, createSessionSlice } from './slices/session/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
@@ -23,7 +23,7 @@ const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (
 
 //  ===============  persist 本地缓存中间件配置 ============ //
 
-type SessionPersist = Pick<SessionStore, 'sessions'>;
+type SessionPersist = Pick<SessionStore, 'sessions' | 'inbox'>;
 
 const LOBE_CHAT = 'LOBE_CHAT';
 
@@ -31,13 +31,13 @@ const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
   name: LOBE_CHAT,
 
   partialize: (s) => ({
+    inbox: s.inbox,
     sessions: s.sessions,
   }),
 
   // 手动控制 Hydration ，避免 ssr 报错
   skipHydration: true,
   version: 0,
-  // version: Migration.targetVersion,
 };
 
 //  ===============  实装 useStore ============ //

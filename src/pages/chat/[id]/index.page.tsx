@@ -5,9 +5,9 @@ import { Flexbox } from 'react-layout-kit';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
-import Conversation from './Conversation';
-import Header from './Header';
-import Config from './Sidebar';
+import Conversation from '../features/Conversation';
+import Header from '../features/Header';
+import SideBar from '../features/Sidebar';
 import Layout from './layout';
 
 const Chat = memo(() => {
@@ -24,12 +24,10 @@ const Chat = memo(() => {
         <title>{pageTitle}</title>
       </Head>
       <Layout>
-        <Flexbox id={'lobe-conversion-container'} style={{ height: '100vh' }}>
-          <Header />
-          <Flexbox flex={1} height={'calc(100vh - 64px)'} horizontal>
-            <Conversation />
-            <Config />
-          </Flexbox>
+        <Header />
+        <Flexbox flex={1} height={'calc(100vh - 64px)'} horizontal>
+          <Conversation />
+          <SideBar />
         </Flexbox>
       </Layout>
     </>

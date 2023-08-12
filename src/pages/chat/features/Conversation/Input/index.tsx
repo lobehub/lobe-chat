@@ -22,7 +22,7 @@ const ChatInput = () => {
     s.updatePreference,
   ]);
   const [sendMessage, hasTopic, saveToTopic] = useSessionStore((s) => [
-    s.createOrSendMsg,
+    s.sendMessage,
     !!s.activeTopicId,
     s.saveToTopic,
   ]);
