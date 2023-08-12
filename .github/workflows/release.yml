@@ -25,7 +25,7 @@ jobs:
         run: pnpm install
 
       - name: Lint
-        run: pnpm run type-check
+        run: pnpm run lint
 
       - name: Test
         run: pnpm run test
