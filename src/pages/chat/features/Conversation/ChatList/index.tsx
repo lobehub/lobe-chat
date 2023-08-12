@@ -4,6 +4,7 @@ import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import {
   agentSelectors,
@@ -87,7 +88,9 @@ const List = () => {
       createAt: Date.now(),
       extra: {},
       id: 'default',
-      meta: {},
+      meta: {
+        avatar: DEFAULT_INBOX_AVATAR,
+      },
       role: 'assistant',
       updateAt: Date.now(),
     } as ChatMessage;
