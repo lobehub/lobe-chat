@@ -1,8 +1,9 @@
 import { ActionIcon, Avatar, Icon, List } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { App, Dropdown, type MenuProps, Tag } from 'antd';
+import { createStyles } from 'antd-style';
 import { FolderOutput, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
-import { FC, memo, useMemo, useRef, useState } from 'react';
+import { memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
@@ -11,9 +12,19 @@ import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useGlobalStore } from '@/store/global';
 import { agentSelectors, chatSelectors, sessionSelectors, useSessionStore } from '@/store/session';
 
-import { useStyles } from './style';
-
 const { Item } = List;
+
+const useStyles = createStyles(({ css }) => {
+  return {
+    container: css`
+      position: relative;
+    `,
+
+    modalRoot: css`
+      z-index: 2000;
+    `,
+  };
+});
 
 interface SessionItemProps {
   active?: boolean;
@@ -21,7 +32,7 @@ interface SessionItemProps {
   loading?: boolean;
 }
 
-const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) => {
+const SessionItem = memo<SessionItemProps>(({ id, active = true, loading }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const isHovering = useHover(ref);

@@ -1,4 +1,4 @@
-export * from './hooks/useSessionHydrated';
+export * from './hooks';
 export * from './selectors';
 export { initialLobeAgentConfig } from './slices/agentConfig';
 export { initLobeSession } from './slices/session';

@@ -31,6 +31,7 @@ export default {
   },
   feedback: '反馈与建议',
   import: '导入配置',
+  inbox: '随便聊聊',
   message: {
     function_loading: '插件请求中...',
   },
