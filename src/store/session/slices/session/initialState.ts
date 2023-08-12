@@ -1,7 +1,7 @@
 import { merge } from 'lodash-es';
 
-import { DEFAULT_AGENT_META } from '@/const/meta';
-import { LobeAgentSession, LobeSessionType } from '@/types/session';
+import { DEFAULT_AGENT_META, DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import { LobeAgentConfig, LobeAgentSession, LobeSessionType } from '@/types/session';
 
 import { initialLobeAgentConfig } from '../agentConfig/initialState';
 
@@ -31,11 +31,10 @@ export const initLobeSession: LobeAgentSession = {
 export const initInbox = merge({}, initLobeSession, {
   config: {
     systemRole: '你是一名 AI 助理',
-  },
+  } as LobeAgentConfig,
   id: 'inbox',
   meta: {
-    avatar: '🗳',
-    title: 'Inbox',
+    avatar: DEFAULT_INBOX_AVATAR,
   },
 } as Partial<LobeAgentSession>);
 

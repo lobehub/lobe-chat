@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { INBOX_SESSION_ID } from '@/const/session';
 import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
@@ -14,10 +15,10 @@ import Layout from './layout';
 const Chat = memo(() => {
   const { t } = useTranslation('common');
 
-  const pageTitle = genSiteHeadTitle(t('inbox'));
+  const pageTitle = genSiteHeadTitle(t('inbox.title'));
 
   useOnFinishHydrationSession(() => {
-    useSessionStore.getState().activeSession('inbox');
+    useSessionStore.getState().activeSession(INBOX_SESSION_ID);
   });
 
   return (

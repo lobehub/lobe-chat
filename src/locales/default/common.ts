@@ -17,7 +17,7 @@ export default {
   copy: '复制',
   copySuccess: '复制成功',
   defaultAgent: '默认助手',
-  defaultSession: '默认对话',
+  defaultSession: '默认助手',
   delete: '删除',
   edit: '编辑',
   export: '导出配置',
@@ -31,7 +31,12 @@ export default {
   },
   feedback: '反馈与建议',
   import: '导入配置',
-  inbox: '随便聊聊',
+  inbox: {
+    defaultMessage:
+      '你好，我是你的智能助手，你可以问我任何问题，我会尽力回答你。如果需要获得更加专业或定制的助手，可以点击「+」创建自定义助手',
+    desc: '开启大脑集群，激发思维火花。你的智能助理，就在这里与你交流一切',
+    title: '随便聊聊',
+  },
   message: {
     function_loading: '插件请求中...',
   },
@@ -48,6 +53,7 @@ export default {
   searchAgentPlaceholder: '搜索助手和对话...',
   send: '发送',
   sendPlaceholder: '输入聊天内容...',
+  sessionList: '助手列表',
   setting: '设置',
   share: '分享',
   tab: {

@@ -3,6 +3,7 @@ import { merge } from 'lodash-es';
 import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
+import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
@@ -99,7 +100,7 @@ export const createSessionSlice: StateCreator<
     const { type, ...res } = payload;
 
     // 如果是 inbox 类型的 session
-    if ('id' in res && res.id === 'inbox') {
+    if ('id' in res && res.id === INBOX_SESSION_ID) {
       const nextInbox = sessionsReducer({ inbox: get().inbox }, payload) as {
         inbox: LobeAgentSession;
       };
@@ -147,8 +148,8 @@ export const createSessionSlice: StateCreator<
   },
 
   switchInbox: () => {
-    if (get().activeId === 'inbox') return;
-    get().activeSession('inbox');
+    if (get().activeId === INBOX_SESSION_ID) return;
+    get().activeSession(INBOX_SESSION_ID);
 
     Router.push('/chat');
   },
