@@ -3,14 +3,15 @@ import { Button, Input } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-import { useSettings } from 'src/store/global';
+
+import { useGlobalStore } from '@/store/global';
 
 import { useStyles } from './style';
 
 const APIKeyForm = memo<{ onConfirm?: () => void }>(({ onConfirm }) => {
   const { t } = useTranslation('error');
   const { styles, theme } = useStyles();
-  const [apiKey, setSettings] = useSettings((s) => [s.settings.OPENAI_API_KEY, s.setSettings]);
+  const [apiKey, setSettings] = useGlobalStore((s) => [s.settings.OPENAI_API_KEY, s.setSettings]);
 
   return (
     <Center gap={16} style={{ maxWidth: 300 }}>

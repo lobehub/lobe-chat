@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { PropsWithChildren, memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { useSettings } from 'src/store/global';
 import { shallow } from 'zustand/shallow';
 
 import AppLayout from '@/layout/AppLayout';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
 import { Sessions } from '../SessionList';
@@ -32,9 +32,9 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
   }, [id]);
 
   useEffect(() => {
-    const hasRehydrated = useSettings.persist.hasHydrated();
+    const hasRehydrated = useGlobalStore.persist.hasHydrated();
     if (hasRehydrated) {
-      useSettings.setState({ sidebarKey: 'chat' });
+      useGlobalStore.setState({ sidebarKey: 'chat' });
     }
   }, []);
 

@@ -2,10 +2,10 @@ import Head from 'next/head';
 import { ReactNode, memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { useSettings } from 'src/store/global';
 
 import SideBar from '@/features/SideBar';
 import { createI18nNext } from '@/locales/create';
+import { useGlobalStore } from '@/store/global';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 const initI18n = createI18nNext('setting');
@@ -19,9 +19,9 @@ const SettingLayout = memo<{ children: ReactNode }>(({ children }) => {
   }, []);
 
   useEffect(() => {
-    const hasRehydrated = useSettings.persist.hasHydrated();
+    const hasRehydrated = useGlobalStore.persist.hasHydrated();
     if (hasRehydrated) {
-      useSettings.setState({ sidebarKey: 'settings' });
+      useGlobalStore.setState({ sidebarKey: 'settings' });
     }
   }, []);
 

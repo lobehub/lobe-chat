@@ -11,11 +11,9 @@ import { type CommonAction, createCommonSlice } from './slices/common';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type SettingsStore = CommonAction & AppSettingsState & AgentAction;
+export type GlobalStore = CommonAction & AppSettingsState & AgentAction;
 
-const createStore: StateCreator<SettingsStore, [['zustand/devtools', never]]> = (
-  ...parameters
-) => ({
+const createStore: StateCreator<GlobalStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createCommonSlice(...parameters),
   ...createAgentSlice(...parameters),
@@ -25,14 +23,14 @@ const createStore: StateCreator<SettingsStore, [['zustand/devtools', never]]> = 
 
 const LOBE_SETTINGS = 'LOBE_SETTINGS';
 
-const persistOptions: PersistOptions<SettingsStore> = {
+const persistOptions: PersistOptions<GlobalStore> = {
   name: LOBE_SETTINGS,
   skipHydration: true,
 };
 
 //  ===============  实装 useStore ============ //
 
-export const useSettings = createWithEqualityFn<SettingsStore>()(
+export const useGlobalStore = createWithEqualityFn<GlobalStore>()(
   persist(
     devtools(createStore, {
       name: LOBE_SETTINGS + (isDev ? '_DEV' : ''),

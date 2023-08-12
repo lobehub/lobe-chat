@@ -9,7 +9,7 @@ import { LobeAgentConfig } from '@/types/session';
 import type { GlobalSettings } from '@/types/settings';
 import { setNamespace } from '@/utils/storeDebug';
 
-import type { SettingsStore } from '../store';
+import type { GlobalStore } from '../store';
 
 const t = setNamespace('settings');
 
@@ -27,7 +27,7 @@ export interface AgentAction {
 }
 
 export const createAgentSlice: StateCreator<
-  SettingsStore,
+  GlobalStore,
   [['zustand/devtools', never]],
   [],
   AgentAction

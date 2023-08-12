@@ -3,11 +3,12 @@ import { MessageSquare, Sticker } from 'lucide-react';
 import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SettingsStore } from 'src/store/global';
+
+import { GlobalStore } from '@/store/global';
 
 export interface TopActionProps {
-  setTab: SettingsStore['switchSideBar'];
-  tab: SettingsStore['sidebarKey'];
+  setTab: GlobalStore['switchSideBar'];
+  tab: GlobalStore['sidebarKey'];
 }
 
 const TopActions = memo<TopActionProps>(({ tab, setTab }) => {

@@ -4,8 +4,8 @@ import { useThemeMode } from 'antd-style';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
 import { PropsWithChildren, useCallback, useEffect } from 'react';
-import { useSettings } from 'src/store/global';
 
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { GlobalStyle } from '@/styles';
 
@@ -28,8 +28,8 @@ const Layout = ({ children }: PropsWithChildren) => {
 };
 
 export default ({ children }: PropsWithChildren) => {
-  const themeMode = useSettings((s) => s.settings.themeMode);
-  const [primaryColor, neutralColor] = useSettings((s) => [
+  const themeMode = useGlobalStore((s) => s.settings.themeMode);
+  const [primaryColor, neutralColor] = useGlobalStore((s) => [
     s.settings.primaryColor,
     s.settings.neutralColor,
   ]);
@@ -40,7 +40,7 @@ export default ({ children }: PropsWithChildren) => {
   useEffect(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
     useSessionStore.persist.rehydrate();
-    useSettings.persist.rehydrate();
+    useGlobalStore.persist.rehydrate();
   }, []);
 
   const genCustomToken: any = useCallback(

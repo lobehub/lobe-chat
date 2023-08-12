@@ -6,12 +6,12 @@ import { AppWindow, Palette, Webhook } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import SliderWithInput from 'src/components/SliderWithInput';
-import { settingsSelectors, useSettings } from 'src/store/global';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { options } from '@/locales/options';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { ConfigKeys } from '@/types/settings';
 
@@ -27,8 +27,8 @@ const Common = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
   const clearSessions = useSessionStore((s) => s.clearSessions);
-  const settings = useSettings(settingsSelectors.currentSettings, isEqual);
-  const [setThemeMode, setSettings, resetSettings] = useSettings((s) => [
+  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
+  const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [
     s.setThemeMode,
     s.setSettings,
     s.resetSettings,

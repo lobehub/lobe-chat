@@ -2,9 +2,9 @@ import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useState } from 'react';
-import { useSettings } from 'src/store/global';
 
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
+import { useGlobalStore } from '@/store/global';
 
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
@@ -16,7 +16,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const FolderPanel = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
-  const [sessionsWidth, sessionExpandable] = useSettings((s) => [
+  const [sessionsWidth, sessionExpandable] = useGlobalStore((s) => [
     s.sessionsWidth,
     s.sessionExpandable,
   ]);
@@ -31,7 +31,7 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
       maxWidth={400}
       minWidth={FOLDER_WIDTH}
       onExpandChange={(expand) => {
-        useSettings.setState({
+        useGlobalStore.setState({
           sessionExpandable: expand,
           sessionsWidth: expand ? 320 : 0,
         });
@@ -44,7 +44,7 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
         if (isEqual(nextWidth, sessionsWidth)) return;
 
         setWidth(nextWidth);
-        useSettings.setState({ sessionsWidth: nextWidth });
+        useGlobalStore.setState({ sessionsWidth: nextWidth });
       }}
       placement="left"
       size={{ height: '100vh', width: sessionsWidth }}

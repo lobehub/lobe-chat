@@ -5,10 +5,10 @@ import { FolderOutput, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
 import { FC, memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { useSettings } from 'src/store/global';
 import { shallow } from 'zustand/shallow';
 
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
+import { useGlobalStore } from '@/store/global';
 import { agentSelectors, chatSelectors, sessionSelectors, useSessionStore } from '@/store/session';
 
 import { useStyles } from './style';
@@ -29,7 +29,7 @@ const SessionItem: FC<SessionItemProps> = memo(({ id, active = true, loading }) 
   const { t } = useTranslation('common');
 
   const { styles } = useStyles();
-  const [defaultModel] = useSettings((s) => [s.settings.defaultAgent.config?.model]);
+  const [defaultModel] = useGlobalStore((s) => [s.settings.defaultAgent.config?.model]);
 
   const [
     pin,

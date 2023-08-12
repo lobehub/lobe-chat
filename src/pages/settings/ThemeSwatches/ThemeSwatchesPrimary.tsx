@@ -6,10 +6,14 @@ import {
   primaryColorsSwatches,
 } from '@lobehub/ui';
 import { memo } from 'react';
-import { useSettings } from 'src/store/global';
+
+import { useGlobalStore } from '@/store/global';
 
 const ThemeSwatchesPrimary = memo(() => {
-  const [primaryColor, setSettings] = useSettings((s) => [s.settings.primaryColor, s.setSettings]);
+  const [primaryColor, setSettings] = useGlobalStore((s) => [
+    s.settings.primaryColor,
+    s.setSettings,
+  ]);
 
   const handleSelect = (v: any) => {
     const name = findCustomThemeName('primary', v) as PrimaryColors;

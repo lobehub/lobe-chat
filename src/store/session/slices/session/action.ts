@@ -1,9 +1,9 @@
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 import Router from 'next/router';
-import { useSettings } from 'src/store/global';
 import { StateCreator } from 'zustand/vanilla';
 
+import { useGlobalStore } from '@/store/global';
 import { SessionStore, initLobeSession } from '@/store/session';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
@@ -79,7 +79,7 @@ export const createSessionSlice: StateCreator<
     const timestamp = Date.now();
 
     // 合并 settings 里的 defaultAgent
-    const globalDefaultAgent = useSettings.getState().settings.defaultAgent;
+    const globalDefaultAgent = useGlobalStore.getState().settings.defaultAgent;
     const newSession: LobeAgentSession = merge({}, initLobeSession, globalDefaultAgent, {
       createAt: timestamp,
       id: uuid(),

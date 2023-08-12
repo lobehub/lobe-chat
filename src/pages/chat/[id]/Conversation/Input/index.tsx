@@ -3,9 +3,9 @@ import { Button } from 'antd';
 import { LucideGalleryVerticalEnd } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSettings } from 'src/store/global';
 
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
 import InputActions from './Action';
@@ -17,7 +17,7 @@ const ChatInput = () => {
   const [expand, setExpand] = useState<boolean>(false);
   const [text, setText] = useState('');
 
-  const [inputHeight] = useSettings((s) => [s.inputHeight]);
+  const [inputHeight] = useGlobalStore((s) => [s.inputHeight]);
   const [sendMessage, hasTopic, saveToTopic] = useSessionStore((s) => [
     s.createOrSendMsg,
     !!s.activeTopicId,
@@ -38,7 +38,7 @@ const ChatInput = () => {
       minHeight={CHAT_TEXTAREA_HEIGHT}
       onSizeChange={(_, size) => {
         if (!size) return;
-        useSettings.setState({
+        useGlobalStore.setState({
           inputHeight: typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
         });
       }}

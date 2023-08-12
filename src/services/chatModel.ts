@@ -1,7 +1,7 @@
 import { merge } from 'lodash-es';
-import { useSettings } from 'src/store/global';
 
 import { LOBE_CHAT_ACCESS_CODE, OPENAI_API_KEY_HEADER_KEY, OPENAI_END_POINT } from '@/const/fetch';
+import { useGlobalStore } from '@/store/global';
 import { initialLobeAgentConfig } from '@/store/session';
 import type { OpenAIStreamPayload } from '@/types/openai';
 
@@ -31,9 +31,9 @@ export const fetchChatModel = (
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
-      [LOBE_CHAT_ACCESS_CODE]: useSettings.getState().settings.password || '',
-      [OPENAI_API_KEY_HEADER_KEY]: useSettings.getState().settings.OPENAI_API_KEY || '',
-      [OPENAI_END_POINT]: useSettings.getState().settings.endpoint || '',
+      [LOBE_CHAT_ACCESS_CODE]: useGlobalStore.getState().settings.password || '',
+      [OPENAI_API_KEY_HEADER_KEY]: useGlobalStore.getState().settings.OPENAI_API_KEY || '',
+      [OPENAI_END_POINT]: useGlobalStore.getState().settings.endpoint || '',
     },
     method: 'POST',
     signal: options?.signal,

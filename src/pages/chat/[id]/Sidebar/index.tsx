@@ -1,10 +1,10 @@
 import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
-import { useSettings } from 'src/store/global';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
+import { useGlobalStore } from '@/store/global';
 
 import Inner from './Inner';
 
@@ -22,7 +22,7 @@ const useStyles = createStyles(({ cx, css, token, stylish }) => ({
 
 const Config = () => {
   const { styles } = useStyles();
-  const [showAgentSettings, toggleConfig] = useSettings((s) => [
+  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.showAgentConfig,
     s.toggleAgentPanel,
   ]);

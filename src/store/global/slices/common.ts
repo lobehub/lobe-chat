@@ -9,7 +9,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import type { Guide, SidebarTabKey } from '../initialState';
 import { AppSettingsState } from '../initialState';
-import type { SettingsStore } from '../store';
+import type { GlobalStore } from '../store';
 
 const t = setNamespace('settings');
 
@@ -47,7 +47,7 @@ export interface CommonAction {
 }
 
 export const createCommonSlice: StateCreator<
-  SettingsStore,
+  GlobalStore,
   [['zustand/devtools', never]],
   [],
   CommonAction

@@ -6,10 +6,10 @@ import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { useSettings } from 'src/store/global';
 
 import HeaderTitle from '@/components/HeaderTitle';
 import Tag from '@/components/Tag';
+import { useGlobalStore } from '@/store/global';
 import { agentSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
 
 import PluginTag from './PluginTag';
@@ -28,7 +28,7 @@ const Header = memo(() => {
     agentSelectors.currentAgentPlugins(s),
   ]);
 
-  const [showAgentSettings, toggleConfig] = useSettings((s) => [
+  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.showAgentConfig,
     s.toggleAgentPanel,
   ]);

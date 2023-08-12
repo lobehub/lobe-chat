@@ -1,13 +1,13 @@
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
-import { settingsSelectors, useSettings } from 'src/store/global';
 
 import { AgentConfig, AgentMeta, AgentPlugin, AgentPrompt } from '@/features/AgentSetting';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 
 const Agent = memo(() => {
-  const config = useSettings(settingsSelectors.currentAgentConfig, isEqual);
-  const meta = useSettings(settingsSelectors.currentAgentMeta, isEqual);
-  const [setAgentConfig, setAgentMeta, toggleAgentPlugin] = useSettings((s) => [
+  const config = useGlobalStore(settingsSelectors.currentAgentConfig, isEqual);
+  const meta = useGlobalStore(settingsSelectors.currentAgentMeta, isEqual);
+  const [setAgentConfig, setAgentMeta, toggleAgentPlugin] = useGlobalStore((s) => [
     s.setAgentConfig,
     s.setAgentMeta,
     s.toggleAgentPlugin,
