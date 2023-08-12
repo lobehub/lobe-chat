@@ -3,7 +3,7 @@ import { App, ConfigProvider } from 'antd';
 import { useThemeMode } from 'antd-style';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
-import { PropsWithChildren, useCallback, useEffect } from 'react';
+import { PropsWithChildren, memo, useCallback, useEffect } from 'react';
 
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -12,7 +12,7 @@ import { GlobalStyle } from '@/styles';
 import i18n from '../locales';
 import { useStyles } from './style';
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
 
   useEffect(() => {
@@ -25,9 +25,9 @@ const Layout = ({ children }: PropsWithChildren) => {
       <App className={styles.bg}>{children}</App>
     </ConfigProvider>
   );
-};
+});
 
-export default ({ children }: PropsWithChildren) => {
+export default memo(({ children }: PropsWithChildren) => {
   const themeMode = useGlobalStore((s) => s.settings.themeMode);
   const [primaryColor, neutralColor] = useGlobalStore((s) => [
     s.settings.primaryColor,
@@ -54,4 +54,4 @@ export default ({ children }: PropsWithChildren) => {
       <Layout>{children}</Layout>
     </ThemeProvider>
   );
-};
+});

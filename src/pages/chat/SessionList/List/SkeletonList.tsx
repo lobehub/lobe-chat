@@ -25,7 +25,7 @@ const useStyles = createStyles(({ css }) => ({
 
 //  从 3~10 随机取一个整数
 
-const SkeletonItem = () => {
+const SkeletonList = () => {
   const { styles } = useStyles();
 
   const list = Array.from({ length: 4 }).fill('');
@@ -44,4 +44,4 @@ const SkeletonItem = () => {
     </Flexbox>
   );
 };
-export default SkeletonItem;
+export default SkeletonList;

@@ -5,22 +5,21 @@ import { Flexbox } from 'react-layout-kit';
 
 import { sessionSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
 
-import SessionItem from './SessionItem';
-import SkeletonItem from './SkeletonItem';
+import SessionItem from './Item';
+import SkeletonList from './SkeletonList';
 
 const SessionList = memo(() => {
   const list = useSessionStore(sessionSelectors.sessionList, isEqual);
-  const [activeId, loading] = useSessionStore((s) => [s.activeId, s.autocompleteLoading.title]);
 
   const isInit = useSessionHydrated();
 
   return !isInit ? (
-    <SkeletonItem />
+    <SkeletonList />
   ) : (
     <Flexbox>
       {list.map(({ id }) => (
         <Link href={`/chat/${id}`} key={id}>
-          <SessionItem active={activeId === id} id={id} loading={loading && id === activeId} />
+          <SessionItem id={id} />
         </Link>
       ))}
     </Flexbox>

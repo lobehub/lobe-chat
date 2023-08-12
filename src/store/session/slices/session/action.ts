@@ -29,6 +29,7 @@ export interface SessionAction {
    * @param payload - 聊天记录
    */
   dispatchSession: (payload: SessionDispatch) => void;
+  importInbox: (inbox: LobeAgentSession) => void;
   /**
    * 导入会话
    * @param sessions
@@ -52,7 +53,6 @@ export interface SessionAction {
    * @returns void
    */
   removeSession: (sessionId: string) => void;
-  switchInbox: () => void;
 
   /**
    * @title 切换会话
@@ -114,7 +114,8 @@ export const createSessionSlice: StateCreator<
       );
     }
   },
-
+  // TODO：暂时先不实现导入 inbox 的功能
+  importInbox: () => {},
   importSessions: (importSessions) => {
     const { sessions } = get();
     set(
@@ -145,13 +146,6 @@ export const createSessionSlice: StateCreator<
     if (sessionId === get().activeId) {
       Router.push('/chat');
     }
-  },
-
-  switchInbox: () => {
-    if (get().activeId === INBOX_SESSION_ID) return;
-    get().activeSession(INBOX_SESSION_ID);
-
-    Router.push('/chat');
   },
 
   switchSession: async (sessionId) => {

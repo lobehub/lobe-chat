@@ -1,4 +1,5 @@
 import { Avatar, List } from '@lobehub/ui';
+import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,15 +9,16 @@ import { useSessionStore } from '@/store/session';
 
 const Inbox = memo(() => {
   const { t } = useTranslation('common');
-  const [activeId, switchInbox] = useSessionStore((s) => [s.activeId, s.switchInbox]);
+  const [activeId] = useSessionStore((s) => [s.activeId]);
 
   return (
-    <List.Item
-      active={activeId === INBOX_SESSION_ID}
-      avatar={<Avatar avatar={DEFAULT_INBOX_AVATAR} size={46} style={{ padding: 3 }} />}
-      onClick={switchInbox}
-      title={t('inbox.title')}
-    />
+    <Link href={'/chat'}>
+      <List.Item
+        active={activeId === INBOX_SESSION_ID}
+        avatar={<Avatar avatar={DEFAULT_INBOX_AVATAR} size={46} style={{ padding: 3 }} />}
+        title={t('inbox.title')}
+      />
+    </Link>
   );
 });
 
