@@ -13,6 +13,7 @@ import { initLobeSession } from './initialState';
 import { SessionDispatch, sessionsReducer } from './reducers/session';
 
 const t = setNamespace('session');
+
 export interface SessionAction {
   activeSession: (sessionId: string) => void;
   clearSessions: () => void;
@@ -96,11 +97,21 @@ export const createSessionSlice: StateCreator<
 
   dispatchSession: (payload) => {
     const { type, ...res } = payload;
-    set(
-      { sessions: sessionsReducer(get().sessions, payload) },
-      false,
-      t(`dispatchChat/${type}`, res),
-    );
+
+    // 如果是 inbox 类型的 session
+    if ('id' in res && res.id === 'inbox') {
+      const nextInbox = sessionsReducer({ inbox: get().inbox }, payload) as {
+        inbox: LobeAgentSession;
+      };
+      set({ inbox: nextInbox.inbox }, false, t(`dispatchInbox/${type}`, res));
+    } else {
+      // 常规类型的session
+      set(
+        { sessions: sessionsReducer(get().sessions, payload) },
+        false,
+        t(`dispatchSessions/${type}`, res),
+      );
+    }
   },
 
   importSessions: (importSessions) => {
@@ -120,13 +131,7 @@ export const createSessionSlice: StateCreator<
       t('importSessions', importSessions),
     );
   },
-  // genShareUrl: () => {
-  //   const session = sessionSelectors.currentSession(get());
-  //   if (!session) return '';
-  //
-  //   const agent = session.config;
-  //   return genShareMessagesUrl(session.chats, agent.systemRole);
-  // },
+
   pinSession: (sessionId, pinned) => {
     const nextValue = typeof pinned === 'boolean' ? pinned : !get().sessions[sessionId].pinned;
 

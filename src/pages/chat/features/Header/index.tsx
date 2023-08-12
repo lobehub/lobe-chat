@@ -48,16 +48,7 @@ const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
           </Flexbox>
         ) : (
           <Flexbox align={'flex-start'} gap={12} horizontal>
-            <Avatar
-              avatar={avatar}
-              background={backgroundColor}
-              onClick={() => {
-                Router.push(`/chat/${id}/setting`);
-              }}
-              size={40}
-              style={{ cursor: 'pointer', flex: 'none' }}
-              title={title}
-            />
+            <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
             <HeaderTitle
               desc={description}
               tag={

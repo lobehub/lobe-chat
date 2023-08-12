@@ -28,11 +28,6 @@ export interface ChatMessageAction {
    */
   clearMessage: () => void;
   /**
-   * 创建或发送消息
-   * @param text - 消息文本
-   */
-  createOrSendMsg: (text: string) => Promise<void>;
-  /**
    * 删除消息
    * @param id - 消息 ID
    */
@@ -87,19 +82,6 @@ export const chatMessage: StateCreator<
     if (activeTopicId) {
       dispatchTopic({ id: activeTopicId, type: 'deleteChatTopic' });
     }
-  },
-
-  createOrSendMsg: async (message) => {
-    if (!message) return;
-
-    const { sendMessage, createSession } = get();
-    const session = sessionSelectors.currentSession(get());
-
-    if (!session) {
-      await createSession();
-    }
-
-    sendMessage(message);
   },
 
   deleteMessage: (id) => {
@@ -328,4 +310,12 @@ export const chatMessage: StateCreator<
 
     await realFetchAIResponse(chats, message.id);
   },
+
+  // genShareUrl: () => {
+  //   const session = sessionSelectors.currentSession(get());
+  //   if (!session) return '';
+  //
+  //   const agent = session.config;
+  //   return genShareMessagesUrl(session.chats, agent.systemRole);
+  // },
 });

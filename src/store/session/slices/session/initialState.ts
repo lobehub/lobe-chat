@@ -1,3 +1,5 @@
+import { merge } from 'lodash-es';
+
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
@@ -26,18 +28,20 @@ export const initLobeSession: LobeAgentSession = {
   updateAt: Date.now(),
 };
 
+export const initInbox = merge({}, initLobeSession, {
+  config: {
+    systemRole: '你是一名 AI 助理',
+  },
+  id: 'inbox',
+  meta: {
+    avatar: '🗳',
+    title: 'Inbox',
+  },
+} as Partial<LobeAgentSession>);
+
 export const initialSessionState: SessionState = {
   activeId: null,
-
-  inbox: {
-    ...initLobeSession,
-    id: 'inbox',
-    meta: {
-      ...DEFAULT_AGENT_META,
-      title: 'Inbox',
-    },
-  },
-
+  inbox: initInbox,
   searchKeywords: '',
   sessions: {},
 };
