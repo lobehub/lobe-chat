@@ -2,6 +2,55 @@
 
 # Changelog
 
+## [Version 0.44.0](https://github.com/lobehub/lobe-chat/compare/v0.43.0...v0.44.0)
+
+<sup>Released on **2023-08-12**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 优化 Inbox 会话的实现逻辑, 将 chat 中的功能模型拆分到 features 中, 重构 session 相关实现，移除循环依赖.
+
+#### ✨ Features
+
+- **misc**: 支持 inbox 消息导出, 支持 inbox 的会话功能, 新增 inbox 数据模型, 新增 inbox 模块入口.
+
+#### 💄 Styles
+
+- **misc**: Fix Inbox defaultMessage avatar, 优化 header 的 setting 展示, 优化门禁下默认的解锁方式, 补充 ChatList 的 Loading 态.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 优化 Inbox 会话的实现逻辑 ([22cc4cf](https://github.com/lobehub/lobe-chat/commit/22cc4cf))
+- **misc**: 将 chat 中的功能模型拆分到 features 中 ([e25a856](https://github.com/lobehub/lobe-chat/commit/e25a856))
+- **misc**: 重构 session 相关实现，移除循环依赖 ([9acf65c](https://github.com/lobehub/lobe-chat/commit/9acf65c))
+
+#### What's improved
+
+- **misc**: 支持 inbox 消息导出 ([498e075](https://github.com/lobehub/lobe-chat/commit/498e075))
+- **misc**: 支持 inbox 的会话功能 ([9b713b8](https://github.com/lobehub/lobe-chat/commit/9b713b8))
+- **misc**: 新增 inbox 数据模型 ([91a8158](https://github.com/lobehub/lobe-chat/commit/91a8158))
+- **misc**: 新增 inbox 模块入口 ([6fc8907](https://github.com/lobehub/lobe-chat/commit/6fc8907))
+
+#### Styles
+
+- **misc**: Fix Inbox defaultMessage avatar ([dbc18a4](https://github.com/lobehub/lobe-chat/commit/dbc18a4))
+- **misc**: 优化 header 的 setting 展示 ([201d380](https://github.com/lobehub/lobe-chat/commit/201d380))
+- **misc**: 优化门禁下默认的解锁方式 ([df9bb45](https://github.com/lobehub/lobe-chat/commit/df9bb45))
+- **misc**: 补充 ChatList 的 Loading 态 ([eb3eb5d](https://github.com/lobehub/lobe-chat/commit/eb3eb5d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.43.0](https://github.com/lobehub/lobe-chat/compare/v0.42.3...v0.43.0)
 
 <sup>Released on **2023-08-12**</sup>
