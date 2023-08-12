@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.42.3](https://github.com/lobehub/lobe-chat/compare/v0.42.2...v0.42.3)
+
+<sup>Released on **2023-08-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: 暂时隐藏 Hero 模板.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: 暂时隐藏 Hero 模板 ([8289ae6](https://github.com/lobehub/lobe-chat/commit/8289ae6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.42.2](https://github.com/lobehub/lobe-chat/compare/v0.42.1...v0.42.2)
 
 <sup>Released on **2023-08-12**</sup>
