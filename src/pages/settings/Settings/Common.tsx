@@ -11,8 +11,8 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { options } from '@/locales/options';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { settingsSelectors, useSettings } from '@/store/settings';
 import { ConfigKeys } from '@/types/settings';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../ThemeSwatches';
@@ -27,8 +27,8 @@ const Common = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
   const clearSessions = useSessionStore((s) => s.clearSessions);
-  const settings = useSettings(settingsSelectors.currentSettings, isEqual);
-  const [setThemeMode, setSettings, resetSettings] = useSettings((s) => [
+  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
+  const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [
     s.setThemeMode,
     s.setSettings,
     s.resetSettings,

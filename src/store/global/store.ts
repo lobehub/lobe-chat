@@ -5,37 +5,40 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { isDev } from '@/utils/env';
 
-import { type AppSettingsState, initialState } from './initialState';
+import { type GlobalState, initialState } from './initialState';
 import { type AgentAction, createAgentSlice } from './slices/agent';
 import { type CommonAction, createCommonSlice } from './slices/common';
+import { type SettingsAction, createSettingsSlice } from './slices/settings';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type SettingsStore = CommonAction & AppSettingsState & AgentAction;
+export type GlobalStore = CommonAction & GlobalState & AgentAction & SettingsAction;
 
-const createStore: StateCreator<SettingsStore, [['zustand/devtools', never]]> = (
-  ...parameters
-) => ({
+const createStore: StateCreator<GlobalStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createCommonSlice(...parameters),
   ...createAgentSlice(...parameters),
+  ...createSettingsSlice(...parameters),
 });
 
 //  ===============  persist 本地缓存中间件配置 ============ //
+type GlobalPersist = Pick<GlobalStore, 'preference' | 'settings'>;
 
-const LOBE_SETTINGS = 'LOBE_SETTINGS';
-
-const persistOptions: PersistOptions<SettingsStore> = {
-  name: LOBE_SETTINGS,
+const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
+  name: 'LOBE_SETTINGS',
+  partialize: (s) => ({
+    preference: s.preference,
+    settings: s.settings,
+  }),
   skipHydration: true,
 };
 
 //  ===============  实装 useStore ============ //
 
-export const useSettings = createWithEqualityFn<SettingsStore>()(
+export const useGlobalStore = createWithEqualityFn<GlobalStore>()(
   persist(
     devtools(createStore, {
-      name: LOBE_SETTINGS + (isDev ? '_DEV' : ''),
+      name: 'LOBE_GLOBAL' + (isDev ? '_DEV' : ''),
     }),
     persistOptions,
   ),

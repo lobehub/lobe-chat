@@ -5,8 +5,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import OtpInput from '../OTPInput';
 import APIKeyForm from './ApiKeyForm';
@@ -15,7 +15,7 @@ import { ErrorActionContainer, FormAction } from './style';
 const InvalidAccess = memo<{ id: string }>(({ id }) => {
   const { t } = useTranslation('error');
   const [mode, setMode] = useState('password');
-  const [password, setSettings] = useSettings((s) => [s.settings.password, s.setSettings]);
+  const [password, setSettings] = useGlobalStore((s) => [s.settings.password, s.setSettings]);
   const [resend, deleteMessage] = useSessionStore((s) => [s.resendMessage, s.deleteMessage]);
 
   return (

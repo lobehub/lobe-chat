@@ -3,7 +3,7 @@ import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-import { useSettings } from '@/store/settings';
+import { useGlobalStore } from '@/store/global';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
 
 const useStyle = createStyles(
@@ -27,7 +27,7 @@ interface AvatarWithUploadProps {
 }
 
 const AvatarWithUpload = memo<AvatarWithUploadProps>(({ size = 40 }) => {
-  const [avatar, setSettings] = useSettings((st) => [st.settings.avatar, st.setSettings]);
+  const [avatar, setSettings] = useGlobalStore((st) => [st.settings.avatar, st.setSettings]);
   const { styles } = useStyle();
 
   const handleUploadAvatar = createUploadImageHandler((avatar) => {

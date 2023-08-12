@@ -9,8 +9,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import HeaderTitle from '@/components/HeaderTitle';
 import Tag from '@/components/Tag';
+import { useGlobalStore } from '@/store/global';
 import { agentSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import PluginTag from './PluginTag';
 
@@ -28,9 +28,9 @@ const Header = memo(() => {
     agentSelectors.currentAgentPlugins(s),
   ]);
 
-  const [showAgentSettings, toggleConfig] = useSettings((s) => [
-    s.showAgentConfig,
-    s.toggleAgentPanel,
+  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
+    s.preference.showChatSideBar,
+    s.toggleChatSideBar,
   ]);
 
   return (

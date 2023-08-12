@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 import { importConfigFile } from '@/utils/config';
 
 export const useImportConfig = () => {
   const importSessions = useSessionStore((s) => s.importSessions);
-  const importAppSettings = useSettings((s) => s.importAppSettings);
+  const importAppSettings = useGlobalStore((s) => s.importAppSettings);
 
   const importConfig = (info: any) => {
     importConfigFile(info, (config) => {

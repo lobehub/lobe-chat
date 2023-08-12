@@ -5,8 +5,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import InputActions from './Action';
 import ActionsRight from './ActionRight';
@@ -17,7 +17,10 @@ const ChatInput = () => {
   const [expand, setExpand] = useState<boolean>(false);
   const [text, setText] = useState('');
 
-  const [inputHeight] = useSettings((s) => [s.inputHeight]);
+  const [inputHeight, updatePreference] = useGlobalStore((s) => [
+    s.preference.inputHeight,
+    s.updatePreference,
+  ]);
   const [sendMessage, hasTopic, saveToTopic] = useSessionStore((s) => [
     s.createOrSendMsg,
     !!s.activeTopicId,
@@ -38,7 +41,8 @@ const ChatInput = () => {
       minHeight={CHAT_TEXTAREA_HEIGHT}
       onSizeChange={(_, size) => {
         if (!size) return;
-        useSettings.setState({
+
+        updatePreference({
           inputHeight: typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
         });
       }}

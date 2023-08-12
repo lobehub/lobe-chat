@@ -9,7 +9,7 @@ import { LobeAgentConfig } from '@/types/session';
 import type { GlobalSettings } from '@/types/settings';
 import { setNamespace } from '@/utils/storeDebug';
 
-import type { SettingsStore } from '../store';
+import type { GlobalStore } from '../store';
 
 const t = setNamespace('settings');
 
@@ -22,12 +22,11 @@ export interface AgentAction {
   resetDefaultAgent: () => void;
   setAgentConfig: (config: Partial<LobeAgentSession['config']>) => void;
   setAgentMeta: (meta: Partial<LobeAgentSession['meta']>) => void;
-  toggleAgentPanel: (visible?: boolean) => void;
   toggleAgentPlugin: (pluginId: string) => void;
 }
 
 export const createAgentSlice: StateCreator<
-  SettingsStore,
+  GlobalStore,
   [['zustand/devtools', never]],
   [],
   AgentAction
@@ -66,11 +65,7 @@ export const createAgentSlice: StateCreator<
 
     set({ settings }, false, t('setAgentMeta', meta));
   },
-  toggleAgentPanel: (newValue) => {
-    const showAgentConfig = typeof newValue === 'boolean' ? newValue : !get().showAgentConfig;
 
-    set({ showAgentConfig }, false, t('toggleAgentPanel', newValue));
-  },
   toggleAgentPlugin: (id: string) => {
     const settings = produce(get().settings, (draft: GlobalSettings) => {
       const oldConfig = draft.defaultAgent.config as LobeAgentConfig;

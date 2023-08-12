@@ -7,10 +7,13 @@ import {
 } from '@lobehub/ui';
 import { memo } from 'react';
 
-import { useSettings } from '@/store/settings';
+import { useGlobalStore } from '@/store/global';
 
 const ThemeSwatchesNeutral = memo(() => {
-  const [neutralColor, setSettings] = useSettings((s) => [s.settings.neutralColor, s.setSettings]);
+  const [neutralColor, setSettings] = useGlobalStore((s) => [
+    s.settings.neutralColor,
+    s.setSettings,
+  ]);
 
   const handleSelect = (v: any) => {
     const name = findCustomThemeName('neutral', v) as NeutralColors;

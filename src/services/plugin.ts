@@ -1,5 +1,5 @@
 import { LOBE_CHAT_ACCESS_CODE } from '@/const/fetch';
-import { useSettings } from '@/store/settings';
+import { useGlobalStore } from '@/store/global';
 import { OpenAIPluginPayload } from '@/types/plugin';
 
 import { URLS } from './url';
@@ -20,7 +20,7 @@ export const fetchPlugin = async (
     body: JSON.stringify(params),
     headers: {
       'Content-Type': 'application/json',
-      [LOBE_CHAT_ACCESS_CODE]: useSettings.getState().settings.password || '',
+      [LOBE_CHAT_ACCESS_CODE]: useGlobalStore.getState().settings.password || '',
     },
     method: 'POST',
     signal: options?.signal,

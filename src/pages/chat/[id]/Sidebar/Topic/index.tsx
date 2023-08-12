@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Empty from '@/components/Empty';
+import { useGlobalStore } from '@/store/global';
 import { topicSelectors, useSessionStore } from '@/store/session';
-import { useSettings } from '@/store/settings';
 
 import TopicItem from './TopicItem';
 
@@ -15,7 +15,10 @@ export const Topic = () => {
   const [activeTopicId] = useSessionStore((s) => [s.activeTopicId]);
   const { t } = useTranslation('empty');
 
-  const [visible, updateGuideState] = useSettings((s) => [s.guide?.topic, s.updateGuideState]);
+  const [visible, updateGuideState] = useGlobalStore((s) => [
+    s.preference.guide?.topic,
+    s.updateGuideState,
+  ]);
 
   return (
     <Flexbox gap={2}>

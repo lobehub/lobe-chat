@@ -4,7 +4,7 @@ import { rgba } from 'polished';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
-import { useSettings } from '@/store/settings';
+import { useGlobalStore } from '@/store/global';
 
 import Inner from './Inner';
 
@@ -22,9 +22,9 @@ const useStyles = createStyles(({ cx, css, token, stylish }) => ({
 
 const Config = () => {
   const { styles } = useStyles();
-  const [showAgentSettings, toggleConfig] = useSettings((s) => [
-    s.showAgentConfig,
-    s.toggleAgentPanel,
+  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
+    s.preference.showChatSideBar,
+    s.toggleChatSideBar,
   ]);
 
   return (

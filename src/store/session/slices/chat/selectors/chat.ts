@@ -1,5 +1,5 @@
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
-import { useSettings } from '@/store/settings';
+import { useGlobalStore } from '@/store/global';
 import { ChatMessage } from '@/types/chatMessage';
 
 import type { SessionStore } from '../../../store';
@@ -20,7 +20,7 @@ export const getChatsById =
       {
         assistant: agentSelectors.currentAgentAvatar(s),
         assistantBackground: agentSelectors.currentAgentBackgroundColor(s),
-        user: useSettings.getState().settings.avatar || DEFAULT_USER_AVATAR,
+        user: useGlobalStore.getState().settings.avatar || DEFAULT_USER_AVATAR,
       },
       s.activeTopicId,
     );
