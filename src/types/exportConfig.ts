@@ -1,64 +1,16 @@
 import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { GlobalSettings } from '@/types/settings';
 
-// 存在4种导出方式
+/**
+ * 导出方式
+ * @enum ['agents', 'sessions', 'singleSession', 'settings', 'all']
+ * @enumNames ['agents', 'sessions', 'singleSession', 'settings', 'all']
+ */
 export type ExportType = 'agents' | 'sessions' | 'singleSession' | 'settings' | 'all';
 
-// 4种方式对应的 state
-
-export interface ConfigStateSettings {
-  settings: GlobalSettings;
-}
-
-export interface ConfigStateAgents {
-  sessions: LobeSessions;
-}
-
-export interface ConfigStateSessions {
-  inbox: LobeAgentSession;
-  sessions: LobeSessions;
-}
-
-export interface ConfigStateSingleSession {
-  sessions: LobeSessions;
-}
-
-export interface ConfigStateAll extends ConfigStateSessions, ConfigStateSettings {}
-
-// 4种方式对应的 file
-export interface ConfigFileSettings {
-  exportType: 'settings';
-  state: ConfigStateSettings;
-  version: number;
-}
-
-export interface ConfigFileSessions {
-  exportType: 'sessions';
-  state: ConfigStateSessions;
-  version: number;
-}
-
-export interface ConfigFileSingleSession {
-  exportType: 'sessions';
-  state: ConfigStateSingleSession;
-  version: number;
-}
-
-export interface ConfigFileAgents {
-  exportType: 'agents';
-  state: ConfigStateAgents;
-  version: number;
-}
-
-export interface ConfigFileAll {
-  exportType: 'all';
-  state: ConfigStateAll;
-  version: number;
-}
-
-export type ConfigFile = ConfigFileSettings | ConfigFileSessions | ConfigFileAll | ConfigFileAgents;
-
-// 用于 map 收集类型的 map
+/**
+ * 配置模型映射
+ */
 export interface ConfigModelMap {
   agents: {
     file: ConfigFileAgents;
@@ -81,3 +33,91 @@ export interface ConfigModelMap {
     state: ConfigStateSingleSession;
   };
 }
+
+// =============   配置数据结构   ============= //
+
+/**
+ * 配置状态：会话
+ */
+export interface ConfigStateSessions {
+  inbox: LobeAgentSession;
+  sessions: LobeSessions;
+}
+
+/**
+ * 配置状态：单个会话
+ */
+export interface ConfigStateSingleSession {
+  sessions: LobeSessions;
+}
+
+/**
+ * 配置状态：角色
+ */
+export interface ConfigStateAgents {
+  sessions: LobeSessions;
+}
+
+/**
+ * 配置状态：设置
+ */
+export interface ConfigStateSettings {
+  settings: GlobalSettings;
+}
+
+/**
+ * 配置状态：全部
+ */
+export interface ConfigStateAll extends ConfigStateSessions, ConfigStateSettings {}
+
+// =============   配置文件类型   ============= //
+
+/**
+ * 配置文件：设置
+ */
+export interface ConfigFileSettings {
+  exportType: 'settings';
+  state: ConfigStateSettings;
+  version: number;
+}
+
+/**
+ * 配置文件：会话
+ */
+export interface ConfigFileSessions {
+  exportType: 'sessions';
+  state: ConfigStateSessions;
+  version: number;
+}
+
+/**
+ * 配置文件：单个会话
+ */
+export interface ConfigFileSingleSession {
+  exportType: 'sessions';
+  state: ConfigStateSingleSession;
+  version: number;
+}
+
+/**
+ * 配置文件：角色
+ */
+export interface ConfigFileAgents {
+  exportType: 'agents';
+  state: ConfigStateAgents;
+  version: number;
+}
+
+/**
+ * 配置文件：全部
+ */
+export interface ConfigFileAll {
+  exportType: 'all';
+  state: ConfigStateAll;
+  version: number;
+}
+
+/**
+ * 配置文件
+ */
+export type ConfigFile = ConfigFileSettings | ConfigFileSessions | ConfigFileAll | ConfigFileAgents;
