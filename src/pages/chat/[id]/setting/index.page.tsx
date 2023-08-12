@@ -7,10 +7,10 @@ import { Flexbox } from 'react-layout-kit';
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
 import { AgentConfig, AgentMeta, AgentPlugin, AgentPrompt } from '@/features/AgentSetting';
-import AppLayout from '@/layout/AppLayout';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
+import ChatLayout from '../layout';
 import Header from './Header';
 
 const EditPage = memo(() => {
@@ -32,7 +32,7 @@ const EditPage = memo(() => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <AppLayout>
+      <ChatLayout>
         <Header />
         <Flexbox align={'center'} flex={1} gap={16} padding={24} style={{ overflow: 'auto' }}>
           <HeaderSpacing height={HEADER_HEIGHT - 16} />
@@ -46,7 +46,7 @@ const EditPage = memo(() => {
           <AgentConfig config={config} updateConfig={updateAgentConfig} />
           <AgentPlugin config={config} updateConfig={toggleAgentPlugin} />
         </Flexbox>
-      </AppLayout>
+      </ChatLayout>
     </>
   );
 });

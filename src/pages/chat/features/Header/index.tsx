@@ -63,7 +63,7 @@ const Header = memo(() => {
               tag={
                 <>
                   <Tag>
-                    <SiOpenai size={'11px'} style={{ marginTop: 3 }} />
+                    <SiOpenai size={'11px'} style={{ marginTop: 2 }} />
                     {model}
                   </Tag>
                   {plugins?.length > 0 && <PluginTag plugins={plugins} />}

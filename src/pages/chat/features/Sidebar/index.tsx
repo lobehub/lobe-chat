@@ -1,6 +1,7 @@
 import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
+import { memo } from 'react';
 
 import HeaderSpacing from '@/components/HeaderSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
@@ -20,7 +21,10 @@ const useStyles = createStyles(({ cx, css, token, stylish }) => ({
   `,
 }));
 
-const Config = () => {
+interface SideBarProps {
+  systemRole?: boolean;
+}
+const SideBar = memo<SideBarProps>(({ systemRole = true }) => {
   const { styles } = useStyles();
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.preference.showChatSideBar,
@@ -37,10 +41,10 @@ const Config = () => {
     >
       <HeaderSpacing />
       <DraggablePanelContainer style={{ flex: 'none', minWidth: CHAT_SIDEBAR_WIDTH }}>
-        <Inner />
+        <Inner systemRole={systemRole} />
       </DraggablePanelContainer>
     </DraggablePanel>
   );
-};
+});
 
-export default Config;
+export default SideBar;
