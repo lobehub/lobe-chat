@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.44.2](https://github.com/lobehub/lobe-chat/compare/v0.44.1...v0.44.2)
+
+<sup>Released on **2023-08-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正重新生成时切分历史消息的逻辑.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正重新生成时切分历史消息的逻辑, closes [#50](https://github.com/lobehub/lobe-chat/issues/50) ([de5141f](https://github.com/lobehub/lobe-chat/commit/de5141f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.44.1](https://github.com/lobehub/lobe-chat/compare/v0.44.0...v0.44.1)
 
 <sup>Released on **2023-08-12**</sup>
