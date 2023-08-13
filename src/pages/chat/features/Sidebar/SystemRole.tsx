@@ -52,7 +52,7 @@ const SystemRole = memo(() => {
   const hydrated = useSessionHydrated();
   const { t } = useTranslation('common');
   return (
-    <>
+    <Flexbox height={'fit-content'}>
       <Header
         actions={
           <ActionIcon
@@ -90,7 +90,7 @@ const SystemRole = memo(() => {
           <Skeleton active avatar={false} style={{ marginTop: 12 }} title={false} />
         )}
       </Flexbox>
-    </>
+    </Flexbox>
   );
 });
 

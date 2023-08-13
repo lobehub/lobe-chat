@@ -5,11 +5,13 @@ import { Flexbox } from 'react-layout-kit';
 
 import Empty from '@/components/Empty';
 import { useGlobalStore } from '@/store/global';
-import { topicSelectors, useSessionStore } from '@/store/session';
+import { topicSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
 
+import SkeletonList from './SkeletonList';
 import TopicItem from './TopicItem';
 
 export const Topic = () => {
+  const hydrated = useSessionHydrated();
   const topics = useSessionStore(topicSelectors.currentTopics, isEqual);
   const { isDarkMode } = useThemeMode();
   const [activeTopicId] = useSessionStore((s) => [s.activeTopicId]);
@@ -20,8 +22,10 @@ export const Topic = () => {
     s.updateGuideState,
   ]);
 
-  return (
-    <Flexbox gap={2}>
+  return !hydrated ? (
+    <SkeletonList />
+  ) : (
+    <Flexbox gap={2} style={{ marginBottom: 12 }}>
       {topics?.length === 0 && (
         <Empty
           alt={t('topic.desc')}
