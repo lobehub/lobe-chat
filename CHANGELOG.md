@@ -2,6 +2,47 @@
 
 # Changelog
 
+### [Version 0.44.3](https://github.com/lobehub/lobe-chat/compare/v0.44.2...v0.44.3)
+
+<sup>Released on **2023-08-13**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 重构 organizeChats 方法.
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正 inbox 点击重新生成会报错的问题.
+
+#### 💄 Styles
+
+- **misc**: 修正话题列表无法滚动的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 重构 organizeChats 方法 ([799612e](https://github.com/lobehub/lobe-chat/commit/799612e))
+
+#### What's fixed
+
+- **misc**: 修正 inbox 点击重新生成会报错的问题 ([064ef56](https://github.com/lobehub/lobe-chat/commit/064ef56))
+
+#### Styles
+
+- **misc**: 修正话题列表无法滚动的问题 ([26772e7](https://github.com/lobehub/lobe-chat/commit/26772e7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.44.2](https://github.com/lobehub/lobe-chat/compare/v0.44.1...v0.44.2)
 
 <sup>Released on **2023-08-13**</sup>
