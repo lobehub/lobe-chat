@@ -22,5 +22,5 @@ export const getTopicMessages = (topicId: string) => (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
   if (!session) return [];
 
-  return organizeChats(session, { assistant: '', user: '' }, topicId);
+  return organizeChats(session, { topicId });
 };

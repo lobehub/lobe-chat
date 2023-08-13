@@ -52,7 +52,7 @@ beforeEach(() => {
 
 describe('organizeChats', () => {
   it('should return an array of chat messages', () => {
-    const result = organizeChats(session, { assistant: '', user: '' });
+    const result = organizeChats(session);
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(3);
     expect(result[0].id).toBe('1');
@@ -61,7 +61,7 @@ describe('organizeChats', () => {
   });
 
   it('should sort chat messages in ascending order of createAt', () => {
-    const result = organizeChats(session, { assistant: '', user: '' });
+    const result = organizeChats(session);
     expect(result[0].id).toBe('1');
     expect(result[1].id).toBe('2');
     expect(result[2].id).toBe('3');
@@ -69,7 +69,7 @@ describe('organizeChats', () => {
 
   it('should filter out archived messages', () => {
     session.chats['2'].topicId = '123';
-    const result = organizeChats(session, { assistant: '', user: '' });
+    const result = organizeChats(session);
     expect(result.length).toBe(2);
     expect(result[0].id).toBe('1');
     expect(result[1].id).toBe('3');
@@ -82,8 +82,10 @@ describe('organizeChats', () => {
     };
 
     const result = organizeChats(session, {
-      assistant: avatar,
-      user: settings.avatar,
+      meta: {
+        user: { avatar: settings.avatar },
+        assistant: { avatar },
+      },
     });
 
     expect(result[0].meta.avatar).toBe(avatar);
@@ -94,7 +96,7 @@ describe('organizeChats', () => {
   it('should reorder messages based on parent-child relationship', () => {
     session.chats['2'].parentId = '1';
     session.chats['3'].parentId = '2';
-    const result = organizeChats(session, { assistant: '', user: '' });
+    const result = organizeChats(session);
     expect(result.length).toBe(3);
     expect(result[0].id).toBe('1');
     expect(result[1].id).toBe('2');
@@ -105,7 +107,7 @@ describe('organizeChats', () => {
     session.chats['2'].parentId = '1';
     session.chats['3'].parentId = '2';
     session.chats['3'].id = '2';
-    const result = organizeChats(session, { assistant: '', user: '' });
+    const result = organizeChats(session);
     expect(result.length).toBe(2);
     expect(result[0].id).toBe('1');
     expect(result[1].id).toBe('2');
@@ -117,7 +119,7 @@ describe('organizeChats', () => {
       config: {},
       type: 'agent',
     } as LobeAgentSession;
-    const result = organizeChats(emptySession, { assistant: '', user: '' });
+    const result = organizeChats(emptySession);
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(0);
   });
@@ -143,7 +145,7 @@ describe('organizeChats', () => {
       };
     }
 
-    const result = organizeChats(largeSession, { assistant: '', user: '' });
+    const result = organizeChats(largeSession);
     expect(result.length).toBe(numMessages);
     expect(result[0].id).toBe('1');
     expect(result[numMessages - 1].id).toBe(numMessages.toString());
@@ -222,7 +224,7 @@ describe('organizeChats', () => {
       updateAt: 1690110700808,
     } as LobeAgentSession;
 
-    const result = organizeChats(realSession, { assistant: '', user: '' });
+    const result = organizeChats(realSession);
 
     expect(
       result.map((i) => ({ id: i.id, content: i.content, role: i.role, createAt: i.createAt })),
@@ -263,13 +265,15 @@ describe('organizeChats', () => {
     ]);
   });
 
-  const avatar = {
-    assistant: 'assistant-avatar',
-    user: 'user-avatar',
+  const params = {
+    meta: {
+      user: { avatar: 'user-avatar' },
+      assistant: { avatar: 'assistant-avatar' },
+    },
   };
 
   it('should organize chats in chronological order when topicId is not provided', () => {
-    const result = organizeChats(session, avatar);
+    const result = organizeChats(session, params);
 
     expect(result.length).toBe(3);
     expect(result[0].id).toBe('1');
@@ -278,21 +282,21 @@ describe('organizeChats', () => {
   });
 
   it('should only return chats with specified topicId when topicId is provided', () => {
-    const result = organizeChats(session, avatar, 'topic-id');
+    const result = organizeChats(session, { ...params, topicId: 'topic-id' });
 
     expect(result.length).toBe(0);
   });
 
   describe('user Meta', () => {
     it('should return correct meta for user role', () => {
-      const result = organizeChats(session, avatar);
+      const result = organizeChats(session, params);
       const meta = result[1].meta;
 
-      expect(meta.avatar).toBe(avatar.user);
+      expect(meta.avatar).toBe(params.meta.user.avatar);
     });
 
     it('should return correct meta for assistant role', () => {
-      const result = organizeChats(session, avatar);
+      const result = organizeChats(session, params);
       const meta = result[0].meta;
 
       expect(meta.avatar).toBe('assistant-avatar');
@@ -313,7 +317,7 @@ describe('organizeChats', () => {
 
         session.chats[message.id] = message;
 
-        const result = organizeChats(session, avatar);
+        const result = organizeChats(session, params);
         const meta = result[3].meta;
 
         expect(meta.avatar).toBe('🧩');
@@ -334,7 +338,7 @@ describe('organizeChats', () => {
 
         session.chats[message.id] = message;
 
-        const result = organizeChats(session, avatar);
+        const result = organizeChats(session, params);
         const meta = result[3].meta;
 
         expect(meta.avatar).toBe('🧩');

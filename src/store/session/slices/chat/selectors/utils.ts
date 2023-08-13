@@ -1,17 +1,25 @@
 import { PluginsMap } from '@/plugins';
 import { ChatMessage } from '@/types/chatMessage';
+import { MetaData } from '@/types/meta';
 import { LobeAgentSession } from '@/types/session';
+
+interface OrganizeParams {
+  meta?: {
+    assistant?: MetaData;
+    user?: MetaData;
+  };
+  topicId?: string;
+}
 
 export const organizeChats = (
   session: LobeAgentSession,
-  avatar: { assistant: string; assistantBackground?: string; user: string },
-  topicId?: string,
+  { topicId, meta }: OrganizeParams = {},
 ) => {
   const getMeta = (message: ChatMessage) => {
     switch (message.role) {
       case 'user': {
         return {
-          avatar: avatar.user,
+          avatar: meta?.user?.avatar,
         };
       }
 
@@ -21,9 +29,9 @@ export const organizeChats = (
 
       case 'assistant': {
         return {
-          avatar: avatar.assistant,
-          backgroundColor: avatar.assistantBackground,
-          title: session.meta.title,
+          avatar: meta?.assistant?.avatar,
+          backgroundColor: meta?.assistant?.backgroundColor,
+          title: meta?.assistant?.title || session.meta.title,
         };
       }
 

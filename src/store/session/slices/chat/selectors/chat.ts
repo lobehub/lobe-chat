@@ -15,15 +15,18 @@ export const getChatsById =
 
     if (!session) return [];
 
-    return organizeChats(
-      session,
-      {
-        assistant: agentSelectors.currentAgentAvatar(s),
-        assistantBackground: agentSelectors.currentAgentBackgroundColor(s),
-        user: useGlobalStore.getState().settings.avatar || DEFAULT_USER_AVATAR,
+    return organizeChats(session, {
+      meta: {
+        assistant: {
+          avatar: agentSelectors.currentAgentAvatar(s),
+          backgroundColor: agentSelectors.currentAgentBackgroundColor(s),
+        },
+        user: {
+          avatar: useGlobalStore.getState().settings.avatar || DEFAULT_USER_AVATAR,
+        },
       },
-      s.activeTopicId,
-    );
+      topicId: s.activeTopicId,
+    });
   };
 
 // 当前激活的消息列表
