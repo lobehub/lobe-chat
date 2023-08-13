@@ -24,6 +24,7 @@ const SkeletonList = memo(() => {
       <Skeleton
         active
         avatar={{ size: 40 }}
+        className={styles.user}
         paragraph={{ width: ['50%', '30%'] }}
         round
         title={false}
@@ -31,10 +32,8 @@ const SkeletonList = memo(() => {
       <Skeleton
         active
         avatar={{ size: 40 }}
-        className={styles.user}
         paragraph={{ width: ['50%', '30%'] }}
         round
-        // style={{ display: 'flex', flexDirection: 'row-reverse' }}
         title={false}
       />
     </Flexbox>
