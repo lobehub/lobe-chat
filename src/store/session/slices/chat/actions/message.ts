@@ -223,22 +223,34 @@ export const chatMessage: StateCreator<
     const chats = chatSelectors.currentChats(get());
 
     const currentIndex = chats.findIndex((c) => c.id === messageId);
+    const currentMessage = chats[currentIndex];
+    let contextMessages: ChatMessage[] = [];
 
-    const histories = chats
-      .slice(0, currentIndex + 1)
-      // 如果点击重新发送的 message 其 role 是 assistant 或者 function，那么需要移除
-      // 如果点击重新发送的 message 其 role 是 user，则不需要移除
-      .filter((c) => !(c.role === 'assistant' && c.id === messageId));
+    switch (currentMessage.role) {
+      case 'function':
+      case 'user': {
+        contextMessages = chats.slice(0, currentIndex + 1);
+        break;
+      }
+      case 'assistant': {
+        // 消息是 AI 发出的因此需要找到它的 user 消息
+        const userId = currentMessage.parentId;
+        const userIndex = chats.findIndex((c) => c.id === userId);
+        // 如果消息没有 parentId，那么同 user/function 模式
+        contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
+        break;
+      }
+    }
 
-    if (histories.length <= 0) return;
+    if (contextMessages.length <= 0) return;
 
     const { realFetchAIResponse } = get();
 
-    const latestMsg = histories.filter((s) => s.role === 'user').at(-1);
+    const latestMsg = contextMessages.filter((s) => s.role === 'user').at(-1);
 
     if (!latestMsg) return;
 
-    await realFetchAIResponse(histories, latestMsg.id);
+    await realFetchAIResponse(contextMessages, latestMsg.id);
   },
 
   sendMessage: async (message) => {
