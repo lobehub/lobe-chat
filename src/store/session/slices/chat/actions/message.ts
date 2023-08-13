@@ -223,7 +223,10 @@ export const chatMessage: StateCreator<
     const chats = chatSelectors.currentChats(get());
 
     const currentIndex = chats.findIndex((c) => c.id === messageId);
+    if (currentIndex < 0) return;
+
     const currentMessage = chats[currentIndex];
+
     let contextMessages: ChatMessage[] = [];
 
     switch (currentMessage.role) {

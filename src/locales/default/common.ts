@@ -4,7 +4,7 @@ export default {
   agentMaxToken: '会话最大长度',
   agentModel: '模型',
   agentProfile: '助手信息',
-  appInitializing: '应用加载中...',
+  appInitializing: '智能集群启动中，请耐心等待...',
   archive: '归档',
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
