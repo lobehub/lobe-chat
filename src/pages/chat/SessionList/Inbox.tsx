@@ -16,6 +16,7 @@ const Inbox = memo(() => {
       <List.Item
         active={activeId === INBOX_SESSION_ID}
         avatar={<Avatar avatar={DEFAULT_INBOX_AVATAR} size={46} style={{ padding: 3 }} />}
+        style={{ alignItems: 'center' }}
         title={t('inbox.title')}
       />
     </Link>
