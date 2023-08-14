@@ -68,7 +68,7 @@ const SystemRole = memo(() => {
         }
         title={t('settingAgent.prompt.title', { ns: 'setting' })}
       />
-      <Flexbox className={styles.promptBox} height={200} padding={'0 16px 16px'}>
+      <Flexbox className={styles.promptBox} height={200}>
         {!init ? (
           <Skeleton active avatar={false} round style={{ marginTop: 12 }} title={false} />
         ) : (

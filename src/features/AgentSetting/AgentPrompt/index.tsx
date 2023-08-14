@@ -14,14 +14,9 @@ import { LobeAgentConfig } from '@/types/session';
 
 export const useStyles = createStyles(({ css, token }) => ({
   input: css`
-    padding: 12px;
-    background: ${token.colorFillTertiary};
-    border: 1px solid ${token.colorPrimaryBorder};
-    border-radius: 8px;
+    border: 1px solid ${token.colorBorderSecondary};
   `,
   markdown: css`
-    padding: 12px;
-    background: ${token.colorFillTertiary};
     border: 1px solid transparent;
   `,
 }));
@@ -45,6 +40,7 @@ const AgentPrompt = memo<AgentPromptProps>(({ config, updateConfig }) => {
           <TokenTag
             displayMode={'used'}
             maxValue={ModelTokens[model]}
+            shape={'square'}
             text={{
               overload: t('tokenTag.overload', { ns: 'common' }),
               remained: t('tokenTag.remained', { ns: 'common' }),
@@ -61,12 +57,20 @@ const AgentPrompt = memo<AgentPromptProps>(({ config, updateConfig }) => {
       <Flexbox gap={16} paddingBlock={16}>
         <EditableMessage
           classNames={styles}
+          editButtonSize={'small'}
           editing={editing}
+          height={'auto'}
+          inputType={'block'}
           onChange={(e) => {
             updateConfig({ systemRole: e });
           }}
           onEditingChange={setEditing}
+          placeholder={t('settingAgent.prompt.placeholder')}
           showEditWhenEmpty
+          text={{
+            cancel: t('cancel', { ns: 'common' }),
+            confirm: t('ok', { ns: 'common' }),
+          }}
           value={systemRole}
         />
         {!editing && !!systemRole && (
@@ -76,6 +80,7 @@ const AgentPrompt = memo<AgentPromptProps>(({ config, updateConfig }) => {
                 e.stopPropagation();
                 setEditing(true);
               }}
+              size={'small'}
               type={'primary'}
             >
               {t('edit', { ns: 'common' })}
