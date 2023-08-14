@@ -13,7 +13,11 @@ const useStyles = createStyles(({ css, token }) => ({
   prompt: css`
     overflow-x: hidden;
     overflow-y: auto;
+
+    padding: 0 16px 16px;
+
     opacity: 0.75;
+
     transition: opacity 200ms ${token.motionEaseOut};
 
     &:hover {
@@ -64,7 +68,7 @@ const SystemRole = memo(() => {
         }
         title={t('settingAgent.prompt.title', { ns: 'setting' })}
       />
-      <Flexbox className={styles.promptBox} height={200} padding={'0 16px 16px'}>
+      <Flexbox className={styles.promptBox} height={200}>
         {hydrated ? (
           <>
             <EditableMessage
