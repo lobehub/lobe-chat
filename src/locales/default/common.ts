@@ -1,6 +1,10 @@
 export default {
   about: '关于',
   advanceSettings: '高级设置',
+  agentDefaultMessage:
+    '你好，我是你的自定义助手，你可以立即与我开始对话，也可以前往 [助手设置](/chat/{{id}}/setting) 完善我的信息。',
+  agentDefaultMessageWithSystemRole:
+    '你好，我是你的自定义助手，我的角色设定如下: \n\n --- \n\n {{systemRole}} \n\n --- \n\n 立即与我开始对话吧~',
   agentMaxToken: '会话最大长度',
   agentModel: '模型',
   agentProfile: '助手信息',
@@ -31,6 +35,7 @@ export default {
   },
   feedback: '反馈与建议',
   import: '导入配置',
+
   inbox: {
     defaultMessage:
       '你好，我是你的智能助手，你可以问我任何问题，我会尽力回答你。如果需要获得更加专业或定制的助手，可以点击「+」创建自定义助手',

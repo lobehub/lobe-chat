@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.44.4",
+  "version": "0.45.0",
   "description": "Lobe Chat is an open-source chatbot client using LangChain, Typescript and Next.js",
   "keywords": [
     "chatbot",
@@ -91,7 +91,7 @@
     "react-dom": "^18",
     "react-hotkeys-hook": "^4",
     "react-i18next": "^13",
-    "react-layout-kit": "^1",
+    "react-layout-kit": "^1.7.1",
     "serpapi": "^2",
     "swr": "^2",
     "ts-md5": "^1",
@@ -105,7 +105,7 @@
     "@lobehub/i18n-cli": "latest",
     "@lobehub/lint": "latest",
     "@next/eslint-plugin-next": "^13",
-    "@testing-library/jest-dom": "^5",
+    "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^14",
     "@types/chroma-js": "^2",
     "@types/lodash-es": "^4",

@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 0.45.0](https://github.com/lobehub/lobe-chat/compare/v0.44.4...v0.45.0)
+
+<sup>Released on **2023-08-14**</sup>
+
+#### ✨ Features
+
+- **misc**: 优化每个角色的初始引导.
+
+#### 💄 Styles
+
+- **misc**: 优化初始化加载状态，等到会话加载完毕再显示内容.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 优化每个角色的初始引导, closes [#76](https://github.com/lobehub/lobe-chat/issues/76) ([8d78dc5](https://github.com/lobehub/lobe-chat/commit/8d78dc5))
+
+#### Styles
+
+- **misc**: 优化初始化加载状态，等到会话加载完毕再显示内容 ([cf603cb](https://github.com/lobehub/lobe-chat/commit/cf603cb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.44.4](https://github.com/lobehub/lobe-chat/compare/v0.44.3...v0.44.4)
 
 <sup>Released on **2023-08-13**</sup>

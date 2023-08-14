@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Header from '@/pages/chat/features/Sidebar/Header';
-import { agentSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
+import { agentSelectors, useSessionChatInit, useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css, token }) => ({
   prompt: css`
@@ -53,7 +53,7 @@ const SystemRole = memo(() => {
     s.updateAgentConfig,
   ]);
 
-  const hydrated = useSessionHydrated();
+  const init = useSessionChatInit();
   const { t } = useTranslation('common');
   return (
     <Flexbox height={'fit-content'}>
@@ -68,8 +68,10 @@ const SystemRole = memo(() => {
         }
         title={t('settingAgent.prompt.title', { ns: 'setting' })}
       />
-      <Flexbox className={styles.promptBox} height={200}>
-        {hydrated ? (
+      <Flexbox className={styles.promptBox} height={200} padding={'0 16px 16px'}>
+        {!init ? (
+          <Skeleton active avatar={false} round style={{ marginTop: 12 }} title={false} />
+        ) : (
           <>
             <EditableMessage
               classNames={{ markdown: styles.prompt }}
@@ -90,8 +92,6 @@ const SystemRole = memo(() => {
             />
             <div className={styles.promptMask} />
           </>
-        ) : (
-          <Skeleton active avatar={false} style={{ marginTop: 12 }} title={false} />
         )}
       </Flexbox>
     </Flexbox>
