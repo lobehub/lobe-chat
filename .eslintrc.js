@@ -9,5 +9,6 @@ config.rules['unicorn/no-null'] = 0;
 config.rules['unicorn/no-typeof-undefined'] = 0;
 config.rules['unicorn/explicit-length-check'] = 0;
 config.rules['unicorn/prefer-code-point'] = 0;
+config.rules['no-extra-boolean-cast'] = 0;
 
 module.exports = config;

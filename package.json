@@ -91,7 +91,7 @@
     "react-dom": "^18",
     "react-hotkeys-hook": "^4",
     "react-i18next": "^13",
-    "react-layout-kit": "^1",
+    "react-layout-kit": "^1.7.1",
     "serpapi": "^2",
     "swr": "^2",
     "ts-md5": "^1",

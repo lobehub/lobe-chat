@@ -11,12 +11,12 @@ import HeaderTitle from '@/components/HeaderTitle';
 import Tag from '@/components/Tag';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
-import { agentSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
+import { agentSelectors, useSessionChatInit, useSessionStore } from '@/store/session';
 
 import PluginTag from './PluginTag';
 
 const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
-  const init = useSessionHydrated();
+  const init = useSessionChatInit();
 
   const { t } = useTranslation('common');
 
