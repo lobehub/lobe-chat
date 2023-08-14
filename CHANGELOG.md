@@ -2,6 +2,40 @@
 
 # Changelog
 
+## [Version 0.46.0](https://github.com/lobehub/lobe-chat/compare/v0.45.0...v0.46.0)
+
+<sup>Released on **2023-08-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Update styling and functionality of AgentPrompt and EditableMessage components, 支持停止生成消息.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove input highlight.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Update styling and functionality of AgentPrompt and EditableMessage components ([80b521c](https://github.com/lobehub/lobe-chat/commit/80b521c))
+- **misc**: 支持停止生成消息, closes [#78](https://github.com/lobehub/lobe-chat/issues/78) ([9eeca80](https://github.com/lobehub/lobe-chat/commit/9eeca80))
+
+#### What's fixed
+
+- **misc**: Remove input highlight ([ad2001a](https://github.com/lobehub/lobe-chat/commit/ad2001a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.45.0](https://github.com/lobehub/lobe-chat/compare/v0.44.4...v0.45.0)
 
 <sup>Released on **2023-08-14**</sup>
