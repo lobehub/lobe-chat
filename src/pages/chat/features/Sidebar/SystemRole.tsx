@@ -70,7 +70,13 @@ const SystemRole = memo(() => {
       />
       <Flexbox className={styles.promptBox} height={200}>
         {!init ? (
-          <Skeleton active avatar={false} round style={{ marginTop: 12 }} title={false} />
+          <Skeleton
+            active
+            avatar={false}
+            round
+            style={{ marginTop: 12, paddingInline: 16 }}
+            title={false}
+          />
         ) : (
           <>
             <EditableMessage
