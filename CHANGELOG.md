@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.46.1](https://github.com/lobehub/lobe-chat/compare/v0.46.0...v0.46.1)
+
+<sup>Released on **2023-08-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix SystemRole Skeleton padding.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix SystemRole Skeleton padding ([ce485a0](https://github.com/lobehub/lobe-chat/commit/ce485a0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.46.0](https://github.com/lobehub/lobe-chat/compare/v0.45.0...v0.46.0)
 
 <sup>Released on **2023-08-14**</sup>
