@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import {
   agentSelectors,
   chatSelectors,
-  useSessionHydrated,
+  useSessionChatInit,
   useSessionStore,
 } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
@@ -33,7 +33,7 @@ const renderErrorMessage: RenderErrorMessage = (error, message) => {
 };
 
 const List = () => {
-  const init = useSessionHydrated();
+  const init = useSessionChatInit();
   const { t } = useTranslation('common');
 
   const data = useSessionStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
