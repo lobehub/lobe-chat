@@ -21,11 +21,15 @@ const ChatInput = () => {
     s.preference.inputHeight,
     s.updatePreference,
   ]);
-  const [sendMessage, hasTopic, saveToTopic] = useSessionStore((s) => [
-    s.sendMessage,
-    !!s.activeTopicId,
-    s.saveToTopic,
-  ]);
+  const [isLoading, hasTopic, sendMessage, saveToTopic, stopGenerateMessage] = useSessionStore(
+    (s) => [
+      !!s.chatLoadingId,
+      !!s.activeTopicId,
+      s.sendMessage,
+      s.saveToTopic,
+      s.stopGenerateMessage,
+    ],
+  );
 
   const footer = hasTopic ? null : (
     <Tooltip title={t('topic.saveCurrentMessages')}>
@@ -60,10 +64,12 @@ const ChatInput = () => {
         actionsRight={<ActionsRight />}
         expand={expand}
         footer={footer}
+        loading={isLoading}
         minHeight={CHAT_TEXTAREA_HEIGHT}
         onExpandChange={setExpand}
         onInputChange={setText}
         onSend={sendMessage}
+        onStop={stopGenerateMessage}
         placeholder={t('sendPlaceholder')}
         text={{
           send: t('send'),

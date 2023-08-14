@@ -46,7 +46,6 @@ export interface ChatMessageAction {
     messages: ChatMessage[],
     assistantMessageId: string,
   ) => Promise<{ isFunctionCall: boolean }>;
-
   /**
    * 实际获取 AI 响应
    *
@@ -54,17 +53,24 @@ export interface ChatMessageAction {
    * @param parentId - 父消息 ID，可选
    */
   realFetchAIResponse: (messages: ChatMessage[], parentId: string) => Promise<void>;
+
   /**
    * 重新发送消息
    * @param id - 消息 ID
    */
   resendMessage: (id: string) => Promise<void>;
-
   /**
    * 发送消息
    * @param text - 消息文本
    */
   sendMessage: (text: string) => Promise<void>;
+
+  stopGenerateMessage: () => void;
+  toggleChatLoading: (
+    loading: boolean,
+    id?: string,
+    action?: string,
+  ) => AbortController | undefined;
   triggerFunctionCall: (id: string) => Promise<void>;
 }
 
@@ -97,14 +103,15 @@ export const chatMessage: StateCreator<
 
     get().dispatchSession({ chats, id: activeId, type: 'updateSessionChat' });
   },
-
   generateMessage: async (messages, assistantId) => {
-    const { dispatchMessage } = get();
-    set(
-      { chatLoadingId: assistantId },
-      false,
-      t('generateMessage(start)', { assistantId, messages }),
+    const { dispatchMessage, toggleChatLoading } = get();
+
+    const abortController = toggleChatLoading(
+      true,
+      assistantId,
+      t('generateMessage(start)', { assistantId, messages }) as string,
     );
+
     const config = agentSelectors.currentAgentConfig(get());
 
     const compiler = template(config.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
@@ -138,12 +145,15 @@ export const chatMessage: StateCreator<
     }
 
     const fetcher = () =>
-      fetchChatModel({
-        messages: postMessages,
-        model: config.model,
-        ...config.params,
-        plugins: config.plugins,
-      });
+      fetchChatModel(
+        {
+          messages: postMessages,
+          model: config.model,
+          ...config.params,
+          plugins: config.plugins,
+        },
+        { signal: abortController?.signal },
+      );
 
     let output = '';
     let isFunctionCall = false;
@@ -175,7 +185,7 @@ export const chatMessage: StateCreator<
       },
     });
 
-    set({ chatLoadingId: undefined }, false, t('generateMessage(end)'));
+    toggleChatLoading(false, undefined, t('generateMessage(end)') as string);
 
     return { isFunctionCall };
   },
@@ -281,8 +291,27 @@ export const chatMessage: StateCreator<
     }
   },
 
+  stopGenerateMessage: () => {
+    const { abortController, toggleChatLoading } = get();
+    if (!abortController) return;
+
+    abortController.abort();
+
+    toggleChatLoading(false);
+  },
+
+  toggleChatLoading: (loading, id, action) => {
+    if (loading) {
+      const abortController = new AbortController();
+      set({ abortController, chatLoadingId: id }, false, action);
+      return abortController;
+    } else {
+      set({ abortController: undefined, chatLoadingId: undefined }, false, action);
+    }
+  },
+
   triggerFunctionCall: async (id) => {
-    const { dispatchMessage, realFetchAIResponse } = get();
+    const { dispatchMessage, realFetchAIResponse, toggleChatLoading } = get();
     const session = sessionSelectors.currentSession(get());
 
     if (!session) return;
@@ -317,7 +346,9 @@ export const chatMessage: StateCreator<
     //   type: 'addMessage',
     // });
 
-    const data = await fetchPlugin(payload);
+    const abortController = toggleChatLoading(true, id);
+    const data = await fetchPlugin(payload, { signal: abortController?.signal });
+    toggleChatLoading(false);
 
     dispatchMessage({ id, key: 'content', type: 'updateMessage', value: data });
 
@@ -325,7 +356,6 @@ export const chatMessage: StateCreator<
 
     await realFetchAIResponse(chats, message.id);
   },
-
   // genShareUrl: () => {
   //   const session = sessionSelectors.currentSession(get());
   //   if (!session) return '';
