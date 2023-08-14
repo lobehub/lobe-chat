@@ -1,11 +1,9 @@
 import { ChatList, RenderErrorMessage, RenderMessage } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
-import { INBOX_SESSION_ID } from '@/const/session';
 import {
   agentSelectors,
   chatSelectors,
@@ -38,11 +36,10 @@ const List = () => {
   const init = useSessionHydrated();
   const { t } = useTranslation('common');
 
-  const data = useSessionStore(chatSelectors.currentChats, isEqual);
+  const data = useSessionStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
 
-  const [isInbox, displayMode, chatLoadingId, deleteMessage, resendMessage, dispatchMessage] =
+  const [displayMode, chatLoadingId, deleteMessage, resendMessage, dispatchMessage] =
     useSessionStore((s) => [
-      s.activeId === INBOX_SESSION_ID,
       agentSelectors.currentAgentConfig(s).displayMode,
       s.chatLoadingId,
       s.deleteMessage,
@@ -81,28 +78,11 @@ const List = () => {
     [chatLoadingId],
   );
 
-  // 针对 inbox 添加初始化时的自定义消息
-  const displayDataSource = useMemo(() => {
-    const emptyGuideMessage = {
-      content: t('inbox.defaultMessage'),
-      createAt: Date.now(),
-      extra: {},
-      id: 'default',
-      meta: {
-        avatar: DEFAULT_INBOX_AVATAR,
-      },
-      role: 'assistant',
-      updateAt: Date.now(),
-    } as ChatMessage;
-
-    return isInbox && data.length === 0 ? [emptyGuideMessage] : data;
-  }, [data]);
-
   return !init ? (
     <SkeletonList />
   ) : (
     <ChatList
-      data={displayDataSource}
+      data={data}
       loadingId={chatLoadingId}
       onActionClick={(key, id) => {
         switch (key) {
