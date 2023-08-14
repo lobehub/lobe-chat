@@ -6,6 +6,10 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, './src'),
     },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'lcov', 'text-summary'],
+    },
     environment: 'jsdom',
     globals: true,
   },
