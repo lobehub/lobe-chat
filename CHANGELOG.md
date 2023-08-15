@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.54.0](https://github.com/lobehub/lobe-chat/compare/v0.53.0...v0.54.0)
+
+<sup>Released on **2023-08-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new features and improve user interface and functionality.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new features and improve user interface and functionality ([1543bd1](https://github.com/lobehub/lobe-chat/commit/1543bd1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.53.0](https://github.com/lobehub/lobe-chat/compare/v0.52.1...v0.53.0)
 
 <sup>Released on **2023-08-15**</sup>
