@@ -1,6 +1,4 @@
-import { ChatInputArea, DraggablePanel, Icon, Tooltip } from '@lobehub/ui';
-import { Button } from 'antd';
-import { LucideGalleryVerticalEnd } from 'lucide-react';
+import { ChatInputArea, DraggablePanel } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +8,7 @@ import { useSessionStore } from '@/store/session';
 
 import InputActions from './Action';
 import ActionsRight from './ActionRight';
+import Footer from './Footer';
 import Token from './Token';
 
 const ChatInput = () => {
@@ -29,12 +28,6 @@ const ChatInput = () => {
       s.saveToTopic,
       s.stopGenerateMessage,
     ],
-  );
-
-  const footer = hasTopic ? null : (
-    <Tooltip title={t('topic.saveCurrentMessages')}>
-      <Button icon={<Icon icon={LucideGalleryVerticalEnd} />} onClick={saveToTopic} />
-    </Tooltip>
   );
 
   return (
@@ -63,7 +56,7 @@ const ChatInput = () => {
         }
         actionsRight={<ActionsRight />}
         expand={expand}
-        footer={footer}
+        footer={<Footer hasTopic={hasTopic} saveToTopic={saveToTopic} />}
         loading={isLoading}
         minHeight={CHAT_TEXTAREA_HEIGHT}
         onExpandChange={setExpand}

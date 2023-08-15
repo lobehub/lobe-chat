@@ -22,6 +22,7 @@ const Token = memo<{ input: string }>(({ input }) => {
     <Tooltip placement={'bottom'} title={t('tokenDetail', { chatsToken, systemRoleToken })}>
       <TokenTag
         maxValue={ModelTokens[model]}
+        style={{ marginLeft: 8 }}
         text={{
           overload: t('tokenTag.overload'),
           remained: t('tokenTag.remained'),

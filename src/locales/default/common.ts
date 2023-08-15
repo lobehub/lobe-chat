@@ -80,4 +80,5 @@ export default {
   },
   updateAgent: '更新助理信息',
   updatePrompt: '更新提示词',
+  warp: '换行',
 };
