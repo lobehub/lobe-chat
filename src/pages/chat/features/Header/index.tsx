@@ -47,7 +47,6 @@ const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
               active
               avatar={{ shape: 'circle', size: 'default' }}
               paragraph={false}
-              round
               title={{ style: { margin: 0, marginTop: 8 }, width: 200 }}
             />
           </Flexbox>

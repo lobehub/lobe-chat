@@ -50,14 +50,16 @@ export const currentChatsWithGuideMessage = (s: SessionStore): ChatMessage[] => 
   if (!isBrandNewChat) return data;
 
   const [activeId, isInbox] = [s.activeId, s.activeId === INBOX_SESSION_ID];
-  const systemRole = agentSelectors.currentAgentSystemRole(s);
   const meta = agentSelectors.currentAgentMeta(s);
   const emptyInboxGuideMessage = {
     content: isInbox
       ? t('inbox.defaultMessage')
-      : !!systemRole
-      ? t('agentDefaultMessageWithSystemRole', { systemRole })
-      : t('agentDefaultMessage', { id: activeId }),
+      : !!meta.description
+      ? t('agentDefaultMessageWithSystemRole', {
+          name: meta.title || t('defaultAgent'),
+          systemRole: meta.description,
+        })
+      : t('agentDefaultMessage', { id: activeId, name: meta.title || t('defaultAgent') }),
     createAt: Date.now(),
     extra: {},
     id: 'default',

@@ -28,19 +28,19 @@
       "title": "Background Color"
     },
     "description": {
-      "placeholder": "Enter assistant description",
+      "placeholder": "Please enter assistant description",
       "title": "Assistant Description"
     },
     "name": {
-      "placeholder": "Enter assistant name",
+      "placeholder": "Please enter assistant name",
       "title": "Name"
     },
     "prompt": {
-      "placeholder": "Enter role prompt",
+      "placeholder": "Please enter role prompt",
       "title": "Role Prompt"
     },
     "tag": {
-      "placeholder": "Enter tag",
+      "placeholder": "Please enter tag",
       "title": "Tag"
     },
     "title": "Assistant Information"
@@ -61,18 +61,18 @@
       "title": "Enable History Message Length Compression Threshold"
     },
     "enableHistoryCount": {
-      "title": "Enable History Message Count Limit",
       "alias": "Unlimited",
-      "limited": "Only include {{number}} chat messages",
-      "unlimited": "Unlimited chat history"
+      "limited": "Only include {{number}} session messages",
+      "title": "Limit History Message Count",
+      "unlimited": "Unlimited History Message Count"
     },
     "historyCount": {
       "desc": "Number of history messages carried in each request",
-      "title": "History Message Count"
+      "title": "Attached History Message Count"
     },
     "inputTemplate": {
       "desc": "The latest user message will be filled into this template",
-      "placeholder": "Enter the input template, {text} will be replaced with real-time input",
+      "placeholder": "Enter the input template, {text} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
     "title": "Chat Settings"
@@ -111,14 +111,14 @@
     "title": "Model Settings",
     "topP": {
       "desc": "Similar to randomness, but do not change together with randomness",
-      "title": "Top-p Sampling"
+      "title": "Nucleus Sampling"
     }
   },
   "settingOpenAI": {
     "endpoint": {
       "desc": "Must include http(s)://, in addition to the default address",
       "placeholder": "https://api.openai.com/v1",
-      "title": "API Proxy Endpoint"
+      "title": "API Proxy Address"
     },
     "title": "OpenAI Settings",
     "token": {
@@ -133,7 +133,7 @@
   "settingSystem": {
     "accessCode": {
       "desc": "Encryption access has been enabled by the administrator",
-      "placeholder": "Enter access password",
+      "placeholder": "Please enter access password",
       "title": "Access Password"
     },
     "title": "System Settings"

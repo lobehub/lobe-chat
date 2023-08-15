@@ -11,7 +11,6 @@ const SkeletonList = memo(() => {
           avatar={false}
           key={i}
           paragraph={{ rows: 1, width: '100%' }}
-          round
           title={false}
         />
       ))}

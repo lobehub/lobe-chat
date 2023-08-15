@@ -26,16 +26,9 @@ const SkeletonList = memo(() => {
         avatar={{ size: 40 }}
         className={styles.user}
         paragraph={{ width: ['50%', '30%'] }}
-        round
         title={false}
       />
-      <Skeleton
-        active
-        avatar={{ size: 40 }}
-        paragraph={{ width: ['50%', '30%'] }}
-        round
-        title={false}
-      />
+      <Skeleton active avatar={{ size: 40 }} paragraph={{ width: ['50%', '30%'] }} title={false} />
     </Flexbox>
   );
 });

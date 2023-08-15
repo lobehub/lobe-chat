@@ -1,7 +1,7 @@
 import { ActionIcon, EditableMessage } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import { Maximize2Icon } from 'lucide-react';
+import { Edit } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -60,7 +60,7 @@ const SystemRole = memo(() => {
       <Header
         actions={
           <ActionIcon
-            icon={Maximize2Icon}
+            icon={Edit}
             onClick={() => setOpenModal(true)}
             size="small"
             title={t('edit')}
@@ -73,7 +73,6 @@ const SystemRole = memo(() => {
           <Skeleton
             active
             avatar={false}
-            round
             style={{ marginTop: 12, paddingInline: 16 }}
             title={false}
           />

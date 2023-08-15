@@ -2,9 +2,8 @@ export default {
   about: '关于',
   advanceSettings: '高级设置',
   agentDefaultMessage:
-    '你好，我是你的自定义助手，你可以立即与我开始对话，也可以前往 [助手设置](/chat/{{id}}/setting) 完善我的信息。',
-  agentDefaultMessageWithSystemRole:
-    '你好，我是你的自定义助手，我的角色设定如下: \n\n --- \n\n {{systemRole}} \n\n --- \n\n 立即与我开始对话吧~',
+    '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置](/chat/{{id}}/setting) 完善我的信息。',
+  agentDefaultMessageWithSystemRole: '你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！',
   agentMaxToken: '会话最大长度',
   agentModel: '模型',
   agentProfile: '助手信息',
@@ -21,8 +20,8 @@ export default {
   confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
   copy: '复制',
   copySuccess: '复制成功',
-  defaultAgent: '默认助手',
-  defaultSession: '默认助手',
+  defaultAgent: '自定义助手',
+  defaultSession: '自定义助手',
   delete: '删除',
   edit: '编辑',
   export: '导出配置',

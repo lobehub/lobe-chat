@@ -37,7 +37,6 @@ const SkeletonList = () => {
           avatar
           key={index}
           paragraph={{ className: styles.paragraph, rows: 1 }}
-          round
           title={{ className: styles.title }}
         />
       ))}
