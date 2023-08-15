@@ -35,7 +35,7 @@ export const FormAction = memo<{
 
   return (
     <Center gap={16} style={{ maxWidth: 300 }}>
-      <Avatar avatar={avatar} background={theme.colorText} gap={12} size={80} />
+      <Avatar avatar={avatar} background={theme.colorFillContent} gap={12} size={80} />
       <Flexbox style={{ fontSize: 20 }}>{title}</Flexbox>
       <Flexbox className={styles.desc}>{description}</Flexbox>
       {children}

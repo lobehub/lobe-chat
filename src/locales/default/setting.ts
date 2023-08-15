@@ -72,7 +72,7 @@ export default {
     },
     inputTemplate: {
       desc: '用户最新的一条消息会填充到此模板',
-      placeholder: '输入预处理模版，{text} 将替换为实时输入信息',
+      placeholder: '预处理模版 {{text}} 将替换为实时输入信息',
       title: '用户输入预处理',
     },
     title: '聊天设置',

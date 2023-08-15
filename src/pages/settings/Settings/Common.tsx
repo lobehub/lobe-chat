@@ -1,12 +1,13 @@
-import { Form, type ItemGroup, SliderWithInput, ThemeSwitch } from '@lobehub/ui';
+import { Form, type ItemGroup, SliderWithInput } from '@lobehub/ui';
 import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { changeLanguage } from 'i18next';
 import { debounce } from 'lodash-es';
-import { AppWindow, Palette, Webhook } from 'lucide-react';
+import { AppWindow, Monitor, Moon, Palette, Sun, Webhook } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SelectWithImg from '@/components/SelectWithImg';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
@@ -76,18 +77,33 @@ const Common = memo(() => {
         },
         {
           children: (
-            <ThemeSwitch
-              labels={{
-                auto: t('settingTheme.themeMode.auto'),
-                dark: t('settingTheme.themeMode.dark'),
-                light: t('settingTheme.themeMode.light'),
-              }}
-              onThemeSwitch={setThemeMode}
-              themeMode={settings.themeMode}
-              type={'select'}
+            <SelectWithImg
+              defaultValue={settings.themeMode}
+              onChange={setThemeMode}
+              options={[
+                {
+                  icon: Sun,
+                  img: '/images/theme_light.webp',
+                  label: t('settingTheme.themeMode.light'),
+                  value: 'light',
+                },
+                {
+                  icon: Moon,
+                  img: '/images/theme_dark.webp',
+                  label: t('settingTheme.themeMode.dark'),
+                  value: 'dark',
+                },
+                {
+                  icon: Monitor,
+                  img: '/images/theme_auto.webp',
+                  label: t('settingTheme.themeMode.auto'),
+                  value: 'auto',
+                },
+              ]}
             />
           ),
           label: t('settingTheme.themeMode.title'),
+          minWidth: undefined,
         },
         {
           children: (

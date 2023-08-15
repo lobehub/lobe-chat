@@ -72,7 +72,7 @@
     },
     "inputTemplate": {
       "desc": "The latest user message will be filled into this template",
-      "placeholder": "Enter the input template, {text} will be replaced with real-time input information",
+      "placeholder": "{{text}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
     "title": "Chat Settings"

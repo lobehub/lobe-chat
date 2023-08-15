@@ -1,11 +1,12 @@
 import { Form, ItemGroup, SliderWithInput } from '@lobehub/ui';
-import { ConfigProvider, Input, Segmented, Select, Switch } from 'antd';
-import { useTheme } from 'antd-style';
+import { ConfigProvider, Input, Select, Switch } from 'antd';
+import { useTheme, useThemeMode } from 'antd-style';
 import { debounce } from 'lodash-es';
-import { BrainCog, MessagesSquare } from 'lucide-react';
+import { BrainCog, LayoutList, MessageSquare, MessagesSquare } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SelectWithImg from '@/components/SelectWithImg';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { AgentAction } from '@/store/session/slices/agentConfig';
 import { LanguageModel } from '@/types/llm';
@@ -26,17 +27,36 @@ export interface AgentConfigProps {
 const AgentConfig = memo<AgentConfigProps>(({ config, updateConfig }) => {
   const { t } = useTranslation('setting');
   const theme = useTheme();
+  const { isDarkMode } = useThemeMode();
 
   const chat: SettingItemGroup = useMemo(
     () => ({
       children: [
         {
           children: (
-            <Segmented
+            <SelectWithImg
+              imgStyle={{
+                background: `linear-gradient(
+                  to bottom,
+                ${isDarkMode ? theme.colorBgElevated : theme.colorBgLayout},
+                ${theme.colorBgContainer}
+                )`,
+              }}
               options={[
-                { label: t('settingChat.chatStyleType.type.chat'), value: 'chat' },
-                { label: t('settingChat.chatStyleType.type.docs'), value: 'docs' },
+                {
+                  icon: MessagesSquare,
+                  img: `/images/chatmode_chat_${isDarkMode ? 'dark' : 'light'}.webp`,
+                  label: t('settingChat.chatStyleType.type.chat'),
+                  value: 'chat',
+                },
+                {
+                  icon: LayoutList,
+                  img: `/images/chatmode_docs_${isDarkMode ? 'dark' : 'light'}.webp`,
+                  label: t('settingChat.chatStyleType.type.docs'),
+                  value: 'docs',
+                },
               ]}
+              size={144}
             />
           ),
           label: t('settingChat.chatStyleType.title'),
@@ -80,7 +100,7 @@ const AgentConfig = memo<AgentConfigProps>(({ config, updateConfig }) => {
           name: 'compressThreshold',
         },
       ],
-      icon: MessagesSquare,
+      icon: MessageSquare,
       title: t('settingChat.title'),
     }),
     [config],

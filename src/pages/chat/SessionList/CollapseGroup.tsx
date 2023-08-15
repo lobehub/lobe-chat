@@ -16,6 +16,9 @@ const useStyles = createStyles(({ css, prefixCls, token }) => ({
         background: ${token.colorFillTertiary};
       }
     }
+    .${prefixCls}-collapse-content {
+      border-radius: 0 !important;
+    }
     .${prefixCls}-collapse-content-box {
       padding: 0 !important;
     }
