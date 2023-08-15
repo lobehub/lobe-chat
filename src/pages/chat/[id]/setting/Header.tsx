@@ -1,6 +1,6 @@
 import { ActionIcon, ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
 import { Dropdown, MenuProps } from 'antd';
-import { FolderOutput, Share2 } from 'lucide-react';
+import { HardDriveDownload, Share2 } from 'lucide-react';
 import Router from 'next/router';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +45,7 @@ const Header = memo(() => {
           <ActionIcon icon={Share2} size={{ fontSize: 24 }} title={t('share', { ns: 'common' })} />
           <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
             <ActionIcon
-              icon={FolderOutput}
+              icon={HardDriveDownload}
               size={{ fontSize: 24 }}
               title={t('export', { ns: 'common' })}
             />

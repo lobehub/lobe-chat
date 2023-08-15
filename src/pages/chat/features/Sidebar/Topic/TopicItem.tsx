@@ -9,7 +9,7 @@ import TopicContent from './TopicContent';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   active: css`
-    background: ${isDarkMode ? token.colorFillTertiary : token.colorFillSecondary};
+    background: ${isDarkMode ? token.colorFillSecondary : token.colorFillTertiary};
     transition: background 200ms ${token.motionEaseOut};
 
     &:hover {

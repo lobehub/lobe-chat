@@ -8,7 +8,7 @@ export default {
   agentMaxToken: '会话最大长度',
   agentModel: '模型',
   agentProfile: '助手信息',
-  appInitializing: '智能集群启动中，请耐心等待...',
+  appInitializing: 'LobeChat 启动中，请耐心等待...',
   archive: '归档',
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
@@ -38,7 +38,7 @@ export default {
   import: '导入配置',
   inbox: {
     defaultMessage:
-      '你好，我是你的智能助手，你可以问我任何问题，我会尽力回答你。如果需要获得更加专业或定制的助手，可以点击「+」创建自定义助手',
+      '你好，我是你的智能助手，你可以问我任何问题，我会尽力回答你。如果需要获得更加专业或定制的助手，可以点击<kbd>+</kbd>创建自定义助手',
     desc: '开启大脑集群，激发思维火花。你的智能助理，就在这里与你交流一切',
     title: '随便聊聊',
   },

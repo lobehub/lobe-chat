@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 const useStyles = createStyles(
   ({ css, token }) => css`
     z-index: 10;
-    box-shadow: 0 2px 8px ${token.colorBgLayout};
+    box-shadow: 0 2px 6px ${token.colorBgLayout};
   `,
 );
 

@@ -1,7 +1,7 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { App, Dropdown, type MenuProps } from 'antd';
 import { createStyles } from 'antd-style';
-import { FolderOutput, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
+import { HardDriveDownload, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -58,7 +58,7 @@ const Actions = memo<ActionProps>(({ id, setOpen }) => {
             },
           },
         ],
-        icon: <Icon icon={FolderOutput} />,
+        icon: <Icon icon={HardDriveDownload} />,
         key: 'export',
         label: t('export'),
       },

@@ -1,7 +1,6 @@
 import isEqual from 'fast-deep-equal';
 import Link from 'next/link';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { sessionSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
 
@@ -17,13 +16,11 @@ const SessionList = memo(() => {
   return !isInit ? (
     <SkeletonList />
   ) : list.length > 0 ? (
-    <Flexbox>
-      {list.map(({ id }) => (
-        <Link href={`/chat/${id}`} key={id}>
-          <SessionItem id={id} />
-        </Link>
-      ))}
-    </Flexbox>
+    list.map(({ id }) => (
+      <Link href={`/chat/${id}`} key={id}>
+        <SessionItem id={id} />
+      </Link>
+    ))
   ) : (
     <AddButton />
   );

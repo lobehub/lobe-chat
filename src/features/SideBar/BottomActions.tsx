@@ -3,9 +3,9 @@ import { Dropdown, MenuProps, Upload } from 'antd';
 import {
   Feather,
   FileClock,
-  FolderInput,
-  FolderOutput,
   Github,
+  HardDriveDownload,
+  HardDriveUpload,
   Heart,
   Settings,
   Settings2,
@@ -33,7 +33,7 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
   const items: MenuProps['items'] = useMemo(
     () => [
       {
-        icon: <Icon icon={FolderInput} />,
+        icon: <Icon icon={HardDriveUpload} />,
         key: 'import',
         label: (
           <Upload maxCount={1} onChange={importConfig} showUploadList={false}>
@@ -67,7 +67,7 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
             onClick: exportAll,
           },
         ],
-        icon: <Icon icon={FolderOutput} />,
+        icon: <Icon icon={HardDriveDownload} />,
         key: 'export',
         label: t('export'),
       },
