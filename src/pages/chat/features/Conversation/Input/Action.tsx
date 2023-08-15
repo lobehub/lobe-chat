@@ -1,11 +1,10 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, SliderWithInput } from '@lobehub/ui';
 import { Dropdown, Popover, Switch } from 'antd';
 import { BrainCog, Thermometer, Timer, TimerOff } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import SliderWithInput from '@/components/SliderWithInput';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 

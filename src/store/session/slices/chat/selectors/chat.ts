@@ -51,7 +51,7 @@ export const currentChatsWithGuideMessage = (s: SessionStore): ChatMessage[] => 
 
   const [activeId, isInbox] = [s.activeId, s.activeId === INBOX_SESSION_ID];
   const systemRole = agentSelectors.currentAgentSystemRole(s);
-
+  const meta = agentSelectors.currentAgentMeta(s);
   const emptyInboxGuideMessage = {
     content: isInbox
       ? t('inbox.defaultMessage')
@@ -61,7 +61,7 @@ export const currentChatsWithGuideMessage = (s: SessionStore): ChatMessage[] => 
     createAt: Date.now(),
     extra: {},
     id: 'default',
-    meta: {
+    meta: meta || {
       avatar: DEFAULT_INBOX_AVATAR,
     },
     role: 'assistant',

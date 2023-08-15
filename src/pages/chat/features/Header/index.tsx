@@ -1,5 +1,5 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
-import { ActionIcon, Avatar, ChatHeader } from '@lobehub/ui';
+import { ActionIcon, Avatar, ChatHeader, ChatHeaderTitle, Tag } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { PanelRightClose, PanelRightOpen, Settings } from 'lucide-react';
 import Router from 'next/router';
@@ -7,8 +7,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import HeaderTitle from '@/components/HeaderTitle';
-import Tag from '@/components/Tag';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
 import { agentSelectors, useSessionChatInit, useSessionStore } from '@/store/session';
@@ -56,7 +54,7 @@ const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
         ) : (
           <Flexbox align={'flex-start'} gap={12} horizontal>
             <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
-            <HeaderTitle
+            <ChatHeaderTitle
               desc={displayDesc}
               tag={
                 <>

@@ -5,6 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { sessionSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
 
+import AddButton from './AddButton';
 import SessionItem from './Item';
 import SkeletonList from './SkeletonList';
 
@@ -15,7 +16,7 @@ const SessionList = memo(() => {
 
   return !isInit ? (
     <SkeletonList />
-  ) : (
+  ) : list.length > 0 ? (
     <Flexbox>
       {list.map(({ id }) => (
         <Link href={`/chat/${id}`} key={id}>
@@ -23,6 +24,8 @@ const SessionList = memo(() => {
         </Link>
       ))}
     </Flexbox>
+  ) : (
+    <AddButton />
   );
 });
 

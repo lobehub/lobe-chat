@@ -1,11 +1,10 @@
-import { Form, ItemGroup } from '@lobehub/ui';
+import { Form, ItemGroup, SliderWithInput } from '@lobehub/ui';
 import { ConfigProvider, Input, Segmented, Select, Switch } from 'antd';
 import { useTheme } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { BrainCog, MessagesSquare } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import SliderWithInput from 'src/components/SliderWithInput';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { AgentAction } from '@/store/session/slices/agentConfig';

@@ -13,11 +13,11 @@ import { AgentAction } from '@/store/session/slices/agentConfig';
 import { LobeAgentConfig } from '@/types/session';
 
 export const useStyles = createStyles(({ css, token }) => ({
-  input: css`
-    border: 1px solid ${token.colorBorderSecondary};
-  `,
   markdown: css`
-    border: 1px solid transparent;
+    border: unset;
+  `,
+  textarea: css`
+    background: ${token.colorFillTertiary};
   `,
 }));
 
@@ -60,7 +60,7 @@ const AgentPrompt = memo<AgentPromptProps>(({ config, updateConfig }) => {
           editButtonSize={'small'}
           editing={editing}
           height={'auto'}
-          inputType={'block'}
+          inputType={'ghost'}
           onChange={(e) => {
             updateConfig({ systemRole: e });
           }}

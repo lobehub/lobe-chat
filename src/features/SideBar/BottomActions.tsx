@@ -1,4 +1,4 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, DiscordIcon, Icon } from '@lobehub/ui';
 import { Dropdown, MenuProps, Upload } from 'antd';
 import {
   Feather,
@@ -14,7 +14,6 @@ import Router from 'next/router';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import DiscordIcon from '@/components/DiscordIcon';
 import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB } from '@/const/url';
 import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';

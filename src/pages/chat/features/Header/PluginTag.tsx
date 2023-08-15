@@ -1,11 +1,10 @@
-import { Avatar, Icon } from '@lobehub/ui';
+import { Avatar, Icon, Tag } from '@lobehub/ui';
 import type { MenuProps } from 'antd';
 import { Dropdown } from 'antd';
 import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Tag from '@/components/Tag';
 import { PluginsMap } from '@/plugins';
 
 export interface PluginTagProps {

@@ -1,10 +1,12 @@
 import { DraggablePanelBody } from '@lobehub/ui';
-import { memo } from 'react';
+import { CollapseProps } from 'antd';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import FolderPanel from '@/features/FolderPanel';
 
+import CollapseGroup from './CollapseGroup';
 import Header from './Header';
 import Inbox from './Inbox';
 import SessionList from './List';
@@ -12,17 +14,24 @@ import SessionList from './List';
 export const Sessions = memo(() => {
   const { t } = useTranslation('common');
 
+  const items: CollapseProps['items'] = useMemo(
+    () => [
+      {
+        children: <SessionList />,
+        key: 'sessionList',
+        label: t('sessionList'),
+      },
+    ],
+    [],
+  );
+
   return (
     <FolderPanel>
       <Header />
       <DraggablePanelBody style={{ padding: 0 }}>
-        <Flexbox gap={8}>
+        <Flexbox>
           <Inbox />
-
-          <Flexbox paddingInline={20} style={{ fontSize: 12, marginTop: 8 }}>
-            {t('sessionList')}
-          </Flexbox>
-          <SessionList />
+          <CollapseGroup defaultActiveKey={['sessionList']} items={items} />
         </Flexbox>
       </DraggablePanelBody>
     </FolderPanel>

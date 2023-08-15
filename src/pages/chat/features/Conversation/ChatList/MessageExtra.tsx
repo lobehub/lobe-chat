@@ -1,8 +1,8 @@
+import { Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ReactNode } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import Tag from '@/components/Tag';
 import { agentSelectors, useSessionStore } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
 

@@ -1,11 +1,10 @@
-import { ActionIcon, ChatHeader } from '@lobehub/ui';
+import { ActionIcon, ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
 import { Dropdown, MenuProps } from 'antd';
 import { FolderOutput, Share2 } from 'lucide-react';
 import Router from 'next/router';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import HeaderTitle from '@/components/HeaderTitle';
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useSessionStore } from '@/store/session';
 
@@ -39,7 +38,7 @@ const Header = memo(() => {
 
   return (
     <ChatHeader
-      left={<HeaderTitle title={t('header.session')} />}
+      left={<ChatHeaderTitle title={t('header.session')} />}
       onBackClick={() => Router.back()}
       right={
         <>
