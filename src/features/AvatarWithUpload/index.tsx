@@ -23,15 +23,47 @@ const useStyle = createStyles(
 );
 
 interface AvatarWithUploadProps {
+  compressSize?: number;
   size?: number;
 }
 
-const AvatarWithUpload = memo<AvatarWithUploadProps>(({ size = 40 }) => {
+const AvatarWithUpload = memo<AvatarWithUploadProps>(({ size = 40, compressSize = 128 }) => {
   const [avatar, setSettings] = useGlobalStore((st) => [st.settings.avatar, st.setSettings]);
   const { styles } = useStyle();
 
   const handleUploadAvatar = createUploadImageHandler((avatar) => {
-    setSettings({ avatar });
+    const img = new Image();
+    img.src = avatar;
+    img.addEventListener('load', () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+      let startX = 0;
+      let startY = 0;
+
+      if (img.width > img.height) {
+        startX = (img.width - img.height) / 2;
+      } else {
+        startY = (img.height - img.width) / 2;
+      }
+
+      canvas.width = compressSize;
+      canvas.height = compressSize;
+
+      ctx.drawImage(
+        img,
+        startX,
+        startY,
+        Math.min(img.width, img.height),
+        Math.min(img.width, img.height),
+        0,
+        0,
+        compressSize,
+        compressSize,
+      );
+
+      const webpBase64 = canvas.toDataURL('image/webp');
+      setSettings({ avatar: webpBase64 });
+    });
   });
 
   return (
