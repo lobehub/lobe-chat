@@ -1,5 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { Tag, Typography } from 'antd';
+import { Icon, Tag } from '@lobehub/ui';
+import { Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { MessageSquareDashed } from 'lucide-react';
 import { memo } from 'react';

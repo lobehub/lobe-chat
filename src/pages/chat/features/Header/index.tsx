@@ -58,10 +58,7 @@ const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
               desc={displayDesc}
               tag={
                 <>
-                  <Tag>
-                    <SiOpenai size={'11px'} style={{ marginTop: 2 }} />
-                    {model}
-                  </Tag>
+                  <Tag icon={<SiOpenai size={'1em'} />}>{model}</Tag>
                   {plugins?.length > 0 && <PluginTag plugins={plugins} />}
                 </>
               }
