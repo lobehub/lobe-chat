@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.48.0](https://github.com/lobehub/lobe-chat/compare/v0.47.0...v0.48.0)
+
+<sup>Released on **2023-08-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Import SiOpenai icon and replace 'Tag' component in chat feature.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Import SiOpenai icon and replace 'Tag' component in chat feature ([98b0352](https://github.com/lobehub/lobe-chat/commit/98b0352))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.47.0](https://github.com/lobehub/lobe-chat/compare/v0.46.1...v0.47.0)
 
 <sup>Released on **2023-08-15**</sup>
