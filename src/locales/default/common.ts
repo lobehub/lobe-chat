@@ -12,6 +12,7 @@ export default {
   archive: '归档',
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
+  backToBottom: '查看最新消息',
   cancel: '取消',
   changelog: '更新日志',
   clearCurrentMessages: '清空当前会话消息',
@@ -35,7 +36,6 @@ export default {
   },
   feedback: '反馈与建议',
   import: '导入配置',
-
   inbox: {
     defaultMessage:
       '你好，我是你的智能助手，你可以问我任何问题，我会尽力回答你。如果需要获得更加专业或定制的助手，可以点击「+」创建自定义助手',
@@ -61,6 +61,7 @@ export default {
   sessionList: '助手列表',
   setting: '设置',
   share: '分享',
+  stop: '停止',
   tab: {
     chat: '会话',
     market: '助手市场',

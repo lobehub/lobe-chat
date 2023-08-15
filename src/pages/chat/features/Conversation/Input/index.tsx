@@ -73,6 +73,7 @@ const ChatInput = () => {
         placeholder={t('sendPlaceholder')}
         text={{
           send: t('send'),
+          stop: t('stop'),
         }}
       />
     </DraggablePanel>
