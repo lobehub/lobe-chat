@@ -1,4 +1,4 @@
-import { DraggablePanel, SearchBar } from '@lobehub/ui';
+import { DraggablePanel, DraggablePanelContainer, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { memo } from 'react';
@@ -51,16 +51,20 @@ const SideBar = memo<SideBarProps>(({ systemRole = true }) => {
       onExpandChange={toggleConfig}
       placement={'right'}
     >
-      <HeaderSpacing />
-      {systemRole && <SystemRole />}
-      <Flexbox height={'100%'} style={{ overflow: 'hidden' }}>
-        <Flexbox padding={16}>
-          <SearchBar placeholder={t('topic.searchPlaceholder')} spotlight type={'ghost'} />
+      <DraggablePanelContainer
+        style={{ flex: 'none', height: '100%', minWidth: CHAT_SIDEBAR_WIDTH }}
+      >
+        <HeaderSpacing />
+        {systemRole && <SystemRole />}
+        <Flexbox height={'100%'} style={{ overflow: 'hidden' }}>
+          <Flexbox padding={16}>
+            <SearchBar placeholder={t('topic.searchPlaceholder')} spotlight type={'ghost'} />
+          </Flexbox>
+          <Flexbox gap={16} paddingInline={16} style={{ overflowY: 'auto', position: 'relative' }}>
+            <Topic />
+          </Flexbox>
         </Flexbox>
-        <Flexbox gap={16} paddingInline={16} style={{ overflowY: 'auto', position: 'relative' }}>
-          <Topic />
-        </Flexbox>
-      </Flexbox>
+      </DraggablePanelContainer>
     </DraggablePanel>
   );
 });
