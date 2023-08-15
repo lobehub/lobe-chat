@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 0.49.0](https://github.com/lobehub/lobe-chat/compare/v0.48.0...v0.49.0)
+
+<sup>Released on **2023-08-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Add `BackToBottom` to conversation, Update icons and text in various components.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add `BackToBottom` to conversation ([1433aa9](https://github.com/lobehub/lobe-chat/commit/1433aa9))
+- **misc**: Update icons and text in various components ([0e7a683](https://github.com/lobehub/lobe-chat/commit/0e7a683))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.48.0](https://github.com/lobehub/lobe-chat/compare/v0.47.0...v0.48.0)
 
 <sup>Released on **2023-08-15**</sup>
