@@ -22,8 +22,8 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
         onClick={() => {
           // 如果已经在 chat 路径下了，那么就不用再跳转了
           if (Router.asPath.startsWith('/chat')) return;
-
           Router.push('/chat');
+          setTab('chat');
         }}
         size="large"
         title={t('tab.chat')}

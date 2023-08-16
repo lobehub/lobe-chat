@@ -63,7 +63,8 @@ export default {
   stop: '停止',
   tab: {
     chat: '会话',
-    market: '助手市场',
+    market: '发现',
+    setting: '设置',
   },
   temp: '临时',
   tokenDetail: '角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}',
