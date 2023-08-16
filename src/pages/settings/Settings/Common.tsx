@@ -79,6 +79,7 @@ const Common = memo(() => {
           children: (
             <SelectWithImg
               defaultValue={settings.themeMode}
+              height={60}
               onChange={setThemeMode}
               options={[
                 {
@@ -100,6 +101,7 @@ const Common = memo(() => {
                   value: 'auto',
                 },
               ]}
+              width={100}
             />
           ),
           label: t('settingTheme.themeMode.title'),

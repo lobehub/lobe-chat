@@ -35,13 +35,7 @@ const AgentConfig = memo<AgentConfigProps>(({ config, updateConfig }) => {
         {
           children: (
             <SelectWithImg
-              imgStyle={{
-                background: `linear-gradient(
-                  to bottom,
-                ${isDarkMode ? theme.colorBgElevated : theme.colorBgLayout},
-                ${theme.colorBgContainer}
-                )`,
-              }}
+              height={86}
               options={[
                 {
                   icon: MessagesSquare,
@@ -56,7 +50,16 @@ const AgentConfig = memo<AgentConfigProps>(({ config, updateConfig }) => {
                   value: 'docs',
                 },
               ]}
-              size={144}
+              styles={{
+                img: {
+                  background: `linear-gradient(
+                  to bottom,
+                ${isDarkMode ? theme.colorBgElevated : theme.colorBgLayout},
+                ${theme.colorBgContainer}
+                )`,
+                },
+              }}
+              width={144}
             />
           ),
           label: t('settingChat.chatStyleType.title'),
