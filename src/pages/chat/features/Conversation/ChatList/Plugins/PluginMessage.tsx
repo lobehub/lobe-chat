@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { PluginsMap } from '@/plugins';
+import { PluginsRender } from '@/plugins/Render';
 import { ChatMessage } from '@/types/chatMessage';
 
 export interface FunctionMessageProps extends ChatMessage {
@@ -13,7 +13,7 @@ export interface FunctionMessageProps extends ChatMessage {
 const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
   const { t } = useTranslation('plugin');
 
-  const Render = PluginsMap[name || '']?.render;
+  const Render = PluginsRender[name || ''];
 
   let isJSON = true;
   try {
