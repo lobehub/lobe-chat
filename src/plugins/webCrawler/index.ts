@@ -1,8 +1,5 @@
 import { PluginItem } from '@/plugins/type';
 
-import runner from './runner';
-import { Result } from './type';
-
 const schema = {
   description: '提取网页内容并总结',
   name: 'websiteCrawler',
@@ -18,6 +15,6 @@ const schema = {
   },
 };
 
-const getWeather: PluginItem<Result> = { avatar: '🕸', name: 'websiteCrawler', runner, schema };
+const getWeather: PluginItem = { avatar: '🕸', name: 'websiteCrawler', schema };
 
 export default getWeather;
