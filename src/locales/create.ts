@@ -7,12 +7,13 @@ import type { Namespaces } from '@/types/locale';
 
 import resources from './resources';
 
-export const createI18nNext = (namespace?: Namespaces[] | Namespaces) => {
-  const ns: Namespaces[] = namespace
-    ? isArray(namespace)
-      ? ['error', 'common', ...namespace]
-      : ['error', 'common', namespace]
-    : ['error', 'common'];
+export const createI18nNext = (params: { namespace?: Namespaces[] | Namespaces } = {}) => {
+  const { namespace } = params;
+
+  const ns: Namespaces[] = isArray(namespace)
+    ? ['error', 'common', ...namespace]
+    : (['error', 'common', namespace].filter(Boolean) as Namespaces[]);
+
   return (
     i18n
       // detect user language
@@ -23,9 +24,12 @@ export const createI18nNext = (namespace?: Namespaces[] | Namespaces) => {
       // init i18next
       // for all options read: https://www.i18next.com/overview/configuration-options
       .init({
-        // @ts-ignore
         debug: process.env.NODE_ENV === 'development',
         defaultNS: ns,
+        // LanguageDetector config, refs: https://github.com/i18next/i18next-browser-languageDetector
+        detection: {
+          caches: [],
+        },
         fallbackLng: 'zh-CN',
         interpolation: {
           escapeValue: false, // not needed for react as it escapes by default

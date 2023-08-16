@@ -3,22 +3,26 @@ import { App, ConfigProvider } from 'antd';
 import { useThemeMode } from 'antd-style';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
+import { changeLanguage } from 'i18next';
 import { PropsWithChildren, memo, useCallback, useEffect } from 'react';
 
-import { useGlobalStore } from '@/store/global';
+import { createI18nNext } from '@/locales/create';
+import { useGlobalStore, useOnFinishHydrationGlobal } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { GlobalStyle } from '@/styles';
 
-import i18n from '../locales';
 import { useStyles } from './style';
+
+const i18n = createI18nNext();
 
 const Layout = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
 
-  useEffect(() => {
-    // 用一种比较奇怪的方式import 了 18n
-    i18n.finally(() => {});
-  }, []);
+  useOnFinishHydrationGlobal((state) => {
+    i18n.then(() => {
+      changeLanguage(state.settings.language);
+    });
+  });
 
   return (
     <ConfigProvider locale={Zh_CN}>

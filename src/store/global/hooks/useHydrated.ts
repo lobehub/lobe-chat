@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useGlobalStore } from '../store';
 
-export const useSettingsHydrated = () => {
+export const useGlobalHydrated = () => {
   // 根据 sessions 是否有值来判断是否已经初始化
   const hasInited = !!Object.values(useGlobalStore.getState().settings).length;
 
