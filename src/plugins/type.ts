@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
  * @template Result - 结果类型，默认为 any
  * @template RunnerParams - 运行参数类型，默认为 any
  */
-export interface PluginItem<Result = any, RunnerParams = any> {
+export interface PluginItem {
   /**
    * 头像
    */
@@ -15,12 +15,7 @@ export interface PluginItem<Result = any, RunnerParams = any> {
    * 名称
    */
   name: string;
-  /**
-   * 运行器
-   * @param params - 运行参数
-   * @returns 运行结果的 Promise
-   */
-  runner: PluginRunner<RunnerParams, Result>;
+  render?: PluginRender;
   /**
    * 聊天完成函数的模式
    */
@@ -33,15 +28,6 @@ export interface PluginItem<Result = any, RunnerParams = any> {
  * @returns React 节点
  */
 export type PluginRender = (props: PluginRenderProps) => ReactNode;
-
-/**
- * 插件运行器
- * @template Params - 参数类型，默认为 object
- * @template Result - 结果类型，默认为 any
- * @param params - 运行参数
- * @returns 运行结果的 Promise
- */
-export type PluginRunner<Params = object, Result = any> = (params: Params) => Promise<Result>;
 
 /**
  * 插件渲染属性

@@ -63,7 +63,6 @@
   "dependencies": {
     "@ant-design/colors": "^7",
     "@ant-design/icons": "^5",
-    "@commitlint/cli": "^17",
     "@emoji-mart/data": "^1",
     "@emoji-mart/react": "^1",
     "@icons-pack/react-simple-icons": "^8",
@@ -86,7 +85,6 @@
     "next": "13.4.7",
     "openai-edge": "^1",
     "polished": "^4",
-    "query-string": "^8",
     "react": "^18",
     "react-dom": "^18",
     "react-hotkeys-hook": "^4",

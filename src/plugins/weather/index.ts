@@ -1,7 +1,4 @@
 import { PluginItem } from '@/plugins/type';
-import { WeatherResult } from '@/plugins/weather/type';
-
-import runner from './runner';
 
 const schema = {
   description: '获取当前天气情况',
@@ -18,10 +15,9 @@ const schema = {
   },
 };
 
-const getWeather: PluginItem<WeatherResult> = {
+const getWeather: PluginItem = {
   avatar: '☂️',
   name: 'realtimeWeather',
-  runner,
   schema,
 };
 
