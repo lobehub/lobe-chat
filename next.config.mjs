@@ -5,7 +5,7 @@ const API_END_PORT_URL = process.env.API_END_PORT_URL || '';
 
 // chat plugin market
 const PLUGIN_RUNNER_BASE_URL =
-  process.env.PLUGIN_RUNNER_BASE_URL || 'https://lobe-chat-plugin-market.vercel.app';
+  process.env.PLUGIN_RUNNER_BASE_URL || 'https://chat-plugins.lobehub.vercel.app';
 
 const withPWA = nextPWA({
   dest: 'public',
@@ -36,7 +36,7 @@ const nextConfig = {
       },
       {
         source: '/api/plugins',
-        // refs to: https://github.com/lobehub/chat-plugin-market
+        // refs to: https://github.com/lobehub/chat-plugin-server
         destination: `${PLUGIN_RUNNER_BASE_URL}/api/v1/runner`,
       },
     ];
