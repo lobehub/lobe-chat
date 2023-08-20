@@ -4,5 +4,5 @@ const prefix = isDev ? '-dev' : '';
 
 export const URLS = {
   openai: '/api/openai' + prefix,
-  plugins: '/api/plugins',
+  plugins: '/api/plugins' + prefix,
 };
