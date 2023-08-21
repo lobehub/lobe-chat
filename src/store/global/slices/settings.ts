@@ -61,7 +61,7 @@ export const createSettingsSlice: StateCreator<
 
   setSettings: (settings) => {
     const oldSetting = get().settings;
-    set({ settings: merge(oldSetting, settings) }, false, t('setSettings', settings));
+    set({ settings: merge({}, oldSetting, settings) }, false, t('setSettings', settings));
   },
   switchThemeMode: (themeMode) => {
     get().setSettings({ themeMode });

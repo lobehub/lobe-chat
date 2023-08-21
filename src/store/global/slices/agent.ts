@@ -52,7 +52,7 @@ export const createAgentSlice: StateCreator<
   setAgentConfig: (config) => {
     const settings = produce(get().settings, (draft: GlobalSettings) => {
       const oldConfig = draft.defaultAgent.config as LobeAgentConfig;
-      draft.defaultAgent.config = merge(oldConfig, config);
+      draft.defaultAgent.config = merge({}, oldConfig, config);
     });
 
     set({ settings }, false, t('setAgentConfig', config));
@@ -60,7 +60,7 @@ export const createAgentSlice: StateCreator<
   setAgentMeta: (meta) => {
     const settings = produce(get().settings, (draft) => {
       const oldMeta = draft.defaultAgent.meta as MetaData;
-      draft.defaultAgent.meta = merge(oldMeta, meta);
+      draft.defaultAgent.meta = merge({}, oldMeta, meta);
     });
 
     set({ settings }, false, t('setAgentMeta', meta));
