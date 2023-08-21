@@ -5,7 +5,7 @@ import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PluginsMap } from '@/plugins';
+import { useSessionStore } from '@/store/session';
 
 export interface PluginTagProps {
   plugins: string[];
@@ -14,15 +14,19 @@ export interface PluginTagProps {
 const PluginTag = memo<PluginTagProps>(({ plugins }) => {
   const { t } = useTranslation('plugin');
 
+  const list = useSessionStore((s) => s.pluginList);
   if (plugins.length === 0) return null;
 
-  const items: MenuProps['items'] = plugins.map((id) => ({
-    icon: (
-      <Avatar avatar={PluginsMap[id].avatar} size={24} style={{ marginLeft: -6, marginRight: 2 }} />
-    ),
-    key: id,
-    label: t(`plugins.${id}` as any),
-  }));
+  const items: MenuProps['items'] = plugins.map((id) => {
+    const item = list?.find((p) => p.name === id);
+    return {
+      icon: (
+        <Avatar avatar={item?.meta.avatar} size={24} style={{ marginLeft: -6, marginRight: 2 }} />
+      ),
+      key: id,
+      label: t(`plugins.${id}` as any),
+    };
+  });
   const count = plugins.length;
 
   return (

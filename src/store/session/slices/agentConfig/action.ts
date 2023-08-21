@@ -1,7 +1,10 @@
+import { LobeChatPluginsMarketIndex } from '@lobehub/chat-plugin-sdk';
 import { produce } from 'immer';
+import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { promptPickEmoji, promptSummaryAgentName, promptSummaryDescription } from '@/prompts/agent';
+import { getPluginList } from '@/services/plugin';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
@@ -62,6 +65,7 @@ export interface AgentAction {
    * @param value - 加载状态的值
    */
   updateLoadingState: (key: keyof SessionLoadingState, value: boolean) => void;
+  useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
 }
 
 export const createAgentSlice: StateCreator<
@@ -244,4 +248,10 @@ export const createAgentSlice: StateCreator<
       t('updateLoadingState', { key, value }),
     );
   },
+  useFetchPluginList: () =>
+    useSWR<LobeChatPluginsMarketIndex>('fetchPluginList', getPluginList, {
+      onSuccess: (pluginMarketIndex) => {
+        set({ pluginList: pluginMarketIndex.plugins });
+      },
+    }),
 });

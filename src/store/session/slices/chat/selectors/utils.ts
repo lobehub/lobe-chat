@@ -1,4 +1,5 @@
-import { PluginsMap } from '@/plugins';
+import { LobeChatPluginMeta } from '@lobehub/chat-plugin-sdk';
+
 import { ChatMessage } from '@/types/chatMessage';
 import { MetaData } from '@/types/meta';
 import { LobeAgentSession } from '@/types/session';
@@ -8,12 +9,13 @@ interface OrganizeParams {
     assistant?: MetaData;
     user?: MetaData;
   };
+  pluginList?: LobeChatPluginMeta[];
   topicId?: string;
 }
 
 export const organizeChats = (
   session: LobeAgentSession,
-  { topicId, meta }: OrganizeParams = {},
+  { topicId, meta, pluginList }: OrganizeParams = {},
 ) => {
   const getMeta = (message: ChatMessage) => {
     switch (message.role) {
@@ -36,7 +38,7 @@ export const organizeChats = (
       }
 
       case 'function': {
-        const plugin = PluginsMap[message.name || ''];
+        const plugin = (pluginList || []).find((m) => m.name === message.name);
 
         return {
           avatar: '🧩',
