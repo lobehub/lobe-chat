@@ -1,11 +1,5 @@
-import {
-  ActionIcon,
-  DraggablePanel,
-  DraggablePanelContainer,
-  MobileNavBar,
-  MobileNavBarTitle,
-  SearchBar,
-} from '@lobehub/ui';
+import { ActionIcon, DraggablePanel, DraggablePanelContainer, SearchBar } from '@lobehub/ui';
+import { Drawer } from 'antd';
 import { createStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { rgba } from 'polished';
@@ -45,7 +39,7 @@ interface SideBarProps {
   systemRole?: boolean;
 }
 const SideBar = memo<SideBarProps>(({ systemRole = true, mobile }) => {
-  const { styles } = useStyles(mobile);
+  const { styles, theme } = useStyles(mobile);
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.preference.showChatSideBar,
     s.toggleChatSideBar,
@@ -53,47 +47,57 @@ const SideBar = memo<SideBarProps>(({ systemRole = true, mobile }) => {
 
   const { t } = useTranslation('common');
 
+  const topic = (
+    <Flexbox height={'100%'} style={{ overflow: 'hidden' }}>
+      <Flexbox padding={16}>
+        <SearchBar
+          placeholder={t('topic.searchPlaceholder')}
+          spotlight={!mobile}
+          type={mobile ? 'block' : 'ghost'}
+        />
+      </Flexbox>
+      <Flexbox gap={16} paddingInline={16} style={{ overflowY: 'auto', position: 'relative' }}>
+        <Topic />
+      </Flexbox>
+    </Flexbox>
+  );
+
+  if (mobile)
+    return (
+      <Drawer
+        bodyStyle={{ padding: 0 }}
+        closeIcon={<ActionIcon icon={X} size={{ blockSize: 32, fontSize: 20 }} />}
+        drawerStyle={{ background: theme.colorBgContainer }}
+        headerStyle={{ padding: '8px 4px' }}
+        height={'75vh'}
+        onClose={() => toggleConfig(false)}
+        open={showAgentSettings}
+        placement={'bottom'}
+        title={t('topic.title')}
+      >
+        {topic}
+      </Drawer>
+    );
+
   return (
     <DraggablePanel
       className={styles.drawer}
       classNames={{
         content: styles.content,
       }}
-      draggable={!mobile}
       expand={showAgentSettings}
-      expandable={!mobile}
-      minWidth={mobile ? ('100vw' as any) : CHAT_SIDEBAR_WIDTH}
-      mode={mobile ? 'float' : 'fixed'}
+      minWidth={CHAT_SIDEBAR_WIDTH}
+      mode={'fixed'}
       onExpandChange={toggleConfig}
       placement={'right'}
     >
       <DraggablePanelContainer
         style={{ flex: 'none', height: '100%', minWidth: CHAT_SIDEBAR_WIDTH }}
       >
-        {mobile ? (
-          <MobileNavBar
-            center={<MobileNavBarTitle title={t('topic.title')} />}
-            left={<ActionIcon icon={X} onClick={() => toggleConfig()} />}
-          />
-        ) : (
-          <>
-            <SafeSpacing />
-            {systemRole && <SystemRole mobile={mobile} />}
-          </>
-        )}
+        <SafeSpacing />
+        {systemRole && <SystemRole mobile={mobile} />}
 
-        <Flexbox height={'100%'} style={{ overflow: 'hidden' }}>
-          <Flexbox padding={16}>
-            <SearchBar
-              placeholder={t('topic.searchPlaceholder')}
-              spotlight={!mobile}
-              type={mobile ? 'block' : 'ghost'}
-            />
-          </Flexbox>
-          <Flexbox gap={16} paddingInline={16} style={{ overflowY: 'auto', position: 'relative' }}>
-            <Topic />
-          </Flexbox>
-        </Flexbox>
+        {topic}
       </DraggablePanelContainer>
     </DraggablePanel>
   );

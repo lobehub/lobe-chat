@@ -1,5 +1,4 @@
 import { MobileNavBar, MobileNavBarTitle } from '@lobehub/ui';
-import Router from 'next/router';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,13 +9,7 @@ const SettingLayout = memo<{ children: ReactNode }>(({ children }) => {
 
   return (
     <AppMobileLayout
-      navBar={
-        <MobileNavBar
-          center={<MobileNavBarTitle title={t('header.global')} />}
-          onBackClick={() => Router.back()}
-          showBackButton
-        />
-      }
+      navBar={<MobileNavBar center={<MobileNavBarTitle title={t('header.global')} />} />}
       showTabBar
     >
       {children}

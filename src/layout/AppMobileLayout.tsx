@@ -9,6 +9,12 @@ import MobileTabBar from '@/features/MobileTabBar';
 const useStyles = createStyles(({ css }) => ({
   container: css`
     position: relative;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    width: 100vw;
+    height: 100vh;
   `,
   mobileNavBar: css`
     position: fixed;
@@ -39,14 +45,13 @@ const AppMobileLayout = memo<AppMobileLayoutProps>(
     const { styles, cx } = useStyles();
 
     return (
-      <Flexbox className={cx(styles.container, className)} style={style} width={'100%'}>
+      <Flexbox className={cx(styles.container, className)} style={style}>
         {navBar && (
           <>
             <div className={styles.mobileNavBar}>{navBar}</div>
             <SafeSpacing mobile position={'top'} />
           </>
         )}
-
         {children}
         {showTabBar && (
           <>

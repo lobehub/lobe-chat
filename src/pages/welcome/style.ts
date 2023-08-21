@@ -41,9 +41,9 @@ export const useStyles = createStyles(({ css, token, stylish, cx }) => {
       padding: 16px;
     `,
     title: css`
-      margin-bottom: 0.2em;
+      margin-bottom: 0.25em;
       font-weight: 800;
-      line-height: 1.2;
+      line-height: 1.4;
       text-align: center;
     `,
     view: cx(

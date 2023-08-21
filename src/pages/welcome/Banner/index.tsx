@@ -13,7 +13,7 @@ import { useImportConfig } from '@/hooks/useImportConfig';
 import { useStyles } from '../style';
 import Hero from './Hero';
 
-const Banner = memo(() => {
+const Banner = memo<{ mobile?: boolean }>(() => {
   const { importConfig } = useImportConfig();
   const ref = useRef(null);
   const domSize = useSize(ref);
@@ -28,12 +28,15 @@ const Banner = memo(() => {
   }, []);
 
   return (
-    <Flexbox height={'80vh'} style={{ marginTop: '10vh' }}>
+    <Flexbox height={'80vh'} style={{ paddingTop: '10vh' }}>
       <GridShowcase>
         <div className={styles.container} ref={ref}>
           <Hero width={width} />
         </div>
         <Flexbox gap={16} horizontal style={{ marginTop: 16 }}>
+          <Upload maxCount={1} onChange={handleImport} showUploadList={false}>
+            <Button size={'large'}>{t('button.import')}</Button>
+          </Upload>
           <Link href={'/chat'}>
             <Button size={'large'} type={'primary'}>
               <Flexbox align={'center'} gap={4} horizontal>
@@ -42,9 +45,6 @@ const Banner = memo(() => {
               </Flexbox>
             </Button>
           </Link>
-          <Upload maxCount={1} onChange={handleImport} showUploadList={false}>
-            <Button size={'large'}>{t('button.import')}</Button>
-          </Upload>
         </Flexbox>
       </GridShowcase>
       {/*TODO：暂时隐藏，待模板完成后再补回*/}
