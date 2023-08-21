@@ -1,6 +1,7 @@
+import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
+
 import { LOBE_CHAT_ACCESS_CODE } from '@/const/fetch';
 import { useGlobalStore } from '@/store/global';
-import { OpenAIPluginPayload } from '@/types/plugin';
 
 import { URLS } from './url';
 
@@ -13,7 +14,7 @@ interface FetchChatModelOptions {
  * 专门用于对话的 fetch
  */
 export const fetchPlugin = async (
-  params: Partial<OpenAIPluginPayload>,
+  params: PluginRequestPayload,
   options?: FetchChatModelOptions,
 ) => {
   const res = await fetch(URLS.plugins, {

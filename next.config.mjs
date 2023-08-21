@@ -3,10 +3,6 @@ import nextPWA from 'next-pwa';
 const isProd = process.env.NODE_ENV === 'production';
 const API_END_PORT_URL = process.env.API_END_PORT_URL || '';
 
-// chat plugin market
-const PLUGIN_RUNNER_BASE_URL =
-  process.env.PLUGIN_RUNNER_BASE_URL || 'https://chat-plugins.lobehub.vercel.app';
-
 const withPWA = nextPWA({
   dest: 'public',
   register: true,
@@ -35,9 +31,8 @@ const nextConfig = {
         destination: `${API_END_PORT_URL}/api/openai`,
       },
       {
-        source: '/api/plugins',
-        // refs to: https://github.com/lobehub/chat-plugin-server
-        destination: `${PLUGIN_RUNNER_BASE_URL}/api/v1/runner`,
+        source: '/api/plugins-dev',
+        destination: `${API_END_PORT_URL}/api/plugins`,
       },
     ];
   },
