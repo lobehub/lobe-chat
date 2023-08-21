@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.54.4](https://github.com/lobehub/lobe-chat/compare/v0.54.3...v0.54.4)
+
+<sup>Released on **2023-08-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix not cannot change setting error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix not cannot change setting error, closes [#86](https://github.com/lobehub/lobe-chat/issues/86) ([6405c28](https://github.com/lobehub/lobe-chat/commit/6405c28))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.54.3](https://github.com/lobehub/lobe-chat/compare/v0.54.2...v0.54.3)
 
 <sup>Released on **2023-08-21**</sup>
