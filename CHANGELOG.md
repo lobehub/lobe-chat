@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.54.3](https://github.com/lobehub/lobe-chat/compare/v0.54.2...v0.54.3)
+
+<sup>Released on **2023-08-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor plugin request.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor plugin request, closes [#89](https://github.com/lobehub/lobe-chat/issues/89) ([23efee3](https://github.com/lobehub/lobe-chat/commit/23efee3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.54.2](https://github.com/lobehub/lobe-chat/compare/v0.54.1...v0.54.2)
 
 <sup>Released on **2023-08-16**</sup>
