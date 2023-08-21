@@ -123,7 +123,7 @@
     "i18next-browser-languagedetector": "^7",
     "i18next-resources-for-ts": "^1",
     "jsdom": "^22",
-    "lint-staged": "^13",
+    "lint-staged": "^14",
     "next-pwa": "^5",
     "node-fetch": "^3",
     "prettier": "^2",
