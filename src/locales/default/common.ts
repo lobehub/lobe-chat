@@ -78,6 +78,7 @@ export default {
     defaultTitle: '默认话题',
     saveCurrentMessages: '将当前会话保存为话题',
     searchPlaceholder: '搜索话题...',
+    title: '话题',
   },
   updateAgent: '更新助理信息',
   updatePrompt: '更新提示词',

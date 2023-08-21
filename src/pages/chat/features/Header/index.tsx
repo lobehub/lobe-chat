@@ -1,7 +1,16 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
-import { ActionIcon, Avatar, ChatHeader, ChatHeaderTitle, Tag } from '@lobehub/ui';
+import {
+  ActionIcon,
+  Avatar,
+  ChatHeader,
+  ChatHeaderTitle,
+  MobileNavBar,
+  MobileNavBarTitle,
+  Tag,
+} from '@lobehub/ui';
 import { Skeleton } from 'antd';
-import { PanelRightClose, PanelRightOpen, Settings } from 'lucide-react';
+import { useResponsive } from 'antd-style';
+import { LayoutList, PanelRightClose, PanelRightOpen, Settings } from 'lucide-react';
 import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +22,8 @@ import { agentSelectors, useSessionChatInit, useSessionStore } from '@/store/ses
 
 import PluginTag from './PluginTag';
 
-const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
+const Header = memo<{ mobile?: boolean; settings?: boolean }>(({ settings = true }) => {
+  const { mobile } = useResponsive();
   const init = useSessionChatInit();
 
   const { t } = useTranslation('common');
@@ -37,6 +47,28 @@ const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const displayDesc = isInbox ? t('inbox.desc') : description;
+
+  if (mobile)
+    return (
+      <MobileNavBar
+        center={<MobileNavBarTitle desc={model} title={displayTitle} />}
+        onBackClick={() => Router.back()}
+        right={
+          <>
+            <ActionIcon icon={LayoutList} onClick={() => toggleConfig()} />
+            {settings && (
+              <ActionIcon
+                icon={Settings}
+                onClick={() => {
+                  Router.push(`/chat/${id}/setting`);
+                }}
+              />
+            )}
+          </>
+        }
+        showBackButton
+      />
+    );
 
   return (
     <ChatHeader

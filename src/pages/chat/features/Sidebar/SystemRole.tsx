@@ -44,7 +44,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const SystemRole = memo(() => {
+const SystemRole = memo<{ mobile?: boolean }>(() => {
   const [openModal, setOpenModal] = useState(false);
 
   const { styles } = useStyles();
@@ -62,7 +62,7 @@ const SystemRole = memo(() => {
           <ActionIcon
             icon={Edit}
             onClick={() => setOpenModal(true)}
-            size="small"
+            size={'small'}
             title={t('edit')}
           />
         }
