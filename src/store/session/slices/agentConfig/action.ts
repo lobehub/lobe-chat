@@ -34,22 +34,21 @@ export interface AgentAction {
    * @returns 一个 Promise，用于异步操作完成后的处理
    */
   autocompleteAgentTitle: (id: string) => Promise<void>;
-
   autocompleteMeta: (key: keyof MetaData) => void;
+
   /**
    * 自动完成会话代理元数据
    * @param id - 代理的 ID
    */
   autocompleteSessionAgentMeta: (id: string, replace?: boolean) => void;
-
   /**
    * 内部更新代理元数据
    * @param id - 代理的 ID
    * @returns 任意类型的返回值
    */
   internalUpdateAgentMeta: (id: string) => any;
-  toggleAgentPlugin: (pluginId: string) => void;
 
+  toggleAgentPlugin: (pluginId: string, checked: boolean) => void;
   /**
    * 更新代理配置
    * @param config - 部分 LobeAgentConfig 的配置
@@ -191,7 +190,6 @@ export const createAgentSlice: StateCreator<
       get().dispatchSession({ id, key, type: 'updateSessionMeta', value });
     };
   },
-
   toggleAgentPlugin: (id: string) => {
     const { activeId } = get();
     const session = sessionSelectors.currentSession(get());
@@ -212,7 +210,6 @@ export const createAgentSlice: StateCreator<
 
     get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
   },
-
   updateAgentConfig: (config) => {
     const { activeId } = get();
     const session = sessionSelectors.currentSession(get());
@@ -220,7 +217,6 @@ export const createAgentSlice: StateCreator<
 
     get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
   },
-
   updateAgentMeta: (meta) => {
     const { activeId } = get();
     const session = sessionSelectors.currentSession(get());

@@ -8,7 +8,8 @@ import { PropsWithChildren, memo, useCallback, useEffect } from 'react';
 
 import { createI18nNext } from '@/locales/create';
 import { useGlobalStore, useOnFinishHydrationGlobal } from '@/store/global';
-import { useSessionStore } from '@/store/session';
+import { usePluginStore } from '@/store/plugin';
+import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
 import { GlobalStyle } from '@/styles';
 
 import { useStyles } from './style';
@@ -24,6 +25,10 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
     });
   });
 
+  useOnFinishHydrationSession((s) => {
+    usePluginStore.getState().checkLocalEnabledPlugins(s.sessions);
+  });
+
   return (
     <ConfigProvider locale={Zh_CN}>
       <App className={styles.bg}>{children}</App>
@@ -32,20 +37,20 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
 });
 
 export default memo(({ children }: PropsWithChildren) => {
+  useEffect(() => {
+    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
+    useSessionStore.persist.rehydrate();
+    useGlobalStore.persist.rehydrate();
+    usePluginStore.persist.rehydrate();
+  }, []);
+
   const themeMode = useGlobalStore((s) => s.settings.themeMode);
   const [primaryColor, neutralColor] = useGlobalStore((s) => [
     s.settings.primaryColor,
     s.settings.neutralColor,
   ]);
-
   const { browserPrefers } = useThemeMode();
   const isDarkMode = themeMode === 'auto' ? browserPrefers === 'dark' : themeMode === 'dark';
-
-  useEffect(() => {
-    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
-    useSessionStore.persist.rehydrate();
-    useGlobalStore.persist.rehydrate();
-  }, []);
 
   const genCustomToken: any = useCallback(
     () => lobeCustomTheme({ isDarkMode, neutralColor, primaryColor }),

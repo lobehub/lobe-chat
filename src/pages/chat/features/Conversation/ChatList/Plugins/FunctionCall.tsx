@@ -6,7 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { PluginsMap } from '@/plugins';
+import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { OpenAIFunctionCall } from '@/types/chatMessage';
 
 import PluginResult from './PluginResultRender';
@@ -22,11 +22,10 @@ const FunctionCall = memo<FunctionCallProps>(({ function_call, loading, content 
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
   const [open, setOpen] = useState(false);
+  const item = usePluginStore(pluginSelectors.getPluginMetaByName(function_call?.name || ''));
 
-  const plugin = PluginsMap[function_call?.name || ''];
-
-  const avatar = plugin?.avatar ? (
-    <Avatar avatar={plugin?.avatar} size={32} />
+  const avatar = item?.meta.avatar ? (
+    <Avatar avatar={item?.meta.avatar} size={32} />
   ) : (
     <Icon icon={LucideToyBrick} />
   );

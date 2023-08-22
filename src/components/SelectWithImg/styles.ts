@@ -8,13 +8,14 @@ export const useStyles = createStyles(({ css, token, cx }) => {
     }
   `;
 
-  const img = cx(css`
-    box-shadow: inset 0 0 0 2px ${token.colorSplit};
-    transition: all 100ms ${token.motionEaseOut};
-    border-radius: ${token.borderRadius}px;
-
-    ${hover}
-  `);
+  const img = cx(
+    css`
+      border-radius: ${token.borderRadius}px;
+      box-shadow: inset 0 0 0 2px ${token.colorSplit};
+      transition: all 100ms ${token.motionEaseOut};
+    `,
+    hover,
+  );
 
   return {
     active: css`

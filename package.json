@@ -63,6 +63,7 @@
   "dependencies": {
     "@ant-design/colors": "^7",
     "@ant-design/icons": "^5",
+    "@cfworker/json-schema": "^1.12.7",
     "@emoji-mart/data": "^1",
     "@emoji-mart/react": "^1",
     "@icons-pack/react-simple-icons": "^8",
@@ -93,6 +94,7 @@
     "react-layout-kit": "^1.7.1",
     "serpapi": "^2",
     "swr": "^2",
+    "systemjs": "^6.14.2",
     "ts-md5": "^1",
     "use-merge-value": "^1",
     "uuid": "^9",
@@ -111,6 +113,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/systemjs": "^6.13.1",
     "@types/testing-library__jest-dom": "^6",
     "@types/uuid": "^9",
     "@umijs/lint": "^4",

@@ -1,4 +1,3 @@
-export interface OpenAIPluginPayload {
-  arguments: string;
-  name: string;
-}
+import { LobeChatPlugin } from '@lobehub/chat-plugin-sdk';
+
+export type PluginManifestMap = Record<string, LobeChatPlugin>;

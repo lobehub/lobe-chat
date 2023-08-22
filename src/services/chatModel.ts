@@ -1,7 +1,9 @@
 import { merge } from 'lodash-es';
+import { ChatCompletionFunctions } from 'openai-edge/types/api';
 
 import { LOBE_CHAT_ACCESS_CODE, OPENAI_API_KEY_HEADER_KEY, OPENAI_END_POINT } from '@/const/fetch';
 import { useGlobalStore } from '@/store/global';
+import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { initialLobeAgentConfig } from '@/store/session/initialState';
 import type { OpenAIStreamPayload } from '@/types/openai';
 
@@ -15,7 +17,7 @@ interface FetchChatModelOptions {
  * 专门用于对话的 fetch
  */
 export const fetchChatModel = (
-  params: Partial<OpenAIStreamPayload>,
+  { plugins: enabledPlugins, ...params }: Partial<OpenAIStreamPayload>,
   options?: FetchChatModelOptions,
 ) => {
   const payload = merge(
@@ -26,9 +28,16 @@ export const fetchChatModel = (
     },
     params,
   );
+  // ============  1. 前置处理 functions   ============ //
+
+  const filterFunctions: ChatCompletionFunctions[] = pluginSelectors.enabledSchema(enabledPlugins)(
+    usePluginStore.getState(),
+  );
+
+  const functions = filterFunctions.length === 0 ? undefined : filterFunctions;
 
   return fetch(URLS.openai, {
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, functions }),
     headers: {
       'Content-Type': 'application/json',
       [LOBE_CHAT_ACCESS_CODE]: useGlobalStore.getState().settings.password || '',
