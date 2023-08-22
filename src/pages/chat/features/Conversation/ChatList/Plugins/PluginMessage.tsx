@@ -41,7 +41,7 @@ const PluginMessage = memo<FunctionMessageProps>(
       );
     }
 
-    if (!manifest.ui?.url) return;
+    if (!manifest?.ui?.url) return;
 
     return (
       <CustomRender content={JSON.parse(content)} name={name || 'unknown'} url={manifest.ui?.url} />
