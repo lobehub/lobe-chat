@@ -8,7 +8,7 @@ import { PropsWithChildren, memo, useCallback, useEffect } from 'react';
 
 import { createI18nNext } from '@/locales/create';
 import { useGlobalStore, useOnFinishHydrationGlobal } from '@/store/global';
-import { useSessionStore } from '@/store/session';
+import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
 import { GlobalStyle } from '@/styles';
 
 import { useStyles } from './style';
@@ -22,6 +22,10 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
     i18n.then(() => {
       changeLanguage(state.settings.language);
     });
+  });
+
+  useOnFinishHydrationSession((s) => {
+    s.checkLocalEnabledPlugins();
   });
 
   return (

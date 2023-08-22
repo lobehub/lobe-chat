@@ -1,14 +1,14 @@
 import { Avatar, Form, ItemGroup } from '@lobehub/ui';
-import { useWhyDidYouUpdate } from 'ahooks';
 import { Skeleton, Switch } from 'antd';
 import { createStyles } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { ToyBrick } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useSessionStore } from '@/store/session';
-import { AgentAction } from '@/store/session/slices/agentConfig';
+import { PluginAction } from '@/store/session/slices/plugin';
 import { LobeAgentConfig } from '@/types/session';
 
 const useStyles = createStyles(({ css }) => ({
@@ -21,6 +21,7 @@ const useStyles = createStyles(({ css }) => ({
     li {
       height: 14px !important;
     }
+
     li + li {
       margin-block-start: 12px !important;
     }
@@ -29,16 +30,15 @@ const useStyles = createStyles(({ css }) => ({
 
 export interface AgentPluginProps {
   config: LobeAgentConfig;
-  updateConfig: AgentAction['toggleAgentPlugin'];
+  updateConfig: PluginAction['toggleAgentPlugin'];
 }
 
 const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
   const useFetchPluginList = useSessionStore((s) => s.useFetchPluginList);
+  const pluginManifestLoading = useSessionStore((s) => s.pluginManifestLoading, isEqual);
   const { data } = useFetchPluginList();
-
-  useWhyDidYouUpdate('AgentPlugin', { config, updateConfig });
 
   const plugin: ItemGroup = useMemo(() => {
     let children;
@@ -70,8 +70,14 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
           avatar: <Avatar avatar={item.meta.avatar} />,
           children: (
             <Switch
-              checked={!config.plugins ? false : config.plugins.includes(item.name)}
-              onChange={() => updateConfig(item.name)}
+              checked={
+                // 如果在加载中，说明激活了
+                pluginManifestLoading[item.name] || !config.plugins
+                  ? false
+                  : config.plugins.includes(item.name)
+              }
+              loading={pluginManifestLoading[item.name]}
+              onChange={(checked) => updateConfig(item.name, checked)}
             />
           ),
           desc: item.meta?.description,
@@ -85,7 +91,7 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
       icon: ToyBrick,
       title: t('settingPlugin.title'),
     };
-  }, [config, data?.plugins]);
+  }, [config, data?.plugins, pluginManifestLoading]);
 
   return <Form items={[plugin]} {...FORM_STYLE} />;
 });

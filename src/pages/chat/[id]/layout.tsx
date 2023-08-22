@@ -7,8 +7,8 @@ import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
 import ChatLayout from '../layout';
 
 const Layout = memo<PropsWithChildren>(({ children }) => {
-  const [activeSession, toggleTopic] = useSessionStore((s) => {
-    return [s.activeSession, s.toggleTopic];
+  const [activeSession, toggleTopic, useFetchPluginList] = useSessionStore((s) => {
+    return [s.activeSession, s.toggleTopic, s.useFetchPluginList];
   }, shallow);
 
   const router = useRouter();
@@ -23,6 +23,8 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
     // 将话题重置为默认值
     toggleTopic();
   }, [id]);
+
+  useFetchPluginList();
 
   return <ChatLayout>{children}</ChatLayout>;
 });
