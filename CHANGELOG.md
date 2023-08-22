@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.55.1](https://github.com/lobehub/lobe-chat/compare/v0.55.0...v0.55.1)
+
+<sup>Released on **2023-08-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor plugin api with @lobehub/chat-plugins-gateway.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor plugin api with @lobehub/chat-plugins-gateway, closes [#100](https://github.com/lobehub/lobe-chat/issues/100) ([b88d0db](https://github.com/lobehub/lobe-chat/commit/b88d0db))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.55.0](https://github.com/lobehub/lobe-chat/compare/v0.54.4...v0.55.0)
 
 <sup>Released on **2023-08-22**</sup>
