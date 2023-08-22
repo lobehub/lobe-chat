@@ -37,20 +37,20 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
 });
 
 export default memo(({ children }: PropsWithChildren) => {
+  useEffect(() => {
+    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
+    useSessionStore.persist.rehydrate();
+    useGlobalStore.persist.rehydrate();
+    usePluginStore.persist.rehydrate();
+  }, []);
+
   const themeMode = useGlobalStore((s) => s.settings.themeMode);
   const [primaryColor, neutralColor] = useGlobalStore((s) => [
     s.settings.primaryColor,
     s.settings.neutralColor,
   ]);
-
   const { browserPrefers } = useThemeMode();
   const isDarkMode = themeMode === 'auto' ? browserPrefers === 'dark' : themeMode === 'dark';
-
-  useEffect(() => {
-    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
-    useSessionStore.persist.rehydrate();
-    useGlobalStore.persist.rehydrate();
-  }, []);
 
   const genCustomToken: any = useCallback(
     () => lobeCustomTheme({ isDarkMode, neutralColor, primaryColor }),
