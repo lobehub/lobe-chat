@@ -2,6 +2,62 @@
 
 # Changelog
 
+## [Version 0.55.0](https://github.com/lobehub/lobe-chat/compare/v0.54.4...v0.55.0)
+
+<sup>Released on **2023-08-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 将网关实现代码集成进 Chat 本体, 抽取插件为独立 store, 重构 openai 接口调用逻辑，将插件 schema 开启关闭逻辑与接口解耦, 重构插件列表获取逻辑，进而完全移除 plugins 目录.
+
+#### ✨ Features
+
+- **misc**: 初步完成插件市场动态加载全链路, 实现插件组件的动态加载.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix error, 修正无法正常开启插件的问题, 修正测试, 补充插件 store 的水合逻辑.
+
+#### 💄 Styles
+
+- **misc**: 完成插件市场 loading 态样式.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 将网关实现代码集成进 Chat 本体 ([17e8161](https://github.com/lobehub/lobe-chat/commit/17e8161))
+- **misc**: 抽取插件为独立 store ([12b7e7d](https://github.com/lobehub/lobe-chat/commit/12b7e7d))
+- **misc**: 重构 openai 接口调用逻辑，将插件 schema 开启关闭逻辑与接口解耦 ([5aa886e](https://github.com/lobehub/lobe-chat/commit/5aa886e))
+- **misc**: 重构插件列表获取逻辑，进而完全移除 plugins 目录 ([10055e1](https://github.com/lobehub/lobe-chat/commit/10055e1))
+
+#### What's improved
+
+- **misc**: 初步完成插件市场动态加载全链路 ([bc5e40f](https://github.com/lobehub/lobe-chat/commit/bc5e40f))
+- **misc**: 实现插件组件的动态加载 ([04dbab2](https://github.com/lobehub/lobe-chat/commit/04dbab2))
+
+#### What's fixed
+
+- **misc**: Fix error ([fbeec75](https://github.com/lobehub/lobe-chat/commit/fbeec75))
+- **misc**: 修正无法正常开启插件的问题 ([b3e9090](https://github.com/lobehub/lobe-chat/commit/b3e9090))
+- **misc**: 修正测试 ([001de5b](https://github.com/lobehub/lobe-chat/commit/001de5b))
+- **misc**: 补充插件 store 的水合逻辑 ([bfb649b](https://github.com/lobehub/lobe-chat/commit/bfb649b))
+
+#### Styles
+
+- **misc**: 完成插件市场 loading 态样式 ([8009691](https://github.com/lobehub/lobe-chat/commit/8009691))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.54.4](https://github.com/lobehub/lobe-chat/compare/v0.54.3...v0.54.4)
 
 <sup>Released on **2023-08-21**</sup>
