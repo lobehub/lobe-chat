@@ -338,7 +338,21 @@ describe('organizeChats', () => {
 
         session.chats[message.id] = message;
 
-        const result = organizeChats(session, params);
+        const result = organizeChats(session, {
+          ...params,
+          pluginList: [
+            {
+              name: 'realtimeWeather',
+              meta: {
+                avatar: '🧩',
+              },
+              createAt: 'abc',
+              manifest: '',
+              homepage: '',
+              schemaVersion: 'v1',
+            },
+          ],
+        });
         const meta = result[3].meta;
 
         expect(meta.avatar).toBe('🧩');
