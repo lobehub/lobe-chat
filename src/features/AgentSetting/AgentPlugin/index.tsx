@@ -36,7 +36,10 @@ export interface AgentPluginProps {
 const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
-  const useFetchPluginList = usePluginStore((s) => s.useFetchPluginList);
+  const [useFetchPluginList, fetchPluginManifest] = usePluginStore((s) => [
+    s.useFetchPluginList,
+    s.fetchPluginManifest,
+  ]);
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
   const { data } = useFetchPluginList();
 
@@ -77,7 +80,12 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
                   : config.plugins.includes(item.name)
               }
               loading={pluginManifestLoading[item.name]}
-              onChange={(checked) => updateConfig(item.name, checked)}
+              onChange={(checked) => {
+                updateConfig(item.name, checked);
+                if (checked) {
+                  fetchPluginManifest(item.name);
+                }
+              }}
             />
           ),
           desc: item.meta?.description,
