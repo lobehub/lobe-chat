@@ -68,6 +68,7 @@
     "@emoji-mart/react": "^1",
     "@icons-pack/react-simple-icons": "^8",
     "@lobehub/chat-plugin-sdk": "latest",
+    "@lobehub/chat-plugins-gateway": "^1.2.2",
     "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
