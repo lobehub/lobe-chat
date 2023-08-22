@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
+import { usePluginStore } from '@/store/plugin';
 import { ChatMessage } from '@/types/chatMessage';
 
 import CustomRender from './CustomRender';
@@ -20,7 +20,7 @@ const PluginMessage = memo<FunctionMessageProps>(
   }) => {
     const { t } = useTranslation('plugin');
 
-    const manifest = useSessionStore((s) => s.pluginManifestMap[name || '']);
+    const manifest = usePluginStore((s) => s.pluginManifestMap[name || '']);
     let isJSON = true;
     try {
       JSON.parse(content);

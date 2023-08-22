@@ -1,8 +1,8 @@
-import { PluginState } from './initialState';
+import { PluginStoreState } from './initialState';
 
-export const enabledSchema =
+const enabledSchema =
   (enabledPlugins: string[] = []) =>
-  (s: PluginState) => {
+  (s: PluginStoreState) => {
     return Object.values(s.pluginManifestMap)
       .filter((p) => {
         // 如果不存在 enabledPlugins，那么全部不启用
@@ -14,6 +14,10 @@ export const enabledSchema =
       .map((i) => i.schema);
   };
 
+const getPluginMetaByName = (name: string) => (s: PluginStoreState) =>
+  s.pluginList?.find((p) => p.name === name);
+
 export const pluginSelectors = {
   enabledSchema,
+  getPluginMetaByName,
 };

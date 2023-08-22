@@ -3,7 +3,7 @@ import { ChatCompletionFunctions } from 'openai-edge/types/api';
 
 import { LOBE_CHAT_ACCESS_CODE, OPENAI_API_KEY_HEADER_KEY, OPENAI_END_POINT } from '@/const/fetch';
 import { useGlobalStore } from '@/store/global';
-import { pluginSelectors, useSessionStore } from '@/store/session';
+import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { initialLobeAgentConfig } from '@/store/session/initialState';
 import type { OpenAIStreamPayload } from '@/types/openai';
 
@@ -31,7 +31,7 @@ export const fetchChatModel = (
   // ============  1. 前置处理 functions   ============ //
 
   const filterFunctions: ChatCompletionFunctions[] = pluginSelectors.enabledSchema(enabledPlugins)(
-    useSessionStore.getState(),
+    usePluginStore.getState(),
   );
 
   const functions = filterFunctions.length === 0 ? undefined : filterFunctions;

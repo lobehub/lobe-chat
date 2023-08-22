@@ -10,11 +10,11 @@ import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { getPluginList } from '@/services/plugin';
+import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { SessionStore } from '../../store';
-import { sessionSelectors } from '../session/selectors';
 import { PluginDispatch, pluginManifestReducer } from './reducers/manifest';
+import { PluginStore } from './store';
 
 const t = setNamespace('plugin');
 
@@ -22,22 +22,21 @@ const t = setNamespace('plugin');
  * 代理行为接口
  */
 export interface PluginAction {
-  checkLocalEnabledPlugins: () => void;
+  checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
   fetchPluginManifest: (name: string) => Promise<void>;
-  toggleAgentPlugin: (pluginId: string, checked: boolean) => void;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
   useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
 }
 
 export const createPluginSlice: StateCreator<
-  SessionStore,
+  PluginStore,
   [['zustand/devtools', never]],
   [],
   PluginAction
 > = (set, get) => ({
-  checkLocalEnabledPlugins: async () => {
-    const { sessions, fetchPluginManifest } = get();
+  checkLocalEnabledPlugins: async (sessions) => {
+    const { fetchPluginManifest } = get();
 
     let enabledPlugins: string[] = [];
 
@@ -104,32 +103,6 @@ export const createPluginSlice: StateCreator<
     get().dispatchPluginManifest({ id: plugin.name, plugin: data, type: 'addManifest' });
   },
 
-  toggleAgentPlugin: async (id: string, checked) => {
-    const { activeId, fetchPluginManifest } = get();
-    const session = sessionSelectors.currentSession(get());
-    if (!activeId || !session) return;
-
-    console.log(checked);
-
-    if (checked) {
-      await fetchPluginManifest(id);
-    }
-
-    const config = produce(session.config, (draft) => {
-      if (draft.plugins === undefined) {
-        draft.plugins = [id];
-      } else {
-        const plugins = draft.plugins;
-        if (plugins.includes(id)) {
-          plugins.splice(plugins.indexOf(id), 1);
-        } else {
-          plugins.push(id);
-        }
-      }
-    });
-
-    get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
-  },
   updateManifestLoadingState: (key, value) => {
     set(
       produce((draft) => {

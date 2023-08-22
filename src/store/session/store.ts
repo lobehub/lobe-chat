@@ -8,28 +8,21 @@ import { isDev } from '@/utils/env';
 import { SessionStoreState, initialState } from './initialState';
 import { AgentAction, createAgentSlice } from './slices/agentConfig/action';
 import { ChatAction, createChatSlice } from './slices/chat/actions';
-import { PluginAction, createPluginSlice } from './slices/plugin/action';
 import { SessionAction, createSessionSlice } from './slices/session/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type SessionStore = SessionAction &
-  AgentAction &
-  ChatAction &
-  SessionStoreState &
-  PluginAction;
-
+export type SessionStore = SessionAction & AgentAction & ChatAction & SessionStoreState;
 const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createAgentSlice(...parameters),
   ...createSessionSlice(...parameters),
   ...createChatSlice(...parameters),
-  ...createPluginSlice(...parameters),
 });
 
 //  ===============  persist 本地缓存中间件配置 ============ //
 
-type SessionPersist = Pick<SessionStore, 'sessions' | 'inbox' | 'pluginList'>;
+type SessionPersist = Pick<SessionStore, 'sessions' | 'inbox'>;
 
 const LOBE_CHAT = 'LOBE_CHAT';
 
@@ -38,7 +31,6 @@ const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
 
   partialize: (s) => ({
     inbox: s.inbox,
-    pluginList: s.pluginList,
     sessions: s.sessions,
   }),
 

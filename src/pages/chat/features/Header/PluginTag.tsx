@@ -5,7 +5,7 @@ import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSessionStore } from '@/store/session';
+import { usePluginStore } from '@/store/plugin';
 
 export interface PluginTagProps {
   plugins: string[];
@@ -14,7 +14,8 @@ export interface PluginTagProps {
 const PluginTag = memo<PluginTagProps>(({ plugins }) => {
   const { t } = useTranslation('plugin');
 
-  const list = useSessionStore((s) => s.pluginList);
+  const list = usePluginStore((s) => s.pluginList);
+
   if (plugins.length === 0) return null;
 
   const items: MenuProps['items'] = plugins.map((id) => {

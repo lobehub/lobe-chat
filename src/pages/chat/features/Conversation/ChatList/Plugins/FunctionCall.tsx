@@ -6,7 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
+import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { OpenAIFunctionCall } from '@/types/chatMessage';
 
 import PluginResult from './PluginResultRender';
@@ -22,7 +22,7 @@ const FunctionCall = memo<FunctionCallProps>(({ function_call, loading, content 
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
   const [open, setOpen] = useState(false);
-  const item = useSessionStore((s) => s.pluginList?.find((p) => p.name === function_call?.name));
+  const item = usePluginStore(pluginSelectors.getPluginMetaByName(function_call?.name || ''));
 
   const avatar = item?.meta.avatar ? (
     <Avatar avatar={item?.meta.avatar} size={32} />

@@ -2,13 +2,15 @@ import { useRouter } from 'next/router';
 import { PropsWithChildren, memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
+import { usePluginStore } from '@/store/plugin';
 import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
 
 import ChatLayout from '../layout';
 
 const Layout = memo<PropsWithChildren>(({ children }) => {
-  const [activeSession, toggleTopic, useFetchPluginList] = useSessionStore((s) => {
-    return [s.activeSession, s.toggleTopic, s.useFetchPluginList];
+  const useFetchPluginList = usePluginStore((s) => s.useFetchPluginList);
+  const [activeSession, toggleTopic] = useSessionStore((s) => {
+    return [s.activeSession, s.toggleTopic];
   }, shallow);
 
   const router = useRouter();

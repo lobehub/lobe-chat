@@ -7,8 +7,8 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { useSessionStore } from '@/store/session';
-import { PluginAction } from '@/store/session/slices/plugin';
+import { usePluginStore } from '@/store/plugin';
+import { AgentAction } from '@/store/session/slices/agentConfig';
 import { LobeAgentConfig } from '@/types/session';
 
 const useStyles = createStyles(({ css }) => ({
@@ -30,14 +30,14 @@ const useStyles = createStyles(({ css }) => ({
 
 export interface AgentPluginProps {
   config: LobeAgentConfig;
-  updateConfig: PluginAction['toggleAgentPlugin'];
+  updateConfig: AgentAction['toggleAgentPlugin'];
 }
 
 const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
-  const useFetchPluginList = useSessionStore((s) => s.useFetchPluginList);
-  const pluginManifestLoading = useSessionStore((s) => s.pluginManifestLoading, isEqual);
+  const useFetchPluginList = usePluginStore((s) => s.useFetchPluginList);
+  const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
   const { data } = useFetchPluginList();
 
   const plugin: ItemGroup = useMemo(() => {
