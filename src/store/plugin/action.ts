@@ -5,7 +5,7 @@ import {
 } from '@lobehub/chat-plugin-sdk';
 import { message } from 'antd';
 import { produce } from 'immer';
-import { uniq } from 'lodash-es';
+import { merge, uniq } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -27,6 +27,7 @@ export interface PluginAction {
   dispatchPluginManifest: (payload: PluginDispatch) => void;
   fetchPluginManifest: (name: string) => Promise<void>;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
+  updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
   useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
 }
 
@@ -110,6 +111,16 @@ export const createPluginSlice: StateCreator<
       }),
       false,
       t('updateManifestLoadingState'),
+    );
+  },
+
+  updatePluginSettings: (id, settings) => {
+    set(
+      produce((draft) => {
+        draft.pluginsSettings[id] = merge({}, draft.pluginsSettings[id], settings);
+      }),
+      false,
+      t('updatePluginSettings'),
     );
   },
   useFetchPluginList: () =>

@@ -44,12 +44,14 @@ export interface AgentPluginProps {
 const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
-  const [useFetchPluginList, fetchPluginManifest] = usePluginStore((s) => [
+  const [useFetchPluginList, fetchPluginManifest, updatePluginSettings] = usePluginStore((s) => [
     s.useFetchPluginList,
     s.fetchPluginManifest,
+    s.updatePluginSettings,
   ]);
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
   const pluginManifestMap = usePluginStore((s) => s.pluginManifestMap, isEqual);
+  const pluginsSettings = usePluginStore((s) => s.pluginsSettings, isEqual);
   const { data } = useFetchPluginList();
 
   const plugins = useSessionStore(agentSelectors.currentAgentPlugins);
@@ -114,16 +116,23 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
           if (!manifest.settings) return null;
 
           return {
-            // children: [],
             children: Object.entries(manifest.settings.properties).map(([name, i]) => ({
-              children: <PluginSettingRender format={i.format} type={i.type as any} />,
+              children: (
+                <PluginSettingRender
+                  defaultValue={pluginsSettings[identifier]?.[name]}
+                  format={i.format}
+                  onChange={(value) => {
+                    updatePluginSettings(identifier, { [name]: value });
+                  }}
+                  type={i.type as any}
+                />
+              ),
               desc: i.description && <Markdown className={styles.md}>{i.description}</Markdown>,
               label: i.title,
               name,
               tag: name,
             })),
             icon: ToyBrick,
-            // icon: <Avatar avatar={item.meta.avatar} />,
             title: t('settingPlugin.config', { id: item.meta.title || item.identifier }),
           };
         })
