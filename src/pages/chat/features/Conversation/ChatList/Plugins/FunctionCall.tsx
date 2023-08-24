@@ -20,7 +20,7 @@ export interface FunctionCallProps {
 }
 
 const FunctionCall = memo<FunctionCallProps>(
-  ({ arguments: requestArgs = '{}', command, loading, content, id = '' }) => {
+  ({ arguments: requestArgs = '{}', command, loading, content, id = 'unknown' }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
@@ -54,7 +54,7 @@ const FunctionCall = memo<FunctionCallProps>(
           ) : (
             avatar
           )}
-          {t(`plugins.${id ?? 'unknown'}` as any, { ns: 'plugin' })}
+          {t(`plugins.${id}` as any, { ns: 'plugin' })}
           <Icon icon={open ? LucideChevronUp : LucideChevronDown} />
         </Flexbox>
         {open && (
