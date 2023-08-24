@@ -19,7 +19,7 @@ const PluginTag = memo<PluginTagProps>(({ plugins }) => {
   if (plugins.length === 0) return null;
 
   const items: MenuProps['items'] = plugins.map((id) => {
-    const item = list?.find((p) => p.name === id);
+    const item = list?.find((p) => p.identifier === id);
     return {
       icon: (
         <Avatar avatar={item?.meta.avatar} size={24} style={{ marginLeft: -6, marginRight: 2 }} />

@@ -1,5 +1,5 @@
 import {
-  LobeChatPlugin,
+  LobeChatPluginManifest,
   LobeChatPluginsMarketIndex,
   pluginManifestSchema,
 } from '@lobehub/chat-plugin-sdk';
@@ -10,6 +10,7 @@ import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { getPluginList } from '@/services/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -51,7 +52,6 @@ export const createPluginSlice: StateCreator<
 
     await Promise.all(plugins.map((name) => fetchPluginManifest(name)));
 
-    console.log('fetched');
     set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
   },
   dispatchPluginManifest: (payload) => {
@@ -62,7 +62,7 @@ export const createPluginSlice: StateCreator<
   },
 
   fetchPluginManifest: async (name) => {
-    const plugin = get().pluginList.find((plugin) => plugin.name === name);
+    const plugin = pluginSelectors.getPluginMetaById(name)(get());
     // 1. 校验文件
 
     if (!plugin) return;
@@ -74,7 +74,7 @@ export const createPluginSlice: StateCreator<
 
     // 2. 发送请求
     get().updateManifestLoadingState(name, true);
-    let data: LobeChatPlugin | null;
+    let data: LobeChatPluginManifest | null;
 
     try {
       const res = await fetch(plugin.manifest);
@@ -100,7 +100,7 @@ export const createPluginSlice: StateCreator<
     }
 
     // 4. 存储 manifest 信息
-    get().dispatchPluginManifest({ id: plugin.name, plugin: data, type: 'addManifest' });
+    get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
   },
 
   updateManifestLoadingState: (key, value) => {

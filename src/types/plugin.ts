@@ -1,3 +1,3 @@
-import { LobeChatPlugin } from '@lobehub/chat-plugin-sdk';
+import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
-export type PluginManifestMap = Record<string, LobeChatPlugin>;
+export type PluginManifestMap = Record<string, LobeChatPluginManifest>;

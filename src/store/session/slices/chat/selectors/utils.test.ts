@@ -342,14 +342,16 @@ describe('organizeChats', () => {
           ...params,
           pluginList: [
             {
-              name: 'realtimeWeather',
+              identifier: 'realtimeWeather',
+              author: '123',
               meta: {
                 avatar: '🧩',
+                title: '天气预报',
               },
               createAt: 'abc',
               manifest: '',
               homepage: '',
-              schemaVersion: 'v1',
+              schemaVersion: 1,
             },
           ],
         });

@@ -38,11 +38,11 @@ export const organizeChats = (
       }
 
       case 'function': {
-        const plugin = (pluginList || []).find((m) => m.name === message.name);
+        const plugin = (pluginList || []).find((m) => m.identifier === message.name);
 
         return {
           avatar: '🧩',
-          title: plugin?.name || 'plugin-unknown',
+          title: plugin?.identifier || 'plugin-unknown',
         };
       }
     }

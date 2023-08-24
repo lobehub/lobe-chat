@@ -19,7 +19,7 @@ const createStore: StateCreator<PluginStore, [['zustand/devtools', never]]> = (.
 
 //  ===============  persist 本地缓存中间件配置 ============ //
 
-type SessionPersist = Pick<PluginStore, 'pluginList'>;
+type SessionPersist = Pick<PluginStore, 'pluginList' | 'pluginManifestMap'>;
 
 const storeName = 'LOBE_PLUGIN';
 
@@ -28,6 +28,7 @@ const persistOptions: PersistOptions<PluginStore, SessionPersist> = {
 
   partialize: (s) => ({
     pluginList: s.pluginList,
+    pluginManifestMap: s.pluginManifestMap,
   }),
 
   // 手动控制 Hydration ，避免 ssr 报错
