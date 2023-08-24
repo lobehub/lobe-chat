@@ -49,25 +49,28 @@ const List = () => {
 
   const renderMessage: RenderMessage = useCallback(
     (content, message: ChatMessage) => {
+      const id = message.plugin?.identifier || message.function_call?.name;
+      const command = message.plugin ?? message.function_call;
+      const args = command?.arguments;
+      const fcProps = {
+        arguments: args,
+        command,
+        content: message.content,
+        id,
+        loading: message.id === chatLoadingId,
+      };
+
       if (message.role === 'function')
         return (
           <Flexbox gap={12}>
-            <FunctionCall
-              content={message.content}
-              function_call={message.function_call}
-              loading={message.id === chatLoadingId}
-            />
+            <FunctionCall {...fcProps} />
             <PluginMessage loading={message.id === chatLoadingId} {...message} />
           </Flexbox>
         );
 
       if (message.role === 'assistant') {
         return isFunctionMessage(message.content) || !!message.function_call ? (
-          <FunctionCall
-            content={message.content}
-            function_call={message.function_call}
-            loading={message.id === chatLoadingId}
-          />
+          <FunctionCall {...fcProps} />
         ) : (
           content
         );

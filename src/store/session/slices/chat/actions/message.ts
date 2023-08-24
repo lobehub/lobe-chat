@@ -1,7 +1,9 @@
+import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT } from '@/const/message';
+import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { fetchChatModel } from '@/services/chatModel';
 import { fetchPlugin } from '@/services/plugin';
 import { SessionStore } from '@/store/session';
@@ -319,32 +321,30 @@ export const chatMessage: StateCreator<
     const message = session.chats[id];
     if (!message) return;
 
-    let payload: OpenAIFunctionCall = { name: '' };
+    let payload: PluginRequestPayload = { apiName: '', identifier: '' };
+    // 识别到内容是 function_call 的情况下
+    // 将 function_call 转换为 plugin request payload
     if (message.content) {
-      const { function_call } = JSON.parse(message.content);
-      dispatchMessage({ id, key: 'function_call', type: 'updateMessage', value: function_call });
+      const { function_call } = JSON.parse(message.content) as {
+        function_call: OpenAIFunctionCall;
+      };
+
+      const [identifier, apiName] = function_call.name.split(PLUGIN_SCHEMA_SEPARATOR);
+      payload = { apiName, arguments: function_call.arguments, identifier };
+
+      dispatchMessage({ id, key: 'plugin', type: 'updateMessage', value: payload });
       dispatchMessage({ id, key: 'content', type: 'updateMessage', value: '' });
-      payload = function_call;
     } else {
-      if (message.function_call) {
-        payload = message.function_call;
+      if (message.plugin) {
+        payload = message.plugin;
       }
     }
 
-    if (!payload.name) return;
+    if (!payload.apiName) return;
 
-    // const fid = nanoid();
     dispatchMessage({ id, key: 'role', type: 'updateMessage', value: 'function' });
-    dispatchMessage({ id, key: 'name', type: 'updateMessage', value: payload.name });
-    dispatchMessage({ id, key: 'function_call', type: 'updateMessage', value: payload });
-
-    // dispatchMessage({
-    //   id: id,
-    //   message: FUNCTION_LOADING,
-    //   parentId: message.,
-    //   role: 'function',
-    //   type: 'addMessage',
-    // });
+    dispatchMessage({ id, key: 'name', type: 'updateMessage', value: payload.identifier });
+    dispatchMessage({ id, key: 'plugin', type: 'updateMessage', value: payload });
 
     const abortController = toggleChatLoading(true, id);
     const data = await fetchPlugin(payload, { signal: abortController?.signal });

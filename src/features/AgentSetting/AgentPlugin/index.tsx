@@ -75,23 +75,23 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
             <Switch
               checked={
                 // 如果在加载中，说明激活了
-                pluginManifestLoading[item.name] || !config.plugins
+                pluginManifestLoading[item.identifier] || !config.plugins
                   ? false
-                  : config.plugins.includes(item.name)
+                  : config.plugins.includes(item.identifier)
               }
-              loading={pluginManifestLoading[item.name]}
+              loading={pluginManifestLoading[item.identifier]}
               onChange={(checked) => {
-                updateConfig(item.name, checked);
+                updateConfig(item.identifier, checked);
                 if (checked) {
-                  fetchPluginManifest(item.name);
+                  fetchPluginManifest(item.identifier);
                 }
               }}
             />
           ),
           desc: item.meta?.description,
-          label: t(`plugins.${item.name}` as any, { ns: 'plugin' }),
+          label: t(`plugins.${item.identifier}` as any, { ns: 'plugin' }),
           minWidth: undefined,
-          tag: item.name,
+          tag: item.identifier,
         }));
 
     return {

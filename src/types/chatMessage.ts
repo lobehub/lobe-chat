@@ -1,3 +1,5 @@
+import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
+
 import { ErrorType } from '@/types/fetch';
 
 import { LLMRoleType } from './llm';
@@ -33,10 +35,17 @@ export interface ChatMessage extends BaseDataModel {
     };
   } & Record<string, any>;
 
+  /**
+   * replace with plugin
+   * @deprecated
+   */
   function_call?: OpenAIFunctionCall;
   name?: string;
 
   parentId?: string;
+
+  plugin?: PluginRequestPayload;
+
   // 引用
   quotaId?: string;
   /**

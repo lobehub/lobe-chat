@@ -1,3 +1,5 @@
+import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
+
 import { PluginStoreState } from './initialState';
 
 const enabledSchema =
@@ -9,15 +11,21 @@ const enabledSchema =
         if (!enabledPlugins) return false;
 
         // 如果存在 enabledPlugins，那么只启用 enabledPlugins 中的插件
-        return enabledPlugins.includes(p.name);
+        return enabledPlugins.includes(p.identifier);
       })
-      .map((i) => i.schema);
+      .flatMap((manifest) =>
+        manifest.api.map((m) => ({
+          ...m,
+          // 将插件的 identifier 作为前缀，避免重复
+          name: manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + m.name,
+        })),
+      );
   };
 
-const getPluginMetaByName = (name: string) => (s: PluginStoreState) =>
-  s.pluginList?.find((p) => p.name === name);
+const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
+  s.pluginList?.find((p) => p.identifier === id);
 
 export const pluginSelectors = {
   enabledSchema,
-  getPluginMetaByName,
+  getPluginMetaById,
 };
