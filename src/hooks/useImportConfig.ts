@@ -1,12 +1,14 @@
 import { useMemo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
+import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
 import { importConfigFile } from '@/utils/config';
 
 export const useImportConfig = () => {
   const importSessions = useSessionStore((s) => s.importSessions);
   const importAppSettings = useGlobalStore((s) => s.importAppSettings);
+  const checkLocalEnabledPlugins = usePluginStore((s) => s.checkLocalEnabledPlugins);
 
   const importConfig = (info: any) => {
     importConfigFile(info, (config) => {
@@ -19,6 +21,9 @@ export const useImportConfig = () => {
         case 'sessions':
         case 'agents': {
           importSessions(config.state.sessions);
+
+          // 检查一下插件开启情况
+          checkLocalEnabledPlugins(config.state.sessions);
           break;
         }
 
@@ -26,6 +31,8 @@ export const useImportConfig = () => {
           importSessions(config.state.sessions);
           importAppSettings(config.state.settings);
 
+          // 检查一下插件开启情况
+          checkLocalEnabledPlugins(config.state.sessions);
           break;
         }
       }

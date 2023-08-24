@@ -52,7 +52,6 @@ export const createPluginSlice: StateCreator<
 
     await Promise.all(plugins.map((name) => fetchPluginManifest(name)));
 
-    console.log('fetched');
     set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
   },
   dispatchPluginManifest: (payload) => {
