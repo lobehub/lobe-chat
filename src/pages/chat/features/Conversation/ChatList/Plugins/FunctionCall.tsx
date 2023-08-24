@@ -54,7 +54,7 @@ const FunctionCall = memo<FunctionCallProps>(
           ) : (
             avatar
           )}
-          {t(`plugins.${id}` as any, { ns: 'plugin' })}
+          {t(`plugins.${id ?? 'unknown'}` as any, { ns: 'plugin' })}
           <Icon icon={open ? LucideChevronUp : LucideChevronDown} />
         </Flexbox>
         {open && (
