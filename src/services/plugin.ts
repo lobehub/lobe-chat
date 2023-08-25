@@ -3,6 +3,7 @@ import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { LOBE_PLUGIN_SETTINGS } from '@/const/fetch';
 import { PLUGINS_INDEX_URL } from '@/const/url';
 import { usePluginStore } from '@/store/plugin';
+import { getMessageError } from '@/utils/fetch';
 
 import { URLS } from './url';
 
@@ -29,6 +30,10 @@ export const fetchPlugin = async (
     method: 'POST',
     signal: options?.signal,
   });
+
+  if (!res.ok) {
+    throw await getMessageError(res);
+  }
 
   return await res.text();
 };
