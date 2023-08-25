@@ -7,12 +7,12 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { transformPluginSettings } from '@/features/PluginSettings';
+import PluginSettingRender from '@/features/PluginSettings/PluginSettingRender';
 import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
 import { AgentAction, agentSelectors } from '@/store/session/slices/agentConfig';
 import { LobeAgentConfig } from '@/types/session';
-
-import PluginSettingRender from './PluginSettingRender';
 
 const useStyles = createStyles(({ css, token }) => ({
   avatar: css`
@@ -116,21 +116,19 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
           if (!manifest.settings) return null;
 
           return {
-            children: Object.entries(manifest.settings.properties).map(([name, i]) => ({
+            children: transformPluginSettings(manifest.settings).map((item) => ({
+              ...item,
               children: (
                 <PluginSettingRender
-                  defaultValue={pluginsSettings[identifier]?.[name]}
-                  format={i.format}
+                  defaultValue={pluginsSettings[identifier]?.[item.name]}
+                  format={item.format}
                   onChange={(value) => {
-                    updatePluginSettings(identifier, { [name]: value });
+                    updatePluginSettings(identifier, { [item.name]: value });
                   }}
-                  type={i.type as any}
+                  type={item.type as any}
                 />
               ),
-              desc: i.description && <Markdown className={styles.md}>{i.description}</Markdown>,
-              label: i.title,
-              name,
-              tag: name,
+              desc: item.desc && <Markdown className={styles.md}>{item.desc}</Markdown>,
             })),
             icon: ToyBrick,
             title: t('settingPlugin.config', { id: item.meta.title || item.identifier }),
