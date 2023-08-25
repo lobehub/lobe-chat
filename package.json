@@ -130,7 +130,7 @@
     "lint-staged": "^14",
     "next-pwa": "^5",
     "node-fetch": "^3",
-    "prettier": "^2",
+    "prettier": "^3",
     "remark": "^14",
     "remark-cli": "^11",
     "semantic-release": "^21",
