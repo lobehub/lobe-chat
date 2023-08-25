@@ -2,7 +2,7 @@ import { t } from 'i18next';
 
 import { fetchChatModel } from '@/services/chatModel';
 import { ChatMessageError } from '@/types/chatMessage';
-import { ErrorResponse } from '@/types/fetch';
+import { ErrorResponse, ErrorType } from '@/types/fetch';
 
 export const getMessageError = async (response: Response) => {
   let chatMessageError: ChatMessageError;
@@ -19,7 +19,7 @@ export const getMessageError = async (response: Response) => {
     // 如果无法正常返回，说明是常规报错
     chatMessageError = {
       message: t(`response.${response.status}`),
-      type: response.status,
+      type: response.status as ErrorType,
     };
   }
 

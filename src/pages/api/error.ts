@@ -1,12 +1,12 @@
-import { ErrorResponse, ErrorType } from '@/types/fetch';
+import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
 
 const getStatus = (errorType: ErrorType) => {
   switch (errorType) {
-    case ErrorType.InvalidAccessCode: {
+    case ChatErrorType.InvalidAccessCode: {
       return 401;
     }
 
-    case ErrorType.OpenAIBizError: {
+    case ChatErrorType.OpenAIBizError: {
       return 577;
     }
   }

@@ -1,5 +1,5 @@
 import { getServerConfig } from '@/config/server';
-import { ErrorType } from '@/types/fetch';
+import { ChatErrorType } from '@/types/fetch';
 
 interface AuthConfig {
   accessCode?: string | null;
@@ -18,7 +18,7 @@ export const checkAuth = ({ apiKey, accessCode }: AuthConfig) => {
   if (!ACCESS_CODE) return { auth: true };
 
   if (accessCode !== ACCESS_CODE) {
-    return { auth: false, error: ErrorType.InvalidAccessCode };
+    return { auth: false, error: ChatErrorType.InvalidAccessCode };
   }
 
   return { auth: true };
