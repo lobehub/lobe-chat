@@ -15,7 +15,7 @@ interface OpenAIErrorResponse {
   error: OpenAIError;
 }
 
-const PluginError = memo<{ content: OpenAIErrorResponse; id: string }>(({ content, id }) => {
+const PluginError = memo<{ content: OpenAIErrorResponse; id: string }>(({ content }) => {
   const { styles } = useStyles();
 
   return (
