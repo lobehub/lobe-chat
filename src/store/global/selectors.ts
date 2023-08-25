@@ -11,10 +11,10 @@ const currentSettings = (s: GlobalStore) => merge({}, DEFAULT_SETTINGS, s.settin
 const currentDefaultAgent = (s: GlobalStore) => merge({}, DEFAULT_AGENT, s.settings.defaultAgent);
 
 const currentAgentConfig = (s: GlobalStore) =>
-  merge({}, DEFAULT_AGENT_CONFIG, s.settings.defaultAgent.config);
+  merge({}, DEFAULT_AGENT_CONFIG, currentDefaultAgent(s).config);
 
 const currentAgentMeta = (s: GlobalStore) =>
-  merge({}, DEFAULT_AGENT_META, s.settings.defaultAgent.meta);
+  merge({}, DEFAULT_AGENT_META, currentDefaultAgent(s).meta);
 
 export const exportSettings = (s: GlobalStore) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

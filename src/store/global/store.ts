@@ -3,6 +3,7 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
+import { DEFAULT_AGENT } from '@/const/settings';
 import { isDev } from '@/utils/env';
 
 import { type GlobalState, initialState } from './initialState';
@@ -25,6 +26,12 @@ const createStore: StateCreator<GlobalStore, [['zustand/devtools', never]]> = (.
 type GlobalPersist = Pick<GlobalStore, 'preference' | 'settings'>;
 
 const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
+  merge: (persistedState, currentState) => {
+    if (!(persistedState as GlobalPersist).settings.defaultAgent) {
+      currentState.settings.defaultAgent = DEFAULT_AGENT;
+    }
+    return currentState;
+  },
   name: 'LOBE_SETTINGS',
   partialize: (s) => ({
     preference: s.preference,
