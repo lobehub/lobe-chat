@@ -1,4 +1,4 @@
-import { ChatList, RenderErrorMessage, RenderMessage } from '@lobehub/ui';
+import { ChatList, RenderMessage } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,26 +11,13 @@ import {
   useSessionStore,
 } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
-import { ErrorType } from '@/types/fetch';
 import { isFunctionMessage } from '@/utils/message';
 
-import InvalidAccess from './Error/InvalidAccess';
-import OpenAiBizError from './Error/OpenAiBizError';
+import { renderErrorMessage } from './Error';
 import MessageExtra from './MessageExtra';
 import FunctionCall from './Plugins/FunctionCall';
 import PluginMessage from './Plugins/PluginMessage';
 import SkeletonList from './SkeletonList';
-
-const renderErrorMessage: RenderErrorMessage = (error, message) => {
-  switch (error.type as ErrorType) {
-    case 'InvalidAccessCode': {
-      return <InvalidAccess id={message.id} />;
-    }
-    case 'OpenAIBizError': {
-      return <OpenAiBizError content={(error as any).body} id={message.id} />;
-    }
-  }
-};
 
 const List = () => {
   const init = useSessionChatInit();

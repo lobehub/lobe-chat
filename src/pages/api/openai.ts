@@ -3,7 +3,7 @@ import { Configuration, OpenAIApi } from 'openai-edge';
 
 import { getServerConfig } from '@/config/server';
 import { createErrorResponse } from '@/pages/api/error';
-import { ErrorType } from '@/types/fetch';
+import { ChatErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
 
 // 创建 OpenAI 实例
@@ -55,7 +55,7 @@ export const createChatCompletion = async ({
     response = await openai.createChatCompletion(requestParams);
   } catch (error) {
     // 如果 await 超时报错，说明是 OpenAI 服务端的问题
-    return createErrorResponse(ErrorType.GatewayTimeout, { message: error });
+    return createErrorResponse(ChatErrorType.GatewayTimeout, { message: error });
   }
 
   // ============  4. 处理异常响应   ============ //
@@ -72,7 +72,7 @@ export const createChatCompletion = async ({
       error = { message: result };
     }
 
-    return createErrorResponse(ErrorType.OpenAIBizError, { ...error, endpoint });
+    return createErrorResponse(ChatErrorType.OpenAIBizError, { ...error, endpoint });
   }
 
   // ============  5. 发送正常相应   ============ //

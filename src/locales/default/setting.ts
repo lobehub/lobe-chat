@@ -128,6 +128,7 @@ export default {
     },
   },
   settingPlugin: {
+    config: '{{id}} 插件配置',
     title: '插件列表',
   },
   settingSystem: {

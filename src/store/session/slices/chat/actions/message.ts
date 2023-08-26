@@ -346,9 +346,18 @@ export const chatMessage: StateCreator<
     dispatchMessage({ id, key: 'name', type: 'updateMessage', value: payload.identifier });
     dispatchMessage({ id, key: 'plugin', type: 'updateMessage', value: payload });
 
-    const abortController = toggleChatLoading(true, id);
-    const data = await fetchPlugin(payload, { signal: abortController?.signal });
+    let data: string;
+    try {
+      const abortController = toggleChatLoading(true, id);
+      data = await fetchPlugin(payload, { signal: abortController?.signal });
+    } catch (error) {
+      dispatchMessage({ id, key: 'error', type: 'updateMessage', value: error });
+
+      data = '';
+    }
     toggleChatLoading(false);
+    // 如果报错则结束了
+    if (!data) return;
 
     dispatchMessage({ id, key: 'content', type: 'updateMessage', value: data });
 

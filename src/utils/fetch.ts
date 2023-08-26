@@ -2,7 +2,29 @@ import { t } from 'i18next';
 
 import { fetchChatModel } from '@/services/chatModel';
 import { ChatMessageError } from '@/types/chatMessage';
-import { ErrorResponse } from '@/types/fetch';
+import { ErrorResponse, ErrorType } from '@/types/fetch';
+
+export const getMessageError = async (response: Response) => {
+  let chatMessageError: ChatMessageError;
+
+  // 尝试取一波业务错误语义
+  try {
+    const data = (await response.json()) as ErrorResponse;
+    chatMessageError = {
+      body: data.body,
+      message: t(`response.${data.errorType}`),
+      type: data.errorType,
+    };
+  } catch {
+    // 如果无法正常返回，说明是常规报错
+    chatMessageError = {
+      message: t(`response.${response.status}`),
+      type: response.status as ErrorType,
+    };
+  }
+
+  return chatMessageError;
+};
 
 export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void;
@@ -19,23 +41,7 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
 
   // 如果不 ok 说明有请求错误
   if (!response.ok) {
-    let chatMessageError: ChatMessageError;
-
-    // 尝试取一波业务错误语义
-    try {
-      const data = (await response.json()) as ErrorResponse;
-      chatMessageError = {
-        body: data.body,
-        message: t(`response.${data.errorType}`),
-        type: data.errorType,
-      };
-    } catch {
-      // 如果无法正常返回，说明是常规报错
-      chatMessageError = {
-        message: t(`response.${response.status}`),
-        type: response.status,
-      };
-    }
+    const chatMessageError = await getMessageError(response);
 
     options.onErrorHandle?.(chatMessageError);
     return;

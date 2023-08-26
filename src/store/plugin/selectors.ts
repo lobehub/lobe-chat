@@ -25,7 +25,11 @@ const enabledSchema =
 const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
   s.pluginList?.find((p) => p.identifier === id);
 
+const getPluginManifestSettingsById = (id: string) => (s: PluginStoreState) =>
+  s.pluginManifestMap[id];
+
 export const pluginSelectors = {
   enabledSchema,
+  getPluginManifestSettingsById,
   getPluginMetaById,
 };

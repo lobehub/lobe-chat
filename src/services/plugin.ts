@@ -1,8 +1,8 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 
-import { LOBE_CHAT_ACCESS_CODE } from '@/const/fetch';
-import { PLUGINS_INDEX_URL } from '@/const/url';
-import { useGlobalStore } from '@/store/global';
+import { LOBE_PLUGIN_SETTINGS } from '@/const/fetch';
+import { usePluginStore } from '@/store/plugin';
+import { getMessageError } from '@/utils/fetch';
 
 import { URLS } from './url';
 
@@ -12,30 +12,27 @@ interface FetchChatModelOptions {
 }
 
 /**
- * 请求插件结果
+ * 请求插件结果´
  */
 export const fetchPlugin = async (
   params: PluginRequestPayload,
   options?: FetchChatModelOptions,
 ) => {
+  const settings = usePluginStore.getState().pluginsSettings?.[params.identifier];
+
   const res = await fetch(URLS.plugins, {
     body: JSON.stringify(params),
     headers: {
       'Content-Type': 'application/json',
-      [LOBE_CHAT_ACCESS_CODE]: useGlobalStore.getState().settings.password || '',
+      [LOBE_PLUGIN_SETTINGS]: JSON.stringify(settings) || '',
     },
     method: 'POST',
     signal: options?.signal,
   });
 
+  if (!res.ok) {
+    throw await getMessageError(res);
+  }
+
   return await res.text();
-};
-
-/**
- * 请求插件列表
- */
-export const getPluginList = async () => {
-  const res = await fetch(PLUGINS_INDEX_URL);
-
-  return res.json();
 };
