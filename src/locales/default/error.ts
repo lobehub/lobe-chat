@@ -36,7 +36,7 @@ export default {
     [PluginErrorType.PluginApiParamsError]:
       '很抱歉，该插件请求的入参校验未通过，请检查入参与 Api 描述信息是否匹配',
     [PluginErrorType.PluginSettingsInvalid]:
-      '很抱歉，该插件需要正确配置后才可以使用，请检查你的配置是否正确',
+      '该插件需要正确配置后才可以使用，请检查你的配置是否正确',
 
     [ChatErrorType.InvalidAccessCode]:
       '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
