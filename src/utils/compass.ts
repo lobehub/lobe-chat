@@ -83,11 +83,7 @@ export class StrCompressor {
       after += '=';
     }
 
-    return new Uint8Array(
-      atob(after)
-        .split('')
-        .map((c) => c.charCodeAt(0)),
-    );
+    return new Uint8Array([...atob(after)].map((c) => c.charCodeAt(0)));
   };
 }
 
