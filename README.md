@@ -23,8 +23,7 @@ Lobe Chat is an open-source chatbot client using OpenAI and Next.js
 [![stargazers][stargazers-shield]][stargazers-url]
 [![issues][issues-shield]][issues-url]
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Your%20OpenAI%20API%20Key&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat)
-
+[![Deploy with Vercel][deploy-button-image]][deploy-url]
 ![](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 </div>
@@ -54,7 +53,7 @@ If you want to deploy this service by yourself, you can follow the steps below.
 
 Click button below to deploy your private plugins' gateway.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Your%20OpenAI%20API%20Key&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat)
+[![Deploy with Vercel][deploy-button-image]][deploy-url]
 
 If you want to make some customization, you can add environment variable:
 
@@ -167,3 +166,8 @@ This project is [MIT](./LICENSE) licensed.
 
 [issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [issues-url]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
+
+<!-- deploy -->
+
+[deploy-button-image]: https://vercel.com/button
+[deploy-url]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20(Learn%20More)%20link.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
