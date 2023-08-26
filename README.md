@@ -129,7 +129,7 @@ This project is [MIT](./LICENSE) licensed.
 
 <!-- release -->
 
-[release-shield]: https://img.shields.io/npm/v/@lobehub/chat?label=%F0%9F%A4%AF%20NPM
+[release-shield]: https://img.shields.io/npm/v/@lobehub/chat?label=%F0%9F%A4%AF%20Chat
 [release-url]: https://www.npmjs.com/package/@lobehub/chat
 
 <!-- releaseDate -->
