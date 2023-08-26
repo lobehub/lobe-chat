@@ -178,12 +178,6 @@ export const chatMessage: StateCreator<
         if (isFunctionMessage(output)) {
           isFunctionCall = true;
         }
-
-        // 滚动到最后一条消息
-        const item = document.querySelector('#for-loading');
-        if (!item) return;
-
-        item.scrollIntoView({ behavior: 'smooth' });
       },
     });
 
