@@ -1,6 +1,5 @@
-import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
+import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 
-import { LOBE_PLUGIN_SETTINGS } from '@/const/fetch';
 import { usePluginStore } from '@/store/plugin';
 import { getMessageError } from '@/utils/fetch';
 
@@ -22,10 +21,7 @@ export const fetchPlugin = async (
 
   const res = await fetch(URLS.plugins, {
     body: JSON.stringify(params),
-    headers: {
-      'Content-Type': 'application/json',
-      [LOBE_PLUGIN_SETTINGS]: JSON.stringify(settings) || '',
-    },
+    headers: createHeadersWithPluginSettings(settings),
     method: 'POST',
     signal: options?.signal,
   });
