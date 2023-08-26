@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.60.2](https://github.com/lobehub/lobe-chat/compare/v0.60.1...v0.60.2)
+
+<sup>Released on **2023-08-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fetch plugin header error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fetch plugin header error ([fa4a0e1](https://github.com/lobehub/lobe-chat/commit/fa4a0e1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.60.1](https://github.com/lobehub/lobe-chat/compare/v0.60.0...v0.60.1)
 
 <sup>Released on **2023-08-26**</sup>
