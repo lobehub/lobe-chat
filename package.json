@@ -65,7 +65,7 @@
     "@ant-design/icons": "^5",
     "@emoji-mart/data": "^1",
     "@emoji-mart/react": "^1",
-    "@icons-pack/react-simple-icons": "^8",
+    "@icons-pack/react-simple-icons": "^9",
     "@lobehub/chat-plugin-sdk": "latest",
     "@lobehub/chat-plugins-gateway": "latest",
     "@lobehub/ui": "latest",
