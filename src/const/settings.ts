@@ -22,6 +22,7 @@ export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
 
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   displayMode: 'chat',
+  historyCount: 1,
   model: LanguageModel.GPT3_5,
   params: {
     frequency_penalty: 0,
