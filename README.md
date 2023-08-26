@@ -23,6 +23,8 @@ Lobe Chat is an open-source chatbot client using OpenAI and Next.js
 [![stargazers][stargazers-shield]][stargazers-url]
 [![issues][issues-shield]][issues-url]
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Your%20OpenAI%20API%20Key&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat)
+
 ![](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 </div>
@@ -32,12 +34,34 @@ Lobe Chat is an open-source chatbot client using OpenAI and Next.js
 
 #### TOC
 
+- [🛳 Self Hosting](#-self-hosting)
+
+  - [Deploy to Vercel](#deploy-to-vercel)
+
 - [⌨️ Local Development](#️-local-development)
+
 - [🤝 Contributing](#-contributing)
 
 ####
 
 </details>
+
+## 🛳 Self Hosting
+
+If you want to deploy this service by yourself, you can follow the steps below.
+
+### Deploy to Vercel
+
+Click button below to deploy your private plugins' gateway.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Your%20OpenAI%20API%20Key&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat)
+
+If you want to make some customization, you can add environment variable:
+
+| Environment variable | Description                                                                       | Example                       |
+| -------------------- | --------------------------------------------------------------------------------- | ----------------------------- |
+| `OPENAI_PROXY_URL`   | OpenAI API 代理 URL，例如：`https://api.chatanywhere.cn`                          | `https://api.chatanywhere.cn` |
+| `ACCESS_CODE`        | Add Password to access this service, the password should be 6 digits or alphabets | `awCT74` \| `e3@09!`          |
 
 ## ⌨️ Local Development
 
@@ -51,7 +75,7 @@ Or clone it for local development:
 $ git clone https://github.com/lobehub/lobe-chat.git
 $ cd lobe-chat
 $ pnpm install
-$ pnpm start
+$ pnpm dev
 ```
 
 <div align="right">
