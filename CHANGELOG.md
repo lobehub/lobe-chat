@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.60.3](https://github.com/lobehub/lobe-chat/compare/v0.60.2...v0.60.3)
+
+<sup>Released on **2023-08-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix global state merge error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix global state merge error ([cbc2fc8](https://github.com/lobehub/lobe-chat/commit/cbc2fc8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.60.2](https://github.com/lobehub/lobe-chat/compare/v0.60.1...v0.60.2)
 
 <sup>Released on **2023-08-26**</sup>
