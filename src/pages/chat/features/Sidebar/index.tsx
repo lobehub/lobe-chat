@@ -1,7 +1,5 @@
-import { ActionIcon, DraggablePanel, DraggablePanelContainer, SearchBar } from '@lobehub/ui';
-import { Drawer } from 'antd';
+import { DraggablePanel, DraggablePanelContainer, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { X } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +9,7 @@ import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 
+import Mobile from './Mobile';
 import SystemRole from './SystemRole';
 import { Topic } from './Topic';
 
@@ -39,7 +38,7 @@ interface SideBarProps {
   systemRole?: boolean;
 }
 const SideBar = memo<SideBarProps>(({ systemRole = true, mobile }) => {
-  const { styles, theme } = useStyles(mobile);
+  const { styles } = useStyles(mobile);
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.preference.showChatSideBar,
     s.toggleChatSideBar,
@@ -62,22 +61,7 @@ const SideBar = memo<SideBarProps>(({ systemRole = true, mobile }) => {
     </Flexbox>
   );
 
-  if (mobile)
-    return (
-      <Drawer
-        bodyStyle={{ padding: 0 }}
-        closeIcon={<ActionIcon icon={X} size={{ blockSize: 32, fontSize: 20 }} />}
-        drawerStyle={{ background: theme.colorBgContainer }}
-        headerStyle={{ padding: '8px 4px' }}
-        height={'75vh'}
-        onClose={() => toggleConfig(false)}
-        open={showAgentSettings}
-        placement={'bottom'}
-        title={t('topic.title')}
-      >
-        {topic}
-      </Drawer>
-    );
+  if (mobile) return <Mobile>{topic}</Mobile>;
 
   return (
     <DraggablePanel

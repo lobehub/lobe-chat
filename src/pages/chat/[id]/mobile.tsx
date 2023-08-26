@@ -25,7 +25,7 @@ const MobileLayout = memo<PropsWithChildren>(({ children }) => {
     toggleTopic();
   }, [id]);
 
-  return <AppMobileLayout navBar={<Header mobile />}>{children}</AppMobileLayout>;
+  return <AppMobileLayout navBar={<Header />}>{children}</AppMobileLayout>;
 });
 
 export default MobileLayout;
