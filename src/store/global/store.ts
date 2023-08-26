@@ -28,9 +28,11 @@ type GlobalPersist = Pick<GlobalStore, 'preference' | 'settings'>;
 
 const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
   merge: (persistedState, currentState) => {
+    const state = persistedState as GlobalPersist;
     return {
       ...currentState,
-      settings: produce((persistedState as GlobalPersist).settings, (draft) => {
+      ...state,
+      settings: produce(state.settings, (draft) => {
         if (!draft.defaultAgent) {
           draft.defaultAgent = DEFAULT_AGENT;
         }
