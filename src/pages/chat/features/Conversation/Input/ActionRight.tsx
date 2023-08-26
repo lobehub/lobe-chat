@@ -16,6 +16,7 @@ const ActionsRight = memo(() => {
       okButtonProps={{ danger: true }}
       okText={t('ok', { ns: 'common' })}
       onConfirm={() => clearMessage()}
+      placement={'topRight'}
       title={t('confirmClearCurrentMessages', { ns: 'common' })}
     >
       <ActionIcon
