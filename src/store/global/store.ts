@@ -1,3 +1,4 @@
+import { produce } from 'immer';
 import { PersistOptions, devtools, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
@@ -27,10 +28,14 @@ type GlobalPersist = Pick<GlobalStore, 'preference' | 'settings'>;
 
 const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
   merge: (persistedState, currentState) => {
-    if (!(persistedState as GlobalPersist).settings.defaultAgent) {
-      currentState.settings.defaultAgent = DEFAULT_AGENT;
-    }
-    return currentState;
+    return {
+      ...currentState,
+      settings: produce((persistedState as GlobalPersist).settings, (draft) => {
+        if (!draft.defaultAgent) {
+          draft.defaultAgent = DEFAULT_AGENT;
+        }
+      }),
+    };
   },
   name: 'LOBE_SETTINGS',
   partialize: (s) => ({
