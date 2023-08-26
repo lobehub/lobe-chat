@@ -11,7 +11,10 @@ import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
 const PluginStatus = memo<{ id: string; title?: string }>(({ title, id }) => {
   const { t } = useTranslation('common');
-  const status = usePluginStore(pluginSelectors.getPluginManifestLoadingStatus(id));
+  const [status, fetchPluginManifest] = usePluginStore((s) => [
+    pluginSelectors.getPluginManifestLoadingStatus(id)(s),
+    s.fetchPluginManifest,
+  ]);
 
   const renderStatus = useMemo(() => {
     switch (status) {
@@ -19,7 +22,16 @@ const PluginStatus = memo<{ id: string; title?: string }>(({ title, id }) => {
         return <Badge color={'blue'} status={'processing'} />;
       }
       case 'error': {
-        return <ActionIcon icon={LucideRotateCw} size={'small'} title={t('retry')} />;
+        return (
+          <ActionIcon
+            icon={LucideRotateCw}
+            onClick={() => {
+              fetchPluginManifest(id);
+            }}
+            size={'small'}
+            title={t('retry')}
+          />
+        );
       }
       case 'success': {
         return <Badge status={status} />;
