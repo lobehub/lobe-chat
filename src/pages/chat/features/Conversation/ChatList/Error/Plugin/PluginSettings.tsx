@@ -41,7 +41,7 @@ const PluginSettings = memo<PluginSettingsProps>(({ id, pluginIdentifier }) => {
         </Flexbox>
         <Flexbox className={styles.desc}>{t('pluginSettings.desc')}</Flexbox>
         <Divider style={{ margin: '0 16px' }} />
-        {manifest?.settings && (
+        {manifest.settings && (
           <PluginSettingsConfig id={manifest.identifier} settings={manifest.settings} />
         )}
         <Button
