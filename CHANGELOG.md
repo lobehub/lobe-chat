@@ -2,6 +2,52 @@
 
 # Changelog
 
+## [Version 0.57.0](https://github.com/lobehub/lobe-chat/compare/v0.56.0...v0.57.0)
+
+<sup>Released on **2023-08-26**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor to ChatErrorType.
+
+#### ✨ Features
+
+- **misc**: 完善插件请求的错误处理, 支持修改与记录插件的配置, 支持发送插件配置信息, 支持渲染 manifest 中的 settings, 支持设置不正确时进行插件的配置, 新增插件请求状态的错误处理.
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正缓存旧数据的报错问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor to ChatErrorType ([cd1a033](https://github.com/lobehub/lobe-chat/commit/cd1a033))
+
+#### What's improved
+
+- **misc**: 完善插件请求的错误处理 ([0698d89](https://github.com/lobehub/lobe-chat/commit/0698d89))
+- **misc**: 支持修改与记录插件的配置 ([76e8237](https://github.com/lobehub/lobe-chat/commit/76e8237))
+- **misc**: 支持发送插件配置信息 ([2cedc85](https://github.com/lobehub/lobe-chat/commit/2cedc85))
+- **misc**: 支持渲染 manifest 中的 settings ([1185300](https://github.com/lobehub/lobe-chat/commit/1185300))
+- **misc**: 支持设置不正确时进行插件的配置 ([f972481](https://github.com/lobehub/lobe-chat/commit/f972481))
+- **misc**: 新增插件请求状态的错误处理 ([228002a](https://github.com/lobehub/lobe-chat/commit/228002a))
+
+#### What's fixed
+
+- **misc**: 修正缓存旧数据的报错问题 ([5d8008f](https://github.com/lobehub/lobe-chat/commit/5d8008f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.56.0](https://github.com/lobehub/lobe-chat/compare/v0.55.1...v0.56.0)
 
 <sup>Released on **2023-08-24**</sup>
