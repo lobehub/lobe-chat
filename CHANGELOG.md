@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 0.60.0](https://github.com/lobehub/lobe-chat/compare/v0.59.0...v0.60.0)
+
+<sup>Released on **2023-08-26**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor with new market index url.
+
+#### ✨ Features
+
+- **misc**: 支持插件 manifest 加载失败后重试.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor with new market index url ([d2834b7](https://github.com/lobehub/lobe-chat/commit/d2834b7))
+
+#### What's improved
+
+- **misc**: 支持插件 manifest 加载失败后重试 ([f36378e](https://github.com/lobehub/lobe-chat/commit/f36378e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.59.0](https://github.com/lobehub/lobe-chat/compare/v0.58.0...v0.59.0)
 
 <sup>Released on **2023-08-26**</sup>
