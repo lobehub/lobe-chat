@@ -113,7 +113,7 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
           if (!item) return null;
           const manifest = pluginManifestMap[identifier];
 
-          if (!manifest.settings) return null;
+          if (!manifest?.settings) return null;
 
           return {
             children: transformPluginSettings(manifest.settings).map((item) => ({
