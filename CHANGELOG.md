@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 0.59.0](https://github.com/lobehub/lobe-chat/compare/v0.58.0...v0.59.0)
+
+<sup>Released on **2023-08-26**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持展示插件插件状态, 支持插件 i18n 模式展示.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持展示插件插件状态 ([7e916ac](https://github.com/lobehub/lobe-chat/commit/7e916ac))
+- **misc**: 支持插件 i18n 模式展示 ([8614734](https://github.com/lobehub/lobe-chat/commit/8614734))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.58.0](https://github.com/lobehub/lobe-chat/compare/v0.57.0...v0.58.0)
 
 <sup>Released on **2023-08-26**</sup>
