@@ -7,6 +7,7 @@ import SafeSpacing from '@/components/SafeSpacing';
 
 import ChatList from './ChatList';
 import ChatInput from './Input';
+import ChatScrollAnchor from './ScrollAnchor';
 
 const Conversation = memo<{ mobile?: boolean }>(({ mobile }) => {
   const ref = useRef(null);
@@ -17,6 +18,7 @@ const Conversation = memo<{ mobile?: boolean }>(({ mobile }) => {
         <div ref={ref} style={{ height: '100%', overflowY: 'scroll' }}>
           {!mobile && <SafeSpacing />}
           <ChatList />
+          <ChatScrollAnchor />
         </div>
         <BackBottom target={ref} text={t('backToBottom')} />
       </div>
