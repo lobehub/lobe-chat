@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.58.0](https://github.com/lobehub/lobe-chat/compare/v0.57.0...v0.58.0)
+
+<sup>Released on **2023-08-26**</sup>
+
+#### ✨ Features
+
+- **misc**: Implement responsive design for mobile devices.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Implement responsive design for mobile devices, closes [#95](https://github.com/lobehub/lobe-chat/issues/95) ([fdb3c93](https://github.com/lobehub/lobe-chat/commit/fdb3c93))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.57.0](https://github.com/lobehub/lobe-chat/compare/v0.56.0...v0.57.0)
 
 <sup>Released on **2023-08-26**</sup>
