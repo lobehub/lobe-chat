@@ -2,6 +2,48 @@
 
 # Changelog
 
+## [Version 0.62.0](https://github.com/lobehub/lobe-chat/compare/v0.61.0...v0.62.0)
+
+<sup>Released on **2023-08-26**</sup>
+
+#### ✨ Features
+
+- **misc**: 支持超过 4k 的会话使用 16k 总结标题.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix plugin settings error.
+
+#### 💄 Styles
+
+- **misc**: 优化清理会话的操作路径, 优化默认角色的配置.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 支持超过 4k 的会话使用 16k 总结标题 ([5764cfb](https://github.com/lobehub/lobe-chat/commit/5764cfb))
+
+#### What's fixed
+
+- **misc**: Fix plugin settings error ([008c2e3](https://github.com/lobehub/lobe-chat/commit/008c2e3))
+
+#### Styles
+
+- **misc**: 优化清理会话的操作路径 ([6b7218e](https://github.com/lobehub/lobe-chat/commit/6b7218e))
+- **misc**: 优化默认角色的配置 ([a07d7a8](https://github.com/lobehub/lobe-chat/commit/a07d7a8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.61.0](https://github.com/lobehub/lobe-chat/compare/v0.60.4...v0.61.0)
 
 <sup>Released on **2023-08-26**</sup>
