@@ -1,7 +1,6 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 
 import { LOBE_PLUGIN_SETTINGS } from '@/const/fetch';
-import { PLUGINS_INDEX_URL } from '@/const/url';
 import { usePluginStore } from '@/store/plugin';
 import { getMessageError } from '@/utils/fetch';
 
@@ -36,13 +35,4 @@ export const fetchPlugin = async (
   }
 
   return await res.text();
-};
-
-/**
- * 请求插件列表
- */
-export const getPluginList = async () => {
-  const res = await fetch(PLUGINS_INDEX_URL);
-
-  return res.json();
 };

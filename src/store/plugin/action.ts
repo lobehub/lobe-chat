@@ -9,7 +9,7 @@ import { merge, uniq } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { getPluginList } from '@/services/plugin';
+import { getPluginList } from '@/services/pluginMarket';
 import { pluginSelectors } from '@/store/plugin/selectors';
 import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
