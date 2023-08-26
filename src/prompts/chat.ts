@@ -1,4 +1,4 @@
-import { chatHelpers } from '@/store/session';
+import { chatHelpers } from '@/store/session/helpers';
 import { LanguageModel } from '@/types/llm';
 import { OpenAIChatMessage, OpenAIStreamPayload } from '@/types/openai';
 
