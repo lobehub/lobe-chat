@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { transformPluginSettings } from '@/features/PluginSettings';
 import PluginSettingRender from '@/features/PluginSettings/PluginSettingRender';
-import { usePluginStore } from '@/store/plugin';
+import { pluginHelpers, usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
 import { AgentAction, agentSelectors } from '@/store/session/slices/agentConfig';
 import { LobeAgentConfig } from '@/types/session';
@@ -98,8 +98,8 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
             }}
           />
         ),
-        desc: meta?.description,
-        label: meta.title,
+        desc: pluginHelpers.getPluginDesc(meta),
+        label: pluginHelpers.getPluginTitle(meta),
         minWidth: undefined,
         tag: identifier,
       }));
@@ -131,7 +131,7 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
               desc: item.desc && <Markdown className={styles.md}>{item.desc}</Markdown>,
             })),
             icon: ToyBrick,
-            title: t('settingPlugin.config', { id: item.meta.title || item.identifier }),
+            title: t('settingPlugin.config', { id: pluginHelpers.getPluginTitle(item.meta) }),
           };
         })
         .filter(Boolean) as unknown as ItemGroup[]);

@@ -1,6 +1,6 @@
 import { PluginRender, PluginRenderProps } from '@lobehub/chat-plugin-sdk';
 import { Skeleton } from 'antd';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import { system } from './dynamticLoader';
 
@@ -10,7 +10,7 @@ interface CustomRenderProps extends PluginRenderProps {
 const CustomRender = memo<CustomRenderProps>(({ url, ...props }) => {
   const [component, setComp] = useState<PluginRender | null>(null);
 
-  if (!component) {
+  useEffect(() => {
     system
       .import(url)
       .then((module1) => {
@@ -21,12 +21,14 @@ const CustomRender = memo<CustomRenderProps>(({ url, ...props }) => {
         setComp(null);
         console.error(error);
       });
+  }, [url]);
 
+  if (!component) {
     return <Skeleton active style={{ width: 300 }} />;
   }
 
-  const Comp = component;
+  const Render = component;
 
-  return <Comp {...props} />;
+  return <Render {...props} />;
 });
 export default CustomRender;

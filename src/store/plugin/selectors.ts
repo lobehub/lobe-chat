@@ -1,4 +1,5 @@
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
+import { pluginHelpers } from '@/store/plugin/helpers';
 
 import { PluginStoreState } from './initialState';
 
@@ -23,13 +24,38 @@ const enabledSchema =
   };
 
 const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
-  s.pluginList?.find((p) => p.identifier === id);
+  pluginHelpers.getPluginFormList(s.pluginList, id);
 
-const getPluginManifestSettingsById = (id: string) => (s: PluginStoreState) =>
-  s.pluginManifestMap[id];
+const getPluginManifestById = (id: string) => (s: PluginStoreState) => s.pluginManifestMap[id];
+const getPluginSettingsById = (id: string) => (s: PluginStoreState) => s.pluginsSettings[id];
+
+// 获取插件 manifest 加载状态
+const getPluginManifestLoadingStatus = (id: string) => (s: PluginStoreState) => {
+  const manifest = getPluginManifestById(id);
+
+  if (s.pluginManifestLoading[id]) return 'loading';
+
+  if (!manifest) return 'error';
+
+  if (!!manifest) return 'success';
+};
+
+const displayPluginList = (s: PluginStoreState) =>
+  s.pluginList.map((p) => ({
+    author: p.author,
+    avatar: p.meta?.avatar,
+    createAt: p.createAt,
+    desc: pluginHelpers.getPluginDesc(p.meta),
+    homepage: p.homepage,
+    identifier: p.identifier,
+    title: pluginHelpers.getPluginTitle(p.meta),
+  }));
 
 export const pluginSelectors = {
+  displayPluginList,
   enabledSchema,
-  getPluginManifestSettingsById,
+  getPluginManifestById,
+  getPluginManifestLoadingStatus,
   getPluginMetaById,
+  getPluginSettingsById,
 };
