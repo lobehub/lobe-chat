@@ -63,7 +63,8 @@ export default {
   stop: '停止',
   tab: {
     chat: '会话',
-    market: '助手市场',
+    market: '发现',
+    setting: '设置',
   },
   temp: '临时',
   tokenDetail: '角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}',
@@ -77,6 +78,7 @@ export default {
     defaultTitle: '默认话题',
     saveCurrentMessages: '将当前会话保存为话题',
     searchPlaceholder: '搜索话题...',
+    title: '话题',
   },
   updateAgent: '更新助理信息',
   updatePrompt: '更新提示词',

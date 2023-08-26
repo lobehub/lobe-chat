@@ -1,4 +1,10 @@
-import { ActionIcon, ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
+import {
+  ActionIcon,
+  ChatHeader,
+  ChatHeaderTitle,
+  MobileNavBar,
+  MobileNavBarTitle,
+} from '@lobehub/ui';
 import { Dropdown, MenuProps } from 'antd';
 import { HardDriveDownload, Share2 } from 'lucide-react';
 import Router from 'next/router';
@@ -8,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useSessionStore } from '@/store/session';
 
-const Header = memo(() => {
+const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
 
@@ -35,6 +41,23 @@ const Header = memo(() => {
     ],
     [],
   );
+
+  if (mobile)
+    return (
+      <MobileNavBar
+        center={<MobileNavBarTitle title={t('header.session')} />}
+        onBackClick={() => Router.back()}
+        right={
+          <>
+            <ActionIcon icon={Share2} title={t('share', { ns: 'common' })} />
+            <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
+              <ActionIcon icon={HardDriveDownload} title={t('export', { ns: 'common' })} />
+            </Dropdown>
+          </>
+        }
+        showBackButton
+      />
+    );
 
   return (
     <ChatHeader

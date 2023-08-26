@@ -13,7 +13,7 @@ import SessionList from './List';
 
 const useStyles = createStyles(({ stylish }) => stylish.noScrollbar);
 
-export const Sessions = memo(() => {
+export const Sessions = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
 
@@ -27,6 +27,15 @@ export const Sessions = memo(() => {
     ],
     [],
   );
+
+  if (mobile)
+    return (
+      <>
+        <Header mobile={'search'} />
+        <Inbox />
+        <CollapseGroup defaultActiveKey={['sessionList']} items={items} />
+      </>
+    );
 
   return (
     <FolderPanel>

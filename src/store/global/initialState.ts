@@ -25,6 +25,7 @@ export interface GlobalState {
 export interface GlobalPreference {
   guide?: Guide;
   inputHeight: number;
+  mobileShowTopic?: boolean;
   sessionsWidth: number;
   showChatSideBar?: boolean;
   showSessionPanel?: boolean;
@@ -34,6 +35,7 @@ export const initialState: GlobalState = {
   preference: {
     guide: {},
     inputHeight: 200,
+    mobileShowTopic: false,
     sessionsWidth: 320,
     showChatSideBar: true,
     showSessionPanel: true,

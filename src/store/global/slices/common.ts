@@ -19,6 +19,7 @@ export interface CommonAction {
    */
   switchSideBar: (key: SidebarTabKey) => void;
   toggleChatSideBar: (visible?: boolean) => void;
+  toggleMobileTopic: (visible?: boolean) => void;
   updateGuideState: (guide: Partial<Guide>) => void;
   updatePreference: (preference: Partial<GlobalPreference>, action?: string) => void;
 }
@@ -37,6 +38,12 @@ export const createCommonSlice: StateCreator<
       typeof newValue === 'boolean' ? newValue : !get().preference.showChatSideBar;
 
     get().updatePreference({ showChatSideBar }, t('toggleAgentPanel', newValue) as string);
+  },
+  toggleMobileTopic: (newValue) => {
+    const mobileShowTopic =
+      typeof newValue === 'boolean' ? newValue : !get().preference.mobileShowTopic;
+
+    get().updatePreference({ mobileShowTopic }, t('toggleMobileTopic', newValue) as string);
   },
   updateGuideState: (guide) => {
     const { updatePreference } = get();

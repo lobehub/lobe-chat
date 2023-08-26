@@ -1,7 +1,7 @@
 import { Avatar, Logo } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { CSSProperties, memo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
@@ -25,9 +25,10 @@ const useStyle = createStyles(
 interface AvatarWithUploadProps {
   compressSize?: number;
   size?: number;
+  style?: CSSProperties;
 }
 
-const AvatarWithUpload = memo<AvatarWithUploadProps>(({ size = 40, compressSize = 128 }) => {
+const AvatarWithUpload = memo<AvatarWithUploadProps>(({ size = 40, compressSize = 128, style }) => {
   const [avatar, setSettings] = useGlobalStore((st) => [st.settings.avatar, st.setSettings]);
   const { styles } = useStyle();
 
@@ -67,7 +68,7 @@ const AvatarWithUpload = memo<AvatarWithUploadProps>(({ size = 40, compressSize 
   });
 
   return (
-    <div className={styles} style={{ maxHeight: size, maxWidth: size }}>
+    <div className={styles} style={{ maxHeight: size, maxWidth: size, ...style }}>
       <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
         {avatar ? <Avatar avatar={avatar} size={size} /> : <Logo size={size} />}
       </Upload>
