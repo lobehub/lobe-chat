@@ -53,6 +53,7 @@ export default {
   regenerate: '重新生成',
   rename: '重命名',
   reset: '重置',
+  retry: '重试',
   roleAndArchive: '角色与记录',
   searchAgentPlaceholder: '搜索助手和对话...',
   send: '发送',
