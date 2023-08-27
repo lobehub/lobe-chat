@@ -7,7 +7,8 @@ import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { settingsSelectors, useGlobalStore } from '@/store/global';
-import { agentSelectors, sessionSelectors, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import Actions from './Actions';
 

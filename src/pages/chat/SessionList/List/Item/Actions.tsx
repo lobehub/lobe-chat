@@ -6,7 +6,8 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
-import { sessionSelectors, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 
 const useStyles = createStyles(({ css }) => ({
   modalRoot: css`

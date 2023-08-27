@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
-import { agentSelectors, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
 const MobileHeader = memo<{ settings?: boolean }>(({ settings = true }) => {
   const { t } = useTranslation('common');

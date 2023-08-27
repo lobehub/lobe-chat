@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Header from '@/pages/chat/features/Sidebar/Header';
-import { agentSelectors, useSessionChatInit, useSessionStore } from '@/store/session';
+import { useSessionChatInit, useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
   prompt: css`

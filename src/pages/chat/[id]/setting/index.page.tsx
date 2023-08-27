@@ -8,7 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 import SafeSpacing from '@/components/SafeSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
 import { AgentConfig, AgentMeta, AgentPlugin, AgentPrompt } from '@/features/AgentSetting';
-import { agentSelectors, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import ChatLayout from '../layout';

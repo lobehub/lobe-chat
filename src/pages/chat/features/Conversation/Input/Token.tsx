@@ -4,7 +4,8 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ModelTokens } from '@/const/modelTokens';
-import { agentSelectors, chatSelectors, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 
 const Token = memo<{ input: string }>(({ input }) => {
   const { t } = useTranslation('common');

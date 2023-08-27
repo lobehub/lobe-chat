@@ -2,7 +2,8 @@ import isEqual from 'fast-deep-equal';
 import Link from 'next/link';
 import { memo } from 'react';
 
-import { sessionSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
+import { useSessionHydrated, useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 
 import AddButton from './AddButton';
 import SessionItem from './Item';

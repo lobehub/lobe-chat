@@ -4,7 +4,8 @@ import { createStyles } from 'antd-style';
 import { ReactNode } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { agentSelectors, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
 
 const useStyles = createStyles(({ css }) => ({

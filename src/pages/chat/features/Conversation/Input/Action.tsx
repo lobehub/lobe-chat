@@ -5,7 +5,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { agentSelectors, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 import { LanguageModel } from '@/types/llm';
 
 const InputActions = memo(() => {
