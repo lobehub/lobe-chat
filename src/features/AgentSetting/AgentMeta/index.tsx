@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 
 import EmojiPicker from '@/components/EmojiPicker';
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { SessionLoadingState } from '@/store/session/slices/agentConfig';
 
 import { useStore } from '../store';
+import { SessionLoadingState } from '../store/initialState';
 import AutoGenerateInput from './AutoGenerateInput';
 import BackgroundSwatches from './BackgroundSwatches';
 

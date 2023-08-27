@@ -56,7 +56,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
 
     return [
       s.activeId === id,
-      s.autocompleteLoading.title && id === s.activeId,
+      !!s.chatLoadingId && id === s.activeId,
       session.pinned,
       agentSelectors.getTitle(meta),
       agentSelectors.getDescription(meta),
