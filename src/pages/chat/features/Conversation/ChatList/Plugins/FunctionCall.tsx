@@ -6,7 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { pluginSelectors, usePluginStore } from '@/store/plugin';
+import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
 import PluginResult from './PluginResultRender';
 import { useStyles } from './style';
@@ -27,8 +27,11 @@ const FunctionCall = memo<FunctionCallProps>(
 
     const item = usePluginStore(pluginSelectors.getPluginMetaById(id));
 
-    const avatar = item?.meta.avatar ? (
-      <Avatar avatar={item?.meta.avatar} size={32} />
+    const pluginAvatar = pluginHelpers.getPluginAvatar(item?.meta);
+    const pluginTitle = pluginHelpers.getPluginTitle(item?.meta);
+
+    const avatar = pluginAvatar ? (
+      <Avatar avatar={pluginAvatar} size={32} />
     ) : (
       <Icon icon={LucideToyBrick} />
     );
@@ -54,7 +57,7 @@ const FunctionCall = memo<FunctionCallProps>(
           ) : (
             avatar
           )}
-          {t(`plugins.${id}` as any, { ns: 'plugin' })}
+          {pluginTitle ?? t('plugins.unknown')}
           <Icon icon={open ? LucideChevronUp : LucideChevronDown} />
         </Flexbox>
         {open && (
