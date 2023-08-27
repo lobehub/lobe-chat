@@ -49,21 +49,24 @@ const List = () => {
 
       if (message.role === 'function')
         return (
-          <Flexbox gap={12}>
+          <Flexbox gap={12} id={message.id}>
             <FunctionCall {...fcProps} />
             <PluginMessage loading={message.id === chatLoadingId} {...message} />
           </Flexbox>
         );
 
-      if (message.role === 'assistant') {
-        return isFunctionMessage(message.content) || !!message.function_call ? (
-          <FunctionCall {...fcProps} />
-        ) : (
-          content
+      if (
+        message.role === 'assistant' &&
+        // 包含了 function 信息
+        isFunctionMessage(message.content)
+      )
+        return (
+          <div id={message.id}>
+            <FunctionCall {...fcProps} />
+          </div>
         );
-      }
 
-      return content;
+      return <div id={message.id}>{content}</div>;
     },
     [chatLoadingId],
   );

@@ -12,6 +12,7 @@ import { useGlobalStore } from '@/store/global';
 import { agentSelectors, useSessionChatInit, useSessionStore } from '@/store/session';
 
 import PluginTag from './PluginTag';
+import ShareButton from './ShareButton';
 
 const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
   const init = useSessionChatInit();
@@ -68,14 +69,7 @@ const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
       }
       right={
         <>
-          {/*<ActionIcon*/}
-          {/*  icon={Share2}*/}
-          {/*  onClick={() => {*/}
-          {/*    // genShareUrl();*/}
-          {/*  }}*/}
-          {/*  size={{ fontSize: 24 }}*/}
-          {/*  title={t('share')}*/}
-          {/*/>*/}
+          <ShareButton />
           <ActionIcon
             icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
             onClick={() => toggleConfig()}
