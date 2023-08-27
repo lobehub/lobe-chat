@@ -263,8 +263,7 @@ export const chatMessage: StateCreator<
   },
 
   sendMessage: async (message) => {
-    const { dispatchMessage, realFetchAIResponse, autocompleteSessionAgentMeta, activeTopicId } =
-      get();
+    const { dispatchMessage, realFetchAIResponse, activeTopicId } = get();
     const session = sessionSelectors.currentSession(get());
     if (!session || !message) return;
 
@@ -281,10 +280,11 @@ export const chatMessage: StateCreator<
 
     await realFetchAIResponse(messages, userId);
 
-    const chats = chatSelectors.currentChats(get());
-    if (chats.length >= 4) {
-      autocompleteSessionAgentMeta(session.id);
-    }
+    // TODO: AgentSettings 提供一个外部调用的 hooks
+    // const chats = chatSelectors.currentChats(get());
+    // if (chats.length >= 4) {
+    //   autocompleteSessionAgentMeta(session.id);
+    // }
   },
 
   stopGenerateMessage: () => {

@@ -1,6 +1,7 @@
 import { Form, ItemGroup, SliderWithInput } from '@lobehub/ui';
 import { ConfigProvider, Input, Select, Switch } from 'antd';
 import { useTheme, useThemeMode } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { BrainCog, LayoutList, MessageSquare, MessagesSquare } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -8,10 +9,10 @@ import { useTranslation } from 'react-i18next';
 
 import SelectWithImg from '@/components/SelectWithImg';
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { AgentAction } from '@/store/session/slices/agentConfig';
 import { LanguageModel } from '@/types/llm';
-import type { LobeAgentConfig } from '@/types/session';
 import { LobeAgentConfigKeys } from '@/types/session';
+
+import { useStore } from '../store';
 
 type SettingItemGroup = ItemGroup & {
   children: {
@@ -19,13 +20,10 @@ type SettingItemGroup = ItemGroup & {
   }[];
 };
 
-export interface AgentConfigProps {
-  config: LobeAgentConfig;
-  updateConfig: AgentAction['updateAgentConfig'];
-}
-
-const AgentConfig = memo<AgentConfigProps>(({ config, updateConfig }) => {
+const AgentConfig = memo(() => {
   const { t } = useTranslation('setting');
+  const updateConfig = useStore((s) => s.setAgentConfig);
+  const config = useStore((s) => s.config, isEqual);
   const theme = useTheme();
   const { isDarkMode } = useThemeMode();
 

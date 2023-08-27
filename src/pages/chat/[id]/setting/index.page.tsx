@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
-import { AgentConfig, AgentMeta, AgentPlugin, AgentPrompt } from '@/features/AgentSetting';
+import AgentSetting from '@/features/AgentSetting';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
@@ -21,10 +21,8 @@ const EditPage = memo(() => {
   const { t } = useTranslation('setting');
   const config = useSessionStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
-  const autocomplete = useSessionStore(agentSelectors.currentAutocomplete);
-  const [updateAgentConfig, toggleAgentPlugin, updateAgentMeta, title] = useSessionStore((s) => [
+  const [updateAgentConfig, updateAgentMeta, title] = useSessionStore((s) => [
     s.updateAgentConfig,
-    s.toggleAgentPlugin,
     s.updateAgentMeta,
     agentSelectors.currentAgentTitle(s),
   ]);
@@ -32,17 +30,12 @@ const EditPage = memo(() => {
   const pageTitle = genSiteHeadTitle(t('header.sessionWithName', { name: title }));
 
   const settings = (
-    <>
-      <AgentPrompt config={config} updateConfig={updateAgentConfig} />
-      <AgentMeta
-        autocomplete={autocomplete}
-        config={config}
-        meta={meta}
-        updateMeta={updateAgentMeta}
-      />
-      <AgentConfig config={config} updateConfig={updateAgentConfig} />
-      <AgentPlugin config={config} updateConfig={toggleAgentPlugin} />
-    </>
+    <AgentSetting
+      config={config}
+      meta={meta}
+      onConfigChange={updateAgentConfig}
+      onMetaChange={updateAgentMeta}
+    />
   );
 
   return (
