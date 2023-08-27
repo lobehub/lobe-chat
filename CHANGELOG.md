@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.63.1](https://github.com/lobehub/lobe-chat/compare/v0.63.0...v0.63.1)
+
+<sup>Released on **2023-08-27**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the selectors import.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the selectors import, closes [#120](https://github.com/lobehub/lobe-chat/issues/120) ([6646502](https://github.com/lobehub/lobe-chat/commit/6646502))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.63.0](https://github.com/lobehub/lobe-chat/compare/v0.62.1...v0.63.0)
 
 <sup>Released on **2023-08-27**</sup>
