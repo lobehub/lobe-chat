@@ -1,5 +1,6 @@
 import { settingsSelectors, useGlobalStore } from '@/store/global';
-import { sessionSelectors, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
 
 const getSessions = () => sessionSelectors.exportSessions(useSessionStore.getState());

@@ -9,7 +9,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
-import { agentSelectors, useSessionChatInit, useSessionStore } from '@/store/session';
+import { useSessionChatInit, useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
 import PluginTag from './PluginTag';
 import ShareButton from './ShareButton';

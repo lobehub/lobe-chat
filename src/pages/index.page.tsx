@@ -1,6 +1,7 @@
 import { memo } from 'react';
 
-import { sessionSelectors, useSessionHydrated, useSessionStore } from '@/store/session';
+import { useSessionHydrated, useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 
 import Chat from './chat/index.page';
 import Loading from './index/Loading';

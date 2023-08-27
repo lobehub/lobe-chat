@@ -3,7 +3,8 @@ import Head from 'next/head';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { agentSelectors, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import Conversation from '../features/Conversation';

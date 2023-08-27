@@ -5,7 +5,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import Empty from '@/components/Empty';
 import { useGlobalStore } from '@/store/global';
-import { topicSelectors, useSessionChatInit, useSessionStore } from '@/store/session';
+import { useSessionChatInit, useSessionStore } from '@/store/session';
+import { topicSelectors } from '@/store/session/selectors';
 
 import SkeletonList from './SkeletonList';
 import TopicItem from './TopicItem';

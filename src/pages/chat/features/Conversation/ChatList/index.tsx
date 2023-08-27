@@ -4,12 +4,8 @@ import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import {
-  agentSelectors,
-  chatSelectors,
-  useSessionChatInit,
-  useSessionStore,
-} from '@/store/session';
+import { useSessionChatInit, useSessionStore } from '@/store/session';
+import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
 import { isFunctionMessage } from '@/utils/message';
 
