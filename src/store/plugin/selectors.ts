@@ -23,8 +23,10 @@ const enabledSchema =
       );
   };
 
+const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.devPluginList];
+
 const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
-  pluginHelpers.getPluginFormList(s.pluginList, id);
+  pluginHelpers.getPluginFormList(pluginList(s), id);
 
 const getPluginManifestById = (id: string) => (s: PluginStoreState) => s.pluginManifestMap[id];
 const getPluginSettingsById = (id: string) => (s: PluginStoreState) => s.pluginsSettings[id];
@@ -41,7 +43,7 @@ const getPluginManifestLoadingStatus = (id: string) => (s: PluginStoreState) => 
 };
 
 const displayPluginList = (s: PluginStoreState) =>
-  s.pluginList.map((p) => ({
+  pluginList(s).map((p) => ({
     author: p.author,
     avatar: p.meta?.avatar,
     createAt: p.createAt,
@@ -58,4 +60,5 @@ export const pluginSelectors = {
   getPluginManifestLoadingStatus,
   getPluginMetaById,
   getPluginSettingsById,
+  pluginList,
 };

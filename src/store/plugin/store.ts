@@ -19,7 +19,10 @@ const createStore: StateCreator<PluginStore, [['zustand/devtools', never]]> = (.
 
 //  ===============  persist 本地缓存中间件配置 ============ //
 
-type SessionPersist = Pick<PluginStore, 'pluginList' | 'pluginManifestMap' | 'pluginsSettings'>;
+type SessionPersist = Pick<
+  PluginStore,
+  'pluginList' | 'pluginManifestMap' | 'pluginsSettings' | 'devPluginList'
+>;
 
 const storeName = 'LOBE_PLUGIN';
 
@@ -27,6 +30,7 @@ const persistOptions: PersistOptions<PluginStore, SessionPersist> = {
   name: storeName,
 
   partialize: (s) => ({
+    devPluginList: s.devPluginList,
     pluginList: s.pluginList,
     pluginManifestMap: s.pluginManifestMap,
     pluginsSettings: s.pluginsSettings,

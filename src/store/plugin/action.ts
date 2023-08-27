@@ -14,6 +14,7 @@ import { pluginSelectors } from '@/store/plugin/selectors';
 import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { DevPlugin, defaultDevPlugin } from './initialState';
 import { PluginDispatch, pluginManifestReducer } from './reducers/manifest';
 import { PluginStore } from './store';
 
@@ -26,7 +27,9 @@ export interface PluginAction {
   checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
   fetchPluginManifest: (name: string) => Promise<void>;
+  saveToDevList: () => void;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
+  updateNewDevPlugin: (value: Partial<DevPlugin>) => void;
   updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
   useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
 }
@@ -55,13 +58,13 @@ export const createPluginSlice: StateCreator<
 
     set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
   },
+  dispatchDevList: () => {},
   dispatchPluginManifest: (payload) => {
     const { pluginManifestMap } = get();
     const nextManifest = pluginManifestReducer(pluginManifestMap, payload);
 
     set({ pluginManifestMap: nextManifest }, false, t('dispatchPluginManifest', payload));
   },
-
   fetchPluginManifest: async (name) => {
     const plugin = pluginSelectors.getPluginMetaById(name)(get());
     // 1. 校验文件
@@ -103,6 +106,14 @@ export const createPluginSlice: StateCreator<
     // 4. 存储 manifest 信息
     get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
   },
+  saveToDevList: () => {
+    const { devPluginList, newDevPlugin } = get();
+    set(
+      { devPluginList: [...devPluginList, newDevPlugin], newDevPlugin: defaultDevPlugin },
+      false,
+      t('saveToDevList'),
+    );
+  },
 
   updateManifestLoadingState: (key, value) => {
     set(
@@ -111,6 +122,14 @@ export const createPluginSlice: StateCreator<
       }),
       false,
       t('updateManifestLoadingState'),
+    );
+  },
+
+  updateNewDevPlugin: (newDevPlugin) => {
+    set(
+      { newDevPlugin: merge({}, get().newDevPlugin, newDevPlugin) },
+      false,
+      t('updateNewDevPlugin'),
     );
   },
 
@@ -123,6 +142,7 @@ export const createPluginSlice: StateCreator<
       t('updatePluginSettings'),
     );
   },
+
   useFetchPluginList: () =>
     useSWR<LobeChatPluginsMarketIndex>('fetchPluginList', getPluginList, {
       onSuccess: (pluginMarketIndex) => {

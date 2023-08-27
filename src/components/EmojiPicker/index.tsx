@@ -4,20 +4,28 @@ import Picker from '@emoji-mart/react';
 import { Avatar } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { memo } from 'react';
+import useMergeState from 'use-merge-value';
 
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
 
 import { useStyles } from './style';
 
 export interface EmojiPickerProps {
-  avatar?: string;
   backgroundColor?: string;
-  onChange: (emoji: string) => void;
+  defaultAvatar?: string;
+  onChange?: (emoji: string) => void;
+  value?: string;
 }
 
 const EmojiPicker = memo<EmojiPickerProps>(
-  ({ avatar = DEFAULT_AVATAR, backgroundColor = DEFAULT_BACKGROUND_COLOR, onChange }) => {
+  ({ value, defaultAvatar, backgroundColor = DEFAULT_BACKGROUND_COLOR, onChange }) => {
     const { styles } = useStyles();
+
+    const [ava, setAva] = useMergeState(DEFAULT_AVATAR, {
+      defaultValue: defaultAvatar,
+      onChange,
+      value,
+    });
 
     return (
       <Popover
@@ -27,7 +35,7 @@ const EmojiPicker = memo<EmojiPickerProps>(
               data={data}
               i18n={i18n}
               locale={'zh'}
-              onEmojiSelect={(e: any) => onChange(e.native)}
+              onEmojiSelect={(e: any) => setAva(e.native)}
               skinTonePosition={'none'}
               theme={'auto'}
             />
@@ -38,7 +46,7 @@ const EmojiPicker = memo<EmojiPickerProps>(
         trigger={'click'}
       >
         <div className={styles.avatar} style={{ width: 'fit-content' }}>
-          <Avatar avatar={avatar} background={backgroundColor} size={44} />
+          <Avatar avatar={ava} background={backgroundColor} size={44} />
         </div>
       </Popover>
     );
