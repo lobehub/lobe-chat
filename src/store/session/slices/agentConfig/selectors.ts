@@ -2,7 +2,6 @@ import { t } from 'i18next';
 import { merge } from 'lodash-es';
 
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
-import { Autocomplete } from '@/features/AgentSetting/AgentMeta';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import { MetaData } from '@/types/meta';
@@ -15,13 +14,6 @@ const currentAgentMeta = (s: SessionStore): MetaData => {
 
   return { avatar: DEFAULT_AVATAR, backgroundColor: DEFAULT_BACKGROUND_COLOR, ...session?.meta };
 };
-
-const currentAutocomplete = (s: SessionStore): Autocomplete => ({
-  autocompleteMeta: s.autocompleteMeta,
-  autocompleteSessionAgentMeta: s.autocompleteSessionAgentMeta,
-  id: s.activeId,
-  loading: s.autocompleteLoading,
-});
 
 const currentAgentTitle = (s: SessionStore) => currentAgentMeta(s)?.title || t('defaultSession');
 
@@ -84,7 +76,6 @@ export const agentSelectors = {
   currentAgentPlugins,
   currentAgentSystemRole,
   currentAgentTitle,
-  currentAutocomplete,
   getAvatar,
   getDescription,
   getTitle,

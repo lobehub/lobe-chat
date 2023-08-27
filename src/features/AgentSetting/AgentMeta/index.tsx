@@ -1,38 +1,28 @@
 import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Button } from 'antd';
+import isEqual from 'fast-deep-equal';
 import { UserCircle, Wand2 } from 'lucide-react';
-import { ReactNode, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import EmojiPicker from '@/components/EmojiPicker';
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { AgentAction, SessionLoadingState } from '@/store/session/slices/agentConfig';
-import { MetaData } from '@/types/meta';
-import { LobeAgentConfig } from '@/types/session';
 
+import { useStore } from '../store';
+import { SessionLoadingState } from '../store/initialState';
 import AutoGenerateInput from './AutoGenerateInput';
 import BackgroundSwatches from './BackgroundSwatches';
 
-export interface Autocomplete {
-  autocompleteMeta: AgentAction['autocompleteMeta'];
-  autocompleteSessionAgentMeta: AgentAction['autocompleteSessionAgentMeta'];
-  id: string | null;
-  loading: SessionLoadingState;
-}
-
-export interface AgentMetaProps {
-  autocomplete?: Autocomplete;
-  config: LobeAgentConfig;
-  meta: MetaData;
-  updateMeta: AgentAction['updateAgentMeta'];
-}
-
-const AgentMeta = memo<AgentMetaProps>(({ config, meta, updateMeta, autocomplete }) => {
+const AgentMeta = memo(() => {
   const { t } = useTranslation('setting');
-
-  const hasSystemRole = useMemo(() => !!config.systemRole, [config]);
-
-  let extra: ReactNode | undefined;
+  const [hasSystemRole, updateMeta, autocompleteMeta, autocompleteAllMeta] = useStore((s) => [
+    !!s.config.systemRole,
+    s.setAgentMeta,
+    s.autocompleteMeta,
+    s.autocompleteAllMeta,
+  ]);
+  const loading = useStore((s) => s.autocompleteLoading);
+  const meta = useStore((s) => s.meta, isEqual);
 
   const basic = [
     {
@@ -49,15 +39,16 @@ const AgentMeta = memo<AgentMetaProps>(({ config, meta, updateMeta, autocomplete
   ];
 
   const autocompleteItems: FormItemProps[] = basic.map((item) => {
-    const handleGenerate = () => autocomplete?.autocompleteMeta(item.key as keyof typeof meta);
     return {
       children: (
         <AutoGenerateInput
-          loading={autocomplete?.loading[item.key as keyof SessionLoadingState]}
+          loading={loading[item.key as keyof SessionLoadingState]}
           onChange={(e) => {
             updateMeta({ [item.key]: e.target.value });
           }}
-          onGenerate={autocomplete ? handleGenerate : undefined}
+          onGenerate={() => {
+            autocompleteMeta(item.key as keyof typeof meta);
+          }}
           placeholder={item.placeholder}
           value={meta[item.key as keyof typeof meta]}
         />
@@ -65,28 +56,6 @@ const AgentMeta = memo<AgentMetaProps>(({ config, meta, updateMeta, autocomplete
       label: item.label,
     };
   });
-
-  if (autocomplete) {
-    const { autocompleteSessionAgentMeta, loading, id } = autocomplete;
-
-    extra = (
-      <Tooltip title={t('autoGenerateTooltip', { ns: 'common' })}>
-        <Button
-          disabled={!hasSystemRole}
-          icon={<Icon icon={Wand2} />}
-          loading={Object.values(loading).some((i) => !!i)}
-          onClick={(e: any) => {
-            e.stopPropagation();
-            if (!id) return;
-            autocompleteSessionAgentMeta(id, true);
-          }}
-          size={'small'}
-        >
-          {t('autoGenerate', { ns: 'common' })}
-        </Button>
-      </Tooltip>
-    );
-  }
 
   const metaData: ItemGroup = useMemo(
     () => ({
@@ -115,11 +84,27 @@ const AgentMeta = memo<AgentMetaProps>(({ config, meta, updateMeta, autocomplete
         },
         ...autocompleteItems,
       ],
-      extra: extra,
+      extra: (
+        <Tooltip title={t('autoGenerateTooltip', { ns: 'common' })}>
+          <Button
+            disabled={!hasSystemRole}
+            icon={<Icon icon={Wand2} />}
+            loading={Object.values(loading).some((i) => !!i)}
+            onClick={(e: any) => {
+              e.stopPropagation();
+
+              autocompleteAllMeta(true);
+            }}
+            size={'small'}
+          >
+            {t('autoGenerate', { ns: 'common' })}
+          </Button>
+        </Tooltip>
+      ),
       icon: UserCircle,
       title: t('settingAgent.title'),
     }),
-    [autocompleteItems, extra, meta],
+    [autocompleteItems, meta],
   );
 
   return <Form items={[metaData]} {...FORM_STYLE} />;

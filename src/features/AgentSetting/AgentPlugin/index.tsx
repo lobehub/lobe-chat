@@ -10,9 +10,8 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { transformPluginSettings } from '@/features/PluginSettings';
 import PluginSettingRender from '@/features/PluginSettings/PluginSettingRender';
 import { pluginHelpers, usePluginStore } from '@/store/plugin';
-import { useSessionStore } from '@/store/session';
-import { AgentAction, agentSelectors } from '@/store/session/slices/agentConfig';
-import { LobeAgentConfig } from '@/types/session';
+
+import { useStore } from '../store';
 
 const useStyles = createStyles(({ css, token }) => ({
   avatar: css`
@@ -36,14 +35,13 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-export interface AgentPluginProps {
-  config: LobeAgentConfig;
-  updateConfig: AgentAction['toggleAgentPlugin'];
-}
-
-const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
+const AgentPlugin = memo(() => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
+
+  const updateConfig = useStore((s) => s.toggleAgentPlugin);
+  const [plugins, hasPlugin] = useStore((s) => [s.config.plugins || [], !!s.config.plugins]);
+
   const [useFetchPluginList, fetchPluginManifest, updatePluginSettings] = usePluginStore((s) => [
     s.useFetchPluginList,
     s.fetchPluginManifest,
@@ -53,8 +51,6 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
   const pluginManifestMap = usePluginStore((s) => s.pluginManifestMap, isEqual);
   const pluginsSettings = usePluginStore((s) => s.pluginsSettings, isEqual);
   const { data } = useFetchPluginList();
-
-  const plugins = useSessionStore(agentSelectors.currentAgentPlugins);
 
   const loadingItem = {
     avatar: (
@@ -85,13 +81,11 @@ const AgentPlugin = memo<AgentPluginProps>(({ config, updateConfig }) => {
           <Switch
             checked={
               // 如果在加载中，说明激活了
-              pluginManifestLoading[identifier] || !config.plugins
-                ? false
-                : config.plugins.includes(identifier)
+              pluginManifestLoading[identifier] || !hasPlugin ? false : plugins.includes(identifier)
             }
             loading={pluginManifestLoading[identifier]}
             onChange={(checked) => {
-              updateConfig(identifier, checked);
+              updateConfig(identifier);
               if (checked) {
                 fetchPluginManifest(identifier);
               }

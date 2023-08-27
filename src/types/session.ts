@@ -1,6 +1,6 @@
 import { ChatMessageMap } from './chatMessage';
 import { LLMExample, LLMParams, LanguageModel } from './llm';
-import { BaseDataModel } from './meta';
+import { BaseDataModel, MetaData } from './meta';
 import { ChatTopicMap } from './topic';
 
 export enum LobeSessionType {
@@ -84,6 +84,13 @@ export interface LobeAgentSession extends LobeSessionBase {
   type: LobeSessionType.Agent;
 }
 
+export interface LobeAgentSettings {
+  /**
+   * 语言模型角色设定
+   */
+  config: LobeAgentConfig;
+  meta: MetaData;
+}
 export type LobeSessions = Record<string, LobeAgentSession>;
 
 export type LobeAgentConfigKeys =

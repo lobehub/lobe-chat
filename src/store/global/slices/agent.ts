@@ -2,10 +2,7 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { DEFAULT_AGENT } from '@/const/settings';
-import { MetaData } from '@/types/meta';
-import type { LobeAgentSession } from '@/types/session';
-import { LobeAgentConfig } from '@/types/session';
+import { LobeAgentSettings } from '@/types/session';
 import type { GlobalSettings } from '@/types/settings';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -17,12 +14,7 @@ const t = setNamespace('settings');
  * 设置操作
  */
 export interface AgentAction {
-  resetAgentConfig: () => void;
-  resetAgentMeta: () => void;
-  resetDefaultAgent: () => void;
-  setAgentConfig: (config: Partial<LobeAgentSession['config']>) => void;
-  setAgentMeta: (meta: Partial<LobeAgentSession['meta']>) => void;
-  toggleAgentPlugin: (pluginId: string) => void;
+  updateDefaultAgent: (agent: Partial<LobeAgentSettings>) => void;
 }
 
 export const createAgentSlice: StateCreator<
@@ -31,55 +23,12 @@ export const createAgentSlice: StateCreator<
   [],
   AgentAction
 > = (set, get) => ({
-  resetAgentConfig: () => {
+  updateDefaultAgent: (agent) => {
     const settings = produce(get().settings, (draft: GlobalSettings) => {
-      draft.defaultAgent.config = DEFAULT_AGENT.config;
-    });
-    set({ settings }, false, t('resetAgentConfig'));
-  },
-  resetAgentMeta: () => {
-    const settings = produce(get().settings, (draft: GlobalSettings) => {
-      draft.defaultAgent.meta = DEFAULT_AGENT.meta;
-    });
-    set({ settings }, false, t('resetAgentMeta'));
-  },
-  resetDefaultAgent: () => {
-    const settings = produce(get().settings, (draft: GlobalSettings) => {
-      draft.defaultAgent = DEFAULT_AGENT;
-    });
-    set({ settings }, false, t('resetDefaultAgent'));
-  },
-  setAgentConfig: (config) => {
-    const settings = produce(get().settings, (draft: GlobalSettings) => {
-      const oldConfig = draft.defaultAgent.config as LobeAgentConfig;
-      draft.defaultAgent.config = merge({}, oldConfig, config);
+      const oldAgent = draft.defaultAgent as LobeAgentSettings;
+      draft.defaultAgent = merge({}, oldAgent, agent);
     });
 
-    set({ settings }, false, t('setAgentConfig', config));
-  },
-  setAgentMeta: (meta) => {
-    const settings = produce(get().settings, (draft) => {
-      const oldMeta = draft.defaultAgent.meta as MetaData;
-      draft.defaultAgent.meta = merge({}, oldMeta, meta);
-    });
-
-    set({ settings }, false, t('setAgentMeta', meta));
-  },
-
-  toggleAgentPlugin: (id: string) => {
-    const settings = produce(get().settings, (draft: GlobalSettings) => {
-      const oldConfig = draft.defaultAgent.config as LobeAgentConfig;
-      if (oldConfig.plugins === undefined) {
-        oldConfig.plugins = [id];
-      } else {
-        if (oldConfig.plugins.includes(id)) {
-          oldConfig.plugins.splice(oldConfig.plugins.indexOf(id), 1);
-        } else {
-          oldConfig.plugins.push(id);
-        }
-      }
-    });
-
-    set({ settings }, false, t('toggleAgentPlugin', id));
+    set({ settings }, false, t('updateDefaultAgent', agent));
   },
 });
