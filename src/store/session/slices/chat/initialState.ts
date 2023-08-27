@@ -3,6 +3,7 @@ export interface ChatState {
   activeTopicId?: string;
   chatLoadingId?: string;
   renameTopicId?: string;
+  shareLoading?: boolean;
   topicLoadingId?: string;
 }
 

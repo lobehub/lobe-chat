@@ -359,11 +359,4 @@ export const chatMessage: StateCreator<
 
     await realFetchAIResponse(chats, message.id);
   },
-  // genShareUrl: () => {
-  //   const session = sessionSelectors.currentSession(get());
-  //   if (!session) return '';
-  //
-  //   const agent = session.config;
-  //   return genShareMessagesUrl(session.chats, agent.systemRole);
-  // },
 });
