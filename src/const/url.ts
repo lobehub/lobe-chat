@@ -7,4 +7,4 @@ export const FEEDBACK = pkg.bugs.url;
 export const DISCORD = 'https://discord.gg/AYFPHvv2jT';
 
 export const PLUGINS_INDEX_URL =
-  process.env.PLUGINS_INDEX_URL ?? 'https://chat-plugins-index.lobehub.com';
+  process.env.PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com';
