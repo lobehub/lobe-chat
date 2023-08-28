@@ -1,5 +1,4 @@
-import { Form, Input } from '@lobehub/ui';
-import { FormItemProps } from '@lobehub/ui/src';
+import { Form, FormItemProps, Input } from '@lobehub/ui';
 import { Form as AFrom } from 'antd';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

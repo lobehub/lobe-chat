@@ -109,7 +109,10 @@ export const createPluginSlice: StateCreator<
   saveToDevList: () => {
     const { devPluginList, newDevPlugin } = get();
     set(
-      { devPluginList: [...devPluginList, newDevPlugin], newDevPlugin: defaultDevPlugin },
+      {
+        devPluginList: [...devPluginList, newDevPlugin as DevPlugin],
+        newDevPlugin: defaultDevPlugin,
+      },
       false,
       t('saveToDevList'),
     );

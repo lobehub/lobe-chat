@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { transformPluginSettings } from '@/features/PluginSettings';
 import PluginSettingRender from '@/features/PluginSettings/PluginSettingRender';
-import { pluginHelpers, usePluginStore } from '@/store/plugin';
+import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
 import { useStore } from '../store';
 
@@ -30,16 +30,19 @@ const PluginSettings = memo(() => {
     s.useFetchPluginList,
     s.updatePluginSettings,
   ]);
+  const pluginList = usePluginStore(pluginSelectors.pluginList);
 
   const pluginManifestMap = usePluginStore((s) => s.pluginManifestMap, isEqual);
   const pluginsSettings = usePluginStore((s) => s.pluginsSettings, isEqual);
-  const { data } = useFetchPluginList();
+  useFetchPluginList();
 
-  const pluginsConfig = !data
+  const isEmpty = pluginList.length === 0;
+
+  const pluginsConfig = isEmpty
     ? []
     : (plugins
         .map((identifier) => {
-          const item = data.plugins.find((i) => i.identifier === identifier);
+          const item = pluginList.find((i) => i.identifier === identifier);
 
           if (!item) return null;
           const manifest = pluginManifestMap[identifier];

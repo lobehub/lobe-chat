@@ -18,7 +18,8 @@ export const renderErrorMessage: RenderErrorMessage = (error, message: ChatMessa
     case PluginErrorType.PluginManifestInvalid:
     case PluginErrorType.PluginManifestNotFound:
     case PluginErrorType.PluginApiNotFound:
-    case PluginErrorType.PluginApiParamsError: {
+    case PluginErrorType.PluginApiParamsError:
+    case PluginErrorType.PluginServerError: {
       return <PluginError content={(error as any).body} id={message.id} />;
     }
     case PluginErrorType.PluginSettingsInvalid: {
