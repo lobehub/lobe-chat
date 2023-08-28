@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.63.3](https://github.com/lobehub/lobe-chat/compare/v0.63.2...v0.63.3)
+
+<sup>Released on **2023-08-28**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor with new market url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor with new market url, closes [#123](https://github.com/lobehub/lobe-chat/issues/123) ([34a88f8](https://github.com/lobehub/lobe-chat/commit/34a88f8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.63.2](https://github.com/lobehub/lobe-chat/compare/v0.63.1...v0.63.2)
 
 <sup>Released on **2023-08-27**</sup>
