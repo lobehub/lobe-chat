@@ -1,5 +1,5 @@
 import { Icon } from '@lobehub/ui';
-import { App, ConfigProvider, Modal, Tabs } from 'antd';
+import { App, ConfigProvider, Modal } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { LucideBlocks } from 'lucide-react';
 import { lighten } from 'polished';
@@ -71,12 +71,14 @@ const DevModal = memo<DevModalProps>(({ open, onOpenChange }) => {
       >
         <Flexbox gap={12}>
           {t('dev.modalDesc')}
-          <Tabs
-            items={[
-              { children: <MetaForm />, key: 'meta', label: t('dev.tabs.meta') },
-              { children: <ManifestForm />, key: 'manifest', label: t('dev.tabs.manifest') },
-            ]}
-          ></Tabs>
+          {/*<Tabs*/}
+          {/*  items={[*/}
+          {/*    { children: <MetaForm />, key: 'meta', label: t('dev.tabs.meta') },*/}
+          {/*    { children: <ManifestForm />, key: 'manifest', label: t('dev.tabs.manifest') },*/}
+          {/*  ]}*/}
+          {/*/>*/}
+          <MetaForm />
+          <ManifestForm />
         </Flexbox>
       </Modal>
     </ConfigProvider>

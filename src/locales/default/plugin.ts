@@ -10,6 +10,11 @@ export default {
         desc: '插件的唯一标识',
         label: '标识符',
       },
+      mode: {
+        'local': '可视化配置',
+        'local-tooltip': '暂时不支持可视化配置',
+        'url': '在线链接',
+      },
       name: {
         desc: '插件标题',
         label: '标题',
@@ -35,12 +40,15 @@ export default {
         label: '首页',
       },
       identifier: {
-        desc: '插件的唯一标识',
+        desc: '插件的唯一标识，仅支持英文字符、数字、破折号 - 、下划线 _',
         label: '标识符',
+        pattenErrorMessage: '只能输入英文字符、数字 、- 和_ 这两个符号',
       },
       manifest: {
         desc: 'LobeChat 将会通过该链接安装插件',
+        invalid: '输入的 manifest 链接无效，或 manifest 不符合规范',
         label: '插件描述文件 Url 地址',
+        urlError: '请输入一个有效的网址',
       },
       title: {
         desc: '插件标题',
@@ -59,17 +67,20 @@ export default {
     save: '保存',
     saveSuccess: '插件设置保存成功',
     tabs: {
-      manifest: '插件描述文件',
+      manifest: '功能描述清单 (Manifest)',
       meta: '插件元信息',
     },
 
     title: '添加自定义插件',
   },
+  list: {
+    'title.local': '本地',
+  },
+
   loading: {
     content: '数据获取中...',
     plugin: '插件运行中...',
   },
-
   pluginList: '插件列表',
   plugins: {
     unknown: '插件检测中...',

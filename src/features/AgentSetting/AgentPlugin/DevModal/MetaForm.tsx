@@ -27,14 +27,20 @@ const MetaForm = memo(() => {
       desc: t('dev.meta.identifier.desc'),
       label: t('dev.meta.identifier.label'),
       name: 'identifier',
-      required: true,
+      rules: [
+        { required: true },
+        {
+          message: t('dev.meta.identifier.pattenErrorMessage'),
+          pattern: /^[\w-]+$/,
+        },
+      ],
     },
     {
       children: <Input placeholder={t('dev.meta.title.placeholder')} />,
       desc: t('dev.meta.title.desc'),
       label: t('dev.meta.title.label'),
       name: ['meta', 'title'],
-      required: true,
+      rules: [{ required: true }],
     },
     {
       children: <Input placeholder={t('dev.meta.description.placeholder')} />,
@@ -76,6 +82,11 @@ const MetaForm = memo(() => {
         onValuesChange={(e) => {
           updateNewDevPlugin(e);
         }}
+        validateMessages={
+          {
+            // required: () => '${title} is required!',
+          }
+        }
       />
     </Flexbox>
   );

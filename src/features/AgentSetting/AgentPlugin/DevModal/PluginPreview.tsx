@@ -1,7 +1,8 @@
 import { Avatar, Form } from '@lobehub/ui';
-import { Card, Switch } from 'antd';
+import { Card, Switch, Tag } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { pluginHelpers, usePluginStore } from '@/store/plugin';
 
@@ -9,12 +10,18 @@ const PluginPreview = memo(() => {
   const { t } = useTranslation('plugin');
   const meta = usePluginStore((s) => s.newDevPlugin);
 
-  console.log(pluginHelpers.getPluginDesc(meta?.meta));
   const items = {
     avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta?.meta) || '🧩'} />,
     children: <Switch />,
-    desc: pluginHelpers.getPluginDesc(meta?.meta) ?? t('dev.preview.desc'),
-    label: pluginHelpers.getPluginTitle(meta?.meta) ?? t('dev.preview.title'),
+    desc: pluginHelpers.getPluginDesc(meta?.meta),
+    label: (
+      <Flexbox align={'center'} gap={8} horizontal>
+        {pluginHelpers.getPluginTitle(meta?.meta) ?? t('dev.preview.title')}
+        <Tag bordered={false} color={'gold'}>
+          {t('list.title.local', { ns: 'plugin' })}
+        </Tag>
+      </Flexbox>
+    ),
     minWidth: undefined,
     tag: !!meta?.identifier ? meta?.identifier : 'id',
   };

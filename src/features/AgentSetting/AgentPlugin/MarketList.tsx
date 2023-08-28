@@ -126,7 +126,7 @@ const MarketList = memo(() => {
       <Flexbox align={'center'} gap={8} horizontal>
         {pluginHelpers.getPluginTitle(meta)}
         <Tag bordered={false} color={'gold'}>
-          Local
+          {t('list.title.local', { ns: 'plugin' })}
         </Tag>
       </Flexbox>
     ),
