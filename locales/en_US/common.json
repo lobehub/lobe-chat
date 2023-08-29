@@ -51,6 +51,7 @@
   "regenerate": "Regenerate",
   "rename": "Rename",
   "reset": "Reset",
+  "retry": "Retry",
   "roleAndArchive": "Roles and Archives",
   "searchAgentPlaceholder": "Search Assistants and Conversations...",
   "send": "Send",
@@ -61,7 +62,8 @@
   "stop": "Stop",
   "tab": {
     "chat": "Chat",
-    "market": "Assistant Market"
+    "market": "Assistant Market",
+    "setting": "Settings"
   },
   "temp": "Temporary",
   "tokenDetail": "Role Setting: {{systemRoleToken}} · Message History: {{chatsToken}}",
@@ -74,8 +76,10 @@
     "confirmRemoveTopic": "You are about to delete this topic. Once deleted, it cannot be recovered. Please proceed with caution.",
     "defaultTitle": "Default Topic",
     "saveCurrentMessages": "Save the current session as a topic",
-    "searchPlaceholder": "Search Topics..."
+    "searchPlaceholder": "Search Topics...",
+    "title": "Topic"
   },
   "updateAgent": "Update Assistant Information",
-  "updatePrompt": "Update Prompts"
+  "updatePrompt": "Update Prompts",
+  "warp": "Line break"
 }

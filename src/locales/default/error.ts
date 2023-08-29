@@ -1,7 +1,3 @@
-import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
-
-import { ChatErrorType } from '@/types/fetch';
-
 export default {
   pluginSettings: {
     desc: '完成以下配置，即可开始使用该插件',
@@ -19,30 +15,24 @@ export default {
     503: '很抱歉，服务器当前无法处理您的请求，可能是由于过载或正在进行维护，请稍后再试',
     504: '很抱歉，服务器没有等到上游服务器的回应，请稍后再试',
 
-    [PluginErrorType.PluginMarketIndexNotFound]:
-      '很抱歉，服务器没有找到插件索引，请检查索引地址是否正确',
-    [PluginErrorType.PluginMarketIndexInvalid]:
-      '很抱歉，插件索引校验未通过，请检查索引文件格式是否规范',
-    [PluginErrorType.PluginMetaNotFound]:
-      '很抱歉，没有在索引中发现该插件，请插件在索引中的配置信息',
-    [PluginErrorType.PluginMetaInvalid]:
-      '很抱歉，该插件的元信息校验未通过，请检查插件元信息格式是否规范',
-    [PluginErrorType.PluginManifestNotFound]:
+    /* eslint-disable sort-keys-fix/sort-keys-fix */
+    PluginMarketIndexNotFound: '很抱歉，服务器没有找到插件索引，请检查索引地址是否正确',
+    PluginMarketIndexInvalid: '很抱歉，插件索引校验未通过，请检查索引文件格式是否规范',
+    PluginMetaNotFound: '很抱歉，没有在索引中发现该插件，请插件在索引中的配置信息',
+    PluginMetaInvalid: '很抱歉，该插件的元信息校验未通过，请检查插件元信息格式是否规范',
+    PluginManifestNotFound:
       '很抱歉，服务器没有找到该插件的描述清单 (manifest.json)，请检查插件描述文件地址是否正确',
-    [PluginErrorType.PluginManifestInvalid]:
-      '很抱歉，该插件的描述清单校验未通过，请检查描述清单格式是否规范',
-    [PluginErrorType.PluginApiNotFound]:
+    PluginManifestInvalid: '很抱歉，该插件的描述清单校验未通过，请检查描述清单格式是否规范',
+    PluginApiNotFound:
       '很抱歉，插件描述清单中不存在该 API ，请检查你的请求方法与插件清单 API 是否匹配',
-    [PluginErrorType.PluginApiParamsError]:
-      '很抱歉，该插件请求的入参校验未通过，请检查入参与 Api 描述信息是否匹配',
-    [PluginErrorType.PluginSettingsInvalid]:
-      '该插件需要正确配置后才可以使用，请检查你的配置是否正确',
-    [PluginErrorType.PluginServerError]:
+    PluginApiParamsError: '很抱歉，该插件请求的入参校验未通过，请检查入参与 Api 描述信息是否匹配',
+    PluginSettingsInvalid: '该插件需要正确配置后才可以使用，请检查你的配置是否正确',
+    PluginServerError:
       '插件服务端请求返回出错，请检查根据下面的报错信息检查你的插件描述文件、插件配置或服务端实现',
 
-    [ChatErrorType.InvalidAccessCode]:
-      '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
-    [ChatErrorType.OpenAIBizError]: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
+    InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
+    OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
+    /* eslint-enable */
   },
   unlock: {
     apikey: {

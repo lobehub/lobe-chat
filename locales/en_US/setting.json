@@ -128,7 +128,10 @@
     }
   },
   "settingPlugin": {
-    "title": "Plugin List"
+    "title": "Plugin List",
+    "add": "Add",
+    "addTooltip": "Add custom plugin",
+    "config": "{{id}} Plugin Configuration"
   },
   "settingSystem": {
     "accessCode": {
