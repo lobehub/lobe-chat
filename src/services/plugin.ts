@@ -22,7 +22,7 @@ export const fetchPlugin = async (
   const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
   const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
 
-  const gatewayURL = (manifest as any)?.gateway;
+  const gatewayURL = manifest?.gateway;
 
   const res = await fetch(gatewayURL ?? URLS.plugins, {
     body: JSON.stringify({ ...params, manifest }),
