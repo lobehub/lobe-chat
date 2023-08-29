@@ -17,10 +17,10 @@ const MarketList = memo<{ id: string }>(({ id }) => {
   const updateConfig = useStore((s) => s.toggleAgentPlugin);
   const [plugins, hasPlugin] = useStore((s) => [s.config.plugins || [], !!s.config.plugins]);
 
-  const [useFetchPluginList, fetchPluginManifest, updateDevPlugin] = usePluginStore((s) => [
+  const [useFetchPluginList, fetchPluginManifest, dispatchDevPluginList] = usePluginStore((s) => [
     s.useFetchPluginList,
     s.fetchPluginManifest,
-    s.updateDevPlugin,
+    s.dispatchDevPluginList,
   ]);
 
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
@@ -31,9 +31,12 @@ const MarketList = memo<{ id: string }>(({ id }) => {
   return (
     <>
       <DevModal
+        onDelete={() => {
+          dispatchDevPluginList({ id, type: 'deleteItem' });
+        }}
         onOpenChange={setModal}
         onSave={(value) => {
-          updateDevPlugin(id, value);
+          dispatchDevPluginList({ id, plugin: value, type: 'updateItem' });
         }}
         open={showModal}
         showDelete

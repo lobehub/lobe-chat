@@ -15,6 +15,7 @@ import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { DevPlugin, defaultDevPlugin } from './initialState';
+import { DevListDispatch, devPluginListReducer } from './reducers/devPluginList';
 import { PluginDispatch, pluginManifestReducer } from './reducers/manifest';
 import { PluginStore } from './store';
 
@@ -25,9 +26,10 @@ const t = setNamespace('plugin');
  */
 export interface PluginAction {
   checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
+  dispatchDevPluginList: (payload: DevListDispatch) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
   fetchPluginManifest: (name: string) => Promise<void>;
-  saveToDevList: () => void;
+  saveToDevList: (value: DevPlugin) => void;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
   updateNewDevPlugin: (value: Partial<DevPlugin>) => void;
   updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
@@ -58,7 +60,12 @@ export const createPluginSlice: StateCreator<
 
     set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
   },
-  dispatchDevList: () => {},
+  dispatchDevPluginList: (payload) => {
+    const { devPluginList } = get();
+
+    const nextList = devPluginListReducer(devPluginList, payload);
+    set({ devPluginList: nextList }, false, t('dispatchDevList', payload));
+  },
   dispatchPluginManifest: (payload) => {
     const { pluginManifestMap } = get();
     const nextManifest = pluginManifestReducer(pluginManifestMap, payload);
@@ -106,16 +113,9 @@ export const createPluginSlice: StateCreator<
     // 4. 存储 manifest 信息
     get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
   },
-  saveToDevList: () => {
-    const { devPluginList, newDevPlugin } = get();
-    set(
-      {
-        devPluginList: [...devPluginList, newDevPlugin as DevPlugin],
-        newDevPlugin: defaultDevPlugin,
-      },
-      false,
-      t('saveToDevList'),
-    );
+  saveToDevList: (value) => {
+    get().dispatchDevPluginList({ plugin: value, type: 'addItem' });
+    set({ newDevPlugin: defaultDevPlugin }, false, t('saveToDevList'));
   },
 
   updateManifestLoadingState: (key, value) => {
@@ -127,7 +127,6 @@ export const createPluginSlice: StateCreator<
       t('updateManifestLoadingState'),
     );
   },
-
   updateNewDevPlugin: (newDevPlugin) => {
     set(
       { newDevPlugin: merge({}, get().newDevPlugin, newDevPlugin) },
@@ -135,7 +134,6 @@ export const createPluginSlice: StateCreator<
       t('updateNewDevPlugin'),
     );
   },
-
   updatePluginSettings: (id, settings) => {
     set(
       produce((draft) => {

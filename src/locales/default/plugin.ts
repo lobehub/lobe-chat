@@ -6,6 +6,7 @@ export default {
   },
   dev: {
     confirmDeleteDevPlugin: '即将删除该本地插件，删除后将无法找回，是否删除该插件？',
+    deleteSuccess: '插件删除成功',
     manifest: {
       identifier: {
         desc: '插件的唯一标识',
@@ -59,7 +60,6 @@ export default {
         placeholder: '搜索引擎',
       },
     },
-
     metaConfig: '插件元信息配置',
     modalDesc: '添加自定义插件后，可用于插件开发验证，也可直接在会话中使用。插件开发文档请参考',
     preview: {

@@ -58,7 +58,10 @@ const DevModal = memo<DevModalProps>(
               danger: true,
               type: 'primary',
             }}
-            onConfirm={onDelete}
+            onConfirm={() => {
+              onDelete?.();
+              message.success(t('dev.deleteSuccess'));
+            }}
             placement={'topLeft'}
             title={t('dev.confirmDeleteDevPlugin')}
           >
