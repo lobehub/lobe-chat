@@ -1,4 +1,8 @@
 {
+  "pluginSettings": {
+    "desc": "Complete the following configuration to start using this plugin",
+    "title": "{{name}} Plugin Configuration"
+  },
   "response": {
     "400": "Sorry, the server does not understand your request. Please make sure your request parameters are correct.",
     "401": "Sorry, the server has rejected your request, possibly due to insufficient permissions or invalid authentication.",
@@ -11,7 +15,17 @@
     "503": "Sorry, the server is currently unable to process your request, possibly due to overload or maintenance. Please try again later.",
     "504": "Sorry, the server did not receive a response from the upstream server. Please try again later.",
     "InvalidAccessCode": "The password is incorrect or empty. Please enter the correct access password or add a custom OpenAI API Key.",
-    "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information."
+    "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information.",
+    "PluginMarketIndexNotFound": "Sorry, the server could not find the plugin index. Please check if the index address is correct",
+    "PluginMarketIndexInvalid": "Sorry, the plugin index validation failed. Please check if the index file format is correct",
+    "PluginMetaNotFound": "Sorry, the plugin was not found in the index. Please check the plugin's configuration information in the index",
+    "PluginMetaInvalid": "Sorry, the plugin's metadata validation failed. Please check if the plugin metadata format is correct",
+    "PluginManifestNotFound": "Sorry, the server could not find the plugin's manifest file (manifest.json). Please check if the plugin manifest file address is correct",
+    "PluginManifestInvalid": "Sorry, the plugin's manifest validation failed. Please check if the manifest format is correct",
+    "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
+    "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
+    "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
+    "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below"
   },
   "unlock": {
     "apikey": {
