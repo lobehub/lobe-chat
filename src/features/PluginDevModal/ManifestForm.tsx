@@ -1,18 +1,11 @@
 import { pluginManifestSchema } from '@lobehub/chat-plugin-sdk';
 import { Form, FormItemProps, Input, Tooltip } from '@lobehub/ui';
-import { Radio } from 'antd';
+import { FormInstance, Radio } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { usePluginStore } from '@/store/plugin';
-
-const ManifestForm = memo(() => {
+const ManifestForm = memo<{ form: FormInstance; mode: 'url' | 'local' }>(({ form, mode }) => {
   const { t } = useTranslation('plugin');
-
-  const [mode, updateNewDevPlugin] = usePluginStore((s) => [
-    s.newDevPlugin.manifestMode,
-    s.updateNewDevPlugin,
-  ]);
 
   const isUrl = mode === 'url';
 
@@ -72,13 +65,14 @@ const ManifestForm = memo(() => {
 
   return (
     <Form
+      form={form}
       items={[
         {
           children: configItem,
           extra: (
             <Radio.Group
               onChange={(v) => {
-                updateNewDevPlugin({ manifestMode: v.target.value });
+                form.setFieldValue('manifestMode', v.target.value);
               }}
               size={'small'}
               value={mode}
@@ -95,10 +89,7 @@ const ManifestForm = memo(() => {
         },
       ]}
       layout={isUrl ? 'vertical' : undefined}
-      onValuesChange={(e) => {
-        updateNewDevPlugin(e);
-      }}
-    ></Form>
+    />
   );
 });
 

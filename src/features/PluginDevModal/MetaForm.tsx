@@ -1,19 +1,14 @@
 import { Form, FormItemProps, Input } from '@lobehub/ui';
-import { Form as AFrom } from 'antd';
+import { FormInstance } from 'antd';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import EmojiPicker from '@/components/EmojiPicker';
-import { usePluginStore } from '@/store/plugin';
-import { DevPlugin } from '@/store/plugin/initialState';
+import { pluginSelectors, usePluginStore } from '@/store/plugin';
 
-import PluginPreview from './PluginPreview';
-
-const MetaForm = memo(() => {
+const MetaForm = memo<{ form: FormInstance }>(({ form }) => {
   const { t } = useTranslation('plugin');
-  const [form] = AFrom.useForm<DevPlugin>();
-  const [updateNewDevPlugin] = usePluginStore((s) => [s.updateNewDevPlugin]);
+  const [plugins] = usePluginStore((s) => [pluginSelectors.pluginList(s).map((i) => i.identifier)]);
 
   useEffect(() => {
     if (usePluginStore.getState().newDevPlugin) {
@@ -32,6 +27,14 @@ const MetaForm = memo(() => {
         {
           message: t('dev.meta.identifier.pattenErrorMessage'),
           pattern: /^[\w-]+$/,
+        },
+        {
+          message: t('dev.meta.identifier.errorDuplicate'),
+          validator: async (_, value) => {
+            if (plugins.includes(value)) {
+              throw new Error('Duplicate');
+            }
+          },
         },
       ],
     },
@@ -69,26 +72,18 @@ const MetaForm = memo(() => {
   ];
 
   return (
-    <Flexbox gap={12}>
-      <PluginPreview />
-      <Form
-        form={form}
-        items={[
-          {
-            children: configItem,
-            title: t('dev.metaConfig'),
-          },
-        ]}
-        onValuesChange={(e) => {
-          updateNewDevPlugin(e);
-        }}
-        validateMessages={
-          {
-            // required: () => '${title} is required!',
-          }
-        }
-      />
-    </Flexbox>
+    <Form
+      form={form}
+      items={[
+        {
+          children: configItem,
+          title: t('dev.metaConfig'),
+        },
+      ]}
+      validateMessages={{
+        required: () => t('dev.meta.formFieldRequired'),
+      }}
+    />
   );
 });
 

@@ -12,13 +12,13 @@ const PluginPreview = memo(() => {
 
   const items = {
     avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta?.meta) || '🧩'} />,
-    children: <Switch />,
+    children: <Switch disabled />,
     desc: pluginHelpers.getPluginDesc(meta?.meta),
     label: (
       <Flexbox align={'center'} gap={8} horizontal>
         {pluginHelpers.getPluginTitle(meta?.meta) ?? t('dev.preview.title')}
         <Tag bordered={false} color={'gold'}>
-          {t('list.title.local', { ns: 'plugin' })}
+          {t('list.item.local.title', { ns: 'plugin' })}
         </Tag>
       </Flexbox>
     ),

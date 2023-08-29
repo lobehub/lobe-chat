@@ -6,12 +6,13 @@ import { LucideBlocks, LucideStore } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import DevModal from 'src/features/PluginDevModal';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import DevModal from '@/features/AgentSetting/AgentPlugin/DevModal';
 import { pluginHelpers, usePluginStore } from '@/store/plugin';
 
 import { useStore } from '../store';
+import LocalPluginItem from './LocalPluginItem';
 
 const useStyles = createStyles(({ css }) => ({
   avatar: css`
@@ -43,10 +44,13 @@ const MarketList = memo(() => {
   const updateConfig = useStore((s) => s.toggleAgentPlugin);
   const [plugins, hasPlugin] = useStore((s) => [s.config.plugins || [], !!s.config.plugins]);
 
-  const [useFetchPluginList, fetchPluginManifest] = usePluginStore((s) => [
-    s.useFetchPluginList,
-    s.fetchPluginManifest,
-  ]);
+  const [useFetchPluginList, fetchPluginManifest, saveToDevList, updateNewDevPlugin] =
+    usePluginStore((s) => [
+      s.useFetchPluginList,
+      s.fetchPluginManifest,
+      s.saveToDevList,
+      s.updateNewDevPlugin,
+    ]);
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
   const pluginList = usePluginStore((s) => s.pluginList, isEqual);
   const devPluginList = usePluginStore((s) => s.devPluginList, isEqual);
@@ -103,30 +107,13 @@ const MarketList = memo(() => {
 
   const devList = devPluginList.map(({ identifier, meta }) => ({
     avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta) || '🧩'} />,
-    children: (
-      <Flexbox align={'center'} gap={8} horizontal>
-        <Switch
-          checked={
-            // 如果在加载中，说明激活了
-            pluginManifestLoading[identifier] || !hasPlugin ? false : plugins.includes(identifier)
-          }
-          loading={pluginManifestLoading[identifier]}
-          onChange={(checked) => {
-            updateConfig(identifier);
-            if (checked) {
-              fetchPluginManifest(identifier);
-            }
-          }}
-        />
-        <Button>配置</Button>
-      </Flexbox>
-    ),
+    children: <LocalPluginItem id={identifier} />,
     desc: pluginHelpers.getPluginDesc(meta),
     label: (
       <Flexbox align={'center'} gap={8} horizontal>
         {pluginHelpers.getPluginTitle(meta)}
         <Tag bordered={false} color={'gold'}>
-          {t('list.title.local', { ns: 'plugin' })}
+          {t('list.item.local.title', { ns: 'plugin' })}
         </Tag>
       </Flexbox>
     ),
@@ -136,7 +123,12 @@ const MarketList = memo(() => {
 
   return (
     <>
-      <DevModal onOpenChange={setModal} open={showModal} />
+      <DevModal
+        onOpenChange={setModal}
+        onSave={saveToDevList}
+        onValueChange={updateNewDevPlugin}
+        open={showModal}
+      />
       <Form
         items={[
           {

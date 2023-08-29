@@ -5,6 +5,7 @@ export default {
     response: '返回结果',
   },
   dev: {
+    confirmDeleteDevPlugin: '即将删除该本地插件，删除后将无法找回，是否删除该插件？',
     manifest: {
       identifier: {
         desc: '插件的唯一标识',
@@ -35,12 +36,14 @@ export default {
         label: '描述',
         placeholder: '查询搜索引擎获取信息',
       },
+      formFieldRequired: '该字段为必填项',
       homepage: {
         desc: '插件的首页',
         label: '首页',
       },
       identifier: {
         desc: '插件的唯一标识，仅支持英文字符、数字、破折号 - 、下划线 _',
+        errorDuplicate: '标识符和已有插件重复，请修改标识符',
         label: '标识符',
         pattenErrorMessage: '只能输入英文字符、数字 、- 和_ 这两个符号',
       },
@@ -56,8 +59,8 @@ export default {
         placeholder: '搜索引擎',
       },
     },
-    metaConfig: '插件元信息配置',
 
+    metaConfig: '插件元信息配置',
     modalDesc: '添加自定义插件后，可用于插件开发验证，也可直接在会话中使用。插件开发文档请参考',
     preview: {
       card: '预览插件展示效果',
@@ -74,7 +77,10 @@ export default {
     title: '添加自定义插件',
   },
   list: {
-    'title.local': '本地',
+    item: {
+      'local.config': '配置',
+      'local.title': '本地',
+    },
   },
 
   loading: {

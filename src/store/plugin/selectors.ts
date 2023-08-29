@@ -28,6 +28,9 @@ const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.devPluginList
 const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
   pluginHelpers.getPluginFormList(pluginList(s), id);
 
+const getDevPluginById = (id: string) => (s: PluginStoreState) =>
+  s.devPluginList.find((i) => i.identifier === id);
+
 const getPluginManifestById = (id: string) => (s: PluginStoreState) => s.pluginManifestMap[id];
 const getPluginSettingsById = (id: string) => (s: PluginStoreState) => s.pluginsSettings[id];
 
@@ -56,6 +59,7 @@ const displayPluginList = (s: PluginStoreState) =>
 export const pluginSelectors = {
   displayPluginList,
   enabledSchema,
+  getDevPluginById,
   getPluginManifestById,
   getPluginManifestLoadingStatus,
   getPluginMetaById,
