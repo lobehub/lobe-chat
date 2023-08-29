@@ -1,6 +1,6 @@
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 
-import { usePluginStore } from '@/store/plugin';
+import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { getMessageError } from '@/utils/fetch';
 
 import { URLS } from './url';
@@ -17,10 +17,13 @@ export const fetchPlugin = async (
   params: PluginRequestPayload,
   options?: FetchChatModelOptions,
 ) => {
-  const settings = usePluginStore.getState().pluginsSettings?.[params.identifier];
+  const s = usePluginStore.getState();
+
+  const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
+  const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
 
   const res = await fetch(URLS.plugins, {
-    body: JSON.stringify(params),
+    body: JSON.stringify({ ...params, manifest }),
     headers: createHeadersWithPluginSettings(settings),
     method: 'POST',
     signal: options?.signal,

@@ -12,41 +12,35 @@ export interface FunctionMessageProps extends ChatMessage {
   loading?: boolean;
 }
 
-const PluginMessage = memo<FunctionMessageProps>(
-  ({
-    content,
-    // loading,
-    name,
-  }) => {
-    const { t } = useTranslation('plugin');
+const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
+  const { t } = useTranslation('plugin');
 
-    const manifest = usePluginStore((s) => s.pluginManifestMap[name || '']);
-    let isJSON = true;
-    try {
-      JSON.parse(content);
-    } catch {
-      isJSON = false;
-    }
+  const manifest = usePluginStore((s) => s.pluginManifestMap[name || '']);
+  let isJSON = true;
+  try {
+    JSON.parse(content);
+  } catch {
+    isJSON = false;
+  }
 
-    // if (!loading)
+  // if (!loading)
 
-    if (!isJSON) {
-      return (
-        <Flexbox gap={8} horizontal>
-          <div>
-            <Loading3QuartersOutlined spin />
-          </div>
-          {t('loading.content')}
-        </Flexbox>
-      );
-    }
-
-    if (!manifest?.ui?.url) return;
-
+  if (!isJSON) {
     return (
-      <CustomRender content={JSON.parse(content)} name={name || 'unknown'} url={manifest.ui?.url} />
+      <Flexbox gap={8} horizontal>
+        <div>
+          <Loading3QuartersOutlined spin />
+        </div>
+        {t('loading.content')}
+      </Flexbox>
     );
-  },
-);
+  }
+
+  if (!manifest?.ui?.url) return;
+
+  return (
+    <CustomRender content={JSON.parse(content)} name={name || 'unknown'} url={manifest.ui?.url} />
+  );
+});
 
 export default PluginMessage;

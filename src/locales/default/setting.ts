@@ -1,3 +1,4 @@
+
 export default {
   danger: {
     clear: {
@@ -128,6 +129,8 @@ export default {
     },
   },
   settingPlugin: {
+    add: '添加',
+    addTooltip: '添加自定义插件',
     config: '{{id}} 插件配置',
     title: '插件列表',
   },

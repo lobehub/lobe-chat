@@ -63,9 +63,9 @@ const AgentMeta = memo(() => {
         {
           children: (
             <EmojiPicker
-              avatar={meta.avatar}
               backgroundColor={meta.backgroundColor}
               onChange={(avatar) => updateMeta({ avatar })}
+              value={meta.avatar}
             />
           ),
           label: t('settingAgent.avatar.title'),
