@@ -2,6 +2,43 @@
 
 # Changelog
 
+## [Version 0.64.0](https://github.com/lobehub/lobe-chat/compare/v0.63.3...v0.64.0)
+
+<sup>Released on **2023-08-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove no need i18n.
+
+#### ✨ Features
+
+- **misc**: 增加自定义插件的增删改配置功能, 完善自定义插件表单的校验逻辑, 支持本地插件侧的请求与错误呈现, 新增插件配置 Dev 弹窗, 绑定本地插件的增删改逻辑.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove no need i18n ([808a86a](https://github.com/lobehub/lobe-chat/commit/808a86a))
+
+#### What's improved
+
+- **misc**: 增加自定义插件的增删改配置功能 ([faba081](https://github.com/lobehub/lobe-chat/commit/faba081))
+- **misc**: 完善自定义插件表单的校验逻辑 ([4e1fd28](https://github.com/lobehub/lobe-chat/commit/4e1fd28))
+- **misc**: 支持本地插件侧的请求与错误呈现 ([7e2b39a](https://github.com/lobehub/lobe-chat/commit/7e2b39a))
+- **misc**: 新增插件配置 Dev 弹窗 ([20269b7](https://github.com/lobehub/lobe-chat/commit/20269b7))
+- **misc**: 绑定本地插件的增删改逻辑 ([902e7ed](https://github.com/lobehub/lobe-chat/commit/902e7ed))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.63.3](https://github.com/lobehub/lobe-chat/compare/v0.63.2...v0.63.3)
 
 <sup>Released on **2023-08-28**</sup>
