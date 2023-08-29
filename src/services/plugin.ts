@@ -22,7 +22,9 @@ export const fetchPlugin = async (
   const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
   const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
 
-  const res = await fetch(URLS.plugins, {
+  const gatewayURL = manifest?.gateway;
+
+  const res = await fetch(gatewayURL ?? URLS.plugins, {
     body: JSON.stringify({ ...params, manifest }),
     headers: createHeadersWithPluginSettings(settings),
     method: 'POST',
