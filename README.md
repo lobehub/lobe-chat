@@ -10,7 +10,7 @@
 
 LobeChat is a open-source, extensible (Function Calling), high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
 
-[Changelog](./CHANGELOG.md) · [Report Bug][issues-url] · [Request Feature][issues-url]
+**English** · [简体中文](./README-zh_CN.md) · [Changelog](./CHANGELOG.md) · [Report Bug][issues-url] · [Request Feature][issues-url]
 
 <!-- SHIELD GROUP -->
 
@@ -24,7 +24,7 @@ LobeChat is a open-source, extensible (Function Calling), high-performance chatb
 [![issues][issues-shield]][issues-url] <br/>
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-![]()
+![cover](https://gw.alipayobjects.com/zos/kitchen/ES6q6C5kVM/lobechat.webp)
 
 </div>
 
