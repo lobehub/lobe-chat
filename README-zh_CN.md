@@ -80,11 +80,25 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 本项目提供了一些额外的配置项，使用环境变量进行设置：
 
-| 环境变量           | 描述                                                                | 是否必选 | 默认值                   | 示例值                                |
-| ------------------ | ------------------------------------------------------------------- | -------- | ------------------------ | ------------------------------------- |
-| `OPENAI_API_KEY`   | OpenAI 密钥，你在 OpenAI 账户页面申请的 API Key                     | 必选     |                          | `skjdfiwoejfoiwejfoiwejfoiwejfoiwejf` |
-| `ACCESS_CODE`      | 添加访问此服务的密码，密码应为6位数字或字母                         |          |                          | `awCT74` \| `e3@09!`                  |
-| `OPENAI_PROXY_URL` | OpenAI 接口代理 URL，如果你手动配置了 OpenAI 接口代理，请填写此选项 |          | `https://api.openai.com` | `https://api.chatanywhere.cn`         |
+#### `OPENAI_API_KEY` (必选)
+
+这是你在OpenAI账户页面申请的API密钥。
+
+示例: `sk-2EnxIQkLqLSCat0bWKHdT3BlbcFJhoCfEoSkwuBzUeisGCku`
+
+#### `ACCESS_CODE` (可选)
+
+这是访问此服务的密码，密码应为6位数字或字母。
+
+示例: `awCT74` 或 `e3@09!`
+
+#### `OPENAI_PROXY_URL` (可选)
+
+> 默认值: `https://api.openai.com`
+
+如果你手动配置了OpenAI接口代理，可以使用此配置项来覆盖默认的OpenAI API请求基础URL。
+
+示例: `https://api.chatanywhere.cn`
 
 <div align="right">
 
