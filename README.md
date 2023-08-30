@@ -101,6 +101,7 @@ $ pnpm dev
 <a href="https://github.com/actions-user" title="actions-user">
   <img src="https://avatars.githubusercontent.com/u/65916846?v=4" width="50" />
 </a>
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=shield"/></a>
 
 <!-- CONTRIBUTION END -->
 
@@ -171,3 +172,6 @@ This project is [MIT](./LICENSE) licensed.
 
 [deploy-button-image]: https://vercel.com/button
 [deploy-url]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat?ref=badge_large)
