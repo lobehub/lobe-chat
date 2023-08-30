@@ -8,7 +8,7 @@
 
 <h1>Lobe Chat</h1>
 
-Lobe Chat is an open-source chatbot client using OpenAI and Next.js
+LobeChat is a open-source, extensible (Function Calling), high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
 
 [Changelog](./CHANGELOG.md) · [Report Bug][issues-url] · [Request Feature][issues-url]
 
@@ -21,10 +21,10 @@ Lobe Chat is an open-source chatbot client using OpenAI and Next.js
 [![contributors][contributors-shield]][contributors-url]
 [![forks][forks-shield]][forks-url]
 [![stargazers][stargazers-shield]][stargazers-url]
-[![issues][issues-shield]][issues-url]
-
+[![issues][issues-shield]][issues-url] <br/>
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
-![](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+![]()
 
 </div>
 
@@ -47,7 +47,7 @@ Lobe Chat is an open-source chatbot client using OpenAI and Next.js
 
 ## 🛳 Self Hosting
 
-If you want to deploy this service by yourself, you can follow the steps below.
+LobeChat offers [official versions][official-url] and Vercel [self-deployment versions][deploy-url]. This allows you to build your own chatbot in minutes without any foundation. If you want to deploy this service yourself, you can follow the steps below.
 
 ### Deploy to Vercel
 
@@ -59,8 +59,16 @@ If you want to make some customization, you can add environment variable:
 
 | Environment variable | Description                                                                       | Example                       |
 | -------------------- | --------------------------------------------------------------------------------- | ----------------------------- |
-| `OPENAI_PROXY_URL`   | OpenAI API 代理 URL，例如：`https://api.chatanywhere.cn`                          | `https://api.chatanywhere.cn` |
+| `OPENAI_PROXY_URL`   | OpenAI API Proxy URL, for example: `https://api.chatanywhere.cn`                  | `https://api.chatanywhere.cn` |
 | `ACCESS_CODE`        | Add Password to access this service, the password should be 6 digits or alphabets | `awCT74` \| `e3@09!`          |
+
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 
 ## ⌨️ Local Development
 
@@ -119,6 +127,7 @@ This project is [MIT](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
+[official-url]: https://lobe-chat.vercel.app
 [profile-url]: https://github.com/lobehub
 [issues-url]: https://github.com/lobehub/lobe-chat/issues/new/choose
 [gitpod-url]: https://gitpod.io/#https://github.com/lobehub/lobe-chat
