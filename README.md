@@ -21,10 +21,11 @@ LobeChat is a open-source, extensible ([Function Calling](https://sspai.com/post
 [![contributors][contributors-shield]][contributors-url]
 [![forks][forks-shield]][forks-url]
 [![stargazers][stargazers-shield]][stargazers-url]
-[![issues][issues-shield]][issues-url] <br/>
+[![issues][issues-shield]][issues-url]
+
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-![cover](https://gw.alipayobjects.com/zos/kitchen/ES6q6C5kVM/lobechat.webp)
+![cover](https://gw.alipayobjects.com/zos/kitchen/3uH7fYVvfO/lobechat.webp)
 
 </div>
 
@@ -33,35 +34,27 @@ LobeChat is a open-source, extensible ([Function Calling](https://sspai.com/post
 
 #### TOC
 
+- [✨ Features](#-features)
 - [🛳 Self Hosting](#-self-hosting)
-
-  - [Deploy to Vercel](#deploy-to-vercel)
-
 - [⌨️ Local Development](#️-local-development)
-
 - [🤝 Contributing](#-contributing)
 
 ####
 
+<br/>
+
 </details>
 
-## 🛳 Self Hosting
+## ✨ Features
 
-LobeChat offers [official versions][official-url] and Vercel [self-deployment versions][deploy-url]. This allows you to build your own chatbot in minutes without any foundation. If you want to deploy this service yourself, you can follow the steps below.
-
-### Deploy to Vercel
-
-Click button below to deploy your private plugins' gateway.
-
-[![Deploy with Vercel][deploy-button-image]][deploy-url]
-
-If you want to make some customization, you can add environment variable:
-
-| Environment variable | Description                                                                       | Example                       |
-| -------------------- | --------------------------------------------------------------------------------- | ----------------------------- |
-| `OPENAI_PROXY_URL`   | OpenAI API Proxy URL, for example: `https://api.chatanywhere.cn`                  | `https://api.chatanywhere.cn` |
-| `ACCESS_CODE`        | Add Password to access this service, the password should be 6 digits or alphabets | `awCT74` \| `e3@09!`          |
-
+- [x] 💨 **Quick Deployment**: Using the Vercel platform, you can deploy with just one click and complete the process within 1 minute, without any complex configuration;
+- [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience;
+- [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more;
+- [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs;
+- [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy;
+- [x] 🤖 **Customizable Assistant Roles**: Users can create, share, and debug personalized dialogue assistant roles according to their needs, providing more flexible and personalized dialogue functions;
+- [ ] 🏬 **Role Market** (WIP): A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
+- [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue assistant from anywhere.
 
 <div align="right">
 
@@ -69,6 +62,30 @@ If you want to make some customization, you can add environment variable:
 
 </div>
 
+## 🛳 Self Hosting
+
+LobeChat provides a [self-hosted version][deploy-url] with Vercel. This allows you to build your own chatbot within a few minutes, without any prior knowledge. If you want to deploy this service yourself, you can follow these steps:
+
+- Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
+- Click the button below to start deployment: Deploy with Vercel. Log in directly with your Github account and remember to fill in the API Key and access code CODE on the environment variable page;
+- After deployment, you can start using it;
+- Bind a custom domain (optional): The DNS of the domain assigned by Vercel is polluted in some areas, binding a custom domain can connect directly.
+
+[![Deploy with Vercel][deploy-button-image]][deploy-url]
+
+> 👉 Note: This project provides some additional configuration items, set with environment variables:
+
+| Environment Variable | Required | Description                                                                                                                                                                                  | Example                                               |
+| -------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                                                                     | `sk-2EnxIQkLqLSCat0bWKHdT3BlbcFJhoCfEoSkwuBzUeisGCku` |
+| `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL. The default value is `https://api.openai.com` | `https://api.chatanywhere.cn`                         |
+| `ACCESS_CODE`        | No       | Add a password to access this service, the password should be a 6-digit number or letter                                                                                                     | `awCT74` or `e3@09!`                                  |
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ## ⌨️ Local Development
 
