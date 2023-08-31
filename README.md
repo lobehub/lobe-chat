@@ -25,7 +25,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-![cover](https://gw.alipayobjects.com/zos/kitchen/3uH7fYVvfO/lobechat.webp)
+![](https://gw.alipayobjects.com/zos/kitchen/3uH7fYVvfO/lobechat.webp)
 
 </div>
 
@@ -34,16 +34,32 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 #### TOC
 
+- [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
 - [✨ Features](#-features)
 - [🛳 Self Hosting](#-self-hosting)
+- [📦 Ecosystem](#-ecosystem)
+- [🧩 Plugins](#-plugins)
 - [⌨️ Local Development](#️-local-development)
 - [🤝 Contributing](#-contributing)
+- [🔗 More Products](#-more-products)
 
 ####
 
 <br/>
 
 </details>
+
+## 👋🏻 Getting Started & Join Our Community
+
+> 👉 Note: Please be aware that LobeChat is currently under active development and is not yet suitable for production use.
+
+[![][official-shield]][official-url] No installation or registration necessary! Visit our website to experience it firsthand.
+
+[![][discord-shield]][discord-url] Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub.
+
+> ⭐️ Star us: You will receive all releases notifications from GitHub without any delay!
+
+![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
 
 ## ✨ Features
 
@@ -89,12 +105,11 @@ LobeChat provides a [self-hosted version][deploy-url] with Vercel. This allows y
 
 ## 📦 Ecosystem
 
-| NPM                                    | Repository                                | Description                                                                                                                                                                                                                                                                    | Version                                    |
-| -------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| [@lobehub/ui][lobe-ui-url]             | [lobehub/lobe-ui][lobe-ui-github]         | Lobe UI is an open-source UI component library dedicated to building AIGC web applications.                                                                                                                                                                                    | [![][lobe-ui-shield]][lobe-ui-url]         |
-| [@lobehub/lint][lobe-lint-url]         | [lobehub/lobe-lint][lobe-lint-github]     | LobeLint provides configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for LobeHub.                                                                                                                                                        | [![][lobe-lint-shield]][lobe-lint-url]     |
-| [@lobehub/commit-cli][lobe-commit-url] | [lobehub/lobe-commit][lobe-commit-github] | Lobe Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.                                                                                                                                                                          | [![][lobe-commit-shield]][lobe-commit-url] |
-| [@lobehub/i18n-cli][lobe-i18n-url]     | [lobehub/lobe-i18n][lobe-i18n-github]     | Lobe i18n is an automation tool for the i18n (internationalization) translation process, powered by ChatGPT. It supports features such as automatic splitting of large files, incremental updates, and customization options for the OpenAI model, API proxy, and temperature. | [![][lobe-i18n-shield]][lobe-i18n-url]     |
+| NPM                            | Repository                            | Description                                                                                                             | Version                                |
+| ------------------------------ | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| [@lobehub/ui][lobe-ui-url]     | [lobehub/lobe-ui][lobe-ui-github]     | Lobe UI is an open-source UI component library dedicated to building AIGC web applications.                             | [![][lobe-ui-shield]][lobe-ui-url]     |
+| [@lobehub/lint][lobe-lint-url] | [lobehub/lobe-lint][lobe-lint-github] | LobeLint provides configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for LobeHub. | [![][lobe-lint-shield]][lobe-lint-url] |
+| @lobehub/assets                | [lobehub/assets][lobe-assets-github]  | Logo assets, favicons, webfonts for LobeHub.                                                                            |                                        |
 
 <div align="right">
 
@@ -112,12 +127,11 @@ Plugins provide a means to extend the [Function Calling][fc-url] capabilities of
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
 - [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The LobeChat Plugins Gateway is a backend service that serves as a gateway for LobeChat plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
 
-| Official Plugin                                     | Description                                                                                                                                       |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [🔍 Search Engine][chat-plugin-search-engine]       | This plugin allows for the use of the SerpApi search engine.                                                                                      |
-| [🌈 Realtime Weather][chat-plugin-realtime-weather] | This plugin provides practical weather information by obtaining real-time weather data and can automatically update based on the user's location. |
-| [🕸 Website Crawler][chat-plugin-web-crawler]       | This plugin automatically crawls the main content of a specified URL webpage and uses it as context input.                                        |
-
+| Official Plugin                                 | Description                                                                                                                                       |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [SearchEngine][chat-plugin-search-engine]       | This plugin allows for the use of the SerpApi search engine.                                                                                      |
+| [RealtimeWeather][chat-plugin-realtime-weather] | This plugin provides practical weather information by obtaining real-time weather data and can automatically update based on the user's location. |
+| [WebsiteCrawler][chat-plugin-web-crawler]       | This plugin automatically crawls the main content of a specified URL webpage and uses it as context input.                                        |
 
 <div align="right">
 
@@ -148,6 +162,8 @@ $ pnpm dev
 
 ## 🤝 Contributing
 
+Contributions of all types are more than welcome, if you are interested in contributing code, feel free to check out our GitHub [Issues][issues-url] and [Projects][project-url] to get stuck in to show us what you’re made of.
+
 <!-- CONTRIBUTION GROUP -->
 
 > 📊 Total: <kbd>**4**</kbd>
@@ -173,6 +189,18 @@ $ pnpm dev
 
 </div>
 
+## 🔗 More Products
+
+- **[🤯 Lobe Theme][lobe-theme] :** The modern theme for stable diffusion webui, exquisite interface design, highly customizable UI, and efficiency boosting features.
+- **[🌏 Lobe i18n][lobe-i18n] :** Lobe i18n is an automation tool for the i18n (internationalization) translation process, powered by ChatGPT. It supports features such as automatic splitting of large files, incremental updates, and customization options for the OpenAI model, API proxy, and temperature.
+- **[💌 Lobe Commit][lobe-commit] :** Lobe Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 ---
 
 #### 📝 License
@@ -182,10 +210,14 @@ This project is [MIT](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
+[official-shield]: https://img.shields.io/website?down_message=offline&label=🤯%20Try%20LobeChat&up_message=online&url=https%3A%2F%2Flobe-chat.vercel.app&style=for-the-badge
 [official-url]: https://lobe-chat.vercel.app
+[discord-shield]: https://dcbadge.vercel.app/api/server/AYFPHvv2jT?style=for-the-badge
+[discord-url]: https://discord.gg/AYFPHvv2jT
 [fc-url]: https://sspai.com/post/81986
 [profile-url]: https://github.com/lobehub
 [issues-url]: https://github.com/lobehub/lobe-chat/issues/new/choose
+[project-url]: https://github.com/lobehub/lobe-chat/projects
 [gitpod-url]: https://gitpod.io/#https://github.com/lobehub/lobe-chat
 
 <!-- SHIELD LINK GROUP -->
@@ -237,6 +269,10 @@ This project is [MIT](./LICENSE) licensed.
 [deploy-button-image]: https://vercel.com/button
 [deploy-url]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
 
+<!-- @lobe/assets -->
+
+[lobe-assets-github]: https://github.com/lobehub/lobe-assets
+
 <!-- @lobehub/ui -->
 
 [lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?label=%F0%9F%A4%AF%20NPM
@@ -249,18 +285,6 @@ This project is [MIT](./LICENSE) licensed.
 [lobe-lint-url]: https://www.npmjs.com/package/@lobehub/lint
 [lobe-lint-github]: https://github.com/lobehub/lobe-lint
 
-<!-- @lobehub/commit-cli -->
-
-[lobe-commit-shield]: https://img.shields.io/npm/v/@lobehub/commit-cli?label=%F0%9F%A4%AF%20NPM
-[lobe-commit-url]: https://www.npmjs.com/package/@lobehub/commit-cli
-[lobe-commit-github]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
-
-<!-- @lobehub/i18n-cli -->
-
-[lobe-i18n-shield]: https://img.shields.io/npm/v/@lobehub/i18n-cli?label=%F0%9F%A4%AF%20NPM
-[lobe-i18n-url]: https://www.npmjs.com/package/@lobehub/i18n-cli
-[lobe-i18n-github]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
-
 <!-- plugins -->
 
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
@@ -269,3 +293,9 @@ This project is [MIT](./LICENSE) licensed.
 [chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
 [chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
 [chat-plugin-web-crawler]: https://github.com/lobehub/chat-plugin-web-crawler
+
+<!-- products -->
+
+[lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
+[lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
+[lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
