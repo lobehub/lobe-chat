@@ -25,12 +25,12 @@ LobeChat 是一个开源的、可扩展的（[Function Calling](https://sspai.co
 
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-![cover](https://gw.alipayobjects.com/zos/kitchen/ES6q6C5kVM/lobechat.webp)
+![cover](https://gw.alipayobjects.com/zos/kitchen/3uH7fYVvfO/lobechat.webp)
 
 </div>
 
 <details>
-<summary><kbd>Table of contents</kbd></summary>
+<summary><kbd>目录树</kbd></summary>
 
 #### TOC
 
@@ -50,55 +50,41 @@ LobeChat 是一个开源的、可扩展的（[Function Calling](https://sspai.co
 
 </details>
 
-## 😎 开始上手
+## ✨ 功能特性
 
-- 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
-- 点击右侧按钮开始部署： Deploy with Vercel，直接使用 Github 账号登录即可，记得在环境变量页填入 API Key 和页面访问密码 CODE；
-- 部署完毕后，即可开始使用；
-- （可选）绑定自定义域名：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
+- [x] 💨 **快速部署**：使用 Vercel 平台，只需点击一键部署按钮，即可在 1 分钟内完成部署，无需复杂的配置过程；
+- [x] 💎 **精致 UI 设计**：经过精心设计的界面，具有优雅的外观和流畅的交互效果，支持亮暗色主题，适配移动端。支持 PWA，提供更加接近原生应用的体验；
+- [x] 🗣️ **流畅的对话体验**：流式响应带来流畅的对话体验，并且支持完整的 Markdown 渲染，包括代码高亮、LaTex 公式、Mermaid 流程图等；
+- [x] 🧩 **支持插件与自定义插件开发**：会话支持插件扩展，用户可以安装和使用各种插件，例如搜索引擎、网页提取等，同时也支持自定义插件的开发，满足自定义需求；
+- [x] 🔒 **隐私安全**：所有数据保存在用户浏览器本地，保证用户的隐私安全；
+- [x] 🤖 **自定义助手角色**：用户可以根据自己的需求创建、分享和调试个性化的对话助手角色，提供更加灵活和个性化的对话功能；
+- [ ] 🏬 **角色市场**（WIP）：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格；
+- [x] 🌐 **自定义域名**：如果用户拥有自己的域名，可以将其绑定到平台上，方便在任何地方快速访问对话助手。
 
-## 🚀 产品核心功能
+<div align="right">
 
-- 💨 **快速部署**：使用 Vercel 平台，只需点击一键部署按钮，即可在 1 分钟内完成部署，无需复杂的配置过程；
-- 💎 **精致 UI 设计**：经过精心设计的界面，具有优雅的外观和流畅的交互效果，支持亮暗色主题，适配移动端。支持 PWA，提供更加接近原生应用的体验；
-- 🗣️ **流畅的对话体验**：流式响应带来流畅的对话体验，并且支持完整的 Markdown 渲染，包括代码高亮、LaTex 公式、Mermaid 流程图等；
-- 🧩 **支持插件与自定义插件开发**：会话支持插件扩展，用户可以安装和使用各种插件，例如搜索引擎、网页提取等，同时也支持自定义插件的开发，满足自定义需求；
-- 🔒 **隐私安全**：所有数据保存在用户浏览器本地，保证用户的隐私安全；
-- 🤖 **自定义助手角色**：用户可以根据自己的需求创建、分享和调试个性化的对话助手角色，提供更加灵活和个性化的对话功能；
-- 🏬 **角色市场**（WIP）：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格；
-- 🌐 **自定义域名**：如果用户拥有自己的域名，可以将其绑定到平台上，方便在任何地方快速访问对话助手。
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ## 🛳 开箱即用
 
-LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。如果想自己部署该服务，可以按照以下步骤进行操作。
+LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。如果想自己部署该服务，可以按照以下步骤进行操作：
 
-### 部署到 Vercel
-
-点击下方按钮部署的私有插件网关。
+- 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
+- 点击下方按钮开始部署： Deploy with Vercel，直接使用 Github 账号登录即可，记得在环境变量页填入 API Key 和页面访问密码 CODE；
+- 部署完毕后，即可开始使用；
+- 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
 
 [![使用 Vercel 部署][deploy-button-image]][deploy-url]
 
-本项目提供了一些额外的配置项，使用环境变量进行设置：
+> 👉 提示：本项目提供了一些额外的配置项，使用环境变量进行设置：
 
-#### `OPENAI_API_KEY` (必选)
-
-这是你在OpenAI账户页面申请的API密钥。
-
-示例: `sk-2EnxIQkLqLSCat0bWKHdT3BlbcFJhoCfEoSkwuBzUeisGCku`
-
-#### `ACCESS_CODE` (可选)
-
-这是访问此服务的密码，密码应为6位数字或字母。
-
-示例: `awCT74` 或 `e3@09!`
-
-#### `OPENAI_PROXY_URL` (可选)
-
-> 默认值: `https://api.openai.com`
-
-如果你手动配置了OpenAI接口代理，可以使用此配置项来覆盖默认的OpenAI API请求基础URL。
-
-示例: `https://api.chatanywhere.cn`
+| 环境变量           |      | 描述                                                                                                                    | 示例                                                  |
+| ------------------ | ---- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `OPENAI_API_KEY`   | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                                                 | `sk-2EnxIQkLqLSCat0bWKHdT3BlbcFJhoCfEoSkwuBzUeisGCku` |
+| `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL,默认值: `https://api.openai.com` | `https://api.chatanywhere.cn`                         |
+| `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                                                           | `awCT74` 或 `e3@09!`                                  |
 
 <div align="right">
 
@@ -108,7 +94,7 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 ## ⌨️ 本地开发
 
-可以使用Gitpod进行在线开发：
+可以使用 Gitpod 进行在线开发：
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][gitpod-url]
 
