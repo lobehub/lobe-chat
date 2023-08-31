@@ -51,16 +51,15 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 
 ## 👋🏻 开始使用 & 交流
 
-> 👉 注意：请注意 LobeChat 目前正在积极开发中，有需求或者问题，欢迎提交 [issues][issues-url]
+我们是一群充满热情的设计工程师，希望为 AIGC 提供现代化的设计组件和工具，并以开源的方式分享，以促进它们在更广泛的社区中的发展和采用，LobeChat 目前正在积极开发中，有需求或者问题，欢迎提交 [issues][issues-url]
 
-|                                      |                                                  |
-| ------------------------------------ | ------------------------------------------------ |
-| [![][official-shield]][official-url] | 无需安装或注册！访问我们的网站，快速体验。                            |
-| [![][discord-shield]][discord-url]   | 加入我们的 Discord 社区！这是你可以与开发者和其他 LobeHub 热衷用户交流的地方。 |
-
-> ⭐️ 给我们点赞：你将从 GitHub 上无延迟地接收所有发布通知！
+| [![][official-shield]][official-url] | 无需安装或注册！访问我们的网站，快速体验                            |
+| :----------------------------------- | :---------------------------------------------- |
+| [![][discord-shield]][discord-url]   | 加入我们的 Discord 社区！这是你可以与开发者和其他 LobeHub 热衷用户交流的地方 |
 
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
+
+> **⭐️ 给我们点赞：** 你将从 GitHub 上无延迟地接收所有发布通知！
 
 ## ✨ 功能特性
 
@@ -70,8 +69,10 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 - [x] 🧩 **支持插件与自定义插件开发**：会话支持插件扩展，用户可以安装和使用各种插件，例如搜索引擎、网页提取等，同时也支持自定义插件的开发，满足自定义需求；
 - [x] 🔒 **隐私安全**：所有数据保存在用户浏览器本地，保证用户的隐私安全；
 - [x] 🤖 **自定义助手角色**：用户可以根据自己的需求创建、分享和调试个性化的对话助手角色，提供更加灵活和个性化的对话功能；
-- [ ] 🏬 **角色市场**（WIP）：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格；
 - [x] 🌐 **自定义域名**：如果用户拥有自己的域名，可以将其绑定到平台上，方便在任何地方快速访问对话助手。
+- [ ] 🏬 **角色市场**（WIP）：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格；
+
+> **👉 Roadmap：** 你可以在 Projects 中找到我们后续的 [Roadmap][project-url] 计划
 
 <div align="right">
 
@@ -90,9 +91,9 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 [![使用 Vercel 部署][deploy-button-image]][deploy-url]
 
-> 👉 提示：本项目提供了一些额外的配置项，使用环境变量进行设置：
+> **👉 提示：** 本项目提供了一些额外的配置项，使用环境变量进行设置：
 
-| 环境变量               | 类型 | 说明                                                      | 示例                                                                  |
+| 环境变量               | 类型 | 描述                                                      | 示例                                                                  |
 | ------------------ | -- | ------------------------------------------------------- | ------------------------------------------------------------------- |
 | `OPENAI_API_KEY`   | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                              | `sk-xxxxxx...xxxxxx`                                                |
 | `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL | `https://api.chatanywhere.cn`<br/>默认值:<br/>`https://api.openai.com` |
@@ -122,7 +123,7 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 插件提供了扩展 LobeChat [Function Calling][fc-url] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。
 
-> 👉 注意：插件系统目前正在进行重大开发。您可以在 <https://github.com/lobehub/lobe-chat/issues/97> 中了解更多信息。
+> **👉 提示：** 插件系统目前正在进行重大开发。您可以在 <https://github.com/lobehub/lobe-chat/issues/97> 中了解更多信息。
 
 - [@lobehub/lobe-chat-plugins][lobe-chat-plugins]：这是 LobeChat 的插件索引。它从该仓库的 index.json 中获取插件列表并显示给用户。
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]：LobeChat 插件 SDK 可帮助您创建出色的 Lobe Chat 插件。
