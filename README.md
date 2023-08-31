@@ -53,14 +53,19 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 > 👉 Note: Please be aware that LobeChat is currently under active development，feedback is welcome for any [issues][issues-url] encountered.
 
-|                                      |                                                                                                                    |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
 | [![][official-shield]][official-url] | No installation or registration necessary! Visit our website to experience it firsthand.                           |
+| :----------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
 | [![][discord-shield]][discord-url]   | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
 
 > ⭐️ Star us: You will receive all releases notifications from GitHub without any delay!
 
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ## ✨ Features
 
@@ -70,8 +75,10 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 - [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs;
 - [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy;
 - [x] 🤖 **Customizable Assistant Roles**: Users can create, share, and debug personalized dialogue assistant roles according to their needs, providing more flexible and personalized dialogue functions;
-- [ ] 🏬 **Role Market** (WIP): A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
 - [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue assistant from anywhere.
+- [ ] 🏬 **Role Market** (WIP): A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
+
+> **👉 Roadmap:** You can find our upcoming [Roadmap][project-url] plans in the Projects section.
 
 <div align="right">
 
