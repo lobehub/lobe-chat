@@ -8,7 +8,7 @@
 
 <h1>Lobe Chat</h1>
 
-LobeChat is a open-source, extensible ([Function Calling](https://sspai.com/post/81986)), high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
+LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
 
 **English** · [简体中文](./README-zh_CN.md) · [Changelog](./CHANGELOG.md) · [Report Bug][issues-url] · [Request Feature][issues-url]
 
@@ -171,6 +171,7 @@ This project is [MIT](./LICENSE) licensed.
 <!-- LINK GROUP -->
 
 [official-url]: https://lobe-chat.vercel.app
+[fc-url]: https://sspai.com/post/81986
 [profile-url]: https://github.com/lobehub
 [issues-url]: https://github.com/lobehub/lobe-chat/issues/new/choose
 [gitpod-url]: https://gitpod.io/#https://github.com/lobehub/lobe-chat
