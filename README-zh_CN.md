@@ -93,22 +93,7 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 </div>
 
-## ⌨️ 本地开发
-
-可以使用 Gitpod 进行在线开发：
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][gitpod-url]
-
-或者使用以下命令进行本地开发：
-
-```bash
-$ git clone https://github.com/lobehub/lobe-chat.git
-$ cd lobe-chat
-$ pnpm install
-$ pnpm dev
-```
-
-### 生态系统
+## 📦 生态系统
 
 | NPM                                    | 仓库地址                                      | 描述                                                                                                | 版本                                         |
 | -------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------ |
@@ -117,7 +102,13 @@ $ pnpm dev
 | [@lobehub/commit-cli][lobe-commit-url] | [lobehub/lobe-commit][lobe-commit-github] | Lobe Commit 是一个利用 Langchain/ChatGPT 生成基于 Gitmoji 的提交信息的 CLI 工具。                                   | [![][lobe-commit-shield]][lobe-commit-url] |
 | [@lobehub/i18n-cli][lobe-i18n-url]     | [lobehub/lobe-i18n][lobe-i18n-github]     | Lobe i18n 是一个由 ChatGPT 驱动的自动化工具，用于 i18n（国际化）翻译流程。它支持自动拆分大文件、增量更新以及对 OpenAI 模型、API 代理和温度的自定义选项等功能。 | [![][lobe-i18n-shield]][lobe-i18n-url]     |
 
-### 插件
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+## 🧩 插件体系
 
 插件提供了扩展 LobeChat [Function Calling][fc-url] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。
 
@@ -132,6 +123,27 @@ $ pnpm dev
 | [🔍 搜索引擎][chat-plugin-search-engine]    | 此插件允许使用 SerpApi 搜索引擎。                  |
 | [🌈 实时天气][chat-plugin-realtime-weather] | 此插件通过获取实时天气数据提供实用的天气信息，并可以根据用户的位置自动更新。 |
 | [🕸 网站爬虫][chat-plugin-web-crawler]      | 此插件自动爬取指定 URL 网页的主要内容，并将其用作上下文输入。      |
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+## ⌨️ 本地开发
+
+可以使用 Gitpod 进行在线开发：
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][gitpod-url]
+
+或者使用以下命令进行本地开发：
+
+```bash
+$ git clone https://github.com/lobehub/lobe-chat.git
+$ cd lobe-chat
+$ pnpm install
+$ pnpm dev
+```
 
 <div align="right">
 
