@@ -53,9 +53,10 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 > 👉 Note: Please be aware that LobeChat is currently under active development and is not yet suitable for production use.
 
-[![][official-shield]][official-url] No installation or registration necessary! Visit our website to experience it firsthand.
-
-[![][discord-shield]][discord-url] Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub.
+|                                      |                                                                                                                    |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| [![][official-shield]][official-url] | No installation or registration necessary! Visit our website to experience it firsthand.                           |
+| [![][discord-shield]][discord-url]   | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
 
 > ⭐️ Star us: You will receive all releases notifications from GitHub without any delay!
 
