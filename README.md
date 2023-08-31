@@ -51,21 +51,15 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 ## 👋🏻 Getting Started & Join Our Community
 
-> 👉 Note: Please be aware that LobeChat is currently under active development，feedback is welcome for any [issues][issues-url] encountered.
+Please be aware that LobeChat is currently under active development，feedback is welcome for any [issues][issues-url] encountered.
 
 | [![][official-shield]][official-url] | No installation or registration necessary! Visit our website to experience it firsthand.                           |
 | :----------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
 | [![][discord-shield]][discord-url]   | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
 
-> ⭐️ Star us: You will receive all releases notifications from GitHub without any delay!
-
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
 
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
+> **⭐️ Star Us:** You will receive all releases notifications from GitHub without any delay!
 
 ## ✨ Features
 
@@ -97,7 +91,7 @@ LobeChat provides a [self-hosted version][deploy-url] with Vercel. This allows y
 
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-> 👉 Note: This project provides some additional configuration items, set with environment variables:
+> **👉 Note:** This project provides some additional configuration items, set with environment variables:
 
 | Environment Variable | Required | Description                                                                                                                                   | Example                                                                             |
 | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -129,7 +123,7 @@ LobeChat provides a [self-hosted version][deploy-url] with Vercel. This allows y
 
 Plugins provide a means to extend the [Function Calling][fc-url] capabilities of LobeChat. They can be used to introduce new function calls, and even new ways to render message results.
 
-> 👉 Note: The plugin system is currently undergoing significant development. You can expect to see it in <https://github.com/lobehub/lobe-chat/issues/97>.
+> **👉 Note:** The plugin system is currently undergoing significant development. You can expect to see it in <https://github.com/lobehub/lobe-chat/issues/97>.
 
 - [@lobehub/lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeChat. It accesses index.json from this repository to display a list of available plugins for LobeChat to the user.
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
