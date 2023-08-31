@@ -25,7 +25,7 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-![cover](https://gw.alipayobjects.com/zos/kitchen/3uH7fYVvfO/lobechat.webp)
+![](https://gw.alipayobjects.com/zos/kitchen/3uH7fYVvfO/lobechat.webp)
 
 </div>
 
@@ -34,22 +34,33 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 
 #### TOC
 
+- [👋🏻 开始使用 & 交流](#-开始使用--交流)
 - [✨ 功能特性](#-功能特性)
-
 - [🛳 开箱即用](#-开箱即用)
-
+- [📦 生态系统](#-生态系统)
+- [🧩 插件体系](#-插件体系)
 - [⌨️ 本地开发](#️-本地开发)
-
-  - [生态系统](#生态系统)
-  - [插件](#插件)
-
 - [🤝 参与贡献](#-参与贡献)
+- [🔗 更多工具](#-更多工具)
 
 ####
 
 <br/>
 
 </details>
+
+## 👋🏻 开始使用 & 交流
+
+> 👉 注意：请注意 LobeChat 目前正在积极开发中，尚未适合生产使用。
+
+|                                      |                                                  |
+| ------------------------------------ | ------------------------------------------------ |
+| [![][official-shield]][official-url] | 无需安装或注册！访问我们的网站，快速体验。                            |
+| [![][discord-shield]][discord-url]   | 加入我们的 Discord 社区！这是你可以与开发者和其他 LobeHub 热衷用户交流的地方。 |
+
+> ⭐️ 给我们点赞：你将从 GitHub 上无延迟地接收所有发布通知！
+
+![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
 
 ## ✨ 功能特性
 
@@ -95,12 +106,11 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 ## 📦 生态系统
 
-| NPM                                    | 仓库地址                                      | 描述                                                                                                | 版本                                         |
-| -------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| [@lobehub/ui][lobe-ui-url]             | [lobehub/lobe-ui][lobe-ui-github]         | Lobe UI 是一个开源的 UI 组件库，专门用于构建 AIGC 网络应用。                                                           | [![][lobe-ui-shield]][lobe-ui-url]         |
-| [@lobehub/lint][lobe-lint-url]         | [lobehub/lobe-lint][lobe-lint-github]     | LobeLint 提供了针对 LobeHub 的 ESlint、Stylelint、Commitlint、Prettier、Remark 和 Semantic Release 的配置。      | [![][lobe-lint-shield]][lobe-lint-url]     |
-| [@lobehub/commit-cli][lobe-commit-url] | [lobehub/lobe-commit][lobe-commit-github] | Lobe Commit 是一个利用 Langchain/ChatGPT 生成基于 Gitmoji 的提交信息的 CLI 工具。                                   | [![][lobe-commit-shield]][lobe-commit-url] |
-| [@lobehub/i18n-cli][lobe-i18n-url]     | [lobehub/lobe-i18n][lobe-i18n-github]     | Lobe i18n 是一个由 ChatGPT 驱动的自动化工具，用于 i18n（国际化）翻译流程。它支持自动拆分大文件、增量更新以及对 OpenAI 模型、API 代理和温度的自定义选项等功能。 | [![][lobe-i18n-shield]][lobe-i18n-url]     |
+| NPM                            | 代码库                                   | 描述                                                                                        | 版本                                     |
+| ------------------------------ | ------------------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------- |
+| [@lobehub/ui][lobe-ui-url]     | [lobehub/lobe-ui][lobe-ui-github]     | Lobe UI 是一个专为构建 AIGC 网页应用程序而设计的开源 UI 组件库。                                                 | [![][lobe-ui-shield]][lobe-ui-url]     |
+| [@lobehub/lint][lobe-lint-url] | [lobehub/lobe-lint][lobe-lint-github] | LobeLint 为 LobeHub 提供 ESlint，Stylelint，Commitlint，Prettier，Remark 和 Semantic Release 的配置。 | [![][lobe-lint-shield]][lobe-lint-url] |
+| @lobehub/assets                | [lobehub/assets][lobe-assets-github]  | LobeHub 的 Logo 资源、favicon、网页字体。                                                           |                                        |
 
 <div align="right">
 
@@ -118,11 +128,11 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]：LobeChat 插件 SDK 可帮助您创建出色的 Lobe Chat 插件。
 - [@lobehub/chat-plugins-gateway][chat-plugins-gateway]：LobeChat 插件网关是一个后端服务，作为 LobeChat 插件的网关。我们使用 Vercel 部署此服务。主要的 API POST /api/v1/runner 被部署为 Edge Function。
 
-| 官方插件                                    | 描述                                     |
-| --------------------------------------- | -------------------------------------- |
-| [🔍 搜索引擎][chat-plugin-search-engine]    | 此插件允许使用 SerpApi 搜索引擎。                  |
-| [🌈 实时天气][chat-plugin-realtime-weather] | 此插件通过获取实时天气数据提供实用的天气信息，并可以根据用户的位置自动更新。 |
-| [🕸 网站爬虫][chat-plugin-web-crawler]      | 此插件自动爬取指定 URL 网页的主要内容，并将其用作上下文输入。      |
+| 官方插件                                 | 描述                                     |
+| ------------------------------------ | -------------------------------------- |
+| [搜索引擎][chat-plugin-search-engine]    | 此插件允许使用 SerpApi 搜索引擎。                  |
+| [实时天气][chat-plugin-realtime-weather] | 此插件通过获取实时天气数据提供实用的天气信息，并可以根据用户的位置自动更新。 |
+| [网站爬虫][chat-plugin-web-crawler]      | 此插件自动爬取指定 URL 网页的主要内容，并将其用作上下文输入。      |
 
 <div align="right">
 
@@ -153,6 +163,8 @@ $ pnpm dev
 
 ## 🤝 参与贡献
 
+我们非常欢迎各种形式的贡献。如果你对贡献代码感兴趣，可以查看我们的 GitHub [Issues][issues-url] 和 [Projects][project-url]，大展身手，向我们展示你的奇思妙想。
+
 <!-- CONTRIBUTION GROUP -->
 
 > 📊 Total: <kbd>**4**</kbd>
@@ -178,6 +190,18 @@ $ pnpm dev
 
 </div>
 
+## 🔗 更多工具
+
+- [🤯 Lobe Theme][lobe-theme] : Stable Diffusion WebUI 的现代主题，精致的界面设计，高度可定制的 UI，以及提高效率的功能。
+- [🌏 Lobe i18n][lobe-i18n] : Lobe i18n 是一个由 ChatGPT 驱动的 i18n（国际化）翻译过程的自动化工具。它支持自动分割大文件、增量更新，以及为 OpenAI 模型、API 代理和温度提供定制选项的功能。
+- [💌 Lobe Commit][lobe-commit] : Lobe Commit 是一个 CLI 工具，它利用 Langchain/ChatGPT 生成基于 Gitmoji 的提交消息。
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 ---
 
 #### 📝 License
@@ -187,10 +211,14 @@ This project is [MIT](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
+[official-shield]: https://img.shields.io/website?down_message=offline&label=🤯%20Try%20LobeChat&up_message=online&url=https%3A%2F%2Flobe-chat.vercel.app&style=for-the-badge
 [official-url]: https://lobe-chat.vercel.app
+[discord-shield]: https://dcbadge.vercel.app/api/server/AYFPHvv2jT?style=for-the-badge
+[discord-url]: https://discord.gg/AYFPHvv2jT
 [fc-url]: https://sspai.com/post/81986
 [profile-url]: https://github.com/lobehub
 [issues-url]: https://github.com/lobehub/lobe-chat/issues/new/choose
+[project-url]: https://github.com/lobehub/lobe-chat/projects
 [gitpod-url]: https://gitpod.io/#https://github.com/lobehub/lobe-chat
 
 <!-- SHIELD LINK GROUP -->
@@ -242,6 +270,10 @@ This project is [MIT](./LICENSE) licensed.
 [deploy-button-image]: https://vercel.com/button
 [deploy-url]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
 
+<!-- @lobe/assets -->
+
+[lobe-assets-github]: https://github.com/lobehub/lobe-assets
+
 <!-- @lobehub/ui -->
 
 [lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?label=%F0%9F%A4%AF%20NPM
@@ -254,18 +286,6 @@ This project is [MIT](./LICENSE) licensed.
 [lobe-lint-url]: https://www.npmjs.com/package/@lobehub/lint
 [lobe-lint-github]: https://github.com/lobehub/lobe-lint
 
-<!-- @lobehub/commit-cli -->
-
-[lobe-commit-shield]: https://img.shields.io/npm/v/@lobehub/commit-cli?label=%F0%9F%A4%AF%20NPM
-[lobe-commit-url]: https://www.npmjs.com/package/@lobehub/commit-cli
-[lobe-commit-github]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
-
-<!-- @lobehub/i18n-cli -->
-
-[lobe-i18n-shield]: https://img.shields.io/npm/v/@lobehub/i18n-cli?label=%F0%9F%A4%AF%20NPM
-[lobe-i18n-url]: https://www.npmjs.com/package/@lobehub/i18n-cli
-[lobe-i18n-github]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
-
 <!-- plugins -->
 
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
@@ -274,3 +294,9 @@ This project is [MIT](./LICENSE) licensed.
 [chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
 [chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
 [chat-plugin-web-crawler]: https://github.com/lobehub/chat-plugin-web-crawler
+
+<!-- products -->
+
+[lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
+[lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
+[lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
