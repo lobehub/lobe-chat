@@ -51,7 +51,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 ## 👋🏻 Getting Started & Join Our Community
 
-> 👉 Note: Please be aware that LobeChat is currently under active development and is not yet suitable for production use.
+> 👉 Note: Please be aware that LobeChat is currently under active development，feedback is welcome for any [issues][issues-url] encountered.
 
 |                                      |                                                                                                                    |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
