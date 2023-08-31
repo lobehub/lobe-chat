@@ -41,6 +41,8 @@ LobeChat 是一个开源的、可扩展的（[Function Calling](https://sspai.co
 
 ####
 
+<br/>
+
 </details>
 
 ## ✨ 功能特性
