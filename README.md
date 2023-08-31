@@ -87,22 +87,7 @@ LobeChat provides a [self-hosted version][deploy-url] with Vercel. This allows y
 
 </div>
 
-## ⌨️ Local Development
-
-You can use Gitpod for online development:
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][gitpod-url]
-
-Or clone it for local development:
-
-```bash
-$ git clone https://github.com/lobehub/lobe-chat.git
-$ cd lobe-chat
-$ pnpm install
-$ pnpm dev
-```
-
-### Ecosystem
+## 📦 Ecosystem
 
 | NPM                                    | Repository                                | Description                                                                                                                                                                                                                                                                    | Version                                    |
 | -------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
@@ -111,7 +96,13 @@ $ pnpm dev
 | [@lobehub/commit-cli][lobe-commit-url] | [lobehub/lobe-commit][lobe-commit-github] | Lobe Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.                                                                                                                                                                          | [![][lobe-commit-shield]][lobe-commit-url] |
 | [@lobehub/i18n-cli][lobe-i18n-url]     | [lobehub/lobe-i18n][lobe-i18n-github]     | Lobe i18n is an automation tool for the i18n (internationalization) translation process, powered by ChatGPT. It supports features such as automatic splitting of large files, incremental updates, and customization options for the OpenAI model, API proxy, and temperature. | [![][lobe-i18n-shield]][lobe-i18n-url]     |
 
-### Plugins
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+## 🧩 Plugins
 
 Plugins provide a means to extend the [Function Calling][fc-url] capabilities of LobeChat. They can be used to introduce new function calls, and even new ways to render message results.
 
@@ -127,6 +118,27 @@ Plugins provide a means to extend the [Function Calling][fc-url] capabilities of
 | [🌈 Realtime Weather][chat-plugin-realtime-weather] | This plugin provides practical weather information by obtaining real-time weather data and can automatically update based on the user's location. |
 | [🕸 Website Crawler][chat-plugin-web-crawler]       | This plugin automatically crawls the main content of a specified URL webpage and uses it as context input.                                        |
 
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+## ⌨️ Local Development
+
+You can use Gitpod for online development:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][gitpod-url]
+
+Or clone it for local development:
+
+```bash
+$ git clone https://github.com/lobehub/lobe-chat.git
+$ cd lobe-chat
+$ pnpm install
+$ pnpm dev
+```
 
 <div align="right">
 
