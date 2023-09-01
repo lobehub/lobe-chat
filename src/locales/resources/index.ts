@@ -1,8 +1,10 @@
 import en_US from './en_US';
+import ru_RU from './ru_RU';
 import zh_CN from './zh_CN';
 
 const resources = {
   'en-US': en_US,
+  'ru-RU': ru_RU,
   'zh-CN': zh_CN,
 } as const;
 export default resources;

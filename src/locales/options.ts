@@ -16,4 +16,8 @@ export const options: LocaleOptions = [
     label: 'English',
     value: 'en-US',
   },
+  {
+    label: 'Russian',
+    value: 'ru-RU',
+  },
 ] as LocaleOptions;
