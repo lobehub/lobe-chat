@@ -1,5 +1,4 @@
 import { produce } from 'immer';
-import { merge } from 'lodash-es';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { LobeAgentSettings } from '@/types/session';
@@ -25,8 +24,7 @@ export const createAgentSlice: StateCreator<
 > = (set, get) => ({
   updateDefaultAgent: (agent) => {
     const settings = produce(get().settings, (draft: GlobalSettings) => {
-      const oldAgent = draft.defaultAgent as LobeAgentSettings;
-      draft.defaultAgent = merge({}, oldAgent, agent);
+      draft.defaultAgent = { ...draft.defaultAgent, ...agent };
     });
 
     set({ settings }, false, t('updateDefaultAgent', agent));
