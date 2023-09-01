@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.65.1](https://github.com/lobehub/lobe-chat/compare/v0.65.0...v0.65.1)
+
+<sup>Released on **2023-09-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正 defaultAgent 无法正常变更的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正 defaultAgent 无法正常变更的问题 ([788d94b](https://github.com/lobehub/lobe-chat/commit/788d94b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.65.0](https://github.com/lobehub/lobe-chat/compare/v0.64.1...v0.65.0)
 
 <sup>Released on **2023-08-29**</sup>
