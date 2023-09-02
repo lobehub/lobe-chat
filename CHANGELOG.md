@@ -2,6 +2,49 @@
 
 # Changelog
 
+## [Version 0.67.0](https://github.com/lobehub/lobe-chat/compare/v0.66.0...v0.67.0)
+
+<sup>Released on **2023-09-02**</sup>
+
+#### ♻ Code Refactoring
+
+- **plugin**: 重构 plugin Store 组织结构，便于开发与迭代维护.
+
+#### ✨ Features
+
+- **plugin-dev**: 优化 manifest 报错原因提示，并支持 id 从 manifest 自动获取.
+
+#### 🐛 Bug Fixes
+
+- **plugin-dev**: 修正编辑模式下预览展示问题和 id 重复校验问题.
+- **plugin**: 修正开启插件后会话无效的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **plugin**: 重构 plugin Store 组织结构，便于开发与迭代维护 ([ec527cb](https://github.com/lobehub/lobe-chat/commit/ec527cb))
+
+#### What's improved
+
+- **plugin-dev**: 优化 manifest 报错原因提示，并支持 id 从 manifest 自动获取 ([7f0787d](https://github.com/lobehub/lobe-chat/commit/7f0787d))
+
+#### What's fixed
+
+- **plugin-dev**: 修正编辑模式下预览展示问题和 id 重复校验问题 ([17c39ef](https://github.com/lobehub/lobe-chat/commit/17c39ef))
+- **plugin**: 修正开启插件后会话无效的问题 ([82e3beb](https://github.com/lobehub/lobe-chat/commit/82e3beb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.66.0](https://github.com/lobehub/lobe-chat/compare/v0.65.1...v0.66.0)
 
 <sup>Released on **2023-09-02**</sup>
