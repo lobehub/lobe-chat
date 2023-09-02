@@ -26,17 +26,17 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
 }));
 
 interface DevModalProps {
+  mode?: 'edit' | 'create';
   onDelete?: () => void;
   onOpenChange: (open: boolean) => void;
   onSave?: (value: DevPlugin) => void;
   onValueChange?: (value: Partial<DevPlugin>) => void;
   open?: boolean;
-  showDelete?: boolean;
   value?: DevPlugin;
 }
 
 const DevModal = memo<DevModalProps>(
-  ({ open, showDelete, value, onValueChange, onSave, onOpenChange, onDelete }) => {
+  ({ open, mode = 'create', value, onValueChange, onSave, onOpenChange, onDelete }) => {
     const { t } = useTranslation('plugin');
 
     const [form] = Form.useForm();
@@ -50,9 +50,11 @@ const DevModal = memo<DevModalProps>(
       form.setFieldsValue(value);
     }, []);
 
+    const isEditMode = mode === 'edit';
+
     const footer = (
       <Flexbox horizontal justify={'space-between'} style={{ marginTop: 24 }}>
-        {showDelete ? (
+        {isEditMode ? (
           <Popconfirm
             okButtonProps={{
               danger: true,
@@ -85,7 +87,7 @@ const DevModal = memo<DevModalProps>(
             }}
             type={'primary'}
           >
-            {t('dev.save')}
+            {t(isEditMode ? 'dev.update' : 'dev.save')}
           </Button>
         </Flexbox>
       </Flexbox>
@@ -97,7 +99,7 @@ const DevModal = memo<DevModalProps>(
         }}
         onFormFinish={(_, info) => {
           onSave?.(info.values as DevPlugin);
-          message.success(t('dev.saveSuccess'));
+          message.success(t(isEditMode ? 'dev.updateSuccess' : 'dev.saveSuccess'));
           onOpenChange(false);
         }}
       >
@@ -121,7 +123,6 @@ const DevModal = memo<DevModalProps>(
               form.submit();
             }}
             open={open}
-            style={{ height: 750 }}
             title={
               <Flexbox gap={8} horizontal>
                 <Icon icon={LucideBlocks} />
@@ -139,9 +140,9 @@ const DevModal = memo<DevModalProps>(
               {/*    { children: <ManifestForm />, key: 'manifest', label: t('dev.tabs.manifest') },*/}
               {/*  ]}*/}
               {/*/>*/}
-              <PluginPreview />
-              <ManifestForm form={form} mode={'url'} />
-              <MetaForm form={form} />
+              <PluginPreview form={form} />
+              <ManifestForm form={form} />
+              <MetaForm form={form} mode={mode} />
             </Flexbox>
           </Modal>
         </ConfigProvider>

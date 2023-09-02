@@ -43,7 +43,7 @@ export default {
         label: '首页',
       },
       identifier: {
-        desc: '插件的唯一标识，仅支持英文字符、数字、破折号 - 、下划线 _',
+        desc: '插件的唯一标识，将从 manifest 中自动识别',
         errorDuplicate: '标识符和已有插件重复，请修改标识符',
         label: '标识符',
         pattenErrorMessage: '只能输入英文字符、数字 、- 和_ 这两个符号',
@@ -52,6 +52,8 @@ export default {
         desc: 'LobeChat 将会通过该链接安装插件',
         jsonInvalid: ' manifest 不符合规范，校验结果: \n\n {{error}}',
         label: '插件描述文件 Url 地址',
+        preview: '预览 Manifest',
+        refresh: '刷新',
         requestError: '请求该链接失败，请输入一个有效的链接，并检查链接是否允许跨域访问',
         urlError: '该链接没有返回 JSON 格式的内容, 请输入一个有效的链接',
       },
@@ -74,13 +76,14 @@ export default {
       manifest: '功能描述清单 (Manifest)',
       meta: '插件元信息',
     },
-
     title: '添加自定义插件',
+    update: '更新',
+    updateSuccess: '插件设置更新成功',
   },
   list: {
     item: {
       'local.config': '配置',
-      'local.title': '本地',
+      'local.title': '自定义',
     },
   },
 

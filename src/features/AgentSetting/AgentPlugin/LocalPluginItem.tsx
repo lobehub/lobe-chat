@@ -31,6 +31,7 @@ const MarketList = memo<{ id: string }>(({ id }) => {
   return (
     <>
       <DevModal
+        mode={'edit'}
         onDelete={() => {
           dispatchDevPluginList({ id, type: 'deleteItem' });
         }}
@@ -39,7 +40,6 @@ const MarketList = memo<{ id: string }>(({ id }) => {
           dispatchDevPluginList({ id, plugin: value, type: 'updateItem' });
         }}
         open={showModal}
-        showDelete
         value={devPlugin}
       />
 
