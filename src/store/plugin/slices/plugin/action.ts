@@ -14,10 +14,8 @@ import { pluginSelectors } from '@/store/plugin/selectors';
 import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { DevPlugin, defaultDevPlugin } from './initialState';
-import { DevListDispatch, devPluginListReducer } from './reducers/devPluginList';
+import { PluginStore } from '../../store';
 import { PluginDispatch, pluginManifestReducer } from './reducers/manifest';
-import { PluginStore } from './store';
 
 const t = setNamespace('plugin');
 
@@ -26,12 +24,9 @@ const t = setNamespace('plugin');
  */
 export interface PluginAction {
   checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
-  dispatchDevPluginList: (payload: DevListDispatch) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
   fetchPluginManifest: (name: string) => Promise<void>;
-  saveToDevList: (value: DevPlugin) => void;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
-  updateNewDevPlugin: (value: Partial<DevPlugin>) => void;
   updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
   useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
 }
@@ -59,12 +54,6 @@ export const createPluginSlice: StateCreator<
     await Promise.all(plugins.map((name) => fetchPluginManifest(name)));
 
     set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
-  },
-  dispatchDevPluginList: (payload) => {
-    const { devPluginList } = get();
-
-    const nextList = devPluginListReducer(devPluginList, payload);
-    set({ devPluginList: nextList }, false, t('dispatchDevList', payload));
   },
   dispatchPluginManifest: (payload) => {
     const { pluginManifestMap } = get();
@@ -113,10 +102,6 @@ export const createPluginSlice: StateCreator<
     // 4. 存储 manifest 信息
     get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
   },
-  saveToDevList: (value) => {
-    get().dispatchDevPluginList({ plugin: value, type: 'addItem' });
-    set({ newDevPlugin: defaultDevPlugin }, false, t('saveToDevList'));
-  },
 
   updateManifestLoadingState: (key, value) => {
     set(
@@ -125,13 +110,6 @@ export const createPluginSlice: StateCreator<
       }),
       false,
       t('updateManifestLoadingState'),
-    );
-  },
-  updateNewDevPlugin: (newDevPlugin) => {
-    set(
-      { newDevPlugin: merge({}, get().newDevPlugin, newDevPlugin) },
-      false,
-      t('updateNewDevPlugin'),
     );
   },
   updatePluginSettings: (id, settings) => {

@@ -20,7 +20,7 @@ const MarketList = memo<{ id: string }>(({ id }) => {
   const [useFetchPluginList, fetchPluginManifest, dispatchDevPluginList] = usePluginStore((s) => [
     s.useFetchPluginList,
     s.fetchPluginManifest,
-    s.dispatchDevPluginList,
+    s.dispatchCustomPluginList,
   ]);
 
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);

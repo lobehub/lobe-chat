@@ -7,7 +7,7 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DevPlugin } from '@/store/plugin/initialState';
+import { CustomPlugin } from '@/types/plugin';
 
 import ManifestForm from './ManifestForm';
 import MetaForm from './MetaForm';
@@ -29,10 +29,10 @@ interface DevModalProps {
   mode?: 'edit' | 'create';
   onDelete?: () => void;
   onOpenChange: (open: boolean) => void;
-  onSave?: (value: DevPlugin) => void;
-  onValueChange?: (value: Partial<DevPlugin>) => void;
+  onSave?: (value: CustomPlugin) => void;
+  onValueChange?: (value: Partial<CustomPlugin>) => void;
   open?: boolean;
-  value?: DevPlugin;
+  value?: CustomPlugin;
 }
 
 const DevModal = memo<DevModalProps>(
@@ -92,13 +92,14 @@ const DevModal = memo<DevModalProps>(
         </Flexbox>
       </Flexbox>
     );
+
     return (
       <Form.Provider
         onFormChange={() => {
           onValueChange?.(form.getFieldsValue());
         }}
         onFormFinish={(_, info) => {
-          onSave?.(info.values as DevPlugin);
+          onSave?.(info.values as CustomPlugin);
           message.success(t(isEditMode ? 'dev.updateSuccess' : 'dev.saveSuccess'));
           onOpenChange(false);
         }}

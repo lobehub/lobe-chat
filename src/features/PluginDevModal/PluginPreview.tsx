@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { pluginHelpers } from '@/store/plugin';
-import { DevPlugin } from '@/store/plugin/initialState';
+import { CustomPlugin } from '@/types/plugin';
 
 const PluginPreview = memo<{ form: FormInstance }>(({ form }) => {
   const { t } = useTranslation('plugin');
-  const plugin: DevPlugin = AForm.useWatch([], form);
+  const plugin: CustomPlugin = AForm.useWatch([], form);
 
   const items = {
     avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(plugin?.meta) || '🧩'} />,

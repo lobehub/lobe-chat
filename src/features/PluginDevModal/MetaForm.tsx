@@ -1,6 +1,6 @@
 import { Form, FormItemProps, Input } from '@lobehub/ui';
 import { FormInstance } from 'antd';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import EmojiPicker from '@/components/EmojiPicker';
@@ -11,12 +11,6 @@ const MetaForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form,
 
   const { t } = useTranslation('plugin');
   const [plugins] = usePluginStore((s) => [pluginSelectors.pluginList(s).map((i) => i.identifier)]);
-
-  useEffect(() => {
-    if (usePluginStore.getState().newDevPlugin) {
-      form.setFieldsValue(usePluginStore.getState().newDevPlugin);
-    }
-  }, []);
 
   const configItem: FormItemProps[] = [
     {

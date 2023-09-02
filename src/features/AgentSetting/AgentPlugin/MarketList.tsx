@@ -41,19 +41,22 @@ const MarketList = memo(() => {
   //   setModal(true);
   // }, []);
 
-  const updateConfig = useStore((s) => s.toggleAgentPlugin);
-  const [plugins, hasPlugin] = useStore((s) => [s.config.plugins || [], !!s.config.plugins]);
+  const [plugins, hasPlugin, toggleAgentPlugin] = useStore((s) => [
+    s.config.plugins || [],
+    !!s.config.plugins,
+    s.toggleAgentPlugin,
+  ]);
 
   const [useFetchPluginList, fetchPluginManifest, saveToDevList, updateNewDevPlugin] =
     usePluginStore((s) => [
       s.useFetchPluginList,
       s.fetchPluginManifest,
-      s.saveToDevList,
+      s.saveToCustomPluginList,
       s.updateNewDevPlugin,
     ]);
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
   const pluginList = usePluginStore((s) => s.pluginList, isEqual);
-  const devPluginList = usePluginStore((s) => s.devPluginList, isEqual);
+  const devPluginList = usePluginStore((s) => s.customPluginList, isEqual);
 
   useFetchPluginList();
 
@@ -92,7 +95,7 @@ const MarketList = memo(() => {
         }
         loading={pluginManifestLoading[identifier]}
         onChange={(checked) => {
-          updateConfig(identifier);
+          toggleAgentPlugin(identifier);
           if (checked) {
             fetchPluginManifest(identifier);
           }
@@ -125,7 +128,12 @@ const MarketList = memo(() => {
     <>
       <DevModal
         onOpenChange={setModal}
-        onSave={saveToDevList}
+        onSave={(devPlugin) => {
+          // 先保存
+          saveToDevList(devPlugin);
+          // 再开启
+          toggleAgentPlugin(devPlugin.identifier);
+        }}
         onValueChange={updateNewDevPlugin}
         open={showModal}
       />
