@@ -24,8 +24,9 @@ const t = setNamespace('plugin');
  */
 export interface PluginAction {
   checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
+  deletePluginSettings: (id: string) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
-  fetchPluginManifest: (name: string) => Promise<void>;
+  fetchPluginManifest: (identifier: string) => Promise<void>;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
   updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
   useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
@@ -51,9 +52,18 @@ export const createPluginSlice: StateCreator<
 
     const plugins = uniq(enabledPlugins);
 
-    await Promise.all(plugins.map((name) => fetchPluginManifest(name)));
+    await Promise.all(plugins.map((identifier) => fetchPluginManifest(identifier)));
 
     set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
+  },
+  deletePluginSettings: (id) => {
+    set(
+      produce((draft) => {
+        draft.pluginsSettings[id] = undefined;
+      }),
+      false,
+      t('deletePluginSettings'),
+    );
   },
   dispatchPluginManifest: (payload) => {
     const { pluginManifestMap } = get();
@@ -61,6 +71,7 @@ export const createPluginSlice: StateCreator<
 
     set({ pluginManifestMap: nextManifest }, false, t('dispatchPluginManifest', payload));
   },
+
   fetchPluginManifest: async (name) => {
     const plugin = pluginSelectors.getPluginMetaById(name)(get());
     // 1. 校验文件
@@ -102,7 +113,6 @@ export const createPluginSlice: StateCreator<
     // 4. 存储 manifest 信息
     get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
   },
-
   updateManifestLoadingState: (key, value) => {
     set(
       produce((draft) => {

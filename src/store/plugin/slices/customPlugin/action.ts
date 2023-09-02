@@ -14,9 +14,11 @@ const t = setNamespace('customPlugin');
  * 代理行为接口
  */
 export interface CustomPluginAction {
+  deleteCustomPlugin: (id: string) => void;
   dispatchCustomPluginList: (payload: CustomPluginListDispatch) => void;
   saveToCustomPluginList: (value: CustomPlugin) => void;
-  updateNewDevPlugin: (value: Partial<CustomPlugin>) => void;
+  updateCustomPlugin: (id: string, value: CustomPlugin) => void;
+  updateNewCustomPlugin: (value: Partial<CustomPlugin>) => void;
 }
 
 export const createCustomPluginSlice: StateCreator<
@@ -25,18 +27,34 @@ export const createCustomPluginSlice: StateCreator<
   [],
   CustomPluginAction
 > = (set, get) => ({
+  deleteCustomPlugin: (id) => {
+    const { dispatchCustomPluginList, dispatchPluginManifest, deletePluginSettings } = get();
+    // 1.删除插件项
+    dispatchCustomPluginList({ id, type: 'deleteItem' });
+    // 2.删除本地 manifest 记录
+    dispatchPluginManifest({ id, type: 'deleteManifest' });
+    // 3.删除插件配置
+    deletePluginSettings(id);
+  },
   dispatchCustomPluginList: (payload) => {
     const { customPluginList } = get();
 
     const nextList = devPluginListReducer(customPluginList, payload);
-    set({ customPluginList: nextList }, false, t('dispatchDevList', payload));
+    set({ customPluginList: nextList }, false, t('dispatchCustomPluginList', payload));
   },
   saveToCustomPluginList: (value) => {
     get().dispatchCustomPluginList({ plugin: value, type: 'addItem' });
-    set({ newCustomPlugin: defaultCustomPlugin }, false, t('saveToDevList'));
+    set({ newCustomPlugin: defaultCustomPlugin }, false, t('saveToCustomPluginList'));
+  },
+  updateCustomPlugin: (id, value) => {
+    const { dispatchCustomPluginList, fetchPluginManifest } = get();
+    // 1. 更新 list 项信息
+    dispatchCustomPluginList({ id, plugin: value, type: 'updateItem' });
+    // 2. 更新 重新拉取 manifest
+    fetchPluginManifest(id);
   },
 
-  updateNewDevPlugin: (newCustomPlugin) => {
+  updateNewCustomPlugin: (newCustomPlugin) => {
     set(
       { newCustomPlugin: merge({}, get().newCustomPlugin, newCustomPlugin) },
       false,

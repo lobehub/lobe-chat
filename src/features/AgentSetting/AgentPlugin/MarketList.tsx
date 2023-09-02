@@ -52,14 +52,22 @@ const MarketList = memo(() => {
       s.useFetchPluginList,
       s.fetchPluginManifest,
       s.saveToCustomPluginList,
-      s.updateNewDevPlugin,
+      s.updateNewCustomPlugin,
     ]);
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
   const pluginList = usePluginStore((s) => s.pluginList, isEqual);
-  const devPluginList = usePluginStore((s) => s.customPluginList, isEqual);
+  const customPluginList = usePluginStore((s) => s.customPluginList, isEqual);
 
   useFetchPluginList();
 
+  const togglePlugin = async (pluginId: string, fetchManifest?: boolean) => {
+    toggleAgentPlugin(pluginId);
+    if (fetchManifest) {
+      await fetchPluginManifest(pluginId);
+    }
+  };
+
+  //  =========== Skeleton Loading =========== //
   const loadingItem = {
     avatar: (
       <Skeleton
@@ -80,10 +88,11 @@ const MarketList = memo(() => {
       />
     ),
   };
-
   const loadingList = [loadingItem, loadingItem, loadingItem];
 
   const isEmpty = pluginList.length === 0;
+
+  //  =========== Plugin List =========== //
 
   const list = pluginList.map(({ identifier, meta }) => ({
     avatar: <Avatar avatar={meta.avatar} />,
@@ -95,10 +104,7 @@ const MarketList = memo(() => {
         }
         loading={pluginManifestLoading[identifier]}
         onChange={(checked) => {
-          toggleAgentPlugin(identifier);
-          if (checked) {
-            fetchPluginManifest(identifier);
-          }
+          togglePlugin(identifier, checked);
         }}
       />
     ),
@@ -108,7 +114,9 @@ const MarketList = memo(() => {
     tag: identifier,
   }));
 
-  const devList = devPluginList.map(({ identifier, meta }) => ({
+  //  =========== Custom Plugin List =========== //
+
+  const customList = customPluginList.map(({ identifier, meta }) => ({
     avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta) || '🧩'} />,
     children: <LocalPluginItem id={identifier} />,
     desc: pluginHelpers.getPluginDesc(meta),
@@ -128,11 +136,11 @@ const MarketList = memo(() => {
     <>
       <DevModal
         onOpenChange={setModal}
-        onSave={(devPlugin) => {
+        onSave={async (devPlugin) => {
           // 先保存
           saveToDevList(devPlugin);
-          // 再开启
-          toggleAgentPlugin(devPlugin.identifier);
+          // 再开启插件
+          await togglePlugin(devPlugin.identifier, true);
         }}
         onValueChange={updateNewDevPlugin}
         open={showModal}
@@ -140,7 +148,7 @@ const MarketList = memo(() => {
       <Form
         items={[
           {
-            children: isEmpty ? loadingList : [...devList, ...list],
+            children: isEmpty ? loadingList : [...customList, ...list],
             extra: (
               <Tooltip title={t('settingPlugin.addTooltip')}>
                 <Button

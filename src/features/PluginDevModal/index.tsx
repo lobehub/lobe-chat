@@ -1,9 +1,9 @@
 import { Icon } from '@lobehub/ui';
 import { App, Button, ConfigProvider, Form, Modal, Popconfirm } from 'antd';
-import { createStyles, useTheme } from 'antd-style';
+import { createStyles } from 'antd-style';
 import { LucideBlocks } from 'lucide-react';
 import { lighten } from 'polished';
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -29,7 +29,7 @@ interface DevModalProps {
   mode?: 'edit' | 'create';
   onDelete?: () => void;
   onOpenChange: (open: boolean) => void;
-  onSave?: (value: CustomPlugin) => void;
+  onSave?: (value: CustomPlugin) => Promise<void> | void;
   onValueChange?: (value: Partial<CustomPlugin>) => void;
   open?: boolean;
   value?: CustomPlugin;
@@ -37,20 +37,16 @@ interface DevModalProps {
 
 const DevModal = memo<DevModalProps>(
   ({ open, mode = 'create', value, onValueChange, onSave, onOpenChange, onDelete }) => {
+    const isEditMode = mode === 'edit';
     const { t } = useTranslation('plugin');
-
-    const [form] = Form.useForm();
-    const theme = useTheme();
-
-    const { styles } = useStyles();
-
+    const { styles, theme } = useStyles();
     const { message } = App.useApp();
 
+    const [submitting, setSubmitting] = useState(false);
+    const [form] = Form.useForm();
     useEffect(() => {
       form.setFieldsValue(value);
     }, []);
-
-    const isEditMode = mode === 'edit';
 
     const footer = (
       <Flexbox horizontal justify={'space-between'} style={{ marginTop: 24 }}>
@@ -82,6 +78,7 @@ const DevModal = memo<DevModalProps>(
             {t('cancel', { ns: 'common' })}
           </Button>
           <Button
+            loading={submitting}
             onClick={() => {
               form.submit();
             }}
@@ -98,8 +95,12 @@ const DevModal = memo<DevModalProps>(
         onFormChange={() => {
           onValueChange?.(form.getFieldsValue());
         }}
-        onFormFinish={(_, info) => {
-          onSave?.(info.values as CustomPlugin);
+        onFormFinish={async (_, info) => {
+          if (onSave) {
+            setSubmitting(true);
+            await onSave?.(info.values as CustomPlugin);
+            setSubmitting(false);
+          }
           message.success(t(isEditMode ? 'dev.updateSuccess' : 'dev.saveSuccess'));
           onOpenChange(false);
         }}

@@ -17,11 +17,13 @@ const MarketList = memo<{ id: string }>(({ id }) => {
   const updateConfig = useStore((s) => s.toggleAgentPlugin);
   const [plugins, hasPlugin] = useStore((s) => [s.config.plugins || [], !!s.config.plugins]);
 
-  const [useFetchPluginList, fetchPluginManifest, dispatchDevPluginList] = usePluginStore((s) => [
-    s.useFetchPluginList,
-    s.fetchPluginManifest,
-    s.dispatchCustomPluginList,
-  ]);
+  const [useFetchPluginList, fetchPluginManifest, deleteCustomPlugin, updateCustomPlugin] =
+    usePluginStore((s) => [
+      s.useFetchPluginList,
+      s.fetchPluginManifest,
+      s.deleteCustomPlugin,
+      s.updateCustomPlugin,
+    ]);
 
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
   const devPlugin = usePluginStore(pluginSelectors.getDevPluginById(id), isEqual);
@@ -33,11 +35,11 @@ const MarketList = memo<{ id: string }>(({ id }) => {
       <DevModal
         mode={'edit'}
         onDelete={() => {
-          dispatchDevPluginList({ id, type: 'deleteItem' });
+          deleteCustomPlugin(id);
         }}
         onOpenChange={setModal}
         onSave={(value) => {
-          dispatchDevPluginList({ id, plugin: value, type: 'updateItem' });
+          updateCustomPlugin(id, value);
         }}
         open={showModal}
         value={devPlugin}
