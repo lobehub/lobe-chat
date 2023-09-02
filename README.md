@@ -168,7 +168,7 @@ Contributions of all types are more than welcome, if you are interested in contr
 
 <!-- CONTRIBUTION GROUP -->
 
-> 📊 Total: <kbd>**4**</kbd>
+> 📊 Total: <kbd>**5**</kbd>
 
 <a href="https://github.com/arvinxx" title="arvinxx">
   <img src="https://avatars.githubusercontent.com/u/28616219?v=4" width="50" />
@@ -181,6 +181,9 @@ Contributions of all types are more than welcome, if you are interested in contr
 </a>
 <a href="https://github.com/actions-user" title="actions-user">
   <img src="https://avatars.githubusercontent.com/u/65916846?v=4" width="50" />
+</a>
+<a href="https://github.com/bropines" title="bropines">
+  <img src="https://avatars.githubusercontent.com/u/57861007?v=4" width="50" />
 </a>
 
 <!-- CONTRIBUTION END -->

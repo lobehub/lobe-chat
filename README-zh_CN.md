@@ -168,7 +168,7 @@ $ pnpm dev
 
 <!-- CONTRIBUTION GROUP -->
 
-> 📊 Total: <kbd>**4**</kbd>
+> 📊 Total: <kbd>**5**</kbd>
 
 <a href="https://github.com/arvinxx" title="arvinxx">
   <img src="https://avatars.githubusercontent.com/u/28616219?v=4" width="50" />
@@ -181,6 +181,9 @@ $ pnpm dev
 </a>
 <a href="https://github.com/actions-user" title="actions-user">
   <img src="https://avatars.githubusercontent.com/u/65916846?v=4" width="50" />
+</a>
+<a href="https://github.com/bropines" title="bropines">
+  <img src="https://avatars.githubusercontent.com/u/57861007?v=4" width="50" />
 </a>
 
 <!-- CONTRIBUTION END -->
