@@ -1,11 +1,11 @@
 import { produce } from 'immer';
 
-import { DevPlugin } from '../initialState';
+import { CustomPlugin } from '@/types/plugin';
 
-export type DevListState = DevPlugin[];
+export type DevListState = CustomPlugin[];
 
 export type AddPluginAction = {
-  plugin: DevPlugin;
+  plugin: CustomPlugin;
   type: 'addItem';
 };
 
@@ -16,15 +16,15 @@ export type DeletePluginAction = {
 
 export type UpdatePluginAction = {
   id: string;
-  plugin: DevPlugin;
+  plugin: CustomPlugin;
   type: 'updateItem';
 };
 
-export type DevListDispatch = AddPluginAction | DeletePluginAction | UpdatePluginAction;
+export type CustomPluginListDispatch = AddPluginAction | DeletePluginAction | UpdatePluginAction;
 
 export const devPluginListReducer = (
   state: DevListState,
-  payload: DevListDispatch,
+  payload: CustomPluginListDispatch,
 ): DevListState => {
   switch (payload.type) {
     case 'addItem': {

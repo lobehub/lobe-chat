@@ -23,13 +23,13 @@ const enabledSchema =
       );
   };
 
-const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.devPluginList];
+const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.customPluginList];
 
 const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
   pluginHelpers.getPluginFormList(pluginList(s), id);
 
 const getDevPluginById = (id: string) => (s: PluginStoreState) =>
-  s.devPluginList.find((i) => i.identifier === id);
+  s.customPluginList.find((i) => i.identifier === id);
 
 const getPluginManifestById = (id: string) => (s: PluginStoreState) => s.pluginManifestMap[id];
 const getPluginSettingsById = (id: string) => (s: PluginStoreState) => s.pluginsSettings[id];

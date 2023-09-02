@@ -14,10 +14,8 @@ import { pluginSelectors } from '@/store/plugin/selectors';
 import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { DevPlugin, defaultDevPlugin } from './initialState';
-import { DevListDispatch, devPluginListReducer } from './reducers/devPluginList';
+import { PluginStore } from '../../store';
 import { PluginDispatch, pluginManifestReducer } from './reducers/manifest';
-import { PluginStore } from './store';
 
 const t = setNamespace('plugin');
 
@@ -26,12 +24,10 @@ const t = setNamespace('plugin');
  */
 export interface PluginAction {
   checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
-  dispatchDevPluginList: (payload: DevListDispatch) => void;
+  deletePluginSettings: (id: string) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
-  fetchPluginManifest: (name: string) => Promise<void>;
-  saveToDevList: (value: DevPlugin) => void;
+  fetchPluginManifest: (identifier: string) => Promise<void>;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
-  updateNewDevPlugin: (value: Partial<DevPlugin>) => void;
   updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
   useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
 }
@@ -56,15 +52,18 @@ export const createPluginSlice: StateCreator<
 
     const plugins = uniq(enabledPlugins);
 
-    await Promise.all(plugins.map((name) => fetchPluginManifest(name)));
+    await Promise.all(plugins.map((identifier) => fetchPluginManifest(identifier)));
 
     set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
   },
-  dispatchDevPluginList: (payload) => {
-    const { devPluginList } = get();
-
-    const nextList = devPluginListReducer(devPluginList, payload);
-    set({ devPluginList: nextList }, false, t('dispatchDevList', payload));
+  deletePluginSettings: (id) => {
+    set(
+      produce((draft) => {
+        draft.pluginsSettings[id] = undefined;
+      }),
+      false,
+      t('deletePluginSettings'),
+    );
   },
   dispatchPluginManifest: (payload) => {
     const { pluginManifestMap } = get();
@@ -72,6 +71,7 @@ export const createPluginSlice: StateCreator<
 
     set({ pluginManifestMap: nextManifest }, false, t('dispatchPluginManifest', payload));
   },
+
   fetchPluginManifest: async (name) => {
     const plugin = pluginSelectors.getPluginMetaById(name)(get());
     // 1. 校验文件
@@ -113,11 +113,6 @@ export const createPluginSlice: StateCreator<
     // 4. 存储 manifest 信息
     get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
   },
-  saveToDevList: (value) => {
-    get().dispatchDevPluginList({ plugin: value, type: 'addItem' });
-    set({ newDevPlugin: defaultDevPlugin }, false, t('saveToDevList'));
-  },
-
   updateManifestLoadingState: (key, value) => {
     set(
       produce((draft) => {
@@ -125,13 +120,6 @@ export const createPluginSlice: StateCreator<
       }),
       false,
       t('updateManifestLoadingState'),
-    );
-  },
-  updateNewDevPlugin: (newDevPlugin) => {
-    set(
-      { newDevPlugin: merge({}, get().newDevPlugin, newDevPlugin) },
-      false,
-      t('updateNewDevPlugin'),
     );
   },
   updatePluginSettings: (id, settings) => {
