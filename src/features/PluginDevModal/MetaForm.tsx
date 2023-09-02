@@ -18,7 +18,7 @@ const MetaForm = memo<{ form: FormInstance }>(({ form }) => {
 
   const configItem: FormItemProps[] = [
     {
-      children: <Input placeholder={'searchEngine'} />,
+      children: <Input disabled placeholder={'searchEngine'} />,
       desc: t('dev.meta.identifier.desc'),
       label: t('dev.meta.identifier.label'),
       name: 'identifier',

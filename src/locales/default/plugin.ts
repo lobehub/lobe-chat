@@ -50,9 +50,10 @@ export default {
       },
       manifest: {
         desc: 'LobeChat 将会通过该链接安装插件',
-        invalid: '输入的 manifest 链接无效，或 manifest 不符合规范',
+        jsonInvalid: ' manifest 不符合规范，校验结果: \n\n {{error}}',
         label: '插件描述文件 Url 地址',
-        urlError: '请输入一个有效的网址',
+        requestError: '请求该链接失败，请输入一个有效的链接，并检查链接是否允许跨域访问',
+        urlError: '该链接没有返回 JSON 格式的内容, 请输入一个有效的链接',
       },
       title: {
         desc: '插件标题',

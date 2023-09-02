@@ -1,18 +1,37 @@
-import { pluginManifestSchema } from '@lobehub/chat-plugin-sdk';
-import { Form, FormItemProps, Input, Tooltip } from '@lobehub/ui';
+import { LobeChatPluginManifest, pluginManifestSchema } from '@lobehub/chat-plugin-sdk';
+import { ActionIcon, Form, FormItemProps, Input, Tooltip } from '@lobehub/ui';
 import { FormInstance, Radio } from 'antd';
-import { memo } from 'react';
+import { RotateCwIcon } from 'lucide-react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const ManifestForm = memo<{ form: FormInstance; mode: 'url' | 'local' }>(({ form, mode }) => {
   const { t } = useTranslation('plugin');
+
+  const [manifest, setManifest] = useState<LobeChatPluginManifest>();
 
   const isUrl = mode === 'url';
 
   const configItem: FormItemProps[] = isUrl
     ? [
         {
-          children: <Input placeholder={'http://localhost/manifest.json'} />,
+          children: (
+            <Input
+              placeholder={'http://localhost:3400/manifest-dev.json'}
+              suffix={
+                manifest && (
+                  <ActionIcon
+                    icon={RotateCwIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      form.validateFields(['manifest']);
+                    }}
+                    size={'small'}
+                  />
+                )
+              }
+            />
+          ),
           desc: t('dev.meta.manifest.desc'),
           hasFeedback: true,
           label: t('dev.meta.manifest.label'),
@@ -25,13 +44,29 @@ const ManifestForm = memo<{ form: FormInstance; mode: 'url' | 'local' }>(({ form
               pattern: /^https?:\/\/.*/,
             },
             {
-              message: t('dev.meta.manifest.invalid'),
+              // message: t('dev.meta.manifest.invalid'),
               validator: async (_, value) => {
-                const res = await fetch(value);
-                if (!res.ok) return true;
+                if (!value) return true;
 
-                const json = await res.json();
-                pluginManifestSchema.parse(json);
+                let res: Response;
+
+                try {
+                  res = await fetch(value);
+                } catch {
+                  throw t('dev.meta.manifest.requestError');
+                }
+
+                const json = await res.json().catch(() => {
+                  throw t('dev.meta.manifest.urlError');
+                });
+
+                const valid = pluginManifestSchema.safeParse(json);
+                if (!valid.success) {
+                  throw t('dev.meta.manifest.jsonInvalid', { error: valid.error });
+                }
+
+                setManifest(valid.data);
+                form.setFieldValue('identifier', valid.data.identifier);
               },
             },
           ],
