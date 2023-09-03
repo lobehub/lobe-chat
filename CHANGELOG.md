@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.68.0](https://github.com/lobehub/lobe-chat/compare/v0.67.0...v0.68.0)
+
+<sup>Released on **2023-09-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Plugin default use iframe render.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Plugin default use iframe render, closes [#141](https://github.com/lobehub/lobe-chat/issues/141) ([35a3a16](https://github.com/lobehub/lobe-chat/commit/35a3a16))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.67.0](https://github.com/lobehub/lobe-chat/compare/v0.66.0...v0.67.0)
 
 <sup>Released on **2023-09-02**</sup>
