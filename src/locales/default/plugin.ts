@@ -82,6 +82,7 @@ export default {
   },
   list: {
     item: {
+      'deprecated.title': '已删除',
       'local.config': '配置',
       'local.title': '自定义',
     },

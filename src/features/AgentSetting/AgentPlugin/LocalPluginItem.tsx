@@ -14,8 +14,8 @@ const MarketList = memo<{ id: string }>(({ id }) => {
 
   const [showModal, setModal] = useState(false);
 
-  const updateConfig = useStore((s) => s.toggleAgentPlugin);
-  const [plugins, hasPlugin] = useStore((s) => [s.config.plugins || [], !!s.config.plugins]);
+  const [toggleAgentPlugin, hasPlugin] = useStore((s) => [s.toggleAgentPlugin, !!s.config.plugins]);
+  const plugins = useStore((s) => s.config.plugins || []);
 
   const [useFetchPluginList, fetchPluginManifest, deleteCustomPlugin, updateCustomPlugin] =
     usePluginStore((s) => [
@@ -36,6 +36,7 @@ const MarketList = memo<{ id: string }>(({ id }) => {
         mode={'edit'}
         onDelete={() => {
           deleteCustomPlugin(id);
+          toggleAgentPlugin(id);
         }}
         onOpenChange={setModal}
         onSave={(value) => {
@@ -53,7 +54,7 @@ const MarketList = memo<{ id: string }>(({ id }) => {
           }
           loading={pluginManifestLoading[id]}
           onChange={(checked) => {
-            updateConfig(id);
+            toggleAgentPlugin(id);
             if (checked) {
               fetchPluginManifest(id);
             }

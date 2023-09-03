@@ -2,14 +2,14 @@ import { Avatar, Form, Icon, Tooltip } from '@lobehub/ui';
 import { Button, Skeleton, Switch, Tag } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { LucideBlocks, LucideStore } from 'lucide-react';
+import { LucideBlocks, LucideStore, LucideTrash2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import DevModal from 'src/features/PluginDevModal';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { pluginHelpers, usePluginStore } from '@/store/plugin';
+import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
 import { useStore } from '../store';
 import LocalPluginItem from './LocalPluginItem';
@@ -37,11 +37,7 @@ const MarketList = memo(() => {
 
   const [showModal, setModal] = useState(false);
 
-  // useEffect(() => {
-  //   setModal(true);
-  // }, []);
-
-  const [plugins, hasPlugin, toggleAgentPlugin] = useStore((s) => [
+  const [userEnabledPlugins, hasPlugin, toggleAgentPlugin] = useStore((s) => [
     s.config.plugins || [],
     !!s.config.plugins,
     s.toggleAgentPlugin,
@@ -57,6 +53,7 @@ const MarketList = memo(() => {
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
   const pluginList = usePluginStore((s) => s.pluginList, isEqual);
   const customPluginList = usePluginStore((s) => s.customPluginList, isEqual);
+  const totalList = usePluginStore(pluginSelectors.pluginList, isEqual);
 
   useFetchPluginList();
 
@@ -100,7 +97,9 @@ const MarketList = memo(() => {
       <Switch
         checked={
           // 如果在加载中，说明激活了
-          pluginManifestLoading[identifier] || !hasPlugin ? false : plugins.includes(identifier)
+          pluginManifestLoading[identifier] || !hasPlugin
+            ? false
+            : userEnabledPlugins.includes(identifier)
         }
         loading={pluginManifestLoading[identifier]}
         onChange={(checked) => {
@@ -132,6 +131,35 @@ const MarketList = memo(() => {
     tag: identifier,
   }));
 
+  //  =========== Deprecated Plugin List =========== //
+
+  // 基于 userEnabledPlugins 和完整的 totalList，检查出不在 totalList 中的插件
+  const deprecatedList = userEnabledPlugins
+    .filter((pluginId) => totalList.findIndex((p) => p.identifier === pluginId) < 0)
+    .map((id) => ({
+      avatar: <Avatar avatar={'♻️'} />,
+      children: (
+        <Switch
+          checked={true}
+          onChange={(checked) => {
+            togglePlugin(id, checked);
+          }}
+        />
+      ),
+      label: (
+        <Flexbox align={'center'} gap={8} horizontal>
+          {id}
+          <Tag bordered={false} color={'red'}>
+            {t('list.item.deprecated.title', { ns: 'plugin' })}
+          </Tag>
+        </Flexbox>
+      ),
+      minWidth: undefined,
+      tag: id,
+    }));
+
+  const hasDeprecated = deprecatedList.length > 0;
+
   return (
     <>
       <DevModal
@@ -148,27 +176,44 @@ const MarketList = memo(() => {
       <Form
         items={[
           {
-            children: isEmpty ? loadingList : [...customList, ...list],
+            children: isEmpty ? loadingList : [...deprecatedList, ...customList, ...list],
             extra: (
-              <Tooltip title={t('settingPlugin.addTooltip')}>
-                <Button
-                  icon={<Icon icon={LucideBlocks} />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModal(true);
-                  }}
-                  size={'small'}
-                >
-                  {t('settingPlugin.add')}
-                </Button>
-              </Tooltip>
+              <Flexbox gap={8} horizontal>
+                {hasDeprecated ? (
+                  <Tooltip title={t('settingPlugin.clearDeprecated')}>
+                    <Button
+                      icon={<Icon icon={LucideTrash2} />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        for (const i of deprecatedList) {
+                          togglePlugin(i.tag as string, false);
+                        }
+                      }}
+                      size={'small'}
+                      type={'text'}
+                    ></Button>
+                  </Tooltip>
+                ) : null}
+                <Tooltip title={t('settingPlugin.addTooltip')}>
+                  <Button
+                    icon={<Icon icon={LucideBlocks} />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModal(true);
+                    }}
+                    size={'small'}
+                  >
+                    {t('settingPlugin.add')}
+                  </Button>
+                </Tooltip>
+              </Flexbox>
             ),
             icon: LucideStore,
             title: t('settingPlugin.title'),
           },
         ]}
         {...FORM_STYLE}
-      />{' '}
+      />
     </>
   );
 });
