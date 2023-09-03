@@ -52,7 +52,11 @@
         "desc": "LobeChat will install the plugin using this link",
         "invalid": "The input manifest link is invalid or does not comply with the specification",
         "label": "Plugin Manifest URL",
-        "urlError": "Please enter a valid URL"
+        "urlError": "Please enter a valid URL",
+        "jsonInvalid": "The manifest is not valid, validation result: \n\n {{error}}",
+        "preview": "Preview Manifest",
+        "refresh": "Refresh",
+        "requestError": "Failed to request the link, please enter a valid link and check if the link allows cross-origin access"
       },
       "title": {
         "desc": "The title of the plugin",
@@ -73,7 +77,9 @@
       "manifest": "Function Description Manifest (Manifest)",
       "meta": "Plugin Metadata"
     },
-    "title": "Add Custom Plugin"
+    "title": "Add Custom Plugin",
+    "update": "Update",
+    "updateSuccess": "Plugin settings updated successfully"
   },
   "list": {
     "item": {

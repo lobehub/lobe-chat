@@ -2,12 +2,13 @@ import { PluginRender, PluginRenderProps } from '@lobehub/chat-plugin-sdk';
 import { Skeleton } from 'antd';
 import { memo, useEffect, useState } from 'react';
 
-import { system } from './dynamticLoader';
+import { system } from './utils';
 
-interface CustomRenderProps extends PluginRenderProps {
+interface SystemJsRenderProps extends PluginRenderProps {
   url: string;
 }
-const CustomRender = memo<CustomRenderProps>(({ url, ...props }) => {
+
+const SystemJsRender = memo<SystemJsRenderProps>(({ url, ...props }) => {
   const [component, setComp] = useState<PluginRender | null>(null);
 
   useEffect(() => {
@@ -31,4 +32,4 @@ const CustomRender = memo<CustomRenderProps>(({ url, ...props }) => {
 
   return <Render {...props} />;
 });
-export default CustomRender;
+export default SystemJsRender;
