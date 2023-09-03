@@ -45,18 +45,18 @@ const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
 
   if (!ui.url) return;
 
-  if (ui.mode === 'iframe')
-    return (
-      <IFrameRender
-        content={contentObj}
-        height={ui.height}
-        name={name || 'unknown'}
-        url={ui.url}
-        width={ui.width}
-      />
-    );
+  if (ui.mode === 'module')
+    return <SystemJsRender content={contentObj} name={name || 'unknown'} url={ui.url} />;
 
-  return <SystemJsRender content={contentObj} name={name || 'unknown'} url={ui.url} />;
+  return (
+    <IFrameRender
+      content={contentObj}
+      height={ui.height}
+      name={name || 'unknown'}
+      url={ui.url}
+      width={ui.width}
+    />
+  );
 });
 
 export default PluginMessage;
