@@ -1,3 +1,6 @@
+import { uniqBy } from 'lodash-es';
+import { ChatCompletionFunctions } from 'openai-edge/types/api';
+
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { pluginHelpers } from '@/store/plugin/helpers';
 
@@ -5,12 +8,12 @@ import { PluginStoreState } from './initialState';
 
 const enabledSchema =
   (enabledPlugins: string[] = []) =>
-  (s: PluginStoreState) => {
-    return Object.values(s.pluginManifestMap)
-      .filter((p) => {
-        // 如果不存在 enabledPlugins，那么全部不启用
-        if (!enabledPlugins) return false;
+  (s: PluginStoreState): ChatCompletionFunctions[] => {
+    // 如果不存在 enabledPlugins，那么全部不启用
+    if (!enabledPlugins) return [];
 
+    const list = Object.values(s.pluginManifestMap)
+      .filter((p) => {
         // 如果存在 enabledPlugins，那么只启用 enabledPlugins 中的插件
         return enabledPlugins.includes(p.identifier);
       })
@@ -21,6 +24,8 @@ const enabledSchema =
           name: manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + m.name,
         })),
       );
+
+    return uniqBy(list, 'name');
   };
 
 const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.customPluginList];
