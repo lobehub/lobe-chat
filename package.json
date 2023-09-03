@@ -66,7 +66,7 @@
     "@emoji-mart/data": "^1",
     "@emoji-mart/react": "^1",
     "@icons-pack/react-simple-icons": "^9",
-    "@lobehub/chat-plugin-sdk": "^1.15.0",
+    "@lobehub/chat-plugin-sdk": "^1.15.1",
     "@lobehub/chat-plugins-gateway": "^1.5.0",
     "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",

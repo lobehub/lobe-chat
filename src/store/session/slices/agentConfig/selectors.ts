@@ -1,10 +1,10 @@
 import { t } from 'i18next';
-import { merge } from 'lodash-es';
 
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import { MetaData } from '@/types/meta';
+import { merge } from '@/utils/merge';
 
 import { sessionSelectors } from '../session/selectors';
 import { initialLobeAgentConfig } from './initialState';
@@ -19,7 +19,7 @@ const currentAgentTitle = (s: SessionStore) => currentAgentMeta(s)?.title || t('
 
 const currentAgentConfig = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
-  return merge({}, initialLobeAgentConfig, session?.config);
+  return merge(initialLobeAgentConfig, session?.config);
 };
 
 const currentAgentSystemRole = (s: SessionStore) => {

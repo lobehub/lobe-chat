@@ -1,8 +1,8 @@
 import { produce } from 'immer';
-import { merge } from 'lodash-es';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { LobeAgentConfig } from '@/types/session';
+import { merge } from '@/utils/merge';
 
 export type ConfigDispatch =
   | { config: Partial<any>; type: 'update' }
@@ -13,7 +13,7 @@ export const configReducer = (state: LobeAgentConfig, payload: ConfigDispatch): 
   switch (payload.type) {
     case 'update': {
       return produce(state, (draftState) => {
-        return merge({}, draftState, payload.config);
+        return merge(draftState, payload.config);
       });
     }
 
