@@ -4,5 +4,5 @@
 
 ### Plugin Development
 
-- [en-US](plugin-development.en-US)
-- [zh-CN](plugin-development.zh-CN)
+- [English](Plugin-Development.en-US)
+- [简体中文](Plugin-Development.zh-CN)

@@ -10,7 +10,9 @@ const useStyle = createStyles(
   ({ css, token }) => css`
     cursor: pointer;
     border-radius: 50%;
-    transition: scale 400ms ${token.motionEaseOut}, box-shadow 100ms ${token.motionEaseOut};
+    transition:
+      scale 400ms ${token.motionEaseOut},
+      box-shadow 100ms ${token.motionEaseOut};
 
     &:hover {
       box-shadow: 0 0 0 3px ${token.colorText};

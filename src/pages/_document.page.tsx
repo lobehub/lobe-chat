@@ -5,12 +5,11 @@ import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/do
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const page = await ctx.renderPage({
-      enhanceApp: (App) => (props) =>
-        (
-          <StyleProvider cache={extractStaticStyle.cache}>
-            <App {...props} />
-          </StyleProvider>
-        ),
+      enhanceApp: (App) => (props) => (
+        <StyleProvider cache={extractStaticStyle.cache}>
+          <App {...props} />
+        </StyleProvider>
+      ),
     });
 
     const styles = extractStaticStyle(page.html).map((item) => item.style);
