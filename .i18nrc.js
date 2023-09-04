@@ -6,7 +6,7 @@ module.exports = defineConfig({
   entry: 'locales/zh_CN',
   entryLocale: 'zh_CN',
   output: 'locales',
-  outputLocales: ['en_US'],
+  outputLocales: ['en_US', 'ru_RU'],
   splitToken: 2500,
   temperature: 0,
   modelName: 'gpt-3.5-turbo',
