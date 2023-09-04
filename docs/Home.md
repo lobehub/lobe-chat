@@ -12,7 +12,15 @@ LobeChat is a open-source, extensible (Function Calling), high-performance chatb
 
 ![](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-**插件开发 | Plugin Development**
+<br/>
 
-- [English](Plugin-Development.en-US)
-- [简体中文](Plugin-Development.zh-CN)
+## 🤖 Agents
+
+- [Agent Index](https://github.com/lobehub/lobe-chat-agents)
+
+## 🧩 Plugins
+
+- [Plugin Index](https://github.com/lobehub/lobe-chat-plugins)
+- [Plugin Development](Plugin-Development.en-US)
+  - [English](Plugin-Development.en-US)
+  - [简体中文](Plugin-Development.zh-CN)
