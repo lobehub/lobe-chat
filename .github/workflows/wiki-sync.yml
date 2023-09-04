@@ -2,6 +2,8 @@ name: Wiki Sync
 
 on:
   push:
+    paths:
+      - 'docs/**'
     branches:
       - main
 
