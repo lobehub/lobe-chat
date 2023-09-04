@@ -55,6 +55,7 @@ export const createChatCompletion = async ({
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
   } catch (error) {
+    console.error(error);
     // Check if the error is an APIError
     if (error instanceof OpenAI.APIError) {
       // 如果 await 超时报错，说明是 OpenAI 服务端的问题
