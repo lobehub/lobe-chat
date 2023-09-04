@@ -1,0 +1,16 @@
+name: Wiki Sync
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-wiki:
+    runs-on: ubuntu-latest
+    name: wiki sync
+    steps:
+    - uses: OrlovM/Wiki-Action@v1
+      with:
+        path: 'docs'
+        token: ${{ secrets.GH_TOKEN }}
