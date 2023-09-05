@@ -254,7 +254,9 @@ After completing the plugin development, you can deploy the plugin using your pr
 
 If you want more people to use your plugin, you are welcome to submit it for review in the plugin marketplace.
 
-[manifest-docs-url]: https://github.com/lobehub/chat-plugin-sdk/tree/master/docs/manifest.zh-CN.md
-[lobe-chat-plugin-template-url]: https://github.com/lobehub/chat-plugin-template
-[plugin-error-type-url]: https://github.com/lobehub/chat-plugin-template
+<!-- LINK GROUP -->
+
 [fetch-plugin-message-url]: https://github.com/lobehub/chat-plugin-template
+[lobe-chat-plugin-template-url]: https://github.com/lobehub/chat-plugin-template
+[manifest-docs-url]: https://github.com/lobehub/chat-plugin-sdk/tree/master/docs/manifest.zh-CN.md
+[plugin-error-type-url]: https://github.com/lobehub/chat-plugin-template

@@ -253,7 +253,9 @@ export default Render;
 
 如果你希望插件被更多人使用，欢迎将你的插件 [提交上架](https://github.com/lobehub/lobe-chat-plugins) 到插件市场。
 
-[manifest-docs-url]: https://github.com/lobehub/chat-plugin-sdk/tree/master/docs/manifest.zh-CN.md
-[lobe-chat-plugin-template-url]: https://github.com/lobehub/chat-plugin-template
-[plugin-error-type-url]: https://github.com/lobehub/chat-plugin-template
+<!-- LINK GROUP -->
+
 [fetch-plugin-message-url]: https://github.com/lobehub/chat-plugin-template
+[lobe-chat-plugin-template-url]: https://github.com/lobehub/chat-plugin-template
+[manifest-docs-url]: https://github.com/lobehub/chat-plugin-sdk/tree/master/docs/manifest.zh-CN.md
+[plugin-error-type-url]: https://github.com/lobehub/chat-plugin-template

@@ -215,92 +215,46 @@ This project is [MIT](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
-[official-shield]: https://img.shields.io/website?down_message=offline&label=🤯%20Try%20LobeChat&up_message=online&url=https%3A%2F%2Flobe-chat.vercel.app&style=for-the-badge
-[official-url]: https://lobe-chat.vercel.app
+[back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
+[chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
+[chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
+[chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
+[chat-plugin-web-crawler]: https://github.com/lobehub/chat-plugin-web-crawler
+[chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
+[ci-release-shield]: https://github.com/lobehub/lobe-chat/workflows/Release%20CI/badge.svg
+[ci-release-url]: https://github.com/lobehub/lobe-chat/actions?query=workflow%3ARelease%20CI
+[ci-test-shield]: https://github.com/lobehub/lobe-chat/workflows/Test%20CI/badge.svg
+[ci-test-url]: https://github.com/lobehub/lobe-chat/actions/workflows/test.yml
+[contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat.svg?style=flat
+[contributors-url]: https://github.com/lobehub/lobe-chat/graphs/contributors
+[deploy-button-image]: https://vercel.com/button
+[deploy-url]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
 [discord-shield]: https://dcbadge.vercel.app/api/server/AYFPHvv2jT?style=for-the-badge
 [discord-url]: https://discord.gg/AYFPHvv2jT
 [fc-url]: https://sspai.com/post/81986
-[profile-url]: https://github.com/lobehub
-[issues-url]: https://github.com/lobehub/lobe-chat/issues/new/choose
-[project-url]: https://github.com/lobehub/lobe-chat/projects
-[gitpod-url]: https://gitpod.io/#https://github.com/lobehub/lobe-chat
-
-<!-- SHIELD LINK GROUP -->
-
-[back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-
-<!-- release -->
-
-[release-shield]: https://img.shields.io/npm/v/@lobehub/chat?label=%F0%9F%A4%AF%20Chat
-[release-url]: https://www.npmjs.com/package/@lobehub/chat
-
-<!-- releaseDate -->
-
-[release-date-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?style=flat
-[release-date-url]: https://github.com/lobehub/lobe-chat/releases
-
-<!-- ciTest -->
-
-[ci-test-shield]: https://github.com/lobehub/lobe-chat/workflows/Test%20CI/badge.svg
-[ci-test-url]: https://github.com/lobehub/lobe-chat/actions/workflows/test.yml
-
-<!-- ciRelease -->
-
-[ci-release-shield]: https://github.com/lobehub/lobe-chat/workflows/Release%20CI/badge.svg
-[ci-release-url]: https://github.com/lobehub/lobe-chat/actions?query=workflow%3ARelease%20CI
-
-<!-- contributors -->
-
-[contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat.svg?style=flat
-[contributors-url]: https://github.com/lobehub/lobe-chat/graphs/contributors
-
-<!-- forks -->
-
 [forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat.svg?style=flat
 [forks-url]: https://github.com/lobehub/lobe-chat/network/members
-
-<!-- stargazers -->
-
-[stargazers-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat.svg?style=flat
-[stargazers-url]: https://github.com/lobehub/lobe-chat/stargazers
-
-<!-- issues -->
-
+[gitpod-url]: https://gitpod.io/#https://github.com/lobehub/lobe-chat
 [issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [issues-url]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
-
-<!-- deploy -->
-
-[deploy-button-image]: https://vercel.com/button
-[deploy-url]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
-
-<!-- @lobe/assets -->
-
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets
-
-<!-- @lobehub/ui -->
-
-[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?label=%F0%9F%A4%AF%20NPM
-[lobe-ui-url]: https://www.npmjs.com/package/@lobehub/ui
-[lobe-ui-github]: https://github.com/lobehub/lobe-ui
-
-<!-- @lobehub/lint -->
-
-[lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?label=%F0%9F%A4%AF%20NPM
-[lobe-lint-url]: https://www.npmjs.com/package/@lobehub/lint
-[lobe-lint-github]: https://github.com/lobehub/lobe-lint
-
-<!-- plugins -->
-
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
-[chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
-[chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
-[chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
-[chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
-[chat-plugin-web-crawler]: https://github.com/lobehub/chat-plugin-web-crawler
-
-<!-- products -->
-
-[lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
 [lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
 [lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
+[lobe-lint-github]: https://github.com/lobehub/lobe-lint
+[lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?label=%F0%9F%A4%AF%20NPM
+[lobe-lint-url]: https://www.npmjs.com/package/@lobehub/lint
+[lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
+[lobe-ui-github]: https://github.com/lobehub/lobe-ui
+[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?label=%F0%9F%A4%AF%20NPM
+[lobe-ui-url]: https://www.npmjs.com/package/@lobehub/ui
+[official-shield]: https://img.shields.io/website?down_message=offline&label=🤯%20Try%20LobeChat&up_message=online&url=https%3A%2F%2Flobe-chat.vercel.app&style=for-the-badge
+[official-url]: https://lobe-chat.vercel.app
+[profile-url]: https://github.com/lobehub
+[project-url]: https://github.com/lobehub/lobe-chat/projects
+[release-date-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?style=flat
+[release-date-url]: https://github.com/lobehub/lobe-chat/releases
+[release-shield]: https://img.shields.io/npm/v/@lobehub/chat?label=%F0%9F%A4%AF%20Chat
+[release-url]: https://www.npmjs.com/package/@lobehub/chat
+[stargazers-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat.svg?style=flat
+[stargazers-url]: https://github.com/lobehub/lobe-chat/stargazers

@@ -54,3 +54,4 @@ test-output
 next-env.d.ts
 .next
 .env
+public/*.js
