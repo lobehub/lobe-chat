@@ -14,8 +14,13 @@ export const createOpenAI = (userApiKey: string | null, endpoint?: string | null
 
   const config: ClientOptions = {
     apiKey: !userApiKey ? OPENAI_API_KEY : userApiKey,
-    baseURL,
   };
+
+  // a bug with openai: https://github.com/openai/openai-node/issues/283
+  // TODO: should refactor when openai fix the bug
+  if (baseURL) {
+    config.baseURL = baseURL;
+  }
 
   return new OpenAI(config);
 };
@@ -55,18 +60,19 @@ export const createChatCompletion = async ({
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
   } catch (error) {
-    console.error(error);
-    // Check if the error is an APIError
+    // Check if the error is an OpenAI APIError
     if (error instanceof OpenAI.APIError) {
-      // 如果 await 超时报错，说明是 OpenAI 服务端的问题
       return createErrorResponse(ChatErrorType.OpenAIBizError, {
         endpoint: !!endpoint ? endpoint : undefined,
-        error: error.error,
+        error: error.error ?? error.cause,
       });
     }
 
-    // 如果不是，那么可能是其他接口端的响应，读 text 为结果
-    return createErrorResponse(ChatErrorType.GatewayTimeout, {
+    // track the error that not an OpenAI APIError
+    console.error(error);
+
+    // return as a GatewayTimeout error
+    return createErrorResponse(ChatErrorType.InternalServerError, {
       endpoint,
       error: JSON.stringify(error),
     });
