@@ -63,8 +63,10 @@ const Header = memo<{ mobile?: 'navbar' | 'search' }>(({ mobile }) => {
       </Flexbox>
       <SearchBar
         allowClear
+        enableShortKey
         onChange={(e) => useSessionStore.setState({ searchKeywords: e.target.value })}
         placeholder={t('searchAgentPlaceholder')}
+        shortKey={'k'}
         spotlight
         type={'ghost'}
         value={keywords}
