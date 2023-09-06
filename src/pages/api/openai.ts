@@ -1,5 +1,5 @@
-import { OpenAIStream, OpenAIStreamCallbacks, StreamingTextResponse } from 'ai';
-import { Configuration, OpenAIApi } from 'openai-edge';
+import { OpenAIStream, StreamingTextResponse } from 'ai';
+import OpenAI, { ClientOptions } from 'openai';
 
 import { getServerConfig } from '@/config/server';
 import { createErrorResponse } from '@/pages/api/error';
@@ -10,25 +10,29 @@ import { OpenAIStreamPayload } from '@/types/openai';
 export const createOpenAI = (userApiKey: string | null, endpoint?: string | null) => {
   const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
 
-  const config = new Configuration({
+  const baseURL = endpoint ? endpoint : OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined;
+
+  const config: ClientOptions = {
     apiKey: !userApiKey ? OPENAI_API_KEY : userApiKey,
-  });
+  };
 
-  const basePath = endpoint ? endpoint : OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined;
+  // a bug with openai: https://github.com/openai/openai-node/issues/283
+  // TODO: should refactor when openai fix the bug
+  if (baseURL) {
+    config.baseURL = baseURL;
+  }
 
-  return new OpenAIApi(config, basePath);
+  return new OpenAI(config);
 };
 
 interface CreateChatCompletionOptions {
   OPENAI_API_KEY: string | null;
-  callbacks?: (payload: OpenAIStreamPayload) => OpenAIStreamCallbacks;
   endpoint?: string | null;
   payload: OpenAIStreamPayload;
 }
 
 export const createChatCompletion = async ({
   payload,
-  callbacks,
   OPENAI_API_KEY,
   endpoint,
 }: CreateChatCompletionOptions) => {
@@ -47,37 +51,30 @@ export const createChatCompletion = async ({
 
   // ============  2. 发送请求   ============ //
 
-  const requestParams = { messages: formatMessages, stream: true, ...params };
-
-  let response: Response;
-
   try {
-    response = await openai.createChatCompletion(requestParams);
+    const response = await openai.chat.completions.create({
+      messages: formatMessages,
+      ...params,
+      stream: true,
+    });
+    const stream = OpenAIStream(response);
+    return new StreamingTextResponse(stream);
   } catch (error) {
-    // 如果 await 超时报错，说明是 OpenAI 服务端的问题
-    return createErrorResponse(ChatErrorType.GatewayTimeout, { message: error });
-  }
-
-  // ============  4. 处理异常响应   ============ //
-  if (!response.ok) {
-    let error;
-
-    try {
-      // 正常情况下应该是 OpenAI 的 JSON
-      error = await response.clone().json();
-    } catch {
-      // 如果不是 JSON，那么可能是其他接口端的响应，读 text 为结果
-      const result = await response.text();
-
-      error = { message: result };
+    // Check if the error is an OpenAI APIError
+    if (error instanceof OpenAI.APIError) {
+      return createErrorResponse(ChatErrorType.OpenAIBizError, {
+        endpoint: !!endpoint ? endpoint : undefined,
+        error: error.error ?? error.cause,
+      });
     }
 
-    return createErrorResponse(ChatErrorType.OpenAIBizError, { ...error, endpoint });
+    // track the error that not an OpenAI APIError
+    console.error(error);
+
+    // return as a GatewayTimeout error
+    return createErrorResponse(ChatErrorType.InternalServerError, {
+      endpoint,
+      error: JSON.stringify(error),
+    });
   }
-
-  // ============  5. 发送正常相应   ============ //
-
-  const stream = OpenAIStream(response, callbacks?.(requestParams));
-
-  return new StreamingTextResponse(stream);
 };

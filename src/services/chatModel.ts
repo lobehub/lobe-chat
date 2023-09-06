@@ -1,11 +1,10 @@
 import { merge } from 'lodash-es';
-import { ChatCompletionFunctions } from 'openai-edge/types/api';
 
 import { LOBE_CHAT_ACCESS_CODE, OPENAI_API_KEY_HEADER_KEY, OPENAI_END_POINT } from '@/const/fetch';
 import { useGlobalStore } from '@/store/global';
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { initialLobeAgentConfig } from '@/store/session/initialState';
-import type { OpenAIStreamPayload } from '@/types/openai';
+import type { ChatCompletionFunctions, OpenAIStreamPayload } from '@/types/openai';
 
 import { URLS } from './url';
 

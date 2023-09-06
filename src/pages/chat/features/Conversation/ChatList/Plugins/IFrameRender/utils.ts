@@ -1,4 +1,4 @@
-import { PluginChannel } from '@lobehub/chat-plugin-sdk';
+import { PluginChannel } from '@lobehub/chat-plugin-sdk/client';
 
 export const onPluginReady = (e: MessageEvent, onReady: () => void) => {
   if (e.data.type === PluginChannel.pluginReadyForRender) {

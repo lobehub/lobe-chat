@@ -1,8 +1,8 @@
 import { uniqBy } from 'lodash-es';
-import { ChatCompletionFunctions } from 'openai-edge/types/api';
 
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { pluginHelpers } from '@/store/plugin/helpers';
+import { ChatCompletionFunctions } from '@/types/openai';
 
 import { PluginStoreState } from './initialState';
 
