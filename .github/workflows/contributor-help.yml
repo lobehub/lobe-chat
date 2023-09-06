@@ -1,9 +1,7 @@
 name: Contributor Helper
 
 on:
-  # 🌏 Think about the planet! No need to update stats too frequently
   schedule: [{ cron: '0 18 * * *' }]
-  # 💡 The following line lets you run workflow manually from the action tab!
   workflow_dispatch:
 jobs:
   contributor:
@@ -21,8 +19,8 @@ jobs:
       - name: Commit and push if changed
         run: |-
           git diff
-          git config --global user.email "actions@github.com"
-          git config --global user.name "github-actions"
+          git config --global user.name "lobehubbot"
+          git config --global user.email "i@lobehub.com"
           git pull
           git add -A
           git commit -m "🤖 docs: Auto update contributors" || exit 0
