@@ -11,6 +11,7 @@ import SkeletonList from './SkeletonList';
 
 const SessionList = memo(() => {
   const list = useSessionStore(sessionSelectors.sessionList, isEqual);
+  const activeSession = useSessionStore((s) => s.activeSession);
 
   const isInit = useSessionHydrated();
 
@@ -18,7 +19,14 @@ const SessionList = memo(() => {
     <SkeletonList />
   ) : list.length > 0 ? (
     list.map(({ id }) => (
-      <Link href={`/chat/${id}`} key={id}>
+      <Link
+        href={`/chat#session=${id}`}
+        key={id}
+        onClick={(e) => {
+          e.preventDefault();
+          activeSession(id);
+        }}
+      >
         <SessionItem id={id} />
       </Link>
     ))

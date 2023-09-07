@@ -29,7 +29,13 @@ const Inbox = memo(() => {
   );
 
   return (
-    <Link href={'/chat'}>
+    <Link
+      href={'/chat'}
+      onClick={(e) => {
+        e.preventDefault();
+        useSessionStore.getState().activeSession(INBOX_SESSION_ID);
+      }}
+    >
       <Item
         active={activeId === INBOX_SESSION_ID}
         avatar={avatarRender}

@@ -1,9 +1,9 @@
-import { memo } from 'react';
+import { useRouter } from 'next/router';
+import { memo, useEffect } from 'react';
 
 import { useSessionHydrated, useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import Chat from './chat/index.page';
 import Loading from './index/Loading';
 import Welcome from './welcome/index.page';
 
@@ -11,9 +11,15 @@ const Home = memo(() => {
   const hydrated = useSessionHydrated();
   const hasSession = useSessionStore(sessionSelectors.hasSessionList);
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (hasSession) router.replace('/chat');
+  }, [hasSession]);
+
   if (!hydrated) return <Loading />;
 
-  return !hasSession ? <Welcome /> : <Chat />;
+  return !hasSession ? <Welcome /> : <Loading />;
 });
 
 export default Home;

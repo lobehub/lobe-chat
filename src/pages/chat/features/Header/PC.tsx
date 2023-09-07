@@ -7,31 +7,30 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import PluginTag from './PluginTag';
 import ShareButton from './ShareButton';
 
-const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
+const Header = memo(() => {
   const init = useSessionChatInit();
 
   const { t } = useTranslation('common');
 
-  const [id, title, description, avatar, backgroundColor, model, plugins] = useSessionStore((s) => [
-    s.activeId,
+  const [id, isInbox, title, description, avatar, backgroundColor, model, plugins] =
+    useSessionStore((s) => [
+      s.activeId,
+      sessionSelectors.isInboxSession(s),
+      agentSelectors.currentAgentTitle(s),
+      agentSelectors.currentAgentDescription(s),
+      agentSelectors.currentAgentAvatar(s),
+      agentSelectors.currentAgentBackgroundColor(s),
+      agentSelectors.currentAgentModel(s),
+      agentSelectors.currentAgentPlugins(s),
+    ]);
 
-    agentSelectors.currentAgentTitle(s),
-    agentSelectors.currentAgentDescription(s),
-    agentSelectors.currentAgentAvatar(s),
-    agentSelectors.currentAgentBackgroundColor(s),
-    agentSelectors.currentAgentModel(s),
-    agentSelectors.currentAgentPlugins(s),
-  ]);
-
-  const isInbox = id === INBOX_SESSION_ID;
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.preference.showChatSideBar,
     s.toggleChatSideBar,
@@ -77,7 +76,7 @@ const Header = memo<{ settings?: boolean }>(({ settings = true }) => {
             size={{ fontSize: 24 }}
             title={t('roleAndArchive')}
           />
-          {settings && (
+          {!isInbox && (
             <ActionIcon
               icon={Settings}
               onClick={() => {
