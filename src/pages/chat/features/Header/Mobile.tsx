@@ -33,7 +33,7 @@ const MobileHeader = memo(() => {
             <ActionIcon
               icon={Settings}
               onClick={() => {
-                Router.push(`/chat/${id}/setting`);
+                Router.push(`/chat/setting#session=${id}`);
               }}
             />
           )}

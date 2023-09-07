@@ -4,12 +4,17 @@ import { Flexbox } from 'react-layout-kit';
 
 import AppLayout from '@/layout/AppLayout';
 import { useSwitchSideBarOnInit } from '@/store/global';
+import { usePluginStore } from '@/store/plugin';
 
 import { Sessions } from './SessionList';
 
 const ChatLayout = memo<PropsWithChildren>(({ children }) => {
   const { mobile } = useResponsive();
+
   useSwitchSideBarOnInit('chat');
+
+  const useFetchPluginList = usePluginStore((s) => s.useFetchPluginList);
+  useFetchPluginList();
 
   return (
     <AppLayout>

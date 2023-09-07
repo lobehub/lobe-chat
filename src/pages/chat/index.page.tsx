@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
@@ -21,10 +20,6 @@ const Chat = memo(() => {
     agentSelectors.currentAgentTitle(s),
   ]);
   const pageTitle = genSiteHeadTitle([avatar, title].filter(Boolean).join(' '));
-
-  const useFetchPluginList = usePluginStore((s) => s.useFetchPluginList);
-
-  useFetchPluginList();
 
   return (
     <>

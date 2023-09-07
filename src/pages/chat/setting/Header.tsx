@@ -14,6 +14,10 @@ import { useTranslation } from 'react-i18next';
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useSessionStore } from '@/store/session';
 
+const onBack = () => {
+  Router.push('/chat');
+};
+
 const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
@@ -46,7 +50,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <MobileNavBar
         center={<MobileNavBarTitle title={t('header.session')} />}
-        onBackClick={() => Router.back()}
+        onBackClick={onBack}
         right={
           <>
             <ActionIcon icon={Share2} title={t('share', { ns: 'common' })} />
@@ -62,7 +66,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (
     <ChatHeader
       left={<ChatHeaderTitle title={t('header.session')} />}
-      onBackClick={() => Router.back()}
+      onBackClick={onBack}
       right={
         <>
           <ActionIcon icon={Share2} size={{ fontSize: 24 }} title={t('share', { ns: 'common' })} />
