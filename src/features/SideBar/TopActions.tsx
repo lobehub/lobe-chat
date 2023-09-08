@@ -4,7 +4,9 @@ import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { GlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
 
 export interface TopActionProps {
   setTab: GlobalStore['switchSideBar'];
@@ -22,7 +24,7 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
         onClick={() => {
           // 如果已经在 chat 路径下了，那么就不用再跳转了
           if (Router.asPath.startsWith('/chat')) return;
-          Router.push('/chat');
+          Router.push(SESSION_CHAT_URL(useSessionStore.getState().activeId));
           setTab('chat');
         }}
         size="large"

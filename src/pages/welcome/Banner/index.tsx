@@ -8,6 +8,7 @@ import { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useImportConfig } from '@/hooks/useImportConfig';
 
 import { useStyles } from '../style';
@@ -24,7 +25,7 @@ const Banner = memo<{ mobile?: boolean }>(() => {
 
   const handleImport = useCallback((e: any) => {
     importConfig(e);
-    Router.push('/chat');
+    Router.push(SESSION_CHAT_URL());
   }, []);
 
   return (
@@ -37,7 +38,7 @@ const Banner = memo<{ mobile?: boolean }>(() => {
           <Upload maxCount={1} onChange={handleImport} showUploadList={false}>
             <Button size={'large'}>{t('button.import')}</Button>
           </Upload>
-          <Link href={'/chat'}>
+          <Link href={SESSION_CHAT_URL()}>
             <Button size={'large'} type={'primary'}>
               <Flexbox align={'center'} gap={4} horizontal>
                 {t('button.start')}

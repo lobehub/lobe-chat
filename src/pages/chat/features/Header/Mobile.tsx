@@ -11,8 +11,7 @@ import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 const MobileHeader = memo(() => {
   const { t } = useTranslation('common');
 
-  const [id, isInbox, title, model] = useSessionStore((s) => [
-    s.activeId,
+  const [isInbox, title, model] = useSessionStore((s) => [
     sessionSelectors.isInboxSession(s),
     agentSelectors.currentAgentTitle(s),
     agentSelectors.currentAgentModel(s),
@@ -33,7 +32,7 @@ const MobileHeader = memo(() => {
             <ActionIcon
               icon={Settings}
               onClick={() => {
-                Router.push(`/chat/setting#session=${id}`);
+                Router.push({ hash: location.hash, pathname: `/chat/setting` });
               }}
             />
           )}

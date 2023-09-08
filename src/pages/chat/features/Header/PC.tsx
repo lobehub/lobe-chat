@@ -19,9 +19,8 @@ const Header = memo(() => {
 
   const { t } = useTranslation('common');
 
-  const [id, isInbox, title, description, avatar, backgroundColor, model, plugins] =
-    useSessionStore((s) => [
-      s.activeId,
+  const [isInbox, title, description, avatar, backgroundColor, model, plugins] = useSessionStore(
+    (s) => [
       sessionSelectors.isInboxSession(s),
       agentSelectors.currentAgentTitle(s),
       agentSelectors.currentAgentDescription(s),
@@ -29,7 +28,8 @@ const Header = memo(() => {
       agentSelectors.currentAgentBackgroundColor(s),
       agentSelectors.currentAgentModel(s),
       agentSelectors.currentAgentPlugins(s),
-    ]);
+    ],
+  );
 
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.preference.showChatSideBar,
@@ -80,7 +80,7 @@ const Header = memo(() => {
             <ActionIcon
               icon={Settings}
               onClick={() => {
-                Router.push(`/chat/setting#session=${id}`);
+                Router.push({ hash: location.hash, pathname: `/chat/setting` });
               }}
               size={{ fontSize: 24 }}
               title={t('header.session', { ns: 'setting' })}

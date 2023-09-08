@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { memo, useEffect } from 'react';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useSessionHydrated, useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -14,7 +15,7 @@ const Home = memo(() => {
   const router = useRouter();
 
   useEffect(() => {
-    if (hasSession) router.replace('/chat');
+    if (hasSession) router.replace(SESSION_CHAT_URL());
   }, [hasSession]);
 
   if (!hydrated) return <Loading />;

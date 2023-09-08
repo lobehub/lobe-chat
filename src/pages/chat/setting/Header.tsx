@@ -15,7 +15,7 @@ import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useSessionStore } from '@/store/session';
 
 const onBack = () => {
-  Router.push('/chat');
+  Router.push({ hash: location.hash, pathname: '/chat' });
 };
 
 const Header = memo<{ mobile?: boolean }>(({ mobile }) => {

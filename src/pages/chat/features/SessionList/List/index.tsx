@@ -2,6 +2,7 @@ import isEqual from 'fast-deep-equal';
 import Link from 'next/link';
 import { memo } from 'react';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useSessionHydrated, useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -20,7 +21,7 @@ const SessionList = memo(() => {
   ) : list.length > 0 ? (
     list.map(({ id }) => (
       <Link
-        href={`/chat#session=${id}`}
+        href={SESSION_CHAT_URL(id)}
         key={id}
         onClick={(e) => {
           e.preventDefault();

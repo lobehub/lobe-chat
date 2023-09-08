@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useSessionStore } from '@/store/session';
 
 const { Item } = List;
@@ -14,7 +15,7 @@ const Inbox = memo(() => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
   const { t } = useTranslation('common');
-  const [activeId] = useSessionStore((s) => [s.activeId]);
+  const [activeId, switchSession] = useSessionStore((s) => [s.activeId, s.switchSession]);
 
   const avatarRender = useMemo(
     () => (
@@ -30,10 +31,10 @@ const Inbox = memo(() => {
 
   return (
     <Link
-      href={'/chat'}
+      href={SESSION_CHAT_URL()}
       onClick={(e) => {
         e.preventDefault();
-        useSessionStore.getState().activeSession(INBOX_SESSION_ID);
+        switchSession(INBOX_SESSION_ID);
       }}
     >
       <Item

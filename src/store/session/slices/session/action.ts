@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
@@ -144,7 +145,7 @@ export const createSessionSlice: StateCreator<
     get().dispatchSession({ id: sessionId, type: 'removeSession' });
 
     if (sessionId === get().activeId) {
-      Router.push('/chat');
+      Router.push(SESSION_CHAT_URL(INBOX_SESSION_ID));
     }
   },
 
@@ -156,6 +157,6 @@ export const createSessionSlice: StateCreator<
     }
 
     // 新会话
-    await Router.push(`/chat/${sessionId}`);
+    await Router.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID));
   },
 });

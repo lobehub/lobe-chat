@@ -6,6 +6,7 @@ import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useGlobalStore } from '@/store/global';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -28,7 +29,7 @@ export default memo<{ className?: string }>(({ className }) => {
         ),
         key: 'chat',
         onClick: () => {
-          Router.push('/chat');
+          Router.push(SESSION_CHAT_URL());
         },
         title: t('tab.chat'),
       },
