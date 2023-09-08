@@ -10,4 +10,5 @@ export const DISCORD = 'https://discord.gg/AYFPHvv2jT';
 export const PLUGINS_INDEX_URL =
   process.env.PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com';
 
-export const SESSION_CHAT_URL = (id: string = INBOX_SESSION_ID) => `/chat#session=${id}`;
+export const SESSION_CHAT_URL = (id: string = INBOX_SESSION_ID, mobile?: boolean) =>
+  mobile ? `/chat/mobile#session=${id}` : `/chat#session=${id}`;

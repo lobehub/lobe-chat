@@ -15,7 +15,12 @@ const Inbox = memo(() => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
   const { t } = useTranslation('common');
-  const [activeId, switchSession] = useSessionStore((s) => [s.activeId, s.switchSession]);
+
+  const [mobile, activeId, switchSession] = useSessionStore((s) => [
+    s.isMobile,
+    s.activeId,
+    s.switchSession,
+  ]);
 
   const avatarRender = useMemo(
     () => (
@@ -31,7 +36,7 @@ const Inbox = memo(() => {
 
   return (
     <Link
-      href={SESSION_CHAT_URL()}
+      href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={(e) => {
         e.preventDefault();
         switchSession(INBOX_SESSION_ID);

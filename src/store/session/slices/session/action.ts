@@ -158,13 +158,13 @@ export const createSessionSlice: StateCreator<
 
     get().activeSession(id);
 
-    Router.push(SESSION_CHAT_URL(id));
+    Router.push(SESSION_CHAT_URL(id, get().isMobile));
   },
   switchSession: (sessionId = INBOX_SESSION_ID) => {
     if (get().activeId === sessionId) return;
 
     get().activeSession(sessionId);
 
-    Router.push(SESSION_CHAT_URL(sessionId));
+    Router.push(SESSION_CHAT_URL(sessionId, get().isMobile));
   },
 });

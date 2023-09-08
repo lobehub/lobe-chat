@@ -1,3 +1,4 @@
+import { useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -12,20 +13,24 @@ import SkeletonList from './SkeletonList';
 
 const SessionList = memo(() => {
   const list = useSessionStore(sessionSelectors.sessionList, isEqual);
-  const activeSession = useSessionStore((s) => s.activeSession);
+  const [activeSession, switchSession] = useSessionStore((s) => [s.activeSession, s.switchSession]);
 
   const isInit = useSessionHydrated();
+
+  const { mobile } = useResponsive();
 
   return !isInit ? (
     <SkeletonList />
   ) : list.length > 0 ? (
     list.map(({ id }) => (
       <Link
-        href={SESSION_CHAT_URL(id)}
+        href={SESSION_CHAT_URL(id, mobile)}
         key={id}
         onClick={(e) => {
           e.preventDefault();
-          activeSession(id);
+
+          if (mobile) switchSession(id);
+          else activeSession(id);
         }}
       >
         <SessionItem id={id} />
