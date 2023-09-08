@@ -1,15 +1,17 @@
 import { ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
-import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSessionStore } from '@/store/session';
+
 const Header = memo(() => {
   const { t } = useTranslation('setting');
+  const [switchBackToChat] = useSessionStore((s) => [s.switchBackToChat]);
 
   return (
     <ChatHeader
       left={<ChatHeaderTitle title={t('header.global')} />}
-      onBackClick={() => Router.back()}
+      onBackClick={switchBackToChat}
       showBackButton
     />
   );

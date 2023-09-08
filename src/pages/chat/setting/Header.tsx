@@ -7,7 +7,6 @@ import {
 } from '@lobehub/ui';
 import { Dropdown, MenuProps } from 'antd';
 import { HardDriveDownload, Share2 } from 'lucide-react';
-import Router from 'next/router';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,7 +15,7 @@ import { useSessionStore } from '@/store/session';
 
 const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('setting');
-  const id = useSessionStore((s) => s.activeId);
+  const [id, onBack] = useSessionStore((s) => [s.activeId, s.switchBackToChat]);
 
   const items = useMemo<MenuProps['items']>(
     () => [
@@ -46,7 +45,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <MobileNavBar
         center={<MobileNavBarTitle title={t('header.session')} />}
-        onBackClick={() => Router.back()}
+        onBackClick={onBack}
         right={
           <>
             <ActionIcon icon={Share2} title={t('share', { ns: 'common' })} />
@@ -62,7 +61,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (
     <ChatHeader
       left={<ChatHeaderTitle title={t('header.session')} />}
-      onBackClick={() => Router.back()}
+      onBackClick={onBack}
       right={
         <>
           <ActionIcon icon={Share2} size={{ fontSize: 24 }} title={t('share', { ns: 'common' })} />

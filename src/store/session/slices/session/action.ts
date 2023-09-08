@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
@@ -54,12 +55,14 @@ export interface SessionAction {
    */
   removeSession: (sessionId: string) => void;
 
+  switchBackToChat: () => void;
+
   /**
    * @title 切换会话
    * @param sessionId - 会话索引
    * @returns void
    */
-  switchSession: (sessionId?: string) => Promise<void>;
+  switchSession: (sessionId?: string) => void;
 }
 
 export const createSessionSlice: StateCreator<
@@ -69,7 +72,7 @@ export const createSessionSlice: StateCreator<
   SessionAction
 > = (set, get) => ({
   activeSession: (sessionId) => {
-    set({ activeId: sessionId }, false, t('activeSession'));
+    set({ activeId: sessionId, activeTopicId: undefined }, false, t('activeSession'));
   },
 
   clearSessions: () => {
@@ -144,18 +147,24 @@ export const createSessionSlice: StateCreator<
     get().dispatchSession({ id: sessionId, type: 'removeSession' });
 
     if (sessionId === get().activeId) {
-      Router.push('/chat');
+      get().switchSession();
     }
   },
 
-  switchSession: async (sessionId) => {
+  switchBackToChat: () => {
+    const { activeId } = get();
+
+    const id = activeId || INBOX_SESSION_ID;
+
+    get().activeSession(id);
+
+    Router.push(SESSION_CHAT_URL(id));
+  },
+  switchSession: (sessionId = INBOX_SESSION_ID) => {
     if (get().activeId === sessionId) return;
 
-    if (sessionId) {
-      get().activeSession(sessionId);
-    }
+    get().activeSession(sessionId);
 
-    // 新会话
-    await Router.push(`/chat/${sessionId}`);
+    Router.push(SESSION_CHAT_URL(sessionId));
   },
 });

@@ -8,6 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/slices/session/selectors';
 
 import Mobile from './Mobile';
 import SystemRole from './SystemRole';
@@ -37,12 +39,14 @@ interface SideBarProps {
   mobile?: boolean;
   systemRole?: boolean;
 }
-const SideBar = memo<SideBarProps>(({ systemRole = true, mobile }) => {
+const SideBar = memo<SideBarProps>(({ mobile }) => {
   const { styles } = useStyles(mobile);
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.preference.showChatSideBar,
     s.toggleChatSideBar,
   ]);
+
+  const isInbox = useSessionStore(sessionSelectors.isInboxSession);
 
   const { t } = useTranslation('common');
 
@@ -79,7 +83,7 @@ const SideBar = memo<SideBarProps>(({ systemRole = true, mobile }) => {
         style={{ flex: 'none', height: '100%', minWidth: CHAT_SIDEBAR_WIDTH }}
       >
         <SafeSpacing />
-        {systemRole && <SystemRole mobile={mobile} />}
+        {!isInbox && <SystemRole mobile={mobile} />}
 
         {topic}
       </DraggablePanelContainer>

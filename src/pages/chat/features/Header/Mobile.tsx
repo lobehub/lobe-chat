@@ -4,21 +4,19 @@ import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
-const MobileHeader = memo<{ settings?: boolean }>(({ settings = true }) => {
+const MobileHeader = memo(() => {
   const { t } = useTranslation('common');
 
-  const [id, title, model] = useSessionStore((s) => [
-    s.activeId,
+  const [isInbox, title, model] = useSessionStore((s) => [
+    sessionSelectors.isInboxSession(s),
     agentSelectors.currentAgentTitle(s),
     agentSelectors.currentAgentModel(s),
   ]);
 
-  const isInbox = id === INBOX_SESSION_ID;
   const [toggleConfig] = useGlobalStore((s) => [s.toggleMobileTopic]);
 
   const displayTitle = isInbox ? t('inbox.title') : title;
@@ -30,11 +28,11 @@ const MobileHeader = memo<{ settings?: boolean }>(({ settings = true }) => {
       right={
         <>
           <ActionIcon icon={LayoutList} onClick={() => toggleConfig()} />
-          {settings && (
+          {!isInbox && (
             <ActionIcon
               icon={Settings}
               onClick={() => {
-                Router.push(`/chat/${id}/setting`);
+                Router.push({ hash: location.hash, pathname: `/chat/setting` });
               }}
             />
           )}

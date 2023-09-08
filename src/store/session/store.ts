@@ -5,6 +5,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { isDev } from '@/utils/env';
 
+import { createHyperStorage } from '../middleware/createHyperStorage';
 import { SessionStoreState, initialState } from './initialState';
 import { AgentAction, createAgentSlice } from './slices/agentConfig/action';
 import { ChatAction, createChatSlice } from './slices/chat/actions';
@@ -22,20 +23,27 @@ const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (
 
 //  ===============  persist 本地缓存中间件配置 ============ //
 
-type SessionPersist = Pick<SessionStore, 'sessions' | 'inbox'>;
-
 const LOBE_CHAT = 'LOBE_CHAT';
 
-const persistOptions: PersistOptions<SessionStore, SessionPersist> = {
+const persistOptions: PersistOptions<SessionStore> = {
   name: LOBE_CHAT,
-
-  partialize: (s) => ({
-    inbox: s.inbox,
-    sessions: s.sessions,
-  }),
 
   // 手动控制 Hydration ，避免 ssr 报错
   skipHydration: true,
+
+  storage: createHyperStorage({
+    localStorage: {
+      selectors: ['inbox', 'sessions'],
+    },
+    url: {
+      mode: 'hash',
+      selectors: [
+        // map state key to storage key
+        { activeId: 'session' },
+        { activeTopicId: 'topic' },
+      ],
+    },
+  }),
   version: 0,
 };
 

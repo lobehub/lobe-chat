@@ -7,6 +7,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`
@@ -20,6 +21,7 @@ export default memo<{ className?: string }>(({ className }) => {
   const [tab, setTab] = useGlobalStore((s) => [s.sidebarKey, s.switchSideBar]);
   const { t } = useTranslation('common');
   const { styles } = useStyles();
+  const switchSession = useSessionStore((s) => s.switchSession);
   const items: MobileTabBarProps['items'] = useMemo(
     () => [
       {
@@ -28,7 +30,7 @@ export default memo<{ className?: string }>(({ className }) => {
         ),
         key: 'chat',
         onClick: () => {
-          Router.push('/chat');
+          switchSession();
         },
         title: t('tab.chat'),
       },

@@ -1,3 +1,6 @@
+import { INBOX_SESSION_ID } from '@/const/session';
+import { SessionStore } from '@/store/session';
+
 import { exportAgents, exportSessions, getExportAgent } from './export';
 import {
   currentSession,
@@ -8,6 +11,8 @@ import {
   sessionList,
 } from './list';
 
+const isInboxSession = (s: SessionStore) => s.activeId === INBOX_SESSION_ID;
+
 export const sessionSelectors = {
   currentSession,
   currentSessionSafe,
@@ -17,5 +22,6 @@ export const sessionSelectors = {
   getSessionById,
   getSessionMetaById,
   hasSessionList,
+  isInboxSession,
   sessionList,
 };

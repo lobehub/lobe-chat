@@ -3,12 +3,13 @@ import { useSize } from 'ahooks';
 import { Button, Upload } from 'antd';
 import { SendHorizonal } from 'lucide-react';
 import Link from 'next/link';
-import Router from 'next/router';
 import { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useImportConfig } from '@/hooks/useImportConfig';
+import { useSessionStore } from '@/store/session';
 
 import { useStyles } from '../style';
 import Hero from './Hero';
@@ -22,9 +23,10 @@ const Banner = memo<{ mobile?: boolean }>(() => {
 
   const { styles } = useStyles();
 
+  const switchSession = useSessionStore((s) => s.switchSession);
   const handleImport = useCallback((e: any) => {
     importConfig(e);
-    Router.push('/chat');
+    switchSession();
   }, []);
 
   return (
@@ -37,7 +39,13 @@ const Banner = memo<{ mobile?: boolean }>(() => {
           <Upload maxCount={1} onChange={handleImport} showUploadList={false}>
             <Button size={'large'}>{t('button.import')}</Button>
           </Upload>
-          <Link href={'/chat'}>
+          <Link
+            href={SESSION_CHAT_URL()}
+            onClick={(e) => {
+              e.preventDefault();
+              switchSession();
+            }}
+          >
             <Button size={'large'} type={'primary'}>
               <Flexbox align={'center'} gap={4} horizontal>
                 {t('button.start')}

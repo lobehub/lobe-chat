@@ -4,12 +4,12 @@ import { memo } from 'react';
 import Mobile from './Mobile';
 import PC from './PC';
 
-const Header = memo<{ settings?: boolean }>((props) => {
+const Header = memo(() => {
   const { mobile } = useResponsive();
 
-  if (mobile) return <Mobile {...props} />;
+  if (mobile) return <Mobile />;
 
-  return <PC {...props} />;
+  return <PC />;
 });
 
 export default Header;

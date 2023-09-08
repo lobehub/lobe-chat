@@ -2,10 +2,10 @@ import { useTheme } from 'antd-style';
 import { memo } from 'react';
 
 import AppMobileLayout from '@/layout/AppMobileLayout';
-import Header from '@/pages/chat/SessionList/Header';
 import { useSwitchSideBarOnInit } from '@/store/global';
 
-import { Sessions } from './SessionList';
+import { Sessions } from './features/SessionList';
+import Header from './features/SessionList/Header';
 
 const ChatMobileLayout = memo(() => {
   useSwitchSideBarOnInit('chat');
