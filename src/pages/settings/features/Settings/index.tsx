@@ -9,6 +9,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import pkg from '../../../../../package.json';
 import Agent from './Agent';
 import Common from './Common';
+import LLM from './LLM';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   background: css`
@@ -58,6 +59,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 enum Tabs {
   agent = 'agent',
   common = 'common',
+  llm = 'llm',
 }
 
 const Settings = memo(() => {
@@ -79,6 +81,7 @@ const Settings = memo(() => {
           activeKey={tab}
           items={[
             { key: Tabs.common, label: t('tab.common') },
+            { key: Tabs.llm, label: t('tab.llm') },
             { key: Tabs.agent, label: t('tab.agent') },
           ]}
           onChange={(e) => setTab(e as Tabs)}
@@ -92,6 +95,7 @@ const Settings = memo(() => {
         </Flexbox>
       </Flexbox>
       {tab === Tabs.common && <Common />}
+      {tab === Tabs.llm && <LLM />}
       {tab === Tabs.agent && <Agent />}
     </Center>
   );

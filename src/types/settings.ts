@@ -5,15 +5,17 @@ import type { Locales } from '@/locales/resources';
 import type { LobeAgentSession } from '@/types/session';
 
 export interface GlobalBaseSettings {
+  /**
+   * @deprecated
+   */
   OPENAI_API_KEY: string;
+
   avatar: string;
-  compressThreshold: number;
-  enableCompressThreshold: boolean;
-  enableHistoryCount: boolean;
-  enableMaxTokens: boolean;
+  /**
+   * @deprecated
+   */
   endpoint: string;
   fontSize: number;
-  historyCount: number;
   language: Locales;
   neutralColor: NeutralColors | '';
   password: string;
@@ -21,13 +23,32 @@ export interface GlobalBaseSettings {
   themeMode: ThemeMode;
 }
 
-export type GlobalDefaultAgent = Partial<LobeAgentSession>;
+export type GlobalDefaultAgent = Pick<LobeAgentSession, 'config' | 'meta'>;
+
+interface AzureOpenAIConfig {
+  AZURE_API_KEY?: string;
+  apiVersion?: string;
+  endpoint?: string;
+  models?: string[];
+}
+
+interface OpenAIConfig {
+  OPENAI_API_KEY: string;
+  endpoint?: string;
+  models?: string[];
+}
+
+export type GlobalLLMConfig = {
+  azureOpenAI: AzureOpenAIConfig;
+  openAI: OpenAIConfig;
+};
 
 /**
  * 配置设置
  */
 export interface GlobalSettings extends GlobalBaseSettings {
   defaultAgent: GlobalDefaultAgent;
+  languageModel: GlobalLLMConfig;
 }
 
 export type ConfigKeys = keyof GlobalSettings;

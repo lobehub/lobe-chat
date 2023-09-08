@@ -20,6 +20,39 @@ export default {
     session: '会话设置',
     sessionWithName: '会话设置 · {{name}}',
   },
+  llm: {
+    AzureOpenAI: {
+      endpoint: {
+        desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值',
+        placeholder: 'https://docs-test-001.openai.azure.com/',
+        title: '接口代理地址',
+      },
+      models: {
+        desc: '支持的模型',
+        fetch: '获取列表',
+        title: '模型列表',
+      },
+      title: 'Azure OpenAI 设置',
+      token: {
+        desc: '使用自己的 Azure API Key',
+        placeholder: 'Azure API Key',
+        title: 'API Key',
+      },
+    },
+    OpenAI: {
+      endpoint: {
+        desc: '除默认地址外，必须包含 http(s)://',
+        placeholder: 'https://api.openai.com/v1',
+        title: '接口代理地址',
+      },
+      title: 'OpenAI 设置',
+      token: {
+        desc: '使用自己的 OpenAI Key',
+        placeholder: 'OpenAI API Key',
+        title: 'API Key',
+      },
+    },
+  },
   settingAgent: {
     avatar: {
       title: '头像',
@@ -114,19 +147,6 @@ export default {
       title: '核采样',
     },
   },
-  settingOpenAI: {
-    endpoint: {
-      desc: '除默认地址外，必须包含 http(s)://',
-      placeholder: 'https://api.openai.com/v1',
-      title: '接口代理地址',
-    },
-    title: 'OpenAI 设置',
-    token: {
-      desc: '使用自己的 OpenAI Key',
-      placeholder: 'OpenAI API Key',
-      title: 'API Key',
-    },
-  },
   settingPlugin: {
     add: '添加',
     addTooltip: '添加自定义插件',
@@ -173,5 +193,6 @@ export default {
   tab: {
     agent: '默认助手',
     common: '通用设置',
+    llm: '语言模型',
   },
 };
