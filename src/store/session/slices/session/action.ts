@@ -72,7 +72,7 @@ export const createSessionSlice: StateCreator<
   SessionAction
 > = (set, get) => ({
   activeSession: (sessionId) => {
-    set({ activeId: sessionId }, false, t('activeSession'));
+    set({ activeId: sessionId, activeTopicId: undefined }, false, t('activeSession'));
   },
 
   clearSessions: () => {
