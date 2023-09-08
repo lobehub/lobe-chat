@@ -1,4 +1,4 @@
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { globalSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
@@ -6,7 +6,7 @@ import { createConfigFile, exportConfigFile } from '@/utils/config';
 const getSessions = () => sessionSelectors.exportSessions(useSessionStore.getState());
 const getSession = (id: string) => sessionSelectors.getSessionById(id)(useSessionStore.getState());
 
-const getSettings = () => settingsSelectors.exportSettings(useGlobalStore.getState());
+const getSettings = () => globalSelectors.exportSettings(useGlobalStore.getState());
 
 // =============   导出所有角色   ============= //
 

@@ -12,7 +12,7 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { options } from '@/locales/options';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { globalSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { ConfigKeys } from '@/types/settings';
 
@@ -29,7 +29,7 @@ const Common = memo(() => {
   const [form] = AntForm.useForm();
   const clearSessions = useSessionStore((s) => s.clearSessions);
 
-  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
+  const settings = useGlobalStore(globalSelectors.currentSettings, isEqual);
   const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [
     s.switchThemeMode,
     s.setSettings,

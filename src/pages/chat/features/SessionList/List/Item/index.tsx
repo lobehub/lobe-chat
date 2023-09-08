@@ -6,7 +6,7 @@ import { memo, useMemo, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { globalSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
@@ -36,7 +36,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   const isHovering = useHover(ref);
 
   const { styles } = useStyles();
-  const [defaultModel] = useGlobalStore((s) => [settingsSelectors.currentAgentConfig(s).model]);
+  const [defaultModel] = useGlobalStore((s) => [globalSelectors.defaultAgentConfig(s).model]);
 
   const [
     active,
