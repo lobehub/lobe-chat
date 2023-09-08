@@ -7,20 +7,15 @@ import {
 } from '@lobehub/ui';
 import { Dropdown, MenuProps } from 'antd';
 import { HardDriveDownload, Share2 } from 'lucide-react';
-import Router from 'next/router';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useSessionStore } from '@/store/session';
 
-const onBack = () => {
-  Router.push({ hash: location.hash, pathname: '/chat' });
-};
-
 const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('setting');
-  const id = useSessionStore((s) => s.activeId);
+  const [id, onBack] = useSessionStore((s) => [s.activeId, s.switchBackToChat]);
 
   const items = useMemo<MenuProps['items']>(
     () => [

@@ -4,7 +4,6 @@ import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { SESSION_CHAT_URL } from '@/const/url';
 import { GlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
@@ -15,7 +14,7 @@ export interface TopActionProps {
 
 const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
   const { t } = useTranslation('common');
-
+  const switchBackToChat = useSessionStore((s) => s.switchBackToChat);
   return (
     <>
       <ActionIcon
@@ -24,7 +23,7 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
         onClick={() => {
           // 如果已经在 chat 路径下了，那么就不用再跳转了
           if (Router.asPath.startsWith('/chat')) return;
-          Router.push(SESSION_CHAT_URL(useSessionStore.getState().activeId));
+          switchBackToChat();
           setTab('chat');
         }}
         size="large"
@@ -33,7 +32,7 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
       <ActionIcon
         active={tab === 'market'}
         icon={Sticker}
-        onClick={() => setTab('market')}
+        // onClick={() => setTab('market')}
         size="large"
         title={t('tab.market')}
       />

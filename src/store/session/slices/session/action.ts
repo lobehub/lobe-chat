@@ -55,12 +55,14 @@ export interface SessionAction {
    */
   removeSession: (sessionId: string) => void;
 
+  switchBackToChat: () => void;
+
   /**
    * @title 切换会话
    * @param sessionId - 会话索引
    * @returns void
    */
-  switchSession: (sessionId?: string) => Promise<void>;
+  switchSession: (sessionId?: string) => void;
 }
 
 export const createSessionSlice: StateCreator<
@@ -145,18 +147,24 @@ export const createSessionSlice: StateCreator<
     get().dispatchSession({ id: sessionId, type: 'removeSession' });
 
     if (sessionId === get().activeId) {
-      Router.push(SESSION_CHAT_URL(INBOX_SESSION_ID));
+      get().switchSession();
     }
   },
 
-  switchSession: async (sessionId) => {
+  switchBackToChat: () => {
+    const { activeId } = get();
+
+    const id = activeId || INBOX_SESSION_ID;
+
+    get().activeSession(id);
+
+    Router.push(SESSION_CHAT_URL(id));
+  },
+  switchSession: (sessionId = INBOX_SESSION_ID) => {
     if (get().activeId === sessionId) return;
 
-    if (sessionId) {
-      get().activeSession(sessionId);
-    }
+    get().activeSession(sessionId);
 
-    // 新会话
-    await Router.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID));
+    Router.push(SESSION_CHAT_URL(sessionId));
   },
 });
