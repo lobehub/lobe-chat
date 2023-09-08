@@ -6,7 +6,7 @@ import AppLayout from '@/layout/AppLayout';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { usePluginStore } from '@/store/plugin';
 
-import { Sessions } from './SessionList';
+import { Sessions } from './features/SessionList';
 
 const ChatLayout = memo<PropsWithChildren>(({ children }) => {
   const { mobile } = useResponsive();
