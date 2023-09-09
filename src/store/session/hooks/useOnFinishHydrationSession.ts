@@ -12,10 +12,9 @@ export const useOnFinishHydrationSession = (
   deps: any[] = [],
 ) => {
   useEffect(() => {
-    const hasRehydrated = useSessionStore.persist.hasHydrated();
     // 只有当水合完毕后再开始做操作
-    if (!hasRehydrated) return;
-
-    fn(useSessionStore.getState());
+    useSessionStore.persist.onFinishHydration(() => {
+      fn(useSessionStore.getState());
+    });
   }, deps);
 };
