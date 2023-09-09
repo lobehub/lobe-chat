@@ -1,5 +1,8 @@
 import { PropsWithChildren, memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
+
+import SafeSpacing from '@/components/SafeSpacing';
+import { MAX_WIDTH } from '@/const/layoutTokens';
 
 import AppLayout from '../../layout/AppLayout';
 import Header from './features/Header';
@@ -14,7 +17,10 @@ const MarketLayout = memo<PropsWithChildren>(({ children }) => {
         style={{ position: 'relative' }}
       >
         <Header />
-        <Center flex={1}>{children}</Center>
+        <Flexbox align={'center'} flex={1} style={{ overflow: 'auto', padding: 16 }}>
+          <SafeSpacing />
+          <Flexbox style={{ maxWidth: MAX_WIDTH }}>{children}</Flexbox>
+        </Flexbox>
       </Flexbox>
     </AppLayout>
   );

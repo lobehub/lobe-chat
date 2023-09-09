@@ -1,17 +1,20 @@
 import { ReactNode, memo } from 'react';
-import { Center } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import AppMobileLayout from '@/layout/AppMobileLayout';
-import { useSwitchSideBarOnInit } from '@/store/global';
 
+import AgentSearchBar from './features/AgentSearchBar';
 import Header from './features/Header';
 
 const ChatMobileLayout = memo<{ children: ReactNode }>(({ children }) => {
-  useSwitchSideBarOnInit('chat');
-
   return (
     <AppMobileLayout navBar={<Header />} showTabBar>
-      <Center flex={1}>{children}</Center>
+      <div style={{ padding: '8px 16px 0' }}>
+        <AgentSearchBar />
+      </div>
+      <Flexbox flex={1} style={{ padding: 16 }}>
+        {children}
+      </Flexbox>
     </AppMobileLayout>
   );
 });

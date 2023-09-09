@@ -84,7 +84,8 @@
   "list": {
     "item": {
       "local.config": "Configuration",
-      "local.title": "Local"
+      "local.title": "Local",
+      "deprecated.title": "Deleted"
     }
   },
   "loading": {

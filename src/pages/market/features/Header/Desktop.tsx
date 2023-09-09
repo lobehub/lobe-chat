@@ -1,8 +1,9 @@
-import { ChatHeader, Logo, SearchBar } from '@lobehub/ui';
+import { ChatHeader, Logo } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+
+import AgentSearchBar from '../AgentSearchBar';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
@@ -13,16 +14,15 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const Header = memo(() => {
   const { styles } = useStyles();
-  const { t } = useTranslation('common');
 
   return (
     <ChatHeader
       left={
         <Link href={'/'}>
-          <Logo className={styles.logo} extra={t('tab.market')} size={36} type={'text'} />
+          <Logo className={styles.logo} extra={'Discover'} size={36} type={'text'} />
         </Link>
       }
-      right={<SearchBar allowClear spotlight type={'ghost'} />}
+      right={<AgentSearchBar />}
     />
   );
 });

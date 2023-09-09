@@ -189,7 +189,8 @@
     "title": "Plugin List",
     "add": "Add",
     "addTooltip": "Add custom plugin",
-    "config": "{{id}} Plugin Configuration"
+    "config": "{{id}} Plugin Configuration",
+    "clearDeprecated": "Remove invalid plugins"
   },
   "settingSystem": {
     "accessCode": {

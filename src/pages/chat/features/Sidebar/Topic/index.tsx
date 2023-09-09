@@ -1,5 +1,6 @@
 import { useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -15,13 +16,20 @@ export const Topic = () => {
   const init = useSessionChatInit();
   const topics = useSessionStore(topicSelectors.currentTopics, isEqual);
   const { isDarkMode } = useThemeMode();
-  const [activeTopicId] = useSessionStore((s) => [s.activeTopicId]);
+  const [activeTopicId, keywords] = useSessionStore((s) => [
+    s.activeTopicId,
+    s.topicSearchKeywords,
+  ]);
   const { t } = useTranslation('empty');
-
   const [visible, updateGuideState] = useGlobalStore((s) => [
     s.preference.guide?.topic,
     s.updateGuideState,
   ]);
+
+  const topicsData = useMemo(() => {
+    if (!keywords) return topics;
+    return topics.filter(({ title }) => title.toLowerCase().includes(keywords.toLowerCase()));
+  }, [topics, keywords]);
 
   return !init ? (
     <SkeletonList />
@@ -45,7 +53,7 @@ export const Topic = () => {
 
       <TopicItem active={!activeTopicId} fav={false} title={'默认话题'} />
 
-      {topics.map(({ id, favorite, title }) => (
+      {topicsData.map(({ id, favorite, title }) => (
         <TopicItem active={activeTopicId === id} fav={favorite} id={id} key={id} title={title} />
       ))}
     </Flexbox>
