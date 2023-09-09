@@ -1,13 +1,15 @@
 {
   "name": "@lobehub/chat",
   "version": "0.70.4",
-  "description": "Lobe Chat is an open-source chatbot client using LangChain, Typescript and Next.js",
+  "description": "Lobe Chat is an open-source chatbot client using Vercel AI SDK, Typescript and Next.js",
   "keywords": [
     "chatbot",
     "ChatGPT",
-    "LangChain",
+    "LobeHub",
     "typescript",
-    "Next.js"
+    "Vercel AI SDK",
+    "Next.js",
+    "OpenAI"
   ],
   "homepage": "https://github.com/lobehub/lobe-chat",
   "bugs": {
@@ -80,12 +82,13 @@
     "fast-deep-equal": "^3",
     "gpt-tokenizer": "^2",
     "i18next": "^23",
+    "idb-keyval": "^6",
     "immer": "^10",
     "lodash-es": "^4",
     "lucide-react": "latest",
     "nanoid": "^4",
     "next": "13.4.7",
-    "openai": "^4.4.0",
+    "openai": "^4.5.0",
     "polished": "^4",
     "react": "^18",
     "react-dom": "^18",

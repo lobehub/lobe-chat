@@ -9,11 +9,9 @@ export const useGlobalHydrated = () => {
   const [isInit, setInit] = useState(hasInited);
 
   useEffect(() => {
-    const hasRehydrated = useGlobalStore.persist.hasHydrated();
-
-    if (hasRehydrated && !isInit) {
-      setInit(true);
-    }
+    useGlobalStore.persist.onFinishHydration(() => {
+      if (!isInit) setInit(true);
+    });
   }, []);
 
   return isInit;

@@ -33,6 +33,8 @@ const persistOptions: PersistOptions<SessionStore> = {
 
   storage: createHyperStorage({
     localStorage: {
+      dbName: 'LobeHub',
+      mode: 'indexedDB',
       selectors: ['inbox', 'sessions'],
     },
     url: {
