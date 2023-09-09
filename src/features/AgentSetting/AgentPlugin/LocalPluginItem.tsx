@@ -36,7 +36,7 @@ const MarketList = memo<{ id: string }>(({ id }) => {
         mode={'edit'}
         onDelete={() => {
           deleteCustomPlugin(id);
-          toggleAgentPlugin(id);
+          toggleAgentPlugin(id, false);
         }}
         onOpenChange={setModal}
         onSave={(value) => {

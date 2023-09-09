@@ -48,7 +48,7 @@ export interface Action {
 
   setAgentMeta: (meta: Partial<MetaData>) => void;
   streamUpdateMeta: (key: keyof MetaData) => any;
-  toggleAgentPlugin: (pluginId: string) => void;
+  toggleAgentPlugin: (pluginId: string, state?: boolean) => void;
   /**
    * 更新加载状态
    * @param key - SessionLoadingState 的键
@@ -198,8 +198,8 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     };
   },
 
-  toggleAgentPlugin: (id) => {
-    get().dispatchConfig({ pluginId: id, type: 'togglePlugin' });
+  toggleAgentPlugin: (id, state) => {
+    get().dispatchConfig({ pluginId: id, state, type: 'togglePlugin' });
   },
 
   updateLoadingState: (key, value) => {
