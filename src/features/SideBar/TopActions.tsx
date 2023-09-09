@@ -32,7 +32,11 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
       <ActionIcon
         active={tab === 'market'}
         icon={Sticker}
-        // onClick={() => setTab('market')}
+        onClick={() => {
+          if (Router.asPath.startsWith('/market')) return;
+          Router.push('/market');
+          setTab('market');
+        }}
         size="large"
         title={t('tab.market')}
       />
