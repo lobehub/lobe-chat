@@ -21,17 +21,15 @@ const ManifestForm = memo<{ form: FormInstance; mode?: 'url' | 'local' }>(
               <Input
                 placeholder={'http://localhost:3400/manifest-dev.json'}
                 suffix={
-                  manifest && (
-                    <ActionIcon
-                      icon={RotateCwIcon}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        form.validateFields(['manifest']);
-                      }}
-                      size={'small'}
-                      title={t('dev.meta.manifest.refresh')}
-                    />
-                  )
+                  <ActionIcon
+                    icon={RotateCwIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      form.validateFields(['manifest']);
+                    }}
+                    size={'small'}
+                    title={t('dev.meta.manifest.refresh')}
+                  />
                 }
               />
             ),
@@ -42,7 +40,7 @@ const ManifestForm = memo<{ form: FormInstance; mode?: 'url' | 'local' }>(
                   <Popover
                     arrow={false}
                     content={
-                      <Highlighter language={'json'}>
+                      <Highlighter language={'json'} style={{ maxHeight: 600, maxWidth: 400 }}>
                         {JSON.stringify(manifest, null, 2)}
                       </Highlighter>
                     }
