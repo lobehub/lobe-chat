@@ -1,3 +1,4 @@
+import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { MetaData } from '@/types/meta';
@@ -7,9 +8,10 @@ import { SessionStore } from '../../store';
 import { sessionSelectors } from '../session/selectors';
 
 /**
- * 代理行为接口
+ * 助手接口
  */
 export interface AgentAction {
+  removePlugin: (id: string) => void;
   /**
    * 更新代理配置
    * @param config - 部分 LobeAgentConfig 的配置
@@ -24,6 +26,18 @@ export const createAgentSlice: StateCreator<
   [],
   AgentAction
 > = (set, get) => ({
+  removePlugin: (id) => {
+    const { activeId } = get();
+    const session = sessionSelectors.currentSession(get());
+    if (!activeId || !session) return;
+
+    const config = produce(session.config, (draft) => {
+      draft.plugins = draft.plugins?.filter((i) => i !== id) || [];
+    });
+
+    get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
+  },
+
   updateAgentConfig: (config) => {
     const { activeId } = get();
     const session = sessionSelectors.currentSession(get());
@@ -31,6 +45,7 @@ export const createAgentSlice: StateCreator<
 
     get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
   },
+
   updateAgentMeta: (meta) => {
     const { activeId } = get();
     const session = sessionSelectors.currentSession(get());

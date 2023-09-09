@@ -21,11 +21,13 @@ const PluginTag = memo<PluginTagProps>(({ plugins }) => {
 
   const items: MenuProps['items'] = plugins.map((id) => {
     const item = list.find((i) => i.identifier === id);
+    const isDeprecated = !item?.title;
+    const avatar = isDeprecated ? '♻️' : item?.avatar || '🧩';
 
     return {
-      icon: <Avatar avatar={item?.avatar} size={24} style={{ marginLeft: -6, marginRight: 2 }} />,
+      icon: <Avatar avatar={avatar} size={24} style={{ marginLeft: -6, marginRight: 2 }} />,
       key: id,
-      label: <PluginStatus id={id} title={item?.title} />,
+      label: <PluginStatus deprecated={isDeprecated} id={id} title={item?.title} />,
     };
   });
 
@@ -36,7 +38,7 @@ const PluginTag = memo<PluginTagProps>(({ plugins }) => {
       <div>
         <Tag>
           {<Icon icon={LucideToyBrick} />}
-          {pluginHelpers.getPluginTitle(displayPlugin?.meta)}
+          {pluginHelpers.getPluginTitle(displayPlugin?.meta) || plugins[0]}
           {count > 1 && <div>({plugins.length - 1}+)</div>}
         </Tag>
       </div>
