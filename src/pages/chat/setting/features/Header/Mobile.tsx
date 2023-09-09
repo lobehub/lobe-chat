@@ -9,7 +9,7 @@ const Header = memo<{ children: ReactNode }>(({ children }) => {
   return (
     <MobileNavBar
       center={<MobileNavBarTitle title={t('header.session')} />}
-      onBackClick={() => Router.back()}
+      onBackClick={() => Router.push({ hash: location.hash, pathname: `/chat/mobile` })}
       right={children}
       showBackButton
     />

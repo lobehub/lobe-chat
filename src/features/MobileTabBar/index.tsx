@@ -36,7 +36,7 @@ export default memo<{ className?: string }>(({ className }) => {
         icon: (active) => <Icon className={active ? styles.active : undefined} icon={Sticker} />,
         key: 'market',
         onClick: () => {
-          Router.push('/market');
+          Router.push({ hash: '', pathname: `/market` });
         },
         title: t('tab.market'),
       },

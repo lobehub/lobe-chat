@@ -1,7 +1,7 @@
 {
   "about": "About",
   "advanceSettings": "Advanced Settings",
-  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away or go to [Assistant Settings](/chat/{{id}}/setting) to complete my information.",
+  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away or go to [Assistant Settings](/chat/setting#session={{id}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
   "agentMaxToken": "Max Session Length",
   "agentModel": "Model",
@@ -62,7 +62,7 @@
   "stop": "Stop",
   "tab": {
     "chat": "Chat",
-    "market": "Assistant Market",
+    "market": "Discover",
     "setting": "Settings"
   },
   "temp": "Temporary",

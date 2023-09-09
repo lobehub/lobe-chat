@@ -1,7 +1,7 @@
 {
   "about": "Наш Github",
   "advanceSettings": "Дополнительные настройки",
-  "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете начать общаться со мной прямо сейчас или перейти на [Assistant Settings](/chat/{{id}}/setting) для моей настройки.",
+  "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете начать общаться со мной прямо сейчас или перейти на [Assistant Settings](/chat/setting#session={{id}}) для моей настройки.",
   "agentDefaultMessageWithSystemRole": "Здравствуйте, Я **{{name}}**, {{systemRole}}. Давайте начнем общаться!",
   "agentMaxToken": "Максимальная длина запроса",
   "agentModel": "Модель",
