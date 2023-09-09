@@ -87,13 +87,21 @@ export default {
       'local.title': '自定义',
     },
   },
-
   loading: {
     content: '数据获取中...',
     plugin: '插件运行中...',
   },
+
   pluginList: '插件列表',
   plugins: {
     unknown: '插件检测中...',
+  },
+  settings: {
+    indexUrl: {
+      title: '市场索引',
+      tooltip: '暂不支持编辑',
+    },
+    modalDesc: '配置插件市场的地址后，可以使用自定义的插件市场',
+    title: '设置插件市场',
   },
 };

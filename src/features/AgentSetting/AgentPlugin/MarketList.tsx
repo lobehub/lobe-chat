@@ -1,8 +1,8 @@
 import { Avatar, Form, Icon, Tooltip } from '@lobehub/ui';
-import { Button, Skeleton, Switch, Tag } from 'antd';
+import { Button, Skeleton, Space, Switch, Tag } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { LucideBlocks, LucideStore, LucideTrash2 } from 'lucide-react';
+import { LucideBlocks, LucideSettings, LucideStore, LucideTrash2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -13,6 +13,7 @@ import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
 import { useStore } from '../store';
 import LocalPluginItem from './LocalPluginItem';
+import MarketSettingModal from './MarketSettingModal';
 
 const useStyles = createStyles(({ css }) => ({
   avatar: css`
@@ -36,6 +37,7 @@ const MarketList = memo(() => {
   const { styles } = useStyles();
 
   const [showModal, setModal] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const [userEnabledPlugins, hasPlugin, toggleAgentPlugin] = useStore((s) => [
     s.config.plugins || [],
@@ -173,12 +175,13 @@ const MarketList = memo(() => {
         onValueChange={updateNewDevPlugin}
         open={showModal}
       />
+      <MarketSettingModal onOpenChange={setShowSettings} open={showSettings} />
       <Form
         items={[
           {
             children: isEmpty ? loadingList : [...deprecatedList, ...customList, ...list],
             extra: (
-              <Flexbox gap={8} horizontal>
+              <Flexbox align={'center'} gap={8} horizontal>
                 {hasDeprecated ? (
                   <Tooltip title={t('settingPlugin.clearDeprecated')}>
                     <Button
@@ -191,21 +194,32 @@ const MarketList = memo(() => {
                       }}
                       size={'small'}
                       type={'text'}
-                    ></Button>
+                    />
                   </Tooltip>
                 ) : null}
-                <Tooltip title={t('settingPlugin.addTooltip')}>
-                  <Button
-                    icon={<Icon icon={LucideBlocks} />}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setModal(true);
-                    }}
-                    size={'small'}
-                  >
-                    {t('settingPlugin.add')}
-                  </Button>
-                </Tooltip>
+
+                <Space.Compact style={{ width: 'auto' }}>
+                  <Tooltip title={t('settingPlugin.addTooltip')}>
+                    <Button
+                      icon={<Icon icon={LucideBlocks} />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setModal(true);
+                      }}
+                      size={'small'}
+                    />
+                  </Tooltip>
+                  <Tooltip title={t('settingPlugin.settings')}>
+                    <Button
+                      icon={<Icon icon={LucideSettings} />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowSettings(true);
+                      }}
+                      size={'small'}
+                    />
+                  </Tooltip>
+                </Space.Compact>
               </Flexbox>
             ),
             icon: LucideStore,
