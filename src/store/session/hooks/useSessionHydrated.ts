@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
-import { useOnFinishHydrationSession } from '@/store/session';
-
 import { useSessionStore } from '../store';
+import { useOnFinishHydrationSession } from './useOnFinishHydrationSession';
 
 export const useSessionHydrated = () => {
   // 根据 sessions 是否有值来判断是否已经初始化
