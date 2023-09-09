@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.72.3](https://github.com/lobehub/lobe-chat/compare/v0.72.2...v0.72.3)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix sessionList double click on mobile.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix sessionList double click on mobile, closes [#169](https://github.com/lobehub/lobe-chat/issues/169) ([3ea2bce](https://github.com/lobehub/lobe-chat/commit/3ea2bce))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.72.2](https://github.com/lobehub/lobe-chat/compare/v0.72.1...v0.72.2)
 
 <sup>Released on **2023-09-09**</sup>
