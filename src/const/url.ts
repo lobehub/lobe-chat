@@ -1,3 +1,5 @@
+import { Locales } from '@/locales/resources';
+
 import pkg from '../../package.json';
 import { INBOX_SESSION_ID } from './session';
 
@@ -8,7 +10,13 @@ export const FEEDBACK = pkg.bugs.url;
 export const DISCORD = 'https://discord.gg/AYFPHvv2jT';
 
 export const PLUGINS_INDEX_URL =
-  process.env.PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com';
+  process.env.PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com/index';
+
+export const getPluginIndexJSON = (lang: Locales = 'en-US', baseUrl = PLUGINS_INDEX_URL) => {
+  if (lang === 'en-US') return baseUrl;
+
+  return `${baseUrl}.${lang}.json`;
+};
 
 export const AGENTS_INDEX_URL = process.env.AGENTS_INDEX_URL ?? 'https://chat-agents.lobehub.com';
 

@@ -50,6 +50,9 @@ const getPluginManifestLoadingStatus = (id: string) => (s: PluginStoreState) => 
   if (!!manifest) return 'success';
 };
 
+const isCustomPlugin = (id: string) => (s: PluginStoreState) =>
+  pluginHelpers.isCustomPlugin(id, s.customPluginList);
+
 const displayPluginList = (s: PluginStoreState) =>
   pluginList(s).map((p) => ({
     author: p.author,
@@ -69,5 +72,6 @@ export const pluginSelectors = {
   getPluginManifestLoadingStatus,
   getPluginMetaById,
   getPluginSettingsById,
+  isCustomPlugin,
   pluginList,
 };

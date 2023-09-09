@@ -3,8 +3,8 @@ import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import DevModal from 'src/features/PluginDevModal';
 
+import DevModal from '@/features/PluginDevModal';
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 
 import { useStore } from '../store';
@@ -36,7 +36,7 @@ const MarketList = memo<{ id: string }>(({ id }) => {
         mode={'edit'}
         onDelete={() => {
           deleteCustomPlugin(id);
-          toggleAgentPlugin(id);
+          toggleAgentPlugin(id, false);
         }}
         onOpenChange={setModal}
         onSave={(value) => {

@@ -6,7 +6,7 @@ import { merge } from '@/utils/merge';
 
 export type ConfigDispatch =
   | { config: Partial<any>; type: 'update' }
-  | { pluginId: string; type: 'togglePlugin' }
+  | { pluginId: string; state?: boolean; type: 'togglePlugin' }
   | { type: 'reset' };
 
 export const configReducer = (state: LobeAgentConfig, payload: ConfigDispatch): LobeAgentConfig => {
@@ -19,15 +19,26 @@ export const configReducer = (state: LobeAgentConfig, payload: ConfigDispatch): 
 
     case 'togglePlugin': {
       return produce(state, (config) => {
-        const { pluginId: id } = payload;
+        const { pluginId: id, state } = payload;
         if (config.plugins === undefined) {
-          config.plugins = [id];
-        } else {
+          config.plugins = [];
+        }
+
+        if (typeof state === 'undefined') {
           if (config.plugins.includes(id)) {
             config.plugins.splice(config.plugins.indexOf(id), 1);
-          } else {
-            config.plugins.push(id);
+
+            return;
           }
+
+          config.plugins.push(id);
+          return;
+        }
+
+        if (!state) {
+          config.plugins = config.plugins.filter((pluginId) => pluginId !== id);
+        } else {
+          config.plugins.push(id);
         }
       });
     }

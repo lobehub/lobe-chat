@@ -1,10 +1,12 @@
 import { LobeChatPluginManifest, pluginManifestSchema } from '@lobehub/chat-plugin-sdk';
-import { ActionIcon, Form, FormItemProps, Highlighter, Input, Tooltip } from '@lobehub/ui';
-import { FormInstance, Popover, Radio } from 'antd';
+import { ActionIcon, Form, FormItemProps, Input, Tooltip } from '@lobehub/ui';
+import { FormInstance, Radio } from 'antd';
 import { FileCode, RotateCwIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+
+import ManifestPreviewer from '@/components/ManifestPreviewer';
 
 const ManifestForm = memo<{ form: FormInstance; mode?: 'url' | 'local' }>(
   ({ form, mode = 'url' }) => {
@@ -21,17 +23,15 @@ const ManifestForm = memo<{ form: FormInstance; mode?: 'url' | 'local' }>(
               <Input
                 placeholder={'http://localhost:3400/manifest-dev.json'}
                 suffix={
-                  manifest && (
-                    <ActionIcon
-                      icon={RotateCwIcon}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        form.validateFields(['manifest']);
-                      }}
-                      size={'small'}
-                      title={t('dev.meta.manifest.refresh')}
-                    />
-                  )
+                  <ActionIcon
+                    icon={RotateCwIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      form.validateFields(['manifest']);
+                    }}
+                    size={'small'}
+                    title={t('dev.meta.manifest.refresh')}
+                  />
                 }
               />
             ),
@@ -39,24 +39,13 @@ const ManifestForm = memo<{ form: FormInstance; mode?: 'url' | 'local' }>(
               <Flexbox horizontal justify={'space-between'} style={{ marginTop: 8 }}>
                 {t('dev.meta.manifest.desc')}
                 {manifest && (
-                  <Popover
-                    arrow={false}
-                    content={
-                      <Highlighter language={'json'}>
-                        {JSON.stringify(manifest, null, 2)}
-                      </Highlighter>
-                    }
-                    placement={'right'}
-                    style={{ width: 400 }}
-                    title={'Manifest JSON'}
-                    trigger={'click'}
-                  >
+                  <ManifestPreviewer manifest={manifest}>
                     <ActionIcon
                       icon={FileCode}
                       size={'small'}
                       title={t('dev.meta.manifest.preview')}
                     />
-                  </Popover>
+                  </ManifestPreviewer>
                 )}
               </Flexbox>
             ),
