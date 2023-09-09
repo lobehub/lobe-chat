@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.70.3](https://github.com/lobehub/lobe-chat/compare/v0.70.2...v0.70.3)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Better mobile style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Better mobile style ([776c407](https://github.com/lobehub/lobe-chat/commit/776c407))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.70.2](https://github.com/lobehub/lobe-chat/compare/v0.70.1...v0.70.2)
 
 <sup>Released on **2023-09-08**</sup>
