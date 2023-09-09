@@ -1,28 +1,40 @@
-import { isEmpty } from 'lodash-es';
 import { PersistStorage } from 'zustand/middleware';
 import { StorageValue } from 'zustand/middleware/persist';
 
+import { createIndexedDB } from './indexedDB';
 import { createKeyMapper } from './keyMapper';
+import { createLocalStorage } from './localStorage';
 import { HyperStorageOptions } from './type';
-import { createUrlSearch } from './urlSearch';
+import { creatUrlStorage } from './urlStorage';
 
 export const createHyperStorage = <T extends object>(
   options: HyperStorageOptions,
 ): PersistStorage<T> => {
   const hasUrl = !!options.url;
-
-  const { setUrlSearch, getUrlSearch } = createUrlSearch(options.url?.mode);
+  const useIndexedDB = options.localStorage?.mode === 'indexedDB';
+  const dbName = options.localStorage?.dbName || 'indexedDB';
 
   const { mapStateKeyToStorageKey, getStateKeyFromStorageKey } = createKeyMapper(options);
 
+  const indexedDB = createIndexedDB(dbName);
+  const localStorage = createLocalStorage();
+  const urlStorage = creatUrlStorage(options.url?.mode);
   return {
-    getItem: (name): StorageValue<T> => {
+    getItem: async (name): Promise<StorageValue<T>> => {
       const state: any = {};
       let version: number | undefined;
+
       // ============== 处理 Local Storage  ============== //
-      const string = localStorage.getItem(name);
-      if (string) {
-        const localState: StorageValue<T> = JSON.parse(string);
+      let localState: StorageValue<T> | undefined;
+
+      // 如果使用 indexedDB，优先从 indexedDB 中获取
+      if (useIndexedDB) {
+        localState = await indexedDB.getItem(name);
+      }
+      // 如果 indexedDB 中不存在，则再试试 localStorage
+      if (!localState) localState = localStorage.getItem(name);
+
+      if (localState) {
         version = localState.version;
         for (const [k, v] of Object.entries(localState.state)) {
           const key = getStateKeyFromStorageKey(k, 'localStorage');
@@ -33,31 +45,39 @@ export const createHyperStorage = <T extends object>(
       // ============== 处理 URL Storage  ============== //
       // 不从 URL 中获取 version，由于 url 状态是临时态 不作为版本控制的依据
       if (hasUrl) {
-        const searchParameters = new URLSearchParams(getUrlSearch());
+        const urlState = urlStorage.getItem();
 
-        for (const [k, v] of searchParameters.entries()) {
-          const key = getStateKeyFromStorageKey(k, 'url');
-          // 当存在 UrlSelector 逻辑，且 key 有效时，才将状态加入终态 state
-          if (hasUrl && key) {
-            state[key] = v;
+        if (urlState) {
+          for (const [k, v] of Object.entries(urlState.state)) {
+            const key = getStateKeyFromStorageKey(k, 'url');
+            // 当存在 UrlSelector 逻辑，且 key 有效时，才将状态加入终态 state
+            if (hasUrl && key) {
+              state[key] = v;
+            }
           }
         }
       }
 
       return { state, version };
     },
-    removeItem: (key): void => {
+    removeItem: async (key) => {
+      // ============== 处理 Local Storage  ============== //
+
+      if (useIndexedDB) {
+        await indexedDB.removeItem(key);
+      } else {
+        localStorage.removeItem(key);
+      }
+
       // ============== 处理 URL Storage  ============== //
       if (hasUrl) {
-        const searchParameters = new URLSearchParams(getUrlSearch());
-
         const storageKey = getStateKeyFromStorageKey(key, 'url');
-        if (storageKey) searchParameters.delete(storageKey);
 
-        setUrlSearch(searchParameters);
+        urlStorage.removeItem(storageKey);
       }
     },
-    setItem: (name, newValue) => {
+
+    setItem: async (name, newValue) => {
       // ============== 处理 Local Storage  ============== //
       const localState: Record<string, any> = {};
       for (const [k, v] of Object.entries(newValue.state)) {
@@ -65,30 +85,24 @@ export const createHyperStorage = <T extends object>(
         if (localKey) localState[localKey] = v;
       }
 
-      localStorage.setItem(name, JSON.stringify({ ...newValue, state: localState }));
+      if (useIndexedDB) {
+        await indexedDB.setItem(name, localState, newValue.version);
+      } else {
+        localStorage.setItem(name, localState, newValue.version);
+      }
 
       // ============== 处理 URL Storage  ============== //
       if (hasUrl) {
-        const searchParameters = new URLSearchParams(getUrlSearch());
+        // 转换 key 为目标 key
+        const finalEntries = Object.entries(newValue.state)
+          .map(([k, v]) => {
+            const urlKey = mapStateKeyToStorageKey(k, 'url');
+            if (!urlKey) return undefined;
+            return [urlKey, v];
+          })
+          .filter(Boolean) as [string, any][];
 
-        for (const [k, v] of Object.entries(newValue.state)) {
-          const urlKey = mapStateKeyToStorageKey(k, 'url');
-
-          if (!urlKey) continue;
-
-          if (isEmpty(v)) {
-            searchParameters.delete(urlKey);
-            continue;
-          }
-
-          if (typeof v === 'string') {
-            searchParameters.set(urlKey, v);
-          } else {
-            searchParameters.set(urlKey, JSON.stringify(v));
-          }
-        }
-
-        setUrlSearch(searchParameters);
+        urlStorage.setItem(name, Object.fromEntries(finalEntries));
       }
     },
   };
