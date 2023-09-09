@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.71.1](https://github.com/lobehub/lobe-chat/compare/v0.71.0...v0.71.1)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mobile route.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix mobile route, closes [#165](https://github.com/lobehub/lobe-chat/issues/165) ([d5e03b6](https://github.com/lobehub/lobe-chat/commit/d5e03b6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.71.0](https://github.com/lobehub/lobe-chat/compare/v0.70.4...v0.71.0)
 
 <sup>Released on **2023-09-09**</sup>
