@@ -110,8 +110,18 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
 
   return (
     <>
-      <ActionIcon icon={DiscordIcon} onClick={() => window.open(DISCORD, '__blank')} />
-      <ActionIcon icon={Github} onClick={() => window.open(GITHUB, '__blank')} />
+      <ActionIcon
+        icon={DiscordIcon}
+        onClick={() => window.open(DISCORD, '__blank')}
+        placement={'right'}
+        title={'Discord'}
+      />
+      <ActionIcon
+        icon={Github}
+        onClick={() => window.open(GITHUB, '__blank')}
+        placement={'right'}
+        title={'Github'}
+      />
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
         <ActionIcon active={tab === 'settings'} icon={Settings2} />
       </Dropdown>

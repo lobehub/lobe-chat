@@ -3,7 +3,7 @@ import { useResponsive } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { genSize, useStyles } from '../style';
+import { genSize, useStyles } from './style';
 
 const Hero = memo<{ width: number }>(({ width }) => {
   const size = useMemo(

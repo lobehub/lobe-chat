@@ -4,7 +4,7 @@ import { PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import AppLayout from '../../layout/AppLayout';
-import { useStyles } from './style';
+import { useStyles } from './features/Banner/style';
 
 const WelcomeLayout = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();

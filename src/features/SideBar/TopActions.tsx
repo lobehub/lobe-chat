@@ -26,6 +26,7 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
           switchBackToChat();
           setTab('chat');
         }}
+        placement={'right'}
         size="large"
         title={t('tab.chat')}
       />
@@ -37,6 +38,7 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
           Router.push('/market');
           setTab('market');
         }}
+        placement={'right'}
         size="large"
         title={t('tab.market')}
       />

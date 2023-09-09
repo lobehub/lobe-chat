@@ -24,7 +24,7 @@ const MobileHeader = memo(() => {
   return (
     <MobileNavBar
       center={<MobileNavBarTitle desc={model} title={displayTitle} />}
-      onBackClick={() => Router.back()}
+      onBackClick={() => Router.push('/chat')}
       right={
         <>
           <ActionIcon icon={LayoutList} onClick={() => toggleConfig()} />

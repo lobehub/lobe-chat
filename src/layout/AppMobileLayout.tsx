@@ -8,16 +8,19 @@ import SafeSpacing from '@/components/SafeSpacing';
 import MobileTabBar from '@/features/MobileTabBar';
 import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
 
-const useStyles = createStyles(({ css }) => ({
-  container: css`
-    position: relative;
+const useStyles = createStyles(({ css, cx, stylish }) => ({
+  container: cx(
+    stylish.noScrollbar,
+    css`
+      position: relative;
 
-    overflow-x: hidden;
-    overflow-y: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
 
-    width: 100vw;
-    height: 100vh;
-  `,
+      width: 100vw;
+      height: 100vh;
+    `,
+  ),
   mobileNavBar: css`
     position: fixed;
     z-index: 100;

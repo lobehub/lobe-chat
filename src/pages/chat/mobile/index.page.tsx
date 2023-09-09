@@ -27,7 +27,7 @@ const Chat = memo(() => {
       <AppMobileLayout navBar={<Header />}>
         <Flexbox height={'calc(100vh - 44px)'} horizontal>
           <Conversation mobile />
-          <SideBar mobile />
+          <SideBar />
         </Flexbox>
       </AppMobileLayout>
     </>

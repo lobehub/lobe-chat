@@ -2,8 +2,8 @@ import { useResponsive } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useStyles } from '../style';
 import AgentCard, { type AgentCardProps } from './AgentCard';
+import { useStyles } from './style';
 
 const items: AgentCardProps['meta'][] = [
   {

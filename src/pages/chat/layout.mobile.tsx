@@ -1,4 +1,3 @@
-import { useTheme } from 'antd-style';
 import { memo } from 'react';
 
 import AppMobileLayout from '@/layout/AppMobileLayout';
@@ -9,15 +8,10 @@ import Header from './features/SessionList/Header';
 
 const ChatMobileLayout = memo(() => {
   useSwitchSideBarOnInit('chat');
-  const theme = useTheme();
 
   return (
-    <AppMobileLayout
-      navBar={<Header mobile={'navbar'} />}
-      showTabBar
-      style={{ background: theme.colorBgContainer }}
-    >
-      <Sessions mobile />
+    <AppMobileLayout navBar={<Header />} showTabBar>
+      <Sessions />
     </AppMobileLayout>
   );
 });

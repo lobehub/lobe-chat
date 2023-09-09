@@ -10,8 +10,8 @@ import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 import Conversation from './features/Conversation';
 import Header from './features/Header';
 import SideBar from './features/Sidebar';
-import Layout from './layout';
-import Mobile from './mobile';
+import DesktopLayout from './layout';
+import MobileLayout from './layout.mobile';
 
 const Chat = memo(() => {
   const { mobile } = useResponsive();
@@ -20,23 +20,24 @@ const Chat = memo(() => {
     agentSelectors.currentAgentTitle(s),
   ]);
   const pageTitle = genSiteHeadTitle([avatar, title].filter(Boolean).join(' '));
+  const RenderLayout = mobile ? MobileLayout : DesktopLayout;
 
   return (
     <>
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      {mobile ? (
-        <Mobile />
-      ) : (
-        <Layout>
-          <Header />
-          <Flexbox flex={1} height={'calc(100vh - 64px)'} horizontal>
-            <Conversation />
-            <SideBar />
-          </Flexbox>
-        </Layout>
-      )}
+      <RenderLayout>
+        {!mobile && (
+          <>
+            <Header />
+            <Flexbox flex={1} height={'calc(100vh - 64px)'} horizontal>
+              <Conversation />
+              <SideBar />
+            </Flexbox>
+          </>
+        )}
+      </RenderLayout>
     </>
   );
 });

@@ -3,18 +3,14 @@ import isEqual from 'fast-deep-equal';
 import Head from 'next/head';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
-import SafeSpacing from '@/components/SafeSpacing';
-import { HEADER_HEIGHT } from '@/const/layoutTokens';
 import AgentSetting from '@/features/AgentSetting';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
-import ChatLayout from '../layout';
-import Header from './Header';
-import Mobile from './mobile';
+import DesktopLayout from './layout';
+import MobileLayout from './layout.mobile';
 
 const EditPage = memo(() => {
   const { mobile } = useResponsive();
@@ -38,26 +34,14 @@ const EditPage = memo(() => {
     />
   );
 
+  const RenderLayout = mobile ? MobileLayout : DesktopLayout;
+
   return (
     <>
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      {mobile ? (
-        <Mobile>
-          <Flexbox gap={16} padding={16}>
-            {settings}
-          </Flexbox>
-        </Mobile>
-      ) : (
-        <ChatLayout>
-          <Header />
-          <Flexbox align={'center'} flex={1} gap={16} padding={24} style={{ overflow: 'auto' }}>
-            <SafeSpacing height={HEADER_HEIGHT - 16} />
-            {settings}
-          </Flexbox>
-        </ChatLayout>
-      )}
+      <RenderLayout>{settings}</RenderLayout>
     </>
   );
 });

@@ -1,51 +1,17 @@
 import { ActionIcon, EditableMessage } from '@lobehub/ui';
 import { Skeleton } from 'antd';
-import { createStyles } from 'antd-style';
 import { Edit } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Header from '@/pages/chat/features/Sidebar/Header';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
-const useStyles = createStyles(({ css, token }) => ({
-  prompt: css`
-    overflow-x: hidden;
-    overflow-y: auto;
+import Header from './Header';
+import { useStyles } from './style';
 
-    padding: 0 16px 16px;
-
-    opacity: 0.75;
-
-    transition: opacity 200ms ${token.motionEaseOut};
-
-    &:hover {
-      opacity: 1;
-    }
-  `,
-  promptBox: css`
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid ${token.colorBorder};
-  `,
-  promptMask: css`
-    pointer-events: none;
-
-    position: absolute;
-    z-index: 10;
-    bottom: 0;
-    left: 0;
-
-    width: 100%;
-    height: 32px;
-
-    background: linear-gradient(to bottom, transparent, ${token.colorBgLayout});
-  `,
-}));
-
-const SystemRole = memo<{ mobile?: boolean }>(() => {
+const SystemRole = memo(() => {
   const [openModal, setOpenModal] = useState(false);
 
   const { styles } = useStyles();

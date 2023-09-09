@@ -6,8 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import pkg from '@/../package.json';
-
+import pkg from '../../../../../package.json';
 import Agent from './Agent';
 import Common from './Common';
 

@@ -1,21 +1,19 @@
-import { DraggablePanelBody } from '@lobehub/ui';
 import { CollapseProps } from 'antd';
-import { createStyles } from 'antd-style';
+import { useResponsive } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import FolderPanel from '@/features/FolderPanel';
-
 import CollapseGroup from './CollapseGroup';
-import Header from './Header';
+import Desktop from './Desktop';
 import Inbox from './Inbox';
 import SessionList from './List';
+import Mobile from './Mobile';
 
-const useStyles = createStyles(({ stylish }) => stylish.noScrollbar);
-
-export const Sessions = memo<{ mobile?: boolean }>(({ mobile }) => {
+export const Sessions = memo(() => {
+  const { mobile } = useResponsive();
   const { t } = useTranslation('common');
-  const { styles } = useStyles();
+
+  const Render = mobile ? Mobile : Desktop;
 
   const items: CollapseProps['items'] = useMemo(
     () => [
@@ -28,22 +26,10 @@ export const Sessions = memo<{ mobile?: boolean }>(({ mobile }) => {
     [],
   );
 
-  if (mobile)
-    return (
-      <>
-        <Header mobile={'search'} />
-        <Inbox />
-        <CollapseGroup defaultActiveKey={['sessionList']} items={items} />
-      </>
-    );
-
   return (
-    <FolderPanel>
-      <Header />
-      <DraggablePanelBody className={styles} style={{ padding: 0 }}>
-        <Inbox />
-        <CollapseGroup defaultActiveKey={['sessionList']} items={items} />
-      </DraggablePanelBody>
-    </FolderPanel>
+    <Render>
+      <Inbox />
+      <CollapseGroup defaultActiveKey={['sessionList']} items={items} />
+    </Render>
   );
 });

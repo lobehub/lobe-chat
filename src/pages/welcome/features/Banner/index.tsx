@@ -11,8 +11,8 @@ import { SESSION_CHAT_URL } from '@/const/url';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { useSessionStore } from '@/store/session';
 
-import { useStyles } from '../style';
 import Hero from './Hero';
+import { useStyles } from './style';
 
 const Banner = memo<{ mobile?: boolean }>(() => {
   const { importConfig } = useImportConfig();

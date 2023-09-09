@@ -1,13 +1,12 @@
 import { Icon, MobileTabBar, type MobileTabBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { MessageSquare, Settings2, Sticker } from 'lucide-react';
+import { MessageSquare, Sticker } from 'lucide-react';
 import Router from 'next/router';
 import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`
@@ -21,7 +20,6 @@ export default memo<{ className?: string }>(({ className }) => {
   const [tab, setTab] = useGlobalStore((s) => [s.sidebarKey, s.switchSideBar]);
   const { t } = useTranslation('common');
   const { styles } = useStyles();
-  const switchSession = useSessionStore((s) => s.switchSession);
   const items: MobileTabBarProps['items'] = useMemo(
     () => [
       {
@@ -30,23 +28,17 @@ export default memo<{ className?: string }>(({ className }) => {
         ),
         key: 'chat',
         onClick: () => {
-          switchSession();
+          Router.push('/chat');
         },
         title: t('tab.chat'),
       },
       {
         icon: (active) => <Icon className={active ? styles.active : undefined} icon={Sticker} />,
         key: 'market',
-
-        title: t('tab.market'),
-      },
-      {
-        icon: (active) => <Icon className={active ? styles.active : undefined} icon={Settings2} />,
-        key: 'settings',
         onClick: () => {
-          Router.push('/settings');
+          Router.push('/market');
         },
-        title: t('tab.setting'),
+        title: t('tab.market'),
       },
     ],
     [t],

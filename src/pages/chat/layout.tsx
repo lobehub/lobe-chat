@@ -1,4 +1,3 @@
-import { useResponsive } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -8,23 +7,19 @@ import { useSwitchSideBarOnInit } from '@/store/global';
 import { Sessions } from './features/SessionList';
 
 const ChatLayout = memo<PropsWithChildren>(({ children }) => {
-  const { mobile } = useResponsive();
-
   useSwitchSideBarOnInit('chat');
 
   return (
     <AppLayout>
       <Sessions />
-      {!mobile && (
-        <Flexbox
-          flex={1}
-          height={'100vh'}
-          id={'lobe-conversion-container'}
-          style={{ position: 'relative' }}
-        >
-          {children}
-        </Flexbox>
-      )}
+      <Flexbox
+        flex={1}
+        height={'100vh'}
+        id={'lobe-conversion-container'}
+        style={{ position: 'relative' }}
+      >
+        {children}
+      </Flexbox>
     </AppLayout>
   );
 });
