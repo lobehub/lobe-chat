@@ -6,7 +6,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import MobileTabBar from '@/features/MobileTabBar';
-import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css, cx, stylish }) => ({
   container: cx(
@@ -48,10 +47,6 @@ interface AppMobileLayoutProps extends PropsWithChildren {
 const AppMobileLayout = memo<AppMobileLayoutProps>(
   ({ children, showTabBar, navBar, style, className }) => {
     const { styles, cx } = useStyles();
-
-    useOnFinishHydrationSession(() => {
-      useSessionStore.setState({ isMobile: true });
-    }, []);
 
     return (
       <>

@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+import { useOnFinishHydrationSession } from '@/store/session';
 
 import { useSessionStore } from '../store';
 
@@ -8,11 +10,9 @@ export const useSessionHydrated = () => {
 
   const [isInit, setInit] = useState(hasInited);
 
-  useEffect(() => {
-    useSessionStore.persist.onFinishHydration(() => {
-      if (!isInit) setInit(true);
-    });
-  }, []);
+  useOnFinishHydrationSession(() => {
+    if (!isInit) setInit(true);
+  });
 
   return isInit;
 };
