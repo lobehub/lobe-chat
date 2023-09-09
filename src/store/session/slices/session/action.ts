@@ -161,10 +161,13 @@ export const createSessionSlice: StateCreator<
     Router.push(SESSION_CHAT_URL(id, get().isMobile));
   },
   switchSession: (sessionId = INBOX_SESSION_ID) => {
-    if (get().activeId === sessionId) return;
+    const { isMobile } = get();
+    // mobile also should switch session due to chat mobile route is different
+    // fix https://github.com/lobehub/lobe-chat/issues/163
+    if (!isMobile && get().activeId === sessionId) return;
 
     get().activeSession(sessionId);
 
-    Router.push(SESSION_CHAT_URL(sessionId, get().isMobile));
+    Router.push(SESSION_CHAT_URL(sessionId, isMobile));
   },
 });
