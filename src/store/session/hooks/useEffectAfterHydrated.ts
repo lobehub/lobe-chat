@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useSessionStore } from '@/store/session';
+import { useSessionStore } from '../store';
 
 export const useEffectAfterSessionHydrated = (
   fn: (session: typeof useSessionStore) => void,
