@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.72.1](https://github.com/lobehub/lobe-chat/compare/v0.72.0...v0.72.1)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正异步水合造成的初始状态不稳定的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正异步水合造成的初始状态不稳定的问题 ([2208f8a](https://github.com/lobehub/lobe-chat/commit/2208f8a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.72.0](https://github.com/lobehub/lobe-chat/compare/v0.71.1...v0.72.0)
 
 <sup>Released on **2023-09-09**</sup>
