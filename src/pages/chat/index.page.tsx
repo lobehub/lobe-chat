@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
+import { useEffectAfterSessionHydrated } from '@/store/session/hooks';
 import { agentSelectors } from '@/store/session/selectors';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
@@ -21,6 +22,13 @@ const Chat = memo(() => {
   ]);
   const pageTitle = genSiteHeadTitle([avatar, title].filter(Boolean).join(' '));
   const RenderLayout = mobile ? MobileLayout : DesktopLayout;
+
+  useEffectAfterSessionHydrated(
+    (store) => {
+      store.setState({ isMobile: mobile });
+    },
+    [mobile],
+  );
 
   return (
     <>
