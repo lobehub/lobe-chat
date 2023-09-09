@@ -5,9 +5,11 @@
   "keywords": [
     "chatbot",
     "ChatGPT",
-    "LangChain",
+    "LobeHub",
     "typescript",
-    "Next.js"
+    "Vercel AI SDK",
+    "Next.js",
+    "OpenAI"
   ],
   "homepage": "https://github.com/lobehub/lobe-chat",
   "bugs": {
