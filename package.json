@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.71.1",
+  "version": "0.72.0",
   "description": "Lobe Chat is an open-source chatbot client using Vercel AI SDK, Typescript and Next.js",
   "keywords": [
     "chatbot",

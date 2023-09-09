@@ -2,6 +2,49 @@
 
 # Changelog
 
+## [Version 0.72.0](https://github.com/lobehub/lobe-chat/compare/v0.71.1...v0.72.0)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Add plugin market Setting Modal, 支持快速刷新与预览 manifest, 适配插件 i18n 方案.
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正删除插件时错误开启的问题.
+
+#### 💄 Styles
+
+- **misc**: 优化 manifest 预览的尺寸.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add plugin market Setting Modal ([a0603a9](https://github.com/lobehub/lobe-chat/commit/a0603a9))
+- **misc**: 支持快速刷新与预览 manifest, closes [#150](https://github.com/lobehub/lobe-chat/issues/150) ([5bd2eb0](https://github.com/lobehub/lobe-chat/commit/5bd2eb0))
+- **misc**: 适配插件 i18n 方案 ([8709ab3](https://github.com/lobehub/lobe-chat/commit/8709ab3))
+
+#### What's fixed
+
+- **misc**: 修正删除插件时错误开启的问题 ([0e35c18](https://github.com/lobehub/lobe-chat/commit/0e35c18))
+
+#### Styles
+
+- **misc**: 优化 manifest 预览的尺寸 ([27f8d6d](https://github.com/lobehub/lobe-chat/commit/27f8d6d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.71.1](https://github.com/lobehub/lobe-chat/compare/v0.71.0...v0.71.1)
 
 <sup>Released on **2023-09-09**</sup>
