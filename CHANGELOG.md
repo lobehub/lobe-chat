@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.72.4](https://github.com/lobehub/lobe-chat/compare/v0.72.3...v0.72.4)
+
+<sup>Released on **2023-09-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Use en-US when no suit lang with plugin index.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Use en-US when no suit lang with plugin index ([4e9668d](https://github.com/lobehub/lobe-chat/commit/4e9668d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.72.3](https://github.com/lobehub/lobe-chat/compare/v0.72.2...v0.72.3)
 
 <sup>Released on **2023-09-09**</sup>
