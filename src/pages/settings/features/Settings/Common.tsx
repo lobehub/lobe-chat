@@ -3,7 +3,7 @@ import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { changeLanguage } from 'i18next';
 import { debounce } from 'lodash-es';
-import { AppWindow, Monitor, Moon, Palette, Sun, Webhook } from 'lucide-react';
+import { AppWindow, Monitor, Moon, Palette, Sun } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -144,30 +144,6 @@ const Common = memo(() => {
     [settings],
   );
 
-  const openAI: SettingItemGroup = useMemo(
-    () => ({
-      children: [
-        {
-          children: <Input.Password placeholder={t('settingOpenAI.token.placeholder')} />,
-          desc: t('settingOpenAI.token.desc'),
-          label: t('settingOpenAI.token.title'),
-          name: 'OPENAI_API_KEY',
-        },
-        {
-          children: <Input placeholder={t('settingOpenAI.endpoint.placeholder')} />,
-          desc: t('settingOpenAI.endpoint.desc'),
-
-          label: t('settingOpenAI.endpoint.title'),
-
-          name: 'endpoint',
-        },
-      ],
-      icon: Webhook,
-      title: t('settingOpenAI.title'),
-    }),
-    [settings],
-  );
-
   const system: SettingItemGroup = useMemo(
     () => ({
       children: [
@@ -204,7 +180,7 @@ const Common = memo(() => {
     [settings],
   );
 
-  const items = useMemo(() => [theme, openAI, system], [settings]);
+  const items = useMemo(() => [theme, system], [settings]);
 
   return (
     <Form

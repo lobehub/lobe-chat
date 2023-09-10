@@ -1,10 +1,13 @@
 import { ThemeMode } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
-import { merge } from 'lodash-es';
+import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
+import { SettingsTabs } from '@/store/global/initialState';
 import type { GlobalSettings } from '@/types/settings';
+import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import type { GlobalStore } from '../store';
@@ -24,7 +27,8 @@ export interface SettingsAction {
    * 设置部分配置设置
    * @param settings - 部分配置设置
    */
-  setSettings: (settings: Partial<GlobalSettings>) => void;
+  setSettings: (settings: DeepPartial<GlobalSettings>) => void;
+  switchSettingTabs: (tab: SettingsTabs) => void;
   /**
    * 设置主题模式
    * @param themeMode - 主题模式
@@ -58,11 +62,19 @@ export const createSettingsSlice: StateCreator<
   resetSettings: () => {
     set({ settings: DEFAULT_SETTINGS }, false, t('resetSettings'));
   },
-
   setSettings: (settings) => {
     const oldSetting = get().settings;
-    set({ settings: merge({}, oldSetting, settings) }, false, t('setSettings', settings));
+    const nextSettings = merge(oldSetting, settings);
+
+    if (isEqual(oldSetting, nextSettings)) return;
+
+    set({ settings: merge(oldSetting, settings) }, false, t('setSettings', settings));
   },
+
+  switchSettingTabs: (tab) => {
+    set({ settingsTab: tab });
+  },
+
   switchThemeMode: (themeMode) => {
     get().setSettings({ themeMode });
   },

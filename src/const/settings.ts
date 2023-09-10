@@ -1,18 +1,17 @@
+import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { LanguageModel } from '@/types/llm';
 import { LobeAgentConfig } from '@/types/session';
-import { GlobalBaseSettings, GlobalDefaultAgent, GlobalSettings } from '@/types/settings';
+import {
+  GlobalBaseSettings,
+  GlobalDefaultAgent,
+  GlobalLLMConfig,
+  GlobalSettings,
+} from '@/types/settings';
 
 export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
-  OPENAI_API_KEY: '',
   avatar: '',
-  compressThreshold: 24,
-  enableCompressThreshold: false,
-  enableHistoryCount: false,
-  enableMaxTokens: true,
-  endpoint: '',
   fontSize: 14,
-  historyCount: 24,
   language: 'zh-CN',
   neutralColor: '',
   password: '',
@@ -34,6 +33,14 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   systemRole: '',
 };
 
+export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
+  openAI: {
+    OPENAI_API_KEY: '',
+    azureApiVersion: '2023-08-01-preview',
+    models: DEFAULT_OPENAI_MODEL_LIST,
+  },
+};
+
 export const DEFAULT_AGENT: GlobalDefaultAgent = {
   config: DEFAULT_AGENT_CONFIG,
   meta: DEFAULT_AGENT_META,
@@ -41,5 +48,6 @@ export const DEFAULT_AGENT: GlobalDefaultAgent = {
 
 export const DEFAULT_SETTINGS: GlobalSettings = {
   defaultAgent: DEFAULT_AGENT,
+  languageModel: DEFAULT_LLM_CONFIG,
   ...DEFAULT_BASE_SETTINGS,
 };

@@ -3,7 +3,7 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { getMessageError } from '@/utils/fetch';
 
-import { URLS } from './url';
+import { URLS } from './_url';
 
 interface FetchChatModelOptions {
   signal?: AbortSignal | undefined;
