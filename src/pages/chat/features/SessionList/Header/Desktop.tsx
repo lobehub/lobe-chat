@@ -39,7 +39,7 @@ const Header = memo(() => {
           title={t('newAgent')}
         />
       </Flexbox>
-      <SessionSearchBar enableShortKey shortKey={'k'} />
+      <SessionSearchBar />
     </Flexbox>
   );
 });

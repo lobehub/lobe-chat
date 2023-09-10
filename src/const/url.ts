@@ -21,5 +21,13 @@ export const getPluginIndexJSON = (lang: Locales = 'en-US', baseUrl = PLUGINS_IN
 
 export const AGENTS_INDEX_URL = process.env.AGENTS_INDEX_URL ?? 'https://chat-agents.lobehub.com';
 
+export const getAgentIndexJSON = (lang: Locales = 'en-US', baseUrl = AGENTS_INDEX_URL) => {
+  if (lang === 'en-US') return baseUrl;
+
+  return `${baseUrl}.${lang}.json`;
+};
+
+export const AGENTS_INDEX_GITHUB = 'https://github.com/lobehub/lobe-chat-agents';
+
 export const SESSION_CHAT_URL = (id: string = INBOX_SESSION_ID, mobile?: boolean) =>
   mobile ? `/chat/mobile#session=${id}` : `/chat#session=${id}`;

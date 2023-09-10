@@ -1,5 +1,5 @@
 import { ActionIcon } from '@lobehub/ui';
-import { MessageSquare, Sticker } from 'lucide-react';
+import { Bot, MessageSquare } from 'lucide-react';
 import Router from 'next/router';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,7 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
       />
       <ActionIcon
         active={tab === 'market'}
-        icon={Sticker}
+        icon={Bot}
         onClick={() => {
           if (Router.asPath.startsWith('/market')) return;
           Router.push('/market');

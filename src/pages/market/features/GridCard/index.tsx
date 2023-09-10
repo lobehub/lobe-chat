@@ -5,6 +5,7 @@ import { memo, useMemo } from 'react';
 
 import { selectors, useMarketStore } from '@/store/market';
 
+import TagList from '../TagList';
 import GridCardItem from './GridCardItem';
 import Loading from './Loading';
 
@@ -18,6 +19,7 @@ const GridCard = memo(() => {
     s.useFetchAgentList,
     s.searchKeywords,
   ]);
+
   useFetchAgentList();
 
   const agentListData = useMemo(() => {
@@ -27,7 +29,12 @@ const GridCard = memo(() => {
 
   if (!agentList) return <Loading num={mobile ? 4 : 16} />;
 
-  return <SpotlightCard items={agentListData} renderItem={gridRender} />;
+  return (
+    <>
+      <TagList />
+      <SpotlightCard items={agentListData} renderItem={gridRender} />
+    </>
+  );
 });
 
 export default GridCard;

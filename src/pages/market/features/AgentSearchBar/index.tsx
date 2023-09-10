@@ -12,8 +12,10 @@ const AgentSearchBar = memo(() => {
   return (
     <SearchBar
       allowClear
+      enableShortKey={!mobile}
       onChange={(e) => useMarketStore.setState({ searchKeywords: e.target.value })}
       placeholder={t('search.placeholder')}
+      shortKey={'k'}
       spotlight={!mobile}
       type={mobile ? 'block' : 'ghost'}
       value={keywords}

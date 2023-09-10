@@ -19,7 +19,9 @@ const MarketLayout = memo<PropsWithChildren>(({ children }) => {
         <Header />
         <Flexbox align={'center'} flex={1} style={{ overflow: 'auto', padding: 16 }}>
           <SafeSpacing />
-          <Flexbox style={{ maxWidth: MAX_WIDTH }}>{children}</Flexbox>
+          <Flexbox gap={16} style={{ maxWidth: MAX_WIDTH }}>
+            {children}
+          </Flexbox>
         </Flexbox>
       </Flexbox>
     </AppLayout>
