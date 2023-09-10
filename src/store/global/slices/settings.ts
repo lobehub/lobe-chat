@@ -5,10 +5,8 @@ import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
-import { fetchModelList } from '@/services/modelList';
 import { SettingsTabs } from '@/store/global/initialState';
 import type { GlobalSettings } from '@/types/settings';
-import { LLMBrand } from '@/types/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -20,7 +18,6 @@ const t = setNamespace('settings');
  * 设置操作
  */
 export interface SettingsAction {
-  getModelList: (models?: LLMBrand) => Promise<void>;
   importAppSettings: (settings: GlobalSettings) => void;
   /**
    * 重置设置
@@ -45,12 +42,6 @@ export const createSettingsSlice: StateCreator<
   [],
   SettingsAction
 > = (set, get) => ({
-  getModelList: async (brand = 'openAI') => {
-    const { setSettings } = get();
-    const models = await fetchModelList();
-
-    setSettings({ languageModel: { [brand]: { models } } });
-  },
   importAppSettings: (importAppSettings) => {
     const { setSettings } = get();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

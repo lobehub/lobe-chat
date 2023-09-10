@@ -6,14 +6,13 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
+import { getModelList } from './getModelList';
 
 interface ModelListProps {
   value?: string[];
 }
 const ModelList = memo<ModelListProps>(({ value }) => {
   const { t } = useTranslation('setting');
-  const getModelList = useGlobalStore((s) => s.getModelList);
 
   const isLoading = !value;
 

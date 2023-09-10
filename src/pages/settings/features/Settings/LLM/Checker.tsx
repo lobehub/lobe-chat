@@ -6,16 +6,17 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
 import { ChatMessageError } from '@/types/chatMessage';
 import { fetchPresetTaskResult } from '@/utils/fetch';
+
+import { getModelList } from './getModelList';
 
 interface CheckerProps {
   checkModel?: boolean;
 }
 const Checker = memo<CheckerProps>(({ checkModel }) => {
   const { t } = useTranslation('setting');
-  const getModelList = useGlobalStore((s) => s.getModelList);
+
   const [loading, setLoading] = useState(false);
   const [pass, setPass] = useState(false);
 
