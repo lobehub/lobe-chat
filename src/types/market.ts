@@ -6,7 +6,7 @@ export interface AgentsMarketIndexItem {
   createAt: string;
   homepage: string;
   identifier: string;
-  manifest: 1;
+  manifest: string;
   meta: MetaData;
   schemaVersion: 1;
 }

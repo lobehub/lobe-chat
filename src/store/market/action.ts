@@ -11,7 +11,7 @@ import type { Store } from './store';
 export interface StoreAction {
   generateAgentTagList: () => string[];
   useFetchAgentList: () => SWRResponse<LobeChatAgentsMarketIndex>;
-  useFetchAgentManifest: (url: string) => SWRResponse<AgentsMarketItem>;
+  useFetchAgentManifest: () => SWRResponse<AgentsMarketItem>;
 }
 
 export const createMarketAction: StateCreator<
@@ -31,6 +31,10 @@ export const createMarketAction: StateCreator<
         set({ agentList: agentMarketIndex.agents }, false, 'useFetchAgentList');
       },
     }),
-  useFetchAgentManifest: (url) =>
-    useSWR<AgentsMarketItem>('fetchAgentManifest', () => getAgentManifest(url)),
+  useFetchAgentManifest: () =>
+    useSWR<AgentsMarketItem>('fetchAgentManifest', () => getAgentManifest(get().agentManifestUrl), {
+      onSuccess: (agentManifest) => {
+        set({ agentManifest }, false, 'useFetchAgentManifest');
+      },
+    }),
 });

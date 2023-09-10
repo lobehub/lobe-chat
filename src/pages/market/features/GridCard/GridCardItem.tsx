@@ -5,19 +5,23 @@ import { startCase } from 'lodash-es';
 import { memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { useMarketStore } from '@/store/market';
 import { AgentsMarketIndexItem } from '@/types/market';
 
 import { useStyles } from './style';
 
 const { Text, Paragraph } = Typography;
 
-const GridCardItem = memo<AgentsMarketIndexItem>(({ meta }) => {
+const GridCardItem = memo<AgentsMarketIndexItem>(({ meta, manifest }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
   const { avatar, title, description, tags, backgroundColor } = meta;
   const { styles, theme } = useStyles();
   return (
-    <Flexbox className={styles.container}>
+    <Flexbox
+      className={styles.container}
+      onClick={() => useMarketStore.setState({ agentManifestUrl: manifest, agentModalOpen: true })}
+    >
       <Flexbox align={'flex-end'} className={styles.banner} justify={'center'}>
         <Avatar
           avatar={avatar}

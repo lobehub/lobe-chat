@@ -13,7 +13,8 @@ export const getAgentList = async () => {
 /**
  * 请求助手 manifest
  */
-export const getAgentManifest = async (manifestUrl: string) => {
+export const getAgentManifest = async (manifestUrl?: string) => {
+  if (!manifestUrl) return;
   const res = await fetch(manifestUrl);
 
   return res.json();

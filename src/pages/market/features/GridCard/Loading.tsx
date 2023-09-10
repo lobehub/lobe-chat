@@ -1,19 +1,12 @@
-import { SpotlightCard } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
-const Loading = memo<{ num?: number }>(({ num = 16 }) => {
+const Loading = memo(() => {
   return (
-    <SpotlightCard
-      items={Array.from({ length: num })
-        .fill('')
-        .map((_, index) => index)}
-      renderItem={(index) => (
-        <div style={{ padding: 16 }}>
-          <Skeleton active={index < 4} />
-        </div>
-      )}
-    />
+    <Flexbox>
+      <Skeleton paragraph={{ rows: 8 }} />
+    </Flexbox>
   );
 });
 
