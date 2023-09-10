@@ -11,7 +11,7 @@ import SelectWithImg from '@/components/SelectWithImg';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
-import { options } from '@/locales/options';
+import { localeOptions } from '@/locales/options';
 import { globalSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { ConfigKeys } from '@/types/settings';
@@ -113,7 +113,7 @@ const Common = memo(() => {
               onChange={(e) => {
                 changeLanguage(e);
               }}
-              options={options}
+              options={localeOptions}
             />
           ),
           label: t('settingTheme.lang.title'),

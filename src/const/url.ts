@@ -1,3 +1,4 @@
+import { localeOptions } from '@/locales/options';
 import { Locales } from '@/locales/resources';
 
 import pkg from '../../package.json';
@@ -13,7 +14,7 @@ export const PLUGINS_INDEX_URL =
   process.env.PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com/index';
 
 export const getPluginIndexJSON = (lang: Locales = 'en-US', baseUrl = PLUGINS_INDEX_URL) => {
-  if (lang === 'en-US') return baseUrl;
+  if (lang === 'en-US' || !localeOptions.map((o) => o.value).includes(lang)) return baseUrl;
 
   return `${baseUrl}.${lang}.json`;
 };
