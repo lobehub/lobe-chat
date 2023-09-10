@@ -5,14 +5,14 @@ import { Flexbox } from 'react-layout-kit';
 
 import { MetaData } from '@/types/meta';
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const useStyles = createStyles(({ css, token }, maskColor: string) => ({
   banner: css`
     position: relative;
 
     overflow: hidden;
 
     height: 64px;
-    margin-bottom: -32px;
+    margin-bottom: -56px;
 
     background: ${token.colorFill};
   `,
@@ -27,13 +27,20 @@ export const useStyles = createStyles(({ css, token }) => ({
     width: 100%;
     height: 100%;
 
-    background: linear-gradient(to bottom, transparent, ${token.colorBgLayout});
+    background: linear-gradient(to bottom, transparent, ${maskColor || token.colorBgLayout});
   `,
 }));
 
-const AgentCardBanner = memo<{ mask?: boolean; meta: MetaData; size?: number } & DivProps>(
-  ({ meta, className, mask, size = 8, ...props }) => {
-    const { styles, theme, cx } = useStyles();
+interface AgentCardBannerProps extends DivProps {
+  mask?: boolean;
+  maskColor?: string;
+  meta: MetaData;
+  size?: number;
+}
+
+const AgentCardBanner = memo<AgentCardBannerProps>(
+  ({ meta, className, mask, size = 8, maskColor, ...props }) => {
+    const { styles, theme, cx } = useStyles(maskColor);
 
     return (
       <Flexbox

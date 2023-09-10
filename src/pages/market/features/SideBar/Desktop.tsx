@@ -6,7 +6,7 @@ import SafeSpacing from '@/components/SafeSpacing';
 import { MARKET_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useMarketStore } from '@/store/market';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, stylish }) => ({
   content: css`
     display: flex;
     flex-direction: column;
@@ -17,6 +17,7 @@ const useStyles = createStyles(({ css, token }) => ({
   header: css`
     border-bottom: 1px solid ${token.colorBorder};
   `,
+  noScrollbar: stylish.noScrollbar,
 }));
 
 const SideBar = memo<{ children: ReactNode }>(({ children }) => {
@@ -46,7 +47,9 @@ const SideBar = memo<{ children: ReactNode }>(({ children }) => {
         }}
       >
         <SafeSpacing />
-        <DraggablePanelBody style={{ padding: 0 }}>{children}</DraggablePanelBody>
+        <DraggablePanelBody className={styles.noScrollbar} style={{ padding: 0 }}>
+          {children}
+        </DraggablePanelBody>
       </DraggablePanelContainer>
     </DraggablePanel>
   );

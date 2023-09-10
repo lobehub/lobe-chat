@@ -10,8 +10,10 @@ export const findDuplicates = (arr: string[]): string[] => {
     }
   }
 
-  // 挑出重复出现 2 次以上的项目
-  const result = Object.keys(duplicates).filter((item) => duplicates[item] >= 2);
+  // 挑出重复出现 3 次以上的项目
+  const COUNT = 3;
+
+  const result = Object.keys(duplicates).filter((item) => duplicates[item] >= COUNT);
 
   // 按重复次数从多到少排序
   result.sort((a, b) => duplicates[b] - duplicates[a]);

@@ -1,6 +1,7 @@
 import { Avatar, Tag } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { Typography } from 'antd';
+import { useThemeMode } from 'antd-style';
 import { startCase } from 'lodash-es';
 import { memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -11,36 +12,43 @@ import { AgentsMarketIndexItem } from '@/types/market';
 import AgentCardBanner from './AgentCardBanner';
 import { useStyles } from './style';
 
-const { Text, Paragraph } = Typography;
-
+const { Paragraph } = Typography;
 const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, manifest }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
   const onAgentCardClick = useMarketStore((s) => s.onAgentCardClick);
   const { avatar, title, description, tags, backgroundColor } = meta;
   const { styles, theme } = useStyles();
+  const { isDarkMode } = useThemeMode();
   return (
     <Flexbox className={styles.container} onClick={() => onAgentCardClick(manifest)}>
-      <AgentCardBanner meta={meta} />
+      <AgentCardBanner
+        mask
+        maskColor={theme.colorBgContainer}
+        meta={meta}
+        style={{ opacity: isDarkMode ? 0.9 : 0.4 }}
+      />
       <Flexbox className={styles.inner} gap={8} ref={ref}>
         <Avatar
           animation={isHovering}
           avatar={avatar}
-          background={backgroundColor || theme.colorBgContainer}
+          background={backgroundColor || theme.colorFillTertiary}
           className={styles.avatar}
           size={56}
         />
-        <Text className={styles.title} ellipsis={{ tooltip: title }}>
+        <Paragraph className={styles.title} ellipsis={{ rows: 1, tooltip: title }}>
           {title}
-        </Text>
-        <Paragraph className={styles.desc} ellipsis={{ rows: 3, tooltip: description }}>
+        </Paragraph>
+        <Paragraph className={styles.desc} ellipsis={{ rows: 2, tooltip: description }}>
           {description}
         </Paragraph>
-        <div>
+        <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
           {(tags as string[]).map((tag: string, index) => (
-            <Tag key={index}>{startCase(tag).trim()}</Tag>
+            <Tag key={index} style={{ margin: 0 }}>
+              {startCase(tag).trim()}
+            </Tag>
           ))}
-        </div>
+        </Flexbox>
       </Flexbox>
     </Flexbox>
   );

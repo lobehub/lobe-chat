@@ -1,9 +1,7 @@
 import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(({ css, token }) => ({
-  avatar: css`
-    box-shadow: 0 0 0 8px ${token.colorBgContainer};
-  `,
+  avatar: css``,
 
   container: css`
     position: relative;
@@ -17,8 +15,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     padding: 16px;
   `,
   title: css`
-    overflow: hidden;
-    width: 288px;
+    margin-bottom: 0 !important;
     font-size: 16px;
     font-weight: 600;
   `,
