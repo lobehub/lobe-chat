@@ -3,6 +3,8 @@ import type { GlobalSettings } from '@/types/settings';
 
 export type SidebarTabKey = 'chat' | 'market' | 'settings';
 
+export type SettingsTabs = 'agent' | 'common' | 'llm';
+
 export interface Guide {
   // Topic 引导
   topic?: boolean;
@@ -19,6 +21,7 @@ export interface GlobalState {
    * 用户设置
    */
   settings: GlobalSettings;
+  settingsTab: SettingsTabs;
   sidebarKey: SidebarTabKey;
 }
 
@@ -41,5 +44,6 @@ export const initialState: GlobalState = {
     showSessionPanel: true,
   },
   settings: DEFAULT_SETTINGS,
+  settingsTab: 'common',
   sidebarKey: 'chat',
 };

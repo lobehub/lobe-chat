@@ -74,7 +74,7 @@ interface FetchAITaskResultParams<T> {
   /**
    * 错误处理函数
    */
-  onError?: (e: Error) => void;
+  onError?: (e: Error, rawError?: any) => void;
   /**
    * 加载状态变化处理函数
    * @param loading - 是否处于加载状态
@@ -101,27 +101,19 @@ export const fetchAIFactory =
     onLoadingChange,
     abortController,
   }: FetchAITaskResultParams<T>) => {
-    const errorHandle = (error: Error) => {
+    const errorHandle = (error: Error, errorContent?: any) => {
       onLoadingChange?.(false);
       if (abortController?.signal.aborted) {
-        // notification.primaryInfo({
-        //   message: '已中断当前节点的执行任务',
-        // });
         return;
       }
-
-      // notification?.error({
-      //   message: `请求失败(${error.message})`,
-      //   placement: 'bottomRight',
-      // });
-      onError?.(error);
+      onError?.(error, errorContent);
     };
 
     onLoadingChange?.(true);
 
     const data = await fetchSSE(() => fetcher(params, { signal: abortController?.signal }), {
       onErrorHandle: (error) => {
-        errorHandle(new Error(error.message));
+        errorHandle(new Error(error.message), error);
       },
       onMessageHandle,
     }).catch(errorHandle);

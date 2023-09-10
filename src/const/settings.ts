@@ -1,3 +1,4 @@
+import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { LanguageModel } from '@/types/llm';
 import { LobeAgentConfig } from '@/types/session';
@@ -9,9 +10,7 @@ import {
 } from '@/types/settings';
 
 export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
-  OPENAI_API_KEY: '',
   avatar: '',
-  endpoint: '',
   fontSize: 14,
   language: 'zh-CN',
   neutralColor: '',
@@ -35,9 +34,10 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
 };
 
 export const GLOBAL_LLM_CONFIG: GlobalLLMConfig = {
-  azureOpenAI: {},
   openAI: {
     OPENAI_API_KEY: '',
+    azureApiVersion: '2023-08-01-preview',
+    models: DEFAULT_OPENAI_MODEL_LIST,
   },
 };
 

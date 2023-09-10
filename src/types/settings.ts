@@ -8,13 +8,13 @@ export interface GlobalBaseSettings {
   /**
    * @deprecated
    */
-  OPENAI_API_KEY: string;
+  OPENAI_API_KEY?: string;
 
   avatar: string;
   /**
    * @deprecated
    */
-  endpoint: string;
+  endpoint?: string;
   fontSize: number;
   language: Locales;
   neutralColor: NeutralColors | '';
@@ -25,23 +25,19 @@ export interface GlobalBaseSettings {
 
 export type GlobalDefaultAgent = Pick<LobeAgentSession, 'config' | 'meta'>;
 
-interface AzureOpenAIConfig {
-  AZURE_API_KEY?: string;
-  apiVersion?: string;
-  endpoint?: string;
-  models?: string[];
-}
-
 interface OpenAIConfig {
   OPENAI_API_KEY: string;
+  azureApiVersion?: string;
   endpoint?: string;
   models?: string[];
+  useAzure?: boolean;
 }
 
 export type GlobalLLMConfig = {
-  azureOpenAI: AzureOpenAIConfig;
   openAI: OpenAIConfig;
 };
+
+export type LLMBrand = keyof GlobalLLMConfig;
 
 /**
  * 配置设置

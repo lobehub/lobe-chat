@@ -2,7 +2,7 @@ import { getPluginIndexJSON } from '@/const/url';
 import { useGlobalStore } from '@/store/global';
 
 /**
- * 请求插件列表
+ * fetch Plugin Market List
  */
 export const getPluginList = async () => {
   const url = getPluginIndexJSON(useGlobalStore.getState().settings.language);

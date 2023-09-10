@@ -7,6 +7,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { DEFAULT_AGENT } from '@/const/settings';
 import { isDev } from '@/utils/env';
 
+import { createHyperStorage } from '../middleware/createHyperStorage';
 import { type GlobalState, initialState } from './initialState';
 import { type AgentAction, createAgentSlice } from './slices/agent';
 import { type CommonAction, createCommonSlice } from './slices/common';
@@ -40,11 +41,19 @@ const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
     };
   },
   name: 'LOBE_SETTINGS',
-  partialize: (s) => ({
-    preference: s.preference,
-    settings: s.settings,
-  }),
+
   skipHydration: true,
+
+  storage: createHyperStorage({
+    localStorage: {
+      dbName: 'LobeHub',
+      selectors: ['preference', 'settings'],
+    },
+    url: {
+      mode: 'hash',
+      selectors: [{ settingsTab: 'tab' }],
+    },
+  }),
 };
 
 //  ===============  实装 useStore ============ //

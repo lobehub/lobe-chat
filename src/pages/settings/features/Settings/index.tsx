@@ -2,9 +2,11 @@ import { GridBackground, Icon, Logo, TabsNav } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { PackageCheck } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
+
+import { useGlobalStore } from '@/store/global';
 
 import pkg from '../../../../../package.json';
 import Agent from './Agent';
@@ -56,16 +58,11 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
 }));
 
-enum Tabs {
-  agent = 'agent',
-  common = 'common',
-  llm = 'llm',
-}
-
 const Settings = memo(() => {
-  const [tab, setTab] = useState<Tabs>(Tabs.common);
   const { styles, theme } = useStyles();
   const { t } = useTranslation('setting');
+
+  const [tab, setTab] = useGlobalStore((s) => [s.settingsTab, s.switchSettingTabs]);
 
   return (
     <Center gap={16} width={'100%'}>
@@ -80,11 +77,11 @@ const Settings = memo(() => {
         <TabsNav
           activeKey={tab}
           items={[
-            { key: Tabs.common, label: t('tab.common') },
-            { key: Tabs.llm, label: t('tab.llm') },
-            { key: Tabs.agent, label: t('tab.agent') },
+            { key: 'common', label: t('tab.common') },
+            { key: 'llm', label: t('tab.llm') },
+            { key: 'agent', label: t('tab.agent') },
           ]}
-          onChange={(e) => setTab(e as Tabs)}
+          onChange={(e) => setTab(e as any)}
         />
         <div className={styles.logo}>
           <Logo extra={'Chat'} type={'text'} />
@@ -94,9 +91,9 @@ const Settings = memo(() => {
           <div>{`${pkg.version}`}</div>
         </Flexbox>
       </Flexbox>
-      {tab === Tabs.common && <Common />}
-      {tab === Tabs.llm && <LLM />}
-      {tab === Tabs.agent && <Agent />}
+      {tab === 'common' && <Common />}
+      {tab === 'llm' && <LLM />}
+      {tab === 'agent' && <Agent />}
     </Center>
   );
 });
