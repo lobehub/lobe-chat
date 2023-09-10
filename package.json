@@ -25,8 +25,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev -p 3010",
-    "i18n": "npm run i18n:toc && lobe-i18n",
-    "i18n:toc": "ts-node --project ./tsconfig.json scripts/toc.ts",
+    "i18n": "npm run i18n:workflow && lobe-i18n",
+    "i18n:workflow": "ts-node --project ./tsconfig.json scripts/i18nWorkflow/index.ts",
     "lint": "npm run lint:ts && npm run lint:style && npm run type-check && npm run lint:circular",
     "lint:circular": "dpdm src/**/*.ts  --warning false  --tree false  --exit-code circular:1  -T true",
     "lint:md": "remark . --quiet --frail --output",

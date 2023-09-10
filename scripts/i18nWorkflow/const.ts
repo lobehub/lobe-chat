@@ -1,9 +1,9 @@
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import i18nConfig from '../.i18nrc';
+import i18nConfig from '../../.i18nrc';
 
-export const root = resolve(__dirname, '..');
+export const root = resolve(__dirname, '../..');
 export const localesDir = resolve(root, i18nConfig.output);
 export const localeDir = (locale: string) => resolve(localesDir, locale);
 export const localeDirJsonList = (locale: string) =>
@@ -15,3 +15,5 @@ export const outputLocaleJsonFilepath = (locale: string, file: string) =>
   resolve(localesDir, locale, file);
 export const srcLocalesResources = resolve(root, srcLocalesDir, 'resources');
 export const localesResourcesFilepath = (locale: string) => resolve(srcLocalesResources, locale);
+
+export { default as i18nConfig } from '../../.i18nrc';

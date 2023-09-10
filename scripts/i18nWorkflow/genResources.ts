@@ -1,10 +1,9 @@
 import { consola } from 'consola';
 import { colors } from 'consola/utils';
-import fs from 'node:fs';
+import { writeFileSync } from 'node:fs';
 
-import i18nConfig from '../.i18nrc.js';
-import { localeDirJsonList, localesResourcesFilepath } from './const';
-import { genResourcesContent, genToc } from './utils';
+import { i18nConfig, localeDirJsonList, localesResourcesFilepath } from './const';
+import { genResourcesContent, genToc, tagBlue, tagGreen } from './utils';
 
 const locales = [i18nConfig.entryLocale, ...i18nConfig.outputLocales];
 
@@ -16,12 +15,12 @@ export const genResources = () => {
     const toc = genToc(files, locale);
 
     const filepath = localesResourcesFilepath(`${locale}.ts`);
-    fs.writeFileSync(filepath, toc);
-    consola.success(colors.bgBlue(colors.black(` ${locale} `)), colors.gray(filepath));
+    writeFileSync(filepath, toc);
+    consola.success(tagBlue(locale), colors.gray(filepath));
   }
 
   const indexFilepath = localesResourcesFilepath(`index.ts`);
-  fs.writeFileSync(indexFilepath, genResourcesContent(locales));
+  writeFileSync(indexFilepath, genResourcesContent(locales));
 
-  consola.success(colors.bgGreen(colors.black(` INDEX `)), colors.gray(indexFilepath));
+  consola.success(tagGreen('INDEX'), colors.gray(indexFilepath));
 };

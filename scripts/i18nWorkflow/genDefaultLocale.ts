@@ -1,9 +1,8 @@
 import { consola } from 'consola';
 import { colors } from 'consola/utils';
 
-import i18nConfig from '../.i18nrc';
-import { entryLocaleJsonFilepath, localesResourcesFilepath } from './const';
-import { writeJSON } from './utils';
+import { entryLocaleJsonFilepath, i18nConfig, localesResourcesFilepath } from './const';
+import { tagWhite, writeJSON } from './utils';
 
 export const genDefaultLocale = () => {
   consola.info(`Default locale is ${i18nConfig.entryLocale}...`);
@@ -15,6 +14,6 @@ export const genDefaultLocale = () => {
   for (const [ns, value] of data) {
     const filepath = entryLocaleJsonFilepath(`${ns}.json`);
     writeJSON(filepath, value);
-    consola.success(colors.bgWhiteBright(colors.black(` ${ns} `)), colors.gray(filepath));
+    consola.success(tagWhite(ns), colors.gray(filepath));
   }
 };
