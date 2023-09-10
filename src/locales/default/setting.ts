@@ -25,7 +25,7 @@ export default {
       endpoint: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值',
         placeholder: 'https://docs-test-001.openai.azure.com',
-        title: '接口代理地址',
+        title: 'Azure API 地址',
       },
       models: {
         desc: '支持的模型',
@@ -33,7 +33,7 @@ export default {
       },
       title: 'Azure OpenAI 设置',
       token: {
-        desc: '使用自己的 Azure API Key',
+        desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值。 可以使用 KEY1 或 KEY2',
         placeholder: 'Azure API Key',
         title: 'API Key',
       },
@@ -76,6 +76,7 @@ export default {
         title: 'Azure OpenAI',
       },
     },
+    waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
   },
   settingAgent: {
     avatar: {

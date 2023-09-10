@@ -3,8 +3,10 @@ import { Form as AntForm, AutoComplete, Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { Webhook } from 'lucide-react';
+import Link from 'next/link';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { globalSelectors, useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
@@ -21,6 +23,9 @@ const useStyles = createStyles(({ css, token }) => ({
       font-size: 12px !important;
       color: ${token.colorTextDescription} !important;
     }
+  `,
+  plan: css`
+    color: ${token.colorTextDescription};
   `,
   tip: css`
     font-size: 12px;
@@ -47,16 +52,30 @@ const LLM = memo(() => {
   const openAI = {
     children: [
       {
-        children: <Input.Password placeholder={t('llm.OpenAI.token.placeholder')} />,
-        desc: t('llm.OpenAI.token.desc'),
-        label: t('llm.OpenAI.token.title'),
+        children: (
+          <Input.Password
+            placeholder={
+              useAzure ? t('llm.AzureOpenAI.token.placeholder') : t('llm.OpenAI.token.placeholder')
+            }
+          />
+        ),
+        desc: useAzure ? t('llm.AzureOpenAI.token.desc') : t('llm.OpenAI.token.desc'),
+        label: useAzure ? t('llm.AzureOpenAI.token.title') : t('llm.OpenAI.token.title'),
         name: [configKey, 'openAI', 'OPENAI_API_KEY'],
       },
       {
-        children: <Input placeholder={t('llm.OpenAI.endpoint.placeholder')} />,
-        desc: t('llm.OpenAI.endpoint.desc'),
+        children: (
+          <Input
+            placeholder={
+              useAzure
+                ? t('llm.AzureOpenAI.endpoint.placeholder')
+                : t('llm.OpenAI.endpoint.placeholder')
+            }
+          />
+        ),
+        desc: useAzure ? t('llm.AzureOpenAI.endpoint.desc') : t('llm.OpenAI.endpoint.desc'),
 
-        label: t('llm.OpenAI.endpoint.title'),
+        label: useAzure ? t('llm.AzureOpenAI.endpoint.title') : t('llm.OpenAI.endpoint.title'),
 
         name: [configKey, 'openAI', 'endpoint'],
       },
@@ -106,38 +125,26 @@ const LLM = memo(() => {
     title: t('llm.OpenAI.title'),
   };
 
-  // const azureOpenAI = {
-  //   children: [
-  //     {
-  //       children: <Input.Password placeholder={t('llm.AzureOpenAI.token.placeholder')} />,
-  //       desc: t('llm.AzureOpenAI.token.desc'),
-  //       label: t('llm.AzureOpenAI.token.title'),
-  //       name: [configKey, 'azureOpenAI', 'AZURE_API_KEY'],
-  //     },
-  //     {
-  //       children: <Input placeholder={t('llm.AzureOpenAI.endpoint.placeholder')} />,
-  //       desc: t('llm.AzureOpenAI.endpoint.desc'),
-  //       label: t('llm.AzureOpenAI.endpoint.title'),
-  //       name: [configKey, 'azureOpenAI', 'endpoint'],
-  //     },
-  //     {
-  //       children: <ModelList brand={'azureOpenAI'} />,
-  //       desc: t('llm.AzureOpenAI.models.desc'),
-  //       label: t('llm.AzureOpenAI.models.title'),
-  //       name: [configKey, 'azureOpenAI', 'models'],
-  //     },
-  //   ],
-  //   icon: Webhook,
-  //   title: t('llm.AzureOpenAI.title'),
-  // };
-
   return (
-    <Form
-      form={form}
-      items={[openAI]}
-      onValuesChange={debounce(setSettings, 100)}
-      {...FORM_STYLE}
-    />
+    <Flexbox gap={24} width={'100%'}>
+      <Form
+        form={form}
+        items={[openAI]}
+        onValuesChange={debounce(setSettings, 100)}
+        {...FORM_STYLE}
+      />
+      <Flexbox align={'center'} className={styles.plan}>
+        <div>
+          <Trans i18nKey="llm.waitingForMore" ns={'setting'}>
+            更多模型正在
+            <Link href="https://github.com/lobehub/lobe-chat/issues/151" target="_blank">
+              计划接入
+            </Link>
+            中 ，敬请期待 ✨
+          </Trans>
+        </div>
+      </Flexbox>
+    </Flexbox>
   );
 });
 
