@@ -66,6 +66,7 @@ const LLM = memo(() => {
       {
         children: (
           <Input
+            allowClear
             placeholder={
               useAzure
                 ? t('llm.AzureOpenAI.endpoint.placeholder')
@@ -126,7 +127,7 @@ const LLM = memo(() => {
   };
 
   return (
-    <Flexbox gap={24} width={'100%'}>
+    <Flexbox align={'center'} gap={24} width={'100%'}>
       <Form
         form={form}
         items={[openAI]}
