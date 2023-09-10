@@ -34,7 +34,7 @@ describe('globalSelectors', () => {
             },
           },
         },
-      } as GlobalStore;
+      } as unknown as GlobalStore;
 
       const result = globalSelectors.currentSettings(s);
 
