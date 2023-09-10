@@ -1,15 +1,14 @@
-import { AgentsMarketIndexItem, AgentsMarketItem } from '@/types/market';
+import { AgentsMarketIndexItem } from '@/types/market';
 
 export interface StroeState {
   agentList: AgentsMarketIndexItem[];
-  agentManifest?: AgentsMarketItem;
   agentManifestUrl?: string;
-  agentModalOpen: boolean;
   searchKeywords: string;
+  showAgentSidebar: boolean;
 }
 
 export const initialState: StroeState = {
   agentList: [],
-  agentModalOpen: false,
   searchKeywords: '',
+  showAgentSidebar: false,
 };

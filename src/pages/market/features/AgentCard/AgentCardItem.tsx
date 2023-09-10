@@ -8,28 +8,20 @@ import { Flexbox } from 'react-layout-kit';
 import { useMarketStore } from '@/store/market';
 import { AgentsMarketIndexItem } from '@/types/market';
 
+import AgentCardBanner from './AgentCardBanner';
 import { useStyles } from './style';
 
 const { Text, Paragraph } = Typography;
 
-const GridCardItem = memo<AgentsMarketIndexItem>(({ meta, manifest }) => {
+const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, manifest }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
+  const onAgentCardClick = useMarketStore((s) => s.onAgentCardClick);
   const { avatar, title, description, tags, backgroundColor } = meta;
   const { styles, theme } = useStyles();
   return (
-    <Flexbox
-      className={styles.container}
-      onClick={() => useMarketStore.setState({ agentManifestUrl: manifest, agentModalOpen: true })}
-    >
-      <Flexbox align={'flex-end'} className={styles.banner} justify={'center'}>
-        <Avatar
-          avatar={avatar}
-          background={backgroundColor || theme.colorBgContainer}
-          className={styles.bannerImg}
-          size={320}
-        />
-      </Flexbox>
+    <Flexbox className={styles.container} onClick={() => onAgentCardClick(manifest)}>
+      <AgentCardBanner meta={meta} />
       <Flexbox className={styles.inner} gap={8} ref={ref}>
         <Avatar
           animation={isHovering}
@@ -54,4 +46,4 @@ const GridCardItem = memo<AgentsMarketIndexItem>(({ meta, manifest }) => {
   );
 });
 
-export default GridCardItem;
+export default AgentCardItem;

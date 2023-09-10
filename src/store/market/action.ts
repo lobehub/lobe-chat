@@ -10,8 +10,10 @@ import type { Store } from './store';
 
 export interface StoreAction {
   generateAgentTagList: () => string[];
+  onAgentCardClick: (url: string) => void;
+  toggleMarketSideBar: (show: boolean) => void;
   useFetchAgentList: () => SWRResponse<LobeChatAgentsMarketIndex>;
-  useFetchAgentManifest: () => SWRResponse<AgentsMarketItem>;
+  useFetchAgentManifest: (url: string) => SWRResponse<AgentsMarketItem>;
 }
 
 export const createMarketAction: StateCreator<
@@ -25,16 +27,20 @@ export const createMarketAction: StateCreator<
     const rawAgentTagList = flatten(agentList.map((item) => item.meta.tags)) as string[];
     return findDuplicates(rawAgentTagList);
   },
+  onAgentCardClick: (url) => {
+    get().toggleMarketSideBar(true);
+    console.log(url);
+    set({ agentManifestUrl: url });
+  },
+  toggleMarketSideBar: (show) => {
+    set({ showAgentSidebar: show }, false, 'toggleMarketSideBar');
+  },
   useFetchAgentList: () =>
     useSWR<LobeChatAgentsMarketIndex>('fetchAgentList', getAgentList, {
       onSuccess: (agentMarketIndex) => {
         set({ agentList: agentMarketIndex.agents }, false, 'useFetchAgentList');
       },
     }),
-  useFetchAgentManifest: () =>
-    useSWR<AgentsMarketItem>('fetchAgentManifest', () => getAgentManifest(get().agentManifestUrl), {
-      onSuccess: (agentManifest) => {
-        set({ agentManifest }, false, 'useFetchAgentManifest');
-      },
-    }),
+  useFetchAgentManifest: (url) =>
+    useSWR<AgentsMarketItem>('fetchAgentManifest', () => getAgentManifest(url)),
 });

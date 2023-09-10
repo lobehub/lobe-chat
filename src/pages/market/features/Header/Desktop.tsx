@@ -30,7 +30,6 @@ const Header = memo(() => {
         <Button
           icon={<Icon icon={Bot} />}
           onClick={() => window.open(AGENTS_INDEX_GITHUB, '__blank')}
-          type={'primary'}
         >
           {t('submitAgent')}
         </Button>

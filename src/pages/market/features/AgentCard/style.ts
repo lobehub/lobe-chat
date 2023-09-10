@@ -4,15 +4,7 @@ export const useStyles = createStyles(({ css, token }) => ({
   avatar: css`
     box-shadow: 0 0 0 8px ${token.colorBgContainer};
   `,
-  banner: css`
-    overflow: hidden;
-    height: 64px;
-    margin-bottom: -32px;
-    background: ${token.colorFill};
-  `,
-  bannerImg: css`
-    filter: blur(40px) saturate(3.2);
-  `,
+
   container: css`
     position: relative;
     overflow: hidden;

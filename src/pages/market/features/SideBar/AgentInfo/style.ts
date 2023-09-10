@@ -9,9 +9,8 @@ export const useStyles = createStyles(({ css, token }) => ({
     flex: none;
   `,
   container: css`
-    position: relative;
-    overflow: hidden;
-    border-radius: 11px;
+    padding: 16px 16px 24px;
+    border-bottom: 1px solid ${token.colorBorderSecondary};
   `,
   date: css`
     font-size: 12px;
@@ -19,16 +18,22 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
   desc: css`
     color: ${token.colorTextDescription};
+    text-align: center;
   `,
-  prompt: css`
-    padding: 16px;
-    background: ${token.colorBgContainer};
-    border-radius: ${token.borderRadiusLG}px;
+  nav: css`
+    padding-top: 4px;
+
+    .ant-tabs-tab {
+      margin: 4px !important;
+
+      + .ant-tabs-tab {
+        margin: 4px !important;
+      }
+    }
   `,
   title: css`
-    overflow: hidden;
-    width: 288px;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
+    text-align: center;
   `,
 }));

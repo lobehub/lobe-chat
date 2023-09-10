@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import AgentSearchBar from '@/pages/market/features/AgentSearchBar';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
-import GridCard from './features/GridCard';
+import AgentCard from './features/AgentCard';
 import DesktopLayout from './layout';
 import MobileLayout from './layout.mobile';
 
@@ -24,7 +24,7 @@ const Market = memo(() => {
       </Head>
       <RenderLayout>
         <AgentSearchBar />
-        <GridCard />
+        <AgentCard />
       </RenderLayout>
     </>
   );
