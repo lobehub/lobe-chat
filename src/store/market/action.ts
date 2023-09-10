@@ -41,6 +41,5 @@ export const createMarketAction: StateCreator<
         set({ agentList: agentMarketIndex.agents }, false, 'useFetchAgentList');
       },
     }),
-  useFetchAgentManifest: (url) =>
-    useSWR<AgentsMarketItem>('fetchAgentManifest', () => getAgentManifest(url)),
+  useFetchAgentManifest: (url) => useSWR<AgentsMarketItem>(url, getAgentManifest),
 });
