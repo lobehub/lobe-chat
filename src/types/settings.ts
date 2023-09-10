@@ -14,8 +14,28 @@ export interface GlobalBaseSettings {
   /**
    * @deprecated
    */
+  compressThreshold?: number;
+  /**
+   * @deprecated
+   */
+  enableCompressThreshold?: boolean;
+  /**
+   * @deprecated
+   */
+  enableHistoryCount?: boolean;
+  /**
+   * @deprecated
+   */
+  enableMaxTokens?: boolean;
+  /**
+   * @deprecated
+   */
   endpoint?: string;
   fontSize: number;
+  /**
+   * @deprecated
+   */
+  historyCount?: number;
   language: Locales;
   neutralColor: NeutralColors | '';
   password: string;
