@@ -1,5 +1,5 @@
 import { Form, Markdown } from '@lobehub/ui';
-import { Form as AntForm, AutoComplete, Checkbox, Input } from 'antd';
+import { Form as AntForm, AutoComplete, Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { Webhook } from 'lucide-react';
@@ -61,7 +61,7 @@ const LLM = memo(() => {
         name: [configKey, 'openAI', 'endpoint'],
       },
       {
-        children: <Checkbox />,
+        children: <Switch />,
         desc: t('llm.OpenAI.useAzure.desc'),
         label: t('llm.OpenAI.useAzure.title'),
         name: [configKey, 'openAI', 'useAzure'],

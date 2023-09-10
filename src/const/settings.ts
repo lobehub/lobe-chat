@@ -33,7 +33,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   systemRole: '',
 };
 
-export const GLOBAL_LLM_CONFIG: GlobalLLMConfig = {
+export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   openAI: {
     OPENAI_API_KEY: '',
     azureApiVersion: '2023-08-01-preview',
@@ -48,6 +48,6 @@ export const DEFAULT_AGENT: GlobalDefaultAgent = {
 
 export const DEFAULT_SETTINGS: GlobalSettings = {
   defaultAgent: DEFAULT_AGENT,
-  languageModel: GLOBAL_LLM_CONFIG,
+  languageModel: DEFAULT_LLM_CONFIG,
   ...DEFAULT_BASE_SETTINGS,
 };

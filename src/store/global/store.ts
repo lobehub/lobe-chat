@@ -4,7 +4,7 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { DEFAULT_AGENT } from '@/const/settings';
+import { DEFAULT_AGENT, DEFAULT_LLM_CONFIG } from '@/const/settings';
 import { isDev } from '@/utils/env';
 
 import { createHyperStorage } from '../middleware/createHyperStorage';
@@ -30,12 +30,26 @@ type GlobalPersist = Pick<GlobalStore, 'preference' | 'settings'>;
 const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
   merge: (persistedState, currentState) => {
     const state = persistedState as GlobalPersist;
+
     return {
       ...currentState,
       ...state,
       settings: produce(state.settings, (draft) => {
         if (!draft.defaultAgent) {
           draft.defaultAgent = DEFAULT_AGENT;
+        }
+
+        //
+        if (!draft.languageModel) {
+          draft.languageModel = {
+            openAI: {
+              ...DEFAULT_LLM_CONFIG.openAI,
+              OPENAI_API_KEY: draft.OPENAI_API_KEY || DEFAULT_LLM_CONFIG.openAI.OPENAI_API_KEY,
+              endpoint: draft.endpoint || DEFAULT_LLM_CONFIG.openAI.OPENAI_API_KEY,
+            },
+          };
+          delete draft.OPENAI_API_KEY;
+          delete draft.endpoint;
         }
       }),
     };
