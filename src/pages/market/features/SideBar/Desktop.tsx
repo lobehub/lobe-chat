@@ -38,7 +38,13 @@ const SideBar = memo<{ children: ReactNode }>(({ children }) => {
       onExpandChange={toggleConfig}
       placement={'right'}
     >
-      <DraggablePanelContainer style={{ minWidth: MARKET_SIDEBAR_WIDTH }}>
+      <DraggablePanelContainer
+        style={{
+          flex: 'none',
+          height: '100vh',
+          minWidth: MARKET_SIDEBAR_WIDTH,
+        }}
+      >
         <SafeSpacing />
         <DraggablePanelBody style={{ padding: 0 }}>{children}</DraggablePanelBody>
       </DraggablePanelContainer>
