@@ -23,9 +23,7 @@ export const createMarketAction: StateCreator<
   generateAgentTagList: () => {
     const agentList = get().agentList;
     const rawAgentTagList = flatten(agentList.map((item) => item.meta.tags)) as string[];
-    const duplicates = findDuplicates(rawAgentTagList);
-    set({ agentTagList: duplicates });
-    return duplicates;
+    return findDuplicates(rawAgentTagList);
   },
   useFetchAgentList: () =>
     useSWR<LobeChatAgentsMarketIndex>('fetchAgentList', getAgentList, {

@@ -1,5 +1,6 @@
 {
   "search": {
     "placeholder": "Search assistant..."
-  }
+  },
+  "submitAgent": "Submit Assistant"
 }

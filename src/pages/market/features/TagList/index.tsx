@@ -8,11 +8,18 @@ import { selectors, useMarketStore } from '@/store/market';
 
 const TagList = memo(() => {
   const agentTagList = useMarketStore(selectors.getAgentTagList, isEqual);
+  const keywords = useMarketStore((s) => s.searchKeywords);
+
   return (
     <Flexbox gap={8} horizontal style={{ flexWrap: 'wrap' }}>
       {agentTagList.map((item) => (
-        <Button key={item} size={'small'}>
-          {startCase(item.trim())}
+        <Button
+          key={item}
+          onClick={() => useMarketStore.setState({ searchKeywords: item })}
+          size={'small'}
+          type={keywords === item ? 'primary' : 'default'}
+        >
+          {startCase(item)}
         </Button>
       ))}
     </Flexbox>

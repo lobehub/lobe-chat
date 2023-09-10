@@ -5,7 +5,7 @@ import AppMobileLayout from '@/layout/AppMobileLayout';
 
 import Header from './features/Header';
 
-const ChatMobileLayout = memo<{ children: ReactNode }>(({ children }) => {
+const MarketLayout = memo<{ children: ReactNode }>(({ children }) => {
   return (
     <AppMobileLayout navBar={<Header />} showTabBar>
       <Flexbox flex={1} gap={16} style={{ padding: 16 }}>
@@ -15,4 +15,4 @@ const ChatMobileLayout = memo<{ children: ReactNode }>(({ children }) => {
   );
 });
 
-export default ChatMobileLayout;
+export default MarketLayout;

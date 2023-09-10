@@ -7,7 +7,7 @@ import { useMarketStore } from '@/store/market';
 
 const AgentSearchBar = memo(() => {
   const { t } = useTranslation('market');
-  const [keywords] = useMarketStore((s) => [s.searchKeywords]);
+  const keywords = useMarketStore((s) => s.searchKeywords);
   const { mobile } = useResponsive();
   return (
     <SearchBar

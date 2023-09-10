@@ -114,5 +114,13 @@
     "title": "Weather Data for the Next 7 Days ({{city}})",
     "updateAt": "Last Updated"
   },
-  "responseData": "Response Data"
+  "responseData": "Response Data",
+  "settings": {
+    "indexUrl": {
+      "title": "Marketplace Index",
+      "tooltip": "Editing is not supported at the moment"
+    },
+    "modalDesc": "After configuring the address of the plugin marketplace, you can use a custom plugin marketplace",
+    "title": "Configure Plugin Marketplace"
+  }
 }

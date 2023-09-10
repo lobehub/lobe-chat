@@ -1,18 +1,20 @@
 import { consola } from 'consola';
 import { colors } from 'consola/utils';
-import fs from 'node:fs';
-import { resolve } from 'node:path';
 
 import i18nConfig from '../.i18nrc';
+import { entryLocaleJsonFilepath, localesResourcesFilepath } from './const';
+import { writeJSON } from './utils';
 
-export const genDefaultLocale = (input: string) => {
+export const genDefaultLocale = () => {
   consola.info(`Default locale is ${i18nConfig.entryLocale}...`);
-  const resources = require(`../${input}/${i18nConfig.entryLocale}`);
+
+  const resources = require(localesResourcesFilepath(i18nConfig.entryLocale));
   const data = Object.entries(resources.default);
   consola.start(`Generate default locale json, found ${data.length} namespaces...`);
+
   for (const [ns, value] of data) {
-    const filepath = resolve(i18nConfig.output, i18nConfig.entryLocale, `${ns}.json`);
-    fs.writeFileSync(filepath, JSON.stringify(value, null, 2));
+    const filepath = entryLocaleJsonFilepath(`${ns}.json`);
+    writeJSON(filepath, value);
     consola.success(colors.bgWhiteBright(colors.black(` ${ns} `)), colors.gray(filepath));
   }
 };

@@ -1,10 +1,10 @@
+import { EmptyCard } from '@lobehub/ui';
 import { useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Empty from '@/components/Empty';
 import { useGlobalStore } from '@/store/global';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { topicSelectors } from '@/store/session/selectors';
@@ -36,7 +36,7 @@ export const Topic = () => {
   ) : (
     <Flexbox gap={2} style={{ marginBottom: 12 }}>
       {topics?.length === 0 && (
-        <Empty
+        <EmptyCard
           alt={t('topic.desc')}
           cover={`/images/empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`}
           desc={t('topic.desc')}
@@ -51,7 +51,11 @@ export const Topic = () => {
         />
       )}
 
-      <TopicItem active={!activeTopicId} fav={false} title={'默认话题'} />
+      <TopicItem
+        active={!activeTopicId}
+        fav={false}
+        title={t('topic.defaultTitle', { ns: 'common' })}
+      />
 
       {topicsData.map(({ id, favorite, title }) => (
         <TopicItem active={activeTopicId === id} fav={favorite} id={id} key={id} title={title} />

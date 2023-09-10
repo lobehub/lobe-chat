@@ -19,7 +19,8 @@ export const getPluginIndexJSON = (lang: Locales = 'en-US', baseUrl = PLUGINS_IN
   return `${baseUrl}.${lang}.json`;
 };
 
-export const AGENTS_INDEX_URL = process.env.AGENTS_INDEX_URL ?? 'https://chat-agents.lobehub.com';
+export const AGENTS_INDEX_URL =
+  process.env.AGENTS_INDEX_URL ?? 'https://chat-agents.lobehub.com/index';
 
 export const getAgentIndexJSON = (lang: Locales = 'en-US', baseUrl = AGENTS_INDEX_URL) => {
   if (lang === 'en-US') return baseUrl;
