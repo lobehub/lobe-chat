@@ -24,7 +24,7 @@ export const createHeaderWithOpenAI = (header?: HeadersInit): HeadersInit => {
 
   if (openai.useAzure) {
     Object.assign(result, {
-      [AZURE_OPENAI_API_VERSION]: openai.azureApiVersion,
+      [AZURE_OPENAI_API_VERSION]: openai.azureApiVersion || '',
       [USE_AZURE_OPENAI]: '1',
     });
   }

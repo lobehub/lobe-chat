@@ -1,7 +1,8 @@
 import OpenAI from 'openai';
 
+import { getClientConfig } from '@/config/client';
 import { getOpenAIAuthFromRequest } from '@/const/fetch';
-import { ChatErrorType, ErrorType } from '@/types/fetch';
+import { ErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
 
 import { checkAuth } from '../auth';
@@ -24,17 +25,12 @@ export default async function handler(req: Request) {
   }
 
   let openai: OpenAI;
-  if (useAzure) {
-    if (!apiVersion) return createErrorResponse(ChatErrorType.BadRequest);
 
-    // `https://test-001.openai.azure.com/openai/deployments/gpt-35-turbo`,
-    const url = `${endpoint}/openai/deployments/${payload.model.replace('.', '')}`;
+  const { USE_AZURE_OPENAI } = getClientConfig();
+  const useAzureOpenAI = useAzure || USE_AZURE_OPENAI;
 
-    openai = createAzureOpenai({
-      apiVersion,
-      endpoint: url,
-      userApiKey: apiKey,
-    });
+  if (useAzureOpenAI) {
+    openai = createAzureOpenai({ apiVersion, endpoint, model: payload.model, userApiKey: apiKey });
   } else {
     openai = createOpenai(apiKey, endpoint);
   }
