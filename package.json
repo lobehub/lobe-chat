@@ -89,7 +89,7 @@
     "lucide-react": "latest",
     "nanoid": "^4",
     "next": "13.4.7",
-    "openai": "^4.5.0",
+    "openai": "^4.6.0",
     "polished": "^4",
     "react": "^18",
     "react-dom": "^18",
