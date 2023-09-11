@@ -33,7 +33,7 @@ const Header = memo(() => {
         </Link>
         <ActionIcon
           icon={MessageSquarePlus}
-          onClick={createSession}
+          onClick={() => createSession()}
           size={{ fontSize: 24 }}
           style={{ flex: 'none' }}
           title={t('newAgent')}

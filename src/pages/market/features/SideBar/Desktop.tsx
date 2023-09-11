@@ -1,10 +1,10 @@
 import { DraggablePanel, DraggablePanelBody, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ReactNode, memo } from 'react';
+import { ReactNode, memo, useState } from 'react';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { MARKET_SIDEBAR_WIDTH } from '@/const/layoutTokens';
-import { useMarketStore } from '@/store/market';
+import { agentMarketSelectors, useMarketStore } from '@/store/market';
 
 const useStyles = createStyles(({ css, token, stylish }) => ({
   content: css`
@@ -22,9 +22,11 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
 
 const SideBar = memo<{ children: ReactNode }>(({ children }) => {
   const { styles } = useStyles();
-  const [showAgentSidebar, toggleConfig] = useMarketStore((s) => [
-    s.showAgentSidebar,
-    s.toggleMarketSideBar,
+  const [tempId, setTempId] = useState<string>('');
+  const [showAgentSidebar, deactivateAgent, activateAgent] = useMarketStore((s) => [
+    agentMarketSelectors.showSideBar(s),
+    s.deactivateAgent,
+    s.activateAgent,
   ]);
 
   return (
@@ -36,7 +38,14 @@ const SideBar = memo<{ children: ReactNode }>(({ children }) => {
       expand={showAgentSidebar}
       minWidth={MARKET_SIDEBAR_WIDTH}
       mode={'fixed'}
-      onExpandChange={toggleConfig}
+      onExpandChange={(show) => {
+        if (!show) {
+          setTempId(useMarketStore.getState().currentIdentifier);
+          deactivateAgent();
+        } else if (tempId) {
+          activateAgent(tempId);
+        }
+      }}
       placement={'right'}
     >
       <DraggablePanelContainer

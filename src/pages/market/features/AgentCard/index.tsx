@@ -1,8 +1,7 @@
 import { SpotlightCard } from '@lobehub/ui';
-import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
 
-import { selectors, useMarketStore } from '@/store/market';
+import { agentMarketSelectors, useMarketStore } from '@/store/market';
 
 import TagList from '../TagList';
 import AgentCardItem from './AgentCardItem';
@@ -11,7 +10,7 @@ import Loading from './Loading';
 const gridRender = (item: any) => <AgentCardItem {...item} />;
 
 const AgentCard = memo(() => {
-  const agentList = useMarketStore(selectors.getAgentList, isEqual);
+  const agentList = useMarketStore(agentMarketSelectors.getAgentList);
 
   const [useFetchAgentList, keywords] = useMarketStore((s) => [
     s.useFetchAgentList,

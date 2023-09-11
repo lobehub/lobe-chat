@@ -4,10 +4,10 @@ import { startCase } from 'lodash-es';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { selectors, useMarketStore } from '@/store/market';
+import { agentMarketSelectors, useMarketStore } from '@/store/market';
 
 const TagList = memo(() => {
-  const agentTagList = useMarketStore(selectors.getAgentTagList, isEqual);
+  const agentTagList = useMarketStore(agentMarketSelectors.getAgentTagList, isEqual);
   const keywords = useMarketStore((s) => s.searchKeywords);
 
   return (

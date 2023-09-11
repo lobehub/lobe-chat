@@ -12,7 +12,7 @@ const AddButton = memo<ButtonProps>((props) => {
   const createSession = useSessionStore((s) => s.createSession);
   return (
     <Flexbox style={{ margin: '12px 16px' }}>
-      <Button block icon={<Icon icon={Plus} />} onClick={createSession} {...props}>
+      <Button block icon={<Icon icon={Plus} />} onClick={() => createSession()} {...props}>
         {t('newAgent')}
       </Button>
     </Flexbox>

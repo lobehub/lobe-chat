@@ -16,7 +16,7 @@ const { Paragraph } = Typography;
 const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
-  const onAgentCardClick = useMarketStore((s) => s.onAgentCardClick);
+  const onAgentCardClick = useMarketStore((s) => s.activateAgent);
   const { avatar, title, description, tags, backgroundColor } = meta;
   const { styles, theme } = useStyles();
   const { isDarkMode } = useThemeMode();

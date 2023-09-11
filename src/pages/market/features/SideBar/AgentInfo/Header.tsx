@@ -5,9 +5,12 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
-import { useStyles } from '@/pages/market/features/SideBar/AgentInfo/style';
-import { useMarketStore } from '@/store/market';
+import { useGlobalStore } from '@/store/global';
+import { agentMarketSelectors, useMarketStore } from '@/store/market';
+import { useSessionStore } from '@/store/session';
 import { AgentsMarketItem } from '@/types/market';
+
+import { useStyles } from './style';
 
 const { Link } = Typography;
 
@@ -16,6 +19,10 @@ const Header = memo<AgentsMarketItem>(({ meta, createAt, author, homepage }) => 
   const { styles, theme } = useStyles();
 
   const { avatar, title, description, tags, backgroundColor } = meta;
+
+  const createSession = useSessionStore((s) => s.createSession);
+  const switchSideBar = useGlobalStore((s) => s.switchSideBar);
+  const agentItem = useMarketStore(agentMarketSelectors.currentAgentItem);
 
   return (
     <Center className={styles.container} gap={16}>
@@ -41,7 +48,16 @@ const Header = memo<AgentsMarketItem>(({ meta, createAt, author, homepage }) => 
       <Link className={styles.author} href={homepage} target={'_blank'}>
         @{author}
       </Link>
-      <Button block type={'primary'}>
+      <Button
+        block
+        onClick={() => {
+          if (!agentItem) return;
+
+          createSession({ config: agentItem.config, meta: agentItem.meta });
+          switchSideBar('chat');
+        }}
+        type={'primary'}
+      >
         {t('addAgent')}
       </Button>
       <div className={styles.date}>{createAt}</div>

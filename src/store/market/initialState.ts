@@ -1,15 +1,17 @@
-import { AgentsMarketIndexItem } from '@/types/market';
+import { AgentsMarketIndexItem, AgentsMarketItem } from '@/types/market';
 
-export interface StroeState {
+export type MarketAgentMap = Record<string, AgentsMarketItem>;
+
+export interface StoreState {
   agentList: AgentsMarketIndexItem[];
+  agentMap: MarketAgentMap;
   currentIdentifier: string;
   searchKeywords: string;
-  showAgentSidebar: boolean;
 }
 
-export const initialState: StroeState = {
+export const initialState: StoreState = {
   agentList: [],
+  agentMap: {},
   currentIdentifier: '',
   searchKeywords: '',
-  showAgentSidebar: false,
 };

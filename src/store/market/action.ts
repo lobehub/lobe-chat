@@ -1,17 +1,17 @@
-import { flatten } from 'lodash-es';
+import isEqual from 'fast-deep-equal';
+import { produce } from 'immer';
 import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { getAgentList, getAgentManifest } from '@/services/agentMarket';
 import { AgentsMarketItem, LobeChatAgentsMarketIndex } from '@/types/market';
-import { findDuplicates } from '@/utils/findDuplicates';
 
 import type { Store } from './store';
 
 export interface StoreAction {
-  generateAgentTagList: () => string[];
-  onAgentCardClick: (identifier: string) => void;
-  toggleMarketSideBar: (show: boolean) => void;
+  activateAgent: (identifier: string) => void;
+  deactivateAgent: () => void;
+  updateAgentMap: (key: string, value: AgentsMarketItem) => void;
   useFetchAgent: (identifier: string) => SWRResponse<AgentsMarketItem>;
   useFetchAgentList: () => SWRResponse<LobeChatAgentsMarketIndex>;
 }
@@ -22,19 +22,29 @@ export const createMarketAction: StateCreator<
   [],
   StoreAction
 > = (set, get) => ({
-  generateAgentTagList: () => {
-    const agentList = get().agentList;
-    const rawAgentTagList = flatten(agentList.map((item) => item.meta.tags)) as string[];
-    return findDuplicates(rawAgentTagList);
-  },
-  onAgentCardClick: (identifier) => {
-    get().toggleMarketSideBar(true);
+  activateAgent: (identifier) => {
     set({ currentIdentifier: identifier });
   },
-  toggleMarketSideBar: (show) => {
-    set({ showAgentSidebar: show }, false, 'toggleMarketSideBar');
+  deactivateAgent: () => {
+    set({ currentIdentifier: undefined }, false, 'deactivateAgent');
   },
-  useFetchAgent: (identifier) => useSWR<AgentsMarketItem>(identifier, getAgentManifest),
+  updateAgentMap: (key, value) => {
+    const { agentMap } = get();
+
+    const nextAgentMap = produce(agentMap, (draft) => {
+      draft[key] = value;
+    });
+
+    if (isEqual(nextAgentMap, agentMap)) return;
+
+    set({ agentMap: nextAgentMap }, false, `setAgentMap/${key}`);
+  },
+  useFetchAgent: (identifier) =>
+    useSWR<AgentsMarketItem>(identifier, getAgentManifest, {
+      onSuccess: (data, key) => {
+        get().updateAgentMap(key, data);
+      },
+    }),
   useFetchAgentList: () =>
     useSWR<LobeChatAgentsMarketIndex>('fetchAgentList', getAgentList, {
       onSuccess: (agentMarketIndex) => {

@@ -1,13 +1,14 @@
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 import Router from 'next/router';
+import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
-import { LobeAgentSession, LobeSessions } from '@/types/session';
+import { LobeAgentSession, LobeAgentSettings, LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 import { uuid } from '@/utils/uuid';
 
@@ -24,7 +25,7 @@ export interface SessionAction {
    * @param session - 会话信息
    * @returns void
    */
-  createSession: () => Promise<string>;
+  createSession: (agent?: DeepPartial<LobeAgentSettings>) => Promise<string>;
   /**
    * 变更session
    * @param payload - 聊天记录
@@ -79,7 +80,7 @@ export const createSessionSlice: StateCreator<
     set({ sessions: {} }, false, t('clearSessions'));
   },
 
-  createSession: async () => {
+  createSession: async (agent) => {
     const { dispatchSession, switchSession } = get();
 
     const timestamp = Date.now();
@@ -87,6 +88,7 @@ export const createSessionSlice: StateCreator<
     // 合并 settings 里的 defaultAgent
     const globalDefaultAgent = useGlobalStore.getState().settings.defaultAgent;
     const newSession: LobeAgentSession = merge({}, initLobeSession, globalDefaultAgent, {
+      ...agent,
       createAt: timestamp,
       id: uuid(),
       updateAt: timestamp,
