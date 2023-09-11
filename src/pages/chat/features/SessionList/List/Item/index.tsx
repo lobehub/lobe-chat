@@ -1,7 +1,7 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
 import { Avatar, List, Tag } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { createStyles } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
 import { memo, useMemo, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
@@ -34,7 +34,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const isHovering = useHover(ref);
-
+  const { mobile } = useResponsive();
   const { styles } = useStyles();
   const [defaultModel] = useGlobalStore((s) => [globalSelectors.defaultAgentConfig(s).model]);
 
@@ -98,7 +98,8 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   return (
     <Item
       actions={actions}
-      active={active}
+      // needn't active state in mobile
+      active={mobile ? false : active}
       addon={addon}
       avatar={avatarRender}
       className={styles.container}

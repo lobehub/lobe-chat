@@ -9,7 +9,7 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { LanguageModel } from '@/types/llm';
 
-const InputActions = memo(() => {
+const ActionLeft = memo(() => {
   const { t } = useTranslation('setting');
 
   const [model, temperature, historyCount, unlimited, updateAgentConfig] = useSessionStore((s) => {
@@ -107,4 +107,4 @@ const InputActions = memo(() => {
   );
 });
 
-export default InputActions;
+export default ActionLeft;

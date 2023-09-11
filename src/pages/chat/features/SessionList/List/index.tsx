@@ -26,10 +26,8 @@ const SessionList = memo(() => {
       <Link
         href={SESSION_CHAT_URL(id, mobile)}
         key={id}
-        // replace onClick with onPointerDown to prevent double click on mobile
-        onPointerDown={(e) => {
+        onClick={(e) => {
           e.preventDefault();
-
           if (mobile) switchSession(id);
           else activeSession(id);
         }}

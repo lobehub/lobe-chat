@@ -1,64 +1,46 @@
-import { ChatInputArea, DraggablePanel } from '@lobehub/ui';
+import { ChatInputArea } from '@lobehub/ui';
+import { useResponsive } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
+import { CHAT_TEXTAREA_HEIGHT } from '@/const/layoutTokens';
 import { useSessionStore } from '@/store/session';
 
-import InputActions from './Action';
-import ActionsRight from './ActionRight';
+import ActionLeft from './ActionBar/ActionLeft';
+import ActionsRight from './ActionBar/ActionRight';
+import Token from './ActionBar/Token';
+import Desktop from './Desktop';
 import Footer from './Footer';
-import Token from './Token';
+import Mobile from './Mobile';
 
 const ChatInput = () => {
   const { t } = useTranslation('common');
   const [expand, setExpand] = useState<boolean>(false);
   const [message, setMessage] = useState('');
+  const { mobile } = useResponsive();
 
-  const [inputHeight, updatePreference] = useGlobalStore((s) => [
-    s.preference.inputHeight,
-    s.updatePreference,
+  const [isLoading, sendMessage, stopGenerateMessage] = useSessionStore((s) => [
+    !!s.chatLoadingId,
+    s.sendMessage,
+    s.stopGenerateMessage,
   ]);
-  const [isLoading, hasTopic, sendMessage, saveToTopic, stopGenerateMessage] = useSessionStore(
-    (s) => [
-      !!s.chatLoadingId,
-      !!s.activeTopicId,
-      s.sendMessage,
-      s.saveToTopic,
-      s.stopGenerateMessage,
-    ],
-  );
+
+  const Render = mobile ? Mobile : Desktop;
 
   return (
-    <DraggablePanel
-      expandable={false}
-      fullscreen={expand}
-      headerHeight={HEADER_HEIGHT}
-      minHeight={CHAT_TEXTAREA_HEIGHT}
-      onSizeChange={(_, size) => {
-        if (!size) return;
-
-        updatePreference({
-          inputHeight: typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
-        });
-      }}
-      placement="bottom"
-      size={{ height: inputHeight, width: '100%' }}
-      style={{ zIndex: 10 }}
-    >
+    <Render expand={expand}>
       <ChatInputArea
         actions={
           <>
-            <InputActions />
+            <ActionLeft />
             <Token input={message} />
           </>
         }
         actionsRight={<ActionsRight />}
         expand={expand}
-        footer={<Footer hasTopic={hasTopic} saveToTopic={saveToTopic} />}
+        footer={<Footer />}
         loading={isLoading}
-        minHeight={CHAT_TEXTAREA_HEIGHT}
+        minHeight={mobile ? 0 : CHAT_TEXTAREA_HEIGHT}
         onExpandChange={setExpand}
         onInputChange={setMessage}
         onSend={sendMessage}
@@ -70,7 +52,7 @@ const ChatInput = () => {
         }}
         value={message}
       />
-    </DraggablePanel>
+    </Render>
   );
 };
 
