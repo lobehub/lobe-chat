@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.76.1](https://github.com/lobehub/lobe-chat/compare/v0.76.0...v0.76.1)
+
+<sup>Released on **2023-09-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix save topic button.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix save topic button ([871905f](https://github.com/lobehub/lobe-chat/commit/871905f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.76.0](https://github.com/lobehub/lobe-chat/compare/v0.75.0...v0.76.0)
 
 <sup>Released on **2023-09-11**</sup>
