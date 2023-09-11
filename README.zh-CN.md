@@ -35,12 +35,21 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 #### TOC
 
 - [👋🏻 开始使用 & 交流](#-开始使用--交流)
+
 - [✨ 功能特性](#-功能特性)
+
 - [🛳 开箱即用](#-开箱即用)
+
+  - [保持更新](#保持更新)
+
 - [📦 生态系统](#-生态系统)
+
 - [🧩 插件体系](#-插件体系)
+
 - [⌨️ 本地开发](#️-本地开发)
+
 - [🤝 参与贡献](#-参与贡献)
+
 - [🔗 更多工具](#-更多工具)
 
 ####
@@ -98,6 +107,10 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 | `OPENAI_API_KEY`   | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                | `sk-xxxxxx...xxxxxx`                                                   |
 | `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL | `https://api.chatanywhere.cn`<br/>默认值:<br/>`https://api.openai.com` |
 | `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                          | `awCT74` 或 `e3@09!`                                                   |
+
+### 保持更新
+
+如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示“有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。我们建议按照 [LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN) 步骤重新部署。
 
 <div align="right">
 

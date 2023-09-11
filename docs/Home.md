@@ -14,6 +14,12 @@ LobeChat is a open-source, extensible (Function Calling), high-performance chatb
 
 <br/>
 
+### 🤯 LobeChat
+
+- [Upstream Sync](Upstream-Sync.en-US)
+  - [English](Upstream-Sync.en-US)
+  - [简体中文](Upstream-Sync.zh-CN)
+
 ## 🤖 Agents
 
 - [Agent Index](https://github.com/lobehub/lobe-chat-agents)

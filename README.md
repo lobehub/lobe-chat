@@ -10,7 +10,7 @@
 
 LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
 
-**English** · [简体中文](./README-zh_CN.md) · [Changelog](./CHANGELOG.md) · [Report Bug][issues-url] · [Request Feature][issues-url]
+**English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Report Bug][issues-url] · [Request Feature][issues-url]
 
 <!-- SHIELD GROUP -->
 
@@ -35,12 +35,21 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 #### TOC
 
 - [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
+
 - [✨ Features](#-features)
+
 - [🛳 Self Hosting](#-self-hosting)
+
+  - [Keep Updated](#keep-updated)
+
 - [📦 Ecosystem](#-ecosystem)
+
 - [🧩 Plugins](#-plugins)
+
 - [⌨️ Local Development](#️-local-development)
+
 - [🤝 Contributing](#-contributing)
+
 - [🔗 More Products](#-more-products)
 
 ####
@@ -98,6 +107,10 @@ LobeChat provides a [self-hosted version][deploy-url] with Vercel. This allows y
 | `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                      | `sk-xxxxxx...xxxxxx`                                                                |
 | `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL | `https://api.chatanywhere.cn`<br/>The default value is<br/>`https://api.openai.com` |
 | `ACCESS_CODE`        | No       | Add a password to access this service, the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                |
+
+### Keep Updated
+
+If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available". This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to accurately detect updates. We suggest you redeploy using the following steps, [Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.en-US).
 
 <div align="right">
 
