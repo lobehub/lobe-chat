@@ -190,8 +190,8 @@
     "add": "Add",
     "addTooltip": "Add custom plugin",
     "config": "{{id}} Plugin Configuration",
-    "clearDeprecated": "Remove invalid plugins",
-    "settings": "Plugin Market Settings"
+    "clearDeprecated": "Remove Deprecated Plugins",
+    "settings": "Plugin Marketplace Settings"
   },
   "settingSystem": {
     "accessCode": {
