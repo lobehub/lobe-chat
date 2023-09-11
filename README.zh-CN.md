@@ -268,7 +268,7 @@ This project is [MIT](./LICENSE) licensed.
 [official-shield]: https://img.shields.io/website?down_message=offline&label=🤯%20Try%20LobeChat&up_message=online&url=https%3A%2F%2Flobe-chat.vercel.app&style=for-the-badge
 [official-url]: https://lobe-chat.vercel.app
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-FEE064?style=for-the-badge
-[pr-welcome-url]: https://github.com/lobehub/lobe-chat-agents
+[pr-welcome-url]: https://github.com/lobehub/lobe-chat/pulls
 [profile-url]: https://github.com/lobehub
 [project-url]: https://github.com/lobehub/lobe-chat/projects
 [release-date-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?style=flat
