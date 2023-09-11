@@ -73,6 +73,7 @@ export default {
       useAzure: {
         desc: '使用 Azure 提供的 OpenAI 服务',
         fetch: '获取列表',
+        serverConfig: '管理员在服务端配置开启了 Azure OpenAI，禁止切换',
         title: 'Azure OpenAI',
       },
     },

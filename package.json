@@ -65,7 +65,6 @@
   "dependencies": {
     "@ant-design/colors": "^7",
     "@ant-design/icons": "^5",
-    "@azure/openai": "latest",
     "@emoji-mart/data": "^1",
     "@emoji-mart/react": "^1",
     "@icons-pack/react-simple-icons": "^9",

@@ -8,6 +8,7 @@ import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { getClientConfig } from '@/config/client';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { globalSelectors, useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
 
@@ -81,7 +82,17 @@ const LLM = memo(() => {
         name: [configKey, 'openAI', 'endpoint'],
       },
       {
-        children: <Switch />,
+        children: (
+          <Switch disabled={getClientConfig().USE_AZURE_OPENAI} />
+          //   <Flexbox gap={4}>
+          //   <div>
+          //
+          //   </div>
+          //   {getClientConfig().USE_AZURE_OPENAI && (
+          //     <div className={styles.tip}>{t('llm.OpenAI.useAzure.serverConfig')}</div>
+          //   )}
+          // </Flexbox>
+        ),
         desc: t('llm.OpenAI.useAzure.desc'),
         label: t('llm.OpenAI.useAzure.title'),
         name: [configKey, 'openAI', 'useAzure'],
