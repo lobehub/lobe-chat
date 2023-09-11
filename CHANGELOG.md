@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.76.2](https://github.com/lobehub/lobe-chat/compare/v0.76.1...v0.76.2)
+
+<sup>Released on **2023-09-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix client config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix client config ([d62f1b3](https://github.com/lobehub/lobe-chat/commit/d62f1b3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.76.1](https://github.com/lobehub/lobe-chat/compare/v0.76.0...v0.76.1)
 
 <sup>Released on **2023-09-11**</sup>
