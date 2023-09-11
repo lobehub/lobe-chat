@@ -21,7 +21,7 @@ export interface GlobalState {
    * 用户设置
    */
   settings: GlobalSettings;
-  settingsTab: SettingsTabs;
+  settingsTab?: SettingsTabs;
   sidebarKey: SidebarTabKey;
 }
 
@@ -44,6 +44,5 @@ export const initialState: GlobalState = {
     showSessionPanel: true,
   },
   settings: DEFAULT_SETTINGS,
-  settingsTab: 'common',
   sidebarKey: 'chat',
 };

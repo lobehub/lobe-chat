@@ -2,7 +2,7 @@ import { GridBackground, Icon, Logo, TabsNav } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { PackageCheck } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -64,6 +64,21 @@ const Settings = memo(() => {
 
   const [tab, setTab] = useGlobalStore((s) => [s.settingsTab, s.switchSettingTabs]);
 
+  const content = useMemo(() => {
+    switch (tab) {
+      case 'llm': {
+        return <LLM />;
+      }
+      case 'agent': {
+        return <Agent />;
+      }
+      default:
+      case 'common': {
+        return <Common />;
+      }
+    }
+  }, [tab]);
+
   return (
     <Center gap={16} width={'100%'}>
       <Flexbox align={'flex-end'} className={styles.tabs} horizontal justify={'center'}>
@@ -91,9 +106,7 @@ const Settings = memo(() => {
           <div>{`${pkg.version}`}</div>
         </Flexbox>
       </Flexbox>
-      {tab === 'common' && <Common />}
-      {tab === 'llm' && <LLM />}
-      {tab === 'agent' && <Agent />}
+      {content}
     </Center>
   );
 });
