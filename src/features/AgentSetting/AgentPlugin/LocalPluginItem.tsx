@@ -3,8 +3,8 @@ import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import DevModal from 'src/features/PluginDevModal';
 
+import DevModal from '@/features/PluginDevModal';
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 
 import { useStore } from '../store';
@@ -14,14 +14,16 @@ const MarketList = memo<{ id: string }>(({ id }) => {
 
   const [showModal, setModal] = useState(false);
 
-  const updateConfig = useStore((s) => s.toggleAgentPlugin);
-  const [plugins, hasPlugin] = useStore((s) => [s.config.plugins || [], !!s.config.plugins]);
+  const [toggleAgentPlugin, hasPlugin] = useStore((s) => [s.toggleAgentPlugin, !!s.config.plugins]);
+  const plugins = useStore((s) => s.config.plugins || []);
 
-  const [useFetchPluginList, fetchPluginManifest, dispatchDevPluginList] = usePluginStore((s) => [
-    s.useFetchPluginList,
-    s.fetchPluginManifest,
-    s.dispatchDevPluginList,
-  ]);
+  const [useFetchPluginList, fetchPluginManifest, deleteCustomPlugin, updateCustomPlugin] =
+    usePluginStore((s) => [
+      s.useFetchPluginList,
+      s.fetchPluginManifest,
+      s.deleteCustomPlugin,
+      s.updateCustomPlugin,
+    ]);
 
   const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
   const devPlugin = usePluginStore(pluginSelectors.getDevPluginById(id), isEqual);
@@ -31,15 +33,16 @@ const MarketList = memo<{ id: string }>(({ id }) => {
   return (
     <>
       <DevModal
+        mode={'edit'}
         onDelete={() => {
-          dispatchDevPluginList({ id, type: 'deleteItem' });
+          deleteCustomPlugin(id);
+          toggleAgentPlugin(id, false);
         }}
         onOpenChange={setModal}
         onSave={(value) => {
-          dispatchDevPluginList({ id, plugin: value, type: 'updateItem' });
+          updateCustomPlugin(id, value);
         }}
         open={showModal}
-        showDelete
         value={devPlugin}
       />
 
@@ -51,7 +54,7 @@ const MarketList = memo<{ id: string }>(({ id }) => {
           }
           loading={pluginManifestLoading[id]}
           onChange={(checked) => {
-            updateConfig(id);
+            toggleAgentPlugin(id);
             if (checked) {
               fetchPluginManifest(id);
             }

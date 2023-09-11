@@ -1,4 +1,3 @@
-
 export default {
   danger: {
     clear: {
@@ -20,6 +19,64 @@ export default {
     global: '全局设置',
     session: '会话设置',
     sessionWithName: '会话设置 · {{name}}',
+  },
+  llm: {
+    AzureOpenAI: {
+      endpoint: {
+        desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值',
+        placeholder: 'https://docs-test-001.openai.azure.com',
+        title: 'Azure API 地址',
+      },
+      models: {
+        desc: '支持的模型',
+        title: '模型列表',
+      },
+      title: 'Azure OpenAI 设置',
+      token: {
+        desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值。 可以使用 KEY1 或 KEY2',
+        placeholder: 'Azure API Key',
+        title: 'API Key',
+      },
+    },
+    OpenAI: {
+      azureApiVersion: {
+        desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
+        fetch: '获取列表',
+        title: 'Azure Api Version',
+      },
+      check: {
+        button: '检查',
+        desc: '测试 Api Key 与代理地址是否正确填写',
+        pass: '检查通过',
+        title: '连通性检查',
+      },
+      endpoint: {
+        desc: '除默认地址外，必须包含 http(s)://',
+        placeholder: 'https://api.openai.com/v1',
+        title: '接口代理地址',
+      },
+      models: {
+        count: '共支持 {{count}} 个模型',
+        desc: '支持的模型',
+        fetch: '获取模型列表',
+        notSupport: 'Azure OpenAI 暂不支持查看模型列表',
+        notSupportTip: '你需要自行确保部署名称与模型名称一致',
+        refetch: '重新获取模型列表',
+        title: '模型列表',
+      },
+      title: 'OpenAI 设置',
+      token: {
+        desc: '使用自己的 OpenAI Key',
+        placeholder: 'OpenAI API Key',
+        title: 'API Key',
+      },
+      useAzure: {
+        desc: '使用 Azure 提供的 OpenAI 服务',
+        fetch: '获取列表',
+        title: 'Azure OpenAI',
+      },
+    },
+    waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
   },
   settingAgent: {
     avatar: {
@@ -115,23 +172,12 @@ export default {
       title: '核采样',
     },
   },
-  settingOpenAI: {
-    endpoint: {
-      desc: '除默认地址外，必须包含 http(s)://',
-      placeholder: 'https://api.openai.com/v1',
-      title: '接口代理地址',
-    },
-    title: 'OpenAI 设置',
-    token: {
-      desc: '使用自己的 OpenAI Key',
-      placeholder: 'OpenAI API Key',
-      title: 'API Key',
-    },
-  },
   settingPlugin: {
     add: '添加',
     addTooltip: '添加自定义插件',
+    clearDeprecated: '移除无效插件',
     config: '{{id}} 插件配置',
+    settings: '配置插件市场',
     title: '插件列表',
   },
   settingSystem: {
@@ -172,5 +218,6 @@ export default {
   tab: {
     agent: '默认助手',
     common: '通用设置',
+    llm: '语言模型',
   },
 };

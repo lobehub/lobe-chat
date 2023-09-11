@@ -25,4 +25,7 @@ export const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   desc: css`
     color: ${token.colorTextDescription};
   `,
+  image: css`
+    align-self: center;
+  `,
 }));

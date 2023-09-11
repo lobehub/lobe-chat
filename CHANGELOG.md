@@ -2,6 +2,518 @@
 
 # Changelog
 
+## [Version 0.73.0](https://github.com/lobehub/lobe-chat/compare/v0.72.4...v0.73.0)
+
+<sup>Released on **2023-09-10**</sup>
+
+#### ✨ Features
+
+- **misc**: Support Azure OpenAI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support Azure OpenAI, closes [#177](https://github.com/lobehub/lobe-chat/issues/177) ([f0c9532](https://github.com/lobehub/lobe-chat/commit/f0c9532))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.72.4](https://github.com/lobehub/lobe-chat/compare/v0.72.3...v0.72.4)
+
+<sup>Released on **2023-09-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Use en-US when no suit lang with plugin index.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Use en-US when no suit lang with plugin index ([4e9668d](https://github.com/lobehub/lobe-chat/commit/4e9668d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.72.3](https://github.com/lobehub/lobe-chat/compare/v0.72.2...v0.72.3)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix sessionList double click on mobile.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix sessionList double click on mobile, closes [#169](https://github.com/lobehub/lobe-chat/issues/169) ([3ea2bce](https://github.com/lobehub/lobe-chat/commit/3ea2bce))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.72.2](https://github.com/lobehub/lobe-chat/compare/v0.72.1...v0.72.2)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mobile switch when session selected.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix mobile switch when session selected, closes [#167](https://github.com/lobehub/lobe-chat/issues/167) ([40d8a11](https://github.com/lobehub/lobe-chat/commit/40d8a11))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.72.1](https://github.com/lobehub/lobe-chat/compare/v0.72.0...v0.72.1)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正异步水合造成的初始状态不稳定的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正异步水合造成的初始状态不稳定的问题 ([2208f8a](https://github.com/lobehub/lobe-chat/commit/2208f8a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.72.0](https://github.com/lobehub/lobe-chat/compare/v0.71.1...v0.72.0)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Add plugin market Setting Modal, 支持快速刷新与预览 manifest, 适配插件 i18n 方案.
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正删除插件时错误开启的问题.
+
+#### 💄 Styles
+
+- **misc**: 优化 manifest 预览的尺寸.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add plugin market Setting Modal ([a0603a9](https://github.com/lobehub/lobe-chat/commit/a0603a9))
+- **misc**: 支持快速刷新与预览 manifest, closes [#150](https://github.com/lobehub/lobe-chat/issues/150) ([5bd2eb0](https://github.com/lobehub/lobe-chat/commit/5bd2eb0))
+- **misc**: 适配插件 i18n 方案 ([8709ab3](https://github.com/lobehub/lobe-chat/commit/8709ab3))
+
+#### What's fixed
+
+- **misc**: 修正删除插件时错误开启的问题 ([0e35c18](https://github.com/lobehub/lobe-chat/commit/0e35c18))
+
+#### Styles
+
+- **misc**: 优化 manifest 预览的尺寸 ([27f8d6d](https://github.com/lobehub/lobe-chat/commit/27f8d6d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.71.1](https://github.com/lobehub/lobe-chat/compare/v0.71.0...v0.71.1)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mobile route.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix mobile route, closes [#165](https://github.com/lobehub/lobe-chat/issues/165) ([d5e03b6](https://github.com/lobehub/lobe-chat/commit/d5e03b6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.71.0](https://github.com/lobehub/lobe-chat/compare/v0.70.4...v0.71.0)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Migrate localStorage to indexedDB.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Migrate localStorage to indexedDB, closes [#160](https://github.com/lobehub/lobe-chat/issues/160) ([7f96deb](https://github.com/lobehub/lobe-chat/commit/7f96deb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.70.4](https://github.com/lobehub/lobe-chat/compare/v0.70.3...v0.70.4)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix route.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix route ([2d1e8d6](https://github.com/lobehub/lobe-chat/commit/2d1e8d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.70.3](https://github.com/lobehub/lobe-chat/compare/v0.70.2...v0.70.3)
+
+<sup>Released on **2023-09-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Better mobile style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Better mobile style ([776c407](https://github.com/lobehub/lobe-chat/commit/776c407))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.70.2](https://github.com/lobehub/lobe-chat/compare/v0.70.1...v0.70.2)
+
+<sup>Released on **2023-09-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正移动端路由问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正移动端路由问题 ([ae3d2f4](https://github.com/lobehub/lobe-chat/commit/ae3d2f4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.70.1](https://github.com/lobehub/lobe-chat/compare/v0.70.0...v0.70.1)
+
+<sup>Released on **2023-09-08**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor settingsSelectors to globalSelectors.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor settingsSelectors to globalSelectors ([38917e8](https://github.com/lobehub/lobe-chat/commit/38917e8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.70.0](https://github.com/lobehub/lobe-chat/compare/v0.69.1...v0.70.0)
+
+<sup>Released on **2023-09-08**</sup>
+
+#### ✨ Features
+
+- **misc**: Refactor to url state.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Refactor to url state, closes [#157](https://github.com/lobehub/lobe-chat/issues/157) ([2efac2b](https://github.com/lobehub/lobe-chat/commit/2efac2b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.69.1](https://github.com/lobehub/lobe-chat/compare/v0.69.0...v0.69.1)
+
+<sup>Released on **2023-09-06**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Mirgrate openai-edge to openai.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Mirgrate openai-edge to openai, closes [#145](https://github.com/lobehub/lobe-chat/issues/145) ([75ee574](https://github.com/lobehub/lobe-chat/commit/75ee574))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.69.0](https://github.com/lobehub/lobe-chat/compare/v0.68.1...v0.69.0)
+
+<sup>Released on **2023-09-06**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new import statement for "Flexbox" component in "Empty" component.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new import statement for "Flexbox" component in "Empty" component ([68db626](https://github.com/lobehub/lobe-chat/commit/68db626))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.68.1](https://github.com/lobehub/lobe-chat/compare/v0.68.0...v0.68.1)
+
+<sup>Released on **2023-09-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正数组合并逻辑, 修正被移除插件无法看到的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正数组合并逻辑 ([e36e621](https://github.com/lobehub/lobe-chat/commit/e36e621))
+- **misc**: 修正被移除插件无法看到的问题 ([c17eb56](https://github.com/lobehub/lobe-chat/commit/c17eb56))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.68.0](https://github.com/lobehub/lobe-chat/compare/v0.67.0...v0.68.0)
+
+<sup>Released on **2023-09-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Plugin default use iframe render.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Plugin default use iframe render, closes [#141](https://github.com/lobehub/lobe-chat/issues/141) ([35a3a16](https://github.com/lobehub/lobe-chat/commit/35a3a16))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.67.0](https://github.com/lobehub/lobe-chat/compare/v0.66.0...v0.67.0)
+
+<sup>Released on **2023-09-02**</sup>
+
+#### ♻ Code Refactoring
+
+- **plugin**: 重构 plugin Store 组织结构，便于开发与迭代维护.
+
+#### ✨ Features
+
+- **plugin-dev**: 优化 manifest 报错原因提示，并支持 id 从 manifest 自动获取.
+
+#### 🐛 Bug Fixes
+
+- **plugin-dev**: 修正编辑模式下预览展示问题和 id 重复校验问题.
+- **plugin**: 修正开启插件后会话无效的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **plugin**: 重构 plugin Store 组织结构，便于开发与迭代维护 ([ec527cb](https://github.com/lobehub/lobe-chat/commit/ec527cb))
+
+#### What's improved
+
+- **plugin-dev**: 优化 manifest 报错原因提示，并支持 id 从 manifest 自动获取 ([7f0787d](https://github.com/lobehub/lobe-chat/commit/7f0787d))
+
+#### What's fixed
+
+- **plugin-dev**: 修正编辑模式下预览展示问题和 id 重复校验问题 ([17c39ef](https://github.com/lobehub/lobe-chat/commit/17c39ef))
+- **plugin**: 修正开启插件后会话无效的问题 ([82e3beb](https://github.com/lobehub/lobe-chat/commit/82e3beb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.66.0](https://github.com/lobehub/lobe-chat/compare/v0.65.1...v0.66.0)
+
+<sup>Released on **2023-09-02**</sup>
+
+#### ✨ Features
+
+- **misc**: Add russian localy.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add russian localy, closes [#137](https://github.com/lobehub/lobe-chat/issues/137) ([785d50f](https://github.com/lobehub/lobe-chat/commit/785d50f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.65.1](https://github.com/lobehub/lobe-chat/compare/v0.65.0...v0.65.1)
 
 <sup>Released on **2023-09-01**</sup>

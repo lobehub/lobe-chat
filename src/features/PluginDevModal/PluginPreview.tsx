@@ -1,29 +1,30 @@
 import { Avatar, Form } from '@lobehub/ui';
-import { Card, Switch, Tag } from 'antd';
+import { Form as AForm, Card, FormInstance, Switch, Tag } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { pluginHelpers, usePluginStore } from '@/store/plugin';
+import { pluginHelpers } from '@/store/plugin';
+import { CustomPlugin } from '@/types/plugin';
 
-const PluginPreview = memo(() => {
+const PluginPreview = memo<{ form: FormInstance }>(({ form }) => {
   const { t } = useTranslation('plugin');
-  const meta = usePluginStore((s) => s.newDevPlugin);
+  const plugin: CustomPlugin = AForm.useWatch([], form);
 
   const items = {
-    avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta?.meta) || '🧩'} />,
+    avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(plugin?.meta) || '🧩'} />,
     children: <Switch disabled />,
-    desc: pluginHelpers.getPluginDesc(meta?.meta),
+    desc: pluginHelpers.getPluginDesc(plugin?.meta),
     label: (
       <Flexbox align={'center'} gap={8} horizontal>
-        {pluginHelpers.getPluginTitle(meta?.meta) ?? t('dev.preview.title')}
+        {pluginHelpers.getPluginTitle(plugin?.meta) ?? t('dev.preview.title')}
         <Tag bordered={false} color={'gold'}>
           {t('list.item.local.title', { ns: 'plugin' })}
         </Tag>
       </Flexbox>
     ),
     minWidth: undefined,
-    tag: !!meta?.identifier ? meta?.identifier : 'id',
+    tag: !!plugin?.identifier ? plugin?.identifier : 'id',
   };
 
   return (

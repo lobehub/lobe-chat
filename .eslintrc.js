@@ -11,5 +11,7 @@ config.rules['unicorn/explicit-length-check'] = 0;
 config.rules['unicorn/prefer-code-point'] = 0;
 config.rules['no-extra-boolean-cast'] = 0;
 config.rules['unicorn/no-useless-undefined'] = 0;
+config.rules['react/no-unknown-property'] = 0;
+config.rules['unicorn/prefer-ternary'] = 0;
 
 module.exports = config;

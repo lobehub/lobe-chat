@@ -1,6 +1,6 @@
 import { Icon, MobileTabBar, type MobileTabBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { MessageSquare, Settings2, Sticker } from 'lucide-react';
+import { MessageSquare, Sticker } from 'lucide-react';
 import Router from 'next/router';
 import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
@@ -35,16 +35,10 @@ export default memo<{ className?: string }>(({ className }) => {
       {
         icon: (active) => <Icon className={active ? styles.active : undefined} icon={Sticker} />,
         key: 'market',
-
-        title: t('tab.market'),
-      },
-      {
-        icon: (active) => <Icon className={active ? styles.active : undefined} icon={Settings2} />,
-        key: 'settings',
         onClick: () => {
-          Router.push('/settings');
+          Router.push({ hash: '', pathname: `/market` });
         },
-        title: t('tab.setting'),
+        title: t('tab.market'),
       },
     ],
     [t],

@@ -1,16 +1,19 @@
+import { uniqBy } from 'lodash-es';
+
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { pluginHelpers } from '@/store/plugin/helpers';
+import { ChatCompletionFunctions } from '@/types/openai';
 
 import { PluginStoreState } from './initialState';
 
 const enabledSchema =
   (enabledPlugins: string[] = []) =>
-  (s: PluginStoreState) => {
-    return Object.values(s.pluginManifestMap)
-      .filter((p) => {
-        // 如果不存在 enabledPlugins，那么全部不启用
-        if (!enabledPlugins) return false;
+  (s: PluginStoreState): ChatCompletionFunctions[] => {
+    // 如果不存在 enabledPlugins，那么全部不启用
+    if (!enabledPlugins) return [];
 
+    const list = Object.values(s.pluginManifestMap)
+      .filter((p) => {
         // 如果存在 enabledPlugins，那么只启用 enabledPlugins 中的插件
         return enabledPlugins.includes(p.identifier);
       })
@@ -21,15 +24,17 @@ const enabledSchema =
           name: manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + m.name,
         })),
       );
+
+    return uniqBy(list, 'name');
   };
 
-const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.devPluginList];
+const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.customPluginList];
 
 const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
   pluginHelpers.getPluginFormList(pluginList(s), id);
 
 const getDevPluginById = (id: string) => (s: PluginStoreState) =>
-  s.devPluginList.find((i) => i.identifier === id);
+  s.customPluginList.find((i) => i.identifier === id);
 
 const getPluginManifestById = (id: string) => (s: PluginStoreState) => s.pluginManifestMap[id];
 const getPluginSettingsById = (id: string) => (s: PluginStoreState) => s.pluginsSettings[id];
@@ -44,6 +49,9 @@ const getPluginManifestLoadingStatus = (id: string) => (s: PluginStoreState) => 
 
   if (!!manifest) return 'success';
 };
+
+const isCustomPlugin = (id: string) => (s: PluginStoreState) =>
+  pluginHelpers.isCustomPlugin(id, s.customPluginList);
 
 const displayPluginList = (s: PluginStoreState) =>
   pluginList(s).map((p) => ({
@@ -64,5 +72,6 @@ export const pluginSelectors = {
   getPluginManifestLoadingStatus,
   getPluginMetaById,
   getPluginSettingsById,
+  isCustomPlugin,
   pluginList,
 };

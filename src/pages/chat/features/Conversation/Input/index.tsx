@@ -14,7 +14,7 @@ import Token from './Token';
 const ChatInput = () => {
   const { t } = useTranslation('common');
   const [expand, setExpand] = useState<boolean>(false);
-  const [text, setText] = useState('');
+  const [message, setMessage] = useState('');
 
   const [inputHeight, updatePreference] = useGlobalStore((s) => [
     s.preference.inputHeight,
@@ -51,7 +51,7 @@ const ChatInput = () => {
         actions={
           <>
             <InputActions />
-            <Token input={text} />
+            <Token input={message} />
           </>
         }
         actionsRight={<ActionsRight />}
@@ -60,7 +60,7 @@ const ChatInput = () => {
         loading={isLoading}
         minHeight={CHAT_TEXTAREA_HEIGHT}
         onExpandChange={setExpand}
-        onInputChange={setText}
+        onInputChange={setMessage}
         onSend={sendMessage}
         onStop={stopGenerateMessage}
         placeholder={t('sendPlaceholder')}
@@ -68,6 +68,7 @@ const ChatInput = () => {
           send: t('send'),
           stop: t('stop'),
         }}
+        value={message}
       />
     </DraggablePanel>
   );

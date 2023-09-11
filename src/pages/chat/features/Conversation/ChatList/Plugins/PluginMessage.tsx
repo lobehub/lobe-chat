@@ -1,12 +1,13 @@
 import { Loading3QuartersOutlined } from '@ant-design/icons';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { usePluginStore } from '@/store/plugin';
 import { ChatMessage } from '@/types/chatMessage';
 
-import CustomRender from './CustomRender';
+import IFrameRender from './IFrameRender';
+import SystemJsRender from './SystemJsRender';
 
 export interface FunctionMessageProps extends ChatMessage {
   loading?: boolean;
@@ -23,6 +24,8 @@ const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
     isJSON = false;
   }
 
+  const contentObj = useMemo(() => (isJSON ? JSON.parse(content) : content), [content]);
+
   // if (!loading)
 
   if (!isJSON) {
@@ -36,10 +39,23 @@ const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
     );
   }
 
-  if (!manifest?.ui?.url) return;
+  if (!manifest?.ui) return;
+
+  const ui = manifest.ui;
+
+  if (!ui.url) return;
+
+  if (ui.mode === 'module')
+    return <SystemJsRender content={contentObj} name={name || 'unknown'} url={ui.url} />;
 
   return (
-    <CustomRender content={JSON.parse(content)} name={name || 'unknown'} url={manifest.ui?.url} />
+    <IFrameRender
+      content={contentObj}
+      height={ui.height}
+      name={name || 'unknown'}
+      url={ui.url}
+      width={ui.width}
+    />
   );
 });
 

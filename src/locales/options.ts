@@ -7,7 +7,7 @@ type LocaleOptions = SelectProps['options'] &
     value: Locales;
   }[];
 
-export const options: LocaleOptions = [
+export const localeOptions: LocaleOptions = [
   {
     label: '简体中文',
     value: 'zh-CN',

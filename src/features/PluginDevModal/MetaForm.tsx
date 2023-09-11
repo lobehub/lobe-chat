@@ -1,24 +1,20 @@
 import { Form, FormItemProps, Input } from '@lobehub/ui';
 import { FormInstance } from 'antd';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import EmojiPicker from '@/components/EmojiPicker';
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 
-const MetaForm = memo<{ form: FormInstance }>(({ form }) => {
+const MetaForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form, mode }) => {
+  const isEditMode = mode === 'edit';
+
   const { t } = useTranslation('plugin');
   const [plugins] = usePluginStore((s) => [pluginSelectors.pluginList(s).map((i) => i.identifier)]);
 
-  useEffect(() => {
-    if (usePluginStore.getState().newDevPlugin) {
-      form.setFieldsValue(usePluginStore.getState().newDevPlugin);
-    }
-  }, []);
-
   const configItem: FormItemProps[] = [
     {
-      children: <Input placeholder={'searchEngine'} />,
+      children: <Input disabled placeholder={'searchEngine'} />,
       desc: t('dev.meta.identifier.desc'),
       label: t('dev.meta.identifier.label'),
       name: 'identifier',
@@ -28,14 +24,17 @@ const MetaForm = memo<{ form: FormInstance }>(({ form }) => {
           message: t('dev.meta.identifier.pattenErrorMessage'),
           pattern: /^[\w-]+$/,
         },
-        {
-          message: t('dev.meta.identifier.errorDuplicate'),
-          validator: async (_, value) => {
-            if (plugins.includes(value)) {
-              throw new Error('Duplicate');
-            }
-          },
-        },
+        // 编辑模式下，不进行重复校验
+        isEditMode
+          ? {}
+          : {
+              message: t('dev.meta.identifier.errorDuplicate'),
+              validator: async (_, value) => {
+                if (plugins.includes(value)) {
+                  throw new Error('Duplicate');
+                }
+              },
+            },
       ],
     },
     {

@@ -5,25 +5,24 @@ import { agentSelectors } from '@/store/session/slices/agentConfig';
 import type { SessionStore } from '../../../store';
 import { currentChatsWithHistoryConfig } from './chat';
 
+// TODO: We should find a smaller package to do this. gpt-tokenizer has 2M Size
+const count = (text: string) => encode(text).length;
+
 export const systemRoleSel = (s: SessionStore): string => {
   const config = agentSelectors.currentAgentConfig(s);
 
   return config.systemRole;
 };
 
-const systemRoleTokens = (s: SessionStore): number[] => {
+export const systemRoleTokenCount = (s: SessionStore): number => {
   const systemRole = systemRoleSel(s);
 
-  return encode(systemRole || '');
+  return count(systemRole || '');
 };
 
-const chatsTokens = (s: SessionStore): number[] => {
+export const chatsTokenCount = (s: SessionStore): number => {
   const chats = currentChatsWithHistoryConfig(s);
-  return encode(chats.map((m) => m.content).join(''));
+  return count(chats.map((m) => m.content).join(''));
 };
 
-export const chatsTokenCount = (s: SessionStore) => chatsTokens(s).length;
-
-export const systemRoleTokenCount = (s: SessionStore) => systemRoleTokens(s).length;
-
-export const totalTokenCount = (s: SessionStore) => chatsTokens(s).length + systemRoleTokenCount(s);
+export const totalTokenCount = (s: SessionStore) => chatsTokenCount(s) + systemRoleTokenCount(s);

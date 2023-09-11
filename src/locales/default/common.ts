@@ -2,7 +2,7 @@ export default {
   about: '关于',
   advanceSettings: '高级设置',
   agentDefaultMessage:
-    '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置](/chat/{{id}}/setting) 完善我的信息。',
+    '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置](/chat/setting#session={{id}}) 完善我的信息。',
   agentDefaultMessageWithSystemRole: '你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！',
   agentMaxToken: '会话最大长度',
   agentModel: '模型',
@@ -38,7 +38,7 @@ export default {
   inbox: {
     defaultMessage:
       '你好，我是你的智能助手，你可以问我任何问题，我会尽力回答你。如果需要获得更加专业或定制的助手，可以点击<kbd>+</kbd>创建自定义助手',
-    desc: '开启大脑集群，激发思维火花。你的智能助理，就在这里与你交流一切',
+    desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
   },
   message: {

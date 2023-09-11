@@ -9,11 +9,11 @@ export interface SessionState {
   /**
    * @title 当前活动的会话
    * @description 当前正在编辑或查看的会话
-   * @default null
    */
-  activeId: string | null;
+  activeId: string | undefined;
   // 默认会话
   inbox: LobeAgentSession;
+  isMobile?: boolean;
   searchKeywords: string;
   sessions: Record<string, LobeAgentSession>;
 }
@@ -39,8 +39,9 @@ export const initInbox = merge({}, initLobeSession, {
 } as Partial<LobeAgentSession>);
 
 export const initialSessionState: SessionState = {
-  activeId: null,
+  activeId: undefined,
   inbox: initInbox,
+  isMobile: false,
   searchKeywords: '',
   sessions: {},
 };

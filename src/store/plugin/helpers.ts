@@ -1,6 +1,8 @@
 import { LobeChatPluginMeta } from '@lobehub/chat-plugin-sdk';
 import i18n from 'i18next';
 
+import { CustomPlugin } from '@/types/plugin';
+
 const getI18nValue = (value: string | Record<string, string> | undefined) => {
   if (!value) return;
 
@@ -18,9 +20,13 @@ const getPluginTitle = (meta?: LobeChatPluginMeta['meta']) => getI18nValue(meta?
 const getPluginDesc = (meta?: LobeChatPluginMeta['meta']) => getI18nValue(meta?.description);
 const getPluginAvatar = (meta?: LobeChatPluginMeta['meta']) => meta?.avatar;
 
+const isCustomPlugin = (id: string, pluginList: CustomPlugin[]) =>
+  pluginList.some((i) => i.identifier === id);
+
 export const pluginHelpers = {
   getPluginAvatar,
   getPluginDesc,
   getPluginFormList,
   getPluginTitle,
+  isCustomPlugin,
 };

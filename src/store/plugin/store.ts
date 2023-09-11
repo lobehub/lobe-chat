@@ -5,23 +5,25 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { isDev } from '@/utils/env';
 
-import { PluginAction, createPluginSlice } from './action';
 import { PluginStoreState, initialState } from './initialState';
+import { CustomPluginAction, createCustomPluginSlice } from './slices/customPlugin';
+import { PluginAction, createPluginSlice } from './slices/plugin';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type PluginStore = PluginStoreState & PluginAction;
+export type PluginStore = PluginStoreState & CustomPluginAction & PluginAction;
 
 const createStore: StateCreator<PluginStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createPluginSlice(...parameters),
+  ...createCustomPluginSlice(...parameters),
 });
 
 //  ===============  persist 本地缓存中间件配置 ============ //
 
 type SessionPersist = Pick<
   PluginStore,
-  'pluginList' | 'pluginManifestMap' | 'pluginsSettings' | 'devPluginList'
+  'pluginList' | 'pluginManifestMap' | 'pluginsSettings' | 'customPluginList'
 >;
 
 const storeName = 'LOBE_PLUGIN';
@@ -30,7 +32,7 @@ const persistOptions: PersistOptions<PluginStore, SessionPersist> = {
   name: storeName,
 
   partialize: (s) => ({
-    devPluginList: s.devPluginList,
+    customPluginList: s.customPluginList,
     pluginList: s.pluginList,
     pluginManifestMap: s.pluginManifestMap,
     pluginsSettings: s.pluginsSettings,

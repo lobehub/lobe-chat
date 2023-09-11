@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
-import Banner from './Banner';
-import Footer from './Footer';
+import Banner from './features/Banner';
+import Footer from './features/Footer';
 import Layout from './layout';
-import Mobile from './mobile';
+import Mobile from './layout.mobile';
 
 const Welcome = memo(() => {
   const { mobile } = useResponsive();

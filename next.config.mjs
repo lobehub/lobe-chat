@@ -27,8 +27,12 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/openai-dev',
-        destination: `${API_END_PORT_URL}/api/openai`,
+        source: '/api/openai/chat-dev',
+        destination: `${API_END_PORT_URL}/api/openai/chat`,
+      },
+      {
+        source: '/api/openai/models-dev',
+        destination: `${API_END_PORT_URL}/api/openai/models`,
       },
       {
         source: '/api/plugins-dev',

@@ -1,13 +1,11 @@
 import { merge } from 'lodash-es';
-import { ChatCompletionFunctions } from 'openai-edge/types/api';
 
-import { LOBE_CHAT_ACCESS_CODE, OPENAI_API_KEY_HEADER_KEY, OPENAI_END_POINT } from '@/const/fetch';
-import { useGlobalStore } from '@/store/global';
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { initialLobeAgentConfig } from '@/store/session/initialState';
-import type { OpenAIStreamPayload } from '@/types/openai';
+import type { ChatCompletionFunctions, OpenAIStreamPayload } from '@/types/openai';
 
-import { URLS } from './url';
+import { createHeaderWithOpenAI } from './_header';
+import { OPENAI_URLS } from './_url';
 
 interface FetchChatModelOptions {
   signal?: AbortSignal | undefined;
@@ -36,14 +34,9 @@ export const fetchChatModel = (
 
   const functions = filterFunctions.length === 0 ? undefined : filterFunctions;
 
-  return fetch(URLS.openai, {
+  return fetch(OPENAI_URLS.chat, {
     body: JSON.stringify({ ...payload, functions }),
-    headers: {
-      'Content-Type': 'application/json',
-      [LOBE_CHAT_ACCESS_CODE]: useGlobalStore.getState().settings.password || '',
-      [OPENAI_API_KEY_HEADER_KEY]: useGlobalStore.getState().settings.OPENAI_API_KEY || '',
-      [OPENAI_END_POINT]: useGlobalStore.getState().settings.endpoint || '',
-    },
+    headers: createHeaderWithOpenAI({ 'Content-Type': 'application/json' }),
     method: 'POST',
     signal: options?.signal,
   });

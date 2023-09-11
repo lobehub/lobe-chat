@@ -1,13 +1,15 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.65.1",
-  "description": "Lobe Chat is an open-source chatbot client using LangChain, Typescript and Next.js",
+  "version": "0.73.0",
+  "description": "Lobe Chat is an open-source chatbot client using Vercel AI SDK, Typescript and Next.js",
   "keywords": [
     "chatbot",
     "ChatGPT",
-    "LangChain",
+    "LobeHub",
     "typescript",
-    "Next.js"
+    "Vercel AI SDK",
+    "Next.js",
+    "OpenAI"
   ],
   "homepage": "https://github.com/lobehub/lobe-chat",
   "bugs": {
@@ -63,11 +65,12 @@
   "dependencies": {
     "@ant-design/colors": "^7",
     "@ant-design/icons": "^5",
+    "@azure/openai": "latest",
     "@emoji-mart/data": "^1",
     "@emoji-mart/react": "^1",
     "@icons-pack/react-simple-icons": "^9",
-    "@lobehub/chat-plugin-sdk": "^1.13.1",
-    "@lobehub/chat-plugins-gateway": "^1.5.0",
+    "@lobehub/chat-plugin-sdk": "^1.17.7",
+    "@lobehub/chat-plugins-gateway": "^1.5.1",
     "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
@@ -80,12 +83,13 @@
     "fast-deep-equal": "^3",
     "gpt-tokenizer": "^2",
     "i18next": "^23",
+    "idb-keyval": "^6",
     "immer": "^10",
     "lodash-es": "^4",
     "lucide-react": "latest",
     "nanoid": "^4",
     "next": "13.4.7",
-    "openai-edge": "^1",
+    "openai": "^4.5.0",
     "polished": "^4",
     "react": "^18",
     "react-dom": "^18",
@@ -93,11 +97,11 @@
     "react-i18next": "^13",
     "react-intersection-observer": "^9",
     "react-layout-kit": "^1.7.1",
-    "serpapi": "^2",
     "swr": "^2",
     "systemjs": "^6.14.2",
     "ts-md5": "^1",
     "use-merge-value": "^1",
+    "utility-types": "^3",
     "uuid": "^9",
     "zustand": "^4.4",
     "zustand-utils": "^1"
@@ -138,12 +142,6 @@
     "ts-node": "^10",
     "typescript": "^5",
     "vitest": "latest"
-  },
-  "peerDependencies": {
-    "antd": ">=5",
-    "antd-style": ">=3",
-    "react": ">=18",
-    "react-dom": ">=18"
   },
   "publishConfig": {
     "access": "public",
