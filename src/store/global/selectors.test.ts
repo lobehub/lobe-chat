@@ -68,7 +68,6 @@ describe('globalSelectors', () => {
         languageModel: {
           openAI: {
             OPENAI_API_KEY: 'openai-api-key',
-            azureApiVersion: '2023-08-01-preview',
             endpoint: 'https://openai-endpoint.com',
             models: ['gpt-3.5-turbo'],
           },
