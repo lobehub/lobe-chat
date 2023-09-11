@@ -1,6 +1,7 @@
 name: Wiki Sync
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'docs/**'
