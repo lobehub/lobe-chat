@@ -1,17 +1,16 @@
-import { Avatar, Giscus, Markdown, TabsNav, Tag } from '@lobehub/ui';
-import { Button, Typography } from 'antd';
-import { startCase } from 'lodash-es';
+import { Markdown, TabsNav } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
+import TokenTag from '@/pages/market/features/SideBar/AgentInfo/TokenTag';
 import { useMarketStore } from '@/store/market';
 
 import AgentCardBanner from '../../AgentCard/AgentCardBanner';
+import Comment from './Comment';
+import Header from './Header';
 import Loading from './Loading';
 import { useStyles } from './style';
-
-const { Link } = Typography;
 
 enum InfoTabs {
   comment = 'comment',
@@ -23,69 +22,21 @@ const AgentModalInner = memo(() => {
     s.useFetchAgent,
     s.currentIdentifier,
   ]);
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
   const { data, isLoading } = useFetchAgent(currentIdentifier);
   const { t } = useTranslation('market');
   const [tab, setTab] = useState<string>(InfoTabs.prompt);
 
   if (isLoading || !data?.meta) return <Loading />;
 
-  const { config, meta, createAt, author, homepage, identifier } = data;
+  const { config, meta, identifier } = data;
   const { systemRole } = config;
-  const { avatar, title, description, tags, backgroundColor } = meta;
-
-  const info = (
-    <>
-      <Avatar
-        avatar={avatar}
-        background={backgroundColor || theme.colorFillTertiary}
-        className={styles.avatar}
-        size={100}
-      />
-
-      <div className={styles.title}>{title}</div>
-      <Center gap={6} horizontal style={{ flexWrap: 'wrap' }}>
-        {(tags as string[]).map((tag: string, index) => (
-          <Tag
-            key={index}
-            onClick={() => useMarketStore.setState({ searchKeywords: tag })}
-            style={{ margin: 0 }}
-          >
-            {startCase(tag).trim()}
-          </Tag>
-        ))}
-      </Center>
-      <div className={styles.desc}>{description}</div>
-      <Link className={styles.author} href={homepage} target={'_blank'}>
-        @{author}
-      </Link>
-      <Button block type={'primary'}>
-        {t('addAgent')}
-      </Button>
-      <div className={styles.date}>{createAt}</div>
-    </>
-  );
-
-  const giscus = (
-    <Giscus
-      category="General"
-      categoryId="DIC_kwDOKON5YM4CZNRJ"
-      id="lobehub"
-      mapping="specific"
-      repo="lobehub/lobe-chat-agents"
-      repoId="R_kgDOKON5YA"
-      term={identifier}
-    />
-  );
-
-  const prompt = <Markdown fullFeaturedCodeBlock>{systemRole}</Markdown>;
 
   return (
     <>
       <AgentCardBanner mask meta={meta} size={10} style={{ height: 120, marginBottom: -60 }} />
-      <Center className={styles.container} gap={16}>
-        {info}
-      </Center>
+
+      <Header {...data} />
       <Flexbox align={'center'}>
         <TabsNav
           activeKey={tab}
@@ -93,7 +44,11 @@ const AgentModalInner = memo(() => {
           items={[
             {
               key: InfoTabs.prompt,
-              label: t('sidebar.prompt'),
+              label: (
+                <Flexbox align={'center'} gap={8} horizontal>
+                  {t('sidebar.prompt')} <TokenTag systemRole={systemRole} />
+                </Flexbox>
+              ),
             },
             {
               key: InfoTabs.comment,
@@ -104,8 +59,8 @@ const AgentModalInner = memo(() => {
         />
       </Flexbox>
       <Flexbox style={{ padding: 16 }}>
-        {tab === InfoTabs.prompt && prompt}
-        {tab === InfoTabs.comment && giscus}
+        {tab === InfoTabs.prompt && <Markdown fullFeaturedCodeBlock>{systemRole}</Markdown>}
+        {tab === InfoTabs.comment && <Comment identifier={identifier} />}
       </Flexbox>
     </>
   );

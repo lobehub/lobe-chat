@@ -9,6 +9,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     flex: none;
   `,
   container: css`
+    position: relative;
     padding: 16px 16px 24px;
     border-bottom: 1px solid ${token.colorBorderSecondary};
   `,

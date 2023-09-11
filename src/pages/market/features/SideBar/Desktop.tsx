@@ -47,7 +47,10 @@ const SideBar = memo<{ children: ReactNode }>(({ children }) => {
         }}
       >
         <SafeSpacing />
-        <DraggablePanelBody className={styles.noScrollbar} style={{ padding: 0 }}>
+        <DraggablePanelBody
+          className={styles.noScrollbar}
+          style={{ padding: 0, position: 'relative' }}
+        >
           {children}
         </DraggablePanelBody>
       </DraggablePanelContainer>
