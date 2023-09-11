@@ -1,4 +1,4 @@
-import { Form, type ItemGroup, SliderWithInput } from '@lobehub/ui';
+import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
 import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { changeLanguage } from 'i18next';
@@ -7,7 +7,6 @@ import { AppWindow, Monitor, Moon, Palette, Sun } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import SelectWithImg from '@/components/SelectWithImg';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';

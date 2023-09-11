@@ -10,7 +10,7 @@ export interface MetaData {
    */
   backgroundColor?: string;
   description?: string;
-  tag?: string[];
+  tags?: string[];
   /**
    * 名称
    * @description 可选参数，如果不传则使用默认名称

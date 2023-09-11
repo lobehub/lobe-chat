@@ -26,7 +26,7 @@ const Header = memo(() => {
       left={<AvatarWithUpload size={28} style={{ marginLeft: 8 }} />}
       right={
         <>
-          <ActionIcon icon={MessageSquarePlus} onClick={createSession} />
+          <ActionIcon icon={MessageSquarePlus} onClick={() => createSession()} />
           <ActionIcon
             icon={Settings2}
             onClick={() => {

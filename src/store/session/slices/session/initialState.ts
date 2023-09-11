@@ -16,6 +16,7 @@ export interface SessionState {
   isMobile?: boolean;
   searchKeywords: string;
   sessions: Record<string, LobeAgentSession>;
+  topicSearchKeywords: string;
 }
 
 export const initLobeSession: LobeAgentSession = {
@@ -44,4 +45,5 @@ export const initialSessionState: SessionState = {
   isMobile: false,
   searchKeywords: '',
   sessions: {},
+  topicSearchKeywords: '',
 };

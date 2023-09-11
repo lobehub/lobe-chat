@@ -1,0 +1,12 @@
+{
+  "addAgent": "Add Assistant",
+  "search": {
+    "placeholder": "Search assistant name, description or keywords..."
+  },
+  "sidebar": {
+    "comment": "Comments",
+    "prompt": "Prompts",
+    "title": "Assistant Details"
+  },
+  "submitAgent": "Submit Assistant"
+}

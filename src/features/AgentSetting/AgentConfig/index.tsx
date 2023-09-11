@@ -1,4 +1,4 @@
-import { Form, ItemGroup, SliderWithInput } from '@lobehub/ui';
+import { Form, ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
 import { ConfigProvider, Input, Select, Switch } from 'antd';
 import { useTheme, useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
@@ -7,7 +7,6 @@ import { BrainCog, LayoutList, MessageSquare, MessagesSquare } from 'lucide-reac
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import SelectWithImg from '@/components/SelectWithImg';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { LanguageModel } from '@/types/llm';
 import { LobeAgentConfigKeys } from '@/types/session';

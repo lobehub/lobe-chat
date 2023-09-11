@@ -19,7 +19,7 @@ export const initialState: State = {
     avatar: false,
     backgroundColor: false,
     description: false,
-    tag: false,
+    tags: false,
     title: false,
   },
 

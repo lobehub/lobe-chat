@@ -1,4 +1,4 @@
-import { ActionIcon, Logo, SearchBar } from '@lobehub/ui';
+import { ActionIcon, Logo } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { MessageSquarePlus } from 'lucide-react';
 import Link from 'next/link';
@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
+
+import SessionSearchBar from '../../SessionSearchBar';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
@@ -21,7 +23,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 const Header = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('common');
-  const [keywords, createSession] = useSessionStore((s) => [s.searchKeywords, s.createSession]);
+  const [createSession] = useSessionStore((s) => [s.createSession]);
 
   return (
     <Flexbox className={styles.top} gap={16} padding={16}>
@@ -31,22 +33,13 @@ const Header = memo(() => {
         </Link>
         <ActionIcon
           icon={MessageSquarePlus}
-          onClick={createSession}
+          onClick={() => createSession()}
           size={{ fontSize: 24 }}
           style={{ flex: 'none' }}
           title={t('newAgent')}
         />
       </Flexbox>
-      <SearchBar
-        allowClear
-        enableShortKey
-        onChange={(e) => useSessionStore.setState({ searchKeywords: e.target.value })}
-        placeholder={t('searchAgentPlaceholder')}
-        shortKey={'k'}
-        spotlight
-        type={'ghost'}
-        value={keywords}
-      />
+      <SessionSearchBar />
     </Flexbox>
   );
 });

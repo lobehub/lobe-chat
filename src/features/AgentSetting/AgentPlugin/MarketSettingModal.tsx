@@ -62,7 +62,7 @@ const MarketSettingModal = memo<MarketSettingModalProps>(({ open, onOpenChange }
                 <Input
                   defaultValue={PLUGINS_INDEX_URL}
                   disabled
-                  placeholder={'https://xxxxx.com/index.json'}
+                  placeholder={'https://xxxxx.com'}
                 />
               </Tooltip>
             </Form.Item>

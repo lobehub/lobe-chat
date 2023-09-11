@@ -11,7 +11,7 @@ export const filterWithKeywords = <T extends BaseDataModel>(
     Object.entries(map).filter(([, item]) => {
       const meta = item.meta;
 
-      const keyList = [meta.title, meta.description, meta.tag?.join('')].filter(
+      const keyList = [meta.title, meta.description, meta.tags?.join('')].filter(
         Boolean,
       ) as string[];
 

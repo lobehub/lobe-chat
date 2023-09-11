@@ -16,8 +16,9 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 [![release][release-shield]][release-url]
 [![releaseDate][release-date-shield]][release-date-url]
+[![][license-shield]][fossa-license-url]
 [![ciTest][ci-test-shield]][ci-test-url]
-[![ciRelease][ci-release-shield]][ci-release-url] <br/>
+[![ciRelease][ci-release-shield]][ci-release-url]<br/>
 [![contributors][contributors-shield]][contributors-url]
 [![forks][forks-shield]][forks-url]
 [![stargazers][stargazers-shield]][stargazers-url]
@@ -79,7 +80,7 @@ Please be aware that LobeChat is currently under active development，feedback i
 - [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy;
 - [x] 🤖 **Customizable Assistant Roles**: Users can create, share, and debug personalized dialogue assistant roles according to their needs, providing more flexible and personalized dialogue functions;
 - [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue assistant from anywhere.
-- [ ] 🏬 **Role Market** (WIP): A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
+- [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
 
 > **👉 Roadmap:** You can find our upcoming [Roadmap][project-url] plans in the Projects section.
 
@@ -100,7 +101,8 @@ LobeChat provides a [self-hosted version][deploy-url] with Vercel. This allows y
 
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-> **👉 Note:** This project provides some additional configuration items, set with environment variables:
+> **Note**\
+> This project provides some additional configuration items, set with environment variables:
 
 | Environment Variable | Required | Description                                                                                                                                   | Example                                                                             |
 | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -136,7 +138,8 @@ If you have deployed your own project following the one-click deployment steps i
 
 Plugins provide a means to extend the [Function Calling][fc-url] capabilities of LobeChat. They can be used to introduce new function calls, and even new ways to render message results.
 
-> **👉 Note:** The plugin system is currently undergoing significant development. You can expect to see it in <https://github.com/lobehub/lobe-chat/issues/97>.
+> **Note**\
+> The plugin system is currently undergoing significant development. You can expect to see it in <https://github.com/lobehub/lobe-chat/issues/97>.
 
 - [@lobehub/lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeChat. It accesses index.json from this repository to display a list of available plugins for LobeChat to the user.
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
@@ -178,6 +181,10 @@ $ pnpm dev
 ## 🤝 Contributing
 
 Contributions of all types are more than welcome, if you are interested in contributing code, feel free to check out our GitHub [Issues][issues-url] and [Projects][project-url] to get stuck in to show us what you’re made of.
+
+[![][pr-welcome-shield]][pr-welcome-url]
+[![][submit-agents-shield]][submit-agents-url]
+[![][submit-plugin-shield]][submit-plugin-url]
 
 <!-- CONTRIBUTION GROUP -->
 
@@ -221,7 +228,12 @@ Contributions of all types are more than welcome, if you are interested in contr
 
 ---
 
-#### 📝 License
+<details>
+<summary><h4>📝 License</h4></summary>
+
+[![][fossa-license-shield]][fossa-license-url]
+
+</details>
 
 Copyright © 2023 [LobeHub][profile-url]. <br />
 This project is [MIT](./LICENSE) licensed.
@@ -247,9 +259,12 @@ This project is [MIT](./LICENSE) licensed.
 [fc-url]: https://sspai.com/post/81986
 [forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat.svg?style=flat
 [forks-url]: https://github.com/lobehub/lobe-chat/network/members
+[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
+[fossa-license-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [gitpod-url]: https://gitpod.io/#https://github.com/lobehub/lobe-chat
 [issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [issues-url]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
+[license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=shield&issueType=license
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
 [lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
@@ -263,6 +278,8 @@ This project is [MIT](./LICENSE) licensed.
 [lobe-ui-url]: https://www.npmjs.com/package/@lobehub/ui
 [official-shield]: https://img.shields.io/website?down_message=offline&label=🤯%20Try%20LobeChat&up_message=online&url=https%3A%2F%2Flobe-chat.vercel.app&style=for-the-badge
 [official-url]: https://lobe-chat.vercel.app
+[pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-FEE064?style=for-the-badge
+[pr-welcome-url]: https://github.com/lobehub/lobe-chat/pulls
 [profile-url]: https://github.com/lobehub
 [project-url]: https://github.com/lobehub/lobe-chat/projects
 [release-date-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?style=flat
@@ -271,3 +288,7 @@ This project is [MIT](./LICENSE) licensed.
 [release-url]: https://www.npmjs.com/package/@lobehub/chat
 [stargazers-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat.svg?style=flat
 [stargazers-url]: https://github.com/lobehub/lobe-chat/stargazers
+[submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-9DFF92?style=for-the-badge
+[submit-agents-url]: https://github.com/lobehub/lobe-chat-agents
+[submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
+[submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins
