@@ -7,6 +7,7 @@ declare global {
       AZURE_API_VERSION?: string;
       OPENAI_API_KEY?: string;
       OPENAI_PROXY_URL?: string;
+      USE_AZURE_OPENAI?: string;
     }
   }
 }
@@ -25,5 +26,6 @@ export const getServerConfig = () => {
 
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,
+    USE_AZURE_OPENAI: process.env.USE_AZURE_OPENAI === '1',
   };
 };

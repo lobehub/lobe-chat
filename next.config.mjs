@@ -14,9 +14,6 @@ const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['page.tsx', 'api.ts'],
   transpilePackages: ['@lobehub/ui'],
-  env: {
-    USE_AZURE_OPENAI: process.env.USE_AZURE_OPENAI === '1',
-  },
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,

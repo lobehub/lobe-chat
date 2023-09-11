@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-import { getClientConfig } from '@/config/client';
+import { getServerConfig } from '@/config/server';
 import { getOpenAIAuthFromRequest } from '@/const/fetch';
 import { ErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
@@ -26,7 +26,7 @@ export default async function handler(req: Request) {
 
   let openai: OpenAI;
 
-  const { USE_AZURE_OPENAI } = getClientConfig();
+  const { USE_AZURE_OPENAI } = getServerConfig();
   const useAzureOpenAI = useAzure || USE_AZURE_OPENAI;
 
   if (useAzureOpenAI) {

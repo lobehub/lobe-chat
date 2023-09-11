@@ -8,7 +8,6 @@ import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { getClientConfig } from '@/config/client';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { globalSelectors, useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
 
@@ -83,7 +82,7 @@ const LLM = memo(() => {
       },
       {
         children: (
-          <Switch disabled={getClientConfig().USE_AZURE_OPENAI} />
+          <Switch />
           //   <Flexbox gap={4}>
           //   <div>
           //
