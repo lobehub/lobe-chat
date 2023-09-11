@@ -16,6 +16,7 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 
 [![release][release-shield]][release-url]
 [![releaseDate][release-date-shield]][release-date-url]
+[![][license-shield]][fossa-license-url]
 [![ciTest][ci-test-shield]][ci-test-url]
 [![ciRelease][ci-release-shield]][ci-release-url] <br/>
 [![contributors][contributors-shield]][contributors-url]
@@ -225,7 +226,12 @@ $ pnpm dev
 
 ---
 
-#### 📝 License
+<details>
+<summary><h4>📝 License</h4></summary>
+
+[![][fossa-license-shield]][fossa-license-url]
+
+</details>
 
 Copyright © 2023 [LobeHub][profile-url]. <br />
 This project is [MIT](./LICENSE) licensed.
@@ -251,9 +257,12 @@ This project is [MIT](./LICENSE) licensed.
 [fc-url]: https://sspai.com/post/81986
 [forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat.svg?style=flat
 [forks-url]: https://github.com/lobehub/lobe-chat/network/members
+[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
+[fossa-license-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [gitpod-url]: https://gitpod.io/#https://github.com/lobehub/lobe-chat
 [issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [issues-url]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
+[license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=shield&issueType=license
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
 [lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
