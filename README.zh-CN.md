@@ -79,7 +79,7 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 - [x] 🔒 **隐私安全**：所有数据保存在用户浏览器本地，保证用户的隐私安全；
 - [x] 🤖 **自定义助手角色**：用户可以根据自己的需求创建、分享和调试个性化的对话助手角色，提供更加灵活和个性化的对话功能；
 - [x] 🌐 **自定义域名**：如果用户拥有自己的域名，可以将其绑定到平台上，方便在任何地方快速访问对话助手。
-- [ ] 🏬 **角色市场**（WIP）：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格；
+- [x] 🏬 **角色市场**：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格；
 
 > **👉 Roadmap：** 你可以在 Projects 中找到我们后续的 [Roadmap][project-url] 计划
 
@@ -179,6 +179,10 @@ $ pnpm dev
 
 我们非常欢迎各种形式的贡献。如果你对贡献代码感兴趣，可以查看我们的 GitHub [Issues][issues-url] 和 [Projects][project-url]，大展身手，向我们展示你的奇思妙想。
 
+[![][pr-welcome-shield]][pr-welcome-url]
+[![][submit-agents-shield]][submit-agents-url]
+[![][submit-plugin-shield]][submit-plugin-url]
+
 <!-- CONTRIBUTION GROUP -->
 
 > 📊 Total: <kbd>**5**</kbd>
@@ -263,6 +267,8 @@ This project is [MIT](./LICENSE) licensed.
 [lobe-ui-url]: https://www.npmjs.com/package/@lobehub/ui
 [official-shield]: https://img.shields.io/website?down_message=offline&label=🤯%20Try%20LobeChat&up_message=online&url=https%3A%2F%2Flobe-chat.vercel.app&style=for-the-badge
 [official-url]: https://lobe-chat.vercel.app
+[pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-FEE064?style=for-the-badge
+[pr-welcome-url]: https://github.com/lobehub/lobe-chat-agents
 [profile-url]: https://github.com/lobehub
 [project-url]: https://github.com/lobehub/lobe-chat/projects
 [release-date-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?style=flat
@@ -271,3 +277,7 @@ This project is [MIT](./LICENSE) licensed.
 [release-url]: https://www.npmjs.com/package/@lobehub/chat
 [stargazers-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat.svg?style=flat
 [stargazers-url]: https://github.com/lobehub/lobe-chat/stargazers
+[submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-9DFF92?style=for-the-badge
+[submit-agents-url]: https://github.com/lobehub/lobe-chat-agents
+[submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
+[submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins

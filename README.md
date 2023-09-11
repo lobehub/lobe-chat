@@ -79,7 +79,7 @@ Please be aware that LobeChat is currently under active development，feedback i
 - [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy;
 - [x] 🤖 **Customizable Assistant Roles**: Users can create, share, and debug personalized dialogue assistant roles according to their needs, providing more flexible and personalized dialogue functions;
 - [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue assistant from anywhere.
-- [ ] 🏬 **Role Market** (WIP): A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
+- [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
 
 > **👉 Roadmap:** You can find our upcoming [Roadmap][project-url] plans in the Projects section.
 
@@ -179,6 +179,10 @@ $ pnpm dev
 
 Contributions of all types are more than welcome, if you are interested in contributing code, feel free to check out our GitHub [Issues][issues-url] and [Projects][project-url] to get stuck in to show us what you’re made of.
 
+[![][pr-welcome-shield]][pr-welcome-url]
+[![][submit-agents-shield]][submit-agents-url]
+[![][submit-plugin-shield]][submit-plugin-url]
+
 <!-- CONTRIBUTION GROUP -->
 
 > 📊 Total: <kbd>**5**</kbd>
@@ -263,6 +267,8 @@ This project is [MIT](./LICENSE) licensed.
 [lobe-ui-url]: https://www.npmjs.com/package/@lobehub/ui
 [official-shield]: https://img.shields.io/website?down_message=offline&label=🤯%20Try%20LobeChat&up_message=online&url=https%3A%2F%2Flobe-chat.vercel.app&style=for-the-badge
 [official-url]: https://lobe-chat.vercel.app
+[pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-FEE064?style=for-the-badge
+[pr-welcome-url]: https://github.com/lobehub/lobe-chat-agents
 [profile-url]: https://github.com/lobehub
 [project-url]: https://github.com/lobehub/lobe-chat/projects
 [release-date-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?style=flat
@@ -271,3 +277,7 @@ This project is [MIT](./LICENSE) licensed.
 [release-url]: https://www.npmjs.com/package/@lobehub/chat
 [stargazers-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat.svg?style=flat
 [stargazers-url]: https://github.com/lobehub/lobe-chat/stargazers
+[submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-9DFF92?style=for-the-badge
+[submit-agents-url]: https://github.com/lobehub/lobe-chat-agents
+[submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
+[submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins
