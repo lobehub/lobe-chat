@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 0.74.0](https://github.com/lobehub/lobe-chat/compare/v0.73.0...v0.74.0)
+
+<sup>Released on **2023-09-11**</sup>
+
+#### ✨ Features
+
+- **misc**: Add russian localy, Update Russian and English localy (LLM tab).
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add russian localy ([7b67c9f](https://github.com/lobehub/lobe-chat/commit/7b67c9f))
+- **misc**: Update Russian and English localy (LLM tab) ([3b23e70](https://github.com/lobehub/lobe-chat/commit/3b23e70))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.73.0](https://github.com/lobehub/lobe-chat/compare/v0.72.4...v0.73.0)
 
 <sup>Released on **2023-09-10**</sup>
