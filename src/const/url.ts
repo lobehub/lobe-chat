@@ -1,3 +1,5 @@
+import urlJoin from 'url-join';
+
 import { localeOptions } from '@/locales/options';
 import { Locales } from '@/locales/resources';
 
@@ -11,21 +13,33 @@ export const FEEDBACK = pkg.bugs.url;
 export const DISCORD = 'https://discord.gg/AYFPHvv2jT';
 
 export const PLUGINS_INDEX_URL =
-  process.env.PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com/index';
+  process.env.PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com';
 
+const checkLang = (lang: Locales) => {
+  return !localeOptions.map((o) => o.value).includes(lang);
+};
 export const getPluginIndexJSON = (lang: Locales = 'en-US', baseUrl = PLUGINS_INDEX_URL) => {
-  if (lang === 'en-US' || !localeOptions.map((o) => o.value).includes(lang)) return baseUrl;
+  if (lang === 'en-US' || checkLang(lang)) return baseUrl;
 
-  return `${baseUrl}.${lang}.json`;
+  return urlJoin(baseUrl, `index.${lang}.json`);
 };
 
-export const AGENTS_INDEX_URL =
-  process.env.AGENTS_INDEX_URL ?? 'https://chat-agents.lobehub.com/index';
+export const AGENTS_INDEX_URL = process.env.AGENTS_INDEX_URL ?? 'https://chat-agents.lobehub.com';
 
 export const getAgentIndexJSON = (lang: Locales = 'en-US', baseUrl = AGENTS_INDEX_URL) => {
-  if (lang === 'en-US') return baseUrl;
+  if (lang === 'en-US' || checkLang(lang)) return baseUrl;
 
-  return `${baseUrl}.${lang}.json`;
+  return urlJoin(baseUrl, `index.${lang}.json`);
+};
+
+export const getAgentJSON = (
+  identifier: string,
+  lang: Locales = 'en-US',
+  baseUrl = AGENTS_INDEX_URL,
+) => {
+  if (lang === 'en-US' || checkLang(lang)) return urlJoin(baseUrl, `${identifier}.json`);
+
+  return urlJoin(baseUrl, `${identifier}.${lang}.json`);
 };
 
 export const AGENTS_INDEX_GITHUB = 'https://github.com/lobehub/lobe-chat-agents';

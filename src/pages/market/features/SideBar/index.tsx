@@ -1,8 +1,6 @@
 import { useResponsive } from 'antd-style';
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-
-import { useMarketStore } from '@/store/market';
 
 import AgentInfo from './AgentInfo';
 import Desktop from './Desktop';
@@ -10,18 +8,13 @@ import Mobile from './Mobile';
 
 const SideBar = memo(() => {
   const { mobile } = useResponsive();
-  const agentManifestUrl = useMarketStore((s) => s.agentManifestUrl);
-  const Render = mobile ? Mobile : Desktop;
 
-  const Inner = useCallback(
-    () => agentManifestUrl && <AgentInfo url={agentManifestUrl} />,
-    [agentManifestUrl],
-  );
+  const Render = mobile ? Mobile : Desktop;
 
   return (
     <Render>
       <Flexbox>
-        <Inner />
+        <AgentInfo />
       </Flexbox>
     </Render>
   );

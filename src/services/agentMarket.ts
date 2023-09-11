@@ -1,4 +1,4 @@
-import { getAgentIndexJSON } from '@/const/url';
+import { getAgentIndexJSON, getAgentJSON } from '@/const/url';
 import { useGlobalStore } from '@/store/global';
 
 /**
@@ -13,9 +13,9 @@ export const getAgentList = async () => {
 /**
  * 请求助手 manifest
  */
-export const getAgentManifest = async (manifestUrl?: string) => {
-  if (!manifestUrl) return;
-  const res = await fetch(manifestUrl);
+export const getAgentManifest = async (identifier?: string) => {
+  if (!identifier) return;
+  const res = await fetch(getAgentJSON(identifier, useGlobalStore.getState().settings.language));
 
   return res.json();
 };

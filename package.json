@@ -100,6 +100,7 @@
     "swr": "^2",
     "systemjs": "^6.14.2",
     "ts-md5": "^1",
+    "url-join": "^5",
     "use-merge-value": "^1",
     "utility-types": "^3",
     "uuid": "^9",

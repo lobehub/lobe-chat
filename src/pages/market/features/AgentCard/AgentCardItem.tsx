@@ -13,7 +13,7 @@ import AgentCardBanner from './AgentCardBanner';
 import { useStyles } from './style';
 
 const { Paragraph } = Typography;
-const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, manifest }) => {
+const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
   const onAgentCardClick = useMarketStore((s) => s.onAgentCardClick);
@@ -21,7 +21,7 @@ const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, manifest }) => {
   const { styles, theme } = useStyles();
   const { isDarkMode } = useThemeMode();
   return (
-    <Flexbox className={styles.container} onClick={() => onAgentCardClick(manifest)}>
+    <Flexbox className={styles.container} onClick={() => onAgentCardClick(identifier)}>
       <AgentCardBanner
         mask
         maskColor={theme.colorBgContainer}
