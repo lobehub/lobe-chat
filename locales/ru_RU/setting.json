@@ -20,6 +20,64 @@
     "session": "Настройки сессии",
     "sessionWithName": "Настройки сессии · {{name}}"
   },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "Это значение можно найти в разделе «Ключи и конечные точки» при проверке ресурса на сайте Azure.",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Адрес API Azure"
+      },
+      "models": {
+        "desc": "Поддерживаемые модели",
+        "title": "Список моделей"
+      },
+      "title": "Настройки Azure OpenAI",
+      "token": {
+        "desc": "Это значение можно найти в разделе «Ключи и конечные точки» при проверке ресурса на сайте Azure. Можно использовать KEY1 или KEY2",
+        "placeholder": "Azure Ключ API",
+        "title": "Ключ API"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "Версия API Azure в формате ГГГГ-ММ-ДД, проверьте [последнюю версию](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Получить список",
+        "title": "Версия Azure Api"
+      },
+      "check": {
+        "button": "Проверить",
+        "desc": "Проверьте правильность заполнения Api Key и адреса прокси-сервера.",
+        "pass": "Подключение успешно",
+        "title": "Проверка возможности подключения"
+      },
+      "endpoint": {
+        "desc": "Должен содержать http(s):// в дополнение к адресу по умолчанию.",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "адрес API прокси"
+      },
+      "models": {
+        "count": "Всего поддерживается {{count}} моделей",
+        "desc": "Поддерживаемые модели",
+        "fetch": "Получение списка моделей",
+        "notSupport": "Azure OpenAI в настоящее время не поддерживает просмотр списков моделей",
+        "notSupportTip": "Необходимо убедиться в том, что имя развертывания совпадает с именем модели",
+        "refetch": "Получение списка моделей",
+        "title": "Список моделей"
+      },
+      "title": "Настройки OpenAI",
+      "token": {
+        "desc": "Используйте свой собственный ключ OpenAI",
+        "placeholder": "Ключ API OpenAI",
+        "title": "Ключ API"
+      },
+      "useAzure": {
+        "desc": "Использование служб OpenAI из Azure",
+        "fetch": "Получить список",
+        "title": "Azure OpenAI"
+      }
+    },
+    "waitingForMore": "<1>Планируется доступ к другим моделям</1>, так что следите за обновлениями ✨"
+  },
   "settingAgent": {
     "avatar": {
       "title": "Аватар"
@@ -170,6 +228,7 @@
   },
   "tab": {
     "agent": "Помощник по умолчанию",
-    "common": "Общие настройки"
+    "common": "Общие настройки",
+    "llm": "Пользовательский API GPT"
   }
 }

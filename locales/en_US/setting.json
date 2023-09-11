@@ -20,6 +20,64 @@
     "session": "Session Settings",
     "sessionWithName": "Session Settings · {{name}}"
   },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "This value can be found in the Keys and Endpoints section when checking out a resource on an Azure site.",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Azure API URL"
+      },
+      "models": {
+        "desc": "Supported models",
+        "title": "List of models"
+      },
+      "title": "Azure OpenAI Settings",
+      "token": {
+        "desc": "This value can be found in the Keys and Endpoints section when checking out a resource on an Azure site. You can use KEY1 or KEY2",
+        "placeholder": "Azure API Key",
+        "title": "API Key"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure API version in YYYY-MM-DD format, check [latest version](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Get list",
+        "title": "Azure API version"
+      },
+      "check": {
+        "button": "Check",
+        "desc": "Check that the Api Key and proxy server address are filled in correctly.",
+        "pass": "Connection successful",
+        "title": "Checking connectivity"
+      },
+      "endpoint": {
+        "desc": "Must contain http(s):// in addition to the default address.",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "API proxy address"
+      },
+      "models": {
+        "count": "Total supported models: {{count}}",
+        "desc": "Supported models",
+        "fetch": "Fetching the list of models",
+        "notSupport": "Azure OpenAI currently does not support viewing lists of models",
+        "notSupportTip": "Make sure that the deployment name matches the model name",
+        "refetch": "Fetching the list of models",
+        "title": "List of models"
+      },
+      "title": "OpenAI Settings",
+      "token": {
+        "desc": "Use your own OpenAI key",
+        "placeholder": "OpenAI API Key",
+        "title": "API Key"
+      },
+      "useAzure": {
+        "desc": "Using OpenAI services from Azure",
+        "fetch": "Get list",
+        "title": "Azure OpenAI"
+      }
+    },
+    "waitingForMore": "<1>Access to other models is planned</1>, so stay tuned ✨"
+  },
   "settingAgent": {
     "avatar": {
       "title": "Avatar"
@@ -170,6 +228,7 @@
   },
   "tab": {
     "agent": "Default Assistant",
-    "common": "Common Settings"
+    "common": "Common Settings",
+    "llm": "Custom LLM API"
   }
 }
