@@ -101,7 +101,8 @@ LobeChat provides a [self-hosted version][deploy-url] with Vercel. This allows y
 
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-> **👉 Note:** This project provides some additional configuration items, set with environment variables:
+> **Note**\
+> This project provides some additional configuration items, set with environment variables:
 
 | Environment Variable | Required | Description                                                                                                                                   | Example                                                                             |
 | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -137,7 +138,8 @@ If you have deployed your own project following the one-click deployment steps i
 
 Plugins provide a means to extend the [Function Calling][fc-url] capabilities of LobeChat. They can be used to introduce new function calls, and even new ways to render message results.
 
-> **👉 Note:** The plugin system is currently undergoing significant development. You can expect to see it in <https://github.com/lobehub/lobe-chat/issues/97>.
+> **Note**\
+> The plugin system is currently undergoing significant development. You can expect to see it in <https://github.com/lobehub/lobe-chat/issues/97>.
 
 - [@lobehub/lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeChat. It accesses index.json from this repository to display a list of available plugins for LobeChat to the user.
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.

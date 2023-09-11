@@ -101,7 +101,8 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 [![使用 Vercel 部署][deploy-button-image]][deploy-url]
 
-> **👉 提示：** 本项目提供了一些额外的配置项，使用环境变量进行设置：
+> **Note**\
+> 本项目提供了一些额外的配置项，使用环境变量进行设置：
 
 | 环境变量           | 类型 | 描述                                                                                   | 示例                                                                   |
 | ------------------ | ---- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
@@ -137,7 +138,8 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 插件提供了扩展 LobeChat [Function Calling][fc-url] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。
 
-> **👉 提示：** 插件系统目前正在进行重大开发。您可以在 <https://github.com/lobehub/lobe-chat/issues/97> 中了解更多信息。
+> **Note**\
+> 插件系统目前正在进行重大开发。您可以在 <https://github.com/lobehub/lobe-chat/issues/97> 中了解更多信息。
 
 - [@lobehub/lobe-chat-plugins][lobe-chat-plugins]：这是 LobeChat 的插件索引。它从该仓库的 index.json 中获取插件列表并显示给用户。
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]：LobeChat 插件 SDK 可帮助您创建出色的 Lobe Chat 插件。
