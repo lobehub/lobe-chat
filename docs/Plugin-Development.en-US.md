@@ -190,7 +190,7 @@ In this example, `manClothes` and `womanClothes` are hardcoded mock data. In act
 
 #### Gateway
 
-Since the default plugin gateway in LobeChat is a cloud service (<https://chat.lobehub.com/api/plugins>), which sends requests to the API addresses specified in the manifest to solve the cross-origin issue.
+Since the default plugin gateway in LobeChat is a cloud service (\</api/plugins>), which sends requests to the API addresses specified in the manifest to solve the cross-origin issue.
 
 For custom plugins, the requests need to be sent to the local service. Therefore, by specifying the gateway in the manifest (<http://localhost:3400/api/gateway>), LobeChat will directly request this address. Then you only need to create a gateway implementation at this address.
 

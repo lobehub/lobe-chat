@@ -189,7 +189,7 @@ export default async (req: Request) => {
 
 #### gateway
 
-由于 LobeChat 默认的插件网关是云端服务（<https://chat.lobehub.com/api/plugins>），云端服务通过 manifest 上的 api 地址发送请求，以解决跨域问题。
+由于 LobeChat 默认的插件网关是云端服务（\</api/plugins>），云端服务通过 manifest 上的 api 地址发送请求，以解决跨域问题。
 
 而针对自定义插件，插件的请求需要发送给本地服务的， 因此通过在 manifest 中指定网关 (<http://localhost:3400/api/gateway>)，LobeChat 将会直接请求该地址，然后只需要在该地址下创建一个网关实现即可。
 
