@@ -2,6 +2,67 @@
 
 # Changelog
 
+## [Version 0.75.0](https://github.com/lobehub/lobe-chat/compare/v0.74.0...v0.75.0)
+
+<sup>Released on **2023-09-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Fefactor index url fetch.
+
+#### ✨ Features
+
+- **market**: Add prompt token count.
+- **misc**: Add agents market and improve UI components, Add and refactor components for chat input feature, Add functions for generating and analyzing JSON files, generating resource files and table of contents, and formatting console output, Add new settings for Azure OpenAI and OpenAI in locales files, Add new string, create AgentModal component, implement GridCardItem and Loading components, import AgentModal, Add SideBar component, new actions, and update market store state and selectors, Add translations and new setting to "setting.json", Improve functionality and user interface of market page, Modify market features components and update CSS styles, support add agent to chat.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fetcher, Fix market sidebar scroll and add i18n.
+
+#### 💄 Styles
+
+- **misc**: Update loading style and compatible with unknown agent identifier.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Fefactor index url fetch ([257584b](https://github.com/lobehub/lobe-chat/commit/257584b))
+
+#### What's improved
+
+- **market**: Add prompt token count ([16221a7](https://github.com/lobehub/lobe-chat/commit/16221a7))
+- **misc**: Add agents market and improve UI components ([116c136](https://github.com/lobehub/lobe-chat/commit/116c136))
+- **misc**: Add and refactor components for chat input feature ([f1ac9fe](https://github.com/lobehub/lobe-chat/commit/f1ac9fe))
+- **misc**: Add functions for generating and analyzing JSON files, generating resource files and table of contents, and formatting console output ([d7c2e74](https://github.com/lobehub/lobe-chat/commit/d7c2e74))
+- **misc**: Add new settings for Azure OpenAI and OpenAI in locales files ([e9e25b5](https://github.com/lobehub/lobe-chat/commit/e9e25b5))
+- **misc**: Add new string, create AgentModal component, implement GridCardItem and Loading components, import AgentModal ([2a0e59f](https://github.com/lobehub/lobe-chat/commit/2a0e59f))
+- **misc**: Add SideBar component, new actions, and update market store state and selectors ([8f6cfda](https://github.com/lobehub/lobe-chat/commit/8f6cfda))
+- **misc**: Add translations and new setting to "setting.json" ([aca3822](https://github.com/lobehub/lobe-chat/commit/aca3822))
+- **misc**: Improve functionality and user interface of market page ([1d465d6](https://github.com/lobehub/lobe-chat/commit/1d465d6))
+- **misc**: Modify market features components and update CSS styles ([97e4179](https://github.com/lobehub/lobe-chat/commit/97e4179))
+- **misc**: Support add agent to chat ([3b930c4](https://github.com/lobehub/lobe-chat/commit/3b930c4))
+
+#### What's fixed
+
+- **misc**: Fix fetcher ([171b2da](https://github.com/lobehub/lobe-chat/commit/171b2da))
+- **misc**: Fix market sidebar scroll and add i18n ([9c897d2](https://github.com/lobehub/lobe-chat/commit/9c897d2))
+
+#### Styles
+
+- **misc**: Update loading style and compatible with unknown agent identifier ([2e2231d](https://github.com/lobehub/lobe-chat/commit/2e2231d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.74.0](https://github.com/lobehub/lobe-chat/compare/v0.73.0...v0.74.0)
 
 <sup>Released on **2023-09-11**</sup>
