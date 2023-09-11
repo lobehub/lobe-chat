@@ -41,6 +41,9 @@ export const createMarketAction: StateCreator<
   },
   useFetchAgent: (identifier) =>
     useSWR<AgentsMarketItem>(identifier, getAgentManifest, {
+      onError: () => {
+        get().deactivateAgent();
+      },
       onSuccess: (data, key) => {
         get().updateAgentMap(key, data);
       },

@@ -8,21 +8,21 @@ import { Center } from 'react-layout-kit';
 import { useGlobalStore } from '@/store/global';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 import { useSessionStore } from '@/store/session';
-import { AgentsMarketItem } from '@/types/market';
 
 import { useStyles } from './style';
 
 const { Link } = Typography;
 
-const Header = memo<AgentsMarketItem>(({ meta, createAt, author, homepage }) => {
+const Header = memo(() => {
   const { t } = useTranslation('market');
   const { styles, theme } = useStyles();
-
-  const { avatar, title, description, tags, backgroundColor } = meta;
 
   const createSession = useSessionStore((s) => s.createSession);
   const switchSideBar = useGlobalStore((s) => s.switchSideBar);
   const agentItem = useMarketStore(agentMarketSelectors.currentAgentItem);
+
+  const { meta, createAt, author, homepage, config } = agentItem;
+  const { avatar, title, description, tags, backgroundColor } = meta;
 
   return (
     <Center className={styles.container} gap={16}>
@@ -53,7 +53,7 @@ const Header = memo<AgentsMarketItem>(({ meta, createAt, author, homepage }) => 
         onClick={() => {
           if (!agentItem) return;
 
-          createSession({ config: agentItem.config, meta: agentItem.meta });
+          createSession({ config, meta });
           switchSideBar('chat');
         }}
         type={'primary'}

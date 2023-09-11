@@ -21,6 +21,12 @@ export const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextDescription};
     text-align: center;
   `,
+  loading: css`
+    .ant-skeleton-content {
+      display: flex;
+      flex-direction: column;
+    }
+  `,
   nav: css`
     padding-top: 4px;
 
