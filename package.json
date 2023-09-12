@@ -143,7 +143,6 @@
     "typescript": "^5",
     "vitest": "latest"
   },
-  "packageManager": "bun@1",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
