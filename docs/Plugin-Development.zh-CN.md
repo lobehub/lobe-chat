@@ -70,7 +70,7 @@ $ npm run dev
 
 ### 3. 会话测试插件功能
 
-接来下我们需要测试下这个自定义插件的功能是否正常。
+接来下我们需要测试这个插件的功能是否正常。
 
 点击「返回」按钮回到会话区，然后向助手发送消息：「我应该穿什么？ 」此时助手将会尝试向你询问，了解你的性别与当前的心情。
 
@@ -159,7 +159,7 @@ manifest 聚合了插件功能如何实现的信息。核心的字段为 `api` �
 
 ### 服务端
 
-服务端需要实现 manifest 中描述的 api 接口。在模板中，我们使用了 vercel 的 [Edge Runtime](https://nextjs.org/docs/pages/api-reference/edge) 作为技术栈，免去运维成本。
+服务端需要实现 manifest 中描述的 api 接口。在模板中，我们使用了 vercel 的 [Edge Runtime](https://nextjs.org/docs/pages/api-reference/edge)，免去运维。
 
 #### api 实现
 
@@ -185,13 +185,13 @@ export default async (req: Request) => {
 };
 ```
 
-其中 `maniClothes` 和 `womanClothes` 是写死的 mock 数据，在实际场景中，可以替换为数据库请求。
+其中 `maniClothes` 和 `womanClothes` 是 mock 数据，在实际场景中，可以替换为数据库查询等。
 
 #### gateway
 
-由于 LobeChat 默认的插件网关是云端服务（\</api/plugins>），云端服务通过 manifest 上的 api 地址发送请求，以解决跨域问题。
+由于 LobeChat 默认的插件网关是云端服务（`/api/plugins`），云端服务通过 manifest 上的 `api.url` 地址发送请求，以解决跨域问题。
 
-而针对自定义插件，插件的请求需要发送给本地服务的， 因此通过在 manifest 中指定网关 (<http://localhost:3400/api/gateway>)，LobeChat 将会直接请求该地址，然后只需要在该地址下创建一个网关实现即可。
+针对自定义插件，插件请求需要发送给本地服务， 因此通过在 manifest 中指定网关 (<http://localhost:3400/api/gateway>)，LobeChat 将会直接请求该地址，然后只需要在该地址下创建对应的网关即可。
 
 ```ts
 import { createLobeChatPluginGateway } from '@lobehub/chat-plugins-gateway';
@@ -207,21 +207,21 @@ export default async createLobeChatPluginGateway();
 
 ### 插件 UI 界面
 
-对于一个插件而言，UI 界面是一个可选项。例如 [「网页内容提取」插件](https://github.com/lobehub/chat-plugin-web-crawler)，就没有实现相应的用户界面。
+自定义插件的 UI 界面是一个可选项。例如 官方插件 [「网页内容提取」](https://github.com/lobehub/chat-plugin-web-crawler)，没有实现相应的用户界面。
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263241-0e765fdc-3463-4c36-a398-aef177a30df9.png)
 
-如果你希望在插件消息中展示更加丰富的信息，或者包含一些富交互，可以为插件定义一个用户界面。例如下图，则为搜索引擎插件的用户界面。
+如果你希望在插件消息中展示更加丰富的信息，或者包含一些富交互操作，你可以为插件定制一个用户界面。例如下图则为[「搜索引擎」](https://github.com/lobehub/chat-plugin-search-engine)插件的用户界面。
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263427-9bdc03d5-aa61-4f62-a2ce-88683f3308d8.png)
 
 #### 插件 UI 界面实现
 
-LobeChat 通过 `iframe` + `postMessage` 实现插件 ui 的加载与通信。因此， 插件 UI 的实现方式与普通的网页开发一致，你可以使用任何你熟悉的前端框架与开发语言。
+LobeChat 通过 `iframe` 实现插件 ui 的加载,使用 `postMessage` 实现主体与插件的通信。因此， 插件 UI 的实现方式与普通的网页开发一致，你可以使用任何你熟悉的前端框架与开发语言。
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263653-4ea87abc-249a-49f3-a241-7ed93ddb1ddf.png)
 
-在我们提供的模板中，我们使用了 React + Next.js + antd 作为前端界面框架，你可以在 `src/pages/index.tsx` 中找到用户界面的实现。
+在我们提供的模板中使用了 React + Next.js + [antd](https://ant.design/) 作为前端界面框架，你可以在 [`src/pages/index.tsx`](https://github.com/lobehub/chat-plugin-template/blob/main/src/pages/index.tsx) 中找到用户界面的实现。
 
 其中关于插件通信，我们在 [`@lobehub/chat-plugin-sdk`](https://github.com/lobehub/chat-plugin-sdk) 提供了相关方法，用于简化插件与 LobeChat 的通信。你可以通过 `fetchPluginMessage` 方法主动向 LobeChat 获取当前消息的数据。关于该方法的详细介绍，参见：[fetchPluginMessage][fetch-plugin-message-url]。
 
