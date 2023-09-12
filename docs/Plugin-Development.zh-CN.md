@@ -64,7 +64,7 @@ $ npm run dev
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259964-59f4906d-ae2e-4ec0-8b43-db36871d0869.png)
 
-完成添加后，即可在插件列表中看到刚刚添加的插件，如果需要修改插件的配置，可以点击「设置」按钮进行修改。
+完成添加后，在插件列表中就能看到刚刚添加的插件，如果需要修改插件的配置，可以点击最右侧的「设置」按钮进行修改。
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260093-a0363c74-0b5b-48dd-b103-2db6b4a8262e.png)
 
