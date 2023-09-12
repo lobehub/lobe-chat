@@ -12,8 +12,8 @@
     "OpenAI"
   ],
   "homepage": "https://github.com/lobehub/lobe-chat",
-  "bugs": {
-    "url": "https://github.com/lobehub/lobe-chat/issues/new/choose"
+  "bugs": { // 帮助
+    "url": "http://www.top-ies.com/?contact/"
   },
   "repository": {
     "type": "git",
