@@ -1,22 +1,25 @@
 ## Lobe Chat Wiki
 
-### 🏠 Home
+#### 🏠 Home
 
-- [TOC](Home)
+- [TOC](Home) | [目录](Home)
 
-### 🤯 LobeChat
+#### 🤯 LobeChat
 
-- [Upstream Sync](Upstream-Sync.en-US)
-  - [English](Upstream-Sync.en-US)
-  - [简体中文](Upstream-Sync.zh-CN)
+- [Upstream Sync](Upstream-Sync.en-US) | [中文](Upstream-Sync.zh-CN)
 
-### 🤖 Agents
+#### 🤖 Agents
 
-- [Agent Index](https://github.com/lobehub/lobe-chat-agents)
+- [Agent Index][agent-index] | [中文][agent-index-cn]
 
-### 🧩 Plugins
+#### 🧩 Plugins
 
-- [Plugin Index](https://github.com/lobehub/lobe-chat-plugins)
-- [Plugin Development](Plugin-Development.en-US)
-  - [English](Plugin-Development.en-US)
-  - [简体中文](Plugin-Development.zh-CN)
+- [Plugin Index][plugin-index] | [中文][plugin-index-cn]
+- [Plugin Development](Plugin-Development.en-US) | [中文](Plugin-Development.zh-CN)
+
+<!-- LINK GROUP -->
+
+[agent-index]: https://github.com/lobehub/lobe-chat-agents
+[agent-index-cn]: https://github.com/lobehub/lobe-chat-agents/blob/main/README.zh-CN.md
+[plugin-index]: https://github.com/lobehub/lobe-chat-plugins
+[plugin-index-cn]: https://github.com/lobehub/lobe-chat-plugins/blob/main/README.zh-CN.md
