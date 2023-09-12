@@ -161,7 +161,6 @@ manifest 聚合了插件功能如何实现的信息。核心字段为 `api` 与 
 
 服务端需要实现 manifest 中描述的 api 接口。在模板中，我们使用了 vercel 的 [Edge Runtime](https://nextjs.org/docs/pages/api-reference/edge)，免去运维。
 
-
 #### api 实现
 
 针对 Edge Runtime ，我们在 `@lobehub/chat-plugin-sdk` 提供了 `createErrorResponse` 方法，用于快速返回错误响应。目前提供的错误类型详见：[PluginErrorType][plugin-error-type-url]。

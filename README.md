@@ -112,7 +112,7 @@ LobeChat provides a [self-hosted version][deploy-url] with Vercel. This allows y
 
 ### Keep Updated
 
-If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available". This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to accurately detect updates. We suggest you redeploy using the following steps, [Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.en-US).
+If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available". This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to accurately detect updates. We suggest you redeploy using the following steps, [📘 Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync).
 
 <div align="right">
 
@@ -136,10 +136,14 @@ If you have deployed your own project following the one-click deployment steps i
 
 ## 🧩 Plugins
 
-Plugins provide a means to extend the [Function Calling][fc-url] capabilities of LobeChat. They can be used to introduce new function calls, and even new ways to render message results.
+Plugins provide a means to extend the [Function Calling][fc-url] capabilities of LobeChat. They can be used to introduce new function calls, and even new ways to render message results. If you are interested in plugin development, please refer to our [📘 Plugin Development Guide](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development) in the Wiki.
 
 > **Note**\
-> The plugin system is currently undergoing significant development. You can expect to see it in <https://github.com/lobehub/lobe-chat/issues/97>.
+> The plugin system is currently undergoing major development. You can learn more in the following issues:
+>
+> - [x] [**Plugin Phase 1**](https://github.com/lobehub/lobe-chat/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
+> - [x] [**Plugin Phase 2**](https://github.com/lobehub/lobe-chat/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture and developer-friendly.
+> - [ ] [**Plugin Phase 3**](https://github.com/lobehub/lobe-chat/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication and examples.
 
 - [@lobehub/lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeChat. It accesses index.json from this repository to display a list of available plugins for LobeChat to the user.
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
@@ -186,27 +190,7 @@ Contributions of all types are more than welcome, if you are interested in contr
 [![][submit-agents-shield]][submit-agents-url]
 [![][submit-plugin-shield]][submit-plugin-url]
 
-<!-- CONTRIBUTION GROUP -->
-
-> 📊 Total: <kbd>**5**</kbd>
-
-<a href="https://github.com/arvinxx" title="arvinxx">
-  <img src="https://avatars.githubusercontent.com/u/28616219?v=4" width="50" />
-</a>
-<a href="https://github.com/canisminor1990" title="canisminor1990">
-  <img src="https://avatars.githubusercontent.com/u/17870709?v=4" width="50" />
-</a>
-<a href="https://github.com/apps/dependabot" title="dependabot[bot]">
-  <img src="https://avatars.githubusercontent.com/in/29110?v=4" width="50" />
-</a>
-<a href="https://github.com/actions-user" title="actions-user">
-  <img src="https://avatars.githubusercontent.com/u/65916846?v=4" width="50" />
-</a>
-<a href="https://github.com/bropines" title="bropines">
-  <img src="https://avatars.githubusercontent.com/u/57861007?v=4" width="50" />
-</a>
-
-<!-- CONTRIBUTION END -->
+[![][contributors-contrib]][contributors-url]
 
 <div align="right">
 
@@ -250,6 +234,7 @@ This project is [MIT](./LICENSE) licensed.
 [ci-release-url]: https://github.com/lobehub/lobe-chat/actions?query=workflow%3ARelease%20CI
 [ci-test-shield]: https://github.com/lobehub/lobe-chat/workflows/Test%20CI/badge.svg
 [ci-test-url]: https://github.com/lobehub/lobe-chat/actions/workflows/test.yml
+[contributors-contrib]: https://contrib.rocks/image?repo=lobehub/lobe-chat
 [contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat.svg?style=flat
 [contributors-url]: https://github.com/lobehub/lobe-chat/graphs/contributors
 [deploy-button-image]: https://vercel.com/button

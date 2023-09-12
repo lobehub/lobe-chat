@@ -2,6 +2,12 @@
 
 LobeChat 支持使用 [Azure OpenAI][azure-openai-url] 作为 OpenAI 的模型服务商，本文将介绍如何配置 Azure OpenAI。
 
+#### TOC
+
+- [使用限制](#使用限制)
+- [在界面中配置](#在界面中配置)
+- [在部署时配置](#在部署时配置)
+
 ## 使用限制
 
 从研发成本考虑([#178][rfc])，目前阶段的 LobeChat 并没有 100% 完全符合 Azure OpenAI 的实现模型，采用了以 `openai` 为基座，兼容 Azure OpeAI 的解决方案。因此会带来以下局限性：

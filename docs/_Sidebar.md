@@ -6,7 +6,8 @@
 
 #### 🤯 LobeChat
 
-- [Upstream Sync](Upstream-Sync.en-US) | [中文](Upstream-Sync.zh-CN)
+- [Upstream Sync](Upstream-Sync) | [中文](Upstream-Sync.zh-CN)
+- [Deploying with Azure OpenAI](Deploy-with-Azure-OpenAI) | [中文](Deploy-with-Azure-OpenAI.zh-CN)
 
 #### 🤖 Agents
 
@@ -15,7 +16,7 @@
 #### 🧩 Plugins
 
 - [Plugin Index][plugin-index] | [中文][plugin-index-cn]
-- [Plugin Development](Plugin-Development.en-US) | [中文](Plugin-Development.zh-CN)
+- [Plugin Development](Plugin-Development) | [中文](Plugin-Development.zh-CN)
 
 <!-- LINK GROUP -->
 

@@ -112,7 +112,7 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 ### 保持更新
 
-如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示“有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。我们建议按照 [LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN) 步骤重新部署。
+如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示“有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。我们建议按照 [📘 LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN) 步骤重新部署。
 
 <div align="right">
 
@@ -136,10 +136,14 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 ## 🧩 插件体系
 
-插件提供了扩展 LobeChat [Function Calling][fc-url] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。
+插件提供了扩展 LobeChat [Function Calling][fc-url] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。如果你对插件开发感兴趣，请在 Wiki 中查阅我们的 [📘 插件开发指引](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development.zh-CN) 。
 
 > **Note**\
-> 插件系统目前正在进行重大开发。您可以在 <https://github.com/lobehub/lobe-chat/issues/97> 中了解更多信息。
+> 插件系统目前正在进行重大开发。您可以在以下 Issues 中了解更多信息:
+>
+> - [x] [**插件一期**](https://github.com/lobehub/lobe-chat/issues/73): 实现插件与主体分离，将插件拆分为独立仓库维护，并实现插件的动态加载
+> - [x] [**插件二期**](https://github.com/lobehub/lobe-chat/issues/97): 插件的安全性与使用的稳定性，更加精准地呈现异常状态，插件架构的可维护性与开发者友好
+> - [ ] [**插件三期**](https://github.com/lobehub/lobe-chat/issues/149)：更高阶与完善的自定义能力，支持插件鉴权与示例
 
 - [@lobehub/lobe-chat-plugins][lobe-chat-plugins]：这是 LobeChat 的插件索引。它从该仓库的 index.json 中获取插件列表并显示给用户。
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]：LobeChat 插件 SDK 可帮助您创建出色的 Lobe Chat 插件。
@@ -186,27 +190,7 @@ $ pnpm dev
 [![][submit-agents-shield]][submit-agents-url]
 [![][submit-plugin-shield]][submit-plugin-url]
 
-<!-- CONTRIBUTION GROUP -->
-
-> 📊 Total: <kbd>**5**</kbd>
-
-<a href="https://github.com/arvinxx" title="arvinxx">
-  <img src="https://avatars.githubusercontent.com/u/28616219?v=4" width="50" />
-</a>
-<a href="https://github.com/canisminor1990" title="canisminor1990">
-  <img src="https://avatars.githubusercontent.com/u/17870709?v=4" width="50" />
-</a>
-<a href="https://github.com/apps/dependabot" title="dependabot[bot]">
-  <img src="https://avatars.githubusercontent.com/in/29110?v=4" width="50" />
-</a>
-<a href="https://github.com/actions-user" title="actions-user">
-  <img src="https://avatars.githubusercontent.com/u/65916846?v=4" width="50" />
-</a>
-<a href="https://github.com/bropines" title="bropines">
-  <img src="https://avatars.githubusercontent.com/u/57861007?v=4" width="50" />
-</a>
-
-<!-- CONTRIBUTION END -->
+[![][contributors-contrib]][contributors-url]
 
 <div align="right">
 
@@ -250,6 +234,7 @@ This project is [MIT](./LICENSE) licensed.
 [ci-release-url]: https://github.com/lobehub/lobe-chat/actions?query=workflow%3ARelease%20CI
 [ci-test-shield]: https://github.com/lobehub/lobe-chat/workflows/Test%20CI/badge.svg
 [ci-test-url]: https://github.com/lobehub/lobe-chat/actions/workflows/test.yml
+[contributors-contrib]: https://contrib.rocks/image?repo=lobehub/lobe-chat
 [contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat.svg?style=flat
 [contributors-url]: https://github.com/lobehub/lobe-chat/graphs/contributors
 [deploy-button-image]: https://vercel.com/button
