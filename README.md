@@ -10,7 +10,7 @@
 
 LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
 
-**English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Report Bug][issues-url] · [Request Feature][issues-url]
+**English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Wiki][wiki-url] · [Report Bug][issues-url] · [Request Feature][issues-url]
 
 <!-- SHIELD GROUP -->
 
@@ -26,7 +26,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-![](https://gw.alipayobjects.com/zos/kitchen/3uH7fYVvfO/lobechat.webp)
+![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
 
 </div>
 
@@ -38,6 +38,8 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 - [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
 
 - [✨ Features](#-features)
+
+- [📸 Snapshot](#-snapshot)
 
 - [🛳 Self Hosting](#-self-hosting)
 
@@ -83,6 +85,42 @@ Please be aware that LobeChat is currently under active development，feedback i
 - [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
 
 > **👉 Roadmap:** You can find our upcoming [Roadmap][project-url] plans in the Projects section.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+## 📸 Snapshot
+
+![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
+
+**Progress Web App**
+
+Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology to achieve a seamless LobeChat experience on your computer or mobile device.
+
+> **Note**\
+> If you are unfamiliar with the installation process of PWA, you can add LobeChat as your desktop application (also applicable to mobile devices) by following these steps:
+>
+> - Launch the Chrome or Edge browser on your computer
+> - Visit the LobeChat webpage
+> - In the upper right corner of the address bar, click on the <kbd>Install</kbd> icon
+> - Follow the instructions on the screen to complete the PWA installation
+
+![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
+
+**Theme Mode Selection**
+
+LobeChat provides two theme modes, light and dark, along with color customization options. By default, the theme follows the system settings, but you can also manually switch in the settings.
+
+![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
+
+**Mobile Device Adaptation**
+
+We have designed a series of adaptations for mobile devices to enhance user experience. We are currently iterating the version for mobile experience, and we welcome any suggestions or ideas you might have.
+
+> 🚧 Additional snapshots and demonstrations are being progressively added...
 
 <div align="right">
 
@@ -212,8 +250,7 @@ Contributions of all types are more than welcome, if you are interested in contr
 
 ---
 
-<details>
-<summary><h4>📝 License</h4></summary>
+<details><summary><h4>📝 License</h4></summary>
 
 [![][fossa-license-shield]][fossa-license-url]
 
@@ -277,3 +314,4 @@ This project is [MIT](./LICENSE) licensed.
 [submit-agents-url]: https://github.com/lobehub/lobe-chat-agents
 [submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
 [submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins
+[wiki-url]: https://github.com/lobehub/lobe-chat/wiki

@@ -10,7 +10,7 @@
 
 LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性能聊天机器人框架。<br/> 它支持一键免费部署私人 ChatGPT/LLM 网页应用程序。
 
-[English](./README.md) · **简体中文** · [更新日志](./CHANGELOG.md) · [报告问题][issues-url] · [请求功能][issues-url]
+[English](./README.md) · **简体中文** · [更新日志](./CHANGELOG.md) · [文档][wiki-url] · [报告问题][issues-url] · [请求功能][issues-url]
 
 <!-- SHIELD GROUP -->
 
@@ -26,7 +26,7 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 
 [![Deploy with Vercel][deploy-button-image]][deploy-url]
 
-![](https://gw.alipayobjects.com/zos/kitchen/3uH7fYVvfO/lobechat.webp)
+![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
 
 </div>
 
@@ -38,6 +38,8 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 - [👋🏻 开始使用 & 交流](#-开始使用--交流)
 
 - [✨ 功能特性](#-功能特性)
+
+- [📸 快照预览](#-快照预览)
 
 - [🛳 开箱即用](#-开箱即用)
 
@@ -83,6 +85,46 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 - [x] 🏬 **角色市场**：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格；
 
 > **👉 Roadmap：** 你可以在 Projects 中找到我们后续的 [Roadmap][project-url] 计划
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+## 📸 快照预览
+
+![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
+
+**PWA 渐进式 Web 应用**
+
+利用渐进式 Web 应用 [PWA](https://support.google.com/chrome/answer/9658361) 技术，您可在电脑或移动设备上实现流畅的 LobeChat 体验。
+
+> **Note**\
+> 若您未熟悉 PWA 的安装过程，您可以按照以下步骤将 LobeChat 添加为您的桌面应用（也适用于移动设备）：
+>
+> - 在电脑上运行 Chrome 或 Edge 浏览器
+> - 访问 LobeChat 网页
+> - 在地址栏的右上角，单击 <kbd>安装</kbd> 图标
+> - 根据屏幕上的指示完成 PWA 的安装
+
+<br/>
+
+![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
+
+**主题模式选择**
+
+LobeChat 提供了亮色和暗色两种主题模式以及颜色定制选项，默认情况下，主题会跟随系统设置，您也可以在设置中手动切换。
+
+<br/>
+
+![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
+
+**移动设备适配**
+
+我们针对移动设备进行了一系列适配设计以提升用户体验。目前我们正在对移动端的体验进行版本迭代，如果您有任何建议或想法，我们非常欢迎您提供反馈。
+
+> 🚧 更多快照和演示正在陆续添加中...
 
 <div align="right">
 
@@ -212,8 +254,7 @@ $ pnpm dev
 
 ---
 
-<details>
-<summary><h4>📝 License</h4></summary>
+<details><summary><h4>📝 License</h4></summary>
 
 [![][fossa-license-shield]][fossa-license-url]
 
@@ -277,3 +318,4 @@ This project is [MIT](./LICENSE) licensed.
 [submit-agents-url]: https://github.com/lobehub/lobe-chat-agents
 [submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
 [submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins
+[wiki-url]: https://github.com/lobehub/lobe-chat/wiki

@@ -6,9 +6,9 @@
 
 - [Custom Plugin Workflow](#custom-plugin-workflow)
 
-  - [1. Create and Start a Plugin Project](#1-create-and-start-a-plugin-project)
-  - [2. Add the Local Plugin in LobeChat Role Settings](#2-add-the-local-plugin-in-lobechat-role-settings)
-  - [3. Test the Plugin Functionality in a Session](#3-test-the-plugin-functionality-in-a-session)
+  - [**`1`** Create and Start a Plugin Project](#1-create-and-start-a-plugin-project)
+  - [**`2`** Add the Local Plugin in LobeChat Role Settings](#2-add-the-local-plugin-in-lobechat-role-settings)
+  - [**`3`** Test the Plugin Functionality in a Session](#3-test-the-plugin-functionality-in-a-session)
 
 - [Local Plugin Development](#local-plugin-development)
 
@@ -18,6 +18,10 @@
   - [Plugin UI Interface](#plugin-ui-interface)
 
 - [Plugin Deployment and Publication](#plugin-deployment-and-publication)
+
+  - [Plugin Shield](#plugin-shield)
+
+- [Link](#link)
 
 ## Plugin Composition
 
@@ -30,11 +34,13 @@ A LobeChat plugin consists of the following components:
 - **Server-side**: Implement the API capabilities described in the manifest.
 - **Frontend UI** (optional): Implement the interface described in the manifest, which will be displayed in plugin messages to provide richer information display than plain text.
 
+<br/>
+
 ## Custom Plugin Workflow
 
 To integrate a plugin into LobeChat, you need to add and use a custom plugin in LobeChat. This section will guide you through the process.
 
-### 1. Create and Start a Plugin Project
+### **`1`** Create and Start a Plugin Project
 
 First, you need to create a plugin project locally. You can use the [lobe-chat-plugin-template][lobe-chat-plugin-template-url] template we have prepared:
 
@@ -49,31 +55,31 @@ When you see `ready started server on 0.0.0.0:3400, url: http://localhost:3400`,
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259526-9ef25272-4312-429b-93bc-a95515727ed3.png)
 
-### 2. Add the Local Plugin in LobeChat Role Settings
+### **`2`** Add the Local Plugin in LobeChat Role Settings
 
 Next, go to LobeChat, create a new assistant, and go to its session settings page:
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259643-1a9cc34a-76f3-4ccf-928b-129654670efd.png)
 
-Click the "Add" button on the right side of "Plugin List" to open the custom plugin add dialog:
+Click the <kbd>Add</kbd> button on the right side of "Plugin List" to open the custom plugin add dialog:
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259748-2ef6a244-39bb-483c-b359-f156ffcbe1a4.png)
 
-Enter `http://localhost:3400/manifest-dev.json` in the "Plugin Manifest URL" field, which is the URL of the locally started plugin manifest.
+Enter `http://localhost:3400/manifest-dev.json` in the `Plugin Manifest URL` field, which is the URL of the locally started plugin manifest.
 
-At this point, you should see that the identifier of the plugin has been automatically recognized as `chat-plugin-template`. Then fill in the remaining form fields (only the title is required) and click the "Save" button to complete the custom plugin addition.
+At this point, you should see that the identifier of the plugin has been automatically recognized as `chat-plugin-template`. Then fill in the remaining form fields (only the title is required) and click the <kbd>Save</kbd> button to complete the custom plugin addition.
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259964-59f4906d-ae2e-4ec0-8b43-db36871d0869.png)
 
-After adding the plugin, you can see the newly added plugin in the plugin list. If you need to modify the plugin's configuration, you can click the "Settings" button to make changes.
+After adding the plugin, you can see the newly added plugin in the plugin list. If you need to modify the plugin's configuration, you can click the <kbd>Settings</kbd> button to make changes.
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260093-a0363c74-0b5b-48dd-b103-2db6b4a8262e.png)
 
-### 3. Test the Plugin Functionality in a Session
+### **`3`** Test the Plugin Functionality in a Session
 
 Next, we need to test the functionality of the custom plugin.
 
-Click the "Back" button to go back to the session area, and then send a message to the assistant: "What should I wear?" The assistant will try to ask you about your gender and current mood.
+Click the <kbd>Back</kbd> button to go back to the session area, and then send a message to the assistant: "What should I wear?" The assistant will try to ask you about your gender and current mood.
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260291-f0aa0e7c-0ffb-486c-a834-08e73d49896f.png)
 
@@ -82,6 +88,8 @@ After answering, the assistant will make a plugin call to retrieve recommended c
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260461-c22ae797-2809-464b-96fc-d0c020f4807b.png)
 
 After completing these steps, you have learned the basic process of adding and using a custom plugin in LobeChat.
+
+<br/>
 
 ## Local Plugin Development
 
@@ -248,15 +256,39 @@ const Render = memo(() => {
 export default Render;
 ```
 
+<br/>
+
 ## Plugin Deployment and Publication
 
 After completing the plugin development, you can deploy the plugin using your preferred method. For example, you can use Vercel or package it as a Docker image for publication.
 
 If you want more people to use your plugin, you are welcome to submit it for review in the plugin marketplace.
 
+[![][submit-plugin-shield]][submit-plugin-url]
+
+### Plugin Shield
+
+[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://github.com/lobehub/lobe-chat-plugins)
+
+```markdown
+[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://github.com/lobehub/lobe-chat-plugins)
+```
+
+<br/>
+
+## Link
+
+- **📘 Pluging SDK Docs**: <https://chat-plugin-sdk.lobehub.com>
+- **🚀 chat-plugin-template**: <https://github.com/lobehub/chat-plugin-template>
+- **🧩 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugin-sdk>
+- **🚪 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugin-gateway>
+- **🏪 lobe-chat-plugins**: <https://github.com/lobehub/lobe-chat-plugins>
+
 <!-- LINK GROUP -->
 
 [fetch-plugin-message-url]: https://github.com/lobehub/chat-plugin-template
 [lobe-chat-plugin-template-url]: https://github.com/lobehub/chat-plugin-template
-[manifest-docs-url]: https://github.com/lobehub/chat-plugin-sdk/tree/master/docs/manifest.zh-CN.md
+[manifest-docs-url]: https://chat-plugin-sdk.lobehub.com/guides/plugin-manifest
 [plugin-error-type-url]: https://github.com/lobehub/chat-plugin-template
+[submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
+[submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins

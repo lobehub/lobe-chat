@@ -31,6 +31,8 @@ You can fill in the corresponding configuration items as needed:
 
 After completing the above field configuration, click on "Check". If the prompt says "Check Passed", it means the configuration was successful.
 
+<br/>
+
 ## Configuration at Deployment
 
 If you want the deployed version to be directly configured with Azure OpenAI for end users to use immediately, you need to configure the following environment variables at deployment:

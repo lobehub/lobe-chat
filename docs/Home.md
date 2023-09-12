@@ -29,11 +29,11 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 - [Plugin Index and Submit][plugin-index] | [插件索引与提交][plugin-index-cn]
 - [Plugin Development](Plugin-Development) | [插件开发](Plugin-Development.zh-CN)
+- [Plugin SDK Docs][plugin-sdk] | [插件 SDK 文档][plugin-skd-cn]
 
 ---
 
-<details>
-<summary><h4>📝 License</h4></summary>
+<details><summary><h4>📝 License</h4></summary>
 
 [![][fossa-license-shield]][fossa-license-url]
 
@@ -52,4 +52,6 @@ This project is [MIT][license-url] licensed.
 [license-url]: https://github.com/lobehub/lobe-chat/blob/main/LICENSE
 [plugin-index]: https://github.com/lobehub/lobe-chat-plugins
 [plugin-index-cn]: https://github.com/lobehub/lobe-chat-plugins/blob/main/README.zh-CN.md
+[plugin-sdk]: https://chat-plugin-sdk.lobehub.com
+[plugin-skd-cn]: https://chat-plugin-sdk.lobehub.com
 [profile-url]: https://github.com/lobehub
