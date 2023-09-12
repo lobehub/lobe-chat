@@ -159,7 +159,7 @@ manifest 聚合了插件功能如何实现的信息。核心的字段为 `api` �
 
 ### 服务端
 
-服务端只需要实现 manifest 中描述的 api 接口即可。在模板中，我们使用了 vercel 的 [Edge Runtime](https://nextjs.org/docs/pages/api-reference/edge) 作为服务，免去运维成本。
+服务端需要实现 manifest 中描述的 api 接口。在模板中，我们使用了 vercel 的 [Edge Runtime](https://nextjs.org/docs/pages/api-reference/edge) 作为技术栈，免去运维成本。
 
 #### api 实现
 
