@@ -35,7 +35,7 @@
 
 ### 1. 创建并启动插件项目
 
-你需要先在本地创建一个插件项目，可以使用我们准备好的 [lobe-chat-plugin-template][lobe-chat-plugin-template-url] 模板；
+你需要先在本地创建一个插件项目，可以使用我们准备好的模板 [lobe-chat-plugin-template][lobe-chat-plugin-template-url]；
 
 ```bash
 $ git clone https://github.com/lobehub/chat-plugin-template.git
