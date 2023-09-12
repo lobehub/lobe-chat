@@ -132,7 +132,7 @@ manifest 聚合了插件功能如何实现的信息。核心字段为 `api` 与 
 1. `identifier`：这是插件的唯一标识符，用来区分不同的插件，这个字段需要全局唯一。
 2. `api`：这是一个数组，包含了插件的所有 API 接口信息。每个接口都包含了url、name、description 和 parameters 字段，均为必填项。其中 `description` 和 `parameters` 两个字段，将会作为 [Function Call](https://sspai.com/post/81986) 的 `functions` 参数发送给 gpt， parameters 需要符合 [JSON Schema](https://json-schema.org/) 规范。 在这个例子中，api 接口名为 `recommendClothes` ，这个接口的功能是根据用户的心情和性别来推荐衣服。接口的参数包括用户的心情和性别，这两个参数都是必填项。
 3. `ui`：这个字段包含了插件的用户界面信息，指明了 LobeChat 从哪个地址加载插件的前端界面。由于 LobeChat 插件界面加载是基于 iframe 实现的，因此可以按需指定插件界面的高度、宽度。
-4. `gateway`：这个字段指定了 LobeChat 查询 api 接口的网关。LobeChat 默认的插件网关是云端服务，而自定义插件的请求需要发送给本地服务的，因此通过在 manifest 中指定网关，LobeChat 将会直接请求这个地址，进而访问到本地的插件服务，发布到线上的插件可以不用指定该字段。
+4. `gateway`：这个字段指定了 LobeChat 查询 api 接口的网关。LobeChat 默认的插件网关是云端服务，而自定义插件的请求需要发给本地启动的服务，远端调用本地地址，一般调用不通。gateway字段解决了该问题。通过在 manifest 中指定网关，LobeChat 将会直接请求这个地址，进而访问到本地的插件服务，发布到线上的插件可以不用指定该字段。
 5. `version`：这是插件的版本号，现阶段暂时没有作用；
 
 在实际开发中，你可以根据自己的需求，修改插件的描述清单，声明自己想要实现的功能。 关于 manifest 各个字段的完整介绍，参见：[manifest][manifest-docs-url]。
