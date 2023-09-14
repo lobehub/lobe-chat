@@ -1,6 +1,6 @@
 import { createStyles } from 'antd-style';
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const useStyles = createStyles(({ css, token, responsive }) => ({
   avatar: css``,
 
   container: css`
@@ -18,5 +18,12 @@ export const useStyles = createStyles(({ css, token }) => ({
     margin-bottom: 0 !important;
     font-size: 16px;
     font-weight: 600;
+  `,
+  subTitle: css`
+    font-weight: 600;
+    font-size: 24px;
+    ${responsive.mobile} {
+      font-size: 20px;
+    }
   `,
 }));

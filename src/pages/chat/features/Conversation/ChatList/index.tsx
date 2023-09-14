@@ -67,9 +67,9 @@ const List = () => {
     [chatLoadingId],
   );
 
-  return !init ? (
-    <SkeletonList />
-  ) : (
+  if (!init) return <SkeletonList />;
+
+  return (
     <ChatList
       data={data}
       loadingId={chatLoadingId}
@@ -102,7 +102,7 @@ const List = () => {
         edit: t('edit'),
         regenerate: t('regenerate'),
       }}
-      type={displayMode}
+      type={displayMode || 'chat'}
     />
   );
 };

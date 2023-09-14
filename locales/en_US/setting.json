@@ -73,7 +73,8 @@
       "useAzure": {
         "desc": "Using OpenAI services from Azure",
         "fetch": "Get list",
-        "title": "Azure OpenAI"
+        "title": "Azure OpenAI",
+        "serverConfig": "The administrator has enabled Azure OpenAI on the server side, switching is prohibited"
       }
     },
     "waitingForMore": "<1>Access to other models is planned</1>, so stay tuned ✨"
@@ -86,11 +87,11 @@
       "title": "Background Color"
     },
     "description": {
-      "placeholder": "Please enter assistant description",
-      "title": "Assistant Description"
+      "placeholder": "Please enter agent description",
+      "title": "Agent Description"
     },
     "name": {
-      "placeholder": "Please enter assistant name",
+      "placeholder": "Please enter agent name",
       "title": "Name"
     },
     "prompt": {
@@ -101,7 +102,7 @@
       "placeholder": "Please enter tag",
       "title": "Tag"
     },
-    "title": "Assistant Information"
+    "title": "Agent Information"
   },
   "settingChat": {
     "chatStyleType": {
@@ -229,7 +230,7 @@
     "title": "Theme Settings"
   },
   "tab": {
-    "agent": "Default Assistant",
+    "agent": "Default Agent",
     "common": "Common Settings",
     "llm": "Custom LLM API"
   }

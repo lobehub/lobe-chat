@@ -1,11 +1,11 @@
-import en_US from './en_US';
-import ru_RU from './ru_RU';
-import zh_CN from './zh_CN';
+import zh_CN from "./zh_CN";
+import en_US from "./en_US";
+import ru_RU from "./ru_RU";
 
 const resources = {
-  'en-US': en_US,
-  'ru-RU': ru_RU,
-  'zh-CN': zh_CN,
+   "zh-CN": zh_CN,
+   "en-US": en_US,
+   "ru-RU": ru_RU,
 } as const;
 export default resources;
 export const defaultResources = zh_CN;

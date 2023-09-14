@@ -32,6 +32,8 @@ const AgentConfig = memo(() => {
         {
           children: (
             <SelectWithImg
+              value={config.displayMode}
+              onChange={(mode) => updateConfig({ displayMode: mode })}
               height={86}
               options={[
                 {
@@ -47,21 +49,11 @@ const AgentConfig = memo(() => {
                   value: 'docs',
                 },
               ]}
-              styles={{
-                img: {
-                  background: `linear-gradient(
-                  to bottom,
-                ${isDarkMode ? theme.colorBgElevated : theme.colorBgLayout},
-                ${theme.colorBgContainer}
-                )`,
-                },
-              }}
               width={144}
             />
           ),
           label: t('settingChat.chatStyleType.title'),
           minWidth: undefined,
-          name: 'displayMode',
         },
         {
           children: <Input placeholder={t('settingChat.inputTemplate.placeholder')} />,

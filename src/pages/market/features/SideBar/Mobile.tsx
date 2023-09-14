@@ -20,7 +20,7 @@ const Mobile = memo<PropsWithChildren>(({ children }) => {
     <Drawer
       bodyStyle={{ padding: 0 }}
       closeIcon={<ActionIcon icon={X} size={{ blockSize: 32, fontSize: 20 }} />}
-      drawerStyle={{ background: theme.colorBgContainer }}
+      drawerStyle={{ background: theme.colorBgLayout }}
       headerStyle={{ padding: '8px 4px' }}
       height={'75vh'}
       onClose={deactivateAgent}

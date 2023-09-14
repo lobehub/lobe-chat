@@ -5,6 +5,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { MAX_WIDTH } from '@/const/layoutTokens';
+import { useSwitchSideBarOnInit } from '@/store/global';
 
 import AppLayout from '../../layout/AppLayout';
 import Header from './features/Header';
@@ -25,6 +26,9 @@ const useStyles = createStyles(({ css }) => ({
 
 const MarketLayout = memo<PropsWithChildren>(({ children }) => {
   const { theme, styles } = useStyles();
+
+  useSwitchSideBarOnInit('market');
+
   return (
     <AppLayout>
       <Flexbox

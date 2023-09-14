@@ -3,10 +3,13 @@ import { Flexbox } from 'react-layout-kit';
 
 import AppMobileLayout from '@/layout/AppMobileLayout';
 import SideBar from '@/pages/market/features/SideBar';
+import { useSwitchSideBarOnInit } from '@/store/global';
 
 import Header from './features/Header';
 
 const MarketLayout = memo<{ children: ReactNode }>(({ children }) => {
+  useSwitchSideBarOnInit('market');
+
   return (
     <AppMobileLayout navBar={<Header />} showTabBar>
       <Flexbox flex={1} gap={16} style={{ padding: 16 }}>

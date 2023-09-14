@@ -8,5 +8,9 @@
     "prompt": "Подсказка",
     "title": "Детали агента"
   },
-  "submitAgent": "Отправить агента"
+  "submitAgent": "Отправить агента",
+  "title": {
+    "recentSubmits": "Недавние добавления",
+    "allAgents": "Все агенты"
+  }
 }

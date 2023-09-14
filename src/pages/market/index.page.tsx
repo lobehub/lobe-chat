@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSwitchSideBarOnInit } from '@/store/global';
 import { useMarketStore } from '@/store/market';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 

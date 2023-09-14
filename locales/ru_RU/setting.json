@@ -73,7 +73,8 @@
       "useAzure": {
         "desc": "Использование служб OpenAI из Azure",
         "fetch": "Получить список",
-        "title": "Azure OpenAI"
+        "title": "Azure OpenAI",
+        "serverConfig": "Администратор настроил сервер для использования Azure OpenAI. Переключение запрещено."
       }
     },
     "waitingForMore": "<1>Планируется доступ к другим моделям</1>, так что следите за обновлениями ✨"

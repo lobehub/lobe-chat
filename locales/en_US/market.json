@@ -1,12 +1,16 @@
 {
-  "addAgent": "Add Assistant",
+  "addAgent": "Add Agent",
   "search": {
-    "placeholder": "Search assistant name, description or keywords..."
+    "placeholder": "Search agent name, description or keywords..."
   },
   "sidebar": {
     "comment": "Comments",
     "prompt": "Prompts",
-    "title": "Assistant Details"
+    "title": "Agent Details"
   },
-  "submitAgent": "Submit Assistant"
+  "submitAgent": "Submit Agent",
+  "title": {
+    "recentSubmits": "Recent Submits",
+    "allAgents": "All Agents"
+  }
 }
