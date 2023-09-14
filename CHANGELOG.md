@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.77.1](https://github.com/lobehub/lobe-chat/compare/v0.77.0...v0.77.1)
+
+<sup>Released on **2023-09-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix lint.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix lint ([9f4f9d7](https://github.com/lobehub/lobe-chat/commit/9f4f9d7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.77.0](https://github.com/lobehub/lobe-chat/compare/v0.76.2...v0.77.0)
 
 <sup>Released on **2023-09-14**</sup>
