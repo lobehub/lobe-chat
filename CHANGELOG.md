@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.77.0](https://github.com/lobehub/lobe-chat/compare/v0.76.2...v0.77.0)
+
+<sup>Released on **2023-09-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Update localization files and add translations for different languages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Update localization files and add translations for different languages ([0157f92](https://github.com/lobehub/lobe-chat/commit/0157f92))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.76.2](https://github.com/lobehub/lobe-chat/compare/v0.76.1...v0.76.2)
 
 <sup>Released on **2023-09-11**</sup>
