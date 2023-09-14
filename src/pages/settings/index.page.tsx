@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useOnFinishHydrationGlobal, useSwitchSideBarOnInit } from '@/store/global';
+import { useSwitchSideBarOnInit } from '@/store/global';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import Settings from './features/Settings';

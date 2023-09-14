@@ -14,16 +14,16 @@ export const useStyles = createStyles(({ css, token, responsive }) => ({
   inner: css`
     padding: 16px;
   `,
+  subTitle: css`
+    font-size: 24px;
+    font-weight: 600;
+    ${responsive.mobile} {
+      font-size: 20px;
+    }
+  `,
   title: css`
     margin-bottom: 0 !important;
     font-size: 16px;
     font-weight: 600;
-  `,
-  subTitle: css`
-    font-weight: 600;
-    font-size: 24px;
-    ${responsive.mobile} {
-      font-size: 20px;
-    }
   `,
 }));

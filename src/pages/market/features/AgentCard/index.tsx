@@ -1,5 +1,4 @@
 import { SpotlightCard } from '@lobehub/ui';
-import { Typography } from 'antd';
 import { useResponsive } from 'antd-style';
 import { shuffle } from 'lodash-es';
 import { memo, useMemo } from 'react';

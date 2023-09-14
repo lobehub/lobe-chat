@@ -13,7 +13,7 @@ const resources = {
   market,
   plugin,
   setting,
-  welcome
+  welcome,
 } as const;
 
 export default resources;

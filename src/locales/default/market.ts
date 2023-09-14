@@ -10,7 +10,7 @@ export default {
   },
   submitAgent: '提交助手',
   title: {
-    recentSubmits: '最近新增',
     allAgents: '全部助手',
+    recentSubmits: '最近新增',
   },
 };

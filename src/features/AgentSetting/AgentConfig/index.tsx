@@ -32,9 +32,8 @@ const AgentConfig = memo(() => {
         {
           children: (
             <SelectWithImg
-              value={config.displayMode}
-              onChange={(mode) => updateConfig({ displayMode: mode })}
               height={86}
+              onChange={(mode) => updateConfig({ displayMode: mode })}
               options={[
                 {
                   icon: MessagesSquare,
@@ -49,6 +48,7 @@ const AgentConfig = memo(() => {
                   value: 'docs',
                 },
               ]}
+              value={config.displayMode}
               width={144}
             />
           ),
