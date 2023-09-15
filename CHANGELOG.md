@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.77.2](https://github.com/lobehub/lobe-chat/compare/v0.77.1...v0.77.2)
+
+<sup>Released on **2023-09-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **settings**: Fix settings route.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **settings**: Fix settings route, closes [#195](https://github.com/lobehub/lobe-chat/issues/195) ([1b7d84e](https://github.com/lobehub/lobe-chat/commit/1b7d84e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.77.1](https://github.com/lobehub/lobe-chat/compare/v0.77.0...v0.77.1)
 
 <sup>Released on **2023-09-14**</sup>
