@@ -9,7 +9,7 @@ const Header = memo(() => {
   return (
     <MobileNavBar
       center={<MobileNavBarTitle title={t('header.global')} />}
-      onBackClick={() => Router.back()}
+      onBackClick={() => Router.push('/chat')}
       showBackButton
     />
   );

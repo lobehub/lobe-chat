@@ -1,5 +1,4 @@
-import { ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
-import Router from 'next/router';
+import { ChatHeader, ChatHeaderTitle, Logo } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,9 +7,7 @@ const Index = memo(() => {
 
   return (
     <ChatHeader
-      left={<ChatHeaderTitle title={t('header.global')} />}
-      onBackClick={() => Router.back()}
-      showBackButton
+      left={<ChatHeaderTitle title={<Logo extra={t('header.global')} type={'text'} />} />}
     />
   );
 });
