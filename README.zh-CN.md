@@ -8,23 +8,25 @@
 
 <h1>Lobe Chat</h1>
 
-LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性能聊天机器人框架。<br/> 它支持一键免费部署私人 ChatGPT/LLM 网页应用程序。
+LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高性能聊天机器人框架。<br/> 它支持一键免费部署私人 ChatGPT/LLM 网页应用程序。
 
-[English](./README.md) · **简体中文** · [更新日志](./CHANGELOG.md) · [文档][wiki-url] · [报告问题][issues-url] · [请求功能][issues-url]
+[English](./README.md) · **简体中文** · [更新日志](./CHANGELOG.md) · [文档][github-wiki-link] · [报告问题][github-issues-link] · [请求功能][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
-[![release][release-shield]][release-url]
-[![releaseDate][release-date-shield]][release-date-url]
-[![][license-shield]][fossa-license-url]
-[![ciTest][ci-test-shield]][ci-test-url]
-[![ciRelease][ci-release-shield]][ci-release-url] <br/>
-[![contributors][contributors-shield]][contributors-url]
-[![forks][forks-shield]][forks-url]
-[![stargazers][stargazers-shield]][stargazers-url]
-[![issues][issues-shield]][issues-url]
+[![][github-release-shield]][github-release-link]
+[![][vercel-shield]][vercel-link]
+[![][discord-shield]][discord-link]
+[![][github-releasedate-shield]][github-releasedate-link]
+[![][github-action-test-shield]][github-action-test-link]
+[![][github-action-release-shield]][github-action-release-link]<br/>
+[![][github-contributors-shield]][github-contributors-link]
+[![][github-forks-shield]][github-forks-link]
+[![][github-stars-shield]][github-stars-link]
+[![][github-issues-shield]][github-issues-link]
+[![][github-license-shield]][github-license-link]
 
-[![Deploy with Vercel][deploy-button-image]][deploy-url]
+[![Deploy with Vercel][deploy-button-image]][deploy-link]
 
 ![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
 
@@ -63,15 +65,21 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 
 ## 👋🏻 开始使用 & 交流
 
-我们是一群充满热情的设计工程师，希望为 AIGC 提供现代化的设计组件和工具，并以开源的方式分享，以促进它们在更广泛的社区中的发展和采用，LobeChat 目前正在积极开发中，有需求或者问题，欢迎提交 [issues][issues-url]
+我们是一群充满热情的设计工程师，希望为 AIGC 提供现代化的设计组件和工具，并以开源的方式分享，以促进它们在更广泛的社区中的发展和采用，LobeChat 目前正在积极开发中，有需求或者问题，欢迎提交 [issues][issues-link]
 
-| [![][official-shield]][official-url] | 无需安装或注册！访问我们的网站，快速体验                                     |
-| :----------------------------------- | :--------------------------------------------------------------------------- |
-| [![][discord-shield]][discord-url]   | 加入我们的 Discord 社区！这是你可以与开发者和其他 LobeHub 热衷用户交流的地方 |
+| [!\[\]\[vercel-shield-bagge\]][vercel-link] | 无需安装或注册！访问我们的网站，快速体验                                     |
+| :------------------------------------------ | :--------------------------------------------------------------------------- |
+| [![][discord-shield-badge]][discord-link]   | 加入我们的 Discord 社区！这是你可以与开发者和其他 LobeHub 热衷用户交流的地方 |
+
+<details><summary><b>⭐️ 收藏项目：</b> 你将从 GitHub 上无延迟地接收所有发布通知！</summary>
+  <br/>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&theme=dark&type=Date">
+    <img src="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&type=Date">
+  </picture>
+</details>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
-
-> **⭐️ 给我们点赞：** 你将从 GitHub 上无延迟地接收所有发布通知！
 
 ## ✨ 功能特性
 
@@ -84,7 +92,8 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-url]）高性
 - [x] 🌐 **自定义域名**：如果用户拥有自己的域名，可以将其绑定到平台上，方便在任何地方快速访问对话助手。
 - [x] 🏬 **角色市场**：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格；
 
-> **👉 Roadmap：** 你可以在 Projects 中找到我们后续的 [Roadmap][project-url] 计划
+> **Important**\
+> 你可以在 Projects 中找到我们后续的 [Roadmap][github-project-link] 计划
 
 <div align="right">
 
@@ -134,14 +143,14 @@ LobeChat 提供了亮色和暗色两种主题模式以及颜色定制选项，�
 
 ## 🛳 开箱即用
 
-LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。如果想自己部署该服务，可以按照以下步骤进行操作：
+LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。如果想自己部署该服务，可以按照以下步骤进行操作：
 
 - 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
 - 点击下方按钮开始部署： Deploy with Vercel，直接使用 Github 账号登录即可，记得在环境变量页填入 API Key 和页面访问密码 CODE；
 - 部署完毕后，即可开始使用；
 - 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
 
-[![使用 Vercel 部署][deploy-button-image]][deploy-url]
+[![使用 Vercel 部署][deploy-button-image]][deploy-link]
 
 > **Note**\
 > 本项目提供了一些额外的配置项，使用环境变量进行设置：
@@ -164,11 +173,11 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 ## 📦 生态系统
 
-| NPM                            | 代码库                                | 描述                                                                                                  | 版本                                   |
-| ------------------------------ | ------------------------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [@lobehub/ui][lobe-ui-url]     | [lobehub/lobe-ui][lobe-ui-github]     | Lobe UI 是一个专为构建 AIGC 网页应用程序而设计的开源 UI 组件库。                                      | [![][lobe-ui-shield]][lobe-ui-url]     |
-| [@lobehub/lint][lobe-lint-url] | [lobehub/lobe-lint][lobe-lint-github] | LobeLint 为 LobeHub 提供 ESlint，Stylelint，Commitlint，Prettier，Remark 和 Semantic Release 的配置。 | [![][lobe-lint-shield]][lobe-lint-url] |
-| @lobehub/assets                | [lobehub/assets][lobe-assets-github]  | LobeHub 的 Logo 资源、favicon、网页字体。                                                             |                                        |
+| NPM                             | 代码库                                | 描述                                                                                                  | 版本                                    |
+| ------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| [@lobehub/ui][lobe-ui-link]     | [lobehub/lobe-ui][lobe-ui-github]     | Lobe UI 是一个专为构建 AIGC 网页应用程序而设计的开源 UI 组件库。                                      | [![][lobe-ui-shield]][lobe-ui-link]     |
+| [@lobehub/lint][lobe-lint-link] | [lobehub/lobe-lint][lobe-lint-github] | LobeLint 为 LobeHub 提供 ESlint，Stylelint，Commitlint，Prettier，Remark 和 Semantic Release 的配置。 | [![][lobe-lint-shield]][lobe-lint-link] |
+| @lobehub/assets                 | [lobehub/assets][lobe-assets-github]  | LobeHub 的 Logo 资源、favicon、网页字体。                                                             |                                         |
 
 <div align="right">
 
@@ -178,7 +187,7 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 ## 🧩 插件体系
 
-插件提供了扩展 LobeChat [Function Calling][fc-url] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。如果你对插件开发感兴趣，请在 Wiki 中查阅我们的 [📘 插件开发指引](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development.zh-CN) 。
+插件提供了扩展 LobeChat [Function Calling][fc-link] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。如果你对插件开发感兴趣，请在 Wiki 中查阅我们的 [📘 插件开发指引](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development.zh-CN) 。
 
 > **Note**\
 > 插件系统目前正在进行重大开发。您可以在以下 Issues 中了解更多信息:
@@ -205,17 +214,19 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-url]。这使你可以在
 
 ## ⌨️ 本地开发
 
-可以使用 Gitpod 进行在线开发：
+可以使用 Github Codespaces 进行在线开发：
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][gitpod-url]
+[![][codespaces-shield]][codespaces-link]
 
 或者使用以下命令进行本地开发：
+
+[![][bun-shield]][bun-link]
 
 ```bash
 $ git clone https://github.com/lobehub/lobe-chat.git
 $ cd lobe-chat
-$ pnpm install
-$ pnpm dev
+$ bun install
+$ bun run dev
 ```
 
 <div align="right">
@@ -226,13 +237,13 @@ $ pnpm dev
 
 ## 🤝 参与贡献
 
-我们非常欢迎各种形式的贡献。如果你对贡献代码感兴趣，可以查看我们的 GitHub [Issues][issues-url] 和 [Projects][project-url]，大展身手，向我们展示你的奇思妙想。
+我们非常欢迎各种形式的贡献。如果你对贡献代码感兴趣，可以查看我们的 GitHub [Issues][github-issues-link] 和 [Projects][github-project-link]，大展身手，向我们展示你的奇思妙想。
 
-[![][pr-welcome-shield]][pr-welcome-url]
-[![][submit-agents-shield]][submit-agents-url]
-[![][submit-plugin-shield]][submit-plugin-url]
+[![][pr-welcome-shield]][pr-welcome-link]
+[![][submit-agents-shield]][submit-agents-link]
+[![][submit-plugin-shield]][submit-plugin-link]
 
-[![][contributors-contrib]][contributors-url]
+[![][contributors-contrib]][contributors-link]
 
 <div align="right">
 
@@ -256,66 +267,73 @@ $ pnpm dev
 
 <details><summary><h4>📝 License</h4></summary>
 
-[![][fossa-license-shield]][fossa-license-url]
+[![][fossa-license-shield]][fossa-license-link]
 
 </details>
 
-Copyright © 2023 [LobeHub][profile-url]. <br />
+Copyright © 2023 [LobeHub][profile-link]. <br />
 This project is [MIT](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
+[bun-link]: https://bun.sh
+[bun-shield]: https://img.shields.io/badge/-speedup%20with%20bun-black?logo=bun&style=for-the-badge
 [chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
 [chat-plugin-web-crawler]: https://github.com/lobehub/chat-plugin-web-crawler
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
-[ci-release-shield]: https://github.com/lobehub/lobe-chat/workflows/Release%20CI/badge.svg
-[ci-release-url]: https://github.com/lobehub/lobe-chat/actions?query=workflow%3ARelease%20CI
-[ci-test-shield]: https://github.com/lobehub/lobe-chat/workflows/Test%20CI/badge.svg
-[ci-test-url]: https://github.com/lobehub/lobe-chat/actions/workflows/test.yml
+[codespaces-link]: https://codespaces.new/lobehub/lobe-chat
+[codespaces-shield]: https://github.com/codespaces/badge.svg
 [contributors-contrib]: https://contrib.rocks/image?repo=lobehub/lobe-chat
-[contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat.svg?style=flat
-[contributors-url]: https://github.com/lobehub/lobe-chat/graphs/contributors
+[contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
 [deploy-button-image]: https://vercel.com/button
-[deploy-url]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
-[discord-shield]: https://dcbadge.vercel.app/api/server/AYFPHvv2jT?style=for-the-badge
-[discord-url]: https://discord.gg/AYFPHvv2jT
-[fc-url]: https://sspai.com/post/81986
-[forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat.svg?style=flat
-[forks-url]: https://github.com/lobehub/lobe-chat/network/members
+[deploy-link]: https://vercel.com/new/clone?repository-link=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+[discord-link]: https://discord.gg/AYFPHvv2jT
+[discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
+[discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
+[fc-link]: https://sspai.com/post/81986
+[fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
-[fossa-license-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
-[gitpod-url]: https://gitpod.io/#https://github.com/lobehub/lobe-chat
-[issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
-[issues-url]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
-[license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=shield&issueType=license
+[github-action-release-link]: https://github.com/actions/workflows/lobehub/lobe-chat/release.yml
+[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/release.yml?labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-action-test-link]: https://github.com/actions/workflows/lobehub/lobe-chat/test.yml
+[github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
+[github-contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat?color=c4f042&labelColor=black&style=flat-square
+[github-forks-link]: https://github.com/lobehub/lobe-chat/network/members
+[github-forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat?color=8ae8ff&labelColor=black&style=flat-square
+[github-issues-link]: https://github.com/lobehub/lobe-chat/issues
+[github-issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat?color=ff80eb&labelColor=black&style=flat-square
+[github-license-link]: https://github.com/lobehub/lobe-chat/blob/main/LICENSE
+[github-license-shield]: https://img.shields.io/github/license/lobehub/lobe-chat?color=white&labelColor=black&style=flat-square
+[github-project-link]: https://github.com/lobehub/lobe-chat/projects
+[github-release-link]: https://github.com/lobehub/lobe-chat/releases
+[github-release-shield]: https://img.shields.io/github/v/release/lobehub/lobe-chat?color=369eff&labelColor=black&logo=github&style=flat-square
+[github-releasedate-link]: https://github.com/lobehub/lobe-chat/releases
+[github-releasedate-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?labelColor=black&style=flat-square
+[github-stars-link]: https://github.com/lobehub/lobe-chat/network/stargazers
+[github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
+[github-wiki-link]: https://github.com/lobehub/lobe-chat/wiki
+[issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
 [lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
 [lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
 [lobe-lint-github]: https://github.com/lobehub/lobe-lint
-[lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?label=%F0%9F%A4%AF%20NPM
-[lobe-lint-url]: https://www.npmjs.com/package/@lobehub/lint
+[lobe-lint-link]: https://www.npmjs.com/package/@lobehub/lint
+[lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
 [lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
 [lobe-ui-github]: https://github.com/lobehub/lobe-ui
-[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?label=%F0%9F%A4%AF%20NPM
-[lobe-ui-url]: https://www.npmjs.com/package/@lobehub/ui
-[official-shield]: https://img.shields.io/website?down_message=offline&label=🤯%20Try%20LobeChat&up_message=online&url=https%3A%2F%2Flobe-chat.vercel.app&style=for-the-badge
-[official-url]: https://lobe-chat.vercel.app
-[pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-FEE064?style=for-the-badge
-[pr-welcome-url]: https://github.com/lobehub/lobe-chat/pulls
-[profile-url]: https://github.com/lobehub
-[project-url]: https://github.com/lobehub/lobe-chat/projects
-[release-date-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?style=flat
-[release-date-url]: https://github.com/lobehub/lobe-chat/releases
-[release-shield]: https://img.shields.io/npm/v/@lobehub/chat?label=%F0%9F%A4%AF%20Chat
-[release-url]: https://www.npmjs.com/package/@lobehub/chat
-[stargazers-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat.svg?style=flat
-[stargazers-url]: https://github.com/lobehub/lobe-chat/stargazers
-[submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-9DFF92?style=for-the-badge
-[submit-agents-url]: https://github.com/lobehub/lobe-chat-agents
-[submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
-[submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins
-[wiki-url]: https://github.com/lobehub/lobe-chat/wiki
+[lobe-ui-link]: https://www.npmjs.com/package/@lobehub/ui
+[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[pr-welcome-link]: https://github.com/lobehub/lobe-chat/pulls
+[pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
+[profile-link]: https://github.com/lobehub
+[submit-agents-link]: https://github.com/lobehub/lobe-chat-agents
+[submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-c4f042?labelColor=black&style=for-the-badge
+[submit-plugin-link]: https://github.com/lobehub/lobe-chat-plugins
+[submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-95f3d9?labelColor=black&style=for-the-badge
+[vercel-link]: https://chat-preview.lobehub.com
+[vercel-shield]: https://img.shields.io/website?down_message=offline&label=vercel&labelColor=black&logo=vercel&style=flat-square&up_message=online&url=https%3A%2F%2Fchat-preview.lobehub.com
