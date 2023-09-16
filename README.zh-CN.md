@@ -67,19 +67,21 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 我们是一群充满热情的设计工程师，希望为 AIGC 提供现代化的设计组件和工具，并以开源的方式分享，以促进它们在更广泛的社区中的发展和采用，LobeChat 目前正在积极开发中，有需求或者问题，欢迎提交 [issues][issues-link]
 
-| [!\[\]\[vercel-shield-bagge\]][vercel-link] | 无需安装或注册！访问我们的网站，快速体验                                     |
-| :------------------------------------------ | :--------------------------------------------------------------------------- |
-| [![][discord-shield-badge]][discord-link]   | 加入我们的 Discord 社区！这是你可以与开发者和其他 LobeHub 热衷用户交流的地方 |
+| [![][vercel-shield-badge]][vercel-link]   | 无需安装或注册！访问我们的网站，快速体验                                     |
+| :---------------------------------------- | :--------------------------------------------------------------------------- |
+| [![][discord-shield-badge]][discord-link] | 加入我们的 Discord 社区！这是你可以与开发者和其他 LobeHub 热衷用户交流的地方 |
 
-<details><summary><b>⭐️ 收藏项目：</b> 你将从 GitHub 上无延迟地接收所有发布通知！</summary>
-  <br/>
+> **Important**\
+> **收藏项目**，你将从 GitHub 上无延迟地接收所有发布通知 \~ ⭐️
+
+![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
+
+<details><summary><kbd>Star History</kbd></summary>
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&theme=dark&type=Date">
     <img src="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&type=Date">
   </picture>
 </details>
-
-![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
 
 ## ✨ 功能特性
 
@@ -92,7 +94,7 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 - [x] 🌐 **自定义域名**：如果用户拥有自己的域名，可以将其绑定到平台上，方便在任何地方快速访问对话助手。
 - [x] 🏬 **角色市场**：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格；
 
-> **Important**\
+> **Note**\
 > 你可以在 Projects 中找到我们后续的 [Roadmap][github-project-link] 计划
 
 <div align="right">
@@ -337,3 +339,4 @@ This project is [MIT](./LICENSE) licensed.
 [submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-95f3d9?labelColor=black&style=for-the-badge
 [vercel-link]: https://chat-preview.lobehub.com
 [vercel-shield]: https://img.shields.io/website?down_message=offline&label=vercel&labelColor=black&logo=vercel&style=flat-square&up_message=online&url=https%3A%2F%2Fchat-preview.lobehub.com
+[vercel-shield-badge]: https://img.shields.io/website?down_message=offline&label=try%20lobechat&labelColor=black&logo=vercel&style=for-the-badge&up_message=online&url=https%3A%2F%2Fchat-preview.lobehub.com

@@ -71,15 +71,17 @@ Please be aware that LobeChat is currently under active development，feedback i
 | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
 | [![][discord-shield-badge]][discord-link] | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
 
-<details><summary><b>⭐️ Star Us:</b> You will receive all releases notifications from GitHub without any delay!</summary>
-  <br/>
+> **Important**\
+> **Star Us**，You will receive all releases notifications from GitHub without any delay \~ ⭐️
+
+![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
+
+<details><summary><kbd>Star History</kbd></summary>
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&theme=dark&type=Date">
     <img src="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&type=Date">
   </picture>
 </details>
-
-![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
 
 ## ✨ Features
 
@@ -92,7 +94,7 @@ Please be aware that LobeChat is currently under active development，feedback i
 - [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue assistant from anywhere.
 - [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
 
-> **Important**\
+> **Note**\
 > You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
 
 <div align="right">
