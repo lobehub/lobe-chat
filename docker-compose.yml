@@ -1,0 +1,8 @@
+version: '3'
+services:
+  lobechat:
+    build: .
+    environment:
+     - OPENAI_API_KEY=""
+    ports:
+      - 3000:3000
