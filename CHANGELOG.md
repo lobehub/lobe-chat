@@ -2,7 +2,32 @@
 
 # Changelog
 
-### [Version 0.77.2](https://github.com/lobehub/lobe-chat/compare/v0.77.1...v0.77.2)
+## [Version 0.78.0](https://github.com/lobehub/lobe-chat/compare/v0.77.2...v0.78.0)
+
+<sup>Released on **2023-09-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Auto create topic when chatting.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Auto create topic when chatting, closes [#203](https://github.com/lobehub/lobe-chat/issues/203) ([f952792](https://github.com/lobehub/lobe-chat/commit/f952792))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.77.2](https://github.com/lobehub/lobe-chat/compare/v0.77.1...v0.77.2)
 
 <sup>Released on **2023-09-15**</sup>
 
@@ -27,7 +52,7 @@
 
 </div>
 
-### [Version 0.77.1](https://github.com/lobehub/lobe-chat/compare/v0.77.0...v0.77.1)
+### [Version 0.77.1](https://github.com/lobehub/lobe-chat/compare/v0.77.0...v0.77.1)
 
 <sup>Released on **2023-09-14**</sup>
 
@@ -52,7 +77,7 @@
 
 </div>
 
-## [Version 0.77.0](https://github.com/lobehub/lobe-chat/compare/v0.76.2...v0.77.0)
+## [Version 0.77.0](https://github.com/lobehub/lobe-chat/compare/v0.76.2...v0.77.0)
 
 <sup>Released on **2023-09-14**</sup>
 
@@ -77,7 +102,7 @@
 
 </div>
 
-### [Version 0.76.2](https://github.com/lobehub/lobe-chat/compare/v0.76.1...v0.76.2)
+### [Version 0.76.2](https://github.com/lobehub/lobe-chat/compare/v0.76.1...v0.76.2)
 
 <sup>Released on **2023-09-11**</sup>
 
@@ -102,7 +127,7 @@
 
 </div>
 
-### [Version 0.76.1](https://github.com/lobehub/lobe-chat/compare/v0.76.0...v0.76.1)
+### [Version 0.76.1](https://github.com/lobehub/lobe-chat/compare/v0.76.0...v0.76.1)
 
 <sup>Released on **2023-09-11**</sup>
 
@@ -127,7 +152,7 @@
 
 </div>
 
-## [Version 0.76.0](https://github.com/lobehub/lobe-chat/compare/v0.75.0...v0.76.0)
+## [Version 0.76.0](https://github.com/lobehub/lobe-chat/compare/v0.75.0...v0.76.0)
 
 <sup>Released on **2023-09-11**</sup>
 
@@ -152,7 +177,7 @@
 
 </div>
 
-## [Version 0.75.0](https://github.com/lobehub/lobe-chat/compare/v0.74.0...v0.75.0)
+## [Version 0.75.0](https://github.com/lobehub/lobe-chat/compare/v0.74.0...v0.75.0)
 
 <sup>Released on **2023-09-11**</sup>
 
@@ -213,7 +238,7 @@
 
 </div>
 
-## [Version 0.74.0](https://github.com/lobehub/lobe-chat/compare/v0.73.0...v0.74.0)
+## [Version 0.74.0](https://github.com/lobehub/lobe-chat/compare/v0.73.0...v0.74.0)
 
 <sup>Released on **2023-09-11**</sup>
 
@@ -239,7 +264,7 @@
 
 </div>
 
-## [Version 0.73.0](https://github.com/lobehub/lobe-chat/compare/v0.72.4...v0.73.0)
+## [Version 0.73.0](https://github.com/lobehub/lobe-chat/compare/v0.72.4...v0.73.0)
 
 <sup>Released on **2023-09-10**</sup>
 
@@ -264,7 +289,7 @@
 
 </div>
 
-### [Version 0.72.4](https://github.com/lobehub/lobe-chat/compare/v0.72.3...v0.72.4)
+### [Version 0.72.4](https://github.com/lobehub/lobe-chat/compare/v0.72.3...v0.72.4)
 
 <sup>Released on **2023-09-10**</sup>
 
@@ -289,7 +314,7 @@
 
 </div>
 
-### [Version 0.72.3](https://github.com/lobehub/lobe-chat/compare/v0.72.2...v0.72.3)
+### [Version 0.72.3](https://github.com/lobehub/lobe-chat/compare/v0.72.2...v0.72.3)
 
 <sup>Released on **2023-09-09**</sup>
 
@@ -314,7 +339,7 @@
 
 </div>
 
-### [Version 0.72.2](https://github.com/lobehub/lobe-chat/compare/v0.72.1...v0.72.2)
+### [Version 0.72.2](https://github.com/lobehub/lobe-chat/compare/v0.72.1...v0.72.2)
 
 <sup>Released on **2023-09-09**</sup>
 
@@ -339,7 +364,7 @@
 
 </div>
 
-### [Version 0.72.1](https://github.com/lobehub/lobe-chat/compare/v0.72.0...v0.72.1)
+### [Version 0.72.1](https://github.com/lobehub/lobe-chat/compare/v0.72.0...v0.72.1)
 
 <sup>Released on **2023-09-09**</sup>
 
@@ -364,7 +389,7 @@
 
 </div>
 
-## [Version 0.72.0](https://github.com/lobehub/lobe-chat/compare/v0.71.1...v0.72.0)
+## [Version 0.72.0](https://github.com/lobehub/lobe-chat/compare/v0.71.1...v0.72.0)
 
 <sup>Released on **2023-09-09**</sup>
 
@@ -407,7 +432,7 @@
 
 </div>
 
-### [Version 0.71.1](https://github.com/lobehub/lobe-chat/compare/v0.71.0...v0.71.1)
+### [Version 0.71.1](https://github.com/lobehub/lobe-chat/compare/v0.71.0...v0.71.1)
 
 <sup>Released on **2023-09-09**</sup>
 
@@ -432,7 +457,7 @@
 
 </div>
 
-## [Version 0.71.0](https://github.com/lobehub/lobe-chat/compare/v0.70.4...v0.71.0)
+## [Version 0.71.0](https://github.com/lobehub/lobe-chat/compare/v0.70.4...v0.71.0)
 
 <sup>Released on **2023-09-09**</sup>
 
@@ -457,7 +482,7 @@
 
 </div>
 
-### [Version 0.70.4](https://github.com/lobehub/lobe-chat/compare/v0.70.3...v0.70.4)
+### [Version 0.70.4](https://github.com/lobehub/lobe-chat/compare/v0.70.3...v0.70.4)
 
 <sup>Released on **2023-09-09**</sup>
 
@@ -482,7 +507,7 @@
 
 </div>
 
-### [Version 0.70.3](https://github.com/lobehub/lobe-chat/compare/v0.70.2...v0.70.3)
+### [Version 0.70.3](https://github.com/lobehub/lobe-chat/compare/v0.70.2...v0.70.3)
 
 <sup>Released on **2023-09-09**</sup>
 
@@ -507,7 +532,7 @@
 
 </div>
 
-### [Version 0.70.2](https://github.com/lobehub/lobe-chat/compare/v0.70.1...v0.70.2)
+### [Version 0.70.2](https://github.com/lobehub/lobe-chat/compare/v0.70.1...v0.70.2)
 
 <sup>Released on **2023-09-08**</sup>
 
@@ -532,7 +557,7 @@
 
 </div>
 
-### [Version 0.70.1](https://github.com/lobehub/lobe-chat/compare/v0.70.0...v0.70.1)
+### [Version 0.70.1](https://github.com/lobehub/lobe-chat/compare/v0.70.0...v0.70.1)
 
 <sup>Released on **2023-09-08**</sup>
 
@@ -557,7 +582,7 @@
 
 </div>
 
-## [Version 0.70.0](https://github.com/lobehub/lobe-chat/compare/v0.69.1...v0.70.0)
+## [Version 0.70.0](https://github.com/lobehub/lobe-chat/compare/v0.69.1...v0.70.0)
 
 <sup>Released on **2023-09-08**</sup>
 
@@ -582,7 +607,7 @@
 
 </div>
 
-### [Version 0.69.1](https://github.com/lobehub/lobe-chat/compare/v0.69.0...v0.69.1)
+### [Version 0.69.1](https://github.com/lobehub/lobe-chat/compare/v0.69.0...v0.69.1)
 
 <sup>Released on **2023-09-06**</sup>
 
@@ -607,7 +632,7 @@
 
 </div>
 
-## [Version 0.69.0](https://github.com/lobehub/lobe-chat/compare/v0.68.1...v0.69.0)
+## [Version 0.69.0](https://github.com/lobehub/lobe-chat/compare/v0.68.1...v0.69.0)
 
 <sup>Released on **2023-09-06**</sup>
 
@@ -632,13 +657,13 @@
 
 </div>
 
-### [Version 0.68.1](https://github.com/lobehub/lobe-chat/compare/v0.68.0...v0.68.1)
+### [Version 0.68.1](https://github.com/lobehub/lobe-chat/compare/v0.68.0...v0.68.1)
 
 <sup>Released on **2023-09-03**</sup>
 
 #### 🐛 Bug Fixes
 
-- **misc**: 修正数组合并逻辑, 修正被移除插件无法看到的问题.
+- **misc**: 修正数组合并逻辑，修正被移除插件无法看到的问题.
 
 <br/>
 
@@ -658,7 +683,7 @@
 
 </div>
 
-## [Version 0.68.0](https://github.com/lobehub/lobe-chat/compare/v0.67.0...v0.68.0)
+## [Version 0.68.0](https://github.com/lobehub/lobe-chat/compare/v0.67.0...v0.68.0)
 
 <sup>Released on **2023-09-03**</sup>
 
@@ -683,7 +708,7 @@
 
 </div>
 
-## [Version 0.67.0](https://github.com/lobehub/lobe-chat/compare/v0.66.0...v0.67.0)
+## [Version 0.67.0](https://github.com/lobehub/lobe-chat/compare/v0.66.0...v0.67.0)
 
 <sup>Released on **2023-09-02**</sup>
 
@@ -726,7 +751,7 @@
 
 </div>
 
-## [Version 0.66.0](https://github.com/lobehub/lobe-chat/compare/v0.65.1...v0.66.0)
+## [Version 0.66.0](https://github.com/lobehub/lobe-chat/compare/v0.65.1...v0.66.0)
 
 <sup>Released on **2023-09-02**</sup>
 
@@ -751,7 +776,7 @@
 
 </div>
 
-### [Version 0.65.1](https://github.com/lobehub/lobe-chat/compare/v0.65.0...v0.65.1)
+### [Version 0.65.1](https://github.com/lobehub/lobe-chat/compare/v0.65.0...v0.65.1)
 
 <sup>Released on **2023-09-01**</sup>
 
@@ -776,7 +801,7 @@
 
 </div>
 
-## [Version 0.65.0](https://github.com/lobehub/lobe-chat/compare/v0.64.1...v0.65.0)
+## [Version 0.65.0](https://github.com/lobehub/lobe-chat/compare/v0.64.1...v0.65.0)
 
 <sup>Released on **2023-08-29**</sup>
 
@@ -801,7 +826,7 @@
 
 </div>
 
-### [Version 0.64.1](https://github.com/lobehub/lobe-chat/compare/v0.64.0...v0.64.1)
+### [Version 0.64.1](https://github.com/lobehub/lobe-chat/compare/v0.64.0...v0.64.1)
 
 <sup>Released on **2023-08-29**</sup>
 
@@ -826,7 +851,7 @@
 
 </div>
 
-## [Version 0.64.0](https://github.com/lobehub/lobe-chat/compare/v0.63.3...v0.64.0)
+## [Version 0.64.0](https://github.com/lobehub/lobe-chat/compare/v0.63.3...v0.64.0)
 
 <sup>Released on **2023-08-29**</sup>
 
@@ -836,7 +861,7 @@
 
 #### ✨ Features
 
-- **misc**: 增加自定义插件的增删改配置功能, 完善自定义插件表单的校验逻辑, 支持本地插件侧的请求与错误呈现, 新增插件配置 Dev 弹窗, 绑定本地插件的增删改逻辑.
+- **misc**: 增加自定义插件的增删改配置功能，完善自定义插件表单的校验逻辑，支持本地插件侧的请求与错误呈现，新增插件配置 Dev 弹窗，绑定本地插件的增删改逻辑.
 
 <br/>
 
@@ -863,7 +888,7 @@
 
 </div>
 
-### [Version 0.63.3](https://github.com/lobehub/lobe-chat/compare/v0.63.2...v0.63.3)
+### [Version 0.63.3](https://github.com/lobehub/lobe-chat/compare/v0.63.2...v0.63.3)
 
 <sup>Released on **2023-08-28**</sup>
 
@@ -888,7 +913,7 @@
 
 </div>
 
-### [Version 0.63.2](https://github.com/lobehub/lobe-chat/compare/v0.63.1...v0.63.2)
+### [Version 0.63.2](https://github.com/lobehub/lobe-chat/compare/v0.63.1...v0.63.2)
 
 <sup>Released on **2023-08-27**</sup>
 
@@ -913,7 +938,7 @@
 
 </div>
 
-### [Version 0.63.1](https://github.com/lobehub/lobe-chat/compare/v0.63.0...v0.63.1)
+### [Version 0.63.1](https://github.com/lobehub/lobe-chat/compare/v0.63.0...v0.63.1)
 
 <sup>Released on **2023-08-27**</sup>
 
@@ -938,7 +963,7 @@
 
 </div>
 
-## [Version 0.63.0](https://github.com/lobehub/lobe-chat/compare/v0.62.1...v0.63.0)
+## [Version 0.63.0](https://github.com/lobehub/lobe-chat/compare/v0.62.1...v0.63.0)
 
 <sup>Released on **2023-08-27**</sup>
 
@@ -963,7 +988,7 @@
 
 </div>
 
-### [Version 0.62.1](https://github.com/lobehub/lobe-chat/compare/v0.62.0...v0.62.1)
+### [Version 0.62.1](https://github.com/lobehub/lobe-chat/compare/v0.62.0...v0.62.1)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -988,7 +1013,7 @@
 
 </div>
 
-## [Version 0.62.0](https://github.com/lobehub/lobe-chat/compare/v0.61.0...v0.62.0)
+## [Version 0.62.0](https://github.com/lobehub/lobe-chat/compare/v0.61.0...v0.62.0)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -1002,7 +1027,7 @@
 
 #### 💄 Styles
 
-- **misc**: 优化清理会话的操作路径, 优化默认角色的配置.
+- **misc**: 优化清理会话的操作路径，优化默认角色的配置.
 
 <br/>
 
@@ -1030,7 +1055,7 @@
 
 </div>
 
-## [Version 0.61.0](https://github.com/lobehub/lobe-chat/compare/v0.60.4...v0.61.0)
+## [Version 0.61.0](https://github.com/lobehub/lobe-chat/compare/v0.60.4...v0.61.0)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -1045,7 +1070,7 @@
 
 #### What's improved
 
-- **misc**: 新增自动滚动, closes [#113](https://github.com/lobehub/lobe-chat/issues/113) ([03fd161](https://github.com/lobehub/lobe-chat/commit/03fd161))
+- **misc**: 新增自动滚动，closes [#113](https://github.com/lobehub/lobe-chat/issues/113) ([03fd161](https://github.com/lobehub/lobe-chat/commit/03fd161))
 
 </details>
 
@@ -1055,7 +1080,7 @@
 
 </div>
 
-### [Version 0.60.4](https://github.com/lobehub/lobe-chat/compare/v0.60.3...v0.60.4)
+### [Version 0.60.4](https://github.com/lobehub/lobe-chat/compare/v0.60.3...v0.60.4)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -1080,7 +1105,7 @@
 
 </div>
 
-### [Version 0.60.3](https://github.com/lobehub/lobe-chat/compare/v0.60.2...v0.60.3)
+### [Version 0.60.3](https://github.com/lobehub/lobe-chat/compare/v0.60.2...v0.60.3)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -1105,7 +1130,7 @@
 
 </div>
 
-### [Version 0.60.2](https://github.com/lobehub/lobe-chat/compare/v0.60.1...v0.60.2)
+### [Version 0.60.2](https://github.com/lobehub/lobe-chat/compare/v0.60.1...v0.60.2)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -1130,7 +1155,7 @@
 
 </div>
 
-### [Version 0.60.1](https://github.com/lobehub/lobe-chat/compare/v0.60.0...v0.60.1)
+### [Version 0.60.1](https://github.com/lobehub/lobe-chat/compare/v0.60.0...v0.60.1)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -1155,7 +1180,7 @@
 
 </div>
 
-## [Version 0.60.0](https://github.com/lobehub/lobe-chat/compare/v0.59.0...v0.60.0)
+## [Version 0.60.0](https://github.com/lobehub/lobe-chat/compare/v0.59.0...v0.60.0)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -1188,13 +1213,13 @@
 
 </div>
 
-## [Version 0.59.0](https://github.com/lobehub/lobe-chat/compare/v0.58.0...v0.59.0)
+## [Version 0.59.0](https://github.com/lobehub/lobe-chat/compare/v0.58.0...v0.59.0)
 
 <sup>Released on **2023-08-26**</sup>
 
 #### ✨ Features
 
-- **misc**: 支持展示插件插件状态, 支持插件 i18n 模式展示.
+- **misc**: 支持展示插件插件状态，支持插件 i18n 模式展示.
 
 <br/>
 
@@ -1214,7 +1239,7 @@
 
 </div>
 
-## [Version 0.58.0](https://github.com/lobehub/lobe-chat/compare/v0.57.0...v0.58.0)
+## [Version 0.58.0](https://github.com/lobehub/lobe-chat/compare/v0.57.0...v0.58.0)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -1239,7 +1264,7 @@
 
 </div>
 
-## [Version 0.57.0](https://github.com/lobehub/lobe-chat/compare/v0.56.0...v0.57.0)
+## [Version 0.57.0](https://github.com/lobehub/lobe-chat/compare/v0.56.0...v0.57.0)
 
 <sup>Released on **2023-08-26**</sup>
 
@@ -1249,7 +1274,7 @@
 
 #### ✨ Features
 
-- **misc**: 完善插件请求的错误处理, 支持修改与记录插件的配置, 支持发送插件配置信息, 支持渲染 manifest 中的 settings, 支持设置不正确时进行插件的配置, 新增插件请求状态的错误处理.
+- **misc**: 完善插件请求的错误处理，支持修改与记录插件的配置，支持发送插件配置信息，支持渲染 manifest 中的 settings, 支持设置不正确时进行插件的配置，新增插件请求状态的错误处理.
 
 #### 🐛 Bug Fixes
 
@@ -1285,7 +1310,7 @@
 
 </div>
 
-## [Version 0.56.0](https://github.com/lobehub/lobe-chat/compare/v0.55.1...v0.56.0)
+## [Version 0.56.0](https://github.com/lobehub/lobe-chat/compare/v0.55.1...v0.56.0)
 
 <sup>Released on **2023-08-24**</sup>
 
@@ -1310,7 +1335,7 @@
 
 </div>
 
-### [Version 0.55.1](https://github.com/lobehub/lobe-chat/compare/v0.55.0...v0.55.1)
+### [Version 0.55.1](https://github.com/lobehub/lobe-chat/compare/v0.55.0...v0.55.1)
 
 <sup>Released on **2023-08-22**</sup>
 
@@ -1335,21 +1360,21 @@
 
 </div>
 
-## [Version 0.55.0](https://github.com/lobehub/lobe-chat/compare/v0.54.4...v0.55.0)
+## [Version 0.55.0](https://github.com/lobehub/lobe-chat/compare/v0.54.4...v0.55.0)
 
 <sup>Released on **2023-08-22**</sup>
 
 #### ♻ Code Refactoring
 
-- **misc**: 将网关实现代码集成进 Chat 本体, 抽取插件为独立 store, 重构 openai 接口调用逻辑，将插件 schema 开启关闭逻辑与接口解耦, 重构插件列表获取逻辑，进而完全移除 plugins 目录.
+- **misc**: 将网关实现代码集成进 Chat 本体，抽取插件为独立 store, 重构 openai 接口调用逻辑，将插件 schema 开启关闭逻辑与接口解耦，重构插件列表获取逻辑，进而完全移除 plugins 目录.
 
 #### ✨ Features
 
-- **misc**: 初步完成插件市场动态加载全链路, 实现插件组件的动态加载.
+- **misc**: 初步完成插件市场动态加载全链路，实现插件组件的动态加载.
 
 #### 🐛 Bug Fixes
 
-- **misc**: Fix error, 修正无法正常开启插件的问题, 修正测试, 补充插件 store 的水合逻辑.
+- **misc**: Fix error, 修正无法正常开启插件的问题，修正测试，补充插件 store 的水合逻辑.
 
 #### 💄 Styles
 
@@ -1391,7 +1416,7 @@
 
 </div>
 
-### [Version 0.54.4](https://github.com/lobehub/lobe-chat/compare/v0.54.3...v0.54.4)
+### [Version 0.54.4](https://github.com/lobehub/lobe-chat/compare/v0.54.3...v0.54.4)
 
 <sup>Released on **2023-08-21**</sup>
 
@@ -1416,7 +1441,7 @@
 
 </div>
 
-### [Version 0.54.3](https://github.com/lobehub/lobe-chat/compare/v0.54.2...v0.54.3)
+### [Version 0.54.3](https://github.com/lobehub/lobe-chat/compare/v0.54.2...v0.54.3)
 
 <sup>Released on **2023-08-21**</sup>
 
@@ -1441,7 +1466,7 @@
 
 </div>
 
-### [Version 0.54.2](https://github.com/lobehub/lobe-chat/compare/v0.54.1...v0.54.2)
+### [Version 0.54.2](https://github.com/lobehub/lobe-chat/compare/v0.54.1...v0.54.2)
 
 <sup>Released on **2023-08-16**</sup>
 
@@ -1466,7 +1491,7 @@
 
 </div>
 
-### [Version 0.54.1](https://github.com/lobehub/lobe-chat/compare/v0.54.0...v0.54.1)
+### [Version 0.54.1](https://github.com/lobehub/lobe-chat/compare/v0.54.0...v0.54.1)
 
 <sup>Released on **2023-08-16**</sup>
 
@@ -1481,7 +1506,7 @@
 
 #### What's fixed
 
-- **misc**: 修正 i18n 失效的问题, closes [#80](https://github.com/lobehub/lobe-chat/issues/80) ([b8d957b](https://github.com/lobehub/lobe-chat/commit/b8d957b))
+- **misc**: 修正 i18n 失效的问题，closes [#80](https://github.com/lobehub/lobe-chat/issues/80) ([b8d957b](https://github.com/lobehub/lobe-chat/commit/b8d957b))
 
 </details>
 
@@ -1491,7 +1516,7 @@
 
 </div>
 
-## [Version 0.54.0](https://github.com/lobehub/lobe-chat/compare/v0.53.0...v0.54.0)
+## [Version 0.54.0](https://github.com/lobehub/lobe-chat/compare/v0.53.0...v0.54.0)
 
 <sup>Released on **2023-08-15**</sup>
 
@@ -1516,7 +1541,7 @@
 
 </div>
 
-## [Version 0.53.0](https://github.com/lobehub/lobe-chat/compare/v0.52.1...v0.53.0)
+## [Version 0.53.0](https://github.com/lobehub/lobe-chat/compare/v0.52.1...v0.53.0)
 
 <sup>Released on **2023-08-15**</sup>
 
@@ -1541,7 +1566,7 @@
 
 </div>
 
-### [Version 0.52.1](https://github.com/lobehub/lobe-chat/compare/v0.52.0...v0.52.1)
+### [Version 0.52.1](https://github.com/lobehub/lobe-chat/compare/v0.52.0...v0.52.1)
 
 <sup>Released on **2023-08-15**</sup>
 
@@ -1566,7 +1591,7 @@
 
 </div>
 
-## [Version 0.52.0](https://github.com/lobehub/lobe-chat/compare/v0.51.0...v0.52.0)
+## [Version 0.52.0](https://github.com/lobehub/lobe-chat/compare/v0.51.0...v0.52.0)
 
 <sup>Released on **2023-08-15**</sup>
 
@@ -1591,7 +1616,7 @@
 
 </div>
 
-## [Version 0.51.0](https://github.com/lobehub/lobe-chat/compare/v0.50.0...v0.51.0)
+## [Version 0.51.0](https://github.com/lobehub/lobe-chat/compare/v0.50.0...v0.51.0)
 
 <sup>Released on **2023-08-15**</sup>
 
@@ -1616,7 +1641,7 @@
 
 </div>
 
-## [Version 0.50.0](https://github.com/lobehub/lobe-chat/compare/v0.49.0...v0.50.0)
+## [Version 0.50.0](https://github.com/lobehub/lobe-chat/compare/v0.49.0...v0.50.0)
 
 <sup>Released on **2023-08-15**</sup>
 
@@ -1641,7 +1666,7 @@
 
 </div>
 
-## [Version 0.49.0](https://github.com/lobehub/lobe-chat/compare/v0.48.0...v0.49.0)
+## [Version 0.49.0](https://github.com/lobehub/lobe-chat/compare/v0.48.0...v0.49.0)
 
 <sup>Released on **2023-08-15**</sup>
 
@@ -1667,7 +1692,7 @@
 
 </div>
 
-## [Version 0.48.0](https://github.com/lobehub/lobe-chat/compare/v0.47.0...v0.48.0)
+## [Version 0.48.0](https://github.com/lobehub/lobe-chat/compare/v0.47.0...v0.48.0)
 
 <sup>Released on **2023-08-15**</sup>
 
@@ -1692,7 +1717,7 @@
 
 </div>
 
-## [Version 0.47.0](https://github.com/lobehub/lobe-chat/compare/v0.46.1...v0.47.0)
+## [Version 0.47.0](https://github.com/lobehub/lobe-chat/compare/v0.46.1...v0.47.0)
 
 <sup>Released on **2023-08-15**</sup>
 
@@ -1717,7 +1742,7 @@
 
 </div>
 
-### [Version 0.46.1](https://github.com/lobehub/lobe-chat/compare/v0.46.0...v0.46.1)
+### [Version 0.46.1](https://github.com/lobehub/lobe-chat/compare/v0.46.0...v0.46.1)
 
 <sup>Released on **2023-08-14**</sup>
 
@@ -1742,7 +1767,7 @@
 
 </div>
 
-## [Version 0.46.0](https://github.com/lobehub/lobe-chat/compare/v0.45.0...v0.46.0)
+## [Version 0.46.0](https://github.com/lobehub/lobe-chat/compare/v0.45.0...v0.46.0)
 
 <sup>Released on **2023-08-14**</sup>
 
@@ -1762,7 +1787,7 @@
 #### What's improved
 
 - **misc**: Update styling and functionality of AgentPrompt and EditableMessage components ([80b521c](https://github.com/lobehub/lobe-chat/commit/80b521c))
-- **misc**: 支持停止生成消息, closes [#78](https://github.com/lobehub/lobe-chat/issues/78) ([9eeca80](https://github.com/lobehub/lobe-chat/commit/9eeca80))
+- **misc**: 支持停止生成消息，closes [#78](https://github.com/lobehub/lobe-chat/issues/78) ([9eeca80](https://github.com/lobehub/lobe-chat/commit/9eeca80))
 
 #### What's fixed
 
@@ -1776,7 +1801,7 @@
 
 </div>
 
-## [Version 0.45.0](https://github.com/lobehub/lobe-chat/compare/v0.44.4...v0.45.0)
+## [Version 0.45.0](https://github.com/lobehub/lobe-chat/compare/v0.44.4...v0.45.0)
 
 <sup>Released on **2023-08-14**</sup>
 
@@ -1795,7 +1820,7 @@
 
 #### What's improved
 
-- **misc**: 优化每个角色的初始引导, closes [#76](https://github.com/lobehub/lobe-chat/issues/76) ([8d78dc5](https://github.com/lobehub/lobe-chat/commit/8d78dc5))
+- **misc**: 优化每个角色的初始引导，closes [#76](https://github.com/lobehub/lobe-chat/issues/76) ([8d78dc5](https://github.com/lobehub/lobe-chat/commit/8d78dc5))
 
 #### Styles
 
@@ -1809,13 +1834,13 @@
 
 </div>
 
-### [Version 0.44.4](https://github.com/lobehub/lobe-chat/compare/v0.44.3...v0.44.4)
+### [Version 0.44.4](https://github.com/lobehub/lobe-chat/compare/v0.44.3...v0.44.4)
 
 <sup>Released on **2023-08-13**</sup>
 
 #### 💄 Styles
 
-- **misc**: 优化 Chat Skeleton 样式, 优化 Inbox 样式.
+- **misc**: 优化 Chat Skeleton 样式，优化 Inbox 样式.
 
 <br/>
 
@@ -1835,7 +1860,7 @@
 
 </div>
 
-### [Version 0.44.3](https://github.com/lobehub/lobe-chat/compare/v0.44.2...v0.44.3)
+### [Version 0.44.3](https://github.com/lobehub/lobe-chat/compare/v0.44.2...v0.44.3)
 
 <sup>Released on **2023-08-13**</sup>
 
@@ -1876,7 +1901,7 @@
 
 </div>
 
-### [Version 0.44.2](https://github.com/lobehub/lobe-chat/compare/v0.44.1...v0.44.2)
+### [Version 0.44.2](https://github.com/lobehub/lobe-chat/compare/v0.44.1...v0.44.2)
 
 <sup>Released on **2023-08-13**</sup>
 
@@ -1891,7 +1916,7 @@
 
 #### What's fixed
 
-- **misc**: 修正重新生成时切分历史消息的逻辑, closes [#50](https://github.com/lobehub/lobe-chat/issues/50) ([de5141f](https://github.com/lobehub/lobe-chat/commit/de5141f))
+- **misc**: 修正重新生成时切分历史消息的逻辑，closes [#50](https://github.com/lobehub/lobe-chat/issues/50) ([de5141f](https://github.com/lobehub/lobe-chat/commit/de5141f))
 
 </details>
 
@@ -1901,7 +1926,7 @@
 
 </div>
 
-### [Version 0.44.1](https://github.com/lobehub/lobe-chat/compare/v0.44.0...v0.44.1)
+### [Version 0.44.1](https://github.com/lobehub/lobe-chat/compare/v0.44.0...v0.44.1)
 
 <sup>Released on **2023-08-12**</sup>
 
@@ -1918,21 +1943,21 @@
 
 </div>
 
-## [Version 0.44.0](https://github.com/lobehub/lobe-chat/compare/v0.43.0...v0.44.0)
+## [Version 0.44.0](https://github.com/lobehub/lobe-chat/compare/v0.43.0...v0.44.0)
 
 <sup>Released on **2023-08-12**</sup>
 
 #### ♻ Code Refactoring
 
-- **misc**: 优化 Inbox 会话的实现逻辑, 将 chat 中的功能模型拆分到 features 中, 重构 session 相关实现，移除循环依赖.
+- **misc**: 优化 Inbox 会话的实现逻辑，将 chat 中的功能模型拆分到 features 中，重构 session 相关实现，移除循环依赖.
 
 #### ✨ Features
 
-- **misc**: 支持 inbox 消息导出, 支持 inbox 的会话功能, 新增 inbox 数据模型, 新增 inbox 模块入口.
+- **misc**: 支持 inbox 消息导出，支持 inbox 的会话功能，新增 inbox 数据模型，新增 inbox 模块入口.
 
 #### 💄 Styles
 
-- **misc**: Fix Inbox defaultMessage avatar, 优化 header 的 setting 展示, 优化门禁下默认的解锁方式, 补充 ChatList 的 Loading 态.
+- **misc**: Fix Inbox defaultMessage avatar, 优化 header 的 setting 展示，优化门禁下默认的解锁方式，补充 ChatList 的 Loading 态.
 
 <br/>
 
@@ -1967,7 +1992,7 @@
 
 </div>
 
-## [Version 0.43.0](https://github.com/lobehub/lobe-chat/compare/v0.42.3...v0.43.0)
+## [Version 0.43.0](https://github.com/lobehub/lobe-chat/compare/v0.42.3...v0.43.0)
 
 <sup>Released on **2023-08-12**</sup>
 
@@ -1982,7 +2007,7 @@
 
 #### What's improved
 
-- **misc**: 支持切换语言, closes [#67](https://github.com/lobehub/lobe-chat/issues/67) ([63ed8ec](https://github.com/lobehub/lobe-chat/commit/63ed8ec))
+- **misc**: 支持切换语言，closes [#67](https://github.com/lobehub/lobe-chat/issues/67) ([63ed8ec](https://github.com/lobehub/lobe-chat/commit/63ed8ec))
 
 </details>
 
@@ -1992,7 +2017,7 @@
 
 </div>
 
-### [Version 0.42.3](https://github.com/lobehub/lobe-chat/compare/v0.42.2...v0.42.3)
+### [Version 0.42.3](https://github.com/lobehub/lobe-chat/compare/v0.42.2...v0.42.3)
 
 <sup>Released on **2023-08-12**</sup>
 
@@ -2017,7 +2042,7 @@
 
 </div>
 
-### [Version 0.42.2](https://github.com/lobehub/lobe-chat/compare/v0.42.1...v0.42.2)
+### [Version 0.42.2](https://github.com/lobehub/lobe-chat/compare/v0.42.1...v0.42.2)
 
 <sup>Released on **2023-08-12**</sup>
 
@@ -2053,7 +2078,7 @@
 
 </div>
 
-### [Version 0.42.1](https://github.com/lobehub/lobe-chat/compare/v0.42.0...v0.42.1)
+### [Version 0.42.1](https://github.com/lobehub/lobe-chat/compare/v0.42.0...v0.42.1)
 
 <sup>Released on **2023-08-12**</sup>
 
@@ -2078,7 +2103,7 @@
 
 </div>
 
-## [Version 0.42.0](https://github.com/lobehub/lobe-chat/compare/v0.41.2...v0.42.0)
+## [Version 0.42.0](https://github.com/lobehub/lobe-chat/compare/v0.41.2...v0.42.0)
 
 <sup>Released on **2023-08-11**</sup>
 
@@ -2103,7 +2128,7 @@
 
 </div>
 
-### [Version 0.41.2](https://github.com/lobehub/lobe-chat/compare/v0.41.1...v0.41.2)
+### [Version 0.41.2](https://github.com/lobehub/lobe-chat/compare/v0.41.1...v0.41.2)
 
 <sup>Released on **2023-08-10**</sup>
 
@@ -2129,7 +2154,7 @@
 
 </div>
 
-### [Version 0.41.1](https://github.com/lobehub/lobe-chat/compare/v0.41.0...v0.41.1)
+### [Version 0.41.1](https://github.com/lobehub/lobe-chat/compare/v0.41.0...v0.41.1)
 
 <sup>Released on **2023-08-10**</sup>
 
@@ -2154,7 +2179,7 @@
 
 </div>
 
-## [Version 0.41.0](https://github.com/lobehub/lobe-chat/compare/v0.40.7...v0.41.0)
+## [Version 0.41.0](https://github.com/lobehub/lobe-chat/compare/v0.40.7...v0.41.0)
 
 <sup>Released on **2023-08-10**</sup>
 
@@ -2187,7 +2212,7 @@
 
 </div>
 
-### [Version 0.40.7](https://github.com/lobehub/lobe-chat/compare/v0.40.6...v0.40.7)
+### [Version 0.40.7](https://github.com/lobehub/lobe-chat/compare/v0.40.6...v0.40.7)
 
 <sup>Released on **2023-08-10**</sup>
 
@@ -2212,7 +2237,7 @@
 
 </div>
 
-### [Version 0.40.6](https://github.com/lobehub/lobe-chat/compare/v0.40.5...v0.40.6)
+### [Version 0.40.6](https://github.com/lobehub/lobe-chat/compare/v0.40.5...v0.40.6)
 
 <sup>Released on **2023-08-10**</sup>
 
@@ -2245,7 +2270,7 @@
 
 </div>
 
-### [Version 0.40.5](https://github.com/lobehub/lobe-chat/compare/v0.40.4...v0.40.5)
+### [Version 0.40.5](https://github.com/lobehub/lobe-chat/compare/v0.40.4...v0.40.5)
 
 <sup>Released on **2023-08-10**</sup>
 
@@ -2270,7 +2295,7 @@
 
 </div>
 
-### [Version 0.40.4](https://github.com/lobehub/lobe-chat/compare/v0.40.3...v0.40.4)
+### [Version 0.40.4](https://github.com/lobehub/lobe-chat/compare/v0.40.3...v0.40.4)
 
 <sup>Released on **2023-08-10**</sup>
 
@@ -2295,7 +2320,7 @@
 
 </div>
 
-### [Version 0.40.3](https://github.com/lobehub/lobe-chat/compare/v0.40.2...v0.40.3)
+### [Version 0.40.3](https://github.com/lobehub/lobe-chat/compare/v0.40.2...v0.40.3)
 
 <sup>Released on **2023-08-10**</sup>
 
@@ -2320,7 +2345,7 @@
 
 </div>
 
-### [Version 0.40.2](https://github.com/lobehub/lobe-chat/compare/v0.40.1...v0.40.2)
+### [Version 0.40.2](https://github.com/lobehub/lobe-chat/compare/v0.40.1...v0.40.2)
 
 <sup>Released on **2023-08-08**</sup>
 
@@ -2345,7 +2370,7 @@
 
 </div>
 
-### [Version 0.40.1](https://github.com/lobehub/lobe-chat/compare/v0.40.0...v0.40.1)
+### [Version 0.40.1](https://github.com/lobehub/lobe-chat/compare/v0.40.0...v0.40.1)
 
 <sup>Released on **2023-08-06**</sup>
 
@@ -2370,7 +2395,7 @@
 
 </div>
 
-## [Version 0.40.0](https://github.com/lobehub/lobe-chat/compare/v0.39.4...v0.40.0)
+## [Version 0.40.0](https://github.com/lobehub/lobe-chat/compare/v0.39.4...v0.40.0)
 
 <sup>Released on **2023-08-05**</sup>
 
@@ -2395,7 +2420,7 @@
 
 </div>
 
-### [Version 0.39.4](https://github.com/lobehub/lobe-chat/compare/v0.39.3...v0.39.4)
+### [Version 0.39.4](https://github.com/lobehub/lobe-chat/compare/v0.39.3...v0.39.4)
 
 <sup>Released on **2023-08-05**</sup>
 
@@ -2410,7 +2435,7 @@
 
 #### Styles
 
-- **misc**: 修正 assistant 消息没有 background 的问题, closes [#42](https://github.com/lobehub/lobe-chat/issues/42) ([812e976](https://github.com/lobehub/lobe-chat/commit/812e976))
+- **misc**: 修正 assistant 消息没有 background 的问题，closes [#42](https://github.com/lobehub/lobe-chat/issues/42) ([812e976](https://github.com/lobehub/lobe-chat/commit/812e976))
 
 </details>
 
@@ -2420,7 +2445,7 @@
 
 </div>
 
-### [Version 0.39.3](https://github.com/lobehub/lobe-chat/compare/v0.39.2...v0.39.3)
+### [Version 0.39.3](https://github.com/lobehub/lobe-chat/compare/v0.39.2...v0.39.3)
 
 <sup>Released on **2023-08-04**</sup>
 
@@ -2445,7 +2470,7 @@
 
 </div>
 
-### [Version 0.39.2](https://github.com/lobehub/lobe-chat/compare/v0.39.1...v0.39.2)
+### [Version 0.39.2](https://github.com/lobehub/lobe-chat/compare/v0.39.1...v0.39.2)
 
 <sup>Released on **2023-08-04**</sup>
 
@@ -2470,7 +2495,7 @@
 
 </div>
 
-### [Version 0.39.1](https://github.com/lobehub/lobe-chat/compare/v0.39.0...v0.39.1)
+### [Version 0.39.1](https://github.com/lobehub/lobe-chat/compare/v0.39.0...v0.39.1)
 
 <sup>Released on **2023-08-04**</sup>
 
@@ -2495,13 +2520,13 @@
 
 </div>
 
-## [Version 0.39.0](https://github.com/lobehub/lobe-chat/compare/v0.38.0...v0.39.0)
+## [Version 0.39.0](https://github.com/lobehub/lobe-chat/compare/v0.38.0...v0.39.0)
 
 <sup>Released on **2023-08-04**</sup>
 
 #### ✨ Features
 
-- **misc**: 支持多轮的插件意图识别, 支持自定义 OpenAI 代理地址.
+- **misc**: 支持多轮的插件意图识别，支持自定义 OpenAI 代理地址.
 
 #### 💄 Styles
 
@@ -2529,7 +2554,7 @@
 
 </div>
 
-## [Version 0.38.0](https://github.com/lobehub/lobe-chat/compare/v0.37.0...v0.38.0)
+## [Version 0.38.0](https://github.com/lobehub/lobe-chat/compare/v0.37.0...v0.38.0)
 
 <sup>Released on **2023-08-04**</sup>
 
@@ -2554,7 +2579,7 @@
 
 </div>
 
-## [Version 0.37.0](https://github.com/lobehub/lobe-chat/compare/v0.36.1...v0.37.0)
+## [Version 0.37.0](https://github.com/lobehub/lobe-chat/compare/v0.36.1...v0.37.0)
 
 <sup>Released on **2023-08-03**</sup>
 
@@ -2569,7 +2594,7 @@
 
 #### What's improved
 
-- **misc**: 支持使用全局助手的设置作为默认助手的创建角色, closes [#44](https://github.com/lobehub/lobe-chat/issues/44) ([f91857d](https://github.com/lobehub/lobe-chat/commit/f91857d))
+- **misc**: 支持使用全局助手的设置作为默认助手的创建角色，closes [#44](https://github.com/lobehub/lobe-chat/issues/44) ([f91857d](https://github.com/lobehub/lobe-chat/commit/f91857d))
 
 </details>
 
@@ -2579,7 +2604,7 @@
 
 </div>
 
-### [Version 0.36.1](https://github.com/lobehub/lobe-chat/compare/v0.36.0...v0.36.1)
+### [Version 0.36.1](https://github.com/lobehub/lobe-chat/compare/v0.36.0...v0.36.1)
 
 <sup>Released on **2023-08-03**</sup>
 
@@ -2604,7 +2629,7 @@
 
 </div>
 
-## [Version 0.36.0](https://github.com/lobehub/lobe-chat/compare/v0.35.1...v0.36.0)
+## [Version 0.36.0](https://github.com/lobehub/lobe-chat/compare/v0.35.1...v0.36.0)
 
 <sup>Released on **2023-08-03**</sup>
 
@@ -2645,7 +2670,7 @@
 
 </div>
 
-### [Version 0.35.1](https://github.com/lobehub/lobe-chat/compare/v0.35.0...v0.35.1)
+### [Version 0.35.1](https://github.com/lobehub/lobe-chat/compare/v0.35.0...v0.35.1)
 
 <sup>Released on **2023-07-31**</sup>
 
@@ -2670,7 +2695,7 @@
 
 </div>
 
-## [Version 0.35.0](https://github.com/lobehub/lobe-chat/compare/v0.34.0...v0.35.0)
+## [Version 0.35.0](https://github.com/lobehub/lobe-chat/compare/v0.34.0...v0.35.0)
 
 <sup>Released on **2023-07-31**</sup>
 
@@ -2696,7 +2721,7 @@
 
 </div>
 
-## [Version 0.34.0](https://github.com/lobehub/lobe-chat/compare/v0.33.0...v0.34.0)
+## [Version 0.34.0](https://github.com/lobehub/lobe-chat/compare/v0.33.0...v0.34.0)
 
 <sup>Released on **2023-07-31**</sup>
 
@@ -2723,7 +2748,7 @@
 
 </div>
 
-## [Version 0.33.0](https://github.com/lobehub/lobe-chat/compare/v0.32.0...v0.33.0)
+## [Version 0.33.0](https://github.com/lobehub/lobe-chat/compare/v0.32.0...v0.33.0)
 
 <sup>Released on **2023-07-30**</sup>
 
@@ -2748,7 +2773,7 @@
 
 </div>
 
-## [Version 0.32.0](https://github.com/lobehub/lobe-chat/compare/v0.31.0...v0.32.0)
+## [Version 0.32.0](https://github.com/lobehub/lobe-chat/compare/v0.31.0...v0.32.0)
 
 <sup>Released on **2023-07-30**</sup>
 
@@ -2763,7 +2788,7 @@
 
 #### What's improved
 
-- **misc**: 支持会话置顶, closes [#32](https://github.com/lobehub/lobe-chat/issues/32) ([fc44b5d](https://github.com/lobehub/lobe-chat/commit/fc44b5d))
+- **misc**: 支持会话置顶，closes [#32](https://github.com/lobehub/lobe-chat/issues/32) ([fc44b5d](https://github.com/lobehub/lobe-chat/commit/fc44b5d))
 
 </details>
 
@@ -2773,7 +2798,7 @@
 
 </div>
 
-## [Version 0.31.0](https://github.com/lobehub/lobe-chat/compare/v0.30.1...v0.31.0)
+## [Version 0.31.0](https://github.com/lobehub/lobe-chat/compare/v0.30.1...v0.31.0)
 
 <sup>Released on **2023-07-30**</sup>
 
@@ -2788,7 +2813,7 @@
 
 #### What's improved
 
-- **misc**: 支持展示 token 使用量, closes [#31](https://github.com/lobehub/lobe-chat/issues/31) ([e4d4dac](https://github.com/lobehub/lobe-chat/commit/e4d4dac))
+- **misc**: 支持展示 token 使用量，closes [#31](https://github.com/lobehub/lobe-chat/issues/31) ([e4d4dac](https://github.com/lobehub/lobe-chat/commit/e4d4dac))
 
 </details>
 
@@ -2798,7 +2823,7 @@
 
 </div>
 
-### [Version 0.30.1](https://github.com/lobehub/lobe-chat/compare/v0.30.0...v0.30.1)
+### [Version 0.30.1](https://github.com/lobehub/lobe-chat/compare/v0.30.0...v0.30.1)
 
 <sup>Released on **2023-07-30**</sup>
 
@@ -2823,13 +2848,13 @@
 
 </div>
 
-## [Version 0.30.0](https://github.com/lobehub/lobe-chat/compare/v0.29.0...v0.30.0)
+## [Version 0.30.0](https://github.com/lobehub/lobe-chat/compare/v0.29.0...v0.30.0)
 
 <sup>Released on **2023-07-30**</sup>
 
 #### ✨ Features
 
-- **misc**: 优化保存为话题功能, 实现 Topic 重命名功能, 实现话题删除功能, 支持缓存角色面板的展开折叠状态.
+- **misc**: 优化保存为话题功能，实现 Topic 重命名功能，实现话题删除功能，支持缓存角色面板的展开折叠状态.
 
 <br/>
 
@@ -2851,13 +2876,13 @@
 
 </div>
 
-## [Version 0.29.0](https://github.com/lobehub/lobe-chat/compare/v0.28.0...v0.29.0)
+## [Version 0.29.0](https://github.com/lobehub/lobe-chat/compare/v0.28.0...v0.29.0)
 
 <sup>Released on **2023-07-30**</sup>
 
 #### ✨ Features
 
-- **misc**: 实现单个会话和角色的导出功能, 实现清空所有会话消息.
+- **misc**: 实现单个会话和角色的导出功能，实现清空所有会话消息.
 
 <br/>
 
@@ -2877,7 +2902,7 @@
 
 </div>
 
-## [Version 0.28.0](https://github.com/lobehub/lobe-chat/compare/v0.27.4...v0.28.0)
+## [Version 0.28.0](https://github.com/lobehub/lobe-chat/compare/v0.27.4...v0.28.0)
 
 <sup>Released on **2023-07-30**</sup>
 
@@ -2887,7 +2912,7 @@
 
 #### ✨ Features
 
-- **misc**: 优化 SideBar 实现，激活态指示更加明确, 实现 session 导入功能, 实现配置导出功能.
+- **misc**: 优化 SideBar 实现，激活态指示更加明确，实现 session 导入功能，实现配置导出功能.
 
 <br/>
 
@@ -2912,7 +2937,7 @@
 
 </div>
 
-### [Version 0.27.4](https://github.com/lobehub/lobe-chat/compare/v0.27.3...v0.27.4)
+### [Version 0.27.4](https://github.com/lobehub/lobe-chat/compare/v0.27.3...v0.27.4)
 
 <sup>Released on **2023-07-29**</sup>
 
@@ -2937,7 +2962,7 @@
 
 </div>
 
-### [Version 0.27.3](https://github.com/lobehub/lobe-chat/compare/v0.27.2...v0.27.3)
+### [Version 0.27.3](https://github.com/lobehub/lobe-chat/compare/v0.27.2...v0.27.3)
 
 <sup>Released on **2023-07-29**</sup>
 
@@ -2970,7 +2995,7 @@
 
 </div>
 
-### [Version 0.27.2](https://github.com/lobehub/lobe-chat/compare/v0.27.1...v0.27.2)
+### [Version 0.27.2](https://github.com/lobehub/lobe-chat/compare/v0.27.1...v0.27.2)
 
 <sup>Released on **2023-07-29**</sup>
 
@@ -2995,7 +3020,7 @@
 
 </div>
 
-### [Version 0.27.1](https://github.com/lobehub/lobe-chat/compare/v0.27.0...v0.27.1)
+### [Version 0.27.1](https://github.com/lobehub/lobe-chat/compare/v0.27.0...v0.27.1)
 
 <sup>Released on **2023-07-29**</sup>
 
@@ -3020,7 +3045,7 @@
 
 </div>
 
-## [Version 0.27.0](https://github.com/lobehub/lobe-chat/compare/v0.26.1...v0.27.0)
+## [Version 0.27.0](https://github.com/lobehub/lobe-chat/compare/v0.26.1...v0.27.0)
 
 <sup>Released on **2023-07-29**</sup>
 
@@ -3053,7 +3078,7 @@
 
 </div>
 
-### [Version 0.26.1](https://github.com/lobehub/lobe-chat/compare/v0.26.0...v0.26.1)
+### [Version 0.26.1](https://github.com/lobehub/lobe-chat/compare/v0.26.0...v0.26.1)
 
 <sup>Released on **2023-07-29**</sup>
 
@@ -3078,7 +3103,7 @@
 
 </div>
 
-## [Version 0.26.0](https://github.com/lobehub/lobe-chat/compare/v0.25.0...v0.26.0)
+## [Version 0.26.0](https://github.com/lobehub/lobe-chat/compare/v0.25.0...v0.26.0)
 
 <sup>Released on **2023-07-28**</sup>
 
@@ -3103,7 +3128,7 @@
 
 </div>
 
-## [Version 0.25.0](https://github.com/lobehub/lobe-chat/compare/v0.24.0...v0.25.0)
+## [Version 0.25.0](https://github.com/lobehub/lobe-chat/compare/v0.24.0...v0.25.0)
 
 <sup>Released on **2023-07-26**</sup>
 
@@ -3128,7 +3153,7 @@
 
 </div>
 
-## [Version 0.24.0](https://github.com/lobehub/lobe-chat/compare/v0.23.0...v0.24.0)
+## [Version 0.24.0](https://github.com/lobehub/lobe-chat/compare/v0.23.0...v0.24.0)
 
 <sup>Released on **2023-07-26**</sup>
 
@@ -3153,7 +3178,7 @@
 
 </div>
 
-## [Version 0.23.0](https://github.com/lobehub/lobe-chat/compare/v0.22.2...v0.23.0)
+## [Version 0.23.0](https://github.com/lobehub/lobe-chat/compare/v0.22.2...v0.23.0)
 
 <sup>Released on **2023-07-26**</sup>
 
@@ -3178,7 +3203,7 @@
 
 </div>
 
-### [Version 0.22.2](https://github.com/lobehub/lobe-chat/compare/v0.22.1...v0.22.2)
+### [Version 0.22.2](https://github.com/lobehub/lobe-chat/compare/v0.22.1...v0.22.2)
 
 <sup>Released on **2023-07-26**</sup>
 
@@ -3203,7 +3228,7 @@
 
 </div>
 
-### [Version 0.22.1](https://github.com/lobehub/lobe-chat/compare/v0.22.0...v0.22.1)
+### [Version 0.22.1](https://github.com/lobehub/lobe-chat/compare/v0.22.0...v0.22.1)
 
 <sup>Released on **2023-07-25**</sup>
 
@@ -3228,7 +3253,7 @@
 
 </div>
 
-## [Version 0.22.0](https://github.com/lobehub/lobe-chat/compare/v0.21.0...v0.22.0)
+## [Version 0.22.0](https://github.com/lobehub/lobe-chat/compare/v0.21.0...v0.22.0)
 
 <sup>Released on **2023-07-25**</sup>
 
@@ -3253,7 +3278,7 @@
 
 </div>
 
-## [Version 0.21.0](https://github.com/lobehub/lobe-chat/compare/v0.20.0...v0.21.0)
+## [Version 0.21.0](https://github.com/lobehub/lobe-chat/compare/v0.20.0...v0.21.0)
 
 <sup>Released on **2023-07-25**</sup>
 
@@ -3276,7 +3301,7 @@
 
 #### What's improved
 
-- **misc**: 支持快捷配置模型、温度, closes [#19](https://github.com/lobehub/lobe-chat/issues/19) ([31daee1](https://github.com/lobehub/lobe-chat/commit/31daee1))
+- **misc**: 支持快捷配置模型、温度，closes [#19](https://github.com/lobehub/lobe-chat/issues/19) ([31daee1](https://github.com/lobehub/lobe-chat/commit/31daee1))
 
 </details>
 
@@ -3286,7 +3311,7 @@
 
 </div>
 
-## [Version 0.20.0](https://github.com/lobehub/lobe-chat/compare/v0.19.0...v0.20.0)
+## [Version 0.20.0](https://github.com/lobehub/lobe-chat/compare/v0.19.0...v0.20.0)
 
 <sup>Released on **2023-07-25**</sup>
 
@@ -3301,7 +3326,7 @@
 
 #### What's improved
 
-- **misc**: 实现话题模块, closes [#16](https://github.com/lobehub/lobe-chat/issues/16) ([64fd6ee](https://github.com/lobehub/lobe-chat/commit/64fd6ee))
+- **misc**: 实现话题模块，closes [#16](https://github.com/lobehub/lobe-chat/issues/16) ([64fd6ee](https://github.com/lobehub/lobe-chat/commit/64fd6ee))
 
 </details>
 
@@ -3311,13 +3336,13 @@
 
 </div>
 
-## [Version 0.19.0](https://github.com/lobehub/lobe-chat/compare/v0.18.2...v0.19.0)
+## [Version 0.19.0](https://github.com/lobehub/lobe-chat/compare/v0.18.2...v0.19.0)
 
 <sup>Released on **2023-07-24**</sup>
 
 #### ♻ Code Refactoring
 
-- **misc**: 将 message reducer 提取到独立文件夹中, 清理无用代码实现.
+- **misc**: 将 message reducer 提取到独立文件夹中，清理无用代码实现.
 
 #### ✨ Features
 
@@ -3345,7 +3370,7 @@
 
 </div>
 
-### [Version 0.18.2](https://github.com/lobehub/lobe-chat/compare/v0.18.1...v0.18.2)
+### [Version 0.18.2](https://github.com/lobehub/lobe-chat/compare/v0.18.1...v0.18.2)
 
 <sup>Released on **2023-07-24**</sup>
 
@@ -3370,7 +3395,7 @@
 
 </div>
 
-### [Version 0.18.1](https://github.com/lobehub/lobe-chat/compare/v0.18.0...v0.18.1)
+### [Version 0.18.1](https://github.com/lobehub/lobe-chat/compare/v0.18.0...v0.18.1)
 
 <sup>Released on **2023-07-24**</sup>
 
@@ -3395,7 +3420,7 @@
 
 </div>
 
-## [Version 0.18.0](https://github.com/lobehub/lobe-chat/compare/v0.17.0...v0.18.0)
+## [Version 0.18.0](https://github.com/lobehub/lobe-chat/compare/v0.17.0...v0.18.0)
 
 <sup>Released on **2023-07-24**</sup>
 
@@ -3420,7 +3445,7 @@
 
 </div>
 
-## [Version 0.17.0](https://github.com/lobehub/lobe-chat/compare/v0.16.1...v0.17.0)
+## [Version 0.17.0](https://github.com/lobehub/lobe-chat/compare/v0.16.1...v0.17.0)
 
 <sup>Released on **2023-07-24**</sup>
 
@@ -3445,7 +3470,7 @@
 
 </div>
 
-### [Version 0.16.1](https://github.com/lobehub/lobe-chat/compare/v0.16.0...v0.16.1)
+### [Version 0.16.1](https://github.com/lobehub/lobe-chat/compare/v0.16.0...v0.16.1)
 
 <sup>Released on **2023-07-24**</sup>
 
@@ -3478,7 +3503,7 @@
 
 </div>
 
-## [Version 0.16.0](https://github.com/lobehub/lobe-chat/compare/v0.15.1...v0.16.0)
+## [Version 0.16.0](https://github.com/lobehub/lobe-chat/compare/v0.15.1...v0.16.0)
 
 <sup>Released on **2023-07-24**</sup>
 
@@ -3511,7 +3536,7 @@
 
 </div>
 
-### [Version 0.15.1](https://github.com/lobehub/lobe-chat/compare/v0.15.0...v0.15.1)
+### [Version 0.15.1](https://github.com/lobehub/lobe-chat/compare/v0.15.0...v0.15.1)
 
 <sup>Released on **2023-07-24**</sup>
 
@@ -3536,7 +3561,7 @@
 
 </div>
 
-## [Version 0.15.0](https://github.com/lobehub/lobe-chat/compare/v0.14.0...v0.15.0)
+## [Version 0.15.0](https://github.com/lobehub/lobe-chat/compare/v0.14.0...v0.15.0)
 
 <sup>Released on **2023-07-24**</sup>
 
@@ -3562,7 +3587,7 @@
 
 </div>
 
-## [Version 0.14.0](https://github.com/lobehub/lobe-chat/compare/v0.13.1...v0.14.0)
+## [Version 0.14.0](https://github.com/lobehub/lobe-chat/compare/v0.13.1...v0.14.0)
 
 <sup>Released on **2023-07-24**</sup>
 
@@ -3577,7 +3602,7 @@
 
 #### What's improved
 
-- **misc**: 支持网页抓取, closes [#14](https://github.com/lobehub/lobe-chat/issues/14) ([9e933b0](https://github.com/lobehub/lobe-chat/commit/9e933b0))
+- **misc**: 支持网页抓取，closes [#14](https://github.com/lobehub/lobe-chat/issues/14) ([9e933b0](https://github.com/lobehub/lobe-chat/commit/9e933b0))
 
 </details>
 
@@ -3587,7 +3612,7 @@
 
 </div>
 
-### [Version 0.13.1](https://github.com/lobehub/lobe-chat/compare/v0.13.0...v0.13.1)
+### [Version 0.13.1](https://github.com/lobehub/lobe-chat/compare/v0.13.0...v0.13.1)
 
 <sup>Released on **2023-07-23**</sup>
 
@@ -3612,7 +3637,7 @@
 
 </div>
 
-## [Version 0.13.0](https://github.com/lobehub/lobe-chat/compare/v0.12.1...v0.13.0)
+## [Version 0.13.0](https://github.com/lobehub/lobe-chat/compare/v0.12.1...v0.13.0)
 
 <sup>Released on **2023-07-23**</sup>
 
@@ -3627,7 +3652,7 @@
 
 #### What's improved
 
-- **misc**: 优化插件模式下的用户体验, closes [#13](https://github.com/lobehub/lobe-chat/issues/13) ([4596f12](https://github.com/lobehub/lobe-chat/commit/4596f12))
+- **misc**: 优化插件模式下的用户体验，closes [#13](https://github.com/lobehub/lobe-chat/issues/13) ([4596f12](https://github.com/lobehub/lobe-chat/commit/4596f12))
 
 </details>
 
@@ -3637,7 +3662,7 @@
 
 </div>
 
-### [Version 0.12.1](https://github.com/lobehub/lobe-chat/compare/v0.12.0...v0.12.1)
+### [Version 0.12.1](https://github.com/lobehub/lobe-chat/compare/v0.12.0...v0.12.1)
 
 <sup>Released on **2023-07-23**</sup>
 
@@ -3662,7 +3687,7 @@
 
 </div>
 
-## [Version 0.12.0](https://github.com/lobehub/lobe-chat/compare/v0.11.0...v0.12.0)
+## [Version 0.12.0](https://github.com/lobehub/lobe-chat/compare/v0.11.0...v0.12.0)
 
 <sup>Released on **2023-07-23**</sup>
 
@@ -3677,7 +3702,7 @@
 
 #### What's improved
 
-- **misc**: 支持插件列表 与 基于 Serpapi 的搜索引擎插件, closes [#12](https://github.com/lobehub/lobe-chat/issues/12) ([d89e06f](https://github.com/lobehub/lobe-chat/commit/d89e06f))
+- **misc**: 支持插件列表 与 基于 Serpapi 的搜索引擎插件，closes [#12](https://github.com/lobehub/lobe-chat/issues/12) ([d89e06f](https://github.com/lobehub/lobe-chat/commit/d89e06f))
 
 </details>
 
@@ -3687,7 +3712,7 @@
 
 </div>
 
-## [Version 0.11.0](https://github.com/lobehub/lobe-chat/compare/v0.10.2...v0.11.0)
+## [Version 0.11.0](https://github.com/lobehub/lobe-chat/compare/v0.10.2...v0.11.0)
 
 <sup>Released on **2023-07-23**</sup>
 
@@ -3730,7 +3755,7 @@
 
 </div>
 
-### [Version 0.10.2](https://github.com/lobehub/lobe-chat/compare/v0.10.1...v0.10.2)
+### [Version 0.10.2](https://github.com/lobehub/lobe-chat/compare/v0.10.1...v0.10.2)
 
 <sup>Released on **2023-07-23**</sup>
 
@@ -3755,7 +3780,7 @@
 
 </div>
 
-### [Version 0.10.1](https://github.com/lobehub/lobe-chat/compare/v0.10.0...v0.10.1)
+### [Version 0.10.1](https://github.com/lobehub/lobe-chat/compare/v0.10.0...v0.10.1)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -3780,7 +3805,7 @@
 
 </div>
 
-## [Version 0.10.0](https://github.com/lobehub/lobe-chat/compare/v0.9.0...v0.10.0)
+## [Version 0.10.0](https://github.com/lobehub/lobe-chat/compare/v0.9.0...v0.10.0)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -3805,7 +3830,7 @@
 
 </div>
 
-## [Version 0.9.0](https://github.com/lobehub/lobe-chat/compare/v0.8.2...v0.9.0)
+## [Version 0.9.0](https://github.com/lobehub/lobe-chat/compare/v0.8.2...v0.9.0)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -3830,7 +3855,7 @@
 
 </div>
 
-### [Version 0.8.2](https://github.com/lobehub/lobe-chat/compare/v0.8.1...v0.8.2)
+### [Version 0.8.2](https://github.com/lobehub/lobe-chat/compare/v0.8.1...v0.8.2)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -3856,7 +3881,7 @@
 
 </div>
 
-### [Version 0.8.1](https://github.com/lobehub/lobe-chat/compare/v0.8.0...v0.8.1)
+### [Version 0.8.1](https://github.com/lobehub/lobe-chat/compare/v0.8.0...v0.8.1)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -3881,7 +3906,7 @@
 
 </div>
 
-## [Version 0.8.0](https://github.com/lobehub/lobe-chat/compare/v0.7.0...v0.8.0)
+## [Version 0.8.0](https://github.com/lobehub/lobe-chat/compare/v0.7.0...v0.8.0)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -3906,7 +3931,7 @@
 
 </div>
 
-## [Version 0.7.0](https://github.com/lobehub/lobe-chat/compare/v0.6.1...v0.7.0)
+## [Version 0.7.0](https://github.com/lobehub/lobe-chat/compare/v0.6.1...v0.7.0)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -3931,7 +3956,7 @@
 
 </div>
 
-### [Version 0.6.1](https://github.com/lobehub/lobe-chat/compare/v0.6.0...v0.6.1)
+### [Version 0.6.1](https://github.com/lobehub/lobe-chat/compare/v0.6.0...v0.6.1)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -3956,7 +3981,7 @@
 
 </div>
 
-## [Version 0.6.0](https://github.com/lobehub/lobe-chat/compare/v0.5.0...v0.6.0)
+## [Version 0.6.0](https://github.com/lobehub/lobe-chat/compare/v0.5.0...v0.6.0)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -3989,7 +4014,7 @@
 
 </div>
 
-## [Version 0.5.0](https://github.com/lobehub/lobe-chat/compare/v0.4.3...v0.5.0)
+## [Version 0.5.0](https://github.com/lobehub/lobe-chat/compare/v0.4.3...v0.5.0)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -4022,7 +4047,7 @@
 
 </div>
 
-### [Version 0.4.3](https://github.com/lobehub/lobe-chat/compare/v0.4.2...v0.4.3)
+### [Version 0.4.3](https://github.com/lobehub/lobe-chat/compare/v0.4.2...v0.4.3)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -4047,7 +4072,7 @@
 
 </div>
 
-### [Version 0.4.2](https://github.com/lobehub/lobe-chat/compare/v0.4.1...v0.4.2)
+### [Version 0.4.2](https://github.com/lobehub/lobe-chat/compare/v0.4.1...v0.4.2)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -4073,7 +4098,7 @@
 
 </div>
 
-### [Version 0.4.1](https://github.com/lobehub/lobe-chat/compare/v0.4.0...v0.4.1)
+### [Version 0.4.1](https://github.com/lobehub/lobe-chat/compare/v0.4.0...v0.4.1)
 
 <sup>Released on **2023-07-22**</sup>
 
@@ -4098,7 +4123,7 @@
 
 </div>
 
-## [Version 0.4.0](https://github.com/lobehub/lobe-chat/compare/v0.3.0...v0.4.0)
+## [Version 0.4.0](https://github.com/lobehub/lobe-chat/compare/v0.3.0...v0.4.0)
 
 <sup>Released on **2023-07-20**</sup>
 
@@ -4124,7 +4149,7 @@
 
 </div>
 
-## [Version 0.3.0](https://github.com/lobehub/lobe-chat/compare/v0.2.0...v0.3.0)
+## [Version 0.3.0](https://github.com/lobehub/lobe-chat/compare/v0.2.0...v0.3.0)
 
 <sup>Released on **2023-07-18**</sup>
 
@@ -4149,7 +4174,7 @@
 
 </div>
 
-## [Version 0.2.0](https://github.com/lobehub/lobe-chat/compare/v0.1.6...v0.2.0)
+## [Version 0.2.0](https://github.com/lobehub/lobe-chat/compare/v0.1.6...v0.2.0)
 
 <sup>Released on **2023-07-18**</sup>
 
@@ -4174,7 +4199,7 @@
 
 </div>
 
-### [Version 0.1.6](https://github.com/lobehub/lobe-chat/compare/v0.1.5...v0.1.6)
+### [Version 0.1.6](https://github.com/lobehub/lobe-chat/compare/v0.1.5...v0.1.6)
 
 <sup>Released on **2023-07-18**</sup>
 
