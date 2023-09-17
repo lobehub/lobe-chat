@@ -270,7 +270,7 @@ export const chatMessage: StateCreator<
     const userId = nanoid();
     dispatchMessage({ id: userId, message, role: 'user', type: 'addMessage' });
 
-    // 如果有 activeTopicId，则添加 topicId
+    // if there is activeTopicId，then add topicId to message
     if (activeTopicId) {
       dispatchMessage({ id: userId, key: 'topicId', type: 'updateMessage', value: activeTopicId });
     }
