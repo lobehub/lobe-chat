@@ -275,16 +275,19 @@ export const chatMessage: StateCreator<
       dispatchMessage({ id: userId, key: 'topicId', type: 'updateMessage', value: activeTopicId });
     }
 
-    // 先拿到当前的 messages
+    // Get the current messages to generate AI response
     const messages = chatSelectors.currentChats(get());
 
     await realFetchAIResponse(messages, userId);
 
-    // TODO: AgentSettings 提供一个外部调用的 hooks
-    // const chats = chatSelectors.currentChats(get());
-    // if (chats.length >= 4) {
-    //   autocompleteSessionAgentMeta(session.id);
-    // }
+    // check activeTopic and then auto create topic
+    const chats = chatSelectors.currentChats(get());
+
+    if (!activeTopicId && chats.length >= 2) {
+      const { saveToTopic, toggleTopic } = get();
+      const id = saveToTopic();
+      if (id) toggleTopic(id);
+    }
   },
 
   stopGenerateMessage: () => {

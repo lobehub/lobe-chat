@@ -26,7 +26,7 @@ export interface ChatTopicAction {
   /**
    * 将当前消息保存为主题
    */
-  saveToTopic: () => void;
+  saveToTopic: () => string | undefined;
   /**
    * 切换主题
    * @param id - 要切换的主题的 ID
@@ -118,6 +118,8 @@ export const chatTopic: StateCreator<
       },
       params: promptSummaryTitle(messages),
     });
+
+    return topicId;
   },
   toggleTopic: (id) => {
     set({ activeTopicId: id }, false, t('toggleTopic'));
