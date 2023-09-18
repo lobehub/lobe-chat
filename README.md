@@ -90,9 +90,9 @@ Please be aware that LobeChat is currently under active development，feedback i
 - [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more;
 - [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs;
 - [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy;
-- [x] 🤖 **Customizable Assistant Roles**: Users can create, share, and debug personalized dialogue assistant roles according to their needs, providing more flexible and personalized dialogue functions;
-- [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue assistant from anywhere.
-- [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue assistant roles, enriching the content and style of the dialogue;
+- [x] 🤖 **Customizable Agent Roles**: Users can create, share, and debug personalized dialogue agent roles according to their needs, providing more flexible and personalized dialogue functions;
+- [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
+- [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue;
 
 > **Note**\
 > You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
@@ -115,9 +115,9 @@ By building a powerful plugin ecosystem, ChatGPT not only can provide real-time 
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
 
-#### `2` Prompt Assistant Market
+#### `2` Prompt Agent Market
 
-In our assistant market, we have accumulated a large number of practical prompt assistants that have been used in daily work and study. You can also share your assistants here and iterate and optimize your prompt assistants with more people. You can submit your assistants through [🤖/🏪 Submit Assistants][submit-agents-link], and our automated i18n workflow will automatically translate your assistants into multiple languages, allowing users around the world to enjoy your wisdom.
+In our agent market, we have accumulated a large number of practical prompt agents that have been used in daily work and study. You can also share your agents here and iterate and optimize your prompt agents with more people. You can submit your agents through [🤖/🏪 Submit Agents][submit-agents-link], and our automated i18n workflow will automatically translate your agents into multiple languages, allowing users around the world to enjoy your wisdom.
 
 <br/>
 
