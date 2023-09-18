@@ -136,7 +136,7 @@
     "node-fetch": "^3",
     "prettier": "^3",
     "remark": "^14",
-    "remark-cli": "^12",
+    "remark-cli": "^11",
     "semantic-release": "^21",
     "stylelint": "^15",
     "ts-node": "^10",

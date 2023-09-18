@@ -138,7 +138,7 @@ $ npm run dev
 在这份 manifest 中，主要包含了以下几个部分：
 
 1. `identifier`：这是插件的唯一标识符，用来区分不同的插件，这个字段需要全局唯一。
-2. `api`：这是一个数组，包含了插件的所有 API 接口信息。每个接口都包含了url、name、description 和 parameters 字段，均为必填项。其中 `description` 和 `parameters` 两个字段，将会作为 [Function Call](https://sspai.com/post/81986) 的 `functions` 参数发送给 gpt， parameters 需要符合 [JSON Schema](https://json-schema.org/) 规范。 在这个例子中，api 接口名为 `recommendClothes` ，这个接口的功能是根据用户的心情和性别来推荐衣服。接口的参数包括用户的心情和性别，这两个参数都是必填项。
+2. `api`：这是一个数组，包含了插件的所有 API 接口信息。每个接口都包含了 url、name、description 和 parameters 字段，均为必填项。其中 `description` 和 `parameters` 两个字段，将会作为 [Function Call](https://sspai.com/post/81986) 的 `functions` 参数发送给 gpt， parameters 需要符合 [JSON Schema](https://json-schema.org/) 规范。 在这个例子中，api 接口名为 `recommendClothes` ，这个接口的功能是根据用户的心情和性别来推荐衣服。接口的参数包括用户的心情和性别，这两个参数都是必填项。
 3. `ui`：这个字段包含了插件的用户界面信息，指明了 LobeChat 从哪个地址加载插件的前端界面。由于 LobeChat 插件界面加载是基于 iframe 实现的，因此可以按需指定插件界面的高度、宽度。
 4. `gateway`：这个字段指定了 LobeChat 查询 api 接口的网关。LobeChat 默认的插件网关是云端服务，而自定义插件的请求需要发给本地启动的服务，远端调用本地地址，一般调用不通。gateway 字段解决了该问题。通过在 manifest 中指定 gateway，LobeChat 将会向该地址发送插件请求，本地的网关地址将会调度请求到本地的插件服务。发布到线上的插件可以不用指定该字段。
 5. `version`：这是插件的版本号，现阶段暂时没有作用；
@@ -225,7 +225,7 @@ export default async createLobeChatPluginGateway();
 
 #### 插件 UI 界面实现
 
-LobeChat 通过 `iframe` 实现插件 ui 的加载,使用 `postMessage` 实现主体与插件的通信。因此， 插件 UI 的实现方式与普通的网页开发一致，你可以使用任何你熟悉的前端框架与开发语言。
+LobeChat 通过 `iframe` 实现插件 ui 的加载，使用 `postMessage` 实现主体与插件的通信。因此， 插件 UI 的实现方式与普通的网页开发一致，你可以使用任何你熟悉的前端框架与开发语言。
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263653-4ea87abc-249a-49f3-a241-7ed93ddb1ddf.png)
 

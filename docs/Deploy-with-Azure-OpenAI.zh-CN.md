@@ -10,7 +10,7 @@ LobeChat 支持使用 [Azure OpenAI][azure-openai-url] 作为 OpenAI 的模型�
 
 ## 使用限制
 
-从研发成本考虑([#178][rfc])，目前阶段的 LobeChat 并没有 100% 完全符合 Azure OpenAI 的实现模型，采用了以 `openai` 为基座，兼容 Azure OpeAI 的解决方案。因此会带来以下局限性：
+从研发成本考虑 ([#178][rfc])，目前阶段的 LobeChat 并没有 100% 完全符合 Azure OpenAI 的实现模型，采用了以 `openai` 为基座，兼容 Azure OpeAI 的解决方案。因此会带来以下局限性：
 
 - OpenAI 与 Azure OpenAI 只能二选一，当你开启使用 Azure OpenAI 后，将无法使用 OpenAI 作为模型服务商；
 - LobeChat 约定了与模型同名的部署名才能正常使用，比如 `gpt-35-turbo` 模型的部署名，必须为 `gpt-35-turbo`，否则 LobeChat 将无法正常正确匹配到相应模型
@@ -25,8 +25,8 @@ LobeChat 支持使用 [Azure OpenAI][azure-openai-url] 作为 OpenAI 的模型�
 
 你按需填写相应的配置项：
 
-- **APIKey**：你在 Azure OpenAI 账户页面申请的 API 密钥，可在“密钥和终结点”部分中找到此值
-- **API 地址**：Azure API 地址，从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值
+- **APIKey**：你在 Azure OpenAI 账户页面申请的 API 密钥，可在 “密钥和终结点” 部分中找到此值
+- **API 地址**：Azure API 地址，从 Azure 门户检查资源时，可在 “密钥和终结点” 部分中找到此值
 - **Azure Api Version**： Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本][azure-api-verion-url]
 
 完成上述字段配置后，点击「检查」，如果提示「检查通过」，则说明配置成功。
@@ -37,13 +37,13 @@ LobeChat 支持使用 [Azure OpenAI][azure-openai-url] 作为 OpenAI 的模型�
 
 如果你希望部署的版本直接配置好 Azure OpenAI，让终端用户直接使用，那么你需要在部署时配置以下环境变量：
 
-| 环境变量            | 类型 | 描述                                                                      | 默认值             | 示例                                               |
-| ------------------- | ---- | ------------------------------------------------------------------------- | ------------------ | -------------------------------------------------- |
-| `USE_AZURE_OPENAI`  | 必选 | 设置改值为 `1` 开启 Azure OpenAI 配置                                     | -                  | `1`                                                |
-| `AZURE_API_KEY`     | 必选 | 这是你在 Azure OpenAI 账户页面申请的 API 密钥                             | -                  | `c55168be3874490ef0565d9779ecd5a6`                 |
-| `OPENAI_PROXY_URL`  | 必选 | Azure API 地址，从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值 | -                  | `https://docs-test-001.openai.azure.com`           |
-| `AZURE_API_VERSION` | 可选 | Azure 的 API 版本，遵循 YYYY-MM-DD 格式                                   | 2023-08-01-preview | `2023-05-15`，查阅[最新版本][azure-api-verion-url] |
-| `ACCESS_CODE`       | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                             | -                  | `awCT74` 或 `e3@09!`                               |
+| 环境变量            | 类型 | 描述                                                                        | 默认值             | 示例                                               |
+| ------------------- | ---- | --------------------------------------------------------------------------- | ------------------ | -------------------------------------------------- |
+| `USE_AZURE_OPENAI`  | 必选 | 设置改值为 `1` 开启 Azure OpenAI 配置                                       | -                  | `1`                                                |
+| `AZURE_API_KEY`     | 必选 | 这是你在 Azure OpenAI 账户页面申请的 API 密钥                               | -                  | `c55168be3874490ef0565d9779ecd5a6`                 |
+| `OPENAI_PROXY_URL`  | 必选 | Azure API 地址，从 Azure 门户检查资源时，可在 “密钥和终结点” 部分中找到此值 | -                  | `https://docs-test-001.openai.azure.com`           |
+| `AZURE_API_VERSION` | 可选 | Azure 的 API 版本，遵循 YYYY-MM-DD 格式                                     | 2023-08-01-preview | `2023-05-15`，查阅[最新版本][azure-api-verion-url] |
+| `ACCESS_CODE`       | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                               | -                  | `awCT74` 或 `e3@09!`                               |
 
 > **Note**\
 > 当你在服务端开启 `USE_AZURE_OPENAI` 后，用户将无法在前端配置中修改并使用 OpenAI key。

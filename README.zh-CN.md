@@ -72,7 +72,7 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 | [![][discord-shield-badge]][discord-link] | 加入我们的 Discord 社区！这是你可以与开发者和其他 LobeHub 热衷用户交流的地方 |
 
 > **Important**\
-> **收藏项目**，你将从 GitHub 上无延迟地接收所有发布通知 \~ ⭐️
+> **收藏项目**，你将从 GitHub 上无延迟地接收所有发布通知～⭐️
 
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
 
@@ -105,9 +105,25 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 ## 📸 快照预览
 
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
+
+#### `1` Function Calling 插件系统
+
+通过构建强大的插件生态，ChatGPT 不仅能够实时获取最新新闻，还能助你一臂之力，轻松查询文档、访问各大电商数据。这使得 ChatGPT 在更广泛的领域中发挥其关键作用。如果你对编写插件有所兴趣，我们在下文的 🧩 插件体系 中提供了详尽的组件开发文档、SDK、以及样板文件，让我们一起让助手变得更加好用和强大～
+
+<br/>
+
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
+
+#### `2` Prompt 助手市场
+
+在我们的助手市场中，我们积累了大量实用的助手 Prompt，这些都是在日常工作和学习中得到实际应用的。你也可以在这里分享你的助手，与更多的人一起迭代和优化你的助手提示词。你可以通过 [🤖/🏪 提交助手][submit-agents-link] 来提交你的助手，我们构建的自动化 i18n 工作流将会自动将你的助手翻译成多语言版本，让多语种用户都能享受到你的智慧成果。
+
+<br/>
+
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
 
-**PWA 渐进式 Web 应用**
+#### `3` PWA 渐进式 Web 应用
 
 利用渐进式 Web 应用 [PWA](https://support.google.com/chrome/answer/9658361) 技术，您可在电脑或移动设备上实现流畅的 LobeChat 体验。
 
@@ -123,17 +139,17 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
-**主题模式选择**
+#### `4` 主题模式选择
 
-LobeChat 提供了亮色和暗色两种主题模式以及颜色定制选项，默认情况下，主题会跟随系统设置，您也可以在设置中手动切换。
+LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，以及丰富的颜色定制选项，以满足您的个性化需求。默认情况下，我们的主题会智能地跟随您的系统设置进行切换，但如果您希望进行手动控制，也可以轻松在设置中进行切换。
 
 <br/>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
 
-**移动设备适配**
+#### `5` 移动设备适配
 
-我们针对移动设备进行了一系列适配设计以提升用户体验。目前我们正在对移动端的体验进行版本迭代，如果您有任何建议或想法，我们非常欢迎您提供反馈。
+针对移动设备进行了一系列的优化设计，以提升用户的移动体验。目前，我们正在对移动端的用户体验进行版本迭代，以实现更加流畅和直观的交互。如果您有任何建议或想法，我们非常欢迎您通过 Github Issues 或者 Pull Requests 提供反馈。
 
 > 🚧 更多快照和演示正在陆续添加中...
 
@@ -165,7 +181,7 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以�
 
 ### 保持更新
 
-如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示“有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。我们建议按照 [📘 LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN) 步骤重新部署。
+如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示 “有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。我们建议按照 [📘 LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN) 步骤重新部署。
 
 <div align="right">
 
@@ -298,9 +314,9 @@ This project is [MIT](./LICENSE) licensed.
 [fc-link]: https://sspai.com/post/81986
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
-[github-action-release-link]: https://github.com/actions/workflows/lobehub/lobe-chat/release.yml
+[github-action-release-link]: https://github.com/lobehub/lobe-chat/actions/workflows/release.yml
 [github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/release.yml?labelColor=black&logo=githubactions&logoColor=white&style=flat-square
-[github-action-test-link]: https://github.com/actions/workflows/lobehub/lobe-chat/test.yml
+[github-action-test-link]: https://github.com/lobehub/lobe-chat/actions/workflows/test.yml
 [github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
 [github-contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
 [github-contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat?color=c4f042&labelColor=black&style=flat-square
