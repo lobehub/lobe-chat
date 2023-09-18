@@ -95,7 +95,7 @@
     "react-hotkeys-hook": "^4",
     "react-i18next": "^13",
     "react-intersection-observer": "^9",
-    "react-layout-kit": "^1.7.1",
+    "react-layout-kit": "^1.7.2",
     "swr": "^2",
     "systemjs": "^6.14.2",
     "ts-md5": "^1",
