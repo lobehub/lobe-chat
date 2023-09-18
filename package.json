@@ -86,7 +86,7 @@
     "immer": "^10",
     "lodash-es": "^4",
     "lucide-react": "latest",
-    "nanoid": "^4",
+    "nanoid": "^5",
     "next": "13.4.7",
     "openai": "^4.7.1",
     "polished": "^4",
