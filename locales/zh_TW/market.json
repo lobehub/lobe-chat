@@ -1,0 +1,16 @@
+{
+  "addAgent": "新增助理",
+  "search": {
+    "placeholder": "搜尋助理名稱、描述或關鍵字..."
+  },
+  "sidebar": {
+    "comment": "評論",
+    "prompt": "提示",
+    "title": "助理詳細資訊"
+  },
+  "submitAgent": "上傳助理",
+  "title": {
+    "recentSubmits": "最新上傳",
+    "allAgents": "所有助理"
+  }
+}
