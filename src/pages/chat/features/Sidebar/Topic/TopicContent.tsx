@@ -97,7 +97,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
       {!editing ? (
         <Paragraph
           className={styles.title}
-          ellipsis={{ rows: 1, tooltip: title }}
+          ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
           style={{ margin: 0 }}
         >
           {title}
