@@ -1,3 +1,5 @@
+'use client';
+
 import { memo, useEffect } from 'react';
 
 import { useSessionHydrated, useSessionStore } from '@/store/session';

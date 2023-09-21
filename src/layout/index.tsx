@@ -1,3 +1,5 @@
+'use client';
+
 import { ThemeProvider, lobeCustomTheme } from '@lobehub/ui';
 import { App, ConfigProvider } from 'antd';
 import { useThemeMode } from 'antd-style';
