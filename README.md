@@ -38,23 +38,14 @@ LobeChat is a open-source, extensible ([Function Calling][fc-link]), high-perfor
 #### TOC
 
 - [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
-
 - [✨ Features](#-features)
-
 - [📸 Snapshot](#-snapshot)
-
 - [🛳 Self Hosting](#-self-hosting)
-
   - [Keep Updated](#keep-updated)
-
 - [📦 Ecosystem](#-ecosystem)
-
 - [🧩 Plugins](#-plugins)
-
 - [⌨️ Local Development](#️-local-development)
-
 - [🤝 Contributing](#-contributing)
-
 - [🔗 More Products](#-more-products)
 
 ####

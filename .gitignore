@@ -55,3 +55,4 @@ next-env.d.ts
 .next
 .env
 public/*.js
+bun.lockb

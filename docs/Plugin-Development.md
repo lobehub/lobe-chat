@@ -3,24 +3,17 @@
 #### TOC
 
 - [Plugin Composition](#plugin-composition)
-
 - [Custom Plugin Workflow](#custom-plugin-workflow)
-
   - [**`1`** Create and Start a Plugin Project](#1-create-and-start-a-plugin-project)
   - [**`2`** Add the Local Plugin in LobeChat Role Settings](#2-add-the-local-plugin-in-lobechat-role-settings)
   - [**`3`** Test the Plugin Functionality in a Session](#3-test-the-plugin-functionality-in-a-session)
-
 - [Local Plugin Development](#local-plugin-development)
-
   - [Manifest](#manifest)
   - [Project Structure](#project-structure)
   - [Server-side](#server-side)
   - [Plugin UI Interface](#plugin-ui-interface)
-
 - [Plugin Deployment and Publication](#plugin-deployment-and-publication)
-
   - [Plugin Shield](#plugin-shield)
-
 - [Link](#link)
 
 ## Plugin Composition
