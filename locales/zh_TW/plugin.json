@@ -1,0 +1,126 @@
+{
+  "debug": {
+    "arguments": "參數",
+    "function_call": "函式呼叫",
+    "response": "回應"
+  },
+  "dev": {
+    "confirmDeleteDevPlugin": "您確定要刪除此本機外掛嗎？一旦刪除，將無法復原。",
+    "deleteSuccess": "外掛已成功刪除",
+    "manifest": {
+      "identifier": {
+        "desc": "外掛的唯一識別碼",
+        "label": "識別碼"
+      },
+      "mode": {
+        "local": "視覺設定",
+        "local-tooltip": "目前不支援視覺設定",
+        "url": "線上連結"
+      },
+      "name": {
+        "desc": "外掛的名稱",
+        "label": "名稱",
+        "placeholder": "搜尋引擎"
+      }
+    },
+    "meta": {
+      "author": {
+        "desc": "外掛的作者",
+        "label": "作者"
+      },
+      "avatar": {
+        "desc": "外掛的圖示，可以是 Emoji 或網址",
+        "label": "圖示"
+      },
+      "description": {
+        "desc": "外掛的描述",
+        "label": "描述",
+        "placeholder": "從搜尋引擎取得資訊"
+      },
+      "formFieldRequired": "此欄位必填",
+      "homepage": {
+        "desc": "外掛的官方首頁",
+        "label": "首頁"
+      },
+      "identifier": {
+        "desc": "外掛的唯一識別碼，只支援英數字元、連字號 -，以及底線 _",
+        "errorDuplicate": "此識別碼已被其他外掛使用，請更改識別碼",
+        "label": "識別碼",
+        "pattenErrorMessage": "只允許英數字元、連字號 -，以及底線 _"
+      },
+      "manifest": {
+        "desc": "LobeChat 會使用此連結安裝外掛",
+        "invalid": "輸入的 manifest 連結不正確或不符合標準",
+        "label": "外掛 Manifest 網址",
+        "urlError": "請輸入有效的網址",
+        "jsonInvalid": "manifest 不正確，驗證結果：\n\n {{error}}",
+        "preview": "預覽 Manifest",
+        "refresh": "重新載入",
+        "requestError": "連結請求失敗，請確認網址是否正確且允許跨域存取"
+      },
+      "title": {
+        "desc": "外掛的名稱",
+        "label": "名稱",
+        "placeholder": "搜尋引擎"
+      }
+    },
+    "metaConfig": "外掛後設資料設定",
+    "modalDesc": "新增自訂外掛後，可用於外掛開發測試或直接在對話中使用。請參考外掛開發文件以取得更多資訊。",
+    "preview": {
+      "card": "外掛顯示預覽",
+      "desc": "外掛描述預覽",
+      "title": "外掛名稱預覽"
+    },
+    "save": "儲存",
+    "saveSuccess": "外掛設定已成功儲存",
+    "tabs": {
+      "manifest": "功能描述清單 (Manifest)",
+      "meta": "外掛後設資料"
+    },
+    "title": "新增自訂外掛",
+    "update": "更新",
+    "updateSuccess": "外掛設定已成功更新"
+  },
+  "list": {
+    "item": {
+      "local.config": "設定",
+      "local.title": "本機",
+      "deprecated.title": "已刪除"
+    }
+  },
+  "loading": {
+    "content": "載入中...",
+    "plugin": "外掛執行中..."
+  },
+  "pluginList": "外掛清單",
+  "plugins": {
+    "realtimeWeather": "即時天氣",
+    "searchEngine": "搜尋引擎",
+    "undefined": "正在偵測外掛...",
+    "websiteCrawler": "網站爬蟲",
+    "unknown": "外掛偵測進行中..."
+  },
+  "realtimeWeather": {
+    "data": {
+      "date": "日期",
+      "daytemp_float": "日間溫度",
+      "dayweather": "日間天氣",
+      "daywind": "日間風向",
+      "nighttemp_float": "夜間溫度",
+      "nightweather": "夜間天氣",
+      "nightwind": "夜間風向",
+      "week": "週"
+    },
+    "title": "未來 7 天的天氣資料 ({{city}})",
+    "updateAt": "最後更新時間"
+  },
+  "responseData": "回應資料",
+  "settings": {
+    "indexUrl": {
+      "title": "外掛市集索引",
+      "tooltip": "目前不支援編輯"
+    },
+    "modalDesc": "設定外掛市集的網址後，您可以使用自訂的外掛市集",
+    "title": "設定外掛市集"
+  }
+}
