@@ -2,7 +2,7 @@ import { SiOpenai } from '@icons-pack/react-simple-icons';
 import { ActionIcon, Avatar, ChatHeader, ChatHeaderTitle, Tag } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { PanelRightClose, PanelRightOpen, Settings } from 'lucide-react';
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,6 +16,7 @@ import ShareButton from './ShareButton';
 
 const Header = memo(() => {
   const init = useSessionChatInit();
+  const router = useRouter();
 
   const { t } = useTranslation('common');
 
@@ -80,7 +81,7 @@ const Header = memo(() => {
             <ActionIcon
               icon={Settings}
               onClick={() => {
-                Router.push({ hash: location.hash, pathname: `/chat/setting` });
+                router.push('/chat/settings', { hash: location.hash });
               }}
               size={{ fontSize: 24 }}
               title={t('header.session', { ns: 'setting' })}

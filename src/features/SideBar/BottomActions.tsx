@@ -10,7 +10,7 @@ import {
   Settings,
   Settings2,
 } from 'lucide-react';
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +25,7 @@ export interface BottomActionProps {
 }
 
 const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
+  const router = useRouter();
   const { t } = useTranslation('common');
 
   const { exportSessions, exportSettings, exportAll, exportAgents } = useExportConfig();
@@ -101,7 +102,7 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         label: t('setting'),
         onClick: () => {
           setTab('settings');
-          Router.push('/settings');
+          router.push('/settings');
         },
       },
     ],

@@ -6,6 +6,7 @@ import { useThemeMode } from 'antd-style';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
 import { changeLanguage } from 'i18next';
+import { useRouter } from 'next/navigation';
 import { PropsWithChildren, memo, useCallback, useEffect } from 'react';
 
 import { createI18nNext } from '@/locales/create';
@@ -21,14 +22,18 @@ const i18n = createI18nNext();
 const Layout = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
 
+  const router = useRouter();
   useOnFinishHydrationGlobal((state) => {
     i18n.then(() => {
       changeLanguage(state.settings.language);
     });
   });
 
-  useOnFinishHydrationSession((s) => {
+  useOnFinishHydrationSession((s, store) => {
     usePluginStore.getState().checkLocalEnabledPlugins(s.sessions);
+
+    // add router instance to store
+    store.setState({ router });
   });
 
   return (

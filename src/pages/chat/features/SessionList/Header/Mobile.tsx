@@ -1,7 +1,7 @@
 import { ActionIcon, Logo, MobileNavBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { MessageSquarePlus, Settings2 } from 'lucide-react';
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 
 import AvatarWithUpload from '@/features/AvatarWithUpload';
@@ -19,6 +19,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
+  const router = useRouter();
 
   return (
     <MobileNavBar
@@ -30,7 +31,7 @@ const Header = memo(() => {
           <ActionIcon
             icon={Settings2}
             onClick={() => {
-              Router.push({ pathname: `/settings` });
+              router.push('/settings');
             }}
           />
         </>

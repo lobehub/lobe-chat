@@ -1,11 +1,13 @@
 import { ActionIcon, Logo, MobileNavBar } from '@lobehub/ui';
 import { Settings2 } from 'lucide-react';
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 
 const Header = memo(() => {
+  const router = useRouter();
+
   return (
     <MobileNavBar
       center={<Logo type={'text'} />}
@@ -14,7 +16,7 @@ const Header = memo(() => {
         <ActionIcon
           icon={Settings2}
           onClick={() => {
-            Router.push({ pathname: `/settings` });
+            router.push('/settings');
           }}
         />
       }

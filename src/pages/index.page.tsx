@@ -1,8 +1,12 @@
 'use client';
 
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 
-import { useSessionHydrated, useSessionStore } from '@/store/session';
+import {
+  useEffectAfterSessionHydrated,
+  useSessionHydrated,
+  useSessionStore,
+} from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
 import Loading from './index/Loading';
@@ -15,7 +19,7 @@ const Home = memo(() => {
     s.switchSession,
   ]);
 
-  useEffect(() => {
+  useEffectAfterSessionHydrated(() => {
     if (hasSession) switchSession();
   }, [hasSession]);
 
