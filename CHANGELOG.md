@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.78.1](https://github.com/lobehub/lobe-chat/compare/v0.78.0...v0.78.1)
+
+<sup>Released on **2023-09-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Show topic tooltip on left side.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Show topic tooltip on left side ([f686fd2](https://github.com/lobehub/lobe-chat/commit/f686fd2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.78.0](https://github.com/lobehub/lobe-chat/compare/v0.77.2...v0.78.0)
 
 <sup>Released on **2023-09-17**</sup>
