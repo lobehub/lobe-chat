@@ -43,7 +43,7 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default memo(({ children }: PropsWithChildren) => {
+export default memo<PropsWithChildren>(({ children }) => {
   useEffect(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
     useSessionStore.persist.rehydrate();

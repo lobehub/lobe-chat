@@ -4,6 +4,8 @@ import { PropsWithChildren } from 'react';
 
 import Layout from '@/layout';
 
+import StyleRegistry from './StyleRegistry';
+
 export const metadata: Metadata = {
   manifest: '/manifest.json',
   title: 'LobeChat',
@@ -12,7 +14,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: PropsWithChildren) => (
   <html lang="en">
     <body>
-      <Layout>{children}</Layout>
+      <StyleRegistry>
+        <Layout>{children}</Layout>
+      </StyleRegistry>
       <Analytics />
     </body>
   </html>
