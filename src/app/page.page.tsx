@@ -1,4 +1,4 @@
-import Page from '@/pages/welcome/index.page';
+import Page from '@/pages/home';
 
 const Index = () => {
   return <Page />;

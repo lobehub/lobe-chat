@@ -1,4 +1,4 @@
-import Page from '@/pages/chat/setting/index.page';
+import Page from '@/pages/settings';
 
 const Index = () => {
   return <Page />;
