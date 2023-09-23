@@ -2,13 +2,13 @@ import { Analytics } from '@vercel/analytics/react';
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { PropsWithChildren } from 'react';
-import Layout from 'src/layout/GlobalLayout';
 
 import {
   LOBE_THEME_APPEARANCE,
   LOBE_THEME_NEUTRAL_COLOR,
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
+import Layout from '@/layout/GlobalLayout';
 
 import StyleRegistry from './StyleRegistry';
 
