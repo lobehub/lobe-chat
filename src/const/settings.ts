@@ -13,9 +13,7 @@ export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
   avatar: '',
   fontSize: 14,
   language: 'zh-CN',
-  neutralColor: '',
   password: '',
-  primaryColor: '',
   themeMode: 'auto',
 };
 
