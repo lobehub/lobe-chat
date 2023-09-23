@@ -70,7 +70,7 @@
     "@icons-pack/react-simple-icons": "^9",
     "@lobehub/chat-plugin-sdk": "^1.17.7",
     "@lobehub/chat-plugins-gateway": "^1.5.3",
-    "@lobehub/ui": "latest",
+    "@lobehub/ui": "beta",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
     "ai": "^2",
