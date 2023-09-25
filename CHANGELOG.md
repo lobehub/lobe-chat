@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.79.3](https://github.com/lobehub/lobe-chat/compare/v0.79.2...v0.79.3)
+
+<sup>Released on **2023-09-25**</sup>
+
+#### 💄 Styles
+
+- **meta**: Update meta image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **meta**: Update meta image, closes [#66](https://github.com/lobehub/lobe-chat/issues/66) ([a71ffff](https://github.com/lobehub/lobe-chat/commit/a71ffff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.79.2](https://github.com/lobehub/lobe-chat/compare/v0.79.1...v0.79.2)
 
 <sup>Released on **2023-09-25**</sup>
