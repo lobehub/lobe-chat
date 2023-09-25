@@ -1,8 +1,8 @@
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import SideBar from '@/app/market/features/SideBar';
 import AppMobileLayout from '@/layout/AppMobileLayout';
-import SideBar from '@/pages/market/features/SideBar';
 import { useSwitchSideBarOnInit } from '@/store/global';
 
 import Header from './features/Header';

@@ -1,4 +1,4 @@
-import Page from '@/pages/chat/mobile';
+import Page from './index';
 
 const Index = () => {
   return <Page />;

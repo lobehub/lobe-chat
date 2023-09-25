@@ -3,7 +3,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import TokenTag from '@/pages/market/features/SideBar/AgentInfo/TokenTag';
+import TokenTag from '@/app/market/features/SideBar/AgentInfo/TokenTag';
 import { useMarketStore } from '@/store/market';
 
 import AgentCardBanner from '../../AgentCard/AgentCardBanner';

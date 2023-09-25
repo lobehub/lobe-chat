@@ -5,7 +5,7 @@ import { rgba } from 'polished';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import pkg from '@/../package.json';
+import pkg from '../../../../../package.json';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   background: css`
