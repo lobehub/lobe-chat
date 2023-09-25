@@ -1,3 +1,5 @@
+'use client';
+
 import { useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import Head from 'next/head';

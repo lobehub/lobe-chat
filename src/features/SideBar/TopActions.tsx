@@ -1,6 +1,6 @@
 import { ActionIcon } from '@lobehub/ui';
 import { Bot, MessageSquare } from 'lucide-react';
-import Router from 'next/router';
+import { usePathname, useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,6 +13,8 @@ export interface TopActionProps {
 }
 
 const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
+  const pathname = usePathname();
+  const router = useRouter();
   const { t } = useTranslation('common');
   const switchBackToChat = useSessionStore((s) => s.switchBackToChat);
   return (
@@ -22,7 +24,7 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
         icon={MessageSquare}
         onClick={() => {
           // 如果已经在 chat 路径下了，那么就不用再跳转了
-          if (Router.asPath.startsWith('/chat')) return;
+          if (pathname?.startsWith('/chat')) return;
           switchBackToChat();
           setTab('chat');
         }}
@@ -34,8 +36,8 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
         active={tab === 'market'}
         icon={Bot}
         onClick={() => {
-          if (Router.asPath.startsWith('/market')) return;
-          Router.push('/market');
+          if (pathname?.startsWith('/market')) return;
+          router.push('/market');
           setTab('market');
         }}
         placement={'right'}

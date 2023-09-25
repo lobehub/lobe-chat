@@ -1,6 +1,6 @@
 import { ActionIcon, MobileNavBar, MobileNavBarTitle } from '@lobehub/ui';
 import { LayoutList, Settings } from 'lucide-react';
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +10,7 @@ import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 const MobileHeader = memo(() => {
   const { t } = useTranslation('common');
+  const router = useRouter();
 
   const [isInbox, title, model] = useSessionStore((s) => [
     sessionSelectors.isInboxSession(s),
@@ -24,7 +25,7 @@ const MobileHeader = memo(() => {
   return (
     <MobileNavBar
       center={<MobileNavBarTitle desc={model} title={displayTitle} />}
-      onBackClick={() => Router.push({ hash: null, pathname: `/chat` })}
+      onBackClick={() => router.push('/chat', { hash: null })}
       right={
         <>
           <ActionIcon icon={LayoutList} onClick={() => toggleConfig()} />
@@ -32,7 +33,7 @@ const MobileHeader = memo(() => {
             <ActionIcon
               icon={Settings}
               onClick={() => {
-                Router.push({ hash: location.hash, pathname: `/chat/setting` });
+                router.push('/chat/settings', { hash: location.hash });
               }}
             />
           )}

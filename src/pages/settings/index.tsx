@@ -1,3 +1,5 @@
+'use client';
+
 import { useResponsive } from 'antd-style';
 import Head from 'next/head';
 import { memo } from 'react';

@@ -37,9 +37,9 @@ export interface GlobalBaseSettings {
    */
   historyCount?: number;
   language: Locales;
-  neutralColor: NeutralColors | '';
+  neutralColor?: NeutralColors;
   password: string;
-  primaryColor: PrimaryColors | '';
+  primaryColor?: PrimaryColors;
   themeMode: ThemeMode;
 }
 

@@ -1,7 +1,7 @@
 import { Icon, MobileTabBar, type MobileTabBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Bot, MessageSquare } from 'lucide-react';
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,7 @@ export default memo<{ className?: string }>(({ className }) => {
   const [tab, setTab] = useGlobalStore((s) => [s.sidebarKey, s.switchSideBar]);
   const { t } = useTranslation('common');
   const { styles } = useStyles();
+  const router = useRouter();
   const items: MobileTabBarProps['items'] = useMemo(
     () => [
       {
@@ -28,7 +29,7 @@ export default memo<{ className?: string }>(({ className }) => {
         ),
         key: 'chat',
         onClick: () => {
-          Router.push('/chat');
+          router.push('/chat');
         },
         title: t('tab.chat'),
       },
@@ -36,7 +37,7 @@ export default memo<{ className?: string }>(({ className }) => {
         icon: (active) => <Icon className={active ? styles.active : undefined} icon={Bot} />,
         key: 'market',
         onClick: () => {
-          Router.push({ hash: '', pathname: `/market` });
+          router.push('/market', { hash: '' });
         },
         title: t('tab.market'),
       },

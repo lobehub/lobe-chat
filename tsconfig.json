@@ -19,7 +19,12 @@
     "types": ["vitest/globals"],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "exclude": ["node_modules"],
   "include": [
@@ -29,7 +34,8 @@
     "tests",
     "**/*.ts",
     "**/*.d.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts"
   ],
   "ts-node": {
     "compilerOptions": {

@@ -1,3 +1,5 @@
+'use client';
+
 import Head from 'next/head';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
