@@ -8,18 +8,27 @@ const title = genSiteHeadTitle();
 const description = pkg.description;
 const metadata: Metadata = {
   appleWebApp: {
+    startupImage: [
+      'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/splash-750x1624.png',
+      {
+        media: '(device-width: 768px) and (device-height: 1024px)',
+        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/splash-2048x2732.png',
+      },
+    ],
     statusBarStyle: 'black-translucent',
     title: title,
   },
   description: description,
   icons: {
     apple:
-      'https://registry.npmmirror.com/@lobehub/assets-favicons/1.1.0/files/assets/apple-touch-icon.png',
-    icon: 'https://registry.npmmirror.com/@lobehub/assets-favicons/1.1.0/files/assets/favicon-32x32.png',
+      'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/apple-touch-icon.png',
+    icon: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon-32x32.png',
     other: {
       rel: 'mask-icon',
-      url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/1.1.0/files/assets/safari-pinned-tab.svg',
+      url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/safari-pinned-tab.svg',
     },
+    shortcut:
+      'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon.ico',
   },
   manifest: '/manifest.json',
   openGraph: {
@@ -27,15 +36,15 @@ const metadata: Metadata = {
     images: [
       {
         alt: title,
-        height: 192,
-        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/1.1.0/files/assets/android-chrome-192x192.png',
-        width: 192,
+        height: 360,
+        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-480x360.png',
+        width: 480,
       },
       {
         alt: title,
-        height: 512,
-        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/1.1.0/files/assets/android-chrome-512x512.png',
-        width: 512,
+        height: 720,
+        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-960x720.png',
+        width: 960,
       },
     ],
     locale: 'en_US',
