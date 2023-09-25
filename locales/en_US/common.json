@@ -33,6 +33,7 @@
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
+  "historyRange": "History Range",
   "import": "Import Configuration",
   "inbox": {
     "defaultMessage": "Hello, I'm your intelligent agent. You can ask me any questions and I will do my best to answer you. If you need a more professional or customized agent, you can click <kbd>+</kbd> to create a custom agent.",

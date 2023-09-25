@@ -33,6 +33,7 @@
     "globalSetting": "导出全局设置"
   },
   "feedback": "反馈与建议",
+  "historyRange": "历史范围",
   "import": "导入配置",
   "inbox": {
     "defaultMessage": "你好，我是你的智能助手，你可以问我任何问题，我会尽力回答你。如果需要获得更加专业或定制的助手，可以点击<kbd>+</kbd>创建自定义助手",

@@ -34,6 +34,7 @@ export default {
     globalSetting: '导出全局设置',
   },
   feedback: '反馈与建议',
+  historyRange: '历史范围',
   import: '导入配置',
   inbox: {
     defaultMessage:

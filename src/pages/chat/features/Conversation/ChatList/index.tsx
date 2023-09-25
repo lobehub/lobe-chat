@@ -21,14 +21,26 @@ const List = () => {
 
   const data = useSessionStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
 
-  const [displayMode, chatLoadingId, deleteMessage, resendMessage, dispatchMessage] =
-    useSessionStore((s) => [
-      agentSelectors.currentAgentConfig(s).displayMode,
+  const [
+    displayMode,
+    enableHistoryCount,
+    historyCount,
+    chatLoadingId,
+    deleteMessage,
+    resendMessage,
+    dispatchMessage,
+  ] = useSessionStore((s) => {
+    const config = agentSelectors.currentAgentConfig(s);
+    return [
+      config.displayMode,
+      config.enableHistoryCount,
+      config.historyCount,
       s.chatLoadingId,
       s.deleteMessage,
       s.resendMessage,
       s.dispatchMessage,
-    ]);
+    ];
+  });
 
   const renderMessage: RenderMessage = useCallback(
     (content, message: ChatMessage) => {
@@ -72,6 +84,8 @@ const List = () => {
   return (
     <ChatList
       data={data}
+      enableHistoryCount={enableHistoryCount}
+      historyCount={historyCount}
       loadingId={chatLoadingId}
       onActionClick={(key, id) => {
         switch (key) {
@@ -100,6 +114,7 @@ const List = () => {
         copySuccess: t('copySuccess'),
         delete: t('delete'),
         edit: t('edit'),
+        history: t('historyRange'),
         regenerate: t('regenerate'),
       }}
       type={displayMode || 'chat'}
