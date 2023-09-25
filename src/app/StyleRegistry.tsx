@@ -14,6 +14,7 @@ const StyleRegistry = ({ children }: PropsWithChildren) => {
 
     isInsert.current = true;
 
+    // @ts-ignore
     return extractStaticStyle().map((item) => item.style);
   });
 

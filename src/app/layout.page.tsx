@@ -1,5 +1,4 @@
 import { Analytics } from '@vercel/analytics/react';
-import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { PropsWithChildren } from 'react';
 
@@ -11,11 +10,6 @@ import {
 import Layout from '@/layout/GlobalLayout';
 
 import StyleRegistry from './StyleRegistry';
-
-export const metadata: Metadata = {
-  manifest: '/manifest.json',
-  title: 'LobeChat',
-};
 
 const RootLayout = ({ children }: PropsWithChildren) => {
   // get default theme config to use with ssr
@@ -43,3 +37,5 @@ const RootLayout = ({ children }: PropsWithChildren) => {
 };
 
 export default RootLayout;
+
+export { default as metadata } from './metadata';
