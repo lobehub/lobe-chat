@@ -33,6 +33,7 @@
     "globalSetting": "Экспорт глобальных настроек"
   },
   "feedback": "Обратная связь",
+  "historyRange": "Исторический диапазон",
   "import": "Импорт конфига",
   "inbox": {
     "defaultMessage": "Hello, I'm your intelligent assistant. You can ask me any questions and I will do my best to answer you. If you need a more professional or customized assistant, you can click <kbd>+</kbd> to create a custom assistant.",
