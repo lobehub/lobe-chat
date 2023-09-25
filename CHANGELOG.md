@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.79.0](https://github.com/lobehub/lobe-chat/compare/v0.78.1...v0.79.0)
+
+<sup>Released on **2023-09-25**</sup>
+
+#### ✨ Features
+
+- **conversation**: Add history range divider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **conversation**: Add history range divider, closes [#118](https://github.com/lobehub/lobe-chat/issues/118) ([92d2c96](https://github.com/lobehub/lobe-chat/commit/92d2c96))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.78.1](https://github.com/lobehub/lobe-chat/compare/v0.78.0...v0.78.1)
 
 <sup>Released on **2023-09-21**</sup>
