@@ -202,16 +202,17 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以�
 
 插件提供了扩展 LobeChat [Function Calling][fc-link] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。如果你对插件开发感兴趣，请在 Wiki 中查阅我们的 [📘 插件开发指引](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development.zh-CN) 。
 
+- [lobe-chat-plugins][lobe-chat-plugins]：这是 LobeChat 的插件索引。它从该仓库的 index.json 中获取插件列表并显示给用户。
+- [chat-plugin-template][chat-plugin-template]: Chat Plugin 插件开发模版，你可以通过项目模版快速新建插件项目。
+- [@lobehub/chat-plugin-sdk][chat-plugin-sdk]：LobeChat 插件 SDK 可帮助您创建出色的 Lobe Chat 插件。
+- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]：LobeChat 插件网关是一个后端服务，作为 LobeChat 插件的网关。我们使用 Vercel 部署此服务。主要的 API POST /api/v1/runner 被部署为 Edge Function。
+
 > **Note**\
 > 插件系统目前正在进行重大开发。您可以在以下 Issues 中了解更多信息:
 >
 > - [x] [**插件一期**](https://github.com/lobehub/lobe-chat/issues/73): 实现插件与主体分离，将插件拆分为独立仓库维护，并实现插件的动态加载
 > - [x] [**插件二期**](https://github.com/lobehub/lobe-chat/issues/97): 插件的安全性与使用的稳定性，更加精准地呈现异常状态，插件架构的可维护性与开发者友好
 > - [ ] [**插件三期**](https://github.com/lobehub/lobe-chat/issues/149)：更高阶与完善的自定义能力，支持插件鉴权与示例
-
-- [@lobehub/lobe-chat-plugins][lobe-chat-plugins]：这是 LobeChat 的插件索引。它从该仓库的 index.json 中获取插件列表并显示给用户。
-- [@lobehub/chat-plugin-sdk][chat-plugin-sdk]：LobeChat 插件 SDK 可帮助您创建出色的 Lobe Chat 插件。
-- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]：LobeChat 插件网关是一个后端服务，作为 LobeChat 插件的网关。我们使用 Vercel 部署此服务。主要的 API POST /api/v1/runner 被部署为 Edge Function。
 
 | 官方插件                                 | 描述                                                                         |
 | ---------------------------------------- | ---------------------------------------------------------------------------- |
@@ -295,6 +296,7 @@ This project is [MIT](./LICENSE) licensed.
 [chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
+[chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugin-web-crawler]: https://github.com/lobehub/chat-plugin-web-crawler
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
 [codespaces-link]: https://codespaces.new/lobehub/lobe-chat

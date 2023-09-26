@@ -200,16 +200,17 @@ If you have deployed your own project following the one-click deployment steps i
 
 Plugins provide a means to extend the [Function Calling][fc-link] capabilities of LobeChat. They can be used to introduce new function calls, and even new ways to render message results. If you are interested in plugin development, please refer to our [📘 Plugin Development Guide](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development) in the Wiki.
 
+- [lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeChat. It accesses index.json from this repository to display a list of available plugins for LobeChat to the user.
+- [chat-plugin-template][chat-plugin-template]: This is the plugin template for LobeChat plugin development.
+- [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
+- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The LobeChat Plugins Gateway is a backend service that serves as a gateway for LobeChat plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
+
 > **Note**\
 > The plugin system is currently undergoing major development. You can learn more in the following issues:
 >
 > - [x] [**Plugin Phase 1**](https://github.com/lobehub/lobe-chat/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
 > - [x] [**Plugin Phase 2**](https://github.com/lobehub/lobe-chat/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture and developer-friendly.
 > - [ ] [**Plugin Phase 3**](https://github.com/lobehub/lobe-chat/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication and examples.
-
-- [@lobehub/lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeChat. It accesses index.json from this repository to display a list of available plugins for LobeChat to the user.
-- [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
-- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The LobeChat Plugins Gateway is a backend service that serves as a gateway for LobeChat plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
 
 | Official Plugin                                 | Description                                                                                                                                       |
 | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -293,6 +294,7 @@ This project is [MIT](./LICENSE) licensed.
 [chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
+[chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugin-web-crawler]: https://github.com/lobehub/chat-plugin-web-crawler
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
 [codespaces-link]: https://codespaces.new/lobehub/lobe-chat
