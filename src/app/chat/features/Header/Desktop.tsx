@@ -10,6 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useGlobalStore } from '@/store/global';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
+import { pathString } from '@/utils/url';
 
 import PluginTag from './PluginTag';
 import ShareButton from './ShareButton';
@@ -81,7 +82,7 @@ const Header = memo(() => {
             <ActionIcon
               icon={Settings}
               onClick={() => {
-                router.push('/chat/settings', { hash: location.hash });
+                router.push(pathString('/chat/settings', { hash: location.hash }));
               }}
               size={{ fontSize: 24 }}
               title={t('header.session', { ns: 'setting' })}
