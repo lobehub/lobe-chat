@@ -13,7 +13,9 @@ const withPWA = nextPWA({
 const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['tsx', 'api.ts'],
-  transpilePackages: ['@lobehub/ui'],
+  // not sure why antd-style cause multi ThemeProvider instance
+  // So we need to transpile it to lib mode
+  transpilePackages: ['@lobehub/ui', 'antd-style'],
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
