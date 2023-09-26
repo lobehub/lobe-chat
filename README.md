@@ -157,10 +157,14 @@ LobeChat provides a [self-hosted version][deploy-link] with Vercel. This allows 
 - After deployment, you can start using it;
 - Bind a custom domain (optional): The DNS of the domain assigned by Vercel is polluted in some areas, binding a custom domain can connect directly.
 
-[![Deploy with Vercel][deploy-button-image]][deploy-link]
+<div align="right">
+
+[![][deploy-button-image]][deploy-link]
+
+</div>
 
 > **Note**\
-> This project provides some additional configuration items, set with environment variables:
+> This project provides some additional configuration items, set with environment variables, The complete list of environment variables can be found in the [📘 Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable) :
 
 | Environment Variable | Required | Description                                                                                                                                   | Example                                                                             |
 | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -304,7 +308,7 @@ This project is [MIT](./LICENSE) licensed.
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
 [github-action-release-link]: https://github.com/actions/workflows/lobehub/lobe-chat/release.yml
-[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/release.yml?labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
 [github-action-test-link]: https://github.com/actions/workflows/lobehub/lobe-chat/test.yml
 [github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
 [github-contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors

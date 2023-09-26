@@ -14,6 +14,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 ### 🤯 LobeChat
 
+- [Environment Variables](Environment-Variable) | [环境变量](Environment-Variable.zh-CN)
 - [Maintaining Updates with LobeChat Self-Deployment](Upstream-Sync) | [自部署保持更新](Upstream-Sync.zh-CN)
 - [Deploying with Azure OpenAI](Deploy-with-Azure-OpenAI) | [自部署保持更新](Deploy-with-Azure-OpenAI.zh-CN)
 

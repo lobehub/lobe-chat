@@ -6,6 +6,7 @@
 
 #### 🤯 LobeChat
 
+- [Environment Variables](Environment-Variable) | [中文](Environment-Variable.zh-CN)
 - [Upstream Sync](Upstream-Sync) | [中文](Upstream-Sync.zh-CN)
 - [Deploying with Azure OpenAI](Deploy-with-Azure-OpenAI) | [中文](Deploy-with-Azure-OpenAI.zh-CN)
 

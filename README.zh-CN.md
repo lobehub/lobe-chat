@@ -159,10 +159,14 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以�
 - 部署完毕后，即可开始使用；
 - 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
 
-[![使用 Vercel 部署][deploy-button-image]][deploy-link]
+<div align="right">
+
+[![][deploy-button-image]][deploy-link]
+
+</div>
 
 > **Note**\
-> 本项目提供了一些额外的配置项，使用环境变量进行设置：
+> 本项目提供了一些额外的配置项，使用环境变量进行设置，完整环境变量可见 [📘环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)：
 
 | 环境变量           | 类型 | 描述                                                                                   | 示例                                                                   |
 | ------------------ | ---- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
@@ -306,7 +310,7 @@ This project is [MIT](./LICENSE) licensed.
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
 [github-action-release-link]: https://github.com/lobehub/lobe-chat/actions/workflows/release.yml
-[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/release.yml?labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
 [github-action-test-link]: https://github.com/lobehub/lobe-chat/actions/workflows/test.yml
 [github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
 [github-contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
