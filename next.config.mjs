@@ -1,7 +1,7 @@
 import nextPWA from 'next-pwa';
 
 const isProd = process.env.NODE_ENV === 'production';
-const API_END_PORT_URL = process.env.API_END_PORT_URL || '';
+const DEV_API_END_PORT_URL = process.env.DEV_API_END_PORT_URL || '';
 
 const withPWA = nextPWA({
   dest: 'public',
@@ -27,15 +27,15 @@ const nextConfig = {
     return [
       {
         source: '/api/openai/chat-dev',
-        destination: `${API_END_PORT_URL}/api/openai/chat`,
+        destination: `${DEV_API_END_PORT_URL}/api/openai/chat`,
       },
       {
         source: '/api/openai/models-dev',
-        destination: `${API_END_PORT_URL}/api/openai/models`,
+        destination: `${DEV_API_END_PORT_URL}/api/openai/models`,
       },
       {
         source: '/api/plugins-dev',
-        destination: `${API_END_PORT_URL}/api/plugins`,
+        destination: `${DEV_API_END_PORT_URL}/api/plugins`,
       },
     ];
   },

@@ -1,7 +1,7 @@
-import { Analytics } from '@vercel/analytics/react';
 import { cookies } from 'next/headers';
 import { PropsWithChildren } from 'react';
 
+import Analytics from '@/components/Analytics';
 import {
   LOBE_THEME_APPEARANCE,
   LOBE_THEME_NEUTRAL_COLOR,
