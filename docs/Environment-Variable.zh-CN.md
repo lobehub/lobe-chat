@@ -6,6 +6,7 @@
 
 - 类型：可选
 - 描述：添加访问 LobeChat 服务的密码，密码应为 6 位数字或字母
+- 默认值：-
 - 示例：`awCT74` 或 `e3@09!`
 
 ## OpenAI
@@ -14,6 +15,7 @@
 
 - 类型：必选
 - 描述：这是你在 OpenAI 账户页面申请的 API 密钥，可以前往[这里][openai-api-page]查看
+- 默认值：-
 - 示例：`sk-xxxxxx...xxxxxx`
 
 ### `OPENAI_PROXY_URL`
@@ -34,13 +36,6 @@
 - 默认值：-
 - 示例：`1`
 
-### `OPENAI_PROXY_URL`
-
-- 类型：可选
-- 描述：Azure API 地址，从 Azure 门户检查资源时，可在 “密钥和终结点” 部分中找到此值
-- 默认值：-
-- 示例：`https://docs-test-001.openai.azure.com`
-
 ### `AZURE_API_KEY`
 
 - 类型：可选
@@ -52,7 +47,7 @@
 
 - 类型：可选
 - 描述：Azure 的 API 版本，遵循 YYYY-MM-DD 格式
-- 默认值：2023-08-01-preview
+- 默认值：`2023-08-01-preview`
 - 示例：`2023-05-15`，查阅[最新版本][azure-api-verion-url]
 
 ## 插件服务
@@ -77,6 +72,7 @@
 
 - 类型：可选
 - 描述：定义 LobeChat 服务端请求转发的代理地址，使用该变量可以方便开发时将请求转发到线上。详见[配置代码](https://github.com/lobehub/lobe-chat/blob/main/next.config.mjs#L29-L38)
+- 默认值：-
 - 示例：`https://chat-preview.lobehub.com`
 
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
