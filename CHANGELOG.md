@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.79.5](https://github.com/lobehub/lobe-chat/compare/v0.79.4...v0.79.5)
+
+<sup>Released on **2023-09-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix URI error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix URI error ([282a0c8](https://github.com/lobehub/lobe-chat/commit/282a0c8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.79.4](https://github.com/lobehub/lobe-chat/compare/v0.79.3...v0.79.4)
 
 <sup>Released on **2023-09-26**</sup>
