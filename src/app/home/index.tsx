@@ -2,7 +2,6 @@
 
 import { memo } from 'react';
 
-import Loading from '@/pages/home/Loading';
 import {
   useEffectAfterSessionHydrated,
   useSessionHydrated,
@@ -11,6 +10,7 @@ import {
 import { sessionSelectors } from '@/store/session/selectors';
 
 import Welcome from '../welcome';
+import Loading from './Loading';
 
 const Home = memo(() => {
   const hydrated = useSessionHydrated();

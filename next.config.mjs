@@ -12,7 +12,7 @@ const withPWA = nextPWA({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  pageExtensions: ['page.tsx', 'api.ts'],
+  pageExtensions: ['tsx', 'api.ts'],
   transpilePackages: ['@lobehub/ui'],
   webpack(config) {
     config.experiments = {

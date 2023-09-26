@@ -9,8 +9,8 @@ import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import Banner from './features/Banner';
 import Footer from './features/Footer';
-import Layout from './layout';
 import Mobile from './layout.mobile';
+import Layout from './layout.pc';
 
 const Welcome = memo(() => {
   const { mobile } = useResponsive();

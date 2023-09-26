@@ -3,13 +3,13 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import TokenTag from '@/pages/market/features/SideBar/AgentInfo/TokenTag';
 import { useMarketStore } from '@/store/market';
 
 import AgentCardBanner from '../../AgentCard/AgentCardBanner';
 import Comment from './Comment';
 import Header from './Header';
 import Loading from './Loading';
+import TokenTag from './TokenTag';
 import { useStyles } from './style';
 
 enum InfoTabs {

@@ -5,12 +5,12 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import AppMobileLayout from '@/layout/AppMobileLayout';
-import Header from '@/pages/chat/features/Header';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import Conversation from '../features/Conversation';
+import Header from '../features/Header';
 import SideBar from '../features/Sidebar';
 
 const Chat = memo(() => {

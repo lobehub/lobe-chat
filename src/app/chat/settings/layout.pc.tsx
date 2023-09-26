@@ -4,7 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import SafeSpacing from '@/components/SafeSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
 
-import ChatLayout from '../layout';
+import ChatLayout from '../layout.pc';
 import Header from './features/Header';
 
 const DesktopLayout = memo<PropsWithChildren>(({ children }) => {

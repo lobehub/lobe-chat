@@ -10,8 +10,8 @@ import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import AgentCard from './features/AgentCard';
 import AgentSearchBar from './features/AgentSearchBar';
-import DesktopLayout from './layout';
 import MobileLayout from './layout.mobile';
+import DesktopLayout from './layout.pc';
 
 const Market = memo(() => {
   const { t } = useTranslation('common');
