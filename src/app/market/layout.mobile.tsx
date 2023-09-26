@@ -1,11 +1,11 @@
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import SideBar from '@/app/market/features/SideBar';
 import AppMobileLayout from '@/layout/AppMobileLayout';
 import { useSwitchSideBarOnInit } from '@/store/global';
 
 import Header from './features/Header';
+import SideBar from './features/SideBar';
 
 const MarketLayout = memo<{ children: ReactNode }>(({ children }) => {
   useSwitchSideBarOnInit('market');
