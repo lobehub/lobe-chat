@@ -119,7 +119,6 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/systemjs": "^6.13.2",
-    "@types/testing-library__jest-dom": "^6",
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
     "@vitest/coverage-v8": "latest",

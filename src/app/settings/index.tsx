@@ -9,8 +9,8 @@ import { useSwitchSideBarOnInit } from '@/store/global';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import Settings from './features/Settings';
-import DesktopLayout from './layout';
 import MobileLayout from './layout.mobile';
+import DesktopLayout from './layout.pc';
 
 const Setting = memo(() => {
   const { mobile } = useResponsive();
