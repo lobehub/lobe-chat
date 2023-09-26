@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.79.4](https://github.com/lobehub/lobe-chat/compare/v0.79.3...v0.79.4)
+
+<sup>Released on **2023-09-26**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move dir from page to app and remove .page suffix.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move dir from page to app and remove .page suffix, closes [#236](https://github.com/lobehub/lobe-chat/issues/236) ([2907303](https://github.com/lobehub/lobe-chat/commit/2907303))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.79.3](https://github.com/lobehub/lobe-chat/compare/v0.79.2...v0.79.3)
 
 <sup>Released on **2023-09-25**</sup>
