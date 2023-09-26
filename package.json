@@ -86,6 +86,7 @@
     "immer": "^10",
     "lodash-es": "^4",
     "lucide-react": "latest",
+    "mixpanel-browser": "^2",
     "nanoid": "^5",
     "next": "^13.5.3",
     "openai": "^4",

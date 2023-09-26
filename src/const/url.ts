@@ -1,5 +1,6 @@
 import urlJoin from 'url-join';
 
+import { getClientConfig } from '@/config/client';
 import { localeOptions } from '@/locales/options';
 import { Locales } from '@/locales/resources';
 
@@ -13,7 +14,7 @@ export const FEEDBACK = pkg.bugs.url;
 export const DISCORD = 'https://discord.gg/AYFPHvv2jT';
 
 export const PLUGINS_INDEX_URL =
-  process.env.PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com';
+  getClientConfig().PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com';
 
 export const DEFAULT_LANG = 'en-US';
 
@@ -26,7 +27,8 @@ export const getPluginIndexJSON = (lang: Locales = DEFAULT_LANG, baseUrl = PLUGI
   return urlJoin(baseUrl, `index.${lang}.json`);
 };
 
-export const AGENTS_INDEX_URL = process.env.AGENTS_INDEX_URL ?? 'https://chat-agents.lobehub.com';
+export const AGENTS_INDEX_URL =
+  getClientConfig().AGENTS_INDEX_URL ?? 'https://chat-agents.lobehub.com';
 
 export const getAgentIndexJSON = (lang: Locales = DEFAULT_LANG, baseUrl = AGENTS_INDEX_URL) => {
   if (checkLang(lang)) return baseUrl;
