@@ -1,7 +1,7 @@
 {
   "about": "關於",
   "advanceSettings": "進階設定",
-  "agentDefaultMessage": "嗨，我是 **{{name}}**。您可以立即與我開始對話，或是前往 [助理設定](/chat/setting#session={{id}}) 完善我的資訊。",
+  "agentDefaultMessage": "嗨，我是 **{{name}}**。您可以立即與我開始對話，或是前往 [助理設定](/chat/settings#session={{id}}) 完善我的資訊。",
   "agentDefaultMessageWithSystemRole": "嗨，我是 **{{name}}**，{{systemRole}}。讓我們開始對話吧！",
   "agentMaxToken": "最大對話長度",
   "agentModel": "模型",
