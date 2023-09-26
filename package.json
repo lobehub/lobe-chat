@@ -87,7 +87,7 @@
     "lodash-es": "^4",
     "lucide-react": "latest",
     "nanoid": "^5",
-    "next": "13.4.7",
+    "next": "13.5.3",
     "openai": "^4.10.0",
     "polished": "^4",
     "react": "^18",
