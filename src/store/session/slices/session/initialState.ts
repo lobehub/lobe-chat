@@ -1,5 +1,5 @@
 import { merge } from 'lodash-es';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import { DEFAULT_AGENT_META, DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { LobeAgentConfig, LobeAgentSession, LobeSessionType } from '@/types/session';

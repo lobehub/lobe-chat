@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
+import { pathString } from '@/utils/url';
 
 const MobileHeader = memo(() => {
   const { t } = useTranslation('common');
@@ -25,7 +26,7 @@ const MobileHeader = memo(() => {
   return (
     <MobileNavBar
       center={<MobileNavBarTitle desc={model} title={displayTitle} />}
-      onBackClick={() => router.push('/chat', { hash: null })}
+      onBackClick={() => router.push('/chat')}
       right={
         <>
           <ActionIcon icon={LayoutList} onClick={() => toggleConfig()} />
@@ -33,7 +34,7 @@ const MobileHeader = memo(() => {
             <ActionIcon
               icon={Settings}
               onClick={() => {
-                router.push('/chat/settings', { hash: location.hash });
+                router.push(pathString('/chat/settings', { hash: location.hash }));
               }}
             />
           )}
