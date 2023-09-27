@@ -12,9 +12,14 @@ import OtpInput from '../OTPInput';
 import APIKeyForm from './ApiKeyForm';
 import { ErrorActionContainer, FormAction } from './style';
 
+enum Tab {
+  Api = 'api',
+  Password = 'password',
+}
+
 const InvalidAccess = memo<{ id: string }>(({ id }) => {
   const { t } = useTranslation('error');
-  const [mode, setMode] = useState('password');
+  const [mode, setMode] = useState<Tab>(Tab.Password);
   const [password, setSettings] = useGlobalStore((s) => [s.settings.password, s.setSettings]);
   const [resend, deleteMessage] = useSessionStore((s) => [s.resendMessage, s.deleteMessage]);
 
@@ -22,16 +27,20 @@ const InvalidAccess = memo<{ id: string }>(({ id }) => {
     <ErrorActionContainer>
       <Segmented
         block
-        onChange={(value) => setMode(value as string)}
+        onChange={(value) => setMode(value as Tab)}
         options={[
-          { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: 'api' },
-          { icon: <Icon icon={SquareAsterisk} />, label: '密码', value: 'password' },
+          { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: Tab.Api },
+          {
+            icon: <Icon icon={SquareAsterisk} />,
+            label: t('password', { ns: 'common' }),
+            value: Tab.Password,
+          },
         ]}
         style={{ width: '100%' }}
         value={mode}
       />
       <Flexbox gap={24}>
-        {mode === 'password' ? (
+        {mode === Tab.Password && (
           <>
             <FormAction
               avatar={'🗳'}
@@ -56,7 +65,8 @@ const InvalidAccess = memo<{ id: string }>(({ id }) => {
               {t('unlock.confirm')}
             </Button>
           </>
-        ) : (
+        )}
+        {mode === Tab.Api && (
           <APIKeyForm
             onConfirm={() => {
               resend(id);

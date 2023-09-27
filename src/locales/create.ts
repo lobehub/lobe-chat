@@ -7,6 +7,8 @@ import type { Namespaces } from '@/types/locale';
 
 import resources from './resources';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 export const createI18nNext = (params: { namespace?: Namespaces[] | Namespaces } = {}) => {
   const { namespace } = params;
 
@@ -18,16 +20,16 @@ export const createI18nNext = (params: { namespace?: Namespaces[] | Namespaces }
     .use(LanguageDetector)
     .use(initReactI18next)
     .init({
-      debug: process.env.NODE_ENV === 'development',
+      debug: isDev,
       defaultNS: ns,
       detection: {
         caches: [],
       },
-      fallbackLng: 'en-US',
+      fallbackLng: isDev ? 'zh-CN' : 'en-US',
       interpolation: {
         escapeValue: false,
       },
-      lng: 'en-US',
+      lng: isDev ? 'zh-CN' : 'en-US',
       ns,
       resources,
     });

@@ -47,6 +47,7 @@
   "newAgent": "New Agent",
   "noDescription": "No Description",
   "ok": "OK",
+  "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
   "regenerate": "Regenerate",
@@ -60,6 +61,17 @@
   "sessionList": "Agent List",
   "setting": "Settings",
   "share": "Share",
+  "shareModal": {
+    "download": "Download Screenshot",
+    "imageType": "Image Type",
+    "screenshot": "Screenshot",
+    "settings": "Export Settings",
+    "withBackground": "Include Background Image",
+    "withPluginInfo": "Include Plugin Information",
+    "withSystemRole": "Include Agent Role Setting",
+    "withFooter": "Including footer",
+    "shareToShareGPT": "Generate ShareGPT sharing link"
+  },
   "stop": "Stop",
   "tab": {
     "chat": "Chat",

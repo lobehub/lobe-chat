@@ -47,6 +47,7 @@
   "newAgent": "新建助手",
   "noDescription": "暂无描述",
   "ok": "确定",
+  "password": "密码",
   "pin": "置顶",
   "pinOff": "取消置顶",
   "regenerate": "重新生成",
@@ -60,6 +61,17 @@
   "sessionList": "助手列表",
   "setting": "设置",
   "share": "分享",
+  "shareModal": {
+    "download": "下载截图",
+    "imageType": "图片格式",
+    "screenshot": "截图",
+    "settings": "导出设置",
+    "shareToShareGPT": "生成 ShareGPT 分享链接",
+    "withBackground": "包含背景图片",
+    "withFooter": "包含页脚",
+    "withPluginInfo": "包含插件信息",
+    "withSystemRole": "包含助手角色设定"
+  },
   "stop": "停止",
   "tab": {
     "chat": "会话",
