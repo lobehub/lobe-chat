@@ -20,10 +20,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - [数据统计](#数据统计)
   - [Vercel Analytics](#vercel-analytics)
   - [Mixpanel Analytics](#mixpanel-analytics)
-  - [`NEXT_PUBLIC_MIXPANEL_PROJECT_TOKEN`](#next_public_mixpanel_project_token)
-  - [`NEXT_PUBLIC_MIXPANEL_DEBUG`](#next_public_mixpanel_debug)
   - [Posthog Analytics](#posthog-analytics)
-  - [`NEXT_PUBLIC_POSTHOG_DEBUG`](#next_public_posthog_debug)
 - [开发环境](#开发环境)
   - [`DEV_API_END_PORT_URL`](#dev_api_end_port_url)
 
@@ -128,14 +125,14 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值： -
 - 示例：`1`
 
-### `NEXT_PUBLIC_MIXPANEL_PROJECT_TOKEN`
+#### `NEXT_PUBLIC_MIXPANEL_PROJECT_TOKEN`
 
 - 类型：可选
 - 描述：设置 Mixpanel 项目的识别 Token，可以在[这里][mixpanel-project-url]找到
 - 默认值： -
 - 示例：`60db2abae7fdd29961f4e8f91b074b3a`
 
-### `NEXT_PUBLIC_MIXPANEL_DEBUG`
+#### `NEXT_PUBLIC_MIXPANEL_DEBUG`
 
 - 类型：可选
 - 描述：开启 Mixpanel 的调试模式
@@ -165,7 +162,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值：`https://app.posthog.com`
 - 示例：`https://example.com`
 
-### `NEXT_PUBLIC_POSTHOG_DEBUG`
+#### `NEXT_PUBLIC_POSTHOG_DEBUG`
 
 - 类型：可选
 - 描述：开启 PostHog 的调试模式
