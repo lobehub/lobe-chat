@@ -1,4 +1,5 @@
 import { ChatList, RenderMessage } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,10 +16,22 @@ import FunctionCall from './Plugins/FunctionCall';
 import PluginMessage from './Plugins/PluginMessage';
 import SkeletonList from './SkeletonList';
 
-const List = () => {
+const useStyles = createStyles(({ css, responsive, cx, stylish }) =>
+  cx(
+    stylish.noScrollbar,
+    css`
+      overflow-x: hidden;
+      ${responsive.mobile} {
+        width: 100vw;
+      }
+    `,
+  ),
+);
+
+const List = memo(() => {
   const init = useSessionChatInit();
   const { t } = useTranslation('common');
-
+  const { styles } = useStyles();
   const data = useSessionStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
 
   const [
@@ -83,6 +96,7 @@ const List = () => {
 
   return (
     <ChatList
+      className={styles}
       data={data}
       enableHistoryCount={enableHistoryCount}
       historyCount={historyCount}
@@ -120,6 +134,6 @@ const List = () => {
       type={displayMode || 'chat'}
     />
   );
-};
+});
 
-export default memo(List);
+export default List;

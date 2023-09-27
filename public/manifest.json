@@ -4,23 +4,38 @@
   "display": "fullscreen",
   "icons": [
     {
-      "src": "https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/android-chrome-192x192.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/android-chrome-512x512.png",
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
+  "id": "/",
   "name": "LobeChat",
   "orientation": "portrait",
   "scope": "/",
   "screenshots": [
     {
-      "src": "https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-960x720.png",
-      "sizes": "960x720",
+      "src": "https://registry.npmmirror.com/@lobehub/assets-favicons/1.4.0/files/assets/og-960x540.png",
+      "sizes": "960x540",
       "type": "image/png"
     }
   ],

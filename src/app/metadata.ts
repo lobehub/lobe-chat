@@ -8,13 +8,6 @@ const title = genSiteHeadTitle();
 const description = pkg.description;
 const metadata: Metadata = {
   appleWebApp: {
-    startupImage: [
-      'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/splash-750x1624.png',
-      {
-        media: '(device-width: 768px) and (device-height: 1024px)',
-        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/splash-2048x2732.png',
-      },
-    ],
     statusBarStyle: 'black-translucent',
     title: title,
   },
@@ -23,10 +16,6 @@ const metadata: Metadata = {
     apple:
       'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/apple-touch-icon.png',
     icon: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon-32x32.png',
-    other: {
-      rel: 'mask-icon',
-      url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/safari-pinned-tab.svg',
-    },
     shortcut:
       'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon.ico',
   },
@@ -37,13 +26,13 @@ const metadata: Metadata = {
       {
         alt: title,
         height: 360,
-        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-480x360.png',
+        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/1.4.0/files/assets/og-480x270.png',
         width: 480,
       },
       {
         alt: title,
         height: 720,
-        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-960x720.png',
+        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/1.4.0/files/assets/og-960x540.png',
         width: 960,
       },
     ],
@@ -57,7 +46,7 @@ const metadata: Metadata = {
     { color: '#fff', media: '(prefers-color-scheme: light)' },
     { color: '#000', media: '(prefers-color-scheme: dark)' },
   ],
-  title: genSiteHeadTitle(),
+  title: title,
   viewport: {
     initialScale: 1,
     maximumScale: 1,

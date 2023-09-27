@@ -11,8 +11,8 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
+import DesktopLayout from './layout.desktop';
 import MobileLayout from './layout.mobile';
-import DesktopLayout from './layout.pc';
 
 const EditPage = memo(() => {
   const { mobile } = useResponsive();

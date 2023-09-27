@@ -4,8 +4,7 @@ export const useIsPWA = () => {
   const [isPWA, setIsPWA] = useState(false);
 
   useEffect(() => {
-    const isInStandaloneMode = () =>
-      'standalone' in window.navigator && window.navigator['standalone'];
+    const isInStandaloneMode = () => window.matchMedia('(display-mode: standalone)').matches;
     if (isInStandaloneMode()) {
       setIsPWA(true);
     }

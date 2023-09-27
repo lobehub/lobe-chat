@@ -13,8 +13,8 @@ import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 import Conversation from './features/Conversation';
 import Header from './features/Header';
 import SideBar from './features/Sidebar';
+import DesktopLayout from './layout.desktop';
 import MobileLayout from './layout.mobile';
-import DesktopLayout from './layout.pc';
 
 const Chat = memo(() => {
   const { mobile } = useResponsive();

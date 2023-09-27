@@ -10,7 +10,7 @@ const WelcomeLayout = memo<PropsWithChildren>(({ children }) => {
     <AppMobileLayout
       navBar={<MobileNavBar center={<Logo type={'text'} />} />}
       showTabBar
-      style={{ background: theme.colorBgContainer }}
+      style={{ background: theme.colorBgLayout }}
     >
       {children}
     </AppMobileLayout>
