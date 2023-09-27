@@ -1,8 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { App, Button, ConfigProvider, Form, Modal, Popconfirm } from 'antd';
-import { createStyles } from 'antd-style';
-import { LucideBlocks } from 'lucide-react';
-import { lighten } from 'polished';
+import { Modal } from '@lobehub/ui';
+import { App, Button, Form, Popconfirm } from 'antd';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -12,18 +9,6 @@ import { CustomPlugin } from '@/types/plugin';
 import ManifestForm from './ManifestForm';
 import MetaForm from './MetaForm';
 import PluginPreview from './PluginPreview';
-
-const useStyles = createStyles(({ css, token, prefixCls }) => ({
-  content: css`
-    .${prefixCls}-modal-content {
-      border: 1px solid ${token.colorSplit};
-      border-radius: 12px;
-    }
-  `,
-  root: css`
-    backdrop-filter: blur(2px);
-  `,
-}));
 
 interface DevModalProps {
   mode?: 'edit' | 'create';
@@ -39,7 +24,6 @@ const DevModal = memo<DevModalProps>(
   ({ open, mode = 'create', value, onValueChange, onSave, onOpenChange, onDelete }) => {
     const isEditMode = mode === 'edit';
     const { t } = useTranslation('plugin');
-    const { styles, theme } = useStyles();
     const { message } = App.useApp();
 
     const [submitting, setSubmitting] = useState(false);
@@ -105,49 +89,28 @@ const DevModal = memo<DevModalProps>(
           onOpenChange(false);
         }}
       >
-        <ConfigProvider
-          theme={{
-            token: {
-              colorBgElevated: lighten(0.005, theme.colorBgContainer),
-            },
-          }}
+        <Modal
+          cancelText={t('cancel', { ns: 'common' })}
+          footer={footer}
+          okText={t('dev.save')}
+          onCancel={() => onOpenChange(false)}
+          onOk={() => form.submit()}
+          open={open}
+          title={t('dev.title')}
         >
-          <Modal
-            centered
-            closable
-            footer={footer}
-            maskClosable
-            okText={t('dev.save')}
-            onCancel={() => {
-              onOpenChange(false);
-            }}
-            onOk={() => {
-              form.submit();
-            }}
-            open={open}
-            title={
-              <Flexbox gap={8} horizontal>
-                <Icon icon={LucideBlocks} />
-                {t('dev.title')}
-              </Flexbox>
-            }
-            width={700}
-            wrapClassName={styles.root}
-          >
-            <Flexbox gap={12}>
-              {t('dev.modalDesc')}
-              {/*<Tabs*/}
-              {/*  items={[*/}
-              {/*    { children: <MetaForm />, key: 'meta', label: t('dev.tabs.meta') },*/}
-              {/*    { children: <ManifestForm />, key: 'manifest', label: t('dev.tabs.manifest') },*/}
-              {/*  ]}*/}
-              {/*/>*/}
-              <PluginPreview form={form} />
-              <ManifestForm form={form} />
-              <MetaForm form={form} mode={mode} />
-            </Flexbox>
-          </Modal>
-        </ConfigProvider>
+          <Flexbox gap={12}>
+            {t('dev.modalDesc')}
+            {/*<Tabs*/}
+            {/*  items={[*/}
+            {/*    { children: <MetaForm />, key: 'meta', label: t('dev.tabs.meta') },*/}
+            {/*    { children: <ManifestForm />, key: 'manifest', label: t('dev.tabs.manifest') },*/}
+            {/*  ]}*/}
+            {/*/>*/}
+            <PluginPreview form={form} />
+            <ManifestForm form={form} />
+            <MetaForm form={form} mode={mode} />
+          </Flexbox>
+        </Modal>
       </Form.Provider>
     );
   },
