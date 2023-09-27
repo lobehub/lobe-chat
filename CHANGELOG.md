@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.80.0](https://github.com/lobehub/lobe-chat/compare/v0.79.8...v0.80.0)
+
+<sup>Released on **2023-09-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Improve user experience and ensure consistency.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Improve user experience and ensure consistency ([abba584](https://github.com/lobehub/lobe-chat/commit/abba584))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.79.8](https://github.com/lobehub/lobe-chat/compare/v0.79.7...v0.79.8)
 
 <sup>Released on **2023-09-27**</sup>
