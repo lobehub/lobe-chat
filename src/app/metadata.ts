@@ -47,7 +47,7 @@ const metadata: Metadata = {
         width: 960,
       },
     ],
-    locale: 'en_US',
+    locale: 'en-US',
     siteName: title,
     title: title,
     type: 'website',

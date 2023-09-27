@@ -19,7 +19,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   const primaryColor = cookieStore.get(LOBE_THEME_PRIMARY_COLOR);
 
   return (
-    <html lang="en">
+    <html lang="en-US">
       <body>
         <StyleRegistry>
           <Layout
