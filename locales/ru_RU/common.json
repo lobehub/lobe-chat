@@ -47,6 +47,7 @@
   "newAgent": "Новый ассистент",
   "noDescription": "Нет описания",
   "ok": "ОК",
+  "password": "пароль",
   "pin": "Закрепить",
   "pinOff": "Открепить",
   "regenerate": "Ре-генерация",
@@ -60,6 +61,17 @@
   "sessionList": "Список помощников",
   "setting": "Настройки",
   "share": "Поделиться",
+  "shareModal": {
+    "download": "Скачать скриншот",
+    "imageType": "Тип изображения",
+    "screenshot": "Скриншот",
+    "settings": "Настройки экспорта",
+    "withBackground": "С фоновым изображением",
+    "withPluginInfo": "С информацией о плагине",
+    "withSystemRole": "С настройками роли помощника",
+    "withFooter": "с подвалом",
+    "shareToShareGPT": "Создать ссылку для обмена ShareGPT"
+  },
   "stop": "Остановить",
   "tab": {
     "chat": "Чат",

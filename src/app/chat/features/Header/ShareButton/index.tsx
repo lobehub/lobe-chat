@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useSessionStore } from '@/store/session';
 
+import Inner from './Inner';
+
 const ShareButton = memo(() => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useTranslation('common');
@@ -24,7 +26,9 @@ const ShareButton = memo(() => {
         onCancel={() => setIsModalOpen(false)}
         open={isModalOpen}
         title={t('share')}
-      />
+      >
+        <Inner />
+      </Modal>
     </>
   );
 });

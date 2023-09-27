@@ -4,6 +4,7 @@ import { createStyles } from 'antd-style';
 import { CSSProperties, memo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
+import { imageToBase64 } from '@/utils/imageToBase64';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
 
 const useStyle = createStyles(
@@ -26,56 +27,33 @@ const useStyle = createStyles(
 
 interface AvatarWithUploadProps {
   compressSize?: number;
+  id?: string;
   size?: number;
   style?: CSSProperties;
 }
 
-const AvatarWithUpload = memo<AvatarWithUploadProps>(({ size = 40, compressSize = 128, style }) => {
-  const [avatar, setSettings] = useGlobalStore((st) => [st.settings.avatar, st.setSettings]);
-  const { styles } = useStyle();
+const AvatarWithUpload = memo<AvatarWithUploadProps>(
+  ({ size = 40, compressSize = 128, style, id }) => {
+    const [avatar, setSettings] = useGlobalStore((st) => [st.settings.avatar, st.setSettings]);
+    const { styles } = useStyle();
 
-  const handleUploadAvatar = createUploadImageHandler((avatar) => {
-    const img = new Image();
-    img.src = avatar;
-    img.addEventListener('load', () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-      let startX = 0;
-      let startY = 0;
-
-      if (img.width > img.height) {
-        startX = (img.width - img.height) / 2;
-      } else {
-        startY = (img.height - img.width) / 2;
-      }
-
-      canvas.width = compressSize;
-      canvas.height = compressSize;
-
-      ctx.drawImage(
-        img,
-        startX,
-        startY,
-        Math.min(img.width, img.height),
-        Math.min(img.width, img.height),
-        0,
-        0,
-        compressSize,
-        compressSize,
-      );
-
-      const webpBase64 = canvas.toDataURL('image/webp');
-      setSettings({ avatar: webpBase64 });
+    const handleUploadAvatar = createUploadImageHandler((avatar) => {
+      const img = new Image();
+      img.src = avatar;
+      img.addEventListener('load', () => {
+        const webpBase64 = imageToBase64({ img, size: compressSize });
+        setSettings({ avatar: webpBase64 });
+      });
     });
-  });
 
-  return (
-    <div className={styles} style={{ maxHeight: size, maxWidth: size, ...style }}>
-      <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
-        {avatar ? <Avatar avatar={avatar} size={size} /> : <Logo size={size} />}
-      </Upload>
-    </div>
-  );
-});
+    return (
+      <div className={styles} id={id} style={{ maxHeight: size, maxWidth: size, ...style }}>
+        <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
+          {avatar ? <Avatar avatar={avatar} size={size} /> : <Logo size={size} />}
+        </Upload>
+      </div>
+    );
+  },
+);
 
 export default AvatarWithUpload;

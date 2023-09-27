@@ -47,6 +47,7 @@
   "newAgent": "新助理",
   "noDescription": "無描述",
   "ok": "確定",
+  "password": "密碼",
   "pin": "置頂",
   "pinOff": "取消置頂",
   "regenerate": "重新產生",
@@ -60,6 +61,17 @@
   "sessionList": "助理列表",
   "setting": "設定",
   "share": "分享",
+  "shareModal": {
+    "download": "下載截圖",
+    "imageType": "圖片格式",
+    "screenshot": "截圖",
+    "settings": "匯出設定",
+    "withBackground": "包含背景圖片",
+    "withPluginInfo": "包含插件資訊",
+    "withSystemRole": "包含助手角色設定",
+    "withFooter": "包含頁腳",
+    "shareToShareGPT": "生成 ShareGPT 分享連結"
+  },
   "stop": "停止",
   "tab": {
     "chat": "聊天",
