@@ -1,6 +1,7 @@
 import { css } from 'antd-style';
 
 export default () => css`
+  html,
   body,
   .ant-app {
     overflow: hidden;
