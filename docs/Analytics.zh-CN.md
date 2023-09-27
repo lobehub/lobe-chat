@@ -14,6 +14,6 @@ Vercel Analytics 提供了 2500 次 / 月的免费 Web Analytics Events (可以�
 
 如果你不需要 Vercel Analytics，你可以通过设置环境变量 `NEXT_PUBLIC_ANALYTICS_VERCEL=0` 来关闭它。
 
-## Plausible
+## 🚧 Posthog
 
-[Plausible](https://plausible.io/) 是一款开源的数据统计服务，它可以帮助你收集网站的访问情况，包括访问量、访问来源、访问设备等等。
+## 🚧 Mixpanel
