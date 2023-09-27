@@ -43,6 +43,16 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
       background: ${token.colorBgLayout};
       border: 1px solid ${token.colorBorder};
       border-radius: ${token.borderRadiusLG}px;
+
+      * {
+        pointer-events: none;
+        overflow: hidden;
+
+        ::-webkit-scrollbar {
+          width: 0 !important;
+          height: 0 !important;
+        }
+      }
     `,
   ),
   role: css`

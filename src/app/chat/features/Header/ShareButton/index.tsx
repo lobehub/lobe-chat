@@ -22,6 +22,7 @@ const ShareButton = memo(() => {
         title={t('share')}
       />
       <Modal
+        centered={false}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
         open={isModalOpen}
