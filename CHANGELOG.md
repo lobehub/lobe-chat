@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.80.2](https://github.com/lobehub/lobe-chat/compare/v0.80.1...v0.80.2)
+
+<sup>Released on **2023-09-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Switch Modal components to @lobehub/ui.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Switch Modal components to @lobehub/ui ([d056015](https://github.com/lobehub/lobe-chat/commit/d056015))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.80.1](https://github.com/lobehub/lobe-chat/compare/v0.80.0...v0.80.1)
 
 <sup>Released on **2023-09-27**</sup>
