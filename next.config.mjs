@@ -41,6 +41,10 @@ const nextConfig = {
       },
     ];
   },
+  env: {
+    AGENTS_INDEX_URL: process.env.AGENTS_INDEX_URL,
+    PLUGINS_INDEX_URL: process.env.PLUGINS_INDEX_URL,
+  },
 };
 
 export default isProd ? withPWA(nextConfig) : nextConfig;
