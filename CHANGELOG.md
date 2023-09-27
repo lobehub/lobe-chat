@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.79.7](https://github.com/lobehub/lobe-chat/compare/v0.79.6...v0.79.7)
+
+<sup>Released on **2023-09-27**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Use hook to check PWA env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Use hook to check PWA env ([b4234db](https://github.com/lobehub/lobe-chat/commit/b4234db))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.79.6](https://github.com/lobehub/lobe-chat/compare/v0.79.5...v0.79.6)
 
 <sup>Released on **2023-09-27**</sup>
