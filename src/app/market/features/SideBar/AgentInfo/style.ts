@@ -1,6 +1,6 @@
 import { createStyles } from 'antd-style';
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const useStyles = createStyles(({ css, token, prefixCls }) => ({
   author: css`
     font-size: 12px;
   `,
@@ -22,7 +22,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     text-align: center;
   `,
   loading: css`
-    .ant-skeleton-content {
+    .${prefixCls}-skeleton-content {
       display: flex;
       flex-direction: column;
     }
@@ -30,10 +30,10 @@ export const useStyles = createStyles(({ css, token }) => ({
   nav: css`
     padding-top: 4px;
 
-    .ant-tabs-tab {
+    .${prefixCls}-tabs-tab {
       margin: 4px !important;
 
-      + .ant-tabs-tab {
+      + .${prefixCls}-tabs-tab {
         margin: 4px !important;
       }
     }

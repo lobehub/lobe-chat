@@ -1,9 +1,9 @@
 import { css } from 'antd-style';
 
-export default () => css`
+export default ({ prefixCls }: { prefixCls: string }) => css`
   html,
   body,
-  .ant-app {
+  .${prefixCls}-app {
     overflow: hidden;
     overscroll-behavior: none;
 

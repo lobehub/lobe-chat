@@ -3,7 +3,6 @@
 import { App, ConfigProvider } from 'antd';
 import 'antd/dist/reset.css';
 import Zh_CN from 'antd/locale/zh_CN';
-import { changeLanguage } from 'i18next';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, memo, useEffect } from 'react';
 
@@ -12,6 +11,7 @@ import { createI18nNext } from '@/locales/create';
 import { useGlobalStore, useOnFinishHydrationGlobal } from '@/store/global';
 import { usePluginStore } from '@/store/plugin';
 import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
+import { switchLang } from '@/utils/switchLang';
 
 import { useStyles } from './style';
 
@@ -30,9 +30,7 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
   }, []);
 
   useOnFinishHydrationGlobal((state) => {
-    i18n.then(() => {
-      changeLanguage(state.settings.language);
-    });
+    i18n.then(() => switchLang(state.settings.language));
   });
 
   useOnFinishHydrationSession((s, store) => {

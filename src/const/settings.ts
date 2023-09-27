@@ -12,7 +12,7 @@ import {
 export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
   avatar: '',
   fontSize: 14,
-  language: 'zh-CN',
+  language: 'en-US',
   password: '',
   themeMode: 'auto',
 };

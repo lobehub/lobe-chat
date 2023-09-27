@@ -15,9 +15,9 @@ import { useStore } from '../store';
 import LocalPluginItem from './LocalPluginItem';
 import MarketSettingModal from './MarketSettingModal';
 
-const useStyles = createStyles(({ css }) => ({
+const useStyles = createStyles(({ css, prefixCls }) => ({
   avatar: css`
-    .ant-skeleton-header {
+    .${prefixCls}-skeleton-header {
       padding-right: 0;
     }
   `,

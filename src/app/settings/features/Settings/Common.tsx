@@ -1,7 +1,6 @@
 import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
 import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { changeLanguage } from 'i18next';
 import { debounce } from 'lodash-es';
 import { AppWindow, Monitor, Moon, Palette, Sun } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
@@ -14,6 +13,7 @@ import { localeOptions } from '@/locales/options';
 import { globalSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { ConfigKeys } from '@/types/settings';
+import { switchLang } from '@/utils/switchLang';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../ThemeSwatches';
 
@@ -107,14 +107,7 @@ const Common = memo(() => {
           minWidth: undefined,
         },
         {
-          children: (
-            <Select
-              onChange={(e) => {
-                changeLanguage(e);
-              }}
-              options={localeOptions}
-            />
-          ),
+          children: <Select onChange={switchLang} options={localeOptions} />,
           label: t('settingTheme.lang.title'),
           name: 'language',
         },

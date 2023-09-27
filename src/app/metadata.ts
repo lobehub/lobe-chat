@@ -5,7 +5,7 @@ import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 import pkg from '../../package.json';
 
 const title = genSiteHeadTitle();
-const description = pkg.description;
+const { description, homepage } = pkg;
 const metadata: Metadata = {
   appleWebApp: {
     statusBarStyle: 'black-translucent',
@@ -40,7 +40,7 @@ const metadata: Metadata = {
     siteName: title,
     title: title,
     type: 'website',
-    url: pkg.homepage,
+    url: homepage,
   },
   themeColor: [
     { color: '#fff', media: '(prefers-color-scheme: light)' },

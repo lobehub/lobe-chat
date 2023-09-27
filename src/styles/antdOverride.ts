@@ -1,22 +1,20 @@
 import { Theme, css } from 'antd-style';
 import { readableColor } from 'polished';
 
-export default (token: Theme) => css`
-  .ant-btn {
+export default ({ token, prefixCls }: { prefixCls: string; token: Theme }) => css`
+  .${prefixCls}-btn {
     box-shadow: none;
   }
 
-  .ant-popover {
+  .${prefixCls}-popover {
     z-index: 1100;
   }
 
-  .ant-slider-track,
-  .ant-tabs-ink-bar,
-  .ant-switch-checked {
+  .${prefixCls}-slider-track, .${prefixCls}-tabs-ink-bar, .${prefixCls}-switch-checked {
     background: ${token.colorPrimary} !important;
   }
 
-  .ant-btn-primary:not(.ant-btn-dangerous) {
+  .${prefixCls}-btn-primary:not(.${prefixCls}-btn-dangerous) {
     color: ${readableColor(token.colorPrimary)};
     background: ${token.colorPrimary};
 

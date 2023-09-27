@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import pkg from '@/../package.json';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode, prefixCls }) => ({
   background: css`
     position: absolute;
     bottom: -10%;
@@ -42,8 +42,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   mobile: css`
     margin-top: -16px;
 
-    .ant-tabs-tab,
-    .ant-tabs-tab + .ant-tabs-tab {
+    .${prefixCls}-tabs-tab, .${prefixCls}-tabs-tab + .${prefixCls}-tabs-tab {
       margin: 4px 8px !important;
     }
   `,
