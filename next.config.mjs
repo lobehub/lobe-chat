@@ -41,17 +41,10 @@ const nextConfig = {
       },
     ];
   },
-  env: ({
+  env: {
     AGENTS_INDEX_URL: process.env.AGENTS_INDEX_URL,
     PLUGINS_INDEX_URL: process.env.PLUGINS_INDEX_URL,
-
-    ANALYTICS_VERCEL: process.env.ANALYTICS_VERCEL,
-    ANALYTICS_MIXPANEL: process.env.ANALYTICS_MIXPANEL,
-    ANALYTICS_PLAUSIBLE: process.env.ANALYTICS_PLAUSIBLE,
-
-    PLAUSIBLE_DOMAIN: process.env.PLAUSIBLE_DOMAIN,
-    MIXPANEL_PROJECT_TOKEN: process.env.ANALYTICS_MIXPANEL,
-  })
+  },
 };
 
 export default isProd ? withPWA(nextConfig) : nextConfig;

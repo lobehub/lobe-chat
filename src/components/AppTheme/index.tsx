@@ -20,9 +20,9 @@ export interface AppThemeProps {
 
 const AppTheme = memo<AppThemeProps>(
   ({ children, defaultAppearance, defaultPrimaryColor, defaultNeutralColor }) => {
-    console.log('server:appearance', defaultAppearance);
-    console.log('server:primaryColor', defaultPrimaryColor);
-    console.log('server:neutralColor', defaultNeutralColor);
+    // console.log('server:appearance', defaultAppearance);
+    // console.log('server:primaryColor', defaultPrimaryColor);
+    // console.log('server:neutralColor', defaultNeutralColor);
     const themeMode = useGlobalStore((s) => s.settings.themeMode);
 
     const [primaryColor, neutralColor] = useGlobalStore((s) => [
@@ -31,7 +31,6 @@ const AppTheme = memo<AppThemeProps>(
     ]);
 
     useEffect(() => {
-      console.log(primaryColor);
       setCookie(LOBE_THEME_PRIMARY_COLOR, primaryColor);
     }, [primaryColor]);
 
