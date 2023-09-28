@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.82.2](https://github.com/lobehub/lobe-chat/compare/v0.82.1...v0.82.2)
+
+<sup>Released on **2023-09-28**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor settings page and mobile ux.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor settings page and mobile ux ([89c5648](https://github.com/lobehub/lobe-chat/commit/89c5648))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.82.1](https://github.com/lobehub/lobe-chat/compare/v0.82.0...v0.82.1)
 
 <sup>Released on **2023-09-27**</sup>
