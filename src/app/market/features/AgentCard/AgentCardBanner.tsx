@@ -39,7 +39,7 @@ interface AgentCardBannerProps extends DivProps {
 }
 
 const AgentCardBanner = memo<AgentCardBannerProps>(
-  ({ meta, className, mask, size = 8, maskColor, ...props }) => {
+  ({ meta, className, mask, size = 8, maskColor, children, ...props }) => {
     const { styles, theme, cx } = useStyles(maskColor);
 
     return (
@@ -56,6 +56,7 @@ const AgentCardBanner = memo<AgentCardBannerProps>(
           style={{ transform: `scale(${size})` }}
         />
         {mask && <div className={styles.bannerMask} />}
+        {children}
       </Flexbox>
     );
   },

@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { GlobalStore } from '@/store/global';
+import { SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
 export interface TopActionProps {
@@ -20,25 +21,25 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
   return (
     <>
       <ActionIcon
-        active={tab === 'chat'}
+        active={tab === SidebarTabKey.Chat}
         icon={MessageSquare}
         onClick={() => {
           // 如果已经在 chat 路径下了，那么就不用再跳转了
           if (pathname?.startsWith('/chat')) return;
           switchBackToChat();
-          setTab('chat');
+          setTab(SidebarTabKey.Chat);
         }}
         placement={'right'}
         size="large"
         title={t('tab.chat')}
       />
       <ActionIcon
-        active={tab === 'market'}
+        active={tab === SidebarTabKey.Market}
         icon={Bot}
         onClick={() => {
           if (pathname?.startsWith('/market')) return;
           router.push('/market');
-          setTab('market');
+          setTab(SidebarTabKey.Market);
         }}
         placement={'right'}
         size="large"

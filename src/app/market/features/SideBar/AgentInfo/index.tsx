@@ -1,4 +1,5 @@
 import { Markdown, TabsNav } from '@lobehub/ui';
+import { useResponsive } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -22,7 +23,8 @@ const AgentModalInner = memo(() => {
     s.useFetchAgent,
     s.currentIdentifier,
   ]);
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
+  const { mobile } = useResponsive();
   const { data, isLoading } = useFetchAgent(currentIdentifier);
   const { t } = useTranslation('market');
   const [tab, setTab] = useState<string>(InfoTabs.prompt);
@@ -34,7 +36,13 @@ const AgentModalInner = memo(() => {
 
   return (
     <>
-      <AgentCardBanner mask meta={meta} size={10} style={{ height: 120, marginBottom: -60 }} />
+      <AgentCardBanner
+        mask
+        maskColor={mobile ? theme.colorBgContainer : undefined}
+        meta={meta}
+        size={10}
+        style={{ height: 120, marginBottom: -60 }}
+      />
       <Header />
       <Flexbox align={'center'}>
         <TabsNav

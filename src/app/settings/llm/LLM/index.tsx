@@ -1,4 +1,4 @@
-import { Form, Markdown } from '@lobehub/ui';
+import { Form, type ItemGroup, Markdown } from '@lobehub/ui';
 import { Form as AntForm, AutoComplete, Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
@@ -49,7 +49,7 @@ const LLM = memo(() => {
 
   const useAzure = useGlobalStore((s) => s.settings.languageModel.openAI.useAzure);
 
-  const openAI = {
+  const openAI: ItemGroup = {
     children: [
       {
         children: (
@@ -94,6 +94,7 @@ const LLM = memo(() => {
         ),
         desc: t('llm.OpenAI.useAzure.desc'),
         label: t('llm.OpenAI.useAzure.title'),
+        minWidth: undefined,
         name: [configKey, 'openAI', 'useAzure'],
         valuePropName: 'checked',
       },
@@ -124,6 +125,7 @@ const LLM = memo(() => {
         children: <Checker checkModel={!useAzure} />,
         desc: t('llm.OpenAI.check.desc'),
         label: t('llm.OpenAI.check.title'),
+        minWidth: undefined,
       },
       // {
       //   children: useAzure ? <Flexbox>{t('llm.OpenAI.models.notSupport')}</Flexbox> : <ModelList />,

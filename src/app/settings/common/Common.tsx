@@ -15,7 +15,7 @@ import { useSessionStore } from '@/store/session';
 import { ConfigKeys } from '@/types/settings';
 import { switchLang } from '@/utils/switchLang';
 
-import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../ThemeSwatches';
+import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../features/ThemeSwatches';
 
 type SettingItemGroup = ItemGroup & {
   children: {

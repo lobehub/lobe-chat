@@ -3,11 +3,12 @@ import { Flexbox } from 'react-layout-kit';
 
 import AppLayout from '@/layout/AppLayout';
 import { useSwitchSideBarOnInit } from '@/store/global';
+import { SidebarTabKey } from '@/store/global/initialState';
 
 import { Sessions } from './features/SessionList';
 
 const ChatLayout = memo<PropsWithChildren>(({ children }) => {
-  useSwitchSideBarOnInit('chat');
+  useSwitchSideBarOnInit(SidebarTabKey.Chat);
 
   return (
     <AppLayout>

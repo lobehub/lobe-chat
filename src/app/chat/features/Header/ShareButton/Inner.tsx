@@ -5,6 +5,7 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import MobilePadding from '@/components/MobilePadding';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -89,33 +90,37 @@ const Inner = memo(() => {
 
   return (
     <Flexbox gap={16}>
-      <Segmented
-        block
-        onChange={(value) => setTab(value as Tab)}
-        options={options}
-        style={{ width: '100%' }}
-        value={tab}
-      />
-      <Form items={[settings]} {...FORM_STYLE} />
-      {tab === Tab.Screenshot && (
-        <Preview
-          imageType={imageType}
-          withBackground={withBackground}
-          withFooter={withFooter}
-          withSystemRole={withSystemRole}
-        />
-      )}
-      {tab === Tab.ShareGPT && (
-        <Button
+      <MobilePadding bottom={0}>
+        <Segmented
           block
-          loading={shareLoading}
-          onClick={() => shareToShareGPT({ avatar, withPluginInfo, withSystemRole })}
-          size={'large'}
-          type={'primary'}
-        >
-          {t('shareModal.shareToShareGPT')}
-        </Button>
-      )}
+          onChange={(value) => setTab(value as Tab)}
+          options={options}
+          style={{ width: '100%' }}
+          value={tab}
+        />
+      </MobilePadding>
+      <Form items={[settings]} {...FORM_STYLE} />
+      <MobilePadding gap={16} top={0}>
+        {tab === Tab.Screenshot && (
+          <Preview
+            imageType={imageType}
+            withBackground={withBackground}
+            withFooter={withFooter}
+            withSystemRole={withSystemRole}
+          />
+        )}
+        {tab === Tab.ShareGPT && (
+          <Button
+            block
+            loading={shareLoading}
+            onClick={() => shareToShareGPT({ avatar, withPluginInfo, withSystemRole })}
+            size={'large'}
+            type={'primary'}
+          >
+            {t('shareModal.shareToShareGPT')}
+          </Button>
+        )}
+      </MobilePadding>
     </Flexbox>
   );
 });

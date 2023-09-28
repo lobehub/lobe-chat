@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import ShareButton from '@/app/chat/features/Header/ShareButton';
+import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -13,10 +15,9 @@ const MobileHeader = memo(() => {
   const { t } = useTranslation('common');
   const router = useRouter();
 
-  const [isInbox, title, model] = useSessionStore((s) => [
+  const [isInbox, title] = useSessionStore((s) => [
     sessionSelectors.isInboxSession(s),
     agentSelectors.currentAgentTitle(s),
-    agentSelectors.currentAgentModel(s),
   ]);
 
   const [toggleConfig] = useGlobalStore((s) => [s.toggleMobileTopic]);
@@ -25,17 +26,21 @@ const MobileHeader = memo(() => {
 
   return (
     <MobileNavBar
-      center={<MobileNavBarTitle desc={model} title={displayTitle} />}
+      center={<MobileNavBarTitle title={displayTitle} />}
       onBackClick={() => router.push('/chat')}
       right={
         <>
-          <ActionIcon icon={LayoutList} onClick={() => toggleConfig()} />
+          <ShareButton />
+          <ActionIcon
+            icon={LayoutList}
+            onClick={() => toggleConfig()}
+            size={MOBILE_HEADER_ICON_SIZE}
+          />
           {!isInbox && (
             <ActionIcon
               icon={Settings}
-              onClick={() => {
-                router.push(pathString('/chat/settings', { hash: location.hash }));
-              }}
+              onClick={() => router.push(pathString('/chat/settings', { hash: location.hash }))}
+              size={MOBILE_HEADER_ICON_SIZE}
             />
           )}
         </>

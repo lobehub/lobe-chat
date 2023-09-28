@@ -13,3 +13,4 @@ export const FORM_STYLE: FormProps = {
   itemMinWidth: 'max(30%,240px)',
   style: { maxWidth: MAX_WIDTH, width: '100%' },
 };
+export const MOBILE_HEADER_ICON_SIZE = { blockSize: 36, fontSize: 22 };

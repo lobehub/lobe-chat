@@ -1,9 +1,17 @@
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import type { GlobalSettings } from '@/types/settings';
 
-export type SidebarTabKey = 'chat' | 'market' | 'settings';
+export enum SidebarTabKey {
+  Chat = 'chat',
+  Market = 'market',
+  Setting = 'settings',
+}
 
-export type SettingsTabs = 'agent' | 'common' | 'llm';
+export enum SettingsTabs {
+  Agent = 'agent',
+  Common = 'common',
+  LLM = 'llm',
+}
 
 export interface Guide {
   // Topic 引导
@@ -21,7 +29,7 @@ export interface GlobalState {
    * 用户设置
    */
   settings: GlobalSettings;
-  settingsTab?: SettingsTabs;
+  settingsTab: SettingsTabs;
   sidebarKey: SidebarTabKey;
 }
 
@@ -44,5 +52,6 @@ export const initialState: GlobalState = {
     showSessionPanel: true,
   },
   settings: DEFAULT_SETTINGS,
-  sidebarKey: 'chat',
+  settingsTab: SettingsTabs.Common,
+  sidebarKey: SidebarTabKey.Chat,
 };

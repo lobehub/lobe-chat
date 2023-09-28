@@ -2,12 +2,13 @@ import { memo } from 'react';
 
 import AppMobileLayout from '@/layout/AppMobileLayout';
 import { useSwitchSideBarOnInit } from '@/store/global';
+import { SidebarTabKey } from '@/store/global/initialState';
 
 import { Sessions } from './features/SessionList';
 import Header from './features/SessionList/Header';
 
 const ChatMobileLayout = memo(() => {
-  useSwitchSideBarOnInit('chat');
+  useSwitchSideBarOnInit(SidebarTabKey.Chat);
 
   return (
     <AppMobileLayout navBar={<Header />} showTabBar>

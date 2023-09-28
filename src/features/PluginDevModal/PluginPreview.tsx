@@ -1,5 +1,5 @@
 import { Avatar, Form } from '@lobehub/ui';
-import { Form as AForm, Card, FormInstance, Switch, Tag } from 'antd';
+import { Form as AForm, FormInstance, Switch, Tag } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -28,9 +28,16 @@ const PluginPreview = memo<{ form: FormInstance }>(({ form }) => {
   };
 
   return (
-    <Card size={'small'} title={t('dev.preview.card')}>
-      <Form.Item {...items} colon={false} style={{ marginBottom: 0 }} />
-    </Card>
+    <Form
+      colon={false}
+      items={[
+        {
+          children: [items],
+          title: t('dev.preview.card'),
+        },
+      ]}
+      style={{ marginBottom: 0 }}
+    />
   );
 });
 

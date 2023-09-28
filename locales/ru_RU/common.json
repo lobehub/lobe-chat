@@ -36,7 +36,7 @@
   "historyRange": "Исторический диапазон",
   "import": "Импорт конфига",
   "inbox": {
-    "defaultMessage": "Hello, I'm your intelligent assistant. You can ask me any questions and I will do my best to answer you. If you need a more professional or customized assistant, you can click <kbd>+</kbd> to create a custom assistant.",
+    "defaultMessage": "Hello, I'm your intelligent assistant. You can ask me any questions and I will do my best to answer you. If you need a more professional or customized assistant, you can click `+` to create a custom assistant.",
     "desc": "Activate the brain cluster and spark your thinking. Your intelligent assistant is here to communicate with you about everything.",
     "title": "Chat Freely"
   },

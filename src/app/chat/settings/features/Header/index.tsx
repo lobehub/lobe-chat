@@ -1,10 +1,11 @@
 import { ActionIcon } from '@lobehub/ui';
 import { Dropdown, MenuProps } from 'antd';
 import { useResponsive } from 'antd-style';
-import { HardDriveDownload, Share2 } from 'lucide-react';
+import { HardDriveDownload } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useSessionStore } from '@/store/session';
 
@@ -42,11 +43,10 @@ const Header = memo<{ mobile?: boolean }>(() => {
     [],
   );
 
-  const size = mobile ? undefined : { fontSize: 24 };
+  const size = mobile ? MOBILE_HEADER_ICON_SIZE : { fontSize: 24 };
 
   return (
     <Render>
-      <ActionIcon icon={Share2} size={size} title={t('share', { ns: 'common' })} />
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
         <ActionIcon icon={HardDriveDownload} size={size} title={t('export', { ns: 'common' })} />
       </Dropdown>

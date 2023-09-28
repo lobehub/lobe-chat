@@ -1,12 +1,13 @@
 import { Icon, MobileTabBar, type MobileTabBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Bot, MessageSquare } from 'lucide-react';
+import { Bot, MessageSquare, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
+import { SidebarTabKey } from '@/store/global/initialState';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`
@@ -27,19 +28,30 @@ export default memo<{ className?: string }>(({ className }) => {
         icon: (active) => (
           <Icon className={active ? styles.active : undefined} icon={MessageSquare} />
         ),
-        key: 'chat',
+        key: SidebarTabKey.Chat,
         onClick: () => {
+          setTab(SidebarTabKey.Chat);
           router.push('/chat');
         },
         title: t('tab.chat'),
       },
       {
         icon: (active) => <Icon className={active ? styles.active : undefined} icon={Bot} />,
-        key: 'market',
+        key: SidebarTabKey.Market,
         onClick: () => {
+          setTab(SidebarTabKey.Market);
           router.push('/market');
         },
         title: t('tab.market'),
+      },
+      {
+        icon: (active) => <Icon className={active ? styles.active : undefined} icon={User} />,
+        key: SidebarTabKey.Setting,
+        onClick: () => {
+          setTab(SidebarTabKey.Setting);
+          router.push('/settings/mobile');
+        },
+        title: t('tab.setting'),
       },
     ],
     [t],

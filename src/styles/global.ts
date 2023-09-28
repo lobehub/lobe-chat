@@ -20,4 +20,13 @@ export default ({ prefixCls }: { prefixCls: string }) => css`
   p {
     margin-bottom: 0;
   }
+
+  @media (max-width: 575px) {
+    * {
+      ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+    }
+  }
 `;

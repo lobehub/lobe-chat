@@ -18,6 +18,7 @@ import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB } from '@/const/url';
 import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { GlobalStore } from '@/store/global';
+import { SidebarTabKey } from '@/store/global/initialState';
 
 export interface BottomActionProps {
   setTab: GlobalStore['switchSideBar'];
@@ -27,7 +28,6 @@ export interface BottomActionProps {
 const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
-
   const { exportSessions, exportSettings, exportAll, exportAgents } = useExportConfig();
   const { importConfig } = useImportConfig();
 
@@ -101,7 +101,7 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         key: 'setting',
         label: t('setting'),
         onClick: () => {
-          setTab('settings');
+          setTab(SidebarTabKey.Setting);
           router.push('/settings');
         },
       },
@@ -124,7 +124,7 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         title={'Github'}
       />
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
-        <ActionIcon active={tab === 'settings'} icon={Settings2} />
+        <ActionIcon active={tab === SidebarTabKey.Setting} icon={Settings2} />
       </Dropdown>
     </>
   );

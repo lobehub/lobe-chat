@@ -1,9 +1,11 @@
 import { Modal } from '@lobehub/ui';
-import { App, Button, Form, Popconfirm } from 'antd';
+import { Alert, App, Button, Form, Popconfirm } from 'antd';
+import { useResponsive } from 'antd-style';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import MobilePadding from '@/components/MobilePadding';
 import { CustomPlugin } from '@/types/plugin';
 
 import ManifestForm from './ManifestForm';
@@ -25,7 +27,7 @@ const DevModal = memo<DevModalProps>(
     const isEditMode = mode === 'edit';
     const { t } = useTranslation('plugin');
     const { message } = App.useApp();
-
+    const { mobile } = useResponsive();
     const [submitting, setSubmitting] = useState(false);
     const [form] = Form.useForm();
     useEffect(() => {
@@ -98,14 +100,16 @@ const DevModal = memo<DevModalProps>(
           open={open}
           title={t('dev.title')}
         >
-          <Flexbox gap={12}>
-            {t('dev.modalDesc')}
-            {/*<Tabs*/}
-            {/*  items={[*/}
-            {/*    { children: <MetaForm />, key: 'meta', label: t('dev.tabs.meta') },*/}
-            {/*    { children: <ManifestForm />, key: 'manifest', label: t('dev.tabs.manifest') },*/}
-            {/*  ]}*/}
-            {/*/>*/}
+          <Flexbox gap={mobile ? 0 : 16}>
+            <MobilePadding bottom={0} gap={16}>
+              <Alert message={t('dev.modalDesc')} showIcon type={'info'} />
+              {/*<Tabs*/}
+              {/*  items={[*/}
+              {/*    { children: <MetaForm />, key: 'meta', label: t('dev.tabs.meta') },*/}
+              {/*    { children: <ManifestForm />, key: 'manifest', label: t('dev.tabs.manifest') },*/}
+              {/*  ]}*/}
+              {/*/>*/}
+            </MobilePadding>
             <PluginPreview form={form} />
             <ManifestForm form={form} />
             <MetaForm form={form} mode={mode} />

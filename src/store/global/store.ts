@@ -69,10 +69,6 @@ const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
       dbName: 'LobeHub',
       selectors: ['preference', 'settings'],
     },
-    url: {
-      mode: 'hash',
-      selectors: [{ settingsTab: 'tab' }],
-    },
   }),
 };
 

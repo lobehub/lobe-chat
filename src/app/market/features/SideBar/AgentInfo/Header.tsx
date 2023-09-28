@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
+import { SidebarTabKey } from '@/store/global/initialState';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 import { useSessionStore } from '@/store/session';
 
@@ -54,7 +55,7 @@ const Header = memo(() => {
           if (!agentItem) return;
 
           createSession({ config, meta });
-          switchSideBar('chat');
+          switchSideBar(SidebarTabKey.Chat);
         }}
         type={'primary'}
       >

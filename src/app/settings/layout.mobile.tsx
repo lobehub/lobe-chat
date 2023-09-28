@@ -8,9 +8,7 @@ import Header from './features/Header';
 const SettingLayout = memo<{ children: ReactNode }>(({ children }) => {
   return (
     <AppMobileLayout navBar={<Header />}>
-      <Flexbox align={'center'} padding={16} style={{ overflow: 'auto' }}>
-        {children}
-      </Flexbox>
+      <Flexbox style={{ overflow: 'auto' }}>{children}</Flexbox>
     </AppMobileLayout>
   );
 });

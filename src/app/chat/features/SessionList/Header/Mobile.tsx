@@ -1,10 +1,11 @@
-import { ActionIcon, Logo, MobileNavBar } from '@lobehub/ui';
+import { ActionIcon, Avatar, Logo, MobileNavBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { MessageSquarePlus, Settings2 } from 'lucide-react';
+import { MessageSquarePlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 
-import AvatarWithUpload from '@/features/AvatarWithUpload';
+import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -20,21 +21,21 @@ export const useStyles = createStyles(({ css, token }) => ({
 const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
   const router = useRouter();
-
+  const avatar = useGlobalStore((st) => st.settings.avatar);
   return (
     <MobileNavBar
       center={<Logo type={'text'} />}
-      left={<AvatarWithUpload size={28} style={{ marginLeft: 8 }} />}
+      left={
+        <div onClick={() => router.push('/settings/mobile')} style={{ marginLeft: 8 }}>
+          {avatar ? <Avatar avatar={avatar} size={28} /> : <Logo size={28} />}
+        </div>
+      }
       right={
-        <>
-          <ActionIcon icon={MessageSquarePlus} onClick={() => createSession()} />
-          <ActionIcon
-            icon={Settings2}
-            onClick={() => {
-              router.push('/settings');
-            }}
-          />
-        </>
+        <ActionIcon
+          icon={MessageSquarePlus}
+          onClick={() => createSession()}
+          size={MOBILE_HEADER_ICON_SIZE}
+        />
       }
     />
   );
