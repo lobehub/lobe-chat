@@ -51,7 +51,7 @@ const InvalidAccess = memo<{ id: string }>(({ id }) => {
                 onChange={(e) => {
                   setSettings({ password: e });
                 }}
-                validationPattern={/[\dA-Za-z]/}
+                validationPattern={/.*/}
                 value={password}
               />
             </FormAction>
