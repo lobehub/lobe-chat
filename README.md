@@ -138,7 +138,7 @@ LobeChat offers two unique theme modes - Light Mode and Dark Mode, as well as ri
 
 #### `5` Mobile Device Adaptation
 
-We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through Github Issues or Pull Requests.
+We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
 > 🚧 Additional snapshots and demonstrations are being progressively added...
 
@@ -153,7 +153,7 @@ We have carried out a series of optimization designs for mobile devices to enhan
 LobeChat provides a [self-hosted version][deploy-link] with Vercel. This allows you to build your own chatbot within a few minutes, without any prior knowledge. If you want to deploy this service yourself, you can follow these steps:
 
 - Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
-- Click the button below to start deployment: Deploy with Vercel. Log in directly with your Github account and remember to fill in the API Key and access code CODE on the environment variable page;
+- Click the button below to start deployment: Deploy with Vercel. Log in directly with your GitHub account and remember to fill in the API Key and access code CODE on the environment variable page;
 - After deployment, you can start using it;
 - Bind a custom domain (optional): The DNS of the domain assigned by Vercel is polluted in some areas, binding a custom domain can connect directly.
 
@@ -226,7 +226,7 @@ Plugins provide a means to extend the [Function Calling][fc-link] capabilities o
 
 ## ⌨️ Local Development
 
-You can use Github Codespaces for online development:
+You can use GitHub Codespaces for online development:
 
 [![][codespaces-shield]][codespaces-link]
 
