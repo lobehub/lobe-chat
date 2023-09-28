@@ -55,25 +55,27 @@ const InvalidAccess = memo<{ id: string }>(({ id }) => {
                 value={password}
               />
             </FormAction>
-            <Button
-              onClick={() => {
-                resend(id);
-                deleteMessage(id);
-              }}
-              type={'primary'}
-            >
-              {t('unlock.confirm')}
-            </Button>
+            <Flexbox gap={12}>
+              <Button
+                onClick={() => {
+                  resend(id);
+                  deleteMessage(id);
+                }}
+                type={'primary'}
+              >
+                {t('unlock.confirm')}
+              </Button>
+              <Button
+                onClick={() => {
+                  deleteMessage(id);
+                }}
+              >
+                {t('unlock.closeMessage')}
+              </Button>
+            </Flexbox>
           </>
         )}
-        {mode === Tab.Api && (
-          <APIKeyForm
-            onConfirm={() => {
-              resend(id);
-              deleteMessage(id);
-            }}
-          />
-        )}
+        {mode === Tab.Api && <APIKeyForm id={id} />}
       </Flexbox>
     </ErrorActionContainer>
   );

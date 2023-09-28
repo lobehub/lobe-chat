@@ -23,6 +23,7 @@ export interface SettingsAction {
    * 重置设置
    */
   resetSettings: () => void;
+  setOpenAIAPIKey: (apikey: string) => void;
   /**
    * 设置部分配置设置
    * @param settings - 部分配置设置
@@ -62,6 +63,10 @@ export const createSettingsSlice: StateCreator<
   resetSettings: () => {
     set({ settings: DEFAULT_SETTINGS }, false, t('resetSettings'));
   },
+  setOpenAIAPIKey: (apikey) => {
+    get().setSettings({ languageModel: { openAI: { OPENAI_API_KEY: apikey } } });
+  },
+
   setSettings: (settings) => {
     const oldSetting = get().settings;
     const nextSettings = merge(oldSetting, settings);
@@ -70,7 +75,6 @@ export const createSettingsSlice: StateCreator<
 
     set({ settings: merge(oldSetting, settings) }, false, t('setSettings', settings));
   },
-
   switchSettingTabs: (tab) => {
     set({ settingsTab: tab });
   },

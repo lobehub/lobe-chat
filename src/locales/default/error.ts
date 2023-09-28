@@ -39,6 +39,7 @@ export default {
       description: '输入你的 OpenAI API Key 即可绕过密码验证。应用不会记录你的 API Key',
       title: '使用自定义 API Key',
     },
+    closeMessage: '关闭提示',
     confirm: '确认并重试',
     password: {
       description: '管理员已开启应用加密，输入应用密码后即可解锁应用。密码只需填写一次',
