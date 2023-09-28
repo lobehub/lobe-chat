@@ -26,7 +26,12 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 [![][github-issues-shield]][github-issues-link]
 [![][github-license-shield]][github-license-link]
 
-[![Deploy with Vercel][deploy-button-image]][deploy-link]
+**感谢分享 LobeChat 仓库**
+
+[![][share-x-shield]][share-x-link]
+[![][share-telegram-shield]][share-telegram-link]
+[![][share-whatsapp-shield]][share-whatsapp-link]
+[![][share-weibo-shield]][share-weibo-link]
 
 ![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
 
@@ -140,7 +145,7 @@ LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，�
 
 #### `5` 移动设备适配
 
-针对移动设备进行了一系列的优化设计，以提升用户的移动体验。目前，我们正在对移动端的用户体验进行版本迭代，以实现更加流畅和直观的交互。如果您有任何建议或想法，我们非常欢迎您通过 Github Issues 或者 Pull Requests 提供反馈。
+针对移动设备进行了一系列的优化设计，以提升用户的移动体验。目前，我们正在对移动端的用户体验进行版本迭代，以实现更加流畅和直观的交互。如果您有任何建议或想法，我们非常欢迎您通过 GitHub Issues 或者 Pull Requests 提供反馈。
 
 > 🚧 更多快照和演示正在陆续添加中...
 
@@ -155,11 +160,11 @@ LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，�
 LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。如果想自己部署该服务，可以按照以下步骤进行操作：
 
 - 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
-- 点击下方按钮开始部署： Deploy with Vercel，直接使用 Github 账号登录即可，记得在环境变量页填入 API Key 和页面访问密码 CODE；
+- 点击下方按钮开始部署： Deploy with Vercel，直接使用 GitHub 账号登录即可，记得在环境变量页填入 API Key 和页面访问密码 CODE；
 - 部署完毕后，即可开始使用；
 - 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
 
-<div align="right">
+<div align="center">
 
 [![][deploy-button-image]][deploy-link]
 
@@ -228,7 +233,7 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以�
 
 ## ⌨️ 本地开发
 
-可以使用 Github Codespaces 进行在线开发：
+可以使用 GitHub Codespaces 进行在线开发：
 
 [![][codespaces-shield]][codespaces-link]
 
@@ -346,6 +351,14 @@ This project is [MIT](./LICENSE) licensed.
 [pr-welcome-link]: https://github.com/lobehub/lobe-chat/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
 [profile-link]: https://github.com/lobehub
+[share-telegram-link]: https://t.me/share/url"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
+[share-telegram-shield]: https://img.shields.io/badge/-share%20on%20telegram-black?labelColor=black&logo=telegram&logoColor=white&style=flat-square
+[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
+[share-weibo-shield]: https://img.shields.io/badge/-share%20on%20weibo-black?labelColor=black&logo=sinaweibo&logoColor=white&style=flat-square
+[share-whatsapp-link]: https://api.whatsapp.com/send"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat%20%23chatbot%20%23chatGPT%20%23openAI
+[share-whatsapp-shield]: https://img.shields.io/badge/-share%20on%20whatsapp-black?labelColor=black&logo=whatsapp&logoColor=white&style=flat-square
+[share-x-link]: https://x.com/intent/tweet?hashtags=chatbot%2CchatGPT%2CopenAI&text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
+[share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
 [submit-agents-link]: https://github.com/lobehub/lobe-chat-agents
 [submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-c4f042?labelColor=black&style=for-the-badge
 [submit-plugin-link]: https://github.com/lobehub/lobe-chat-plugins
