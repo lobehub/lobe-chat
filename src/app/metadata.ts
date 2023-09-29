@@ -43,7 +43,7 @@ const metadata: Metadata = {
     url: homepage,
   },
   themeColor: [
-    { color: '#fff', media: '(prefers-color-scheme: light)' },
+    { color: '#f8f8f8', media: '(prefers-color-scheme: light)' },
     { color: '#000', media: '(prefers-color-scheme: dark)' },
   ],
   title: title,
