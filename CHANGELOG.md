@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 0.82.6](https://github.com/lobehub/lobe-chat/compare/v0.82.5...v0.82.6)
+
+<sup>Released on **2023-09-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix share default config, pin openai to fix type error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix share default config ([e00d6bf](https://github.com/lobehub/lobe-chat/commit/e00d6bf))
+- **misc**: Pin openai to fix type error ([5af4050](https://github.com/lobehub/lobe-chat/commit/5af4050))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.82.5](https://github.com/lobehub/lobe-chat/compare/v0.82.4...v0.82.5)
 
 <sup>Released on **2023-09-29**</sup>
