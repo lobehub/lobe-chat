@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.82.5](https://github.com/lobehub/lobe-chat/compare/v0.82.4...v0.82.5)
+
+<sup>Released on **2023-09-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update theme color and styling of mobile settings page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update theme color and styling of mobile settings page ([1acfb71](https://github.com/lobehub/lobe-chat/commit/1acfb71))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.82.4](https://github.com/lobehub/lobe-chat/compare/v0.82.3...v0.82.4)
 
 <sup>Released on **2023-09-29**</sup>
