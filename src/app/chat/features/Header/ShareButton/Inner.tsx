@@ -21,7 +21,7 @@ const Inner = memo(() => {
   const [withSystemRole, setWithSystemRole] = useState(false);
   const [withPluginInfo, setWithPluginInfo] = useState(false);
   const [withBackground, setWithBackground] = useState(true);
-  const [withFooter, setWithFooter] = useState(true);
+  const [withFooter, setWithFooter] = useState(false);
   const [imageType, setImageType] = useState<ImageType>(ImageType.JPG);
   const [tab, setTab] = useState<Tab>(Tab.Screenshot);
   const { t } = useTranslation('common');
