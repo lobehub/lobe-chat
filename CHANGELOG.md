@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.82.4](https://github.com/lobehub/lobe-chat/compare/v0.82.3...v0.82.4)
+
+<sup>Released on **2023-09-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正 localStorage 不存在造成设置页刷新 500 保存的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正 localStorage 不存在造成设置页刷新 500 保存的问题 ([b894cc8](https://github.com/lobehub/lobe-chat/commit/b894cc8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.82.3](https://github.com/lobehub/lobe-chat/compare/v0.82.2...v0.82.3)
 
 <sup>Released on **2023-09-29**</sup>
