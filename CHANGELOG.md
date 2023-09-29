@@ -2,6 +2,33 @@
 
 # Changelog
 
+### [Version 0.82.3](https://github.com/lobehub/lobe-chat/compare/v0.82.2...v0.82.3)
+
+<sup>Released on **2023-09-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 修正 access code 校验逻辑，修正 api key 无法正常显示在秘钥输入框，并增加显示关闭按钮，修正移动端输入 access code 默认打开数据键盘的问题.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 修正 access code 校验逻辑，closes [#184](https://github.com/lobehub/lobe-chat/issues/184) ([a7301c3](https://github.com/lobehub/lobe-chat/commit/a7301c3))
+- **misc**: 修正 api key 无法正常显示在秘钥输入框，并增加显示关闭按钮，closes [#182](https://github.com/lobehub/lobe-chat/issues/182) ([def1153](https://github.com/lobehub/lobe-chat/commit/def1153))
+- **misc**: 修正移动端输入 access code 默认打开数据键盘的问题 ([7994982](https://github.com/lobehub/lobe-chat/commit/7994982))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.82.2](https://github.com/lobehub/lobe-chat/compare/v0.82.1...v0.82.2)
 
 <sup>Released on **2023-09-28**</sup>
