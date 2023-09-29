@@ -91,7 +91,7 @@
     "mixpanel-browser": "^2",
     "nanoid": "^5",
     "next": "^13.5.3",
-    "openai": "^4",
+    "openai": "~4.10.0",
     "polished": "^4",
     "posthog-js": "^1",
     "react": "^18",
