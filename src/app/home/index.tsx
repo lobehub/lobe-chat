@@ -1,31 +1,20 @@
 'use client';
 
-import { memo } from 'react';
+import { Icon, Logo } from '@lobehub/ui';
+import { t } from 'i18next';
+import { Loader2 } from 'lucide-react';
+import { Center, Flexbox } from 'react-layout-kit';
 
-import {
-  useEffectAfterSessionHydrated,
-  useSessionHydrated,
-  useSessionStore,
-} from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+const Loading = () => (
+  <Flexbox height={'100vh'} width={'100%'}>
+    <Center flex={1} gap={12} width={'100%'}>
+      <Logo extra={'Chat'} size={48} type={'combine'} />
+      <Center gap={16} horizontal>
+        <Icon icon={Loader2} spin />
+        {t('appInitializing', { ns: 'common' })}
+      </Center>
+    </Center>
+  </Flexbox>
+);
 
-import Welcome from '../welcome';
-import Loading from './Loading';
-
-const Home = memo(() => {
-  const hydrated = useSessionHydrated();
-  const [hasSession, switchSession] = useSessionStore((s) => [
-    sessionSelectors.hasSessionList(s),
-    s.switchSession,
-  ]);
-
-  useEffectAfterSessionHydrated(() => {
-    if (hasSession) switchSession();
-  }, [hasSession]);
-
-  if (!hydrated) return <Loading />;
-
-  return !hasSession ? <Welcome /> : <Loading />;
-});
-
-export default Home;
+export default Loading;
