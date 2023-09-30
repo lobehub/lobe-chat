@@ -1,6 +1,11 @@
+import analyzer from '@next/bundle-analyzer';
 import nextPWA from 'next-pwa';
 
 const isProd = process.env.NODE_ENV === 'production';
+
+const withBundleAnalyzer = analyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const withPWA = nextPWA({
   dest: 'public',
@@ -29,4 +34,4 @@ const nextConfig = {
   },
 };
 
-export default isProd ? withPWA(nextConfig) : nextConfig;
+export default isProd ? withBundleAnalyzer(withPWA(nextConfig)) : nextConfig;

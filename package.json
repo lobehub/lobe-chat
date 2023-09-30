@@ -24,6 +24,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "dev": "next dev -p 3010",
     "i18n": "npm run i18n:workflow && lobe-i18n",
     "i18n:workflow": "ts-node --project ./tsconfig.json scripts/i18nWorkflow/index.ts",
@@ -117,6 +118,7 @@
     "@commitlint/cli": "^17",
     "@lobehub/i18n-cli": "latest",
     "@lobehub/lint": "latest",
+    "@next/bundle-analyzer": "^13",
     "@next/eslint-plugin-next": "^13",
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^14",
