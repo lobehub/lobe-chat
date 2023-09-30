@@ -1,3 +1,5 @@
+'use client';
+
 import { ActionIcon, DiscordIcon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Book, Github } from 'lucide-react';

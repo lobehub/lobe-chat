@@ -1,11 +1,14 @@
+'use client';
+
 import { Logo, MobileNavBar } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
 
-import AppMobileLayout from '../../layout/AppMobileLayout';
+import AppMobileLayout from '@/layout/AppMobileLayout';
 
-const WelcomeLayout = memo<PropsWithChildren>(({ children }) => {
+const MobileLayout = memo<PropsWithChildren>(({ children }) => {
   const theme = useTheme();
+
   return (
     <AppMobileLayout
       navBar={<MobileNavBar center={<Logo type={'text'} />} />}
@@ -17,4 +20,4 @@ const WelcomeLayout = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default WelcomeLayout;
+export default MobileLayout;

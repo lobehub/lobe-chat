@@ -1,7 +1,16 @@
-import Page from './index';
+import { t } from 'i18next';
+import { Metadata } from 'next';
 
-const Index = () => {
-  return <Page />;
+import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
+
+import Banner from './features/Banner';
+
+export const generateMetadata = (): Metadata => ({
+  title: genSiteHeadTitle(t('header', { ns: 'welcome' })),
+});
+
+const Page = () => {
+  return <Banner />;
 };
 
-export default Index;
+export default Page;

@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import AppLayout from '../../layout/AppLayout';
-import { useStyles } from './features/Banner/style';
+import AppLayout from '@/layout/AppLayout';
 
-const WelcomeLayout = memo<PropsWithChildren>(({ children }) => {
+import { useStyles } from '../features/Banner/style';
+
+const Desktop = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   return (
     <AppLayout>
@@ -28,4 +29,4 @@ const WelcomeLayout = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default WelcomeLayout;
+export default Desktop;
