@@ -6,4 +6,4 @@ export const config = {
   runtime: 'edge',
 };
 
-export default createLobeChatPluginGateway({ pluginsIndexUrl: PLUGINS_INDEX_URL });
+export const POST = createLobeChatPluginGateway({ pluginsIndexUrl: PLUGINS_INDEX_URL });
