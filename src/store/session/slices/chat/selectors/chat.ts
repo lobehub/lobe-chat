@@ -79,3 +79,8 @@ export const currentChatsWithHistoryConfig = (s: SessionStore): ChatMessage[] =>
 
   return getSlicedMessagesWithConfig(chats, config);
 };
+
+export const chatsMessageString = (s: SessionStore): string => {
+  const chats = currentChatsWithHistoryConfig(s);
+  return chats.map((m) => m.content).join('');
+};

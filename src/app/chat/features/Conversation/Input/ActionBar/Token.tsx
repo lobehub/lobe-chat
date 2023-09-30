@@ -1,24 +1,27 @@
 import { TokenTag, Tooltip } from '@lobehub/ui';
-import { encode } from 'gpt-tokenizer';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ModelTokens } from '@/const/modelTokens';
+import { useTokenCount } from '@/hooks/useTokenCount';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 
 const Token = memo<{ input: string }>(({ input }) => {
   const { t } = useTranslation('common');
 
-  const inputTokenCount = useMemo(() => encode(input).length, [input]);
+  const inputTokenCount = useTokenCount(input);
 
-  const [totalToken, systemRoleToken, chatsToken, model] = useSessionStore((s) => [
-    chatSelectors.totalTokenCount(s),
-    chatSelectors.systemRoleTokenCount(s),
-    chatSelectors.chatsTokenCount(s),
+  const [messageString, systemRole, model] = useSessionStore((s) => [
+    chatSelectors.chatsMessageString(s),
+    agentSelectors.currentAgentSystemRole(s),
     agentSelectors.currentAgentModel(s),
   ]);
 
+  const systemRoleToken = useTokenCount(systemRole);
+  const chatsToken = useTokenCount(messageString);
+
+  const totalToken = systemRoleToken + chatsToken;
   return (
     <Tooltip placement={'bottom'} title={t('tokenDetail', { chatsToken, systemRoleToken })}>
       <TokenTag

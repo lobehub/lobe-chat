@@ -95,7 +95,7 @@ export const createSessionSlice: StateCreator<
 
     dispatchSession({ session: newSession, type: 'addSession' });
 
-    await switchSession(newSession.id);
+    switchSession(newSession.id);
 
     return newSession.id;
   },

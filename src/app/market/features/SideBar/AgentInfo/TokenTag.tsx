@@ -1,6 +1,7 @@
 import { createStyles } from 'antd-style';
-import { encode } from 'gpt-tokenizer';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
+
+import { useTokenCount } from '@/hooks/useTokenCount';
 
 const useStyles = createStyles(
   ({ css, token }) => css`
@@ -17,7 +18,7 @@ const useStyles = createStyles(
 
 const TokenTag = memo<{ systemRole: string }>(({ systemRole }) => {
   const { styles } = useStyles();
-  const value = useMemo(() => encode(systemRole).length, [systemRole]);
+  const value = useTokenCount(systemRole);
 
   return <div className={styles}>{value}</div>;
 });

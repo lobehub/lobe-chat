@@ -285,7 +285,7 @@ export const chatMessage: StateCreator<
 
     if (!activeTopicId && chats.length >= 2) {
       const { saveToTopic, toggleTopic } = get();
-      const id = saveToTopic();
+      const id = await saveToTopic();
       if (id) toggleTopic(id);
     }
   },

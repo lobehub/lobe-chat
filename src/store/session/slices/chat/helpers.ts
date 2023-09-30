@@ -1,9 +1,8 @@
-import { encode } from 'gpt-tokenizer';
-
 import { OpenAIChatMessage } from '@/types/openai';
+import { encodeAsync } from '@/utils/tokenizer';
 
-export const getMessagesTokenCount = (messages: OpenAIChatMessage[]) =>
-  encode(messages.map((m) => m.content).join('')).length;
+export const getMessagesTokenCount = async (messages: OpenAIChatMessage[]) =>
+  encodeAsync(messages.map((m) => m.content).join(''));
 
 export const chatHelpers = {
   getMessagesTokenCount,

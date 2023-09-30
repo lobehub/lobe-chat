@@ -2,7 +2,9 @@ import { chatHelpers } from '@/store/session/helpers';
 import { LanguageModel } from '@/types/llm';
 import { OpenAIChatMessage, OpenAIStreamPayload } from '@/types/openai';
 
-export const promptSummaryTitle = (messages: OpenAIChatMessage[]): Partial<OpenAIStreamPayload> => {
+export const promptSummaryTitle = async (
+  messages: OpenAIChatMessage[],
+): Promise<Partial<OpenAIStreamPayload>> => {
   const finalMessages: OpenAIChatMessage[] = [
     {
       content:
@@ -17,7 +19,7 @@ export const promptSummaryTitle = (messages: OpenAIChatMessage[]): Partial<OpenA
     },
   ];
   // 如果超过 4k，则使用 GPT3.5 16K 模型
-  const tokens = chatHelpers.getMessagesTokenCount(finalMessages);
+  const tokens = await chatHelpers.getMessagesTokenCount(finalMessages);
   let model: LanguageModel | undefined = undefined;
   if (tokens > 4000) {
     model = LanguageModel.GPT3_5_16K;

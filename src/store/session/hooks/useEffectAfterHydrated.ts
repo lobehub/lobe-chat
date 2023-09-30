@@ -1,21 +1,26 @@
 import { useEffect } from 'react';
 
-import { useSessionStore } from '../store';
+import { SessionStore, useSessionStore } from '../store';
 
 export const useEffectAfterSessionHydrated = (
-  fn: (session: typeof useSessionStore) => void,
+  fn: (session: typeof useSessionStore, store: SessionStore) => void,
   deps: any[] = [],
 ) => {
+  // const hasTrigger = useRef(false);
   useEffect(() => {
     const hasRehydrated = useSessionStore.persist.hasHydrated();
 
     if (hasRehydrated) {
-      // 等价 useEffect 多次触发
-      fn(useSessionStore);
+      // equal useEffect triggered multi-time
+      fn(useSessionStore, useSessionStore.getState());
     } else {
-      // 等价于 useEffect 第一次触发
+      // keep onFinishHydration just are triggered only once
+      // if (hasTrigger.current) return;
+      //
+      // hasTrigger.current = true;
+      // equal useEffect first trigger
       useSessionStore.persist.onFinishHydration(() => {
-        fn(useSessionStore);
+        fn(useSessionStore, useSessionStore.getState());
       });
     }
   }, deps);
