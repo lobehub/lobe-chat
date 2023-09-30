@@ -1,14 +1,18 @@
-import { currentChats, currentChatsWithGuideMessage, getChatsById } from './chat';
-import { chatsTokenCount, systemRoleTokenCount, totalTokenCount } from './token';
+import {
+  chatsMessageString,
+  currentChats,
+  currentChatsWithGuideMessage,
+  currentChatsWithHistoryConfig,
+  getChatsById,
+} from './chat';
 import { currentTopics, getTopicMessages } from './topic';
 
 export const chatSelectors = {
-  chatsTokenCount,
+  chatsMessageString,
   currentChats,
   currentChatsWithGuideMessage,
+  currentChatsWithHistoryConfig,
   getChatsById,
-  systemRoleTokenCount,
-  totalTokenCount,
 };
 
 export const topicSelectors = {

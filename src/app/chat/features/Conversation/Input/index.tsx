@@ -1,6 +1,7 @@
 import { ChatInputArea } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
-import { memo, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { Suspense, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CHAT_TEXTAREA_HEIGHT } from '@/const/layoutTokens';
@@ -8,10 +9,11 @@ import { useSessionStore } from '@/store/session';
 
 import ActionLeft from './ActionBar/ActionLeft';
 import ActionsRight from './ActionBar/ActionRight';
-import Token from './ActionBar/Token';
 import Desktop from './Desktop';
 import Footer from './Footer';
 import Mobile from './Mobile';
+
+const Token = dynamic(() => import('./ActionBar/Token'), { ssr: false });
 
 const ChatInput = () => {
   const { t } = useTranslation('common');
@@ -33,7 +35,9 @@ const ChatInput = () => {
         actions={
           <>
             <ActionLeft />
-            <Token input={message} />
+            <Suspense>
+              <Token input={message} />
+            </Suspense>
           </>
         }
         actionsRight={<ActionsRight />}

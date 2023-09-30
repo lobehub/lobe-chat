@@ -1,7 +1,6 @@
 import { EditableMessage, FormGroup, TokenTag } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
-import { encode } from 'gpt-tokenizer';
 import { Bot } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { ModelTokens } from '@/const/modelTokens';
+import { useTokenCount } from '@/hooks/useTokenCount';
 
 import { useStore } from '../store';
 
@@ -26,11 +26,8 @@ const AgentPrompt = memo(() => {
   const { styles } = useStyles();
   const [editing, setEditing] = useState(false);
   const updateConfig = useStore((s) => s.setAgentConfig);
-  const [systemRole, model, systemTokenCount] = useStore((s) => [
-    s.config.systemRole,
-    s.config.model,
-    encode(s.config.systemRole || '').length,
-  ]);
+  const [systemRole, model] = useStore((s) => [s.config.systemRole, s.config.model]);
+  const systemTokenCount = useTokenCount(systemRole);
 
   return (
     <FormGroup

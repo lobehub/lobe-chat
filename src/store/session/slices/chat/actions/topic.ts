@@ -26,7 +26,7 @@ export interface ChatTopicAction {
   /**
    * 将当前消息保存为主题
    */
-  saveToTopic: () => string | undefined;
+  saveToTopic: () => Promise<string | undefined>;
   /**
    * 切换主题
    * @param id - 要切换的主题的 ID
@@ -72,7 +72,7 @@ export const chatTopic: StateCreator<
     // 切换到默认 topic
     toggleTopic();
   },
-  saveToTopic: () => {
+  saveToTopic: async () => {
     const session = sessionSelectors.currentSession(get());
     if (!session) return;
 
@@ -116,7 +116,7 @@ export const chatTopic: StateCreator<
         output += x;
         dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: output });
       },
-      params: promptSummaryTitle(messages),
+      params: await promptSummaryTitle(messages),
     });
 
     return topicId;

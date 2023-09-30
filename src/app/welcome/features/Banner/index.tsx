@@ -1,3 +1,5 @@
+'use client';
+
 import { GridShowcase, Icon } from '@lobehub/ui';
 import { useSize } from 'ahooks';
 import { Button, Upload } from 'antd';
