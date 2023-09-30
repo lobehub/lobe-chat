@@ -5,15 +5,15 @@ import { getOpenAIAuthFromRequest } from '@/const/fetch';
 import { ErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
 
-import { checkAuth } from '../auth';
+import { checkAuth } from '../../auth';
+import { createAzureOpenai } from '../createAzureOpenai';
 import { createChatCompletion } from '../createChatCompletion';
-import { createErrorResponse } from '../error';
-import { createAzureOpenai } from './createAzureOpenai';
-import { createOpenai } from './createOpenai';
+import { createOpenai } from '../createOpenai';
+import { createErrorResponse } from '../errorResponse';
 
 export const runtime = 'edge';
 
-export default async function handler(req: Request) {
+export const POST = async (req: Request) => {
   const payload = (await req.json()) as OpenAIStreamPayload;
 
   const { apiKey, accessCode, endpoint, useAzure, apiVersion } = getOpenAIAuthFromRequest(req);
@@ -36,4 +36,4 @@ export default async function handler(req: Request) {
   }
 
   return createChatCompletion({ openai, payload });
-}
+};

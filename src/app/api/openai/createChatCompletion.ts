@@ -1,7 +1,7 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI from 'openai';
 
-import { createErrorResponse } from '@/pages/api/error';
+import { createErrorResponse } from '@/app/api/openai/errorResponse';
 import { ChatErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
 
