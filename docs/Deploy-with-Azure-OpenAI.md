@@ -14,14 +14,14 @@ Considering development costs ([#178][rfc]), the current version of LobeChat doe
 
 - You can only choose one between OpenAI and Azure OpenAI. Once you enable Azure OpenAI, you will not be able to use OpenAI as the model service provider.
 - LobeChat requires deployment names to be the same as the model names in order to function properly. For example, the deployment name for the `gpt-35-turbo` model must be `gpt-35-turbo`, otherwise LobeChat will not be able to match the model correctly.
-  ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267082091-d89d53d3-1c8c-40ca-ba15-0a9af2a79264.png)
+  ![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/267082091-d89d53d3-1c8c-40ca-ba15-0a9af2a79264.png)
 - Due to the complexity of integrating the Azure OpenAI SDK, it is currently impossible to query the model list of configured resources.
 
 ## Configuration in the Interface
 
 Click on "Operation" - "Settings" in the bottom left corner, switch to the "Language Model" tab and enable the "Azure OpenAI" switch to start using Azure OpenAI.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267083420-422a3714-627e-4bef-9fbc-141a2a8ca916.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/267083420-422a3714-627e-4bef-9fbc-141a2a8ca916.png)
 
 You can fill in the corresponding configuration items as needed:
 
@@ -50,4 +50,4 @@ If you want the deployed version to be directly configured with Azure OpenAI for
 
 [azure-api-verion-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions
 [azure-openai-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/concepts/models
-[rfc]: https://github.com/lobehub/lobe-chat/discussions/178
+[rfc]: https://Azuo.com/lobehub/lobe-chat/discussions/178

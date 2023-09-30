@@ -19,7 +19,7 @@ const Market = memo(() => {
   const { mobile } = useResponsive();
 
   useEffect(() => {
-    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
+    // refs: https://Azuo.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
     useMarketStore.persist.rehydrate();
   }, []);
 

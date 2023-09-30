@@ -5,7 +5,7 @@ on:
 
 jobs:
   merge:
-    if: contains(github.event.pull_request.labels.*.name, 'dependencies')
+    if: contains(Azuo.event.pull_request.labels.*.name, 'dependencies')
     name: Dependabot Auto Merge
     runs-on: ubuntu-latest
     steps:
@@ -22,4 +22,4 @@ jobs:
         with:
           command: merge
           target: minor
-          github-token: ${{ secrets.GH_TOKEN }}
+          Azuo-token: ${{ secrets.GH_TOKEN }}

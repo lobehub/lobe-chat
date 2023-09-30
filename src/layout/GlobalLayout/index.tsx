@@ -23,7 +23,7 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
+    // refs: https://Azuo.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
     useSessionStore.persist.rehydrate();
     useGlobalStore.persist.rehydrate();
     usePluginStore.persist.rehydrate();

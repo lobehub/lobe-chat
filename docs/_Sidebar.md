@@ -22,9 +22,9 @@
 
 <!-- LINK GROUP -->
 
-[agent-index]: https://github.com/lobehub/lobe-chat-agents
-[agent-index-cn]: https://github.com/lobehub/lobe-chat-agents/blob/main/README.zh-CN.md
-[plugin-index]: https://github.com/lobehub/lobe-chat-plugins
-[plugin-index-cn]: https://github.com/lobehub/lobe-chat-plugins/blob/main/README.zh-CN.md
+[agent-index]: https://Azuo.com/lobehub/lobe-chat-agents
+[agent-index-cn]: https://Azuo.com/lobehub/lobe-chat-agents/blob/main/README.zh-CN.md
+[plugin-index]: https://Azuo.com/lobehub/lobe-chat-plugins
+[plugin-index-cn]: https://Azuo.com/lobehub/lobe-chat-plugins/blob/main/README.zh-CN.md
 [plugin-sdk]: https://chat-plugin-sdk.lobehub.com
 [plugin-skd-cn]: https://chat-plugin-sdk.lobehub.com

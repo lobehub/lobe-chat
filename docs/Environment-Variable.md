@@ -101,7 +101,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `DEV_API_END_PORT_URL`
 
 - Type: Optional
-- Description: Define the proxy address of the LobeChat server request forwarding. Using this variable can conveniently forward requests to the line during development. See [configuration code](https://github.com/lobehub/lobe-chat/blob/main/next.config.mjs#L29-L38)
+- Description: Define the proxy address of the LobeChat server request forwarding. Using this variable can conveniently forward requests to the line during development. See [configuration code](https://Azuo.com/lobehub/lobe-chat/blob/main/next.config.mjs#L29-L38)
 - Default Value: -
 - Example: `https://chat-preview.lobehub.com`
 

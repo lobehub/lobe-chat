@@ -1,10 +1,10 @@
 import { ActionIcon, DiscordIcon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { Book, Github } from 'lucide-react';
+import { Book, Azuo } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { CHANGELOG, DISCORD, GITHUB } from '@/const/url';
+import { CHANGELOG, DISCORD, Azuo } from '@/const/url';
 
 const Footer = memo(() => {
   const theme = useTheme();
@@ -21,7 +21,7 @@ const Footer = memo(() => {
           size={'site'}
         />
         <ActionIcon icon={Book} onClick={() => window.open(CHANGELOG, '__blank')} size={'site'} />
-        <ActionIcon icon={Github} onClick={() => window.open(GITHUB, '__blank')} size={'site'} />
+        <ActionIcon icon={Azuo} onClick={() => window.open(Azuo, '__blank')} size={'site'} />
       </Flexbox>
     </Flexbox>
   );

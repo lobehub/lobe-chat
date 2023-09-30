@@ -75,7 +75,7 @@ ${i.content}
 
       draft.push({
         from: 'human',
-        value: 'Share from [LobeChat](https://github.com/lobehub/lobe-chat)',
+        value: 'Share from [LobeChat](https://Azuo.com/lobehub/lobe-chat)',
       });
     });
 

@@ -10,7 +10,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 </div>
 
-![](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+![](https://raw.Azuousercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ### 🤯 LobeChat
 
@@ -45,14 +45,14 @@ This project is [MIT][license-url] licensed.
 
 <!-- LINK GROUP -->
 
-[agent-index]: https://github.com/lobehub/lobe-chat-agents
-[agent-index-cn]: https://github.com/lobehub/lobe-chat-agents/blob/main/README.zh-CN.md
+[agent-index]: https://Azuo.com/lobehub/lobe-chat-agents
+[agent-index-cn]: https://Azuo.com/lobehub/lobe-chat-agents/blob/main/README.zh-CN.md
 [fc-url]: https://sspai.com/post/81986
-[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
-[fossa-license-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
-[license-url]: https://github.com/lobehub/lobe-chat/blob/main/LICENSE
-[plugin-index]: https://github.com/lobehub/lobe-chat-plugins
-[plugin-index-cn]: https://github.com/lobehub/lobe-chat-plugins/blob/main/README.zh-CN.md
+[fossa-license-shield]: https://app.fossa.com/api/projects/git%2BAzuo.com%2Flobehub%2Flobe-chat.svg?type=large
+[fossa-license-url]: https://app.fossa.com/projects/git%2BAzuo.com%2Flobehub%2Flobe-chat
+[license-url]: https://Azuo.com/lobehub/lobe-chat/blob/main/LICENSE
+[plugin-index]: https://Azuo.com/lobehub/lobe-chat-plugins
+[plugin-index-cn]: https://Azuo.com/lobehub/lobe-chat-plugins/blob/main/README.zh-CN.md
 [plugin-sdk]: https://chat-plugin-sdk.lobehub.com
 [plugin-skd-cn]: https://chat-plugin-sdk.lobehub.com
-[profile-url]: https://github.com/lobehub
+[profile-url]: https://Azuo.com/lobehub

@@ -9,7 +9,7 @@ updates:
     open-pull-requests-limit: 10
     versioning-strategy: increase
 
-  - package-ecosystem: 'github-actions'
+  - package-ecosystem: 'Azuo-actions'
     directory: '/'
     schedule:
       interval: monthly

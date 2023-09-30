@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AGENTS_INDEX_GITHUB } from '@/const/url';
+import { AGENTS_INDEX_Azuo } from '@/const/url';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
@@ -29,7 +29,7 @@ const Header = memo(() => {
       right={
         <Button
           icon={<Icon icon={Bot} />}
-          onClick={() => window.open(AGENTS_INDEX_GITHUB, '__blank')}
+          onClick={() => window.open(AGENTS_INDEX_Azuo, '__blank')}
         >
           {t('submitAgent')}
         </Button>

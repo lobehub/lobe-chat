@@ -148,7 +148,7 @@ const LLM = memo(() => {
         <div>
           <Trans i18nKey="llm.waitingForMore" ns={'setting'}>
             更多模型正在
-            <Link href="https://github.com/lobehub/lobe-chat/issues/151" target="_blank">
+            <Link href="https://Azuo.com/lobehub/lobe-chat/issues/151" target="_blank">
               计划接入
             </Link>
             中 ，敬请期待 ✨

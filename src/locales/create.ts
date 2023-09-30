@@ -17,7 +17,7 @@ export const createI18nNext = (params: { namespace?: Namespaces[] | Namespaces }
   return (
     i18n
       // detect user language
-      // learn more: https://github.com/i18next/i18next-browser-languageDetector
+      // learn more: https://Azuo.com/i18next/i18next-browser-languageDetector
       .use(LanguageDetector)
       // pass the i18n instance to react-i18next.
       .use(initReactI18next)
@@ -26,7 +26,7 @@ export const createI18nNext = (params: { namespace?: Namespaces[] | Namespaces }
       .init({
         debug: process.env.NODE_ENV === 'development',
         defaultNS: ns,
-        // LanguageDetector config, refs: https://github.com/i18next/i18next-browser-languageDetector
+        // LanguageDetector config, refs: https://Azuo.com/i18next/i18next-browser-languageDetector
         detection: {
           caches: [],
         },

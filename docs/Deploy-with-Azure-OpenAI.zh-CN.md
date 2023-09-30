@@ -14,14 +14,14 @@ LobeChat 支持使用 [Azure OpenAI][azure-openai-url] 作为 OpenAI 的模型�
 
 - OpenAI 与 Azure OpenAI 只能二选一，当你开启使用 Azure OpenAI 后，将无法使用 OpenAI 作为模型服务商；
 - LobeChat 约定了与模型同名的部署名才能正常使用，比如 `gpt-35-turbo` 模型的部署名，必须为 `gpt-35-turbo`，否则 LobeChat 将无法正常正确匹配到相应模型
-  ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267082091-d89d53d3-1c8c-40ca-ba15-0a9af2a79264.png)
+  ![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/267082091-d89d53d3-1c8c-40ca-ba15-0a9af2a79264.png)
 - 由于 Azure OpenAI 的 SDK 接入复杂度，当前无法查询配置资源的模型列表；
 
 ## 在界面中配置
 
 点击左下角「操作」 -「设置」，切到 「语言模型」 Tab 后通过开启「Azure OpenAI」开关，即可开启使用 Azure OpenAI。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267083420-422a3714-627e-4bef-9fbc-141a2a8ca916.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/267083420-422a3714-627e-4bef-9fbc-141a2a8ca916.png)
 
 你按需填写相应的配置项：
 
@@ -50,4 +50,4 @@ LobeChat 支持使用 [Azure OpenAI][azure-openai-url] 作为 OpenAI 的模型�
 
 [azure-api-verion-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions
 [azure-openai-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/concepts/models
-[rfc]: https://github.com/lobehub/lobe-chat/discussions/178
+[rfc]: https://Azuo.com/lobehub/lobe-chat/discussions/178

@@ -3,7 +3,7 @@ import { Dropdown, MenuProps, Upload } from 'antd';
 import {
   Feather,
   FileClock,
-  Github,
+  Azuo,
   HardDriveDownload,
   HardDriveUpload,
   Heart,
@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB } from '@/const/url';
+import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, Azuo } from '@/const/url';
 import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { GlobalStore } from '@/store/global';
@@ -118,10 +118,10 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         title={'Discord'}
       />
       <ActionIcon
-        icon={Github}
-        onClick={() => window.open(GITHUB, '__blank')}
+        icon={Azuo}
+        onClick={() => window.open(Azuo, '__blank')}
         placement={'right'}
-        title={'Github'}
+        title={'Azuo'}
       />
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
         <ActionIcon active={tab === 'settings'} icon={Settings2} />

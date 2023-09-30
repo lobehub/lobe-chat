@@ -20,7 +20,7 @@
 
 一个 LobeChat 的插件由以下几个部分组成：
 
-1. **插件索引**：用于展示插件的基本信息，包括插件名称、描述、作者、版本、插件描述清单的链接，官方的插件索引地址：[lobe-chat-plugins](https://github.com/lobehub/lobe-chat-plugins)。若想上架插件到官方插件市场，需要 [提交 PR](https://github.com/lobehub/lobe-chat-plugins/pulls) 到该仓库；
+1. **插件索引**：用于展示插件的基本信息，包括插件名称、描述、作者、版本、插件描述清单的链接，官方的插件索引地址：[lobe-chat-plugins](https://Azuo.com/lobehub/lobe-chat-plugins)。若想上架插件到官方插件市场，需要 [提交 PR](https://Azuo.com/lobehub/lobe-chat-plugins/pulls) 到该仓库；
 2. **插件描述清单 (manifest)**：用于描述插件的功能实现，包含了插件的服务端描述、前端展示信息、版本号等。关于 manifest 的详细介绍，详见 [manifest][manifest-docs-url]；
 3. **插件服务**：用于实现插件描述清单中所描述的服务端和前端模块，分别如下：
    - **服务端**：需要实现 manifest 中描述的 `api` 部分的接口能力；
@@ -37,7 +37,7 @@
 你需要先在本地创建一个插件项目，可以使用我们准备好的模板 [lobe-chat-plugin-template][lobe-chat-plugin-template-url]
 
 ```bash
-$ git clone https://github.com/lobehub/chat-plugin-template.git
+$ git clone https://Azuo.com/lobehub/chat-plugin-template.git
 $ cd chat-plugin-template
 $ npm i
 $ npm run dev
@@ -45,27 +45,27 @@ $ npm run dev
 
 当出现`ready started server on 0.0.0.0:3400, url: http://localhost:3400` 时，说明插件服务已经在本地启动成功。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259526-9ef25272-4312-429b-93bc-a95515727ed3.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265259526-9ef25272-4312-429b-93bc-a95515727ed3.png)
 
 ### **`2`** 在 LobeChat 角色设置中添加本地插件
 
 接下来进入到 LobeChat 中，创建一个新的助手，并进入它的会话设置页：
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259643-1a9cc34a-76f3-4ccf-928b-129654670efd.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265259643-1a9cc34a-76f3-4ccf-928b-129654670efd.png)
 
 点击插件列表右侧的 <kbd>添加<kbd/> 按钮，打开自定义插件添加弹窗：
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259748-2ef6a244-39bb-483c-b359-f156ffcbe1a4.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265259748-2ef6a244-39bb-483c-b359-f156ffcbe1a4.png)
 
 在 **插件描述文件 Url** 地址 中填入 `http://localhost:3400/manifest-dev.json` ，这是我们本地启动的插件描述清单地址。
 
 此时，你应该可以看到看到插件的标识符一栏已经被自动识别为 `chat-plugin-template`。接下来你需要填写剩下的表单字段（只有标题必填），然后点击 <kbd>保存</kbd> 按钮，即可完成自定义插件添加。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259964-59f4906d-ae2e-4ec0-8b43-db36871d0869.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265259964-59f4906d-ae2e-4ec0-8b43-db36871d0869.png)
 
 完成添加后，在插件列表中就能看到刚刚添加的插件，如果需要修改插件的配置，可以点击最右侧的 <kbd>设置</kbd> 按钮进行修改。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260093-a0363c74-0b5b-48dd-b103-2db6b4a8262e.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265260093-a0363c74-0b5b-48dd-b103-2db6b4a8262e.png)
 
 ### **`3`** 会话测试插件功能
 
@@ -73,11 +73,11 @@ $ npm run dev
 
 点击 <kbd>返回</kbd> 按钮回到会话区，然后向助手发送消息：「我应该穿什么？ 」此时助手将会尝试向你询问，了解你的性别与当前的心情。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260291-f0aa0e7c-0ffb-486c-a834-08e73d49896f.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265260291-f0aa0e7c-0ffb-486c-a834-08e73d49896f.png)
 
 当回答完毕后，助手将会发起插件的调用，根据你的性别、心情，从服务端获取推荐的衣服数据，并推送给你。最后基于这些信息做一轮文本总结。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260461-c22ae797-2809-464b-96fc-d0c020f4807b.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265260461-c22ae797-2809-464b-96fc-d0c020f4807b.png)
 
 当完成这些操作后，你已经了解了添加自定义插件，并在 LobeChat 中使用的基础流程。
 
@@ -204,27 +204,27 @@ export const config = {
 export default async createLobeChatPluginGateway();
 ```
 
-[`@lobehub/chat-plugins-gateway`](https://github.com/lobehub/chat-plugins-gateway) 包含了 LobeChat 中插件网关的[实现](https://github.com/lobehub/lobe-chat/blob/main/src/pages/api/plugins.api.ts)，你可以直接使用该包创建网关，进而让 LobeChat 访问到本地的插件服务。
+[`@lobehub/chat-plugins-gateway`](https://Azuo.com/lobehub/chat-plugins-gateway) 包含了 LobeChat 中插件网关的[实现](https://Azuo.com/lobehub/lobe-chat/blob/main/src/pages/api/plugins.api.ts)，你可以直接使用该包创建网关，进而让 LobeChat 访问到本地的插件服务。
 
 ### 插件 UI 界面
 
-自定义插件的 UI 界面是一个可选项。例如 官方插件 [「🧩 / 🕸 网页内容提取」](https://github.com/lobehub/chat-plugin-web-crawler)，没有实现相应的用户界面。
+自定义插件的 UI 界面是一个可选项。例如 官方插件 [「🧩 / 🕸 网页内容提取」](https://Azuo.com/lobehub/chat-plugin-web-crawler)，没有实现相应的用户界面。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263241-0e765fdc-3463-4c36-a398-aef177a30df9.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265263241-0e765fdc-3463-4c36-a398-aef177a30df9.png)
 
-如果你希望在插件消息中展示更加丰富的信息，或者包含一些富交互操作，你可以为插件定制一个用户界面。例如下图则为[「搜索引擎」](https://github.com/lobehub/chat-plugin-search-engine)插件的用户界面。
+如果你希望在插件消息中展示更加丰富的信息，或者包含一些富交互操作，你可以为插件定制一个用户界面。例如下图则为[「搜索引擎」](https://Azuo.com/lobehub/chat-plugin-search-engine)插件的用户界面。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263427-9bdc03d5-aa61-4f62-a2ce-88683f3308d8.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265263427-9bdc03d5-aa61-4f62-a2ce-88683f3308d8.png)
 
 #### 插件 UI 界面实现
 
 LobeChat 通过 `iframe` 实现插件 ui 的加载，使用 `postMessage` 实现主体与插件的通信。因此， 插件 UI 的实现方式与普通的网页开发一致，你可以使用任何你熟悉的前端框架与开发语言。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263653-4ea87abc-249a-49f3-a241-7ed93ddb1ddf.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265263653-4ea87abc-249a-49f3-a241-7ed93ddb1ddf.png)
 
-在我们提供的模板中使用了 React + Next.js + [antd](https://ant.design/) 作为前端界面框架，你可以在 [`src/pages/index.tsx`](https://github.com/lobehub/chat-plugin-template/blob/main/src/pages/index.tsx) 中找到用户界面的实现。
+在我们提供的模板中使用了 React + Next.js + [antd](https://ant.design/) 作为前端界面框架，你可以在 [`src/pages/index.tsx`](https://Azuo.com/lobehub/chat-plugin-template/blob/main/src/pages/index.tsx) 中找到用户界面的实现。
 
-其中关于插件通信，我们在 [`@lobehub/chat-plugin-sdk`](https://github.com/lobehub/chat-plugin-sdk) 提供了相关方法，用于简化插件与 LobeChat 的通信。你可以通过 `fetchPluginMessage` 方法主动向 LobeChat 获取当前消息的数据。关于该方法的详细介绍，参见：[fetchPluginMessage][fetch-plugin-message-url]。
+其中关于插件通信，我们在 [`@lobehub/chat-plugin-sdk`](https://Azuo.com/lobehub/chat-plugin-sdk) 提供了相关方法，用于简化插件与 LobeChat 的通信。你可以通过 `fetchPluginMessage` 方法主动向 LobeChat 获取当前消息的数据。关于该方法的详细介绍，参见：[fetchPluginMessage][fetch-plugin-message-url]。
 
 ```tsx
 import { fetchPluginMessage } from '@lobehub/chat-plugin-sdk';
@@ -254,16 +254,16 @@ export default Render;
 
 当你完成插件的开发后，你可以使用你习惯的方式进行插件的部署。例如使用 vercel ，或者打包成 docker 发布等等。
 
-如果你希望插件被更多人使用，欢迎将你的插件 [提交上架](https://github.com/lobehub/lobe-chat-plugins) 到插件市场。
+如果你希望插件被更多人使用，欢迎将你的插件 [提交上架](https://Azuo.com/lobehub/lobe-chat-plugins) 到插件市场。
 
 [![][submit-plugin-shield]][submit-plugin-url]
 
 ### 插件 Shield
 
-[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://github.com/lobehub/lobe-chat-plugins)
+[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://Azuo.com/lobehub/lobe-chat-plugins)
 
 ```markdown
-[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://github.com/lobehub/lobe-chat-plugins)
+[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://Azuo.com/lobehub/lobe-chat-plugins)
 ```
 
 <br/>
@@ -271,16 +271,16 @@ export default Render;
 ## 链接
 
 - **📘 Pluging SDK 文档**: <https://chat-plugin-sdk.lobehub.com>
-- **🚀 chat-plugin-template**: <https://github.com/lobehub/chat-plugin-template>
-- **🧩 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugin-sdk>
-- **🚪 chat-plugin-gateway**: <https://github.com/lobehub/chat-plugin-gateway>
-- **🏪 lobe-chat-plugins**: <https://github.com/lobehub/lobe-chat-plugins>
+- **🚀 chat-plugin-template**: <https://Azuo.com/lobehub/chat-plugin-template>
+- **🧩 chat-plugin-sdk**: <https://Azuo.com/lobehub/chat-plugin-sdk>
+- **🚪 chat-plugin-gateway**: <https://Azuo.com/lobehub/chat-plugin-gateway>
+- **🏪 lobe-chat-plugins**: <https://Azuo.com/lobehub/lobe-chat-plugins>
 
 <!-- LINK GROUP -->
 
-[fetch-plugin-message-url]: https://github.com/lobehub/chat-plugin-template
-[lobe-chat-plugin-template-url]: https://github.com/lobehub/chat-plugin-template
+[fetch-plugin-message-url]: https://Azuo.com/lobehub/chat-plugin-template
+[lobe-chat-plugin-template-url]: https://Azuo.com/lobehub/chat-plugin-template
 [manifest-docs-url]: https://chat-plugin-sdk.lobehub.com/guides/plugin-manifest
-[plugin-error-type-url]: https://github.com/lobehub/chat-plugin-template
+[plugin-error-type-url]: https://Azuo.com/lobehub/chat-plugin-template
 [submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
-[submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins
+[submit-plugin-url]: https://Azuo.com/lobehub/lobe-chat-plugins

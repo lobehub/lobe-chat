@@ -20,7 +20,7 @@
 
 A LobeChat plugin consists of the following components:
 
-1. **Plugin Index**: Used to display basic information about the plugin, including the plugin name, description, author, version, and a link to the plugin manifest. The official plugin index can be found at [lobe-chat-plugins](https://github.com/lobehub/lobe-chat-plugins). To submit a plugin to the official plugin marketplace, you need to submit a PR to this repository.
+1. **Plugin Index**: Used to display basic information about the plugin, including the plugin name, description, author, version, and a link to the plugin manifest. The official plugin index can be found at [lobe-chat-plugins](https://Azuo.com/lobehub/lobe-chat-plugins). To submit a plugin to the official plugin marketplace, you need to submit a PR to this repository.
 2. **Plugin Manifest**: Used to describe the functionality of the plugin, including the server-side description, frontend display information, and version number. For more details about the manifest, please refer to the [manifest][manifest-docs-url].
 3. **Plugin Services**: Used to implement the server-side and frontend modules described in the manifest:
 
@@ -38,7 +38,7 @@ To integrate a plugin into LobeChat, you need to add and use a custom plugin in 
 First, you need to create a plugin project locally. You can use the [lobe-chat-plugin-template][lobe-chat-plugin-template-url] template we have prepared:
 
 ```bash
-$ git clone https://github.com/lobehub/chat-plugin-template.git
+$ git clone https://Azuo.com/lobehub/chat-plugin-template.git
 $ cd chat-plugin-template
 $ npm i
 $ npm run dev
@@ -46,27 +46,27 @@ $ npm run dev
 
 When you see `ready started server on 0.0.0.0:3400, url: http://localhost:3400`, it means that the plugin service has been successfully started locally.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259526-9ef25272-4312-429b-93bc-a95515727ed3.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265259526-9ef25272-4312-429b-93bc-a95515727ed3.png)
 
 ### **`2`** Add the Local Plugin in LobeChat Role Settings
 
 Next, go to LobeChat, create a new assistant, and go to its session settings page:
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259643-1a9cc34a-76f3-4ccf-928b-129654670efd.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265259643-1a9cc34a-76f3-4ccf-928b-129654670efd.png)
 
 Click the <kbd>Add</kbd> button on the right side of "Plugin List" to open the custom plugin add dialog:
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259748-2ef6a244-39bb-483c-b359-f156ffcbe1a4.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265259748-2ef6a244-39bb-483c-b359-f156ffcbe1a4.png)
 
 Enter `http://localhost:3400/manifest-dev.json` in the `Plugin Manifest URL` field, which is the URL of the locally started plugin manifest.
 
 At this point, you should see that the identifier of the plugin has been automatically recognized as `chat-plugin-template`. Then fill in the remaining form fields (only the title is required) and click the <kbd>Save</kbd> button to complete the custom plugin addition.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259964-59f4906d-ae2e-4ec0-8b43-db36871d0869.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265259964-59f4906d-ae2e-4ec0-8b43-db36871d0869.png)
 
 After adding the plugin, you can see the newly added plugin in the plugin list. If you need to modify the plugin's configuration, you can click the <kbd>Settings</kbd> button to make changes.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260093-a0363c74-0b5b-48dd-b103-2db6b4a8262e.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265260093-a0363c74-0b5b-48dd-b103-2db6b4a8262e.png)
 
 ### **`3`** Test the Plugin Functionality in a Session
 
@@ -74,11 +74,11 @@ Next, we need to test the functionality of the custom plugin.
 
 Click the <kbd>Back</kbd> button to go back to the session area, and then send a message to the assistant: "What should I wear?" The assistant will try to ask you about your gender and current mood.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260291-f0aa0e7c-0ffb-486c-a834-08e73d49896f.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265260291-f0aa0e7c-0ffb-486c-a834-08e73d49896f.png)
 
 After answering, the assistant will make a plugin call to retrieve recommended clothing data based on your gender and mood from the server and push it to you. Finally, it will summarize the information in a text response.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260461-c22ae797-2809-464b-96fc-d0c020f4807b.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265260461-c22ae797-2809-464b-96fc-d0c020f4807b.png)
 
 After completing these steps, you have learned the basic process of adding and using a custom plugin in LobeChat.
 
@@ -205,27 +205,27 @@ export const config = {
 export default async createLobeChatPluginGateway();
 ```
 
-[`@lobehub/chat-plugins-gateway`](https://github.com/lobehub/chat-plugins-gateway) includes the implementation of the plugin gateway in LobeChat, which you can use to create a gateway. This allows LobeChat to access the local plugin service.
+[`@lobehub/chat-plugins-gateway`](https://Azuo.com/lobehub/chat-plugins-gateway) includes the implementation of the plugin gateway in LobeChat, which you can use to create a gateway. This allows LobeChat to access the local plugin service.
 
 ### Plugin UI Interface
 
-For a plugin, the UI interface is optional. For example, the [Web Crawler](https://github.com/lobehub/chat-plugin-web-crawler) plugin does not provide a corresponding user interface.
+For a plugin, the UI interface is optional. For example, the [Web Crawler](https://Azuo.com/lobehub/chat-plugin-web-crawler) plugin does not provide a corresponding user interface.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263241-0e765fdc-3463-4c36-a398-aef177a30df9.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265263241-0e765fdc-3463-4c36-a398-aef177a30df9.png)
 
 If you want to display richer information in plugin messages or include some rich interactions, you can define a user interface for the plugin. For example, the following image shows the user interface of a search engine plugin.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263427-9bdc03d5-aa61-4f62-a2ce-88683f3308d8.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265263427-9bdc03d5-aa61-4f62-a2ce-88683f3308d8.png)
 
 #### Plugin UI Interface Implementation
 
 LobeChat uses `iframe` + `postMessage` to load and communicate with plugin UI. Therefore, the implementation of the plugin UI is the same as normal web development. You can use any frontend framework and programming language you are familiar with.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263653-4ea87abc-249a-49f3-a241-7ed93ddb1ddf.png)
+![](https://Azuo-production-user-asset-6210df.s3.amazonaws.com/28616219/265263653-4ea87abc-249a-49f3-a241-7ed93ddb1ddf.png)
 
 In our template, we use React + Next.js + antd as the frontend framework. You can find the implementation of the user interface in `src/pages/index.tsx`.
 
-Regarding plugin communication, we provide related methods in [`@lobehub/chat-plugin-sdk`](https://github.com/lobehub/chat-plugin-sdk) to simplify the communication between the plugin and LobeChat. You can use the `fetchPluginMessage` method to actively retrieve the data of the current message from LobeChat. For a detailed description of this method, please refer to: [fetchPluginMessage][fetch-plugin-message-url].
+Regarding plugin communication, we provide related methods in [`@lobehub/chat-plugin-sdk`](https://Azuo.com/lobehub/chat-plugin-sdk) to simplify the communication between the plugin and LobeChat. You can use the `fetchPluginMessage` method to actively retrieve the data of the current message from LobeChat. For a detailed description of this method, please refer to: [fetchPluginMessage][fetch-plugin-message-url].
 
 ```tsx
 import { fetchPluginMessage } from '@lobehub/chat-plugin-sdk';
@@ -261,10 +261,10 @@ If you want more people to use your plugin, you are welcome to submit it for rev
 
 ### Plugin Shield
 
-[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://github.com/lobehub/lobe-chat-plugins)
+[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://Azuo.com/lobehub/lobe-chat-plugins)
 
 ```markdown
-[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://github.com/lobehub/lobe-chat-plugins)
+[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://Azuo.com/lobehub/lobe-chat-plugins)
 ```
 
 <br/>
@@ -272,16 +272,16 @@ If you want more people to use your plugin, you are welcome to submit it for rev
 ## Link
 
 - **📘 Pluging SDK Docs**: <https://chat-plugin-sdk.lobehub.com>
-- **🚀 chat-plugin-template**: <https://github.com/lobehub/chat-plugin-template>
-- **🧩 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugin-sdk>
-- **🚪 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugin-gateway>
-- **🏪 lobe-chat-plugins**: <https://github.com/lobehub/lobe-chat-plugins>
+- **🚀 chat-plugin-template**: <https://Azuo.com/lobehub/chat-plugin-template>
+- **🧩 chat-plugin-sdk**: <https://Azuo.com/lobehub/chat-plugin-sdk>
+- **🚪 chat-plugin-sdk**: <https://Azuo.com/lobehub/chat-plugin-gateway>
+- **🏪 lobe-chat-plugins**: <https://Azuo.com/lobehub/lobe-chat-plugins>
 
 <!-- LINK GROUP -->
 
-[fetch-plugin-message-url]: https://github.com/lobehub/chat-plugin-template
-[lobe-chat-plugin-template-url]: https://github.com/lobehub/chat-plugin-template
+[fetch-plugin-message-url]: https://Azuo.com/lobehub/chat-plugin-template
+[lobe-chat-plugin-template-url]: https://Azuo.com/lobehub/chat-plugin-template
 [manifest-docs-url]: https://chat-plugin-sdk.lobehub.com/guides/plugin-manifest
-[plugin-error-type-url]: https://github.com/lobehub/chat-plugin-template
+[plugin-error-type-url]: https://Azuo.com/lobehub/chat-plugin-template
 [submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
-[submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins
+[submit-plugin-url]: https://Azuo.com/lobehub/lobe-chat-plugins

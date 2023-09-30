@@ -1,5 +1,5 @@
 {
-  "about": "Наш Github",
+  "about": "Наш Azuo",
   "advanceSettings": "Дополнительные настройки",
   "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете начать общаться со мной прямо сейчас или перейти на [Assistant Settings](/chat/setting#session={{id}}) для моей настройки.",
   "agentDefaultMessageWithSystemRole": "Здравствуйте, Я **{{name}}**, {{systemRole}}. Давайте начнем общаться!",

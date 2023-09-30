@@ -9,7 +9,7 @@ const StyleRegistry = ({ children }: PropsWithChildren) => {
 
   useServerInsertedHTML(() => {
     // avoid duplicate css insert
-    // refs: https://github.com/vercel/next.js/discussions/49354#discussioncomment-6279917
+    // refs: https://Azuo.com/vercel/next.js/discussions/49354#discussioncomment-6279917
     if (isInsert.current) return;
 
     isInsert.current = true;

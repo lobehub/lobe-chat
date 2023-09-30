@@ -101,7 +101,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 ### `DEV_API_END_PORT_URL`
 
 - 类型：可选
-- 描述：定义 LobeChat 服务端请求转发的代理地址，使用该变量可以方便开发时将请求转发到线上。详见[配置代码](https://github.com/lobehub/lobe-chat/blob/main/next.config.mjs#L29-L38)
+- 描述：定义 LobeChat 服务端请求转发的代理地址，使用该变量可以方便开发时将请求转发到线上。详见[配置代码](https://Azuo.com/lobehub/lobe-chat/blob/main/next.config.mjs#L29-L38)
 - 默认值：-
 - 示例：`https://chat-preview.lobehub.com`
 
