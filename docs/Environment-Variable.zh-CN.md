@@ -21,8 +21,6 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
   - [Vercel Analytics](#vercel-analytics)
   - [Mixpanel Analytics](#mixpanel-analytics)
   - [Posthog Analytics](#posthog-analytics)
-- [开发环境](#开发环境)
-  - [`DEV_API_END_PORT_URL`](#dev_api_end_port_url)
 
 ## 通用变量
 
@@ -168,15 +166,6 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 描述：开启 PostHog 的调试模式
 - 默认值： -
 - 示例：`1`
-
-## 开发环境
-
-### `DEV_API_END_PORT_URL`
-
-- 类型：可选
-- 描述：定义 LobeChat 服务端请求转发的代理地址，使用该变量可以方便开发时将请求转发到线上。详见[配置代码](https://github.com/lobehub/lobe-chat/blob/main/next.config.mjs#L29-L38)
-- 默认值：-
-- 示例：`https://chat-preview.lobehub.com`
 
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
 [mixpanel-analytics-url]: https://mixpanel.com

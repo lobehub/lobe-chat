@@ -19,8 +19,6 @@ LobeChat provides additional configuration options during deployment, which can 
   - [`AGENTS_INDEX_URL`](#agents_index_url)
 - [Data Analytics](#data-analytics)
   - [Posthog Analytics](#posthog-analytics)
-- [Development Environment](#development-environment)
-  - [`DEV_API_END_PORT_URL`](#dev_api_end_port_url)
 
 ## General Variables
 
@@ -129,17 +127,6 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Description: Enable debug mode for PostHog.
 - Default: -
 - Example: `1`
-
-<br/>
-
-## Development Environment
-
-### `DEV_API_END_PORT_URL`
-
-- Type: Optional
-- Description: Define the proxy address of the LobeChat server request forwarding. Using this variable can conveniently forward requests to the line during development. See [configuration code](https://github.com/lobehub/lobe-chat/blob/main/next.config.mjs#L29-L38)
-- Default: -
-- Example: `https://chat-preview.lobehub.com`
 
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
 [openai-api-page]: https://platform.openai.com/account/api-keys
