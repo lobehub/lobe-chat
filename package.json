@@ -102,7 +102,7 @@
     "react-intersection-observer": "^9",
     "react-layout-kit": "^1",
     "remark": "^14",
-    "remark-gfm": "^3",
+    "remark-gfm": "^4.0.0",
     "remark-html": "^15",
     "swr": "^2",
     "systemjs": "^6",
