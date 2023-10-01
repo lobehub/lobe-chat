@@ -146,7 +146,7 @@
     "next-pwa": "^5",
     "node-fetch": "^3",
     "prettier": "^3",
-    "remark-cli": "^11",
+    "remark-cli": "^12.0.0",
     "semantic-release": "^21",
     "stylelint": "^15",
     "ts-node": "^10",
