@@ -6,9 +6,9 @@ import { toJpeg, toPng, toSvg } from 'html-to-image';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import ChatList from 'src/app/chat/features/Conversation/ChatList';
 
 import PluginTag from '@/app/chat/components/ChatHeader/PluginTag';
-import ChatList from '@/app/chat/features/Conversation/ChatList';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
 import { sessionSelectors } from '@/store/session/slices/session/selectors';

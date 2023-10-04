@@ -9,28 +9,32 @@ import { useSessionStore } from '@/store/session';
 
 import ActionLeft from './ActionBar/ActionLeft';
 import ActionsRight from './ActionBar/ActionRight';
-import Desktop from './Desktop';
 import Footer from './Footer';
-import Mobile from './Mobile';
 
 const Token = dynamic(() => import('./ActionBar/Token'), { ssr: false });
 
-const ChatInput = () => {
-  const { t } = useTranslation('common');
-  const [expand, setExpand] = useState<boolean>(false);
-  const [message, setMessage] = useState('');
-  const { mobile } = useResponsive();
+interface ChatContentProps {
+  expand?: boolean;
+  mobile?: boolean;
+  onExpandChange?: (expand: boolean) => void;
+}
 
-  const [isLoading, sendMessage, stopGenerateMessage] = useSessionStore((s) => [
-    !!s.chatLoadingId,
-    s.sendMessage,
-    s.stopGenerateMessage,
-  ]);
+export const ChatInputContent = memo<ChatContentProps>(
+  ({ expand, onExpandChange, mobile: defaultMobile }) => {
+    const { t } = useTranslation('common');
 
-  const Render = mobile ? Mobile : Desktop;
+    const [message, setMessage] = useState('');
+    const { mobile: runtimeMobile } = useResponsive();
 
-  return (
-    <Render expand={expand}>
+    const mobile = runtimeMobile || defaultMobile;
+
+    const [isLoading, sendMessage, stopGenerateMessage] = useSessionStore((s) => [
+      !!s.chatLoadingId,
+      s.sendMessage,
+      s.stopGenerateMessage,
+    ]);
+
+    return (
       <ChatInputArea
         actions={
           <>
@@ -45,7 +49,7 @@ const ChatInput = () => {
         footer={<Footer />}
         loading={isLoading}
         minHeight={mobile ? 0 : CHAT_TEXTAREA_HEIGHT}
-        onExpandChange={setExpand}
+        onExpandChange={onExpandChange}
         onInputChange={setMessage}
         onSend={sendMessage}
         onStop={stopGenerateMessage}
@@ -56,8 +60,6 @@ const ChatInput = () => {
         }}
         value={message}
       />
-    </Render>
-  );
-};
-
-export default memo(ChatInput);
+    );
+  },
+);

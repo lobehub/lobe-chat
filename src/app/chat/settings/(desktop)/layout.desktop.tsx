@@ -1,10 +1,12 @@
+'use client';
+
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
 
-import Header from './features/Header';
+import Header from './Header';
 
 const DesktopLayout = memo<PropsWithChildren>(({ children }) => {
   return (

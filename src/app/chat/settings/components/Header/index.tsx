@@ -9,15 +9,10 @@ import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useSessionStore } from '@/store/session';
 
-import Desktop from './Desktop';
-import Mobile from './Mobile';
-
-const Header = memo<{ mobile?: boolean }>(() => {
+export const HeaderContent = memo<{ mobile?: boolean }>(() => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
   const { mobile } = useResponsive();
-
-  const Render = mobile ? Mobile : Desktop;
 
   const items = useMemo<MenuProps['items']>(
     () => [
@@ -46,12 +41,8 @@ const Header = memo<{ mobile?: boolean }>(() => {
   const size = mobile ? MOBILE_HEADER_ICON_SIZE : { fontSize: 24 };
 
   return (
-    <Render>
-      <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
-        <ActionIcon icon={HardDriveDownload} size={size} title={t('export', { ns: 'common' })} />
-      </Dropdown>
-    </Render>
+    <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
+      <ActionIcon icon={HardDriveDownload} size={size} title={t('export', { ns: 'common' })} />
+    </Dropdown>
   );
 });
-
-export default Header;
