@@ -4,7 +4,7 @@ import { ReactNode, memo } from 'react';
 
 import FolderPanel from '@/features/FolderPanel';
 
-import Header from './Header';
+import Header from '../SessionHeader';
 
 const useStyles = createStyles(({ stylish }) => stylish.noScrollbar);
 

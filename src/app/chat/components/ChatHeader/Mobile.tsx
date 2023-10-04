@@ -4,12 +4,13 @@ import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ShareButton from '@/app/chat/features/Header/ShareButton';
 import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
+
+import ShareButton from './ShareButton';
 
 const MobileHeader = memo(() => {
   const { t } = useTranslation('common');

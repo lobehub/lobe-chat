@@ -1,6 +1,6 @@
 import { ReactNode, memo } from 'react';
 
-import SessionSearchBar from '../SessionSearchBar';
+import SessionSearchBar from '../../features/SessionSearchBar';
 
 const Sessions = memo<{ children: ReactNode }>(({ children }) => {
   return (

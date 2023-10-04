@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
 
-import SessionSearchBar from '../../SessionSearchBar';
+import SessionSearchBar from '../../../features/SessionSearchBar';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`

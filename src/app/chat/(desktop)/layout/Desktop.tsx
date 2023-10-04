@@ -5,14 +5,14 @@ import AppLayout from '@/layout/AppLayout';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
-import { Sessions } from './features/SessionList';
+import ResponsiveSessionList from '../features/SessionList';
 
-const ChatLayout = memo<PropsWithChildren>(({ children }) => {
+const Desktop = memo<PropsWithChildren>(({ children }) => {
   useSwitchSideBarOnInit(SidebarTabKey.Chat);
 
   return (
     <AppLayout>
-      <Sessions />
+      <ResponsiveSessionList />
       <Flexbox
         flex={1}
         height={'100vh'}
@@ -25,4 +25,4 @@ const ChatLayout = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default ChatLayout;
+export default Desktop;

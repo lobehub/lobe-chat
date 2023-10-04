@@ -7,13 +7,13 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import pkg from '@/../package.json';
+import PluginTag from '@/app/chat/components/ChatHeader/PluginTag';
 import ChatList from '@/app/chat/features/Conversation/ChatList';
-import PluginTag from '@/app/chat/features/Header/PluginTag';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
 import { sessionSelectors } from '@/store/session/slices/session/selectors';
 
+import pkg from '../../../../../../package.json';
 import { useStyles } from './style';
 
 export enum ImageType {

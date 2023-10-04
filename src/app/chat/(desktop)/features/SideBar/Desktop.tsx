@@ -6,9 +6,9 @@ import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/slices/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 
-import SystemRole from './SystemRole';
+import SystemRole from '../../../components/Inspector/SystemRole';
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`
@@ -23,7 +23,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const SideBar = memo<{ children: ReactNode }>(({ children }) => {
+const Desktop = memo<{ children: ReactNode }>(({ children }) => {
   const { styles } = useStyles();
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.preference.showChatSideBar,
@@ -55,4 +55,4 @@ const SideBar = memo<{ children: ReactNode }>(({ children }) => {
   );
 });
 
-export default SideBar;
+export default Desktop;

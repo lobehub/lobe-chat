@@ -12,8 +12,8 @@ import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
 
-import PluginTag from './PluginTag';
-import ShareButton from './ShareButton';
+import PluginTag from '../../../components/ChatHeader/PluginTag';
+import ShareButton from '../../../components/ChatHeader/ShareButton';
 
 const Header = memo(() => {
   const init = useSessionChatInit();
