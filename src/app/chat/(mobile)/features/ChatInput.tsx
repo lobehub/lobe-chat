@@ -6,7 +6,7 @@ import Mobile from '../../components/ChatInput/Mobile';
 const ChatInput = () => {
   return (
     <Mobile>
-      <ChatInputContent />
+      <ChatInputContent mobile />
     </Mobile>
   );
 };
