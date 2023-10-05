@@ -1,7 +1,12 @@
-import Page from './index';
+import { isMobileDevice } from '@/utils/responsive';
 
-const Index = () => {
-  return <Page />;
+import DesktopPage from './(desktop)';
+import MobilePage from './(mobile)';
+
+const Page = () => {
+  const mobile = isMobileDevice();
+
+  return mobile ? <MobilePage /> : <DesktopPage />;
 };
 
-export default Index;
+export default Page;

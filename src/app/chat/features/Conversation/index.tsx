@@ -1,6 +1,6 @@
 import { BackBottom } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { memo, useRef } from 'react';
+import { ReactNode, memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -8,7 +8,6 @@ import SafeSpacing from '@/components/SafeSpacing';
 import { usePluginStore } from '@/store/plugin';
 
 import ChatList from './ChatList';
-import ChatInput from './Input';
 import ChatScrollAnchor from './ScrollAnchor';
 
 const useStyles = createStyles(
@@ -23,7 +22,12 @@ const useStyles = createStyles(
   `,
 );
 
-const Conversation = memo<{ mobile?: boolean }>(({ mobile }) => {
+interface ConversationProps {
+  chatInput: ReactNode;
+  mobile?: boolean;
+}
+
+const Conversation = memo<ConversationProps>(({ mobile, chatInput }) => {
   const ref = useRef(null);
   const { t } = useTranslation('common');
   const { styles } = useStyles();
@@ -41,7 +45,7 @@ const Conversation = memo<{ mobile?: boolean }>(({ mobile }) => {
         </div>
         <BackBottom target={ref} text={t('backToBottom')} />
       </div>
-      <ChatInput />
+      {chatInput}
     </Flexbox>
   );
 });

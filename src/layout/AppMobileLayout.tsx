@@ -1,6 +1,5 @@
 import { type MobileNavBarTitleProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import Head from 'next/head';
 import { CSSProperties, PropsWithChildren, ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -49,29 +48,21 @@ const AppMobileLayout = memo<AppMobileLayoutProps>(
     const { styles, cx } = useStyles();
 
     return (
-      <>
-        <Head>
-          <meta
-            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-            name="viewport"
-          />
-        </Head>
-        <Flexbox className={cx(styles.container, className)} style={style}>
-          {navBar && (
-            <>
-              <div className={styles.mobileNavBar}>{navBar}</div>
-              <SafeSpacing mobile position={'top'} />
-            </>
-          )}
-          {children}
-          {showTabBar && (
-            <>
-              <SafeSpacing mobile position={'bottom'} />
-              <MobileTabBar className={styles.mobileTabBar} />
-            </>
-          )}
-        </Flexbox>
-      </>
+      <Flexbox className={cx(styles.container, className)} style={style}>
+        {navBar && (
+          <>
+            <div className={styles.mobileNavBar}>{navBar}</div>
+            <SafeSpacing mobile position={'top'} />
+          </>
+        )}
+        {children}
+        {showTabBar && (
+          <>
+            <SafeSpacing mobile position={'bottom'} />
+            <MobileTabBar className={styles.mobileTabBar} />
+          </>
+        )}
+      </Flexbox>
     );
   },
 );

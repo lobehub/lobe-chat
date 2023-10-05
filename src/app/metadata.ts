@@ -46,7 +46,10 @@ const metadata: Metadata = {
     { color: '#f8f8f8', media: '(prefers-color-scheme: light)' },
     { color: '#000', media: '(prefers-color-scheme: dark)' },
   ],
-  title: title,
+  title: {
+    default: title,
+    template: '%s · LobeChat',
+  },
   viewport: {
     initialScale: 1,
     maximumScale: 1,
