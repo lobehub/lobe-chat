@@ -1,7 +1,7 @@
 import { produce } from 'immer';
-import { merge } from 'lodash-es';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import type { GlobalPreference, GlobalState, Guide, SidebarTabKey } from '../initialState';
@@ -47,14 +47,13 @@ export const createCommonSlice: StateCreator<
   },
   updateGuideState: (guide) => {
     const { updatePreference } = get();
-    const nextGuide = merge({}, get().preference.guide, guide);
+    const nextGuide = merge(get().preference.guide, guide);
     updatePreference({ guide: nextGuide });
   },
-
   updatePreference: (preference, action) => {
     set(
       produce((draft: GlobalState) => {
-        draft.preference = merge({}, draft.preference, preference);
+        draft.preference = merge(draft.preference, preference);
       }),
       false,
       action,

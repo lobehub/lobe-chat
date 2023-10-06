@@ -10,6 +10,7 @@ import Agent from './Agent';
 
 const AgentSetting = memo(() => {
   useSwitchSideBarOnInit(SettingsTabs.Agent);
+
   return (
     <Layout>
       <Agent />

@@ -21,6 +21,10 @@ declare global {
       NEXT_PUBLIC_POSTHOG_KEY: string;
       NEXT_PUBLIC_POSTHOG_HOST: string;
       NEXT_PUBLIC_POSTHOG_DEBUG: string;
+
+      NEXT_PUBLIC_I18N_DEBUG: string;
+      NEXT_PUBLIC_I18N_DEBUG_BROWSER: string;
+      NEXT_PUBLIC_I18N_DEBUG_SERVER: string;
     }
   }
 }
@@ -29,18 +33,27 @@ export const getClientConfig = () => ({
   AGENTS_INDEX_URL: process.env.AGENTS_INDEX_URL,
   PLUGINS_INDEX_URL: process.env.PLUGINS_INDEX_URL,
 
+  // Vercel Analytics
   ANALYTICS_VERCEL: process.env.NEXT_PUBLIC_ANALYTICS_VERCEL !== '0',
   VERCEL_DEBUG: process.env.NEXT_PUBLIC_VERCEL_DEBUG === '1',
 
+  // Plausible Analytics
   ANALYTICS_PLAUSIBLE: process.env.NEXT_PUBLIC_ANALYTICS_PLAUSIBLE === '1',
   PLAUSIBLE_DOMAIN: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN,
 
+  // Mixpanel Analytics
   ANALYTICS_MIXPANEL: process.env.NEXT_PUBLIC_ANALYTICS_MIXPANEL === '1',
   MIXPANEL_PROJECT_TOKEN: process.env.NEXT_PUBLIC_MIXPANEL_PROJECT_TOKEN,
   MIXPANEL_DEBUG: process.env.NEXT_PUBLIC_MIXPANEL_DEBUG === '1',
 
+  // Posthog Analytics
   ANALYTICS_POSTHOG: process.env.NEXT_PUBLIC_ANALYTICS_POSTHOG === '1',
   POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
   POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
   POSTHOG_DEBUG: process.env.NEXT_PUBLIC_POSTHOG_DEBUG === '1',
+
+  // i18n debug mode
+  I18N_DEBUG: process.env.NEXT_PUBLIC_I18N_DEBUG === '1',
+  I18N_DEBUG_BROWSER: process.env.NEXT_PUBLIC_I18N_DEBUG_BROWSER === '1',
+  I18N_DEBUG_SERVER: process.env.NEXT_PUBLIC_I18N_DEBUG_SERVER === '1',
 });
