@@ -1,11 +1,13 @@
-import { getAgentJSON } from '@/const/url';
+import { getAgentIndexJSON, getAgentJSON } from '@/const/url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 
 /**
  * 请求助手列表
  */
 export const getAgentList = async () => {
-  const res = await fetch(settingsSelectors.currentLanguage(useGlobalStore.getState()));
+  const res = await fetch(
+    getAgentIndexJSON(settingsSelectors.currentLanguage(useGlobalStore.getState())),
+  );
 
   return res.json();
 };
