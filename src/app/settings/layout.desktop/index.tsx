@@ -1,16 +1,16 @@
 'use client';
 
 import { useResponsive } from 'antd-style';
-import Head from 'next/head';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import PageTitle from '@/components/PageTitle';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
-import DesktopLayout from './layout.desktop';
-import MobileLayout from './layout.mobile';
+import MobileLayout from '../layout.mobile';
+import DesktopLayout from './Desktop';
 
 const Setting = memo<{ children: ReactNode }>(({ children }) => {
   const { mobile } = useResponsive();
@@ -23,9 +23,7 @@ const Setting = memo<{ children: ReactNode }>(({ children }) => {
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
+      <PageTitle title={pageTitle} />
       <RenderLayout>{children}</RenderLayout>
     </>
   );

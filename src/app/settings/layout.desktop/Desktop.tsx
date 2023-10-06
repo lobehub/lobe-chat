@@ -4,8 +4,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 import SafeSpacing from '@/components/SafeSpacing';
 import AppLayout from '@/layout/AppLayout';
 
-import Header from './features/Header';
-import SideBar from './features/SideBar';
+import Header from '../features/Header';
+import SideBar from '../features/SideBar';
 
 const SettingLayout = memo<{ children: ReactNode }>(({ children }) => {
   return (
