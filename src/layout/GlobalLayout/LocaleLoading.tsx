@@ -1,4 +1,4 @@
-import { Icon, Logo } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { Loader2 } from 'lucide-react';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';

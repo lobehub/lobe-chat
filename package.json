@@ -76,7 +76,7 @@
     "ahooks": "^3",
     "ai": "^2",
     "antd": "^5",
-    "antd-style": "^3",
+    "antd-style": "^3.5",
     "brotli-wasm": "^1",
     "chroma-js": "^2",
     "dayjs": "^1",

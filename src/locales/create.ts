@@ -23,17 +23,17 @@ export const createI18nNext = (lang?: string) => {
     'welcome',
   ];
 
-  return (
-    i18n
-      .use(initReactI18next)
-      .use(LanguageDetector)
-      //  don't find a good way to handle suspense loading
-      // .use(
-      //   resourcesToBackend(
-      //     isDev ? resources : (lng: string, ns: string) => import(`../../locales/${lng}/${ns}.json`),
-      //   ),
-      // )
-      .init({
+  const instance = i18n.use(initReactI18next).use(LanguageDetector);
+  //  not find a good way to handle suspense loading
+  // .use(
+  //   resourcesToBackend(
+  //     isDev ? resources : (lng: string, ns: string) => import(`../../locales/${lng}/${ns}.json`),
+  //   ),
+  // )
+
+  return {
+    init: () =>
+      instance.init({
         debug: debugMode,
         defaultNS: ['error', 'common'],
         detection: {
@@ -47,6 +47,7 @@ export const createI18nNext = (lang?: string) => {
         lng: lang,
         ns,
         resources,
-      })
-  );
+      }),
+    instance,
+  };
 };
