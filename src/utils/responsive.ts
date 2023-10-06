@@ -12,7 +12,7 @@ export const isMobileDevice = () => {
   const { get } = headers();
   const ua = get('user-agent');
 
-  console.log(ua);
+  // console.log(ua);
   const device = new UAParser(ua || '').getDevice();
 
   return device.type === 'mobile';

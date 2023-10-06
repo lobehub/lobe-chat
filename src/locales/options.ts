@@ -1,11 +1,10 @@
-import type { SelectProps } from 'antd';
 
 import type { Locales } from '@/types/locale';
 
-type LocaleOptions = SelectProps['options'] &
-  {
-    value: Locales;
-  }[];
+type LocaleOptions = {
+  label: string;
+  value: Locales;
+}[];
 
 export const localeOptions: LocaleOptions = [
   {
@@ -25,3 +24,5 @@ export const localeOptions: LocaleOptions = [
     value: 'ru-RU',
   },
 ] as LocaleOptions;
+
+export const supportLangs: string[] = localeOptions.map((i) => i.value);

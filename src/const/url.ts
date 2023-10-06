@@ -1,10 +1,10 @@
 import urlJoin from 'url-join';
 
 import { getClientConfig } from '@/config/client';
-import { localeOptions } from '@/locales/options';
 import { Locales } from '@/locales/resources';
 
 import pkg from '../../package.json';
+import { DEFAULT_LANG, checkLang } from './locale';
 import { INBOX_SESSION_ID } from './session';
 
 export const GITHUB = pkg.homepage;
@@ -16,11 +16,6 @@ export const DISCORD = 'https://discord.gg/AYFPHvv2jT';
 export const PLUGINS_INDEX_URL =
   getClientConfig().PLUGINS_INDEX_URL ?? 'https://chat-plugins.lobehub.com';
 
-export const DEFAULT_LANG = 'en-US';
-
-export const checkLang = (lang: Locales) => {
-  return lang === DEFAULT_LANG || !localeOptions.map((o) => o.value).includes(lang);
-};
 export const getPluginIndexJSON = (lang: Locales = DEFAULT_LANG, baseUrl = PLUGINS_INDEX_URL) => {
   if (checkLang(lang)) return baseUrl;
 

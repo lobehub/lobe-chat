@@ -211,7 +211,8 @@
       "title": "字型大小"
     },
     "lang": {
-      "title": "語言設定"
+      "title": "語言設定",
+      "autoMode": "跟隨系統"
     },
     "neutralColor": {
       "desc": "不同色彩傾向的灰階自訂",

@@ -1,56 +1,44 @@
 'use client';
 
-import { App, ConfigProvider } from 'antd';
+import { App } from 'antd';
+import { createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
-import Zh_CN from 'antd/locale/zh_CN';
-import { useRouter } from 'next/navigation';
-import { PropsWithChildren, memo, useEffect } from 'react';
+import { PropsWithChildren, memo } from 'react';
 
-import AppTheme, { AppThemeProps } from '@/components/AppTheme';
-import { createI18nNext } from '@/locales/create';
-import { useGlobalStore, useOnFinishHydrationGlobal } from '@/store/global';
-import { usePluginStore } from '@/store/plugin';
-import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
-import { switchLang } from '@/utils/switchLang';
+import AppTheme, { AppThemeProps } from './AppTheme';
+import Locale from './Locale';
+import StoreHydration from './StoreHydration';
 
-import { useStyles } from './style';
+const useStyles = createStyles(({ css, token }) => ({
+  bg: css`
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-const i18n = createI18nNext();
+    height: 100%;
 
-const Layout = memo<PropsWithChildren>(({ children }) => {
+    background: ${token.colorBgLayout};
+  `,
+}));
+
+const Container = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
 
-  const router = useRouter();
-
-  useEffect(() => {
-    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
-    useSessionStore.persist.rehydrate();
-    useGlobalStore.persist.rehydrate();
-    usePluginStore.persist.rehydrate();
-  }, []);
-
-  useOnFinishHydrationGlobal((state) => {
-    i18n.then(() => switchLang(state.settings.language));
-  });
-
-  useOnFinishHydrationSession((s, store) => {
-    usePluginStore.getState().checkLocalEnabledPlugins(s.sessions);
-
-    // add router instance to store
-    store.setState({ router });
-  });
-
-  return (
-    <ConfigProvider locale={Zh_CN}>
-      <App className={styles.bg}>{children}</App>
-    </ConfigProvider>
-  );
+  return <App className={styles.bg}>{children}</App>;
 });
 
-const ThemeWrapper = ({ children, ...theme }: AppThemeProps) => (
+interface GlobalLayoutProps extends AppThemeProps {
+  defaultLang?: string;
+}
+
+const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) => (
   <AppTheme {...theme}>
-    <Layout>{children}</Layout>
+    <Locale lang={defaultLang}>
+      <StoreHydration />
+      <Container>{children}</Container>
+    </Locale>
   </AppTheme>
 );
 
-export default ThemeWrapper;
+export default GlobalLayout;

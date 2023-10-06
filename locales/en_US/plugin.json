@@ -115,6 +115,7 @@
     "updateAt": "Last Updated"
   },
   "responseData": "Response Data",
+  "setting": "Plugin Settings",
   "settings": {
     "indexUrl": {
       "title": "Marketplace Index",

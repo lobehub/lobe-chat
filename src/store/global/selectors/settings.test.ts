@@ -1,9 +1,9 @@
 import { LanguageModel } from '@/types/llm';
 
-import { globalSelectors } from './selectors';
-import { GlobalStore } from './store';
+import { GlobalStore } from '../store';
+import { settingsSelectors } from './settings';
 
-describe('globalSelectors', () => {
+describe('settingsSelectors', () => {
   describe('currentSettings', () => {
     it('should merge DEFAULT_SETTINGS and s.settings correctly', () => {
       const s = {
@@ -36,7 +36,7 @@ describe('globalSelectors', () => {
         },
       } as unknown as GlobalStore;
 
-      const result = globalSelectors.currentSettings(s);
+      const result = settingsSelectors.currentSettings(s);
 
       expect(result).toEqual({
         avatar: 'avatar.jpg',
@@ -93,7 +93,7 @@ describe('globalSelectors', () => {
   //       },
   //     };
   //
-  //     const result = globalSelectors.defaultAgent(s);
+  //     const result = settingsSelectors.defaultAgent(s);
   //
   //
   //
@@ -114,9 +114,9 @@ describe('globalSelectors', () => {
   //       },
   //     };
   //
-  //     const result = globalSelectors.defaultAgentConfig(s);
+  //     const result = settingsSelectors.defaultAgentConfig(s);
   //
-  //     const defaultAgent = globalSelectors.defaultAgent(s);
+  //     const defaultAgent = settingsSelectors.defaultAgent(s);
   //     const expected = merge({}, DEFAULT_AGENT_CONFIG, defaultAgent.config);
   //
   //     expect(result).toEqual(expected);
@@ -136,9 +136,9 @@ describe('globalSelectors', () => {
   //       },
   //     };
   //
-  //     const result = globalSelectors.defaultAgentMeta(s);
+  //     const result = settingsSelectors.defaultAgentMeta(s);
   //
-  //     const defaultAgent = globalSelectors.defaultAgent(s);
+  //     const defaultAgent = settingsSelectors.defaultAgent(s);
   //     const expected = merge({}, DEFAULT_AGENT_META, defaultAgent.meta);
   //
   //     expect(result).toEqual(expected);
@@ -183,7 +183,7 @@ describe('globalSelectors', () => {
   //       },
   //     };
   //
-  //     const result = globalSelectors.exportSettings(s);
+  //     const result = settingsSelectors.exportSettings(s);
   //
   //     const expected = {
   //       avatar: 'avatar.jpg',
@@ -255,7 +255,7 @@ describe('globalSelectors', () => {
   //       },
   //     };
   //
-  //     const result = globalSelectors.exportSettings(s);
+  //     const result = settingsSelectors.exportSettings(s);
   //
   //     expect(result).toBeInstanceOf(GlobalSettings);
   //   });

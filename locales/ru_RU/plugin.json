@@ -95,6 +95,7 @@
   "plugins": {
     "unknown": "Проверка плагинов..."
   },
+  "setting": "Настройки плагина",
   "settings": {
     "indexUrl": {
       "title": "Индекс рынка",

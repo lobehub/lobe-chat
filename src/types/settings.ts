@@ -1,7 +1,7 @@
 import type { NeutralColors, PrimaryColors } from '@lobehub/ui';
 import type { ThemeMode } from 'antd-style';
 
-import type { Locales } from '@/locales/resources';
+import { LocaleMode } from '@/types/locale';
 import type { LobeAgentSession } from '@/types/session';
 
 export interface GlobalBaseSettings {
@@ -36,7 +36,7 @@ export interface GlobalBaseSettings {
    * @deprecated
    */
   historyCount?: number;
-  language: Locales;
+  language: LocaleMode;
   neutralColor?: NeutralColors;
   password: string;
   primaryColor?: PrimaryColors;

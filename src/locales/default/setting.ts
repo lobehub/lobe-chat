@@ -198,7 +198,8 @@ export default {
       title: '字体大小',
     },
     lang: {
-      title: '语言设置',
+      autoMode: '跟随系统',
+      title: '语言',
     },
     neutralColor: {
       desc: '不同色彩倾向的灰阶自定义',
