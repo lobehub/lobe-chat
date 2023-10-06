@@ -9,7 +9,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { globalSelectors, useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
+import { settingsSelectors, useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
 
 import Checker from './Checker';
 
@@ -42,7 +42,7 @@ const LLM = memo(() => {
   const [setSettings] = useGlobalStore((s) => [s.setSettings]);
 
   useEffectAfterGlobalHydrated((store) => {
-    const settings = globalSelectors.currentSettings(store.getState());
+    const settings = settingsSelectors.currentSettings(store.getState());
 
     form.setFieldsValue(settings);
   }, []);
