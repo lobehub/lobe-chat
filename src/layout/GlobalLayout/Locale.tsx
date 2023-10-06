@@ -3,7 +3,9 @@ import Zh_CN from 'antd/locale/zh_CN';
 import { PropsWithChildren, memo, useState } from 'react';
 
 import { createI18nNext } from '@/locales/create';
+import { useOnFinishHydrationGlobal } from '@/store/global';
 import { isOnServerSide } from '@/utils/env';
+import { switchLang } from '@/utils/switchLang';
 
 interface LocaleLayoutProps extends PropsWithChildren {
   lang?: string;
@@ -23,6 +25,12 @@ const InnerLocale = memo<LocaleLayoutProps>(({ children, lang }) => {
         // console.log('inited.');
       });
   }
+
+  useOnFinishHydrationGlobal((s) => {
+    if (s.settings.language === 'auto') {
+      switchLang('auto');
+    }
+  }, []);
 
   return <ConfigProvider locale={Zh_CN}>{children}</ConfigProvider>;
 });
