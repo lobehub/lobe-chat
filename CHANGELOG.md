@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.83.5](https://github.com/lobehub/lobe-chat/compare/v0.83.4...v0.83.5)
+
+<sup>Released on **2023-10-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent market list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent market list, closes [#273](https://github.com/lobehub/lobe-chat/issues/273) ([c020277](https://github.com/lobehub/lobe-chat/commit/c020277))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.83.4](https://github.com/lobehub/lobe-chat/compare/v0.83.3...v0.83.4)
 
 <sup>Released on **2023-10-06**</sup>
