@@ -211,7 +211,8 @@
       "title": "Font Size"
     },
     "lang": {
-      "title": "Language Settings"
+      "title": "Language Settings",
+      "autoMode": "Follow System"
     },
     "neutralColor": {
       "desc": "Custom grayscale for different color tendencies",

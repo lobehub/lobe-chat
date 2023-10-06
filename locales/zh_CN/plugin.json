@@ -95,10 +95,11 @@
   "plugins": {
     "unknown": "插件检测中..."
   },
+  "setting": "插件设置",
   "settings": {
     "indexUrl": {
       "title": "市场索引",
-      "tooltip": "暂不支持编辑"
+      "tooltip": "暂不支持在线编辑，请通过部署时环境变量进行设置"
     },
     "modalDesc": "配置插件市场的地址后，可以使用自定义的插件市场",
     "title": "设置插件市场"

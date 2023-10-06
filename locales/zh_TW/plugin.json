@@ -115,6 +115,7 @@
     "updateAt": "最後更新時間"
   },
   "responseData": "回應資料",
+  "setting": "插件設置",
   "settings": {
     "indexUrl": {
       "title": "外掛市集索引",

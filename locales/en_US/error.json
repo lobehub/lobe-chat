@@ -36,6 +36,7 @@
     "password": {
       "description": "The application encryption has been enabled by the administrator. Enter the application password to unlock the application. The password only needs to be filled in once.",
       "title": "Enter Password to Unlock Application"
-    }
+    },
+    "closeMessage": "Close message"
   }
 }
