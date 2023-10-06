@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.83.4](https://github.com/lobehub/lobe-chat/compare/v0.83.3...v0.83.4)
+
+<sup>Released on **2023-10-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent settings, closes [#271](https://github.com/lobehub/lobe-chat/issues/271) ([aac9a70](https://github.com/lobehub/lobe-chat/commit/aac9a70))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.83.3](https://github.com/lobehub/lobe-chat/compare/v0.83.2...v0.83.3)
 
 <sup>Released on **2023-10-06**</sup>
