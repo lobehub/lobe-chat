@@ -22,23 +22,23 @@ export interface AgentCardProps {
 const AgentCard = memo<AgentCardProps>(({ defaultAgents }) => {
   const { t } = useTranslation('market');
   const { mobile } = useResponsive();
-  const clientAgentList = useMarketStore(agentMarketSelectors.getAgentList);
-
-  const agentList = clientAgentList.length === 0 && defaultAgents ? defaultAgents : clientAgentList;
+  const { styles } = useStyles();
 
   const [useFetchAgentList, keywords] = useMarketStore((s) => [
     s.useFetchAgentList,
     s.searchKeywords,
   ]);
-  const { styles } = useStyles();
-  const { isLoading } = useFetchAgentList();
+  useFetchAgentList();
+
+  const clientAgentList = useMarketStore(agentMarketSelectors.getAgentList);
+  const agentList = clientAgentList.length === 0 && defaultAgents ? defaultAgents : clientAgentList;
 
   const agentListData = useMemo(() => {
     if (!keywords) return agentList;
     return agentList.filter(({ meta }) => JSON.stringify(meta).toLowerCase().includes(keywords));
   }, [agentList, keywords]);
 
-  if (isLoading || !agentList) return <Loading />;
+  if (agentList.length === 0) return <Loading />;
 
   return (
     <Flexbox gap={mobile ? 16 : 24}>
