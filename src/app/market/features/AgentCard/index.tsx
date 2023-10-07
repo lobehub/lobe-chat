@@ -1,6 +1,5 @@
 import { SpotlightCard } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
-import { shuffle } from 'lodash-es';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -50,11 +49,7 @@ const AgentCard = memo<AgentCardProps>(({ defaultAgents }) => {
           <div className={styles.subTitle}>{t('title.recentSubmits')}</div>
           <SpotlightCard items={agentListData.slice(0, 3)} renderItem={gridRender} />
           <div className={styles.subTitle}>{t('title.allAgents')}</div>
-          <SpotlightCard
-            items={shuffle(agentListData.slice(3))}
-            renderItem={gridRender}
-            spotlight={false}
-          />
+          <SpotlightCard items={agentListData.slice(3)} renderItem={gridRender} spotlight={false} />
         </>
       )}
     </Flexbox>
