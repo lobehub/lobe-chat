@@ -1,5 +1,7 @@
 import { Loading3QuartersOutlined } from '@ant-design/icons';
-import { memo, useMemo } from 'react';
+import { Skeleton } from 'antd';
+import dynamic from 'next/dynamic';
+import { Suspense, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -7,7 +9,8 @@ import { usePluginStore } from '@/store/plugin';
 import { ChatMessage } from '@/types/chatMessage';
 
 import IFrameRender from './IFrameRender';
-import SystemJsRender from './SystemJsRender';
+
+const SystemJsRender = dynamic(() => import('./SystemJsRender'), { ssr: false });
 
 export interface FunctionMessageProps extends ChatMessage {
   loading?: boolean;
@@ -46,7 +49,11 @@ const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
   if (!ui.url) return;
 
   if (ui.mode === 'module')
-    return <SystemJsRender content={contentObj} name={name || 'unknown'} url={ui.url} />;
+    return (
+      <Suspense fallback={<Skeleton active style={{ width: 300 }} />}>
+        <SystemJsRender content={contentObj} name={name || 'unknown'} url={ui.url} />
+      </Suspense>
+    );
 
   return (
     <IFrameRender
