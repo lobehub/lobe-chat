@@ -9,16 +9,14 @@ import ChatHeader from './features/ChatHeader';
 import ChatInput from './features/ChatInput';
 import SideBar from './features/SideBar';
 
-const DesktopPage = memo(() => {
-  return (
-    <>
-      <PageTitle />
-      <ChatHeader />
-      <Flexbox flex={1} height={'calc(100vh - 64px)'} horizontal>
-        <Conversation chatInput={<ChatInput />} />
-        <SideBar />
-      </Flexbox>
-    </>
-  );
-});
+const DesktopPage = memo(() => (
+  <>
+    <PageTitle />
+    <ChatHeader />
+    <Flexbox flex={1} height={'calc(100vh - 64px)'} horizontal>
+      <Conversation chatInput={<ChatInput />} />
+      <SideBar />
+    </Flexbox>
+  </>
+));
 export default DesktopPage;

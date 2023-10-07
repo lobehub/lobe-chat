@@ -1,7 +1,31 @@
-import Page from './index';
+'use client';
 
-const Index = () => {
-  return <Page />;
-};
+import { memo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
-export default Index;
+import PageTitle from '@/components/PageTitle';
+import { useMarketStore } from '@/store/market';
+import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
+
+import AgentCard from './features/AgentCard';
+import AgentSearchBar from './features/AgentSearchBar';
+
+const Market = memo(() => {
+  const { t } = useTranslation('common');
+  const pageTitle = genSiteHeadTitle(t('tab.market'));
+
+  useEffect(() => {
+    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
+    useMarketStore.persist.rehydrate();
+  }, []);
+
+  return (
+    <>
+      <PageTitle title={pageTitle} />
+      <AgentSearchBar />
+      <AgentCard />
+    </>
+  );
+});
+
+export default Market;

@@ -1,4 +1,6 @@
-import { ReactNode, memo } from 'react';
+'use client';
+
+import { PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import AppMobileLayout from '@/layout/AppMobileLayout';
@@ -8,7 +10,7 @@ import { SidebarTabKey } from '@/store/global/initialState';
 import Header from './features/Header';
 import SideBar from './features/SideBar';
 
-const MarketLayout = memo<{ children: ReactNode }>(({ children }) => {
+const MarketLayout = ({ children }: PropsWithChildren) => {
   useSwitchSideBarOnInit(SidebarTabKey.Market);
 
   return (
@@ -19,6 +21,6 @@ const MarketLayout = memo<{ children: ReactNode }>(({ children }) => {
       <SideBar />
     </AppMobileLayout>
   );
-});
+};
 
 export default MarketLayout;
