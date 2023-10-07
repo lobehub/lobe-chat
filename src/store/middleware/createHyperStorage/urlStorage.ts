@@ -15,7 +15,11 @@ const createUrlSearch = (mode: 'search' | 'hash' = 'hash'): UrlSearchHelper => {
 
   return {
     getUrlSearch: () => location.search.slice(1),
-    setUrlSearch: (params: URLSearchParams) => (location.search = params.toString()),
+    setUrlSearch: (params: URLSearchParams) => {
+      if (params.size === 0) return;
+
+      history.replaceState({}, '', '?' + params.toString());
+    },
   };
 };
 
