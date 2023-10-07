@@ -7,8 +7,8 @@ import AppMobileLayout from '@/layout/AppMobileLayout';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
-import SideBar from './features/AgentDetail';
-import Header from './features/Header';
+import DetailModal from './AgentDetail';
+import Header from './Header';
 
 const MarketLayout = ({ children }: PropsWithChildren) => {
   useSwitchSideBarOnInit(SidebarTabKey.Market);
@@ -18,7 +18,7 @@ const MarketLayout = ({ children }: PropsWithChildren) => {
       <Flexbox flex={1} gap={16} style={{ padding: 16 }}>
         {children}
       </Flexbox>
-      <SideBar />
+      <DetailModal />
     </AppMobileLayout>
   );
 };

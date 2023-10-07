@@ -6,8 +6,8 @@ import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
 import pkg from '@/../package.json';
+import Header from '@/app/market/(mobile)/Header';
 import AgentCardBanner from '@/app/market/features/AgentCard/AgentCardBanner';
-import Header from '@/app/market/features/Header';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import AppMobileLayout from '@/layout/AppMobileLayout';
 import { useGlobalStore, useSwitchSideBarOnInit } from '@/store/global';

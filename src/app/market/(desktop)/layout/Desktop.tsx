@@ -8,9 +8,9 @@ import { MAX_WIDTH } from '@/const/layoutTokens';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
-import AppLayout from '../../../layout/AppLayout';
-import SideBar from '../features/AgentDetail';
-import Header from '../features/Header';
+import AppLayout from '../../../../layout/AppLayout';
+import SideBar from '../AgentDetail';
+import Header from '../Header';
 
 const useStyles = createStyles(({ css }) => ({
   background: css`

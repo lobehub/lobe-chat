@@ -3,7 +3,7 @@ import { PropsWithChildren, ReactNode } from 'react';
 interface ServerResponsiveLayoutProps {
   Desktop: (props: PropsWithChildren) => ReactNode;
   Mobile: (props: PropsWithChildren) => ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
   isMobile: () => boolean;
 }
 const ResponsiveLayout = ({ children, Desktop, Mobile, isMobile }: ServerResponsiveLayoutProps) => {

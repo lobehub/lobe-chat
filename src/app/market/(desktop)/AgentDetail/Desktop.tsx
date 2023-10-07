@@ -20,7 +20,7 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
   noScrollbar: stylish.noScrollbar,
 }));
 
-const SideBar = memo<{ children: ReactNode }>(({ children }) => {
+const SideBar = memo<{ children?: ReactNode }>(({ children }) => {
   const { styles } = useStyles();
   const [tempId, setTempId] = useState<string>('');
   const [showAgentSidebar, deactivateAgent, activateAgent] = useMarketStore((s) => [
