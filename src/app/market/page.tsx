@@ -1,31 +1,29 @@
-'use client';
+import { cookies } from 'next/headers';
 
-import { memo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { LOBE_LOCALE_COOKIE } from '@/const/locale';
+import { getAgentIndexJSON } from '@/const/url';
+import { Locales } from '@/locales/resources';
+import { LobeChatAgentsMarketIndex } from '@/types/market';
 
-import PageTitle from '@/components/PageTitle';
-import { useMarketStore } from '@/store/market';
-import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
+import Market from './index';
 
-import AgentCard from './features/AgentCard';
-import AgentSearchBar from './features/AgentSearchBar';
+const getAgentList = async (): Promise<LobeChatAgentsMarketIndex> => {
+  const cookieStore = cookies();
+  const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
 
-const Market = memo(() => {
-  const { t } = useTranslation('common');
-  const pageTitle = genSiteHeadTitle(t('tab.market'));
+  try {
+    const res = await fetch(getAgentIndexJSON(lang?.value as Locales));
 
-  useEffect(() => {
-    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
-    useMarketStore.persist.rehydrate();
-  }, []);
+    return res.json();
+  } catch {
+    return { agents: [], schemaVersion: 1 };
+  }
+};
 
-  return (
-    <>
-      <PageTitle title={pageTitle} />
-      <AgentSearchBar />
-      <AgentCard />
-    </>
-  );
-});
+const Page = async () => {
+  const data = await getAgentList();
 
-export default Market;
+  return <Market defaultAgents={data.agents} />;
+};
+
+export default Page;

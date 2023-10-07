@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
+import { AgentsMarketIndexItem } from '@/types/market';
 
 import TagList from '../TagList';
 import AgentCardItem from './AgentCardItem';
@@ -14,10 +15,17 @@ import { useStyles } from './style';
 
 const gridRender = (item: any) => <AgentCardItem {...item} />;
 
-const AgentCard = memo(() => {
-  const { mobile } = useResponsive();
-  const agentList = useMarketStore(agentMarketSelectors.getAgentList);
+export interface AgentCardProps {
+  defaultAgents?: AgentsMarketIndexItem[];
+}
+
+const AgentCard = memo<AgentCardProps>(({ defaultAgents }) => {
   const { t } = useTranslation('market');
+  const { mobile } = useResponsive();
+  const clientAgentList = useMarketStore(agentMarketSelectors.getAgentList);
+
+  const agentList = clientAgentList.length === 0 && defaultAgents ? defaultAgents : clientAgentList;
+
   const [useFetchAgentList, keywords] = useMarketStore((s) => [
     s.useFetchAgentList,
     s.searchKeywords,
