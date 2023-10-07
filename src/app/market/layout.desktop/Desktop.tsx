@@ -9,8 +9,8 @@ import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
 import AppLayout from '../../../layout/AppLayout';
+import SideBar from '../features/AgentDetail';
 import Header from '../features/Header';
-import SideBar from '../features/SideBar';
 
 const useStyles = createStyles(({ css }) => ({
   background: css`

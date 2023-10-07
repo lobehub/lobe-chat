@@ -7,8 +7,8 @@ import AppMobileLayout from '@/layout/AppMobileLayout';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
+import SideBar from './features/AgentDetail';
 import Header from './features/Header';
-import SideBar from './features/SideBar';
 
 const MarketLayout = ({ children }: PropsWithChildren) => {
   useSwitchSideBarOnInit(SidebarTabKey.Market);
