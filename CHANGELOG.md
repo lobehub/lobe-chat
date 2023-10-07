@@ -2,6 +2,41 @@
 
 # Changelog
 
+### [Version 0.83.7](https://github.com/lobehub/lobe-chat/compare/v0.83.6...v0.83.7)
+
+<sup>Released on **2023-10-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix shuffle, use search url with agent item.
+
+#### 💄 Styles
+
+- **misc**: Better tag style, improve loading state.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix shuffle ([d4b9dc3](https://github.com/lobehub/lobe-chat/commit/d4b9dc3))
+- **misc**: Use search url with agent item ([98df623](https://github.com/lobehub/lobe-chat/commit/98df623))
+
+#### Styles
+
+- **misc**: Better tag style ([38e42ea](https://github.com/lobehub/lobe-chat/commit/38e42ea))
+- **misc**: Improve loading state ([f00c868](https://github.com/lobehub/lobe-chat/commit/f00c868))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.83.6](https://github.com/lobehub/lobe-chat/compare/v0.83.5...v0.83.6)
 
 <sup>Released on **2023-10-06**</sup>
