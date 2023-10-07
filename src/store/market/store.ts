@@ -24,7 +24,7 @@ const persistOptions: PersistOptions<Store> = {
       selectors: ['agentMap'],
     },
     url: {
-      mode: 'hash',
+      mode: 'search',
       selectors: [
         // map state key to storage key
         { currentIdentifier: 'agent' },

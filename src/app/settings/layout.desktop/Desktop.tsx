@@ -1,4 +1,4 @@
-import { ReactNode, memo } from 'react';
+import { PropsWithChildren } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
@@ -7,7 +7,7 @@ import AppLayout from '@/layout/AppLayout';
 import Header from '../features/Header';
 import SideBar from '../features/SideBar';
 
-const SettingLayout = memo<{ children: ReactNode }>(({ children }) => {
+const SettingLayout = ({ children }: PropsWithChildren) => {
   return (
     <AppLayout>
       <SideBar />
@@ -22,6 +22,6 @@ const SettingLayout = memo<{ children: ReactNode }>(({ children }) => {
       </Flexbox>
     </AppLayout>
   );
-});
+};
 
 export default SettingLayout;

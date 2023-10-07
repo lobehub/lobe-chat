@@ -1,10 +1,11 @@
 'use client';
 
-import { useResponsive } from 'antd-style';
-import { ReactNode, memo } from 'react';
+import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageTitle from '@/components/PageTitle';
+import ResponsiveLayout from '@/components/ResponsiveLayout';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
@@ -12,21 +13,20 @@ import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 import MobileLayout from '../layout.mobile';
 import DesktopLayout from './Desktop';
 
-const Setting = memo<{ children: ReactNode }>(({ children }) => {
-  const { mobile } = useResponsive();
+const Setting = ({ children }: PropsWithChildren) => {
   const { t } = useTranslation('setting');
   const pageTitle = genSiteHeadTitle(t('header.global'));
-
-  const RenderLayout = mobile ? MobileLayout : DesktopLayout;
 
   useSwitchSideBarOnInit(SidebarTabKey.Setting);
 
   return (
     <>
       <PageTitle title={pageTitle} />
-      <RenderLayout>{children}</RenderLayout>
+      <ResponsiveLayout Desktop={DesktopLayout} Mobile={MobileLayout} isMobile={useIsMobile}>
+        {children}
+      </ResponsiveLayout>
     </>
   );
-});
+};
 
 export default Setting;

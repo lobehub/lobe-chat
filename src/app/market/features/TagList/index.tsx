@@ -16,7 +16,7 @@ const TagList = memo(() => {
         <Button
           key={item}
           onClick={() => useMarketStore.setState({ searchKeywords: item })}
-          size={'small'}
+          shape={'round'}
           type={keywords === item ? 'primary' : 'default'}
         >
           {startCase(item)}

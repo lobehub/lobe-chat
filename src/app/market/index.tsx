@@ -1,39 +1,29 @@
 'use client';
 
-import { useResponsive } from 'antd-style';
-import Head from 'next/head';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import PageTitle from '@/components/PageTitle';
 import { useMarketStore } from '@/store/market';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
-import AgentCard from './features/AgentCard';
+import AgentCard, { AgentCardProps } from './features/AgentCard';
 import AgentSearchBar from './features/AgentSearchBar';
-import DesktopLayout from './layout.desktop';
-import MobileLayout from './layout.mobile';
 
-const Market = memo(() => {
+const Market = memo<AgentCardProps>(({ defaultAgents }) => {
   const { t } = useTranslation('common');
   const pageTitle = genSiteHeadTitle(t('tab.market'));
-  const { mobile } = useResponsive();
 
   useEffect(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
     useMarketStore.persist.rehydrate();
   }, []);
 
-  const RenderLayout = mobile ? MobileLayout : DesktopLayout;
-
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
-      <RenderLayout>
-        <AgentSearchBar />
-        <AgentCard />
-      </RenderLayout>
+      <PageTitle title={pageTitle} />
+      <AgentSearchBar />
+      <AgentCard defaultAgents={defaultAgents} />
     </>
   );
 });

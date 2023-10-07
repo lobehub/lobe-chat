@@ -1,5 +1,6 @@
 import { getAgentIndexJSON, getAgentJSON } from '@/const/url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { LobeChatAgentsMarketIndex } from '@/types/market';
 
 /**
  * 请求助手列表
@@ -9,7 +10,9 @@ export const getAgentList = async () => {
     getAgentIndexJSON(settingsSelectors.currentLanguage(useGlobalStore.getState())),
   );
 
-  return res.json();
+  const data: LobeChatAgentsMarketIndex = await res.json();
+
+  return data;
 };
 
 /**
