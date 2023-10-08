@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useMarketStore } from '@/store/market';
 
-import AgentCardBanner from '../../AgentCard/AgentCardBanner';
+import AgentCardBanner from '../../../features/AgentCard/AgentCardBanner';
 import Comment from './Comment';
 import Header from './Header';
 import Loading from './Loading';
