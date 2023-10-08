@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.83.9](https://github.com/lobehub/lobe-chat/compare/v0.83.8...v0.83.9)
+
+<sup>Released on **2023-10-08**</sup>
+
+#### ♻ Code Refactoring
+
+- **agent-market**: Refactor desktop and mobile to improve mobile performance.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **agent-market**: Refactor desktop and mobile to improve mobile performance, closes [#278](https://github.com/lobehub/lobe-chat/issues/278) ([82b7f60](https://github.com/lobehub/lobe-chat/commit/82b7f60))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.83.8](https://github.com/lobehub/lobe-chat/compare/v0.83.7...v0.83.8)
 
 <sup>Released on **2023-10-07**</sup>
