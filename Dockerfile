@@ -9,9 +9,10 @@ WORKDIR /app
 
 COPY package.json ./
 
+RUN pnpm i -g bun
 # If you want to build docker in China
-RUN npm config set registry https://registry.npmmirror.com/
-RUN pnpm install
+#RUN npm config set registry https://registry.npmmirror.com/
+RUN bun i
 
 COPY . .
 RUN pnpm run build:docker # run build standalone for docker version
