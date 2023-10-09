@@ -25,6 +25,7 @@
   "scripts": {
     "build": "next build",
     "build:analyze": "ANALYZE=true next build",
+    "build:docker": "DOCKER=true next build",
     "dev": "next dev -p 3010",
     "i18n": "npm run i18n:workflow && lobe-i18n",
     "i18n:workflow": "ts-node --project ./tsconfig.json scripts/i18nWorkflow/index.ts",

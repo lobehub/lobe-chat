@@ -2,6 +2,7 @@ import analyzer from '@next/bundle-analyzer';
 import nextPWA from 'next-pwa';
 
 const isProd = process.env.NODE_ENV === 'production';
+const buildWithDocker = process.env.DOCKER === 'true';
 
 const withBundleAnalyzer = analyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -32,6 +33,8 @@ const nextConfig = {
     AGENTS_INDEX_URL: process.env.AGENTS_INDEX_URL,
     PLUGINS_INDEX_URL: process.env.PLUGINS_INDEX_URL,
   },
+
+  output: buildWithDocker ? 'standalone' : undefined,
 };
 
 export default isProd ? withBundleAnalyzer(withPWA(nextConfig)) : nextConfig;
