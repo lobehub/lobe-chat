@@ -2,7 +2,7 @@ import { SiOpenai } from '@icons-pack/react-simple-icons';
 import { Avatar, ChatHeaderTitle, Logo, Markdown, Tag } from '@lobehub/ui';
 import { Button, SegmentedProps } from 'antd';
 import dayjs from 'dayjs';
-import { toJpeg, toPng, toSvg } from 'html-to-image';
+import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -20,6 +20,7 @@ export enum ImageType {
   JPG = 'jpg',
   PNG = 'png',
   SVG = 'svg',
+  WEBP = 'webp',
 }
 
 export const imageTypeOptions: SegmentedProps['options'] = [
@@ -34,6 +35,10 @@ export const imageTypeOptions: SegmentedProps['options'] = [
   {
     label: 'SVG',
     value: ImageType.SVG,
+  },
+  {
+    label: 'WEBP',
+    value: ImageType.WEBP,
   },
 ];
 
@@ -69,26 +74,31 @@ const Preview = memo<PreviewProps>(({ withSystemRole, imageType, withBackground,
       let screenshotFn: any;
       switch (imageType) {
         case ImageType.JPG: {
-          screenshotFn = toJpeg;
+          screenshotFn = domToJpeg;
           break;
         }
         case ImageType.PNG: {
-          screenshotFn = toPng;
+          screenshotFn = domToPng;
           break;
         }
         case ImageType.SVG: {
-          screenshotFn = toSvg;
+          screenshotFn = domToSvg;
+          break;
+        }
+        case ImageType.WEBP: {
+          screenshotFn = domToWebp;
           break;
         }
       }
+
       const dataUrl = await screenshotFn(document.querySelector('#preview') as HTMLDivElement);
       const link = document.createElement('a');
       link.download = `LobeChat_${title}_${dayjs().format('YYYY-MM-DD')}.${imageType}`;
       link.href = dataUrl;
       link.click();
       setLoading(false);
-    } catch {
-      console.error('Failed to download image');
+    } catch (error) {
+      console.error('Failed to download image', error);
       setLoading(false);
     }
   }, [imageType, title]);
