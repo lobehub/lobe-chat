@@ -16,20 +16,16 @@ name: 'Lighthouse-Badger-Advanced'
 env:
   TOKEN_NAME: 'GH_TOKEN' # target token name; insert only the name never the real value e.g. 'LIGHTHOUSE_BADGER_TOKEN'
   # To change predefined values, just override them
-  REPO_BRANCH: 'lobehub/lobe-chat main' # target repository & branch (predefined: repo with this file and master branch)
+  REPO_BRANCH: 'lobehub/lobe-chat lighthouse' # target repository & branch (predefined: repo with this file and master branch)
   USER_NAME: 'lobehubbot' # user who should commit
   USER_EMAIL: 'i@lobehub.com'
   AUDIT_TYPE: 'both' # 'mobile', 'desktop', 'both' or 'both_p'
-  MOBILE_LIGHTHOUSE_PARAMS: '--throttling.cpuSlowdownMultiplier=2 --max-wait-for-load=6000' # Lighthouse parameters mobile audit
-  DESKTOP_LIGHTHOUSE_PARAMS: '--preset=desktop --throttling.cpuSlowdownMultiplier=1 --max-wait-for-load=6000' # Lighthouse parameters desktop audit
+  MOBILE_LIGHTHOUSE_PARAMS: '--throttling.cpuSlowdownMultiplier=2' # Lighthouse parameters mobile audit
+  DESKTOP_LIGHTHOUSE_PARAMS: '--preset=desktop --throttling.cpuSlowdownMultiplier=1' # Lighthouse parameters desktop audit
   COMMIT_MESSAGE: '🤖 chore: Lighthouse Results Refreshed'
 
 # TRIGGERS
 on:
-  push:
-    branches:
-      - main
-      - lighthouse
   workflow_dispatch:
 
 ########################################################################
@@ -48,19 +44,19 @@ jobs:
         include:
           - NAME: 'LobeChat | Welcome'
             URLS: 'https://chat.lobehub.com/welcome'
-            BADGES_ARGS: '-b pagespeed -o docs/lighthouse/welcome -r'
+            BADGES_ARGS: '-b pagespeed -o lighthouse/welcome -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Welcome'
           - NAME: 'LobeChat | Chat'
             URLS: 'https://chat.lobehub.com/chat'
-            BADGES_ARGS: '-b pagespeed -o docs/lighthouse/chat -r'
+            BADGES_ARGS: '-b pagespeed -o lighthouse/chat -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Chat'
           - NAME: 'LobeChat | Market'
             URLS: 'https://chat.lobehub.com/market'
-            BADGES_ARGS: '-b pagespeed -o docs/lighthouse/market -r'
+            BADGES_ARGS: '-b pagespeed -o lighthouse/market -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Market'
           - NAME: 'LobeChat | Settings'
             URLS: 'https://chat.lobehub.com/settings'
-            BADGES_ARGS: '-b pagespeed -o docs/lighthouse/settings -r'
+            BADGES_ARGS: '-b pagespeed -o lighthouse/settings -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Settings'
     ####################################################################
     # THAT'S IT; YOU DON'T HAVE TO DEFINE ANYTHING IN THE FOLLOWING
