@@ -6,7 +6,9 @@ import MobilePage from './(mobile)';
 const Page = () => {
   const mobile = isMobileDevice();
 
-  return mobile ? <MobilePage /> : <DesktopPage />;
+  const Page = mobile ? MobilePage : DesktopPage;
+
+  return <Page />;
 };
 
 export default Page;

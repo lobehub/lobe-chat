@@ -1,38 +1,14 @@
-'use client';
+import { isMobileDevice } from '@/utils/responsive';
 
-import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import DesktopPage from './(desktop)';
+import MobilePage from './(mobile)';
 
-import PageTitle from '@/components/PageTitle';
-import AgentSetting from '@/features/AgentSetting';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
-import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
+const Page = () => {
+  const mobile = isMobileDevice();
 
-const EditPage = memo(() => {
-  const { t } = useTranslation('setting');
-  const config = useSessionStore(agentSelectors.currentAgentConfig, isEqual);
-  const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
-  const [updateAgentConfig, updateAgentMeta, title] = useSessionStore((s) => [
-    s.updateAgentConfig,
-    s.updateAgentMeta,
-    agentSelectors.currentAgentTitle(s),
-  ]);
+  const Page = mobile ? MobilePage : DesktopPage;
 
-  const pageTitle = genSiteHeadTitle(t('header.sessionWithName', { name: title }));
+  return <Page />;
+};
 
-  return (
-    <>
-      <PageTitle title={pageTitle} />
-      <AgentSetting
-        config={config}
-        meta={meta}
-        onConfigChange={updateAgentConfig}
-        onMetaChange={updateAgentMeta}
-      />
-    </>
-  );
-});
-
-export default EditPage;
+export default Page;

@@ -1,9 +1,14 @@
+import { useResponsive } from 'antd-style';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
 import { useGlobalStore } from '@/store/global';
 import { usePluginStore } from '@/store/plugin';
-import { useOnFinishHydrationSession, useSessionStore } from '@/store/session';
+import {
+  useEffectAfterSessionHydrated,
+  useOnFinishHydrationSession,
+  useSessionStore,
+} from '@/store/session';
 
 const StoreHydration = memo(() => {
   const router = useRouter();
@@ -21,6 +26,15 @@ const StoreHydration = memo(() => {
     // add router instance to store
     store.setState({ router });
   });
+
+  const { mobile } = useResponsive();
+
+  useEffectAfterSessionHydrated(
+    (store) => {
+      store.setState({ isMobile: mobile });
+    },
+    [mobile],
+  );
 
   return null;
 });

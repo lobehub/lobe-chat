@@ -11,12 +11,13 @@ const TagList = memo(() => {
   const keywords = useMarketStore((s) => s.searchKeywords);
 
   return (
-    <Flexbox gap={8} horizontal style={{ flexWrap: 'wrap' }}>
+    <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
       {agentTagList.map((item) => (
         <Button
           key={item}
           onClick={() => useMarketStore.setState({ searchKeywords: item })}
           shape={'round'}
+          size={'small'}
           type={keywords === item ? 'primary' : 'default'}
         >
           {startCase(item)}
