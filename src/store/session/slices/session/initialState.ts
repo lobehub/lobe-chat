@@ -33,7 +33,7 @@ export const initLobeSession: LobeAgentSession = {
 
 export const initInbox = merge({}, initLobeSession, {
   config: {
-    systemRole: '你是一名 AI 助理',
+    systemRole: '',
   } as LobeAgentConfig,
   id: 'inbox',
   meta: {
@@ -42,7 +42,7 @@ export const initInbox = merge({}, initLobeSession, {
 } as Partial<LobeAgentSession>);
 
 export const initialSessionState: SessionState = {
-  activeId: undefined,
+  activeId: 'inbox',
   inbox: initInbox,
   isMobile: false,
   searchKeywords: '',

@@ -1,15 +1,12 @@
-'use client';
-
 import { PropsWithChildren, memo } from 'react';
 
-import ResponsiveLayout from '@/components/ResponsiveLayout';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import ResponsiveLayout from '@/layout/ResponsiveLayout.client';
 
 import Mobile from '../(mobile)/layout.mobile';
 import Desktop from './layout.desktop';
 
 export default memo(({ children }: PropsWithChildren) => (
-  <ResponsiveLayout Desktop={Desktop} Mobile={Mobile} isMobile={useIsMobile}>
+  <ResponsiveLayout Desktop={Desktop} Mobile={Mobile}>
     {children}
   </ResponsiveLayout>
 ));

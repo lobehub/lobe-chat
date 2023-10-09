@@ -13,7 +13,7 @@ import Common from './Common';
 export default memo(() => {
   useSwitchSideBarOnInit(SettingsTabs.Common);
   const { t } = useTranslation('setting');
-  const pageTitle = genSiteHeadTitle(t('header.global'));
+  const pageTitle = genSiteHeadTitle(t('tab.common'));
   return (
     <>
       <PageTitle title={pageTitle} />

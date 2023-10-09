@@ -1,12 +1,17 @@
 import { memo } from 'react';
 
-import { SessionListContent } from '../../components/SessionList';
-import Wrapper from '../../components/SessionList/Mobile';
+import SessionListContent from '../../features/SessionListContent';
+import SessionSearchBar from '../../features/SessionSearchBar';
 
-const SessionList = memo(() => (
-  <Wrapper>
-    <SessionListContent />
-  </Wrapper>
-));
+const Sessions = memo(() => {
+  return (
+    <>
+      <div style={{ padding: '8px 16px' }}>
+        <SessionSearchBar />
+      </div>
+      <SessionListContent />
+    </>
+  );
+});
 
-export default SessionList;
+export default Sessions;

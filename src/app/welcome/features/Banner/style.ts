@@ -1,8 +1,13 @@
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 
-export const useStyles = createStyles(({ css, token, stylish, cx }) => {
+export const useStyles = createStyles(({ css, token, stylish, cx, prefixCls }) => {
   return {
+    buttonGroup: css`
+      .${prefixCls}-upload {
+        width: 100% !important;
+      }
+    `,
     container: css`
       z-index: 10;
 
@@ -49,8 +54,12 @@ export const useStyles = createStyles(({ css, token, stylish, cx }) => {
     view: cx(
       stylish.noScrollbar,
       css`
+        position: relative;
+
         overflow-x: hidden;
         overflow-y: auto;
+
+        max-width: 1024px;
         height: 100vh;
         padding: 32px 16px;
       `,

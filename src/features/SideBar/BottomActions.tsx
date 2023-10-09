@@ -102,7 +102,7 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         label: t('setting'),
         onClick: () => {
           setTab(SidebarTabKey.Setting);
-          router.push('/settings');
+          router.push('/settings/common');
         },
       },
     ],

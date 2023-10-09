@@ -1,1 +1,3 @@
-export { default } from './mobile';
+import Index from './mobile';
+
+export default () => <Index />;

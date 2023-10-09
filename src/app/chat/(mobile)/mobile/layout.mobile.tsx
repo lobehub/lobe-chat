@@ -1,9 +1,11 @@
+'use client';
+
 import { PropsWithChildren } from 'react';
 
 import AppLayoutMobile from '@/layout/AppLayout.mobile';
 
-import Header from '../../components/ChatHeader/Mobile';
+import ChatHeader from '../features/ChatHeader';
 
 export default ({ children }: PropsWithChildren) => (
-  <AppLayoutMobile navBar={<Header />}>{children}</AppLayoutMobile>
+  <AppLayoutMobile navBar={<ChatHeader />}>{children}</AppLayoutMobile>
 );
