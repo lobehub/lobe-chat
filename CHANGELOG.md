@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.84.0-beta.2](https://github.com/lobehub/lobe-chat/compare/v0.84.0-beta.1...v0.84.0-beta.2)
+
+<sup>Released on **2023-10-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Use bun to improve speed.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Use bun to improve speed ([8db2a3c](https://github.com/lobehub/lobe-chat/commit/8db2a3c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.84.0-beta.1](https://github.com/lobehub/lobe-chat/compare/v0.83.9...v0.84.0-beta.1)
 
 <sup>Released on **2023-10-09**</sup>
