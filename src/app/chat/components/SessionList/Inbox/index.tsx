@@ -1,5 +1,6 @@
 import { Avatar, List } from '@lobehub/ui';
 import { useHover } from 'ahooks';
+import { useResponsive } from 'antd-style';
 import Link from 'next/link';
 import { memo, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,10 +16,10 @@ const Inbox = memo(() => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
   const { t } = useTranslation('common');
-
-  const [mobile, activeId, switchSession] = useSessionStore((s) => [
-    s.isMobile,
+  const { mobile } = useResponsive();
+  const [activeId, activeSession, switchSession] = useSessionStore((s) => [
     s.activeId,
+    s.activeSession,
     s.switchSession,
   ]);
 
@@ -39,7 +40,8 @@ const Inbox = memo(() => {
       href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={(e) => {
         e.preventDefault();
-        switchSession(INBOX_SESSION_ID);
+        if (mobile) switchSession(INBOX_SESSION_ID);
+        else activeSession(INBOX_SESSION_ID);
       }}
     >
       <Item

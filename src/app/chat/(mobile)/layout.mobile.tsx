@@ -1,9 +1,10 @@
 import { PropsWithChildren, memo } from 'react';
 
+import SessionHeader from '@/app/chat/(mobile)/features/SessionHeader';
 import AppLayoutMobile from '@/layout/AppLayout.mobile';
 
-import Header from './Header';
-
 export default memo(({ children }: PropsWithChildren) => (
-  <AppLayoutMobile navBar={<Header />}>{children}</AppLayoutMobile>
+  <AppLayoutMobile navBar={<SessionHeader />} showTabBar>
+    {children}
+  </AppLayoutMobile>
 ));

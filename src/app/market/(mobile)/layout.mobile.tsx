@@ -3,7 +3,7 @@
 import { PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import AppMobileLayout from '@/layout/AppMobileLayout';
+import AppLayoutMobile from '@/layout/AppLayout.mobile';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
@@ -14,12 +14,12 @@ const MarketLayout = ({ children }: PropsWithChildren) => {
   useSwitchSideBarOnInit(SidebarTabKey.Market);
 
   return (
-    <AppMobileLayout navBar={<Header />} showTabBar>
+    <AppLayoutMobile navBar={<Header />} showTabBar>
       <Flexbox flex={1} gap={16} style={{ padding: 16 }}>
         {children}
       </Flexbox>
       <DetailModal />
-    </AppMobileLayout>
+    </AppLayoutMobile>
   );
 };
 

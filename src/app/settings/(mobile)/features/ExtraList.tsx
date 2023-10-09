@@ -9,7 +9,7 @@ import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { useGlobalStore } from '@/store/global';
 
-import Item from '../features/SideBar/Item';
+import Item from '../../features/SideBar/Item';
 
 const ExtraList = memo(() => {
   const { t } = useTranslation('common');

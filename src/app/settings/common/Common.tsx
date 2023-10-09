@@ -1,3 +1,5 @@
+'use client';
+
 import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
 import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';

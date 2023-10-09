@@ -11,6 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { settingsSelectors, useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
 
+import Layout from '../../(desktop)/layout.responsive';
 import Checker from './Checker';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -139,25 +140,27 @@ const LLM = memo(() => {
   };
 
   return (
-    <Flexbox align={'center'} gap={24} width={'100%'}>
-      <Form
-        form={form}
-        items={[openAI]}
-        onValuesChange={debounce(setSettings, 100)}
-        {...FORM_STYLE}
-      />
-      <Flexbox align={'center'} className={styles.plan}>
-        <div>
-          <Trans i18nKey="llm.waitingForMore" ns={'setting'}>
-            更多模型正在
-            <Link href="https://github.com/lobehub/lobe-chat/issues/151" target="_blank">
-              计划接入
-            </Link>
-            中 ，敬请期待 ✨
-          </Trans>
-        </div>
+    <Layout>
+      <Flexbox align={'center'} gap={24} width={'100%'}>
+        <Form
+          form={form}
+          items={[openAI]}
+          onValuesChange={debounce(setSettings, 100)}
+          {...FORM_STYLE}
+        />
+        <Flexbox align={'center'} className={styles.plan}>
+          <div>
+            <Trans i18nKey="llm.waitingForMore" ns={'setting'}>
+              更多模型正在
+              <Link href="https://github.com/lobehub/lobe-chat/issues/151" target="_blank">
+                计划接入
+              </Link>
+              中 ，敬请期待 ✨
+            </Trans>
+          </div>
+        </Flexbox>
       </Flexbox>
-    </Flexbox>
+    </Layout>
   );
 });
 

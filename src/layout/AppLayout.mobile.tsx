@@ -43,7 +43,7 @@ interface AppMobileLayoutProps extends PropsWithChildren {
   title?: MobileNavBarTitleProps;
 }
 
-const AppMobileLayout = memo<AppMobileLayoutProps>(
+const AppLayoutMobile = memo<AppMobileLayoutProps>(
   ({ children, showTabBar, navBar, style, className }) => {
     const { styles, cx } = useStyles();
 
@@ -67,4 +67,4 @@ const AppMobileLayout = memo<AppMobileLayoutProps>(
   },
 );
 
-export default AppMobileLayout;
+export default AppLayoutMobile;

@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 import SideBar from '@/features/SideBar';
 import { useIsPWA } from '@/hooks/useIsPWA';
 
-const AppLayout = memo<PropsWithChildren>(({ children }) => {
+const AppLayoutDesktop = memo<PropsWithChildren>(({ children }) => {
   const isPWA = useIsPWA();
   const theme = useTheme();
   return (
@@ -20,4 +20,4 @@ const AppLayout = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default AppLayout;
+export default AppLayoutDesktop;

@@ -8,7 +8,7 @@ import { MAX_WIDTH } from '@/const/layoutTokens';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
-import AppLayout from '../../../../layout/AppLayout';
+import AppLayoutDesktop from '../../../../layout/AppLayout.desktop';
 import SideBar from '../AgentDetail';
 import Header from '../Header';
 
@@ -31,7 +31,7 @@ const MarketLayout = memo<PropsWithChildren>(({ children }) => {
   useSwitchSideBarOnInit(SidebarTabKey.Market);
 
   return (
-    <AppLayout>
+    <AppLayoutDesktop>
       <Flexbox
         flex={1}
         height={'100vh'}
@@ -59,7 +59,7 @@ const MarketLayout = memo<PropsWithChildren>(({ children }) => {
           <SideBar />
         </Flexbox>
       </Flexbox>
-    </AppLayout>
+    </AppLayoutDesktop>
   );
 });
 

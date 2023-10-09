@@ -2,18 +2,20 @@
 
 import { memo } from 'react';
 
-import AppMobileLayout from '@/layout/AppMobileLayout';
+import { useSwitchSideBarOnInit } from '@/store/global';
+import { SidebarTabKey } from '@/store/global/initialState';
 
 import PageTitle from '../features/PageTitle';
-import SessionHeader from './features/SessionHeader';
 import SessionList from './features/SessionList';
+import Layout from './layout.mobile';
 
 const ChatMobilePage = memo(() => {
+  useSwitchSideBarOnInit(SidebarTabKey.Chat);
   return (
-    <AppMobileLayout navBar={<SessionHeader />} showTabBar>
+    <Layout>
       <PageTitle />
       <SessionList />
-    </AppMobileLayout>
+    </Layout>
   );
 });
 

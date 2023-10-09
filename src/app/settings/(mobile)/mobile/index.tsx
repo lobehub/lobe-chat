@@ -6,16 +6,15 @@ import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
 import pkg from '@/../package.json';
-import Header from '@/app/market/(mobile)/Header';
 import AgentCardBanner from '@/app/market/features/AgentCard/AgentCardBanner';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
-import AppMobileLayout from '@/layout/AppMobileLayout';
 import { useGlobalStore, useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { AVATAR } from '@/store/session/slices/chat/actions/share';
 
-import List from '../features/SideBar/List';
-import ExtraList from './ExtraList';
+import List from '../../features/SideBar/List';
+import ExtraList from '../features/ExtraList';
+import Layout from '../layout.mobile';
 
 const useStyles = createStyles(({ css, token }) => ({
   divider: css`
@@ -29,11 +28,12 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const Setting = memo(() => {
+  useSwitchSideBarOnInit(SidebarTabKey.Setting);
   const avatar = useGlobalStore((s) => s.settings.avatar);
   const { styles } = useStyles();
-  useSwitchSideBarOnInit(SidebarTabKey.Setting);
+
   return (
-    <AppMobileLayout navBar={<Header />} showTabBar>
+    <Layout>
       <AgentCardBanner
         mask
         meta={{ avatar: avatar || AVATAR }}
@@ -54,7 +54,7 @@ const Setting = memo(() => {
           </Divider>
         </Center>
       </div>
-    </AppMobileLayout>
+    </Layout>
   );
 });
 

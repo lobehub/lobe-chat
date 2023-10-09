@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import AppLayout from '@/layout/AppLayout';
+import AppLayoutDesktop from '@/layout/AppLayout.desktop';
 
 import { useStyles } from '../features/Banner/style';
 
 const Desktop = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   return (
-    <AppLayout>
+    <AppLayoutDesktop>
       <Center
         className={styles.layout}
         flex={1}
@@ -25,7 +25,7 @@ const Desktop = memo<PropsWithChildren>(({ children }) => {
           {children}
         </Flexbox>
       </Center>
-    </AppLayout>
+    </AppLayoutDesktop>
   );
 });
 

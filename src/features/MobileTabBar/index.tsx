@@ -49,7 +49,7 @@ export default memo<{ className?: string }>(({ className }) => {
         key: SidebarTabKey.Setting,
         onClick: () => {
           setTab(SidebarTabKey.Setting);
-          router.push('/settings/mobile');
+          router.push('/settings');
         },
         title: t('tab.setting'),
       },
