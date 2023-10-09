@@ -14,7 +14,6 @@ import { AVATAR } from '@/store/session/slices/chat/actions/share';
 
 import List from '../../features/SideBar/List';
 import ExtraList from '../features/ExtraList';
-import Layout from '../layout.mobile';
 
 const useStyles = createStyles(({ css, token }) => ({
   divider: css`
@@ -33,7 +32,7 @@ const Setting = memo(() => {
   const { styles } = useStyles();
 
   return (
-    <Layout>
+    <>
       <AgentCardBanner
         mask
         meta={{ avatar: avatar || AVATAR }}
@@ -54,7 +53,7 @@ const Setting = memo(() => {
           </Divider>
         </Center>
       </div>
-    </Layout>
+    </>
   );
 });
 

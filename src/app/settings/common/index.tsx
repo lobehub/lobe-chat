@@ -8,6 +8,7 @@ import { useSwitchSideBarOnInit } from '@/store/global/hooks/useSwitchSettingsOn
 import { SettingsTabs } from '@/store/global/initialState';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
+import Layout from '../layout.responsive';
 import Common from './Common';
 
 export default memo(() => {
@@ -15,9 +16,9 @@ export default memo(() => {
   const { t } = useTranslation('setting');
   const pageTitle = genSiteHeadTitle(t('header.global'));
   return (
-    <>
+    <Layout>
       <PageTitle title={pageTitle} />
       <Common />
-    </>
+    </Layout>
   );
 });

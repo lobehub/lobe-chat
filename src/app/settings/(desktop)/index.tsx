@@ -1,1 +1,1 @@
-export { default } from '../common/page';
+export { default } from '../common/index';
