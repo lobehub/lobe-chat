@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - beta
 
 jobs:
   release:
@@ -28,3 +29,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+          DOCKER_REGISTRY_USER: ${{ secrets.DOCKER_REGISTRY_USER }}
