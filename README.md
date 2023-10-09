@@ -46,6 +46,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-link]), high-perfor
 - [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
 - [✨ Features](#-features)
 - [📸 Snapshot](#-snapshot)
+- [⚡️ Performance](#️-performance)
 - [🛳 Self Hosting](#-self-hosting)
   - [Keep Updated](#keep-updated)
 - [📦 Ecosystem](#-ecosystem)
@@ -147,6 +148,22 @@ LobeChat offers two unique theme modes - Light Mode and Dark Mode, as well as ri
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
 > 🚧 Additional snapshots and demonstrations are being progressively added...
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+## ⚡️ Performance
+
+|                   Desktop                   |                   Mobile                   |
+| :-----------------------------------------: | :----------------------------------------: |
+|              ![][chat-desktop]              |              ![][chat-mobile]              |
+| [📑 Lighthouse Report][chat-desktop-report] | [📑 Lighthouse Report][chat-mobile-report] |
+
+> **Note**\
+> The complete list of reports can be found in the [📘 Lighthouse Reports](https://github.com/lobehub/lobe-chat/wiki/Lighthouse)
 
 <div align="right">
 
@@ -297,6 +314,10 @@ This project is [MIT](./LICENSE) licensed.
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
 [bun-link]: https://bun.sh
 [bun-shield]: https://img.shields.io/badge/-speedup%20with%20bun-black?logo=bun&style=for-the-badge
+[chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
+[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_lobehub_com_chat.html
+[chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
+[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_lobehub_com_chat.html
 [chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine

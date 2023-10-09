@@ -46,6 +46,7 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 - [👋🏻 开始使用 & 交流](#-开始使用--交流)
 - [✨ 功能特性](#-功能特性)
 - [📸 快照预览](#-快照预览)
+- [⚡️ 性能测试](#️-性能测试)
 - [🛳 开箱即用](#-开箱即用)
   - [保持更新](#保持更新)
 - [📦 生态系统](#-生态系统)
@@ -149,6 +150,22 @@ LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，�
 针对移动设备进行了一系列的优化设计，以提升用户的移动体验。目前，我们正在对移动端的用户体验进行版本迭代，以实现更加流畅和直观的交互。如果您有任何建议或想法，我们非常欢迎您通过 GitHub Issues 或者 Pull Requests 提供反馈。
 
 > 🚧 更多快照和演示正在陆续添加中...
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+## ⚡️ 性能测试
+
+|                    Desktop                    |                    Mobile                    |
+| :-------------------------------------------: | :------------------------------------------: |
+|               ![][chat-desktop]               |               ![][chat-mobile]               |
+| [📑 Lighthouse 测试报告][chat-desktop-report] | [📑 Lighthouse 测试报告][chat-mobile-report] |
+
+> **Note**\
+> 完整测试报告可见 [📘 Lighthouse 性能测试](https://github.com/lobehub/lobe-chat/wiki/Lighthouse.zh-CN)
 
 <div align="right">
 
@@ -299,6 +316,10 @@ This project is [MIT](./LICENSE) licensed.
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
 [bun-link]: https://bun.sh
 [bun-shield]: https://img.shields.io/badge/-speedup%20with%20bun-black?logo=bun&style=for-the-badge
+[chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
+[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_lobehub_com_chat.html
+[chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
+[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_lobehub_com_chat.html
 [chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
