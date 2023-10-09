@@ -159,13 +159,13 @@ LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，�
 
 ## ⚡️ 性能测试
 
+> **Note**\
+> 完整测试报告可见 [📘 Lighthouse 性能测试](https://github.com/lobehub/lobe-chat/wiki/Lighthouse.zh-CN)
+
 |                    Desktop                    |                    Mobile                    |
 | :-------------------------------------------: | :------------------------------------------: |
 |               ![][chat-desktop]               |               ![][chat-mobile]               |
 | [📑 Lighthouse 测试报告][chat-desktop-report] | [📑 Lighthouse 测试报告][chat-mobile-report] |
-
-> **Note**\
-> 完整测试报告可见 [📘 Lighthouse 性能测试](https://github.com/lobehub/lobe-chat/wiki/Lighthouse.zh-CN)
 
 <div align="right">
 

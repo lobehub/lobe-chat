@@ -157,13 +157,13 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ## ⚡️ Performance
 
+> **Note**\
+> The complete list of reports can be found in the [📘 Lighthouse Reports](https://github.com/lobehub/lobe-chat/wiki/Lighthouse)
+
 |                   Desktop                   |                   Mobile                   |
 | :-----------------------------------------: | :----------------------------------------: |
 |              ![][chat-desktop]              |              ![][chat-mobile]              |
 | [📑 Lighthouse Report][chat-desktop-report] | [📑 Lighthouse Report][chat-mobile-report] |
-
-> **Note**\
-> The complete list of reports can be found in the [📘 Lighthouse Reports](https://github.com/lobehub/lobe-chat/wiki/Lighthouse)
 
 <div align="right">
 
