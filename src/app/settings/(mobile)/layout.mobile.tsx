@@ -1,3 +1,5 @@
+'use client';
+
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
