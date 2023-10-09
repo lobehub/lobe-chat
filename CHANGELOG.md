@@ -2,6 +2,43 @@
 
 # Changelog
 
+### [Version 0.83.10](https://github.com/lobehub/lobe-chat/compare/v0.83.9...v0.83.10)
+
+<sup>Released on **2023-10-09**</sup>
+
+#### ♻ Code Refactoring
+
+- **layout**: Refactor layout, Refactor settings layout, Refactor ssc layout.
+- **share**: Use modern-screenshot.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix rsc layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **layout**: Refactor layout ([ace21f4](https://github.com/lobehub/lobe-chat/commit/ace21f4))
+- **layout**: Refactor settings layout ([bd48121](https://github.com/lobehub/lobe-chat/commit/bd48121))
+- **layout**: Refactor ssc layout ([26e1c41](https://github.com/lobehub/lobe-chat/commit/26e1c41))
+- **share**: Use modern-screenshot, closes [#256](https://github.com/lobehub/lobe-chat/issues/256) ([b3d7108](https://github.com/lobehub/lobe-chat/commit/b3d7108))
+
+#### What's fixed
+
+- **misc**: Fix rsc layout ([d73f13f](https://github.com/lobehub/lobe-chat/commit/d73f13f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.83.9](https://github.com/lobehub/lobe-chat/compare/v0.83.8...v0.83.9)
 
 <sup>Released on **2023-10-08**</sup>
