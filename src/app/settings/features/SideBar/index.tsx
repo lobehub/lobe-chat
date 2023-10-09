@@ -5,6 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import FolderPanel from '@/features/FolderPanel';
 
+import UpgradeAlert from '../UpgradeAlert';
 import List from './List';
 
 const useStyles = createStyles(({ stylish, token, css }) => ({
@@ -29,6 +30,7 @@ const SideBar = memo(() => {
             <Logo className={styles.logo} size={36} type={'text'} />
           </div>
         </Flexbox>
+        <UpgradeAlert />
         <List />
       </DraggablePanelBody>
     </FolderPanel>

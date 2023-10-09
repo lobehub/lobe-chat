@@ -5,8 +5,8 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
-import pkg from '@/../package.json';
 import AgentCardBanner from '@/app/market/features/AgentCard/AgentCardBanner';
+import { CURRENT_VERSION } from '@/const/version';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { useGlobalStore, useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
@@ -50,7 +50,7 @@ const Setting = memo(() => {
         <ExtraList />
         <Center style={{ paddingInline: 64 }}>
           <Divider>
-            <span className={styles.footer}>LobeChat v{pkg.version}</span>
+            <span className={styles.footer}>LobeChat v{CURRENT_VERSION}</span>
           </Divider>
         </Center>
       </div>

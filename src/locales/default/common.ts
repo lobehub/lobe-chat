@@ -96,5 +96,10 @@ export default {
   },
   updateAgent: '更新助理信息',
   updatePrompt: '更新提示词',
+  upgradeVersion: {
+    action: '立即升级',
+    hasNew: '有可用更新',
+    newVersion: '有新版本可用：{{version}}',
+  },
   warp: '换行',
 };
