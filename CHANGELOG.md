@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 0.85.3](https://github.com/lobehub/lobe-chat/compare/v0.85.2...v0.85.3)
+
+<sup>Released on **2023-10-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add new components, modify display properties, and update settings feature, Replace 100vh with 100% to fix mobile scroll problem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add new components, modify display properties, and update settings feature ([87a4a46](https://github.com/lobehub/lobe-chat/commit/87a4a46))
+- **misc**: Replace 100vh with 100% to fix mobile scroll problem ([2ef3c94](https://github.com/lobehub/lobe-chat/commit/2ef3c94))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.85.2](https://github.com/lobehub/lobe-chat/compare/v0.85.1...v0.85.2)
 
 <sup>Released on **2023-10-10**</sup>
