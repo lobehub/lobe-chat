@@ -43,19 +43,19 @@ jobs:
       matrix:
         include:
           - NAME: 'LobeChat | Welcome'
-            URLS: 'https://chat.lobehub.com/welcome'
+            URLS: 'https://chat-preview.lobehub.com/welcome'
             BADGES_ARGS: '-b pagespeed -o lighthouse/welcome -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Welcome'
           - NAME: 'LobeChat | Chat'
-            URLS: 'https://chat.lobehub.com/chat'
+            URLS: 'https://chat-preview.lobehub.com/chat'
             BADGES_ARGS: '-b pagespeed -o lighthouse/chat -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Chat'
           - NAME: 'LobeChat | Market'
-            URLS: 'https://chat.lobehub.com/market'
+            URLS: 'https://chat-preview.lobehub.com/market'
             BADGES_ARGS: '-b pagespeed -o lighthouse/market -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Market'
           - NAME: 'LobeChat | Settings'
-            URLS: 'https://chat.lobehub.com/settings'
+            URLS: 'https://chat-preview.lobehub.com/settings'
             BADGES_ARGS: '-b pagespeed -o lighthouse/settings -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Settings'
     ####################################################################
