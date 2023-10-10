@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 0.86.0-beta.2](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.1...v0.86.0-beta.2)
+
+<sup>Released on **2023-10-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add apikey form when there is no default api key in env, Fix mobile safearea (fix.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add apikey form when there is no default api key in env, closes [#290](https://github.com/lobehub/lobe-chat/issues/290) ([2c907e9](https://github.com/lobehub/lobe-chat/commit/2c907e9))
+- **misc**: Fix mobile safearea (fix, closes [#211](https://github.com/lobehub/lobe-chat/issues/211) ([68775b8](https://github.com/lobehub/lobe-chat/commit/68775b8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.85.2](https://github.com/lobehub/lobe-chat/compare/v0.85.1...v0.85.2)
 
 <sup>Released on **2023-10-10**</sup>
