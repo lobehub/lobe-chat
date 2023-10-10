@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.86.0-beta.7](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.6...v0.86.0-beta.7)
+
+<sup>Released on **2023-10-10**</sup>
+
+#### ✨ Features
+
+- **misc**: Add more ENV for Dockerfile.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add more ENV for Dockerfile ([ea1eca8](https://github.com/lobehub/lobe-chat/commit/ea1eca8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.86.0-beta.6](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.5...v0.86.0-beta.6)
 
 <sup>Released on **2023-10-10**</sup>
