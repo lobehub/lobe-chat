@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 0.86.0-beta.1](https://github.com/lobehub/lobe-chat/compare/v0.85.0...v0.86.0-beta.1)
+
+<sup>Released on **2023-10-10**</sup>
+
+#### ✨ Features
+
+- **misc**: Dockerize lobe-chat.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Use bun to improve speed.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Dockerize lobe-chat ([1b750f8](https://github.com/lobehub/lobe-chat/commit/1b750f8))
+
+#### What's fixed
+
+- **misc**: Use bun to improve speed ([8db2a3c](https://github.com/lobehub/lobe-chat/commit/8db2a3c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.85.0](https://github.com/lobehub/lobe-chat/compare/v0.84.0...v0.85.0)
 
 <sup>Released on **2023-10-10**</sup>
