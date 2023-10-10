@@ -16,8 +16,7 @@ const withPWA = nextPWA({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // not sure why antd-style cause multi ThemeProvider instance
-  // So we need to transpile it to lib mode
+  swcMinify: true,
   transpilePackages: ['@lobehub/ui', 'antd-style'],
   webpack(config) {
     config.experiments = {
