@@ -4,11 +4,11 @@ module.exports = {
   ...release,
   plugins: [
     ...release.plugins,
-    [
-      '@codedependant/semantic-release-docker',
-      {
-        dockerImage: 'lobe-chat',
-      },
-    ],
+    // [
+    //   '@codedependant/semantic-release-docker',
+    //   {
+    //     dockerImage: 'lobe-chat',
+    //   },
+    // ],
   ],
 };
