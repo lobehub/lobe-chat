@@ -2,90 +2,23 @@
 
 # Changelog
 
-## [Version 0.86.0-beta.5](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.4...v0.86.0-beta.5)
+### [Version 0.85.3](https://github.com/lobehub/lobe-chat/compare/v0.85.2...v0.85.3)
 
 <sup>Released on **2023-10-10**</sup>
 
-#### ✨ Features
+#### 💄 Styles
 
-- **misc**: Add default ACCESS_CODE=lobe66.
+- **misc**: Add new components, modify display properties, and update settings feature, Replace 100vh with 100% to fix mobile scroll problem.
 
 <br/>
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-#### What's improved
+#### Styles
 
-- **misc**: Add default ACCESS_CODE=lobe66 ([3ebec4a](https://github.com/lobehub/lobe-chat/commit/3ebec4a))
-
-</details>
-
-<div align="right">
-
-[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
-
-</div>
-
-## [Version 0.86.0-beta.4](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.3...v0.86.0-beta.4)
-
-<sup>Released on **2023-10-10**</sup>
-
-<br/>
-
-<details>
-<summary><kbd>Improvements and Fixes</kbd></summary>
-
-</details>
-
-<div align="right">
-
-[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
-
-</div>
-
-## [Version 0.86.0-beta.3](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.2...v0.86.0-beta.3)
-
-<sup>Released on **2023-10-10**</sup>
-
-#### ✨ Features
-
-- **misc**: Try with new docker ci.
-
-<br/>
-
-<details>
-<summary><kbd>Improvements and Fixes</kbd></summary>
-
-#### What's improved
-
-- **misc**: Try with new docker ci ([728172e](https://github.com/lobehub/lobe-chat/commit/728172e))
-
-</details>
-
-<div align="right">
-
-[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
-
-</div>
-
-## [Version 0.86.0-beta.2](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.1...v0.86.0-beta.2)
-
-<sup>Released on **2023-10-10**</sup>
-
-#### 🐛 Bug Fixes
-
-- **misc**: Add apikey form when there is no default api key in env, Fix mobile safearea (fix.
-
-<br/>
-
-<details>
-<summary><kbd>Improvements and Fixes</kbd></summary>
-
-#### What's fixed
-
-- **misc**: Add apikey form when there is no default api key in env, closes [#290](https://github.com/lobehub/lobe-chat/issues/290) ([2c907e9](https://github.com/lobehub/lobe-chat/commit/2c907e9))
-- **misc**: Fix mobile safearea (fix, closes [#211](https://github.com/lobehub/lobe-chat/issues/211) ([68775b8](https://github.com/lobehub/lobe-chat/commit/68775b8))
+- **misc**: Add new components, modify display properties, and update settings feature ([87a4a46](https://github.com/lobehub/lobe-chat/commit/87a4a46))
+- **misc**: Replace 100vh with 100% to fix mobile scroll problem ([2ef3c94](https://github.com/lobehub/lobe-chat/commit/2ef3c94))
 
 </details>
 

@@ -7,7 +7,7 @@ const Loading = memo(() => (
   <div
     style={{
       backdropFilter: 'blur(3px)',
-      height: '100vh',
+      height: '100%',
       width: '100vw',
       zIndex: 100,
     }}

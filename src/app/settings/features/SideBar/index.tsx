@@ -27,7 +27,7 @@ const SideBar = memo(() => {
       <DraggablePanelBody className={styles.body} style={{ padding: 0 }}>
         <Flexbox className={styles.top} padding={16}>
           <div>
-            <Logo className={styles.logo} size={36} type={'text'} />
+            <Logo className={styles.logo} extra={'Settings'} size={36} type={'text'} />
           </div>
         </Flexbox>
         <UpgradeAlert />

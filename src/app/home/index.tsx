@@ -9,7 +9,7 @@ const Loading = () => {
   const { t } = useTranslation();
 
   return (
-    <Flexbox height={'100vh'} width={'100%'}>
+    <Flexbox height={'100%'} width={'100%'}>
       <Center flex={1} gap={12} width={'100%'}>
         <Logo extra={'Chat'} size={48} type={'combine'} />
         <Center gap={16} horizontal>

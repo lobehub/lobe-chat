@@ -1,6 +1,7 @@
 import { consola } from 'consola';
 import { colors } from 'consola/utils';
 import { tocForResources } from 'i18next-resources-for-ts';
+import { isObject } from 'lodash';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -58,20 +59,13 @@ export const diff = (obj1: any, obj2: any, prefix: string = ''): string[] => {
   let result: string[] = [];
   for (const key in obj1) {
     if (!obj2[key]) continue;
-    if (typeof obj1[key] === 'object' && obj1[key] !== null && obj2[key]) {
-      result = result.concat(diff(obj1[key], obj2[key], `${key}.`));
+    if (isObject(obj1[key]) && isObject(obj2[key])) {
+      result = [...result, ...diff(obj1[key], obj2[key], `${prefix}${key}.`)];
     } else if (obj1[key] !== obj2[key]) {
       result.push(`${prefix}${key}`);
     }
   }
   return result;
-};
-
-export const unset = (obj: any, key: string) => {
-  const keys = key.split('.');
-  const lastKey = keys.pop();
-  const lastObj = keys.reduce((obj, key) => (obj[key] = obj[key] || {}), obj);
-  if (lastKey) delete lastObj[lastKey];
 };
 
 export const tagBlue = (text: string) => colors.bgBlueBright(colors.black(` ${text} `));

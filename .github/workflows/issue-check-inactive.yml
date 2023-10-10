@@ -18,5 +18,6 @@ jobs:
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'check-inactive'
+          token: ${{ secrets.GH_TOKEN }}
           inactive-label: 'Inactive'
           inactive-day: 30

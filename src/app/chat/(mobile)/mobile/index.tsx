@@ -10,7 +10,7 @@ import Layout from './layout.mobile';
 
 const Chat = memo(() => (
   <Layout>
-    <Flexbox height={'calc(100vh - 44px)'} horizontal>
+    <Flexbox height={'calc(100% - 44px)'} horizontal>
       <Conversation chatInput={<ChatInput />} mobile />
       <TopicList />
     </Flexbox>

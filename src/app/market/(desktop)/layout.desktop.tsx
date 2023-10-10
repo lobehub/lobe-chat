@@ -34,12 +34,12 @@ const MarketLayout = memo<PropsWithChildren>(({ children }) => {
     <AppLayoutDesktop>
       <Flexbox
         flex={1}
-        height={'100vh'}
+        height={'100%'}
         id={'lobe-market-container'}
         style={{ position: 'relative' }}
       >
         <Header />
-        <Flexbox flex={1} height={'calc(100vh - 64px)'} horizontal>
+        <Flexbox flex={1} height={'calc(100% - 64px)'} horizontal>
           <Flexbox align={'center'} flex={1} style={{ overflow: 'auto', padding: 16 }}>
             <SafeSpacing />
 

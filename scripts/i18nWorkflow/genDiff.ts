@@ -1,5 +1,6 @@
 import { consola } from 'consola';
 import { colors } from 'consola/utils';
+import { unset } from 'lodash';
 import { existsSync } from 'node:fs';
 
 import {
@@ -8,7 +9,7 @@ import {
   localesResourcesFilepath,
   outputLocaleJsonFilepath,
 } from './const';
-import { diff, readJSON, tagWhite, tagYellow, unset, writeJSON } from './utils';
+import { diff, readJSON, tagWhite, tagYellow, writeJSON } from './utils';
 
 export const genDiff = () => {
   consola.start(`Diff between Dev/Prod local...`);

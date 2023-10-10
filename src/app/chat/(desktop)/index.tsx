@@ -18,7 +18,7 @@ const DesktopPage = memo(() => (
     <Layout>
       <PageTitle />
       <ChatHeader />
-      <Flexbox flex={1} height={'calc(100vh - 64px)'} horizontal>
+      <Flexbox flex={1} height={'calc(100% - 64px)'} horizontal>
         <Conversation chatInput={<ChatInput />} />
         <SideBar />
       </Flexbox>

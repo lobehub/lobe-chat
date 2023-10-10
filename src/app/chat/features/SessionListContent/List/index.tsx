@@ -24,6 +24,7 @@ const SessionList = memo(() => {
   ) : list.length > 0 ? (
     list.map(({ id }) => (
       <Link
+        aria-label={id}
         href={SESSION_CHAT_URL(id, mobile)}
         key={id}
         onClick={(e) => {

@@ -8,7 +8,7 @@ import { useGlobalStore } from '@/store/global';
 
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
-    height: 100vh;
+    height: 100%;
     color: ${token.colorTextSecondary};
     background: ${token.colorBgContainer};
   `,
@@ -48,7 +48,7 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
         updatePreference({ sessionsWidth: nextWidth });
       }}
       placement="left"
-      size={{ height: '100vh', width: sessionsWidth }}
+      size={{ height: '100%', width: sessionsWidth }}
     >
       <DraggablePanelContainer style={{ flex: 'none', height: '100%', minWidth: FOLDER_WIDTH }}>
         {children}

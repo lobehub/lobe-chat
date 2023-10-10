@@ -16,7 +16,7 @@ export default memo(({ children }: PropsWithChildren) => {
       <ResponsiveSessionList />
       <Flexbox
         flex={1}
-        height={'100vh'}
+        height={'100%'}
         id={'lobe-conversion-container'}
         style={{ position: 'relative' }}
       >

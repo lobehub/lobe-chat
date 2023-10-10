@@ -3,18 +3,18 @@ import { css } from 'antd-style';
 export default ({ prefixCls }: { prefixCls: string }) => css`
   html,
   body,
+  #__next,
   .${prefixCls}-app {
-    overflow: hidden;
+    position: relative;
     overscroll-behavior: none;
+    height: 100% !important;
+    min-height: 100% !important;
 
     ::-webkit-scrollbar {
+      display: none;
       width: 0;
       height: 0;
     }
-  }
-
-  #__next {
-    height: 100%;
   }
 
   p {
@@ -24,6 +24,7 @@ export default ({ prefixCls }: { prefixCls: string }) => css`
   @media (max-width: 575px) {
     * {
       ::-webkit-scrollbar {
+        display: none;
         width: 0;
         height: 0;
       }

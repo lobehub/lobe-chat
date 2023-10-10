@@ -16,7 +16,7 @@ const useStyles = createStyles(({ css, cx, stylish }) => ({
       overflow-y: auto;
 
       width: 100vw;
-      height: 100vh;
+      height: 100%;
     `,
   ),
   mobileNavBar: css`
@@ -62,7 +62,6 @@ const AppLayoutMobile = memo<AppMobileLayoutProps>(
             <MobileTabBar className={styles.mobileTabBar} />
           </>
         )}
-        <SafeSpacing mobile position={'bottom'} />
       </Flexbox>
     );
   },

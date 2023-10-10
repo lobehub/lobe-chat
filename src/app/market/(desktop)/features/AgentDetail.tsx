@@ -53,7 +53,7 @@ const SideBar = memo(() => {
       <DraggablePanelContainer
         style={{
           flex: 'none',
-          height: '100vh',
+          height: '100%',
           minWidth: MARKET_SIDEBAR_WIDTH,
         }}
       >

@@ -22,7 +22,7 @@ const Header = memo(() => {
   return (
     <ChatHeader
       left={
-        <Link href={'/'}>
+        <Link aria-label={'home'} href={'/'}>
           <Logo className={styles.logo} extra={'Discover'} size={36} type={'text'} />
         </Link>
       }

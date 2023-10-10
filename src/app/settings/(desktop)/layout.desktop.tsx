@@ -14,7 +14,7 @@ export default memo(({ children }: PropsWithChildren) => {
   return (
     <AppLayoutDesktop>
       <SideBar />
-      <Flexbox flex={1} height={'100vh'} style={{ position: 'relative' }}>
+      <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>
         <Header />
         <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
           <SafeSpacing />
