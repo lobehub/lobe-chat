@@ -1,0 +1,22 @@
+name: PR Welcome
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions-cool/pr-welcome@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment: |
+            Great PR @${{ github.event.pull_request.user.login }}. The growth of project is inseparable from user feedback and contribution, thanks for your contribution ❤️
+
+            非常棒的 PR @${{ github.event.pull_request.user.login }}. 项目的成长离不开用户反馈和贡献，感谢您的贡献 ❤️
+          emoji: 'heart'
+          pr-emoji: '+1, heart'
+          close: true

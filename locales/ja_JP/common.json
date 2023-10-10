@@ -1,0 +1,103 @@
+{
+  "about": "について",
+  "advanceSettings": "詳細設定",
+  "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐにチャットを始めることができますし、[エージェント設定](/chat/settings#session={{id}}) に移動して私の情報を完全にすることもできます。",
+  "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です。{{systemRole}}、さあ、チャットを始めましょう！",
+  "agentMaxToken": "セッションの最大トークン数",
+  "agentModel": "モデル",
+  "agentProfile": "エージェント情報",
+  "appInitializing": "LobeChat を起動しています。お待ちください...",
+  "archive": "アーカイブ",
+  "autoGenerate": "自動生成",
+  "autoGenerateTooltip": "ヒントワードに基づいてエージェントの説明を自動生成します",
+  "backToBottom": "最新メッセージを表示",
+  "cancel": "キャンセル",
+  "changelog": "更新履歴",
+  "clearCurrentMessages": "現在のセッションのメッセージをクリア",
+  "close": "閉じる",
+  "confirmClearCurrentMessages": "現在のセッションのメッセージをクリアします。クリア後は元に戻すことはできませんので、操作を確認してください",
+  "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除後は元に戻すことはできませんので、操作を確認してください",
+  "copy": "コピー",
+  "copySuccess": "コピーが成功しました",
+  "defaultAgent": "デフォルトエージェント",
+  "defaultSession": "デフォルトセッション",
+  "delete": "削除",
+  "edit": "編集",
+  "export": "設定のエクスポート",
+  "exportType": {
+    "agent": "エージェント設定のエクスポート",
+    "agentWithMessage": "エージェントとメッセージのエクスポート",
+    "all": "グローバル設定とすべてのエージェントデータのエクスポート",
+    "allAgent": "すべてのエージェント設定のエクスポート",
+    "allAgentWithMessage": "すべてのエージェントとメッセージのエクスポート",
+    "globalSetting": "グローバル設定のエクスポート"
+  },
+  "feedback": "フィードバック",
+  "historyRange": "履歴範囲",
+  "import": "設定のインポート",
+  "inbox": {
+    "defaultMessage": "こんにちは、私はあなたのインテリジェントエージェントです。何でも質問してください、できる限りお答えします。より専門的でカスタマイズされたエージェントが必要な場合は、`+` をクリックしてカスタムエージェントを作成できます",
+    "desc": "ブレインクラスタを起動し、思考の火花を引き起こします。あなたのインテリジェントアシスタントとのすべてのコミュニケーションはここで行われます",
+    "title": "気軽にチャット"
+  },
+  "message": {
+    "function_loading": "プラグインリクエスト中..."
+  },
+  "moreSetting": "その他の設定...",
+  "newAgent": "新しいエージェント",
+  "noDescription": "説明はありません",
+  "ok": "OK",
+  "password": "パスワード",
+  "pin": "ピン留め",
+  "pinOff": "ピン留め解除",
+  "regenerate": "再生成",
+  "rename": "名前の変更",
+  "reset": "リセット",
+  "retry": "再試行",
+  "roleAndArchive": "役割とアーカイブ",
+  "searchAgentPlaceholder": "エージェントとチャットを検索...",
+  "send": "送信",
+  "sendPlaceholder": "チャット内容を入力...",
+  "sessionList": "エージェントリスト",
+  "setting": "設定",
+  "share": "共有",
+  "shareModal": {
+    "download": "ダウンロード",
+    "imageType": "画像形式",
+    "screenshot": "スクリーンショット",
+    "settings": "設定をエクスポート",
+    "shareToShareGPT": "ShareGPT共有リンクを生成",
+    "withBackground": "背景画像を含む",
+    "withFooter": "フッターを含む",
+    "withPluginInfo": "プラグイン情報を含む",
+    "withSystemRole": "アシスタントの役割設定を含む"
+  },
+  "stop": "停止",
+  "tab": {
+    "chat": "チャット",
+    "market": "発見",
+    "setting": "設定"
+  },
+  "temp": "一時的な",
+  "tokenDetail": "役割設定: {{systemRoleToken}} · チャット履歴: {{chatsToken}}",
+  "tokenTag": {
+    "overload": "制限を超える",
+    "remained": "残り",
+    "used": "使用済み"
+  },
+  "topic": {
+    "confirmRemoveTopic": "このトピックを削除しますか？削除後は元に戻せませんので、注意して操作してください。",
+    "defaultTitle": "デフォルトトピック",
+    "saveCurrentMessages": "現在のチャットをトピックとして保存",
+    "searchPlaceholder": "トピックを検索...",
+    "title": "トピック"
+  },
+  "updateAgent": "アシスタント情報を更新",
+  "updatePrompt": "プロンプトの更新",
+  "upgradeVersion": {
+    "action": "今すぐアップグレード",
+    "hasNew": "利用可能な更新があります",
+    "newVersion": "新しいバージョンが利用可能です：{{version}}"
+  },
+  "warp": "改行"
+}

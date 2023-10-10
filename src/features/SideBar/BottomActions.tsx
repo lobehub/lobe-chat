@@ -1,6 +1,7 @@
 import { ActionIcon, DiscordIcon, Icon } from '@lobehub/ui';
 import { Badge, ConfigProvider, Dropdown, MenuProps, Upload } from 'antd';
 import {
+  Book,
   Feather,
   FileClock,
   Github,
@@ -15,7 +16,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB } from '@/const/url';
+import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB, WIKI } from '@/const/url';
 import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { GlobalStore, useGlobalStore } from '@/store/global';
@@ -95,6 +96,12 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
       onClick: () => window.open(CHANGELOG, '__blank'),
     },
     {
+      icon: <Icon icon={Book} />,
+      key: 'wiki',
+      label: 'WIKI',
+      onClick: () => window.open(WIKI, '__blank'),
+    },
+    {
       icon: <Icon icon={Heart} />,
       key: 'about',
       label: t('about'),
@@ -130,7 +137,7 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         icon={Github}
         onClick={() => window.open(GITHUB, '__blank')}
         placement={'right'}
-        title={'Github'}
+        title={'GitHub'}
       />
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
         {hasNewVersion ? (

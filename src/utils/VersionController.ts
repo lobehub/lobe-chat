@@ -56,7 +56,7 @@ export class VersionController<T> {
       nextData = migration.migrate(nextData);
 
       nextData.version += 1;
-      console.log('迁移器：', migration, '数据：', nextData, '迁移后版本:', nextData.version);
+      console.debug('迁移器：', migration, '数据：', nextData, '迁移后版本:', nextData.version);
     }
 
     return nextData;

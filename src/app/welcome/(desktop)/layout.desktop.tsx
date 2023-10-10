@@ -1,5 +1,4 @@
 import { Logo } from '@lobehub/ui';
-import Link from 'next/link';
 import { PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -18,9 +17,7 @@ const Desktop = memo<PropsWithChildren>(({ children }) => {
         horizontal
         style={{ position: 'relative' }}
       >
-        <Link href={'/'}>
-          <Logo className={styles.logo} size={36} type={'text'} />
-        </Link>
+        <Logo className={styles.logo} size={36} type={'text'} />
         <Flexbox className={styles.view} flex={1}>
           {children}
         </Flexbox>

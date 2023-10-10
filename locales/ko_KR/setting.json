@@ -1,0 +1,225 @@
+{
+  "danger": {
+    "clear": {
+      "action": "지금 지우기",
+      "confirm": "모든 채팅 데이터를 지우시겠습니까?",
+      "desc": "모든 대화 데이터를 지웁니다.",
+      "success": "모든 대화 메시지가 지워졌습니다.",
+      "title": "모든 대화 메시지 지우기"
+    },
+    "reset": {
+      "action": "지금 재설정",
+      "confirm": "모든 설정을 재설정하시겠습니까?",
+      "currentVersion": "현재 버전",
+      "desc": "모든 설정 항목을 기본값으로 재설정합니다.",
+      "title": "모든 설정 재설정"
+    }
+  },
+  "header": {
+    "global": "전역 설정",
+    "session": "세션 설정",
+    "sessionWithName": "세션 설정 · {{name}}"
+  },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "Azure 포털에서 리소스를 확인할 때 이 값을 '키 및 엔드포인트' 섹션에서 찾을 수 있습니다.",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Azure API 주소"
+      },
+      "models": {
+        "desc": "지원되는 모델",
+        "title": "모델 목록"
+      },
+      "title": "Azure OpenAI 설정",
+      "token": {
+        "desc": "Azure 포털에서 리소스를 확인할 때 이 값을 '키 및 엔드포인트' 섹션에서 찾을 수 있습니다. KEY1 또는 KEY2를 사용할 수 있습니다.",
+        "placeholder": "Azure API 키",
+        "title": "API 키"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure의 API 버전입니다. YYYY-MM-DD 형식을 따릅니다. [최신 버전](https://learn.microsoft.com/ko-kr/azure/ai-services/openai/reference#chat-completions)을 확인하세요.",
+        "fetch": "목록 가져오기",
+        "title": "Azure API 버전"
+      },
+      "check": {
+        "button": "확인",
+        "desc": "API 키와 프록시 주소가 올바르게 입력되었는지 테스트합니다.",
+        "pass": "확인 완료",
+        "title": "연결성 확인"
+      },
+      "endpoint": {
+        "desc": "기본 주소 외에도 반드시 http(s)://를 포함해야 합니다.",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "인터페이스 프록시 주소"
+      },
+      "models": {
+        "count": "총 {{count}}개의 모델 지원",
+        "desc": "지원되는 모델",
+        "fetch": "모델 목록 가져오기",
+        "notSupport": "Azure OpenAI에서 모델 목록을 볼 수 없습니다.",
+        "notSupportTip": "배포 이름과 모델 이름이 일치하는지 확인해야 합니다.",
+        "refetch": "모델 목록 다시 가져오기",
+        "title": "모델 목록"
+      },
+      "title": "OpenAI 설정",
+      "token": {
+        "desc": "자체 OpenAI 키 사용",
+        "placeholder": "OpenAI API 키",
+        "title": "API 키"
+      },
+      "useAzure": {
+        "desc": "Azure에서 제공하는 OpenAI 서비스 사용",
+        "fetch": "목록 가져오기",
+        "serverConfig": "관리자가 서버에서 Azure OpenAI를 구성했으므로 변경이 금지되었습니다.",
+        "title": "Azure OpenAI"
+      }
+    },
+    "waitingForMore": "더 많은 모델이 <1>계획 중</1>에 있으니 기대해주세요 ✨"
+  },
+  "settingAgent": {
+    "avatar": {
+      "title": "아바타"
+    },
+    "backgroundColor": {
+      "title": "배경색"
+    },
+    "description": {
+      "placeholder": "도우미 설명을 입력하세요.",
+      "title": "도우미 설명"
+    },
+    "name": {
+      "placeholder": "도우미 이름을 입력하세요.",
+      "title": "이름"
+    },
+    "prompt": {
+      "placeholder": "역할 프롬프트 힌트를 입력하세요.",
+      "title": "역할 설정"
+    },
+    "tag": {
+      "placeholder": "태그를 입력하세요.",
+      "title": "태그"
+    },
+    "title": "도우미 정보"
+  },
+  "settingChat": {
+    "chatStyleType": {
+      "title": "채팅 창 스타일",
+      "type": {
+        "chat": "대화 모드",
+        "docs": "문서 모드"
+      }
+    },
+    "compressThreshold": {
+      "desc": "압축되지 않은 이전 메시지가이 값보다 크면 압축됩니다.",
+      "title": "압축 임계값"
+    },
+    "enableCompressThreshold": {
+      "title": "이전 메시지 길이 압축 사용"
+    },
+    "enableHistoryCount": {
+      "alias": "제한 없음",
+      "limited": "대화 메시지 {{number}} 개만 포함",
+      "title": "대화 메시지 제한",
+      "unlimited": "대화 메시지 제한 없음"
+    },
+    "historyCount": {
+      "desc": "요청당 포함되는 이전 메시지 수",
+      "title": "포함된 이전 메시지 수"
+    },
+    "inputTemplate": {
+      "desc": "사용자의 최신 메시지가이 템플릿에 채워집니다.",
+      "placeholder": "사전 처리 템플릿 {{text}}은(는) 실시간 입력 정보로 대체됩니다.",
+      "title": "사용자 입력 사전 처리"
+    },
+    "title": "채팅 설정"
+  },
+  "settingModel": {
+    "enableMaxTokens": {
+      "title": "단일 응답 제한 사용"
+    },
+    "frequencyPenalty": {
+      "desc": "값이 클수록 반복 단어가 줄어듭니다.",
+      "title": "빈도 패널티"
+    },
+    "maxTokens": {
+      "desc": "단일 상호 작용에 사용되는 최대 토큰 수",
+      "title": "단일 응답 제한"
+    },
+    "model": {
+      "desc": "ChatGPT 모델",
+      "list": {
+        "gpt-3.5-turbo": "GPT 3.5",
+        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+        "gpt-4": "GPT 4",
+        "gpt-4-32k": "GPT 4 (32K)"
+      },
+      "title": "모델"
+    },
+    "presencePenalty": {
+      "desc": "값이 클수록 새로운 주제로 확장될 가능성이 높아집니다.",
+      "title": "주제 신선도"
+    },
+    "temperature": {
+      "desc": "값이 클수록 응답이 더 무작위 해집니다.",
+      "title": "랜덤성",
+      "titleWithValue": "랜덤성 {{value}}"
+    },
+    "title": "모델 설정",
+    "topP": {
+      "desc": "랜덤성과 유사하지만 함께 변경하지 마십시오.",
+      "title": "상위 P 샘플링"
+    }
+  },
+  "settingPlugin": {
+    "add": "추가",
+    "addTooltip": "사용자 정의 플러그인 추가",
+    "clearDeprecated": "사용되지 않는 플러그인 제거",
+    "config": "{{id}} 플러그인 구성",
+    "settings": "플러그인 마켓 설정",
+    "title": "플러그인 목록"
+  },
+  "settingSystem": {
+    "accessCode": {
+      "desc": "관리자가 암호 액세스를 활성화했습니다.",
+      "placeholder": "액세스 코드를 입력하세요.",
+      "title": "액세스 코드"
+    },
+    "title": "시스템 설정"
+  },
+  "settingTheme": {
+    "avatar": {
+      "title": "아바타"
+    },
+    "fontSize": {
+      "desc": "채팅 콘텐츠의 글꼴 크기",
+      "title": "글꼴 크기"
+    },
+    "lang": {
+      "autoMode": "시스템에 따름",
+      "title": "언어"
+    },
+    "neutralColor": {
+      "desc": "다양한 색상 경향의 중립적인 사용자 정의",
+      "title": "중립 색상"
+    },
+    "primaryColor": {
+      "desc": "사용자 정의 테마 색상",
+      "title": "테마 색상"
+    },
+    "themeMode": {
+      "auto": "자동",
+      "dark": "다크",
+      "light": "라이트",
+      "title": "테마"
+    },
+    "title": "테마 설정"
+  },
+  "tab": {
+    "agent": "기본 도우미",
+    "common": "일반 설정",
+    "llm": "언어 모델"
+  }
+}

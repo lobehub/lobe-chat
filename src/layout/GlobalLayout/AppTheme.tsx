@@ -20,9 +20,9 @@ export interface AppThemeProps {
 
 const AppTheme = memo<AppThemeProps>(
   ({ children, defaultAppearance, defaultPrimaryColor, defaultNeutralColor }) => {
-    // console.log('server:appearance', defaultAppearance);
-    // console.log('server:primaryColor', defaultPrimaryColor);
-    // console.log('server:neutralColor', defaultNeutralColor);
+    // console.debug('server:appearance', defaultAppearance);
+    // console.debug('server:primaryColor', defaultPrimaryColor);
+    // console.debug('server:neutralColor', defaultNeutralColor);
     const themeMode = useGlobalStore((s) => s.settings.themeMode);
 
     const [primaryColor, neutralColor] = useGlobalStore((s) => [

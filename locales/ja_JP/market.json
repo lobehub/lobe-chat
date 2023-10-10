@@ -1,0 +1,16 @@
+{
+  "addAgent": "助手を追加する",
+  "search": {
+    "placeholder": "助手の名前、説明、またはキーワードを検索..."
+  },
+  "sidebar": {
+    "comment": "コメント",
+    "prompt": "プロンプト",
+    "title": "助手の詳細"
+  },
+  "submitAgent": "助手を提出する",
+  "title": {
+    "allAgents": "すべての助手",
+    "recentSubmits": "最近の追加"
+  }
+}

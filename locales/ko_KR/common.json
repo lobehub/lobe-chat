@@ -1,0 +1,103 @@
+{
+  "about": "소개",
+  "advanceSettings": "고급 설정",
+  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 바로 대화를 시작하거나 [도우미 설정](/chat/settings#session={{id}})으로 이동하여 제 정보를 완성할 수 있습니다.",
+  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해봅시다!",
+  "agentMaxToken": "세션 최대 길이",
+  "agentModel": "모델",
+  "agentProfile": "도우미 정보",
+  "appInitializing": "LobeChat을 시작하는 중입니다. 잠시 기다려주세요...",
+  "archive": "보관함",
+  "autoGenerate": "자동 생성",
+  "autoGenerateTooltip": "도우미 설명을 자동으로 완성합니다.",
+  "backToBottom": "최신 메시지 보기",
+  "cancel": "취소",
+  "changelog": "변경 내역",
+  "clearCurrentMessages": "현재 대화 메시지 지우기",
+  "close": "닫기",
+  "confirmClearCurrentMessages": "현재 대화 메시지를 지우시겠습니까? 지운 후에는 복구할 수 없습니다. 작업을 확인하세요.",
+  "confirmRemoveSessionItemAlert": "도우미를 삭제하시겠습니까? 삭제한 후에는 복구할 수 없습니다. 작업을 확인하세요.",
+  "copy": "복사",
+  "copySuccess": "복사 완료",
+  "defaultAgent": "기본 도우미",
+  "defaultSession": "기본 도우미",
+  "delete": "삭제",
+  "edit": "편집",
+  "export": "설정 내보내기",
+  "exportType": {
+    "agent": "도우미 설정 내보내기",
+    "agentWithMessage": "도우미와 메시지 내보내기",
+    "all": "전역 설정과 모든 도우미 데이터 내보내기",
+    "allAgent": "모든 도우미 설정 내보내기",
+    "allAgentWithMessage": "모든 도우미와 메시지 내보내기",
+    "globalSetting": "전역 설정 내보내기"
+  },
+  "feedback": "피드백",
+  "historyRange": "기록 범위",
+  "import": "설정 가져오기",
+  "inbox": {
+    "defaultMessage": "안녕하세요, 저는 인공지능 도우미입니다. 궁금한 점이 있으면 물어보세요. 가능한 한 답변해드리겠습니다. 더 전문적이거나 맞춤화된 도우미가 필요하다면 `+`를 클릭하여 사용자 정의 도우미를 만들 수 있습니다.",
+    "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끄집어내세요. 여기에서 모든 것을 대화하는 인공지능 도우미와 소통하세요.",
+    "title": "무작위 대화"
+  },
+  "message": {
+    "function_loading": "플러그인 요청 중..."
+  },
+  "moreSetting": "추가 설정...",
+  "newAgent": "새 도우미",
+  "noDescription": "설명 없음",
+  "ok": "확인",
+  "password": "비밀번호",
+  "pin": "고정",
+  "pinOff": "고정 해제",
+  "regenerate": "재생성",
+  "rename": "이름 변경",
+  "reset": "재설정",
+  "retry": "재시도",
+  "roleAndArchive": "역할 및 기록",
+  "searchAgentPlaceholder": "도우미와 대화 검색...",
+  "send": "보내기",
+  "sendPlaceholder": "대화 내용 입력...",
+  "sessionList": "도우미 목록",
+  "setting": "설정",
+  "share": "공유",
+  "shareModal": {
+    "download": "스크린샷 다운로드",
+    "imageType": "이미지 형식",
+    "screenshot": "스크린샷",
+    "settings": "내보내기 설정",
+    "shareToShareGPT": "ShareGPT 공유 링크 생성",
+    "withBackground": "배경 이미지 포함",
+    "withFooter": "푸터 포함",
+    "withPluginInfo": "플러그인 정보 포함",
+    "withSystemRole": "어시스턴트 역할 포함"
+  },
+  "stop": "중지",
+  "tab": {
+    "chat": "채팅",
+    "market": "탐색",
+    "setting": "설정"
+  },
+  "temp": "임시",
+  "tokenDetail": "역할 설정: {{systemRoleToken}} · 이전 메시지: {{chatsToken}}",
+  "tokenTag": {
+    "overload": "제한 초과",
+    "remained": "남음",
+    "used": "사용됨"
+  },
+  "topic": {
+    "confirmRemoveTopic": "이 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 주의하세요.",
+    "defaultTitle": "기본 주제",
+    "saveCurrentMessages": "현재 대화를 주제로 저장",
+    "searchPlaceholder": "주제 검색...",
+    "title": "주제"
+  },
+  "updateAgent": "어시스턴트 정보 업데이트",
+  "updatePrompt": "프롬프트 문구 업데이트",
+  "upgradeVersion": {
+    "action": "지금 업그레이드",
+    "hasNew": "사용 가능한 업데이트가 있습니다",
+    "newVersion": "새 버전 사용 가능: {{version}}"
+  },
+  "warp": "줄바꿈"
+}

@@ -19,7 +19,7 @@ const SaveTopic = memo(() => {
 
   return (
     <Tooltip title={t('topic.saveCurrentMessages')}>
-      <Render icon={icon} onClick={saveToTopic} />
+      <Render aria-label={t('topic.saveCurrentMessages')} icon={icon} onClick={saveToTopic} />
     </Tooltip>
   );
 });

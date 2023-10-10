@@ -1,0 +1,107 @@
+{
+  "debug": {
+    "arguments": "引数",
+    "function_call": "関数呼び出し",
+    "response": "レスポンス"
+  },
+  "dev": {
+    "confirmDeleteDevPlugin": "このローカルプラグインを削除しますか？削除後は元に戻せません。",
+    "deleteSuccess": "プラグインが正常に削除されました",
+    "manifest": {
+      "identifier": {
+        "desc": "プラグインの一意の識別子",
+        "label": "識別子"
+      },
+      "mode": {
+        "local": "ビジュアル設定",
+        "local-tooltip": "ビジュアル設定は一時的にサポートされていません",
+        "url": "オンラインリンク"
+      },
+      "name": {
+        "desc": "プラグインのタイトル",
+        "label": "タイトル",
+        "placeholder": "検索エンジン"
+      }
+    },
+    "meta": {
+      "author": {
+        "desc": "プラグインの作者",
+        "label": "作者"
+      },
+      "avatar": {
+        "desc": "プラグインのアイコン、絵文字やURLを使用できます",
+        "label": "アイコン"
+      },
+      "description": {
+        "desc": "プラグインの説明",
+        "label": "説明",
+        "placeholder": "検索エンジンで情報を取得します"
+      },
+      "formFieldRequired": "このフィールドは必須です",
+      "homepage": {
+        "desc": "プラグインのホームページ",
+        "label": "ホームページ"
+      },
+      "identifier": {
+        "desc": "プラグインの一意の識別子、マニフェストから自動的に識別されます",
+        "errorDuplicate": "識別子が既存のプラグインと重複しています。識別子を変更してください",
+        "label": "識別子",
+        "pattenErrorMessage": "英数字、-、_ のみ入力できます"
+      },
+      "manifest": {
+        "desc": "LobeChatはこのリンクを使用してプラグインをインストールします",
+        "jsonInvalid": "マニフェストが規格に準拠していません。検証結果：\n\n{{error}}",
+        "label": "プラグインのマニフェストURL",
+        "preview": "マニフェストのプレビュー",
+        "refresh": "更新",
+        "requestError": "リンクのリクエストに失敗しました。有効なリンクを入力し、クロスオリジンリクエストが許可されているか確認してください",
+        "urlError": "このリンクはJSON形式のコンテンツを返していません。有効なリンクを入力してください"
+      },
+      "title": {
+        "desc": "プラグインのタイトル",
+        "label": "タイトル",
+        "placeholder": "検索エンジン"
+      }
+    },
+    "metaConfig": "プラグインのメタ情報の設定",
+    "modalDesc": "カスタムプラグインを追加すると、プラグインの開発検証やセッションで直接使用できます。プラグインの開発ドキュメントについては、参照してください",
+    "preview": {
+      "card": "プラグインのプレビュー表示",
+      "desc": "プラグインの説明のプレビュー",
+      "title": "プラグイン名のプレビュー"
+    },
+    "save": "保存",
+    "saveSuccess": "プラグインの設定が正常に保存されました",
+    "tabs": {
+      "manifest": "機能のマニフェスト",
+      "meta": "プラグインのメタ情報"
+    },
+    "title": "カスタムプラグインの追加",
+    "update": "更新",
+    "updateSuccess": "プラグインの設定が正常に更新されました"
+  },
+  "list": {
+    "item": {
+      "deprecated.title": "削除済み",
+      "local.config": "設定",
+      "local.title": "カスタム"
+    }
+  },
+  "loading": {
+    "content": "データの取得中...",
+    "plugin": "プラグインの実行中..."
+  },
+  "pluginList": "プラグインリスト",
+  "plugins": {
+    "unknown": "プラグインの検出中..."
+  },
+  "setting": "プラグインの設定",
+  "settings": {
+    "indexUrl": {
+      "title": "マーケットインデックス",
+      "tooltip": "オンライン編集は現在サポートされていません。デプロイ時の環境変数を使用して設定してください"
+    },
+    "modalDesc": "プラグインマーケットのアドレスを設定すると、カスタムのプラグインマーケットを使用できます",
+    "title": "プラグインマーケットの設定"
+  }
+}
