@@ -2,22 +2,22 @@
 
 # Changelog
 
-## [Version 0.84.0-beta.2](https://github.com/lobehub/lobe-chat/compare/v0.84.0-beta.1...v0.84.0-beta.2)
+## [Version 0.85.0](https://github.com/lobehub/lobe-chat/compare/v0.84.0...v0.85.0)
 
-<sup>Released on **2023-10-09**</sup>
+<sup>Released on **2023-10-10**</sup>
 
-#### 🐛 Bug Fixes
+#### ✨ Features
 
-- **misc**: Use bun to improve speed.
+- **misc**: Add ja_JP, ko_KR and update workflow.
 
 <br/>
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-#### What's fixed
+#### What's improved
 
-- **misc**: Use bun to improve speed ([8db2a3c](https://github.com/lobehub/lobe-chat/commit/8db2a3c))
+- **misc**: Add ja_JP, ko_KR and update workflow ([57512a0](https://github.com/lobehub/lobe-chat/commit/57512a0))
 
 </details>
 
@@ -27,13 +27,13 @@
 
 </div>
 
-## [Version 0.84.0-beta.1](https://github.com/lobehub/lobe-chat/compare/v0.83.9...v0.84.0-beta.1)
+## [Version 0.84.0](https://github.com/lobehub/lobe-chat/compare/v0.83.10...v0.84.0)
 
-<sup>Released on **2023-10-09**</sup>
+<sup>Released on **2023-10-10**</sup>
 
 #### ✨ Features
 
-- **misc**: Dockerize lobe-chat.
+- **misc**: Support detect new version and upgrade action.
 
 <br/>
 
@@ -42,7 +42,44 @@
 
 #### What's improved
 
-- **misc**: Dockerize lobe-chat ([1b750f8](https://github.com/lobehub/lobe-chat/commit/1b750f8))
+- **misc**: Support detect new version and upgrade action, closes [#282](https://github.com/lobehub/lobe-chat/issues/282) ([5da19b2](https://github.com/lobehub/lobe-chat/commit/5da19b2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.83.10](https://github.com/lobehub/lobe-chat/compare/v0.83.9...v0.83.10)
+
+<sup>Released on **2023-10-09**</sup>
+
+#### ♻ Code Refactoring
+
+- **layout**: Refactor layout, Refactor settings layout, Refactor ssc layout.
+- **share**: Use modern-screenshot.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix rsc layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **layout**: Refactor layout ([ace21f4](https://github.com/lobehub/lobe-chat/commit/ace21f4))
+- **layout**: Refactor settings layout ([bd48121](https://github.com/lobehub/lobe-chat/commit/bd48121))
+- **layout**: Refactor ssc layout ([26e1c41](https://github.com/lobehub/lobe-chat/commit/26e1c41))
+- **share**: Use modern-screenshot, closes [#256](https://github.com/lobehub/lobe-chat/issues/256) ([b3d7108](https://github.com/lobehub/lobe-chat/commit/b3d7108))
+
+#### What's fixed
+
+- **misc**: Fix rsc layout ([d73f13f](https://github.com/lobehub/lobe-chat/commit/d73f13f))
 
 </details>
 

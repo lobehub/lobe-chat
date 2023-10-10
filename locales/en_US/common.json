@@ -94,5 +94,10 @@
   },
   "updateAgent": "Update Agent Information",
   "updatePrompt": "Update Prompts",
+  "upgradeVersion": {
+    "action": "Upgrade Now",
+    "hasNew": "New Update Available",
+    "newVersion": "New version available: {{version}}"
+  },
   "warp": "Line break"
 }

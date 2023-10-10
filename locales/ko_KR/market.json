@@ -1,0 +1,16 @@
+{
+  "addAgent": "보조 프로그램 추가",
+  "search": {
+    "placeholder": "보조 프로그램 이름, 설명 또는 키워드 검색..."
+  },
+  "sidebar": {
+    "comment": "의견",
+    "prompt": "프롬프트",
+    "title": "보조 프로그램 세부 정보"
+  },
+  "submitAgent": "보조 프로그램 제출",
+  "title": {
+    "allAgents": "모든 보조 프로그램",
+    "recentSubmits": "최근 추가"
+  }
+}

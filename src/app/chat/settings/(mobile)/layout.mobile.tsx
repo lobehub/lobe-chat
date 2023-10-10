@@ -1,13 +1,9 @@
-'use client';
-
 import { PropsWithChildren, memo } from 'react';
 
-import AppMobileLayout from '@/layout/AppMobileLayout';
+import AppLayoutMobile from '@/layout/AppLayout.mobile';
 
 import Header from './Header';
 
-const MobileLayout = memo<PropsWithChildren>(({ children }) => {
-  return <AppMobileLayout navBar={<Header />}>{children}</AppMobileLayout>;
-});
-
-export default MobileLayout;
+export default memo(({ children }: PropsWithChildren) => (
+  <AppLayoutMobile navBar={<Header />}>{children}</AppLayoutMobile>
+));

@@ -1,11 +1,10 @@
 import { LogoThree } from '@lobehub/ui';
-import { useResponsive } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { genSize, useStyles } from './style';
 
-const Hero = memo<{ width: number }>(({ width }) => {
+const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
   const size = useMemo(
     () => ({
       base: genSize(width / 3.5, 240),
@@ -16,7 +15,7 @@ const Hero = memo<{ width: number }>(({ width }) => {
     [width],
   );
   const { styles } = useStyles(size.base);
-  const { mobile } = useResponsive();
+
   const { t } = useTranslation('welcome');
 
   return (

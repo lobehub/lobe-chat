@@ -1,0 +1,225 @@
+{
+  "danger": {
+    "clear": {
+      "action": "クリア",
+      "confirm": "すべてのチャットデータをクリアしますか？",
+      "desc": "すべてのセッションデータをクリアします",
+      "success": "すべてのセッションメッセージがクリアされました",
+      "title": "すべてのセッションメッセージをクリア"
+    },
+    "reset": {
+      "action": "リセット",
+      "confirm": "すべての設定をリセットしますか？",
+      "currentVersion": "現在のバージョン",
+      "desc": "すべての設定項目をデフォルト値にリセットします",
+      "title": "すべての設定をリセット"
+    }
+  },
+  "header": {
+    "global": "グローバル設定",
+    "session": "セッション設定",
+    "sessionWithName": "セッション設定 · {{name}}"
+  },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "Azureポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Azure APIアドレス"
+      },
+      "models": {
+        "desc": "サポートされているモデル",
+        "title": "モデルリスト"
+      },
+      "title": "Azure OpenAI設定",
+      "token": {
+        "desc": "Azureポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます。KEY1またはKEY2を使用できます",
+        "placeholder": "Azure APIキー",
+        "title": "APIキー"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "AzureのAPIバージョンは、YYYY-MM-DD形式に従います。[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照してください",
+        "fetch": "リストを取得",
+        "title": "Azure APIバージョン"
+      },
+      "check": {
+        "button": "チェック",
+        "desc": "APIキーとプロキシアドレスが正しく入力されているかをテストします",
+        "pass": "チェックに合格しました",
+        "title": "接続性のチェック"
+      },
+      "endpoint": {
+        "desc": "デフォルトのアドレス以外に、http(s)://を含める必要があります",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "エンドポイントプロキシアドレス"
+      },
+      "models": {
+        "count": "{{count}}モデルがサポートされています",
+        "desc": "サポートされているモデル",
+        "fetch": "モデルリストを取得",
+        "notSupport": "Azure OpenAIではモデルリストの表示はサポートされていません",
+        "notSupportTip": "デプロイ名とモデル名が一致していることを確認する必要があります",
+        "refetch": "モデルリストを再取得",
+        "title": "モデルリスト"
+      },
+      "title": "OpenAI設定",
+      "token": {
+        "desc": "独自のOpenAIキーを使用します",
+        "placeholder": "OpenAI APIキー",
+        "title": "APIキー"
+      },
+      "useAzure": {
+        "desc": "Azureが提供するOpenAIサービスを使用します",
+        "fetch": "リストを取得",
+        "serverConfig": "管理者がサーバー側でAzure OpenAIを設定しており、切り替えが禁止されています",
+        "title": "Azure OpenAI"
+      }
+    },
+    "waitingForMore": "他のモデルは現在 <1>計画中</1> です。お楽しみに ✨"
+  },
+  "settingAgent": {
+    "avatar": {
+      "title": "アバター"
+    },
+    "backgroundColor": {
+      "title": "背景色"
+    },
+    "description": {
+      "placeholder": "アシスタントの説明を入力してください",
+      "title": "説明"
+    },
+    "name": {
+      "placeholder": "アシスタントの名前を入力してください",
+      "title": "名前"
+    },
+    "prompt": {
+      "placeholder": "キャラクタープロンプトを入力してください",
+      "title": "キャラクター設定"
+    },
+    "tag": {
+      "placeholder": "タグを入力してください",
+      "title": "タグ"
+    },
+    "title": "アシスタント情報"
+  },
+  "settingChat": {
+    "chatStyleType": {
+      "title": "チャットウィンドウのスタイル",
+      "type": {
+        "chat": "対話モード",
+        "docs": "ドキュメントモード"
+      }
+    },
+    "compressThreshold": {
+      "desc": "非圧縮の履歴メッセージがこの値を超えると、圧縮されます",
+      "title": "履歴メッセージの圧縮閾値"
+    },
+    "enableCompressThreshold": {
+      "title": "履歴メッセージの圧縮閾値を有効にする"
+    },
+    "enableHistoryCount": {
+      "alias": "制限なし",
+      "limited": "{{number}}件の会話メッセージのみ含む",
+      "title": "履歴メッセージ数の制限",
+      "unlimited": "履歴メッセージ数の制限なし"
+    },
+    "historyCount": {
+      "desc": "リクエストごとに含まれる履歴メッセージ数",
+      "title": "履歴メッセージ数"
+    },
+    "inputTemplate": {
+      "desc": "ユーザーの最新のメッセージがこのテンプレートに埋め込まれます",
+      "placeholder": "プリプロセステンプレート {{text}} はリアルタイムの入力情報に置き換えられます",
+      "title": "ユーザー入力のプリプロセス"
+    },
+    "title": "チャット設定"
+  },
+  "settingModel": {
+    "enableMaxTokens": {
+      "title": "単一応答制限を有効にする"
+    },
+    "frequencyPenalty": {
+      "desc": "値が大きいほど、重複する単語が減少する可能性が高くなります",
+      "title": "頻度ペナルティ"
+    },
+    "maxTokens": {
+      "desc": "単一の対話で使用される最大トークン数",
+      "title": "単一応答制限"
+    },
+    "model": {
+      "desc": "ChatGPTモデル",
+      "list": {
+        "gpt-3.5-turbo": "GPT 3.5",
+        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+        "gpt-4": "GPT 4",
+        "gpt-4-32k": "GPT 4 (32K)"
+      },
+      "title": "モデル"
+    },
+    "presencePenalty": {
+      "desc": "値が大きいほど、新しいトピックに展開する可能性が高くなります",
+      "title": "トピックの新鮮さ"
+    },
+    "temperature": {
+      "desc": "値が大きいほど、応答がよりランダムになります",
+      "title": "ランダム性",
+      "titleWithValue": "ランダム性 {{value}}"
+    },
+    "title": "モデル設定",
+    "topP": {
+      "desc": "ランダム性と同様ですが、ランダム性とは同時に変更しないでください",
+      "title": "トップPサンプリング"
+    }
+  },
+  "settingPlugin": {
+    "add": "追加",
+    "addTooltip": "カスタムプラグインを追加",
+    "clearDeprecated": "無効なプラグインを削除",
+    "config": "{{id}}プラグインの設定",
+    "settings": "プラグインマーケットの設定",
+    "title": "プラグインリスト"
+  },
+  "settingSystem": {
+    "accessCode": {
+      "desc": "管理者が暗号化アクセスを有効にしています",
+      "placeholder": "アクセスコードを入力してください",
+      "title": "アクセスコード"
+    },
+    "title": "システム設定"
+  },
+  "settingTheme": {
+    "avatar": {
+      "title": "アバター"
+    },
+    "fontSize": {
+      "desc": "チャットのテキストサイズ",
+      "title": "フォントサイズ"
+    },
+    "lang": {
+      "autoMode": "システムに従う",
+      "title": "言語"
+    },
+    "neutralColor": {
+      "desc": "異なる色調のグレースケールのカスタマイズ",
+      "title": "中立色"
+    },
+    "primaryColor": {
+      "desc": "カスタムテーマカラー",
+      "title": "テーマカラー"
+    },
+    "themeMode": {
+      "auto": "自動",
+      "dark": "ダーク",
+      "light": "ライト",
+      "title": "テーマ"
+    },
+    "title": "テーマ設定"
+  },
+  "tab": {
+    "agent": "デフォルトのアシスタント",
+    "common": "一般設定",
+    "llm": "言語モデル"
+  }
+}

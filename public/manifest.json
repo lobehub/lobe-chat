@@ -6,12 +6,26 @@
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "id": "/",
@@ -20,13 +34,28 @@
   "scope": "/",
   "screenshots": [
     {
-      "src": "https://registry.npmmirror.com/@lobehub/assets-favicons/1.4.0/files/assets/og-960x540.png",
-      "sizes": "960x540",
+      "src": "/screenshots/screenshot-1.png",
+      "sizes": "750x1334",
+      "type": "image/png"
+    },
+    {
+      "src": "/screenshots/screenshot-2.png",
+      "sizes": "750x1334",
+      "type": "image/png"
+    },
+    {
+      "src": "/screenshots/screenshot-3.png",
+      "sizes": "750x1334",
+      "type": "image/png"
+    },
+    {
+      "src": "/screenshots/screenshot-4.png",
+      "sizes": "750x1334",
       "type": "image/png"
     }
   ],
   "short_name": "LobeChat",
   "splash_pages": null,
-  "start_url": "/",
+  "start_url": ".",
   "theme_color": "#000000"
 }

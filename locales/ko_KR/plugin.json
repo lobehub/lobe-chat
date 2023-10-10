@@ -1,0 +1,107 @@
+{
+  "debug": {
+    "arguments": "함수 호출 인수",
+    "function_call": "함수 호출",
+    "response": "응답"
+  },
+  "dev": {
+    "confirmDeleteDevPlugin": "로컬 플러그인을 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다.",
+    "deleteSuccess": "플러그인이 성공적으로 삭제되었습니다.",
+    "manifest": {
+      "identifier": {
+        "desc": "플러그인의 고유 식별자",
+        "label": "식별자"
+      },
+      "mode": {
+        "local": "시각적 구성",
+        "local-tooltip": "시각적 구성은 일시적으로 지원되지 않습니다.",
+        "url": "온라인 링크"
+      },
+      "name": {
+        "desc": "플러그인 제목",
+        "label": "제목",
+        "placeholder": "검색 엔진"
+      }
+    },
+    "meta": {
+      "author": {
+        "desc": "플러그인 작성자",
+        "label": "작성자"
+      },
+      "avatar": {
+        "desc": "플러그인 아이콘으로는 Emoji 또는 URL을 사용할 수 있습니다.",
+        "label": "아이콘"
+      },
+      "description": {
+        "desc": "플러그인 설명",
+        "label": "설명",
+        "placeholder": "검색 엔진에서 정보 가져오기"
+      },
+      "formFieldRequired": "이 필드는 필수 입력 사항입니다.",
+      "homepage": {
+        "desc": "플러그인 홈페이지",
+        "label": "홈페이지"
+      },
+      "identifier": {
+        "desc": "플러그인의 고유 식별자는 manifest에서 자동으로 인식됩니다.",
+        "errorDuplicate": "식별자가 이미 있는 플러그인과 중복되었습니다. 식별자를 수정해주세요.",
+        "label": "식별자",
+        "pattenErrorMessage": "영문자, 숫자, - 및 _만 입력할 수 있습니다."
+      },
+      "manifest": {
+        "desc": "LobeChat은 이 링크를 통해 플러그인을 설치합니다.",
+        "jsonInvalid": "manifest가 규칙에 맞지 않습니다. 유효성 검사 결과: \n\n {{error}}",
+        "label": "플러그인 설명 파일 URL 주소",
+        "preview": "Manifest 미리보기",
+        "refresh": "새로 고침",
+        "requestError": "이 링크를 요청하는 중에 오류가 발생했습니다. 유효한 링크를 입력하고 링크가 크로스 도메인 액세스를 허용하는지 확인해주세요.",
+        "urlError": "이 링크는 JSON 형식의 내용을 반환하지 않습니다. 유효한 링크를 입력해주세요."
+      },
+      "title": {
+        "desc": "플러그인 제목",
+        "label": "제목",
+        "placeholder": "검색 엔진"
+      }
+    },
+    "metaConfig": "플러그인 메타 정보 구성",
+    "modalDesc": "사용자 정의 플러그인을 추가하면 플러그인 개발 검증 및 세션에서 직접 사용할 수 있습니다. 플러그인 개발 문서는 참조해주세요.",
+    "preview": {
+      "card": "플러그인 미리보기",
+      "desc": "플러그인 설명 미리보기",
+      "title": "플러그인 이름 미리보기"
+    },
+    "save": "저장",
+    "saveSuccess": "플러그인 설정이 성공적으로 저장되었습니다.",
+    "tabs": {
+      "manifest": "기능 설명 목록 (Manifest)",
+      "meta": "플러그인 메타 정보"
+    },
+    "title": "사용자 정의 플러그인 추가",
+    "update": "업데이트",
+    "updateSuccess": "플러그인 설정이 성공적으로 업데이트되었습니다."
+  },
+  "list": {
+    "item": {
+      "deprecated.title": "삭제됨",
+      "local.config": "구성",
+      "local.title": "사용자 정의"
+    }
+  },
+  "loading": {
+    "content": "데이터 가져오는 중...",
+    "plugin": "플러그인 실행 중..."
+  },
+  "pluginList": "플러그인 목록",
+  "plugins": {
+    "unknown": "플러그인 검사 중..."
+  },
+  "setting": "플러그인 설정",
+  "settings": {
+    "indexUrl": {
+      "title": "마켓 인덱스",
+      "tooltip": "온라인 편집은 지원되지 않습니다. 배포 환경 변수를 통해 설정해주세요."
+    },
+    "modalDesc": "플러그인 마켓의 주소를 구성하면 사용자 정의 플러그인 마켓을 사용할 수 있습니다.",
+    "title": "플러그인 마켓 설정"
+  }
+}

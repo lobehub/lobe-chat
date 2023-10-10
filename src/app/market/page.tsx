@@ -4,8 +4,10 @@ import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { getAgentIndexJSON } from '@/const/url';
 import { Locales } from '@/locales/resources';
 import { LobeChatAgentsMarketIndex } from '@/types/market';
+import { isMobileDevice } from '@/utils/responsive';
 
-import Market from './index';
+import DesktopPage from './(desktop)';
+import MobilePage from './(mobile)';
 
 const getAgentList = async (): Promise<LobeChatAgentsMarketIndex> => {
   const cookieStore = cookies();
@@ -20,10 +22,11 @@ const getAgentList = async (): Promise<LobeChatAgentsMarketIndex> => {
   }
 };
 
-const Page = async () => {
+export default async () => {
   const data = await getAgentList();
+  const mobile = isMobileDevice();
 
-  return <Market defaultAgents={data.agents} />;
+  const Page = mobile ? MobilePage : DesktopPage;
+
+  return <Page defaultAgents={data.agents} />;
 };
-
-export default Page;

@@ -20,9 +20,9 @@ const InnerLocale = memo<LocaleLayoutProps>(({ children, lang }) => {
   } else {
     // if on browser side, init i18n instance only once
     if (!i18n.instance.isInitialized)
-      // console.log('locale', lang);
+      // console.debug('locale', lang);
       i18n.init().then(() => {
-        // console.log('inited.');
+        // console.debug('inited.');
       });
   }
 

@@ -1,12 +1,14 @@
-import { t } from 'i18next';
-import { Metadata } from 'next';
+import { isMobileDevice } from '@/utils/responsive';
 
-import Banner from './features/Banner';
+import DesktopPage from './(desktop)';
+import MobilePage from './(mobile)';
 
-export const generateMetadata = (): Metadata => ({
-  title: t('header', { ns: 'welcome' }),
-});
+const Page = () => {
+  const mobile = isMobileDevice();
 
-const Page = () => <Banner />;
+  const Page = mobile ? MobilePage : DesktopPage;
+
+  return <Page />;
+};
 
 export default Page;
