@@ -62,6 +62,7 @@ const AppLayoutMobile = memo<AppMobileLayoutProps>(
             <MobileTabBar className={styles.mobileTabBar} />
           </>
         )}
+        <SafeSpacing mobile position={'bottom'} />
       </Flexbox>
     );
   },

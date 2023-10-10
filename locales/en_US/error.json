@@ -25,12 +25,13 @@
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
-    "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below"
+    "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
+    "NoAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key"
   },
   "unlock": {
     "apikey": {
-      "description": "Enter your OpenAI API Key to bypass password verification. The application will not record your API Key.",
-      "title": "Use Custom API Key"
+      "title": "Use Custom API Key",
+      "description": "Enter your OpenAI API Key to start the conversation. The application will not record your API Key."
     },
     "confirm": "Confirm and Retry",
     "password": {

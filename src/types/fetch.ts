@@ -2,10 +2,9 @@
 export const ChatErrorType = {
   // ******* 业务错误语义 ******* //
 
-  // 密码无效
-  InvalidAccessCode: 'InvalidAccessCode',
-  // OpenAI 返回的业务错误
-  OpenAIBizError: 'OpenAIBizError',
+  InvalidAccessCode: 'InvalidAccessCode', // 密码无效
+  OpenAIBizError: 'OpenAIBizError', // OpenAI 返回的业务错误
+  NoAPIKey: 'NoAPIKey',
 
   // ******* 客户端错误 ******* //
   BadRequest: 400,

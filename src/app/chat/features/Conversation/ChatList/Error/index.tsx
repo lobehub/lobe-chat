@@ -5,6 +5,7 @@ import { ChatMessage } from '@/types/chatMessage';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 
 import InvalidAccess from './InvalidAccess';
+import OpenAPIKey from './OpenAPIKey';
 import OpenAiBizError from './OpenAiBizError';
 import PluginError from './Plugin/PluginError';
 import PluginSettings from './Plugin/PluginSettings';
@@ -34,6 +35,10 @@ export const renderErrorMessage: RenderErrorMessage = (error, message: ChatMessa
   switch (error.type as ErrorType) {
     case ChatErrorType.InvalidAccessCode: {
       return <InvalidAccess id={message.id} />;
+    }
+
+    case ChatErrorType.NoAPIKey: {
+      return <OpenAPIKey id={message.id} />;
     }
 
     case ChatErrorType.OpenAIBizError: {
