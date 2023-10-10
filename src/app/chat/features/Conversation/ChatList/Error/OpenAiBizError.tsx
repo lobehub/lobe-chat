@@ -2,8 +2,8 @@ import { Highlighter } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import APIKeyForm from './ApiKeyForm';
-import { ErrorActionContainer, useStyles } from './style';
+import OpenAPIKey from './OpenAPIKey';
+import { useStyles } from './style';
 
 interface OpenAIError {
   code: 'invalid_api_key' | string;
@@ -21,13 +21,8 @@ const OpenAiBizError = memo<{ content: OpenAIErrorResponse; id: string }>(({ con
 
   const errorCode = content.error?.code;
 
-  if (errorCode === 'invalid_api_key') {
-    return (
-      <ErrorActionContainer>
-        <APIKeyForm id={id} />
-      </ErrorActionContainer>
-    );
-  }
+  if (errorCode === 'invalid_api_key') return <OpenAPIKey id={id} />;
+
   return (
     <Flexbox className={styles.container} style={{ maxWidth: 600 }}>
       <Highlighter language={'json'}>{JSON.stringify(content, null, 2)}</Highlighter>

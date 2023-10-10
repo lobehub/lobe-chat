@@ -9,12 +9,12 @@ interface AuthConfig {
 export const checkAuth = ({ apiKey, accessCode }: AuthConfig) => {
   const { ACCESS_CODE } = getServerConfig();
 
-  // 如果存在 apiKey
+  // if apiKey exist
   if (apiKey) {
     return { auth: true };
   }
 
-  // 如果不存在，则检查 accessCode
+  // if accessCode doesn't exist
   if (!ACCESS_CODE) return { auth: true };
 
   if (accessCode !== ACCESS_CODE) {
