@@ -121,7 +121,6 @@
     "zustand-utils": "^1"
   },
   "devDependencies": {
-    "@codedependant/semantic-release-docker": "^4",
     "@commitlint/cli": "^17",
     "@lobehub/i18n-cli": "latest",
     "@lobehub/lint": "latest",
