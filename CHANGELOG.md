@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.86.0-beta.5](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.4...v0.86.0-beta.5)
+
+<sup>Released on **2023-10-10**</sup>
+
+#### ✨ Features
+
+- **misc**: Add default ACCESS_CODE=lobe66.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add default ACCESS_CODE=lobe66 ([3ebec4a](https://github.com/lobehub/lobe-chat/commit/3ebec4a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.86.0-beta.4](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.3...v0.86.0-beta.4)
 
 <sup>Released on **2023-10-10**</sup>
