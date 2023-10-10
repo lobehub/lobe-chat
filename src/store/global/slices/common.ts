@@ -1,6 +1,10 @@
 import { produce } from 'immer';
+import { gt } from 'semver';
+import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { CURRENT_VERSION } from '@/const/version';
+import { featLatestVersion } from '@/services/latestVersion';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -22,6 +26,7 @@ export interface CommonAction {
   toggleMobileTopic: (visible?: boolean) => void;
   updateGuideState: (guide: Partial<Guide>) => void;
   updatePreference: (preference: Partial<GlobalPreference>, action?: string) => void;
+  useCheckLatestVersion: () => SWRResponse<string>;
 }
 
 export const createCommonSlice: StateCreator<
@@ -59,4 +64,11 @@ export const createCommonSlice: StateCreator<
       action,
     );
   },
+  useCheckLatestVersion: () =>
+    useSWR('checkLatestVersion', featLatestVersion, {
+      onSuccess: (data: string) => {
+        if (gt(data, CURRENT_VERSION))
+          set({ hasNewVersion: true, latestVersion: data }, false, t('checkLatestVersion'));
+      },
+    }),
 });
