@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 
 import { getServerConfig } from '@/config/server';
 import { getOpenAIAuthFromRequest } from '@/const/fetch';
-import { ErrorType } from '@/types/fetch';
+import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { OpenAIStreamPayload } from '@/types/openai';
 
 import { checkAuth } from '../../auth';
@@ -29,10 +29,24 @@ export const POST = async (req: Request) => {
   const { USE_AZURE_OPENAI } = getServerConfig();
   const useAzureOpenAI = useAzure || USE_AZURE_OPENAI;
 
-  if (useAzureOpenAI) {
-    openai = createAzureOpenai({ apiVersion, endpoint, model: payload.model, userApiKey: apiKey });
-  } else {
-    openai = createOpenai(apiKey, endpoint);
+  try {
+    if (useAzureOpenAI) {
+      openai = createAzureOpenai({
+        apiVersion,
+        endpoint,
+        model: payload.model,
+        userApiKey: apiKey,
+      });
+    } else {
+      openai = createOpenai(apiKey, endpoint);
+    }
+  } catch (error) {
+    if ((error as Error).cause === ChatErrorType.NoAPIKey) {
+      return createErrorResponse(ChatErrorType.NoAPIKey);
+    }
+
+    console.error(error); // log error to trace it
+    return createErrorResponse(ChatErrorType.InternalServerError);
   }
 
   return createChatCompletion({ openai, payload });
