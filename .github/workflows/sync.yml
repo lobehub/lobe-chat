@@ -2,6 +2,7 @@ name: Upstream Sync
 
 permissions:
   contents: write
+    pull-requests: write
 
 on:
   schedule:
