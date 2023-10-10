@@ -21,5 +21,6 @@ jobs:
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'remove-labels'
+          token: ${{ secrets.GH_TOKEN }}
           issue-number: ${{ github.event.issue.number }}
           labels: 'Inactive'
