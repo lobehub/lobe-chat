@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.86.0-beta.3](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.2...v0.86.0-beta.3)
+
+<sup>Released on **2023-10-10**</sup>
+
+#### ✨ Features
+
+- **misc**: Try with new docker ci.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Try with new docker ci ([728172e](https://github.com/lobehub/lobe-chat/commit/728172e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.86.0-beta.2](https://github.com/lobehub/lobe-chat/compare/v0.86.0-beta.1...v0.86.0-beta.2)
 
 <sup>Released on **2023-10-10**</sup>
