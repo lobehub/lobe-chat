@@ -44,4 +44,6 @@ EXPOSE 3000
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
 
+ENV ACCESS_CODE "lobe66"
+
 CMD ["node", "server.js"]
