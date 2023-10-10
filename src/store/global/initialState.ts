@@ -18,7 +18,18 @@ export interface Guide {
   topic?: boolean;
 }
 
+export interface GlobalPreference {
+  guide?: Guide;
+  inputHeight: number;
+  mobileShowTopic?: boolean;
+  sessionsWidth: number;
+  showChatSideBar?: boolean;
+  showSessionPanel?: boolean;
+}
+
 export interface GlobalState {
+  hasNewVersion?: boolean;
+  latestVersion?: string;
   /**
    *  用户偏好的 UI 状态
    *  @localStorage
@@ -31,15 +42,6 @@ export interface GlobalState {
   settings: GlobalSettings;
   settingsTab: SettingsTabs;
   sidebarKey: SidebarTabKey;
-}
-
-export interface GlobalPreference {
-  guide?: Guide;
-  inputHeight: number;
-  mobileShowTopic?: boolean;
-  sessionsWidth: number;
-  showChatSideBar?: boolean;
-  showSessionPanel?: boolean;
 }
 
 export const initialState: GlobalState = {
