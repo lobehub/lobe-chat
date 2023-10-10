@@ -13,7 +13,7 @@ const Desktop = memo<PropsWithChildren>(({ children }) => {
       <Center
         className={styles.layout}
         flex={1}
-        height={'100vh'}
+        height={'100%'}
         horizontal
         style={{ position: 'relative' }}
       >

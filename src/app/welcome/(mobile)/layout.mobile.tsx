@@ -12,7 +12,7 @@ const MobileLayout = memo<PropsWithChildren>(({ children }) => {
 
   return (
     <AppLayoutMobile navBar={<Header />} showTabBar style={{ background: theme.colorBgLayout }}>
-      <div style={{ paddingInline: 16 }}>{children}</div>
+      <div style={{ height: '100%', paddingInline: 16 }}>{children}</div>
     </AppLayoutMobile>
   );
 });

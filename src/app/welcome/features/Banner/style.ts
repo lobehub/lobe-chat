@@ -60,7 +60,7 @@ export const useStyles = createStyles(({ css, token, stylish, cx, prefixCls }) =
         overflow-y: auto;
 
         max-width: 1024px;
-        height: 100vh;
+        height: 100%;
         padding: 32px 16px;
       `,
     ),

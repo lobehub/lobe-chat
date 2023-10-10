@@ -10,6 +10,7 @@ const AppLayoutDesktop = memo<PropsWithChildren>(({ children }) => {
   const theme = useTheme();
   return (
     <Flexbox
+      height={'100%'}
       horizontal
       style={isPWA ? { borderTop: `1px solid ${theme.colorBorder}` } : {}}
       width={'100%'}

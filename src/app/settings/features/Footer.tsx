@@ -13,7 +13,7 @@ const useStyles = createStyles(
 const Footer = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   return (
-    <Center style={{ maxWidth: 600, width: ' 100%' }}>
+    <Center style={{ maxWidth: 600, width: '100%' }}>
       <Divider>
         <span className={styles}>{children}</span>
       </Divider>

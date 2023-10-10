@@ -10,7 +10,7 @@ const Showcase = memo(() => (
   <Flexbox
     flex={1}
     justify={'center'}
-    style={{ height: '100vh', position: 'relative', width: '100%' }}
+    style={{ height: '100%', position: 'relative', width: '100%' }}
   >
     <GridShowcase>
       <Banner />
