@@ -2,6 +2,7 @@ name: Upstream Sync
 
 permissions:
   contents: write
+  
 on:
   schedule:
     - cron: '0 * * * *' # every hour
