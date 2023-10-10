@@ -17,7 +17,14 @@ const withPWA = nextPWA({
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  images: { 
+    unoptimized:!isProd, 
+  }, 
+  experimental: { 
+    forceSwcTransforms: true, 
+  },
   transpilePackages: ['@lobehub/ui', 'antd-style'],
+
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
