@@ -3,10 +3,8 @@ import { Form as AntForm, AutoComplete, Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { Webhook } from 'lucide-react';
-import Link from 'next/link';
 import { memo } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { settingsSelectors, useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
@@ -23,9 +21,6 @@ const useStyles = createStyles(({ css, token }) => ({
       font-size: 12px !important;
       color: ${token.colorTextDescription} !important;
     }
-  `,
-  plan: css`
-    color: ${token.colorTextDescription};
   `,
   tip: css`
     font-size: 12px;
@@ -139,25 +134,12 @@ const LLM = memo(() => {
   };
 
   return (
-    <Flexbox align={'center'} gap={24} width={'100%'}>
-      <Form
-        form={form}
-        items={[openAI]}
-        onValuesChange={debounce(setSettings, 100)}
-        {...FORM_STYLE}
-      />
-      <Flexbox align={'center'} className={styles.plan}>
-        <div>
-          <Trans i18nKey="llm.waitingForMore" ns={'setting'}>
-            更多模型正在
-            <Link href="https://github.com/lobehub/lobe-chat/issues/151" target="_blank">
-              计划接入
-            </Link>
-            中 ，敬请期待 ✨
-          </Trans>
-        </div>
-      </Flexbox>
-    </Flexbox>
+    <Form
+      form={form}
+      items={[openAI]}
+      onValuesChange={debounce(setSettings, 100)}
+      {...FORM_STYLE}
+    />
   );
 });
 

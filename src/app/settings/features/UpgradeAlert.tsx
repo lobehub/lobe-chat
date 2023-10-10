@@ -14,7 +14,7 @@ const UpgradeAlert = memo(() => {
     hasNewVersion && (
       <Alert
         action={
-          <Link href={MANUAL_UPGRADE_URL} target={'_blank'}>
+          <Link aria-label={t('upgradeVersion.action')} href={MANUAL_UPGRADE_URL} target={'_blank'}>
             <Button size={'small'} type={'primary'}>
               {t('upgradeVersion.action')}
             </Button>

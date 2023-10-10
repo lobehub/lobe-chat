@@ -47,7 +47,7 @@ const Header = memo(() => {
         ))}
       </Center>
       <div className={styles.desc}>{description}</div>
-      <Link className={styles.author} href={homepage} target={'_blank'}>
+      <Link aria-label={author} className={styles.author} href={homepage} target={'_blank'}>
         @{author}
       </Link>
       <Button

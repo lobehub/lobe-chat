@@ -5,6 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import MobileTabBar from '@/features/MobileTabBar';
+import { useIsPWA } from '@/hooks/useIsPWA';
 
 const useStyles = createStyles(({ css, cx, stylish }) => ({
   container: cx(
@@ -45,6 +46,7 @@ interface AppMobileLayoutProps extends PropsWithChildren {
 
 const AppLayoutMobile = memo<AppMobileLayoutProps>(
   ({ children, showTabBar, navBar, style, className }) => {
+    const isPWA = useIsPWA();
     const { styles, cx } = useStyles();
 
     return (
@@ -62,7 +64,7 @@ const AppLayoutMobile = memo<AppMobileLayoutProps>(
             <MobileTabBar className={styles.mobileTabBar} />
           </>
         )}
-        <SafeSpacing mobile position={'bottom'} />
+        {!isPWA && <SafeSpacing mobile position={'bottom'} />}
       </Flexbox>
     );
   },

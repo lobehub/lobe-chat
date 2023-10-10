@@ -22,6 +22,7 @@ const List = memo(() => {
 
   return items.map(({ value, icon, label }) => (
     <Link
+      aria-label={label}
       href={`/settings/${value}`}
       key={value}
       onClick={() => {

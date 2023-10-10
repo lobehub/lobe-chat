@@ -50,6 +50,7 @@ const AgentCardBanner = memo<AgentCardBannerProps>(
         {...props}
       >
         <Avatar
+          alt={'banner'}
           avatar={meta.avatar}
           background={meta.backgroundColor || theme.colorBgContainer}
           className={styles.bannerImg}
