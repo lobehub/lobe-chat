@@ -23,7 +23,7 @@ jobs:
       - name: Test
         run: bun run test
 
-      - name: release
+      - name: Release
         run: bun run release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

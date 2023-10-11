@@ -13,7 +13,7 @@ jobs:
       - name: Install deps
         run: bun i
 
-      - name: lint
+      - name: Lint
         run: bun run lint
 
       - name: Test and coverage

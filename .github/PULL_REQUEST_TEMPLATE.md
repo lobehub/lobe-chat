@@ -4,6 +4,7 @@
 
 - [ ] ✨ feat
 - [ ] 🐛 fix
+- [ ] ♻️ refactor
 - [ ] 💄 style
 - [ ] 🔨 chore
 - [ ] 📝 docs

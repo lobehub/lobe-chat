@@ -11,7 +11,7 @@ on:
 jobs:
   update-wiki:
     runs-on: ubuntu-latest
-    name: wiki sync
+    name: Wiki sync
     steps:
       - uses: OrlovM/Wiki-Action@v1
         with:

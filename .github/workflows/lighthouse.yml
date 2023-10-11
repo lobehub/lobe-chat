@@ -40,9 +40,7 @@ jobs:
             URLS: 'https://chat-preview.lobehub.com/settings'
             BADGES_ARGS: '-b pagespeed -o lighthouse/settings -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Settings'
-    ####################################################################
-    # THAT'S IT; YOU DON'T HAVE TO DEFINE ANYTHING IN THE FOLLOWING
-    ####################################################################
+
     steps:
       - name: Preparatory Tasks
         run: |
