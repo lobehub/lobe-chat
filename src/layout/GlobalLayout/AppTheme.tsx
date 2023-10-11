@@ -49,6 +49,7 @@ const AppTheme = memo<AppThemeProps>(
           setCookie(LOBE_THEME_APPEARANCE, appearance);
         }}
         themeMode={themeMode}
+enableWebfonts={false}
       >
         <GlobalStyle />
         {children}
