@@ -1,11 +1,11 @@
-export const OPENAI_END_POINT = 'X-OPENAI-END_POINT';
-export const OPENAI_API_KEY_HEADER_KEY = 'X-OPENAI-API-KEY';
+export const OPENAI_END_POINT = 'X-openai-end-point';
+export const OPENAI_API_KEY_HEADER_KEY = 'X-openai-api-key';
 
-export const USE_AZURE_OPENAI = 'X-USE_AZURE_OPENAI';
+export const USE_AZURE_OPENAI = 'X-use-azure-openai';
 
-export const AZURE_OPENAI_API_VERSION = 'X-AZURE_OPENAI_API_VERSION';
+export const AZURE_OPENAI_API_VERSION = 'X-azure-openai-api-version';
 
-export const LOBE_CHAT_ACCESS_CODE = 'X-LOBE_CHAT_ACCESS_CODE';
+export const LOBE_CHAT_ACCESS_CODE = 'X-lobe-chat-access-code';
 
 export const getOpenAIAuthFromRequest = (req: Request) => {
   const apiKey = req.headers.get(OPENAI_API_KEY_HEADER_KEY);
