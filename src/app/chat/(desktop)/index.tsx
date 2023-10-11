@@ -1,17 +1,19 @@
 'use client';
 
-import { memo } from 'react';
+import dynamic from 'next/dynamic';
+import { FC, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ResponsiveIndex from '@/components/ResponsiveIndex';
 
-import Mobile from '../(mobile)';
 import Conversation from '../features/Conversation';
 import PageTitle from '../features/PageTitle';
 import ChatHeader from './features/ChatHeader';
 import ChatInput from './features/ChatInput';
 import SideBar from './features/SideBar';
-import Layout from './layout.responsive';
+import Layout from './layout.desktop';
+
+const Mobile: FC = dynamic(() => import('../(mobile)')) as FC;
 
 const DesktopPage = memo(() => (
   <ResponsiveIndex Mobile={Mobile}>

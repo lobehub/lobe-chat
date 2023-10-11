@@ -1,10 +1,12 @@
 import { Form, FormItemProps, Input } from '@lobehub/ui';
 import { FormInstance } from 'antd';
+import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import EmojiPicker from '@/components/EmojiPicker';
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
+
+const EmojiPicker = dynamic(() => import('@/components/EmojiPicker'));
 
 const MetaForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form, mode }) => {
   const isEditMode = mode === 'edit';

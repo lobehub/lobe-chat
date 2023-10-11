@@ -1,12 +1,14 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Conversation from '../../features/Conversation';
 import ChatInput from '../features/ChatInput';
-import TopicList from '../features/TopicList';
 import Layout from './layout.mobile';
+
+const TopicList = dynamic(() => import('../features/TopicList'));
 
 const Chat = memo(() => (
   <Layout>

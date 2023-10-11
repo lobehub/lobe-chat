@@ -1,5 +1,5 @@
-import { SpotlightCard } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
+import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -11,6 +11,9 @@ import TagList from '../TagList';
 import AgentCardItem from './AgentCardItem';
 import Loading from './Loading';
 import { useStyles } from './style';
+
+const AgentCardMobile = dynamic(() => import('../../(mobile)/features/AgentCard'));
+const AgentCardDesktop = dynamic(() => import('@lobehub/ui/es/SpotlightCard'));
 
 const gridRender = (item: any) => <AgentCardItem {...item} />;
 
@@ -39,17 +42,19 @@ const AgentCard = memo<AgentCardProps>(({ defaultAgents }) => {
 
   if (agentList.length === 0) return <Loading />;
 
+  const CardRender = mobile ? AgentCardMobile : AgentCardDesktop;
+
   return (
     <Flexbox gap={mobile ? 16 : 24}>
       <TagList />
       {keywords ? (
-        <SpotlightCard items={agentListData} renderItem={gridRender} spotlight={false} />
+        <CardRender items={agentListData} renderItem={gridRender} spotlight={false} />
       ) : (
         <>
           <div className={styles.subTitle}>{t('title.recentSubmits')}</div>
-          <SpotlightCard items={agentListData.slice(0, 3)} renderItem={gridRender} />
+          <CardRender items={agentListData.slice(0, 3)} renderItem={gridRender} />
           <div className={styles.subTitle}>{t('title.allAgents')}</div>
-          <SpotlightCard items={agentListData.slice(3)} renderItem={gridRender} spotlight={false} />
+          <CardRender items={agentListData.slice(3)} renderItem={gridRender} spotlight={false} />
         </>
       )}
     </Flexbox>

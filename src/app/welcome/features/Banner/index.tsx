@@ -4,6 +4,7 @@ import { Icon } from '@lobehub/ui';
 import { useSize } from 'ahooks';
 import { Button, Upload } from 'antd';
 import { SendHorizonal } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -11,8 +12,9 @@ import { Flexbox } from 'react-layout-kit';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { useSessionStore } from '@/store/session';
 
-import Hero from './Hero';
 import { useStyles } from './style';
+
+const Hero = dynamic(() => import('./Hero'));
 
 const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { importConfig } = useImportConfig();

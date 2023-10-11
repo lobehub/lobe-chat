@@ -1,5 +1,6 @@
-import { NeutralColors, PrimaryColors, ThemeProvider } from '@lobehub/ui';
+import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@lobehub/ui';
 import { ThemeAppearance } from 'antd-style';
+import Image from 'next/image';
 import { ReactNode, memo, useEffect } from 'react';
 
 import {
@@ -51,7 +52,7 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
-        {children}
+        <ConfigProvider config={{ imgAs: Image } as any}>{children}</ConfigProvider>
       </ThemeProvider>
     );
   },

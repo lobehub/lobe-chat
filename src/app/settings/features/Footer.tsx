@@ -5,15 +5,15 @@ import { Center } from 'react-layout-kit';
 
 const useStyles = createStyles(
   ({ css, token }) => css`
-    font-size: 14px;
-    color: ${token.colorTextDescription};
+    font-size: 12px;
+    color: ${token.colorTextQuaternary};
   `,
 );
 
 const Footer = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   return (
-    <Center style={{ maxWidth: 600, width: '100%' }}>
+    <Center style={{ maxWidth: 600, paddingInline: 16, width: '100%' }}>
       <Divider>
         <span className={styles}>{children}</span>
       </Divider>
