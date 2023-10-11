@@ -1,5 +1,7 @@
+import { Icon } from '@lobehub/ui';
 import { Button, Input } from 'antd';
-import { memo } from 'react';
+import { Network } from 'lucide-react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -10,11 +12,14 @@ import { FormAction } from './style';
 
 const APIKeyForm = memo<{ id: string }>(({ id }) => {
   const { t } = useTranslation('error');
+  const [showProxy, setShow] = useState(false);
 
-  const [apiKey, setKeys] = useGlobalStore((s) => [
+  const [apiKey, proxyUrl, setConfig] = useGlobalStore((s) => [
     settingsSelectors.openAIAPI(s),
-    s.setOpenAIAPIKey,
+    settingsSelectors.openAIProxyUrl(s),
+    s.setOpenAIConfig,
   ]);
+
   const [resend, deleteMessage] = useSessionStore((s) => [s.resendMessage, s.deleteMessage]);
 
   return (
@@ -26,12 +31,32 @@ const APIKeyForm = memo<{ id: string }>(({ id }) => {
       >
         <Input.Password
           onChange={(e) => {
-            setKeys(e.target.value);
+            setConfig({ OPENAI_API_KEY: e.target.value });
           }}
           placeholder={'sk-*****************************************'}
           type={'block'}
           value={apiKey}
         />
+        {showProxy ? (
+          <Input
+            onChange={(e) => {
+              setConfig({ endpoint: e.target.value });
+            }}
+            placeholder={'https://api.openai.com/v1'}
+            type={'block'}
+            value={proxyUrl}
+          />
+        ) : (
+          <Button
+            icon={<Icon icon={Network} />}
+            onClick={() => {
+              setShow(true);
+            }}
+            type={'text'}
+          >
+            {t('unlock.apikey.addProxyUrl')}
+          </Button>
+        )}
       </FormAction>
       <Flexbox gap={12} width={'100%'}>
         <Button

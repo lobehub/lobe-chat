@@ -45,7 +45,7 @@ export interface GlobalBaseSettings {
 
 export type GlobalDefaultAgent = Pick<LobeAgentSession, 'config' | 'meta'>;
 
-interface OpenAIConfig {
+export interface OpenAIConfig {
   OPENAI_API_KEY: string;
   azureApiVersion?: string;
   endpoint?: string;

@@ -6,7 +6,7 @@ import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
 import { SettingsTabs } from '@/store/global/initialState';
-import type { GlobalSettings } from '@/types/settings';
+import type { GlobalSettings, OpenAIConfig } from '@/types/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -23,7 +23,7 @@ export interface SettingsAction {
    * 重置设置
    */
   resetSettings: () => void;
-  setOpenAIAPIKey: (apikey: string) => void;
+  setOpenAIConfig: (config: Partial<OpenAIConfig>) => void;
   /**
    * 设置部分配置设置
    * @param settings - 部分配置设置
@@ -63,17 +63,17 @@ export const createSettingsSlice: StateCreator<
   resetSettings: () => {
     set({ settings: DEFAULT_SETTINGS }, false, t('resetSettings'));
   },
-  setOpenAIAPIKey: (apikey) => {
-    get().setSettings({ languageModel: { openAI: { OPENAI_API_KEY: apikey } } });
+  setOpenAIConfig: (config) => {
+    get().setSettings({ languageModel: { openAI: config } });
   },
 
   setSettings: (settings) => {
-    const oldSetting = get().settings;
-    const nextSettings = merge(oldSetting, settings);
+    const prevSetting = get().settings;
+    const nextSettings = merge(prevSetting, settings);
 
-    if (isEqual(oldSetting, nextSettings)) return;
+    if (isEqual(prevSetting, nextSettings)) return;
 
-    set({ settings: merge(oldSetting, settings) }, false, t('setSettings', settings));
+    set({ settings: merge(prevSetting, settings) }, false, t('setSettings', settings));
   },
   switchSettingTabs: (tab) => {
     set({ settingsTab: tab });

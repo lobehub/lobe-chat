@@ -17,6 +17,8 @@ const defaultAgentMeta = (s: GlobalStore) => merge(DEFAULT_AGENT_META, defaultAg
 const openAIAPIKeySelectors = (s: GlobalStore) =>
   s.settings.languageModel.openAI.OPENAI_API_KEY || s.settings.OPENAI_API_KEY;
 
+const openAIProxyUrlSelectors = (s: GlobalStore) => s.settings.languageModel.openAI.endpoint;
+
 export const exportSettings = (s: GlobalStore) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { OPENAI_API_KEY: _, password: __, ...settings } = s.settings;
@@ -41,4 +43,5 @@ export const settingsSelectors = {
   defaultAgentMeta,
   exportSettings,
   openAIAPI: openAIAPIKeySelectors,
+  openAIProxyUrl: openAIProxyUrlSelectors,
 };

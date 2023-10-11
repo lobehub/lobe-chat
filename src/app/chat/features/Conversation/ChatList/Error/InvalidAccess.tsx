@@ -29,12 +29,12 @@ const InvalidAccess = memo<{ id: string }>(({ id }) => {
         block
         onChange={(value) => setMode(value as Tab)}
         options={[
-          { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: Tab.Api },
           {
             icon: <Icon icon={SquareAsterisk} />,
             label: t('password', { ns: 'common' }),
             value: Tab.Password,
           },
+          { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: Tab.Api },
         ]}
         style={{ width: '100%' }}
         value={mode}
