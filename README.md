@@ -17,10 +17,10 @@ LobeChat is a open-source, extensible ([Function Calling][fc-link]), high-perfor
 [![][github-release-shield]][github-release-link]
 [![][docker-release-shield]][docker-release-link]
 [![][vercel-shield]][vercel-link]
-[![][discord-shield]][discord-link]
-[![][github-releasedate-shield]][github-releasedate-link]
+[![][discord-shield]][discord-link]<br/>
 [![][github-action-test-shield]][github-action-test-link]
-[![][github-action-release-shield]][github-action-release-link]<br/>
+[![][github-action-release-shield]][github-action-release-link]
+[![][github-releasedate-shield]][github-releasedate-link]<br/>
 [![][github-contributors-shield]][github-contributors-link]
 [![][github-forks-shield]][github-forks-link]
 [![][github-stars-shield]][github-stars-link]
@@ -190,11 +190,11 @@ LobeChat provides a [self-hosted version][deploy-link] with Vercel. This allows 
 > **Note**\
 > This project provides some additional configuration items, set with environment variables, The complete list of environment variables can be found in the [📘 Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable) :
 
-| Environment Variable | Required | Description                                                                                                                                   | Example                                                                             |
-| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                      | `sk-xxxxxx...xxxxxx`                                                                |
+| Environment Variable | Required | Description                                                                                                                                   | Example                                                                                   |
+| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                      | `sk-xxxxxx...xxxxxx`                                                                      |
 | `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL | `https://api.chatanywhere.cn/v1`<br/>The default value is<br/>`https://api.openai.com/v1` |
-| `ACCESS_CODE`        | No       | Add a password to access this service, the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                |
+| `ACCESS_CODE`        | No       | Add a password to access this service, the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                      |
 
 ### Keep Updated
 

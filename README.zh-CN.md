@@ -17,10 +17,10 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 [![][github-release-shield]][github-release-link]
 [![][docker-release-shield]][docker-release-link]
 [![][vercel-shield]][vercel-link]
-[![][discord-shield]][discord-link]
-[![][github-releasedate-shield]][github-releasedate-link]
+[![][discord-shield]][discord-link]<br/>
 [![][github-action-test-shield]][github-action-test-link]
-[![][github-action-release-shield]][github-action-release-link]<br/>
+[![][github-action-release-shield]][github-action-release-link]
+[![][github-releasedate-shield]][github-releasedate-link]<br/>
 [![][github-contributors-shield]][github-contributors-link]
 [![][github-forks-shield]][github-forks-link]
 [![][github-stars-shield]][github-stars-link]
@@ -192,11 +192,11 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以�
 > **Note**\
 > 本项目提供了一些额外的配置项，使用环境变量进行设置，完整环境变量可见 [📘环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)：
 
-| 环境变量           | 类型 | 描述                                                                                   | 示例                                                                   |
-| ------------------ | ---- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `OPENAI_API_KEY`   | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                | `sk-xxxxxx...xxxxxx`                                                   |
+| 环境变量           | 类型 | 描述                                                                                   | 示例                                                                         |
+| ------------------ | ---- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`   | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                | `sk-xxxxxx...xxxxxx`                                                         |
 | `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL | `https://api.chatanywhere.cn/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
-| `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                          | `awCT74` 或 `e3@09!`                                                   |
+| `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                          | `awCT74` 或 `e3@09!`                                                         |
 
 ### 保持更新
 
