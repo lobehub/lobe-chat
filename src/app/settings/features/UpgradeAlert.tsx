@@ -22,7 +22,8 @@ const UpgradeAlert = memo(() => {
         }
         banner
         closable
-        message={t('upgradeVersion.newVersion', { version: latestVersion })}
+        message={`✨ ${t('upgradeVersion.newVersion', { version: latestVersion })}`}
+        showIcon={false}
         type={'info'}
       />
     )

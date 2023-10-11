@@ -7,6 +7,9 @@ export const useStyles = createStyles(({ css, token, responsive }) => ({
     position: relative;
     overflow: hidden;
     border-radius: 11px;
+    ${responsive.mobile} {
+      border-radius: unset;
+    }
   `,
   desc: css`
     color: ${token.colorTextDescription};

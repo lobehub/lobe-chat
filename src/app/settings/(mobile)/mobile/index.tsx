@@ -5,14 +5,13 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
-import AgentCardBanner from '@/app/market/features/AgentCard/AgentCardBanner';
 import { CURRENT_VERSION } from '@/const/version';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { useGlobalStore, useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
-import { AVATAR } from '@/store/session/slices/chat/actions/share';
 
 import List from '../../features/SideBar/List';
+import AvatarBanner from '../features/AvatarBanner';
 import ExtraList from '../features/ExtraList';
 import Layout from './layout.mobile';
 
@@ -34,16 +33,11 @@ const Setting = memo(() => {
 
   return (
     <Layout>
-      <AgentCardBanner
-        mask
-        meta={{ avatar: avatar || AVATAR }}
-        size={10}
-        style={{ height: 172, marginBottom: 0 }}
-      >
+      <AvatarBanner avatar={avatar} mask>
         <Center style={{ position: 'absolute', zIndex: 2 }}>
           <AvatarWithUpload size={88} />
         </Center>
-      </AgentCardBanner>
+      </AvatarBanner>
       <div style={{ width: '100%' }}>
         <List />
         <div className={styles.divider} />

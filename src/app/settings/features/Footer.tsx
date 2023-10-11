@@ -5,8 +5,8 @@ import { Center } from 'react-layout-kit';
 
 const useStyles = createStyles(
   ({ css, token }) => css`
-    font-size: 14px;
-    color: ${token.colorTextDescription};
+    font-size: 12px;
+    color: ${token.colorTextQuaternary};
   `,
 );
 

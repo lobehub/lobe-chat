@@ -1,8 +1,10 @@
-import { LogoThree } from '@lobehub/ui';
+import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { genSize, useStyles } from './style';
+
+const LogoThree = dynamic(() => import('@lobehub/ui/es/LogoThree'));
 
 const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
   const size = useMemo(

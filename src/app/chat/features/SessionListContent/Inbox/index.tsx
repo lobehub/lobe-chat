@@ -37,7 +37,7 @@ const Inbox = memo(() => {
 
   return (
     <Link
-      aria-label={INBOX_SESSION_ID}
+      aria-label={t('inbox.title')}
       href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={(e) => {
         e.preventDefault();
