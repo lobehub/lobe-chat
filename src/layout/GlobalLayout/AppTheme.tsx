@@ -45,11 +45,11 @@ const AppTheme = memo<AppThemeProps>(
           primaryColor: primaryColor ?? defaultPrimaryColor,
         }}
         defaultAppearance={defaultAppearance}
+        enableWebfonts={false}
         onAppearanceChange={(appearance) => {
           setCookie(LOBE_THEME_APPEARANCE, appearance);
         }}
         themeMode={themeMode}
-enableWebfonts={false}
       >
         <GlobalStyle />
         {children}
