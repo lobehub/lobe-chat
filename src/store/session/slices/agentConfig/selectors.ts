@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 
+import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
@@ -42,7 +43,7 @@ const currentAgentAvatar = (s: SessionStore) => {
   return session.meta.avatar || DEFAULT_AVATAR;
 };
 
-const currentAgentModel = (s: SessionStore): LanguageModel => {
+const currentAgentModel = (s: SessionStore): LanguageModel | string => {
   const config = currentAgentConfig(s);
 
   return config?.model || LanguageModel.GPT3_5;
@@ -66,6 +67,12 @@ const getTitle = (s: MetaData) => s.title || t('defaultSession', { ns: 'common' 
 export const getDescription = (s: MetaData) =>
   s.description || t('noDescription', { ns: 'common' });
 
+const showTokenTag = (s: SessionStore) => {
+  const model = currentAgentModel(s);
+
+  return DEFAULT_OPENAI_MODEL_LIST.includes(model);
+};
+
 export const agentSelectors = {
   currentAgentAvatar,
   currentAgentBackgroundColor,
@@ -80,4 +87,5 @@ export const agentSelectors = {
   getDescription,
   getTitle,
   hasSystemRole,
+  showTokenTag,
 };

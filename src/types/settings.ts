@@ -48,6 +48,10 @@ export type GlobalDefaultAgent = Pick<LobeAgentSession, 'config' | 'meta'>;
 export interface OpenAIConfig {
   OPENAI_API_KEY: string;
   azureApiVersion?: string;
+  /**
+   * custom mode name for fine-tuning or openai like model
+   */
+  customModelName?: string;
   endpoint?: string;
   models?: string[];
   useAzure?: boolean;

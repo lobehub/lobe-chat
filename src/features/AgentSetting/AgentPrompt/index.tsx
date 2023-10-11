@@ -9,6 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { ModelTokens } from '@/const/modelTokens';
 import { useTokenCount } from '@/hooks/useTokenCount';
+import { LanguageModel } from '@/types/llm';
 
 import { useStore } from '../store';
 
@@ -29,21 +30,25 @@ const AgentPrompt = memo(() => {
   const [systemRole, model] = useStore((s) => [s.config.systemRole, s.config.model]);
   const systemTokenCount = useTokenCount(systemRole);
 
+  const showTag = model in ModelTokens;
+
   return (
     <FormGroup
       extra={
         <Flexbox align={'center'} gap={8} horizontal>
-          <TokenTag
-            displayMode={'used'}
-            maxValue={ModelTokens[model]}
-            shape={'square'}
-            text={{
-              overload: t('tokenTag.overload', { ns: 'common' }),
-              remained: t('tokenTag.remained', { ns: 'common' }),
-              used: t('tokenTag.used', { ns: 'common' }),
-            }}
-            value={systemTokenCount}
-          />
+          {showTag && (
+            <TokenTag
+              displayMode={'used'}
+              maxValue={ModelTokens[model as LanguageModel]}
+              shape={'square'}
+              text={{
+                overload: t('tokenTag.overload', { ns: 'common' }),
+                remained: t('tokenTag.remained', { ns: 'common' }),
+                used: t('tokenTag.used', { ns: 'common' }),
+              }}
+              value={systemTokenCount}
+            />
+          )}
         </Flexbox>
       }
       icon={Bot}

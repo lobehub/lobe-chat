@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CHAT_TEXTAREA_HEIGHT } from '@/const/layoutTokens';
 import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
 import ActionLeft from './ActionBar/ActionLeft';
 import ActionsRight from './ActionBar/ActionRight';
@@ -28,10 +29,11 @@ const ChatInputContent = memo<ChatContentProps>(
 
     const mobile = runtimeMobile || defaultMobile;
 
-    const [isLoading, sendMessage, stopGenerateMessage] = useSessionStore((s) => [
+    const [isLoading, sendMessage, stopGenerateMessage, showTokenTag] = useSessionStore((s) => [
       !!s.chatLoadingId,
       s.sendMessage,
       s.stopGenerateMessage,
+      agentSelectors.showTokenTag(s),
     ]);
 
     return (
@@ -39,9 +41,11 @@ const ChatInputContent = memo<ChatContentProps>(
         actions={
           <>
             <ActionLeft />
-            <Suspense>
-              <Token input={message} />
-            </Suspense>
+            {showTokenTag && (
+              <Suspense>
+                <Token input={message} />
+              </Suspense>
+            )}
           </>
         }
         actionsRight={<ActionsRight />}

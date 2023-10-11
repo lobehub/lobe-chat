@@ -6,6 +6,7 @@ import { ModelTokens } from '@/const/modelTokens';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, chatSelectors } from '@/store/session/selectors';
+import { LanguageModel } from '@/types/llm';
 
 const Token = memo<{ input: string }>(({ input }) => {
   const { t } = useTranslation('common');
@@ -15,7 +16,7 @@ const Token = memo<{ input: string }>(({ input }) => {
   const [messageString, systemRole, model] = useSessionStore((s) => [
     chatSelectors.chatsMessageString(s),
     agentSelectors.currentAgentSystemRole(s),
-    agentSelectors.currentAgentModel(s),
+    agentSelectors.currentAgentModel(s) as LanguageModel,
   ]);
 
   const systemRoleToken = useTokenCount(systemRole);
