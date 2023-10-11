@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 0.88.0](https://github.com/lobehub/lobe-chat/compare/v0.87.0...v0.88.0)
+
+<sup>Released on **2023-10-11**</sup>
+
+#### ✨ Features
+
+- **misc**: Add mobile responsiveness, create new component, modify properties, make API calls, Dynamically import components using "dynamic" function.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add mobile responsiveness, create new component, modify properties, make API calls ([759c920](https://github.com/lobehub/lobe-chat/commit/759c920))
+- **misc**: Dynamically import components using "dynamic" function ([dd9db22](https://github.com/lobehub/lobe-chat/commit/dd9db22))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.87.0](https://github.com/lobehub/lobe-chat/compare/v0.86.5...v0.87.0)
 
 <sup>Released on **2023-10-11**</sup>
