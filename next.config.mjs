@@ -18,11 +18,31 @@ const withPWA = nextPWA({
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  images: { 
-    unoptimized:!isProd, 
-  }, 
-  experimental: { 
-    forceSwcTransforms: true, 
+  images: {
+    unoptimized: !isProd,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'registry.npmmirror.com',
+        port: '',
+        pathname: '/@lobehub/assets-emoji/1.3.0/files/assets/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'registry.npmmirror.com',
+        port: '',
+        pathname: '/@lobehub/assets-emoji-anim/1.0.0/files/assets/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'registry.npmmirror.com',
+        port: '',
+        pathname: '/@lobehub/assets-logo/1.1.0/files/assets/**',
+      },
+    ],
+  },
+  experimental: {
+    forceSwcTransforms: true,
   },
   transpilePackages: ['@lobehub/ui', 'antd-style'],
 
