@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.86.3](https://github.com/lobehub/lobe-chat/compare/v0.86.2...v0.86.3)
+
+<sup>Released on **2023-10-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix docker image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix docker image ([14ff80e](https://github.com/lobehub/lobe-chat/commit/14ff80e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.86.2](https://github.com/lobehub/lobe-chat/compare/v0.86.1...v0.86.2)
 
 <sup>Released on **2023-10-11**</sup>
