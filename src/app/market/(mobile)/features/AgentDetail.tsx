@@ -1,10 +1,11 @@
 import { Modal } from '@lobehub/ui';
+import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 
-import AgentDetailContent from '../../features/AgentDetailContent';
+const AgentDetailContent = dynamic(() => import('../../features/AgentDetailContent'));
 
 const AgentDetail = memo(() => {
   const [showAgentSidebar, deactivateAgent] = useMarketStore((s) => [

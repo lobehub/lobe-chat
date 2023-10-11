@@ -1,13 +1,14 @@
 import { ActionIcon, Modal } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
 import { Share2 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useSessionStore } from '@/store/session';
 
-import Inner from './Inner';
+const Inner = dynamic(() => import('./Inner'));
 
 const ShareButton = memo(() => {
   const [isModalOpen, setIsModalOpen] = useState(false);

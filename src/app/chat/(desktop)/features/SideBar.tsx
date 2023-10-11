@@ -1,5 +1,6 @@
 import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
 import SafeSpacing from '@/components/SafeSpacing';
@@ -9,7 +10,8 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
 import TopicListContent from '../../features/TopicListContent';
-import SystemRole from '../../features/TopicListContent/SystemRole';
+
+const SystemRole = dynamic(() => import('../../features/TopicListContent/SystemRole'));
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`

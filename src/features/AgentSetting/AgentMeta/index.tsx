@@ -2,16 +2,18 @@ import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehu
 import { Button } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { UserCircle, Wand2 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import EmojiPicker from '@/components/EmojiPicker';
 import { FORM_STYLE } from '@/const/layoutTokens';
 
 import { useStore } from '../store';
 import { SessionLoadingState } from '../store/initialState';
 import AutoGenerateInput from './AutoGenerateInput';
 import BackgroundSwatches from './BackgroundSwatches';
+
+const EmojiPicker = dynamic(() => import('@/components/EmojiPicker'));
 
 const AgentMeta = memo(() => {
   const { t } = useTranslation('setting');
