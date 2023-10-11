@@ -11,7 +11,7 @@ import { LobeAgentSession, LobeAgentSettings, LobeSessions } from '@/types/sessi
 import { setNamespace } from '@/utils/storeDebug';
 import { uuid } from '@/utils/uuid';
 
-import { initLobeSession } from './initialState';
+import { initInbox, initLobeSession } from './initialState';
 import { SessionDispatch, sessionsReducer } from './reducers/session';
 
 const t = setNamespace('session');
@@ -76,7 +76,7 @@ export const createSessionSlice: StateCreator<
   },
 
   clearSessions: () => {
-    set({ sessions: {} }, false, t('clearSessions'));
+    set({ inbox: initInbox, sessions: {} }, false, t('clearSessions'));
   },
 
   createSession: async (agent) => {
