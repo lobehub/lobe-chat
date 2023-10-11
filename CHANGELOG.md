@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.86.2](https://github.com/lobehub/lobe-chat/compare/v0.86.1...v0.86.2)
+
+<sup>Released on **2023-10-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **docker**: Improve config to reduce unnecessary env and change default PORT.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **docker**: Improve config to reduce unnecessary env and change default PORT, closes [#298](https://github.com/lobehub/lobe-chat/issues/298) ([6061318](https://github.com/lobehub/lobe-chat/commit/6061318))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.86.1](https://github.com/lobehub/lobe-chat/compare/v0.86.0...v0.86.1)
 
 <sup>Released on **2023-10-11**</sup>
