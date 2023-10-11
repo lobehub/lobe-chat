@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.86.4](https://github.com/lobehub/lobe-chat/compare/v0.86.3...v0.86.4)
+
+<sup>Released on **2023-10-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve api key form.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve api key form ([fa3170d](https://github.com/lobehub/lobe-chat/commit/fa3170d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.86.3](https://github.com/lobehub/lobe-chat/compare/v0.86.2...v0.86.3)
 
 <sup>Released on **2023-10-11**</sup>
