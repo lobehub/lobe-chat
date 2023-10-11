@@ -44,9 +44,10 @@ EXPOSE 3210
 
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
+ENV PORT=3210
 
 ENV ACCESS_CODE "lobe66"
 ENV OPENAI_API_KEY ""
 ENV OPENAI_PROXY_URL ""
 
-CMD ["PORT=3210","node", "server.js"]
+CMD ["node", "server.js"]
