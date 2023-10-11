@@ -70,10 +70,14 @@ const LLM = memo(() => {
           />
         ),
         desc: useAzure ? t('llm.AzureOpenAI.endpoint.desc') : t('llm.OpenAI.endpoint.desc'),
-
         label: useAzure ? t('llm.AzureOpenAI.endpoint.title') : t('llm.OpenAI.endpoint.title'),
-
         name: [configKey, 'openAI', 'endpoint'],
+      },
+      {
+        children: <Input allowClear placeholder={t('llm.OpenAI.customModelName.placeholder')} />,
+        desc: t('llm.OpenAI.customModelName.desc'),
+        label: t('llm.OpenAI.customModelName.title'),
+        name: [configKey, 'openAI', 'customModelName'],
       },
       {
         children: (

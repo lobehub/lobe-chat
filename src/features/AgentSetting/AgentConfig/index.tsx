@@ -8,7 +8,7 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { LanguageModel } from '@/types/llm';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 
 import { useStore } from '../store';
 
@@ -16,9 +16,11 @@ const AgentConfig = memo(() => {
   const { t } = useTranslation('setting');
   const updateConfig = useStore((s) => s.setAgentConfig);
   const [form] = AFrom.useForm();
+  const { isDarkMode } = useThemeMode();
+
   const config = useStore((s) => s.config, isEqual);
 
-  const { isDarkMode } = useThemeMode();
+  const modelList = useGlobalStore(settingsSelectors.modelList);
 
   useEffect(() => {
     form.setFieldsValue(config);
@@ -96,14 +98,7 @@ const AgentConfig = memo(() => {
   const model: ItemGroup = {
     children: [
       {
-        children: (
-          <Select
-            options={Object.values(LanguageModel).map((value) => ({
-              label: value,
-              value,
-            }))}
-          />
-        ),
+        children: <Select options={modelList.map((value) => ({ label: value, value }))} />,
         desc: t('settingModel.model.desc'),
         label: t('settingModel.model.title'),
         name: 'model',

@@ -1,3 +1,4 @@
+import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { DEFAULT_AGENT, DEFAULT_AGENT_CONFIG, DEFAULT_SETTINGS } from '@/const/settings';
 import { Locales } from '@/locales/resources';
@@ -18,6 +19,11 @@ const openAIAPIKeySelectors = (s: GlobalStore) =>
   s.settings.languageModel.openAI.OPENAI_API_KEY || s.settings.OPENAI_API_KEY;
 
 const openAIProxyUrlSelectors = (s: GlobalStore) => s.settings.languageModel.openAI.endpoint;
+
+const modelListSelectors = (s: GlobalStore) => [
+  ...DEFAULT_OPENAI_MODEL_LIST,
+  ...(s.settings.languageModel.openAI.customModelName || '').split(',').filter(Boolean),
+];
 
 export const exportSettings = (s: GlobalStore) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,6 +48,7 @@ export const settingsSelectors = {
   defaultAgentConfig,
   defaultAgentMeta,
   exportSettings,
+  modelList: modelListSelectors,
   openAIAPI: openAIAPIKeySelectors,
   openAIProxyUrl: openAIProxyUrlSelectors,
 };

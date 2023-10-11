@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { LanguageModel } from '@/types/llm';
@@ -23,12 +24,14 @@ const ActionLeft = memo(() => {
     ];
   });
 
+  const modelList = useGlobalStore(settingsSelectors.modelList);
+
   return (
     <>
       <Dropdown
         menu={{
           activeKey: model,
-          items: Object.values(LanguageModel).map((i) => ({ key: i, label: i })),
+          items: modelList.map((i) => ({ key: i, label: i })),
           onClick: (e) => {
             updateAgentConfig({ model: e.key as LanguageModel });
           },
