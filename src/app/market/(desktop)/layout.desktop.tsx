@@ -1,5 +1,6 @@
 import { GridBackground } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import dynamic from 'next/dynamic';
 import { PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -9,8 +10,9 @@ import AppLayoutDesktop from '@/layout/AppLayout.desktop';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
-import SideBar from './features/AgentDetail';
 import Header from './features/Header';
+
+const SideBar = dynamic(() => import('./features/AgentDetail'), { ssr: false });
 
 const useStyles = createStyles(({ css }) => ({
   background: css`

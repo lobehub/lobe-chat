@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -7,8 +8,9 @@ import AppLayoutMobile from '@/layout/AppLayout.mobile';
 import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
-import DetailModal from './features/AgentDetail';
 import Header from './features/Header';
+
+const DetailModal = dynamic(() => import('./features/AgentDetail'), { ssr: false });
 
 const MarketLayout = ({ children }: PropsWithChildren) => {
   useSwitchSideBarOnInit(SidebarTabKey.Market);
