@@ -1,10 +1,11 @@
 FROM node:20-slim AS base
+
+## Install dependencies only when needed
+FROM base AS builder
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-## Install dependencies only when needed
-FROM base AS builder
 WORKDIR /app
 
 COPY package.json ./
@@ -39,7 +40,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 3210
 
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
@@ -48,4 +49,4 @@ ENV ACCESS_CODE "lobe66"
 ENV OPENAI_API_KEY ""
 ENV OPENAI_PROXY_URL ""
 
-CMD ["node", "server.js"]
+CMD ["PORT=3210","node", "server.js"]
