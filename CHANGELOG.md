@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.89.3](https://github.com/lobehub/lobe-chat/compare/v0.89.2...v0.89.3)
+
+<sup>Released on **2023-10-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix plugin error with nginx reverse proxy.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix plugin error with nginx reverse proxy, closes [#315](https://github.com/lobehub/lobe-chat/issues/315) ([3ba3a3b](https://github.com/lobehub/lobe-chat/commit/3ba3a3b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.89.2](https://github.com/lobehub/lobe-chat/compare/v0.89.1...v0.89.2)
 
 <sup>Released on **2023-10-12**</sup>
