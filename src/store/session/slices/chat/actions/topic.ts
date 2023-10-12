@@ -1,7 +1,7 @@
 import { StateCreator } from 'zustand/vanilla';
 
+import { chainSummaryTitle } from '@/chains/chat';
 import { LOADING_FLAT } from '@/const/message';
-import { promptSummaryTitle } from '@/prompts/chat';
 import { SessionStore } from '@/store/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';
@@ -116,7 +116,7 @@ export const chatTopic: StateCreator<
         output += x;
         dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: output });
       },
-      params: await promptSummaryTitle(messages),
+      params: await chainSummaryTitle(messages),
     });
 
     return topicId;

@@ -2,7 +2,7 @@ import { chatHelpers } from '@/store/session/helpers';
 import { LanguageModel } from '@/types/llm';
 import { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
 
-export const promptSummaryTitle = async (
+export const chainSummaryTitle = async (
   messages: OpenAIChatMessage[],
 ): Promise<Partial<OpenAIChatStreamPayload>> => {
   const finalMessages: OpenAIChatMessage[] = [
