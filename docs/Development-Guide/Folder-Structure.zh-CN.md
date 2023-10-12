@@ -1,3 +1,5 @@
+# 目录架构
+
 LobeChat 的文件夹目录架构如下：
 
 ```bash
@@ -18,10 +20,10 @@ src
 
 ## app
 
-在 `app` 文件夹中，我们将每个路由页面按照 app router 的 [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups) 进行组织，以此来分别处理桌面端和移动端的代码实现。以下是 `welcome` 页面的文件结构为例：
+在 `app` 文件夹中，我们将每个路由页面按照 app router 的 [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups) 进行组织，以此来分别处理桌面端和移动端的代码实现。以 `welcome` 页面的文件结构为例：
 
 ```bash
-.
+welcome
 ├── (desktop)               # 桌面端实现
 │   ├── features            # 桌面端特有的功能
 │   ├── index.tsx           # 桌面端的主入口文件
