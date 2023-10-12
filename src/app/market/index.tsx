@@ -7,10 +7,9 @@ import PageTitle from '@/components/PageTitle';
 import { useMarketStore } from '@/store/market';
 import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
-import AgentCard, { AgentCardProps } from './features/AgentCard';
 import AgentSearchBar from './features/AgentSearchBar';
 
-const Market = memo<AgentCardProps>(({ defaultAgents }) => {
+const Market = memo(() => {
   const { t } = useTranslation('common');
   const pageTitle = genSiteHeadTitle(t('tab.market'));
 
@@ -23,7 +22,6 @@ const Market = memo<AgentCardProps>(({ defaultAgents }) => {
     <>
       <PageTitle title={pageTitle} />
       <AgentSearchBar />
-      <AgentCard defaultAgents={defaultAgents} />
     </>
   );
 });

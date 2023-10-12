@@ -31,7 +31,8 @@
   "unlock": {
     "apikey": {
       "title": "사용자 정의 API 키 사용",
-      "description": "OpenAI API 키를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다."
+      "description": "OpenAI API 키를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+      "addProxyUrl": "OpenAI 프록시 주소 추가하기 (선택 사항)"
     },
     "closeMessage": "알림 닫기",
     "confirm": "확인 및 다시 시도",

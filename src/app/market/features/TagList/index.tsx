@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { startCase } from 'lodash-es';
 import { memo } from 'react';
@@ -12,17 +12,21 @@ const TagList = memo(() => {
 
   return (
     <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
-      {agentTagList.map((item) => (
-        <Button
-          key={item}
-          onClick={() => useMarketStore.setState({ searchKeywords: item })}
-          shape={'round'}
-          size={'small'}
-          type={keywords === item ? 'primary' : 'default'}
-        >
-          {startCase(item)}
-        </Button>
-      ))}
+      {agentTagList?.length > 0
+        ? agentTagList.map((item) => (
+            <Button
+              key={item}
+              onClick={() => useMarketStore.setState({ searchKeywords: item })}
+              shape={'round'}
+              size={'small'}
+              type={keywords === item ? 'primary' : 'default'}
+            >
+              {startCase(item)}
+            </Button>
+          ))
+        : Array.from({ length: 5 })
+            .fill('')
+            .map((_, index) => <Skeleton.Button key={index} shape={'round'} size={'small'} />)}
     </Flexbox>
   );
 });

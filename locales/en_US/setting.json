@@ -75,6 +75,11 @@
         "fetch": "Get list",
         "title": "Azure OpenAI",
         "serverConfig": "The administrator has enabled Azure OpenAI on the server side, switching is prohibited"
+      },
+      "customModelName": {
+        "desc": "Add custom models, separate multiple models with commas (,)",
+        "placeholder": "model1,model2,model3",
+        "title": "Custom Model Name"
       }
     },
     "waitingForMore": "<1>Access to other models is planned</1>, so stay tuned ✨"

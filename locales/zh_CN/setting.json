@@ -50,6 +50,11 @@
         "pass": "检查通过",
         "title": "连通性检查"
       },
+      "customModelName": {
+        "desc": "增加自定义模型，多个模型使用逗号（,） 隔开",
+        "placeholder": "model1,model2,model3",
+        "title": "自定义模型名称"
+      },
       "endpoint": {
         "desc": "除默认地址外，必须包含 http(s)://",
         "placeholder": "https://api.openai.com/v1",

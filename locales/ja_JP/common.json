@@ -73,6 +73,7 @@
     "withSystemRole": "アシスタントの役割設定を含む"
   },
   "stop": "停止",
+  "switchMobileLayout": "モバイルレイアウトに切り替え中...",
   "tab": {
     "chat": "チャット",
     "market": "発見",

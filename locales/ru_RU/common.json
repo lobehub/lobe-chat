@@ -73,6 +73,7 @@
     "shareToShareGPT": "Создать ссылку для обмена ShareGPT"
   },
   "stop": "Остановить",
+  "switchMobileLayout": "Переключение на мобильный макет...",
   "tab": {
     "chat": "Чат",
     "market": "Магазин ассистентов",

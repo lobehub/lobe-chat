@@ -31,7 +31,8 @@
   "unlock": {
     "apikey": {
       "title": "カスタムAPIキーの使用",
-      "description": "OpenAI APIキーを入力すると、会話を開始できます。アプリはあなたのAPIキーを記録しません。"
+      "description": "OpenAI APIキーを入力すると、会話を開始できます。アプリはあなたのAPIキーを記録しません。",
+      "addProxyUrl": "OpenAIプロキシURLを追加（オプション）"
     },
     "closeMessage": "ヒントを閉じる",
     "confirm": "確認して再試行",

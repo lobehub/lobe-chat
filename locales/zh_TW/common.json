@@ -73,6 +73,7 @@
     "shareToShareGPT": "生成 ShareGPT 分享連結"
   },
   "stop": "停止",
+  "switchMobileLayout": "正在切換到行動端佈局...",
   "tab": {
     "chat": "聊天",
     "market": "探索",

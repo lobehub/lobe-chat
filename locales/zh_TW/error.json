@@ -31,7 +31,8 @@
   "unlock": {
     "apikey": {
       "title": "使用自定義 API Key",
-      "description": "輸入你的 OpenAI API Key 即可開始會話。應用程式不會記錄你的 API Key"
+      "description": "輸入你的 OpenAI API Key 即可開始會話。應用程式不會記錄你的 API Key",
+      "addProxyUrl": "添加 OpenAI 代理地址（可選）"
     },
     "confirm": "確認並重試",
     "password": {

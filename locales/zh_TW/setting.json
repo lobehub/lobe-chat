@@ -75,6 +75,11 @@
         "fetch": "取得列表",
         "title": "Azure OpenAI",
         "serverConfig": "管理員已在伺服器端啟用 Azure OpenAI，禁止切換"
+      },
+      "customModelName": {
+        "desc": "增加自訂模型，多個模型使用逗號（,） 隔開",
+        "placeholder": "model1,model2,model3",
+        "title": "自訂模型名稱"
       }
     },
     "waitingForMore": "<1>計劃支援其他模型</1>，敬請期待 ✨"

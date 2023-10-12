@@ -75,6 +75,7 @@ export default {
     withSystemRole: '包含助手角色设定',
   },
   stop: '停止',
+  switchMobileLayout: '正在切换到移动端布局...',
   tab: {
     chat: '会话',
     market: '发现',

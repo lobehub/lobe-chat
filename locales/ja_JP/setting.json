@@ -75,6 +75,11 @@
         "fetch": "リストを取得",
         "serverConfig": "管理者がサーバー側でAzure OpenAIを設定しており、切り替えが禁止されています",
         "title": "Azure OpenAI"
+      },
+      "customModelName": {
+        "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ってください",
+        "placeholder": "model1,model2,model3",
+        "title": "カスタムモデル名"
       }
     },
     "waitingForMore": "他のモデルは現在 <1>計画中</1> です。お楽しみに ✨"

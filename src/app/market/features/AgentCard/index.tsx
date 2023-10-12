@@ -1,6 +1,6 @@
+import { SpotlightCardProps } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
-import dynamic from 'next/dynamic';
-import { memo, useMemo } from 'react';
+import { FC, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -12,16 +12,14 @@ import AgentCardItem from './AgentCardItem';
 import Loading from './Loading';
 import { useStyles } from './style';
 
-const AgentCardMobile = dynamic(() => import('../../(mobile)/features/AgentCard'));
-const AgentCardDesktop = dynamic(() => import('@lobehub/ui/es/SpotlightCard'));
-
 const gridRender = (item: any) => <AgentCardItem {...item} />;
 
 export interface AgentCardProps {
+  CardRender: FC<SpotlightCardProps>;
   defaultAgents?: AgentsMarketIndexItem[];
 }
 
-const AgentCard = memo<AgentCardProps>(({ defaultAgents }) => {
+const AgentCard = memo<AgentCardProps>(({ defaultAgents, CardRender }) => {
   const { t } = useTranslation('market');
   const { mobile } = useResponsive();
   const { styles } = useStyles();
@@ -41,8 +39,6 @@ const AgentCard = memo<AgentCardProps>(({ defaultAgents }) => {
   }, [agentList, keywords]);
 
   if (agentList.length === 0) return <Loading />;
-
-  const CardRender = mobile ? AgentCardMobile : AgentCardDesktop;
 
   return (
     <Flexbox gap={mobile ? 16 : 24}>

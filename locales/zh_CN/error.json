@@ -30,6 +30,7 @@
   },
   "unlock": {
     "apikey": {
+      "addProxyUrl": "添加 OpenAI 代理地址（可选）",
       "description": "输入你的 OpenAI API Key 即可开始会话。应用不会记录你的 API Key",
       "title": "使用自定义 API Key"
     },

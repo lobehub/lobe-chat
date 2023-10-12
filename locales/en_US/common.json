@@ -73,6 +73,7 @@
     "shareToShareGPT": "Generate ShareGPT sharing link"
   },
   "stop": "Stop",
+  "switchMobileLayout": "Switching to mobile layout...",
   "tab": {
     "chat": "Chat",
     "market": "Discover",

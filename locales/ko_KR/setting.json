@@ -75,6 +75,11 @@
         "fetch": "목록 가져오기",
         "serverConfig": "관리자가 서버에서 Azure OpenAI를 구성했으므로 변경이 금지되었습니다.",
         "title": "Azure OpenAI"
+      },
+      "customModelName": {
+        "desc": "사용자 정의 모델 추가, 여러 모델은 쉼표(,)로 구분합니다",
+        "placeholder": "model1,model2,model3",
+        "title": "사용자 정의 모델 이름"
       }
     },
     "waitingForMore": "더 많은 모델이 <1>계획 중</1>에 있으니 기대해주세요 ✨"

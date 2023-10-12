@@ -31,7 +31,8 @@
   "unlock": {
     "apikey": {
       "title": "Use Custom API Key",
-      "description": "Enter your OpenAI API Key to start the conversation. The application will not record your API Key."
+      "description": "Enter your OpenAI API Key to start the conversation. The application will not record your API Key.",
+      "addProxyUrl": "Add OpenAI Proxy URL (optional)"
     },
     "confirm": "Confirm and Retry",
     "password": {

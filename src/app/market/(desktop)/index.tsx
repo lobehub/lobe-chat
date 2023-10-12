@@ -1,19 +1,22 @@
 'use client';
 
+import { SpotlightCard } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { FC, memo } from 'react';
 
-import { AgentCardProps } from '@/app/market/features/AgentCard';
+import AgentCard from '@/app/market/features/AgentCard';
 import ResponsiveIndex from '@/components/ResponsiveIndex';
+import { AgentsMarketIndexItem } from '@/types/market';
 
 import Index from '../index';
 import Layout from './layout.desktop';
 
 const Mobile: FC = dynamic(() => import('../(mobile)')) as FC;
-export default memo<AgentCardProps>((props) => (
+export default memo<{ defaultAgents?: AgentsMarketIndexItem[] }>(({ defaultAgents }) => (
   <ResponsiveIndex Mobile={Mobile}>
     <Layout>
-      <Index {...props} />
+      <Index />
+      <AgentCard CardRender={SpotlightCard} defaultAgents={defaultAgents} />
     </Layout>
   </ResponsiveIndex>
 ));

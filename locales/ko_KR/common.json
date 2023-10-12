@@ -73,6 +73,7 @@
     "withSystemRole": "어시스턴트 역할 포함"
   },
   "stop": "중지",
+  "switchMobileLayout": "모바일 레이아웃으로 전환 중...",
   "tab": {
     "chat": "채팅",
     "market": "탐색",

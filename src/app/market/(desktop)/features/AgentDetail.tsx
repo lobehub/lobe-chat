@@ -1,13 +1,12 @@
 import { DraggablePanel, DraggablePanelBody, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import dynamic from 'next/dynamic';
 import { memo, useState } from 'react';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { MARKET_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 
-const AgentDetailContent = dynamic(() => import('../../features/AgentDetailContent'));
+import AgentDetailContent from '../../features/AgentDetailContent';
 
 const useStyles = createStyles(({ css, token, stylish }) => ({
   content: css`
