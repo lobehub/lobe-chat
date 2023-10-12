@@ -19,7 +19,6 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
   - [`AGENTS_INDEX_URL`](#agents_index_url)
 - [数据统计](#数据统计)
   - [Vercel Analytics](#vercel-analytics)
-  - [Mixpanel Analytics](#mixpanel-analytics)
   - [Posthog Analytics](#posthog-analytics)
 
 ## 通用变量
@@ -114,29 +113,6 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值： -
 - 示例：`1`
 
-### Mixpanel Analytics
-
-#### `NEXT_PUBLIC_ANALYTICS_MIXPANEL`
-
-- 类型：可选
-- 描述：用于开启 [Mixpanel Analytics][mixpanel-analytics-url] 的环境变量，设为 `1` 时开启 Mixpanel Analytics
-- 默认值： -
-- 示例：`1`
-
-#### `NEXT_PUBLIC_MIXPANEL_PROJECT_TOKEN`
-
-- 类型：可选
-- 描述：设置 Mixpanel 项目的识别 Token，可以在[这里][mixpanel-project-url]找到
-- 默认值： -
-- 示例：`60db2abae7fdd29961f4e8f91b074b3a`
-
-#### `NEXT_PUBLIC_MIXPANEL_DEBUG`
-
-- 类型：可选
-- 描述：开启 Mixpanel 的调试模式
-- 默认值： -
-- 示例：`1`
-
 ### Posthog Analytics
 
 #### `NEXT_PUBLIC_ANALYTICS_POSTHOG`
@@ -168,7 +144,5 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 示例：`1`
 
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
-[mixpanel-analytics-url]: https://mixpanel.com
-[mixpanel-project-url]: https://mixpanel.com/settings/project
 [openai-api-page]: https://platform.openai.com/account/api-keys
 [posthog-analytics-url]: https://posthog.com
