@@ -34,17 +34,12 @@ export const getClientConfig = () => ({
   PLUGINS_INDEX_URL: process.env.PLUGINS_INDEX_URL,
 
   // Vercel Analytics
-  ANALYTICS_VERCEL: process.env.NEXT_PUBLIC_ANALYTICS_VERCEL !== '0',
+  ANALYTICS_VERCEL: process.env.NEXT_PUBLIC_ANALYTICS_VERCEL === '1',
   VERCEL_DEBUG: process.env.NEXT_PUBLIC_VERCEL_DEBUG === '1',
 
   // Plausible Analytics
   ANALYTICS_PLAUSIBLE: process.env.NEXT_PUBLIC_ANALYTICS_PLAUSIBLE === '1',
   PLAUSIBLE_DOMAIN: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN,
-
-  // Mixpanel Analytics
-  ANALYTICS_MIXPANEL: process.env.NEXT_PUBLIC_ANALYTICS_MIXPANEL === '1',
-  MIXPANEL_PROJECT_TOKEN: process.env.NEXT_PUBLIC_MIXPANEL_PROJECT_TOKEN,
-  MIXPANEL_DEBUG: process.env.NEXT_PUBLIC_MIXPANEL_DEBUG === '1',
 
   // Posthog Analytics
   ANALYTICS_POSTHOG: process.env.NEXT_PUBLIC_ANALYTICS_POSTHOG === '1',
