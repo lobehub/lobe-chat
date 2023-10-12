@@ -26,7 +26,7 @@ const Header = memo(() => {
     <MobileNavBar
       center={<Logo type={'text'} />}
       left={
-        <div onClick={() => router.push('/settings/mobile')} style={{ marginLeft: 8 }}>
+        <div onClick={() => router.push('/settings')} style={{ marginLeft: 8 }}>
           {avatar ? <Avatar avatar={avatar} size={28} /> : <Logo size={28} />}
         </div>
       }

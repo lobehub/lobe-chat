@@ -16,7 +16,7 @@ const ResponsiveLayout = ({ children, Desktop, Mobile }: ServerResponsiveLayoutP
   const mobile = useIsMobile();
 
   return (
-    <Suspense fallback={<FullscreenLoading title={t('appInitializing')} />}>
+    <Suspense fallback={<FullscreenLoading title={t('layoutInitializing', { ns: 'common' })} />}>
       {mobile ? <Mobile>{children}</Mobile> : <Desktop>{children}</Desktop>}
     </Suspense>
   );

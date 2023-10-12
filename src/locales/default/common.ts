@@ -36,12 +36,14 @@ export default {
   feedback: '反馈与建议',
   historyRange: '历史范围',
   import: '导入配置',
+
   inbox: {
     defaultMessage:
       '你好，我是你的智能助手，你可以问我任何问题，我会尽力回答你。如果需要获得更加专业或定制的助手，可以点击`+`创建自定义助手',
     desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
   },
+  layoutInitializing: '正在加载布局...',
   message: {
     function_loading: '插件请求中...',
   },
@@ -75,7 +77,6 @@ export default {
     withSystemRole: '包含助手角色设定',
   },
   stop: '停止',
-  switchMobileLayout: '正在切换到移动端布局...',
   tab: {
     chat: '会话',
     market: '发现',

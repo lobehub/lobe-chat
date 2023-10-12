@@ -7,7 +7,7 @@ import FullscreenLoading from '@/components/FullscreenLoading';
 const Loading = () => {
   const { t } = useTranslation();
 
-  return <FullscreenLoading title={t('switchMobileLayout')} />;
+  return <FullscreenLoading title={t('appInitializing', { ns: 'common' })} />;
 };
 
 export default Loading;

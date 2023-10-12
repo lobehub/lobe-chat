@@ -1,7 +1,9 @@
 'use client';
 
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import FullscreenLoading from '@/components/FullscreenLoading';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface ResponsiveIndexProps {
@@ -9,9 +11,14 @@ interface ResponsiveIndexProps {
   children: ReactNode;
 }
 const ResponsiveIndex = ({ children, Mobile }: ResponsiveIndexProps) => {
+  const { t } = useTranslation();
   const mobile = useIsMobile();
 
-  return mobile ? <Mobile /> : children;
+  return (
+    <Suspense fallback={<FullscreenLoading title={t('layoutInitializing', { ns: 'common' })} />}>
+      {mobile ? <Mobile /> : children}
+    </Suspense>
+  );
 };
 
 export default ResponsiveIndex;
