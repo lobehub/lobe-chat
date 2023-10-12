@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { MetaData } from '@/types/meta';
 
-export const useStyles = createStyles(({ css, token }, maskColor: string) => ({
+export const useStyles = createStyles(({ css, token }) => ({
   banner: css`
     position: relative;
 
@@ -14,20 +14,14 @@ export const useStyles = createStyles(({ css, token }, maskColor: string) => ({
     height: 64px;
     margin-bottom: -56px;
 
-    background: ${token.colorFill};
+    background: ${token.colorFillSecondary};
+
+    mask-image: linear-gradient(to bottom, #fff, transparent);
   `,
   bannerImg: css`
-    filter: blur(6px) saturate(1.6);
-  `,
-  bannerMask: css`
     position: absolute;
-    bottom: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background: linear-gradient(to bottom, transparent, ${maskColor || token.colorBgLayout});
+    top: -50%;
+    filter: blur(50px) saturate(2);
   `,
 }));
 
@@ -39,8 +33,8 @@ interface AgentCardBannerProps extends DivProps {
 }
 
 const AgentCardBanner = memo<AgentCardBannerProps>(
-  ({ meta, className, mask, size = 8, maskColor, children, ...props }) => {
-    const { styles, theme, cx } = useStyles(maskColor);
+  ({ meta, className, size = 200, children, ...props }) => {
+    const { styles, cx } = useStyles();
 
     return (
       <Flexbox
@@ -49,14 +43,7 @@ const AgentCardBanner = memo<AgentCardBannerProps>(
         justify={'center'}
         {...props}
       >
-        <Avatar
-          alt={'banner'}
-          avatar={meta.avatar}
-          background={meta.backgroundColor || theme.colorBgContainer}
-          className={styles.bannerImg}
-          style={{ transform: `scale(${size})` }}
-        />
-        {mask && <div className={styles.bannerMask} />}
+        <Avatar alt={'banner'} avatar={meta.avatar} className={styles.bannerImg} size={size} />
         {children}
       </Flexbox>
     );

@@ -33,7 +33,7 @@ const Setting = memo(() => {
 
   return (
     <Layout>
-      <AvatarBanner avatar={avatar} mask>
+      <AvatarBanner avatar={avatar}>
         <Center style={{ position: 'absolute', zIndex: 2 }}>
           <AvatarWithUpload size={88} />
         </Center>

@@ -9,9 +9,9 @@ const { description, homepage } = pkg;
 const metadata: Metadata = {
   appleWebApp: {
     statusBarStyle: 'black-translucent',
-    title: title,
+    title,
   },
-  description: description,
+  description,
   icons: {
     apple:
       'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/apple-touch-icon.png',
@@ -26,13 +26,13 @@ const metadata: Metadata = {
       {
         alt: title,
         height: 360,
-        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/1.4.0/files/assets/og-480x270.png',
+        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-480x270.png',
         width: 480,
       },
       {
         alt: title,
         height: 720,
-        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/1.4.0/files/assets/og-960x540.png',
+        url: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-960x540.png',
         width: 960,
       },
     ],
@@ -49,6 +49,15 @@ const metadata: Metadata = {
   title: {
     default: title,
     template: '%s · LobeChat',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@lobehub',
+    description,
+    images: [
+      'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-960x540.png',
+    ],
+    title,
   },
   viewport: {
     initialScale: 1,

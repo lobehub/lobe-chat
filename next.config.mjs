@@ -16,8 +16,9 @@ const withPWA = nextPWA({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compress: isProd,
+  productionBrowserSourceMaps: true,
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     unoptimized: !isProd,
     remotePatterns: [
@@ -39,12 +40,20 @@ const nextConfig = {
         port: '',
         pathname: '/@lobehub/assets-logo/1.1.0/files/assets/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'registry.npmmirror.com',
+        port: '',
+        pathname: '/@lobehub/assets-favicons/latest/files/assets/**',
+      },
     ],
   },
   experimental: {
+    webVitalsAttribution: ['CLS', 'LCP'],
     forceSwcTransforms: true,
+    optimizePackageImports: ['modern-screenshot','emoji-mart','@emoji-mart/react','@emoji-mart/data','@icons-pack/react-simple-icons','gpt-tokenizer','chroma-js'],
   },
-  transpilePackages: ['@lobehub/ui', 'antd-style'],
+  transpilePackages: ['@lobehub/ui', 'antd-style', 'lodash-es'],
 
   webpack(config) {
     config.experiments = {

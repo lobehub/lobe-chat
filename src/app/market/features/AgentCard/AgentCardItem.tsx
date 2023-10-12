@@ -22,12 +22,7 @@ const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
   const { isDarkMode } = useThemeMode();
   return (
     <Flexbox className={styles.container} onClick={() => onAgentCardClick(identifier)}>
-      <AgentCardBanner
-        mask
-        maskColor={theme.colorBgContainer}
-        meta={meta}
-        style={{ opacity: isDarkMode ? 0.9 : 0.4 }}
-      />
+      <AgentCardBanner meta={meta} style={{ opacity: isDarkMode ? 0.9 : 0.4 }} />
       <Flexbox className={styles.inner} gap={8} ref={ref}>
         <Avatar
           animation={isHovering}

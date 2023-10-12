@@ -1,11 +1,10 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { useSize } from 'ahooks';
 import { Button, Upload } from 'antd';
 import { SendHorizonal } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { memo, useCallback, useRef } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -18,9 +17,6 @@ const Hero = dynamic(() => import('./Hero'));
 
 const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { importConfig } = useImportConfig();
-  const ref = useRef(null);
-  const domSize = useSize(ref);
-  const width = domSize?.width || 1024;
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
   const [switchSession, switchBackToChat, router, isMobile] = useSessionStore((s) => [
@@ -36,8 +32,8 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <>
-      <div className={styles.container} ref={ref}>
-        <Hero mobile={mobile} width={width} />
+      <div className={styles.container}>
+        <Hero mobile={mobile} width={mobile ? 640 : 1024} />
       </div>
       <Flexbox
         className={styles.buttonGroup}
