@@ -17,7 +17,6 @@ const withPWA = nextPWA({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   compress: isProd,
-  productionBrowserSourceMaps: true,
   reactStrictMode: true,
   images: {
     unoptimized: !isProd,
