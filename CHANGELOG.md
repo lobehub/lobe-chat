@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.89.1](https://github.com/lobehub/lobe-chat/compare/v0.89.0...v0.89.1)
+
+<sup>Released on **2023-10-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove useless dynamic import.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove useless dynamic import ([4a9c426](https://github.com/lobehub/lobe-chat/commit/4a9c426))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.89.0](https://github.com/lobehub/lobe-chat/compare/v0.88.0...v0.89.0)
 
 <sup>Released on **2023-10-12**</sup>
