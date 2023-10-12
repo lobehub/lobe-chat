@@ -49,7 +49,8 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 - [📸 快照预览](#-快照预览)
 - [⚡️ 性能测试](#️-性能测试)
 - [🛳 开箱即用](#-开箱即用)
-  - [保持更新](#保持更新)
+  - [一键部署到 Vercel](#一键部署到-vercel)
+  - [使用 Docker 部署](#使用-docker-部署)
 - [📦 生态系统](#-生态系统)
 - [🧩 插件体系](#-插件体系)
 - [⌨️ 本地开发](#️-本地开发)
@@ -176,6 +177,8 @@ LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，�
 
 ## 🛳 开箱即用
 
+### 一键部署到 Vercel
+
 LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。如果想自己部署该服务，可以按照以下步骤进行操作：
 
 - 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
@@ -198,9 +201,32 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以�
 | `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL | `https://api.chatanywhere.cn/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
 | `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                          | `awCT74` 或 `e3@09!`                                                         |
 
-### 保持更新
+#### 保持更新
 
 如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示 “有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。我们建议按照 [📘 LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN) 步骤重新部署。
+
+### 使用 Docker 部署
+
+我们提供了 Docker 镜像，供你在自己的私有设备上部署 LobeChat 服务。使用以下命令即可使用一键启动 LobeChat 服务：
+
+```shell
+docker run -d -p 3210:3210 \
+  -e OPENAI_API_KEY=sk-xxxx \
+  -e ACCESS_CODE=lobe66 \
+  lobehub/lobe-chat
+```
+
+如果你需要通过代理使用 OpenAI 服务，你可以使用 `OPENAI_PROXY_URL` 环境变量来配置代理地址：
+
+```shell
+docker run -d -p 3210:3210 \
+  -e OPENAI_API_KEY=sk-xxxx \
+  -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
+  -e ACCESS_CODE=lobe66 \
+  lobehub/lobe-chat
+```
+
+有关 Docker 部署的详细说明，详见 [📘 使用 Docker 部署](docs/Docker-Deployment.zh-CN.md)
 
 <div align="right">
 

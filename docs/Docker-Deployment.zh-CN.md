@@ -17,6 +17,8 @@ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
+使用你的 OpenAI API Key 替换上述命令中的 `sk-xxxx` ， 官方 Docker 镜像中设定的密码默认为 `lobe66`，请将其替换为自己的密码以提升安全性。
+
 ### 使用代理地址
 
 如果你需要通过代理使用 OpenAI 服务，你可以使用 `OPENAI_PROXY_URL` 环境变量来配置代理地址：
@@ -29,7 +31,7 @@ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-LobeChat 完整的环境变量请参考 [环境变量](./Environment-Variable.zh-CN.md) 部分。
+LobeChat 支持的完整环境变量列表请参考 [环境变量](./Environment-Variable.zh-CN.md) 部分。
 
 > **Note**\
 > 由于官方的 Docker 镜像构建大约需要半小时左右，如果在更新部署后会出现「存在更新」的提示，可以等待镜像构建完成后再次部署。

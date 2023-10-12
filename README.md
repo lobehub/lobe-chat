@@ -49,7 +49,8 @@ LobeChat is a open-source, extensible ([Function Calling][fc-link]), high-perfor
 - [📸 Snapshot](#-snapshot)
 - [⚡️ Performance](#️-performance)
 - [🛳 Self Hosting](#-self-hosting)
-  - [Keep Updated](#keep-updated)
+  - [Deploying with Vercel](#deploying-with-vercel)
+  - [Deploying with Docker](#deploying-with-docker)
 - [📦 Ecosystem](#-ecosystem)
 - [🧩 Plugins](#-plugins)
 - [⌨️ Local Development](#️-local-development)
@@ -174,6 +175,8 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ## 🛳 Self Hosting
 
+### Deploying with Vercel
+
 LobeChat provides a [self-hosted version][deploy-link] with Vercel. This allows you to build your own chatbot within a few minutes, without any prior knowledge. If you want to deploy this service yourself, you can follow these steps:
 
 - Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
@@ -196,9 +199,32 @@ LobeChat provides a [self-hosted version][deploy-link] with Vercel. This allows 
 | `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL | `https://api.chatanywhere.cn/v1`<br/>The default value is<br/>`https://api.openai.com/v1` |
 | `ACCESS_CODE`        | No       | Add a password to access this service, the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                      |
 
-### Keep Updated
+#### Keep Updated
 
 If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available". This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to accurately detect updates. We suggest you redeploy using the following steps, [📘 Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync).
+
+### Deploying with Docker
+
+We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service with one-click:
+
+```shell
+docker run -d -p 3210:3210 \
+  -e OPENAI_API_KEY=sk-xxxx \
+  -e ACCESS_CODE=lobe66 \
+  lobehub/lobe-chat
+```
+
+If you need to use the OpenAI service through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
+
+```shell
+docker run -d -p 3210:3210 \
+  -e OPENAI_API_KEY=sk-xxxx \
+  -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
+  -e ACCESS_CODE=lobe66 \
+  lobehub/lobe-chat
+```
+
+For detailed instructions on deploying with Docker, please refer to the [📘 Docker Deployment Guide](docs/Docker-Deployment.md)
 
 <div align="right">
 
