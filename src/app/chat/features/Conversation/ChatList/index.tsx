@@ -5,6 +5,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
 import { PREFIX_KEY, REGENERATE_KEY } from '@/const/hotkeys';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 
@@ -25,6 +26,7 @@ const List = memo(() => {
     deleteMessage,
     resendMessage,
     dispatchMessage,
+    translateMessage,
   ] = useSessionStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
     return [
@@ -35,8 +37,10 @@ const List = memo(() => {
       s.deleteMessage,
       s.resendMessage,
       s.dispatchMessage,
+      s.translateMessage,
     ];
   });
+  const targetLang = useGlobalStore(settingsSelectors.currentLanguage);
 
   const hotkeys = [PREFIX_KEY, REGENERATE_KEY].join('+');
 
