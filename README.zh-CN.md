@@ -49,8 +49,9 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 - [📸 快照预览](#-快照预览)
 - [⚡️ 性能测试](#️-性能测试)
 - [🛳 开箱即用](#-开箱即用)
-  - [一键部署到 Vercel](#一键部署到-vercel)
-  - [使用 Docker 部署](#使用-docker-部署)
+  - [`A` 使用 Vercel 部署](#a-使用-vercel-部署)
+  - [`B` 使用 Docker 部署](#b-使用-docker-部署)
+- [环境变量](#环境变量)
 - [📦 生态系统](#-生态系统)
 - [🧩 插件体系](#-插件体系)
 - [⌨️ 本地开发](#️-本地开发)
@@ -177,40 +178,33 @@ LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，�
 
 ## 🛳 开箱即用
 
-### 一键部署到 Vercel
+LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。
 
-LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。如果想自己部署该服务，可以按照以下步骤进行操作：
+### `A` 使用 Vercel 部署
+
+如果想在 Vercel 上部署该服务，可以按照以下步骤进行操作：
 
 - 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
 - 点击下方按钮开始部署： Deploy with Vercel，直接使用 GitHub 账号登录即可，记得在环境变量页填入 API Key 和页面访问密码 CODE；
 - 部署完毕后，即可开始使用；
 - 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
 
-<div align="center">
-
-[![][deploy-button-image]][deploy-link]
-
-</div>
-
-> **Note**\
-> 本项目提供了一些额外的配置项，使用环境变量进行设置，完整环境变量可见 [📘环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)：
-
-| 环境变量           | 类型 | 描述                                                                                   | 示例                                                                         |
-| ------------------ | ---- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `OPENAI_API_KEY`   | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                | `sk-xxxxxx...xxxxxx`                                                         |
-| `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL | `https://api.chatanywhere.cn/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
-| `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                          | `awCT74` 或 `e3@09!`                                                         |
-
 #### 保持更新
 
 如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示 “有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。我们建议按照 [📘 LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN) 步骤重新部署。
 
-### 使用 Docker 部署
+<br/>
+
+### `B` 使用 Docker 部署
+
+[![][docker-release-shield]][docker-release-link]
+[![][docker-size-shield]][docker-size-link]
+[![][docker-pulls-shield]][docker-pulls-link]
 
 我们提供了 Docker 镜像，供你在自己的私有设备上部署 LobeChat 服务。使用以下命令即可使用一键启动 LobeChat 服务：
 
-```shell
-docker run -d -p 3210:3210 \
+```bash
+$ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
   lobehub/lobe-chat
@@ -218,15 +212,31 @@ docker run -d -p 3210:3210 \
 
 如果你需要通过代理使用 OpenAI 服务，你可以使用 `OPENAI_PROXY_URL` 环境变量来配置代理地址：
 
-```shell
-docker run -d -p 3210:3210 \
+```bash
+$ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
   -e ACCESS_CODE=lobe66 \
   lobehub/lobe-chat
 ```
 
-有关 Docker 部署的详细说明，详见 [📘 使用 Docker 部署](docs/Docker-Deployment.zh-CN.md)
+> **Note**\
+> 有关 Docker 部署的详细说明，详见 [📘 使用 Docker 部署](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment.zh-CN)
+
+<br/>
+
+## 环境变量
+
+本项目提供了一些额外的配置项，使用环境变量进行设置：
+
+| 环境变量           | 类型 | 描述                                                                                   | 示例                                                                         |
+| ------------------ | ---- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`   | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                | `sk-xxxxxx...xxxxxx`                                                         |
+| `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL | `https://api.chatanywhere.cn/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
+| `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                          | `awCT74` 或 `e3@09!`                                                         |
+
+> **Note**\
+> 完整环境变量可见 [📘环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)
 
 <div align="right">
 
@@ -357,13 +367,16 @@ This project is [MIT](./LICENSE) licensed.
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [contributors-contrib]: https://contrib.rocks/image?repo=lobehub/lobe-chat
 [contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
-[deploy-button-image]: https://vercel.com/button
 [deploy-link]: https://vercel.com/new/clone?repository-link=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
 [docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
 [fc-link]: https://sspai.com/post/81986
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large

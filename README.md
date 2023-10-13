@@ -49,8 +49,9 @@ LobeChat is a open-source, extensible ([Function Calling][fc-link]), high-perfor
 - [📸 Snapshot](#-snapshot)
 - [⚡️ Performance](#️-performance)
 - [🛳 Self Hosting](#-self-hosting)
-  - [Deploying with Vercel](#deploying-with-vercel)
-  - [Deploying with Docker](#deploying-with-docker)
+  - [`A` Deploying with Vercel](#a-deploying-with-vercel)
+  - [`B` Deploying with Docker](#b-deploying-with-docker)
+- [Environment Variable](#environment-variable)
 - [📦 Ecosystem](#-ecosystem)
 - [🧩 Plugins](#-plugins)
 - [⌨️ Local Development](#️-local-development)
@@ -175,9 +176,11 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ## 🛳 Self Hosting
 
-### Deploying with Vercel
+LobeChat provides [Self-Hosted Version][deploy-link] with Vercel and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes, without any prior knowledge.
 
-LobeChat provides a [self-hosted version][deploy-link] with Vercel. This allows you to build your own chatbot within a few minutes, without any prior knowledge. If you want to deploy this service yourself, you can follow these steps:
+### `A` Deploying with Vercel
+
+If you want to deploy this service yourself on Vercel, you can follow these steps:
 
 - Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
 - Click the button below to start deployment: Deploy with Vercel. Log in directly with your GitHub account and remember to fill in the API Key and access code CODE on the environment variable page;
@@ -190,25 +193,22 @@ LobeChat provides a [self-hosted version][deploy-link] with Vercel. This allows 
 
 </div>
 
-> **Note**\
-> This project provides some additional configuration items, set with environment variables, The complete list of environment variables can be found in the [📘 Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable) :
-
-| Environment Variable | Required | Description                                                                                                                                   | Example                                                                                   |
-| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                      | `sk-xxxxxx...xxxxxx`                                                                      |
-| `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL | `https://api.chatanywhere.cn/v1`<br/>The default value is<br/>`https://api.openai.com/v1` |
-| `ACCESS_CODE`        | No       | Add a password to access this service, the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                      |
-
 #### Keep Updated
 
 If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available". This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to accurately detect updates. We suggest you redeploy using the following steps, [📘 Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync).
 
-### Deploying with Docker
+<br/>
 
-We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service with one-click:
+### `B` Deploying with Docker
 
-```shell
-docker run -d -p 3210:3210 \
+[![][docker-release-shield]][docker-release-link]
+[![][docker-size-shield]][docker-size-link]
+[![][docker-pulls-shield]][docker-pulls-link]
+
+We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service:
+
+```bash
+$ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
   lobehub/lobe-chat
@@ -216,15 +216,31 @@ docker run -d -p 3210:3210 \
 
 If you need to use the OpenAI service through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
 
-```shell
-docker run -d -p 3210:3210 \
+```bash
+$ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
   -e ACCESS_CODE=lobe66 \
   lobehub/lobe-chat
 ```
 
-For detailed instructions on deploying with Docker, please refer to the [📘 Docker Deployment Guide](docs/Docker-Deployment.md)
+> **Note**\
+> For detailed instructions on deploying with Docker, please refer to the [📘 Docker Deployment Guide](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment)
+
+<br/>
+
+## Environment Variable
+
+This project provides some additional configuration items, set with environment variables
+
+| Environment Variable | Required | Description                                                                                                                                   | Example                                                                                   |
+| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                      | `sk-xxxxxx...xxxxxx`                                                                      |
+| `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL | `https://api.chatanywhere.cn/v1`<br/>The default value is<br/>`https://api.openai.com/v1` |
+| `ACCESS_CODE`        | No       | Add a password to access this service, the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                      |
+
+> **Note**\
+> The complete list of environment variables can be found in the [📘 Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable)
 
 <div align="right">
 
@@ -360,8 +376,12 @@ This project is [MIT](./LICENSE) licensed.
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
 [docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
 [fc-link]: https://sspai.com/post/81986
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large

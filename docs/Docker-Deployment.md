@@ -1,42 +1,84 @@
-# Deployment using Docker
+# Docker Deployment Guide
 
 [![][docker-release-shield]][docker-release-link]
+[![][docker-size-shield]][docker-size-link]
+[![][docker-pulls-shield]][docker-pulls-link]
 
-We provide Docker images for deploying the LobeChat service on your own private devices.
+We provide [Docker Images][docker-release-link] for you to deploy LobeChat service on your private device.
 
-## Container Image
+## Install Docker container environment
 
-### Command Deployment (Recommended)
+If already installed, skip this step.
 
-Use the following command to start the LobeChat service with one-click:
+**Ubuntu:**
 
 ```shell
-docker run -d -p 3210:3210 \
+$ apt install docker.io
+```
+
+**CentOS:**
+
+```shell
+$ yum install docker
+```
+
+## Deploy container image
+
+### `A` Command deployment (recommended)
+
+Use the following command to start LobeChat service with one click:
+
+```shell
+$ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
   lobehub/lobe-chat
 ```
 
-### Using Proxy Address
+> **Note**
+>
+> - The default mapped port is `3210`. Make sure it is not occupied or manually change the port mapping.
+> - Replace `sk-xxxx` in the above command with your own OpenAI API Key.
+> - The password set in the official Docker image is `lobe66` by default. Replace it with your own password to improve security.
+> - For a complete list of environment variables supported by LobeChat, please refer to the [Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN) section.
 
-If you need to use OpenAI services through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
+#### Use a proxy address
+
+If you need to use OpenAI service through a proxy, you can use the `OPENAI_PROXY_URL` environment variable to configure the proxy address:
 
 ```shell
-docker run -d -p 3210:3210 \
+$ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
   -e ACCESS_CODE=lobe66 \
   lobehub/lobe-chat
 ```
 
-For a complete list of environment variables for LobeChat, please refer to the [Environment Variables](./Environment-Variable.md) section.
-
 > **Note**\
-> Since the official Docker image construction takes about half an hour, if you see the "update available" message after updating the deployment, you can wait for the image construction to complete before redeploying.
+> As the official Docker image build takes about half an hour, if there is a "update available" prompt after updating deployment, wait for the image to finish building before deploying again.
 
-### 🚧 Docker Compose
+### `B` Docker Compose
 
-Under construction, please be patient\~
+The configuration file for using `docker-compose` is as follows:
 
+```yml
+version: '3.8'
+
+services:
+  lobe-chat:
+    image: lobehub/lobe-chat
+    container_name: lobe-chat
+    ports:
+      - '3210:3210'
+    environment:
+      OPENAI_API_KEY: sk-xxxx
+      OPENAI_PROXY_URL: https://api-proxy.com/v1
+      ACCESS_CODE: lobe66
+```
+
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
 [docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
