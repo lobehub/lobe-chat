@@ -12,13 +12,13 @@ If already installed, skip this step.
 
 **Ubuntu:**
 
-```shell
+```fish
 $ apt install docker.io
 ```
 
 **CentOS:**
 
-```shell
+```fish
 $ yum install docker
 ```
 
@@ -28,7 +28,7 @@ $ yum install docker
 
 Use the following command to start LobeChat service with one click:
 
-```shell
+```fish
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
@@ -46,7 +46,7 @@ $ docker run -d -p 3210:3210 \
 
 If you need to use OpenAI service through a proxy, you can use the `OPENAI_PROXY_URL` environment variable to configure the proxy address:
 
-```shell
+```fish
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
@@ -75,6 +75,8 @@ services:
       OPENAI_PROXY_URL: https://api-proxy.com/v1
       ACCESS_CODE: lobe66
 ```
+
+<!-- LINK GROUP -->
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square

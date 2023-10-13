@@ -206,7 +206,7 @@ If you have deployed your own project following the one-click deployment steps i
 
 We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service:
 
-```bash
+```fish
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
@@ -216,7 +216,7 @@ $ docker run -d -p 3210:3210 \
 > **Note**\
 > If you need to use the OpenAI service through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
 
-```bash
+```fish
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
@@ -300,7 +300,7 @@ Or clone it for local development:
 
 [![][bun-shield]][bun-link]
 
-```bash
+```fish
 $ git clone https://github.com/lobehub/lobe-chat.git
 $ cd lobe-chat
 $ bun install

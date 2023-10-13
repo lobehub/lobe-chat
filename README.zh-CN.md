@@ -208,7 +208,7 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-link] 和 [Docker 镜像]
 
 我们提供了 Docker 镜像，供你在自己的私有设备上部署 LobeChat 服务。使用以下命令即可使用一键启动 LobeChat 服务：
 
-```bash
+```fish
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
@@ -218,7 +218,7 @@ $ docker run -d -p 3210:3210 \
 > **Note**\
 > 如果你需要通过代理使用 OpenAI 服务，你可以使用 `OPENAI_PROXY_URL` 环境变量来配置代理地址：
 
-```bash
+```fish
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
@@ -302,7 +302,7 @@ $ docker run -d -p 3210:3210 \
 
 [![][bun-shield]][bun-link]
 
-```bash
+```fish
 $ git clone https://github.com/lobehub/lobe-chat.git
 $ cd lobe-chat
 $ bun install

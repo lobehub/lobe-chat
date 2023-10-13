@@ -12,13 +12,13 @@
 
 **Ubuntu**
 
-```shell
+```fish
 $ apt install docker.io
 ```
 
 **CentOS**
 
-```shell
+```fish
 $ yum install docker
 ```
 
@@ -28,7 +28,7 @@ $ yum install docker
 
 使用以下命令即可使用一键启动 LobeChat 服务：
 
-```shell
+```fish
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
@@ -46,7 +46,7 @@ $ docker run -d -p 3210:3210 \
 
 如果你需要通过代理使用 OpenAI 服务，你可以使用 `OPENAI_PROXY_URL` 环境变量来配置代理地址：
 
-```shell
+```fish
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
