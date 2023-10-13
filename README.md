@@ -51,7 +51,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-link]), high-perfor
 - [🛳 Self Hosting](#-self-hosting)
   - [`A` Deploying with Vercel](#a-deploying-with-vercel)
   - [`B` Deploying with Docker](#b-deploying-with-docker)
-- [Environment Variable](#environment-variable)
+  - [Environment Variable](#environment-variable)
 - [📦 Ecosystem](#-ecosystem)
 - [🧩 Plugins](#-plugins)
 - [⌨️ Local Development](#️-local-development)
@@ -225,7 +225,7 @@ $ docker run -d -p 3210:3210 \
 
 <br/>
 
-## Environment Variable
+### Environment Variable
 
 This project provides some additional configuration items, set with environment variables:
 
