@@ -227,7 +227,7 @@ $ docker run -d -p 3210:3210 \
 
 ## Environment Variable
 
-This project provides some additional configuration items, set with environment variables
+This project provides some additional configuration items, set with environment variables:
 
 | Environment Variable | Required | Description                                                                                                                                   | Example                                                                                   |
 | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
