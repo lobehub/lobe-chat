@@ -178,7 +178,9 @@ LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，�
 
 ## 🛳 开箱即用
 
-LobeChat 提供了 Vercel 的 [自托管版本][deploy-link]。这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。
+LobeChat 提供了 Vercel 的 [自托管版本][deploy-link] 和 [Docker 镜像][docker-release-link]，这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。
+
+<br/>
 
 ### `A` 使用 Vercel 部署
 
