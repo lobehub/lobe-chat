@@ -23,11 +23,14 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
   // ============  2. send api   ============ //
 
   try {
-    const response = await openai.chat.completions.create({
-      messages: formatMessages,
-      ...params,
-      stream: true,
-    });
+    const response = await openai.chat.completions.create(
+      {
+        messages: formatMessages,
+        ...params,
+        stream: true,
+      },
+      { headers: { Accept: '*/*' } },
+    );
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
   } catch (error) {
