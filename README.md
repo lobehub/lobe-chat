@@ -8,7 +8,7 @@
 
 <h1>Lobe Chat</h1>
 
-LobeChat is a open-source, extensible ([Function Calling][fc-link]), high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
+LobeChat is an open-source, extensible ([Function Calling][fc-link]), high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
 
 **English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Wiki][github-wiki-link] · [Report Bug][github-issues-link] · [Request Feature][github-issues-link]
 
