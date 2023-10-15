@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 0.89.5](https://github.com/lobehub/lobe-chat/compare/v0.89.4...v0.89.5)
+
+<sup>Released on **2023-10-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fallback to en when the locale is zh, fix reset button not clear plugin settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fallback to en when the locale is zh ([ff2c00e](https://github.com/lobehub/lobe-chat/commit/ff2c00e))
+- **misc**: Fix reset button not clear plugin settings ([aa1e657](https://github.com/lobehub/lobe-chat/commit/aa1e657))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.89.4](https://github.com/lobehub/lobe-chat/compare/v0.89.3...v0.89.4)
 
 <sup>Released on **2023-10-15**</sup>
