@@ -8,7 +8,7 @@
 
 <h1>Lobe Chat</h1>
 
-LobeChat is an open-source, extensible ([Function Calling][fc-link]), high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
+LobeChat is an open-source, extensible ([Function Calling][fc-link]) high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
 
 **English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Wiki][github-wiki-link] · [Report Bug][github-issues-link] · [Request Feature][github-issues-link]
 
@@ -66,14 +66,14 @@ LobeChat is an open-source, extensible ([Function Calling][fc-link]), high-perfo
 
 ## 👋🏻 Getting Started & Join Our Community
 
-Please be aware that LobeChat is currently under active development，feedback is welcome for any [issues][issues-link] encountered.
+Please be aware that LobeChat is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
 
 | [![][vercel-shield-badge]][vercel-link]   | No installation or registration necessary! Visit our website to experience it firsthand.                           |
 | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
 | [![][discord-shield-badge]][discord-link] | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
 
 > **Important**\
-> **Star Us**，You will receive all releases notifications from GitHub without any delay \~ ⭐️
+> **Star Us**, You will receive all release notifications from GitHub without any delay \~ ⭐️
 
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
 
@@ -86,12 +86,12 @@ Please be aware that LobeChat is currently under active development，feedback i
 
 ## ✨ Features
 
-- [x] 💨 **Quick Deployment**: Using the Vercel platform, you can deploy with just one click and complete the process within 1 minute, without any complex configuration;
+- [x] 💨 **Quick Deployment**: Using the Vercel platform, you can deploy with just one click and complete the process within 1 minute without any complex configuration;
 - [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience;
 - [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more;
 - [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs;
 - [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy;
-- [x] 🤖 **Customizable Agent Roles**: Users can create, share, and debug personalized dialogue agent roles according to their needs, providing more flexible and personalized dialogue functions;
+- [x] 🤖 **Customizable Agent Roles**: Users can create, share, and debug personalized dialogue agent roles according to their needs, providing more flexible and customized dialogue functions;
 - [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
 - [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue;
 
@@ -110,7 +110,7 @@ Please be aware that LobeChat is currently under active development，feedback i
 
 #### `1` Function Calling Plugin System
 
-By building a powerful plugin ecosystem, ChatGPT not only can provide real-time news updates, but it can also assist you in easily querying documents and accessing various e-commerce data. This allows ChatGPT to play a key role in a wider range of fields. If you are interested in writing plugins, we provide detailed component development documentation, SDKs, and template files in the [🧩 Plugin System](#-Plugin-System) section below. Let's work together to make ChatGPT more powerful and easier to use.
+By building a robust plugin ecosystem, ChatGPT cannot only provide real-time news updates but can also assist you in efficiently querying documents and accessing various e-commerce data. This allows ChatGPT to play a vital role in a wider range of fields. If you are interested in writing plugins, we provide detailed component development documentation, SDKs, and template files in the [🧩 Plugin System](#-Plugin-System) section below. Let's work together to make ChatGPT more powerful and easier to use.
 
 <br/>
 
@@ -118,7 +118,7 @@ By building a powerful plugin ecosystem, ChatGPT not only can provide real-time 
 
 #### `2` Prompt Agent Market
 
-In our agent market, we have accumulated a large number of practical prompt agents that have been used in daily work and study. You can also share your agents here and iterate and optimize your prompt agents with more people. You can submit your agents through [🤖/🏪 Submit Agents][submit-agents-link], and our automated i18n workflow will automatically translate your agents into multiple languages, allowing users around the world to enjoy your wisdom.
+In our agent market, we have accumulated a large number of practical, prompt agents that have been used in daily work and study. You can also share your agents here and iterate and optimize your prompt agents with more people. You can submit your agents through [🤖/🏪 Submit Agents][submit-agents-link], and our automated i18n workflow will automatically translate your agents into multiple languages, allowing users worldwide to enjoy your wisdom.
 
 <br/>
 
@@ -176,7 +176,7 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ## 🛳 Self Hosting
 
-LobeChat provides [Self-Hosted Version][deploy-link] with Vercel and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes, without any prior knowledge.
+LobeChat provides [Self-Hosted Version][deploy-link] with Vercel and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
 
 <br/>
 
@@ -185,13 +185,13 @@ LobeChat provides [Self-Hosted Version][deploy-link] with Vercel and [Docker Ima
 If you want to deploy this service yourself on Vercel, you can follow these steps:
 
 - Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
-- Click the button below to start deployment: Deploy with Vercel. Log in directly with your GitHub account and remember to fill in the API Key and access code CODE on the environment variable page;
+- Click the button below to start deployment: Deploy with Vercel. Log in directly with your GitHub account, and remember to fill in the API Key and access code CODE on the environment variable page;
 - After deployment, you can start using it;
-- Bind a custom domain (optional): The DNS of the domain assigned by Vercel is polluted in some areas, binding a custom domain can connect directly.
+- Bind a custom domain (optional): The DNS of the domain assigned by Vercel is polluted in some areas; binding a custom domain can connect directly.
 
 #### Keep Updated
 
-If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available". This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to accurately detect updates.
+If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available."  This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to detect updates accurately.
 
 > **Important**\
 > We suggest you redeploy using the following steps, [📘 Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync).
@@ -231,13 +231,13 @@ $ docker run -d -p 3210:3210 \
 
 ### Environment Variable
 
-This project provides some additional configuration items, set with environment variables:
+This project provides some additional configuration items set with environment variables:
 
 | Environment Variable | Required | Description                                                                                                                                   | Example                                                                                   |
 | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                      | `sk-xxxxxx...xxxxxx`                                                                      |
 | `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL | `https://api.chatanywhere.cn/v1`<br/>The default value is<br/>`https://api.openai.com/v1` |
-| `ACCESS_CODE`        | No       | Add a password to access this service, the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                      |
+| `ACCESS_CODE`        | No       | Add a password to access this service; the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                      |
 
 > **Note**\
 > The complete list of environment variables can be found in the [📘 Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable)
@@ -264,12 +264,12 @@ This project provides some additional configuration items, set with environment 
 
 ## 🧩 Plugins
 
-Plugins provide a means to extend the [Function Calling][fc-link] capabilities of LobeChat. They can be used to introduce new function calls, and even new ways to render message results. If you are interested in plugin development, please refer to our [📘 Plugin Development Guide](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development) in the Wiki.
+Plugins provide a means to extend the [Function Calling][fc-link] capabilities of LobeChat. They can be used to introduce new function calls and even new ways to render message results. If you are interested in plugin development, please refer to our [📘 Plugin Development Guide](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development) in the Wiki.
 
 - [lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeChat. It accesses index.json from this repository to display a list of available plugins for LobeChat to the user.
 - [chat-plugin-template][chat-plugin-template]: This is the plugin template for LobeChat plugin development.
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
-- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The LobeChat Plugins Gateway is a backend service that serves as a gateway for LobeChat plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
+- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The LobeChat Plugins Gateway is a backend service that provides a gateway for LobeChat plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
 
 > **Note**\
 > The plugin system is currently undergoing major development. You can learn more in the following issues:
@@ -315,7 +315,7 @@ $ bun dev
 
 ## 🤝 Contributing
 
-Contributions of all types are more than welcome, if you are interested in contributing code, feel free to check out our GitHub [Issues][github-issues-link] and [Projects][github-project-link] to get stuck in to show us what you’re made of.
+Contributions of all types are more than welcome; if you are interested in contributing code, feel free to check out our GitHub [Issues][github-issues-link] and [Projects][github-project-link] to get stuck in to show us what you’re made of.
 
 [![][pr-welcome-shield]][pr-welcome-link]
 [![][submit-agents-shield]][submit-agents-link]
@@ -331,9 +331,9 @@ Contributions of all types are more than welcome, if you are interested in contr
 
 ## 🔗 More Products
 
-- **[🤯 Lobe Theme][lobe-theme] :** The modern theme for stable diffusion webui, exquisite interface design, highly customizable UI, and efficiency boosting features.
+- **[🤯 Lobe Theme][lobe-theme]:** The modern theme for stable diffusion webui, exquisite interface design, highly customizable UI, and efficiency-boosting features.
 - **[🌏 Lobe i18n][lobe-i18n] :** Lobe i18n is an automation tool for the i18n (internationalization) translation process, powered by ChatGPT. It supports features such as automatic splitting of large files, incremental updates, and customization options for the OpenAI model, API proxy, and temperature.
-- **[💌 Lobe Commit][lobe-commit] :** Lobe Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.
+- **[💌 Lobe Commit][lobe-commit]:** Lobe Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.
 
 <div align="right">
 
