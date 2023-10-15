@@ -11,6 +11,7 @@ import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { localeOptions } from '@/locales/options';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
 import { switchLang } from '@/utils/switchLang';
 
@@ -22,6 +23,7 @@ const Common = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
   const clearSessions = useSessionStore((s) => s.clearSessions);
+  const resetPluginSettings = usePluginStore((s) => s.resetPluginSettings);
 
   const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
   const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [
@@ -45,6 +47,7 @@ const Common = memo(() => {
       title: t('danger.reset.confirm'),
     });
   }, []);
+
   const handleClear = useCallback(() => {
     modal.confirm({
       cancelText: t('cancel', { ns: 'common' }),
@@ -55,6 +58,7 @@ const Common = memo(() => {
       okText: t('ok', { ns: 'common' }),
       onOk: () => {
         clearSessions();
+        resetPluginSettings();
         message.success(t('danger.clear.success'));
       },
       title: t('danger.clear.confirm'),

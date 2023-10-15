@@ -10,6 +10,7 @@ const resources = {
   'ja-JP': ja_JP,
   'ko-KR': ko_KR,
   'ru-RU': ru_RU,
+  'zh': zh_CN,
   'zh-CN': zh_CN,
   'zh-TW': zh_TW,
 } as const;
