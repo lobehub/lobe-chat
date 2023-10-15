@@ -183,7 +183,7 @@ LobeChat provides Self-Hosted Version with Vercel and [Docker Image][docker-rele
 If you want to deploy this service yourself on Vercel, you can follow these steps:
 
 - Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
-- Click the button below to start deployment: Deploy with Vercel. Log in directly with your GitHub account, and remember to fill in the API Key and access code CODE on the environment variable page;
+- Click the button below to start deployment: Deploy with Vercel. Log in directly with your GitHub account, and remember to fill in the `OPENAI_API_KEY`(required) and `ACCESS_CODE` (recommended) on the environment variable section;
 - After deployment, you can start using it;
 - Bind a custom domain (optional): The DNS of the domain assigned by Vercel is polluted in some areas; binding a custom domain can connect directly.
 
