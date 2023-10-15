@@ -20,7 +20,7 @@ export interface OpenAIChatMessage {
 /**
  * @title OpenAI Stream Payload
  */
-export interface OpenAIStreamPayload {
+export interface OpenAIChatStreamPayload {
   /**
    * @title 控制生成文本中的惩罚系数，用于减少重复性
    * @default 0

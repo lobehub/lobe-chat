@@ -2,7 +2,7 @@ import { merge } from 'lodash-es';
 
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { initialLobeAgentConfig } from '@/store/session/initialState';
-import type { ChatCompletionFunctions, OpenAIStreamPayload } from '@/types/openai';
+import type { ChatCompletionFunctions, OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 import { createHeaderWithOpenAI } from './_header';
 import { OPENAI_URLS } from './_url';
@@ -15,7 +15,7 @@ interface FetchChatModelOptions {
  * 专门用于对话的 fetch
  */
 export const fetchChatModel = (
-  { plugins: enabledPlugins, ...params }: Partial<OpenAIStreamPayload>,
+  { plugins: enabledPlugins, ...params }: Partial<OpenAIChatStreamPayload>,
   options?: FetchChatModelOptions,
 ) => {
   const payload = merge(

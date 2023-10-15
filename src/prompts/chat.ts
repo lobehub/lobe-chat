@@ -1,10 +1,10 @@
 import { chatHelpers } from '@/store/session/helpers';
 import { LanguageModel } from '@/types/llm';
-import { OpenAIChatMessage, OpenAIStreamPayload } from '@/types/openai';
+import { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 export const promptSummaryTitle = async (
   messages: OpenAIChatMessage[],
-): Promise<Partial<OpenAIStreamPayload>> => {
+): Promise<Partial<OpenAIChatStreamPayload>> => {
   const finalMessages: OpenAIChatMessage[] = [
     {
       content:

@@ -1,4 +1,4 @@
-import { OpenAIChatMessage } from '@/types/openai';
+import { OpenAIChatMessage } from '@/types/openai/chat';
 import { encodeAsync } from '@/utils/tokenizer';
 
 export const getMessagesTokenCount = async (messages: OpenAIChatMessage[]) =>

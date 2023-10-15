@@ -3,18 +3,18 @@ import OpenAI from 'openai';
 import { getServerConfig } from '@/config/server';
 import { getOpenAIAuthFromRequest } from '@/const/fetch';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
-import { OpenAIStreamPayload } from '@/types/openai';
+import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 import { checkAuth } from '../../auth';
 import { createAzureOpenai } from '../createAzureOpenai';
-import { createChatCompletion } from '../createChatCompletion';
 import { createOpenai } from '../createOpenai';
 import { createErrorResponse } from '../errorResponse';
+import { createChatCompletion } from './createChatCompletion';
 
 export const runtime = 'edge';
 
 export const POST = async (req: Request) => {
-  const payload = (await req.json()) as OpenAIStreamPayload;
+  const payload = (await req.json()) as OpenAIChatStreamPayload;
 
   const { apiKey, accessCode, endpoint, useAzure, apiVersion } = getOpenAIAuthFromRequest(req);
 

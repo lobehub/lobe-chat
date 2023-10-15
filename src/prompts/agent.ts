@@ -1,7 +1,7 @@
-import { OpenAIStreamPayload } from '@/types/openai';
+import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 // 自动起名
-export const promptSummaryAgentName = (content: string): Partial<OpenAIStreamPayload> => ({
+export const promptSummaryAgentName = (content: string): Partial<OpenAIChatStreamPayload> => ({
   messages: [
     {
       content: `你是一名擅长起名的起名大师，你需要将用户的描述总结为 20 个字以内的角色，格式要求如下：
@@ -32,7 +32,7 @@ export const promptSummaryAgentName = (content: string): Partial<OpenAIStreamPay
 });
 
 // 自动挑选 emoji 和背景色
-export const promptPickEmoji = (content: string): Partial<OpenAIStreamPayload> => ({
+export const promptPickEmoji = (content: string): Partial<OpenAIChatStreamPayload> => ({
   messages: [
     {
       content: '你是一名非常懂设计与时尚的设计师，你需要从用户的描述中匹配一个合适的 emoji。',
@@ -61,7 +61,7 @@ export const promptPickEmoji = (content: string): Partial<OpenAIStreamPayload> =
   ],
 });
 
-export const promptSummaryDescription = (content: string): Partial<OpenAIStreamPayload> => ({
+export const promptSummaryDescription = (content: string): Partial<OpenAIChatStreamPayload> => ({
   messages: [
     {
       content:

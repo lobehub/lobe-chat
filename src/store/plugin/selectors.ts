@@ -2,7 +2,7 @@ import { uniqBy } from 'lodash-es';
 
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { pluginHelpers } from '@/store/plugin/helpers';
-import { ChatCompletionFunctions } from '@/types/openai';
+import { ChatCompletionFunctions } from '@/types/openai/chat';
 
 import { PluginStoreState } from './initialState';
 

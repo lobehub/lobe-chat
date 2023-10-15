@@ -3,11 +3,11 @@ import OpenAI from 'openai';
 
 import { createErrorResponse } from '@/app/api/openai/errorResponse';
 import { ChatErrorType } from '@/types/fetch';
-import { OpenAIStreamPayload } from '@/types/openai';
+import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 interface CreateChatCompletionOptions {
   openai: OpenAI;
-  payload: OpenAIStreamPayload;
+  payload: OpenAIChatStreamPayload;
 }
 
 export const createChatCompletion = async ({ payload, openai }: CreateChatCompletionOptions) => {
