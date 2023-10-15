@@ -20,13 +20,14 @@ import { PluginDispatch, pluginManifestReducer } from './reducers/manifest';
 const t = setNamespace('plugin');
 
 /**
- * 代理行为接口
+ * 插件接口
  */
 export interface PluginAction {
   checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
   deletePluginSettings: (id: string) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
   fetchPluginManifest: (identifier: string) => Promise<void>;
+  resetPluginSettings: () => void;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
   updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
   useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
@@ -71,7 +72,6 @@ export const createPluginSlice: StateCreator<
 
     set({ pluginManifestMap: nextManifest }, false, t('dispatchPluginManifest', payload));
   },
-
   fetchPluginManifest: async (name) => {
     const plugin = pluginSelectors.getPluginMetaById(name)(get());
     // 1. 校验文件
@@ -112,6 +112,9 @@ export const createPluginSlice: StateCreator<
 
     // 4. 存储 manifest 信息
     get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
+  },
+  resetPluginSettings: () => {
+    set({ pluginsSettings: {} }, false, t('resetPluginSettings'));
   },
   updateManifestLoadingState: (key, value) => {
     set(
