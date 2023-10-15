@@ -39,8 +39,15 @@ export const sessionList = (s: SessionStore) => {
   });
 };
 
+export const pinnedSessionList = (s: SessionStore) => sessionList(s).filter((s) => s.pinned);
+export const unpinnedSessionList = (s: SessionStore) => sessionList(s).filter((s) => !s.pinned);
+
 export const hasSessionList = (s: SessionStore) => {
   const list = sessionList(s);
+  return list?.length > 0;
+};
+export const hasPinnedSessionList = (s: SessionStore) => {
+  const list = pinnedSessionList(s);
   return list?.length > 0;
 };
 
