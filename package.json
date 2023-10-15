@@ -144,7 +144,7 @@
     "eslint": "^8",
     "husky": "^8",
     "jsdom": "^22",
-    "lint-staged": "^14",
+    "lint-staged": "^15.0.0",
     "lodash": "^4",
     "next-pwa": "^5",
     "node-fetch": "^3",
