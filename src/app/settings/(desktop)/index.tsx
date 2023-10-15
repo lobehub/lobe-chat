@@ -8,7 +8,7 @@ import ResponsiveIndex from '@/components/ResponsiveIndex';
 import Common from '../common';
 import Layout from './layout.desktop';
 
-const Mobile: FC = dynamic(() => import('../(mobile)')) as FC;
+const Mobile: FC = dynamic(() => import('../(mobile)'), { ssr: false }) as FC;
 
 export default memo(() => (
   <ResponsiveIndex Mobile={Mobile}>

@@ -11,7 +11,8 @@ import { AgentsMarketIndexItem } from '@/types/market';
 import Index from '../index';
 import Layout from './layout.desktop';
 
-const Mobile: FC = dynamic(() => import('../(mobile)')) as FC;
+const Mobile: FC = dynamic(() => import('../(mobile)'), { ssr: false }) as FC;
+
 export default memo<{ defaultAgents?: AgentsMarketIndexItem[] }>(({ defaultAgents }) => (
   <ResponsiveIndex Mobile={Mobile}>
     <Layout>

@@ -13,7 +13,7 @@ import { SessionLoadingState } from '../store/initialState';
 import AutoGenerateInput from './AutoGenerateInput';
 import BackgroundSwatches from './BackgroundSwatches';
 
-const EmojiPicker = dynamic(() => import('@/components/EmojiPicker'));
+const EmojiPicker = dynamic(() => import('@/components/EmojiPicker'), { ssr: false });
 
 const AgentMeta = memo(() => {
   const { t } = useTranslation('setting');

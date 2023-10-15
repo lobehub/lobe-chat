@@ -13,7 +13,7 @@ import ChatInput from './features/ChatInput';
 import SideBar from './features/SideBar';
 import Layout from './layout.desktop';
 
-const Mobile: FC = dynamic(() => import('../(mobile)')) as FC;
+const Mobile: FC = dynamic(() => import('../(mobile)'), { ssr: false }) as FC;
 
 const DesktopPage = memo(() => (
   <ResponsiveIndex Mobile={Mobile}>

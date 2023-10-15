@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 
-const EmojiPicker = dynamic(() => import('@/components/EmojiPicker'));
+const EmojiPicker = dynamic(() => import('@/components/EmojiPicker'), { ssr: false });
 
 const MetaForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form, mode }) => {
   const isEditMode = mode === 'edit';

@@ -7,7 +7,7 @@ import ResponsiveLayout from '@/layout/ResponsiveLayout.client';
 
 import DesktopLayout from './layout.desktop';
 
-const MobileLayout = dynamic(() => import('../(mobile)/layout.mobile')) as FC;
+const MobileLayout = dynamic(() => import('../(mobile)/layout.mobile'), { ssr: false }) as FC;
 
 export default memo(({ children }: PropsWithChildren) => (
   <ResponsiveLayout Desktop={DesktopLayout} Mobile={MobileLayout}>

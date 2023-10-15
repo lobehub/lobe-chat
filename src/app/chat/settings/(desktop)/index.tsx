@@ -8,7 +8,7 @@ import ResponsiveIndex from '@/components/ResponsiveIndex';
 import EditPage from '../features/EditPage';
 import Layout from './layout.desktop';
 
-const Mobile: FC = dynamic(() => import('../(mobile)')) as FC;
+const Mobile: FC = dynamic(() => import('../(mobile)'), { ssr: false }) as FC;
 
 const ChatSettings = memo(() => (
   <ResponsiveIndex Mobile={Mobile}>
