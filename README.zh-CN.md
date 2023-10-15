@@ -178,7 +178,7 @@ LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，�
 
 ## 🛳 开箱即用
 
-LobeChat 提供了 Vercel 的 [自托管版本][deploy-link] 和 [Docker 镜像][docker-release-link]，这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。
+LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release-link]，这使你可以在几分钟内构建自己的聊天机器人，无需任何基础知识。
 
 <br/>
 
@@ -190,6 +190,12 @@ LobeChat 提供了 Vercel 的 [自托管版本][deploy-link] 和 [Docker 镜像]
 - 点击下方按钮开始部署： Deploy with Vercel，直接使用 GitHub 账号登录即可，记得在环境变量页填入 API Key 和页面访问密码 CODE；
 - 部署完毕后，即可开始使用；
 - 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
+
+<div align="center">
+
+[![][deploy-button-image]][deploy-link]
+
+</div>
 
 #### 保持更新
 
@@ -373,7 +379,8 @@ This project is [MIT](./LICENSE) licensed.
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [contributors-contrib]: https://contrib.rocks/image?repo=lobehub/lobe-chat
 [contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
-[deploy-link]: https://vercel.com/new/clone?repository-link=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+[deploy-button-image]: https://vercel.com/button
+[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge

@@ -176,9 +176,7 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ## 🛳 Self Hosting
 
-LobeChat provides [Self-Hosted Version][deploy-link] with Vercel and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
-
-<br/>
+LobeChat provides Self-Hosted Version with Vercel and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
 
 ### `A` Deploying with Vercel
 
@@ -189,9 +187,15 @@ If you want to deploy this service yourself on Vercel, you can follow these step
 - After deployment, you can start using it;
 - Bind a custom domain (optional): The DNS of the domain assigned by Vercel is polluted in some areas; binding a custom domain can connect directly.
 
+<div align="center">
+
+[![][deploy-button-image]][deploy-link]
+
+</div>
+
 #### Keep Updated
 
-If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available."  This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to detect updates accurately.
+If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available." This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to detect updates accurately.
 
 > **Important**\
 > We suggest you redeploy using the following steps, [📘 Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync).
@@ -371,7 +375,8 @@ This project is [MIT](./LICENSE) licensed.
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [contributors-contrib]: https://contrib.rocks/image?repo=lobehub/lobe-chat
 [contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
-[deploy-link]: https://vercel.com/new/clone?repository-link=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%20&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+[deploy-button-image]: https://vercel.com/button
+[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
