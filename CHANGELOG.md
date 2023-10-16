@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.89.8](https://github.com/lobehub/lobe-chat/compare/v0.89.7...v0.89.8)
+
+<sup>Released on **2023-10-16**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor ChatList.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix type.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor ChatList, closes [#147](https://github.com/lobehub/lobe-chat/issues/147) ([aa4216c](https://github.com/lobehub/lobe-chat/commit/aa4216c))
+
+#### What's fixed
+
+- **misc**: Fix type ([1e931d5](https://github.com/lobehub/lobe-chat/commit/1e931d5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.89.7](https://github.com/lobehub/lobe-chat/compare/v0.89.6...v0.89.7)
 
 <sup>Released on **2023-10-16**</sup>
