@@ -86,14 +86,14 @@ Please be aware that LobeChat is currently under active development, and feedbac
 
 ## ✨ Features
 
-- [x] 💨 **Quick Deployment**: Using the Vercel platform, you can deploy with just one click and complete the process within 1 minute without any complex configuration;
-- [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience;
-- [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more;
-- [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs;
+- [x] 💨 **Quick Deployment**: Using the Vercel platform, you can deploy with just one click and complete the process within 1 minute without any complex configuration.
+- [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience.
+- [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more.
+- [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs.
 - [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy;
 - [x] 🤖 **Customizable Agent Roles**: Users can create, share, and debug personalized dialogue agent roles according to their needs, providing more flexible and customized dialogue functions;
 - [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
-- [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue;
+- [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue.
 
 > **Note**\
 > You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
@@ -183,8 +183,8 @@ LobeChat provides Self-Hosted Version with Vercel and [Docker Image][docker-rele
 If you want to deploy this service yourself on Vercel, you can follow these steps:
 
 - Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
-- Click the button below to start deployment: Deploy with Vercel. Log in directly with your GitHub account, and remember to fill in the `OPENAI_API_KEY`(required) and `ACCESS_CODE` (recommended) on the environment variable section;
-- After deployment, you can start using it;
+- Click the button below to start deployment: Deploy with Vercel. Log in directly with your GitHub account, and remember to fill in the `OPENAI_API_KEY`(required) and `ACCESS_CODE` (recommended) on the environment variable section.
+- After deployment, you can start using it.
 - Bind a custom domain (optional): The DNS of the domain assigned by Vercel is polluted in some areas; binding a custom domain can connect directly.
 
 <div align="center">
@@ -279,8 +279,8 @@ Plugins provide a means to extend the [Function Calling][fc-link] capabilities o
 > The plugin system is currently undergoing major development. You can learn more in the following issues:
 >
 > - [x] [**Plugin Phase 1**](https://github.com/lobehub/lobe-chat/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
-> - [x] [**Plugin Phase 2**](https://github.com/lobehub/lobe-chat/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture and developer-friendly.
-> - [ ] [**Plugin Phase 3**](https://github.com/lobehub/lobe-chat/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication and examples.
+> - [x] [**Plugin Phase 2**](https://github.com/lobehub/lobe-chat/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture, and developer-friendly.
+> - [ ] [**Plugin Phase 3**](https://github.com/lobehub/lobe-chat/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication, and examples.
 
 | Official Plugin                                 | Description                                                                                                                                       |
 | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -335,7 +335,7 @@ Contributions of all types are more than welcome; if you are interested in contr
 
 ## 🔗 More Products
 
-- **[🤯 Lobe Theme][lobe-theme]:** The modern theme for stable diffusion webui, exquisite interface design, highly customizable UI, and efficiency-boosting features.
+- **[🤯 Lobe Theme][lobe-theme]:** The modern theme for stable diffusion WebUI, exquisite interface design, highly customizable UI, and efficiency-boosting features.
 - **[🌏 Lobe i18n][lobe-i18n] :** Lobe i18n is an automation tool for the i18n (internationalization) translation process, powered by ChatGPT. It supports features such as automatic splitting of large files, incremental updates, and customization options for the OpenAI model, API proxy, and temperature.
 - **[💌 Lobe Commit][lobe-commit]:** Lobe Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.
 
