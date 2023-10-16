@@ -1,4 +1,4 @@
-import { Highlighter } from '@lobehub/ui';
+import { Highlighter, RenderErrorMessage } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -15,12 +15,13 @@ interface OpenAIErrorResponse {
   error: OpenAIError;
 }
 
-const PluginError = memo<{ content: OpenAIErrorResponse; id: string }>(({ content }) => {
+const PluginError: RenderErrorMessage = memo(({ error, id }) => {
   const { styles } = useStyles();
+  const errorBody: OpenAIErrorResponse = (error as any)?.body;
 
   return (
-    <Flexbox className={styles.container} style={{ maxWidth: 600 }}>
-      <Highlighter language={'json'}>{JSON.stringify(content, null, 2)}</Highlighter>
+    <Flexbox className={styles.container} id={id} style={{ maxWidth: 600 }}>
+      <Highlighter language={'json'}>{JSON.stringify(errorBody, null, 2)}</Highlighter>
     </Flexbox>
   );
 });

@@ -1,18 +1,13 @@
-import { ChatList, RenderMessage } from '@lobehub/ui';
+import { ChatList } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors, chatSelectors } from '@/store/session/selectors';
-import { ChatMessage } from '@/types/chatMessage';
-import { isFunctionMessage } from '@/utils/message';
 
-import { renderErrorMessage } from './Error';
-import MessageExtra from './MessageExtra';
-import FunctionCall from './Plugins/FunctionCall';
-import PluginMessage from './Plugins/PluginMessage';
+import { renderErrorMessages } from './Error';
+import { renderActions, renderMessages, renderMessagesExtra } from './Messages';
 import SkeletonList from './SkeletonList';
 
 const List = memo(() => {
@@ -41,43 +36,6 @@ const List = memo(() => {
     ];
   });
 
-  const renderMessage: RenderMessage = useCallback(
-    (content, message: ChatMessage) => {
-      const id = message.plugin?.identifier || message.function_call?.name;
-      const command = message.plugin ?? message.function_call;
-      const args = command?.arguments;
-      const fcProps = {
-        arguments: args,
-        command,
-        content: message.content,
-        id,
-        loading: message.id === chatLoadingId,
-      };
-
-      if (message.role === 'function')
-        return (
-          <Flexbox gap={12} id={message.id}>
-            <FunctionCall {...fcProps} />
-            <PluginMessage loading={message.id === chatLoadingId} {...message} />
-          </Flexbox>
-        );
-
-      if (
-        message.role === 'assistant' &&
-        // 包含了 function 信息
-        isFunctionMessage(message.content)
-      )
-        return (
-          <div id={message.id}>
-            <FunctionCall {...fcProps} />
-          </div>
-        );
-
-      return <div id={message.id}>{content}</div>;
-    },
-    [chatLoadingId],
-  );
-
   if (!init) return <SkeletonList />;
 
   return (
@@ -99,12 +57,13 @@ const List = memo(() => {
           }
         }
       }}
-      onMessageChange={(id, content) => {
-        dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
-      }}
-      renderErrorMessage={renderErrorMessage}
-      renderMessage={renderMessage}
-      renderMessageExtra={MessageExtra}
+      onMessageChange={(id, content) =>
+        dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content })
+      }
+      renderActions={renderActions}
+      renderErrorMessages={renderErrorMessages}
+      renderMessages={renderMessages}
+      renderMessagesExtra={renderMessagesExtra}
       style={{ marginTop: 24 }}
       text={{
         cancel: t('cancel'),

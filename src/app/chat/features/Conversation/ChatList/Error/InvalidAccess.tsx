@@ -1,4 +1,4 @@
-import { Icon } from '@lobehub/ui';
+import { Icon, RenderErrorMessage } from '@lobehub/ui';
 import { Button, Segmented } from 'antd';
 import { KeySquare, SquareAsterisk } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -17,7 +17,7 @@ enum Tab {
   Password = 'password',
 }
 
-const InvalidAccess = memo<{ id: string }>(({ id }) => {
+const InvalidAccess: RenderErrorMessage = memo(({ id }) => {
   const { t } = useTranslation('error');
   const [mode, setMode] = useState<Tab>(Tab.Password);
   const [password, setSettings] = useGlobalStore((s) => [s.settings.password, s.setSettings]);

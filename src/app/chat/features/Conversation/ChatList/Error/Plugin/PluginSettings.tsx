@@ -1,4 +1,4 @@
-import { Avatar } from '@lobehub/ui';
+import { Avatar, RenderErrorMessage } from '@lobehub/ui';
 import { Button, Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
@@ -12,32 +12,26 @@ import { useSessionStore } from '@/store/session';
 
 import { ErrorActionContainer, useStyles } from '../style';
 
-interface PluginSettingsProps {
-  id: string;
-  pluginIdentifier: string;
-}
-
-const PluginSettings = memo<PluginSettingsProps>(({ id, pluginIdentifier }) => {
+const PluginSettings: RenderErrorMessage = memo(({ id, plugin }) => {
   const { styles } = useStyles();
-
   const { t } = useTranslation('error');
   const theme = useTheme();
   const [resend, deleteMessage] = useSessionStore((s) => [s.resendMessage, s.deleteMessage]);
-
-  const plugin = usePluginStore(pluginSelectors.getPluginMetaById(pluginIdentifier), isEqual);
+  const pluginIdentifier = plugin?.identifier as string;
+  const pluginMeta = usePluginStore(pluginSelectors.getPluginMetaById(pluginIdentifier), isEqual);
   const manifest = usePluginStore(pluginSelectors.getPluginManifestById(pluginIdentifier), isEqual);
 
   return (
     <ErrorActionContainer>
       <Center gap={16} style={{ maxWidth: 400 }}>
         <Avatar
-          avatar={pluginHelpers.getPluginAvatar(plugin?.meta) || '⚙️'}
+          avatar={pluginHelpers.getPluginAvatar(pluginMeta?.meta) || '⚙️'}
           background={theme.colorFillContent}
           gap={12}
           size={80}
         />
         <Flexbox style={{ fontSize: 20 }}>
-          {t('pluginSettings.title', { name: pluginHelpers.getPluginTitle(plugin?.meta) })}
+          {t('pluginSettings.title', { name: pluginHelpers.getPluginTitle(pluginMeta?.meta) })}
         </Flexbox>
         <Flexbox className={styles.desc}>{t('pluginSettings.desc')}</Flexbox>
         <Divider style={{ margin: '0 16px' }} />
