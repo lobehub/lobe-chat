@@ -20,7 +20,7 @@ import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB, WIKI } from '@/const/url';
 import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { GlobalStore, useGlobalStore } from '@/store/global';
-import { SidebarTabKey } from '@/store/global/initialState';
+import { SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 
 export interface BottomActionProps {
   setTab: GlobalStore['switchSideBar'];
@@ -120,6 +120,10 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
       ),
       onClick: () => {
         setTab(SidebarTabKey.Setting);
+        useGlobalStore.setState({
+          settingsTab: SettingsTabs.Common,
+          sidebarKey: SidebarTabKey.Setting,
+        });
         router.push('/settings/common');
       },
     },
