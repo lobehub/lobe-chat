@@ -1,6 +1,12 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
-import { ActionIconGroup, RenderAction, Tag, useChatListActionsBar } from '@lobehub/ui';
-import { RenderMessage, RenderMessageExtra } from '@lobehub/ui/src';
+import {
+  ActionIconGroup,
+  RenderAction,
+  RenderMessage,
+  RenderMessageExtra,
+  Tag,
+  useChatListActionsBar,
+} from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
