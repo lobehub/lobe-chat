@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.89.7](https://github.com/lobehub/lobe-chat/compare/v0.89.6...v0.89.7)
+
+<sup>Released on **2023-10-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix setting tab highlight (fix.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix setting tab highlight (fix, closes [#332](https://github.com/lobehub/lobe-chat/issues/332) ([d288f9d](https://github.com/lobehub/lobe-chat/commit/d288f9d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.89.6](https://github.com/lobehub/lobe-chat/compare/v0.89.5...v0.89.6)
 
 <sup>Released on **2023-10-15**</sup>
