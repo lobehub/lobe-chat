@@ -9,6 +9,9 @@ jobs:
   if_merged:
     name: Check merged and add comment
     if: github.event.pull_request.merged == true
+    permissions:
+      issues: write # for actions-cool/issues-helper to update issues
+      pull-requests: write # for actions-cool/issues-helper to update PRs
     runs-on: ubuntu-latest
     steps:
       - uses: actions-cool/pr-welcome@main
