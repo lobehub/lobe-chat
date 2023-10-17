@@ -44,18 +44,9 @@ const List = memo(() => {
       enableHistoryCount={enableHistoryCount}
       historyCount={historyCount}
       loadingId={chatLoadingId}
-      onActionClick={(key, id) => {
-        switch (key) {
-          case 'delete': {
-            deleteMessage(id);
-            break;
-          }
-
-          case 'regenerate': {
-            resendMessage(id);
-            break;
-          }
-        }
+      onActionsClick={{
+        del: ({ id }) => deleteMessage(id),
+        regenerate: ({ id }) => resendMessage(id),
       }}
       onMessageChange={(id, content) =>
         dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content })
