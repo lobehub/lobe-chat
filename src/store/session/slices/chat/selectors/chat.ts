@@ -86,22 +86,22 @@ export const chatsMessageString = (s: SessionStore): string => {
   return chats.map((m) => m.content).join('');
 };
 
-export const currentFunctionCallProps = (
-  s: SessionStore,
-): ((
-  props: Pick<ChatMessage, 'plugin' | 'function_call' | 'content' | 'id'>,
-) => FunctionCallProps) => {
-  const chatLoadingId = s.chatLoadingId;
-  return ({ plugin, function_call, content, id }) => {
+export const getFunctionMessageParams =
+  (
+    s: SessionStore,
+  ): ((
+    props: Pick<ChatMessage, 'plugin' | 'function_call' | 'content' | 'id'>,
+  ) => FunctionCallProps) =>
+  ({ plugin, function_call, content, id }) => {
     const itemId = plugin?.identifier || function_call?.name;
     const command = plugin ?? function_call;
     const args = command?.arguments;
+
     return {
       arguments: args,
       command,
       content,
       id: itemId,
-      loading: id === chatLoadingId,
+      loading: id === s.chatLoadingId,
     };
   };
-};

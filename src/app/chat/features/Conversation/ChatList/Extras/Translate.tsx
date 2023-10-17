@@ -66,7 +66,7 @@ const Translate = memo<TranslateProps>(({ content = '', from, to, id, loading })
           />
         </Flexbox>
       </Flexbox>
-      {show && !content ? <BubblesLoading /> : <Markdown>{content}</Markdown>}
+      {show && loading && !content ? <BubblesLoading /> : <Markdown>{content}</Markdown>}
     </Flexbox>
   );
 });

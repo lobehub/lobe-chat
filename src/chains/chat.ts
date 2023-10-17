@@ -1,7 +1,6 @@
 import { chatHelpers } from '@/store/session/helpers';
 import { LanguageModel } from '@/types/llm';
 import { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
-import { Translate } from '@/types/translate';
 
 export const chainSummaryTitle = async (
   messages: OpenAIChatMessage[],
@@ -34,7 +33,7 @@ export const chainSummaryTitle = async (
 
 export const chainTranslate = (
   content: string,
-  trans: Translate,
+  targetLang: string,
 ): Partial<OpenAIChatStreamPayload> => ({
   messages: [
     {
@@ -42,7 +41,36 @@ export const chainTranslate = (
       role: 'system',
     },
     {
-      content: `请将以下内容 ${content}，翻译为 ${trans.to} `,
+      content: `请将以下内容 ${content}，翻译为 ${targetLang} `,
+      role: 'user',
+    },
+  ],
+});
+export const chainLangDetect = (content: string): Partial<OpenAIChatStreamPayload> => ({
+  messages: [
+    {
+      content:
+        '你是一名精通全世界语言的语言专家，你需要识别用户输入的内容，以国际标准 locale 进行输出',
+      role: 'system',
+    },
+    {
+      content: '{你好}',
+      role: 'user',
+    },
+    {
+      content: 'zh-CN',
+      role: 'assistant',
+    },
+    {
+      content: '{hello}',
+      role: 'user',
+    },
+    {
+      content: 'en-US',
+      role: 'assistant',
+    },
+    {
+      content: `{${content}}`,
       role: 'user',
     },
   ],

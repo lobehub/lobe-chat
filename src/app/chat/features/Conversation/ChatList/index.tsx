@@ -9,8 +9,10 @@ import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 
+import { renderActions } from './Actions';
 import { renderErrorMessages } from './Error';
-import { renderActions, renderMessages, renderMessagesExtra } from './Messages';
+import { renderMessagesExtra } from './Extras';
+import { renderMessages } from './Messages';
 import SkeletonList from './SkeletonList';
 
 const List = memo(() => {
@@ -40,6 +42,7 @@ const List = memo(() => {
       s.translateMessage,
     ];
   });
+
   const targetLang = useGlobalStore(settingsSelectors.currentLanguage);
 
   const hotkeys = [PREFIX_KEY, REGENERATE_KEY].join('+');
@@ -67,7 +70,15 @@ const List = memo(() => {
       loadingId={chatLoadingId}
       onActionsClick={{
         del: ({ id }) => deleteMessage(id),
-        regenerate: ({ id }) => resendMessage(id),
+        regenerate: ({ id, error }) => {
+          resendMessage(id);
+
+          // if this message is an error message, we need to delete it
+          if (error) deleteMessage(id);
+        },
+        translate: ({ id }) => {
+          translateMessage(id, targetLang);
+        },
       }}
       onMessageChange={(id, content) =>
         dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content })

@@ -2,17 +2,20 @@ import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
 import { LanguagesIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { localeOptions } from '@/locales/options';
 
 export const useCustomActions = () => {
   const { t } = useTranslation('chat');
-  const targetLang = useGlobalStore(settingsSelectors.currentLanguage);
 
-  const translate: ActionIconGroupItems = {
+  const translate = {
+    children: localeOptions.map((i) => ({
+      key: i.value,
+      label: t(`lang.${i.value}`, { ns: 'common' }),
+    })),
     icon: LanguagesIcon,
     key: 'translate',
-    label: t('translateTo', { lang: t(`lang.${targetLang}`, { ns: 'common' }) }),
-  };
+    label: t('translateTo'),
+  } as ActionIconGroupItems;
 
   return {
     translate,

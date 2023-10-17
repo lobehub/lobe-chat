@@ -3,8 +3,8 @@ import {
   currentChats,
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,
-  currentFunctionCallProps,
   getChatsById,
+  getFunctionMessageParams,
 } from './chat';
 import { currentTopics, getTopicMessages } from './topic';
 
@@ -13,8 +13,8 @@ export const chatSelectors = {
   currentChats,
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,
-  currentFunctionCallProps,
   getChatsById,
+  getFunctionMessageParams,
 };
 
 export const topicSelectors = {

@@ -79,6 +79,7 @@
     "antd-style": "^3.5",
     "brotli-wasm": "^1",
     "chroma-js": "^2",
+    "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1",
     "emoji-mart": "^5",
     "fast-deep-equal": "^3",
