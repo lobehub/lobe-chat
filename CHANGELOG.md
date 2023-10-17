@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.90.2](https://github.com/lobehub/lobe-chat/compare/v0.90.1...v0.90.2)
+
+<sup>Released on **2023-10-17**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor OpenAIStreamPayload with chat name.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor OpenAIStreamPayload with chat name ([a799530](https://github.com/lobehub/lobe-chat/commit/a799530))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.90.1](https://github.com/lobehub/lobe-chat/compare/v0.90.0...v0.90.1)
 
 <sup>Released on **2023-10-17**</sup>
