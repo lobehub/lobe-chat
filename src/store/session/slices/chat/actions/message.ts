@@ -1,17 +1,14 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
-import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
-import { chainTranslate } from '@/chains/chat';
 import { LOADING_FLAT } from '@/const/message';
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { fetchChatModel } from '@/services/chatModel';
 import { fetchPlugin } from '@/services/plugin';
 import { SessionStore } from '@/store/session';
 import { ChatMessage, OpenAIFunctionCall } from '@/types/chatMessage';
-import { Translate } from '@/types/translate';
-import { fetchPresetTaskResult, fetchSSE } from '@/utils/fetch';
+import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessage } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
@@ -76,11 +73,7 @@ export interface ChatMessageAction {
     id?: string,
     action?: string,
   ) => AbortController | undefined;
-  /**
-   * 翻译消息
-   * @param id
-   */
-  translateMessage: (id: string, trans: Translate) => Promise<void>;
+
   triggerFunctionCall: (id: string) => Promise<void>;
 }
 
@@ -314,31 +307,6 @@ export const chatMessage: StateCreator<
     } else {
       set({ abortController: undefined, chatLoadingId: undefined }, false, action);
     }
-  },
-
-  translateMessage: async (id, trans) => {
-    const session = sessionSelectors.currentSession(get());
-    if (!session || !id) return;
-
-    const message = session.chats[id];
-    if (!message) return;
-
-    let content = '';
-
-    fetchPresetTaskResult({
-      onMessageHandle: (text) => {
-        get().dispatchMessage({
-          id,
-          key: 'translate',
-          type: 'updateMessageExtra',
-          value: produce({ ...trans, content: '' }, (draft) => {
-            content += text;
-            draft.content += content;
-          }),
-        });
-      },
-      params: chainTranslate(message.content, trans),
-    });
   },
 
   triggerFunctionCall: async (id) => {
