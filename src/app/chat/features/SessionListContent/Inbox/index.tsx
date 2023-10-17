@@ -15,7 +15,7 @@ const { Item } = List;
 const Inbox = memo(() => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
   const [activeId, activeSession, switchSession] = useSessionStore((s) => [
     s.activeId,

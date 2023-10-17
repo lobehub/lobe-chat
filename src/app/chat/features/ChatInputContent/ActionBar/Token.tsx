@@ -9,7 +9,7 @@ import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 import { LanguageModel } from '@/types/llm';
 
 const Token = memo<{ input: string }>(({ input }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
 
   const inputTokenCount = useTokenCount(input);
 

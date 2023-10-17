@@ -2,9 +2,6 @@ export default {
   agentDefaultMessage:
     '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置](/chat/settings#session={{id}}) 完善我的信息。',
   agentDefaultMessageWithSystemRole: '你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！',
-  agentMaxToken: '会话最大长度',
-  agentModel: '模型',
-  agentProfile: '助手信息',
   backToBottom: '查看最新消息',
   clearCurrentMessages: '清空当前会话消息',
   confirmClearCurrentMessages: '即将清空当前会话消息，清空后将无法找回，请确认你的操作',
@@ -18,9 +15,6 @@ export default {
     desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
   },
-  message: {
-    function_loading: '插件请求中...',
-  },
   newAgent: '新建助手',
   noDescription: '暂无描述',
 
@@ -30,9 +24,6 @@ export default {
   searchAgentPlaceholder: '搜索助手和对话...',
   send: '发送',
   sendPlaceholder: '输入聊天内容...',
-  sessionList: '助手列表',
-  setting: '设置',
-  share: '分享',
   shareModal: {
     download: '下载截图',
     imageType: '图片格式',
@@ -64,13 +55,6 @@ export default {
     clear: '删除翻译',
   },
   translateTo: '翻译',
-
   updateAgent: '更新助理信息',
-  updatePrompt: '更新提示词',
-  upgradeVersion: {
-    action: '立即升级',
-    hasNew: '有可用更新',
-    newVersion: '有新版本可用：{{version}}',
-  },
   warp: '换行',
 };

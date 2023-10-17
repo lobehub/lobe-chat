@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useSessionStore } from '@/store/session';
 
 const TopicSearchBar = memo(() => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
   const [keywords] = useSessionStore((s) => [s.topicSearchKeywords]);
   const { mobile } = useResponsive();
   return (

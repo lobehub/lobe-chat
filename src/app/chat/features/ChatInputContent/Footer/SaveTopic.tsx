@@ -11,7 +11,7 @@ import { PREFIX_KEY, SAVE_TOPIC_KEY } from '@/const/hotkeys';
 import { useSessionStore } from '@/store/session';
 
 const SaveTopic = memo(() => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
   const [hasTopic, saveToTopic] = useSessionStore((s) => [!!s.activeTopicId, s.saveToTopic]);
   const { mobile } = useResponsive();
 

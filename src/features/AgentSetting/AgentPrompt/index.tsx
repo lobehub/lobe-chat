@@ -42,9 +42,9 @@ const AgentPrompt = memo(() => {
               maxValue={ModelTokens[model as LanguageModel]}
               shape={'square'}
               text={{
-                overload: t('tokenTag.overload', { ns: 'common' }),
-                remained: t('tokenTag.remained', { ns: 'common' }),
-                used: t('tokenTag.used', { ns: 'common' }),
+                overload: t('tokenTag.overload', { ns: 'chat' }),
+                remained: t('tokenTag.remained', { ns: 'chat' }),
+                used: t('tokenTag.used', { ns: 'chat' }),
               }}
               value={systemTokenCount}
             />

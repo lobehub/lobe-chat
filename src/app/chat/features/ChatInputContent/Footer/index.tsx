@@ -9,7 +9,7 @@ import SaveTopic from './SaveTopic';
 
 const Footer = memo(() => {
   const theme = useTheme();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
 
   return (
     <>

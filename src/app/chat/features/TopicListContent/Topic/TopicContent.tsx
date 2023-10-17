@@ -74,7 +74,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
             onOk: () => {
               removeTopic(id);
             },
-            title: t('topic.confirmRemoveTopic'),
+            title: t('topic.confirmRemoveTopic', { ns: 'chat' }),
           });
         },
       },

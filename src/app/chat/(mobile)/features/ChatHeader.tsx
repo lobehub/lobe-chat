@@ -13,7 +13,7 @@ import { pathString } from '@/utils/url';
 import ShareButton from '../../features/ChatHeader/ShareButton';
 
 const MobileHeader = memo(() => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
   const router = useRouter();
 
   const [isInbox, title] = useSessionStore((s) => [

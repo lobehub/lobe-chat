@@ -12,7 +12,7 @@ const Topics = memo(() => {
     s.toggleMobileTopic,
   ]);
 
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
 
   return (
     <Modal onCancel={() => toggleConfig(false)} open={showAgentSettings} title={t('topic.title')}>

@@ -24,7 +24,7 @@ const Inner = memo(() => {
   const [withFooter, setWithFooter] = useState(false);
   const [imageType, setImageType] = useState<ImageType>(ImageType.JPG);
   const [tab, setTab] = useState<Tab>(Tab.Screenshot);
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
 
   const avatar = useGlobalStore((s) => s.settings.avatar);
   const [shareLoading, shareToShareGPT] = useSessionStore((s) => [

@@ -12,8 +12,7 @@ import ChatScrollAnchor from './ScrollAnchor';
 
 const useStyles = createStyles(
   ({ css, responsive, stylish }) => css`
-    overflow-x: hidden;
-    overflow-y: scroll;
+    overflow: hidden scroll;
     height: 100%;
     ${responsive.mobile} {
       ${stylish.noScrollbar}
@@ -29,7 +28,7 @@ interface ConversationProps {
 
 const Conversation = memo<ConversationProps>(({ mobile, chatInput }) => {
   const ref = useRef(null);
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
   const { styles } = useStyles();
 
   const useFetchPluginList = usePluginStore((s) => s.useFetchPluginList);
