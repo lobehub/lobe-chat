@@ -2,6 +2,7 @@ import { useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import Link from 'next/link';
 import { memo } from 'react';
+import LazyLoad from 'react-lazy-load';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSessionHydrated, useSessionStore } from '@/store/session';
@@ -23,18 +24,19 @@ const SessionList = memo(() => {
     <SkeletonList />
   ) : list.length > 0 ? (
     list.map(({ id }) => (
-      <Link
-        aria-label={id}
-        href={SESSION_CHAT_URL(id, mobile)}
-        key={id}
-        onClick={(e) => {
-          e.preventDefault();
-          if (mobile) switchSession(id);
-          else activeSession(id);
-        }}
-      >
-        <SessionItem id={id} />
-      </Link>
+      <LazyLoad height={70} key={id}>
+        <Link
+          aria-label={id}
+          href={SESSION_CHAT_URL(id, mobile)}
+          onClick={(e) => {
+            e.preventDefault();
+            if (mobile) switchSession(id);
+            else activeSession(id);
+          }}
+        >
+          <SessionItem id={id} />
+        </Link>
+      </LazyLoad>
     ))
   ) : (
     <AddButton />

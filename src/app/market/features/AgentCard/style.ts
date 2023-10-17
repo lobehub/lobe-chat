@@ -1,8 +1,6 @@
 import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(({ css, token, responsive }) => ({
-  avatar: css``,
-
   container: css`
     position: relative;
     overflow: hidden;
@@ -16,6 +14,9 @@ export const useStyles = createStyles(({ css, token, responsive }) => ({
   `,
   inner: css`
     padding: 16px;
+  `,
+  lazy: css`
+    min-height: 232px;
   `,
   subTitle: css`
     font-size: 24px;

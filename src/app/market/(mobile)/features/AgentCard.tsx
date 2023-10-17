@@ -12,7 +12,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
 }));
 
-const AgentCard = memo<SpotlightCardProps>(({ items, renderItem, gap = 8, ...props }) => {
+const AgentCard = memo<SpotlightCardProps>(({ items, renderItem, gap = 16, ...props }) => {
   const { styles } = useStyles();
   return (
     <Flexbox gap={gap} {...props}>

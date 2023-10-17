@@ -12,6 +12,6 @@ import Layout from './layout.mobile';
 export default memo<{ defaultAgents?: AgentsMarketIndexItem[] }>(({ defaultAgents }) => (
   <Layout>
     <Index />
-    <AgentCard CardRender={CardRender} defaultAgents={defaultAgents} />
+    <AgentCard CardRender={CardRender} defaultAgents={defaultAgents} mobile />
   </Layout>
 ));
