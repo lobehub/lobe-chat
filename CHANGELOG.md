@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.90.3](https://github.com/lobehub/lobe-chat/compare/v0.90.2...v0.90.3)
+
+<sup>Released on **2023-10-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix ActionBar props and regenerate btn with error message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix ActionBar props and regenerate btn with error message, closes [#337](https://github.com/lobehub/lobe-chat/issues/337) ([246e8fd](https://github.com/lobehub/lobe-chat/commit/246e8fd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.90.2](https://github.com/lobehub/lobe-chat/compare/v0.90.1...v0.90.2)
 
 <sup>Released on **2023-10-17**</sup>
