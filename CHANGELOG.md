@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.91.0](https://github.com/lobehub/lobe-chat/compare/v0.90.3...v0.91.0)
+
+<sup>Released on **2023-10-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Add hotkeys.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add hotkeys, closes [#286](https://github.com/lobehub/lobe-chat/issues/286) ([041054d](https://github.com/lobehub/lobe-chat/commit/041054d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.90.3](https://github.com/lobehub/lobe-chat/compare/v0.90.2...v0.90.3)
 
 <sup>Released on **2023-10-17**</sup>
