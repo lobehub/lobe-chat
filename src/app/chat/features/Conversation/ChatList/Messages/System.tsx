@@ -1,7 +1,9 @@
 import { ActionIconGroup, RenderAction, useChatListActionsBar } from '@lobehub/ui';
 import { memo } from 'react';
 
-export const SystemActionsBar: RenderAction = memo(({ text, ...props }) => {
+export const SystemActionsBar: RenderAction = memo(({ text, onActionClick }) => {
   const { del } = useChatListActionsBar(text);
-  return <ActionIconGroup dropdownMenu={[del]} items={[]} type="ghost" {...props} />;
+  return (
+    <ActionIconGroup dropdownMenu={[del]} items={[]} onActionClick={onActionClick} type="ghost" />
+  );
 });

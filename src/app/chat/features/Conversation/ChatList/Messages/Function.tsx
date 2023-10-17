@@ -3,14 +3,14 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
-import { currentFunctionCallProps } from '@/store/session/slices/chat/selectors/chat';
+import { chatSelectors } from '@/store/session/selectors';
 
 import FunctionCall from '../Plugins/FunctionCall';
 import PluginMessage from '../Plugins/PluginMessage';
 
 export const FunctionMessage: RenderMessage = memo(
   ({ id, content, plugin, function_call, ...props }) => {
-    const genFunctionCallProps = useSessionStore(currentFunctionCallProps);
+    const genFunctionCallProps = useSessionStore(chatSelectors.currentFunctionCallProps);
     const fcProps = genFunctionCallProps({ content, function_call, id, plugin });
 
     return (
@@ -29,14 +29,14 @@ export const FunctionMessage: RenderMessage = memo(
   },
 );
 
-export const FunctionActionsBar: RenderAction = memo(({ text, ...props }) => {
+export const FunctionActionsBar: RenderAction = memo(({ text, onActionClick }) => {
   const { regenerate, divider, del } = useChatListActionsBar(text);
   return (
     <ActionIconGroup
       dropdownMenu={[regenerate, divider, del]}
       items={[regenerate]}
+      onActionClick={onActionClick}
       type="ghost"
-      {...props}
     />
   );
 });

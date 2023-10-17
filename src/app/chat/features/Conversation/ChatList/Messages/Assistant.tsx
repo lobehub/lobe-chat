@@ -13,12 +13,11 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
-import { currentFunctionCallProps } from '@/store/session/slices/chat/selectors/chat';
+import { chatSelectors } from '@/store/session/slices/chat/selectors';
 import { isFunctionMessage } from '@/utils/message';
 
 import FunctionCall from '../Plugins/FunctionCall';
 import { DefautMessage } from './Default';
-import { SystemActionsBar } from './System';
 
 const useStyles = createStyles(({ css }) => ({
   container: css`
@@ -34,7 +33,7 @@ const useStyles = createStyles(({ css }) => ({
 
 export const AssistantMessage: RenderMessage = memo(
   ({ id, plugin, function_call, content, ...props }) => {
-    const genFunctionCallProps = useSessionStore(currentFunctionCallProps);
+    const genFunctionCallProps = useSessionStore(chatSelectors.currentFunctionCallProps);
 
     if (!isFunctionMessage(content)) return <DefautMessage content={content} id={id} {...props} />;
 
@@ -65,16 +64,15 @@ export const AssistantMessageExtra: RenderMessageExtra = memo(({ extra, function
   );
 });
 
-export const AssistantActionsBar: RenderAction = memo(({ text, error, id, ...props }) => {
+export const AssistantActionsBar: RenderAction = memo(({ text, error, id, onActionClick }) => {
   const { regenerate, edit, copy, divider, del } = useChatListActionsBar(text);
   if (id === 'default') return;
-  if (error) return <SystemActionsBar id={id} text={text} {...props} />;
   return (
     <ActionIconGroup
-      dropdownMenu={[edit, copy, regenerate, divider, del]}
-      items={[regenerate, copy]}
+      dropdownMenu={error ? [regenerate, divider, del] : [edit, copy, regenerate, divider, del]}
+      items={[regenerate]}
+      onActionClick={onActionClick}
       type="ghost"
-      {...props}
     />
   );
 });
