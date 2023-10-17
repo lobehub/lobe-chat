@@ -3,32 +3,24 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
+import { currentFunctionCallProps } from '@/store/session/slices/chat/selectors/chat';
 
 import FunctionCall from '../Plugins/FunctionCall';
 import PluginMessage from '../Plugins/PluginMessage';
 
 export const FunctionMessage: RenderMessage = memo(
   ({ id, content, plugin, function_call, ...props }) => {
-    const chatLoadingId = useSessionStore((s) => s.chatLoadingId);
-    const itemId = plugin?.identifier || function_call?.name;
-    const command = plugin ?? function_call;
-    const args = command?.arguments;
-    const fcProps = {
-      arguments: args,
-      command,
-      content,
-      id,
-      loading: id === chatLoadingId,
-    };
+    const genFunctionCallProps = useSessionStore(currentFunctionCallProps);
+    const fcProps = genFunctionCallProps({ content, function_call, id, plugin });
 
     return (
-      <Flexbox gap={12} id={itemId}>
+      <Flexbox gap={12} id={id}>
         <FunctionCall {...fcProps} />
         <PluginMessage
           content={content}
           function_call={function_call}
           id={id}
-          loading={id === chatLoadingId}
+          loading={fcProps.loading}
           plugin={plugin}
           {...props}
         />

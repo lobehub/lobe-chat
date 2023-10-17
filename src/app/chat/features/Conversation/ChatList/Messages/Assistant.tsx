@@ -13,6 +13,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
+import { currentFunctionCallProps } from '@/store/session/slices/chat/selectors/chat';
 import { isFunctionMessage } from '@/utils/message';
 
 import FunctionCall from '../Plugins/FunctionCall';
@@ -33,23 +34,14 @@ const useStyles = createStyles(({ css }) => ({
 
 export const AssistantMessage: RenderMessage = memo(
   ({ id, plugin, function_call, content, ...props }) => {
-    const chatLoadingId = useSessionStore((s) => s.chatLoadingId);
+    const genFunctionCallProps = useSessionStore(currentFunctionCallProps);
 
     if (!isFunctionMessage(content)) return <DefautMessage content={content} id={id} {...props} />;
 
-    const itemId = plugin?.identifier || function_call?.name;
-    const command = plugin ?? function_call;
-    const args = command?.arguments;
-    const fcProps = {
-      arguments: args,
-      command,
-      content: content,
-      id: itemId,
-      loading: id === chatLoadingId,
-    };
+    const fcProps = genFunctionCallProps({ content, function_call, id, plugin });
 
     return (
-      <div id={itemId}>
+      <div id={id}>
         <FunctionCall {...fcProps} />
       </div>
     );

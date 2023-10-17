@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 
+import { FunctionCallProps } from '@/app/chat/features/Conversation/ChatList/Plugins/FunctionCall';
 import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
@@ -83,4 +84,24 @@ export const currentChatsWithHistoryConfig = (s: SessionStore): ChatMessage[] =>
 export const chatsMessageString = (s: SessionStore): string => {
   const chats = currentChatsWithHistoryConfig(s);
   return chats.map((m) => m.content).join('');
+};
+
+export const currentFunctionCallProps = (
+  s: SessionStore,
+): ((
+  props: Pick<ChatMessage, 'plugin' | 'function_call' | 'content' | 'id'>,
+) => FunctionCallProps) => {
+  const chatLoadingId = s.chatLoadingId;
+  return ({ plugin, function_call, content, id }) => {
+    const itemId = plugin?.identifier || function_call?.name;
+    const command = plugin ?? function_call;
+    const args = command?.arguments;
+    return {
+      arguments: args,
+      command,
+      content,
+      id: itemId,
+      loading: id === chatLoadingId,
+    };
+  };
 };
