@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.89.10](https://github.com/lobehub/lobe-chat/compare/v0.89.9...v0.89.10)
+
+<sup>Released on **2023-10-17**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor ChatList onActionsClick.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor ChatList onActionsClick ([d06d87e](https://github.com/lobehub/lobe-chat/commit/d06d87e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.89.9](https://github.com/lobehub/lobe-chat/compare/v0.89.8...v0.89.9)
 
 <sup>Released on **2023-10-17**</sup>
