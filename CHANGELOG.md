@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.90.1](https://github.com/lobehub/lobe-chat/compare/v0.90.0...v0.90.1)
+
+<sup>Released on **2023-10-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix lazyload height.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix lazyload height ([98efe02](https://github.com/lobehub/lobe-chat/commit/98efe02))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.90.0](https://github.com/lobehub/lobe-chat/compare/v0.89.10...v0.90.0)
 
 <sup>Released on **2023-10-17**</sup>
