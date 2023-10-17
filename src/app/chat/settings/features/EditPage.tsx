@@ -8,7 +8,6 @@ import PageTitle from '@/components/PageTitle';
 import AgentSetting from '@/features/AgentSetting';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
-import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 const EditPage = memo(() => {
   const { t } = useTranslation('setting');
@@ -20,11 +19,9 @@ const EditPage = memo(() => {
     agentSelectors.currentAgentTitle(s),
   ]);
 
-  const pageTitle = genSiteHeadTitle(t('header.sessionWithName', { name: title }));
-
   return (
     <>
-      <PageTitle title={pageTitle} />
+      <PageTitle title={t('header.sessionWithName', { name: title })} />
       <AgentSetting
         config={config}
         meta={meta}

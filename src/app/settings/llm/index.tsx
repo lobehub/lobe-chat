@@ -8,17 +8,15 @@ import Footer from '@/app/settings/features/Footer';
 import PageTitle from '@/components/PageTitle';
 import { useSwitchSideBarOnInit } from '@/store/global/hooks/useSwitchSettingsOnInit';
 import { SettingsTabs } from '@/store/global/initialState';
-import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
 
 import LLM from './LLM';
 
 export default memo(() => {
   useSwitchSideBarOnInit(SettingsTabs.LLM);
   const { t } = useTranslation('setting');
-  const pageTitle = genSiteHeadTitle(t('tab.llm'));
   return (
     <>
-      <PageTitle title={pageTitle} />
+      <PageTitle title={t('tab.llm')} />
       <LLM />
       <Footer>
         <Trans i18nKey="llm.waitingForMore" ns={'setting'}>

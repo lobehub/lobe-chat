@@ -1,8 +1,10 @@
 import { ChatList } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
+import { PREFIX_KEY, REGENERATE_KEY } from '@/const/hotkeys';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 
@@ -35,6 +37,21 @@ const List = memo(() => {
       s.dispatchMessage,
     ];
   });
+
+  const hotkeys = [PREFIX_KEY, REGENERATE_KEY].join('+');
+
+  useHotkeys(
+    hotkeys,
+    () => {
+      console.log(111);
+      const lastMessage = data.at(-1);
+      if (!lastMessage || lastMessage.id === 'default' || lastMessage.role === 'system') return;
+      resendMessage(lastMessage.id);
+    },
+    {
+      preventDefault: true,
+    },
+  );
 
   if (!init) return <SkeletonList />;
 

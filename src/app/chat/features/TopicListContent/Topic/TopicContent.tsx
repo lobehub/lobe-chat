@@ -83,7 +83,16 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
   );
 
   return (
-    <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
+    <Flexbox
+      align={'center'}
+      gap={8}
+      horizontal
+      justify={'space-between'}
+      onDoubleClick={(e) => {
+        if (!id) return;
+        if (e.altKey) toggleEditing(true);
+      }}
+    >
       <ActionIcon
         color={fav ? theme.colorWarning : undefined}
         fill={fav ? theme.colorWarning : 'transparent'}

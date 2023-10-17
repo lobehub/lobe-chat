@@ -1,10 +1,8 @@
 import { Metadata } from 'next';
 
-import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
-
 import pkg from '../../package.json';
 
-const title = genSiteHeadTitle();
+const title = 'LobeChat';
 const { description, homepage } = pkg;
 const metadata: Metadata = {
   appleWebApp: {

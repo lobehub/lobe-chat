@@ -13,7 +13,7 @@ import { useStyles } from './style';
 
 const SystemRole = memo(() => {
   const [openModal, setOpenModal] = useState(false);
-
+  const [editing, setEditing] = useState(false);
   const { styles } = useStyles();
   const [systemRole, updateAgentConfig] = useSessionStore((s) => [
     agentSelectors.currentAgentSystemRole(s),
@@ -35,7 +35,16 @@ const SystemRole = memo(() => {
         }
         title={t('settingAgent.prompt.title', { ns: 'setting' })}
       />
-      <Flexbox className={styles.promptBox} height={200}>
+      <Flexbox
+        className={styles.promptBox}
+        height={200}
+        onDoubleClick={(e) => {
+          if (e.altKey) {
+            setOpenModal(true);
+            setEditing(true);
+          }
+        }}
+      >
         {!init ? (
           <Skeleton
             active
@@ -47,9 +56,11 @@ const SystemRole = memo(() => {
           <>
             <EditableMessage
               classNames={{ markdown: styles.prompt }}
+              editing={editing}
               onChange={(e) => {
                 updateAgentConfig({ systemRole: e });
               }}
+              onEditingChange={setEditing}
               onOpenChange={setOpenModal}
               openModal={openModal}
               placeholder={`${t('settingAgent.prompt.placeholder', { ns: 'setting' })}...`}
