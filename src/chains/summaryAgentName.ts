@@ -1,7 +1,10 @@
 import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
-// 自动起名
-export const promptSummaryAgentName = (content: string): Partial<OpenAIChatStreamPayload> => ({
+/**
+ * summary agent name for user prompt
+ * @param content
+ */
+export const chainSummaryAgentName = (content: string): Partial<OpenAIChatStreamPayload> => ({
   messages: [
     {
       content: `你是一名擅长起名的起名大师，你需要将用户的描述总结为 20 个字以内的角色，格式要求如下：
@@ -28,49 +31,5 @@ export const promptSummaryAgentName = (content: string): Partial<OpenAIChatStrea
     },
     { content: '文案比喻优化专家', role: 'assistant' },
     { content: `输入: {${content}}`, role: 'user' },
-  ],
-});
-
-// 自动挑选 emoji 和背景色
-export const promptPickEmoji = (content: string): Partial<OpenAIChatStreamPayload> => ({
-  messages: [
-    {
-      content: '你是一名非常懂设计与时尚的设计师，你需要从用户的描述中匹配一个合适的 emoji。',
-      role: 'system',
-    },
-    {
-      content: `输入:你是一名精通体验设计的设计系统设计师，设计系统存在诸多类别的 token，比如品牌色、成功色等，你需要为各个类别的 token 提供说明文案。`,
-      role: 'user',
-    },
-    {
-      content: `💅`,
-      role: 'assistant',
-    },
-    {
-      content: `输入:用户会输入一串 ts 代码，为了确保所有功能和分支的 100% 的覆盖率，你需要给出需要考虑哪些数据场景。`,
-      role: 'user',
-    },
-    {
-      content: `🧪`,
-      role: 'assistant',
-    },
-    {
-      content: `输入:${content}`,
-      role: 'user',
-    },
-  ],
-});
-
-export const promptSummaryDescription = (content: string): Partial<OpenAIChatStreamPayload> => ({
-  messages: [
-    {
-      content:
-        '你是一名擅长会话的助理，你需要将用户的输入的内容总结为一个专家的简介，不超过 20 个字',
-      role: 'system',
-    },
-    {
-      content: `${content}`,
-      role: 'user',
-    },
   ],
 });

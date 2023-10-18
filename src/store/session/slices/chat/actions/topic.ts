@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { chainSummaryTitle } from '@/chains/chat';
+import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT } from '@/const/message';
 import { SessionStore } from '@/store/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';

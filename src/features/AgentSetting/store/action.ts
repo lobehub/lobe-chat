@@ -1,6 +1,8 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { promptPickEmoji, promptSummaryAgentName, promptSummaryDescription } from '@/chains/agent';
+import { chainPickEmoji } from '@/chains/pickEmoji';
+import { chainSummaryAgentName } from '@/chains/summaryAgentName';
+import { chainSummaryDescription } from '@/chains/summaryDescription';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
@@ -73,7 +75,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
       onLoadingChange: (loading) => {
         get().updateLoadingState('avatar', loading);
       },
-      params: promptPickEmoji(systemRole),
+      params: chainPickEmoji(systemRole),
     });
 
     if (emoji) {
@@ -100,7 +102,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
         updateLoadingState('description', loading);
       },
       onMessageHandle: streamUpdateMeta('description'),
-      params: promptSummaryDescription(systemRole),
+      params: chainSummaryDescription(systemRole),
     });
   },
   autocompleteAgentTitle: async () => {
@@ -123,7 +125,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
         updateLoadingState('title', loading);
       },
       onMessageHandle: streamUpdateMeta('title'),
-      params: promptSummaryAgentName(systemRole),
+      params: chainSummaryAgentName(systemRole),
     });
   },
   autocompleteAllMeta: (replace) => {
