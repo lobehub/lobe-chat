@@ -7,9 +7,10 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import BubblesLoading from '@/app/chat/features/Conversation/ChatList/Loading';
 import { useSessionStore } from '@/store/session';
 import { ChatTranslate } from '@/types/chatMessage';
+
+import BubblesLoading from '../Loading';
 
 const useStyles = createStyles(({ css }) => ({
   container: css`
@@ -66,7 +67,7 @@ const Translate = memo<TranslateProps>(({ content = '', from, to, id, loading })
           />
         </Flexbox>
       </Flexbox>
-      {show && loading && !content ? <BubblesLoading /> : <Markdown>{content}</Markdown>}
+      {!show ? null : loading && !content ? <BubblesLoading /> : <Markdown>{content}</Markdown>}
     </Flexbox>
   );
 });
