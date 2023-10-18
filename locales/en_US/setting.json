@@ -235,6 +235,13 @@
     },
     "title": "Theme Settings"
   },
+  "submitAgentModal": {
+    "tooltips": "Share to Assistant Market",
+    "button": "Submit Assistant",
+    "identifier": "Identifier",
+    "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags.",
+    "placeholder": "Please enter a unique identifier for the assistant, such as web-development."
+  },
   "tab": {
     "agent": "Default Agent",
     "common": "Common Settings",

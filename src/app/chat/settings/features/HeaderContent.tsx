@@ -9,9 +9,12 @@ import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useSessionStore } from '@/store/session';
 
+import SubmitAgentButton from './SubmitAgentButton';
+
 export const HeaderContent = memo<{ mobile?: boolean }>(() => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
+
   const { mobile } = useResponsive();
 
   const items = useMemo<MenuProps['items']>(
@@ -41,8 +44,13 @@ export const HeaderContent = memo<{ mobile?: boolean }>(() => {
   const size = mobile ? MOBILE_HEADER_ICON_SIZE : { fontSize: 24 };
 
   return (
-    <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
-      <ActionIcon icon={HardDriveDownload} size={size} title={t('export', { ns: 'common' })} />
-    </Dropdown>
+    <>
+      <SubmitAgentButton />
+      <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
+        <ActionIcon icon={HardDriveDownload} size={size} title={t('export', { ns: 'common' })} />
+      </Dropdown>
+    </>
   );
 });
+
+export default HeaderContent;

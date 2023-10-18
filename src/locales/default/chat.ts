@@ -36,7 +36,6 @@ export default {
     withSystemRole: '包含助手角色设定',
   },
   stop: '停止',
-
   temp: '临时',
   tokenDetail: '角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}',
   tokenTag: {

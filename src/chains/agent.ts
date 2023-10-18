@@ -4,29 +4,24 @@ import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 export const promptSummaryAgentName = (content: string): Partial<OpenAIChatStreamPayload> => ({
   messages: [
     {
-      content: `你是一名擅长起名的起名大师，你需要将用户的描述总结为 20 个字以内的角色，格式要求如下：
-输入: {文本作为JSON引用字符串}
-输出: {角色名}
-`,
+      content: `你是一名擅长起名的起名大师，名字需要有文学内涵，注重精炼和赋子意境，你需要将用户的描述总结为 20 个字以内的角色, 格式要求如下：\n输入: {文本作为JSON引用字符串}\n输出: {角色名}`,
       role: 'system',
     },
     {
-      content: `输入: {你是一名专业的前端开发者，擅长结合 vitest 和\`testing-library/react\` 书写单元测试。接下来用户会输入一串 ts 代码，你需要给出完善的单元测试。\n你需要注意，单元测试代码中，不应该使用 jest 。如果需要使用 \`jest.fn\`，请使用 \`vi.fn\` 替换}`,
+      content: `输入: {你是一名文案大师，帮我为一些设计 / 艺术作品起名，名字需要有文学内涵，注重精炼和赋子意境，表达作品的情景氛国，使名称既简洁又富有诗意。}`,
       role: 'user',
     },
-    { content: '前端 vitest 测试专家', role: 'assistant' },
+    { content: '创意命名师', role: 'assistant' },
     {
-      content: `输入: {你是一名前端专家，请将下面的代码转成 ts，不要修改实现。如果原本 js 中没有定义的全局变量，需要补充 declare 的类型声明。}`,
+      content: `输入: {你是一名前端代码专家，请将下面的代码转成 ts，不要修改实现。如果原本 js 中没有定义的全局变量，需要补充 declare 的类型声明。}`,
       role: 'user',
     },
-    { content: 'js 转 ts 专家', role: 'assistant' },
+    { content: 'ts转换魔术师', role: 'assistant' },
     {
-      content: `输入:{你是一名擅长比喻和隐喻的UX Writter。用户会输入文案，你需要给出3个优化后的结果，使用 markdown格式的文本。下面是一个例子：
-输入：页面加载中
-输出：页面似乎在思考，一会儿才能准备好}`,
+      content: `输入: {你是一名创业计划撰写专家，可以提供包括创意名称、简短的标语、目标用户画像、用户痛点、主要价值主张、销售/营销渠道、收入流、成本结构等计划生成。}`,
       role: 'user',
     },
-    { content: '文案比喻优化专家', role: 'assistant' },
+    { content: '创业咨询专家', role: 'assistant' },
     { content: `输入: {${content}}`, role: 'user' },
   ],
 });
@@ -35,42 +30,76 @@ export const promptSummaryAgentName = (content: string): Partial<OpenAIChatStrea
 export const promptPickEmoji = (content: string): Partial<OpenAIChatStreamPayload> => ({
   messages: [
     {
-      content: '你是一名非常懂设计与时尚的设计师，你需要从用户的描述中匹配一个合适的 emoji。',
+      content:
+        '你是一名擅长进行概念抽象的设计师与 Emoji 专家，你需要根据角色能力的描述抽象出一个表达物理实体的概念 Emoji 作为角色头像, 格式要求如下：\n输入: {文本作为JSON引用字符串}\n输出: {一个Emoji}',
       role: 'system',
     },
     {
-      content: `输入:你是一名精通体验设计的设计系统设计师，设计系统存在诸多类别的 token，比如品牌色、成功色等，你需要为各个类别的 token 提供说明文案。`,
+      content: `输入: {你是一名文案大师，帮我为一些设计 / 艺术作品起名，名字需要有文学内涵，注重精炼和赋子意境，表达作品的情景氛国，使名称既简洁又富有诗意。}`,
       role: 'user',
     },
+    { content: '✒️', role: 'assistant' },
     {
-      content: `💅`,
-      role: 'assistant',
-    },
-    {
-      content: `输入:用户会输入一串 ts 代码，为了确保所有功能和分支的 100% 的覆盖率，你需要给出需要考虑哪些数据场景。`,
+      content: `输入: {你是一名代码巫师，请将下面的代码转成 ts，不要修改实现。如果原本 js 中没有定义的全局变量，需要补充 declare 的类型声明。}`,
       role: 'user',
     },
+    { content: '🧙‍♂️', role: 'assistant' },
     {
-      content: `🧪`,
-      role: 'assistant',
-    },
-    {
-      content: `输入:${content}`,
+      content: `输入: {你是一名创业计划撰写专家，可以提供包括创意名称、简短的标语、目标用户画像、用户痛点、主要价值主张、销售/营销渠道、收入流、成本结构等计划生成。}`,
       role: 'user',
     },
+    { content: '🚀', role: 'assistant' },
+    { content: `输入: {${content}}`, role: 'user' },
   ],
 });
 
 export const promptSummaryDescription = (content: string): Partial<OpenAIChatStreamPayload> => ({
   messages: [
     {
-      content:
-        '你是一名擅长会话的助理，你需要将用户的输入的内容总结为一个专家的简介，不超过 20 个字',
+      content: `你是一名擅长技能总结的助理，你需要将用户的输入的内容总结为一个角色技能简介，确保信息清晰、逻辑清晰，并有效地传达角色的技能和经验，不超过 20 个字, 格式要求如下：\n输入: {文本作为JSON引用字符串}\n输出: {角色技能简介}`,
       role: 'system',
     },
     {
-      content: `${content}`,
+      content: `输入: {你是一名文案大师，帮我为一些设计 / 艺术作品起名，名字需要有文学内涵，注重精炼和赋子意境，表达作品的情景氛国，使名称既简洁又富有诗意。}`,
       role: 'user',
     },
+    { content: '擅长文创艺术作品起名', role: 'assistant' },
+    {
+      content: `输入: {你是一名前端代码专家，请将下面的代码转成 ts，不要修改实现。如果原本 js 中没有定义的全局变量，需要补充 declare 的类型声明。}`,
+      role: 'user',
+    },
+    { content: '擅长 ts 转换和补充类型声明', role: 'assistant' },
+    {
+      content: `输入: {你是一名创业计划撰写专家，可以提供包括创意名称、简短的标语、目标用户画像、用户痛点、主要价值主张、销售/营销渠道、收入流、成本结构等计划生成。}`,
+      role: 'user',
+    },
+    { content: '擅长创业计划撰写与咨询', role: 'assistant' },
+    { content: `输入: {${content}}`, role: 'user' },
+  ],
+});
+
+export const promptSummaryTags = (content: string): Partial<OpenAIChatStreamPayload> => ({
+  messages: [
+    {
+      content:
+        '你是一名擅长会话标签总结的助理，你需要将用户的输入的内容提炼出分类标签，使用`,`分隔，不超过 5 个标签, 格式要求如下：\n输入: {文本作为JSON引用字符串}\n输出: {角色名}',
+      role: 'system',
+    },
+    {
+      content: `输入: {你是一名文案大师，帮我为一些设计 / 艺术作品起名，名字需要有文学内涵，注重精炼和赋子意境，表达作品的情景氛国，使名称既简洁又富有诗意。}`,
+      role: 'user',
+    },
+    { content: '起名,写作,创意', role: 'assistant' },
+    {
+      content: `输入: {你是一名前端专家，请将下面的代码转成 ts，不要修改实现。如果原本 js 中没有定义的全局变量，需要补充 declare 的类型声明。}`,
+      role: 'user',
+    },
+    { content: '代码,软件开发,效率', role: 'assistant' },
+    {
+      content: `输入: {你是一名创业计划撰写专家，可以提供包括创意名称、简短的标语、目标用户画像、用户痛点、主要价值主张、销售/营销渠道、收入流、成本结构等计划生成。}`,
+      role: 'user',
+    },
+    { content: '创业,计划,咨询', role: 'assistant' },
+    { content: `输入: {${content}}`, role: 'user' },
   ],
 });

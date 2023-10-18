@@ -222,6 +222,13 @@
     },
     "title": "테마 설정"
   },
+  "submitAgentModal": {
+    "tooltips": "도우미 마켓에 공유",
+    "button": "도우미 제출",
+    "identifier": "식별자 도우미 식별자",
+    "metaMiss": "도우미 정보를 입력한 후 제출하세요. 이름, 설명 및 태그를 포함해야 합니다.",
+    "placeholder": "도우미의 식별자를 입력하세요. 고유해야 하며, 예를 들어 web-development과 같은 형식이어야 합니다."
+  },
   "tab": {
     "agent": "기본 도우미",
     "common": "일반 설정",

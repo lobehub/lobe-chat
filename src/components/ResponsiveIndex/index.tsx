@@ -14,10 +14,12 @@ const ResponsiveIndex = ({ children, Mobile }: ResponsiveIndexProps) => {
   const { t } = useTranslation();
   const mobile = useIsMobile();
 
-  return (
+  return mobile ? (
     <Suspense fallback={<FullscreenLoading title={t('layoutInitializing', { ns: 'common' })} />}>
-      {mobile ? <Mobile /> : children}
+      <Mobile />
     </Suspense>
+  ) : (
+    children
   );
 };
 

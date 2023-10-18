@@ -1,7 +1,8 @@
 {
   "about": "Наш Github",
   "advanceSettings": "Дополнительные настройки",
-  "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете начать общаться со мной прямо сейчас или перейти на [Assistant Settings](/chat/settings#session={{id}}) для моей настройки.",
+  "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете начать общаться со мной прямо сейчас или перейти на [Agent Settings](/chat/settings#session={{id}}) для моей настройки.",
+  "agentMaxToken": "Максимальная длина сессии",
   "agentModel": "Модель",
   "agentProfile": "Информация о помощнике",
   "appInitializing": "LobeChat запускается, пожалуйста, подождите...",

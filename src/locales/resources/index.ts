@@ -13,7 +13,6 @@ const resources = {
   'zh-CN': zh_CN,
   'zh-TW': zh_TW,
 } as const;
-
 export default resources;
 export const defaultResources = zh_CN;
 export type Resources = typeof resources;

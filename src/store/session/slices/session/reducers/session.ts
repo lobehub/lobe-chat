@@ -112,7 +112,7 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
 
         const { key, value } = payload;
 
-        const validKeys = ['avatar', 'backgroundColor', 'description', 'tag', 'title'];
+        const validKeys = ['avatar', 'backgroundColor', 'description', 'tags', 'title'];
 
         if (validKeys.includes(key)) chat.meta[key] = value;
       });
