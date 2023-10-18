@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 0.93.0](https://github.com/lobehub/lobe-chat/compare/v0.92.0...v0.93.0)
+
+<sup>Released on **2023-10-18**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor chain.
+
+#### ✨ Features
+
+- **misc**: Support multi-language translate.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor chain ([49c4863](https://github.com/lobehub/lobe-chat/commit/49c4863))
+
+#### What's improved
+
+- **misc**: Support multi-language translate ([548bc5d](https://github.com/lobehub/lobe-chat/commit/548bc5d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.92.0](https://github.com/lobehub/lobe-chat/compare/v0.91.0...v0.92.0)
 
 <sup>Released on **2023-10-18**</sup>
