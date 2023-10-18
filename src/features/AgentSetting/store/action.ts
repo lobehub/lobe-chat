@@ -1,11 +1,9 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import {
-  promptPickEmoji,
-  promptSummaryAgentName,
-  promptSummaryDescription,
-  promptSummaryTags,
-} from '@/chains/agent';
+import { chainPickEmoji } from '@/chains/pickEmoji';
+import { chainSummaryAgentName } from '@/chains/summaryAgentName';
+import { chainSummaryDescription } from '@/chains/summaryDescription';
+import { chainSummaryTags } from '@/chains/summaryTags';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
@@ -80,7 +78,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
       onLoadingChange: (loading) => {
         get().updateLoadingState('avatar', loading);
       },
-      params: promptPickEmoji([meta.title, meta.description, systemRole].filter(Boolean).join(',')),
+      params: chainPickEmoji([meta.title, meta.description, systemRole].filter(Boolean).join(',')),
     });
 
     if (emoji) {
@@ -107,7 +105,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
         updateLoadingState('description', loading);
       },
       onMessageHandle: streamUpdateMetaString('description'),
-      params: promptSummaryDescription(systemRole),
+      params: chainSummaryDescription(systemRole),
     });
   },
   autocompleteAgentTags: async () => {
@@ -130,7 +128,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
         updateLoadingState('tags', loading);
       },
       onMessageHandle: streamUpdateMetaArray('tags'),
-      params: promptSummaryTags(
+      params: chainSummaryTags(
         [meta.title, meta.description, systemRole].filter(Boolean).join(','),
       ),
     });
@@ -155,7 +153,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
         updateLoadingState('title', loading);
       },
       onMessageHandle: streamUpdateMetaString('title'),
-      params: promptSummaryAgentName([meta.description, systemRole].filter(Boolean).join(',')),
+      params: chainSummaryAgentName([meta.description, systemRole].filter(Boolean).join(',')),
     });
   },
   autocompleteAllMeta: (replace) => {

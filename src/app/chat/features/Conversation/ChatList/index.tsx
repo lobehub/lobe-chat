@@ -5,7 +5,6 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
 import { PREFIX_KEY, REGENERATE_KEY } from '@/const/hotkeys';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 
@@ -43,14 +42,11 @@ const List = memo(() => {
     ];
   });
 
-  const targetLang = useGlobalStore(settingsSelectors.currentLanguage);
-
   const hotkeys = [PREFIX_KEY, REGENERATE_KEY].join('+');
 
   useHotkeys(
     hotkeys,
     () => {
-      console.log(111);
       const lastMessage = data.at(-1);
       if (!lastMessage || lastMessage.id === 'default' || lastMessage.role === 'system') return;
       resendMessage(lastMessage.id);
@@ -68,17 +64,28 @@ const List = memo(() => {
       enableHistoryCount={enableHistoryCount}
       historyCount={historyCount}
       loadingId={chatLoadingId}
-      onActionsClick={{
-        del: ({ id }) => deleteMessage(id),
-        regenerate: ({ id, error }) => {
-          resendMessage(id);
+      onActionsClick={(action, { id, error }) => {
+        switch (action.key) {
+          case 'del': {
+            deleteMessage(id);
+            break;
+          }
+          case 'regenerate': {
+            resendMessage(id);
 
-          // if this message is an error message, we need to delete it
-          if (error) deleteMessage(id);
-        },
-        translate: ({ id }) => {
-          translateMessage(id, targetLang);
-        },
+            // if this message is an error message, we need to delete it
+            if (error) deleteMessage(id);
+            break;
+          }
+        }
+
+        // click the menu item with translate item, the result is:
+        // key: 'en-US'
+        // keyPath: ['en-US','translate']
+        if (action.keyPath.at(-1) === 'translate') {
+          const lang = action.keyPath[0];
+          translateMessage(id, lang);
+        }
       }}
       onMessageChange={(id, content) =>
         dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content })
