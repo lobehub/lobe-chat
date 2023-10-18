@@ -29,15 +29,15 @@ const ActionsRight = memo(() => {
         cancelText={t('cancel', { ns: 'common' })}
         okButtonProps={{ danger: true }}
         okText={t('ok', { ns: 'common' })}
-        onConfirm={clearMessage}
+        onConfirm={() => clearMessage()}
         placement={'topRight'}
-        title={t('confirmClearCurrentMessages', { ns: 'common' })}
+        title={t('confirmClearCurrentMessages', { ns: 'chat' })}
       >
         <ActionIcon
           icon={Eraser}
           placement={'bottom'}
           title={
-            (<HotKeys desc={t('clearCurrentMessages', { ns: 'common' })} keys={hotkeys} />) as any
+            (<HotKeys desc={t('clearCurrentMessages', { ns: 'chat' })} keys={hotkeys} />) as any
           }
         />
       </Popconfirm>

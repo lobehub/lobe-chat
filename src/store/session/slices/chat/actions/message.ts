@@ -66,13 +66,14 @@ export interface ChatMessageAction {
    * @param text - 消息文本
    */
   sendMessage: (text: string) => Promise<void>;
-
   stopGenerateMessage: () => void;
+
   toggleChatLoading: (
     loading: boolean,
     id?: string,
     action?: string,
   ) => AbortController | undefined;
+
   triggerFunctionCall: (id: string) => Promise<void>;
 }
 
@@ -298,7 +299,6 @@ export const chatMessage: StateCreator<
 
     toggleChatLoading(false);
   },
-
   toggleChatLoading: (loading, id, action) => {
     if (loading) {
       const abortController = new AbortController();

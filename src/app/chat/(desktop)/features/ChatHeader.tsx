@@ -19,7 +19,7 @@ const Header = memo(() => {
   const init = useSessionChatInit();
   const router = useRouter();
 
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
 
   const [isInbox, title, description, avatar, backgroundColor, model, plugins] = useSessionStore(
     (s) => [

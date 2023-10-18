@@ -30,8 +30,6 @@ const FunctionCall = memo<FunctionCallProps>(
     const pluginAvatar = pluginHelpers.getPluginAvatar(item?.meta);
     const pluginTitle = pluginHelpers.getPluginTitle(item?.meta);
 
-    console.log(item?.meta);
-
     const avatar = pluginAvatar ? (
       <Avatar avatar={pluginAvatar} size={32} />
     ) : (

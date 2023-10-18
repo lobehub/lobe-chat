@@ -54,7 +54,7 @@ export const Topic = () => {
       <TopicItem
         active={!activeTopicId}
         fav={false}
-        title={t('topic.defaultTitle', { ns: 'common' })}
+        title={t('topic.defaultTitle', { ns: 'chat' })}
       />
 
       {topicsData.map(({ id, favorite, title }) => (

@@ -52,15 +52,21 @@ export const currentChatsWithGuideMessage = (s: SessionStore): ChatMessage[] => 
 
   const [activeId, isInbox] = [s.activeId, s.activeId === INBOX_SESSION_ID];
   const meta = agentSelectors.currentAgentMeta(s);
+
+  const inboxMsg = t('inbox.defaultMessage', { ns: 'chat' });
+  const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
+    name: meta.title || t('defaultAgent'),
+    ns: 'chat',
+    systemRole: meta.description,
+  });
+  const agentMsg = t('agentDefaultMessage', {
+    id: activeId,
+    name: meta.title || t('defaultAgent'),
+    ns: 'chat',
+  });
+
   const emptyInboxGuideMessage = {
-    content: isInbox
-      ? t('inbox.defaultMessage')
-      : !!meta.description
-      ? t('agentDefaultMessageWithSystemRole', {
-          name: meta.title || t('defaultAgent'),
-          systemRole: meta.description,
-        })
-      : t('agentDefaultMessage', { id: activeId, name: meta.title || t('defaultAgent') }),
+    content: isInbox ? inboxMsg : !!meta.description ? agentSystemRoleMsg : agentMsg,
     createAt: Date.now(),
     extra: {},
     id: 'default',
@@ -86,22 +92,22 @@ export const chatsMessageString = (s: SessionStore): string => {
   return chats.map((m) => m.content).join('');
 };
 
-export const currentFunctionCallProps = (
-  s: SessionStore,
-): ((
-  props: Pick<ChatMessage, 'plugin' | 'function_call' | 'content' | 'id'>,
-) => FunctionCallProps) => {
-  const chatLoadingId = s.chatLoadingId;
-  return ({ plugin, function_call, content, id }) => {
+export const getFunctionMessageParams =
+  (
+    s: SessionStore,
+  ): ((
+    props: Pick<ChatMessage, 'plugin' | 'function_call' | 'content' | 'id'>,
+  ) => FunctionCallProps) =>
+  ({ plugin, function_call, content, id }) => {
     const itemId = plugin?.identifier || function_call?.name;
     const command = plugin ?? function_call;
     const args = command?.arguments;
+
     return {
       arguments: args,
       command,
       content,
       id: itemId,
-      loading: id === chatLoadingId,
+      loading: id === s.chatLoadingId,
     };
   };
-};

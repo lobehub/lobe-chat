@@ -6,14 +6,15 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { usePluginStore } from '@/store/plugin';
-import { ChatMessage } from '@/types/chatMessage';
 
 import IFrameRender from './IFrameRender';
 
 const SystemJsRender = dynamic(() => import('./SystemJsRender'), { ssr: false });
 
-export interface FunctionMessageProps extends ChatMessage {
+export interface FunctionMessageProps {
+  content: string;
   loading?: boolean;
+  name?: string;
 }
 
 const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
@@ -28,8 +29,6 @@ const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
   }
 
   const contentObj = useMemo(() => (isJSON ? JSON.parse(content) : content), [content]);
-
-  // if (!loading)
 
   if (!isJSON) {
     return (

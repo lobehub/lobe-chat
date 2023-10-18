@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { promptPickEmoji, promptSummaryAgentName, promptSummaryDescription } from '@/prompts/agent';
+import { promptPickEmoji, promptSummaryAgentName, promptSummaryDescription } from '@/chains/agent';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';

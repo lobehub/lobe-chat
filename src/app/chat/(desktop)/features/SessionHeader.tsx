@@ -21,7 +21,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const Header = memo(() => {
   const { styles } = useStyles();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
   const [createSession] = useSessionStore((s) => [s.createSession]);
 
   return (

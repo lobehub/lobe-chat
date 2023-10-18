@@ -2,20 +2,15 @@
   "about": "Наш Github",
   "advanceSettings": "Дополнительные настройки",
   "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете начать общаться со мной прямо сейчас или перейти на [Assistant Settings](/chat/settings#session={{id}}) для моей настройки.",
-  "agentDefaultMessageWithSystemRole": "Здравствуйте, Я **{{name}}**, {{systemRole}}. Давайте начнем общаться!",
-  "agentMaxToken": "Максимальная длина запроса",
   "agentModel": "Модель",
   "agentProfile": "Информация о помощнике",
   "appInitializing": "LobeChat запускается, пожалуйста, подождите...",
   "archive": "Архив",
   "autoGenerate": "Автогенерация",
   "autoGenerateTooltip": "Автогенерация описания помощника на основе подсказок",
-  "backToBottom": "Перейти к последним сообщениям",
   "cancel": "Отмена",
   "changelog": "Журнал изменений",
-  "clearCurrentMessages": "Очистить сообщения текущего сеанса",
   "close": "Закрывать",
-  "confirmClearCurrentMessages": "Вы собираетесь удалить сообщения текущего сеанса? После очистки их невозможно восстановить. Пожалуйста, подтвердите вашу операцию.",
   "confirmRemoveSessionItemAlert": "Вы собираетесь удалить этого помощника? После удаления его невозможно восстановить. Пожалуйста, подтвердите вашу операцию.",
   "copy": "Копировать",
   "copySuccess": "Скопировано",
@@ -35,16 +30,17 @@
   "feedback": "Обратная связь",
   "historyRange": "Исторический диапазон",
   "import": "Импорт конфига",
-  "inbox": {
-    "defaultMessage": "Hello, I'm your intelligent assistant. You can ask me any questions and I will do my best to answer you. If you need a more professional or customized assistant, you can click `+` to create a custom assistant.",
-    "desc": "Activate the brain cluster and spark your thinking. Your intelligent assistant is here to communicate with you about everything.",
-    "title": "Chat Freely"
+  "lang": {
+    "en": "Английский",
+    "en-US": "Английский",
+    "ja-JP": "Японский",
+    "ko-KR": "Корейский",
+    "ru-RU": "Русский",
+    "zh": "Китайский (упрощенный)",
+    "zh-CN": "Китайский (упрощенный)",
+    "zh-TW": "Китайский (традиционный)"
   },
-  "message": {
-    "function_loading": "Запрос плагина в процессе..."
-  },
-  "moreSetting": "Больше настроек...",
-  "newAgent": "Новый ассистент",
+  "layoutInitializing": "Идет загрузка макета...",
   "noDescription": "Нет описания",
   "ok": "ОК",
   "password": "пароль",
@@ -54,51 +50,21 @@
   "rename": "Переименовать",
   "reset": "Сброс",
   "retry": "Повторить",
-  "roleAndArchive": "Роли и архивы",
-  "searchAgentPlaceholder": "Поисковые помощники и беседы...",
   "send": "Отправить",
-  "sendPlaceholder": "Введите ваше сообщение...",
   "sessionList": "Список помощников",
   "setting": "Настройки",
   "share": "Поделиться",
-  "shareModal": {
-    "download": "Скачать скриншот",
-    "imageType": "Тип изображения",
-    "screenshot": "Скриншот",
-    "settings": "Настройки экспорта",
-    "withBackground": "С фоновым изображением",
-    "withPluginInfo": "С информацией о плагине",
-    "withSystemRole": "С настройками роли помощника",
-    "withFooter": "с подвалом",
-    "shareToShareGPT": "Создать ссылку для обмена ShareGPT"
-  },
   "stop": "Остановить",
-  "switchMobileLayout": "Переключение на мобильный макет...",
   "tab": {
     "chat": "Чат",
     "market": "Магазин ассистентов",
     "setting": "Настройки"
   },
   "temp": "Временный",
-  "tokenDetail": "Установление ролей: {{systemRoleToken}} · История сообщений: {{chatsToken}}",
-  "tokenTag": {
-    "overload": "Превышение лимита",
-    "remained": "Осталось",
-    "used": "Использовано"
-  },
-  "topic": {
-    "confirmRemoveTopic": "Вы собираетесь удалить эту тему? После удаления он не может быть восстановлен. Пожалуйста, действуйте с осторожностью.",
-    "defaultTitle": "Default",
-    "saveCurrentMessages": "Сохранить текущую сессию в качестве темы",
-    "searchPlaceholder": "Поиск тем...",
-    "title": "Тема"
-  },
   "updateAgent": "Обновление информации о помощнике",
-  "updatePrompt": "Обновление подсказок",
   "upgradeVersion": {
     "action": "Обновить сейчас",
     "hasNew": "Доступно обновление",
     "newVersion": "Доступна новая версия: {{version}}"
-  },
-  "warp": "Разрыв строки"
+  }
 }

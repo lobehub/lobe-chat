@@ -1,6 +1,7 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 
 import { ErrorType } from '@/types/fetch';
+import { Translate } from '@/types/translate';
 
 import { LLMRoleType } from './llm';
 import { BaseDataModel } from './meta';
@@ -18,6 +19,9 @@ export interface OpenAIFunctionCall {
   name: string;
 }
 
+export interface ChatTranslate extends Translate {
+  content?: string;
+}
 export interface ChatMessage extends BaseDataModel {
   /**
    * @title 内容
@@ -29,10 +33,7 @@ export interface ChatMessage extends BaseDataModel {
   extra?: {
     fromModel?: string;
     // 翻译
-    translate?: {
-      target: string;
-      to: string;
-    };
+    translate?: ChatTranslate;
   } & Record<string, any>;
 
   /**

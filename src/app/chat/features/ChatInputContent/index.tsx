@@ -57,7 +57,7 @@ const ChatInputContent = memo<ChatContentProps>(
         onInputChange={setMessage}
         onSend={sendMessage}
         onStop={stopGenerateMessage}
-        placeholder={t('sendPlaceholder')}
+        placeholder={t('sendPlaceholder', { ns: 'chat' })}
         text={{
           send: t('send'),
           stop: t('stop'),

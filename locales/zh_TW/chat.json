@@ -1,0 +1,55 @@
+{
+  "agentDefaultMessage": "妳好，我是 **{{name}}**，妳可以立即與我開始對話，也可以前往 [助手設定](/chat/settings#session={{id}}) 完善我的資訊。",
+  "agentDefaultMessageWithSystemRole": "妳好，我是 **{{name}}**，{{systemRole}}，讓我們開始對話吧！",
+  "backToBottom": "查看最新訊息",
+  "clearCurrentMessages": "清空當前會話訊息",
+  "confirmClearCurrentMessages": "即將清空當前會話訊息，清空後將無法找回，請確認妳的操作",
+  "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後該將無法找回，請確認妳的操作",
+  "defaultAgent": "自定義助手",
+  "defaultSession": "自定義助手",
+  "historyRange": "歷史範圍",
+  "inbox": {
+    "defaultMessage": "妳好，我是妳的智能助手，妳可以問我任何問題，我會盡力回答妳。如果需要獲得更加專業或定制的助手，可以點擊`+`創建自定義助手",
+    "desc": "開啟大腦集群，激發思維火花。妳的智能助理，在這裡與妳交流一切",
+    "title": "隨便聊聊"
+  },
+  "newAgent": "新建助手",
+  "noDescription": "暫無描述",
+  "regenerate": "重新生成",
+  "roleAndArchive": "角色與記錄",
+  "searchAgentPlaceholder": "搜索助手和對話...",
+  "send": "發送",
+  "sendPlaceholder": "輸入聊天內容...",
+  "shareModal": {
+    "download": "下載截圖",
+    "imageType": "圖片格式",
+    "screenshot": "截圖",
+    "settings": "導出設定",
+    "shareToShareGPT": "生成 ShareGPT 分享鏈接",
+    "withBackground": "包含背景圖片",
+    "withFooter": "包含頁腳",
+    "withPluginInfo": "包含插件信息",
+    "withSystemRole": "包含助手角色設定"
+  },
+  "stop": "停止",
+  "temp": "臨時",
+  "tokenDetail": "角色設定: {{systemRoleToken}} · 歷史訊息: {{chatsToken}}",
+  "tokenTag": {
+    "overload": "超過限制",
+    "remained": "剩餘",
+    "used": "使用"
+  },
+  "topic": {
+    "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
+    "defaultTitle": "默認話題",
+    "saveCurrentMessages": "將當前會話保存為話題",
+    "searchPlaceholder": "搜索話題...",
+    "title": "話題"
+  },
+  "translate": {
+    "clear": "刪除翻譯"
+  },
+  "translateTo": "翻譯",
+  "updateAgent": "更新助理資訊",
+  "warp": "換行"
+}

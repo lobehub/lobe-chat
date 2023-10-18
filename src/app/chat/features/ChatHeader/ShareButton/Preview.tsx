@@ -62,7 +62,7 @@ const Preview = memo<PreviewProps>(({ withSystemRole, imageType, withBackground,
       agentSelectors.currentAgentPlugins(s),
       agentSelectors.currentAgentSystemRole(s),
     ]);
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('chat');
   const { styles } = useStyles(withBackground);
 
   const displayTitle = isInbox ? t('inbox.title') : title;
