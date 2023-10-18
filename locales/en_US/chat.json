@@ -1,0 +1,55 @@
+{
+  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away or go to [Assistant Settings](/chat/settings#session={{id}}) to improve my information.",
+  "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start the conversation!",
+  "backToBottom": "Go to Latest Messages",
+  "clearCurrentMessages": "Clear Current Session Messages",
+  "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be recovered. Please confirm your operation.",
+  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be recovered. Please confirm your operation.",
+  "defaultAgent": "Custom Assistant",
+  "defaultSession": "Custom Assistant",
+  "historyRange": "History Range",
+  "inbox": {
+    "defaultMessage": "Hello, I'm your intelligent assistant. You can ask me any questions, and I will do my best to answer you. If you need a more professional or customized assistant, you can click on `+` to create a custom assistant.",
+    "desc": "Activate brain clusters and spark thinking. Your intelligent assistant is here to communicate with you about everything.",
+    "title": "Chat Randomly"
+  },
+  "newAgent": "Create New Assistant",
+  "noDescription": "No description available",
+  "regenerate": "Regenerate",
+  "roleAndArchive": "Roles and Archives",
+  "searchAgentPlaceholder": "Search assistants and conversations...",
+  "send": "Send",
+  "sendPlaceholder": "Enter chat content...",
+  "shareModal": {
+    "download": "Download Screenshot",
+    "imageType": "Image Format",
+    "screenshot": "Screenshot",
+    "settings": "Export Settings",
+    "shareToShareGPT": "Generate ShareGPT Sharing Link",
+    "withBackground": "Include Background Image",
+    "withFooter": "Include Footer",
+    "withPluginInfo": "Include Plugin Information",
+    "withSystemRole": "Include Assistant Role Setting"
+  },
+  "stop": "Stop",
+  "temp": "Temporary",
+  "tokenDetail": "Role Setting: {{systemRoleToken}} · Chat History: {{chatsToken}}",
+  "tokenTag": {
+    "overload": "Exceeded Limit",
+    "remained": "Remaining",
+    "used": "Used"
+  },
+  "topic": {
+    "confirmRemoveTopic": "You are about to delete this topic. Once deleted, it cannot be recovered. Please proceed with caution.",
+    "defaultTitle": "Default Topic",
+    "saveCurrentMessages": "Save Current Session as Topic",
+    "searchPlaceholder": "Search topics...",
+    "title": "Topic"
+  },
+  "translate": {
+    "clear": "Clear Translation"
+  },
+  "translateTo": "Translate",
+  "updateAgent": "Update Assistant Information",
+  "warp": "Line Break"
+}

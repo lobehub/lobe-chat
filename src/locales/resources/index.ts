@@ -1,4 +1,3 @@
-
 import en_US from './en_US';
 import ja_JP from './ja_JP';
 import ko_KR from './ko_KR';
@@ -7,12 +6,10 @@ import zh_CN from './zh_CN';
 import zh_TW from './zh_TW';
 
 const resources = {
-  'en': en_US,
   'en-US': en_US,
   'ja-JP': ja_JP,
   'ko-KR': ko_KR,
   'ru-RU': ru_RU,
-  'zh': zh_CN,
   'zh-CN': zh_CN,
   'zh-TW': zh_TW,
 } as const;
@@ -23,5 +20,3 @@ export type Resources = typeof resources;
 export type DefaultResources = typeof defaultResources;
 export type Namespaces = keyof DefaultResources;
 export type Locales = keyof Resources;
-
-export const supportLocales: string[] = Object.keys(resources);

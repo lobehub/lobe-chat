@@ -2,7 +2,7 @@ import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainLangDetect, chainTranslate } from '@/chains/chat';
-import { supportLocales } from '@/locales/resources';
+import { supportLocales } from '@/locales/options';
 import { SessionStore } from '@/store/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';

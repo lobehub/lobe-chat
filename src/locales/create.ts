@@ -4,9 +4,10 @@ import { initReactI18next } from 'react-i18next';
 
 import { getClientConfig } from '@/config/client';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
-import resources from '@/locales/resources';
 import type { Namespaces } from '@/types/locale';
 import { isOnServerSide } from '@/utils/env';
+
+import { resources } from './options';
 
 const { I18N_DEBUG, I18N_DEBUG_BROWSER, I18N_DEBUG_SERVER } = getClientConfig();
 const debugMode = I18N_DEBUG ?? isOnServerSide ? I18N_DEBUG_SERVER : I18N_DEBUG_BROWSER;
