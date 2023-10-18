@@ -32,6 +32,7 @@ export default {
   import: '导入配置',
 
   lang: {
+    'en': '英语',
     'en-US': '英语',
     'ja-JP': '日语',
     'ko-KR': '韩语',

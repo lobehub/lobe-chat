@@ -2,7 +2,7 @@ import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainLangDetect, chainTranslate } from '@/chains/chat';
-import { supportLangs } from '@/locales/options';
+import { supportLocales } from '@/locales/resources';
 import { SessionStore } from '@/store/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';
@@ -63,7 +63,7 @@ export const chatTranslate: StateCreator<
     fetchPresetTaskResult({
       params: chainLangDetect(message.content),
     }).then((data) => {
-      if (data && supportLangs.includes(data)) from = data;
+      if (data && supportLocales.includes(data)) from = data;
     });
 
     // translate to target language
