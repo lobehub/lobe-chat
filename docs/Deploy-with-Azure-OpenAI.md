@@ -27,7 +27,7 @@ You can fill in the corresponding configuration items as needed:
 
 - **APIKey**: The API key you applied for on the Azure OpenAI account page, which can be found in the "Keys and Endpoints" section.
 - **API Address**: Azure API address, which can be found in the "Keys and Endpoints" section when checking resources from the Azure portal.
-- **Azure Api Version**: The API version of Azure, which follows the YYYY-MM-DD format, refer to the [latest version][azure-api-verion-url].
+- **Azure Api Version**: The API version of Azure, which follows the YYYY-MM-DD format, refer to the [latest version][azure-api-version-url].
 
 After completing the above field configuration, click on "Check". If the prompt says "Check Passed", it means the configuration was successful.
 
@@ -42,12 +42,12 @@ If you want the deployed version to be directly configured with Azure OpenAI for
 | `USE_AZURE_OPENAI`   | Yes      | Set this value to `1` to enable Azure OpenAI configuration                        | -                  | `1`                                                           |
 | `AZURE_API_KEY`      | Yes      | This is the API key you applied for on the Azure OpenAI account page              | -                  | `c55168be3874490ef0565d9779ecd5a6`                            |
 | `OPENAI_PROXY_URL`   | Yes      | Azure API address, can be found in the "Keys and Endpoints" section               | -                  | `https://docs-test-001.openai.azure.com`                      |
-| `AZURE_API_VERSION`  | No       | Azure's API version, follows the YYYY-MM-DD format                                | 2023-08-01-preview | `2023-05-15`, refer to [latest version][azure-api-verion-url] |
+| `AZURE_API_VERSION`  | No       | Azure's API version, follows the YYYY-MM-DD format                                | 2023-08-01-preview | `2023-05-15`, refer to [latest version][azure-api-version-url] |
 | `ACCESS_CODE`        | No       | Add a password to access this service, the password should be 6 digits or letters | -                  | `awCT74` or `e3@09!`                                          |
 
 > **Note**\
 > When you enable `USE_AZURE_OPENAI` on the server side, users will not be able to modify and use the OpenAI key in the front-end configuration.
 
-[azure-api-verion-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions
+[azure-api-version-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions
 [azure-openai-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/concepts/models
 [rfc]: https://github.com/lobehub/lobe-chat/discussions/178
