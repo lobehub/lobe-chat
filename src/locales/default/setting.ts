@@ -109,6 +109,7 @@ export default {
     },
     title: '助手信息',
   },
+
   settingChat: {
     chatStyleType: {
       title: '聊天窗口样式',
@@ -221,6 +222,13 @@ export default {
       title: '主题',
     },
     title: '主题设置',
+  },
+  submitAgentModal: {
+    button: '提交助手',
+    identifier: 'identifier 助手标识符',
+    metaMiss: '请补全助手信息后提交，需要包含名称、描述和标签',
+    placeholder: '请输入助手的标识符，需要是唯一的，比如 web-development',
+    tooltips: '分享到助手市场',
   },
   tab: {
     agent: '默认助手',

@@ -235,6 +235,13 @@
     },
     "title": "主題設定"
   },
+  "submitAgentModal": {
+    "tooltips": "分享到助手市場",
+    "button": "提交助手",
+    "identifier": "助手識別符",
+    "metaMiss": "請補全助手資訊後提交，需要包含名稱、描述和標籤",
+    "placeholder": "請輸入助手的識別符，需要是唯一的，例如 web-development"
+  },
   "tab": {
     "agent": "預設助理",
     "common": "通用設定",

@@ -5,6 +5,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import AgentInfo from '@/features/AgentInfo';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
@@ -15,8 +16,9 @@ const SystemRole = memo(() => {
   const [openModal, setOpenModal] = useState(false);
   const [editing, setEditing] = useState(false);
   const { styles } = useStyles();
-  const [systemRole, updateAgentConfig] = useSessionStore((s) => [
+  const [systemRole, meta, updateAgentConfig] = useSessionStore((s) => [
     agentSelectors.currentAgentSystemRole(s),
+    agentSelectors.currentAgentMeta(s),
     s.updateAgentConfig,
   ]);
 
@@ -57,6 +59,7 @@ const SystemRole = memo(() => {
             <EditableMessage
               classNames={{ markdown: styles.prompt }}
               editing={editing}
+              model={{ extra: <AgentInfo meta={meta} style={{ marginBottom: 16 }} /> }}
               onChange={(e) => {
                 updateAgentConfig({ systemRole: e });
               }}

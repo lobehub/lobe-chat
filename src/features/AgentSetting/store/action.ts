@@ -3,6 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { chainPickEmoji } from '@/chains/pickEmoji';
 import { chainSummaryAgentName } from '@/chains/summaryAgentName';
 import { chainSummaryDescription } from '@/chains/summaryDescription';
+import { chainSummaryTags } from '@/chains/summaryTags';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 import { fetchPresetTaskResult } from '@/utils/fetch';
@@ -28,6 +29,7 @@ export interface Action {
    * @returns 一个 Promise，用于异步操作完成后的处理
    */
   autocompleteAgentDescription: () => Promise<void>;
+  autocompleteAgentTags: () => Promise<void>;
   /**
    * 自动完成代理标题
    * @param id - 代理的 ID
@@ -49,7 +51,8 @@ export interface Action {
   setAgentConfig: (config: Partial<LobeAgentConfig>) => void;
 
   setAgentMeta: (meta: Partial<MetaData>) => void;
-  streamUpdateMeta: (key: keyof MetaData) => any;
+  streamUpdateMetaArray: (key: keyof MetaData) => any;
+  streamUpdateMetaString: (key: keyof MetaData) => any;
   toggleAgentPlugin: (pluginId: string, state?: boolean) => void;
   /**
    * 更新加载状态
@@ -67,7 +70,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
   ...initialState,
 
   autoPickEmoji: async () => {
-    const { config, dispatchMeta } = get();
+    const { config, meta, dispatchMeta } = get();
 
     const systemRole = config.systemRole;
 
@@ -75,7 +78,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
       onLoadingChange: (loading) => {
         get().updateLoadingState('avatar', loading);
       },
-      params: chainPickEmoji(systemRole),
+      params: chainPickEmoji([meta.title, meta.description, systemRole].filter(Boolean).join(',')),
     });
 
     if (emoji) {
@@ -83,7 +86,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     }
   },
   autocompleteAgentDescription: async () => {
-    const { dispatchMeta, config, meta, updateLoadingState, streamUpdateMeta } = get();
+    const { dispatchMeta, config, meta, updateLoadingState, streamUpdateMetaString } = get();
 
     const systemRole = config.systemRole;
 
@@ -101,12 +104,37 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
       onLoadingChange: (loading) => {
         updateLoadingState('description', loading);
       },
-      onMessageHandle: streamUpdateMeta('description'),
+      onMessageHandle: streamUpdateMetaString('description'),
       params: chainSummaryDescription(systemRole),
     });
   },
+  autocompleteAgentTags: async () => {
+    const { dispatchMeta, config, meta, updateLoadingState, streamUpdateMetaArray } = get();
+
+    const systemRole = config.systemRole;
+
+    if (!systemRole) return;
+
+    const preValue = meta.tags;
+
+    // 替换为 ...
+    dispatchMeta({ type: 'update', value: { tags: ['...'] } });
+
+    fetchPresetTaskResult({
+      onError: () => {
+        dispatchMeta({ type: 'update', value: { tags: preValue } });
+      },
+      onLoadingChange: (loading) => {
+        updateLoadingState('tags', loading);
+      },
+      onMessageHandle: streamUpdateMetaArray('tags'),
+      params: chainSummaryTags(
+        [meta.title, meta.description, systemRole].filter(Boolean).join(','),
+      ),
+    });
+  },
   autocompleteAgentTitle: async () => {
-    const { dispatchMeta, config, meta, updateLoadingState, streamUpdateMeta } = get();
+    const { dispatchMeta, config, meta, updateLoadingState, streamUpdateMetaString } = get();
 
     const systemRole = config.systemRole;
 
@@ -124,8 +152,8 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
       onLoadingChange: (loading) => {
         updateLoadingState('title', loading);
       },
-      onMessageHandle: streamUpdateMeta('title'),
-      params: chainSummaryAgentName(systemRole),
+      onMessageHandle: streamUpdateMetaString('title'),
+      params: chainSummaryAgentName([meta.description, systemRole].filter(Boolean).join(',')),
     });
   },
   autocompleteAllMeta: (replace) => {
@@ -142,9 +170,18 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     if (!meta.avatar || replace) {
       get().autoPickEmoji();
     }
+
+    if (!meta.tags || replace) {
+      get().autocompleteAgentTags();
+    }
   },
   autocompleteMeta: (key) => {
-    const { autoPickEmoji, autocompleteAgentTitle, autocompleteAgentDescription } = get();
+    const {
+      autoPickEmoji,
+      autocompleteAgentTitle,
+      autocompleteAgentDescription,
+      autocompleteAgentTags,
+    } = get();
 
     switch (key) {
       case 'avatar': {
@@ -159,6 +196,12 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
 
       case 'title': {
         autocompleteAgentTitle();
+        return;
+      }
+
+      case 'tags': {
+        autocompleteAgentTags();
+        return;
       }
     }
   },
@@ -189,10 +232,19 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     get().dispatchConfig({ config, type: 'update' });
   },
   setAgentMeta: (meta) => {
+    console.log(meta);
     get().dispatchMeta({ type: 'update', value: meta });
   },
 
-  streamUpdateMeta: (key: keyof MetaData) => {
+  streamUpdateMetaArray: (key: keyof MetaData) => {
+    let value = '';
+    return (text: string) => {
+      value += text;
+      get().dispatchMeta({ type: 'update', value: { [key]: value.split(',') } });
+    };
+  },
+
+  streamUpdateMetaString: (key: keyof MetaData) => {
     let value = '';
     return (text: string) => {
       value += text;

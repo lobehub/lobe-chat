@@ -1,11 +1,12 @@
 import { ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
 import { useRouter } from 'next/navigation';
-import { ReactNode, memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import HeaderContent from '@/app/chat/settings/features/HeaderContent';
 import { pathString } from '@/utils/url';
 
-const Header = memo<{ children: ReactNode }>(({ children }) => {
+const Header = memo(() => {
   const { t } = useTranslation('setting');
   const router = useRouter();
 
@@ -13,7 +14,7 @@ const Header = memo<{ children: ReactNode }>(({ children }) => {
     <ChatHeader
       left={<ChatHeaderTitle title={t('header.session')} />}
       onBackClick={() => router.push(pathString('/chat', { hash: location.hash }))}
-      right={children}
+      right={<HeaderContent />}
       showBackButton
     />
   );

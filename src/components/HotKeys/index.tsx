@@ -47,9 +47,9 @@ const HotKeys = memo<HotKeysProps>(({ keys, desc }) => {
 
   if (!desc) return content;
   return (
-    <Flexbox align={'center'} gap={8} horizontal>
-      {content}
+    <Flexbox align={'center'} style={{ textAlign: 'center' }}>
       {desc}
+      {content}
     </Flexbox>
   );
 });

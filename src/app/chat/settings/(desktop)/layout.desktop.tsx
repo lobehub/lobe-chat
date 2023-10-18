@@ -5,7 +5,7 @@ import SafeSpacing from '@/components/SafeSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
 
 import Layout from '../../(desktop)/layout.desktop';
-import Header from './Header';
+import Header from './features/Header';
 
 export default memo(({ children }: PropsWithChildren) => (
   <Layout>
