@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.94.2](https://github.com/lobehub/lobe-chat/compare/v0.94.1...v0.94.2)
+
+<sup>Released on **2023-10-19**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent market with other locales.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent market with other locales ([2414d34](https://github.com/lobehub/lobe-chat/commit/2414d34))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.94.1](https://github.com/lobehub/lobe-chat/compare/v0.94.0...v0.94.1)
 
 <sup>Released on **2023-10-19**</sup>
