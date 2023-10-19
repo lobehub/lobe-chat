@@ -31,7 +31,7 @@ const Inner = memo(() => {
       '### systemRole',
       systemRole,
       '### identifier',
-      identifier,
+      kebabCase(identifier),
       '### avatar',
       meta.avatar,
       '### title',
@@ -65,7 +65,7 @@ const Inner = memo(() => {
           {t('submitAgentModal.identifier')}
         </strong>
         <Input
-          onChange={(e) => setIdentifier(kebabCase(e.target.value))}
+          onChange={(e) => setIdentifier(e.target.value)}
           placeholder={t('submitAgentModal.placeholder')}
           value={identifier}
         />
