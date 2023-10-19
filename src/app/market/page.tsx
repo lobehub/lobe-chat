@@ -16,7 +16,7 @@ const getAgentList = async (): Promise<LobeChatAgentsMarketIndex> => {
   try {
     const res = await fetch(getAgentIndexJSON(lang?.value as Locales));
 
-    return res.json();
+    return await res.json();
   } catch {
     return { agents: [], schemaVersion: 1 };
   }
