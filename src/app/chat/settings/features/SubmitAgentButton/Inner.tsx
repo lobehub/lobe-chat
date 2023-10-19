@@ -54,7 +54,7 @@ const Inner = memo(() => {
 
   return (
     <Flexbox gap={16}>
-      <MobilePadding>
+      <MobilePadding gap={16}>
         {!isMetaPass && (
           <Alert message={t('submitAgentModal.metaMiss')} showIcon type={'warning'} />
         )}
