@@ -1,5 +1,5 @@
 import { getAgentIndexJSON, getAgentJSON } from '@/const/url';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { getCurrentLanguage } from '@/store/global/helpers';
 import { LobeChatAgentsMarketIndex } from '@/types/market';
 
 /**
@@ -8,9 +8,7 @@ import { LobeChatAgentsMarketIndex } from '@/types/market';
 export const getAgentList = async () => {
   let res: Response;
 
-  res = await fetch(
-    getAgentIndexJSON(settingsSelectors.currentLanguage(useGlobalStore.getState()) as any),
-  );
+  res = await fetch(getAgentIndexJSON(getCurrentLanguage()));
 
   if (res.status === 404) {
     res = await fetch(getAgentIndexJSON('en-US'));
@@ -26,9 +24,7 @@ export const getAgentList = async () => {
  */
 export const getAgentManifest = async (identifier?: string) => {
   if (!identifier) return;
-  const res = await fetch(
-    getAgentJSON(identifier, settingsSelectors.currentLanguage(useGlobalStore.getState())),
-  );
+  const res = await fetch(getAgentJSON(identifier, getCurrentLanguage()));
 
   return res.json();
 };

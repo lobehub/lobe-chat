@@ -1,11 +1,11 @@
 import { getPluginIndexJSON } from '@/const/url';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { getCurrentLanguage } from '@/store/global/helpers';
 
 /**
  * fetch Plugin Market List
  */
 export const getPluginList = async () => {
-  const url = getPluginIndexJSON(settingsSelectors.currentLanguage(useGlobalStore.getState()));
+  const url = getPluginIndexJSON(getCurrentLanguage());
 
   const res = await fetch(url);
 

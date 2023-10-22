@@ -1,3 +1,4 @@
+import { getCurrentLanguage } from '@/store/global/helpers';
 import { chatHelpers } from '@/store/session/slices/chat/helpers';
 import { LanguageModel } from '@/types/llm';
 import { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
@@ -5,16 +6,17 @@ import { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat'
 export const chainSummaryTitle = async (
   messages: OpenAIChatMessage[],
 ): Promise<Partial<OpenAIChatStreamPayload>> => {
+  const lang = getCurrentLanguage();
+
   const finalMessages: OpenAIChatMessage[] = [
     {
-      content:
-        '你是一名擅长会话的助理，你需要将用户的会话总结为 10 个字以内的标题，不需要包含标点符号',
+      content: '你是一名擅长会话的助理，你需要将用户的会话总结为 10 个字以内的标题',
       role: 'system',
     },
     {
       content: `${messages.map((message) => `${message.role}: ${message.content}`).join('\n')}
 
-请总结上述对话为10个字以内的标题，不需要包含标点符号`,
+请总结上述对话为10个字以内的标题，不需要包含标点符号，输出语言语种为：${lang}`,
       role: 'user',
     },
   ];
