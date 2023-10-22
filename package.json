@@ -122,7 +122,7 @@
     "zustand-utils": "^1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17",
+    "@commitlint/cli": "^18.0.0",
     "@lobehub/i18n-cli": "latest",
     "@lobehub/lint": "latest",
     "@next/bundle-analyzer": "^13",
