@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.94.5](https://github.com/lobehub/lobe-chat/compare/v0.94.4...v0.94.5)
+
+<sup>Released on **2023-10-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fallback agent market index to en when not find correct locale.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fallback agent market index to en when not find correct locale, closes [#355](https://github.com/lobehub/lobe-chat/issues/355) ([7a45ab4](https://github.com/lobehub/lobe-chat/commit/7a45ab4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.94.4](https://github.com/lobehub/lobe-chat/compare/v0.94.3...v0.94.4)
 
 <sup>Released on **2023-10-21**</sup>
