@@ -4,7 +4,7 @@ import {
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,
   getChatsById,
-  getFunctionMessageParams,
+  getFunctionMessageProps,
 } from './chat';
 import { currentTopics, getTopicMessages } from './topic';
 
@@ -14,7 +14,7 @@ export const chatSelectors = {
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,
   getChatsById,
-  getFunctionMessageParams,
+  getFunctionMessageProps,
 };
 
 export const topicSelectors = {

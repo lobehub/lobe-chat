@@ -16,7 +16,8 @@ const t = setNamespace('chat/plugin');
  * 插件方法
  */
 export interface ChatPluginAction {
-  runPluginAutoMode: (id: string, payload: any) => Promise<void>;
+  runPluginDefaultType: (id: string, payload: any) => Promise<void>;
+  runPluginStandaloneType: (id: string, payload: any) => Promise<void>;
   triggerFunctionCall: (id: string) => Promise<void>;
 }
 
@@ -26,7 +27,7 @@ export const chatPlugin: StateCreator<
   [],
   ChatPluginAction
 > = (set, get) => ({
-  runPluginAutoMode: async (id, payload) => {
+  runPluginDefaultType: async (id, payload) => {
     const { dispatchMessage, coreProcessMessage, toggleChatLoading } = get();
     let data: string;
     try {
@@ -44,12 +45,13 @@ export const chatPlugin: StateCreator<
     dispatchMessage({ id, key: 'content', type: 'updateMessage', value: data });
 
     const chats = chatSelectors.currentChats(get());
-
     await coreProcessMessage(chats, id);
   },
-
+  runPluginStandaloneType: async (id, payload) => {
+    console.log('触发standalone', id, payload);
+  },
   triggerFunctionCall: async (id) => {
-    const { dispatchMessage, runPluginAutoMode } = get();
+    const { dispatchMessage, runPluginDefaultType, runPluginStandaloneType } = get();
     const session = sessionSelectors.currentSession(get());
 
     if (!session) return;
@@ -58,6 +60,7 @@ export const chatPlugin: StateCreator<
     if (!message) return;
 
     let payload: PluginRequestPayload = { apiName: '', identifier: '' };
+
     // 识别到内容是 function_call 的情况下
     // 将 function_call 转换为 plugin request payload
     if (message.content) {
@@ -65,8 +68,14 @@ export const chatPlugin: StateCreator<
         function_call: OpenAIFunctionCall;
       };
 
-      const [identifier, apiName] = function_call.name.split(PLUGIN_SCHEMA_SEPARATOR);
-      payload = { apiName, arguments: function_call.arguments, identifier };
+      const [identifier, apiName, type] = function_call.name.split(PLUGIN_SCHEMA_SEPARATOR);
+
+      payload = {
+        apiName,
+        arguments: function_call.arguments,
+        identifier,
+        type: type ?? 'default',
+      };
 
       dispatchMessage({ id, key: 'plugin', type: 'updateMessage', value: payload });
       dispatchMessage({ id, key: 'content', type: 'updateMessage', value: '' });
@@ -82,6 +91,7 @@ export const chatPlugin: StateCreator<
     dispatchMessage({ id, key: 'name', type: 'updateMessage', value: payload.identifier });
     dispatchMessage({ id, key: 'plugin', type: 'updateMessage', value: payload });
 
-    runPluginAutoMode(id, payload);
+    if (payload.type === 'standalone') runPluginStandaloneType(id, payload);
+    else runPluginDefaultType(id, payload);
   },
 });

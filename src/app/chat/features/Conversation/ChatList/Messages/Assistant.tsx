@@ -5,22 +5,18 @@ import { useSessionStore } from '@/store/session';
 import { chatSelectors } from '@/store/session/selectors';
 import { isFunctionMessageAtStart } from '@/utils/message';
 
-import FunctionCall from '../Plugins/FunctionCall';
+import Inspector from '../Plugins/Inspector';
 import { DefaultMessage } from './Default';
 
-export const AssistantMessage: RenderMessage = memo(
-  ({ id, plugin, function_call, content, ...props }) => {
-    const genFunctionCallProps = useSessionStore(chatSelectors.getFunctionMessageParams);
+export const AssistantMessage: RenderMessage = memo(({ id, plugin, content, ...props }) => {
+  const fcProps = useSessionStore(chatSelectors.getFunctionMessageProps({ content, id, plugin }));
 
-    if (!isFunctionMessageAtStart(content))
-      return <DefaultMessage content={content} id={id} {...props} />;
+  if (!isFunctionMessageAtStart(content))
+    return <DefaultMessage content={content} id={id} {...props} />;
 
-    const fcProps = genFunctionCallProps({ content, function_call, id, plugin });
-
-    return (
-      <div id={id}>
-        <FunctionCall {...fcProps} />
-      </div>
-    );
-  },
-);
+  return (
+    <div id={id}>
+      <Inspector {...fcProps} />
+    </div>
+  );
+});

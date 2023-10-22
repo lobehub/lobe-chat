@@ -8,10 +8,10 @@ import { Flexbox } from 'react-layout-kit';
 
 import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
-import PluginResult from './PluginResultRender';
-import { useStyles } from './style';
+import { useStyles } from '../style';
+import PluginResult from './PluginResultJSON';
 
-export interface FunctionCallProps {
+export interface InspectorProps {
   arguments?: string;
   command?: any;
   content: string;
@@ -19,7 +19,7 @@ export interface FunctionCallProps {
   loading?: boolean;
 }
 
-const FunctionCall = memo<FunctionCallProps>(
+const Inspector = memo<InspectorProps>(
   ({ arguments: requestArgs = '{}', command, loading, content, id = 'unknown' }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
@@ -87,4 +87,4 @@ const FunctionCall = memo<FunctionCallProps>(
   },
 );
 
-export default FunctionCall;
+export default Inspector;
