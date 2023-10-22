@@ -141,7 +141,7 @@
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
     "@vitest/coverage-v8": "latest",
-    "commitlint": "^17",
+    "commitlint": "^18.0.0",
     "consola": "^3",
     "dpdm": "^3",
     "eslint": "^8",
