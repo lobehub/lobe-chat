@@ -36,6 +36,7 @@ export const exportSettings = (s: GlobalStore) => {
 
 const currentLanguage = (s: GlobalStore) => {
   const locale = s.settings.language;
+
   if (locale === 'auto') {
     if (isOnServerSide) return DEFAULT_LANG;
 
