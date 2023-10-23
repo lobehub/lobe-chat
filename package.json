@@ -76,7 +76,7 @@
     "ahooks": "^3",
     "ai": "^2",
     "antd": "^5",
-    "antd-style": "^3.5",
+    "antd-style": "^3",
     "brotli-wasm": "^1",
     "chroma-js": "^2",
     "copy-to-clipboard": "^3",
@@ -122,7 +122,7 @@
     "zustand-utils": "^1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.0.0",
+    "@commitlint/cli": "^18",
     "@lobehub/i18n-cli": "latest",
     "@lobehub/lint": "latest",
     "@next/bundle-analyzer": "^13",
@@ -141,7 +141,7 @@
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
     "@vitest/coverage-v8": "latest",
-    "commitlint": "^18.0.0",
+    "commitlint": "^18",
     "consola": "^3",
     "dpdm": "^3",
     "eslint": "^8",
