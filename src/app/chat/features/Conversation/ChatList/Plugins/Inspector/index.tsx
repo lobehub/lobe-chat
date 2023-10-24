@@ -1,26 +1,40 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { Avatar, Highlighter, Icon } from '@lobehub/ui';
+import { LobePluginType } from '@lobehub/chat-plugin-sdk';
+import { ActionIcon, Avatar, Highlighter, Icon } from '@lobehub/ui';
 import { Tabs } from 'antd';
-import { LucideChevronDown, LucideChevronUp, LucideToyBrick } from 'lucide-react';
+import { LucideChevronDown, LucideChevronUp, LucideOrbit, LucideToyBrick } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
-import PluginResult from './PluginResultRender';
+import PluginResult from './PluginResultJSON';
+import Settings from './Settings';
 import { useStyles } from './style';
 
-export interface FunctionCallProps {
+export interface InspectorProps {
   arguments?: string;
   command?: any;
   content: string;
   id?: string;
   loading?: boolean;
+  setShow?: (showRender: boolean) => void;
+  showRender?: boolean;
+  type?: LobePluginType;
 }
 
-const FunctionCall = memo<FunctionCallProps>(
-  ({ arguments: requestArgs = '{}', command, loading, content, id = 'unknown' }) => {
+const Inspector = memo<InspectorProps>(
+  ({
+    arguments: requestArgs = '{}',
+    command,
+    showRender,
+    loading,
+    setShow,
+    content,
+    id = 'unknown',
+    type,
+  }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
@@ -41,24 +55,38 @@ const FunctionCall = memo<FunctionCallProps>(
 
     return (
       <Flexbox gap={8}>
-        <Flexbox
-          align={'center'}
-          className={styles.container}
-          gap={8}
-          horizontal
-          onClick={() => {
-            setOpen(!open);
-          }}
-        >
-          {loading ? (
-            <div>
-              <LoadingOutlined />
-            </div>
-          ) : (
-            avatar
-          )}
-          {pluginTitle ?? t('plugins.unknown')}
-          <Icon icon={open ? LucideChevronUp : LucideChevronDown} />
+        <Flexbox align={'center'} distribution={'space-between'} gap={24} horizontal>
+          <Flexbox
+            align={'center'}
+            className={styles.container}
+            gap={8}
+            horizontal
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            {loading ? (
+              <div>
+                <LoadingOutlined />
+              </div>
+            ) : (
+              avatar
+            )}
+            {pluginTitle ?? t('plugins.unknown')}
+            <Icon icon={open ? LucideChevronUp : LucideChevronDown} />
+          </Flexbox>
+          <Flexbox horizontal>
+            {type === 'standalone' && <ActionIcon icon={LucideOrbit} />}
+            <Settings id={id} />
+            {setShow && (
+              <ActionIcon
+                icon={showRender ? LucideChevronUp : LucideChevronDown}
+                onClick={() => {
+                  setShow(!showRender);
+                }}
+              />
+            )}
+          </Flexbox>
         </Flexbox>
         {open && (
           <Tabs
@@ -87,4 +115,4 @@ const FunctionCall = memo<FunctionCallProps>(
   },
 );
 
-export default FunctionCall;
+export default Inspector;

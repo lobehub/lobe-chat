@@ -18,11 +18,17 @@ const enabledSchema =
         return enabledPlugins.includes(p.identifier);
       })
       .flatMap((manifest) =>
-        manifest.api.map((m) => ({
-          ...m,
+        manifest.api.map((m) => {
+          const pluginType = manifest.type ? `${PLUGIN_SCHEMA_SEPARATOR + manifest.type}` : '';
+
           // 将插件的 identifier 作为前缀，避免重复
-          name: manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + m.name,
-        })),
+          const apiName = manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + m.name + pluginType;
+
+          return {
+            ...m,
+            name: apiName,
+          };
+        }),
       );
 
     return uniqBy(list, 'name');

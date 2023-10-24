@@ -1,6 +1,6 @@
+import { LobePluginType } from '@lobehub/chat-plugin-sdk';
 import { t } from 'i18next';
 
-import { FunctionCallProps } from '@/app/chat/features/Conversation/ChatList/Plugins/FunctionCall';
 import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
@@ -92,22 +92,19 @@ export const chatsMessageString = (s: SessionStore): string => {
   return chats.map((m) => m.content).join('');
 };
 
-export const getFunctionMessageParams =
-  (
-    s: SessionStore,
-  ): ((
-    props: Pick<ChatMessage, 'plugin' | 'function_call' | 'content' | 'id'>,
-  ) => FunctionCallProps) =>
-  ({ plugin, function_call, content, id }) => {
-    const itemId = plugin?.identifier || function_call?.name;
-    const command = plugin ?? function_call;
-    const args = command?.arguments;
+export const getFunctionMessageProps =
+  ({ plugin, content, id }: Pick<ChatMessage, 'plugin' | 'content' | 'id'>) =>
+  (s: SessionStore) => ({
+    arguments: plugin?.arguments,
+    command: plugin,
+    content,
+    id: plugin?.identifier,
+    loading: id === s.chatLoadingId,
+    type: plugin?.type as LobePluginType,
+  });
 
-    return {
-      arguments: args,
-      command,
-      content,
-      id: itemId,
-      loading: id === s.chatLoadingId,
-    };
-  };
+export const getMessageById = (id: string) => (s: SessionStore) => {
+  for (const e of Object.values(s.sessions)) {
+    if (e.chats[id]) return e.chats[id];
+  }
+};

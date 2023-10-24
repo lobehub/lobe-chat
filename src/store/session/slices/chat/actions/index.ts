@@ -3,6 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { SessionStore } from '@/store/session';
 
 import { ChatMessageAction, chatMessage } from './message';
+import { ChatPluginAction, chatPlugin } from './plugin';
 import { ShareAction, chatShare } from './share';
 import { ChatTopicAction, chatTopic } from './topic';
 import { ChatTranslateAction, chatTranslate } from './translate';
@@ -14,7 +15,8 @@ export interface ChatAction
   extends ChatTopicAction,
     ChatMessageAction,
     ShareAction,
-    ChatTranslateAction {}
+    ChatTranslateAction,
+    ChatPluginAction {}
 
 export const createChatSlice: StateCreator<
   SessionStore,
@@ -26,4 +28,5 @@ export const createChatSlice: StateCreator<
   ...chatMessage(...params),
   ...chatShare(...params),
   ...chatTranslate(...params),
+  ...chatPlugin(...params),
 });

@@ -9,6 +9,8 @@ import { usePluginStore } from '@/store/plugin';
 import PluginSettingRender from './PluginSettingRender';
 
 export const transformPluginSettings = (pluginSettings: PluginSchema) => {
+  if (!pluginSettings?.properties) return [];
+
   return Object.entries(pluginSettings.properties).map(([name, i]) => ({
     desc: i.description,
     format: i.format,
@@ -21,7 +23,7 @@ export const transformPluginSettings = (pluginSettings: PluginSchema) => {
 
 interface PluginSettingsConfigProps {
   id: string;
-  settings: PluginSchema;
+  schema: PluginSchema;
 }
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -32,8 +34,8 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ settings, id }) => {
-  const items = transformPluginSettings(settings);
+const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) => {
+  const items = transformPluginSettings(schema);
 
   const { styles } = useStyles();
   const [updatePluginSettings] = usePluginStore((s) => [s.updatePluginSettings]);

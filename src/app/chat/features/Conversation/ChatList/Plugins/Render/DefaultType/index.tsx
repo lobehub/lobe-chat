@@ -11,13 +11,13 @@ import IFrameRender from './IFrameRender';
 
 const SystemJsRender = dynamic(() => import('./SystemJsRender'), { ssr: false });
 
-export interface FunctionMessageProps {
+export interface PluginDefaultTypeProps {
   content: string;
   loading?: boolean;
   name?: string;
 }
 
-const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
+const PluginDefaultType = memo<PluginDefaultTypeProps>(({ content, name }) => {
   const { t } = useTranslation('plugin');
 
   const manifest = usePluginStore((s) => s.pluginManifestMap[name || '']);
@@ -65,4 +65,4 @@ const PluginMessage = memo<FunctionMessageProps>(({ content, name }) => {
   );
 });
 
-export default PluginMessage;
+export default PluginDefaultType;

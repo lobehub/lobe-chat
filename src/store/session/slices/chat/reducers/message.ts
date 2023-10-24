@@ -1,8 +1,10 @@
+import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 
 import { ChatMessage, ChatMessageMap } from '@/types/chatMessage';
 import { LLMRoleType } from '@/types/llm';
 import { MetaData } from '@/types/meta';
+import { merge } from '@/utils/merge';
 import { nanoid } from '@/utils/uuid';
 
 interface AddMessage {
@@ -38,12 +40,20 @@ interface UpdateMessageExtra {
   value: any;
 }
 
+interface UpdatePluginState {
+  id: string;
+  key: string;
+  type: 'updatePluginState';
+  value: any;
+}
+
 export type MessageDispatch =
   | AddMessage
   | DeleteMessage
   | ResetMessages
   | UpdateMessage
-  | UpdateMessageExtra;
+  | UpdateMessageExtra
+  | UpdatePluginState;
 
 export const messagesReducer = (
   state: ChatMessageMap,
@@ -97,6 +107,26 @@ export const messagesReducer = (
           message.extra[key] = value;
         }
 
+        message.updateAt = Date.now();
+      });
+    }
+
+    case 'updatePluginState': {
+      return produce(state, (draftState) => {
+        const { id, key, value } = payload;
+        const message = draftState[id];
+        if (!message) return;
+
+        let newState;
+        if (!message.pluginState) {
+          newState = { [key]: value } as any;
+        } else {
+          newState = merge(message.pluginState, { [key]: value });
+        }
+
+        if (isEqual(message.pluginState, newState)) return;
+
+        message.pluginState = newState;
         message.updateAt = Date.now();
       });
     }

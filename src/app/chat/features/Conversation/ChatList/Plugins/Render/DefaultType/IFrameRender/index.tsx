@@ -1,9 +1,9 @@
 import { PluginRenderProps } from '@lobehub/chat-plugin-sdk/client';
 import { Skeleton } from 'antd';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 
-import { useOnPluginFetchMessage, useOnPluginReady } from './hooks';
-import { sendMessageToPlugin } from './utils';
+import { useOnPluginReadyForInteraction } from '../../utils/iframeOnReady';
+import { sendMessageToPlugin } from '../../utils/postMessage';
 
 interface IFrameRenderProps extends PluginRenderProps {
   height?: number;
@@ -12,24 +12,13 @@ interface IFrameRenderProps extends PluginRenderProps {
 }
 
 const IFrameRender = memo<IFrameRenderProps>(({ url, width = 800, height = 300, ...props }) => {
-  const [loading, setLoading] = useState(true);
-  const [readyForRender, setReady] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  useOnPluginReady(() => setReady(true));
+  const [loading, setLoading] = useState(true);
 
   // 当 props 发生变化时，主动向 iframe 发送数据
-  useEffect(() => {
+  useOnPluginReadyForInteraction(() => {
     const iframeWin = iframeRef.current?.contentWindow;
 
-    if (iframeWin && readyForRender) {
-      sendMessageToPlugin(iframeWin, props);
-    }
-  }, [readyForRender, props]);
-
-  // 当接收到来自 iframe 的请求时，触发发送数据
-  useOnPluginFetchMessage(() => {
-    const iframeWin = iframeRef.current?.contentWindow;
     if (iframeWin) {
       sendMessageToPlugin(iframeWin, props);
     }

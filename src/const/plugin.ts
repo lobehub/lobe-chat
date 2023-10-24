@@ -1,1 +1,1 @@
-export const PLUGIN_SCHEMA_SEPARATOR = '--__--';
+export const PLUGIN_SCHEMA_SEPARATOR = '____';
