@@ -1,4 +1,4 @@
-import { LobePluginType } from '@lobehub/chat-plugin-sdk';
+import { LobePluginType, PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { memo } from 'react';
 
 import DefaultType from './DefaultType';
@@ -6,15 +6,17 @@ import Standalone from './StandaloneType';
 
 export interface PluginRenderProps {
   content: string;
+  id: string;
   loading?: boolean;
   name?: string;
+  payload?: PluginRequestPayload;
   type?: LobePluginType;
 }
 
-const PluginRender = memo<PluginRenderProps>(({ content, name, type }) => {
+const PluginRender = memo<PluginRenderProps>(({ content, id, payload, name, type }) => {
   switch (type) {
     case 'standalone': {
-      return <Standalone name={name} />;
+      return <Standalone id={id} name={name} payload={payload} />;
     }
 
     default: {

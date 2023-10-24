@@ -16,9 +16,10 @@ const t = setNamespace('chat/plugin');
  * 插件方法
  */
 export interface ChatPluginAction {
+  fillPluginMessageContent: (id: string, content: string) => Promise<void>;
   runPluginDefaultType: (id: string, payload: any) => Promise<void>;
-  runPluginStandaloneType: (id: string, payload: any) => Promise<void>;
   triggerFunctionCall: (id: string) => Promise<void>;
+  updatePluginState: (id: string, key: string, value: any) => void;
 }
 
 export const chatPlugin: StateCreator<
@@ -27,6 +28,14 @@ export const chatPlugin: StateCreator<
   [],
   ChatPluginAction
 > = (set, get) => ({
+  fillPluginMessageContent: async (id, content) => {
+    const { dispatchMessage, coreProcessMessage } = get();
+
+    dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
+
+    const chats = chatSelectors.currentChats(get());
+    await coreProcessMessage(chats, id);
+  },
   runPluginDefaultType: async (id, payload) => {
     const { dispatchMessage, coreProcessMessage, toggleChatLoading } = get();
     let data: string;
@@ -47,11 +56,8 @@ export const chatPlugin: StateCreator<
     const chats = chatSelectors.currentChats(get());
     await coreProcessMessage(chats, id);
   },
-  runPluginStandaloneType: async (id, payload) => {
-    console.log('触发standalone', id, payload);
-  },
   triggerFunctionCall: async (id) => {
-    const { dispatchMessage, runPluginDefaultType, runPluginStandaloneType } = get();
+    const { dispatchMessage, runPluginDefaultType } = get();
     const session = sessionSelectors.currentSession(get());
 
     if (!session) return;
@@ -91,7 +97,13 @@ export const chatPlugin: StateCreator<
     dispatchMessage({ id, key: 'name', type: 'updateMessage', value: payload.identifier });
     dispatchMessage({ id, key: 'plugin', type: 'updateMessage', value: payload });
 
-    if (payload.type === 'standalone') runPluginStandaloneType(id, payload);
-    else runPluginDefaultType(id, payload);
+    if (payload.type === 'standalone') {
+      // nothing to do
+    } else runPluginDefaultType(id, payload);
+  },
+  updatePluginState: (id, key, value) => {
+    const { dispatchMessage } = get();
+
+    dispatchMessage({ id, key, type: 'updatePluginState', value });
   },
 });

@@ -46,6 +46,7 @@ export interface ChatMessage extends BaseDataModel {
   parentId?: string;
 
   plugin?: PluginRequestPayload;
+  pluginState?: any;
 
   // 引用
   quotaId?: string;

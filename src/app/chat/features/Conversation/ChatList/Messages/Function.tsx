@@ -1,6 +1,6 @@
 import { RenderMessage } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
@@ -14,11 +14,21 @@ export const FunctionMessage: RenderMessage = memo(({ id, content, plugin, name 
     chatSelectors.getFunctionMessageProps({ content, id, plugin }),
     isEqual,
   );
+  const [showRender, setShow] = useState(true);
 
   return (
     <Flexbox gap={12} id={id}>
-      <Inspector {...fcProps} />
-      <PluginRender content={content} loading={fcProps.loading} name={name} type={fcProps.type} />
+      <Inspector showRender={showRender} {...fcProps} setShow={setShow} />
+      {showRender && (
+        <PluginRender
+          content={content}
+          id={id}
+          loading={fcProps.loading}
+          name={name}
+          payload={fcProps.command}
+          type={fcProps.type}
+        />
+      )}
     </Flexbox>
   );
 });

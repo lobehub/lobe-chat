@@ -102,3 +102,9 @@ export const getFunctionMessageProps =
     loading: id === s.chatLoadingId,
     type: plugin?.type as LobePluginType,
   });
+
+export const getMessageById = (id: string) => (s: SessionStore) => {
+  for (const e of Object.values(s.sessions)) {
+    if (e.chats[id]) return e.chats[id];
+  }
+};
