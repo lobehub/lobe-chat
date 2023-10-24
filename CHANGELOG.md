@@ -2,6 +2,41 @@
 
 # Changelog
 
+## [Version 0.95.0](https://github.com/lobehub/lobe-chat/compare/v0.94.5...v0.95.0)
+
+<sup>Released on **2023-10-24**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: 优化 plugin 文件夹命名以支持 standalone 类型的插件.
+
+#### ✨ Features
+
+- **misc**: Support function call at message end, support plugin settings modal, support plugin state and settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: 优化 plugin 文件夹命名以支持 standalone 类型的插件 ([98860a8](https://github.com/lobehub/lobe-chat/commit/98860a8))
+
+#### What's improved
+
+- **misc**: Support function call at message end, closes [#357](https://github.com/lobehub/lobe-chat/issues/357) ([e195fdb](https://github.com/lobehub/lobe-chat/commit/e195fdb))
+- **misc**: Support plugin settings modal ([f47b6fa](https://github.com/lobehub/lobe-chat/commit/f47b6fa))
+- **misc**: Support plugin state and settings ([10829a4](https://github.com/lobehub/lobe-chat/commit/10829a4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.94.5](https://github.com/lobehub/lobe-chat/compare/v0.94.4...v0.94.5)
 
 <sup>Released on **2023-10-22**</sup>
