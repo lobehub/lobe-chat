@@ -10,6 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
 import PluginResult from './PluginResultJSON';
+import Settings from './Settings';
 import { useStyles } from './style';
 
 export interface InspectorProps {
@@ -76,6 +77,7 @@ const Inspector = memo<InspectorProps>(
           </Flexbox>
           <Flexbox horizontal>
             {type === 'standalone' && <ActionIcon icon={LucideOrbit} />}
+            <Settings id={id} />
             {setShow && (
               <ActionIcon
                 icon={showRender ? LucideChevronUp : LucideChevronDown}

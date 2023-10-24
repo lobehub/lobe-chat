@@ -36,7 +36,7 @@ const PluginSettings: RenderErrorMessage = memo(({ id, plugin }) => {
         <Flexbox className={styles.desc}>{t('pluginSettings.desc')}</Flexbox>
         <Divider style={{ margin: '0 16px' }} />
         {manifest.settings && (
-          <PluginSettingsConfig id={manifest.identifier} settings={manifest.settings} />
+          <PluginSettingsConfig id={manifest.identifier} schema={manifest.settings} />
         )}
         <Button
           block

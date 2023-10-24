@@ -15,7 +15,6 @@ const ChatInputDesktopLayout = memo(() => {
 
   return (
     <DraggablePanel
-      expandable={false}
       fullscreen={expand}
       headerHeight={HEADER_HEIGHT}
       minHeight={CHAT_TEXTAREA_HEIGHT}
