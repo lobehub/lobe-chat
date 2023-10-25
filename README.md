@@ -131,10 +131,10 @@ Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome
 > **Note**\
 > If you are unfamiliar with the installation process of PWA, you can add LobeChat as your desktop application (also applicable to mobile devices) by following these steps:
 >
-> - Launch the Chrome or Edge browser on your computer
-> - Visit the LobeChat webpage
-> - In the upper right corner of the address bar, click on the <kbd>Install</kbd> icon
-> - Follow the instructions on the screen to complete the PWA installation
+> - Launch the Chrome or Edge browser on your computer.
+> - Visit the LobeChat webpage.
+> - In the upper right corner of the address bar, click on the <kbd>Install</kbd> icon.
+> - Follow the instructions on the screen to complete the PWA installation.
 
 <br/>
 
