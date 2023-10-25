@@ -80,7 +80,7 @@ const PluginDefaultType = memo<PluginDefaultTypeProps>(({ content, name }) => {
     isJSON = false;
   }
 
-  const contentObj = useMemo(() => (isJSON ? JSON.parse(content) : content), [content]);
+  const contentObj = useMemo<object>(() => (isJSON ? JSON.parse(content) : content), [content]);
 
   if (!isJSON) {
     return (
