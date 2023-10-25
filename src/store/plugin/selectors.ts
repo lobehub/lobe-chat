@@ -70,6 +70,12 @@ const displayPluginList = (s: PluginStoreState) =>
     title: pluginHelpers.getPluginTitle(p.meta),
   }));
 
+const hasPluginUI = (id: string) => (s: PluginStoreState) => {
+  const manifest = getPluginManifestById(id)(s);
+
+  return !!manifest?.ui;
+};
+
 export const pluginSelectors = {
   displayPluginList,
   enabledSchema,
@@ -78,6 +84,7 @@ export const pluginSelectors = {
   getPluginManifestLoadingStatus,
   getPluginMetaById,
   getPluginSettingsById,
+  hasPluginUI,
   isCustomPlugin,
   pluginList,
 };

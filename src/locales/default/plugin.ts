@@ -2,6 +2,8 @@ export default {
   debug: {
     arguments: '调用参数',
     function_call: '函数调用',
+    off: '关闭调试',
+    on: '查看插件调用信息',
     response: '返回结果',
   },
   dev: {
@@ -88,10 +90,9 @@ export default {
     },
   },
   loading: {
-    content: '数据获取中...',
+    content: '调用插件中...',
     plugin: '插件运行中...',
   },
-
   pluginList: '插件列表',
   plugins: {
     unknown: '插件检测中...',

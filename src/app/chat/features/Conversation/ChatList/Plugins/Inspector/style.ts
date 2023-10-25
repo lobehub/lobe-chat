@@ -6,6 +6,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
     width: fit-content;
     padding: 6px 8px;
+    padding-inline-end: 12px;
 
     color: ${token.colorText};
 

@@ -1,8 +1,15 @@
-import { LoadingOutlined } from '@ant-design/icons';
+import { Loading3QuartersOutlined } from '@ant-design/icons';
 import { LobePluginType } from '@lobehub/chat-plugin-sdk';
 import { ActionIcon, Avatar, Highlighter, Icon } from '@lobehub/ui';
 import { Tabs } from 'antd';
-import { LucideChevronDown, LucideChevronUp, LucideOrbit, LucideToyBrick } from 'lucide-react';
+import isEqual from 'fast-deep-equal';
+import {
+  LucideBug,
+  LucideBugOff,
+  LucideChevronDown,
+  LucideChevronUp,
+  LucideToyBrick,
+} from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -33,14 +40,14 @@ const Inspector = memo<InspectorProps>(
     setShow,
     content,
     id = 'unknown',
-    type,
+    // type,
   }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
 
-    const item = usePluginStore(pluginSelectors.getPluginMetaById(id));
-
+    const item = usePluginStore(pluginSelectors.getPluginMetaById(id), isEqual);
+    const showRightAction = usePluginStore(pluginSelectors.hasPluginUI(id));
     const pluginAvatar = pluginHelpers.getPluginAvatar(item?.meta);
     const pluginTitle = pluginHelpers.getPluginTitle(item?.meta);
 
@@ -62,31 +69,32 @@ const Inspector = memo<InspectorProps>(
             gap={8}
             horizontal
             onClick={() => {
-              setOpen(!open);
+              setShow?.(!showRender);
             }}
           >
             {loading ? (
               <div>
-                <LoadingOutlined />
+                <Loading3QuartersOutlined spin />
               </div>
             ) : (
               avatar
             )}
             {pluginTitle ?? t('plugins.unknown')}
-            <Icon icon={open ? LucideChevronUp : LucideChevronDown} />
+            {showRightAction && <Icon icon={showRender ? LucideChevronUp : LucideChevronDown} />}
           </Flexbox>
-          <Flexbox horizontal>
-            {type === 'standalone' && <ActionIcon icon={LucideOrbit} />}
-            <Settings id={id} />
-            {setShow && (
+          {
+            <Flexbox horizontal>
+              {/*{type === 'standalone' && <ActionIcon icon={LucideOrbit} />}*/}
               <ActionIcon
-                icon={showRender ? LucideChevronUp : LucideChevronDown}
+                icon={open ? LucideBugOff : LucideBug}
                 onClick={() => {
-                  setShow(!showRender);
+                  setOpen(!open);
                 }}
+                title={t(open ? 'debug.off' : 'debug.on')}
               />
-            )}
-          </Flexbox>
+              <Settings id={id} />
+            </Flexbox>
+          }
         </Flexbox>
         {open && (
           <Tabs
