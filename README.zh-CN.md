@@ -131,10 +131,10 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 > **Note**\
 > 若您未熟悉 PWA 的安装过程，您可以按照以下步骤将 LobeChat 添加为您的桌面应用（也适用于移动设备）：
 >
-> - 在电脑上运行 Chrome 或 Edge 浏览器
-> - 访问 LobeChat 网页
-> - 在地址栏的右上角，单击 <kbd>安装</kbd> 图标
-> - 根据屏幕上的指示完成 PWA 的安装
+> - 在电脑上运行 Chrome 或 Edge 浏览器 .
+> - 访问 LobeChat 网页 .
+> - 在地址栏的右上角，单击 <kbd>安装</kbd> 图标 .
+> - 根据屏幕上的指示完成 PWA 的安装 .
 
 <br/>
 
