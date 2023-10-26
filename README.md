@@ -109,8 +109,8 @@ Please be aware that LobeChat is currently under active development, and feedbac
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
 
 #### `1` Function Calling Plugin System
+By establishing a versatile plugin system, ChatGPT becomes capable of delivering real-time news updates and enhancing your ability to interact with documents and e-commerce data more effectively. This extended functionality positions ChatGPT as a valuable resource across diverse domains. If you have an interest in creating plugins, we offer comprehensive component development documentation, software development kits (SDKs), and pre-made templates in the [🧩 Plugin System](#-Plugin-System) section below. Join us in our collective efforts to empower ChatGPT, making it both more potent and user-friendly.
 
-By building a robust plugin ecosystem, ChatGPT cannot only provide real-time news updates but can also assist you in efficiently querying documents and accessing various e-commerce data. This allows ChatGPT to play a vital role in a wider range of fields. If you are interested in writing plugins, we provide detailed component development documentation, SDKs, and template files in the [🧩 Plugin System](#-Plugin-System) section below. Let's work together to make ChatGPT more powerful and easier to use.
 
 <br/>
 
@@ -118,7 +118,7 @@ By building a robust plugin ecosystem, ChatGPT cannot only provide real-time new
 
 #### `2` Prompt Agent Market
 
-In our agent market, we have accumulated a large number of practical, prompt agents that have been used in daily work and study. You can also share your agents here and iterate and optimize your prompt agents with more people. You can submit your agents through [🤖/🏪 Submit Agents][submit-agents-link], and our automated i18n workflow will automatically translate your agents into multiple languages, allowing users worldwide to enjoy your wisdom.
+In our agent market. We have accumulated a large number of practical, prompt agents that have been used in daily work and study. You can also share your agents here and iterate and optimize your prompt agents with more people. You can submit your agents through [🤖/🏪 Submit Agents][submit-agents-link], and our automated i18n workflow will automatically translate your agents into multiple languages, allowing users worldwide to enjoy your wisdom.
 
 <br/>
 
@@ -134,7 +134,7 @@ Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome
 > - Launch the Chrome or Edge browser on your computer.
 > - Visit the LobeChat webpage.
 > - In the upper right corner of the address bar, click on the <kbd>Install</kbd> icon.
-> - Follow the instructions on the screen to complete the PWA installation.
+> - Follow the instructions on the screen to complete the PWA Installation.
 
 <br/>
 
