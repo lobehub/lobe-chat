@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.96.0](https://github.com/lobehub/lobe-chat/compare/v0.95.1...v0.96.0)
+
+<sup>Released on **2023-10-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Improve pin mode about session group.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Improve pin mode about session group, closes [#369](https://github.com/lobehub/lobe-chat/issues/369) ([75c5883](https://github.com/lobehub/lobe-chat/commit/75c5883))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.95.1](https://github.com/lobehub/lobe-chat/compare/v0.95.0...v0.95.1)
 
 <sup>Released on **2023-10-25**</sup>
