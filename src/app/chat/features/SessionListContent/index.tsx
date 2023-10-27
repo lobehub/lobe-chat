@@ -3,6 +3,7 @@ import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { preferenceSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -15,6 +16,11 @@ const SessionListContent = memo(() => {
   const unpinnedSessionList = useSessionStore(sessionSelectors.unpinnedSessionList, isEqual);
   const pinnedList = useSessionStore(sessionSelectors.pinnedSessionList, isEqual);
   const hasPinnedSessionList = useSessionStore(sessionSelectors.hasPinnedSessionList);
+
+  const [sessionGroupKeys, updatePreference] = useGlobalStore((s) => [
+    preferenceSelectors.sessionGroupKeys(s),
+    s.updatePreference,
+  ]);
 
   const items = [
     hasPinnedSessionList && {
@@ -32,7 +38,15 @@ const SessionListContent = memo(() => {
   return (
     <>
       <Inbox />
-      <CollapseGroup defaultActiveKey={['pinned', 'sessionList']} items={items} />
+      <CollapseGroup
+        activeKey={sessionGroupKeys}
+        items={items}
+        onChange={(keys) => {
+          const sessionGroupKeys = typeof keys === 'string' ? [keys] : keys;
+
+          updatePreference({ sessionGroupKeys });
+        }}
+      />
     </>
   );
 });

@@ -22,6 +22,7 @@ export interface GlobalPreference {
   guide?: Guide;
   inputHeight: number;
   mobileShowTopic?: boolean;
+  sessionGroupKeys: string[];
   sessionsWidth: number;
   showChatSideBar?: boolean;
   showSessionPanel?: boolean;
@@ -49,6 +50,7 @@ export const initialState: GlobalState = {
     guide: {},
     inputHeight: 200,
     mobileShowTopic: false,
+    sessionGroupKeys: ['pinned', 'sessionList'],
     sessionsWidth: 320,
     showChatSideBar: true,
     showSessionPanel: true,

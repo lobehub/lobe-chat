@@ -7,7 +7,17 @@ import FolderPanel from '@/features/FolderPanel';
 import SessionListContent from '../../features/SessionListContent';
 import Header from './SessionHeader';
 
-const useStyles = createStyles(({ stylish }) => stylish.noScrollbar);
+const useStyles = createStyles(({ stylish, css, cx }) =>
+  cx(
+    stylish.noScrollbar,
+    css`
+      padding: 0 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    `,
+  ),
+);
 
 const Sessions = memo(() => {
   const { styles } = useStyles();
@@ -15,7 +25,7 @@ const Sessions = memo(() => {
   return (
     <FolderPanel>
       <Header />
-      <DraggablePanelBody className={styles} style={{ paddingBlock: 0, paddingInline: 6 }}>
+      <DraggablePanelBody className={styles}>
         <SessionListContent />
       </DraggablePanelBody>
     </FolderPanel>
