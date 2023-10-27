@@ -26,6 +26,13 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 [![][github-stars-shield]][github-stars-link]
 [![][github-issues-shield]][github-issues-link]
 [![][github-license-shield]][github-license-link]
+## 💻Tech Stack / ## 技术栈
+
+<p align="center">
+  <a href="">
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="typescript" />
+  </a>
+</p>
 
 **感谢分享 LobeChat 仓库**
 
