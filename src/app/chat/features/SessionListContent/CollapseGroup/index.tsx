@@ -6,10 +6,10 @@ import { memo } from 'react';
 
 const useStyles = createStyles(({ css, prefixCls, token }) => ({
   container: css`
-    border-radius: 0;
     .${prefixCls}-collapse-header {
       padding-inline: 16px !important;
       color: ${token.colorTextDescription} !important;
+      border-radius: 8px !important;
 
       &:hover {
         color: ${token.colorText} !important;

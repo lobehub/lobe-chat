@@ -7,8 +7,11 @@ import {
   currentSessionSafe,
   getSessionById,
   getSessionMetaById,
+  hasPinnedSessionList,
   hasSessionList,
+  pinnedSessionList,
   sessionList,
+  unpinnedSessionList,
 } from './list';
 
 const isInboxSession = (s: SessionStore) => s.activeId === INBOX_SESSION_ID;
@@ -21,7 +24,10 @@ export const sessionSelectors = {
   getExportAgent,
   getSessionById,
   getSessionMetaById,
+  hasPinnedSessionList,
   hasSessionList,
   isInboxSession,
+  pinnedSessionList,
   sessionList,
+  unpinnedSessionList,
 };

@@ -1,12 +1,11 @@
 import { createStyles, useResponsive } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import Link from 'next/link';
 import { memo } from 'react';
 import LazyLoad from 'react-lazy-load';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSessionHydrated, useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import { LobeAgentSession } from '@/types/session';
 
 import AddButton from './AddButton';
 import SessionItem from './Item';
@@ -18,8 +17,10 @@ const useStyles = createStyles(
   `,
 );
 
-const SessionList = memo(() => {
-  const list = useSessionStore(sessionSelectors.sessionList, isEqual);
+interface SessionListProps {
+  dataSource: LobeAgentSession[];
+}
+const SessionList = memo<SessionListProps>(({ dataSource }) => {
   const [activeSession, switchSession] = useSessionStore((s) => [s.activeSession, s.switchSession]);
   const { styles } = useStyles();
   const isInit = useSessionHydrated();
@@ -28,8 +29,8 @@ const SessionList = memo(() => {
 
   return !isInit ? (
     <SkeletonList />
-  ) : list.length > 0 ? (
-    list.map(({ id }) => (
+  ) : dataSource.length > 0 ? (
+    dataSource.map(({ id }) => (
       <LazyLoad className={styles} key={id}>
         <Link
           aria-label={id}
