@@ -49,7 +49,7 @@ const Inbox = memo(() => {
         active={mobile ? false : activeId === INBOX_SESSION_ID}
         avatar={avatarRender}
         ref={ref}
-        style={{ alignItems: 'center' }}
+        style={{ alignItems: 'center', borderRadius: 8 }}
         title={t('inbox.title')}
       />
     </Link>

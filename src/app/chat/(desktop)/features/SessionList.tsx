@@ -15,7 +15,7 @@ const Sessions = memo(() => {
   return (
     <FolderPanel>
       <Header />
-      <DraggablePanelBody className={styles} style={{ padding: 0 }}>
+      <DraggablePanelBody className={styles} style={{ paddingBlock: 0, paddingInline: 6 }}>
         <SessionListContent />
       </DraggablePanelBody>
     </FolderPanel>

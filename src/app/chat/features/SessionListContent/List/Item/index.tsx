@@ -18,6 +18,7 @@ const useStyles = createStyles(({ css }) => {
   return {
     container: css`
       position: relative;
+      border-radius: 8px;
     `,
 
     modalRoot: css`
@@ -96,21 +97,23 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   );
 
   return (
-    <Item
-      actions={actions}
-      // needn't active state in mobile
-      active={mobile ? false : active}
-      addon={addon}
-      avatar={avatarRender}
-      className={styles.container}
-      date={updateAt}
-      description={description || systemRole}
-      loading={loading}
-      pin={pin}
-      ref={ref}
-      showAction={open || isHovering}
-      title={title}
-    />
+    <Flexbox paddingBlock={1}>
+      <Item
+        actions={actions}
+        // needn't active state in mobile
+        active={mobile ? false : active}
+        addon={addon}
+        avatar={avatarRender}
+        className={styles.container}
+        date={updateAt}
+        description={description || systemRole}
+        loading={loading}
+        pin={pin}
+        ref={ref}
+        showAction={open || isHovering}
+        title={title}
+      />
+    </Flexbox>
   );
 }, shallow);
 
