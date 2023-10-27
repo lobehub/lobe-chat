@@ -26,7 +26,13 @@ LobeChat is an open-source, extensible ([Function Calling][fc-link]) high-perfor
 [![][github-stars-shield]][github-stars-link]
 [![][github-issues-shield]][github-issues-link]
 [![][github-license-shield]][github-license-link]
+## 💻Tech Stack
 
+<p align="center">
+  <a href="">
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="typescript" />
+  </a>
+</p>
 **Share LobeChat Repository**
 
 [![][share-x-shield]][share-x-link]
