@@ -14,15 +14,14 @@ import Actions from './Actions';
 
 const { Item } = List;
 
-const useStyles = createStyles(({ css }) => {
+export const useStyles = createStyles(({ css, token, responsive }) => {
   return {
     container: css`
       position: relative;
-      border-radius: 8px;
-    `,
-
-    modalRoot: css`
-      z-index: 2000;
+      border-radius: ${token.borderRadius}px;
+      ${responsive.mobile} {
+        border-radius: 0;
+      }
     `,
   };
 });

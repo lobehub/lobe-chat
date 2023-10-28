@@ -31,7 +31,9 @@ const SideBar = memo(() => {
           </div>
         </Flexbox>
         <UpgradeAlert />
-        <List />
+        <Flexbox gap={2} style={{ paddingInline: 6 }}>
+          <List />
+        </Flexbox>
       </DraggablePanelBody>
     </FolderPanel>
   );

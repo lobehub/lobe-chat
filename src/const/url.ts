@@ -10,6 +10,7 @@ import { INBOX_SESSION_ID } from './session';
 export const GITHUB = pkg.homepage;
 export const CHANGELOG = urlJoin(GITHUB, 'blob/master/CHANGELOG.md');
 export const WIKI = urlJoin(GITHUB, 'wiki');
+export const WIKI_PLUGIN_GUIDE = urlJoin(WIKI, 'Plugin-Development');
 export const ABOUT = pkg.homepage;
 export const FEEDBACK = pkg.bugs.url;
 export const DISCORD = 'https://discord.gg/AYFPHvv2jT';

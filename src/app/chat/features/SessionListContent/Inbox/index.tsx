@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { memo, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useStyles } from '@/app/chat/features/SessionListContent/List/Item';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
@@ -14,6 +15,7 @@ const { Item } = List;
 
 const Inbox = memo(() => {
   const ref = useRef(null);
+  const { styles } = useStyles();
   const isHovering = useHover(ref);
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
@@ -48,8 +50,8 @@ const Inbox = memo(() => {
       <Item
         active={mobile ? false : activeId === INBOX_SESSION_ID}
         avatar={avatarRender}
+        className={styles.container}
         ref={ref}
-        style={{ alignItems: 'center', borderRadius: 8 }}
         title={t('inbox.title')}
       />
     </Link>

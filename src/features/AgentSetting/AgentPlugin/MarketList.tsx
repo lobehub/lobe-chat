@@ -181,7 +181,17 @@ const MarketList = memo(() => {
           {
             children: isEmpty ? loadingList : [...deprecatedList, ...customList, ...list],
             extra: (
-              <Flexbox align={'center'} gap={8} horizontal>
+              <Space.Compact style={{ width: 'auto' }}>
+                <Button
+                  icon={<Icon icon={LucideBlocks} />}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModal(true);
+                  }}
+                  size={'small'}
+                >
+                  {t('settingPlugin.addTooltip')}
+                </Button>
                 {hasDeprecated ? (
                   <Tooltip title={t('settingPlugin.clearDeprecated')}>
                     <Button
@@ -193,34 +203,20 @@ const MarketList = memo(() => {
                         }
                       }}
                       size={'small'}
-                      type={'text'}
                     />
                   </Tooltip>
                 ) : null}
-
-                <Space.Compact style={{ width: 'auto' }}>
-                  <Tooltip title={t('settingPlugin.addTooltip')}>
-                    <Button
-                      icon={<Icon icon={LucideBlocks} />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setModal(true);
-                      }}
-                      size={'small'}
-                    />
-                  </Tooltip>
-                  <Tooltip title={t('settingPlugin.settings')}>
-                    <Button
-                      icon={<Icon icon={LucideSettings} />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowSettings(true);
-                      }}
-                      size={'small'}
-                    />
-                  </Tooltip>
-                </Space.Compact>
-              </Flexbox>
+                <Tooltip title={t('settingPlugin.settings')}>
+                  <Button
+                    icon={<Icon icon={LucideSettings} />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowSettings(true);
+                    }}
+                    size={'small'}
+                  />
+                </Tooltip>
+              </Space.Compact>
             ),
             icon: LucideStore,
             title: t('settingPlugin.title'),

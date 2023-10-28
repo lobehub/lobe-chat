@@ -5,10 +5,15 @@ import { CSSProperties, ReactNode, memo } from 'react';
 
 const { Item } = List;
 
-const useStyles = createStyles(({ css }) => ({
+const useStyles = createStyles(({ css, token, responsive }) => ({
   container: css`
+    position: relative;
     padding-top: 20px;
     padding-bottom: 20px;
+    border-radius: ${token.borderRadius}px;
+    ${responsive.mobile} {
+      border-radius: 0;
+    }
   `,
 }));
 

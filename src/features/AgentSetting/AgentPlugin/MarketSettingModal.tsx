@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import MobilePadding from '@/components/MobilePadding';
-import { PLUGINS_INDEX_URL } from '@/const/url';
+import { PLUGINS_INDEX_URL, WIKI_PLUGIN_GUIDE } from '@/const/url';
 
 interface MarketSettingModalProps {
   onOpenChange: (open: boolean) => void;
@@ -34,7 +34,14 @@ const MarketSettingModal = memo<MarketSettingModalProps>(({ open, onOpenChange }
                       style={{ width: '100%' }}
                     />
                   ),
-                  desc: t('settings.modalDesc'),
+                  desc: (
+                    <>
+                      {t('dev.modalDesc')}
+                      <a href={WIKI_PLUGIN_GUIDE} rel="noreferrer" target={'_blank'}>
+                        {WIKI_PLUGIN_GUIDE}
+                      </a>
+                    </>
+                  ),
                   label: t('settings.indexUrl.title'),
                 },
               ],

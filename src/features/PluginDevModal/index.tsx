@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import MobilePadding from '@/components/MobilePadding';
+import { WIKI_PLUGIN_GUIDE } from '@/const/url';
 import { CustomPlugin } from '@/types/plugin';
 
 import ManifestForm from './ManifestForm';
@@ -102,7 +103,18 @@ const DevModal = memo<DevModalProps>(
         >
           <Flexbox gap={mobile ? 0 : 16}>
             <MobilePadding bottom={0} gap={16}>
-              <Alert message={t('dev.modalDesc')} showIcon type={'info'} />
+              <Alert
+                message={
+                  <>
+                    {t('dev.modalDesc')}
+                    <a href={WIKI_PLUGIN_GUIDE} rel="noreferrer" target={'_blank'}>
+                      {WIKI_PLUGIN_GUIDE}
+                    </a>
+                  </>
+                }
+                showIcon
+                type={'info'}
+              />
               {/*<Tabs*/}
               {/*  items={[*/}
               {/*    { children: <MetaForm />, key: 'meta', label: t('dev.tabs.meta') },*/}

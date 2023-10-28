@@ -5,16 +5,17 @@ import Image from 'next/image';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import MobilePadding from '@/components/MobilePadding';
 import { AGENTS_INDEX_GITHUB } from '@/const/url';
 
 const Inner = memo(() => {
   const { t } = useTranslation('market');
   return (
-    <div>
+    <MobilePadding>
       <Image
         alt={'banner'}
         height={602}
-        src={'/images/market_modal_banner.webp'}
+        src={'/images/banner_market_modal.webp'}
         style={{ height: 'auto', marginBottom: 24, width: '100%' }}
         width={1602}
       />
@@ -45,7 +46,7 @@ const Inner = memo(() => {
       >
         {t('guide.func2.button')}
       </Button>
-    </div>
+    </MobilePadding>
   );
 });
 
