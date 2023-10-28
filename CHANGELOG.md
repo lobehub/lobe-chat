@@ -218,7 +218,7 @@
 
 #### 🐛 Bug Fixes
 
-- **misc**: Fix agent share formate.
+- **misc**: Fix agent share format.
 
 <br/>
 
@@ -227,7 +227,7 @@
 
 #### What's fixed
 
-- **misc**: Fix agent share formate ([56ebc0b](https://github.com/lobehub/lobe-chat/commit/56ebc0b))
+- **misc**: Fix agent share format ([56ebc0b](https://github.com/lobehub/lobe-chat/commit/56ebc0b))
 
 </details>
 
@@ -1029,7 +1029,7 @@
 
 #### 🐛 Bug Fixes
 
-- **misc**: Fix mobile safearea (fix.
+- **misc**: Fix mobile safe area (fix.
 
 <br/>
 
@@ -1038,7 +1038,7 @@
 
 #### What's fixed
 
-- **misc**: Fix mobile safearea (fix, closes [#211](https://github.com/lobehub/lobe-chat/issues/211) ([68775b8](https://github.com/lobehub/lobe-chat/commit/68775b8))
+- **misc**: Fix mobile safe area (fix, closes [#211](https://github.com/lobehub/lobe-chat/issues/211) ([68775b8](https://github.com/lobehub/lobe-chat/commit/68775b8))
 
 </details>
 
@@ -1688,7 +1688,7 @@
 
 #### 💄 Styles
 
-- **misc**: Fix conversation mobile viewarea.
+- **misc**: Fix conversation mobile view area.
 
 <br/>
 
@@ -1697,7 +1697,7 @@
 
 #### Styles
 
-- **misc**: Fix conversation mobile viewarea ([6668e11](https://github.com/lobehub/lobe-chat/commit/6668e11))
+- **misc**: Fix conversation mobile view area ([6668e11](https://github.com/lobehub/lobe-chat/commit/6668e11))
 
 </details>
 
@@ -1738,7 +1738,7 @@
 
 #### 💄 Styles
 
-- **misc**: Fix safeare in mobile.
+- **misc**: Fix safearea in mobile.
 
 <br/>
 
@@ -1747,7 +1747,7 @@
 
 #### Styles
 
-- **misc**: Fix safeare in mobile ([2adfb04](https://github.com/lobehub/lobe-chat/commit/2adfb04))
+- **misc**: Fix safearea in mobile ([2adfb04](https://github.com/lobehub/lobe-chat/commit/2adfb04))
 
 </details>
 
@@ -1788,7 +1788,7 @@
 
 #### 💄 Styles
 
-- **misc**: Optmize PWA style and scroll effect.
+- **misc**: Optimize PWA style and scroll effect.
 
 <br/>
 
@@ -1797,7 +1797,7 @@
 
 #### Styles
 
-- **misc**: Optmize PWA style and scroll effect ([0ae05b8](https://github.com/lobehub/lobe-chat/commit/0ae05b8))
+- **misc**: Optimize PWA style and scroll effect ([0ae05b8](https://github.com/lobehub/lobe-chat/commit/0ae05b8))
 
 </details>
 
@@ -2224,7 +2224,7 @@
 
 #### ✨ Features
 
-- **misc**: Add russian localy, Update Russian and English localy (LLM tab).
+- **misc**: Add russian locally, Update Russian and English locally (LLM tab).
 
 <br/>
 
@@ -2233,8 +2233,8 @@
 
 #### What's improved
 
-- **misc**: Add russian localy ([7b67c9f](https://github.com/lobehub/lobe-chat/commit/7b67c9f))
-- **misc**: Update Russian and English localy (LLM tab) ([3b23e70](https://github.com/lobehub/lobe-chat/commit/3b23e70))
+- **misc**: Add russian locally ([7b67c9f](https://github.com/lobehub/lobe-chat/commit/7b67c9f))
+- **misc**: Update Russian and English locally (LLM tab) ([3b23e70](https://github.com/lobehub/lobe-chat/commit/3b23e70))
 
 </details>
 
@@ -2593,7 +2593,7 @@
 
 #### ♻ Code Refactoring
 
-- **misc**: Mirgrate openai-edge to openai.
+- **misc**: Migrate openai-edge to openai.
 
 <br/>
 
@@ -2602,7 +2602,7 @@
 
 #### Code refactoring
 
-- **misc**: Mirgrate openai-edge to openai, closes [#145](https://github.com/lobehub/lobe-chat/issues/145) ([75ee574](https://github.com/lobehub/lobe-chat/commit/75ee574))
+- **misc**: Migrate openai-edge to openai, closes [#145](https://github.com/lobehub/lobe-chat/issues/145) ([75ee574](https://github.com/lobehub/lobe-chat/commit/75ee574))
 
 </details>
 
@@ -2737,7 +2737,7 @@
 
 #### ✨ Features
 
-- **misc**: Add russian localy.
+- **misc**: Add russian locally.
 
 <br/>
 
@@ -2746,7 +2746,7 @@
 
 #### What's improved
 
-- **misc**: Add russian localy, closes [#137](https://github.com/lobehub/lobe-chat/issues/137) ([785d50f](https://github.com/lobehub/lobe-chat/commit/785d50f))
+- **misc**: Add russian locally, closes [#137](https://github.com/lobehub/lobe-chat/issues/137) ([785d50f](https://github.com/lobehub/lobe-chat/commit/785d50f))
 
 </details>
 
