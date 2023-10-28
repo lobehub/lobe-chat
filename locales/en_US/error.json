@@ -1,7 +1,7 @@
 {
   "pluginSettings": {
     "desc": "Complete the following configuration to start using this plugin",
-    "title": "{{name}} Plugin Configuration"
+    "title": "{{name}} Plugin Settings"
   },
   "response": {
     "400": "Sorry, the server does not understand your request. Please make sure your request parameters are correct.",

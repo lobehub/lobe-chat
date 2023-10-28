@@ -59,7 +59,11 @@ const AgentModalInner = memo(() => {
         />
       </Flexbox>
       <Flexbox style={{ padding: 16 }}>
-        {tab === InfoTabs.prompt && <Markdown fullFeaturedCodeBlock>{systemRole}</Markdown>}
+        {tab === InfoTabs.prompt && (
+          <Markdown className={styles.markdown} fullFeaturedCodeBlock>
+            {systemRole}
+          </Markdown>
+        )}
         {tab === InfoTabs.comment && <Comment identifier={identifier} />}
       </Flexbox>
     </>

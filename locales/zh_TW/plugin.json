@@ -2,7 +2,9 @@
   "debug": {
     "arguments": "參數",
     "function_call": "函式呼叫",
-    "response": "回應"
+    "response": "回應",
+    "off": "關閉偵錯",
+    "on": "查看插件呼叫資訊"
   },
   "dev": {
     "confirmDeleteDevPlugin": "您確定要刪除此本機外掛嗎？一旦刪除，將無法復原。",
@@ -89,8 +91,8 @@
     }
   },
   "loading": {
-    "content": "載入中...",
-    "plugin": "外掛執行中..."
+    "plugin": "外掛執行中...",
+    "content": "呼叫插件中..."
   },
   "pluginList": "外掛清單",
   "plugins": {

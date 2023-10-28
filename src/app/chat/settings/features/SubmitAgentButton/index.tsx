@@ -22,7 +22,6 @@ const SubmitAgentButton = memo(() => {
         title={t('submitAgentModal.tooltips')}
       />
       <Modal
-        centered={false}
         footer={null}
         onCancel={() => setIsModalOpen(false)}
         open={isModalOpen}

@@ -12,12 +12,15 @@ import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
 import { useStore } from '../store';
 
-const useStyles = createStyles(({ css, token }) => ({
-  md: css`
-    p {
-      color: ${token.colorTextDescription};
-    }
-  `,
+const useStyles = createStyles(({ css, token, cx, stylish }) => ({
+  markdown: cx(
+    stylish.markdownInChat,
+    css`
+      p {
+        color: ${token.colorTextDescription};
+      }
+    `,
+  ),
 }));
 
 const PluginSettings = memo(() => {
@@ -62,7 +65,7 @@ const PluginSettings = memo(() => {
                   type={item.type as any}
                 />
               ),
-              desc: item.desc && <Markdown className={styles.md}>{item.desc}</Markdown>,
+              desc: item.desc && <Markdown className={styles.markdown}>{item.desc}</Markdown>,
             })),
             icon: ToyBrick,
             title: t('settingPlugin.config', { id: pluginHelpers.getPluginTitle(item.meta) }),

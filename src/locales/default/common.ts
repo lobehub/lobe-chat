@@ -30,7 +30,6 @@ export default {
   feedback: '反馈与建议',
   historyRange: '历史范围',
   import: '导入配置',
-
   lang: {
     'en': '英语',
     'en-US': '英语',
@@ -45,7 +44,6 @@ export default {
   noDescription: '暂无描述',
   ok: '确定',
   password: '密码',
-
   pin: '置顶',
   pinOff: '取消置顶',
   regenerate: '重新生成',

@@ -1,7 +1,7 @@
 export default {
   pluginSettings: {
     desc: '完成以下配置，即可开始使用该插件',
-    title: '{{name}}插件配置',
+    title: '{{name}} 插件配置',
   },
   response: {
     400: '很抱歉，服务器不明白您的请求，请确认您的请求参数是否正确',

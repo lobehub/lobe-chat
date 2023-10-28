@@ -130,7 +130,7 @@ const Preview = memo<PreviewProps>(({ withSystemRole, imageType, withBackground,
               </Flexbox>
               {withSystemRole && systemRole && (
                 <div className={styles.role}>
-                  <Markdown>{systemRole}</Markdown>
+                  <Markdown className={styles.markdown}>{systemRole}</Markdown>
                 </div>
               )}
             </div>
