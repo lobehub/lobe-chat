@@ -1,22 +1,16 @@
-import { Avatar, List } from '@lobehub/ui';
-import { useHover } from 'ahooks';
 import { useResponsive } from 'antd-style';
 import Link from 'next/link';
-import { memo, useMemo, useRef } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useStyles } from '@/app/chat/features/SessionListContent/List/Item';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSessionStore } from '@/store/session';
 
-const { Item } = List;
+import ListItem from '../ListItem';
 
 const Inbox = memo(() => {
-  const ref = useRef(null);
-  const { styles } = useStyles();
-  const isHovering = useHover(ref);
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
   const [activeId, activeSession, switchSession] = useSessionStore((s) => [
@@ -24,18 +18,6 @@ const Inbox = memo(() => {
     s.activeSession,
     s.switchSession,
   ]);
-
-  const avatarRender = useMemo(
-    () => (
-      <Avatar
-        animation={isHovering}
-        avatar={DEFAULT_INBOX_AVATAR}
-        size={46}
-        style={{ padding: 3 }}
-      />
-    ),
-    [isHovering],
-  );
 
   return (
     <Link
@@ -47,11 +29,9 @@ const Inbox = memo(() => {
         else activeSession(INBOX_SESSION_ID);
       }}
     >
-      <Item
-        active={mobile ? false : activeId === INBOX_SESSION_ID}
-        avatar={avatarRender}
-        className={styles.container}
-        ref={ref}
+      <ListItem
+        active={activeId === INBOX_SESSION_ID}
+        avatar={DEFAULT_INBOX_AVATAR}
         title={t('inbox.title')}
       />
     </Link>

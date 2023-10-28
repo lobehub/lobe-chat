@@ -1,8 +1,6 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
-import { Avatar, List, Tag } from '@lobehub/ui';
-import { useHover } from 'ahooks';
-import { createStyles, useResponsive } from 'antd-style';
-import { memo, useMemo, useRef, useState } from 'react';
+import { Tag } from '@lobehub/ui';
+import { memo, useMemo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
@@ -10,21 +8,8 @@ import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
+import ListItem from '../../ListItem';
 import Actions from './Actions';
-
-const { Item } = List;
-
-export const useStyles = createStyles(({ css, token, responsive }) => {
-  return {
-    container: css`
-      position: relative;
-      border-radius: ${token.borderRadius}px;
-      ${responsive.mobile} {
-        border-radius: 0;
-      }
-    `,
-  };
-});
 
 interface SessionItemProps {
   id: string;
@@ -32,10 +17,7 @@ interface SessionItemProps {
 
 const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  const isHovering = useHover(ref);
-  const { mobile } = useResponsive();
-  const { styles } = useStyles();
+
   const [defaultModel] = useGlobalStore((s) => [settingsSelectors.defaultAgentConfig(s).model]);
 
   const [
@@ -72,19 +54,6 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
 
   const actions = useMemo(() => <Actions id={id} setOpen={setOpen} />, [id]);
 
-  const avatarRender = useMemo(
-    () => (
-      <Avatar
-        animation={isHovering}
-        avatar={avatar}
-        background={avatarBackground}
-        shape="circle"
-        size={46}
-      />
-    ),
-    [isHovering, avatar, avatarBackground],
-  );
-
   const addon = useMemo(
     () =>
       !showModel ? undefined : (
@@ -96,23 +65,19 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   );
 
   return (
-    <Flexbox paddingBlock={1}>
-      <Item
-        actions={actions}
-        // needn't active state in mobile
-        active={mobile ? false : active}
-        addon={addon}
-        avatar={avatarRender}
-        className={styles.container}
-        date={updateAt}
-        description={description || systemRole}
-        loading={loading}
-        pin={pin}
-        ref={ref}
-        showAction={open || isHovering}
-        title={title}
-      />
-    </Flexbox>
+    <ListItem
+      actions={actions}
+      active={active}
+      addon={addon}
+      avatar={avatar}
+      avatarBackground={avatarBackground}
+      date={updateAt}
+      description={description || systemRole}
+      loading={loading}
+      pin={pin}
+      showAction={open}
+      title={title}
+    />
   );
 }, shallow);
 
