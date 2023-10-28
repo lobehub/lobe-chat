@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.96.3](https://github.com/lobehub/lobe-chat/compare/v0.96.2...v0.96.3)
+
+<sup>Released on **2023-10-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix SessionList on mobile.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix SessionList on mobile ([e7e7b80](https://github.com/lobehub/lobe-chat/commit/e7e7b80))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.96.2](https://github.com/lobehub/lobe-chat/compare/v0.96.1...v0.96.2)
 
 <sup>Released on **2023-10-28**</sup>
