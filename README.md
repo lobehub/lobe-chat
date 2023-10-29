@@ -100,8 +100,6 @@ Please be aware that LobeChat is currently under active development, and feedbac
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
 ## 📸 Snapshot
@@ -154,8 +152,6 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
 ## ⚡️ Performance
@@ -169,8 +165,6 @@ We have carried out a series of optimization designs for mobile devices to enhan
 | [📑 Lighthouse Report][chat-desktop-report] | [📑 Lighthouse Report][chat-mobile-report] |
 
 <div align="right">
-
-[![][back-to-top]](#readme-top)
 
 </div>
 
@@ -248,7 +242,6 @@ This project provides some additional configuration items set with environment v
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
 
 </div>
 
@@ -262,7 +255,6 @@ This project provides some additional configuration items set with environment v
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
 
 </div>
 
@@ -290,7 +282,6 @@ Plugins provide a means to extend the [Function Calling][fc-link] capabilities o
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
 
 </div>
 
@@ -313,7 +304,6 @@ $ bun dev
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
 
 </div>
 
@@ -328,8 +318,6 @@ Contributions of all types are more than welcome; if you are interested in contr
 [![][contributors-contrib]][contributors-link]
 
 <div align="right">
-
-[![][back-to-top]](#readme-top)
 
 </div>
 
