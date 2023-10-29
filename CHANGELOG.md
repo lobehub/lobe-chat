@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.96.5](https://github.com/lobehub/lobe-chat/compare/v0.96.4...v0.96.5)
+
+<sup>Released on **2023-10-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix docker image optimization error log.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix docker image optimization error log ([730aec1](https://github.com/lobehub/lobe-chat/commit/730aec1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.96.4](https://github.com/lobehub/lobe-chat/compare/v0.96.3...v0.96.4)
 
 <sup>Released on **2023-10-29**</sup>
