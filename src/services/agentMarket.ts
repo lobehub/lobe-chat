@@ -1,30 +1,21 @@
-import { getAgentIndexJSON, getAgentJSON } from '@/const/url';
-import { getCurrentLanguage } from '@/store/global/helpers';
+import { URLS } from '@/services/_url';
 import { LobeChatAgentsMarketIndex } from '@/types/market';
 
 /**
  * 请求助手列表
  */
-export const getAgentList = async () => {
-  let res: Response;
+export const getAgentList = async (locale: string): Promise<LobeChatAgentsMarketIndex> => {
+  const res = await fetch(`${URLS.market}?locale=${locale}`);
 
-  res = await fetch(getAgentIndexJSON(getCurrentLanguage()));
-
-  if (res.status === 404) {
-    res = await fetch(getAgentIndexJSON('en-US'));
-  }
-
-  const data: LobeChatAgentsMarketIndex = await res.json();
-
-  return data;
+  return res.json();
 };
 
 /**
  * 请求助手 manifest
  */
-export const getAgentManifest = async (identifier?: string) => {
+export const getAgentManifest = async (identifier: string, locale: string) => {
   if (!identifier) return;
-  const res = await fetch(getAgentJSON(identifier, getCurrentLanguage()));
+  const res = await fetch(`${URLS.market}/${identifier}?locale=${locale}`);
 
   return res.json();
 };
