@@ -35,8 +35,7 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
   preview: cx(
     stylish.noScrollbar,
     css`
-      overflow-x: hidden;
-      overflow-y: scroll;
+      overflow: hidden scroll;
 
       width: 100%;
       max-height: 40vh;

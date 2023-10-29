@@ -13,10 +13,7 @@ const useStyles = createStyles(({ css, cx, stylish }) => ({
     stylish.noScrollbar,
     css`
       position: relative;
-
-      overflow-x: hidden;
-      overflow-y: auto;
-
+      overflow: hidden auto;
       width: 100vw;
       height: 100%;
     `,

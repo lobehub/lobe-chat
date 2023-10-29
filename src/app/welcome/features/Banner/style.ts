@@ -56,8 +56,7 @@ export const useStyles = createStyles(({ css, token, stylish, cx, prefixCls }) =
       css`
         position: relative;
 
-        overflow-x: hidden;
-        overflow-y: auto;
+        overflow: hidden auto;
 
         max-width: 1024px;
         height: 100%;

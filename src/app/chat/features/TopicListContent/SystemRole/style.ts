@@ -2,13 +2,9 @@ import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(({ css, token }) => ({
   prompt: css`
-    overflow-x: hidden;
-    overflow-y: auto;
-
+    overflow: hidden auto;
     padding: 0 16px 16px;
-
     opacity: 0.75;
-
     transition: opacity 200ms ${token.motionEaseOut};
 
     &:hover {
