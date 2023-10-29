@@ -6,7 +6,6 @@ export const runtime = 'edge';
 export const GET = async (req: Request, { params }: { params: { id: string } }) => {
   const { searchParams } = new URL(req.url);
 
-  console.log(params);
   const locale = searchParams.get('locale');
 
   let res: Response;
