@@ -1,6 +1,4 @@
-import { getAgentJSON } from '@/const/url';
 import { URLS } from '@/services/_url';
-import { getCurrentLanguage } from '@/store/global/helpers';
 import { LobeChatAgentsMarketIndex } from '@/types/market';
 
 /**
@@ -19,6 +17,5 @@ export const getAgentManifest = async (identifier: string, locale: string) => {
   if (!identifier) return;
   const res = await fetch(`${URLS.market}/${identifier}?locale=${locale}`);
 
-  console.log(await res.clone().json());
   return res.json();
 };
