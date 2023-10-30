@@ -16,6 +16,7 @@ declare global {
 
       NEXT_PUBLIC_ANALYTICS_PLAUSIBLE?: string;
       NEXT_PUBLIC_PLAUSIBLE_DOMAIN?: string;
+      NEXT_PUBLIC_PLAUSIBLE_SCRIPT_BASE_URL?: string;
 
       NEXT_PUBLIC_ANALYTICS_POSTHOG: string;
       NEXT_PUBLIC_POSTHOG_KEY: string;
@@ -40,6 +41,8 @@ export const getClientConfig = () => ({
   // Plausible Analytics
   ANALYTICS_PLAUSIBLE: process.env.NEXT_PUBLIC_ANALYTICS_PLAUSIBLE === '1',
   PLAUSIBLE_DOMAIN: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN,
+  PLAUSIBLE_SCRIPT_BASE_URL:
+    process.env.NEXT_PUBLIC_PLAUSIBLE_SCRIPT_BASE_URL || 'https://plausible.io',
 
   // Posthog Analytics
   ANALYTICS_POSTHOG: process.env.NEXT_PUBLIC_ANALYTICS_POSTHOG === '1',
