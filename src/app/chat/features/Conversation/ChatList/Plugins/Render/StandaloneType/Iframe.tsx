@@ -16,7 +16,7 @@ import {
   useOnPluginFillContent,
 } from '../utils/listenToPlugin';
 import {
-  sendMessageToPlugin,
+  sendMessageContentToPlugin,
   sendPayloadToPlugin,
   sendPluginSettingsToPlugin,
   sendPluginStateToPlugin,
@@ -58,7 +58,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
         props.content = message.content || '';
       }
 
-      sendMessageToPlugin(iframeWin, props);
+      sendMessageContentToPlugin(iframeWin, props);
     }
   }, []);
 

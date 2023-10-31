@@ -3,7 +3,8 @@ import { Skeleton } from 'antd';
 import { memo, useRef, useState } from 'react';
 
 import { useOnPluginReadyForInteraction } from '../../utils/iframeOnReady';
-import { sendMessageToPlugin } from '../../utils/postMessage';
+import { useOnPluginFetchMessage } from '../../utils/listenToPlugin';
+import { sendMessageContentToPlugin } from '../../utils/postMessage';
 
 interface IFrameRenderProps extends PluginRenderProps {
   height?: number;
@@ -20,7 +21,15 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, width = 800, height = 300, 
     const iframeWin = iframeRef.current?.contentWindow;
 
     if (iframeWin) {
-      sendMessageToPlugin(iframeWin, props);
+      sendMessageContentToPlugin(iframeWin, props);
+    }
+  }, [props]);
+
+  // when get iframe fetch message ，send message content
+  useOnPluginFetchMessage(() => {
+    const iframeWin = iframeRef.current?.contentWindow;
+    if (iframeWin) {
+      sendMessageContentToPlugin(iframeWin, props);
     }
   }, [props]);
 
