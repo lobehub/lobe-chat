@@ -154,7 +154,6 @@
     "prettier": "^3",
     "remark-cli": "^11",
     "semantic-release": "^21",
-    "sharp": "^0.32.6",
     "stylelint": "^15",
     "ts-node": "^10",
     "typescript": "^5",
