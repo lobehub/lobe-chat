@@ -13,11 +13,7 @@ import ListItem from '../ListItem';
 const Inbox = memo(() => {
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
-  const [activeId, activeSession, switchSession] = useSessionStore((s) => [
-    s.activeId,
-    s.activeSession,
-    s.switchSession,
-  ]);
+  const [activeId, switchSession] = useSessionStore((s) => [s.activeId, s.switchSession]);
 
   return (
     <Link
@@ -25,8 +21,7 @@ const Inbox = memo(() => {
       href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={(e) => {
         e.preventDefault();
-        if (mobile) switchSession(INBOX_SESSION_ID);
-        else activeSession(INBOX_SESSION_ID);
+        switchSession(INBOX_SESSION_ID);
       }}
     >
       <ListItem
