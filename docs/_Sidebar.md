@@ -6,7 +6,8 @@
 
 #### 🤯 LobeChat Usage
 
-- [Custom Agents Guide](Agents) | [中文](Agents.zh-CN)
+- [Custom Agents Guide](Usage-Agents) | [中文](Usage-Agents.zh-CN)
+- [Topics Guide](Usage-Topics) | [中文](Usage-Topics.zh-CN)
 
 #### 🛳 Self Hosting
 

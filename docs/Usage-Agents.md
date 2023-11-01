@@ -3,8 +3,8 @@
 #### TOC
 
 - [Adding Custom Agents](#adding-custom-agents)
-  - [A. Add through the Agent Marketplace](#a-add-through-the-agent-marketplace)
-  - [B. Create a Custom Agent](#b-create-a-custom-agent)
+  - [`A` Add through the Agent Marketplace](#a-add-through-the-agent-marketplace)
+  - [`B` Create a Custom Agent](#b-create-a-custom-agent)
 - [Basic Concepts of Prompts](#basic-concepts-of-prompts)
   - [How to write a structured prompt](#how-to-write-a-structured-prompt)
   - [How to improve quality and effectiveness](#how-to-improve-quality-and-effectiveness)
@@ -55,7 +55,7 @@ Generative AI is very useful, but it requires human guidance. In most cases, gen
 
 Let's look at a basic example of a discussion question:
 
-> *"What are the most urgent environmental issues our planet faces, and what can individuals do to help address these problems?"*
+> _"What are the most urgent environmental issues our planet faces, and what can individuals do to help address these problems?"_
 
 We can turn this into a simple prompt by answering the following question upfront.
 
@@ -88,7 +88,7 @@ After formulating effective prompts for discussion questions, you now need to re
 
 A simple iteration method is to generate multiple outputs and examine them to understand the concepts and structure used by agent. Once the outputs have been evaluated, you can select the most suitable ones and combine them into a coherent answer. Another iterative approach is to start gradually and then expand step by step. This requires more than one prompt: an initial prompt for writing the first one or two paragraphs, followed by additional prompts to expand on the content already written. Here's a potential philosophical discussion prompt:
 
-> *"Is mathematics invented or discovered? Explain your answer with careful reasoning."*
+> _"Is mathematics invented or discovered? Explain your answer with careful reasoning."_
 
 Add it to a simple prompt like this:
 
@@ -184,11 +184,11 @@ The presence penalty parameter can be seen as a punishment for repetitive conten
 
 Frequency penalty is a mechanism that penalizes frequent occurrences of new vocabulary in the generated text, reducing the likelihood of the model repeating the same words. The higher the value, the more likely it is to reduce repeated words.
 
-- `-2.0` When the morning news starts playing, I noticed that my TV now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now *(The most frequent word is "now" with a percentage of 44.79%)*
-- `-1.0` He always watches the news in the morning, watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching *(The most frequent word is "watching" with a percentage of 57.69%)*
-- `0.0` When the morning sun shines into the small restaurant, a tired mailman appears at the door, holding a bag of mail in his hand. The owner warmly prepares breakfast for him, and he starts sorting the mail while enjoying his breakfast. ***(The most frequent word is "the" with a percentage of 8.45%)***
-- `1.0` A deep sleep girl is awakened by a warm sunbeam. She sees the first ray of sunlight in the morning, surrounded by the sounds of birds and the fragrance of flowers, everything is full of vitality. *(The most frequent word is "the" with a percentage of 5.45%)*
-- `2.0` Every morning, he sits on the balcony to have breakfast. In the gentle sunset, everything looks very peaceful. However, one day, as he was about to pick up his breakfast, an optimistic little bird flew by, bringing him a good mood for the day. *(The most frequent word is "the" with a percentage of 4.94%)*
+- `-2.0` When the morning news starts playing, I noticed that my TV now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now _(The most frequent word is "now" with a percentage of 44.79%)_
+- `-1.0` He always watches the news in the morning, watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching watching _(The most frequent word is "watching" with a percentage of 57.69%)_
+- `0.0` When the morning sun shines into the small restaurant, a tired mailman appears at the door, holding a bag of mail in his hand. The owner warmly prepares breakfast for him, and he starts sorting the mail while enjoying his breakfast. **_(The most frequent word is "the" with a percentage of 8.45%)_**
+- `1.0` A deep sleep girl is awakened by a warm sunbeam. She sees the first ray of sunlight in the morning, surrounded by the sounds of birds and the fragrance of flowers, everything is full of vitality. _(The most frequent word is "the" with a percentage of 5.45%)_
+- `2.0` Every morning, he sits on the balcony to have breakfast. In the gentle sunset, everything looks very peaceful. However, one day, as he was about to pick up his breakfast, an optimistic little bird flew by, bringing him a good mood for the day. _(The most frequent word is "the" with a percentage of 4.94%)_
 
 ## Further Reading
 
