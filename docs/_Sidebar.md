@@ -4,13 +4,16 @@
 
 - [TOC](Home) | [目录](Home)
 
-#### 🤯 LobeChat
+#### 🤯 LobeChat Usage
+
+- [Custom Agents Guide](Agents) | [中文](Agents.zh-CN)
+
+#### 🛳 Self Hosting
 
 - [Environment Variables](Environment-Variable) | [中文](Environment-Variable.zh-CN)
 - [Upstream Sync](Upstream-Sync) | [中文](Upstream-Sync.zh-CN)
 - [Deploying with Azure OpenAI](Deploy-with-Azure-OpenAI) | [中文](Deploy-with-Azure-OpenAI.zh-CN)
 - [Docker Deployment Guide](Docker-Deployment) | [中文](Docker-Deployment.zh-CN)
-- [Lighthouse Report](Lighthouse) | [中文](Lighthouse.zh-CN)
 
 #### 🤖 Agents
 
@@ -21,6 +24,10 @@
 - [Plugin Index][plugin-index] | [中文][plugin-index-cn]
 - [Plugin Development](Plugin-Development) | [中文](Plugin-Development.zh-CN)
 - [Plugin SDK Docs][plugin-sdk] | [中文][plugin-skd-cn]
+
+#### 📊 Other
+
+- [Lighthouse Report](Lighthouse) | [中文](Lighthouse.zh-CN)
 
 <!-- LINK GROUP -->
 
