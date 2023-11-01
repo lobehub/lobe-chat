@@ -21,13 +21,13 @@
 
 As the fundamental unit of LobeChat, adding and iterating on agents is crucial. Now you can add agents to your favorites list in two ways:
 
-### A. Add through the Agent Marketplace
+### `A` Add through the Agent Marketplace
 
 If you're new to writing prompts, you might want to browse the Agent Marketplace in LobeChat. Here, you can find commonly used agents submitted by others and add them to your list with just one click, making it very convenient.
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/279588466-4c32041b-a8e6-4703-ba4a-f91b7800e359.png)
 
-### B. Create a Custom Agent
+### `B` Create a Custom Agent
 
 When you need to handle specific tasks, you'll want to consider creating a custom agent to help you solve the problem. You can add and configure the agent in detail using the following steps:
 
