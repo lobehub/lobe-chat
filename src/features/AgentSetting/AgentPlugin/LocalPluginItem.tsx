@@ -20,7 +20,7 @@ const MarketList = memo<{ id: string }>(({ id }) => {
   const [useFetchPluginList, fetchPluginManifest, deleteCustomPlugin, updateCustomPlugin] =
     usePluginStore((s) => [
       s.useFetchPluginList,
-      s.fetchPluginManifest,
+      s.installPlugin,
       s.deleteCustomPlugin,
       s.updateCustomPlugin,
     ]);

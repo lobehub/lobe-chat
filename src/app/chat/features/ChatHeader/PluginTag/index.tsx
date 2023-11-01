@@ -3,7 +3,7 @@ import type { MenuProps } from 'antd';
 import { Dropdown } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideToyBrick } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 
 import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
 
@@ -16,6 +16,12 @@ export interface PluginTagProps {
 const PluginTag = memo<PluginTagProps>(({ plugins }) => {
   const list = usePluginStore(pluginSelectors.displayPluginList);
   const displayPlugin = usePluginStore(pluginSelectors.getPluginMetaById(plugins[0]), isEqual);
+
+  const checkPluginsIsInstalled = usePluginStore((s) => s.checkPluginsIsInstalled);
+
+  useEffect(() => {
+    checkPluginsIsInstalled(plugins);
+  }, [plugins]);
 
   if (plugins.length === 0) return null;
 

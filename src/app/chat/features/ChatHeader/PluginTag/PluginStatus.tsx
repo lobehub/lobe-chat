@@ -19,7 +19,7 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
   const [status, isCustom, fetchPluginManifest] = usePluginStore((s) => [
     pluginSelectors.getPluginManifestLoadingStatus(id)(s),
     pluginSelectors.isCustomPlugin(id)(s),
-    s.fetchPluginManifest,
+    s.installPlugin,
   ]);
 
   const manifest = usePluginStore(pluginSelectors.getPluginManifestById(id));

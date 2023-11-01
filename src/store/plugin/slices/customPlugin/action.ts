@@ -47,11 +47,11 @@ export const createCustomPluginSlice: StateCreator<
     set({ newCustomPlugin: defaultCustomPlugin }, false, t('saveToCustomPluginList'));
   },
   updateCustomPlugin: (id, value) => {
-    const { dispatchCustomPluginList, fetchPluginManifest } = get();
+    const { dispatchCustomPluginList, installPlugin } = get();
     // 1. 更新 list 项信息
     dispatchCustomPluginList({ id, plugin: value, type: 'updateItem' });
-    // 2. 更新 重新拉取 manifest
-    fetchPluginManifest(id);
+    // 2. 重新安装插件
+    installPlugin(id);
   },
 
   updateNewCustomPlugin: (newCustomPlugin) => {

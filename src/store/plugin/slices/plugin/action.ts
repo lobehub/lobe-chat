@@ -24,9 +24,12 @@ const t = setNamespace('plugin');
  */
 export interface PluginAction {
   checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
+  checkPluginsIsInstalled: (plugins: string[]) => void;
+
   deletePluginSettings: (id: string) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
-  fetchPluginManifest: (identifier: string) => Promise<void>;
+  installPlugin: (identifier: string) => Promise<void>;
+  installPlugins: (plugins: string[]) => Promise<void>;
   resetPluginSettings: () => void;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
   updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
@@ -40,7 +43,7 @@ export const createPluginSlice: StateCreator<
   PluginAction
 > = (set, get) => ({
   checkLocalEnabledPlugins: async (sessions) => {
-    const { fetchPluginManifest } = get();
+    const { checkPluginsIsInstalled } = get();
 
     let enabledPlugins: string[] = [];
 
@@ -53,7 +56,10 @@ export const createPluginSlice: StateCreator<
 
     const plugins = uniq(enabledPlugins);
 
-    await Promise.all(plugins.map((identifier) => fetchPluginManifest(identifier)));
+    await checkPluginsIsInstalled(plugins);
+  },
+  checkPluginsIsInstalled: async (plugins) => {
+    await get().installPlugins(plugins);
 
     set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
   },
@@ -72,7 +78,7 @@ export const createPluginSlice: StateCreator<
 
     set({ pluginManifestMap: nextManifest }, false, t('dispatchPluginManifest', payload));
   },
-  fetchPluginManifest: async (name) => {
+  installPlugin: async (name) => {
     const plugin = pluginSelectors.getPluginMetaById(name)(get());
     // 1. 校验文件
 
@@ -98,7 +104,7 @@ export const createPluginSlice: StateCreator<
 
     get().updateManifestLoadingState(name, undefined);
     if (!data) {
-      message.error('插件描述文件请求失败');
+      message.error(`插件 ${plugin.meta.title} 描述文件请求失败`);
       return;
     }
 
@@ -112,6 +118,11 @@ export const createPluginSlice: StateCreator<
 
     // 4. 存储 manifest 信息
     get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
+  },
+  installPlugins: async (plugins) => {
+    const { installPlugin } = get();
+
+    await Promise.all(plugins.map((identifier) => installPlugin(identifier)));
   },
   resetPluginSettings: () => {
     set({ pluginsSettings: {} }, false, t('resetPluginSettings'));

@@ -48,7 +48,7 @@ const MarketList = memo(() => {
   const [useFetchPluginList, fetchPluginManifest, saveToDevList, updateNewDevPlugin] =
     usePluginStore((s) => [
       s.useFetchPluginList,
-      s.fetchPluginManifest,
+      s.installPlugin,
       s.saveToCustomPluginList,
       s.updateNewCustomPlugin,
     ]);
