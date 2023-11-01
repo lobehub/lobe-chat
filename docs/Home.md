@@ -14,8 +14,8 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 ### 🤯 LobeChat Usage
 
-- [Custom Agents Guide](Usage-Agents) | [助手自定义](Usage-Agents.zh-CN)
-- [Topics Guide](Usage-Topics) | [指南话题](Usage-Topics.zh-CN)
+- [Custom Agents Guide](Usage-Agents) | [自定义助手指南](Usage-Agents.zh-CN)
+- [Topics Guide](Usage-Topics) | [话题指南](Usage-Topics.zh-CN)
 
 ---
 
