@@ -28,7 +28,6 @@
     "build:docker": "DOCKER=true next build",
     "dev": "next dev -p 3010",
     "i18n": "npm run i18n:workflow && lobe-i18n",
-    "i18n:workflow": "ts-node --project ./tsconfig.json scripts/i18nWorkflow/index.ts",
     "lint": "npm run lint:ts && npm run lint:style && npm run type-check && npm run lint:circular",
     "lint:circular": "dpdm src/**/*.ts  --warning false  --tree false  --exit-code circular:1  -T true",
     "lint:md": "remark . --quiet --frail --output",
@@ -43,7 +42,9 @@
     "test": "vitest --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "test:update": "vitest -u",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "workflow:i18n": "ts-node --project ./tsconfig.json scripts/i18nWorkflow/index.ts",
+    "workflow:readme": "bun scripts/readmeWorkflow/index.ts"
   },
   "lint-staged": {
     "*.md": [
@@ -149,6 +150,7 @@
     "jsdom": "^22",
     "lint-staged": "^15",
     "lodash": "^4",
+    "markdown-table": "^3",
     "next-pwa": "^5",
     "node-fetch": "^3",
     "prettier": "^3",

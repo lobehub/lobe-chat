@@ -120,6 +120,19 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 在我们的助手市场中，我们积累了大量实用的助手 Prompt，这些都是在日常工作和学习中得到实际应用的。你也可以在这里分享你的助手，与更多的人一起迭代和优化你的助手提示词。你可以通过 [🤖/🏪 提交助手][submit-agents-link] 来提交你的助手，我们构建的自动化 i18n 工作流将会自动将你的助手翻译成多语言版本，让多语种用户都能享受到你的智慧成果。
 
+<!-- AGENT LIST -->
+
+| 最近新增                                                                                                                                                                        | 助手说明                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| [Sketch 特性总结专家](https://chat-preview.lobehub.com/market?agent=sketch-changelog-highlighter)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-02**</sup> | 擅长从 Sketch 的更新日志中提取关键变更要点<br/>`体验设计` `sketch` `更新` `特性` `文本总结` |
+| [抬杠高手](https://chat-preview.lobehub.com/market?agent=tqg-20231026)<br/><sup>By **[cake79](https://github.com/cake79)** on **2023-10-26**</sup>                              | 模拟那些喜欢抬杠的人，能对用户输入的任何观点进行抬杠表达的角色<br/>`写作` `对话`            |
+| [图表生成器](https://chat-preview.lobehub.com/market?agent=graph-generator)<br/><sup>By **[choldrim](https://github.com/choldrim)** on **2023-10-23**</sup>                     | 自动图表生成器<br/>`图表`                                                                   |
+| [作品命名大师](https://chat-preview.lobehub.com/market?agent=meaningful-name)<br/><sup>By **[yingxirz](https://github.com/yingxirz)** on **2023-10-18**</sup>                   | 为您的艺术创作提供简洁而富有内涵的名称。<br/>`起名` `创意`                                  |
+
+> 📊 Total agents: [<kbd>**37**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+
+ <!-- AGENT LIST -->
+
 <br/>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
@@ -286,11 +299,18 @@ $ docker run -d -p 3210:3210 \
 > - [x] [**插件二期**](https://github.com/lobehub/lobe-chat/issues/97): 插件的安全性与使用的稳定性，更加精准地呈现异常状态，插件架构的可维护性与开发者友好
 > - [ ] [**插件三期**](https://github.com/lobehub/lobe-chat/issues/149)：更高阶与完善的自定义能力，支持插件鉴权与示例
 
-| 官方插件                                 | 描述                                                                         |
-| ---------------------------------------- | ---------------------------------------------------------------------------- |
-| [搜索引擎][chat-plugin-search-engine]    | 此插件允许使用 SerpApi 搜索引擎。                                            |
-| [实时天气][chat-plugin-realtime-weather] | 此插件通过获取实时天气数据提供实用的天气信息，并可以根据用户的位置自动更新。 |
-| [网站爬虫][chat-plugin-web-crawler]      | 此插件自动爬取指定 URL 网页的主要内容，并将其用作上下文输入。                |
+<!-- PLUGIN LIST -->
+
+| 官方插件                                                            | 插件说明                   |
+| ------------------------------------------------------------------- | -------------------------- |
+| [时钟时间](https://github.com/lobehub/chat-plugin-clock-time)       | 显示一个时钟来展示当前时间 |
+| [网站爬虫](https://github.com/lobehub/chat-plugin-web-crawler)      | 从网页链接中提取内容       |
+| [搜索引擎](https://github.com/lobehub/chat-plugin-search-engine)    | 查询搜索引擎以获取信息     |
+| [实时天气](https://github.com/lobehub/chat-plugin-realtime-weather) | 获取实时天气信息           |
+
+> 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+
+ <!-- PLUGIN LIST -->
 
 <div align="right">
 
@@ -369,11 +389,8 @@ This project is [MIT](./LICENSE) licensed.
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
 [chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
-[chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
-[chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
-[chat-plugin-web-crawler]: https://github.com/lobehub/chat-plugin-web-crawler
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
 [codespaces-link]: https://codespaces.new/lobehub/lobe-chat
 [codespaces-shield]: https://github.com/codespaces/badge.svg

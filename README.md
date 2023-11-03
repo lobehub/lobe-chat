@@ -120,6 +120,19 @@ By establishing a versatile plugin system, ChatGPT becomes capable of delivering
 
 In our agent market. We have accumulated a large number of practical, prompt agents that have been used in daily work and study. You can also share your agents here and iterate and optimize your prompt agents with more people. You can submit your agents through [🤖/🏪 Submit Agents][submit-agents-link], and our automated i18n workflow will automatically translate your agents into multiple languages, allowing users worldwide to enjoy your wisdom.
 
+<!-- AGENT LIST -->
+
+| Recent Submits                                                                                                                                                                            | Description                                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [Sketch Feature Summary Expert](https://chat-preview.lobehub.com/market?agent=sketch-changelog-highlighter)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-02**</sup> | Skilled at extracting key changes from Sketch release notes<br/>`Experience Design` `sketch` `update` `feature` `text summary` |
+| [Master of Debating](https://chat-preview.lobehub.com/market?agent=tqg-20231026)<br/><sup>By **[cake79](https://github.com/cake79)** on **2023-10-26**</sup>                              | Simulates people who enjoy debating and can express counterarguments to any user input<br/>`Writing` `Dialogue`                |
+| [Graph Generator](https://chat-preview.lobehub.com/market?agent=graph-generator)<br/><sup>By **[choldrim](https://github.com/choldrim)** on **2023-10-23**</sup>                          | Automatic Graph Generator<br/>`graph`                                                                                          |
+| [Master of Naming](https://chat-preview.lobehub.com/market?agent=meaningful-name)<br/><sup>By **[yingxirz](https://github.com/yingxirz)** on **2023-10-18**</sup>                         | Provides concise and meaningful names for your artistic creations.<br/>`naming` `creative`                                     |
+
+> 📊 Total agents: [<kbd>**37**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+
+ <!-- AGENT LIST -->
+
 <br/>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
@@ -282,11 +295,18 @@ Plugins provide a means to extend the [Function Calling][fc-link] capabilities o
 > - [x] [**Plugin Phase 2**](https://github.com/lobehub/lobe-chat/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture, and developer-friendly.
 > - [ ] [**Plugin Phase 3**](https://github.com/lobehub/lobe-chat/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication, and examples.
 
-| Official Plugin                                 | Description                                                                                                                                       |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [SearchEngine][chat-plugin-search-engine]       | This plugin allows for the use of the SerpApi search engine.                                                                                      |
-| [RealtimeWeather][chat-plugin-realtime-weather] | This plugin provides practical weather information by obtaining real-time weather data and can automatically update based on the user's location. |
-| [WebsiteCrawler][chat-plugin-web-crawler]       | This plugin automatically crawls the main content of a specified URL webpage and uses it as context input.                                        |
+<!-- PLUGIN LIST -->
+
+| Official Plugin                                                             | Description                            |
+| --------------------------------------------------------------------------- | -------------------------------------- |
+| [Clock Time](https://github.com/lobehub/chat-plugin-clock-time)             | display a clock to show current time   |
+| [Website Crawler](https://github.com/lobehub/chat-plugin-web-crawler)       | Extract content from web links         |
+| [Search Engine](https://github.com/lobehub/chat-plugin-search-engine)       | Query search engine to get information |
+| [Realtime Weather](https://github.com/lobehub/chat-plugin-realtime-weather) | Get realtime weather information       |
+
+> 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+
+ <!-- PLUGIN LIST -->
 
 <div align="right">
 
@@ -365,11 +385,8 @@ This project is [MIT](./LICENSE) licensed.
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
 [chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
-[chat-plugin-realtime-weather]: https://github.com/lobehub/chat-plugin-realtime-weather
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
-[chat-plugin-search-engine]: https://github.com/lobehub/chat-plugin-search-engine
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
-[chat-plugin-web-crawler]: https://github.com/lobehub/chat-plugin-web-crawler
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
 [codespaces-link]: https://codespaces.new/lobehub/lobe-chat
 [codespaces-shield]: https://github.com/codespaces/badge.svg

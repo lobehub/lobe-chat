@@ -50,7 +50,15 @@ const nextConfig = {
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP'],
     forceSwcTransforms: true,
-    optimizePackageImports: ['modern-screenshot','emoji-mart','@emoji-mart/react','@emoji-mart/data','@icons-pack/react-simple-icons','gpt-tokenizer','chroma-js'],
+    optimizePackageImports: [
+      'modern-screenshot',
+      'emoji-mart',
+      '@emoji-mart/react',
+      '@emoji-mart/data',
+      '@icons-pack/react-simple-icons',
+      'gpt-tokenizer',
+      'chroma-js',
+    ],
   },
   transpilePackages: ['@lobehub/ui', 'antd-style', 'lodash-es'],
 
