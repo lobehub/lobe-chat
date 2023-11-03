@@ -260,10 +260,10 @@ export default Render;
 
 ### 插件 Shield
 
-[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://github.com/lobehub/lobe-chat-plugins)
+[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF%20%26%20%F0%9F%A7%A9%20LobeHub-Plugin-95f3d9?labelColor=black&style=flat-square)](https://github.com/lobehub/lobe-chat-plugins)
 
 ```markdown
-[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF_LobeChat-plugin-cyan)](https://github.com/lobehub/lobe-chat-plugins)
+[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF%20%26%20%F0%9F%A7%A9%20LobeHub-Plugin-95f3d9?labelColor=black&style=flat-square)](https://github.com/lobehub/lobe-chat-plugins)
 ```
 
 <br/>
@@ -282,5 +282,5 @@ export default Render;
 [lobe-chat-plugin-template-url]: https://github.com/lobehub/chat-plugin-template
 [manifest-docs-url]: https://chat-plugin-sdk.lobehub.com/guides/plugin-manifest
 [plugin-error-type-url]: https://github.com/lobehub/chat-plugin-template
-[submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-50E3C2?style=for-the-badge
+[submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-95f3d9?labelColor=black&style=for-the-badge
 [submit-plugin-url]: https://github.com/lobehub/lobe-chat-plugins
