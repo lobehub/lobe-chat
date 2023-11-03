@@ -110,7 +110,7 @@ Please be aware that LobeChat is currently under active development, and feedbac
 
 #### `1` Function Calling Plugin System
 
-By establishing a versatile plugin system, ChatGPT becomes capable of delivering real-time news updates and enhancing your ability to interact with documents and e-commerce data more effectively. This extended functionality positions ChatGPT as a valuable resource across diverse domains. If you have an interest in creating plugins, we offer comprehensive component development documentation, software development kits (SDKs), and pre-made templates in the [🧩 Plugin System](#-Plugin-System) section below. Join us in our collective efforts to empower ChatGPT, making it both more potent and user-friendly.
+By establishing a versatile plugin system, ChatGPT becomes capable of delivering real-time news updates and enhancing your ability to interact with documents and e-commerce data more effectively. This extended functionality positions ChatGPT as a valuable resource across diverse domains. If you have an interest in creating plugins, we offer comprehensive component development documentation, software development kits (SDKs), and pre-made templates in the [🧩 Plugin System](#-plugins) section below. Join us in our collective efforts to empower ChatGPT, making it both more potent and user-friendly.
 
 <br/>
 
