@@ -3,7 +3,7 @@ import { markdownTable } from 'markdown-table';
 import qs from 'query-string';
 
 import { AGENT_REPO, AGENT_SPLIT, DataItem, MARKET_URL } from './const';
-import { fetchAgentIndex, genLink, readReadme, updateReadme, writeReadme } from './utlis';
+import { fetchAgentIndex, genLink, genTags, readReadme, updateReadme, writeReadme } from './utlis';
 
 const genAgentTable = (data: DataItem[], lang: string) => {
   const isCN = lang === 'zh-CN';
@@ -18,16 +18,10 @@ const genAgentTable = (data: DataItem[], lang: string) => {
       ),
       `<sup>By **${genLink(item.author, item.homepage)}** on **${item.createAt}**</sup>`,
     ].join('<br/>'),
-    [
-      item.meta.description,
-      item.meta.tags
-        .filter(Boolean)
-        .map((tag) => `\`${tag}\``)
-        .join(' '),
-    ].join('<br/>'),
+    [item.meta.description, genTags(item.meta.tags)].join('<br/>'),
   ]);
   return markdownTable([
-    [isCN ? '最近新增' : 'Recent Submits', isCN ? '助手说明' : 'Description'],
+    isCN ? ['最近新增', '助手说明'] : ['Recent Submits', 'Description'],
     ...content,
   ]);
 };

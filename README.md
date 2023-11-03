@@ -124,8 +124,8 @@ In our agent market. We have accumulated a large number of practical, prompt age
 
 | Recent Submits                                                                                                                                                                            | Description                                                                                                                    |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [Sketch Feature Summary Expert](https://chat-preview.lobehub.com/market?agent=sketch-changelog-highlighter)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-02**</sup> | Skilled at extracting key changes from Sketch release notes<br/>`Experience Design` `sketch` `update` `feature` `text summary` |
-| [Master of Debating](https://chat-preview.lobehub.com/market?agent=tqg-20231026)<br/><sup>By **[cake79](https://github.com/cake79)** on **2023-10-26**</sup>                              | Simulates people who enjoy debating and can express counterarguments to any user input<br/>`Writing` `Dialogue`                |
+| [Sketch Feature Summary Expert](https://chat-preview.lobehub.com/market?agent=sketch-changelog-highlighter)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-02**</sup> | Skilled at extracting key changes from Sketch release notes<br/>`experience-design` `sketch` `update` `feature` `text-summary` |
+| [Master of Debating](https://chat-preview.lobehub.com/market?agent=tqg-20231026)<br/><sup>By **[cake79](https://github.com/cake79)** on **2023-10-26**</sup>                              | Simulates people who enjoy debating and can express counterarguments to any user input<br/>`writing` `dialogue`                |
 | [Graph Generator](https://chat-preview.lobehub.com/market?agent=graph-generator)<br/><sup>By **[choldrim](https://github.com/choldrim)** on **2023-10-23**</sup>                          | Automatic Graph Generator<br/>`graph`                                                                                          |
 | [Master of Naming](https://chat-preview.lobehub.com/market?agent=meaningful-name)<br/><sup>By **[yingxirz](https://github.com/yingxirz)** on **2023-10-18**</sup>                         | Provides concise and meaningful names for your artistic creations.<br/>`naming` `creative`                                     |
 
@@ -297,12 +297,12 @@ Plugins provide a means to extend the [Function Calling][fc-link] capabilities o
 
 <!-- PLUGIN LIST -->
 
-| Official Plugin                                                             | Description                            |
-| --------------------------------------------------------------------------- | -------------------------------------- |
-| [Clock Time](https://github.com/lobehub/chat-plugin-clock-time)             | display a clock to show current time   |
-| [Website Crawler](https://github.com/lobehub/chat-plugin-web-crawler)       | Extract content from web links         |
-| [Search Engine](https://github.com/lobehub/chat-plugin-search-engine)       | Query search engine to get information |
-| [Realtime Weather](https://github.com/lobehub/chat-plugin-realtime-weather) | Get realtime weather information       |
+| Official Plugin                                                                                                     | Repository                                                                                      | Description                                                |
+| ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| [Clock Time](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>       | [lobehub/chat-plugin-clock-time](https://github.com/lobehub/chat-plugin-clock-time)             | Display a clock to show current time<br/>`clock` `time`    |
+| [Website Crawler](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-17**</sup>  | [lobehub/chat-plugin-web-crawler](https://github.com/lobehub/chat-plugin-web-crawler)           | Extract content from web links<br/>`web` `content-crawler` |
+| [Search Engine](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-15**</sup>    | [lobehub/chat-plugin-search-engine](https://github.com/lobehub/chat-plugin-search-engine)       | Query search engine to get information<br/>`web` `search`  |
+| [Realtime Weather](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-12**</sup> | [lobehub/chat-plugin-realtime-weather](https://github.com/lobehub/chat-plugin-realtime-weather) | Get realtime weather information<br/>`weather` `realtime`  |
 
 > 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 

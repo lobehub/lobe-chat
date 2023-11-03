@@ -1,3 +1,4 @@
+import { kebabCase } from 'lodash';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -23,6 +24,12 @@ export const fetchPluginIndex = async (lang: string) => {
 };
 
 export const genLink = (title: string, url: string) => `[${title}](${url})`;
+
+export const genTags = (tags: string[]) =>
+  tags
+    .filter(Boolean)
+    .map((tag) => `\`${kebabCase(tag)}\``)
+    .join(' ');
 
 const getReadmePath = (lang: string) => {
   const isCN = lang === 'zh-CN';

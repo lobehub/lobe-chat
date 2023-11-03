@@ -1,16 +1,23 @@
 import { consola } from 'consola';
 import { markdownTable } from 'markdown-table';
 
-import { DataItem, PLUGIN_REPO, PLUGIN_SPLIT } from './const';
-import { fetchPluginIndex, genLink, readReadme, updateReadme, writeReadme } from './utlis';
+import { DataItem, PLGUIN_URL, PLUGIN_REPO, PLUGIN_SPLIT } from './const';
+import { fetchPluginIndex, genLink, genTags, readReadme, updateReadme, writeReadme } from './utlis';
 
 const genPluginTable = (data: DataItem[], lang: string) => {
   const isCN = lang === 'zh-CN';
   const content = data
     .filter((item) => item.author === 'LobeHub')
-    .map((item) => [genLink(item.meta.title, item.homepage), item.meta.description]);
+    .map((item) => [
+      [
+        genLink(item.meta.title, PLGUIN_URL),
+        `<sup>By **${item.author}** on **${item.createAt}**</sup>`,
+      ].join('<br/>'),
+      genLink(item.homepage.split('github.com/')[1], item.homepage),
+      [item.meta.description, genTags(item.meta.tags)].join('<br/>'),
+    ]);
   return markdownTable([
-    [isCN ? '官方插件' : 'Official Plugin', isCN ? '插件说明' : 'Description'],
+    isCN ? ['官方插件', '仓库', '插件描述'] : ['Official Plugin', 'Repository', 'Description'],
     ...content,
   ]);
 };

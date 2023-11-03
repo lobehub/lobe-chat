@@ -23,6 +23,9 @@ jobs:
       - name: Test
         run: bun run test
 
+      - name: Workflow
+        run: bun run workflow:readme
+
       - name: Release
         run: bun run release
         env:
