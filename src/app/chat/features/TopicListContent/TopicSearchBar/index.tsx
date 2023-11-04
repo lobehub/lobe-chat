@@ -5,14 +5,19 @@ import { useTranslation } from 'react-i18next';
 
 import { useSessionStore } from '@/store/session';
 
-const TopicSearchBar = memo(() => {
+const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
   const { t } = useTranslation('chat');
   const [keywords] = useSessionStore((s) => [s.topicSearchKeywords]);
   const { mobile } = useResponsive();
   return (
     <SearchBar
-      allowClear
-      onChange={(e) => useSessionStore.setState({ topicSearchKeywords: e.target.value })}
+      autoFocus
+      onBlur={() => {
+        if (keywords === '') onClear?.();
+      }}
+      onChange={(e) => {
+        useSessionStore.setState({ topicSearchKeywords: e.target.value });
+      }}
       placeholder={t('topic.searchPlaceholder')}
       spotlight={!mobile}
       type={mobile ? 'block' : 'ghost'}

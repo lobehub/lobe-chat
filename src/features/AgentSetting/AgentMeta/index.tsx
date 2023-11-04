@@ -8,6 +8,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 
 import { useStore } from '../store';
 import { SessionLoadingState } from '../store/initialState';
@@ -15,16 +16,18 @@ import AutoGenerateInput from './AutoGenerateInput';
 import AutoGenerateSelect from './AutoGenerateSelect';
 import BackgroundSwatches from './BackgroundSwatches';
 
-const EmojiPicker = dynamic(() => import('@/components/EmojiPicker'), { ssr: false });
+const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
 const AgentMeta = memo(() => {
   const { t } = useTranslation('setting');
+
   const [hasSystemRole, updateMeta, autocompleteMeta, autocompleteAllMeta] = useStore((s) => [
     !!s.config.systemRole,
     s.setAgentMeta,
     s.autocompleteMeta,
     s.autocompleteAllMeta,
   ]);
+  const locale = useGlobalStore(settingsSelectors.currentLanguage);
   const loading = useStore((s) => s.autocompleteLoading);
   const meta = useStore((s) => s.meta, isEqual);
 
@@ -77,6 +80,7 @@ const AgentMeta = memo(() => {
           children: (
             <EmojiPicker
               backgroundColor={meta.backgroundColor}
+              locale={locale}
               onChange={(avatar) => updateMeta({ avatar })}
               value={meta.avatar}
             />

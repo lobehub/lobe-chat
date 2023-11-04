@@ -26,11 +26,12 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
 
 export interface AgentInfoProps {
   meta?: MetaData;
+  onAvatarClick?: () => void;
   style?: CSSProperties;
   systemRole?: string;
 }
 
-const AgentInfo = memo<AgentInfoProps>(({ systemRole, style, meta }) => {
+const AgentInfo = memo<AgentInfoProps>(({ systemRole, style, meta, onAvatarClick }) => {
   const { styles, theme } = useStyles();
 
   if (!meta) return;
@@ -43,6 +44,7 @@ const AgentInfo = memo<AgentInfoProps>(({ systemRole, style, meta }) => {
           avatar={meta.avatar}
           background={meta.backgroundColor || theme.colorFillTertiary}
           className={styles.avatar}
+          onClick={onAvatarClick}
           size={100}
         />
       )}

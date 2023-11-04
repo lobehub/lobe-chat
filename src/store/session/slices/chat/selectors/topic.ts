@@ -18,6 +18,10 @@ export const currentTopics = (s: SessionStore): ChatTopic[] => {
   return [...favTopics, ...defaultTopics];
 };
 
+export const currentTopicLength = (s: SessionStore): number => {
+  return currentTopics(s).length;
+};
+
 export const getTopicMessages = (topicId: string) => (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
   if (!session) return [];

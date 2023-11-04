@@ -19,10 +19,18 @@ export interface ChatTopicAction {
    */
   dispatchTopic: (payload: ChatTopicDispatch) => void;
   /**
+   * 移出所有话题
+   */
+  removeAllTopic: () => void;
+  /**
    * 移除话题
    * @param id
    */
   removeTopic: (id: string) => void;
+  /**
+   * 移出所有未标记的话题
+   */
+  removeUnstarredTopic: () => void;
   /**
    * 将当前消息保存为主题
    */
@@ -54,6 +62,17 @@ export const chatTopic: StateCreator<
 
     get().dispatchSession({ id: activeId, topics, type: 'updateSessionTopic' });
   },
+  removeAllTopic: () => {
+    const { removeTopic, toggleTopic } = get();
+    const topics = topicSelectors.currentTopics(get());
+
+    for (const { id } of topics) {
+      removeTopic(id);
+    }
+
+    // 切换到默认 topic
+    toggleTopic();
+  },
   removeTopic: (id) => {
     const { dispatchTopic, dispatchMessage, toggleTopic } = get();
 
@@ -68,6 +87,17 @@ export const chatTopic: StateCreator<
 
     // 最后移除 topic
     dispatchTopic({ id, type: 'deleteChatTopic' });
+
+    // 切换到默认 topic
+    toggleTopic();
+  },
+  removeUnstarredTopic: () => {
+    const { removeTopic, toggleTopic } = get();
+    const topics = topicSelectors.currentTopics(get());
+
+    for (const { id, favorite } of topics) {
+      if (!favorite) removeTopic(id);
+    }
 
     // 切换到默认 topic
     toggleTopic();

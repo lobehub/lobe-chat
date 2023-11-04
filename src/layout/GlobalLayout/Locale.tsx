@@ -1,5 +1,5 @@
 import { ConfigProvider } from 'antd';
-import Zh_CN from 'antd/locale/zh_CN';
+import defaultLocale from 'antd/locale/en_US';
 import { PropsWithChildren, memo, useState } from 'react';
 
 import { createI18nNext } from '@/locales/create';
@@ -12,6 +12,7 @@ interface LocaleLayoutProps extends PropsWithChildren {
 }
 
 const InnerLocale = memo<LocaleLayoutProps>(({ children, lang }) => {
+  const [locale, setLocale] = useState(defaultLocale);
   const [i18n] = useState(createI18nNext(lang));
 
   // if run on server side, init i18n instance everytime
@@ -26,13 +27,22 @@ const InnerLocale = memo<LocaleLayoutProps>(({ children, lang }) => {
       });
   }
 
+  const getLocale = async (localeName: string) => {
+    setLocale((await import(`antd/locale/${localeName}.js`)) as any);
+  };
+
   useOnFinishHydrationGlobal((s) => {
     if (s.settings.language === 'auto') {
       switchLang('auto');
     }
+
+    if (lang?.includes('-') && lang !== 'en-US') {
+      const localeName = lang?.replace('-', '_');
+      getLocale(localeName);
+    }
   }, []);
 
-  return <ConfigProvider locale={Zh_CN}>{children}</ConfigProvider>;
+  return <ConfigProvider locale={locale}>{children}</ConfigProvider>;
 });
 
 // const Locale = memo<LocaleLayoutProps>((props) => (

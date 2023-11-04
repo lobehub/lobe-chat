@@ -9,13 +9,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface HeaderProps {
+interface SidebarHeaderProps {
   actions?: ReactNode;
-  mobile?: boolean;
-  title: string;
+  title: ReactNode;
 }
 
-const Header = memo<HeaderProps>(({ title, actions }) => {
+const SidebarHeader = memo<SidebarHeaderProps>(({ title, actions }) => {
   const { styles } = useStyles();
 
   return (
@@ -24,15 +23,17 @@ const Header = memo<HeaderProps>(({ title, actions }) => {
       className={styles.header}
       distribution={'space-between'}
       horizontal
-      padding={12}
+      padding={14}
       paddingInline={16}
     >
-      <Flexbox>{title}</Flexbox>
-      <Flexbox gap={4} horizontal>
+      <Flexbox align={'center'} gap={4} horizontal>
+        {title}
+      </Flexbox>
+      <Flexbox align={'center'} gap={2} horizontal>
         {actions}
       </Flexbox>
     </Flexbox>
   );
 });
 
-export default Header;
+export default SidebarHeader;

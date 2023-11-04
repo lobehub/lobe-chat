@@ -22,7 +22,7 @@
   "searchAgentPlaceholder": "Search agents and conversations...",
   "send": "Send",
   "sendPlaceholder": "Enter chat content...",
-  "sessionList": "Assistant List",
+  "sessionList": "Agent List",
   "shareModal": {
     "download": "Download Screenshot",
     "imageType": "Image Format",
@@ -47,7 +47,13 @@
     "defaultTitle": "Default Topic",
     "saveCurrentMessages": "Save Current Session as Topic",
     "searchPlaceholder": "Search topics...",
-    "title": "Topic"
+    "deleteAll": "Delete All Topics",
+    "deleteUnstarred": "Delete Unstarred Topics",
+    "title": "Topic List",
+    "confirmRemoveAll": "All topics will be deleted and cannot be recovered. Please proceed with caution.",
+    "confirmRemoveUnstarred": "All unstarred topics will be deleted and cannot be recovered. Please proceed with caution.",
+    "removeAll": "Remove All Topics",
+    "removeUnstarred": "Remove Unstarred Topics"
   },
   "translate": {
     "clear": "Clear Translation"

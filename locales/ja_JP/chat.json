@@ -47,7 +47,13 @@
     "defaultTitle": "デフォルトトピック",
     "saveCurrentMessages": "現在の会話をトピックとして保存",
     "searchPlaceholder": "トピックを検索...",
-    "title": "トピック"
+    "deleteAll": "すべてのトピックを削除する",
+    "deleteUnstarred": "スターを付けていないトピックを削除する",
+    "title": "トピックリスト",
+    "confirmRemoveAll": "すべてのトピックを削除します。削除後は元に戻すことはできませんので、注意して操作してください。",
+    "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除後は元に戻すことはできませんので、注意して操作してください。",
+    "removeAll": "すべてのトピックを削除",
+    "removeUnstarred": "スターをつけていないトピックを削除"
   },
   "translate": {
     "clear": "翻訳をクリア"

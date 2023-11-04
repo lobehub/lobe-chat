@@ -16,7 +16,7 @@ const Topics = memo(() => {
 
   return (
     <Modal onCancel={() => toggleConfig(false)} open={showAgentSettings} title={t('topic.title')}>
-      <TopicListContent />
+      <TopicListContent mobile />
     </Modal>
   );
 });

@@ -11,7 +11,7 @@ import { sessionSelectors } from '@/store/session/selectors';
 
 import TopicListContent from '../../features/TopicListContent';
 
-const SystemRole = dynamic(() => import('../../features/TopicListContent/SystemRole'));
+const SystemRole = dynamic(() => import('../../features/SystemRole'));
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`

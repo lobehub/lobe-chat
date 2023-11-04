@@ -14,7 +14,7 @@ const useStyles = createStyles(({ stylish, css, cx }) =>
       display: flex;
       flex-direction: column;
       gap: 2px;
-      padding: 0 6px;
+      padding: 8px 8px 0;
     `,
   ),
 );

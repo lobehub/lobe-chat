@@ -26,6 +26,7 @@ export interface GlobalPreference {
   sessionsWidth: number;
   showChatSideBar?: boolean;
   showSessionPanel?: boolean;
+  showSystemRole?: boolean;
 }
 
 export interface GlobalState {
@@ -54,6 +55,7 @@ export const initialState: GlobalState = {
     sessionsWidth: 320,
     showChatSideBar: true,
     showSessionPanel: true,
+    showSystemRole: false,
   },
   settings: DEFAULT_SETTINGS,
   settingsTab: SettingsTabs.Common,

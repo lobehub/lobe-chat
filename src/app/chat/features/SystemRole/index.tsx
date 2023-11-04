@@ -1,19 +1,23 @@
 import { ActionIcon, EditableMessage } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { Edit } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import useMergeState from 'use-merge-value';
 
 import AgentInfo from '@/features/AgentInfo';
+import { useGlobalStore } from '@/store/global';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
+import { pathString } from '@/utils/url';
 
-import Header from './Header';
+import SidebarHeader from '../SidebarHeader';
 import { useStyles } from './style';
 
 const SystemRole = memo(() => {
-  const [openModal, setOpenModal] = useState(false);
+  const router = useRouter();
   const [editing, setEditing] = useState(false);
   const { styles } = useStyles();
   const [systemRole, meta, updateAgentConfig] = useSessionStore((s) => [
@@ -21,30 +25,45 @@ const SystemRole = memo(() => {
     agentSelectors.currentAgentMeta(s),
     s.updateAgentConfig,
   ]);
+  const [showSystemRole, toggleSystemRole] = useGlobalStore((s) => [
+    s.preference.showSystemRole,
+    s.toggleSystemRole,
+  ]);
+  const [open, setOpen] = useMergeState(false, {
+    defaultValue: showSystemRole,
+    onChange: toggleSystemRole,
+    value: showSystemRole,
+  });
 
   const init = useSessionChatInit();
   const { t } = useTranslation('common');
+
+  const handleOpenWithEdit = () => {
+    if (!init) return;
+    setEditing(true);
+    setOpen(true);
+  };
+
+  const handleOpen = () => {
+    if (!init) return;
+    setEditing(false);
+    setOpen(true);
+  };
+
   return (
     <Flexbox height={'fit-content'}>
-      <Header
+      <SidebarHeader
         actions={
-          <ActionIcon
-            icon={Edit}
-            onClick={() => setOpenModal(true)}
-            size={'small'}
-            title={t('edit')}
-          />
+          <ActionIcon icon={Edit} onClick={handleOpenWithEdit} size={'small'} title={t('edit')} />
         }
         title={t('settingAgent.prompt.title', { ns: 'setting' })}
       />
       <Flexbox
         className={styles.promptBox}
         height={200}
+        onClick={handleOpen}
         onDoubleClick={(e) => {
-          if (e.altKey) {
-            setOpenModal(true);
-            setEditing(true);
-          }
+          if (e.altKey) handleOpenWithEdit();
         }}
       >
         {!init ? (
@@ -59,13 +78,23 @@ const SystemRole = memo(() => {
             <EditableMessage
               classNames={{ markdown: styles.prompt }}
               editing={editing}
-              model={{ extra: <AgentInfo meta={meta} style={{ marginBottom: 16 }} /> }}
+              model={{
+                extra: (
+                  <AgentInfo
+                    meta={meta}
+                    onAvatarClick={() =>
+                      router.push(pathString('/chat/settings', { hash: location.hash }))
+                    }
+                    style={{ marginBottom: 16 }}
+                  />
+                ),
+              }}
               onChange={(e) => {
                 updateAgentConfig({ systemRole: e });
               }}
               onEditingChange={setEditing}
-              onOpenChange={setOpenModal}
-              openModal={openModal}
+              onOpenChange={setOpen}
+              openModal={open}
               placeholder={`${t('settingAgent.prompt.placeholder', { ns: 'setting' })}...`}
               styles={{ markdown: systemRole ? {} : { opacity: 0.5 } }}
               text={{

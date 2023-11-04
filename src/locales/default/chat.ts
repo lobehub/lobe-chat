@@ -46,11 +46,15 @@ export default {
     used: '使用',
   },
   topic: {
+    confirmRemoveAll: '即将删除全部话题，删除后将不可恢复，请谨慎操作。',
     confirmRemoveTopic: '即将删除该话题，删除后将不可恢复，请谨慎操作。',
+    confirmRemoveUnstarred: '即将删除未收藏话题，删除后将不可恢复，请谨慎操作。',
     defaultTitle: '默认话题',
+    removeAll: '删除全部话题',
+    removeUnstarred: '删除未收藏话题',
     saveCurrentMessages: '将当前会话保存为话题',
     searchPlaceholder: '搜索话题...',
-    title: '话题',
+    title: '话题列表',
   },
   translate: {
     clear: '删除翻译',

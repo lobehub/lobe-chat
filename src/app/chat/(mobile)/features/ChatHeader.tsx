@@ -1,5 +1,5 @@
 import { ActionIcon, MobileNavBar, MobileNavBarTitle } from '@lobehub/ui';
-import { LayoutList, Settings } from 'lucide-react';
+import { Clock3, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,11 +32,7 @@ const MobileHeader = memo(() => {
       right={
         <>
           <ShareButton />
-          <ActionIcon
-            icon={LayoutList}
-            onClick={() => toggleConfig()}
-            size={MOBILE_HEADER_ICON_SIZE}
-          />
+          <ActionIcon icon={Clock3} onClick={() => toggleConfig()} size={MOBILE_HEADER_ICON_SIZE} />
           {!isInbox && (
             <ActionIcon
               icon={Settings}

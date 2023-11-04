@@ -8,15 +8,16 @@ import { PREFIX_KEY, REGENERATE_KEY } from '@/const/hotkeys';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 
-import { renderActions } from './Actions';
+import { renderActions, useActionsClick } from './Actions';
 import { renderErrorMessages } from './Error';
 import { renderMessagesExtra } from './Extras';
-import { renderMessages } from './Messages';
+import { renderMessages, useAvatarsClick } from './Messages';
 import SkeletonList from './SkeletonList';
 
 const List = memo(() => {
   const init = useSessionChatInit();
   const { t } = useTranslation('common');
+
   const data = useSessionStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
 
   const [
@@ -24,10 +25,8 @@ const List = memo(() => {
     enableHistoryCount,
     historyCount,
     chatLoadingId,
-    deleteMessage,
     resendMessage,
     dispatchMessage,
-    translateMessage,
   ] = useSessionStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
     return [
@@ -35,12 +34,12 @@ const List = memo(() => {
       config.enableHistoryCount,
       config.historyCount,
       s.chatLoadingId,
-      s.deleteMessage,
       s.resendMessage,
       s.dispatchMessage,
-      s.translateMessage,
     ];
   });
+  const onActionsClick = useActionsClick();
+  const onAvatarsClick = useAvatarsClick();
 
   const hotkeys = [PREFIX_KEY, REGENERATE_KEY].join('+');
 
@@ -64,29 +63,8 @@ const List = memo(() => {
       enableHistoryCount={enableHistoryCount}
       historyCount={historyCount}
       loadingId={chatLoadingId}
-      onActionsClick={(action, { id, error }) => {
-        switch (action.key) {
-          case 'del': {
-            deleteMessage(id);
-            break;
-          }
-          case 'regenerate': {
-            resendMessage(id);
-
-            // if this message is an error message, we need to delete it
-            if (error) deleteMessage(id);
-            break;
-          }
-        }
-
-        // click the menu item with translate item, the result is:
-        // key: 'en-US'
-        // keyPath: ['en-US','translate']
-        if (action.keyPath.at(-1) === 'translate') {
-          const lang = action.keyPath[0];
-          translateMessage(id, lang);
-        }
-      }}
+      onActionsClick={onActionsClick}
+      onAvatarsClick={onAvatarsClick}
       onMessageChange={(id, content) =>
         dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content })
       }

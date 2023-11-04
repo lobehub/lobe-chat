@@ -47,7 +47,13 @@
     "defaultTitle": "기본 주제",
     "saveCurrentMessages": "현재 대화를 주제로 저장",
     "searchPlaceholder": "주제 검색...",
-    "title": "주제"
+    "deleteAll": "모든 주제 삭제",
+    "deleteUnstarred": "스타가 없는 주제 삭제",
+    "title": "주제 목록",
+    "confirmRemoveAll": "모든 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으므로 신중하게 작업하십시오.",
+    "confirmRemoveUnstarred": "스타를 지정하지 않은 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으므로 신중하게 작업하십시오.",
+    "removeAll": "모든 주제 삭제",
+    "removeUnstarred": "스타를 지정하지 않은 주제 삭제"
   },
   "translate": {
     "clear": "번역 지우기"

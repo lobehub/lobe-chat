@@ -55,7 +55,17 @@ const Header = memo(() => {
           </Flexbox>
         ) : (
           <Flexbox align={'flex-start'} gap={12} horizontal>
-            <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
+            <Avatar
+              avatar={avatar}
+              background={backgroundColor}
+              onClick={() =>
+                isInbox
+                  ? router.push('/settings/agent')
+                  : router.push(pathString('/chat/settings', { hash: location.hash }))
+              }
+              size={40}
+              title={title}
+            />
             <ChatHeaderTitle
               desc={displayDesc}
               tag={
