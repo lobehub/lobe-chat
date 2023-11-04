@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.96.9](https://github.com/lobehub/lobe-chat/compare/v0.96.8...v0.96.9)
+
+<sup>Released on **2023-11-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update topic list header.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update topic list header ([ce932d7](https://github.com/lobehub/lobe-chat/commit/ce932d7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.96.8](https://github.com/lobehub/lobe-chat/compare/v0.96.7...v0.96.8)
 
 <sup>Released on **2023-10-31**</sup>
