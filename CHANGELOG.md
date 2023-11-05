@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 0.97.0](https://github.com/lobehub/lobe-chat/compare/v0.96.9...v0.97.0)
+
+<sup>Released on **2023-11-05**</sup>
+
+#### ✨ Features
+
+- **misc**: Add open new topic when open a topic.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix toggle back to default topic when clearing topic.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add open new topic when open a topic ([4df6384](https://github.com/lobehub/lobe-chat/commit/4df6384))
+
+#### What's fixed
+
+- **misc**: Fix toggle back to default topic when clearing topic ([6fe0a5c](https://github.com/lobehub/lobe-chat/commit/6fe0a5c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.96.9](https://github.com/lobehub/lobe-chat/compare/v0.96.8...v0.96.9)
 
 <sup>Released on **2023-11-04**</sup>
