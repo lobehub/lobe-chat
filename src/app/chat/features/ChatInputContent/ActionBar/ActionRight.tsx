@@ -10,7 +10,7 @@ import HotKeys from '@/components/HotKeys';
 import { CLEAN_MESSAGE_KEY, PREFIX_KEY } from '@/const/hotkeys';
 import { useSessionStore } from '@/store/session';
 
-import SaveTopic from '../Footer/SaveTopic';
+import SaveTopic from '../Topic';
 
 const ActionsRight = memo(() => {
   const { t } = useTranslation('setting');

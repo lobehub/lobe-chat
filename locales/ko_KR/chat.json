@@ -53,7 +53,8 @@
     "confirmRemoveAll": "모든 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으므로 신중하게 작업하십시오.",
     "confirmRemoveUnstarred": "스타를 지정하지 않은 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으므로 신중하게 작업하십시오.",
     "removeAll": "모든 주제 삭제",
-    "removeUnstarred": "스타를 지정하지 않은 주제 삭제"
+    "removeUnstarred": "스타를 지정하지 않은 주제 삭제",
+    "openNewTopic": "새로운 주제 열기"
   },
   "translate": {
     "clear": "번역 지우기"

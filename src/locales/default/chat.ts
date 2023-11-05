@@ -50,6 +50,7 @@ export default {
     confirmRemoveTopic: '即将删除该话题，删除后将不可恢复，请谨慎操作。',
     confirmRemoveUnstarred: '即将删除未收藏话题，删除后将不可恢复，请谨慎操作。',
     defaultTitle: '默认话题',
+    openNewTopic: '开启新话题',
     removeAll: '删除全部话题',
     removeUnstarred: '删除未收藏话题',
     saveCurrentMessages: '将当前会话保存为话题',

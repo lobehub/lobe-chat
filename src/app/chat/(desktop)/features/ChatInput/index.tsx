@@ -4,7 +4,8 @@ import { memo, useState } from 'react';
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 
-import ChatInputContent from '../../features/ChatInputContent';
+import ChatInputContent from '../../../features/ChatInputContent';
+import Footer from './Footer';
 
 const ChatInputDesktopLayout = memo(() => {
   const [expand, setExpand] = useState<boolean>(false);
@@ -29,7 +30,7 @@ const ChatInputDesktopLayout = memo(() => {
       size={{ height: inputHeight, width: '100%' }}
       style={{ zIndex: 10 }}
     >
-      <ChatInputContent expand={expand} onExpandChange={setExpand} />
+      <ChatInputContent expand={expand} footer={<Footer />} onExpandChange={setExpand} />
     </DraggablePanel>
   );
 });

@@ -53,7 +53,8 @@
     "confirmRemoveAll": "すべてのトピックを削除します。削除後は元に戻すことはできませんので、注意して操作してください。",
     "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除後は元に戻すことはできませんので、注意して操作してください。",
     "removeAll": "すべてのトピックを削除",
-    "removeUnstarred": "スターをつけていないトピックを削除"
+    "removeUnstarred": "スターをつけていないトピックを削除",
+    "openNewTopic": "新しいトピックを開く"
   },
   "translate": {
     "clear": "翻訳をクリア"

@@ -18,6 +18,7 @@ export interface ChatTopicAction {
    * @param payload - 要分发的主题
    */
   dispatchTopic: (payload: ChatTopicDispatch) => void;
+  openNewTopicOrSaveTopic: () => void;
   /**
    * 移出所有话题
    */
@@ -62,6 +63,15 @@ export const chatTopic: StateCreator<
 
     get().dispatchSession({ id: activeId, topics, type: 'updateSessionTopic' });
   },
+  openNewTopicOrSaveTopic: () => {
+    const { toggleTopic, saveToTopic, activeTopicId } = get();
+    const hasTopic = !!activeTopicId;
+
+    if (hasTopic) toggleTopic();
+    else {
+      saveToTopic();
+    }
+  },
   removeAllTopic: () => {
     const { removeTopic, toggleTopic } = get();
     const topics = topicSelectors.currentTopics(get());
@@ -79,10 +89,7 @@ export const chatTopic: StateCreator<
     // 移除关联的 message
     const messages = topicSelectors.getTopicMessages(id)(get());
     for (const m of messages) {
-      dispatchMessage({
-        id: m.id,
-        type: 'deleteMessage',
-      });
+      dispatchMessage({ id: m.id, type: 'deleteMessage' });
     }
 
     // 最后移除 topic
@@ -107,8 +114,11 @@ export const chatTopic: StateCreator<
     if (!session) return;
 
     const { dispatchTopic, dispatchMessage, updateTopicLoading } = get();
-    // 获取当前的 messages
+    // get current messages
     const messages = chatSelectors.currentChats(get());
+
+    // if there is no message, stop saving
+    if (messages.length === 0) return;
 
     const topicId = nanoid();
 
@@ -154,6 +164,7 @@ export const chatTopic: StateCreator<
   toggleTopic: (id) => {
     set({ activeTopicId: id }, false, t('toggleTopic'));
   },
+
   updateTopicLoading: (id) => {
     set({ topicLoadingId: id }, false, t('updateTopicLoading'));
   },

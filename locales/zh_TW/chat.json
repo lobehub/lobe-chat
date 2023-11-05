@@ -53,7 +53,8 @@
     "confirmRemoveAll": "即將刪除全部話題，刪除後將無法恢復，請謹慎操作。",
     "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將無法恢復，請謹慎操作。",
     "removeAll": "刪除全部話題",
-    "removeUnstarred": "刪除未收藏話題"
+    "removeUnstarred": "刪除未收藏話題",
+    "openNewTopic": "開啟新話題"
   },
   "translate": {
     "clear": "刪除翻譯"
