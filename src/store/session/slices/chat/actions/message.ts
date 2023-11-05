@@ -83,13 +83,16 @@ export const chatMessage: StateCreator<
   ChatMessageAction
 > = (set, get) => ({
   clearMessage: () => {
-    const { dispatchMessage, activeTopicId, dispatchTopic } = get();
+    const { dispatchMessage, activeTopicId, dispatchTopic, toggleTopic } = get();
 
     dispatchMessage({ topicId: activeTopicId, type: 'resetMessages' });
 
     if (activeTopicId) {
       dispatchTopic({ id: activeTopicId, type: 'deleteChatTopic' });
     }
+
+    // after remove topic , go back to default topic
+    toggleTopic();
   },
 
   coreProcessMessage: async (messages, userMessageId) => {
