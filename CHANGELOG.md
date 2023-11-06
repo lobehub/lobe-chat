@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.97.1](https://github.com/lobehub/lobe-chat/compare/v0.97.0...v0.97.1)
+
+<sup>Released on **2023-11-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Use pnpm to fix docker release.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Use pnpm to fix docker release ([886cc3b](https://github.com/lobehub/lobe-chat/commit/886cc3b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.97.0](https://github.com/lobehub/lobe-chat/compare/v0.96.9...v0.97.0)
 
 <sup>Released on **2023-11-05**</sup>
