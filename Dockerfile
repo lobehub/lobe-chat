@@ -10,7 +10,7 @@ WORKDIR /app
 
 COPY package.json ./
 
-RUN pnpm i -g bun
+RUN pnpm i -g bun@1.0.8
 # If you want to build docker in China
 #RUN npm config set registry https://registry.npmmirror.com/
 RUN bun i
