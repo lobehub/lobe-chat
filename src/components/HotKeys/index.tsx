@@ -26,6 +26,10 @@ const useStyles = createStyles(
   `,
 );
 
+const HOTKEY_MAPPINGS: Partial<Record<string, string>> = {
+  alt: 'option',
+};
+
 export interface HotKeysProps {
   desc?: string;
   keys: string;
@@ -33,7 +37,10 @@ export interface HotKeysProps {
 
 const HotKeys = memo<HotKeysProps>(({ keys, desc }) => {
   const { styles } = useStyles();
-  const keysGroup = keys.split('+').filter(Boolean);
+  const keysGroup = keys
+    .split('+')
+    .filter(Boolean)
+    .map((k) => HOTKEY_MAPPINGS[k] ?? k);
   const content = (
     <Flexbox align={'center'} className={styles} gap={2} horizontal>
       {keysGroup.map((key, index) => (
