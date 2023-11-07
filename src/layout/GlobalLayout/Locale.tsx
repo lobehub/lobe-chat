@@ -1,6 +1,6 @@
 import { ConfigProvider } from 'antd';
-import defaultLocale from 'antd/locale/en_US';
 import { PropsWithChildren, memo, useState } from 'react';
+import useSWR from 'swr';
 
 import { createI18nNext } from '@/locales/create';
 import { useOnFinishHydrationGlobal } from '@/store/global';
@@ -12,7 +12,11 @@ interface LocaleLayoutProps extends PropsWithChildren {
 }
 
 const InnerLocale = memo<LocaleLayoutProps>(({ children, lang }) => {
-  const [locale, setLocale] = useState(defaultLocale);
+  const { data: locale } = useSWR(
+    lang,
+    async () =>
+      await import(`antd/locale/${lang?.includes('-') ? lang?.replace('-', '_') : 'en-US'}.js`),
+  );
   const [i18n] = useState(createI18nNext(lang));
 
   // if run on server side, init i18n instance everytime
@@ -27,18 +31,9 @@ const InnerLocale = memo<LocaleLayoutProps>(({ children, lang }) => {
       });
   }
 
-  const getLocale = async (localeName: string) => {
-    setLocale((await import(`antd/locale/${localeName}.js`)) as any);
-  };
-
   useOnFinishHydrationGlobal((s) => {
     if (s.settings.language === 'auto') {
       switchLang('auto');
-    }
-
-    if (lang?.includes('-') && lang !== 'en-US') {
-      const localeName = lang?.replace('-', '_');
-      getLocale(localeName);
     }
   }, []);
 
