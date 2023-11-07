@@ -2,6 +2,8 @@ import { createStyles } from 'antd-style';
 import { Fragment, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { isApplePlatform } from '@/utils/platform';
+
 const useStyles = createStyles(
   ({ css, token }) => css`
     font-size: 12px;
@@ -27,7 +29,7 @@ const useStyles = createStyles(
 );
 
 const HOTKEY_MAPPINGS: Partial<Record<string, string>> = {
-  alt: 'option',
+  alt: isApplePlatform() ? 'option' : 'alt',
 };
 
 export interface HotKeysProps {
