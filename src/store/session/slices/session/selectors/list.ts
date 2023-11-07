@@ -92,3 +92,10 @@ export const getSessionMetaById =
 //
 //   return sessionTree;
 // };
+
+export const hasConversion = (s: SessionStore) => {
+  const hasCustomAgents = !!Object.keys(s.sessions).length;
+  const hasMessageInInbox = !!Object.keys(s.inbox.chats).length;
+
+  return hasCustomAgents || hasMessageInInbox;
+};

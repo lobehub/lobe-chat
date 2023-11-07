@@ -12,9 +12,9 @@ const Redirect = memo(() => {
   useEffect(() => {
     useSessionStore.persist.onFinishHydration(() => {
       const store = useSessionStore.getState();
-      const hasSession = sessionSelectors.hasSessionList(store);
+      const hasConversion = sessionSelectors.hasConversion(store);
 
-      if (hasSession) {
+      if (hasConversion) {
         router.push('/chat');
         store.switchSession();
       } else {
