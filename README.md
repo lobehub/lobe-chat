@@ -35,6 +35,8 @@ LobeChat is an open-source, extensible ([Function Calling][fc-link]) high-perfor
 [![][share-reddit-shield]][share-reddit-link]
 [![][share-weibo-shield]][share-weibo-link]
 
+<sup>Pioneering the new age of thinking and creating. Built for you, the Super Individual.</sup>
+
 ![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
 
 </div>

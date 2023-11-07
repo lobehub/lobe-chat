@@ -46,7 +46,7 @@ const SystemRole = memo(() => {
 
   const handleOpen = () => {
     if (!init) return;
-    setEditing(false);
+
     setOpen(true);
   };
 
@@ -82,9 +82,11 @@ const SystemRole = memo(() => {
                 extra: (
                   <AgentInfo
                     meta={meta}
-                    onAvatarClick={() =>
-                      router.push(pathString('/chat/settings', { hash: location.hash }))
-                    }
+                    onAvatarClick={() => {
+                      setOpen(false);
+                      setEditing(false);
+                      router.push(pathString('/chat/settings', { hash: location.hash }));
+                    }}
                     style={{ marginBottom: 16 }}
                   />
                 ),
