@@ -2,8 +2,6 @@ import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { Skeleton } from 'antd';
 import { memo, useRef, useState } from 'react';
 
-import { useOnPluginSettingsUpdate } from '@/app/chat/features/Conversation/ChatList/Plugins/Render/utils/pluginSettings';
-import { useOnPluginStateUpdate } from '@/app/chat/features/Conversation/ChatList/Plugins/Render/utils/pluginState';
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
 import { chatSelectors } from '@/store/session/selectors';
@@ -15,6 +13,8 @@ import {
   useOnPluginFetchPluginState,
   useOnPluginFillContent,
 } from '../utils/listenToPlugin';
+import { useOnPluginSettingsUpdate } from '../utils/pluginSettings';
+import { useOnPluginStateUpdate } from '../utils/pluginState';
 import {
   sendMessageContentToPlugin,
   sendPayloadToPlugin,
