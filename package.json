@@ -92,7 +92,7 @@
     "lucide-react": "latest",
     "modern-screenshot": "^4",
     "nanoid": "^5",
-    "next": "^13.5.3",
+    "next": "^14.0.0",
     "openai": "~4.15.0",
     "polished": "^4",
     "posthog-js": "^1",
