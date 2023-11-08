@@ -1,3 +1,4 @@
+import { getClientConfig } from '@/config/client';
 import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { LanguageModel } from '@/types/llm';
@@ -34,6 +35,8 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
 export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   openAI: {
     OPENAI_API_KEY: '',
+    // support user custom model names with env var
+    customModelName: getClientConfig().CUSTOM_MODELS,
     models: DEFAULT_OPENAI_MODEL_LIST,
   },
 };
