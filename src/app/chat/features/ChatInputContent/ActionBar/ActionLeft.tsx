@@ -35,6 +35,10 @@ const ActionLeft = memo(() => {
           onClick: (e) => {
             updateAgentConfig({ model: e.key as LanguageModel });
           },
+          style: {
+            maxHeight: 400,
+            overflow: 'scroll',
+          },
         }}
         trigger={['click']}
       >
