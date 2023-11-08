@@ -68,12 +68,13 @@ export interface ChatMessageAction {
    */
   sendMessage: (text: string) => Promise<void>;
   stopGenerateMessage: () => void;
-
   toggleChatLoading: (
     loading: boolean,
     id?: string,
     action?: string,
   ) => AbortController | undefined;
+
+  updateInputMessage: (message: string) => void;
 }
 
 export const chatMessage: StateCreator<
@@ -94,7 +95,6 @@ export const chatMessage: StateCreator<
     // after remove topic , go back to default topic
     toggleTopic();
   },
-
   coreProcessMessage: async (messages, userMessageId) => {
     const { dispatchMessage, fetchAIChatMessage, triggerFunctionCall, activeTopicId } = get();
 
@@ -163,6 +163,7 @@ export const chatMessage: StateCreator<
   deleteMessage: (id) => {
     get().dispatchMessage({ id, type: 'deleteMessage' });
   },
+
   dispatchMessage: (payload) => {
     const { activeId } = get();
     const session = sessionSelectors.currentSession(get());
@@ -172,7 +173,6 @@ export const chatMessage: StateCreator<
 
     get().dispatchSession({ chats, id: activeId, type: 'updateSessionChat' });
   },
-
   fetchAIChatMessage: async (messages, assistantId) => {
     const { dispatchMessage, toggleChatLoading } = get();
 
@@ -341,6 +341,7 @@ export const chatMessage: StateCreator<
 
     toggleChatLoading(false);
   },
+
   toggleChatLoading: (loading, id, action) => {
     if (loading) {
       const abortController = new AbortController();
@@ -349,5 +350,8 @@ export const chatMessage: StateCreator<
     } else {
       set({ abortController: undefined, chatLoadingId: undefined }, false, action);
     }
+  },
+  updateInputMessage: (message) => {
+    set({ inputMessage: message }, false, t('updateInputMessage'));
   },
 });
