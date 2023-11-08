@@ -77,6 +77,8 @@ const nextConfig = {
       layers: true,
     };
 
+    config.resolve.alias['@ant-design/cssinjs'] = '@ant-design/cssinjs/lib';
+
     return config;
   },
 };
