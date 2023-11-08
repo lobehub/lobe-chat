@@ -1,7 +1,10 @@
+'use client';
+
 import { createStyles } from 'antd-style';
-import { Fragment, memo } from 'react';
+import { Fragment, memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { CLEAN_MESSAGE_KEY, PREFIX_KEY } from '@/const/hotkeys';
 import { isApplePlatform } from '@/utils/platform';
 
 const useStyles = createStyles(
@@ -28,10 +31,6 @@ const useStyles = createStyles(
   `,
 );
 
-const HOTKEY_MAPPINGS: Partial<Record<string, string>> = {
-  alt: isApplePlatform() ? 'option' : 'alt',
-};
-
 export interface HotKeysProps {
   desc?: string;
   keys: string;
@@ -39,15 +38,28 @@ export interface HotKeysProps {
 
 const HotKeys = memo<HotKeysProps>(({ keys, desc }) => {
   const { styles } = useStyles();
-  const keysGroup = keys
-    .split('+')
-    .filter(Boolean)
-    .map((k) => HOTKEY_MAPPINGS[k] ?? k);
+  const [keysGroup, setKeysGroup] = useState(keys.split('+'));
+  const visibility = typeof window === 'undefined' ? 'hidden' : 'visible';
+
+  useEffect(() => {
+    const mapping: Record<string, string> = {
+      [CLEAN_MESSAGE_KEY]: isApplePlatform() ? '⌫' : 'backspace',
+      [PREFIX_KEY]: isApplePlatform() ? '⌥' : 'alt',
+    };
+    const newValue = keys
+      .split('+')
+      .filter(Boolean)
+      .map((k) => mapping[k] ?? k);
+    setKeysGroup(newValue);
+  }, [keys]);
+
   const content = (
     <Flexbox align={'center'} className={styles} gap={2} horizontal>
       {keysGroup.map((key, index) => (
         <Fragment key={index}>
-          <kbd>{key.toUpperCase()}</kbd>
+          <kbd>
+            <span style={{ visibility }}>{key.toUpperCase()}</span>
+          </kbd>
           {index + 1 < keysGroup.length && <span>+</span>}
         </Fragment>
       ))}

@@ -1,8 +1,8 @@
 import UAParser from 'ua-parser-js';
 
 export const getPlatform = () => {
-  const ua = navigator.userAgent;
-  return new UAParser(ua || '').getOS();
+  let ua = navigator.userAgent;
+  return new UAParser(ua).getOS();
 };
 
 export const isApplePlatform = () => {
