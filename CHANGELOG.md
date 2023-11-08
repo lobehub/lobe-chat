@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 0.99.1](https://github.com/lobehub/lobe-chat/compare/v0.99.0...v0.99.1)
+
+<sup>Released on **2023-11-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add max height to model menu in chat input area.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add max height to model menu in chat input area, closes [#430](https://github.com/lobehub/lobe-chat/issues/430) ([c9a86f3](https://github.com/lobehub/lobe-chat/commit/c9a86f3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.99.0](https://github.com/lobehub/lobe-chat/compare/v0.98.3...v0.99.0)
+
+<sup>Released on **2023-11-08**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Environment Variable for custom model name when deploying.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Environment Variable for custom model name when deploying, closes [#429](https://github.com/lobehub/lobe-chat/issues/429) ([15f9fa2](https://github.com/lobehub/lobe-chat/commit/15f9fa2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.98.3](https://github.com/lobehub/lobe-chat/compare/v0.98.2...v0.98.3)
+
+<sup>Released on **2023-11-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix redirect to welcome problem when there are topics in inbox.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix redirect to welcome problem when there are topics in inbox, closes [#422](https://github.com/lobehub/lobe-chat/issues/422) ([3d2588a](https://github.com/lobehub/lobe-chat/commit/3d2588a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.98.2](https://github.com/lobehub/lobe-chat/compare/v0.98.1...v0.98.2)
 
 <sup>Released on **2023-11-07**</sup>
