@@ -6,6 +6,7 @@ LobeChat provides additional configuration options during deployment, which can 
 
 - [General Variables](#general-variables)
   - [`ACCESS_CODE`](#access_code)
+  - [`NEXT_PUBLIC_CUSTOM_MODELS`](#next_public_custom_models)
 - [OpenAI](#openai)
   - [`OPENAI_API_KEY`](#openai_api_key)
   - [`OPENAI_PROXY_URL`](#openai_proxy_url)
@@ -18,6 +19,7 @@ LobeChat provides additional configuration options during deployment, which can 
 - [Agent Service](#agent-service)
   - [`AGENTS_INDEX_URL`](#agents_index_url)
 - [Data Analytics](#data-analytics)
+  - [Vercel Analytics](#vercel-analytics)
   - [Posthog Analytics](#posthog-analytics)
 
 ## General Variables
@@ -26,10 +28,15 @@ LobeChat provides additional configuration options during deployment, which can 
 
 - Type: Optional
 - Description: Add a password to access the LobeChat service, the password should be 6 digits or letters
-- Default: -
+- Default: `-`
 - Example: `awCT74` or `e3@09!`
 
-<br/>
+### `NEXT_PUBLIC_CUSTOM_MODELS`
+
+- Type: Optional
+- Description: add your custom model name, multi model seperate by comma. for example: `gpt-3.5-1106,gpt-4-1106`
+- Default: `-`
+- Example: `model1,model2,model3`
 
 ## OpenAI
 
@@ -37,7 +44,7 @@ LobeChat provides additional configuration options during deployment, which can 
 
 - Type: Required
 - Description: This is the API key you apply for on the OpenAI account page, you can go [here][openai-api-page] to view
-- Default: -
+- Default: `-`
 - Example: `sk-xxxxxx...xxxxxx`
 
 ### `OPENAI_PROXY_URL`
@@ -57,14 +64,14 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 
 - Type: Optional
 - Description: Set this value to `1` to enable Azure OpenAI configuration
-- Default: -
+- Default: `-`
 - Example: `1`
 
 ### `AZURE_API_KEY`
 
 - Type: Optional
 - Description: This is the API key you apply for on the Azure OpenAI account page
-- Default: -
+- Default: `-`
 - Example: `c55168be3874490ef0565d9779ecd5a6`
 
 ### `AZURE_API_VERSION`
@@ -98,13 +105,29 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 
 ## Data Analytics
 
+### Vercel Analytics
+
+#### `NEXT_PUBLIC_ANALYTICS_VERCEL`
+
+- Type: Optional
+- Description: Environment variable to enable [Vercel Analytics][vercel-analytics-url]. Set to `1` to enable Vercel Analytics.
+- Default: `-`
+- Example: `1`
+
+#### `NEXT_PUBLIC_VERCEL_DEBUG`
+
+- Type: Optional
+- Description: Enable debug mode for Vercel Analytics.
+- Default: `-`
+- Example: `1`
+
 ### Posthog Analytics
 
 #### `NEXT_PUBLIC_ANALYTICS_POSTHOG`
 
 - Type: Optional
-- Description: Environment variable to enable \[PostHog Analytics]\[posthog-analytics-url]. Set to `1` to enable PostHog Analytics.
-- Default: -
+- Description: Environment variable to enable [PostHog Analytics][posthog-analytics-url]. Set to `1` to enable PostHog Analytics.
+- Default: `-`
 - Example: `1`
 
 #### `NEXT_PUBLIC_POSTHOG_KEY`
@@ -130,3 +153,5 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
 [openai-api-page]: https://platform.openai.com/account/api-keys
+[posthog-analytics-url]: https://posthog.com
+[vercel-analytics-url]: https://vercel.com/analytics

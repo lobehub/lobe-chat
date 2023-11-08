@@ -6,6 +6,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 
 - [通用变量](#通用变量)
   - [`ACCESS_CODE`](#access_code)
+  - [`NEXT_PUBLIC_CUSTOM_MODELS`](#next_public_custom_models)
 - [OpenAI](#openai)
   - [`OPENAI_API_KEY`](#openai_api_key)
   - [`OPENAI_PROXY_URL`](#openai_proxy_url)
@@ -30,7 +31,12 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值：-
 - 示例：`awCT74` 或 `e3@09!`
 
-<br/>
+### `NEXT_PUBLIC_CUSTOM_MODELS`
+
+- 类型：可选
+- 描述：添加自定义模型名称，多个模型需要使用逗号 `,` 隔开。 比如: `gpt-3.5-1106,gpt-4-1106`
+- 默认值：`-`
+- 示例：`model1,model2,model3`
 
 ## OpenAI
 
@@ -75,8 +81,6 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值：`2023-08-01-preview`
 - 示例：`2023-05-15`，查阅[最新版本][azure-api-verion-url]
 
-<br/>
-
 ## 插件服务
 
 ### `PLUGINS_INDEX_URL`
@@ -84,8 +88,6 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 类型：可选
 - 描述：LobeChat 插件市场的索引地址，如果你自行部署了插件市场的服务，可以使用该变量来覆盖默认的插件市场地址
 - 默认值：`https://chat-plugins.lobehub.com`
-
-<br/>
 
 ## 角色服务
 
@@ -102,15 +104,15 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 #### `NEXT_PUBLIC_ANALYTICS_VERCEL`
 
 - 类型：可选
-- 描述：用于配置 Vercel Analytics 的环境变量，当设为 `0` 则关闭 Vercel Analytics
-- 默认值： -
-- 示例：`0`
+- 描述：用于配置 Vercel Analytics 的环境变量，当设为 `1` 时开启 Vercel Analytics
+- 默认值： `-`
+- 示例：`1`
 
 #### `NEXT_PUBLIC_VERCEL_DEBUG`
 
 - 类型：可选
 - 描述：用于开启 Vercel Analytics 的调试模式
-- 默认值： -
+- 默认值： `-`
 - 示例：`1`
 
 ### Posthog Analytics
@@ -119,14 +121,14 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 
 - 类型：可选
 - 描述：用于开启 [PostHog Analytics][posthog-analytics-url] 的环境变量，设为 `1` 时开启 PostHog Analytics
-- 默认值： -
+- 默认值： `-`
 - 示例：`1`
 
 #### `NEXT_PUBLIC_POSTHOG_KEY`
 
 - 类型：可选
 - 描述：设置 PostHog 项目 Key
-- 默认值： -
+- 默认值： `-`
 - 示例：`phc_xxxxxxxx`
 
 #### `NEXT_PUBLIC_POSTHOG_HOST`
@@ -140,7 +142,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 
 - 类型：可选
 - 描述：开启 PostHog 的调试模式
-- 默认值： -
+- 默认值： `-`
 - 示例：`1`
 
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
