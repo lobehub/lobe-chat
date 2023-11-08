@@ -21,7 +21,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
 
   return (
-    <html lang={lang?.value || DEFAULT_LANG}>
+    <html lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
       <body>
         <StyleRegistry>
           <Layout
