@@ -1,5 +1,5 @@
+import nextPWA from '@ducanh2912/next-pwa';
 import analyzer from '@next/bundle-analyzer';
-import nextPWA from 'next-pwa';
 
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
@@ -11,7 +11,9 @@ const withBundleAnalyzer = analyzer({
 const withPWA = nextPWA({
   dest: 'public',
   register: true,
-  skipWaiting: true,
+  workboxOptions: {
+    skipWaiting: true,
+  },
 });
 
 /** @type {import('next').NextConfig} */
