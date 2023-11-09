@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.100.2](https://github.com/lobehub/lobe-chat/compare/v0.100.1...v0.100.2)
+
+<sup>Released on **2023-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Upgrade viewport for nextjs 14.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Upgrade viewport for nextjs 14, closes [#436](https://github.com/lobehub/lobe-chat/issues/436) ([57d3d07](https://github.com/lobehub/lobe-chat/commit/57d3d07))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.100.1](https://github.com/lobehub/lobe-chat/compare/v0.100.0...v0.100.1)
 
 <sup>Released on **2023-11-09**</sup>
