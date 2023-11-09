@@ -33,8 +33,13 @@ declare global {
 }
 
 export const getClientConfig = () => ({
-  AGENTS_INDEX_URL: process.env.AGENTS_INDEX_URL,
-  PLUGINS_INDEX_URL: process.env.PLUGINS_INDEX_URL,
+  AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL
+    ? process.env.AGENTS_INDEX_URL
+    : 'https://chat-agents.lobehub.com',
+  PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
+    ? process.env.PLUGINS_INDEX_URL
+    : 'https://chat-plugins.lobehub.com',
+
   // custom model names
   CUSTOM_MODELS: process.env.NEXT_PUBLIC_CUSTOM_MODELS,
 
