@@ -1,5 +1,5 @@
+import nextPWA from '@ducanh2912/next-pwa';
 import analyzer from '@next/bundle-analyzer';
-import nextPWA from 'next-pwa';
 
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
@@ -11,44 +11,19 @@ const withBundleAnalyzer = analyzer({
 const withPWA = nextPWA({
   dest: 'public',
   register: true,
-  skipWaiting: true,
+  workboxOptions: {
+    skipWaiting: true,
+  },
 });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   compress: isProd,
-  reactStrictMode: true,
-  images: {
-    unoptimized: !isProd,
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'registry.npmmirror.com',
-        port: '',
-        pathname: '/@lobehub/assets-emoji/1.3.0/files/assets/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'registry.npmmirror.com',
-        port: '',
-        pathname: '/@lobehub/assets-emoji-anim/1.0.0/files/assets/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'registry.npmmirror.com',
-        port: '',
-        pathname: '/@lobehub/assets-logo/1.1.0/files/assets/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'registry.npmmirror.com',
-        port: '',
-        pathname: '/@lobehub/assets-favicons/latest/files/assets/**',
-      },
-    ],
+  env: {
+    AGENTS_INDEX_URL: process.env.AGENTS_INDEX_URL ?? '',
+    PLUGINS_INDEX_URL: process.env.PLUGINS_INDEX_URL ?? '',
   },
   experimental: {
-    webVitalsAttribution: ['CLS', 'LCP'],
     forceSwcTransforms: true,
     optimizePackageImports: [
       'modern-screenshot',
@@ -59,7 +34,41 @@ const nextConfig = {
       'gpt-tokenizer',
       'chroma-js',
     ],
+    webVitalsAttribution: ['CLS', 'LCP'],
   },
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'registry.npmmirror.com',
+        pathname: '/@lobehub/assets-emoji/1.3.0/files/assets/**',
+        port: '',
+        protocol: 'https',
+      },
+      {
+        hostname: 'registry.npmmirror.com',
+        pathname: '/@lobehub/assets-emoji-anim/1.0.0/files/assets/**',
+        port: '',
+        protocol: 'https',
+      },
+      {
+        hostname: 'registry.npmmirror.com',
+        pathname: '/@lobehub/assets-logo/1.1.0/files/assets/**',
+        port: '',
+        protocol: 'https',
+      },
+      {
+        hostname: 'registry.npmmirror.com',
+        pathname: '/@lobehub/assets-favicons/latest/files/assets/**',
+        port: '',
+        protocol: 'https',
+      },
+    ],
+    unoptimized: !isProd,
+  },
+  output: buildWithDocker ? 'standalone' : undefined,
+
+  reactStrictMode: true,
+
   transpilePackages: ['@lobehub/ui', 'antd-style', 'lodash-es'],
 
   webpack(config) {
@@ -68,15 +77,10 @@ const nextConfig = {
       layers: true,
     };
 
+    config.resolve.alias['@ant-design/cssinjs'] = '@ant-design/cssinjs/lib';
+
     return config;
   },
-
-  env: {
-    AGENTS_INDEX_URL: process.env.AGENTS_INDEX_URL,
-    PLUGINS_INDEX_URL: process.env.PLUGINS_INDEX_URL,
-  },
-
-  output: buildWithDocker ? 'standalone' : undefined,
 };
 
 export default isProd ? withBundleAnalyzer(withPWA(nextConfig)) : nextConfig;
