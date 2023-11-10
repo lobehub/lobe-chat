@@ -35,7 +35,7 @@ const FileUpload = memo(() => {
           ></Icon>
         </Center>
       ) : (
-        <ActionIcon icon={LucideFileUp} placement={'bottom'} title={t('uploadFile')} />
+        <ActionIcon icon={LucideFileUp} placement={'bottom'} title={t('upload.actionTooltip')} />
       )}
     </Upload>
   );

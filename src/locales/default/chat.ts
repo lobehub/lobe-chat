@@ -62,6 +62,10 @@ export default {
   },
   translateTo: '翻译',
   updateAgent: '更新助理信息',
-  uploadFile: '上传文件',
+  upload: {
+    actionTooltip: '上传文件',
+    dragDesc: '拖拽文件到这里，支持上传多个文件。按住 Shift 直接发送文件',
+    dragTitle: '上传文件',
+  },
   warp: '换行',
 };
