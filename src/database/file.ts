@@ -13,6 +13,10 @@ class _FileModel extends BaseModel {
 
     return this.add(file, `file-${id}`);
   }
+
+  async findById(id: string) {
+    return this.table.get(id);
+  }
 }
 
 export const FileModel = new _FileModel();

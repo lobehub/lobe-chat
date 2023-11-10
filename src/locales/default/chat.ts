@@ -62,5 +62,6 @@ export default {
   },
   translateTo: '翻译',
   updateAgent: '更新助理信息',
+  uploadFile: '上传文件',
   warp: '换行',
 };

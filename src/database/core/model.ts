@@ -9,12 +9,16 @@ import { LocalDB, LocalDBInstance, LocalDBSchema } from './db';
 export class BaseModel<N extends keyof LocalDBSchema = any> {
   private readonly db: LocalDB;
   private readonly schema: ZodSchema;
-  private readonly table: keyof LocalDBSchema;
+  private readonly _tableName: keyof LocalDBSchema;
 
   constructor(table: N, schema: ZodSchema) {
     this.db = LocalDBInstance;
     this.schema = schema;
-    this.table = table;
+    this._tableName = table;
+  }
+
+  get table() {
+    return this.db[this._tableName];
   }
 
   /**
@@ -26,7 +30,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any> {
     const result = this.schema.safeParse(data);
 
     if (!result.success) {
-      const errorMsg = `[${this.db.name}][${this.table}] Failed to create new record. Error: ${result.error}`;
+      const errorMsg = `[${this.db.name}][${this._tableName}] Failed to create new record. Error: ${result.error}`;
 
       const newError = new TypeError(errorMsg);
       // make this error show on console to help debug
@@ -34,7 +38,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any> {
       throw newError;
     }
 
-    const tableName = this.table;
+    const tableName = this._tableName;
 
     const record: DBModel<LocalFile> = { ...result.data, createAt: Date.now(), id };
 
