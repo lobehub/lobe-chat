@@ -1,66 +1,34 @@
-import { createStyles } from 'antd-style';
-import dynamic from 'next/dynamic';
-import { ReactNode, Suspense, memo } from 'react';
+import { ReactNode, memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { actionMap, leftActionList, rightActionList } from './config';
 
-import ActionLeft from './ActionLeft';
-import ActionsRight from './ActionRight';
+const RenderActionList = ({ dataSource }: { dataSource: string[] }) => (
+  <>
+    {dataSource.map((key) => {
+      const Render = actionMap[key];
+      return <Render key={key} />;
+    })}
+  </>
+);
 
-const Token = dynamic(() => import('./Token'), { ssr: false });
-
-const useStyles = createStyles(({ css }) => {
-  return {
-    actionLeft: css`
-      display: flex;
-      flex: 1;
-      gap: 4px;
-      align-items: center;
-      justify-content: flex-start;
-    `,
-    actionsBar: css`
-      display: flex;
-      flex: none;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: 0 16px;
-    `,
-    actionsRight: css`
-      display: flex;
-      flex: 0;
-      gap: 4px;
-      align-items: center;
-      justify-content: flex-end;
-    `,
-  };
-});
-
-export interface ActionProps {
-  rightExtra?: ReactNode;
+export interface ActionBarProps {
+  rightAreaEndRender?: ReactNode;
+  rightAreaStartRender?: ReactNode;
 }
 
-const ActionBar = memo<ActionProps>(({ rightExtra }) => {
-  const { styles } = useStyles();
-
-  const [showTokenTag] = useSessionStore((s) => [agentSelectors.showTokenTag(s)]);
-
+const ActionBar = memo<ActionBarProps>(({ rightAreaStartRender, rightAreaEndRender }) => {
   return (
-    <div className={styles.actionsBar}>
-      <div className={styles.actionLeft}>
-        <ActionLeft />
-        {showTokenTag && (
-          <Suspense>
-            <Token />
-          </Suspense>
-        )}
-      </div>
-      <div className={styles.actionsRight}>
-        <ActionsRight />
-        {rightExtra}
-      </div>
-    </div>
+    <Flexbox align={'center'} flex={'none'} horizontal justify={'space-between'} padding={'0 16px'}>
+      <Flexbox align={'center'} flex={1} gap={4} horizontal>
+        <RenderActionList dataSource={leftActionList} />
+      </Flexbox>
+      <Flexbox align={'center'} flex={0} gap={4} horizontal justify={'flex-end'}>
+        {rightAreaStartRender}
+        <RenderActionList dataSource={rightActionList} />
+        {rightAreaEndRender}
+      </Flexbox>
+    </Flexbox>
   );
 });
 

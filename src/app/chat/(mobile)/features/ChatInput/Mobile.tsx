@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import useControlledState from 'use-merge-value';
 
-import Action from '@/app/chat/features/ChatInput/ActionBar';
+import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
+import SaveTopic from '@/app/chat/features/ChatInput/Topic';
 
 import { useStyles } from './style.mobile';
 
@@ -36,7 +37,7 @@ const ChatInputArea = forwardRef<InputRef, ChatInputAreaMobile>(
 
     return (
       <Flexbox className={cx(styles.container)} gap={12}>
-        <Action />
+        <ActionBar rightAreaStartRender={<SaveTopic />} />
         <Flexbox className={styles.inner} gap={8} horizontal>
           <Input
             className={cx(styles.input)}

@@ -52,7 +52,7 @@ const ChatInputDesktopLayout = memo(() => {
     >
       <section className={styles.container} style={{ minHeight: CHAT_TEXTAREA_HEIGHT }}>
         <ActionBar
-          rightExtra={
+          rightAreaEndRender={
             <ActionIcon
               icon={expand ? Minimize2 : Maximize2}
               onClick={() => {
