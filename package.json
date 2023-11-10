@@ -80,6 +80,7 @@
     "chroma-js": "^2",
     "copy-to-clipboard": "^3",
     "dayjs": "^1",
+    "dexie": "^3",
     "fast-deep-equal": "^3",
     "gpt-tokenizer": "^2",
     "i18next": "^23",
@@ -116,6 +117,7 @@
     "use-merge-value": "^1",
     "utility-types": "^3",
     "uuid": "^9",
+    "zod": "^3",
     "zustand": "^4.4",
     "zustand-utils": "^1"
   },
