@@ -10,7 +10,7 @@ import SaveTopic from '@/app/chat/features/ChatInput/Topic';
 import FileList from '@/app/chat/features/FileList';
 import { useSessionStore } from '@/store/session';
 
-import { useSendMessage } from './useSend';
+import { useSendMessage } from '../../../features/ChatInput/useSend';
 
 const Footer = memo(() => {
   const { t } = useTranslation('chat');

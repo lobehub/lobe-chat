@@ -9,6 +9,10 @@ class FileService {
     return FileModel.create(file);
   }
 
+  async removeFile(id: string) {
+    return FileModel.delete(id);
+  }
+
   async getFile(id: string): Promise<FilePreview> {
     const item = await FileModel.findById(id);
     if (!item) {
@@ -17,10 +21,13 @@ class FileService {
 
     // arrayBuffer to url
     const url = URL.createObjectURL(new Blob([item.data]));
+    const base64 = Buffer.from(item.data).toString('base64');
 
     return {
+      base64Url: `data:${item.type};base64,${base64}`,
+      fileType: item.type,
       name: item.name,
-      type: item.type,
+      type: 'local',
       url,
     };
   }

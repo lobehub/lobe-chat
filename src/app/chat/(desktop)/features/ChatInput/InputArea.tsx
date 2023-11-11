@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useSessionStore } from '@/store/session';
 
-import { useSendMessage } from './useSend';
+import { useSendMessage } from '../../../features/ChatInput/useSend';
 
 const useStyles = createStyles(({ css }) => {
   return {
@@ -23,9 +23,9 @@ const useStyles = createStyles(({ css }) => {
 
 const InputArea = memo(() => {
   const { t } = useTranslation('common');
-  const isChineseInput = useRef(false);
-
   const { cx, styles } = useStyles();
+
+  const isChineseInput = useRef(false);
 
   const [loading, message, updateInputMessage] = useSessionStore((s) => [
     !!s.chatLoadingId,

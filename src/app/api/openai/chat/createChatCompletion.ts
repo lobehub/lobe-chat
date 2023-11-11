@@ -14,11 +14,12 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
   // ============  1. preprocess messages   ============ //
   const { messages, ...params } = payload;
 
+  // remove unnecessary fields like `plugins` or `files` by lobe-chat
   const formatMessages = messages.map((m) => ({
     content: m.content,
     name: m.name,
     role: m.role,
-  }));
+  })) as OpenAI.ChatCompletionMessageParam[];
 
   // ============  2. send api   ============ //
 

@@ -14,6 +14,8 @@ const t = setNamespace('files/image');
  * 代理行为接口
  */
 export interface FileAction {
+  clearImageList: () => void;
+  removeFile: (id: string) => Promise<void>;
   setImageMapItem: (id: string, item: FilePreview) => void;
   uploadFile: (file: File) => Promise<void>;
   useFetchFile: (id: string) => SWRResponse<FilePreview>;
@@ -25,6 +27,18 @@ export const createFileSlice: StateCreator<
   [],
   FileAction
 > = (set, get) => ({
+  clearImageList: () => {
+    set({ inputFilesList: [] }, false, t('clearImageList'));
+  },
+  removeFile: async (id) => {
+    await fileService.removeFile(id);
+
+    set(
+      ({ inputFilesList }) => ({ inputFilesList: inputFilesList.filter((i) => i !== id) }),
+      false,
+      t('removeFile'),
+    );
+  },
   setImageMapItem: (id, item) => {
     set(
       produce((draft) => {
@@ -45,6 +59,7 @@ export const createFileSlice: StateCreator<
         size: file.size,
         type: file.type,
       });
+
       set(
         ({ inputFilesList }) => ({ inputFilesList: [...inputFilesList, data.id] }),
         false,

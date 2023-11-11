@@ -9,5 +9,5 @@ export interface ChatState {
 }
 
 export const initialChatState: ChatState = {
-  inputMessage: '',
+  inputMessage: '这是什么图片？',
 };

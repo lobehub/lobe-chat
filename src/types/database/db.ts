@@ -1,4 +1,4 @@
 export type DBModel<T> = T & {
-  createAt: number;
+  createdAt: number;
   id: string;
 };

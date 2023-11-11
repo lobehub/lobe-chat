@@ -40,7 +40,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any> {
 
     const tableName = this._tableName;
 
-    const record: DBModel<LocalFile> = { ...result.data, createAt: Date.now(), id };
+    const record: DBModel<LocalFile> = { ...result.data, createdAt: Date.now(), id };
 
     const newId = await this.db[tableName].add(record);
 

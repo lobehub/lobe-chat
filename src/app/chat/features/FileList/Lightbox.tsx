@@ -1,54 +1,49 @@
-import { memo, useState } from 'react';
+import { createStyles } from 'antd-style';
+import isEqual from 'fast-deep-equal';
+import { memo } from 'react';
 import Lightbox from 'react-spring-lightbox';
 
 import { filesSelectors, useFileStore } from '@/store/files';
 
-const Light = memo(() => {
-  const list = useFileStore(filesSelectors.imageList);
-  console.log(list);
-  const [currentImageIndex, setCurrentIndex] = useState(0);
+const useStyles = createStyles(({ css, token }) => ({
+  wrapper: css`
+    background: ${token.colorBgMask};
+    backdrop-filter: blur(4px);
+  `,
+}));
 
-  const gotoPrevious = () => currentImageIndex > 0 && setCurrentIndex(currentImageIndex - 1);
+interface LightBoxProps {
+  index: number;
+  onNext: () => void;
+  onOpenChange: (open: boolean) => void;
+  onPrev: () => void;
+  open: boolean;
+}
 
-  const gotoNext = () =>
-    currentImageIndex + 1 < list.length && setCurrentIndex(currentImageIndex + 1);
+const LightBox = memo<LightBoxProps>(({ onOpenChange, open, index, onNext, onPrev }) => {
+  const list = useFileStore(filesSelectors.imageList, isEqual);
+  const imgs = useFileStore(filesSelectors.imageUrlOrBase64List);
+  console.log(imgs);
+
+  const { styles } = useStyles();
 
   return (
     <Lightbox
-      currentIndex={currentImageIndex}
+      className={styles.wrapper}
+      currentIndex={index}
       images={list.map((i) => ({
         alt: i.name,
+        loading: 'lazy',
         src: i.url,
       }))}
-      isOpen={true}
-      onNext={gotoNext}
-      onPrev={gotoPrevious}
-      /* Add your own UI */
-      // renderHeader={() => (<CustomHeader />)}
-      // renderFooter={() => (<CustomFooter />)}
-      // renderPrevButton={() => (<CustomLeftArrowButton />)}
-      // renderNextButton={() => (<CustomRightArrowButton />)}
-      // renderImageOverlay={() => (<ImageOverlayComponent >)}
-
-      /* Add styling */
-      // className="cool-class"
-      // style={{ background: "grey" }}
-
-      /* Handle closing */
-      // onClose={handleClose}
-
-      /* Use single or double click to zoom */
-      singleClickToZoom
-
-      /* react-spring config for open/close animation */
-      // pageTransitionConfig={{
-      //   from: { transform: "scale(0.75)", opacity: 0 },
-      //   enter: { transform: "scale(1)", opacity: 1 },
-      //   leave: { transform: "scale(0.75)", opacity: 0 },
-      //   config: { mass: 1, tension: 320, friction: 32 }
-      // }}
+      isOpen={open}
+      onClose={() => {
+        onOpenChange(false);
+      }}
+      onNext={onNext}
+      onPrev={onPrev}
     />
   );
 });
 
-export default Light;
+export default LightBox;
