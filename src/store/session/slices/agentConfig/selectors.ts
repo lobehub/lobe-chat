@@ -2,9 +2,11 @@ import { t } from 'i18next';
 
 import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
+import { DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import { MetaData } from '@/types/meta';
+import { LobeAgentTTSConfig } from '@/types/session';
 import { merge } from '@/utils/merge';
 
 import { sessionSelectors } from '../session/selectors';
@@ -73,6 +75,12 @@ const showTokenTag = (s: SessionStore) => {
   return DEFAULT_OPENAI_MODEL_LIST.includes(model);
 };
 
+const currentAgentTTS = (s: SessionStore): LobeAgentTTSConfig => {
+  const config = currentAgentConfig(s);
+
+  return config?.tts || DEFAUTT_AGENT_TTS_CONFIG;
+};
+
 export const agentSelectors = {
   currentAgentAvatar,
   currentAgentBackgroundColor,
@@ -82,6 +90,7 @@ export const agentSelectors = {
   currentAgentModel,
   currentAgentPlugins,
   currentAgentSystemRole,
+  currentAgentTTS,
   currentAgentTitle,
   getAvatar,
   getDescription,

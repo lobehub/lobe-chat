@@ -207,6 +207,24 @@
     },
     "title": "System Settings"
   },
+  "settingTTS": {
+    "showAllLocaleVoice": {
+      "desc": "If disabled, only voices for the current language will be displayed",
+      "title": "Show all locale voices"
+    },
+    "sttService": {
+      "desc": "The 'browser' option refers to the native speech recognition service in the browser",
+      "title": "Speech-to-Text Service"
+    },
+    "title": "Speech Services",
+    "ttsService": {
+      "desc": "If using the OpenAI text-to-speech service, ensure that the OpenAI model service is enabled",
+      "title": "Text-to-Speech Service"
+    },
+    "voice": {
+      "title": "Text-to-Speech Voices"
+    }
+  },
   "settingTheme": {
     "avatar": {
       "title": "Avatar"

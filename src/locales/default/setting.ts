@@ -109,7 +109,6 @@ export default {
     },
     title: '助手信息',
   },
-
   settingChat: {
     chatStyleType: {
       title: '聊天窗口样式',
@@ -194,6 +193,24 @@ export default {
       title: '访问密码',
     },
     title: '系统设置',
+  },
+  settingTTS: {
+    showAllLocaleVoice: {
+      desc: '关闭则只显示当前语种的声源',
+      title: '显示所有语种声源',
+    },
+    sttService: {
+      desc: '其中 broswer 为浏览器原生的语音识别服务',
+      title: '语音识别服务',
+    },
+    title: '语音服务',
+    ttsService: {
+      desc: '如使用 OpenAI 语音合成服务，需要保证 OpenAI 模型服务已开启',
+      title: '语音合成服务',
+    },
+    voice: {
+      title: '语音合成声源',
+    },
   },
   settingTheme: {
     avatar: {

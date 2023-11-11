@@ -282,6 +282,14 @@ describe('sessionsReducer', () => {
         draft.session1.config = {
           model: LanguageModel.GPT4,
           params: {},
+          tts: {
+            ttsService: 'openai',
+            sttService: 'openai',
+            showAllLocaleVoice: false,
+            voice: {
+              openai: 'alloy',
+            },
+          },
           systemRole: 'system',
         };
       });

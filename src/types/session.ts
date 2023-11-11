@@ -33,6 +33,17 @@ interface LobeSessionBase extends BaseDataModel {
   type: LobeSessionType;
 }
 
+export interface LobeAgentTTSConfig {
+  showAllLocaleVoice?: boolean;
+  sttService: 'openai' | 'browser';
+  ttsService: 'openai' | 'edge' | 'microsoft';
+  voice: {
+    edge?: string;
+    microsoft?: string;
+    openai: string;
+  };
+}
+
 export interface LobeAgentConfig {
   compressThreshold?: number;
   displayMode?: 'chat' | 'docs';
@@ -71,6 +82,10 @@ export interface LobeAgentConfig {
    * 系统角色
    */
   systemRole: string;
+  /**
+   * 语音服务
+   */
+  tts: LobeAgentTTSConfig;
 }
 
 /**

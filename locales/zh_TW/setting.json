@@ -207,6 +207,24 @@
     },
     "title": "系統設定"
   },
+  "settingTTS": {
+    "showAllLocaleVoice": {
+      "desc": "關閉則只顯示當前語種的聲源",
+      "title": "顯示所有語種聲源"
+    },
+    "sttService": {
+      "desc": "其中 broswer 為瀏覽器原生的語音識別服務",
+      "title": "語音識別服務"
+    },
+    "title": "語音服務",
+    "ttsService": {
+      "desc": "如使用 OpenAI 語音合成服務，需要保證 OpenAI 模型服務已開啟",
+      "title": "語音合成服務"
+    },
+    "voice": {
+      "title": "語音合成聲源"
+    }
+  },
   "settingTheme": {
     "avatar": {
       "title": "頭像"

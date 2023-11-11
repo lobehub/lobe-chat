@@ -2,7 +2,7 @@ import { getClientConfig } from '@/config/client';
 import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { LanguageModel } from '@/types/llm';
-import { LobeAgentConfig } from '@/types/session';
+import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/session';
 import {
   GlobalBaseSettings,
   GlobalDefaultAgent,
@@ -18,6 +18,15 @@ export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
   themeMode: 'auto',
 };
 
+export const DEFAUTT_AGENT_TTS_CONFIG: LobeAgentTTSConfig = {
+  showAllLocaleVoice: false,
+  sttService: 'openai',
+  ttsService: 'openai',
+  voice: {
+    openai: 'alloy',
+  },
+};
+
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   displayMode: 'chat',
   historyCount: 1,
@@ -30,6 +39,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   },
   plugins: [],
   systemRole: '',
+  tts: DEFAUTT_AGENT_TTS_CONFIG,
 };
 
 export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {

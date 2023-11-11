@@ -194,6 +194,24 @@
     },
     "title": "システム設定"
   },
+  "settingTTS": {
+    "showAllLocaleVoice": {
+      "desc": "关闭すると、現在の言語の音声のみが表示されます",
+      "title": "すべての言語の音声を表示"
+    },
+    "sttService": {
+      "desc": "ブラウザはブラウザのネイティブ音声認識サービスです",
+      "title": "音声認識サービス"
+    },
+    "title": "音声サービス",
+    "ttsService": {
+      "desc": "OpenAIの音声合成サービスを使用する場合、OpenAIモデルサービスが有効になっていることを確認する必要があります",
+      "title": "音声合成サービス"
+    },
+    "voice": {
+      "title": "音声合成音声源"
+    }
+  },
   "settingTheme": {
     "avatar": {
       "title": "アバター"

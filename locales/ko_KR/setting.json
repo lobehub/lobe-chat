@@ -194,6 +194,24 @@
     },
     "title": "시스템 설정"
   },
+  "settingTTS": {
+    "showAllLocaleVoice": {
+      "desc": "현재 언어의 음성만 표시하려면 닫으십시오",
+      "title": "모든 언어 음성 표시"
+    },
+    "sttService": {
+      "desc": "브라우저는 브라우저 기본 음성 인식 서비스입니다",
+      "title": "음성 인식 서비스"
+    },
+    "title": "음성 서비스",
+    "ttsService": {
+      "desc": "OpenAI 음성 합성 서비스를 사용하는 경우 OpenAI 모델 서비스가 열려 있어야 합니다",
+      "title": "음성 합성 서비스"
+    },
+    "voice": {
+      "title": "음성 합성 음성"
+    }
+  },
   "settingTheme": {
     "avatar": {
       "title": "아바타"
