@@ -1,7 +1,7 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { useTheme } from 'antd-style';
-import { LucideFileUp, LucideLoader2 } from 'lucide-react';
+import { LucideImage, LucideLoader2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
@@ -15,6 +15,7 @@ const FileUpload = memo(() => {
   const upload = useFileStore((s) => s.uploadFile);
   return (
     <Upload
+      accept="image/*"
       beforeUpload={async (file) => {
         setLoading(true);
 
@@ -23,6 +24,7 @@ const FileUpload = memo(() => {
         setLoading(false);
         return false;
       }}
+      multiple={true}
       showUploadList={false}
     >
       {loading ? (
@@ -35,7 +37,7 @@ const FileUpload = memo(() => {
           ></Icon>
         </Center>
       ) : (
-        <ActionIcon icon={LucideFileUp} placement={'bottom'} title={t('upload.actionTooltip')} />
+        <ActionIcon icon={LucideImage} placement={'bottom'} title={t('upload.actionTooltip')} />
       )}
     </Upload>
   );

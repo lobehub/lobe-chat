@@ -2,11 +2,13 @@ import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { FileImage, FileText, FileUpIcon } from 'lucide-react';
 import { rgba } from 'polished';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, token }) => {
+import { useFileStore } from '@/store/files';
+
+const useStyles = createStyles(({ css, token, stylish }) => {
   return {
     container: css`
       width: 300px;
@@ -46,7 +48,10 @@ const useStyles = createStyles(({ css, token }) => {
       width: 100%;
       height: 100%;
 
-      background: ${rgba('#000', 0.8)};
+      transition: all 0.3s ease-in-out;
+
+      background: ${token.colorBgMask};
+      ${stylish.blur};
     `,
   };
 });
@@ -55,7 +60,7 @@ const handleDragOver = (e: DragEvent) => {
   e.preventDefault();
 };
 
-const DragUpload = () => {
+const DragUpload = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
   const [isDragging, setIsDragging] = useState(false);
@@ -63,6 +68,20 @@ const DragUpload = () => {
   // causing isDragging to be mistakenly set to false.
   // to fix this issue, use a counter to ensure the status change only when drag event left the browser window .
   const dragCounter = useRef(0);
+
+  const uploadFile = useFileStore((s) => s.uploadFile);
+
+  const uploadImages = async (fileList: FileList | undefined) => {
+    if (!fileList || fileList.length === 0) return;
+
+    const pools = Array.from(fileList).map(async (file) => {
+      // skip none-file items
+      if (!file.type.startsWith('image')) return;
+      await uploadFile(file);
+    });
+
+    await Promise.all(pools);
+  };
 
   const handleDragEnter = (e: DragEvent) => {
     e.preventDefault();
@@ -84,20 +103,27 @@ const DragUpload = () => {
     }
   };
 
-  const handleDrop = (e: DragEvent) => {
+  const handleDrop = async (e: DragEvent) => {
     e.preventDefault();
     // reset counter
     dragCounter.current = 0;
 
     setIsDragging(false);
 
-    // 获取拖拽的文件列表
+    // get filesList
+    // TODO: support folder files upload
     const files = e.dataTransfer?.files;
 
-    if (files && files.length > 0) {
-      // 这里可以添加上传文件的逻辑
-      console.log('Dropped files:', files);
-    }
+    // upload files
+    uploadImages(files);
+  };
+
+  const handlePaste = (event: ClipboardEvent) => {
+    // get files from clipboard
+
+    const files = event.clipboardData?.files;
+
+    uploadImages(files);
   };
 
   useEffect(() => {
@@ -105,12 +131,14 @@ const DragUpload = () => {
     window.addEventListener('dragover', handleDragOver);
     window.addEventListener('dragleave', handleDragLeave);
     window.addEventListener('drop', handleDrop);
+    window.addEventListener('paste', handlePaste);
 
     return () => {
       window.removeEventListener('dragenter', handleDragEnter);
       window.removeEventListener('dragover', handleDragOver);
       window.removeEventListener('dragleave', handleDragLeave);
       window.removeEventListener('drop', handleDrop);
+      window.removeEventListener('paste', handlePaste);
     };
   }, []);
 
@@ -133,6 +161,6 @@ const DragUpload = () => {
       </Center>
     )
   );
-};
+});
 
 export default DragUpload;

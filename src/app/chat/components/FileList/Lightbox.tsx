@@ -1,5 +1,4 @@
 import { createStyles } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import Lightbox from 'react-spring-lightbox';
 
@@ -14,19 +13,17 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface LightBoxProps {
   index: number;
+  items: string[];
   onNext: () => void;
   onOpenChange: (open: boolean) => void;
   onPrev: () => void;
   open: boolean;
 }
 
-const LightBox = memo<LightBoxProps>(({ onOpenChange, open, index, onNext, onPrev }) => {
-  const list = useFileStore(filesSelectors.imageList, isEqual);
-  const imgs = useFileStore(filesSelectors.imageUrlOrBase64List);
-  console.log(imgs);
-
+const LightBox = memo<LightBoxProps>(({ onOpenChange, open, items, index, onNext, onPrev }) => {
   const { styles } = useStyles();
 
+  const list = useFileStore(filesSelectors.getImageDetailByList(items));
   return (
     <Lightbox
       className={styles.wrapper}

@@ -3,6 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { LOADING_FLAT } from '@/const/message';
+import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
 import { fetchChatModel } from '@/services/chatModel';
 import { filesSelectors, useFileStore } from '@/store/files';
 import { SessionStore } from '@/store/session';
@@ -235,10 +236,15 @@ export const chatMessage: StateCreator<
 
         const content: UserMessageContentPart[] = [
           { text: m.content, type: 'text' },
-          ...imageList.map((i) => ({ image_url: i.url, type: 'image_url' }) as const),
+          ...imageList.map(
+            (i) => ({ image_url: { detail: 'auto', url: i.url }, type: 'image_url' }) as const,
+          ),
         ];
         return { ...m, content };
       });
+
+      // due to vision model's default max_tokens is very small, we need to set the max_tokens a larger one.
+      if (!config.params.max_tokens) config.params.max_tokens = VISION_MODEL_DEFAULT_MAX_TOKENS;
     }
 
     const fetcher = () =>

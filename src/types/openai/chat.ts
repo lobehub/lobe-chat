@@ -6,7 +6,10 @@ interface UserMessageContentPartText {
   type: 'text';
 }
 interface UserMessageContentPartImage {
-  image_url: string;
+  image_url: {
+    detail?: 'auto' | 'low' | 'high';
+    url: string;
+  };
   type: 'image_url';
 }
 

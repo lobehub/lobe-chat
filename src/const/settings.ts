@@ -18,6 +18,8 @@ export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
   themeMode: 'auto',
 };
 
+export const VISION_MODEL_DEFAULT_MAX_TOKENS = 1000;
+
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   displayMode: 'chat',
   historyCount: 1,

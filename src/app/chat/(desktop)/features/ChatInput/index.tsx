@@ -3,12 +3,12 @@ import { createStyles } from 'antd-style';
 import { Maximize2, Minimize2 } from 'lucide-react';
 import { memo, useState } from 'react';
 
-import Footer from '@/app/chat/(desktop)/features/ChatInput/Footer';
 import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 
 import DragUpload from './DragUpload';
+import Footer from './Footer';
 import InputArea from './InputArea';
 
 const useStyles = createStyles(({ css }) => {

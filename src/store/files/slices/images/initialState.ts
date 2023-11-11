@@ -7,5 +7,5 @@ export interface ImageFileState {
 
 export const initialImageFileState: ImageFileState = {
   imagesMap: {},
-  inputFilesList: ['file-B2ke8s63'],
+  inputFilesList: [],
 };

@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import SaveTopic from '@/app/chat/features/ChatInput/Topic';
-import FileList from '@/app/chat/features/FileList';
+import { useSendMessage } from '@/app/chat/features/ChatInput/useSend';
 import { useSessionStore } from '@/store/session';
 
-import { useSendMessage } from '../../../features/ChatInput/useSend';
+import { LocalFiles } from './LocalFiles';
 
 const Footer = memo(() => {
   const { t } = useTranslation('chat');
@@ -29,7 +29,7 @@ const Footer = memo(() => {
       padding={'0 24px'}
     >
       <Flexbox>
-        <FileList />
+        <LocalFiles />
       </Flexbox>
       <Flexbox align={'center'} gap={8} horizontal>
         <Flexbox
