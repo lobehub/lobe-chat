@@ -6,6 +6,8 @@ import { memo, useState } from 'react';
 import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
 import DragUpload from './DragUpload';
 import Footer from './Footer';
@@ -35,9 +37,10 @@ const ChatInputDesktopLayout = memo(() => {
     s.updatePreference,
   ]);
 
+  const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);
   return (
     <>
-      <DragUpload />
+      {canUpload && <DragUpload />}
       <DraggablePanel
         fullscreen={expand}
         headerHeight={HEADER_HEIGHT}

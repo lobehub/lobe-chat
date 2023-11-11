@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
+import { DEFAULT_OPENAI_MODEL_LIST, VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
@@ -49,6 +49,11 @@ const currentAgentModel = (s: SessionStore): LanguageModel | string => {
   return config?.model || LanguageModel.GPT3_5;
 };
 
+const modelHasVisionAbility = (s: SessionStore): boolean => {
+  const model = currentAgentModel(s);
+  return VISION_MODEL_WHITE_LIST.includes(model);
+};
+
 const currentAgentPlugins = (s: SessionStore) => {
   const config = currentAgentConfig(s);
 
@@ -87,5 +92,6 @@ export const agentSelectors = {
   getDescription,
   getTitle,
   hasSystemRole,
+  modelHasVisionAbility,
   showTokenTag,
 };

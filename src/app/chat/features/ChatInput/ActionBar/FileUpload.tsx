@@ -7,12 +7,19 @@ import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/files';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/slices/agentConfig';
 
 const FileUpload = memo(() => {
   const { t } = useTranslation('chat');
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const upload = useFileStore((s) => s.uploadFile);
+
+  const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);
+
+  if (!canUpload) return null;
+
   return (
     <Upload
       accept="image/*"

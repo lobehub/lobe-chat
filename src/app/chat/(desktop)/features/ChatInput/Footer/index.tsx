@@ -9,6 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import SaveTopic from '@/app/chat/features/ChatInput/Topic';
 import { useSendMessage } from '@/app/chat/features/ChatInput/useSend';
 import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
 import { LocalFiles } from './LocalFiles';
 
@@ -18,6 +19,7 @@ const Footer = memo(() => {
   const [loading, onStop] = useSessionStore((s) => [!!s.chatLoadingId, s.stopGenerateMessage]);
 
   const onSend = useSendMessage();
+  const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);
 
   return (
     <Flexbox
@@ -28,9 +30,7 @@ const Footer = memo(() => {
       horizontal
       padding={'0 24px'}
     >
-      <Flexbox>
-        <LocalFiles />
-      </Flexbox>
+      <Flexbox>{canUpload && <LocalFiles />}</Flexbox>
       <Flexbox align={'center'} gap={8} horizontal>
         <Flexbox
           gap={4}
