@@ -41,6 +41,7 @@ export const currentChats = (s: SessionStore): ChatMessage[] => {
   return getChatsById(s.activeId)(s);
 };
 
+const initTime = Date.now();
 // 针对新助手添加初始化时的自定义消息
 export const currentChatsWithGuideMessage = (s: SessionStore): ChatMessage[] => {
   const data = currentChats(s);
@@ -67,14 +68,14 @@ export const currentChatsWithGuideMessage = (s: SessionStore): ChatMessage[] => 
 
   const emptyInboxGuideMessage = {
     content: isInbox ? inboxMsg : !!meta.description ? agentSystemRoleMsg : agentMsg,
-    createAt: Date.now(),
+    createAt: initTime,
     extra: {},
     id: 'default',
     meta: meta || {
       avatar: DEFAULT_INBOX_AVATAR,
     },
     role: 'assistant',
-    updateAt: Date.now(),
+    updateAt: initTime,
   } as ChatMessage;
 
   return [emptyInboxGuideMessage];

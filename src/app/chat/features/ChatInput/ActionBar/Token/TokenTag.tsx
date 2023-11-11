@@ -8,16 +8,16 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors, chatSelectors } from '@/store/session/selectors';
 import { LanguageModel } from '@/types/llm';
 
-const Token = memo<{ input: string }>(({ input }) => {
+const Token = memo(() => {
   const { t } = useTranslation('chat');
 
-  const inputTokenCount = useTokenCount(input);
-
-  const [messageString, systemRole, model] = useSessionStore((s) => [
+  const [input, messageString, systemRole, model] = useSessionStore((s) => [
+    s.inputMessage,
     chatSelectors.chatsMessageString(s),
     agentSelectors.currentAgentSystemRole(s),
     agentSelectors.currentAgentModel(s) as LanguageModel,
   ]);
+  const inputTokenCount = useTokenCount(input);
 
   const systemRoleToken = useTokenCount(systemRole);
   const chatsToken = useTokenCount(messageString);
