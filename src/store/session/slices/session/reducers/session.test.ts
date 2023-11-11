@@ -215,6 +215,14 @@ describe('sessionsReducer', () => {
             model: 'gpt-3.5-turbo',
             params: {},
             systemRole: 'system-role',
+            tts: {
+              showAllLocaleVoice: false,
+              sttService: 'openai',
+              ttsService: 'openai',
+              voice: {
+                openai: 'alloy',
+              },
+            },
           },
           type: 'agent',
           meta: {
@@ -257,6 +265,14 @@ describe('sessionsReducer', () => {
             model: 'gpt-3.5-turbo',
             params: {},
             systemRole: 'system',
+            tts: {
+              showAllLocaleVoice: false,
+              sttService: 'openai',
+              ttsService: 'openai',
+              voice: {
+                openai: 'alloy',
+              },
+            },
           },
         } as LobeAgentSession,
         session2: {

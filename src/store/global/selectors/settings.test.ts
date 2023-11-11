@@ -20,6 +20,14 @@ describe('settingsSelectors', () => {
               systemRole: '',
               model: LanguageModel.GPT3_5,
               params: {},
+              tts: {
+                showAllLocaleVoice: false,
+                sttService: 'openai',
+                ttsService: 'openai',
+                voice: {
+                  openai: 'alloy',
+                },
+              },
             },
             meta: {
               avatar: 'Default Agent',
@@ -59,6 +67,14 @@ describe('settingsSelectors', () => {
               top_p: 1,
             },
             plugins: [],
+            tts: {
+              showAllLocaleVoice: false,
+              sttService: 'openai',
+              ttsService: 'openai',
+              voice: {
+                openai: 'alloy',
+              },
+            },
           },
           meta: {
             avatar: 'Default Agent',
