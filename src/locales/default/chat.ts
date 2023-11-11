@@ -61,6 +61,7 @@ export default {
     clear: '删除翻译',
   },
   translateTo: '翻译',
+  tts: '语音朗读',
   updateAgent: '更新助理信息',
   warp: '换行',
 };

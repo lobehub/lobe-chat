@@ -1,24 +1,30 @@
 import { RenderMessageExtra } from '@lobehub/ui';
-import { Divider } from 'antd';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
 
+import ExtraContainer from './ExtraContainer';
+import TTS from './TTS';
 import Translate from './Translate';
 
-export const UserMessageExtra: RenderMessageExtra = memo(({ extra, id }) => {
-  const hasTranslate = !!extra?.translate;
-
+export const UserMessageExtra: RenderMessageExtra = memo(({ extra, id, content }) => {
   const loading = useSessionStore((s) => s.chatLoadingId === id);
+
+  const showExtra = extra?.translate || extra?.showTTS;
+  if (!showExtra) return;
+
   return (
-    <Flexbox gap={8} style={{ marginTop: hasTranslate ? 8 : 0 }}>
-      {extra?.translate && (
-        <div>
-          <Divider style={{ margin: '12px 0' }} />
-          <Translate id={id} {...extra.translate} loading={loading} />
-        </div>
+    <div style={{ marginTop: 8 }}>
+      {extra?.showTTS && (
+        <ExtraContainer>
+          <TTS content={content} id={id} loading={loading} />
+        </ExtraContainer>
       )}
-    </Flexbox>
+      {extra?.translate && (
+        <ExtraContainer>
+          <Translate id={id} {...extra?.translate} loading={loading} />
+        </ExtraContainer>
+      )}
+    </div>
   );
 });

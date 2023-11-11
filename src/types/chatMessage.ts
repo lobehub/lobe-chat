@@ -32,6 +32,8 @@ export interface ChatMessage extends BaseDataModel {
   // 扩展字段
   extra?: {
     fromModel?: string;
+    // TTS
+    showTTS?: boolean;
     // 翻译
     translate?: ChatTranslate;
   } & Record<string, any>;

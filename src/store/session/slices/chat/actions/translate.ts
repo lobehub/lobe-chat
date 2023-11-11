@@ -23,6 +23,7 @@ export interface ChatTranslateAction {
    * @param id
    */
   translateMessage: (id: string, targetLang: string) => Promise<void>;
+  ttsMessage: (id: string) => void;
 }
 
 export const chatTranslate: StateCreator<
@@ -84,5 +85,15 @@ export const chatTranslate: StateCreator<
     });
 
     toggleChatLoading(false);
+  },
+
+  ttsMessage: (id) => {
+    const { dispatchMessage } = get();
+    dispatchMessage({
+      id,
+      key: 'showTTS',
+      type: 'updateMessageExtra',
+      value: true,
+    });
   },
 });

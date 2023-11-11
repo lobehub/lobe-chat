@@ -1,24 +1,21 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
 import { RenderMessageExtra, Tag } from '@lobehub/ui';
-import { Divider } from 'antd';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
+import ExtraContainer from './ExtraContainer';
+import TTS from './TTS';
 import Translate from './Translate';
 
-export const AssistantMessageExtra: RenderMessageExtra = memo(({ extra, id }) => {
+export const AssistantMessageExtra: RenderMessageExtra = memo(({ extra, id, content }) => {
   const model = useSessionStore(agentSelectors.currentAgentModel);
-
-  const showModelTag = extra?.fromModel && model !== extra?.fromModel;
-  const hasTranslate = !!extra?.translate;
-
-  const showExtra = showModelTag || hasTranslate;
-
   const loading = useSessionStore((s) => s.chatLoadingId === id);
 
+  const showModelTag = extra?.fromModel && model !== extra?.fromModel;
+  const showExtra = extra?.showModelTag || extra?.translate || extra?.showTTS;
   if (!showExtra) return;
 
   return (
@@ -28,12 +25,18 @@ export const AssistantMessageExtra: RenderMessageExtra = memo(({ extra, id }) =>
           <Tag icon={<SiOpenai size={'1em'} />}>{extra?.fromModel as string}</Tag>
         </div>
       )}
-      {extra.translate && (
-        <div>
-          <Divider style={{ margin: '12px 0' }} />
-          <Translate id={id} loading={loading} {...extra.translate} />
-        </div>
-      )}
+      <div>
+        {extra?.showTTS && (
+          <ExtraContainer>
+            <TTS content={content} id={id} loading={loading} />
+          </ExtraContainer>
+        )}
+        {extra?.translate && (
+          <ExtraContainer>
+            <Translate id={id} loading={loading} {...extra?.translate} />
+          </ExtraContainer>
+        )}
+      </div>
     </Flexbox>
   );
 });

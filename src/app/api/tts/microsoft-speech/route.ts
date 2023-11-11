@@ -4,5 +4,5 @@ export const runtime = 'edge';
 
 export const POST = async (req: Request) => {
   const res = await handleMicrosoftSpeechRequest(req);
-  return res;
+  return new Response(res.body, res);
 };
