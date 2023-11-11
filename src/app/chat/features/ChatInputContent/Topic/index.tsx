@@ -25,6 +25,7 @@ const SaveTopic = memo(() => {
 
   const hotkeys = [PREFIX_KEY, SAVE_TOPIC_KEY].join('+');
   useHotkeys(hotkeys, openNewTopicOrSaveTopic, {
+    enableOnFormTags: true,
     preventDefault: true,
   });
 
