@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.100.4](https://github.com/lobehub/lobe-chat/compare/v0.100.3...v0.100.4)
+
+<sup>Released on **2023-11-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Hotkey disabled in form tags.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Hotkey disabled in form tags ([165888f](https://github.com/lobehub/lobe-chat/commit/165888f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.100.3](https://github.com/lobehub/lobe-chat/compare/v0.100.2...v0.100.3)
 
 <sup>Released on **2023-11-09**</sup>
