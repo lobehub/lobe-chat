@@ -73,7 +73,7 @@
     "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
-    "ai": "2.2.20",
+    "ai": "2.2.22",
     "antd": "^5",
     "antd-style": "^3",
     "brotli-wasm": "^1",
