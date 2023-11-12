@@ -12,7 +12,7 @@ const getImageUrlOrBase64ById =
 
     if (!preview) return undefined;
 
-    const url = preview.type === 'local' ? (preview.base64Url as string) : preview.url;
+    const url = preview.saveMode === 'local' ? (preview.base64Url as string) : preview.url;
 
     return { id, url: url };
   };

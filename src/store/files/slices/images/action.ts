@@ -56,9 +56,10 @@ export const createFileSlice: StateCreator<
       const data = await fileService.uploadFile({
         createdAt: file.lastModified,
         data: await file.arrayBuffer(),
+        fileType: file.type,
         name: file.name,
+        saveMode: 'local',
         size: file.size,
-        type: file.type,
       });
 
       set(

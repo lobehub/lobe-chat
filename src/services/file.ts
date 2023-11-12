@@ -24,10 +24,10 @@ class FileService {
     const base64 = Buffer.from(item.data).toString('base64');
 
     return {
-      base64Url: `data:${item.type};base64,${base64}`,
-      fileType: item.type,
+      base64Url: `data:${item.fileType};base64,${base64}`,
+      fileType: item.fileType,
       name: item.name,
-      type: 'local',
+      saveMode: 'local',
       url,
     };
   }

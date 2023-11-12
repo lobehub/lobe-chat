@@ -3,6 +3,6 @@ export interface FilePreview {
   data?: ArrayBuffer;
   fileType: string;
   name: string;
-  type?: string | 'local';
+  saveMode?: string | 'local';
   url: string;
 }
