@@ -147,6 +147,7 @@
     "consola": "^3",
     "dpdm": "^3",
     "eslint": "^8",
+    "fake-indexeddb": "^5",
     "husky": "^8",
     "jsdom": "^22",
     "lint-staged": "^15",
