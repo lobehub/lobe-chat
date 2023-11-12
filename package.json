@@ -93,7 +93,7 @@
     "modern-screenshot": "^4",
     "nanoid": "^5",
     "next": "14.0.1",
-    "openai": "~4.15.0",
+    "openai": "~4.17.0",
     "polished": "^4",
     "posthog-js": "^1",
     "query-string": "^8",
