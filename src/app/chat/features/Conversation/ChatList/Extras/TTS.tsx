@@ -1,25 +1,12 @@
-import {
-  AudioPlayer,
-  EdgeSpeechOptions,
-  MicrosoftSpeechOptions,
-  OpenaiTtsOptions,
-  getAzureVoiceOptions,
-  getEdgeVoiceOptions,
-  useEdgeSpeech,
-  useMicrosoftSpeech,
-  useOpenaiTTS,
-} from '@lobehub/tts';
+import { AudioPlayer } from '@lobehub/tts';
 import { ActionIcon } from '@lobehub/ui';
-import isEqual from 'fast-deep-equal';
 import { TrashIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { MICROSOFT_SPEECH_PROXY_URL } from '@/const/url';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useTTS } from '@/hooks/useTTS';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agentConfig';
 import { ChatTTS } from '@/types/chatMessage';
 
 interface TTSProps extends ChatTTS {
@@ -28,57 +15,13 @@ interface TTSProps extends ChatTTS {
   loading?: boolean;
 }
 
-const TTS = memo<TTSProps>(({ id, init, content, loading }) => {
+const TTS = memo<TTSProps>(({ id, init, content }) => {
   const [isStart, setIsStart] = useState(false);
   const { t } = useTranslation('chat');
-  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
-  const [ttsMessage, clearTTS, toggleChatLoading] = useSessionStore((s) => [
-    s.ttsMessage,
-    s.clearTTS,
-    s.toggleChatLoading,
-  ]);
-  const ttsConfig = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const [locale, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => [
-    settingsSelectors.currentLanguage(s),
-    settingsSelectors.openAIAPI(s),
-    settingsSelectors.openAIProxyUrl(s),
-  ]);
 
-  let useTTS;
-  let options: any = {};
-  switch (ttsConfig.ttsService) {
-    case 'openai': {
-      useTTS = useOpenaiTTS;
-      options = {
-        api: {
-          key: openAIAPI,
-          proxy: openAIProxyUrl,
-        },
-        model: settings.tts.openAI.ttsModel,
-        name: ttsConfig.voice.openai,
-      } as OpenaiTtsOptions;
-      break;
-    }
-    case 'edge': {
-      useTTS = useEdgeSpeech;
-      options = {
-        name: ttsConfig.voice.edge || getEdgeVoiceOptions(locale)?.[0].value,
-      } as EdgeSpeechOptions;
-      break;
-    }
-    case 'microsoft': {
-      useTTS = useMicrosoftSpeech;
-      options = {
-        api: {
-          proxy: MICROSOFT_SPEECH_PROXY_URL,
-        },
-        name: ttsConfig.voice.microsoft || getAzureVoiceOptions(locale)?.[0].value,
-      } as MicrosoftSpeechOptions;
-      break;
-    }
-  }
+  const [ttsMessage, clearTTS] = useSessionStore((s) => [s.ttsMessage, s.clearTTS]);
 
-  const { isGlobalLoading, audio, start } = useTTS(content, options);
+  const { isGlobalLoading, audio, start, stop } = useTTS(content);
 
   const handleInitStart = useCallback(() => {
     if (isStart) return;
@@ -91,12 +34,6 @@ const TTS = memo<TTSProps>(({ id, init, content, loading }) => {
     handleInitStart();
     ttsMessage(id, true);
   }, [init]);
-
-  useEffect(() => {
-    if (isGlobalLoading === undefined) return;
-    if (isGlobalLoading && !loading) toggleChatLoading(true, id);
-    if (!isGlobalLoading && loading) toggleChatLoading(false);
-  }, [isGlobalLoading, loading]);
 
   return (
     <Flexbox align={'center'} horizontal style={{ minWidth: 160 }}>
@@ -111,6 +48,7 @@ const TTS = memo<TTSProps>(({ id, init, content, loading }) => {
       <ActionIcon
         icon={TrashIcon}
         onClick={() => {
+          stop();
           clearTTS(id);
         }}
         size={'small'}
