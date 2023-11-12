@@ -12,7 +12,8 @@ import {
 import { ActionIcon } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { TrashIcon } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { MICROSOFT_SPEECH_PROXY_URL } from '@/const/url';
@@ -27,8 +28,9 @@ interface TTSProps extends ChatTTS {
   loading?: boolean;
 }
 
-const TTS = memo<TTSProps>(({ id, init, content }) => {
+const TTS = memo<TTSProps>(({ id, init, content, loading }) => {
   const [isStart, setIsStart] = useState(false);
+  const { t } = useTranslation('chat');
   const [ttsMessage, clearTTS, toggleChatLoading] = useSessionStore((s) => [
     s.ttsMessage,
     s.clearTTS,
@@ -76,22 +78,23 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
 
   const { isGlobalLoading, audio, start } = useTTS(content, options);
 
+  const handleInitStart = useCallback(() => {
+    if (isStart) return;
+    start();
+    setIsStart(true);
+  }, [isStart]);
+
   useEffect(() => {
-    if (!init && !isStart) {
-      start();
-      setIsStart(true);
-    }
+    if (init) return;
+    handleInitStart();
+    ttsMessage(id, true);
   }, [init]);
 
   useEffect(() => {
-    if (audio?.duration > 0) {
-      ttsMessage(id, true);
-    }
-  }, [audio?.duration]);
-
-  useEffect(() => {
-    toggleChatLoading(isGlobalLoading, id);
-  }, [isGlobalLoading]);
+    if (isGlobalLoading === undefined) return;
+    if (isGlobalLoading && !loading) toggleChatLoading(true, id);
+    if (!isGlobalLoading && loading) toggleChatLoading(false);
+  }, [isGlobalLoading, loading]);
 
   return (
     <Flexbox align={'center'} horizontal style={{ minWidth: 160 }}>
@@ -99,11 +102,7 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
         audio={audio}
         buttonSize={'small'}
         isLoading={isGlobalLoading}
-        onInitPlay={() => {
-          if (isStart) return;
-          start();
-          setIsStart(true);
-        }}
+        onInitPlay={handleInitStart}
         timeRender={'tag'}
         timeStyle={{ margin: 0 }}
       />
@@ -113,6 +112,7 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
           clearTTS(id);
         }}
         size={'small'}
+        title={t('tts.clear')}
       />
     </Flexbox>
   );

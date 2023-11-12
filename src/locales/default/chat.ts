@@ -58,10 +58,13 @@ export default {
     title: '话题列表',
   },
   translate: {
+    action: '翻译',
     clear: '删除翻译',
   },
-  translateTo: '翻译',
-  tts: '语音朗读',
+  tts: {
+    action: '语音朗读',
+    clear: '删除语音',
+  },
   updateAgent: '更新助理信息',
   warp: '换行',
 };

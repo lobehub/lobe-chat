@@ -57,9 +57,14 @@
     "openNewTopic": "新しいトピックを開く"
   },
   "translate": {
-    "clear": "翻訳をクリア"
+    "clear": "翻訳をクリア",
+    "action": "翻訳"
   },
   "translateTo": "翻訳",
+  "tts": {
+    "action": "音声読み上げ",
+    "clear": "音声削除"
+  },
   "updateAgent": "エージェント情報を更新",
   "warp": "改行"
 }

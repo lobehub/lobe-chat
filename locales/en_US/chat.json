@@ -57,9 +57,14 @@
     "openNewTopic": "Open a new topic"
   },
   "translate": {
-    "clear": "Clear Translation"
+    "clear": "Clear Translation",
+    "action": "Translate"
   },
   "translateTo": "Translate",
+  "tts": {
+    "action": "Text to Speech",
+    "clear": "Clear Speech"
+  },
   "updateAgent": "Update Agent Information",
   "warp": "Line Break"
 }
