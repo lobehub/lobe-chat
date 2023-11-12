@@ -35,6 +35,10 @@
     "withSystemRole": "С указанием роли помощника"
   },
   "stop": "Остановить",
+  "stt": {
+    "action": "Голосовой ввод",
+    "loading": "Идет распознавание..."
+  },
   "temp": "Временный",
   "tokenDetail": "Роль помощника: {{systemRoleToken}} · История сообщений: {{chatsToken}}",
   "tokenTag": {

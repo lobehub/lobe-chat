@@ -33,12 +33,11 @@ interface LobeSessionBase extends BaseDataModel {
   type: LobeSessionType;
 }
 
-export type STTServer = 'openai' | 'browser';
 export type TTSServer = 'openai' | 'edge' | 'microsoft';
 
 export interface LobeAgentTTSConfig {
   showAllLocaleVoice?: boolean;
-  sttService: STTServer;
+  sttLocale: 'auto' | string;
   ttsService: TTSServer;
   voice: {
     edge?: string;

@@ -1,4 +1,9 @@
-import { getAzureVoiceOptions, getEdgeVoiceOptions, getOpenaiVoiceOptions } from '@lobehub/tts';
+import {
+  getAzureVoiceOptions,
+  getEdgeVoiceOptions,
+  getOpenaiVoiceOptions,
+  getVoiceLocaleOptions,
+} from '@lobehub/tts';
 import { Form, ItemGroup } from '@lobehub/ui';
 import { Form as AFrom, Select, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -11,7 +16,7 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 
 import { useStore } from '../store';
-import { sstOptions, ttsOptions } from './options';
+import { ttsOptions } from './options';
 
 const TTS_SETTING_KEY = 'tts';
 
@@ -35,6 +40,8 @@ const AgentTTS = memo(() => {
     () => getAzureVoiceOptions(showAllLocaleVoice ? undefined : locale),
     [locale, showAllLocaleVoice],
   );
+  const sttLocaleOptions = useMemo(() => getVoiceLocaleOptions() || [], []);
+
   const tts: ItemGroup = {
     children: [
       {
@@ -46,7 +53,6 @@ const AgentTTS = memo(() => {
       {
         children: <Switch />,
         desc: t('settingTTS.showAllLocaleVoice.desc'),
-        divider: false,
         hidden: config.tts.ttsService === 'openai',
         label: t('settingTTS.showAllLocaleVoice.title'),
         minWidth: undefined,
@@ -57,14 +63,14 @@ const AgentTTS = memo(() => {
         children: (
           <Select defaultValue={openaiVoiceOptions?.[0].value} options={openaiVoiceOptions} />
         ),
-        divider: false,
-
+        desc: t('settingTTS.voice.desc'),
         hidden: config.tts.ttsService !== 'openai',
         label: t('settingTTS.voice.title'),
         name: [TTS_SETTING_KEY, 'voice', 'openai'],
       },
       {
         children: <Select defaultValue={edgeVoiceOptions?.[0].value} options={edgeVoiceOptions} />,
+        desc: t('settingTTS.voice.desc'),
         divider: false,
         hidden: config.tts.ttsService !== 'edge',
         label: t('settingTTS.voice.title'),
@@ -74,16 +80,24 @@ const AgentTTS = memo(() => {
         children: (
           <Select defaultValue={microsoftVoiceOptions?.[0].value} options={microsoftVoiceOptions} />
         ),
+        desc: t('settingTTS.voice.desc'),
         divider: false,
         hidden: config.tts.ttsService !== 'microsoft',
         label: t('settingTTS.voice.title'),
         name: [TTS_SETTING_KEY, 'voice', 'microsoft'],
       },
       {
-        children: <Select options={sstOptions} />,
-        desc: t('settingTTS.sttService.desc'),
-        label: t('settingTTS.sttService.title'),
-        name: [TTS_SETTING_KEY, 'sttService'],
+        children: (
+          <Select
+            options={[
+              { label: t('settingTheme.lang.autoMode'), value: 'auto' },
+              ...sttLocaleOptions,
+            ]}
+          />
+        ),
+        desc: t('settingTTS.sttLocale.desc'),
+        label: t('settingTTS.sttLocale.title'),
+        name: [TTS_SETTING_KEY, 'sttLocale'],
       },
     ],
     icon: Mic,

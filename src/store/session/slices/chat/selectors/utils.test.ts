@@ -43,7 +43,7 @@ beforeEach(() => {
       systemRole: '',
       tts: {
         ttsService: 'openai',
-        sttService: 'openai',
+        sttLocale: 'auto',
         showAllLocaleVoice: false,
         voice: {
           openai: 'alloy',
@@ -225,7 +225,7 @@ describe('organizeChats', () => {
         },
         tts: {
           ttsService: 'openai',
-          sttService: 'openai',
+          sttLocale: 'auto',
           showAllLocaleVoice: false,
           voice: {
             openai: 'alloy',

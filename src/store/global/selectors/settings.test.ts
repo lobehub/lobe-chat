@@ -22,7 +22,7 @@ describe('settingsSelectors', () => {
               params: {},
               tts: {
                 showAllLocaleVoice: false,
-                sttService: 'openai',
+                sttLocale: 'auto',
                 ttsService: 'openai',
                 voice: {
                   openai: 'alloy',
@@ -33,6 +33,14 @@ describe('settingsSelectors', () => {
               avatar: 'Default Agent',
               description: 'Default agent for testing',
             },
+          },
+          tts: {
+            openAI: {
+              sttModel: 'whisper-1',
+              ttsModel: 'tts-1',
+            },
+            sttPersisted: false,
+            sttServer: 'openai',
           },
           languageModel: {
             openAI: {
@@ -69,7 +77,7 @@ describe('settingsSelectors', () => {
             plugins: [],
             tts: {
               showAllLocaleVoice: false,
-              sttService: 'openai',
+              sttLocale: 'auto',
               ttsService: 'openai',
               voice: {
                 openai: 'alloy',
@@ -80,6 +88,14 @@ describe('settingsSelectors', () => {
             avatar: 'Default Agent',
             description: 'Default agent for testing',
           },
+        },
+        tts: {
+          openAI: {
+            sttModel: 'whisper-1',
+            ttsModel: 'tts-1',
+          },
+          sttPersisted: false,
+          sttServer: 'openai',
         },
         languageModel: {
           openAI: {

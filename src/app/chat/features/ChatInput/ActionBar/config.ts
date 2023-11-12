@@ -15,5 +15,5 @@ export const actionMap: Record<string, FC> = {
 };
 
 // we can make these action lists configurable in the future
-export const leftActionList = ['model', 'temperature', 'history', 'token'];
+export const leftActionList = ['model', 'temperature', 'history'];
 export const rightActionList = ['clear'];

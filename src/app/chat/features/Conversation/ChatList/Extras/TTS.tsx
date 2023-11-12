@@ -31,6 +31,7 @@ interface TTSProps extends ChatTTS {
 const TTS = memo<TTSProps>(({ id, init, content, loading }) => {
   const [isStart, setIsStart] = useState(false);
   const { t } = useTranslation('chat');
+  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
   const [ttsMessage, clearTTS, toggleChatLoading] = useSessionStore((s) => [
     s.ttsMessage,
     s.clearTTS,
@@ -53,6 +54,7 @@ const TTS = memo<TTSProps>(({ id, init, content, loading }) => {
           key: openAIAPI,
           proxy: openAIProxyUrl,
         },
+        model: settings.tts.openAI.ttsModel,
         name: ttsConfig.voice.openai,
       } as OpenaiTtsOptions;
       break;

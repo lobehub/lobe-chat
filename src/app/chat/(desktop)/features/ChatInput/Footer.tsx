@@ -7,9 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import SaveTopic from '@/app/chat/features/ChatInput/Topic';
+import { useSendMessage } from '@/app/chat/features/ChatInput/useSend';
 import { useSessionStore } from '@/store/session';
-
-import { useSendMessage } from './useSend';
 
 const useStyles = createStyles(({ css }) => ({
   footerBar: css`

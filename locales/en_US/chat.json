@@ -35,6 +35,10 @@
     "withSystemRole": "Include Agent Role Setting"
   },
   "stop": "Stop",
+  "stt": {
+    "action": "Voice Input",
+    "loading": "Recognizing..."
+  },
   "temp": "Temporary",
   "tokenDetail": "Role Setting: {{systemRoleToken}} · Chat History: {{chatsToken}}",
   "tokenTag": {

@@ -217,7 +217,7 @@ describe('sessionsReducer', () => {
             systemRole: 'system-role',
             tts: {
               showAllLocaleVoice: false,
-              sttService: 'openai',
+              sttLocale: 'auto',
               ttsService: 'openai',
               voice: {
                 openai: 'alloy',
@@ -267,7 +267,7 @@ describe('sessionsReducer', () => {
             systemRole: 'system',
             tts: {
               showAllLocaleVoice: false,
-              sttService: 'openai',
+              sttLocale: 'auto',
               ttsService: 'openai',
               voice: {
                 openai: 'alloy',
@@ -300,7 +300,7 @@ describe('sessionsReducer', () => {
           params: {},
           tts: {
             ttsService: 'openai',
-            sttService: 'openai',
+            sttLocale: 'auto',
             showAllLocaleVoice: false,
             voice: {
               openai: 'alloy',

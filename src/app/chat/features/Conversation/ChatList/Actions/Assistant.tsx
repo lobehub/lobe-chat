@@ -13,7 +13,7 @@ export const AssistantActionsBar: RenderAction = memo(({ text, id, onActionClick
 
   return (
     <ActionIconGroup
-      dropdownMenu={[edit, copy, regenerate, tts, divider, translate, divider, del]}
+      dropdownMenu={[edit, copy, regenerate, divider, tts, translate, divider, del]}
       items={[regenerate, copy]}
       onActionClick={onActionClick}
       type="ghost"

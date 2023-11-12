@@ -222,8 +222,23 @@
       "title": "Text-to-Speech Service"
     },
     "voice": {
-      "title": "Text-to-Speech Voices"
-    }
+      "title": "Text-to-Speech Voices",
+      "desc": "Select a voice for the current assistant, different TTS services support different voices"
+    },
+    "openai": {
+      "sttModel": "OpenAI Speech Recognition Model",
+      "ttsModel": "OpenAI Text-to-Speech Model"
+    },
+    "stt": "Speech Recognition Settings",
+    "sttLocale": {
+      "desc": "The language of the speech input, this option can improve the accuracy of speech recognition",
+      "title": "Speech Recognition Language"
+    },
+    "sttPersisted": {
+      "desc": "When enabled, speech recognition will not automatically end and requires manual click on the end button",
+      "title": "Manually End Speech Recognition"
+    },
+    "tts": "Text-to-Speech Settings"
   },
   "settingTheme": {
     "avatar": {
@@ -263,6 +278,7 @@
   "tab": {
     "agent": "Default Agent",
     "common": "Common Settings",
-    "llm": "Custom LLM API"
+    "llm": "Custom LLM API",
+    "tts": "Speech Services"
   }
 }

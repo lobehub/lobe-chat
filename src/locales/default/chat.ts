@@ -38,6 +38,10 @@ export default {
     withSystemRole: '包含助手角色设定',
   },
   stop: '停止',
+  stt: {
+    action: '语音输入',
+    loading: '识别中...',
+  },
   temp: '临时',
   tokenDetail: '角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}',
   tokenTag: {
