@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
+import { TTS_URL } from '@/services/_url';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -68,5 +69,5 @@ export const getClientConfig = () => ({
 
   // tts
   MICROSOFT_SPEECH_PROXY_URL:
-    process.env.NEXT_PUBLIC_MICROSOFT_SPEECH_PROXY_URL || '/api/tts/microsoft-speech',
+    process.env.NEXT_PUBLIC_MICROSOFT_SPEECH_PROXY_URL || TTS_URL.microsoft,
 });

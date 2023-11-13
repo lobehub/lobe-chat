@@ -1,7 +1,7 @@
-import { handleMicrosoftSpeechRequest } from '@lobehub/tts/es/server';
+import { fetchMicrosoftSpeech } from '@/services/tts';
 
 export const runtime = 'edge';
 
 export const POST = async (req: Request) => {
-  return await handleMicrosoftSpeechRequest(req, { duplex: 'half' });
+  return await fetchMicrosoftSpeech(req);
 };
