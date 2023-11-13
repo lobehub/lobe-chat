@@ -38,4 +38,15 @@ describe('getServerConfig', () => {
     const config = getServerConfig();
     expect(config.USE_AZURE_OPENAI).toBe(false);
   });
+
+  it('returns default IMGUR_CLIENT_ID when no environment variable is set', () => {
+    const config = getServerConfig();
+    expect(config.IMGUR_CLIENT_ID).toBe('e415f320d6e24f9');
+  });
+
+  it('returns custom IMGUR_CLIENT_ID when environment variable is set', () => {
+    process.env.IMGUR_CLIENT_ID = 'custom-client-id';
+    const config = getServerConfig();
+    expect(config.IMGUR_CLIENT_ID).toBe('custom-client-id');
+  });
 });
