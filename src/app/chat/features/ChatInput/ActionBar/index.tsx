@@ -18,11 +18,13 @@ export interface ActionBarProps {
   padding?: number | string;
   rightAreaEndRender?: ReactNode;
   rightAreaStartRender?: ReactNode;
+  showToken?: boolean;
 }
 
 const ActionBar = memo<ActionBarProps>(
   ({
     padding = '0 16px',
+    showToken = true,
     rightAreaStartRender,
     rightAreaEndRender,
     leftAreaStartRender,
@@ -40,7 +42,7 @@ const ActionBar = memo<ActionBarProps>(
           {leftAreaStartRender}
           <RenderActionList dataSource={leftActionList} />
           {leftAreaEndRender}
-          <RenderActionList dataSource={['token']} />
+          {showToken && <RenderActionList dataSource={['token']} />}
         </Flexbox>
         <Flexbox align={'center'} flex={0} gap={4} horizontal justify={'flex-end'}>
           {rightAreaStartRender}

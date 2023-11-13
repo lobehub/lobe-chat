@@ -7,7 +7,7 @@ declare global {
       AGENTS_INDEX_URL?: string;
       PLUGINS_INDEX_URL?: string;
 
-      MICROSOFT_SPEECH_PROXY_URL?: string;
+      NEXT_PUBLIC_MICROSOFT_SPEECH_PROXY_URL?: string;
 
       NEXT_PUBLIC_CUSTOM_MODELS?: string;
 
@@ -67,5 +67,6 @@ export const getClientConfig = () => ({
   I18N_DEBUG_SERVER: process.env.NEXT_PUBLIC_I18N_DEBUG_SERVER === '1',
 
   // tts
-  MICROSOFT_SPEECH_PROXY_URL: process.env.MICROSOFT_SPEECH_PROXY_URL || '/api/tts/microsoft-speech',
+  MICROSOFT_SPEECH_PROXY_URL:
+    process.env.NEXT_PUBLIC_MICROSOFT_SPEECH_PROXY_URL || '/api/tts/microsoft-speech',
 });

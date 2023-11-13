@@ -1,9 +1,4 @@
-import {
-  getAzureVoiceOptions,
-  getEdgeVoiceOptions,
-  getOpenaiVoiceOptions,
-  getVoiceLocaleOptions,
-} from '@lobehub/tts';
+import { getAzureVoiceOptions, getEdgeVoiceOptions, getVoiceLocaleOptions } from '@lobehub/tts';
 import { Form, ItemGroup } from '@lobehub/ui';
 import { Form as AFrom, Select, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -16,7 +11,7 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 
 import { useStore } from '../store';
-import { ttsOptions } from './options';
+import { openaiVoiceOptions, ttsOptions } from './options';
 
 const TTS_SETTING_KEY = 'tts';
 
@@ -31,7 +26,6 @@ const AgentTTS = memo(() => {
     form.setFieldsValue(config);
   }, [config]);
   const showAllLocaleVoice = config.tts.showAllLocaleVoice;
-  const openaiVoiceOptions = useMemo(() => getOpenaiVoiceOptions(), []);
   const edgeVoiceOptions = useMemo(
     () => getEdgeVoiceOptions(showAllLocaleVoice ? undefined : locale),
     [locale, showAllLocaleVoice],

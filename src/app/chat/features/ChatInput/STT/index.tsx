@@ -1,14 +1,12 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { Button, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { Mic, MicOff } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSTT } from '@/hooks/useSTT';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -24,14 +22,10 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
 
-  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
-
   const [loading, updateInputMessage] = useSessionStore((s) => [
     !!s.chatLoadingId,
     s.updateInputMessage,
   ]);
-
-  const isPersisted = settings.tts.sttPersisted;
 
   const { start, isLoading, stop, formattedTime, time } = useSTT((text) => {
     if (loading) stop();
@@ -76,7 +70,6 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
     >
       <Render
         icon={iconRender}
-        loading={isPersisted ? undefined : isLoading}
         onClick={triggerStartStop}
         placement={'bottom'}
         style={{ flex: 'none' }}
