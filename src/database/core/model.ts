@@ -11,8 +11,8 @@ export class BaseModel<N extends keyof LocalDBSchema = any> {
   private readonly schema: ZodSchema;
   private readonly _tableName: keyof LocalDBSchema;
 
-  constructor(table: N, schema: ZodSchema) {
-    this.db = LocalDBInstance;
+  constructor(table: N, schema: ZodSchema, db = LocalDBInstance) {
+    this.db = db;
     this.schema = schema;
     this._tableName = table;
   }

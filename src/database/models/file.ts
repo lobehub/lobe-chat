@@ -1,7 +1,7 @@
 import { LocalFile, LocalFileSchema } from '@/types/database/files';
 import { nanoid } from '@/utils/uuid';
 
-import { BaseModel } from './core';
+import { BaseModel } from '../core';
 
 class _FileModel extends BaseModel {
   constructor() {

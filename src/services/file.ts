@@ -1,4 +1,4 @@
-import { FileModel } from '@/database/file';
+import { FileModel } from '@/database/models/file';
 import { LocalFile } from '@/types/database/files';
 import { FilePreview } from '@/types/files';
 
