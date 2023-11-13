@@ -69,6 +69,8 @@ const nextConfig = {
 
   reactStrictMode: true,
 
+  transpilePackages: ['@lobehub/ui', '@lobehub/tts', 'antd-style', 'lodash-es'],
+
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
