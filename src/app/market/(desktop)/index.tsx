@@ -6,18 +6,17 @@ import { FC, memo } from 'react';
 
 import AgentCard from '@/app/market/features/AgentCard';
 import ResponsiveIndex from '@/components/ResponsiveIndex';
-import { AgentsMarketIndexItem } from '@/types/market';
 
 import Index from '../index';
 import Layout from './layout.desktop';
 
 const Mobile: FC = dynamic(() => import('../(mobile)'), { ssr: false }) as FC;
 
-export default memo<{ defaultAgents?: AgentsMarketIndexItem[] }>(({ defaultAgents }) => (
+export default memo(() => (
   <ResponsiveIndex Mobile={Mobile}>
     <Layout>
       <Index />
-      <AgentCard CardRender={SpotlightCard} defaultAgents={defaultAgents} />
+      <AgentCard CardRender={SpotlightCard} />
     </Layout>
   </ResponsiveIndex>
 ));

@@ -12,6 +12,7 @@ import type { Store } from './store';
 export interface StoreAction {
   activateAgent: (identifier: string) => void;
   deactivateAgent: () => void;
+  setSearchKeywords: (keywords: string) => void;
   updateAgentMap: (key: string, value: AgentsMarketItem) => void;
   useFetchAgent: (identifier: string) => SWRResponse<AgentsMarketItem>;
   useFetchAgentList: () => SWRResponse<LobeChatAgentsMarketIndex>;
@@ -28,6 +29,9 @@ export const createMarketAction: StateCreator<
   },
   deactivateAgent: () => {
     set({ currentIdentifier: undefined }, false, 'deactivateAgent');
+  },
+  setSearchKeywords: (keywords) => {
+    set({ searchKeywords: keywords });
   },
   updateAgentMap: (key, value) => {
     const { agentMap } = get();
@@ -56,7 +60,11 @@ export const createMarketAction: StateCreator<
   useFetchAgentList: () =>
     useSWR<LobeChatAgentsMarketIndex>(getCurrentLanguage(), getAgentList, {
       onSuccess: (agentMarketIndex) => {
-        set({ agentList: agentMarketIndex.agents }, false, 'useFetchAgentList');
+        set(
+          { agentList: agentMarketIndex.agents, tagList: agentMarketIndex.tags },
+          false,
+          'useFetchAgentList',
+        );
       },
     }),
 });
