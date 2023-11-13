@@ -13,13 +13,16 @@ import AgentCardBanner from './AgentCardBanner';
 import { useStyles } from './style';
 
 const { Paragraph } = Typography;
+
 const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
   const onAgentCardClick = useMarketStore((s) => s.activateAgent);
-  const { avatar, title, description, tags, backgroundColor } = meta;
   const { styles, theme } = useStyles();
   const { isDarkMode } = useThemeMode();
+
+  const { avatar, title, description, tags, backgroundColor } = meta;
+
   return (
     <Flexbox className={styles.container} onClick={() => onAgentCardClick(identifier)}>
       <AgentCardBanner meta={meta} style={{ opacity: isDarkMode ? 0.9 : 0.4 }} />

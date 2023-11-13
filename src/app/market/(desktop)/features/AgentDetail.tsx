@@ -1,6 +1,6 @@
 import { DraggablePanel, DraggablePanelBody, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { memo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { MARKET_SIDEBAR_WIDTH } from '@/const/layoutTokens';
@@ -31,6 +31,18 @@ const SideBar = memo(() => {
     s.activateAgent,
   ]);
 
+  const handleExpandChange = useCallback(
+    (show: boolean) => {
+      if (!show) {
+        setTempId(useMarketStore.getState().currentIdentifier);
+        deactivateAgent();
+      } else if (tempId) {
+        activateAgent(tempId);
+      }
+    },
+    [deactivateAgent, activateAgent, tempId],
+  );
+
   return (
     <DraggablePanel
       className={styles.drawer}
@@ -40,14 +52,7 @@ const SideBar = memo(() => {
       expand={showAgentSidebar}
       minWidth={MARKET_SIDEBAR_WIDTH}
       mode={'fixed'}
-      onExpandChange={(show) => {
-        if (!show) {
-          setTempId(useMarketStore.getState().currentIdentifier);
-          deactivateAgent();
-        } else if (tempId) {
-          activateAgent(tempId);
-        }
-      }}
+      onExpandChange={handleExpandChange}
       placement={'right'}
     >
       <DraggablePanelContainer

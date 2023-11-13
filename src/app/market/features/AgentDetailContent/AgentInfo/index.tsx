@@ -22,11 +22,10 @@ const AgentModalInner = memo(() => {
     s.useFetchAgent,
     s.currentIdentifier,
   ]);
-  const { styles } = useStyles();
-
-  const { data, isLoading } = useFetchAgent(currentIdentifier);
   const { t } = useTranslation('market');
   const [tab, setTab] = useState<string>(InfoTabs.prompt);
+  const { data, isLoading } = useFetchAgent(currentIdentifier);
+  const { styles } = useStyles();
 
   if (isLoading || !data?.meta) return <Loading />;
 
