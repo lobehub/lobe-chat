@@ -1,5 +1,5 @@
 import { Icon, RenderErrorMessage } from '@lobehub/ui';
-import { Button, Segmented } from 'antd';
+import { Button, Input, Segmented } from 'antd';
 import { KeySquare, SquareAsterisk } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,6 @@ import { Flexbox } from 'react-layout-kit';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
-import OtpInput from '../OTPInput';
 import APIKeyForm from './ApiKeyForm';
 import { ErrorActionContainer, FormAction } from './style';
 
@@ -47,11 +46,12 @@ const InvalidAccess: RenderErrorMessage = memo(({ id }) => {
               description={t('unlock.password.description')}
               title={t('unlock.password.title')}
             >
-              <OtpInput
+              <Input.Password
                 onChange={(e) => {
-                  setSettings({ password: e });
+                  setSettings({ password: e.target.value });
                 }}
-                validationPattern={/.*/}
+                placeholder={t('unlock.password.placeholder')}
+                type={'block'}
                 value={password}
               />
             </FormAction>
