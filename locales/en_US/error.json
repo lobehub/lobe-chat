@@ -37,7 +37,8 @@
     "confirm": "Confirm and Retry",
     "password": {
       "description": "The application encryption has been enabled by the administrator. Enter the application password to unlock the application. The password only needs to be filled in once.",
-      "title": "Enter Password to Unlock Application"
+      "title": "Enter Password to Unlock Application",
+      "placeholder": "Please enter password"
     },
     "closeMessage": "Close message"
   }
