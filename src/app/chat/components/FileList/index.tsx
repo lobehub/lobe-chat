@@ -14,11 +14,14 @@ import Lightbox from './Lightbox';
 // }));
 
 interface FileListProps {
+  alwaysShowClose?: boolean;
+
   editable?: boolean;
+
   items: string[];
 }
 
-const FileList = memo<FileListProps>(({ items, editable = true }) => {
+const FileList = memo<FileListProps>(({ items, editable = true, alwaysShowClose }) => {
   // const { styles } = useStyles();
 
   const [showLightbox, setShowLightbox] = useState(false);
@@ -38,6 +41,7 @@ const FileList = memo<FileListProps>(({ items, editable = true }) => {
       >
         {items.map((i, index) => (
           <FileItem
+            alwaysShowClose={alwaysShowClose}
             editable={editable}
             id={i}
             key={i}
