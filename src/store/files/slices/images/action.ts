@@ -18,7 +18,7 @@ export interface FileAction {
   removeFile: (id: string) => Promise<void>;
   setImageMapItem: (id: string, item: FilePreview) => void;
   uploadFile: (file: File) => Promise<void>;
-  uploadMultiFiles: (fileList: FileList) => Promise<void>;
+
   useFetchFile: (id: string) => SWRResponse<FilePreview>;
 }
 
@@ -67,30 +67,6 @@ export const createFileSlice: StateCreator<
         false,
         t('uploadFile'),
       );
-    } catch (error) {
-      // 提示用户上传失败
-      console.error('upload error:', error);
-    }
-  },
-  uploadMultiFiles: async (fileList) => {
-    try {
-      const pools = [...fileList].map(async (file) => ({
-        createdAt: file.lastModified,
-        data: await file.arrayBuffer(),
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      }));
-      const files = await Promise.all(pools);
-      console.log(files);
-
-      // const data = await fileService.uploadFile(files);
-      //
-      // set(
-      //   ({ inputFilesList }) => ({ inputFilesList: [...inputFilesList, data.id] }),
-      //   false,
-      //   t('uploadFile'),
-      // );
     } catch (error) {
       // 提示用户上传失败
       console.error('upload error:', error);
