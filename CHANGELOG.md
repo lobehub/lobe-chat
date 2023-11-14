@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.101.2](https://github.com/lobehub/lobe-chat/compare/v0.101.1...v0.101.2)
+
+<sup>Released on **2023-11-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: upload image to vision model adapting to mobile device.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: upload image to vision model adapting to mobile device, closes [#457](https://github.com/lobehub/lobe-chat/issues/457) ([9c4f4ee](https://github.com/lobehub/lobe-chat/commit/9c4f4ee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.101.1](https://github.com/lobehub/lobe-chat/compare/v0.101.0...v0.101.1)
 
 <sup>Released on **2023-11-14**</sup>
