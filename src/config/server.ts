@@ -12,9 +12,15 @@ declare global {
       AZURE_API_KEY?: string;
       AZURE_API_VERSION?: string;
       USE_AZURE_OPENAI?: string;
+
+      IMGUR_CLIENT_ID?: string;
     }
   }
 }
+
+// we apply a free imgur app to get a client id
+// refs: https://apidocs.imgur.com/
+const DEFAULT_IMAGUR_CLIENT_ID = 'e415f320d6e24f9';
 
 export const getServerConfig = () => {
   if (typeof process === 'undefined') {
@@ -30,5 +36,7 @@ export const getServerConfig = () => {
     AZURE_API_KEY: process.env.AZURE_API_KEY,
     AZURE_API_VERSION: process.env.AZURE_API_VERSION,
     USE_AZURE_OPENAI: process.env.USE_AZURE_OPENAI === '1',
+
+    IMGUR_CLIENT_ID: process.env.IMGUR_CLIENT_ID || DEFAULT_IMAGUR_CLIENT_ID,
   };
 };

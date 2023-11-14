@@ -18,10 +18,10 @@ const useStyles = createStyles(({ css }) => {
 });
 
 const InputArea = memo(() => {
-  const { cx, styles } = useStyles();
+  const { styles } = useStyles();
 
   return (
-    <div className={cx(styles.textareaContainer)}>
+    <div className={styles.textareaContainer}>
       <InputAreaInner className={styles.textarea} />
     </div>
   );

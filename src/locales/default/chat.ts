@@ -70,5 +70,10 @@ export default {
     clear: '删除语音',
   },
   updateAgent: '更新助理信息',
+  upload: {
+    actionTooltip: '上传图片',
+    dragDesc: '拖拽文件到这里，支持上传多个图片。按住 Shift 直接发送图片',
+    dragTitle: '上传图片',
+  },
   warp: '换行',
 };

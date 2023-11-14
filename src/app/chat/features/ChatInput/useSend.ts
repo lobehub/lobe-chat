@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { filesSelectors, useFileStore } from '@/store/files';
 import { useSessionStore } from '@/store/session';
 
 export const useSendMessage = () => {
@@ -11,7 +12,10 @@ export const useSendMessage = () => {
   return useCallback(() => {
     const store = useSessionStore.getState();
     if (!!store.chatLoadingId) return;
-    sendMessage(store.inputMessage);
+    const imageList = filesSelectors.imageUrlOrBase64List(useFileStore.getState());
+
+    sendMessage(store.inputMessage, imageList);
     updateInputMessage('');
+    useFileStore.getState().clearImageList();
   }, []);
 };

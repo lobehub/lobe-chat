@@ -42,18 +42,19 @@ export interface ChatMessage extends BaseDataModel {
     tts?: ChatTTS;
   } & Record<string, any>;
 
+  files?: string[];
   /**
    * replace with plugin
    * @deprecated
    */
   function_call?: OpenAIFunctionCall;
+
   name?: string;
 
   parentId?: string;
-
   plugin?: PluginRequestPayload;
-  pluginState?: any;
 
+  pluginState?: any;
   // 引用
   quotaId?: string;
   /**

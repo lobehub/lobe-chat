@@ -206,6 +206,103 @@ describe('sessionsReducer', () => {
     });
   });
 
+  describe('updateSessionFiles', () => {
+    it('should update session files when valid id, key, and value are provided', () => {
+      const state: LobeSessions = {
+        'session-id': {
+          id: 'session-id',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system-role',
+          },
+          type: 'agent',
+          meta: {
+            avatar: 'avatar-url',
+            backgroundColor: 'background-color',
+            description: 'description',
+            tags: ['tag1', 'tag2'],
+            title: 'title',
+          },
+        } as LobeAgentSession,
+      };
+      const id = 'session-id';
+      const files = ['new-file'];
+      const payload: SessionDispatch = { type: 'updateSessionFiles', id, files };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual({
+        'session-id': {
+          ...state['session-id'],
+          files: ['new-file'],
+        },
+      });
+    });
+
+    it('should not change state when invalid id, key, and value are provided', () => {
+      const state: LobeSessions = {
+        'session-id': {
+          id: 'session-id',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system-role',
+          },
+          type: 'agent',
+          meta: {
+            avatar: 'avatar-url',
+            backgroundColor: 'background-color',
+            description: 'description',
+            tags: ['tag1', 'tag2'],
+            title: 'title',
+          },
+        } as LobeAgentSession,
+      };
+      const id = 'non-existent-id';
+      const files = ['new-file'];
+      const payload: SessionDispatch = { type: 'updateSessionFiles', id, files };
+
+      const newState = sessionsReducer(state, payload);
+
+      expect(newState).toEqual(state);
+    });
+
+    it('should not change state when valid id, invalid files  are provided', () => {
+      const state: LobeSessions = {
+        'session-id': {
+          id: 'session-id',
+          config: {
+            model: 'gpt-3.5-turbo',
+            params: {},
+            systemRole: 'system-role',
+          },
+          type: 'agent',
+          meta: {
+            avatar: 'avatar-url',
+            backgroundColor: 'background-color',
+            description: 'description',
+            tags: ['tag1', 'tag2'],
+            title: 'title',
+          },
+        } as LobeAgentSession,
+      };
+      const id = 'session-id';
+
+      const errFile1 = 123213412 as any;
+      const res1 = sessionsReducer(state, { type: 'updateSessionFiles', id, files: errFile1 });
+      expect(res1).toEqual(state);
+
+      const errFile2 = undefined as any;
+      const res2 = sessionsReducer(state, { type: 'updateSessionFiles', id, files: errFile2 });
+      expect(res2).toEqual(state);
+
+      const errFile3 = ['state', 123] as any;
+      const res3 = sessionsReducer(state, { type: 'updateSessionFiles', id, files: errFile3 });
+      expect(res3).toEqual(state);
+    });
+  });
+
   describe('updateSessionConfig', () => {
     it('should update session config when valid id and partial config are provided', () => {
       const state: LobeSessions = {
@@ -369,7 +466,7 @@ describe('sessionsReducer', () => {
     });
   });
 
-  test('should not change state when invalid operation type is provided', () => {
+  it('should not change state when invalid operation type is provided', () => {
     const state: LobeSessions = {
       session1: {
         id: 'session1',

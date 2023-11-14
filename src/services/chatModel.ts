@@ -1,8 +1,9 @@
 import { merge } from 'lodash-es';
 
+import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { pluginSelectors, usePluginStore } from '@/store/plugin';
 import { initialLobeAgentConfig } from '@/store/session/initialState';
-import type { ChatCompletionFunctions, OpenAIChatStreamPayload } from '@/types/openai/chat';
+import type { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 import { createHeaderWithOpenAI } from './_header';
 import { OPENAI_URLS } from './_url';
@@ -26,13 +27,17 @@ export const fetchChatModel = (
     },
     params,
   );
-  // ============  1. 前置处理 functions   ============ //
+  // ============   preprocess tools   ============ //
 
-  const filterFunctions: ChatCompletionFunctions[] = pluginSelectors.enabledSchema(enabledPlugins)(
-    usePluginStore.getState(),
-  );
+  const filterTools = pluginSelectors.enabledSchema(enabledPlugins)(usePluginStore.getState());
 
-  const functions = filterFunctions.length === 0 ? undefined : filterFunctions;
+  // the rule that model can use tools:
+  // 1. tools is not empty
+  // 2. model is not in vision white list, because vision model can't use tools
+  // TODO: we need to find some method to let vision model use tools
+  const shouldUseTools = filterTools.length > 0 && !VISION_MODEL_WHITE_LIST.includes(payload.model);
+
+  const functions = shouldUseTools ? filterTools : undefined;
 
   return fetch(OPENAI_URLS.chat, {
     body: JSON.stringify({ ...payload, functions }),

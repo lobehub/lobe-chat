@@ -107,7 +107,7 @@ describe('settingsSelectors', () => {
       });
     });
   });
-  //
+
   // describe('defaultAgent', () => {
   //   it('should merge DEFAULT_AGENT and s.settings.defaultAgent correctly', () => {
   //     const s: GlobalStore = {
@@ -126,8 +126,6 @@ describe('settingsSelectors', () => {
   //     };
   //
   //     const result = settingsSelectors.defaultAgent(s);
-  //
-  //
   //
   //     expect(result).toEqual(expected);
   //   });
