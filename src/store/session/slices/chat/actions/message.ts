@@ -1,10 +1,14 @@
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
+import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { LOADING_FLAT } from '@/const/message';
+import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
 import { fetchChatModel } from '@/services/chatModel';
+import { filesSelectors, useFileStore } from '@/store/files';
 import { SessionStore } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
+import { OpenAIChatMessage, UserMessageContentPart } from '@/types/openai/chat';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
@@ -12,6 +16,7 @@ import { nanoid } from '@/utils/uuid';
 
 import { agentSelectors } from '../../agentConfig/selectors';
 import { sessionSelectors } from '../../session/selectors';
+import { FileDispatch, filesReducer } from '../reducers/files';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
 import { chatSelectors } from '../selectors';
 import { getSlicedMessagesWithConfig } from '../utils';
@@ -37,6 +42,10 @@ export interface ChatMessageAction {
    * @param id - 消息 ID
    */
   deleteMessage: (id: string) => void;
+  /**
+   * agent files dispatch method
+   */
+  dispatchAgentFile: (payload: FileDispatch) => void;
   /**
    * 分发消息
    * @param payload - 消息分发参数
@@ -66,7 +75,7 @@ export interface ChatMessageAction {
    * 发送消息
    * @param text - 消息文本
    */
-  sendMessage: (text: string) => Promise<void>;
+  sendMessage: (text: string, images?: { id: string; url: string }[]) => Promise<void>;
   stopGenerateMessage: () => void;
   toggleChatLoading: (
     loading: boolean,
@@ -164,6 +173,15 @@ export const chatMessage: StateCreator<
     get().dispatchMessage({ id, type: 'deleteMessage' });
   },
 
+  dispatchAgentFile: (payload) => {
+    const { activeId } = get();
+    const session = sessionSelectors.currentSession(get());
+    if (!activeId || !session) return;
+
+    const files = filesReducer(session.files || [], payload);
+
+    get().dispatchSession({ files, id: activeId, type: 'updateSessionFiles' });
+  },
   dispatchMessage: (payload) => {
     const { activeId } = get();
     const session = sessionSelectors.currentSession(get());
@@ -173,6 +191,7 @@ export const chatMessage: StateCreator<
 
     get().dispatchSession({ chats, id: activeId, type: 'updateSessionChat' });
   },
+
   fetchAIChatMessage: async (messages, assistantId) => {
     const { dispatchMessage, toggleChatLoading } = get();
 
@@ -186,17 +205,17 @@ export const chatMessage: StateCreator<
 
     const compiler = template(config.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
 
-    // ========================== //
-    //   对 messages 做统一预处理    //
-    // ========================== //
+    // ================================== //
+    //   messages uniformly preprocess    //
+    // ================================== //
 
-    // 1. 按参数设定截断长度
-    const slicedMessages = getSlicedMessagesWithConfig(messages, config);
+    // 1. slice messages with config
+    let preprocessMsgs = getSlicedMessagesWithConfig(messages, config);
 
-    // 2. 替换 inputMessage 模板
-    const postMessages = !config.inputTemplate
-      ? slicedMessages
-      : slicedMessages.map((m) => {
+    // 2. replace inputMessage template
+    preprocessMsgs = !config.inputTemplate
+      ? preprocessMsgs
+      : preprocessMsgs.map((m) => {
           if (m.role === 'user') {
             try {
               return { ...m, content: compiler({ text: m.content }) };
@@ -206,12 +225,41 @@ export const chatMessage: StateCreator<
               return m;
             }
           }
+
           return m;
         });
 
-    // 3. 添加 systemRole
+    // 3. add systemRole
     if (config.systemRole) {
-      postMessages.unshift({ content: config.systemRole, role: 'system' } as ChatMessage);
+      preprocessMsgs.unshift({ content: config.systemRole, role: 'system' } as ChatMessage);
+    }
+
+    let postMessages: OpenAIChatMessage[] = preprocessMsgs;
+
+    // 4. handle content type for vision model
+    // for the models with visual ability, add image url to content
+    // refs: https://platform.openai.com/docs/guides/vision/quick-start
+    if (VISION_MODEL_WHITE_LIST.includes(config.model)) {
+      postMessages = preprocessMsgs.map((m) => {
+        if (!m.files) return m;
+
+        const imageList = filesSelectors.getImageUrlOrBase64ByList(m.files)(
+          useFileStore.getState(),
+        );
+
+        if (imageList.length === 0) return m;
+
+        const content: UserMessageContentPart[] = [
+          { text: m.content, type: 'text' },
+          ...imageList.map(
+            (i) => ({ image_url: { detail: 'auto', url: i.url }, type: 'image_url' }) as const,
+          ),
+        ];
+        return { ...m, content };
+      });
+
+      // due to vision model's default max_tokens is very small, we need to set the max_tokens a larger one.
+      if (!config.params.max_tokens) config.params.max_tokens = VISION_MODEL_DEFAULT_MAX_TOKENS;
     }
 
     const fetcher = () =>
@@ -248,7 +296,7 @@ export const chatMessage: StateCreator<
 
     toggleChatLoading(false, undefined, t('generateMessage(end)') as string);
 
-    // also exist message like this: 请稍等，我帮您查询一下。{"function_call": {"name": "plugin-identifier____recommendClothes____standalone", "arguments": "{\n "mood": "",\n "gender": "man"\n}"}}
+    // also exist message like this:  请稍等，我帮您查询一下。{"function_call": {"name": "plugin-identifier____recommendClothes____standalone", "arguments": "{\n "mood": "",\n "gender": "man"\n}"}}
     if (!isFunctionCall) {
       const { content, valid } = testFunctionMessageAtEnd(output);
 
@@ -305,13 +353,27 @@ export const chatMessage: StateCreator<
     await coreProcessMessage(contextMessages, latestMsg.id);
   },
 
-  sendMessage: async (message) => {
-    const { dispatchMessage, coreProcessMessage, activeTopicId } = get();
+  sendMessage: async (message, files) => {
+    const { dispatchMessage, dispatchAgentFile, coreProcessMessage, activeTopicId } = get();
     const session = sessionSelectors.currentSession(get());
     if (!session || !message) return;
 
     const userId = nanoid();
-    dispatchMessage({ id: userId, message, role: 'user', type: 'addMessage' });
+
+    dispatchMessage({
+      id: userId,
+      message: message,
+      role: 'user',
+      type: 'addMessage',
+    });
+
+    // if message has attached with files, then add files to message and the agent
+    if (files && files.length > 0) {
+      const fileIdList = files.map((f) => f.id);
+      dispatchMessage({ id: userId, key: 'files', type: 'updateMessage', value: fileIdList });
+
+      dispatchAgentFile({ files: fileIdList, type: 'addFiles' });
+    }
 
     // if there is activeTopicId，then add topicId to message
     if (activeTopicId) {
@@ -341,7 +403,6 @@ export const chatMessage: StateCreator<
 
     toggleChatLoading(false);
   },
-
   toggleChatLoading: (loading, id, action) => {
     if (loading) {
       const abortController = new AbortController();

@@ -3,11 +3,14 @@ import { createStyles } from 'antd-style';
 import { Maximize2, Minimize2 } from 'lucide-react';
 import { memo, useState } from 'react';
 
-import Footer from '@/app/chat/(desktop)/features/ChatInput/Footer';
 import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
+import DragUpload from './DragUpload';
+import Footer from './Footer';
 import InputArea from './InputArea';
 
 const useStyles = createStyles(({ css }) => {
@@ -34,37 +37,42 @@ const ChatInputDesktopLayout = memo(() => {
     s.updatePreference,
   ]);
 
+  const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);
   return (
-    <DraggablePanel
-      fullscreen={expand}
-      headerHeight={HEADER_HEIGHT}
-      minHeight={CHAT_TEXTAREA_HEIGHT}
-      onSizeChange={(_, size) => {
-        if (!size) return;
+    <>
+      {canUpload && <DragUpload />}
+      <DraggablePanel
+        fullscreen={expand}
+        headerHeight={HEADER_HEIGHT}
+        minHeight={CHAT_TEXTAREA_HEIGHT}
+        onSizeChange={(_, size) => {
+          if (!size) return;
 
-        updatePreference({
-          inputHeight: typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
-        });
-      }}
-      placement="bottom"
-      size={{ height: inputHeight, width: '100%' }}
-      style={{ zIndex: 10 }}
-    >
-      <section className={styles.container} style={{ minHeight: CHAT_TEXTAREA_HEIGHT }}>
-        <ActionBar
-          rightAreaEndRender={
-            <ActionIcon
-              icon={expand ? Minimize2 : Maximize2}
-              onClick={() => {
-                setExpand(!expand);
-              }}
-            />
-          }
-        />
-        <InputArea />
-        <Footer />
-      </section>
-    </DraggablePanel>
+          updatePreference({
+            inputHeight:
+              typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
+          });
+        }}
+        placement="bottom"
+        size={{ height: inputHeight, width: '100%' }}
+        style={{ zIndex: 10 }}
+      >
+        <section className={styles.container} style={{ minHeight: CHAT_TEXTAREA_HEIGHT }}>
+          <ActionBar
+            rightAreaEndRender={
+              <ActionIcon
+                icon={expand ? Minimize2 : Maximize2}
+                onClick={() => {
+                  setExpand(!expand);
+                }}
+              />
+            }
+          />
+          <InputArea />
+          <Footer />
+        </section>
+      </DraggablePanel>
+    </>
   );
 });
 

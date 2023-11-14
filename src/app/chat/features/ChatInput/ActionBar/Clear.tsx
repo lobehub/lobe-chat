@@ -1,20 +1,27 @@
 import { ActionIcon } from '@lobehub/ui';
 import { Popconfirm } from 'antd';
 import { Eraser } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
 import HotKeys from '@/components/HotKeys';
 import { CLEAN_MESSAGE_KEY, PREFIX_KEY } from '@/const/hotkeys';
+import { useFileStore } from '@/store/files';
 import { useSessionStore } from '@/store/session';
 
 const Clear = memo(() => {
   const { t } = useTranslation('setting');
-  const [clearMessage] = useSessionStore((s) => [s.clearMessage, s.updateAgentConfig]);
+  const [clearMessage] = useSessionStore((s) => [s.clearMessage]);
+  const [clearImageList] = useFileStore((s) => [s.clearImageList]);
   const hotkeys = [PREFIX_KEY, CLEAN_MESSAGE_KEY].join('+');
 
-  useHotkeys(hotkeys, clearMessage, {
+  const resetConversation = useCallback(() => {
+    clearMessage();
+    clearImageList();
+  }, []);
+
+  useHotkeys(hotkeys, resetConversation, {
     preventDefault: true,
   });
 
@@ -23,7 +30,9 @@ const Clear = memo(() => {
       cancelText={t('cancel', { ns: 'common' })}
       okButtonProps={{ danger: true }}
       okText={t('ok', { ns: 'common' })}
-      onConfirm={() => clearMessage()}
+      onConfirm={() => {
+        resetConversation();
+      }}
       placement={'topRight'}
       title={t('confirmClearCurrentMessages', { ns: 'chat' })}
     >
