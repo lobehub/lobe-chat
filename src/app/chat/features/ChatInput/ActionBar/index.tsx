@@ -1,9 +1,9 @@
-import { ReactNode, memo } from 'react';
+import { ReactNode, memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { actionMap, leftActionList, rightActionList } from './config';
+import { ActionKeys, actionMap, getLeftActionList, getRightActionList } from './config';
 
-const RenderActionList = ({ dataSource }: { dataSource: string[] }) => (
+const RenderActionList = ({ dataSource }: { dataSource: ActionKeys[] }) => (
   <>
     {dataSource.map((key) => {
       const Render = actionMap[key];
@@ -15,21 +15,24 @@ const RenderActionList = ({ dataSource }: { dataSource: string[] }) => (
 export interface ActionBarProps {
   leftAreaEndRender?: ReactNode;
   leftAreaStartRender?: ReactNode;
+  mobile?: boolean;
   padding?: number | string;
   rightAreaEndRender?: ReactNode;
   rightAreaStartRender?: ReactNode;
-  showToken?: boolean;
 }
 
 const ActionBar = memo<ActionBarProps>(
   ({
     padding = '0 16px',
-    showToken = true,
+    mobile,
     rightAreaStartRender,
     rightAreaEndRender,
     leftAreaStartRender,
     leftAreaEndRender,
   }) => {
+    const leftActionList = useMemo(() => getLeftActionList(mobile), [mobile]);
+    const rightActionList = useMemo(() => getRightActionList(mobile), [mobile]);
+
     return (
       <Flexbox
         align={'center'}
@@ -42,7 +45,6 @@ const ActionBar = memo<ActionBarProps>(
           {leftAreaStartRender}
           <RenderActionList dataSource={leftActionList} />
           {leftAreaEndRender}
-          {showToken && <RenderActionList dataSource={['token']} />}
         </Flexbox>
         <Flexbox align={'center'} flex={0} gap={4} horizontal justify={'flex-end'}>
           {rightAreaStartRender}

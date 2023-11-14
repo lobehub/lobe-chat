@@ -4,7 +4,6 @@ import { Maximize2, Minimize2 } from 'lucide-react';
 import { memo, useState } from 'react';
 
 import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
-import STT from '@/app/chat/features/ChatInput/STT';
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -59,7 +58,6 @@ const ChatInputDesktopLayout = memo(() => {
       >
         <section className={styles.container} style={{ minHeight: CHAT_TEXTAREA_HEIGHT }}>
           <ActionBar
-            leftAreaEndRender={<STT />}
             rightAreaEndRender={
               <ActionIcon
                 icon={expand ? Minimize2 : Maximize2}

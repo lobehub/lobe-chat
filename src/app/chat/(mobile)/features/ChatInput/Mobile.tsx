@@ -27,7 +27,7 @@ const ChatInputArea = memo(() => {
 
   return (
     <Flexbox className={styles.container} gap={12}>
-      <ActionBar padding={'0 8px'} rightAreaStartRender={<SaveTopic mobile />} />
+      <ActionBar mobile padding={'0 8px'} rightAreaStartRender={<SaveTopic mobile />} />
       <Flexbox className={styles.inner} gap={8} horizontal>
         <STT mobile />
         <InputAreaInner mobile />
