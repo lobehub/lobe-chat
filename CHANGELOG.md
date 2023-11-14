@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.101.3](https://github.com/lobehub/lobe-chat/compare/v0.101.2...v0.101.3)
+
+<sup>Released on **2023-11-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve password ui to make it more clear.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve password ui to make it more clear, closes [#458](https://github.com/lobehub/lobe-chat/issues/458) ([e3d2a8e](https://github.com/lobehub/lobe-chat/commit/e3d2a8e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.101.2](https://github.com/lobehub/lobe-chat/compare/v0.101.1...v0.101.2)
 
 <sup>Released on **2023-11-14**</sup>
