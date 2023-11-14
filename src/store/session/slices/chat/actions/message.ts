@@ -16,6 +16,7 @@ import { nanoid } from '@/utils/uuid';
 
 import { agentSelectors } from '../../agentConfig/selectors';
 import { sessionSelectors } from '../../session/selectors';
+import { FileDispatch, filesReducer } from '../reducers/files';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
 import { chatSelectors } from '../selectors';
 import { getSlicedMessagesWithConfig } from '../utils';
@@ -41,6 +42,10 @@ export interface ChatMessageAction {
    * @param id - 消息 ID
    */
   deleteMessage: (id: string) => void;
+  /**
+   * agent files dispatch method
+   */
+  dispatchAgentFile: (payload: FileDispatch) => void;
   /**
    * 分发消息
    * @param payload - 消息分发参数
@@ -168,6 +173,15 @@ export const chatMessage: StateCreator<
     get().dispatchMessage({ id, type: 'deleteMessage' });
   },
 
+  dispatchAgentFile: (payload) => {
+    const { activeId } = get();
+    const session = sessionSelectors.currentSession(get());
+    if (!activeId || !session) return;
+
+    const files = filesReducer(session.files || [], payload);
+
+    get().dispatchSession({ files, id: activeId, type: 'updateSessionFiles' });
+  },
   dispatchMessage: (payload) => {
     const { activeId } = get();
     const session = sessionSelectors.currentSession(get());
@@ -177,6 +191,7 @@ export const chatMessage: StateCreator<
 
     get().dispatchSession({ chats, id: activeId, type: 'updateSessionChat' });
   },
+
   fetchAIChatMessage: async (messages, assistantId) => {
     const { dispatchMessage, toggleChatLoading } = get();
 
@@ -339,7 +354,7 @@ export const chatMessage: StateCreator<
   },
 
   sendMessage: async (message, files) => {
-    const { dispatchMessage, coreProcessMessage, activeTopicId } = get();
+    const { dispatchMessage, dispatchAgentFile, coreProcessMessage, activeTopicId } = get();
     const session = sessionSelectors.currentSession(get());
     if (!session || !message) return;
 
@@ -352,14 +367,12 @@ export const chatMessage: StateCreator<
       type: 'addMessage',
     });
 
-    // if message has attached with files, then add files to message
+    // if message has attached with files, then add files to message and the agent
     if (files && files.length > 0) {
-      dispatchMessage({
-        id: userId,
-        key: 'files',
-        type: 'updateMessage',
-        value: files.map((f) => f.id),
-      });
+      const fileIdList = files.map((f) => f.id);
+      dispatchMessage({ id: userId, key: 'files', type: 'updateMessage', value: fileIdList });
+
+      dispatchAgentFile({ files: fileIdList, type: 'addFiles' });
     }
 
     // if there is activeTopicId，then add topicId to message
@@ -369,7 +382,6 @@ export const chatMessage: StateCreator<
 
     // Get the current messages to generate AI response
     const messages = chatSelectors.currentChats(get());
-    console.log(messages);
 
     await coreProcessMessage(messages, userId);
 
@@ -391,7 +403,6 @@ export const chatMessage: StateCreator<
 
     toggleChatLoading(false);
   },
-
   toggleChatLoading: (loading, id, action) => {
     if (loading) {
       const abortController = new AbortController();

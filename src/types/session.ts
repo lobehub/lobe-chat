@@ -19,6 +19,7 @@ interface LobeSessionBase extends BaseDataModel {
    * 聊天记录
    */
   chats: ChatMessageMap;
+  files?: string[];
   /**
    * 置顶
    */

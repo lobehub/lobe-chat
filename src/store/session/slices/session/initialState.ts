@@ -25,6 +25,7 @@ export const initLobeSession: LobeAgentSession = {
   chats: {},
   config: initialLobeAgentConfig,
   createAt: Date.now(),
+  files: [],
   id: '',
   meta: DEFAULT_AGENT_META,
   type: LobeSessionType.Agent,

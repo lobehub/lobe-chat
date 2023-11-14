@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+import { z } from 'zod';
 
 import { ChatMessageMap } from '@/types/chatMessage';
 import { MetaData } from '@/types/meta';
@@ -39,7 +40,7 @@ interface UpdateSessionChat {
 }
 
 /**
- * @title 更新会话聊天上下文
+ * 更新会话聊天上下文
  */
 interface UpdateSessionTopic {
   /**
@@ -49,6 +50,15 @@ interface UpdateSessionTopic {
   topics: ChatTopicMap;
 
   type: 'updateSessionTopic';
+}
+
+/**
+ * 更新会话聊天上下文
+ */
+interface UpdateSessionFiles {
+  files: string[];
+  id: string;
+  type: 'updateSessionFiles';
 }
 
 interface UpdateSessionMeta {
@@ -76,6 +86,7 @@ export type SessionDispatch =
   | UpdateSessionMeta
   | UpdateSessionAgentConfig
   | UpdateSessionTopic
+  | UpdateSessionFiles
   | ToggleSessionPinned;
 
 export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): LobeSessions => {
@@ -133,6 +144,20 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
         if (!chat) return;
 
         chat.topics = payload.topics;
+      });
+    }
+
+    case 'updateSessionFiles': {
+      return produce(state, (draft) => {
+        const session = draft[payload.id];
+        if (!session || !payload.files) return;
+
+        const schema = z.array(z.string());
+
+        const { success } = schema.safeParse(payload.files);
+        if (!success) return;
+
+        session.files = payload.files;
       });
     }
 
