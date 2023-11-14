@@ -124,12 +124,12 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 | 最近新增                                                                                                                                                                           | 助手说明                                                                                                                                       |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| [中英文互译助手](https://chat-preview.lobehub.com/market?agent=en-cn-translator)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2023-11-14**</sup>                 | 中英文翻译专家，追求翻译信达雅<br/>`翻译` `中文` `英文`                                                                                        |
+| [科研文章翻译助手](https://chat-preview.lobehub.com/market?agent=s-rtranslation)<br/><sup>By **[aihoom](https://github.com/aihoom)** on **2023-11-14**</sup>                       | 能够帮你翻译科技文章的翻译助手<br/>`科研` `翻译`                                                                                               |
 | [学术写作增强机器人](https://chat-preview.lobehub.com/market?agent=academic-writing-eb)<br/><sup>By **[Ruler27](https://github.com/Ruler27)** on **2023-11-11**</sup>              | 学术英语拼写和修辞改进。<br/>`校对` `修辞` `学术` `研究` `英文` `润色`                                                                         |
 | [LobeChat 技术文档专家](https://chat-preview.lobehub.com/market?agent=lobe-chat-develop-doc-writter)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-05**</sup> | LobeChat 是一个 Next.js 框架构建的 AI 会话应用，我将会帮你一起书写 LobeChat 的开发文档<br/>`开发文档` `技术介绍` `next-js` `react` `lobe-chat` |
-| [Sketch 特性总结专家](https://chat-preview.lobehub.com/market?agent=sketch-changelog-highlighter)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-02**</sup>    | 擅长从 Sketch 的更新日志中提取关键变更要点<br/>`体验设计` `sketch` `更新` `特性` `文本总结`                                                    |
-| [抬杠高手](https://chat-preview.lobehub.com/market?agent=tqg-20231026)<br/><sup>By **[cake79](https://github.com/cake79)** on **2023-10-26**</sup>                                 | 模拟那些喜欢抬杠的人，能对用户输入的任何观点进行抬杠表达的角色<br/>`写作` `对话`                                                               |
 
-> 📊 Total agents: [<kbd>**39**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**41**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
