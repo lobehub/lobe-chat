@@ -1,11 +1,7 @@
-import { TextArea } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { memo, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+import { memo } from 'react';
 
-import { useSessionStore } from '@/store/session';
-
-import { useSendMessage } from '../../../features/ChatInput/useSend';
+import InputAreaInner from '@/app/chat/features/ChatInput/InputAreaInner';
 
 const useStyles = createStyles(({ css }) => {
   return {
@@ -22,46 +18,11 @@ const useStyles = createStyles(({ css }) => {
 });
 
 const InputArea = memo(() => {
-  const { t } = useTranslation('common');
-  const { cx, styles } = useStyles();
-
-  const isChineseInput = useRef(false);
-
-  const [loading, message, updateInputMessage] = useSessionStore((s) => [
-    !!s.chatLoadingId,
-    s.inputMessage,
-    s.updateInputMessage,
-  ]);
-
-  const handleSend = useSendMessage();
+  const { styles } = useStyles();
 
   return (
-    <div className={cx(styles.textareaContainer)}>
-      <TextArea
-        className={styles.textarea}
-        onBlur={(e) => {
-          updateInputMessage(e.target.value);
-        }}
-        onChange={(e) => {
-          updateInputMessage(e.target.value);
-        }}
-        onCompositionEnd={() => {
-          isChineseInput.current = false;
-        }}
-        onCompositionStart={() => {
-          isChineseInput.current = true;
-        }}
-        onPressEnter={(e) => {
-          if (!loading && !e.shiftKey && !isChineseInput.current) {
-            e.preventDefault();
-            handleSend();
-          }
-        }}
-        placeholder={t('sendPlaceholder', { ns: 'chat' })}
-        resize={false}
-        type="pure"
-        value={message}
-      />
+    <div className={styles.textareaContainer}>
+      <InputAreaInner className={styles.textarea} />
     </div>
   );
 });

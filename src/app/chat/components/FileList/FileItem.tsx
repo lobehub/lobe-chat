@@ -10,60 +10,64 @@ import { useFileStore } from '@/store/files';
 
 import { IMAGE_SIZE, useStyles } from './FileItem.style';
 
-const FileItem = memo<{ editable: boolean; id: string; onClick: () => void }>(
-  ({ editable, id, onClick }) => {
-    const { styles } = useStyles();
-    const [useFetchFile, removeFile] = useFileStore((s) => [s.useFetchFile, s.removeFile]);
+interface FileItemProps {
+  alwaysShowClose?: boolean;
+  editable: boolean;
+  id: string;
+  onClick: () => void;
+}
+const FileItem = memo<FileItemProps>(({ editable, id, onClick, alwaysShowClose }) => {
+  const { styles, cx } = useStyles();
+  const [useFetchFile, removeFile] = useFileStore((s) => [s.useFetchFile, s.removeFile]);
 
-    const { data, isLoading } = useFetchFile(id);
+  const { data, isLoading } = useFetchFile(id);
 
-    return (
-      <Flexbox className={styles.container} onClick={onClick}>
-        {isLoading ? (
-          <Skeleton
-            active
-            title={{
-              style: { borderRadius: 8, height: IMAGE_SIZE },
-              width: IMAGE_SIZE,
-            }}
-          />
-        ) : (
-          <Flexbox className={styles.imageCtn}>
-            <div className={styles.imageWrapper}>
-              {data ? (
-                <Image
-                  alt={data.name || ''}
-                  className={styles.image}
-                  fetchPriority={'high'}
-                  height={IMAGE_SIZE}
-                  loading={'lazy'}
-                  src={data.url}
-                  width={IMAGE_SIZE}
-                />
-              ) : (
-                <Center className={styles.notFound} height={'100%'}>
-                  <Icon icon={LucideImageOff} size={{ fontSize: 28 }} />
-                </Center>
-              )}
-            </div>
-          </Flexbox>
-        )}
-        {/* only show close icon when editable */}
-        {editable && (
-          <Center
-            className={styles.closeIcon}
-            onClick={(e) => {
-              e.stopPropagation();
+  return (
+    <Flexbox className={styles.container} onClick={onClick}>
+      {isLoading ? (
+        <Skeleton
+          active
+          title={{
+            style: { borderRadius: 8, height: IMAGE_SIZE },
+            width: IMAGE_SIZE,
+          }}
+        />
+      ) : (
+        <Flexbox className={styles.imageCtn}>
+          <div className={styles.imageWrapper}>
+            {data ? (
+              <Image
+                alt={data.name || ''}
+                className={styles.image}
+                fetchPriority={'high'}
+                height={IMAGE_SIZE}
+                loading={'lazy'}
+                src={data.url}
+                width={IMAGE_SIZE}
+              />
+            ) : (
+              <Center className={styles.notFound} height={'100%'}>
+                <Icon icon={LucideImageOff} size={{ fontSize: 28 }} />
+              </Center>
+            )}
+          </div>
+        </Flexbox>
+      )}
+      {/* only show close icon when editable */}
+      {editable && (
+        <Center
+          className={cx(styles.closeIcon, alwaysShowClose && styles.alwaysShowClose)}
+          onClick={(e) => {
+            e.stopPropagation();
 
-              removeFile(id);
-            }}
-          >
-            <CloseCircleFilled />
-          </Center>
-        )}
-      </Flexbox>
-    );
-  },
-);
+            removeFile(id);
+          }}
+        >
+          <CloseCircleFilled />
+        </Center>
+      )}
+    </Flexbox>
+  );
+});
 
 export default FileItem;

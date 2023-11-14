@@ -28,6 +28,9 @@ export const useStyles = createStyles(({ css, cx, token, isDarkMode }) => {
   `);
 
   return {
+    alwaysShowClose: css`
+      opacity: 1 !important;
+    `,
     closeIcon,
     container: css`
       cursor: pointer;

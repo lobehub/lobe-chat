@@ -1,10 +1,10 @@
 import { createStyles } from 'antd-style';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_TEXTAREA_HEIGHT_MOBILE } from '@/const/layoutTokens';
-import { useSessionStore } from '@/store/session';
 
+import Files from './Files';
 import ChatInputArea from './Mobile';
 
 const useStyles = createStyles(
@@ -23,25 +23,12 @@ const useStyles = createStyles(
 const ChatInputMobileLayout = memo(() => {
   const { styles } = useStyles();
 
-  const [message, setMessage] = useState('');
-
-  const [isLoading, sendMessage, stopGenerateMessage] = useSessionStore((s) => [
-    !!s.chatLoadingId,
-    s.sendMessage,
-    s.stopGenerateMessage,
-  ]);
-
   return (
     <>
+      <Files />
       <SafeSpacing height={CHAT_TEXTAREA_HEIGHT_MOBILE} mobile position={'bottom'} />
       <div className={styles}>
-        <ChatInputArea
-          loading={isLoading}
-          onChange={setMessage}
-          onSend={sendMessage}
-          onStop={stopGenerateMessage}
-          value={message}
-        />
+        <ChatInputArea />
       </div>
     </>
   );
