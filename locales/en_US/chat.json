@@ -61,5 +61,10 @@
   },
   "translateTo": "Translate",
   "updateAgent": "Update Agent Information",
+  "upload": {
+    "actionTooltip": "Upload Image",
+    "dragDesc": "Drag and drop files here, supports uploading multiple images. Hold Shift to send images directly",
+    "dragTitle": "Upload Image"
+  },
   "warp": "Line Break"
 }

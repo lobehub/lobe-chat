@@ -61,5 +61,10 @@
   },
   "translateTo": "翻譯",
   "updateAgent": "更新助理資訊",
+  "upload": {
+    "actionTooltip": "上傳圖片",
+    "dragDesc": "拖曳檔案到這裡，支援上傳多張圖片。按住 Shift 直接發送圖片",
+    "dragTitle": "上傳圖片"
+  },
   "warp": "換行"
 }
