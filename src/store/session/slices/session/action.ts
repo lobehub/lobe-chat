@@ -1,13 +1,13 @@
 import { produce } from 'immer';
-import { merge } from 'lodash-es';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
-import { useGlobalStore } from '@/store/global';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
 import { LobeAgentSession, LobeAgentSettings, LobeSessions } from '@/types/session';
+import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 import { uuid } from '@/utils/uuid';
 
@@ -85,8 +85,12 @@ export const createSessionSlice: StateCreator<
     const timestamp = Date.now();
 
     // 合并 settings 里的 defaultAgent
-    const globalDefaultAgent = useGlobalStore.getState().settings.defaultAgent;
-    const newSession: LobeAgentSession = merge({}, initLobeSession, globalDefaultAgent, {
+    const defaultAgent = merge(
+      initLobeSession,
+      settingsSelectors.defaultAgent(useGlobalStore.getState()),
+    );
+
+    const newSession: LobeAgentSession = merge(defaultAgent, {
       ...agent,
       createAt: timestamp,
       id: uuid(),
