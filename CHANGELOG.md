@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.101.4](https://github.com/lobehub/lobe-chat/compare/v0.101.3...v0.101.4)
+
+<sup>Released on **2023-11-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the plugin array merge error when fork agent from market.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the plugin array merge error when fork agent from market, closes [#459](https://github.com/lobehub/lobe-chat/issues/459) ([fc29b33](https://github.com/lobehub/lobe-chat/commit/fc29b33))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.101.3](https://github.com/lobehub/lobe-chat/compare/v0.101.2...v0.101.3)
 
 <sup>Released on **2023-11-14**</sup>
