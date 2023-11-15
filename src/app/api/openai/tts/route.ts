@@ -1,4 +1,4 @@
-import { OpenAISTTPayload, createOpenaiAudioTranscriptionsCompletion } from '@lobehub/tts';
+import { OpenAITTSPayload, createOpenaiAudioSpeechCompletion } from '@lobehub/tts';
 import OpenAI from 'openai';
 
 import { getServerConfig } from '@/config/server';
@@ -13,7 +13,7 @@ import { createErrorResponse } from '../errorResponse';
 export const runtime = 'edge';
 
 export const POST = async (req: Request) => {
-  const payload = (await req.json()) as OpenAISTTPayload;
+  const payload = (await req.json()) as OpenAITTSPayload;
 
   const { apiKey, accessCode, endpoint, useAzure, apiVersion } = getOpenAIAuthFromRequest(req);
 
@@ -48,11 +48,7 @@ export const POST = async (req: Request) => {
     return createErrorResponse(ChatErrorType.InternalServerError);
   }
 
-  const res = await createOpenaiAudioTranscriptionsCompletion({ openai, payload });
+  const res = await createOpenaiAudioSpeechCompletion({ openai, payload });
 
-  return new Response(JSON.stringify(res), {
-    headers: {
-      'content-type': 'application/json;charset=UTF-8',
-    },
-  });
+  return res;
 };

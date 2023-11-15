@@ -1,4 +1,5 @@
-import { getOpenaiVoiceOptions } from '@lobehub/tts';
+// @ts-ignore
+import { getOpenaiVoiceOptions } from '@lobehub/tts/react';
 import { SelectProps } from 'antd';
 
 export const ttsOptions: SelectProps['options'] = [

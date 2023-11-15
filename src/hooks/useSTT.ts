@@ -1,41 +1,44 @@
+// @ts-ignore
 import {
   OpenaiSpeechRecognitionOptions,
   useOpenaiSTTWithPSR,
   useOpenaiSTTWithSR,
   usePersistedSpeechRecognition,
-  useSpeechRecognition,
-} from '@lobehub/tts';
+  useSpeechRecognition, // @ts-ignore
+} from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 
+import { OPENAI_URLS } from '@/services/_url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
 
 export const useSTT = (onTextChange: (value: string) => void) => {
   const ttsConfig = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
+  const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const [locale, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => [
     settingsSelectors.currentLanguage(s),
     settingsSelectors.openAIAPI(s),
     settingsSelectors.openAIProxyUrl(s),
   ]);
 
-  const isPersisted = settings.tts.sttPersisted;
+  const isPersisted = ttsSettings.sttPersisted;
   const sttLocale =
     ttsConfig?.sttLocale && ttsConfig.sttLocale !== 'auto' ? ttsConfig.sttLocale : locale;
 
   let useSelectedSTT;
   let options: any = {};
 
-  switch (settings.tts.sttServer) {
+  switch (ttsSettings.sttServer) {
     case 'openai': {
       useSelectedSTT = isPersisted ? useOpenaiSTTWithPSR : useOpenaiSTTWithSR;
       options = {
         api: {
           key: openAIAPI,
           proxy: openAIProxyUrl,
+          url: OPENAI_URLS.stt,
         },
-        model: settings.tts.openAI.sttModel,
+        model: ttsSettings.openAI.sttModel,
       } as OpenaiSpeechRecognitionOptions;
       break;
     }

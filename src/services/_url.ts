@@ -7,8 +7,10 @@ export const OPENAI_URLS = {
   chat: '/api/openai/chat',
   models: '/api/openai/models',
   stt: '/api/openai/stt',
+  tts: '/api/openai/tts',
 };
 
 export const TTS_URL = {
+  edge: '/tts/edge-speech',
   microsoft: '/tts/microsoft-speech',
 };

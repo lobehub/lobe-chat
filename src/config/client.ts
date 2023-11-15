@@ -1,5 +1,4 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
-import { TTS_URL } from '@/services/_url';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -7,8 +6,6 @@ declare global {
     interface ProcessEnv {
       AGENTS_INDEX_URL?: string;
       PLUGINS_INDEX_URL?: string;
-
-      NEXT_PUBLIC_MICROSOFT_SPEECH_PROXY_URL?: string;
 
       NEXT_PUBLIC_CUSTOM_MODELS?: string;
 
@@ -66,8 +63,4 @@ export const getClientConfig = () => ({
   I18N_DEBUG: process.env.NEXT_PUBLIC_I18N_DEBUG === '1',
   I18N_DEBUG_BROWSER: process.env.NEXT_PUBLIC_I18N_DEBUG_BROWSER === '1',
   I18N_DEBUG_SERVER: process.env.NEXT_PUBLIC_I18N_DEBUG_SERVER === '1',
-
-  // tts
-  MICROSOFT_SPEECH_PROXY_URL:
-    process.env.NEXT_PUBLIC_MICROSOFT_SPEECH_PROXY_URL || TTS_URL.microsoft,
 });

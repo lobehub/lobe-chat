@@ -6,17 +6,17 @@ import {
   getEdgeVoiceOptions,
   useEdgeSpeech,
   useMicrosoftSpeech,
-  useOpenaiTTS,
-} from '@lobehub/tts';
+  useOpenaiTTS, // @ts-ignore
+} from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 
-import { MICROSOFT_SPEECH_PROXY_URL } from '@/const/url';
+import { OPENAI_URLS, TTS_URL } from '@/services/_url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
 
 export const useTTS = (content: string) => {
-  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
+  const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsConfig = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
   const [locale, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => [
     settingsSelectors.currentLanguage(s),
@@ -33,8 +33,9 @@ export const useTTS = (content: string) => {
         api: {
           key: openAIAPI,
           proxy: openAIProxyUrl,
+          url: OPENAI_URLS.tts,
         },
-        model: settings.tts.openAI.ttsModel,
+        model: ttsSettings.openAI.ttsModel,
         name: ttsConfig.voice.openai,
       } as OpenaiTtsOptions;
       break;
@@ -42,6 +43,9 @@ export const useTTS = (content: string) => {
     case 'edge': {
       useSelectedTTS = useEdgeSpeech;
       options = {
+        api: {
+          url: TTS_URL.edge,
+        },
         name: ttsConfig.voice.edge || getEdgeVoiceOptions(locale)?.[0].value,
       } as EdgeSpeechOptions;
       break;
@@ -50,7 +54,7 @@ export const useTTS = (content: string) => {
       useSelectedTTS = useMicrosoftSpeech;
       options = {
         api: {
-          proxy: MICROSOFT_SPEECH_PROXY_URL,
+          url: TTS_URL.microsoft,
         },
         name: ttsConfig.voice.microsoft || getAzureVoiceOptions(locale)?.[0].value,
       } as MicrosoftSpeechOptions;

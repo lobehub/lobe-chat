@@ -1,7 +1,9 @@
-import { fetchMicrosoftSpeech } from '@/services/tts';
+import { MicrosoftSpeechPayload, createMicrosoftSpeechComletion } from '@lobehub/tts';
 
 export const runtime = 'edge';
 
 export const POST = async (req: Request) => {
-  return await fetchMicrosoftSpeech(req);
+  const payload = (await req.json()) as MicrosoftSpeechPayload;
+  const res = await createMicrosoftSpeechComletion({ payload });
+  return res;
 };

@@ -1,4 +1,8 @@
-import { getAzureVoiceOptions, getEdgeVoiceOptions, getVoiceLocaleOptions } from '@lobehub/tts';
+import {
+  getAzureVoiceOptions,
+  getEdgeVoiceOptions,
+  getVoiceLocaleOptions, // @ts-ignore
+} from '@lobehub/tts/react';
 import { Form, ItemGroup } from '@lobehub/ui';
 import { Form as AFrom, Select, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';

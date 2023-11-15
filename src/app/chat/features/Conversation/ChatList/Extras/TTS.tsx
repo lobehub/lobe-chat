@@ -1,4 +1,5 @@
-import { AudioPlayer } from '@lobehub/tts';
+// @ts-ignore
+import { AudioPlayer } from '@lobehub/tts/react';
 import { ActionIcon } from '@lobehub/ui';
 import { TrashIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
