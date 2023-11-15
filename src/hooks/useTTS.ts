@@ -1,6 +1,12 @@
 import { VoiceList } from '@lobehub/tts';
-// @ts-ignore
-import { useEdgeSpeech, useMicrosoftSpeech, useOpenaiTTS } from '@lobehub/tts/react';
+import {
+  EdgeSpeechOptions,
+  MicrosoftSpeechOptions,
+  OpenaiTtsOptions,
+  useEdgeSpeech,
+  useMicrosoftSpeech,
+  useOpenaiTTS, // @ts-ignore
+} from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 
 import { OPENAI_URLS, TTS_URL } from '@/services/_url';
@@ -32,8 +38,8 @@ export const useTTS = (content: string) => {
           url: OPENAI_URLS.tts,
         },
         model: ttsSettings.openAI.ttsModel,
-        name: ttsConfig.voice.openai || VoiceList.openaiVoiceOptions?.[0].value,
-      };
+        voice: ttsConfig.voice.openai || VoiceList.openaiVoiceOptions?.[0].value,
+      } as OpenaiTtsOptions;
       break;
     }
     case 'edge': {
@@ -42,8 +48,8 @@ export const useTTS = (content: string) => {
         api: {
           url: TTS_URL.edge,
         },
-        name: ttsConfig.voice.edge || voiceList.edgeVoiceOptions?.[0].value,
-      };
+        voice: ttsConfig.voice.edge || voiceList.edgeVoiceOptions?.[0].value,
+      } as EdgeSpeechOptions;
       break;
     }
     case 'microsoft': {
@@ -52,8 +58,8 @@ export const useTTS = (content: string) => {
         api: {
           url: TTS_URL.microsoft,
         },
-        name: ttsConfig.voice.microsoft || voiceList.microsoftVoiceOptions?.[0].value,
-      };
+        voice: ttsConfig.voice.microsoft || voiceList.microsoftVoiceOptions?.[0].value,
+      } as MicrosoftSpeechOptions;
       break;
     }
   }
