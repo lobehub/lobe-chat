@@ -1,5 +1,3 @@
-// @ts-ignore
-import { getOpenaiVoiceOptions } from '@lobehub/tts/react';
 import { SelectProps } from 'antd';
 
 export const ttsOptions: SelectProps['options'] = [
@@ -16,5 +14,3 @@ export const ttsOptions: SelectProps['options'] = [
     value: 'microsoft',
   },
 ];
-
-export const openaiVoiceOptions: SelectProps['options'] = getOpenaiVoiceOptions();

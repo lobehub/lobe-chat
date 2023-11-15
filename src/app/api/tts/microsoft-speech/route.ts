@@ -1,4 +1,5 @@
-import { MicrosoftSpeechPayload, createMicrosoftSpeechComletion } from '@lobehub/tts';
+// @ts-ignore
+import { MicrosoftSpeechPayload, createMicrosoftSpeechComletion } from '@lobehub/tts/server';
 
 export const runtime = 'edge';
 

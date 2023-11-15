@@ -1,13 +1,6 @@
-import {
-  EdgeSpeechOptions,
-  MicrosoftSpeechOptions,
-  OpenaiTtsOptions,
-  getAzureVoiceOptions,
-  getEdgeVoiceOptions,
-  useEdgeSpeech,
-  useMicrosoftSpeech,
-  useOpenaiTTS, // @ts-ignore
-} from '@lobehub/tts/react';
+import { VoiceList } from '@lobehub/tts';
+// @ts-ignore
+import { useEdgeSpeech, useMicrosoftSpeech, useOpenaiTTS } from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 
 import { OPENAI_URLS, TTS_URL } from '@/services/_url';
@@ -18,11 +11,14 @@ import { agentSelectors } from '@/store/session/slices/agentConfig';
 export const useTTS = (content: string) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsConfig = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const [locale, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => [
-    settingsSelectors.currentLanguage(s),
-    settingsSelectors.openAIAPI(s),
-    settingsSelectors.openAIProxyUrl(s),
-  ]);
+  const [voiceList, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => {
+    const locale = settingsSelectors.currentLanguage(s);
+    return [
+      new VoiceList(locale),
+      settingsSelectors.openAIAPI(s),
+      settingsSelectors.openAIProxyUrl(s),
+    ];
+  });
 
   let useSelectedTTS;
   let options: any = {};
@@ -36,8 +32,8 @@ export const useTTS = (content: string) => {
           url: OPENAI_URLS.tts,
         },
         model: ttsSettings.openAI.ttsModel,
-        name: ttsConfig.voice.openai,
-      } as OpenaiTtsOptions;
+        name: ttsConfig.voice.openai || VoiceList.openaiVoiceOptions?.[0].value,
+      };
       break;
     }
     case 'edge': {
@@ -46,8 +42,8 @@ export const useTTS = (content: string) => {
         api: {
           url: TTS_URL.edge,
         },
-        name: ttsConfig.voice.edge || getEdgeVoiceOptions(locale)?.[0].value,
-      } as EdgeSpeechOptions;
+        name: ttsConfig.voice.edge || voiceList.edgeVoiceOptions?.[0].value,
+      };
       break;
     }
     case 'microsoft': {
@@ -56,8 +52,8 @@ export const useTTS = (content: string) => {
         api: {
           url: TTS_URL.microsoft,
         },
-        name: ttsConfig.voice.microsoft || getAzureVoiceOptions(locale)?.[0].value,
-      } as MicrosoftSpeechOptions;
+        name: ttsConfig.voice.microsoft || voiceList.microsoftVoiceOptions?.[0].value,
+      };
       break;
     }
   }

@@ -1,44 +1,38 @@
-import {
-  getAzureVoiceOptions,
-  getEdgeVoiceOptions,
-  getVoiceLocaleOptions, // @ts-ignore
-} from '@lobehub/tts/react';
+import { VoiceList } from '@lobehub/tts';
 import { Form, ItemGroup } from '@lobehub/ui';
 import { Form as AFrom, Select, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { Mic } from 'lucide-react';
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 
 import { useStore } from '../store';
-import { openaiVoiceOptions, ttsOptions } from './options';
+import { ttsOptions } from './options';
 
 const TTS_SETTING_KEY = 'tts';
+const { openaiVoiceOptions, localeOptions } = VoiceList;
 
 const AgentTTS = memo(() => {
   const { t } = useTranslation('setting');
   const updateConfig = useStore((s) => s.setAgentConfig);
   const [form] = AFrom.useForm();
-  const locale = useGlobalStore(settingsSelectors.currentLanguage);
+  const voiceList = useGlobalStore((s) => {
+    const locale = settingsSelectors.currentLanguage(s);
+    return (all?: boolean) => new VoiceList(all ? undefined : locale);
+  });
   const config = useStore((s) => s.config, isEqual);
 
   useEffect(() => {
     form.setFieldsValue(config);
   }, [config]);
+
   const showAllLocaleVoice = config.tts.showAllLocaleVoice;
-  const edgeVoiceOptions = useMemo(
-    () => getEdgeVoiceOptions(showAllLocaleVoice ? undefined : locale),
-    [locale, showAllLocaleVoice],
-  );
-  const microsoftVoiceOptions = useMemo(
-    () => getAzureVoiceOptions(showAllLocaleVoice ? undefined : locale),
-    [locale, showAllLocaleVoice],
-  );
-  const sttLocaleOptions = useMemo(() => getVoiceLocaleOptions() || [], []);
+
+  const { edgeVoiceOptions, microsoftVoiceOptions } = voiceList(showAllLocaleVoice);
 
   const tts: ItemGroup = {
     children: [
@@ -89,7 +83,7 @@ const AgentTTS = memo(() => {
           <Select
             options={[
               { label: t('settingTheme.lang.autoMode'), value: 'auto' },
-              ...sttLocaleOptions,
+              ...(localeOptions || []),
             ]}
           />
         ),

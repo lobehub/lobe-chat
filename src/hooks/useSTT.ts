@@ -1,4 +1,3 @@
-// @ts-ignore
 import {
   OpenaiSpeechRecognitionOptions,
   useOpenaiSTTWithPSR,

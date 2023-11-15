@@ -1,4 +1,5 @@
-import { OpenAISTTPayload, createOpenaiAudioTranscriptionsCompletion } from '@lobehub/tts';
+// @ts-ignore
+import { OpenAISTTPayload, createOpenaiAudioTranscriptionsCompletion } from '@lobehub/tts/server';
 import OpenAI from 'openai';
 
 import { getServerConfig } from '@/config/server';
