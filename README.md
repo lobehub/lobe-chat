@@ -88,17 +88,26 @@ Please be aware that LobeChat is currently under active development, and feedbac
 
 ## ✨ Features
 
-- [x] 💨 **Quick Deployment**: Using the Vercel platform, you can deploy with just one click and complete the process within 1 minute without any complex configuration.
 - [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience.
 - [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more.
-- [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs.
-- [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy.
 - [x] 🤖 **Customizable Agent Roles**: Users can create, share, and debug personalized dialogue agent roles according to their needs, providing more flexible and customized dialogue functions.
-- [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
-- [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue.
+- [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs.
+- [x] 🏬 **Agent Market**: A Agent Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue.
+- [x] 👁️ **Visual Recognition**: With the integration of visual recognition capabilities, your agent can now analyze and understand images provided during the conversation. This allows for more interactive and context-aware conversations, enabling the dialogue agent to provide relevant and accurate responses based on visual content.
+- [ ] （WIP）📢 **Text-to-Speech (TTS) Conversation**: LobeChat are supporting Text-to-Speech technology, allowing users to have voice-based conversations with the dialogue agent. This feature enhances the user experience by providing a more natural and immersive conversation environment. Users can choose from a variety of voices and adjust the speech rate to suit their preferences.
+
 
 > **Note**\
 > You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
+
+
+-----
+
+Beside these features, LobeChat also have much better basic technique underground:
+
+- [x] 💨 **Quick Deployment**: Using the Vercel platform or docker image, you can deploy with just one click and complete the process within 1 minute without any complex configuration.
+- [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
+- [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy.
 
 <div align="right">
 
