@@ -1,5 +1,5 @@
-// @ts-ignore
-import { OpenAITTSPayload, createOpenaiAudioSpeechCompletion } from '@lobehub/tts/server';
+import { OpenAITTSPayload } from '@lobehub/tts';
+import { createOpenaiAudioSpeech } from '@lobehub/tts/server';
 import OpenAI from 'openai';
 
 import { getServerConfig } from '@/config/server';
@@ -49,7 +49,5 @@ export const POST = async (req: Request) => {
     return createErrorResponse(ChatErrorType.InternalServerError);
   }
 
-  const res = await createOpenaiAudioSpeechCompletion({ openai, payload });
-
-  return res;
+  return await createOpenaiAudioSpeech({ openai, payload });
 };
