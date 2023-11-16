@@ -69,7 +69,7 @@ const nextConfig = {
 
   reactStrictMode: true,
 
-  transpilePackages: ['@lobehub/ui', 'antd-style', 'lodash-es'],
+  transpilePackages: ['antd-style', '@lobehub/ui'],
 
   webpack(config) {
     config.experiments = {
@@ -77,7 +77,15 @@ const nextConfig = {
       layers: true,
     };
 
-    config.resolve.alias['@ant-design/cssinjs'] = '@ant-design/cssinjs/lib';
+    // to fix shikiji compile error
+    // refs: https://github.com/antfu/shikiji/issues/23
+    config.module.rules.push({
+      test: /\.m?js$/,
+      type: 'javascript/auto',
+      resolve: {
+        fullySpecified: false,
+      },
+    });
 
     return config;
   },
