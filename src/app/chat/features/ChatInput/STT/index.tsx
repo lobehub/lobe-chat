@@ -64,9 +64,9 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
           },
         ],
       }}
-      placement={mobile ? 'topRight' : 'topCenter'}
+      open={isLoading}
+      placement={mobile ? 'topRight' : 'top'}
       trigger={['click']}
-      visible={isLoading}
     >
       <Render
         icon={iconRender}

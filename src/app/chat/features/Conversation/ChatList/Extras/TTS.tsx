@@ -35,16 +35,20 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
     ttsMessage(id, true);
   }, [init]);
 
+  console.log(audio);
+
   return (
     <Flexbox align={'center'} horizontal style={{ minWidth: 160 }}>
-      <AudioPlayer
-        audio={audio}
-        buttonSize={'small'}
-        isLoading={isGlobalLoading}
-        onInitPlay={handleInitStart}
-        timeRender={'tag'}
-        timeStyle={{ margin: 0 }}
-      />
+      {audio && (
+        <AudioPlayer
+          audio={audio}
+          buttonSize={'small'}
+          isLoading={isGlobalLoading}
+          onInitPlay={handleInitStart}
+          timeRender={'tag'}
+          timeStyle={{ margin: 0 }}
+        />
+      )}
       <ActionIcon
         icon={TrashIcon}
         onClick={() => {

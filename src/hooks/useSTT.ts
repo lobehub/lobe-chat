@@ -47,8 +47,7 @@ export const useSTT = (onTextChange: (value: string) => void) => {
     }
   }
 
-  return useSelectedSTT(sttLocale, {
-    ...options,
+  return useSelectedSTT(sttLocale, options, {
     onTextChange,
   });
 };
