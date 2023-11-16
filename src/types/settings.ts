@@ -67,7 +67,7 @@ export interface GlobalTTSConfig {
     sttModel: 'whisper-1';
     ttsModel: 'tts-1' | 'tts-1-hd';
   };
-  sttPersisted: boolean;
+  sttAutoStop: boolean;
   sttServer: STTServer;
 }
 

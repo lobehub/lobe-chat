@@ -2,10 +2,10 @@ import { VoiceList } from '@lobehub/tts';
 import {
   EdgeSpeechOptions,
   MicrosoftSpeechOptions,
-  OpenAITTSConfig,
+  OpenAITTSOptions,
   useEdgeSpeech,
   useMicrosoftSpeech,
-  useOpenaiTTS,
+  useOpenAITTS,
 } from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 
@@ -16,7 +16,7 @@ import { agentSelectors } from '@/store/session/slices/agentConfig';
 
 export const useTTS = (content: string) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
-  const ttsConfig = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
+  const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
   const [voiceList, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => {
     const locale = settingsSelectors.currentLanguage(s);
     return [
@@ -28,30 +28,30 @@ export const useTTS = (content: string) => {
 
   let useSelectedTTS;
   let options: any = {};
-  switch (ttsConfig.ttsService) {
+  switch (ttsAgentSettings.ttsService) {
     case 'openai': {
-      useSelectedTTS = useOpenaiTTS;
+      useSelectedTTS = useOpenAITTS;
       options = {
         api: {
-          key: openAIAPI,
-          proxy: openAIProxyUrl,
-          url: OPENAI_URLS.tts,
+          apiKey: openAIAPI,
+          backendUrl: OPENAI_URLS.tts,
+          baseUrl: openAIProxyUrl,
         },
         options: {
           model: ttsSettings.openAI.ttsModel,
-          voice: ttsConfig.voice.openai || VoiceList.openaiVoiceOptions?.[0].value,
+          voice: ttsAgentSettings.voice.openai || VoiceList.openaiVoiceOptions?.[0].value,
         },
-      } as OpenAITTSConfig;
+      } as OpenAITTSOptions;
       break;
     }
     case 'edge': {
       useSelectedTTS = useEdgeSpeech;
       options = {
         api: {
-          url: TTS_URL.edge,
+          backendUrl: TTS_URL.edge,
         },
         options: {
-          voice: ttsConfig.voice.edge || voiceList.edgeVoiceOptions?.[0].value,
+          voice: ttsAgentSettings.voice.edge || voiceList.edgeVoiceOptions?.[0].value,
         },
       } as EdgeSpeechOptions;
       break;
@@ -60,10 +60,10 @@ export const useTTS = (content: string) => {
       useSelectedTTS = useMicrosoftSpeech;
       options = {
         api: {
-          url: TTS_URL.microsoft,
+          backendUrl: TTS_URL.microsoft,
         },
         options: {
-          voice: ttsConfig.voice.microsoft || voiceList.microsoftVoiceOptions?.[0].value,
+          voice: ttsAgentSettings.voice.microsoft || voiceList.microsoftVoiceOptions?.[0].value,
         },
       } as MicrosoftSpeechOptions;
       break;

@@ -39,7 +39,7 @@ describe('settingsSelectors', () => {
               sttModel: 'whisper-1',
               ttsModel: 'tts-1',
             },
-            sttPersisted: false,
+            sttAutoStop: true,
             sttServer: 'openai',
           },
           languageModel: {
@@ -94,7 +94,7 @@ describe('settingsSelectors', () => {
             sttModel: 'whisper-1',
             ttsModel: 'tts-1',
           },
-          sttPersisted: false,
+          sttAutoStop: true,
           sttServer: 'openai',
         },
         languageModel: {

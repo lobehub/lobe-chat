@@ -238,7 +238,11 @@
       "desc": "When enabled, speech recognition will not automatically end and requires manual click on the end button",
       "title": "Manually End Speech Recognition"
     },
-    "tts": "Text-to-Speech Settings"
+    "tts": "Text-to-Speech Settings",
+    "sttAutoStop": {
+      "desc": "When disabled, speech recognition will not automatically stop and will require manual intervention to end the process.",
+      "title": "Automatic Speech Recognition Termination"
+    }
   },
   "settingTheme": {
     "avatar": {

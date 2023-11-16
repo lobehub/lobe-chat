@@ -1,9 +1,8 @@
 import {
-  OpenaiSpeechRecognitionOptions,
-  useOpenaiSTTWithPSR,
-  useOpenaiSTTWithSR,
-  usePersistedSpeechRecognition,
-  useSpeechRecognition, // @ts-ignore
+  OpenAISTTOptions,
+  SpeechRecognitionOptions,
+  useOpenAISTT,
+  useSpeechRecognition,
 } from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 
@@ -13,41 +12,47 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
 
 export const useSTT = (onTextChange: (value: string) => void) => {
-  const ttsConfig = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
+  const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
   const [locale, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => [
     settingsSelectors.currentLanguage(s),
     settingsSelectors.openAIAPI(s),
     settingsSelectors.openAIProxyUrl(s),
   ]);
 
-  const isPersisted = ttsSettings.sttPersisted;
+  const autoStop = ttsSettings.sttAutoStop;
   const sttLocale =
-    ttsConfig?.sttLocale && ttsConfig.sttLocale !== 'auto' ? ttsConfig.sttLocale : locale;
+    ttsAgentSettings?.sttLocale && ttsAgentSettings.sttLocale !== 'auto'
+      ? ttsAgentSettings.sttLocale
+      : locale;
 
   let useSelectedSTT;
   let options: any = {};
 
   switch (ttsSettings.sttServer) {
     case 'openai': {
-      useSelectedSTT = isPersisted ? useOpenaiSTTWithPSR : useOpenaiSTTWithSR;
+      useSelectedSTT = useOpenAISTT;
       options = {
         api: {
-          key: openAIAPI,
-          proxy: openAIProxyUrl,
-          url: OPENAI_URLS.stt,
+          apiKey: openAIAPI,
+          backendUrl: OPENAI_URLS.stt,
+          baseUrl: openAIProxyUrl,
         },
-        model: ttsSettings.openAI.sttModel,
-      } as OpenaiSpeechRecognitionOptions;
+        autoStop,
+        options: {
+          model: ttsSettings.openAI.sttModel,
+        },
+      } as OpenAISTTOptions;
       break;
     }
     case 'browser': {
-      useSelectedSTT = isPersisted ? usePersistedSpeechRecognition : useSpeechRecognition;
+      options = {
+        autoStop,
+      } as SpeechRecognitionOptions;
+      useSelectedSTT = useSpeechRecognition;
       break;
     }
   }
 
-  return useSelectedSTT(sttLocale, options, {
-    onTextChange,
-  });
+  return useSelectedSTT(sttLocale, { onTextChange, ...options });
 };
