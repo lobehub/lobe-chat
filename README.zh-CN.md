@@ -72,7 +72,8 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 | :---------------------------------------- | :--------------------------------------------------------------------------- |
 | [![][discord-shield-badge]][discord-link] | 加入我们的 Discord 社区！这是你可以与开发者和其他 LobeHub 热衷用户交流的地方 |
 
-> **Important**\
+> \[!IMPORTANT]
+>
 > **收藏项目**，你将从 GitHub 上无延迟地接收所有发布通知～⭐️
 
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
@@ -94,16 +95,17 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 - [x] 👁️ **视觉识别**: 通过集成视觉识别能力，AI 助手现在可以分析和理解对话过程中提供的图像。这使得对话代理能够进行更具交互性和上下文感知的对话，根据视觉内容提供相关和准确的回答。
 - [ ] （WIP）📢 **文本转语音（TTS）对话**: 我们正在支持文本转语音技术，允许用户与对话代理进行语音对话。这个功能通过提供更自然和沉浸式的对话环境来增强用户体验。用户可以选择多种声音并调整语速以适应自己的偏好。
 
-> **Note**\
+> \[!NOTE]
+>
 > 你可以在 Projects 中找到我们后续的 [Roadmap][github-project-link] 计划
 
-----
+---
+
 除了上述功能特性以外，我们的底层技术方案为你带来了更多使用保障：
 
 - [x] 💨 **快速部署**：使用 Vercel 平台或者我们的 Docker 镜像，只需点击一键部署按钮，即可在 1 分钟内完成部署，无需复杂的配置过程 .
 - [x] 🔒 **隐私安全**：所有数据保存在用户浏览器本地，保证用户的隐私安全 .
 - [x] 🌐 **自定义域名**：如果用户拥有自己的域名，可以将其绑定到平台上，方便在任何地方快速访问对话助手 .
-
 
 <div align="right">
 
@@ -148,7 +150,8 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 利用渐进式 Web 应用 [PWA](https://support.google.com/chrome/answer/9658361) 技术，您可在电脑或移动设备上实现流畅的 LobeChat 体验。
 
-> **Note**\
+> \[!NOTE]
+>
 > 若您未熟悉 PWA 的安装过程，您可以按照以下步骤将 LobeChat 添加为您的桌面应用（也适用于移动设备）：
 >
 > - 在电脑上运行 Chrome 或 Edge 浏览器 .
@@ -182,7 +185,8 @@ LobeChat 提供了两种独特的主题模式 - 明亮模式和暗黑模式，�
 
 ## ⚡️ 性能测试
 
-> **Note**\
+> \[!NOTE]
+>
 > 完整测试报告可见 [📘 Lighthouse 性能测试](https://github.com/lobehub/lobe-chat/wiki/Lighthouse.zh-CN)
 
 |                    Desktop                    |                    Mobile                    |
@@ -221,7 +225,8 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 
 如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示 “有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。
 
-> **Important**\
+> \[!TIP]
+>
 > 我们建议按照 [📘 LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN) 步骤重新部署。
 
 <br/>
@@ -241,7 +246,8 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**\
+> \[!TIP]
+>
 > 如果你需要通过代理使用 OpenAI 服务，你可以使用 `OPENAI_PROXY_URL` 环境变量来配置代理地址：
 
 ```fish
@@ -252,7 +258,8 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**\
+> \[!NOTE]
+>
 > 有关 Docker 部署的详细说明，详见 [📘 使用 Docker 部署](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment.zh-CN)
 
 <br/>
@@ -267,7 +274,8 @@ $ docker run -d -p 3210:3210 \
 | `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL | `https://api.chatanywhere.cn/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
 | `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                          | `awCT74` 或 `e3@09!`                                                         |
 
-> **Note**\
+> \[!NOTE]
+>
 > 完整环境变量可见 [📘环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)
 
 <div align="right">
@@ -299,7 +307,8 @@ $ docker run -d -p 3210:3210 \
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]：LobeChat 插件 SDK 可帮助您创建出色的 Lobe Chat 插件。
 - [@lobehub/chat-plugins-gateway][chat-plugins-gateway]：LobeChat 插件网关是一个后端服务，作为 LobeChat 插件的网关。我们使用 Vercel 部署此服务。主要的 API POST /api/v1/runner 被部署为 Edge Function。
 
-> **Note**\
+> \[!NOTE]
+>
 > 插件系统目前正在进行重大开发。您可以在以下 Issues 中了解更多信息:
 >
 > - [x] [**插件一期**](https://github.com/lobehub/lobe-chat/issues/73): 实现插件与主体分离，将插件拆分为独立仓库维护，并实现插件的动态加载

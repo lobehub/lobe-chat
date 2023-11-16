@@ -9,7 +9,7 @@
 
 In the official ChatGPT app, there is only the concept of topics, as shown in the figure, the sidebar contains the user's historical conversation topic list.
 
-> **Note**
+> \[!NOTE]
 >
 > However, in our use, we actually find that this mode has many problems, such as the information indexing of historical conversations is too scattered, and when dealing with some repetitive tasks, it is difficult to have a stable entrance. For example, I hope there is a stable entrance to allow ChatGPT to help me translate documents. In this mode, I need to constantly create new topics and then set the translation Prompt I created before. When there are high-frequency tasks, this will be a very low-efficiency interaction form.
 

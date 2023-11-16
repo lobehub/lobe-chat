@@ -74,7 +74,8 @@ Please be aware that LobeChat is currently under active development, and feedbac
 | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
 | [![][discord-shield-badge]][discord-link] | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
 
-> **Important**\
+> \[!IMPORTANT]
+>
 > **Star Us**, You will receive all release notifications from GitHub without any delay \~ ⭐️
 
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
@@ -96,12 +97,11 @@ Please be aware that LobeChat is currently under active development, and feedbac
 - [x] 👁️ **Visual Recognition**: With the integration of visual recognition capabilities, your agent can now analyze and understand images provided during the conversation. This allows for more interactive and context-aware conversations, enabling the dialogue agent to provide relevant and accurate responses based on visual content.
 - [ ] （WIP）📢 **Text-to-Speech (TTS) Conversation**: LobeChat are supporting Text-to-Speech technology, allowing users to have voice-based conversations with the dialogue agent. This feature enhances the user experience by providing a more natural and immersive conversation environment. Users can choose from a variety of voices and adjust the speech rate to suit their preferences.
 
-
-> **Note**\
+> \[!NOTE]
+>
 > You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
 
-
------
+---
 
 Beside these features, LobeChat also have much better basic technique underground:
 
@@ -152,7 +152,8 @@ In our agent market. We have accumulated a large number of practical, prompt age
 
 Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology to achieve a seamless LobeChat experience on your computer or mobile device.
 
-> **Note**\
+> \[!NOTE]
+>
 > If you are unfamiliar with the installation process of PWA, you can add LobeChat as your desktop application (also applicable to mobile devices) by following these steps:
 >
 > - Launch the Chrome or Edge browser on your computer.
@@ -184,7 +185,8 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ## ⚡️ Performance
 
-> **Note**\
+> \[!NOTE]
+>
 > The complete list of reports can be found in the [📘 Lighthouse Reports](https://github.com/lobehub/lobe-chat/wiki/Lighthouse)
 
 |                   Desktop                   |                   Mobile                   |
@@ -221,7 +223,8 @@ If you want to deploy this service yourself on Vercel, you can follow these step
 
 If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available." This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to detect updates accurately.
 
-> **Important**\
+> \[!TIP]
+>
 > We suggest you redeploy using the following steps, [📘 Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync).
 
 <br/>
@@ -241,7 +244,8 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**\
+> \[!TIP]
+>
 > If you need to use the OpenAI service through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
 
 ```fish
@@ -252,7 +256,8 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**\
+> \[!NOTE]
+>
 > For detailed instructions on deploying with Docker, please refer to the [📘 Docker Deployment Guide](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment)
 
 <br/>
@@ -267,7 +272,8 @@ This project provides some additional configuration items set with environment v
 | `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL | `https://api.chatanywhere.cn/v1`<br/>The default value is<br/>`https://api.openai.com/v1` |
 | `ACCESS_CODE`        | No       | Add a password to access this service; the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                      |
 
-> **Note**\
+> \[!NOTE]
+>
 > The complete list of environment variables can be found in the [📘 Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable)
 
 <div align="right">
@@ -299,7 +305,8 @@ Plugins provide a means to extend the [Function Calling][fc-link] capabilities o
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
 - [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The LobeChat Plugins Gateway is a backend service that provides a gateway for LobeChat plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
 
-> **Note**\
+> \[!NOTE]
+>
 > The plugin system is currently undergoing major development. You can learn more in the following issues:
 >
 > - [x] [**Plugin Phase 1**](https://github.com/lobehub/lobe-chat/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
