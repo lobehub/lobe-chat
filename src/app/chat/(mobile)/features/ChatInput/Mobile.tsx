@@ -3,11 +3,12 @@ import { rgba } from 'polished';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import SendButton from '@/app/chat/(mobile)/features/ChatInput/SendButton';
 import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
 import InputAreaInner from '@/app/chat/features/ChatInput/InputAreaInner';
 import STT from '@/app/chat/features/ChatInput/STT';
 import SaveTopic from '@/app/chat/features/ChatInput/Topic';
+
+import SendButton from './SendButton';
 
 const useStyles = createStyles(({ css, token }) => {
   return {

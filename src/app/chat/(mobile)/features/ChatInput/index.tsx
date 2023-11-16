@@ -4,6 +4,7 @@ import { memo } from 'react';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_TEXTAREA_HEIGHT_MOBILE } from '@/const/layoutTokens';
 
+import Files from './Files';
 import ChatInputArea from './Mobile';
 
 const useStyles = createStyles(
@@ -24,6 +25,7 @@ const ChatInputMobileLayout = memo(() => {
 
   return (
     <>
+      <Files />
       <SafeSpacing height={CHAT_TEXTAREA_HEIGHT_MOBILE} mobile position={'bottom'} />
       <div className={styles}>
         <ChatInputArea />

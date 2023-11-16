@@ -2,8 +2,9 @@ import { Input, TextArea } from '@lobehub/ui';
 import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSendMessage } from '@/app/chat/features/ChatInput/useSend';
 import { useSessionStore } from '@/store/session';
+
+import { useSendMessage } from '../useSend';
 
 export interface InputAreaInnerProps {
   className?: string;

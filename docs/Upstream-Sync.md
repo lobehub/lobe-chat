@@ -8,7 +8,8 @@ If you have deployed your own project following the one-click deployment steps i
 
 ## Enabling Automatic Updates
 
-> **Note**\
+> \[!NOTE]
+>
 > If you encounter an error executing Upstream Sync, manually Sync Fork once
 
 Once you have forked the project, due to Github restrictions, you will need to manually enable Workflows on the Actions page of your forked project and activate the Upstream Sync Action. Once enabled, you can set up hourly automatic updates.

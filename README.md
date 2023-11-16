@@ -74,7 +74,8 @@ Please be aware that LobeChat is currently under active development, and feedbac
 | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
 | [![][discord-shield-badge]][discord-link] | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
 
-> **Important**\
+> \[!IMPORTANT]
+>
 > **Star Us**, You will receive all release notifications from GitHub without any delay \~ ⭐️
 
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
@@ -88,17 +89,25 @@ Please be aware that LobeChat is currently under active development, and feedbac
 
 ## ✨ Features
 
-- [x] 💨 **Quick Deployment**: Using the Vercel platform, you can deploy with just one click and complete the process within 1 minute without any complex configuration.
 - [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience.
 - [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more.
-- [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs.
-- [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy.
 - [x] 🤖 **Customizable Agent Roles**: Users can create, share, and debug personalized dialogue agent roles according to their needs, providing more flexible and customized dialogue functions.
-- [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
-- [x] 🏬 **Role Market**: A Role Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue.
+- [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs.
+- [x] 🏬 **Agent Market**: A Agent Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue.
+- [x] 👁️ **Visual Recognition**: With the integration of visual recognition capabilities, your agent can now analyze and understand images provided during the conversation. This allows for more interactive and context-aware conversations, enabling the dialogue agent to provide relevant and accurate responses based on visual content.
+- [ ] （WIP）📢 **Text-to-Speech (TTS) Conversation**: LobeChat are supporting Text-to-Speech technology, allowing users to have voice-based conversations with the dialogue agent. This feature enhances the user experience by providing a more natural and immersive conversation environment. Users can choose from a variety of voices and adjust the speech rate to suit their preferences.
 
-> **Note**\
+> \[!NOTE]
+>
 > You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
+
+---
+
+Beside these features, LobeChat also have much better basic technique underground:
+
+- [x] 💨 **Quick Deployment**: Using the Vercel platform or docker image, you can deploy with just one click and complete the process within 1 minute without any complex configuration.
+- [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
+- [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy.
 
 <div align="right">
 
@@ -124,14 +133,14 @@ In our agent market. We have accumulated a large number of practical, prompt age
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                                       | Description                                                                                                                                                                                                                           |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Academic Writing Enhancement Bot](https://chat-preview.lobehub.com/market?agent=academic-writing-eb)<br/><sup>By **[Ruler27](https://github.com/Ruler27)** on **2023-11-11**</sup>                  | Academic English spelling and rhetoric refinement.<br/>`proofreading` `rhetoric` `academic` `research` `english` `editing`                                                                                                            |
-| [LobeChat Technical Documentation Expert](https://chat-preview.lobehub.com/market?agent=lobe-chat-develop-doc-writter)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-05**</sup> | LobeChat is an AI conversation application built with the Next.js framework. I will help you write the development documentation for LobeChat.<br/>`development-documentation` `technical-introduction` `next-js` `react` `lobe-chat` |
-| [Sketch Feature Summary Expert](https://chat-preview.lobehub.com/market?agent=sketch-changelog-highlighter)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-02**</sup>            | Skilled at extracting key changes from Sketch release notes<br/>`experience-design` `sketch` `update` `feature` `text-summary`                                                                                                        |
-| [Master of Debating](https://chat-preview.lobehub.com/market?agent=tqg-20231026)<br/><sup>By **[cake79](https://github.com/cake79)** on **2023-10-26**</sup>                                         | Simulates people who enjoy debating and can express counterarguments to any user input<br/>`writing` `dialogue`                                                                                                                       |
+| Recent Submits                                                                                                                                                              | Description                                                                                                                                                                                                                                                                                                                               |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Full-stack Developer](https://chat-preview.lobehub.com/market?agent=fs-dev)<br/><sup>By **[cloverfield11](https://github.com/cloverfield11)** on **2023-11-15**</sup>      | Full-stack web developer with experience in HTML, CSS, JavaScript, Python, Java, Ruby, and frameworks such as React, Angular, Vue.js, Express, Django, Next.js, Flask, or Ruby on Rails. Experience in databases, application architecture, security, and testing.<br/>`web-development` `front-end` `back-end` `programming` `databases` |
+| [Graphic Creative Master](https://chat-preview.lobehub.com/market?agent=graphic-creativity)<br/><sup>By **[yingxirz](https://github.com/yingxirz)** on **2023-11-15**</sup> | Specializes in graphic creative design and graphic creativity<br/>`graphic` `creative` `design` `graphic-design`                                                                                                                                                                                                                          |
+| [Expert Agent Mentor](https://chat-preview.lobehub.com/market?agent=synapse-co-r)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2023-11-15**</sup>         | Call on expert agents perfectly suited for the task to support your goals<br/>`task-guidance` `execution-plan` `communication` `support`                                                                                                                                                                                                  |
+| [Tailwind Wizard](https://chat-preview.lobehub.com/market?agent=tailwind-wizard)<br/><sup>By **[skyf0cker](https://github.com/skyf0cker)** on **2023-11-15**</sup>          | Provides a UI operation to generate HTML<br/>`development` `coding` `ui-design`                                                                                                                                                                                                                                                           |
 
-> 📊 Total agents: [<kbd>**39**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**47**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -143,7 +152,8 @@ In our agent market. We have accumulated a large number of practical, prompt age
 
 Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology to achieve a seamless LobeChat experience on your computer or mobile device.
 
-> **Note**\
+> \[!NOTE]
+>
 > If you are unfamiliar with the installation process of PWA, you can add LobeChat as your desktop application (also applicable to mobile devices) by following these steps:
 >
 > - Launch the Chrome or Edge browser on your computer.
@@ -175,7 +185,8 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ## ⚡️ Performance
 
-> **Note**\
+> \[!NOTE]
+>
 > The complete list of reports can be found in the [📘 Lighthouse Reports](https://github.com/lobehub/lobe-chat/wiki/Lighthouse)
 
 |                   Desktop                   |                   Mobile                   |
@@ -212,7 +223,8 @@ If you want to deploy this service yourself on Vercel, you can follow these step
 
 If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available." This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to detect updates accurately.
 
-> **Important**\
+> \[!TIP]
+>
 > We suggest you redeploy using the following steps, [📘 Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync).
 
 <br/>
@@ -232,7 +244,8 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**\
+> \[!TIP]
+>
 > If you need to use the OpenAI service through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
 
 ```fish
@@ -243,7 +256,8 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**\
+> \[!NOTE]
+>
 > For detailed instructions on deploying with Docker, please refer to the [📘 Docker Deployment Guide](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment)
 
 <br/>
@@ -258,7 +272,8 @@ This project provides some additional configuration items set with environment v
 | `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL | `https://api.chatanywhere.cn/v1`<br/>The default value is<br/>`https://api.openai.com/v1` |
 | `ACCESS_CODE`        | No       | Add a password to access this service; the password should be a 6-digit number or letter                                                      | `awCT74` or `e3@09!`                                                                      |
 
-> **Note**\
+> \[!NOTE]
+>
 > The complete list of environment variables can be found in the [📘 Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable)
 
 <div align="right">
@@ -291,7 +306,8 @@ Plugins provide a means to extend the [Function Calling][fc-link] capabilities o
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeChat Plugin SDK assists you in creating exceptional chat plugins for Lobe Chat.
 - [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The LobeChat Plugins Gateway is a backend service that provides a gateway for LobeChat plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
 
-> **Note**\
+> \[!NOTE]
+>
 > The plugin system is currently undergoing major development. You can learn more in the following issues:
 >
 > - [x] [**Plugin Phase 1**](https://github.com/lobehub/lobe-chat/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.

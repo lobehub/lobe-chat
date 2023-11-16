@@ -45,6 +45,7 @@ export default {
     confirm: '确认并重试',
     password: {
       description: '管理员已开启应用加密，输入应用密码后即可解锁应用。密码只需填写一次',
+      placeholder: '请输入密码',
       title: '输入密码解锁应用',
     },
   },

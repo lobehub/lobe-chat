@@ -45,7 +45,8 @@ LobeChat 支持使用 [Azure OpenAI][azure-openai-url] 作为 OpenAI 的模型�
 | `AZURE_API_VERSION` | 可选 | Azure 的 API 版本，遵循 YYYY-MM-DD 格式                                     | 2023-08-01-preview | `2023-05-15`，查阅[最新版本][azure-api-verion-url] |
 | `ACCESS_CODE`       | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                               | -                  | `awCT74` 或 `e3@09!`                               |
 
-> **Note**\
+> \[!NOTE]
+>
 > 当你在服务端开启 `USE_AZURE_OPENAI` 后，用户将无法在前端配置中修改并使用 OpenAI key。
 
 [azure-api-verion-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions

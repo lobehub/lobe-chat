@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 0.101.4](https://github.com/lobehub/lobe-chat/compare/v0.101.3...v0.101.4)
+
+<sup>Released on **2023-11-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the plugin array merge error when fork agent from market.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the plugin array merge error when fork agent from market, closes [#459](https://github.com/lobehub/lobe-chat/issues/459) ([fc29b33](https://github.com/lobehub/lobe-chat/commit/fc29b33))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.101.3](https://github.com/lobehub/lobe-chat/compare/v0.101.2...v0.101.3)
+
+<sup>Released on **2023-11-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve password ui to make it more clear.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve password ui to make it more clear, closes [#458](https://github.com/lobehub/lobe-chat/issues/458) ([e3d2a8e](https://github.com/lobehub/lobe-chat/commit/e3d2a8e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.101.2](https://github.com/lobehub/lobe-chat/compare/v0.101.1...v0.101.2)
+
+<sup>Released on **2023-11-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: upload image to vision model adapting to mobile device.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: upload image to vision model adapting to mobile device, closes [#457](https://github.com/lobehub/lobe-chat/issues/457) ([9c4f4ee](https://github.com/lobehub/lobe-chat/commit/9c4f4ee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.101.1](https://github.com/lobehub/lobe-chat/compare/v0.101.0...v0.101.1)
+
+<sup>Released on **2023-11-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix market search (fix.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix market search (fix, closes [#437](https://github.com/lobehub/lobe-chat/issues/437) ([178b742](https://github.com/lobehub/lobe-chat/commit/178b742))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.101.0](https://github.com/lobehub/lobe-chat/compare/v0.100.5...v0.101.0)
 
 <sup>Released on **2023-11-14**</sup>
