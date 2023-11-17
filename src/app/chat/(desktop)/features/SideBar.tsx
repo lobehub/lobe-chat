@@ -48,7 +48,13 @@ const Desktop = memo(() => {
       placement={'right'}
     >
       <DraggablePanelContainer
-        style={{ flex: 'none', height: '100%', minWidth: CHAT_SIDEBAR_WIDTH }}
+        style={{
+          flex: 'none',
+          height: '100%',
+          maxHeight: '100vh',
+          minWidth: CHAT_SIDEBAR_WIDTH,
+          overflow: 'auto',
+        }}
       >
         <SafeSpacing />
         {!isInbox && <SystemRole />}
