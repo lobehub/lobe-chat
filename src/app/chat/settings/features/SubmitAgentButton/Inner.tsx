@@ -1,4 +1,5 @@
-import { Alert, Button, Divider, Input } from 'antd';
+import { Alert } from '@lobehub/ui';
+import { Button, Divider, Input } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { kebabCase } from 'lodash-es';

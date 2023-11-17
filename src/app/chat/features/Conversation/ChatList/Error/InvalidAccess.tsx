@@ -16,7 +16,7 @@ enum Tab {
   Password = 'password',
 }
 
-const InvalidAccess: RenderErrorMessage = memo(({ id }) => {
+const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
   const { t } = useTranslation('error');
   const [mode, setMode] = useState<Tab>(Tab.Password);
   const [password, setSettings] = useGlobalStore((s) => [s.settings.password, s.setSettings]);
