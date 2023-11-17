@@ -35,6 +35,12 @@ export default {
     NoAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',
     /* eslint-enable */
   },
+  stt: {
+    responseError: '服务请求失败，请检查配置或重试',
+  },
+  tts: {
+    responseError: '服务请求失败，请检查配置或重试',
+  },
   unlock: {
     apikey: {
       addProxyUrl: '添加 OpenAI 代理地址（可选）',

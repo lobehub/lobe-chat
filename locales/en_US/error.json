@@ -28,6 +28,12 @@
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "NoAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key"
   },
+  "stt": {
+    "responseError": "Service request failed, please check the configuration or try again"
+  },
+  "tts": {
+    "responseError": "Service request failed, please check the configuration or try again"
+  },
   "unlock": {
     "apikey": {
       "title": "Use Custom API Key",

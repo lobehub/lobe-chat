@@ -1,6 +1,6 @@
 import { AudioPlayer } from '@lobehub/tts/react';
-import { ActionIcon } from '@lobehub/ui';
-import { Alert, Button } from 'antd';
+import { ActionIcon, Alert } from '@lobehub/ui';
+import { Button } from 'antd';
 import { TrashIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -68,9 +68,10 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
             </Button>
           }
           closable
-          message={error.message}
+          extra={error.message}
+          message={t('stt.responseError', { ns: 'error' })}
           onClose={handleDelete}
-          showIcon
+          style={{ alignItems: 'center' }}
           type="error"
         />
       ) : (

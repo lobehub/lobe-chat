@@ -1,5 +1,5 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Alert, Button, Dropdown } from 'antd';
+import { ActionIcon, Alert, Icon } from '@lobehub/ui';
+import { Button, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { Mic, MicOff } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
@@ -68,12 +68,9 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Dropdown
-      menu={{
-        activeKey: 'time',
-        items: [
-          {
-            key: 'time',
-            label: error ? (
+      dropdownRender={
+        error
+          ? () => (
               <Alert
                 action={
                   <Button onClick={handleRetry} size={'small'} type={'primary'}>
@@ -81,12 +78,21 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
                   </Button>
                 }
                 closable
-                message={error.message}
+                extra={error.message}
+                message={t('stt.responseError', { ns: 'error' })}
                 onClose={handleCloseError}
-                showIcon
+                style={{ alignItems: 'center' }}
                 type="error"
               />
-            ) : (
+            )
+          : undefined
+      }
+      menu={{
+        activeKey: 'time',
+        items: [
+          {
+            key: 'time',
+            label: (
               <Flexbox align={'center'} gap={8} horizontal>
                 <div className={styles.recording} />
                 {time > 0 ? formattedTime : t('stt.loading')}
