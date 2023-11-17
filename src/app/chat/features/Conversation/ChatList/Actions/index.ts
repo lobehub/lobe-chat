@@ -20,10 +20,11 @@ interface ActionsClick {
 }
 
 export const useActionsClick = (): ChatListProps['onActionsClick'] => {
-  const [deleteMessage, resendMessage, translateMessage] = useSessionStore((s) => [
+  const [deleteMessage, resendMessage, translateMessage, ttsMessage] = useSessionStore((s) => [
     s.deleteMessage,
     s.resendMessage,
     s.translateMessage,
+    s.ttsMessage,
   ]);
 
   return (action, { id, error }) => {
@@ -41,6 +42,12 @@ export const useActionsClick = (): ChatListProps['onActionsClick'] => {
           if (error) deleteMessage(id);
         },
         trigger: action.key === 'regenerate',
+      },
+      {
+        onClick: () => {
+          ttsMessage(id);
+        },
+        trigger: action.key === 'tts',
       },
       {
         onClick: () => {

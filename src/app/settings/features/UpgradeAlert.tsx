@@ -21,10 +21,10 @@ const UpgradeAlert = memo(() => {
             </Button>
           </Link>
         }
-        banner
         closable
         message={`✨ ${t('upgradeVersion.newVersion', { version: latestVersion })}`}
         showIcon={false}
+        style={{ marginBottom: 6 }}
         type={'info'}
       />
     )

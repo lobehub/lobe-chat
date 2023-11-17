@@ -38,6 +38,10 @@ export default {
     withSystemRole: '包含助手角色设定',
   },
   stop: '停止',
+  stt: {
+    action: '语音输入',
+    loading: '识别中...',
+  },
   temp: '临时',
   tokenDetail: '角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}',
   tokenTag: {
@@ -58,9 +62,13 @@ export default {
     title: '话题列表',
   },
   translate: {
+    action: '翻译',
     clear: '删除翻译',
   },
-  translateTo: '翻译',
+  tts: {
+    action: '语音朗读',
+    clear: '删除语音',
+  },
   updateAgent: '更新助理信息',
   upload: {
     actionTooltip: '上传图片',

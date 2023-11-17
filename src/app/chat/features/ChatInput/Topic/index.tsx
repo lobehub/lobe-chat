@@ -1,6 +1,5 @@
 import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
 import { Button } from 'antd';
-import { useResponsive } from 'antd-style';
 import { LucideGalleryVerticalEnd, LucideMessageSquarePlus } from 'lucide-react';
 import { memo } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -10,13 +9,12 @@ import HotKeys from '@/components/HotKeys';
 import { PREFIX_KEY, SAVE_TOPIC_KEY } from '@/const/hotkeys';
 import { useSessionStore } from '@/store/session';
 
-const SaveTopic = memo(() => {
+const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
   const [hasTopic, openNewTopicOrSaveTopic] = useSessionStore((s) => [
     !!s.activeTopicId,
     s.openNewTopicOrSaveTopic,
   ]);
-  const { mobile } = useResponsive();
 
   const icon = hasTopic ? LucideMessageSquarePlus : LucideGalleryVerticalEnd;
   const Render = mobile ? ActionIcon : Button;

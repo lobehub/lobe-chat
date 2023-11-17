@@ -1,7 +1,7 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import { Fragment, memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { CLEAN_MESSAGE_KEY, PREFIX_KEY } from '@/const/hotkeys';
@@ -56,12 +56,9 @@ const HotKeys = memo<HotKeysProps>(({ keys, desc }) => {
   const content = (
     <Flexbox align={'center'} className={styles} gap={2} horizontal>
       {keysGroup.map((key, index) => (
-        <Fragment key={index}>
-          <kbd>
-            <span style={{ visibility }}>{key.toUpperCase()}</span>
-          </kbd>
-          {index + 1 < keysGroup.length && <span>+</span>}
-        </Fragment>
+        <kbd key={index}>
+          <span style={{ visibility }}>{key.toUpperCase()}</span>
+        </kbd>
       ))}
     </Flexbox>
   );

@@ -41,6 +41,14 @@ beforeEach(() => {
         temperature: 0.6,
       },
       systemRole: '',
+      tts: {
+        ttsService: 'openai',
+        sttLocale: 'auto',
+        showAllLocaleVoice: false,
+        voice: {
+          openai: 'alloy',
+        },
+      },
     },
     type: 'agent',
     createAt: 1690110700808,
@@ -214,6 +222,14 @@ describe('organizeChats', () => {
         model: 'gpt-4',
         params: {
           temperature: 0.6,
+        },
+        tts: {
+          ttsService: 'openai',
+          sttLocale: 'auto',
+          showAllLocaleVoice: false,
+          voice: {
+            openai: 'alloy',
+          },
         },
         systemRole: '',
       },

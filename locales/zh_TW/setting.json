@@ -207,6 +207,43 @@
     },
     "title": "系統設定"
   },
+  "settingTTS": {
+    "showAllLocaleVoice": {
+      "desc": "關閉則只顯示當前語種的聲源",
+      "title": "顯示所有語種聲源"
+    },
+    "sttService": {
+      "desc": "其中 broswer 為瀏覽器原生的語音識別服務",
+      "title": "語音識別服務"
+    },
+    "title": "語音服務",
+    "ttsService": {
+      "desc": "如使用 OpenAI 語音合成服務，需要保證 OpenAI 模型服務已開啟",
+      "title": "語音合成服務"
+    },
+    "voice": {
+      "title": "語音合成聲源",
+      "desc": "為當前助手挑選一個聲音，不同 TTS 服務支持的聲源不同"
+    },
+    "openai": {
+      "sttModel": "OpenAI 語音識別模型",
+      "ttsModel": "OpenAI 語音合成模型"
+    },
+    "stt": "語音識別設定",
+    "sttLocale": {
+      "desc": "語音輸入的語言，此選項可提高語音識別準確率",
+      "title": "語音識別語言"
+    },
+    "sttPersisted": {
+      "desc": "開啟後，語音識別將不會自動結束，需要手動點擊結束按鈕",
+      "title": "手動結束語音識別"
+    },
+    "tts": "語音合成設定",
+    "sttAutoStop": {
+      "desc": "關閉後，語音識別將不會自動結束，需要手動點擊結束按鈕",
+      "title": "自動結束語音識別"
+    }
+  },
   "settingTheme": {
     "avatar": {
       "title": "頭像"
@@ -245,6 +282,7 @@
   "tab": {
     "agent": "預設助理",
     "common": "通用設定",
-    "llm": "語言模型"
+    "llm": "語言模型",
+    "tts": "語音服務"
   }
 }

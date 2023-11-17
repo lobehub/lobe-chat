@@ -7,6 +7,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -85,7 +86,7 @@ const Header = memo(() => {
           <ActionIcon
             icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
             onClick={() => toggleConfig()}
-            size={{ fontSize: 24 }}
+            size={DESKTOP_HEADER_ICON_SIZE}
             title={t('roleAndArchive')}
           />
           {!isInbox && (
@@ -94,7 +95,7 @@ const Header = memo(() => {
               onClick={() => {
                 router.push(pathString('/chat/settings', { hash: location.hash }));
               }}
-              size={{ fontSize: 24 }}
+              size={DESKTOP_HEADER_ICON_SIZE}
               title={t('header.session', { ns: 'setting' })}
             />
           )}

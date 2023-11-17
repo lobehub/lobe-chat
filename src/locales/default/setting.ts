@@ -109,7 +109,6 @@ export default {
     },
     title: '助手信息',
   },
-
   settingChat: {
     chatStyleType: {
       title: '聊天窗口样式',
@@ -195,6 +194,39 @@ export default {
     },
     title: '系统设置',
   },
+  settingTTS: {
+    openai: {
+      sttModel: 'OpenAI 语音识别模型',
+      ttsModel: 'OpenAI 语音合成模型',
+    },
+    showAllLocaleVoice: {
+      desc: '关闭则只显示当前语种的声源',
+      title: '显示所有语种声源',
+    },
+    stt: '语音识别设置',
+    sttAutoStop: {
+      desc: '关闭后，语音识别将不会自动结束，需要手动点击结束按钮',
+      title: '自动结束语音识别',
+    },
+    sttLocale: {
+      desc: '语音输入的语种，此选项可提高语音识别准确率',
+      title: '语音识别语种',
+    },
+    sttService: {
+      desc: '其中 broswer 为浏览器原生的语音识别服务',
+      title: '语音识别服务',
+    },
+    title: '语音服务',
+    tts: '语音合成设置',
+    ttsService: {
+      desc: '如使用 OpenAI 语音合成服务，需要保证 OpenAI 模型服务已开启',
+      title: '语音合成服务',
+    },
+    voice: {
+      desc: '为当前助手挑选一个声音，不同 TTS 服务支持的声源不同',
+      title: '语音合成声源',
+    },
+  },
   settingTheme: {
     avatar: {
       title: '头像',
@@ -234,5 +266,6 @@ export default {
     agent: '默认助手',
     common: '通用设置',
     llm: '语言模型',
+    tts: '语音服务',
   },
 };
