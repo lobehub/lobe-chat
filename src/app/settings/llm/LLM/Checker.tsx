@@ -1,6 +1,6 @@
 import { CheckCircleFilled } from '@ant-design/icons';
-import { Highlighter } from '@lobehub/ui';
-import { Alert, Button } from 'antd';
+import { Alert, Highlighter } from '@lobehub/ui';
+import { Button } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -72,10 +72,19 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
 
       {error && (
         <Flexbox gap={8}>
-          <Alert banner message={error.message} showIcon type={'error'}></Alert>
-          <Flexbox style={{ maxWidth: 600 }}>
-            <Highlighter language={'json'}>{JSON.stringify(error.body, null, 2)}</Highlighter>
-          </Flexbox>
+          <Alert
+            banner
+            extra={
+              <Flexbox style={{ maxWidth: 600 }}>
+                <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+                  {JSON.stringify(error.body, null, 2)}
+                </Highlighter>
+              </Flexbox>
+            }
+            message={error.message}
+            showIcon
+            type={'error'}
+          />
         </Flexbox>
       )}
     </Flexbox>

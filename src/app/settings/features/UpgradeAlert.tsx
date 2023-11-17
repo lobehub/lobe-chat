@@ -1,4 +1,5 @@
-import { Alert, Button } from 'antd';
+import { Alert } from '@lobehub/ui';
+import { Button } from 'antd';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
