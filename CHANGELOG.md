@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.101.5](https://github.com/lobehub/lobe-chat/compare/v0.101.4...v0.101.5)
+
+<sup>Released on **2023-11-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve openai error info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve openai error info, closes [#469](https://github.com/lobehub/lobe-chat/issues/469) ([5523b64](https://github.com/lobehub/lobe-chat/commit/5523b64))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.101.4](https://github.com/lobehub/lobe-chat/compare/v0.101.3...v0.101.4)
 
 <sup>Released on **2023-11-14**</sup>
