@@ -5,16 +5,16 @@ const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
 
 const withBundleAnalyzer = analyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
+                                      enabled: process.env.ANALYZE === 'true',
+                                    });
 
 const withPWA = nextPWA({
-  dest: 'public',
-  register: true,
-  workboxOptions: {
-    skipWaiting: true,
-  },
-});
+                          dest: 'public',
+                          register: true,
+                          workboxOptions: {
+                            skipWaiting: true,
+                          },
+                        });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -40,28 +40,10 @@ const nextConfig = {
     remotePatterns: [
       {
         hostname: 'registry.npmmirror.com',
-        pathname: '/@lobehub/assets-emoji/1.3.0/files/assets/**',
+        pathname: '/@lobehub/**',
         port: '',
         protocol: 'https',
-      },
-      {
-        hostname: 'registry.npmmirror.com',
-        pathname: '/@lobehub/assets-emoji-anim/1.0.0/files/assets/**',
-        port: '',
-        protocol: 'https',
-      },
-      {
-        hostname: 'registry.npmmirror.com',
-        pathname: '/@lobehub/assets-logo/1.1.0/files/assets/**',
-        port: '',
-        protocol: 'https',
-      },
-      {
-        hostname: 'registry.npmmirror.com',
-        pathname: '/@lobehub/assets-favicons/latest/files/assets/**',
-        port: '',
-        protocol: 'https',
-      },
+      }
     ],
     unoptimized: !isProd,
   },
@@ -69,7 +51,7 @@ const nextConfig = {
 
   reactStrictMode: true,
 
-  transpilePackages: ['@lobehub/ui', '@lobehub/tts', 'antd-style', 'lodash-es'],
+  transpilePackages: ['antd-style', '@lobehub/ui', '@lobehub/tts'],
 
   webpack(config) {
     config.experiments = {
@@ -77,7 +59,15 @@ const nextConfig = {
       layers: true,
     };
 
-    config.resolve.alias['@ant-design/cssinjs'] = '@ant-design/cssinjs/lib';
+    // to fix shikiji compile error
+    // refs: https://github.com/antfu/shikiji/issues/23
+    config.module.rules.push({
+                               test: /\.m?js$/,
+                               type: 'javascript/auto',
+                               resolve: {
+                                 fullySpecified: false,
+                               },
+                             });
 
     return config;
   },
