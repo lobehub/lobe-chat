@@ -5,16 +5,16 @@ const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
 
 const withBundleAnalyzer = analyzer({
-                                      enabled: process.env.ANALYZE === 'true',
-                                    });
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const withPWA = nextPWA({
-                          dest: 'public',
-                          register: true,
-                          workboxOptions: {
-                            skipWaiting: true,
-                          },
-                        });
+  dest: 'public',
+  register: true,
+  workboxOptions: {
+    skipWaiting: true,
+  },
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -43,7 +43,7 @@ const nextConfig = {
         pathname: '/@lobehub/**',
         port: '',
         protocol: 'https',
-      }
+      },
     ],
     unoptimized: !isProd,
   },
@@ -62,12 +62,12 @@ const nextConfig = {
     // to fix shikiji compile error
     // refs: https://github.com/antfu/shikiji/issues/23
     config.module.rules.push({
-                               test: /\.m?js$/,
-                               type: 'javascript/auto',
-                               resolve: {
-                                 fullySpecified: false,
-                               },
-                             });
+      test: /\.m?js$/,
+      type: 'javascript/auto',
+      resolve: {
+        fullySpecified: false,
+      },
+    });
 
     return config;
   },
