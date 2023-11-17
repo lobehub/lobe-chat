@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 0.101.6](https://github.com/lobehub/lobe-chat/compare/v0.101.5...v0.101.6)
+
+<sup>Released on **2023-11-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add config to renderErrorMessages, Use new Alert ui.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add config to renderErrorMessages ([75b6b40](https://github.com/lobehub/lobe-chat/commit/75b6b40))
+- **misc**: Use new Alert ui ([cf845a7](https://github.com/lobehub/lobe-chat/commit/cf845a7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.101.5](https://github.com/lobehub/lobe-chat/compare/v0.101.4...v0.101.5)
 
 <sup>Released on **2023-11-17**</sup>
