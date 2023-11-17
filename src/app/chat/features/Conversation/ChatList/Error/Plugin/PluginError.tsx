@@ -13,7 +13,7 @@ interface OpenAIErrorResponse {
   error: OpenAIError;
 }
 
-const PluginError: RenderErrorMessage = memo(({ error, id }) => {
+const PluginError: RenderErrorMessage['Render'] = memo(({ error, id }) => {
   const errorBody: OpenAIErrorResponse = (error as any)?.body;
 
   return (

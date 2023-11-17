@@ -12,7 +12,7 @@ import { useSessionStore } from '@/store/session';
 
 import { ErrorActionContainer, useStyles } from '../style';
 
-const PluginSettings: RenderErrorMessage = memo(({ id, plugin }) => {
+const PluginSettings: RenderErrorMessage['Render'] = memo(({ id, plugin }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('error');
   const theme = useTheme();

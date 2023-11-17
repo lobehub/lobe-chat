@@ -15,16 +15,18 @@ interface OpenAIErrorResponse {
   error: OpenAIError;
 }
 
-const OpenAiBizError: RenderErrorMessage = memo(({ error, id, ...props }) => {
+const OpenAiBizError: RenderErrorMessage['Render'] = memo(({ error, id, ...props }) => {
   const errorBody: OpenAIErrorResponse = (error as any)?.body;
 
   const errorCode = errorBody.error?.code;
 
-  if (errorCode === 'invalid_api_key') return <OpenAPIKey error={error} id={id} {...props} />;
+  if (errorCode === 'invalid_api_key')
+    // @ts-ignore
+    return <OpenAPIKey error={error} id={id} {...props} />;
 
   return (
     <Flexbox style={{ maxWidth: 600 }}>
-      <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+      <Highlighter copyButtonSize={'small'} language={'json'}>
         {JSON.stringify(errorBody, null, 2)}
       </Highlighter>
     </Flexbox>
