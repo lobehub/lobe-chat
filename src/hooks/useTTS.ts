@@ -8,13 +8,14 @@ import {
   useOpenAITTS,
 } from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
+import { SWRConfiguration } from 'swr';
 
 import { OPENAI_URLS, TTS_URL } from '@/services/_url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
 
-export const useTTS = (content: string) => {
+export const useTTS = (content: string, config?: SWRConfiguration) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
   const [voiceList, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => {
@@ -70,5 +71,8 @@ export const useTTS = (content: string) => {
     }
   }
 
-  return useSelectedTTS(content, options);
+  return useSelectedTTS(content, {
+    ...config,
+    ...options,
+  });
 };

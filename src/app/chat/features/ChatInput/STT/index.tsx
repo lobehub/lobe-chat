@@ -1,8 +1,8 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
-import { Button, Dropdown } from 'antd';
+import { Alert, Button, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { Mic, MicOff } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -19,6 +19,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
+  const [error, setError] = useState<Error>();
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
 
@@ -27,11 +28,19 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
     s.updateInputMessage,
   ]);
 
-  const { start, isLoading, stop, formattedTime, time } = useSTT((text) => {
-    if (loading) stop();
-    if (text) {
-      updateInputMessage(text);
-    }
+  const { start, isLoading, stop, formattedTime, time } = useSTT({
+    onError: (err) => {
+      stop();
+      setError(err);
+    },
+    onErrorRetry: (err) => {
+      stop();
+      setError(err);
+    },
+    onTextChange: (text) => {
+      if (loading) stop();
+      if (text) updateInputMessage(text);
+    },
   });
 
   const icon = isLoading ? MicOff : Mic;
@@ -39,7 +48,7 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
   const iconRender: any = !mobile ? icon : <Icon icon={icon} />;
   const desc = t('stt.action');
 
-  const triggerStartStop = useCallback(() => {
+  const handleTriggerStartStop = useCallback(() => {
     if (loading) return;
     if (!isLoading) {
       start();
@@ -48,6 +57,15 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
     }
   }, [loading, isLoading, start, stop]);
 
+  const handleCloseError = useCallback(() => {
+    setError(undefined);
+  }, []);
+
+  const handleRetry = useCallback(() => {
+    setError(undefined);
+    start();
+  }, [start]);
+
   return (
     <Dropdown
       menu={{
@@ -55,7 +73,20 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
         items: [
           {
             key: 'time',
-            label: (
+            label: error ? (
+              <Alert
+                action={
+                  <Button onClick={handleRetry} size={'small'} type={'primary'}>
+                    {t('retry', { ns: 'common' })}
+                  </Button>
+                }
+                closable
+                message={error.message}
+                onClose={handleCloseError}
+                showIcon
+                type="error"
+              />
+            ) : (
               <Flexbox align={'center'} gap={8} horizontal>
                 <div className={styles.recording} />
                 {time > 0 ? formattedTime : t('stt.loading')}
@@ -64,13 +95,13 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
           },
         ],
       }}
-      open={isLoading}
+      open={!!error || isLoading}
       placement={mobile ? 'topRight' : 'top'}
       trigger={['click']}
     >
       <Render
         icon={iconRender}
-        onClick={triggerStartStop}
+        onClick={handleTriggerStartStop}
         placement={'bottom'}
         style={{ flex: 'none' }}
         title={desc}

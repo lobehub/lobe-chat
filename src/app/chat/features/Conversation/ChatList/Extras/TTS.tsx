@@ -1,5 +1,6 @@
 import { AudioPlayer } from '@lobehub/tts/react';
 import { ActionIcon } from '@lobehub/ui';
+import { Alert, Button } from 'antd';
 import { TrashIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,11 +18,24 @@ interface TTSProps extends ChatTTS {
 
 const TTS = memo<TTSProps>(({ id, init, content }) => {
   const [isStart, setIsStart] = useState(false);
+  const [error, setError] = useState<Error>();
   const { t } = useTranslation('chat');
 
   const [ttsMessage, clearTTS] = useSessionStore((s) => [s.ttsMessage, s.clearTTS]);
 
-  const { isGlobalLoading, audio, start, stop } = useTTS(content);
+  const { isGlobalLoading, audio, start, stop } = useTTS(content, {
+    onError: (err) => {
+      stop();
+      setError(err);
+    },
+    onErrorRetry: (err) => {
+      stop();
+      setError(err);
+    },
+    onSuccess: () => {
+      ttsMessage(id, true);
+    },
+  });
 
   const handleInitStart = useCallback(() => {
     if (isStart) return;
@@ -29,35 +43,54 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
     setIsStart(true);
   }, [isStart]);
 
+  const handleDelete = useCallback(() => {
+    stop();
+    clearTTS(id);
+  }, [stop, id]);
+
+  const handleRetry = useCallback(() => {
+    setError(undefined);
+    start();
+  }, [start]);
+
   useEffect(() => {
     if (init) return;
     handleInitStart();
-    ttsMessage(id, true);
   }, [init]);
-
-  console.log(audio);
 
   return (
     <Flexbox align={'center'} horizontal style={{ minWidth: 160 }}>
-      {audio && (
-        <AudioPlayer
-          audio={audio}
-          buttonSize={'small'}
-          isLoading={isGlobalLoading}
-          onInitPlay={handleInitStart}
-          timeRender={'tag'}
-          timeStyle={{ margin: 0 }}
+      {error ? (
+        <Alert
+          action={
+            <Button onClick={handleRetry} size={'small'} type={'primary'}>
+              {t('retry', { ns: 'common' })}
+            </Button>
+          }
+          closable
+          message={error.message}
+          onClose={handleDelete}
+          showIcon
+          type="error"
         />
+      ) : (
+        <>
+          <AudioPlayer
+            audio={audio}
+            buttonSize={'small'}
+            isLoading={isGlobalLoading}
+            onInitPlay={handleInitStart}
+            timeRender={'tag'}
+            timeStyle={{ margin: 0 }}
+          />
+          <ActionIcon
+            icon={TrashIcon}
+            onClick={handleDelete}
+            size={'small'}
+            title={t('tts.clear')}
+          />
+        </>
       )}
-      <ActionIcon
-        icon={TrashIcon}
-        onClick={() => {
-          stop();
-          clearTTS(id);
-        }}
-        size={'small'}
-        title={t('tts.clear')}
-      />
     </Flexbox>
   );
 });
