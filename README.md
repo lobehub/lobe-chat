@@ -117,16 +117,13 @@ Beside these features, LobeChat also have much better basic technique undergroun
 
 ## 📸 Snapshot
 
-
 #### `1` Function Calling Plugin System
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
 
 By establishing a versatile plugin system, ChatGPT becomes capable of delivering real-time news updates and enhancing your ability to interact with documents and e-commerce data more effectively. This extended functionality positions ChatGPT as a valuable resource across diverse domains. If you have an interest in creating plugins, we offer comprehensive component development documentation, software development kits (SDKs), and pre-made templates in the [🧩 Plugin System](#-plugins) section below. Join us in our collective efforts to empower ChatGPT, making it both more potent and user-friendly.
 
-
-https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2
-
+<https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
 
 #### `2` Prompt Agent Market
 
@@ -149,7 +146,6 @@ In our agent market. We have accumulated a large number of practical, prompt age
 
 <br/>
 
-
 #### `3` Progress Web App
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
@@ -167,13 +163,11 @@ Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome
 
 <br/>
 
-
 #### `4` Theme Mode Selection
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
 LobeChat offers two unique theme modes - Light Mode and Dark Mode, as well as rich color customization options to meet your personalized needs. By default, our themes will intelligently switch based on your system settings, but if you prefer manual control, you can easily switch in the settings. <br/>
-
 
 #### `5` Mobile Device Adaptation
 
@@ -184,7 +178,6 @@ We have carried out a series of optimization designs for mobile devices to enhan
 #### `6` Visual Model Support
 
 We have support [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) model.You can just upload, drag/drop or just paste your image to chat.
-
 
 > 🚧 Additional snapshots and demonstrations are being progressively added...
 
