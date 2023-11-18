@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.101.7](https://github.com/lobehub/lobe-chat/compare/v0.101.6...v0.101.7)
+
+<sup>Released on **2023-11-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Agent details sidebar and market page height overflow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Agent details sidebar and market page height overflow ([71a54cc](https://github.com/lobehub/lobe-chat/commit/71a54cc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.101.6](https://github.com/lobehub/lobe-chat/compare/v0.101.5...v0.101.6)
 
 <sup>Released on **2023-11-17**</sup>
