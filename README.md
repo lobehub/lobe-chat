@@ -125,9 +125,12 @@ By establishing a versatile plugin system, ChatGPT becomes capable of delivering
 
 <https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
 
-#### `2` Prompt Agent Market
+<br/>
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
+
+#### `2` Prompt Agent Market
+
 
 In our agent market. We have accumulated a large number of practical, prompt agents that have been used in daily work and study. You can also share your agents here and iterate and optimize your prompt agents with more people. You can submit your agents through [🤖/🏪 Submit Agents][submit-agents-link], and our automated i18n workflow will automatically translate your agents into multiple languages, allowing users worldwide to enjoy your wisdom.
 
