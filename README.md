@@ -117,13 +117,19 @@ Beside these features, LobeChat also have much better basic technique undergroun
 
 ## 📸 Snapshot
 
-#### `1` Function Calling Plugin System
-
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
+
+#### `1` Function Calling Plugin System
 
 By establishing a versatile plugin system, ChatGPT becomes capable of delivering real-time news updates and enhancing your ability to interact with documents and e-commerce data more effectively. This extended functionality positions ChatGPT as a valuable resource across diverse domains. If you have an interest in creating plugins, we offer comprehensive component development documentation, software development kits (SDKs), and pre-made templates in the [🧩 Plugin System](#-plugins) section below. Join us in our collective efforts to empower ChatGPT, making it both more potent and user-friendly.
 
 <https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
 
 #### `2` Prompt Agent Market
 
@@ -144,11 +150,15 @@ In our agent market. We have accumulated a large number of practical, prompt age
 
  <!-- AGENT LIST -->
 
-<br/>
+<div align="right">
 
-#### `3` Progress Web App
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
+
+#### `3` Progress Web App
 
 Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology to achieve a seamless LobeChat experience on your computer or mobile device.
 
@@ -161,19 +171,35 @@ Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome
 > - In the upper right corner of the address bar, click on the <kbd>Install</kbd> icon.
 > - Follow the instructions on the screen to complete the PWA Installation.
 
-<br/>
+<div align="right">
 
-#### `4` Theme Mode Selection
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
+#### `4` Theme Mode Selection
+
 LobeChat offers two unique theme modes - Light Mode and Dark Mode, as well as rich color customization options to meet your personalized needs. By default, our themes will intelligently switch based on your system settings, but if you prefer manual control, you can easily switch in the settings. <br/>
 
-#### `5` Mobile Device Adaptation
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
 
+#### `5` Mobile Device Adaptation
+
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
 
 #### `6` Visual Model Support
 
