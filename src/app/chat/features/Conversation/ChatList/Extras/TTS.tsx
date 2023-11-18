@@ -1,5 +1,5 @@
 import { AudioPlayer } from '@lobehub/tts/react';
-import { ActionIcon, Alert } from '@lobehub/ui';
+import { ActionIcon, Alert, Highlighter } from '@lobehub/ui';
 import { Button } from 'antd';
 import { TrashIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
@@ -8,7 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useTTS } from '@/hooks/useTTS';
 import { useSessionStore } from '@/store/session';
-import { ChatTTS } from '@/types/chatMessage';
+import { ChatMessageError, ChatTTS } from '@/types/chatMessage';
+import { getMessageError } from '@/utils/fetch';
 
 interface TTSProps extends ChatTTS {
   content: string;
@@ -18,22 +19,26 @@ interface TTSProps extends ChatTTS {
 
 const TTS = memo<TTSProps>(({ id, init, content }) => {
   const [isStart, setIsStart] = useState(false);
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<ChatMessageError>();
   const { t } = useTranslation('chat');
 
   const [ttsMessage, clearTTS] = useSessionStore((s) => [s.ttsMessage, s.clearTTS]);
 
-  const { isGlobalLoading, audio, start, stop } = useTTS(content, {
+  const { isGlobalLoading, audio, start, stop, response } = useTTS(content, {
     onError: (err) => {
       stop();
-      setError(err);
+      setError({ body: err, message: t('tts.responseError', { ns: 'error' }), type: 500 });
     },
-    onErrorRetry: (err) => {
-      stop();
-      setError(err);
-    },
-    onSuccess: () => {
-      ttsMessage(id, true);
+    onErrorRetry: () => stop(),
+    onSuccess: async () => {
+      if (!response) return;
+      if (response.status === 200) {
+        ttsMessage(id, true);
+      } else {
+        const message = await getMessageError(response);
+        if (!message) return;
+        setError(message);
+      }
     },
   });
 
@@ -59,7 +64,7 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
   }, [init]);
 
   return (
-    <Flexbox align={'center'} horizontal style={{ minWidth: 160 }}>
+    <Flexbox align={'center'} horizontal style={{ minWidth: 160, width: '100%' }}>
       {error ? (
         <Alert
           action={
@@ -68,10 +73,16 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
             </Button>
           }
           closable
-          extra={error.message}
-          message={t('stt.responseError', { ns: 'error' })}
+          extra={
+            error.body && (
+              <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+                {JSON.stringify(error.body, null, 2)}
+              </Highlighter>
+            )
+          }
+          message={error.message}
           onClose={handleDelete}
-          style={{ alignItems: 'center' }}
+          style={{ alignItems: 'center', width: '100%' }}
           type="error"
         />
       ) : (
@@ -81,6 +92,7 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
             buttonSize={'small'}
             isLoading={isGlobalLoading}
             onInitPlay={handleInitStart}
+            onLoadingStop={stop}
             timeRender={'tag'}
             timeStyle={{ margin: 0 }}
           />

@@ -1,4 +1,4 @@
-import { ActionIcon, Alert, Icon } from '@lobehub/ui';
+import { ActionIcon, Alert, Highlighter, Icon } from '@lobehub/ui';
 import { Button, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { Mic, MicOff } from 'lucide-react';
@@ -8,6 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useSTT } from '@/hooks/useSTT';
 import { useSessionStore } from '@/store/session';
+import { ChatMessageError } from '@/types/chatMessage';
+import { getMessageError } from '@/utils/fetch';
 
 const useStyles = createStyles(({ css, token }) => ({
   recording: css`
@@ -19,7 +21,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<ChatMessageError>();
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
 
@@ -28,14 +30,19 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
     s.updateInputMessage,
   ]);
 
-  const { start, isLoading, stop, formattedTime, time } = useSTT({
+  const { start, isLoading, stop, formattedTime, time, response } = useSTT({
     onError: (err) => {
       stop();
-      setError(err);
+      setError({ body: err, message: t('stt.responseError', { ns: 'error' }), type: 500 });
     },
-    onErrorRetry: (err) => {
-      stop();
-      setError(err);
+    onErrorRetry: () => stop(),
+    onSuccess: async () => {
+      if (!response) return;
+      if (response.status !== 200) {
+        const message = await getMessageError(response);
+        if (!message) return;
+        setError(message);
+      }
     },
     onTextChange: (text) => {
       if (loading) stop();
@@ -78,8 +85,14 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
                   </Button>
                 }
                 closable
-                extra={error.message}
-                message={t('stt.responseError', { ns: 'error' })}
+                extra={
+                  error.body && (
+                    <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+                      {JSON.stringify(error.body, null, 2)}
+                    </Highlighter>
+                  )
+                }
+                message={error.message}
                 onClose={handleCloseError}
                 style={{ alignItems: 'center' }}
                 type="error"

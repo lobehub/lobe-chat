@@ -49,7 +49,10 @@ export const useTTS = (content: string, config?: SWRConfiguration) => {
       useSelectedTTS = useEdgeSpeech;
       options = {
         api: {
-          backendUrl: TTS_URL.edge,
+          /**
+           * @description client fetch
+           * backendUrl: TTS_URL.edge,
+           */
         },
         options: {
           voice: ttsAgentSettings.voice.edge || voiceList.edgeVoiceOptions?.[0].value,
