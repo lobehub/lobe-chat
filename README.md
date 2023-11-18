@@ -185,7 +185,6 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 We have support [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) model.You can just upload, drag/drop or just paste your image to chat.
 
-https://twitter.com/arvin17x/status/1724298845298037156
 
 > 🚧 Additional snapshots and demonstrations are being progressively added...
 
