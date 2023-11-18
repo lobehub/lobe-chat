@@ -115,17 +115,23 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 ## 📸 快照预览
 
-#### `1` Function Calling 插件系统
-
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
+
+#### `1` Function Calling 插件系统
 
 通过构建强大的插件生态，ChatGPT 不仅能够实时获取最新新闻，还能助你一臂之力，轻松查询文档、访问各大电商数据。这使得 ChatGPT 在更广泛的领域中发挥其关键作用。如果你对编写插件有所兴趣，我们在下文的 [🧩 插件体系](#-插件体系) 中提供了详尽的组件开发文档、SDK、以及样板文件，让我们一起让助手变得更加好用和强大～
 
 <https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
 
-#### `2` 助手市场
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
+
+#### `2` 助手市场
 
 在我们的助手市场中，我们积累了大量实用的助手，这些都是在日常工作和学习中得到实际应用的。你也可以在这里分享你的助手，与更多的人一起迭代和优化你的助手提示词。你可以通过 [🤖/🏪 提交助手][submit-agents-link] 来提交你的助手，我们构建的自动化 i18n 工作流将会自动将你的助手翻译成多语言版本，让多语种用户都能享受到你的智慧成果。
 
@@ -142,11 +148,15 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
  <!-- AGENT LIST -->
 
-<br/>
+<div align="right">
 
-#### `3` PWA 渐进式 Web 应用
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
+
+#### `3` PWA 渐进式 Web 应用
 
 我们利用了渐进式 Web 应用 [PWA](https://support.google.com/chrome/answer/9658361) 技术，使得您可在电脑或移动设备上实现接近原生的 LobeChat 体验。
 
@@ -159,21 +169,35 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 > - 在地址栏的右上角，单击 <kbd>安装</kbd> 图标 .
 > - 根据屏幕上的指示完成 PWA 的安装 .
 
-<br/>
+<div align="right">
 
-#### `4` 主题模式选择
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
+#### `4` 主题模式选择
+
 LobeChat 提供了丰富的主题模式 - 亮色 / 深色模式 与丰富的颜色定制选项，以满足您的个性化需求。默认情况下，我们的主题会智能地跟随您的系统设置进行切换，但如果您希望进行手动控制，也可以轻松在设置中进行切换。
 
-<br/>
+<div align="right">
 
-#### `5` 移动设备适配
+[![][back-to-top]](#readme-top)
+
+</div>
 
 ![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
 
+#### `5` 移动设备适配
+
 针对移动设备进行了一系列的优化设计，以提升用户的移动体验。目前，我们正在对移动端的用户体验进行版本迭代，以实现更加流畅和直观的交互。如果您有任何建议或想法，我们非常欢迎您通过 GitHub Issues 或者 Pull Requests 提供反馈。
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
 
 #### `6` 图片识别
 
