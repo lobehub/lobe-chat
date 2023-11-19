@@ -27,11 +27,18 @@ export const getServerConfig = () => {
     throw new Error('[Server Config] you are importing a nodejs-only module outside of nodejs');
   }
 
+  // region format: iad1,sfo1
+  let regions: string[] = [];
+  if (process.env.OPENAI_FUNCTION_REGIONS) {
+    regions = process.env.OPENAI_FUNCTION_REGIONS.split(',');
+  }
+
   return {
     ACCESS_CODE: process.env.ACCESS_CODE,
 
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,
+    OPENAI_FUNCTION_REGIONS: regions,
 
     AZURE_API_KEY: process.env.AZURE_API_KEY,
     AZURE_API_VERSION: process.env.AZURE_API_VERSION,
