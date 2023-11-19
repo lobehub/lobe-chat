@@ -207,6 +207,44 @@
     },
     "title": "System Settings"
   },
+  "settingTTS": {
+    "showAllLocaleVoice": {
+      "desc": "If disabled, only voices for the current language will be displayed",
+      "title": "Show all locale voices"
+    },
+    "sttService": {
+      "desc": "The 'browser' option refers to the native speech recognition service in the browser",
+      "title": "Speech-to-Text Service"
+    },
+    "title": "Speech Services",
+    "ttsService": {
+      "desc": "If using the OpenAI text-to-speech service, ensure that the OpenAI model service is enabled",
+      "title": "Text-to-Speech Service"
+    },
+    "voice": {
+      "title": "Text-to-Speech Voices",
+      "desc": "Select a voice for the current assistant, different TTS services support different voices",
+      "preview": "Preview Voice"
+    },
+    "openai": {
+      "sttModel": "OpenAI Speech Recognition Model",
+      "ttsModel": "OpenAI Text-to-Speech Model"
+    },
+    "stt": "Speech Recognition Settings",
+    "sttLocale": {
+      "desc": "The language of the speech input, this option can improve the accuracy of speech recognition",
+      "title": "Speech Recognition Language"
+    },
+    "sttPersisted": {
+      "desc": "When enabled, speech recognition will not automatically end and requires manual click on the end button",
+      "title": "Manually End Speech Recognition"
+    },
+    "tts": "Text-to-Speech Settings",
+    "sttAutoStop": {
+      "desc": "When disabled, speech recognition will not automatically stop and will require manual intervention to end the process.",
+      "title": "Automatic Speech Recognition Termination"
+    }
+  },
   "settingTheme": {
     "avatar": {
       "title": "Avatar"
@@ -245,6 +283,7 @@
   "tab": {
     "agent": "Default Agent",
     "common": "Common Settings",
-    "llm": "Custom LLM API"
+    "llm": "Custom LLM API",
+    "tts": "Speech Services"
   }
 }

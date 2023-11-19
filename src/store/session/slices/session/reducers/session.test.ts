@@ -312,6 +312,14 @@ describe('sessionsReducer', () => {
             model: 'gpt-3.5-turbo',
             params: {},
             systemRole: 'system-role',
+            tts: {
+              showAllLocaleVoice: false,
+              sttLocale: 'auto',
+              ttsService: 'openai',
+              voice: {
+                openai: 'alloy',
+              },
+            },
           },
           type: 'agent',
           meta: {
@@ -354,6 +362,14 @@ describe('sessionsReducer', () => {
             model: 'gpt-3.5-turbo',
             params: {},
             systemRole: 'system',
+            tts: {
+              showAllLocaleVoice: false,
+              sttLocale: 'auto',
+              ttsService: 'openai',
+              voice: {
+                openai: 'alloy',
+              },
+            },
           },
         } as LobeAgentSession,
         session2: {
@@ -379,6 +395,14 @@ describe('sessionsReducer', () => {
         draft.session1.config = {
           model: LanguageModel.GPT4,
           params: {},
+          tts: {
+            ttsService: 'openai',
+            sttLocale: 'auto',
+            showAllLocaleVoice: false,
+            voice: {
+              openai: 'alloy',
+            },
+          },
           systemRole: 'system',
         };
       });

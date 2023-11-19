@@ -1,7 +1,12 @@
 import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_LANG } from '@/const/locale';
 import { DEFAULT_AGENT_META } from '@/const/meta';
-import { DEFAULT_AGENT, DEFAULT_AGENT_CONFIG, DEFAULT_SETTINGS } from '@/const/settings';
+import {
+  DEFAULT_AGENT,
+  DEFAULT_AGENT_CONFIG,
+  DEFAULT_SETTINGS,
+  DEFAULT_TTS_CONFIG,
+} from '@/const/settings';
 import { Locales } from '@/locales/resources';
 import { GlobalSettings } from '@/types/settings';
 import { isOnServerSide } from '@/utils/env';
@@ -10,6 +15,8 @@ import { merge } from '@/utils/merge';
 import { GlobalStore } from '../store';
 
 const currentSettings = (s: GlobalStore) => merge(DEFAULT_SETTINGS, s.settings);
+
+const currentTTS = (s: GlobalStore) => merge(DEFAULT_TTS_CONFIG, s.settings.tts);
 
 const defaultAgent = (s: GlobalStore) => merge(DEFAULT_AGENT, s.settings.defaultAgent);
 
@@ -49,6 +56,7 @@ const currentLanguage = (s: GlobalStore) => {
 export const settingsSelectors = {
   currentLanguage,
   currentSettings,
+  currentTTS,
   defaultAgent,
   defaultAgentConfig,
   defaultAgentMeta,

@@ -1,6 +1,6 @@
 import { getOpenAIAuthFromRequest } from '@/const/fetch';
 
-import { createOpenai } from '../createOpenai';
+import { createOpenai } from '../createBizOpenAI/createOpenai';
 
 export const runtime = 'edge';
 

@@ -40,25 +40,7 @@ const nextConfig = {
     remotePatterns: [
       {
         hostname: 'registry.npmmirror.com',
-        pathname: '/@lobehub/assets-emoji/1.3.0/files/assets/**',
-        port: '',
-        protocol: 'https',
-      },
-      {
-        hostname: 'registry.npmmirror.com',
-        pathname: '/@lobehub/assets-emoji-anim/1.0.0/files/assets/**',
-        port: '',
-        protocol: 'https',
-      },
-      {
-        hostname: 'registry.npmmirror.com',
-        pathname: '/@lobehub/assets-logo/1.1.0/files/assets/**',
-        port: '',
-        protocol: 'https',
-      },
-      {
-        hostname: 'registry.npmmirror.com',
-        pathname: '/@lobehub/assets-favicons/latest/files/assets/**',
+        pathname: '/@lobehub/**',
         port: '',
         protocol: 'https',
       },
@@ -69,7 +51,7 @@ const nextConfig = {
 
   reactStrictMode: true,
 
-  transpilePackages: ['antd-style', '@lobehub/ui'],
+  transpilePackages: ['antd-style', '@lobehub/ui', '@lobehub/tts'],
 
   webpack(config) {
     config.experiments = {

@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { getServerConfig } from '@/config/server';
 import { ChatErrorType } from '@/types/fetch';
 
-// 创建 OpenAI 实例
+// create OpenAI instance
 export const createOpenai = (userApiKey: string | null, endpoint?: string | null) => {
   const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
 

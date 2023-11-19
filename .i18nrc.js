@@ -8,5 +8,5 @@ module.exports = defineConfig({
   output: 'locales',
   outputLocales: ['zh_TW', 'en_US', 'ru_RU', 'ja_JP', 'ko_KR'],
   temperature: 0,
-  modelName: 'gpt-3.5-turbo',
+  modelName: 'gpt-3.5-turbo-1106',
 });

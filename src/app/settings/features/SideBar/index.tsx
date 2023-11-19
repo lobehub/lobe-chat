@@ -30,8 +30,8 @@ const SideBar = memo(() => {
             <Logo className={styles.logo} extra={'Settings'} size={36} type={'text'} />
           </div>
         </Flexbox>
-        <UpgradeAlert />
         <Flexbox gap={2} style={{ paddingInline: 8 }}>
+          <UpgradeAlert />
           <List />
         </Flexbox>
       </DraggablePanelBody>

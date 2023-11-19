@@ -20,11 +20,27 @@ describe('settingsSelectors', () => {
               systemRole: '',
               model: LanguageModel.GPT3_5,
               params: {},
+              tts: {
+                showAllLocaleVoice: false,
+                sttLocale: 'auto',
+                ttsService: 'openai',
+                voice: {
+                  openai: 'alloy',
+                },
+              },
             },
             meta: {
               avatar: 'Default Agent',
               description: 'Default agent for testing',
             },
+          },
+          tts: {
+            openAI: {
+              sttModel: 'whisper-1',
+              ttsModel: 'tts-1',
+            },
+            sttAutoStop: true,
+            sttServer: 'openai',
           },
           languageModel: {
             openAI: {
@@ -59,11 +75,27 @@ describe('settingsSelectors', () => {
               top_p: 1,
             },
             plugins: [],
+            tts: {
+              showAllLocaleVoice: false,
+              sttLocale: 'auto',
+              ttsService: 'openai',
+              voice: {
+                openai: 'alloy',
+              },
+            },
           },
           meta: {
             avatar: 'Default Agent',
             description: 'Default agent for testing',
           },
+        },
+        tts: {
+          openAI: {
+            sttModel: 'whisper-1',
+            ttsModel: 'tts-1',
+          },
+          sttAutoStop: true,
+          sttServer: 'openai',
         },
         languageModel: {
           openAI: {

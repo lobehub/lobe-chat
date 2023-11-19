@@ -16,13 +16,15 @@ const t = setNamespace('chat/translate');
  * 翻译事件
  */
 export interface ChatTranslateAction {
-  clearTranslate: (id: string) => void;
+  clearTTS: (id: string) => void;
 
+  clearTranslate: (id: string) => void;
   /**
    * 翻译消息
    * @param id
    */
   translateMessage: (id: string, targetLang: string) => Promise<void>;
+  ttsMessage: (id: string, init?: boolean) => void;
 }
 
 export const chatTranslate: StateCreator<
@@ -31,6 +33,15 @@ export const chatTranslate: StateCreator<
   [],
   ChatTranslateAction
 > = (set, get) => ({
+  clearTTS: (id) => {
+    get().dispatchMessage({
+      id,
+      key: 'tts',
+      type: 'updateMessageExtra',
+      value: null,
+    });
+  },
+
   clearTranslate: (id) => {
     get().dispatchMessage({
       id,
@@ -84,5 +95,17 @@ export const chatTranslate: StateCreator<
     });
 
     toggleChatLoading(false);
+  },
+
+  ttsMessage: (id, init) => {
+    const { dispatchMessage } = get();
+    dispatchMessage({
+      id,
+      key: 'tts',
+      type: 'updateMessageExtra',
+      value: {
+        init: Boolean(init),
+      },
+    });
   },
 });

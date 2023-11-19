@@ -11,6 +11,7 @@ export enum SettingsTabs {
   Agent = 'agent',
   Common = 'common',
   LLM = 'llm',
+  TTS = 'tts',
 }
 
 export interface Guide {

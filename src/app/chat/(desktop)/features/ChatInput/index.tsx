@@ -47,7 +47,6 @@ const ChatInputDesktopLayout = memo(() => {
         minHeight={CHAT_TEXTAREA_HEIGHT}
         onSizeChange={(_, size) => {
           if (!size) return;
-
           updatePreference({
             inputHeight:
               typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,

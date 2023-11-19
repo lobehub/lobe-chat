@@ -15,11 +15,11 @@ const createImpl = (createState: any) => {
 
 // Reset all stores after each test run
 beforeEach(() => {
-  act(() =>
-    { for (const resetFn of storeResetFns) {
+  act(() => {
+    for (const resetFn of storeResetFns) {
       resetFn();
-    } },
-  );
+    }
+  });
 });
 
 export const createWithEqualityFn = (f: any) => (f === undefined ? createImpl : createImpl(f));

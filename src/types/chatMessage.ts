@@ -22,6 +22,10 @@ export interface OpenAIFunctionCall {
 export interface ChatTranslate extends Translate {
   content?: string;
 }
+
+export interface ChatTTS {
+  init?: boolean;
+}
 export interface ChatMessage extends BaseDataModel {
   /**
    * @title 内容
@@ -34,6 +38,8 @@ export interface ChatMessage extends BaseDataModel {
     fromModel?: string;
     // 翻译
     translate?: ChatTranslate;
+    // TTS
+    tts?: ChatTTS;
   } & Record<string, any>;
 
   files?: string[];
