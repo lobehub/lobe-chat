@@ -8,7 +8,8 @@
 
 <h1>Lobe Chat</h1>
 
-LobeChat is an open-source, extensible ([Function Calling][fc-link]) high-performance chatbot framework. <br/> It supports one-click free deployment of your private ChatGPT/LLM web application.
+LobeChat is an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible ([Function Call][fc-link]) plugin system. <br/>
+Supports one-click free deployment of your private ChatGPT/LLM web application.
 
 **English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Wiki][github-wiki-link] · [Report Bug][github-issues-link] · [Request Feature][github-issues-link]
 
@@ -95,13 +96,11 @@ Please be aware that LobeChat is currently under active development, and feedbac
 - [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs.
 - [x] 🏬 **Agent Market**: A Agent Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue.
 - [x] 👁️ **Visual Recognition**: With the integration of visual recognition capabilities, your agent can now analyze and understand images provided during the conversation. This allows for more interactive and context-aware conversations, enabling the dialogue agent to provide relevant and accurate responses based on visual content.
-- [ ] （WIP）📢 **Text-to-Speech (TTS) Conversation**: LobeChat are supporting Text-to-Speech technology, allowing users to have voice-based conversations with the dialogue agent. This feature enhances the user experience by providing a more natural and immersive conversation environment. Users can choose from a variety of voices and adjust the speech rate to suit their preferences.
+- [x] 📢 **TTS & STT Conversation**: LobeChat are supporting Text-to-Speech and Speech-to-Text technology, allowing users to have voice-based conversations with the dialogue agent. This feature enhances the user experience by providing a more natural and immersive conversation environment. Users can choose from a variety of voices and adjust the speech rate to suit their preferences.
 
 > \[!NOTE]
 >
 > You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
-
----
 
 Beside these features, LobeChat also have much better basic technique underground:
 
@@ -117,13 +116,80 @@ Beside these features, LobeChat also have much better basic technique undergroun
 
 ## 📸 Snapshot
 
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png)
+
+#### `1` Visual Model Support
+
+LobeChat now supports OpenAI's latest [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) model with visual recognition capabilities,
+a multimodal intelligence that can perceive visuals. Users can easily upload or drag and drop images into the dialogue box,
+and the agent will be able to recognize the content of the images and engage in intelligent conversation based on this,
+creating smarter and more diversified chat scenarios.
+
+This feature opens up new interactive methods, allowing communication to transcend text and include a wealth of visual elements.
+Whether it's sharing images in daily use or interpreting images within specific industries, the agent provides an outstanding conversational experience.
+
+#### `2` TTS & STT Voice Speech
+
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png)
+
+LobeChat supports Text-to-Speech (TTS) and Speech-to-Text (STT) technologies, enabling our application to convert text messages into clear voice outputs,
+allowing users to interact with our conversational agent as if they were talking to a real person. Users can choose from a variety of voices to pair with the agent.
+
+Moreover, TTS offers an excellent solution for those who prefer auditory learning or desire to receive information while busy.
+In LobeChat, we have meticulously selected a range of high-quality voice options (OpenAI Audio, Microsoft Edge Speech) to meet the needs of users from different regions and cultural backgrounds.
+Users can choose the voice that suits their personal preferences or specific scenarios, resulting in a personalized communication experience.
+
+In the process of implementing this feature, we found that there was no satisfactory TTS (Text-to-Speech) frontend library available on the market.
+As a result, we invested a lot of effort, including data conversion, audio progress management, and speech visualization, among other tasks.
+
+Therefore, we decided to refine our implementation and make it open source, hoping to assist developers who wish to implement TTS.
+[@lobehub/tts][lobe-tts-link] is a high-quality TTS toolkit developed in TypeScript, which supports usage both on the server-side and in the browser.
+
+| <https://github.com/lobehub/lobe-tts/assets/28616219/3ab68c5a-2745-442e-8d66-ca410192ace1> | <https://github.com/lobehub/lobe-tts/assets/28616219/c2638383-314f-44c3-b358-8fbbd3028d61> |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+
+- Server-side: With just 15 lines of code, you can achieve high-quality voice generation capabilities comparable to OpenAI's TTS service.
+- It currently supports EdgeSpeechTTS, MicrosoftTTS, OpenAITTS, and OpenAISTT.
+- Browser: It provides high-quality React Hooks and visual audio components, supporting common functions such as loading, playing, pausing, and dragging the timeline.
+- Additionally, it offers a very rich set of capabilities for adjusting the audio track styles.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
 
-#### `1` Function Calling Plugin System
+#### `3` Function Calling Plugin System
 
-By establishing a versatile plugin system, ChatGPT becomes capable of delivering real-time news updates and enhancing your ability to interact with documents and e-commerce data more effectively. This extended functionality positions ChatGPT as a valuable resource across diverse domains. If you have an interest in creating plugins, we offer comprehensive component development documentation, software development kits (SDKs), and pre-made templates in the [🧩 Plugin System](#-plugins) section below. Join us in our collective efforts to empower ChatGPT, making it both more potent and user-friendly.
+The plugin ecosystem of LobeChat is a significant extension of its core functionalities, greatly enhancing the practicality and flexibility of ChatGPT.
+By leveraging plugins, ChatGPT can perform real-time information retrieval and processing,
+such as automatically fetching the latest news headlines to provide users with immediate and relevant information.
+Moreover, these plugins are not limited to news aggregation but can also extend to other practical functions, such as quick document retrieval,
+e-commerce platform data access, and various third-party services.
+
+To aid developers in joining this ecosystem, we provide comprehensive development resources in the [🧩 Plugin System](#-plugins) section.
+This includes detailed component development documentation,
+a fully-featured software development kit (SDK), and template files—all designed to simplify the development process and lower the barrier to entry for developers.
+
+We welcome developers to use these resources to unleash their creativity and write feature-rich, user-friendly plugins.
+With collective efforts, we can continuously expand the boundaries of chat applications and explore a more intelligent and efficient creativity platform.
 
 <https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
+
+<!-- PLUGIN LIST -->
+
+| Official Plugin                                                                                                     | Repository                                                                                      | Description                                                |
+| ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| [Clock Time](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>       | [lobehub/chat-plugin-clock-time](https://github.com/lobehub/chat-plugin-clock-time)             | Display a clock to show current time<br/>`clock` `time`    |
+| [Website Crawler](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-17**</sup>  | [lobehub/chat-plugin-web-crawler](https://github.com/lobehub/chat-plugin-web-crawler)           | Extract content from web links<br/>`web` `content-crawler` |
+| [Search Engine](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-15**</sup>    | [lobehub/chat-plugin-search-engine](https://github.com/lobehub/chat-plugin-search-engine)       | Query search engine to get information<br/>`web` `search`  |
+| [Realtime Weather](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-12**</sup> | [lobehub/chat-plugin-realtime-weather](https://github.com/lobehub/chat-plugin-realtime-weather) | Get realtime weather information<br/>`weather` `realtime`  |
+
+> 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+
+ <!-- PLUGIN LIST -->
 
 <div align="right">
 
@@ -133,15 +199,25 @@ By establishing a versatile plugin system, ChatGPT becomes capable of delivering
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
 
-#### `2` Prompt Agent Market
+#### `4` Prompt Agent Market
 
-In our agent market. We have accumulated a large number of practical, prompt agents that have been used in daily work and study. You can also share your agents here and iterate and optimize your prompt agents with more people. You can submit your agents through [🤖/🏪 Submit Agents][submit-agents-link], and our automated i18n workflow will automatically translate your agents into multiple languages, allowing users worldwide to enjoy your wisdom.
+In the LobeChat Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
+which not only play an important role in work scenarios but also offer great convenience in learning processes.
+Our marketplace is not just a showcase platform but also a collaborative space. Here, everyone can contribute their wisdom and share the agents they have developed.
+
+By [🤖/🏪 Submit Agents][submit-agents-link], you can easily submit your agent creations to our platform.
+Importantly, LobeChat has established a sophisticated automated internationalization (i18n) workflow,
+capable of seamlessly translating your agent into multiple language versions.
+This means that no matter what language your users speak, they can experience your agent without barriers.
+
+We welcome all users to join this growing ecosystem and participate in the iteration and optimization of agents.
+Together, we can create more interesting, practical, and innovative agents, further enriching the diversity and practicality of the agent offerings.
 
 <!-- AGENT LIST -->
 
 | Recent Submits                                                                                                                                                              | Description                                                                                                                                                                                                                                                                                                                               |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Short Video Script Assistant](https://chat-preview.lobehub.com/market?agent=tik-tok-director)<br/><sup>By **[aihoom](https://github.com/aihoom)** on **2023-11-17**</sup>  | Designed to help users write engaging and trendy short video scripts<br/>`short-video` `tkitok` `screenwriter`                                                                                                                                                                                                                            |
+| [Short Video Script Agent](https://chat-preview.lobehub.com/market?agent=tik-tok-director)<br/><sup>By **[aihoom](https://github.com/aihoom)** on **2023-11-17**</sup>      | Designed to help users write engaging and trendy short video scripts<br/>`short-video` `tkitok` `screenwriter`                                                                                                                                                                                                                            |
 | [Expert Agent Mentor](https://chat-preview.lobehub.com/market?agent=co-agent)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2023-11-16**</sup>             | Call on expert agents perfectly suited for the task to support your goals<br/>`task-guidance` `execution-plan` `communication` `support`                                                                                                                                                                                                  |
 | [Full-stack Developer](https://chat-preview.lobehub.com/market?agent=fs-dev)<br/><sup>By **[cloverfield11](https://github.com/cloverfield11)** on **2023-11-15**</sup>      | Full-stack web developer with experience in HTML, CSS, JavaScript, Python, Java, Ruby, and frameworks such as React, Angular, Vue.js, Express, Django, Next.js, Flask, or Ruby on Rails. Experience in databases, application architecture, security, and testing.<br/>`web-development` `front-end` `back-end` `programming` `databases` |
 | [Graphic Creative Master](https://chat-preview.lobehub.com/market?agent=graphic-creativity)<br/><sup>By **[yingxirz](https://github.com/yingxirz)** on **2023-11-15**</sup> | Specializes in graphic creative design and graphic creativity<br/>`graphic` `creative` `design` `graphic-design`                                                                                                                                                                                                                          |
@@ -158,9 +234,15 @@ In our agent market. We have accumulated a large number of practical, prompt age
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
 
-#### `3` Progress Web App
+#### `5` Progress Web App
 
-Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology to achieve a seamless LobeChat experience on your computer or mobile device.
+We deeply understand the importance of providing a seamless experience for users in today's multi-device environment.
+Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
+a modern web technology that elevates web applications to an experience close to that of native apps.
+
+Through PWA, LobeChat can offer a highly optimized user experience on both desktop and mobile devices while maintaining its lightweight and high-performance characteristics.
+Visually and in terms of feel, we have also meticulously designed the interface to ensure it is indistinguishable from native apps,
+providing smooth animations, responsive layouts, and adapting to different device screen resolutions.
 
 > \[!NOTE]
 >
@@ -179,9 +261,15 @@ Utilize the Progressive Web Application ([PWA](https://support.google.com/chrome
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
-#### `4` Theme Mode Selection
+#### `6` Theme Mode Selection
 
-LobeChat offers two unique theme modes - Light Mode and Dark Mode, as well as rich color customization options to meet your personalized needs. By default, our themes will intelligently switch based on your system settings, but if you prefer manual control, you can easily switch in the settings. <br/>
+As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
+hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.
+Beyond switching theme modes, a range of color customization options allow users to adjust the application's theme colors according to their preferences.
+Whether it's a desire for a sober dark blue, a lively peach pink, or a professional gray-white, users can find their style of color choices in LobeChat.
+
+The default configuration can intelligently recognize the user's system color mode and automatically switch themes to ensure a consistent visual experience with the operating system.
+For users who like to manually control details, LobeChat also offers intuitive setting options and a choice between chat bubble mode and document mode for conversation scenarios.
 
 <div align="right">
 
@@ -191,7 +279,7 @@ LobeChat offers two unique theme modes - Light Mode and Dark Mode, as well as ri
 
 ![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
 
-#### `5` Mobile Device Adaptation
+#### `7` Mobile Device Adaptation
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
@@ -200,10 +288,6 @@ We have carried out a series of optimization designs for mobile devices to enhan
 [![][back-to-top]](#readme-top)
 
 </div>
-
-#### `6` Visual Model Support
-
-We have support [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) model.You can just upload, drag/drop or just paste your image to chat.
 
 > 🚧 Additional snapshots and demonstrations are being progressively added...
 
@@ -343,19 +427,6 @@ Plugins provide a means to extend the [Function Calling][fc-link] capabilities o
 > - [x] [**Plugin Phase 1**](https://github.com/lobehub/lobe-chat/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
 > - [x] [**Plugin Phase 2**](https://github.com/lobehub/lobe-chat/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture, and developer-friendly.
 > - [ ] [**Plugin Phase 3**](https://github.com/lobehub/lobe-chat/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication, and examples.
-
-<!-- PLUGIN LIST -->
-
-| Official Plugin                                                                                                     | Repository                                                                                      | Description                                                |
-| ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| [Clock Time](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>       | [lobehub/chat-plugin-clock-time](https://github.com/lobehub/chat-plugin-clock-time)             | Display a clock to show current time<br/>`clock` `time`    |
-| [Website Crawler](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-17**</sup>  | [lobehub/chat-plugin-web-crawler](https://github.com/lobehub/chat-plugin-web-crawler)           | Extract content from web links<br/>`web` `content-crawler` |
-| [Search Engine](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-15**</sup>    | [lobehub/chat-plugin-search-engine](https://github.com/lobehub/chat-plugin-search-engine)       | Query search engine to get information<br/>`web` `search`  |
-| [Realtime Weather](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-12**</sup> | [lobehub/chat-plugin-realtime-weather](https://github.com/lobehub/chat-plugin-realtime-weather) | Get realtime weather information<br/>`weather` `realtime`  |
-
-> 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
-
- <!-- PLUGIN LIST -->
 
 <div align="right">
 

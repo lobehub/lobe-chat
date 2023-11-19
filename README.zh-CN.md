@@ -8,7 +8,7 @@
 
 <h1>Lobe Chat</h1>
 
-LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高性能聊天机器人框架。<br/> 它支持一键免费部署私人 ChatGPT/LLM 网页应用程序。
+LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多模态、可扩展的（[Function Call][fc-link]）插件系统。<br/> 支持一键免费部署私人 ChatGPT/LLM 网页应用程序。
 
 [English](./README.md) · **简体中文** · [更新日志](./CHANGELOG.md) · [文档][github-wiki-link] · [报告问题][github-issues-link] · [请求功能][github-issues-link]
 
@@ -93,13 +93,11 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 - [x] 🤖 **自定义助手角色**：用户可以根据自己的需求创建、分享和调试个性化的对话助手角色，提供更加灵活和个性化的对话功能 .
 - [x] 🏬 **角色市场**：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格 .
 - [x] 👁️ **视觉识别**: 通过集成视觉识别能力，AI 助手现在可以分析和理解对话过程中提供的图像。这使得对话代理能够进行更具交互性和上下文感知的对话，根据视觉内容提供相关和准确的回答。
-- [ ] （WIP）📢 **文本转语音（TTS）对话**: 我们正在支持文本转语音技术，允许用户与对话代理进行语音对话。这个功能通过提供更自然和沉浸式的对话环境来增强用户体验。用户可以选择多种声音并调整语速以适应自己的偏好。
+- [ ] 📢 **语音会话**: 我们支持文本转语音技术，允许用户与对话代理进行语音对话。这个功能通过提供更自然和沉浸式的对话环境来增强用户体验。用户可以选择多种声音并调整语速以适应自己的偏好。
 
 > \[!NOTE]
 >
 > 你可以在 Projects 中找到我们后续的 [Roadmap][github-project-link] 计划
-
----
 
 除了上述功能特性以外，我们的底层技术方案为你带来了更多使用保障：
 
@@ -115,13 +113,70 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 ## 📸 快照预览
 
+#### `1` GPT 视觉认知
+
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png)
+
+LobeChat 已经支持 OpenAI 最新的 [`gpt-4-vsion`](https://platform.openai.com/docs/guides/vision) 支持视觉识别的模型，这是一个具备视觉识别能力的多模态智能。
+用户可以轻松上传图片或者拖拽图片到对话框中，助手将能够识别图片内容，并在此基础上进行智能对话，构建更智能、更多元化的聊天场景。
+
+这一特性打开了新的互动方式，使得交流不再局限于文字，而是可以涵盖丰富的视觉元素。无论是日常使用中的图片分享，还是在特定行业内的图像解读，助手都能提供出色的对话体验。
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+#### `2` TTS & STT 语音会话
+
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png)
+
+LobeChat 支持文字转语音（Text-to-Speech，TTS）和语音转文字（Speech-to-Text，STT）技术，我们的应用能够将文本信息转化为清晰的语音输出，用户可以像与真人交谈一样与我们的对话代理进行交流。
+用户可以从多种声音中选择，给助手搭配合适的音源。 同时，对于那些倾向于听觉学习或者想要在忙碌中获取信息的用户来说，TTS 提供了一个极佳的解决方案。
+
+在 LobeChat 中，我们精心挑选了一系列高品质的声音选项 (OpenAI Audio, Microsoft Edge Speech)，以满足不同地域和文化背景用户的需求。用户可以根据个人喜好或者特定场景来选择合适的语音，从而获得个性化的交流体验。
+
+我们在实现该功能过程中，发现市面上并没有一款很好的 TTS 前端库。因此我们实现上耗费了很多精力，包括数据转换、音频进度管理、语音可视化等。
+于是我们决定把这套实现打磨并开源出来，希望能帮助到想要实现 TTS 的开发者们，[@lobehub/tts][lobe-tts-link] 是一个使用 TS 语言开发的，高质量 TTS 工具包，支持在服务端和浏览器中使用。
+
+| <https://github.com/lobehub/lobe-tts/assets/28616219/3ab68c5a-2745-442e-8d66-ca410192ace1> | <https://github.com/lobehub/lobe-tts/assets/28616219/c2638383-314f-44c3-b358-8fbbd3028d61> |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+
+- 服务端：只要使用 15 行代码，即可实现对标 OpenAI TTS 服务的高质量语音生成能力。目前支持 EdgeSpeechTTS 与 MicrosoftTTS 与 OpenAITTS、OpenAISTT。
+- 浏览器：提供了高质量的 React Hooks 与可视化音频组件，支持加载、播放、暂停、拖动时间轴等常用功能，且提供了非常丰富的音轨样式调整能力。
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
 
-#### `1` Function Calling 插件系统
+#### `3` Function Calling 插件系统
 
-通过构建强大的插件生态，ChatGPT 不仅能够实时获取最新新闻，还能助你一臂之力，轻松查询文档、访问各大电商数据。这使得 ChatGPT 在更广泛的领域中发挥其关键作用。如果你对编写插件有所兴趣，我们在下文的 [🧩 插件体系](#-插件体系) 中提供了详尽的组件开发文档、SDK、以及样板文件，让我们一起让助手变得更加好用和强大～
+LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地增强了 ChatGPT 的实用性和灵活性。通过利用插件，ChatGPT 能够实现实时信息的获取和处理，例如自动获取最新新闻头条，为用户提供即时且相关的资讯。
+此外，这些插件不仅局限于新闻聚合，还可以扩展到其他实用的功能，如快速检索文档、获取电商平台数据、以及其他各式各样的第三方服务。
+
+为了帮助开发者更好地参与到这个生态中来，我们在 [🧩 插件体系](#-插件体系) 部分提供了全面的开发资源。
+这包括详尽的组件开发文档、功能齐全的软件开发工具包（SDK），以及样板文件，这些都是为了简化开发过程，降低开发者的入门门槛。
+我们欢迎开发者利用这些资源，发挥创造力，编写出功能丰富、用户友好的插件。通过共同的努力，我们可以不断扩展聊天应用的功能界限，探索一个更加智能、高效的创造力平台。
 
 <https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
+
+<!-- PLUGIN LIST -->
+
+| 官方插件                                                                                                    | 仓库                                                                                            | 插件描述                                     |
+| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| [时钟时间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup> | [lobehub/chat-plugin-clock-time](https://github.com/lobehub/chat-plugin-clock-time)             | 显示一个时钟来展示当前时间<br/>`时钟` `时间` |
+| [网站爬虫](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-17**</sup> | [lobehub/chat-plugin-web-crawler](https://github.com/lobehub/chat-plugin-web-crawler)           | 从网页链接中提取内容<br/>`网页` `内容爬取器` |
+| [搜索引擎](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-15**</sup> | [lobehub/chat-plugin-search-engine](https://github.com/lobehub/chat-plugin-search-engine)       | 查询搜索引擎以获取信息<br/>`网络` `搜索`     |
+| [实时天气](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-12**</sup> | [lobehub/chat-plugin-realtime-weather](https://github.com/lobehub/chat-plugin-realtime-weather) | 获取实时天气信息<br/>`天气` `实时`           |
+
+> 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+
+ <!-- PLUGIN LIST -->
 
 <div align="right">
 
@@ -131,9 +186,13 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
 
-#### `2` 助手市场
+#### `4` 助手市场
 
-在我们的助手市场中，我们积累了大量实用的助手，这些都是在日常工作和学习中得到实际应用的。你也可以在这里分享你的助手，与更多的人一起迭代和优化你的助手提示词。你可以通过 [🤖/🏪 提交助手][submit-agents-link] 来提交你的助手，我们构建的自动化 i18n 工作流将会自动将你的助手翻译成多语言版本，让多语种用户都能享受到你的智慧成果。
+在 LobeChat 的助手市场中，创作者们可以发现一个充满活力和创新的社区，它汇聚了众多精心设计的助手，这些助手不仅在工作场景中发挥着重要作用，也在学习过程中提供了极大的便利。
+我们的市场不仅是一个展示平台，更是一个协作的空间。在这里，每个人都可以贡献自己的智慧，分享个人开发的助手。
+
+通过 [🤖/🏪 提交助手][submit-agents-link] ，你可以轻松地将你的助手作品提交到我们的平台。我们特别强调的是，LobeChat 建立了一套精密的自动化国际化（i18n）工作流程， 它的强大之处在于能够无缝地将你的助手转化为多种语言版本。
+这意味着，不论你的用户使用何种语言，他们都能无障碍地体验到你的助手。我欢迎所有用户加入这个不断成长的生态系统，共同参与到助手的迭代与优化中来。共同创造出更多有趣、实用且具有创新性的助手，进一步丰富助手的多样性和实用性。
 
 <!-- AGENT LIST -->
 
@@ -156,9 +215,11 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
 
-#### `3` PWA 渐进式 Web 应用
+#### `5` PWA 渐进式 Web 应用
 
-我们利用了渐进式 Web 应用 [PWA](https://support.google.com/chrome/answer/9658361) 技术，使得您可在电脑或移动设备上实现接近原生的 LobeChat 体验。
+我们利深知在当今多设备环境下为用户提供无缝体验的重要性。为此，我们采用了渐进式 Web 应用 [PWA](https://support.google.com/chrome/answer/9658361) 技术，
+这是一种能够将网页应用提升至接近原生应用体验的现代 Web 技术。通过 PWA，LobeChat 能够在桌面和移动设备上提供高度优化的用户体验，同时保持轻量级和高性能的特点。
+在视觉和感觉上，我们也经过精心设计，以确保它的界面与原生应用无差别，提供流畅的动画、响应式布局和适配不同设备的屏幕分辨率。
 
 > \[!NOTE]
 >
@@ -177,9 +238,11 @@ LobeChat 是一个开源的、可扩展的（[Function Calling][fc-link]）高�
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
-#### `4` 主题模式选择
+#### `6` 主题模式选择
 
-LobeChat 提供了丰富的主题模式 - 亮色 / 深色模式 与丰富的颜色定制选项，以满足您的个性化需求。默认情况下，我们的主题会智能地跟随您的系统设置进行切换，但如果您希望进行手动控制，也可以轻松在设置中进行切换。
+作为设计工程师出身 LobeChat 在界面设计上十分考虑用户的个性化体验，因此引入了灵活多变的主题模式，其中包括日间的亮色模式和夜间的深色模式。
+除了主题模式的切换，提供了一系列的颜色定制选项，允许用户根据自己的喜好来调整应用的主题色彩。无论是想要沉稳的深蓝，还是希望活泼的桃粉，或者是专业的灰白，用户都能够在 LobeChat 中找到匹配自己风格的颜色选择。
+默认配置能够智能地识别用户系统的颜色模式，自动进行主题切换，以确保应用界面与操作系统保持一致的视觉体验。对于喜欢手动调控细节的用户，LobeChat 同样提供了直观的设置选项，针对聊天场景也提供了对话气泡模式和文档模式的选择。
 
 <div align="right">
 
@@ -189,19 +252,9 @@ LobeChat 提供了丰富的主题模式 - 亮色 / 深色模式 与丰富的颜�
 
 ![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
 
-#### `5` 移动设备适配
+#### `7` 移动设备适配
 
 针对移动设备进行了一系列的优化设计，以提升用户的移动体验。目前，我们正在对移动端的用户体验进行版本迭代，以实现更加流畅和直观的交互。如果您有任何建议或想法，我们非常欢迎您通过 GitHub Issues 或者 Pull Requests 提供反馈。
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
-#### `6` 图片识别
-
-LobeChat 已经支持 OpenAI 最新的 [`gpt-4-vsion`](https://platform.openai.com/docs/guides/vision) 支持视觉识别的模型。你可以上传图片，或者直接粘贴图片，与助手进行对话。
 
 > 🚧 更多快照和演示正在陆续添加中...
 
@@ -343,19 +396,6 @@ $ docker run -d -p 3210:3210 \
 > - [x] [**插件一期**](https://github.com/lobehub/lobe-chat/issues/73): 实现插件与主体分离，将插件拆分为独立仓库维护，并实现插件的动态加载
 > - [x] [**插件二期**](https://github.com/lobehub/lobe-chat/issues/97): 插件的安全性与使用的稳定性，更加精准地呈现异常状态，插件架构的可维护性与开发者友好
 > - [ ] [**插件三期**](https://github.com/lobehub/lobe-chat/issues/149)：更高阶与完善的自定义能力，支持插件鉴权与示例
-
-<!-- PLUGIN LIST -->
-
-| 官方插件                                                                                                    | 仓库                                                                                            | 插件描述                                     |
-| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| [时钟时间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup> | [lobehub/chat-plugin-clock-time](https://github.com/lobehub/chat-plugin-clock-time)             | 显示一个时钟来展示当前时间<br/>`时钟` `时间` |
-| [网站爬虫](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-17**</sup> | [lobehub/chat-plugin-web-crawler](https://github.com/lobehub/chat-plugin-web-crawler)           | 从网页链接中提取内容<br/>`网页` `内容爬取器` |
-| [搜索引擎](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-15**</sup> | [lobehub/chat-plugin-search-engine](https://github.com/lobehub/chat-plugin-search-engine)       | 查询搜索引擎以获取信息<br/>`网络` `搜索`     |
-| [实时天气](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-12**</sup> | [lobehub/chat-plugin-realtime-weather](https://github.com/lobehub/chat-plugin-realtime-weather) | 获取实时天气信息<br/>`天气` `实时`           |
-
-> 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
-
- <!-- PLUGIN LIST -->
 
 <div align="right">
 
