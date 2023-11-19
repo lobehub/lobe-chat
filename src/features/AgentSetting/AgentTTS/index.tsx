@@ -68,7 +68,7 @@ const AgentTTS = memo(() => {
         name: [TTS_SETTING_KEY, 'voice', 'edge'],
       },
       {
-        children: <SelectWithTTSPreview options={microsoftVoiceOptions} server={'openai'} />,
+        children: <SelectWithTTSPreview options={microsoftVoiceOptions} server={'microsoft'} />,
         desc: t('settingTTS.voice.desc'),
         divider: false,
         hidden: config.tts.ttsService !== 'microsoft',

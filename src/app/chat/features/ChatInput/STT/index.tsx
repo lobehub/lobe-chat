@@ -30,19 +30,32 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
     s.updateInputMessage,
   ]);
 
-  const { start, isLoading, stop, formattedTime, time, response } = useSTT({
-    onError: (err) => {
-      stop();
+  const setDefaultError = useCallback(
+    (err?: any) => {
       setError({ body: err, message: t('stt.responseError', { ns: 'error' }), type: 500 });
     },
-    onErrorRetry: () => stop(),
+    [t],
+  );
+
+  const { start, isLoading, stop, formattedTime, time, response, isRecording } = useSTT({
+    onError: (err) => {
+      stop();
+      setDefaultError(err);
+    },
+    onErrorRetry: (err) => {
+      stop();
+      setDefaultError(err);
+    },
     onSuccess: async () => {
       if (!response) return;
-      if (response.status !== 200) {
-        const message = await getMessageError(response);
-        if (!message) return;
+      if (response.status === 200) return;
+      const message = await getMessageError(response);
+      if (message) {
         setError(message);
+      } else {
+        setDefaultError();
       }
+      stop();
     },
     onTextChange: (text) => {
       if (loading) stop();
@@ -66,7 +79,8 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const handleCloseError = useCallback(() => {
     setError(undefined);
-  }, []);
+    stop();
+  }, [stop]);
 
   const handleRetry = useCallback(() => {
     setError(undefined);
@@ -108,13 +122,13 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
             label: (
               <Flexbox align={'center'} gap={8} horizontal>
                 <div className={styles.recording} />
-                {time > 0 ? formattedTime : t('stt.loading')}
+                {time > 0 ? formattedTime : t(isRecording ? 'stt.loading' : 'stt.prettifying')}
               </Flexbox>
             ),
           },
         ],
       }}
-      open={!!error || isLoading}
+      open={!!error || isRecording || isLoading}
       placement={mobile ? 'topRight' : 'top'}
       trigger={['click']}
     >

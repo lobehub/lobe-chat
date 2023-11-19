@@ -39,7 +39,10 @@ export const useTTS = (content: string, config?: TTSConfig) => {
         },
         options: {
           model: ttsSettings.openAI.ttsModel,
-          voice: ttsAgentSettings.voice.openai || VoiceList.openaiVoiceOptions?.[0].value,
+          voice:
+            config?.voice ||
+            ttsAgentSettings.voice.openai ||
+            VoiceList.openaiVoiceOptions?.[0].value,
         },
       } as OpenAITTSOptions;
       break;
@@ -54,7 +57,8 @@ export const useTTS = (content: string, config?: TTSConfig) => {
            */
         },
         options: {
-          voice: ttsAgentSettings.voice.edge || voiceList.edgeVoiceOptions?.[0].value,
+          voice:
+            config?.voice || ttsAgentSettings.voice.edge || voiceList.edgeVoiceOptions?.[0].value,
         },
       } as EdgeSpeechOptions;
       break;
@@ -66,14 +70,15 @@ export const useTTS = (content: string, config?: TTSConfig) => {
           serviceUrl: TTS_URL.microsoft,
         },
         options: {
-          voice: ttsAgentSettings.voice.microsoft || voiceList.microsoftVoiceOptions?.[0].value,
+          voice:
+            config?.voice ||
+            ttsAgentSettings.voice.microsoft ||
+            voiceList.microsoftVoiceOptions?.[0].value,
         },
       } as MicrosoftSpeechOptions;
       break;
     }
   }
-
-  if (config?.voice) options.voice = config.voice;
 
   return useSelectedTTS(content, {
     ...config,

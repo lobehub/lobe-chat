@@ -37,7 +37,8 @@
   "stop": "Stop",
   "stt": {
     "action": "Voice Input",
-    "loading": "Recognizing..."
+    "loading": "Recognizing...",
+    "prettifying": "Prettifying..."
   },
   "temp": "Temporary",
   "tokenDetail": "Role Setting: {{systemRoleToken}} · Chat History: {{chatsToken}}",

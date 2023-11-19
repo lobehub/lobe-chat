@@ -2,7 +2,7 @@ import { AudioPlayer } from '@lobehub/tts/react';
 import { Alert, Highlighter } from '@lobehub/ui';
 import { Button, RefSelectProps, Select, SelectProps } from 'antd';
 import { useTheme } from 'antd-style';
-import { forwardRef, useCallback, useEffect, useState } from 'react';
+import { forwardRef, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -16,43 +16,65 @@ interface SelectWithTTSPreviewProps extends SelectProps {
 }
 
 const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProps>(
-  ({ value, options, server, ...rest }, ref) => {
+  ({ value, options, server, onSelect, ...rest }, ref) => {
     const [error, setError] = useState<ChatMessageError>();
+    const [voice, setVoice] = useState<string>(value);
     const { t } = useTranslation('welcome');
     const theme = useTheme();
-    const name = options?.find((item) => item.value === value)?.label;
-    const PREVIEW_TEXT = ['Lobe Chat', t('slogan.title'), t('slogan.desc1'), name].join('. ');
+    const PREVIEW_TEXT = ['Lobe Chat', t('slogan.title'), t('slogan.desc1')].join('. ');
+
+    const setDefaultError = useCallback(
+      (err?: any) => {
+        setError({ body: err, message: t('tts.responseError', { ns: 'error' }), type: 500 });
+      },
+      [t],
+    );
+
     const { isGlobalLoading, audio, stop, start, response, setText } = useTTS(PREVIEW_TEXT, {
       onError: (err) => {
         stop();
-        setError({ body: err, message: t('tts.responseError', { ns: 'error' }), type: 500 });
+        setDefaultError(err);
       },
-      onErrorRetry: () => stop(),
+      onErrorRetry: (err) => {
+        stop();
+        setDefaultError(err);
+      },
       onSuccess: async () => {
         if (!response) return;
-        if (response.status !== 200) {
-          const message = await getMessageError(response);
-          if (!message) return;
+        if (response.status === 200) return;
+        const message = await getMessageError(response);
+        if (message) {
           setError(message);
+        } else {
+          setDefaultError();
         }
+        stop();
       },
       server,
-      voice: value,
+      voice,
     });
+
+    const handleCloseError = useCallback(() => {
+      setError(undefined);
+      stop();
+    }, [stop]);
 
     const handleRetry = useCallback(() => {
       setError(undefined);
+      stop();
       start();
-    }, [start]);
+    }, [stop, start]);
 
-    useEffect(() => {
-      setText(PREVIEW_TEXT);
-    }, [value]);
-
+    const handleSelect: SelectProps['onSelect'] = (value, option) => {
+      stop();
+      setVoice(value as string);
+      setText([PREVIEW_TEXT, option?.label].join(' - '));
+      onSelect?.(value, option);
+    };
     return (
       <Flexbox gap={8}>
         <Flexbox align={'center'} gap={8} horizontal style={{ width: '100%' }}>
-          <Select options={options} ref={ref} value={value} {...rest} />
+          <Select onSelect={handleSelect} options={options} ref={ref} value={value} {...rest} />
           <AudioPlayer
             allowPause={false}
             audio={audio}
@@ -84,6 +106,7 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
               )
             }
             message={error.message}
+            onClose={handleCloseError}
             style={{ alignItems: 'center', width: '100%' }}
             type="error"
           />

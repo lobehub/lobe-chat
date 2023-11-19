@@ -41,6 +41,7 @@ export default {
   stt: {
     action: '语音输入',
     loading: '识别中...',
+    prettifying: '润色中...',
   },
   temp: '临时',
   tokenDetail: '角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}',

@@ -24,21 +24,32 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
 
   const [ttsMessage, clearTTS] = useSessionStore((s) => [s.ttsMessage, s.clearTTS]);
 
+  const setDefaultError = useCallback(
+    (err?: any) => {
+      setError({ body: err, message: t('tts.responseError', { ns: 'error' }), type: 500 });
+    },
+    [t],
+  );
+
   const { isGlobalLoading, audio, start, stop, response } = useTTS(content, {
     onError: (err) => {
       stop();
-      setError({ body: err, message: t('tts.responseError', { ns: 'error' }), type: 500 });
+      setDefaultError(err);
     },
-    onErrorRetry: () => stop(),
+    onErrorRetry: (err) => {
+      stop();
+      setDefaultError(err);
+    },
     onSuccess: async () => {
       if (!response) return;
-      if (response.status === 200) {
-        ttsMessage(id, true);
-      } else {
-        const message = await getMessageError(response);
-        if (!message) return;
+      if (response.status === 200) return ttsMessage(id, true);
+      const message = await getMessageError(response);
+      if (message) {
         setError(message);
+      } else {
+        setDefaultError();
       }
+      stop();
     },
   });
 

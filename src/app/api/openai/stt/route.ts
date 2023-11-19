@@ -6,7 +6,13 @@ import { createBizOpenAI } from '../createBizOpenAI';
 export const runtime = 'edge';
 
 export const POST = async (req: Request) => {
-  const payload = (await req.json()) as OpenAISTTPayload;
+  const formData = await req.formData();
+  const speechBlob = formData.get('speech') as Blob;
+  const optionsString = formData.get('options') as string;
+  const payload = {
+    options: JSON.parse(optionsString),
+    speech: speechBlob,
+  } as OpenAISTTPayload;
 
   const openaiOrErrResponse = createBizOpenAI(req, payload.options.model);
 

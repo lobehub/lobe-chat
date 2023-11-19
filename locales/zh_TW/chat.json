@@ -37,7 +37,8 @@
   "stop": "停止",
   "stt": {
     "action": "語音輸入",
-    "loading": "辨識中..."
+    "loading": "辨識中...",
+    "prettifying": "美化中..."
   },
   "temp": "臨時",
   "tokenDetail": "角色設定: {{systemRoleToken}} · 歷史訊息: {{chatsToken}}",

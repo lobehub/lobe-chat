@@ -37,7 +37,8 @@
   "stop": "停止",
   "stt": {
     "action": "音声入力",
-    "loading": "読み取り中..."
+    "loading": "読み取り中...",
+    "prettifying": "美化中..."
   },
   "temp": "一時",
   "tokenDetail": "役割設定: {{systemRoleToken}} · チャット履歴: {{chatsToken}}",

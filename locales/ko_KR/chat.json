@@ -37,7 +37,8 @@
   "stop": "정지",
   "stt": {
     "action": "음성 입력",
-    "loading": "인식 중..."
+    "loading": "인식 중...",
+    "prettifying": "미화 중..."
   },
   "temp": "임시",
   "tokenDetail": "역할 설정: {{systemRoleToken}} · 대화 기록: {{chatsToken}}",
