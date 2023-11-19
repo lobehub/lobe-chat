@@ -8,7 +8,7 @@
 
 <h1>Lobe Chat</h1>
 
-LobeChat is an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible ([Function Call][fc-link]) plugin system. <br/>
+LobeChat is an open-source, high-performance chatbot framework<br/>that supports speech synthesis, multimodal, and extensible ([Function Call][fc-link]) plugin system. <br/>
 Supports one-click free deployment of your private ChatGPT/LLM web application.
 
 **English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Wiki][github-wiki-link] · [Report Bug][github-issues-link] · [Request Feature][github-issues-link]
@@ -98,15 +98,17 @@ Please be aware that LobeChat is currently under active development, and feedbac
 - [x] 👁️ **Visual Recognition**: With the integration of visual recognition capabilities, your agent can now analyze and understand images provided during the conversation. This allows for more interactive and context-aware conversations, enabling the dialogue agent to provide relevant and accurate responses based on visual content.
 - [x] 📢 **TTS & STT Conversation**: LobeChat are supporting Text-to-Speech and Speech-to-Text technology, allowing users to have voice-based conversations with the dialogue agent. This feature enhances the user experience by providing a more natural and immersive conversation environment. Users can choose from a variety of voices and adjust the speech rate to suit their preferences.
 
-> \[!NOTE]
->
-> You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
+---
 
 Beside these features, LobeChat also have much better basic technique underground:
 
 - [x] 💨 **Quick Deployment**: Using the Vercel platform or docker image, you can deploy with just one click and complete the process within 1 minute without any complex configuration.
 - [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
 - [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy.
+
+> \[!NOTE]
+>
+> You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
 
 <div align="right">
 
@@ -134,9 +136,9 @@ Whether it's sharing images in daily use or interpreting images within specific 
 
 </div>
 
-#### `2` TTS & STT Voice Speech
-
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png)
+
+#### `2` TTS & STT Voice Speech
 
 LobeChat supports Text-to-Speech (TTS) and Speech-to-Text (STT) technologies, enabling our application to convert text messages into clear voice outputs,
 allowing users to interact with our conversational agent as if they were talking to a real person. Users can choose from a variety of voices to pair with the agent.
