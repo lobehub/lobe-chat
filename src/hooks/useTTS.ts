@@ -15,15 +15,21 @@ import { OPENAI_URLS, TTS_URL } from '@/services/_url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
+import { TTSServer } from '@/types/session';
 
-export const useTTS = (content: string, config?: SWRConfiguration) => {
+interface TTSConfig extends SWRConfiguration {
+  server?: TTSServer;
+  voice?: string;
+}
+
+export const useTTS = (content: string, config?: TTSConfig) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const voiceList = useGlobalStore(settingsSelectors.voiceList);
+  const voiceList = useGlobalStore((s) => new VoiceList(settingsSelectors.currentLanguage(s)));
 
   let useSelectedTTS;
   let options: any = {};
-  switch (ttsAgentSettings.ttsService) {
+  switch (config?.server || ttsAgentSettings.ttsService) {
     case 'openai': {
       useSelectedTTS = useOpenAITTS;
       options = {
@@ -66,6 +72,8 @@ export const useTTS = (content: string, config?: SWRConfiguration) => {
       break;
     }
   }
+
+  if (config?.voice) options.voice = config.voice;
 
   return useSelectedTTS(content, {
     ...config,

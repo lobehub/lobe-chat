@@ -14,7 +14,11 @@ import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agentConfig';
 
-export const useSTT = (config: { onTextChange: (value: string) => void } & SWRConfiguration) => {
+interface STTConfig extends SWRConfiguration {
+  onTextChange: (value: string) => void;
+}
+
+export const useSTT = (config: STTConfig) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
   const locale = useGlobalStore(settingsSelectors.currentLanguage);

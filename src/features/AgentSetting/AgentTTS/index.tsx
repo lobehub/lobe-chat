@@ -8,6 +8,7 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import SelectWithTTSPreview from '@/features/AgentSetting/AgentTTS/SelectWithTTSPreview';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 
 import { useStore } from '../store';
@@ -52,16 +53,14 @@ const AgentTTS = memo(() => {
         valuePropName: 'checked',
       },
       {
-        children: (
-          <Select defaultValue={openaiVoiceOptions?.[0].value} options={openaiVoiceOptions} />
-        ),
+        children: <SelectWithTTSPreview options={openaiVoiceOptions} server={'openai'} />,
         desc: t('settingTTS.voice.desc'),
         hidden: config.tts.ttsService !== 'openai',
         label: t('settingTTS.voice.title'),
         name: [TTS_SETTING_KEY, 'voice', 'openai'],
       },
       {
-        children: <Select defaultValue={edgeVoiceOptions?.[0].value} options={edgeVoiceOptions} />,
+        children: <SelectWithTTSPreview options={edgeVoiceOptions} server={'edge'} />,
         desc: t('settingTTS.voice.desc'),
         divider: false,
         hidden: config.tts.ttsService !== 'edge',
@@ -69,9 +68,7 @@ const AgentTTS = memo(() => {
         name: [TTS_SETTING_KEY, 'voice', 'edge'],
       },
       {
-        children: (
-          <Select defaultValue={microsoftVoiceOptions?.[0].value} options={microsoftVoiceOptions} />
-        ),
+        children: <SelectWithTTSPreview options={microsoftVoiceOptions} server={'openai'} />,
         desc: t('settingTTS.voice.desc'),
         divider: false,
         hidden: config.tts.ttsService !== 'microsoft',
@@ -97,7 +94,21 @@ const AgentTTS = memo(() => {
   };
 
   return (
-    <Form form={form} items={[tts]} onValuesChange={debounce(updateConfig, 100)} {...FORM_STYLE} />
+    <Form
+      form={form}
+      initialValues={{
+        [TTS_SETTING_KEY]: {
+          voice: {
+            edge: edgeVoiceOptions?.[0].value,
+            microsoft: microsoftVoiceOptions?.[0].value,
+            openai: openaiVoiceOptions?.[0].value,
+          },
+        },
+      }}
+      items={[tts]}
+      onValuesChange={debounce(updateConfig, 100)}
+      {...FORM_STYLE}
+    />
   );
 });
 
