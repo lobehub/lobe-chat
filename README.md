@@ -147,11 +147,12 @@ Moreover, TTS offers an excellent solution for those who prefer auditory learnin
 In LobeChat, we have meticulously selected a range of high-quality voice options (OpenAI Audio, Microsoft Edge Speech) to meet the needs of users from different regions and cultural backgrounds.
 Users can choose the voice that suits their personal preferences or specific scenarios, resulting in a personalized communication experience.
 
-In the process of implementing this feature, we found that there was no satisfactory TTS (Text-to-Speech) frontend library available on the market.
-As a result, we invested a lot of effort, including data conversion, audio progress management, and speech visualization, among other tasks.
-
 > \[!NOTE]
 >
+> In the process of implementing this feature, we found that there was no satisfactory TTS (Text-to-Speech) frontend library available on the market.
+> As a result, we invested a lot of effort, including data conversion, audio progress management, and speech visualization, among other tasks.
+
+> \[!IMPORTANT]
 > Therefore, we decided to refine our implementation and make it open source, hoping to assist developers who wish to implement TTS.
 > [@lobehub/tts][lobe-tts-link] is a high-quality TTS toolkit developed in TypeScript, which supports usage both on the server-side and in the browser.
 >
