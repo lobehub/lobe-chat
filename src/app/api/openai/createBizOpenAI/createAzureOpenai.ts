@@ -4,7 +4,7 @@ import urlJoin from 'url-join';
 import { getServerConfig } from '@/config/server';
 import { ChatErrorType } from '@/types/fetch';
 
-// 创建 Azure OpenAI 实例
+// create Azure OpenAI Instance
 export const createAzureOpenai = (params: {
   apiVersion?: string | null;
   endpoint?: string | null;
