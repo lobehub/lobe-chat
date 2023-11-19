@@ -1,3 +1,5 @@
+import { VoiceList } from '@lobehub/tts';
+
 import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_LANG } from '@/const/locale';
 import { DEFAULT_AGENT_META } from '@/const/meta';
@@ -53,6 +55,11 @@ const currentLanguage = (s: GlobalStore) => {
   return locale;
 };
 
+const voiceListSelectors = (s: GlobalStore) => {
+  const locale = currentLanguage(s);
+  return new VoiceList(locale);
+};
+
 export const settingsSelectors = {
   currentLanguage,
   currentSettings,
@@ -64,4 +71,5 @@ export const settingsSelectors = {
   modelList: modelListSelectors,
   openAIAPI: openAIAPIKeySelectors,
   openAIProxyUrl: openAIProxyUrlSelectors,
+  voiceList: voiceListSelectors,
 };

@@ -1,3 +1,4 @@
+import { getRecordMineType } from '@lobehub/tts';
 import {
   OpenAISTTOptions,
   SpeechRecognitionOptions,
@@ -7,6 +8,7 @@ import {
 import isEqual from 'fast-deep-equal';
 import { SWRConfiguration } from 'swr';
 
+import { createHeaderWithOpenAI } from '@/services/_header';
 import { OPENAI_URLS } from '@/services/_url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -15,11 +17,7 @@ import { agentSelectors } from '@/store/session/slices/agentConfig';
 export const useSTT = (config: { onTextChange: (value: string) => void } & SWRConfiguration) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const [locale, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => [
-    settingsSelectors.currentLanguage(s),
-    settingsSelectors.openAIAPI(s),
-    settingsSelectors.openAIProxyUrl(s),
-  ]);
+  const locale = useGlobalStore(settingsSelectors.currentLanguage);
 
   const autoStop = ttsSettings.sttAutoStop;
   const sttLocale =
@@ -35,12 +33,12 @@ export const useSTT = (config: { onTextChange: (value: string) => void } & SWRCo
       useSelectedSTT = useOpenAISTT;
       options = {
         api: {
-          apiKey: openAIAPI,
-          backendUrl: OPENAI_URLS.stt,
-          baseUrl: openAIProxyUrl,
+          serverUrl: OPENAI_URLS.stt,
         },
         autoStop,
+        headers: createHeaderWithOpenAI(),
         options: {
+          mineType: getRecordMineType(),
           model: ttsSettings.openAI.sttModel,
         },
       } as OpenAISTTOptions;

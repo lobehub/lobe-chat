@@ -10,6 +10,7 @@ import {
 import isEqual from 'fast-deep-equal';
 import { SWRConfiguration } from 'swr';
 
+import { createHeaderWithOpenAI } from '@/services/_header';
 import { OPENAI_URLS, TTS_URL } from '@/services/_url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -18,14 +19,7 @@ import { agentSelectors } from '@/store/session/slices/agentConfig';
 export const useTTS = (content: string, config?: SWRConfiguration) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const [voiceList, openAIAPI, openAIProxyUrl] = useGlobalStore((s) => {
-    const locale = settingsSelectors.currentLanguage(s);
-    return [
-      new VoiceList(locale),
-      settingsSelectors.openAIAPI(s),
-      settingsSelectors.openAIProxyUrl(s),
-    ];
-  });
+  const voiceList = useGlobalStore(settingsSelectors.voiceList);
 
   let useSelectedTTS;
   let options: any = {};
@@ -34,10 +28,9 @@ export const useTTS = (content: string, config?: SWRConfiguration) => {
       useSelectedTTS = useOpenAITTS;
       options = {
         api: {
-          apiKey: openAIAPI,
-          backendUrl: OPENAI_URLS.tts,
-          baseUrl: openAIProxyUrl,
+          serverUrl: OPENAI_URLS.tts,
         },
+        headers: createHeaderWithOpenAI(),
         options: {
           model: ttsSettings.openAI.ttsModel,
           voice: ttsAgentSettings.voice.openai || VoiceList.openaiVoiceOptions?.[0].value,
@@ -51,7 +44,7 @@ export const useTTS = (content: string, config?: SWRConfiguration) => {
         api: {
           /**
            * @description client fetch
-           * backendUrl: TTS_URL.edge,
+           * serverUrl: TTS_URL.edge,
            */
         },
         options: {
@@ -64,7 +57,7 @@ export const useTTS = (content: string, config?: SWRConfiguration) => {
       useSelectedTTS = useMicrosoftSpeech;
       options = {
         api: {
-          backendUrl: TTS_URL.microsoft,
+          serverUrl: TTS_URL.microsoft,
         },
         options: {
           voice: ttsAgentSettings.voice.microsoft || voiceList.microsoftVoiceOptions?.[0].value,
