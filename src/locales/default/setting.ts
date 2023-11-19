@@ -224,6 +224,7 @@ export default {
     },
     voice: {
       desc: '为当前助手挑选一个声音，不同 TTS 服务支持的声源不同',
+      preview: '试听声源',
       title: '语音合成声源',
     },
   },

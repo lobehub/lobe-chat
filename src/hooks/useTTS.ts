@@ -34,9 +34,9 @@ export const useTTS = (content: string, config?: TTSConfig) => {
       useSelectedTTS = useOpenAITTS;
       options = {
         api: {
-          serverUrl: OPENAI_URLS.tts,
+          headers: createHeaderWithOpenAI(),
+          serviceUrl: OPENAI_URLS.tts,
         },
-        headers: createHeaderWithOpenAI(),
         options: {
           model: ttsSettings.openAI.ttsModel,
           voice: ttsAgentSettings.voice.openai || VoiceList.openaiVoiceOptions?.[0].value,
@@ -50,7 +50,7 @@ export const useTTS = (content: string, config?: TTSConfig) => {
         api: {
           /**
            * @description client fetch
-           * serverUrl: TTS_URL.edge,
+           * serviceUrl: TTS_URL.edge,
            */
         },
         options: {
@@ -63,7 +63,7 @@ export const useTTS = (content: string, config?: TTSConfig) => {
       useSelectedTTS = useMicrosoftSpeech;
       options = {
         api: {
-          serverUrl: TTS_URL.microsoft,
+          serviceUrl: TTS_URL.microsoft,
         },
         options: {
           voice: ttsAgentSettings.voice.microsoft || voiceList.microsoftVoiceOptions?.[0].value,

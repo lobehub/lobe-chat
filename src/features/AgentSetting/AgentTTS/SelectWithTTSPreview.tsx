@@ -1,6 +1,7 @@
 import { AudioPlayer } from '@lobehub/tts/react';
 import { Alert, Highlighter } from '@lobehub/ui';
 import { Button, RefSelectProps, Select, SelectProps } from 'antd';
+import { useTheme } from 'antd-style';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -18,6 +19,7 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
   ({ value, options, server, ...rest }, ref) => {
     const [error, setError] = useState<ChatMessageError>();
     const { t } = useTranslation('welcome');
+    const theme = useTheme();
     const name = options?.find((item) => item.value === value)?.label;
     const PREVIEW_TEXT = ['Lobe Chat', t('slogan.title'), t('slogan.desc1'), name].join('. ');
     const { isGlobalLoading, audio, stop, start, response, setText } = useTTS(PREVIEW_TEXT, {
@@ -52,14 +54,18 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
         <Flexbox align={'center'} gap={8} horizontal style={{ width: '100%' }}>
           <Select options={options} ref={ref} value={value} {...rest} />
           <AudioPlayer
+            allowPause={false}
             audio={audio}
             buttonActive
+            buttonSize={{ blockSize: 36, fontSize: 16 }}
+            buttonStyle={{ border: `1px solid ${theme.colorBorder}` }}
             isLoading={isGlobalLoading}
             onInitPlay={start}
             onLoadingStop={stop}
             showSlider={false}
             showTime={false}
             style={{ flex: 'none', padding: 0, width: 'unset' }}
+            title={t('settingTTS.voice.preview', { ns: 'setting' })}
           />
         </Flexbox>
         {error && (

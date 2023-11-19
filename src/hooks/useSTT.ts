@@ -37,10 +37,10 @@ export const useSTT = (config: STTConfig) => {
       useSelectedSTT = useOpenAISTT;
       options = {
         api: {
-          serverUrl: OPENAI_URLS.stt,
+          headers: createHeaderWithOpenAI(),
+          serviceUrl: OPENAI_URLS.stt,
         },
         autoStop,
-        headers: createHeaderWithOpenAI(),
         options: {
           mineType: getRecordMineType(),
           model: ttsSettings.openAI.sttModel,
