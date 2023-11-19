@@ -128,6 +128,12 @@ creating smarter and more diversified chat scenarios.
 This feature opens up new interactive methods, allowing communication to transcend text and include a wealth of visual elements.
 Whether it's sharing images in daily use or interpreting images within specific industries, the agent provides an outstanding conversational experience.
 
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 #### `2` TTS & STT Voice Speech
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png)
@@ -142,16 +148,13 @@ Users can choose the voice that suits their personal preferences or specific sce
 In the process of implementing this feature, we found that there was no satisfactory TTS (Text-to-Speech) frontend library available on the market.
 As a result, we invested a lot of effort, including data conversion, audio progress management, and speech visualization, among other tasks.
 
-Therefore, we decided to refine our implementation and make it open source, hoping to assist developers who wish to implement TTS.
-[@lobehub/tts][lobe-tts-link] is a high-quality TTS toolkit developed in TypeScript, which supports usage both on the server-side and in the browser.
-
-| <https://github.com/lobehub/lobe-tts/assets/28616219/3ab68c5a-2745-442e-8d66-ca410192ace1> | <https://github.com/lobehub/lobe-tts/assets/28616219/c2638383-314f-44c3-b358-8fbbd3028d61> |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-
-- Server-side: With just 15 lines of code, you can achieve high-quality voice generation capabilities comparable to OpenAI's TTS service.
-- It currently supports EdgeSpeechTTS, MicrosoftTTS, OpenAITTS, and OpenAISTT.
-- Browser: It provides high-quality React Hooks and visual audio components, supporting common functions such as loading, playing, pausing, and dragging the timeline.
-- Additionally, it offers a very rich set of capabilities for adjusting the audio track styles.
+> \[!NOTE]
+>
+> Therefore, we decided to refine our implementation and make it open source, hoping to assist developers who wish to implement TTS.
+> [@lobehub/tts][lobe-tts-link] is a high-quality TTS toolkit developed in TypeScript, which supports usage both on the server-side and in the browser.
+>
+> - **Server-side:** With just 15 lines of code, you can achieve high-quality voice generation capabilities comparable to OpenAI's TTS service. It currently supports EdgeSpeechTTS, MicrosoftTTS, OpenAITTS, and OpenAISTT.
+> - **Browser-side:** It provides high-quality React Hooks and visual audio components, supporting common functions such as loading, playing, pausing, and dragging the timeline. Additionally, it offers a very rich set of capabilities for adjusting the audio track styles.
 
 <div align="right">
 
@@ -169,12 +172,16 @@ such as automatically fetching the latest news headlines to provide users with i
 Moreover, these plugins are not limited to news aggregation but can also extend to other practical functions, such as quick document retrieval,
 e-commerce platform data access, and various third-party services.
 
-To aid developers in joining this ecosystem, we provide comprehensive development resources in the [🧩 Plugin System](#-plugins) section.
-This includes detailed component development documentation,
-a fully-featured software development kit (SDK), and template files—all designed to simplify the development process and lower the barrier to entry for developers.
+> \[!TIP]
+>
+> To aid developers in joining this ecosystem, we provide comprehensive development resources in the [🧩 Plugin System](#-plugins) section.
+> This includes detailed component development documentation,
+> a fully-featured software development kit (SDK), and template files—all designed to simplify the development process and lower the barrier to entry for developers.
 
-We welcome developers to use these resources to unleash their creativity and write feature-rich, user-friendly plugins.
-With collective efforts, we can continuously expand the boundaries of chat applications and explore a more intelligent and efficient creativity platform.
+> \[!IMPORTANT]
+>
+> We welcome developers to use these resources to unleash their creativity and write feature-rich, user-friendly plugins.
+> With collective efforts, we can continuously expand the boundaries of chat applications and explore a more intelligent and efficient creativity platform.
 
 <https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
 
@@ -205,13 +212,17 @@ In the LobeChat Agent Marketplace, creators can discover a vibrant and innovativ
 which not only play an important role in work scenarios but also offer great convenience in learning processes.
 Our marketplace is not just a showcase platform but also a collaborative space. Here, everyone can contribute their wisdom and share the agents they have developed.
 
-By [🤖/🏪 Submit Agents][submit-agents-link], you can easily submit your agent creations to our platform.
-Importantly, LobeChat has established a sophisticated automated internationalization (i18n) workflow,
-capable of seamlessly translating your agent into multiple language versions.
-This means that no matter what language your users speak, they can experience your agent without barriers.
+> \[!TIP]
+>
+> By [🤖/🏪 Submit Agents][submit-agents-link], you can easily submit your agent creations to our platform.
+> Importantly, LobeChat has established a sophisticated automated internationalization (i18n) workflow,
+> capable of seamlessly translating your agent into multiple language versions.
+> This means that no matter what language your users speak, they can experience your agent without barriers.
 
-We welcome all users to join this growing ecosystem and participate in the iteration and optimization of agents.
-Together, we can create more interesting, practical, and innovative agents, further enriching the diversity and practicality of the agent offerings.
+> \[!IMPORTANT]
+>
+> We welcome all users to join this growing ecosystem and participate in the iteration and optimization of agents.
+> Together, we can create more interesting, practical, and innovative agents, further enriching the diversity and practicality of the agent offerings.
 
 <!-- AGENT LIST -->
 
@@ -268,8 +279,10 @@ hence introducing flexible and diverse theme modes, including a light mode for d
 Beyond switching theme modes, a range of color customization options allow users to adjust the application's theme colors according to their preferences.
 Whether it's a desire for a sober dark blue, a lively peach pink, or a professional gray-white, users can find their style of color choices in LobeChat.
 
-The default configuration can intelligently recognize the user's system color mode and automatically switch themes to ensure a consistent visual experience with the operating system.
-For users who like to manually control details, LobeChat also offers intuitive setting options and a choice between chat bubble mode and document mode for conversation scenarios.
+> \[!TIP]
+>
+> The default configuration can intelligently recognize the user's system color mode and automatically switch themes to ensure a consistent visual experience with the operating system.
+> For users who like to manually control details, LobeChat also offers intuitive setting options and a choice between chat bubble mode and document mode for conversation scenarios.
 
 <div align="right">
 
@@ -282,12 +295,6 @@ For users who like to manually control details, LobeChat also offers intuitive s
 #### `7` Mobile Device Adaptation
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
 
 > 🚧 Additional snapshots and demonstrations are being progressively added...
 
