@@ -5,7 +5,8 @@ import isEqual from 'fast-deep-equal';
 import { LucideToyBrick } from 'lucide-react';
 import { memo, useEffect } from 'react';
 
-import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
+import { pluginHelpers, usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
 import PluginStatus from './PluginStatus';
 

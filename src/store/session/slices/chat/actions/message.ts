@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { LOADING_FLAT } from '@/const/message';
 import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
-import { fetchChatModel } from '@/services/chatModel';
+import { chatService } from '@/services/chat';
 import { filesSelectors, useFileStore } from '@/store/files';
 import { SessionStore } from '@/store/session';
 import { ChatMessage } from '@/types/chatMessage';
@@ -263,7 +263,7 @@ export const chatMessage: StateCreator<
     }
 
     const fetcher = () =>
-      fetchChatModel(
+      chatService.getChatCompletion(
         {
           messages: postMessages,
           model: config.model,

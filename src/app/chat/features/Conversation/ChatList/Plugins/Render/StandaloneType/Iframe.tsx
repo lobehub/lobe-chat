@@ -2,7 +2,8 @@ import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { Skeleton } from 'antd';
 import { memo, useRef, useState } from 'react';
 
-import { pluginSelectors, usePluginStore } from '@/store/plugin';
+import { usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 import { useSessionStore } from '@/store/session';
 import { chatSelectors } from '@/store/session/selectors';
 

@@ -9,7 +9,7 @@ import { merge, uniq } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { getPluginList } from '@/services/pluginMarket';
+import { pluginService } from '@/services/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
 import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
@@ -147,7 +147,7 @@ export const createPluginSlice: StateCreator<
   },
 
   useFetchPluginList: () =>
-    useSWR<LobeChatPluginsMarketIndex>('fetchPluginList', getPluginList, {
+    useSWR<LobeChatPluginsMarketIndex>('fetchPluginList', pluginService.getPluginList, {
       onSuccess: (pluginMarketIndex) => {
         set({ pluginList: pluginMarketIndex.plugins }, false, t('useFetchPluginList'));
       },

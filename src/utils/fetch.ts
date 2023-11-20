@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-import { fetchChatModel } from '@/services/chatModel';
+import { chatService } from '@/services/chat';
 import { ChatMessageError } from '@/types/chatMessage';
 import { ErrorResponse, ErrorType } from '@/types/fetch';
 
@@ -123,4 +123,4 @@ export const fetchAIFactory =
     return await data?.text();
   };
 
-export const fetchPresetTaskResult = fetchAIFactory(fetchChatModel);
+export const fetchPresetTaskResult = fetchAIFactory(chatService.getChatCompletion);

@@ -2,7 +2,7 @@ import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { StateCreator } from 'zustand/vanilla';
 
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
-import { fetchPlugin } from '@/services/plugin';
+import { chatService } from '@/services/chat';
 import { SessionStore } from '@/store/session';
 import { OpenAIFunctionCall } from '@/types/chatMessage';
 import { setNamespace } from '@/utils/storeDebug';
@@ -41,7 +41,7 @@ export const chatPlugin: StateCreator<
     let data: string;
     try {
       const abortController = toggleChatLoading(true, id, t('fetchPlugin') as string);
-      data = await fetchPlugin(payload, { signal: abortController?.signal });
+      data = await chatService.runPluginApi(payload, { signal: abortController?.signal });
     } catch (error) {
       dispatchMessage({ id, key: 'error', type: 'updateMessage', value: error });
 

@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import PluginSettingsConfig from '@/features/PluginSettings';
-import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
+import { pluginHelpers, usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 import { useSessionStore } from '@/store/session';
 
 import { ErrorActionContainer, useStyles } from '../style';

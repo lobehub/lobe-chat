@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
-import { pluginSelectors, usePluginStore } from '@/store/plugin';
+import { usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 import { useSessionStore } from '@/store/session';
 
 interface PluginStatusProps {

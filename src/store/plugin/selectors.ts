@@ -1,10 +1,10 @@
 import { uniqBy } from 'lodash-es';
 
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
-import { pluginHelpers } from '@/store/plugin/helpers';
 import { ChatCompletionFunctions } from '@/types/openai/chat';
 
-import { PluginStoreState } from './initialState';
+import { pluginHelpers } from './helpers';
+import type { PluginStoreState } from './initialState';
 
 const enabledSchema =
   (enabledPlugins: string[] = []) =>

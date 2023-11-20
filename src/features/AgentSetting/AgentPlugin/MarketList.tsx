@@ -9,7 +9,8 @@ import { Flexbox } from 'react-layout-kit';
 import DevModal from 'src/features/PluginDevModal';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
+import { pluginHelpers, usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
 import { useStore } from '../store';
 import LocalPluginItem from './LocalPluginItem';

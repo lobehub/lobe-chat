@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import DevModal from '@/features/PluginDevModal';
-import { pluginSelectors, usePluginStore } from '@/store/plugin';
+import { usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
 import { useStore } from '../store';
 
