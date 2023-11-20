@@ -139,7 +139,15 @@
       "placeholder": "前置處理範本 {{text}} 將替換為即時輸入資訊",
       "title": "使用者輸入前置處理"
     },
-    "title": "聊天設定"
+    "title": "聊天設定",
+    "autoCreateTopicThreshold": {
+      "desc": "當前訊息數超過設定該值後，將自動創建話題",
+      "title": "訊息閾值"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "會話過程中是否自動創建話題，僅在臨時話題中生效",
+      "title": "自動創建話題"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {

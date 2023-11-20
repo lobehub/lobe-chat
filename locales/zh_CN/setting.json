@@ -110,6 +110,10 @@
     "title": "助手信息"
   },
   "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "当前消息数超过设定该值后，将自动创建话题",
+      "title": "消息阈值"
+    },
     "chatStyleType": {
       "title": "聊天窗口样式",
       "type": {
@@ -120,6 +124,10 @@
     "compressThreshold": {
       "desc": "当未压缩的历史消息超过该值时，将进行压缩",
       "title": "历史消息长度压缩阈值"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "会话过程中是否自动创建话题，仅在临时话题中生效",
+      "title": "自动创建话题"
     },
     "enableCompressThreshold": {
       "title": "是否开启历史消息长度压缩阈值"

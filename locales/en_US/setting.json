@@ -139,7 +139,15 @@
       "placeholder": "{{text}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
-    "title": "Chat Settings"
+    "title": "Chat Settings",
+    "autoCreateTopicThreshold": {
+      "title": "Message Threshold",
+      "desc": "Automatically create a topic when the current message count exceeds this value"
+    },
+    "enableAutoCreateTopic": {
+      "title": "Enable Auto Topic Creation",
+      "desc": "Whether to automatically create a topic during the conversation, only effective in temporary topics"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
