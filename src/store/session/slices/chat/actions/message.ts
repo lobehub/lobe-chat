@@ -14,7 +14,7 @@ import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/mess
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
-import { agentSelectors } from '../../agentConfig/selectors';
+import { agentSelectors } from '../../agent/selectors';
 import { sessionSelectors } from '../../session/selectors';
 import { FileDispatch, filesReducer } from '../reducers/files';
 import { MessageDispatch, messagesReducer } from '../reducers/message';

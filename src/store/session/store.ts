@@ -7,7 +7,7 @@ import { isDev } from '@/utils/env';
 
 import { createHyperStorage } from '../middleware/createHyperStorage';
 import { SessionStoreState, initialState } from './initialState';
-import { AgentAction, createAgentSlice } from './slices/agentConfig/action';
+import { AgentAction, createAgentSlice } from './slices/agent/action';
 import { ChatAction, createChatSlice } from './slices/chat/actions';
 import { SessionAction, createSessionSlice } from './slices/session/action';
 

@@ -7,7 +7,7 @@ import { useGlobalStore } from '@/store/global';
 import { ChatMessage } from '@/types/chatMessage';
 
 import type { SessionStore } from '../../../store';
-import { agentSelectors } from '../../agentConfig';
+import { agentSelectors } from '../../agent';
 import { sessionSelectors } from '../../session/selectors';
 import { getSlicedMessagesWithConfig } from '../utils';
 import { currentTopics } from './topic';
