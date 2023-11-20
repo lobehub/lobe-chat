@@ -13,5 +13,5 @@ export const sendPluginStateToPlugin = (window: Window, key: string, value: any)
 };
 
 export const sendPluginSettingsToPlugin = (window: Window, settings: any) => {
-  window.postMessage({ type: PluginChannel.renderPluginState, value: settings }, '*');
+  window.postMessage({ type: PluginChannel.renderPluginSettings, value: settings }, '*');
 };
