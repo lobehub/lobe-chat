@@ -6,8 +6,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { chatService } from '@/services/chat';
 import { ChatMessageError } from '@/types/chatMessage';
-import { fetchPresetTaskResult } from '@/utils/fetch';
 
 import { getModelList } from './getModelList';
 
@@ -28,7 +28,7 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
       getModelList();
     }
 
-    const data = await fetchPresetTaskResult({
+    const data = await chatService.fetchPresetTaskResult({
       onError: (_, rawError) => {
         setError(rawError);
       },

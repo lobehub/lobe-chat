@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { transformPluginSettings } from '@/features/PluginSettings';
 import PluginSettingRender from '@/features/PluginSettings/PluginSettingRender';
-import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
+import { pluginHelpers, usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
 import { useStore } from '../store';
 
@@ -30,7 +31,7 @@ const PluginSettings = memo(() => {
   const [plugins] = useStore((s) => [s.config.plugins || [], !!s.config.plugins]);
 
   const [useFetchPluginList, updatePluginSettings] = usePluginStore((s) => [
-    s.useFetchPluginList,
+    s.useFetchPluginStore,
     s.updatePluginSettings,
   ]);
   const pluginList = usePluginStore(pluginSelectors.pluginList);

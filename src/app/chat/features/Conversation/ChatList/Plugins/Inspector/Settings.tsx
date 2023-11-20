@@ -4,7 +4,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PluginSettingsModal from '@/features/PluginSettingsModal';
-import { pluginSelectors, usePluginStore } from '@/store/plugin';
+import { usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
 const Settings = memo<{ id: string }>(({ id }) => {
   const item = usePluginStore(pluginSelectors.getPluginManifestById(id));

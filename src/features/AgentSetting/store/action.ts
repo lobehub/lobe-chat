@@ -4,9 +4,9 @@ import { chainPickEmoji } from '@/chains/pickEmoji';
 import { chainSummaryAgentName } from '@/chains/summaryAgentName';
 import { chainSummaryDescription } from '@/chains/summaryDescription';
 import { chainSummaryTags } from '@/chains/summaryTags';
+import { chatService } from '@/services/chat';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
-import { fetchPresetTaskResult } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { SessionLoadingState } from '../store/initialState';
@@ -74,7 +74,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
 
     const systemRole = config.systemRole;
 
-    const emoji = await fetchPresetTaskResult({
+    const emoji = await chatService.fetchPresetTaskResult({
       onLoadingChange: (loading) => {
         get().updateLoadingState('avatar', loading);
       },
@@ -97,7 +97,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     // 替换为 ...
     dispatchMeta({ type: 'update', value: { description: '...' } });
 
-    fetchPresetTaskResult({
+    chatService.fetchPresetTaskResult({
       onError: () => {
         dispatchMeta({ type: 'update', value: { description: preValue } });
       },
@@ -120,7 +120,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     // 替换为 ...
     dispatchMeta({ type: 'update', value: { tags: ['...'] } });
 
-    fetchPresetTaskResult({
+    chatService.fetchPresetTaskResult({
       onError: () => {
         dispatchMeta({ type: 'update', value: { tags: preValue } });
       },
@@ -145,7 +145,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     // 替换为 ...
     dispatchMeta({ type: 'update', value: { title: '...' } });
 
-    fetchPresetTaskResult({
+    chatService.fetchPresetTaskResult({
       onError: () => {
         dispatchMeta({ type: 'update', value: { title: previousTitle } });
       },

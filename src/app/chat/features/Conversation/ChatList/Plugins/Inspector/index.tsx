@@ -14,7 +14,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { pluginHelpers, pluginSelectors, usePluginStore } from '@/store/plugin';
+import { pluginHelpers, usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
 import PluginResult from './PluginResultJSON';
 import Settings from './Settings';
