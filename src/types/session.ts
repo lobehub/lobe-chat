@@ -48,8 +48,10 @@ export interface LobeAgentTTSConfig {
 }
 
 export interface LobeAgentConfig {
+  autoCreateTopicThreshold: number;
   compressThreshold?: number;
   displayMode?: 'chat' | 'docs';
+  enableAutoCreateTopic: boolean;
   /**
    * 历史消息长度压缩阈值
    */
