@@ -1,10 +1,9 @@
-import { merge } from 'lodash-es';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import { DEFAULT_AGENT_META, DEFAULT_INBOX_AVATAR } from '@/const/meta';
-import { LobeAgentConfig, LobeAgentSession, LobeSessionType } from '@/types/session';
-
-import { initialLobeAgentConfig } from '../agentConfig/initialState';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { LobeAgentSession, LobeSessionType } from '@/types/session';
+import { merge } from '@/utils/merge';
 
 export interface SessionState {
   /**
@@ -23,7 +22,7 @@ export interface SessionState {
 
 export const initLobeSession: LobeAgentSession = {
   chats: {},
-  config: initialLobeAgentConfig,
+  config: DEFAULT_AGENT_CONFIG,
   createAt: Date.now(),
   files: [],
   id: '',
@@ -31,16 +30,12 @@ export const initLobeSession: LobeAgentSession = {
   type: LobeSessionType.Agent,
   updateAt: Date.now(),
 };
-
-export const initInbox = merge({}, initLobeSession, {
-  config: {
-    systemRole: '',
-  } as LobeAgentConfig,
+export const initInbox: LobeAgentSession = merge(initLobeSession, {
   id: 'inbox',
   meta: {
     avatar: DEFAULT_INBOX_AVATAR,
   },
-} as Partial<LobeAgentSession>);
+});
 
 export const initialSessionState: SessionState = {
   activeId: 'inbox',

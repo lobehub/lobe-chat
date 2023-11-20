@@ -2,9 +2,9 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { merge } from 'lodash-es';
 
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { usePluginStore } from '@/store/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
-import { initialLobeAgentConfig } from '@/store/session/initialState';
 import type { OpenAIChatStreamPayload } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
@@ -22,9 +22,9 @@ class ChatService {
   ) => {
     const payload = merge(
       {
-        model: initialLobeAgentConfig.model,
+        model: DEFAULT_AGENT_CONFIG.model,
         stream: true,
-        ...initialLobeAgentConfig.params,
+        ...DEFAULT_AGENT_CONFIG.params,
       },
       params,
     );
