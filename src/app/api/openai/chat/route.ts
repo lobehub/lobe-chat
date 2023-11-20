@@ -2,6 +2,7 @@ import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 import { createBizOpenAI } from '../createBizOpenAI';
 import { createChatCompletion } from './createChatCompletion';
+import { getServerConfig } from '@/config/server';
 
 const getPreferredRegion = () => {
   try {
