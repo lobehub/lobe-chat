@@ -5,10 +5,10 @@ import { LucideImage, LucideLoader2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
-import { agentSelectors } from 'src/store/session/selectors';
 
 import { useFileStore } from '@/store/files';
 import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
 const FileUpload = memo(() => {
   const { t } = useTranslation('chat');

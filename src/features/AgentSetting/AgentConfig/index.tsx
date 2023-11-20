@@ -78,7 +78,6 @@ const AgentConfig = memo(() => {
       },
       {
         children: <Switch />,
-        desc: t('settingChat.historyCount.desc'),
         label: t('settingChat.enableHistoryCount.title'),
         minWidth: undefined,
         name: 'enableHistoryCount',
