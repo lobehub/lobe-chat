@@ -4,8 +4,8 @@ import { StateCreator } from 'zustand/vanilla';
 import { chainLangDetect } from '@/chains/langDetect';
 import { chainTranslate } from '@/chains/translate';
 import { supportLocales } from '@/locales/options';
+import { chatService } from '@/services/chat';
 import { SessionStore } from '@/store/session';
-import { fetchPresetTaskResult } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { sessionSelectors } from '../../session/selectors';
@@ -72,14 +72,16 @@ export const chatTranslate: StateCreator<
     toggleChatLoading(true, id, t('translateMessage(start)', { id }) as string);
 
     // detect from language
-    fetchPresetTaskResult({
-      params: chainLangDetect(message.content),
-    }).then((data) => {
-      if (data && supportLocales.includes(data)) from = data;
-    });
+    chatService
+      .fetchPresetTaskResult({
+        params: chainLangDetect(message.content),
+      })
+      .then((data) => {
+        if (data && supportLocales.includes(data)) from = data;
+      });
 
     // translate to target language
-    await fetchPresetTaskResult({
+    await chatService.fetchPresetTaskResult({
       onMessageHandle: (text) => {
         dispatchMessage({
           id,

@@ -2,8 +2,8 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT } from '@/const/message';
+import { chatService } from '@/services/chat';
 import { SessionStore } from '@/store/session';
-import { fetchPresetTaskResult } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
@@ -145,7 +145,7 @@ export const chatTopic: StateCreator<
     let output = '';
 
     // 自动总结话题标题
-    fetchPresetTaskResult({
+    chatService.fetchPresetTaskResult({
       onError: () => {
         dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: defaultTitle });
       },

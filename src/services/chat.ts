@@ -6,7 +6,7 @@ import { usePluginStore } from '@/store/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
 import { initialLobeAgentConfig } from '@/store/session/initialState';
 import type { OpenAIChatStreamPayload } from '@/types/openai/chat';
-import { getMessageError } from '@/utils/fetch';
+import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
 import { createHeaderWithOpenAI } from './_header';
 import { OPENAI_URLS, URLS } from './_url';
@@ -77,6 +77,8 @@ class ChatService {
 
     return await res.text();
   };
+
+  fetchPresetTaskResult = fetchAIFactory(this.getChatCompletion);
 }
 
 export const chatService = new ChatService();
