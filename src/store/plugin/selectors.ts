@@ -49,7 +49,7 @@ const getPluginSettingsById = (id: string) => (s: PluginStoreState) => s.plugins
 
 // 获取插件 manifest 加载状态
 const getPluginManifestLoadingStatus = (id: string) => (s: PluginStoreState) => {
-  const manifest = getPluginManifestById(id);
+  const manifest = getPluginManifestById(id)(s);
 
   if (s.pluginManifestLoading[id]) return 'loading';
 
