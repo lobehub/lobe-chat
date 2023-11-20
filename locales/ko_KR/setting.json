@@ -139,7 +139,15 @@
       "placeholder": "사전 처리 템플릿 {{text}}은(는) 실시간 입력 정보로 대체됩니다.",
       "title": "사용자 입력 사전 처리"
     },
-    "title": "채팅 설정"
+    "title": "채팅 설정",
+    "autoCreateTopicThreshold": {
+      "desc": "현재 메시지 수가이 값 이상이면 자동으로 주제를 만듭니다.",
+      "title": "메시지 임계값"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "대화 중에 주제를 자동으로 만들지 여부를 설정합니다. 임시 주제에서만 작동합니다.",
+      "title": "주제 자동 생성"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {

@@ -7,7 +7,7 @@ import { genShareGPTUrl } from '@/services/shareGPT';
 import { SessionStore } from '@/store/session';
 import { ShareGPTConversation } from '@/types/share';
 
-import { agentSelectors } from '../../agentConfig';
+import { agentSelectors } from '../../agent';
 import { sessionSelectors } from '../../session/selectors';
 import { chatSelectors } from '../selectors';
 

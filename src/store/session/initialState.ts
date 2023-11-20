@@ -8,5 +8,4 @@ export const initialState: SessionStoreState = {
   ...initialChatState,
 };
 
-export { initialLobeAgentConfig } from './slices/agentConfig';
 export { initLobeSession } from './slices/session/initialState';

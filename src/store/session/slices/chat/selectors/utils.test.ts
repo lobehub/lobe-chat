@@ -40,6 +40,8 @@ beforeEach(() => {
       params: {
         temperature: 0.6,
       },
+      autoCreateTopicThreshold: 2,
+      enableAutoCreateTopic: true,
       systemRole: '',
       tts: {
         ttsService: 'openai',
@@ -219,6 +221,8 @@ describe('organizeChats', () => {
         },
       },
       config: {
+        autoCreateTopicThreshold: 2,
+        enableAutoCreateTopic: true,
         model: 'gpt-4',
         params: {
           temperature: 0.6,

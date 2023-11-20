@@ -404,7 +404,7 @@ describe('sessionsReducer', () => {
             },
           },
           systemRole: 'system',
-        };
+        } as LobeAgentConfig;
       });
 
       const newState = sessionsReducer(state, payload);

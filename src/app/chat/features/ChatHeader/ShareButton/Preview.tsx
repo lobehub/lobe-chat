@@ -10,8 +10,7 @@ import ChatList from 'src/app/chat/features/Conversation/ChatList';
 
 import pkg from '@/../package.json';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agentConfig';
-import { sessionSelectors } from '@/store/session/slices/session/selectors';
+import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import PluginTag from '../../ChatHeader/PluginTag';
 import { useStyles } from './style';

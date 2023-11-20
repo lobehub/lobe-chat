@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
+import { useGlobalStore } from '@/store/global';
 import { MetaData } from '@/types/meta';
 import { LobeAgentConfig } from '@/types/session';
 
@@ -39,11 +40,22 @@ export const createAgentSlice: StateCreator<
   },
 
   updateAgentConfig: (config) => {
-    const { activeId } = get();
+    const { activeId, dispatchSession } = get();
     const session = sessionSelectors.currentSession(get());
     if (!activeId || !session) return;
 
-    get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
+    // if is the inbox session, update the global config
+    if (sessionSelectors.isInboxSession(get())) {
+      useGlobalStore.getState().updateDefaultAgent({ config });
+      // NOTE: DON'T ADD RETURN HERE.
+      // we need to use `dispatchSession` below to update inbox config to trigger the inbox config rerender
+    }
+
+    // Although we use global store to store the default agent config,
+    // due to the `currentAgentConfig` selector use `useGlobalStore.getState()`
+    // to get the default agent config which not rerender on global store update
+    // we need to update the session config here.
+    dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
   },
 
   updateAgentMeta: (meta) => {

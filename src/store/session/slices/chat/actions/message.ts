@@ -14,7 +14,7 @@ import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/mess
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
-import { agentSelectors } from '../../agentConfig/selectors';
+import { agentSelectors } from '../../agent/selectors';
 import { sessionSelectors } from '../../session/selectors';
 import { FileDispatch, filesReducer } from '../reducers/files';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
@@ -388,7 +388,11 @@ export const chatMessage: StateCreator<
     // check activeTopic and then auto create topic
     const chats = chatSelectors.currentChats(get());
 
-    if (!activeTopicId && chats.length >= 2) {
+    const agentConfig = agentSelectors.currentAgentConfig(get());
+    // if autoCreateTopic is false, then stop
+    if (!agentConfig.enableAutoCreateTopic) return;
+
+    if (!activeTopicId && chats.length >= agentConfig.autoCreateTopicThreshold) {
       const { saveToTopic, toggleTopic } = get();
       const id = await saveToTopic();
       if (id) toggleTopic(id);

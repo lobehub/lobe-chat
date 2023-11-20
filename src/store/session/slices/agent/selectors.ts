@@ -2,7 +2,8 @@ import { t } from 'i18next';
 
 import { DEFAULT_OPENAI_MODEL_LIST, VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
-import { DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
+import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
 import { LanguageModel } from '@/types/llm';
 import { MetaData } from '@/types/meta';
@@ -10,7 +11,6 @@ import { LobeAgentTTSConfig } from '@/types/session';
 import { merge } from '@/utils/merge';
 
 import { sessionSelectors } from '../session/selectors';
-import { initialLobeAgentConfig } from './initialState';
 
 const currentAgentMeta = (s: SessionStore): MetaData => {
   const session = sessionSelectors.currentSession(s);
@@ -22,7 +22,13 @@ const currentAgentTitle = (s: SessionStore) => currentAgentMeta(s)?.title || t('
 
 const currentAgentConfig = (s: SessionStore) => {
   const session = sessionSelectors.currentSession(s);
-  return merge(initialLobeAgentConfig, session?.config);
+
+  // if is the inbox session, use the default agent config in global store
+  if (sessionSelectors.isInboxSession(s)) {
+    return settingsSelectors.defaultAgentConfig(useGlobalStore.getState());
+  }
+
+  return merge(DEFAULT_AGENT_CONFIG, session?.config);
 };
 
 const currentAgentSystemRole = (s: SessionStore) => {

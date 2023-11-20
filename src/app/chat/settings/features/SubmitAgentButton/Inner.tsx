@@ -13,7 +13,7 @@ import { AGENTS_INDEX_GITHUB_ISSUE } from '@/const/url';
 import AgentInfo from '@/features/AgentInfo';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agentConfig';
+import { agentSelectors } from '@/store/session/selectors';
 
 const Inner = memo(() => {
   const { t } = useTranslation('setting');

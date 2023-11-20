@@ -8,7 +8,7 @@ import { Center } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/files';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agentConfig';
+import { agentSelectors } from '@/store/session/selectors';
 
 const FileUpload = memo(() => {
   const { t } = useTranslation('chat');

@@ -139,7 +139,15 @@
       "placeholder": "プリプロセステンプレート {{text}} はリアルタイムの入力情報に置き換えられます",
       "title": "ユーザー入力のプリプロセス"
     },
-    "title": "チャット設定"
+    "title": "チャット設定",
+    "autoCreateTopicThreshold": {
+      "desc": "現在のメッセージ数がこの値を超えると、トピックが自動的に作成されます",
+      "title": "メッセージ閾値"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "会話中にトピックを自動的に作成するかどうか、一時的なトピックでのみ有効です",
+      "title": "トピックの自動作成"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {

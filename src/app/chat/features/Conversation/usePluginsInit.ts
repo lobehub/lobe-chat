@@ -1,6 +1,6 @@
 import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agentConfig';
+import { agentSelectors } from '@/store/session/selectors';
 
 export const usePluginsInit = () => {
   const [plugins] = useSessionStore((s) => [agentSelectors.currentAgentPlugins(s)]);
