@@ -34,6 +34,8 @@ const enabledSchema =
     return uniqBy(list, 'name');
   };
 
+const onlinePluginStore = (s: PluginStoreState) => s.pluginList;
+
 const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.customPluginList];
 
 const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
@@ -86,5 +88,6 @@ export const pluginSelectors = {
   getPluginSettingsById,
   hasPluginUI,
   isCustomPlugin,
+  onlinePluginStore,
   pluginList,
 };

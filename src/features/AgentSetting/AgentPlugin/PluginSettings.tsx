@@ -31,7 +31,7 @@ const PluginSettings = memo(() => {
   const [plugins] = useStore((s) => [s.config.plugins || [], !!s.config.plugins]);
 
   const [useFetchPluginList, updatePluginSettings] = usePluginStore((s) => [
-    s.useFetchPluginList,
+    s.useFetchPluginStore,
     s.updatePluginSettings,
   ]);
   const pluginList = usePluginStore(pluginSelectors.pluginList);

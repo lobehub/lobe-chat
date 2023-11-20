@@ -25,15 +25,16 @@ const t = setNamespace('plugin');
 export interface PluginAction {
   checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
   checkPluginsIsInstalled: (plugins: string[]) => void;
-
   deletePluginSettings: (id: string) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
   installPlugin: (identifier: string) => Promise<void>;
   installPlugins: (plugins: string[]) => Promise<void>;
+  loadPluginStore: () => Promise<LobeChatPluginsMarketIndex>;
   resetPluginSettings: () => void;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
   updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
-  useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
+  useCheckPluginsIsInstalled: (plugins: string[]) => SWRResponse;
+  useFetchPluginStore: () => SWRResponse<LobeChatPluginsMarketIndex>;
 }
 
 export const createPluginSlice: StateCreator<
@@ -59,9 +60,20 @@ export const createPluginSlice: StateCreator<
     await checkPluginsIsInstalled(plugins);
   },
   checkPluginsIsInstalled: async (plugins) => {
-    await get().installPlugins(plugins);
+    // if there is no plugins, just skip.
+    if (plugins.length === 0) return;
 
-    set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
+    const { loadPluginStore, installPlugins } = get();
+
+    // check if the store is empty
+    // if it is, we need to load the plugin store
+    if (pluginSelectors.onlinePluginStore(get()).length === 0) {
+      await loadPluginStore();
+    }
+
+    await installPlugins(plugins);
+
+    set({ manifestPrepared: true }, false, t('checkPluginsIsInstalled'));
   },
   deletePluginSettings: (id) => {
     set(
@@ -80,7 +92,8 @@ export const createPluginSlice: StateCreator<
   },
   installPlugin: async (name) => {
     const plugin = pluginSelectors.getPluginMetaById(name)(get());
-    // 1. 校验文件
+
+    // 1. valid plugin
 
     if (!plugin) return;
 
@@ -124,6 +137,13 @@ export const createPluginSlice: StateCreator<
 
     await Promise.all(plugins.map((identifier) => installPlugin(identifier)));
   },
+  loadPluginStore: async () => {
+    const pluginMarketIndex = await pluginService.getPluginList();
+
+    set({ pluginList: pluginMarketIndex.plugins }, false, t('loadPluginList'));
+
+    return pluginMarketIndex;
+  },
   resetPluginSettings: () => {
     set({ pluginsSettings: {} }, false, t('resetPluginSettings'));
   },
@@ -146,10 +166,8 @@ export const createPluginSlice: StateCreator<
     );
   },
 
-  useFetchPluginList: () =>
-    useSWR<LobeChatPluginsMarketIndex>('fetchPluginList', pluginService.getPluginList, {
-      onSuccess: (pluginMarketIndex) => {
-        set({ pluginList: pluginMarketIndex.plugins }, false, t('useFetchPluginList'));
-      },
-    }),
+  useCheckPluginsIsInstalled: (plugins) => useSWR(plugins, get().checkPluginsIsInstalled),
+
+  useFetchPluginStore: () =>
+    useSWR<LobeChatPluginsMarketIndex>('loadPluginStore', get().loadPluginStore),
 });
