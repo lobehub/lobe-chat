@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.102.3](https://github.com/lobehub/lobe-chat/compare/v0.102.2...v0.102.3)
+
+<sup>Released on **2023-11-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix plugin not work correct when adding agent from market.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix plugin not work correct when adding agent from market, closes [#394](https://github.com/lobehub/lobe-chat/issues/394) ([7c99816](https://github.com/lobehub/lobe-chat/commit/7c99816))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.102.2](https://github.com/lobehub/lobe-chat/compare/v0.102.1...v0.102.2)
 
 <sup>Released on **2023-11-20**</sup>
