@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.102.2](https://github.com/lobehub/lobe-chat/compare/v0.102.1...v0.102.2)
+
+<sup>Released on **2023-11-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model tag missing.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model tag missing, closes [#481](https://github.com/lobehub/lobe-chat/issues/481) ([8c96cf0](https://github.com/lobehub/lobe-chat/commit/8c96cf0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.102.1](https://github.com/lobehub/lobe-chat/compare/v0.102.0...v0.102.1)
 
 <sup>Released on **2023-11-19**</sup>
