@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.102.4](https://github.com/lobehub/lobe-chat/compare/v0.102.3...v0.102.4)
+
+<sup>Released on **2023-11-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **plugin**: Fix plugin can't get settings from lobe-chat.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **plugin**: Fix plugin can't get settings from lobe-chat, closes [#488](https://github.com/lobehub/lobe-chat/issues/488) ([1555140](https://github.com/lobehub/lobe-chat/commit/1555140))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.102.3](https://github.com/lobehub/lobe-chat/compare/v0.102.2...v0.102.3)
 
 <sup>Released on **2023-11-20**</sup>
