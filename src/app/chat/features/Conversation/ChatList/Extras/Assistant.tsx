@@ -17,7 +17,11 @@ export const AssistantMessageExtra: RenderMessageExtra = memo<ChatMessage>(
     const loading = useSessionStore((s) => s.chatLoadingId === id);
 
     const showModelTag = extra?.fromModel && model !== extra?.fromModel;
-    const showExtra = extra?.showModelTag || extra?.translate || extra?.tts;
+    const showTranslate = !!extra?.translate;
+    const showTTS = !!extra?.tts;
+
+    const showExtra = showModelTag || showTranslate || showTTS;
+
     if (!showExtra) return;
 
     return (
