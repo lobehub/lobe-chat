@@ -49,6 +49,10 @@ export interface ChatMessage extends BaseDataModel {
    */
   function_call?: OpenAIFunctionCall;
 
+  /**
+   * replace with `plugin.identifier`
+   * @deprecated
+   */
   name?: string;
 
   parentId?: string;

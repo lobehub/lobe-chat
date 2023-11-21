@@ -3,7 +3,7 @@ import { nanoid } from '@/utils/uuid';
 
 import { BaseModel } from '../core';
 
-class _FileModel extends BaseModel {
+class _FileModel extends BaseModel<'files'> {
   constructor() {
     super('files', LocalFileSchema);
   }

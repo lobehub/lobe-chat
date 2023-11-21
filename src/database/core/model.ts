@@ -1,12 +1,10 @@
 import { ZodSchema } from 'zod';
 
-import { DBModel } from '@/types/database/db';
-import { LocalFile } from '@/types/database/files';
 import { nanoid } from '@/utils/uuid';
 
 import { LocalDB, LocalDBInstance, LocalDBSchema } from './db';
 
-export class BaseModel<N extends keyof LocalDBSchema = any> {
+export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]['table']> {
   private readonly db: LocalDB;
   private readonly schema: ZodSchema;
   private readonly _tableName: keyof LocalDBSchema;
@@ -18,7 +16,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any> {
   }
 
   get table() {
-    return this.db[this._tableName];
+    return this.db[this._tableName] as T;
   }
 
   /**
@@ -40,7 +38,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any> {
 
     const tableName = this._tableName;
 
-    const record: DBModel<LocalFile> = { ...result.data, createdAt: Date.now(), id };
+    const record: any = { ...result.data, createdAt: Date.now(), id, updatedAt: Date.now() };
 
     const newId = await this.db[tableName].add(record);
 
