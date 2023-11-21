@@ -16,7 +16,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
   }
 
   get table() {
-    return this.db[this._tableName] as T;
+    return this.db[this._tableName];
   }
 
   /**

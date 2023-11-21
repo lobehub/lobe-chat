@@ -5,14 +5,16 @@ import { LobeMetaDataSchema } from '@/types/meta';
 
 export const DB_SessionSchema = z.object({
   type: z.enum(['agent', 'group']).default('agent'),
-  pinned: z.boolean().default(false),
-  config: z.object({}),
   meta: LobeMetaDataSchema,
+  pinned: z.boolean().default(false),
+
+  // TODO: Need to check whether use a strict format schema
+  config: z.any(),
 
   // foreign key
-  messages: z.array(z.string()),
-  files: z.array(z.string()),
-  topics: z.array(z.string()),
+  messages: z.array(z.string()).default([]),
+  files: z.array(z.string()).default([]),
+  topics: z.array(z.string()).default([]),
 });
 /* eslint-enable  */
 

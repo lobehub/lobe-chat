@@ -1,68 +1,82 @@
 import { produce } from 'immer';
+import useSWR, { SWRResponse } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
+import { sessionService } from '@/services/session';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
-import { LobeAgentSession, LobeAgentSettings, LobeSessions } from '@/types/session';
+import {
+  LobeAgentSession,
+  LobeAgentSettings,
+  LobeSessionType,
+  LobeSessions,
+} from '@/types/session';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
-import { uuid } from '@/utils/uuid';
 
-import { initInbox, initLobeSession } from './initialState';
+import { initLobeSession } from './initialState';
 import { SessionDispatch, sessionsReducer } from './reducers/session';
 
 const t = setNamespace('session');
 
 export interface SessionAction {
+  /**
+   * active the session
+   * TODO: 这个方法应该放在 chatStore 中
+   * @param sessionId
+   */
   activeSession: (sessionId: string) => void;
+  /**
+   * TODO: 待改造
+   */
   clearSessions: () => void;
   /**
-   * @title 添加会话
-   * @param session - 会话信息
-   * @returns void
+   * create a new session
+   * @param agent
+   * @returns sessionId
    */
   createSession: (agent?: DeepPartial<LobeAgentSettings>) => Promise<string>;
   /**
-   * 变更session
-   * @param payload - 聊天记录
+   * TODO: Need to be removed
+   * dispatch session
    */
   dispatchSession: (payload: SessionDispatch) => void;
+  /**
+   * TODO: 待改造为更新 inbox 信息
+   * 导入会话
+   * @param sessions
+   */
   importInbox: (inbox: LobeAgentSession) => void;
   /**
+   * TODO: 待改造为批量添加
    * 导入会话
    * @param sessions
    */
   importSessions: (sessions: LobeSessions) => void;
 
   /**
+   * TODO: 待改造为更新 item
    * 置顶会话
    * @param sessionId
    */
   pinSession: (sessionId: string, pinned?: boolean) => void;
 
   /**
-   * 生成压缩后的消息
-   * @returns 压缩后的消息
+   * remove session
+   * @param id - sessionId
    */
-  // genShareUrl: () => string;
-  /**
-   * @title 删除会话
-   * @param index - 会话索引
-   * @returns void
-   */
-  removeSession: (sessionId: string) => void;
+  removeSession: (id: string) => void;
 
   switchBackToChat: () => void;
 
   /**
-   * @title 切换会话
-   * @param sessionId - 会话索引
-   * @returns void
+   * switch session url
    */
   switchSession: (sessionId?: string) => void;
+  useFetchSessions: () => SWRResponse<any>;
 }
 
 export const createSessionSlice: StateCreator<
@@ -75,14 +89,13 @@ export const createSessionSlice: StateCreator<
     set({ activeId: sessionId, activeTopicId: undefined }, false, t('activeSession'));
   },
 
-  clearSessions: () => {
-    set({ inbox: initInbox, sessions: {} }, false, t('clearSessions'));
+  clearSessions: async () => {
+    await sessionService.removeAllSessions();
+    // set({ inbox: initInbox, sessions: {} }, false, t('clearSessions'));
   },
 
   createSession: async (agent) => {
-    const { dispatchSession, switchSession } = get();
-
-    const timestamp = Date.now();
+    const { switchSession } = get();
 
     // 合并 settings 里的 defaultAgent
     const defaultAgent = merge(
@@ -90,18 +103,13 @@ export const createSessionSlice: StateCreator<
       settingsSelectors.defaultAgent(useGlobalStore.getState()),
     );
 
-    const newSession: LobeAgentSession = merge(defaultAgent, {
-      ...agent,
-      createAt: timestamp,
-      id: uuid(),
-      updateAt: timestamp,
-    });
+    const newSession: LobeAgentSession = merge(defaultAgent, agent);
 
-    dispatchSession({ session: newSession, type: 'addSession' });
+    const id = await sessionService.createNewSession(LobeSessionType.Agent, newSession);
 
-    switchSession(newSession.id);
+    switchSession(id);
 
-    return newSession.id;
+    return id;
   },
 
   dispatchSession: (payload) => {
@@ -148,8 +156,8 @@ export const createSessionSlice: StateCreator<
     get().dispatchSession({ id: sessionId, pinned: nextValue, type: 'toggleSessionPinned' });
   },
 
-  removeSession: (sessionId) => {
-    get().dispatchSession({ id: sessionId, type: 'removeSession' });
+  removeSession: async (sessionId) => {
+    await sessionService.removeSession(sessionId);
 
     if (sessionId === get().activeId) {
       get().switchSession();
@@ -172,4 +180,8 @@ export const createSessionSlice: StateCreator<
 
     router?.push(SESSION_CHAT_URL(sessionId, isMobile));
   },
+  useFetchSessions: () =>
+    useSWR('fetchSessions', sessionService.getSessions, {
+      onSuccess: () => {},
+    }),
 });
