@@ -1,22 +1,8 @@
 import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
+import { getPreferredRegion } from '../../config';
 import { createBizOpenAI } from '../createBizOpenAI';
 import { createChatCompletion } from './createChatCompletion';
-import { getServerConfig } from '@/config/server';
-
-const getPreferredRegion = () => {
-  try {
-    const cfg = getServerConfig();
-    if (cfg.OPENAI_FUNCTION_REGIONS.length <= 0) {
-      return 'auto';
-    }
-
-    return cfg.OPENAI_FUNCTION_REGIONS;
-  } catch (error) {
-    console.error('get server config failed, error:', error);
-    return 'auto';
-  }
-};
 
 export const runtime = 'edge';
 export const preferredRegion = getPreferredRegion();
