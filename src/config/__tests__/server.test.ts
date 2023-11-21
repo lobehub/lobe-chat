@@ -39,6 +39,12 @@ describe('getServerConfig', () => {
     expect(config.USE_AZURE_OPENAI).toBe(false);
   });
 
+  it('correctly handles values for OPENAI_FUNCTION_REGIONS', () => {
+    process.env.OPENAI_FUNCTION_REGIONS = 'iad1,sfo1';
+    const config = getServerConfig();
+    expect(config.OPENAI_FUNCTION_REGIONS).toStrictEqual(['iad1', 'sfo1']);
+  });
+
   it('returns default IMGUR_CLIENT_ID when no environment variable is set', () => {
     const config = getServerConfig();
     expect(config.IMGUR_CLIENT_ID).toBe('e415f320d6e24f9');
