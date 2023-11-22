@@ -6,7 +6,7 @@ import { LobeMetaDataSchema } from '@/types/meta';
 export const DB_SessionSchema = z.object({
   type: z.enum(['agent', 'group']).default('agent'),
   meta: LobeMetaDataSchema,
-  pinned: z.boolean().default(false),
+  group: z.string().default('default'),
 
   // TODO: Need to check whether use a strict format schema
   config: z.any(),

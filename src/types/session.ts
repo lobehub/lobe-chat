@@ -14,6 +14,12 @@ export enum LobeSessionType {
   Group = 'group',
 }
 
+export type SessionGroupKey = 'pinned' | 'default' | string;
+
+export enum SessionGroupDefaultKeys {
+  Default = 'default',
+  Pinned = 'pinned',
+}
 interface LobeSessionBase extends BaseDataModel {
   /**
    * 聊天记录
@@ -23,7 +29,7 @@ interface LobeSessionBase extends BaseDataModel {
   /**
    * 置顶
    */
-  pinned?: boolean;
+  group?: SessionGroupKey;
   /**
    * 主题
    */
@@ -96,11 +102,13 @@ export interface LobeAgentConfig {
 /**
  * Lobe Agent会话
  */
-export interface LobeAgentSession extends LobeSessionBase {
+export interface LobeAgentSession extends Omit<LobeSessionBase, 'topics'> {
   /**
    * 语言模型角色设定
    */
   config: LobeAgentConfig;
+  messages: string[];
+  topics: string[];
   type: LobeSessionType.Agent;
 }
 
@@ -111,7 +119,7 @@ export interface LobeAgentSettings {
   config: LobeAgentConfig;
   meta: MetaData;
 }
-export type LobeSessions = Record<string, LobeAgentSession>;
+export type LobeSessions = LobeAgentSession[];
 
 export type LobeAgentConfigKeys =
   | keyof LobeAgentConfig

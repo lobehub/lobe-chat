@@ -48,9 +48,9 @@ export const organizeChats = (
     }
   };
 
-  const basic = Object.values<ChatMessage>(session.chats)
+  const basic = Object.values<ChatMessage>(session.chats || {})
     // 首先按照时间顺序排序，越早的在越前面
-    .sort((pre, next) => pre.createAt - next.createAt)
+    .sort((pre, next) => pre.createdAt - next.createdAt)
     .filter((m) => {
       // 过滤掉包含 topicId 的消息，有主题的消息不应该出现在聊天框中
       if (!topicId) return !m.topicId;

@@ -1,5 +1,7 @@
+import Dexie, { BulkError } from 'dexie';
 import { ZodObject } from 'zod';
 
+import { DBBaseFieldsSchema } from '@/types/database/db';
 import { nanoid } from '@/utils/uuid';
 
 import { LocalDB, LocalDBInstance, LocalDBSchema } from './db';
@@ -16,7 +18,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
   }
 
   get table() {
-    return this.db[this._tableName];
+    return this.db[this._tableName] as Dexie.Table;
   }
 
   /**
@@ -43,6 +45,76 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     const newId = await this.db[tableName].add(record);
 
     return { id: newId };
+  }
+
+  /**
+   * Batch create new records
+   * @param dataArray An array of data to be added
+   * @param options
+   * @param options.generateId
+   * @param options.createWithNewId
+   */
+  protected async _batchAdd<T = LocalDBSchema[N]['model']>(
+    dataArray: T[],
+    options: {
+      /**
+       * always create with a new id
+       */
+      createWithNewId?: boolean;
+      idGenerator?: () => string;
+    } = {},
+  ) {
+    const { idGenerator = nanoid, createWithNewId = false } = options;
+    const validatedData = [];
+    const errors = [];
+
+    for (const data of dataArray) {
+      const schemaWithId = this.schema.merge(DBBaseFieldsSchema.partial());
+
+      const result = schemaWithId.safeParse(data);
+
+      if (result.success) {
+        const item = result.data;
+        const autoId = idGenerator();
+
+        const id = createWithNewId ? autoId : item.id ?? autoId;
+
+        validatedData.push({
+          ...item,
+          createdAt: item.createdAt ?? Date.now(),
+          id,
+          updatedAt: item.updatedAt ?? Date.now(),
+        });
+      } else {
+        errors.push(result.error);
+
+        const errorMsg = `[${this.db.name}][${
+          this._tableName
+        }] Failed to create the record. Data: ${JSON.stringify(data)}. Errors: ${result.error}`;
+        console.error(new TypeError(errorMsg));
+      }
+    }
+    if (validatedData.length === 0) {
+      // No valid data to add
+      return { added: 0, errors, success: false };
+    }
+
+    // Using bulkAdd to insert validated data
+    try {
+      await this.table.bulkAdd(validatedData);
+
+      return { added: validatedData.length, ids: validatedData.map((v) => v.id), success: true };
+    } catch (error) {
+      const bulkError = error as BulkError;
+      // Handle bulkAdd errors here
+      console.error(`[${this.db.name}][${this._tableName}] Bulk add error:`, bulkError);
+      // Return the number of successfully added records and errors
+      return {
+        added: validatedData.length - bulkError.failures.length,
+        errors: bulkError.failures,
+        success: false,
+      };
+    }
   }
 
   protected async _update(id: string, data: Partial<T>) {

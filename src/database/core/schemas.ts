@@ -17,6 +17,6 @@ export const dbSchemaV2 = {
 
   messages:
     '&id, type, sessionId, topicId, quotaId, parentId, role, fromModel, favorite, createdAt, updatedAt',
-  sessions: '&id, type, pinned, meta.title, meta.description, createdAt, updatedAt',
+  sessions: '&id, type, group, meta.title, meta.description, createdAt, updatedAt',
   topics: '&id, title, favorite, createdAt, updatedAt',
 };

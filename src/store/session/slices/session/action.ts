@@ -1,11 +1,10 @@
-import { produce } from 'immer';
-import useSWR, { SWRResponse } from 'swr';
+import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
-import { sessionService } from '@/services/session';
+import { GetSessionsResponse, sessionService } from '@/services/session';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
 import {
@@ -22,6 +21,8 @@ import { SessionDispatch, sessionsReducer } from './reducers/session';
 
 const t = setNamespace('session');
 
+const FETCH_SESSIONS_KEY = 'fetchSessions';
+
 export interface SessionAction {
   /**
    * active the session
@@ -30,7 +31,7 @@ export interface SessionAction {
    */
   activeSession: (sessionId: string) => void;
   /**
-   * TODO: 待改造
+   * reset sessions to default
    */
   clearSessions: () => void;
   /**
@@ -42,27 +43,29 @@ export interface SessionAction {
   /**
    * TODO: Need to be removed
    * dispatch session
+   * @deprecated
    */
   dispatchSession: (payload: SessionDispatch) => void;
-  /**
-   * TODO: 待改造为更新 inbox 信息
-   * 导入会话
-   * @param sessions
-   */
-  importInbox: (inbox: LobeAgentSession) => void;
-  /**
-   * TODO: 待改造为批量添加
-   * 导入会话
-   * @param sessions
-   */
-  importSessions: (sessions: LobeSessions) => void;
 
   /**
-   * TODO: 待改造为更新 item
-   * 置顶会话
-   * @param sessionId
+   * import sessions from files
+   * @param sessions
    */
-  pinSession: (sessionId: string, pinned?: boolean) => void;
+  importSessions: (sessions: LobeSessions) => Promise<void>;
+
+  /**
+   * Pins or unpins a session.
+   *
+   * @param {string} id - The ID of the session to pin or unpin.
+   * @param {boolean} [pinned] - Optional. If set to true, it pins the session. If set to false or omitted, it unpins the session.
+   * @returns {Promise<void>} A promise that resolves when the session is successfully pinned or unpinned.
+   */
+  pinSession: (id: string, pinned?: boolean) => Promise<void>;
+
+  /**
+   * re-fetch the data
+   */
+  refresh: () => Promise<void>;
 
   /**
    * remove session
@@ -76,6 +79,13 @@ export interface SessionAction {
    * switch session url
    */
   switchSession: (sessionId?: string) => void;
+  /**
+   * A custom hook that uses SWR to fetch sessions data.
+   *
+   * @typedef {import('swr').SWRResponse} SWRResponse
+   *
+   * @returns {SWRResponse<any>} - The response object containing the sessions data.
+   */
   useFetchSessions: () => SWRResponse<any>;
 }
 
@@ -91,11 +101,12 @@ export const createSessionSlice: StateCreator<
 
   clearSessions: async () => {
     await sessionService.removeAllSessions();
-    // set({ inbox: initInbox, sessions: {} }, false, t('clearSessions'));
+
+    get().refresh();
   },
 
   createSession: async (agent) => {
-    const { switchSession } = get();
+    const { switchSession, refresh } = get();
 
     // 合并 settings 里的 defaultAgent
     const defaultAgent = merge(
@@ -106,12 +117,12 @@ export const createSessionSlice: StateCreator<
     const newSession: LobeAgentSession = merge(defaultAgent, agent);
 
     const id = await sessionService.createNewSession(LobeSessionType.Agent, newSession);
+    await refresh();
 
     switchSession(id);
 
     return id;
   },
-
   dispatchSession: (payload) => {
     const { type, ...res } = payload;
 
@@ -130,34 +141,27 @@ export const createSessionSlice: StateCreator<
       );
     }
   },
-  // TODO：暂时先不实现导入 inbox 的功能
-  importInbox: () => {},
-  importSessions: (importSessions) => {
-    const { sessions } = get();
-    set(
-      {
-        sessions: produce(sessions, (draft) => {
-          for (const [id, session] of Object.entries(importSessions)) {
-            // 如果已经存在，则跳过
-            if (draft[id]) continue;
 
-            draft[id] = session;
-          }
-        }),
-      },
-      false,
-      t('importSessions', importSessions),
-    );
+  importSessions: async (importSessions) => {
+    console.log('importSessions:', importSessions);
+    const data = await sessionService.batchCreateSessions(importSessions);
+    console.log(data);
+
+    await get().refresh();
+  },
+  pinSession: async (sessionId, pinned) => {
+    await sessionService.updateSessionGroup(sessionId, pinned ? 'pinned' : 'default');
+
+    await get().refresh();
   },
 
-  pinSession: (sessionId, pinned) => {
-    const nextValue = typeof pinned === 'boolean' ? pinned : !get().sessions[sessionId].pinned;
-
-    get().dispatchSession({ id: sessionId, pinned: nextValue, type: 'toggleSessionPinned' });
+  refresh: async () => {
+    await mutate(FETCH_SESSIONS_KEY);
   },
 
   removeSession: async (sessionId) => {
     await sessionService.removeSession(sessionId);
+    await get().refresh();
 
     if (sessionId === get().activeId) {
       get().switchSession();
@@ -180,8 +184,20 @@ export const createSessionSlice: StateCreator<
 
     router?.push(SESSION_CHAT_URL(sessionId, isMobile));
   },
+
   useFetchSessions: () =>
-    useSWR('fetchSessions', sessionService.getSessions, {
-      onSuccess: () => {},
+    useSWR<GetSessionsResponse>(FETCH_SESSIONS_KEY, sessionService.getSessions, {
+      onSuccess: (data) => {
+        const { inbox, sessions } = data;
+        set(
+          {
+            fetchSessionsLoading: false,
+            inbox,
+            sessions: sessions,
+          },
+          false,
+          t('useFetchSessions/onSuccess', data),
+        );
+      },
     }),
 });

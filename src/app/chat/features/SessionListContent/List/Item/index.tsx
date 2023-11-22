@@ -6,6 +6,7 @@ import { shallow } from 'zustand/shallow';
 
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
+import { sessionHelpers } from '@/store/session/helpers';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import ListItem from '../../ListItem';
@@ -39,14 +40,14 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
     return [
       s.activeId === id,
       !!s.chatLoadingId && id === s.activeId,
-      session.pinned,
+      sessionHelpers.getSessionPinned(session),
       agentSelectors.getTitle(meta),
       agentSelectors.getDescription(meta),
       systemRole,
       agentSelectors.getAvatar(meta),
       meta.backgroundColor,
-      session?.updateAt,
-      session.config.model,
+      session?.updatedAt,
+      agentSelectors.currentAgentModel(s),
     ];
   });
 

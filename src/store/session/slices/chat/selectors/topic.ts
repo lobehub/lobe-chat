@@ -12,8 +12,8 @@ export const currentTopics = (s: SessionStore): ChatTopic[] => {
   const topics = Object.values(session.topics || {});
 
   // 按时间倒序
-  const favTopics = topics.filter((t) => t.favorite).sort((a, b) => b.updateAt - a.updateAt);
-  const defaultTopics = topics.filter((t) => !t.favorite).sort((a, b) => b.updateAt - a.updateAt);
+  const favTopics = topics.filter((t) => t.favorite).sort((a, b) => b.updatedAt - a.updatedAt);
+  const defaultTopics = topics.filter((t) => !t.favorite).sort((a, b) => b.updatedAt - a.updatedAt);
 
   return [...favTopics, ...defaultTopics];
 };

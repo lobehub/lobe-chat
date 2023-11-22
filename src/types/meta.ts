@@ -20,8 +20,19 @@ export const LobeMetaDataSchema = z.object({
 export type MetaData = z.infer<typeof LobeMetaDataSchema>;
 
 export interface BaseDataModel {
-  createAt: number;
+  /**
+   * @deprecated
+   */
+  createAt?: number;
+
+  createdAt: number;
+
   id: string;
   meta: MetaData;
-  updateAt: number;
+
+  /**
+   * @deprecated
+   */
+  updateAt?: number;
+  updatedAt: number;
 }

@@ -12,24 +12,24 @@ beforeEach(() => {
     chats: {
       '1': {
         id: '1',
-        createAt: 1639440000000,
-        updateAt: 1639440000000,
+        createdAt: 1639440000000,
+        updatedAt: 1639440000000,
         meta: {},
         content: 'Message 1',
         role: 'assistant',
       },
       '2': {
         id: '2',
-        createAt: 1639450000000,
-        updateAt: 1639450000000,
+        createdAt: 1639450000000,
+        updatedAt: 1639450000000,
         meta: {},
         content: 'Message 2',
         role: 'user',
       },
       '3': {
         id: '3',
-        createAt: 1639460000000,
-        updateAt: 1639460000000,
+        createdAt: 1639460000000,
+        updatedAt: 1639460000000,
         meta: {},
         content: 'Message 3',
         role: 'assistant',
@@ -53,10 +53,10 @@ beforeEach(() => {
       },
     },
     type: 'agent',
-    createAt: 1690110700808,
+    createdAt: 1690110700808,
     id: 'abc',
     meta: {},
-    updateAt: 1690110700808,
+    updatedAt: 1690110700808,
   } as LobeAgentSession;
 });
 
@@ -147,8 +147,8 @@ describe('organizeChats', () => {
     for (let i = 1; i <= numMessages; i++) {
       largeSession.chats[i.toString()] = {
         id: i.toString(),
-        createAt: i,
-        updateAt: i,
+        createdAt: i,
+        updatedAt: i,
         meta: {},
         content: `Message ${i}`,
         role: 'assistant',
@@ -166,21 +166,21 @@ describe('organizeChats', () => {
       chats: {
         'Ftei28dF': {
           content: '鲁迅为何暴打周树人',
-          createAt: 1690111354731,
+          createdAt: 1690111354731,
           id: 'Ftei28dF',
           meta: {},
           role: 'user',
-          updateAt: 1690111354731,
+          updatedAt: 1690111354731,
         },
         '9bQW9hTs': {
           content:
             '这是一种误解。鲁迅和周树人是同一人，指的都是现代文学家周樟寿。"鲁迅"是他的笔名，"周树人"则是他的原名。所以，鲁迅并没有暴打周树人，这只是一种说法上的误解。',
-          createAt: 1690111354734,
+          createdAt: 1690111354734,
           id: '9bQW9hTs',
           meta: {},
           parentId: 'Ftei28dF',
           role: 'assistant',
-          updateAt: 1690111361514,
+          updatedAt: 1690111361514,
           extra: {
             fromModel: 'gpt-4',
           },
@@ -188,12 +188,12 @@ describe('organizeChats', () => {
         'HRQGSszU': {
           content:
             '这个问题基于一个误解。实际上，鲁迅和周树人是同一个人，这是中国现代文学的开山鼻祖周树人的笔名。他的本名是周树人，鲁迅则是他在30岁时开始使用的笔名。因此，鲁迅不能暴打周树人，因为他们是同一个人。',
-          createAt: 1690111364344,
+          createdAt: 1690111364344,
           id: 'HRQGSszU',
           meta: {},
           parentId: 'Ftei28dF',
           role: 'assistant',
-          updateAt: 1690111369519,
+          updatedAt: 1690111369519,
           extra: {
             fromModel: 'gpt-4',
           },
@@ -201,23 +201,23 @@ describe('organizeChats', () => {
         '981qr9n0': {
           content:
             '这是一个误解。鲁迅和周树人是同一个人，是中国现代文学的奠基人。鲁迅是他的笔名，周树人是他的本名。所以，鲁迅不可能暴打周树人。这种说法可能是源于一些误解或误传。',
-          createAt: 1690111375456,
+          createdAt: 1690111375456,
           id: '981qr9n0',
           meta: {},
           parentId: 'Ftei28dF',
           role: 'assistant',
-          updateAt: 1690111381458,
+          updatedAt: 1690111381458,
           extra: {
             fromModel: 'gpt-4',
           },
         },
         'ddd': {
           content: '鲁迅是谁',
-          createAt: 1690211354731,
+          createdAt: 1690211354731,
           id: 'ddd',
           meta: {},
           role: 'user',
-          updateAt: 1690211354731,
+          updatedAt: 1690211354731,
         },
       },
       config: {
@@ -237,17 +237,17 @@ describe('organizeChats', () => {
         },
         systemRole: '',
       },
-      createAt: 1690110700808,
+      createdAt: 1690110700808,
       id: '1515e861-0c64-49a3-bb85-2b24d65a19d6',
       meta: {},
       type: 'agent',
-      updateAt: 1690110700808,
+      updatedAt: 1690110700808,
     } as LobeAgentSession;
 
     const result = organizeChats(realSession);
 
     expect(
-      result.map((i) => ({ id: i.id, content: i.content, role: i.role, createAt: i.createAt })),
+      result.map((i) => ({ id: i.id, content: i.content, role: i.role, createAt: i.createdAt })),
     ).toEqual([
       {
         content: '鲁迅为何暴打周树人',
@@ -327,8 +327,8 @@ describe('organizeChats', () => {
       it('找不到插件', () => {
         const message = {
           id: '4',
-          createAt: 1927785600004,
-          updateAt: 1927785600004,
+          createdAt: 1927785600004,
+          updatedAt: 1927785600004,
           role: 'function',
           function_call: {
             name: 'plugin-name',
@@ -347,8 +347,8 @@ describe('organizeChats', () => {
       it('找到的插件', () => {
         const message = {
           id: '4',
-          createAt: 1927785600004,
-          updateAt: 1927785600004,
+          createdAt: 1927785600004,
+          updatedAt: 1927785600004,
           role: 'function',
           function_call: {
             name: 'realtimeWeather',

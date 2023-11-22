@@ -191,7 +191,7 @@ describe('messagesReducer', () => {
       const newState = messagesReducer(initialState, payload);
 
       expect(newState.message1.content).toBe('Updated Message');
-      expect(newState.message1.updateAt).toBeGreaterThan(initialState.message1.updateAt);
+      expect(newState.message1.updatedAt).toBeGreaterThan(initialState.message1.updatedAt);
     });
 
     it('should not modify the state if the specified message does not exist', () => {
@@ -233,7 +233,7 @@ describe('messagesReducer', () => {
       const newState = messagesReducer(initialState, payload);
 
       expect(newState.message1.extra!.translate).toEqual({ target: 'en', to: 'zh' });
-      expect(newState.message1.updateAt).toBeGreaterThan(initialState.message1.updateAt);
+      expect(newState.message1.updatedAt).toBeGreaterThan(initialState.message1.updatedAt);
     });
 
     it('should not modify the state if the specified message does not exist', () => {

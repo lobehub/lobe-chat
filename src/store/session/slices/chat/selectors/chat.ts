@@ -68,14 +68,14 @@ export const currentChatsWithGuideMessage = (s: SessionStore): ChatMessage[] => 
 
   const emptyInboxGuideMessage = {
     content: isInbox ? inboxMsg : !!meta.description ? agentSystemRoleMsg : agentMsg,
-    createAt: initTime,
+    createdAt: initTime,
     extra: {},
     id: 'default',
     meta: meta || {
       avatar: DEFAULT_INBOX_AVATAR,
     },
     role: 'assistant',
-    updateAt: initTime,
+    updatedAt: initTime,
   } as ChatMessage;
 
   return [emptyInboxGuideMessage];

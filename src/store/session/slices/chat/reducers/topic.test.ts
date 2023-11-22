@@ -18,8 +18,8 @@ describe('topicReducer', () => {
         topic: {
           id: '1',
           title: 'Test Topic',
-          createAt: Date.now(),
-          updateAt: Date.now(),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
         },
       };
 
@@ -36,8 +36,8 @@ describe('topicReducer', () => {
         topic: {
           id: '1',
           title: 'Test Topic',
-          createAt: Date.now(),
-          updateAt: Date.now(),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
         },
       };
 
@@ -52,8 +52,8 @@ describe('topicReducer', () => {
         topic: {
           id: '1',
           title: 'Test Topic',
-          createAt: Date.now(),
-          updateAt: Date.now(),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
         },
       };
 
@@ -68,8 +68,8 @@ describe('topicReducer', () => {
       const topic: ChatTopic = {
         id: '1',
         title: 'Test Topic',
-        createAt: Date.now(),
-        updateAt: Date.now(),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
       };
 
       state['1'] = topic;
@@ -90,8 +90,8 @@ describe('topicReducer', () => {
       const topic: ChatTopic = {
         id: '1',
         title: 'Test Topic',
-        createAt: Date.now() - 1,
-        updateAt: Date.now() - 1, // 设定比当前时间前面一点
+        createdAt: Date.now() - 1,
+        updatedAt: Date.now() - 1, // 设定比当前时间前面一点
       };
 
       state['1'] = topic;
@@ -105,7 +105,7 @@ describe('topicReducer', () => {
 
       const newState = topicReducer(state, payload);
 
-      expect(newState['1'].updateAt).toBeGreaterThan(topic.updateAt);
+      expect(newState['1'].updatedAt).toBeGreaterThan(topic.updatedAt);
     });
   });
 
@@ -114,8 +114,8 @@ describe('topicReducer', () => {
       const topic: ChatTopic = {
         id: '1',
         title: 'Test Topic',
-        createAt: Date.now(),
-        updateAt: Date.now(),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
       };
 
       state['1'] = topic;
@@ -150,8 +150,8 @@ describe('topicReducer', () => {
         topic: {
           id: '1',
           title: 'Test Topic',
-          createAt: Date.now(),
-          updateAt: Date.now(),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
         },
       };
 
@@ -166,8 +166,8 @@ describe('topicReducer', () => {
         topic: {
           id: '1',
           title: 'Test Topic',
-          createAt: Date.now(),
-          updateAt: Date.now(),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
         },
       };
 

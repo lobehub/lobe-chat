@@ -9,9 +9,7 @@ import {
   getSessionMetaById,
   hasConversion,
   hasPinnedSessionList,
-  hasSessionList,
   pinnedSessionList,
-  sessionList,
   unpinnedSessionList,
 } from './list';
 
@@ -27,9 +25,7 @@ export const sessionSelectors = {
   getSessionMetaById,
   hasConversion,
   hasPinnedSessionList,
-  hasSessionList,
   isInboxSession,
   pinnedSessionList,
-  sessionList,
   unpinnedSessionList,
 };

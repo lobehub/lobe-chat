@@ -45,7 +45,16 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
       icon: <Icon icon={HardDriveUpload} />,
       key: 'import',
       label: (
-        <Upload maxCount={1} onChange={importConfig} showUploadList={false}>
+        <Upload
+          beforeUpload={(file) => {
+            console.log(file);
+            importConfig(file);
+
+            return false;
+          }}
+          maxCount={1}
+          showUploadList={false}
+        >
           {t('import')}
         </Upload>
       ),

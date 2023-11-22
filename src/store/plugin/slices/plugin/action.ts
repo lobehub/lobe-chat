@@ -48,7 +48,7 @@ export const createPluginSlice: StateCreator<
 
     let enabledPlugins: string[] = [];
 
-    for (const session of Object.values(sessions)) {
+    for (const session of sessions) {
       const plugins = session.config.plugins;
       if (!plugins || plugins.length === 0) continue;
 

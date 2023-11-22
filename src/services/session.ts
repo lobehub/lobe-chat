@@ -1,5 +1,11 @@
+import { INBOX_SESSION_ID } from '@/const/session';
 import { SessionModel } from '@/database/models/session';
-import { LobeAgentSession, LobeSessionType } from '@/types/session';
+import { LobeAgentSession, LobeSessionType, LobeSessions, SessionGroupKey } from '@/types/session';
+
+export interface GetSessionsResponse {
+  inbox: LobeAgentSession;
+  sessions: LobeSessions;
+}
 
 class SessionService {
   async createNewSession(
@@ -13,8 +19,15 @@ class SessionService {
     return item.id;
   }
 
-  async getSessions() {
-    return SessionModel.query()
+  async getSessions(): Promise<GetSessionsResponse> {
+    console.time('getSessions');
+
+    const inbox = await SessionModel.findById(INBOX_SESSION_ID);
+    const sessions = await SessionModel.query();
+
+    console.timeEnd('getSessions');
+
+    return { inbox, sessions };
   }
 
   async removeSession(id: string) {
@@ -23,6 +36,14 @@ class SessionService {
 
   async removeAllSessions() {
     return SessionModel.clearTable();
+  }
+
+  async updateSessionGroup(id: string, group: SessionGroupKey) {
+    return SessionModel.update(id, { group });
+  }
+
+  async batchCreateSessions(importSessions: LobeSessions) {
+    return SessionModel.batchCreate(importSessions);
   }
 }
 

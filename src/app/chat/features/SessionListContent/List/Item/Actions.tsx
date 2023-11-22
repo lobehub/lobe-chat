@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
 import { useSessionStore } from '@/store/session';
+import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
 
 const useStyles = createStyles(({ css }) => ({
@@ -27,7 +28,7 @@ const Actions = memo<ActionProps>(({ id, setOpen }) => {
 
   const [pin, removeSession, pinSession] = useSessionStore((s) => {
     const session = sessionSelectors.getSessionById(id)(s);
-    return [session.pinned, s.removeSession, s.pinSession];
+    return [sessionHelpers.getSessionPinned(session), s.removeSession, s.pinSession];
   });
 
   const { modal } = App.useApp();

@@ -27,11 +27,11 @@ vi.mock('@/store/session/selectors', () => ({
 
 const mockData: ChatMessage = {
   content: 'test-content',
-  createAt: 0,
+  createdAt: 0,
   id: 'abc',
   meta: { avatar: '', backgroundColor: '', description: '', tags: [], title: '' },
   role: 'assistant',
-  updateAt: 0,
+  updatedAt: 0,
 };
 
 describe('AssistantMessageExtra', () => {
