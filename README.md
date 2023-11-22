@@ -152,7 +152,7 @@ Users can choose the voice that suits their personal preferences or specific sce
 > As a result, we invested a lot of effort, including data conversion, audio progress management, and speech visualization, among other tasks.
 
 > \[!IMPORTANT]
-> 
+>
 > Therefore, we decided to refine our implementation and make it open source, hoping to assist developers who wish to implement TTS.
 > [@lobehub/tts][lobe-tts-github] is a high-quality TTS toolkit developed in TypeScript, which supports usage both on the server-side and in the browser.
 >
@@ -186,7 +186,6 @@ e-commerce platform data access, and various third-party services.
 > We welcome developers to use these resources to unleash their creativity and write feature-rich, user-friendly plugins.
 > With collective efforts, we can continuously expand the boundaries of chat applications and explore a more intelligent and efficient creativity platform.
 
-
 <video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
 <!-- PLUGIN LIST -->
@@ -200,7 +199,7 @@ e-commerce platform data access, and various third-party services.
 
 > 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
-<!-- PLUGIN LIST -->
+ <!-- PLUGIN LIST -->
 
 <div align="right">
 
@@ -230,16 +229,16 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                             | Description                                                                                                                                                                                                                                                                                                                               |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [True Friend](https://chat-preview.lobehub.com/market?agent=ai-0x0-old-friends)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2023-11-21**</sup>          | You can talk to me about anything. I can give you some thoughts and advice as a friend. Relax.<br/>`friendship` `humor` `authentic` `simulation`                                                                                                                                                                                          |
-| [Short Video Script Assistant](https://chat-preview.lobehub.com/market?agent=tik-tok-director)<br/><sup>By **[aihoom](https://github.com/aihoom)** on **2023-11-17**</sup> | Designed to help users write engaging and trendy short video scripts<br/>`short-video` `tkitok` `screenwriter`                                                                                                                                                                                                                            |
-| [Expert Agent Mentor](https://chat-preview.lobehub.com/market?agent=co-agent)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2023-11-16**</sup>            | Call on expert agents perfectly suited for the task to support your goals<br/>`task-guidance` `execution-plan` `communication` `support`                                                                                                                                                                                                  |
-| [Full-stack Developer](https://chat-preview.lobehub.com/market?agent=fs-dev)<br/><sup>By **[cloverfield11](https://github.com/cloverfield11)** on **2023-11-15**</sup>     | Full-stack web developer with experience in HTML, CSS, JavaScript, Python, Java, Ruby, and frameworks such as React, Angular, Vue.js, Express, Django, Next.js, Flask, or Ruby on Rails. Experience in databases, application architecture, security, and testing.<br/>`web-development` `front-end` `back-end` `programming` `databases` |
+| Recent Submits                                                                                                                                                                            | Description                                                                                                                                                                                                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [JS Code Quality Optimization](https://chat-preview.lobehub.com/market?agent=js-code-quality)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2023-11-22**</sup> | Dedicated to clean and elegant code refactoring<br/>`refactoring` `code-optimization` `code-quality`                                                                                                                                                                                         |
+| [LobeChat Test Engineer](https://chat-preview.lobehub.com/market?agent=lobe-chat-unit-test-dev)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-22**</sup>             | Proficient in writing frontend automation tests, especially comprehensive test coverage for TypeScript applications. Skilled in using the Vitest testing framework with a deep understanding of testing principles and strategies.<br/>`automation-testing` `testing` `lobe-chat` `frontend` |
+| [Q\&A Document Conversion Expert](https://chat-preview.lobehub.com/market?agent=q-a-helper)<br/><sup>By **[barryWang12138](https://github.com/barryWang12138)** on **2023-11-22**</sup>   | Please provide your document content, and I will segment and clean it according to your requirements, and provide answers in a standardized format.<br/>`q-a` `document`                                                                                                                     |
+| [True Friend](https://chat-preview.lobehub.com/market?agent=ai-0x0-old-friends)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2023-11-21**</sup>                         | You can talk to me about anything. I can give you some thoughts and advice as a friend. Relax.<br/>`friendship` `humor` `authentic` `simulation`                                                                                                                                             |
 
-> 📊 Total agents: [<kbd>**49**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**52**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
-<!-- AGENT LIST -->
+ <!-- AGENT LIST -->
 
 <div align="right">
 
