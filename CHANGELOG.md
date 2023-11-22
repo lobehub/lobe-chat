@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.105.0](https://github.com/lobehub/lobe-chat/compare/v0.104.0...v0.105.0)
+
+<sup>Released on **2023-11-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Standalone pluginn can get more arguments on init.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Standalone pluginn can get more arguments on init, closes [#498](https://github.com/lobehub/lobe-chat/issues/498) ([a7624f5](https://github.com/lobehub/lobe-chat/commit/a7624f5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.104.0](https://github.com/lobehub/lobe-chat/compare/v0.103.1...v0.104.0)
 
 <sup>Released on **2023-11-21**</sup>
