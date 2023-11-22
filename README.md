@@ -1,12 +1,10 @@
-<a name="readme-top"></a>
-
-<div align="center">
+<a name="readme-top"></a><div align="center">
 
 <img height="120" src="https://registry.npmmirror.com/@lobehub/assets-logo/1.0.0/files/assets/logo-3d.webp">
 <img height="120" src="https://gw.alipayobjects.com/zos/kitchen/qJ3l3EPsdW/split.svg">
 <img height="120" src="https://registry.npmmirror.com/@lobehub/assets-emoji-anim/1.0.0/files/assets/robot.webp">
 
-<h1>Lobe Chat</h1>
+# Lobe Chat
 
 LobeChat is an open-source, high-performance chatbot framework<br/>that supports speech synthesis, multimodal, and extensible ([Function Call][fc-link]) plugin system. <br/>
 Supports one-click free deployment of your private ChatGPT/LLM web application.
@@ -81,7 +79,8 @@ Please be aware that LobeChat is currently under active development, and feedbac
 
 ![](https://gw.alipayobjects.com/zos/kitchen/0hcO8QiU9c/star.webp)
 
-<details><summary><kbd>Star History</kbd></summary>
+<details>
+  <summary><kbd>Star History</kbd></summary>
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&theme=dark&type=Date">
     <img width="100%" src="https://api.star-history.com/svg?repos=lobehub%2Flobe-chat&type=Date">
@@ -153,8 +152,9 @@ Users can choose the voice that suits their personal preferences or specific sce
 > As a result, we invested a lot of effort, including data conversion, audio progress management, and speech visualization, among other tasks.
 
 > \[!IMPORTANT]
+> 
 > Therefore, we decided to refine our implementation and make it open source, hoping to assist developers who wish to implement TTS.
-> [@lobehub/tts][lobe-tts-link] is a high-quality TTS toolkit developed in TypeScript, which supports usage both on the server-side and in the browser.
+> [@lobehub/tts][lobe-tts-github] is a high-quality TTS toolkit developed in TypeScript, which supports usage both on the server-side and in the browser.
 >
 > - **Server-side:** With just 15 lines of code, you can achieve high-quality voice generation capabilities comparable to OpenAI's TTS service. It currently supports EdgeSpeechTTS, MicrosoftTTS, OpenAITTS, and OpenAISTT.
 > - **Browser-side:** It provides high-quality React Hooks and visual audio components, supporting common functions such as loading, playing, pausing, and dragging the timeline. Additionally, it offers a very rich set of capabilities for adjusting the audio track styles.
@@ -186,7 +186,8 @@ e-commerce platform data access, and various third-party services.
 > We welcome developers to use these resources to unleash their creativity and write feature-rich, user-friendly plugins.
 > With collective efforts, we can continuously expand the boundaries of chat applications and explore a more intelligent and efficient creativity platform.
 
-<https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
+
+<video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
 <!-- PLUGIN LIST -->
 
@@ -199,7 +200,7 @@ e-commerce platform data access, and various third-party services.
 
 > 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
- <!-- PLUGIN LIST -->
+<!-- PLUGIN LIST -->
 
 <div align="right">
 
@@ -238,7 +239,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 > 📊 Total agents: [<kbd>**49**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
- <!-- AGENT LIST -->
+<!-- AGENT LIST -->
 
 <div align="right">
 
