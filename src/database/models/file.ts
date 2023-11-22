@@ -11,7 +11,7 @@ class _FileModel extends BaseModel<'files'> {
   async create(file: LocalFile) {
     const id = nanoid();
 
-    return this.add(file, `file-${id}`);
+    return this._add(file, `file-${id}`);
   }
 
   async findById(id: string) {
