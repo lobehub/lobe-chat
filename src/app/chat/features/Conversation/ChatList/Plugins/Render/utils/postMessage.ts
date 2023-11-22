@@ -4,8 +4,19 @@ export const sendMessageContentToPlugin = (window: Window, props: any) => {
   window.postMessage({ props, type: PluginChannel.renderPlugin }, '*');
 };
 
-export const sendPayloadToPlugin = (window: Window, props: any) => {
-  window.postMessage({ props, type: PluginChannel.initStandalonePlugin }, '*');
+export const sendPayloadToPlugin = (
+  window: Window,
+  props: { payload: any; settings: any; state?: any },
+) => {
+  window.postMessage(
+    {
+      type: PluginChannel.initStandalonePlugin,
+      ...props,
+      // TODO: props need to deprecated
+      props: props.payload,
+    },
+    '*',
+  );
 };
 
 export const sendPluginStateToPlugin = (window: Window, key: string, value: any) => {

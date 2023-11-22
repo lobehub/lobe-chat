@@ -20,4 +20,6 @@ export const useOnPluginReadyForInteraction = (onReady: () => void, deps: any[] 
       onReady();
     }
   }, [readyForRender, ...deps]);
+
+  return readyForRender;
 };

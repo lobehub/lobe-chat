@@ -23,6 +23,11 @@ import {
   sendPluginStateToPlugin,
 } from '../utils/postMessage';
 
+// just to simplify code a little, don't use this pattern everywhere
+const getSettings = (identifier: string) =>
+  pluginSelectors.getPluginSettingsById(identifier)(usePluginStore.getState());
+const getMessage = (id: string) => chatSelectors.getMessageById(id)(useSessionStore.getState());
+
 interface IFrameRenderProps {
   height?: number;
   id: string;
@@ -39,8 +44,13 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
   // when payload change，send content to plugin
   useOnPluginReadyForInteraction(() => {
     const iframeWin = iframeRef.current?.contentWindow;
+
     if (iframeWin && payload) {
-      sendPayloadToPlugin(iframeWin, payload);
+      const settings = getSettings(payload.identifier);
+      const message = getMessage(id);
+      const state = message?.pluginState;
+
+      sendPayloadToPlugin(iframeWin, { payload, settings, state });
     }
   }, [payload]);
 
@@ -74,7 +84,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
     const iframeWin = iframeRef.current?.contentWindow;
 
     if (iframeWin) {
-      const message = chatSelectors.getMessageById(id)(useSessionStore.getState());
+      const message = getMessage(id);
       if (!message) return;
 
       sendPluginStateToPlugin(iframeWin, key, message.pluginState?.[key]);
@@ -94,9 +104,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
     if (iframeWin) {
       if (!payload?.identifier) return;
 
-      const settings = pluginSelectors.getPluginSettingsById(payload?.identifier)(
-        usePluginStore.getState(),
-      );
+      const settings = getSettings(payload.identifier);
 
       sendPluginSettingsToPlugin(iframeWin, settings);
     }
