@@ -186,14 +186,12 @@ export const createSessionSlice: StateCreator<
   },
 
   useFetchSessions: () =>
-    useSWR<GetSessionsResponse>(FETCH_SESSIONS_KEY, sessionService.getSessions, {
+    useSWR<LobeSessions>(FETCH_SESSIONS_KEY, sessionService.getSessions, {
       onSuccess: (data) => {
-        const { inbox, sessions } = data;
         set(
           {
             fetchSessionsLoading: false,
-            inbox,
-            sessions: sessions,
+            sessions: data,
           },
           false,
           t('useFetchSessions/onSuccess', data),

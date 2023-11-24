@@ -12,8 +12,6 @@ export interface SessionState {
    */
   activeId: string | undefined;
   fetchSessionsLoading: boolean;
-  // 默认会话
-  inbox: LobeAgentSession;
   isMobile?: boolean;
   router?: AppRouterInstance;
   searchKeywords: string;
@@ -33,7 +31,7 @@ export const initLobeSession: LobeAgentSession = {
   type: LobeSessionType.Agent,
   updatedAt: Date.now(),
 };
-export const initInbox: LobeAgentSession = merge(initLobeSession, {
+export const initInboxSession: LobeAgentSession = merge(initLobeSession, {
   id: 'inbox',
   meta: {
     avatar: DEFAULT_INBOX_AVATAR,
@@ -43,7 +41,6 @@ export const initInbox: LobeAgentSession = merge(initLobeSession, {
 export const initialSessionState: SessionState = {
   activeId: 'inbox',
   fetchSessionsLoading: true,
-  inbox: initInbox,
   isMobile: false,
   searchKeywords: '',
   sessions: [],

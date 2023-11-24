@@ -40,7 +40,6 @@ export interface ConfigModelMap {
  * 配置状态：会话
  */
 export interface ConfigStateSessions {
-  inbox: LobeAgentSession;
   sessions: LobeSessions;
 }
 

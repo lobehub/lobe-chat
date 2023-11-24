@@ -7,7 +7,6 @@ import { LobeAgentSession, LobeSessions } from '@/types/session';
 import { getSessionById } from './list';
 
 export const exportSessions = (s: SessionStore): ConfigStateSessions => ({
-  inbox: s.inbox,
   sessions: s.sessions,
 });
 

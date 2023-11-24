@@ -1,9 +1,15 @@
 import { INBOX_SESSION_ID } from '@/const/session';
 import { MetaData } from '@/types/meta';
-import { LobeAgentSession, SessionGroupDefaultKeys } from '@/types/session';
+import { LobeAgentSession, LobeSessions, SessionGroupDefaultKeys } from '@/types/session';
 
 import { SessionStore } from '../../../store';
-import { initLobeSession } from '../initialState';
+import { initInboxSession, initLobeSession } from '../initialState';
+
+export const inboxSession = (s: SessionStore): LobeAgentSession =>
+  s.sessions.find((i) => i.id === INBOX_SESSION_ID) || initInboxSession;
+
+export const customAgentSessions = (s: SessionStore): LobeSessions =>
+  s.sessions.filter((s) => s.id !== INBOX_SESSION_ID);
 
 export const pinnedSessionList = (s: SessionStore) =>
   s.sessions.filter((s) => s.group === SessionGroupDefaultKeys.Pinned);
@@ -11,16 +17,9 @@ export const pinnedSessionList = (s: SessionStore) =>
 export const unpinnedSessionList = (s: SessionStore) =>
   s.sessions.filter((s) => s.group === SessionGroupDefaultKeys.Default);
 
-export const hasPinnedSessionList = (s: SessionStore) => {
-  const list = pinnedSessionList(s);
-  return list?.length > 0;
-};
-
 export const getSessionById =
   (id: string) =>
   (s: SessionStore): LobeAgentSession => {
-    if (id === INBOX_SESSION_ID) return s.inbox;
-
     const session = s.sessions.find((s) => s.id === id);
 
     if (!session) return initLobeSession;
@@ -37,21 +36,24 @@ export const getSessionMetaById =
     return session.meta;
   };
 
-export const hasConversion = (s: SessionStore) => {
-  const hasCustomAgents = s.sessions.length > 0;
-  const hasMessageInInbox = !!Object.keys(s.inbox.chats).length;
-
-  return hasCustomAgents || hasMessageInInbox;
-};
-
 export const currentSession = (s: SessionStore): LobeAgentSession | undefined => {
   if (!s.activeId) return;
-
-  if (s.activeId === INBOX_SESSION_ID) return s.inbox;
 
   return s.sessions.find((i) => i.id === s.activeId);
 };
 
 export const currentSessionSafe = (s: SessionStore): LobeAgentSession => {
   return currentSession(s) || initLobeSession;
+};
+
+export const hasPinnedSessionList = (s: SessionStore) => {
+  const list = pinnedSessionList(s);
+  return list?.length > 0;
+};
+
+export const hasConversion = (s: SessionStore) => {
+  const hasCustomAgents = customAgentSessions(s).length > 0;
+  const hasMessageInInbox = inboxSession(s).messages.length > 0;
+
+  return hasCustomAgents || hasMessageInInbox;
 };
