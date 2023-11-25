@@ -5,21 +5,23 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useChatStore } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
-import { useSessionChatInit, useSessionStore } from '@/store/session';
-import { topicSelectors } from '@/store/session/selectors';
 
 import SkeletonList from './SkeletonList';
 import TopicItem from './TopicItem';
 
 export const Topic = () => {
-  const init = useSessionChatInit();
-  const topics = useSessionStore(topicSelectors.currentTopics, isEqual);
   const { isDarkMode } = useThemeMode();
-  const [activeTopicId, keywords] = useSessionStore((s) => [
+
+  const topics = useChatStore(topicSelectors.currentTopics, isEqual);
+  const [topicsInit, activeTopicId, keywords] = useChatStore((s) => [
+    s.topicsInit,
     s.activeTopicId,
     s.topicSearchKeywords,
   ]);
+
   const { t } = useTranslation('empty');
   const [visible, updateGuideState] = useGlobalStore((s) => [
     s.preference.guide?.topic,
@@ -31,7 +33,7 @@ export const Topic = () => {
     return topics.filter(({ title }) => title.toLowerCase().includes(keywords.toLowerCase()));
   }, [topics, keywords]);
 
-  return !init ? (
+  return !topicsInit ? (
     <SkeletonList />
   ) : (
     <Flexbox gap={2} style={{ marginBottom: 12 }}>

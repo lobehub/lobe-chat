@@ -5,8 +5,10 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
 import { PREFIX_KEY, REGENERATE_KEY } from '@/const/hotkeys';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionChatInit, useSessionStore } from '@/store/session';
-import { agentSelectors, chatSelectors } from '@/store/session/selectors';
+import { agentSelectors } from '@/store/session/selectors';
 
 import { renderActions, useActionsClick } from './Actions';
 import { renderErrorMessages } from './Error';
@@ -18,25 +20,17 @@ const List = memo(() => {
   const init = useSessionChatInit();
   const { t } = useTranslation('common');
 
-  const data = useSessionStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
+  const data = useChatStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
 
-  const [
-    displayMode,
-    enableHistoryCount,
-    historyCount,
-    chatLoadingId,
-    resendMessage,
-    dispatchMessage,
-  ] = useSessionStore((s) => {
+  const [chatLoadingId, resendMessage, dispatchMessage] = useChatStore((s) => [
+    s.chatLoadingId,
+    s.resendMessage,
+    s.dispatchMessage,
+  ]);
+
+  const [displayMode, enableHistoryCount, historyCount] = useSessionStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
-    return [
-      config.displayMode,
-      config.enableHistoryCount,
-      config.historyCount,
-      s.chatLoadingId,
-      s.resendMessage,
-      s.dispatchMessage,
-    ];
+    return [config.displayMode, config.enableHistoryCount, config.historyCount];
   });
   const onActionsClick = useActionsClick();
   const onAvatarsClick = useAvatarsClick();

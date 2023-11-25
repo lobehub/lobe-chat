@@ -1,16 +1,16 @@
 import { useCallback } from 'react';
 
 import { filesSelectors, useFileStore } from '@/store/files';
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from 'src/store/chat';
 
 export const useSendMessage = () => {
-  const [sendMessage, updateInputMessage] = useSessionStore((s) => [
+  const [sendMessage, updateInputMessage] = useChatStore((s) => [
     s.sendMessage,
     s.updateInputMessage,
   ]);
 
   return useCallback(() => {
-    const store = useSessionStore.getState();
+    const store = useChatStore.getState();
     if (!!store.chatLoadingId) return;
     const imageList = filesSelectors.imageUrlOrBase64List(useFileStore.getState());
 

@@ -1,5 +1,5 @@
+import { chatHelpers } from '@/store/chat/helpers';
 import { getCurrentLanguage } from '@/store/global/helpers';
-import { chatHelpers } from '@/store/session/slices/chat/helpers';
 import { LanguageModel } from '@/types/llm';
 import { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
 
