@@ -2,7 +2,7 @@ import { Input, TextArea } from '@lobehub/ui';
 import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 import { useSendMessage } from '../useSend';
 
@@ -15,7 +15,7 @@ const InputAreaInner = memo<InputAreaInnerProps>(({ className, mobile }) => {
   const { t } = useTranslation('chat');
   const isChineseInput = useRef(false);
 
-  const [loading, message, updateInputMessage] = useSessionStore((s) => [
+  const [loading, message, updateInputMessage] = useChatStore((s) => [
     !!s.chatLoadingId,
     s.inputMessage,
     s.updateInputMessage,

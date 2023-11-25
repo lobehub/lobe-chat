@@ -5,12 +5,13 @@ import { chainLangDetect } from '@/chains/langDetect';
 import { chainTranslate } from '@/chains/translate';
 import { supportLocales } from '@/locales/options';
 import { chatService } from '@/services/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { sessionSelectors } from '../../session/selectors';
 
-const t = setNamespace('chat/translate');
+const t = setNamespace('translate');
 
 /**
  * 翻译事件
@@ -53,10 +54,8 @@ export const chatTranslate: StateCreator<
 
   translateMessage: async (id, targetLang) => {
     const { toggleChatLoading, dispatchMessage } = get();
-    const session = sessionSelectors.currentSession(get());
-    if (!session || !id) return;
 
-    const message = session.chats[id];
+    const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
 
     let content = '';

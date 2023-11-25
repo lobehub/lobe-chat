@@ -1,7 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 
-import { ChatMessage, ChatMessageMap } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/chatMessage';
 import { LLMRoleType } from '@/types/llm';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
@@ -23,7 +23,6 @@ interface DeleteMessage {
 }
 
 interface ResetMessages {
-  topicId?: string;
   type: 'resetMessages';
 }
 
@@ -48,57 +47,52 @@ interface UpdatePluginState {
 }
 
 export type MessageDispatch =
-  | AddMessage
-  | DeleteMessage
-  | ResetMessages
-  | UpdateMessage
-  | UpdateMessageExtra
-  | UpdatePluginState;
+    | AddMessage
+    | DeleteMessage
+    | ResetMessages
+    | UpdateMessage
+    | UpdateMessageExtra
+    | UpdatePluginState;
 
-export const messagesReducer = (
-  state: ChatMessageMap,
-  payload: MessageDispatch,
-): ChatMessageMap => {
+export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch): ChatMessage[] => {
   switch (payload.type) {
     case 'addMessage': {
       return produce(state, (draftState) => {
         const mid = payload.id || nanoid();
 
-        draftState[mid] = {
+        draftState.push({
           content: payload.message,
-          createAt: Date.now(),
+          createdAt: Date.now(),
           id: mid,
           meta: payload.meta || {},
           parentId: payload.parentId,
           quotaId: payload.quotaId,
           role: payload.role,
-          updateAt: Date.now(),
-        };
+          updatedAt: Date.now(),
+        });
       });
     }
 
     case 'deleteMessage': {
-      return produce(state, (draftState) => {
-        delete draftState[payload.id];
-      });
+      return state.filter((i) => i.id !== payload.id);
     }
 
     case 'updateMessage': {
       return produce(state, (draftState) => {
         const { id, key, value } = payload;
-        const message = draftState[id];
+        const message = draftState.find((i) => i.id === id);
         if (!message) return;
 
         // @ts-ignore
         message[key] = value;
-        message.updateAt = Date.now();
+        message.updatedAt = Date.now();
       });
     }
 
     case 'updateMessageExtra': {
       return produce(state, (draftState) => {
         const { id, key, value } = payload;
-        const message = draftState[id];
+        const message = draftState.find((i) => i.id === id);
         if (!message) return;
 
         if (!message.extra) {
@@ -107,14 +101,14 @@ export const messagesReducer = (
           message.extra[key] = value;
         }
 
-        message.updateAt = Date.now();
+        message.updatedAt = Date.now();
       });
     }
 
     case 'updatePluginState': {
       return produce(state, (draftState) => {
         const { id, key, value } = payload;
-        const message = draftState[id];
+        const message = draftState.find((i) => i.id === id);
         if (!message) return;
 
         let newState;
@@ -127,26 +121,12 @@ export const messagesReducer = (
         if (isEqual(message.pluginState, newState)) return;
 
         message.pluginState = newState;
-        message.updateAt = Date.now();
+        message.updatedAt = Date.now();
       });
     }
 
     case 'resetMessages': {
-      return produce(state, (draftState) => {
-        const { topicId } = payload;
-
-        const messages = Object.values(draftState).filter((message) => {
-          // 如果没有 topicId，说明是清空默认对话里的消息
-          if (!topicId) return !message.topicId;
-
-          return message.topicId === topicId;
-        });
-
-        // 删除上述找到的消息
-        for (const message of messages) {
-          delete draftState[message.id];
-        }
-      });
+      return [];
     }
 
     default: {

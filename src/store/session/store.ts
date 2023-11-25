@@ -21,7 +21,7 @@ const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (
 
 //  ===============  persist 本地缓存中间件配置 ============ //
 
-const LOBE_CHAT = 'LOBE_CHAT';
+const LOBE_CHAT = 'LobeChat_Session';
 
 const persistOptions: PersistOptions<SessionStore> = {
   name: LOBE_CHAT,

@@ -26,10 +26,8 @@ type SessionPersist = Pick<
   'pluginList' | 'pluginManifestMap' | 'pluginsSettings' | 'customPluginList'
 >;
 
-const storeName = 'LOBE_PLUGIN';
-
 const persistOptions: PersistOptions<PluginStore, SessionPersist> = {
-  name: storeName,
+  name: 'LOBE_PLUGIN',
 
   partialize: (s) => ({
     customPluginList: s.customPluginList,
@@ -48,7 +46,7 @@ const persistOptions: PersistOptions<PluginStore, SessionPersist> = {
 export const usePluginStore = createWithEqualityFn<PluginStore>()(
   persist(
     devtools(createStore, {
-      name: storeName + (isDev ? '_DEV' : ''),
+      name: 'LobeChat_Plugin' + (isDev ? '_DEV' : ''),
     }),
     persistOptions,
   ),

@@ -10,7 +10,7 @@ import { setNamespace } from '@/utils/storeDebug';
 import { sessionSelectors } from '../../session/selectors';
 import { chatSelectors } from '../selectors';
 
-const t = setNamespace('chat/plugin');
+const t = setNamespace('plugin');
 
 /**
  * 插件方法

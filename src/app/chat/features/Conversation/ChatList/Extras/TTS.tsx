@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useTTS } from '@/hooks/useTTS';
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 import { ChatMessageError, ChatTTS } from '@/types/chatMessage';
 import { getMessageError } from '@/utils/fetch';
 
@@ -22,7 +22,7 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
   const [error, setError] = useState<ChatMessageError>();
   const { t } = useTranslation('chat');
 
-  const [ttsMessage, clearTTS] = useSessionStore((s) => [s.ttsMessage, s.clearTTS]);
+  const [ttsMessage, clearTTS] = useChatStore((s) => [s.ttsMessage, s.clearTTS]);
 
   const setDefaultError = useCallback(
     (err?: any) => {

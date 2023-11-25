@@ -1,27 +1,29 @@
-import { ChatMessageMap } from '@/types/chatMessage';
+import { ChatMessage, ChatMessageMap } from '@/types/chatMessage';
 
 import { MessageDispatch, messagesReducer } from './message';
 
 describe('messagesReducer', () => {
-  let initialState: ChatMessageMap;
+  let initialState: ChatMessage[];
 
   beforeEach(() => {
-    initialState = {
-      message1: {
+    initialState = [
+      {
         id: 'message1',
         content: 'Hello World',
-        createAt: 1629264000000,
-        updateAt: 1629264000000,
+        createdAt: 1629264000000,
+        updatedAt: 1629264000000,
         role: 'user',
+        meta: {},
       },
-      message2: {
+      {
         id: 'message2',
         content: 'How are you?',
-        createAt: 1629264000000,
-        updateAt: 1629264000000,
+        createdAt: 1629264000000,
+        updatedAt: 1629264000000,
         role: 'system',
+        meta: {},
       },
-    } as unknown as ChatMessageMap;
+    ];
   });
 
   describe('addMessage', () => {
@@ -35,16 +37,16 @@ describe('messagesReducer', () => {
 
       const newState = messagesReducer(initialState, payload);
 
-      expect(Object.keys(newState)).toHaveLength(3);
-      expect(newState).toHaveProperty('message1');
-      expect(newState).toHaveProperty('message2');
-      expect(newState).toHaveProperty('message3');
-      expect(newState.message3).toEqual({
+      expect(newState).toHaveLength(3);
+      expect(newState[0].id).toEqual('message1');
+      expect(newState[1].id).toEqual('message2');
+      expect(newState[2].id).toEqual('message3');
+      expect(newState[2]).toEqual({
         id: 'message3',
         content: 'New Message',
         meta: {},
-        createAt: expect.any(Number),
-        updateAt: expect.any(Number),
+        createdAt: expect.any(Number),
+        updatedAt: expect.any(Number),
         role: 'user',
       });
     });
@@ -60,15 +62,16 @@ describe('messagesReducer', () => {
       const newState = messagesReducer(initialState, payload);
 
       expect(Object.keys(newState)).toHaveLength(3);
-      expect(newState).toHaveProperty('message1');
-      expect(newState).toHaveProperty('message2');
-      expect(newState).toHaveProperty('customId');
-      expect(newState.customId).toEqual({
+      expect(newState).toHaveLength(3);
+      expect(newState[0].id).toEqual('message1');
+      expect(newState[1].id).toEqual('message2');
+      expect(newState[2].id).toEqual('customId');
+      expect(newState[2]).toEqual({
         id: 'customId',
         content: 'New Message',
         meta: {},
-        createAt: expect.any(Number),
-        updateAt: expect.any(Number),
+        createdAt: expect.any(Number),
+        updatedAt: expect.any(Number),
         role: 'user',
       });
     });
@@ -84,12 +87,12 @@ describe('messagesReducer', () => {
 
       const newState = messagesReducer(initialState, payload);
 
-      expect(newState.message3).toEqual({
+      expect(newState[2]).toEqual({
         id: 'message3',
         content: 'New Message',
         meta: {},
-        createAt: expect.any(Number),
-        updateAt: expect.any(Number),
+        createdAt: expect.any(Number),
+        updatedAt: expect.any(Number),
         role: 'user',
         parentId: 'message1',
       });
@@ -106,12 +109,12 @@ describe('messagesReducer', () => {
 
       const newState = messagesReducer(initialState, payload);
 
-      expect(newState.message3).toEqual({
+      expect(newState[2]).toEqual({
         id: 'message3',
         meta: {},
         content: 'New Message',
-        createAt: expect.any(Number),
-        updateAt: expect.any(Number),
+        createdAt: expect.any(Number),
+        updatedAt: expect.any(Number),
         role: 'user',
         quotaId: 'message2',
       });
@@ -129,12 +132,12 @@ describe('messagesReducer', () => {
 
       const newState = messagesReducer(initialState, payload);
 
-      expect(newState.message3).toEqual({
+      expect(newState[2]).toEqual({
         id: 'message3',
         content: 'New Message',
         meta: {},
-        createAt: expect.any(Number),
-        updateAt: expect.any(Number),
+        createdAt: expect.any(Number),
+        updatedAt: expect.any(Number),
         role: 'user',
         parentId: 'message1',
         quotaId: 'message2',
@@ -151,9 +154,9 @@ describe('messagesReducer', () => {
 
       const newState = messagesReducer(initialState, payload);
 
-      expect(Object.keys(newState)).toHaveLength(1);
-      expect(newState).not.toHaveProperty('message1');
-      expect(newState).toHaveProperty('message2');
+      expect(newState).toHaveLength(1);
+      expect(newState.find((x) => x.id === 'message1')).toBeUndefined();
+      expect(newState.find((x) => x.id === 'message2')).not.toBeUndefined();
     });
 
     it('should not modify the state if the specified message does not exist', () => {
@@ -189,9 +192,11 @@ describe('messagesReducer', () => {
       };
 
       const newState = messagesReducer(initialState, payload);
+      const newMessage = newState.find((i) => i.id === 'message1');
 
-      expect(newState.message1.content).toBe('Updated Message');
-      expect(newState.message1.updatedAt).toBeGreaterThan(initialState.message1.updatedAt);
+      expect(newMessage).not.toBeUndefined();
+      expect(newMessage?.content).toBe('Updated Message');
+      expect(newMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
     });
 
     it('should not modify the state if the specified message does not exist', () => {
@@ -232,8 +237,8 @@ describe('messagesReducer', () => {
 
       const newState = messagesReducer(initialState, payload);
 
-      expect(newState.message1.extra!.translate).toEqual({ target: 'en', to: 'zh' });
-      expect(newState.message1.updatedAt).toBeGreaterThan(initialState.message1.updatedAt);
+      expect(newState[0].extra!.translate).toEqual({ target: 'en', to: 'zh' });
+      expect(newState[0].updatedAt).toBeGreaterThan(initialState[0].updatedAt);
     });
 
     it('should not modify the state if the specified message does not exist', () => {
@@ -271,38 +276,7 @@ describe('messagesReducer', () => {
 
       const newState = messagesReducer(initialState, payload);
 
-      expect(newState).toEqual({});
-    });
-
-    it('should delete messages with the specified topicId', () => {
-      const initialState = {
-        message1: {
-          id: 'message1',
-          content: 'Hello World',
-          createAt: 1629264000000,
-          updateAt: 1629264000000,
-          role: 'user',
-          topicId: 'topic1',
-        },
-        message2: {
-          id: 'message2',
-          content: 'How are you?',
-          createAt: 1629264000000,
-          updateAt: 1629264000000,
-          role: 'system',
-        },
-      } as unknown as ChatMessageMap;
-
-      const payload: MessageDispatch = {
-        type: 'resetMessages',
-        topicId: 'topic1',
-      };
-
-      const newState = messagesReducer(initialState, payload);
-
-      expect(Object.keys(newState)).toHaveLength(1);
-      expect(newState).not.toHaveProperty('message1');
-      expect(newState).toHaveProperty('message2');
+      expect(newState).toEqual([]);
     });
   });
 

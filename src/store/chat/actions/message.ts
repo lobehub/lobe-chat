@@ -5,9 +5,10 @@ import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { LOADING_FLAT } from '@/const/message';
 import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
 import { chatService } from '@/services/chat';
-import { filesSelectors, useFileStore } from '@/store/files';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
+import { filesSelectors, useFileStore } from '@/store/files';
+import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
 import { OpenAIChatMessage, UserMessageContentPart } from '@/types/openai/chat';
@@ -20,7 +21,7 @@ import { FileDispatch, filesReducer } from '../reducers/files';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
 import { chatSelectors } from '../selectors';
 
-const t = setNamespace('chat/message');
+const t = setNamespace('message');
 
 /**
  * 聊天操作
@@ -86,6 +87,8 @@ export interface ChatMessageAction {
   updateInputMessage: (message: string) => void;
 }
 
+const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
+
 export const chatMessage: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
@@ -107,7 +110,7 @@ export const chatMessage: StateCreator<
   coreProcessMessage: async (messages, userMessageId) => {
     const { dispatchMessage, fetchAIChatMessage, triggerFunctionCall, activeTopicId } = get();
 
-    const { model } = agentSelectors.currentAgentConfig(get());
+    const { model } = getAgentConfig();
 
     // 添加一个空的信息用于放置 ai 响应，注意顺序不能反
     // 因为如果顺序反了，messages 中将包含新增的 ai message
@@ -184,12 +187,12 @@ export const chatMessage: StateCreator<
   },
   dispatchMessage: (payload) => {
     const { activeId } = get();
-    const session = sessionSelectors.currentSession(get());
-    if (!activeId || !session) return;
 
-    const chats = messagesReducer(session.chats, payload);
+    if (!activeId) return;
 
-    get().dispatchSession({ chats, id: activeId, type: 'updateSessionChat' });
+    const messages = messagesReducer(get().messages, payload);
+
+    set({ messages }, false, t('dispatchMessage', payload));
   },
 
   fetchAIChatMessage: async (messages, assistantId) => {
@@ -201,7 +204,7 @@ export const chatMessage: StateCreator<
       t('generateMessage(start)', { assistantId, messages }) as string,
     );
 
-    const config = agentSelectors.currentAgentConfig(get());
+    const config = getAgentConfig();
 
     const compiler = template(config.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
 
@@ -312,10 +315,6 @@ export const chatMessage: StateCreator<
   },
 
   resendMessage: async (messageId) => {
-    const session = sessionSelectors.currentSession(get());
-
-    if (!session) return;
-
     // 1. 构造所有相关的历史记录
     const chats = chatSelectors.currentChats(get());
 
@@ -355,8 +354,7 @@ export const chatMessage: StateCreator<
 
   sendMessage: async (message, files) => {
     const { dispatchMessage, dispatchAgentFile, coreProcessMessage, activeTopicId } = get();
-    const session = sessionSelectors.currentSession(get());
-    if (!session || !message) return;
+    if (!message) return;
 
     const userId = nanoid();
 
@@ -388,7 +386,7 @@ export const chatMessage: StateCreator<
     // check activeTopic and then auto create topic
     const chats = chatSelectors.currentChats(get());
 
-    const agentConfig = agentSelectors.currentAgentConfig(get());
+    const agentConfig = getAgentConfig();
     // if autoCreateTopic is false, then stop
     if (!agentConfig.enableAutoCreateTopic) return;
 
@@ -417,6 +415,6 @@ export const chatMessage: StateCreator<
     }
   },
   updateInputMessage: (message) => {
-    set({ inputMessage: message }, false, t('updateInputMessage'));
+    set({ inputMessage: message }, false, t('updateInputMessage', message));
   },
 });

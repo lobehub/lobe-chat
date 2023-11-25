@@ -3,14 +3,14 @@ import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
-import { chatSelectors } from '@/store/session/selectors';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 
 import Inspector from '../Plugins/Inspector';
 import PluginRender from '../Plugins/Render';
 
 export const FunctionMessage: RenderMessage = memo(({ id, content, plugin, name }) => {
-  const fcProps = useSessionStore(
+  const fcProps = useChatStore(
     chatSelectors.getFunctionMessageProps({ content, id, plugin }),
     isEqual,
   );

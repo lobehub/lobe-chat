@@ -31,7 +31,7 @@ export type ChatTopicDispatch =
   | DeleteChatTopicAction
   | FavorChatTopicAction;
 
-export const topicReducer = (state: ChatTopicMap, payload: ChatTopicDispatch): ChatTopicMap => {
+export const topicReducer = (state: ChatTopic[], payload: ChatTopicDispatch): ChatTopic[] => {
   switch (payload.type) {
     case 'addChatTopic': {
       return produce(state, (draftState) => {

@@ -37,7 +37,7 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
 
 export const useChatStore = createWithEqualityFn<ChatStore>()(
   devtools(createStore, {
-    name: 'LOBE_MESSAGES' + (isDev ? '_DEV' : ''),
+    name: 'LobeChat_Chat' + (isDev ? '_DEV' : ''),
   }),
   shallow,
 );

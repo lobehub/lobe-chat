@@ -11,7 +11,7 @@ import { sessionSelectors } from '../../session/selectors';
 import { ChatTopicDispatch, topicReducer } from '../reducers/topic';
 import { chatSelectors, topicSelectors } from '../selectors';
 
-const t = setNamespace('chat/topic');
+const t = setNamespace('topic');
 export interface ChatTopicAction {
   /**
    * 分发主题
@@ -56,10 +56,9 @@ export const chatTopic: StateCreator<
 > = (set, get) => ({
   dispatchTopic: (payload) => {
     const { activeId } = get();
-    const session = sessionSelectors.currentSession(get());
-    if (!activeId || !session) return;
+    if (!activeId) return;
 
-    const topics = topicReducer(session.topics || {}, payload);
+    const topics = topicReducer(get().topics, payload);
 
     get().dispatchSession({ id: activeId, topics, type: 'updateSessionTopic' });
   },
@@ -110,8 +109,8 @@ export const chatTopic: StateCreator<
     toggleTopic();
   },
   saveToTopic: async () => {
-    const session = sessionSelectors.currentSession(get());
-    if (!session) return;
+    // TODO: 替换为服务端实现
+    if (true) return;
 
     const { dispatchTopic, dispatchMessage, updateTopicLoading } = get();
     // get current messages
@@ -124,16 +123,13 @@ export const chatTopic: StateCreator<
 
     const defaultTitle = '默认话题';
     const newTopic = {
-      createAt: Date.now(),
+      createdAt: Date.now(),
       id: topicId,
       title: defaultTitle,
-      updateAt: Date.now(),
+      updatedAt: Date.now(),
     };
 
-    dispatchTopic({
-      topic: newTopic,
-      type: 'addChatTopic',
-    });
+    dispatchTopic({ topic: newTopic, type: 'addChatTopic' });
 
     // 为所有 message 添加 topicId
     for (const m of messages) {
