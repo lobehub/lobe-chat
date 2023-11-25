@@ -5,7 +5,7 @@ import { chainLangDetect } from '@/chains/langDetect';
 import { chainTranslate } from '@/chains/translate';
 import { supportLocales } from '@/locales/options';
 import { chatService } from '@/services/chat';
-import { SessionStore } from '@/store/session';
+import { ChatStore } from '@/store/chat/store';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { sessionSelectors } from '../../session/selectors';
@@ -28,7 +28,7 @@ export interface ChatTranslateAction {
 }
 
 export const chatTranslate: StateCreator<
-  SessionStore,
+  ChatStore,
   [['zustand/devtools', never]],
   [],
   ChatTranslateAction

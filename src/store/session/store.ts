@@ -8,17 +8,15 @@ import { isDev } from '@/utils/env';
 import { createHyperStorage } from '../middleware/createHyperStorage';
 import { SessionStoreState, initialState } from './initialState';
 import { AgentAction, createAgentSlice } from './slices/agent/action';
-import { ChatAction, createChatSlice } from './slices/chat/actions';
 import { SessionAction, createSessionSlice } from './slices/session/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type SessionStore = SessionAction & AgentAction & ChatAction & SessionStoreState;
+export type SessionStore = SessionAction & AgentAction & SessionStoreState;
 const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createAgentSlice(...parameters),
   ...createSessionSlice(...parameters),
-  ...createChatSlice(...parameters),
 });
 
 //  ===============  persist 本地缓存中间件配置 ============ //

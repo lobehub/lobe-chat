@@ -6,7 +6,9 @@ import { LOADING_FLAT } from '@/const/message';
 import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
 import { chatService } from '@/services/chat';
 import { filesSelectors, useFileStore } from '@/store/files';
-import { SessionStore } from '@/store/session';
+import { chatHelpers } from '@/store/chat/helpers';
+import { ChatStore } from '@/store/chat/store';
+import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
 import { OpenAIChatMessage, UserMessageContentPart } from '@/types/openai/chat';
 import { fetchSSE } from '@/utils/fetch';
@@ -14,12 +16,9 @@ import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/mess
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
-import { agentSelectors } from '../../agent/selectors';
-import { sessionSelectors } from '../../session/selectors';
 import { FileDispatch, filesReducer } from '../reducers/files';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
 import { chatSelectors } from '../selectors';
-import { getSlicedMessagesWithConfig } from '../utils';
 
 const t = setNamespace('chat/message');
 
@@ -28,7 +27,8 @@ const t = setNamespace('chat/message');
  */
 export interface ChatMessageAction {
   /**
-   * 清除消息
+   * TODO: 根据 sessionId 和 topicId 删除消息记录
+   * clear message on the active session
    */
   clearMessage: () => void;
   /**
@@ -38,7 +38,7 @@ export interface ChatMessageAction {
    */
   coreProcessMessage: (messages: ChatMessage[], parentId: string) => Promise<void>;
   /**
-   * 删除消息
+   * TODO: 删除单条消息
    * @param id - 消息 ID
    */
   deleteMessage: (id: string) => void;
@@ -87,7 +87,7 @@ export interface ChatMessageAction {
 }
 
 export const chatMessage: StateCreator<
-  SessionStore,
+  ChatStore,
   [['zustand/devtools', never]],
   [],
   ChatMessageAction
@@ -210,7 +210,7 @@ export const chatMessage: StateCreator<
     // ================================== //
 
     // 1. slice messages with config
-    let preprocessMsgs = getSlicedMessagesWithConfig(messages, config);
+    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, config);
 
     // 2. replace inputMessage template
     preprocessMsgs = !config.inputTemplate

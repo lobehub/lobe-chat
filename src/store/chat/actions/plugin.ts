@@ -3,7 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { chatService } from '@/services/chat';
-import { SessionStore } from '@/store/session';
+import { ChatStore } from '@/store/chat/store';
 import { OpenAIFunctionCall } from '@/types/chatMessage';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -23,7 +23,7 @@ export interface ChatPluginAction {
 }
 
 export const chatPlugin: StateCreator<
-  SessionStore,
+  ChatStore,
   [['zustand/devtools', never]],
   [],
   ChatPluginAction

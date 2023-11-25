@@ -4,10 +4,10 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { genShareGPTUrl } from '@/services/shareGPT';
-import { SessionStore } from '@/store/session';
+import { ChatStore } from '@/store/chat/store';
+import { agentSelectors } from '@/store/session/selectors';
 import { ShareGPTConversation } from '@/types/share';
 
-import { agentSelectors } from '../../agent';
 import { sessionSelectors } from '../../session/selectors';
 import { chatSelectors } from '../selectors';
 
@@ -51,7 +51,7 @@ export interface ShareAction {
 }
 
 export const chatShare: StateCreator<
-  SessionStore,
+  ChatStore,
   [['zustand/devtools', never]],
   [],
   ShareAction

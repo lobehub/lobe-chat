@@ -3,7 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT } from '@/const/message';
 import { chatService } from '@/services/chat';
-import { SessionStore } from '@/store/session';
+import { ChatStore } from '@/store/chat';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
@@ -49,7 +49,7 @@ export interface ChatTopicAction {
 }
 
 export const chatTopic: StateCreator<
-  SessionStore,
+  ChatStore,
   [['zustand/devtools', never]],
   [],
   ChatTopicAction
