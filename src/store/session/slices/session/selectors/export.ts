@@ -21,7 +21,5 @@ export const exportAgents = (s: SessionStore): ConfigStateAgents => {
 
 export const getExportAgent =
   (id: string) =>
-  (s: SessionStore): LobeAgentSession => {
-    const session = getSessionById(id)(s);
-    return { ...session, chats: {}, topics: {} };
-  };
+  (s: SessionStore): LobeAgentSession =>
+    getSessionById(id)(s);

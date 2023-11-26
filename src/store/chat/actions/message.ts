@@ -1,4 +1,4 @@
-/* eslint-disable sort-keys-fix/sort-keys-fix */
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Note: To make the code more logic and readable, we just disable the auto sort key eslint rule
 // DON'T REMOVE THE FIRST LINE
 import { template } from 'lodash-es';
@@ -30,15 +30,23 @@ import { chatSelectors } from '../selectors';
 const t = setNamespace('message');
 
 export interface ChatMessageAction {
+  // create
+  resendMessage: (id: string) => Promise<void>;
+  sendMessage: (text: string, images?: { id: string; url: string }[]) => Promise<void>;
+  // delete
   /**
    * clear message on the active session
    */
-  clearMessage: () => void;
-  /**
-   * core process of the AI message (include preprocess and postprocess)
-   */
-  coreProcessMessage: (messages: ChatMessage[], parentId: string) => Promise<void>;
+  clearMessage: () => Promise<void>;
   deleteMessage: (id: string) => Promise<void>;
+  clearAllMessages: () => Promise<void>;
+  // update
+  updateInputMessage: (message: string) => void;
+  updateMessageContent: (id: string, content: string) => Promise<void>;
+  // query
+  useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
+  stopGenerateMessage: () => void;
+
   /**
    * agent files dispatch method
    */
@@ -48,6 +56,10 @@ export interface ChatMessageAction {
    * this method will not update messages to database
    */
   dispatchMessage: (payload: MessageDispatch) => void;
+  /**
+   * core process of the AI message (include preprocess and postprocess)
+   */
+  coreProcessMessage: (messages: ChatMessage[], parentId: string) => Promise<void>;
   /**
    * 实际获取 AI 响应
    * @param messages - 聊天消息数组
@@ -62,22 +74,12 @@ export interface ChatMessageAction {
     functionCallContent: string;
     isFunctionCall: boolean;
   }>;
-
-  refreshMessages: () => Promise<void>;
-
-  resendMessage: (id: string) => Promise<void>;
-  sendMessage: (text: string, images?: { id: string; url: string }[]) => Promise<void>;
-  stopGenerateMessage: () => void;
-
   toggleChatLoading: (
     loading: boolean,
     id?: string,
     action?: string,
   ) => AbortController | undefined;
-
-  updateInputMessage: (message: string) => void;
-  updateMessageContent: (id: string, content: string) => Promise<void>;
-  useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
+  refreshMessages: () => Promise<void>;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
@@ -105,6 +107,11 @@ export const chatMessage: StateCreator<
 
     // after remove topic , go back to default topic
     switchTopic();
+  },
+  clearAllMessages: async () => {
+    const { refreshMessages } = get();
+    await messageService.clearAllMessage();
+    await refreshMessages();
   },
   resendMessage: async (messageId) => {
     // 1. 构造所有相关的历史记录

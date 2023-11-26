@@ -1,5 +1,4 @@
 import { BaseModel } from '@/database/core';
-import { SessionModel } from '@/database/models/session';
 import { DB_Topic, DB_TopicSchema } from '@/database/schemas/topic';
 import { DBModel } from '@/types/database/db';
 import { ChatTopic } from '@/types/topic';
@@ -36,7 +35,6 @@ class _TopicModel extends BaseModel {
   async query({ pageSize = 9999, current = 0, sessionId }: QueryTopicParams): Promise<ChatTopic[]> {
     const offset = current * pageSize;
 
-    console.log(sessionId);
     const result: DBModel<DB_Topic>[] = await this.table
       .where('sessionId')
       .equals(sessionId)
@@ -44,7 +42,6 @@ class _TopicModel extends BaseModel {
       .sortBy('createdAt')
       // handle page size
       .then((sortedArray) => sortedArray.slice(offset, offset + pageSize));
-    console.log(result);
 
     return result.map((i) => ({ ...i, favorite: !!i.favorite }));
   }
@@ -75,8 +72,7 @@ class _TopicModel extends BaseModel {
     const topicIds = await query.primaryKeys();
 
     // Use the bulkDelete method to delete all selected messages in bulk
-    await this.table.bulkDelete(topicIds);
-    await SessionModel.removeTopics(sessionId, topicIds);
+    return this.table.bulkDelete(topicIds);
   }
 
   async clearTable() {

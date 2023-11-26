@@ -102,7 +102,7 @@ export interface LobeAgentConfig {
 /**
  * Lobe Agent会话
  */
-export interface LobeAgentSession extends Omit<LobeSessionBase, 'topics'> {
+export interface LobeAgentSession extends Omit<LobeSessionBase, 'topics' | 'chats'> {
   /**
    * 语言模型角色设定
    */

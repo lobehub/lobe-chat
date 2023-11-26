@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
-import { GetSessionsResponse, sessionService } from '@/services/session';
+import { sessionService } from '@/services/session';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
 import {
@@ -17,7 +17,6 @@ import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { initLobeSession } from './initialState';
-import { SessionDispatch, sessionsReducer } from './reducers/session';
 
 const t = setNamespace('session');
 
@@ -33,20 +32,13 @@ export interface SessionAction {
   /**
    * reset sessions to default
    */
-  clearSessions: () => void;
+  clearSessions: () => Promise<void>;
   /**
    * create a new session
    * @param agent
    * @returns sessionId
    */
   createSession: (agent?: DeepPartial<LobeAgentSettings>) => Promise<string>;
-  /**
-   * TODO: Need to be removed
-   * dispatch session
-   * @deprecated
-   */
-  dispatchSession: (payload: SessionDispatch) => void;
-
   /**
    * import sessions from files
    * @param sessions
@@ -96,7 +88,7 @@ export const createSessionSlice: StateCreator<
   SessionAction
 > = (set, get) => ({
   activeSession: (sessionId) => {
-    set({ activeId: sessionId, activeTopicId: undefined }, false, t('activeSession'));
+    set({ activeId: sessionId }, false, t('activeSession'));
   },
 
   clearSessions: async () => {
@@ -122,24 +114,6 @@ export const createSessionSlice: StateCreator<
     switchSession(id);
 
     return id;
-  },
-  dispatchSession: (payload) => {
-    const { type, ...res } = payload;
-
-    // 如果是 inbox 类型的 session
-    if ('id' in res && res.id === INBOX_SESSION_ID) {
-      const nextInbox = sessionsReducer({ inbox: get().inbox }, payload) as {
-        inbox: LobeAgentSession;
-      };
-      set({ inbox: nextInbox.inbox }, false, t(`dispatchInbox/${type}`, res));
-    } else {
-      // 常规类型的session
-      set(
-        { sessions: sessionsReducer(get().sessions, payload) },
-        false,
-        t(`dispatchSessions/${type}`, res),
-      );
-    }
   },
 
   importSessions: async (importSessions) => {

@@ -25,7 +25,8 @@ export interface ChatTopicAction {
   favoriteTopic: (id: string, favState: boolean) => Promise<void>;
   openNewTopicOrSaveTopic: () => void;
   refreshTopic: () => Promise<void>;
-  removeAllTopic: () => Promise<void>;
+  removeAllTopics: () => Promise<void>;
+  removeSessionTopics: () => Promise<void>;
   removeTopic: (id: string) => Promise<void>;
   /**
    * TODO
@@ -134,7 +135,7 @@ export const chatTopic: StateCreator<
     await get().refreshMessages();
   },
   // delete
-  removeAllTopic: async () => {
+  removeSessionTopics: async () => {
     const { switchTopic, activeId, refreshTopic } = get();
 
     await topicService.removeTopics(activeId);
@@ -142,6 +143,12 @@ export const chatTopic: StateCreator<
 
     // switch to default topic
     switchTopic();
+  },
+  removeAllTopics: async () => {
+    const { refreshTopic } = get();
+
+    await topicService.removeAllTopic();
+    await refreshTopic();
   },
   removeTopic: async (id) => {
     const { activeId, switchTopic, refreshTopic } = get();

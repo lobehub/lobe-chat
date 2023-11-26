@@ -43,10 +43,7 @@ const persistOptions: PersistOptions<ChatStore> = {
   storage: createHyperStorage({
     url: {
       mode: 'hash',
-      selectors: [
-        // map state key to storage key
-        { activeTopicId: 'topic' },
-      ],
+      selectors: [{ activeTopicId: 'topic' }],
     },
   }),
   version: 0,

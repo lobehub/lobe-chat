@@ -1,5 +1,14 @@
+import { DeepPartial } from 'utility-types';
+
 import { SessionModel } from '@/database/models/session';
-import { LobeAgentSession, LobeSessionType, LobeSessions, SessionGroupKey } from '@/types/session';
+import { MetaData } from '@/types/meta';
+import {
+  LobeAgentConfig,
+  LobeAgentSession,
+  LobeSessionType,
+  LobeSessions,
+  SessionGroupKey,
+} from '@/types/session';
 
 class SessionService {
   async createNewSession(
@@ -11,6 +20,10 @@ class SessionService {
       throw new Error('session create Error');
     }
     return item.id;
+  }
+
+  async batchCreateSessions(importSessions: LobeSessions) {
+    return SessionModel.batchCreate(importSessions);
   }
 
   async getSessions(): Promise<LobeSessions> {
@@ -35,8 +48,12 @@ class SessionService {
     return SessionModel.update(id, { group });
   }
 
-  async batchCreateSessions(importSessions: LobeSessions) {
-    return SessionModel.batchCreate(importSessions);
+  async updateSessionMeta(activeId: string, meta: Partial<MetaData>) {
+    return SessionModel.update(activeId, { meta });
+  }
+
+  async updateSessionConfig(activeId: string, config: DeepPartial<LobeAgentConfig>) {
+    return SessionModel.update(activeId, { config });
   }
 }
 

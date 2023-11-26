@@ -21,6 +21,10 @@ class _FileModel extends BaseModel<'files'> {
   async delete(id: string) {
     return this.table.delete(id);
   }
+
+  async clear() {
+    return this.table.clear();
+  }
 }
 
 export const FileModel = new _FileModel();

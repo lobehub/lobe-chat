@@ -13,6 +13,10 @@ class FileService {
     return FileModel.delete(id);
   }
 
+  async removeAllFiles() {
+    return FileModel.clear();
+  }
+
   async getFile(id: string): Promise<FilePreview> {
     const item = await FileModel.findById(id);
     if (!item) {

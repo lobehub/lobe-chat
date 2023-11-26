@@ -10,11 +10,6 @@ export const DB_SessionSchema = z.object({
 
   // TODO: Need to check whether use a strict format schema
   config: z.any(),
-
-  // foreign key
-  messages: z.array(z.string()).default([]),
-  files: z.array(z.string()).default([]),
-  topics: z.array(z.string()).default([]),
 });
 /* eslint-enable  */
 

@@ -16,7 +16,7 @@ const Header = memo(() => {
   const [topicLength, removeUnstarredTopic, removeAllTopic] = useChatStore((s) => [
     topicSelectors.currentTopicLength(s),
     s.removeUnstarredTopic,
-    s.removeAllTopic,
+    s.removeSessionTopics,
   ]);
 
   const [showSearch, setShowSearch] = useState(false);

@@ -8,14 +8,13 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { FileStore } from '../../store';
 
-const t = setNamespace('files/image');
+const t = setNamespace('image');
 
-/**
- * 代理行为接口
- */
 export interface FileAction {
   clearImageList: () => void;
+  removeAllFiles: () => Promise<void>;
   removeFile: (id: string) => Promise<void>;
+
   setImageMapItem: (id: string, item: FilePreview) => void;
   uploadFile: (file: File) => Promise<void>;
 
@@ -30,6 +29,9 @@ export const createFileSlice: StateCreator<
 > = (set, get) => ({
   clearImageList: () => {
     set({ inputFilesList: [] }, false, t('clearImageList'));
+  },
+  removeAllFiles: async () => {
+    await fileService.removeAllFiles();
   },
   removeFile: async (id) => {
     await fileService.removeFile(id);

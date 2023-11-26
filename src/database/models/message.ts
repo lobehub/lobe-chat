@@ -5,8 +5,6 @@ import { DB_Message, DB_MessageSchema } from '@/database/schemas/message';
 import { DBModel } from '@/types/database/db';
 import { nanoid } from '@/utils/uuid';
 
-import { SessionModel } from './session';
-
 export interface CreateMessageParams extends DB_Message {
   // content: string;
   // role: MessageRoleType;
@@ -28,9 +26,6 @@ class _MessageModel extends BaseModel {
     const id = nanoid();
 
     const messageData: DB_Message = { ...defaultValue, ...data };
-
-    // bind the message to session
-    await SessionModel.addMessages(data.sessionId, [id]);
 
     return this._add(messageData, id);
   }
@@ -64,11 +59,6 @@ class _MessageModel extends BaseModel {
   }
 
   async delete(id: string) {
-    const item = await this.findById(id);
-
-    // remove message from session
-    await SessionModel.removeMessages(item.sessionId, [id]);
-
     return this.table.delete(id);
   }
 
@@ -125,8 +115,7 @@ class _MessageModel extends BaseModel {
     const messageIds = await query.primaryKeys();
 
     // Use the bulkDelete method to delete all selected messages in bulk
-    await this.table.bulkDelete(messageIds);
-    await SessionModel.removeMessages(sessionId, messageIds);
+    return this.table.bulkDelete(messageIds);
   }
 }
 
