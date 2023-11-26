@@ -7,7 +7,6 @@ import { ChatStore } from '@/store/chat/store';
 import { OpenAIFunctionCall } from '@/types/chatMessage';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { sessionSelectors } from '../../session/selectors';
 import { chatSelectors } from '../selectors';
 
 const t = setNamespace('plugin');
@@ -58,11 +57,8 @@ export const chatPlugin: StateCreator<
   },
   triggerFunctionCall: async (id) => {
     const { dispatchMessage, runPluginDefaultType } = get();
-    const session = sessionSelectors.currentSession(get());
 
-    if (!session) return;
-
-    const message = session.chats[id];
+    const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
 
     let payload: PluginRequestPayload = { apiName: '', identifier: '' };

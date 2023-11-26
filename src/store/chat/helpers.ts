@@ -1,6 +1,6 @@
+import { LobeAgentConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/chatMessage';
 import { OpenAIChatMessage } from '@/types/openai/chat';
-import { LobeAgentConfig } from '@/types/session';
 import { encodeAsync } from '@/utils/tokenizer';
 
 export const getMessagesTokenCount = async (messages: OpenAIChatMessage[]) =>

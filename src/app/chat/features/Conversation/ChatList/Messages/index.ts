@@ -16,7 +16,7 @@ export const renderMessages: ChatListProps['renderMessages'] = {
   assistant: AssistantMessage,
   default: DefaultMessage,
   function: FunctionMessage,
-  user: UserMessage,
+  user: UserMessage as any,
 };
 
 export const useAvatarsClick = (): ChatListProps['onAvatarsClick'] => {
@@ -32,8 +32,8 @@ export const useAvatarsClick = (): ChatListProps['onAvatarsClick'] => {
           isInbox
             ? router.push('/settings/agent')
             : mobile
-            ? router.push(pathString('/chat/settings', { hash: location.hash }))
-            : toggleSystemRole(true);
+              ? router.push(pathString('/chat/settings', { hash: location.hash }))
+              : toggleSystemRole(true);
       }
     }
   };

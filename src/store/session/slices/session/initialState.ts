@@ -20,14 +20,10 @@ export interface SessionState {
 }
 
 export const initLobeSession: LobeAgentSession = {
-  chats: {},
   config: DEFAULT_AGENT_CONFIG,
   createdAt: Date.now(),
-  files: [],
   id: '',
-  messages: [],
   meta: DEFAULT_AGENT_META,
-  topics: [],
   type: LobeSessionType.Agent,
   updatedAt: Date.now(),
 };

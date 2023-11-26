@@ -287,13 +287,11 @@ export const chatMessage: StateCreator<
       triggerFunctionCall(functionId);
     }
   },
-  dispatchAgentFile: (payload) => {
-    const { activeId } = get();
-    if (!activeId) return;
+  dispatchAgentFile: () => {
+    throw new Error('需要重构！');
+    // const files = filesReducer(get().files || [], payload);
 
-    const files = filesReducer(session.files || [], payload);
-
-    get().dispatchSession({ files, id: activeId, type: 'updateSessionFiles' });
+    // get().dispatchSession({ files, id: activeId, type: 'updateSessionFiles' });
   },
   dispatchMessage: (payload) => {
     const { activeId } = get();

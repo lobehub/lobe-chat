@@ -26,6 +26,7 @@ export interface ChatTranslate extends Translate {
 export interface ChatTTS {
   init?: boolean;
 }
+
 export interface ChatMessage extends BaseDataModel {
   /**
    * @title 内容
@@ -33,22 +34,8 @@ export interface ChatMessage extends BaseDataModel {
    */
   content: string;
   error?: any;
-  // 扩展字段
-  extra?: {
-    fromModel?: string;
-    // 翻译
-    translate?: ChatTranslate;
-    // TTS
-    tts?: ChatTTS;
-  } & Record<string, any>;
-
   files?: string[];
-  /**
-   * replace with plugin
-   * @deprecated
-   */
-  function_call?: OpenAIFunctionCall;
-
+  fromModel?: string;
   /**
    * replace with `plugin.identifier`
    * @deprecated
@@ -56,11 +43,13 @@ export interface ChatMessage extends BaseDataModel {
   name?: string;
 
   parentId?: string;
+
   plugin?: PluginRequestPayload;
 
   pluginState?: any;
   // 引用
   quotaId?: string;
+
   /**
    * 角色
    * @description 消息发送者的角色
@@ -70,6 +59,10 @@ export interface ChatMessage extends BaseDataModel {
    * 保存到主题的消息
    */
   topicId?: string;
+  // 翻译
+  translate?: ChatTranslate | null;
+  // TTS
+  tts?: ChatTTS;
 }
 
 export type ChatMessageMap = Record<string, ChatMessage>;

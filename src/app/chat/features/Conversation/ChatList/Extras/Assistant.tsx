@@ -1,8 +1,9 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
-import { RenderMessageExtra, Tag } from '@lobehub/ui';
+import { Tag } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
@@ -11,14 +12,14 @@ import ExtraContainer from './ExtraContainer';
 import TTS from './TTS';
 import Translate from './Translate';
 
-export const AssistantMessageExtra: RenderMessageExtra = memo<ChatMessage>(
-  ({ extra, id, content }) => {
+export const AssistantMessageExtra = memo<ChatMessage>(
+  ({ tts, translate, fromModel, id, content }) => {
     const model = useSessionStore(agentSelectors.currentAgentModel);
-    const loading = useSessionStore((s) => s.chatLoadingId === id);
+    const loading = useChatStore((s) => s.chatLoadingId === id);
 
-    const showModelTag = extra?.fromModel && model !== extra?.fromModel;
-    const showTranslate = !!extra?.translate;
-    const showTTS = !!extra?.tts;
+    const showModelTag = fromModel && model !== fromModel;
+    const showTranslate = !!translate;
+    const showTTS = !!tts;
 
     const showExtra = showModelTag || showTranslate || showTTS;
 
@@ -28,18 +29,18 @@ export const AssistantMessageExtra: RenderMessageExtra = memo<ChatMessage>(
       <Flexbox gap={8} style={{ marginTop: 8 }}>
         {showModelTag && (
           <div>
-            <Tag icon={<SiOpenai size={'1em'} />}>{extra?.fromModel as string}</Tag>
+            <Tag icon={<SiOpenai size={'1em'} />}>{fromModel as string}</Tag>
           </div>
         )}
         <div>
-          {extra?.tts && (
+          {tts && (
             <ExtraContainer>
-              <TTS content={content} id={id} loading={loading} {...extra?.tts} />
+              <TTS content={content} id={id} loading={loading} {...tts} />
             </ExtraContainer>
           )}
-          {extra?.translate && (
+          {translate && (
             <ExtraContainer>
-              <Translate id={id} loading={loading} {...extra?.translate} />
+              <Translate id={id} loading={loading} {...translate} />
             </ExtraContainer>
           )}
         </div>

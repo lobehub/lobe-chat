@@ -3,11 +3,11 @@ import { useResponsive } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
   const { t } = useTranslation('chat');
-  const [keywords] = useSessionStore((s) => [s.topicSearchKeywords]);
+  const [keywords] = useChatStore((s) => [s.topicSearchKeywords]);
   const { mobile } = useResponsive();
   return (
     <SearchBar
@@ -16,7 +16,7 @@ const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
         if (keywords === '') onClear?.();
       }}
       onChange={(e) => {
-        useSessionStore.setState({ topicSearchKeywords: e.target.value });
+        useChatStore.setState({ topicSearchKeywords: e.target.value });
       }}
       placeholder={t('topic.searchPlaceholder')}
       spotlight={!mobile}

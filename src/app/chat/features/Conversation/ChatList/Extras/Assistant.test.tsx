@@ -58,20 +58,20 @@ describe('AssistantMessageExtra', () => {
   });
 
   it('should render Tag component if extra.fromModel exists and does not match the current model', async () => {
-    render(<AssistantMessageExtra {...mockData} extra={{ fromModel: 'otherModel' }} />);
+    render(<AssistantMessageExtra {...mockData} fromModel={'otherModel'} />);
 
     expect(screen.getByText('otherModel')).toBeInTheDocument();
   });
 
   it('should render TTS component if extra.fromModel and extra.tts coexist', async () => {
-    render(<AssistantMessageExtra {...mockData} extra={{ fromModel: 'otherModel', tts: {} }} />);
+    render(<AssistantMessageExtra {...mockData} {...{ fromModel: 'otherModel', tts: {} }} />);
 
     expect(screen.getByText('otherModel')).toBeInTheDocument();
     expect(screen.getByText('TTS Component')).toBeInTheDocument();
   });
 
   it('should render Translate component if extra.translate exists', async () => {
-    render(<AssistantMessageExtra {...mockData} extra={{ translate: {} }} />);
+    render(<AssistantMessageExtra {...mockData} translate={{} as any} />);
     expect(screen.getByText('Translate Component')).toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe('AssistantMessageExtra', () => {
     (useSessionStore as unknown as Mock).mockImplementation(() => ({
       chatLoadingId: 'test-id',
     }));
-    render(<AssistantMessageExtra {...mockData} extra={{ translate: {}, tts: {} }} />);
+    render(<AssistantMessageExtra {...mockData} {...{ translate: {} as any, tts: {} }} />);
     expect(screen.getByText('TTS Component')).toBeInTheDocument();
     expect(screen.getByText('Translate Component')).toBeInTheDocument();
   });

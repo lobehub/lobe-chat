@@ -1,14 +1,9 @@
 import { DeepPartial } from 'utility-types';
 
 import { SessionModel } from '@/database/models/session';
+import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
-import {
-  LobeAgentConfig,
-  LobeAgentSession,
-  LobeSessionType,
-  LobeSessions,
-  SessionGroupKey,
-} from '@/types/session';
+import { LobeAgentSession, LobeSessionType, LobeSessions, SessionGroupKey } from '@/types/session';
 
 class SessionService {
   async createNewSession(

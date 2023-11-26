@@ -53,7 +53,7 @@ const List = memo(() => {
 
   return (
     <ChatList
-      data={data}
+      data={data as any}
       enableHistoryCount={enableHistoryCount}
       historyCount={historyCount}
       loadingId={chatLoadingId}

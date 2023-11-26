@@ -5,8 +5,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
 
 import APIKeyForm from './ApiKeyForm';
 import { ErrorActionContainer, FormAction } from './style';
@@ -20,7 +20,7 @@ const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
   const { t } = useTranslation('error');
   const [mode, setMode] = useState<Tab>(Tab.Password);
   const [password, setSettings] = useGlobalStore((s) => [s.settings.password, s.setSettings]);
-  const [resend, deleteMessage] = useSessionStore((s) => [s.resendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
 
   return (
     <ErrorActionContainer>

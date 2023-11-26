@@ -15,7 +15,7 @@ import { OPENAI_URLS, TTS_URL } from '@/services/_url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
-import { TTSServer } from '@/types/session';
+import { TTSServer } from '@/types/agent';
 
 interface TTSConfig extends SWRConfiguration {
   server?: TTSServer;

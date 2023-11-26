@@ -52,8 +52,6 @@ export const hasPinnedSessionList = (s: SessionStore) => {
 };
 
 export const hasConversion = (s: SessionStore) => {
-  const hasCustomAgents = customAgentSessions(s).length > 0;
-  const hasMessageInInbox = inboxSession(s).messages.length > 0;
-
-  return hasCustomAgents || hasMessageInInbox;
+  // TODO: 补回 inbox message数量大于0 的逻辑
+  return customAgentSessions(s).length > 0;
 };

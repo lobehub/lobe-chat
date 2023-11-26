@@ -1,29 +1,32 @@
-import { RenderMessageExtra } from '@lobehub/ui';
 import { memo } from 'react';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 import { ChatMessage } from '@/types/chatMessage';
 
 import ExtraContainer from './ExtraContainer';
 import TTS from './TTS';
 import Translate from './Translate';
 
-export const UserMessageExtra: RenderMessageExtra = memo<ChatMessage>(({ extra, id, content }) => {
-  const loading = useSessionStore((s) => s.chatLoadingId === id);
+export const UserMessageExtra = memo<ChatMessage>(({ tts, translate, id, content }) => {
+  const loading = useChatStore((s) => s.chatLoadingId === id);
 
-  const showExtra = extra?.translate || extra?.tts;
+  const showTranslate = !!translate;
+  const showTTS = !!tts;
+
+  const showExtra = showTranslate || showTTS;
+
   if (!showExtra) return;
 
   return (
     <div style={{ marginTop: 8 }}>
-      {extra?.tts && (
+      {tts && (
         <ExtraContainer>
-          <TTS content={content} id={id} loading={loading} {...extra?.tts} />
+          <TTS content={content} id={id} loading={loading} {...tts} />
         </ExtraContainer>
       )}
-      {extra?.translate && (
+      {translate && (
         <ExtraContainer>
-          <Translate id={id} {...extra?.translate} loading={loading} />
+          <Translate id={id} {...translate} loading={loading} />
         </ExtraContainer>
       )}
     </div>

@@ -3,8 +3,8 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
+import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
-import { LobeAgentConfig } from '@/types/session';
 
 import { SessionStore } from '../../store';
 import { sessionSelectors } from '../session/selectors';

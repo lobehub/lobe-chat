@@ -5,9 +5,9 @@ import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { SessionStore } from '@/store/session';
+import { LobeAgentTTSConfig } from '@/types/agent';
 import { LanguageModel } from '@/types/llm';
 import { MetaData } from '@/types/meta';
-import { LobeAgentTTSConfig } from '@/types/session';
 import { merge } from '@/utils/merge';
 
 import { sessionSelectors } from '../session/selectors';

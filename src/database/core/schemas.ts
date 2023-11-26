@@ -13,7 +13,7 @@ export const dbSchemaV1 = {
 // - Added `sessions` 、`messages` 、`topics` tables
 // - Added `createdAt` and `updatedAt` fields to all
 export const dbSchemaV2 = {
-  files: '&id, name, fileType, saveMode, createdAt, updatedAt',
+  files: '&id, name, fileType, saveMode, createdAt, updatedAt, messageId, sessionId',
 
   messages:
     '&id, role, fromModel, favorite, createdAt, updatedAt, sessionId, topicId, quotaId, parentId, [sessionId+topicId]',
