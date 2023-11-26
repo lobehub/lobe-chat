@@ -39,13 +39,20 @@ class _MessageModel extends BaseModel {
     return this._batchAdd(messages, { idGenerator: nanoid });
   }
 
-  async query({ sessionId, pageSize = 9999, current = 0 }: QueryMessageParams) {
+  async query({ sessionId, topicId, pageSize = 9999, current = 0 }: QueryMessageParams) {
     const offset = current * pageSize;
 
+    const query =
+      topicId !== undefined
+        ? // TODO: The query {"sessionId":"xxx","topicId":"xxx"} on messages would benefit of a compound index [sessionId+topicId]
+          this.table.where({ sessionId, topicId }) // Use a compound index
+        : this.table
+            .where('sessionId')
+            .equals(sessionId)
+            .and((message) => message.topicId === undefined);
+
     return (
-      this.table
-        .where('sessionId')
-        .equals(sessionId)
+      query
         .sortBy('createdAt')
         // handle page size
         .then((sortedArray) => sortedArray.slice(offset, offset + pageSize))
@@ -73,15 +80,25 @@ class _MessageModel extends BaseModel {
     return super._update(id, data);
   }
 
-  async updateExtra(id: string, data: any) {
-    const item = await this.findById(id);
+  /**
+   * Batch updates multiple fields of the specified messages.
+   *
+   * @param {string[]} messageIds - The identifiers of the messages to be updated.
+   * @param {Partial<DB_Message>} updateFields - An object containing the fields to update and their new values.
+   * @returns {Promise<number>} - The number of updated messages.
+   */
+  async batchUpdate(messageIds: string[], updateFields: Partial<DB_Message>): Promise<number> {
+    // Retrieve the messages by their IDs
+    const messagesToUpdate = await this.table.where(':id').anyOf(messageIds).toArray();
 
-    return super._update(id, {
-      extra: {
-        ...((item.extra || {}) as unknown as object),
-        ...data,
-      },
-    });
+    // Update the specified fields of each message
+    const updatedMessages = messagesToUpdate.map((message) => ({
+      ...message,
+      ...updateFields,
+    }));
+
+    // Use the bulkPut method to update the messages in bulk
+    return this.table.bulkPut(updatedMessages);
   }
 
   /**
@@ -94,8 +111,15 @@ class _MessageModel extends BaseModel {
    * @returns {Promise<void>}
    */
   async batchDelete(sessionId: string, topicId: string | undefined): Promise<void> {
-    // use both assistantId and topicId as the filter criteria in the query.
-    const query = this.table.where({ sessionId, topicId }); // Use a compound index
+    // If topicId is specified, use both assistantId and topicId as the filter criteria in the query.
+    // Otherwise, filter by assistantId and require that topicId is undefined.
+    const query =
+      topicId !== undefined
+        ? this.table.where({ sessionId, topicId }) // Use a compound index
+        : this.table
+            .where('sessionId')
+            .equals(sessionId)
+            .and((message) => message.topicId === undefined);
 
     // Retrieve a collection of message IDs that satisfy the criteria
     const messageIds = await query.primaryKeys();

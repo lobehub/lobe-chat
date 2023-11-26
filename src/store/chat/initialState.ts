@@ -13,20 +13,26 @@ export interface ChatStoreState {
    * @deprecated
    */
   chatLoadingId?: string;
-  fetchMessagesLoading: boolean;
   inputMessage: string;
   messageLoadingIds: [];
   messages: ChatMessage[];
+  /**
+   * whether messages have fetched
+   */
   messagesInit: boolean;
   shareLoading?: boolean;
+  topicLoadingId?: string;
+  topicRenamingId?: string;
   topicSearchKeywords: string;
   topics: ChatTopic[];
+  /**
+   * whether topics have fetched
+   */
   topicsInit: boolean;
 }
 
 export const initialState: ChatStoreState = {
   activeId: 'inbox',
-  fetchMessagesLoading: true,
   inputMessage: '',
   messageLoadingIds: [],
   messages: [],

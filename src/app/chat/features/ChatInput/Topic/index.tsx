@@ -7,11 +7,11 @@ import { useTranslation } from 'react-i18next';
 
 import HotKeys from '@/components/HotKeys';
 import { PREFIX_KEY, SAVE_TOPIC_KEY } from '@/const/hotkeys';
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
-  const [hasTopic, openNewTopicOrSaveTopic] = useSessionStore((s) => [
+  const [hasTopic, openNewTopicOrSaveTopic] = useChatStore((s) => [
     !!s.activeTopicId,
     s.openNewTopicOrSaveTopic,
   ]);

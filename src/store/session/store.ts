@@ -35,7 +35,6 @@ const persistOptions: PersistOptions<SessionStore> = {
       selectors: [
         // map state key to storage key
         { activeId: 'session' },
-        { activeTopicId: 'topic' },
       ],
     },
   }),

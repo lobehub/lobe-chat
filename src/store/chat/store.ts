@@ -1,15 +1,16 @@
-import { devtools } from 'zustand/middleware';
+import { PersistOptions, devtools, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
+import { createHyperStorage } from '@/store/middleware/createHyperStorage';
 import { isDev } from '@/utils/env';
 
+import { ChatEnhanceAction, chatEnhance } from './actions/enhance';
 import { ChatMessageAction, chatMessage } from './actions/message';
 import { ChatPluginAction, chatPlugin } from './actions/plugin';
 import { ShareAction, chatShare } from './actions/share';
 import { ChatTopicAction, chatTopic } from './actions/topic';
-import { ChatEnhanceAction, chatEnhance } from './actions/enhance';
 import { ChatStoreState, initialState } from './initialState';
 
 export interface ChatStoreAction
@@ -33,11 +34,32 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   ...chatPlugin(...params),
 });
 
+const persistOptions: PersistOptions<ChatStore> = {
+  name: 'LobeChat_Chat',
+
+  // 手动控制 Hydration ，避免 ssr 报错
+  skipHydration: true,
+
+  storage: createHyperStorage({
+    url: {
+      mode: 'hash',
+      selectors: [
+        // map state key to storage key
+        { activeTopicId: 'topic' },
+      ],
+    },
+  }),
+  version: 0,
+};
+
 //  ===============  实装 useStore ============ //
 
 export const useChatStore = createWithEqualityFn<ChatStore>()(
-  devtools(createStore, {
-    name: 'LobeChat_Chat' + (isDev ? '_DEV' : ''),
-  }),
+  persist(
+    devtools(createStore, {
+      name: 'LobeChat_Chat' + (isDev ? '_DEV' : ''),
+    }),
+    persistOptions,
+  ),
   shallow,
 );

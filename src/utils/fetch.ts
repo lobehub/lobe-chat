@@ -74,6 +74,7 @@ interface FetchAITaskResultParams<T> {
    * 错误处理函数
    */
   onError?: (e: Error, rawError?: any) => void;
+  onFinish?: (text: string) => void;
   /**
    * 加载状态变化处理函数
    * @param loading - 是否处于加载状态
@@ -84,7 +85,6 @@ interface FetchAITaskResultParams<T> {
    * @param text - 消息内容
    */
   onMessageHandle?: (text: string) => void;
-
   /**
    * 请求对象
    */
@@ -96,6 +96,7 @@ export const fetchAIFactory =
   async ({
     params,
     onMessageHandle,
+    onFinish,
     onError,
     onLoadingChange,
     abortController,
@@ -119,5 +120,10 @@ export const fetchAIFactory =
 
     onLoadingChange?.(false);
 
-    return await data?.text();
+    const content = await data?.text();
+    if (content) {
+      onFinish?.(content);
+    }
+
+    return content;
   };

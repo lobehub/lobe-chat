@@ -2,7 +2,7 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 import DefaultContent from './DefaultContent';
 import TopicContent from './TopicContent';
@@ -49,7 +49,7 @@ export interface ConfigCellProps {
 const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
   const { styles, cx } = useStyles();
 
-  const [toggleTopic] = useSessionStore((s) => [s.toggleTopic]);
+  const [toggleTopic] = useChatStore((s) => [s.switchTopic]);
 
   return (
     <Flexbox

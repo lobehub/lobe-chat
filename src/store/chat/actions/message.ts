@@ -1,4 +1,6 @@
-/*eslint-disable sort-keys-fix/sort-keys-fix */
+/* eslint-disable sort-keys-fix/sort-keys-fix */
+// Note: To make the code more logic and readable, we just disable the auto sort key eslint rule
+// DON'T REMOVE THE FIRST LINE
 import { template } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
@@ -9,6 +11,7 @@ import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
 import { DB_Message } from '@/database/schemas/message';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
+import { topicService } from '@/services/topic';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { filesSelectors, useFileStore } from '@/store/files';
@@ -26,12 +29,8 @@ import { chatSelectors } from '../selectors';
 
 const t = setNamespace('message');
 
-/**
- * 聊天操作
- */
 export interface ChatMessageAction {
   /**
-   * TODO: 根据 sessionId 和 topicId 删除消息记录
    * clear message on the active session
    */
   clearMessage: () => void;
@@ -94,18 +93,18 @@ export const chatMessage: StateCreator<
     await get().refreshMessages();
   },
   clearMessage: async () => {
-    const { activeId, activeTopicId, refreshMessages, toggleTopic } = get();
+    const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
 
     await messageService.removeMessages(activeId, activeTopicId);
 
     if (activeTopicId) {
-      // TODO：topicService 删除 topic
+      await topicService.removeTopics(activeId);
     }
-
-    refreshMessages();
+    await refreshTopic();
+    await refreshMessages();
 
     // after remove topic , go back to default topic
-    toggleTopic();
+    switchTopic();
   },
   resendMessage: async (messageId) => {
     // 1. 构造所有相关的历史记录
@@ -180,9 +179,9 @@ export const chatMessage: StateCreator<
     if (!agentConfig.enableAutoCreateTopic) return;
 
     if (!activeTopicId && chats.length >= agentConfig.autoCreateTopicThreshold) {
-      const { saveToTopic, toggleTopic } = get();
+      const { saveToTopic, switchTopic } = get();
       const id = await saveToTopic();
-      if (id) toggleTopic(id);
+      if (id) switchTopic(id);
     }
   },
   stopGenerateMessage: () => {
@@ -191,7 +190,7 @@ export const chatMessage: StateCreator<
 
     abortController.abort();
 
-    toggleChatLoading(false);
+    toggleChatLoading(false, undefined, t('stopGenerateMessage') as string);
   },
   updateInputMessage: (message) => {
     set({ inputMessage: message }, false, t('updateInputMessage', message));
@@ -207,9 +206,9 @@ export const chatMessage: StateCreator<
     await messageService.updateMessageContent(id, content);
     await refreshMessages();
   },
-  useFetchMessages: (sessionId) =>
+  useFetchMessages: (sessionId, activeTopicId) =>
     useSWR<ChatMessage[]>(
-      [sessionId, get().activeTopicId],
+      [sessionId, activeTopicId],
       async ([sessionId, topicId]: [string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),
       {

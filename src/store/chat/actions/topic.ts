@@ -1,51 +1,44 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
+// Note: To make the code more logic and readable, we just disable the auto sort key eslint rule
+// DON'T REMOVE THE FIRST LINE
+import { t } from 'i18next';
+import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT } from '@/const/message';
 import { chatService } from '@/services/chat';
+import { messageService } from '@/services/message';
+import { topicService } from '@/services/topic';
 import { ChatStore } from '@/store/chat';
+import { ChatMessage } from '@/types/chatMessage';
+import { ChatTopic } from '@/types/topic';
 import { setNamespace } from '@/utils/storeDebug';
-import { nanoid } from '@/utils/uuid';
 
-import { sessionSelectors } from '../../session/selectors';
 import { ChatTopicDispatch, topicReducer } from '../reducers/topic';
 import { chatSelectors, topicSelectors } from '../selectors';
 
-const t = setNamespace('topic');
+const n = setNamespace('topic');
+
 export interface ChatTopicAction {
-  /**
-   * 分发主题
-   * @param payload - 要分发的主题
-   */
   dispatchTopic: (payload: ChatTopicDispatch) => void;
+  favoriteTopic: (id: string, favState: boolean) => Promise<void>;
   openNewTopicOrSaveTopic: () => void;
+  refreshTopic: () => Promise<void>;
+  removeAllTopic: () => Promise<void>;
+  removeTopic: (id: string) => Promise<void>;
   /**
-   * 移出所有话题
-   */
-  removeAllTopic: () => void;
-  /**
-   * 移除话题
-   * @param id
-   */
-  removeTopic: (id: string) => void;
-  /**
+   * TODO
    * 移出所有未标记的话题
    */
   removeUnstarredTopic: () => void;
-  /**
-   * 将当前消息保存为主题
-   */
   saveToTopic: () => Promise<string | undefined>;
-  /**
-   * 切换主题
-   * @param id - 要切换的主题的 ID
-   */
-  toggleTopic: (id?: string) => void;
-  /**
-   * 更新主题加载状态
-   * @param id - 要更新的主题的 ID
-   */
+  summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
+
+  switchTopic: (id?: string) => Promise<void>;
   updateTopicLoading: (id?: string) => void;
+  updateTopicTitle: (id: string, title: string) => Promise<void>;
+  useFetchTopics: (sessionId: string) => SWRResponse<ChatTopic[]>;
 }
 
 export const chatTopic: StateCreator<
@@ -54,96 +47,60 @@ export const chatTopic: StateCreator<
   [],
   ChatTopicAction
 > = (set, get) => ({
-  dispatchTopic: (payload) => {
-    const { activeId } = get();
-    if (!activeId) return;
-
-    const topics = topicReducer(get().topics, payload);
-
-    get().dispatchSession({ id: activeId, topics, type: 'updateSessionTopic' });
-  },
+  // create
   openNewTopicOrSaveTopic: () => {
-    const { toggleTopic, saveToTopic, activeTopicId } = get();
+    const { switchTopic, saveToTopic, activeTopicId } = get();
     const hasTopic = !!activeTopicId;
 
-    if (hasTopic) toggleTopic();
+    if (hasTopic) switchTopic();
     else {
       saveToTopic();
     }
   },
-  removeAllTopic: () => {
-    const { removeTopic, toggleTopic } = get();
-    const topics = topicSelectors.currentTopics(get());
-
-    for (const { id } of topics) {
-      removeTopic(id);
-    }
-
-    // 切换到默认 topic
-    toggleTopic();
-  },
-  removeTopic: (id) => {
-    const { dispatchTopic, dispatchMessage, toggleTopic } = get();
-
-    // 移除关联的 message
-    const messages = topicSelectors.getTopicMessages(id)(get());
-    for (const m of messages) {
-      dispatchMessage({ id: m.id, type: 'deleteMessage' });
-    }
-
-    // 最后移除 topic
-    dispatchTopic({ id, type: 'deleteChatTopic' });
-
-    // 切换到默认 topic
-    toggleTopic();
-  },
-  removeUnstarredTopic: () => {
-    const { removeTopic, toggleTopic } = get();
-    const topics = topicSelectors.currentTopics(get());
-
-    for (const { id, favorite } of topics) {
-      if (!favorite) removeTopic(id);
-    }
-
-    // 切换到默认 topic
-    toggleTopic();
-  },
   saveToTopic: async () => {
-    // TODO: 替换为服务端实现
-    if (true) return;
-
-    const { dispatchTopic, dispatchMessage, updateTopicLoading } = get();
-    // get current messages
+    // if there is no message, stop
     const messages = chatSelectors.currentChats(get());
-
-    // if there is no message, stop saving
     if (messages.length === 0) return;
 
-    const topicId = nanoid();
+    const { activeId, summaryTopicTitle, refreshTopic, refreshMessages } = get();
 
-    const defaultTitle = '默认话题';
-    const newTopic = {
-      createdAt: Date.now(),
-      id: topicId,
-      title: defaultTitle,
-      updatedAt: Date.now(),
-    };
+    // 1. create topic
+    const topicId = await topicService.createTopic({
+      sessionId: activeId,
+      title: t('topic.defaultTitle', { ns: 'chat' }),
+    });
+    await refreshTopic();
 
-    dispatchTopic({ topic: newTopic, type: 'addChatTopic' });
+    // 2.add topicId to these message
+    await messageService.bindMessagesToTopic(
+      topicId,
+      messages.map((m) => m.id),
+    );
+    await refreshMessages();
 
-    // 为所有 message 添加 topicId
-    for (const m of messages) {
-      dispatchMessage({ id: m.id, key: 'topicId', type: 'updateMessage', value: topicId });
-    }
+    // 3. auto summary topic Title
+    // we don't need to wait for summary, just let it run async
+    summaryTopicTitle(topicId, messages);
+
+    return topicId;
+  },
+  // update
+  summaryTopicTitle: async (topicId, messages) => {
+    const { dispatchTopic, updateTopicLoading, refreshTopic } = get();
+    const topic = topicSelectors.getTopicById(topicId)(get());
+    if (!topic) return;
 
     dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: LOADING_FLAT });
 
     let output = '';
 
     // 自动总结话题标题
-    chatService.fetchPresetTaskResult({
+    await chatService.fetchPresetTaskResult({
       onError: () => {
-        dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: defaultTitle });
+        dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: topic.title });
+      },
+      onFinish: (text) => {
+        topicService.updateTitle(topicId, text);
       },
       onLoadingChange: (loading) => {
         updateTopicLoading(loading ? topicId : undefined);
@@ -154,14 +111,75 @@ export const chatTopic: StateCreator<
       },
       params: await chainSummaryTitle(messages),
     });
-
-    return topicId;
+    await refreshTopic();
   },
-  toggleTopic: (id) => {
-    set({ activeTopicId: id }, false, t('toggleTopic'));
+  favoriteTopic: async (id, favState) => {
+    await topicService.updateFavorite(id, favState);
+    await get().refreshTopic();
+  },
+  updateTopicTitle: async (id, title) => {
+    await topicService.updateTitle(id, title);
+    await get().refreshTopic();
+  },
+  // query
+  useFetchTopics: (sessionId) =>
+    useSWR<ChatTopic[]>(sessionId, async (sessionId) => topicService.getTopics({ sessionId }), {
+      onSuccess: (topics) => {
+        set({ topics, topicsInit: true }, false, n('useFetchTopics(success)', { sessionId }));
+      },
+    }),
+  switchTopic: async (id) => {
+    set({ activeTopicId: id }, false, n('toggleTopic'));
+
+    await get().refreshMessages();
+  },
+  // delete
+  removeAllTopic: async () => {
+    const { switchTopic, activeId, refreshTopic } = get();
+
+    await topicService.removeTopics(activeId);
+    await refreshTopic();
+
+    // switch to default topic
+    switchTopic();
+  },
+  removeTopic: async (id) => {
+    const { activeId, switchTopic, refreshTopic } = get();
+
+    // remove messages in the topic
+    await messageService.removeMessages(activeId, id);
+
+    // remove topic
+    await topicService.removeTopic(id);
+    await refreshTopic();
+
+    // switch bach to default topic
+    switchTopic();
+  },
+  removeUnstarredTopic: async () => {
+    const { refreshTopic, switchTopic } = get();
+    const topics = topicSelectors.currentUnFavTopics(get());
+
+    await topicService.batchRemoveTopics(topics.map((t) => t.id));
+    await refreshTopic();
+
+    // 切换到默认 topic
+    switchTopic();
   },
 
+  // Internal process method of the topics
+  dispatchTopic: (payload) => {
+    const { activeId } = get();
+    if (!activeId) return;
+
+    const topics = topicReducer(get().topics, payload);
+
+    set({ topics }, false, n(`dispatchTopic/${payload.type}`, payload));
+  },
   updateTopicLoading: (id) => {
-    set({ topicLoadingId: id }, false, t('updateTopicLoading'));
+    set({ topicLoadingId: id }, false, n('updateTopicLoading'));
+  },
+  refreshTopic: async () => {
+    await mutate(get().activeId);
   },
 });

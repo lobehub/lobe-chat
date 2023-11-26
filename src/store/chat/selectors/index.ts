@@ -6,7 +6,8 @@ import {
   getFunctionMessageProps,
   getMessageById,
 } from './chat';
-import { currentTopicLength, currentTopics } from './topic';
+
+export { topicSelectors } from './topic';
 
 export const chatSelectors = {
   chatsMessageString,
@@ -15,9 +16,4 @@ export const chatSelectors = {
   currentChatsWithHistoryConfig,
   getFunctionMessageProps,
   getMessageById,
-};
-
-export const topicSelectors = {
-  currentTopicLength,
-  currentTopics,
 };

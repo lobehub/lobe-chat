@@ -110,6 +110,19 @@ class _SessionModel extends BaseModel {
     // Update the session with the new messages array
     await this.update(sessionId, { messages: updatedMessages });
   }
+
+  async removeTopics(sessionId: string, topicIds: string[]) {
+    const session = await this.findById(sessionId);
+    if (!session) {
+      throw new Error(`Session with id ${sessionId} not found`);
+    }
+
+    // Filter out the topic IDs that need to be removed
+    const updatedTopics = session.topics.filter((t) => !topicIds.includes(t));
+
+    // Update the session with the new topics array
+    await this.update(sessionId, { topics: updatedTopics });
+  }
 }
 
 export const SessionModel = new _SessionModel();

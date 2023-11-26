@@ -2,10 +2,20 @@ import { ChatTopic } from '@/types/topic';
 
 import { ChatStore } from '../store';
 
-export const currentTopics = (s: ChatStore): ChatTopic[] => {
-  return s.topics;
-};
+const currentTopics = (s: ChatStore): ChatTopic[] => s.topics;
 
-export const currentTopicLength = (s: ChatStore): number => {
-  return currentTopics(s).length;
+const currentUnFavTopics = (s: ChatStore): ChatTopic[] => s.topics.filter((s) => !s.favorite);
+
+const currentTopicLength = (s: ChatStore): number => currentTopics(s).length;
+
+const getTopicById =
+  (id: string) =>
+  (s: ChatStore): ChatTopic | undefined =>
+    currentTopics(s).find((topic) => topic.id === id);
+
+export const topicSelectors = {
+  currentTopicLength,
+  currentTopics,
+  currentUnFavTopics,
+  getTopicById,
 };

@@ -1,9 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { LocalFile } from '@/types/database/files';
 
-import { LocalDB } from '../core/db';
-import { FileModel } from './file';
+import { LocalDB } from '../../core/db';
+import { FileModel } from '../file';
 
 // Assuming LocalDB is already mocked or using an in-memory database
 // and LocalFileSchema has been imported correctly.

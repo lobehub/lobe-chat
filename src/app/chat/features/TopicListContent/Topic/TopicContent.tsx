@@ -6,7 +6,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css }) => ({
   content: css`
@@ -32,15 +32,16 @@ interface TopicContentProps {
 const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
   const { t } = useTranslation('common');
 
-  const [editing, dispatchTopic, removeTopic] = useSessionStore((s) => [
-    s.renameTopicId === id,
-    s.dispatchTopic,
+  const [editing, favoriteTopic, updateTopicTitle, removeTopic] = useChatStore((s) => [
+    s.topicRenamingId === id,
+    s.favoriteTopic,
+    s.updateTopicTitle,
     s.removeTopic,
   ]);
   const { styles, theme } = useStyles();
 
   const toggleEditing = (visible?: boolean) => {
-    useSessionStore.setState({ renameTopicId: visible ? id : '' });
+    useChatStore.setState({ topicRenamingId: visible ? id : '' });
   };
 
   const { modal } = App.useApp();
@@ -99,7 +100,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
         icon={Star}
         onClick={() => {
           if (!id) return;
-          dispatchTopic({ favorite: !fav, id, type: 'favorChatTopic' });
+          favoriteTopic(id, !fav);
         }}
         size={'small'}
       />
@@ -116,7 +117,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
           editing={editing}
           onChangeEnd={(v) => {
             if (title !== v) {
-              dispatchTopic({ id, key: 'title', type: 'updateChatTopic', value: v });
+              updateTopicTitle(id, v);
             }
             toggleEditing(false);
           }}

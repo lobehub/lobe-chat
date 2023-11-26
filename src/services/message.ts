@@ -13,8 +13,7 @@ export class MessageService {
   async getMessages(sessionId: string, topicId: string | undefined) {
     console.time('getMessages');
 
-    console.log('topicId:', topicId);
-    const messages: DBModel<DB_Message>[] = await MessageModel.query({ sessionId });
+    const messages: DBModel<DB_Message>[] = await MessageModel.query({ sessionId, topicId });
 
     console.timeEnd('getMessages');
 
@@ -68,6 +67,14 @@ export class MessageService {
 
   async clearAllMessage() {
     return MessageModel.clearTable();
+  }
+
+  async bindMessagesToTopic(topicId: string, messageIds: string[]) {
+    console.time('bindMessagesToTopic');
+    const data = await MessageModel.batchUpdate(messageIds, { topicId });
+
+    console.timeEnd('bindMessagesToTopic');
+    return data;
   }
 }
 

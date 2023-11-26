@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const DB_TopicSchema = z.object({
   title: z.string(),
-  favorite: z.boolean().optional(),
+  favorite: z.number().int().default(0),
 
   // foreign keys
   sessionId: z.string().optional(),
