@@ -54,8 +54,21 @@ class _TopicModel extends BaseModel {
     return this.table.get(id);
   }
 
+  /**
+   * Deletes a topic and all messages associated with it.
+   */
   async delete(id: string) {
-    return this.table.delete(id);
+    return this.db.transaction('rw', [this.table, this.db.messages], async () => {
+      // Delete all messages associated with the topic
+      const messages = await this.db.messages.where('topicId').equals(id).toArray();
+
+      if (messages.length > 0) {
+        const messageIds = messages.map((msg) => msg.id);
+        await this.db.messages.bulkDelete(messageIds);
+      }
+
+      await this.table.delete(id);
+    });
   }
 
   /**
@@ -97,8 +110,24 @@ class _TopicModel extends BaseModel {
     return nextState;
   }
 
+  /**
+   * Deletes multiple topics and all messages associated with them in a transaction.
+   */
   async batchDelete(topicIds: string[]) {
-    return await this.table.bulkDelete(topicIds);
+    return this.db.transaction('rw', [this.table, this.db.messages], async () => {
+      // Iterate over each topicId and delete related messages, then delete the topic itself
+      for (const topicId of topicIds) {
+        // Delete all messages associated with the topic
+        const messages = await this.db.messages.where('topicId').equals(topicId).toArray();
+        if (messages.length > 0) {
+          const messageIds = messages.map((msg) => msg.id);
+          await this.db.messages.bulkDelete(messageIds);
+        }
+
+        // Delete the topic
+        await this.table.delete(topicId);
+      }
+    });
   }
 }
 

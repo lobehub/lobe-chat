@@ -44,7 +44,7 @@ class _MessageModel extends BaseModel {
         : this.table
             .where('sessionId')
             .equals(sessionId)
-            .and((message) => message.topicId === undefined);
+            .and((message) => !message.topicId);
 
     return (
       query
@@ -88,7 +88,9 @@ class _MessageModel extends BaseModel {
     }));
 
     // Use the bulkPut method to update the messages in bulk
-    return this.table.bulkPut(updatedMessages);
+    await this.table.bulkPut(updatedMessages);
+
+    return updatedMessages.length;
   }
 
   /**

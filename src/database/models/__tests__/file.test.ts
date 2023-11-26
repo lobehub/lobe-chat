@@ -68,4 +68,17 @@ describe('_FileModel', () => {
     const fileInDb = await FileModel.findById(createdFile.id);
     expect(fileInDb).toBeUndefined();
   });
+
+  it('should clear all files', async () => {
+    // First, create a file to test the delete method
+    const createdFile = await FileModel.create(fileData);
+    const createdFile2 = await FileModel.create(fileData);
+    await FileModel.clear();
+
+    // Verify that the file has been removed from the database
+    const fileInDb = await FileModel.findById(createdFile.id);
+    expect(fileInDb).toBeUndefined();
+    const fileInDb2 = await FileModel.findById(createdFile2.id);
+    expect(fileInDb2).toBeUndefined();
+  });
 });

@@ -1,11 +1,6 @@
-import {
-  DEFAULT_AGENT_LOBE_SESSION,
-  DEFAULT_INBOX_SESSION,
-  INBOX_SESSION_ID,
-} from '@/const/session';
+import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
 import { BaseModel } from '@/database/core';
 import { DB_Session, DB_SessionSchema } from '@/database/schemas/session';
-import { DBModel } from '@/types/database/db';
 import { LobeAgentSession, SessionGroupKey } from '@/types/session';
 import { merge } from '@/utils/merge';
 import { uuid } from '@/utils/uuid';
@@ -38,59 +33,39 @@ class _SessionModel extends BaseModel {
     return this.table.where('group').equals(group).toArray();
   }
 
-  async findById(id: string) {
-    let session: DBModel<DB_Session>;
-    if (id === INBOX_SESSION_ID) {
-      session = await this.findByIdOrCreate(id);
-    } else {
-      session = await this.table.get(id);
-    }
-    return session;
+  async update(id: string, data: Partial<DB_Session>) {
+    return super._update(id, data);
   }
-
-  async findByIdOrCreate(id: string) {
-    let item = await this.table.get(id);
-
-    if (!item) {
-      const defaultSession = id === INBOX_SESSION_ID ? DEFAULT_INBOX_SESSION : { id };
-
-      await this.create('agent', defaultSession, id);
-      item = await this.findById(id);
-    }
-
-    return item;
-  }
-
+  /**
+   * Delete a session , also delete all messages and topic associated with it.
+   */
   async delete(id: string) {
-    return this.table.delete(id);
+    return this.db.transaction('rw', [this.table, this.db.topics, this.db.messages], async () => {
+      // Delete all topics associated with the session
+      const topics = await this.db.topics.where('sessionId').equals(id).toArray();
+      const topicIds = topics.map((topic) => topic.id);
+      if (topicIds.length > 0) {
+        await this.db.topics.bulkDelete(topicIds);
+      }
+
+      // Delete all messages associated with the session
+      const messages = await this.db.messages.where('sessionId').equals(id).toArray();
+      const messageIds = messages.map((message) => message.id);
+      if (messageIds.length > 0) {
+        await this.db.messages.bulkDelete(messageIds);
+      }
+
+      // Finally, delete the session itself
+      await this.table.delete(id);
+    });
   }
 
   async clearTable() {
     return this.table.clear();
   }
 
-  async update(id: string, data: Partial<DB_Session>) {
-    return super._update(id, data);
-  }
-
-  /**
-   * Add message IDs to a session's messages array
-   * @param sessionId The ID of the session
-   * @param messageIds An array of message IDs to add
-   */
-  async addMessages(sessionId: string, messageIds: string[]) {
-    const session = await this.findById(sessionId);
-
-    if (!session) {
-      throw new Error(`Session not found. [id] ${sessionId} `);
-    }
-
-    // Combine the existing messages with the new message IDs
-    // Ensuring there are no duplicate IDs
-    const updatedMessages = Array.from(new Set([...session.messages, ...messageIds]));
-
-    // Update the session with the new messages array
-    await this.update(sessionId, { messages: updatedMessages });
+  async findById(id: string) {
+    return this.table.get(id);
   }
 }
 

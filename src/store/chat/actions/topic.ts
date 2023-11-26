@@ -1,7 +1,8 @@
-/* eslint-disable sort-keys-fix/sort-keys-fix */
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Note: To make the code more logic and readable, we just disable the auto sort key eslint rule
 // DON'T REMOVE THE FIRST LINE
 import { t } from 'i18next';
+import { produce } from 'immer';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -15,28 +16,23 @@ import { ChatMessage } from '@/types/chatMessage';
 import { ChatTopic } from '@/types/topic';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { ChatTopicDispatch, topicReducer } from '../reducers/topic';
 import { chatSelectors, topicSelectors } from '../selectors';
 
 const n = setNamespace('topic');
 
 export interface ChatTopicAction {
-  dispatchTopic: (payload: ChatTopicDispatch) => void;
   favoriteTopic: (id: string, favState: boolean) => Promise<void>;
   openNewTopicOrSaveTopic: () => void;
   refreshTopic: () => Promise<void>;
   removeAllTopics: () => Promise<void>;
   removeSessionTopics: () => Promise<void>;
   removeTopic: (id: string) => Promise<void>;
-  /**
-   * TODO
-   * 移出所有未标记的话题
-   */
   removeUnstarredTopic: () => void;
   saveToTopic: () => Promise<string | undefined>;
   summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
-
   switchTopic: (id?: string) => Promise<void>;
+
+  updateTopicTitleInSummary: (id: string, title: string) => void;
   updateTopicLoading: (id?: string) => void;
   updateTopicTitle: (id: string, title: string) => Promise<void>;
   useFetchTopics: (sessionId: string) => SWRResponse<ChatTopic[]>;
@@ -87,18 +83,18 @@ export const chatTopic: StateCreator<
   },
   // update
   summaryTopicTitle: async (topicId, messages) => {
-    const { dispatchTopic, updateTopicLoading, refreshTopic } = get();
+    const { updateTopicTitleInSummary, updateTopicLoading, refreshTopic } = get();
     const topic = topicSelectors.getTopicById(topicId)(get());
     if (!topic) return;
 
-    dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: LOADING_FLAT });
+    updateTopicTitleInSummary(topicId, LOADING_FLAT);
 
     let output = '';
 
     // 自动总结话题标题
     await chatService.fetchPresetTaskResult({
       onError: () => {
-        dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: topic.title });
+        updateTopicTitleInSummary(topicId, topic.title);
       },
       onFinish: (text) => {
         topicService.updateTitle(topicId, text);
@@ -108,7 +104,7 @@ export const chatTopic: StateCreator<
       },
       onMessageHandle: (x) => {
         output += x;
-        dispatchTopic({ id: topicId, key: 'title', type: 'updateChatTopic', value: output });
+        updateTopicTitleInSummary(topicId, output);
       },
       params: await chainSummaryTitle(messages),
     });
@@ -175,13 +171,15 @@ export const chatTopic: StateCreator<
   },
 
   // Internal process method of the topics
-  dispatchTopic: (payload) => {
-    const { activeId } = get();
-    if (!activeId) return;
+  updateTopicTitleInSummary: (id, title) => {
+    const topics = produce(get().topics, (draftState) => {
+      const topic = draftState.find((i) => i.id === id);
 
-    const topics = topicReducer(get().topics, payload);
+      if (!topic) return;
+      topic.title = title;
+    });
 
-    set({ topics }, false, n(`dispatchTopic/${payload.type}`, payload));
+    set({ topics }, false, n(`updateTopicTitleInSummary`, { id, title }));
   },
   updateTopicLoading: (id) => {
     set({ topicLoadingId: id }, false, n('updateTopicLoading'));
