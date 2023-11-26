@@ -7,7 +7,7 @@ export interface ChatStoreState {
    * @title 当前活动的会话
    * @description 当前正在编辑或查看的会话
    */
-  activeId: string | undefined;
+  activeId: string;
   activeTopicId?: string;
   /**
    * @deprecated
@@ -17,6 +17,7 @@ export interface ChatStoreState {
   inputMessage: string;
   messageLoadingIds: [];
   messages: ChatMessage[];
+  messagesInit: boolean;
   shareLoading?: boolean;
   topicSearchKeywords: string;
   topics: ChatTopic[];
@@ -29,6 +30,7 @@ export const initialState: ChatStoreState = {
   inputMessage: '',
   messageLoadingIds: [],
   messages: [],
+  messagesInit: false,
   topicSearchKeywords: '',
   topics: [],
   topicsInit: false,

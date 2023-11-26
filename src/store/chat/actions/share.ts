@@ -4,12 +4,12 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { genShareGPTUrl } from '@/services/shareGPT';
-import { ChatStore } from '@/store/chat/store';
+import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ShareGPTConversation } from '@/types/share';
 
-import { sessionSelectors } from '../../session/selectors';
 import { chatSelectors } from '../selectors';
+import { ChatStore } from '../store';
 
 interface ShareMessage {
   from: 'human' | 'gpt';
@@ -50,18 +50,14 @@ export interface ShareAction {
   }) => void;
 }
 
-export const chatShare: StateCreator<
-  ChatStore,
-  [['zustand/devtools', never]],
-  [],
-  ShareAction
-> = (set, get) => ({
+export const chatShare: StateCreator<ChatStore, [['zustand/devtools', never]], [], ShareAction> = (
+  set,
+  get,
+) => ({
   shareToShareGPT: async ({ withSystemRole, withPluginInfo, avatar }) => {
-    const session = sessionSelectors.currentSession(get());
-    if (!session) return;
     const messages = chatSelectors.currentChats(get());
-    const config = agentSelectors.currentAgentConfig(get());
-    const meta = agentSelectors.currentAgentMeta(get());
+    const config = agentSelectors.currentAgentConfig(useSessionStore.getState());
+    const meta = agentSelectors.currentAgentMeta(useSessionStore.getState());
 
     const defaultMsg: ShareGPTConversation['items'] = [];
     const showSystemRole = withSystemRole && !!config.systemRole;

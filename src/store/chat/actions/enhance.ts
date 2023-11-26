@@ -5,78 +5,65 @@ import { chainLangDetect } from '@/chains/langDetect';
 import { chainTranslate } from '@/chains/translate';
 import { supportLocales } from '@/locales/options';
 import { chatService } from '@/services/chat';
+import { messageService } from '@/services/message';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { sessionSelectors } from '../../session/selectors';
-
-const t = setNamespace('translate');
+const t = setNamespace('enhance');
 
 /**
- * 翻译事件
+ * enhance chat action like translate,tts
  */
-export interface ChatTranslateAction {
-  clearTTS: (id: string) => void;
+export interface ChatEnhanceAction {
+  clearTTS: (id: string) => Promise<void>;
 
-  clearTranslate: (id: string) => void;
-  /**
-   * 翻译消息
-   * @param id
-   */
+  clearTranslate: (id: string) => Promise<void>;
   translateMessage: (id: string, targetLang: string) => Promise<void>;
-  ttsMessage: (id: string, init?: boolean) => void;
+  ttsMessage: (id: string, init?: boolean) => Promise<void>;
 }
 
-export const chatTranslate: StateCreator<
+export const chatEnhance: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatTranslateAction
+  ChatEnhanceAction
 > = (set, get) => ({
-  clearTTS: (id) => {
-    get().dispatchMessage({
-      id,
-      key: 'tts',
-      type: 'updateMessageExtra',
-      value: null,
-    });
+  clearTTS: async (id) => {
+    await messageService.updateMessageTTS(id, null);
+    await get().refreshMessages();
   },
 
-  clearTranslate: (id) => {
-    get().dispatchMessage({
-      id,
-      key: 'translate',
-      type: 'updateMessageExtra',
-      value: null,
-    });
+  clearTranslate: async (id) => {
+    await messageService.updateMessageTranslate(id, null);
+    await get().refreshMessages();
   },
 
   translateMessage: async (id, targetLang) => {
-    const { toggleChatLoading, dispatchMessage } = get();
+    const { toggleChatLoading, dispatchMessage, refreshMessages } = get();
 
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
 
-    let content = '';
-    let from = '';
-
-    dispatchMessage({
-      id,
-      key: 'translate',
-      type: 'updateMessageExtra',
-      value: { content: '', to: targetLang },
-    });
+    // create translate extra
+    await messageService.updateMessageTranslate(id, { content: '', from: '', to: targetLang });
+    await refreshMessages();
 
     toggleChatLoading(true, id, t('translateMessage(start)', { id }) as string);
+
+    let content = '';
+    let from = '';
 
     // detect from language
     chatService
       .fetchPresetTaskResult({
         params: chainLangDetect(message.content),
       })
-      .then((data) => {
+      .then(async (data) => {
         if (data && supportLocales.includes(data)) from = data;
+
+        await messageService.updateMessageTranslate(id, { content, from, to: targetLang });
+        await refreshMessages();
       });
 
     // translate to target language
@@ -85,7 +72,7 @@ export const chatTranslate: StateCreator<
         dispatchMessage({
           id,
           key: 'translate',
-          type: 'updateMessageExtra',
+          type: 'updateMessage',
           value: produce({ content: '', from, to: targetLang }, (draft) => {
             content += text;
             draft.content += content;
@@ -95,18 +82,14 @@ export const chatTranslate: StateCreator<
       params: chainTranslate(message.content, targetLang),
     });
 
+    await messageService.updateMessageTranslate(id, { content, from, to: targetLang });
+    await refreshMessages();
+
     toggleChatLoading(false);
   },
 
-  ttsMessage: (id, init) => {
-    const { dispatchMessage } = get();
-    dispatchMessage({
-      id,
-      key: 'tts',
-      type: 'updateMessageExtra',
-      value: {
-        init: Boolean(init),
-      },
-    });
+  ttsMessage: async (id, init) => {
+    await messageService.updateMessageTTS(id, { init: Boolean(init) });
+    await get().refreshMessages();
   },
 });

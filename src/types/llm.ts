@@ -46,6 +46,7 @@ export interface LLMParams {
 }
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function';
+export type MessageRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
 export interface LLMMessage {
   content: string;

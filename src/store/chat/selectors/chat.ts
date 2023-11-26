@@ -1,20 +1,59 @@
 import { LobePluginType } from '@lobehub/chat-plugin-sdk';
 import { t } from 'i18next';
 
-import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { DB_Message } from '@/database/schemas/message';
 import { chatHelpers } from '@/store/chat/helpers';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
 
 import type { ChatStore } from '../store';
 
+const getMeta = (message: ChatMessage) => {
+  switch (message.role) {
+    case 'user': {
+      return {
+        avatar: useGlobalStore.getState().settings.avatar || DEFAULT_USER_AVATAR,
+      };
+    }
+
+    case 'system': {
+      return message.meta;
+    }
+
+    case 'assistant': {
+      return agentSelectors.currentAgentMeta(useSessionStore.getState());
+    }
+
+    case 'function': {
+      return {
+        avatar: '🧩',
+        title: 'plugin-unknown',
+      };
+    }
+  }
+};
+
 // 当前激活的消息列表
 export const currentChats = (s: ChatStore): ChatMessage[] => {
   if (!s.activeId) return [];
 
-  return s.messages;
+  return s.messages.map((i) => {
+    const message = i as unknown as DB_Message;
+
+    return {
+      ...i,
+      extra: {
+        fromModel: message.fromModel,
+        translate: message.translate,
+        tts: message.tts,
+      },
+      meta: getMeta(i),
+    } as ChatMessage;
+  });
 };
 
 const initTime = Date.now();

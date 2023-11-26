@@ -9,14 +9,14 @@ import { ChatMessageAction, chatMessage } from './actions/message';
 import { ChatPluginAction, chatPlugin } from './actions/plugin';
 import { ShareAction, chatShare } from './actions/share';
 import { ChatTopicAction, chatTopic } from './actions/topic';
-import { ChatTranslateAction, chatTranslate } from './actions/translate';
+import { ChatEnhanceAction, chatEnhance } from './actions/enhance';
 import { ChatStoreState, initialState } from './initialState';
 
 export interface ChatStoreAction
   extends ChatMessageAction,
     ChatTopicAction,
     ShareAction,
-    ChatTranslateAction,
+    ChatEnhanceAction,
     ChatPluginAction {}
 
 export type ChatStore = ChatStoreAction & ChatStoreState;
@@ -29,7 +29,7 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   ...chatMessage(...params),
   ...chatTopic(...params),
   ...chatShare(...params),
-  ...chatTranslate(...params),
+  ...chatEnhance(...params),
   ...chatPlugin(...params),
 });
 

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSTT } from '@/hooks/useSTT';
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 import { ChatMessageError } from '@/types/chatMessage';
 import { getMessageError } from '@/utils/fetch';
 
@@ -25,7 +25,7 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
 
-  const [loading, updateInputMessage] = useSessionStore((s) => [
+  const [loading, updateInputMessage] = useChatStore((s) => [
     !!s.chatLoadingId,
     s.updateInputMessage,
   ]);

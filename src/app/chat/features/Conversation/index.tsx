@@ -8,7 +8,7 @@ import SafeSpacing from '@/components/SafeSpacing';
 
 import ChatList from './ChatList';
 import ChatScrollAnchor from './ScrollAnchor';
-import { usePluginsInit } from './usePluginsInit';
+import { useInitConversation } from './useInitConversation';
 
 const useStyles = createStyles(
   ({ css, responsive, stylish }) => css`
@@ -31,8 +31,8 @@ const Conversation = memo<ConversationProps>(({ mobile, chatInput }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
 
-  // fetch plugin list and init plugins
-  usePluginsInit();
+  // init conversation
+  useInitConversation();
 
   return (
     <Flexbox flex={1} style={{ position: 'relative' }}>

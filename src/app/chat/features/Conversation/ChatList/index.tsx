@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { PREFIX_KEY, REGENERATE_KEY } from '@/const/hotkeys';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { useSessionChatInit, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
 import { renderActions, useActionsClick } from './Actions';
@@ -17,15 +17,15 @@ import { renderMessages, useAvatarsClick } from './Messages';
 import SkeletonList from './SkeletonList';
 
 const List = memo(() => {
-  const init = useSessionChatInit();
   const { t } = useTranslation('common');
 
   const data = useChatStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
 
-  const [chatLoadingId, resendMessage, dispatchMessage] = useChatStore((s) => [
+  const [init, chatLoadingId, resendMessage, updateMessageContent] = useChatStore((s) => [
+    s.messagesInit,
     s.chatLoadingId,
     s.resendMessage,
-    s.dispatchMessage,
+    s.updateMessageContent,
   ]);
 
   const [displayMode, enableHistoryCount, historyCount] = useSessionStore((s) => {
@@ -59,9 +59,7 @@ const List = memo(() => {
       loadingId={chatLoadingId}
       onActionsClick={onActionsClick}
       onAvatarsClick={onAvatarsClick}
-      onMessageChange={(id, content) =>
-        dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content })
-      }
+      onMessageChange={(id, content) => updateMessageContent(id, content)}
       renderActions={renderActions}
       renderErrorMessages={renderErrorMessages}
       renderMessages={renderMessages}

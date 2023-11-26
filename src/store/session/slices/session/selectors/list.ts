@@ -12,10 +12,10 @@ export const customAgentSessions = (s: SessionStore): LobeSessions =>
   s.sessions.filter((s) => s.id !== INBOX_SESSION_ID);
 
 export const pinnedSessionList = (s: SessionStore) =>
-  s.sessions.filter((s) => s.group === SessionGroupDefaultKeys.Pinned);
+  customAgentSessions(s).filter((s) => s.group === SessionGroupDefaultKeys.Pinned);
 
 export const unpinnedSessionList = (s: SessionStore) =>
-  s.sessions.filter((s) => s.group === SessionGroupDefaultKeys.Default);
+  customAgentSessions(s).filter((s) => s.group === SessionGroupDefaultKeys.Default);
 
 export const getSessionById =
   (id: string) =>

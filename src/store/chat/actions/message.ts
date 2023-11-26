@@ -1,21 +1,24 @@
+/*eslint-disable sort-keys-fix/sort-keys-fix */
 import { template } from 'lodash-es';
+import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { LOADING_FLAT } from '@/const/message';
 import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
+import { DB_Message } from '@/database/schemas/message';
 import { chatService } from '@/services/chat';
+import { messageService } from '@/services/message';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { filesSelectors, useFileStore } from '@/store/files';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
+import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
 import { OpenAIChatMessage, UserMessageContentPart } from '@/types/openai/chat';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
-import { nanoid } from '@/utils/uuid';
 
 import { FileDispatch, filesReducer } from '../reducers/files';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
@@ -33,23 +36,17 @@ export interface ChatMessageAction {
    */
   clearMessage: () => void;
   /**
-   * 处理 ai 消息的核心逻辑（包含前处理与后处理）
-   * @param messages - 聊天消息数组
-   * @param parentId - 父消息 ID，可选
+   * core process of the AI message (include preprocess and postprocess)
    */
   coreProcessMessage: (messages: ChatMessage[], parentId: string) => Promise<void>;
-  /**
-   * TODO: 删除单条消息
-   * @param id - 消息 ID
-   */
-  deleteMessage: (id: string) => void;
+  deleteMessage: (id: string) => Promise<void>;
   /**
    * agent files dispatch method
    */
   dispatchAgentFile: (payload: FileDispatch) => void;
   /**
-   * 分发消息
-   * @param payload - 消息分发参数
+   * update message at the frontend point
+   * this method will not update messages to database
    */
   dispatchMessage: (payload: MessageDispatch) => void;
   /**
@@ -67,17 +64,12 @@ export interface ChatMessageAction {
     isFunctionCall: boolean;
   }>;
 
-  /**
-   * 重新发送消息
-   * @param id - 消息 ID
-   */
+  refreshMessages: () => Promise<void>;
+
   resendMessage: (id: string) => Promise<void>;
-  /**
-   * 发送消息
-   * @param text - 消息文本
-   */
   sendMessage: (text: string, images?: { id: string; url: string }[]) => Promise<void>;
   stopGenerateMessage: () => void;
+
   toggleChatLoading: (
     loading: boolean,
     id?: string,
@@ -85,6 +77,8 @@ export interface ChatMessageAction {
   ) => AbortController | undefined;
 
   updateInputMessage: (message: string) => void;
+  updateMessageContent: (id: string, content: string) => Promise<void>;
+  useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
@@ -95,91 +89,201 @@ export const chatMessage: StateCreator<
   [],
   ChatMessageAction
 > = (set, get) => ({
-  clearMessage: () => {
-    const { dispatchMessage, activeTopicId, dispatchTopic, toggleTopic } = get();
+  deleteMessage: async (id) => {
+    await messageService.removeMessage(id);
+    await get().refreshMessages();
+  },
+  clearMessage: async () => {
+    const { activeId, activeTopicId, refreshMessages, toggleTopic } = get();
 
-    dispatchMessage({ topicId: activeTopicId, type: 'resetMessages' });
+    await messageService.removeMessages(activeId, activeTopicId);
 
     if (activeTopicId) {
-      dispatchTopic({ id: activeTopicId, type: 'deleteChatTopic' });
+      // TODO：topicService 删除 topic
     }
+
+    refreshMessages();
 
     // after remove topic , go back to default topic
     toggleTopic();
   },
+  resendMessage: async (messageId) => {
+    // 1. 构造所有相关的历史记录
+    const chats = chatSelectors.currentChats(get());
+
+    const currentIndex = chats.findIndex((c) => c.id === messageId);
+    if (currentIndex < 0) return;
+
+    const currentMessage = chats[currentIndex];
+
+    let contextMessages: ChatMessage[] = [];
+
+    switch (currentMessage.role) {
+      case 'function':
+      case 'user': {
+        contextMessages = chats.slice(0, currentIndex + 1);
+        break;
+      }
+      case 'assistant': {
+        // 消息是 AI 发出的因此需要找到它的 user 消息
+        const userId = currentMessage.parentId;
+        const userIndex = chats.findIndex((c) => c.id === userId);
+        // 如果消息没有 parentId，那么同 user/function 模式
+        contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
+        break;
+      }
+    }
+
+    if (contextMessages.length <= 0) return;
+
+    const { coreProcessMessage } = get();
+
+    const latestMsg = contextMessages.filter((s) => s.role === 'user').at(-1);
+
+    if (!latestMsg) return;
+
+    await coreProcessMessage(contextMessages, latestMsg.id);
+  },
+  sendMessage: async (message, files) => {
+    const { dispatchAgentFile, coreProcessMessage, activeTopicId, activeId } = get();
+    if (!message || !activeId) return;
+
+    const fileIdList = files?.map((f) => f.id);
+
+    let newMessage: DB_Message = {
+      content: message,
+      files: fileIdList,
+      role: 'user',
+      sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    };
+
+    // if message has attached with files, then add files to message and the agent
+    if (fileIdList && fileIdList.length > 0) {
+      dispatchAgentFile({ files: fileIdList, type: 'addFiles' });
+    }
+
+    const id = await messageService.create(newMessage);
+    await get().refreshMessages();
+
+    // Get the current messages to generate AI response
+    const messages = chatSelectors.currentChats(get());
+
+    await coreProcessMessage(messages, id);
+
+    // check activeTopic and then auto create topic
+    const chats = chatSelectors.currentChats(get());
+
+    const agentConfig = getAgentConfig();
+    // if autoCreateTopic is false, then stop
+    if (!agentConfig.enableAutoCreateTopic) return;
+
+    if (!activeTopicId && chats.length >= agentConfig.autoCreateTopicThreshold) {
+      const { saveToTopic, toggleTopic } = get();
+      const id = await saveToTopic();
+      if (id) toggleTopic(id);
+    }
+  },
+  stopGenerateMessage: () => {
+    const { abortController, toggleChatLoading } = get();
+    if (!abortController) return;
+
+    abortController.abort();
+
+    toggleChatLoading(false);
+  },
+  updateInputMessage: (message) => {
+    set({ inputMessage: message }, false, t('updateInputMessage', message));
+  },
+  updateMessageContent: async (id, content) => {
+    const { dispatchMessage, refreshMessages } = get();
+
+    // Due to the async update method and refresh need about 100ms
+    // we need to update the message content at the frontend to avoid the update flick
+    // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
+    dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
+
+    await messageService.updateMessageContent(id, content);
+    await refreshMessages();
+  },
+  useFetchMessages: (sessionId) =>
+    useSWR<ChatMessage[]>(
+      [sessionId, get().activeTopicId],
+      async ([sessionId, topicId]: [string, string | undefined]) =>
+        messageService.getMessages(sessionId, topicId),
+      {
+        onSuccess: (messages, key) => {
+          set(
+            { activeId: sessionId, messages, messagesInit: true },
+            false,
+            t('useFetchMessages', {
+              messages,
+              queryKey: key,
+            }),
+          );
+        },
+      },
+    ),
+  refreshMessages: async () => {
+    await mutate([get().activeId, get().activeTopicId]);
+  },
+
+  // the internal process method of the AI message
   coreProcessMessage: async (messages, userMessageId) => {
-    const { dispatchMessage, fetchAIChatMessage, triggerFunctionCall, activeTopicId } = get();
+    const { fetchAIChatMessage, triggerFunctionCall, refreshMessages, activeTopicId } = get();
 
     const { model } = getAgentConfig();
 
-    // 添加一个空的信息用于放置 ai 响应，注意顺序不能反
-    // 因为如果顺序反了，messages 中将包含新增的 ai message
-    const mid = nanoid();
-
-    dispatchMessage({
-      id: mid,
-      message: LOADING_FLAT,
-      parentId: userMessageId,
+    // 1. Add an empty message to place the AI response
+    const assistantMessage: DB_Message = {
       role: 'assistant',
-      type: 'addMessage',
-    });
+      content: LOADING_FLAT,
+      fromModel: model,
 
-    // 如果有 activeTopicId，则添加 topicId
-    if (activeTopicId) {
-      dispatchMessage({ id: mid, key: 'topicId', type: 'updateMessage', value: activeTopicId });
-    }
+      parentId: userMessageId,
+      sessionId: get().activeId,
+      topicId: activeTopicId, // if there is activeTopicId，then add it to topicId
+    };
 
-    // 为模型添加 fromModel 的额外信息
-    dispatchMessage({ id: mid, key: 'fromModel', type: 'updateMessageExtra', value: model });
+    const mid = await messageService.create(assistantMessage);
+    await refreshMessages();
 
-    // 生成 ai message
+    // 2. fetch the AI response
     const { isFunctionCall, content, functionCallAtEnd, functionCallContent } =
       await fetchAIChatMessage(messages, mid);
 
-    // 如果是 function，则发送函数调用方法
+    // update the content after fetch result
+    await messageService.updateMessageContent(mid, content);
+
+    // 3. if it's the function call message, trigger the function method
     if (isFunctionCall) {
       let functionId = mid;
 
+      // if the function call is at the end of the message, then create a new function message
       if (functionCallAtEnd) {
         // create a new separate message and remove the function call from the prev message
-        dispatchMessage({
-          id: mid,
-          key: 'content',
-          type: 'updateMessage',
-          value: content.replace(functionCallContent, ''),
-        });
 
-        functionId = nanoid();
-        dispatchMessage({
-          id: functionId,
-          message: functionCallContent,
+        await messageService.updateMessageContent(mid, content.replace(functionCallContent, ''));
+
+        const functionMessage: DB_Message = {
+          role: 'function',
+          content: functionCallContent,
+          fromModel: model,
+
           parentId: userMessageId,
-          role: 'assistant',
-          type: 'addMessage',
-        });
-
-        // also add activeTopicId
-        if (activeTopicId)
-          dispatchMessage({
-            id: functionId,
-            key: 'topicId',
-            type: 'updateMessage',
-            value: activeTopicId,
-          });
+          sessionId: get().activeId,
+          topicId: activeTopicId,
+        };
+        functionId = await messageService.create(functionMessage);
       }
 
       triggerFunctionCall(functionId);
     }
   },
-
-  deleteMessage: (id) => {
-    get().dispatchMessage({ id, type: 'deleteMessage' });
-  },
-
   dispatchAgentFile: (payload) => {
     const { activeId } = get();
-    const session = sessionSelectors.currentSession(get());
-    if (!activeId || !session) return;
+    if (!activeId) return;
 
     const files = filesReducer(session.files || [], payload);
 
@@ -192,11 +296,10 @@ export const chatMessage: StateCreator<
 
     const messages = messagesReducer(get().messages, payload);
 
-    set({ messages }, false, t('dispatchMessage', payload));
+    set({ messages }, false, t(`dispatchMessage/${payload.type}`, payload));
   },
-
   fetchAIChatMessage: async (messages, assistantId) => {
-    const { dispatchMessage, toggleChatLoading } = get();
+    const { dispatchMessage, toggleChatLoading, refreshMessages } = get();
 
     const abortController = toggleChatLoading(
       true,
@@ -282,24 +385,25 @@ export const chatMessage: StateCreator<
     let functionCallContent = '';
 
     await fetchSSE(fetcher, {
-      onErrorHandle: (error) => {
-        dispatchMessage({ id: assistantId, key: 'error', type: 'updateMessage', value: error });
+      onErrorHandle: async (error) => {
+        await messageService.updateMessageError(assistantId, error);
+        await refreshMessages();
       },
       onMessageHandle: (text) => {
         output += text;
-
+        // Note: Don't need change this to  `messageService.updateMessageContent`
+        // because we don't need to update the message content to the database in the middle of the process
         dispatchMessage({ id: assistantId, key: 'content', type: 'updateMessage', value: output });
 
         // is this message is just a function call
-        if (isFunctionMessageAtStart(output)) {
-          isFunctionCall = true;
-        }
+        if (isFunctionMessageAtStart(output)) isFunctionCall = true;
       },
     });
 
     toggleChatLoading(false, undefined, t('generateMessage(end)') as string);
 
-    // also exist message like this:  请稍等，我帮您查询一下。{"function_call": {"name": "plugin-identifier____recommendClothes____standalone", "arguments": "{\n "mood": "",\n "gender": "man"\n}"}}
+    // also exist message like this:
+    // 请稍等，我帮您查询一下。{"function_call": {"name": "plugin-identifier____recommendClothes____standalone", "arguments": "{\n "mood": "",\n "gender": "man"\n}"}}
     if (!isFunctionCall) {
       const { content, valid } = testFunctionMessageAtEnd(output);
 
@@ -313,98 +417,6 @@ export const chatMessage: StateCreator<
 
     return { content: output, functionCallAtEnd, functionCallContent, isFunctionCall };
   },
-
-  resendMessage: async (messageId) => {
-    // 1. 构造所有相关的历史记录
-    const chats = chatSelectors.currentChats(get());
-
-    const currentIndex = chats.findIndex((c) => c.id === messageId);
-    if (currentIndex < 0) return;
-
-    const currentMessage = chats[currentIndex];
-
-    let contextMessages: ChatMessage[] = [];
-
-    switch (currentMessage.role) {
-      case 'function':
-      case 'user': {
-        contextMessages = chats.slice(0, currentIndex + 1);
-        break;
-      }
-      case 'assistant': {
-        // 消息是 AI 发出的因此需要找到它的 user 消息
-        const userId = currentMessage.parentId;
-        const userIndex = chats.findIndex((c) => c.id === userId);
-        // 如果消息没有 parentId，那么同 user/function 模式
-        contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
-        break;
-      }
-    }
-
-    if (contextMessages.length <= 0) return;
-
-    const { coreProcessMessage } = get();
-
-    const latestMsg = contextMessages.filter((s) => s.role === 'user').at(-1);
-
-    if (!latestMsg) return;
-
-    await coreProcessMessage(contextMessages, latestMsg.id);
-  },
-
-  sendMessage: async (message, files) => {
-    const { dispatchMessage, dispatchAgentFile, coreProcessMessage, activeTopicId } = get();
-    if (!message) return;
-
-    const userId = nanoid();
-
-    dispatchMessage({
-      id: userId,
-      message: message,
-      role: 'user',
-      type: 'addMessage',
-    });
-
-    // if message has attached with files, then add files to message and the agent
-    if (files && files.length > 0) {
-      const fileIdList = files.map((f) => f.id);
-      dispatchMessage({ id: userId, key: 'files', type: 'updateMessage', value: fileIdList });
-
-      dispatchAgentFile({ files: fileIdList, type: 'addFiles' });
-    }
-
-    // if there is activeTopicId，then add topicId to message
-    if (activeTopicId) {
-      dispatchMessage({ id: userId, key: 'topicId', type: 'updateMessage', value: activeTopicId });
-    }
-
-    // Get the current messages to generate AI response
-    const messages = chatSelectors.currentChats(get());
-
-    await coreProcessMessage(messages, userId);
-
-    // check activeTopic and then auto create topic
-    const chats = chatSelectors.currentChats(get());
-
-    const agentConfig = getAgentConfig();
-    // if autoCreateTopic is false, then stop
-    if (!agentConfig.enableAutoCreateTopic) return;
-
-    if (!activeTopicId && chats.length >= agentConfig.autoCreateTopicThreshold) {
-      const { saveToTopic, toggleTopic } = get();
-      const id = await saveToTopic();
-      if (id) toggleTopic(id);
-    }
-  },
-
-  stopGenerateMessage: () => {
-    const { abortController, toggleChatLoading } = get();
-    if (!abortController) return;
-
-    abortController.abort();
-
-    toggleChatLoading(false);
-  },
   toggleChatLoading: (loading, id, action) => {
     if (loading) {
       const abortController = new AbortController();
@@ -413,8 +425,5 @@ export const chatMessage: StateCreator<
     } else {
       set({ abortController: undefined, chatLoadingId: undefined }, false, action);
     }
-  },
-  updateInputMessage: (message) => {
-    set({ inputMessage: message }, false, t('updateInputMessage', message));
   },
 });

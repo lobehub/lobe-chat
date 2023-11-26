@@ -1,0 +1,109 @@
+import { DeepPartial } from 'utility-types';
+
+import { BaseModel } from '@/database/core';
+import { DB_Message, DB_MessageSchema } from '@/database/schemas/message';
+import { DBModel } from '@/types/database/db';
+import { nanoid } from '@/utils/uuid';
+
+import { SessionModel } from './session';
+
+export interface CreateMessageParams extends DB_Message {
+  // content: string;
+  // role: MessageRoleType;
+  sessionId: string;
+}
+
+export interface QueryMessageParams {
+  current?: number;
+  pageSize?: number;
+  sessionId: string;
+  topicId?: string;
+}
+
+class _MessageModel extends BaseModel {
+  constructor() {
+    super('messages', DB_MessageSchema);
+  }
+  async create(data: CreateMessageParams, defaultValue: Partial<DB_Message> = {}) {
+    const id = nanoid();
+
+    const messageData: DB_Message = { ...defaultValue, ...data };
+
+    // bind the message to session
+    await SessionModel.addMessages(data.sessionId, [id]);
+
+    return this._add(messageData, id);
+  }
+
+  async batchCreate(messages: DB_Message[]) {
+    return this._batchAdd(messages, { idGenerator: nanoid });
+  }
+
+  async query({ sessionId, pageSize = 9999, current = 0 }: QueryMessageParams) {
+    const offset = current * pageSize;
+
+    return (
+      this.table
+        .where('sessionId')
+        .equals(sessionId)
+        .sortBy('createdAt')
+        // handle page size
+        .then((sortedArray) => sortedArray.slice(offset, offset + pageSize))
+    );
+  }
+
+  async findById(id: string): Promise<DBModel<DB_Message>> {
+    return this.table.get(id);
+  }
+
+  async delete(id: string) {
+    const item = await this.findById(id);
+
+    // remove message from session
+    await SessionModel.removeMessages(item.sessionId, [id]);
+
+    return this.table.delete(id);
+  }
+
+  async clearTable() {
+    return this.table.clear();
+  }
+
+  async update(id: string, data: DeepPartial<DB_Message>) {
+    return super._update(id, data);
+  }
+
+  async updateExtra(id: string, data: any) {
+    const item = await this.findById(id);
+
+    return super._update(id, {
+      extra: {
+        ...((item.extra || {}) as unknown as object),
+        ...data,
+      },
+    });
+  }
+
+  /**
+   * Deletes multiple messages based on the assistantId and optionally the topicId.
+   * If topicId is not provided, it deletes messages where topicId is undefined.
+   * If topicId is provided, it deletes messages with that specific topicId.
+   *
+   * @param {string} sessionId - The identifier of the assistant associated with the messages.
+   * @param {string | undefined} topicId - The identifier of the topic associated with the messages (optional).
+   * @returns {Promise<void>}
+   */
+  async batchDelete(sessionId: string, topicId: string | undefined): Promise<void> {
+    // use both assistantId and topicId as the filter criteria in the query.
+    const query = this.table.where({ sessionId, topicId }); // Use a compound index
+
+    // Retrieve a collection of message IDs that satisfy the criteria
+    const messageIds = await query.primaryKeys();
+
+    // Use the bulkDelete method to delete all selected messages in bulk
+    await this.table.bulkDelete(messageIds);
+    await SessionModel.removeMessages(sessionId, messageIds);
+  }
+}
+
+export const MessageModel = new _MessageModel();
