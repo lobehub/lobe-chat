@@ -10,6 +10,10 @@ export class MessageService {
     return id;
   }
 
+  async batchCreate(messages: ChatMessage[]) {
+    return MessageModel.batchCreate(messages);
+  }
+
   async getMessages(sessionId: string, topicId: string | undefined): Promise<ChatMessage[]> {
     console.time('getMessages');
 

@@ -23,7 +23,7 @@ import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { FileDispatch, filesReducer } from '../reducers/files';
+import { FileDispatch } from '../reducers/files';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
 import { chatSelectors } from '../selectors';
 
@@ -33,6 +33,7 @@ export interface ChatMessageAction {
   // create
   resendMessage: (id: string) => Promise<void>;
   sendMessage: (text: string, images?: { id: string; url: string }[]) => Promise<void>;
+  importMessages: (messages: ChatMessage[]) => Promise<void>;
   // delete
   /**
    * clear message on the active session
@@ -190,6 +191,12 @@ export const chatMessage: StateCreator<
       const id = await saveToTopic();
       if (id) switchTopic(id);
     }
+  },
+
+  importMessages: async (messages) => {
+    await messageService.batchCreate(messages);
+
+    await get().refreshMessages();
   },
   stopGenerateMessage: () => {
     const { abortController, toggleChatLoading } = get();

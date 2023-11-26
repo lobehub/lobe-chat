@@ -16,7 +16,7 @@ export const dbSchemaV2 = {
   files: '&id, name, fileType, saveMode, createdAt, updatedAt, messageId, sessionId',
 
   messages:
-    '&id, role, fromModel, favorite, createdAt, updatedAt, sessionId, topicId, quotaId, parentId, [sessionId+topicId]',
-  sessions: '&id, type, group, meta.title, meta.description, createdAt, updatedAt',
+    '&id, role, content, fromModel, favorite, createdAt, updatedAt, sessionId, topicId, quotaId, parentId, [sessionId+topicId]',
+  sessions: '&id, type, title, group, meta.title, meta.description, createdAt, updatedAt',
   topics: '&id, title, favorite, createdAt, updatedAt, sessionId',
 };

@@ -47,7 +47,6 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
       label: (
         <Upload
           beforeUpload={(file) => {
-            console.log(file);
             importConfig(file);
 
             return false;

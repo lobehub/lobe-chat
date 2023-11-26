@@ -46,7 +46,15 @@ const ExtraList = memo(() => {
 
   return (
     <>
-      <Upload maxCount={1} onChange={importConfig} showUploadList={false}>
+      <Upload
+        beforeUpload={(file) => {
+          importConfig(file);
+
+          return false;
+        }}
+        maxCount={1}
+        showUploadList={false}
+      >
         <Item icon={HardDriveUpload} label={t('import')} style={{ width: '100vw' }} />
       </Upload>
       {items.map(({ value, icon, label, onClick }) => (

@@ -26,10 +26,7 @@ class _TopicModel extends BaseModel {
   }
 
   async batchCreate(topics: CreateTopicParams[]) {
-    return this._batchAdd(
-      topics.map((t) => ({ ...t, favorite: t.favorite ? 1 : 0 })),
-      { idGenerator: nanoid },
-    );
+    return this._batchAdd(topics.map((t) => ({ ...t, favorite: t.favorite ? 1 : 0 })));
   }
 
   async query({ pageSize = 9999, current = 0, sessionId }: QueryTopicParams): Promise<ChatTopic[]> {

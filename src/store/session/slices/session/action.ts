@@ -117,9 +117,7 @@ export const createSessionSlice: StateCreator<
   },
 
   importSessions: async (importSessions) => {
-    console.log('importSessions:', importSessions);
-    const data = await sessionService.batchCreateSessions(importSessions);
-    console.log(data);
+    await sessionService.batchCreateSessions(importSessions);
 
     await get().refresh();
   },

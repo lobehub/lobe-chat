@@ -2,6 +2,7 @@ import { DeepPartial } from 'utility-types';
 
 import { BaseModel } from '@/database/core';
 import { DB_Message, DB_MessageSchema } from '@/database/schemas/message';
+import { ChatMessage } from '@/types/chatMessage';
 import { DBModel } from '@/types/database/db';
 import { nanoid } from '@/utils/uuid';
 
@@ -30,8 +31,8 @@ class _MessageModel extends BaseModel {
     return this._add(messageData, id);
   }
 
-  async batchCreate(messages: DB_Message[]) {
-    return this._batchAdd(messages, { idGenerator: nanoid });
+  async batchCreate(messages: ChatMessage[]) {
+    return this._batchAdd(messages);
   }
 
   async query({ sessionId, topicId, pageSize = 9999, current = 0 }: QueryMessageParams) {
