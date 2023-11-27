@@ -256,9 +256,6 @@ export const chatMessage: StateCreator<
     const { isFunctionCall, content, functionCallAtEnd, functionCallContent } =
       await fetchAIChatMessage(messages, mid);
 
-    // update the content after fetch result
-    await messageService.updateMessageContent(mid, content);
-
     // 3. if it's the function call message, trigger the function method
     if (isFunctionCall) {
       let functionId = mid;
@@ -344,7 +341,7 @@ export const chatMessage: StateCreator<
     }
 
     const fetcher = () =>
-      chatService.getChatCompletion(
+      chatService.createAssistantMessage(
         {
           messages: preprocessMsgs,
           model: config.model,
@@ -363,6 +360,10 @@ export const chatMessage: StateCreator<
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(assistantId, error);
         await refreshMessages();
+      },
+      onFinish: async (content) => {
+        // update the content after fetch result
+        await messageService.updateMessageContent(assistantId, content);
       },
       onMessageHandle: (text) => {
         output += text;

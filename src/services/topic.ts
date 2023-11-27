@@ -43,7 +43,7 @@ class TopicService {
   }
 
   async batchCreateTopics(importTopics: ChatTopic[]) {
-    return TopicModel.batchCreate(importTopics);
+    return TopicModel.batchCreate(importTopics as any);
   }
 
   updateTitle(topicId: string, text: string) {

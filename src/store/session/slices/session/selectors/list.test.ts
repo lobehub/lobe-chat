@@ -3,7 +3,7 @@ import { LanguageModel } from '@/types/llm';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
 import { initLobeSession } from '../initialState';
-import { currentSession, currentSessionSafe, getSessionById, getSessionMetaById } from './list';
+import { sessionSelectors } from './list';
 
 describe('currentSession', () => {
   const s = {
@@ -31,11 +31,11 @@ describe('currentSession', () => {
   } as unknown as SessionStore;
 
   it('should return undefined when s.activeId is not defined', () => {
-    expect(currentSession({ sessions: {} } as any)).toBeUndefined();
+    expect(sessionSelectors.currentSession({ sessions: {} } as any)).toBeUndefined();
   });
 
   it('should return s.sessions[s.activeId] when s.activeId is not equal to INBOX_SESSION_ID', () => {
-    expect(currentSession(s)).toEqual(s.sessions[0]);
+    expect(sessionSelectors.currentSession(s)).toEqual(s.sessions[0]);
   });
 });
 
@@ -65,11 +65,11 @@ describe('currentSessionSafe', () => {
   } as unknown as SessionStore;
 
   it('should return initLobeSession when currentSession(s) returns undefined', () => {
-    expect(currentSessionSafe({ sessions: {} } as any)).toEqual(initLobeSession);
+    expect(sessionSelectors.currentSessionSafe({ sessions: {} } as any)).toEqual(initLobeSession);
   });
 
   it('should return the result of currentSession(s) when it returns a non-undefined value', () => {
-    expect(currentSessionSafe(s)).toEqual(s.sessions[0]);
+    expect(sessionSelectors.currentSessionSafe(s)).toEqual(s.sessions[0]);
   });
 });
 
@@ -99,11 +99,11 @@ describe('getSessionById', () => {
   } as unknown as SessionStore;
 
   it('should return the session with the specified id when id is not equal to INBOX_SESSION_ID', () => {
-    expect(getSessionById('1')(s)).toEqual(s.sessions[0]);
+    expect(sessionSelectors.getSessionById('1')(s)).toEqual(s.sessions[0]);
   });
 
   it('should return initLobeSession when the session with the specified id does not exist', () => {
-    expect(getSessionById('3')(s)).toEqual(initLobeSession);
+    expect(sessionSelectors.getSessionById('3')(s)).toEqual(initLobeSession);
   });
 });
 
@@ -116,10 +116,10 @@ describe('getSessionMetaById', () => {
   } as unknown as SessionStore;
 
   it('should return the meta data of the session with the specified id', () => {
-    expect(getSessionMetaById('1')(s)).toEqual({ title: 'Session 1' });
+    expect(sessionSelectors.getSessionMetaById('1')(s)).toEqual({ title: 'Session 1' });
   });
 
   it('should return an empty object when the session with the specified id does not exist', () => {
-    expect(getSessionMetaById('3')(s)).toEqual({});
+    expect(sessionSelectors.getSessionMetaById('3')(s)).toEqual({});
   });
 });

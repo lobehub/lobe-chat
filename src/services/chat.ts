@@ -8,7 +8,7 @@ import { filesSelectors, useFileStore } from '@/store/files';
 import { usePluginStore } from '@/store/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
 import { ChatMessage } from '@/types/chatMessage';
-import type { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import type {OpenAIChatMessage, OpenAIChatStreamPayload} from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
@@ -24,7 +24,7 @@ interface GetChatCompletionPayload extends Partial<Omit<OpenAIChatStreamPayload,
 }
 
 class ChatService {
-  getChatCompletion = (
+  createAssistantMessage = async (
     { plugins: enabledPlugins, messages, ...params }: GetChatCompletionPayload,
     options?: FetchOptions,
   ) => {
@@ -36,7 +36,6 @@ class ChatService {
       },
       params,
     );
-
     // ============  1. preprocess messages   ============ //
 
     const oaiMessages = this.processMessages(messages);
@@ -54,8 +53,21 @@ class ChatService {
 
     const functions = shouldUseTools ? filterTools : undefined;
 
+    return this.getChatCompletion({ ...params, functions, messages: oaiMessages }, options);
+  };
+
+  getChatCompletion = (params: Partial<OpenAIChatStreamPayload>, options?: FetchOptions) => {
+    const payload = merge(
+      {
+        model: DEFAULT_AGENT_CONFIG.model,
+        stream: true,
+        ...DEFAULT_AGENT_CONFIG.params,
+      },
+      params,
+    );
+
     return fetch(OPENAI_URLS.chat, {
-      body: JSON.stringify({ ...payload, functions, messages: oaiMessages }),
+      body: JSON.stringify(payload),
       headers: createHeaderWithOpenAI({ 'Content-Type': 'application/json' }),
       method: 'POST',
       signal: options?.signal,
@@ -93,7 +105,7 @@ class ChatService {
 
   fetchPresetTaskResult = fetchAIFactory(this.getChatCompletion);
 
-  private processMessages = (messages: ChatMessage[]): OpenAI.ChatCompletionMessageParam[] => {
+  private processMessages = (messages: ChatMessage[]): OpenAIChatMessage[] => {
     // handle content type for vision model
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
@@ -112,7 +124,7 @@ class ChatService {
       ] as UserMessageContentPart[];
     };
 
-    return messages.map((m): OpenAI.ChatCompletionMessageParam => {
+    return messages.map((m): OpenAIChatMessage => {
       switch (m.role) {
         case 'user': {
           return { content: getContent(m), role: m.role };

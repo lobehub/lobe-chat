@@ -19,7 +19,11 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
 
   try {
     const response = await openai.chat.completions.create(
-      { messages, ...params, stream: true },
+      {
+        messages,
+        ...params,
+        stream: true,
+      } as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       { headers: { Accept: '*/*' } },
     );
     const stream = OpenAIStream(response);

@@ -17,8 +17,14 @@ interface UpdatePluginState {
   type: 'updatePluginState';
   value: any;
 }
+interface UpdateMessageExtra {
+  id: string;
+  key: string;
+  type: 'updateMessageExtra';
+  value: any;
+}
 
-export type MessageDispatch = UpdateMessage | UpdatePluginState;
+export type MessageDispatch = UpdateMessage | UpdatePluginState | UpdateMessageExtra;
 
 export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch): ChatMessage[] => {
   switch (payload.type) {
@@ -31,6 +37,22 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
         // @ts-ignore
         message[key] = value;
         message.updatedAt = Date.now();
+      });
+    }
+
+    case 'updateMessageExtra': {
+      return produce(state, (draftState) => {
+        const { id, key, value } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message) return;
+
+        if (!message.extra) {
+          message.extra = { [key]: value } as any;
+        } else {
+          message.extra[key] = value;
+        }
+
+        message.updateAt = Date.now();
       });
     }
 

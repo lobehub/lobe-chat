@@ -72,7 +72,7 @@ export const chatEnhance: StateCreator<
         dispatchMessage({
           id,
           key: 'translate',
-          type: 'updateMessage',
+          type: 'updateMessageExtra',
           value: produce({ content: '', from, to: targetLang }, (draft) => {
             content += text;
             draft.content += content;

@@ -1,4 +1,3 @@
-import OpenAI from 'openai';
 
 import { LLMRoleType } from '@/types/llm';
 
@@ -34,6 +33,11 @@ export interface OpenAIChatMessage {
   role: LLMRoleType;
 }
 
+export interface OpenAIChatStringMessage {
+  content: string;
+  role: LLMRoleType;
+}
+
 /**
  * @title OpenAI Stream Payload
  */
@@ -43,6 +47,7 @@ export interface OpenAIChatStreamPayload {
    * @default 0
    */
   frequency_penalty?: number;
+  functions?: ChatCompletionFunctions[];
   /**
    * @title 生成文本的最大长度
    */
@@ -50,7 +55,7 @@ export interface OpenAIChatStreamPayload {
   /**
    * @title 聊天信息列表
    */
-  messages: OpenAI.ChatCompletionMessageParam[];
+  messages: OpenAIChatMessage[];
   /**
    * @title 模型名称
    */

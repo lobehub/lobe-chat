@@ -27,6 +27,7 @@ export const getMessageError = async (response: Response) => {
 
 export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void;
+  onFinish?: (text: string) => void;
   onMessageHandle?: (text: string) => void;
 }
 
@@ -51,7 +52,7 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
   const data = response.body;
 
   if (!data) return;
-
+  let output = '';
   const reader = data.getReader();
   const decoder = new TextDecoder();
 
@@ -62,8 +63,11 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
     done = doneReading;
     const chunkValue = decoder.decode(value, { stream: true });
 
+    output += chunkValue;
     options.onMessageHandle?.(chunkValue);
   }
+
+  options?.onFinish?.(output);
 
   return returnRes;
 };
@@ -115,15 +119,11 @@ export const fetchAIFactory =
       onErrorHandle: (error) => {
         errorHandle(new Error(error.message), error);
       },
+      onFinish,
       onMessageHandle,
     }).catch(errorHandle);
 
     onLoadingChange?.(false);
 
-    const content = await data?.text();
-    if (content) {
-      onFinish?.(content);
-    }
-
-    return content;
+    return await data?.text();
   };
