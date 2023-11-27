@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
 import { LobeAgentSession, LobeSessionType, SessionGroupKey } from '@/types/session';
@@ -15,6 +16,7 @@ describe('SessionModel', () => {
       type: LobeSessionType.Agent,
       group: 'testGroup',
       meta: {},
+      config: DEFAULT_AGENT_CONFIG,
       // ... other properties based on LobeAgentSession
     };
   });

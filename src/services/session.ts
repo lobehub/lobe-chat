@@ -48,7 +48,7 @@ class SessionService {
   }
 
   async updateSessionConfig(activeId: string, config: DeepPartial<LobeAgentConfig>) {
-    return SessionModel.update(activeId, { config });
+    return SessionModel.updateConfig(activeId, config);
   }
 }
 

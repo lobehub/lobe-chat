@@ -25,7 +25,6 @@ const FETCH_SESSIONS_KEY = 'fetchSessions';
 export interface SessionAction {
   /**
    * active the session
-   * TODO: 这个方法应该放在 chatStore 中
    * @param sessionId
    */
   activeSession: (sessionId: string) => void;

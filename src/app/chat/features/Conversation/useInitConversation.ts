@@ -8,8 +8,9 @@ import { agentSelectors } from '@/store/session/selectors';
 export const useInitConversation = () => {
   const [sessionId] = useSessionStore((s) => [s.activeId]);
   const plugins = useSessionStore((s) => agentSelectors.currentAgentPlugins(s));
-  const [activeTopicId, useFetchMessages, useFetchTopics] = useChatStore((s) => [
+  const [activeTopicId, switchTopic, useFetchMessages, useFetchTopics] = useChatStore((s) => [
     s.activeTopicId,
+    s.switchTopic,
     s.useFetchMessages,
     s.useFetchTopics,
   ]);
@@ -27,5 +28,16 @@ export const useInitConversation = () => {
 
   useEffect(() => {
     useChatStore.persist.rehydrate();
+
+    // // when activeId changed, switch topic to undefined
+    const unsubscribe = useSessionStore.subscribe(
+      (s) => s.activeId,
+      () => {
+        switchTopic();
+      },
+    );
+    return () => {
+      unsubscribe();
+    };
   }, []);
 };

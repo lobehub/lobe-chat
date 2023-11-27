@@ -1,4 +1,4 @@
-import { LLMExample, LLMParams, LanguageModel } from '@/types/llm';
+import { FewShots, LLMParams, LanguageModel } from '@/types/llm';
 
 export type TTSServer = 'openai' | 'edge' | 'microsoft';
 
@@ -26,10 +26,8 @@ export interface LobeAgentConfig {
    */
   enableHistoryCount?: boolean;
   enableMaxTokens?: boolean;
-  /**
-   * 语言模型示例
-   */
-  example?: LLMExample;
+
+  fewShots?: FewShots;
   /**
    * 历史消息条数
    */

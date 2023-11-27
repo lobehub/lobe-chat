@@ -1,6 +1,9 @@
+import { DeepPartial } from 'utility-types';
+
 import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
 import { BaseModel } from '@/database/core';
 import { DB_Session, DB_SessionSchema } from '@/database/schemas/session';
+import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, SessionGroupKey } from '@/types/session';
 import { merge } from '@/utils/merge';
 import { uuid } from '@/utils/uuid';
@@ -35,6 +38,13 @@ class _SessionModel extends BaseModel {
 
   async update(id: string, data: Partial<DB_Session>) {
     return super._update(id, data);
+  }
+
+  async updateConfig(id: string, data: DeepPartial<LobeAgentConfig>) {
+    const session = await this.findById(id);
+    const config = merge(session.config, data);
+
+    return this.update(id, { config });
   }
   /**
    * Delete a session , also delete all messages and topic associated with it.

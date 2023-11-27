@@ -1,4 +1,4 @@
-import { PersistOptions, devtools, persist } from 'zustand/middleware';
+import { PersistOptions, devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
@@ -44,11 +44,13 @@ const persistOptions: PersistOptions<SessionStore> = {
 //  ===============  实装 useStore ============ //
 
 export const useSessionStore = createWithEqualityFn<SessionStore>()(
-  persist(
-    devtools(createStore, {
-      name: LOBE_CHAT + (isDev ? '_DEV' : ''),
-    }),
-    persistOptions,
+  subscribeWithSelector(
+    persist(
+      devtools(createStore, {
+        name: LOBE_CHAT + (isDev ? '_DEV' : ''),
+      }),
+      persistOptions,
+    ),
   ),
   shallow,
 );

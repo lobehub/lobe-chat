@@ -92,7 +92,7 @@ export const chatPlugin: StateCreator<
     await refreshMessages();
 
     if (payload.type === 'standalone') {
-      // TODO： need to check settings
+      // TODO: need to auth user's settings
     } else runPluginDefaultType(id, payload);
   },
   updatePluginState: async (id, key, value) => {
