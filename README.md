@@ -281,8 +281,7 @@ Whether it's a desire for a sober dark blue, a lively peach pink, or a professio
 
 </div>
 
-
-### More
+#### What's more
 
 Beside these features, LobeChat also have much better basic technique underground:
 
