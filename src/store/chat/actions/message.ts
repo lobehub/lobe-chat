@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-// Note: To make the code more logic and readable, we just disable the auto sort key eslint rule
-// DON'T REMOVE THE FIRST LINE
+// Note: DON'T REMOVE THE FIRST LINE
+// Disable the auto sort key eslint rule to make the code more logic and readable
 import { template } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
@@ -15,16 +15,13 @@ import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
-import { filesSelectors, useFileStore } from '@/store/files';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
-import { OpenAIChatMessage, UserMessageContentPart } from '@/types/openai/chat';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { FileDispatch } from '../reducers/files';
 import { MessageDispatch, messagesReducer } from '../reducers/message';
 import { chatSelectors } from '../selectors';
 
@@ -49,10 +46,6 @@ export interface ChatMessageAction {
   useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
   stopGenerateMessage: () => void;
 
-  /**
-   * agent files dispatch method
-   */
-  dispatchAgentFile: (payload: FileDispatch) => void;
   /**
    * update message at the frontend point
    * this method will not update messages to database
@@ -153,24 +146,20 @@ export const chatMessage: StateCreator<
     await coreProcessMessage(contextMessages, latestMsg.id);
   },
   sendMessage: async (message, files) => {
-    const { dispatchAgentFile, coreProcessMessage, activeTopicId, activeId } = get();
+    const { coreProcessMessage, activeTopicId, activeId } = get();
     if (!message || !activeId) return;
 
     const fileIdList = files?.map((f) => f.id);
 
-    let newMessage: DB_Message = {
+    let newMessage: CreateMessageParams = {
       content: message,
+      // if message has attached with files, then add files to message and the agent
       files: fileIdList,
       role: 'user',
       sessionId: activeId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
     };
-
-    // if message has attached with files, then add files to message and the agent
-    if (fileIdList && fileIdList.length > 0) {
-      dispatchAgentFile({ files: fileIdList, type: 'addFiles' });
-    }
 
     const id = await messageService.create(newMessage);
     await get().refreshMessages();
@@ -294,12 +283,6 @@ export const chatMessage: StateCreator<
 
       triggerFunctionCall(functionId);
     }
-  },
-  dispatchAgentFile: () => {
-    throw new Error('需要重构！');
-    // const files = filesReducer(get().files || [], payload);
-
-    // get().dispatchSession({ files, id: activeId, type: 'updateSessionFiles' });
   },
   dispatchMessage: (payload) => {
     const { activeId } = get();
