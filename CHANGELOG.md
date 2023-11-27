@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.105.1](https://github.com/lobehub/lobe-chat/compare/v0.105.0...v0.105.1)
+
+<sup>Released on **2023-11-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent market detail scroll error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent market detail scroll error, closes [#503](https://github.com/lobehub/lobe-chat/issues/503) ([8900ad0](https://github.com/lobehub/lobe-chat/commit/8900ad0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.105.0](https://github.com/lobehub/lobe-chat/compare/v0.104.0...v0.105.0)
 
 <sup>Released on **2023-11-22**</sup>
