@@ -1,5 +1,8 @@
-import { OpenAIFunctionCall } from '@/types/chatMessage';
+import OpenAI from 'openai';
+
 import { LLMRoleType } from '@/types/llm';
+
+import { OpenAIFunctionCall } from './functionCall';
 
 interface UserMessageContentPartText {
   text: string;
@@ -47,7 +50,7 @@ export interface OpenAIChatStreamPayload {
   /**
    * @title 聊天信息列表
    */
-  messages: OpenAIChatMessage[];
+  messages: OpenAI.ChatCompletionMessageParam[];
   /**
    * @title 模型名称
    */

@@ -1,5 +1,3 @@
-import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
-
 import { ErrorType } from '@/types/fetch';
 import { Translate } from '@/types/translate';
 
@@ -14,10 +12,6 @@ export interface ChatMessageError {
   message: string;
   type: ErrorType;
 }
-export interface OpenAIFunctionCall {
-  arguments?: string;
-  name: string;
-}
 
 export interface ChatTranslate extends Translate {
   content?: string;
@@ -26,6 +20,14 @@ export interface ChatTranslate extends Translate {
 export interface ChatTTS {
   init?: boolean;
 }
+
+export interface ChatPluginPayload {
+  apiName: string;
+  arguments?: string;
+  identifier: string;
+  type: 'standalone' | 'default';
+}
+
 export interface ChatMessage extends BaseDataModel {
   content: string;
   error?: any;
@@ -33,14 +35,14 @@ export interface ChatMessage extends BaseDataModel {
   extra?: {
     fromModel?: string;
     // 翻译
-    translate?: ChatTranslate;
+    translate?: ChatTranslate | null;
     // TTS
     tts?: ChatTTS;
   } & Record<string, any>;
 
   files?: string[];
   parentId?: string;
-  plugin?: PluginRequestPayload;
+  plugin?: ChatPluginPayload;
 
   pluginState?: any;
   // 引用

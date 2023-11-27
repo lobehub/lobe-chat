@@ -1,7 +1,12 @@
-import { DBModel } from '@/database/core/types/db';
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
-import { DB_Message } from '@/database/schemas/message';
-import { ChatMessage, ChatMessageError, ChatTTS, ChatTranslate } from '@/types/chatMessage';
+import {
+  ChatMessage,
+  ChatMessageError,
+  ChatPluginPayload,
+  ChatTTS,
+  ChatTranslate,
+} from '@/types/chatMessage';
+import { LLMRoleType } from '@/types/llm';
 
 export class MessageService {
   async create(data: CreateMessageParams) {
@@ -17,13 +22,13 @@ export class MessageService {
   async getMessages(sessionId: string, topicId: string | undefined): Promise<ChatMessage[]> {
     console.time('getMessages');
 
-    const messages: DBModel<DB_Message>[] = await MessageModel.query({ sessionId, topicId });
+    const messages = await MessageModel.query({ sessionId, topicId });
 
     console.timeEnd('getMessages');
 
-    const finalList: DBModel<DB_Message>[] = [];
+    const finalList: ChatMessage[] = [];
 
-    const addItem = (item: DBModel<DB_Message>) => {
+    const addItem = (item: ChatMessage) => {
       const isExist = finalList.findIndex((i) => item.id === i.id) > -1;
       if (!isExist) {
         finalList.push(item);
@@ -79,6 +84,17 @@ export class MessageService {
 
     console.timeEnd('bindMessagesToTopic');
     return data;
+  }
+
+  async updateMessageRole(id: string, role: LLMRoleType) {
+    return MessageModel.update(id, { role });
+  }
+
+  async updateMessagePlugin(id: string, plugin: ChatPluginPayload) {
+    return MessageModel.update(id, { plugin });
+  }
+  async updateMessagePluginState(id: string, key: string, value: any) {
+    return MessageModel.update(id, { pluginState: { [key]: value } });
   }
 }
 

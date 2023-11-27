@@ -11,10 +11,11 @@ const PluginSchema = z.object({
   identifier: z.string(),
   arguments: z.string(),
   apiName: z.string(),
+  type: z.enum(['default', 'standalone']).default('default'),
 });
 
 export const DB_MessageSchema = z.object({
-  role: z.enum(['user', 'tool', 'system', 'assistant', 'function']),
+  role: z.enum(['user', 'system', 'assistant', 'function']),
   content: z.string(),
   files: z.array(z.string()).optional(),
   favorite: z.boolean().optional(),

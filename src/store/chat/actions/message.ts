@@ -8,6 +8,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { LOADING_FLAT } from '@/const/message';
 import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
+import { CreateMessageParams } from '@/database/models/message';
 import { DB_Message } from '@/database/schemas/message';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
@@ -279,7 +280,7 @@ export const chatMessage: StateCreator<
 
         await messageService.updateMessageContent(mid, content.replace(functionCallContent, ''));
 
-        const functionMessage: DB_Message = {
+        const functionMessage: CreateMessageParams = {
           role: 'function',
           content: functionCallContent,
           fromModel: model,
@@ -351,38 +352,18 @@ export const chatMessage: StateCreator<
       preprocessMsgs.unshift({ content: config.systemRole, role: 'system' } as ChatMessage);
     }
 
-    let postMessages: OpenAIChatMessage[] = preprocessMsgs;
-
-    // 4. handle content type for vision model
-    // for the models with visual ability, add image url to content
-    // refs: https://platform.openai.com/docs/guides/vision/quick-start
+    // 4. handle config for the vision model
+    // Due to vision model's default max_tokens is very small
+    // we need to set the max_tokens a larger one.
     if (VISION_MODEL_WHITE_LIST.includes(config.model)) {
-      postMessages = preprocessMsgs.map((m) => {
-        if (!m.files) return m;
-
-        const imageList = filesSelectors.getImageUrlOrBase64ByList(m.files)(
-          useFileStore.getState(),
-        );
-
-        if (imageList.length === 0) return m;
-
-        const content: UserMessageContentPart[] = [
-          { text: m.content, type: 'text' },
-          ...imageList.map(
-            (i) => ({ image_url: { detail: 'auto', url: i.url }, type: 'image_url' }) as const,
-          ),
-        ];
-        return { ...m, content };
-      });
-
-      // due to vision model's default max_tokens is very small, we need to set the max_tokens a larger one.
+      /* eslint-disable unicorn/no-lonely-if */
       if (!config.params.max_tokens) config.params.max_tokens = VISION_MODEL_DEFAULT_MAX_TOKENS;
     }
 
     const fetcher = () =>
       chatService.getChatCompletion(
         {
-          messages: postMessages,
+          messages: preprocessMsgs,
           model: config.model,
           ...config.params,
           plugins: config.plugins,

@@ -3,11 +3,10 @@ import { DeepPartial } from 'utility-types';
 import { BaseModel } from '@/database/core';
 import { DBModel } from '@/database/core/types/db';
 import { DB_Message, DB_MessageSchema } from '@/database/schemas/message';
+import { ChatMessage } from '@/types/chatMessage';
 import { nanoid } from '@/utils/uuid';
 
 export interface CreateMessageParams extends DB_Message {
-  // content: string;
-  // role: MessageRoleType;
   sessionId: string;
 }
 
@@ -34,7 +33,12 @@ class _MessageModel extends BaseModel {
     return this._batchAdd(messages);
   }
 
-  async query({ sessionId, topicId, pageSize = 9999, current = 0 }: QueryMessageParams) {
+  async query({
+    sessionId,
+    topicId,
+    pageSize = 9999,
+    current = 0,
+  }: QueryMessageParams): Promise<ChatMessage[]> {
     const offset = current * pageSize;
 
     const query =
@@ -46,12 +50,17 @@ class _MessageModel extends BaseModel {
             .equals(sessionId)
             .and((message) => !message.topicId);
 
-    return (
-      query
-        .sortBy('createdAt')
-        // handle page size
-        .then((sortedArray) => sortedArray.slice(offset, offset + pageSize))
-    );
+    const data: DBModel<DB_Message>[] = await query
+      .sortBy('createdAt')
+      // handle page size
+      .then((sortedArray) => sortedArray.slice(offset, offset + pageSize));
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return data.map(({ sessionId: _, fromModel, translate, tts, ...item }) => ({
+      ...item,
+      extra: { fromModel: fromModel, translate: translate, tts: tts },
+      meta: {},
+    }));
   }
 
   async findById(id: string): Promise<DBModel<DB_Message>> {
