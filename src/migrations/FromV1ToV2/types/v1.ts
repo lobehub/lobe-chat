@@ -20,7 +20,7 @@ export interface V1Chat {
   meta: V1MetaData;
   // function call name
   name?: string;
-  parentId: string;
+  parentId?: string;
   plugin?: {
     apiName: string;
     arguments: string;
@@ -73,5 +73,6 @@ export interface V1Topic {
 }
 
 export interface V1ConfigState {
-  sessions: Record<string, V1Session>;
+  inbox?: V1Session;
+  sessions?: Record<string, V1Session>;
 }

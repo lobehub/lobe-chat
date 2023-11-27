@@ -26,7 +26,10 @@ const Common = memo(() => {
   const [form] = AntForm.useForm();
 
   const clearSessions = useSessionStore((s) => s.clearSessions);
-  const [clearTopics, clearMessage] = useChatStore((s) => [s.removeAllTopics, s.clearMessage]);
+  const [clearTopics, clearAllMessages] = useChatStore((s) => [
+    s.removeAllTopics,
+    s.clearAllMessages,
+  ]);
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
   const resetPluginSettings = usePluginStore((s) => s.resetPluginSettings);
 
@@ -66,7 +69,7 @@ const Common = memo(() => {
         resetPluginSettings();
         await clearTopics();
         await removeAllFiles();
-        await clearMessage();
+        await clearAllMessages();
 
         message.success(t('danger.clear.success'));
       },
