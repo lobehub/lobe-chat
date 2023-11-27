@@ -11,7 +11,7 @@ import StoreHydration from './StoreHydration';
 
 const useStyles = createStyles(({ css, token }) => ({
   bg: css`
-    overflow-y: scroll;
+    overflow-y: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
