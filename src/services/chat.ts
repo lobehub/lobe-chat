@@ -1,6 +1,5 @@
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { merge } from 'lodash-es';
-import OpenAI from 'openai/index';
 
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -8,7 +7,7 @@ import { filesSelectors, useFileStore } from '@/store/files';
 import { usePluginStore } from '@/store/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
 import { ChatMessage } from '@/types/chatMessage';
-import type {OpenAIChatMessage, OpenAIChatStreamPayload} from '@/types/openai/chat';
+import type { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
