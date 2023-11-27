@@ -269,8 +269,9 @@ export const chatMessage: StateCreator<
         const functionMessage: CreateMessageParams = {
           role: 'function',
           content: functionCallContent,
-          fromModel: model,
-
+          extra: {
+            fromModel: model,
+          },
           parentId: userMessageId,
           sessionId: get().activeId,
           topicId: activeTopicId,

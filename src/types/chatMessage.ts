@@ -23,7 +23,7 @@ export interface ChatTTS {
 
 export interface ChatPluginPayload {
   apiName: string;
-  arguments?: string;
+  arguments: string;
   identifier: string;
   type: 'standalone' | 'default';
 }
@@ -52,6 +52,7 @@ export interface ChatMessage extends BaseDataModel {
    * @description 消息发送者的角色
    */
   role: LLMRoleType;
+  sessionId?: string;
   /**
    * 保存到主题的消息
    */

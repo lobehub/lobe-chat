@@ -23,12 +23,15 @@ export class MigrationV1ToV2 implements Migration {
 
         ...i
       }) => {
+        console.log(i.meta, chats, topics);
         for (const chat of Object.values(chats)) {
           v2Messages.push(this.migrationMessage(i.id, chat));
         }
 
-        for (const chat of Object.values(topics)) {
-          v2Topics.push(this.migrationTopic(i.id, chat));
+        if (topics) {
+          for (const chat of Object.values(topics)) {
+            v2Topics.push(this.migrationTopic(i.id, chat));
+          }
         }
 
         return {

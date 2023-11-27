@@ -6,7 +6,9 @@ import { DB_Message, DB_MessageSchema } from '@/database/schemas/message';
 import { ChatMessage } from '@/types/chatMessage';
 import { nanoid } from '@/utils/uuid';
 
-export interface CreateMessageParams extends DB_Message {
+export interface CreateMessageParams
+  extends Partial<Omit<ChatMessage, 'content' | 'role'>>,
+    Pick<ChatMessage, 'content' | 'role'> {
   sessionId: string;
 }
 
@@ -21,25 +23,18 @@ class _MessageModel extends BaseModel {
   constructor() {
     super('messages', DB_MessageSchema);
   }
-  async create(data: CreateMessageParams, defaultValue: Partial<DB_Message> = {}) {
+  async create(data: CreateMessageParams) {
     const id = nanoid();
 
-    const messageData: DB_Message = { ...defaultValue, ...data };
+    const messageData: DB_Message = this.mapChatMessageToDBMessage(data as ChatMessage);
 
     return this._add(messageData, id);
   }
 
-  async batchCreate(messages: DB_Message[]) {
-    return this._batchAdd(messages);
-  }
+  async batchCreate(messages: ChatMessage[]) {
+    const data: DB_Message[] = messages.map((m) => this.mapChatMessageToDBMessage(m));
 
-  private mapToChatMessage(messages: DBModel<DB_Message>[]): ChatMessage[] {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return messages.map(({ sessionId: _, fromModel, translate, tts, ...item }) => ({
-      ...item,
-      extra: { fromModel: fromModel, translate: translate, tts: tts },
-      meta: {},
-    }));
+    return this._batchAdd(data);
   }
 
   async query({
@@ -59,12 +54,35 @@ class _MessageModel extends BaseModel {
             .equals(sessionId)
             .and((message) => !message.topicId);
 
-    const data: DBModel<DB_Message>[] = await query
+    const dbMessages: DBModel<DB_Message>[] = await query
       .sortBy('createdAt')
       // handle page size
       .then((sortedArray) => sortedArray.slice(offset, offset + pageSize));
 
-    return this.mapToChatMessage(data);
+    const messages = dbMessages.map((msg) => this.mapToChatMessage(msg));
+
+    const finalList: ChatMessage[] = [];
+
+    const addItem = (item: ChatMessage) => {
+      const isExist = finalList.findIndex((i) => item.id === i.id) > -1;
+      if (!isExist) {
+        finalList.push(item);
+      }
+    };
+    const messageMap = new Map<string, ChatMessage>();
+    for (const item of messages) messageMap.set(item.id, item);
+
+    for (const item of messages) {
+      if (!item.parentId || !messageMap.has(item.parentId)) {
+        // 如果消息没有父消息或者父消息不在列表中，直接添加
+        addItem(item);
+      } else {
+        // 如果消息有父消息，确保先添加父消息
+        addItem(messageMap.get(item.parentId)!);
+        addItem(item);
+      }
+    }
+    return finalList;
   }
 
   async findById(id: string): Promise<DBModel<DB_Message>> {
@@ -136,8 +154,27 @@ class _MessageModel extends BaseModel {
   async queryAll() {
     const data: DBModel<DB_Message>[] = await this.table.orderBy('updatedAt').toArray();
 
-    return this.mapToChatMessage(data);
+    return data.map((element) => this.mapToChatMessage(element));
   }
+
+  private mapChatMessageToDBMessage(message: ChatMessage): DB_Message {
+    const { extra, ...messageData } = message;
+
+    return { ...messageData, ...extra } as DB_Message;
+  }
+
+  private mapToChatMessage = ({
+    fromModel,
+    translate,
+    tts,
+    ...item
+  }: DBModel<DB_Message>): ChatMessage => {
+    return {
+      ...item,
+      extra: { fromModel: fromModel, translate: translate, tts: tts },
+      meta: {},
+    };
+  };
 }
 
 export const MessageModel = new _MessageModel();

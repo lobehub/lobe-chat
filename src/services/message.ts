@@ -16,7 +16,7 @@ export class MessageService {
   }
 
   async batchCreate(messages: ChatMessage[]) {
-    return MessageModel.batchCreate(messages as any);
+    return MessageModel.batchCreate(messages);
   }
 
   async getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]> {
@@ -26,28 +26,7 @@ export class MessageService {
 
     console.timeEnd('getMessages');
 
-    const finalList: ChatMessage[] = [];
-
-    const addItem = (item: ChatMessage) => {
-      const isExist = finalList.findIndex((i) => item.id === i.id) > -1;
-      if (!isExist) {
-        finalList.push(item);
-      }
-    };
-
-    // 基于添加逻辑进行重排序
-    for (const item of messages) {
-      // 先判存在与否，不存在就加入
-      addItem(item);
-
-      for (const another of messages) {
-        if (another.parentId === item.id) {
-          addItem(another);
-        }
-      }
-    }
-
-    return finalList.map((f) => ({ ...f, meta: {} }));
+    return messages;
   }
 
   async removeMessage(id: string) {

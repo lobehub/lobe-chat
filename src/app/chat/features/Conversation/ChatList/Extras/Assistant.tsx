@@ -16,6 +16,7 @@ export const AssistantMessageExtra = memo<ChatMessage>(({ extra, id, content }) 
   const model = useSessionStore(agentSelectors.currentAgentModel);
   const loading = useChatStore((s) => s.chatLoadingId === id);
 
+  console.log(extra, model);
   const showModelTag = extra?.fromModel && model !== extra?.fromModel;
   const showTranslate = !!extra?.translate;
   const showTTS = !!extra?.tts;

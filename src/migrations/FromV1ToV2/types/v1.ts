@@ -39,7 +39,7 @@ export interface V1Session {
   id: string;
   meta: V1MetaData;
   pinned?: boolean;
-  topics: Record<string, V1Topic>;
+  topics?: Record<string, V1Topic>;
   type: 'agent';
   updateAt: number;
 }

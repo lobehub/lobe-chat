@@ -31,6 +31,7 @@ export const useImportConfig = () => {
         }
 
         case 'all': {
+          console.log(config.state);
           importSessions(config.state.sessions);
           importMessages(config.state.messages);
           importTopics(config.state.topics);

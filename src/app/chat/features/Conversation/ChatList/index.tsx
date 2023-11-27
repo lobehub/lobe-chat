@@ -21,6 +21,7 @@ const List = memo(() => {
 
   const data = useChatStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
 
+  console.log(data);
   const [init, chatLoadingId, resendMessage, updateMessageContent] = useChatStore((s) => [
     s.messagesInit,
     s.chatLoadingId,

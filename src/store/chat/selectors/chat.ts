@@ -3,12 +3,12 @@ import { t } from 'i18next';
 
 import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
-import { DB_Message } from '@/database/schemas/message';
 import { chatHelpers } from '@/store/chat/helpers';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
+import { merge } from '@/utils/merge';
 
 import type { ChatStore } from '../store';
 
@@ -29,6 +29,7 @@ const getMeta = (message: ChatMessage) => {
     }
 
     case 'function': {
+      // TODO: 后续改成将 plugin metadata 写入 message metadata 的方案
       return {
         avatar: '🧩',
         title: 'plugin-unknown',
@@ -41,19 +42,7 @@ const getMeta = (message: ChatMessage) => {
 export const currentChats = (s: ChatStore): ChatMessage[] => {
   if (!s.activeId) return [];
 
-  return s.messages.map((i) => {
-    const message = i as unknown as DB_Message;
-
-    return {
-      ...i,
-      extra: {
-        fromModel: message.fromModel,
-        translate: message.translate,
-        tts: message.tts,
-      },
-      meta: getMeta(i),
-    } as ChatMessage;
-  });
+  return s.messages.map((i) => ({ ...i, meta: getMeta(i) }));
 };
 
 const initTime = Date.now();
@@ -85,9 +74,7 @@ export const currentChatsWithGuideMessage = (s: ChatStore): ChatMessage[] => {
     createdAt: initTime,
     extra: {},
     id: 'default',
-    meta: meta || {
-      avatar: DEFAULT_INBOX_AVATAR,
-    },
+    meta: merge({ avatar: DEFAULT_INBOX_AVATAR }, meta),
     role: 'assistant',
     updatedAt: initTime,
   } as ChatMessage;

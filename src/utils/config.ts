@@ -43,6 +43,7 @@ export const importConfigFile = (file: File, onConfigImport: (config: ConfigFile
 
       onConfigImport({ ...config, state });
     } catch (error) {
+      console.error(error);
       notification.error({
         description: `出错原因: ${(error as Error).message}`,
         message: '导入失败',

@@ -19,7 +19,6 @@ export const DB_MessageSchema = z.object({
   content: z.string(),
   files: z.array(z.string()).optional(),
   favorite: z.boolean().optional(),
-  extra: z.any().optional(),
   error: z.any().optional(),
 
   plugin: PluginSchema.optional(),
