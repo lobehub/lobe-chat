@@ -252,8 +252,6 @@ providing smooth animations, responsive layouts, and adapting to different devic
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
-> 🚧 Additional snapshots and demonstrations are being progressively added...
-
 <div align="right">
 
 [![][back-to-top]](#readme-top)
@@ -290,6 +288,8 @@ Beside these features, LobeChat also have much better basic technique undergroun
 - [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy.
 - [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience.
 - [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more.
+
+> ✨ more features will be added when LobeChat evolve.
 
 ---
 
