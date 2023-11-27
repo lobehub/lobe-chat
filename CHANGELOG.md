@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.105.2](https://github.com/lobehub/lobe-chat/compare/v0.105.1...v0.105.2)
+
+<sup>Released on **2023-11-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add some env to Dockerfile.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add some env to Dockerfile, closes [#514](https://github.com/lobehub/lobe-chat/issues/514) ([ed148db](https://github.com/lobehub/lobe-chat/commit/ed148db))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.105.1](https://github.com/lobehub/lobe-chat/compare/v0.105.0...v0.105.1)
 
 <sup>Released on **2023-11-27**</sup>
