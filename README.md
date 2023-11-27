@@ -47,7 +47,6 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 
 - [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
 - [✨ Features](#-features)
-- [📸 Snapshot](#-snapshot)
 - [⚡️ Performance](#️-performance)
 - [🛳 Self Hosting](#-self-hosting)
   - [`A` Deploying with Vercel](#a-deploying-with-vercel)
@@ -160,7 +159,6 @@ e-commerce platform data access, and various third-party services.
 > We welcome developers to use these resources to unleash their creativity and write feature-rich, user-friendly plugins.
 > With collective efforts, we can continuously expand the boundaries of chat applications and explore a more intelligent and efficient creativity platform.
 
-
 <!-- PLUGIN LIST -->
 
 | Official Plugin                                                                                                     | Repository                                                                                      | Description                                                |
@@ -258,7 +256,6 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 </div>
 
-
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
 #### `7` Theme Mode Selection
@@ -292,7 +289,6 @@ Beside these features, LobeChat also have much better basic technique undergroun
 > ✨ more features will be added when LobeChat evolve.
 
 ---
-
 
 > \[!NOTE]
 >
