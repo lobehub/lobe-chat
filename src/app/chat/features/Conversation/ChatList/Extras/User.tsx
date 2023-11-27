@@ -7,11 +7,11 @@ import ExtraContainer from './ExtraContainer';
 import TTS from './TTS';
 import Translate from './Translate';
 
-export const UserMessageExtra = memo<ChatMessage>(({ tts, translate, id, content }) => {
+export const UserMessageExtra = memo<ChatMessage>(({ extra, id, content }) => {
   const loading = useChatStore((s) => s.chatLoadingId === id);
 
-  const showTranslate = !!translate;
-  const showTTS = !!tts;
+  const showTranslate = !!extra?.translate;
+  const showTTS = !!extra?.tts;
 
   const showExtra = showTranslate || showTTS;
 
@@ -19,14 +19,14 @@ export const UserMessageExtra = memo<ChatMessage>(({ tts, translate, id, content
 
   return (
     <div style={{ marginTop: 8 }}>
-      {tts && (
+      {extra?.tts && (
         <ExtraContainer>
-          <TTS content={content} id={id} loading={loading} {...tts} />
+          <TTS content={content} id={id} loading={loading} {...extra?.tts} />
         </ExtraContainer>
       )}
-      {translate && (
+      {extra?.translate && (
         <ExtraContainer>
-          <Translate id={id} {...translate} loading={loading} />
+          <Translate id={id} {...extra?.translate} loading={loading} />
         </ExtraContainer>
       )}
     </div>

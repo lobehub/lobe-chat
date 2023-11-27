@@ -3,13 +3,13 @@ import Dexie from 'dexie';
 import { DB_Message } from '@/database/schemas/message';
 import { DB_Session } from '@/database/schemas/session';
 import { DB_Topic } from '@/database/schemas/topic';
-import { DBModel } from '@/types/database/db';
-import { LocalFile } from '@/types/database/files';
+import { DBModel } from '@/database/core/types/db';
+import { DB_File } from '@/database/schemas/files';
 
 import { dbSchemaV1, dbSchemaV2 } from './schemas';
 
 interface LobeDBSchemaMap {
-  files: LocalFile;
+  files: DB_File;
   messages: DB_Message;
   sessions: DB_Session;
   topics: DB_Topic;

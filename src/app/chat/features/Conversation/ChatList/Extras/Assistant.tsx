@@ -12,39 +12,37 @@ import ExtraContainer from './ExtraContainer';
 import TTS from './TTS';
 import Translate from './Translate';
 
-export const AssistantMessageExtra = memo<ChatMessage>(
-  ({ tts, translate, fromModel, id, content }) => {
-    const model = useSessionStore(agentSelectors.currentAgentModel);
-    const loading = useChatStore((s) => s.chatLoadingId === id);
+export const AssistantMessageExtra = memo<ChatMessage>(({ extra, id, content }) => {
+  const model = useSessionStore(agentSelectors.currentAgentModel);
+  const loading = useChatStore((s) => s.chatLoadingId === id);
 
-    const showModelTag = fromModel && model !== fromModel;
-    const showTranslate = !!translate;
-    const showTTS = !!tts;
+  const showModelTag = extra?.fromModel && model !== extra?.fromModel;
+  const showTranslate = !!extra?.translate;
+  const showTTS = !!extra?.tts;
 
-    const showExtra = showModelTag || showTranslate || showTTS;
+  const showExtra = showModelTag || showTranslate || showTTS;
 
-    if (!showExtra) return;
+  if (!showExtra) return;
 
-    return (
-      <Flexbox gap={8} style={{ marginTop: 8 }}>
-        {showModelTag && (
-          <div>
-            <Tag icon={<SiOpenai size={'1em'} />}>{fromModel as string}</Tag>
-          </div>
-        )}
+  return (
+    <Flexbox gap={8} style={{ marginTop: 8 }}>
+      {showModelTag && (
         <div>
-          {tts && (
-            <ExtraContainer>
-              <TTS content={content} id={id} loading={loading} {...tts} />
-            </ExtraContainer>
-          )}
-          {translate && (
-            <ExtraContainer>
-              <Translate id={id} loading={loading} {...translate} />
-            </ExtraContainer>
-          )}
+          <Tag icon={<SiOpenai size={'1em'} />}>{extra?.fromModel as string}</Tag>
         </div>
-      </Flexbox>
-    );
-  },
-);
+      )}
+      <div>
+        {extra?.tts && (
+          <ExtraContainer>
+            <TTS content={content} id={id} loading={loading} {...extra?.tts} />
+          </ExtraContainer>
+        )}
+        {extra?.translate && (
+          <ExtraContainer>
+            <Translate id={id} loading={loading} {...extra?.translate} />
+          </ExtraContainer>
+        )}
+      </div>
+    </Flexbox>
+  );
+});

@@ -8,7 +8,7 @@ export const dbSchemaV1 = {
 };
 
 // ************************************** //
-// ******* Version 2 - 2023-11-21 ******* //
+// ******* Version 2 - 2023-11-27 ******* //
 // ************************************** //
 // - Added `sessions` 、`messages` 、`topics` tables
 // - Added `createdAt` and `updatedAt` fields to all

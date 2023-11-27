@@ -1,7 +1,7 @@
 import Dexie, { BulkError } from 'dexie';
 import { ZodObject } from 'zod';
 
-import { DBBaseFieldsSchema } from '@/types/database/db';
+import { DBBaseFieldsSchema } from '@/database/core/types/db';
 import { nanoid } from '@/utils/uuid';
 
 import { LocalDB, LocalDBInstance, LocalDBSchema } from './db';

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const LocalFileSchema = z.object({
+export const DB_FileSchema = z.object({
   /**
    * create Time
    */
@@ -35,4 +35,4 @@ export const LocalFileSchema = z.object({
   url: z.string().url().optional(),
 });
 
-export type LocalFile = z.infer<typeof LocalFileSchema>;
+export type DB_File = z.infer<typeof DB_FileSchema>;

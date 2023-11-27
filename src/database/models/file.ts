@@ -1,14 +1,14 @@
-import { LocalFile, LocalFileSchema } from '@/types/database/files';
+import { DB_File, DB_FileSchema } from '@/database/schemas/files';
 import { nanoid } from '@/utils/uuid';
 
 import { BaseModel } from '../core';
 
 class _FileModel extends BaseModel<'files'> {
   constructor() {
-    super('files', LocalFileSchema);
+    super('files', DB_FileSchema);
   }
 
-  async create(file: LocalFile) {
+  async create(file: DB_File) {
     const id = nanoid();
 
     return this._add(file, `file-${id}`);

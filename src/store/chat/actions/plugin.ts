@@ -90,7 +90,6 @@ export const chatPlugin: StateCreator<
     if (!payload.apiName) return;
 
     dispatchMessage({ id, key: 'role', type: 'updateMessage', value: 'function' });
-    dispatchMessage({ id, key: 'name', type: 'updateMessage', value: payload.identifier });
     dispatchMessage({ id, key: 'plugin', type: 'updateMessage', value: payload });
 
     if (payload.type === 'standalone') {

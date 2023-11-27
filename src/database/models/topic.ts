@@ -1,6 +1,6 @@
 import { BaseModel } from '@/database/core';
 import { DB_Topic, DB_TopicSchema } from '@/database/schemas/topic';
-import { DBModel } from '@/types/database/db';
+import { DBModel } from '@/database/core/types/db';
 import { ChatTopic } from '@/types/topic';
 import { nanoid } from '@/utils/uuid';
 

@@ -1,7 +1,7 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FileModel } from '@/database/models/file';
-import { LocalFile } from '@/types/database/files';
+import { DB_File } from '@/database/schemas/files';
 
 import { fileService } from '../file';
 
@@ -25,7 +25,7 @@ describe('FileService', () => {
   });
 
   it('uploadFile should save the file to the database', async () => {
-    const localFile: LocalFile = {
+    const localFile: DB_File = {
       name: 'test',
       data: new ArrayBuffer(1),
       fileType: 'image/png',
@@ -53,7 +53,7 @@ describe('FileService', () => {
 
   it('getFile should retrieve and convert file info to FilePreview', async () => {
     const fileId = '1';
-    const fileData: LocalFile = {
+    const fileData: DB_File = {
       name: 'test',
       data: new ArrayBuffer(1),
       fileType: 'image/png',

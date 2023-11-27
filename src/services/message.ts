@@ -1,7 +1,7 @@
+import { DBModel } from '@/database/core/types/db';
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
 import { DB_Message } from '@/database/schemas/message';
 import { ChatMessage, ChatMessageError, ChatTTS, ChatTranslate } from '@/types/chatMessage';
-import { DBModel } from '@/types/database/db';
 
 export class MessageService {
   async create(data: CreateMessageParams) {
@@ -11,7 +11,7 @@ export class MessageService {
   }
 
   async batchCreate(messages: ChatMessage[]) {
-    return MessageModel.batchCreate(messages);
+    return MessageModel.batchCreate(messages as any);
   }
 
   async getMessages(sessionId: string, topicId: string | undefined): Promise<ChatMessage[]> {

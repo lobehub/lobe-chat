@@ -1,9 +1,8 @@
 import { DeepPartial } from 'utility-types';
 
 import { BaseModel } from '@/database/core';
+import { DBModel } from '@/database/core/types/db';
 import { DB_Message, DB_MessageSchema } from '@/database/schemas/message';
-import { ChatMessage } from '@/types/chatMessage';
-import { DBModel } from '@/types/database/db';
 import { nanoid } from '@/utils/uuid';
 
 export interface CreateMessageParams extends DB_Message {
@@ -31,7 +30,7 @@ class _MessageModel extends BaseModel {
     return this._add(messageData, id);
   }
 
-  async batchCreate(messages: ChatMessage[]) {
+  async batchCreate(messages: DB_Message[]) {
     return this._batchAdd(messages);
   }
 

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { LocalFile } from '@/types/database/files';
+import { DB_File } from '@/database/schemas/files';
 
 import { LocalDB } from '../../core/db';
 import { FileModel } from '../file';
@@ -9,7 +9,7 @@ import { FileModel } from '../file';
 // and LocalFileSchema has been imported correctly.
 
 describe('_FileModel', () => {
-  let fileData: LocalFile;
+  let fileData: DB_File;
 
   beforeEach(() => {
     // Set up file data with the correct structure according to LocalFileSchema
@@ -32,7 +32,7 @@ describe('_FileModel', () => {
 
   it('should create a file record', async () => {
     // First, create a file to test the create method
-    const fileData: LocalFile = {
+    const fileData: DB_File = {
       data: new ArrayBuffer(10),
       fileType: 'image/png',
       name: 'test.png',

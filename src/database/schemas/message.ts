@@ -7,6 +7,12 @@ const TranslateSchema = z.object({
   content: z.string().optional(),
 });
 
+const PluginSchema = z.object({
+  identifier: z.string(),
+  arguments: z.string(),
+  apiName: z.string(),
+});
+
 export const DB_MessageSchema = z.object({
   role: z.enum(['user', 'tool', 'system', 'assistant', 'function']),
   content: z.string(),
@@ -15,13 +21,7 @@ export const DB_MessageSchema = z.object({
   extra: z.any().optional(),
   error: z.any().optional(),
 
-  plugin: z
-    .object({
-      identifier: z.string(),
-      arguments: z.string(),
-      apiName: z.string(),
-    })
-    .optional(),
+  plugin: PluginSchema.optional(),
   pluginState: z.any().optional(),
   fromModel: z.string().optional(),
   translate: TranslateSchema.optional().or(z.null()),

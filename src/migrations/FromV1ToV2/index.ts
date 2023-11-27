@@ -60,7 +60,7 @@ export class MigrationV1ToV2 implements Migration {
       ? {
           apiName: function_call.name,
           arguments: function_call.arguments,
-          identifier: name,
+          identifier: name!,
           type: 'default',
         }
       : chat.plugin,

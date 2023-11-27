@@ -1,9 +1,9 @@
 import { FileModel } from '@/database/models/file';
-import { LocalFile } from '@/types/database/files';
+import { DB_File } from '@/database/schemas/files';
 import { FilePreview } from '@/types/files';
 
 class FileService {
-  async uploadFile(file: LocalFile) {
+  async uploadFile(file: DB_File) {
     // save to local storage
     // we may want to save to a remote server later
     return FileModel.create(file);
