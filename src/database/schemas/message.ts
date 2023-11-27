@@ -18,7 +18,7 @@ export const DB_MessageSchema = z.object({
   plugin: z
     .object({
       identifier: z.string(),
-      argument: z.string(),
+      arguments: z.string(),
       apiName: z.string(),
     })
     .optional(),
