@@ -33,6 +33,15 @@ class _MessageModel extends BaseModel {
     return this._batchAdd(messages);
   }
 
+  private mapToChatMessage(messages: DBModel<DB_Message>[]): ChatMessage[] {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return messages.map(({ sessionId: _, fromModel, translate, tts, ...item }) => ({
+      ...item,
+      extra: { fromModel: fromModel, translate: translate, tts: tts },
+      meta: {},
+    }));
+  }
+
   async query({
     sessionId,
     topicId,
@@ -55,12 +64,7 @@ class _MessageModel extends BaseModel {
       // handle page size
       .then((sortedArray) => sortedArray.slice(offset, offset + pageSize));
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return data.map(({ sessionId: _, fromModel, translate, tts, ...item }) => ({
-      ...item,
-      extra: { fromModel: fromModel, translate: translate, tts: tts },
-      meta: {},
-    }));
+    return this.mapToChatMessage(data);
   }
 
   async findById(id: string): Promise<DBModel<DB_Message>> {
@@ -127,6 +131,12 @@ class _MessageModel extends BaseModel {
 
     // Use the bulkDelete method to delete all selected messages in bulk
     return this.table.bulkDelete(messageIds);
+  }
+
+  async queryAll() {
+    const data: DBModel<DB_Message>[] = await this.table.orderBy('updatedAt').toArray();
+
+    return this.mapToChatMessage(data);
   }
 }
 

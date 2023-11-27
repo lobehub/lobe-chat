@@ -19,7 +19,7 @@ export class MessageService {
     return MessageModel.batchCreate(messages as any);
   }
 
-  async getMessages(sessionId: string, topicId: string | undefined): Promise<ChatMessage[]> {
+  async getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]> {
     console.time('getMessages');
 
     const messages = await MessageModel.query({ sessionId, topicId });
@@ -95,6 +95,10 @@ export class MessageService {
   }
   async updateMessagePluginState(id: string, key: string, value: any) {
     return MessageModel.update(id, { pluginState: { [key]: value } });
+  }
+
+  async getAllMessages() {
+    return MessageModel.queryAll();
   }
 }
 

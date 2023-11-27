@@ -1,6 +1,6 @@
 import { BaseModel } from '@/database/core';
-import { DB_Topic, DB_TopicSchema } from '@/database/schemas/topic';
 import { DBModel } from '@/database/core/types/db';
+import { DB_Topic, DB_TopicSchema } from '@/database/schemas/topic';
 import { ChatTopic } from '@/types/topic';
 import { nanoid } from '@/utils/uuid';
 
@@ -125,6 +125,10 @@ class _TopicModel extends BaseModel {
         await this.table.delete(topicId);
       }
     });
+  }
+
+  queryAll() {
+    return this.table.orderBy('updatedAt').toArray();
   }
 }
 

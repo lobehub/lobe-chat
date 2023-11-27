@@ -1,9 +1,11 @@
+import { messageService } from '@/services/message';
+import { sessionService } from '@/services/session';
+import { topicService } from '@/services/topic';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionExportSelectors, sessionSelectors } from '@/store/session/selectors';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
 
-const getSessions = () => sessionExportSelectors.exportSessions(useSessionStore.getState());
 const getSession = (id: string) => sessionSelectors.getSessionById(id)(useSessionStore.getState());
 const getSettings = () => settingsSelectors.exportSettings(useGlobalStore.getState());
 
@@ -22,7 +24,7 @@ export const exportAgents = async () => {
 const getAgent = (id: string) =>
   sessionExportSelectors.getExportAgent(id)(useSessionStore.getState());
 
-export const exportSingleAgent = (id: string) => {
+export const exportSingleAgent = async (id: string) => {
   const agent = getAgent(id);
   if (!agent) return;
 
@@ -33,18 +35,25 @@ export const exportSingleAgent = (id: string) => {
 
 // =============   导出所有会话   ============= //
 
-export const exportSessions = () => {
-  const config = createConfigFile('sessions', getSessions());
+export const exportSessions = async () => {
+  const sessions = await sessionService.getSessions();
+  const messages = await messageService.getAllMessages();
+  const topics = await topicService.getAllTopics();
+
+  const config = createConfigFile('sessions', { messages, sessions, topics });
 
   exportConfigFile(config, 'sessions');
 };
 
 // =============   导出单个会话   ============= //
-export const exportSingleSession = (id: string) => {
+export const exportSingleSession = async (id: string) => {
   const session = getSession(id);
   if (!session) return;
 
-  const config = createConfigFile('singleSession', { sessions: [session] });
+  const messages = await messageService.getMessages(id);
+  const topics = await topicService.getTopics({ sessionId: id });
+
+  const config = createConfigFile('singleSession', { messages, sessions: [session], topics });
 
   exportConfigFile(config, `${session.meta?.title}-session`);
 };
@@ -58,11 +67,13 @@ export const exportSettings = () => {
   exportConfigFile(config, 'settings');
 };
 
-export const exportAll = () => {
-  const sessions = getSessions();
+export const exportAll = async () => {
+  const sessions = await sessionService.getSessions();
+  const messages = await messageService.getAllMessages();
+  const topics = await topicService.getAllTopics();
   const settings = getSettings();
 
-  const config = createConfigFile('all', { ...sessions, settings });
+  const config = createConfigFile('all', { messages, sessions, settings, topics });
 
   exportConfigFile(config, 'config');
 };

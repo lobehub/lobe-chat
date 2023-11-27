@@ -49,6 +49,10 @@ class TopicService {
   updateTitle(topicId: string, text: string) {
     return TopicModel.update(topicId, { title: text });
   }
+
+  async getAllTopics() {
+    return TopicModel.queryAll();
+  }
 }
 
 export const topicService = new TopicService();
