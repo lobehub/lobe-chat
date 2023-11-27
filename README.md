@@ -89,34 +89,6 @@ Please be aware that LobeChat is currently under active development, and feedbac
 
 ## ✨ Features
 
-- [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience.
-- [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more.
-- [x] 🤖 **Customizable Agent Roles**: Users can create, share, and debug personalized dialogue agent roles according to their needs, providing more flexible and customized dialogue functions.
-- [x] 🧩 **Plugin Support & Custom Plugin Development**: Conversations are extendable with plugins. Users can install and use various plugins, such as search engines, web extraction, etc. It also supports the development of custom plugins to meet custom needs.
-- [x] 🏬 **Agent Market**: A Agent Market is provided where users can select their preferred dialogue agent roles, enriching the content and style of the dialogue.
-- [x] 👁️ **Visual Recognition**: With the integration of visual recognition capabilities, your agent can now analyze and understand images provided during the conversation. This allows for more interactive and context-aware conversations, enabling the dialogue agent to provide relevant and accurate responses based on visual content.
-- [x] 📢 **TTS & STT Conversation**: LobeChat are supporting Text-to-Speech and Speech-to-Text technology, allowing users to have voice-based conversations with the dialogue agent. This feature enhances the user experience by providing a more natural and immersive conversation environment. Users can choose from a variety of voices and adjust the speech rate to suit their preferences.
-
----
-
-Beside these features, LobeChat also have much better basic technique underground:
-
-- [x] 💨 **Quick Deployment**: Using the Vercel platform or docker image, you can deploy with just one click and complete the process within 1 minute without any complex configuration.
-- [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
-- [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy.
-
-> \[!NOTE]
->
-> You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
-## 📸 Snapshot
-
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png)
 
 #### `1` Visual Model Support
@@ -175,6 +147,8 @@ such as automatically fetching the latest news headlines to provide users with i
 Moreover, these plugins are not limited to news aggregation but can also extend to other practical functions, such as quick document retrieval,
 e-commerce platform data access, and various third-party services.
 
+<video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
+
 > \[!TIP]
 >
 > To aid developers in joining this ecosystem, we provide comprehensive development resources in the [🧩 Plugin System](#-plugins) section.
@@ -186,7 +160,6 @@ e-commerce platform data access, and various third-party services.
 > We welcome developers to use these resources to unleash their creativity and write feature-rich, user-friendly plugins.
 > With collective efforts, we can continuously expand the boundaries of chat applications and explore a more intelligent and efficient creativity platform.
 
-<video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
 <!-- PLUGIN LIST -->
 
@@ -209,7 +182,7 @@ e-commerce platform data access, and various third-party services.
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
 
-#### `4` Prompt Agent Market
+#### `4` Agent Market
 
 In the LobeChat Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
 which not only play an important role in work scenarios but also offer great convenience in learning processes.
@@ -273,9 +246,22 @@ providing smooth animations, responsive layouts, and adapting to different devic
 
 </div>
 
+![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
+
+#### `6` Mobile Device Adaptation
+
+We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
-#### `6` Theme Mode Selection
+#### `7` Theme Mode Selection
 
 As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
 hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.
@@ -293,13 +279,24 @@ Whether it's a desire for a sober dark blue, a lively peach pink, or a professio
 
 </div>
 
-![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
+#### What's more
 
-#### `7` Mobile Device Adaptation
+Beside these features, LobeChat also have much better basic technique underground:
 
-We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
+- [x] 💨 **Quick Deployment**: Using the Vercel platform or docker image, you can deploy with just one click and complete the process within 1 minute without any complex configuration.
+- [x] 🌐 **Custom Domain**: If users have their own domain, they can bind it to the platform for quick access to the dialogue agent from anywhere.
+- [x] 🔒 **Privacy Protection**: All data is stored locally in the user's browser, ensuring user privacy.
+- [x] 💎 **Exquisite UI Design**: With a carefully designed interface, it offers an elegant appearance and smooth interaction. It supports light and dark themes and is mobile-friendly. PWA support provides a more native-like experience.
+- [x] 🗣️ **Smooth Conversation Experience**: Fluid responses ensure a smooth conversation experience. It fully supports Markdown rendering, including code highlighting, LaTex formulas, Mermaid flowcharts, and more.
 
-> 🚧 Additional snapshots and demonstrations are being progressively added...
+> ✨ more features will be added when LobeChat evolve.
+
+---
+
+
+> \[!NOTE]
+>
+> You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
 
 <div align="right">
 
