@@ -41,6 +41,7 @@ const persistOptions: PersistOptions<ChatStore> = {
   skipHydration: true,
 
   storage: createHyperStorage({
+    localStorage: false,
     url: {
       mode: 'hash',
       selectors: [{ activeTopicId: 'topic' }],

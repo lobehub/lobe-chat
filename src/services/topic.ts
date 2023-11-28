@@ -13,13 +13,7 @@ class TopicService {
   }
 
   async getTopics(params: QueryTopicParams): Promise<ChatTopic[]> {
-    console.time('getTopic');
-
-    const topics = await TopicModel.query(params);
-
-    console.timeEnd('getTopic');
-
-    return topics;
+    return TopicModel.query(params);
   }
 
   async removeTopic(id: string) {

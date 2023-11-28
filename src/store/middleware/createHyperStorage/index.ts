@@ -10,9 +10,20 @@ import { creatUrlStorage } from './urlStorage';
 export const createHyperStorage = <T extends object>(
   options: HyperStorageOptions,
 ): PersistStorage<T> => {
+  const getLocalStorageConfig = () => {
+    if (options.localStorage === false) {
+      return { dbName: '', skipLocalStorage: true, useIndexedDB: false };
+    }
+
+    const useIndexedDB = options.localStorage?.mode === 'indexedDB';
+    const dbName = options.localStorage?.dbName || 'indexedDB';
+
+    return { dbName, skipLocalStorage: false, useIndexedDB };
+  };
+
   const hasUrl = !!options.url;
-  const useIndexedDB = options.localStorage?.mode === 'indexedDB';
-  const dbName = options.localStorage?.dbName || 'indexedDB';
+
+  const { skipLocalStorage, useIndexedDB, dbName } = getLocalStorageConfig();
 
   const { mapStateKeyToStorageKey, getStateKeyFromStorageKey } = createKeyMapper(options);
 
@@ -25,20 +36,22 @@ export const createHyperStorage = <T extends object>(
       let version: number | undefined;
 
       // ============== 处理 Local Storage  ============== //
-      let localState: StorageValue<T> | undefined;
+      if (!skipLocalStorage) {
+        let localState: StorageValue<T> | undefined;
 
-      // 如果使用 indexedDB，优先从 indexedDB 中获取
-      if (useIndexedDB) {
-        localState = await indexedDB.getItem(name);
-      }
-      // 如果 indexedDB 中不存在，则再试试 localStorage
-      if (!localState) localState = localStorage.getItem(name);
+        // 如果使用 indexedDB，优先从 indexedDB 中获取
+        if (useIndexedDB) {
+          localState = await indexedDB.getItem(name);
+        }
+        // 如果 indexedDB 中不存在，则再试试 localStorage
+        if (!localState) localState = localStorage.getItem(name);
 
-      if (localState) {
-        version = localState.version;
-        for (const [k, v] of Object.entries(localState.state)) {
-          const key = getStateKeyFromStorageKey(k, 'localStorage');
-          if (key) state[key] = v;
+        if (localState) {
+          version = localState.version;
+          for (const [k, v] of Object.entries(localState.state)) {
+            const key = getStateKeyFromStorageKey(k, 'localStorage');
+            if (key) state[key] = v;
+          }
         }
       }
 
@@ -62,11 +75,12 @@ export const createHyperStorage = <T extends object>(
     },
     removeItem: async (key) => {
       // ============== 处理 Local Storage  ============== //
-
-      if (useIndexedDB) {
-        await indexedDB.removeItem(key);
-      } else {
-        localStorage.removeItem(key);
+      if (!skipLocalStorage) {
+        if (useIndexedDB) {
+          await indexedDB.removeItem(key);
+        } else {
+          localStorage.removeItem(key);
+        }
       }
 
       // ============== 处理 URL Storage  ============== //
@@ -85,10 +99,12 @@ export const createHyperStorage = <T extends object>(
         if (localKey) localState[localKey] = v;
       }
 
-      if (useIndexedDB) {
-        await indexedDB.setItem(name, localState, newValue.version);
-      } else {
-        localStorage.setItem(name, localState, newValue.version);
+      if (!skipLocalStorage) {
+        if (useIndexedDB) {
+          await indexedDB.setItem(name, localState, newValue.version);
+        } else {
+          localStorage.setItem(name, localState, newValue.version);
+        }
       }
 
       // ============== 处理 URL Storage  ============== //

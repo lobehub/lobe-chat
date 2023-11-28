@@ -17,6 +17,6 @@ export const dbSchemaV2 = {
 
   messages:
     '&id, role, content, fromModel, favorite, plugin.identifier, plugin.apiName, translate.content, createdAt, updatedAt, sessionId, topicId, quotaId, parentId, [sessionId+topicId]',
-  sessions: '&id, type, title, group, meta.title, meta.description, createdAt, updatedAt',
+  sessions: '&id, type, group, meta.title, meta.description, meta.tags, createdAt, updatedAt',
   topics: '&id, title, favorite, createdAt, updatedAt, sessionId',
 };

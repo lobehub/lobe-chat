@@ -157,6 +157,12 @@ class _MessageModel extends BaseModel {
     return data.map((element) => this.mapToChatMessage(element));
   }
 
+  async isEmpty() {
+    const count = await this.table.count();
+
+    return count === 0;
+  }
+
   private mapChatMessageToDBMessage(message: ChatMessage): DB_Message {
     const { extra, ...messageData } = message;
 

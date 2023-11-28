@@ -77,6 +77,10 @@ class _SessionModel extends BaseModel {
   async findById(id: string) {
     return this.table.get(id);
   }
+
+  async isEmpty() {
+    return (await this.table.count()) === 0;
+  }
 }
 
 export const SessionModel = new _SessionModel();

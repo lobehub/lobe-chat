@@ -19,14 +19,13 @@ export class MessageService {
     return MessageModel.batchCreate(messages);
   }
 
+  async hasMessages() {
+    const isEmpty = await MessageModel.isEmpty();
+    return !isEmpty;
+  }
+
   async getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]> {
-    console.time('getMessages');
-
-    const messages = await MessageModel.query({ sessionId, topicId });
-
-    console.timeEnd('getMessages');
-
-    return messages;
+    return MessageModel.query({ sessionId, topicId });
   }
 
   async removeMessage(id: string) {
@@ -58,11 +57,7 @@ export class MessageService {
   }
 
   async bindMessagesToTopic(topicId: string, messageIds: string[]) {
-    console.time('bindMessagesToTopic');
-    const data = await MessageModel.batchUpdate(messageIds, { topicId });
-
-    console.timeEnd('bindMessagesToTopic');
-    return data;
+    return MessageModel.batchUpdate(messageIds, { topicId });
   }
 
   async updateMessageRole(id: string, role: LLMRoleType) {

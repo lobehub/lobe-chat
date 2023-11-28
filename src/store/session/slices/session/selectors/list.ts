@@ -47,10 +47,7 @@ const hasPinnedSessionList = (s: SessionStore) => {
   return list?.length > 0;
 };
 
-const hasConversion = (s: SessionStore) => {
-  // TODO: 补回 inbox message数量大于0 的逻辑
-  return customAgentSessions(s).length > 0;
-};
+const hasCustomAgents = (s: SessionStore) => customAgentSessions(s).length > 0;
 
 const isInboxSession = (s: SessionStore) => s.activeId === INBOX_SESSION_ID;
 
@@ -59,7 +56,7 @@ export const sessionSelectors = {
   currentSessionSafe,
   getSessionById,
   getSessionMetaById,
-  hasConversion,
+  hasCustomAgents,
   hasPinnedSessionList,
   inboxSession,
   isInboxSession,

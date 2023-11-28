@@ -22,13 +22,7 @@ class SessionService {
   }
 
   async getSessions(): Promise<LobeSessions> {
-    console.time('getSessions');
-
-    const sessions = await SessionModel.query();
-
-    console.timeEnd('getSessions');
-
-    return sessions;
+    return SessionModel.query();
   }
 
   async getAllAgents(): Promise<LobeSessions> {
@@ -54,6 +48,11 @@ class SessionService {
 
   async updateSessionConfig(activeId: string, config: DeepPartial<LobeAgentConfig>) {
     return SessionModel.updateConfig(activeId, config);
+  }
+
+  async hasSessions() {
+    const isEmpty = await SessionModel.isEmpty();
+    return !isEmpty;
   }
 }
 

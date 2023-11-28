@@ -2,6 +2,7 @@
 
 import { Icon } from '@lobehub/ui';
 import { Button, Upload } from 'antd';
+import { RcFile } from 'antd/es/upload/interface';
 import { SendHorizonal } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +24,7 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
     s.router,
     s.isMobile,
   ]);
-  const handleImport = useCallback((e: any) => {
+  const handleImport = useCallback((e: RcFile) => {
     importConfig(e);
     switchSession();
   }, []);
@@ -40,7 +41,7 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
         justify={'center'}
         width={'100%'}
       >
-        <Upload maxCount={1} onChange={handleImport} showUploadList={false}>
+        <Upload beforeUpload={handleImport} maxCount={1} showUploadList={false}>
           <Button block={mobile} size={'large'}>
             {t('button.import')}
           </Button>

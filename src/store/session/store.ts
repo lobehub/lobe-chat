@@ -28,10 +28,7 @@ const persistOptions: PersistOptions<SessionStore> = {
   skipHydration: true,
 
   storage: createHyperStorage({
-    localStorage: {
-      mode: 'indexedDB',
-      selectors: ['inbox'],
-    },
+    localStorage: false,
     url: {
       mode: 'hash',
       selectors: [
