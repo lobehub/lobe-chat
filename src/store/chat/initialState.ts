@@ -14,12 +14,15 @@ export interface ChatStoreState {
    */
   chatLoadingId?: string;
   inputMessage: string;
+  isSearchingTopic: boolean;
   messageLoadingIds: [];
   messages: ChatMessage[];
   /**
    * whether messages have fetched
    */
   messagesInit: boolean;
+
+  searchTopics: ChatTopic[];
   shareLoading?: boolean;
   topicLoadingId?: string;
   topicRenamingId?: string;
@@ -34,9 +37,11 @@ export interface ChatStoreState {
 export const initialState: ChatStoreState = {
   activeId: 'inbox',
   inputMessage: '',
+  isSearchingTopic: false,
   messageLoadingIds: [],
   messages: [],
   messagesInit: false,
+  searchTopics: [],
   topicSearchKeywords: '',
   topics: [],
   topicsInit: false,

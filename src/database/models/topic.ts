@@ -130,6 +130,61 @@ class _TopicModel extends BaseModel {
   queryAll() {
     return this.table.orderBy('updatedAt').toArray();
   }
+
+  /**
+   * Query topics by keyword in title, message content, or translated content
+   * @param keyword The keyword to search for
+   */
+  async queryByKeyword(keyword: string): Promise<ChatTopic[]> {
+    if (!keyword) return [];
+
+    console.time('queryTopicsByKeyword');
+    const keywordLowerCase = keyword.toLowerCase();
+
+    // Find topics with matching title
+    const matchingTopicsPromise = this.table
+      .filter((topic) => topic.title.toLowerCase().includes(keywordLowerCase))
+      .toArray();
+
+    // Find messages with matching content or translate.content
+    const matchingMessagesPromise = this.db.messages
+      .filter((message) => {
+        // check content
+        if (message.content.toLowerCase().includes(keywordLowerCase)) return true;
+
+        // check translate content
+        if (message.translate && message.translate.content) {
+          return message.translate.content.toLowerCase().includes(keywordLowerCase);
+        }
+
+        return false;
+      })
+      .toArray();
+
+    // Resolve both promises
+    const [matchingTopics, matchingMessages] = await Promise.all([
+      matchingTopicsPromise,
+      matchingMessagesPromise,
+    ]);
+
+    // Extract topic IDs from messages
+    const topicIdsFromMessages = matchingMessages.map((message) => message.topicId);
+
+    // Combine topic IDs from both sources
+    const combinedTopicIds = new Set([
+      ...topicIdsFromMessages,
+      ...matchingTopics.map((topic) => topic.id),
+    ]);
+
+    // Retrieve unique topics by IDs
+    const uniqueTopics = await this.table
+      .where('id')
+      .anyOf([...combinedTopicIds])
+      .toArray();
+
+    console.timeEnd('queryTopicsByKeyword');
+    return uniqueTopics.map((i) => ({ ...i, favorite: !!i.favorite }));
+  }
 }
 
 export const TopicModel = new _TopicModel();

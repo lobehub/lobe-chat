@@ -47,6 +47,10 @@ class TopicService {
   async getAllTopics() {
     return TopicModel.queryAll();
   }
+
+  async searchTopics(keyword: string) {
+    return TopicModel.queryByKeyword(keyword);
+  }
 }
 
 export const topicService = new TopicService();
