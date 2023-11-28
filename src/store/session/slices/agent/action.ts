@@ -28,21 +28,21 @@ export const createAgentSlice: StateCreator<
     const session = sessionSelectors.currentSession(get());
     if (!session) return;
 
-    const { activeId, refresh } = get();
+    const { activeId, refreshSessions } = get();
 
     const config = produce(session.config, (draft) => {
       draft.plugins = draft.plugins?.filter((i) => i !== id) || [];
     });
 
     await sessionService.updateSessionConfig(activeId, config);
-    await refresh();
+    await refreshSessions();
   },
 
   updateAgentConfig: async (config) => {
     const session = sessionSelectors.currentSession(get());
     if (!session) return;
 
-    const { activeId, refresh } = get();
+    const { activeId, refreshSessions } = get();
 
     // if is the inbox session, update the global config
     if (sessionSelectors.isInboxSession(get())) {
@@ -57,16 +57,16 @@ export const createAgentSlice: StateCreator<
     // we need to update the session config here.
 
     await sessionService.updateSessionConfig(activeId, config);
-    await refresh();
+    await refreshSessions();
   },
 
   updateAgentMeta: async (meta) => {
     const session = sessionSelectors.currentSession(get());
     if (!session) return;
 
-    const { activeId, refresh } = get();
+    const { activeId, refreshSessions } = get();
 
     await sessionService.updateSessionMeta(activeId, meta);
-    await refresh();
+    await refreshSessions();
   },
 });

@@ -12,8 +12,10 @@ export interface SessionState {
   activeId: string;
   fetchSessionsLoading: boolean;
   isMobile?: boolean;
+  isSearching: boolean;
   router?: AppRouterInstance;
   searchKeywords: string;
+  searchSessions: LobeAgentSession[];
   sessions: LobeAgentSession[];
 }
 
@@ -21,6 +23,8 @@ export const initialState: SessionStoreState = {
   activeId: 'inbox',
   fetchSessionsLoading: true,
   isMobile: false,
+  isSearching: false,
   searchKeywords: '',
+  searchSessions: [],
   sessions: [],
 };

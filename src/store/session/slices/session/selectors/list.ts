@@ -4,19 +4,17 @@ import { MetaData } from '@/types/meta';
 import { LobeAgentSession, LobeSessions, SessionGroupDefaultKeys } from '@/types/session';
 
 import { SessionStore } from '../../../store';
-import { initInboxSession, initLobeSession } from '../initialState';
+import { initLobeSession } from '../initialState';
 
-const inboxSession = (s: SessionStore): LobeAgentSession =>
-  s.sessions.find((i) => i.id === INBOX_SESSION_ID) || initInboxSession;
+const defaultSessions = (s: SessionStore): LobeSessions => s.sessions;
 
-const customAgentSessions = (s: SessionStore): LobeSessions =>
-  s.sessions.filter((s) => s.id !== INBOX_SESSION_ID);
+const searchSessions = (s: SessionStore): LobeSessions => s.searchSessions;
 
 const pinnedSessionList = (s: SessionStore) =>
-  customAgentSessions(s).filter((s) => s.group === SessionGroupDefaultKeys.Pinned);
+  defaultSessions(s).filter((s) => s.group === SessionGroupDefaultKeys.Pinned);
 
 const unpinnedSessionList = (s: SessionStore) =>
-  customAgentSessions(s).filter((s) => s.group === SessionGroupDefaultKeys.Default);
+  defaultSessions(s).filter((s) => s.group === SessionGroupDefaultKeys.Default);
 
 const getSessionById =
   (id: string) =>
@@ -47,7 +45,7 @@ const hasPinnedSessionList = (s: SessionStore) => {
   return list?.length > 0;
 };
 
-const hasCustomAgents = (s: SessionStore) => customAgentSessions(s).length > 0;
+const hasCustomAgents = (s: SessionStore) => defaultSessions(s).length > 0;
 
 const isInboxSession = (s: SessionStore) => s.activeId === INBOX_SESSION_ID;
 
@@ -58,8 +56,8 @@ export const sessionSelectors = {
   getSessionMetaById,
   hasCustomAgents,
   hasPinnedSessionList,
-  inboxSession,
   isInboxSession,
   pinnedSessionList,
+  searchSessions,
   unpinnedSessionList,
 };

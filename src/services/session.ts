@@ -54,6 +54,10 @@ class SessionService {
     const isEmpty = await SessionModel.isEmpty();
     return !isEmpty;
   }
+
+  searchSessions(keyword: string) {
+    return SessionModel.queryByKeyword(keyword);
+  }
 }
 
 export const sessionService = new SessionService();

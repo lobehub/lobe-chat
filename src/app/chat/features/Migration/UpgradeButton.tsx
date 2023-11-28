@@ -23,7 +23,7 @@ const UpgradeButton = memo<UpgradeButtonProps>(
   ({ setUpgradeStatus, upgradeStatus, state, setError, primary = true, children }) => {
     const { t } = useTranslation('migration');
 
-    const refreshSession = useSessionStore((s) => s.refresh);
+    const refreshSession = useSessionStore((s) => s.refreshSessions);
     const [refreshMessages, refreshTopic] = useChatStore((s) => [
       s.refreshMessages,
       s.refreshTopic,

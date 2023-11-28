@@ -51,7 +51,7 @@ export interface SessionAction {
   /**
    * re-fetch the data
    */
-  refresh: () => Promise<void>;
+  refreshSessions: () => Promise<void>;
 
   /**
    * remove session
@@ -67,12 +67,10 @@ export interface SessionAction {
   switchSession: (sessionId?: string) => void;
   /**
    * A custom hook that uses SWR to fetch sessions data.
-   *
-   * @typedef {import('swr').SWRResponse} SWRResponse
-   *
-   * @returns {SWRResponse<any>} - The response object containing the sessions data.
    */
   useFetchSessions: () => SWRResponse<any>;
+
+  useSearchSessions: (keyword?: string) => SWRResponse<any>;
 }
 
 export const createSessionSlice: StateCreator<
@@ -88,11 +86,11 @@ export const createSessionSlice: StateCreator<
   clearSessions: async () => {
     await sessionService.removeAllSessions();
 
-    get().refresh();
+    get().refreshSessions();
   },
 
   createSession: async (agent) => {
-    const { switchSession, refresh } = get();
+    const { switchSession, refreshSessions } = get();
 
     // 合并 settings 里的 defaultAgent
     const defaultAgent = merge(
@@ -103,7 +101,7 @@ export const createSessionSlice: StateCreator<
     const newSession: LobeAgentSession = merge(defaultAgent, agent);
 
     const id = await sessionService.createNewSession(LobeSessionType.Agent, newSession);
-    await refresh();
+    await refreshSessions();
 
     switchSession(id);
 
@@ -113,16 +111,16 @@ export const createSessionSlice: StateCreator<
   pinSession: async (sessionId, pinned) => {
     await sessionService.updateSessionGroup(sessionId, pinned ? 'pinned' : 'default');
 
-    await get().refresh();
+    await get().refreshSessions();
   },
 
-  refresh: async () => {
+  refreshSessions: async () => {
     await mutate(FETCH_SESSIONS_KEY);
   },
 
   removeSession: async (sessionId) => {
     await sessionService.removeSession(sessionId);
-    await get().refresh();
+    await get().refreshSessions();
 
     if (sessionId === get().activeId) {
       get().switchSession();
@@ -157,6 +155,14 @@ export const createSessionSlice: StateCreator<
           false,
           t('useFetchSessions/onSuccess', data),
         );
+      },
+    }),
+
+  useSearchSessions: (keyword) =>
+    useSWR<LobeSessions>(keyword, sessionService.searchSessions, {
+      onSuccess: (data) => {
+        console.log('search results:', data);
+        set({ searchSessions: data }, false, t('useSearchSessions(success)', data));
       },
     }),
 });
