@@ -5,15 +5,15 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ABOUT, CHANGELOG, FEEDBACK } from '@/const/url';
-import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
+import { configService } from '@/services/config';
 import { useGlobalStore } from '@/store/global';
 
 import Item from '../../features/SideBar/Item';
 
 const ExtraList = memo(() => {
   const { t } = useTranslation('common');
-  const { exportAll } = useExportConfig();
+
   const { importConfig } = useImportConfig();
   const tab = useGlobalStore((s) => s.settingsTab);
   const { mobile } = useResponsive();
@@ -21,7 +21,7 @@ const ExtraList = memo(() => {
     {
       icon: HardDriveDownload,
       label: t('export'),
-      onClick: exportAll,
+      onClick: configService.exportAll,
       value: 'export',
     },
     {

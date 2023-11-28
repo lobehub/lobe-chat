@@ -1,0 +1,145 @@
+import { messageService } from '@/services/message';
+import { sessionService } from '@/services/session';
+import { topicService } from '@/services/topic';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
+import { sessionExportSelectors, sessionSelectors } from '@/store/session/selectors';
+import { ChatMessage } from '@/types/chatMessage';
+import { ConfigFile } from '@/types/exportConfig';
+import { LobeSessions } from '@/types/session';
+import { GlobalSettings } from '@/types/settings';
+import { ChatTopic } from '@/types/topic';
+import { createConfigFile, exportConfigFile } from '@/utils/config';
+
+class ConfigService {
+  /**
+   * import sessions from files
+   * @param sessions
+   */
+  importSessions = async (sessions: LobeSessions) => {
+    await sessionService.batchCreateSessions(sessions);
+  };
+  importMessages = async (messages: ChatMessage[]) => {
+    await messageService.batchCreate(messages);
+  };
+  importSettings = async (settings: GlobalSettings) => {
+    useGlobalStore.getState().importAppSettings(settings);
+  };
+  importTopics = async (topics: ChatTopic[]) => {
+    await topicService.batchCreateTopics(topics);
+  };
+
+  importConfigState = async (config: ConfigFile) => {
+    switch (config.exportType) {
+      case 'settings': {
+        await this.importSettings(config.state.settings);
+        break;
+      }
+
+      case 'agents': {
+        await this.importSessions(config.state.sessions);
+
+        break;
+      }
+      case 'sessions': {
+        await this.importSessions(config.state.sessions);
+        await this.importMessages(config.state.messages);
+        await this.importTopics(config.state.topics);
+        break;
+      }
+
+      case 'all': {
+        await this.importSessions(config.state.sessions);
+        await this.importMessages(config.state.messages);
+        await this.importTopics(config.state.topics);
+
+        await this.importSettings(config.state.settings);
+
+        break;
+      }
+    }
+  };
+
+  /**
+   * export all agents
+   */
+  exportAgents = async () => {
+    const agents = await sessionService.getAllAgents();
+
+    const config = createConfigFile('agents', { sessions: agents });
+
+    exportConfigFile(config, 'agents');
+  };
+
+  /**
+   * export all sessions
+   */
+  exportSessions = async () => {
+    const sessions = await sessionService.getSessions();
+    const messages = await messageService.getAllMessages();
+    const topics = await topicService.getAllTopics();
+
+    const config = createConfigFile('sessions', { messages, sessions, topics });
+
+    exportConfigFile(config, 'sessions');
+  };
+
+  /**
+   * export a session
+   */
+  exportSingleSession = async (id: string) => {
+    const session = this.getSession(id);
+    if (!session) return;
+
+    const messages = await messageService.getMessages(id);
+    const topics = await topicService.getTopics({ sessionId: id });
+
+    const config = createConfigFile('singleSession', { messages, sessions: [session], topics });
+
+    exportConfigFile(config, `${session.meta?.title}-session`);
+  };
+
+  exportSingleAgent = async (id: string) => {
+    const agent = this.getAgent(id);
+    if (!agent) return;
+
+    const config = createConfigFile('agents', { sessions: [agent] });
+
+    exportConfigFile(config, agent.meta?.title || 'agent');
+  };
+
+  /**
+   * export settings
+   */
+  exportSettings = async () => {
+    const settings = this.getSettings();
+
+    const config = createConfigFile('settings', { settings });
+
+    exportConfigFile(config, 'settings');
+  };
+
+  /**
+   * export all data
+   */
+  exportAll = async () => {
+    const sessions = await sessionService.getSessions();
+    const messages = await messageService.getAllMessages();
+    const topics = await topicService.getAllTopics();
+    const settings = this.getSettings();
+
+    const config = createConfigFile('all', { messages, sessions, settings, topics });
+
+    exportConfigFile(config, 'config');
+  };
+
+  private getSettings = () => settingsSelectors.exportSettings(useGlobalStore.getState());
+
+  private getSession = (id: string) =>
+    sessionSelectors.getSessionById(id)(useSessionStore.getState());
+
+  private getAgent = (id: string) =>
+    sessionExportSelectors.getExportAgent(id)(useSessionStore.getState());
+}
+
+export const configService = new ConfigService();

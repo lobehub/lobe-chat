@@ -31,7 +31,6 @@ export interface ChatTopicAction {
   saveToTopic: () => Promise<string | undefined>;
   summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
   switchTopic: (id?: string) => Promise<void>;
-  importTopics: (topics: ChatTopic[]) => Promise<void>;
   updateTopicTitleInSummary: (id: string, title: string) => void;
   updateTopicLoading: (id?: string) => void;
   updateTopicTitle: (id: string, title: string) => Promise<void>;
@@ -54,11 +53,7 @@ export const chatTopic: StateCreator<
       saveToTopic();
     }
   },
-  importTopics: async (topic) => {
-    const { refreshTopic } = get();
-    await topicService.batchCreateTopics(topic);
-    await refreshTopic();
-  },
+
   saveToTopic: async () => {
     // if there is no message, stop
     const messages = chatSelectors.currentChats(get());

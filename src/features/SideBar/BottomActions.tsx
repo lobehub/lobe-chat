@@ -17,8 +17,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB, WIKI } from '@/const/url';
-import { useExportConfig } from '@/hooks/useExportConfig';
 import { useImportConfig } from '@/hooks/useImportConfig';
+import { configService } from '@/services/config';
 import { GlobalStore, useGlobalStore } from '@/store/global';
 import { SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 
@@ -30,7 +30,6 @@ export interface BottomActionProps {
 const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
-  const { exportSessions, exportSettings, exportAll, exportAgents } = useExportConfig();
   const { importConfig } = useImportConfig();
 
   const [hasNewVersion, useCheckLatestVersion] = useGlobalStore((s) => [
@@ -63,17 +62,17 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         {
           key: 'allAgent',
           label: <div>{t('exportType.allAgent')}</div>,
-          onClick: exportAgents,
+          onClick: configService.exportAgents,
         },
         {
           key: 'allAgentWithMessage',
           label: <div>{t('exportType.allAgentWithMessage')}</div>,
-          onClick: exportSessions,
+          onClick: configService.exportSessions,
         },
         {
           key: 'globalSetting',
           label: <div>{t('exportType.globalSetting')}</div>,
-          onClick: exportSettings,
+          onClick: configService.exportSettings,
         },
         {
           type: 'divider',
@@ -81,7 +80,7 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         {
           key: 'all',
           label: <div>{t('exportType.all')}</div>,
-          onClick: exportAll,
+          onClick: configService.exportAll,
         },
       ],
       icon: <Icon icon={HardDriveDownload} />,

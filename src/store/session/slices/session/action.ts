@@ -38,11 +38,6 @@ export interface SessionAction {
    * @returns sessionId
    */
   createSession: (agent?: DeepPartial<LobeAgentSettings>) => Promise<string>;
-  /**
-   * import sessions from files
-   * @param sessions
-   */
-  importSessions: (sessions: LobeSessions) => Promise<void>;
 
   /**
    * Pins or unpins a session.
@@ -115,11 +110,6 @@ export const createSessionSlice: StateCreator<
     return id;
   },
 
-  importSessions: async (importSessions) => {
-    await sessionService.batchCreateSessions(importSessions);
-
-    await get().refresh();
-  },
   pinSession: async (sessionId, pinned) => {
     await sessionService.updateSessionGroup(sessionId, pinned ? 'pinned' : 'default');
 

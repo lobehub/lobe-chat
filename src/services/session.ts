@@ -31,6 +31,11 @@ class SessionService {
     return sessions;
   }
 
+  async getAllAgents(): Promise<LobeSessions> {
+    // TODO: add a filter to get only agents
+    return await SessionModel.query();
+  }
+
   async removeSession(id: string) {
     return SessionModel.delete(id);
   }

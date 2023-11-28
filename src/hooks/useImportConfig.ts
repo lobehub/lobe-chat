@@ -1,46 +1,21 @@
 import { useMemo } from 'react';
 
+import { configService } from '@/services/config';
 import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { importConfigFile } from '@/utils/config';
 
 export const useImportConfig = () => {
-  const importSessions = useSessionStore((s) => s.importSessions);
-  const [importMessages, importTopics] = useChatStore((s) => [s.importMessages, s.importTopics]);
-  const importAppSettings = useGlobalStore((s) => s.importAppSettings);
+  const refreshSessions = useSessionStore((s) => s.refresh);
+  const [refreshMessages, refreshTopics] = useChatStore((s) => [s.refreshMessages, s.refreshTopic]);
 
   const importConfig = (file: File) => {
-    importConfigFile(file, (config) => {
-      switch (config.exportType) {
-        case 'settings': {
-          importAppSettings(config.state.settings);
-          break;
-        }
+    importConfigFile(file, async (config) => {
+      await configService.importConfigState(config);
 
-        case 'agents': {
-          importSessions(config.state.sessions);
-
-          break;
-        }
-        case 'sessions': {
-          importSessions(config.state.sessions);
-          importMessages(config.state.messages);
-          importTopics(config.state.topics);
-          break;
-        }
-
-        case 'all': {
-          console.log(config.state);
-          importSessions(config.state.sessions);
-          importMessages(config.state.messages);
-          importTopics(config.state.topics);
-
-          importAppSettings(config.state.settings);
-
-          break;
-        }
-      }
+      refreshSessions();
+      refreshMessages();
+      refreshTopics();
     });
   };
 

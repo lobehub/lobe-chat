@@ -31,7 +31,6 @@ export interface ChatMessageAction {
   // create
   resendMessage: (id: string) => Promise<void>;
   sendMessage: (text: string, images?: { id: string; url: string }[]) => Promise<void>;
-  importMessages: (messages: ChatMessage[]) => Promise<void>;
   // delete
   /**
    * clear message on the active session
@@ -183,11 +182,6 @@ export const chatMessage: StateCreator<
     }
   },
 
-  importMessages: async (messages) => {
-    await messageService.batchCreate(messages);
-
-    await get().refreshMessages();
-  },
   stopGenerateMessage: () => {
     const { abortController, toggleChatLoading } = get();
     if (!abortController) return;

@@ -21,15 +21,17 @@ const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (
 
 //  ===============  persist 本地缓存中间件配置 ============ //
 
-const LOBE_CHAT = 'LobeChat_Session';
-
 const persistOptions: PersistOptions<SessionStore> = {
-  name: LOBE_CHAT,
+  name: 'LOBE_CHAT',
 
   // 手动控制 Hydration ，避免 ssr 报错
   skipHydration: true,
 
   storage: createHyperStorage({
+    localStorage: {
+      mode: 'indexedDB',
+      selectors: ['inbox'],
+    },
     url: {
       mode: 'hash',
       selectors: [
@@ -38,19 +40,20 @@ const persistOptions: PersistOptions<SessionStore> = {
       ],
     },
   }),
-  version: 0,
+
+  version: 2,
 };
 
 //  ===============  实装 useStore ============ //
 
 export const useSessionStore = createWithEqualityFn<SessionStore>()(
-  subscribeWithSelector(
-    persist(
+  persist(
+    subscribeWithSelector(
       devtools(createStore, {
-        name: LOBE_CHAT + (isDev ? '_DEV' : ''),
+        name: 'LobeChat_Session' + (isDev ? '_DEV' : ''),
       }),
-      persistOptions,
     ),
+    persistOptions,
   ),
   shallow,
 );
