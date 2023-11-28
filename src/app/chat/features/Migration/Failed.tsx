@@ -9,9 +9,11 @@ import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { githubService } from '@/services/github';
+
 import ExportConfigButton from './ExportConfigButton';
 import UpgradeButton from './UpgradeButton';
-import { UpgradeStatus, V1DB_NAME, V1DB_TABLE_NAME } from './const';
+import { MigrationError, UpgradeStatus, V1DB_NAME, V1DB_TABLE_NAME } from './const';
 
 const clearLocal = () => {
   clear(createStore(V1DB_NAME, V1DB_TABLE_NAME));
@@ -19,8 +21,8 @@ const clearLocal = () => {
 };
 
 interface FailedProps {
-  error?: any;
-  setError: (error: any) => void;
+  error?: MigrationError;
+  setError: (error: MigrationError) => void;
   setUpgradeStatus: (status: UpgradeStatus) => void;
   state: any;
   upgradeStatus: UpgradeStatus;
@@ -84,7 +86,11 @@ const Failed = memo<FailedProps>(({ error, state, setUpgradeStatus, setError, up
           非常抱歉，数据库升级过程发生异常。请重试升级，或
           <Link
             aria-label={'issue'}
-            href="https://github.com/lobehub/lobe-chat/issues/151"
+            href="https://github.com/lobehub/lobe-chat/issues"
+            onClick={(e) => {
+              e.preventDefault();
+              githubService.submitDBV1UpgradeError(1, error!);
+            }}
             target="_blank"
           >
             提交问题

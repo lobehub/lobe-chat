@@ -8,3 +8,8 @@ export enum UpgradeStatus {
 
 export const V1DB_NAME = 'LobeHub';
 export const V1DB_TABLE_NAME = 'LOBE_CHAT';
+
+export interface MigrationError {
+  message: string;
+  stack: string;
+}

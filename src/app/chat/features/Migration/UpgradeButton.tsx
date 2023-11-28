@@ -8,12 +8,12 @@ import { configService } from '@/services/config';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 
-import { MIGRATE_KEY, UpgradeStatus, V1DB_NAME, V1DB_TABLE_NAME } from './const';
+import { MIGRATE_KEY, MigrationError, UpgradeStatus, V1DB_NAME, V1DB_TABLE_NAME } from './const';
 
 export interface UpgradeButtonProps {
   children?: ReactNode;
   primary?: boolean;
-  setError: (error: any) => void;
+  setError: (error: MigrationError) => void;
   setUpgradeStatus: (status: UpgradeStatus) => void;
   state: any;
   upgradeStatus: UpgradeStatus;

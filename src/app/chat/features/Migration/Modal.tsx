@@ -9,7 +9,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import Failed from './Failed';
 import MigrationStart from './Start';
-import { UpgradeStatus } from './const';
+import { MigrationError, UpgradeStatus } from './const';
 
 const useStyles = createStyles(({ css, token, prefixCls, isDarkMode }) => ({
   modalTitle: css`
@@ -45,7 +45,7 @@ const MigrationModal = memo<MigrationModalProps>(({ setOpen, open, state: dbStat
   const { styles } = useStyles();
   const [upgradeStatus, setUpgradeStatus] = useState<UpgradeStatus>(UpgradeStatus.START);
 
-  const [error, setError] = useState<{ message: string; stack: string }>();
+  const [error, setError] = useState<MigrationError>();
 
   const close = () => {
     setOpen(false);
