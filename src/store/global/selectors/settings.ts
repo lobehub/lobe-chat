@@ -8,7 +8,7 @@ import {
   DEFAULT_TTS_CONFIG,
 } from '@/const/settings';
 import { Locales } from '@/locales/resources';
-import { GlobalSettings } from '@/types/settings';
+import { CustomModels, GlobalSettings } from '@/types/settings';
 import { isOnServerSide } from '@/utils/env';
 import { merge } from '@/utils/merge';
 
@@ -29,10 +29,41 @@ const openAIAPIKeySelectors = (s: GlobalStore) =>
 
 const openAIProxyUrlSelectors = (s: GlobalStore) => s.settings.languageModel.openAI.endpoint;
 
-const modelListSelectors = (s: GlobalStore) => [
-  ...DEFAULT_OPENAI_MODEL_LIST,
-  ...(s.settings.languageModel.openAI.customModelName || '').split(',').filter(Boolean),
-];
+const modelListSelectors = (s: GlobalStore) => {
+  let models: CustomModels = [];
+
+  const modelNames = [
+    ...DEFAULT_OPENAI_MODEL_LIST,
+    ...(s.settings.languageModel.openAI.customModelName || '').split(/[,，]/).filter(Boolean),
+  ];
+
+  for (const item of modelNames) {
+    const disable = item.startsWith('-');
+    const nameConfig = item.startsWith('+') || item.startsWith('-') ? item.slice(1) : item;
+    const [name, displayName] = nameConfig.split('=');
+
+    if (disable) {
+      // Disable all models.
+      if (name === 'all') {
+        models = [];
+      }
+      continue;
+    }
+
+    // Remove duplicate model entries.
+    const existingIndex = models.findIndex(({ name: n }) => n === name);
+    if (existingIndex !== -1) {
+      models.splice(existingIndex, 1);
+    }
+
+    models.push({
+      displayName: displayName || name,
+      name,
+    });
+  }
+
+  return models;
+};
 
 export const exportSettings = (s: GlobalStore) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -22,7 +22,7 @@ const ModelSwitch = memo(() => {
     <Dropdown
       menu={{
         activeKey: model,
-        items: modelList.map((i) => ({ key: i, label: i })),
+        items: modelList.map(({ name, displayName }) => ({ key: name, label: displayName })),
         onClick: (e) => {
           updateAgentConfig({ model: e.key as LanguageModel });
         },
