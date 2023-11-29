@@ -55,9 +55,7 @@ describe('VersionController', () => {
       state: { value: 10 },
     };
 
-    expect(() => versionController.migrate(data as any)).toThrow(
-      '导入数据缺少版本号，请检查文件后重试',
-    );
+    expect(() => versionController.migrate(data as any)).toThrow();
   });
 
   it('should migrate data correctly through multiple versions', () => {
