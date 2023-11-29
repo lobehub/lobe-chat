@@ -9,10 +9,14 @@ import Balancer from 'react-wrap-balancer';
 import ExportConfigButton from './ExportConfigButton';
 import UpgradeButton, { UpgradeButtonProps } from './UpgradeButton';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode, responsive }) => ({
   desc: css`
     width: 280px;
     color: ${token.colorTextSecondary};
+
+    ${responsive.mobile} {
+      line-height: ${token.lineHeight};
+    }
   `,
   hint: css`
     font-size: ${token.fontSizeSM}px;
@@ -27,6 +31,13 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     height: 72px;
     background: ${isDarkMode ? token.blue1 : token.geekblue1};
     border-radius: 50%;
+  `,
+  intro: css`
+    ${responsive.mobile} {
+      width: 350px;
+      margin-top: 24px;
+      line-height: ${token.lineHeight};
+    }
   `,
 
   title: css`
@@ -60,7 +71,7 @@ const MigrationStart = memo<UpgradeButtonProps>((props) => {
   return (
     <>
       <Flexbox>
-        <Flexbox style={{ textAlign: 'center' }} width={460}>
+        <Flexbox className={styles.intro} style={{ textAlign: 'center' }} width={460}>
           {t('dbV1.description')}
         </Flexbox>
       </Flexbox>

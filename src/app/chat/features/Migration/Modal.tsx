@@ -97,6 +97,7 @@ const MigrationModal = memo<MigrationModalProps>(({ setOpen, open, state: dbStat
   return (
     <Modal
       centered
+      className={'abc'}
       classNames={{
         header: styles.modalTitle,
       }}
