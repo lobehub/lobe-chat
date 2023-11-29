@@ -55,7 +55,7 @@ class SessionService {
     return !isEmpty;
   }
 
-  searchSessions(keyword: string) {
+  async searchSessions(keyword: string) {
     return SessionModel.queryByKeyword(keyword);
   }
 }

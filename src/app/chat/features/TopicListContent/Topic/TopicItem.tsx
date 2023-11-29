@@ -1,5 +1,5 @@
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
@@ -21,17 +21,8 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     padding: 8px;
     border-radius: ${token.borderRadius}px;
 
-    .topic-more {
-      opacity: 0;
-      transition: opacity 400ms ${token.motionEaseOut};
-    }
-
     &:hover {
       background: ${token.colorFillSecondary};
-
-      .topic-more {
-        opacity: 1;
-      }
     }
   `,
   split: css`
@@ -50,6 +41,7 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
   const { styles, cx } = useStyles();
 
   const [toggleTopic] = useChatStore((s) => [s.switchTopic]);
+  const [isHover, setHovering] = useState(false);
 
   return (
     <Flexbox
@@ -60,8 +52,18 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
       onClick={() => {
         toggleTopic(id);
       }}
+      onMouseEnter={() => {
+        setHovering(true);
+      }}
+      onMouseLeave={() => {
+        setHovering(false);
+      }}
     >
-      {!id ? <DefaultContent /> : <TopicContent fav={fav} id={id} title={title} />}
+      {!id ? (
+        <DefaultContent />
+      ) : (
+        <TopicContent fav={fav} id={id} showMore={isHover} title={title} />
+      )}
     </Flexbox>
   );
 });

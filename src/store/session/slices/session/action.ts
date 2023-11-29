@@ -161,8 +161,8 @@ export const createSessionSlice: StateCreator<
   useSearchSessions: (keyword) =>
     useSWR<LobeSessions>(keyword, sessionService.searchSessions, {
       onSuccess: (data) => {
-        console.log('search results:', data);
         set({ searchSessions: data }, false, t('useSearchSessions(success)', data));
       },
+      revalidateOnFocus: false,
     }),
 });

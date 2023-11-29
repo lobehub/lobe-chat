@@ -26,10 +26,11 @@ const { Paragraph } = Typography;
 interface TopicContentProps {
   fav?: boolean;
   id: string;
+  showMore?: boolean;
   title: string;
 }
 
-const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
+const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   const { t } = useTranslation('common');
 
   const [editing, favoriteTopic, updateTopicTitle, removeTopic] = useChatStore((s) => [
@@ -131,7 +132,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
           value={title}
         />
       )}
-      {!editing && (
+      {showMore && !editing && (
         <Dropdown
           arrow={false}
           menu={{

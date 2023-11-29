@@ -18,7 +18,7 @@ export const DB_MessageSchema = z.object({
   role: z.enum(['user', 'system', 'assistant', 'function']),
   content: z.string(),
   files: z.array(z.string()).optional(),
-  favorite: z.boolean().optional(),
+  favorite: z.number().int().min(0).max(1).optional(),
   error: z.any().optional(),
 
   plugin: PluginSchema.optional(),
