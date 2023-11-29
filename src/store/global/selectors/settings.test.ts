@@ -58,6 +58,57 @@ describe('settingsSelectors', () => {
     });
   });
 
+  describe('CUSTOM_MODELS', () => {
+    it('custom deletion, addition, and renaming of models', () => {
+      const s = {
+        settings: {
+          languageModel: {
+            openAI: {
+              customModelName:
+                '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-1106-preview=gpt-4-turbo,gpt-4-1106-preview=gpt-4-32k',
+            },
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.modelList(s);
+
+      expect(result).toMatchSnapshot();
+    });
+
+    it('duplicate naming model', () => {
+      const s = {
+        settings: {
+          languageModel: {
+            openAI: {
+              customModelName: 'gpt-4-1106-preview=gpt-4-turbo，gpt-4-1106-preview=gpt-4-32k',
+            },
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.modelList(s);
+
+      expect(result).toMatchSnapshot();
+    });
+
+    it('only add the model', () => {
+      const s = {
+        settings: {
+          languageModel: {
+            openAI: {
+              customModelName: 'model1,model2,model3，model4',
+            },
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.modelList(s);
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
   // describe('defaultAgent', () => {
   //   it('should merge DEFAULT_AGENT and s.settings.defaultAgent correctly', () => {
   //     const s: GlobalStore = {

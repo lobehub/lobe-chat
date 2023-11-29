@@ -114,7 +114,14 @@ const AgentConfig = memo(() => {
   const model: ItemGroup = {
     children: [
       {
-        children: <Select options={modelList.map((value) => ({ label: value, value }))} />,
+        children: (
+          <Select
+            options={modelList.map(({ name, displayName }) => ({
+              label: displayName,
+              value: name,
+            }))}
+          />
+        ),
         desc: t('settingModel.model.desc'),
         label: t('settingModel.model.title'),
         name: 'model',
