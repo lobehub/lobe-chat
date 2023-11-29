@@ -1,5 +1,4 @@
 import { BaseModel } from '@/database/core';
-import { DBModel } from '@/database/core/types/db';
 import { DB_Topic, DB_TopicSchema } from '@/database/schemas/topic';
 import { ChatTopic } from '@/types/topic';
 import { nanoid } from '@/utils/uuid';
@@ -32,15 +31,22 @@ class _TopicModel extends BaseModel {
   async query({ pageSize = 9999, current = 0, sessionId }: QueryTopicParams): Promise<ChatTopic[]> {
     const offset = current * pageSize;
 
-    const result: DBModel<DB_Topic>[] = await this.table
-      .where('sessionId')
-      .equals(sessionId)
-      .reverse()
-      .sortBy('createdAt')
-      // handle page size
-      .then((sortedArray) => sortedArray.slice(offset, offset + pageSize));
+    // get all topics
+    const allTopics = await this.table.where('sessionId').equals(sessionId).toArray();
 
-    return result.map((i) => ({ ...i, favorite: !!i.favorite }));
+    // 将所有主题按星标消息优先，时间倒序进行排序
+    const sortedTopics = allTopics.sort((a, b) => {
+      if (a.favorite && !b.favorite) return -1; // a是星标，b不是，a排前面
+      if (!a.favorite && b.favorite) return 1; // b是星标，a不是，b排前面
+
+      // 如果星标状态相同，则按时间倒序排序
+      return b.createdAt - a.createdAt;
+    });
+
+    // handle pageSize
+    const pagedTopics = sortedTopics.slice(offset, offset + pageSize);
+
+    return pagedTopics.map((i) => ({ ...i, favorite: !!i.favorite }));
   }
 
   async findBySessionId(sessionId: string) {
