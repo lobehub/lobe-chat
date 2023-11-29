@@ -4,18 +4,20 @@ import { Database, SearchCheck, Zap } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
+import Balancer from 'react-wrap-balancer';
 
 import ExportConfigButton from './ExportConfigButton';
 import UpgradeButton, { UpgradeButtonProps } from './UpgradeButton';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   desc: css`
-    color: ${token.colorTextSecondary};
     width: 280px;
+    color: ${token.colorTextSecondary};
   `,
   hint: css`
     font-size: ${token.fontSizeSM}px;
     color: ${token.colorTextTertiary};
+    text-align: center;
   `,
   icon: css`
     color: ${isDarkMode ? token.blue : token.geekblue};
@@ -58,14 +60,14 @@ const MigrationStart = memo<UpgradeButtonProps>((props) => {
   return (
     <>
       <Flexbox>
-        <Flexbox style={{ textAlign: 'center' }} width={450}>
+        <Flexbox style={{ textAlign: 'center' }} width={460}>
           {t('dbV1.description')}
         </Flexbox>
       </Flexbox>
       <Flexbox gap={32}>
         {features.map((item) => {
           return (
-            <Flexbox align={'center'} gap={24} horizontal key={item.title}>
+            <Flexbox align={'flex-start'} gap={24} horizontal key={item.title}>
               <Center className={styles.iconCtn}>
                 <Icon className={styles.icon} icon={item.avatar} size={{ fontSize: 36 }} />
               </Center>
@@ -77,13 +79,13 @@ const MigrationStart = memo<UpgradeButtonProps>((props) => {
           );
         })}
       </Flexbox>
-      <Flexbox align={'center'} gap={16} style={{ paddingBottom: 16}}>
-        <Flexbox gap={16} horizontal>
+      <Flexbox align={'center'} gap={16} style={{ paddingBottom: 16 }}>
+        <Flexbox gap={16} horizontal justify={'center'} style={{ flexWrap: 'wrap' }}>
           <ExportConfigButton state={props.state} />
           <UpgradeButton {...props} />
         </Flexbox>
         <Flexbox align={'center'} className={styles.hint}>
-          {t('dbV1.upgradeTip')}
+          <Balancer>{t('dbV1.upgradeTip')}</Balancer>
         </Flexbox>
       </Flexbox>
     </>

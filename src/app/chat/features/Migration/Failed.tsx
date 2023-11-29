@@ -8,6 +8,7 @@ import { lighten } from 'polished';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import Balancer from 'react-wrap-balancer';
 
 import { githubService } from '@/services/github';
 
@@ -50,8 +51,10 @@ const Failed = memo<FailedProps>(({ error, state, setUpgradeStatus, setError, up
           <Flexbox
             gap={16}
             horizontal
+            justify={'center'}
             style={{
               alignSelf: 'center',
+              flexWrap: 'wrap',
             }}
           >
             <ExportConfigButton primary state={state} />
@@ -82,21 +85,23 @@ const Failed = memo<FailedProps>(({ error, state, setUpgradeStatus, setError, up
       status={'error'}
       style={{ paddingBlock: 24, width: 450 }}
       subTitle={
-        <Trans i18nKey="dbV1.upgrade.error.subTitle" ns={'migration'}>
-          非常抱歉，数据库升级过程发生异常。请重试升级，或
-          <Link
-            aria-label={'issue'}
-            href="https://github.com/lobehub/lobe-chat/issues"
-            onClick={(e) => {
-              e.preventDefault();
-              githubService.submitDBV1UpgradeError(1, error!);
-            }}
-            target="_blank"
-          >
-            提交问题
-          </Link>
-          中 ，敬请期待 ✨
-        </Trans>
+        <Balancer>
+          <Trans i18nKey="dbV1.upgrade.error.subTitle" ns={'migration'}>
+            非常抱歉，数据库升级过程发生异常。请重试升级，或
+            <Link
+              aria-label={'issue'}
+              href="https://github.com/lobehub/lobe-chat/issues"
+              onClick={(e) => {
+                e.preventDefault();
+                githubService.submitDBV1UpgradeError(1, error!);
+              }}
+              target="_blank"
+            >
+              提交问题
+            </Link>
+            我们将会第一时间帮你排查问题。
+          </Trans>
+        </Balancer>
       }
       title={t('dbV1.upgrade.error.title')}
     />

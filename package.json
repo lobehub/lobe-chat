@@ -107,6 +107,7 @@
     "react-layout-kit": "^1",
     "react-lazy-load": "^4",
     "react-spring-lightbox": "^1",
+    "react-wrap-balancer": "^1.1.0",
     "remark": "^14",
     "remark-gfm": "^3",
     "remark-html": "^15",
