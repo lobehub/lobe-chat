@@ -11,51 +11,78 @@ import { GlobalSettings } from '@/types/settings';
 import { ChatTopic } from '@/types/topic';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
 
+export interface ImportResult {
+  added: number;
+  errors: number;
+  skips: number;
+}
+export interface ImportResults {
+  messages?: ImportResult;
+  sessions: ImportResult;
+  topics?: ImportResult;
+}
+
 class ConfigService {
   /**
    * import sessions from files
    * @param sessions
    */
   importSessions = async (sessions: LobeSessions) => {
-    await sessionService.batchCreateSessions(sessions);
+    return await sessionService.batchCreateSessions(sessions);
   };
   importMessages = async (messages: ChatMessage[]) => {
-    await messageService.batchCreate(messages);
+    return messageService.batchCreate(messages);
   };
   importSettings = async (settings: GlobalSettings) => {
     useGlobalStore.getState().importAppSettings(settings);
   };
   importTopics = async (topics: ChatTopic[]) => {
-    await topicService.batchCreateTopics(topics);
+    return topicService.batchCreateTopics(topics);
   };
 
-  importConfigState = async (config: ConfigFile) => {
+  importConfigState = async (config: ConfigFile): Promise<ImportResults | undefined> => {
     switch (config.exportType) {
       case 'settings': {
         await this.importSettings(config.state.settings);
+
         break;
       }
 
       case 'agents': {
-        await this.importSessions(config.state.sessions);
-
-        break;
-      }
-      case 'sessions': {
-        await this.importSessions(config.state.sessions);
-        await this.importMessages(config.state.messages);
-        await this.importTopics(config.state.topics);
-        break;
+        const data = await this.importSessions(config.state.sessions);
+        return {
+          sessions: this.mapImportResult(data),
+        };
       }
 
       case 'all': {
-        await this.importSessions(config.state.sessions);
-        await this.importMessages(config.state.messages);
-        await this.importTopics(config.state.topics);
-
         await this.importSettings(config.state.settings);
 
-        break;
+        const [sessions, messages, topics] = await Promise.all([
+          this.importSessions(config.state.sessions),
+          this.importMessages(config.state.messages),
+          this.importTopics(config.state.topics),
+        ]);
+
+        return {
+          messages: this.mapImportResult(messages),
+          sessions: this.mapImportResult(sessions),
+          topics: this.mapImportResult(topics),
+        };
+      }
+
+      case 'sessions': {
+        const [sessions, messages, topics] = await Promise.all([
+          this.importSessions(config.state.sessions),
+          this.importMessages(config.state.messages),
+          this.importTopics(config.state.topics),
+        ]);
+
+        return {
+          messages: this.mapImportResult(messages),
+          sessions: this.mapImportResult(sessions),
+          topics: this.mapImportResult(topics),
+        };
       }
     }
   };
@@ -140,6 +167,18 @@ class ConfigService {
 
   private getAgent = (id: string) =>
     sessionExportSelectors.getExportAgent(id)(useSessionStore.getState());
+
+  private mapImportResult = (input: {
+    added: number;
+    errors?: Error[];
+    skips: string[];
+  }): ImportResult => {
+    return {
+      added: input.added,
+      errors: input.errors?.length || 0,
+      skips: input.skips.length,
+    };
+  };
 }
 
 export const configService = new ConfigService();

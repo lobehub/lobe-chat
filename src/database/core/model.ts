@@ -63,10 +63,17 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
       createWithNewId?: boolean;
       idGenerator?: () => string;
     } = {},
-  ) {
+  ): Promise<{
+    added: number;
+    errors?: Error[];
+    ids: string[];
+    skips: string[];
+    success: boolean;
+  }> {
     const { idGenerator = nanoid, createWithNewId = false } = options;
     const validatedData = [];
     const errors = [];
+    const skips: string[] = [];
 
     for (const data of dataArray) {
       const schemaWithId = this.schema.merge(DBBaseFieldsSchema.partial());
@@ -78,6 +85,12 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
         const autoId = idGenerator();
 
         const id = createWithNewId ? autoId : item.id ?? autoId;
+
+        // skip if the id already exists
+        if (await this.table.get(id)) {
+          skips.push(id);
+          continue;
+        }
 
         validatedData.push({
           ...item,
@@ -96,22 +109,29 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     }
     if (validatedData.length === 0) {
       // No valid data to add
-      return { added: 0, errors, success: false };
+      return { added: 0, errors, ids: [], skips, success: false };
     }
 
     // Using bulkAdd to insert validated data
     try {
       await this.table.bulkAdd(validatedData);
 
-      return { added: validatedData.length, ids: validatedData.map((v) => v.id), success: true };
+      return {
+        added: validatedData.length,
+        ids: validatedData.map((item) => item.id),
+        skips,
+        success: true,
+      };
     } catch (error) {
       const bulkError = error as BulkError;
       // Handle bulkAdd errors here
       console.error(`[${this.db.name}][${this._tableName}] Bulk add error:`, bulkError);
       // Return the number of successfully added records and errors
       return {
-        added: validatedData.length - bulkError.failures.length,
+        added: validatedData.length - skips.length - bulkError.failures.length,
         errors: bulkError.failures,
+        ids: validatedData.map((item) => item.id),
+        skips,
         success: false,
       };
     }

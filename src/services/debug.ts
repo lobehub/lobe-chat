@@ -3,8 +3,8 @@ import { DEBUG_MODEL } from '@/database/models/__DEBUG';
 class DebugService {
   async insertLargeDataToDB() {
     return DEBUG_MODEL.createRandomData({
-      messageCount: 100_000,
-      sessionCount: 4,
+      messageCount: 400_000,
+      sessionCount: 40,
       topicCount: 200,
     });
   }

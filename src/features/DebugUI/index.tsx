@@ -1,5 +1,5 @@
 import { Icon } from '@lobehub/ui';
-import { App, FloatButton } from 'antd';
+import { App, FloatButton, Spin } from 'antd';
 import { DatabaseIcon, Loader2 } from 'lucide-react';
 import { memo, useState } from 'react';
 
@@ -9,21 +9,25 @@ const DebugUI = memo(() => {
   const [loading, setLoading] = useState(false);
   const { message } = App.useApp();
   return (
-    <FloatButton
-      icon={<Icon icon={loading ? Loader2 : DatabaseIcon} spin={loading} />}
-      onClick={async () => {
-        setLoading(true);
-        const startTime = Date.now();
+    <>
+      {loading && <Spin fullscreen />}
+      <FloatButton
+        icon={<Icon icon={loading ? Loader2 : DatabaseIcon} spin={loading} />}
+        onClick={async () => {
+          setLoading(true);
 
-        await debugService.insertLargeDataToDB();
+          const startTime = Date.now();
 
-        const duration = Date.now() - startTime;
+          await debugService.insertLargeDataToDB();
 
-        setLoading(false);
-        message.success(`插入成功，耗时：${(duration / 1000).toFixed(1)} s`);
-      }}
-      tooltip={'性能压测，插入100w数据'}
-    />
+          const duration = Date.now() - startTime;
+
+          setLoading(false);
+          message.success(`插入成功，耗时：${(duration / 1000).toFixed(1)} s`);
+        }}
+        tooltip={'性能压测，插入100w数据'}
+      />
+    </>
   );
 });
 

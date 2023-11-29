@@ -1,10 +1,12 @@
 // This file is for debugging purposes only.
 // DON'T USE IT IN PRODUCTION.
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { LLMRoleType } from '@/types/llm';
+import { DBModel } from '@/database/core/types/db';
+import { DB_Message } from '@/database/schemas/message';
+import { DB_Topic } from '@/database/schemas/topic';
 
 import { BaseModel } from '../core';
-import { DB_SessionSchema } from '../schemas/session';
+import { DB_Session, DB_SessionSchema } from '../schemas/session';
 
 class _DEBUG_MODEL extends BaseModel<'sessions'> {
   constructor() {
@@ -37,70 +39,78 @@ class _DEBUG_MODEL extends BaseModel<'sessions'> {
     const numberOfTopics = topicCount;
     const numberOfMessages = messageCount;
 
-    // Start a transaction
+    // Prepare data for batch inserts
+    const sessionsData: DBModel<DB_Session>[] = [];
+    const topicsData: DBModel<DB_Topic>[] = [];
+    const messagesData: DBModel<DB_Message>[] = [];
+
+    // Prepare sessions
+    for (let i = 1; i <= numberOfSessions; i++) {
+      sessionsData.push({
+        config: DEFAULT_AGENT_CONFIG,
+        createdAt: this.randomDate(new Date(2020, 0, 1), new Date()),
+        group: 'default',
+        id: `sess_${i}`,
+        meta: {
+          description: `Session Description ${i}`,
+          title: `Session Title ${i}`,
+        },
+        type: 'agent',
+        updatedAt: this.randomDate(new Date(2020, 0, 1), new Date()),
+      });
+    }
+
+    // Prepare topics
+    for (let i = 1; i <= numberOfTopics; i++) {
+      topicsData.push({
+        createdAt: this.randomDate(new Date(2020, 0, 1), new Date()),
+        favorite: this.getRandomInt(0, 1),
+        id: `topic_${i}`,
+        sessionId: `sess_${this.getRandomInt(1, numberOfSessions)}`,
+        title: `Topic Title ${i}`,
+        updatedAt: this.randomDate(new Date(2020, 0, 1), new Date()),
+      });
+    }
+
+    // Prepare messages
+    for (let i = 1; i <= numberOfMessages; i++) {
+      messagesData.push({
+        content: this.randomString(300),
+        createdAt: this.randomDate(new Date(2020, 0, 1), new Date()),
+        favorite: this.getRandomInt(0, 1),
+        fromModel: 'model',
+        id: `msg_${i}`,
+        parentId: `msg_${this.getRandomInt(1, numberOfMessages)}`,
+        quotaId: `msg_${this.getRandomInt(1, numberOfMessages)}`,
+        role: this.randomPick(['user', 'assistant']),
+        sessionId: `sess_${this.getRandomInt(1, numberOfSessions)}`,
+        topicId: `topic_${this.getRandomInt(1, numberOfTopics)}`,
+        updatedAt: this.randomDate(new Date(2020, 0, 1), new Date()),
+      });
+    }
+
+    // Start a transaction for batch inserts
     await this.db.transaction(
       'rw',
       this.db.sessions,
       this.db.topics,
       this.db.messages,
       async () => {
-        // Insert sessions
-        for (let i = 1; i <= numberOfSessions; i++) {
-          await this.db.sessions.add({
-            config: DEFAULT_AGENT_CONFIG,
-            createdAt: this.randomDate(new Date(2020, 0, 1), new Date()),
-            group: 'default',
-            id: `sess_${i}`,
-            meta: {
-              description: `Session Description ${i}`,
-              title: `Session Title ${i}`,
-            },
-            type: 'agent',
-            updatedAt: this.randomDate(new Date(2020, 0, 1), new Date()),
-          });
-        }
+        // Batch insert sessions, topics, and messages
+        console.log('开始插入 sessions');
+        console.time('插入sessions');
+        await this.db.sessions.bulkAdd(sessionsData);
+        console.timeEnd('插入sessions');
 
-        // Insert topics
-        for (let i = 1; i <= numberOfTopics; i++) {
-          await this.db.topics.add({
-            createdAt: this.randomDate(new Date(2020, 0, 1), new Date()),
-            favorite: this.getRandomInt(0, 1),
-            id: `topic_${i}`,
-            sessionId: `sess_${this.getRandomInt(1, numberOfSessions)}`,
-            title: `Topic Title ${i}`,
-            updatedAt: this.randomDate(new Date(2020, 0, 1), new Date()),
-          });
-        }
+        console.log('开始插入 topics');
+        console.time('插入topics');
+        await this.db.topics.bulkAdd(topicsData);
+        console.timeEnd('插入topics');
 
-        // Insert messages
-        for (let i = 1; i <= numberOfMessages; i++) {
-          await this.db.messages.add({
-            content: this.randomString(300),
-
-            createdAt: this.randomDate(new Date(2020, 0, 1), new Date()),
-            favorite: this.getRandomInt(0, 1),
-
-            fromModel: 'model',
-
-            id: `msg_${i}`,
-
-            // Random quota ID
-            parentId: `msg_${this.getRandomInt(1, numberOfMessages)}`,
-
-            // Assuming topic IDs are like 'topic_1', 'topic_2', etc.
-            quotaId: `msg_${this.getRandomInt(1, numberOfMessages)}`,
-
-            // Random parent ID
-            role: this.randomPick<LLMRoleType>(['user', 'assistant']) as LLMRoleType,
-
-            sessionId: `sess_${this.getRandomInt(1, numberOfSessions)}`,
-
-            // Assuming session IDs are like 'sess_1', 'sess_2', etc.
-            topicId: `topic_${this.getRandomInt(1, numberOfTopics)}`,
-
-            updatedAt: this.randomDate(new Date(2020, 0, 1), new Date()),
-          });
-        }
+        console.log('开始插入 messages');
+        console.time('插入messages');
+        await this.db.messages.bulkAdd(messagesData);
+        console.timeEnd('插入messages');
       },
     );
   };

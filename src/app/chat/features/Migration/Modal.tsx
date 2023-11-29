@@ -1,38 +1,15 @@
-import { Icon, Modal } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { Button, Result } from 'antd';
-import { createStyles } from 'antd-style';
 import { BadgeCheck, CpuIcon } from 'lucide-react';
-import { rgba } from 'polished';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Center } from 'react-layout-kit';
+
+import DataStyleModal from '@/components/DataStyleModal';
 
 import Failed from './Failed';
 import MigrationStart from './Start';
 import { MigrationError, UpgradeStatus } from './const';
-
-const useStyles = createStyles(({ css, token, prefixCls, isDarkMode }) => ({
-  modalTitle: css`
-    &.${prefixCls}-modal-header {
-      height: 80px;
-      background:
-        linear-gradient(
-          180deg,
-          ${rgba(token.colorBgElevated, 0)},
-          ${token.colorBgContainer} ${isDarkMode ? '80' : '140'}px
-        ),
-        fixed 0 0 /10px 10px radial-gradient(${token.colorFill} 1px, transparent 0);
-    }
-
-    & .${prefixCls}-modal-title {
-      font-size: 24px;
-    }
-  `,
-  title: css`
-    font-size: ${token.fontSizeLG}px;
-    font-weight: bold;
-  `,
-}));
 
 interface MigrationModalProps {
   open: boolean;
@@ -42,7 +19,6 @@ interface MigrationModalProps {
 
 const MigrationModal = memo<MigrationModalProps>(({ setOpen, open, state: dbState }) => {
   const { t } = useTranslation('migration');
-  const { styles } = useStyles();
   const [upgradeStatus, setUpgradeStatus] = useState<UpgradeStatus>(UpgradeStatus.START);
 
   const [error, setError] = useState<MigrationError>();
@@ -95,25 +71,9 @@ const MigrationModal = memo<MigrationModalProps>(({ setOpen, open, state: dbStat
   };
 
   return (
-    <Modal
-      centered
-      className={'abc'}
-      classNames={{
-        header: styles.modalTitle,
-      }}
-      closable={false}
-      footer={null}
-      open={open}
-      title={
-        <Flexbox gap={8} horizontal>
-          <Icon icon={CpuIcon} />
-          {t('dbV1.title')}
-        </Flexbox>
-      }
-      width={550}
-    >
+    <DataStyleModal icon={CpuIcon} open={open} title={t('dbV1.title')}>
       <Center gap={48}>{renderContent()}</Center>
-    </Modal>
+    </DataStyleModal>
   );
 });
 
