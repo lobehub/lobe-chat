@@ -45,6 +45,8 @@ class _SessionModel extends BaseModel {
 
   async updateConfig(id: string, data: DeepPartial<LobeAgentConfig>) {
     const session = await this.findById(id);
+    if (!session) return;
+
     const config = merge(session.config, data);
 
     return this.update(id, { config });

@@ -39,25 +39,21 @@ export const createAgentSlice: StateCreator<
   },
 
   updateAgentConfig: async (config) => {
-    const session = sessionSelectors.currentSession(get());
-    if (!session) return;
-
-    const { activeId, refreshSessions } = get();
-
     // if is the inbox session, update the global config
-    if (sessionSelectors.isInboxSession(get())) {
+    const isInbox = sessionSelectors.isInboxSession(get());
+    if (isInbox) {
       useGlobalStore.getState().updateDefaultAgent({ config });
-      // NOTE: DON'T ADD RETURN HERE.
-      // we need to use `dispatchSession` below to update inbox config to trigger the inbox config rerender
+    } else {
+      const session = sessionSelectors.currentSession(get());
+      if (!session) return;
+
+      const { activeId } = get();
+
+      await sessionService.updateSessionConfig(activeId, config);
     }
 
-    // Although we use global store to store the default agent config,
-    // due to the `currentAgentConfig` selector use `useGlobalStore.getState()`
-    // to get the default agent config which not rerender on global store update
-    // we need to update the session config here.
-
-    await sessionService.updateSessionConfig(activeId, config);
-    await refreshSessions();
+    // trigger store rerender
+    await get().refreshSessions();
   },
 
   updateAgentMeta: async (meta) => {
