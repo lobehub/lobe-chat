@@ -39,7 +39,7 @@ const getMeta = (message: ChatMessage) => {
 };
 
 // 当前激活的消息列表
-export const currentChats = (s: ChatStore): ChatMessage[] => {
+const currentChats = (s: ChatStore): ChatMessage[] => {
   if (!s.activeId) return [];
 
   return s.messages.map((i) => ({ ...i, meta: getMeta(i) }));
@@ -47,7 +47,7 @@ export const currentChats = (s: ChatStore): ChatMessage[] => {
 
 const initTime = Date.now();
 // 针对新助手添加初始化时的自定义消息
-export const currentChatsWithGuideMessage = (s: ChatStore): ChatMessage[] => {
+const currentChatsWithGuideMessage = (s: ChatStore): ChatMessage[] => {
   const data = currentChats(s);
 
   const isBrandNewChat = data.length === 0;
@@ -82,19 +82,19 @@ export const currentChatsWithGuideMessage = (s: ChatStore): ChatMessage[] => {
   return [emptyInboxGuideMessage];
 };
 
-export const currentChatsWithHistoryConfig = (s: ChatStore): ChatMessage[] => {
+const currentChatsWithHistoryConfig = (s: ChatStore): ChatMessage[] => {
   const chats = currentChats(s);
   const config = agentSelectors.currentAgentConfig(useSessionStore.getState());
 
   return chatHelpers.getSlicedMessagesWithConfig(chats, config);
 };
 
-export const chatsMessageString = (s: ChatStore): string => {
+const chatsMessageString = (s: ChatStore): string => {
   const chats = currentChatsWithHistoryConfig(s);
   return chats.map((m) => m.content).join('');
 };
 
-export const getFunctionMessageProps =
+const getFunctionMessageProps =
   ({ plugin, content, id }: Pick<ChatMessage, 'plugin' | 'content' | 'id'>) =>
   (s: ChatStore) => ({
     arguments: plugin?.arguments,
@@ -105,6 +105,15 @@ export const getFunctionMessageProps =
     type: plugin?.type as LobePluginType,
   });
 
-export const getMessageById = (id: string) => (s: ChatStore) => {
+const getMessageById = (id: string) => (s: ChatStore) => {
   return s.messages.find((m) => m.id === id);
+};
+
+export const chatSelectors = {
+  chatsMessageString,
+  currentChats,
+  currentChatsWithGuideMessage,
+  currentChatsWithHistoryConfig,
+  getFunctionMessageProps,
+  getMessageById,
 };
