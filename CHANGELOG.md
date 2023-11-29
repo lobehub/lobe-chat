@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.106.0](https://github.com/lobehub/lobe-chat/compare/v0.105.2...v0.106.0)
+
+<sup>Released on **2023-11-29**</sup>
+
+#### ✨ Features
+
+- **misc**: Support custom deletion, addition, and renaming of models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support custom deletion, addition, and renaming of models, closes [#521](https://github.com/lobehub/lobe-chat/issues/521) [#518](https://github.com/lobehub/lobe-chat/issues/518) [#518](https://github.com/lobehub/lobe-chat/issues/518) ([65e0824](https://github.com/lobehub/lobe-chat/commit/65e0824))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.105.2](https://github.com/lobehub/lobe-chat/compare/v0.105.1...v0.105.2)
 
 <sup>Released on **2023-11-27**</sup>
