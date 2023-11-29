@@ -382,7 +382,7 @@ $ docker run -d -p 3210:3210 \
 
 ### `C` Deploying with Zeabur
 
-If you want to deploy this service yourself on Vercel, you can follow these steps:
+If you want to deploy this service yourself on Zeabur, you can follow these steps:
 
 - Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
 - Click the button below to start deployment: Deploy with Zeabur.
