@@ -51,6 +51,7 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 - [🛳 Self Hosting](#-self-hosting)
   - [`A` Deploying with Vercel](#a-deploying-with-vercel)
   - [`B` Deploying with Docker](#b-deploying-with-docker)
+  - [`C` Deploying with Zeabur](#c-deploying-with-zeabur)
   - [Environment Variable](#environment-variable)
 - [📦 Ecosystem](#-ecosystem)
 - [🧩 Plugins](#-plugins)
@@ -379,6 +380,22 @@ $ docker run -d -p 3210:3210 \
 
 <br/>
 
+### `C` Deploying with Zeabur
+
+If you want to deploy this service yourself on Vercel, you can follow these steps:
+
+- Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
+- Click the button below to start deployment: Deploy with Zeabur.
+- You can start using it after the deployment.
+- You can bind a custom domain or use the subdomain provided by Zeabur.
+
+
+<div align="center">
+
+[![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link]
+
+</div>
+
 ### Environment Variable
 
 This project provides some additional configuration items set with environment variables:
@@ -518,6 +535,8 @@ This project is [MIT](./LICENSE) licensed.
 [contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
 [deploy-button-image]: https://vercel.com/button
 [deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+[deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
+[deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
