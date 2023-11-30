@@ -3,11 +3,25 @@
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
-import { PropsWithChildren, memo } from 'react';
+import dynamic from 'next/dynamic';
+import { FC, PropsWithChildren, memo } from 'react';
+
+import { getClientConfig } from '@/config/client';
 
 import AppTheme, { AppThemeProps } from './AppTheme';
 import Locale from './Locale';
 import StoreHydration from './StoreHydration';
+
+let DebugUI: FC = () => null;
+
+// we need use Constant Folding to remove code below in production
+// refs: https://webpack.js.org/plugins/internal-plugins/#constplugin
+if (process.env.NODE_ENV === 'development') {
+  // eslint-disable-next-line unicorn/no-lonely-if
+  if (getClientConfig().DEBUG_MODE) {
+    DebugUI = dynamic(() => import('@/features/DebugUI'), { ssr: false }) as FC;
+  }
+}
 
 const useStyles = createStyles(({ css, token }) => ({
   bg: css`
@@ -37,6 +51,7 @@ const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) =>
     <Locale lang={defaultLang}>
       <StoreHydration />
       <Container>{children}</Container>
+      <DebugUI />
     </Locale>
   </AppTheme>
 );

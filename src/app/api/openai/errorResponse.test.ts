@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
+import { ChatErrorType } from '@/types/fetch';
 
 import { createErrorResponse } from './errorResponse';
 

@@ -10,6 +10,8 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { localeOptions } from '@/locales/options';
+import { useChatStore } from '@/store/chat';
+import { useFileStore } from '@/store/files';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
@@ -22,7 +24,13 @@ type SettingItemGroup = ItemGroup;
 const Common = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
+
   const clearSessions = useSessionStore((s) => s.clearSessions);
+  const [clearTopics, clearAllMessages] = useChatStore((s) => [
+    s.removeAllTopics,
+    s.clearAllMessages,
+  ]);
+  const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
   const resetPluginSettings = usePluginStore((s) => s.resetPluginSettings);
 
   const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
@@ -56,9 +64,13 @@ const Common = memo(() => {
         danger: true,
       },
       okText: t('ok', { ns: 'common' }),
-      onOk: () => {
-        clearSessions();
+      onOk: async () => {
+        await clearSessions();
         resetPluginSettings();
+        await clearTopics();
+        await removeAllFiles();
+        await clearAllMessages();
+
         message.success(t('danger.clear.success'));
       },
       title: t('danger.clear.confirm'),
@@ -161,8 +173,8 @@ const Common = memo(() => {
             {t('danger.clear.action')}
           </Button>
         ),
-        desc: t('danger.clear.title'),
-        label: t('danger.clear.desc'),
+        desc: t('danger.clear.desc'),
+        label: t('danger.clear.title'),
         minWidth: undefined,
       },
     ],

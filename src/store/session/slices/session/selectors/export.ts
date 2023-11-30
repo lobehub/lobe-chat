@@ -4,14 +4,13 @@ import { SessionStore } from '@/store/session';
 import { ConfigStateAgents, ConfigStateSessions } from '@/types/exportConfig';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
 
-import { getSessionById } from './list';
+import { sessionHelpers } from '../helpers';
 
-export const exportSessions = (s: SessionStore): ConfigStateSessions => ({
-  inbox: s.inbox,
+const exportSessions = (s: SessionStore): Pick<ConfigStateSessions, 'sessions'> => ({
   sessions: s.sessions,
 });
 
-export const exportAgents = (s: SessionStore): ConfigStateAgents => {
+const exportAgents = (s: SessionStore): ConfigStateAgents => {
   return {
     sessions: transform(s.sessions, (result: LobeSessions, value, key) => {
       // 移除 chats 和 topics
@@ -20,9 +19,13 @@ export const exportAgents = (s: SessionStore): ConfigStateAgents => {
   };
 };
 
-export const getExportAgent =
+const getExportAgent =
   (id: string) =>
-  (s: SessionStore): LobeAgentSession => {
-    const session = getSessionById(id)(s);
-    return { ...session, chats: {}, topics: {} };
-  };
+  (s: SessionStore): LobeAgentSession =>
+    sessionHelpers.getSessionById(id, s.sessions);
+
+export const sessionExportSelectors = {
+  exportAgents,
+  exportSessions,
+  getExportAgent,
+};

@@ -5,8 +5,10 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
 import { PREFIX_KEY, REGENERATE_KEY } from '@/const/hotkeys';
-import { useSessionChatInit, useSessionStore } from '@/store/session';
-import { agentSelectors, chatSelectors } from '@/store/session/selectors';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
 import { renderActions, useActionsClick } from './Actions';
 import { renderErrorMessages } from './Error';
@@ -15,28 +17,20 @@ import { renderMessages, useAvatarsClick } from './Messages';
 import SkeletonList from './SkeletonList';
 
 const List = memo(() => {
-  const init = useSessionChatInit();
   const { t } = useTranslation('common');
 
-  const data = useSessionStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
+  const data = useChatStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
 
-  const [
-    displayMode,
-    enableHistoryCount,
-    historyCount,
-    chatLoadingId,
-    resendMessage,
-    dispatchMessage,
-  ] = useSessionStore((s) => {
+  const [init, chatLoadingId, resendMessage, updateMessageContent] = useChatStore((s) => [
+    s.messagesInit,
+    s.chatLoadingId,
+    s.resendMessage,
+    s.updateMessageContent,
+  ]);
+
+  const [displayMode, enableHistoryCount, historyCount] = useSessionStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
-    return [
-      config.displayMode,
-      config.enableHistoryCount,
-      config.historyCount,
-      s.chatLoadingId,
-      s.resendMessage,
-      s.dispatchMessage,
-    ];
+    return [config.displayMode, config.enableHistoryCount, config.historyCount];
   });
   const onActionsClick = useActionsClick();
   const onAvatarsClick = useAvatarsClick();
@@ -59,15 +53,13 @@ const List = memo(() => {
 
   return (
     <ChatList
-      data={data}
+      data={data as any}
       enableHistoryCount={enableHistoryCount}
       historyCount={historyCount}
       loadingId={chatLoadingId}
       onActionsClick={onActionsClick}
       onAvatarsClick={onAvatarsClick}
-      onMessageChange={(id, content) =>
-        dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content })
-      }
+      onMessageChange={(id, content) => updateMessageContent(id, content)}
       renderActions={renderActions}
       renderErrorMessages={renderErrorMessages}
       renderMessages={renderMessages}

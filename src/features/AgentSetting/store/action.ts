@@ -5,8 +5,8 @@ import { chainSummaryAgentName } from '@/chains/summaryAgentName';
 import { chainSummaryDescription } from '@/chains/summaryDescription';
 import { chainSummaryTags } from '@/chains/summaryTags';
 import { chatService } from '@/services/chat';
+import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
-import { LobeAgentConfig } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { SessionLoadingState } from '../store/initialState';

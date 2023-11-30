@@ -5,8 +5,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { useChatStore } from '@/store/chat';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
 
 import { FormAction } from './style';
 
@@ -20,7 +20,7 @@ const APIKeyForm = memo<{ id: string }>(({ id }) => {
     s.setOpenAIConfig,
   ]);
 
-  const [resend, deleteMessage] = useSessionStore((s) => [s.resendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
 
   return (
     <Center gap={16} style={{ maxWidth: 300 }}>

@@ -1,9 +1,10 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI from 'openai';
 
-import { createErrorResponse } from '@/app/api/openai/errorResponse';
 import { ChatErrorType } from '@/types/fetch';
 import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+
+import { createErrorResponse } from '../errorResponse';
 
 interface CreateChatCompletionOptions {
   openai: OpenAI;
@@ -14,22 +15,15 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
   // ============  1. preprocess messages   ============ //
   const { messages, ...params } = payload;
 
-  // remove unnecessary fields like `plugins` or `files` by lobe-chat
-  const formatMessages = messages.map((m) => ({
-    content: m.content,
-    name: m.name,
-    role: m.role,
-  })) as OpenAI.ChatCompletionMessageParam[];
-
   // ============  2. send api   ============ //
 
   try {
     const response = await openai.chat.completions.create(
       {
-        messages: formatMessages,
+        messages,
         ...params,
         stream: true,
-      },
+      } as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       { headers: { Accept: '*/*' } },
     );
     const stream = OpenAIStream(response);

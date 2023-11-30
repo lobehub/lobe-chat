@@ -3,9 +3,9 @@
     "clear": {
       "action": "Clear Now",
       "confirm": "Confirm clearing all chat data?",
-      "desc": "Clear all session data",
       "success": "All session messages have been cleared",
-      "title": "Clear All Session Messages"
+      "title": "Clear All Session Messages",
+      "desc": "Will clear all session data, including assistant, files, messages, plugins, etc."
     },
     "reset": {
       "action": "Reset Now",
@@ -231,7 +231,7 @@
     },
     "voice": {
       "title": "Text-to-Speech Voices",
-      "desc": "Select a voice for the current assistant, different TTS services support different voices",
+      "desc": "Select a voice for the current agent, different TTS services support different voices",
       "preview": "Preview Voice"
     },
     "openai": {
@@ -282,11 +282,11 @@
     "title": "Theme Settings"
   },
   "submitAgentModal": {
-    "tooltips": "Share to Assistant Market",
-    "button": "Submit Assistant",
+    "tooltips": "Share to Agent Market",
+    "button": "Submit Agent",
     "identifier": "Identifier",
-    "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags.",
-    "placeholder": "Please enter a unique identifier for the assistant, such as web-development."
+    "metaMiss": "Please complete the agent information before submitting. It should include name, description, and tags.",
+    "placeholder": "Please enter a unique identifier for the agent, such as web-development."
   },
   "tab": {
     "agent": "Default Agent",

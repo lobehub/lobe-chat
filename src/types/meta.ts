@@ -1,26 +1,38 @@
-export interface MetaData {
+import { z } from 'zod';
+
+export const LobeMetaDataSchema = z.object({
   /**
    * 角色头像
-   * @description 可选参数，如果不传则使用默认头像
    */
-  avatar?: string;
+  avatar: z.string().optional(),
   /**
    *  背景色
-   * @description 可选参数，如果不传则使用默认背景色
    */
-  backgroundColor?: string;
-  description?: string;
-  tags?: string[];
+  backgroundColor: z.string().optional(),
+  description: z.string().optional(),
+  tags: z.array(z.string()).optional(),
   /**
    * 名称
-   * @description 可选参数，如果不传则使用默认名称
    */
-  title?: string;
-}
+  title: z.string().optional(),
+});
+
+export type MetaData = z.infer<typeof LobeMetaDataSchema>;
 
 export interface BaseDataModel {
-  createAt: number;
+  /**
+   * @deprecated
+   */
+  createAt?: number;
+
+  createdAt: number;
+
   id: string;
   meta: MetaData;
-  updateAt: number;
+
+  /**
+   * @deprecated
+   */
+  updateAt?: number;
+  updatedAt: number;
 }

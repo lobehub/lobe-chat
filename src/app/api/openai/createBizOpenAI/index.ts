@@ -1,4 +1,4 @@
-import OpenAI from 'openai/index';
+import OpenAI from 'openai';
 
 import { checkAuth } from '@/app/api/auth';
 import { getServerConfig } from '@/config/server';

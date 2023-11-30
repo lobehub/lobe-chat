@@ -3,9 +3,12 @@ import { merge } from 'lodash-es';
 
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { filesSelectors, useFileStore } from '@/store/files';
 import { usePluginStore } from '@/store/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
-import type { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatMessage } from '@/types/chatMessage';
+import type { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
 import { createHeaderWithOpenAI } from './_header';
@@ -15,9 +18,13 @@ interface FetchOptions {
   signal?: AbortSignal | undefined;
 }
 
+interface GetChatCompletionPayload extends Partial<Omit<OpenAIChatStreamPayload, 'messages'>> {
+  messages: ChatMessage[];
+}
+
 class ChatService {
-  getChatCompletion = (
-    { plugins: enabledPlugins, ...params }: Partial<OpenAIChatStreamPayload>,
+  createAssistantMessage = async (
+    { plugins: enabledPlugins, messages, ...params }: GetChatCompletionPayload,
     options?: FetchOptions,
   ) => {
     const payload = merge(
@@ -28,7 +35,11 @@ class ChatService {
       },
       params,
     );
-    // ============   preprocess tools   ============ //
+    // ============  1. preprocess messages   ============ //
+
+    const oaiMessages = this.processMessages(messages);
+
+    // ============  2. preprocess tools   ============ //
 
     const filterTools = pluginSelectors.enabledSchema(enabledPlugins)(usePluginStore.getState());
 
@@ -41,8 +52,21 @@ class ChatService {
 
     const functions = shouldUseTools ? filterTools : undefined;
 
+    return this.getChatCompletion({ ...params, functions, messages: oaiMessages }, options);
+  };
+
+  getChatCompletion = (params: Partial<OpenAIChatStreamPayload>, options?: FetchOptions) => {
+    const payload = merge(
+      {
+        model: DEFAULT_AGENT_CONFIG.model,
+        stream: true,
+        ...DEFAULT_AGENT_CONFIG.params,
+      },
+      params,
+    );
+
     return fetch(OPENAI_URLS.chat, {
-      body: JSON.stringify({ ...payload, functions }),
+      body: JSON.stringify(payload),
       headers: createHeaderWithOpenAI({ 'Content-Type': 'application/json' }),
       method: 'POST',
       signal: options?.signal,
@@ -79,6 +103,43 @@ class ChatService {
   };
 
   fetchPresetTaskResult = fetchAIFactory(this.getChatCompletion);
+
+  private processMessages = (messages: ChatMessage[]): OpenAIChatMessage[] => {
+    // handle content type for vision model
+    // for the models with visual ability, add image url to content
+    // refs: https://platform.openai.com/docs/guides/vision/quick-start
+    const getContent = (m: ChatMessage) => {
+      if (!m.files) return m.content;
+
+      const imageList = filesSelectors.getImageUrlOrBase64ByList(m.files)(useFileStore.getState());
+
+      if (imageList.length === 0) return m.content;
+
+      return [
+        { text: m.content, type: 'text' },
+        ...imageList.map(
+          (i) => ({ image_url: { detail: 'auto', url: i.url }, type: 'image_url' }) as const,
+        ),
+      ] as UserMessageContentPart[];
+    };
+
+    return messages.map((m): OpenAIChatMessage => {
+      switch (m.role) {
+        case 'user': {
+          return { content: getContent(m), role: m.role };
+        }
+
+        case 'function': {
+          const name = m.plugin?.identifier as string;
+          return { content: m.content, name, role: m.role };
+        }
+
+        default: {
+          return { content: m.content, role: m.role };
+        }
+      }
+    });
+  };
 }
 
 export const chatService = new ChatService();

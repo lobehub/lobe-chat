@@ -30,6 +30,25 @@
   "feedback": "피드백",
   "historyRange": "기록 범위",
   "import": "설정 가져오기",
+  "importModal": {
+    "finish": {
+      "onlySettings": "시스템 설정이 성공적으로 가져와졌습니다.",
+      "start": "시작",
+      "subTitle": "데이터가 성공적으로 가져와졌습니다. 소요 시간: {{duration}} 초. 가져오기 세부 정보는 다음과 같습니다:",
+      "title": "데이터 가져오기 완료"
+    },
+    "loading": "데이터를 가져오는 중입니다. 잠시 기다려주세요...",
+    "result": {
+      "added": "성공적으로 가져옴",
+      "errors": "가져오기 오류",
+      "messages": "메시지",
+      "sessions": "어시스턴트",
+      "skips": "중복 건너뜀",
+      "topics": "주제",
+      "type": "데이터 유형"
+    },
+    "title": "데이터 가져오기"
+  },
   "lang": {
     "en": "영어",
     "en-US": "영어",

@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import PluginSettingsConfig from '@/features/PluginSettings';
+import { useChatStore } from '@/store/chat';
 import { pluginHelpers, usePluginStore } from '@/store/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
-import { useSessionStore } from '@/store/session';
 
 import { ErrorActionContainer, useStyles } from '../style';
 
@@ -17,7 +17,7 @@ const PluginSettings: RenderErrorMessage['Render'] = memo(({ id, plugin }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('error');
   const theme = useTheme();
-  const [resend, deleteMessage] = useSessionStore((s) => [s.resendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
   const pluginIdentifier = plugin?.identifier as string;
   const pluginMeta = usePluginStore(pluginSelectors.getPluginMetaById(pluginIdentifier), isEqual);
   const manifest = usePluginStore(pluginSelectors.getPluginManifestById(pluginIdentifier), isEqual);

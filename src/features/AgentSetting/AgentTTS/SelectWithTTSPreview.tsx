@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useTTS } from '@/hooks/useTTS';
+import { TTSServer } from '@/types/agent';
 import { ChatMessageError } from '@/types/chatMessage';
-import { TTSServer } from '@/types/session';
 import { getMessageError } from '@/utils/fetch';
 
 interface SelectWithTTSPreviewProps extends SelectProps {

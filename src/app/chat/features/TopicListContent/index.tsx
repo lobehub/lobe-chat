@@ -1,10 +1,9 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import TopicSearchBar from '@/app/chat/features/TopicListContent/TopicSearchBar';
-
 import Header from './Header';
 import { Topic } from './Topic';
+import TopicSearchBar from './TopicSearchBar';
 
 const TopicListContent = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (

@@ -28,6 +28,8 @@ declare global {
       NEXT_PUBLIC_I18N_DEBUG: string;
       NEXT_PUBLIC_I18N_DEBUG_BROWSER: string;
       NEXT_PUBLIC_I18N_DEBUG_SERVER: string;
+
+      NEXT_PUBLIC_DEVELOPER_DEBUG: string;
     }
   }
 }
@@ -63,4 +65,7 @@ export const getClientConfig = () => ({
   I18N_DEBUG: process.env.NEXT_PUBLIC_I18N_DEBUG === '1',
   I18N_DEBUG_BROWSER: process.env.NEXT_PUBLIC_I18N_DEBUG_BROWSER === '1',
   I18N_DEBUG_SERVER: process.env.NEXT_PUBLIC_I18N_DEBUG_SERVER === '1',
+
+  // developer debug mode
+  DEBUG_MODE: process.env.NEXT_PUBLIC_DEVELOPER_DEBUG === '1',
 });

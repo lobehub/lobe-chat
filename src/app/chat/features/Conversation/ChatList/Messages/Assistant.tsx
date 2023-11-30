@@ -1,15 +1,19 @@
-import { RenderMessage } from '@lobehub/ui';
-import { memo } from 'react';
+import { ReactNode, memo } from 'react';
 
-import { useSessionStore } from '@/store/session';
-import { chatSelectors } from '@/store/session/selectors';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
+import { ChatMessage } from '@/types/chatMessage';
 import { isFunctionMessageAtStart } from '@/utils/message';
 
 import Inspector from '../Plugins/Inspector';
 import { DefaultMessage } from './Default';
 
-export const AssistantMessage: RenderMessage = memo(({ id, plugin, content, ...props }) => {
-  const fcProps = useSessionStore(chatSelectors.getFunctionMessageProps({ content, id, plugin }));
+export const AssistantMessage = memo<
+  ChatMessage & {
+    editableContent: ReactNode;
+  }
+>(({ id, plugin, content, ...props }) => {
+  const fcProps = useChatStore(chatSelectors.getFunctionMessageProps({ content, id, plugin }));
 
   if (!isFunctionMessageAtStart(content))
     return <DefaultMessage content={content} id={id} {...props} />;

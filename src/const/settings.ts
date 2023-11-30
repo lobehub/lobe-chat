@@ -1,8 +1,8 @@
 import { getClientConfig } from '@/config/client';
 import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_META } from '@/const/meta';
+import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
 import { LanguageModel } from '@/types/llm';
-import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/session';
 import {
   GlobalBaseSettings,
   GlobalDefaultAgent,

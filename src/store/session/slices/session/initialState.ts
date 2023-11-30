@@ -11,26 +11,23 @@ export interface SessionState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string | undefined;
-  // 默认会话
-  inbox: LobeAgentSession;
+  fetchSessionsLoading: boolean;
   isMobile?: boolean;
   router?: AppRouterInstance;
   searchKeywords: string;
-  sessions: Record<string, LobeAgentSession>;
+  sessions: LobeAgentSession[];
   topicSearchKeywords: string;
 }
 
 export const initLobeSession: LobeAgentSession = {
-  chats: {},
   config: DEFAULT_AGENT_CONFIG,
-  createAt: Date.now(),
-  files: [],
+  createdAt: Date.now(),
   id: '',
   meta: DEFAULT_AGENT_META,
   type: LobeSessionType.Agent,
-  updateAt: Date.now(),
+  updatedAt: Date.now(),
 };
-export const initInbox: LobeAgentSession = merge(initLobeSession, {
+export const initInboxSession: LobeAgentSession = merge(initLobeSession, {
   id: 'inbox',
   meta: {
     avatar: DEFAULT_INBOX_AVATAR,
@@ -39,9 +36,9 @@ export const initInbox: LobeAgentSession = merge(initLobeSession, {
 
 export const initialSessionState: SessionState = {
   activeId: 'inbox',
-  inbox: initInbox,
+  fetchSessionsLoading: true,
   isMobile: false,
   searchKeywords: '',
-  sessions: {},
+  sessions: [],
   topicSearchKeywords: '',
 };
