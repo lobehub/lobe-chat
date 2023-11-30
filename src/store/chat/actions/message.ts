@@ -271,6 +271,7 @@ export const chatMessage: StateCreator<
           topicId: activeTopicId,
         };
         functionId = await messageService.create(functionMessage);
+        await refreshMessages();
       }
 
       triggerFunctionCall(functionId);
