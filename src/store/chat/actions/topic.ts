@@ -97,7 +97,7 @@ export const chatTopic: StateCreator<
       onError: () => {
         updateTopicTitleInSummary(topicId, topic.title);
       },
-      onFinish: (text) => {
+      onFinish: async (text) => {
         topicService.updateTitle(topicId, text);
       },
       onLoadingChange: (loading) => {

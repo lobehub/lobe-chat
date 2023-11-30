@@ -249,7 +249,6 @@ export const chatMessage: StateCreator<
     // 2. fetch the AI response
     const { isFunctionCall, content, functionCallAtEnd, functionCallContent } =
       await fetchAIChatMessage(messages, mid);
-    await messageService.updateMessageContent(mid, content);
 
     // 3. if it's the function call message, trigger the function method
     if (isFunctionCall) {
@@ -361,6 +360,7 @@ export const chatMessage: StateCreator<
       onFinish: async (content) => {
         // update the content after fetch result
         await messageService.updateMessageContent(assistantId, content);
+        await refreshMessages();
       },
       onMessageHandle: async (text) => {
         output += text;
