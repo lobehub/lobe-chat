@@ -1,49 +1,47 @@
-import { CloseCircleFilled } from '@ant-design/icons';
-import { Icon } from '@lobehub/ui';
-import { Skeleton } from 'antd';
-import { LucideImageOff } from 'lucide-react';
-import Image from 'next/image';
-import { memo } from 'react';
+import { ActionIcon, Icon } from '@lobehub/ui';
+import { Image, Skeleton } from 'antd';
+import { LucideImageOff, Trash } from 'lucide-react';
+import { CSSProperties, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 
-import { IMAGE_SIZE, useStyles } from './FileItem.style';
+import { MIN_IMAGE_SIZE, useStyles } from './FileItem.style';
 
 interface FileItemProps {
   alwaysShowClose?: boolean;
+  className?: string;
   editable: boolean;
   id: string;
-  onClick: () => void;
+  onClick?: () => void;
+  style?: CSSProperties;
 }
-const FileItem = memo<FileItemProps>(({ editable, id, onClick, alwaysShowClose }) => {
-  const { styles, cx } = useStyles();
-  const [useFetchFile, removeFile] = useFileStore((s) => [s.useFetchFile, s.removeFile]);
+const FileItem = memo<FileItemProps>(
+  ({ editable, id, onClick, alwaysShowClose, className, style }) => {
+    const { styles, cx } = useStyles(editable);
+    const [useFetchFile, removeFile] = useFileStore((s) => [s.useFetchFile, s.removeFile]);
+    const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
+    const { data, isLoading } = useFetchFile(id);
 
-  const { data, isLoading } = useFetchFile(id);
-
-  return (
-    <Flexbox className={styles.container} onClick={onClick}>
-      {isLoading ? (
-        <Skeleton
-          active
-          title={{
-            style: { borderRadius: 8, height: IMAGE_SIZE },
-            width: IMAGE_SIZE,
-          }}
-        />
-      ) : (
-        <Flexbox className={styles.imageCtn}>
+    return (
+      <Flexbox className={cx(styles.container, className)} onClick={onClick} style={style}>
+        {isLoading ? (
+          <Skeleton.Image
+            active
+            style={{ borderRadius: 8, height: IMAGE_SIZE, width: IMAGE_SIZE }}
+          />
+        ) : (
           <div className={styles.imageWrapper}>
             {data ? (
               <Image
                 alt={data.name || ''}
-                className={styles.image}
                 fetchPriority={'high'}
-                height={IMAGE_SIZE}
                 loading={'lazy'}
+                preview={{
+                  styles: { mask: { backdropFilter: 'blur(2px)' } },
+                }}
                 src={data.url}
-                width={IMAGE_SIZE}
+                wrapperClassName={styles.image}
               />
             ) : (
               <Center className={styles.notFound} height={'100%'}>
@@ -51,23 +49,23 @@ const FileItem = memo<FileItemProps>(({ editable, id, onClick, alwaysShowClose }
               </Center>
             )}
           </div>
-        </Flexbox>
-      )}
-      {/* only show close icon when editable */}
-      {editable && (
-        <Center
-          className={cx(styles.closeIcon, alwaysShowClose && styles.alwaysShowClose)}
-          onClick={(e) => {
-            e.stopPropagation();
+        )}
+        {/* only show close icon when editable */}
+        {editable && (
+          <Center
+            className={cx(styles.closeIcon, alwaysShowClose && styles.alwaysShowClose)}
+            onClick={(e) => {
+              e.stopPropagation();
 
-            removeFile(id);
-          }}
-        >
-          <CloseCircleFilled />
-        </Center>
-      )}
-    </Flexbox>
-  );
-});
+              removeFile(id);
+            }}
+          >
+            <ActionIcon active glass icon={Trash} size={{ blockSize: 24, fontSize: 16 }} />
+          </Center>
+        )}
+      </Flexbox>
+    );
+  },
+);
 
 export default FileItem;

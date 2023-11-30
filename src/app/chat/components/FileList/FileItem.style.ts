@@ -1,30 +1,22 @@
 import { createStyles } from 'antd-style';
+import { rgba } from 'polished';
 
-export const IMAGE_SIZE = 64;
-const imageBorderRaidus = 8;
+export const MIN_IMAGE_SIZE = 64;
 
-export const useStyles = createStyles(({ css, cx, token, isDarkMode }) => {
+export const useStyles = createStyles(({ css, cx, token, prefixCls }, editable?: boolean) => {
+  const IMAGE_SIZE = editable ? `${MIN_IMAGE_SIZE}px` : '100%';
+
   const closeIcon = cx(css`
     cursor: pointer;
 
     position: absolute;
-    top: -6px;
-    right: -6px;
+    top: 0;
+    right: 0;
 
-    width: 16px;
-    height: 16px;
-
-    color: ${isDarkMode ? token.colorTextQuaternary : token.colorTextTertiary};
+    width: 24px;
+    height: 24px;
 
     opacity: 0;
-    background: ${isDarkMode ? token.colorTextSecondary : token.colorBgContainer};
-    border-radius: 50%;
-
-    transition: all 0.2s ease-in;
-
-    &:hover {
-      scale: 1.2;
-    }
   `);
 
   return {
@@ -37,48 +29,54 @@ export const useStyles = createStyles(({ css, cx, token, isDarkMode }) => {
 
       position: relative;
 
-      width: ${IMAGE_SIZE}px;
-      height: ${IMAGE_SIZE}px;
-
-      border-radius: ${imageBorderRaidus}px;
+      width: ${IMAGE_SIZE};
+      min-width: ${MIN_IMAGE_SIZE};
+      height: ${IMAGE_SIZE};
+      min-height: ${MIN_IMAGE_SIZE};
 
       &:hover {
         .${closeIcon} {
           opacity: 1;
         }
       }
-    `,
-    image: css`
-      opacity: ${isDarkMode ? 0.6 : 1};
-      object-fit: cover;
-      border-radius: 8px;
-      animation: fade-in 0.3s ease-in;
 
-      @keyframes fade-in {
-        from {
-          scale: 1.2;
-          opacity: 1;
-        }
+      .${prefixCls}-image-mask-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 12px;
 
-        to {
-          scale: 1;
-          opacity: 1;
+        svg {
+          font-size: 16px;
         }
       }
     `,
-    imageCtn: css`
-      position: relative;
+    image: css`
+      width: inherit;
+      height: inherit;
+      border-radius: 0;
+
+      img {
+        width: ${IMAGE_SIZE} !important;
+        height: ${IMAGE_SIZE} !important;
+        object-fit: contain;
+      }
     `,
+
     imageWrapper: css`
       overflow: hidden;
-      width: ${IMAGE_SIZE}px;
-      height: ${IMAGE_SIZE}px;
-      border-radius: ${imageBorderRaidus}px;
+
+      width: inherit;
+      height: inherit;
+
+      background: ${rgba(token.colorBgLayout, 0.25)};
+      border-radius: ${token.borderRadius}px;
+      box-shadow: 0 0 0 1px ${token.colorFillTertiary};
     `,
     notFound: css`
       color: ${token.colorTextSecondary};
       background: ${token.colorFillTertiary};
-      border-radius: ${imageBorderRaidus}px;
+      border-radius: ${token.borderRadius}px;
     `,
   };
 });

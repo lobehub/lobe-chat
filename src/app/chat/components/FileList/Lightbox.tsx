@@ -1,45 +1,28 @@
-import { createStyles } from 'antd-style';
-import { memo } from 'react';
-import Lightbox from 'react-spring-lightbox';
+import { Image } from 'antd';
+import { PropsWithChildren, memo } from 'react';
 
 import { filesSelectors, useFileStore } from '@/store/file';
 
-const useStyles = createStyles(({ css, token }) => ({
-  wrapper: css`
-    background: ${token.colorBgMask};
-    backdrop-filter: blur(4px);
-  `,
-}));
+const { PreviewGroup } = Image;
 
-interface LightBoxProps {
-  index: number;
+interface LightBoxProps extends PropsWithChildren {
   items: string[];
-  onNext: () => void;
-  onOpenChange: (open: boolean) => void;
-  onPrev: () => void;
-  open: boolean;
 }
 
-const LightBox = memo<LightBoxProps>(({ onOpenChange, open, items, index, onNext, onPrev }) => {
-  const { styles } = useStyles();
+const LightBox = memo<LightBoxProps>(({ items, children }) => {
+  const list = useFileStore(filesSelectors.getImageUrlByList(items));
 
-  const list = useFileStore(filesSelectors.getImageDetailByList(items));
+  if (list.length === 1) return children;
+
   return (
-    <Lightbox
-      className={styles.wrapper}
-      currentIndex={index}
-      images={list.map((i) => ({
-        alt: i.name,
-        loading: 'lazy',
-        src: i.url,
-      }))}
-      isOpen={open}
-      onClose={() => {
-        onOpenChange(false);
+    <PreviewGroup
+      items={list}
+      preview={{
+        styles: { mask: { backdropFilter: 'blur(2px)' } },
       }}
-      onNext={onNext}
-      onPrev={onPrev}
-    />
+    >
+      {children}
+    </PreviewGroup>
   );
 });
 
