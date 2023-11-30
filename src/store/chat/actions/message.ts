@@ -94,7 +94,7 @@ export const chatMessage: StateCreator<
     await messageService.removeMessages(activeId, activeTopicId);
 
     if (activeTopicId) {
-      await topicService.removeTopics(activeId);
+      await topicService.removeTopic(activeTopicId);
     }
     await refreshTopic();
     await refreshMessages();
