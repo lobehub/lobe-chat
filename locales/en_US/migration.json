@@ -36,7 +36,7 @@
         "title": "Database Upgrade Successful"
       }
     },
-    "upgradeTip": "The upgrade process will take approximately 1-2 seconds. Please do not close LobeChat during the upgrade."
+    "upgradeTip": "The upgrade process will take approximately 10 to 20 seconds. Please do not close LobeChat during the upgrade."
   },
   "migrateError": {
     "missVersion": "Imported data is missing a version number. Please check the file and try again.",

@@ -36,7 +36,7 @@
         "title": "資料庫升級成功"
       }
     },
-    "upgradeTip": "升級大致需要 1~2 秒，升級過程中請不要關閉 LobeChat"
+    "upgradeTip": "升級大約需要 10~20 秒，升級過程中請不要關閉 LobeChat"
   },
   "migrateError": {
     "missVersion": "導入數據缺少版本號，請檢查文件後重試",
