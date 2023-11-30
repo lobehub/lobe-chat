@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.107.4](https://github.com/lobehub/lobe-chat/compare/v0.107.3...v0.107.4)
+
+<sup>Released on **2023-11-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix a bug that remove all topics when clear message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix a bug that remove all topics when clear message ([1ab912d](https://github.com/lobehub/lobe-chat/commit/1ab912d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.107.3](https://github.com/lobehub/lobe-chat/compare/v0.107.2...v0.107.3)
 
 <sup>Released on **2023-11-30**</sup>
