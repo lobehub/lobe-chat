@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.107.9](https://github.com/lobehub/lobe-chat/compare/v0.107.8...v0.107.9)
+
+<sup>Released on **2023-11-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Switch session causing problem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Switch session causing problem, closes [#535](https://github.com/lobehub/lobe-chat/issues/535) ([205bc42](https://github.com/lobehub/lobe-chat/commit/205bc42))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.107.8](https://github.com/lobehub/lobe-chat/compare/v0.107.7...v0.107.8)
 
 <sup>Released on **2023-11-30**</sup>
