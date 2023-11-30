@@ -15,9 +15,7 @@ import Lightbox from './Lightbox';
 
 interface FileListProps {
   alwaysShowClose?: boolean;
-
   editable?: boolean;
-
   items: string[];
 }
 
@@ -33,12 +31,7 @@ const FileList = memo<FileListProps>(({ items, editable = true, alwaysShowClose 
 
   return (
     <>
-      <Flexbox
-        align={'flex-end'}
-        // className={styles.container}
-        gap={8}
-        horizontal
-      >
+      <Flexbox align={'flex-end'} gap={8} horizontal>
         {items.map((i, index) => (
           <FileItem
             alwaysShowClose={alwaysShowClose}

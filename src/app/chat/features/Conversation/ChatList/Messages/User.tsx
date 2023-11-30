@@ -17,7 +17,7 @@ export const UserMessage = memo<
   return (
     <Flexbox gap={8} id={id}>
       {editableContent}
-      {res.files && <FileList editable={false} items={res.files} />}
+      {res.files && res.files?.length > 0 && <FileList editable={false} items={res.files} />}
     </Flexbox>
   );
 });
