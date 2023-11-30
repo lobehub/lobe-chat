@@ -1,7 +1,7 @@
 import { Alert, Highlighter, Icon } from '@lobehub/ui';
 import { Button, Popconfirm, Result } from 'antd';
 import { useTheme } from 'antd-style';
-import { clear, createStore } from 'idb-keyval';
+import { createStore, del, get, set } from 'idb-keyval';
 import { ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 import { lighten } from 'polished';
@@ -16,8 +16,12 @@ import ExportConfigButton from './ExportConfigButton';
 import UpgradeButton from './UpgradeButton';
 import { MigrationError, UpgradeStatus, V1DB_NAME, V1DB_TABLE_NAME } from './const';
 
-const clearLocal = () => {
-  clear(createStore(V1DB_NAME, V1DB_TABLE_NAME));
+const clearLocal = async () => {
+  const store = createStore(V1DB_NAME, V1DB_TABLE_NAME);
+  // delete the state key and back it up to state_backup for reproduce
+  const state = await get('state', store);
+  await del('state');
+  await set('state_backup', state, store);
   location.reload();
 };
 

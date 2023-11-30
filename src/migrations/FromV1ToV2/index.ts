@@ -14,8 +14,11 @@ export class MigrationV1ToV2 implements Migration {
     finalTopics: V2Topic[],
   ): V2Session => {
     const { chats, topics, createAt, updateAt, pinned, ...i } = session;
-    for (const chat of Object.values(chats)) {
-      finalMessages.push(this.migrationMessage(chat, i.id));
+
+    if (chats) {
+      for (const chat of Object.values(chats)) {
+        finalMessages.push(this.migrationMessage(chat, i.id));
+      }
     }
 
     if (topics) {
