@@ -274,7 +274,7 @@ export const chatMessage: StateCreator<
       }
 
       await refreshMessages();
-      triggerFunctionCall(functionId);
+      await triggerFunctionCall(functionId);
     }
   },
   dispatchMessage: (payload) => {
