@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.107.0](https://github.com/lobehub/lobe-chat/compare/v0.106.0...v0.107.0)
+
+<sup>Released on **2023-11-30**</sup>
+
+#### ✨ Features
+
+- **misc**: Refactor the persist layer from zustand's persist to dexie ORM.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Refactor the persist layer from zustand's persist to dexie ORM, closes [#500](https://github.com/lobehub/lobe-chat/issues/500) ([9ae3a8e](https://github.com/lobehub/lobe-chat/commit/9ae3a8e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.106.0](https://github.com/lobehub/lobe-chat/compare/v0.105.2...v0.106.0)
 
 <sup>Released on **2023-11-29**</sup>
