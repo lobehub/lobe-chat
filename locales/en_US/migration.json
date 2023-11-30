@@ -13,12 +13,12 @@
     "description": "In the new version, LobeChat's data storage has made a huge leap. Therefore, we need to upgrade the old version data to bring you a better user experience.",
     "features": {
       "capability": {
-        "desc": "Based on indexedDB technology, it can store a lifetime of conversation messages.",
+        "desc": "Based on IndexedDB technology, it can store a lifetime of conversation messages.",
         "title": "High Capacity"
       },
       "performance": {
-        "desc": "Automatic indexing of tens of millions of messages, with millisecond response times for retrieval and queries.",
-        "title": "High Performance"
+        "title": "High Performance",
+        "desc": "Millions of messages are automatically indexed, and retrieval queries respond in milliseconds."
       },
       "use": {
         "desc": "Supports searching for titles, descriptions, tags, message content, and even translated text, greatly improving daily search efficiency.",
@@ -28,8 +28,8 @@
     "title": "LobeChat Data Evolution",
     "upgrade": {
       "error": {
-        "subTitle": "We are sorry, an exception occurred during the database upgrade process. Please try the following solutions: A. Clear local data and re-import backup data; B. Click the 'Re-upgrade' button.<br><br> If the error persists, please <1>submit an issue</1>, and we will help you troubleshoot it as soon as possible.",
-        "title": "Database Upgrade Failed"
+        "title": "Database Upgrade Failed",
+        "subTitle": "We are sorry, an error occurred during the database upgrade process. Please try the following solutions: A. Clear local data and re-import backup data; B. Click the 'Retry Upgrade' button.<br><br> If the issue persists, please <1>submit a request</1>, and we will assist you as soon as possible."
       },
       "success": {
         "subTitle": "LobeChat's database has been successfully upgraded to the latest version. Start experiencing it now!",
@@ -40,6 +40,6 @@
   },
   "migrateError": {
     "missVersion": "Imported data is missing a version number. Please check the file and try again.",
-    "noMigration": "No migration plan found for the current file version. Please check the file version and try again. If the issue persists, please submit an issue."
+    "noMigration": "No migration solution found for the current version. Please check the version number and try again. If the issue persists, please submit a feedback request."
   }
 }

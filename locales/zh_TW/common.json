@@ -30,6 +30,25 @@
   "feedback": "回饋與建議",
   "historyRange": "歷史範圍",
   "import": "匯入設定",
+  "importModal": {
+    "finish": {
+      "onlySettings": "系統設置匯入成功",
+      "start": "開始使用",
+      "subTitle": "數據匯入成功，耗時 {{duration}} 秒。匯入明細如下：",
+      "title": "數據匯入完成"
+    },
+    "loading": "數據匯入中，請耐心等待...",
+    "result": {
+      "added": "匯入成功",
+      "errors": "匯入出錯",
+      "messages": "消息",
+      "sessions": "助手",
+      "skips": "重複跳過",
+      "topics": "話題",
+      "type": "數據類型"
+    },
+    "title": "匯入數據"
+  },
   "lang": {
     "en": "英語",
     "en-US": "英語",
