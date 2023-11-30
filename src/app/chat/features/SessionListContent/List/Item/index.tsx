@@ -21,10 +21,8 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
 
   const [defaultModel] = useGlobalStore((s) => [settingsSelectors.defaultAgentConfig(s).model]);
-  const [active, loading] = useChatStore((s) => [
-    s.activeId === id,
-    !!s.chatLoadingId && id === s.activeId,
-  ]);
+  const [active] = useSessionStore((s) => [s.activeId === id]);
+  const [loading] = useChatStore((s) => [!!s.chatLoadingId && id === s.activeId]);
 
   const [pin, title, description, systemRole, avatar, avatarBackground, updateAt, model] =
     useSessionStore((s) => {
