@@ -1,4 +1,5 @@
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
+import { DB_Message } from '@/database/schemas/message';
 import {
   ChatMessage,
   ChatMessageError,
@@ -62,6 +63,10 @@ export class MessageService {
 
   async bindMessagesToTopic(topicId: string, messageIds: string[]) {
     return MessageModel.batchUpdate(messageIds, { topicId });
+  }
+
+  async updateMessage(id: string, message: Partial<DB_Message>) {
+    return MessageModel.update(id, message);
   }
 
   async updateMessageRole(id: string, role: LLMRoleType) {

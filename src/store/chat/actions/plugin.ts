@@ -81,14 +81,14 @@ export const chatPlugin: StateCreator<
       };
 
       await messageService.updateMessageContent(id, '');
+      await refreshMessages();
     } else {
       if (message.plugin) payload = message.plugin;
     }
 
     if (!payload.apiName) return;
 
-    await messageService.updateMessageRole(id, 'function');
-    await messageService.updateMessagePlugin(id, payload);
+    await messageService.updateMessage(id, { plugin: payload, role: 'function' });
     await refreshMessages();
 
     if (payload.type === 'standalone') {
