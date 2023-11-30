@@ -34,7 +34,12 @@ class _DEBUG_MODEL extends BaseModel<'sessions'> {
     return array[randomIndex];
   }
 
-  createRandomData = async ({ sessionCount = 10, topicCount = 2000, messageCount = 10_000 }) => {
+  createRandomData = async ({
+    sessionCount = 10,
+    topicCount = 2000,
+    messageCount = 10_000,
+    startIndex = 1,
+  }) => {
     const numberOfSessions = sessionCount;
     const numberOfTopics = topicCount;
     const numberOfMessages = messageCount;
@@ -45,7 +50,7 @@ class _DEBUG_MODEL extends BaseModel<'sessions'> {
     const messagesData: DBModel<DB_Message>[] = [];
 
     // Prepare sessions
-    for (let i = 1; i <= numberOfSessions; i++) {
+    for (let i = startIndex; i < numberOfSessions + startIndex; i++) {
       sessionsData.push({
         config: DEFAULT_AGENT_CONFIG,
         createdAt: this.randomDate(new Date(2020, 0, 1), new Date()),
@@ -61,30 +66,30 @@ class _DEBUG_MODEL extends BaseModel<'sessions'> {
     }
 
     // Prepare topics
-    for (let i = 1; i <= numberOfTopics; i++) {
+    for (let i = startIndex; i < numberOfTopics + startIndex; i++) {
       topicsData.push({
         createdAt: this.randomDate(new Date(2020, 0, 1), new Date()),
         favorite: this.getRandomInt(0, 1),
         id: `topic_${i}`,
-        sessionId: `sess_${this.getRandomInt(1, numberOfSessions)}`,
+        sessionId: `sess_${this.getRandomInt(startIndex, numberOfSessions)}`,
         title: `Topic Title ${i}`,
         updatedAt: this.randomDate(new Date(2020, 0, 1), new Date()),
       });
     }
 
     // Prepare messages
-    for (let i = 1; i <= numberOfMessages; i++) {
+    for (let i = startIndex; i < numberOfMessages + startIndex; i++) {
       messagesData.push({
         content: this.randomString(300),
         createdAt: this.randomDate(new Date(2020, 0, 1), new Date()),
         favorite: this.getRandomInt(0, 1),
         fromModel: 'model',
         id: `msg_${i}`,
-        parentId: `msg_${this.getRandomInt(1, numberOfMessages)}`,
-        quotaId: `msg_${this.getRandomInt(1, numberOfMessages)}`,
+        parentId: `msg_${this.getRandomInt(startIndex, numberOfMessages)}`,
+        quotaId: `msg_${this.getRandomInt(startIndex, numberOfMessages)}`,
         role: this.randomPick(['user', 'assistant']),
-        sessionId: `sess_${this.getRandomInt(1, numberOfSessions)}`,
-        topicId: `topic_${this.getRandomInt(1, numberOfTopics)}`,
+        sessionId: `sess_${this.getRandomInt(startIndex, numberOfSessions)}`,
+        topicId: `topic_${this.getRandomInt(startIndex, numberOfTopics)}`,
         updatedAt: this.randomDate(new Date(2020, 0, 1), new Date()),
       });
     }
