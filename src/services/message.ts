@@ -32,6 +32,10 @@ export class MessageService {
     return MessageModel.delete(id);
   }
 
+  async getAllMessagesInSession(sessionId: string) {
+    return MessageModel.queryBySessionId(sessionId);
+  }
+
   async updateMessageContent(id: string, content: string) {
     return MessageModel.update(id, { content });
   }

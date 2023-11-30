@@ -118,7 +118,7 @@ class ConfigService {
     const session = this.getSession(id);
     if (!session) return;
 
-    const messages = await messageService.getMessages(id);
+    const messages = await messageService.getAllMessagesInSession(id);
     const topics = await topicService.getTopics({ sessionId: id });
 
     const config = createConfigFile('singleSession', { messages, sessions: [session], topics });

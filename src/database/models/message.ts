@@ -163,6 +163,10 @@ class _MessageModel extends BaseModel {
     return count === 0;
   }
 
+  async queryBySessionId(sessionId: string) {
+    return this.table.where('sessionId').equals(sessionId).toArray();
+  }
+
   private mapChatMessageToDBMessage(message: ChatMessage): DB_Message {
     const { extra, ...messageData } = message;
 
