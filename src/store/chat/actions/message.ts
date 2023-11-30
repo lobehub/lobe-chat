@@ -220,6 +220,10 @@ export const chatMessage: StateCreator<
             }),
           );
         },
+        // default is 2000ms ,it makes the user's quick switch don't work correctly.
+        // Cause issue like this: https://github.com/lobehub/lobe-chat/issues/532
+        // we need to set it to 0.
+        dedupingInterval: 0,
       },
     ),
   refreshMessages: async () => {
