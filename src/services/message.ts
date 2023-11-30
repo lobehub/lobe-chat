@@ -53,7 +53,7 @@ export class MessageService {
     return MessageModel.update(id, { tts: data as ChatTTS });
   }
 
-  async removeMessages(assistantId: string, topicId?: string) {
+  async removeMessages(assistantId: string, topicId?: string | null) {
     return MessageModel.batchDelete(assistantId, topicId);
   }
 

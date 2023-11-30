@@ -9,7 +9,6 @@ import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { LOADING_FLAT } from '@/const/message';
 import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
 import { CreateMessageParams } from '@/database/models/message';
-import { DB_Message } from '@/database/schemas/message';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -42,7 +41,7 @@ export interface ChatMessageAction {
   updateInputMessage: (message: string) => void;
   updateMessageContent: (id: string, content: string) => Promise<void>;
   // query
-  useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
+  useFetchMessages: (sessionId: string, topicId?: string | null) => SWRResponse<ChatMessage[]>;
   stopGenerateMessage: () => void;
 
   /**
@@ -233,11 +232,12 @@ export const chatMessage: StateCreator<
     const { model } = getAgentConfig();
 
     // 1. Add an empty message to place the AI response
-    const assistantMessage: DB_Message = {
+    const assistantMessage: CreateMessageParams = {
       role: 'assistant',
       content: LOADING_FLAT,
-      fromModel: model,
-
+      extra: {
+        fromModel: model,
+      },
       parentId: userMessageId,
       sessionId: get().activeId,
       topicId: activeTopicId, // if there is activeTopicId，then add it to topicId

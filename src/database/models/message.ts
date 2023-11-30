@@ -7,9 +7,10 @@ import { ChatMessage } from '@/types/chatMessage';
 import { nanoid } from '@/utils/uuid';
 
 export interface CreateMessageParams
-  extends Partial<Omit<ChatMessage, 'content' | 'role'>>,
+  extends Partial<Omit<ChatMessage, 'content' | 'role' | 'topicId'>>,
     Pick<ChatMessage, 'content' | 'role'> {
   sessionId: string;
+  topicId?: string | null;
 }
 
 export interface QueryMessageParams {
@@ -45,14 +46,13 @@ class _MessageModel extends BaseModel {
   }: QueryMessageParams): Promise<ChatMessage[]> {
     const offset = current * pageSize;
 
-    const query =
-      topicId !== undefined
-        ? // TODO: The query {"sessionId":"xxx","topicId":"xxx"} on messages would benefit of a compound index [sessionId+topicId]
-          this.table.where({ sessionId, topicId }) // Use a compound index
-        : this.table
-            .where('sessionId')
-            .equals(sessionId)
-            .and((message) => !message.topicId);
+    const query = !!topicId
+      ? // TODO: The query {"sessionId":"xxx","topicId":"xxx"} on messages would benefit of a compound index [sessionId+topicId]
+        this.table.where({ sessionId, topicId }) // Use a compound index
+      : this.table
+          .where('sessionId')
+          .equals(sessionId)
+          .and((message) => !message.topicId);
 
     const dbMessages: DBModel<DB_Message>[] = await query
       .sortBy('createdAt')
@@ -133,16 +133,15 @@ class _MessageModel extends BaseModel {
    * @param {string | undefined} topicId - The identifier of the topic associated with the messages (optional).
    * @returns {Promise<void>}
    */
-  async batchDelete(sessionId: string, topicId: string | undefined): Promise<void> {
+  async batchDelete(sessionId: string, topicId?: string | null): Promise<void> {
     // If topicId is specified, use both assistantId and topicId as the filter criteria in the query.
     // Otherwise, filter by assistantId and require that topicId is undefined.
-    const query =
-      topicId !== undefined
-        ? this.table.where({ sessionId, topicId }) // Use a compound index
-        : this.table
-            .where('sessionId')
-            .equals(sessionId)
-            .and((message) => message.topicId === undefined);
+    const query = !!topicId
+      ? this.table.where({ sessionId, topicId }) // Use a compound index
+      : this.table
+          .where('sessionId')
+          .equals(sessionId)
+          .and((message) => message.topicId === undefined);
 
     // Retrieve a collection of message IDs that satisfy the criteria
     const messageIds = await query.primaryKeys();
@@ -168,9 +167,9 @@ class _MessageModel extends BaseModel {
   }
 
   private mapChatMessageToDBMessage(message: ChatMessage): DB_Message {
-    const { extra, ...messageData } = message;
+    const { extra, topicId, ...messageData } = message;
 
-    return { ...messageData, ...extra } as DB_Message;
+    return { ...messageData, ...extra, topicId: !!topicId ? topicId : undefined } as DB_Message;
   }
 
   private mapToChatMessage = ({

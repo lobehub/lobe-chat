@@ -94,7 +94,7 @@ describe('MessageModel', () => {
         pageSize: 1,
         current: 0,
         sessionId: messageData.sessionId,
-        topicId: messageData.topicId,
+        topicId: messageData.topicId as string,
       });
 
       expect(queriedMessages).toHaveLength(1);
@@ -319,7 +319,7 @@ describe('MessageModel', () => {
       // 验证所有具有给定会话 ID 和话题 ID 的消息是否已删除
       const messagesInDb = await MessageModel.query({
         sessionId: messageData.sessionId,
-        topicId: messageData.topicId,
+        topicId: messageData.topicId as string,
       });
       expect(messagesInDb).toHaveLength(0);
     });

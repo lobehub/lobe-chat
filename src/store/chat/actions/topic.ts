@@ -133,7 +133,7 @@ export const chatTopic: StateCreator<
       },
     }),
   switchTopic: async (id) => {
-    set({ activeTopicId: id }, false, n('toggleTopic'));
+    set({ activeTopicId: !!id ? id : null }, false, n('toggleTopic'));
 
     await get().refreshMessages();
   },
