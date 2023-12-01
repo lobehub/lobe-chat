@@ -69,9 +69,9 @@ export const useStyles = createStyles(({ css, cx, token, prefixCls }, editable?:
       width: inherit;
       height: inherit;
 
-      background: ${rgba(token.colorBgContainer, 0.33)};
+      background: ${editable ? token.colorFillTertiary : rgba(token.colorBgLayout, 0.25)};
       border-radius: ${token.borderRadius}px;
-      box-shadow: 0 0 0 1px ${token.colorFillTertiary};
+      box-shadow: 0 0 0 1px ${editable ? token.colorFillSecondary : token.colorFillTertiary};
     `,
     notFound: css`
       color: ${token.colorTextSecondary};
