@@ -14,7 +14,7 @@ const TopicList = dynamic(() => import('../features/TopicList'));
 
 const Chat = memo(() => {
   // due to mobile side don't have sessionList, so we need to fetch sessions here
-  // refs:
+  // refs: https://github.com/lobehub/lobe-chat/pull/541
   const useFetchSessions = useSessionStore((s) => s.useFetchSessions);
   useFetchSessions();
 
