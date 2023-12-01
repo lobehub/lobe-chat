@@ -3,9 +3,6 @@ import { FilesStoreState } from './initialState';
 const getImageDetailByList = (list: string[]) => (s: FilesStoreState) =>
   list.map((i) => s.imagesMap[i]).filter(Boolean);
 
-const getImageUrlByList = (list: string[]) => (s: FilesStoreState) =>
-  list.map((i) => s.imagesMap[i].url).filter(Boolean);
-
 const imageDetailList = (s: FilesStoreState) => getImageDetailByList(s.inputFilesList)(s);
 
 const getImageUrlOrBase64ById =
@@ -30,7 +27,6 @@ const imageUrlOrBase64List = (s: FilesStoreState) => getImageUrlOrBase64ByList(s
 
 export const filesSelectors = {
   getImageDetailByList,
-  getImageUrlByList,
   getImageUrlOrBase64ById,
   getImageUrlOrBase64ByList,
   imageDetailList,
