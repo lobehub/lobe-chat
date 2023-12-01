@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import HotKeys from '@/components/HotKeys';
 import { CLEAN_MESSAGE_KEY, PREFIX_KEY } from '@/const/hotkeys';
 import { useChatStore } from '@/store/chat';
-import { useFileStore } from '@/store/files';
+import { useFileStore } from '@/store/file';
 
 const Clear = memo(() => {
   const { t } = useTranslation('setting');

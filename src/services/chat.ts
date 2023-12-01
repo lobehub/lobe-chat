@@ -3,7 +3,7 @@ import { merge } from 'lodash-es';
 
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { filesSelectors, useFileStore } from '@/store/files';
+import { filesSelectors, useFileStore } from '@/store/file';
 import { usePluginStore } from '@/store/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
 import { ChatMessage } from '@/types/chatMessage';

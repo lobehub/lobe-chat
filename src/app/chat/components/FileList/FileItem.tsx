@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { useFileStore } from '@/store/files';
+import { useFileStore } from '@/store/file';
 
 import { IMAGE_SIZE, useStyles } from './FileItem.style';
 

@@ -2,7 +2,7 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import Lightbox from 'react-spring-lightbox';
 
-import { filesSelectors, useFileStore } from '@/store/files';
+import { filesSelectors, useFileStore } from '@/store/file';
 
 const useStyles = createStyles(({ css, token }) => ({
   wrapper: css`
