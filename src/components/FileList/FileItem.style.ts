@@ -69,7 +69,7 @@ export const useStyles = createStyles(({ css, cx, token, prefixCls }, editable?:
       width: inherit;
       height: inherit;
 
-      background: ${rgba(token.colorBgLayout, 0.25)};
+      background: ${rgba(token.colorBgContainer, 0.33)};
       border-radius: ${token.borderRadius}px;
       box-shadow: 0 0 0 1px ${token.colorFillTertiary};
     `,
