@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.107.11](https://github.com/lobehub/lobe-chat/compare/v0.107.10...v0.107.11)
+
+<sup>Released on **2023-12-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix switch model don't work on mobile.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix switch model don't work on mobile, closes [#541](https://github.com/lobehub/lobe-chat/issues/541) ([609f505](https://github.com/lobehub/lobe-chat/commit/609f505))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.107.10](https://github.com/lobehub/lobe-chat/compare/v0.107.9...v0.107.10)
 
 <sup>Released on **2023-11-30**</sup>
