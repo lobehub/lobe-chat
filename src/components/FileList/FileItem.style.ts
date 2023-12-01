@@ -59,7 +59,7 @@ export const useStyles = createStyles(({ css, cx, token, prefixCls }, editable?:
       img {
         width: ${IMAGE_SIZE} !important;
         height: ${IMAGE_SIZE} !important;
-        object-fit: contain;
+        object-fit: cover;
       }
     `,
 
