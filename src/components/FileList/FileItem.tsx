@@ -60,7 +60,13 @@ const FileItem = memo<FileItemProps>(
               removeFile(id);
             }}
           >
-            <ActionIcon active glass icon={Trash} size={{ blockSize: 24, fontSize: 16 }} />
+            <ActionIcon
+              active
+              color={'#fff'}
+              glass
+              icon={Trash}
+              size={{ blockSize: 24, fontSize: 16 }}
+            />
           </Center>
         )}
       </Flexbox>

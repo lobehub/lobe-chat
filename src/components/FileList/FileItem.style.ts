@@ -41,7 +41,7 @@ export const useStyles = createStyles(({ css, cx, token, prefixCls }, editable?:
       }
 
       .${prefixCls}-image-mask-info {
-        display: flex;
+        display: ${editable ? 'none' : 'flex'};
         flex-direction: column;
         align-items: center;
         font-size: 12px;
