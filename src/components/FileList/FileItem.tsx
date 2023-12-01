@@ -1,12 +1,11 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Image, Skeleton } from 'antd';
-import { LucideImageOff, Trash } from 'lucide-react';
+import { ActionIcon, Image } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
+import { Trash } from 'lucide-react';
 import { CSSProperties, memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 
-import { MIN_IMAGE_SIZE, useStyles } from './FileItem.style';
+import { MIN_IMAGE_SIZE } from './style';
 
 interface FileItemProps {
   alwaysShowClose?: boolean;
@@ -16,62 +15,43 @@ interface FileItemProps {
   onClick?: () => void;
   style?: CSSProperties;
 }
-const FileItem = memo<FileItemProps>(
-  ({ editable, id, onClick, alwaysShowClose, className, style }) => {
-    const { styles, cx } = useStyles(editable);
-    const [useFetchFile, removeFile] = useFileStore((s) => [s.useFetchFile, s.removeFile]);
-    const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
-    const { data, isLoading } = useFetchFile(id);
+const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
+  const theme = useTheme();
+  const [useFetchFile, removeFile] = useFileStore((s) => [s.useFetchFile, s.removeFile]);
+  const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
+  const { data, isLoading } = useFetchFile(id);
 
-    return (
-      <Flexbox className={cx(styles.container, className)} onClick={onClick} style={style}>
-        {isLoading ? (
-          <Skeleton.Image
+  return (
+    <Image
+      actions={
+        editable && (
+          <ActionIcon
             active
-            style={{ borderRadius: 8, height: IMAGE_SIZE, width: IMAGE_SIZE }}
-          />
-        ) : (
-          <div className={styles.imageWrapper}>
-            {data ? (
-              <Image
-                alt={data.name || ''}
-                fetchPriority={'high'}
-                loading={'lazy'}
-                preview={{
-                  styles: { mask: { backdropFilter: 'blur(2px)' } },
-                }}
-                src={data.url}
-                wrapperClassName={styles.image}
-              />
-            ) : (
-              <Center className={styles.notFound} height={'100%'}>
-                <Icon icon={LucideImageOff} size={{ fontSize: 28 }} />
-              </Center>
-            )}
-          </div>
-        )}
-        {/* only show close icon when editable */}
-        {editable && (
-          <Center
-            className={cx(styles.closeIcon, alwaysShowClose && styles.alwaysShowClose)}
+            glass
+            icon={Trash}
             onClick={(e) => {
               e.stopPropagation();
-
               removeFile(id);
             }}
-          >
-            <ActionIcon
-              active
-              color={'#fff'}
-              glass
-              icon={Trash}
-              size={{ blockSize: 24, fontSize: 16 }}
-            />
-          </Center>
-        )}
-      </Flexbox>
-    );
-  },
-);
+            size={'small'}
+          />
+        )
+      }
+      alt={data?.name || id || ''}
+      alwaysShowActions={alwaysShowClose}
+      isLoading={isLoading}
+      size={IMAGE_SIZE as any}
+      src={data?.url}
+      style={
+        editable
+          ? {
+              background: theme.colorBgContainer,
+              border: `1px solid ${theme.colorBorderSecondary}`,
+            }
+          : {}
+      }
+    />
+  );
+});
 
 export default FileItem;

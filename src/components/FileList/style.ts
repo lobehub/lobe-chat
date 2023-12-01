@@ -1,8 +1,7 @@
 import { createStyles } from 'antd-style';
 
-import { MIN_IMAGE_SIZE } from './FileItem.style';
-
 export const MAX_SIZE = 640;
+export const MIN_IMAGE_SIZE = 64;
 export const GAP = 8;
 
 export const useStyles = createStyles(({ css }) => ({
