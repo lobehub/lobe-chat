@@ -1,7 +1,7 @@
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import FileList from 'src/components/FileList';
 
-import FileList from '@/app/chat/components/FileList';
 import { LOADING_FLAT } from '@/const/message';
 import { ChatMessage } from '@/types/chatMessage';
 
