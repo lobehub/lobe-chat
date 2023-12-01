@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 import pkg from '../../package.json';
 
-const title = 'LobeChat';
+const title = 'CloudOSD';
 const { description, homepage } = pkg;
 const metadata: Metadata = {
   appleWebApp: {
