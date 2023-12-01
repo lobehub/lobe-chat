@@ -151,7 +151,7 @@ export const chatMessage: StateCreator<
     const fileIdList = files?.map((f) => f.id);
 
     // if message is empty and no files, then stop
-    if (!message && fileIdList?.length === 0) return;
+    if (!message && (!fileIdList || fileIdList?.length === 0)) return;
 
     let newMessage: CreateMessageParams = {
       content: message,
