@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
-import { filesSelectors, useFileStore } from '@/store/files';
-import { useChatStore } from 'src/store/chat';
+import { useChatStore } from '@/store/chat';
+import { filesSelectors, useFileStore } from '@/store/file';
 
 export const useSendMessage = () => {
   const [sendMessage, updateInputMessage] = useChatStore((s) => [

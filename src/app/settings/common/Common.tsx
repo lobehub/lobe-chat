@@ -11,7 +11,7 @@ import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { localeOptions } from '@/locales/options';
 import { useChatStore } from '@/store/chat';
-import { useFileStore } from '@/store/files';
+import { useFileStore } from '@/store/file';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';

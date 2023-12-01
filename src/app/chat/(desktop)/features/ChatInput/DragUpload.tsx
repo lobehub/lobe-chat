@@ -6,7 +6,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { useFileStore } from '@/store/files';
+import { useFileStore } from '@/store/file';
 
 const useStyles = createStyles(({ css, token, stylish }) => {
   return {

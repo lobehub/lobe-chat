@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import FileList from '@/app/chat/components/FileList';
-import { useFileStore } from '@/store/files';
+import { useFileStore } from '@/store/file';
 
 const Files = memo(() => {
   const inputFilesList = useFileStore((s) => s.inputFilesList);
