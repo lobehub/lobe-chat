@@ -1,36 +1,24 @@
 import { createStyles } from 'antd-style';
 
-export const MAX_SIZE = 640;
 export const MIN_IMAGE_SIZE = 64;
-export const GAP = 8;
-
-export const useStyles = createStyles(({ css }) => ({
-  container: css`
-    display: grid;
-    grid-gap: ${GAP}px;
-    grid-template-columns: repeat(6, 1fr);
-
-    width: 100%;
-    max-width: ${MAX_SIZE}px;
-
-    & > div {
-      grid-column: span 2;
+export const MAX_SIZE_DESKTOP = 640;
+export const MAX_SIZE_MOBILE = 280;
+export const useStyles = createStyles(
+  ({ css }, { col, gap, max, min }: { col: number; gap: number; max: number; min: number }) => ({
+    container: css`
+      display: grid;
+      grid-gap: ${gap}px;
+      grid-template-columns: repeat(${col}, 1fr);
 
       width: 100%;
-      min-width: ${MIN_IMAGE_SIZE}px;
-      min-height: ${MIN_IMAGE_SIZE}px;
-      max-height: ${(MAX_SIZE - GAP) / 2}px;
-    }
+      max-width: ${max}px;
 
-    & > div:nth-child(1):nth-last-child(2),
-    & > div:nth-child(2):nth-last-child(1) {
-      grid-column: span 3;
-      max-height: ${(MAX_SIZE - 2 * GAP) / 3}px;
-    }
-
-    & > :nth-child(1):nth-last-child(1) {
-      grid-column: span 6;
-      max-height: ${MAX_SIZE}px;
-    }
-  `,
-}));
+      & > div {
+        width: 100%;
+        min-width: ${min}px;
+        min-height: ${min}px;
+        max-height: ${(max - gap * (col - 1)) / col}px;
+      }
+    `,
+  }),
+);

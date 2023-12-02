@@ -1,16 +1,15 @@
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
-import FileList from '@/components/FileList';
+import EditableFileList from '@/components/FileList/EditableFileList';
 import { useFileStore } from '@/store/file';
 
 const Files = memo(() => {
   const inputFilesList = useFileStore((s) => s.inputFilesList);
 
   return (
-    <Flexbox padding={12}>
-      <FileList alwaysShowClose items={inputFilesList} />
-    </Flexbox>
+    <div style={{ position: 'relative', width: '100vw' }}>
+      <EditableFileList alwaysShowClose items={inputFilesList} />
+    </div>
   );
 });
 

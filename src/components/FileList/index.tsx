@@ -1,38 +1,62 @@
 import { ImageGallery } from '@lobehub/ui';
+import { useResponsive } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { MAX_SIZE_DESKTOP, MAX_SIZE_MOBILE } from '@/components/FileList/style';
+
+import FileGrid from './FileGrid';
 import FileItem from './FileItem';
-import { useStyles } from './style';
 
 interface FileListProps {
-  alwaysShowClose?: boolean;
-  editable?: boolean;
   items: string[];
 }
 
-const FileList = memo<FileListProps>(({ items, editable = true, alwaysShowClose }) => {
-  const { styles } = useStyles();
+const FileList = memo<FileListProps>(({ items }) => {
+  const { mobile } = useResponsive();
 
-  const content = useMemo(
-    () => (
-      <ImageGallery enable={items?.length > 1}>
-        {items.map((i) => (
-          <FileItem alwaysShowClose={alwaysShowClose} editable={editable} id={i} key={i} />
-        ))}
-      </ImageGallery>
-    ),
-    [items],
+  const { firstRow, lastRow } = useMemo(() => {
+    if (items.length === 4) {
+      return {
+        firstRow: items.slice(0, 2),
+        lastRow: items.slice(2, 4),
+      };
+    }
+
+    const firstCol = items.length % 3 === 0 ? 3 : items.length % 3;
+
+    return {
+      firstRow: items.slice(0, firstCol),
+      lastRow: items.slice(firstCol, items.length),
+    };
+  }, [items]);
+
+  const { gap, max } = useMemo(
+    () => ({
+      gap: mobile ? 4 : 6,
+      max: mobile ? MAX_SIZE_MOBILE : MAX_SIZE_DESKTOP,
+    }),
+    [mobile],
   );
 
-  if (editable)
-    return (
-      <Flexbox gap={8} horizontal>
-        {content}
+  return (
+    <ImageGallery enable={items?.length > 1}>
+      <Flexbox gap={gap}>
+        <FileGrid col={firstRow.length} gap={gap} max={max}>
+          {firstRow.map((i) => (
+            <FileItem id={i} key={i} />
+          ))}
+        </FileGrid>
+        {lastRow.length > 0 && (
+          <FileGrid col={lastRow.length > 2 ? 3 : lastRow.length} gap={gap} max={max}>
+            {lastRow.map((i) => (
+              <FileItem id={i} key={i} />
+            ))}
+          </FileGrid>
+        )}
       </Flexbox>
-    );
-
-  return <div className={styles.container}>{content}</div>;
+    </ImageGallery>
+  );
 });
 
 export default FileList;

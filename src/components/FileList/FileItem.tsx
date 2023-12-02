@@ -10,7 +10,7 @@ import { MIN_IMAGE_SIZE } from './style';
 interface FileItemProps {
   alwaysShowClose?: boolean;
   className?: string;
-  editable: boolean;
+  editable?: boolean;
   id: string;
   onClick?: () => void;
   style?: CSSProperties;
@@ -26,7 +26,7 @@ const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
       actions={
         editable && (
           <ActionIcon
-            active
+            color={'#fff'}
             glass
             icon={Trash}
             onClick={(e) => {
@@ -34,6 +34,9 @@ const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
               removeFile(id);
             }}
             size={'small'}
+            style={{
+              background: theme.colorBgMask,
+            }}
           />
         )
       }
@@ -47,8 +50,9 @@ const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
           ? {
               background: theme.colorBgContainer,
               border: `1px solid ${theme.colorBorderSecondary}`,
+              marginBlock: 0,
             }
-          : {}
+          : { marginBlock: 0 }
       }
     />
   );
