@@ -1,11 +1,29 @@
 import { ActionIcon, Image } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
+import { createStyles } from 'antd-style';
 import { Trash } from 'lucide-react';
-import { CSSProperties, memo } from 'react';
+import { CSSProperties, memo, useCallback } from 'react';
 
 import { useFileStore } from '@/store/file';
 
 import { MIN_IMAGE_SIZE } from './style';
+
+export const useStyles = createStyles(({ css, token }) => ({
+  deleteButton: css`
+    color: #fff;
+    background: ${token.colorBgMask};
+
+    &:hover {
+      background: ${token.colorError};
+    }
+  `,
+  editableImage: css`
+    background: ${token.colorBgContainer};
+    border: 1px solid ${token.colorBorderSecondary};
+  `,
+  image: css`
+    margin-block: 0 !important;
+  `,
+}));
 
 interface FileItemProps {
   alwaysShowClose?: boolean;
@@ -16,27 +34,29 @@ interface FileItemProps {
   style?: CSSProperties;
 }
 const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
-  const theme = useTheme();
   const [useFetchFile, removeFile] = useFileStore((s) => [s.useFetchFile, s.removeFile]);
   const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
   const { data, isLoading } = useFetchFile(id);
+  const { styles, cx } = useStyles();
+
+  const handleRemoveFile = useCallback(
+    (e: any) => {
+      e.stopPropagation();
+      removeFile(id);
+    },
+    [id],
+  );
 
   return (
     <Image
       actions={
         editable && (
           <ActionIcon
-            color={'#fff'}
+            className={styles.deleteButton}
             glass
             icon={Trash}
-            onClick={(e) => {
-              e.stopPropagation();
-              removeFile(id);
-            }}
+            onClick={handleRemoveFile}
             size={'small'}
-            style={{
-              background: theme.colorBgMask,
-            }}
           />
         )
       }
@@ -45,15 +65,7 @@ const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
       isLoading={isLoading}
       size={IMAGE_SIZE as any}
       src={data?.url}
-      style={
-        editable
-          ? {
-              background: theme.colorBgContainer,
-              border: `1px solid ${theme.colorBorderSecondary}`,
-              marginBlock: 0,
-            }
-          : { marginBlock: 0 }
-      }
+      wrapperClassName={cx(styles.image, editable && styles.editableImage)}
     />
   );
 });
