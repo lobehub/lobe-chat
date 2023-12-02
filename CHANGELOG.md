@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.107.12](https://github.com/lobehub/lobe-chat/compare/v0.107.11...v0.107.12)
+
+<sup>Released on **2023-12-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix topic not refresh when switching sessions quickly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix topic not refresh when switching sessions quickly, closes [#555](https://github.com/lobehub/lobe-chat/issues/555) ([1806c05](https://github.com/lobehub/lobe-chat/commit/1806c05))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.107.11](https://github.com/lobehub/lobe-chat/compare/v0.107.10...v0.107.11)
 
 <sup>Released on **2023-12-01**</sup>

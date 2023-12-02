@@ -125,6 +125,7 @@ export const chatTopic: StateCreator<
       onSuccess: (topics) => {
         set({ topics, topicsInit: true }, false, n('useFetchTopics(success)', { sessionId }));
       },
+      dedupingInterval: 0,
     }),
   useSearchTopics: (keywords) =>
     useSWR<ChatTopic[]>(keywords, topicService.searchTopics, {
