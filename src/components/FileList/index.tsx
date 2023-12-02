@@ -4,6 +4,7 @@ import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { MAX_SIZE_DESKTOP, MAX_SIZE_MOBILE } from '@/components/FileList/style';
+import { filesSelectors, useFileStore } from '@/store/file';
 
 import FileGrid from './FileGrid';
 import FileItem from './FileItem';
@@ -14,6 +15,12 @@ interface FileListProps {
 
 const FileList = memo<FileListProps>(({ items }) => {
   const { mobile } = useResponsive();
+  const list = useFileStore((s) => {
+    return filesSelectors
+      .getImageDetailByList(items)(s)
+      .map((i) => i.url)
+      .filter(Boolean);
+  });
 
   const { firstRow, lastRow } = useMemo(() => {
     if (items.length === 4) {
@@ -40,7 +47,7 @@ const FileList = memo<FileListProps>(({ items }) => {
   );
 
   return (
-    <ImageGallery enable={items?.length > 1}>
+    <ImageGallery enable={list?.length > 1} items={list}>
       <Flexbox gap={gap}>
         <FileGrid col={firstRow.length} gap={gap} max={max}>
           {firstRow.map((i) => (
