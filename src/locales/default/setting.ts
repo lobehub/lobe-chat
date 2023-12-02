@@ -277,4 +277,16 @@ export default {
     llm: '语言模型',
     tts: '语音服务',
   },
+  tools: {
+    builtins: {
+      groupName: '内置',
+    },
+    plugins: {
+      enabled: '已启用 {{num}}',
+      groupName: '插件',
+      noEnabled: '暂无启用插件',
+      store: '插件市场',
+    },
+    title: '扩展工具',
+  },
 };

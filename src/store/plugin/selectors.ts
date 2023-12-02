@@ -78,6 +78,8 @@ const hasPluginUI = (id: string) => (s: PluginStoreState) => {
   return !!manifest?.ui;
 };
 
+const installedPlugins = (s: PluginStoreState) => Object.values(s.pluginManifestMap);
+
 export const pluginSelectors = {
   displayPluginList,
   enabledSchema,
@@ -87,6 +89,7 @@ export const pluginSelectors = {
   getPluginMetaById,
   getPluginSettingsById,
   hasPluginUI,
+  installedPlugins,
   isCustomPlugin,
   onlinePluginStore,
   pluginList,
