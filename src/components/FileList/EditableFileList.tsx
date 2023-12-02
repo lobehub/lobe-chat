@@ -22,7 +22,7 @@ const EditableFileList = memo<EditableFileListProps>(
         padding={padding}
         style={{ overflow: 'auto', width: '100%' }}
       >
-        <ImageGallery enable={items?.length > 1}>
+        <ImageGallery>
           {items.map((i) => (
             <FileItem alwaysShowClose={alwaysShowClose} editable={editable} id={i} key={i} />
           ))}

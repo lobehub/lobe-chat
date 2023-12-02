@@ -40,7 +40,7 @@ const FileList = memo<FileListProps>(({ items }) => {
   );
 
   return (
-    <ImageGallery enable={items?.length > 1}>
+    <ImageGallery>
       <Flexbox gap={gap}>
         <FileGrid col={firstRow.length} gap={gap} max={max}>
           {firstRow.map((i) => (
