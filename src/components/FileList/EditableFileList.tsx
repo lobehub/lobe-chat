@@ -9,7 +9,7 @@ interface EditableFileListProps {
   alwaysShowClose?: boolean;
   editable?: boolean;
   items: string[];
-  padding?: number;
+  padding?: number | string;
 }
 
 const EditableFileList = memo<EditableFileListProps>(

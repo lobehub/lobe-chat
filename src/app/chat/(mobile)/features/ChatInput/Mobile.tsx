@@ -3,6 +3,7 @@ import { rgba } from 'polished';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Files from '@/app/chat/(mobile)/features/ChatInput/Files';
 import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
 import InputAreaInner from '@/app/chat/features/ChatInput/InputAreaInner';
 import STT from '@/app/chat/features/ChatInput/STT';
@@ -28,6 +29,7 @@ const ChatInputArea = memo(() => {
 
   return (
     <Flexbox className={styles.container} gap={12}>
+      <Files />
       <ActionBar mobile padding={'0 8px'} rightAreaStartRender={<SaveTopic mobile />} />
       <Flexbox className={styles.inner} gap={8} horizontal>
         <STT mobile />
