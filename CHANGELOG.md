@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.107.14](https://github.com/lobehub/lobe-chat/compare/v0.107.13...v0.107.14)
+
+<sup>Released on **2023-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix opt+delete fail in inputing (resolve.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix opt+delete fail in inputing (resolve, closes [#556](https://github.com/lobehub/lobe-chat/issues/556) ([4d5d93d](https://github.com/lobehub/lobe-chat/commit/4d5d93d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.107.13](https://github.com/lobehub/lobe-chat/compare/v0.107.12...v0.107.13)
 
 <sup>Released on **2023-12-03**</sup>
