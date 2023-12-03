@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ChatStore, ChatStoreState } from '@/store/chat';
+import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
 import { merge } from '@/utils/merge';
 
