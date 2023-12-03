@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.107.15](https://github.com/lobehub/lobe-chat/compare/v0.107.14...v0.107.15)
+
+<sup>Released on **2023-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix messages flickering when creating topic.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix messages flickering when creating topic, closes [#565](https://github.com/lobehub/lobe-chat/issues/565) ([7127550](https://github.com/lobehub/lobe-chat/commit/7127550))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.107.14](https://github.com/lobehub/lobe-chat/compare/v0.107.13...v0.107.14)
 
 <sup>Released on **2023-12-03**</sup>
