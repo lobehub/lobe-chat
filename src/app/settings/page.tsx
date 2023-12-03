@@ -1,3 +1,4 @@
+import { getServerConfig } from '@/config/server';
 import { isMobileDevice } from '@/utils/responsive';
 
 import DesktopPage from './(desktop)';
@@ -8,7 +9,9 @@ const Page = () => {
 
   const Page = mobile ? MobilePage : DesktopPage;
 
-  return <Page />;
+  const { SHOW_ACCESS_CODE_CONFIG } = getServerConfig();
+
+  return <Page showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG} />;
 };
 
 export default Page;
