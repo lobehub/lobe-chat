@@ -9,7 +9,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import type { GlobalStore } from '../store';
 
-const t = setNamespace('settings');
+const n = setNamespace('settings');
 
 /**
  * 设置操作
@@ -29,6 +29,6 @@ export const createAgentSlice: StateCreator<
       draft.defaultAgent = merge(draft.defaultAgent, agent);
     });
 
-    set({ settings }, false, t('updateDefaultAgent', agent));
+    set({ settings }, false, n('updateDefaultAgent', agent));
   },
 });

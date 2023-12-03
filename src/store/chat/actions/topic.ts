@@ -22,7 +22,7 @@ const n = setNamespace('topic');
 
 export interface ChatTopicAction {
   favoriteTopic: (id: string, favState: boolean) => Promise<void>;
-  openNewTopicOrSaveTopic: () => void;
+  openNewTopicOrSaveTopic: () => Promise<void>;
   refreshTopic: () => Promise<void>;
   removeAllTopics: () => Promise<void>;
   removeSessionTopics: () => Promise<void>;
@@ -45,7 +45,7 @@ export const chatTopic: StateCreator<
   ChatTopicAction
 > = (set, get) => ({
   // create
-  openNewTopicOrSaveTopic: () => {
+  openNewTopicOrSaveTopic: async () => {
     const { switchTopic, saveToTopic, activeTopicId } = get();
     const hasTopic = !!activeTopicId;
 

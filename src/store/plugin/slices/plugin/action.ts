@@ -17,7 +17,7 @@ import { setNamespace } from '@/utils/storeDebug';
 import { PluginStore } from '../../store';
 import { PluginDispatch, pluginManifestReducer } from './reducers/manifest';
 
-const t = setNamespace('plugin');
+const n = setNamespace('plugin');
 
 /**
  * 插件接口
@@ -73,7 +73,7 @@ export const createPluginSlice: StateCreator<
 
     await installPlugins(plugins);
 
-    set({ manifestPrepared: true }, false, t('checkPluginsIsInstalled'));
+    set({ manifestPrepared: true }, false, n('checkPluginsIsInstalled'));
   },
   deletePluginSettings: (id) => {
     set(
@@ -81,14 +81,14 @@ export const createPluginSlice: StateCreator<
         draft.pluginsSettings[id] = undefined;
       }),
       false,
-      t('deletePluginSettings'),
+      n('deletePluginSettings'),
     );
   },
   dispatchPluginManifest: (payload) => {
     const { pluginManifestMap } = get();
     const nextManifest = pluginManifestReducer(pluginManifestMap, payload);
 
-    set({ pluginManifestMap: nextManifest }, false, t('dispatchPluginManifest', payload));
+    set({ pluginManifestMap: nextManifest }, false, n('dispatchPluginManifest', payload));
   },
   installPlugin: async (name) => {
     const plugin = pluginSelectors.getPluginMetaById(name)(get());
@@ -140,12 +140,12 @@ export const createPluginSlice: StateCreator<
   loadPluginStore: async () => {
     const pluginMarketIndex = await pluginService.getPluginList();
 
-    set({ pluginList: pluginMarketIndex.plugins }, false, t('loadPluginList'));
+    set({ pluginList: pluginMarketIndex.plugins }, false, n('loadPluginList'));
 
     return pluginMarketIndex;
   },
   resetPluginSettings: () => {
-    set({ pluginsSettings: {} }, false, t('resetPluginSettings'));
+    set({ pluginsSettings: {} }, false, n('resetPluginSettings'));
   },
   updateManifestLoadingState: (key, value) => {
     set(
@@ -153,7 +153,7 @@ export const createPluginSlice: StateCreator<
         draft.pluginManifestLoading[key] = value;
       }),
       false,
-      t('updateManifestLoadingState'),
+      n('updateManifestLoadingState'),
     );
   },
   updatePluginSettings: (id, settings) => {
@@ -162,7 +162,7 @@ export const createPluginSlice: StateCreator<
         draft.pluginsSettings[id] = merge({}, draft.pluginsSettings[id], settings);
       }),
       false,
-      t('updatePluginSettings'),
+      n('updatePluginSettings'),
     );
   },
 

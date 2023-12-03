@@ -8,7 +8,7 @@ import { PluginStore } from '../../store';
 import { defaultCustomPlugin } from './initialState';
 import { CustomPluginListDispatch, devPluginListReducer } from './reducers/customPluginList';
 
-const t = setNamespace('customPlugin');
+const n = setNamespace('customPlugin');
 
 /**
  * 代理行为接口
@@ -40,11 +40,11 @@ export const createCustomPluginSlice: StateCreator<
     const { customPluginList } = get();
 
     const nextList = devPluginListReducer(customPluginList, payload);
-    set({ customPluginList: nextList }, false, t('dispatchCustomPluginList', payload));
+    set({ customPluginList: nextList }, false, n('dispatchCustomPluginList', payload));
   },
   saveToCustomPluginList: (value) => {
     get().dispatchCustomPluginList({ plugin: value, type: 'addItem' });
-    set({ newCustomPlugin: defaultCustomPlugin }, false, t('saveToCustomPluginList'));
+    set({ newCustomPlugin: defaultCustomPlugin }, false, n('saveToCustomPluginList'));
   },
   updateCustomPlugin: (id, value) => {
     const { dispatchCustomPluginList, installPlugin } = get();
@@ -58,7 +58,7 @@ export const createCustomPluginSlice: StateCreator<
     set(
       { newCustomPlugin: merge({}, get().newCustomPlugin, newCustomPlugin) },
       false,
-      t('updateNewDevPlugin'),
+      n('updateNewDevPlugin'),
     );
   },
 });
