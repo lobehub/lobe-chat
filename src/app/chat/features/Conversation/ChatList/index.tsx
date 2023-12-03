@@ -45,6 +45,7 @@ const List = memo(() => {
       resendMessage(lastMessage.id);
     },
     {
+      enableOnFormTags: true,
       preventDefault: true,
     },
   );

@@ -22,6 +22,7 @@ const Clear = memo(() => {
   }, []);
 
   useHotkeys(hotkeys, resetConversation, {
+    enableOnFormTags: true,
     preventDefault: true,
   });
 
