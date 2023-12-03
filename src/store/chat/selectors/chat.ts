@@ -107,9 +107,7 @@ const getFunctionMessageProps =
     type: plugin?.type as LobePluginType,
   });
 
-const getMessageById = (id: string) => (s: ChatStore) => {
-  return s.messages.find((m) => m.id === id);
-};
+const getMessageById = (id: string) => (s: ChatStore) => chatHelpers.getMessageById(s.messages, id);
 
 export const chatSelectors = {
   chatsMessageString,
