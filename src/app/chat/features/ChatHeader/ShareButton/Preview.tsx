@@ -6,9 +6,9 @@ import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import ChatList from 'src/app/chat/features/Conversation/ChatList';
 
 import pkg from '@/../package.json';
+import ChatList from '@/app/chat/features/Conversation/ChatList';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
