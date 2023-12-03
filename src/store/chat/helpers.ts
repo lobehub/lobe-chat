@@ -6,18 +6,25 @@ import { encodeAsync } from '@/utils/tokenizer';
 export const getMessagesTokenCount = async (messages: OpenAIChatMessage[]) =>
   encodeAsync(messages.map((m) => m.content).join(''));
 
+export const getMessageById = (messages: ChatMessage[], id: string) =>
+  messages.find((m) => m.id === id);
+
 const getSlicedMessagesWithConfig = (
   messages: ChatMessage[],
   config: LobeAgentConfig,
 ): ChatMessage[] => {
-  // 如果没有开启历史消息数限制，或者限制为 0，则直接返回
+  // if historyCount is not enabled or set to 0, return all messages
   if (!config.enableHistoryCount || !config.historyCount) return messages;
 
-  // 如果开启了，则返回尾部的N条消息
-  return messages.reverse().slice(0, config.historyCount).reverse();
+  // if historyCount is negative, return empty array
+  if (config.historyCount <= 0) return [];
+
+  // if historyCount is positive, return last N messages
+  return messages.slice(-config.historyCount);
 };
 
 export const chatHelpers = {
+  getMessageById,
   getMessagesTokenCount,
   getSlicedMessagesWithConfig,
 };
