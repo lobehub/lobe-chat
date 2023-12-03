@@ -8,7 +8,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { FileStore } from '../../store';
 
-const t = setNamespace('image');
+const n = setNamespace('image');
 
 export interface FileAction {
   clearImageList: () => void;
@@ -28,7 +28,7 @@ export const createFileSlice: StateCreator<
   FileAction
 > = (set, get) => ({
   clearImageList: () => {
-    set({ inputFilesList: [] }, false, t('clearImageList'));
+    set({ inputFilesList: [] }, false, n('clearImageList'));
   },
   removeAllFiles: async () => {
     await fileService.removeAllFiles();
@@ -39,7 +39,7 @@ export const createFileSlice: StateCreator<
     set(
       ({ inputFilesList }) => ({ inputFilesList: inputFilesList.filter((i) => i !== id) }),
       false,
-      t('removeFile'),
+      n('removeFile'),
     );
   },
   setImageMapItem: (id, item) => {
@@ -50,7 +50,7 @@ export const createFileSlice: StateCreator<
         draft.imagesMap[id] = item;
       }),
       false,
-      t('setImageMapItem'),
+      n('setImageMapItem'),
     );
   },
   uploadFile: async (file) => {
@@ -67,7 +67,7 @@ export const createFileSlice: StateCreator<
       set(
         ({ inputFilesList }) => ({ inputFilesList: [...inputFilesList, data.id] }),
         false,
-        t('uploadFile'),
+        n('uploadFile'),
       );
     } catch (error) {
       // 提示用户上传失败

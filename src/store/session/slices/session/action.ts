@@ -18,7 +18,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { initLobeSession } from './initialState';
 
-const t = setNamespace('session');
+const n = setNamespace('session');
 
 const FETCH_SESSIONS_KEY = 'fetchSessions';
 
@@ -80,7 +80,7 @@ export const createSessionSlice: StateCreator<
   SessionAction
 > = (set, get) => ({
   activeSession: (sessionId) => {
-    set({ activeId: sessionId }, false, t('activeSession'));
+    set({ activeId: sessionId }, false, n('activeSession'));
   },
 
   clearSessions: async () => {
@@ -153,7 +153,7 @@ export const createSessionSlice: StateCreator<
             sessions: data,
           },
           false,
-          t('useFetchSessions/onSuccess', data),
+          n('useFetchSessions/onSuccess', data),
         );
       },
     }),
@@ -161,7 +161,7 @@ export const createSessionSlice: StateCreator<
   useSearchSessions: (keyword) =>
     useSWR<LobeSessions>(keyword, sessionService.searchSessions, {
       onSuccess: (data) => {
-        set({ searchSessions: data }, false, t('useSearchSessions(success)', data));
+        set({ searchSessions: data }, false, n('useSearchSessions(success)', data));
       },
       revalidateOnFocus: false,
     }),
