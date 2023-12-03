@@ -22,7 +22,7 @@ const n = setNamespace('topic');
 
 export interface ChatTopicAction {
   favoriteTopic: (id: string, favState: boolean) => Promise<void>;
-  openNewTopicOrSaveTopic: () => void;
+  openNewTopicOrSaveTopic: () => Promise<void>;
   refreshTopic: () => Promise<void>;
   removeAllTopics: () => Promise<void>;
   removeSessionTopics: () => Promise<void>;
@@ -45,7 +45,7 @@ export const chatTopic: StateCreator<
   ChatTopicAction
 > = (set, get) => ({
   // create
-  openNewTopicOrSaveTopic: () => {
+  openNewTopicOrSaveTopic: async () => {
     const { switchTopic, saveToTopic, activeTopicId } = get();
     const hasTopic = !!activeTopicId;
 
@@ -60,23 +60,17 @@ export const chatTopic: StateCreator<
     const messages = chatSelectors.currentChats(get());
     if (messages.length === 0) return;
 
-    const { activeId, summaryTopicTitle, refreshTopic, refreshMessages } = get();
+    const { activeId, summaryTopicTitle, refreshTopic } = get();
 
-    // 1. create topic
+    // 1. create topic and bind these messages
     const topicId = await topicService.createTopic({
       sessionId: activeId,
       title: t('topic.defaultTitle', { ns: 'chat' }),
+      messages: messages.map((m) => m.id),
     });
     await refreshTopic();
 
-    // 2.add topicId to these message
-    await messageService.bindMessagesToTopic(
-      topicId,
-      messages.map((m) => m.id),
-    );
-    await refreshMessages();
-
-    // 3. auto summary topic Title
+    // 2. auto summary topic Title
     // we don't need to wait for summary, just let it run async
     summaryTopicTitle(topicId, messages);
 

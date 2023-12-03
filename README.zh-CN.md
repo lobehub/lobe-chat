@@ -25,7 +25,8 @@ LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多�
 [![][github-forks-shield]][github-forks-link]
 [![][github-stars-shield]][github-stars-link]
 [![][github-issues-shield]][github-issues-link]
-[![][github-license-shield]][github-license-link]
+[![][github-license-shield]][github-license-link]<br>
+[![](https://img.shields.io/badge/-Sponsor%20LobeHub-f04f88?logo=opencollective&logoColor=white&style=flat-square)](https://opencollective.com/lobehub 'Sponsor LobeHub on open-collective')
 
 **分享 LobeChat 给你的好友**
 
@@ -48,9 +49,8 @@ LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多�
 - [✨ 特性一览](#-特性一览)
 - [⚡️ 性能测试](#️-性能测试)
 - [🛳 开箱即用](#-开箱即用)
-  - [`A` 使用 Vercel 部署](#a-使用-vercel-部署)
+  - [`A` 使用 Vercel 或 Zeabur 部署](#a-使用-vercel-或-zeabur-部署)
   - [`B` 使用 Docker 部署](#b-使用-docker-部署)
-  - [`C` 使用 Zeabur 部署](#c-使用-zeabur-部署)
   - [环境变量](#环境变量)
 - [📦 生态系统](#-生态系统)
 - [🧩 插件体系](#-插件体系)
@@ -296,18 +296,20 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 
 <br/>
 
-### `A` 使用 Vercel 部署
+### `A` 使用 Vercel 或 Zeabur 部署
 
-如果想在 Vercel 上部署该服务，可以按照以下步骤进行操作：
+如果想在 Vercel 或 Zeabur 上部署该服务，可以按照以下步骤进行操作：
 
 - 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
-- 点击下方按钮开始部署： Deploy with Vercel，直接使用 GitHub 账号登录即可，记得在环境变量页填入 `OPENAI_API_KEY` （必填） and `ACCESS_CODE`（推荐）；
+- 点击下方按钮开始部署： 直接使用 GitHub 账号登录即可，记得在环境变量页填入 `OPENAI_API_KEY` （必填） and `ACCESS_CODE`（推荐）；
 - 部署完毕后，即可开始使用；
-- 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
+- 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。目前 Zeabur 提供的域名还未被污染，大多数地区都可以直连。
 
 <div align="center">
 
-[![][deploy-button-image]][deploy-link]
+|            使用 Vercel 部署             |                      使用 Zeabur 部署                       |
+| :-------------------------------------: | :---------------------------------------------------------: |
+| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] |
 
 </div>
 
@@ -351,23 +353,6 @@ $ docker run -d -p 3210:3210 \
 > \[!NOTE]
 >
 > 有关 Docker 部署的详细说明，详见 [📘 使用 Docker 部署](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment.zh-CN)
-
-<br/>
-
-### `C` 使用 Zeabur 部署
-
-如果想在 Zeabur 上部署该服务，可以按照以下步骤进行操作：
-
-- 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
-- 点击下方按钮开始部署： Deploy to Zeabur
-- 部署完毕后，即可开始使用；
-- 绑定自定义域名（可选）：你可以使用 Zeabur 提供的子域名，也可以选择绑定自定义域名。目前 Zeabur 提供的域名还未被污染，大多数地区都可以直连。
-
-<div align="center">
-
-[![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link]
-
-</div>
 
 <br/>
 

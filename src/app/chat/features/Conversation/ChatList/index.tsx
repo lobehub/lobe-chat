@@ -18,8 +18,8 @@ import SkeletonList from './SkeletonList';
 
 const List = memo(() => {
   const { t } = useTranslation('common');
-
-  const data = useChatStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
+  const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
+  const data = useChatStore(chatSelectors.currentChatsWithGuideMessage(meta), isEqual);
 
   const [init, chatLoadingId, resendMessage, updateMessageContent] = useChatStore((s) => [
     s.messagesInit,
@@ -45,6 +45,7 @@ const List = memo(() => {
       resendMessage(lastMessage.id);
     },
     {
+      enableOnFormTags: true,
       preventDefault: true,
     },
   );

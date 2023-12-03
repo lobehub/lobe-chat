@@ -3,13 +3,14 @@ import { t } from 'i18next';
 
 import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
-import { chatHelpers } from '@/store/chat/helpers';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';
+import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
+import { chatHelpers } from '../helpers';
 import type { ChatStore } from '../store';
 
 const getMeta = (message: ChatMessage) => {
@@ -47,40 +48,41 @@ const currentChats = (s: ChatStore): ChatMessage[] => {
 
 const initTime = Date.now();
 // 针对新助手添加初始化时的自定义消息
-const currentChatsWithGuideMessage = (s: ChatStore): ChatMessage[] => {
-  const data = currentChats(s);
+const currentChatsWithGuideMessage =
+  (meta: MetaData) =>
+  (s: ChatStore): ChatMessage[] => {
+    const data = currentChats(s);
 
-  const isBrandNewChat = data.length === 0;
+    const isBrandNewChat = data.length === 0;
 
-  if (!isBrandNewChat) return data;
+    if (!isBrandNewChat) return data;
 
-  const [activeId, isInbox] = [s.activeId, s.activeId === INBOX_SESSION_ID];
-  const meta = agentSelectors.currentAgentMeta(useSessionStore.getState());
+    const [activeId, isInbox] = [s.activeId, s.activeId === INBOX_SESSION_ID];
 
-  const inboxMsg = t('inbox.defaultMessage', { ns: 'chat' });
-  const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
-    name: meta.title || t('defaultAgent'),
-    ns: 'chat',
-    systemRole: meta.description,
-  });
-  const agentMsg = t('agentDefaultMessage', {
-    id: activeId,
-    name: meta.title || t('defaultAgent'),
-    ns: 'chat',
-  });
+    const inboxMsg = t('inbox.defaultMessage', { ns: 'chat' });
+    const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
+      name: meta.title || t('defaultAgent'),
+      ns: 'chat',
+      systemRole: meta.description,
+    });
+    const agentMsg = t('agentDefaultMessage', {
+      id: activeId,
+      name: meta.title || t('defaultAgent'),
+      ns: 'chat',
+    });
 
-  const emptyInboxGuideMessage = {
-    content: isInbox ? inboxMsg : !!meta.description ? agentSystemRoleMsg : agentMsg,
-    createdAt: initTime,
-    extra: {},
-    id: 'default',
-    meta: merge({ avatar: DEFAULT_INBOX_AVATAR }, meta),
-    role: 'assistant',
-    updatedAt: initTime,
-  } as ChatMessage;
+    const emptyInboxGuideMessage = {
+      content: isInbox ? inboxMsg : !!meta.description ? agentSystemRoleMsg : agentMsg,
+      createdAt: initTime,
+      extra: {},
+      id: 'default',
+      meta: merge({ avatar: DEFAULT_INBOX_AVATAR }, meta),
+      role: 'assistant',
+      updatedAt: initTime,
+    } as ChatMessage;
 
-  return [emptyInboxGuideMessage];
-};
+    return [emptyInboxGuideMessage];
+  };
 
 const currentChatsWithHistoryConfig = (s: ChatStore): ChatMessage[] => {
   const chats = currentChats(s);
@@ -105,9 +107,7 @@ const getFunctionMessageProps =
     type: plugin?.type as LobePluginType,
   });
 
-const getMessageById = (id: string) => (s: ChatStore) => {
-  return s.messages.find((m) => m.id === id);
-};
+const getMessageById = (id: string) => (s: ChatStore) => chatHelpers.getMessageById(s.messages, id);
 
 export const chatSelectors = {
   chatsMessageString,

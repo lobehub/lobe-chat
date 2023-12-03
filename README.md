@@ -1,4 +1,6 @@
-<a name="readme-top"></a><div align="center">
+<a name="readme-top"></a>
+
+<div align="center">
 
 <img height="120" src="https://registry.npmmirror.com/@lobehub/assets-logo/1.0.0/files/assets/logo-3d.webp">
 <img height="120" src="https://gw.alipayobjects.com/zos/kitchen/qJ3l3EPsdW/split.svg">
@@ -24,7 +26,8 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 [![][github-forks-shield]][github-forks-link]
 [![][github-stars-shield]][github-stars-link]
 [![][github-issues-shield]][github-issues-link]
-[![][github-license-shield]][github-license-link]
+[![][github-license-shield]][github-license-link]<br>
+[![](https://img.shields.io/badge/-Sponsor%20LobeHub-f04f88?logo=opencollective&logoColor=white&style=flat-square)](https://opencollective.com/lobehub 'Sponsor LobeHub on open-collective')
 
 **Share LobeChat Repository**
 
@@ -49,9 +52,8 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 - [✨ Features](#-features)
 - [⚡️ Performance](#️-performance)
 - [🛳 Self Hosting](#-self-hosting)
-  - [`A` Deploying with Vercel](#a-deploying-with-vercel)
+  - [`A` Deploying with Vercel or Zeabur](#a-deploying-with-vercel-or-zeabur)
   - [`B` Deploying with Docker](#b-deploying-with-docker)
-  - [`C` Deploying with Zeabur](#c-deploying-with-zeabur)
   - [Environment Variable](#environment-variable)
 - [📦 Ecosystem](#-ecosystem)
 - [🧩 Plugins](#-plugins)
@@ -322,18 +324,20 @@ Beside these features, LobeChat also have much better basic technique undergroun
 
 LobeChat provides Self-Hosted Version with Vercel and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
 
-### `A` Deploying with Vercel
+### `A` Deploying with Vercel or Zeabur
 
-If you want to deploy this service yourself on Vercel, you can follow these steps:
+If you want to deploy this service yourself on either Vercel or Zeabur, you can follow these steps:
 
 - Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
-- Click the button below to start deployment: Deploy with Vercel. Log in directly with your GitHub account, and remember to fill in the `OPENAI_API_KEY`(required) and `ACCESS_CODE` (recommended) on the environment variable section.
+- Click the button below to start deployment: Log in directly with your GitHub account, and remember to fill in the `OPENAI_API_KEY`(required) and `ACCESS_CODE` (recommended) on the environment variable section.
 - After deployment, you can start using it.
 - Bind a custom domain (optional): The DNS of the domain assigned by Vercel is polluted in some areas; binding a custom domain can connect directly.
 
 <div align="center">
 
-[![][deploy-button-image]][deploy-link]
+|           Deploy with Vercel            |                     Deploy with Zeabur                      |
+| :-------------------------------------: | :---------------------------------------------------------: |
+| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] |
 
 </div>
 
@@ -377,23 +381,6 @@ $ docker run -d -p 3210:3210 \
 > \[!NOTE]
 >
 > For detailed instructions on deploying with Docker, please refer to the [📘 Docker Deployment Guide](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment)
-
-<br/>
-
-### `C` Deploying with Zeabur
-
-If you want to deploy this service yourself on Zeabur, you can follow these steps:
-
-- Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
-- Click the button below to start deployment: Deploy with Zeabur.
-- You can start using it after the deployment.
-- You can bind a custom domain or use the subdomain provided by Zeabur.
-
-<div align="center">
-
-[![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link]
-
-</div>
 
 <br/>
 

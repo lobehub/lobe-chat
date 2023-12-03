@@ -2,6 +2,106 @@
 
 # Changelog
 
+## [Version 0.108.0](https://github.com/lobehub/lobe-chat/compare/v0.107.16...v0.108.0)
+
+<sup>Released on **2023-12-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Hide the password form item in the settings when there is no `ACCESS_CODE` env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Hide the password form item in the settings when there is no `ACCESS_CODE` env, closes [#568](https://github.com/lobehub/lobe-chat/issues/568) ([3b5f8b2](https://github.com/lobehub/lobe-chat/commit/3b5f8b2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.107.16](https://github.com/lobehub/lobe-chat/compare/v0.107.15...v0.107.16)
+
+<sup>Released on **2023-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix custom agent meta issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix custom agent meta issue, closes [#567](https://github.com/lobehub/lobe-chat/issues/567) ([75560e1](https://github.com/lobehub/lobe-chat/commit/75560e1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.107.15](https://github.com/lobehub/lobe-chat/compare/v0.107.14...v0.107.15)
+
+<sup>Released on **2023-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix messages flickering when creating topic.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix messages flickering when creating topic, closes [#565](https://github.com/lobehub/lobe-chat/issues/565) ([7127550](https://github.com/lobehub/lobe-chat/commit/7127550))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.107.14](https://github.com/lobehub/lobe-chat/compare/v0.107.13...v0.107.14)
+
+<sup>Released on **2023-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix opt+delete fail in inputing (resolve.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix opt+delete fail in inputing (resolve, closes [#556](https://github.com/lobehub/lobe-chat/issues/556) ([4d5d93d](https://github.com/lobehub/lobe-chat/commit/4d5d93d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.107.13](https://github.com/lobehub/lobe-chat/compare/v0.107.12...v0.107.13)
 
 <sup>Released on **2023-12-03**</sup>
