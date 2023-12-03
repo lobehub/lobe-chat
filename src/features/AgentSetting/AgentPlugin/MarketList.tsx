@@ -53,7 +53,7 @@ const MarketList = memo(() => {
       s.saveToCustomPluginList,
       s.updateNewCustomPlugin,
     ]);
-  const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
+  const pluginManifestLoading = usePluginStore((s) => s.pluginInstallLoading, isEqual);
   const pluginList = usePluginStore((s) => s.pluginList, isEqual);
   const customPluginList = usePluginStore((s) => s.customPluginList, isEqual);
   const totalList = usePluginStore(pluginSelectors.pluginList, isEqual);

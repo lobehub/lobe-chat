@@ -106,4 +106,16 @@ export default {
     modalDesc: '配置插件市场的地址后，可以使用自定义的插件市场',
     title: '设置插件市场',
   },
+  store: {
+    empty: '暂无已安装插件',
+    install: '安装',
+    installAllPlugins: '安装全部',
+    releasedAt: '发布于 {{createdAt}}',
+    tabs: {
+      all: '全部',
+      installed: '已安装',
+    },
+    title: '插件商店',
+    uninstall: '卸载',
+  },
 };

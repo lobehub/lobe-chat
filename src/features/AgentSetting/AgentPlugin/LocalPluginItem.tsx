@@ -26,7 +26,7 @@ const MarketList = memo<{ id: string }>(({ id }) => {
       s.updateCustomPlugin,
     ]);
 
-  const pluginManifestLoading = usePluginStore((s) => s.pluginManifestLoading, isEqual);
+  const pluginManifestLoading = usePluginStore((s) => s.pluginInstallLoading, isEqual);
   const devPlugin = usePluginStore(pluginSelectors.getDevPluginById(id), isEqual);
 
   useFetchPluginList();

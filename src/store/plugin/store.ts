@@ -8,15 +8,17 @@ import { isDev } from '@/utils/env';
 import { PluginStoreState, initialState } from './initialState';
 import { CustomPluginAction, createCustomPluginSlice } from './slices/customPlugin';
 import { PluginAction, createPluginSlice } from './slices/plugin';
+import { PluginStoreAction, createPluginStoreSlice } from './slices/store';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type PluginStore = PluginStoreState & CustomPluginAction & PluginAction;
+export type PluginStore = PluginStoreState & CustomPluginAction & PluginAction & PluginStoreAction;
 
 const createStore: StateCreator<PluginStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createPluginSlice(...parameters),
   ...createCustomPluginSlice(...parameters),
+  ...createPluginStoreSlice(...parameters),
 });
 
 //  ===============  persist 本地缓存中间件配置 ============ //

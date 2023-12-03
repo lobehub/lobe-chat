@@ -51,7 +51,7 @@ const getPluginSettingsById = (id: string) => (s: PluginStoreState) => s.plugins
 const getPluginManifestLoadingStatus = (id: string) => (s: PluginStoreState) => {
   const manifest = getPluginManifestById(id)(s);
 
-  if (s.pluginManifestLoading[id]) return 'loading';
+  if (s.pluginInstallLoading[id]) return 'loading';
 
   if (!manifest) return 'error';
 
@@ -79,6 +79,7 @@ const hasPluginUI = (id: string) => (s: PluginStoreState) => {
 };
 
 const installedPlugins = (s: PluginStoreState) => Object.values(s.pluginManifestMap);
+const isPluginInstalled = (id: string) => (s: PluginStoreState) => !!s.pluginManifestMap[id];
 
 export const pluginSelectors = {
   displayPluginList,
@@ -91,6 +92,9 @@ export const pluginSelectors = {
   hasPluginUI,
   installedPlugins,
   isCustomPlugin,
+  isPluginInstalled,
   onlinePluginStore,
   pluginList,
 };
+
+export { pluginStoreSelectors } from './slices/store/selectors';
