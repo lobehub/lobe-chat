@@ -21,7 +21,11 @@ import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../features/ThemeSwa
 
 type SettingItemGroup = ItemGroup;
 
-const Common = memo(() => {
+export interface SettingsCommonProps {
+  showAccessCodeConfig: boolean;
+}
+
+const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
@@ -154,6 +158,7 @@ const Common = memo(() => {
       {
         children: <Input.Password placeholder={t('settingSystem.accessCode.placeholder')} />,
         desc: t('settingSystem.accessCode.desc'),
+        hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),
         name: 'password',
       },
