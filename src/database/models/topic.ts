@@ -5,6 +5,7 @@ import { nanoid } from '@/utils/uuid';
 
 export interface CreateTopicParams {
   favorite?: boolean;
+  messages?: string[];
   sessionId: string;
   title: string;
 }
@@ -20,8 +21,14 @@ class _TopicModel extends BaseModel {
     super('topics', DB_TopicSchema);
   }
 
-  async create({ title, favorite, sessionId }: CreateTopicParams, id = nanoid()) {
-    return this._add({ favorite: favorite ? 1 : 0, sessionId, title: title }, id);
+  async create({ title, favorite, sessionId, messages }: CreateTopicParams, id = nanoid()) {
+    const topic = await this._add({ favorite: favorite ? 1 : 0, sessionId, title: title }, id);
+
+    // add topicId to these messages
+    if (messages) {
+      await this.db.messages.where('id').anyOf(messages).modify({ topicId: topic.id });
+    }
+    return topic;
   }
 
   async batchCreate(topics: CreateTopicParams[]) {
