@@ -151,7 +151,7 @@
     "eslint": "^8",
     "fake-indexeddb": "^5",
     "husky": "^8",
-    "jsdom": "^22",
+    "jsdom": "^23.0.0",
     "lint-staged": "^15",
     "lodash": "^4",
     "markdown-table": "^3",
