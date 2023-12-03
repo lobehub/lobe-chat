@@ -2,6 +2,60 @@
 
 # Changelog
 
+### [Version 0.107.13](https://github.com/lobehub/lobe-chat/compare/v0.107.12...v0.107.13)
+
+<sup>Released on **2023-12-03**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor Image components.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix a bug that can't send only images with empty content, Fix image gallery sort index, Fix image gallery sort index, Fix image sort index, Fix image upload error, Fix import.
+
+#### 💄 Styles
+
+- **misc**: Change image fit to cover mode, Fix empty files style, Move file inside chat input in mobile mode, Update editable image style, Update image default background color, Update image editable style, Update image grid, Update Image grid, Update image remove button hover style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor Image components ([72dcd18](https://github.com/lobehub/lobe-chat/commit/72dcd18))
+
+#### What's fixed
+
+- **misc**: Fix a bug that can't send only images with empty content ([9601520](https://github.com/lobehub/lobe-chat/commit/9601520))
+- **misc**: Fix image gallery sort index ([16548d3](https://github.com/lobehub/lobe-chat/commit/16548d3))
+- **misc**: Fix image gallery sort index ([5636599](https://github.com/lobehub/lobe-chat/commit/5636599))
+- **misc**: Fix image sort index ([29cf223](https://github.com/lobehub/lobe-chat/commit/29cf223))
+- **misc**: Fix image upload error ([c7745c7](https://github.com/lobehub/lobe-chat/commit/c7745c7))
+- **misc**: Fix import ([af797d6](https://github.com/lobehub/lobe-chat/commit/af797d6))
+
+#### Styles
+
+- **misc**: Change image fit to cover mode ([9fdc459](https://github.com/lobehub/lobe-chat/commit/9fdc459))
+- **misc**: Fix empty files style ([bbe14c4](https://github.com/lobehub/lobe-chat/commit/bbe14c4))
+- **misc**: Move file inside chat input in mobile mode ([b6401c1](https://github.com/lobehub/lobe-chat/commit/b6401c1))
+- **misc**: Update editable image style ([a96ca4c](https://github.com/lobehub/lobe-chat/commit/a96ca4c))
+- **misc**: Update image default background color ([fadc024](https://github.com/lobehub/lobe-chat/commit/fadc024))
+- **misc**: Update image editable style ([8dea792](https://github.com/lobehub/lobe-chat/commit/8dea792))
+- **misc**: Update image grid ([901d10c](https://github.com/lobehub/lobe-chat/commit/901d10c))
+- **misc**: Update Image grid ([c68788d](https://github.com/lobehub/lobe-chat/commit/c68788d))
+- **misc**: Update image remove button hover style ([5bc916c](https://github.com/lobehub/lobe-chat/commit/5bc916c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.107.12](https://github.com/lobehub/lobe-chat/compare/v0.107.11...v0.107.12)
 
 <sup>Released on **2023-12-02**</sup>
