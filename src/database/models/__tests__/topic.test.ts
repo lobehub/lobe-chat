@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
+import { DB_Message } from '@/database/schemas/message';
+import { nanoid } from '@/utils/uuid';
+import * as uuidUtils from '@/utils/uuid';
 
 import { CreateTopicParams, QueryTopicParams, TopicModel } from '../topic';
 
@@ -53,6 +56,43 @@ describe('TopicModel', () => {
           sessionId: favoriteTopicData.sessionId,
         }),
       );
+    });
+
+    it('should update messages with the new topic id when messages are provided', async () => {
+      const messagesToUpdate = [nanoid(), nanoid()];
+      // 假设这些消息存在于数据库中
+      for (const messageId of messagesToUpdate) {
+        await MessageModel.table.add({ id: messageId, text: 'Sample message', topicId: null });
+      }
+
+      const topicDataWithMessages = {
+        ...topicData,
+        messages: messagesToUpdate,
+      };
+
+      const topic = await TopicModel.create(topicDataWithMessages);
+      expect(topic).toHaveProperty('id');
+
+      // 验证数据库中的消息是否已更新
+      const updatedMessages: DB_Message[] = await MessageModel.table
+        .where('id')
+        .anyOf(messagesToUpdate)
+        .toArray();
+
+      expect(updatedMessages).toHaveLength(messagesToUpdate.length);
+      for (const message of updatedMessages) {
+        expect(message.topicId).toEqual(topic.id);
+      }
+    });
+
+    it('should create a topic with a unique id when no id is provided', async () => {
+      const spy = vi.spyOn(uuidUtils, 'nanoid'); // 使用 Vitest 的 spy 功能来监视 nanoid 调用
+      const result = await TopicModel.create(topicData);
+
+      expect(spy).toHaveBeenCalled(); // 验证 nanoid 被调用来生成 id
+      expect(result).toHaveProperty('id');
+      expect(typeof result.id).toBe('string');
+      spy.mockRestore(); // 测试结束后恢复原始行为
     });
   });
   describe('batch create', () => {
