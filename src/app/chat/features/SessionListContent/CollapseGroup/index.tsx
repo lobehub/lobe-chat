@@ -4,12 +4,16 @@ import { createStyles } from 'antd-style';
 import { ChevronDown } from 'lucide-react';
 import { memo } from 'react';
 
-const useStyles = createStyles(({ css, prefixCls, token }) => ({
+const useStyles = createStyles(({ css, prefixCls, token, responsive }) => ({
   container: css`
     .${prefixCls}-collapse-header {
-      padding-inline: 16px !important;
+      padding-inline: 16px 10px !important;
       color: ${token.colorTextDescription} !important;
-      border-radius: 8px !important;
+      border-radius: ${token.borderRadius}px !important;
+
+      ${responsive.mobile} {
+        border-radius: 0 !important;
+      }
 
       &:hover {
         color: ${token.colorText} !important;

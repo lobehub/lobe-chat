@@ -77,7 +77,7 @@ const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
 export const useGlobalStore = createWithEqualityFn<GlobalStore>()(
   persist(
     devtools(createStore, {
-      name: 'LOBE_GLOBAL' + (isDev ? '_DEV' : ''),
+      name: 'LobeChat_Global' + (isDev ? '_DEV' : ''),
     }),
     persistOptions,
   ),

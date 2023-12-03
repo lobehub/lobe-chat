@@ -1,12 +1,28 @@
-import { OpenAIFunctionCall } from '@/types/chatMessage';
+
 import { LLMRoleType } from '@/types/llm';
+
+import { OpenAIFunctionCall } from './functionCall';
+
+interface UserMessageContentPartText {
+  text: string;
+  type: 'text';
+}
+interface UserMessageContentPartImage {
+  image_url: {
+    detail?: 'auto' | 'low' | 'high';
+    url: string;
+  };
+  type: 'image_url';
+}
+
+export type UserMessageContentPart = UserMessageContentPartText | UserMessageContentPartImage;
 
 export interface OpenAIChatMessage {
   /**
    * @title 内容
    * @description 消息内容
    */
-  content: string;
+  content: string | UserMessageContentPart[];
 
   function_call?: OpenAIFunctionCall;
   name?: string;
@@ -14,6 +30,11 @@ export interface OpenAIChatMessage {
    * 角色
    * @description 消息发送者的角色
    */
+  role: LLMRoleType;
+}
+
+export interface OpenAIChatStringMessage {
+  content: string;
   role: LLMRoleType;
 }
 
@@ -26,6 +47,7 @@ export interface OpenAIChatStreamPayload {
    * @default 0
    */
   frequency_penalty?: number;
+  functions?: ChatCompletionFunctions[];
   /**
    * @title 生成文本的最大长度
    */

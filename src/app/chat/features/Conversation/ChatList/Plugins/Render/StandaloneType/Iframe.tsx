@@ -2,11 +2,10 @@ import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { Skeleton } from 'antd';
 import { memo, useRef, useState } from 'react';
 
-import { useOnPluginSettingsUpdate } from '@/app/chat/features/Conversation/ChatList/Plugins/Render/utils/pluginSettings';
-import { useOnPluginStateUpdate } from '@/app/chat/features/Conversation/ChatList/Plugins/Render/utils/pluginState';
-import { pluginSelectors, usePluginStore } from '@/store/plugin';
-import { useSessionStore } from '@/store/session';
-import { chatSelectors } from '@/store/session/selectors';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
+import { usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
 import { useOnPluginReadyForInteraction } from '../utils/iframeOnReady';
 import {
@@ -15,12 +14,19 @@ import {
   useOnPluginFetchPluginState,
   useOnPluginFillContent,
 } from '../utils/listenToPlugin';
+import { useOnPluginSettingsUpdate } from '../utils/pluginSettings';
+import { useOnPluginStateUpdate } from '../utils/pluginState';
 import {
-  sendMessageToPlugin,
+  sendMessageContentToPlugin,
   sendPayloadToPlugin,
   sendPluginSettingsToPlugin,
   sendPluginStateToPlugin,
 } from '../utils/postMessage';
+
+// just to simplify code a little, don't use this pattern everywhere
+const getSettings = (identifier: string) =>
+  pluginSelectors.getPluginSettingsById(identifier)(usePluginStore.getState());
+const getMessage = (id: string) => chatSelectors.getMessageById(id)(useChatStore.getState());
 
 interface IFrameRenderProps {
   height?: number;
@@ -38,8 +44,13 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
   // when payload change，send content to plugin
   useOnPluginReadyForInteraction(() => {
     const iframeWin = iframeRef.current?.contentWindow;
+
     if (iframeWin && payload) {
-      sendPayloadToPlugin(iframeWin, payload);
+      const settings = getSettings(payload.identifier);
+      const message = getMessage(id);
+      const state = message?.pluginState;
+
+      sendPayloadToPlugin(iframeWin, { payload, settings, state });
     }
   }, [payload]);
 
@@ -48,7 +59,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
     const iframeWin = iframeRef.current?.contentWindow;
 
     if (iframeWin) {
-      const message = chatSelectors.getMessageById(id)(useSessionStore.getState());
+      const message = chatSelectors.getMessageById(id)(useChatStore.getState());
       if (!message) return;
       const props = { content: '' };
 
@@ -58,12 +69,12 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
         props.content = message.content || '';
       }
 
-      sendMessageToPlugin(iframeWin, props);
+      sendMessageContentToPlugin(iframeWin, props);
     }
   }, []);
 
   // when plugin try to send back message, we should fill it to the message content
-  const fillPluginContent = useSessionStore((s) => s.fillPluginMessageContent);
+  const fillPluginContent = useChatStore((s) => s.fillPluginMessageContent);
   useOnPluginFillContent((content) => {
     fillPluginContent(id, content);
   });
@@ -73,7 +84,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
     const iframeWin = iframeRef.current?.contentWindow;
 
     if (iframeWin) {
-      const message = chatSelectors.getMessageById(id)(useSessionStore.getState());
+      const message = getMessage(id);
       if (!message) return;
 
       sendPluginStateToPlugin(iframeWin, key, message.pluginState?.[key]);
@@ -81,7 +92,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
   });
 
   // when plugin update state, we should update it to the message pluginState key
-  const updatePluginState = useSessionStore((s) => s.updatePluginState);
+  const updatePluginState = useChatStore((s) => s.updatePluginState);
   useOnPluginStateUpdate((key, value) => {
     updatePluginState(id, key, value);
   });
@@ -93,9 +104,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
     if (iframeWin) {
       if (!payload?.identifier) return;
 
-      const settings = pluginSelectors.getPluginSettingsById(payload?.identifier)(
-        usePluginStore.getState(),
-      );
+      const settings = getSettings(payload.identifier);
 
       sendPluginSettingsToPlugin(iframeWin, settings);
     }

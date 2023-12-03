@@ -1,10 +1,10 @@
 import { uniqBy } from 'lodash-es';
 
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
-import { pluginHelpers } from '@/store/plugin/helpers';
 import { ChatCompletionFunctions } from '@/types/openai/chat';
 
-import { PluginStoreState } from './initialState';
+import { pluginHelpers } from './helpers';
+import type { PluginStoreState } from './initialState';
 
 const enabledSchema =
   (enabledPlugins: string[] = []) =>
@@ -34,6 +34,8 @@ const enabledSchema =
     return uniqBy(list, 'name');
   };
 
+const onlinePluginStore = (s: PluginStoreState) => s.pluginList;
+
 const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.customPluginList];
 
 const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
@@ -47,7 +49,7 @@ const getPluginSettingsById = (id: string) => (s: PluginStoreState) => s.plugins
 
 // 获取插件 manifest 加载状态
 const getPluginManifestLoadingStatus = (id: string) => (s: PluginStoreState) => {
-  const manifest = getPluginManifestById(id);
+  const manifest = getPluginManifestById(id)(s);
 
   if (s.pluginManifestLoading[id]) return 'loading';
 
@@ -86,5 +88,6 @@ export const pluginSelectors = {
   getPluginSettingsById,
   hasPluginUI,
   isCustomPlugin,
+  onlinePluginStore,
   pluginList,
 };

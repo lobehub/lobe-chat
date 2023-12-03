@@ -2,7 +2,9 @@
   "debug": {
     "arguments": "Arguments",
     "function_call": "Function Call",
-    "response": "Response"
+    "response": "Response",
+    "off": "Turn off debug",
+    "on": "View plugin invocation information"
   },
   "dev": {
     "confirmDeleteDevPlugin": "Are you sure you want to delete this local plugin? Once deleted, it cannot be recovered.",
@@ -89,8 +91,8 @@
     }
   },
   "loading": {
-    "content": "Loading...",
-    "plugin": "Plugin is running..."
+    "plugin": "Plugin is running...",
+    "content": "Calling plugin..."
   },
   "pluginList": "Plugin List",
   "plugins": {

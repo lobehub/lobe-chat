@@ -4,13 +4,15 @@ import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { pluginSelectors, usePluginStore } from '@/store/plugin';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
-const EmojiPicker = dynamic(() => import('@/components/EmojiPicker'), { ssr: false });
+const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
 const MetaForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form, mode }) => {
   const isEditMode = mode === 'edit';
-
+  const locale = useGlobalStore(settingsSelectors.currentLanguage);
   const { t } = useTranslation('plugin');
   const [plugins] = usePluginStore((s) => [pluginSelectors.pluginList(s).map((i) => i.identifier)]);
 
@@ -65,7 +67,7 @@ const MetaForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form,
       name: 'homepage',
     },
     {
-      children: <EmojiPicker defaultAvatar={'🧩'} />,
+      children: <EmojiPicker defaultAvatar={'🧩'} locale={locale} />,
       desc: t('dev.meta.avatar.desc'),
       label: t('dev.meta.avatar.label'),
       name: ['meta', 'avatar'],

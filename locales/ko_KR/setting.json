@@ -3,9 +3,9 @@
     "clear": {
       "action": "지금 지우기",
       "confirm": "모든 채팅 데이터를 지우시겠습니까?",
-      "desc": "모든 대화 데이터를 지웁니다.",
       "success": "모든 대화 메시지가 지워졌습니다.",
-      "title": "모든 대화 메시지 지우기"
+      "title": "모든 대화 메시지 지우기",
+      "desc": "도우미, 파일, 메시지, 플러그인 등을 포함한 모든 세션 데이터가 삭제됩니다."
     },
     "reset": {
       "action": "지금 재설정",
@@ -139,7 +139,15 @@
       "placeholder": "사전 처리 템플릿 {{text}}은(는) 실시간 입력 정보로 대체됩니다.",
       "title": "사용자 입력 사전 처리"
     },
-    "title": "채팅 설정"
+    "title": "채팅 설정",
+    "autoCreateTopicThreshold": {
+      "desc": "현재 메시지 수가이 값 이상이면 자동으로 주제를 만듭니다.",
+      "title": "메시지 임계값"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "대화 중에 주제를 자동으로 만들지 여부를 설정합니다. 임시 주제에서만 작동합니다.",
+      "title": "주제 자동 생성"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -194,6 +202,44 @@
     },
     "title": "시스템 설정"
   },
+  "settingTTS": {
+    "showAllLocaleVoice": {
+      "desc": "현재 언어의 음성만 표시하려면 닫으십시오",
+      "title": "모든 언어 음성 표시"
+    },
+    "sttService": {
+      "desc": "브라우저는 브라우저 기본 음성 인식 서비스입니다",
+      "title": "음성 인식 서비스"
+    },
+    "title": "음성 서비스",
+    "ttsService": {
+      "desc": "OpenAI 음성 합성 서비스를 사용하는 경우 OpenAI 모델 서비스가 열려 있어야 합니다",
+      "title": "음성 합성 서비스"
+    },
+    "voice": {
+      "title": "음성 합성 음성",
+      "desc": "현재 어시스턴트에 대한 음성을 선택하십시오. 각기 다른 TTS 서비스는 다른 음성을 지원합니다.",
+      "preview": "프리뷰 음성"
+    },
+    "openai": {
+      "sttModel": "OpenAI 음성 인식 모델",
+      "ttsModel": "OpenAI 음성 합성 모델"
+    },
+    "stt": "음성 인식 설정",
+    "sttLocale": {
+      "desc": "음성 입력의 언어, 이 옵션을 통해 음성 인식 정확도를 높일 수 있습니다.",
+      "title": "음성 인식 언어"
+    },
+    "sttPersisted": {
+      "desc": "활성화하면 음성 인식이 자동으로 종료되지 않고, 수동으로 종료 버튼을 클릭해야 합니다.",
+      "title": "음성 인식 수동 종료"
+    },
+    "tts": "음성 합성 설정",
+    "sttAutoStop": {
+      "desc": "자동으로 종료되지 않고 수동으로 종료 버튼을 클릭해야 하는 음성 인식을 사용하지 않습니다.",
+      "title": "음성 인식 자동 종료"
+    }
+  },
   "settingTheme": {
     "avatar": {
       "title": "아바타"
@@ -232,6 +278,7 @@
   "tab": {
     "agent": "기본 도우미",
     "common": "일반 설정",
-    "llm": "언어 모델"
+    "llm": "언어 모델",
+    "tts": "음성 서비스"
   }
 }

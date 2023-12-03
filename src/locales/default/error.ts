@@ -1,7 +1,7 @@
 export default {
   pluginSettings: {
     desc: '完成以下配置，即可开始使用该插件',
-    title: '{{name}}插件配置',
+    title: '{{name}} 插件配置',
   },
   response: {
     400: '很抱歉，服务器不明白您的请求，请确认您的请求参数是否正确',
@@ -35,6 +35,12 @@ export default {
     NoAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',
     /* eslint-enable */
   },
+  stt: {
+    responseError: '服务请求失败，请检查配置或重试',
+  },
+  tts: {
+    responseError: '服务请求失败，请检查配置或重试',
+  },
   unlock: {
     apikey: {
       addProxyUrl: '添加 OpenAI 代理地址（可选）',
@@ -45,6 +51,7 @@ export default {
     confirm: '确认并重试',
     password: {
       description: '管理员已开启应用加密，输入应用密码后即可解锁应用。密码只需填写一次',
+      placeholder: '请输入密码',
       title: '输入密码解锁应用',
     },
   },

@@ -8,6 +8,7 @@ import { useIsPWA } from '@/hooks/useIsPWA';
 const AppLayoutDesktop = memo<PropsWithChildren>(({ children }) => {
   const isPWA = useIsPWA();
   const theme = useTheme();
+
   return (
     <Flexbox
       height={'100%'}

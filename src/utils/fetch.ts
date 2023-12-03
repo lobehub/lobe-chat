@@ -1,6 +1,5 @@
 import { t } from 'i18next';
 
-import { fetchChatModel } from '@/services/chatModel';
 import { ChatMessageError } from '@/types/chatMessage';
 import { ErrorResponse, ErrorType } from '@/types/fetch';
 
@@ -28,6 +27,7 @@ export const getMessageError = async (response: Response) => {
 
 export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void;
+  onFinish?: (text: string) => Promise<void>;
   onMessageHandle?: (text: string) => void;
 }
 
@@ -52,7 +52,7 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
   const data = response.body;
 
   if (!data) return;
-
+  let output = '';
   const reader = data.getReader();
   const decoder = new TextDecoder();
 
@@ -63,8 +63,11 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
     done = doneReading;
     const chunkValue = decoder.decode(value, { stream: true });
 
+    output += chunkValue;
     options.onMessageHandle?.(chunkValue);
   }
+
+  await options?.onFinish?.(output);
 
   return returnRes;
 };
@@ -75,6 +78,7 @@ interface FetchAITaskResultParams<T> {
    * 错误处理函数
    */
   onError?: (e: Error, rawError?: any) => void;
+  onFinish?: (text: string) => Promise<void>;
   /**
    * 加载状态变化处理函数
    * @param loading - 是否处于加载状态
@@ -85,7 +89,6 @@ interface FetchAITaskResultParams<T> {
    * @param text - 消息内容
    */
   onMessageHandle?: (text: string) => void;
-
   /**
    * 请求对象
    */
@@ -97,6 +100,7 @@ export const fetchAIFactory =
   async ({
     params,
     onMessageHandle,
+    onFinish,
     onError,
     onLoadingChange,
     abortController,
@@ -115,6 +119,7 @@ export const fetchAIFactory =
       onErrorHandle: (error) => {
         errorHandle(new Error(error.message), error);
       },
+      onFinish,
       onMessageHandle,
     }).catch(errorHandle);
 
@@ -122,5 +127,3 @@ export const fetchAIFactory =
 
     return await data?.text();
   };
-
-export const fetchPresetTaskResult = fetchAIFactory(fetchChatModel);

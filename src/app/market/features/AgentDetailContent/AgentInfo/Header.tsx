@@ -17,7 +17,6 @@ const { Link } = Typography;
 const Header = memo(() => {
   const { t } = useTranslation('market');
   const { styles, theme } = useStyles();
-
   const createSession = useSessionStore((s) => s.createSession);
   const switchSideBar = useGlobalStore((s) => s.switchSideBar);
   const agentItem = useMarketStore(agentMarketSelectors.currentAgentItem);

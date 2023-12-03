@@ -45,6 +45,8 @@ export interface GlobalBaseSettings {
 
 export type GlobalDefaultAgent = Pick<LobeAgentSession, 'config' | 'meta'>;
 
+export type CustomModels = { displayName: string; name: string }[];
+
 export interface OpenAIConfig {
   OPENAI_API_KEY: string;
   azureApiVersion?: string;
@@ -57,9 +59,19 @@ export interface OpenAIConfig {
   useAzure?: boolean;
 }
 
-export type GlobalLLMConfig = {
+export interface GlobalLLMConfig {
   openAI: OpenAIConfig;
-};
+}
+
+export type STTServer = 'openai' | 'browser';
+export interface GlobalTTSConfig {
+  openAI: {
+    sttModel: 'whisper-1';
+    ttsModel: 'tts-1' | 'tts-1-hd';
+  };
+  sttAutoStop: boolean;
+  sttServer: STTServer;
+}
 
 export type LLMBrand = keyof GlobalLLMConfig;
 
@@ -69,6 +81,7 @@ export type LLMBrand = keyof GlobalLLMConfig;
 export interface GlobalSettings extends GlobalBaseSettings {
   defaultAgent: GlobalDefaultAgent;
   languageModel: GlobalLLMConfig;
+  tts: GlobalTTSConfig;
 }
 
 export type ConfigKeys = keyof GlobalSettings;

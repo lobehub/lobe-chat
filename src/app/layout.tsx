@@ -1,3 +1,4 @@
+import { Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { PropsWithChildren } from 'react';
 
@@ -21,7 +22,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
 
   return (
-    <html lang={lang?.value || DEFAULT_LANG}>
+    <html lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
       <body>
         <StyleRegistry>
           <Layout
@@ -42,3 +43,16 @@ const RootLayout = ({ children }: PropsWithChildren) => {
 export default RootLayout;
 
 export { default as metadata } from './metadata';
+
+export const viewport: Viewport = {
+  initialScale: 1,
+  maximumScale: 1,
+  minimumScale: 1,
+  themeColor: [
+    { color: '#f8f8f8', media: '(prefers-color-scheme: light)' },
+    { color: '#000', media: '(prefers-color-scheme: dark)' },
+  ],
+  userScalable: false,
+  viewportFit: 'cover',
+  width: 'device-width',
+};

@@ -6,12 +6,11 @@ import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import ChatList from 'src/app/chat/features/Conversation/ChatList';
 
 import pkg from '@/../package.json';
+import ChatList from '@/app/chat/features/Conversation/ChatList';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agentConfig';
-import { sessionSelectors } from '@/store/session/slices/session/selectors';
+import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import PluginTag from '../../ChatHeader/PluginTag';
 import { useStyles } from './style';
@@ -130,7 +129,7 @@ const Preview = memo<PreviewProps>(({ withSystemRole, imageType, withBackground,
               </Flexbox>
               {withSystemRole && systemRole && (
                 <div className={styles.role}>
-                  <Markdown>{systemRole}</Markdown>
+                  <Markdown className={styles.markdown}>{systemRole}</Markdown>
                 </div>
               )}
             </div>

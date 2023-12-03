@@ -15,11 +15,14 @@
   },
   "newAgent": "新しいエージェントを作成",
   "noDescription": "説明はありません",
+  "pin": "ピン留め",
+  "pinOff": "ピン留め解除",
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
   "searchAgentPlaceholder": "エージェントと会話を検索...",
   "send": "送信",
   "sendPlaceholder": "チャット内容を入力...",
+  "sessionList": "セッションリスト",
   "shareModal": {
     "download": "スクリーンショットをダウンロード",
     "imageType": "画像形式",
@@ -32,6 +35,11 @@
     "withSystemRole": "エージェントの役割設定を含む"
   },
   "stop": "停止",
+  "stt": {
+    "action": "音声入力",
+    "loading": "読み取り中...",
+    "prettifying": "美化中..."
+  },
   "temp": "一時",
   "tokenDetail": "役割設定: {{systemRoleToken}} · チャット履歴: {{chatsToken}}",
   "tokenTag": {
@@ -44,12 +52,29 @@
     "defaultTitle": "デフォルトトピック",
     "saveCurrentMessages": "現在の会話をトピックとして保存",
     "searchPlaceholder": "トピックを検索...",
-    "title": "トピック"
+    "deleteAll": "すべてのトピックを削除する",
+    "deleteUnstarred": "スターを付けていないトピックを削除する",
+    "title": "トピックリスト",
+    "confirmRemoveAll": "すべてのトピックを削除します。削除後は元に戻すことはできませんので、注意して操作してください。",
+    "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除後は元に戻すことはできませんので、注意して操作してください。",
+    "removeAll": "すべてのトピックを削除",
+    "removeUnstarred": "スターをつけていないトピックを削除",
+    "openNewTopic": "新しいトピックを開く"
   },
   "translate": {
-    "clear": "翻訳をクリア"
+    "clear": "翻訳をクリア",
+    "action": "翻訳"
   },
   "translateTo": "翻訳",
+  "tts": {
+    "action": "音声読み上げ",
+    "clear": "音声削除"
+  },
   "updateAgent": "エージェント情報を更新",
+  "upload": {
+    "actionTooltip": "画像をアップロード",
+    "dragDesc": "ファイルをここにドラッグして複数の画像をアップロードできます。Shift キーを押しながら画像を直接送信できます",
+    "dragTitle": "画像をアップロード"
+  },
   "warp": "改行"
 }

@@ -1,32 +1,40 @@
 import { ActionIcon, Modal } from '@lobehub/ui';
-import { useResponsive } from 'antd-style';
 import { Share2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import useMergeState from 'use-merge-value';
 
-import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import { useSessionStore } from '@/store/session';
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { useChatStore } from '@/store/chat';
 
 const Inner = dynamic(() => import('./Inner'));
+interface ShareButtonProps {
+  mobile?: boolean;
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
+}
 
-const ShareButton = memo(() => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const ShareButton = memo<ShareButtonProps>(({ mobile, setOpen, open }) => {
+  const [isModalOpen, setIsModalOpen] = useMergeState(false, {
+    defaultValue: false,
+    onChange: setOpen,
+    value: open,
+  });
   const { t } = useTranslation('common');
-  const [shareLoading] = useSessionStore((s) => [s.shareLoading]);
-  const { mobile } = useResponsive();
-
-  const size = mobile ? MOBILE_HEADER_ICON_SIZE : { fontSize: 24 };
+  const [shareLoading] = useChatStore((s) => [s.shareLoading]);
 
   return (
     <>
-      <ActionIcon
-        icon={Share2}
-        loading={shareLoading}
-        onClick={() => setIsModalOpen(true)}
-        size={size}
-        title={t('share')}
-      />
+      {!mobile && (
+        <ActionIcon
+          icon={Share2}
+          loading={shareLoading}
+          onClick={() => setIsModalOpen(true)}
+          size={DESKTOP_HEADER_ICON_SIZE}
+          title={t('share')}
+        />
+      )}
       <Modal
         centered={false}
         footer={null}

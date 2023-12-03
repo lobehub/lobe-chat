@@ -10,10 +10,9 @@ WORKDIR /app
 
 COPY package.json ./
 
-RUN pnpm i -g bun
 # If you want to build docker in China
 #RUN npm config set registry https://registry.npmmirror.com/
-RUN bun i
+RUN pnpm i
 
 COPY . .
 RUN pnpm run build:docker # run build standalone for docker version
@@ -46,8 +45,17 @@ EXPOSE 3210
 ENV HOSTNAME "0.0.0.0"
 ENV PORT=3210
 
+# General Variables
 ENV ACCESS_CODE "lobe66"
+ENV NEXT_PUBLIC_CUSTOM_MODELS ""
+
+# OpenAI
 ENV OPENAI_API_KEY ""
 ENV OPENAI_PROXY_URL ""
+
+# Azure OpenAI
+ENV USE_AZURE_OPENAI ""
+ENV AZURE_API_KEY ""
+ENV AZURE_API_VERSION ""
 
 CMD ["node", "server.js"]

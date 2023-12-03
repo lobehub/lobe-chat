@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useSessionStore } from '@/store/session';
 
 import SessionSearchBar from '../../features/SessionSearchBar';
@@ -28,11 +29,10 @@ const Header = memo(() => {
     <Flexbox className={styles.top} gap={16} padding={16}>
       <Flexbox distribution={'space-between'} horizontal>
         <Logo className={styles.logo} size={36} type={'text'} />
-
         <ActionIcon
           icon={MessageSquarePlus}
           onClick={() => createSession()}
-          size={{ fontSize: 24 }}
+          size={DESKTOP_HEADER_ICON_SIZE}
           style={{ flex: 'none' }}
           title={t('newAgent')}
         />

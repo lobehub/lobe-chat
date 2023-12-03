@@ -5,42 +5,35 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
 import { PREFIX_KEY, REGENERATE_KEY } from '@/const/hotkeys';
-import { useSessionChatInit, useSessionStore } from '@/store/session';
-import { agentSelectors, chatSelectors } from '@/store/session/selectors';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
-import { renderActions } from './Actions';
+import { renderActions, useActionsClick } from './Actions';
 import { renderErrorMessages } from './Error';
 import { renderMessagesExtra } from './Extras';
-import { renderMessages } from './Messages';
+import { renderMessages, useAvatarsClick } from './Messages';
 import SkeletonList from './SkeletonList';
 
 const List = memo(() => {
-  const init = useSessionChatInit();
   const { t } = useTranslation('common');
-  const data = useSessionStore(chatSelectors.currentChatsWithGuideMessage, isEqual);
+  const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
+  const data = useChatStore(chatSelectors.currentChatsWithGuideMessage(meta), isEqual);
 
-  const [
-    displayMode,
-    enableHistoryCount,
-    historyCount,
-    chatLoadingId,
-    deleteMessage,
-    resendMessage,
-    dispatchMessage,
-    translateMessage,
-  ] = useSessionStore((s) => {
+  const [init, chatLoadingId, resendMessage, updateMessageContent] = useChatStore((s) => [
+    s.messagesInit,
+    s.chatLoadingId,
+    s.resendMessage,
+    s.updateMessageContent,
+  ]);
+
+  const [displayMode, enableHistoryCount, historyCount] = useSessionStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
-    return [
-      config.displayMode,
-      config.enableHistoryCount,
-      config.historyCount,
-      s.chatLoadingId,
-      s.deleteMessage,
-      s.resendMessage,
-      s.dispatchMessage,
-      s.translateMessage,
-    ];
+    return [config.displayMode, config.enableHistoryCount, config.historyCount];
   });
+  const onActionsClick = useActionsClick();
+  const onAvatarsClick = useAvatarsClick();
 
   const hotkeys = [PREFIX_KEY, REGENERATE_KEY].join('+');
 
@@ -52,6 +45,7 @@ const List = memo(() => {
       resendMessage(lastMessage.id);
     },
     {
+      enableOnFormTags: true,
       preventDefault: true,
     },
   );
@@ -60,36 +54,13 @@ const List = memo(() => {
 
   return (
     <ChatList
-      data={data}
+      data={data as any}
       enableHistoryCount={enableHistoryCount}
       historyCount={historyCount}
       loadingId={chatLoadingId}
-      onActionsClick={(action, { id, error }) => {
-        switch (action.key) {
-          case 'del': {
-            deleteMessage(id);
-            break;
-          }
-          case 'regenerate': {
-            resendMessage(id);
-
-            // if this message is an error message, we need to delete it
-            if (error) deleteMessage(id);
-            break;
-          }
-        }
-
-        // click the menu item with translate item, the result is:
-        // key: 'en-US'
-        // keyPath: ['en-US','translate']
-        if (action.keyPath.at(-1) === 'translate') {
-          const lang = action.keyPath[0];
-          translateMessage(id, lang);
-        }
-      }}
-      onMessageChange={(id, content) =>
-        dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content })
-      }
+      onActionsClick={onActionsClick}
+      onAvatarsClick={onAvatarsClick}
+      onMessageChange={(id, content) => updateMessageContent(id, content)}
       renderActions={renderActions}
       renderErrorMessages={renderErrorMessages}
       renderMessages={renderMessages}

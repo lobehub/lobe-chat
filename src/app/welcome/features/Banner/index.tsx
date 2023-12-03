@@ -1,20 +1,19 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { Button, Upload } from 'antd';
+import { Button } from 'antd';
 import { SendHorizonal } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useImportConfig } from '@/hooks/useImportConfig';
+import DataImporter from '@/features/DataImporter';
 import { useSessionStore } from '@/store/session';
 
 import Hero from './Hero';
 import { useStyles } from './style';
 
 const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { importConfig } = useImportConfig();
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
   const [switchSession, switchBackToChat, router, isMobile] = useSessionStore((s) => [
@@ -23,10 +22,6 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
     s.router,
     s.isMobile,
   ]);
-  const handleImport = useCallback((e: any) => {
-    importConfig(e);
-    switchSession();
-  }, []);
 
   return (
     <>
@@ -40,11 +35,15 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
         justify={'center'}
         width={'100%'}
       >
-        <Upload maxCount={1} onChange={handleImport} showUploadList={false}>
+        <DataImporter
+          onFinishImport={() => {
+            switchSession();
+          }}
+        >
           <Button block={mobile} size={'large'}>
             {t('button.import')}
           </Button>
-        </Upload>
+        </DataImporter>
         <Button
           block={mobile}
           onClick={() => (isMobile ? router?.push('/chat') : switchBackToChat())}

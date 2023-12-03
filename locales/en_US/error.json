@@ -1,7 +1,7 @@
 {
   "pluginSettings": {
     "desc": "Complete the following configuration to start using this plugin",
-    "title": "{{name}} Plugin Configuration"
+    "title": "{{name}} Plugin Settings"
   },
   "response": {
     "400": "Sorry, the server does not understand your request. Please make sure your request parameters are correct.",
@@ -28,6 +28,12 @@
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "NoAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key"
   },
+  "stt": {
+    "responseError": "Service request failed, please check the configuration or try again"
+  },
+  "tts": {
+    "responseError": "Service request failed, please check the configuration or try again"
+  },
   "unlock": {
     "apikey": {
       "title": "Use Custom API Key",
@@ -37,7 +43,8 @@
     "confirm": "Confirm and Retry",
     "password": {
       "description": "The application encryption has been enabled by the administrator. Enter the application password to unlock the application. The password only needs to be filled in once.",
-      "title": "Enter Password to Unlock Application"
+      "title": "Enter Password to Unlock Application",
+      "placeholder": "Please enter password"
     },
     "closeMessage": "Close message"
   }

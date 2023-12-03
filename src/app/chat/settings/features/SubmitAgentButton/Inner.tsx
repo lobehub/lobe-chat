@@ -1,4 +1,5 @@
-import { Alert, Button, Divider, Input } from 'antd';
+import { Alert } from '@lobehub/ui';
+import { Button, Divider, Input } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { kebabCase } from 'lodash-es';
@@ -12,7 +13,7 @@ import { AGENTS_INDEX_GITHUB_ISSUE } from '@/const/url';
 import AgentInfo from '@/features/AgentInfo';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agentConfig';
+import { agentSelectors } from '@/store/session/selectors';
 
 const Inner = memo(() => {
   const { t } = useTranslation('setting');

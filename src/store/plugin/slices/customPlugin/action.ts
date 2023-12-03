@@ -8,7 +8,7 @@ import { PluginStore } from '../../store';
 import { defaultCustomPlugin } from './initialState';
 import { CustomPluginListDispatch, devPluginListReducer } from './reducers/customPluginList';
 
-const t = setNamespace('customPlugin');
+const n = setNamespace('customPlugin');
 
 /**
  * 代理行为接口
@@ -40,25 +40,25 @@ export const createCustomPluginSlice: StateCreator<
     const { customPluginList } = get();
 
     const nextList = devPluginListReducer(customPluginList, payload);
-    set({ customPluginList: nextList }, false, t('dispatchCustomPluginList', payload));
+    set({ customPluginList: nextList }, false, n('dispatchCustomPluginList', payload));
   },
   saveToCustomPluginList: (value) => {
     get().dispatchCustomPluginList({ plugin: value, type: 'addItem' });
-    set({ newCustomPlugin: defaultCustomPlugin }, false, t('saveToCustomPluginList'));
+    set({ newCustomPlugin: defaultCustomPlugin }, false, n('saveToCustomPluginList'));
   },
   updateCustomPlugin: (id, value) => {
-    const { dispatchCustomPluginList, fetchPluginManifest } = get();
+    const { dispatchCustomPluginList, installPlugin } = get();
     // 1. 更新 list 项信息
     dispatchCustomPluginList({ id, plugin: value, type: 'updateItem' });
-    // 2. 更新 重新拉取 manifest
-    fetchPluginManifest(id);
+    // 2. 重新安装插件
+    installPlugin(id);
   },
 
   updateNewCustomPlugin: (newCustomPlugin) => {
     set(
       { newCustomPlugin: merge({}, get().newCustomPlugin, newCustomPlugin) },
       false,
-      t('updateNewDevPlugin'),
+      n('updateNewDevPlugin'),
     );
   },
 });

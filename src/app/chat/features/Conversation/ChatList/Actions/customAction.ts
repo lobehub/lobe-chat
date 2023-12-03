@@ -1,5 +1,5 @@
 import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
-import { LanguagesIcon } from 'lucide-react';
+import { LanguagesIcon, Play } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { localeOptions } from '@/locales/options';
@@ -14,10 +14,17 @@ export const useCustomActions = () => {
     })),
     icon: LanguagesIcon,
     key: 'translate',
-    label: t('translateTo'),
+    label: t('translate.action'),
+  } as ActionIconGroupItems;
+
+  const tts = {
+    icon: Play,
+    key: 'tts',
+    label: t('tts.action'),
   } as ActionIconGroupItems;
 
   return {
     translate,
+    tts,
   };
 };

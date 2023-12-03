@@ -7,7 +7,7 @@ import { Center } from 'react-layout-kit';
 
 import { MetaData } from '@/types/meta';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, stylish }) => ({
   avatar: css`
     flex: none;
   `,
@@ -15,6 +15,7 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextDescription};
     text-align: center;
   `,
+  markdown: stylish.markdownInChat,
 
   title: css`
     font-size: 20px;
@@ -25,11 +26,12 @@ const useStyles = createStyles(({ css, token }) => ({
 
 export interface AgentInfoProps {
   meta?: MetaData;
+  onAvatarClick?: () => void;
   style?: CSSProperties;
   systemRole?: string;
 }
 
-const AgentInfo = memo<AgentInfoProps>(({ systemRole, style, meta }) => {
+const AgentInfo = memo<AgentInfoProps>(({ systemRole, style, meta, onAvatarClick }) => {
   const { styles, theme } = useStyles();
 
   if (!meta) return;
@@ -42,6 +44,7 @@ const AgentInfo = memo<AgentInfoProps>(({ systemRole, style, meta }) => {
           avatar={meta.avatar}
           background={meta.backgroundColor || theme.colorFillTertiary}
           className={styles.avatar}
+          onClick={onAvatarClick}
           size={100}
         />
       )}
@@ -59,7 +62,7 @@ const AgentInfo = memo<AgentInfoProps>(({ systemRole, style, meta }) => {
       {systemRole && (
         <>
           <Divider style={{ margin: '8px 0' }} />
-          <Markdown>{systemRole}</Markdown>
+          <Markdown className={styles.markdown}>{systemRole}</Markdown>
         </>
       )}
     </Center>

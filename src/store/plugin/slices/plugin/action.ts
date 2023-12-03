@@ -9,7 +9,7 @@ import { merge, uniq } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { getPluginList } from '@/services/pluginMarket';
+import { pluginService } from '@/services/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
 import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
@@ -17,20 +17,24 @@ import { setNamespace } from '@/utils/storeDebug';
 import { PluginStore } from '../../store';
 import { PluginDispatch, pluginManifestReducer } from './reducers/manifest';
 
-const t = setNamespace('plugin');
+const n = setNamespace('plugin');
 
 /**
  * 插件接口
  */
 export interface PluginAction {
   checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
+  checkPluginsIsInstalled: (plugins: string[]) => void;
   deletePluginSettings: (id: string) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
-  fetchPluginManifest: (identifier: string) => Promise<void>;
+  installPlugin: (identifier: string) => Promise<void>;
+  installPlugins: (plugins: string[]) => Promise<void>;
+  loadPluginStore: () => Promise<LobeChatPluginsMarketIndex>;
   resetPluginSettings: () => void;
   updateManifestLoadingState: (key: string, value: boolean | undefined) => void;
   updatePluginSettings: <T>(id: string, settings: Partial<T>) => void;
-  useFetchPluginList: () => SWRResponse<LobeChatPluginsMarketIndex>;
+  useCheckPluginsIsInstalled: (plugins: string[]) => SWRResponse;
+  useFetchPluginStore: () => SWRResponse<LobeChatPluginsMarketIndex>;
 }
 
 export const createPluginSlice: StateCreator<
@@ -40,11 +44,11 @@ export const createPluginSlice: StateCreator<
   PluginAction
 > = (set, get) => ({
   checkLocalEnabledPlugins: async (sessions) => {
-    const { fetchPluginManifest } = get();
+    const { checkPluginsIsInstalled } = get();
 
     let enabledPlugins: string[] = [];
 
-    for (const session of Object.values(sessions)) {
+    for (const session of sessions) {
       const plugins = session.config.plugins;
       if (!plugins || plugins.length === 0) continue;
 
@@ -53,9 +57,23 @@ export const createPluginSlice: StateCreator<
 
     const plugins = uniq(enabledPlugins);
 
-    await Promise.all(plugins.map((identifier) => fetchPluginManifest(identifier)));
+    await checkPluginsIsInstalled(plugins);
+  },
+  checkPluginsIsInstalled: async (plugins) => {
+    // if there is no plugins, just skip.
+    if (plugins.length === 0) return;
 
-    set({ manifestPrepared: true }, false, t('checkLocalEnabledPlugins'));
+    const { loadPluginStore, installPlugins } = get();
+
+    // check if the store is empty
+    // if it is, we need to load the plugin store
+    if (pluginSelectors.onlinePluginStore(get()).length === 0) {
+      await loadPluginStore();
+    }
+
+    await installPlugins(plugins);
+
+    set({ manifestPrepared: true }, false, n('checkPluginsIsInstalled'));
   },
   deletePluginSettings: (id) => {
     set(
@@ -63,18 +81,19 @@ export const createPluginSlice: StateCreator<
         draft.pluginsSettings[id] = undefined;
       }),
       false,
-      t('deletePluginSettings'),
+      n('deletePluginSettings'),
     );
   },
   dispatchPluginManifest: (payload) => {
     const { pluginManifestMap } = get();
     const nextManifest = pluginManifestReducer(pluginManifestMap, payload);
 
-    set({ pluginManifestMap: nextManifest }, false, t('dispatchPluginManifest', payload));
+    set({ pluginManifestMap: nextManifest }, false, n('dispatchPluginManifest', payload));
   },
-  fetchPluginManifest: async (name) => {
+  installPlugin: async (name) => {
     const plugin = pluginSelectors.getPluginMetaById(name)(get());
-    // 1. 校验文件
+
+    // 1. valid plugin
 
     if (!plugin) return;
 
@@ -98,7 +117,7 @@ export const createPluginSlice: StateCreator<
 
     get().updateManifestLoadingState(name, undefined);
     if (!data) {
-      message.error('插件描述文件请求失败');
+      message.error(`插件 ${plugin.meta.title} 描述文件请求失败`);
       return;
     }
 
@@ -113,8 +132,20 @@ export const createPluginSlice: StateCreator<
     // 4. 存储 manifest 信息
     get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
   },
+  installPlugins: async (plugins) => {
+    const { installPlugin } = get();
+
+    await Promise.all(plugins.map((identifier) => installPlugin(identifier)));
+  },
+  loadPluginStore: async () => {
+    const pluginMarketIndex = await pluginService.getPluginList();
+
+    set({ pluginList: pluginMarketIndex.plugins }, false, n('loadPluginList'));
+
+    return pluginMarketIndex;
+  },
   resetPluginSettings: () => {
-    set({ pluginsSettings: {} }, false, t('resetPluginSettings'));
+    set({ pluginsSettings: {} }, false, n('resetPluginSettings'));
   },
   updateManifestLoadingState: (key, value) => {
     set(
@@ -122,7 +153,7 @@ export const createPluginSlice: StateCreator<
         draft.pluginManifestLoading[key] = value;
       }),
       false,
-      t('updateManifestLoadingState'),
+      n('updateManifestLoadingState'),
     );
   },
   updatePluginSettings: (id, settings) => {
@@ -131,14 +162,12 @@ export const createPluginSlice: StateCreator<
         draft.pluginsSettings[id] = merge({}, draft.pluginsSettings[id], settings);
       }),
       false,
-      t('updatePluginSettings'),
+      n('updatePluginSettings'),
     );
   },
 
-  useFetchPluginList: () =>
-    useSWR<LobeChatPluginsMarketIndex>('fetchPluginList', getPluginList, {
-      onSuccess: (pluginMarketIndex) => {
-        set({ pluginList: pluginMarketIndex.plugins }, false, t('useFetchPluginList'));
-      },
-    }),
+  useCheckPluginsIsInstalled: (plugins) => useSWR(plugins, get().checkPluginsIsInstalled),
+
+  useFetchPluginStore: () =>
+    useSWR<LobeChatPluginsMarketIndex>('loadPluginStore', get().loadPluginStore),
 });

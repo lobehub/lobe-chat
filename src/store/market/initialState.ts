@@ -7,6 +7,7 @@ export interface StoreState {
   agentMap: MarketAgentMap;
   currentIdentifier: string;
   searchKeywords: string;
+  tagList: string[];
 }
 
 export const initialState: StoreState = {
@@ -14,4 +15,5 @@ export const initialState: StoreState = {
   agentMap: {},
   currentIdentifier: '',
   searchKeywords: '',
+  tagList: [],
 };

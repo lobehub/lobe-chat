@@ -26,12 +26,15 @@ interface PluginSettingsConfigProps {
   schema: PluginSchema;
 }
 
-const useStyles = createStyles(({ css, token }) => ({
-  md: css`
-    p {
-      color: ${token.colorTextDescription};
-    }
-  `,
+const useStyles = createStyles(({ css, token, stylish, cx }) => ({
+  markdown: cx(
+    stylish.markdownInChat,
+    css`
+      p {
+        color: ${token.colorTextDescription};
+      }
+    `,
+  ),
 }));
 
 const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) => {
@@ -45,7 +48,7 @@ const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) =>
     <Form layout={'vertical'}>
       {items.map((item) => (
         <Form.Item
-          desc={item.desc && <Markdown className={styles.md}>{item.desc as string}</Markdown>}
+          desc={item.desc && <Markdown className={styles.markdown}>{item.desc as string}</Markdown>}
           key={item.label}
           label={item.label}
           tag={item.tag}

@@ -31,11 +31,11 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
     background: ${token.colorBgContainer};
     border-bottom: 1px solid ${token.colorBorder};
   `,
+  markdown: stylish.markdownInChat,
   preview: cx(
     stylish.noScrollbar,
     css`
-      overflow-x: hidden;
-      overflow-y: scroll;
+      overflow: hidden scroll;
 
       width: 100%;
       max-height: 40vh;

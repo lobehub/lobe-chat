@@ -30,6 +30,25 @@
   "feedback": "Feedback",
   "historyRange": "History Range",
   "import": "Import Configuration",
+  "importModal": {
+    "finish": {
+      "onlySettings": "System settings imported successfully",
+      "start": "Start using",
+      "subTitle": "Data imported successfully, took {{duration}} seconds. Details of the import are as follows:",
+      "title": "Data import completed"
+    },
+    "loading": "Importing data, please wait patiently...",
+    "result": {
+      "added": "Imported successfully",
+      "errors": "Import errors",
+      "messages": "Messages",
+      "sessions": "Assistants",
+      "skips": "Skipped duplicates",
+      "topics": "Topics",
+      "type": "Data type"
+    },
+    "title": "Import Data"
+  },
   "lang": {
     "en": "English",
     "en-US": "English",

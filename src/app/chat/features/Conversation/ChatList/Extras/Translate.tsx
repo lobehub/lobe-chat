@@ -7,15 +7,13 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 import { ChatTranslate } from '@/types/chatMessage';
 
 import BubblesLoading from '../Loading';
 
-const useStyles = createStyles(({ css }) => ({
-  container: css`
-    margin-top: 8px;
-  `,
+const useStyles = createStyles(({ stylish }) => ({
+  markdown: stylish.markdownInChat,
 }));
 
 interface TranslateProps extends ChatTranslate {
@@ -24,10 +22,10 @@ interface TranslateProps extends ChatTranslate {
 }
 
 const Translate = memo<TranslateProps>(({ content = '', from, to, id, loading }) => {
-  const { theme } = useStyles();
+  const { theme, styles } = useStyles();
   const { t } = useTranslation('common');
   const [show, setShow] = useState(true);
-  const clearTranslate = useSessionStore((s) => s.clearTranslate);
+  const clearTranslate = useChatStore((s) => s.clearTranslate);
 
   const { message } = App.useApp();
   return (
@@ -67,7 +65,11 @@ const Translate = memo<TranslateProps>(({ content = '', from, to, id, loading })
           />
         </Flexbox>
       </Flexbox>
-      {!show ? null : loading && !content ? <BubblesLoading /> : <Markdown>{content}</Markdown>}
+      {!show ? null : loading && !content ? (
+        <BubblesLoading />
+      ) : (
+        <Markdown className={styles.markdown}>{content}</Markdown>
+      )}
     </Flexbox>
   );
 });

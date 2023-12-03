@@ -5,8 +5,9 @@ import { HardDriveDownload, MoreVertical, Pin, PinOff, Trash } from 'lucide-reac
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
+import { configService } from '@/services/config';
 import { useSessionStore } from '@/store/session';
+import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
 
 const useStyles = createStyles(({ css }) => ({
@@ -27,7 +28,7 @@ const Actions = memo<ActionProps>(({ id, setOpen }) => {
 
   const [pin, removeSession, pinSession] = useSessionStore((s) => {
     const session = sessionSelectors.getSessionById(id)(s);
-    return [session.pinned, s.removeSession, s.pinSession];
+    return [sessionHelpers.getSessionPinned(session), s.removeSession, s.pinSession];
   });
 
   const { modal } = App.useApp();
@@ -48,14 +49,14 @@ const Actions = memo<ActionProps>(({ id, setOpen }) => {
             key: 'agent',
             label: <div>{t('exportType.agent')}</div>,
             onClick: () => {
-              exportSingleAgent(id);
+              configService.exportSingleAgent(id);
             },
           },
           {
             key: 'agentWithMessage',
             label: <div>{t('exportType.agentWithMessage')}</div>,
             onClick: () => {
-              exportSingleSession(id);
+              configService.exportSingleSession(id);
             },
           },
         ],

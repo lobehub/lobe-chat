@@ -38,6 +38,11 @@ export default {
     withSystemRole: '包含助手角色设定',
   },
   stop: '停止',
+  stt: {
+    action: '语音输入',
+    loading: '识别中...',
+    prettifying: '润色中...',
+  },
   temp: '临时',
   tokenDetail: '角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}',
   tokenTag: {
@@ -46,16 +51,30 @@ export default {
     used: '使用',
   },
   topic: {
+    confirmRemoveAll: '即将删除全部话题，删除后将不可恢复，请谨慎操作。',
     confirmRemoveTopic: '即将删除该话题，删除后将不可恢复，请谨慎操作。',
+    confirmRemoveUnstarred: '即将删除未收藏话题，删除后将不可恢复，请谨慎操作。',
     defaultTitle: '默认话题',
+    openNewTopic: '开启新话题',
+    removeAll: '删除全部话题',
+    removeUnstarred: '删除未收藏话题',
     saveCurrentMessages: '将当前会话保存为话题',
     searchPlaceholder: '搜索话题...',
-    title: '话题',
+    title: '话题列表',
   },
   translate: {
+    action: '翻译',
     clear: '删除翻译',
   },
-  translateTo: '翻译',
+  tts: {
+    action: '语音朗读',
+    clear: '删除语音',
+  },
   updateAgent: '更新助理信息',
+  upload: {
+    actionTooltip: '上传图片',
+    dragDesc: '拖拽文件到这里，支持上传多个图片。按住 Shift 直接发送图片',
+    dragTitle: '上传图片',
+  },
   warp: '换行',
 };

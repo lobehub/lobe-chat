@@ -1,22 +1,27 @@
 import { SearchBar } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
-import { memo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useMarketStore } from '@/store/market';
 
 const AgentSearchBar = memo(() => {
   const { t } = useTranslation('market');
-  const keywords = useMarketStore((s) => s.searchKeywords);
+  const [keywords, setKeywords] = useMarketStore((s) => [s.searchKeywords, s.setSearchKeywords]);
   const [value, setValue] = useState(keywords);
   const { mobile } = useResponsive();
+
+  const handleSearch = useCallback(() => {
+    setKeywords(value);
+  }, [value, setKeywords]);
+
   return (
     <SearchBar
       allowClear
       enableShortKey={!mobile}
       onChange={(e) => setValue(e.target.value)}
-      onPressEnter={() => useMarketStore.setState({ searchKeywords: value })}
-      onSubmit={() => useMarketStore.setState({ searchKeywords: value })}
+      onPressEnter={handleSearch}
+      onSubmit={handleSearch}
       placeholder={t('search.placeholder')}
       shortKey={'k'}
       spotlight={!mobile}

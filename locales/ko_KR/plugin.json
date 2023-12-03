@@ -2,7 +2,9 @@
   "debug": {
     "arguments": "함수 호출 인수",
     "function_call": "함수 호출",
-    "response": "응답"
+    "response": "응답",
+    "off": "디버그 끄기",
+    "on": "플러그인 호출 정보 보기"
   },
   "dev": {
     "confirmDeleteDevPlugin": "로컬 플러그인을 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다.",
@@ -88,8 +90,8 @@
     }
   },
   "loading": {
-    "content": "데이터 가져오는 중...",
-    "plugin": "플러그인 실행 중..."
+    "plugin": "플러그인 실행 중...",
+    "content": "플러그인 호출 중..."
   },
   "pluginList": "플러그인 목록",
   "plugins": {

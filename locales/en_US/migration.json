@@ -1,0 +1,45 @@
+{
+  "dbV1": {
+    "action": {
+      "clearDB": "Clear Local Data",
+      "downloadBackup": "Download Data Backup",
+      "reUpgrade": "Re-upgrade",
+      "start": "Get Started",
+      "upgrade": "Upgrade"
+    },
+    "clear": {
+      "confirm": "You are about to clear local data (global settings will not be affected). Please confirm that you have downloaded a data backup."
+    },
+    "description": "In the new version, LobeChat's data storage has made a huge leap. Therefore, we need to upgrade the old version data to bring you a better user experience.",
+    "features": {
+      "capability": {
+        "desc": "Based on IndexedDB technology, it can store a lifetime of conversation messages.",
+        "title": "High Capacity"
+      },
+      "performance": {
+        "title": "High Performance",
+        "desc": "Millions of messages are automatically indexed, and retrieval queries respond in milliseconds."
+      },
+      "use": {
+        "desc": "Supports searching for titles, descriptions, tags, message content, and even translated text, greatly improving daily search efficiency.",
+        "title": "More User-Friendly"
+      }
+    },
+    "title": "LobeChat Data Evolution",
+    "upgrade": {
+      "error": {
+        "title": "Database Upgrade Failed",
+        "subTitle": "We are sorry, an error occurred during the database upgrade process. Please try the following solutions: A. Clear local data and re-import backup data; B. Click the 'Retry Upgrade' button.<br><br> If the issue persists, please <1>submit a request</1>, and we will assist you as soon as possible."
+      },
+      "success": {
+        "subTitle": "LobeChat's database has been successfully upgraded to the latest version. Start experiencing it now!",
+        "title": "Database Upgrade Successful"
+      }
+    },
+    "upgradeTip": "The upgrade process will take approximately 10 to 20 seconds. Please do not close LobeChat during the upgrade."
+  },
+  "migrateError": {
+    "missVersion": "Imported data is missing a version number. Please check the file and try again.",
+    "noMigration": "No migration solution found for the current version. Please check the version number and try again. If the issue persists, please submit a feedback request."
+  }
+}

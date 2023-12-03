@@ -2,7 +2,9 @@
   "debug": {
     "arguments": "引数",
     "function_call": "関数呼び出し",
-    "response": "レスポンス"
+    "response": "レスポンス",
+    "off": "デバッグをオフにする",
+    "on": "プラグイン呼び出し情報を表示する"
   },
   "dev": {
     "confirmDeleteDevPlugin": "このローカルプラグインを削除しますか？削除後は元に戻せません。",
@@ -88,8 +90,8 @@
     }
   },
   "loading": {
-    "content": "データの取得中...",
-    "plugin": "プラグインの実行中..."
+    "plugin": "プラグインの実行中...",
+    "content": "プラグインを呼び出しています..."
   },
   "pluginList": "プラグインリスト",
   "plugins": {

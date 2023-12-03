@@ -4,6 +4,7 @@ import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { getAgentList, getAgentManifest } from '@/services/agentMarket';
+import { getCurrentLanguage } from '@/store/global/helpers';
 import { AgentsMarketItem, LobeChatAgentsMarketIndex } from '@/types/market';
 
 import type { Store } from './store';
@@ -11,6 +12,7 @@ import type { Store } from './store';
 export interface StoreAction {
   activateAgent: (identifier: string) => void;
   deactivateAgent: () => void;
+  setSearchKeywords: (keywords: string) => void;
   updateAgentMap: (key: string, value: AgentsMarketItem) => void;
   useFetchAgent: (identifier: string) => SWRResponse<AgentsMarketItem>;
   useFetchAgentList: () => SWRResponse<LobeChatAgentsMarketIndex>;
@@ -28,6 +30,9 @@ export const createMarketAction: StateCreator<
   deactivateAgent: () => {
     set({ currentIdentifier: undefined }, false, 'deactivateAgent');
   },
+  setSearchKeywords: (keywords) => {
+    set({ searchKeywords: keywords });
+  },
   updateAgentMap: (key, value) => {
     const { agentMap } = get();
 
@@ -40,18 +45,26 @@ export const createMarketAction: StateCreator<
     set({ agentMap: nextAgentMap }, false, `setAgentMap/${key}`);
   },
   useFetchAgent: (identifier) =>
-    useSWR<AgentsMarketItem>(identifier, getAgentManifest, {
-      onError: () => {
-        get().deactivateAgent();
+    useSWR<AgentsMarketItem>(
+      [identifier, getCurrentLanguage()],
+      ([id, locale]) => getAgentManifest(id, locale as string),
+      {
+        onError: () => {
+          get().deactivateAgent();
+        },
+        onSuccess: (data) => {
+          get().updateAgentMap(identifier, data);
+        },
       },
-      onSuccess: (data, key) => {
-        get().updateAgentMap(key, data);
-      },
-    }),
+    ),
   useFetchAgentList: () =>
-    useSWR<LobeChatAgentsMarketIndex>('fetchAgentList', getAgentList, {
+    useSWR<LobeChatAgentsMarketIndex>(getCurrentLanguage(), getAgentList, {
       onSuccess: (agentMarketIndex) => {
-        set({ agentList: agentMarketIndex.agents }, false, 'useFetchAgentList');
+        set(
+          { agentList: agentMarketIndex.agents, tagList: agentMarketIndex.tags },
+          false,
+          'useFetchAgentList',
+        );
       },
     }),
 });
