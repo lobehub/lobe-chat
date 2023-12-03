@@ -10,7 +10,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors } from '../selectors';
 
-const t = setNamespace('plugin');
+const n = setNamespace('plugin');
 
 export interface ChatPluginAction {
   fillPluginMessageContent: (id: string, content: string) => Promise<void>;
@@ -38,7 +38,7 @@ export const chatPlugin: StateCreator<
     const { refreshMessages, coreProcessMessage, toggleChatLoading } = get();
     let data: string;
     try {
-      const abortController = toggleChatLoading(true, id, t('fetchPlugin') as string);
+      const abortController = toggleChatLoading(true, id, n('fetchPlugin') as string);
       data = await chatService.runPluginApi(payload, { signal: abortController?.signal });
     } catch (error) {
       await messageService.updateMessageError(id, error as any);

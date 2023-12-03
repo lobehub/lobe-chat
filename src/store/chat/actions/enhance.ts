@@ -10,7 +10,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { setNamespace } from '@/utils/storeDebug';
 
-const t = setNamespace('enhance');
+const n = setNamespace('enhance');
 
 /**
  * enhance chat action like translate,tts
@@ -49,7 +49,7 @@ export const chatEnhance: StateCreator<
     await messageService.updateMessageTranslate(id, { content: '', from: '', to: targetLang });
     await refreshMessages();
 
-    toggleChatLoading(true, id, t('translateMessage(start)', { id }) as string);
+    toggleChatLoading(true, id, n('translateMessage(start)', { id }) as string);
 
     let content = '';
     let from = '';
