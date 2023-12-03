@@ -228,20 +228,6 @@ describe('chatSelectors', () => {
 
   describe('chatsMessageString', () => {
     it('should concatenate the contents of all messages returned by currentChatsWithHistoryConfig', () => {
-      // Mock the currentChatsWithHistoryConfig to return a specific subset of messages
-      vi.mock('@/store/session/selectors', () => ({
-        agentSelectors: {
-          currentAgentConfig: vi.fn(() => ({ historySize: 2 })), // Mocked history size
-        },
-      }));
-      vi.mock('@/store/chat/helpers', () => ({
-        chatHelpers: {
-          getSlicedMessagesWithConfig: vi.fn((messages, config) =>
-            messages.slice(-config.historySize),
-          ),
-        },
-      }));
-
       // Prepare a state with a few messages
       const state = merge(initialStore, {
         messages: mockMessages,

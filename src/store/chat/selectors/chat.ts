@@ -3,7 +3,6 @@ import { t } from 'i18next';
 
 import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
-import { chatHelpers } from '@/store/chat/helpers';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
@@ -11,6 +10,7 @@ import { ChatMessage } from '@/types/chatMessage';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
+import { chatHelpers } from '../helpers';
 import type { ChatStore } from '../store';
 
 const getMeta = (message: ChatMessage) => {
