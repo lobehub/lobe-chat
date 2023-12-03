@@ -146,9 +146,12 @@ export const chatMessage: StateCreator<
   },
   sendMessage: async (message, files) => {
     const { coreProcessMessage, activeTopicId, activeId } = get();
-    if (!message || !activeId) return;
+    if (!activeId) return;
 
     const fileIdList = files?.map((f) => f.id);
+
+    // if message is empty and no files, then stop
+    if (!message && (!fileIdList || fileIdList?.length === 0)) return;
 
     let newMessage: CreateMessageParams = {
       content: message,
