@@ -82,6 +82,12 @@ export default {
     update: '更新',
     updateSuccess: '插件设置更新成功',
   },
+  error: {
+    fetchError: '请求失败',
+    installError: '插件 {{name}} 安装失败',
+    manifestInvalid: '描述文件格式不正确',
+    noManifest: '描述文件不存在',
+  },
   list: {
     item: {
       'deprecated.title': '已删除',

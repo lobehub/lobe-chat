@@ -1,4 +1,4 @@
-import { LobeChatPluginsMarketIndex } from '@lobehub/chat-plugin-sdk';
+import { LobeChatPluginManifest, LobeChatPluginsMarketIndex } from '@lobehub/chat-plugin-sdk';
 
 import { getPluginIndexJSON } from '@/const/url';
 import { getCurrentLanguage } from '@/store/global/helpers';
@@ -15,6 +15,17 @@ class PluginService {
     const data: LobeChatPluginsMarketIndex = await res.json();
 
     return data;
+  };
+
+  fetchManifest = async (manifest: string) => {
+    try {
+      const res = await fetch(manifest);
+
+      return (await res.json()) as LobeChatPluginManifest;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   };
 }
 
