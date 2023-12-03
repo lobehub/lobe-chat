@@ -13,7 +13,7 @@ import {
 } from '@/types/exportConfig';
 
 export const exportConfigFile = (config: object, fileName?: string) => {
-  const file = `LobeChat-${fileName || '-config'}-v${CURRENT_CONFIG_VERSION}.json`;
+  const file = `Taverse-${fileName || '-config'}-v${CURRENT_CONFIG_VERSION}.json`;
 
   // 创建一个 Blob 对象
   const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });

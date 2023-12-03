@@ -4,7 +4,7 @@
   "agentMaxToken": "Max Session Length",
   "agentModel": "Model",
   "agentProfile": "Agent Profile",
-  "appInitializing": "LobeChat is initializing, please wait...",
+  "appInitializing": "Taverse is initializing, please wait...",
   "archive": "Archive",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto generate agent description based on prompts",

@@ -44,7 +44,7 @@ const Setting = memo(() => {
         <ExtraList />
         <Center style={{ paddingInline: 64 }}>
           <Divider>
-            <span className={styles.footer}>LobeChat v{CURRENT_VERSION}</span>
+            <span className={styles.footer}>Taverse v{CURRENT_VERSION}</span>
           </Divider>
         </Center>
       </div>

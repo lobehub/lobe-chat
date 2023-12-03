@@ -98,7 +98,7 @@ const Preview = memo<PreviewProps>(({ withSystemRole, imageType, withBackground,
         scale: 2,
       });
       const link = document.createElement('a');
-      link.download = `LobeChat_${title}_${dayjs().format('YYYY-MM-DD')}.${imageType}`;
+      link.download = `Taverse_${title}_${dayjs().format('YYYY-MM-DD')}.${imageType}`;
       link.href = dataUrl;
       link.click();
       setLoading(false);

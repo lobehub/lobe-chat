@@ -4,7 +4,7 @@
   "agentMaxToken": "セッションの最大トークン数",
   "agentModel": "モデル",
   "agentProfile": "エージェント情報",
-  "appInitializing": "LobeChatを起動中です。お待ちください...",
+  "appInitializing": "Taverseを起動中です。お待ちください...",
   "archive": "アーカイブ",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントワードに基づいてエージェントの説明を自動生成します",
