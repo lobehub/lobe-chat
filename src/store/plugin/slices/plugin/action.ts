@@ -3,7 +3,7 @@ import { merge, uniq } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { pluginStoreSelectors } from '@/store/plugin/selectors';
 import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -55,7 +55,7 @@ export const createPluginSlice: StateCreator<
 
     // check if the store is empty
     // if it is, we need to load the plugin store
-    if (pluginSelectors.onlinePluginStore(get()).length === 0) {
+    if (pluginStoreSelectors.onlinePluginStore(get()).length === 0) {
       await loadPluginStore();
     }
 

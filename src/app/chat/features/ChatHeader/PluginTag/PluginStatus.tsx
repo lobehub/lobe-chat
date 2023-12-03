@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
 import { usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { customPluginSelectors, pluginSelectors } from '@/store/plugin/selectors';
 import { useSessionStore } from '@/store/session';
 
 interface PluginStatusProps {
@@ -19,7 +19,7 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
   const { t } = useTranslation('common');
   const [status, isCustom, fetchPluginManifest] = usePluginStore((s) => [
     pluginSelectors.getPluginManifestLoadingStatus(id)(s),
-    pluginSelectors.isCustomPlugin(id)(s),
+    customPluginSelectors.isCustomPlugin(id)(s),
     s.installPlugin,
   ]);
 
