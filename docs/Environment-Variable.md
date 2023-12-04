@@ -27,9 +27,9 @@ LobeChat provides additional configuration options during deployment, which can 
 ### `ACCESS_CODE`
 
 - Type: Optional
-- Description: Add a password to access the LobeChat service, the password should be 6 digits or letters
+- Description: Add a password to access the LobeChat service, ; you can set a long password to avoid leaking.
 - Default: `-`
-- Example: `awCT74` or `e3@09!`
+- Example: `awCTe)re_r74` or `rtrt_ewee3@09!`
 
 ### `NEXT_PUBLIC_CUSTOM_MODELS`
 
