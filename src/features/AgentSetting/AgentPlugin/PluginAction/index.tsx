@@ -1,0 +1,38 @@
+import { Switch } from 'antd';
+import isEqual from 'fast-deep-equal';
+import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
+
+import { usePluginStore } from '@/store/plugin';
+
+import { useStore } from '../../store';
+import PluginSettings from './PluginSettings';
+
+const PluginSwitch = memo<{ identifier: string }>(({ identifier }) => {
+  const pluginManifestLoading = usePluginStore((s) => s.pluginInstallLoading, isEqual);
+  const [userEnabledPlugins, hasPlugin, toggleAgentPlugin] = useStore((s) => [
+    s.config.plugins || [],
+    !!s.config.plugins,
+    s.toggleAgentPlugin,
+  ]);
+
+  return (
+    <Flexbox align={'center'} gap={8} horizontal>
+      <Switch
+        checked={
+          // 如果在加载中，说明激活了
+          pluginManifestLoading[identifier] || !hasPlugin
+            ? false
+            : userEnabledPlugins.includes(identifier)
+        }
+        loading={pluginManifestLoading[identifier]}
+        onChange={() => {
+          toggleAgentPlugin(identifier);
+        }}
+      />
+      <PluginSettings identifier={identifier} />
+    </Flexbox>
+  );
+});
+
+export default PluginSwitch;

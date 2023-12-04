@@ -78,7 +78,7 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
             removePlugin(id);
           }}
           size={'small'}
-          title={t('settingPlugin.clearDeprecated', { ns: 'setting' })}
+          title={t('plugin.clearDeprecated', { ns: 'setting' })}
         />
       ) : (
         <Flexbox align={'center'} horizontal>

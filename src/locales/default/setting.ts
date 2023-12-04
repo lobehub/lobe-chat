@@ -84,6 +84,20 @@ export default {
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
   },
+  plugin: {
+    addTooltip: '添加自定义插件',
+    clearDeprecated: '移除无效插件',
+    empty: '暂无已安装插件，欢迎前往 <1>插件商店</1> 探索',
+    installStatus: {
+      deprecated: '已卸载',
+    },
+    settings: {
+      hint: '请根据描述填写以下配置',
+      title: '{{id}} 插件配置',
+      tooltip: '插件配置',
+    },
+    store: '插件商店',
+  },
   settingAgent: {
     avatar: {
       title: '头像',
@@ -187,11 +201,6 @@ export default {
     },
   },
   settingPlugin: {
-    add: '添加',
-    addTooltip: '添加自定义插件',
-    clearDeprecated: '移除无效插件',
-    config: '{{id}} 插件配置',
-    settings: '配置插件市场',
     title: '插件列表',
   },
   settingSystem: {

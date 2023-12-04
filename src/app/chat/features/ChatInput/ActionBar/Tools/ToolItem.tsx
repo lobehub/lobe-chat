@@ -6,9 +6,10 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agent';
 
 const ToolItem = memo<{ identifier: string; label: string }>(({ identifier, label }) => {
-  const checked = useSessionStore((s) =>
+  const [checked, togglePlugin] = useSessionStore((s) => [
     agentSelectors.currentAgentPlugins(s).includes(identifier),
-  );
+    s.togglePlugin,
+  ]);
 
   return (
     <Flexbox
@@ -17,14 +18,16 @@ const ToolItem = memo<{ identifier: string; label: string }>(({ identifier, labe
       justify={'space-between'}
       onClick={(e) => {
         e.stopPropagation();
+        togglePlugin(identifier);
       }}
+      padding={'8px 12px'}
     >
       {label}
       <Checkbox
         checked={checked}
         onClick={(e) => {
-          console.log(identifier);
           e.stopPropagation();
+          togglePlugin(identifier);
         }}
       />
     </Flexbox>

@@ -11,7 +11,7 @@ interface MarketSettingModalProps {
   open?: boolean;
 }
 
-const MarketSettingModal = memo<MarketSettingModalProps>(({ open, onOpenChange }) => {
+const StoreSetting = memo<MarketSettingModalProps>(({ open, onOpenChange }) => {
   const { t } = useTranslation('plugin');
 
   return (
@@ -53,4 +53,4 @@ const MarketSettingModal = memo<MarketSettingModalProps>(({ open, onOpenChange }
   );
 });
 
-export default MarketSettingModal;
+export default StoreSetting;
