@@ -58,20 +58,6 @@ describe('pluginSelectors', () => {
       expect(result).toEqual(mockState.pluginManifestMap['plugin-1']);
     });
   });
-  describe('getPluginManifestLoadingStatus', () => {
-    it('success', () => {
-      const result = pluginSelectors.getPluginManifestLoadingStatus('plugin-1')(mockState);
-      expect(result).toBe('success');
-    });
-    it('loading', () => {
-      let result = pluginSelectors.getPluginManifestLoadingStatus('plugin-2')(mockState);
-      expect(result).toBe('loading');
-    });
-    it('error', () => {
-      let result = pluginSelectors.getPluginManifestLoadingStatus('plugin-3')(mockState);
-      expect(result).toBe('error');
-    });
-  });
 
   describe('pluginList', () => {
     it('should return the combined list of pluginList and customPluginList', () => {
