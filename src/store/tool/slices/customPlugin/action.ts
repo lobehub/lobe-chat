@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { CustomPlugin } from '@/types/plugin';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { PluginStore } from '../../store';
+import { ToolStore } from '../../store';
 import { defaultCustomPlugin } from './initialState';
 import { CustomPluginListDispatch, devPluginListReducer } from './reducers/customPluginList';
 
@@ -22,7 +22,7 @@ export interface CustomPluginAction {
 }
 
 export const createCustomPluginSlice: StateCreator<
-  PluginStore,
+  ToolStore,
   [['zustand/devtools', never]],
   [],
   CustomPluginAction

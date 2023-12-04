@@ -5,7 +5,7 @@ import { Suspense, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { usePluginStore } from '@/store/plugin';
+import { useToolStore } from '@/store/tool';
 
 import IFrameRender from './IFrameRender';
 
@@ -72,7 +72,7 @@ export interface PluginDefaultTypeProps {
 }
 
 const PluginDefaultType = memo<PluginDefaultTypeProps>(({ content, name }) => {
-  const manifest = usePluginStore((s) => s.pluginManifestMap[name || '']);
+  const manifest = useToolStore((s) => s.pluginManifestMap[name || '']);
   let isJSON = true;
   try {
     JSON.parse(content);

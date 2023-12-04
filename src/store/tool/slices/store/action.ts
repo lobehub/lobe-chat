@@ -6,10 +6,10 @@ import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { pluginService } from '@/services/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { PluginStore } from '../../store';
+import { ToolStore } from '../../store';
 import { PluginStoreState } from './initialState';
 
 const n = setNamespace('pluginStore');
@@ -29,7 +29,7 @@ export interface PluginStoreAction {
 }
 
 export const createPluginStoreSlice: StateCreator<
-  PluginStore,
+  ToolStore,
   [['zustand/devtools', never]],
   [],
   PluginStoreAction

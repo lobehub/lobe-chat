@@ -5,16 +5,16 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { isDev } from '@/utils/env';
 
-import { PluginStoreState, initialState } from './initialState';
+import { ToolStoreState, initialState } from './initialState';
 import { CustomPluginAction, createCustomPluginSlice } from './slices/customPlugin';
 import { PluginAction, createPluginSlice } from './slices/plugin';
 import { PluginStoreAction, createPluginStoreSlice } from './slices/store';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type PluginStore = PluginStoreState & CustomPluginAction & PluginAction & PluginStoreAction;
+export type ToolStore = ToolStoreState & CustomPluginAction & PluginAction & PluginStoreAction;
 
-const createStore: StateCreator<PluginStore, [['zustand/devtools', never]]> = (...parameters) => ({
+const createStore: StateCreator<ToolStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createPluginSlice(...parameters),
   ...createCustomPluginSlice(...parameters),
@@ -24,11 +24,11 @@ const createStore: StateCreator<PluginStore, [['zustand/devtools', never]]> = (.
 //  ===============  persist 本地缓存中间件配置 ============ //
 
 type SessionPersist = Pick<
-  PluginStore,
+  ToolStore,
   'pluginList' | 'pluginManifestMap' | 'pluginsSettings' | 'customPluginList'
 >;
 
-const persistOptions: PersistOptions<PluginStore, SessionPersist> = {
+const persistOptions: PersistOptions<ToolStore, SessionPersist> = {
   name: 'LOBE_PLUGIN',
 
   partialize: (s) => ({
@@ -45,7 +45,7 @@ const persistOptions: PersistOptions<PluginStore, SessionPersist> = {
 
 //  ===============  实装 useStore ============ //
 
-export const usePluginStore = createWithEqualityFn<PluginStore>()(
+export const useToolStore = createWithEqualityFn<ToolStore>()(
   persist(
     devtools(createStore, {
       name: 'LobeChat_Plugin' + (isDev ? '_DEV' : ''),

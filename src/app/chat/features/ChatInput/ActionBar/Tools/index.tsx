@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginStore from '@/features/PluginStore';
-import { usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 import ToolItem from './ToolItem';
 
@@ -30,7 +30,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
-  const list = usePluginStore(pluginSelectors.installedPlugins, isEqual);
+  const list = useToolStore(pluginSelectors.installedPlugins, isEqual);
   const enablePluginCount = useSessionStore((s) => agentSelectors.currentAgentPlugins(s).length);
   const [open, setOpen] = useState(false);
   const { styles } = useStyles();

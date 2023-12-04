@@ -8,8 +8,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import PluginStore from '@/features/PluginStore';
-import { pluginHelpers, usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { pluginHelpers, useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 import { useStore } from '../store';
 import AddPluginButton from './AddPluginButton';
@@ -26,8 +26,8 @@ const AgentPlugin = memo(() => {
     s.toggleAgentPlugin,
   ]);
 
-  const installedPlugins = usePluginStore(pluginSelectors.installedPlugins, isEqual);
-  const customPluginList = usePluginStore((s) => s.customPluginList, isEqual);
+  const installedPlugins = useToolStore(pluginSelectors.installedPlugins, isEqual);
+  const customPluginList = useToolStore((s) => s.customPluginList, isEqual);
 
   const isEmpty = installedPlugins.length === 0 && userEnabledPlugins.length === 0;
 

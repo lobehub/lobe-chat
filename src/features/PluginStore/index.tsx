@@ -5,8 +5,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { usePluginStore } from '@/store/plugin';
-import { pluginStoreSelectors } from '@/store/plugin/selectors';
+import { useToolStore } from '@/store/tool';
+import { pluginStoreSelectors } from '@/store/tool/selectors';
 
 import Loading from './Loading';
 import PluginItem from './PluginItem';
@@ -18,13 +18,13 @@ interface PluginStoreProps {
 export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
   const { t } = useTranslation('plugin');
 
-  const [listType, useFetchPluginList, installPlugins] = usePluginStore((s) => [
+  const [listType, useFetchPluginList, installPlugins] = useToolStore((s) => [
     s.listType,
     s.useFetchPluginStore,
     s.installPlugins,
   ]);
 
-  const pluginStoreList = usePluginStore(pluginStoreSelectors.onlinePluginStore, isEqual);
+  const pluginStoreList = useToolStore(pluginStoreSelectors.onlinePluginStore, isEqual);
   const { isLoading } = useFetchPluginList();
   const isEmpty = pluginStoreList.length === 0;
 
@@ -51,7 +51,7 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
                   { key: 'installed', label: t('store.tabs.installed') },
                 ]}
                 onChange={(v) => {
-                  usePluginStore.setState({ listType: v as any });
+                  useToolStore.setState({ listType: v as any });
                 }}
               />
 

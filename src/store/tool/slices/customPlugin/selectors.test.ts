@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { PluginStoreState } from '../../initialState';
-import { pluginStoreSelectors } from './selectors';
+import { ToolStoreState } from '../../initialState';
+import { customPluginSelectors } from './selectors';
 
 const mockState = {
   pluginManifestMap: {
@@ -36,13 +36,24 @@ const mockState = {
       homepage: 'http://homepage-2.com',
     },
   ],
-} as unknown as PluginStoreState;
+  customPluginList: [],
+  pluginsSettings: {},
+} as unknown as ToolStoreState;
 
-describe('pluginStoreSelectors', () => {
-  describe('onlinePluginStore', () => {
-    it('should return the online plugin list', () => {
-      const result = pluginStoreSelectors.onlinePluginStore(mockState);
-      expect(result).toEqual(mockState.pluginList);
+describe('pluginSelectors', () => {
+  describe('isCustomPlugin', () => {
+    it('should return false for a non-custom plugin', () => {
+      const result = customPluginSelectors.isCustomPlugin('plugin-1')(mockState);
+      expect(result).toBe(false);
+    });
+
+    it('should return true for a custom plugin', () => {
+      const stateWithCustomPlugin = {
+        ...mockState,
+        customPluginList: [{ identifier: 'custom-plugin' }],
+      } as ToolStoreState;
+      const result = customPluginSelectors.isCustomPlugin('custom-plugin')(stateWithCustomPlugin);
+      expect(result).toBe(true);
     });
   });
 });

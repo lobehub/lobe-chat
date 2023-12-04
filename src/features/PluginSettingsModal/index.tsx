@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import PluginSettingsConfig from '@/features/PluginSettings';
-import { pluginHelpers, usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { pluginHelpers, useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 interface PluginSettingsModalProps {
   id: string;
@@ -18,7 +18,7 @@ interface PluginSettingsModalProps {
 }
 
 const PluginSettingsModal = memo<PluginSettingsModalProps>(({ schema, onClose, id, open }) => {
-  const pluginMeta = usePluginStore(pluginSelectors.getPluginMetaById(id), isEqual);
+  const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(id), isEqual);
 
   const { t } = useTranslation('plugin');
   const theme = useTheme();

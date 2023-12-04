@@ -3,12 +3,12 @@ import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
 import { useGlobalStore } from '@/store/global';
-import { usePluginStore } from '@/store/plugin';
 import {
   useEffectAfterSessionHydrated,
   useOnFinishHydrationSession,
   useSessionStore,
 } from '@/store/session';
+import { useToolStore } from '@/store/tool';
 
 const StoreHydration = memo(() => {
   const router = useRouter();
@@ -17,11 +17,11 @@ const StoreHydration = memo(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
     useSessionStore.persist.rehydrate();
     useGlobalStore.persist.rehydrate();
-    usePluginStore.persist.rehydrate();
+    useToolStore.persist.rehydrate();
   }, []);
 
   useOnFinishHydrationSession((s, store) => {
-    usePluginStore.getState().checkLocalEnabledPlugins(s.sessions);
+    useToolStore.getState().checkLocalEnabledPlugins(s.sessions);
 
     // add router instance to store
     store.setState({ router });

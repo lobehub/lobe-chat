@@ -8,8 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { transformPluginSettings } from '@/features/PluginSettings';
 import PluginSettingRender from '@/features/PluginSettings/PluginSettingRender';
-import { pluginHelpers, usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { pluginHelpers, useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 const useStyles = createStyles(({ css, token, cx, stylish }) => ({
   markdown: cx(
@@ -27,10 +27,10 @@ const PluginSettings = memo<{ identifier: string }>(({ identifier }) => {
   const { styles } = useStyles();
 
   const [open, setOpen] = useState(false);
-  const [updatePluginSettings] = usePluginStore((s) => [s.updatePluginSettings]);
+  const [updatePluginSettings] = useToolStore((s) => [s.updatePluginSettings]);
 
-  const plugin = usePluginStore(pluginSelectors.getPluginManifestById(identifier));
-  const pluginSettings = usePluginStore(pluginSelectors.getPluginSettingsById(identifier));
+  const plugin = useToolStore(pluginSelectors.getPluginManifestById(identifier));
+  const pluginSettings = useToolStore(pluginSelectors.getPluginSettingsById(identifier));
 
   if (!plugin.settings) return null;
 

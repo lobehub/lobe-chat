@@ -7,8 +7,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { usePluginStore } from '@/store/plugin';
-import { pluginStoreSelectors } from '@/store/plugin/selectors';
+import { useToolStore } from '@/store/tool';
+import { pluginStoreSelectors } from '@/store/tool/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
   desc: css`
@@ -27,7 +27,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 const PluginItem = memo<LobeChatPluginMeta>(({ identifier, createdAt, homepage, author, meta }) => {
-  const [installed, installing, installPlugin, unInstallPlugin] = usePluginStore((s) => [
+  const [installed, installing, installPlugin, unInstallPlugin] = useToolStore((s) => [
     pluginStoreSelectors.isPluginInstalled(identifier)(s),
     pluginStoreSelectors.isPluginInstallLoading(identifier)(s),
     s.installPlugin,

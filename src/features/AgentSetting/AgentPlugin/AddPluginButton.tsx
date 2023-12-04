@@ -6,13 +6,13 @@ import { useTranslation } from 'react-i18next';
 
 import { useStore } from '@/features/AgentSetting/store';
 import DevModal from '@/features/PluginDevModal';
-import { usePluginStore } from '@/store/plugin';
+import { useToolStore } from '@/store/tool';
 
 const AddPluginButton = forwardRef<HTMLButtonElement>((props, ref) => {
   const { t } = useTranslation('setting');
   const [showModal, setModal] = useState(false);
   const [toggleAgentPlugin] = useStore((s) => [s.toggleAgentPlugin]);
-  const [installPlugin, saveToDevList, updateNewDevPlugin] = usePluginStore((s) => [
+  const [installPlugin, saveToDevList, updateNewDevPlugin] = useToolStore((s) => [
     s.installPlugin,
     s.saveToCustomPluginList,
     s.updateNewCustomPlugin,

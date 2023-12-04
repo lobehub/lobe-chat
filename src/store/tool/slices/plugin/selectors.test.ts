@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { PluginStoreState } from '../../initialState';
+import { ToolStoreState } from '../../initialState';
 import { pluginSelectors } from './selectors';
 
 const mockState = {
@@ -38,7 +38,7 @@ const mockState = {
   ],
   customPluginList: [],
   pluginsSettings: {},
-} as unknown as PluginStoreState;
+} as unknown as ToolStoreState;
 
 describe('pluginSelectors', () => {
   describe('enabledSchema', () => {
@@ -104,7 +104,7 @@ describe('pluginSelectors', () => {
       const stateWithCustomPlugin = {
         ...mockState,
         customPluginList: [customPlugin],
-      } as PluginStoreState;
+      } as ToolStoreState;
       const result = pluginSelectors.getDevPluginById('custom-plugin')(stateWithCustomPlugin);
       expect(result).toEqual(customPlugin);
     });
@@ -154,7 +154,7 @@ describe('pluginSelectors', () => {
             ui: true,
           },
         },
-      } as unknown as PluginStoreState;
+      } as unknown as ToolStoreState;
       const result = pluginSelectors.hasPluginUI('ui-plugin')(stateWithUIPlugin);
       expect(result).toBe(true);
     });

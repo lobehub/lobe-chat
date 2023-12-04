@@ -5,8 +5,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { settingsSelectors, useGlobalStore } from '@/store/global';
-import { usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
@@ -14,7 +14,7 @@ const MetaForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form,
   const isEditMode = mode === 'edit';
   const locale = useGlobalStore(settingsSelectors.currentLanguage);
   const { t } = useTranslation('plugin');
-  const [plugins] = usePluginStore((s) => [pluginSelectors.pluginList(s).map((i) => i.identifier)]);
+  const [plugins] = useToolStore((s) => [pluginSelectors.pluginList(s).map((i) => i.identifier)]);
 
   const configItem: FormItemProps[] = [
     {

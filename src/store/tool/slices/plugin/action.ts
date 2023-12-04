@@ -3,11 +3,11 @@ import { merge, uniq } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { pluginStoreSelectors } from '@/store/plugin/selectors';
+import { pluginStoreSelectors } from '@/store/tool/selectors';
 import { LobeSessions } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { PluginStore } from '../../store';
+import { ToolStore } from '../../store';
 import { PluginDispatch, pluginManifestReducer } from './reducers/manifest';
 
 const n = setNamespace('plugin');
@@ -26,7 +26,7 @@ export interface PluginAction {
 }
 
 export const createPluginSlice: StateCreator<
-  PluginStore,
+  ToolStore,
   [['zustand/devtools', never]],
   [],
   PluginAction

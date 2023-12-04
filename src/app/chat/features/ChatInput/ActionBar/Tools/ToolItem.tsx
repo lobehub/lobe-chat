@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agent';
+import { agentSelectors } from '@/store/session/selectors';
 
 const ToolItem = memo<{ identifier: string; label: string }>(({ identifier, label }) => {
   const [checked, togglePlugin] = useSessionStore((s) => [
