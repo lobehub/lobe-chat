@@ -365,7 +365,7 @@ $ docker run -d -p 3210:3210 \
 | `OPENAI_API_KEY`          | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                                                                                         | `sk-xxxxxx...xxxxxx`                                                         |
 | `OPENAI_PROXY_URL`        | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL                                                                          | `https://api.chatanywhere.cn/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
 | `OPENAI_FUNCTION_REGIONS` | 可选 | 当你使用 Vercel 部署 Lobe-Chat，而且有需求指定响应调用 OpenAI 接口的请求的 Edge Function 的 Region 时，可以使用该配置进行配置，该值的类型为逗号分隔的字符串数组 | `iad1,sfo1`                                                                  |
-| `ACCESS_CODE`             | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                                                                                                   | `awCT74` 或 `e3@09!`                                                         |
+| `ACCESS_CODE`             | 可选 | 添加访问此服务的密码，你可以设置一个长密码以防被爆破                                                                                                            | `awCTe)re_r74` or `rtrt_ewee3@09!`                                           |
 
 > \[!NOTE]
 >
