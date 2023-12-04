@@ -4,10 +4,10 @@ import { Loader2, SendHorizonal } from 'lucide-react';
 import { memo } from 'react';
 
 import { useSendMessage } from '@/app/chat/features/ChatInput/useSend';
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 const SendButton = memo(() => {
-  const [loading, onStop] = useSessionStore((s) => [!!s.chatLoadingId, s.stopGenerateMessage]);
+  const [loading, onStop] = useChatStore((s) => [!!s.chatLoadingId, s.stopGenerateMessage]);
 
   const handleSend = useSendMessage();
 

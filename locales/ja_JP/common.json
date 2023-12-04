@@ -30,6 +30,25 @@
   "feedback": "フィードバック",
   "historyRange": "履歴範囲",
   "import": "設定のインポート",
+  "importModal": {
+    "finish": {
+      "onlySettings": "システム設定のインポートに成功しました",
+      "start": "開始",
+      "subTitle": "データのインポートに成功しました。所要時間は {{duration}} 秒です。以下はインポートの詳細です：",
+      "title": "データのインポートが完了しました"
+    },
+    "loading": "データをインポート中です。しばらくお待ちください...",
+    "result": {
+      "added": "インポートに成功",
+      "errors": "インポートエラー",
+      "messages": "メッセージ",
+      "sessions": "アシスタント",
+      "skips": "重複スキップ",
+      "topics": "トピック",
+      "type": "データの種類"
+    },
+    "title": "データのインポート"
+  },
   "lang": {
     "en": "英語",
     "en-US": "英語",

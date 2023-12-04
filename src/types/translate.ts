@@ -1,4 +1,5 @@
 export interface Translate {
-  from: string;
+  from?: string;
   to: string;
 }
+

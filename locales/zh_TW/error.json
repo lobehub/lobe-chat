@@ -28,6 +28,12 @@
     "PluginServerError": "外掛伺服器請求回傳錯誤。請根據下面的錯誤資訊檢查您的外掛描述檔案、外掛設定或伺服器實作",
     "NoAPIKey": "OpenAI API 金鑰為空，請添加自訂 OpenAI API 金鑰"
   },
+  "stt": {
+    "responseError": "服務請求失敗，請檢查配置或重試"
+  },
+  "tts": {
+    "responseError": "服務請求失敗，請檢查配置或重試"
+  },
   "unlock": {
     "apikey": {
       "title": "使用自定義 API Key",
@@ -37,7 +43,8 @@
     "confirm": "確認並重試",
     "password": {
       "description": "管理員已啟用應用程式加密，輸入應用程式密碼後即可解鎖應用程式。密碼只需填寫一次。",
-      "title": "輸入密碼解鎖應用程式"
+      "title": "輸入密碼解鎖應用程式",
+      "placeholder": "請輸入密碼"
     },
     "closeMessage": "關閉提示"
   }

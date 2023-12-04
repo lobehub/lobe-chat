@@ -27,16 +27,18 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 ### `ACCESS_CODE`
 
 - 类型：可选
-- 描述：添加访问 LobeChat 服务的密码，密码应为 6 位数字或字母
+- 描述：添加访问 LobeChat 服务的密码，你可以设置一个长密码以防被爆破
 - 默认值：-
-- 示例：`awCT74` 或 `e3@09!`
+- 示例：`awCTe)re_r74` or `rtrt_ewee3@09!`
 
 ### `NEXT_PUBLIC_CUSTOM_MODELS`
 
 - 类型：可选
-- 描述：添加自定义模型名称，多个模型需要使用逗号 `,` 隔开。 比如: `gpt-3.5-1106,gpt-4-1106`
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。
 - 默认值：`-`
-- 示例：`model1,model2,model3`
+- 示例：`+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-1106-preview=gpt-4-turbo`
+
+上面示例表示增加 `qwen-7b-chat` 和 `glm-6b` 到模型列表，而从列表中删除 `gpt-3.5-turbo`，并将 `gpt-4-1106-preview` 模型名字展示为 `gpt-4-turbo`。如果你想先禁用所有模型，再启用指定模型，可以使用 `-all,+gpt-3.5-turbo`，则表示仅启用 `gpt-3.5-turbo`。
 
 ## OpenAI
 

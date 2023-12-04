@@ -9,16 +9,16 @@ import { useSwitchSideBarOnInit } from '@/store/global/hooks/useSwitchSettingsOn
 import { SettingsTabs } from '@/store/global/initialState';
 
 import Footer from '../features/Footer';
-import Common from './Common';
+import Common, { SettingsCommonProps } from './Common';
 
-export default memo(() => {
+export default memo<SettingsCommonProps>((props) => {
   useSwitchSideBarOnInit(SettingsTabs.Common);
   const { t } = useTranslation('setting');
 
   return (
     <>
       <PageTitle title={t('tab.common')} />
-      <Common />
+      <Common {...props} />
       <Footer>LobeChat v{CURRENT_VERSION}</Footer>
     </>
   );

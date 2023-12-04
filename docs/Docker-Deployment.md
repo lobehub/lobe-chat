@@ -35,7 +35,7 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**
+> \[!NOTE]
 >
 > - The default mapped port is `3210`. Make sure it is not occupied or manually change the port mapping.
 > - Replace `sk-xxxx` in the above command with your own OpenAI API Key.
@@ -54,7 +54,8 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**\
+> \[!NOTE]
+>
 > As the official Docker image build takes about half an hour, if there is a "update available" prompt after updating deployment, wait for the image to finish building before deploying again.
 
 ### `B` Docker Compose

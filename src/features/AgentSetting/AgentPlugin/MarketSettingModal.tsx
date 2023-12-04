@@ -1,5 +1,4 @@
-import { Form, Input, Modal } from '@lobehub/ui';
-import { Alert } from 'antd';
+import { Alert, Form, Input, Modal } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';

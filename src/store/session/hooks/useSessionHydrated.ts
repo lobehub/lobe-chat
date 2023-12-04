@@ -1,17 +1,13 @@
-import { useState } from 'react';
-
-import { sessionSelectors } from '../selectors';
 import { useSessionStore } from '../store';
-import { useEffectAfterSessionHydrated } from './useEffectAfterHydrated';
 
 export const useSessionHydrated = () => {
-  const hasInited = sessionSelectors.hasConversion(useSessionStore.getState());
+  const [fetchSessionsLoading, useFetchSessions] = useSessionStore((s) => [
+    s.fetchSessionsLoading,
 
-  const [isInit, setInit] = useState(hasInited);
+    s.useFetchSessions,
+  ]);
 
-  useEffectAfterSessionHydrated(() => {
-    if (!isInit) setInit(true);
-  }, []);
+  const { isLoading } = useFetchSessions();
 
-  return isInit;
+  return !(isLoading || fetchSessionsLoading);
 };

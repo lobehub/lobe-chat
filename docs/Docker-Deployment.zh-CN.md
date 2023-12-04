@@ -35,7 +35,7 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**
+> \[!NOTE]
 >
 > - 默认映射端口为 `3210`, 请确保未被占用或手动更改端口映射
 > - 使用你的 OpenAI API Key 替换上述命令中的 `sk-xxxx`
@@ -54,7 +54,8 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> **Note**\
+> \[!NOTE]
+>
 > 由于官方的 Docker 镜像构建大约需要半小时左右，如果在更新部署后会出现「存在更新」的提示，可以等待镜像构建完成后再次部署。
 
 ### `B` Docker Compose

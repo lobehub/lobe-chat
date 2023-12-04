@@ -1,6 +1,6 @@
-import { LocalFile } from './database/files';
+import { DB_File } from '../database/schemas/files';
 
-export interface FilePreview extends Pick<LocalFile, 'saveMode' | 'fileType'> {
+export interface FilePreview extends Pick<DB_File, 'saveMode' | 'fileType'> {
   base64Url?: string;
   data?: ArrayBuffer;
   name: string;

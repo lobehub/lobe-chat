@@ -6,9 +6,9 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
-import { useFileStore } from '@/store/files';
+import { useFileStore } from '@/store/file';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agentConfig';
+import { agentSelectors } from '@/store/session/selectors';
 
 const FileUpload = memo(() => {
   const { t } = useTranslation('chat');

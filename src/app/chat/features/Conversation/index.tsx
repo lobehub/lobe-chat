@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
-import { usePluginStore } from '@/store/plugin';
 
 import ChatList from './ChatList';
 import ChatScrollAnchor from './ScrollAnchor';
+import { useInitConversation } from './useInitConversation';
 
 const useStyles = createStyles(
   ({ css, responsive, stylish }) => css`
@@ -31,8 +31,8 @@ const Conversation = memo<ConversationProps>(({ mobile, chatInput }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
 
-  const useFetchPluginList = usePluginStore((s) => s.useFetchPluginList);
-  useFetchPluginList();
+  // init conversation
+  useInitConversation();
 
   return (
     <Flexbox flex={1} style={{ position: 'relative' }}>

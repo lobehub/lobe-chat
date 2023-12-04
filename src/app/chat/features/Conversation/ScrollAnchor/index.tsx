@@ -1,12 +1,12 @@
 import { memo, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 import { useAtBottom } from './useAtBottom';
 
 const ChatScrollAnchor = memo(() => {
-  const trackVisibility = useSessionStore((s) => !!s.chatLoadingId);
+  const trackVisibility = useChatStore((s) => !!s.chatLoadingId);
 
   const isAtBottom = useAtBottom();
   const { ref, entry, inView } = useInView({

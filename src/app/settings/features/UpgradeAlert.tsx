@@ -1,4 +1,5 @@
-import { Alert, Button } from 'antd';
+import { Alert } from '@lobehub/ui';
+import { Button } from 'antd';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,10 +21,10 @@ const UpgradeAlert = memo(() => {
             </Button>
           </Link>
         }
-        banner
         closable
         message={`✨ ${t('upgradeVersion.newVersion', { version: latestVersion })}`}
         showIcon={false}
+        style={{ marginBottom: 6 }}
         type={'info'}
       />
     )

@@ -35,6 +35,11 @@
     "withSystemRole": "Include Agent Role Setting"
   },
   "stop": "Stop",
+  "stt": {
+    "action": "Voice Input",
+    "loading": "Recognizing...",
+    "prettifying": "Prettifying..."
+  },
   "temp": "Temporary",
   "tokenDetail": "Role Setting: {{systemRoleToken}} · Chat History: {{chatsToken}}",
   "tokenTag": {
@@ -57,9 +62,19 @@
     "openNewTopic": "Open a new topic"
   },
   "translate": {
-    "clear": "Clear Translation"
+    "clear": "Clear Translation",
+    "action": "Translate"
   },
   "translateTo": "Translate",
+  "tts": {
+    "action": "Text to Speech",
+    "clear": "Clear Speech"
+  },
   "updateAgent": "Update Agent Information",
+  "upload": {
+    "actionTooltip": "Upload Image",
+    "dragDesc": "Drag and drop files here, supports uploading multiple images. Hold Shift to send images directly",
+    "dragTitle": "Upload Image"
+  },
   "warp": "Line Break"
 }

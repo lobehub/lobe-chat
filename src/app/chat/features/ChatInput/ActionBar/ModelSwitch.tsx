@@ -13,8 +13,7 @@ const ModelSwitch = memo(() => {
   const { t } = useTranslation('setting');
 
   const [model, updateAgentConfig] = useSessionStore((s) => {
-    const config = agentSelectors.currentAgentConfig(s);
-    return [config.model, s.updateAgentConfig];
+    return [agentSelectors.currentAgentModel(s), s.updateAgentConfig];
   });
 
   const modelList = useGlobalStore(settingsSelectors.modelList);
@@ -23,7 +22,7 @@ const ModelSwitch = memo(() => {
     <Dropdown
       menu={{
         activeKey: model,
-        items: modelList.map((i) => ({ key: i, label: i })),
+        items: modelList.map(({ name, displayName }) => ({ key: name, label: displayName })),
         onClick: (e) => {
           updateAgentConfig({ model: e.key as LanguageModel });
         },

@@ -3,9 +3,9 @@
     "clear": {
       "action": "Clear Now",
       "confirm": "Confirm clearing all chat data?",
-      "desc": "Clear all session data",
       "success": "All session messages have been cleared",
-      "title": "Clear All Session Messages"
+      "title": "Clear All Session Messages",
+      "desc": "Will clear all session data, including assistant, files, messages, plugins, etc."
     },
     "reset": {
       "action": "Reset Now",
@@ -139,7 +139,15 @@
       "placeholder": "{{text}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
-    "title": "Chat Settings"
+    "title": "Chat Settings",
+    "autoCreateTopicThreshold": {
+      "title": "Message Threshold",
+      "desc": "Automatically create a topic when the current message count exceeds this value"
+    },
+    "enableAutoCreateTopic": {
+      "title": "Enable Auto Topic Creation",
+      "desc": "Whether to automatically create a topic during the conversation, only effective in temporary topics"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -207,6 +215,44 @@
     },
     "title": "System Settings"
   },
+  "settingTTS": {
+    "showAllLocaleVoice": {
+      "desc": "If disabled, only voices for the current language will be displayed",
+      "title": "Show all locale voices"
+    },
+    "sttService": {
+      "desc": "The 'browser' option refers to the native speech recognition service in the browser",
+      "title": "Speech-to-Text Service"
+    },
+    "title": "Speech Services",
+    "ttsService": {
+      "desc": "If using the OpenAI text-to-speech service, ensure that the OpenAI model service is enabled",
+      "title": "Text-to-Speech Service"
+    },
+    "voice": {
+      "title": "Text-to-Speech Voices",
+      "desc": "Select a voice for the current agent, different TTS services support different voices",
+      "preview": "Preview Voice"
+    },
+    "openai": {
+      "sttModel": "OpenAI Speech Recognition Model",
+      "ttsModel": "OpenAI Text-to-Speech Model"
+    },
+    "stt": "Speech Recognition Settings",
+    "sttLocale": {
+      "desc": "The language of the speech input, this option can improve the accuracy of speech recognition",
+      "title": "Speech Recognition Language"
+    },
+    "sttPersisted": {
+      "desc": "When enabled, speech recognition will not automatically end and requires manual click on the end button",
+      "title": "Manually End Speech Recognition"
+    },
+    "tts": "Text-to-Speech Settings",
+    "sttAutoStop": {
+      "desc": "When disabled, speech recognition will not automatically stop and will require manual intervention to end the process.",
+      "title": "Automatic Speech Recognition Termination"
+    }
+  },
   "settingTheme": {
     "avatar": {
       "title": "Avatar"
@@ -236,15 +282,16 @@
     "title": "Theme Settings"
   },
   "submitAgentModal": {
-    "tooltips": "Share to Assistant Market",
-    "button": "Submit Assistant",
+    "tooltips": "Share to Agent Market",
+    "button": "Submit Agent",
     "identifier": "Identifier",
-    "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags.",
-    "placeholder": "Please enter a unique identifier for the assistant, such as web-development."
+    "metaMiss": "Please complete the agent information before submitting. It should include name, description, and tags.",
+    "placeholder": "Please enter a unique identifier for the agent, such as web-development."
   },
   "tab": {
     "agent": "Default Agent",
     "common": "Common Settings",
-    "llm": "Custom LLM API"
+    "llm": "Custom LLM API",
+    "tts": "Speech Services"
   }
 }

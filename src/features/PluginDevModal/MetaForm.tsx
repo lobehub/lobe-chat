@@ -5,7 +5,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { settingsSelectors, useGlobalStore } from '@/store/global';
-import { pluginSelectors, usePluginStore } from '@/store/plugin';
+import { usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 

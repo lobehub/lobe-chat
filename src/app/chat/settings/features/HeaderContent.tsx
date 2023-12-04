@@ -5,8 +5,8 @@ import { HardDriveDownload } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
+import { HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { configService } from '@/services/config';
 import { useSessionStore } from '@/store/session';
 
 import SubmitAgentButton from './SubmitAgentButton';
@@ -25,7 +25,7 @@ export const HeaderContent = memo<{ mobile?: boolean }>(() => {
         onClick: () => {
           if (!id) return;
 
-          exportSingleAgent(id);
+          configService.exportSingleAgent(id);
         },
       },
       {
@@ -34,20 +34,22 @@ export const HeaderContent = memo<{ mobile?: boolean }>(() => {
         onClick: () => {
           if (!id) return;
 
-          exportSingleSession(id);
+          configService.exportSingleSession(id);
         },
       },
     ],
     [],
   );
 
-  const size = mobile ? MOBILE_HEADER_ICON_SIZE : { fontSize: 24 };
-
   return (
     <>
       <SubmitAgentButton />
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
-        <ActionIcon icon={HardDriveDownload} size={size} title={t('export', { ns: 'common' })} />
+        <ActionIcon
+          icon={HardDriveDownload}
+          size={HEADER_ICON_SIZE(mobile)}
+          title={t('export', { ns: 'common' })}
+        />
       </Dropdown>
     </>
   );

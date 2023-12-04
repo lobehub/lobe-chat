@@ -20,11 +20,27 @@ describe('settingsSelectors', () => {
               systemRole: '',
               model: LanguageModel.GPT3_5,
               params: {},
+              tts: {
+                showAllLocaleVoice: false,
+                sttLocale: 'auto',
+                ttsService: 'openai',
+                voice: {
+                  openai: 'alloy',
+                },
+              },
             },
             meta: {
               avatar: 'Default Agent',
               description: 'Default agent for testing',
             },
+          },
+          tts: {
+            openAI: {
+              sttModel: 'whisper-1',
+              ttsModel: 'tts-1',
+            },
+            sttAutoStop: true,
+            sttServer: 'openai',
           },
           languageModel: {
             openAI: {
@@ -38,41 +54,58 @@ describe('settingsSelectors', () => {
 
       const result = settingsSelectors.currentSettings(s);
 
-      expect(result).toEqual({
-        avatar: 'avatar.jpg',
-        fontSize: 14,
-        language: 'en-US',
-        neutralColor: 'sand',
-        password: 'password123',
-        primaryColor: 'blue',
-        themeMode: 'light',
-        defaultAgent: {
-          config: {
-            displayMode: 'chat',
-            historyCount: 1,
-            systemRole: '',
-            model: LanguageModel.GPT3_5,
-            params: {
-              frequency_penalty: 0,
-              presence_penalty: 0,
-              temperature: 0.6,
-              top_p: 1,
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('CUSTOM_MODELS', () => {
+    it('custom deletion, addition, and renaming of models', () => {
+      const s = {
+        settings: {
+          languageModel: {
+            openAI: {
+              customModelName:
+                '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-1106-preview=gpt-4-turbo,gpt-4-1106-preview=gpt-4-32k',
             },
-            plugins: [],
-          },
-          meta: {
-            avatar: 'Default Agent',
-            description: 'Default agent for testing',
           },
         },
-        languageModel: {
-          openAI: {
-            OPENAI_API_KEY: 'openai-api-key',
-            endpoint: 'https://openai-endpoint.com',
-            models: ['gpt-3.5-turbo'],
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.modelList(s);
+
+      expect(result).toMatchSnapshot();
+    });
+
+    it('duplicate naming model', () => {
+      const s = {
+        settings: {
+          languageModel: {
+            openAI: {
+              customModelName: 'gpt-4-1106-preview=gpt-4-turbo，gpt-4-1106-preview=gpt-4-32k',
+            },
           },
         },
-      });
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.modelList(s);
+
+      expect(result).toMatchSnapshot();
+    });
+
+    it('only add the model', () => {
+      const s = {
+        settings: {
+          languageModel: {
+            openAI: {
+              customModelName: 'model1,model2,model3，model4',
+            },
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.modelList(s);
+
+      expect(result).toMatchSnapshot();
     });
   });
 

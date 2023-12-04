@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import DevModal from '@/features/PluginDevModal';
-import { pluginSelectors, usePluginStore } from '@/store/plugin';
+import { usePluginStore } from '@/store/plugin';
+import { pluginSelectors } from '@/store/plugin/selectors';
 
 import { useStore } from '../store';
 
@@ -19,8 +20,8 @@ const MarketList = memo<{ id: string }>(({ id }) => {
 
   const [useFetchPluginList, fetchPluginManifest, deleteCustomPlugin, updateCustomPlugin] =
     usePluginStore((s) => [
-      s.useFetchPluginList,
-      s.fetchPluginManifest,
+      s.useFetchPluginStore,
+      s.installPlugin,
       s.deleteCustomPlugin,
       s.updateCustomPlugin,
     ]);

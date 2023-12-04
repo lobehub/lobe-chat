@@ -34,7 +34,8 @@ When you need to handle specific tasks, you'll want to consider creating a custo
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/279587283-a3ea8dfd-70fb-47ee-ab00-e3911ac6a939.png)
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/279587292-a3d102c6-f61e-4578-91f1-c0a4c97588e1.png)
 
-> **Note**\
+> \[!NOTE]
+>
 > Quick setting tip: You can conveniently modify the prompt by using the quick edit button in the sidebar.
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/279587294-388d1877-193e-4a50-9fe8-8fbcc3ccefa0.png)
@@ -50,7 +51,8 @@ Generative AI is very useful, but it requires human guidance. In most cases, gen
 
 ### How to write a structured prompt
 
-> **Important**\
+> \[!TIP]
+>
 > A structured prompt refers to the construction of the prompt having clear logic and structure. For example, if you want the model to generate an article, your prompt may need to include the topic of the article, its outline, and its style.
 
 Let's look at a basic example of a discussion question:
@@ -77,7 +79,8 @@ The second prompt generates longer outputs with better structure. The use of the
 
 ### How to improve quality and effectiveness
 
-> **Important**\
+> \[!TIP]
+>
 > There are several ways to improve the quality and effectiveness of prompts:
 >
 > - Be as clear as possible about your needs. The model will try to fulfill your requirements, so if your requirements are not clear, the output may not meet your expectations.
@@ -154,7 +157,8 @@ Controls the randomness of the model's output. Higher values increase randomness
 - Lower values make the output more focused and deterministic.
 - Higher values make the output more random and creative.
 
-> **Note**\
+> \[!NOTE]
+>
 > Generally, the longer and clearer the prompt, the better the quality and confidence of the generated output. In this case, you can increase the temperature value. Conversely, if the prompt is short and ambiguous, setting a higher temperature value will make the model's output less stable.
 
 <br/>
@@ -163,7 +167,8 @@ Controls the randomness of the model's output. Higher values increase randomness
 
 Top-p nucleus sampling is another sampling parameter that is different from temperature. Before the model generates the output, it generates a set of tokens. In top-p sampling mode, the candidate word list is dynamic and selected from the tokens based on a percentage. Top-p introduces randomness to the selection of tokens, allowing other high-scoring tokens to have a chance of being selected instead of always choosing the highest-scoring one.
 
-> **Note**\
+> \[!NOTE]
+>
 > Top-p is similar to randomness. In general, it is not recommended to change it together with the randomness parameter, temperature.
 
 <br/>
@@ -175,7 +180,8 @@ The presence penalty parameter can be seen as a punishment for repetitive conten
 - Increasing the originality and diversity of the generated text: In some application scenarios, such as creative writing or generating news headlines, it is desirable for the generated text to have high originality and diversity. By increasing the value of the presence penalty parameter, the probability of generating repeated content in the generated text can be effectively reduced, thereby improving its originality and diversity.
 - Preventing generation loops and meaningless content: In some cases, the generative model may produce repetitive and meaningless text that fails to convey useful information. By appropriately increasing the value of the presence penalty parameter, the probability of generating this type of meaningless content can be reduced, thereby improving the readability and usefulness of the generated text.
 
-> **Note**\
+> \[!NOTE]
+>
 > It is worth noting that the presence penalty parameter, along with other parameters such as temperature and top-p, collectively affect the quality of the generated text. Compared to other parameters, the presence penalty parameter focuses more on the originality and repetitiveness of the text, while the temperature and top-p parameters have a greater impact on the randomness and determinism of the generated text. By adjusting these parameters properly, comprehensive control of the quality of the generated text can be achieved.
 
 <br/>

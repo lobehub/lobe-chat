@@ -59,8 +59,8 @@ jobs:
           comment: |
             ❤️ Great PR @${{ github.event.pull_request.user.login }} ❤️
 
-            The growth of project is inseparable from user feedback and contribution, thanks for your contribution!\
-            项目的成长离不开用户反馈和贡献，感谢您的贡献!
+            The growth of project is inseparable from user feedback and contribution, thanks for your contribution! If you are interesting with the lobehub developer community, please join our [discord](https://discord.com/invite/AYFPHvv2jT) and then dm @arvinxx or @canisminor1990. They will invite you to our private developer channel. We are talking about the lobe-chat development or sharing ai newsletter around the world.\
+            项目的成长离不开用户反馈和贡献，感谢您的贡献! 如果您对 LobeHub 开发者社区感兴趣，请加入我们的 [discord](https://discord.com/invite/AYFPHvv2jT)，然后私信 @arvinxx 或 @canisminor1990。他们会邀请您加入我们的私密开发者频道。我们将会讨论关于 Lobe Chat 的开发，分享和讨论全球范围内的 AI 消息。
           emoji: 'hooray'
           pr-emoji: '+1, heart'
       - name: Remove inactive

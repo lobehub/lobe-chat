@@ -35,6 +35,11 @@
     "withSystemRole": "도우미 역할 포함"
   },
   "stop": "정지",
+  "stt": {
+    "action": "음성 입력",
+    "loading": "인식 중...",
+    "prettifying": "미화 중..."
+  },
   "temp": "임시",
   "tokenDetail": "역할 설정: {{systemRoleToken}} · 대화 기록: {{chatsToken}}",
   "tokenTag": {
@@ -57,9 +62,19 @@
     "openNewTopic": "새로운 주제 열기"
   },
   "translate": {
-    "clear": "번역 지우기"
+    "clear": "번역 지우기",
+    "action": "번역"
   },
   "translateTo": "번역",
+  "tts": {
+    "action": "음성 읽기",
+    "clear": "음성 삭제"
+  },
   "updateAgent": "도우미 정보 업데이트",
+  "upload": {
+    "actionTooltip": "이미지 업로드",
+    "dragDesc": "여기로 파일을 끌어다 놓으세요. 여러 이미지를 업로드할 수 있습니다. Shift를 누른 채로 이미지를 직접 보내세요.",
+    "dragTitle": "이미지 업로드"
+  },
   "warp": "줄바꿈"
 }

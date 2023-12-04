@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next';
 
 import HotKeys from '@/components/HotKeys';
 import { CLEAN_MESSAGE_KEY, PREFIX_KEY } from '@/const/hotkeys';
-import { useFileStore } from '@/store/files';
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
+import { useFileStore } from '@/store/file';
 
 const Clear = memo(() => {
   const { t } = useTranslation('setting');
-  const [clearMessage] = useSessionStore((s) => [s.clearMessage]);
+  const [clearMessage] = useChatStore((s) => [s.clearMessage]);
   const [clearImageList] = useFileStore((s) => [s.clearImageList]);
   const hotkeys = [PREFIX_KEY, CLEAN_MESSAGE_KEY].join('+');
 
@@ -22,6 +22,7 @@ const Clear = memo(() => {
   }, []);
 
   useHotkeys(hotkeys, resetConversation, {
+    enableOnFormTags: true,
     preventDefault: true,
   });
 

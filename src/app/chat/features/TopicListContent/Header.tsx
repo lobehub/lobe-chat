@@ -5,18 +5,18 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
-import { topicSelectors } from '@/store/session/selectors';
+import { useChatStore } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/selectors';
 
 import SidebarHeader from '../SidebarHeader';
 import TopicSearchBar from './TopicSearchBar';
 
 const Header = memo(() => {
   const { t } = useTranslation('chat');
-  const [topicLength, removeUnstarredTopic, removeAllTopic] = useSessionStore((s) => [
+  const [topicLength, removeUnstarredTopic, removeAllTopic] = useChatStore((s) => [
     topicSelectors.currentTopicLength(s),
     s.removeUnstarredTopic,
-    s.removeAllTopic,
+    s.removeSessionTopics,
   ]);
 
   const [showSearch, setShowSearch] = useState(false);

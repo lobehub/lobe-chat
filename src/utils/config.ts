@@ -35,27 +35,21 @@ export const exportConfigFile = (config: object, fileName?: string) => {
   a.remove();
 };
 
-export const importConfigFile = (info: any, onConfigImport: (config: ConfigFile) => void) => {
-  const reader = new FileReader();
-  //读取完文件之后的回调函数
-  reader.onloadend = function (evt) {
-    const fileString = evt.target?.result;
-    const fileJson = fileString as string;
-
+export const importConfigFile = (file: File, onConfigImport: (config: ConfigFile) => void) => {
+  file.text().then((text) => {
     try {
-      const config = JSON.parse(fileJson);
+      const config = JSON.parse(text);
       const { state } = Migration.migrate(config);
 
       onConfigImport({ ...config, state });
     } catch (error) {
+      console.error(error);
       notification.error({
         description: `出错原因: ${(error as Error).message}`,
         message: '导入失败',
       });
     }
-  };
-  //@ts-ignore file 类型不明确
-  reader.readAsText(info.file.originFileObj, 'utf8');
+  });
 };
 
 type CreateConfigFileState<T extends ExportType> = ConfigModelMap[T]['state'];

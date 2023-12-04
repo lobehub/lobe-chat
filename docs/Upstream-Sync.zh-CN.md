@@ -8,7 +8,8 @@
 
 ## 启动自动更新
 
-> **Note**\
+> \[!NOTE]
+>
 > 如果你在执行 `Upstream Sync` 时遇到错误，请手动执再行一次
 
 当你 Fork 了项目后，由于 Github 的限制，你需要手动在你 Fork 的项目的 Actions 页面启用 Workflows，并启动 Upstream Sync Action。启用后，你可以设置每小时进行一次自动更新。

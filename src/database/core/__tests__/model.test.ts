@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ZodSchema, z } from 'zod';
+import { z } from 'zod';
 
 import { BaseModel } from '../model';
 
@@ -37,7 +37,7 @@ describe('BaseModel', () => {
         content: 'Hello, World!',
       };
 
-      const result = await baseModel['add'](validData);
+      const result = await baseModel['_add'](validData);
 
       expect(result).toHaveProperty('id');
       expect(console.error).not.toHaveBeenCalled();
@@ -49,7 +49,7 @@ describe('BaseModel', () => {
         content: 'Hello, World!',
       };
 
-      await expect(baseModel['add'](invalidData)).rejects.toThrow(TypeError);
+      await expect(baseModel['_add'](invalidData)).rejects.toThrow(TypeError);
     });
   });
 });

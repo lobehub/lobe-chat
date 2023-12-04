@@ -5,6 +5,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 export const useStyles = createStyles(({ css, token }) => ({
   container: css`
+    color: ${token.colorText};
     background: ${token.colorBgContainer};
     border: 1px solid ${token.colorSplit};
     border-radius: 8px;

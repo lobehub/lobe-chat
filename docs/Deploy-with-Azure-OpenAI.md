@@ -45,7 +45,8 @@ If you want the deployed version to be directly configured with Azure OpenAI for
 | `AZURE_API_VERSION`  | No       | Azure's API version, follows the YYYY-MM-DD format                                | 2023-08-01-preview | `2023-05-15`, refer to [latest version][azure-api-version-url] |
 | `ACCESS_CODE`        | No       | Add a password to access this service, the password should be 6 digits or letters | -                  | `awCT74` or `e3@09!`                                           |
 
-> **Note**\
+> \[!NOTE]
+>
 > When you enable `USE_AZURE_OPENAI` on the server side, users will not be able to modify and use the OpenAI key in the front-end configuration.
 
 [azure-api-version-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions

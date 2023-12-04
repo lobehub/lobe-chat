@@ -35,6 +35,11 @@
     "withSystemRole": "包含助手角色設定"
   },
   "stop": "停止",
+  "stt": {
+    "action": "語音輸入",
+    "loading": "辨識中...",
+    "prettifying": "美化中..."
+  },
   "temp": "臨時",
   "tokenDetail": "角色設定: {{systemRoleToken}} · 歷史訊息: {{chatsToken}}",
   "tokenTag": {
@@ -57,9 +62,19 @@
     "openNewTopic": "開啟新話題"
   },
   "translate": {
-    "clear": "刪除翻譯"
+    "clear": "刪除翻譯",
+    "action": "翻譯"
   },
   "translateTo": "翻譯",
+  "tts": {
+    "action": "語音朗讀",
+    "clear": "清除語音"
+  },
   "updateAgent": "更新助理資訊",
+  "upload": {
+    "actionTooltip": "上傳圖片",
+    "dragDesc": "拖曳檔案到這裡，支援上傳多張圖片。按住 Shift 直接發送圖片",
+    "dragTitle": "上傳圖片"
+  },
   "warp": "換行"
 }
