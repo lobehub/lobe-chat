@@ -144,7 +144,7 @@
     "@types/ua-parser-js": "^0.7",
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
-    "@vitest/coverage-v8": "latest",
+    "@vitest/coverage-v8": "^1",
     "commitlint": "^18",
     "consola": "^3",
     "dpdm": "^3",
@@ -162,7 +162,7 @@
     "stylelint": "^15",
     "ts-node": "^10",
     "typescript": "^5",
-    "vitest": "latest"
+    "vitest": "^1"
   },
   "publishConfig": {
     "access": "public",
