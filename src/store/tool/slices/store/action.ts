@@ -64,6 +64,7 @@ export const createPluginStoreSlice: StateCreator<
       // 4. 存储 manifest 信息
       get().dispatchPluginManifest({ id: plugin.identifier, plugin: data, type: 'addManifest' });
     } catch (error) {
+      console.error(error);
       const err = error as PluginInstallError;
 
       notification.error({
