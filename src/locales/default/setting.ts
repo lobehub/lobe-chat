@@ -294,7 +294,7 @@ export default {
       enabled: '已启用 {{num}}',
       groupName: '插件',
       noEnabled: '暂无启用插件',
-      store: '插件市场',
+      store: '插件商店',
     },
     title: '扩展工具',
   },
