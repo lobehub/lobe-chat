@@ -79,8 +79,6 @@ class ChatService {
    * @param options
    */
   runPluginApi = async (params: PluginRequestPayload, options?: FetchOptions) => {
-    const { useToolStore } = await import('@/store/tool');
-
     const s = useToolStore.getState();
 
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);

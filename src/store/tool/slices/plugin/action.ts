@@ -16,8 +16,8 @@ const n = setNamespace('plugin');
  * 插件接口
  */
 export interface PluginAction {
-  checkLocalEnabledPlugins: (sessions: LobeSessions) => void;
-  checkPluginsIsInstalled: (plugins: string[]) => void;
+  checkLocalEnabledPlugins: (sessions: LobeSessions) => Promise<void>;
+  checkPluginsIsInstalled: (plugins: string[]) => Promise<void>;
   deletePluginSettings: (id: string) => void;
   dispatchPluginManifest: (payload: PluginDispatch) => void;
   resetPluginSettings: () => void;
@@ -45,6 +45,7 @@ export const createPluginSlice: StateCreator<
 
     const plugins = uniq(enabledPlugins);
 
+    if (plugins.length === 0) return;
     await checkPluginsIsInstalled(plugins);
   },
   checkPluginsIsInstalled: async (plugins) => {
