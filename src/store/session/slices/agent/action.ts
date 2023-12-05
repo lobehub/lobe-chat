@@ -33,8 +33,6 @@ export const createAgentSlice: StateCreator<
     const session = sessionSelectors.currentSession(get());
     if (!session) return;
 
-    const { activeId, refreshSessions } = get();
-
     const config = produce(session.config, (draft) => {
       draft.plugins = produce(draft.plugins || [], (plugins) => {
         const index = plugins.indexOf(id);
@@ -54,8 +52,7 @@ export const createAgentSlice: StateCreator<
       });
     });
 
-    await sessionService.updateSessionConfig(activeId, config);
-    await refreshSessions();
+     get().updateAgentConfig(config);
   },
   updateAgentConfig: async (config) => {
     // if is the inbox session, update the global config
