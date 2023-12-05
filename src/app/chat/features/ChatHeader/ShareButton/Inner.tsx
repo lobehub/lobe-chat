@@ -7,8 +7,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import MobilePadding from '@/components/MobilePadding';
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
 
 import Preview, { ImageType, imageTypeOptions } from './Preview';
 
@@ -27,10 +27,7 @@ const Inner = memo(() => {
   const { t } = useTranslation('chat');
 
   const avatar = useGlobalStore((s) => s.settings.avatar);
-  const [shareLoading, shareToShareGPT] = useSessionStore((s) => [
-    s.shareLoading,
-    s.shareToShareGPT,
-  ]);
+  const [shareLoading, shareToShareGPT] = useChatStore((s) => [s.shareLoading, s.shareToShareGPT]);
 
   const options: SegmentedProps['options'] = useMemo(
     () => [

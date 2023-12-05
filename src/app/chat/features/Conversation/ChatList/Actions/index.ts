@@ -1,6 +1,6 @@
 import { ChatListProps } from '@lobehub/ui';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 import { AssistantActionsBar } from './Assistant';
 import { DefaultActionsBar } from './Fallback';
@@ -20,7 +20,7 @@ interface ActionsClick {
 }
 
 export const useActionsClick = (): ChatListProps['onActionsClick'] => {
-  const [deleteMessage, resendMessage, translateMessage, ttsMessage] = useSessionStore((s) => [
+  const [deleteMessage, resendMessage, translateMessage, ttsMessage] = useChatStore((s) => [
     s.deleteMessage,
     s.resendMessage,
     s.translateMessage,

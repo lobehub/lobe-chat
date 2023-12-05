@@ -27,11 +27,11 @@ vi.mock('@/store/session/selectors', () => ({
 
 const mockData: ChatMessage = {
   content: 'test-content',
-  createAt: 0,
+  createdAt: 0,
   id: 'abc',
   meta: { avatar: '', backgroundColor: '', description: '', tags: [], title: '' },
   role: 'assistant',
-  updateAt: 0,
+  updatedAt: 0,
 };
 
 describe('AssistantMessageExtra', () => {
@@ -71,7 +71,7 @@ describe('AssistantMessageExtra', () => {
   });
 
   it('should render Translate component if extra.translate exists', async () => {
-    render(<AssistantMessageExtra {...mockData} extra={{ translate: {} }} />);
+    render(<AssistantMessageExtra {...mockData} extra={{ translate: { to: 'abc' } }} />);
     expect(screen.getByText('Translate Component')).toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe('AssistantMessageExtra', () => {
     (useSessionStore as unknown as Mock).mockImplementation(() => ({
       chatLoadingId: 'test-id',
     }));
-    render(<AssistantMessageExtra {...mockData} extra={{ translate: {}, tts: {} }} />);
+    render(<AssistantMessageExtra {...mockData} extra={{ translate: { to: 'abc' }, tts: {} }} />);
     expect(screen.getByText('TTS Component')).toBeInTheDocument();
     expect(screen.getByText('Translate Component')).toBeInTheDocument();
   });

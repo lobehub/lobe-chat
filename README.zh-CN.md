@@ -25,7 +25,8 @@ LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多�
 [![][github-forks-shield]][github-forks-link]
 [![][github-stars-shield]][github-stars-link]
 [![][github-issues-shield]][github-issues-link]
-[![][github-license-shield]][github-license-link]
+[![][github-license-shield]][github-license-link]<br>
+[![](https://img.shields.io/badge/-Sponsor%20LobeHub-f04f88?logo=opencollective&logoColor=white&style=flat-square)](https://opencollective.com/lobehub 'Sponsor LobeHub on open-collective')
 
 **分享 LobeChat 给你的好友**
 
@@ -45,11 +46,10 @@ LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多�
 #### TOC
 
 - [👋🏻 开始使用 & 交流](#-开始使用--交流)
-- [✨ 功能特性](#-功能特性)
-- [📸 快照预览](#-快照预览)
+- [✨ 特性一览](#-特性一览)
 - [⚡️ 性能测试](#️-性能测试)
 - [🛳 开箱即用](#-开箱即用)
-  - [`A` 使用 Vercel 部署](#a-使用-vercel-部署)
+  - [`A` 使用 Vercel 或 Zeabur 部署](#a-使用-vercel-或-zeabur-部署)
   - [`B` 使用 Docker 部署](#b-使用-docker-部署)
   - [环境变量](#环境变量)
 - [📦 生态系统](#-生态系统)
@@ -85,35 +85,7 @@ LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多�
   </picture>
 </details>
 
-## ✨ 功能特性
-
-- [x] 💎 **精致 UI 设计**：经过精心设计的界面，具有优雅的外观和流畅的交互效果，支持亮暗色主题，适配移动端。支持 PWA，提供更加接近原生应用的体验。
-- [x] 🗣️ **流畅的对话体验**：流式响应带来流畅的对话体验，并且支持完整的 Markdown 渲染，包括代码高亮、LaTex 公式、Mermaid 流程图等。
-- [x] 🧩 **支持插件与自定义插件开发**：会话支持插件扩展，用户可以安装和使用各种插件，例如搜索引擎、网页提取等，同时也支持自定义插件的开发，满足自定义需求。
-- [x] 🤖 **自定义助手角色**：用户可以根据自己的需求创建、分享和调试个性化的对话助手角色，提供更加灵活和个性化的对话功能 .
-- [x] 🏬 **角色市场**：提供角色市场，用户可以在市场上选择自己喜欢的对话助手角色，丰富对话的内容和风格。
-- [x] 👁️ **视觉识别**: 通过集成视觉识别能力，AI 助手现在可以分析和理解对话过程中提供的图像。这使得对话代理能够进行更具交互性和上下文感知的对话，根据视觉内容提供相关和准确的回答。
-- [ ] 📢 **语音会话**: 我们支持文本转语音技术，允许用户与对话代理进行语音对话。这个功能通过提供更自然和沉浸式的对话环境来增强用户体验。用户可以选择多种声音并调整语速以适应自己的偏好。
-
----
-
-除了上述功能特性以外，我们的底层技术方案为你带来了更多使用保障：
-
-- [x] 💨 **快速部署**：使用 Vercel 平台或者我们的 Docker 镜像，只需点击一键部署按钮，即可在 1 分钟内完成部署，无需复杂的配置过程。
-- [x] 🔒 **隐私安全**：所有数据保存在用户浏览器本地，保证用户的隐私安全。
-- [x] 🌐 **自定义域名**：如果用户拥有自己的域名，可以将其绑定到平台上，方便在任何地方快速访问对话助手。
-
-> \[!NOTE]
->
-> 你可以在 Projects 中找到我们后续的 [Roadmap][github-project-link] 计划
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
-## 📸 快照预览
+## ✨ 特性一览
 
 #### `1` GPT 视觉认知
 
@@ -160,6 +132,8 @@ LobeChat 支持文字转语音（Text-to-Speech，TTS）和语音转文字（Spe
 LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地增强了 ChatGPT 的实用性和灵活性。通过利用插件，ChatGPT 能够实现实时信息的获取和处理，例如自动获取最新新闻头条，为用户提供即时且相关的资讯。
 此外，这些插件不仅局限于新闻聚合，还可以扩展到其他实用的功能，如快速检索文档、获取电商平台数据、以及其他各式各样的第三方服务。
 
+<https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
+
 > \[!TIP]
 >
 > 为了帮助开发者更好地参与到这个生态中来，我们在 [🧩 插件体系](#-插件体系) 部分提供了全面的开发资源。
@@ -168,8 +142,6 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 > \[!IMPORTANT]
 >
 > 我们欢迎开发者利用这些资源，发挥创造力，编写出功能丰富、用户友好的插件。通过共同的努力，我们可以不断扩展聊天应用的功能界限，探索一个更加智能、高效的创造力平台。
-
-<https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2>
 
 <!-- PLUGIN LIST -->
 
@@ -210,12 +182,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                     | 助手说明                                                                                                                                                          |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [有机化学研究员](https://chat-preview.lobehub.com/market?agent=organic-chemistry-researcher)<br/><sup>By **[y22emc2](https://github.com/y22emc2)** on **2023-12-02**</sup>   | 擅长有机化学领域的学术翻译和写作<br/>`有机化学` `科研` `翻译` `写作` `学术文章`                                                                                   |
 | [JS 代码质量优化](https://chat-preview.lobehub.com/market?agent=js-code-quality)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2023-11-22**</sup> | 致力于干净和优雅的代码重构<br/>`重构` `代码优化` `代码质量`                                                                                                       |
 | [LobeChat 测试工程师](https://chat-preview.lobehub.com/market?agent=lobe-chat-unit-test-dev)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2023-11-22**</sup>   | 擅长编写前端自动化测试，特别是 TypeScript 应用的全面测试覆盖。熟练使用 Vitest 测试框架，具备深入的测试原理和策略理解。<br/>`自动化测试` `测试` `lobe-chat` `前端` |
 | [问答文档转换专家](https://chat-preview.lobehub.com/market?agent=q-a-helper)<br/><sup>By **[barryWang12138](https://github.com/barryWang12138)** on **2023-11-22**</sup>     | 请提供您的文档内容，我将根据您的要求进行分段和清洗，并按照规范的格式回答。<br/>`q-a` `文档`                                                                       |
-| [真实的老友](https://chat-preview.lobehub.com/market?agent=ai-0x0-old-friends)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2023-11-21**</sup>             | 可以跟我谈论一切，我可以给你作为老友的一些想法和建议，放轻松<br/>`友情` `幽默` `真实` `模拟`                                                                      |
 
-> 📊 Total agents: [<kbd>**52**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**53**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -248,9 +220,21 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 </div>
 
+![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
+
+#### `6` 移动设备适配
+
+针对移动设备进行了一系列的优化设计，以提升用户的移动体验。目前，我们正在对移动端的用户体验进行版本迭代，以实现更加流畅和直观的交互。如果您有任何建议或想法，我们非常欢迎您通过 GitHub Issues 或者 Pull Requests 提供反馈。
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
-#### `6` 主题模式选择
+#### `7` 主题模式选择
 
 作为设计工程师出身 LobeChat 在界面设计上十分考虑用户的个性化体验，因此引入了灵活多变的主题模式，其中包括日间的亮色模式和夜间的深色模式。
 除了主题模式的切换，提供了一系列的颜色定制选项，允许用户根据自己的喜好来调整应用的主题色彩。无论是想要沉稳的深蓝，还是希望活泼的桃粉，或者是专业的灰白，用户都能够在 LobeChat 中找到匹配自己风格的颜色选择。
@@ -265,13 +249,23 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 </div>
 
-![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
+#### 更多特性
 
-#### `7` 移动设备适配
+除了上述功能特性以外，我们的所具有的设计和技术能力将为你带来了更多使用保障：
 
-针对移动设备进行了一系列的优化设计，以提升用户的移动体验。目前，我们正在对移动端的用户体验进行版本迭代，以实现更加流畅和直观的交互。如果您有任何建议或想法，我们非常欢迎您通过 GitHub Issues 或者 Pull Requests 提供反馈。
+- [x] 💎 **精致 UI 设计**：经过精心设计的界面，具有优雅的外观和流畅的交互效果，支持亮暗色主题，适配移动端。支持 PWA，提供更加接近原生应用的体验。
+- [x] 🗣️ **流畅的对话体验**：流式响应带来流畅的对话体验，并且支持完整的 Markdown 渲染，包括代码高亮、LaTex 公式、Mermaid 流程图等。
+- [x] 💨 **快速部署**：使用 Vercel 平台或者我们的 Docker 镜像，只需点击一键部署按钮，即可在 1 分钟内完成部署，无需复杂的配置过程。
+- [x] 🔒 **隐私安全**：所有数据保存在用户浏览器本地，保证用户的隐私安全。
+- [x] 🌐 **自定义域名**：如果用户拥有自己的域名，可以将其绑定到平台上，方便在任何地方快速访问对话助手。
 
-> 🚧 更多快照和演示正在陆续添加中...
+> ✨ 随着产品迭代持续更新，我们将会带来更多更多令人激动的功能！
+
+---
+
+> \[!NOTE]
+>
+> 你可以在 Projects 中找到我们后续的 [Roadmap][github-project-link] 计划
 
 <div align="right">
 
@@ -302,18 +296,20 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 
 <br/>
 
-### `A` 使用 Vercel 部署
+### `A` 使用 Vercel 或 Zeabur 部署
 
-如果想在 Vercel 上部署该服务，可以按照以下步骤进行操作：
+如果想在 Vercel 或 Zeabur 上部署该服务，可以按照以下步骤进行操作：
 
 - 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
-- 点击下方按钮开始部署： Deploy with Vercel，直接使用 GitHub 账号登录即可，记得在环境变量页填入 `OPENAI_API_KEY` （必填） and `ACCESS_CODE`（推荐）；
+- 点击下方按钮开始部署： 直接使用 GitHub 账号登录即可，记得在环境变量页填入 `OPENAI_API_KEY` （必填） and `ACCESS_CODE`（推荐）；
 - 部署完毕后，即可开始使用；
-- 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
+- 绑定自定义域名（可选）：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。目前 Zeabur 提供的域名还未被污染，大多数地区都可以直连。
 
 <div align="center">
 
-[![][deploy-button-image]][deploy-link]
+|            使用 Vercel 部署             |                      使用 Zeabur 部署                       |
+| :-------------------------------------: | :---------------------------------------------------------: |
+| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] |
 
 </div>
 
@@ -369,7 +365,7 @@ $ docker run -d -p 3210:3210 \
 | `OPENAI_API_KEY`          | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                                                                                         | `sk-xxxxxx...xxxxxx`                                                         |
 | `OPENAI_PROXY_URL`        | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL                                                                          | `https://api.chatanywhere.cn/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
 | `OPENAI_FUNCTION_REGIONS` | 可选 | 当你使用 Vercel 部署 Lobe-Chat，而且有需求指定响应调用 OpenAI 接口的请求的 Edge Function 的 Region 时，可以使用该配置进行配置，该值的类型为逗号分隔的字符串数组 | `iad1,sfo1`                                                                  |
-| `ACCESS_CODE`             | 可选 | 添加访问此服务的密码，密码应为 6 位数字或字母                                                                                                                   | `awCT74` 或 `e3@09!`                                                         |
+| `ACCESS_CODE`             | 可选 | 添加访问此服务的密码，你可以设置一个长密码以防被爆破                                                                                                            | `awCTe)re_r74` or `rtrt_ewee3@09!`                                           |
 
 > \[!NOTE]
 >
@@ -450,7 +446,37 @@ $ bun run dev
 [![][submit-agents-shield]][submit-agents-link]
 [![][submit-plugin-shield]][submit-plugin-link]
 
-[![][contributors-contrib]][contributors-link]
+<a href="https://github.com/lobehub/lobe-chat/graphs/contributors" target="_blank">
+  <table>
+    <tr>
+      <th colspan="2">
+        <br><img src="https://contrib.rocks/image?repo=lobehub/lobe-chat"><br><br>
+      </th>
+    </tr>
+    <tr>
+      <td>
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="https://next.ossinsight.io/widgets/official/compose-org-active-contributors/thumbnail.png?activity=active&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=2x3&color_scheme=dark">
+          <img src="https://next.ossinsight.io/widgets/official/compose-org-active-contributors/thumbnail.png?activity=active&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=2x3&color_scheme=light">
+        </picture>
+      </td>
+      <td rowspan="2">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="https://next.ossinsight.io/widgets/official/compose-org-participants-growth/thumbnail.png?activity=active&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=4x7&color_scheme=dark">
+          <img src="https://next.ossinsight.io/widgets/official/compose-org-participants-growth/thumbnail.png?activity=active&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=4x7&color_scheme=light">
+        </picture>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="https://next.ossinsight.io/widgets/official/compose-org-active-contributors/thumbnail.png?activity=new&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=2x3&color_scheme=dark">
+          <img src="https://next.ossinsight.io/widgets/official/compose-org-active-contributors/thumbnail.png?activity=new&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=2x3&color_scheme=light">
+        </picture>
+      </td>
+    </tr>
+  </table>
+</a>
 
 <div align="right">
 
@@ -495,10 +521,10 @@ This project is [MIT](./LICENSE) licensed.
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
 [codespaces-link]: https://codespaces.new/lobehub/lobe-chat
 [codespaces-shield]: https://github.com/codespaces/badge.svg
-[contributors-contrib]: https://contrib.rocks/image?repo=lobehub/lobe-chat
-[contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
 [deploy-button-image]: https://vercel.com/button
 [deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+[deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
+[deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge

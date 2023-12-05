@@ -1,14 +1,20 @@
 import { SearchBar } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
   const { t } = useTranslation('chat');
-  const [keywords] = useSessionStore((s) => [s.topicSearchKeywords]);
+
+  const [keywords, setKeywords] = useState<string | undefined>(undefined);
   const { mobile } = useResponsive();
+
+  const useSearchTopics = useChatStore((s) => s.useSearchTopics);
+
+  useSearchTopics(keywords);
+
   return (
     <SearchBar
       autoFocus
@@ -16,7 +22,10 @@ const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
         if (keywords === '') onClear?.();
       }}
       onChange={(e) => {
-        useSessionStore.setState({ topicSearchKeywords: e.target.value });
+        const value = e.target.value;
+
+        setKeywords(value);
+        useChatStore.setState({ isSearchingTopic: !!value });
       }}
       placeholder={t('topic.searchPlaceholder')}
       spotlight={!mobile}

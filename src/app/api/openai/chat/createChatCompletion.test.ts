@@ -33,7 +33,7 @@ describe('createChatCompletion', () => {
     const result = await createChatCompletion({
       openai: openaiInstance,
       payload: {
-        messages: [{ content: 'Hello', name: 'User', role: 'user' }],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'text-davinci-003',
         temperature: 0,
       },
@@ -63,7 +63,7 @@ describe('createChatCompletion', () => {
     const result = await createChatCompletion({
       openai: openaiInstance,
       payload: {
-        messages: [{ content: 'Hello', name: 'User', role: 'user' }],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'text-davinci-003',
         temperature: 0,
       },
@@ -89,7 +89,7 @@ describe('createChatCompletion', () => {
     const result = await createChatCompletion({
       openai: openaiInstance,
       payload: {
-        messages: [{ content: 'Hello', name: 'User', role: 'user' }],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'text-davinci-003',
         temperature: 0,
       },
@@ -114,7 +114,7 @@ describe('createChatCompletion', () => {
     const result = await createChatCompletion({
       openai: openaiInstance,
       payload: {
-        messages: [{ content: 'Hello', name: 'User', role: 'user' }],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'text-davinci-003',
         temperature: 0,
       },

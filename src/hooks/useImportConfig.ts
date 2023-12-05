@@ -1,43 +1,26 @@
 import { useMemo } from 'react';
 
-import { useGlobalStore } from '@/store/global';
-import { usePluginStore } from '@/store/plugin';
+import { ImportResults, configService } from '@/services/config';
+import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { importConfigFile } from '@/utils/config';
 
 export const useImportConfig = () => {
-  const importSessions = useSessionStore((s) => s.importSessions);
-  const importAppSettings = useGlobalStore((s) => s.importAppSettings);
-  const checkLocalEnabledPlugins = usePluginStore((s) => s.checkLocalEnabledPlugins);
+  const refreshSessions = useSessionStore((s) => s.refreshSessions);
+  const [refreshMessages, refreshTopics] = useChatStore((s) => [s.refreshMessages, s.refreshTopic]);
 
-  const importConfig = (info: any) => {
-    importConfigFile(info, (config) => {
-      switch (config.exportType) {
-        case 'settings': {
-          importAppSettings(config.state.settings);
-          break;
-        }
+  const importConfig = async (file: File) =>
+    new Promise<ImportResults | undefined>((resolve) => {
+      importConfigFile(file, async (config) => {
+        const data = await configService.importConfigState(config);
 
-        case 'sessions':
-        case 'agents': {
-          importSessions(config.state.sessions);
+        await refreshSessions();
+        await refreshMessages();
+        await refreshTopics();
 
-          // 检查一下插件开启情况
-          checkLocalEnabledPlugins(config.state.sessions);
-          break;
-        }
-
-        case 'all': {
-          importSessions(config.state.sessions);
-          importAppSettings(config.state.settings);
-
-          // 检查一下插件开启情况
-          checkLocalEnabledPlugins(config.state.sessions);
-          break;
-        }
-      }
+        resolve(data);
+      });
     });
-  };
 
   return useMemo(() => ({ importConfig }), []);
 };

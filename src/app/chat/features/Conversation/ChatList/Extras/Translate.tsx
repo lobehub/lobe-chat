@@ -7,7 +7,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 import { ChatTranslate } from '@/types/chatMessage';
 
 import BubblesLoading from '../Loading';
@@ -25,7 +25,7 @@ const Translate = memo<TranslateProps>(({ content = '', from, to, id, loading })
   const { theme, styles } = useStyles();
   const { t } = useTranslation('common');
   const [show, setShow] = useState(true);
-  const clearTranslate = useSessionStore((s) => s.clearTranslate);
+  const clearTranslate = useChatStore((s) => s.clearTranslate);
 
   const { message } = App.useApp();
   return (

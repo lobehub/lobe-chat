@@ -1,9 +1,10 @@
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
+import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
+import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
-import { LobeAgentConfig } from '@/types/session';
 
 import { SessionStore } from '../../store';
 import { sessionSelectors } from '../session/selectors';
@@ -13,10 +14,6 @@ import { sessionSelectors } from '../session/selectors';
  */
 export interface AgentAction {
   removePlugin: (id: string) => void;
-  /**
-   * 更新代理配置
-   * @param config - 部分 LobeAgentConfig 的配置
-   */
   updateAgentConfig: (config: Partial<LobeAgentConfig>) => void;
   updateAgentMeta: (meta: Partial<MetaData>) => void;
 }
@@ -27,51 +24,45 @@ export const createAgentSlice: StateCreator<
   [],
   AgentAction
 > = (set, get) => ({
-  removePlugin: (id) => {
-    const { activeId } = get();
+  removePlugin: async (id) => {
     const session = sessionSelectors.currentSession(get());
-    if (!activeId || !session) return;
+    if (!session) return;
+
+    const { activeId, refreshSessions } = get();
 
     const config = produce(session.config, (draft) => {
       draft.plugins = draft.plugins?.filter((i) => i !== id) || [];
     });
 
-    get().dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
+    await sessionService.updateSessionConfig(activeId, config);
+    await refreshSessions();
   },
 
-  updateAgentConfig: (config) => {
-    const { activeId, dispatchSession } = get();
-    const session = sessionSelectors.currentSession(get());
-    if (!activeId || !session) return;
-
+  updateAgentConfig: async (config) => {
     // if is the inbox session, update the global config
-    if (sessionSelectors.isInboxSession(get())) {
+    const isInbox = sessionSelectors.isInboxSession(get());
+    if (isInbox) {
       useGlobalStore.getState().updateDefaultAgent({ config });
-      // NOTE: DON'T ADD RETURN HERE.
-      // we need to use `dispatchSession` below to update inbox config to trigger the inbox config rerender
+    } else {
+      const session = sessionSelectors.currentSession(get());
+      if (!session) return;
+
+      const { activeId } = get();
+
+      await sessionService.updateSessionConfig(activeId, config);
     }
 
-    // Although we use global store to store the default agent config,
-    // due to the `currentAgentConfig` selector use `useGlobalStore.getState()`
-    // to get the default agent config which not rerender on global store update
-    // we need to update the session config here.
-    dispatchSession({ config, id: activeId, type: 'updateSessionConfig' });
+    // trigger store rerender
+    await get().refreshSessions();
   },
 
-  updateAgentMeta: (meta) => {
-    const { activeId } = get();
+  updateAgentMeta: async (meta) => {
     const session = sessionSelectors.currentSession(get());
-    if (!activeId || !session) return;
+    if (!session) return;
 
-    for (const [key, value] of Object.entries(meta)) {
-      if (value !== undefined) {
-        get().dispatchSession({
-          id: activeId,
-          key: key as keyof MetaData,
-          type: 'updateSessionMeta',
-          value,
-        });
-      }
-    }
+    const { activeId, refreshSessions } = get();
+
+    await sessionService.updateSessionMeta(activeId, meta);
+    await refreshSessions();
   },
 });

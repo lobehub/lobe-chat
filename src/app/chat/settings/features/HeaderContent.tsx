@@ -6,7 +6,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import { exportSingleAgent, exportSingleSession } from '@/helpers/export';
+import { configService } from '@/services/config';
 import { useSessionStore } from '@/store/session';
 
 import SubmitAgentButton from './SubmitAgentButton';
@@ -25,7 +25,7 @@ export const HeaderContent = memo<{ mobile?: boolean }>(() => {
         onClick: () => {
           if (!id) return;
 
-          exportSingleAgent(id);
+          configService.exportSingleAgent(id);
         },
       },
       {
@@ -34,7 +34,7 @@ export const HeaderContent = memo<{ mobile?: boolean }>(() => {
         onClick: () => {
           if (!id) return;
 
-          exportSingleSession(id);
+          configService.exportSingleSession(id);
         },
       },
     ],

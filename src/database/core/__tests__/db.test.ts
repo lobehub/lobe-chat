@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { DBModel } from '@/types/database/db';
-import { LocalFile } from '@/types/database/files';
+import { DBModel } from '@/database/core/types/db';
+import { DB_File } from '@/database/schemas/files';
 
 import { LocalDB } from '../db';
 
@@ -24,7 +24,7 @@ describe('LocalDB', () => {
   });
 
   it('should allow adding a file', async () => {
-    const file: DBModel<LocalFile> = {
+    const file: DBModel<DB_File> = {
       id: 'file1',
       name: 'testfile.txt',
       data: new ArrayBuffer(3),
@@ -32,6 +32,7 @@ describe('LocalDB', () => {
       fileType: 'plain/text',
       size: 3,
       createdAt: Date.now(),
+      updatedAt: Date.now(),
     };
 
     await db.files.add(file);
@@ -40,7 +41,7 @@ describe('LocalDB', () => {
   });
 
   it('should allow updating a file', async () => {
-    const file: DBModel<LocalFile> = {
+    const file: DBModel<DB_File> = {
       id: 'file1',
       name: 'testfile.txt',
       data: new ArrayBuffer(3),
@@ -48,6 +49,7 @@ describe('LocalDB', () => {
       fileType: 'plain/text',
       size: 3,
       createdAt: Date.now(),
+      updatedAt: Date.now(),
     };
     await db.files.add(file);
 
@@ -59,13 +61,14 @@ describe('LocalDB', () => {
   });
 
   it('should allow deleting a file', async () => {
-    const file: DBModel<LocalFile> = {
+    const file: DBModel<DB_File> = {
       id: 'file1',
       name: 'testfile.txt',
       data: new ArrayBuffer(3),
       saveMode: 'local',
       fileType: 'plain/text',
       size: 3,
+      updatedAt: Date.now(),
       createdAt: Date.now(),
     };
     await db.files.add(file);

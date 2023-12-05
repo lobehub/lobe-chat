@@ -8,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import SaveTopic from '@/app/chat/features/ChatInput/Topic';
 import { useSendMessage } from '@/app/chat/features/ChatInput/useSend';
+import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
@@ -16,7 +17,7 @@ import { LocalFiles } from './LocalFiles';
 const Footer = memo(() => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
-  const [loading, onStop] = useSessionStore((s) => [!!s.chatLoadingId, s.stopGenerateMessage]);
+  const [loading, onStop] = useChatStore((s) => [!!s.chatLoadingId, s.stopGenerateMessage]);
 
   const onSend = useSendMessage();
   const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);

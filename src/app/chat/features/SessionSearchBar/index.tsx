@@ -1,19 +1,27 @@
 import { SearchBar } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSessionStore } from '@/store/session';
 
 const SessionSearchBar = memo(() => {
   const { t } = useTranslation('chat');
-  const [keywords] = useSessionStore((s) => [s.searchKeywords]);
+  const [keywords, setKeywords] = useState<string | undefined>(undefined);
+  const [useSearchSessions] = useSessionStore((s) => [s.useSearchSessions]);
+
+  useSearchSessions(keywords);
+
   const { mobile } = useResponsive();
   return (
     <SearchBar
       allowClear
       enableShortKey={!mobile}
-      onChange={(e) => useSessionStore.setState({ searchKeywords: e.target.value })}
+      onChange={(e) => {
+        const newKeywords = e.target.value;
+        setKeywords(newKeywords);
+        useSessionStore.setState({ isSearching: !!newKeywords });
+      }}
       placeholder={t('searchAgentPlaceholder')}
       shortKey={'k'}
       spotlight={!mobile}

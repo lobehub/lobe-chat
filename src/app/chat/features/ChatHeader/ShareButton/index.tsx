@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useMergeState from 'use-merge-value';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 const Inner = dynamic(() => import('./Inner'));
 interface ShareButtonProps {
@@ -22,7 +22,7 @@ const ShareButton = memo<ShareButtonProps>(({ mobile, setOpen, open }) => {
     value: open,
   });
   const { t } = useTranslation('common');
-  const [shareLoading] = useSessionStore((s) => [s.shareLoading]);
+  const [shareLoading] = useChatStore((s) => [s.shareLoading]);
 
   return (
     <>

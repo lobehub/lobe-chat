@@ -2,10 +2,10 @@ import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { Skeleton } from 'antd';
 import { memo, useRef, useState } from 'react';
 
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { usePluginStore } from '@/store/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
-import { useSessionStore } from '@/store/session';
-import { chatSelectors } from '@/store/session/selectors';
 
 import { useOnPluginReadyForInteraction } from '../utils/iframeOnReady';
 import {
@@ -26,7 +26,7 @@ import {
 // just to simplify code a little, don't use this pattern everywhere
 const getSettings = (identifier: string) =>
   pluginSelectors.getPluginSettingsById(identifier)(usePluginStore.getState());
-const getMessage = (id: string) => chatSelectors.getMessageById(id)(useSessionStore.getState());
+const getMessage = (id: string) => chatSelectors.getMessageById(id)(useChatStore.getState());
 
 interface IFrameRenderProps {
   height?: number;
@@ -59,7 +59,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
     const iframeWin = iframeRef.current?.contentWindow;
 
     if (iframeWin) {
-      const message = chatSelectors.getMessageById(id)(useSessionStore.getState());
+      const message = chatSelectors.getMessageById(id)(useChatStore.getState());
       if (!message) return;
       const props = { content: '' };
 
@@ -74,7 +74,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
   }, []);
 
   // when plugin try to send back message, we should fill it to the message content
-  const fillPluginContent = useSessionStore((s) => s.fillPluginMessageContent);
+  const fillPluginContent = useChatStore((s) => s.fillPluginMessageContent);
   useOnPluginFillContent((content) => {
     fillPluginContent(id, content);
   });
@@ -92,7 +92,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
   });
 
   // when plugin update state, we should update it to the message pluginState key
-  const updatePluginState = useSessionStore((s) => s.updatePluginState);
+  const updatePluginState = useChatStore((s) => s.updatePluginState);
   useOnPluginStateUpdate((key, value) => {
     updatePluginState(id, key, value);
   });

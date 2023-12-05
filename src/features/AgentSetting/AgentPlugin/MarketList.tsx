@@ -6,9 +6,9 @@ import { LucideBlocks, LucideSettings, LucideStore, LucideTrash2 } from 'lucide-
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import DevModal from 'src/features/PluginDevModal';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import DevModal from '@/features/PluginDevModal';
 import { pluginHelpers, usePluginStore } from '@/store/plugin';
 import { pluginSelectors } from '@/store/plugin/selectors';
 
