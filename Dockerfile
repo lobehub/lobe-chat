@@ -1,4 +1,4 @@
-FROM node:20-slim AS base
+FROM node:20.10-bullseye AS base
 
 ## Install dependencies only when needed
 FROM base AS builder
