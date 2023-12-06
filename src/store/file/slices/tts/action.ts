@@ -40,9 +40,5 @@ export const createTTSFileSlice: StateCreator<
       console.error('upload error:', error);
     }
   },
-  useFetchTTSFile: (id) =>
-    useSWR(id, async (id) => {
-      const item = await fileService.getFile(id);
-      return item;
-    }),
+  useFetchTTSFile: (id) => useSWR(id, fileService.getFile),
 });

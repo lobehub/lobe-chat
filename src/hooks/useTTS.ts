@@ -9,7 +9,6 @@ import {
 } from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 
-import { useTTSVoice } from '@/hooks/useTTSVoice';
 import { createHeaderWithOpenAI } from '@/services/_header';
 import { OPENAI_URLS, TTS_URL } from '@/services/_url';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
@@ -26,7 +25,8 @@ interface TTSConfig extends TTSOptions {
 export const useTTS = (content: string, config?: TTSConfig) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const voice = useTTSVoice();
+  const lang = useGlobalStore(settingsSelectors.currentLanguage);
+  const voice = useSessionStore(agentSelectors.currentAgentTTSVoice(lang));
   let useSelectedTTS;
   let options: any = {};
   switch (config?.server || ttsAgentSettings.ttsService) {

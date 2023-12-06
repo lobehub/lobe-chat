@@ -91,8 +91,8 @@ export const chatEnhance: StateCreator<
     toggleChatLoading(false);
   },
 
-  ttsMessage: async (id, state) => {
-    await messageService.updateMessageTTS(id, { ...state });
+  ttsMessage: async (id, state = {}) => {
+    await messageService.updateMessageTTS(id, state);
     await get().refreshMessages();
   },
 });
