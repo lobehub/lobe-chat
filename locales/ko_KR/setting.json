@@ -84,6 +84,20 @@
     },
     "waitingForMore": "더 많은 모델이 <1>계획 중</1>에 있으니 기대해주세요 ✨"
   },
+  "plugin": {
+    "addTooltip": "사용자 정의 플러그인 추가",
+    "clearDeprecated": "사용되지 않는 플러그인 지우기",
+    "empty": "설치된 플러그인이 없습니다. <1>플러그인 상점</1>에서 살펴보세요",
+    "installStatus": {
+      "deprecated": "설치 취소됨"
+    },
+    "settings": {
+      "hint": "설명에 따라 아래 구성을 입력하십시오",
+      "title": "{{id}} 플러그인 구성",
+      "tooltip": "플러그인 구성"
+    },
+    "store": "플러그인 상점"
+  },
   "settingAgent": {
     "avatar": {
       "title": "아바타"
@@ -280,5 +294,17 @@
     "common": "일반 설정",
     "llm": "언어 모델",
     "tts": "음성 서비스"
+  },
+  "tools": {
+    "builtins": {
+      "groupName": "내장"
+    },
+    "plugins": {
+      "enabled": "{{num}}개 활성화됨",
+      "groupName": "플러그인",
+      "noEnabled": "활성화된 플러그인이 없습니다",
+      "store": "플러그인 상점"
+    },
+    "title": "확장 도구"
   }
 }

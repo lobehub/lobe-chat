@@ -82,6 +82,12 @@
     "update": "업데이트",
     "updateSuccess": "플러그인 설정이 성공적으로 업데이트되었습니다."
   },
+  "error": {
+    "fetchError": "요청 실패",
+    "installError": "플러그인 {{name}} 설치 실패",
+    "manifestInvalid": "설명 파일 형식이 잘못되었습니다",
+    "noManifest": "설명 파일이 없습니다"
+  },
   "list": {
     "item": {
       "deprecated.title": "삭제됨",
@@ -105,5 +111,18 @@
     },
     "modalDesc": "플러그인 마켓의 주소를 구성하면 사용자 정의 플러그인 마켓을 사용할 수 있습니다.",
     "title": "플러그인 마켓 설정"
+  },
+  "store": {
+    "empty": "설치된 플러그인이 없습니다",
+    "install": "설치",
+    "installAllPlugins": "모두 설치",
+    "networkError": "플러그인 스토어를 가져오는 데 실패했습니다. 네트워크 연결을 확인한 후 다시 시도하십시오",
+    "releasedAt": "{{createdAt}}에 출시",
+    "tabs": {
+      "all": "모두",
+      "installed": "설치됨"
+    },
+    "title": "플러그인 스토어",
+    "uninstall": "제거"
   }
 }
