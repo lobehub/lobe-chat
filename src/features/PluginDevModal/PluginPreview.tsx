@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { pluginHelpers } from '@/store/plugin';
+import { pluginHelpers } from '@/store/tool';
 import { CustomPlugin } from '@/types/plugin';
 
 const PluginPreview = memo<{ form: FormInstance }>(({ form }) => {

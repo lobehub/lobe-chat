@@ -82,6 +82,12 @@
     "update": "更新",
     "updateSuccess": "プラグインの設定が正常に更新されました"
   },
+  "error": {
+    "fetchError": "リクエストに失敗しました",
+    "installError": "プラグイン {{name}} のインストールに失敗しました",
+    "manifestInvalid": "マニフェストの形式が正しくありません",
+    "noManifest": "マニフェストが存在しません"
+  },
   "list": {
     "item": {
       "deprecated.title": "削除済み",
@@ -105,5 +111,18 @@
     },
     "modalDesc": "プラグインマーケットのアドレスを設定すると、カスタムのプラグインマーケットを使用できます",
     "title": "プラグインマーケットの設定"
+  },
+  "store": {
+    "empty": "インストールされたプラグインはありません",
+    "install": "インストール",
+    "installAllPlugins": "すべてのプラグインをインストール",
+    "networkError": "プラグインストアの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
+    "releasedAt": "{{createdAt}} にリリース",
+    "tabs": {
+      "all": "すべて",
+      "installed": "インストール済み"
+    },
+    "title": "プラグインストア",
+    "uninstall": "アンインストール"
   }
 }

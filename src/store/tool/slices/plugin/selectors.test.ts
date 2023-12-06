@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { PluginStoreState } from './initialState';
+import { ToolStoreState } from '../../initialState';
 import { pluginSelectors } from './selectors';
 
 const mockState = {
@@ -38,7 +38,7 @@ const mockState = {
   ],
   customPluginList: [],
   pluginsSettings: {},
-} as unknown as PluginStoreState;
+} as unknown as ToolStoreState;
 
 describe('pluginSelectors', () => {
   describe('enabledSchema', () => {
@@ -56,27 +56,6 @@ describe('pluginSelectors', () => {
     it('getPluginManifestById should return the correct manifest', () => {
       const result = pluginSelectors.getPluginManifestById('plugin-1')(mockState);
       expect(result).toEqual(mockState.pluginManifestMap['plugin-1']);
-    });
-  });
-  describe('getPluginManifestLoadingStatus', () => {
-    it('success', () => {
-      const result = pluginSelectors.getPluginManifestLoadingStatus('plugin-1')(mockState);
-      expect(result).toBe('success');
-    });
-    it('loading', () => {
-      let result = pluginSelectors.getPluginManifestLoadingStatus('plugin-2')(mockState);
-      expect(result).toBe('loading');
-    });
-    it('error', () => {
-      let result = pluginSelectors.getPluginManifestLoadingStatus('plugin-3')(mockState);
-      expect(result).toBe('error');
-    });
-  });
-
-  describe('onlinePluginStore', () => {
-    it('should return the online plugin list', () => {
-      const result = pluginSelectors.onlinePluginStore(mockState);
-      expect(result).toEqual(mockState.pluginList);
     });
   });
 
@@ -111,7 +90,7 @@ describe('pluginSelectors', () => {
       const stateWithCustomPlugin = {
         ...mockState,
         customPluginList: [customPlugin],
-      } as PluginStoreState;
+      } as ToolStoreState;
       const result = pluginSelectors.getDevPluginById('custom-plugin')(stateWithCustomPlugin);
       expect(result).toEqual(customPlugin);
     });
@@ -126,22 +105,6 @@ describe('pluginSelectors', () => {
       };
       const result = pluginSelectors.getPluginSettingsById('plugin-1')(stateWithSettings);
       expect(result).toEqual(mockSettings);
-    });
-  });
-
-  describe('isCustomPlugin', () => {
-    it('should return false for a non-custom plugin', () => {
-      const result = pluginSelectors.isCustomPlugin('plugin-1')(mockState);
-      expect(result).toBe(false);
-    });
-
-    it('should return true for a custom plugin', () => {
-      const stateWithCustomPlugin = {
-        ...mockState,
-        customPluginList: [{ identifier: 'custom-plugin' }],
-      } as PluginStoreState;
-      const result = pluginSelectors.isCustomPlugin('custom-plugin')(stateWithCustomPlugin);
-      expect(result).toBe(true);
     });
   });
 
@@ -177,7 +140,7 @@ describe('pluginSelectors', () => {
             ui: true,
           },
         },
-      } as unknown as PluginStoreState;
+      } as unknown as ToolStoreState;
       const result = pluginSelectors.hasPluginUI('ui-plugin')(stateWithUIPlugin);
       expect(result).toBe(true);
     });

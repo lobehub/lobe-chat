@@ -5,8 +5,8 @@ import isEqual from 'fast-deep-equal';
 import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
 
-import { pluginHelpers, usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { pluginHelpers, useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 import PluginStatus from './PluginStatus';
 
@@ -15,8 +15,8 @@ export interface PluginTagProps {
 }
 
 const PluginTag = memo<PluginTagProps>(({ plugins }) => {
-  const list = usePluginStore(pluginSelectors.displayPluginList);
-  const displayPlugin = usePluginStore(pluginSelectors.getPluginMetaById(plugins[0]), isEqual);
+  const list = useToolStore(pluginSelectors.displayPluginList);
+  const displayPlugin = useToolStore(pluginSelectors.getPluginMetaById(plugins[0]), isEqual);
 
   if (plugins.length === 0) return null;
 

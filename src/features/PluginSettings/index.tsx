@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 
-import { usePluginStore } from '@/store/plugin';
+import { useToolStore } from '@/store/tool';
 
 import PluginSettingRender from './PluginSettingRender';
 
@@ -41,8 +41,8 @@ const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) =>
   const items = transformPluginSettings(schema);
 
   const { styles } = useStyles();
-  const [updatePluginSettings] = usePluginStore((s) => [s.updatePluginSettings]);
-  const pluginSetting = usePluginStore((s) => s.pluginsSettings[id] || {}, isEqual);
+  const [updatePluginSettings] = useToolStore((s) => [s.updatePluginSettings]);
+  const pluginSetting = useToolStore((s) => s.pluginsSettings[id] || {}, isEqual);
 
   return (
     <Form layout={'vertical'}>

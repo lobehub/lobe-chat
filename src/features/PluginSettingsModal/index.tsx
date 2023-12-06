@@ -6,9 +6,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import MobilePadding from '@/components/MobilePadding';
 import PluginSettingsConfig from '@/features/PluginSettings';
-import { pluginHelpers, usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { pluginHelpers, useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 interface PluginSettingsModalProps {
   id: string;
@@ -18,27 +19,31 @@ interface PluginSettingsModalProps {
 }
 
 const PluginSettingsModal = memo<PluginSettingsModalProps>(({ schema, onClose, id, open }) => {
-  const pluginMeta = usePluginStore(pluginSelectors.getPluginMetaById(id), isEqual);
+  const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(id), isEqual);
 
   const { t } = useTranslation('plugin');
   const theme = useTheme();
   return (
     <Modal onCancel={onClose} open={open} title={t('setting')} width={600}>
-      <Center gap={16}>
-        <Avatar
-          avatar={pluginHelpers.getPluginAvatar(pluginMeta?.meta) || '⚙️'}
-          background={theme.colorFillContent}
-          gap={12}
-          size={64}
-        />
+      <MobilePadding>
+        <Center gap={16}>
+          <Avatar
+            avatar={pluginHelpers.getPluginAvatar(pluginMeta?.meta) || '⚙️'}
+            background={theme.colorFillContent}
+            gap={12}
+            size={64}
+          />
 
-        <Flexbox style={{ fontSize: 20 }}>{pluginHelpers.getPluginTitle(pluginMeta?.meta)}</Flexbox>
-        <Typography.Text type={'secondary'}>
-          {pluginHelpers.getPluginDesc(pluginMeta?.meta)}
-        </Typography.Text>
-        <Divider style={{ marginBottom: 0, marginTop: 8 }} />
-        {schema && <PluginSettingsConfig id={id} schema={schema} />}
-      </Center>
+          <Flexbox style={{ fontSize: 20 }}>
+            {pluginHelpers.getPluginTitle(pluginMeta?.meta)}
+          </Flexbox>
+          <Typography.Text type={'secondary'}>
+            {pluginHelpers.getPluginDesc(pluginMeta?.meta)}
+          </Typography.Text>
+          <Divider style={{ marginBottom: 0, marginTop: 8 }} />
+          {schema && <PluginSettingsConfig id={id} schema={schema} />}
+        </Center>
+      </MobilePadding>
     </Modal>
   );
 });

@@ -83,6 +83,12 @@
     "update": "Update",
     "updateSuccess": "Plugin settings updated successfully"
   },
+  "error": {
+    "fetchError": "Request failed",
+    "installError": "Plugin {{name}} installation failed",
+    "manifestInvalid": "Invalid manifest file format",
+    "noManifest": "Manifest file does not exist"
+  },
   "list": {
     "item": {
       "local.config": "Configuration",
@@ -125,5 +131,18 @@
     },
     "modalDesc": "After configuring the address of the plugin marketplace, you can use a custom plugin marketplace",
     "title": "Configure Plugin Marketplace"
+  },
+  "store": {
+    "empty": "No installed plugins yet",
+    "install": "Install",
+    "installAllPlugins": "Install All",
+    "networkError": "Failed to fetch plugin store. Please check your network connection and try again",
+    "releasedAt": "Released at {{createdAt}}",
+    "tabs": {
+      "all": "All",
+      "installed": "Installed"
+    },
+    "title": "Plugin Store",
+    "uninstall": "Uninstall"
   }
 }
