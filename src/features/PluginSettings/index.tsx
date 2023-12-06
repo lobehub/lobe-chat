@@ -1,10 +1,12 @@
 import { PluginSchema } from '@lobehub/chat-plugin-sdk';
 import { Form, Markdown } from '@lobehub/ui';
+import { Form as AForm } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 
 import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 import PluginSettingRender from './PluginSettingRender';
 
@@ -38,14 +40,20 @@ const useStyles = createStyles(({ css, token, stylish, cx }) => ({
 }));
 
 const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) => {
+  const { styles } = useStyles();
+
+  const [updatePluginSettings] = useToolStore((s) => [s.updatePluginSettings]);
+  const pluginSetting = useToolStore(pluginSelectors.getPluginSettingsById(id), isEqual);
+
+  const [form] = AForm.useForm();
+  useEffect(() => {
+    form.setFieldsValue(pluginSetting);
+  }, []);
+
   const items = transformPluginSettings(schema);
 
-  const { styles } = useStyles();
-  const [updatePluginSettings] = useToolStore((s) => [s.updatePluginSettings]);
-  const pluginSetting = useToolStore((s) => s.pluginsSettings[id] || {}, isEqual);
-
   return (
-    <Form layout={'vertical'}>
+    <Form form={form} layout={'vertical'}>
       {items.map((item) => (
         <Form.Item
           desc={item.desc && <Markdown className={styles.markdown}>{item.desc as string}</Markdown>}

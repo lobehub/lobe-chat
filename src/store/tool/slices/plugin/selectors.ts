@@ -1,10 +1,75 @@
-import { uniqBy } from 'lodash-es';
+import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
+import { uniq, uniqBy } from 'lodash-es';
 
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { ChatCompletionFunctions } from '@/types/openai/chat';
+import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-import { pluginHelpers } from '../../helpers';
 import type { ToolStoreState } from '../../initialState';
+
+const installedPlugins = (s: ToolStoreState) => s.installedPlugins;
+
+const isPluginInstalled = (id: string) => (s: ToolStoreState) =>
+  installedPlugins(s).some((i) => i.identifier === id);
+
+const getInstalledPluginById = (id: string) => (s: ToolStoreState) =>
+  installedPlugins(s).find((p) => p.identifier === id);
+
+const getPluginMetaById = (id: string) => (s: ToolStoreState) => {
+  // first try to find meta from store
+  const storeMeta = s.pluginStoreList.find((i) => i.identifier === id)?.meta;
+  if (storeMeta) return storeMeta;
+
+  // then use installed meta
+  return getInstalledPluginById(id)(s)?.manifest?.meta;
+};
+
+const getCustomPluginById = (id: string) => (s: ToolStoreState) =>
+  installedPlugins(s).find((i) => i.identifier === id && i.type === 'customPlugin') as
+    | LobeToolCustomPlugin
+    | undefined;
+
+const getPluginManifestById = (id: string) => (s: ToolStoreState) =>
+  getInstalledPluginById(id)(s)?.manifest;
+
+const getPluginSettingsById = (id: string) => (s: ToolStoreState) =>
+  getInstalledPluginById(id)(s)?.settings || {};
+
+// 获取插件 manifest 加载状态
+const getPluginManifestLoadingStatus = (id: string) => (s: ToolStoreState) => {
+  const manifest = getPluginManifestById(id)(s);
+
+  if (s.pluginInstallLoading[id]) return 'loading';
+
+  if (!manifest) return 'error';
+
+  if (!!manifest) return 'success';
+};
+
+const storeAndInstallPluginsIdList = (s: ToolStoreState) =>
+  uniq(
+    [
+      s.installedPlugins.map((i) => i.identifier),
+      s.pluginStoreList.map((i) => i.identifier),
+    ].flat(),
+  );
+
+const installedPluginManifestList = (s: ToolStoreState) =>
+  installedPlugins(s)
+    .map((i) => i.manifest as LobeChatPluginManifest)
+    .filter((i) => !!i);
+
+const installedPluginMetaList = (s: ToolStoreState) =>
+  installedPlugins(s).map((p) => ({
+    identifier: p.identifier,
+    meta: getPluginMetaById(p.identifier)(s),
+  }));
+
+const isPluginHasUI = (id: string) => (s: ToolStoreState) => {
+  const plugin = getPluginManifestById(id)(s);
+
+  return !!plugin?.ui;
+};
 
 const enabledSchema =
   (enabledPlugins: string[] = []) =>
@@ -12,11 +77,11 @@ const enabledSchema =
     // 如果不存在 enabledPlugins，那么全部不启用
     if (!enabledPlugins) return [];
 
-    const list = Object.values(s.pluginManifestMap)
-      .filter((p) => {
+    const list = installedPluginManifestList(s)
+      .filter((m) =>
         // 如果存在 enabledPlugins，那么只启用 enabledPlugins 中的插件
-        return enabledPlugins.includes(p.identifier);
-      })
+        enabledPlugins.includes(m?.identifier),
+      )
       .flatMap((manifest) =>
         manifest.api.map((m) => {
           const pluginType = manifest.type ? `${PLUGIN_SCHEMA_SEPARATOR + manifest.type}` : '';
@@ -34,58 +99,18 @@ const enabledSchema =
     return uniqBy(list, 'name');
   };
 
-const pluginList = (s: ToolStoreState) => [...s.pluginList, ...s.customPluginList];
-
-const getPluginMetaById = (id: string) => (s: ToolStoreState) =>
-  pluginHelpers.getPluginFormList(pluginList(s), id);
-
-const getDevPluginById = (id: string) => (s: ToolStoreState) =>
-  s.customPluginList.find((i) => i.identifier === id);
-
-const getPluginManifestById = (id: string) => (s: ToolStoreState) => s.pluginManifestMap[id];
-const getPluginSettingsById = (id: string) => (s: ToolStoreState) => s.pluginsSettings[id];
-
-// 获取插件 manifest 加载状态
-const getPluginManifestLoadingStatus = (id: string) => (s: ToolStoreState) => {
-  const manifest = getPluginManifestById(id)(s);
-
-  if (s.pluginInstallLoading[id]) return 'loading';
-
-  if (!manifest) return 'error';
-
-  if (!!manifest) return 'success';
-};
-
-const displayPluginList = (s: ToolStoreState) =>
-  pluginList(s).map((p) => ({
-    author: p.author,
-    avatar: p.meta?.avatar,
-    createAt: p.createAt,
-    desc: pluginHelpers.getPluginDesc(p.meta),
-    homepage: p.homepage,
-    identifier: p.identifier,
-    title: pluginHelpers.getPluginTitle(p.meta),
-  }));
-
-const hasPluginUI = (id: string) => (s: ToolStoreState) => {
-  const manifest = getPluginManifestById(id)(s);
-
-  return !!manifest?.ui;
-};
-
-const installedPlugins = (s: ToolStoreState) => Object.values(s.pluginManifestMap);
-const isPluginInstalled = (id: string) => (s: ToolStoreState) => !!s.pluginManifestMap[id];
-
 export const pluginSelectors = {
-  displayPluginList,
   enabledSchema,
-  getDevPluginById,
+  getCustomPluginById,
+  getInstalledPluginById,
   getPluginManifestById,
   getPluginManifestLoadingStatus,
   getPluginMetaById,
   getPluginSettingsById,
-  hasPluginUI,
+  installedPluginManifestList,
+  installedPluginMetaList,
   installedPlugins,
+  isPluginHasUI,
   isPluginInstalled,
-  pluginList,
+  storeAndInstallPluginsIdList,
 };

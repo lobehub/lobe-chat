@@ -5,19 +5,20 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { pluginHelpers } from '@/store/tool';
-import { CustomPlugin } from '@/types/plugin';
+import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 const PluginPreview = memo<{ form: FormInstance }>(({ form }) => {
   const { t } = useTranslation('plugin');
-  const plugin: CustomPlugin = AForm.useWatch([], form);
+
+  const plugin: LobeToolCustomPlugin = AForm.useWatch([], form);
 
   const items = {
-    avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(plugin?.meta) || '🧩'} />,
+    avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(plugin?.manifest?.meta)} />,
     children: <Switch disabled />,
-    desc: pluginHelpers.getPluginDesc(plugin?.meta),
+    desc: pluginHelpers.getPluginDesc(plugin?.manifest?.meta),
     label: (
       <Flexbox align={'center'} gap={8} horizontal>
-        {pluginHelpers.getPluginTitle(plugin?.meta) ?? t('dev.preview.title')}
+        {pluginHelpers.getPluginTitle(plugin?.manifest?.meta) ?? t('dev.preview.title')}
         <Tag bordered={false} color={'gold'}>
           {t('list.item.local.title', { ns: 'plugin' })}
         </Tag>

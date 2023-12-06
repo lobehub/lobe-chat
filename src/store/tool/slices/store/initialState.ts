@@ -6,12 +6,12 @@ export interface PluginStoreState {
   displayMode: 'grid' | 'list';
   listType: 'all' | 'installed';
   pluginInstallLoading: PluginInstallLoadingMap;
-  pluginList: LobeChatPluginMeta[];
+  pluginStoreList: LobeChatPluginMeta[];
 }
 
 export const initialPluginStoreState: PluginStoreState = {
   displayMode: 'grid',
   listType: 'all',
   pluginInstallLoading: {},
-  pluginList: [],
+  pluginStoreList: [],
 };

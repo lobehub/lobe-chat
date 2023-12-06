@@ -30,7 +30,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
-  const list = useToolStore(pluginSelectors.installedPlugins, isEqual);
+  const list = useToolStore(pluginSelectors.installedPluginManifestList, isEqual);
   const enablePluginCount = useSessionStore((s) => agentSelectors.currentAgentPlugins(s).length);
   const [open, setOpen] = useState(false);
   const { styles } = useStyles();

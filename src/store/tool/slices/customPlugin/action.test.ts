@@ -1,26 +1,33 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CustomPlugin } from '@/types/plugin';
+import { pluginService } from '@/services/plugin';
+import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { useToolStore } from '../../store';
 import { defaultCustomPlugin } from './initialState';
-import { CustomPluginListDispatch } from './reducers/customPluginList';
 
 beforeEach(() => {
   vi.resetAllMocks();
 });
-
+vi.mock('@/services/plugin', () => ({
+  pluginService: {
+    getPluginManifest: vi.fn(),
+    updatePlugin: vi.fn(),
+    createCustomPlugin: vi.fn(),
+    uninstallPlugin: vi.fn(),
+    updatePluginManifest: vi.fn(),
+  },
+}));
 describe('useToolStore:customPlugin', () => {
   describe('deleteCustomPlugin', () => {
     it('should delete custom plugin and related settings', async () => {
       // 设置初始状态和 mock 函数
-      const deletePluginSettingsMock = vi.fn();
+
       act(() => {
         useToolStore.setState({
           // ...其他状态
-          customPluginList: [{ identifier: 'test-plugin' } as CustomPlugin],
-          deletePluginSettings: deletePluginSettingsMock,
+          installedPlugins: [{ identifier: 'test-plugin' } as LobeToolCustomPlugin],
         });
       });
 
@@ -28,122 +35,86 @@ describe('useToolStore:customPlugin', () => {
       const pluginId = 'test-plugin';
 
       act(() => {
-        result.current.deleteCustomPlugin(pluginId);
+        result.current.uninstallCustomPlugin(pluginId);
       });
 
-      expect(deletePluginSettingsMock).toHaveBeenCalledWith(pluginId);
-      expect(result.current.customPluginList).toEqual([]);
-    });
-  });
-
-  describe('dispatchCustomPluginList', () => {
-    it('should update the custom plugin list based on the dispatched action', () => {
-      const initialState = {
-        customPluginList: [],
-      };
-      act(() => {
-        useToolStore.setState(initialState);
-      });
-
-      const payload = {
-        type: 'addItem',
-        plugin: { identifier: 'plugin1', meta: { title: 'Test Plugin' } },
-      } as CustomPluginListDispatch;
-
-      const { result } = renderHook(() => useToolStore());
-
-      act(() => {
-        result.current.dispatchCustomPluginList(payload);
-      });
-
-      expect(useToolStore.getState().customPluginList).toEqual([
-        { identifier: 'plugin1', meta: { title: 'Test Plugin' } },
-      ]);
-    });
-
-    it('should return same if the type is not in dispatch', () => {
-      const initialState = {
-        customPluginList: [],
-      };
-      act(() => {
-        useToolStore.setState(initialState);
-      });
-
-      const payload = {
-        type: 'adddItem',
-        plugin: { identifier: 'plugin1', meta: { title: 'Test Plugin' } },
-      } as unknown as CustomPluginListDispatch;
-
-      const { result } = renderHook(() => useToolStore());
-
-      act(() => {
-        result.current.dispatchCustomPluginList(payload);
-      });
-
-      expect(useToolStore.getState().customPluginList).toEqual([]);
+      expect(pluginService.uninstallPlugin).toBeCalledWith(pluginId);
     });
   });
 
   describe('saveToCustomPluginList', () => {
     it('should add a plugin to the custom plugin list and reset newCustomPlugin', async () => {
-      const newPlugin = { identifier: 'plugin2', meta: { title: 'New Plugin' } } as CustomPlugin;
+      const newPlugin = {
+        type: 'customPlugin',
+        manifest: {
+          identifier: 'plugin2',
+          meta: { title: 'New Plugin' },
+        },
+      } as LobeToolCustomPlugin;
       act(() => {
         useToolStore.setState({
-          customPluginList: [],
+          installedPlugins: [],
           newCustomPlugin: newPlugin,
         });
       });
 
       const { result } = renderHook(() => useToolStore());
 
-      act(() => {
-        result.current.saveToCustomPluginList(newPlugin);
+      await act(async () => {
+        await result.current.installCustomPlugin(newPlugin);
       });
 
-      expect(result.current.customPluginList).toEqual([newPlugin]);
       expect(result.current.newCustomPlugin).toEqual(defaultCustomPlugin);
+      expect(pluginService.createCustomPlugin).toBeCalledWith(newPlugin);
     });
   });
   describe('updateCustomPlugin', () => {
-    it('should update a specific plugin in the custom plugin list and reinstall the plugin', () => {
+    it('should update a specific plugin in the custom plugin list and reinstall the plugin', async () => {
       const pluginId = 'test-plugin';
       const old = {
+        type: 'customPlugin',
         identifier: pluginId,
-        meta: { title: 'Old Plugin', avatar: '🍎' },
-      } as CustomPlugin;
-
-      const installPluginMock = vi.fn();
+        manifest: {
+          identifier: pluginId,
+          meta: { title: 'Old Plugin', avatar: '🍎' },
+        },
+      } as LobeToolCustomPlugin;
 
       act(() => {
         useToolStore.setState({
-          customPluginList: [old],
-          installPlugin: installPluginMock,
+          installedPlugins: [old],
         });
       });
 
       const { result } = renderHook(() => useToolStore());
 
       const updatedPlugin = {
+        type: 'customPlugin',
+        manifest: {
+          identifier: pluginId,
+          meta: { title: 'Updated Plugin', avatar: '🥒' },
+        },
         identifier: pluginId,
-        meta: { title: 'Updated Plugin', avatar: '🥒' },
-      } as CustomPlugin;
+      } as LobeToolCustomPlugin;
 
-      act(() => {
-        result.current.updateCustomPlugin(pluginId, updatedPlugin);
+      await act(async () => {
+        await result.current.updateCustomPlugin(pluginId, updatedPlugin);
       });
 
-      expect(result.current.customPluginList).toEqual([updatedPlugin]);
-      expect(installPluginMock).toHaveBeenCalledWith(pluginId);
+      expect(pluginService.updatePlugin).toHaveBeenCalledWith(pluginId, updatedPlugin);
     });
   });
 
   describe('updateNewCustomPlugin', () => {
     it('should update the newCustomPlugin state with the provided values', () => {
       const initialNewCustomPlugin = {
-        identifier: 'plugin3',
-        meta: { title: 'Initial Plugin' },
-      } as CustomPlugin;
-      const updates = { meta: { title: 'Updated Name' } } as Partial<CustomPlugin>;
+        type: 'customPlugin',
+        manifest: {
+          identifier: 'plugin3',
+          meta: { title: 'Initial Plugin' },
+        },
+      } as LobeToolCustomPlugin;
+      const updates = { meta: { title: 'Updated Name' } } as Partial<LobeToolCustomPlugin>;
       const expectedNewCustomPlugin = { ...initialNewCustomPlugin, ...updates };
 
       act(() => {
