@@ -18,6 +18,7 @@ export interface ChatTranslate extends Translate {
 }
 
 export interface ChatTTS {
+  contentMd5?: string;
   file?: string;
   voice?: string;
 }

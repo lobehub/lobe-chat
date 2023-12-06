@@ -15,7 +15,7 @@ export interface TTSProps extends ChatTTS {
   loading?: boolean;
 }
 
-const InitPlayer = memo<TTSProps>(({ id, file, voice, content }) => {
+const InitPlayer = memo<TTSProps>(({ id, file, voice, content, contentMd5 }) => {
   const [isStart, setIsStart] = useState(false);
   const [error, setError] = useState<ChatMessageError>();
   const uploadTTS = useFileStore(filesSelectors.uploadTTSByArrayBuffers);
@@ -52,7 +52,7 @@ const InitPlayer = memo<TTSProps>(({ id, file, voice, content }) => {
     onUpload: async (currentVoice, arrayBuffers) => {
       if (file && currentVoice === voice) return;
       const fileID = await uploadTTS(id, arrayBuffers);
-      ttsMessage(id, { file: fileID, voice: currentVoice });
+      ttsMessage(id, { contentMd5, file: fileID, voice: currentVoice });
     },
   });
 

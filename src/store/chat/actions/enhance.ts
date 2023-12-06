@@ -20,7 +20,10 @@ export interface ChatEnhanceAction {
 
   clearTranslate: (id: string) => Promise<void>;
   translateMessage: (id: string, targetLang: string) => Promise<void>;
-  ttsMessage: (id: string, state?: { file?: string; voice?: string }) => Promise<void>;
+  ttsMessage: (
+    id: string,
+    state?: { contentMd5?: string; file?: string; voice?: string },
+  ) => Promise<void>;
 }
 
 export const chatEnhance: StateCreator<
