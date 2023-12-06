@@ -4,8 +4,8 @@ import { merge } from 'lodash-es';
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { filesSelectors, useFileStore } from '@/store/file';
-import { usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/chatMessage';
 import type { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
@@ -41,7 +41,7 @@ class ChatService {
 
     // ============  2. preprocess tools   ============ //
 
-    const filterTools = pluginSelectors.enabledSchema(enabledPlugins)(usePluginStore.getState());
+    const filterTools = pluginSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
     // the rule that model can use tools:
     // 1. tools is not empty
@@ -79,9 +79,7 @@ class ChatService {
    * @param options
    */
   runPluginApi = async (params: PluginRequestPayload, options?: FetchOptions) => {
-    const { usePluginStore } = await import('@/store/plugin');
-
-    const s = usePluginStore.getState();
+    const s = useToolStore.getState();
 
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
     const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);

@@ -84,6 +84,20 @@
     },
     "waitingForMore": "他のモデルは現在 <1>計画中</1> です。お楽しみに ✨"
   },
+  "plugin": {
+    "addTooltip": "カスタムプラグインを追加",
+    "clearDeprecated": "無効なプラグインをクリア",
+    "empty": "インストールされたプラグインはありません。 <1>プラグインストア</1> で探索してください",
+    "installStatus": {
+      "deprecated": "アンインストール済み"
+    },
+    "settings": {
+      "hint": "説明に従って以下の設定を入力してください",
+      "title": "{{id}} プラグイン設定",
+      "tooltip": "プラグイン設定"
+    },
+    "store": "プラグインストア"
+  },
   "settingAgent": {
     "avatar": {
       "title": "アバター"
@@ -280,5 +294,17 @@
     "common": "一般設定",
     "llm": "言語モデル",
     "tts": "音声サービス"
+  },
+  "tools": {
+    "builtins": {
+      "groupName": "組み込み"
+    },
+    "plugins": {
+      "enabled": "{{num}} 個が有効",
+      "groupName": "プラグイン",
+      "noEnabled": "有効なプラグインはありません",
+      "store": "プラグインストア"
+    },
+    "title": "拡張ツール"
   }
 }

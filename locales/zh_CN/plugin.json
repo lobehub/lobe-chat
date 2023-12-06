@@ -82,6 +82,12 @@
     "update": "更新",
     "updateSuccess": "插件设置更新成功"
   },
+  "error": {
+    "fetchError": "请求失败",
+    "installError": "插件 {{name}} 安装失败",
+    "manifestInvalid": "描述文件格式不正确",
+    "noManifest": "描述文件不存在"
+  },
   "list": {
     "item": {
       "deprecated.title": "已删除",
@@ -105,5 +111,18 @@
     },
     "modalDesc": "配置插件市场的地址后，可以使用自定义的插件市场",
     "title": "设置插件市场"
+  },
+  "store": {
+    "empty": "暂无已安装插件",
+    "install": "安装",
+    "installAllPlugins": "安装全部",
+    "networkError": "获取插件商店失败，请检测网络连接后重试",
+    "releasedAt": "发布于 {{createdAt}}",
+    "tabs": {
+      "all": "全部",
+      "installed": "已安装"
+    },
+    "title": "插件商店",
+    "uninstall": "卸载"
   }
 }

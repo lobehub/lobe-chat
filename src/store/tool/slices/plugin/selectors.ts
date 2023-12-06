@@ -3,12 +3,12 @@ import { uniqBy } from 'lodash-es';
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { ChatCompletionFunctions } from '@/types/openai/chat';
 
-import { pluginHelpers } from './helpers';
-import type { PluginStoreState } from './initialState';
+import { pluginHelpers } from '../../helpers';
+import type { ToolStoreState } from '../../initialState';
 
 const enabledSchema =
   (enabledPlugins: string[] = []) =>
-  (s: PluginStoreState): ChatCompletionFunctions[] => {
+  (s: ToolStoreState): ChatCompletionFunctions[] => {
     // 如果不存在 enabledPlugins，那么全部不启用
     if (!enabledPlugins) return [];
 
@@ -34,34 +34,29 @@ const enabledSchema =
     return uniqBy(list, 'name');
   };
 
-const onlinePluginStore = (s: PluginStoreState) => s.pluginList;
+const pluginList = (s: ToolStoreState) => [...s.pluginList, ...s.customPluginList];
 
-const pluginList = (s: PluginStoreState) => [...s.pluginList, ...s.customPluginList];
-
-const getPluginMetaById = (id: string) => (s: PluginStoreState) =>
+const getPluginMetaById = (id: string) => (s: ToolStoreState) =>
   pluginHelpers.getPluginFormList(pluginList(s), id);
 
-const getDevPluginById = (id: string) => (s: PluginStoreState) =>
+const getDevPluginById = (id: string) => (s: ToolStoreState) =>
   s.customPluginList.find((i) => i.identifier === id);
 
-const getPluginManifestById = (id: string) => (s: PluginStoreState) => s.pluginManifestMap[id];
-const getPluginSettingsById = (id: string) => (s: PluginStoreState) => s.pluginsSettings[id];
+const getPluginManifestById = (id: string) => (s: ToolStoreState) => s.pluginManifestMap[id];
+const getPluginSettingsById = (id: string) => (s: ToolStoreState) => s.pluginsSettings[id];
 
 // 获取插件 manifest 加载状态
-const getPluginManifestLoadingStatus = (id: string) => (s: PluginStoreState) => {
+const getPluginManifestLoadingStatus = (id: string) => (s: ToolStoreState) => {
   const manifest = getPluginManifestById(id)(s);
 
-  if (s.pluginManifestLoading[id]) return 'loading';
+  if (s.pluginInstallLoading[id]) return 'loading';
 
   if (!manifest) return 'error';
 
   if (!!manifest) return 'success';
 };
 
-const isCustomPlugin = (id: string) => (s: PluginStoreState) =>
-  pluginHelpers.isCustomPlugin(id, s.customPluginList);
-
-const displayPluginList = (s: PluginStoreState) =>
+const displayPluginList = (s: ToolStoreState) =>
   pluginList(s).map((p) => ({
     author: p.author,
     avatar: p.meta?.avatar,
@@ -72,11 +67,14 @@ const displayPluginList = (s: PluginStoreState) =>
     title: pluginHelpers.getPluginTitle(p.meta),
   }));
 
-const hasPluginUI = (id: string) => (s: PluginStoreState) => {
+const hasPluginUI = (id: string) => (s: ToolStoreState) => {
   const manifest = getPluginManifestById(id)(s);
 
   return !!manifest?.ui;
 };
+
+const installedPlugins = (s: ToolStoreState) => Object.values(s.pluginManifestMap);
+const isPluginInstalled = (id: string) => (s: ToolStoreState) => !!s.pluginManifestMap[id];
 
 export const pluginSelectors = {
   displayPluginList,
@@ -87,7 +85,7 @@ export const pluginSelectors = {
   getPluginMetaById,
   getPluginSettingsById,
   hasPluginUI,
-  isCustomPlugin,
-  onlinePluginStore,
+  installedPlugins,
+  isPluginInstalled,
   pluginList,
 };
