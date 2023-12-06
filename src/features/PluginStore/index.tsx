@@ -6,6 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import MobilePadding from '@/components/MobilePadding';
 import { useToolStore } from '@/store/tool';
 import { pluginStoreSelectors } from '@/store/tool/selectors';
 
@@ -39,49 +40,54 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
       title={t('store.title')}
       width={800}
     >
-      <Center>
-        <Flexbox gap={24} width={'100%'}>
-          <Flexbox align={'center'} horizontal justify={'space-between'}>
-            <TabsNav
-              activeKey={listType}
-              items={[
-                { key: 'all', label: t('store.tabs.all') },
-                { key: 'installed', label: t('store.tabs.installed') },
-              ]}
-              onChange={(v) => {
-                useToolStore.setState({ listType: v as any });
-              }}
-            />
-            <Flexbox gap={8} horizontal>
-              {listType === 'all' && (
-                <Button
-                  onClick={() => {
-                    installPlugins(pluginStoreList.map((item) => item.identifier));
-                  }}
-                >
-                  {t('store.installAllPlugins')}
-                </Button>
-              )}
+      <MobilePadding>
+        <Center>
+          <Flexbox gap={24} width={'100%'}>
+            <Flexbox align={'center'} horizontal justify={'space-between'}>
+              <TabsNav
+                activeKey={listType}
+                items={[
+                  { key: 'all', label: t('store.tabs.all') },
+                  { key: 'installed', label: t('store.tabs.installed') },
+                ]}
+                onChange={(v) => {
+                  useToolStore.setState({ listType: v as any });
+                }}
+              />
+              <Flexbox gap={8} horizontal>
+                {listType === 'all' && (
+                  <Button
+                    onClick={() => {
+                      installPlugins(pluginStoreList.map((item) => item.identifier));
+                    }}
+                  >
+                    {t('store.installAllPlugins')}
+                  </Button>
+                )}
+              </Flexbox>
             </Flexbox>
+            {isLoading ? (
+              <Loading />
+            ) : isEmpty ? (
+              <Center gap={12} padding={40}>
+                {error ? (
+                  <>
+                    <Icon icon={ServerCrash} size={{ fontSize: 80 }} />
+                    {t('store.networkError')}
+                  </>
+                ) : (
+                  <Empty
+                    description={t('store.empty')}
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  ></Empty>
+                )}
+              </Center>
+            ) : (
+              <SpotlightCard columns={2} gap={16} items={pluginStoreList} renderItem={PluginItem} />
+            )}
           </Flexbox>
-          {isLoading ? (
-            <Loading />
-          ) : isEmpty ? (
-            <Center gap={12} padding={40}>
-              {error ? (
-                <>
-                  <Icon icon={ServerCrash} size={{ fontSize: 80 }} />
-                  {t('store.networkError')}
-                </>
-              ) : (
-                <Empty description={t('store.empty')} image={Empty.PRESENTED_IMAGE_SIMPLE}></Empty>
-              )}
-            </Center>
-          ) : (
-            <SpotlightCard columns={2} gap={16} items={pluginStoreList} renderItem={PluginItem} />
-          )}
-        </Flexbox>
-      </Center>
+        </Center>
+      </MobilePadding>
     </Modal>
   );
 });
