@@ -1,7 +1,6 @@
 import { memo } from 'react';
 import { Md5 } from 'ts-md5';
 
-import { settingsSelectors, useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/slices/agent';
 
@@ -11,8 +10,7 @@ import InitPlayer, { TTSProps } from './InitPlayer';
 const TTS = memo<TTSProps>(
   (props) => {
     const { file, voice, content, contentMd5 } = props;
-    const lang = useGlobalStore(settingsSelectors.currentLanguage);
-    const currentVoice = useSessionStore(agentSelectors.currentAgentTTSVoice(lang));
+    const currentVoice = useSessionStore(agentSelectors.currentAgentTTSVoice);
 
     const isVoiceEqual = currentVoice === voice;
     const md5 = Md5.hashStr(content).toString();

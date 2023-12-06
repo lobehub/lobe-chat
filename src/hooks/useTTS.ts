@@ -25,8 +25,7 @@ interface TTSConfig extends TTSOptions {
 export const useTTS = (content: string, config?: TTSConfig) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const lang = useGlobalStore(settingsSelectors.currentLanguage);
-  const voice = useSessionStore(agentSelectors.currentAgentTTSVoice(lang));
+  const voice = useSessionStore(agentSelectors.currentAgentTTSVoice);
   let useSelectedTTS;
   let options: any = {};
   switch (config?.server || ttsAgentSettings.ttsService) {
