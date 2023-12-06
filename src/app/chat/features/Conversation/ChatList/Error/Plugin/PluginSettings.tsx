@@ -8,8 +8,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import PluginSettingsConfig from '@/features/PluginSettings';
 import { useChatStore } from '@/store/chat';
-import { pluginHelpers, usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { pluginHelpers, useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 import { ErrorActionContainer, useStyles } from '../style';
 
@@ -19,8 +19,8 @@ const PluginSettings: RenderErrorMessage['Render'] = memo(({ id, plugin }) => {
   const theme = useTheme();
   const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
   const pluginIdentifier = plugin?.identifier as string;
-  const pluginMeta = usePluginStore(pluginSelectors.getPluginMetaById(pluginIdentifier), isEqual);
-  const manifest = usePluginStore(pluginSelectors.getPluginManifestById(pluginIdentifier), isEqual);
+  const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(pluginIdentifier), isEqual);
+  const manifest = useToolStore(pluginSelectors.getPluginManifestById(pluginIdentifier), isEqual);
 
   return (
     <ErrorActionContainer>

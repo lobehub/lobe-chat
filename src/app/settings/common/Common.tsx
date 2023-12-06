@@ -13,8 +13,8 @@ import { localeOptions } from '@/locales/options';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
-import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
+import { useToolStore } from '@/store/tool';
 import { switchLang } from '@/utils/switchLang';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../features/ThemeSwatches';
@@ -35,7 +35,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
     s.clearAllMessages,
   ]);
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
-  const resetPluginSettings = usePluginStore((s) => s.resetPluginSettings);
+  const resetPluginSettings = useToolStore((s) => s.resetPluginSettings);
 
   const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
   const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [

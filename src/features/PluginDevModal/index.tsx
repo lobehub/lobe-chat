@@ -96,7 +96,10 @@ const DevModal = memo<DevModalProps>(
           cancelText={t('cancel', { ns: 'common' })}
           footer={footer}
           okText={t('dev.save')}
-          onCancel={() => onOpenChange(false)}
+          onCancel={(e) => {
+            e.stopPropagation();
+            onOpenChange(false);
+          }}
           onOk={() => form.submit()}
           open={open}
           title={t('dev.title')}

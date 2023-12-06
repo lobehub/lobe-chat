@@ -84,6 +84,20 @@
     },
     "waitingForMore": "<1>Access to other models is planned</1>, so stay tuned ✨"
   },
+  "plugin": {
+    "addTooltip": "Add Custom Plugin",
+    "clearDeprecated": "Remove Deprecated Plugins",
+    "empty": "No installed plugins yet, feel free to visit the <1>Plugin Store</1> to explore",
+    "installStatus": {
+      "deprecated": "Uninstalled"
+    },
+    "settings": {
+      "hint": "Please fill in the following configuration based on the description",
+      "title": "{{id}} Plugin Configuration",
+      "tooltip": "Plugin Configuration"
+    },
+    "store": "Plugin Store"
+  },
   "settingAgent": {
     "avatar": {
       "title": "Avatar"
@@ -293,5 +307,17 @@
     "common": "Common Settings",
     "llm": "Custom LLM API",
     "tts": "Speech Services"
+  },
+  "tools": {
+    "builtins": {
+      "groupName": "Built-in"
+    },
+    "plugins": {
+      "enabled": "Enabled {{num}}",
+      "groupName": "Plugins",
+      "noEnabled": "No enabled plugins yet",
+      "store": "Plugin Store"
+    },
+    "title": "Extensions"
   }
 }

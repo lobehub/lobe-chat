@@ -7,6 +7,7 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
     coverage: {
+      all: false,
       exclude: ['__mocks__/**'],
       provider: 'v8',
       reporter: ['text', 'json', 'lcov', 'text-summary'],

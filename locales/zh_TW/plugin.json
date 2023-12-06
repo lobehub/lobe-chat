@@ -83,6 +83,12 @@
     "update": "更新",
     "updateSuccess": "外掛設定已成功更新"
   },
+  "error": {
+    "fetchError": "請求失敗",
+    "installError": "插件 {{name}} 安裝失敗",
+    "manifestInvalid": "描述檔格式無效",
+    "noManifest": "描述檔不存在"
+  },
   "list": {
     "item": {
       "local.config": "設定",
@@ -125,5 +131,18 @@
     },
     "modalDesc": "設定外掛市集的網址後，您可以使用自訂的外掛市集",
     "title": "設定外掛市集"
+  },
+  "store": {
+    "empty": "暫無已安裝插件",
+    "install": "安裝",
+    "installAllPlugins": "安裝全部",
+    "networkError": "獲取插件商店失敗，請檢查網路連線後重試",
+    "releasedAt": "發佈於 {{createdAt}}",
+    "tabs": {
+      "all": "全部",
+      "installed": "已安裝"
+    },
+    "title": "插件商店",
+    "uninstall": "解除安裝"
   }
 }

@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
+import { useToolStore } from '@/store/tool';
 
 export const useInitConversation = () => {
   const [sessionId] = useSessionStore((s) => [s.activeId]);
@@ -18,7 +18,7 @@ export const useInitConversation = () => {
   useFetchMessages(sessionId, activeTopicId);
   useFetchTopics(sessionId);
 
-  const [useFetchPluginStore, checkPluginsIsInstalled] = usePluginStore((s) => [
+  const [useFetchPluginStore, checkPluginsIsInstalled] = useToolStore((s) => [
     s.useFetchPluginStore,
     s.useCheckPluginsIsInstalled,
   ]);

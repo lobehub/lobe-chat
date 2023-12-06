@@ -4,11 +4,11 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PluginSettingsModal from '@/features/PluginSettingsModal';
-import { usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 const Settings = memo<{ id: string }>(({ id }) => {
-  const item = usePluginStore(pluginSelectors.getPluginManifestById(id));
+  const item = useToolStore(pluginSelectors.getPluginManifestById(id));
   const [open, setOpen] = useState(false);
   const { t } = useTranslation('plugin');
   return (
