@@ -8,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useTTS } from '@/hooks/useTTS';
 import { useChatStore } from '@/store/chat';
+import { filesSelectors, useFileStore } from '@/store/file';
 import { ChatMessageError, ChatTTS } from '@/types/chatMessage';
 import { getMessageError } from '@/utils/fetch';
 
@@ -17,9 +18,10 @@ interface TTSProps extends ChatTTS {
   loading?: boolean;
 }
 
-const TTS = memo<TTSProps>(({ id, init, content }) => {
+const TTS = memo<TTSProps>(({ id, file, voice, content }) => {
   const [isStart, setIsStart] = useState(false);
   const [error, setError] = useState<ChatMessageError>();
+  const uploadTTS = useFileStore(filesSelectors.uploadTTSByArrayBuffers);
   const { t } = useTranslation('chat');
 
   const [ttsMessage, clearTTS] = useChatStore((s) => [s.ttsMessage, s.clearTTS]);
@@ -40,9 +42,15 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
       stop();
       setDefaultError(err);
     },
+    onFinish: async (currentVoice, arrayBuffers) => {
+      console.log(file, currentVoice, voice);
+      if (file && currentVoice === voice) return;
+      const fileID = await uploadTTS(id, arrayBuffers);
+      ttsMessage(id, { file: fileID, voice: currentVoice });
+      console.log('onFinish', fileID);
+    },
     onSuccess: async () => {
-      if (!response) return;
-      if (response.status === 200) return ttsMessage(id, true);
+      if (!response || response.ok) return;
       const message = await getMessageError(response);
       if (message) {
         setError(message);
@@ -57,7 +65,7 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
     if (isStart) return;
     start();
     setIsStart(true);
-  }, [isStart]);
+  }, [isStart, start]);
 
   const handleDelete = useCallback(() => {
     stop();
@@ -70,9 +78,19 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
   }, [start]);
 
   useEffect(() => {
-    if (init) return;
-    handleInitStart();
-  }, [init]);
+    setTimeout(() => {
+      handleInitStart();
+    }, 100);
+  }, []);
+
+  // useEffect(() => {
+  //   if (audio.duration > 0) {
+  //     audio.stop();
+  //     setTimeout(() => {
+  //       audio.play();
+  //     }, 1000);
+  //   }
+  // }, [audio.duration]);
 
   return (
     <Flexbox align={'center'} horizontal style={{ minWidth: 160, width: '100%' }}>
@@ -99,6 +117,7 @@ const TTS = memo<TTSProps>(({ id, init, content }) => {
       ) : (
         <>
           <AudioPlayer
+            allowPause={false}
             audio={audio}
             buttonSize={'small'}
             isLoading={isGlobalLoading}

@@ -1,0 +1,49 @@
+import useSWR, { SWRResponse } from 'swr';
+import { StateCreator } from 'zustand/vanilla';
+
+import { fileService } from '@/services/file';
+import { FilePreview } from '@/types/files';
+
+import { FileStore } from '../../store';
+
+export interface TTSFileAction {
+  removeTTSFile: (id: string) => Promise<void>;
+
+  uploadTTSFile: (file: File) => Promise<string | undefined>;
+
+  useFetchTTSFile: (id: string) => SWRResponse<FilePreview>;
+}
+
+export const createTTSFileSlice: StateCreator<
+  FileStore,
+  [['zustand/devtools', never]],
+  [],
+  TTSFileAction
+> = () => ({
+  removeTTSFile: async (id) => {
+    await fileService.removeFile(id);
+  },
+  uploadTTSFile: async (file) => {
+    try {
+      const data = await fileService.uploadFile({
+        createdAt: file.lastModified,
+        data: await file.arrayBuffer(),
+        fileType: file.type,
+        name: file.name,
+        saveMode: 'local',
+        size: file.size,
+      });
+
+      return data.id;
+    } catch (error) {
+      // 提示用户上传失败
+      console.error('upload error:', error);
+    }
+  },
+  useFetchTTSFile: (id) =>
+    useSWR(id, async (id) => {
+      const item = await fileService.getFile(id);
+
+      return item;
+    }),
+});
