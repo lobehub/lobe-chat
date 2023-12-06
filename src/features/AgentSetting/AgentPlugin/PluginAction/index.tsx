@@ -6,7 +6,6 @@ import { Flexbox } from 'react-layout-kit';
 import { useToolStore } from '@/store/tool';
 
 import { useStore } from '../../store';
-import PluginSettings from './PluginSettings';
 
 const PluginSwitch = memo<{ identifier: string }>(({ identifier }) => {
   const pluginManifestLoading = useToolStore((s) => s.pluginInstallLoading, isEqual);
@@ -18,7 +17,6 @@ const PluginSwitch = memo<{ identifier: string }>(({ identifier }) => {
 
   return (
     <Flexbox align={'center'} gap={8} horizontal>
-      <PluginSettings identifier={identifier} />
       <Switch
         checked={
           // 如果在加载中，说明激活了

@@ -3,6 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
+import { agentSelectors } from '@/store/session/selectors';
 import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
 
@@ -30,10 +31,9 @@ export const createAgentSlice: StateCreator<
   },
 
   togglePlugin: async (id, open) => {
-    const session = sessionSelectors.currentSession(get());
-    if (!session) return;
+    const originConfig = agentSelectors.currentAgentConfig(get());
 
-    const config = produce(session.config, (draft) => {
+    const config = produce(originConfig, (draft) => {
       draft.plugins = produce(draft.plugins || [], (plugins) => {
         const index = plugins.indexOf(id);
         const shouldOpen = open !== undefined ? open : index === -1;
@@ -52,7 +52,7 @@ export const createAgentSlice: StateCreator<
       });
     });
 
-     get().updateAgentConfig(config);
+    get().updateAgentConfig(config);
   },
   updateAgentConfig: async (config) => {
     // if is the inbox session, update the global config
