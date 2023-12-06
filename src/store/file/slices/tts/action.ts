@@ -11,7 +11,7 @@ export interface TTSFileAction {
 
   uploadTTSFile: (file: File) => Promise<string | undefined>;
 
-  useFetchTTSFile: (id: string) => SWRResponse<FilePreview>;
+  useFetchTTSFile: (id: string | null) => SWRResponse<FilePreview>;
 }
 
 export const createTTSFileSlice: StateCreator<
@@ -43,7 +43,6 @@ export const createTTSFileSlice: StateCreator<
   useFetchTTSFile: (id) =>
     useSWR(id, async (id) => {
       const item = await fileService.getFile(id);
-
       return item;
     }),
 });
