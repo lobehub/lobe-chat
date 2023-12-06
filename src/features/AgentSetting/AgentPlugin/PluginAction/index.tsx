@@ -18,6 +18,7 @@ const PluginSwitch = memo<{ identifier: string }>(({ identifier }) => {
 
   return (
     <Flexbox align={'center'} gap={8} horizontal>
+      <PluginSettings identifier={identifier} />
       <Switch
         checked={
           // 如果在加载中，说明激活了
@@ -30,7 +31,6 @@ const PluginSwitch = memo<{ identifier: string }>(({ identifier }) => {
           toggleAgentPlugin(identifier);
         }}
       />
-      <PluginSettings identifier={identifier} />
     </Flexbox>
   );
 });

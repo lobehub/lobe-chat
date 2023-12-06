@@ -116,6 +116,7 @@ export default {
     empty: '暂无已安装插件',
     install: '安装',
     installAllPlugins: '安装全部',
+    networkError: '获取插件商店失败，请检测网络连接后重试',
     releasedAt: '发布于 {{createdAt}}',
     tabs: {
       all: '全部',

@@ -1,6 +1,7 @@
-import { Modal, SpotlightCard, TabsNav } from '@lobehub/ui';
+import { Icon, Modal, SpotlightCard, TabsNav } from '@lobehub/ui';
 import { Button, Empty } from 'antd';
 import isEqual from 'fast-deep-equal';
+import { ServerCrash } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -25,7 +26,7 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
   ]);
 
   const pluginStoreList = useToolStore(pluginStoreSelectors.onlinePluginStore, isEqual);
-  const { isLoading } = useFetchPluginList();
+  const { isLoading, error } = useFetchPluginList();
   const isEmpty = pluginStoreList.length === 0;
 
   return (
@@ -38,44 +39,48 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
       title={t('store.title')}
       width={800}
     >
-      <Center padding={'0 16px'}>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <Flexbox gap={24} width={'100%'}>
-            <Flexbox align={'center'} horizontal justify={'space-between'}>
-              <TabsNav
-                activeKey={listType}
-                items={[
-                  { key: 'all', label: t('store.tabs.all') },
-                  { key: 'installed', label: t('store.tabs.installed') },
-                ]}
-                onChange={(v) => {
-                  useToolStore.setState({ listType: v as any });
-                }}
-              />
-
-              <Flexbox gap={8} horizontal>
-                {listType === 'all' && (
-                  <Button
-                    onClick={() => {
-                      installPlugins(pluginStoreList.map((item) => item.identifier));
-                    }}
-                  >
-                    {t('store.installAllPlugins')}
-                  </Button>
-                )}
-              </Flexbox>
+      <Center>
+        <Flexbox gap={24} width={'100%'}>
+          <Flexbox align={'center'} horizontal justify={'space-between'}>
+            <TabsNav
+              activeKey={listType}
+              items={[
+                { key: 'all', label: t('store.tabs.all') },
+                { key: 'installed', label: t('store.tabs.installed') },
+              ]}
+              onChange={(v) => {
+                useToolStore.setState({ listType: v as any });
+              }}
+            />
+            <Flexbox gap={8} horizontal>
+              {listType === 'all' && (
+                <Button
+                  onClick={() => {
+                    installPlugins(pluginStoreList.map((item) => item.identifier));
+                  }}
+                >
+                  {t('store.installAllPlugins')}
+                </Button>
+              )}
             </Flexbox>
-            {isEmpty ? (
-              <Center padding={40}>
-                <Empty description={t('store.empty')} image={Empty.PRESENTED_IMAGE_SIMPLE}></Empty>
-              </Center>
-            ) : (
-              <SpotlightCard columns={2} gap={16} items={pluginStoreList} renderItem={PluginItem} />
-            )}
           </Flexbox>
-        )}
+          {isLoading ? (
+            <Loading />
+          ) : isEmpty ? (
+            <Center gap={12} padding={40}>
+              {error ? (
+                <>
+                  <Icon icon={ServerCrash} size={{ fontSize: 80 }} />
+                  {t('store.networkError')}
+                </>
+              ) : (
+                <Empty description={t('store.empty')} image={Empty.PRESENTED_IMAGE_SIMPLE}></Empty>
+              )}
+            </Center>
+          ) : (
+            <SpotlightCard columns={2} gap={16} items={pluginStoreList} renderItem={PluginItem} />
+          )}
+        </Flexbox>
       </Center>
     </Modal>
   );
