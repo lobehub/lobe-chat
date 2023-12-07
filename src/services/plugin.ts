@@ -6,7 +6,7 @@ import {
 
 import { getPluginIndexJSON } from '@/const/url';
 import { PluginModel } from '@/database/models/plugin';
-import { getCurrentLanguage } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
@@ -20,7 +20,7 @@ class PluginService {
    * get plugin list from store
    */
   getPluginList = async () => {
-    const url = getPluginIndexJSON(getCurrentLanguage());
+    const url = getPluginIndexJSON(globalHelpers.getCurrentLanguage());
 
     const res = await fetch(url);
 

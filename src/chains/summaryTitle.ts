@@ -1,15 +1,12 @@
 import { chatHelpers } from '@/store/chat/helpers';
-import { getCurrentLanguage } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 import { LanguageModel } from '@/types/llm';
-import {
-  OpenAIChatMessage,
-  OpenAIChatStreamPayload,
-} from '@/types/openai/chat';
+import { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 export const chainSummaryTitle = async (
   messages: OpenAIChatMessage[],
 ): Promise<Partial<OpenAIChatStreamPayload>> => {
-  const lang = getCurrentLanguage();
+  const lang = globalHelpers.getCurrentLanguage();
 
   const finalMessages: OpenAIChatMessage[] = [
     {

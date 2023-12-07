@@ -4,7 +4,7 @@ import { notification } from 'antd';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getPluginIndexJSON } from '@/const/url';
-import { getCurrentLanguage } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 import { useToolStore } from '@/store/tool';
 
 import { pluginService } from '../plugin';
@@ -14,7 +14,9 @@ vi.mock('@/const/url', () => ({
   getPluginIndexJSON: vi.fn(),
 }));
 vi.mock('@/store/global/helpers', () => ({
-  getCurrentLanguage: vi.fn(),
+  globalHelpers: {
+    getCurrentLanguage: vi.fn(),
+  },
 }));
 
 beforeEach(() => {
@@ -27,7 +29,7 @@ describe('PluginService', () => {
       // Arrange
       const fakeResponse = { plugins: [{ name: 'TestPlugin' }] };
       const fakeUrl = 'http://fake-url.com/plugins.json';
-      (getCurrentLanguage as Mock).mockReturnValue('en');
+      (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('en');
       (getPluginIndexJSON as Mock).mockReturnValue(fakeUrl);
       global.fetch = vi.fn(() =>
         Promise.resolve({
@@ -39,7 +41,7 @@ describe('PluginService', () => {
       const pluginList = await pluginService.getPluginList();
 
       // Assert
-      expect(getCurrentLanguage).toHaveBeenCalled();
+      expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
       expect(getPluginIndexJSON).toHaveBeenCalledWith('en');
       expect(fetch).toHaveBeenCalledWith(fakeUrl);
       expect(pluginList).toEqual(fakeResponse);
@@ -48,7 +50,7 @@ describe('PluginService', () => {
     it('should handle fetch error', async () => {
       // Arrange
       const fakeUrl = 'http://fake-url.com/plugins.json';
-      (getCurrentLanguage as Mock).mockReturnValue('en');
+      (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('en');
       (getPluginIndexJSON as Mock).mockReturnValue(fakeUrl);
       global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
 
