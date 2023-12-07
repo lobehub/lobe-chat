@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useTTS } from '@/hooks/useTTS';
 import { useChatStore } from '@/store/chat';
-import { filesSelectors, useFileStore } from '@/store/file';
+import { useFileStore } from '@/store/file';
 import { ChatMessageError, ChatTTS } from '@/types/chatMessage';
 import { getMessageError } from '@/utils/fetch';
 
@@ -18,7 +18,7 @@ export interface TTSProps extends ChatTTS {
 const InitPlayer = memo<TTSProps>(({ id, content, contentMd5, file }) => {
   const [isStart, setIsStart] = useState(false);
   const [error, setError] = useState<ChatMessageError>();
-  const uploadTTS = useFileStore(filesSelectors.uploadTTSByArrayBuffers);
+  const uploadTTS = useFileStore((s) => s.uploadTTSByArrayBuffers);
   const { t } = useTranslation('chat');
 
   const [ttsMessage, clearTTS] = useChatStore((s) => [s.ttsMessage, s.clearTTS]);

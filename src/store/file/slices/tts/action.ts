@@ -9,6 +9,11 @@ import { FileStore } from '../../store';
 export interface TTSFileAction {
   removeTTSFile: (id: string) => Promise<void>;
 
+  uploadTTSByArrayBuffers: (
+    messageId: string,
+    arrayBuffers: ArrayBuffer[],
+  ) => Promise<string | undefined>;
+
   uploadTTSFile: (file: File) => Promise<string | undefined>;
 
   useFetchTTSFile: (id: string | null) => SWRResponse<FilePreview>;
@@ -19,9 +24,20 @@ export const createTTSFileSlice: StateCreator<
   [['zustand/devtools', never]],
   [],
   TTSFileAction
-> = () => ({
+> = (_, get) => ({
   removeTTSFile: async (id) => {
     await fileService.removeFile(id);
+  },
+  uploadTTSByArrayBuffers: async (messageId, arrayBuffers) => {
+    const fileType = 'audio/mp3';
+    const blob = new Blob(arrayBuffers, { type: fileType });
+    const fileName = `${messageId}.mp3`;
+    const fileOptions = {
+      lastModified: Date.now(),
+      type: fileType,
+    };
+    const file = new File([blob], fileName, fileOptions);
+    return get().uploadTTSFile(file);
   },
   uploadTTSFile: async (file) => {
     try {
