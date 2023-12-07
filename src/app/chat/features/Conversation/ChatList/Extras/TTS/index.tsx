@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { Md5 } from 'ts-md5';
 
 import { useSessionStore } from '@/store/session';
@@ -12,9 +12,10 @@ const TTS = memo<TTSProps>(
     const { file, voice, content, contentMd5 } = props;
     const currentVoice = useSessionStore(agentSelectors.currentAgentTTSVoice);
 
-    const isVoiceEqual = currentVoice === voice;
-    const md5 = Md5.hashStr(content).toString();
+    const md5 = useMemo(() => Md5.hashStr(content).toString(), [content]);
+
     const isContentEqual = contentMd5 === md5;
+    const isVoiceEqual = currentVoice === voice;
     const isEqual = isVoiceEqual && isContentEqual;
 
     const PlayerRender = file && isEqual ? FilePlayer : InitPlayer;
