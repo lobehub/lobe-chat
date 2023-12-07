@@ -1,14 +1,13 @@
-import { VoiceList } from '@lobehub/tts';
 import {
   EdgeSpeechOptions,
   MicrosoftSpeechOptions,
   OpenAITTSOptions,
+  TTSOptions,
   useEdgeSpeech,
   useMicrosoftSpeech,
   useOpenAITTS,
 } from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
-import { SWRConfiguration } from 'swr';
 
 import { createHeaderWithOpenAI } from '@/services/_header';
 import { OPENAI_URLS, TTS_URL } from '@/services/_url';
@@ -17,7 +16,8 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { TTSServer } from '@/types/agent';
 
-interface TTSConfig extends SWRConfiguration {
+interface TTSConfig extends TTSOptions {
+  onUpload?: (currentVoice: string, arraybuffers: ArrayBuffer[]) => void;
   server?: TTSServer;
   voice?: string;
 }
@@ -25,8 +25,8 @@ interface TTSConfig extends SWRConfiguration {
 export const useTTS = (content: string, config?: TTSConfig) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const voiceList = useGlobalStore((s) => new VoiceList(settingsSelectors.currentLanguage(s)));
-
+  const lang = useGlobalStore(settingsSelectors.currentLanguage);
+  const voice = useSessionStore(agentSelectors.currentAgentTTSVoice(lang));
   let useSelectedTTS;
   let options: any = {};
   switch (config?.server || ttsAgentSettings.ttsService) {
@@ -39,10 +39,7 @@ export const useTTS = (content: string, config?: TTSConfig) => {
         },
         options: {
           model: ttsSettings.openAI.ttsModel,
-          voice:
-            config?.voice ||
-            ttsAgentSettings.voice.openai ||
-            VoiceList.openaiVoiceOptions?.[0].value,
+          voice: config?.voice || voice,
         },
       } as OpenAITTSOptions;
       break;
@@ -57,8 +54,7 @@ export const useTTS = (content: string, config?: TTSConfig) => {
            */
         },
         options: {
-          voice:
-            config?.voice || ttsAgentSettings.voice.edge || voiceList.edgeVoiceOptions?.[0].value,
+          voice: config?.voice || voice,
         },
       } as EdgeSpeechOptions;
       break;
@@ -70,10 +66,7 @@ export const useTTS = (content: string, config?: TTSConfig) => {
           serviceUrl: TTS_URL.microsoft,
         },
         options: {
-          voice:
-            config?.voice ||
-            ttsAgentSettings.voice.microsoft ||
-            voiceList.microsoftVoiceOptions?.[0].value,
+          voice: config?.voice || voice,
         },
       } as MicrosoftSpeechOptions;
       break;
@@ -83,5 +76,8 @@ export const useTTS = (content: string, config?: TTSConfig) => {
   return useSelectedTTS(content, {
     ...config,
     ...options,
+    onFinish: (arraybuffers) => {
+      config?.onUpload?.(options.voice || 'alloy', arraybuffers);
+    },
   });
 };
