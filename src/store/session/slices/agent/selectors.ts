@@ -1,3 +1,4 @@
+import { VoiceList } from '@lobehub/tts';
 import { t } from 'i18next';
 
 import { DEFAULT_OPENAI_MODEL_LIST, VISION_MODEL_WHITE_LIST } from '@/const/llm';
@@ -45,6 +46,29 @@ const currentAgentTTS = (s: SessionStore): LobeAgentTTSConfig => {
 
   return config?.tts || DEFAUTT_AGENT_TTS_CONFIG;
 };
+
+const currentAgentTTSVoice =
+  (lang: string) =>
+  (s: SessionStore): string => {
+    const { voice, ttsService } = currentAgentTTS(s);
+    const voiceList = new VoiceList(lang);
+    let currentVoice;
+    switch (ttsService) {
+      case 'openai': {
+        currentVoice = voice.openai || (VoiceList.openaiVoiceOptions?.[0].value as string);
+        break;
+      }
+      case 'edge': {
+        currentVoice = voice.edge || (voiceList.edgeVoiceOptions?.[0].value as string);
+        break;
+      }
+      case 'microsoft': {
+        currentVoice = voice.microsoft || (voiceList.microsoftVoiceOptions?.[0].value as string);
+        break;
+      }
+    }
+    return currentVoice || 'alloy';
+  };
 
 // ==========   Meta   ============== //
 const currentAgentMeta = (s: SessionStore): MetaData => {
@@ -97,6 +121,7 @@ export const agentSelectors = {
   currentAgentPlugins,
   currentAgentSystemRole,
   currentAgentTTS,
+  currentAgentTTSVoice,
   currentAgentTitle,
   getAvatar,
   getDescription,
