@@ -20,7 +20,10 @@ export interface ChatEnhanceAction {
 
   clearTranslate: (id: string) => Promise<void>;
   translateMessage: (id: string, targetLang: string) => Promise<void>;
-  ttsMessage: (id: string, init?: boolean) => Promise<void>;
+  ttsMessage: (
+    id: string,
+    state?: { contentMd5?: string; file?: string; voice?: string },
+  ) => Promise<void>;
 }
 
 export const chatEnhance: StateCreator<
@@ -88,8 +91,8 @@ export const chatEnhance: StateCreator<
     toggleChatLoading(false);
   },
 
-  ttsMessage: async (id, init) => {
-    await messageService.updateMessageTTS(id, { init: Boolean(init) });
+  ttsMessage: async (id, state = {}) => {
+    await messageService.updateMessageTTS(id, state);
     await get().refreshMessages();
   },
 });
