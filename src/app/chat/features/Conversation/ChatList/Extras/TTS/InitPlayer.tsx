@@ -15,7 +15,7 @@ export interface TTSProps extends ChatTTS {
   loading?: boolean;
 }
 
-const InitPlayer = memo<TTSProps>(({ id, content, contentMd5 }) => {
+const InitPlayer = memo<TTSProps>(({ id, content, contentMd5, file }) => {
   const [isStart, setIsStart] = useState(false);
   const [error, setError] = useState<ChatMessageError>();
   const uploadTTS = useFileStore(filesSelectors.uploadTTSByArrayBuffers);
@@ -72,10 +72,11 @@ const InitPlayer = memo<TTSProps>(({ id, content, contentMd5 }) => {
   }, [start]);
 
   useEffect(() => {
+    if (file) return;
     setTimeout(() => {
       handleInitStart();
     }, 100);
-  }, []);
+  }, [file]);
 
   return (
     <Player
