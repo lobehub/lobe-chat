@@ -7,7 +7,7 @@ const getPluginFormList = (pluginList: LobeChatPluginMeta[], id: string) =>
 
 const getPluginTitle = (meta?: LobeChatPluginMeta['meta']) => meta?.title;
 const getPluginDesc = (meta?: LobeChatPluginMeta['meta']) => meta?.description;
-const getPluginAvatar = (meta?: LobeChatPluginMeta['meta']) => meta?.avatar;
+const getPluginAvatar = (meta?: LobeChatPluginMeta['meta']) => meta?.avatar || '🧩';
 
 const isCustomPlugin = (id: string, pluginList: CustomPlugin[]) =>
   pluginList.some((i) => i.identifier === id);
