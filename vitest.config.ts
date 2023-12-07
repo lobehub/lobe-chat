@@ -2,6 +2,10 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ['crypto', 'util', 'tty'],
+    include: ['@lobehub/tts'],
+  },
   test: {
     alias: {
       '@': resolve(__dirname, './src'),
