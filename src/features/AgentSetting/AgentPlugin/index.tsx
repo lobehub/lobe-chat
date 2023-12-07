@@ -34,7 +34,7 @@ const AgentPlugin = memo(() => {
   //  =========== Plugin List =========== //
 
   const list = installedPlugins.map(({ identifier, meta }) => ({
-    avatar: <Avatar avatar={meta.avatar} />,
+    avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta)} />,
     children: <PluginAction identifier={identifier} />,
     desc: pluginHelpers.getPluginDesc(meta),
     label: pluginHelpers.getPluginTitle(meta),
@@ -45,7 +45,7 @@ const AgentPlugin = memo(() => {
   //  =========== Custom Plugin List =========== //
 
   const customList = customPluginList.map(({ identifier, meta }) => ({
-    avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta) || '🧩'} />,
+    avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta)} />,
     children: <LocalPluginItem id={identifier} />,
     desc: pluginHelpers.getPluginDesc(meta),
     label: (
