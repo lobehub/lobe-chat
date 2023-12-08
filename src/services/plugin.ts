@@ -10,7 +10,7 @@ import { globalHelpers } from '@/store/global/helpers';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-interface InstallPluginParams {
+export interface InstallPluginParams {
   identifier: string;
   manifest: LobeChatPluginManifest;
   type: 'plugin' | 'customPlugin';
