@@ -1,5 +1,5 @@
+import { ChatInputActionBar } from '@lobehub/ui';
 import { ReactNode, memo, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { ActionKeys, actionMap, getLeftActionList, getRightActionList } from './config';
 
@@ -34,24 +34,23 @@ const ActionBar = memo<ActionBarProps>(
     const rightActionList = useMemo(() => getRightActionList(mobile), [mobile]);
 
     return (
-      <Flexbox
-        align={'center'}
-        flex={'none'}
-        horizontal
-        justify={'space-between'}
+      <ChatInputActionBar
+        leftAddons={
+          <>
+            {leftAreaStartRender}
+            <RenderActionList dataSource={leftActionList} />
+            {leftAreaEndRender}
+          </>
+        }
         padding={padding}
-      >
-        <Flexbox align={'center'} flex={1} gap={4} horizontal>
-          {leftAreaStartRender}
-          <RenderActionList dataSource={leftActionList} />
-          {leftAreaEndRender}
-        </Flexbox>
-        <Flexbox align={'center'} flex={0} gap={4} horizontal justify={'flex-end'}>
-          {rightAreaStartRender}
-          <RenderActionList dataSource={rightActionList} />
-          {rightAreaEndRender}
-        </Flexbox>
-      </Flexbox>
+        rightAddons={
+          <>
+            {rightAreaStartRender}
+            <RenderActionList dataSource={rightActionList} />
+            {rightAreaEndRender}
+          </>
+        }
+      />
     );
   },
 );
