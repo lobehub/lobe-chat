@@ -28,7 +28,7 @@ const ToolItem = memo<{ identifier: string; label: string }>(({ identifier, labe
       }}
       padding={'8px 12px'}
     >
-      <Flexbox align={'center'} horizontal gap={8}>
+      <Flexbox align={'center'} gap={8} horizontal>
         {label}
         {isCustom && (
           <Tag bordered={false} color={'gold'}>
