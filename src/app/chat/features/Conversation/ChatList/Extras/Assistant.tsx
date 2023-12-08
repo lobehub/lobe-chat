@@ -31,7 +31,7 @@ export const AssistantMessageExtra = memo<ChatMessage>(({ extra, id, content }) 
           <Tag icon={<SiOpenai size={'1em'} />}>{extra?.fromModel as string}</Tag>
         </div>
       )}
-      <div>
+      <>
         {extra?.tts && (
           <ExtraContainer>
             <TTS content={content} id={id} loading={loading} {...extra?.tts} />
@@ -42,7 +42,7 @@ export const AssistantMessageExtra = memo<ChatMessage>(({ extra, id, content }) 
             <Translate id={id} loading={loading} {...extra?.translate} />
           </ExtraContainer>
         )}
-      </div>
+      </>
     </Flexbox>
   );
 });
