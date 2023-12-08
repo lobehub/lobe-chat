@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.110.1](https://github.com/lobehub/lobe-chat/compare/v0.110.0...v0.110.1)
+
+<sup>Released on **2023-12-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Sharp missing in production.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Sharp missing in production, closes [#598](https://github.com/lobehub/lobe-chat/issues/598) ([c8ef782](https://github.com/lobehub/lobe-chat/commit/c8ef782))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.110.0](https://github.com/lobehub/lobe-chat/compare/v0.109.1...v0.110.0)
 
 <sup>Released on **2023-12-07**</sup>
