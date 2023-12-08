@@ -15,7 +15,7 @@ export interface PluginTagProps {
 }
 
 const PluginTag = memo<PluginTagProps>(({ plugins }) => {
-  const list = useToolStore(pluginSelectors.installedPluginMetaList);
+  const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const displayPlugin = useToolStore(pluginSelectors.getPluginMetaById(plugins[0]), isEqual);
 
   if (plugins.length === 0) return null;
