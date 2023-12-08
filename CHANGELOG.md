@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.110.2](https://github.com/lobehub/lobe-chat/compare/v0.110.1...v0.110.2)
+
+<sup>Released on **2023-12-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix ChatInputArea style and typo (resolve.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix ChatInputArea style and typo (resolve, closes [#599](https://github.com/lobehub/lobe-chat/issues/599) ([0d08f3b](https://github.com/lobehub/lobe-chat/commit/0d08f3b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.110.1](https://github.com/lobehub/lobe-chat/compare/v0.110.0...v0.110.1)
 
 <sup>Released on **2023-12-08**</sup>

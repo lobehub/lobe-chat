@@ -1,4 +1,5 @@
 import { MobileChatInputArea, MobileChatSendButton } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +12,7 @@ import Files from './Files';
 
 const ChatInputMobileLayout = memo(() => {
   const { t } = useTranslation('chat');
-
+  const theme = useTheme();
   const { ref, onSend, loading, value, onInput, onStop, expand, setExpand } = useChatInput();
 
   return (
@@ -23,7 +24,10 @@ const ChatInputMobileLayout = memo(() => {
       placeholder={t('sendPlaceholder')}
       ref={ref}
       setExpand={setExpand}
-      style={{ width: '100vw' }}
+      style={{
+        background: `linear-gradient(to bottom, ${theme.colorFillQuaternary}, transparent)`,
+        width: '100vw',
+      }}
       textAreaLeftAddons={<STT mobile />}
       textAreaRightAddons={
         <MobileChatSendButton loading={loading} onSend={onSend} onStop={onStop} />
