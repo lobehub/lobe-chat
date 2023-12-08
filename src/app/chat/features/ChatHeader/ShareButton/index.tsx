@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useMergeState from 'use-merge-value';
 
-import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 
 const Inner = dynamic(() => import('./Inner'));
@@ -26,15 +26,14 @@ const ShareButton = memo<ShareButtonProps>(({ mobile, setOpen, open }) => {
 
   return (
     <>
-      {!mobile && (
-        <ActionIcon
-          icon={Share2}
-          loading={shareLoading}
-          onClick={() => setIsModalOpen(true)}
-          size={DESKTOP_HEADER_ICON_SIZE}
-          title={t('share')}
-        />
-      )}
+      <ActionIcon
+        icon={Share2}
+        loading={shareLoading}
+        onClick={() => setIsModalOpen(true)}
+        size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}
+        title={t('share')}
+      />
+
       <Modal
         centered={false}
         footer={null}
