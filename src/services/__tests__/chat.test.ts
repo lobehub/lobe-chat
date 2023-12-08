@@ -31,18 +31,26 @@ describe('ChatService', () => {
       const enabledPlugins = ['plugin1'];
       await act(async () => {
         useToolStore.setState({
-          pluginManifestMap: {
-            plugin1: {
+          installedPlugins: [
+            {
               identifier: 'plugin1',
-              api: [{ name: 'api1' }],
-              type: 'default',
-            } as LobeChatPluginManifest,
-            plugin2: {
+              manifest: {
+                identifier: 'plugin1',
+                api: [{ name: 'api1' }],
+                type: 'default',
+              } as LobeChatPluginManifest,
+              type: 'plugin',
+            },
+            {
               identifier: 'plugin2',
-              api: [{ name: 'api2' }],
-              type: 'standalone',
-            } as LobeChatPluginManifest,
-          },
+              manifest: {
+                identifier: 'plugin2',
+                api: [{ name: 'api2' }],
+                type: 'standalone',
+              } as LobeChatPluginManifest,
+              type: 'plugin',
+            },
+          ],
         });
       });
       await chatService.createAssistantMessage({ messages, plugins: enabledPlugins });

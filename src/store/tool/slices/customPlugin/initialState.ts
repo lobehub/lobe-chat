@@ -1,16 +1,17 @@
-import { CustomPlugin } from '@/types/plugin';
+import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 export interface CustomPluginState {
-  customPluginList: CustomPlugin[];
-  newCustomPlugin: Partial<CustomPlugin>;
+  newCustomPlugin: Partial<LobeToolCustomPlugin>;
 }
-export const defaultCustomPlugin: Partial<CustomPlugin> = {
-  apiMode: 'simple',
-  enableSettings: false,
-  manifestMode: 'url',
+export const defaultCustomPlugin: Partial<LobeToolCustomPlugin> = {
+  customParams: {
+    apiMode: 'simple',
+    enableSettings: false,
+    manifestMode: 'url',
+  },
+  type: 'customPlugin',
 };
 
 export const initialCustomPluginState: CustomPluginState = {
-  customPluginList: [],
   newCustomPlugin: defaultCustomPlugin,
 };

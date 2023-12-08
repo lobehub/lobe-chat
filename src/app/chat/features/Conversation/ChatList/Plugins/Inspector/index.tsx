@@ -47,10 +47,10 @@ const Inspector = memo<InspectorProps>(
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
 
-    const item = useToolStore(pluginSelectors.getPluginMetaById(id), isEqual);
-    const showRightAction = useToolStore(pluginSelectors.hasPluginUI(id));
-    const pluginAvatar = pluginHelpers.getPluginAvatar(item?.meta);
-    const pluginTitle = pluginHelpers.getPluginTitle(item?.meta);
+    const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(id), isEqual);
+    const showRightAction = useToolStore(pluginSelectors.isPluginHasUI(id));
+    const pluginAvatar = pluginHelpers.getPluginAvatar(pluginMeta);
+    const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('plugins.unknown');
 
     const avatar = pluginAvatar ? (
       <Avatar avatar={pluginAvatar} size={32} />
@@ -80,7 +80,7 @@ const Inspector = memo<InspectorProps>(
             ) : (
               avatar
             )}
-            {pluginTitle ?? t('plugins.unknown')}
+            {loading ? t('plugins.loading') : pluginTitle}
             {showRightAction && <Icon icon={showRender ? LucideChevronUp : LucideChevronDown} />}
           </Flexbox>
           {

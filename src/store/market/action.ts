@@ -4,7 +4,7 @@ import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { getAgentList, getAgentManifest } from '@/services/agentMarket';
-import { getCurrentLanguage } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 import { AgentsMarketItem, LobeChatAgentsMarketIndex } from '@/types/market';
 
 import type { Store } from './store';
@@ -46,7 +46,7 @@ export const createMarketAction: StateCreator<
   },
   useFetchAgent: (identifier) =>
     useSWR<AgentsMarketItem>(
-      [identifier, getCurrentLanguage()],
+      [identifier, globalHelpers.getCurrentLanguage()],
       ([id, locale]) => getAgentManifest(id, locale as string),
       {
         onError: () => {
@@ -58,7 +58,7 @@ export const createMarketAction: StateCreator<
       },
     ),
   useFetchAgentList: () =>
-    useSWR<LobeChatAgentsMarketIndex>(getCurrentLanguage(), getAgentList, {
+    useSWR<LobeChatAgentsMarketIndex>(globalHelpers.getCurrentLanguage(), getAgentList, {
       onSuccess: (agentMarketIndex) => {
         set(
           { agentList: agentMarketIndex.agents, tagList: agentMarketIndex.tags },

@@ -18,12 +18,12 @@ export const useInitConversation = () => {
   useFetchMessages(sessionId, activeTopicId);
   useFetchTopics(sessionId);
 
-  const [useFetchPluginStore, checkPluginsIsInstalled] = useToolStore((s) => [
-    s.useFetchPluginStore,
-    s.useCheckPluginsIsInstalled,
-  ]);
+  const [useFetchPluginStore, useFetchInstalledPlugins, checkPluginsIsInstalled] = useToolStore(
+    (s) => [s.useFetchPluginStore, s.useFetchInstalledPlugins, s.useCheckPluginsIsInstalled],
+  );
 
   useFetchPluginStore();
+  useFetchInstalledPlugins();
   checkPluginsIsInstalled(plugins);
 
   useEffect(() => {

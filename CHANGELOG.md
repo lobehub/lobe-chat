@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.110.3](https://github.com/lobehub/lobe-chat/compare/v0.110.2...v0.110.3)
+
+<sup>Released on **2023-12-08**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor with new plugin implement with dexie db.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor with new plugin implement with dexie db, closes [#596](https://github.com/lobehub/lobe-chat/issues/596) ([f3b5e7b](https://github.com/lobehub/lobe-chat/commit/f3b5e7b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.110.2](https://github.com/lobehub/lobe-chat/compare/v0.110.1...v0.110.2)
 
 <sup>Released on **2023-12-08**</sup>

@@ -23,35 +23,37 @@ const PluginSettings: RenderErrorMessage['Render'] = memo(({ id, plugin }) => {
   const manifest = useToolStore(pluginSelectors.getPluginManifestById(pluginIdentifier), isEqual);
 
   return (
-    <ErrorActionContainer>
-      <Center gap={16} style={{ maxWidth: 400 }}>
-        <Avatar
-          avatar={pluginHelpers.getPluginAvatar(pluginMeta?.meta) || '⚙️'}
-          background={theme.colorFillContent}
-          gap={12}
-          size={80}
-        />
-        <Flexbox style={{ fontSize: 20 }}>
-          {t('pluginSettings.title', { name: pluginHelpers.getPluginTitle(pluginMeta?.meta) })}
-        </Flexbox>
-        <Flexbox className={styles.desc}>{t('pluginSettings.desc')}</Flexbox>
-        <Divider style={{ margin: '0 16px' }} />
-        {manifest.settings && (
-          <PluginSettingsConfig id={manifest.identifier} schema={manifest.settings} />
-        )}
-        <Button
-          block
-          onClick={() => {
-            resend(id);
-            deleteMessage(id);
-          }}
-          style={{ marginTop: 8 }}
-          type={'primary'}
-        >
-          {t('unlock.confirm')}
-        </Button>
-      </Center>
-    </ErrorActionContainer>
+    !!manifest && (
+      <ErrorActionContainer>
+        <Center gap={16} style={{ maxWidth: 400 }}>
+          <Avatar
+            avatar={pluginHelpers.getPluginAvatar(pluginMeta) || '⚙️'}
+            background={theme.colorFillContent}
+            gap={12}
+            size={80}
+          />
+          <Flexbox style={{ fontSize: 20 }}>
+            {t('pluginSettings.title', { name: pluginHelpers.getPluginTitle(pluginMeta) })}
+          </Flexbox>
+          <Flexbox className={styles.desc}>{t('pluginSettings.desc')}</Flexbox>
+          <Divider style={{ margin: '0 16px' }} />
+          {manifest.settings && (
+            <PluginSettingsConfig id={manifest.identifier} schema={manifest.settings} />
+          )}
+          <Button
+            block
+            onClick={() => {
+              resend(id);
+              deleteMessage(id);
+            }}
+            style={{ marginTop: 8 }}
+            type={'primary'}
+          >
+            {t('unlock.confirm')}
+          </Button>
+        </Center>
+      </ErrorActionContainer>
+    )
   );
 });
 

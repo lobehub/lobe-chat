@@ -1,15 +1,15 @@
-import { PluginManifestMap } from '@/types/plugin';
+import { LobeTool } from '@/types/tool';
 
 export type PluginsSettings = Record<string, any>;
 
 export interface PluginState {
-  manifestPrepared: boolean;
-  pluginManifestMap: PluginManifestMap;
+  installedPlugins: LobeTool[];
+  loadingInstallPlugins: boolean;
   pluginsSettings: PluginsSettings;
 }
 
 export const initialPluginState: PluginState = {
-  manifestPrepared: false,
-  pluginManifestMap: {},
+  installedPlugins: [],
+  loadingInstallPlugins: true,
   pluginsSettings: {},
 };

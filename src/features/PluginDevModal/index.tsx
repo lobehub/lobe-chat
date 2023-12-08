@@ -1,31 +1,33 @@
-import { Alert, Modal } from '@lobehub/ui';
-import { App, Button, Form, Popconfirm } from 'antd';
+import { Alert, Icon, Modal, Tooltip } from '@lobehub/ui';
+import { App, Button, Form, Popconfirm, Segmented } from 'antd';
 import { useResponsive } from 'antd-style';
+import { MoveUpRight } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import MobilePadding from '@/components/MobilePadding';
 import { WIKI_PLUGIN_GUIDE } from '@/const/url';
-import { CustomPlugin } from '@/types/plugin';
+import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-import ManifestForm from './ManifestForm';
-import MetaForm from './MetaForm';
+import LocalForm from './LocalForm';
 import PluginPreview from './PluginPreview';
+import UrlModeForm from './UrlModeForm';
 
 interface DevModalProps {
   mode?: 'edit' | 'create';
   onDelete?: () => void;
   onOpenChange: (open: boolean) => void;
-  onSave?: (value: CustomPlugin) => Promise<void> | void;
-  onValueChange?: (value: Partial<CustomPlugin>) => void;
+  onSave?: (value: LobeToolCustomPlugin) => Promise<void> | void;
+  onValueChange?: (value: Partial<LobeToolCustomPlugin>) => void;
   open?: boolean;
-  value?: CustomPlugin;
+  value?: LobeToolCustomPlugin;
 }
 
 const DevModal = memo<DevModalProps>(
   ({ open, mode = 'create', value, onValueChange, onSave, onOpenChange, onDelete }) => {
     const isEditMode = mode === 'edit';
+    const [configMode, setConfigMode] = useState<'url' | 'local'>('url');
     const { t } = useTranslation('plugin');
     const { message } = App.useApp();
     const { mobile } = useResponsive();
@@ -85,7 +87,8 @@ const DevModal = memo<DevModalProps>(
         onFormFinish={async (_, info) => {
           if (onSave) {
             setSubmitting(true);
-            await onSave?.(info.values as CustomPlugin);
+
+            await onSave?.(info.values as LobeToolCustomPlugin);
             setSubmitting(false);
           }
           message.success(t(isEditMode ? 'dev.updateSuccess' : 'dev.saveSuccess'));
@@ -100,34 +103,67 @@ const DevModal = memo<DevModalProps>(
             e.stopPropagation();
             onOpenChange(false);
           }}
-          onOk={() => form.submit()}
+          onOk={(e) => {
+            e.stopPropagation();
+            form.submit();
+          }}
           open={open}
           title={t('dev.title')}
         >
-          <Flexbox gap={mobile ? 0 : 16}>
+          <Flexbox
+            gap={mobile ? 0 : 16}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             <MobilePadding bottom={0} gap={16}>
               <Alert
                 message={
-                  <>
-                    {t('dev.modalDesc')}
-                    <a href={WIKI_PLUGIN_GUIDE} rel="noreferrer" target={'_blank'}>
-                      {WIKI_PLUGIN_GUIDE}
+                  <Trans i18nKey={'dev.modalDesc'} ns={'plugin'}>
+                    添加自定义插件后，可用于插件开发验证，也可直接在会话中使用。插件开发文档请参考：
+                    <a
+                      href={WIKI_PLUGIN_GUIDE}
+                      rel="noreferrer"
+                      style={{ paddingInline: 8 }}
+                      target={'_blank'}
+                    >
+                      文档
                     </a>
-                  </>
+                    <Icon icon={MoveUpRight} />
+                  </Trans>
                 }
                 showIcon
                 type={'info'}
               />
-              {/*<Tabs*/}
-              {/*  items={[*/}
-              {/*    { children: <MetaForm />, key: 'meta', label: t('dev.tabs.meta') },*/}
-              {/*    { children: <ManifestForm />, key: 'manifest', label: t('dev.tabs.manifest') },*/}
-              {/*  ]}*/}
-              {/*/>*/}
             </MobilePadding>
             <PluginPreview form={form} />
-            <ManifestForm form={form} />
-            <MetaForm form={form} mode={mode} />
+            <Segmented
+              block
+              onChange={(e) => {
+                setConfigMode(e as any);
+              }}
+              options={[
+                {
+                  label: t('dev.manifest.mode.url'),
+                  value: 'url',
+                },
+                {
+                  disabled: true,
+                  label: (
+                    <Tooltip title={t('dev.manifest.mode.local-tooltip')}>
+                      {t('dev.manifest.mode.local')}
+                    </Tooltip>
+                  ),
+                  value: 'local',
+                },
+              ]}
+            />
+            {configMode === 'url' ? (
+              <UrlModeForm form={form} isEditMode={mode === 'edit'} />
+            ) : (
+              <LocalForm form={form} mode={mode} />
+            )}
+            {/*<MetaForm form={form} mode={mode} />*/}
           </Flexbox>
         </Modal>
       </Form.Provider>

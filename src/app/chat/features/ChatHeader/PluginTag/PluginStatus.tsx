@@ -17,10 +17,10 @@ interface PluginStatusProps {
 }
 const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
   const { t } = useTranslation('common');
-  const [status, isCustom, fetchPluginManifest] = useToolStore((s) => [
+  const [status, isCustom, reinstallCustomPlugin] = useToolStore((s) => [
     pluginSelectors.getPluginManifestLoadingStatus(id)(s),
     customPluginSelectors.isCustomPlugin(id)(s),
-    s.installPlugin,
+    s.reinstallCustomPlugin,
   ]);
 
   const manifest = useToolStore(pluginSelectors.getPluginManifestById(id));
@@ -37,7 +37,7 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
           <ActionIcon
             icon={LucideRotateCw}
             onClick={() => {
-              fetchPluginManifest(id);
+              reinstallCustomPlugin(id);
             }}
             size={'small'}
             title={t('retry')}
@@ -87,8 +87,7 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
               icon={RotateCwIcon}
               onClick={(e) => {
                 e.stopPropagation();
-                fetchPluginManifest(id);
-                // form.validateFields(['manifest']);
+                reinstallCustomPlugin(id);
               }}
               size={'small'}
               title={t('dev.meta.manifest.refresh', { ns: 'plugin' })}

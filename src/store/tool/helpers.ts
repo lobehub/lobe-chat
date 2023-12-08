@@ -1,16 +1,15 @@
-import { LobeChatPluginMeta } from '@lobehub/chat-plugin-sdk';
+import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
-import { CustomPlugin } from '@/types/plugin';
+import { LobeTool } from '@/types/tool';
 
-const getPluginFormList = (pluginList: LobeChatPluginMeta[], id: string) =>
-  pluginList?.find((p) => p.identifier === id);
+const getPluginFormList = (list: LobeTool[], id: string) => list?.find((p) => p.identifier === id);
 
-const getPluginTitle = (meta?: LobeChatPluginMeta['meta']) => meta?.title;
-const getPluginDesc = (meta?: LobeChatPluginMeta['meta']) => meta?.description;
-const getPluginAvatar = (meta?: LobeChatPluginMeta['meta']) => meta?.avatar || '🧩';
+const getPluginTitle = (meta?: LobeChatPluginManifest['meta']) => meta?.title;
+const getPluginDesc = (meta?: LobeChatPluginManifest['meta']) => meta?.description;
+const getPluginAvatar = (meta?: LobeChatPluginManifest['meta']) => meta?.avatar || '🧩';
 
-const isCustomPlugin = (id: string, pluginList: CustomPlugin[]) =>
-  pluginList.some((i) => i.identifier === id);
+const isCustomPlugin = (id: string, pluginList: LobeTool[]) =>
+  pluginList.some((i) => i.identifier === id && i.type === 'customPlugin');
 
 export const pluginHelpers = {
   getPluginAvatar,

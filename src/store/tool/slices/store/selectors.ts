@@ -1,21 +1,21 @@
 import type { ToolStoreState } from '../../initialState';
 
-const installedPlugins = (s: ToolStoreState) => Object.values(s.pluginManifestMap);
-
 const onlinePluginStore = (s: ToolStoreState) => {
-  if (s.listType === 'all') return s.pluginList;
+  if (s.listType === 'all') return s.pluginStoreList;
 
-  const installedPluginIds = Object.keys(s.pluginManifestMap);
+  const installedPluginIds = new Set(s.installedPlugins.map((i) => i.identifier));
 
-  return s.pluginList.filter((p) => installedPluginIds.includes(p.identifier));
+  return s.pluginStoreList.filter((p) => installedPluginIds.has(p.identifier));
 };
 
-const isPluginInstalled = (id: string) => (s: ToolStoreState) => !!s.pluginManifestMap[id];
 const isPluginInstallLoading = (id: string) => (s: ToolStoreState) => s.pluginInstallLoading[id];
 
+const getPluginById = (id: string) => (s: ToolStoreState) => {
+  return s.pluginStoreList.find((i) => i.identifier === id);
+};
+
 export const pluginStoreSelectors = {
-  installedPlugins,
+  getPluginById,
   isPluginInstallLoading,
-  isPluginInstalled,
   onlinePluginStore,
 };
