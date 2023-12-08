@@ -1,4 +1,4 @@
-import { ActionIcon, Alert, Highlighter, Icon } from '@lobehub/ui';
+import { ActionIcon, Alert, Highlighter } from '@lobehub/ui';
 import { Button, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { Mic, MicOff } from 'lucide-react';
@@ -63,9 +63,6 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
     },
   });
 
-  const icon = isLoading ? MicOff : Mic;
-  const Render: any = !mobile ? ActionIcon : Button;
-  const iconRender: any = !mobile ? icon : <Icon icon={icon} />;
   const desc = t('stt.action');
 
   const handleTriggerStartStop = useCallback(() => {
@@ -132,10 +129,12 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
       placement={mobile ? 'topRight' : 'top'}
       trigger={['click']}
     >
-      <Render
-        icon={iconRender}
+      <ActionIcon
+        active={mobile}
+        icon={isLoading ? MicOff : Mic}
         onClick={handleTriggerStartStop}
         placement={'bottom'}
+        size={mobile ? { blockSize: 36, fontSize: 16 } : {}}
         style={{ flex: 'none' }}
         title={desc}
       />

@@ -1,50 +1,55 @@
-import { ActionIcon, DraggablePanel } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { ActionIcon, ChatInputArea, ChatSendButton } from '@lobehub/ui';
 import { Maximize2, Minimize2 } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
+import SaveTopic from '@/app/chat/features/ChatInput/Topic';
+import { useChatInput } from '@/app/chat/features/ChatInput/useChatInput';
 import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
 
 import DragUpload from './DragUpload';
-import Footer from './Footer';
-import InputArea from './InputArea';
-
-const useStyles = createStyles(({ css }) => {
-  return {
-    container: css`
-      position: relative;
-
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      height: 100%;
-      padding: 12px 0 16px;
-    `,
-  };
-});
+import { LocalFiles } from './LocalFiles';
 
 const ChatInputDesktopLayout = memo(() => {
-  const { styles } = useStyles();
-  const [expand, setExpand] = useState<boolean>(false);
+  const { t } = useTranslation('chat');
+  const {
+    ref,
+    onStop,
+    onSend,
+    loading,
+    value,
+    onInput,
+    expand,
+    setExpand,
+    inputHeight,
+    updatePreference,
+    canUpload,
+  } = useChatInput();
 
-  const [inputHeight, updatePreference] = useGlobalStore((s) => [
-    s.preference.inputHeight,
-    s.updatePreference,
-  ]);
-
-  const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);
   return (
     <>
       {canUpload && <DragUpload />}
-      <DraggablePanel
-        fullscreen={expand}
-        headerHeight={HEADER_HEIGHT}
-        minHeight={CHAT_TEXTAREA_HEIGHT}
+      <ChatInputArea
+        bottomAddons={
+          <ChatSendButton
+            leftAddons={canUpload && <LocalFiles />}
+            loading={loading}
+            onSend={onSend}
+            onStop={onStop}
+            rightAddons={<SaveTopic />}
+            texts={{
+              send: t('send'),
+              stop: t('stop'),
+              warp: t('warp'),
+            }}
+          />
+        }
+        expand={expand}
+        heights={{ headerHeight: HEADER_HEIGHT, inputHeight, minHeight: CHAT_TEXTAREA_HEIGHT }}
+        loading={loading}
+        onInput={onInput}
+        onSend={onSend}
         onSizeChange={(_, size) => {
           if (!size) return;
           updatePreference({
@@ -52,11 +57,9 @@ const ChatInputDesktopLayout = memo(() => {
               typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
           });
         }}
-        placement="bottom"
-        size={{ height: inputHeight, width: '100%' }}
-        style={{ zIndex: 10 }}
-      >
-        <section className={styles.container} style={{ minHeight: CHAT_TEXTAREA_HEIGHT }}>
+        placeholder={t('sendPlaceholder')}
+        ref={ref}
+        topAddons={
           <ActionBar
             rightAreaEndRender={
               <ActionIcon
@@ -67,10 +70,9 @@ const ChatInputDesktopLayout = memo(() => {
               />
             }
           />
-          <InputArea />
-          <Footer />
-        </section>
-      </DraggablePanel>
+        }
+        value={value}
+      />
     </>
   );
 });
