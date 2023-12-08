@@ -1,5 +1,5 @@
 import { TextAreaRef } from 'antd/es/input/TextArea';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
@@ -24,17 +24,19 @@ export const useChatInput = () => {
     s.stopGenerateMessage,
   ]);
 
+  const handleSend = useCallback(() => {
+    setExpand(false);
+    ref?.current?.blur();
+    onSend();
+  }, [onSend]);
+
   return {
     canUpload,
     expand,
     inputHeight,
     loading,
     onInput,
-    onSend: () => {
-      setExpand(false);
-      ref?.current?.blur();
-      onSend();
-    },
+    onSend: handleSend,
     onStop,
     ref,
     setExpand,
