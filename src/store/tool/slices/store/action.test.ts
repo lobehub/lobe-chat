@@ -5,15 +5,17 @@ import useSWR from 'swr';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { pluginService } from '@/services/plugin';
-import { CustomPlugin } from '@/types/plugin';
+import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { useToolStore } from '../../store';
 
 // Mock the pluginService.getPluginList method
 vi.mock('@/services/plugin', () => ({
   pluginService: {
-    fetchManifest: vi.fn(),
+    getPluginManifest: vi.fn(),
     getPluginList: vi.fn(),
+    uninstallPlugin: vi.fn(),
+    installPlugin: vi.fn(),
   },
 }));
 
@@ -64,16 +66,19 @@ const pluginManifestMock = {
   version: '1',
 };
 // Mock useSWR
-vi.mock('swr', () => ({
-  __esModule: true,
-  default: vi.fn(),
-}));
+vi.mock('swr', async () => {
+  const actual = await vi.importActual('swr');
+  return {
+    ...(actual as any),
+    default: vi.fn(),
+  };
+});
 
 const logError = console.error;
 beforeEach(() => {
   vi.restoreAllMocks();
   useToolStore.setState({
-    pluginList: [
+    pluginStoreList: [
       {
         identifier: 'plugin1',
         meta: { title: 'plugin1', avatar: '🍏' },
@@ -104,7 +109,7 @@ describe('useToolStore:pluginStore', () => {
       // Then
       expect(pluginService.getPluginList).toHaveBeenCalled();
       expect(pluginList).toEqual(pluginListMock);
-      expect(useToolStore.getState().pluginList).toEqual(pluginListMock.plugins);
+      expect(useToolStore.getState().pluginStoreList).toEqual(pluginListMock.plugins);
     });
 
     it('should handle errors when loading plugin list', async () => {
@@ -128,7 +133,7 @@ describe('useToolStore:pluginStore', () => {
       expect(errorOccurred).toBe(true);
       expect(pluginList).toBeUndefined();
       // Ensure the state is not updated with an undefined value
-      expect(useToolStore.getState().pluginList).not.toBeUndefined();
+      expect(useToolStore.getState().pluginStoreList).not.toBeUndefined();
     });
   });
 
@@ -220,19 +225,21 @@ describe('useToolStore:pluginStore', () => {
         },
         version: '1',
       };
-      (pluginService.fetchManifest as Mock).mockResolvedValue(pluginManifestMock);
+      (pluginService.getPluginManifest as Mock).mockResolvedValue(pluginManifestMock);
 
       await act(async () => {
         await useToolStore.getState().installPlugin(pluginIdentifier);
       });
 
       // Then
-      expect(pluginService.fetchManifest).toHaveBeenCalled();
+      expect(pluginService.getPluginManifest).toHaveBeenCalled();
       expect(notification.error).not.toHaveBeenCalled();
       expect(updateInstallLoadingStateMock).toHaveBeenCalledTimes(2);
-      expect(useToolStore.getState().pluginManifestMap[pluginIdentifier]).toEqual(
-        pluginManifestMock,
-      );
+      expect(pluginService.installPlugin).toHaveBeenCalledWith({
+        identifier: 'plugin1',
+        type: 'plugin',
+        manifest: pluginManifestMock,
+      });
 
       act(() => {
         useToolStore.setState({
@@ -241,14 +248,15 @@ describe('useToolStore:pluginStore', () => {
       });
     });
 
-    it('should throw error with no manifest url', async () => {
+    it('should throw error with no error', async () => {
       // Given
 
-      const pluginManifestMock = { identifier: 'plugin1', version: '1.0.0' };
-      (pluginService.fetchManifest as Mock).mockResolvedValue(pluginManifestMock);
+      const error = new TypeError('noManifest');
+
+      (pluginService.getPluginManifest as Mock).mockRejectedValue(error);
 
       useToolStore.setState({
-        pluginList: [
+        pluginStoreList: [
           {
             identifier: 'plugin1',
             meta: { title: 'plugin1', avatar: '🍏' },
@@ -265,37 +273,6 @@ describe('useToolStore:pluginStore', () => {
         message: 'error.installError',
       });
     });
-
-    it('should throw error with invalid manifest', async () => {
-      const pluginManifestMock = { identifier: 'plugin1', version: '1.0.0' };
-      (pluginService.fetchManifest as Mock).mockResolvedValue(pluginManifestMock);
-
-      await act(async () => {
-        await useToolStore.getState().installPlugin('plugin1');
-      });
-
-      expect(pluginService.fetchManifest).toHaveBeenCalled();
-      expect(notification.error).toHaveBeenCalledWith({
-        description: 'error.manifestInvalid',
-        message: 'error.installError',
-      });
-    });
-
-    it('should handle error when fetch is error available', async () => {
-      (pluginService.fetchManifest as Mock).mockResolvedValue(undefined);
-
-      await act(async () => {
-        await useToolStore.getState().installPlugin('plugin1');
-      });
-
-      expect(pluginService.fetchManifest).toHaveBeenCalled();
-      expect(notification.error).toHaveBeenCalledWith({
-        description: 'error.fetchError',
-        message: 'error.installError',
-      });
-    });
-
-    // ... Add more test cases for error handling (fetchError and manifestInvalid)
   });
 
   describe('installPlugins', () => {
@@ -303,7 +280,7 @@ describe('useToolStore:pluginStore', () => {
       // Given
       act(() => {
         useToolStore.setState({
-          pluginList: [
+          pluginStoreList: [
             {
               identifier: 'plugin1',
               meta: { title: 'plugin1', avatar: '🍏' },
@@ -320,15 +297,14 @@ describe('useToolStore:pluginStore', () => {
 
       const plugins = ['plugin1', 'plugin2'];
 
-      (pluginService.fetchManifest as Mock).mockResolvedValue(pluginManifestMock);
+      (pluginService.getPluginManifest as Mock).mockResolvedValue(pluginManifestMock);
 
       // When
       await act(async () => {
         await useToolStore.getState().installPlugins(plugins);
       });
 
-      // Then
-      expect(Object.keys(useToolStore.getState().pluginManifestMap)).toHaveLength(2);
+      expect(pluginService.installPlugin).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -338,28 +314,32 @@ describe('useToolStore:pluginStore', () => {
       const pluginIdentifier = 'plugin1';
       act(() => {
         useToolStore.setState({
-          pluginManifestMap: {
-            [pluginIdentifier]: {
+          installedPlugins: [
+            {
               identifier: pluginIdentifier,
-              meta: {},
-            } as LobeChatPluginManifest,
-          },
+              type: 'plugin',
+              manifest: {
+                identifier: pluginIdentifier,
+                meta: {},
+              } as LobeChatPluginManifest,
+            },
+          ],
         });
       });
 
       // When
       act(() => {
-        useToolStore.getState().unInstallPlugin(pluginIdentifier);
+        useToolStore.getState().uninstallPlugin(pluginIdentifier);
       });
 
       // Then
-      expect(useToolStore.getState().pluginManifestMap[pluginIdentifier]).toBeUndefined();
+      expect(pluginService.uninstallPlugin).toBeCalledWith(pluginIdentifier);
     });
   });
 
   describe('updateInstallLoadingState', () => {
     it('should update the loading state for a plugin', () => {
-      const pluginIdentifier = 'plugin1';
+      const pluginIdentifier = 'abc';
       const loadingState = true;
       const { result } = renderHook(() => useToolStore());
 
@@ -372,15 +352,11 @@ describe('useToolStore:pluginStore', () => {
 
     it('should clear the loading state for a plugin', () => {
       // Given
-      const pluginIdentifier = 'plugin2';
+      const pluginIdentifier = 'dddd';
       const loadingState = undefined;
 
       act(() => {
-        useToolStore.setState({
-          pluginInstallLoading: {
-            [pluginIdentifier]: true,
-          },
-        });
+        useToolStore.setState({ pluginInstallLoading: { [pluginIdentifier]: true } });
       });
       const { result } = renderHook(() => useToolStore());
 

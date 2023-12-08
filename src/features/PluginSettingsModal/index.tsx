@@ -24,21 +24,27 @@ const PluginSettingsModal = memo<PluginSettingsModalProps>(({ schema, onClose, i
   const { t } = useTranslation('plugin');
   const theme = useTheme();
   return (
-    <Modal onCancel={onClose} open={open} title={t('setting')} width={600}>
+    <Modal
+      onCancel={onClose}
+      onOk={() => {
+        onClose();
+      }}
+      open={open}
+      title={t('setting')}
+      width={600}
+    >
       <MobilePadding>
         <Center gap={16}>
           <Avatar
-            avatar={pluginHelpers.getPluginAvatar(pluginMeta?.meta) || '⚙️'}
+            avatar={pluginHelpers.getPluginAvatar(pluginMeta) || '⚙️'}
             background={theme.colorFillContent}
             gap={12}
             size={64}
           />
 
-          <Flexbox style={{ fontSize: 20 }}>
-            {pluginHelpers.getPluginTitle(pluginMeta?.meta)}
-          </Flexbox>
+          <Flexbox style={{ fontSize: 20 }}>{pluginHelpers.getPluginTitle(pluginMeta)}</Flexbox>
           <Typography.Text type={'secondary'}>
-            {pluginHelpers.getPluginDesc(pluginMeta?.meta)}
+            {pluginHelpers.getPluginDesc(pluginMeta)}
           </Typography.Text>
           <Divider style={{ marginBottom: 0, marginTop: 8 }} />
           {schema && <PluginSettingsConfig id={id} schema={schema} />}

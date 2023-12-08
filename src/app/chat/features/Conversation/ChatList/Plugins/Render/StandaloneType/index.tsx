@@ -2,6 +2,7 @@ import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { memo } from 'react';
 
 import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/slices/plugin/selectors';
 
 import IFrameRender from './Iframe';
 
@@ -12,7 +13,7 @@ export interface PluginStandaloneTypeProps {
 }
 
 const PluginDefaultType = memo<PluginStandaloneTypeProps>(({ payload, id, name = 'unknown' }) => {
-  const manifest = useToolStore((s) => s.pluginManifestMap[name]);
+  const manifest = useToolStore(pluginSelectors.getPluginManifestById(name));
 
   if (!manifest?.ui) return;
 

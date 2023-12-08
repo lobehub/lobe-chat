@@ -22,12 +22,12 @@ const MarketList = memo<{ id: string }>(({ id }) => {
     useToolStore((s) => [
       s.useFetchPluginStore,
       s.installPlugin,
-      s.deleteCustomPlugin,
+      s.uninstallCustomPlugin,
       s.updateCustomPlugin,
     ]);
 
   const pluginManifestLoading = useToolStore((s) => s.pluginInstallLoading, isEqual);
-  const devPlugin = useToolStore(pluginSelectors.getDevPluginById(id), isEqual);
+  const devPlugin = useToolStore(pluginSelectors.getCustomPluginById(id), isEqual);
 
   useFetchPluginList();
 

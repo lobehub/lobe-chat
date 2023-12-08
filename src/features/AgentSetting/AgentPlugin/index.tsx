@@ -13,6 +13,7 @@ import { pluginSelectors } from '@/store/tool/selectors';
 
 import { useStore } from '../store';
 import AddPluginButton from './AddPluginButton';
+import LoadingList from './LoadingList';
 import LocalPluginItem from './LocalPluginItem';
 import PluginAction from './PluginAction';
 
@@ -27,42 +28,45 @@ const AgentPlugin = memo(() => {
   ]);
 
   const installedPlugins = useToolStore(pluginSelectors.installedPlugins, isEqual);
-  const customPluginList = useToolStore((s) => s.customPluginList, isEqual);
+  const useFetchInstalledPlugins = useToolStore((s) => s.useFetchInstalledPlugins);
+
+  const { isLoading } = useFetchInstalledPlugins();
 
   const isEmpty = installedPlugins.length === 0 && userEnabledPlugins.length === 0;
 
   //  =========== Plugin List =========== //
 
-  const list = installedPlugins.map(({ identifier, meta }) => ({
-    avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta)} />,
-    children: <PluginAction identifier={identifier} />,
-    desc: pluginHelpers.getPluginDesc(meta),
-    label: pluginHelpers.getPluginTitle(meta),
-    minWidth: undefined,
-    tag: identifier,
-  }));
+  const list = installedPlugins.map(({ identifier, type, manifest: { meta } = {} }) => {
+    const isCustomPlugin = type === 'customPlugin';
 
-  //  =========== Custom Plugin List =========== //
+    return {
+      avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta)} />,
+      children: isCustomPlugin ? (
+        <LocalPluginItem id={identifier} />
+      ) : (
+        <PluginAction identifier={identifier} />
+      ),
 
-  const customList = customPluginList.map(({ identifier, meta }) => ({
-    avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta)} />,
-    children: <LocalPluginItem id={identifier} />,
-    desc: pluginHelpers.getPluginDesc(meta),
-    label: (
-      <Flexbox align={'center'} gap={8} horizontal>
-        {pluginHelpers.getPluginTitle(meta)}
-        <Tag bordered={false} color={'gold'}>
-          {t('list.item.local.title', { ns: 'plugin' })}
-        </Tag>
-      </Flexbox>
-    ),
-    minWidth: undefined,
-    tag: identifier,
-  }));
+      desc: pluginHelpers.getPluginDesc(meta),
+
+      label: isCustomPlugin ? (
+        <Flexbox align={'center'} gap={8} horizontal>
+          {pluginHelpers.getPluginTitle(meta)}
+          <Tag bordered={false} color={'gold'}>
+            {t('list.item.local.title', { ns: 'plugin' })}
+          </Tag>
+        </Flexbox>
+      ) : (
+        pluginHelpers.getPluginTitle(meta)
+      ),
+      minWidth: undefined,
+      tag: identifier,
+    };
+  });
 
   //  =========== Deprecated Plugin List =========== //
 
-  // 基于 userEnabledPlugins 和完整的 installedPlugins，检查出不在 totalList 中的插件
+  // 检查出不在 installedPlugins 中的插件
   const deprecatedList = userEnabledPlugins
     .filter((pluginId) => installedPlugins.findIndex((p) => p.identifier === pluginId) < 0)
     .map((id) => ({
@@ -89,13 +93,16 @@ const AgentPlugin = memo(() => {
 
   const hasDeprecated = deprecatedList.length > 0;
 
+  const loadingSkeleton = LoadingList();
   return (
     <>
       <PluginStore open={showStore} setOpen={setShowStore} />
       <Form
         items={[
           {
-            children: isEmpty ? (
+            children: isLoading ? (
+              loadingSkeleton
+            ) : isEmpty ? (
               <Center padding={40}>
                 <Empty
                   description={
@@ -117,7 +124,7 @@ const AgentPlugin = memo(() => {
                 />
               </Center>
             ) : (
-              [...deprecatedList, ...customList, ...list]
+              [...deprecatedList, ...list]
             ),
             extra: (
               <Space.Compact style={{ width: 'auto' }}>

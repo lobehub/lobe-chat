@@ -12,36 +12,29 @@ const AddPluginButton = forwardRef<HTMLButtonElement>((props, ref) => {
   const { t } = useTranslation('setting');
   const [showModal, setModal] = useState(false);
   const [toggleAgentPlugin] = useStore((s) => [s.toggleAgentPlugin]);
-  const [installPlugin, saveToDevList, updateNewDevPlugin] = useToolStore((s) => [
-    s.installPlugin,
-    s.saveToCustomPluginList,
+  const [installCustomPlugin, updateNewDevPlugin] = useToolStore((s) => [
+    s.installCustomPlugin,
     s.updateNewCustomPlugin,
   ]);
 
-  const togglePlugin = async (pluginId: string, fetchManifest?: boolean) => {
-    toggleAgentPlugin(pluginId);
-    if (fetchManifest) {
-      await installPlugin(pluginId);
-    }
-  };
-
   return (
-    <>
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <DevModal
         onOpenChange={setModal}
         onSave={async (devPlugin) => {
-          // 先保存
-          saveToDevList(devPlugin);
-          // 再开启插件
-          await togglePlugin(devPlugin.identifier, true);
+          await installCustomPlugin(devPlugin);
+          toggleAgentPlugin(devPlugin.identifier);
         }}
         onValueChange={updateNewDevPlugin}
         open={showModal}
       />
       <Button
         icon={<Icon icon={LucideBlocks} />}
-        onClick={(e) => {
-          e.stopPropagation();
+        onClick={() => {
           setModal(true);
         }}
         ref={ref}
@@ -49,7 +42,7 @@ const AddPluginButton = forwardRef<HTMLButtonElement>((props, ref) => {
       >
         {t('plugin.addTooltip')}
       </Button>
-    </>
+    </div>
   );
 });
 
