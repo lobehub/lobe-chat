@@ -11,8 +11,11 @@ WORKDIR /app
 COPY package.json ./
 
 # If you want to build docker in China
-#RUN npm config set registry https://registry.npmmirror.com/
+# RUN npm config set registry https://registry.npmmirror.com/
 RUN pnpm i
+
+# https://nextjs.org/docs/messages/sharp-missing-in-production
+ENV NEXT_SHARP_PATH /app/node_modules/sharp
 
 COPY . .
 RUN pnpm run build:docker # run build standalone for docker version
