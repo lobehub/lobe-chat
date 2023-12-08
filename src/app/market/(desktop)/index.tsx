@@ -1,6 +1,6 @@
 'use client';
 
-import { SpotlightCard } from '@lobehub/ui';
+import { SpotlightCard, SpotlightCardProps } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { FC, memo } from 'react';
 
@@ -16,7 +16,7 @@ export default memo(() => (
   <ResponsiveIndex Mobile={Mobile}>
     <Layout>
       <Index />
-      <AgentCard CardRender={SpotlightCard} />
+      <AgentCard CardRender={SpotlightCard as FC<SpotlightCardProps>} />
     </Layout>
   </ResponsiveIndex>
 ));
