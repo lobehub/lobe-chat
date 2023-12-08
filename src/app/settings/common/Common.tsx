@@ -35,7 +35,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
     s.clearAllMessages,
   ]);
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
-  const resetPluginSettings = useToolStore((s) => s.resetPluginSettings);
+  const removeAllPlugins = useToolStore((s) => s.removeAllPlugins);
 
   const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
   const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [
@@ -69,11 +69,13 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
       },
       okText: t('ok', { ns: 'common' }),
       onOk: async () => {
-        await clearSessions();
-        resetPluginSettings();
-        await clearTopics();
-        await removeAllFiles();
-        await clearAllMessages();
+        await Promise.all([
+          clearSessions,
+          removeAllPlugins,
+          clearTopics,
+          removeAllFiles,
+          clearAllMessages,
+        ]);
 
         message.success(t('danger.clear.success'));
       },

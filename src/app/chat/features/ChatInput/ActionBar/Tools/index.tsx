@@ -10,7 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import PluginStore from '@/features/PluginStore';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
-import { useToolStore } from '@/store/tool';
+import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
 import ToolItem from './ToolItem';
@@ -30,7 +30,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
-  const list = useToolStore(pluginSelectors.installedPlugins, isEqual);
+  const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const enablePluginCount = useSessionStore((s) => agentSelectors.currentAgentPlugins(s).length);
   const [open, setOpen] = useState(false);
   const { styles } = useStyles();
@@ -58,7 +58,7 @@ const Tools = memo(() => {
               children: [
                 ...list.map((item) => ({
                   icon: item.meta?.avatar ? (
-                    <Avatar avatar={item.meta?.avatar} size={24} />
+                    <Avatar avatar={pluginHelpers.getPluginAvatar(item.meta)} size={24} />
                   ) : (
                     <Icon icon={ToyBrick} size={{ fontSize: 16 }} style={{ padding: 4 }} />
                   ),
@@ -66,7 +66,7 @@ const Tools = memo(() => {
                   label: (
                     <ToolItem
                       identifier={item.identifier}
-                      label={item.meta?.title || item.identifier}
+                      label={pluginHelpers.getPluginTitle(item?.meta) || item.identifier}
                     />
                   ),
                 })),

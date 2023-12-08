@@ -15,20 +15,26 @@ export interface PluginTagProps {
 }
 
 const PluginTag = memo<PluginTagProps>(({ plugins }) => {
-  const list = useToolStore(pluginSelectors.displayPluginList);
+  const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const displayPlugin = useToolStore(pluginSelectors.getPluginMetaById(plugins[0]), isEqual);
 
   if (plugins.length === 0) return null;
 
   const items: MenuProps['items'] = plugins.map((id) => {
     const item = list.find((i) => i.identifier === id);
-    const isDeprecated = !item?.title;
-    const avatar = isDeprecated ? '♻️' : item?.avatar || '🧩';
+    const isDeprecated = !pluginHelpers.getPluginTitle(item?.meta);
+    const avatar = isDeprecated ? '♻️' : pluginHelpers.getPluginAvatar(item?.meta);
 
     return {
       icon: <Avatar avatar={avatar} size={24} style={{ marginLeft: -6, marginRight: 2 }} />,
       key: id,
-      label: <PluginStatus deprecated={isDeprecated} id={id} title={item?.title} />,
+      label: (
+        <PluginStatus
+          deprecated={isDeprecated}
+          id={id}
+          title={pluginHelpers.getPluginTitle(item?.meta)}
+        />
+      ),
     };
   });
 
@@ -39,7 +45,7 @@ const PluginTag = memo<PluginTagProps>(({ plugins }) => {
       <div>
         <Tag>
           {<Icon icon={LucideToyBrick} />}
-          {pluginHelpers.getPluginTitle(displayPlugin?.meta) || plugins[0]}
+          {pluginHelpers.getPluginTitle(displayPlugin) || plugins[0]}
           {count > 1 && <div>({plugins.length - 1}+)</div>}
         </Tag>
       </div>

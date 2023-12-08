@@ -20,3 +20,14 @@ export const dbSchemaV2 = {
   sessions: '&id, type, group, meta.title, meta.description, meta.tags, createdAt, updatedAt',
   topics: '&id, title, favorite, createdAt, updatedAt, sessionId',
 };
+
+// ************************************** //
+// ******* Version 3 - 2023-12-06 ******* //
+// ************************************** //
+// - Added `plugin` table
+
+export const dbSchemaV3 = {
+  ...dbSchemaV2,
+  plugins:
+    '&identifier, type, manifest.type, manifest.meta.title, manifest.meta.description, manifest.meta.author, createdAt, updatedAt',
+};

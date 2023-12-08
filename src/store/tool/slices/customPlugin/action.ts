@@ -1,12 +1,16 @@
+import { notification } from 'antd';
+import { t } from 'i18next';
 import { merge } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
-import { CustomPlugin } from '@/types/plugin';
+import { pluginService } from '@/services/plugin';
+import { pluginHelpers } from '@/store/tool/helpers';
+import { LobeToolCustomPlugin, PluginInstallError } from '@/types/tool/plugin';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { ToolStore } from '../../store';
+import { pluginSelectors } from '../plugin/selectors';
 import { defaultCustomPlugin } from './initialState';
-import { CustomPluginListDispatch, devPluginListReducer } from './reducers/customPluginList';
 
 const n = setNamespace('customPlugin');
 
@@ -14,11 +18,11 @@ const n = setNamespace('customPlugin');
  * 代理行为接口
  */
 export interface CustomPluginAction {
-  deleteCustomPlugin: (id: string) => void;
-  dispatchCustomPluginList: (payload: CustomPluginListDispatch) => void;
-  saveToCustomPluginList: (value: CustomPlugin) => void;
-  updateCustomPlugin: (id: string, value: CustomPlugin) => void;
-  updateNewCustomPlugin: (value: Partial<CustomPlugin>) => void;
+  installCustomPlugin: (value: LobeToolCustomPlugin) => Promise<void>;
+  reinstallCustomPlugin: (id: string) => Promise<void>;
+  uninstallCustomPlugin: (id: string) => Promise<void>;
+  updateCustomPlugin: (id: string, value: LobeToolCustomPlugin) => Promise<void>;
+  updateNewCustomPlugin: (value: Partial<LobeToolCustomPlugin>) => void;
 }
 
 export const createCustomPluginSlice: StateCreator<
@@ -27,33 +31,52 @@ export const createCustomPluginSlice: StateCreator<
   [],
   CustomPluginAction
 > = (set, get) => ({
-  deleteCustomPlugin: (id) => {
-    const { dispatchCustomPluginList, dispatchPluginManifest, deletePluginSettings } = get();
-    // 1.删除插件项
-    dispatchCustomPluginList({ id, type: 'deleteItem' });
-    // 2.删除本地 manifest 记录
-    dispatchPluginManifest({ id, type: 'deleteManifest' });
-    // 3.删除插件配置
-    deletePluginSettings(id);
-  },
-  dispatchCustomPluginList: (payload) => {
-    const { customPluginList } = get();
+  installCustomPlugin: async (value) => {
+    await pluginService.createCustomPlugin(value);
 
-    const nextList = devPluginListReducer(customPluginList, payload);
-    set({ customPluginList: nextList }, false, n('dispatchCustomPluginList', payload));
-  },
-  saveToCustomPluginList: (value) => {
-    get().dispatchCustomPluginList({ plugin: value, type: 'addItem' });
+    await get().refreshPlugins();
     set({ newCustomPlugin: defaultCustomPlugin }, false, n('saveToCustomPluginList'));
   },
-  updateCustomPlugin: (id, value) => {
-    const { dispatchCustomPluginList, installPlugin } = get();
-    // 1. 更新 list 项信息
-    dispatchCustomPluginList({ id, plugin: value, type: 'updateItem' });
-    // 2. 重新安装插件
-    installPlugin(id);
+  reinstallCustomPlugin: async (id) => {
+    const plugin = pluginSelectors.getCustomPluginById(id)(get());
+    if (!plugin) return;
+
+    const { refreshPlugins, updateInstallLoadingState } = get();
+    try {
+      updateInstallLoadingState(id, true);
+      const manifest = await pluginService.getPluginManifest(plugin.customParams?.manifestUrl);
+      updateInstallLoadingState(id, false);
+
+      await pluginService.updatePluginManifest(id, manifest);
+      await refreshPlugins();
+    } catch (error) {
+      updateInstallLoadingState(id, false);
+
+      console.error(error);
+      const err = error as PluginInstallError;
+
+      const meta = pluginSelectors.getPluginMetaById(id)(get());
+      const name = pluginHelpers.getPluginTitle(meta);
+
+      notification.error({
+        description: t(`error.${err.message}`, { error: err.cause, ns: 'plugin' }),
+        message: t('error.reinstallError', { name, ns: 'plugin' }),
+      });
+    }
+  },
+  uninstallCustomPlugin: async (id) => {
+    await pluginService.uninstallPlugin(id);
+    await get().refreshPlugins();
   },
 
+  updateCustomPlugin: async (id, value) => {
+    const { reinstallCustomPlugin } = get();
+    // 1. 更新 list 项信息
+    await pluginService.updatePlugin(id, value);
+
+    // 2. 重新安装插件
+    await reinstallCustomPlugin(id);
+  },
   updateNewCustomPlugin: (newCustomPlugin) => {
     set(
       { newCustomPlugin: merge({}, get().newCustomPlugin, newCustomPlugin) },
