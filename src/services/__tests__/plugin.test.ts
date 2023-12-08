@@ -271,7 +271,7 @@ describe('PluginService', () => {
     it('should update a plugin', async () => {
       // Arrange
       const id = 'plugin-id';
-      const value = { name: 'NewPluginName' };
+      const value = { settings: { ab: '1' } } as unknown as LobeToolCustomPlugin;
       vi.mocked(PluginModel.update).mockResolvedValue(1);
 
       // Act
@@ -287,7 +287,7 @@ describe('PluginService', () => {
     it('should update a plugin manifest', async () => {
       // Arrange
       const id = 'plugin-id';
-      const manifest = { name: 'NewPluginManifest' };
+      const manifest = { name: 'NewPluginManifest' } as unknown as LobeChatPluginManifest;
       vi.mocked(PluginModel.update).mockResolvedValue(1);
 
       // Act
