@@ -7,7 +7,7 @@ import { pluginSelectors } from './selectors';
 
 const mockState = {
   ...initialState,
-  pluginManifestLoading: {
+  pluginInstallLoading: {
     'plugin-1': false,
     'plugin-2': true,
   },
@@ -137,6 +137,75 @@ describe('pluginSelectors', () => {
       } as ToolStoreState;
       const result = pluginSelectors.isPluginHasUI('ui-plugin')(stateWithUIPlugin);
       expect(result).toBe(true);
+    });
+  });
+
+  describe('isPluginInstalled', () => {
+    it('should return true if the plugin is installed', () => {
+      const result = pluginSelectors.isPluginInstalled('plugin-1')(mockState);
+      expect(result).toBe(true);
+    });
+
+    it('should return false if the plugin is not installed', () => {
+      const result = pluginSelectors.isPluginInstalled('non-installed-plugin')(mockState);
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('getInstalledPluginById', () => {
+    it('should return the installed plugin by id', () => {
+      const result = pluginSelectors.getInstalledPluginById('plugin-1')(mockState);
+      expect(result).toEqual(mockState.installedPlugins[0]);
+    });
+
+    it('should return undefined if the plugin is not installed', () => {
+      const result = pluginSelectors.getInstalledPluginById('non-installed-plugin')(mockState);
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getPluginManifestLoadingStatus', () => {
+    it('should return "loading" if the plugin manifest is being loaded', () => {
+      const result = pluginSelectors.getPluginManifestLoadingStatus('plugin-2')(mockState);
+      expect(result).toBe('loading');
+    });
+
+    it('should return "error" if the plugin manifest is not found', () => {
+      const result =
+        pluginSelectors.getPluginManifestLoadingStatus('non-existing-plugin')(mockState);
+      expect(result).toBe('error');
+    });
+
+    it('should return "success" if the plugin manifest is loaded', () => {
+      const result = pluginSelectors.getPluginManifestLoadingStatus('plugin-1')(mockState);
+      expect(result).toBe('success');
+    });
+  });
+
+  describe('storeAndInstallPluginsIdList', () => {
+    it('should return a list of unique plugin identifiers from both installed and store lists', () => {
+      const result = pluginSelectors.storeAndInstallPluginsIdList(mockState);
+      expect(result).toEqual(['plugin-1', 'plugin-2']);
+    });
+  });
+
+  describe('installedPluginManifestList', () => {
+    it('should return a list of manifests for installed plugins', () => {
+      const result = pluginSelectors.installedPluginManifestList(mockState);
+      const expectedManifests = mockState.installedPlugins.map((p) => p.manifest);
+      expect(result).toEqual(expectedManifests);
+    });
+  });
+
+  describe('installedPluginMetaList', () => {
+    it('should return a list of meta information for installed plugins', () => {
+      const result = pluginSelectors.installedPluginMetaList(mockState);
+      const expectedMetaList = mockState.installedPlugins.map((p) => ({
+        identifier: p.identifier,
+        meta: pluginSelectors.getPluginMetaById(p.identifier)(mockState),
+        type: p.type,
+      }));
+      expect(result).toEqual(expectedMetaList);
     });
   });
 });
