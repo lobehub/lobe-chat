@@ -159,7 +159,7 @@
     "prettier": "^3",
     "remark-cli": "^11",
     "semantic-release": "^21",
-    "stylelint": "^15",
+    "stylelint": "^16.0.0",
     "ts-node": "^10",
     "typescript": "^5",
     "vitest": "^1"
