@@ -63,6 +63,7 @@ const installedPluginMetaList = (s: ToolStoreState) =>
   installedPlugins(s).map((p) => ({
     identifier: p.identifier,
     meta: getPluginMetaById(p.identifier)(s),
+    type: p.type,
   }));
 
 const isPluginHasUI = (id: string) => (s: ToolStoreState) => {

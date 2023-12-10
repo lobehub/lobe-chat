@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.110.5](https://github.com/lobehub/lobe-chat/compare/v0.110.4...v0.110.5)
+
+<sup>Released on **2023-12-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix setting plugin i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix setting plugin i18n, closes [#606](https://github.com/lobehub/lobe-chat/issues/606) ([4e18ebf](https://github.com/lobehub/lobe-chat/commit/4e18ebf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.110.4](https://github.com/lobehub/lobe-chat/compare/v0.110.3...v0.110.4)
 
 <sup>Released on **2023-12-08**</sup>
