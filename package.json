@@ -162,7 +162,7 @@
     "stylelint": "^15",
     "ts-node": "^10",
     "typescript": "^5",
-    "vitest": "0.34.6"
+    "vitest": "1.0.4"
   },
   "publishConfig": {
     "access": "public",
