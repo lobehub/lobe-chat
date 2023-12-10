@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.110.4",
+  "version": "0.110.5",
   "description": "An open-source, extensible (Function Calling), high-performance chatbot framework. It supports one-click free deployment of your private ChatGPT/LLM web application",
   "keywords": [
     "chatbot",
@@ -144,7 +144,7 @@
     "@types/ua-parser-js": "^0.7",
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
-    "@vitest/coverage-v8": "^1",
+    "@vitest/coverage-v8": "0.34.6",
     "commitlint": "^18",
     "consola": "^3",
     "dpdm": "^3",
@@ -162,7 +162,7 @@
     "stylelint": "^15",
     "ts-node": "^10",
     "typescript": "^5",
-    "vitest": "^1"
+    "vitest": "0.34.6"
   },
   "publishConfig": {
     "access": "public",
