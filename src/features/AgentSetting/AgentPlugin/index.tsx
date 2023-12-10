@@ -27,7 +27,7 @@ const AgentPlugin = memo(() => {
     s.toggleAgentPlugin,
   ]);
 
-  const installedPlugins = useToolStore(pluginSelectors.installedPlugins, isEqual);
+  const installedPlugins = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const useFetchInstalledPlugins = useToolStore((s) => s.useFetchInstalledPlugins);
 
   const { isLoading } = useFetchInstalledPlugins();
@@ -36,7 +36,7 @@ const AgentPlugin = memo(() => {
 
   //  =========== Plugin List =========== //
 
-  const list = installedPlugins.map(({ identifier, type, manifest: { meta } = {} }) => {
+  const list = installedPlugins.map(({ identifier, type, meta }) => {
     const isCustomPlugin = type === 'customPlugin';
 
     return {
