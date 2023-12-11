@@ -1,0 +1,1012 @@
+{
+  "basePath": "/mj",
+  "definitions": {
+    "Blend提交参数": {
+      "type": "object",
+      "required": ["base64Array"],
+      "properties": {
+        "base64Array": {
+          "type": "array",
+          "example": ["data:image/png;base64,xxx1", "data:image/png;base64,xxx2"],
+          "description": "图片base64数组",
+          "items": {
+            "type": "string"
+          },
+          "refType": "string"
+        },
+        "dimensions": {
+          "type": "string",
+          "example": "SQUARE",
+          "description": "比例: PORTRAIT(2:3); SQUARE(1:1); LANDSCAPE(3:2)",
+          "enum": ["PORTRAIT", "SQUARE", "LANDSCAPE"],
+          "refType": null
+        },
+        "notifyHook": {
+          "type": "string",
+          "description": "回调地址, 为空时使用全局notifyHook",
+          "refType": null
+        },
+        "state": {
+          "type": "string",
+          "description": "自定义参数",
+          "refType": null
+        }
+      },
+      "title": "Blend提交参数"
+    },
+    "Describe提交参数": {
+      "type": "object",
+      "required": ["base64"],
+      "properties": {
+        "base64": {
+          "type": "string",
+          "example": "data:image/png;base64,xxx",
+          "description": "图片base64"
+        },
+        "notifyHook": {
+          "type": "string",
+          "description": "回调地址, 为空时使用全局notifyHook"
+        },
+        "state": {
+          "type": "string",
+          "description": "自定义参数"
+        }
+      },
+      "title": "Describe提交参数"
+    },
+    "Discord账号": {
+      "type": "object",
+      "properties": {
+        "channelId": {
+          "type": "string",
+          "description": "频道ID"
+        },
+        "coreSize": {
+          "type": "integer",
+          "format": "int32",
+          "description": "并发数"
+        },
+        "enable": {
+          "type": "boolean",
+          "description": "是否可用"
+        },
+        "guildId": {
+          "type": "string",
+          "description": "服务器ID"
+        },
+        "id": {
+          "type": "string",
+          "description": "ID"
+        },
+        "properties": {
+          "type": "object"
+        },
+        "queueSize": {
+          "type": "integer",
+          "format": "int32",
+          "description": "等待队列长度"
+        },
+        "timeoutMinutes": {
+          "type": "integer",
+          "format": "int32",
+          "description": "任务超时时间(分钟)"
+        },
+        "userAgent": {
+          "type": "string",
+          "description": "用户UserAgent"
+        },
+        "userToken": {
+          "type": "string",
+          "description": "用户Token"
+        }
+      },
+      "title": "Discord账号"
+    },
+    "Imagine提交参数": {
+      "type": "object",
+      "required": ["prompt"],
+      "properties": {
+        "base64Array": {
+          "type": "array",
+          "description": "垫图base64数组",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notifyHook": {
+          "type": "string",
+          "description": "回调地址, 为空时使用全局notifyHook"
+        },
+        "prompt": {
+          "type": "string",
+          "example": "Cat",
+          "description": "提示词"
+        },
+        "state": {
+          "type": "string",
+          "description": "自定义参数"
+        }
+      },
+      "title": "Imagine提交参数"
+    },
+    "任务": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "任务类型",
+          "enum": ["IMAGINE", "UPSCALE", "VARIATION", "REROLL", "DESCRIBE", "BLEND"]
+        },
+        "description": {
+          "type": "string",
+          "description": "任务描述"
+        },
+        "failReason": {
+          "type": "string",
+          "description": "失败原因"
+        },
+        "finishTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": "结束时间"
+        },
+        "id": {
+          "type": "string",
+          "description": "ID"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "图片url"
+        },
+        "progress": {
+          "type": "string",
+          "description": "任务进度"
+        },
+        "prompt": {
+          "type": "string",
+          "description": "提示词"
+        },
+        "promptEn": {
+          "type": "string",
+          "description": "提示词-英文"
+        },
+        "properties": {
+          "type": "object"
+        },
+        "startTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": "开始执行时间"
+        },
+        "state": {
+          "type": "string",
+          "description": "自定义参数"
+        },
+        "status": {
+          "type": "string",
+          "description": "任务状态",
+          "enum": ["NOT_START", "SUBMITTED", "IN_PROGRESS", "FAILURE", "SUCCESS"]
+        },
+        "submitTime": {
+          "type": "integer",
+          "format": "int64",
+          "description": "提交时间"
+        }
+      },
+      "title": "任务"
+    },
+    "任务查询参数": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "任务查询参数"
+    },
+    "变化任务提交参数": {
+      "type": "object",
+      "required": ["action", "taskId"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "example": "UPSCALE",
+          "description": "UPSCALE(放大); VARIATION(变换); REROLL(重新生成)",
+          "enum": ["UPSCALE", "VARIATION", "REROLL"]
+        },
+        "index": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "序号(1~4), action为UPSCALE,VARIATION时必传",
+          "minimum": 1,
+          "maximum": 4,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "notifyHook": {
+          "type": "string",
+          "description": "回调地址, 为空时使用全局notifyHook"
+        },
+        "state": {
+          "type": "string",
+          "description": "自定义参数"
+        },
+        "taskId": {
+          "type": "string",
+          "example": "1320098173412546",
+          "description": "任务ID"
+        }
+      },
+      "title": "变化任务提交参数"
+    },
+    "变化任务提交参数-simple": {
+      "type": "object",
+      "required": ["content"],
+      "properties": {
+        "content": {
+          "type": "string",
+          "example": "1320098173412546 U2",
+          "description": "变化描述: ID $action$index"
+        },
+        "notifyHook": {
+          "type": "string",
+          "description": "回调地址, 为空时使用全局notifyHook"
+        },
+        "state": {
+          "type": "string",
+          "description": "自定义参数"
+        }
+      },
+      "title": "变化任务提交参数-simple"
+    },
+    "提交结果": {
+      "type": "object",
+      "required": ["code", "description"],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "状态码: 1(提交成功), 21(已存在), 22(排队中), other(错误)"
+        },
+        "description": {
+          "type": "string",
+          "example": "提交成功",
+          "description": "描述"
+        },
+        "properties": {
+          "type": "object",
+          "description": "扩展字段"
+        },
+        "result": {
+          "type": "string",
+          "example": 1320098173412546,
+          "description": "任务ID"
+        }
+      },
+      "title": "提交结果"
+    }
+  },
+  "host": "localhost:8080",
+  "info": {
+    "description": "代理 MidJourney 的discord频道，实现api形式调用AI绘图",
+    "version": "v2.5.4",
+    "title": "Midjourney Proxy API文档",
+    "termsOfService": "https://github.com/novicezk/midjourney-proxy",
+    "contact": {
+      "name": "novicezk",
+      "url": "https://github.com/novicezk/midjourney-proxy"
+    }
+  },
+  "paths": {
+    "/mj/account/list": {
+      "get": {
+        "tags": ["账号查询"],
+        "summary": "查询所有账号",
+        "operationId": "listUsingGET",
+        "produces": ["*/*"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "originalRef": "Discord账号",
+                "$ref": "#/definitions/Discord账号"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "originalRef": "Discord账号",
+                "$ref": "#/definitions/Discord账号"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/account/{id}/fetch": {
+      "get": {
+        "tags": ["账号查询"],
+        "summary": "指定ID获取账号",
+        "operationId": "fetchUsingGET",
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "账号ID",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "Discord账号",
+              "$ref": "#/definitions/Discord账号"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "Discord账号",
+              "$ref": "#/definitions/Discord账号"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/submit/blend": {
+      "post": {
+        "tags": ["任务提交"],
+        "summary": "提交Blend任务",
+        "operationId": "blendUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "blendDTO",
+            "description": "blendDTO",
+            "required": true,
+            "schema": {
+              "originalRef": "Blend提交参数",
+              "$ref": "#/definitions/Blend提交参数"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/submit/change": {
+      "post": {
+        "tags": ["任务提交"],
+        "summary": "绘图变化",
+        "operationId": "changeUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "changeDTO",
+            "description": "changeDTO",
+            "required": true,
+            "schema": {
+              "originalRef": "变化任务提交参数",
+              "$ref": "#/definitions/变化任务提交参数"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/submit/describe": {
+      "post": {
+        "tags": ["任务提交"],
+        "summary": "提交Describe任务",
+        "operationId": "describeUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "describeDTO",
+            "description": "describeDTO",
+            "required": true,
+            "schema": {
+              "originalRef": "Describe提交参数",
+              "$ref": "#/definitions/Describe提交参数"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/submit/imagine": {
+      "post": {
+        "tags": ["任务提交"],
+        "summary": "提交Imagine任务",
+        "operationId": "imagineUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "imagineDTO",
+            "description": "imagineDTO",
+            "required": true,
+            "schema": {
+              "originalRef": "Imagine提交参数",
+              "$ref": "#/definitions/Imagine提交参数"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/submit/simple-change": {
+      "post": {
+        "tags": ["任务提交"],
+        "summary": "绘图变化-simple",
+        "operationId": "simpleChangeUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "simpleChangeDTO",
+            "description": "simpleChangeDTO",
+            "required": true,
+            "schema": {
+              "originalRef": "变化任务提交参数-simple",
+              "$ref": "#/definitions/变化任务提交参数-simple"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "提交结果",
+              "$ref": "#/definitions/提交结果"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/task/list": {
+      "get": {
+        "tags": ["任务查询"],
+        "summary": "查询所有任务",
+        "operationId": "listUsingGET_1",
+        "produces": ["*/*"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "originalRef": "任务",
+                "$ref": "#/definitions/任务"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "originalRef": "任务",
+                "$ref": "#/definitions/任务"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/task/list-by-condition": {
+      "post": {
+        "tags": ["任务查询"],
+        "summary": "根据ID列表查询任务",
+        "operationId": "listByIdsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "conditionDTO",
+            "description": "conditionDTO",
+            "required": true,
+            "schema": {
+              "originalRef": "任务查询参数",
+              "$ref": "#/definitions/任务查询参数"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "originalRef": "任务",
+                "$ref": "#/definitions/任务"
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "originalRef": "任务",
+                "$ref": "#/definitions/任务"
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/task/queue": {
+      "get": {
+        "tags": ["任务查询"],
+        "summary": "查询任务队列",
+        "operationId": "queueUsingGET",
+        "produces": ["*/*"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "originalRef": "任务",
+                "$ref": "#/definitions/任务"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "originalRef": "任务",
+                "$ref": "#/definitions/任务"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    },
+    "/mj/task/{id}/fetch": {
+      "get": {
+        "tags": ["任务查询"],
+        "summary": "指定ID获取任务",
+        "operationId": "fetchUsingGET_1",
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "任务ID",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "任务",
+              "$ref": "#/definitions/任务"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "responsesObject": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "任务",
+              "$ref": "#/definitions/任务"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "2147483647"
+      }
+    }
+  },
+  "swagger": "2.0",
+  "tags": [
+    {
+      "name": "任务提交",
+      "x-order": "2147483647"
+    },
+    {
+      "name": "任务查询",
+      "x-order": "2147483647"
+    },
+    {
+      "name": "账号查询",
+      "x-order": "2147483647"
+    }
+  ],
+  "x-openapi": {
+    "x-markdownFiles": null,
+    "x-setting": {
+      "language": "zh-CN",
+      "enableSwaggerModels": true,
+      "swaggerModelName": "Swagger Models",
+      "enableReloadCacheParameter": false,
+      "enableAfterScript": true,
+      "enableDocumentManage": true,
+      "enableVersion": false,
+      "enableRequestCache": true,
+      "enableFilterMultipartApis": false,
+      "enableFilterMultipartApiMethodType": "POST",
+      "enableHost": false,
+      "enableHostText": "",
+      "enableDynamicParameter": false,
+      "enableDebug": true,
+      "enableFooter": true,
+      "enableFooterCustom": false,
+      "footerCustomContent": null,
+      "enableSearch": true,
+      "enableOpenApi": true,
+      "enableHomeCustom": false,
+      "homeCustomLocation": null,
+      "enableGroup": true,
+      "enableResponseCode": true
+    }
+  }
+}

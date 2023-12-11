@@ -9,6 +9,8 @@ import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { InstallPluginParams, pluginService } from '../plugin';
+import OpenAPIV2 from './openapi/OpenAPI_V2.json';
+import openAPIV3 from './openapi/OpenAPI_V3.json';
 
 // Mocking modules and functions
 vi.mock('@/const/url', () => ({
@@ -329,5 +331,17 @@ describe('PluginService', () => {
     });
   });
 
-  // Add any additional tests to cover edge cases or error handling as needed.
+  describe('convertOpenAPIToPluginSchema', () => {
+    it('can convert OpenAPI v3.1 to lobe apis', async () => {
+      const plugins = await pluginService.convertOpenAPIToPluginSchema(openAPIV3);
+
+      expect(plugins).toMatchSnapshot();
+    });
+
+    it('can convert OpenAPI v2 MJ openAPI', async () => {
+      const plugins = await pluginService.convertOpenAPIToPluginSchema(OpenAPIV2);
+
+      expect(plugins).toMatchSnapshot();
+    });
+  });
 });
