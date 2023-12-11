@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.110.7](https://github.com/lobehub/lobe-chat/compare/v0.110.6...v0.110.7)
+
+<sup>Released on **2023-12-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix language settings may not take effect.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix language settings may not take effect, closes [#595](https://github.com/lobehub/lobe-chat/issues/595) ([a5db64e](https://github.com/lobehub/lobe-chat/commit/a5db64e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.110.6](https://github.com/lobehub/lobe-chat/compare/v0.110.5...v0.110.6)
 
 <sup>Released on **2023-12-11**</sup>
