@@ -42,6 +42,10 @@ $ docker run -d -p 3210:3210 \
 > - 官方 Docker 镜像中设定的密码默认为 `lobe66`，请将其替换为自己的密码以提升安全性
 > - LobeChat 支持的完整环境变量列表请参考 [环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN) 部分
 
+> \[!WARNING]
+>
+> 注意，当**部署架构与镜像的不一致时**，需要对 **Sharp** 进行交叉编译，详见 [Sharp 交叉编译](https://sharp.pixelplumbing.com/install#cross-platform)
+
 #### 使用代理地址
 
 如果你需要通过代理使用 OpenAI 服务，你可以使用 `OPENAI_PROXY_URL` 环境变量来配置代理地址：

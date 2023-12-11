@@ -42,6 +42,10 @@ $ docker run -d -p 3210:3210 \
 > - The password set in the official Docker image is `lobe66` by default. Replace it with your own password to improve security.
 > - For a complete list of environment variables supported by LobeChat, please refer to the [Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN) section.
 
+> \[!WARNING]
+>
+> If the architecture of your **deployed server differs from the container architecture**, you may need to perform cross-compilation for **Sharp**. For further details, please refer to the documentation on [Sharp Cross-platform](https://sharp.pixelplumbing.com/install#cross-platform).
+
 #### Use a proxy address
 
 If you need to use OpenAI service through a proxy, you can use the `OPENAI_PROXY_URL` environment variable to configure the proxy address:
