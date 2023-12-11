@@ -1,5 +1,15 @@
 FROM node:20-slim AS base
 
+## Sharp dependencies, copy all the files for production
+FROM base AS sharp
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+WORKDIR /app
+
+RUN pnpm add sharp
+
 ## Install dependencies only when needed
 FROM base AS builder
 ENV PNPM_HOME="/pnpm"
@@ -13,9 +23,6 @@ COPY package.json ./
 # If you want to build docker in China
 # RUN npm config set registry https://registry.npmmirror.com/
 RUN pnpm i
-
-# https://nextjs.org/docs/messages/sharp-missing-in-production
-ENV NEXT_SHARP_PATH /app/node_modules/sharp
 
 COPY . .
 RUN pnpm run build:docker # run build standalone for docker version
@@ -39,6 +46,7 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=sharp --chown=nextjs:nodejs /app/node_modules/.pnpm ./node_modules/.pnpm
 
 USER nextjs
 
