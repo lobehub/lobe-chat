@@ -10,9 +10,8 @@ import MobilePadding from '@/components/MobilePadding';
 import { WIKI_PLUGIN_GUIDE } from '@/const/url';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-import LocalForm from './LocalForm';
 import PluginPreview from './PluginPreview';
-import UrlModeForm from './UrlModeForm';
+import UrlManifestForm from './UrlManifestForm';
 
 interface DevModalProps {
   mode?: 'edit' | 'create';
@@ -136,7 +135,6 @@ const DevModal = memo<DevModalProps>(
                 type={'info'}
               />
             </MobilePadding>
-            <PluginPreview form={form} />
             <Segmented
               block
               onChange={(e) => {
@@ -159,11 +157,9 @@ const DevModal = memo<DevModalProps>(
               ]}
             />
             {configMode === 'url' ? (
-              <UrlModeForm form={form} isEditMode={mode === 'edit'} />
-            ) : (
-              <LocalForm form={form} mode={mode} />
-            )}
-            {/*<MetaForm form={form} mode={mode} />*/}
+              <UrlManifestForm form={form} isEditMode={mode === 'edit'} />
+            ) : null}
+            <PluginPreview form={form} />
           </Flexbox>
         </Modal>
       </Form.Provider>
