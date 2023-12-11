@@ -172,7 +172,7 @@ e-commerce platform data access, and various third-party services.
 | [Search Engine](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-15**</sup>    | [lobehub/chat-plugin-search-engine](https://github.com/lobehub/chat-plugin-search-engine)       | Query search engine to get information<br/>`web` `search`  |
 | [Realtime Weather](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-12**</sup> | [lobehub/chat-plugin-realtime-weather](https://github.com/lobehub/chat-plugin-realtime-weather) | Get realtime weather information<br/>`weather` `realtime`  |
 
-> 📊 Total plugins: [<kbd>**4**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**5**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -204,14 +204,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                           | Description                                                                                                                                                                                                   |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Recipe Generator](https://chat-preview.lobehub.com/market?agent=recipe-generator)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup>                       | Describe the recipe, or send the name of the dish.<br/>`kitchen` `baking` `food` `recipes` `cook`                                                                                                             |
-| [Code Wizard](https://chat-preview.lobehub.com/market?agent=friend-developer)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-07**</sup>                            | Master of programming in various languages<br/>`programming` `coding` `consultation` `friend` `helper` `it` `it`                                                                                              |
-| [Mr. Feynman](https://chat-preview.lobehub.com/market?agent=mrfeynman)<br/><sup>By **[jjy1000](https://github.com/jjy1000)** on **2023-12-04**</sup>                                     | Explains complex knowledge concepts in a popular way to help you understand complex knowledge concepts. It can also explain knowledge types containing answers and questions.<br/>`general-teacher-assistant` |
-| [Organic Chemistry Researcher](https://chat-preview.lobehub.com/market?agent=organic-chemistry-researcher)<br/><sup>By **[y22emc2](https://github.com/y22emc2)** on **2023-12-02**</sup> | Specializes in academic translation and writing in the field of organic chemistry<br/>`organic-chemistry` `research` `translation` `writing` `academic-articles`                                              |
+| Recent Submits                                                                                                                                                           | Description                                                                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [HTTP Request Master](https://chat-preview.lobehub.com/market?agent=http-request-master)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup> | I support extensive customization) To work, be sure to download and enable the "Website Crawler" plugin!<br/>`http-request` `http` `request` `web`                                                            |
+| [Recipe Generator](https://chat-preview.lobehub.com/market?agent=recipe-generator)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup>       | Describe the recipe, or send the name of the dish.<br/>`kitchen` `baking` `food` `recipes` `cook`                                                                                                             |
+| [Code Wizard](https://chat-preview.lobehub.com/market?agent=friend-developer)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-07**</sup>            | Master of programming in various languages<br/>`programming` `coding` `consultation` `friend` `helper` `it` `it`                                                                                              |
+| [Mr. Feynman](https://chat-preview.lobehub.com/market?agent=mrfeynman)<br/><sup>By **[jjy1000](https://github.com/jjy1000)** on **2023-12-04**</sup>                     | Explains complex knowledge concepts in a popular way to help you understand complex knowledge concepts. It can also explain knowledge types containing answers and questions.<br/>`general-teacher-assistant` |
 
-> 📊 Total agents: [<kbd>**56**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**57**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
