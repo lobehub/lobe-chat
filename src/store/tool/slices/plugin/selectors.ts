@@ -3,7 +3,7 @@ import { uniq, uniqBy } from 'lodash-es';
 
 import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { ChatCompletionFunctions } from '@/types/openai/chat';
-import { LobeToolCustomPlugin } from '@/types/tool/plugin';
+import { InstallPluginMeta, LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import type { ToolStoreState } from '../../initialState';
 
@@ -60,7 +60,10 @@ const installedPluginManifestList = (s: ToolStoreState) =>
     .filter((i) => !!i);
 
 const installedPluginMetaList = (s: ToolStoreState) =>
-  installedPlugins(s).map((p) => ({
+  installedPlugins(s).map<InstallPluginMeta>((p) => ({
+    author: p.manifest?.author,
+    createdAt: p.manifest?.createdAt || (p.manifest as any)?.createAt,
+    homepage: p.manifest?.homepage,
     identifier: p.identifier,
     meta: getPluginMetaById(p.identifier)(s),
     type: p.type,

@@ -2,9 +2,11 @@ import {
   LobeChatPluginApi,
   LobeChatPluginManifest,
   LobeChatPluginsMarketIndex,
+  PluginSchema,
   pluginApiSchema,
   pluginManifestSchema,
 } from '@lobehub/chat-plugin-sdk';
+import { uniq } from 'lodash-es';
 import { convertParametersToJSONSchema } from 'openapi-jsonschema-parameters';
 
 import { getPluginIndexJSON } from '@/const/url';
@@ -78,6 +80,8 @@ class PluginService {
       try {
         const openAPIs = await this.convertOpenAPIToPluginSchema(openapiJson);
         data.api = [...data.api, ...openAPIs];
+
+        data.settings = await this.convertAuthToSettingsSchema(openapiJson, data.settings);
       } catch (error) {
         throw new TypeError('openAPIInvalid', { cause: error });
       }
@@ -118,9 +122,10 @@ class PluginService {
   }
 
   convertOpenAPIToPluginSchema = async (openApiJson: object) => {
-    // 使用 SwaggerClient 解析 OpenAPI JSON
     // @ts-ignore
-    const SwaggerClient = await import('swagger-client');
+    const { default: SwaggerClient } = await import('swagger-client');
+
+    // 使用 SwaggerClient 解析 OpenAPI JSON
     const openAPI = await SwaggerClient.resolve({ spec: openApiJson });
 
     const api = openAPI.spec;
@@ -157,6 +162,107 @@ class PluginService {
     }
 
     return plugins;
+  };
+
+  convertAuthToSettingsSchema = async (
+    openApiJson: any,
+    // eslint-disable-next-line unicorn/no-object-as-default-parameter
+    rawSettingsSchema: PluginSchema = { properties: {}, type: 'object' },
+  ): Promise<PluginSchema> => {
+    let settingsSchema = rawSettingsSchema;
+
+    // @ts-ignore
+    const { default: SwaggerClient } = await import('swagger-client');
+
+    // 使用 SwaggerClient 解析 OpenAPI JSON
+    const openAPI = await SwaggerClient.resolve({ spec: openApiJson });
+    const api = openAPI.spec;
+
+    for (const entry of Object.entries(api.components?.securitySchemes || {})) {
+      let authSchema = {} as PluginSchema;
+      const [key, value] = entry as [string, any];
+
+      switch (value.type) {
+        case 'apiKey': {
+          authSchema = {
+            properties: {
+              [key]: {
+                description: value.description || `${key} API Key`,
+                title: value.name,
+                type: 'string',
+              },
+            },
+            required: [key],
+            type: 'object',
+          };
+          break;
+        }
+        case 'http': {
+          if (value.scheme === 'basic') {
+            authSchema = {
+              properties: {
+                [key]: {
+                  description: 'Basic authentication credentials',
+                  format: 'password',
+                  type: 'string',
+                },
+              },
+              required: [key],
+              type: 'object',
+            };
+          } else if (value.scheme === 'bearer') {
+            authSchema = {
+              properties: {
+                [key]: {
+                  description: value.description || `${key} Bearer token`,
+                  format: 'password',
+                  title: key,
+                  type: 'string',
+                },
+              },
+              required: [key],
+              type: 'object',
+            };
+          }
+          break;
+        }
+        case 'oauth2': {
+          authSchema = {
+            properties: {
+              [`${key}_clientId`]: {
+                description: 'Client ID for OAuth2',
+                type: 'string',
+              },
+              [`${key}_clientSecret`]: {
+                description: 'Client Secret for OAuth2',
+                format: 'password',
+                type: 'string',
+              },
+              [`${key}_accessToken`]: {
+                description: 'Access token for OAuth2',
+                format: 'password',
+                type: 'string',
+              },
+            },
+            required: [`${key}_clientId`, `${key}_clientSecret`, `${key}_accessToken`],
+            type: 'object',
+          };
+          break;
+        }
+      }
+
+      // 合并当前鉴权机制的 schema 到 settingsSchema
+      settingsSchema.properties = merge(settingsSchema.properties, authSchema.properties);
+
+      if (authSchema.required) {
+        settingsSchema.required = uniq([
+          ...(settingsSchema.required || []),
+          ...authSchema.required,
+        ]);
+      }
+    }
+
+    return settingsSchema;
   };
 }
 
