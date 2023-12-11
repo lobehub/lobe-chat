@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.110.6](https://github.com/lobehub/lobe-chat/compare/v0.110.5...v0.110.6)
+
+<sup>Released on **2023-12-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Sharp missing in docker production.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Sharp missing in docker production, closes [#603](https://github.com/lobehub/lobe-chat/issues/603) ([d89b48d](https://github.com/lobehub/lobe-chat/commit/d89b48d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.110.5](https://github.com/lobehub/lobe-chat/compare/v0.110.4...v0.110.5)
 
 <sup>Released on **2023-12-10**</sup>
