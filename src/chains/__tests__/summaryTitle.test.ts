@@ -51,7 +51,7 @@ describe('chainSummaryTitle', () => {
           role: 'user',
         },
       ],
-      model: LanguageModel.GPT3_5_16K,
+      model: LanguageModel.GPT4_PREVIEW,
     });
 
     // Verify that getMessagesTokenCount was called with the correct messages
@@ -97,7 +97,7 @@ describe('chainSummaryTitle', () => {
           role: 'user',
         },
       ],
-      model: 'gpt-3.5-turbo-16k',
+      // No model specified since the token count is below the limit
     });
 
     // Verify that getMessagesTokenCount was called with the correct messages
