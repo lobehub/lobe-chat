@@ -1,3 +1,4 @@
+import { ModelTokens } from '@/const/modelTokens';
 import { chatHelpers } from '@/store/chat/helpers';
 import { globalHelpers } from '@/store/global/helpers';
 import { LanguageModel } from '@/types/llm';
@@ -20,11 +21,11 @@ export const chainSummaryTitle = async (
       role: 'user',
     },
   ];
-  // 如果超过 4k，则使用 GPT3.5 16K 模型
+  // 如果超过 16k，则使用 GPT-4-turbo 模型
   const tokens = await chatHelpers.getMessagesTokenCount(finalMessages);
   let model: LanguageModel | undefined = undefined;
-  if (tokens > 4000) {
-    model = LanguageModel.GPT3_5_16K;
+  if (tokens > ModelTokens[LanguageModel.GPT3_5]) {
+    model = LanguageModel.GPT4_PREVIEW;
   }
 
   return {

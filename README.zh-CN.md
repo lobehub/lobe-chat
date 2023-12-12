@@ -181,14 +181,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                           | 助手说明                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| [HTTP 请求大师](https://chat-preview.lobehub.com/market?agent=http-request-master)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup> | 我支持广泛的定制。要使用，请确保下载并启用 “网站爬虫” 插件！<br/>`http-request` `http` `request` `web`                          |
-| [食谱生成器](https://chat-preview.lobehub.com/market?agent=recipe-generator)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup>       | 描述食谱，或发送菜名。<br/>`厨房` `烘焙` `食物` `食谱` `烹饪`                                                                   |
-| [代码魔法师](https://chat-preview.lobehub.com/market?agent=friend-developer)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-07**</sup>       | 精通多种编程语言的大师<br/>`编程` `编码` `咨询` `朋友` `助手` `it` `it`                                                         |
-| [Mr. Feynman](https://chat-preview.lobehub.com/market?agent=mrfeynman)<br/><sup>By **[jjy1000](https://github.com/jjy1000)** on **2023-12-04**</sup>               | 对你提出的复杂知识概念进行通俗性解释，帮助你理解复杂的知识概念。同时可以对包含答案和问题的知识类型进行解释。<br/>`通用教师助手` |
+| 最近新增                                                                                                                                                             | 助手说明                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [GitHub Copilot](https://chat-preview.lobehub.com/market?agent=github-copilot)<br/><sup>By **[luciouskami](https://github.com/luciouskami)** on **2023-12-11**</sup> | GitHub Copilot<br/>`code` `it`                                                                               |
+| [授粉 AI 画图](https://chat-preview.lobehub.com/market?agent=pollinations-drawing)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2023-12-11**</sup> | 一个绘画助手，通过用户的描述，帮其丰富润色优化，并且调用绘画能力，以 Markdown 语法展示图片<br/>`绘画` `润色` |
+| [HTTP 请求大师](https://chat-preview.lobehub.com/market?agent=http-request-master)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup>   | 我支持广泛的定制。要使用，请确保下载并启用 “网站爬虫” 插件！<br/>`http-request` `http` `request` `web`       |
+| [食谱生成器](https://chat-preview.lobehub.com/market?agent=recipe-generator)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup>         | 描述食谱，或发送菜名。<br/>`厨房` `烘焙` `食物` `食谱` `烹饪`                                                |
 
-> 📊 Total agents: [<kbd>**57**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**59**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
