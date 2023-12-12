@@ -6,6 +6,18 @@ export default {
     on: '查看插件调用信息',
     response: '返回结果',
   },
+  detailModal: {
+    info: {
+      description: 'API 描述',
+      name: 'API 名称',
+    },
+    tabs: {
+      info: '插件能力',
+      manifest: '安装文件',
+      settings: '设置',
+    },
+    title: '插件详情',
+  },
   dev: {
     confirmDeleteDevPlugin: '即将删除该本地插件，删除后将无法找回，是否删除该插件？',
     deleteSuccess: '插件删除成功',
@@ -80,7 +92,10 @@ export default {
       manifest: '功能描述清单 (Manifest)',
       meta: '插件元信息',
     },
-    title: '添加自定义插件',
+    title: {
+      create: '添加自定义插件',
+      edit: '编辑自定义插件',
+    },
     type: {
       lobe: 'LobeChat 插件',
       openai: 'OpenAI 插件',
@@ -123,8 +138,16 @@ export default {
     title: '设置插件市场',
   },
   store: {
+    actions: {
+      confirmUninstall: '即将卸载该插件，卸载后将清除该插件配置，请确认你的操作',
+      detail: '详情',
+      install: '安装',
+      manifest: '编辑安装文件',
+      settings: '设置',
+      uninstall: '卸载',
+    },
+    customPlugin: '自定义',
     empty: '暂无已安装插件',
-    install: '安装',
     installAllPlugins: '安装全部',
     networkError: '获取插件商店失败，请检测网络连接后重试',
     placeholder: '搜索插件名称介绍或关键词...',
@@ -134,6 +157,5 @@ export default {
       installed: '已安装',
     },
     title: '插件商店',
-    uninstall: '卸载',
   },
 };

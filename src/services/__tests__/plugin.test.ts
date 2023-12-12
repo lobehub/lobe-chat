@@ -465,6 +465,7 @@ describe('PluginService', () => {
           apiKeyAuth: {
             title: 'X-OpenAPIHub-Key',
             description: 'apiKeyAuth API Key',
+            format: 'password',
             type: 'string',
           },
         },

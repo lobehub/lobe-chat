@@ -26,7 +26,9 @@
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "InvalidAccessCode": "Mot de passe incorrect ou vide. Veuillez saisir un mot de passe d'accès correct ou ajouter une clé API OpenAI personnalisée",
     "OpenAIBizError": "Erreur de service OpenAI. Veuillez diagnostiquer ou réessayer en fonction des informations ci-dessous",
-    "NoAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée"
+    "NoAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée",
+    "PluginGatewayError": "Désolé, une erreur est survenue avec la passerelle du plugin. Veuillez vérifier la configuration de la passerelle du plugin.",
+    "PluginOpenApiInitError": "Désolé, l'initialisation du client OpenAPI a échoué. Veuillez vérifier les informations de configuration d'OpenAPI."
   },
   "stt": {
     "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"

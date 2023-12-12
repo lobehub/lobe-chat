@@ -107,7 +107,7 @@ const DevModal = memo<DevModalProps>(
             form.submit();
           }}
           open={open}
-          title={t('dev.title')}
+          title={t(isEditMode ? 'dev.title.edit' : 'dev.title.create')}
         >
           <Flexbox
             gap={mobile ? 0 : 16}

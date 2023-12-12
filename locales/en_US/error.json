@@ -26,7 +26,9 @@
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
-    "NoAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key"
+    "NoAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
+    "PluginGatewayError": "Sorry, there was an error with the plugin gateway. Please check if the plugin gateway configuration is correct.",
+    "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct."
   },
   "stt": {
     "responseError": "Service request failed, please check the configuration or try again"

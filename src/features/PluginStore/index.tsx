@@ -1,15 +1,12 @@
-import { Modal, TabsNav } from '@lobehub/ui';
-import { Button } from 'antd';
-import isEqual from 'fast-deep-equal';
+import { Modal } from '@lobehub/ui';
+import { Segmented } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import MobilePadding from '@/components/MobilePadding';
 import { useToolStore } from '@/store/tool';
-import { pluginStoreSelectors } from '@/store/tool/selectors';
 
-import AddPluginButton from './AddPluginButton';
 import InstalledPluginList from './InstalledPluginList';
 import OnlineList from './OnlineList';
 
@@ -20,9 +17,7 @@ interface PluginStoreProps {
 export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
   const { t } = useTranslation('plugin');
 
-  const [listType, installPlugins] = useToolStore((s) => [s.listType, s.installPlugins]);
-
-  const pluginStoreList = useToolStore(pluginStoreSelectors.onlinePluginStore, isEqual);
+  const [listType] = useToolStore((s) => [s.listType]);
 
   return (
     <Modal
@@ -37,30 +32,19 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
       <MobilePadding>
         <Center>
           <Flexbox gap={24} width={'100%'}>
-            <Flexbox align={'center'} horizontal justify={'space-between'}>
-              <TabsNav
-                activeKey={listType}
-                items={[
-                  { key: 'all', label: t('store.tabs.all') },
-                  { key: 'installed', label: t('store.tabs.installed') },
-                ]}
-                onChange={(v) => {
-                  useToolStore.setState({ listType: v as any });
-                }}
-              />
-              <Flexbox gap={8} horizontal>
-                <AddPluginButton />
-                {listType === 'all' && (
-                  <Button
-                    onClick={() => {
-                      installPlugins(pluginStoreList.map((item) => item.identifier));
-                    }}
-                  >
-                    {t('store.installAllPlugins')}
-                  </Button>
-                )}
-              </Flexbox>
-            </Flexbox>
+            <Segmented
+              block
+              onChange={(v) => {
+                useToolStore.setState({ listType: v as any });
+              }}
+              options={[
+                { label: t('store.tabs.all'), value: 'all' },
+                { label: t('store.tabs.installed'), value: 'installed' },
+              ]}
+              style={{ flex: 1 }}
+              value={listType}
+            />
+
             {listType === 'all' ? <OnlineList /> : <InstalledPluginList />}
           </Flexbox>
         </Center>

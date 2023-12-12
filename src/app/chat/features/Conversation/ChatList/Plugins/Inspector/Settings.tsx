@@ -3,7 +3,7 @@ import { LucideSettings } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import PluginSettingsModal from '@/features/PluginSettingsModal';
+import PluginDetailModal from 'src/features/PluginDetailModal';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
@@ -21,7 +21,7 @@ const Settings = memo<{ id: string }>(({ id }) => {
           }}
           title={t('setting')}
         />
-        <PluginSettingsModal
+        <PluginDetailModal
           id={id}
           onClose={() => {
             setOpen(false);

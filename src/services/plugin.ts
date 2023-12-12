@@ -188,6 +188,7 @@ class PluginService {
             properties: {
               [key]: {
                 description: value.description || `${key} API Key`,
+                format: 'password',
                 title: value.name,
                 type: 'string',
               },

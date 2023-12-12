@@ -1,9 +1,12 @@
+import { Md5 } from 'ts-md5';
 import { StateCreator } from 'zustand/vanilla';
 
-import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
+import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { ChatPluginPayload } from '@/types/chatMessage';
 import { OpenAIFunctionCall } from '@/types/openai/functionCall';
 import { setNamespace } from '@/utils/storeDebug';
@@ -79,6 +82,16 @@ export const chatPlugin: StateCreator<
         identifier,
         type: (type ?? 'default') as any,
       };
+
+      // if the apiName is md5, try to find the correct apiName in the plugins
+      if (apiName.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX)) {
+        const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
+        const manifest = pluginSelectors.getPluginManifestById(identifier)(useToolStore.getState());
+
+        const api = manifest?.api.find((api) => Md5.hashStr(api.name).toString() === md5);
+        if (!api) return;
+        payload.apiName = api.name;
+      }
     } else {
       if (message.plugin) payload = message.plugin;
     }
