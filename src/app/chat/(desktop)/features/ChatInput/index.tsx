@@ -6,7 +6,11 @@ import { useTranslation } from 'react-i18next';
 import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
 import SaveTopic from '@/app/chat/features/ChatInput/Topic';
 import { useChatInput } from '@/app/chat/features/ChatInput/useChatInput';
-import { CHAT_TEXTAREA_HEIGHT, HEADER_HEIGHT } from '@/const/layoutTokens';
+import {
+  CHAT_TEXTAREA_HEIGHT,
+  CHAT_TEXTAREA_MAX_HEIGHT,
+  HEADER_HEIGHT,
+} from '@/const/layoutTokens';
 
 import DragUpload from './DragUpload';
 import { LocalFiles } from './LocalFiles';
@@ -77,7 +81,12 @@ const ChatInputDesktopLayout = memo(() => {
       <ChatInputArea
         bottomAddons={buttonAddons}
         expand={expand}
-        heights={{ headerHeight: HEADER_HEIGHT, inputHeight, minHeight: CHAT_TEXTAREA_HEIGHT }}
+        heights={{
+          headerHeight: HEADER_HEIGHT,
+          inputHeight,
+          maxHeight: CHAT_TEXTAREA_MAX_HEIGHT,
+          minHeight: CHAT_TEXTAREA_HEIGHT,
+        }}
         loading={loading}
         onInput={onInput}
         onSend={onSend}
