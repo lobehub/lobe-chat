@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.110.8](https://github.com/lobehub/lobe-chat/compare/v0.110.7...v0.110.8)
+
+<sup>Released on **2023-12-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Clean up gpt-3.5 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Clean up gpt-3.5 model, closes [#554](https://github.com/lobehub/lobe-chat/issues/554) ([9616783](https://github.com/lobehub/lobe-chat/commit/9616783))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.110.7](https://github.com/lobehub/lobe-chat/compare/v0.110.6...v0.110.7)
 
 <sup>Released on **2023-12-11**</sup>
