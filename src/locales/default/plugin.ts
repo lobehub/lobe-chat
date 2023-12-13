@@ -118,6 +118,7 @@ export default {
     install: '安装',
     installAllPlugins: '安装全部',
     networkError: '获取插件商店失败，请检测网络连接后重试',
+    placeholder: '搜索插件名称介绍或关键词...',
     releasedAt: '发布于 {{createdAt}}',
     tabs: {
       all: '全部',

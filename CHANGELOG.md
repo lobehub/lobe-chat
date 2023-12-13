@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.111.2](https://github.com/lobehub/lobe-chat/compare/v0.111.1...v0.111.2)
+
+<sup>Released on **2023-12-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Change topic-deletion hotkey.
+
+#### 💄 Styles
+
+- **misc**: Fix image display in safari (fix.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Change topic-deletion hotkey, closes [#616](https://github.com/lobehub/lobe-chat/issues/616) ([912ff45](https://github.com/lobehub/lobe-chat/commit/912ff45))
+
+#### Styles
+
+- **misc**: Fix image display in safari (fix, closes [#571](https://github.com/lobehub/lobe-chat/issues/571) ([4beefa7](https://github.com/lobehub/lobe-chat/commit/4beefa7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.111.1](https://github.com/lobehub/lobe-chat/compare/v0.111.0...v0.111.1)
 
 <sup>Released on **2023-12-13**</sup>

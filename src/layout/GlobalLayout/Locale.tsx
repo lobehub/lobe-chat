@@ -15,7 +15,7 @@ const InnerLocale = memo<LocaleLayoutProps>(({ children, lang }) => {
   const { data: locale } = useSWR(
     lang,
     async () =>
-      await import(`antd/locale/${lang?.includes('-') ? lang?.replace('-', '_') : 'en-US'}.js`),
+      await import(`antd/locale/${lang?.includes('-') ? lang?.replace('-', '_') : 'en_US'}.js`),
     { revalidateOnFocus: false },
   );
   const [i18n] = useState(createI18nNext(lang));

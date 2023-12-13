@@ -1,10 +1,13 @@
 'use client';
 
+import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { isString } from 'lodash-es';
+import { Command, Delete, Option } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { CLEAN_MESSAGE_KEY, PREFIX_KEY } from '@/const/hotkeys';
+import { CLEAN_MESSAGE_KEY, META_KEY, PREFIX_KEY } from '@/const/hotkeys';
 import { isApplePlatform } from '@/utils/platform';
 
 const useStyles = createStyles(
@@ -13,14 +16,15 @@ const useStyles = createStyles(
 
     span {
       font-weight: 600;
-      opacity: 0.5;
     }
 
     kbd {
-      padding: 3px 5px;
+      min-width: 16px;
+      padding: 3px 6px;
 
       line-height: 1;
-      color: ${token.colorTextSecondary};
+      color: ${token.colorTextDescription};
+      text-align: center;
 
       background: ${token.colorBgContainer};
       border: 1px solid ${token.colorBorderSecondary};
@@ -42,9 +46,10 @@ const HotKeys = memo<HotKeysProps>(({ keys, desc }) => {
   const visibility = typeof window === 'undefined' ? 'hidden' : 'visible';
 
   useEffect(() => {
-    const mapping: Record<string, string> = {
-      [CLEAN_MESSAGE_KEY]: isApplePlatform() ? '⌫' : 'backspace',
-      [PREFIX_KEY]: isApplePlatform() ? '⌥' : 'alt',
+    const mapping: Record<string, any> = {
+      [CLEAN_MESSAGE_KEY]: isApplePlatform() ? <Icon icon={Delete} /> : 'backspace',
+      [META_KEY]: isApplePlatform() ? <Icon icon={Command} /> : 'ctrl',
+      [PREFIX_KEY]: isApplePlatform() ? <Icon icon={Option} /> : 'alt',
     };
     const newValue = keys
       .split('+')
@@ -57,7 +62,7 @@ const HotKeys = memo<HotKeysProps>(({ keys, desc }) => {
     <Flexbox align={'center'} className={styles} gap={2} horizontal>
       {keysGroup.map((key, index) => (
         <kbd key={index}>
-          <span style={{ visibility }}>{key.toUpperCase()}</span>
+          <span style={{ visibility }}>{isString(key) ? key.toUpperCase() : key}</span>
         </kbd>
       ))}
     </Flexbox>

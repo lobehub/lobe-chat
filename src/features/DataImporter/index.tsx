@@ -1,7 +1,7 @@
 import { Icon } from '@lobehub/ui';
 import { Button, Result, Table, Upload } from 'antd';
 import { createStyles } from 'antd-style';
-import { BadgeCheck, ImportIcon } from 'lucide-react';
+import { CheckCircle, ImportIcon } from 'lucide-react';
 import React, { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -169,7 +169,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
                   {t('importModal.finish.start')}
                 </Button>
               }
-              icon={<Icon icon={BadgeCheck} />}
+              icon={<Icon icon={CheckCircle} />}
               status={'success'}
               style={{ paddingBlock: 24 }}
               subTitle={
