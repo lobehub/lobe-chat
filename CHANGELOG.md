@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.110.9](https://github.com/lobehub/lobe-chat/compare/v0.110.8...v0.110.9)
+
+<sup>Released on **2023-12-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: ChatInput should have maxHeight.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: ChatInput should have maxHeight, closes [#630](https://github.com/lobehub/lobe-chat/issues/630) ([8dfe1b8](https://github.com/lobehub/lobe-chat/commit/8dfe1b8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.110.8](https://github.com/lobehub/lobe-chat/compare/v0.110.7...v0.110.8)
 
 <sup>Released on **2023-12-12**</sup>

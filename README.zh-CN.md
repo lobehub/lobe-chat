@@ -183,12 +183,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                             | 助手说明                                                                                                     |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [Python Gradio 代码师](https://chat-preview.lobehub.com/market?agent=gradio-coding)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-12**</sup>  | 具有与 Hugging Face 合作的 Gradio 经验的 Python 程序员。<br/>`编程` `助手` `python`                          |
 | [GitHub Copilot](https://chat-preview.lobehub.com/market?agent=github-copilot)<br/><sup>By **[luciouskami](https://github.com/luciouskami)** on **2023-12-11**</sup> | GitHub Copilot<br/>`code` `it`                                                                               |
 | [授粉 AI 画图](https://chat-preview.lobehub.com/market?agent=pollinations-drawing)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2023-12-11**</sup> | 一个绘画助手，通过用户的描述，帮其丰富润色优化，并且调用绘画能力，以 Markdown 语法展示图片<br/>`绘画` `润色` |
 | [HTTP 请求大师](https://chat-preview.lobehub.com/market?agent=http-request-master)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup>   | 我支持广泛的定制。要使用，请确保下载并启用 “网站爬虫” 插件！<br/>`http-request` `http` `request` `web`       |
-| [食谱生成器](https://chat-preview.lobehub.com/market?agent=recipe-generator)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup>         | 描述食谱，或发送菜名。<br/>`厨房` `烘焙` `食物` `食谱` `烹饪`                                                |
 
-> 📊 Total agents: [<kbd>**59**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**60**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
