@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.110.10](https://github.com/lobehub/lobe-chat/compare/v0.110.9...v0.110.10)
+
+<sup>Released on **2023-12-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add cancel button text i18n for delete assistant modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add cancel button text i18n for delete assistant modal, closes [#640](https://github.com/lobehub/lobe-chat/issues/640) ([fae04c9](https://github.com/lobehub/lobe-chat/commit/fae04c9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.110.9](https://github.com/lobehub/lobe-chat/compare/v0.110.8...v0.110.9)
 
 <sup>Released on **2023-12-13**</sup>

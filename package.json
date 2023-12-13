@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.110.9",
+  "version": "0.110.10",
   "description": "An open-source, extensible (Function Calling), high-performance chatbot framework. It supports one-click free deployment of your private ChatGPT/LLM web application",
   "keywords": [
     "chatbot",
