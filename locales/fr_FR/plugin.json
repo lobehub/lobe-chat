@@ -123,6 +123,7 @@
       "installed": "Installés"
     },
     "title": "Boutique de plugins",
-    "uninstall": "Désinstaller"
+    "uninstall": "Désinstaller",
+    "placeholder": "Rechercher le nom ou les mots-clés de l'extension..."
   }
 }
