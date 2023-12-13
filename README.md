@@ -206,12 +206,12 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 | Recent Submits                                                                                                                                                               | Description                                                                                                                                                                 |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Python Coder Gradio](https://chat-preview.lobehub.com/market?agent=gradio-coding)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-12**</sup>           | Python programmer experienced with Gradio for Hugging Face.<br/>`programming` `assistant` `python`                                                                          |
 | [GitHub Copilot](https://chat-preview.lobehub.com/market?agent=github-copilot)<br/><sup>By **[luciouskami](https://github.com/luciouskami)** on **2023-12-11**</sup>         | GitHub Copilot<br/>`code` `it`                                                                                                                                              |
 | [Pollinate AI drawing](https://chat-preview.lobehub.com/market?agent=pollinations-drawing)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2023-12-11**</sup> | A drawing assistant that helps users enrich and optimize their descriptions and utilizes drawing abilities to display images in Markdown syntax<br/>`drawing` `enhancement` |
 | [HTTP Request Master](https://chat-preview.lobehub.com/market?agent=http-request-master)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup>     | I support extensive customization) To work, be sure to download and enable the "Website Crawler" plugin!<br/>`http-request` `http` `request` `web`                          |
-| [Recipe Generator](https://chat-preview.lobehub.com/market?agent=recipe-generator)<br/><sup>By **[Igroshka](https://github.com/Igroshka)** on **2023-12-08**</sup>           | Describe the recipe, or send the name of the dish.<br/>`kitchen` `baking` `food` `recipes` `cook`                                                                           |
 
-> 📊 Total agents: [<kbd>**59**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**60**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
