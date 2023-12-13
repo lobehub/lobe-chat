@@ -32,6 +32,10 @@ export const localeOptions: LocaleOptions = [
     label: 'Russian',
     value: 'ru-RU',
   },
+  {
+    label: 'Français',
+    value: 'fr-FR',
+  },
 ] as LocaleOptions;
 
 export const supportLangs: string[] = localeOptions.map((i) => i.value);

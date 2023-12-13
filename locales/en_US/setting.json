@@ -2,14 +2,14 @@
   "danger": {
     "clear": {
       "action": "Clear Now",
-      "confirm": "Confirm clearing all chat data?",
+      "confirm": "Confirm to clear all chat data?",
+      "desc": "This will clear all session data, including assistant, files, messages, plugins, etc.",
       "success": "All session messages have been cleared",
-      "title": "Clear All Session Messages",
-      "desc": "Will clear all session data, including assistant, files, messages, plugins, etc."
+      "title": "Clear All Session Messages"
     },
     "reset": {
       "action": "Reset Now",
-      "confirm": "Confirm resetting all settings?",
+      "confirm": "Confirm to reset all settings?",
       "currentVersion": "Current Version",
       "desc": "Reset all settings to default values",
       "title": "Reset All Settings"
@@ -23,76 +23,76 @@
   "llm": {
     "AzureOpenAI": {
       "endpoint": {
-        "desc": "This value can be found in the Keys and Endpoints section when checking out a resource on an Azure site.",
+        "desc": "This value can be found in the 'Keys and Endpoints' section when checking the resource on the Azure portal",
         "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure API URL"
+        "title": "Azure API Address"
       },
       "models": {
         "desc": "Supported models",
-        "title": "List of models"
+        "title": "Model List"
       },
       "title": "Azure OpenAI Settings",
       "token": {
-        "desc": "This value can be found in the Keys and Endpoints section when checking out a resource on an Azure site. You can use KEY1 or KEY2",
+        "desc": "This value can be found in the 'Keys and Endpoints' section when checking the resource on the Azure portal. You can use KEY1 or KEY2",
         "placeholder": "Azure API Key",
         "title": "API Key"
       }
     },
     "OpenAI": {
       "azureApiVersion": {
-        "desc": "Azure API version in YYYY-MM-DD format, check [latest version](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Get list",
-        "title": "Azure API version"
+        "desc": "The API version for Azure, following the format YYYY-MM-DD, check the [latest version](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Fetch List",
+        "title": "Azure API Version"
       },
       "check": {
         "button": "Check",
-        "desc": "Check that the Api Key and proxy server address are filled in correctly.",
-        "pass": "Connection successful",
-        "title": "Checking connectivity"
-      },
-      "endpoint": {
-        "desc": "Must contain http(s):// in addition to the default address.",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "API proxy address"
-      },
-      "models": {
-        "count": "Total supported models: {{count}}",
-        "desc": "Supported models",
-        "fetch": "Fetching the list of models",
-        "notSupport": "Azure OpenAI currently does not support viewing lists of models",
-        "notSupportTip": "Make sure that the deployment name matches the model name",
-        "refetch": "Fetching the list of models",
-        "title": "List of models"
-      },
-      "title": "OpenAI Settings",
-      "token": {
-        "desc": "Use your own OpenAI key",
-        "placeholder": "OpenAI API Key",
-        "title": "API Key"
-      },
-      "useAzure": {
-        "desc": "Using OpenAI services from Azure",
-        "fetch": "Get list",
-        "title": "Azure OpenAI",
-        "serverConfig": "The administrator has enabled Azure OpenAI on the server side, switching is prohibited"
+        "desc": "Test if the Api Key and proxy address are filled in correctly",
+        "pass": "Check Passed",
+        "title": "Connectivity Check"
       },
       "customModelName": {
         "desc": "Add custom models, separate multiple models with commas (,)",
         "placeholder": "model1,model2,model3",
         "title": "Custom Model Name"
+      },
+      "endpoint": {
+        "desc": "Must include http(s):// besides the default address",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "API Proxy Address"
+      },
+      "models": {
+        "count": "Supports a total of {{count}} models",
+        "desc": "Supported models",
+        "fetch": "Fetch Model List",
+        "notSupport": "Azure OpenAI does not currently support viewing the model list",
+        "notSupportTip": "You need to ensure that the deployment name matches the model name",
+        "refetch": "Refetch Model List",
+        "title": "Model List"
+      },
+      "title": "OpenAI Settings",
+      "token": {
+        "desc": "Use your own OpenAI Key",
+        "placeholder": "OpenAI API Key",
+        "title": "API Key"
+      },
+      "useAzure": {
+        "desc": "Use OpenAI services provided by Azure",
+        "fetch": "Fetch List",
+        "serverConfig": "The administrator has enabled Azure OpenAI on the server side, and switching is prohibited",
+        "title": "Azure OpenAI"
       }
     },
-    "waitingForMore": "<1>Access to other models is planned</1>, so stay tuned ✨"
+    "waitingForMore": "More models are <1>planned to be added</1>, stay tuned ✨"
   },
   "plugin": {
     "addTooltip": "Add Custom Plugin",
     "clearDeprecated": "Remove Deprecated Plugins",
-    "empty": "No installed plugins yet, feel free to visit the <1>Plugin Store</1> to explore",
+    "empty": "No installed plugins yet, feel free to explore the <1>Plugin Store</1>",
     "installStatus": {
       "deprecated": "Uninstalled"
     },
     "settings": {
-      "hint": "Please fill in the following configuration based on the description",
+      "hint": "Please fill in the following configurations based on the description",
       "title": "{{id}} Plugin Configuration",
       "tooltip": "Plugin Configuration"
     },
@@ -106,77 +106,77 @@
       "title": "Background Color"
     },
     "description": {
-      "placeholder": "Please enter agent description",
-      "title": "Agent Description"
+      "placeholder": "Enter assistant description",
+      "title": "Assistant Description"
     },
     "name": {
-      "placeholder": "Please enter agent name",
+      "placeholder": "Enter assistant name",
       "title": "Name"
     },
     "prompt": {
-      "placeholder": "Please enter role prompt",
-      "title": "Role Prompt"
+      "placeholder": "Enter role prompt word",
+      "title": "Role Setting"
     },
     "tag": {
-      "placeholder": "Please enter tag",
+      "placeholder": "Enter tag",
       "title": "Tag"
     },
-    "title": "Agent Information"
+    "title": "Assistant Information"
   },
   "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "Automatically create a topic when the current message count exceeds this value",
+      "title": "Message Threshold"
+    },
     "chatStyleType": {
       "title": "Chat Window Style",
       "type": {
-        "chat": "Chat Mode",
+        "chat": "Conversation Mode",
         "docs": "Document Mode"
       }
     },
     "compressThreshold": {
-      "desc": "When the uncompressed history messages exceed this value, compression will be performed",
+      "desc": "When the uncompressed history messages exceed this value, compression will be applied",
       "title": "History Message Length Compression Threshold"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "Whether to automatically create a topic during the conversation, only effective in temporary topics",
+      "title": "Auto Create Topic"
     },
     "enableCompressThreshold": {
       "title": "Enable History Message Length Compression Threshold"
     },
     "enableHistoryCount": {
       "alias": "Unlimited",
-      "limited": "Only include {{number}} session messages",
+      "limited": "Include only {{number}} conversation messages",
       "title": "Limit History Message Count",
-      "unlimited": "Unlimited History Message Count"
+      "unlimited": "Unlimited history message count"
     },
     "historyCount": {
-      "desc": "Number of history messages carried in each request",
+      "desc": "Number of historical messages carried with each request",
       "title": "Attached History Message Count"
     },
     "inputTemplate": {
-      "desc": "The latest user message will be filled into this template",
-      "placeholder": "{{text}} will be replaced with real-time input information",
+      "desc": "The user's latest message will be filled into this template",
+      "placeholder": "Preprocessing template {{text}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
-    "title": "Chat Settings",
-    "autoCreateTopicThreshold": {
-      "title": "Message Threshold",
-      "desc": "Automatically create a topic when the current message count exceeds this value"
-    },
-    "enableAutoCreateTopic": {
-      "title": "Enable Auto Topic Creation",
-      "desc": "Whether to automatically create a topic during the conversation, only effective in temporary topics"
-    }
+    "title": "Chat Settings"
   },
   "settingModel": {
     "enableMaxTokens": {
-      "title": "Enable Single Reply Limit"
+      "title": "Enable Max Tokens Limit"
     },
     "frequencyPenalty": {
-      "desc": "The larger the value, the more likely it is to reduce repeated words",
+      "desc": "The higher the value, the more likely it is to reduce repeated words",
       "title": "Frequency Penalty"
     },
     "maxTokens": {
-      "desc": "Maximum number of tokens used in a single interaction",
-      "title": "Single Reply Limit"
+      "desc": "The maximum number of tokens used for each interaction",
+      "title": "Max Tokens Limit"
     },
     "model": {
-      "desc": "ChatGPT Model",
+      "desc": "ChatGPT model",
       "list": {
         "gpt-3.5-turbo": "GPT 3.5",
         "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
@@ -186,85 +186,63 @@
       "title": "Model"
     },
     "presencePenalty": {
-      "desc": "The larger the value, the more likely it is to expand to new topics",
+      "desc": "The higher the value, the more likely it is to expand to new topics",
       "title": "Topic Freshness"
     },
     "temperature": {
-      "desc": "The larger the value, the more random the reply",
+      "desc": "The higher the value, the more random the response",
       "title": "Randomness",
       "titleWithValue": "Randomness {{value}}"
     },
     "title": "Model Settings",
     "topP": {
       "desc": "Similar to randomness, but do not change together with randomness",
-      "title": "Nucleus Sampling"
-    }
-  },
-  "settingOpenAI": {
-    "endpoint": {
-      "desc": "Must include http(s)://, in addition to the default address",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "API Proxy Address"
-    },
-    "title": "OpenAI Settings",
-    "token": {
-      "desc": "Use your own OpenAI Key",
-      "placeholder": "OpenAI API Key",
-      "title": "API Key"
+      "title": "Top P Sampling"
     }
   },
   "settingPlugin": {
-    "title": "Plugin List",
-    "add": "Add",
-    "addTooltip": "Add custom plugin",
-    "config": "{{id}} Plugin Configuration",
-    "clearDeprecated": "Remove Deprecated Plugins",
-    "settings": "Plugin Marketplace Settings"
+    "title": "Plugin List"
   },
   "settingSystem": {
     "accessCode": {
-      "desc": "Encryption access has been enabled by the administrator",
-      "placeholder": "Please enter access password",
+      "desc": "Encryption access is enabled by the administrator",
+      "placeholder": "Enter access password",
       "title": "Access Password"
     },
     "title": "System Settings"
   },
   "settingTTS": {
-    "showAllLocaleVoice": {
-      "desc": "If disabled, only voices for the current language will be displayed",
-      "title": "Show all locale voices"
-    },
-    "sttService": {
-      "desc": "The 'browser' option refers to the native speech recognition service in the browser",
-      "title": "Speech-to-Text Service"
-    },
-    "title": "Speech Services",
-    "ttsService": {
-      "desc": "If using the OpenAI text-to-speech service, ensure that the OpenAI model service is enabled",
-      "title": "Text-to-Speech Service"
-    },
-    "voice": {
-      "title": "Text-to-Speech Voices",
-      "desc": "Select a voice for the current agent, different TTS services support different voices",
-      "preview": "Preview Voice"
-    },
     "openai": {
-      "sttModel": "OpenAI Speech Recognition Model",
+      "sttModel": "OpenAI Speech-to-Text Model",
       "ttsModel": "OpenAI Text-to-Speech Model"
     },
+    "showAllLocaleVoice": {
+      "desc": "If closed, only voices in the current language will be displayed",
+      "title": "Show All Locale Voices"
+    },
     "stt": "Speech Recognition Settings",
+    "sttAutoStop": {
+      "desc": "When closed, speech recognition will not end automatically and requires manual click to stop",
+      "title": "Auto Stop Speech Recognition"
+    },
     "sttLocale": {
       "desc": "The language of the speech input, this option can improve the accuracy of speech recognition",
       "title": "Speech Recognition Language"
     },
-    "sttPersisted": {
-      "desc": "When enabled, speech recognition will not automatically end and requires manual click on the end button",
-      "title": "Manually End Speech Recognition"
+    "sttService": {
+      "desc": "Where 'browser' is the native speech recognition service of the browser",
+      "title": "Speech Recognition Service"
     },
+    "title": "Speech Service",
     "tts": "Text-to-Speech Settings",
-    "sttAutoStop": {
-      "desc": "When disabled, speech recognition will not automatically stop and will require manual intervention to end the process.",
-      "title": "Automatic Speech Recognition Termination"
+    "ttsService": {
+      "desc": "If using OpenAI text-to-speech service, make sure the OpenAI model service is enabled",
+      "title": "Text-to-Speech Service"
+    },
+    "voice": {
+      "desc": "Select a voice for the current assistant, different TTS services support different voices",
+      "preview": "Voice Preview",
+      "title": "Text-to-Speech Voice"
     }
   },
   "settingTheme": {
@@ -272,20 +250,20 @@
       "title": "Avatar"
     },
     "fontSize": {
-      "desc": "Font size of chat content",
+      "desc": "Font size for chat content",
       "title": "Font Size"
     },
     "lang": {
-      "title": "Language Settings",
-      "autoMode": "Follow System"
+      "autoMode": "Follow System",
+      "title": "Language"
     },
     "neutralColor": {
-      "desc": "Custom grayscale for different color tendencies",
+      "desc": "Custom neutral color for different color tendencies",
       "title": "Neutral Color"
     },
     "primaryColor": {
-      "desc": "Custom theme color",
-      "title": "Theme Color"
+      "desc": "Custom primary theme color",
+      "title": "Primary Color"
     },
     "themeMode": {
       "auto": "Auto",
@@ -296,28 +274,28 @@
     "title": "Theme Settings"
   },
   "submitAgentModal": {
-    "tooltips": "Share to Agent Market",
     "button": "Submit Agent",
-    "identifier": "Identifier",
-    "metaMiss": "Please complete the agent information before submitting. It should include name, description, and tags.",
-    "placeholder": "Please enter a unique identifier for the agent, such as web-development."
+    "identifier": "Agent Identifier",
+    "metaMiss": "Please complete the agent information before submitting. It should include name, description, and tags",
+    "placeholder": "Enter a unique identifier for the agent, e.g. web-development",
+    "tooltips": "Share to the agent marketplace"
   },
   "tab": {
     "agent": "Default Agent",
     "common": "Common Settings",
-    "llm": "Custom LLM API",
-    "tts": "Speech Services"
+    "llm": "Language Model",
+    "tts": "Text-to-Speech"
   },
   "tools": {
     "builtins": {
-      "groupName": "Built-in"
+      "groupName": "Built-ins"
     },
     "plugins": {
-      "enabled": "Enabled {{num}}",
+      "enabled": "Enabled: {{num}}",
       "groupName": "Plugins",
-      "noEnabled": "No enabled plugins yet",
+      "noEnabled": "No plugins enabled",
       "store": "Plugin Store"
     },
-    "title": "Extensions"
+    "title": "Extension Tools"
   }
 }

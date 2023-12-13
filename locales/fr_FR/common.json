@@ -1,0 +1,89 @@
+{
+  "about": "À propos",
+  "advanceSettings": "Paramètres avancés",
+  "agentMaxToken": "Longueur maximale de la session",
+  "agentModel": "Modèle",
+  "agentProfile": "Profil de l'assistant",
+  "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
+  "archive": "Archiver",
+  "autoGenerate": "Générer automatiquement",
+  "autoGenerateTooltip": "Générer automatiquement la description de l'assistant basée sur les suggestions",
+  "cancel": "Annuler",
+  "changelog": "Journal des modifications",
+  "close": "Fermer",
+  "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet assistant. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
+  "copy": "Copier",
+  "copySuccess": "Copie réussie",
+  "defaultAgent": "Assistant par défaut",
+  "defaultSession": "Session par défaut",
+  "delete": "Supprimer",
+  "edit": "Modifier",
+  "export": "Exporter",
+  "exportType": {
+    "agent": "Exporter les paramètres de l'assistant",
+    "agentWithMessage": "Exporter l'assistant et les messages",
+    "all": "Exporter les paramètres globaux et toutes les données des assistants",
+    "allAgent": "Exporter tous les paramètres de l'assistant",
+    "allAgentWithMessage": "Exporter tous les assistants et les messages",
+    "globalSetting": "Exporter les paramètres globaux"
+  },
+  "feedback": "Retour d'information et suggestions",
+  "historyRange": "Plage d'historique",
+  "import": "Importer",
+  "importModal": {
+    "finish": {
+      "onlySettings": "Importation des paramètres système réussie",
+      "start": "Commencer à utiliser",
+      "subTitle": "Importation des données réussie, durée : {{duration}} secondes. Détails de l'importation :",
+      "title": "Importation des données terminée"
+    },
+    "loading": "Importation des données en cours, veuillez patienter...",
+    "result": {
+      "added": "Importation réussie",
+      "errors": "Erreurs d'importation",
+      "messages": "Messages",
+      "sessions": "Assistants",
+      "skips": "Éléments ignorés en double",
+      "topics": "Sujets",
+      "type": "Type de données"
+    },
+    "title": "Importer des données"
+  },
+  "lang": {
+    "en": "Anglais",
+    "en-US": "Anglais",
+    "ja-JP": "Japonais",
+    "ko-KR": "Coréen",
+    "ru-RU": "Russe",
+    "zh": "Chinois",
+    "zh-CN": "Chinois simplifié",
+    "zh-TW": "Chinois traditionnel",
+    "fr-FR": "français"
+  },
+  "layoutInitializing": "Initialisation de la mise en page en cours...",
+  "noDescription": "Aucune description disponible",
+  "ok": "OK",
+  "password": "Mot de passe",
+  "pin": "Épingler",
+  "pinOff": "Désactiver l'épinglage",
+  "regenerate": "Régénérer",
+  "rename": "Renommer",
+  "reset": "Réinitialiser",
+  "retry": "Réessayer",
+  "send": "Envoyer",
+  "setting": "Paramètre",
+  "share": "Partager",
+  "stop": "Arrêter",
+  "tab": {
+    "chat": "Conversation",
+    "market": "Découvrir",
+    "setting": "Paramètre"
+  },
+  "temp": "Temporaire",
+  "updateAgent": "Mettre à jour les informations de l'assistant",
+  "upgradeVersion": {
+    "action": "Mettre à jour maintenant",
+    "hasNew": "Nouvelle mise à jour disponible",
+    "newVersion": "Nouvelle version disponible : {{version}}"
+  }
+}

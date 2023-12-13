@@ -2,17 +2,17 @@
   "danger": {
     "clear": {
       "action": "立即清除",
-      "confirm": "確定要清除所有聊天資料嗎？",
+      "confirm": "確認清除所有聊天資料？",
+      "desc": "將會清除所有對話資料，包括助手、檔案、訊息、外掛等",
       "success": "已清除所有對話訊息",
-      "title": "清除所有對話訊息",
-      "desc": "將會清除所有會話資料，包括助手、檔案、訊息、插件等"
+      "title": "清除所有對話訊息"
     },
     "reset": {
-      "action": "立即重設",
-      "confirm": "確定要重設所有設定嗎？",
-      "currentVersion": "目前版本",
-      "desc": "將所有設定重設為預設值",
-      "title": "重設所有設定"
+      "action": "立即重置",
+      "confirm": "確認重置所有設定？",
+      "currentVersion": "當前版本",
+      "desc": "重置所有設定項回預設值",
+      "title": "重置所有設定"
     }
   },
   "header": {
@@ -23,9 +23,9 @@
   "llm": {
     "AzureOpenAI": {
       "endpoint": {
-        "desc": "在 Azure 網站檢查資源時，可以在「金鑰和端點」部分找到此值。",
+        "desc": "從 Azure 門戶檢查資源時，可在“金鑰和終結點”部分中找到此值",
         "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure API 網址"
+        "title": "Azure API 地址"
       },
       "models": {
         "desc": "支援的模型",
@@ -33,35 +33,40 @@
       },
       "title": "Azure OpenAI 設定",
       "token": {
-        "desc": "在 Azure 網站檢查資源時，可以在「金鑰和端點」部分找到此值。可以使用 KEY1 或 KEY2",
+        "desc": "從 Azure 門戶檢查資源時，可在“金鑰和終結點”部分中找到此值。 可以使用 KEY1 或 KEY2",
         "placeholder": "Azure API 金鑰",
         "title": "API 金鑰"
       }
     },
     "OpenAI": {
       "azureApiVersion": {
-        "desc": "Azure API 版本，遵循 YYYY-MM-DD 格式，查詢[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "取得列表",
-        "title": "Azure API 版本"
+        "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "獲取列表",
+        "title": "Azure Api 版本"
       },
       "check": {
         "button": "檢查",
-        "desc": "檢查 API 金鑰和代理伺服器網址是否正確填寫。",
-        "pass": "連線成功",
-        "title": "檢查連線狀態"
+        "desc": "測試 Api 金鑰與代理地址是否正確填寫",
+        "pass": "檢查通過",
+        "title": "連通性檢查"
+      },
+      "customModelName": {
+        "desc": "增加自訂模型，多個模型使用逗號（,） 隔開",
+        "placeholder": "model1,model2,model3",
+        "title": "自訂模型名稱"
       },
       "endpoint": {
-        "desc": "除了預設網址外，必須包含 http(s)://",
+        "desc": "除預設地址外，必須包含 http(s)://",
         "placeholder": "https://api.openai.com/v1",
-        "title": "API 代理網址"
+        "title": "介面代理地址"
       },
       "models": {
-        "count": "總共支援 {{count}} 個模型",
+        "count": "共支援 {{count}} 個模型",
         "desc": "支援的模型",
-        "fetch": "取得模型列表",
-        "notSupport": "Azure OpenAI 目前不支援檢視模型列表",
-        "notSupportTip": "請確保部署名稱與模型名稱相符",
-        "refetch": "重新取得模型列表",
+        "fetch": "獲取模型列表",
+        "notSupport": "Azure OpenAI 暫不支援查看模型列表",
+        "notSupportTip": "你需要自行確保部署名稱與模型名稱一致",
+        "refetch": "重新獲取模型列表",
         "title": "模型列表"
       },
       "title": "OpenAI 設定",
@@ -72,31 +77,26 @@
       },
       "useAzure": {
         "desc": "使用 Azure 提供的 OpenAI 服務",
-        "fetch": "取得列表",
-        "title": "Azure OpenAI",
-        "serverConfig": "管理員已在伺服器端啟用 Azure OpenAI，禁止切換"
-      },
-      "customModelName": {
-        "desc": "增加自訂模型，多個模型使用逗號（,） 隔開",
-        "placeholder": "model1,model2,model3",
-        "title": "自訂模型名稱"
+        "fetch": "獲取列表",
+        "serverConfig": "管理員在服務端配置開啟了 Azure OpenAI，禁止切換",
+        "title": "Azure OpenAI"
       }
     },
-    "waitingForMore": "<1>計劃支援其他模型</1>，敬請期待 ✨"
+    "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨"
   },
   "plugin": {
-    "addTooltip": "新增自訂外掛程式",
-    "clearDeprecated": "清除已棄用的外掛程式",
-    "empty": "目前沒有安裝任何外掛程式，歡迎前往 <1>外掛程式商店</1> 進行探索",
+    "addTooltip": "新增自訂外掛",
+    "clearDeprecated": "清除已棄用的外掛",
+    "empty": "目前沒有安裝任何外掛，歡迎前往 <1>外掛商店</1> 探索",
     "installStatus": {
-      "deprecated": "已移除"
+      "deprecated": "已解除安裝"
     },
     "settings": {
       "hint": "請根據描述填寫以下設定",
-      "title": "{{id}} 外掛程式設定",
-      "tooltip": "外掛程式設定"
+      "title": "{{id}} 外掛設定",
+      "tooltip": "外掛設定"
     },
-    "store": "外掛程式商店"
+    "store": "外掛商店"
   },
   "settingAgent": {
     "avatar": {
@@ -106,24 +106,28 @@
       "title": "背景色"
     },
     "description": {
-      "placeholder": "請輸入助理描述",
-      "title": "助理描述"
+      "placeholder": "請輸入助手描述",
+      "title": "助手描述"
     },
     "name": {
-      "placeholder": "請輸入助理名稱",
+      "placeholder": "請輸入助手名稱",
       "title": "名稱"
     },
     "prompt": {
-      "placeholder": "請輸入角色提示",
-      "title": "角色提示"
+      "placeholder": "請輸入角色 Prompt 提示詞",
+      "title": "角色設定"
     },
     "tag": {
       "placeholder": "請輸入標籤",
       "title": "標籤"
     },
-    "title": "助理資訊"
+    "title": "助手資訊"
   },
   "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "當前訊息數超過設定值後，將自動建立話題",
+      "title": "訊息閾值"
+    },
     "chatStyleType": {
       "title": "聊天視窗樣式",
       "type": {
@@ -132,11 +136,15 @@
       }
     },
     "compressThreshold": {
-      "desc": "當未壓縮的歷史訊息超過此值時，將進行壓縮",
+      "desc": "當未壓縮的歷史訊息超過該值時，將進行壓縮",
       "title": "歷史訊息長度壓縮閾值"
     },
+    "enableAutoCreateTopic": {
+      "desc": "對話過程中是否自動建立話題，僅在臨時話題中生效",
+      "title": "自動建立話題"
+    },
     "enableCompressThreshold": {
-      "title": "是否啟用歷史訊息長度壓縮閾值"
+      "title": "是否開啟歷史訊息長度壓縮閾值"
     },
     "enableHistoryCount": {
       "alias": "不限制",
@@ -149,30 +157,22 @@
       "title": "附帶歷史訊息數"
     },
     "inputTemplate": {
-      "desc": "使用者最新的一條訊息會填充到此範本",
-      "placeholder": "前置處理範本 {{text}} 將替換為即時輸入資訊",
-      "title": "使用者輸入前置處理"
+      "desc": "使用者最新的一條訊息會填充到此模板",
+      "placeholder": "預處理模板 {{text}} 將替換為實時輸入資訊",
+      "title": "使用者輸入預處理"
     },
-    "title": "聊天設定",
-    "autoCreateTopicThreshold": {
-      "desc": "當前訊息數超過設定該值後，將自動創建話題",
-      "title": "訊息閾值"
-    },
-    "enableAutoCreateTopic": {
-      "desc": "會話過程中是否自動創建話題，僅在臨時話題中生效",
-      "title": "自動創建話題"
-    }
+    "title": "聊天設定"
   },
   "settingModel": {
     "enableMaxTokens": {
       "title": "啟用單次回覆限制"
     },
     "frequencyPenalty": {
-      "desc": "值越大，越有可能降低重複字詞",
+      "desc": "數值越大，越有可能降低重複字詞",
       "title": "頻率懲罰度"
     },
     "maxTokens": {
-      "desc": "單次互動所用的最大 Token 數",
+      "desc": "單次互動所使用的最大 Token 數",
       "title": "單次回覆限制"
     },
     "model": {
@@ -186,85 +186,63 @@
       "title": "模型"
     },
     "presencePenalty": {
-      "desc": "值越大，越有可能延伸到新話題",
+      "desc": "數值越大，越有可能擴展到新話題",
       "title": "話題新鮮度"
     },
     "temperature": {
-      "desc": "值越大，回覆越隨機",
+      "desc": "數值越大，回覆越隨機",
       "title": "隨機性",
       "titleWithValue": "隨機性 {{value}}"
     },
     "title": "模型設定",
     "topP": {
       "desc": "與隨機性類似，但不要和隨機性一起更改",
-      "title": "核心抽樣參數"
-    }
-  },
-  "settingOpenAI": {
-    "endpoint": {
-      "desc": "除了預設網址外，必須包含 http(s)://",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "API 代理網址"
-    },
-    "title": "OpenAI 設定",
-    "token": {
-      "desc": "使用自己的 OpenAI 金鑰",
-      "placeholder": "OpenAI API 金鑰",
-      "title": "API 金鑰"
+      "title": "核採樣"
     }
   },
   "settingPlugin": {
-    "add": "新增",
-    "addTooltip": "新增自訂外掛",
-    "clearDeprecated": "移除過時外掛",
-    "config": "{{id}} 外掛設定",
-    "settings": "設定外掛市場",
-    "title": "外掛列表"
+    "title": "插件列表"
   },
   "settingSystem": {
     "accessCode": {
-      "desc": "管理員已啟用加密存取",
-      "placeholder": "請輸入存取密碼",
-      "title": "存取密碼"
+      "desc": "管理員已開啟加密訪問",
+      "placeholder": "請輸入訪問密碼",
+      "title": "訪問密碼"
     },
     "title": "系統設定"
   },
   "settingTTS": {
+    "openai": {
+      "sttModel": "OpenAI 語音識別模型",
+      "ttsModel": "OpenAI 語音合成模型"
+    },
     "showAllLocaleVoice": {
       "desc": "關閉則只顯示當前語種的聲源",
       "title": "顯示所有語種聲源"
+    },
+    "stt": "語音識別設定",
+    "sttAutoStop": {
+      "desc": "關閉後，語音識別將不會自動結束，需要手動點擊結束按鈕",
+      "title": "自動結束語音識別"
+    },
+    "sttLocale": {
+      "desc": "語音輸入的語種，此選項可提高語音識別準確率",
+      "title": "語音識別語種"
     },
     "sttService": {
       "desc": "其中 broswer 為瀏覽器原生的語音識別服務",
       "title": "語音識別服務"
     },
     "title": "語音服務",
+    "tts": "語音合成設定",
     "ttsService": {
       "desc": "如使用 OpenAI 語音合成服務，需要保證 OpenAI 模型服務已開啟",
       "title": "語音合成服務"
     },
     "voice": {
-      "title": "語音合成聲源",
       "desc": "為當前助手挑選一個聲音，不同 TTS 服務支持的聲源不同",
-      "preview": "預覽"
-    },
-    "openai": {
-      "sttModel": "OpenAI 語音識別模型",
-      "ttsModel": "OpenAI 語音合成模型"
-    },
-    "stt": "語音識別設定",
-    "sttLocale": {
-      "desc": "語音輸入的語言，此選項可提高語音識別準確率",
-      "title": "語音識別語言"
-    },
-    "sttPersisted": {
-      "desc": "開啟後，語音識別將不會自動結束，需要手動點擊結束按鈕",
-      "title": "手動結束語音識別"
-    },
-    "tts": "語音合成設定",
-    "sttAutoStop": {
-      "desc": "關閉後，語音識別將不會自動結束，需要手動點擊結束按鈕",
-      "title": "自動結束語音識別"
+      "preview": "試聽聲源",
+      "title": "語音合成聲源"
     }
   },
   "settingTheme": {
@@ -272,20 +250,20 @@
       "title": "頭像"
     },
     "fontSize": {
-      "desc": "聊天內容的字型大小",
-      "title": "字型大小"
+      "desc": "聊天內容的字體大小",
+      "title": "字體大小"
     },
     "lang": {
-      "title": "語言設定",
-      "autoMode": "跟隨系統"
+      "autoMode": "跟隨系統",
+      "title": "語言"
     },
     "neutralColor": {
-      "desc": "不同色彩傾向的灰階自訂",
+      "desc": "不同色彩傾向的灰階自定義",
       "title": "中性色"
     },
     "primaryColor": {
-      "desc": "自訂主題顏色",
-      "title": "主題顏色"
+      "desc": "自定義主題色",
+      "title": "主題色"
     },
     "themeMode": {
       "auto": "自動",
@@ -296,28 +274,28 @@
     "title": "主題設定"
   },
   "submitAgentModal": {
-    "tooltips": "分享到助手市場",
     "button": "提交助手",
-    "identifier": "助手識別符",
-    "metaMiss": "請補全助手資訊後提交，需要包含名稱、描述和標籤",
-    "placeholder": "請輸入助手的識別符，需要是唯一的，例如 web-development"
+    "identifier": "助手標識符",
+    "metaMiss": "請補全助手信息後提交，需要包含名稱、描述和標籤",
+    "placeholder": "請輸入助手的標識符，需要是唯一的，比如 web-development",
+    "tooltips": "分享到助手市場"
   },
   "tab": {
-    "agent": "預設助理",
-    "common": "通用設定",
+    "agent": "默認助手",
+    "common": "通用設置",
     "llm": "語言模型",
     "tts": "語音服務"
   },
   "tools": {
     "builtins": {
-      "groupName": "內建"
+      "groupName": "內置"
     },
     "plugins": {
       "enabled": "已啟用 {{num}}",
-      "groupName": "外掛程式",
-      "noEnabled": "目前沒有已啟用的外掛程式",
-      "store": "外掛程式商店"
+      "groupName": "插件",
+      "noEnabled": "暫無啟用插件",
+      "store": "插件商店"
     },
-    "title": "擴充工具"
+    "title": "擴展工具"
   }
 }
