@@ -13,7 +13,7 @@ LobeChat 的核心技术栈如下：
 - **路由**：路由管理我们直接使用 [Next.js](https://nextjs.org/) 自身提供的解决方案。
 - **国际化**：我们使用 [i18next](https://www.i18next.com/) 来实现应用的多语言支持。
 - **样式**：我们使用 [antd-style](https://github.com/ant-design/antd-style)，这是一款与 Ant Design 配套的 CSS-in-JS 库。
-- **单元测试**：我们使用 [vitest](https://github.com/vitejs/vitest) 进行单元测试。
+- **单元测试**：我们使用 [vitest](https://github.com/vitest-dev/vitest) 进行单元测试。
 
 ## 文件夹目录架构
 
