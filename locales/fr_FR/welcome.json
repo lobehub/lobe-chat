@@ -1,0 +1,14 @@
+{
+  "button": {
+    "import": "Importer la configuration",
+    "start": "Démarrer maintenant"
+  },
+  "header": "Bienvenue",
+  "pickAgent": "Ou choisissez parmi les modèles d'assistant suivants",
+  "skip": "Passer",
+  "slogan": {
+    "desc1": "Déployez un cluster cérébral, suscitez des étincelles de réflexion. Votre assistant intelligent est toujours là.",
+    "desc2": "Créez votre premier assistant, commençons maintenant~",
+    "title": "Offrez-vous un cerveau plus intelligent"
+  }
+}

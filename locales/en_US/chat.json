@@ -1,28 +1,28 @@
 {
-  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away or go to [Agent Settings](/chat/settings#session={{id}}) to improve my information.",
-  "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start the conversation!",
-  "backToBottom": "Go to Latest Messages",
-  "clearCurrentMessages": "Clear Current Session Messages",
-  "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be recovered. Please confirm your operation.",
-  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be recovered. Please confirm your operation.",
-  "defaultAgent": "Custom Agent",
-  "defaultSession": "Custom Agent",
+  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away, or go to [Assistant Settings](/chat/settings#session={{id}}) to complete my information.",
+  "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
+  "backToBottom": "Back to Bottom",
+  "clearCurrentMessages": "Clear current session messages",
+  "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
+  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
+  "defaultAgent": "Default Assistant",
+  "defaultSession": "Default Assistant",
   "historyRange": "History Range",
   "inbox": {
-    "defaultMessage": "Hello, I'm your intelligent agent. You can ask me any questions, and I will do my best to answer you. If you need a more professional or customized agent, you can click on `+` to create a custom agent.",
-    "desc": "Activate brain clusters and spark thinking. Your intelligent agent is here to communicate with you about everything.",
-    "title": "Chat Randomly"
+    "defaultMessage": "Hello, I'm your virtual assistant. You can ask me anything, and I'll do my best to answer you. If you need a more professional or customized assistant, click on `+` to create a custom assistant.",
+    "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
+    "title": "Just Chat"
   },
-  "newAgent": "Create New Agent",
+  "newAgent": "New Assistant",
   "noDescription": "No description available",
   "pin": "Pin",
   "pinOff": "Unpin",
   "regenerate": "Regenerate",
-  "roleAndArchive": "Roles and Archives",
-  "searchAgentPlaceholder": "Search agents and conversations...",
+  "roleAndArchive": "Role and Archive",
+  "searchAgentPlaceholder": "Search assistants and conversations...",
   "send": "Send",
-  "sendPlaceholder": "Enter chat content...",
-  "sessionList": "Agent List",
+  "sendPlaceholder": "Type your message here...",
+  "sessionList": "Assistant List",
   "shareModal": {
     "download": "Download Screenshot",
     "imageType": "Image Format",
@@ -32,13 +32,13 @@
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",
-    "withSystemRole": "Include Agent Role Setting"
+    "withSystemRole": "Include Assistant Role Setting"
   },
   "stop": "Stop",
   "stt": {
     "action": "Voice Input",
     "loading": "Recognizing...",
-    "prettifying": "Prettifying..."
+    "prettifying": "Polishing..."
   },
   "temp": "Temporary",
   "tokenDetail": "Role Setting: {{systemRoleToken}} · Chat History: {{chatsToken}}",
@@ -48,33 +48,30 @@
     "used": "Used"
   },
   "topic": {
+    "confirmRemoveAll": "You are about to delete all topics. Once deleted, they cannot be recovered. Please proceed with caution.",
     "confirmRemoveTopic": "You are about to delete this topic. Once deleted, it cannot be recovered. Please proceed with caution.",
+    "confirmRemoveUnstarred": "You are about to delete unstarred topics. Once deleted, they cannot be recovered. Please proceed with caution.",
     "defaultTitle": "Default Topic",
-    "saveCurrentMessages": "Save Current Session as Topic",
-    "searchPlaceholder": "Search topics...",
-    "deleteAll": "Delete All Topics",
-    "deleteUnstarred": "Delete Unstarred Topics",
-    "title": "Topic List",
-    "confirmRemoveAll": "All topics will be deleted and cannot be recovered. Please proceed with caution.",
-    "confirmRemoveUnstarred": "All unstarred topics will be deleted and cannot be recovered. Please proceed with caution.",
+    "openNewTopic": "Open New Topic",
     "removeAll": "Remove All Topics",
     "removeUnstarred": "Remove Unstarred Topics",
-    "openNewTopic": "Open a new topic"
+    "saveCurrentMessages": "Save current session as topic",
+    "searchPlaceholder": "Search topics...",
+    "title": "Topic List"
   },
   "translate": {
-    "clear": "Clear Translation",
-    "action": "Translate"
+    "action": "Translate",
+    "clear": "Clear Translation"
   },
-  "translateTo": "Translate",
   "tts": {
-    "action": "Text to Speech",
+    "action": "Text-to-Speech",
     "clear": "Clear Speech"
   },
-  "updateAgent": "Update Agent Information",
+  "updateAgent": "Update Assistant Information",
   "upload": {
     "actionTooltip": "Upload Image",
-    "dragDesc": "Drag and drop files here, supports uploading multiple images. Hold Shift to send images directly",
+    "dragDesc": "Drag and drop files here, support uploading multiple images. Hold down Shift to send images directly.",
     "dragTitle": "Upload Image"
   },
-  "warp": "Line Break"
+  "warp": "换行"
 }

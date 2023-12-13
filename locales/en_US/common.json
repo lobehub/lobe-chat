@@ -7,24 +7,24 @@
   "appInitializing": "LobeChat is initializing, please wait...",
   "archive": "Archive",
   "autoGenerate": "Auto Generate",
-  "autoGenerateTooltip": "Auto generate agent description based on prompts",
+  "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "close": "Close",
-  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be recovered. Please confirm your action.",
+  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be recovered. Please confirm your action.",
   "copy": "Copy",
-  "copySuccess": "Copy Successful",
-  "defaultAgent": "Custom Agent",
-  "defaultSession": "Custom Agent",
+  "copySuccess": "Copied successfully",
+  "defaultAgent": "Default Assistant",
+  "defaultSession": "Default Assistant",
   "delete": "Delete",
   "edit": "Edit",
   "export": "Export Configuration",
   "exportType": {
-    "agent": "Export Agent Settings",
-    "agentWithMessage": "Export Agent and Messages",
-    "all": "Export Global Settings and All Agent Data",
-    "allAgent": "Export All Agent Settings",
-    "allAgentWithMessage": "Export All Agents and Messages",
+    "agent": "Export Assistant Settings",
+    "agentWithMessage": "Export Assistant and Messages",
+    "all": "Export Global Settings and All Assistant Data",
+    "allAgent": "Export All Assistant Settings",
+    "allAgentWithMessage": "Export All Assistants and Messages",
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
@@ -34,18 +34,18 @@
     "finish": {
       "onlySettings": "System settings imported successfully",
       "start": "Start using",
-      "subTitle": "Data imported successfully, took {{duration}} seconds. Details of the import are as follows:",
+      "subTitle": "Data imported successfully, took {{duration}} seconds. Import details are as follows:",
       "title": "Data import completed"
     },
-    "loading": "Importing data, please wait patiently...",
+    "loading": "Data importing, please wait...",
     "result": {
       "added": "Imported successfully",
       "errors": "Import errors",
       "messages": "Messages",
       "sessions": "Assistants",
-      "skips": "Skipped duplicates",
+      "skips": "Duplicates skipped",
       "topics": "Topics",
-      "type": "Data type"
+      "type": "Data Type"
     },
     "title": "Import Data"
   },
@@ -57,10 +57,11 @@
     "ru-RU": "Russian",
     "zh": "Simplified Chinese",
     "zh-CN": "Simplified Chinese",
-    "zh-TW": "Traditional Chinese"
+    "zh-TW": "Traditional Chinese",
+    "fr-FR": "French"
   },
-  "layoutInitializing": "Loading layout...",
-  "noDescription": "No description",
+  "layoutInitializing": "Initializing layout...",
+  "noDescription": "No description available",
   "ok": "OK",
   "password": "Password",
   "pin": "Pin",
@@ -70,7 +71,6 @@
   "reset": "Reset",
   "retry": "Retry",
   "send": "Send",
-  "sessionList": "Agent List",
   "setting": "Settings",
   "share": "Share",
   "stop": "Stop",
@@ -80,10 +80,10 @@
     "setting": "Settings"
   },
   "temp": "Temporary",
-  "updateAgent": "Update Agent Profile",
+  "updateAgent": "Update Agent Information",
   "upgradeVersion": {
     "action": "Upgrade Now",
-    "hasNew": "Update available",
+    "hasNew": "New update available",
     "newVersion": "New version available: {{version}}"
   }
 }
