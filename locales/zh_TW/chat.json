@@ -1,16 +1,16 @@
 {
-  "agentDefaultMessage": "妳好，我是 **{{name}}**，妳可以立即與我開始對話，也可以前往 [助手設定](/chat/settings#session={{id}}) 完善我的資訊。",
-  "agentDefaultMessageWithSystemRole": "妳好，我是 **{{name}}**，{{systemRole}}，讓我們開始對話吧！",
+  "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即與我開始對話，也可以前往 [助手設置](/chat/settings#session={{id}}) 完善我的信息。",
+  "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，{{systemRole}}，讓我們開始對話吧！",
   "backToBottom": "查看最新訊息",
-  "clearCurrentMessages": "清空當前會話訊息",
-  "confirmClearCurrentMessages": "即將清空當前會話訊息，清空後將無法找回，請確認妳的操作",
-  "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後該將無法找回，請確認妳的操作",
+  "clearCurrentMessages": "清空當前對話",
+  "confirmClearCurrentMessages": "即將清空當前對話，清空後將無法找回，請確認你的操作",
+  "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",
   "defaultAgent": "自定義助手",
   "defaultSession": "自定義助手",
   "historyRange": "歷史範圍",
   "inbox": {
-    "defaultMessage": "妳好，我是妳的智能助手，妳可以問我任何問題，我會盡力回答妳。如果需要獲得更加專業或定制的助手，可以點擊`+`創建自定義助手",
-    "desc": "開啟大腦集群，激發思維火花。妳的智能助理，在這裡與妳交流一切",
+    "defaultMessage": "你好，我是你的智能助手，你可以問我任何問題，我會盡力回答你。如果需要獲得更專業或定制的助手，可以點擊`+`創建自定義助手",
+    "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
     "title": "隨便聊聊"
   },
   "newAgent": "新建助手",
@@ -27,7 +27,7 @@
     "download": "下載截圖",
     "imageType": "圖片格式",
     "screenshot": "截圖",
-    "settings": "導出設定",
+    "settings": "導出設置",
     "shareToShareGPT": "生成 ShareGPT 分享鏈接",
     "withBackground": "包含背景圖片",
     "withFooter": "包含頁腳",
@@ -37,43 +37,40 @@
   "stop": "停止",
   "stt": {
     "action": "語音輸入",
-    "loading": "辨識中...",
-    "prettifying": "美化中..."
+    "loading": "識別中...",
+    "prettifying": "潤色中..."
   },
   "temp": "臨時",
-  "tokenDetail": "角色設定: {{systemRoleToken}} · 歷史訊息: {{chatsToken}}",
+  "tokenDetail": "角色設定: {{systemRoleToken}} · 歷史消息: {{chatsToken}}",
   "tokenTag": {
     "overload": "超過限制",
     "remained": "剩餘",
     "used": "使用"
   },
   "topic": {
+    "confirmRemoveAll": "即將刪除全部話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
+    "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",
     "defaultTitle": "默認話題",
-    "saveCurrentMessages": "將當前會話保存為話題",
-    "searchPlaceholder": "搜索話題...",
-    "deleteAll": "刪除所有話題",
-    "deleteUnstarred": "刪除未收藏話題",
-    "title": "話題列表",
-    "confirmRemoveAll": "即將刪除全部話題，刪除後將無法恢復，請謹慎操作。",
-    "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將無法恢復，請謹慎操作。",
+    "openNewTopic": "開啟新話題",
     "removeAll": "刪除全部話題",
     "removeUnstarred": "刪除未收藏話題",
-    "openNewTopic": "開啟新話題"
+    "saveCurrentMessages": "將當前對話保存為話題",
+    "searchPlaceholder": "搜索話題...",
+    "title": "話題列表"
   },
   "translate": {
-    "clear": "刪除翻譯",
-    "action": "翻譯"
+    "action": "翻譯",
+    "clear": "刪除翻譯"
   },
-  "translateTo": "翻譯",
   "tts": {
     "action": "語音朗讀",
-    "clear": "清除語音"
+    "clear": "刪除語音"
   },
-  "updateAgent": "更新助理資訊",
+  "updateAgent": "更新助理信息",
   "upload": {
     "actionTooltip": "上傳圖片",
-    "dragDesc": "拖曳檔案到這裡，支援上傳多張圖片。按住 Shift 直接發送圖片",
+    "dragDesc": "拖拽文件到這裡，支持上傳多個圖片。按住 Shift 直接發送圖片",
     "dragTitle": "上傳圖片"
   },
   "warp": "換行"

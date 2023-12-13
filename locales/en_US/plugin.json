@@ -2,81 +2,77 @@
   "debug": {
     "arguments": "Arguments",
     "function_call": "Function Call",
-    "response": "Response",
-    "off": "Turn off debug",
-    "on": "View plugin invocation information"
+    "off": "Turn Off Debug",
+    "on": "View Plugin Call Information",
+    "response": "Response"
   },
   "dev": {
     "confirmDeleteDevPlugin": "Are you sure you want to delete this local plugin? Once deleted, it cannot be recovered.",
     "deleteSuccess": "Plugin deleted successfully",
     "manifest": {
       "identifier": {
-        "desc": "The unique identifier of the plugin",
+        "desc": "Unique identifier for the plugin",
         "label": "Identifier"
       },
       "mode": {
-        "local": "Visual Configuration",
-        "local-tooltip": "Visual configuration is not supported at the moment",
+        "local": "Local Configuration",
+        "local-tooltip": "Local configuration is temporarily not supported",
         "url": "Online Link"
       },
       "name": {
-        "desc": "The title of the plugin",
+        "desc": "Plugin title",
         "label": "Title",
         "placeholder": "Search Engine"
       }
     },
     "meta": {
       "author": {
-        "desc": "The author of the plugin",
+        "desc": "Author of the plugin",
         "label": "Author"
       },
       "avatar": {
-        "desc": "The icon of the plugin, can be an Emoji or a URL",
+        "desc": "Plugin icon, can use Emoji or URL",
         "label": "Icon"
       },
       "description": {
-        "desc": "The description of the plugin",
+        "desc": "Plugin description",
         "label": "Description",
-        "placeholder": "Get information from search engines"
+        "placeholder": "Query search engine for information"
       },
       "formFieldRequired": "This field is required",
       "homepage": {
-        "desc": "The homepage of the plugin",
+        "desc": "Plugin homepage",
         "label": "Homepage"
       },
       "identifier": {
-        "desc": "The unique identifier of the plugin, only supports alphanumeric characters, hyphen -, and underscore _",
-        "errorDuplicate": "The identifier is already used by another plugin, please modify the identifier",
+        "desc": "Unique identifier for the plugin, will be automatically recognized from the manifest",
+        "errorDuplicate": "Identifier is already used by another plugin, please modify the identifier",
         "label": "Identifier",
-        "pattenErrorMessage": "Only alphanumeric characters, hyphen -, and underscore _ are allowed"
+        "pattenErrorMessage": "Only English characters, numbers, - and _ are allowed"
       },
       "manifest": {
-        "desc": "LobeChat will install the plugin using this link",
-        "invalid": "The input manifest link is invalid or does not comply with the specification",
-        "label": "Plugin Manifest URL",
-        "urlError": "Please enter a valid URL",
-        "jsonInvalid": "The manifest is not valid, validation result: \n\n {{error}}",
+        "desc": "LobeChat will install the plugin through this link",
+        "label": "Plugin Description File (Manifest) URL",
         "preview": "Preview Manifest",
-        "refresh": "Refresh",
-        "requestError": "Failed to request the link, please enter a valid link and check if the link allows cross-origin access"
+        "refresh": "Refresh"
       },
       "title": {
-        "desc": "The title of the plugin",
+        "desc": "Plugin title",
         "label": "Title",
         "placeholder": "Search Engine"
       }
     },
     "metaConfig": "Plugin metadata configuration",
-    "modalDesc": "After adding a custom plugin, it can be used for plugin development verification or directly in conversations. Please refer to the plugin development documentation for more information.",
+    "modalDesc": "After adding a custom plugin, it can be used for plugin development validation or directly in the session. For plugin development, please refer to the <1>development documentation↗</>.",
     "preview": {
-      "card": "Preview of plugin display",
-      "desc": "Preview of plugin description",
+      "card": "Preview Plugin Display",
+      "desc": "Preview Plugin Description",
       "title": "Plugin Name Preview"
     },
-    "save": "Save",
+    "save": "Install Plugin",
     "saveSuccess": "Plugin settings saved successfully",
     "tabs": {
-      "manifest": "Function Description Manifest (Manifest)",
+      "manifest": "Manifest Description",
       "meta": "Plugin Metadata"
     },
     "title": "Add Custom Plugin",
@@ -84,59 +80,43 @@
     "updateSuccess": "Plugin settings updated successfully"
   },
   "error": {
-    "fetchError": "Request failed",
-    "installError": "Plugin {{name}} installation failed",
-    "manifestInvalid": "Invalid manifest file format",
-    "noManifest": "Manifest file does not exist"
+    "fetchError": "Failed to fetch the manifest link. Please ensure the link is valid and allows cross-origin access.",
+    "installError": "Failed to install plugin {{name}}",
+    "manifestInvalid": "The manifest does not comply with the specification. Validation result: \n\n {{error}}",
+    "noManifest": "Manifest file does not exist",
+    "reinstallError": "Failed to refresh plugin {{name}}",
+    "urlError": "The link did not return content in JSON format. Please ensure it is a valid link"
   },
   "list": {
     "item": {
+      "deprecated.title": "Deprecated",
       "local.config": "Configuration",
-      "local.title": "Local",
-      "deprecated.title": "Deleted"
+      "local.title": "Custom"
     }
   },
   "loading": {
-    "plugin": "Plugin is running...",
-    "content": "Calling plugin..."
+    "content": "Calling plugin...",
+    "plugin": "Plugin running..."
   },
   "pluginList": "Plugin List",
   "plugins": {
-    "realtimeWeather": "Realtime Weather",
-    "searchEngine": "Search Engine",
-    "undefined": "Plugin Detection...",
-    "websiteCrawler": "Website Crawler",
-    "unknown": "Plugin detection in progress..."
+    "loading": "Checking plugins...",
+    "unknown": "Unknown plugin"
   },
-  "realtimeWeather": {
-    "data": {
-      "date": "Date",
-      "daytemp_float": "Daytime Temperature",
-      "dayweather": "Daytime Weather",
-      "daywind": "Daytime Wind",
-      "nighttemp_float": "Nighttime Temperature",
-      "nightweather": "Nighttime Weather",
-      "nightwind": "Nighttime Wind",
-      "week": "Week"
-    },
-    "title": "Weather Data for the Next 7 Days ({{city}})",
-    "updateAt": "Last Updated"
-  },
-  "responseData": "Response Data",
   "setting": "Plugin Settings",
   "settings": {
     "indexUrl": {
       "title": "Marketplace Index",
-      "tooltip": "Editing is not supported at the moment"
+      "tooltip": "Online editing is not supported for now. Please set it through environment variables during deployment."
     },
-    "modalDesc": "After configuring the address of the plugin marketplace, you can use a custom plugin marketplace",
-    "title": "Configure Plugin Marketplace"
+    "modalDesc": "After configuring the address of the plugin marketplace, you can use a custom plugin marketplace.",
+    "title": "Set Plugin Marketplace"
   },
   "store": {
     "empty": "No installed plugins yet",
     "install": "Install",
     "installAllPlugins": "Install All",
-    "networkError": "Failed to fetch plugin store. Please check your network connection and try again",
+    "networkError": "Failed to fetch the plugin store. Please check your network connection and try again.",
     "releasedAt": "Released at {{createdAt}}",
     "tabs": {
       "all": "All",

@@ -1,46 +1,46 @@
 {
-  "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに会話を始めることができますし、[エージェント設定](/chat/settings#session={{id}}) に移動して私の情報を充実させることもできます。",
-  "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、会話を始めましょう！",
-  "backToBottom": "最新のメッセージを表示",
-  "clearCurrentMessages": "現在の会話メッセージをクリア",
-  "confirmClearCurrentMessages": "現在の会話メッセージをクリアします。クリア後は元に戻すことはできませんので、操作を確認してください",
-  "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除後は元に戻すことはできませんので、操作を確認してください",
+  "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐにチャットを開始するか、[エージェント設定](/chat/settings#session={{id}}) に移動して私の情報を完全にすることができます。",
+  "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、チャットを始めましょう！",
+  "backToBottom": "最新メッセージを表示",
+  "clearCurrentMessages": "現在の会話をクリア",
+  "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
+  "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
   "defaultAgent": "デフォルトエージェント",
-  "defaultSession": "デフォルトエージェント",
+  "defaultSession": "デフォルトセッション",
   "historyRange": "履歴範囲",
   "inbox": {
-    "defaultMessage": "こんにちは、私はあなたのインテリジェントアシスタントです。何でも質問してください、できる限りお答えします。より専門的またはカスタマイズされたアシスタントが必要な場合は、`+` をクリックしてカスタムエージェントを作成できます",
-    "desc": "ブレインクラスタを起動し、思考の火花を引き起こします。あなたのインテリジェントアシスタントは、ここであなたとすべてを話します",
-    "title": "ちょっとおしゃべりしましょう"
+    "defaultMessage": "こんにちは、私はあなたのスマートアシスタントです。何か質問があれば遠慮なく聞いてください。より専門的でカスタマイズされたアシスタントが必要な場合は、`+` をクリックしてカスタムエージェントを作成できます。",
+    "desc": "脳のクラスターを起動し、アイデアの火花を散らします。あなたのスマートアシスタントは、あなたとすべてのことについてここでコミュニケーションします。",
+    "title": "気軽におしゃべり"
   },
-  "newAgent": "新しいエージェントを作成",
-  "noDescription": "説明はありません",
+  "newAgent": "新しいエージェント",
+  "noDescription": "説明なし",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
-  "searchAgentPlaceholder": "エージェントと会話を検索...",
+  "searchAgentPlaceholder": "エージェントや会話を検索...",
   "send": "送信",
-  "sendPlaceholder": "チャット内容を入力...",
-  "sessionList": "セッションリスト",
+  "sendPlaceholder": "チャット内容を入力してください...",
+  "sessionList": "エージェントリスト",
   "shareModal": {
     "download": "スクリーンショットをダウンロード",
     "imageType": "画像形式",
     "screenshot": "スクリーンショット",
     "settings": "エクスポート設定",
-    "shareToShareGPT": "ShareGPT共有リンクを生成",
+    "shareToShareGPT": "ShareGPT 共有リンクを生成",
     "withBackground": "背景画像を含む",
     "withFooter": "フッターを含む",
     "withPluginInfo": "プラグイン情報を含む",
-    "withSystemRole": "エージェントの役割設定を含む"
+    "withSystemRole": "エージェントの役割を含む"
   },
   "stop": "停止",
   "stt": {
     "action": "音声入力",
-    "loading": "読み取り中...",
-    "prettifying": "美化中..."
+    "loading": "認識中...",
+    "prettifying": "整形中..."
   },
-  "temp": "一時",
+  "temp": "一時的",
   "tokenDetail": "役割設定: {{systemRoleToken}} · チャット履歴: {{chatsToken}}",
   "tokenTag": {
     "overload": "制限を超えています",
@@ -48,32 +48,29 @@
     "used": "使用済み"
   },
   "topic": {
-    "confirmRemoveTopic": "このトピックを削除します。削除後は元に戻すことはできませんので、注意して操作してください",
+    "confirmRemoveAll": "すべてのトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
+    "confirmRemoveTopic": "このトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
+    "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "defaultTitle": "デフォルトトピック",
-    "saveCurrentMessages": "現在の会話をトピックとして保存",
-    "searchPlaceholder": "トピックを検索...",
-    "deleteAll": "すべてのトピックを削除する",
-    "deleteUnstarred": "スターを付けていないトピックを削除する",
-    "title": "トピックリスト",
-    "confirmRemoveAll": "すべてのトピックを削除します。削除後は元に戻すことはできませんので、注意して操作してください。",
-    "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除後は元に戻すことはできませんので、注意して操作してください。",
+    "openNewTopic": "新しいトピックを開く",
     "removeAll": "すべてのトピックを削除",
     "removeUnstarred": "スターをつけていないトピックを削除",
-    "openNewTopic": "新しいトピックを開く"
+    "saveCurrentMessages": "現在の会話をトピックとして保存",
+    "searchPlaceholder": "トピックを検索...",
+    "title": "トピックリスト"
   },
   "translate": {
-    "clear": "翻訳をクリア",
-    "action": "翻訳"
+    "action": "翻訳",
+    "clear": "翻訳を削除"
   },
-  "translateTo": "翻訳",
   "tts": {
     "action": "音声読み上げ",
-    "clear": "音声削除"
+    "clear": "音声を削除"
   },
   "updateAgent": "エージェント情報を更新",
   "upload": {
     "actionTooltip": "画像をアップロード",
-    "dragDesc": "ファイルをここにドラッグして複数の画像をアップロードできます。Shift キーを押しながら画像を直接送信できます",
+    "dragDesc": "ファイルをここにドラッグしてください。複数の画像をアップロードできます。Shift キーを押しながら画像を直接送信することもできます。",
     "dragTitle": "画像をアップロード"
   },
   "warp": "改行"
