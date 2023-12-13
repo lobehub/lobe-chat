@@ -1,4 +1,5 @@
 import en_US from './en_US';
+import fr_FR from './fr_FR';
 import ja_JP from './ja_JP';
 import ko_KR from './ko_KR';
 import ru_RU from './ru_RU';
@@ -7,6 +8,7 @@ import zh_TW from './zh_TW';
 
 const resources = {
   'en-US': en_US,
+  'fr-FR': fr_FR,
   'ja-JP': ja_JP,
   'ko-KR': ko_KR,
   'ru-RU': ru_RU,

@@ -1,19 +1,19 @@
 {
-  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 바로 대화를 시작하거나 [도우미 설정](/chat/settings#session={{id}})으로 이동하여 제 정보를 완성할 수 있습니다.",
-  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해보세요!",
+  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 즉시 대화를 시작하거나 [도우미 설정](/chat/settings#session={{id}})으로 이동하여 내 정보를 완성할 수 있습니다.",
+  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
   "backToBottom": "최신 메시지 보기",
   "clearCurrentMessages": "현재 대화 지우기",
-  "confirmClearCurrentMessages": "현재 대화를 지우시겠습니까? 지우면 복구할 수 없습니다. 작업을 확인하세요.",
-  "confirmRemoveSessionItemAlert": "도우미를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다. 작업을 확인하세요.",
-  "defaultAgent": "사용자 정의 도우미",
-  "defaultSession": "사용자 정의 도우미",
-  "historyRange": "기록 범위",
+  "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
+  "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
+  "defaultAgent": "기본 도우미",
+  "defaultSession": "기본 도우미",
+  "historyRange": "대화 기록 범위",
   "inbox": {
-    "defaultMessage": "안녕하세요, 저는 여러분의 인공지능 도우미입니다. 궁금한 점이 있으면 물어보세요. 더 전문적이거나 맞춤화된 도우미가 필요하다면 `+`를 클릭하여 사용자 정의 도우미를 생성할 수 있습니다.",
-    "desc": "뇌 클러스터를 활성화하여 창의적인 생각을 이끌어내는 인공지능 도우미입니다. 모든 것에 대해 여기에서 대화하세요.",
-    "title": "잡담하기"
+    "defaultMessage": "안녕하세요, 저는 당신의 인공지능 도우미입니다. 어떤 질문이든 물어보세요. 최선을 다해 답변해 드리겠습니다. 더 전문적이거나 맞춤형 도우미가 필요하다면 `+`를 클릭하여 사용자 정의 도우미를 만들 수 있습니다.",
+    "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끌어내는 인공지능 비서입니다. 여기서 모든 것에 대해 대화합니다.",
+    "title": "무작위 대화"
   },
-  "newAgent": "새 도우미 만들기",
+  "newAgent": "새 도우미",
   "noDescription": "설명 없음",
   "pin": "고정",
   "pinOff": "고정 해제",
@@ -21,7 +21,7 @@
   "roleAndArchive": "역할 및 아카이브",
   "searchAgentPlaceholder": "도우미 및 대화 검색...",
   "send": "보내기",
-  "sendPlaceholder": "대화 내용 입력...",
+  "sendPlaceholder": "채팅 내용 입력...",
   "sessionList": "도우미 목록",
   "shareModal": {
     "download": "스크린샷 다운로드",
@@ -34,38 +34,35 @@
     "withPluginInfo": "플러그인 정보 포함",
     "withSystemRole": "도우미 역할 포함"
   },
-  "stop": "정지",
+  "stop": "중지",
   "stt": {
     "action": "음성 입력",
     "loading": "인식 중...",
-    "prettifying": "미화 중..."
+    "prettifying": "정제 중..."
   },
   "temp": "임시",
   "tokenDetail": "역할 설정: {{systemRoleToken}} · 대화 기록: {{chatsToken}}",
   "tokenTag": {
     "overload": "한도 초과",
     "remained": "남음",
-    "used": "사용"
+    "used": "사용됨"
   },
   "topic": {
-    "confirmRemoveTopic": "해당 주제를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다. 신중하게 작업하세요.",
+    "confirmRemoveAll": "모든 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
+    "confirmRemoveTopic": "이 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
+    "confirmRemoveUnstarred": "별표가 없는 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
     "defaultTitle": "기본 주제",
+    "openNewTopic": "새 주제 열기",
+    "removeAll": "모든 주제 삭제",
+    "removeUnstarred": "별표가 없는 주제 삭제",
     "saveCurrentMessages": "현재 대화를 주제로 저장",
     "searchPlaceholder": "주제 검색...",
-    "deleteAll": "모든 주제 삭제",
-    "deleteUnstarred": "스타가 없는 주제 삭제",
-    "title": "주제 목록",
-    "confirmRemoveAll": "모든 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으므로 신중하게 작업하십시오.",
-    "confirmRemoveUnstarred": "스타를 지정하지 않은 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으므로 신중하게 작업하십시오.",
-    "removeAll": "모든 주제 삭제",
-    "removeUnstarred": "스타를 지정하지 않은 주제 삭제",
-    "openNewTopic": "새로운 주제 열기"
+    "title": "주제 목록"
   },
   "translate": {
-    "clear": "번역 지우기",
-    "action": "번역"
+    "action": "번역",
+    "clear": "번역 삭제"
   },
-  "translateTo": "번역",
   "tts": {
     "action": "음성 읽기",
     "clear": "음성 삭제"
@@ -73,7 +70,7 @@
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
     "actionTooltip": "이미지 업로드",
-    "dragDesc": "여기로 파일을 끌어다 놓으세요. 여러 이미지를 업로드할 수 있습니다. Shift를 누른 채로 이미지를 직접 보내세요.",
+    "dragDesc": "여기로 파일을 끌어다 놓거나 여러 이미지를 업로드할 수 있습니다. Shift를 누른 채로 이미지를 직접 보내기",
     "dragTitle": "이미지 업로드"
   },
   "warp": "줄바꿈"
