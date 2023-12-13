@@ -73,6 +73,7 @@ const Actions = memo<ActionProps>(({ id, setOpen }) => {
           domEvent.stopPropagation();
 
           modal.confirm({
+            cancelText: t('cancel'),
             centered: true,
             okButtonProps: { danger: true },
             okText: t('ok'),
