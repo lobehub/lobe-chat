@@ -1,5 +1,5 @@
 import { ActionIcon } from '@lobehub/ui';
-import { SettingsIcon } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +19,7 @@ const PluginSettings = memo<{ identifier: string }>(({ identifier }) => {
   return (
     <>
       <ActionIcon
-        icon={SettingsIcon}
+        icon={Settings2}
         onClick={() => {
           setOpen(true);
         }}

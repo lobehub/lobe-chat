@@ -123,6 +123,7 @@
       "installed": "Installed"
     },
     "title": "Plugin Store",
-    "uninstall": "Uninstall"
+    "uninstall": "Uninstall",
+    "placeholder": "Search for plugin name, description, or keywords..."
   }
 }

@@ -25,6 +25,8 @@ const PluginSettingsModal = memo<PluginSettingsModalProps>(({ schema, onClose, i
   const theme = useTheme();
   return (
     <Modal
+      cancelText={t('cancel', { ns: 'common' })}
+      okText={t('ok', { ns: 'common' })}
       onCancel={onClose}
       onOk={() => {
         onClose();

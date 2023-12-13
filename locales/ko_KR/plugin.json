@@ -123,6 +123,7 @@
       "installed": "설치됨"
     },
     "title": "플러그인 상점",
-    "uninstall": "제거"
+    "uninstall": "제거",
+    "placeholder": "플러그인 이름 또는 키워드로 검색..."
   }
 }

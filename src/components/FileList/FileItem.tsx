@@ -62,9 +62,11 @@ const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
       }
       alt={data?.name || id || ''}
       alwaysShowActions={alwaysShowClose}
+      height={'auto'}
       isLoading={isLoading}
       size={IMAGE_SIZE as any}
       src={data?.url}
+      style={{ height: 'auto' }}
       wrapperClassName={cx(styles.image, editable && styles.editableImage)}
     />
   );
