@@ -13,8 +13,6 @@ export const createKeyMapper = (options: HyperStorageOptions) => {
 
     let storageKey: string | undefined;
 
-    if (!selectors) return key;
-
     for (const selector of selectors) {
       if (typeof selector === 'string') {
         if (selector === key) storageKey = key;

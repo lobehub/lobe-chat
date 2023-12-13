@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.111.0](https://github.com/lobehub/lobe-chat/compare/v0.110.10...v0.111.0)
+
+<sup>Released on **2023-12-13**</sup>
+
+#### ✨ Features
+
+- **locale**: Add fr-FR.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **locale**: Add fr-FR, closes [#637](https://github.com/lobehub/lobe-chat/issues/637) ([357141c](https://github.com/lobehub/lobe-chat/commit/357141c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.110.10](https://github.com/lobehub/lobe-chat/compare/v0.110.9...v0.110.10)
 
 <sup>Released on **2023-12-13**</sup>

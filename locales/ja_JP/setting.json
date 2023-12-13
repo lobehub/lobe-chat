@@ -1,17 +1,17 @@
 {
   "danger": {
     "clear": {
-      "action": "クリア",
-      "confirm": "すべてのチャットデータをクリアしますか？",
-      "success": "すべてのセッションメッセージがクリアされました",
-      "title": "すべてのセッションメッセージをクリア",
-      "desc": "すべてのセッションデータ（アシスタント、ファイル、メッセージ、プラグインなど）が削除されます"
+      "action": "すぐにクリア",
+      "confirm": "すべてのチャットデータを削除しますか？",
+      "desc": "アシスタント、ファイル、メッセージ、プラグインなど、すべてのセッションデータが削除されます",
+      "success": "すべてのセッションメッセージが削除されました",
+      "title": "すべてのセッションメッセージをクリア"
     },
     "reset": {
-      "action": "リセット",
+      "action": "すぐにリセット",
       "confirm": "すべての設定をリセットしますか？",
       "currentVersion": "現在のバージョン",
-      "desc": "すべての設定項目をデフォルト値にリセットします",
+      "desc": "すべての設定をデフォルト値にリセットします",
       "title": "すべての設定をリセット"
     }
   },
@@ -23,66 +23,66 @@
   "llm": {
     "AzureOpenAI": {
       "endpoint": {
-        "desc": "Azureポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます",
+        "desc": "Azure ポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます",
         "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure APIアドレス"
+        "title": "Azure API アドレス"
       },
       "models": {
         "desc": "サポートされているモデル",
         "title": "モデルリスト"
       },
-      "title": "Azure OpenAI設定",
+      "title": "Azure OpenAI 設定",
       "token": {
-        "desc": "Azureポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます。KEY1またはKEY2を使用できます",
-        "placeholder": "Azure APIキー",
-        "title": "APIキー"
+        "desc": "Azure ポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます。KEY1 または KEY2 を使用できます",
+        "placeholder": "Azure API キー",
+        "title": "API キー"
       }
     },
     "OpenAI": {
       "azureApiVersion": {
-        "desc": "AzureのAPIバージョンは、YYYY-MM-DD形式に従います。[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照してください",
+        "desc": "Azure の API バージョンは YYYY-MM-DD 形式に従い、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照してください",
         "fetch": "リストを取得",
-        "title": "Azure APIバージョン"
+        "title": "Azure API バージョン"
       },
       "check": {
         "button": "チェック",
-        "desc": "APIキーとプロキシアドレスが正しく入力されているかをテストします",
-        "pass": "チェックに合格しました",
-        "title": "接続性のチェック"
+        "desc": "API キーとプロキシアドレスが正しく入力されているかをテストします",
+        "pass": "チェックに合格",
+        "title": "接続性チェック"
+      },
+      "customModelName": {
+        "desc": "カスタムモデルを追加し、複数のモデルはカンマ（,）で区切って使用します",
+        "placeholder": "model1,model2,model3",
+        "title": "カスタムモデル名"
       },
       "endpoint": {
-        "desc": "デフォルトのアドレス以外に、http(s)://を含める必要があります",
+        "desc": "デフォルトのアドレス以外に、http(s):// を含める必要があります",
         "placeholder": "https://api.openai.com/v1",
-        "title": "エンドポイントプロキシアドレス"
+        "title": "インターフェースプロキシアドレス"
       },
       "models": {
-        "count": "{{count}}モデルがサポートされています",
+        "count": "{{count}} 個のモデルをサポート",
         "desc": "サポートされているモデル",
         "fetch": "モデルリストを取得",
-        "notSupport": "Azure OpenAIではモデルリストの表示はサポートされていません",
-        "notSupportTip": "デプロイ名とモデル名が一致していることを確認する必要があります",
+        "notSupport": "Azure OpenAI はモデルリストの表示をサポートしていません",
+        "notSupportTip": "デプロイ名とモデル名が一致することを確認する必要があります",
         "refetch": "モデルリストを再取得",
         "title": "モデルリスト"
       },
-      "title": "OpenAI設定",
+      "title": "OpenAI 設定",
       "token": {
-        "desc": "独自のOpenAIキーを使用します",
-        "placeholder": "OpenAI APIキー",
-        "title": "APIキー"
+        "desc": "独自の OpenAI キーを使用します",
+        "placeholder": "OpenAI API キー",
+        "title": "API キー"
       },
       "useAzure": {
-        "desc": "Azureが提供するOpenAIサービスを使用します",
+        "desc": "Azure の提供する OpenAI サービスを使用します",
         "fetch": "リストを取得",
-        "serverConfig": "管理者がサーバー側でAzure OpenAIを設定しており、切り替えが禁止されています",
-        "title": "Azure OpenAI"
-      },
-      "customModelName": {
-        "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ってください",
-        "placeholder": "model1,model2,model3",
-        "title": "カスタムモデル名"
+        "serverConfig": "管理者はサーバー側で Azure OpenAI を有効にし、切り替えを禁止しています",
+        "title": "Azure OpenAI を使用"
       }
     },
-    "waitingForMore": "他のモデルは現在 <1>計画中</1> です。お楽しみに ✨"
+    "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに ✨"
   },
   "plugin": {
     "addTooltip": "カスタムプラグインを追加",
@@ -114,8 +114,8 @@
       "title": "名前"
     },
     "prompt": {
-      "placeholder": "キャラクタープロンプトを入力してください",
-      "title": "キャラクター設定"
+      "placeholder": "役割のプロンプトワードを入力してください",
+      "title": "役割の設定"
     },
     "tag": {
       "placeholder": "タグを入力してください",
@@ -124,59 +124,59 @@
     "title": "アシスタント情報"
   },
   "settingChat": {
-    "chatStyleType": {
-      "title": "チャットウィンドウのスタイル",
-      "type": {
-        "chat": "対話モード",
-        "docs": "ドキュメントモード"
-      }
-    },
-    "compressThreshold": {
-      "desc": "非圧縮の履歴メッセージがこの値を超えると、圧縮されます",
-      "title": "履歴メッセージの圧縮閾値"
-    },
-    "enableCompressThreshold": {
-      "title": "履歴メッセージの圧縮閾値を有効にする"
-    },
-    "enableHistoryCount": {
-      "alias": "制限なし",
-      "limited": "{{number}}件の会話メッセージのみ含む",
-      "title": "履歴メッセージ数の制限",
-      "unlimited": "履歴メッセージ数の制限なし"
-    },
-    "historyCount": {
-      "desc": "リクエストごとに含まれる履歴メッセージ数",
-      "title": "履歴メッセージ数"
-    },
-    "inputTemplate": {
-      "desc": "ユーザーの最新のメッセージがこのテンプレートに埋め込まれます",
-      "placeholder": "プリプロセステンプレート {{text}} はリアルタイムの入力情報に置き換えられます",
-      "title": "ユーザー入力のプリプロセス"
-    },
-    "title": "チャット設定",
     "autoCreateTopicThreshold": {
       "desc": "現在のメッセージ数がこの値を超えると、トピックが自動的に作成されます",
       "title": "メッセージ閾値"
     },
+    "chatStyleType": {
+      "title": "チャットウィンドウのスタイル",
+      "type": {
+        "chat": "チャットモード",
+        "docs": "ドキュメントモード"
+      }
+    },
+    "compressThreshold": {
+      "desc": "圧縮されていない過去のメッセージがこの値を超えると、圧縮されます",
+      "title": "過去メッセージの長さの圧縮閾値"
+    },
     "enableAutoCreateTopic": {
-      "desc": "会話中にトピックを自動的に作成するかどうか、一時的なトピックでのみ有効です",
-      "title": "トピックの自動作成"
-    }
+      "desc": "会話中に自動的にトピックを作成するかどうか。一時的なトピックのみ有効です",
+      "title": "自動的にトピックを作成する"
+    },
+    "enableCompressThreshold": {
+      "title": "過去メッセージの長さの圧縮閾値を有効にする"
+    },
+    "enableHistoryCount": {
+      "alias": "制限なし",
+      "limited": "{{number}}件の会話メッセージのみ含む",
+      "title": "過去メッセージ数を制限する",
+      "unlimited": "過去メッセージ数を制限しない"
+    },
+    "historyCount": {
+      "desc": "リクエストごとに含まれる過去メッセージの数",
+      "title": "過去メッセージ数"
+    },
+    "inputTemplate": {
+      "desc": "ユーザーの最新メッセージがこのテンプレートに埋め込まれます",
+      "placeholder": "入力テンプレート {{text}} はリアルタイムの入力情報に置き換えられます",
+      "title": "ユーザー入力のプリプロセス"
+    },
+    "title": "チャット設定"
   },
   "settingModel": {
     "enableMaxTokens": {
       "title": "単一応答制限を有効にする"
     },
     "frequencyPenalty": {
-      "desc": "値が大きいほど、重複する単語が減少する可能性が高くなります",
+      "desc": "値が大きいほど、単語の繰り返しを減らす可能性が高くなります",
       "title": "頻度ペナルティ"
     },
     "maxTokens": {
-      "desc": "単一の対話で使用される最大トークン数",
+      "desc": "1 回の対話で使用される最大トークン数",
       "title": "単一応答制限"
     },
     "model": {
-      "desc": "ChatGPTモデル",
+      "desc": "ChatGPT モデル",
       "list": {
         "gpt-3.5-turbo": "GPT 3.5",
         "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
@@ -186,7 +186,7 @@
       "title": "モデル"
     },
     "presencePenalty": {
-      "desc": "値が大きいほど、新しいトピックに展開する可能性が高くなります",
+      "desc": "値が大きいほど、新しいトピックに拡張する可能性が高くなります",
       "title": "トピックの新鮮さ"
     },
     "temperature": {
@@ -196,16 +196,11 @@
     },
     "title": "モデル設定",
     "topP": {
-      "desc": "ランダム性と同様ですが、ランダム性とは同時に変更しないでください",
-      "title": "トップPサンプリング"
+      "desc": "ランダム性と同様ですが、ランダム性と一緒に変更しないでください",
+      "title": "トップ P"
     }
   },
   "settingPlugin": {
-    "add": "追加",
-    "addTooltip": "カスタムプラグインを追加",
-    "clearDeprecated": "無効なプラグインを削除",
-    "config": "{{id}}プラグインの設定",
-    "settings": "プラグインマーケットの設定",
     "title": "プラグインリスト"
   },
   "settingSystem": {
@@ -217,41 +212,37 @@
     "title": "システム設定"
   },
   "settingTTS": {
-    "showAllLocaleVoice": {
-      "desc": "关闭すると、現在の言語の音声のみが表示されます",
-      "title": "すべての言語の音声を表示"
-    },
-    "sttService": {
-      "desc": "ブラウザはブラウザのネイティブ音声認識サービスです",
-      "title": "音声認識サービス"
-    },
-    "title": "音声サービス",
-    "ttsService": {
-      "desc": "OpenAIの音声合成サービスを使用する場合、OpenAIモデルサービスが有効になっていることを確認する必要があります",
-      "title": "音声合成サービス"
-    },
-    "voice": {
-      "title": "音声合成音声源",
-      "desc": "現在のアシスタントに適した音声を選択します。異なるTTSサービスは異なる音声をサポートしています",
-      "preview": "プレビュー"
-    },
     "openai": {
       "sttModel": "OpenAI 音声認識モデル",
       "ttsModel": "OpenAI 音声合成モデル"
     },
+    "showAllLocaleVoice": {
+      "desc": "無効にすると、現在の言語の音声のみが表示されます",
+      "title": "すべての言語の音声を表示"
+    },
     "stt": "音声認識設定",
+    "sttAutoStop": {
+      "desc": "無効にすると、音声認識は自動的に停止せず、手動で停止する必要があります",
+      "title": "音声認識の自動停止"
+    },
     "sttLocale": {
       "desc": "音声入力の言語、このオプションを選択すると音声認識の精度が向上します",
       "title": "音声認識言語"
     },
-    "sttPersisted": {
-      "desc": "有効にすると、音声認識が自動的に終了せず、手動で終了ボタンをクリックする必要があります",
-      "title": "音声認識の手動終了"
+    "sttService": {
+      "desc": "ブラウザはネイティブの音声認識サービスです",
+      "title": "音声認識サービス"
     },
+    "title": "音声サービス",
     "tts": "音声合成設定",
-    "sttAutoStop": {
-      "desc": "オフにすると、音声認識が自動的に終了せず、手動で終了ボタンをクリックする必要があります",
-      "title": "音声認識の自動終了"
+    "ttsService": {
+      "desc": "OpenAI 音声合成サービスを使用する場合、OpenAI モデルサービスが有効になっている必要があります",
+      "title": "音声合成サービス"
+    },
+    "voice": {
+      "desc": "現在のアシスタントに適した音声を選択します。異なる TTS サービスは異なる音声をサポートしています",
+      "preview": "音声を試聴",
+      "title": "音声合成音声"
     }
   },
   "settingTheme": {
@@ -259,7 +250,7 @@
       "title": "アバター"
     },
     "fontSize": {
-      "desc": "チャットのテキストサイズ",
+      "desc": "チャットのフォントサイズ",
       "title": "フォントサイズ"
     },
     "lang": {
@@ -271,7 +262,7 @@
       "title": "中立色"
     },
     "primaryColor": {
-      "desc": "カスタムテーマカラー",
+      "desc": "カスタマイズテーマカラー",
       "title": "テーマカラー"
     },
     "themeMode": {
@@ -283,14 +274,14 @@
     "title": "テーマ設定"
   },
   "submitAgentModal": {
-    "tooltips": "アシスタントマーケットに共有する",
-    "button": "助手を提出する",
-    "identifier": "識別子 エージェントの識別子",
-    "metaMiss": "エージェント情報を入力してから提出してください。名前、説明、およびタグが必要です",
-    "placeholder": "エージェントの識別子を入力してください。一意である必要があります。例：web-development"
+    "button": "エージェントを提出",
+    "identifier": "エージェント識別子",
+    "metaMiss": "エージェント情報を入力してから提出してください。名前、説明、タグが必要です。",
+    "placeholder": "エージェントの識別子を入力してください。一意である必要があります。例：web-development",
+    "tooltips": "エージェントマーケットに共有"
   },
   "tab": {
-    "agent": "デフォルトのアシスタント",
+    "agent": "デフォルトエージェント",
     "common": "一般設定",
     "llm": "言語モデル",
     "tts": "音声サービス"
@@ -300,7 +291,7 @@
       "groupName": "組み込み"
     },
     "plugins": {
-      "enabled": "{{num}} 個が有効",
+      "enabled": "{{num}} が有効",
       "groupName": "プラグイン",
       "noEnabled": "有効なプラグインはありません",
       "store": "プラグインストア"

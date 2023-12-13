@@ -1,15 +1,18 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.110.10",
-  "description": "An open-source, extensible (Function Calling), high-performance chatbot framework. It supports one-click free deployment of your private ChatGPT/LLM web application",
+  "version": "0.111.0",
+  "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
+    "framework",
     "chatbot",
-    "ChatGPT",
-    "LobeHub",
-    "typescript",
-    "Vercel AI SDK",
-    "Next.js",
-    "OpenAI"
+    "chatgpt",
+    "nextjs",
+    "vercel-ai",
+    "openai",
+    "azure-openai",
+    "visual-model",
+    "tts",
+    "stt"
   ],
   "homepage": "https://github.com/lobehub/lobe-chat",
   "bugs": {

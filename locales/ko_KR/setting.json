@@ -1,17 +1,17 @@
 {
   "danger": {
     "clear": {
-      "action": "지금 지우기",
+      "action": "모두 지우기",
       "confirm": "모든 채팅 데이터를 지우시겠습니까?",
-      "success": "모든 대화 메시지가 지워졌습니다.",
-      "title": "모든 대화 메시지 지우기",
-      "desc": "도우미, 파일, 메시지, 플러그인 등을 포함한 모든 세션 데이터가 삭제됩니다."
+      "desc": "보조, 파일, 메시지, 플러그인 등 모든 세션 데이터가 지워집니다",
+      "success": "모든 세션 메시지가 지워졌습니다",
+      "title": "모든 세션 메시지 지우기"
     },
     "reset": {
-      "action": "지금 재설정",
+      "action": "모두 재설정",
       "confirm": "모든 설정을 재설정하시겠습니까?",
       "currentVersion": "현재 버전",
-      "desc": "모든 설정 항목을 기본값으로 재설정합니다.",
+      "desc": "모든 설정을 기본값으로 재설정합니다",
       "title": "모든 설정 재설정"
     }
   },
@@ -23,7 +23,7 @@
   "llm": {
     "AzureOpenAI": {
       "endpoint": {
-        "desc": "Azure 포털에서 리소스를 확인할 때 이 값을 '키 및 엔드포인트' 섹션에서 찾을 수 있습니다.",
+        "desc": "Azure 포털에서 리소스를 확인할 때 이 값을“키 및 엔드포인트” 섹션에서 찾을 수 있습니다",
         "placeholder": "https://docs-test-001.openai.azure.com",
         "title": "Azure API 주소"
       },
@@ -33,25 +33,30 @@
       },
       "title": "Azure OpenAI 설정",
       "token": {
-        "desc": "Azure 포털에서 리소스를 확인할 때 이 값을 '키 및 엔드포인트' 섹션에서 찾을 수 있습니다. KEY1 또는 KEY2를 사용할 수 있습니다.",
+        "desc": "Azure 포털에서 리소스를 확인할 때 이 값을“키 및 엔드포인트” 섹션에서 찾을 수 있습니다. KEY1 또는 KEY2를 사용할 수 있습니다",
         "placeholder": "Azure API 키",
         "title": "API 키"
       }
     },
     "OpenAI": {
       "azureApiVersion": {
-        "desc": "Azure의 API 버전입니다. YYYY-MM-DD 형식을 따릅니다. [최신 버전](https://learn.microsoft.com/ko-kr/azure/ai-services/openai/reference#chat-completions)을 확인하세요.",
+        "desc": "Azure의 API 버전으로 YYYY-MM-DD 형식을 따르며 [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 확인하세요",
         "fetch": "목록 가져오기",
         "title": "Azure API 버전"
       },
       "check": {
         "button": "확인",
-        "desc": "API 키와 프록시 주소가 올바르게 입력되었는지 테스트합니다.",
+        "desc": "API 키 및 프록시 주소가 올바르게 입력되었는지 테스트합니다",
         "pass": "확인 완료",
         "title": "연결성 확인"
       },
+      "customModelName": {
+        "desc": "사용자 정의 모델 추가, 여러 모델은 쉼표(,)로 구분합니다",
+        "placeholder": "모델1,모델2,모델3",
+        "title": "사용자 정의 모델 이름"
+      },
       "endpoint": {
-        "desc": "기본 주소 외에도 반드시 http(s)://를 포함해야 합니다.",
+        "desc": "기본 주소 이외에 반드시 http(s)://를 포함해야 합니다",
         "placeholder": "https://api.openai.com/v1",
         "title": "인터페이스 프록시 주소"
       },
@@ -59,8 +64,8 @@
         "count": "총 {{count}}개의 모델 지원",
         "desc": "지원되는 모델",
         "fetch": "모델 목록 가져오기",
-        "notSupport": "Azure OpenAI에서 모델 목록을 볼 수 없습니다.",
-        "notSupportTip": "배포 이름과 모델 이름이 일치하는지 확인해야 합니다.",
+        "notSupport": "Azure OpenAI는 모델 목록 조회를 지원하지 않습니다",
+        "notSupportTip": "배포 이름과 모델 이름이 일치하는지 직접 확인해야 합니다",
         "refetch": "모델 목록 다시 가져오기",
         "title": "모델 목록"
       },
@@ -73,30 +78,25 @@
       "useAzure": {
         "desc": "Azure에서 제공하는 OpenAI 서비스 사용",
         "fetch": "목록 가져오기",
-        "serverConfig": "관리자가 서버에서 Azure OpenAI를 구성했으므로 변경이 금지되었습니다.",
+        "serverConfig": "관리자가 서버에서 Azure OpenAI를 구성했으므로 변경이 금지되었습니다",
         "title": "Azure OpenAI"
-      },
-      "customModelName": {
-        "desc": "사용자 정의 모델 추가, 여러 모델은 쉼표(,)로 구분합니다",
-        "placeholder": "model1,model2,model3",
-        "title": "사용자 정의 모델 이름"
       }
     },
-    "waitingForMore": "더 많은 모델이 <1>계획 중</1>에 있으니 기대해주세요 ✨"
+    "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요 ✨"
   },
   "plugin": {
     "addTooltip": "사용자 정의 플러그인 추가",
-    "clearDeprecated": "사용되지 않는 플러그인 지우기",
-    "empty": "설치된 플러그인이 없습니다. <1>플러그인 상점</1>에서 살펴보세요",
+    "clearDeprecated": "사용되지 않는 플러그인 제거",
+    "empty": "설치된 플러그인이 없습니다. <1>플러그인 스토어</1>에서 새로운 플러그인을 찾아보세요.",
     "installStatus": {
-      "deprecated": "설치 취소됨"
+      "deprecated": "설치 해제됨"
     },
     "settings": {
       "hint": "설명에 따라 아래 구성을 입력하십시오",
-      "title": "{{id}} 플러그인 구성",
-      "tooltip": "플러그인 구성"
+      "title": "{{id}} 플러그인 설정",
+      "tooltip": "플러그인 설정"
     },
-    "store": "플러그인 상점"
+    "store": "플러그인 스토어"
   },
   "settingAgent": {
     "avatar": {
@@ -106,24 +106,28 @@
       "title": "배경색"
     },
     "description": {
-      "placeholder": "도우미 설명을 입력하세요.",
+      "placeholder": "도우미 설명을 입력하세요",
       "title": "도우미 설명"
     },
     "name": {
-      "placeholder": "도우미 이름을 입력하세요.",
+      "placeholder": "도우미 이름을 입력하세요",
       "title": "이름"
     },
     "prompt": {
-      "placeholder": "역할 프롬프트 힌트를 입력하세요.",
+      "placeholder": "역할 프롬프트 단어를 입력하세요",
       "title": "역할 설정"
     },
     "tag": {
-      "placeholder": "태그를 입력하세요.",
+      "placeholder": "태그를 입력하세요",
       "title": "태그"
     },
     "title": "도우미 정보"
   },
   "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "현재 메시지 수가이 값 이상이면 자동으로 주제가 생성됩니다",
+      "title": "메시지 임계값"
+    },
     "chatStyleType": {
       "title": "채팅 창 스타일",
       "type": {
@@ -132,43 +136,39 @@
       }
     },
     "compressThreshold": {
-      "desc": "압축되지 않은 이전 메시지가이 값보다 크면 압축됩니다.",
-      "title": "압축 임계값"
+      "desc": "압축되지 않은 이전 메시지가이 값 이상이면 압축됩니다",
+      "title": "이전 메시지 길이 압축 임계값"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "대화 중에 자동으로 주제를 만들지 여부를 설정합니다. 일시적인 주제에서만 작동합니다",
+      "title": "자동 주제 생성 활성화"
     },
     "enableCompressThreshold": {
-      "title": "이전 메시지 길이 압축 사용"
+      "title": "이전 메시지 길이 압축 임계값 활성화"
     },
     "enableHistoryCount": {
       "alias": "제한 없음",
-      "limited": "대화 메시지 {{number}} 개만 포함",
-      "title": "대화 메시지 제한",
-      "unlimited": "대화 메시지 제한 없음"
+      "limited": "{{number}}개의 대화 메시지만 포함",
+      "title": "이전 메시지 수 제한",
+      "unlimited": "이전 메시지 수 제한 없음"
     },
     "historyCount": {
       "desc": "요청당 포함되는 이전 메시지 수",
-      "title": "포함된 이전 메시지 수"
+      "title": "이전 메시지 수"
     },
     "inputTemplate": {
-      "desc": "사용자의 최신 메시지가이 템플릿에 채워집니다.",
-      "placeholder": "사전 처리 템플릿 {{text}}은(는) 실시간 입력 정보로 대체됩니다.",
-      "title": "사용자 입력 사전 처리"
+      "desc": "사용자의 최신 메시지가이 템플릿에 채워집니다",
+      "placeholder": "입력 템플릿 {{text}}은 실시간 입력 정보로 대체됩니다",
+      "title": "사용자 입력 전처리"
     },
-    "title": "채팅 설정",
-    "autoCreateTopicThreshold": {
-      "desc": "현재 메시지 수가이 값 이상이면 자동으로 주제를 만듭니다.",
-      "title": "메시지 임계값"
-    },
-    "enableAutoCreateTopic": {
-      "desc": "대화 중에 주제를 자동으로 만들지 여부를 설정합니다. 임시 주제에서만 작동합니다.",
-      "title": "주제 자동 생성"
-    }
+    "title": "채팅 설정"
   },
   "settingModel": {
     "enableMaxTokens": {
-      "title": "단일 응답 제한 사용"
+      "title": "단일 응답 제한 활성화"
     },
     "frequencyPenalty": {
-      "desc": "값이 클수록 반복 단어가 줄어듭니다.",
+      "desc": "값이 클수록 반복 단어가 줄어듭니다",
       "title": "빈도 패널티"
     },
     "maxTokens": {
@@ -186,72 +186,63 @@
       "title": "모델"
     },
     "presencePenalty": {
-      "desc": "값이 클수록 새로운 주제로 확장될 가능성이 높아집니다.",
+      "desc": "값이 클수록 새로운 주제로 확장될 가능성이 높아집니다",
       "title": "주제 신선도"
     },
     "temperature": {
-      "desc": "값이 클수록 응답이 더 무작위 해집니다.",
+      "desc": "값이 클수록 응답이 더 무작위해집니다",
       "title": "랜덤성",
       "titleWithValue": "랜덤성 {{value}}"
     },
     "title": "모델 설정",
     "topP": {
-      "desc": "랜덤성과 유사하지만 함께 변경하지 마십시오.",
+      "desc": "랜덤성과 유사하지만 함께 변경하지 마세요",
       "title": "상위 P 샘플링"
     }
   },
   "settingPlugin": {
-    "add": "추가",
-    "addTooltip": "사용자 정의 플러그인 추가",
-    "clearDeprecated": "사용되지 않는 플러그인 제거",
-    "config": "{{id}} 플러그인 구성",
-    "settings": "플러그인 마켓 설정",
     "title": "플러그인 목록"
   },
   "settingSystem": {
     "accessCode": {
-      "desc": "관리자가 암호 액세스를 활성화했습니다.",
-      "placeholder": "액세스 코드를 입력하세요.",
-      "title": "액세스 코드"
+      "desc": "관리자가 암호화된 액세스를 활성화했습니다",
+      "placeholder": "액세스 암호를 입력하세요",
+      "title": "액세스 암호"
     },
     "title": "시스템 설정"
   },
   "settingTTS": {
-    "showAllLocaleVoice": {
-      "desc": "현재 언어의 음성만 표시하려면 닫으십시오",
-      "title": "모든 언어 음성 표시"
-    },
-    "sttService": {
-      "desc": "브라우저는 브라우저 기본 음성 인식 서비스입니다",
-      "title": "음성 인식 서비스"
-    },
-    "title": "음성 서비스",
-    "ttsService": {
-      "desc": "OpenAI 음성 합성 서비스를 사용하는 경우 OpenAI 모델 서비스가 열려 있어야 합니다",
-      "title": "음성 합성 서비스"
-    },
-    "voice": {
-      "title": "음성 합성 음성",
-      "desc": "현재 어시스턴트에 대한 음성을 선택하십시오. 각기 다른 TTS 서비스는 다른 음성을 지원합니다.",
-      "preview": "프리뷰 음성"
-    },
     "openai": {
       "sttModel": "OpenAI 음성 인식 모델",
       "ttsModel": "OpenAI 음성 합성 모델"
     },
+    "showAllLocaleVoice": {
+      "desc": "현재 언어의 음성만 표시하려면 닫으세요",
+      "title": "모든 로캘 음성 표시"
+    },
     "stt": "음성 인식 설정",
+    "sttAutoStop": {
+      "desc": "비활성화하면 음성 인식이 자동으로 종료되지 않으며 수동으로 종료 버튼을 클릭해야 합니다",
+      "title": "음성 인식 자동 중지"
+    },
     "sttLocale": {
-      "desc": "음성 입력의 언어, 이 옵션을 통해 음성 인식 정확도를 높일 수 있습니다.",
+      "desc": "음성 입력의 언어로 음성 인식 정확도를 향상시킬 수 있습니다",
       "title": "음성 인식 언어"
     },
-    "sttPersisted": {
-      "desc": "활성화하면 음성 인식이 자동으로 종료되지 않고, 수동으로 종료 버튼을 클릭해야 합니다.",
-      "title": "음성 인식 수동 종료"
+    "sttService": {
+      "desc": "브라우저는 기본 음성 인식 서비스입니다",
+      "title": "음성 인식 서비스"
     },
+    "title": "음성 서비스",
     "tts": "음성 합성 설정",
-    "sttAutoStop": {
-      "desc": "자동으로 종료되지 않고 수동으로 종료 버튼을 클릭해야 하는 음성 인식을 사용하지 않습니다.",
-      "title": "음성 인식 자동 종료"
+    "ttsService": {
+      "desc": "OpenAI 음성 합성 서비스를 사용하는 경우 OpenAI 모델 서비스가 활성화되어 있어야 합니다",
+      "title": "음성 합성 서비스"
+    },
+    "voice": {
+      "desc": "현재 어시스턴트에 대한 음성을 선택하십시오. 각 TTS 서비스는 다른 음성을 지원합니다",
+      "preview": "음성 미리듣기",
+      "title": "음성 합성 음성"
     }
   },
   "settingTheme": {
@@ -259,7 +250,7 @@
       "title": "아바타"
     },
     "fontSize": {
-      "desc": "채팅 콘텐츠의 글꼴 크기",
+      "desc": "채팅 내용의 글꼴 크기",
       "title": "글꼴 크기"
     },
     "lang": {
@@ -267,30 +258,30 @@
       "title": "언어"
     },
     "neutralColor": {
-      "desc": "다양한 색상 경향의 중립적인 사용자 정의",
-      "title": "중립 색상"
+      "desc": "다양한 색상 선호도에 따른 중립적인 사용자 정의",
+      "title": "중립색"
     },
     "primaryColor": {
-      "desc": "사용자 정의 테마 색상",
-      "title": "테마 색상"
+      "desc": "사용자 정의 주제 색상",
+      "title": "주제 색상"
     },
     "themeMode": {
       "auto": "자동",
-      "dark": "다크",
-      "light": "라이트",
+      "dark": "다크 모드",
+      "light": "라이트 모드",
       "title": "테마"
     },
     "title": "테마 설정"
   },
   "submitAgentModal": {
-    "tooltips": "도우미 마켓에 공유",
-    "button": "도우미 제출",
-    "identifier": "식별자 도우미 식별자",
-    "metaMiss": "도우미 정보를 입력한 후 제출하세요. 이름, 설명 및 태그를 포함해야 합니다.",
-    "placeholder": "도우미의 식별자를 입력하세요. 고유해야 하며, 예를 들어 web-development과 같은 형식이어야 합니다."
+    "button": "에이전트 제출",
+    "identifier": "에이전트 식별자",
+    "metaMiss": "에이전트 정보를 입력한 후 제출하십시오. 이름, 설명 및 태그를 포함해야 합니다.",
+    "placeholder": "에이전트 식별자를 입력하세요. 고유해야 하며, 예: 웹 개발",
+    "tooltips": "에이전트 마켓에 공유"
   },
   "tab": {
-    "agent": "기본 도우미",
+    "agent": "기본 에이전트",
     "common": "일반 설정",
     "llm": "언어 모델",
     "tts": "음성 서비스"
@@ -300,10 +291,10 @@
       "groupName": "내장"
     },
     "plugins": {
-      "enabled": "{{num}}개 활성화됨",
+      "enabled": "활성화됨 {{num}}",
       "groupName": "플러그인",
-      "noEnabled": "활성화된 플러그인이 없습니다",
-      "store": "플러그인 상점"
+      "noEnabled": "활성화된 플러그인이 없음",
+      "store": "플러그인 스토어"
     },
     "title": "확장 도구"
   }

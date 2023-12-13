@@ -1,0 +1,51 @@
+{
+  "pluginSettings": {
+    "desc": "Completez la configuration suivante pour commencer à utiliser ce plugin",
+    "title": "Configuration du plugin {{name}}"
+  },
+  "response": {
+    "400": "Désolé, le serveur ne comprend pas votre requête. Veuillez vérifier la validité de vos paramètres de requête",
+    "401": "Désolé, le serveur a refusé votre requête, probablement en raison d'autorisations insuffisantes ou d'une authentification invalide",
+    "403": "Désolé, le serveur a refusé votre requête. Vous n'avez pas l'autorisation d'accéder à ce contenu",
+    "404": "Désolé, le serveur n'a pas pu trouver la page ou la ressource demandée. Veuillez vérifier l'URL",
+    "405": "Désolé, le serveur ne prend pas en charge la méthode de requête que vous utilisez. Veuillez vérifier votre méthode de requête",
+    "429": "Désolé, votre requête est trop fréquente et le serveur est un peu fatigué. Veuillez réessayer plus tard",
+    "500": "Désolé, le serveur semble rencontrer des difficultés et ne peut temporairement pas traiter votre requête. Veuillez réessayer plus tard",
+    "502": "Désolé, le serveur semble perdu et ne peut temporairement pas fournir de service. Veuillez réessayer plus tard",
+    "503": "Désolé, le serveur ne peut actuellement pas traiter votre requête, probablement en raison d'une surcharge ou de travaux de maintenance. Veuillez réessayer plus tard",
+    "504": "Désolé, le serveur n'a pas reçu de réponse de la part du serveur amont. Veuillez réessayer plus tard",
+    "PluginMarketIndexNotFound": "Désolé, le serveur n'a pas trouvé l'index du plugin. Veuillez vérifier l'adresse de l'index",
+    "PluginMarketIndexInvalid": "Désolé, la validation de l'index du plugin a échoué. Veuillez vérifier le format du fichier d'index",
+    "PluginMetaNotFound": "Désolé, aucune métadonnée de plugin n'a été trouvée dans l'index",
+    "PluginMetaInvalid": "Désolé, la validation des métadonnées de ce plugin a échoué. Veuillez vérifier le format des métadonnées du plugin",
+    "PluginManifestNotFound": "Désolé, le serveur n'a pas trouvé le manifeste de description de ce plugin (manifest.json). Veuillez vérifier l'adresse du fichier de description du plugin",
+    "PluginManifestInvalid": "Désolé, la validation du manifeste de ce plugin a échoué. Veuillez vérifier le format du manifeste",
+    "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
+    "PluginApiParamsError": "Désolé, la validation des paramètres d'entrée de la requête de ce plugin a échoué. Veuillez vérifier que les paramètres d'entrée correspondent aux informations de l'API",
+    "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
+    "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
+    "InvalidAccessCode": "Mot de passe incorrect ou vide. Veuillez saisir un mot de passe d'accès correct ou ajouter une clé API OpenAI personnalisée",
+    "OpenAIBizError": "Erreur de service OpenAI. Veuillez diagnostiquer ou réessayer en fonction des informations ci-dessous",
+    "NoAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée"
+  },
+  "stt": {
+    "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"
+  },
+  "tts": {
+    "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "Ajouter l'URL du proxy OpenAI (optionnel)",
+      "description": "Entrez votre clé API OpenAI pour commencer la session. L'application ne stockera pas votre clé API.",
+      "title": "Utiliser une clé API personnalisée"
+    },
+    "closeMessage": "Fermer le message",
+    "confirm": "Confirmer et réessayer",
+    "password": {
+      "description": "L'administrateur a activé le cryptage de l'application. Entrez le mot de passe de l'application pour déverrouiller. Le mot de passe ne doit être saisi qu'une seule fois.",
+      "placeholder": "Entrez le mot de passe",
+      "title": "Entrez le mot de passe pour déverrouiller l'application"
+    }
+  }
+}
