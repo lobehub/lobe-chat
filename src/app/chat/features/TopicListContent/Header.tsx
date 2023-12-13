@@ -1,4 +1,4 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, Icon, Tag } from '@lobehub/ui';
 import { App, Dropdown, MenuProps } from 'antd';
 import { MoreHorizontal, Search, Trash } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
@@ -78,7 +78,12 @@ const Header = memo(() => {
           </Dropdown>
         </>
       }
-      title={`${t('topic.title')} ${topicLength > 1 ? topicLength + 1 : ''}`}
+           title={
+            <span>
+              {topicLength > 1 && <Tag>{topicLength}</Tag>}
+              {t('topic.title')}
+            </span>
+                 }
     />
   );
 });
