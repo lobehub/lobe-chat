@@ -1,14 +1,14 @@
-# LobeChat 会话 API 实现逻辑
+# Conversation API Implementation Logic
 
-LobeChat 的大模型 AI 实现主要依赖于 OpenAI 的 API，包括后端的核心会话 API 和前端的集成 API。接下来，我们将分别介绍后端和前端的实现思路和代码。
+The implementation of LobeChat's large model AI mainly relies on OpenAI's API, including the core conversation API on the backend and the integrated API on the frontend. Next, we will introduce the implementation approach and code for the backend and frontend separately.
 
-## 后端实现
+## Backend Implementation
 
-以下代码中移除了鉴权、错误处理等逻辑，仅保留了核心的主要功能逻辑。
+The following code removes authentication, error handling, and other logic, retaining only the core functionality logic.
 
-### 核心会话 API
+### Core Conversation API
 
-在 `src/app/api/openai/chat/handler.ts` 文件中，我们定义了 `POST` 方法，该方法首先从请求中解析出 payload 数据（即客户端发送的会话内容），然后从请求中获取 OpenAI 的授权信息。之后，我们创建一个 `openai` 对象，并调用 `createChatCompletion` 方法，该方法负责发送会话请求到 OpenAI 并返回结果。
+In the file `src/app/api/openai/chat/handler.ts`, we define a `POST` method, which first parses the payload data from the request (i.e., the conversation content sent by the client), and then retrieves the authorization information from the request. Then, we create an `openai` object and call the `createChatCompletion` method, which is responsible for sending the conversation request to OpenAI and returning the result.
 
 ```ts
 export const POST = async (req: Request) => {
@@ -22,9 +22,9 @@ export const POST = async (req: Request) => {
 };
 ```
 
-### 会话结果处理
+### Conversation Result Processing
 
-在 `src/app/api/openai/chat/createChatCompletion.ts` 文件中，我们定义了 `createChatCompletion` 方法，该方法首先对 payload 数据进行预处理，然后调用 OpenAI 的 `chat.completions.create` 方法发送请求，并使用 [Vercel AI SDK](https://sdk.vercel.ai/docs) 中的 `OpenAIStream` 将返回的结果转化为流式响应。
+In the file `src/app/api/openai/chat/createChatCompletion.ts`, we define the `createChatCompletion` method, which first preprocesses the payload data, then calls OpenAI's `chat.completions.create` method to send the request, and uses the `OpenAIStream` from the [Vercel AI SDK](https://sdk.vercel.ai/docs) to convert the returned result into a streaming response.
 
 ```ts
 import { OpenAIStream, StreamingTextResponse } from 'ai';
@@ -51,11 +51,11 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
 };
 ```
 
-## 前端实现
+## Frontend Implementation
 
-### 前端集成
+### Frontend Integration
 
-在 `src/services/chatModel.ts` 文件中，我们定义了 `fetchChatModel` 方法，该方法首先对 payload 数据进行前置处理，然后发送 POST 请求到后端的 `/chat` 接口，并将请求结果返回。
+In the `src/services/chatModel.ts` file, we define the `fetchChatModel` method, which first preprocesses the payload data, then sends a POST request to the `/chat` endpoint on the backend, and returns the request result.
 
 ```ts
 export const fetchChatModel = (
@@ -86,9 +86,9 @@ export const fetchChatModel = (
 };
 ```
 
-### 使用流式获取结果
+### Using Streaming to Get Results
 
-在 `src/utils/fetch.ts` 文件中，我们定义了 `fetchSSE` 方法，该方法使用流式方法获取数据，当读取到新的数据块时，会调用 `onMessageHandle` 回调函数处理数据块，进而实现打字机输出效果。
+In the `src/utils/fetch.ts` file, we define the `fetchSSE` method, which uses a streaming approach to retrieve data. When a new data chunk is read, it calls the `onMessageHandle` callback function to process the data chunk, achieving a typewriter-like output effect.
 
 ```ts
 export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchSSEOptions = {}) => {
@@ -124,4 +124,4 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
 };
 ```
 
-以上就是 LobeChat 会话 API 的核心实现。在理解了这些核心代码的基础上，便可以进一步扩展和优化 LobeChat 的 AI 功能。
+The above is the core implementation of the LobeChat session API. With an understanding of these core codes, further expansion and optimization of LobeChat's AI functionality can be achieved.

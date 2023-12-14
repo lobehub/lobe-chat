@@ -60,7 +60,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 
 ## Azure OpenAI
 
-如果你需要使用 Azure OpenAI 来提供模型服务，可以查阅 [使用 Azure OpenAI 部署](./Deploy-with-Azure-OpenAI.zh-CN.md) 章节查看详细步骤，这里将列举和 Azure OpenAI 相关的环境变量。
+如果你需要使用 Azure OpenAI 来提供模型服务，可以查阅 [使用 Azure OpenAI 部署](Deploy-with-Azure-OpenAI.zh-CN.md) 章节查看详细步骤，这里将列举和 Azure OpenAI 相关的环境变量。
 
 ### `USE_AZURE_OPENAI`
 
