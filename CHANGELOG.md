@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.111.4](https://github.com/lobehub/lobe-chat/compare/v0.111.3...v0.111.4)
+
+<sup>Released on **2023-12-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Revert "🐛 fix: clean up gpt-3.5 model".
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Revert "🐛 fix: clean up gpt-3.5 model", closes [#653](https://github.com/lobehub/lobe-chat/issues/653) ([b8b14fc](https://github.com/lobehub/lobe-chat/commit/b8b14fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.111.3](https://github.com/lobehub/lobe-chat/compare/v0.111.2...v0.111.3)
 
 <sup>Released on **2023-12-14**</sup>
