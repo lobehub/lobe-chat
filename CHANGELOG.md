@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.111.3](https://github.com/lobehub/lobe-chat/compare/v0.111.2...v0.111.3)
+
+<sup>Released on **2023-12-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the history-count text.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the history-count text, closes [#615](https://github.com/lobehub/lobe-chat/issues/615) ([4db1cef](https://github.com/lobehub/lobe-chat/commit/4db1cef))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.111.2](https://github.com/lobehub/lobe-chat/compare/v0.111.1...v0.111.2)
 
 <sup>Released on **2023-12-13**</sup>
