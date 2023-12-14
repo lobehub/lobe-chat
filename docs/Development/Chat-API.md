@@ -2,6 +2,15 @@
 
 The implementation of LobeChat's large model AI mainly relies on OpenAI's API, including the core conversation API on the backend and the integrated API on the frontend. Next, we will introduce the implementation approach and code for the backend and frontend separately.
 
+#### TOC
+
+- [Backend Implementation](#backend-implementation)
+  - [Core Conversation API](#core-conversation-api)
+  - [Conversation Result Processing](#conversation-result-processing)
+- [Frontend Implementation](#frontend-implementation)
+  - [Frontend Integration](#frontend-integration)
+  - [Using Streaming to Get Results](#using-streaming-to-get-results)
+
 ## Backend Implementation
 
 The following code removes authentication, error handling, and other logic, retaining only the core functionality logic.

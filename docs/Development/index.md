@@ -2,6 +2,11 @@
 
 Welcome to the LobeChat technical development getting started guide. LobeChat is an AI conversation application built on the Next.js framework, which integrates a series of technology stacks to achieve diverse functions and features. This guide will provide a detailed introduction to the main technical components of LobeChat and how to configure and use these technologies in your development environment.
 
+#### TOC
+
+- [Basic Technology Stack](#basic-technology-stack)
+- [Folder Directory Structure](#folder-directory-structure)
+
 ## Basic Technology Stack
 
 The core technology stack of LobeChat includes:
