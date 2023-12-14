@@ -1,6 +1,6 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { ActionIcon, FormItem, Input } from '@lobehub/ui';
-import { Form, FormInstance } from 'antd';
+import { Checkbox, Form, FormInstance } from 'antd';
 import { FileCode, RotateCwIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,25 @@ import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { PluginInstallError } from '@/types/tool/plugin';
 
+const ProxyChecker = memo<{ onChange?: (value: boolean) => void; value?: boolean }>(
+  ({ value, onChange }) => {
+    const { t } = useTranslation('plugin');
+
+    return (
+      <Flexbox
+        gap={8}
+        horizontal
+        onClick={() => {
+          onChange?.(!value);
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        <Checkbox checked={value} /> {t('dev.customParams.useProxy.label')}
+      </Flexbox>
+    );
+  },
+);
+
 const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
   ({ form, isEditMode }) => {
     const { t } = useTranslation('plugin');
@@ -19,6 +38,7 @@ const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
     const [manifest, setManifest] = useState<LobeChatPluginManifest>();
 
     const urlKey = ['customParams', 'manifestUrl'];
+    const proxyKey = ['customParams', 'useProxy'];
     const pluginIds = useToolStore(pluginSelectors.storeAndInstallPluginsIdList);
 
     return (
@@ -53,7 +73,8 @@ const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
                 if (!value) return true;
 
                 try {
-                  const data = await pluginService.getPluginManifest(value);
+                  const useProxy = form.getFieldValue(proxyKey);
+                  const data = await pluginService.getPluginManifest(value, useProxy);
                   setManifest(data);
 
                   form.setFieldsValue({ identifier: data.identifier, manifest: data });
@@ -95,6 +116,11 @@ const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
             }
           />
         </FormItem>
+
+        <FormItem name={proxyKey} noStyle>
+          <ProxyChecker />
+        </FormItem>
+
         <FormItem name={'identifier'} noStyle />
         <FormItem name={'manifest'} noStyle />
       </Form>

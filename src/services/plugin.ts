@@ -8,10 +8,13 @@ import {
 } from '@lobehub/chat-plugin-sdk';
 import { uniq } from 'lodash-es';
 import { convertParametersToJSONSchema } from 'openapi-jsonschema-parameters';
+import YAML from 'yaml';
 
 import { getPluginIndexJSON } from '@/const/url';
 import { PluginModel } from '@/database/models/plugin';
+import { PROXY_URL } from '@/services/_url';
 import { globalHelpers } from '@/store/global/helpers';
+import { OpenAIPluginManifest } from '@/types/openai/plugin';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 import { merge } from '@/utils/merge';
@@ -22,11 +25,11 @@ export interface InstallPluginParams {
   type: 'plugin' | 'customPlugin';
 }
 class PluginService {
-  private _fetchJSON = async <T = any>(url: string): Promise<T> => {
+  private _fetchJSON = async <T = any>(url: string, proxy = false): Promise<T> => {
     // 2. 发送请求
     let res: Response;
     try {
-      res = await fetch(url);
+      res = await (proxy ? fetch(PROXY_URL, { body: url, method: 'POST' }) : fetch(url));
     } catch {
       throw new TypeError('fetchError');
     }
@@ -36,8 +39,15 @@ class PluginService {
     }
 
     let data;
+    const contentType = res.headers.get('Content-Type');
+
     try {
-      data = await res.json();
+      if (contentType === 'application/json') {
+        data = await res.json();
+      } else {
+        const yaml = await res.text();
+        data = YAML.parse(yaml);
+      }
     } catch {
       throw new TypeError('urlError');
     }
@@ -57,7 +67,10 @@ class PluginService {
     return data;
   };
 
-  getPluginManifest = async (url?: string): Promise<LobeChatPluginManifest> => {
+  getPluginManifest = async (
+    url?: string,
+    useProxy: boolean = false,
+  ): Promise<LobeChatPluginManifest> => {
     // 1. valid plugin
     if (!url) {
       throw new TypeError('noManifest');
@@ -65,7 +78,14 @@ class PluginService {
 
     // 2. 发送请求
 
-    const data = await this._fetchJSON<LobeChatPluginManifest>(url);
+    let data = await this._fetchJSON<LobeChatPluginManifest>(url, useProxy);
+
+    // @ts-ignore
+    // if there is a description_for_model, it is an OpenAI plugin
+    // we need convert to lobe plugin
+    if (data['description_for_model']) {
+      data = this.convertOpenAIManifestToLobeManifest(data as any);
+    }
 
     // 3. 校验插件文件格式规范
     const parser = pluginManifestSchema.safeParse(data);
@@ -74,9 +94,10 @@ class PluginService {
       throw new TypeError('manifestInvalid', { cause: parser.error });
     }
 
-    // 4. if exist OpenAPI api, merge the openAPIs with apis
+    // 4. if exist OpenAPI api, merge the OpenAPIs to api
     if (parser.data.openapi) {
-      const openapiJson = await this._fetchJSON(parser.data.openapi);
+      const openapiJson = await this._fetchJSON(parser.data.openapi, useProxy);
+
       try {
         const openAPIs = await this.convertOpenAPIToPluginSchema(openapiJson);
         data.api = [...data.api, ...openAPIs];
@@ -264,6 +285,47 @@ class PluginService {
     }
 
     return settingsSchema;
+  };
+
+  private convertOpenAIManifestToLobeManifest = (
+    data: OpenAIPluginManifest,
+  ): LobeChatPluginManifest => {
+    const manifest: LobeChatPluginManifest = {
+      api: [],
+      homepage: data.legal_info_url,
+      identifier: data.name_for_model,
+      meta: {
+        avatar: data.logo_url,
+        description: data.description_for_human,
+        title: data.name_for_human,
+      },
+      openapi: data.api.url,
+
+      type: 'default',
+      version: '1',
+    };
+    switch (data.auth.type) {
+      case 'none': {
+        break;
+      }
+      case 'service_http': {
+        manifest.settings = {
+          properties: {
+            apiAuthKey: {
+              default: data.auth.verification_tokens['openai'],
+              description: 'API Key',
+              format: 'password',
+              title: 'API Key',
+              type: 'string',
+            },
+          },
+          type: 'object',
+        };
+        break;
+      }
+    }
+
+    return manifest;
   };
 }
 

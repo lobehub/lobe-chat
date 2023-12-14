@@ -1,5 +1,33 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`PluginService > can parse the OpenAI plugin 1`] = `
+{
+  "api": [],
+  "homepage": "https://products.wolframalpha.com/api/commercial-termsofuse",
+  "identifier": "Wolfram",
+  "meta": {
+    "avatar": "https://www.wolframcdn.com/images/icons/Wolfram.png",
+    "description": "Access computation, math, curated knowledge & real-time data through Wolfram|Alpha and Wolfram Language.",
+    "title": "Wolfram",
+  },
+  "openapi": "https://www.wolframalpha.com/.well-known/apispec.json",
+  "settings": {
+    "properties": {
+      "apiAuthKey": {
+        "default": "18c4412dec6846eda6ec2fa95f144e1f",
+        "description": "API Key",
+        "format": "password",
+        "title": "API Key",
+        "type": "string",
+      },
+    },
+    "type": "object",
+  },
+  "type": "default",
+  "version": "1",
+}
+`;
+
 exports[`PluginService > convertOpenAPIToPluginSchema > can convert OpenAPI v2 MJ openAPI 1`] = `
 [
   {

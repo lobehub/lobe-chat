@@ -127,6 +127,7 @@
     "use-merge-value": "^1",
     "utility-types": "^3",
     "uuid": "^9",
+    "yaml": "^2",
     "zod": "^3",
     "zustand": "^4.4",
     "zustand-utils": "^1"

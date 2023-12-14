@@ -20,6 +20,11 @@ export default {
   },
   dev: {
     confirmDeleteDevPlugin: '即将删除该本地插件，删除后将无法找回，是否删除该插件？',
+    customParams: {
+      useProxy: {
+        label: '使用代理请求安装插件（如错误提示跨域访问，可开启后重试）',
+      },
+    },
     deleteSuccess: '插件删除成功',
     manifest: {
       identifier: {

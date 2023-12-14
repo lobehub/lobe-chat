@@ -9,6 +9,7 @@ import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { InstallPluginParams, pluginService } from '../plugin';
+import OpenAIPlugin from './openai/plugin.json';
 import OpenAPI_Auth_API_Key from './openapi/OpenAPI_Auth_API_Key.json';
 import OpenAPIV2 from './openapi/OpenAPI_V2.json';
 import openAPIV3 from './openapi/OpenAPI_V3.json';
@@ -114,6 +115,7 @@ describe('PluginService', () => {
 
       global.fetch = vi.fn(() =>
         Promise.resolve({
+          headers: new Headers({ 'content-type': 'application/json' }),
           ok: true,
           json: () => Promise.resolve(fakeManifest),
         }),
@@ -138,6 +140,7 @@ describe('PluginService', () => {
       const manifestUrl = 'http://fake-url.com/manifest.json';
       global.fetch = vi.fn(() =>
         Promise.resolve({
+          headers: new Headers({ 'content-type': 'application/json' }),
           ok: true,
           json: () => Promise.resolve(fakeManifest),
         }),
@@ -167,6 +170,7 @@ describe('PluginService', () => {
       const manifestUrl = 'http://fake-url.com/manifest.json';
       global.fetch = vi.fn(() =>
         Promise.resolve({
+          headers: new Headers({ 'content-type': 'application/json' }),
           ok: true,
           json: () => {
             throw new Error('abc');
@@ -187,6 +191,7 @@ describe('PluginService', () => {
       global.fetch = vi.fn(() =>
         Promise.resolve({
           ok: false,
+          headers: new Headers({ 'content-type': 'application/json' }),
           json: () => Promise.resolve(fakeManifest),
         }),
       ) as any;
@@ -227,6 +232,7 @@ describe('PluginService', () => {
         global.fetch = vi.fn((url) =>
           Promise.resolve({
             ok: true,
+            headers: new Headers({ 'content-type': 'application/json' }),
             json: () => Promise.resolve(url === openapiUrl ? openAPIV3 : fakeManifest),
           }),
         ) as any;
@@ -263,6 +269,7 @@ describe('PluginService', () => {
         global.fetch = vi.fn((url) =>
           Promise.resolve({
             ok: true,
+            headers: new Headers({ 'content-type': 'application/json' }),
             json: () => Promise.resolve(url === openapiUrl ? [] : fakeManifest),
           }),
         ) as any;
@@ -547,5 +554,11 @@ describe('PluginService', () => {
         type: 'object',
       });
     });
+  });
+
+  it('can parse the OpenAI plugin', async () => {
+    const manifest = pluginService['convertOpenAIManifestToLobeManifest'](OpenAIPlugin as any);
+
+    expect(manifest).toMatchSnapshot();
   });
 });

@@ -9,6 +9,7 @@ export interface CustomPluginParams {
   enableSettings?: boolean;
   manifestMode?: 'local' | 'url';
   manifestUrl?: string;
+  useProxy?: boolean;
 }
 
 export interface LobeToolCustomPlugin {

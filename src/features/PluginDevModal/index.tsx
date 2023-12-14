@@ -1,5 +1,5 @@
 import { Alert, Icon, Modal, Tooltip } from '@lobehub/ui';
-import { App, Button, Form, Popconfirm, Segmented } from 'antd';
+import { App, Button, Divider, Form, Popconfirm, Segmented } from 'antd';
 import { useResponsive } from 'antd-style';
 import { MoveUpRight } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
@@ -156,10 +156,13 @@ const DevModal = memo<DevModalProps>(
                 },
               ]}
             />
-            {configMode === 'url' ? (
-              <UrlManifestForm form={form} isEditMode={mode === 'edit'} />
-            ) : null}
-            <PluginPreview form={form} />
+            <Flexbox>
+              {configMode === 'url' ? (
+                <UrlManifestForm form={form} isEditMode={mode === 'edit'} />
+              ) : null}
+              <Divider />
+              <PluginPreview form={form} />
+            </Flexbox>
           </Flexbox>
         </Modal>
       </Form.Provider>
