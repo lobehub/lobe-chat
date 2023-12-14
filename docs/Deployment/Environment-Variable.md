@@ -60,7 +60,7 @@ The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `g
 
 ## Azure OpenAI
 
-If you need to use Azure OpenAI to provide model services, you can refer to the [Deploy with Azure OpenAI](./Deploy-with-Azure-OpenAI.zh-CN.md) section for detailed steps. Here are the environment variables related to Azure OpenAI.
+If you need to use Azure OpenAI to provide model services, you can refer to the [Deploy with Azure OpenAI](Deploy-with-Azure-OpenAI.zh-CN.md) section for detailed steps. Here are the environment variables related to Azure OpenAI.
 
 ### `USE_AZURE_OPENAI`
 
