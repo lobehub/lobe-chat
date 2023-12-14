@@ -24,6 +24,14 @@ exports[`settingsSelectors > CUSTOM_MODELS > duplicate naming model 1`] = `
     "name": "gpt-3.5-turbo",
   },
   {
+    "displayName": "gpt-3.5-turbo-1106",
+    "name": "gpt-3.5-turbo-1106",
+  },
+  {
+    "displayName": "gpt-3.5-turbo-16k",
+    "name": "gpt-3.5-turbo-16k",
+  },
+  {
     "displayName": "gpt-4",
     "name": "gpt-4",
   },
@@ -47,6 +55,14 @@ exports[`settingsSelectors > CUSTOM_MODELS > only add the model 1`] = `
   {
     "displayName": "gpt-3.5-turbo",
     "name": "gpt-3.5-turbo",
+  },
+  {
+    "displayName": "gpt-3.5-turbo-1106",
+    "name": "gpt-3.5-turbo-1106",
+  },
+  {
+    "displayName": "gpt-3.5-turbo-16k",
+    "name": "gpt-3.5-turbo-16k",
   },
   {
     "displayName": "gpt-4",
