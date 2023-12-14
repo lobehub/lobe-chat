@@ -12,11 +12,13 @@ module.exports = defineConfig({
     jsonMode: true,
   },
   markdown: {
-    entry: ['./README.md'],
-    outputLocales: ['zh_CN'],
-    outputExtensions: (locale) => {
-      if (locale === 'en_US') return '.md';
-      return `.${locale.replace('_', '-')}.md`;
+    entry: ['./README.zh-CN.md', './docs/**/*.zh-CN.md'],
+    entryLocale: 'zh-CN',
+    entryExtension: '.zh-CN.md',
+    outputLocales: ['en-US'],
+    outputExtensions: (locale, { getDefaultExtension }) => {
+      if (locale === 'en-US') return '.md';
+      return getDefaultExtension(locale);
     },
   },
 });

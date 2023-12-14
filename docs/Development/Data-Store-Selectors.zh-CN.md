@@ -1,4 +1,4 @@
-## Selector
+# 数据存储取数模块
 
 selectors 是 LobeChat 数据流研发框架下的取数模块，它的作用是从 store 中以特定特务逻辑取出数据，供组件消费使用。
 
