@@ -153,8 +153,8 @@ export default {
       unlimited: '不限历史消息数',
     },
     historyCount: {
-      desc: '每次请求携带的历史消息数',
-      title: '附带历史消息数',
+      desc: '每次请求携带的消息数（包括最新编写的提问。每个提问和回答都计算1）',
+      title: '附带消息数',
     },
     inputTemplate: {
       desc: '用户最新的一条消息会填充到此模板',
