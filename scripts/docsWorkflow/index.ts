@@ -18,7 +18,7 @@ const run = async () => {
         en: path,
       };
       const links = {
-        cn: urlJoin(WIKI_URL, relative(DOCS_DIR, paths.cn).split('/')[1].replace('.md', 'zh-CN')),
+        cn: urlJoin(WIKI_URL, relative(DOCS_DIR, paths.cn).split('/')[1].replace('.zh-CN.md', '')),
         en: urlJoin(WIKI_URL, relative(DOCS_DIR, paths.en).split('/')[1].replace('.md', '')),
       };
       const titles = {
