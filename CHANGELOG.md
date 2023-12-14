@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.111.5](https://github.com/lobehub/lobe-chat/compare/v0.111.4...v0.111.5)
+
+<sup>Released on **2023-12-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Wrong locale language in en_US.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Wrong locale language in en_US, closes [#660](https://github.com/lobehub/lobe-chat/issues/660) ([e1c31ee](https://github.com/lobehub/lobe-chat/commit/e1c31ee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.111.4](https://github.com/lobehub/lobe-chat/compare/v0.111.3...v0.111.4)
 
 <sup>Released on **2023-12-14**</sup>
