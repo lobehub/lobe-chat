@@ -13,11 +13,11 @@
 
 #### 🛳 Self Hosting
 
-- [Data Statistics](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Analytics) | [中文](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Analyticszh-CN)
-- [Deploying with Azure OpenAI](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Deploy-with-Azure-OpenAI) | [中文](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Deploy-with-Azure-OpenAIzh-CN)
-- [Docker Deployment Guide](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Docker-Deployment) | [中文](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Docker-Deploymentzh-CN)
-- [LobeChat Environment Variables](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Environment-Variable) | [中文](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Environment-Variablezh-CN)
-- [Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Upstream-Sync) | [中文](https://github.com/lobehub/lobe-chat/wiki/SelfHosting/Upstream-Synczh-CN)
+- [Data Statistics](https://github.com/lobehub/lobe-chat/wiki/Deployment/Analytics) | [中文](https://github.com/lobehub/lobe-chat/wiki/Deployment/Analyticszh-CN)
+- [Deploying with Azure OpenAI](https://github.com/lobehub/lobe-chat/wiki/Deployment/Deploy-with-Azure-OpenAI) | [中文](https://github.com/lobehub/lobe-chat/wiki/Deployment/Deploy-with-Azure-OpenAIzh-CN)
+- [Docker Deployment Guide](https://github.com/lobehub/lobe-chat/wiki/Deployment/Docker-Deployment) | [中文](https://github.com/lobehub/lobe-chat/wiki/Deployment/Docker-Deploymentzh-CN)
+- [LobeChat Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Deployment/Environment-Variable) | [中文](https://github.com/lobehub/lobe-chat/wiki/Deployment/Environment-Variablezh-CN)
+- [Maintaining Updates with LobeChat Self-Deployment](https://github.com/lobehub/lobe-chat/wiki/Deployment/Upstream-Sync) | [中文](https://github.com/lobehub/lobe-chat/wiki/Deployment/Upstream-Synczh-CN)
 
 #### ⌨️ Development
 

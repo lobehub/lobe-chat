@@ -4,7 +4,7 @@ export default [
     title: '🤯 LobeChat Usage',
   },
   {
-    dir: 'SelfHosting',
+    dir: 'Deployment',
     title: '🛳 Self Hosting',
   },
   {

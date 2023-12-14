@@ -278,7 +278,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 > \[!NOTE]
 >
-> 完整测试报告可见 [📘 Lighthouse 性能测试](https://github.com/lobehub/lobe-chat/wiki/Lighthouse.zh-CN)
+> 完整测试报告可见 [📘 Lighthouse 性能测试](https://github.com/lobehub/lobe-chat/wiki/Others/Lighthouse.zh-CN)
 
 |                    Desktop                    |                    Mobile                    |
 | :-------------------------------------------: | :------------------------------------------: |
@@ -320,7 +320,7 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 
 > \[!TIP]
 >
-> 我们建议按照 [📘 LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN) 步骤重新部署。
+> 我们建议按照 [📘 LobeChat 自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Deployment/Upstream-Sync.zh-CN) 步骤重新部署。
 
 <br/>
 
@@ -353,7 +353,7 @@ $ docker run -d -p 3210:3210 \
 
 > \[!NOTE]
 >
-> 有关 Docker 部署的详细说明，详见 [📘 使用 Docker 部署](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment.zh-CN)
+> 有关 Docker 部署的详细说明，详见 [📘 使用 Docker 部署](https://github.com/lobehub/lobe-chat/wiki/Deployment/Docker-Deployment.zh-CN)
 
 <br/>
 
@@ -370,7 +370,7 @@ $ docker run -d -p 3210:3210 \
 
 > \[!NOTE]
 >
-> 完整环境变量可见 [📘环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)
+> 完整环境变量可见 [📘环境变量](https://github.com/lobehub/lobe-chat/wiki/Deployment/Environment-Variable.zh-CN)
 
 <div align="right">
 
@@ -395,7 +395,7 @@ $ docker run -d -p 3210:3210 \
 
 ## 🧩 插件体系
 
-插件提供了扩展 LobeChat [Function Calling][fc-link] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。如果你对插件开发感兴趣，请在 Wiki 中查阅我们的 [📘 插件开发指引](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development.zh-CN) 。
+插件提供了扩展 LobeChat [Function Calling][fc-link] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。如果你对插件开发感兴趣，请在 Wiki 中查阅我们的 [📘 插件开发指引](https://github.com/lobehub/lobe-chat/wiki/Plugins/Plugin-Development.zh-CN) 。
 
 - [lobe-chat-plugins][lobe-chat-plugins]：这是 LobeChat 的插件索引。它从该仓库的 index.json 中获取插件列表并显示给用户。
 - [chat-plugin-template][chat-plugin-template]: Chat Plugin 插件开发模版，你可以通过项目模版快速新建插件项目。
