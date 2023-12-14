@@ -1,4 +1,4 @@
-<a name="readme-top"> </a>
+<a name="readme-top"></a>
 
 <div align="center">
 
