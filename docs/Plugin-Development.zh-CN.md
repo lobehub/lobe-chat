@@ -273,7 +273,7 @@ export default Render;
 - **📘 Pluging SDK 文档**: <https://chat-plugin-sdk.lobehub.com>
 - **🚀 chat-plugin-template**: <https://github.com/lobehub/chat-plugin-template>
 - **🧩 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugin-sdk>
-- **🚪 chat-plugin-gateway**: <https://github.com/lobehub/chat-plugin-gateway>
+- **🚪 chat-plugin-gateway**: <https://github.com/lobehub/chat-plugins-gateway>
 - **🏪 lobe-chat-plugins**: <https://github.com/lobehub/lobe-chat-plugins>
 
 <!-- LINK GROUP -->
