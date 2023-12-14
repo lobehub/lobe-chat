@@ -13,13 +13,13 @@ const run = async () => {
     const childrenFiles = docsFiles.filter((file) => file.includes(resolve(DOCS_DIR, item.dir)));
 
     const children: any = await pMap(childrenFiles, async (path) => {
-      const links = {
-        cn: urlJoin(WIKI_URL, relative(DOCS_DIR, path).replace('.md', 'zh-CN')),
-        en: urlJoin(WIKI_URL, relative(DOCS_DIR, path).replace('.md', '')),
-      };
       const paths = {
         cn: path.replace('.md', '.zh-CN.md'),
         en: path,
+      };
+      const links = {
+        cn: urlJoin(WIKI_URL, relative(DOCS_DIR, paths.cn).split('/')[1].replace('.md', 'zh-CN')),
+        en: urlJoin(WIKI_URL, relative(DOCS_DIR, paths.en).split('/')[1].replace('.md', '')),
       };
       const titles = {
         cn: await getTitle(paths.cn),
