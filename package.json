@@ -172,7 +172,8 @@
     "typescript": "^5",
     "unified": "^11",
     "unist-util-visit": "^5",
-    "vitest": "0.34.6"
+    "vitest": "0.34.6",
+    "vitest-canvas-mock": "^0.3.3"
   },
   "publishConfig": {
     "access": "public",
