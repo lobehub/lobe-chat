@@ -151,6 +151,7 @@ export default {
       settings: '设置',
       uninstall: '卸载',
     },
+    communityPlugin: '三方社区',
     customPlugin: '自定义',
     empty: '暂无已安装插件',
     installAllPlugins: '安装全部',

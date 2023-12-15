@@ -6,6 +6,8 @@ const getPluginFormList = (list: LobeTool[], id: string) => list?.find((p) => p.
 
 const getPluginTitle = (meta?: LobeChatPluginManifest['meta']) => meta?.title;
 const getPluginDesc = (meta?: LobeChatPluginManifest['meta']) => meta?.description;
+
+const getPluginTags = (meta?: LobeChatPluginManifest['meta']) => meta?.tags;
 const getPluginAvatar = (meta?: LobeChatPluginManifest['meta']) => meta?.avatar || '🧩';
 
 const isCustomPlugin = (id: string, pluginList: LobeTool[]) =>
@@ -18,6 +20,7 @@ export const pluginHelpers = {
   getPluginAvatar,
   getPluginDesc,
   getPluginFormList,
+  getPluginTags,
   getPluginTitle,
   isCustomPlugin,
   isSettingSchemaNonEmpty,

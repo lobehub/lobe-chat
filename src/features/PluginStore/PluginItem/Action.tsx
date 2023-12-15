@@ -1,7 +1,7 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { Button, Dropdown, Popconfirm } from 'antd';
 import { useResponsive } from 'antd-style';
-import { InfoIcon, MoreVerticalIcon, Settings2, Trash2 } from 'lucide-react';
+import { InfoIcon, MoreVerticalIcon, Settings, Trash2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -42,7 +42,7 @@ const Actions = memo<ActionsProps>(({ identifier, type }) => {
             {isCustomPlugin && <EditCustomPlugin identifier={identifier} />}
             {hasSettings && (
               <ActionIcon
-                icon={Settings2}
+                icon={Settings}
                 onClick={() => {
                   setOpen(true);
                   setTab('settings');

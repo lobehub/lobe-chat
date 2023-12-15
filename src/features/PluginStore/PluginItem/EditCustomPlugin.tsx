@@ -1,6 +1,6 @@
 import { ActionIcon } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { Package2 } from 'lucide-react';
+import { PackageSearch } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -37,7 +37,7 @@ const EditCustomPlugin = memo<{ identifier: string }>(({ identifier }) => {
         value={customPlugin}
       />
       <ActionIcon
-        icon={Package2}
+        icon={PackageSearch}
         onClick={() => {
           setModal(true);
         }}

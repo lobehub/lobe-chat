@@ -44,7 +44,7 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
         width={650}
       >
         <MobilePadding>
-          <Center gap={16}>
+          <Center gap={8}>
             <Meta id={id} />
             <Divider style={{ marginBottom: 0, marginTop: 8 }} />
             <TabsNav
@@ -62,6 +62,7 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
                 ].filter(Boolean) as TabsProps['items']
               }
               onChange={setTabKey}
+              variant={'compact'}
             />
             {tabKey === 'settings' ? (
               hasSettings && <PluginSettingsConfig id={id} schema={schema} />

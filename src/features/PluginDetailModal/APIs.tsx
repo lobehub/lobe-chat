@@ -23,6 +23,7 @@ const APIs = memo<{
           {
             dataIndex: 'name',
             ellipsis: true,
+            render: (name: string) => <code>{name}</code>,
             title: t('detailModal.info.name'),
           },
           {

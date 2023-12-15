@@ -1,5 +1,6 @@
 import { Icon, SearchBar } from '@lobehub/ui';
 import { Button, Empty } from 'antd';
+import { useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ServerCrash } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -16,7 +17,7 @@ import PluginItem from './PluginItem';
 export const OnlineList = memo(() => {
   const { t } = useTranslation('plugin');
   const [keywords, setKeywords] = useState<string>();
-
+  const { mobile } = useResponsive();
   const pluginStoreList = useToolStore((s) => {
     const custom = pluginSelectors.installedCustomPluginMetaList(s);
     const store = pluginStoreSelectors.onlinePluginStore(s);
@@ -39,26 +40,24 @@ export const OnlineList = memo(() => {
 
   return (
     <Flexbox gap={16}>
-      <Flexbox align={'center'} gap={16} horizontal justify={'space-between'}>
+      <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
         <Flexbox flex={1}>
           <SearchBar
             allowClear
             onChange={(e) => setKeywords(e.target.value)}
             placeholder={t('store.placeholder')}
-            type={'block'}
+            type={mobile ? 'block' : 'ghost'}
             value={keywords}
           />
         </Flexbox>
-        <Flexbox gap={8} horizontal>
-          <AddPluginButton />
-          <Button
-            onClick={() => {
-              installPlugins(storePluginIds);
-            }}
-          >
-            {t('store.installAllPlugins')}
-          </Button>
-        </Flexbox>
+        <AddPluginButton />
+        <Button
+          onClick={() => {
+            installPlugins(storePluginIds);
+          }}
+        >
+          {t('store.installAllPlugins')}
+        </Button>
       </Flexbox>
 
       {isLoading ? (

@@ -3,6 +3,7 @@ import { createStyles } from 'antd-style';
 import { Trash } from 'lucide-react';
 import { CSSProperties, memo, useCallback } from 'react';
 
+import { usePlatform } from '@/hooks/usePlatform';
 import { useFileStore } from '@/store/file';
 
 import { MIN_IMAGE_SIZE } from './style';
@@ -38,6 +39,7 @@ const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
   const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
   const { data, isLoading } = useFetchFile(id);
   const { styles, cx } = useStyles();
+  const { isSafari } = usePlatform();
 
   const handleRemoveFile = useCallback(
     (e: any) => {
@@ -62,11 +64,11 @@ const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
       }
       alt={data?.name || id || ''}
       alwaysShowActions={alwaysShowClose}
-      height={'auto'}
+      height={isSafari ? 'auto' : '100%'}
       isLoading={isLoading}
       size={IMAGE_SIZE as any}
       src={data?.url}
-      style={{ height: 'auto' }}
+      style={{ height: isSafari ? 'auto' : '100%' }}
       wrapperClassName={cx(styles.image, editable && styles.editableImage)}
     />
   );
