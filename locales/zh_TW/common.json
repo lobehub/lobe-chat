@@ -82,8 +82,8 @@
   "temp": "臨時",
   "updateAgent": "更新助理資訊",
   "upgradeVersion": {
-    "action": "立即升級",
     "hasNew": "有可用更新",
-    "newVersion": "有新版本可用：{{version}}"
+    "newVersion": "有新版本可用：{{version}}",
+    "action": "升級"
   }
 }

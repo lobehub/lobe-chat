@@ -1,4 +1,4 @@
-# Maintaining Updates with LobeChat Self-Deployment
+# Upstream Sync
 
 If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available". This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to accurately detect updates. We suggest you redeploy using the following steps:
 

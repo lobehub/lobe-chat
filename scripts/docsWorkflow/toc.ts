@@ -1,11 +1,11 @@
 export default [
   {
     dir: 'Usage',
-    title: '🤯 LobeChat Usage',
+    title: '🤯 Usage',
   },
   {
     dir: 'Deployment',
-    title: '🛳 Self Hosting',
+    title: '🛳 Self-Hosting',
   },
   {
     dir: 'Development',
