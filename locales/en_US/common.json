@@ -7,24 +7,24 @@
   "appInitializing": "LobeChat is initializing, please wait...",
   "archive": "Archive",
   "autoGenerate": "Auto Generate",
-  "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
+  "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "close": "Close",
-  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be recovered. Please confirm your action.",
+  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be recovered. Please confirm your action.",
   "copy": "Copy",
   "copySuccess": "Copied successfully",
-  "defaultAgent": "Default Assistant",
-  "defaultSession": "Default Assistant",
+  "defaultAgent": "Default Agent",
+  "defaultSession": "Default Agent",
   "delete": "Delete",
   "edit": "Edit",
   "export": "Export Configuration",
   "exportType": {
-    "agent": "Export Assistant Settings",
-    "agentWithMessage": "Export Assistant and Messages",
-    "all": "Export Global Settings and All Assistant Data",
-    "allAgent": "Export All Assistant Settings",
-    "allAgentWithMessage": "Export All Assistants and Messages",
+    "agent": "Export Agent Settings",
+    "agentWithMessage": "Export Agent and Messages",
+    "all": "Export Global Settings and All Agent Data",
+    "allAgent": "Export All Agent Settings",
+    "allAgentWithMessage": "Export All Agents and Messages",
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
@@ -42,7 +42,7 @@
       "added": "Imported successfully",
       "errors": "Import errors",
       "messages": "Messages",
-      "sessions": "Assistants",
+      "sessions": "Agents",
       "skips": "Duplicates skipped",
       "topics": "Topics",
       "type": "Data Type"
@@ -82,8 +82,8 @@
   "temp": "Temporary",
   "updateAgent": "Update Agent Information",
   "upgradeVersion": {
-    "action": "Upgrade Now",
     "hasNew": "New update available",
-    "newVersion": "New version available: {{version}}"
+    "newVersion": "New version available: {{version}}",
+    "action": "Upgrade"
   }
 }

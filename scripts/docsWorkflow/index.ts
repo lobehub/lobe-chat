@@ -18,7 +18,10 @@ const run = async () => {
         en: path,
       };
       const links = {
-        cn: urlJoin(WIKI_URL, relative(DOCS_DIR, paths.cn).split('/')[1].replace('.zh-CN.md', '')),
+        cn: urlJoin(
+          WIKI_URL,
+          relative(DOCS_DIR, paths.cn).split('/')[1].replace('.zh-CN.md', '.zh-CN'),
+        ),
         en: urlJoin(WIKI_URL, relative(DOCS_DIR, paths.en).split('/')[1].replace('.md', '')),
       };
       const titles = {
@@ -60,7 +63,7 @@ const run = async () => {
           child.links.cn,
         )}\n`;
       });
-    homeContent += `\n\n---\n\n`;
+    homeContent += `\n\n<br/>\n\n`;
     sidebarContent += `\n\n`;
   });
 

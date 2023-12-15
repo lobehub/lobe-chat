@@ -82,7 +82,7 @@ export default {
   temp: '临时',
   updateAgent: '更新助理信息',
   upgradeVersion: {
-    action: '立即升级',
+    action: '升级',
     hasNew: '有可用更新',
     newVersion: '有新版本可用：{{version}}',
   },

@@ -1,4 +1,4 @@
-# LobeChat Environment Variables
+# Environment Variables
 
 LobeChat provides additional configuration options during deployment, which can be set using environment variables
 
