@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 /**
  * just for a proxy
  */
