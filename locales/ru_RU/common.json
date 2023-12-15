@@ -82,8 +82,8 @@
   "temp": "Временный",
   "updateAgent": "Обновить информацию об агенте",
   "upgradeVersion": {
-    "action": "Обновить сейчас",
     "hasNew": "Доступно обновление",
-    "newVersion": "Доступна новая версия: {{version}}"
+    "newVersion": "Доступна новая версия: {{version}}",
+    "action": "обновить"
   }
 }

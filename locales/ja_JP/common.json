@@ -82,8 +82,8 @@
   "temp": "一時的",
   "updateAgent": "エージェント情報を更新",
   "upgradeVersion": {
-    "action": "今すぐアップグレード",
     "hasNew": "利用可能な更新があります",
-    "newVersion": "新しいバージョンが利用可能です：{{version}}"
+    "newVersion": "新しいバージョンが利用可能です：{{version}}",
+    "action": "アップグレード"
   }
 }
