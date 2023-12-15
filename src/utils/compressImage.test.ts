@@ -9,7 +9,6 @@ beforeEach(() => {
 });
 
 describe('compressImage', () => {
-  // 宽图
   it('should compress image with maxWidth', () => {
     const img = document.createElement('img');
     img.width = 3000;
@@ -25,7 +24,7 @@ describe('compressImage', () => {
     expect(drawImageSpy).toBeCalledTimes(1);
     expect(drawImageSpy).toBeCalledWith(img, 0, 0, 3000, 2000, 0, 0, 2160, 1440);
   });
-  // 高图
+
   it('should compress image with maxHeight', () => {
     const img = document.createElement('img');
     img.width = 2000;
@@ -41,8 +40,8 @@ describe('compressImage', () => {
     expect(drawImageSpy).toBeCalledTimes(1);
     expect(drawImageSpy).toBeCalledWith(img, 0, 0, 2000, 3000, 0, 0, 1440, 2160);
   });
-  // 方图
-  it('should compress image with maxHeight', () => {
+
+  it('should not compress image', () => {
     const img = document.createElement('img');
     img.width = 2000;
     img.height = 2000;
