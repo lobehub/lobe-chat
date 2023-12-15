@@ -3,7 +3,7 @@ import { useResponsive } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import FileItem from '@/components/FileList/FileItem';
+import ImageFileItem from '@/components/FileList/ImageFileItem';
 
 interface EditableFileListProps {
   alwaysShowClose?: boolean;
@@ -24,7 +24,7 @@ const EditableFileList = memo<EditableFileListProps>(
       >
         <ImageGallery>
           {items.map((i) => (
-            <FileItem alwaysShowClose={alwaysShowClose} editable={editable} id={i} key={i} />
+            <ImageFileItem alwaysShowClose={alwaysShowClose} editable={editable} id={i} key={i} />
           ))}
         </ImageGallery>
       </Flexbox>

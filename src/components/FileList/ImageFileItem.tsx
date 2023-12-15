@@ -33,7 +33,7 @@ interface FileItemProps {
   onClick?: () => void;
   style?: CSSProperties;
 }
-const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
+const ImageFileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
   const [useFetchFile, removeFile] = useFileStore((s) => [s.useFetchFile, s.removeFile]);
   const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
   const { data, isLoading } = useFetchFile(id);
@@ -72,4 +72,4 @@ const FileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
   );
 });
 
-export default FileItem;
+export default ImageFileItem;
