@@ -40,12 +40,18 @@ export const chatPlugin: StateCreator<
   runPluginDefaultType: async (id, payload) => {
     const { refreshMessages, coreProcessMessage, toggleChatLoading } = get();
     let data: string;
+
     try {
       const abortController = toggleChatLoading(true, id, n('fetchPlugin') as string);
       data = await chatService.runPluginApi(payload, { signal: abortController?.signal });
     } catch (error) {
-      await messageService.updateMessageError(id, error as any);
-      await refreshMessages();
+      const err = error as Error;
+
+      // ignore the aborted request error
+      if (!err.message.includes('The user aborted a request.')) {
+        await messageService.updateMessageError(id, error as any);
+        await refreshMessages();
+      }
 
       data = '';
     }
