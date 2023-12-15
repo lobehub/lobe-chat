@@ -82,8 +82,8 @@
   "temp": "임시",
   "updateAgent": "에이전트 정보 업데이트",
   "upgradeVersion": {
-    "action": "즉시 업그레이드",
     "hasNew": "사용 가능한 업데이트가 있습니다",
-    "newVersion": "새 버전 사용 가능: {{version}}"
+    "newVersion": "새 버전 사용 가능: {{version}}",
+    "action": "업그레이드"
   }
 }

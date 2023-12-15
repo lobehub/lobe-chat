@@ -1,4 +1,4 @@
-# LobeChat Plugin Development
+# Plugin Development Guide
 
 #### TOC
 
