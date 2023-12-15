@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginDetailModal from '@/features/PluginDetailModal';
-import { useToolStore } from '@/store/tool';
+import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
 import { LobeToolType } from '@/types/tool/tool';
 
@@ -32,13 +32,15 @@ const Actions = memo<ActionsProps>(({ identifier, type }) => {
   const plugin = useToolStore(pluginSelectors.getPluginManifestById(identifier));
 
   const [tab, setTab] = useState('info');
+  const hasSettings = pluginHelpers.isSettingSchemaNonEmpty(plugin?.settings);
+
   return (
     <>
       <Flexbox align={'center'} horizontal>
         {installed ? (
           <>
             {isCustomPlugin && <EditCustomPlugin identifier={identifier} />}
-            {plugin?.settings && (
+            {hasSettings && (
               <ActionIcon
                 icon={Settings2}
                 onClick={() => {

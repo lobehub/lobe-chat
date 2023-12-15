@@ -1,5 +1,5 @@
 import { Modal, TabsNav } from '@lobehub/ui';
-import { Divider } from 'antd';
+import { Divider, TabsProps } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
@@ -7,6 +7,7 @@ import useMergeState from 'use-merge-value';
 
 import MobilePadding from '@/components/MobilePadding';
 import PluginSettingsConfig from '@/features/PluginSettings';
+import { pluginHelpers } from '@/store/tool';
 
 import APIs from './APIs';
 import Meta from './Meta';
@@ -28,6 +29,8 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
     });
     const { t } = useTranslation('plugin');
 
+    const hasSettings = pluginHelpers.isSettingSchemaNonEmpty(schema);
+
     return (
       <Modal
         cancelText={t('cancel', { ns: 'common' })}
@@ -46,20 +49,22 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
             <Divider style={{ marginBottom: 0, marginTop: 8 }} />
             <TabsNav
               activeKey={tabKey}
-              items={[
-                {
-                  key: 'info',
-                  label: t('detailModal.tabs.info'),
-                },
-                schema && {
-                  key: 'settings',
-                  label: t('detailModal.tabs.settings'),
-                },
-              ]}
+              items={
+                [
+                  {
+                    key: 'info',
+                    label: t('detailModal.tabs.info'),
+                  },
+                  hasSettings && {
+                    key: 'settings',
+                    label: t('detailModal.tabs.settings'),
+                  },
+                ].filter(Boolean) as TabsProps['items']
+              }
               onChange={setTabKey}
             />
             {tabKey === 'settings' ? (
-              schema && <PluginSettingsConfig id={id} schema={schema} />
+              hasSettings && <PluginSettingsConfig id={id} schema={schema} />
             ) : (
               <APIs id={id} />
             )}
