@@ -2,9 +2,9 @@
   "debug": {
     "arguments": "引数",
     "function_call": "関数呼び出し",
-    "response": "レスポンス",
     "off": "デバッグをオフにする",
-    "on": "プラグイン呼び出し情報を表示する"
+    "on": "プラグイン呼び出し情報を表示する",
+    "response": "レスポンス"
   },
   "detailModal": {
     "info": {
@@ -20,6 +20,11 @@
   },
   "dev": {
     "confirmDeleteDevPlugin": "このローカルプラグインを削除しますか？削除後は元に戻せません。",
+    "customParams": {
+      "useProxy": {
+        "label": "プロキシを使用する（クロスドメインエラーが発生した場合、このオプションを有効にして再インストールしてください）"
+      }
+    },
     "deleteSuccess": "プラグインが正常に削除されました",
     "manifest": {
       "identifier": {
@@ -64,12 +69,9 @@
       },
       "manifest": {
         "desc": "LobeChatはこのリンクを使用してプラグインをインストールします",
-        "jsonInvalid": "マニフェストが規格に準拠していません。検証結果：\n\n{{error}}",
+        "label": "プラグイン記述ファイル (Manifest) URL",
         "preview": "マニフェストのプレビュー",
-        "refresh": "更新",
-        "requestError": "リンクのリクエストに失敗しました。有効なリンクを入力し、クロスオリジンリクエストが許可されているか確認してください",
-        "urlError": "このリンクはJSON形式のコンテンツを返していません。有効なリンクを入力してください",
-        "label": "プラグイン記述ファイル (Manifest) URL"
+        "refresh": "更新"
       },
       "title": {
         "desc": "プラグインのタイトル",
@@ -78,38 +80,38 @@
       }
     },
     "metaConfig": "プラグインのメタ情報の設定",
-    "preview": {
-      "card": "プラグインのプレビュー表示",
-      "desc": "プラグインの説明のプレビュー",
-      "title": "プラグイン名のプレビュー"
-    },
-    "saveSuccess": "プラグインの設定が正常に保存されました",
-    "tabs": {
-      "manifest": "機能のマニフェスト",
-      "meta": "プラグインのメタ情報"
-    },
-    "update": "更新",
-    "updateSuccess": "プラグインの設定が正常に更新されました",
     "modalDesc": "カスタムプラグインを追加すると、プラグインの開発検証に使用したり、セッション中に直接使用したりできます。プラグインの開発については、<1>開発ドキュメント↗</>を参照してください",
     "openai": {
       "importUrl": "URLリンクからインポート",
       "schema": "スキーマ"
     },
+    "preview": {
+      "card": "プラグインのプレビュー表示",
+      "desc": "プラグインの説明のプレビュー",
+      "title": "プラグイン名のプレビュー"
+    },
     "save": "プラグインを保存",
-    "type": {
-      "lobe": "LobeChatプラグイン",
-      "openai": "OpenAIプラグイン"
+    "saveSuccess": "プラグインの設定が正常に保存されました",
+    "tabs": {
+      "manifest": "機能のマニフェスト",
+      "meta": "プラグインのメタ情報"
     },
     "title": {
       "create": "カスタムプラグインを追加",
       "edit": "カスタムプラグインを編集"
-    }
+    },
+    "type": {
+      "lobe": "LobeChatプラグイン",
+      "openai": "OpenAIプラグイン"
+    },
+    "update": "更新",
+    "updateSuccess": "プラグインの設定が正常に更新されました"
   },
   "error": {
-    "installError": "プラグイン {{name}} のインストールに失敗しました",
-    "noManifest": "マニフェストが存在しません",
     "fetchError": "このmanifestリンクのリクエストに失敗しました。リンクが有効であることを確認し、リンクがクロスドメインアクセスを許可しているかを確認してください",
+    "installError": "プラグイン {{name}} のインストールに失敗しました",
     "manifestInvalid": "manifestが仕様に準拠していません。検証結果: \n\n {{error}}",
+    "noManifest": "マニフェストが存在しません",
     "openAPIInvalid": "OpenAPIの解析に失敗しました。エラー: \n\n {{error}}",
     "reinstallError": "プラグイン{{name}}の再インストールに失敗しました",
     "urlError": "このリンクはJSON形式のコンテンツを返していません。有効なリンクであることを確認してください"
@@ -122,8 +124,8 @@
     }
   },
   "loading": {
-    "plugin": "プラグインの実行中...",
-    "content": "プラグインを呼び出しています..."
+    "content": "プラグインを呼び出しています...",
+    "plugin": "プラグインの実行中..."
   },
   "pluginList": "プラグインリスト",
   "plugins": {
@@ -140,18 +142,6 @@
     "title": "プラグインマーケットの設定"
   },
   "store": {
-    "empty": "インストールされたプラグインはありません",
-    "install": "インストール",
-    "installAllPlugins": "すべてのプラグインをインストール",
-    "networkError": "プラグインストアの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
-    "releasedAt": "{{createdAt}} にリリース",
-    "tabs": {
-      "all": "すべて",
-      "installed": "インストール済み"
-    },
-    "title": "プラグインストア",
-    "uninstall": "アンインストール",
-    "placeholder": "プラグイン名、説明、またはキーワードで検索...",
     "actions": {
       "confirmUninstall": "このプラグインをアンインストールします。アンインストール後、プラグインの設定がクリアされます。操作を確認してください。",
       "detail": "詳細",
@@ -160,6 +150,17 @@
       "settings": "設定",
       "uninstall": "アンインストール"
     },
-    "customPlugin": "カスタムプラグイン"
+    "communityPlugin": "コミュニティプラグイン",
+    "customPlugin": "カスタムプラグイン",
+    "empty": "インストールされたプラグインはありません",
+    "installAllPlugins": "すべてのプラグインをインストール",
+    "networkError": "プラグインストアの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
+    "placeholder": "プラグイン名、説明、またはキーワードで検索...",
+    "releasedAt": "{{createdAt}} にリリース",
+    "tabs": {
+      "all": "すべて",
+      "installed": "インストール済み"
+    },
+    "title": "プラグインストア"
   }
 }

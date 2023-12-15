@@ -2,9 +2,9 @@
   "debug": {
     "arguments": "함수 호출 인수",
     "function_call": "함수 호출",
-    "response": "응답",
     "off": "디버그 끄기",
-    "on": "플러그인 호출 정보 보기"
+    "on": "플러그인 호출 정보 보기",
+    "response": "응답"
   },
   "detailModal": {
     "info": {
@@ -20,6 +20,11 @@
   },
   "dev": {
     "confirmDeleteDevPlugin": "로컬 플러그인을 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다.",
+    "customParams": {
+      "useProxy": {
+        "label": "프록시 사용 (크로스 도메인 오류가 발생할 경우 이 옵션을 활성화한 후 다시 설치해 보세요)"
+      }
+    },
     "deleteSuccess": "플러그인이 성공적으로 삭제되었습니다.",
     "manifest": {
       "identifier": {
@@ -64,12 +69,9 @@
       },
       "manifest": {
         "desc": "LobeChat은 이 링크를 통해 플러그인을 설치합니다.",
-        "jsonInvalid": "manifest가 규칙에 맞지 않습니다. 유효성 검사 결과: \n\n {{error}}",
+        "label": "Manifest 파일 URL",
         "preview": "Manifest 미리보기",
-        "refresh": "새로 고침",
-        "requestError": "이 링크를 요청하는 중에 오류가 발생했습니다. 유효한 링크를 입력하고 링크가 크로스 도메인 액세스를 허용하는지 확인해주세요.",
-        "urlError": "이 링크는 JSON 형식의 내용을 반환하지 않습니다. 유효한 링크를 입력해주세요.",
-        "label": "Manifest 파일 URL"
+        "refresh": "새로 고침"
       },
       "title": {
         "desc": "플러그인 제목",
@@ -78,38 +80,38 @@
       }
     },
     "metaConfig": "플러그인 메타 정보 구성",
-    "preview": {
-      "card": "플러그인 미리보기",
-      "desc": "플러그인 설명 미리보기",
-      "title": "플러그인 이름 미리보기"
-    },
-    "saveSuccess": "플러그인 설정이 성공적으로 저장되었습니다.",
-    "tabs": {
-      "manifest": "기능 설명 목록 (Manifest)",
-      "meta": "플러그인 메타 정보"
-    },
-    "update": "업데이트",
-    "updateSuccess": "플러그인 설정이 성공적으로 업데이트되었습니다.",
     "modalDesc": "사용자 정의 플러그인을 추가하면 플러그인 개발을 검증하거나 세션에서 직접 사용할 수 있습니다. 플러그인 개발은 <1>개발 문서↗</>를 참조하세요.",
     "openai": {
       "importUrl": "URL 링크에서 가져오기",
       "schema": "스키마"
     },
+    "preview": {
+      "card": "플러그인 미리보기",
+      "desc": "플러그인 설명 미리보기",
+      "title": "플러그인 이름 미리보기"
+    },
     "save": "플러그인 설치",
-    "type": {
-      "lobe": "LobeChat 플러그인",
-      "openai": "OpenAI 플러그인"
+    "saveSuccess": "플러그인 설정이 성공적으로 저장되었습니다.",
+    "tabs": {
+      "manifest": "기능 설명 목록 (Manifest)",
+      "meta": "플러그인 메타 정보"
     },
     "title": {
       "create": "사용자 정의 플러그인 추가",
       "edit": "사용자 정의 플러그인 편집"
-    }
+    },
+    "type": {
+      "lobe": "LobeChat 플러그인",
+      "openai": "OpenAI 플러그인"
+    },
+    "update": "업데이트",
+    "updateSuccess": "플러그인 설정이 성공적으로 업데이트되었습니다."
   },
   "error": {
-    "installError": "플러그인 {{name}} 설치 실패",
-    "noManifest": "설명 파일이 없습니다",
     "fetchError": "해당 manifest 링크를 요청하는 중 오류가 발생했습니다. 링크의 유효성을 확인하고, 링크가 크로스 도메인 액세스를 허용하는지 확인하세요.",
+    "installError": "플러그인 {{name}} 설치 실패",
     "manifestInvalid": "manifest가 규격에 맞지 않습니다. 유효성 검사 결과: \n\n {{error}}",
+    "noManifest": "설명 파일이 없습니다",
     "openAPIInvalid": "OpenAPI 파싱에 실패했습니다. 오류: \n\n {{error}}",
     "reinstallError": "플러그인 {{name}} 다시 설치 중 오류가 발생했습니다.",
     "urlError": "이 링크는 JSON 형식의 내용을 반환하지 않습니다. 유효한 링크인지 확인하세요."
@@ -122,8 +124,8 @@
     }
   },
   "loading": {
-    "plugin": "플러그인 실행 중...",
-    "content": "플러그인 호출 중..."
+    "content": "플러그인 호출 중...",
+    "plugin": "플러그인 실행 중..."
   },
   "pluginList": "플러그인 목록",
   "plugins": {
@@ -140,18 +142,6 @@
     "title": "플러그인 마켓 설정"
   },
   "store": {
-    "empty": "설치된 플러그인이 없습니다",
-    "install": "설치",
-    "installAllPlugins": "모두 설치",
-    "networkError": "플러그인 스토어를 가져오는 데 실패했습니다. 네트워크 연결을 확인한 후 다시 시도하십시오",
-    "releasedAt": "{{createdAt}}에 출시",
-    "tabs": {
-      "all": "모두",
-      "installed": "설치됨"
-    },
-    "title": "플러그인 스토어",
-    "uninstall": "제거",
-    "placeholder": "플러그인 이름 또는 키워드를 검색하세요...",
     "actions": {
       "confirmUninstall": "이 플러그인을 제거하려고 합니다. 제거하면 플러그인 구성이 지워지므로 작업을 확인하세요.",
       "detail": "상세정보",
@@ -160,6 +150,17 @@
       "settings": "설정",
       "uninstall": "제거"
     },
-    "customPlugin": "사용자 정의 플러그인"
+    "communityPlugin": "커뮤니티 플러그인",
+    "customPlugin": "사용자 정의 플러그인",
+    "empty": "설치된 플러그인이 없습니다",
+    "installAllPlugins": "모두 설치",
+    "networkError": "플러그인 스토어를 가져오는 데 실패했습니다. 네트워크 연결을 확인한 후 다시 시도하십시오",
+    "placeholder": "플러그인 이름 또는 키워드를 검색하세요...",
+    "releasedAt": "{{createdAt}}에 출시",
+    "tabs": {
+      "all": "모두",
+      "installed": "설치됨"
+    },
+    "title": "플러그인 스토어"
   }
 }

@@ -2,9 +2,9 @@
   "debug": {
     "arguments": "Arguments",
     "function_call": "Function Call",
-    "response": "Response",
     "off": "Turn off debug",
-    "on": "View plugin invocation information"
+    "on": "View plugin invocation information",
+    "response": "Response"
   },
   "detailModal": {
     "info": {
@@ -20,6 +20,11 @@
   },
   "dev": {
     "confirmDeleteDevPlugin": "Are you sure you want to delete this local plugin? Once deleted, it cannot be recovered.",
+    "customParams": {
+      "useProxy": {
+        "label": "Install via proxy (if encountering cross-origin access errors, try enabling this option and reinstalling)"
+      }
+    },
     "deleteSuccess": "Plugin deleted successfully",
     "manifest": {
       "identifier": {
@@ -64,13 +69,9 @@
       },
       "manifest": {
         "desc": "LobeChat will install the plugin using this link",
-        "invalid": "The input manifest link is invalid or does not comply with the specification",
-        "urlError": "Please enter a valid URL",
-        "jsonInvalid": "The manifest is not valid, validation result: \n\n {{error}}",
+        "label": "Plugin Description (Manifest) URL",
         "preview": "Preview Manifest",
-        "refresh": "Refresh",
-        "requestError": "Failed to request the link, please enter a valid link and check if the link allows cross-origin access",
-        "label": "Plugin Description (Manifest) URL"
+        "refresh": "Refresh"
       },
       "title": {
         "desc": "The title of the plugin",
@@ -79,77 +80,58 @@
       }
     },
     "metaConfig": "Plugin metadata configuration",
-    "preview": {
-      "card": "Preview of plugin display",
-      "desc": "Preview of plugin description",
-      "title": "Plugin Name Preview"
-    },
-    "saveSuccess": "Plugin settings saved successfully",
-    "tabs": {
-      "manifest": "Function Description Manifest (Manifest)",
-      "meta": "Plugin Metadata"
-    },
-    "update": "Update",
-    "updateSuccess": "Plugin settings updated successfully",
     "modalDesc": "After adding a custom plugin, it can be used for plugin development verification or directly in the session. Please refer to the <1>development documentation↗</> for plugin development.",
     "openai": {
       "importUrl": "Import from URL link",
       "schema": "Schema"
     },
+    "preview": {
+      "card": "Preview of plugin display",
+      "desc": "Preview of plugin description",
+      "title": "Plugin Name Preview"
+    },
     "save": "Install Plugin",
-    "type": {
-      "lobe": "LobeChat Plugin",
-      "openai": "OpenAI Plugin"
+    "saveSuccess": "Plugin settings saved successfully",
+    "tabs": {
+      "manifest": "Function Description Manifest (Manifest)",
+      "meta": "Plugin Metadata"
     },
     "title": {
       "create": "Add Custom Plugin",
       "edit": "Edit Custom Plugin"
-    }
+    },
+    "type": {
+      "lobe": "LobeChat Plugin",
+      "openai": "OpenAI Plugin"
+    },
+    "update": "Update",
+    "updateSuccess": "Plugin settings updated successfully"
   },
   "error": {
-    "installError": "Plugin {{name}} installation failed",
-    "noManifest": "Manifest file does not exist",
     "fetchError": "Failed to fetch the manifest link. Please ensure the link is valid and allows cross-origin access.",
+    "installError": "Plugin {{name}} installation failed",
     "manifestInvalid": "The manifest does not conform to the specification. Validation result: \n\n {{error}}",
+    "noManifest": "Manifest file does not exist",
     "openAPIInvalid": "OpenAPI parsing failed. Error: \n\n {{error}}",
     "reinstallError": "Failed to refresh plugin {{name}}",
     "urlError": "The link did not return content in JSON format. Please ensure it is a valid link."
   },
   "list": {
     "item": {
+      "deprecated.title": "Deleted",
       "local.config": "Configuration",
-      "local.title": "Local",
-      "deprecated.title": "Deleted"
+      "local.title": "Local"
     }
   },
   "loading": {
-    "plugin": "Plugin is running...",
-    "content": "Calling plugin..."
+    "content": "Calling plugin...",
+    "plugin": "Plugin is running..."
   },
   "pluginList": "Plugin List",
   "plugins": {
-    "realtimeWeather": "Realtime Weather",
-    "searchEngine": "Search Engine",
-    "undefined": "Plugin Detection...",
-    "websiteCrawler": "Website Crawler",
     "loading": "Detecting plugins...",
     "unknown": "Unknown Plugin"
   },
-  "realtimeWeather": {
-    "data": {
-      "date": "Date",
-      "daytemp_float": "Daytime Temperature",
-      "dayweather": "Daytime Weather",
-      "daywind": "Daytime Wind",
-      "nighttemp_float": "Nighttime Temperature",
-      "nightweather": "Nighttime Weather",
-      "nightwind": "Nighttime Wind",
-      "week": "Week"
-    },
-    "title": "Weather Data for the Next 7 Days ({{city}})",
-    "updateAt": "Last Updated"
-  },
-  "responseData": "Response Data",
   "setting": "Plugin Settings",
   "settings": {
     "indexUrl": {
@@ -160,18 +142,6 @@
     "title": "Configure Plugin Marketplace"
   },
   "store": {
-    "empty": "No installed plugins yet",
-    "install": "Install",
-    "installAllPlugins": "Install All",
-    "networkError": "Failed to fetch plugin store. Please check your network connection and try again",
-    "releasedAt": "Released at {{createdAt}}",
-    "tabs": {
-      "all": "All",
-      "installed": "Installed"
-    },
-    "title": "Plugin Store",
-    "uninstall": "Uninstall",
-    "placeholder": "Search for plugin name, description, or keyword...",
     "actions": {
       "confirmUninstall": "The plugin is about to be uninstalled. After uninstalling, the plugin configuration will be cleared. Please confirm your operation.",
       "detail": "Details",
@@ -180,6 +150,17 @@
       "settings": "Settings",
       "uninstall": "Uninstall"
     },
-    "customPlugin": "Custom Plugin"
+    "communityPlugin": "Third-party",
+    "customPlugin": "Custom Plugin",
+    "empty": "No installed plugins yet",
+    "installAllPlugins": "Install All",
+    "networkError": "Failed to fetch plugin store. Please check your network connection and try again",
+    "placeholder": "Search for plugin name, description, or keyword...",
+    "releasedAt": "Released at {{createdAt}}",
+    "tabs": {
+      "all": "All",
+      "installed": "Installed"
+    },
+    "title": "Plugin Store"
   }
 }

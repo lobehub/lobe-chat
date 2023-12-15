@@ -2,9 +2,9 @@
   "debug": {
     "arguments": "參數",
     "function_call": "函式呼叫",
-    "response": "回應",
     "off": "關閉偵錯",
-    "on": "查看插件呼叫資訊"
+    "on": "查看插件呼叫資訊",
+    "response": "回應"
   },
   "detailModal": {
     "info": {
@@ -20,6 +20,11 @@
   },
   "dev": {
     "confirmDeleteDevPlugin": "您確定要刪除此本機外掛嗎？一旦刪除，將無法復原。",
+    "customParams": {
+      "useProxy": {
+        "label": "透過代理安裝（若遇到跨域訪問錯誤，可嘗試開啟該選項後重新安裝）"
+      }
+    },
     "deleteSuccess": "外掛已成功刪除",
     "manifest": {
       "identifier": {
@@ -64,13 +69,9 @@
       },
       "manifest": {
         "desc": "LobeChat 會使用此連結安裝外掛",
-        "invalid": "輸入的 manifest 連結不正確或不符合標準",
-        "urlError": "請輸入有效的網址",
-        "jsonInvalid": "manifest 不正確，驗證結果：\n\n {{error}}",
+        "label": "插件描述檔 (Manifest) URL",
         "preview": "預覽 Manifest",
-        "refresh": "重新載入",
-        "requestError": "連結請求失敗，請確認網址是否正確且允許跨域存取",
-        "label": "插件描述檔 (Manifest) URL"
+        "refresh": "重新載入"
       },
       "title": {
         "desc": "外掛的名稱",
@@ -79,77 +80,58 @@
       }
     },
     "metaConfig": "外掛後設資料設定",
-    "preview": {
-      "card": "外掛顯示預覽",
-      "desc": "外掛描述預覽",
-      "title": "外掛名稱預覽"
-    },
-    "saveSuccess": "外掛設定已成功儲存",
-    "tabs": {
-      "manifest": "功能描述清單 (Manifest)",
-      "meta": "外掛後設資料"
-    },
-    "update": "更新",
-    "updateSuccess": "外掛設定已成功更新",
     "modalDesc": "添加自訂插件後，可用於插件開發驗證，也可直接在會話中使用。插件開發請參考<1>開發文件↗</>",
     "openai": {
       "importUrl": "從 URL 連結匯入",
       "schema": "Schema"
     },
+    "preview": {
+      "card": "外掛顯示預覽",
+      "desc": "外掛描述預覽",
+      "title": "外掛名稱預覽"
+    },
     "save": "安裝插件",
-    "type": {
-      "lobe": "LobeChat 插件",
-      "openai": "OpenAI 插件"
+    "saveSuccess": "外掛設定已成功儲存",
+    "tabs": {
+      "manifest": "功能描述清單 (Manifest)",
+      "meta": "外掛後設資料"
     },
     "title": {
       "create": "新增自訂插件",
       "edit": "編輯自訂插件"
-    }
+    },
+    "type": {
+      "lobe": "LobeChat 插件",
+      "openai": "OpenAI 插件"
+    },
+    "update": "更新",
+    "updateSuccess": "外掛設定已成功更新"
   },
   "error": {
-    "installError": "插件 {{name}} 安裝失敗",
-    "noManifest": "描述檔不存在",
     "fetchError": "請求該 manifest 連結失敗，請確保連結的有效性，並檢查連結是否允許跨域訪問",
+    "installError": "插件 {{name}} 安裝失敗",
     "manifestInvalid": "manifest 不符合規範，校驗結果: \n\n {{error}}",
+    "noManifest": "描述檔不存在",
     "openAPIInvalid": "OpenAPI 解析失敗，錯誤: \n\n {{error}}",
     "reinstallError": "插件 {{name}} 刷新失敗",
     "urlError": "該連結沒有返回 JSON 格式的內容, 請確保是有效的連結"
   },
   "list": {
     "item": {
+      "deprecated.title": "已刪除",
       "local.config": "設定",
-      "local.title": "本機",
-      "deprecated.title": "已刪除"
+      "local.title": "本機"
     }
   },
   "loading": {
-    "plugin": "外掛執行中...",
-    "content": "呼叫插件中..."
+    "content": "呼叫插件中...",
+    "plugin": "外掛執行中..."
   },
   "pluginList": "外掛清單",
   "plugins": {
-    "realtimeWeather": "即時天氣",
-    "searchEngine": "搜尋引擎",
-    "undefined": "正在偵測外掛...",
-    "websiteCrawler": "網站爬蟲",
     "loading": "插件檢測中...",
     "unknown": "未知插件"
   },
-  "realtimeWeather": {
-    "data": {
-      "date": "日期",
-      "daytemp_float": "日間溫度",
-      "dayweather": "日間天氣",
-      "daywind": "日間風向",
-      "nighttemp_float": "夜間溫度",
-      "nightweather": "夜間天氣",
-      "nightwind": "夜間風向",
-      "week": "週"
-    },
-    "title": "未來 7 天的天氣資料 ({{city}})",
-    "updateAt": "最後更新時間"
-  },
-  "responseData": "回應資料",
   "setting": "插件設置",
   "settings": {
     "indexUrl": {
@@ -160,18 +142,6 @@
     "title": "設定外掛市集"
   },
   "store": {
-    "empty": "暫無已安裝插件",
-    "install": "安裝",
-    "installAllPlugins": "安裝全部",
-    "networkError": "獲取插件商店失敗，請檢查網路連線後重試",
-    "releasedAt": "發佈於 {{createdAt}}",
-    "tabs": {
-      "all": "全部",
-      "installed": "已安裝"
-    },
-    "title": "插件商店",
-    "uninstall": "解除安裝",
-    "placeholder": "搜尋插件名稱介紹或關鍵字...",
     "actions": {
       "confirmUninstall": "即將卸載該插件，卸載後將清除該插件配置，請確認你的操作",
       "detail": "詳情",
@@ -180,6 +150,17 @@
       "settings": "設定",
       "uninstall": "卸載"
     },
-    "customPlugin": "自訂插件"
+    "communityPlugin": "社群外掛",
+    "customPlugin": "自訂插件",
+    "empty": "暫無已安裝插件",
+    "installAllPlugins": "安裝全部",
+    "networkError": "獲取插件商店失敗，請檢查網路連線後重試",
+    "placeholder": "搜尋插件名稱介紹或關鍵字...",
+    "releasedAt": "發佈於 {{createdAt}}",
+    "tabs": {
+      "all": "全部",
+      "installed": "已安裝"
+    },
+    "title": "插件商店"
   }
 }
