@@ -22,7 +22,7 @@ export default {
     confirmDeleteDevPlugin: '即将删除该本地插件，删除后将无法找回，是否删除该插件？',
     customParams: {
       useProxy: {
-        label: '使用代理请求安装插件（如错误提示跨域访问，可开启后重试）',
+        label: '通过代理安装（如遇到跨域访问错误，可尝试开启该选项后重新安装）',
       },
     },
     deleteSuccess: '插件删除成功',

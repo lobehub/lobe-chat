@@ -1,13 +1,9 @@
 import {
-  LobeChatPluginApi,
   LobeChatPluginManifest,
   LobeChatPluginsMarketIndex,
-  PluginSchema,
-  pluginApiSchema,
   pluginManifestSchema,
 } from '@lobehub/chat-plugin-sdk';
-import { uniq } from 'lodash-es';
-import { convertParametersToJSONSchema } from 'openapi-jsonschema-parameters';
+import { OpenAPIConvertor } from '@lobehub/chat-plugin-sdk/openapi';
 import YAML from 'yaml';
 
 import { getPluginIndexJSON } from '@/const/url';
@@ -17,7 +13,6 @@ import { globalHelpers } from '@/store/global/helpers';
 import { OpenAIPluginManifest } from '@/types/openai/plugin';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
-import { merge } from '@/utils/merge';
 
 export interface InstallPluginParams {
   identifier: string;
@@ -99,10 +94,11 @@ class PluginService {
       const openapiJson = await this._fetchJSON(parser.data.openapi, useProxy);
 
       try {
-        const openAPIs = await this.convertOpenAPIToPluginSchema(openapiJson);
+        const convertor = new OpenAPIConvertor(openapiJson);
+        const openAPIs = await convertor.convertOpenAPIToPluginSchema();
         data.api = [...data.api, ...openAPIs];
 
-        data.settings = await this.convertAuthToSettingsSchema(openapiJson, data.settings);
+        data.settings = await convertor.convertAuthToSettingsSchema(data.settings);
       } catch (error) {
         throw new TypeError('openAPIInvalid', { cause: error });
       }
@@ -141,151 +137,6 @@ class PluginService {
   async updatePluginSettings(id: string, settings: any) {
     return PluginModel.update(id, { settings });
   }
-
-  convertOpenAPIToPluginSchema = async (openApiJson: object) => {
-    // @ts-ignore
-    const { default: SwaggerClient } = await import('swagger-client');
-
-    // 使用 SwaggerClient 解析 OpenAPI JSON
-    const openAPI = await SwaggerClient.resolve({ spec: openApiJson });
-
-    const api = openAPI.spec;
-    const paths = api.paths;
-    const methods = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'];
-
-    const plugins: LobeChatPluginApi[] = [];
-
-    for (const [path, operations] of Object.entries(paths)) {
-      for (const method of methods) {
-        const operation = (operations as any)[method];
-        if (operation) {
-          const schemas = convertParametersToJSONSchema(operation.parameters || []);
-
-          let parameters = { properties: {}, type: 'object' };
-          for (const schema of Object.values(schemas)) {
-            parameters = merge(parameters, schema);
-          }
-
-          // 保留原始逻辑作为备选
-          const name = operation.operationId || `${method.toUpperCase()} ${path}`;
-
-          const description = operation.summary || operation.description || name;
-
-          const plugin = { description, name, parameters } as LobeChatPluginApi;
-
-          const res = pluginApiSchema.safeParse(plugin);
-          if (res.success) plugins.push(plugin);
-          else {
-            throw res.error;
-          }
-        }
-      }
-    }
-
-    return plugins;
-  };
-
-  convertAuthToSettingsSchema = async (
-    openApiJson: any,
-    // eslint-disable-next-line unicorn/no-object-as-default-parameter
-    rawSettingsSchema: PluginSchema = { properties: {}, type: 'object' },
-  ): Promise<PluginSchema> => {
-    let settingsSchema = rawSettingsSchema;
-
-    // @ts-ignore
-    const { default: SwaggerClient } = await import('swagger-client');
-
-    // 使用 SwaggerClient 解析 OpenAPI JSON
-    const openAPI = await SwaggerClient.resolve({ spec: openApiJson });
-    const api = openAPI.spec;
-
-    for (const entry of Object.entries(api.components?.securitySchemes || {})) {
-      let authSchema = {} as PluginSchema;
-      const [key, value] = entry as [string, any];
-
-      switch (value.type) {
-        case 'apiKey': {
-          authSchema = {
-            properties: {
-              [key]: {
-                description: value.description || `${key} API Key`,
-                format: 'password',
-                title: value.name,
-                type: 'string',
-              },
-            },
-            required: [key],
-            type: 'object',
-          };
-          break;
-        }
-        case 'http': {
-          if (value.scheme === 'basic') {
-            authSchema = {
-              properties: {
-                [key]: {
-                  description: 'Basic authentication credentials',
-                  format: 'password',
-                  type: 'string',
-                },
-              },
-              required: [key],
-              type: 'object',
-            };
-          } else if (value.scheme === 'bearer') {
-            authSchema = {
-              properties: {
-                [key]: {
-                  description: value.description || `${key} Bearer token`,
-                  format: 'password',
-                  title: key,
-                  type: 'string',
-                },
-              },
-              required: [key],
-              type: 'object',
-            };
-          }
-          break;
-        }
-        case 'oauth2': {
-          authSchema = {
-            properties: {
-              [`${key}_clientId`]: {
-                description: 'Client ID for OAuth2',
-                type: 'string',
-              },
-              [`${key}_clientSecret`]: {
-                description: 'Client Secret for OAuth2',
-                format: 'password',
-                type: 'string',
-              },
-              [`${key}_accessToken`]: {
-                description: 'Access token for OAuth2',
-                format: 'password',
-                type: 'string',
-              },
-            },
-            required: [`${key}_clientId`, `${key}_clientSecret`, `${key}_accessToken`],
-            type: 'object',
-          };
-          break;
-        }
-      }
-
-      // 合并当前鉴权机制的 schema 到 settingsSchema
-      settingsSchema.properties = merge(settingsSchema.properties, authSchema.properties);
-
-      if (authSchema.required) {
-        settingsSchema.required = uniq([
-          ...(settingsSchema.required || []),
-          ...authSchema.required,
-        ]);
-      }
-    }
-
-    return settingsSchema;
-  };
 
   private convertOpenAIManifestToLobeManifest = (
     data: OpenAIPluginManifest,
