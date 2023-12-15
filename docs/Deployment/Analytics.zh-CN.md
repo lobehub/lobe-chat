@@ -2,6 +2,11 @@
 
 为更好地帮助分析 LobeChat 的用户使用情况，我们在 LobeChat 中集成了若干免费 / 开源的数据统计服务，用于收集用户的使用情况，你可以按需开启。
 
+#### TOC
+
+- [Vercel Analytics](#vercel-analytics)
+- [🚧 Posthog](#-posthog)
+
 ## Vercel Analytics
 
 [Vercel Analytics](https://vercel.com/analytics) 是 Vercel 推出的一款数据分析服务，它可以帮助你收集网站的访问情况，包括访问量、访问来源、访问设备等等。

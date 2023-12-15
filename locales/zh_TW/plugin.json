@@ -123,6 +123,7 @@
       "installed": "已安裝"
     },
     "title": "插件商店",
-    "uninstall": "卸載"
+    "uninstall": "卸載",
+    "placeholder": "搜尋插件名稱介紹或關鍵字..."
   }
 }

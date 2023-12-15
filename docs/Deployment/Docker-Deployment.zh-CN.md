@@ -6,6 +6,13 @@
 
 我们提供了 [Docker 镜像][docker-release-link]，供你在自己的私有设备上部署 LobeChat 服务
 
+#### TOC
+
+- [安装 Docker 容器环境](#安装-docker-容器环境)
+- [部署容器镜像](#部署容器镜像)
+  - [`A` 指令部署（推荐）](#a-指令部署推荐)
+  - [`B` Docker Compose](#b-docker-compose)
+
 ## 安装 Docker 容器环境
 
 如果已安装，请跳过此步

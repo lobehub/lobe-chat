@@ -2,6 +2,114 @@
 
 # Changelog
 
+### [Version 0.111.5](https://github.com/lobehub/lobe-chat/compare/v0.111.4...v0.111.5)
+
+<sup>Released on **2023-12-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Wrong locale language in en_US.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Wrong locale language in en_US, closes [#660](https://github.com/lobehub/lobe-chat/issues/660) ([e1c31ee](https://github.com/lobehub/lobe-chat/commit/e1c31ee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.111.4](https://github.com/lobehub/lobe-chat/compare/v0.111.3...v0.111.4)
+
+<sup>Released on **2023-12-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Revert "🐛 fix: clean up gpt-3.5 model".
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Revert "🐛 fix: clean up gpt-3.5 model", closes [#653](https://github.com/lobehub/lobe-chat/issues/653) ([b8b14fc](https://github.com/lobehub/lobe-chat/commit/b8b14fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.111.3](https://github.com/lobehub/lobe-chat/compare/v0.111.2...v0.111.3)
+
+<sup>Released on **2023-12-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the history-count text.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the history-count text, closes [#615](https://github.com/lobehub/lobe-chat/issues/615) ([4db1cef](https://github.com/lobehub/lobe-chat/commit/4db1cef))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.111.2](https://github.com/lobehub/lobe-chat/compare/v0.111.1...v0.111.2)
+
+<sup>Released on **2023-12-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Change topic-deletion hotkey.
+
+#### 💄 Styles
+
+- **misc**: Fix image display in safari (fix.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Change topic-deletion hotkey, closes [#616](https://github.com/lobehub/lobe-chat/issues/616) ([912ff45](https://github.com/lobehub/lobe-chat/commit/912ff45))
+
+#### Styles
+
+- **misc**: Fix image display in safari (fix, closes [#571](https://github.com/lobehub/lobe-chat/issues/571) ([4beefa7](https://github.com/lobehub/lobe-chat/commit/4beefa7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.111.1](https://github.com/lobehub/lobe-chat/compare/v0.111.0...v0.111.1)
 
 <sup>Released on **2023-12-13**</sup>

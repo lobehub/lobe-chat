@@ -6,6 +6,13 @@
 
 We provide [Docker Images][docker-release-link] for you to deploy LobeChat service on your private device.
 
+#### TOC
+
+- [Install Docker container environment](#install-docker-container-environment)
+- [Deploy container image](#deploy-container-image)
+  - [`A` Command deployment (recommended)](#a-command-deployment-recommended)
+  - [`B` Docker Compose](#b-docker-compose)
+
 ## Install Docker container environment
 
 If already installed, skip this step.

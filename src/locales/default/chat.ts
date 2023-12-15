@@ -44,7 +44,7 @@ export default {
     prettifying: '润色中...',
   },
   temp: '临时',
-  tokenDetail: '角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}',
+  tokenDetail: '角色设定: {{systemRoleToken}} · 会话消息: {{chatsToken}}',
   tokenTag: {
     overload: '超过限制',
     remained: '剩余',

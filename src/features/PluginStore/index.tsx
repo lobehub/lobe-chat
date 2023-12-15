@@ -1,8 +1,9 @@
-import { Icon, Modal, SpotlightCard, TabsNav } from '@lobehub/ui';
-import { Button, Empty } from 'antd';
+import { Icon, Modal, SearchBar } from '@lobehub/ui';
+import { Button, Empty, Segmented } from 'antd';
+import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ServerCrash } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -13,13 +14,24 @@ import { pluginStoreSelectors } from '@/store/tool/selectors';
 import Loading from './Loading';
 import PluginItem from './PluginItem';
 
+const useStyles = createStyles(({ css, token }) => ({
+  header: css`
+    color: ${token.colorTextDescription};
+
+    > div {
+      flex: 1;
+    }
+  `,
+}));
+
 interface PluginStoreProps {
   open?: boolean;
   setOpen: (open: boolean) => void;
 }
 export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
+  const [keywords, setKeywords] = useState<string>();
   const { t } = useTranslation('plugin');
-
+  const { styles } = useStyles();
   const [listType, useFetchPluginList, installPlugins] = useToolStore((s) => [
     s.listType,
     s.useFetchPluginStore,
@@ -43,28 +55,19 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
       <MobilePadding>
         <Center>
           <Flexbox gap={24} width={'100%'}>
-            <Flexbox align={'center'} horizontal justify={'space-between'}>
-              <TabsNav
-                activeKey={listType}
-                items={[
-                  { key: 'all', label: t('store.tabs.all') },
-                  { key: 'installed', label: t('store.tabs.installed') },
-                ]}
+            <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
+              <Segmented
+                block
                 onChange={(v) => {
                   useToolStore.setState({ listType: v as any });
                 }}
+                options={[
+                  { label: t('store.tabs.all'), value: 'all' },
+                  { label: t('store.tabs.installed'), value: 'installed' },
+                ]}
+                style={{ flex: 1 }}
+                value={listType}
               />
-              <Flexbox gap={8} horizontal>
-                {listType === 'all' && (
-                  <Button
-                    onClick={() => {
-                      installPlugins(pluginStoreList.map((item) => item.identifier));
-                    }}
-                  >
-                    {t('store.installAllPlugins')}
-                  </Button>
-                )}
-              </Flexbox>
             </Flexbox>
             {isLoading ? (
               <Loading />
@@ -83,7 +86,37 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
                 )}
               </Center>
             ) : (
-              <SpotlightCard columns={2} gap={16} items={pluginStoreList} renderItem={PluginItem} />
+              <>
+                <Flexbox className={styles.header} gap={8} horizontal>
+                  <SearchBar
+                    allowClear
+                    onChange={(e) => setKeywords(e.target.value)}
+                    placeholder={t('store.placeholder')}
+                    type={'block'}
+                    value={keywords}
+                  />
+                  {listType === 'all' && (
+                    <Button
+                      onClick={() => {
+                        installPlugins(pluginStoreList.map((item) => item.identifier));
+                      }}
+                    >
+                      {t('store.installAllPlugins')}
+                    </Button>
+                  )}
+                </Flexbox>
+
+                {pluginStoreList
+                  .filter((item) =>
+                    [item.meta.title, item.meta.description, item.author, ...(item.meta.tags || [])]
+                      .join('')
+                      .toLowerCase()
+                      .includes((keywords || '')?.toLowerCase()),
+                  )
+                  .map((item) => (
+                    <PluginItem key={item.identifier} {...item} />
+                  ))}
+              </>
             )}
           </Flexbox>
         </Center>

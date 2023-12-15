@@ -274,7 +274,7 @@ If you want more people to use your plugin, you are welcome to submit it for rev
 - **📘 Pluging SDK Docs**: <https://chat-plugin-sdk.lobehub.com>
 - **🚀 chat-plugin-template**: <https://github.com/lobehub/chat-plugin-template>
 - **🧩 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugin-sdk>
-- **🚪 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugin-gateway>
+- **🚪 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugins-gateway>
 - **🏪 lobe-chat-plugins**: <https://github.com/lobehub/lobe-chat-plugins>
 
 <!-- LINK GROUP -->
