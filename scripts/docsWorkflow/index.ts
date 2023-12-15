@@ -9,6 +9,7 @@ import { genMdLink, getTitle, updateDocs } from './utils';
 
 const run = async () => {
   consola.info(`Find ${docsFiles.length} entry doc files`);
+  console.log("HELLO WIRKD")
   const docs: any = await pMap(toc, async (item) => {
     const childrenFiles = docsFiles.filter((file) => file.includes(resolve(DOCS_DIR, item.dir)));
 
