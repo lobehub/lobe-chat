@@ -91,7 +91,10 @@ const enabledSchema =
       )
       .flatMap((manifest) =>
         manifest.api.map((m) => {
-          const pluginType = manifest.type ? `${PLUGIN_SCHEMA_SEPARATOR + manifest.type}` : '';
+          const pluginType =
+            manifest.type && manifest.type !== 'default'
+              ? `${PLUGIN_SCHEMA_SEPARATOR + manifest.type}`
+              : '';
 
           // 将插件的 identifier 作为前缀，避免重复
           let apiName = manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + m.name + pluginType;
