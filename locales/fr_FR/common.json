@@ -3,28 +3,28 @@
   "advanceSettings": "Paramètres avancés",
   "agentMaxToken": "Longueur maximale de la session",
   "agentModel": "Modèle",
-  "agentProfile": "Profil de l'assistant",
+  "agentProfile": "Profil de l'agent",
   "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
   "archive": "Archiver",
   "autoGenerate": "Générer automatiquement",
-  "autoGenerateTooltip": "Générer automatiquement la description de l'assistant basée sur les suggestions",
+  "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
   "close": "Fermer",
-  "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet assistant. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
+  "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
   "copy": "Copier",
   "copySuccess": "Copie réussie",
-  "defaultAgent": "Assistant par défaut",
+  "defaultAgent": "Agent par défaut",
   "defaultSession": "Session par défaut",
   "delete": "Supprimer",
   "edit": "Modifier",
   "export": "Exporter",
   "exportType": {
-    "agent": "Exporter les paramètres de l'assistant",
-    "agentWithMessage": "Exporter l'assistant et les messages",
-    "all": "Exporter les paramètres globaux et toutes les données des assistants",
-    "allAgent": "Exporter tous les paramètres de l'assistant",
-    "allAgentWithMessage": "Exporter tous les assistants et les messages",
+    "agent": "Exporter les paramètres de l'agent",
+    "agentWithMessage": "Exporter l'agent et les messages",
+    "all": "Exporter les paramètres globaux et toutes les données des agents",
+    "allAgent": "Exporter tous les paramètres de l'agent",
+    "allAgentWithMessage": "Exporter tous les agents et les messages",
     "globalSetting": "Exporter les paramètres globaux"
   },
   "feedback": "Retour d'information et suggestions",
@@ -42,7 +42,7 @@
       "added": "Importation réussie",
       "errors": "Erreurs d'importation",
       "messages": "Messages",
-      "sessions": "Assistants",
+      "sessions": "Agents",
       "skips": "Éléments ignorés en double",
       "topics": "Sujets",
       "type": "Type de données"
@@ -80,10 +80,10 @@
     "setting": "Paramètre"
   },
   "temp": "Temporaire",
-  "updateAgent": "Mettre à jour les informations de l'assistant",
+  "updateAgent": "Mettre à jour les informations de l'agent",
   "upgradeVersion": {
-    "action": "Mettre à jour maintenant",
     "hasNew": "Nouvelle mise à jour disponible",
-    "newVersion": "Nouvelle version disponible : {{version}}"
+    "newVersion": "Nouvelle version disponible : {{version}}",
+    "action": "Mettre à jour"
   }
 }
