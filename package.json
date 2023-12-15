@@ -74,7 +74,7 @@
     "@ant-design/icons": "^5",
     "@icons-pack/react-simple-icons": "^9",
     "@lobehub/chat-plugin-sdk": "latest",
-    "@lobehub/chat-plugins-gateway": "latest",
+    "@lobehub/chat-plugins-gateway": "1.8.1",
     "@lobehub/tts": "latest",
     "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",
