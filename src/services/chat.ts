@@ -148,6 +148,8 @@ class ChatService {
         useToolStore.getState(),
       );
 
+      if (!toolsSystemRoles) return;
+
       if (systemMessage) {
         systemMessage.content = systemMessage.content + '\n\n' + toolsSystemRoles;
       } else {

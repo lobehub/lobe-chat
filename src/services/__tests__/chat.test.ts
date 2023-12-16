@@ -387,6 +387,39 @@ The user provides you with a URL and keyword and this gives you the robots.txt, 
           undefined,
         );
       });
+
+      it('not update system role without tool', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        const messages = [
+          { role: 'system', content: 'system' },
+          {
+            role: 'user',
+            content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n',
+          },
+        ] as ChatMessage[];
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-3.5-turbo-1106',
+          top_p: 1,
+          plugins: ['ttt'],
+        });
+
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            model: 'gpt-3.5-turbo-1106',
+            top_p: 1,
+            messages: [
+              {
+                content: 'system',
+                role: 'system',
+              },
+              { content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n', role: 'user' },
+            ],
+          },
+          undefined,
+        );
+      });
     });
   });
 

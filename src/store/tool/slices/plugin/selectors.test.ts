@@ -83,6 +83,26 @@ describe('pluginSelectors', () => {
       expect(result).toEqual([{ name: 'plugin-4____api-4____standalone' }]);
     });
 
+    it('enabledSchema should return md5 hash apiName', () => {
+      const result = pluginSelectors.enabledSchema(['long-long-plugin-with-id'])({
+        ...mockState,
+        installedPlugins: [
+          ...mockState.installedPlugins,
+          {
+            identifier: 'long-long-plugin-with-id',
+            manifest: {
+              identifier: 'long-long-plugin-with-id',
+              api: [{ name: 'long-long-manifest-long-long-apiName' }],
+            },
+            type: 'plugin',
+          },
+        ],
+      } as ToolStoreState);
+      expect(result).toEqual([
+        { name: 'long-long-plugin-with-id____MD5HASH_396eae4c671da3fb642c49ad2b9e8790' },
+      ]);
+    });
+
     it('enabledSchema should return empty', () => {
       const result = pluginSelectors.enabledSchema([])(mockState);
       expect(result).toEqual([]);
