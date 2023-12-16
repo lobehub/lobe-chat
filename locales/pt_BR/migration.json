@@ -1,0 +1,45 @@
+{
+  "dbV1": {
+    "action": {
+      "clearDB": "Limpar banco de dados",
+      "downloadBackup": "Baixar backup",
+      "reUpgrade": "Reinstalar",
+      "start": "Começar",
+      "upgrade": "Atualização"
+    },
+    "clear": {
+      "confirm": "Você está prestes a limpar os dados locais (as configurações globais não serão afetadas). Por favor, confirme se você fez o download do backup dos dados."
+    },
+    "description": "Na nova versão, o armazenamento de dados do LobeChat deu um salto significativo. Portanto, precisamos atualizar os dados da versão anterior para proporcionar uma experiência de uso melhor para você.",
+    "features": {
+      "capability": {
+        "desc": "Baseado na tecnologia IndexedDB, capaz de armazenar todas as suas mensagens de conversa ao longo da vida.",
+        "title": "Alta capacidade"
+      },
+      "performance": {
+        "desc": "Índice automático de milhões de mensagens, com resposta em milissegundos para consultas.",
+        "title": "Alto desempenho"
+      },
+      "use": {
+        "desc": "Suporte à pesquisa de títulos, descrições, tags, conteúdo das mensagens e até mesmo texto traduzido, aumentando significativamente a eficiência da busca diária.",
+        "title": "Mais fácil de usar"
+      }
+    },
+    "title": "Evolução dos dados do LobeChat",
+    "upgrade": {
+      "error": {
+        "subTitle": "Lamentamos muito, ocorreu um erro durante o processo de atualização do banco de dados. Por favor, tente as seguintes soluções: A. Limpar os dados locais e importar novamente os dados de backup; B. Clicar no botão 'Reinstalar'.<br><br> Se o erro persistir, por favor <1>envie um problema</1>, iremos ajudá-lo a resolver o problema o mais rápido possível.",
+        "title": "Falha na atualização do banco de dados"
+      },
+      "success": {
+        "subTitle": "O banco de dados do LobeChat foi atualizado para a versão mais recente. Comece a usar agora mesmo!",
+        "title": "Atualização do banco de dados bem-sucedida"
+      }
+    },
+    "upgradeTip": "A atualização geralmente leva de 10 a 20 segundos. Durante o processo de atualização, por favor, não feche o LobeChat."
+  },
+  "migrateError": {
+    "missVersion": "O arquivo de importação está sem o número da versão. Por favor, verifique o arquivo e tente novamente.",
+    "noMigration": "Não foi encontrado um plano de migração correspondente à versão atual. Por favor, verifique o número da versão e tente novamente. Se o problema persistir, por favor, envie um relatório de problema."
+  }
+}

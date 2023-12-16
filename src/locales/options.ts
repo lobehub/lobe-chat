@@ -29,17 +29,29 @@ export const localeOptions: LocaleOptions = [
     value: 'ko-KR',
   },
   {
-    label: 'Russian',
-    value: 'ru-RU',
+    label: 'Deutsch',
+    value: 'de-DE',
+  },
+  {
+    label: 'Español',
+    value: 'es-ES',
   },
   {
     label: 'Français',
     value: 'fr-FR',
   },
   {
+    label: 'Português',
+    value: 'pt-BR',
+  },
+  {
+    label: 'Russian',
+    value: 'ru-RU',
+  },
+  {
     label: 'Turkish',
     value: 'tr-TR',
-  }
+  },
 ] as LocaleOptions;
 
 export const supportLangs: string[] = localeOptions.map((i) => i.value);

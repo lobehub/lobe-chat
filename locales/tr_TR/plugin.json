@@ -96,7 +96,10 @@
       "manifest": "Manifest Tanımı",
       "meta": "Eklenti Meta Verileri"
     },
-    "title": "Eklenti Ekle",
+    "title": {
+      "create": "Özel Eklenti Ekle",
+      "edit": "Özel Eklentiyi Düzenle"
+    },
     "type": {
       "lobe": "LobeChat Eklentisi",
       "openai": "OpenAI Eklentisi"
