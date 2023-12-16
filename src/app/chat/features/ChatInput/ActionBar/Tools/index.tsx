@@ -2,7 +2,7 @@ import { ActionIcon, Avatar, Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ArrowRight, PencilRuler, Store, ToyBrick } from 'lucide-react';
+import { ArrowRight, Blocks, Store, ToyBrick } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -103,10 +103,10 @@ const Tools = memo(() => {
             e.domEvent.preventDefault();
           },
         }}
-        placement={'topLeft'}
+        placement={'top'}
         trigger={['click']}
       >
-        <ActionIcon icon={PencilRuler} placement={'bottom'} title={t('tools.title')} />
+        <ActionIcon icon={Blocks} placement={'bottom'} title={t('tools.title')} />
       </Dropdown>
       <PluginStore open={open} setOpen={setOpen} />
     </>

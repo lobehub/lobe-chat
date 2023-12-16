@@ -3,7 +3,7 @@
     "clear": {
       "action": "Effacer immédiatement",
       "confirm": "Confirmer la suppression de toutes les données de chat ?",
-      "desc": "Cela supprimera toutes les données de session, y compris les assistants, les fichiers, les messages, les plugins, etc.",
+      "desc": "Cela supprimera toutes les données de session, y compris les agents, les fichiers, les messages, les plugins, etc.",
       "success": "Tous les messages de session ont été effacés",
       "title": "Effacer tous les messages de session"
     },
@@ -106,11 +106,11 @@
       "title": "Couleur de fond"
     },
     "description": {
-      "placeholder": "Veuillez saisir la description de l'assistant",
-      "title": "Description de l'assistant"
+      "placeholder": "Veuillez saisir la description de l'agent",
+      "title": "Description de l'agent"
     },
     "name": {
-      "placeholder": "Veuillez saisir le nom de l'assistant",
+      "placeholder": "Veuillez saisir le nom de l'agent",
       "title": "Nom"
     },
     "prompt": {
@@ -121,7 +121,7 @@
       "placeholder": "Veuillez saisir l'étiquette",
       "title": "Étiquette"
     },
-    "title": "Informations sur l'assistant"
+    "title": "Informations sur l'agent"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -240,7 +240,7 @@
       "title": "Service de synthèse vocale"
     },
     "voice": {
-      "desc": "Choisissez une voix pour l'assistant actuel, les services TTS prennent en charge des voix différentes",
+      "desc": "Choisissez une voix pour l'agent actuel, les services TTS prennent en charge des voix différentes",
       "preview": "Prévisualisation de la voix",
       "title": "Voix de synthèse vocale"
     }
@@ -274,14 +274,14 @@
     "title": "Paramètres du thème"
   },
   "submitAgentModal": {
-    "button": "Soumettre l'assistant",
-    "identifier": "Identifiant de l'assistant",
-    "metaMiss": "Veuillez compléter les informations de l'assistant avant de soumettre. Elles doivent inclure le nom, la description et les balises.",
-    "placeholder": "Veuillez entrer l'identifiant de l'assistant, qui doit être unique, par exemple développement-web",
-    "tooltips": "Partager sur le marché des assistants"
+    "button": "Soumettre l'agent",
+    "identifier": "Identifiant de l'agent",
+    "metaMiss": "Veuillez compléter les informations de l'agent avant de soumettre. Elles doivent inclure le nom, la description et les balises.",
+    "placeholder": "Veuillez entrer l'identifiant de l'agent, qui doit être unique, par exemple développement-web",
+    "tooltips": "Partager sur le marché des agents"
   },
   "tab": {
-    "agent": "Assistant par défaut",
+    "agent": "Agent par défaut",
     "common": "Paramètres généraux",
     "llm": "Modèle de langue",
     "tts": "Service vocal"

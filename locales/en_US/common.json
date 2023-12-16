@@ -52,6 +52,7 @@
   "lang": {
     "en": "English",
     "en-US": "English",
+    "fr-FR": "French",
     "ja-JP": "Japanese",
     "ko-KR": "Korean",
     "ru-RU": "Russian",
@@ -83,8 +84,8 @@
   "temp": "Temporary",
   "updateAgent": "Update Agent Information",
   "upgradeVersion": {
+    "action": "Upgrade",
     "hasNew": "New update available",
-    "newVersion": "New version available: {{version}}",
-    "action": "Upgrade"
+    "newVersion": "New version available: {{version}}"
   }
 }
