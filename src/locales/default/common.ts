@@ -53,6 +53,7 @@ export default {
     'en': '英语',
     'en-US': '英语',
     'fr-FR': '法语',
+    'tr-TR': '土耳其语',
     'ja-JP': '日语',
     'ko-KR': '韩语',
     'ru-RU': '俄语',
