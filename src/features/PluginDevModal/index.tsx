@@ -134,35 +134,35 @@ const DevModal = memo<DevModalProps>(
                 showIcon
                 type={'info'}
               />
+              <Segmented
+                block
+                onChange={(e) => {
+                  setConfigMode(e as any);
+                }}
+                options={[
+                  {
+                    label: t('dev.manifest.mode.url'),
+                    value: 'url',
+                  },
+                  {
+                    disabled: true,
+                    label: (
+                      <Tooltip title={t('dev.manifest.mode.local-tooltip')}>
+                        {t('dev.manifest.mode.local')}
+                      </Tooltip>
+                    ),
+                    value: 'local',
+                  },
+                ]}
+              />
+              <Flexbox>
+                {configMode === 'url' ? (
+                  <UrlManifestForm form={form} isEditMode={mode === 'edit'} />
+                ) : null}
+                <Divider />
+                <PluginPreview form={form} />
+              </Flexbox>
             </MobilePadding>
-            <Segmented
-              block
-              onChange={(e) => {
-                setConfigMode(e as any);
-              }}
-              options={[
-                {
-                  label: t('dev.manifest.mode.url'),
-                  value: 'url',
-                },
-                {
-                  disabled: true,
-                  label: (
-                    <Tooltip title={t('dev.manifest.mode.local-tooltip')}>
-                      {t('dev.manifest.mode.local')}
-                    </Tooltip>
-                  ),
-                  value: 'local',
-                },
-              ]}
-            />
-            <Flexbox>
-              {configMode === 'url' ? (
-                <UrlManifestForm form={form} isEditMode={mode === 'edit'} />
-              ) : null}
-              <Divider />
-              <PluginPreview form={form} />
-            </Flexbox>
           </Flexbox>
         </Modal>
       </Form.Provider>
