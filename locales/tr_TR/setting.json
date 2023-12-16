@@ -85,7 +85,7 @@
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
   },
   "plugin": {
-    "addTooltip": "Özel Eklenti Ekle",
+    "addTooltip": "Eklenti Ekle",
     "clearDeprecated": "Kullanım Dışı Eklentileri Kaldır",
     "empty": "Henüz eklenti yok, <1>Eklenti Mağazası</1>'nı keşfetmekten çekinmeyin",
     "installStatus": {
@@ -114,7 +114,7 @@
       "title": "Ad"
     },
     "prompt": {
-      "placeholder": "Rol ipucu kelimesini girin",
+      "placeholder": "Prompt girin",
       "title": "Rol Ayarı"
     },
     "tag": {
@@ -169,7 +169,7 @@
     },
     "frequencyPenalty": {
       "desc": "Değer ne kadar yüksekse, tekrarlayan kelimeleri azaltma olasılığı o kadar yüksektir",
-      "title": "Frekans Cezası"
+      "title": "Frequency Penalty"
     },
     "maxTokens": {
       "desc": "Her etkileşim için kullanılan maksimum token sayısı",
@@ -187,17 +187,17 @@
     },
     "presencePenalty": {
       "desc": "Değer ne kadar yüksekse, yeni konulara genişleme olasılığı o kadar yüksektir",
-      "title": "Konu Tazeliği"
+      "title": "Presence Penalty"
     },
     "temperature": {
       "desc": "Değer ne kadar yüksekse, yanıt o kadar rastgele olur",
-      "title": "Rastgelelik",
-      "titleWithValue": "Rastgelelik {{value}}"
+      "title": "Randomness",
+      "titleWithValue": "temperature {{value}}"
     },
     "title": "Model Ayarları",
     "topP": {
-      "desc": "Rastgelelik gibi, ancak rastgelelikle birlikte değişmez",
-      "title": "Top P Örnekleme"
+      "desc": "temperature gibi, ancak temperature ile birlikte değişmez",
+      "title": "Top P"
     }
   },
   "settingPlugin": {
@@ -214,7 +214,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "OpenAI Konuşmadan Metne Modeli",
-      "ttsModel": "OpenAI Metinden Sese Modeli"
+      "ttsModel": "OpenAI Metin Seslendirme Modeli"
     },
     "showAllLocaleVoice": {
       "desc": "Kapalıysa, yalnızca mevcut dildeki sesler görüntülenir",
@@ -234,15 +234,15 @@
       "title": "Konuşmadan Metin Hizmeti"
     },
     "title": "Konuşma Hizmeti",
-    "tts": "Metinden Sese Ayarlar",
+    "tts": "Metin Seslendirme Ayarlar",
     "ttsService": {
-      "desc": "OpenAI metinden sese hizmetini kullanıyorsanız, OpenAI model hizmetinin etkin olduğundan emin olun",
-      "title": "Metinden Sese Hizmeti"
+      "desc": "OpenAI metin seslendirme hizmetini kullanıyorsanız, OpenAI model hizmetinin etkin olduğundan emin olun",
+      "title": "Metin Seslendirme Hizmeti"
     },
     "voice": {
       "desc": "Mevcut asistan için bir ses seçin, farklı TTS hizmetleri farklı sesleri destekler",
       "preview": "Ses Önizlemesi",
-      "title": "Metinden Sese Ses"
+      "title": "Metin Seslendirme"
     }
   },
   "settingTheme": {
@@ -274,17 +274,17 @@
     "title": "Tema Ayarları"
   },
   "submitAgentModal": {
-    "button": "Ajanı Gönder",
-    "identifier": "Ajan Kimliği",
-    "metaMiss": "Lütfen göndermeden önce ajan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
-    "placeholder": "Ajan için benzersiz bir kimlik girin, örneğin web-geliştirme",
-    "tooltips": "Ajan pazarına paylaşın"
+    "button": "Asistan Gönder",
+    "identifier": "Asistan Kimliği",
+    "metaMiss": "Lütfen göndermeden önce asistan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
+    "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
+    "tooltips": "Asistan pazarına paylaşın"
   },
   "tab": {
-    "agent": "Varsayılan Ajan",
-    "common": "Ortak Ayarlar",
-    "llm": "Dil Modeli",
-    "tts": "Metinden Sese"
+    "agent": "Varsayılan Asistan",
+    "common": "Genel Ayarlar",
+    "llm": "Modeller",
+    "tts": "Metin Seslendirme"
   },
   "tools": {
     "builtins": {
