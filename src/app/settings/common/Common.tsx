@@ -131,7 +131,33 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
         name: 'language',
       },
       {
-        children: <SliderWithInput max={18} min={12} />,
+        children: (
+          <SliderWithInput
+            marks={{
+              12: {
+                label: t('settingTheme.fontSize.marks.small'),
+                style: {
+                  marginTop: 4,
+                },
+              },
+              14: {
+                label: t('settingTheme.fontSize.marks.normal'),
+                style: {
+                  marginTop: 4,
+                },
+              },
+              18: {
+                label: t('settingTheme.fontSize.marks.large'),
+                style: {
+                  marginTop: 4,
+                },
+              },
+            }}
+            max={18}
+            min={12}
+            step={1}
+          />
+        ),
         desc: t('settingTheme.fontSize.desc'),
         label: t('settingTheme.fontSize.title'),
         name: 'fontSize',
