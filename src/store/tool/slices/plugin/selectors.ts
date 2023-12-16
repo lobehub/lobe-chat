@@ -3,10 +3,10 @@ import { uniq, uniqBy } from 'lodash-es';
 import { Md5 } from 'ts-md5';
 
 import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
-import { pluginHelpers } from '@/store/tool';
 import { ChatCompletionFunctions } from '@/types/openai/chat';
 import { InstallPluginMeta, LobeToolCustomPlugin } from '@/types/tool/plugin';
 
+import { pluginHelpers } from '../../helpers';
 import type { ToolStoreState } from '../../initialState';
 
 const installedPlugins = (s: ToolStoreState) => s.installedPlugins;
