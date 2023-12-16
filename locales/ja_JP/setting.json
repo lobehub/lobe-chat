@@ -85,7 +85,7 @@
     "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに ✨"
   },
   "plugin": {
-    "addTooltip": "カスタムプラグインを追加",
+    "addTooltip": "カスタムプラグイン",
     "clearDeprecated": "無効なプラグインをクリア",
     "empty": "インストールされたプラグインはありません。 <1>プラグインストア</1> で探索してください",
     "installStatus": {

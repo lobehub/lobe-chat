@@ -69,13 +69,11 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
       },
       okText: t('ok', { ns: 'common' }),
       onOk: async () => {
-        await Promise.all([
-          clearSessions,
-          removeAllPlugins,
-          clearTopics,
-          removeAllFiles,
-          clearAllMessages,
-        ]);
+        await clearSessions();
+        await removeAllPlugins();
+        await clearTopics();
+        await removeAllFiles();
+        await clearAllMessages();
 
         message.success(t('danger.clear.success'));
       },

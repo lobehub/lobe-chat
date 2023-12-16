@@ -52,13 +52,13 @@
   "lang": {
     "en": "Anglais",
     "en-US": "Anglais",
+    "fr-FR": "français",
     "ja-JP": "Japonais",
     "ko-KR": "Coréen",
     "ru-RU": "Russe",
     "zh": "Chinois",
     "zh-CN": "Chinois simplifié",
-    "zh-TW": "Chinois traditionnel",
-    "fr-FR": "français"
+    "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
   "noDescription": "Aucune description disponible",
@@ -82,8 +82,8 @@
   "temp": "Temporaire",
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upgradeVersion": {
+    "action": "Mettre à jour",
     "hasNew": "Nouvelle mise à jour disponible",
-    "newVersion": "Nouvelle version disponible : {{version}}",
-    "action": "Mettre à jour"
+    "newVersion": "Nouvelle version disponible : {{version}}"
   }
 }

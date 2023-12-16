@@ -50,7 +50,7 @@ const Inspector = memo<InspectorProps>(
     const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(id), isEqual);
     const showRightAction = useToolStore(pluginSelectors.isPluginHasUI(id));
     const pluginAvatar = pluginHelpers.getPluginAvatar(pluginMeta);
-    const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('plugins.unknown');
+    const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('plugins.loading');
 
     const avatar = pluginAvatar ? (
       <Avatar avatar={pluginAvatar} size={32} />
@@ -80,7 +80,7 @@ const Inspector = memo<InspectorProps>(
             ) : (
               avatar
             )}
-            {loading ? t('plugins.loading') : pluginTitle}
+            {pluginTitle}
             {showRightAction && <Icon icon={showRender ? LucideChevronUp : LucideChevronDown} />}
           </Flexbox>
           {
