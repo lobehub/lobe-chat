@@ -50,12 +50,16 @@
     "title": "Import Data"
   },
   "lang": {
+    "de-DE": "German",
     "en": "English",
     "en-US": "English",
+    "es-ES": "Spanish",
     "fr-FR": "French",
     "ja-JP": "Japanese",
     "ko-KR": "Korean",
+    "pt-BR": "Portuguese",
     "ru-RU": "Russian",
+    "tr-TR": "Turkish",
     "zh": "Simplified Chinese",
     "zh-CN": "Simplified Chinese",
     "zh-TW": "Traditional Chinese"

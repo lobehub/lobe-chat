@@ -1,0 +1,77 @@
+{
+  "agentDefaultMessage": "Hola, soy **{{name}}**, puedes comenzar a chatear conmigo de inmediato o ir a [Configuración del asistente](/chat/settings#session={{id}}) para completar mi información.",
+  "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, {{systemRole}}, ¡comencemos a chatear!",
+  "backToBottom": "Volver al fondo",
+  "clearCurrentMessages": "Borrar mensajes actuales",
+  "confirmClearCurrentMessages": "Estás a punto de borrar los mensajes de esta sesión. Una vez borrados, no se podrán recuperar. Por favor, confirma tu acción.",
+  "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
+  "defaultAgent": "Asistente predeterminado",
+  "defaultSession": "Asistente predeterminado",
+  "historyRange": "Rango de historial",
+  "inbox": {
+    "defaultMessage": "Hola, soy tu asistente virtual, puedes preguntarme cualquier cosa y haré todo lo posible para responderte. Si necesitas un asistente más profesional o personalizado, haz clic en `+` para crear un asistente personalizado.",
+    "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
+    "title": "Charla casual"
+  },
+  "newAgent": "Nuevo asistente",
+  "noDescription": "Sin descripción",
+  "pin": "Fijar",
+  "pinOff": "Desfijar",
+  "regenerate": "Regenerar",
+  "roleAndArchive": "Rol y archivo",
+  "searchAgentPlaceholder": "Buscar asistentes y conversaciones...",
+  "send": "Enviar",
+  "sendPlaceholder": "Escribe tu mensaje...",
+  "sessionList": "Lista de asistentes",
+  "shareModal": {
+    "download": "Descargar captura de pantalla",
+    "imageType": "Tipo de imagen",
+    "screenshot": "Captura de pantalla",
+    "settings": "Configuración de exportación",
+    "shareToShareGPT": "Generar enlace de compartición ShareGPT",
+    "withBackground": "Incluir imagen de fondo",
+    "withFooter": "Incluir pie de página",
+    "withPluginInfo": "Incluir información del plugin",
+    "withSystemRole": "Incluir configuración de rol del asistente"
+  },
+  "stop": "Detener",
+  "stt": {
+    "action": "Entrada de voz",
+    "loading": "Reconociendo...",
+    "prettifying": "Embelleciendo..."
+  },
+  "temp": "Temporal",
+  "tokenDetail": "Configuración de rol: {{systemRoleToken}} · Mensajes de sesión: {{chatsToken}}",
+  "tokenTag": {
+    "overload": "Excedido",
+    "remained": "Restante",
+    "used": "Usado"
+  },
+  "topic": {
+    "confirmRemoveAll": "Estás a punto de eliminar todos los temas. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",
+    "confirmRemoveTopic": "Estás a punto de eliminar este tema. Una vez eliminado, no se podrá recuperar. Por favor, procede con precaución.",
+    "confirmRemoveUnstarred": "Estás a punto de eliminar los temas no marcados como favoritos. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",
+    "defaultTitle": "Tema predeterminado",
+    "openNewTopic": "Abrir nuevo tema",
+    "removeAll": "Eliminar todos los temas",
+    "removeUnstarred": "Eliminar temas no marcados como favoritos",
+    "saveCurrentMessages": "Guardar la conversación actual como tema",
+    "searchPlaceholder": "Buscar temas...",
+    "title": "Lista de temas"
+  },
+  "translate": {
+    "action": "Traducir",
+    "clear": "Borrar traducción"
+  },
+  "tts": {
+    "action": "Lectura de voz",
+    "clear": "Borrar voz"
+  },
+  "updateAgent": "Actualizar información del asistente",
+  "upload": {
+    "actionTooltip": "Subir imagen",
+    "dragDesc": "Arrastra y suelta archivos aquí, admite la carga de varias imágenes. Mantén presionada la tecla Shift para enviar las imágenes directamente.",
+    "dragTitle": "Subir imagen"
+  },
+  "warp": "Salto de línea"
+}

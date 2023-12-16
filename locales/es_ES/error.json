@@ -1,0 +1,53 @@
+{
+  "pluginSettings": {
+    "desc": "Complete la siguiente configuración para comenzar a usar este complemento",
+    "title": "Configuración del complemento {{name}}"
+  },
+  "response": {
+    "400": "Lo sentimos, el servidor no comprende su solicitud. Por favor, asegúrese de que los parámetros de su solicitud sean correctos",
+    "401": "Lo sentimos, el servidor ha rechazado su solicitud, posiblemente debido a permisos insuficientes o falta de autenticación válida",
+    "403": "Lo sentimos, el servidor ha rechazado su solicitud. No tiene permiso para acceder a este contenido",
+    "404": "Lo sentimos, el servidor no puede encontrar la página o recurso solicitado. Por favor, verifique si la URL es correcta",
+    "405": "Lo sentimos, el servidor no admite el método de solicitud que está utilizando. Por favor, verifique si el método de solicitud es correcto",
+    "429": "Lo sentimos, ha realizado demasiadas solicitudes. El servidor está un poco cansado. Por favor, inténtelo de nuevo más tarde",
+    "500": "Lo sentimos, el servidor parece estar experimentando dificultades y no puede completar su solicitud en este momento. Por favor, inténtelo de nuevo más tarde",
+    "502": "Lo sentimos, el servidor parece estar desorientado y no puede proporcionar servicio en este momento. Por favor, inténtelo de nuevo más tarde",
+    "503": "Lo sentimos, el servidor no puede procesar su solicitud en este momento, posiblemente debido a una sobrecarga o mantenimiento. Por favor, inténtelo de nuevo más tarde",
+    "504": "Lo sentimos, el servidor no recibió respuesta del servidor upstream. Por favor, inténtelo de nuevo más tarde",
+    "InvalidAccessCode": "La contraseña es incorrecta o está vacía. Ingrese la contraseña de acceso correcta o agregue una clave de API de OpenAI personalizada",
+    "NoAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
+    "OpenAIBizError": "Error al solicitar el servicio OpenAI. Depure o reintente según la siguiente información",
+    "PluginApiNotFound": "Lo sentimos, el API especificado no existe en el manifiesto del complemento. Verifique si su método de solicitud coincide con el API del manifiesto del complemento",
+    "PluginApiParamsError": "Lo sentimos, la validación de los parámetros de entrada de la solicitud del complemento no ha pasado. Verifique si los parámetros de entrada coinciden con la información de descripción del API",
+    "PluginGatewayError": "Lo sentimos, se ha producido un error en la puerta de enlace del complemento. Verifique si la configuración de la puerta de enlace del complemento es correcta",
+    "PluginManifestInvalid": "Lo sentimos, la validación del manifiesto del complemento no ha pasado. Por favor, verifique si el formato del manifiesto es correcto",
+    "PluginManifestNotFound": "Lo sentimos, el servidor no puede encontrar el manifiesto de descripción del complemento (manifest.json). Verifique si la dirección del archivo de descripción del complemento es correcta",
+    "PluginMarketIndexInvalid": "Lo sentimos, la validación del índice del complemento no ha pasado. Por favor, verifique si el formato del archivo de índice es correcto",
+    "PluginMarketIndexNotFound": "Lo sentimos, el servidor no puede encontrar el índice del complemento. Por favor, verifique si la dirección del índice es correcta",
+    "PluginMetaInvalid": "Lo sentimos, la validación de la meta del complemento no ha pasado. Por favor, verifique si el formato de la meta del complemento es correcto",
+    "PluginMetaNotFound": "Lo sentimos, no se encontró la meta del complemento en el índice. Verifique la información de configuración del complemento en el índice",
+    "PluginOpenApiInitError": "Lo sentimos, la inicialización del cliente OpenAPI ha fallado. Verifique si la información de configuración de OpenAPI es correcta",
+    "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
+    "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta"
+  },
+  "stt": {
+    "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
+  },
+  "tts": {
+    "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "Añadir URL de proxy de OpenAI (opcional)",
+      "description": "Ingresa tu clave de API de OpenAI para comenzar la sesión. La aplicación no guardará tu clave de API",
+      "title": "Usar clave de API personalizada"
+    },
+    "closeMessage": "Cerrar mensaje",
+    "confirm": "Confirmar y volver a intentar",
+    "password": {
+      "description": "El administrador ha activado el cifrado de la aplicación. Ingresa la contraseña de la aplicación para desbloquearla. La contraseña solo se necesita ingresar una vez",
+      "placeholder": "Ingresa la contraseña",
+      "title": "Ingresar contraseña para desbloquear la aplicación"
+    }
+  }
+}

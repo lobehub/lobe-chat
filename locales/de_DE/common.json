@@ -1,0 +1,93 @@
+{
+  "about": "Über",
+  "advanceSettings": "Erweiterte Einstellungen",
+  "agentMaxToken": "Maximale Sitzungslänge",
+  "agentModel": "Modell",
+  "agentProfile": "Assistentenprofil",
+  "appInitializing": "LobeChat wird initialisiert. Bitte haben Sie einen Moment Geduld...",
+  "archive": "Archiv",
+  "autoGenerate": "Automatisch generieren",
+  "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
+  "cancel": "Abbrechen",
+  "changelog": "Änderungsprotokoll",
+  "close": "Schließen",
+  "confirmRemoveSessionItemAlert": "Möchten Sie diesen Assistenten wirklich löschen? Nach dem Löschen kann er nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
+  "copy": "Kopieren",
+  "copySuccess": "Kopieren erfolgreich",
+  "defaultAgent": "Standardassistent",
+  "defaultSession": "Standardassistent",
+  "delete": "Löschen",
+  "edit": "Bearbeiten",
+  "export": "Exportieren",
+  "exportType": {
+    "agent": "Assistenteneinstellungen exportieren",
+    "agentWithMessage": "Assistent und Nachrichten exportieren",
+    "all": "Globale Einstellungen und alle Assistentendaten exportieren",
+    "allAgent": "Alle Assistenteneinstellungen exportieren",
+    "allAgentWithMessage": "Alle Assistenten und Nachrichten exportieren",
+    "globalSetting": "Globale Einstellungen exportieren"
+  },
+  "feedback": "Feedback und Vorschläge",
+  "historyRange": "Verlaufsbereich",
+  "import": "Importieren",
+  "importModal": {
+    "finish": {
+      "onlySettings": "Systemeinstellungen erfolgreich importiert",
+      "start": "Starten",
+      "subTitle": "Daten erfolgreich importiert. Dauer: {{duration}} Sekunden. Details des Imports:",
+      "title": "Import abgeschlossen"
+    },
+    "loading": "Daten werden importiert. Bitte haben Sie einen Moment Geduld...",
+    "result": {
+      "added": "Erfolgreich importiert",
+      "errors": "Fehler beim Import",
+      "messages": "Nachrichten",
+      "sessions": "Assistenten",
+      "skips": "Übersprungen (doppelt)",
+      "topics": "Themen",
+      "type": "Datentyp"
+    },
+    "title": "Daten importieren"
+  },
+  "lang": {
+    "de-DE": "Deutsch",
+    "en": "Englisch",
+    "en-US": "Englisch",
+    "es-ES": "Spanisch",
+    "fr-FR": "Französisch",
+    "ja-JP": "Japanisch",
+    "ko-KR": "Koreanisch",
+    "pt-BR": "Portugiesisch",
+    "ru-RU": "Russisch",
+    "tr-TR": "Türkisch",
+    "zh": "Chinesisch",
+    "zh-CN": "Chinesisch (vereinfacht)",
+    "zh-TW": "Chinesisch (traditionell)"
+  },
+  "layoutInitializing": "Layout wird geladen...",
+  "noDescription": "Keine Beschreibung vorhanden",
+  "ok": "OK",
+  "password": "Passwort",
+  "pin": "Anheften",
+  "pinOff": "Anheften aufheben",
+  "regenerate": "Neu generieren",
+  "rename": "Umbenennen",
+  "reset": "Zurücksetzen",
+  "retry": "Erneut versuchen",
+  "send": "Senden",
+  "setting": "Einstellung",
+  "share": "Teilen",
+  "stop": "Stoppen",
+  "tab": {
+    "chat": "Chat",
+    "market": "Entdecken",
+    "setting": "Einstellung"
+  },
+  "temp": "Temporär",
+  "updateAgent": "Assistentenprofil aktualisieren",
+  "upgradeVersion": {
+    "action": "Aktualisieren",
+    "hasNew": "Neue Version verfügbar",
+    "newVersion": "Neue Version verfügbar: {{version}}"
+  }
+}
