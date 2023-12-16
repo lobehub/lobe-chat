@@ -6,8 +6,25 @@
     "on": "Eklenti Çağrı Bilgilerini Görüntüle",
     "response": "Yanıt"
   },
+  "detailModal": {
+    "info": {
+      "description": "API Açıklaması",
+      "name": "API Adı"
+    },
+    "tabs": {
+      "info": "Eklenti Yetenekleri",
+      "manifest": "Yükleme Dosyası",
+      "settings": "Ayarlar"
+    },
+    "title": "Eklenti Detayları"
+  },
   "dev": {
     "confirmDeleteDevPlugin": "Bu eklentiyi silmek istediğinizden emin misiniz? Bir kere silindiğinde, geri alınamaz.",
+    "customParams": {
+      "useProxy": {
+        "label": "Proxy kullanarak yükle (Çapraz kaynak erişim hatası ile karşılaşılırsa, bu seçeneği etkinleştirerek yeniden yükleme deneyebilirsiniz)"
+      }
+    },
     "deleteSuccess": "Eklenti başarıyla silindi",
     "manifest": {
       "identifier": {
@@ -64,6 +81,10 @@
     },
     "metaConfig": "Eklenti meta veri yapılandırması",
     "modalDesc": "Özel bir eklenti ekledikten sonra, eklenti doğrulama için veya doğrudan oturumda kullanılabilir. Eklenti geliştirme için lütfen <1>geliştirme dokümantasyonuna↗</> başvurun.",
+    "openai": {
+      "importUrl": "URL Bağlantısından İçe Aktar",
+      "schema": "Şema"
+    },
     "preview": {
       "card": "Eklenti Görünümünü Önizle",
       "desc": "Eklenti Açıklamasını Önizle",
@@ -76,6 +97,10 @@
       "meta": "Eklenti Meta Verileri"
     },
     "title": "Eklenti Ekle",
+    "type": {
+      "lobe": "LobeChat Eklentisi",
+      "openai": "OpenAI Eklentisi"
+    },
     "update": "Güncelle",
     "updateSuccess": "Eklenti ayarları başarıyla güncellendi"
   },
@@ -84,6 +109,7 @@
     "installError": "{{name}} eklentisi yüklenemedi",
     "manifestInvalid": "Manifest, şartnameye uygun değil. Doğrulama sonucu: \n\n {{error}}",
     "noManifest": "Manifest dosyası mevcut değil",
+    "openAPIInvalid": "OpenAPI ayrıştırma hatası, hata: \n\n {{error}}",
     "reinstallError": "{{name}} eklentisi yenilenemedi",
     "urlError": "Bağlantı JSON formatında içerik döndürmedi. Lütfen geçerli bir bağlantı olduğundan emin olun"
   },
@@ -113,17 +139,25 @@
     "title": "Eklenti Pazarı Ayarla"
   },
   "store": {
+    "actions": {
+      "confirmUninstall": "Bu eklentiyi kaldırmak üzeresiniz, kaldırdıktan sonra eklenti yapılandırması temizlenecektir, işleminizi onaylayın",
+      "detail": "Detay",
+      "install": "Yükle",
+      "manifest": "Yükleme Dosyasını Düzenle",
+      "settings": "Ayarlar",
+      "uninstall": "Kaldır"
+    },
+    "communityPlugin": "Topluluk Eklentisi",
+    "customPlugin": "Özel",
     "empty": "Henüz yüklenmiş eklenti yok",
-    "install": "Yükle",
     "installAllPlugins": "Tümünü Yükle",
     "networkError": "Eklenti mağazası alınamadı. Lütfen ağ bağlantınızı kontrol edin ve tekrar deneyin.",
+    "placeholder": "Eklenti adını, açıklamasını veya anahtar kelimeleri ara...",
     "releasedAt": "{{createdAt}} tarihinde yayınlandı",
     "tabs": {
       "all": "Tümü",
       "installed": "Yüklü"
     },
-    "title": "Eklenti Mağazası",
-    "uninstall": "Kaldır",
-    "placeholder": "Eklenti adını, açıklamasını veya anahtar kelimeleri ara..."
+    "title": "Eklenti Mağazası"
   }
 }

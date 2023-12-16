@@ -17,8 +17,8 @@
         "title": "Yüksek Kapasite"
       },
       "performance": {
-        "title": "Yüksek Performans",
-        "desc": "Milyonlarca mesaj otomatik olarak indekslenir ve sorgu yanıtları milisaniyeler içinde gerçekleşir."
+        "desc": "Milyonlarca mesaj otomatik olarak indekslenir ve sorgu yanıtları milisaniyeler içinde gerçekleşir.",
+        "title": "Yüksek Performans"
       },
       "use": {
         "desc": "Başlıkları, açıklamaları, etiketleri, mesaj içeriğini ve hatta çevrilmiş metni aramayı destekler, günlük arama verimliliğini büyük ölçüde artırır.",
@@ -28,8 +28,8 @@
     "title": "LobeChat Data Evolution",
     "upgrade": {
       "error": {
-        "title": "Veritabanı Yükseltmesi Başarısız Oldu",
-        "subTitle": "Üzgünüz, veritabanı yükseltme işlemi sırasında bir hata oluştu. Lütfen şu çözümleri deneyin: A. Yerel verileri temizleyin ve yedek verileri yeniden içe aktarın; B. 'Yükseltmeyi Yeniden Dene' düğmesine tıklayın.<br><br> Sorun devam ederse, lütfen <1>bir istek gönderin</1>, en kısa sürede size yardımcı olacağız."
+        "subTitle": "Üzgünüz, veritabanı yükseltme işlemi sırasında bir hata oluştu. Lütfen şu çözümleri deneyin: A. Yerel verileri temizleyin ve yedek verileri yeniden içe aktarın; B. 'Yükseltmeyi Yeniden Dene' düğmesine tıklayın.<br><br> Sorun devam ederse, lütfen <1>bir istek gönderin</1>, en kısa sürede size yardımcı olacağız.",
+        "title": "Veritabanı Yükseltmesi Başarısız Oldu"
       },
       "success": {
         "subTitle": "LobeChat'in veritabanı en son sürüme başarıyla yükseltildi. Şimdi deneyimlemeye başlayın!",

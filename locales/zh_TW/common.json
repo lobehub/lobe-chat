@@ -56,11 +56,10 @@
     "ja-JP": "日文",
     "ko-KR": "韓文",
     "ru-RU": "俄文",
+    "tr-TR": "土耳其",
     "zh": "簡體中文",
-    "zh-CN": "簡體中文",n
-    "zh-TW": "繁體中文",
-    "fr-FR": "法語",
-    "tr-TR": "土耳其"
+    "zh-CN": "簡體中文",
+    "zh-TW": "繁體中文"
   },
   "layoutInitializing": "正在載入版面配置...",
   "noDescription": "暫無描述",

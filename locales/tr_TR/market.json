@@ -24,7 +24,7 @@
   },
   "submitAgent": "Asistan Ekle",
   "title": {
-    "recentSubmits": "Son Eklenenler",
-    "allAgents": "Tüm Asistanlar"
+    "allAgents": "Tüm Asistanlar",
+    "recentSubmits": "Son Eklenenler"
   }
 }

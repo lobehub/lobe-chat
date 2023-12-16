@@ -56,11 +56,10 @@
     "ja-JP": "Japonais",
     "ko-KR": "Coréen",
     "ru-RU": "Russe",
+    "tr-TR": "turque",
     "zh": "Chinois",
     "zh-CN": "Chinois simplifié",
-    "zh-TW": "Chinois traditionnel",
-    "fr-FR": "français",
-    "tr-TR": "turque"
+    "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
   "noDescription": "Aucune description disponible",

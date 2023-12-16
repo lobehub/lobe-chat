@@ -52,14 +52,14 @@
   "lang": {
     "en": "İngilizce",
     "en-US": "İngilizce",
+    "fr-FR": "Fransızca",
     "ja-JP": "Japonca",
     "ko-KR": "Korece",
     "ru-RU": "Rusça",
+    "tr-TR": "Türkçe",
     "zh": "Basitleştirilmiş Çince",
     "zh-CN": "Basitleştirilmiş Çince",
-    "zh-TW": "Geleneksel Çince",
-    "fr-FR": "Fransızca",
-    "tr-TR": "Türkçe"
+    "zh-TW": "Geleneksel Çince"
   },
   "layoutInitializing": "Başlatılıyor...",
   "noDescription": "Açıklama yok",
@@ -83,8 +83,8 @@
   "temp": "Geçici",
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upgradeVersion": {
+    "action": "Güncelle",
     "hasNew": "Yeni güncelleme mevcut",
-    "newVersion": "Yeni sürüm mevcut: {{version}}",
-    "action": "Güncelle"
+    "newVersion": "Yeni sürüm mevcut: {{version}}"
   }
 }
