@@ -58,7 +58,9 @@
     "ru-RU": "러시아어",
     "zh": "중국어",
     "zh-CN": "중국어(간체)",
-    "zh-TW": "중국어(번체)"
+    "zh-TW": "중국어(번체)",
+    "fr-FR": "프랑스어",
+    "tr-TR": "터키어"
   },
   "layoutInitializing": "레이아웃을 불러오는 중...",
   "noDescription": "설명 없음",

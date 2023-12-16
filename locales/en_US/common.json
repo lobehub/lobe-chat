@@ -58,7 +58,9 @@
     "ru-RU": "Russian",
     "zh": "Simplified Chinese",
     "zh-CN": "Simplified Chinese",
-    "zh-TW": "Traditional Chinese"
+    "zh-TW": "Traditional Chinese",
+    "fr-FR": "French",
+    "tr-TR": "Turkish"
   },
   "layoutInitializing": "Initializing layout...",
   "noDescription": "No description available",

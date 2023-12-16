@@ -56,6 +56,7 @@ export default {
     'ja-JP': '日语',
     'ko-KR': '韩语',
     'ru-RU': '俄语',
+    'tr-TR': '土耳其语',
     'zh': '简体中文',
     'zh-CN': '简体中文',
     'zh-TW': '繁体中文',
