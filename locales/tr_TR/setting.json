@@ -251,6 +251,11 @@
     },
     "fontSize": {
       "desc": "Sohbet içeriği için yazı boyutu",
+      "marks": {
+        "large": "Büyük",
+        "normal": "Normal",
+        "small": "Küçük"
+      },
       "title": "Yazı Boyutu"
     },
     "lang": {

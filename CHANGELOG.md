@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.113.1](https://github.com/lobehub/lobe-chat/compare/v0.113.0...v0.113.1)
+
+<sup>Released on **2023-12-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fontsize setting and audio download style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fontsize setting and audio download style, closes [#433](https://github.com/lobehub/lobe-chat/issues/433) ([6882752](https://github.com/lobehub/lobe-chat/commit/6882752))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.113.0](https://github.com/lobehub/lobe-chat/compare/v0.112.1...v0.113.0)
 
 <sup>Released on **2023-12-16**</sup>
