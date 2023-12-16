@@ -1,0 +1,166 @@
+{
+  "debug": {
+    "arguments": "Argümanlar",
+    "function_call": "Fonksiyon Çağrısı",
+    "off": "Hata Ayıklamayı Kapat",
+    "on": "Eklenti Çağrı Bilgilerini Görüntüle",
+    "response": "Yanıt"
+  },
+  "detailModal": {
+    "info": {
+      "description": "API Açıklaması",
+      "name": "API Adı"
+    },
+    "tabs": {
+      "info": "Eklenti Yetenekleri",
+      "manifest": "Yükleme Dosyası",
+      "settings": "Ayarlar"
+    },
+    "title": "Eklenti Detayları"
+  },
+  "dev": {
+    "confirmDeleteDevPlugin": "Bu eklentiyi silmek istediğinizden emin misiniz? Bir kere silindiğinde, geri alınamaz.",
+    "customParams": {
+      "useProxy": {
+        "label": "Proxy kullanarak yükle (Çapraz kaynak erişim hatası ile karşılaşılırsa, bu seçeneği etkinleştirerek yeniden yükleme deneyebilirsiniz)"
+      }
+    },
+    "deleteSuccess": "Eklenti başarıyla silindi",
+    "manifest": {
+      "identifier": {
+        "desc": "Eklenti için benzersiz tanımlayıcı",
+        "label": "Tanımlayıcı"
+      },
+      "mode": {
+        "local": "Yapılandırma",
+        "local-tooltip": "Yapılandırma geçici olarak desteklenmiyor",
+        "url": "Çevrimiçi Bağlantı"
+      },
+      "name": {
+        "desc": "Eklenti başlığı",
+        "label": "Başlık",
+        "placeholder": "Arama Motoru"
+      }
+    },
+    "meta": {
+      "author": {
+        "desc": "Eklentinin yazarı",
+        "label": "Yazar"
+      },
+      "avatar": {
+        "desc": "Eklenti simgesi, Emoji veya URL kullanılabilir",
+        "label": "Simge"
+      },
+      "description": {
+        "desc": "Eklenti açıklaması",
+        "label": "Açıklama",
+        "placeholder": "Bilgi için arama motorunu sorgula"
+      },
+      "formFieldRequired": "Bu alan gereklidir",
+      "homepage": {
+        "desc": "Eklentinin ana sayfası",
+        "label": "Ana Sayfa"
+      },
+      "identifier": {
+        "desc": "Eklenti için benzersiz tanımlayıcı, manifestten otomatik olarak tanınacak",
+        "errorDuplicate": "Tanımlayıcı başka bir eklenti tarafından kullanılıyor, lütfen tanımlayıcıyı değiştirin",
+        "label": "Tanımlayıcı",
+        "pattenErrorMessage": "Sadece İngilizce karakterler, sayılar, - ve _ kullanılabilir"
+      },
+      "manifest": {
+        "desc": "LobeChat, eklentiyi bu bağlantı üzerinden yükleyecek",
+        "label": "Eklenti Tanım Dosyası (Manifest) URL'si",
+        "preview": "Manifesti Önizle",
+        "refresh": "Yenile"
+      },
+      "title": {
+        "desc": "Eklenti başlığı",
+        "label": "Başlık",
+        "placeholder": "Arama Motoru"
+      }
+    },
+    "metaConfig": "Eklenti meta veri yapılandırması",
+    "modalDesc": "Özel bir eklenti ekledikten sonra, eklenti doğrulama için veya doğrudan oturumda kullanılabilir. Eklenti geliştirme için lütfen <1>geliştirme dokümantasyonuna↗</> başvurun.",
+    "openai": {
+      "importUrl": "URL Bağlantısından İçe Aktar",
+      "schema": "Şema"
+    },
+    "preview": {
+      "card": "Eklenti Görünümünü Önizle",
+      "desc": "Eklenti Açıklamasını Önizle",
+      "title": "Eklenti Adı Önizlemesi"
+    },
+    "save": "Eklentiyi Yükle",
+    "saveSuccess": "Eklenti ayarları başarıyla kaydedildi",
+    "tabs": {
+      "manifest": "Manifest Tanımı",
+      "meta": "Eklenti Meta Verileri"
+    },
+    "title": {
+      "create": "Özel Eklenti Ekle",
+      "edit": "Özel Eklentiyi Düzenle"
+    },
+    "type": {
+      "lobe": "LobeChat Eklentisi",
+      "openai": "OpenAI Eklentisi"
+    },
+    "update": "Güncelle",
+    "updateSuccess": "Eklenti ayarları başarıyla güncellendi"
+  },
+  "error": {
+    "fetchError": "Manifest bağlantısı alınamadı. Lütfen bağlantının geçerli olduğundan ve çapraz köken erişimine izin verdiğinden emin olun.",
+    "installError": "{{name}} eklentisi yüklenemedi",
+    "manifestInvalid": "Manifest, şartnameye uygun değil. Doğrulama sonucu: \n\n {{error}}",
+    "noManifest": "Manifest dosyası mevcut değil",
+    "openAPIInvalid": "OpenAPI ayrıştırma hatası, hata: \n\n {{error}}",
+    "reinstallError": "{{name}} eklentisi yenilenemedi",
+    "urlError": "Bağlantı JSON formatında içerik döndürmedi. Lütfen geçerli bir bağlantı olduğundan emin olun"
+  },
+  "list": {
+    "item": {
+      "deprecated.title": "Eski",
+      "local.config": "Yapılandırma",
+      "local.title": "Özel"
+    }
+  },
+  "loading": {
+    "content": "Eklenti çağrılıyor...",
+    "plugin": "Eklenti çalışıyor..."
+  },
+  "pluginList": "Eklenti Listesi",
+  "plugins": {
+    "loading": "Eklentiler kontrol ediliyor...",
+    "unknown": "Bilinmeyen eklenti"
+  },
+  "setting": "Eklenti Ayarları",
+  "settings": {
+    "indexUrl": {
+      "title": "Pazar Endeksi",
+      "tooltip": "Çevrimiçi düzenleme şu anda desteklenmiyor. Lütfen dağıtım sırasında çevre değişkenleri üzerinden ayarlayın."
+    },
+    "modalDesc": "Eklenti pazarı adresini yapılandırdıktan sonra, özel bir eklenti pazarı kullanabilirsiniz.",
+    "title": "Eklenti Pazarı Ayarla"
+  },
+  "store": {
+    "actions": {
+      "confirmUninstall": "Bu eklentiyi kaldırmak üzeresiniz, kaldırdıktan sonra eklenti yapılandırması temizlenecektir, işleminizi onaylayın",
+      "detail": "Detay",
+      "install": "Yükle",
+      "manifest": "Yükleme Dosyasını Düzenle",
+      "settings": "Ayarlar",
+      "uninstall": "Kaldır"
+    },
+    "communityPlugin": "Topluluk Eklentisi",
+    "customPlugin": "Özel",
+    "empty": "Henüz yüklenmiş eklenti yok",
+    "installAllPlugins": "Tümünü Yükle",
+    "networkError": "Eklenti mağazası alınamadı. Lütfen ağ bağlantınızı kontrol edin ve tekrar deneyin.",
+    "placeholder": "Eklenti adını, açıklamasını veya anahtar kelimeleri ara...",
+    "releasedAt": "{{createdAt}} tarihinde yayınlandı",
+    "tabs": {
+      "all": "Tümü",
+      "installed": "Yüklü"
+    },
+    "title": "Eklenti Mağazası"
+  }
+}

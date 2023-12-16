@@ -1,0 +1,166 @@
+{
+  "debug": {
+    "arguments": "Argumentos de Chamada",
+    "function_call": "Chamada de Função",
+    "off": "Desativar Depuração",
+    "on": "Ver Informações de Chamada de Plugin",
+    "response": "Resposta"
+  },
+  "detailModal": {
+    "info": {
+      "description": "Descrição da API",
+      "name": "Nome da API"
+    },
+    "tabs": {
+      "info": "Capacidades do Plugin",
+      "manifest": "Arquivo de Instalação",
+      "settings": "Configurações"
+    },
+    "title": "Detalhes do Plugin"
+  },
+  "dev": {
+    "confirmDeleteDevPlugin": "Tem certeza de que deseja excluir este plugin local? Esta ação não poderá ser desfeita.",
+    "customParams": {
+      "useProxy": {
+        "label": "Instalar via Proxy (se ocorrer erro de acesso entre domínios, tente ativar esta opção e reinstalar)"
+      }
+    },
+    "deleteSuccess": "Plugin excluído com sucesso",
+    "manifest": {
+      "identifier": {
+        "desc": "Identificador único do plugin",
+        "label": "Identificador"
+      },
+      "mode": {
+        "local": "Configuração Visual",
+        "local-tooltip": "Configuração visual não suportada temporariamente",
+        "url": "Link Online"
+      },
+      "name": {
+        "desc": "Título do plugin",
+        "label": "Título",
+        "placeholder": "Pesquisar mecanismo de busca"
+      }
+    },
+    "meta": {
+      "author": {
+        "desc": "Autor do plugin",
+        "label": "Autor"
+      },
+      "avatar": {
+        "desc": "Ícone do plugin, pode ser um Emoji ou um URL",
+        "label": "Ícone"
+      },
+      "description": {
+        "desc": "Descrição do plugin",
+        "label": "Descrição",
+        "placeholder": "Obter informações de um mecanismo de busca"
+      },
+      "formFieldRequired": "Este campo é obrigatório",
+      "homepage": {
+        "desc": "Página inicial do plugin",
+        "label": "Página Inicial"
+      },
+      "identifier": {
+        "desc": "Identificador único do plugin, será automaticamente reconhecido a partir do manifesto",
+        "errorDuplicate": "Identificador duplicado com um plugin existente, por favor modifique o identificador",
+        "label": "Identificador",
+        "pattenErrorMessage": "Apenas caracteres alfanuméricos, - e _ são permitidos"
+      },
+      "manifest": {
+        "desc": "LobeChat instalará o plugin a partir deste link",
+        "label": "URL do Arquivo de Descrição do Plugin (Manifest)",
+        "preview": "Visualizar Manifesto",
+        "refresh": "Atualizar"
+      },
+      "title": {
+        "desc": "Título do plugin",
+        "label": "Título",
+        "placeholder": "Pesquisar mecanismo de busca"
+      }
+    },
+    "metaConfig": "Configuração de Metadados do Plugin",
+    "modalDesc": "Após adicionar um plugin personalizado, ele pode ser usado para validação de desenvolvimento de plugin ou diretamente em uma conversa. Consulte o <1>documento de desenvolvimento↗</> para desenvolver plugins.",
+    "openai": {
+      "importUrl": "Importar a partir de URL",
+      "schema": "Esquema"
+    },
+    "preview": {
+      "card": "Visualizar Efeito do Plugin",
+      "desc": "Visualizar Descrição do Plugin",
+      "title": "Visualizar Nome do Plugin"
+    },
+    "save": "Instalar Plugin",
+    "saveSuccess": "Configurações do plugin salvas com sucesso",
+    "tabs": {
+      "manifest": "Lista de Descrição de Funcionalidades (Manifest)",
+      "meta": "Metadados do Plugin"
+    },
+    "title": {
+      "create": "Adicionar Plugin Personalizado",
+      "edit": "Editar Plugin Personalizado"
+    },
+    "type": {
+      "lobe": "Plugin LobeChat",
+      "openai": "Plugin OpenAI"
+    },
+    "update": "Atualizar",
+    "updateSuccess": "Configurações do plugin atualizadas com sucesso"
+  },
+  "error": {
+    "fetchError": "Falha ao buscar o link do manifesto. Certifique-se de que o link é válido e permita o acesso entre domínios.",
+    "installError": "Falha na instalação do plugin {{name}}.",
+    "manifestInvalid": "O manifesto não está em conformidade com as especificações. Resultado da validação: \n\n {{error}}",
+    "noManifest": "Manifesto não encontrado",
+    "openAPIInvalid": "Falha ao analisar o OpenAPI. Erro: \n\n {{error}}",
+    "reinstallError": "Falha ao atualizar o plugin {{name}}",
+    "urlError": "O link não retornou conteúdo no formato JSON. Certifique-se de que o link é válido."
+  },
+  "list": {
+    "item": {
+      "deprecated.title": "Obsoleto",
+      "local.config": "Configuração",
+      "local.title": "Personalizado"
+    }
+  },
+  "loading": {
+    "content": "Carregando o plugin...",
+    "plugin": "Executando o plugin..."
+  },
+  "pluginList": "Lista de Plugins",
+  "plugins": {
+    "loading": "Verificando plugins...",
+    "unknown": "Plugin desconhecido"
+  },
+  "setting": "Configuração do Plugin",
+  "settings": {
+    "indexUrl": {
+      "title": "Índice do Mercado",
+      "tooltip": "Edição online não suportada. Configure através de variáveis de ambiente durante a implantação."
+    },
+    "modalDesc": "Após configurar o endereço do mercado de plugins, você poderá usar um mercado personalizado de plugins.",
+    "title": "Configurações do Mercado de Plugins"
+  },
+  "store": {
+    "actions": {
+      "confirmUninstall": "Você está prestes a desinstalar este plugin. A desinstalação irá limpar a configuração do plugin. Confirme a operação.",
+      "detail": "Detalhes",
+      "install": "Instalar",
+      "manifest": "Editar arquivo de instalação",
+      "settings": "Configurações",
+      "uninstall": "Desinstalar"
+    },
+    "communityPlugin": "Plugin da Comunidade",
+    "customPlugin": "Personalizado",
+    "empty": "Nenhum plugin instalado",
+    "installAllPlugins": "Instalar todos os plugins",
+    "networkError": "Falha ao obter a loja de plugins. Verifique a conexão de rede e tente novamente.",
+    "placeholder": "Pesquisar por nome, descrição ou palavra-chave do plugin...",
+    "releasedAt": "Lançado em {{createdAt}}",
+    "tabs": {
+      "all": "Todos",
+      "installed": "Instalados"
+    },
+    "title": "Loja de Plugins"
+  }
+}

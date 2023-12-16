@@ -1,0 +1,301 @@
+{
+  "danger": {
+    "clear": {
+      "action": "Temizle",
+      "confirm": "Tüm sohbet verilerini temizlemeyi onaylıyor musunuz?",
+      "desc": "Bu, oturum verilerini, asistanı, dosyaları, mesajları, eklentileri vb. temizleyecektir.",
+      "success": "Tüm oturum mesajları temizlendi",
+      "title": "Tüm Oturum Mesajlarını Temizle"
+    },
+    "reset": {
+      "action": "Sıfırla",
+      "confirm": "Tüm ayarları sıfırlamayı onaylıyor musunuz?",
+      "currentVersion": "Geçerli Sürüm",
+      "desc": "Tüm ayarları varsayılan değerlere sıfırlar",
+      "title": "Tüm Ayarları Sıfırla"
+    }
+  },
+  "header": {
+    "global": "Genel Ayarlar",
+    "session": "Oturum Ayarları",
+    "sessionWithName": "Oturum Ayarları · {{name}}"
+  },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "Bu değer, Azure portalındaki kaynağı kontrol ederken 'Keys and Endpoints' bölümünde bulunabilir",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Azure API Adresi"
+      },
+      "models": {
+        "desc": "Desteklenen modeller",
+        "title": "Model Listesi"
+      },
+      "title": "Azure OpenAI Ayarları",
+      "token": {
+        "desc": "Bu değer, Azure portalındaki kaynağı kontrol ederken 'Keys and Endpoints' bölümünde bulunabilir. KEY1 veya KEY2'yi kullanabilirsiniz",
+        "placeholder": "Azure API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure için API sürümü, YYYY-MM-DD formatını takip eder, [en son sürümü kontrol edin](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Listeyi Al",
+        "title": "Azure API Sürümü"
+      },
+      "check": {
+        "button": "Kontrol Et",
+        "desc": "Api Anahtarı ve proxy adresinin doğru şekilde doldurulup doldurulmadığını test eder",
+        "pass": "Kontrol Başarılı",
+        "title": "Bağlantı Kontrolü"
+      },
+      "customModelName": {
+        "desc": "Özel modeller ekleyin, birden fazla modeli virgülle (,) ayırarak yazın",
+        "placeholder": "model1,model2,model3",
+        "title": "Özel Model Adı"
+      },
+      "endpoint": {
+        "desc": "Varsayılan adresin yanı sıra http(s):// içermelidir",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "API Proxy Adresi"
+      },
+      "models": {
+        "count": "Toplam {{count}} modeli destekler",
+        "desc": "Desteklenen modeller",
+        "fetch": "Model Listesini Al",
+        "notSupport": "Azure OpenAI şu anda model listesini görüntülemeyi desteklemiyor",
+        "notSupportTip": "Dağıtım adının model adıyla eşleştiğinden emin olmalısınız",
+        "refetch": "Model Listesini Yeniden Al",
+        "title": "Model Listesi"
+      },
+      "title": "OpenAI Ayarları",
+      "token": {
+        "desc": "Kendi OpenAI Anahtarınızı kullanın",
+        "placeholder": "OpenAI API Anahtarı",
+        "title": "API Anahtarı"
+      },
+      "useAzure": {
+        "desc": "Azure tarafından sağlanan OpenAI hizmetlerini kullanın",
+        "fetch": "Listeyi Al",
+        "serverConfig": "Yönetici, sunucu tarafında Azure OpenAI'yi etkinleştirdi ve değiştirme yasağı getirdi",
+        "title": "Azure OpenAI"
+      }
+    },
+    "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
+  },
+  "plugin": {
+    "addTooltip": "Eklenti Ekle",
+    "clearDeprecated": "Kullanım Dışı Eklentileri Kaldır",
+    "empty": "Henüz eklenti yok, <1>Eklenti Mağazası</1>'nı keşfetmekten çekinmeyin",
+    "installStatus": {
+      "deprecated": "Kaldırıldı"
+    },
+    "settings": {
+      "hint": "Açıklamaya dayalı olarak aşağıdaki yapılandırmaları doldurun",
+      "title": "{{id}} Eklenti Yapılandırması",
+      "tooltip": "Eklenti Yapılandırması"
+    },
+    "store": "Eklenti Mağazası"
+  },
+  "settingAgent": {
+    "avatar": {
+      "title": "Avatar"
+    },
+    "backgroundColor": {
+      "title": "Arka Plan Rengi"
+    },
+    "description": {
+      "placeholder": "Asistan açıklamasını girin",
+      "title": "Asistan Açıklaması"
+    },
+    "name": {
+      "placeholder": "Asistan adını girin",
+      "title": "Ad"
+    },
+    "prompt": {
+      "placeholder": "Prompt girin",
+      "title": "Rol Ayarı"
+    },
+    "tag": {
+      "placeholder": "Etiket girin",
+      "title": "Etiket"
+    },
+    "title": "Asistan Bilgileri"
+  },
+  "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "Mevcut mesaj sayısı bu değeri aştığında otomatik olarak bir konu oluşturulur",
+      "title": "Mesaj Sınırı"
+    },
+    "chatStyleType": {
+      "title": "Sohbet Pencere Stili",
+      "type": {
+        "chat": "Konuşma Modu",
+        "docs": "Belge Modu"
+      }
+    },
+    "compressThreshold": {
+      "desc": "Sıkıştırılmamış geçmiş mesajlar bu değeri aştığında sıkıştırma uygulanır",
+      "title": "Geçmiş Mesaj Uzunluğu Sıkıştırma Eşiği"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "Sohbet sırasında otomatik olarak bir konu oluşturup oluşturmayacağınız, yalnızca geçici konularda etkilidir",
+      "title": "Otomatik Konu Oluştur"
+    },
+    "enableCompressThreshold": {
+      "title": "Geçmiş Mesaj Uzunluğu Sıkıştırma Eşiği Kullan"
+    },
+    "enableHistoryCount": {
+      "alias": "Sınırsız",
+      "limited": "Yalnızca {{number}} konuşma mesajını içerir",
+      "title": "Geçmiş Mesaj Sayısı Sınırlama",
+      "unlimited": "Sınırsız geçmiş mesaj sayısı"
+    },
+    "historyCount": {
+      "desc": "Her istekle taşınan tarihsel mesaj sayısı",
+      "title": "Eklenen Geçmiş Mesaj Sayısı"
+    },
+    "inputTemplate": {
+      "desc": "Kullanıcının son mesajı bu şablona doldurulur",
+      "placeholder": "Ön işleme şablonu {{text}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
+      "title": "Kullanıcı Girişi Ön İşleme"
+    },
+    "title": "Sohbet Ayarları"
+  },
+  "settingModel": {
+    "enableMaxTokens": {
+      "title": "Max Token Sınırlamasını Etkinleştir"
+    },
+    "frequencyPenalty": {
+      "desc": "Değer ne kadar yüksekse, tekrarlayan kelimeleri azaltma olasılığı o kadar yüksektir",
+      "title": "Frequency Penalty"
+    },
+    "maxTokens": {
+      "desc": "Her etkileşim için kullanılan maksimum token sayısı",
+      "title": "Max Token Sınırlaması"
+    },
+    "model": {
+      "desc": "ChatGPT modeli",
+      "list": {
+        "gpt-3.5-turbo": "GPT 3.5",
+        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+        "gpt-4": "GPT 4",
+        "gpt-4-32k": "GPT 4 (32K)"
+      },
+      "title": "Model"
+    },
+    "presencePenalty": {
+      "desc": "Değer ne kadar yüksekse, yeni konulara genişleme olasılığı o kadar yüksektir",
+      "title": "Presence Penalty"
+    },
+    "temperature": {
+      "desc": "Değer ne kadar yüksekse, yanıt o kadar rastgele olur",
+      "title": "Randomness",
+      "titleWithValue": "temperature {{value}}"
+    },
+    "title": "Model Ayarları",
+    "topP": {
+      "desc": "temperature gibi, ancak temperature ile birlikte değişmez",
+      "title": "Top P"
+    }
+  },
+  "settingPlugin": {
+    "title": "Eklenti Listesi"
+  },
+  "settingSystem": {
+    "accessCode": {
+      "desc": "Yönetici tarafından şifreleme erişimi etkinleştirildi",
+      "placeholder": "Erişim şifresini girin",
+      "title": "Erişim Şifresi"
+    },
+    "title": "Sistem Ayarları"
+  },
+  "settingTTS": {
+    "openai": {
+      "sttModel": "OpenAI Konuşmadan Metne Modeli",
+      "ttsModel": "OpenAI Metin Seslendirme Modeli"
+    },
+    "showAllLocaleVoice": {
+      "desc": "Kapalıysa, yalnızca mevcut dildeki sesler görüntülenir",
+      "title": "Tüm Yerel Sesleri Göster"
+    },
+    "stt": "Konuşmadan Metne Ayarlar",
+    "sttAutoStop": {
+      "desc": "Kapalıysa, konuşmadan metni otomatik olarak sona ermez ve manuel olarak durdurmak için tıklamanız gerekir",
+      "title": "Otomatik Durdur Konuşmadan Metin"
+    },
+    "sttLocale": {
+      "desc": "Konuşmadan metin dilini, bu seçenek konuşmadan metin tanıma doğruluğunu artırabilir",
+      "title": "Konuşmadan Metin Dil"
+    },
+    "sttService": {
+      "desc": "'Tarayıcı' yerel konuşmadan metin hizmeti olduğundan",
+      "title": "Konuşmadan Metin Hizmeti"
+    },
+    "title": "Konuşma Hizmeti",
+    "tts": "Metin Seslendirme Ayarlar",
+    "ttsService": {
+      "desc": "OpenAI metin seslendirme hizmetini kullanıyorsanız, OpenAI model hizmetinin etkin olduğundan emin olun",
+      "title": "Metin Seslendirme Hizmeti"
+    },
+    "voice": {
+      "desc": "Mevcut asistan için bir ses seçin, farklı TTS hizmetleri farklı sesleri destekler",
+      "preview": "Ses Önizlemesi",
+      "title": "Metin Seslendirme"
+    }
+  },
+  "settingTheme": {
+    "avatar": {
+      "title": "Avatar"
+    },
+    "fontSize": {
+      "desc": "Sohbet içeriği için yazı boyutu",
+      "title": "Yazı Boyutu"
+    },
+    "lang": {
+      "autoMode": "Sistem Takibi",
+      "title": "Dil"
+    },
+    "neutralColor": {
+      "desc": "Farklı renk eğilimleri için özel nötr renk",
+      "title": "Nötr Renk"
+    },
+    "primaryColor": {
+      "desc": "Özel ana tema rengi",
+      "title": "Ana Renk"
+    },
+    "themeMode": {
+      "auto": "Oto",
+      "dark": "Karanlık",
+      "light": "Açık",
+      "title": "Tema"
+    },
+    "title": "Tema Ayarları"
+  },
+  "submitAgentModal": {
+    "button": "Asistan Gönder",
+    "identifier": "Asistan Kimliği",
+    "metaMiss": "Lütfen göndermeden önce asistan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
+    "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
+    "tooltips": "Asistan pazarına paylaşın"
+  },
+  "tab": {
+    "agent": "Varsayılan Asistan",
+    "common": "Genel Ayarlar",
+    "llm": "Modeller",
+    "tts": "Metin Seslendirme"
+  },
+  "tools": {
+    "builtins": {
+      "groupName": "Dahili Araçlar"
+    },
+    "plugins": {
+      "enabled": "Etkin: {{num}}",
+      "groupName": "Eklentiler",
+      "noEnabled": "Etkin eklenti yok",
+      "store": "Eklenti Mağazası"
+    },
+    "title": "Uzantı Araçları"
+  }
+}

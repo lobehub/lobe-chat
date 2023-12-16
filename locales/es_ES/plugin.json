@@ -1,0 +1,166 @@
+{
+  "debug": {
+    "arguments": "Argumentos de llamada",
+    "function_call": "Llamada a función",
+    "off": "Desactivado",
+    "on": "Ver información de llamada de complemento",
+    "response": "Respuesta"
+  },
+  "detailModal": {
+    "info": {
+      "description": "Descripción de la API",
+      "name": "Nombre de la API"
+    },
+    "tabs": {
+      "info": "Capacidad del complemento",
+      "manifest": "Archivo de instalación",
+      "settings": "Ajustes"
+    },
+    "title": "Detalles del complemento"
+  },
+  "dev": {
+    "confirmDeleteDevPlugin": "Está a punto de eliminar este complemento local. Una vez eliminado, no se podrá recuperar. ¿Desea eliminar este complemento?",
+    "customParams": {
+      "useProxy": {
+        "label": "Instalar a través de proxy (si encuentra errores de acceso entre dominios, intente habilitar esta opción y reinstalar)"
+      }
+    },
+    "deleteSuccess": "Complemento eliminado",
+    "manifest": {
+      "identifier": {
+        "desc": "Identificador único del complemento",
+        "label": "Identificador"
+      },
+      "mode": {
+        "local": "Configuración visual",
+        "local-tooltip": "La configuración visual no está disponible temporalmente",
+        "url": "Enlace en línea"
+      },
+      "name": {
+        "desc": "Título del complemento",
+        "label": "Título",
+        "placeholder": "Buscar motor de búsqueda"
+      }
+    },
+    "meta": {
+      "author": {
+        "desc": "Autor del complemento",
+        "label": "Autor"
+      },
+      "avatar": {
+        "desc": "Icono del complemento, se puede usar Emoji o URL",
+        "label": "Icono"
+      },
+      "description": {
+        "desc": "Descripción del complemento",
+        "label": "Descripción",
+        "placeholder": "Obtener información de búsqueda en el motor de búsqueda"
+      },
+      "formFieldRequired": "Este campo es obligatorio",
+      "homepage": {
+        "desc": "Página de inicio del complemento",
+        "label": "Página de inicio"
+      },
+      "identifier": {
+        "desc": "Identificador único del complemento, se reconocerá automáticamente desde el manifiesto",
+        "errorDuplicate": "El identificador del complemento ya existe, modifique el identificador",
+        "label": "Identificador",
+        "pattenErrorMessage": "Solo se pueden ingresar caracteres alfanuméricos, - y _"
+      },
+      "manifest": {
+        "desc": "LobeChat instalará el complemento a través de este enlace",
+        "label": "URL del archivo de descripción del complemento (Manifest)",
+        "preview": "Vista previa del Manifest",
+        "refresh": "Actualizar"
+      },
+      "title": {
+        "desc": "Título del complemento",
+        "label": "Título",
+        "placeholder": "Buscar motor de búsqueda"
+      }
+    },
+    "metaConfig": "Configuración de metadatos del complemento",
+    "modalDesc": "Después de agregar un complemento personalizado, se puede utilizar para validar el desarrollo del complemento o se puede usar directamente en la conversación. Consulte el <1>documento de desarrollo↗</> para el desarrollo del complemento.",
+    "openai": {
+      "importUrl": "Importar desde enlace URL",
+      "schema": "Esquema"
+    },
+    "preview": {
+      "card": "Vista previa del efecto del complemento",
+      "desc": "Vista previa de la descripción del complemento",
+      "title": "Vista previa del nombre del complemento"
+    },
+    "save": "Instalar complemento",
+    "saveSuccess": "Configuración del complemento guardada con éxito",
+    "tabs": {
+      "manifest": "Lista de descripción de funciones (Manifest)",
+      "meta": "Metadatos del complemento"
+    },
+    "title": {
+      "create": "Agregar complemento personalizado",
+      "edit": "Editar complemento personalizado"
+    },
+    "type": {
+      "lobe": "Complemento LobeChat",
+      "openai": "Complemento OpenAI"
+    },
+    "update": "Actualizar",
+    "updateSuccess": "Configuración del complemento actualizada con éxito"
+  },
+  "error": {
+    "fetchError": "Error al recuperar el enlace del manifiesto. Asegúrese de que el enlace sea válido y permita el acceso entre dominios.",
+    "installError": "Error al instalar el complemento {{name}}.",
+    "manifestInvalid": "El manifiesto no cumple con las normas. Resultado de la validación: \n\n {{error}}",
+    "noManifest": "No se encontró el archivo de descripción",
+    "openAPIInvalid": "Error al analizar OpenAPI. Error: \n\n {{error}}",
+    "reinstallError": "Error al volver a instalar el complemento {{name}}.",
+    "urlError": "El enlace no devuelve contenido en formato JSON. Asegúrese de que sea un enlace válido."
+  },
+  "list": {
+    "item": {
+      "deprecated.title": "Obsoleto",
+      "local.config": "Configuración",
+      "local.title": "Personalizado"
+    }
+  },
+  "loading": {
+    "content": "Cargando complemento...",
+    "plugin": "Ejecutando complemento..."
+  },
+  "pluginList": "Lista de complementos",
+  "plugins": {
+    "loading": "Comprobando complementos...",
+    "unknown": "Complemento desconocido"
+  },
+  "setting": "Configuración de complementos",
+  "settings": {
+    "indexUrl": {
+      "title": "Índice de mercado",
+      "tooltip": "No se admite la edición en línea. Configure a través de variables de entorno al implementar."
+    },
+    "modalDesc": "Después de configurar la dirección del mercado de complementos, puede utilizar un mercado personalizado de complementos.",
+    "title": "Configuración del mercado de complementos"
+  },
+  "store": {
+    "actions": {
+      "confirmUninstall": "Está a punto de desinstalar este complemento. Se eliminará la configuración del complemento. Confirme su acción.",
+      "detail": "Detalles",
+      "install": "Instalar",
+      "manifest": "Editar archivo de instalación",
+      "settings": "Configuración",
+      "uninstall": "Desinstalar"
+    },
+    "communityPlugin": "Comunidad",
+    "customPlugin": "Personalizado",
+    "empty": "No hay complementos instalados",
+    "installAllPlugins": "Instalar todos",
+    "networkError": "Error al obtener la tienda de complementos. Verifique la conexión a internet e inténtelo de nuevo.",
+    "placeholder": "Buscar por nombre, descripción o palabra clave del complemento...",
+    "releasedAt": "Publicado el {{createdAt}}",
+    "tabs": {
+      "all": "Todos",
+      "installed": "Instalados"
+    },
+    "title": "Tienda de complementos"
+  }
+}
