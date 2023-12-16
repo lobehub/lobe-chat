@@ -72,7 +72,7 @@ export interface PluginDefaultTypeProps {
   name?: string;
 }
 
-const PluginDefaultType = memo<PluginDefaultTypeProps>(({ content, name }) => {
+const PluginDefaultType = memo<PluginDefaultTypeProps>(({ content, name, loading }) => {
   const manifest = useToolStore(pluginSelectors.getPluginManifestById(name || ''));
   let isJSON = true;
   try {
@@ -85,9 +85,11 @@ const PluginDefaultType = memo<PluginDefaultTypeProps>(({ content, name }) => {
 
   if (!isJSON) {
     return (
-      <Flexbox gap={8}>
-        <Loading />
-      </Flexbox>
+      loading && (
+        <Flexbox gap={8}>
+          <Loading />
+        </Flexbox>
+      )
     );
   }
 

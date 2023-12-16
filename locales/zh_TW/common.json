@@ -52,13 +52,13 @@
   "lang": {
     "en": "英文",
     "en-US": "英文",
+    "fr-FR": "法語",
     "ja-JP": "日文",
     "ko-KR": "韓文",
     "ru-RU": "俄文",
     "zh": "簡體中文",
     "zh-CN": "簡體中文",
-    "zh-TW": "繁體中文",
-    "fr-FR": "法語"
+    "zh-TW": "繁體中文"
   },
   "layoutInitializing": "正在載入版面配置...",
   "noDescription": "暫無描述",
@@ -82,8 +82,8 @@
   "temp": "臨時",
   "updateAgent": "更新助理資訊",
   "upgradeVersion": {
+    "action": "升級",
     "hasNew": "有可用更新",
-    "newVersion": "有新版本可用：{{version}}",
-    "action": "升級"
+    "newVersion": "有新版本可用：{{version}}"
   }
 }

@@ -1,129 +1,166 @@
 {
   "debug": {
-    "arguments": "調用參數",
-    "function_call": "函數調用",
-    "off": "關閉調試",
-    "on": "查看插件調用信息",
-    "response": "返回結果"
+    "arguments": "參數",
+    "function_call": "函式呼叫",
+    "off": "關閉偵錯",
+    "on": "查看插件呼叫資訊",
+    "response": "回應"
+  },
+  "detailModal": {
+    "info": {
+      "description": "API 描述",
+      "name": "API 名稱"
+    },
+    "tabs": {
+      "info": "插件能力",
+      "manifest": "安裝檔案",
+      "settings": "設定"
+    },
+    "title": "插件詳情"
   },
   "dev": {
-    "confirmDeleteDevPlugin": "即將刪除該本地插件，刪除後將無法找回，是否刪除該插件？",
-    "deleteSuccess": "插件刪除成功",
+    "confirmDeleteDevPlugin": "您確定要刪除此本機外掛嗎？一旦刪除，將無法復原。",
+    "customParams": {
+      "useProxy": {
+        "label": "透過代理安裝（若遇到跨域訪問錯誤，可嘗試開啟該選項後重新安裝）"
+      }
+    },
+    "deleteSuccess": "外掛已成功刪除",
     "manifest": {
       "identifier": {
-        "desc": "插件的唯一標識",
-        "label": "標識符"
+        "desc": "外掛的唯一識別碼",
+        "label": "識別碼"
       },
       "mode": {
-        "local": "可視化配置",
-        "local-tooltip": "暫時不支持可視化配置",
-        "url": "在線鏈接"
+        "local": "視覺設定",
+        "local-tooltip": "目前不支援視覺設定",
+        "url": "線上連結"
       },
       "name": {
-        "desc": "插件標題",
-        "label": "標題",
-        "placeholder": "搜索引擎"
+        "desc": "外掛的名稱",
+        "label": "名稱",
+        "placeholder": "搜尋引擎"
       }
     },
     "meta": {
       "author": {
-        "desc": "插件的作者",
+        "desc": "外掛的作者",
         "label": "作者"
       },
       "avatar": {
-        "desc": "插件的圖標，可以使用 Emoji，也可以使用 URL",
-        "label": "圖標"
+        "desc": "外掛的圖示，可以是 Emoji 或網址",
+        "label": "圖示"
       },
       "description": {
-        "desc": "插件描述",
+        "desc": "外掛的描述",
         "label": "描述",
-        "placeholder": "查詢搜索引擎獲取信息"
+        "placeholder": "從搜尋引擎取得資訊"
       },
-      "formFieldRequired": "該字段為必填項",
+      "formFieldRequired": "此欄位必填",
       "homepage": {
-        "desc": "插件的首頁",
+        "desc": "外掛的官方首頁",
         "label": "首頁"
       },
       "identifier": {
-        "desc": "插件的唯一標識，將從 manifest 中自動識別",
-        "errorDuplicate": "標識符和已有插件重複，請修改標識符",
-        "label": "標識符",
-        "pattenErrorMessage": "只能輸入英文字符、數字 、- 和_ 這兩個符號"
+        "desc": "外掛的唯一識別碼，只支援英數字元、連字號 -，以及底線 _",
+        "errorDuplicate": "此識別碼已被其他外掛使用，請更改識別碼",
+        "label": "識別碼",
+        "pattenErrorMessage": "只允許英數字元、連字號 -，以及底線 _"
       },
       "manifest": {
-        "desc": "LobeChat 將會通過該鏈接安裝插件",
-        "label": "插件描述文件 (Manifest) URL",
+        "desc": "LobeChat 會使用此連結安裝外掛",
+        "label": "插件描述檔 (Manifest) URL",
         "preview": "預覽 Manifest",
-        "refresh": "刷新"
+        "refresh": "重新載入"
       },
       "title": {
-        "desc": "插件標題",
-        "label": "標題",
-        "placeholder": "搜索引擎"
+        "desc": "外掛的名稱",
+        "label": "名稱",
+        "placeholder": "搜尋引擎"
       }
     },
-    "metaConfig": "插件元信息配置",
-    "modalDesc": "添加自定義插件後，可用於插件開發驗證，也可直接在會話中使用。插件開發請參考<1>開發文檔↗</>",
+    "metaConfig": "外掛後設資料設定",
+    "modalDesc": "添加自訂插件後，可用於插件開發驗證，也可直接在會話中使用。插件開發請參考<1>開發文件↗</>",
+    "openai": {
+      "importUrl": "從 URL 連結匯入",
+      "schema": "Schema"
+    },
     "preview": {
-      "card": "預覽插件展示效果",
-      "desc": "預覽插件描述",
-      "title": "插件名稱預覽"
+      "card": "外掛顯示預覽",
+      "desc": "外掛描述預覽",
+      "title": "外掛名稱預覽"
     },
     "save": "安裝插件",
-    "saveSuccess": "插件設置保存成功",
+    "saveSuccess": "外掛設定已成功儲存",
     "tabs": {
       "manifest": "功能描述清單 (Manifest)",
-      "meta": "插件元信息"
+      "meta": "外掛後設資料"
     },
-    "title": "添加自定義插件",
+    "title": {
+      "create": "新增自訂插件",
+      "edit": "編輯自訂插件"
+    },
+    "type": {
+      "lobe": "LobeChat 插件",
+      "openai": "OpenAI 插件"
+    },
     "update": "更新",
-    "updateSuccess": "插件設置更新成功"
+    "updateSuccess": "外掛設定已成功更新"
   },
   "error": {
-    "fetchError": "請求該 manifest 鏈接失敗，請確保鏈接的有效性，並檢查鏈接是否允許跨域訪問",
+    "fetchError": "請求該 manifest 連結失敗，請確保連結的有效性，並檢查連結是否允許跨域訪問",
     "installError": "插件 {{name}} 安裝失敗",
-    "manifestInvalid": " manifest 不符合規範，校驗結果: \n\n {{error}}",
-    "noManifest": "描述文件不存在",
+    "manifestInvalid": "manifest 不符合規範，校驗結果: \n\n {{error}}",
+    "noManifest": "描述檔不存在",
+    "openAPIInvalid": "OpenAPI 解析失敗，錯誤: \n\n {{error}}",
     "reinstallError": "插件 {{name}} 刷新失敗",
-    "urlError": "該鏈接沒有返回 JSON 格式的內容, 請確保是有效的鏈接"
+    "urlError": "該連結沒有返回 JSON 格式的內容, 請確保是有效的連結"
   },
   "list": {
     "item": {
       "deprecated.title": "已刪除",
-      "local.config": "配置",
-      "local.title": "自定義"
+      "local.config": "設定",
+      "local.title": "本機"
     }
   },
   "loading": {
-    "content": "調用插件中...",
-    "plugin": "插件運行中..."
+    "content": "呼叫插件中...",
+    "plugin": "外掛執行中..."
   },
-  "pluginList": "插件列表",
+  "pluginList": "外掛清單",
   "plugins": {
     "loading": "插件檢測中...",
     "unknown": "未知插件"
   },
-  "setting": "插件設定",
+  "setting": "插件設置",
   "settings": {
     "indexUrl": {
-      "title": "市場索引",
-      "tooltip": "暫不支持線上編輯，請透過部署時環境變數進行設定"
+      "title": "外掛市集索引",
+      "tooltip": "目前不支援編輯"
     },
-    "modalDesc": "配置插件市場的地址後，可以使用自定義的插件市場",
-    "title": "設定插件市場"
+    "modalDesc": "設定外掛市集的網址後，您可以使用自訂的外掛市集",
+    "title": "設定外掛市集"
   },
   "store": {
+    "actions": {
+      "confirmUninstall": "即將卸載該插件，卸載後將清除該插件配置，請確認你的操作",
+      "detail": "詳情",
+      "install": "安裝",
+      "manifest": "編輯安裝檔案",
+      "settings": "設定",
+      "uninstall": "卸載"
+    },
+    "communityPlugin": "社群外掛",
+    "customPlugin": "自訂插件",
     "empty": "暫無已安裝插件",
-    "install": "安裝",
     "installAllPlugins": "安裝全部",
-    "networkError": "獲取插件商店失敗，請檢測網路連接後重試",
-    "releasedAt": "發布於 {{createdAt}}",
+    "networkError": "獲取插件商店失敗，請檢查網路連線後重試",
+    "placeholder": "搜尋插件名稱介紹或關鍵字...",
+    "releasedAt": "發佈於 {{createdAt}}",
     "tabs": {
       "all": "全部",
       "installed": "已安裝"
     },
-    "title": "插件商店",
-    "uninstall": "卸載",
-    "placeholder": "搜尋插件名稱介紹或關鍵字..."
+    "title": "插件商店"
   }
 }

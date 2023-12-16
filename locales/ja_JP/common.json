@@ -52,13 +52,13 @@
   "lang": {
     "en": "英語",
     "en-US": "英語",
+    "fr-FR": "フランス語",
     "ja-JP": "日本語",
     "ko-KR": "韓国語",
     "ru-RU": "ロシア語",
     "zh": "簡体字中国語",
     "zh-CN": "簡体字中国語",
-    "zh-TW": "繁体字中国語",
-    "fr-FR": "フランス語"
+    "zh-TW": "繁体字中国語"
   },
   "layoutInitializing": "レイアウトを初期化中...",
   "noDescription": "説明はありません",
@@ -82,8 +82,8 @@
   "temp": "一時的",
   "updateAgent": "エージェント情報を更新",
   "upgradeVersion": {
+    "action": "アップグレード",
     "hasNew": "利用可能な更新があります",
-    "newVersion": "新しいバージョンが利用可能です：{{version}}",
-    "action": "アップグレード"
+    "newVersion": "新しいバージョンが利用可能です：{{version}}"
   }
 }
