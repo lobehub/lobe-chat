@@ -151,7 +151,7 @@ class PluginService {
         title: data.name_for_human,
       },
       openapi: data.api.url,
-
+      systemRole: data.description_for_model,
       type: 'default',
       version: '1',
     };
