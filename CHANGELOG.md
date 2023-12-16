@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.114.0](https://github.com/lobehub/lobe-chat/compare/v0.113.1...v0.114.0)
+
+<sup>Released on **2023-12-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Supports setting multiple access code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Supports setting multiple access code, closes [#647](https://github.com/lobehub/lobe-chat/issues/647) ([7db0430](https://github.com/lobehub/lobe-chat/commit/7db0430))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.113.1](https://github.com/lobehub/lobe-chat/compare/v0.113.0...v0.113.1)
 
 <sup>Released on **2023-12-16**</sup>
