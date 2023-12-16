@@ -52,13 +52,13 @@
   "lang": {
     "en": "영어",
     "en-US": "영어",
+    "fr-FR": "프랑스어",
     "ja-JP": "일본어",
     "ko-KR": "한국어",
     "ru-RU": "러시아어",
     "zh": "중국어",
     "zh-CN": "중국어(간체)",
-    "zh-TW": "중국어(번체)",
-    "fr-FR": "프랑스어"
+    "zh-TW": "중국어(번체)"
   },
   "layoutInitializing": "레이아웃을 불러오는 중...",
   "noDescription": "설명 없음",
@@ -82,8 +82,8 @@
   "temp": "임시",
   "updateAgent": "에이전트 정보 업데이트",
   "upgradeVersion": {
+    "action": "업그레이드",
     "hasNew": "사용 가능한 업데이트가 있습니다",
-    "newVersion": "새 버전 사용 가능: {{version}}",
-    "action": "업그레이드"
+    "newVersion": "새 버전 사용 가능: {{version}}"
   }
 }

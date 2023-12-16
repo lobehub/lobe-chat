@@ -1,14 +1,31 @@
 {
   "debug": {
-    "arguments": "호출 매개변수",
+    "arguments": "함수 호출 인수",
     "function_call": "함수 호출",
-    "off": "디버깅 끄기",
+    "off": "디버그 끄기",
     "on": "플러그인 호출 정보 보기",
     "response": "응답"
   },
+  "detailModal": {
+    "info": {
+      "description": "API 설명",
+      "name": "API 이름"
+    },
+    "tabs": {
+      "info": "플러그인 능력",
+      "manifest": "설치 파일",
+      "settings": "설정"
+    },
+    "title": "플러그인 상세정보"
+  },
   "dev": {
-    "confirmDeleteDevPlugin": "로컬 플러그인을 삭제하려고 합니다. 삭제한 후에는 복구할 수 없습니다. 이 플러그인을 삭제하시겠습니까?",
-    "deleteSuccess": "플러그인이 성공적으로 삭제되었습니다",
+    "confirmDeleteDevPlugin": "로컬 플러그인을 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다.",
+    "customParams": {
+      "useProxy": {
+        "label": "프록시 사용 (크로스 도메인 오류가 발생할 경우 이 옵션을 활성화한 후 다시 설치해 보세요)"
+      }
+    },
+    "deleteSuccess": "플러그인이 성공적으로 삭제되었습니다.",
     "manifest": {
       "identifier": {
         "desc": "플러그인의 고유 식별자",
@@ -16,7 +33,7 @@
       },
       "mode": {
         "local": "시각적 구성",
-        "local-tooltip": "시각적 구성은 현재 지원되지 않습니다",
+        "local-tooltip": "시각적 구성은 일시적으로 지원되지 않습니다.",
         "url": "온라인 링크"
       },
       "name": {
@@ -31,7 +48,7 @@
         "label": "작성자"
       },
       "avatar": {
-        "desc": "플러그인 아이콘, 이모지 또는 URL을 사용할 수 있습니다",
+        "desc": "플러그인 아이콘으로는 Emoji 또는 URL을 사용할 수 있습니다.",
         "label": "아이콘"
       },
       "description": {
@@ -39,22 +56,22 @@
         "label": "설명",
         "placeholder": "검색 엔진에서 정보 가져오기"
       },
-      "formFieldRequired": "이 필드는 필수 입력 사항입니다",
+      "formFieldRequired": "이 필드는 필수 입력 사항입니다.",
       "homepage": {
         "desc": "플러그인 홈페이지",
         "label": "홈페이지"
       },
       "identifier": {
-        "desc": "플러그인의 고유 식별자는 manifest에서 자동으로 인식됩니다",
-        "errorDuplicate": "식별자가 기존 플러그인과 중복되었습니다. 식별자를 수정해주세요",
+        "desc": "플러그인의 고유 식별자는 manifest에서 자동으로 인식됩니다.",
+        "errorDuplicate": "식별자가 이미 있는 플러그인과 중복되었습니다. 식별자를 수정해주세요.",
         "label": "식별자",
-        "pattenErrorMessage": "영문자, 숫자, - 및 _ 만 입력할 수 있습니다"
+        "pattenErrorMessage": "영문자, 숫자, - 및 _만 입력할 수 있습니다."
       },
       "manifest": {
-        "desc": "LobeChat은 이 링크를 통해 플러그인을 설치합니다",
-        "label": "플러그인 설명 파일 (Manifest) URL",
-        "preview": "미리보기",
-        "refresh": "새로고침"
+        "desc": "LobeChat은 이 링크를 통해 플러그인을 설치합니다.",
+        "label": "Manifest 파일 URL",
+        "preview": "Manifest 미리보기",
+        "refresh": "새로 고침"
       },
       "title": {
         "desc": "플러그인 제목",
@@ -63,29 +80,41 @@
       }
     },
     "metaConfig": "플러그인 메타 정보 구성",
-    "modalDesc": "사용자 정의 플러그인을 추가하면 플러그인 개발 확인 및 대화 중에 직접 사용할 수 있습니다. 플러그인 개발은 <1>개발 문서↗</>를 참조하세요",
+    "modalDesc": "사용자 정의 플러그인을 추가하면 플러그인 개발을 검증하거나 세션에서 직접 사용할 수 있습니다. 플러그인 개발은 <1>개발 문서↗</>를 참조하세요.",
+    "openai": {
+      "importUrl": "URL 링크에서 가져오기",
+      "schema": "스키마"
+    },
     "preview": {
-      "card": "플러그인 효과 미리보기",
+      "card": "플러그인 미리보기",
       "desc": "플러그인 설명 미리보기",
       "title": "플러그인 이름 미리보기"
     },
     "save": "플러그인 설치",
-    "saveSuccess": "플러그인 설정이 성공적으로 저장되었습니다",
+    "saveSuccess": "플러그인 설정이 성공적으로 저장되었습니다.",
     "tabs": {
       "manifest": "기능 설명 목록 (Manifest)",
       "meta": "플러그인 메타 정보"
     },
-    "title": "사용자 정의 플러그인 추가",
+    "title": {
+      "create": "사용자 정의 플러그인 추가",
+      "edit": "사용자 정의 플러그인 편집"
+    },
+    "type": {
+      "lobe": "LobeChat 플러그인",
+      "openai": "OpenAI 플러그인"
+    },
     "update": "업데이트",
-    "updateSuccess": "플러그인 설정이 성공적으로 업데이트되었습니다"
+    "updateSuccess": "플러그인 설정이 성공적으로 업데이트되었습니다."
   },
   "error": {
-    "fetchError": "해당 manifest 링크를 요청하는 중 오류가 발생했습니다. 링크의 유효성을 확인하고, 교차 출처 리소스 공유가 허용되는지 확인하세요",
-    "installError": "플러그인 {{name}} 설치 중 오류가 발생했습니다",
-    "manifestInvalid": "manifest가 규격에 맞지 않습니다. 검증 결과: \n\n {{error}}",
+    "fetchError": "해당 manifest 링크를 요청하는 중 오류가 발생했습니다. 링크의 유효성을 확인하고, 링크가 크로스 도메인 액세스를 허용하는지 확인하세요.",
+    "installError": "플러그인 {{name}} 설치 실패",
+    "manifestInvalid": "manifest가 규격에 맞지 않습니다. 유효성 검사 결과: \n\n {{error}}",
     "noManifest": "설명 파일이 없습니다",
-    "reinstallError": "플러그인 {{name}} 새로고침 중 오류가 발생했습니다",
-    "urlError": "이 링크는 JSON 형식의 내용을 반환하지 않습니다. 유효한 링크인지 확인하세요"
+    "openAPIInvalid": "OpenAPI 파싱에 실패했습니다. 오류: \n\n {{error}}",
+    "reinstallError": "플러그인 {{name}} 다시 설치 중 오류가 발생했습니다.",
+    "urlError": "이 링크는 JSON 형식의 내용을 반환하지 않습니다. 유효한 링크인지 확인하세요."
   },
   "list": {
     "item": {
@@ -100,30 +129,38 @@
   },
   "pluginList": "플러그인 목록",
   "plugins": {
-    "loading": "플러그인 확인 중...",
+    "loading": "플러그인을 확인하는 중...",
     "unknown": "알 수 없는 플러그인"
   },
   "setting": "플러그인 설정",
   "settings": {
     "indexUrl": {
-      "title": "마켓 색인",
-      "tooltip": "온라인 편집을 지원하지 않으며, 배포 시 환경 변수를 통해 설정하십시오"
+      "title": "마켓 인덱스",
+      "tooltip": "온라인 편집은 지원되지 않습니다. 배포 환경 변수를 통해 설정해주세요."
     },
-    "modalDesc": "플러그인 마켓 주소를 구성하면 사용자 정의 플러그인 마켓을 사용할 수 있습니다",
+    "modalDesc": "플러그인 마켓의 주소를 구성하면 사용자 정의 플러그인 마켓을 사용할 수 있습니다.",
     "title": "플러그인 마켓 설정"
   },
   "store": {
+    "actions": {
+      "confirmUninstall": "이 플러그인을 제거하려고 합니다. 제거하면 플러그인 구성이 지워지므로 작업을 확인하세요.",
+      "detail": "상세정보",
+      "install": "설치",
+      "manifest": "설치 파일 편집",
+      "settings": "설정",
+      "uninstall": "제거"
+    },
+    "communityPlugin": "커뮤니티 플러그인",
+    "customPlugin": "사용자 정의 플러그인",
     "empty": "설치된 플러그인이 없습니다",
-    "install": "설치",
     "installAllPlugins": "모두 설치",
-    "networkError": "플러그인 상점을 가져오는 데 실패했습니다. 네트워크 연결을 확인한 후 다시 시도하십시오",
-    "releasedAt": "{{createdAt}}에 출시됨",
+    "networkError": "플러그인 스토어를 가져오는 데 실패했습니다. 네트워크 연결을 확인한 후 다시 시도하십시오",
+    "placeholder": "플러그인 이름 또는 키워드를 검색하세요...",
+    "releasedAt": "{{createdAt}}에 출시",
     "tabs": {
       "all": "모두",
       "installed": "설치됨"
     },
-    "title": "플러그인 상점",
-    "uninstall": "제거",
-    "placeholder": "플러그인 이름 또는 키워드로 검색..."
+    "title": "플러그인 스토어"
   }
 }

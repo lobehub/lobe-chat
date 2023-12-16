@@ -2,128 +2,165 @@
   "debug": {
     "arguments": "Arguments",
     "function_call": "Function Call",
-    "off": "Turn Off Debug",
-    "on": "View Plugin Call Information",
+    "off": "Turn off debug",
+    "on": "View plugin invocation information",
     "response": "Response"
+  },
+  "detailModal": {
+    "info": {
+      "description": "API Description",
+      "name": "API Name"
+    },
+    "tabs": {
+      "info": "Plugin Capabilities",
+      "manifest": "Installation File",
+      "settings": "Settings"
+    },
+    "title": "Plugin Details"
   },
   "dev": {
     "confirmDeleteDevPlugin": "Are you sure you want to delete this local plugin? Once deleted, it cannot be recovered.",
+    "customParams": {
+      "useProxy": {
+        "label": "Install via proxy (if encountering cross-origin access errors, try enabling this option and reinstalling)"
+      }
+    },
     "deleteSuccess": "Plugin deleted successfully",
     "manifest": {
       "identifier": {
-        "desc": "Unique identifier for the plugin",
+        "desc": "The unique identifier of the plugin",
         "label": "Identifier"
       },
       "mode": {
-        "local": "Local Configuration",
-        "local-tooltip": "Local configuration is temporarily not supported",
+        "local": "Visual Configuration",
+        "local-tooltip": "Visual configuration is not supported at the moment",
         "url": "Online Link"
       },
       "name": {
-        "desc": "Plugin title",
+        "desc": "The title of the plugin",
         "label": "Title",
         "placeholder": "Search Engine"
       }
     },
     "meta": {
       "author": {
-        "desc": "Author of the plugin",
+        "desc": "The author of the plugin",
         "label": "Author"
       },
       "avatar": {
-        "desc": "Plugin icon, can use Emoji or URL",
+        "desc": "The icon of the plugin, can be an Emoji or a URL",
         "label": "Icon"
       },
       "description": {
-        "desc": "Plugin description",
+        "desc": "The description of the plugin",
         "label": "Description",
-        "placeholder": "Query search engine for information"
+        "placeholder": "Get information from search engines"
       },
       "formFieldRequired": "This field is required",
       "homepage": {
-        "desc": "Plugin homepage",
+        "desc": "The homepage of the plugin",
         "label": "Homepage"
       },
       "identifier": {
-        "desc": "Unique identifier for the plugin, will be automatically recognized from the manifest",
-        "errorDuplicate": "Identifier is already used by another plugin, please modify the identifier",
+        "desc": "The unique identifier of the plugin, only supports alphanumeric characters, hyphen -, and underscore _",
+        "errorDuplicate": "The identifier is already used by another plugin, please modify the identifier",
         "label": "Identifier",
-        "pattenErrorMessage": "Only English characters, numbers, - and _ are allowed"
+        "pattenErrorMessage": "Only alphanumeric characters, hyphen -, and underscore _ are allowed"
       },
       "manifest": {
-        "desc": "LobeChat will install the plugin through this link",
-        "label": "Plugin Description File (Manifest) URL",
+        "desc": "LobeChat will install the plugin using this link",
+        "label": "Plugin Description (Manifest) URL",
         "preview": "Preview Manifest",
         "refresh": "Refresh"
       },
       "title": {
-        "desc": "Plugin title",
+        "desc": "The title of the plugin",
         "label": "Title",
         "placeholder": "Search Engine"
       }
     },
     "metaConfig": "Plugin metadata configuration",
-    "modalDesc": "After adding a custom plugin, it can be used for plugin development validation or directly in the session. For plugin development, please refer to the <1>development documentation↗</>.",
+    "modalDesc": "After adding a custom plugin, it can be used for plugin development verification or directly in the session. Please refer to the <1>development documentation↗</> for plugin development.",
+    "openai": {
+      "importUrl": "Import from URL link",
+      "schema": "Schema"
+    },
     "preview": {
-      "card": "Preview Plugin Display",
-      "desc": "Preview Plugin Description",
+      "card": "Preview of plugin display",
+      "desc": "Preview of plugin description",
       "title": "Plugin Name Preview"
     },
     "save": "Install Plugin",
     "saveSuccess": "Plugin settings saved successfully",
     "tabs": {
-      "manifest": "Manifest Description",
+      "manifest": "Function Description Manifest (Manifest)",
       "meta": "Plugin Metadata"
     },
-    "title": "Add Custom Plugin",
+    "title": {
+      "create": "Add Custom Plugin",
+      "edit": "Edit Custom Plugin"
+    },
+    "type": {
+      "lobe": "LobeChat Plugin",
+      "openai": "OpenAI Plugin"
+    },
     "update": "Update",
     "updateSuccess": "Plugin settings updated successfully"
   },
   "error": {
     "fetchError": "Failed to fetch the manifest link. Please ensure the link is valid and allows cross-origin access.",
-    "installError": "Failed to install plugin {{name}}",
-    "manifestInvalid": "The manifest does not comply with the specification. Validation result: \n\n {{error}}",
+    "installError": "Plugin {{name}} installation failed",
+    "manifestInvalid": "The manifest does not conform to the specification. Validation result: \n\n {{error}}",
     "noManifest": "Manifest file does not exist",
+    "openAPIInvalid": "OpenAPI parsing failed. Error: \n\n {{error}}",
     "reinstallError": "Failed to refresh plugin {{name}}",
-    "urlError": "The link did not return content in JSON format. Please ensure it is a valid link"
+    "urlError": "The link did not return content in JSON format. Please ensure it is a valid link."
   },
   "list": {
     "item": {
-      "deprecated.title": "Deprecated",
+      "deprecated.title": "Deleted",
       "local.config": "Configuration",
-      "local.title": "Custom"
+      "local.title": "Local"
     }
   },
   "loading": {
     "content": "Calling plugin...",
-    "plugin": "Plugin running..."
+    "plugin": "Plugin is running..."
   },
   "pluginList": "Plugin List",
   "plugins": {
-    "loading": "Checking plugins...",
-    "unknown": "Unknown plugin"
+    "loading": "Detecting plugins...",
+    "unknown": "Unknown Plugin"
   },
   "setting": "Plugin Settings",
   "settings": {
     "indexUrl": {
       "title": "Marketplace Index",
-      "tooltip": "Online editing is not supported for now. Please set it through environment variables during deployment."
+      "tooltip": "Editing is not supported at the moment"
     },
-    "modalDesc": "After configuring the address of the plugin marketplace, you can use a custom plugin marketplace.",
-    "title": "Set Plugin Marketplace"
+    "modalDesc": "After configuring the address of the plugin marketplace, you can use a custom plugin marketplace",
+    "title": "Configure Plugin Marketplace"
   },
   "store": {
+    "actions": {
+      "confirmUninstall": "The plugin is about to be uninstalled. After uninstalling, the plugin configuration will be cleared. Please confirm your operation.",
+      "detail": "Details",
+      "install": "Install",
+      "manifest": "Edit Installation File",
+      "settings": "Settings",
+      "uninstall": "Uninstall"
+    },
+    "communityPlugin": "Third-party",
+    "customPlugin": "Custom Plugin",
     "empty": "No installed plugins yet",
-    "install": "Install",
     "installAllPlugins": "Install All",
-    "networkError": "Failed to fetch the plugin store. Please check your network connection and try again.",
+    "networkError": "Failed to fetch plugin store. Please check your network connection and try again",
+    "placeholder": "Search for plugin name, description, or keyword...",
     "releasedAt": "Released at {{createdAt}}",
     "tabs": {
       "all": "All",
       "installed": "Installed"
     },
-    "title": "Plugin Store",
-    "uninstall": "Uninstall",
-    "placeholder": "Search for plugin name, description, or keywords..."
+    "title": "Plugin Store"
   }
 }

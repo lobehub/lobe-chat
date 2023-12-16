@@ -3,7 +3,7 @@
     "clear": {
       "action": "Clear Now",
       "confirm": "Confirm to clear all chat data?",
-      "desc": "This will clear all session data, including assistant, files, messages, plugins, etc.",
+      "desc": "This will clear all session data, including agent, files, messages, plugins, etc.",
       "success": "All session messages have been cleared",
       "title": "Clear All Session Messages"
     },
@@ -85,7 +85,7 @@
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned ✨"
   },
   "plugin": {
-    "addTooltip": "Add Custom Plugin",
+    "addTooltip": "Custom Plugin",
     "clearDeprecated": "Remove Deprecated Plugins",
     "empty": "No installed plugins yet, feel free to explore the <1>Plugin Store</1>",
     "installStatus": {
@@ -106,11 +106,11 @@
       "title": "Background Color"
     },
     "description": {
-      "placeholder": "Enter assistant description",
-      "title": "Assistant Description"
+      "placeholder": "Enter agent description",
+      "title": "Agent Description"
     },
     "name": {
-      "placeholder": "Enter assistant name",
+      "placeholder": "Enter agent name",
       "title": "Name"
     },
     "prompt": {
@@ -121,7 +121,7 @@
       "placeholder": "Enter tag",
       "title": "Tag"
     },
-    "title": "Assistant Information"
+    "title": "Agent Information"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -240,7 +240,7 @@
       "title": "Text-to-Speech Service"
     },
     "voice": {
-      "desc": "Select a voice for the current assistant, different TTS services support different voices",
+      "desc": "Select a voice for the current agent, different TTS services support different voices",
       "preview": "Voice Preview",
       "title": "Text-to-Speech Voice"
     }
