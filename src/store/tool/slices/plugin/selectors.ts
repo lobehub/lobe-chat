@@ -3,6 +3,7 @@ import { uniq, uniqBy } from 'lodash-es';
 import { Md5 } from 'ts-md5';
 
 import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
+import { pluginHelpers } from '@/store/tool';
 import { ChatCompletionFunctions } from '@/types/openai/chat';
 import { InstallPluginMeta, LobeToolCustomPlugin } from '@/types/tool/plugin';
 
@@ -118,7 +119,33 @@ const enabledSchema =
     return uniqBy(list, 'name');
   };
 
+const enabledPluginsSystemRoles =
+  (enabledPlugins: string[] = []) =>
+  (s: ToolStoreState) => {
+    const toolsSystemRole = enabledPlugins
+      .map((id) => {
+        const manifest = getPluginManifestById(id)(s);
+        if (!manifest) return '';
+        const meta = getPluginMetaById(id)(s);
+
+        const title = pluginHelpers.getPluginTitle(meta);
+        const desc = pluginHelpers.getPluginDesc(meta);
+
+        return [`### ${title}`, manifest.systemRole || desc].join('\n\n');
+      })
+      .filter(Boolean);
+
+    if (toolsSystemRole.length > 0) {
+      return ['## Tools', 'You can use these tools below:', ...toolsSystemRole]
+        .filter(Boolean)
+        .join('\n\n');
+    }
+
+    return '';
+  };
+
 export const pluginSelectors = {
+  enabledPluginsSystemRoles,
   enabledSchema,
   getCustomPluginById,
   getInstalledPluginById,
