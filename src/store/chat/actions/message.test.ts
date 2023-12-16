@@ -383,8 +383,9 @@ describe('chatMessage actions', () => {
       const toggleChatLoadingSpy = vi.spyOn(result.current, 'toggleChatLoading');
       const abortController = new AbortController();
 
-      // 设置模拟 abortController
-      useChatStore.setState({ abortController });
+      act(() => {
+        useChatStore.setState({ abortController });
+      });
 
       await act(async () => {
         result.current.stopGenerateMessage();

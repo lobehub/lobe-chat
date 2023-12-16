@@ -8,7 +8,7 @@ import { memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { CLEAN_MESSAGE_KEY, META_KEY, PREFIX_KEY } from '@/const/hotkeys';
-import { isApplePlatform } from '@/utils/platform';
+import { usePlatform } from '@/hooks/usePlatform';
 
 const useStyles = createStyles(
   ({ css, token }) => css`
@@ -44,12 +44,13 @@ const HotKeys = memo<HotKeysProps>(({ keys, desc }) => {
   const { styles } = useStyles();
   const [keysGroup, setKeysGroup] = useState(keys.split('+'));
   const visibility = typeof window === 'undefined' ? 'hidden' : 'visible';
+  const { isApple } = usePlatform();
 
   useEffect(() => {
     const mapping: Record<string, any> = {
-      [CLEAN_MESSAGE_KEY]: isApplePlatform() ? <Icon icon={Delete} /> : 'backspace',
-      [META_KEY]: isApplePlatform() ? <Icon icon={Command} /> : 'ctrl',
-      [PREFIX_KEY]: isApplePlatform() ? <Icon icon={Option} /> : 'alt',
+      [CLEAN_MESSAGE_KEY]: isApple ? <Icon icon={Delete} /> : 'backspace',
+      [META_KEY]: isApple ? <Icon icon={Command} /> : 'ctrl',
+      [PREFIX_KEY]: isApple ? <Icon icon={Option} /> : 'alt',
     };
     const newValue = keys
       .split('+')

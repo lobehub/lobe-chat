@@ -29,6 +29,8 @@ export default {
     PluginSettingsInvalid: '该插件需要正确配置后才可以使用，请检查你的配置是否正确',
     PluginServerError:
       '插件服务端请求返回出错，请检查根据下面的报错信息检查你的插件描述文件、插件配置或服务端实现',
+    PluginGatewayError: '很抱歉，插件网关出现错误，请检查插件网关配置是否正确',
+    PluginOpenApiInitError: '很抱歉，OpenAPI 客户端初始化失败，请检查 OpenAPI 的配置信息是否正确',
 
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
     OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',

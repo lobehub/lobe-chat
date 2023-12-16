@@ -55,6 +55,7 @@ const AgentModalInner = memo(() => {
             },
           ]}
           onChange={setTab}
+          variant={'compact'}
         />
       </Flexbox>
       <Flexbox style={{ padding: 16 }}>

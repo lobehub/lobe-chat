@@ -1,0 +1,14 @@
+{
+  "button": {
+    "import": "Konfiguration importieren",
+    "start": "Jetzt starten"
+  },
+  "header": "Willkommen",
+  "pickAgent": "Oder wählen Sie eine Vorlage aus den folgenden Assistenten",
+  "skip": "Erstellung überspringen",
+  "slogan": {
+    "desc1": "Starten Sie das Gehirncluster und entfachen Sie den Funken des Denkens. Ihr intelligenter Assistent ist immer da.",
+    "desc2": "Erstellen Sie Ihren ersten Assistenten und lassen Sie uns beginnen.",
+    "title": "Geben Sie sich ein schlaueres Gehirn"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "agentDefaultMessage": "Olá, eu sou **{{name}}**, você pode começar a conversar comigo agora ou ir para [Configurações do Assistente](/chat/settings#session={{id}}) para completar minhas informações.",
+  "agentDefaultMessageWithSystemRole": "Olá, eu sou **{{name}}**, {{systemRole}}, vamos conversar!",
+  "backToBottom": "Voltar para o início",
+  "clearCurrentMessages": "Limpar mensagens atuais",
+  "confirmClearCurrentMessages": "Você está prestes a limpar as mensagens desta sessão. Depois de limpar, não será possível recuperá-las. Por favor, confirme sua ação.",
+  "confirmRemoveSessionItemAlert": "Você está prestes a remover este assistente. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
+  "defaultAgent": "Assistente Padrão",
+  "defaultSession": "Sessão Padrão",
+  "historyRange": "Intervalo de Histórico",
+  "inbox": {
+    "defaultMessage": "Olá, eu sou seu assistente virtual, você pode me perguntar qualquer coisa e eu farei o meu melhor para responder. Se precisar de um assistente mais profissional ou personalizado, clique em `+` para criar um assistente personalizado.",
+    "desc": "Ative o cluster cerebral, inspire faíscas de pensamento. Seu assistente inteligente, aqui para conversar sobre tudo.",
+    "title": "Conversa Aleatória"
+  },
+  "newAgent": "Novo Assistente",
+  "noDescription": "Sem descrição",
+  "pin": "Fixar",
+  "pinOff": "Desafixar",
+  "regenerate": "Regenerar",
+  "roleAndArchive": "Função e Arquivo",
+  "searchAgentPlaceholder": "Pesquisar assistentes e conversas...",
+  "send": "Enviar",
+  "sendPlaceholder": "Digite a mensagem...",
+  "sessionList": "Lista de Assistentes",
+  "shareModal": {
+    "download": "Baixar Captura de Tela",
+    "imageType": "Tipo de Imagem",
+    "screenshot": "Captura de Tela",
+    "settings": "Configurações de Exportação",
+    "shareToShareGPT": "Gerar Link de Compartilhamento ShareGPT",
+    "withBackground": "Com Imagem de Fundo",
+    "withFooter": "Com Rodapé",
+    "withPluginInfo": "Com Informações do Plugin",
+    "withSystemRole": "Com Função do Assistente"
+  },
+  "stop": "Parar",
+  "stt": {
+    "action": "Entrada de Voz",
+    "loading": "Reconhecendo...",
+    "prettifying": "Embelezando..."
+  },
+  "temp": "Temporário",
+  "tokenDetail": "Função: {{systemRoleToken}} · Mensagens: {{chatsToken}}",
+  "tokenTag": {
+    "overload": "Limite Excedido",
+    "remained": "Restante",
+    "used": "Usado"
+  },
+  "topic": {
+    "confirmRemoveAll": "Você está prestes a remover todos os tópicos. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
+    "confirmRemoveTopic": "Você está prestes a remover este tópico. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
+    "confirmRemoveUnstarred": "Você está prestes a remover os tópicos não favoritados. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
+    "defaultTitle": "Tópico Padrão",
+    "openNewTopic": "Abrir Novo Tópico",
+    "removeAll": "Remover Todos os Tópicos",
+    "removeUnstarred": "Remover Tópicos Não Favoritados",
+    "saveCurrentMessages": "Salvar Mensagens Atuais como Tópico",
+    "searchPlaceholder": "Pesquisar tópicos...",
+    "title": "Lista de Tópicos"
+  },
+  "translate": {
+    "action": "Traduzir",
+    "clear": "Limpar Tradução"
+  },
+  "tts": {
+    "action": "Leitura de Voz",
+    "clear": "Limpar Leitura"
+  },
+  "updateAgent": "Atualizar Informações do Assistente",
+  "upload": {
+    "actionTooltip": "Enviar Imagem",
+    "dragDesc": "Arraste os arquivos aqui, suporta o envio de várias imagens. Pressione Shift para enviar as imagens diretamente.",
+    "dragTitle": "Enviar Imagem"
+  },
+  "warp": "Quebrar Linha"
+}

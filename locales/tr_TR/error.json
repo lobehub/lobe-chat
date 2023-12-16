@@ -1,0 +1,53 @@
+{
+  "pluginSettings": {
+    "desc": "Bu eklentiyi kullanmaya başlamak için aşağıdaki yapılandırmayı tamamlayın",
+    "title": "{{name}} Eklenti Ayarları"
+  },
+  "response": {
+    "400": "Üzgünüm, sunucu isteğinizi anlamadı. Lütfen istek parametrelerinizin doğru olduğundan emin olun.",
+    "401": "Üzgünüm, sunucu isteğinizi reddetti, muhtemelen yetersiz izinler veya geçersiz kimlik doğrulama nedeniyle.",
+    "403": "Üzgünüm, sunucu isteğinizi reddetti. Bu içeriğe erişim izniniz yok.",
+    "404": "Üzgünüm, sunucu istediğiniz sayfa veya kaynağı bulamıyor. Lütfen URL'nizin doğru olduğundan emin olun.",
+    "405": "Üzgünüm, sunucu kullandığınız istek yöntemini desteklemiyor. Lütfen istek yönteminizin doğru olduğundan emin olun.",
+    "429": "Üzgünüm, isteğiniz çok sık ve sunucu biraz yorgun. Lütfen daha sonra tekrar deneyin.",
+    "500": "Üzgünüm, sunucu bazı zorluklar yaşıyor ve geçici olarak isteğinizi tamamlayamıyor. Lütfen daha sonra tekrar deneyin.",
+    "502": "Üzgünüm, sunucu kayboldu ve geçici olarak hizmet veremiyor. Lütfen daha sonra tekrar deneyin.",
+    "503": "Üzgünüm, sunucu şu anda isteğinizi işleyemiyor, muhtemelen aşırı yüklenme veya bakım nedeniyle. Lütfen daha sonra tekrar deneyin.",
+    "504": "Üzgünüm, sunucu yukarı akış sunucusundan bir yanıt alamadı. Lütfen daha sonra tekrar deneyin.",
+    "InvalidAccessCode": "Şifre yanlış veya boş. Lütfen doğru erişim şifresini girin veya özel bir OpenAI API Anahtarı ekleyin.",
+    "NoAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
+    "OpenAIBizError": "OpenAI hizmeti talep ederken hata oluştu. Aşağıdaki bilgilere dayanarak sorun giderin veya tekrar deneyin.",
+    "PluginApiNotFound": "Üzgünüm, eklentinin bildiriminde API mevcut değil. Lütfen istek yönteminizin eklenti bildirim API'sı ile eşleşip eşleşmediğini kontrol edin",
+    "PluginApiParamsError": "Üzgünüm, eklenti isteği için giriş parametre doğrulaması başarısız oldu. Lütfen giriş parametrelerinin API açıklamasıyla eşleşip eşleşmediğini kontrol edin",
+    "PluginGatewayError": "Üzgünüz, eklenti ağ geçidinde bir hata oluştu, lütfen eklenti ağ geçidi yapılandırmasını kontrol edin",
+    "PluginManifestInvalid": "Üzgünüm, eklentinin bildirim doğrulaması başarısız oldu. Lütfen bildirim formatının doğru olup olmadığını kontrol edin",
+    "PluginManifestNotFound": "Üzgünüm, sunucu eklentinin bildirim dosyasını (manifest.json) bulamadı. Lütfen eklenti bildirim dosyası adresinin doğru olup olmadığını kontrol edin",
+    "PluginMarketIndexInvalid": "Üzgünüm, eklenti dizini doğrulaması başarısız oldu. Lütfen dizin dosya formatının doğru olup olmadığını kontrol edin",
+    "PluginMarketIndexNotFound": "Üzgünüm, sunucu eklenti dizinini bulamadı. Lütfen dizin adresinin doğru olup olmadığını kontrol edin",
+    "PluginMetaInvalid": "Üzgünüm, eklentinin meta veri doğrulaması başarısız oldu. Lütfen eklenti meta veri formatının doğru olup olmadığını kontrol edin",
+    "PluginMetaNotFound": "Üzgünüm, dizinde eklenti bulunamadı. Lütfen dizindeki eklentinin yapılandırma bilgilerini kontrol edin",
+    "PluginOpenApiInitError": "Üzgünüz, OpenAPI istemci başlatma hatası, lütfen OpenAPI yapılandırma bilgilerini kontrol edin",
+    "PluginServerError": "Eklenti sunucusu isteği bir hata ile döndü. Lütfen aşağıdaki hata bilgilerine dayanarak eklenti bildirim dosyanızı, eklenti yapılandırmanızı veya sunucu uygulamanızı kontrol edin",
+    "PluginSettingsInvalid": "Bu eklenti, kullanılmadan önce doğru şekilde yapılandırılmalıdır. Lütfen yapılandırmanızın doğru olup olmadığını kontrol edin"
+  },
+  "stt": {
+    "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
+  },
+  "tts": {
+    "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "OpenAI Proxy URL'si Ekle (isteğe bağlı)",
+      "description": "Konuşmayı başlatmak için OpenAI API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmeyecek.",
+      "title": "Özel API Anahtarı Kullanın"
+    },
+    "closeMessage": "Mesajı kapat",
+    "confirm": "Onayla ve Yeniden Dene",
+    "password": {
+      "description": "Uygulama şifrelemesi yönetici tarafından etkinleştirilmiştir. Uygulamayı açmak için uygulama şifresini girin. Şifre sadece bir kez doldurulmalıdır.",
+      "placeholder": "Lütfen şifre girin",
+      "title": "Uygulamayı Açmak için Şifre Girin"
+    }
+  }
+}

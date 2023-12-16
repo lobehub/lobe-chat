@@ -1,0 +1,77 @@
+{
+  "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir chatten oder gehe zu [Assistenteneinstellungen](/chat/settings#session={{id}}), um meine Informationen zu vervollständigen.",
+  "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**, {{systemRole}}. Lass uns chatten!",
+  "backToBottom": "Zurück zum Ende",
+  "clearCurrentMessages": "Aktuelle Nachrichten löschen",
+  "confirmClearCurrentMessages": "Möchtest du wirklich die aktuellen Nachrichten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "confirmRemoveSessionItemAlert": "Möchtest du diesen Assistenten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "defaultAgent": "Standardassistent",
+  "defaultSession": "Standardassistent",
+  "historyRange": "Verlaufsbereich",
+  "inbox": {
+    "defaultMessage": "Hallo, ich bin dein intelligenter Assistent. Du kannst mir jede Frage stellen, und ich werde mein Bestes tun, um sie zu beantworten. Wenn du einen professionelleren oder maßgeschneiderten Assistenten benötigst, klicke auf das `+`, um einen benutzerdefinierten Assistenten zu erstellen.",
+    "desc": "Aktiviere das Gehirncluster und entfache den Funken des Denkens. Dein intelligenter Assistent, der mit dir über alles kommuniziert.",
+    "title": "Lass uns plaudern"
+  },
+  "newAgent": "Neuer Assistent",
+  "noDescription": "Keine Beschreibung vorhanden",
+  "pin": "Anheften",
+  "pinOff": "Anheften aufheben",
+  "regenerate": "Neu generieren",
+  "roleAndArchive": "Rolle und Archiv",
+  "searchAgentPlaceholder": "Assistenten und Unterhaltungen durchsuchen...",
+  "send": "Senden",
+  "sendPlaceholder": "Chat-Nachricht eingeben...",
+  "sessionList": "Assistentenliste",
+  "shareModal": {
+    "download": "Screenshot herunterladen",
+    "imageType": "Bildformat",
+    "screenshot": "Screenshot",
+    "settings": "Exporteinstellungen",
+    "shareToShareGPT": "ShareGPT-Link generieren",
+    "withBackground": "Mit Hintergrundbild",
+    "withFooter": "Mit Fußzeile",
+    "withPluginInfo": "Mit Plugin-Informationen",
+    "withSystemRole": "Mit Assistentenrolle"
+  },
+  "stop": "Stoppen",
+  "stt": {
+    "action": "Spracheingabe",
+    "loading": "Erkenne...",
+    "prettifying": "Verschönern..."
+  },
+  "temp": "Temporär",
+  "tokenDetail": "Rollen-Einstellung: {{systemRoleToken}} · Chat-Nachrichten: {{chatsToken}}",
+  "tokenTag": {
+    "overload": "Überlastung",
+    "remained": "Verbleibend",
+    "used": "Verwendet"
+  },
+  "topic": {
+    "confirmRemoveAll": "Möchtest du wirklich alle Themen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "confirmRemoveTopic": "Möchtest du dieses Thema wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "confirmRemoveUnstarred": "Möchtest du die nicht markierten Themen wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "defaultTitle": "Standardthema",
+    "openNewTopic": "Neues Thema öffnen",
+    "removeAll": "Alle Themen löschen",
+    "removeUnstarred": "Nicht markierte Themen löschen",
+    "saveCurrentMessages": "Aktuelle Unterhaltung als Thema speichern",
+    "searchPlaceholder": "Themen durchsuchen...",
+    "title": "Themenliste"
+  },
+  "translate": {
+    "action": "Übersetzen",
+    "clear": "Übersetzung löschen"
+  },
+  "tts": {
+    "action": "Sprachausgabe",
+    "clear": "Sprachausgabe löschen"
+  },
+  "updateAgent": "Assistenteninformationen aktualisieren",
+  "upload": {
+    "actionTooltip": "Bild hochladen",
+    "dragDesc": "Dateien hierher ziehen, um mehrere Bilder hochzuladen. Halte die Umschalttaste gedrückt, um Bilder direkt zu senden.",
+    "dragTitle": "Bild hochladen"
+  },
+  "warp": "Zeilenumbruch"
+}

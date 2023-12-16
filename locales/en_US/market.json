@@ -24,7 +24,7 @@
   },
   "submitAgent": "Submit Agent",
   "title": {
-    "recentSubmits": "Recent Submits",
-    "allAgents": "All Agents"
+    "allAgents": "All Agents",
+    "recentSubmits": "Recent Submits"
   }
 }

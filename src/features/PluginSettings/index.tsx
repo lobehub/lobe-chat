@@ -53,7 +53,7 @@ const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) =>
   const items = transformPluginSettings(schema);
 
   return (
-    <Form form={form} layout={'vertical'}>
+    <Form form={form} layout={'vertical'} style={{ width: '100%' }}>
       {items.map((item) => (
         <Form.Item
           desc={item.desc && <Markdown className={styles.markdown}>{item.desc as string}</Markdown>}

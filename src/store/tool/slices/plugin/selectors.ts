@@ -1,9 +1,10 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { uniq, uniqBy } from 'lodash-es';
+import { Md5 } from 'ts-md5';
 
-import { PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
+import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { ChatCompletionFunctions } from '@/types/openai/chat';
-import { LobeToolCustomPlugin } from '@/types/tool/plugin';
+import { InstallPluginMeta, LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import type { ToolStoreState } from '../../initialState';
 
@@ -60,11 +61,16 @@ const installedPluginManifestList = (s: ToolStoreState) =>
     .filter((i) => !!i);
 
 const installedPluginMetaList = (s: ToolStoreState) =>
-  installedPlugins(s).map((p) => ({
+  installedPlugins(s).map<InstallPluginMeta>((p) => ({
+    author: p.manifest?.author,
+    createdAt: p.manifest?.createdAt || (p.manifest as any)?.createAt,
+    homepage: p.manifest?.homepage,
     identifier: p.identifier,
     meta: getPluginMetaById(p.identifier)(s),
     type: p.type,
   }));
+const installedCustomPluginMetaList = (s: ToolStoreState) =>
+  installedPluginMetaList(s).filter((p) => p.type === 'customPlugin');
 
 const isPluginHasUI = (id: string) => (s: ToolStoreState) => {
   const plugin = getPluginManifestById(id)(s);
@@ -85,10 +91,22 @@ const enabledSchema =
       )
       .flatMap((manifest) =>
         manifest.api.map((m) => {
-          const pluginType = manifest.type ? `${PLUGIN_SCHEMA_SEPARATOR + manifest.type}` : '';
+          const pluginType =
+            manifest.type && manifest.type !== 'default'
+              ? `${PLUGIN_SCHEMA_SEPARATOR + manifest.type}`
+              : '';
 
           // 将插件的 identifier 作为前缀，避免重复
-          const apiName = manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + m.name + pluginType;
+          let apiName = manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + m.name + pluginType;
+
+          // OpenAI GPT function_call name can't be longer than 64 characters
+          // So we need to use md5 to shorten the name
+          // and then find the correct apiName in response by md5
+          if (apiName.length >= 64) {
+            const md5Content = PLUGIN_SCHEMA_API_MD5_PREFIX + Md5.hashStr(m.name).toString();
+
+            apiName = manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + md5Content + pluginType;
+          }
 
           return {
             ...m,
@@ -108,6 +126,7 @@ export const pluginSelectors = {
   getPluginManifestLoadingStatus,
   getPluginMetaById,
   getPluginSettingsById,
+  installedCustomPluginMetaList,
   installedPluginManifestList,
   installedPluginMetaList,
   installedPlugins,

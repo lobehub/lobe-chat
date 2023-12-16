@@ -1,0 +1,53 @@
+{
+  "pluginSettings": {
+    "desc": "Führen Sie die folgende Konfiguration durch, um das Plugin zu verwenden",
+    "title": "{{name}} Plugin-Konfiguration"
+  },
+  "response": {
+    "400": "Entschuldigung, der Server versteht Ihre Anfrage nicht. Bitte überprüfen Sie die Richtigkeit Ihrer Anfrageparameter",
+    "401": "Entschuldigung, der Server hat Ihre Anfrage abgelehnt. Möglicherweise aufgrund unzureichender Berechtigungen oder fehlender gültiger Authentifizierung",
+    "403": "Entschuldigung, der Server hat Ihre Anfrage abgelehnt. Sie haben keine Berechtigung, auf diesen Inhalt zuzugreifen",
+    "404": "Entschuldigung, der Server konnte die angeforderte Seite oder Ressource nicht finden. Bitte überprüfen Sie die Richtigkeit Ihrer URL",
+    "405": "Entschuldigung, der Server unterstützt die von Ihnen verwendete Anfragemethode nicht. Bitte überprüfen Sie die Richtigkeit Ihrer Anfragemethode",
+    "429": "Entschuldigung, Ihre Anfrage ist zu häufig. Der Server ist etwas überlastet. Bitte versuchen Sie es später erneut",
+    "500": "Entschuldigung, der Server hat anscheinend einige Schwierigkeiten und kann Ihre Anfrage vorübergehend nicht bearbeiten. Bitte versuchen Sie es später erneut",
+    "502": "Entschuldigung, der Server scheint die Orientierung verloren zu haben und kann vorübergehend keinen Service bereitstellen. Bitte versuchen Sie es später erneut",
+    "503": "Entschuldigung, der Server kann Ihre Anfrage derzeit nicht verarbeiten. Möglicherweise aufgrund von Überlastung oder Wartungsarbeiten. Bitte versuchen Sie es später erneut",
+    "504": "Entschuldigung, der Server hat keine Antwort vom Upstream-Server erhalten. Bitte versuchen Sie es später erneut",
+    "InvalidAccessCode": "Falsches oder leeres Passwort. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
+    "NoAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
+    "OpenAIBizError": "Fehler bei der OpenAI-Serviceanfrage. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut",
+    "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
+    "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
+    "PluginGatewayError": "Entschuldigung, es ist ein Fehler im Plugin-Gateway aufgetreten. Bitte überprüfen Sie die Plugin-Gateway-Konfiguration auf Richtigkeit",
+    "PluginManifestInvalid": "Entschuldigung, das Manifest des Plugins hat die Überprüfung nicht bestanden. Bitte überprüfen Sie das Format des Manifests",
+    "PluginManifestNotFound": "Entschuldigung, der Server konnte das Manifest (manifest.json) des Plugins nicht finden. Bitte überprüfen Sie die Adresse der Plugin-Beschreibungsdatei",
+    "PluginMarketIndexInvalid": "Entschuldigung, die Plugin-Marktindexüberprüfung ist fehlgeschlagen. Bitte überprüfen Sie das Format der Indexdatei",
+    "PluginMarketIndexNotFound": "Entschuldigung, der Server konnte den Plugin-Marktindex nicht finden. Bitte überprüfen Sie die Indexadresse auf Richtigkeit",
+    "PluginMetaInvalid": "Entschuldigung, die Metadaten des Plugins haben die Überprüfung nicht bestanden. Bitte überprüfen Sie das Format der Plugin-Metadaten",
+    "PluginMetaNotFound": "Entschuldigung, das Plugin wurde im Index nicht gefunden. Bitte überprüfen Sie die Konfigurationsinformationen des Plugins im Index",
+    "PluginOpenApiInitError": "Entschuldigung, die Initialisierung des OpenAPI-Clients ist fehlgeschlagen. Bitte überprüfen Sie die Konfigurationsinformationen des OpenAPI auf Richtigkeit",
+    "PluginServerError": "Fehler bei der Serveranfrage des Plugins. Bitte überprüfen Sie die Fehlerinformationen unten in Ihrer Plugin-Beschreibungsdatei, Plugin-Konfiguration oder Serverimplementierung",
+    "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit"
+  },
+  "stt": {
+    "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
+  },
+  "tts": {
+    "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "Proxy-URL hinzufügen (optional)",
+      "description": "Gib deinen OpenAI API-Schlüssel ein, um eine Sitzung zu starten. Die App speichert deinen API-Schlüssel nicht.",
+      "title": "Benutzerdefinierten API-Schlüssel verwenden"
+    },
+    "closeMessage": "Hinweis schließen",
+    "confirm": "Bestätigen und erneut versuchen",
+    "password": {
+      "description": "Der Administrator hat die App-Verschlüsselung aktiviert. Gib das App-Passwort ein, um die App zu entsperren. Das Passwort muss nur einmal eingegeben werden.",
+      "placeholder": "Passwort eingeben",
+      "title": "App entsperren durch Passworteingabe"
+    }
+  }
+}

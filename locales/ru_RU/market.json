@@ -24,7 +24,7 @@
   },
   "submitAgent": "Отправить агента",
   "title": {
-    "recentSubmits": "Недавние добавления",
-    "allAgents": "Все агенты"
+    "allAgents": "Все агенты",
+    "recentSubmits": "Недавние добавления"
   }
 }

@@ -1,0 +1,93 @@
+{
+  "about": "Sobre",
+  "advanceSettings": "Configurações avançadas",
+  "agentMaxToken": "Máximo de tokens da sessão",
+  "agentModel": "Modelo",
+  "agentProfile": "Perfil do assistente",
+  "appInitializing": "LobeChat inicializando, por favor aguarde...",
+  "archive": "Arquivar",
+  "autoGenerate": "Auto completar",
+  "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
+  "cancel": "Cancelar",
+  "changelog": "Registro de alterações",
+  "close": "Fechar",
+  "confirmRemoveSessionItemAlert": "Você está prestes a excluir este assistente. Após a exclusão, não será possível recuperá-lo. Por favor, confirme sua ação.",
+  "copy": "Copiar",
+  "copySuccess": "Cópia bem-sucedida",
+  "defaultAgent": "Assistente padrão",
+  "defaultSession": "Sessão padrão",
+  "delete": "Excluir",
+  "edit": "Editar",
+  "export": "Exportar configuração",
+  "exportType": {
+    "agent": "Exportar configuração do assistente",
+    "agentWithMessage": "Exportar assistente e mensagens",
+    "all": "Exportar configurações globais e todos os dados do assistente",
+    "allAgent": "Exportar todas as configurações do assistente",
+    "allAgentWithMessage": "Exportar todos os assistentes e mensagens",
+    "globalSetting": "Exportar configurações globais"
+  },
+  "feedback": "Feedback e sugestões",
+  "historyRange": "Intervalo de histórico",
+  "import": "Importar configuração",
+  "importModal": {
+    "finish": {
+      "onlySettings": "Configurações do sistema importadas com sucesso",
+      "start": "Começar a usar",
+      "subTitle": "Importação de dados concluída em {{duration}} segundos. Detalhes da importação:",
+      "title": "Importação de dados concluída"
+    },
+    "loading": "Importando dados, por favor aguarde...",
+    "result": {
+      "added": "Importação bem-sucedida",
+      "errors": "Erros na importação",
+      "messages": "Mensagens",
+      "sessions": "Assistentes",
+      "skips": "Ignorados",
+      "topics": "Tópicos",
+      "type": "Tipo de dados"
+    },
+    "title": "Importar dados"
+  },
+  "lang": {
+    "de-DE": "Alemão",
+    "en": "Inglês",
+    "en-US": "Inglês",
+    "es-ES": "Espanhol",
+    "fr-FR": "Francês",
+    "ja-JP": "Japonês",
+    "ko-KR": "Coreano",
+    "pt-BR": "Português do Brasil",
+    "ru-RU": "Russo",
+    "tr-TR": "Turco",
+    "zh": "Chinês",
+    "zh-CN": "Chinês simplificado",
+    "zh-TW": "Chinês tradicional"
+  },
+  "layoutInitializing": "Inicializando layout...",
+  "noDescription": "Sem descrição",
+  "ok": "OK",
+  "password": "Senha",
+  "pin": "Fixar",
+  "pinOff": "Desafixar",
+  "regenerate": "Regenerar",
+  "rename": "Renomear",
+  "reset": "Redefinir",
+  "retry": "Tentar novamente",
+  "send": "Enviar",
+  "setting": "Configuração",
+  "share": "Compartilhar",
+  "stop": "Parar",
+  "tab": {
+    "chat": "Chat",
+    "market": "Descobrir",
+    "setting": "Configuração"
+  },
+  "temp": "Temporário",
+  "updateAgent": "Atualizar informações do assistente",
+  "upgradeVersion": {
+    "action": "Atualizar",
+    "hasNew": "Nova atualização disponível",
+    "newVersion": "Nova versão disponível: {{version}}"
+  }
+}
