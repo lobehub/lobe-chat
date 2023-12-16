@@ -1,5 +1,5 @@
 import { Alert, Icon, Modal, Tooltip } from '@lobehub/ui';
-import { App, Button, Form, Popconfirm, Segmented } from 'antd';
+import { App, Button, Divider, Form, Popconfirm, Segmented } from 'antd';
 import { useResponsive } from 'antd-style';
 import { MoveUpRight } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
@@ -10,9 +10,8 @@ import MobilePadding from '@/components/MobilePadding';
 import { WIKI_PLUGIN_GUIDE } from '@/const/url';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-import LocalForm from './LocalForm';
 import PluginPreview from './PluginPreview';
-import UrlModeForm from './UrlModeForm';
+import UrlManifestForm from './UrlManifestForm';
 
 interface DevModalProps {
   mode?: 'edit' | 'create';
@@ -108,7 +107,7 @@ const DevModal = memo<DevModalProps>(
             form.submit();
           }}
           open={open}
-          title={t('dev.title')}
+          title={t(isEditMode ? 'dev.title.edit' : 'dev.title.create')}
         >
           <Flexbox
             gap={mobile ? 0 : 16}
@@ -135,35 +134,35 @@ const DevModal = memo<DevModalProps>(
                 showIcon
                 type={'info'}
               />
+              <Segmented
+                block
+                onChange={(e) => {
+                  setConfigMode(e as any);
+                }}
+                options={[
+                  {
+                    label: t('dev.manifest.mode.url'),
+                    value: 'url',
+                  },
+                  {
+                    disabled: true,
+                    label: (
+                      <Tooltip title={t('dev.manifest.mode.local-tooltip')}>
+                        {t('dev.manifest.mode.local')}
+                      </Tooltip>
+                    ),
+                    value: 'local',
+                  },
+                ]}
+              />
+              <Flexbox>
+                {configMode === 'url' ? (
+                  <UrlManifestForm form={form} isEditMode={mode === 'edit'} />
+                ) : null}
+                <Divider />
+                <PluginPreview form={form} />
+              </Flexbox>
             </MobilePadding>
-            <PluginPreview form={form} />
-            <Segmented
-              block
-              onChange={(e) => {
-                setConfigMode(e as any);
-              }}
-              options={[
-                {
-                  label: t('dev.manifest.mode.url'),
-                  value: 'url',
-                },
-                {
-                  disabled: true,
-                  label: (
-                    <Tooltip title={t('dev.manifest.mode.local-tooltip')}>
-                      {t('dev.manifest.mode.local')}
-                    </Tooltip>
-                  ),
-                  value: 'local',
-                },
-              ]}
-            />
-            {configMode === 'url' ? (
-              <UrlModeForm form={form} isEditMode={mode === 'edit'} />
-            ) : (
-              <LocalForm form={form} mode={mode} />
-            )}
-            {/*<MetaForm form={form} mode={mode} />*/}
           </Flexbox>
         </Modal>
       </Form.Provider>

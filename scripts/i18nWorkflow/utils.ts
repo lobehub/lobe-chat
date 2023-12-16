@@ -1,7 +1,6 @@
 import { consola } from 'consola';
 import { colors } from 'consola/utils';
 import { tocForResources } from 'i18next-resources-for-ts';
-import { isObject } from 'lodash';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -56,19 +55,6 @@ export const genToc = (files: string[], locale: string) => {
     toc = toc.replaceAll('.json', '').replaceAll('../../../locales/zh_CN', '../default');
   }
   return toc;
-};
-
-export const diff = (obj1: any, obj2: any, prefix: string = ''): string[] => {
-  let result: string[] = [];
-  for (const key in obj1) {
-    if (!obj2[key]) continue;
-    if (isObject(obj1[key]) && isObject(obj2[key])) {
-      result = [...result, ...diff(obj1[key], obj2[key], `${prefix}${key}.`)];
-    } else if (obj1[key] !== obj2[key]) {
-      result.push(`${prefix}${key}`);
-    }
-  }
-  return result;
 };
 
 export const tagBlue = (text: string) => colors.bgBlueBright(colors.black(` ${text} `));

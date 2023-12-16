@@ -18,7 +18,7 @@ export const FunctionMessage = memo<ChatMessage>(({ id, content, plugin }) => {
   const [showRender, setShow] = useState(true);
 
   return (
-    <Flexbox gap={12} id={id}>
+    <Flexbox gap={12} id={id} width={'100%'}>
       <Inspector showRender={showRender} {...fcProps} setShow={setShow} />
       {showRender && (
         <PluginRender

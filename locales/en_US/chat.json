@@ -1,28 +1,28 @@
 {
-  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away, or go to [Assistant Settings](/chat/settings#session={{id}}) to complete my information.",
+  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away, or go to [Agent Settings](/chat/settings#session={{id}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
-  "backToBottom": "Back to Bottom",
+  "backToBottom": "Back to bottom",
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
-  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
-  "defaultAgent": "Default Assistant",
-  "defaultSession": "Default Assistant",
+  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be retrieved. Please confirm your action.",
+  "defaultAgent": "Default Agent",
+  "defaultSession": "Default Agent",
   "historyRange": "History Range",
   "inbox": {
-    "defaultMessage": "Hello, I'm your virtual assistant. You can ask me anything, and I'll do my best to answer you. If you need a more professional or customized assistant, click on `+` to create a custom assistant.",
-    "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
+    "defaultMessage": "Hello, I'm your virtual agent. You can ask me anything, and I'll do my best to answer you. If you need a more professional or customized agent, click on `+` to create a custom agent.",
+    "desc": "Activate the brain cluster and spark creative thinking. Your virtual agent is here to communicate with you about everything.",
     "title": "Just Chat"
   },
-  "newAgent": "New Assistant",
+  "newAgent": "New Agent",
   "noDescription": "No description available",
   "pin": "Pin",
   "pinOff": "Unpin",
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
-  "searchAgentPlaceholder": "Search assistants and conversations...",
+  "searchAgentPlaceholder": "Search agents and conversations...",
   "send": "Send",
   "sendPlaceholder": "Type your message here...",
-  "sessionList": "Assistant List",
+  "sessionList": "Agent List",
   "shareModal": {
     "download": "Download Screenshot",
     "imageType": "Image Format",
@@ -32,7 +32,7 @@
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",
-    "withSystemRole": "Include Assistant Role Setting"
+    "withSystemRole": "Include Agent Role Setting"
   },
   "stop": "Stop",
   "stt": {
@@ -67,7 +67,7 @@
     "action": "Text-to-Speech",
     "clear": "Clear Speech"
   },
-  "updateAgent": "Update Assistant Information",
+  "updateAgent": "Update Agent Information",
   "upload": {
     "actionTooltip": "Upload Image",
     "dragDesc": "Drag and drop files here, support uploading multiple images. Hold down Shift to send images directly.",

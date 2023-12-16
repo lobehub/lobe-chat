@@ -57,7 +57,7 @@ describe('ChatService', () => {
 
       expect(getChatCompletionSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          functions: expect.arrayContaining([{ name: 'plugin1____api1____default' }]),
+          functions: expect.arrayContaining([{ name: 'plugin1____api1' }]),
           messages: expect.anything(),
         }),
         undefined,

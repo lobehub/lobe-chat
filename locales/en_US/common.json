@@ -52,13 +52,13 @@
   "lang": {
     "en": "English",
     "en-US": "English",
+    "fr-FR": "French",
     "ja-JP": "Japanese",
     "ko-KR": "Korean",
     "ru-RU": "Russian",
     "zh": "Simplified Chinese",
     "zh-CN": "Simplified Chinese",
-    "zh-TW": "Traditional Chinese",
-    "fr-FR": "French"
+    "zh-TW": "Traditional Chinese"
   },
   "layoutInitializing": "Initializing layout...",
   "noDescription": "No description available",
@@ -82,8 +82,8 @@
   "temp": "Temporary",
   "updateAgent": "Update Agent Information",
   "upgradeVersion": {
+    "action": "Upgrade",
     "hasNew": "New update available",
-    "newVersion": "New version available: {{version}}",
-    "action": "Upgrade"
+    "newVersion": "New version available: {{version}}"
   }
 }
