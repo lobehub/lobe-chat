@@ -30,6 +30,14 @@ const mockState = {
       },
       type: 'plugin',
     },
+    {
+      identifier: 'plugin-3',
+      manifest: {
+        identifier: 'plugin-3',
+        api: [{ name: 'api-3' }],
+      },
+      type: 'customPlugin',
+    },
   ],
   pluginStoreList: [
     {
@@ -57,22 +65,42 @@ describe('pluginSelectors', () => {
     });
 
     it('enabledSchema should return with standalone plugin', () => {
-      const result = pluginSelectors.enabledSchema(['plugin-3'])({
+      const result = pluginSelectors.enabledSchema(['plugin-4'])({
         ...mockState,
         installedPlugins: [
           ...mockState.installedPlugins,
           {
-            identifier: 'plugin-3',
+            identifier: 'plugin-4',
             manifest: {
-              identifier: 'plugin-3',
-              api: [{ name: 'api-3' }],
+              identifier: 'plugin-4',
+              api: [{ name: 'api-4' }],
               type: 'standalone',
             },
             type: 'plugin',
           },
         ],
       } as ToolStoreState);
-      expect(result).toEqual([{ name: 'plugin-3____api-3____standalone' }]);
+      expect(result).toEqual([{ name: 'plugin-4____api-4____standalone' }]);
+    });
+
+    it('enabledSchema should return md5 hash apiName', () => {
+      const result = pluginSelectors.enabledSchema(['long-long-plugin-with-id'])({
+        ...mockState,
+        installedPlugins: [
+          ...mockState.installedPlugins,
+          {
+            identifier: 'long-long-plugin-with-id',
+            manifest: {
+              identifier: 'long-long-plugin-with-id',
+              api: [{ name: 'long-long-manifest-long-long-apiName' }],
+            },
+            type: 'plugin',
+          },
+        ],
+      } as ToolStoreState);
+      expect(result).toEqual([
+        { name: 'long-long-plugin-with-id____MD5HASH_396eae4c671da3fb642c49ad2b9e8790' },
+      ]);
     });
 
     it('enabledSchema should return empty', () => {
@@ -204,7 +232,7 @@ describe('pluginSelectors', () => {
   describe('storeAndInstallPluginsIdList', () => {
     it('should return a list of unique plugin identifiers from both installed and store lists', () => {
       const result = pluginSelectors.storeAndInstallPluginsIdList(mockState);
-      expect(result).toEqual(['plugin-1', 'plugin-2']);
+      expect(result).toEqual(['plugin-1', 'plugin-2', 'plugin-3']);
     });
   });
 
@@ -225,6 +253,14 @@ describe('pluginSelectors', () => {
         type: p.type,
       }));
       expect(result).toEqual(expectedMetaList);
+    });
+  });
+
+  describe('installedCustomPluginMetaList', () => {
+    it('should return a list of meta information for installed plugins', () => {
+      const result = pluginSelectors.installedCustomPluginMetaList(mockState);
+
+      expect(result).toEqual([{ identifier: 'plugin-3', type: 'customPlugin' }]);
     });
   });
 });

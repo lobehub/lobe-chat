@@ -8,6 +8,8 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { LanguageModel } from '@/types/llm';
 
 const Token = memo(() => {
@@ -23,14 +25,30 @@ const Token = memo(() => {
     agentSelectors.currentAgentModel(s) as LanguageModel,
   ]);
 
+  const plugins = useSessionStore(agentSelectors.currentAgentPlugins);
+
+  const toolsString = useToolStore((s) => {
+    const pluginSystemRoles = pluginSelectors.enabledPluginsSystemRoles(plugins)(s);
+    const schemaNumber = pluginSelectors
+      .enabledSchema(plugins)(s)
+      .map((i) => JSON.stringify(i))
+      .join('');
+
+    return pluginSystemRoles + schemaNumber;
+  });
+
   const inputTokenCount = useTokenCount(input);
 
   const systemRoleToken = useTokenCount(systemRole);
   const chatsToken = useTokenCount(messageString);
+  const toolsToken = useTokenCount(toolsString);
 
-  const totalToken = systemRoleToken + chatsToken;
+  const totalToken = systemRoleToken + chatsToken + toolsToken;
   return (
-    <Tooltip placement={'bottom'} title={t('tokenDetail', { chatsToken, systemRoleToken })}>
+    <Tooltip
+      placement={'bottom'}
+      title={t('tokenDetail', { chatsToken, systemRoleToken, toolsToken })}
+    >
       <TokenTag
         maxValue={ModelTokens[model]}
         style={{ marginLeft: 8 }}
