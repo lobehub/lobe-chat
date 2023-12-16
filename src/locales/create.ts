@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next';
 
 import { getClientConfig } from '@/config/client';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
+import { COOKIE_CACHE_DAYS } from '@/const/settings';
 import type { Namespaces } from '@/types/locale';
 import { isOnServerSide } from '@/utils/env';
 
@@ -39,6 +40,7 @@ export const createI18nNext = (lang?: string) => {
         defaultNS: ['error', 'common'],
         detection: {
           caches: ['cookie'],
+          cookieMinutes: 60 * 24 * COOKIE_CACHE_DAYS,
           lookupCookie: LOBE_LOCALE_COOKIE,
         },
         fallbackLng: DEFAULT_LANG,

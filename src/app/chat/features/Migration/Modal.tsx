@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { Button, Result } from 'antd';
-import { BadgeCheck, CpuIcon } from 'lucide-react';
+import { CheckCircle, CpuIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
@@ -48,7 +48,7 @@ const MigrationModal = memo<MigrationModalProps>(({ setOpen, open, state: dbStat
                 {t('dbV1.action.start')}
               </Button>
             }
-            icon={<Icon icon={BadgeCheck} />}
+            icon={<Icon icon={CheckCircle} />}
             status={'success'}
             style={{ paddingBlock: 24 }}
             subTitle={t('dbV1.upgrade.success.subTitle')}

@@ -1,0 +1,53 @@
+{
+  "pluginSettings": {
+    "desc": "Complete a seguinte configuração para começar a usar este plugin",
+    "title": "Configuração do plugin {{name}}"
+  },
+  "response": {
+    "400": "Desculpe, o servidor não entendeu sua solicitação. Verifique se os parâmetros da sua solicitação estão corretos",
+    "401": "Desculpe, o servidor recusou sua solicitação, possivelmente devido à falta de permissão ou autenticação inválida",
+    "403": "Desculpe, o servidor recusou sua solicitação. Você não tem permissão para acessar este conteúdo",
+    "404": "Desculpe, o servidor não encontrou a página ou recurso solicitado. Verifique se a URL está correta",
+    "405": "Desculpe, o servidor não suporta o método de solicitação que você está usando. Verifique se o método de solicitação está correto",
+    "429": "Desculpe, houve muitas solicitações. O servidor está um pouco sobrecarregado. Por favor, tente novamente mais tarde",
+    "500": "Desculpe, o servidor parece estar enfrentando algumas dificuldades e não pode concluir sua solicitação no momento. Por favor, tente novamente mais tarde",
+    "502": "Desculpe, o servidor parece estar temporariamente indisponível. Por favor, tente novamente mais tarde",
+    "503": "Desculpe, o servidor não pode processar sua solicitação no momento, possivelmente devido a sobrecarga ou manutenção. Por favor, tente novamente mais tarde",
+    "504": "Desculpe, o servidor não recebeu resposta do servidor upstream. Por favor, tente novamente mais tarde",
+    "InvalidAccessCode": "Senha incorreta ou em branco. Insira a senha de acesso correta ou adicione uma chave de API personalizada do OpenAI",
+    "NoAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
+    "OpenAIBizError": "Erro ao solicitar o serviço OpenAI. Verifique ou tente novamente com base nas informações abaixo",
+    "PluginApiNotFound": "Desculpe, o API especificado não existe no manifesto do plugin. Verifique se o método de solicitação corresponde ao API do manifesto do plugin",
+    "PluginApiParamsError": "Desculpe, a validação dos parâmetros de entrada da solicitação do plugin falhou. Verifique se os parâmetros de entrada correspondem às informações de descrição do API",
+    "PluginGatewayError": "Desculpe, ocorreu um erro no gateway do plugin. Verifique se a configuração do gateway do plugin está correta",
+    "PluginManifestInvalid": "Desculpe, a validação do manifesto de descrição do plugin falhou. Verifique se o formato do manifesto de descrição está correto",
+    "PluginManifestNotFound": "Desculpe, o servidor não encontrou o manifesto de descrição do plugin (manifest.json). Verifique se o endereço do arquivo de descrição do plugin está correto",
+    "PluginMarketIndexInvalid": "Desculpe, a validação do índice do plugin falhou. Verifique se o formato do arquivo do índice está correto",
+    "PluginMarketIndexNotFound": "Desculpe, o servidor não encontrou o índice do plugin. Verifique se o endereço do índice está correto",
+    "PluginMetaInvalid": "Desculpe, a validação das metainformações do plugin falhou. Verifique se o formato das metainformações do plugin está correto",
+    "PluginMetaNotFound": "Desculpe, o plugin não foi encontrado no índice. Verifique as informações de configuração do plugin no índice",
+    "PluginOpenApiInitError": "Desculpe, a inicialização do cliente OpenAPI falhou. Verifique se as informações de configuração do OpenAPI estão corretas",
+    "PluginServerError": "Erro na resposta do servidor do plugin. Verifique o arquivo de descrição do plugin, a configuração do plugin ou a implementação do servidor de acordo com as informações de erro abaixo",
+    "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta"
+  },
+  "stt": {
+    "responseError": "Falha na solicitação de serviço. Verifique a configuração ou tente novamente"
+  },
+  "tts": {
+    "responseError": "Falha na solicitação de serviço. Verifique a configuração ou tente novamente"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "Adicionar URL do Proxy OpenAI (opcional)",
+      "description": "Insira sua chave de API OpenAI para iniciar a sessão. O aplicativo não irá armazenar sua chave de API.",
+      "title": "Usar chave de API personalizada"
+    },
+    "closeMessage": "Fechar mensagem",
+    "confirm": "Confirmar e tentar novamente",
+    "password": {
+      "description": "O administrador ativou a criptografia do aplicativo. Insira a senha do aplicativo para desbloqueá-lo. A senha só precisa ser inserida uma vez.",
+      "placeholder": "Insira a senha",
+      "title": "Insira a senha para desbloquear o aplicativo"
+    }
+  }
+}

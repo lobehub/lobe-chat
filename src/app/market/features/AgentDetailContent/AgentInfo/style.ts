@@ -29,15 +29,7 @@ export const useStyles = createStyles(({ css, token, prefixCls, stylish }) => ({
   `,
   markdown: stylish.markdownInChat,
   nav: css`
-    padding-top: 4px;
-
-    .${prefixCls}-tabs-tab {
-      margin: 4px !important;
-
-      + .${prefixCls}-tabs-tab {
-        margin: 4px !important;
-      }
-    }
+    padding-top: 8px;
   `,
   title: css`
     font-size: 20px;

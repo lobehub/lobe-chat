@@ -23,10 +23,12 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
 
   /**
    * create a new record
-   * @param data
-   * @param id
    */
-  protected async _add<T = LocalDBSchema[N]['model']>(data: T, id: string | number = nanoid()) {
+  protected async _add<T = LocalDBSchema[N]['model']>(
+    data: T,
+    id: string | number = nanoid(),
+    primaryKey: string = 'id',
+  ) {
     const result = this.schema.safeParse(data);
 
     if (!result.success) {
@@ -40,7 +42,12 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
 
     const tableName = this._tableName;
 
-    const record: any = { ...result.data, createdAt: Date.now(), id, updatedAt: Date.now() };
+    const record: any = {
+      ...result.data,
+      createdAt: Date.now(),
+      [primaryKey]: id,
+      updatedAt: Date.now(),
+    };
 
     const newId = await this.db[tableName].add(record);
 

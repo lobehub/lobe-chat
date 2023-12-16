@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
-import { usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
 import { useSessionStore } from '@/store/session';
+import { useToolStore } from '@/store/tool';
+import { customPluginSelectors, pluginSelectors } from '@/store/tool/selectors';
 
 interface PluginStatusProps {
   deprecated?: boolean;
@@ -17,13 +17,13 @@ interface PluginStatusProps {
 }
 const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
   const { t } = useTranslation('common');
-  const [status, isCustom, fetchPluginManifest] = usePluginStore((s) => [
+  const [status, isCustom, reinstallCustomPlugin] = useToolStore((s) => [
     pluginSelectors.getPluginManifestLoadingStatus(id)(s),
-    pluginSelectors.isCustomPlugin(id)(s),
-    s.installPlugin,
+    customPluginSelectors.isCustomPlugin(id)(s),
+    s.reinstallCustomPlugin,
   ]);
 
-  const manifest = usePluginStore(pluginSelectors.getPluginManifestById(id));
+  const manifest = useToolStore(pluginSelectors.getPluginManifestById(id));
 
   const removePlugin = useSessionStore((s) => s.removePlugin);
 
@@ -37,7 +37,7 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
           <ActionIcon
             icon={LucideRotateCw}
             onClick={() => {
-              fetchPluginManifest(id);
+              reinstallCustomPlugin(id);
             }}
             size={'small'}
             title={t('retry')}
@@ -78,7 +78,7 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
             removePlugin(id);
           }}
           size={'small'}
-          title={t('settingPlugin.clearDeprecated', { ns: 'setting' })}
+          title={t('plugin.clearDeprecated', { ns: 'setting' })}
         />
       ) : (
         <Flexbox align={'center'} horizontal>
@@ -87,8 +87,7 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
               icon={RotateCwIcon}
               onClick={(e) => {
                 e.stopPropagation();
-                fetchPluginManifest(id);
-                // form.validateFields(['manifest']);
+                reinstallCustomPlugin(id);
               }}
               size={'small'}
               title={t('dev.meta.manifest.refresh', { ns: 'plugin' })}

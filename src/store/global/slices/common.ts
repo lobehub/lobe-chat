@@ -4,7 +4,7 @@ import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { CURRENT_VERSION } from '@/const/version';
-import { featLatestVersion } from '@/services/latestVersion';
+import { globalService } from '@/services/global';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -72,7 +72,7 @@ export const createCommonSlice: StateCreator<
     );
   },
   useCheckLatestVersion: () =>
-    useSWR('checkLatestVersion', featLatestVersion, {
+    useSWR('checkLatestVersion', globalService.getLatestVersion, {
       onSuccess: (data: string) => {
         if (gt(data, CURRENT_VERSION))
           set({ hasNewVersion: true, latestVersion: data }, false, n('checkLatestVersion'));

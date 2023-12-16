@@ -33,12 +33,12 @@ export const getServerConfig = () => {
     regions = process.env.OPENAI_FUNCTION_REGIONS.split(',');
   }
 
-  const ACCESS_CODE = process.env.ACCESS_CODE;
+  const ACCESS_CODES = process.env.ACCESS_CODE?.split(',').filter(Boolean) || [];
 
   return {
-    ACCESS_CODE,
+    ACCESS_CODES,
 
-    SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODE,
+    SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODES.length,
 
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,

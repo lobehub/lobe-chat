@@ -383,8 +383,9 @@ describe('chatMessage actions', () => {
       const toggleChatLoadingSpy = vi.spyOn(result.current, 'toggleChatLoading');
       const abortController = new AbortController();
 
-      // 设置模拟 abortController
-      useChatStore.setState({ abortController });
+      act(() => {
+        useChatStore.setState({ abortController });
+      });
 
       await act(async () => {
         result.current.stopGenerateMessage();
@@ -469,7 +470,6 @@ describe('chatMessage actions', () => {
       // 设置模拟返回值
       (messageService.getMessages as Mock).mockResolvedValue(messages);
 
-      // renderHook 在 @testing-library/react-hooks 中使用，所以我们使用 render 来替代
       const { result } = renderHook(() => useChatStore().useFetchMessages(sessionId, topicId));
 
       // 等待异步操作完成

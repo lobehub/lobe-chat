@@ -35,7 +35,7 @@ interface AvatarWithUploadProps {
 }
 
 const AvatarWithUpload = memo<AvatarWithUploadProps>(
-  ({ size = 40, compressSize = 128, style, id }) => {
+  ({ size = 40, compressSize = 256, style, id }) => {
     const [avatar, setSettings] = useGlobalStore((st) => [st.settings.avatar, st.setSettings]);
     const { styles } = useStyle();
 

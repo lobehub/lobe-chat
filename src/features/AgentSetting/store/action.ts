@@ -232,7 +232,6 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     get().dispatchConfig({ config, type: 'update' });
   },
   setAgentMeta: (meta) => {
-    console.log(meta);
     get().dispatchMeta({ type: 'update', value: meta });
   },
 

@@ -1,11 +1,12 @@
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
+import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { filesSelectors, useFileStore } from '@/store/file';
-import { usePluginStore } from '@/store/plugin';
-import { pluginSelectors } from '@/store/plugin/selectors';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/chatMessage';
 import type { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
@@ -37,11 +38,11 @@ class ChatService {
     );
     // ============  1. preprocess messages   ============ //
 
-    const oaiMessages = this.processMessages(messages);
+    const oaiMessages = this.processMessages(messages, enabledPlugins);
 
     // ============  2. preprocess tools   ============ //
 
-    const filterTools = pluginSelectors.enabledSchema(enabledPlugins)(usePluginStore.getState());
+    const filterTools = pluginSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
     // the rule that model can use tools:
     // 1. tools is not empty
@@ -79,9 +80,7 @@ class ChatService {
    * @param options
    */
   runPluginApi = async (params: PluginRequestPayload, options?: FetchOptions) => {
-    const { usePluginStore } = await import('@/store/plugin');
-
-    const s = usePluginStore.getState();
+    const s = useToolStore.getState();
 
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
     const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
@@ -104,7 +103,7 @@ class ChatService {
 
   fetchPresetTaskResult = fetchAIFactory(this.getChatCompletion);
 
-  private processMessages = (messages: ChatMessage[]): OpenAIChatMessage[] => {
+  private processMessages = (messages: ChatMessage[], tools?: string[]): OpenAIChatMessage[] => {
     // handle content type for vision model
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
@@ -123,7 +122,7 @@ class ChatService {
       ] as UserMessageContentPart[];
     };
 
-    return messages.map((m): OpenAIChatMessage => {
+    const postMessages = messages.map((m): OpenAIChatMessage => {
       switch (m.role) {
         case 'user': {
           return { content: getContent(m), role: m.role };
@@ -137,6 +136,27 @@ class ChatService {
         default: {
           return { content: m.content, role: m.role };
         }
+      }
+    });
+
+    return produce(postMessages, (draft) => {
+      if (!tools || tools.length === 0) return;
+
+      const systemMessage = draft.find((i) => i.role === 'system');
+
+      const toolsSystemRoles = pluginSelectors.enabledPluginsSystemRoles(tools)(
+        useToolStore.getState(),
+      );
+
+      if (!toolsSystemRoles) return;
+
+      if (systemMessage) {
+        systemMessage.content = systemMessage.content + '\n\n' + toolsSystemRoles;
+      } else {
+        draft.unshift({
+          content: toolsSystemRoles,
+          role: 'system',
+        });
       }
     });
   };
