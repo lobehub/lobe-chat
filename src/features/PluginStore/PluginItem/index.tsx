@@ -16,15 +16,18 @@ const useStyles = createStyles(({ css, token }) => ({
   desc: css`
     margin: 0 !important;
     font-size: 12px;
+    line-height: 1;
     color: ${token.colorTextDescription};
   `,
   link: css`
+    overflow: hidden;
     color: ${token.colorText};
   `,
   title: css`
+    margin: 0 !important;
     font-size: 14px;
     font-weight: bold;
-    line-height: 2;
+    line-height: 1;
   `,
 }));
 
@@ -47,15 +50,19 @@ const PluginItem = memo<InstallPluginMeta>(({ identifier, homepage, author, type
         style={{ overflow: 'hidden', position: 'relative' }}
       >
         <Avatar avatar={meta.avatar} style={{ flex: 'none', overflow: 'hidden' }} />
-        <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
+        <Flexbox flex={1} gap={4} style={{ overflow: 'hidden', position: 'relative' }}>
           <Flexbox align={'center'} gap={8} horizontal>
             <Tooltip title={identifier}>
               {homepage ? (
                 <Link className={styles.link} href={homepage} target={'_blank'}>
-                  <div className={styles.title}>{meta.title}</div>
+                  <Paragraph className={styles.title} ellipsis={{ rows: 1 }}>
+                    {meta.title}
+                  </Paragraph>
                 </Link>
               ) : (
-                <div className={styles.title}>{meta.title}</div>
+                <Paragraph className={styles.title} ellipsis={{ rows: 1 }}>
+                  {meta.title}
+                </Paragraph>
               )}
             </Tooltip>
             <PluginTag author={author} type={type} />

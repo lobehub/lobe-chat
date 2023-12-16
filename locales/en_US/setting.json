@@ -251,6 +251,11 @@
     },
     "fontSize": {
       "desc": "Font size for chat content",
+      "marks": {
+        "large": "Large",
+        "normal": "Normal",
+        "small": "Small"
+      },
       "title": "Font Size"
     },
     "lang": {
