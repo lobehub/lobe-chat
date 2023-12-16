@@ -251,6 +251,11 @@
     },
     "fontSize": {
       "desc": "Taille de la police du contenu du chat",
+      "marks": {
+        "large": "Grand",
+        "normal": "Normal",
+        "small": "Petit"
+      },
       "title": "Taille de la police"
     },
     "lang": {
