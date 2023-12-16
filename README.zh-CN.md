@@ -146,15 +146,18 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                    | 仓库                                                                                            | 插件描述                                                |
-| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| [授粉绘画](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AI0x0** on **2023-12-10**</sup>   | [mushan0x0/lobe-pollinations-ai](https://github.com/mushan0x0/lobe-pollinations-ai)             | 通过 pollinations.ai 进行图像生成<br/>`drawing` `image` |
-| [时钟时间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup> | [lobehub/chat-plugin-clock-time](https://github.com/lobehub/chat-plugin-clock-time)             | 显示一个时钟来展示当前时间<br/>`时钟` `时间`            |
-| [网站爬虫](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-17**</sup> | [lobehub/chat-plugin-web-crawler](https://github.com/lobehub/chat-plugin-web-crawler)           | 从网页链接中提取内容<br/>`网页` `内容爬取器`            |
-| [搜索引擎](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-15**</sup> | [lobehub/chat-plugin-search-engine](https://github.com/lobehub/chat-plugin-search-engine)       | 查询搜索引擎以获取信息<br/>`网络` `搜索`                |
-| [实时天气](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-08-12**</sup> | [lobehub/chat-plugin-realtime-weather](https://github.com/lobehub/chat-plugin-realtime-weather) | 获取实时天气信息<br/>`天气` `实时`                      |
+| 最近新增                                                                                                       | 仓库                                                                                            | 插件描述                                                                                   |
+| -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [天气 GPT](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Steven Tey** on **undefined**</sup>  | [steven-tey/weathergpt](https://github.com/steven-tey/weathergpt)                               | 获取特定位置的当前天气信息。<br/>`天气`                                                    |
+| [AskYouPDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AskYourPDF** on **undefined**</sup> | [undefined](https://askyourpdf.com/)                                                            | 释放您的 PDF 的力量！深入您的文档，找到答案，并将信息带到您的指尖。<br/>`pdf` `文档` `web` |
+| [时钟时间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **undefined**</sup>     | [lobehub/chat-plugin-clock-time](https://github.com/lobehub/chat-plugin-clock-time)             | 显示一个时钟来展示当前时间<br/>`时钟` `时间`                                               |
+| [授粉绘画](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AI0x0** on **undefined**</sup>       | [mushan0x0/lobe-pollinations-ai](https://github.com/mushan0x0/lobe-pollinations-ai)             | 通过 pollinations.ai 进行图像生成<br/>`drawing` `image`                                    |
+| [实时天气](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **undefined**</sup>     | [lobehub/chat-plugin-realtime-weather](https://github.com/lobehub/chat-plugin-realtime-weather) | 获取实时天气信息<br/>`天气` `实时`                                                         |
+| [搜索引擎](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **undefined**</sup>     | [lobehub/chat-plugin-search-engine](https://github.com/lobehub/chat-plugin-search-engine)       | 查询搜索引擎以获取信息<br/>`网络` `搜索`                                                   |
+| [SEO](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Orren Prunckun** on **undefined**</sup>   | [undefined](https://orrenprunckun.com)                                                          | 输入任何 URL 和关键词，获取页面 SEO 分析和见解！<br/>`seo`                                 |
+| [网站爬虫](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **undefined**</sup>     | [lobehub/chat-plugin-web-crawler](https://github.com/lobehub/chat-plugin-web-crawler)           | 从网页链接中提取内容<br/>`网页` `内容爬取器`                                               |
 
-> 📊 Total plugins: [<kbd>**5**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**8**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -182,14 +185,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                     | 助手说明                                                                                       |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| [模拟 ChatGPT Web](https://chat-preview.lobehub.com/market?agent=chat-gpt-web)<br/><sup>By **[pzcn](https://github.com/pzcn)** on **2023-12-16**</sup>                       | 使 GPT 认为自己是 ChatGPT 网页版，从而达到更加接近于网页版的回复<br/>`助手` `对话`             |
-| [ShortBookGPT](https://chat-preview.lobehub.com/market?agent=book-summary-agent)<br/><sup>By **[thelapyae](https://github.com/thelapyae)** on **2023-12-15**</sup>           | 专注于生成简洁的书籍摘要，带有可操作的要点。<br/>`书籍摘要` `ai助手` `要点摘要` `可操作的要点` |
-| [探案解析器](https://chat-preview.lobehub.com/market?agent=detective-game-assistant)<br/><sup>By **[Sheldon23357](https://github.com/Sheldon23357)** on **2023-12-15**</sup> | 根据给定的凶杀案件，进行一局游戏<br/>`探案` `游戏` `推理` `解谜` `侦探`                        |
-| [案件生成器](https://chat-preview.lobehub.com/market?agent=detective-novelist)<br/><sup>By **[Sheldon23357](https://github.com/Sheldon23357)** on **2023-12-15**</sup>       | 擅长创作红鲱鱼风格的谋杀悬疑故事<br/>`探案` `游戏` `推理` `解谜` `侦探`                        |
+| 最近新增                                                                                                                                                                 | 助手说明                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| [模拟 ChatGPT Web](https://chat-preview.lobehub.com/market?agent=chat-gpt-web)<br/><sup>By **[pzcn](https://github.com/pzcn)** on **2023-12-16**</sup>                   | 使 GPT 认为自己是 ChatGPT 网页版，从而达到更加接近于网页版的回复<br/>`助手` `对话`             |
+| [祝贺](https://chat-preview.lobehub.com/market?agent=congratulations-with-smileys)<br/><sup>By **[almaziphone](https://github.com/almaziphone)** on **2023-12-16**</sup> | 用表情符号编写美丽而简短的祝贺<br/>`祝贺` `节日` `善良`                                        |
+| [刑辩专家](https://chat-preview.lobehub.com/market?agent=yundaodev-1)<br/><sup>By **[SuperLande](https://github.com/SuperLande)** on **2023-12-16**</sup>                | 一位中国刑事法律专家，从事多年刑事辩护实务工作，了解刑法与刑事诉讼法理论<br/>`刑辩`            |
+| [ShortBookGPT](https://chat-preview.lobehub.com/market?agent=book-summary-agent)<br/><sup>By **[thelapyae](https://github.com/thelapyae)** on **2023-12-15**</sup>       | 专注于生成简洁的书籍摘要，带有可操作的要点。<br/>`书籍摘要` `ai助手` `要点摘要` `可操作的要点` |
 
-> 📊 Total agents: [<kbd>**70**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**72**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -367,7 +370,7 @@ $ docker run -d -p 3210:3210 \
 | `OPENAI_API_KEY`          | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                                                                                         | `sk-xxxxxx...xxxxxx`                                                         |
 | `OPENAI_PROXY_URL`        | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL                                                                          | `https://api.chatanywhere.cn/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
 | `OPENAI_FUNCTION_REGIONS` | 可选 | 当你使用 Vercel 部署 Lobe-Chat，而且有需求指定响应调用 OpenAI 接口的请求的 Edge Function 的 Region 时，可以使用该配置进行配置，该值的类型为逗号分隔的字符串数组 | `iad1,sfo1`                                                                  |
-| `ACCESS_CODE`             | 可选 | 添加访问此服务的密码，你可以设置一个长密码以防被爆破                                                                                                            | `awCTe)re_r74` or `rtrt_ewee3@09!`                                           |
+| `ACCESS_CODE`             | 可选 | 添加访问此服务的密码，你可以设置一个长密码以防被爆破，该值用逗号分隔时为密码数组                                                                                | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                    |
 
 > \[!NOTE]
 >
