@@ -50,12 +50,16 @@
     "title": "Importer des données"
   },
   "lang": {
+    "de-DE": "Allemand",
     "en": "Anglais",
     "en-US": "Anglais",
+    "es-ES": "Espagnol",
     "fr-FR": "français",
     "ja-JP": "Japonais",
     "ko-KR": "Coréen",
+    "pt-BR": "Portugais",
     "ru-RU": "Russe",
+    "tr-TR": "turque",
     "zh": "Chinois",
     "zh-CN": "Chinois simplifié",
     "zh-TW": "Chinois traditionnel"
