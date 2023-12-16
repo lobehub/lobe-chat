@@ -10,10 +10,10 @@ import zh_TW from './zh_TW';
 const resources = {
   'en-US': en_US,
   'fr-FR': fr_FR,
-  'tr-TR': tr_TR,
   'ja-JP': ja_JP,
   'ko-KR': ko_KR,
   'ru-RU': ru_RU,
+  'tr-TR': tr_TR,
   'zh-CN': zh_CN,
   'zh-TW': zh_TW,
 } as const;
