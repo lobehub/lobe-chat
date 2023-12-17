@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.114.2](https://github.com/lobehub/lobe-chat/compare/v0.114.1...v0.114.2)
+
+<sup>Released on **2023-12-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix chat error when message has image with non-vision model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix chat error when message has image with non-vision model, closes [#698](https://github.com/lobehub/lobe-chat/issues/698) [#693](https://github.com/lobehub/lobe-chat/issues/693) ([b142c17](https://github.com/lobehub/lobe-chat/commit/b142c17))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.114.1](https://github.com/lobehub/lobe-chat/compare/v0.114.0...v0.114.1)
 
 <sup>Released on **2023-12-16**</sup>
