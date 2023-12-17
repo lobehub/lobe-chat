@@ -15,6 +15,8 @@ import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 import { createHeaderWithOpenAI } from './_header';
 import { OPENAI_URLS, URLS } from './_url';
 
+const isVisionModel = (model?: string) => model && VISION_MODEL_WHITE_LIST.includes(model);
+
 interface FetchOptions {
   signal?: AbortSignal | undefined;
 }
@@ -38,7 +40,11 @@ class ChatService {
     );
     // ============  1. preprocess messages   ============ //
 
-    const oaiMessages = this.processMessages(messages, enabledPlugins);
+    const oaiMessages = this.processMessages({
+      messages,
+      model: payload.model,
+      tools: enabledPlugins,
+    });
 
     // ============  2. preprocess tools   ============ //
 
@@ -48,8 +54,7 @@ class ChatService {
     // 1. tools is not empty
     // 2. model is not in vision white list, because vision model can't use tools
     // TODO: we need to find some method to let vision model use tools
-    const shouldUseTools =
-      filterTools.length > 0 && !VISION_MODEL_WHITE_LIST.includes(payload.model);
+    const shouldUseTools = filterTools.length > 0 && !isVisionModel(payload.model);
 
     const functions = shouldUseTools ? filterTools : undefined;
 
@@ -103,7 +108,15 @@ class ChatService {
 
   fetchPresetTaskResult = fetchAIFactory(this.getChatCompletion);
 
-  private processMessages = (messages: ChatMessage[], tools?: string[]): OpenAIChatMessage[] => {
+  private processMessages = ({
+    messages,
+    tools,
+    model,
+  }: {
+    messages: ChatMessage[];
+    model?: string;
+    tools?: string[];
+  }): OpenAIChatMessage[] => {
     // handle content type for vision model
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
@@ -113,6 +126,10 @@ class ChatService {
       const imageList = filesSelectors.getImageUrlOrBase64ByList(m.files)(useFileStore.getState());
 
       if (imageList.length === 0) return m.content;
+
+      if (!isVisionModel(model)) {
+        return m.content;
+      }
 
       return [
         { text: m.content, type: 'text' },
