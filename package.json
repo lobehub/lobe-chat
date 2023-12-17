@@ -167,7 +167,7 @@
     "p-map": "^7",
     "prettier": "^3",
     "remark-cli": "^11",
-    "remark-parse": "^10",
+    "remark-parse": "^11.0.0",
     "semantic-release": "^21",
     "stylelint": "^15",
     "ts-node": "^10",
