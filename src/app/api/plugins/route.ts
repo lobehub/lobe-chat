@@ -1,7 +1,5 @@
-import { createLobeChatPluginGateway } from '@lobehub/chat-plugins-gateway';
+import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
 import { PLUGINS_INDEX_URL } from '@/const/url';
 
-export const runtime = 'edge';
-
-export const POST = createLobeChatPluginGateway({ pluginsIndexUrl: PLUGINS_INDEX_URL });
+export const POST = createGatewayOnEdgeRuntime({ pluginsIndexUrl: PLUGINS_INDEX_URL });

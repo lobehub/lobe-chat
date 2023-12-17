@@ -1,0 +1,93 @@
+{
+  "about": "Hakkında",
+  "advanceSettings": "Gelişmiş Ayarlar",
+  "agentMaxToken": "Maksimum Oturum Süresi",
+  "agentModel": "Model",
+  "agentProfile": "Asistan Profili",
+  "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
+  "archive": "Arşiv",
+  "autoGenerate": "Otomatik Oluştur",
+  "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "cancel": "İptal",
+  "changelog": "Changelog",
+  "close": "Kapat",
+  "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
+  "copy": "Kopyala",
+  "copySuccess": "Kopyalama Başarılı",
+  "defaultAgent": "Varsayılan Asistan",
+  "defaultSession": "Varsayılan Asistan",
+  "delete": "Sil",
+  "edit": "Düzenle",
+  "export": "Dışa Aktar",
+  "exportType": {
+    "agent": "Asistan Ayarlarını Dışa Aktar",
+    "agentWithMessage": "Asistan ve Mesajları Dışa Aktar",
+    "all": "Ayarları ve Asistan Verilerini Dışa Aktar",
+    "allAgent": "Tüm Asistan Verilerini Dışa Aktar",
+    "allAgentWithMessage": "Tüm Asistan ve Mesajları Dışa Aktar",
+    "globalSetting": "Ayarları Dışa Aktar"
+  },
+  "feedback": "Feedback",
+  "historyRange": "Geçmiş Aralığı",
+  "import": "İçe Aktar",
+  "importModal": {
+    "finish": {
+      "onlySettings": "Sistem ayarları başarıyla içe aktarıldı",
+      "start": "Başla",
+      "subTitle": "Veri başarıyla aktarıldı, {{duration}} saniye sürdü. İçe aktarma ayrıntıları aşağıdaki gibidir:",
+      "title": "Veri başarıyla aktarıldı"
+    },
+    "loading": "Veri aktarılıyor, lütfen bekleyin...",
+    "result": {
+      "added": "Başarıyla içe aktarıldı",
+      "errors": "İçe Aktarma Hataları",
+      "messages": "Mesajlar",
+      "sessions": "Asistanlar",
+      "skips": "Geç",
+      "topics": "Konular",
+      "type": "Tip"
+    },
+    "title": "Veri İçe Aktar"
+  },
+  "lang": {
+    "de-DE": "Almanca",
+    "en": "İngilizce",
+    "en-US": "İngilizce",
+    "es-ES": "İspanyolca",
+    "fr-FR": "Fransızca",
+    "ja-JP": "Japonca",
+    "ko-KR": "Korece",
+    "pt-BR": "Portekizce",
+    "ru-RU": "Rusça",
+    "tr-TR": "Türkçe",
+    "zh": "Basitleştirilmiş Çince",
+    "zh-CN": "Basitleştirilmiş Çince",
+    "zh-TW": "Geleneksel Çince"
+  },
+  "layoutInitializing": "Başlatılıyor...",
+  "noDescription": "Açıklama yok",
+  "ok": "Tamam",
+  "password": "Password",
+  "pin": "Pin",
+  "pinOff": "Unpin",
+  "regenerate": "Tekrarla",
+  "rename": "Yeniden İsimlendir",
+  "reset": "Reset",
+  "retry": "Yeniden Dene",
+  "send": "Gönder",
+  "setting": "Ayarlar",
+  "share": "Paylaş",
+  "stop": "Dur",
+  "tab": {
+    "chat": "Chat",
+    "market": "Keşfet",
+    "setting": "Ayarlar"
+  },
+  "temp": "Geçici",
+  "updateAgent": "Asistan Bilgilerini Güncelle",
+  "upgradeVersion": {
+    "action": "Güncelle",
+    "hasNew": "Yeni güncelleme mevcut",
+    "newVersion": "Yeni sürüm mevcut: {{version}}"
+  }
+}

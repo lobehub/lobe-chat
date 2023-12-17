@@ -1,0 +1,14 @@
+{
+  "button": {
+    "import": "Importar configuración",
+    "start": "Comenzar ahora"
+  },
+  "header": "Bienvenido/a",
+  "pickAgent": "O elige una plantilla de asistente a continuación",
+  "skip": "Saltar",
+  "slogan": {
+    "desc1": "Despierta el poder de tu mente. Tu asistente inteligente siempre está aquí para avivar la chispa del pensamiento.",
+    "desc2": "Crea tu primer asistente. ¡Comencemos!",
+    "title": "Dale a tu mente una ventaja más inteligente"
+  }
+}

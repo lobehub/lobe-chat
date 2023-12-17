@@ -13,14 +13,14 @@ export interface PluginRenderProps {
   type?: LobePluginType;
 }
 
-const PluginRender = memo<PluginRenderProps>(({ content, id, payload, name, type }) => {
+const PluginRender = memo<PluginRenderProps>(({ content, id, payload, name, type, loading }) => {
   switch (type) {
     case 'standalone': {
       return <Standalone id={id} name={name} payload={payload} />;
     }
 
     default: {
-      return <DefaultType content={content} name={name} />;
+      return <DefaultType content={content} loading={loading} name={name} />;
     }
   }
 });
