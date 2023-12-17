@@ -9,7 +9,7 @@ const genPluginTable = (data: DataItem[], lang: string) => {
   const content = data.map((item) => [
     [
       genLink(item.meta.title, PLGUIN_URL),
-      `<sup>By **${item.author}** on **${item.createAt}**</sup>`,
+      `<sup>By **${item.author}** on **${item.createdAt}**</sup>`,
     ].join('<br/>'),
     genLink(item.homepage.split('github.com/')[1], item.homepage),
     [item.meta.description, genTags(item.meta.tags)].join('<br/>'),

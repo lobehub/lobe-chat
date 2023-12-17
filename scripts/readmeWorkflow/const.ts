@@ -1,6 +1,6 @@
 export interface DataItem {
   author: string;
-  createAt: string;
+  createdAt: string;
   homepage: string;
   identifier: string;
   meta: { avatar: string; description: string; tags: string[]; title: string };
