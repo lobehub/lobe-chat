@@ -152,6 +152,8 @@ e-commerce platform data access, and various third-party services.
 
 <video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
+[Learn More →](./docs/Usage/Plugins.md)
+
 > \[!TIP]
 >
 > To aid developers in joining this ecosystem, we provide comprehensive development resources in the [🧩 Plugin System](#-plugins) section.
