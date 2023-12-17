@@ -86,7 +86,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.runPluginDefaultType(messageId, pluginPayload);
+        await result.current.invokeDefaultTypePlugin(messageId, pluginPayload);
       });
 
       expect(initialState.toggleChatLoading).toHaveBeenCalledWith(
@@ -121,7 +121,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.runPluginDefaultType(messageId, pluginPayload);
+        await result.current.invokeDefaultTypePlugin(messageId, pluginPayload);
       });
 
       expect(initialState.toggleChatLoading).toHaveBeenCalledWith(
@@ -150,7 +150,7 @@ describe('ChatPluginAction', () => {
 
       const initialState = {
         refreshMessages: vi.fn(),
-        runPluginDefaultType: vi.fn(),
+        invokeDefaultTypePlugin: vi.fn(),
       };
       useChatStore.setState(initialState);
 
@@ -172,7 +172,7 @@ describe('ChatPluginAction', () => {
         role: 'function',
       });
       expect(initialState.refreshMessages).toHaveBeenCalled();
-      expect(initialState.runPluginDefaultType).toHaveBeenCalledWith(
+      expect(initialState.invokeDefaultTypePlugin).toHaveBeenCalledWith(
         messageId,
         messagePluginPayload,
       );
@@ -191,7 +191,7 @@ describe('ChatPluginAction', () => {
 
       useToolStore.setState({ installedPlugins: [plugin] });
 
-      useChatStore.setState({ refreshMessages: vi.fn(), runPluginDefaultType: vi.fn() });
+      useChatStore.setState({ refreshMessages: vi.fn(), invokeDefaultTypePlugin: vi.fn() });
 
       (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
         id: messageId,
@@ -212,7 +212,7 @@ describe('ChatPluginAction', () => {
           plugin: expect.objectContaining({ apiName }),
         }),
       );
-      expect(result.current.runPluginDefaultType).toHaveBeenCalledWith(
+      expect(result.current.invokeDefaultTypePlugin).toHaveBeenCalledWith(
         messageId,
         expect.objectContaining({
           apiName: apiName,
@@ -231,7 +231,7 @@ describe('ChatPluginAction', () => {
 
       useChatStore.setState({
         refreshMessages: vi.fn(),
-        runPluginDefaultType: vi.fn(),
+        invokeDefaultTypePlugin: vi.fn(),
       });
 
       (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
@@ -248,8 +248,8 @@ describe('ChatPluginAction', () => {
       // 验证 refreshMessages 是否被调用
       expect(result.current.refreshMessages).toHaveBeenCalled();
 
-      // 验证 runPluginDefaultType 是否没有被调用，因为类型是 standalone
-      expect(result.current.runPluginDefaultType).not.toHaveBeenCalled();
+      // 验证 invokeDefaultTypePlugin 是否没有被调用，因为类型是 standalone
+      expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
     });
   });
 

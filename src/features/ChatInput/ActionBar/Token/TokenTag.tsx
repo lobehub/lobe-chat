@@ -9,7 +9,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
-import { pluginSelectors } from '@/store/tool/selectors';
+import { toolSelectors } from '@/store/tool/selectors';
 import { LanguageModel } from '@/types/llm';
 
 const Token = memo(() => {
@@ -28,8 +28,8 @@ const Token = memo(() => {
   const plugins = useSessionStore(agentSelectors.currentAgentPlugins);
 
   const toolsString = useToolStore((s) => {
-    const pluginSystemRoles = pluginSelectors.enabledPluginsSystemRoles(plugins)(s);
-    const schemaNumber = pluginSelectors
+    const pluginSystemRoles = toolSelectors.enabledSystemRoles(plugins)(s);
+    const schemaNumber = toolSelectors
       .enabledSchema(plugins)(s)
       .map((i) => JSON.stringify(i))
       .join('');

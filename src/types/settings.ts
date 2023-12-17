@@ -75,12 +75,18 @@ export interface GlobalTTSConfig {
 
 export type LLMBrand = keyof GlobalLLMConfig;
 
+export interface GlobalTool {
+  dalle: {
+    autoGenerate: boolean;
+  };
+}
 /**
  * 配置设置
  */
 export interface GlobalSettings extends GlobalBaseSettings {
   defaultAgent: GlobalDefaultAgent;
   languageModel: GlobalLLMConfig;
+  tool: GlobalTool;
   tts: GlobalTTSConfig;
 }
 

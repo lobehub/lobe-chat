@@ -84,14 +84,19 @@ const currentLanguage = (s: GlobalStore) => {
   return locale;
 };
 
+const dalleConfig = (s: GlobalStore) => s.settings.tool?.dalle || {};
+const isDalleAutoGenerating = (s: GlobalStore) => s.settings.tool?.dalle?.autoGenerate;
+
 export const settingsSelectors = {
   currentLanguage,
   currentSettings,
   currentTTS,
+  dalleConfig,
   defaultAgent,
   defaultAgentConfig,
   defaultAgentMeta,
   exportSettings,
+  isDalleAutoGenerating,
   modelList: modelListSelectors,
   openAIAPI: openAIAPIKeySelectors,
   openAIProxyUrl: openAIProxyUrlSelectors,
