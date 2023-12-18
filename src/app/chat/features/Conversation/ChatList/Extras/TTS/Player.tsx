@@ -18,7 +18,7 @@ const Player = memo<PlayerProps>(({ onRetry, error, onDelete, audio, isLoading, 
   const { t } = useTranslation('chat');
 
   return (
-    <Flexbox align={'center'} horizontal style={{ minWidth: 160, width: '100%' }}>
+    <Flexbox align={'center'} horizontal style={{ minWidth: 200, width: '100%' }}>
       {error ? (
         <Alert
           action={

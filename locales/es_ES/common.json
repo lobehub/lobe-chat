@@ -1,0 +1,93 @@
+{
+  "about": "Acerca de",
+  "advanceSettings": "Configuración avanzada",
+  "agentMaxToken": "Máximo de tokens de sesión",
+  "agentModel": "Modelo",
+  "agentProfile": "Perfil del asistente",
+  "appInitializing": "LobeChat está inicializando, por favor espere...",
+  "archive": "Archivar",
+  "autoGenerate": "Generación automática",
+  "autoGenerateTooltip": "Completar automáticamente la descripción del asistente basándose en las sugerencias",
+  "cancel": "Cancelar",
+  "changelog": "Registro de cambios",
+  "close": "Cerrar",
+  "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción",
+  "copy": "Copiar",
+  "copySuccess": "¡Copia exitosa!",
+  "defaultAgent": "Asistente predeterminado",
+  "defaultSession": "Sesión predeterminada",
+  "delete": "Eliminar",
+  "edit": "Editar",
+  "export": "Exportar configuración",
+  "exportType": {
+    "agent": "Exportar configuración del asistente",
+    "agentWithMessage": "Exportar asistente y mensajes",
+    "all": "Exportar configuración global y todos los datos de los asistentes",
+    "allAgent": "Exportar todas las configuraciones de los asistentes",
+    "allAgentWithMessage": "Exportar todos los asistentes y mensajes",
+    "globalSetting": "Exportar configuración global"
+  },
+  "feedback": "Comentarios y sugerencias",
+  "historyRange": "Rango de historial",
+  "import": "Importar configuración",
+  "importModal": {
+    "finish": {
+      "onlySettings": "La importación de la configuración del sistema se ha completado",
+      "start": "Comenzar a usar",
+      "subTitle": "Importación de datos completada en {{duration}} segundos. Detalles de la importación:",
+      "title": "Importación de datos completada"
+    },
+    "loading": "Importando datos, por favor espere...",
+    "result": {
+      "added": "Importación exitosa",
+      "errors": "Errores de importación",
+      "messages": "Mensajes",
+      "sessions": "Asistentes",
+      "skips": "Saltos de duplicados",
+      "topics": "Temas",
+      "type": "Tipo de datos"
+    },
+    "title": "Importar datos"
+  },
+  "lang": {
+    "de-DE": "Alemán",
+    "en": "Inglés",
+    "en-US": "Inglés",
+    "es-ES": "Español",
+    "fr-FR": "Francés",
+    "ja-JP": "Japonés",
+    "ko-KR": "Coreano",
+    "pt-BR": "Portugués",
+    "ru-RU": "Ruso",
+    "tr-TR": "Turco",
+    "zh": "Chino",
+    "zh-CN": "Chino simplificado",
+    "zh-TW": "Chino tradicional"
+  },
+  "layoutInitializing": "Inicializando diseño...",
+  "noDescription": "Sin descripción",
+  "ok": "Aceptar",
+  "password": "Contraseña",
+  "pin": "Fijar",
+  "pinOff": "Quitar fijación",
+  "regenerate": "Regenerar",
+  "rename": "Renombrar",
+  "reset": "Restablecer",
+  "retry": "Reintentar",
+  "send": "Enviar",
+  "setting": "Configuración",
+  "share": "Compartir",
+  "stop": "Detener",
+  "tab": {
+    "chat": "Chat",
+    "market": "Descubrir",
+    "setting": "Configuración"
+  },
+  "temp": "Temporal",
+  "updateAgent": "Actualizar información del asistente",
+  "upgradeVersion": {
+    "action": "Actualizar",
+    "hasNew": "Hay una nueva actualización disponible",
+    "newVersion": "Nueva versión disponible: {{version}}"
+  }
+}

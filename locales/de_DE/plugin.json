@@ -1,0 +1,166 @@
+{
+  "debug": {
+    "arguments": "Argumente",
+    "function_call": "Funktionsaufruf",
+    "off": "Debugging deaktivieren",
+    "on": "Plugin-Aufrufinformationen anzeigen",
+    "response": "Antwort"
+  },
+  "detailModal": {
+    "info": {
+      "description": "API-Beschreibung",
+      "name": "API-Name"
+    },
+    "tabs": {
+      "info": "Plugin-Fähigkeiten",
+      "manifest": "Installationsdatei",
+      "settings": "Einstellungen"
+    },
+    "title": "Plugin-Details"
+  },
+  "dev": {
+    "confirmDeleteDevPlugin": "Möchten Sie das lokale Plugin wirklich löschen? Es kann nach dem Löschen nicht wiederhergestellt werden.",
+    "customParams": {
+      "useProxy": {
+        "label": "Durch Proxy installieren (Bei Problemen mit Cross-Origin-Zugriffsfehlern können Sie versuchen, diese Option zu aktivieren und das Plugin erneut zu installieren)"
+      }
+    },
+    "deleteSuccess": "Plugin erfolgreich gelöscht",
+    "manifest": {
+      "identifier": {
+        "desc": "Eindeutige Kennung des Plugins",
+        "label": "Kennung"
+      },
+      "mode": {
+        "local": "Visuelle Konfiguration",
+        "local-tooltip": "Visuelle Konfiguration vorübergehend nicht unterstützt",
+        "url": "Online-Link"
+      },
+      "name": {
+        "desc": "Plugin-Titel",
+        "label": "Titel",
+        "placeholder": "Suchmaschine"
+      }
+    },
+    "meta": {
+      "author": {
+        "desc": "Autor des Plugins",
+        "label": "Autor"
+      },
+      "avatar": {
+        "desc": "Symbol des Plugins, kann Emoji oder URL verwenden",
+        "label": "Symbol"
+      },
+      "description": {
+        "desc": "Plugin-Beschreibung",
+        "label": "Beschreibung",
+        "placeholder": "Informationen von Suchmaschinen abrufen"
+      },
+      "formFieldRequired": "Dieses Feld ist erforderlich",
+      "homepage": {
+        "desc": "Startseite des Plugins",
+        "label": "Startseite"
+      },
+      "identifier": {
+        "desc": "Eindeutige Kennung des Plugins, wird automatisch aus dem Manifest erkannt",
+        "errorDuplicate": "Kennung ist bereits für ein anderes Plugin vergeben. Bitte ändern Sie die Kennung",
+        "label": "Kennung",
+        "pattenErrorMessage": "Es können nur Buchstaben, Zahlen, - und _ eingegeben werden"
+      },
+      "manifest": {
+        "desc": "LobeChat wird das Plugin über diesen Link installieren",
+        "label": "Plugin-Beschreibungsdatei (Manifest) URL",
+        "preview": "Vorschau des Manifests",
+        "refresh": "Aktualisieren"
+      },
+      "title": {
+        "desc": "Plugin-Titel",
+        "label": "Titel",
+        "placeholder": "Suchmaschine"
+      }
+    },
+    "metaConfig": "Konfiguration der Plugin-Metadaten",
+    "modalDesc": "Nach dem Hinzufügen eines benutzerdefinierten Plugins kann es zur Validierung der Plugin-Entwicklung verwendet oder direkt in Unterhaltungen verwendet werden. Weitere Informationen zur Plugin-Entwicklung finden Sie in den <1>Entwicklerdokumenten↗</>.",
+    "openai": {
+      "importUrl": "Von URL-Link importieren",
+      "schema": "Schema"
+    },
+    "preview": {
+      "card": "Vorschau der Plugin-Anzeige",
+      "desc": "Vorschau der Plugin-Beschreibung",
+      "title": "Vorschau des Plugin-Namens"
+    },
+    "save": "Plugin installieren",
+    "saveSuccess": "Plugin-Einstellungen erfolgreich gespeichert",
+    "tabs": {
+      "manifest": "Funktionsbeschreibungsliste (Manifest)",
+      "meta": "Plugin-Metadaten"
+    },
+    "title": {
+      "create": "Benutzerdefiniertes Plugin hinzufügen",
+      "edit": "Benutzerdefiniertes Plugin bearbeiten"
+    },
+    "type": {
+      "lobe": "LobeChat-Plugin",
+      "openai": "OpenAI-Plugin"
+    },
+    "update": "Aktualisieren",
+    "updateSuccess": "Plugin-Einstellungen erfolgreich aktualisiert"
+  },
+  "error": {
+    "fetchError": "Fehler beim Abrufen des Manifest-Links. Stellen Sie sicher, dass der Link gültig ist und dass die Cross-Origin-Anfrage erlaubt ist.",
+    "installError": "Fehler bei der Installation des Plugins {{name}}.",
+    "manifestInvalid": "Das Manifest entspricht nicht den Standards. Validierungsergebnis: \n\n {{error}}",
+    "noManifest": "Manifest nicht vorhanden",
+    "openAPIInvalid": "Fehler beim Parsen von OpenAPI. Fehler: \n\n {{error}}",
+    "reinstallError": "Fehler beim Aktualisieren des Plugins {{name}}.",
+    "urlError": "Der Link hat keine JSON-Format-Inhalte zurückgegeben. Stellen Sie sicher, dass der Link gültig ist."
+  },
+  "list": {
+    "item": {
+      "deprecated.title": "Veraltet",
+      "local.config": "Konfiguration",
+      "local.title": "Benutzerdefiniert"
+    }
+  },
+  "loading": {
+    "content": "Plugin wird aufgerufen...",
+    "plugin": "Plugin wird ausgeführt..."
+  },
+  "pluginList": "Plugin-Liste",
+  "plugins": {
+    "loading": "Plugins werden überprüft...",
+    "unknown": "Unbekanntes Plugin"
+  },
+  "setting": "Plugin-Einstellung",
+  "settings": {
+    "indexUrl": {
+      "title": "Marktindex",
+      "tooltip": "Online-Bearbeitung wird derzeit nicht unterstützt. Bitte über Umgebungsvariablen bei der Bereitstellung festlegen."
+    },
+    "modalDesc": "Nachdem Sie die Adresse des Plugin-Marktes konfiguriert haben, können Sie den benutzerdefinierten Plugin-Markt verwenden.",
+    "title": "Plugin-Markteinstellungen"
+  },
+  "store": {
+    "actions": {
+      "confirmUninstall": "Das Plugin wird deinstalliert und alle Konfigurationen werden gelöscht. Bitte bestätigen Sie Ihre Aktion.",
+      "detail": "Details",
+      "install": "Installieren",
+      "manifest": "Installationsdatei bearbeiten",
+      "settings": "Einstellungen",
+      "uninstall": "Deinstallieren"
+    },
+    "communityPlugin": "Community",
+    "customPlugin": "Benutzerdefiniert",
+    "empty": "Keine installierten Plugins vorhanden",
+    "installAllPlugins": "Alle installieren",
+    "networkError": "Fehler beim Abrufen des Plugin-Shops. Bitte überprüfen Sie die Netzwerkverbindung und versuchen Sie es erneut.",
+    "placeholder": "Suche nach Plugin-Namen, Beschreibung oder Stichwort...",
+    "releasedAt": "Veröffentlicht am {{createdAt}}",
+    "tabs": {
+      "all": "Alle",
+      "installed": "Installiert"
+    },
+    "title": "Plugin-Shop"
+  }
+}

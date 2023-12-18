@@ -14,3 +14,5 @@ export const TTS_URL = {
   edge: '/api/tts/edge-speech',
   microsoft: '/api/tts/microsoft-speech',
 };
+
+export const PROXY_URL = '/api/proxy';

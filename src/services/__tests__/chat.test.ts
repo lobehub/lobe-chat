@@ -8,7 +8,7 @@ import { useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
 import { ChatMessage } from '@/types/chatMessage';
 import { OpenAIChatStreamPayload } from '@/types/openai/chat';
-import { fetchAIFactory } from '@/utils/fetch';
+import { LobeTool } from '@/types/tool';
 
 import { chatService } from '../chat';
 
@@ -57,7 +57,7 @@ describe('ChatService', () => {
 
       expect(getChatCompletionSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          functions: expect.arrayContaining([{ name: 'plugin1____api1____default' }]),
+          functions: expect.arrayContaining([{ name: 'plugin1____api1' }]),
           messages: expect.anything(),
         }),
         undefined,
@@ -84,105 +84,393 @@ describe('ChatService', () => {
       );
     });
 
-    // New test case for processMessages
-    it('should correctly process messages and handle content for vision models', async () => {
-      const messages = [
-        { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
-        { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
-        { content: 'Hey', role: 'assistant' }, // Regular user message
-      ] as ChatMessage[];
+    describe('should handle content correctly for vision models', () => {
+      it('should include image content when with vision model', async () => {
+        const messages = [
+          { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
+          { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
+          { content: 'Hey', role: 'assistant' }, // Regular user message
+        ] as ChatMessage[];
 
-      // Mock file store state to return a specific image URL or Base64 for the given files
-      act(() => {
-        useFileStore.setState({
-          imagesMap: {
-            file1: {
-              name: 'abc.png',
-              saveMode: 'url',
-              fileType: 'image/png',
-              url: 'http://example.com/image.jpg',
+        // Mock file store state to return a specific image URL or Base64 for the given files
+        act(() => {
+          useFileStore.setState({
+            imagesMap: {
+              file1: {
+                name: 'abc.png',
+                saveMode: 'url',
+                fileType: 'image/png',
+                url: 'http://example.com/image.jpg',
+              },
             },
-          },
+          });
         });
+
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        await chatService.createAssistantMessage({
+          messages,
+          plugins: [],
+          model: 'gpt-4-vision-preview',
+        });
+
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            messages: [
+              {
+                content: [
+                  { text: 'Hello', type: 'text' },
+                  {
+                    image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
+                    type: 'image_url',
+                  },
+                ],
+                role: 'user',
+              },
+              {
+                content: 'Hi',
+                name: 'plugin1',
+                role: 'function',
+              },
+              {
+                content: 'Hey',
+                role: 'assistant',
+              },
+            ],
+            model: 'gpt-4-vision-preview',
+          },
+          undefined,
+        );
       });
 
-      const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-      await chatService.createAssistantMessage({ messages, plugins: [] });
+      it('should not include image content when default model', async () => {
+        const messages = [
+          { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
+          { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
+          { content: 'Hey', role: 'assistant' }, // Regular user message
+        ] as ChatMessage[];
 
-      expect(getChatCompletionSpy).toHaveBeenCalledWith(
-        {
-          messages: [
-            {
-              content: [
-                { text: 'Hello', type: 'text' },
-                {
-                  image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
-                  type: 'image_url',
-                },
-              ],
-              role: 'user',
+        // Mock file store state to return a specific image URL or Base64 for the given files
+        act(() => {
+          useFileStore.setState({
+            imagesMap: {
+              file1: {
+                name: 'abc.png',
+                saveMode: 'url',
+                fileType: 'image/png',
+                url: 'http://example.com/image.jpg',
+              },
             },
-            {
-              content: 'Hi',
-              name: 'plugin1',
-              role: 'function',
+          });
+        });
+
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        await chatService.createAssistantMessage({
+          messages,
+          plugins: [],
+          model: 'gpt-3.5-turbo',
+        });
+
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            messages: [
+              { content: 'Hello', role: 'user' },
+              { content: 'Hi', name: 'plugin1', role: 'function' },
+              { content: 'Hey', role: 'assistant' },
+            ],
+            model: 'gpt-3.5-turbo',
+          },
+          undefined,
+        );
+      });
+
+      it('should not include image with vision models when can not find the image', async () => {
+        const messages = [
+          { content: 'Hello', role: 'user', files: ['file2'] }, // Message with files
+          { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
+          { content: 'Hey', role: 'assistant' }, // Regular user message
+        ] as ChatMessage[];
+
+        // Mock file store state to return a specific image URL or Base64 for the given files
+        act(() => {
+          useFileStore.setState({
+            imagesMap: {
+              file1: {
+                name: 'abc.png',
+                saveMode: 'url',
+                fileType: 'image/png',
+                url: 'http://example.com/image.jpg',
+              },
             },
-            {
-              content: 'Hey',
-              role: 'assistant',
-            },
-          ],
-        },
-        undefined,
-      );
+          });
+        });
+
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        await chatService.createAssistantMessage({ messages, plugins: [] });
+
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            messages: [
+              {
+                content: 'Hello',
+                role: 'user',
+              },
+              {
+                content: 'Hi',
+                name: 'plugin1',
+                role: 'function',
+              },
+              {
+                content: 'Hey',
+                role: 'assistant',
+              },
+            ],
+          },
+          undefined,
+        );
+      });
     });
 
-    it('should correctly process messages and handle content for vision models', async () => {
-      const messages = [
-        { content: 'Hello', role: 'user', files: ['file2'] }, // Message with files
-        { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
-        { content: 'Hey', role: 'assistant' }, // Regular user message
-      ] as ChatMessage[];
-
-      // Mock file store state to return a specific image URL or Base64 for the given files
-      act(() => {
-        useFileStore.setState({
-          imagesMap: {
-            file1: {
-              name: 'abc.png',
-              saveMode: 'url',
-              fileType: 'image/png',
-              url: 'http://example.com/image.jpg',
+    describe('with tools messages', () => {
+      it('should inject a tool system role for models with tools', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        const messages = [
+          {
+            role: 'user',
+            content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n',
+            sessionId: 'inbox',
+            createdAt: 1702723964330,
+            id: 'vyQvEw6V',
+            updatedAt: 1702723964330,
+            extra: {},
+            meta: {
+              avatar: '😀',
             },
           },
+        ] as ChatMessage[];
+
+        act(() => {
+          useToolStore.setState({
+            installedPlugins: [
+              {
+                identifier: 'seo',
+                manifest: {
+                  api: [
+                    {
+                      description: 'Get data from users',
+                      name: 'getData',
+                      parameters: {
+                        properties: {
+                          keyword: {
+                            type: 'string',
+                          },
+                          url: {
+                            type: 'string',
+                          },
+                        },
+                        required: ['keyword', 'url'],
+                        type: 'object',
+                      },
+                    },
+                  ],
+                  homepage: 'https://seo-plugin.orrenprunckun.com/terms.php',
+                  identifier: 'seo',
+                  meta: {
+                    avatar: 'https://seo-plugin.orrenprunckun.com/icon.png',
+                    description:
+                      'Enter any URL and keyword and get an On-Page SEO analysis & insights!',
+                    title: 'SEO',
+                  },
+                  openapi: 'https://openai-collections.chat-plugin.lobehub.com/seo/openapi.yaml',
+                  systemRole:
+                    'The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.',
+                  type: 'default',
+                  version: '1',
+                  settings: {
+                    properties: {},
+                    type: 'object',
+                  },
+                },
+                type: 'plugin',
+              } as LobeTool,
+            ],
+          });
         });
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-3.5-turbo-1106',
+          top_p: 1,
+          plugins: ['seo'],
+        });
+
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            model: 'gpt-3.5-turbo-1106',
+            top_p: 1,
+            functions: [
+              {
+                description: 'Get data from users',
+                name: 'seo____getData',
+                parameters: {
+                  properties: { keyword: { type: 'string' }, url: { type: 'string' } },
+                  required: ['keyword', 'url'],
+                  type: 'object',
+                },
+              },
+            ],
+            messages: [
+              {
+                content: `## Tools
+
+You can use these tools below:
+
+### SEO
+
+The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.`,
+                role: 'system',
+              },
+              { content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n', role: 'user' },
+            ],
+          },
+          undefined,
+        );
       });
 
-      const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-      await chatService.createAssistantMessage({ messages, plugins: [] });
+      it('should update the system role for models with tools', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        const messages = [
+          { role: 'system', content: 'system' },
+          {
+            role: 'user',
+            content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n',
+          },
+        ] as ChatMessage[];
 
-      expect(getChatCompletionSpy).toHaveBeenCalledWith(
-        {
-          messages: [
-            {
-              content: 'Hello',
-              role: 'user',
-            },
-            {
-              content: 'Hi',
-              name: 'plugin1',
-              role: 'function',
-            },
-            {
-              content: 'Hey',
-              role: 'assistant',
-            },
-          ],
-        },
-        undefined,
-      );
+        act(() => {
+          useToolStore.setState({
+            installedPlugins: [
+              {
+                identifier: 'seo',
+                manifest: {
+                  api: [
+                    {
+                      description: 'Get data from users',
+                      name: 'getData',
+                      parameters: {
+                        properties: {
+                          keyword: {
+                            type: 'string',
+                          },
+                          url: {
+                            type: 'string',
+                          },
+                        },
+                        required: ['keyword', 'url'],
+                        type: 'object',
+                      },
+                    },
+                  ],
+                  homepage: 'https://seo-plugin.orrenprunckun.com/terms.php',
+                  identifier: 'seo',
+                  meta: {
+                    avatar: 'https://seo-plugin.orrenprunckun.com/icon.png',
+                    description:
+                      'Enter any URL and keyword and get an On-Page SEO analysis & insights!',
+                    title: 'SEO',
+                  },
+                  openapi: 'https://openai-collections.chat-plugin.lobehub.com/seo/openapi.yaml',
+                  systemRole:
+                    'The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.',
+                  type: 'default',
+                  version: '1',
+                  settings: {
+                    properties: {},
+                    type: 'object',
+                  },
+                },
+                type: 'plugin',
+              } as LobeTool,
+            ],
+          });
+        });
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-3.5-turbo-1106',
+          top_p: 1,
+          plugins: ['seo'],
+        });
+
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            model: 'gpt-3.5-turbo-1106',
+            top_p: 1,
+            functions: [
+              {
+                description: 'Get data from users',
+                name: 'seo____getData',
+                parameters: {
+                  properties: { keyword: { type: 'string' }, url: { type: 'string' } },
+                  required: ['keyword', 'url'],
+                  type: 'object',
+                },
+              },
+            ],
+            messages: [
+              {
+                content: `system
+
+## Tools
+
+You can use these tools below:
+
+### SEO
+
+The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.`,
+                role: 'system',
+              },
+              { content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n', role: 'user' },
+            ],
+          },
+          undefined,
+        );
+      });
+
+      it('not update system role without tool', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        const messages = [
+          { role: 'system', content: 'system' },
+          {
+            role: 'user',
+            content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n',
+          },
+        ] as ChatMessage[];
+
+        await chatService.createAssistantMessage({
+          messages,
+          model: 'gpt-3.5-turbo-1106',
+          top_p: 1,
+          plugins: ['ttt'],
+        });
+
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            model: 'gpt-3.5-turbo-1106',
+            top_p: 1,
+            messages: [
+              {
+                content: 'system',
+                role: 'system',
+              },
+              { content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n', role: 'user' },
+            ],
+          },
+          undefined,
+        );
+      });
     });
   });
+
   describe('getChatCompletion', () => {
     it('should make a POST request with the correct payload', async () => {
       const params: Partial<OpenAIChatStreamPayload> = {

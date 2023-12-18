@@ -1,0 +1,45 @@
+{
+  "dbV1": {
+    "action": {
+      "clearDB": "Lokale Daten löschen",
+      "downloadBackup": "Datenbackup herunterladen",
+      "reUpgrade": "Erneut aktualisieren",
+      "start": "Starten",
+      "upgrade": "Upgrade durchführen"
+    },
+    "clear": {
+      "confirm": "Lokale Daten werden gelöscht (Globale Einstellungen bleiben unberührt). Bitte bestätigen Sie, dass Sie ein Datenbackup heruntergeladen haben."
+    },
+    "description": "In der neuen Version hat LobeChat einen großen Sprung in der Datenverwaltung gemacht. Daher müssen wir die Daten der alten Version aktualisieren, um Ihnen ein besseres Nutzungserlebnis zu bieten.",
+    "features": {
+      "capability": {
+        "desc": "Basierend auf der IndexedDB-Technologie, groß genug, um Ihre gesamten Chat-Nachrichten zu speichern",
+        "title": "Hohe Kapazität"
+      },
+      "performance": {
+        "desc": "Automatische Indexierung von Millionen von Nachrichten, Abfragen in Millisekunden",
+        "title": "Hohe Leistung"
+      },
+      "use": {
+        "desc": "Unterstützt die Suche nach Titeln, Beschreibungen, Tags, Nachrichteninhalten und sogar übersetzten Texten, was die tägliche Sucheffizienz erheblich verbessert",
+        "title": "Benutzerfreundlicher"
+      }
+    },
+    "title": "LobeChat Datenmigration",
+    "upgrade": {
+      "error": {
+        "subTitle": "Es tut uns sehr leid, während des Datenbank-Upgrades ist ein Fehler aufgetreten. Bitte versuchen Sie folgende Lösungen: A. Löschen Sie lokale Daten und importieren Sie das Backup erneut; B. Klicken Sie auf die Schaltfläche „Erneut aktualisieren“.<br><br> Wenn das Problem weiterhin besteht, <1>reichen Sie ein Problem ein</1>, wir werden Ihnen sofort helfen.",
+        "title": "Datenbank-Upgrade fehlgeschlagen"
+      },
+      "success": {
+        "subTitle": "Die Datenbank von LobeChat wurde erfolgreich auf die neueste Version aktualisiert. Beginnen Sie sofort mit dem Erlebnis.",
+        "title": "Datenbank-Upgrade erfolgreich"
+      }
+    },
+    "upgradeTip": "Das Upgrade dauert in der Regel 10-20 Sekunden. Bitte schließen Sie LobeChat während des Upgrades nicht."
+  },
+  "migrateError": {
+    "missVersion": "Die importierten Daten enthalten keine Versionsnummer. Bitte überprüfen Sie die Datei und versuchen Sie es erneut.",
+    "noMigration": "Es wurde kein Migrationsplan für die aktuelle Version gefunden. Bitte überprüfen Sie die Versionsnummer und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, reichen Sie bitte eine Problemmeldung ein."
+  }
+}

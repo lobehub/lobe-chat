@@ -71,23 +71,23 @@ describe('ChatEnhanceAction', () => {
       const messageContent = 'Hello World';
       const detectedLang = 'en-US';
 
-      // 设置初始消息状态
-      useChatStore.setState({
-        messages: [
-          {
-            id: messageId,
-            content: messageContent,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            role: 'user',
-            sessionId: 'test',
-            topicId: 'test',
-            meta: {},
-          },
-        ],
+      act(() => {
+        useChatStore.setState({
+          messages: [
+            {
+              id: messageId,
+              content: messageContent,
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+              role: 'user',
+              sessionId: 'test',
+              topicId: 'test',
+              meta: {},
+            },
+          ],
+        });
       });
 
-      // 模拟语言检测和翻译结果
       (chatService.fetchPresetTaskResult as Mock).mockImplementation(({ params }) => {
         if (params === chainLangDetect(messageContent)) {
           return Promise.resolve(detectedLang);

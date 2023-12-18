@@ -85,7 +85,9 @@ describe('topic action', () => {
   describe('saveToTopic', () => {
     it('should not create a topic if there are no messages', async () => {
       const { result } = renderHook(() => useChatStore());
-      useChatStore.setState({ messages: [] });
+      act(() => {
+        useChatStore.setState({ messages: [] });
+      });
 
       const createTopicSpy = vi.spyOn(topicService, 'createTopic');
 
@@ -98,7 +100,9 @@ describe('topic action', () => {
     it('should create a topic and bind messages to it', async () => {
       const { result } = renderHook(() => useChatStore());
       const messages = [{ id: 'message1' }, { id: 'message2' }] as ChatMessage[];
-      useChatStore.setState({ messages, activeId: 'session-id' });
+      act(() => {
+        useChatStore.setState({ messages, activeId: 'session-id' });
+      });
 
       const createTopicSpy = vi
         .spyOn(topicService, 'createTopic')
@@ -133,8 +137,10 @@ describe('topic action', () => {
     it('should call mutate to refresh topics', async () => {
       const { result } = renderHook(() => useChatStore());
       const activeId = 'test-session-id';
-      useChatStore.setState({ activeId });
 
+      act(() => {
+        useChatStore.setState({ activeId });
+      });
       // Mock the mutate function to resolve immediately
 
       await act(async () => {
@@ -148,8 +154,10 @@ describe('topic action', () => {
     it('should handle errors during refreshing topics', async () => {
       const { result } = renderHook(() => useChatStore());
       const activeId = 'test-session-id';
-      useChatStore.setState({ activeId });
 
+      act(() => {
+        useChatStore.setState({ activeId });
+      });
       // Mock the mutate function to throw an error
       // 设置模拟错误
       (mutate as Mock).mockImplementation(() => {

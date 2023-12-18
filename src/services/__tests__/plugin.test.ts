@@ -9,6 +9,8 @@ import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { InstallPluginParams, pluginService } from '../plugin';
+import openAPIV3 from './openai/OpenAPI_V3.json';
+import OpenAIPlugin from './openai/plugin.json';
 
 // Mocking modules and functions
 vi.mock('@/const/url', () => ({
@@ -111,6 +113,7 @@ describe('PluginService', () => {
 
       global.fetch = vi.fn(() =>
         Promise.resolve({
+          headers: new Headers({ 'content-type': 'application/json' }),
           ok: true,
           json: () => Promise.resolve(fakeManifest),
         }),
@@ -135,6 +138,7 @@ describe('PluginService', () => {
       const manifestUrl = 'http://fake-url.com/manifest.json';
       global.fetch = vi.fn(() =>
         Promise.resolve({
+          headers: new Headers({ 'content-type': 'application/json' }),
           ok: true,
           json: () => Promise.resolve(fakeManifest),
         }),
@@ -164,6 +168,7 @@ describe('PluginService', () => {
       const manifestUrl = 'http://fake-url.com/manifest.json';
       global.fetch = vi.fn(() =>
         Promise.resolve({
+          headers: new Headers({ 'content-type': 'application/json' }),
           ok: true,
           json: () => {
             throw new Error('abc');
@@ -184,6 +189,7 @@ describe('PluginService', () => {
       global.fetch = vi.fn(() =>
         Promise.resolve({
           ok: false,
+          headers: new Headers({ 'content-type': 'application/json' }),
           json: () => Promise.resolve(fakeManifest),
         }),
       ) as any;
@@ -193,6 +199,85 @@ describe('PluginService', () => {
       } catch (e) {
         expect(e).toEqual(new TypeError('fetchError'));
       }
+    });
+
+    describe('support OpenAPI manifest', () => {
+      it('should get plugin manifest', async () => {
+        const manifestUrl = 'http://fake-url.com/manifest.json';
+        const openapiUrl = 'http://fake-url.com/openapiUrl.json';
+
+        const fakeManifest = {
+          $schema: '../node_modules/@lobehub/chat-plugin-sdk/schema.json',
+          api: [],
+          openapi: openapiUrl,
+          author: 'LobeHub',
+          createAt: '2023-08-12',
+          homepage: 'https://github.com/lobehub/chat-plugin-realtime-weather',
+          identifier: 'realtime-weather',
+          meta: {
+            avatar: '🌈',
+            tags: ['weather', 'realtime'],
+            title: 'Realtime Weather',
+            description: 'Get realtime weather information',
+          },
+          ui: {
+            url: 'https://realtime-weather.chat-plugin.lobehub.com/iframe',
+            height: 310,
+          },
+          version: '1',
+        };
+
+        global.fetch = vi.fn((url) =>
+          Promise.resolve({
+            ok: true,
+            headers: new Headers({ 'content-type': 'application/json' }),
+            json: () => Promise.resolve(url === openapiUrl ? openAPIV3 : fakeManifest),
+          }),
+        ) as any;
+
+        const manifest = await pluginService.getPluginManifest(manifestUrl);
+
+        expect(manifest).toMatchSnapshot();
+      });
+
+      it('should return error on openAPIInvalid', async () => {
+        const openapiUrl = 'http://fake-url.com/openapiUrl.json';
+        const manifestUrl = 'http://fake-url.com/manifest.json';
+        const fakeManifest = {
+          $schema: '../node_modules/@lobehub/chat-plugin-sdk/schema.json',
+          api: [],
+          openapi: openapiUrl,
+          author: 'LobeHub',
+          createAt: '2023-08-12',
+          homepage: 'https://github.com/lobehub/chat-plugin-realtime-weather',
+          identifier: 'realtime-weather',
+          meta: {
+            avatar: '🌈',
+            tags: ['weather', 'realtime'],
+            title: 'Realtime Weather',
+            description: 'Get realtime weather information',
+          },
+          ui: {
+            url: 'https://realtime-weather.chat-plugin.lobehub.com/iframe',
+            height: 310,
+          },
+          version: '1',
+        };
+
+        global.fetch = vi.fn((url) =>
+          Promise.resolve({
+            ok: true,
+            headers: new Headers({ 'content-type': 'application/json' }),
+            json: () => Promise.resolve(url === openapiUrl ? [] : fakeManifest),
+          }),
+        ) as any;
+
+        try {
+          await pluginService.getPluginManifest(manifestUrl);
+        } catch (e) {
+          expect(e).toEqual(new TypeError('openAPIInvalid'));
+        }
+      });
     });
   });
 
@@ -329,5 +414,9 @@ describe('PluginService', () => {
     });
   });
 
-  // Add any additional tests to cover edge cases or error handling as needed.
+  it('can parse the OpenAI plugin', async () => {
+    const manifest = pluginService['convertOpenAIManifestToLobeManifest'](OpenAIPlugin as any);
+
+    expect(manifest).toMatchSnapshot();
+  });
 });

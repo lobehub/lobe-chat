@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import { MAX_SIZE_DESKTOP, MAX_SIZE_MOBILE } from '@/components/FileList/style';
 
 import FileGrid from './FileGrid';
-import FileItem from './FileItem';
+import ImageFileItem from './ImageFileItem';
 
 interface FileListProps {
   items: string[];
@@ -44,13 +44,13 @@ const FileList = memo<FileListProps>(({ items }) => {
       <Flexbox gap={gap}>
         <FileGrid col={firstRow.length} gap={gap} max={max}>
           {firstRow.map((i) => (
-            <FileItem id={i} key={i} />
+            <ImageFileItem id={i} key={i} />
           ))}
         </FileGrid>
         {lastRow.length > 0 && (
           <FileGrid col={lastRow.length > 2 ? 3 : lastRow.length} gap={gap} max={max}>
             {lastRow.map((i) => (
-              <FileItem id={i} key={i} />
+              <ImageFileItem id={i} key={i} />
             ))}
           </FileGrid>
         )}

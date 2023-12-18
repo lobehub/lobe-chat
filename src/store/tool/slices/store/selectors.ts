@@ -1,11 +1,22 @@
+import { InstallPluginMeta } from '@/types/tool/plugin';
+
 import type { ToolStoreState } from '../../initialState';
 
 const onlinePluginStore = (s: ToolStoreState) => {
-  if (s.listType === 'all') return s.pluginStoreList;
-
   const installedPluginIds = new Set(s.installedPlugins.map((i) => i.identifier));
+  const list =
+    s.listType === 'all'
+      ? s.pluginStoreList
+      : s.pluginStoreList.filter((p) => installedPluginIds.has(p.identifier));
 
-  return s.pluginStoreList.filter((p) => installedPluginIds.has(p.identifier));
+  return list.map<InstallPluginMeta>((p) => ({
+    author: p.author,
+    createdAt: p.createdAt,
+    homepage: p.homepage,
+    identifier: p.identifier,
+    meta: p.meta,
+    type: 'plugin',
+  }));
 };
 
 const isPluginInstallLoading = (id: string) => (s: ToolStoreState) => s.pluginInstallLoading[id];

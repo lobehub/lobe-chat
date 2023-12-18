@@ -24,7 +24,7 @@
   },
   "submitAgent": "上傳助理",
   "title": {
-    "recentSubmits": "最新上傳",
-    "allAgents": "所有助理"
+    "allAgents": "所有助理",
+    "recentSubmits": "最新上傳"
   }
 }

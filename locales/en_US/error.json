@@ -15,18 +15,20 @@
     "503": "Sorry, the server is currently unable to process your request, possibly due to overload or maintenance. Please try again later.",
     "504": "Sorry, the server did not receive a response from the upstream server. Please try again later.",
     "InvalidAccessCode": "The password is incorrect or empty. Please enter the correct access password or add a custom OpenAI API Key.",
+    "NoAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
     "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information.",
-    "PluginMarketIndexNotFound": "Sorry, the server could not find the plugin index. Please check if the index address is correct",
-    "PluginMarketIndexInvalid": "Sorry, the plugin index validation failed. Please check if the index file format is correct",
-    "PluginMetaNotFound": "Sorry, the plugin was not found in the index. Please check the plugin's configuration information in the index",
-    "PluginMetaInvalid": "Sorry, the plugin's metadata validation failed. Please check if the plugin metadata format is correct",
-    "PluginManifestNotFound": "Sorry, the server could not find the plugin's manifest file (manifest.json). Please check if the plugin manifest file address is correct",
-    "PluginManifestInvalid": "Sorry, the plugin's manifest validation failed. Please check if the manifest format is correct",
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
-    "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
+    "PluginGatewayError": "Sorry, there was an error with the plugin gateway. Please check if the plugin gateway configuration is correct.",
+    "PluginManifestInvalid": "Sorry, the plugin's manifest validation failed. Please check if the manifest format is correct",
+    "PluginManifestNotFound": "Sorry, the server could not find the plugin's manifest file (manifest.json). Please check if the plugin manifest file address is correct",
+    "PluginMarketIndexInvalid": "Sorry, the plugin index validation failed. Please check if the index file format is correct",
+    "PluginMarketIndexNotFound": "Sorry, the server could not find the plugin index. Please check if the index address is correct",
+    "PluginMetaInvalid": "Sorry, the plugin's metadata validation failed. Please check if the plugin metadata format is correct",
+    "PluginMetaNotFound": "Sorry, the plugin was not found in the index. Please check the plugin's configuration information in the index",
+    "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct.",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
-    "NoAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key"
+    "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct"
   },
   "stt": {
     "responseError": "Service request failed, please check the configuration or try again"
@@ -36,16 +38,16 @@
   },
   "unlock": {
     "apikey": {
-      "title": "Use Custom API Key",
+      "addProxyUrl": "Add OpenAI Proxy URL (optional)",
       "description": "Enter your OpenAI API Key to start the conversation. The application will not record your API Key.",
-      "addProxyUrl": "Add OpenAI Proxy URL (optional)"
+      "title": "Use Custom API Key"
     },
+    "closeMessage": "Close message",
     "confirm": "Confirm and Retry",
     "password": {
       "description": "The application encryption has been enabled by the administrator. Enter the application password to unlock the application. The password only needs to be filled in once.",
-      "title": "Enter Password to Unlock Application",
-      "placeholder": "Please enter password"
-    },
-    "closeMessage": "Close message"
+      "placeholder": "Please enter password",
+      "title": "Enter Password to Unlock Application"
+    }
   }
 }
