@@ -16,6 +16,10 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'lcov', 'text-summary'],
     },
+    deps: {
+      inline: ['vitest-canvas-mock'],
+    },
+    // threads: false,
     environment: 'jsdom',
     globals: true,
     setupFiles: './tests/setup.ts',
