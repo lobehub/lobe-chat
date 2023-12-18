@@ -1,5 +1,5 @@
 {
-  "addAgent": "助手を追加する",
+  "addAgent": "エージェントを追加する",
   "guide": {
     "func1": {
       "desc1": "セッションウィンドウで右上隅の設定にアクセスして、アシスタントの設定ページに移動します。",
@@ -15,16 +15,16 @@
     }
   },
   "search": {
-    "placeholder": "助手の名前、説明、またはキーワードを検索..."
+    "placeholder": "エージェントの名前、説明、またはキーワードを検索..."
   },
   "sidebar": {
     "comment": "コメント",
     "prompt": "プロンプト",
-    "title": "助手の詳細"
+    "title": "エージェントの詳細"
   },
-  "submitAgent": "助手を提出する",
+  "submitAgent": "エージェントを提出する",
   "title": {
-    "allAgents": "すべての助手",
+    "allAgents": "すべてのエージェント",
     "recentSubmits": "最近の追加"
   }
 }
