@@ -1,0 +1,30 @@
+# NOTES:
+
+Congratulations! You have successfully deployed the lobe-chat Helm chart.
+
+To access the lobe-chat application, you have a few options:
+
+1. Port Forwarding:
+   - Run the following command to port forward the lobe-chat service to your local machine:
+
+     kubectl port-forward svc/{{ .Release.Name }}-lobe-chat {{ .Values.service.port }}:{{ .Values.service.port }}
+
+   - Open a web browser and enter the following URL:
+
+     http://localhost:{{ .Values.service.port }}
+
+   - You should now see the lobe-chat application running.
+
+2. Ingress Hostname:
+   - Open a web browser and enter the following URL:
+
+     {{ if index .Values "ingress" "tls" }}
+     https://{{ index .Values "ingress" "hosts" 0 "host" }}
+     {{ else }}
+     http://{{ index .Values "ingress" "hosts" 0 "host" }}
+     {{ end }}
+
+   - You should now see the lobe-chat application running.
+
+Enjoy using lobe-chat!
+

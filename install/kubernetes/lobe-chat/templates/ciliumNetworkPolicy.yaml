@@ -1,0 +1,8 @@
+{{- with .Values.ciliumNetworkPolicy }}
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: lobe-chat
+spec:
+  {{ toYaml . | nindent 2 }}
+{{- end }}

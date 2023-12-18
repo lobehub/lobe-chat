@@ -1,0 +1,146 @@
+# Default values for lobe-chat.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  # https://hub.docker.com/r/lobehub/lobe-chat
+  repository: lobehub/lobe-chat
+  pullPolicy: Always
+  tag: "v0.114.2"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+env: {}
+  #- name: OPENAI_PROXY_URL
+  #  value: "https://api-proxy.com/v1"
+
+# The name of the secret containing the environment variables to be added to the container
+envFromSecret: lobe-chat
+
+secret:
+  # Creates a secret named lobe-chat with the specified key/value pairs.
+  # It's not recommended to store secrets in the chart itself, but this is an option.
+  enabled: false
+  OPENAI_API_KEY: ""
+  ACCESS_CODE: ""
+
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  runAsGroup: 1001
+  fsGroup: 1001
+
+securityContext:
+  privileged: false
+  #
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+
+service:
+  type: ClusterIP
+  port: 3210
+
+ciliumNetworkPolicy:  {}
+#  endpointSelector:
+#    matchLabels:
+#      app.kubernetes.io/name: lobe-chat
+#      app.kubernetes.io/instance: lobe-chat
+#  ingress:
+#    - fromEntities:
+#        - ingress
+#      toPorts:
+#        - ports:
+#            - port: "3210"
+#              protocol: TCP
+#  egress:
+#  - toFQDNs:
+#    - matchPattern: api.openai.com
+#    - matchPattern: chat-agents.lobehub.com
+#    - matchPattern: registry.npmmirror.com
+#  - toEndpoints:
+#    - matchLabels:
+#        "k8s:io.kubernetes.pod.namespace": kube-system
+#        "k8s:k8s-app": kube-dns
+#    toPorts:
+#    - ports:
+#      - port: "53"
+#        protocol: ANY
+#      rules:
+#       dns:
+#        - matchPattern: "*"
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: lobe-chat.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: lobe-chat.local
+  #    hosts:
+  #      - lobe-chat.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
