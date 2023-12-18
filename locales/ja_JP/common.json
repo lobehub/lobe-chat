@@ -1,5 +1,5 @@
 {
-  "about": "について",
+  "about": "概要",
   "advanceSettings": "高度な設定",
   "agentMaxToken": "エージェントの最大トークン数",
   "agentModel": "モデル",
@@ -80,7 +80,7 @@
   "stop": "停止",
   "tab": {
     "chat": "チャット",
-    "market": "発見",
+    "market": "探す",
     "setting": "設定"
   },
   "temp": "一時的",
