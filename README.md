@@ -525,8 +525,8 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 
 <a href="https://opencollective.com/lobehub" target="_blank">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://readme-wizard.lobehub.com/api/sponsor?themeMode=dark">
-    <img  src="https://readme-wizard.lobehub.com/api/sponsor">
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/lobehub/.github/blob/main/static/sponsor-dark.png?raw=true">
+    <img  src="https://github.com/lobehub/.github/blob/main/static/sponsor-light.png?raw=true">
   </picture>
 </a>
 

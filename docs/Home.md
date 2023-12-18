@@ -67,6 +67,8 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
  <!-- DOCS LIST -->
 
+---
+
 <details><summary><h4>📝 License</h4></summary>
 
 [![][fossa-license-shield]][fossa-license-url]
