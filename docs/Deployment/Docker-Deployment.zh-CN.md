@@ -80,6 +80,7 @@ services:
   lobe-chat:
     image: lobehub/lobe-chat
     container_name: lobe-chat
+    restart: always
     ports:
       - '3210:3210'
     environment:
