@@ -35,7 +35,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, width = 800, height = 300, 
 
   return (
     <>
-      {loading && <Skeleton active style={{ width }} />}
+      {loading && <Skeleton active style={{ maxWidth: '100%', width }} />}
       <iframe
         // @ts-ignore
         allowtransparency="true"
@@ -51,6 +51,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, width = 800, height = 300, 
           // iframe 在 color-scheme:dark 模式下无法透明
           // refs: https://www.jianshu.com/p/bc5a37bb6a7b
           colorScheme: 'light',
+          maxWidth: '100%',
         }}
         width={width}
       />
