@@ -183,14 +183,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                 | 助手说明                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
-| [模拟 ChatGPT Web](https://chat-preview.lobehub.com/market?agent=chat-gpt-web)<br/><sup>By **[pzcn](https://github.com/pzcn)** on **2023-12-16**</sup>                   | 使 GPT 认为自己是 ChatGPT 网页版，从而达到更加接近于网页版的回复<br/>`助手` `对话`                                 |
-| [祝贺](https://chat-preview.lobehub.com/market?agent=congratulations-with-smileys)<br/><sup>By **[almaziphone](https://github.com/almaziphone)** on **2023-12-16**</sup> | 用表情符号编写美丽而简短的祝贺<br/>`祝贺` `节日` `善良`                                                            |
-| [房地产经纪人](https://chat-preview.lobehub.com/market?agent=estate-agency)<br/><sup>By **[ccsen](https://github.com/ccsen)** on **2023-12-16**</sup>                    | 专业的房地产经纪人专家，精通房地产咨询和管理。<br/>`房地产` `房地产经纪人` `知识专家` `房产评估` `购房` `物业管理` |
-| [刑辩专家](https://chat-preview.lobehub.com/market?agent=yundaodev-1)<br/><sup>By **[SuperLande](https://github.com/SuperLande)** on **2023-12-16**</sup>                | 一位中国刑事法律专家，从事多年刑事辩护实务工作，了解刑法与刑事诉讼法理论<br/>`刑辩`                                |
+| 最近新增                                                                                                                                                     | 助手说明                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| [梦境画家](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>    | 一位能将你的梦想变成现实的梦境艺术家。<br/>`txt-2-img` `painter`               |
+| [NewsHub](https://chat-preview.lobehub.com/market?agent=news-hub)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>          | 一个新闻搜索助手，擅长查找和呈现相关新闻<br/>`新闻` `搜索` `助手`              |
+| [NewsNest](https://chat-preview.lobehub.com/market?agent=news-nest)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>        | 一个新闻搜索助手，可以根据您的需求帮助您查找和显示相关新闻。<br/>`新闻` `搜索` |
+| [旅行助手](https://chat-preview.lobehub.com/market?agent=travel-assistant)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup> | 一位经验丰富的户外徒步和冒险专家，根据用户需求制定旅行计划。<br/>`户外` `徒步` |
 
-> 📊 Total agents: [<kbd>**73**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**77**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

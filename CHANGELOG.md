@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.114.4](https://github.com/lobehub/lobe-chat/compare/v0.114.3...v0.114.4)
+
+<sup>Released on **2023-12-19**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent system role modal scrolling when content is too long.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent system role modal scrolling when content is too long, closes [#716](https://github.com/lobehub/lobe-chat/issues/716) ([c3e36d1](https://github.com/lobehub/lobe-chat/commit/c3e36d1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.114.3](https://github.com/lobehub/lobe-chat/compare/v0.114.2...v0.114.3)
 
 <sup>Released on **2023-12-18**</sup>
