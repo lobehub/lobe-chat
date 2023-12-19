@@ -172,9 +172,9 @@ e-commerce platform data access, and various third-party services.
 | [weather GPT](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Steven Tey** on **2023-12-16**</sup>  | Get current weather information for a specific location.<br/>`weather`                                                                       |
 | [Ask Your PDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AskYourPDF** on **2023-12-16**</sup> | Unlock the power of your PDFs!, dive into your documents, find answers, and bring information to your fingertips.<br/>`pdf` `document` `web` |
 | [Clock Time](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>      | Display a clock to show current time<br/>`clock` `time`                                                                                      |
-| [Pollinate drawing](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AI0x0** on **2023-12-10**</sup> | Generate images through pollinations.ai<br/>`drawing` `image`                                                                                |
+| [Mindmap](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Moonlit7** on **2023-12-19**</sup>        | A mindmap generation assistant<br/>`mindmap`                                                                                                 |
 
-> 📊 Total plugins: [<kbd>**8**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**9**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -206,14 +206,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                       | Description                                                                                                                    |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [Dream Painter](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>       | A dream artist who can bring your dreams into reality.<br/>`txt-2-img` `painter`                                               |
-| [NewsHub](https://chat-preview.lobehub.com/market?agent=news-hub)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                  | A news search assistant proficient at finding and presenting relevant news<br/>`news` `search` `helper`                        |
-| [NewsNest](https://chat-preview.lobehub.com/market?agent=news-nest)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                | A news search assistant, can help you find and display relevant news based on your needs.<br/>`news` `search`                  |
-| [Travel Assistant](https://chat-preview.lobehub.com/market?agent=travel-assistant)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup> | An experienced outdoor hiking and adventure expert who creates travel plans based on user requirements.<br/>`outdoor` `hiking` |
+| Recent Submits                                                                                                                                                   | Description                                                                                                                                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Dream Painter](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>   | A dream artist who can bring your dreams into reality.<br/>`txt-2-img` `painter`                                                                                                                                  |
+| [NewsHub](https://chat-preview.lobehub.com/market?agent=news-hub)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>              | A news search assistant proficient at finding and presenting relevant news<br/>`news` `search` `helper`                                                                                                           |
+| [NewsNest](https://chat-preview.lobehub.com/market?agent=news-nest)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>            | A news search assistant, can help you find and display relevant news based on your needs.<br/>`news` `search`                                                                                                     |
+| [Research Assistant](https://chat-preview.lobehub.com/market?agent=research-assistant)<br/><sup>By **[ccsen](https://github.com/ccsen)** on **2023-12-19**</sup> | Capable of answering questions, conducting research, drafting content, and more, utilizing scientific research papers.<br/>`research-assistant` `literature-retrieval` `writing` `scientific-research` `citation` |
 
-> 📊 Total agents: [<kbd>**77**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**78**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
