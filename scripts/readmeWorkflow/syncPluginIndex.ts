@@ -14,7 +14,7 @@ const genPluginTable = (data: DataItem[], lang: string) => {
     [item.meta.description, genTags(item.meta.tags)].join('<br/>'),
   ]);
   return markdownTable([
-    isCN ? ['最近新增', '插件描述'] : ['Recent Submits', 'Repository', 'Description'],
+    isCN ? ['最近新增', '插件描述'] : ['Recent Submits', 'Description'],
     ...content,
   ]);
 };
