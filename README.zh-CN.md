@@ -153,9 +153,9 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [天气 GPT](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Steven Tey** on **2023-12-16**</sup>  | 获取特定位置的当前天气信息。<br/>`天气`                                                    |
 | [AskYouPDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AskYourPDF** on **2023-12-16**</sup> | 释放您的 PDF 的力量！深入您的文档，找到答案，并将信息带到您的指尖。<br/>`pdf` `文档` `web` |
 | [时钟时间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>     | 显示一个时钟来展示当前时间<br/>`时钟` `时间`                                               |
-| [授粉绘画](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AI0x0** on **2023-12-10**</sup>       | 通过 pollinations.ai 进行图像生成<br/>`drawing` `image`                                    |
+| [思维导图](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Moonlit7** on **2023-12-19**</sup>    | 思维导图生成助手<br/>`思维导图` `脑图`                                                     |
 
-> 📊 Total plugins: [<kbd>**8**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**9**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -183,14 +183,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                     | 助手说明                                                                       |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| [梦境画家](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>    | 一位能将你的梦想变成现实的梦境艺术家。<br/>`txt-2-img` `painter`               |
-| [NewsHub](https://chat-preview.lobehub.com/market?agent=news-hub)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>          | 一个新闻搜索助手，擅长查找和呈现相关新闻<br/>`新闻` `搜索` `助手`              |
-| [NewsNest](https://chat-preview.lobehub.com/market?agent=news-nest)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>        | 一个新闻搜索助手，可以根据您的需求帮助您查找和显示相关新闻。<br/>`新闻` `搜索` |
-| [旅行助手](https://chat-preview.lobehub.com/market?agent=travel-assistant)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup> | 一位经验丰富的户外徒步和冒险专家，根据用户需求制定旅行计划。<br/>`户外` `徒步` |
+| 最近新增                                                                                                                                                  | 助手说明                                                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [梦境画家](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup> | 一位能将你的梦想变成现实的梦境艺术家。<br/>`txt-2-img` `painter`                                                                                  |
+| [NewsHub](https://chat-preview.lobehub.com/market?agent=news-hub)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>       | 一个新闻搜索助手，擅长查找和呈现相关新闻<br/>`新闻` `搜索` `助手`                                                                                 |
+| [NewsNest](https://chat-preview.lobehub.com/market?agent=news-nest)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>     | 一个新闻搜索助手，可以根据您的需求帮助您查找和显示相关新闻。<br/>`新闻` `搜索`                                                                    |
+| [研究助理](https://chat-preview.lobehub.com/market?agent=research-assistant)<br/><sup>By **[ccsen](https://github.com/ccsen)** on **2023-12-19**</sup>    | 能够回答问题，进行研究，起草内容等，利用科学研究论文。<br/>`research-assistant` `literature-retrieval` `writing` `scientific-research` `citation` |
 
-> 📊 Total agents: [<kbd>**77**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**78**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
