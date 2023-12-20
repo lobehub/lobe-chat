@@ -1,0 +1,45 @@
+{
+  "dbV1": {
+    "action": {
+      "clearDB": "Yerel Verileri Temizle",
+      "downloadBackup": "Yedeğini İndir",
+      "reUpgrade": "Yeniden Yükselt",
+      "start": "Başla",
+      "upgrade": "Yükselt"
+    },
+    "clear": {
+      "confirm": "Yerel verileri temizlemek üzeresiniz (global ayarlar etkilenmeyecek). Lütfen yedeği indirdiğinizi onaylayın."
+    },
+    "description": "Yeni sürümde, LobeChat'in veri arttı. Bu nedenle, size daha iyi bir kullanıcı deneyimi sunmak için eski sürüm verilerini yükseltmemiz gerekiyor.",
+    "features": {
+      "capability": {
+        "desc": "IndexedDB teknolojisine ile ömür boyu konuşma mesajları depolayabilir.",
+        "title": "Yüksek Kapasite"
+      },
+      "performance": {
+        "desc": "Milyonlarca mesaj otomatik olarak indekslenir ve sorgu yanıtları milisaniyeler içinde gerçekleşir.",
+        "title": "Yüksek Performans"
+      },
+      "use": {
+        "desc": "Başlıkları, açıklamaları, etiketleri, mesaj içeriğini ve hatta çevrilmiş metni aramayı destekler, günlük arama verimliliğini büyük ölçüde artırır.",
+        "title": "Daha Kullanıcı Dostu"
+      }
+    },
+    "title": "LobeChat Data Evolution",
+    "upgrade": {
+      "error": {
+        "subTitle": "Üzgünüz, veritabanı yükseltme işlemi sırasında bir hata oluştu. Lütfen şu çözümleri deneyin: A. Yerel verileri temizleyin ve yedek verileri yeniden içe aktarın; B. 'Yükseltmeyi Yeniden Dene' düğmesine tıklayın.<br><br> Sorun devam ederse, lütfen <1>bir istek gönderin</1>, en kısa sürede size yardımcı olacağız.",
+        "title": "Veritabanı Yükseltmesi Başarısız Oldu"
+      },
+      "success": {
+        "subTitle": "LobeChat'in veritabanı en son sürüme başarıyla yükseltildi. Şimdi deneyimlemeye başlayın!",
+        "title": "Veritabanı Yükseltmesi Başarılı"
+      }
+    },
+    "upgradeTip": "Yükseltme işlemi yaklaşık 10 ila 20 saniye sürecektir. Lütfen yükseltme sırasında LobeChat'i kapatmayın."
+  },
+  "migrateError": {
+    "missVersion": "İçe aktarılan verilerde bir sürüm numarası eksik. Lütfen dosyayı kontrol edin ve tekrar deneyin.",
+    "noMigration": "Mevcut sürüm için bir geçiş çözümü bulunamadı. Lütfen sürüm numarasını kontrol edin ve tekrar deneyin. Sorun devam ederse, lütfen bir geri bildirim isteği gönderin."
+  }
+}

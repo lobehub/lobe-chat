@@ -2,7 +2,7 @@ export default {
   agentDefaultMessage:
     '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置](/chat/settings#session={{id}}) 完善我的信息。',
   agentDefaultMessageWithSystemRole: '你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！',
-  backToBottom: '查看最新消息',
+  backToBottom: '跳转至当前',
   clearCurrentMessages: '清空当前会话消息',
   confirmClearCurrentMessages: '即将清空当前会话消息，清空后将无法找回，请确认你的操作',
   confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
@@ -44,7 +44,8 @@ export default {
     prettifying: '润色中...',
   },
   temp: '临时',
-  tokenDetail: '角色设定: {{systemRoleToken}} · 历史消息: {{chatsToken}}',
+  tokenDetail:
+    '角色设定: {{systemRoleToken}} · 会话消息: {{chatsToken}} · 工具设定: {{toolsToken}}',
   tokenTag: {
     overload: '超过限制',
     remained: '剩余',

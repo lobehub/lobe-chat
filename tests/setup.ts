@@ -5,9 +5,10 @@ import { theme } from 'antd';
 // refs: https://github.com/dumbmatter/fakeIndexedDB#dexie-and-other-indexeddb-api-wrappers
 import 'fake-indexeddb/auto';
 import React from 'react';
+import 'vitest-canvas-mock';
 
 // remove antd hash on test
 theme.defaultConfig.hashed = false;
 
 // 将 React 设置为全局变量，这样就不需要在每个测试文件中导入它了
-global.React = React;
+(global as any).React = React;

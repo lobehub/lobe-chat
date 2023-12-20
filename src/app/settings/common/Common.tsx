@@ -13,8 +13,8 @@ import { localeOptions } from '@/locales/options';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
 import { settingsSelectors, useGlobalStore } from '@/store/global';
-import { usePluginStore } from '@/store/plugin';
 import { useSessionStore } from '@/store/session';
+import { useToolStore } from '@/store/tool';
 import { switchLang } from '@/utils/switchLang';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../features/ThemeSwatches';
@@ -35,7 +35,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
     s.clearAllMessages,
   ]);
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
-  const resetPluginSettings = usePluginStore((s) => s.resetPluginSettings);
+  const removeAllPlugins = useToolStore((s) => s.removeAllPlugins);
 
   const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
   const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [
@@ -70,7 +70,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
       okText: t('ok', { ns: 'common' }),
       onOk: async () => {
         await clearSessions();
-        resetPluginSettings();
+        await removeAllPlugins();
         await clearTopics();
         await removeAllFiles();
         await clearAllMessages();
@@ -131,7 +131,33 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
         name: 'language',
       },
       {
-        children: <SliderWithInput max={18} min={12} />,
+        children: (
+          <SliderWithInput
+            marks={{
+              12: {
+                label: t('settingTheme.fontSize.marks.small'),
+                style: {
+                  marginTop: 4,
+                },
+              },
+              14: {
+                label: t('settingTheme.fontSize.marks.normal'),
+                style: {
+                  marginTop: 4,
+                },
+              },
+              18: {
+                label: t('settingTheme.fontSize.marks.large'),
+                style: {
+                  marginTop: 4,
+                },
+              },
+            }}
+            max={18}
+            min={12}
+            step={1}
+          />
+        ),
         desc: t('settingTheme.fontSize.desc'),
         label: t('settingTheme.fontSize.title'),
         name: 'fontSize',

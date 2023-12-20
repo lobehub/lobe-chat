@@ -5,20 +5,38 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
+import { settingsSelectors, useGlobalStore } from '@/store/global';
 
 import ChatList from './ChatList';
 import ChatScrollAnchor from './ScrollAnchor';
 import { useInitConversation } from './useInitConversation';
 
-const useStyles = createStyles(
-  ({ css, responsive, stylish }) => css`
-    overflow: hidden scroll;
-    height: 100%;
-    ${responsive.mobile} {
-      ${stylish.noScrollbar}
-      width: 100vw;
-    }
-  `,
+const useStyles = createStyles(({ css, responsive, stylish, cx }, fontSize: number = 14) =>
+  cx(
+    css`
+      overflow: hidden scroll;
+      height: 100%;
+
+      ${responsive.mobile} {
+        ${stylish.noScrollbar}
+        width: 100vw;
+      }
+    `,
+    fontSize !== 14 &&
+      css`
+        article[data-code-type='markdown'] {
+          p,
+          code,
+          pre,
+          ul,
+          ol,
+          li,
+          blockquote {
+            font-size: ${fontSize}px;
+          }
+        }
+      `,
+  ),
 );
 
 interface ConversationProps {
@@ -29,7 +47,8 @@ interface ConversationProps {
 const Conversation = memo<ConversationProps>(({ mobile, chatInput }) => {
   const ref = useRef(null);
   const { t } = useTranslation('chat');
-  const { styles } = useStyles();
+  const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
+  const { styles } = useStyles(fontSize);
 
   // init conversation
   useInitConversation();

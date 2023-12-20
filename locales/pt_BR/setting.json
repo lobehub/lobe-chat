@@ -1,0 +1,306 @@
+{
+  "danger": {
+    "clear": {
+      "action": "Limpar Agora",
+      "confirm": "Confirmar a exclusão de todos os dados de conversa?",
+      "desc": "Isso irá apagar todos os dados de conversas, incluindo assistentes, arquivos, mensagens, e plugins.",
+      "success": "Todos os dados de conversa foram apagados com sucesso",
+      "title": "Limpar Todas as Conversas"
+    },
+    "reset": {
+      "action": "Redefinir Agora",
+      "confirm": "Confirmar a redefinição de todas as configurações?",
+      "currentVersion": "Versão Atual",
+      "desc": "Redefinir todas as configurações para os valores padrão",
+      "title": "Redefinir Todas as Configurações"
+    }
+  },
+  "header": {
+    "global": "Configurações Globais",
+    "session": "Configurações de Sessão",
+    "sessionWithName": "Configurações de Sessão · {{name}}"
+  },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "Você pode encontrar este valor na seção 'Chave e Endpoint' ao verificar os recursos no portal Azure",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Endereço da API Azure"
+      },
+      "models": {
+        "desc": "Modelos suportados",
+        "title": "Lista de Modelos"
+      },
+      "title": "Configurações Azure OpenAI",
+      "token": {
+        "desc": "Você pode encontrar este valor na seção 'Chave e Endpoint' ao verificar os recursos no portal Azure. Você pode usar KEY1 ou KEY2",
+        "placeholder": "Chave da API Azure",
+        "title": "Chave da API"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "Versão da API Azure, no formato YYYY-MM-DD. Consulte a [última versão](https://learn.microsoft.com/pt-br/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Obter Lista",
+        "title": "Versão da API Azure"
+      },
+      "check": {
+        "button": "Verificar",
+        "desc": "Verifique se a Chave da API e o Endereço do Proxy estão preenchidos corretamente",
+        "pass": "Verificação bem-sucedida",
+        "title": "Verificação de Conectividade"
+      },
+      "customModelName": {
+        "desc": "Adicione modelos personalizados, separados por vírgula (,)",
+        "placeholder": "modelo1,modelo2,modelo3",
+        "title": "Nome do Modelo Personalizado"
+      },
+      "endpoint": {
+        "desc": "Além do endereço padrão, deve incluir http(s)://",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "Endereço do Proxy da Interface"
+      },
+      "models": {
+        "count": "Total de {{count}} modelos suportados",
+        "desc": "Modelos suportados",
+        "fetch": "Obter Lista de Modelos",
+        "notSupport": "Azure OpenAI não suporta a visualização da lista de modelos no momento",
+        "notSupportTip": "Você precisa garantir que o nome de implantação corresponda ao nome do modelo",
+        "refetch": "Obter Lista de Modelos Novamente",
+        "title": "Lista de Modelos"
+      },
+      "title": "Configurações OpenAI",
+      "token": {
+        "desc": "Use sua própria Chave da API OpenAI",
+        "placeholder": "Chave da API OpenAI",
+        "title": "Chave da API"
+      },
+      "useAzure": {
+        "desc": "Use o serviço OpenAI fornecido pela Azure",
+        "fetch": "Obter Lista",
+        "serverConfig": "O administrador configurou o OpenAI Azure no servidor e a troca está desativada",
+        "title": "Usar Azure OpenAI"
+      }
+    },
+    "waitingForMore": "Mais modelos estão sendo <1>planejados para serem adicionados</1>, aguarde ansiosamente ✨"
+  },
+  "plugin": {
+    "addTooltip": "Adicionar plug-in personalizado",
+    "clearDeprecated": "Remover plug-ins inválidos",
+    "empty": "Nenhum plug-in instalado no momento, visite a <1>loja de plug-ins</1> para explorar",
+    "installStatus": {
+      "deprecated": "Desinstalado"
+    },
+    "settings": {
+      "hint": "Por favor, preencha as configurações abaixo de acordo com a descrição",
+      "title": "Configurações do plug-in {{id}}",
+      "tooltip": "Configurações do plug-in"
+    },
+    "store": "Loja de plug-ins"
+  },
+  "settingAgent": {
+    "avatar": {
+      "title": "Avatar"
+    },
+    "backgroundColor": {
+      "title": "Cor de fundo"
+    },
+    "description": {
+      "placeholder": "Digite a descrição do assistente",
+      "title": "Descrição do assistente"
+    },
+    "name": {
+      "placeholder": "Digite o nome do assistente",
+      "title": "Nome"
+    },
+    "prompt": {
+      "placeholder": "Digite a palavra de prompt do papel",
+      "title": "Configuração do papel"
+    },
+    "tag": {
+      "placeholder": "Digite a etiqueta",
+      "title": "Etiqueta"
+    },
+    "title": "Informações do assistente"
+  },
+  "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "Quando o número de mensagens atingir esse valor, um tópico será criado automaticamente",
+      "title": "Limite de mensagens"
+    },
+    "chatStyleType": {
+      "title": "Estilo da janela de chat",
+      "type": {
+        "chat": "Modo de conversa",
+        "docs": "Modo de documento"
+      }
+    },
+    "compressThreshold": {
+      "desc": "Quando o número de mensagens não compactadas ultrapassar esse valor, elas serão compactadas",
+      "title": "Limite de compactação de mensagens"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "Se deve criar automaticamente um tópico durante a conversa, apenas válido em tópicos temporários",
+      "title": "Criar tópico automaticamente"
+    },
+    "enableCompressThreshold": {
+      "title": "Ativar limite de compactação de mensagens"
+    },
+    "enableHistoryCount": {
+      "alias": "Sem limite",
+      "limited": "Incluir apenas {{number}} mensagens de conversa",
+      "title": "Limitar número de mensagens de histórico",
+      "unlimited": "Sem limite de mensagens de histórico"
+    },
+    "historyCount": {
+      "desc": "Número de mensagens incluídas em cada solicitação (incluindo a última pergunta feita. Cada pergunta e resposta contam como 1)",
+      "title": "Número de mensagens incluídas"
+    },
+    "inputTemplate": {
+      "desc": "A última mensagem do usuário será preenchida neste modelo",
+      "placeholder": "O modelo de pré-processamento {{text}} será substituído pela entrada em tempo real",
+      "title": "Pré-processamento de entrada do usuário"
+    },
+    "title": "Configurações de chat"
+  },
+  "settingModel": {
+    "enableMaxTokens": {
+      "title": "Ativar limite de resposta única"
+    },
+    "frequencyPenalty": {
+      "desc": "Quanto maior o valor, maior a probabilidade de reduzir palavras repetidas",
+      "title": "Penalidade de frequência"
+    },
+    "maxTokens": {
+      "desc": "Número máximo de tokens a serem usados em uma interação única",
+      "title": "Limite de resposta única"
+    },
+    "model": {
+      "desc": "Modelo ChatGPT",
+      "list": {
+        "gpt-3.5-turbo": "GPT 3.5",
+        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+        "gpt-4": "GPT 4",
+        "gpt-4-32k": "GPT 4 (32K)"
+      },
+      "title": "Modelo"
+    },
+    "presencePenalty": {
+      "desc": "Quanto maior o valor, maior a probabilidade de expandir para novos tópicos",
+      "title": "Penalidade de novidade do tópico"
+    },
+    "temperature": {
+      "desc": "Quanto maior o valor, mais aleatória será a resposta",
+      "title": "Aleatoriedade",
+      "titleWithValue": "Aleatoriedade {{value}}"
+    },
+    "title": "Configurações do modelo",
+    "topP": {
+      "desc": "Semelhante à aleatoriedade, mas não deve ser alterado junto com a aleatoriedade",
+      "title": "Amostragem principal"
+    }
+  },
+  "settingPlugin": {
+    "title": "Lista de plugins"
+  },
+  "settingSystem": {
+    "accessCode": {
+      "desc": "O administrador habilitou o acesso criptografado",
+      "placeholder": "Digite a senha de acesso",
+      "title": "Senha de acesso"
+    },
+    "title": "Configurações do sistema"
+  },
+  "settingTTS": {
+    "openai": {
+      "sttModel": "Modelo de reconhecimento de fala OpenAI",
+      "ttsModel": "Modelo de síntese de fala OpenAI"
+    },
+    "showAllLocaleVoice": {
+      "desc": "Se desativado, mostrará apenas as vozes no idioma atual",
+      "title": "Mostrar todas as vozes do idioma"
+    },
+    "stt": "Configurações de reconhecimento de fala",
+    "sttAutoStop": {
+      "desc": "Se desativado, o reconhecimento de fala não será encerrado automaticamente e precisará ser encerrado manualmente",
+      "title": "Parar reconhecimento de fala automaticamente"
+    },
+    "sttLocale": {
+      "desc": "Idioma da entrada de fala, isso pode melhorar a precisão do reconhecimento de fala",
+      "title": "Idioma do reconhecimento de fala"
+    },
+    "sttService": {
+      "desc": "Onde 'browser' é o serviço nativo de reconhecimento de fala do navegador",
+      "title": "Serviço de reconhecimento de fala"
+    },
+    "title": "Serviço de fala",
+    "tts": "Configurações de síntese de fala",
+    "ttsService": {
+      "desc": "Se estiver usando o serviço de síntese de fala OpenAI, certifique-se de que o serviço do modelo OpenAI esteja habilitado",
+      "title": "Serviço de síntese de fala"
+    },
+    "voice": {
+      "desc": "Escolha uma voz para o assistente atual, diferentes serviços TTS suportam vozes diferentes",
+      "preview": "Ouvir voz",
+      "title": "Voz de síntese de fala"
+    }
+  },
+  "settingTheme": {
+    "avatar": {
+      "title": "Avatar"
+    },
+    "fontSize": {
+      "desc": "Tamanho da fonte do conteúdo do chat",
+      "marks": {
+        "large": "Grande",
+        "normal": "Normal",
+        "small": "Pequeno"
+      },
+      "title": "Tamanho da Fonte"
+    },
+    "lang": {
+      "autoMode": "Seguir sistema",
+      "title": "Idioma"
+    },
+    "neutralColor": {
+      "desc": "Personalização de tons de cinza com diferentes tendências de cores",
+      "title": "Cor Neutra"
+    },
+    "primaryColor": {
+      "desc": "Cor do tema personalizado",
+      "title": "Cor Principal"
+    },
+    "themeMode": {
+      "auto": "Automático",
+      "dark": "Escuro",
+      "light": "Claro",
+      "title": "Tema"
+    },
+    "title": "Configurações de Tema"
+  },
+  "submitAgentModal": {
+    "button": "Enviar Assistente",
+    "identifier": "Identificador do assistente",
+    "metaMiss": "Por favor, complete as informações do assistente antes de enviar, incluindo nome, descrição e etiqueta",
+    "placeholder": "Insira o identificador único do assistente, como por exemplo, desenvolvimento-web",
+    "tooltips": "Compartilhar no mercado de assistentes"
+  },
+  "tab": {
+    "agent": "Assistente Padrão",
+    "common": "Configurações Comuns",
+    "llm": "Modelo de Linguagem",
+    "tts": "Serviço de Voz"
+  },
+  "tools": {
+    "builtins": {
+      "groupName": "Integrados"
+    },
+    "plugins": {
+      "enabled": "Ativado {{num}}",
+      "groupName": "Plugins",
+      "noEnabled": "Nenhum plugin ativado no momento",
+      "store": "Loja de Plugins"
+    },
+    "title": "Ferramentas de Extensão"
+  }
+}

@@ -1,6 +1,6 @@
 import { ActionIcon, Icon, Modal } from '@lobehub/ui';
 import { Button } from 'antd';
-import { Share2 } from 'lucide-react';
+import { Rss } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,13 +14,13 @@ const ShareAgentButton = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const buttonContent = mobile ? (
     <ActionIcon
-      icon={Share2}
+      icon={Rss}
       onClick={() => setIsModalOpen(true)}
       size={MOBILE_HEADER_ICON_SIZE}
       title={t('submitAgent')}
     />
   ) : (
-    <Button icon={<Icon icon={Share2} />} onClick={() => setIsModalOpen(true)}>
+    <Button icon={<Icon icon={Rss} />} onClick={() => setIsModalOpen(true)}>
       {t('submitAgent')}
     </Button>
   );

@@ -16,7 +16,7 @@ const genAgentTable = (data: DataItem[], lang: string) => {
           url: MARKET_URL,
         }),
       ),
-      `<sup>By **${genLink(item.author, item.homepage)}** on **${item.createAt}**</sup>`,
+      `<sup>By **${genLink(item.author, item.homepage)}** on **${(item as any).createAt}**</sup>`,
     ].join('<br/>'),
     [item.meta.description, genTags(item.meta.tags)].join('<br/>'),
   ]);

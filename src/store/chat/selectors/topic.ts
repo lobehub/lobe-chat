@@ -4,6 +4,9 @@ import { ChatStore } from '../store';
 
 const currentTopics = (s: ChatStore): ChatTopic[] => s.topics;
 
+const currentActiveTopic = (s: ChatStore): ChatTopic | undefined => {
+  return s.topics.find((topic) => topic.id === s.activeTopicId);
+};
 const searchTopics = (s: ChatStore): ChatTopic[] => s.searchTopics;
 
 const displayTopics = (s: ChatStore): ChatTopic[] =>
@@ -19,6 +22,7 @@ const getTopicById =
     currentTopics(s).find((topic) => topic.id === id);
 
 export const topicSelectors = {
+  currentActiveTopic,
   currentTopicLength,
   currentTopics,
   currentUnFavTopics,

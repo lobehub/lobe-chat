@@ -1,7 +1,7 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
 import { ActionIcon, Avatar, ChatHeader, ChatHeaderTitle, Tag } from '@lobehub/ui';
 import { Skeleton } from 'antd';
-import { PanelRightClose, PanelRightOpen, Settings } from 'lucide-react';
+import { PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
 
 import PluginTag from '../../features/ChatHeader/PluginTag';
+import SettingButton from '../../features/ChatHeader/SettingButton';
 import ShareButton from '../../features/ChatHeader/ShareButton';
 
 const Header = memo(() => {
@@ -89,16 +90,7 @@ const Header = memo(() => {
             size={DESKTOP_HEADER_ICON_SIZE}
             title={t('roleAndArchive')}
           />
-          {!isInbox && (
-            <ActionIcon
-              icon={Settings}
-              onClick={() => {
-                router.push(pathString('/chat/settings', { hash: location.hash }));
-              }}
-              size={DESKTOP_HEADER_ICON_SIZE}
-              title={t('header.session', { ns: 'setting' })}
-            />
-          )}
+          <SettingButton />
         </>
       }
     />
