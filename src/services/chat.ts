@@ -161,9 +161,7 @@ class ChatService {
 
       const systemMessage = draft.find((i) => i.role === 'system');
 
-      const toolsSystemRoles = toolSelectors.enabledSystemRoles(tools)(
-        useToolStore.getState(),
-      );
+      const toolsSystemRoles = toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
 
       if (!toolsSystemRoles) return;
 

@@ -3,13 +3,32 @@ import { uniqBy } from 'lodash-es';
 import { Md5 } from 'ts-md5';
 
 import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
-import { pluginHelpers } from '@/store/tool';
-import { ToolStoreState } from '@/store/tool/initialState';
-import { builtinToolSelectors } from '@/store/tool/slices/builtin/selectors';
-import { pluginSelectors } from '@/store/tool/slices/plugin/selectors';
 import { MetaData } from '@/types/meta';
 import { ChatCompletionFunctions } from '@/types/openai/chat';
 import { LobeToolMeta } from '@/types/tool/tool';
+
+import { pluginHelpers } from '../helpers';
+import { ToolStoreState } from '../initialState';
+import { builtinToolSelectors } from '../slices/builtin/selectors';
+import { pluginSelectors } from '../slices/plugin/selectors';
+
+const getAPIName = (identifier: string, name: string, type?: string) => {
+  const pluginType = type && type !== 'default' ? `${PLUGIN_SCHEMA_SEPARATOR + type}` : '';
+
+  // 将插件的 identifier 作为前缀，避免重复
+  let apiName = identifier + PLUGIN_SCHEMA_SEPARATOR + name + pluginType;
+
+  // OpenAI GPT function_call name can't be longer than 64 characters
+  // So we need to use md5 to shorten the name
+  // and then find the correct apiName in response by md5
+  if (apiName.length >= 64) {
+    const md5Content = PLUGIN_SCHEMA_API_MD5_PREFIX + Md5.hashStr(name).toString();
+
+    apiName = identifier + PLUGIN_SCHEMA_SEPARATOR + md5Content + pluginType;
+  }
+
+  return apiName;
+};
 
 const enabledSchema =
   (tools: string[] = []) =>
@@ -20,29 +39,10 @@ const enabledSchema =
       // 如果存在 enabledPlugins，那么只启用 enabledPlugins 中的插件
       .filter((m) => tools.includes(m?.identifier))
       .flatMap((manifest) =>
-        manifest.api.map((m) => {
-          const pluginType =
-            manifest.type && manifest.type !== 'default'
-              ? `${PLUGIN_SCHEMA_SEPARATOR + manifest.type}`
-              : '';
-
-          // 将插件的 identifier 作为前缀，避免重复
-          let apiName = manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + m.name + pluginType;
-
-          // OpenAI GPT function_call name can't be longer than 64 characters
-          // So we need to use md5 to shorten the name
-          // and then find the correct apiName in response by md5
-          if (apiName.length >= 64) {
-            const md5Content = PLUGIN_SCHEMA_API_MD5_PREFIX + Md5.hashStr(m.name).toString();
-
-            apiName = manifest.identifier + PLUGIN_SCHEMA_SEPARATOR + md5Content + pluginType;
-          }
-
-          return {
-            ...m,
-            name: apiName,
-          };
-        }),
+        manifest.api.map((m) => ({
+          ...m,
+          name: getAPIName(manifest.identifier, m.name, manifest.type),
+        })),
       );
 
     return uniqBy(list, 'name');
@@ -65,12 +65,14 @@ const enabledSystemRoles =
         const systemRole = manifest.systemRole || pluginHelpers.getPluginDesc(meta);
 
         const methods = manifest.api
-          .map((m) => {
-            return [`#### ${m.name}`, m.description];
-          })
+          .map((m) =>
+            [`#### ${getAPIName(manifest.identifier, m.name, manifest.type)}`, m.description].join(
+              '\n\n',
+            ),
+          )
           .join('\n\n');
 
-        return [`### ${title}`, systemRole, 'The apis you can use:\n\n', methods].join('\n\n');
+        return [`### ${title}`, systemRole, 'The APIs you can use:', methods].join('\n\n');
       })
       .filter(Boolean);
 
