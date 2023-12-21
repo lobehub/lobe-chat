@@ -19,17 +19,22 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
 
   return (
     <>
-      <ActionIcon
-        active={tab === SidebarTabKey.Chat}
-        icon={MessageSquare}
-        onClick={() => {
+      <Link
+        href={'/chat'}
+        onClick={(e) => {
+          e.preventDefault();
           switchBackToChat();
           setTab(SidebarTabKey.Chat);
         }}
-        placement={'right'}
-        size="large"
-        title={t('tab.chat')}
-      />
+      >
+        <ActionIcon
+          active={tab === SidebarTabKey.Chat}
+          icon={MessageSquare}
+          placement={'right'}
+          size="large"
+          title={t('tab.chat')}
+        />
+      </Link>
       <Link href={'/market'}>
         <ActionIcon
           active={tab === SidebarTabKey.Market}
