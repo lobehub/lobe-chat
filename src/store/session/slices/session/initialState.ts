@@ -24,6 +24,7 @@ export const initLobeSession: LobeAgentSession = {
   createdAt: Date.now(),
   id: '',
   meta: DEFAULT_AGENT_META,
+  sortId: -1,
   type: LobeSessionType.Agent,
   updatedAt: Date.now(),
 };

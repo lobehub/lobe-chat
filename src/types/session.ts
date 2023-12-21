@@ -20,6 +20,7 @@ export enum SessionGroupDefaultKeys {
 export interface LobeAgentSession extends BaseDataModel {
   config: LobeAgentConfig;
   group?: SessionGroupKey;
+  sortId?: number;
   type: LobeSessionType.Agent;
 }
 

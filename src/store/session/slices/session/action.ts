@@ -28,6 +28,7 @@ export interface SessionAction {
    * @param sessionId
    */
   activeSession: (sessionId: string) => void;
+  batchUpdateSessions: (agents: Array<{ data: LobeAgentSession; id: string }>) => Promise<void>;
   /**
    * reset sessions to default
    */
@@ -81,6 +82,12 @@ export const createSessionSlice: StateCreator<
 > = (set, get) => ({
   activeSession: (sessionId) => {
     set({ activeId: sessionId }, false, n('activeSession'));
+  },
+
+  batchUpdateSessions: async (agents) => {
+    await sessionService.batchUpdateSessions(agents);
+
+    await get().refreshSessions();
   },
 
   clearSessions: async () => {

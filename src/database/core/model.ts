@@ -164,4 +164,32 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
 
     return { success };
   }
+
+  protected async _batchUpdate(dataArray: Array<{ data: Partial<T>; id: string }>): Promise<void> {
+    // Prepare an array to store the processed data
+    const processedData = [];
+
+    for (const { id, data } of dataArray) {
+      // we need to check whether the data is valid
+      // pick data related schema from the full schema
+      const keys = Object.keys(data);
+      const partialSchema = this.schema.pick(Object.fromEntries(keys.map((key) => [key, true])));
+
+      const result = partialSchema.safeParse(data);
+      if (!result.success) {
+        const errorMsg = `[${this.db.name}][${this._tableName}] Failed to update the record:${id}. Error: ${result.error}`;
+
+        const newError = new TypeError(errorMsg);
+        // make this error show on console to help debug
+        console.error(newError);
+        throw newError;
+      }
+
+      // Prepare the data for bulkPut
+      processedData.push({ ...result.data, id, updatedAt: Date.now() });
+    }
+
+    // Perform the bulkPut operation
+    await this.table.bulkPut(processedData);
+  }
 }

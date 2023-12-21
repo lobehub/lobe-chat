@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5",
+    "@hello-pangea/dnd": "^16.5.0",
     "@icons-pack/react-simple-icons": "^9",
     "@lobehub/chat-plugin-sdk": "latest",
     "@lobehub/chat-plugins-gateway": "latest",

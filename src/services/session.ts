@@ -21,6 +21,10 @@ class SessionService {
     return SessionModel.batchCreate(importSessions);
   }
 
+  async batchUpdateSessions(importSessions: Array<{ data: LobeAgentSession; id: string }>) {
+    return SessionModel.batchUpdate(importSessions);
+  }
+
   async getSessions(): Promise<LobeSessions> {
     return SessionModel.query();
   }

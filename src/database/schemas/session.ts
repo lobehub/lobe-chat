@@ -50,6 +50,7 @@ export const DB_SessionSchema = z.object({
   config: AgentSchema,
   group: z.string().default('default'),
   meta: LobeMetaDataSchema,
+  sortId: z.number().default(-1).optional(),
   type: z.enum(['agent', 'group']).default('agent'),
 });
 

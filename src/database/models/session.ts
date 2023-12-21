@@ -22,6 +22,10 @@ class _SessionModel extends BaseModel {
     return this._batchAdd(sessions, { idGenerator: uuid });
   }
 
+  async batchUpdate(sessions: Array<{ data: LobeAgentSession; id: string }>) {
+    return this._batchUpdate(sessions);
+  }
+
   async query({
     pageSize = 9999,
     current = 0,
