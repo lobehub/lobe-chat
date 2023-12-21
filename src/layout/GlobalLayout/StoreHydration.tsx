@@ -29,6 +29,11 @@ const StoreHydration = memo(() => {
     },
     [router],
   );
+  useEffect(() => {
+    router.prefetch('/chat');
+    router.prefetch('/market');
+    router.prefetch('/settings');
+  }, [router]);
 
   return null;
 });
