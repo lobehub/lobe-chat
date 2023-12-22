@@ -45,12 +45,24 @@ export const localeOptions: LocaleOptions = [
     value: 'pt-BR',
   },
   {
-    label: 'Russian',
+    label: 'Русский',
     value: 'ru-RU',
   },
   {
-    label: 'Turkish',
+    label: 'Türkçe',
     value: 'tr-TR',
+  },
+  {
+    label: 'Polski',
+    value: 'pl-PL',
+  },
+  {
+    label: 'Nederlands',
+    value: 'nl-NL',
+  },
+  {
+    label: 'Italiano',
+    value: 'it-IT',
   },
 ] as LocaleOptions;
 

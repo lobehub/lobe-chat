@@ -1,0 +1,166 @@
+{
+  "debug": {
+    "arguments": "Argomenti di chiamata",
+    "function_call": "Chiamata di funzione",
+    "off": "Disattivato",
+    "on": "Visualizza informazioni sulla chiamata del plugin",
+    "response": "Risposta"
+  },
+  "detailModal": {
+    "info": {
+      "description": "Descrizione API",
+      "name": "Nome API"
+    },
+    "tabs": {
+      "info": "Abilità del plugin",
+      "manifest": "File di installazione",
+      "settings": "Impostazioni"
+    },
+    "title": "Dettagli del plugin"
+  },
+  "dev": {
+    "confirmDeleteDevPlugin": "Stai per eliminare questo plugin locale. Una volta eliminato, non sarà possibile recuperarlo. Vuoi eliminare questo plugin?",
+    "customParams": {
+      "useProxy": {
+        "label": "Installa tramite proxy (se si verificano errori di accesso cross-origin, prova ad abilitare questa opzione e reinstallare)"
+      }
+    },
+    "deleteSuccess": "Plugin eliminato con successo",
+    "manifest": {
+      "identifier": {
+        "desc": "Identificatore univoco del plugin",
+        "label": "Identificatore"
+      },
+      "mode": {
+        "local": "Configurazione visuale",
+        "local-tooltip": "Configurazione visuale non supportata al momento",
+        "url": "Collegamento online"
+      },
+      "name": {
+        "desc": "Titolo del plugin",
+        "label": "Titolo",
+        "placeholder": "Motore di ricerca"
+      }
+    },
+    "meta": {
+      "author": {
+        "desc": "Autore del plugin",
+        "label": "Autore"
+      },
+      "avatar": {
+        "desc": "Icona del plugin, puoi usare Emoji o un URL",
+        "label": "Icona"
+      },
+      "description": {
+        "desc": "Descrizione del plugin",
+        "label": "Descrizione",
+        "placeholder": "Ottieni informazioni dai motori di ricerca"
+      },
+      "formFieldRequired": "Questo campo è obbligatorio",
+      "homepage": {
+        "desc": "Homepage del plugin",
+        "label": "Homepage"
+      },
+      "identifier": {
+        "desc": "Identificatore univoco del plugin, verrà riconosciuto automaticamente dal manifesto",
+        "errorDuplicate": "Identificatore duplicato rispetto a un plugin esistente. Modifica l'identificatore",
+        "label": "Identificatore",
+        "pattenErrorMessage": "Puoi inserire solo caratteri alfanumerici, - e _"
+      },
+      "manifest": {
+        "desc": "LobeChat installerà il plugin da questo collegamento",
+        "label": "URL del file di descrizione del plugin (Manifest)",
+        "preview": "Anteprima Manifest",
+        "refresh": "Aggiorna"
+      },
+      "title": {
+        "desc": "Titolo del plugin",
+        "label": "Titolo",
+        "placeholder": "Motore di ricerca"
+      }
+    },
+    "metaConfig": "Configurazione metadati del plugin",
+    "modalDesc": "Dopo aver aggiunto un plugin personalizzato, potrà essere utilizzato per la convalida dello sviluppo del plugin o direttamente nelle conversazioni. Per lo sviluppo del plugin, consulta il <1>documento di sviluppo↗</>",
+    "openai": {
+      "importUrl": "Importa da URL",
+      "schema": "Schema"
+    },
+    "preview": {
+      "card": "Anteprima dell'aspetto del plugin",
+      "desc": "Anteprima della descrizione del plugin",
+      "title": "Anteprima del nome del plugin"
+    },
+    "save": "Installa plugin",
+    "saveSuccess": "Impostazioni del plugin salvate con successo",
+    "tabs": {
+      "manifest": "Elenco delle funzionalità (Manifest)",
+      "meta": "Metadati del plugin"
+    },
+    "title": {
+      "create": "Aggiungi plugin personalizzato",
+      "edit": "Modifica plugin personalizzato"
+    },
+    "type": {
+      "lobe": "Plugin LobeChat",
+      "openai": "Plugin OpenAI"
+    },
+    "update": "Aggiorna",
+    "updateSuccess": "Impostazioni del plugin aggiornate con successo"
+  },
+  "error": {
+    "fetchError": "Errore nel recupero del collegamento al manifesto. Assicurati che il collegamento sia valido e che sia consentito l'accesso cross-origin.",
+    "installError": "Installazione del plugin {{name}} fallita",
+    "manifestInvalid": "Il manifesto non è conforme allo standard. Risultato della convalida: \n\n {{error}}",
+    "noManifest": "Il file di descrizione non esiste",
+    "openAPIInvalid": "Analisi dell'OpenAPI fallita. Errore: \n\n {{error}}",
+    "reinstallError": "Ricaricamento del plugin {{name}} fallito",
+    "urlError": "Il collegamento non restituisce contenuti nel formato JSON. Assicurati che il collegamento sia valido"
+  },
+  "list": {
+    "item": {
+      "deprecated.title": "Deprecato",
+      "local.config": "Configurazione",
+      "local.title": "Personalizzato"
+    }
+  },
+  "loading": {
+    "content": "Caricamento del plugin in corso...",
+    "plugin": "Esecuzione del plugin in corso..."
+  },
+  "pluginList": "Elenco dei plugin",
+  "plugins": {
+    "loading": "Rilevamento dei plugin in corso...",
+    "unknown": "Plugin sconosciuto"
+  },
+  "setting": "Impostazioni del plugin",
+  "settings": {
+    "indexUrl": {
+      "title": "Indice di mercato",
+      "tooltip": "Modifica non supportata online. Imposta tramite variabili d'ambiente durante il deploy"
+    },
+    "modalDesc": "Dopo aver configurato l'indirizzo del mercato dei plugin, è possibile utilizzare un mercato dei plugin personalizzato",
+    "title": "Impostazioni del mercato dei plugin"
+  },
+  "store": {
+    "actions": {
+      "confirmUninstall": "Stai per disinstallare questo plugin. La disinstallazione cancellerà la configurazione del plugin. Conferma l'operazione",
+      "detail": "Dettagli",
+      "install": "Installa",
+      "manifest": "Modifica file di installazione",
+      "settings": "Impostazioni",
+      "uninstall": "Disinstalla"
+    },
+    "communityPlugin": "Plugin della community",
+    "customPlugin": "Personalizzato",
+    "empty": "Nessun plugin installato al momento",
+    "installAllPlugins": "Installa tutti",
+    "networkError": "Impossibile recuperare il negozio dei plugin. Controlla la connessione di rete e riprova",
+    "placeholder": "Cerca per nome, descrizione o parola chiave del plugin...",
+    "releasedAt": "Pubblicato il {{createdAt}}",
+    "tabs": {
+      "all": "Tutti",
+      "installed": "Installati"
+    },
+    "title": "Negozio dei plugin"
+  }
+}
