@@ -3,8 +3,6 @@ import {
   LobeChatPluginsMarketIndex,
   pluginManifestSchema,
 } from '@lobehub/chat-plugin-sdk';
-import { OpenAPIConvertor } from '@lobehub/chat-plugin-sdk/openapi';
-import YAML from 'yaml';
 
 import { getPluginIndexJSON } from '@/const/url';
 import { PluginModel } from '@/database/models/plugin';
@@ -40,6 +38,8 @@ class PluginService {
       if (contentType === 'application/json') {
         data = await res.json();
       } else {
+        const { default: YAML } = await import('yaml');
+
         const yaml = await res.text();
         data = YAML.parse(yaml);
       }
@@ -94,6 +94,8 @@ class PluginService {
       const openapiJson = await this._fetchJSON(parser.data.openapi, useProxy);
 
       try {
+        const { OpenAPIConvertor } = await import('@lobehub/chat-plugin-sdk/openapi');
+
         const convertor = new OpenAPIConvertor(openapiJson);
         const openAPIs = await convertor.convertOpenAPIToPluginSchema();
         data.api = [...data.api, ...openAPIs];
