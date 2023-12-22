@@ -206,14 +206,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                   | Description                                                                                                                                                                                                       |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Dream Painter](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>   | A dream artist who can bring your dreams into reality.<br/>`txt-2-img` `painter`                                                                                                                                  |
-| [NewsHub](https://chat-preview.lobehub.com/market?agent=news-hub)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>              | A news search assistant proficient at finding and presenting relevant news<br/>`news` `search` `helper`                                                                                                           |
-| [NewsNest](https://chat-preview.lobehub.com/market?agent=news-nest)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>            | A news search assistant, can help you find and display relevant news based on your needs.<br/>`news` `search`                                                                                                     |
-| [Research Assistant](https://chat-preview.lobehub.com/market?agent=research-assistant)<br/><sup>By **[ccsen](https://github.com/ccsen)** on **2023-12-19**</sup> | Capable of answering questions, conducting research, drafting content, and more, utilizing scientific research papers.<br/>`research-assistant` `literature-retrieval` `writing` `scientific-research` `citation` |
+| Recent Submits                                                                                                                                                                 | Description                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| [Facebook Ads Expert](https://chat-preview.lobehub.com/market?agent=facebook-ads-expert)<br/><sup>By **[alissonryan](https://github.com/alissonryan)** on **2023-12-20**</sup> | Create a Facebook Ads with a expert<br/>`copywriting` `facebook-ads` `lead-generation`                        |
+| [Dream Painter](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                 | A dream artist who can bring your dreams into reality.<br/>`txt-2-img` `painter`                              |
+| [NewsHub](https://chat-preview.lobehub.com/market?agent=news-hub)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                            | A news search assistant proficient at finding and presenting relevant news<br/>`news` `search` `helper`       |
+| [NewsNest](https://chat-preview.lobehub.com/market?agent=news-nest)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                          | A news search assistant, can help you find and display relevant news based on your needs.<br/>`news` `search` |
 
-> 📊 Total agents: [<kbd>**78**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**79**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
