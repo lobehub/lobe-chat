@@ -14,6 +14,7 @@ export default memo(() => {
     <SideNav
       avatar={<AvatarWithUpload id={'avatar'} />}
       bottomActions={<BottomActions setTab={setTab} tab={tab} />}
+      id={'SideNav'}
       style={{ height: '100%' }}
       topActions={<TopActions setTab={setTab} tab={tab} />}
     />

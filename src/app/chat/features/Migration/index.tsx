@@ -9,6 +9,15 @@ import { MIGRATE_KEY, V1DB_NAME, V1DB_TABLE_NAME } from './const';
 
 const Modal = dynamic(() => import('./Modal'), { loading: () => <Spin fullscreen />, ssr: false });
 
+/**
+ * 这个组件的作用是在应用启动时检查数据库迁移的状态.
+ *
+ * 如果满足特定条件（数据库已经迁移，或者是新用户，即数据库不存在状态键），则不会有任何动作。
+ *
+ * 如果数据库存在且需要迁移，它会设置状态并显示一个模态窗口来通知用户或处理迁移。
+ *
+ * 同时，它也会渲染任何作为子元素传递给它的内容。
+ */
 const Migration = memo<PropsWithChildren>(({ children }) => {
   const [dbState, setDbState] = useState(null);
   const [open, setOpen] = useState(false);

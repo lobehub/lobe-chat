@@ -9,6 +9,9 @@ import { SidebarTabKey } from '@/store/global/initialState';
 
 import ResponsiveSessionList from './features/SessionList';
 
+/**
+ * 桌面端聊天页面布局
+ */
 export default memo(({ children }: PropsWithChildren) => {
   useSwitchSideBarOnInit(SidebarTabKey.Chat);
   return (
