@@ -4,9 +4,9 @@ import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Conversation from '@/features/Conversation';
 import { useSessionStore } from '@/store/session';
 
-import Conversation from '../../features/Conversation';
 import ChatInput from '../features/ChatInput';
 import Layout from './layout.mobile';
 

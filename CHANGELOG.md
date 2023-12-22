@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.114.7](https://github.com/lobehub/lobe-chat/compare/v0.114.6...v0.114.7)
+
+<sup>Released on **2023-12-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move the conversation and chatInput to features folder.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move the conversation and chatInput to features folder, closes [#750](https://github.com/lobehub/lobe-chat/issues/750) ([0334592](https://github.com/lobehub/lobe-chat/commit/0334592))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.114.6](https://github.com/lobehub/lobe-chat/compare/v0.114.5...v0.114.6)
 
 <sup>Released on **2023-12-22**</sup>
