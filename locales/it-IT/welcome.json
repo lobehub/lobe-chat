@@ -1,0 +1,14 @@
+{
+  "button": {
+    "import": "Importa configurazione",
+    "start": "Inizia subito"
+  },
+  "header": "Benvenuti",
+  "pickAgent": "Oppure scegli tra i seguenti modelli di assistente",
+  "skip": "Salta creazione",
+  "slogan": {
+    "desc1": "Attiva il cluster cerebrale e accendi la scintilla del pensiero. Il tuo assistente intelligente è sempre qui.",
+    "desc2": "Crea il tuo primo assistente, cominciamo!",
+    "title": "Dai a te stesso un cervello più intelligente"
+  }
+}

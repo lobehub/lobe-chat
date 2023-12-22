@@ -1,0 +1,306 @@
+{
+  "danger": {
+    "clear": {
+      "action": "Wyczyść teraz",
+      "confirm": "Potwierdź wyczyszczenie wszystkich danych czatu?",
+      "desc": "Spowoduje to usunięcie wszystkich danych sesji, w tym asystenta, pliki, wiadomości, wtyczki itp.",
+      "success": "Wyczyszczono wszystkie wiadomości sesji",
+      "title": "Wyczyść wszystkie wiadomości sesji"
+    },
+    "reset": {
+      "action": "Zresetuj teraz",
+      "confirm": "Potwierdź zresetowanie wszystkich ustawień?",
+      "currentVersion": "Aktualna wersja",
+      "desc": "Zresetuj wszystkie ustawienia do wartości domyślnych",
+      "title": "Zresetuj wszystkie ustawienia"
+    }
+  },
+  "header": {
+    "global": "Ustawienia globalne",
+    "session": "Ustawienia sesji",
+    "sessionWithName": "Ustawienia sesji · {{name}}"
+  },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "Wartość znajdująca się w sekcji „Klucze i punkty końcowe” podczas sprawdzania zasobów w portalu Azure",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Adres API Azure"
+      },
+      "models": {
+        "desc": "Lista obsługiwanych modeli",
+        "title": "Lista modeli"
+      },
+      "title": "Ustawienia Azure OpenAI",
+      "token": {
+        "desc": "Wartość znajdująca się w sekcji „Klucze i punkty końcowe” podczas sprawdzania zasobów w portalu Azure. Można użyć KLUCZ1 lub KLUCZ2",
+        "placeholder": "Klucz API Azure",
+        "title": "Klucz API"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "Wersja API dla usługi Azure, zgodna z formatem RRRR-MM-DD. Zobacz [najnowszą wersję](https://learn.microsoft.com/pl-pl/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Pobierz listę",
+        "title": "Wersja interfejsu API Azure"
+      },
+      "check": {
+        "button": "Sprawdź",
+        "desc": "Testuje poprawność wprowadzenia klucza API i adresu proxy",
+        "pass": "Test zakończony pomyślnie",
+        "title": "Test łączności"
+      },
+      "customModelName": {
+        "desc": "Dodaj niestandardowe modele, oddzielając je przecinkami (,)",
+        "placeholder": "model1,model2,model3",
+        "title": "Nazwa niestandardowego modelu"
+      },
+      "endpoint": {
+        "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "Adres proxy interfejsu"
+      },
+      "models": {
+        "count": "Łącznie obsługiwane jest {{count}} modeli",
+        "desc": "Lista obsługiwanych modeli",
+        "fetch": "Pobierz listę modeli",
+        "notSupport": "Azure OpenAI tymczasowo nie obsługuje wyświetlania listy modeli",
+        "notSupportTip": "Musisz samodzielnie upewnić się, że nazwa wdrożenia jest zgodna z nazwą modelu",
+        "refetch": "Pobierz listę modeli ponownie",
+        "title": "Lista modeli"
+      },
+      "title": "Ustawienia OpenAI",
+      "token": {
+        "desc": "Użyj własnego klucza API OpenAI",
+        "placeholder": "Klucz API OpenAI",
+        "title": "Klucz API"
+      },
+      "useAzure": {
+        "desc": "Użyj usługi OpenAI dostarczanej przez Azure",
+        "fetch": "Pobierz listę",
+        "serverConfig": "Administrator skonfigurował usługę Azure OpenAI po stronie serwera, co uniemożliwia przełączenie",
+        "title": "Użyj Azure OpenAI"
+      }
+    },
+    "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
+  },
+  "plugin": {
+    "addTooltip": "Dodaj niestandardowy dodatek",
+    "clearDeprecated": "Usuń przestarzałe dodatki",
+    "empty": "Brak zainstalowanych dodatków, zapraszamy do odwiedzenia <1>sklepu z dodatkami</1>",
+    "installStatus": {
+      "deprecated": "Odinstalowany"
+    },
+    "settings": {
+      "hint": "Proszę wypełnić poniższe ustawienia zgodnie z opisem",
+      "title": "Konfiguracja dodatku {{id}}",
+      "tooltip": "Konfiguracja dodatku"
+    },
+    "store": "Sklep z dodatkami"
+  },
+  "settingAgent": {
+    "avatar": {
+      "title": "Awatar"
+    },
+    "backgroundColor": {
+      "title": "Kolor tła"
+    },
+    "description": {
+      "placeholder": "Proszę wprowadzić opis asystenta",
+      "title": "Opis asystenta"
+    },
+    "name": {
+      "placeholder": "Proszę wprowadzić nazwę asystenta",
+      "title": "Nazwa"
+    },
+    "prompt": {
+      "placeholder": "Proszę wprowadzić słowo kluczowe dla roli Prompt",
+      "title": "Ustawienia roli"
+    },
+    "tag": {
+      "placeholder": "Proszę wprowadzić tag",
+      "title": "Tag"
+    },
+    "title": "Informacje o asystencie"
+  },
+  "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "Automatyczne tworzenie tematu po przekroczeniu określonej liczby wiadomości",
+      "title": "Próg automatycznego tworzenia tematu"
+    },
+    "chatStyleType": {
+      "title": "Styl okna czatu",
+      "type": {
+        "chat": "Tryb rozmowy",
+        "docs": "Tryb dokumentów"
+      }
+    },
+    "compressThreshold": {
+      "desc": "Kompresja historii wiadomości, gdy przekroczy określoną wartość",
+      "title": "Próg kompresji historii"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "Automatyczne tworzenie tematu podczas rozmowy, działa tylko w przypadku tymczasowych tematów",
+      "title": "Automatyczne tworzenie tematu"
+    },
+    "enableCompressThreshold": {
+      "title": "Włącz próg kompresji historii"
+    },
+    "enableHistoryCount": {
+      "alias": "Bez limitu",
+      "limited": "Zawiera tylko {{number}} wiadomości",
+      "title": "Ograniczenie liczby wiadomości w historii",
+      "unlimited": "Bez limitu wiadomości w historii"
+    },
+    "historyCount": {
+      "desc": "Liczba wiadomości przesyłanych w jednym żądaniu (obejmuje najnowsze pytania i odpowiedzi, gdzie każde pytanie i odpowiedź liczy się jako 1)",
+      "title": "Liczba wiadomości"
+    },
+    "inputTemplate": {
+      "desc": "Ostatnia wiadomość użytkownika zostanie wypełniona w tym szablonie",
+      "placeholder": "Szablon wejściowy {{text}} zostanie zastąpiony rzeczywistą wiadomością",
+      "title": "Szablon wejściowy"
+    },
+    "title": "Ustawienia czatu"
+  },
+  "settingModel": {
+    "enableMaxTokens": {
+      "title": "Włącz limit jednorazowej odpowiedzi"
+    },
+    "frequencyPenalty": {
+      "desc": "Im większa wartość, tym większe prawdopodobieństwo zmniejszenia powtarzających się słów",
+      "title": "Kara za częstość"
+    },
+    "maxTokens": {
+      "desc": "Maksymalna liczba tokenów używanych w pojedynczej interakcji",
+      "title": "Limit jednorazowej odpowiedzi"
+    },
+    "model": {
+      "desc": "Model ChatGPT",
+      "list": {
+        "gpt-3.5-turbo": "GPT 3.5",
+        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+        "gpt-4": "GPT 4",
+        "gpt-4-32k": "GPT 4 (32K)"
+      },
+      "title": "Model"
+    },
+    "presencePenalty": {
+      "desc": "Im większa wartość, tym większe prawdopodobieństwo rozszerzenia się na nowe tematy",
+      "title": "Świeżość tematu"
+    },
+    "temperature": {
+      "desc": "Im większa wartość, tym odpowiedzi są bardziej losowe",
+      "title": "Losowość",
+      "titleWithValue": "Losowość {{value}}"
+    },
+    "title": "Ustawienia modelu",
+    "topP": {
+      "desc": "Podobne do losowości, ale nie należy zmieniać razem z losowością",
+      "title": "Najlepsze P"
+    }
+  },
+  "settingPlugin": {
+    "title": "Lista wtyczek"
+  },
+  "settingSystem": {
+    "accessCode": {
+      "desc": "Administrator włączył szyfrowany dostęp",
+      "placeholder": "Wprowadź hasło dostępu",
+      "title": "Hasło dostępu"
+    },
+    "title": "Ustawienia systemowe"
+  },
+  "settingTTS": {
+    "openai": {
+      "sttModel": "Model rozpoznawania mowy OpenAI",
+      "ttsModel": "Model syntezy mowy OpenAI"
+    },
+    "showAllLocaleVoice": {
+      "desc": "Jeśli wyłączone, wyświetlane są tylko głosy w bieżącym języku",
+      "title": "Pokaż wszystkie głosy lokalne"
+    },
+    "stt": "Ustawienia rozpoznawania mowy",
+    "sttAutoStop": {
+      "desc": "Po wyłączeniu rozpoznawanie mowy nie zakończy się automatycznie, trzeba ręcznie kliknąć przycisk zakończenia",
+      "title": "Automatyczne zatrzymywanie rozpoznawania mowy"
+    },
+    "sttLocale": {
+      "desc": "Język wejścia mowy, opcja ta może poprawić dokładność rozpoznawania mowy",
+      "title": "Język rozpoznawania mowy"
+    },
+    "sttService": {
+      "desc": "Dla przeglądarki używana jest wbudowana usługa rozpoznawania mowy",
+      "title": "Usługa rozpoznawania mowy"
+    },
+    "title": "Usługi mowy",
+    "tts": "Ustawienia syntezy mowy",
+    "ttsService": {
+      "desc": "Jeśli korzystasz z usługi syntezy mowy OpenAI, upewnij się, że usługa modeli OpenAI jest włączona",
+      "title": "Usługa syntezy mowy"
+    },
+    "voice": {
+      "desc": "Wybierz głos dla bieżącego asystenta, różne usługi TTS obsługują różne głosy",
+      "preview": "Podgląd głosu",
+      "title": "Głos syntezy mowy"
+    }
+  },
+  "settingTheme": {
+    "avatar": {
+      "title": "Awatar"
+    },
+    "fontSize": {
+      "desc": "Rozmiar czcionki wiadomości",
+      "marks": {
+        "large": "Duży",
+        "normal": "Standardowy",
+        "small": "Mały"
+      },
+      "title": "Rozmiar czcionki"
+    },
+    "lang": {
+      "autoMode": "Automatycznie",
+      "title": "Język"
+    },
+    "neutralColor": {
+      "desc": "Dostosowanie odcieni szarości z różnymi kolorami",
+      "title": "Kolor neutralny"
+    },
+    "primaryColor": {
+      "desc": "Dostosowywanie koloru motywu",
+      "title": "Kolor motywu"
+    },
+    "themeMode": {
+      "auto": "Automatyczny",
+      "dark": "Ciemny",
+      "light": "Jasny",
+      "title": "Motyw"
+    },
+    "title": "Ustawienia motywu"
+  },
+  "submitAgentModal": {
+    "button": "Prześlij asystenta",
+    "identifier": "Identyfikator asystenta",
+    "metaMiss": "Proszę uzupełnić informacje o asystencie przed przesłaniem, należy podać nazwę, opis i tagi",
+    "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
+    "tooltips": "Udostępnij na rynku asystentów"
+  },
+  "tab": {
+    "agent": "Domyślny asystent",
+    "common": "Ustawienia ogólne",
+    "llm": "Model językowy",
+    "tts": "Usługa głosowa"
+  },
+  "tools": {
+    "builtins": {
+      "groupName": "Wbudowane"
+    },
+    "plugins": {
+      "enabled": "Włączone {{num}}",
+      "groupName": "Wtyczki",
+      "noEnabled": "Brak włączonych wtyczek",
+      "store": "Sklep z wtyczkami"
+    },
+    "title": "Narzędzia rozszerzeń"
+  }
+}
