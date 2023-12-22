@@ -24,8 +24,8 @@ export const FunctionMessage = memo<ChatMessage>(({ id, content, plugin }) => {
         <PluginRender
           content={content}
           id={id}
+          identifier={plugin?.identifier}
           loading={fcProps.loading}
-          name={plugin?.identifier}
           payload={fcProps.command}
           type={fcProps.type}
         />

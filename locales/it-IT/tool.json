@@ -1,0 +1,8 @@
+{
+  "dalle": {
+    "autoGenerate": "Auto-generato",
+    "generate": "Genera",
+    "generating": "Generazione in corso...",
+    "images": "Immagini:"
+  }
+}
