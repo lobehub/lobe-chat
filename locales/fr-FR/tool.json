@@ -1,0 +1,8 @@
+{
+  "dalle": {
+    "autoGenerate": "Auto-générer",
+    "generate": "Générer",
+    "generating": "En cours de génération...",
+    "images": "Images :"
+  }
+}
