@@ -3,10 +3,10 @@ import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
-import STT from '@/app/chat/features/ChatInput/STT';
-import SaveTopic from '@/app/chat/features/ChatInput/Topic';
-import { useChatInput } from '@/app/chat/features/ChatInput/useChatInput';
+import ActionBar from '@/features/ChatInput/ActionBar';
+import STT from '@/features/ChatInput/STT';
+import SaveTopic from '@/features/ChatInput/Topic';
+import { useChatInput } from '@/features/ChatInput/useChatInput';
 
 import Files from './Files';
 

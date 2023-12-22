@@ -3,14 +3,14 @@ import { Maximize2, Minimize2 } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ActionBar from '@/app/chat/features/ChatInput/ActionBar';
-import SaveTopic from '@/app/chat/features/ChatInput/Topic';
-import { useChatInput } from '@/app/chat/features/ChatInput/useChatInput';
 import {
   CHAT_TEXTAREA_HEIGHT,
   CHAT_TEXTAREA_MAX_HEIGHT,
   HEADER_HEIGHT,
 } from '@/const/layoutTokens';
+import ActionBar from '@/features/ChatInput/ActionBar';
+import SaveTopic from '@/features/ChatInput/Topic';
+import { useChatInput } from '@/features/ChatInput/useChatInput';
 
 import DragUpload from './DragUpload';
 import { LocalFiles } from './LocalFiles';
