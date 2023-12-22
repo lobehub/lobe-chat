@@ -13,7 +13,6 @@ export const entryLocaleJsonFilepath = (file: string) =>
   resolve(localesDir, i18nConfig.entryLocale, file);
 export const outputLocaleJsonFilepath = (locale: string, file: string) =>
   resolve(localesDir, locale, file);
-export const srcLocalesResources = resolve(root, srcLocalesDir, 'resources');
-export const localesResourcesFilepath = (locale: string) => resolve(srcLocalesResources, locale);
+export const srcDefaultLocales = resolve(root, srcLocalesDir, 'default');
 
 export { default as i18nConfig } from '../../.i18nrc';
