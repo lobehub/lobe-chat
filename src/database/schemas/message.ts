@@ -11,7 +11,7 @@ const PluginSchema = z.object({
   identifier: z.string(),
   arguments: z.string(),
   apiName: z.string(),
-  type: z.enum(['default', 'standalone']).default('default'),
+  type: z.enum(['default', 'standalone', 'builtin']).default('default'),
 });
 
 export const DB_MessageSchema = z.object({

@@ -1,3 +1,4 @@
+import tool from '../default/tool';
 import chat from './chat';
 import common from './common';
 import empty from './empty';
@@ -17,6 +18,7 @@ const resources = {
   migration,
   plugin,
   setting,
+  tool,
   welcome,
 } as const;
 

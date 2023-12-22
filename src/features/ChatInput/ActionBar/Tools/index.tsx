@@ -11,7 +11,7 @@ import PluginStore from '@/features/PluginStore';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
-import { pluginSelectors } from '@/store/tool/selectors';
+import { builtinToolSelectors, pluginSelectors } from '@/store/tool/selectors';
 
 import ToolItem from './ToolItem';
 
@@ -31,7 +31,15 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
-  const enablePluginCount = useSessionStore((s) => agentSelectors.currentAgentPlugins(s).length);
+  const builtinList = useToolStore(builtinToolSelectors.metaList, isEqual);
+
+  const enablePluginCount = useSessionStore(
+    (s) =>
+      agentSelectors
+        .currentAgentPlugins(s)
+        .filter((i) => !builtinList.some((b) => b.identifier === i)).length,
+  );
+
   const [open, setOpen] = useState(false);
   const { styles } = useStyles();
 
@@ -42,18 +50,22 @@ const Tools = memo(() => {
         menu={{
           className: styles.menu,
           items: [
-            // {
-            //   children: [
-            //     {
-            //       icon: <Icon icon={PaletteIcon} size={{ fontSize: 16 }} style={{ padding: 4 }} />,
-            //       key: 'dalle3',
-            //       label: <ToolItem identifier={'dalle3'} label={'DALL·E 3'} />,
-            //     },
-            //   ],
-            //   key: 'builtins',
-            //   label: t('tools.builtins.groupName'),
-            //   type: 'group',
-            // },
+            {
+              children: builtinList.map((item) => ({
+                icon: <Avatar avatar={item.meta.avatar} size={24} />,
+                key: item.identifier,
+                label: (
+                  <ToolItem
+                    identifier={item.identifier}
+                    label={item.meta?.title || item.identifier}
+                  />
+                ),
+              })),
+
+              key: 'builtins',
+              label: t('tools.builtins.groupName'),
+              type: 'group',
+            },
             {
               children: [
                 ...list.map((item) => ({

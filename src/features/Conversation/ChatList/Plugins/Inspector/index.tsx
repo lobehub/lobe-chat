@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { pluginHelpers, useToolStore } from '@/store/tool';
-import { pluginSelectors } from '@/store/tool/selectors';
+import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 
 import PluginResult from './PluginResultJSON';
 import Settings from './Settings';
@@ -47,9 +47,11 @@ const Inspector = memo<InspectorProps>(
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
 
-    const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(id), isEqual);
+    const pluginMeta = useToolStore(toolSelectors.getMetaById(id), isEqual);
+
     const showRightAction = useToolStore(pluginSelectors.isPluginHasUI(id));
     const pluginAvatar = pluginHelpers.getPluginAvatar(pluginMeta);
+
     const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('plugins.loading');
 
     const avatar = pluginAvatar ? (

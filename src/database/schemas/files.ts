@@ -14,6 +14,7 @@ export const DB_FileSchema = z.object({
    * @example 'image/png'
    */
   fileType: z.string(),
+  metadata: z.any().optional(),
   /**
    * file name
    * @example 'test.png'

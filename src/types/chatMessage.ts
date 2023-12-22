@@ -27,7 +27,7 @@ export interface ChatPluginPayload {
   apiName: string;
   arguments: string;
   identifier: string;
-  type: 'standalone' | 'default';
+  type: 'standalone' | 'default' | 'builtin';
 }
 
 export interface ChatMessage extends BaseDataModel {
