@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import resourcesToBackend from 'i18next-resources-to-backend';
 import { initReactI18next } from 'react-i18next';
 
 import { getClientConfig } from '@/config/client';
@@ -8,7 +9,7 @@ import { COOKIE_CACHE_DAYS } from '@/const/settings';
 import type { Namespaces } from '@/types/locale';
 import { isOnServerSide } from '@/utils/env';
 
-import { resources } from './options';
+// import { resources } from './options';
 
 const { I18N_DEBUG, I18N_DEBUG_BROWSER, I18N_DEBUG_SERVER } = getClientConfig();
 const debugMode = I18N_DEBUG ?? isOnServerSide ? I18N_DEBUG_SERVER : I18N_DEBUG_BROWSER;
@@ -25,13 +26,16 @@ export const createI18nNext = (lang?: string) => {
     'welcome',
   ];
 
-  const instance = i18n.use(initReactI18next).use(LanguageDetector);
-  //  not find a good way to handle suspense loading
-  // .use(
-  //   resourcesToBackend(
-  //     isDev ? resources : (lng: string, ns: string) => import(`../../locales/${lng}/${ns}.json`),
-  //   ),
-  // )
+  const instance = i18n
+    .use(initReactI18next)
+    .use(LanguageDetector)
+    //  not find a good way to handle suspense loading
+    .use(
+      resourcesToBackend(
+        // isDev ? resources :
+        async (lng: string, ns: string) => import(`@/../locales/${lng}/${ns}.json`),
+      ),
+    );
 
   return {
     init: () =>
@@ -49,7 +53,7 @@ export const createI18nNext = (lang?: string) => {
         },
         lng: lang,
         ns,
-        resources,
+        // resources,
       }),
     instance,
   };

@@ -1,12 +1,12 @@
-import chat from '../../../locales/es_ES/chat.json';
-import common from '../../../locales/es_ES/common.json';
-import empty from '../../../locales/es_ES/empty.json';
-import error from '../../../locales/es_ES/error.json';
-import market from '../../../locales/es_ES/market.json';
-import migration from '../../../locales/es_ES/migration.json';
-import plugin from '../../../locales/es_ES/plugin.json';
-import setting from '../../../locales/es_ES/setting.json';
-import welcome from '../../../locales/es_ES/welcome.json';
+import chat from '../../../locales/es-ES/chat.json';
+import common from '../../../locales/es-ES/common.json';
+import empty from '../../../locales/es-ES/empty.json';
+import error from '../../../locales/es-ES/error.json';
+import market from '../../../locales/es-ES/market.json';
+import migration from '../../../locales/es-ES/migration.json';
+import plugin from '../../../locales/es-ES/plugin.json';
+import setting from '../../../locales/es-ES/setting.json';
+import welcome from '../../../locales/es-ES/welcome.json';
 
 const resources = {
   chat,
