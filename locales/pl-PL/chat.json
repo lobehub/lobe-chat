@@ -1,0 +1,77 @@
+{
+  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu zacząć ze mną rozmawiać, lub udoskonalić moje informacje, przechodząc do [Ustawień asystenta](/chat/settings#session={{id}}).",
+  "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
+  "backToBottom": "Przewiń na dół",
+  "clearCurrentMessages": "Wyczyść bieżącą rozmowę",
+  "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
+  "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
+  "defaultAgent": "Domyślny asystent",
+  "defaultSession": "Domyślna sesja",
+  "historyRange": "Zakres historii",
+  "inbox": {
+    "defaultMessage": "Cześć, jestem twoim inteligentnym asystentem, możesz zadać mi dowolne pytanie, postaram się na nie odpowiedzieć. Jeśli potrzebujesz bardziej profesjonalnego lub spersonalizowanego asystenta, kliknij `+`, aby utworzyć niestandardowego asystenta.",
+    "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
+    "title": "Pogadajmy sobie"
+  },
+  "newAgent": "Nowy asystent",
+  "noDescription": "Brak opisu",
+  "pin": "Przypnij",
+  "pinOff": "Odepnij",
+  "regenerate": "Wygeneruj ponownie",
+  "roleAndArchive": "Rola i archiwum",
+  "searchAgentPlaceholder": "Szukaj asystentów i rozmów...",
+  "send": "Wyślij",
+  "sendPlaceholder": "Wpisz treść rozmowy...",
+  "sessionList": "Lista sesji",
+  "shareModal": {
+    "download": "Pobierz zrzut ekranu",
+    "imageType": "Typ obrazu",
+    "screenshot": "Zrzut ekranu",
+    "settings": "Ustawienia eksportu",
+    "shareToShareGPT": "Generuj link udostępniania ShareGPT",
+    "withBackground": "Z tłem",
+    "withFooter": "Z stopką",
+    "withPluginInfo": "Z informacjami o wtyczce",
+    "withSystemRole": "Z rolą asystenta"
+  },
+  "stop": "Zatrzymaj",
+  "stt": {
+    "action": "Mowa na tekst",
+    "loading": "Rozpoznawanie...",
+    "prettifying": "Upiększanie..."
+  },
+  "temp": "Tymczasowy",
+  "tokenDetail": "Ustawienia roli: {{systemRoleToken}} · Wiadomości sesji: {{chatsToken}} · Ustawienia narzędzi: {{toolsToken}}",
+  "tokenTag": {
+    "overload": "Przekroczenie limitu",
+    "remained": "Pozostało",
+    "used": "Użyte"
+  },
+  "topic": {
+    "confirmRemoveAll": "Czy na pewno chcesz usunąć wszystkie tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
+    "confirmRemoveTopic": "Czy na pewno chcesz usunąć ten temat? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
+    "confirmRemoveUnstarred": "Czy na pewno chcesz usunąć nieoznaczone tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
+    "defaultTitle": "Domyślne tematy",
+    "openNewTopic": "Otwórz nowy temat",
+    "removeAll": "Usuń wszystkie tematy",
+    "removeUnstarred": "Usuń nieoznaczone tematy",
+    "saveCurrentMessages": "Zapisz bieżącą rozmowę jako temat",
+    "searchPlaceholder": "Szukaj tematów...",
+    "title": "Lista tematów"
+  },
+  "translate": {
+    "action": "Tłumaczenie",
+    "clear": "Wyczyść tłumaczenie"
+  },
+  "tts": {
+    "action": "Czytaj tekst",
+    "clear": "Wyczyść czytanie"
+  },
+  "updateAgent": "Aktualizuj informacje asystenta",
+  "upload": {
+    "actionTooltip": "Prześlij obraz",
+    "dragDesc": "Przeciągnij pliki tutaj, obsługiwane jest przesyłanie wielu obrazów. Naciśnij klawisz Shift, aby wysłać obraz bezpośrednio",
+    "dragTitle": "Prześlij obraz"
+  },
+  "warp": "Złamanie wiersza"
+}

@@ -1,0 +1,53 @@
+{
+  "pluginSettings": {
+    "desc": "Completa la seguente configurazione per iniziare a utilizzare il plugin",
+    "title": "Configurazione del plugin {{name}}"
+  },
+  "response": {
+    "400": "Spiacenti, il server non comprende la tua richiesta. Verifica che i parametri della tua richiesta siano corretti",
+    "401": "Spiacenti, il server ha rifiutato la tua richiesta, probabilmente a causa di autorizzazioni insufficienti o di un'identificazione non valida",
+    "403": "Spiacenti, il server ha rifiutato la tua richiesta. Non hai accesso a questo contenuto",
+    "404": "Spiacenti, il server non trova la pagina o la risorsa richiesta. Verifica che l'URL sia corretto",
+    "405": "Spiacenti, il server non supporta il metodo di richiesta utilizzato. Verifica che il metodo di richiesta sia corretto",
+    "429": "Spiacenti, ci sono troppe richieste in arrivo. Il server è un po' stanco. Riprova più tardi",
+    "500": "Spiacenti, il server sembra avere qualche difficoltà al momento e non può completare la tua richiesta. Riprova più tardi",
+    "502": "Spiacenti, il server sembra smarrito e non può fornire servizio al momento. Riprova più tardi",
+    "503": "Spiacenti, il server non può elaborare la tua richiesta al momento, probabilmente a causa di sovraccarico o manutenzione in corso. Riprova più tardi",
+    "504": "Spiacenti, il server non ha ricevuto risposta dal server upstream. Riprova più tardi",
+    "InvalidAccessCode": "Password non corretta o vuota. Inserisci una password di accesso corretta o aggiungi una chiave API personalizzata OpenAI",
+    "NoAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
+    "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
+    "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
+    "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",
+    "PluginGatewayError": "Spiacenti, si è verificato un errore nel gateway del plugin. Verifica che la configurazione del gateway del plugin sia corretta",
+    "PluginManifestInvalid": "Spiacenti, la convalida del manifesto descrittivo del plugin non è riuscita. Verifica che il formato del manifesto descrittivo sia conforme alle specifiche",
+    "PluginManifestNotFound": "Spiacenti, il server non trova il manifesto descrittivo del plugin (manifest.json). Verifica che l'indirizzo del file descrittivo del plugin sia corretto",
+    "PluginMarketIndexInvalid": "Spiacenti, la convalida dell'indice del plugin non è riuscita. Verifica che il formato del file dell'indice sia conforme alle specifiche",
+    "PluginMarketIndexNotFound": "Spiacenti, il server non trova l'indice del plugin. Verifica che l'indirizzo dell'indice sia corretto",
+    "PluginMetaInvalid": "Spiacenti, la convalida dei metadati del plugin non è riuscita. Verifica che il formato dei metadati del plugin sia conforme alle specifiche",
+    "PluginMetaNotFound": "Spiacenti, il plugin non è stato trovato nell'indice. Verifica che le informazioni di configurazione del plugin siano presenti nell'indice",
+    "PluginOpenApiInitError": "Spiacenti, inizializzazione fallita del client OpenAPI. Verifica che le informazioni di configurazione di OpenAPI siano corrette",
+    "PluginServerError": "Errore nella risposta del server del plugin. Verifica il file descrittivo del plugin, la configurazione del plugin o l'implementazione del server",
+    "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta"
+  },
+  "stt": {
+    "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
+  },
+  "tts": {
+    "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "Aggiungi URL del proxy OpenAI (opzionale)",
+      "description": "Inserisci la tua chiave API OpenAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API.",
+      "title": "Utilizza una chiave API personalizzata"
+    },
+    "closeMessage": "Chiudi messaggio",
+    "confirm": "Conferma e riprova",
+    "password": {
+      "description": "L'amministratore ha attivato la crittografia dell'applicazione. Inserisci la password dell'applicazione per sbloccarla. La password va inserita solo una volta.",
+      "placeholder": "Inserisci la password",
+      "title": "Inserisci la password per sbloccare l'applicazione"
+    }
+  }
+}

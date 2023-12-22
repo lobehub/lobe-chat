@@ -1,0 +1,53 @@
+{
+  "pluginSettings": {
+    "desc": "Voltooi de volgende instellingen om de plugin te gebruiken",
+    "title": "{{name}} Plugin Instellingen"
+  },
+  "response": {
+    "400": "Sorry, de server begrijpt uw verzoek niet. Controleer of uw verzoekparameters juist zijn",
+    "401": "Sorry, de server heeft uw verzoek geweigerd vanwege onvoldoende rechten of ongeldige authenticatie",
+    "403": "Sorry, de server heeft uw verzoek geweigerd omdat u geen toegang heeft tot deze inhoud",
+    "404": "Sorry, de server kan de door u gevraagde pagina of bron niet vinden. Controleer of uw URL juist is",
+    "405": "Sorry, de server ondersteunt de gebruikte verzoekmethode niet. Controleer of uw verzoekmethode juist is",
+    "429": "Sorry, uw verzoek is te veel voor de server. Probeer het later opnieuw",
+    "500": "Sorry, de server lijkt problemen te ondervinden en kan uw verzoek tijdelijk niet voltooien. Probeer het later opnieuw",
+    "502": "Sorry, de server lijkt de weg kwijt te zijn en kan tijdelijk geen service verlenen. Probeer het later opnieuw",
+    "503": "Sorry, de server kan uw verzoek momenteel niet verwerken vanwege overbelasting of onderhoud. Probeer het later opnieuw",
+    "504": "Sorry, de server heeft geen reactie ontvangen van de upstream server. Probeer het later opnieuw",
+    "InvalidAccessCode": "Ongeldige of lege toegangscode. Voer de juiste toegangscode in of voeg een aangepaste OpenAI API-sleutel toe",
+    "NoAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
+    "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
+    "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
+    "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
+    "PluginGatewayError": "Sorry, er is een fout opgetreden in de plug-in gateway. Controleer of de plug-in gatewayconfiguratie juist is",
+    "PluginManifestInvalid": "Sorry, de validatie van de beschrijvingslijst van de plug-in is mislukt. Controleer of het formaat van de beschrijvingslijst correct is",
+    "PluginManifestNotFound": "Sorry, de server kon de beschrijvingslijst (manifest.json) van de plug-in niet vinden. Controleer of het adres van de plug-inbeschrijvingsbestand juist is",
+    "PluginMarketIndexInvalid": "Sorry, de plug-inindexvalidatie is mislukt. Controleer of het indexbestandsformaat correct is",
+    "PluginMarketIndexNotFound": "Sorry, de server kon de plug-inindex niet vinden. Controleer of het indexadres juist is",
+    "PluginMetaInvalid": "Sorry, de validatie van de plug-inmetadata is mislukt. Controleer of het formaat van de plug-inmetadata correct is",
+    "PluginMetaNotFound": "Sorry, de plug-in is niet gevonden in de index. Controleer of de plug-inconfiguratie in de index staat",
+    "PluginOpenApiInitError": "Sorry, initialisatie van de OpenAPI-client is mislukt. Controleer of de configuratie van OpenAPI juist is",
+    "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
+    "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is"
+  },
+  "stt": {
+    "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
+  },
+  "tts": {
+    "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "Voeg optionele OpenAI-proxyadres toe",
+      "description": "Voer uw OpenAI API-sleutel in om een sessie te starten. De app slaat uw API-sleutel niet op.",
+      "title": "Gebruik aangepaste API-sleutel"
+    },
+    "closeMessage": "Sluit bericht",
+    "confirm": "Bevestigen en opnieuw proberen",
+    "password": {
+      "description": "De beheerder heeft app-encryptie ingeschakeld. Voer het app-wachtwoord in om de app te ontgrendelen. Het wachtwoord hoeft slechts één keer te worden ingevoerd.",
+      "placeholder": "Voer het wachtwoord in",
+      "title": "Voer het wachtwoord in om de app te ontgrendelen"
+    }
+  }
+}
