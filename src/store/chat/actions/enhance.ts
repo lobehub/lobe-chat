@@ -60,18 +60,25 @@ export const chatEnhance: StateCreator<
 
     await pMap(items, async (params, index) => {
       toggleDallEImageLoading(messageId + params.prompt, true);
-      const urls = await imageGenerationService.generateImage(params);
+      const url = await imageGenerationService.generateImage(params);
 
-      const { id } = await fileService.uploadImageByUrl(urls, {
-        metadata: { ...params, originPrompt: originPrompt },
-        name: `${originPrompt || params.prompt}_${index}.png`,
+      await updateImageItem(messageId, (draft) => {
+        draft[index].previewUrl = url;
       });
 
       toggleDallEImageLoading(messageId + params.prompt, false);
 
-      await updateImageItem(messageId, (draft) => {
-        draft[index].imageId = id;
-      });
+      fileService
+        .uploadImageByUrl(url, {
+          metadata: { ...params, originPrompt: originPrompt },
+          name: `${originPrompt || params.prompt}_${index}.png`,
+        })
+        .then(({ id }) => {
+          updateImageItem(messageId, (draft) => {
+            draft[index].imageId = id;
+            draft[index].previewUrl = undefined;
+          });
+        });
     });
   },
   text2image: async (id, data) => {
