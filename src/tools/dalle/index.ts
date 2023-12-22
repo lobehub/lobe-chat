@@ -54,7 +54,7 @@ export const DalleManifest: BuiltinToolManifest = {
   ],
   identifier: 'dalle3',
   meta: {
-    avatar: '🖍',
+    avatar: '🖌',
     title: 'Dall·E 3',
   },
   systemRole: `Whenever a description of an image is given, use dalle to create the images and then summarize the prompts used to generate the images in plain text. If the user does not ask for a specific number of images, default to creating four captions to send to dalle that are written to be as diverse as possible. All captions sent to dalle must abide by the following policies:

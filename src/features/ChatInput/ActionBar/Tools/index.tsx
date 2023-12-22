@@ -32,7 +32,14 @@ const Tools = memo(() => {
   const { t } = useTranslation('setting');
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const builtinList = useToolStore(builtinToolSelectors.metaList, isEqual);
-  const enablePluginCount = useSessionStore((s) => agentSelectors.currentAgentPlugins(s).length);
+
+  const enablePluginCount = useSessionStore(
+    (s) =>
+      agentSelectors
+        .currentAgentPlugins(s)
+        .filter((i) => !builtinList.some((b) => b.identifier === i)).length,
+  );
+
   const [open, setOpen] = useState(false);
   const { styles } = useStyles();
 
@@ -47,7 +54,12 @@ const Tools = memo(() => {
               children: builtinList.map((item) => ({
                 icon: <Avatar avatar={item.meta.avatar} size={24} />,
                 key: item.identifier,
-                label: <ToolItem identifier={item.identifier} label={item.identifier} />,
+                label: (
+                  <ToolItem
+                    identifier={item.identifier}
+                    label={item.meta?.title || item.identifier}
+                  />
+                ),
               })),
 
               key: 'builtins',
