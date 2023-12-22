@@ -1,5 +1,7 @@
 import type { Locales } from '@/types/locale';
 
+import { locales } from './resources';
+
 type LocaleOptions = {
   label: string;
   value: Locales;
@@ -52,4 +54,4 @@ export const localeOptions: LocaleOptions = [
   },
 ] as LocaleOptions;
 
-export const supportLocales: string[] = [...localeOptions.map((i) => i.value), 'en', 'zh'];
+export const supportLocales: string[] = [...locales, 'en', 'zh'];
