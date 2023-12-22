@@ -15,6 +15,11 @@ import {
 import DragUpload from './DragUpload';
 import { LocalFiles } from './LocalFiles';
 
+/**
+ * 聊天消息输入框
+ *
+ * ![](https://i.imgur.com/lJQQkMC.png)
+ */
 const ChatInputDesktopLayout = memo(() => {
   const { t } = useTranslation('chat');
   const {
@@ -59,6 +64,11 @@ const ChatInputDesktopLayout = memo(() => {
     [canUpload, loading, onSend, onStop, t],
   );
 
+  /**
+   * 聊天消息输入框上面的按钮
+   *
+   * ![](https://i.imgur.com/03JgFFz.png)
+   */
   const topAddons = useMemo(
     () => (
       <ActionBar

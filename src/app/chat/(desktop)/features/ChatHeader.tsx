@@ -17,6 +17,11 @@ import PluginTag from '../../features/ChatHeader/PluginTag';
 import SettingButton from '../../features/ChatHeader/SettingButton';
 import ShareButton from '../../features/ChatHeader/ShareButton';
 
+/**
+ * 机器人描述及工具条
+ *
+ * ![](https://imgur.com/D66fMqt.png)
+ */
 const Header = memo(() => {
   const init = useSessionChatInit();
   const router = useRouter();

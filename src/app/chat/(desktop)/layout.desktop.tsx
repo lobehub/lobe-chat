@@ -10,7 +10,9 @@ import { SidebarTabKey } from '@/store/global/initialState';
 import ResponsiveSessionList from './features/SessionList';
 
 /**
- * 桌面端聊天页面布局
+ * 针对桌面端设计的整个聊天页面的布局
+ *
+ * @author dongjak
  */
 export default memo(({ children }: PropsWithChildren) => {
   useSwitchSideBarOnInit(SidebarTabKey.Chat);

@@ -21,6 +21,11 @@ export interface ActionBarProps {
   rightAreaStartRender?: ReactNode;
 }
 
+/**
+ * 负责渲染聊天框上方的工具栏
+ *
+ * ![](https://i.imgur.com/03JgFFz.png)
+ */
 const ActionBar = memo<ActionBarProps>(
   ({
     padding = '0 16px',

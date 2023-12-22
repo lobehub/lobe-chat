@@ -44,6 +44,11 @@ interface ConversationProps {
   mobile?: boolean;
 }
 
+/**
+ * 对话区域,包含对话消息内容和输入框
+ *
+ * ![](https://imgur.com/aDbMTqA.png)
+ */
 const Conversation = memo<ConversationProps>(({ mobile, chatInput }) => {
   const ref = useRef(null);
   const { t } = useTranslation('chat');
@@ -54,7 +59,7 @@ const Conversation = memo<ConversationProps>(({ mobile, chatInput }) => {
   useInitConversation();
 
   return (
-    <Flexbox flex={1} style={{ position: 'relative' }}>
+    <Flexbox flex={1} id={'Conversation'} style={{ position: 'relative' }}>
       <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
         <div className={styles} ref={ref}>
           {!mobile && <SafeSpacing />}

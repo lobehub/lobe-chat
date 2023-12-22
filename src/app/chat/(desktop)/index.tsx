@@ -14,8 +14,10 @@ import SideBar from './features/SideBar';
 import Layout from './layout.desktop';
 
 const Mobile: FC = dynamic(() => import('../(mobile)'), { ssr: false }) as FC;
-
-const DesktopPage = memo(() => (
+/**
+ * 针对桌面端的聊天页面
+ */
+const ChatIndexPageForDesktop = memo(() => (
   <ResponsiveIndex Mobile={Mobile}>
     <Layout>
       <PageTitle />
@@ -27,4 +29,4 @@ const DesktopPage = memo(() => (
     </Layout>
   </ResponsiveIndex>
 ));
-export default DesktopPage;
+export default ChatIndexPageForDesktop;

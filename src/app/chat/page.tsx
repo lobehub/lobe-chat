@@ -1,17 +1,17 @@
 import { isMobileDevice } from '@/utils/responsive';
 
-import DesktopPage from './(desktop)';
+import ChatIndexPageForDesktop from './(desktop)';
 import MobilePage from './(mobile)';
 import Migration from './features/Migration';
 
 const Page = () => {
   const mobile = isMobileDevice();
 
-  const Page = mobile ? MobilePage : DesktopPage;
+  const ChatIndexPage = mobile ? MobilePage : ChatIndexPageForDesktop;
 
   return (
     <Migration>
-      <Page />
+      <ChatIndexPage />
     </Migration>
   );
 };

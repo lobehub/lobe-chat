@@ -7,6 +7,9 @@ import FullscreenLoading from '@/components/FullscreenLoading';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface ResponsiveIndexProps {
+  /**
+   * 针对移动端设计的会话页面首页,如果是移动端,则渲染这个组件
+   */
   Mobile: FC;
   children: ReactNode;
 }

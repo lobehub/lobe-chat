@@ -18,6 +18,9 @@ const checkHasConversation = async () => {
   return hasMessages || hasAgents;
 };
 
+/**
+ * 根据是否存在历史会话决定跳转到欢迎页面还是聊天页面
+ */
 const Redirect = memo(() => {
   const router = useRouter();
   const [switchSession] = useSessionStore((s) => [s.switchSession]);
