@@ -293,7 +293,7 @@ export default {
   },
   tools: {
     builtins: {
-      groupName: '内置',
+      groupName: '内置扩展',
     },
     plugins: {
       enabled: '已启用 {{num}}',

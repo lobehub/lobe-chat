@@ -1,0 +1,8 @@
+{
+  "dalle": {
+    "autoGenerate": "자동 생성",
+    "generate": "생성",
+    "generating": "생성 중...",
+    "images": "이미지:"
+  }
+}

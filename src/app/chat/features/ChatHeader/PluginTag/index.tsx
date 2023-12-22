@@ -6,7 +6,7 @@ import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
 
 import { pluginHelpers, useToolStore } from '@/store/tool';
-import { pluginSelectors } from '@/store/tool/selectors';
+import { toolSelectors } from '@/store/tool/selectors';
 
 import PluginStatus from './PluginStatus';
 
@@ -15,8 +15,8 @@ export interface PluginTagProps {
 }
 
 const PluginTag = memo<PluginTagProps>(({ plugins }) => {
-  const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
-  const displayPlugin = useToolStore(pluginSelectors.getPluginMetaById(plugins[0]), isEqual);
+  const list = useToolStore(toolSelectors.metaList, isEqual);
+  const displayPlugin = useToolStore(toolSelectors.getMetaById(plugins[0]), isEqual);
 
   if (plugins.length === 0) return null;
 

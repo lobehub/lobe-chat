@@ -1,0 +1,8 @@
+{
+  "dalle": {
+    "autoGenerate": "自動生成",
+    "generate": "生成",
+    "generating": "生成中...",
+    "images": "圖片:"
+  }
+}
