@@ -13,6 +13,8 @@ export interface ChatStoreState {
    * @deprecated
    */
   chatLoadingId?: string;
+  dalleImageLoading: Record<string, boolean>;
+
   inputMessage: string;
   isSearchingTopic: boolean;
   messageLoadingIds: [];
@@ -36,6 +38,7 @@ export interface ChatStoreState {
 
 export const initialState: ChatStoreState = {
   activeId: 'inbox',
+  dalleImageLoading: {},
   inputMessage: '',
   isSearchingTopic: false,
   messageLoadingIds: [],

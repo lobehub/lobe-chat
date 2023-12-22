@@ -130,8 +130,8 @@ export default {
   },
   pluginList: '插件列表',
   plugins: {
-    loading: '插件检测中...',
-    unknown: '未知插件',
+    loading: '工具检测中...',
+    unknown: '未知工具',
   },
   setting: '插件设置',
   settings: {
