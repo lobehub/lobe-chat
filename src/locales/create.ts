@@ -33,7 +33,13 @@ export const createI18nNext = (lang?: string) => {
     .use(
       resourcesToBackend(
         // isDev ? resources :
-        async (lng: string, ns: string) => import(`@/../locales/${lng}/${ns}.json`),
+        async (lng: string, ns: string) => {
+          if (lng === 'en') return import(`@/../locales/en-US/${ns}.json`);
+
+          if (lng === 'zh') return import(`@/../locales/zh-CN/${ns}.json`);
+
+          return import(`@/../locales/${lng}/${ns}.json`);
+        },
       ),
     );
 
