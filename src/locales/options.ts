@@ -1,6 +1,6 @@
 import type { Locales } from '@/types/locale';
 
-import _resources from './resources';
+import { locales } from './resources';
 
 type LocaleOptions = {
   label: string;
@@ -54,12 +54,4 @@ export const localeOptions: LocaleOptions = [
   },
 ] as LocaleOptions;
 
-export const supportLangs: string[] = localeOptions.map((i) => i.value);
-
-export const resources = {
-  ..._resources,
-  en: _resources['en-US'],
-  zh: _resources['zh-CN'],
-};
-
-export const supportLocales = Object.keys(resources);
+export const supportLocales: string[] = [...locales, 'en', 'zh'];
