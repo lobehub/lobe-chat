@@ -1,0 +1,14 @@
+{
+  "button": {
+    "import": "Importuj konfigurację",
+    "start": "Rozpocznij teraz"
+  },
+  "header": "Witaj",
+  "pickAgent": "Wybierz szablon asystenta lub kontynuuj",
+  "skip": "Pomiń tworzenie",
+  "slogan": {
+    "desc1": "Ożyw swoje myślenie poprzez uruchomienie klastra mózgu. Twój inteligentny asystent zawsze jest obecny.",
+    "desc2": "Stwórz swojego pierwszego asystenta. Zaczynamy!",
+    "title": "Daj sobie mądrzejszy mózg"
+  }
+}
