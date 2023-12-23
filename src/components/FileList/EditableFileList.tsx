@@ -3,7 +3,7 @@ import { useResponsive } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ImageFileItem from '@/components/FileList/ImageFileItem';
+import ImageFileItem from './ImageFileItem';
 
 interface EditableFileListProps {
   alwaysShowClose?: boolean;
