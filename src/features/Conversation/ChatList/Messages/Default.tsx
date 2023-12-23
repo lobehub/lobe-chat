@@ -1,7 +1,7 @@
 import { ReactNode, memo } from 'react';
 
 import { LOADING_FLAT } from '@/const/message';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 
 import BubblesLoading from '../Loading';
 

@@ -1,11 +1,12 @@
 import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionExportSelectors, sessionSelectors } from '@/store/session/selectors';
-import { ChatMessage } from '@/types/chatMessage';
 import { ConfigFile } from '@/types/exportConfig';
+import { ChatMessage } from '@/types/message';
 import { LobeSessions } from '@/types/session';
 import { GlobalSettings } from '@/types/settings';
 import { ChatTopic } from '@/types/topic';

@@ -7,7 +7,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { settingsSelectors, useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
+import { useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 
 import Checker from './Checker';
 

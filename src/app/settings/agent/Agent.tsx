@@ -2,9 +2,10 @@ import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 
 import AgentSetting from '@/features/AgentSetting';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useGlobalStore } from '@/store/global';
 import { useSwitchSideBarOnInit } from '@/store/global/hooks/useSwitchSettingsOnInit';
 import { SettingsTabs } from '@/store/global/initialState';
+import { settingsSelectors } from '@/store/global/selectors';
 
 const Agent = memo(() => {
   useSwitchSideBarOnInit(SettingsTabs.Agent);

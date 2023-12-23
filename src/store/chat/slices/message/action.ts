@@ -17,13 +17,13 @@ import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { MessageDispatch, messagesReducer } from '../reducers/message';
-import { chatSelectors } from '../selectors';
+import { chatSelectors } from '../../selectors';
+import { MessageDispatch, messagesReducer } from './reducer';
 
 const n = setNamespace('message');
 

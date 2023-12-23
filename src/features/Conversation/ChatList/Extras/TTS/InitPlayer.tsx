@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useTTS } from '@/hooks/useTTS';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
-import { ChatMessageError, ChatTTS } from '@/types/chatMessage';
+import { ChatMessageError, ChatTTS } from '@/types/message';
 import { getMessageError } from '@/utils/fetch';
 
 import Player from './Player';

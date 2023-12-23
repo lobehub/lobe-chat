@@ -5,11 +5,11 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
 import { useSessionStore } from '@/store/session';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
-import { chatSelectors } from '../chat';
+import { chatSelectors } from './selectors';
 
 vi.mock('i18next', () => ({
   t: vi.fn((key) => key), // Simplified mock return value

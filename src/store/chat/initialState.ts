@@ -1,51 +1,13 @@
-import { ChatMessage } from '@/types/chatMessage';
-import { ChatTopic } from '@/types/topic';
+import { ChatMessageState, initialMessageState } from './slices/message/initialState';
+import { ChatShareState, initialShareState } from './slices/share/initialState';
+import { ChatToolState, initialToolState } from './slices/tool/initialState';
+import { ChatTopicState, initialTopicState } from './slices/topic/initialState';
 
-export interface ChatStoreState {
-  abortController?: AbortController;
-  /**
-   * @title 当前活动的会话
-   * @description 当前正在编辑或查看的会话
-   */
-  activeId: string;
-  activeTopicId?: string;
-  /**
-   * @deprecated
-   */
-  chatLoadingId?: string;
-  dalleImageLoading: Record<string, boolean>;
-
-  inputMessage: string;
-  isSearchingTopic: boolean;
-  messageLoadingIds: [];
-  messages: ChatMessage[];
-  /**
-   * whether messages have fetched
-   */
-  messagesInit: boolean;
-
-  searchTopics: ChatTopic[];
-  shareLoading?: boolean;
-  topicLoadingId?: string;
-  topicRenamingId?: string;
-  topicSearchKeywords: string;
-  topics: ChatTopic[];
-  /**
-   * whether topics have fetched
-   */
-  topicsInit: boolean;
-}
+export type ChatStoreState = ChatTopicState & ChatMessageState & ChatToolState & ChatShareState;
 
 export const initialState: ChatStoreState = {
-  activeId: 'inbox',
-  dalleImageLoading: {},
-  inputMessage: '',
-  isSearchingTopic: false,
-  messageLoadingIds: [],
-  messages: [],
-  messagesInit: false,
-  searchTopics: [],
-  topicSearchKeywords: '',
-  topics: [],
-  topicsInit: false,
+  ...initialMessageState,
+  ...initialTopicState,
+  ...initialToolState,
+  ...initialShareState,
 };
