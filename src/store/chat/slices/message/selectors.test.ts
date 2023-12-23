@@ -9,7 +9,7 @@ import { ChatMessage } from '@/types/chatMessage';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
-import { chatSelectors } from '../chat';
+import { chatSelectors } from './selectors';
 
 vi.mock('i18next', () => ({
   t: vi.fn((key) => key), // Simplified mock return value

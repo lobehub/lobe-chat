@@ -22,8 +22,8 @@ import { fetchSSE } from '@/utils/fetch';
 import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { MessageDispatch, messagesReducer } from '../reducers/message';
-import { chatSelectors } from '../selectors';
+import { chatSelectors } from '../../selectors';
+import { MessageDispatch, messagesReducer } from './reducer';
 
 const n = setNamespace('message');
 

@@ -4,7 +4,7 @@ import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
 import { merge } from '@/utils/merge';
 
-import { topicSelectors } from '..';
+import { topicSelectors } from '../../selectors';
 
 const initialStore = initialState as ChatStore;
 

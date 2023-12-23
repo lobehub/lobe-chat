@@ -10,8 +10,8 @@ import { ChatMessage } from '@/types/chatMessage';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
-import { chatHelpers } from '../helpers';
-import type { ChatStore } from '../store';
+import { chatHelpers } from '../../helpers';
+import type { ChatStore } from '../../store';
 
 const getMeta = (message: ChatMessage) => {
   switch (message.role) {

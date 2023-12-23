@@ -9,7 +9,7 @@ import { topicService } from '@/services/topic';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/chatMessage';
 
-import { useChatStore } from '../store';
+import { useChatStore } from '../../store';
 
 // Mock service
 vi.mock('@/services/message', () => ({
