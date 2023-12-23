@@ -34,6 +34,7 @@ const modelListSelectors = (s: GlobalStore) => {
 
   const modelNames = [
     ...DEFAULT_OPENAI_MODEL_LIST,
+    ...(s.serverConfig.customModelName || '').split(/[,，]/).filter(Boolean),
     ...(s.settings.languageModel.openAI.customModelName || '').split(/[,，]/).filter(Boolean),
   ];
 

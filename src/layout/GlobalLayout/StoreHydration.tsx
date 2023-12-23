@@ -8,11 +8,15 @@ import { useEffectAfterSessionHydrated, useSessionStore } from '@/store/session'
 const StoreHydration = memo(() => {
   const router = useRouter();
 
+  const useFetchGlobalConfig = useGlobalStore((s) => s.useFetchGlobalConfig);
+
   useEffect(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
     useSessionStore.persist.rehydrate();
     useGlobalStore.persist.rehydrate();
   }, []);
+
+  useFetchGlobalConfig();
 
   const { mobile } = useResponsive();
 
@@ -29,6 +33,7 @@ const StoreHydration = memo(() => {
     },
     [router],
   );
+
   useEffect(() => {
     router.prefetch('/chat');
     router.prefetch('/market');
