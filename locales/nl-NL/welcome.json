@@ -1,0 +1,14 @@
+{
+  "button": {
+    "import": "Importeer configuratie",
+    "start": "Nu beginnen"
+  },
+  "header": "Welkom",
+  "pickAgent": "Of kies een assistent-sjabloon uit de onderstaande opties",
+  "skip": "Overslaan bij het maken",
+  "slogan": {
+    "desc1": "Activeer denkkracht en ontsteek creatieve vonken in het brein. Jouw intelligente assistent is er altijd voor jou.",
+    "desc2": "Maak je eerste assistent en laten we beginnen!",
+    "title": "Geef jezelf een slimmer brein"
+  }
+}

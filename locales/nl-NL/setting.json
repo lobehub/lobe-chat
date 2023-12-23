@@ -1,0 +1,306 @@
+{
+  "danger": {
+    "clear": {
+      "action": "Direct verwijderen",
+      "confirm": "Alle chatgegevens wissen bevestigen?",
+      "desc": "Alle gespreksgegevens worden gewist, inclusief assistenten, bestanden, berichten, plug-ins, enz.",
+      "success": "Alle gespreksberichten zijn gewist",
+      "title": "Alle gespreksberichten wissen"
+    },
+    "reset": {
+      "action": "Direct resetten",
+      "confirm": "Alle instellingen resetten bevestigen?",
+      "currentVersion": "Huidige versie",
+      "desc": "Alle instellingen worden teruggezet naar de standaardwaarden",
+      "title": "Alle instellingen resetten"
+    }
+  },
+  "header": {
+    "global": "Algemene instellingen",
+    "session": "Sessie-instellingen",
+    "sessionWithName": "Sessie-instellingen · {{name}}"
+  },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "Deze waarde is te vinden in het gedeelte 'Sleutels en eindpunten' wanneer u de bron controleert in het Azure-portal",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Azure API-adres"
+      },
+      "models": {
+        "desc": "Ondersteunde modellen",
+        "title": "Modellijst"
+      },
+      "title": "Azure OpenAI-instellingen",
+      "token": {
+        "desc": "Deze waarde is te vinden in het gedeelte 'Sleutels en eindpunten' wanneer u de bron controleert in het Azure-portal. U kunt KEY1 of KEY2 gebruiken",
+        "placeholder": "Azure API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "API-versie van Azure, in het formaat YYYY-MM-DD, zie [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Lijst ophalen",
+        "title": "Azure API-versie"
+      },
+      "check": {
+        "button": "Controleren",
+        "desc": "Test of de API-sleutel en proxy-adres correct zijn ingevuld",
+        "pass": "Controle geslaagd",
+        "title": "Connectiviteitscontrole"
+      },
+      "customModelName": {
+        "desc": "Voeg aangepaste modellen toe, gescheiden door een komma (,)",
+        "placeholder": "model1,model2,model3",
+        "title": "Naam aangepast model"
+      },
+      "endpoint": {
+        "desc": "Moet http(s):// bevatten, naast het standaardadres",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "Proxy-adres"
+      },
+      "models": {
+        "count": "In totaal {{count}} modellen ondersteund",
+        "desc": "Ondersteunde modellen",
+        "fetch": "Modellen ophalen",
+        "notSupport": "Azure OpenAI ondersteunt momenteel geen weergave van modellijsten",
+        "notSupportTip": "U moet ervoor zorgen dat de implementatienaam overeenkomt met de modelnaam",
+        "refetch": "Modellijst opnieuw ophalen",
+        "title": "Modellijst"
+      },
+      "title": "OpenAI-instellingen",
+      "token": {
+        "desc": "Gebruik uw eigen OpenAI-sleutel",
+        "placeholder": "OpenAI API-sleutel",
+        "title": "API-sleutel"
+      },
+      "useAzure": {
+        "desc": "Gebruik OpenAI-service van Azure",
+        "fetch": "Lijst ophalen",
+        "serverConfig": "Beheerder heeft Azure OpenAI aan de serverzijde geconfigureerd, overschakelen is niet toegestaan",
+        "title": "Azure OpenAI gebruiken"
+      }
+    },
+    "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨"
+  },
+  "plugin": {
+    "addTooltip": "Voeg aangepaste plug-in toe",
+    "clearDeprecated": "Verwijder verouderde plug-ins",
+    "empty": "Geen geïnstalleerde plug-ins, ga naar de <1>plug-in store</1> om te verkennen",
+    "installStatus": {
+      "deprecated": "Verwijderd"
+    },
+    "settings": {
+      "hint": "Vul de volgende configuratie in op basis van de beschrijving",
+      "title": "{{id}} Plug-inconfiguratie",
+      "tooltip": "Plug-inconfiguratie"
+    },
+    "store": "Plug-in store"
+  },
+  "settingAgent": {
+    "avatar": {
+      "title": "Avatar"
+    },
+    "backgroundColor": {
+      "title": "Achtergrondkleur"
+    },
+    "description": {
+      "placeholder": "Voer assistentbeschrijving in",
+      "title": "Assistentbeschrijving"
+    },
+    "name": {
+      "placeholder": "Voer assistentnaam in",
+      "title": "Naam"
+    },
+    "prompt": {
+      "placeholder": "Voer rol Prompt-woord in",
+      "title": "Rolinstelling"
+    },
+    "tag": {
+      "placeholder": "Voer tag in",
+      "title": "Tag"
+    },
+    "title": "Assistentinformatie"
+  },
+  "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "Automatisch een onderwerp maken wanneer het aantal berichten de ingestelde waarde overschrijdt",
+      "title": "Berichtdrempel"
+    },
+    "chatStyleType": {
+      "title": "Chatvensterstijl",
+      "type": {
+        "chat": "Gespreksmodus",
+        "docs": "Documentmodus"
+      }
+    },
+    "compressThreshold": {
+      "desc": "Comprimeren wanneer het aantal ongecomprimeerde berichten de ingestelde waarde overschrijdt",
+      "title": "Compressiedrempel voor berichtlengte"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "Automatisch een onderwerp maken tijdens het gesprek, alleen van toepassing op tijdelijke onderwerpen",
+      "title": "Automatisch onderwerp maken"
+    },
+    "enableCompressThreshold": {
+      "title": "Compressiedrempel voor berichtlengte inschakelen"
+    },
+    "enableHistoryCount": {
+      "alias": "Onbeperkt",
+      "limited": "Bevat alleen {{number}} berichten",
+      "title": "Berichtgeschiedenis beperken",
+      "unlimited": "Onbeperkt aantal berichten in de geschiedenis"
+    },
+    "historyCount": {
+      "desc": "Aantal berichten dat bij elke aanvraag wordt meegenomen (inclusief de meest recente vraag. Elke vraag en antwoord tellen als 1)",
+      "title": "Berichtaantal meenemen"
+    },
+    "inputTemplate": {
+      "desc": "De meest recente gebruikersboodschap wordt ingevuld in dit sjabloon",
+      "placeholder": "Voorbewerkingssjabloon {{text}} wordt vervangen door realtime invoer",
+      "title": "Voorbewerking van gebruikersinvoer"
+    },
+    "title": "Chatinstellingen"
+  },
+  "settingModel": {
+    "enableMaxTokens": {
+      "title": "Limiet voor enkele reacties inschakelen"
+    },
+    "frequencyPenalty": {
+      "desc": "Hoe hoger de waarde, hoe waarschijnlijker het is dat herhaalde woorden worden verminderd",
+      "title": "Frequentieboete"
+    },
+    "maxTokens": {
+      "desc": "Het maximale aantal tokens dat wordt gebruikt voor een enkele interactie",
+      "title": "Limiet voor enkele reacties"
+    },
+    "model": {
+      "desc": "ChatGPT-model",
+      "list": {
+        "gpt-3.5-turbo": "GPT 3.5",
+        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+        "gpt-4": "GPT 4",
+        "gpt-4-32k": "GPT 4 (32K)"
+      },
+      "title": "Model"
+    },
+    "presencePenalty": {
+      "desc": "Hoe hoger de waarde, hoe waarschijnlijker het is dat het gesprek naar nieuwe onderwerpen wordt uitgebreid",
+      "title": "Onderwerpnieuwheid"
+    },
+    "temperature": {
+      "desc": "Hoe hoger de waarde, hoe willekeuriger de reactie",
+      "title": "Willekeurigheid",
+      "titleWithValue": "Willekeurigheid {{value}}"
+    },
+    "title": "Modelinstellingen",
+    "topP": {
+      "desc": "Vergelijkbaar met willekeurigheid, maar verander dit niet samen met willekeurigheid",
+      "title": "Top-P-monstername"
+    }
+  },
+  "settingPlugin": {
+    "title": "Plugin-lijst"
+  },
+  "settingSystem": {
+    "accessCode": {
+      "desc": "Beheerder heeft versleutelde toegang ingeschakeld",
+      "placeholder": "Voer toegangswachtwoord in",
+      "title": "Toegangswachtwoord"
+    },
+    "title": "Systeeminstellingen"
+  },
+  "settingTTS": {
+    "openai": {
+      "sttModel": "OpenAI spraakherkenningsmodel",
+      "ttsModel": "OpenAI spraaksynthesemodel"
+    },
+    "showAllLocaleVoice": {
+      "desc": "Als dit is uitgeschakeld, worden alleen stemmen in de huidige taal weergegeven",
+      "title": "Alle taalstemmen weergeven"
+    },
+    "stt": "Spraakherkenning instellingen",
+    "sttAutoStop": {
+      "desc": "Als dit is uitgeschakeld, stopt de spraakherkenning niet automatisch en moet je handmatig op de stopknop klikken",
+      "title": "Automatisch stoppen van spraakherkenning"
+    },
+    "sttLocale": {
+      "desc": "De taal van de gesproken invoer, deze optie kan de nauwkeurigheid van spraakherkenning verbeteren",
+      "title": "Taal voor spraakherkenning"
+    },
+    "sttService": {
+      "desc": "Browser staat voor de native spraakherkenningsservice van de browser",
+      "title": "Spraakherkenningsservice"
+    },
+    "title": "Spraakdienst",
+    "tts": "Spraaksynthese-instellingen",
+    "ttsService": {
+      "desc": "Als je gebruikmaakt van de spraaksynthese-service van OpenAI, zorg er dan voor dat de OpenAI-modelservice is ingeschakeld",
+      "title": "Spraaksynthese-service"
+    },
+    "voice": {
+      "desc": "Kies een stem voor de huidige assistent, verschillende TTS-services ondersteunen verschillende stemmen",
+      "preview": "Stem voorbeluisteren",
+      "title": "Spraaksynthese stem"
+    }
+  },
+  "settingTheme": {
+    "avatar": {
+      "title": "Profielfoto"
+    },
+    "fontSize": {
+      "desc": "Lettergrootte van chatberichten",
+      "marks": {
+        "large": "Groot",
+        "normal": "Normaal",
+        "small": "Klein"
+      },
+      "title": "Lettergrootte"
+    },
+    "lang": {
+      "autoMode": "Volg systeem",
+      "title": "Taal"
+    },
+    "neutralColor": {
+      "desc": "Aangepaste grijstinten voor verschillende kleurvoorkeuren",
+      "title": "Neutrale kleur"
+    },
+    "primaryColor": {
+      "desc": "Aangepaste themakleur",
+      "title": "Themakleur"
+    },
+    "themeMode": {
+      "auto": "Automatisch",
+      "dark": "Donker",
+      "light": "Licht",
+      "title": "Thema"
+    },
+    "title": "Thema-instellingen"
+  },
+  "submitAgentModal": {
+    "button": "Assistent indienen",
+    "identifier": "Assistent-identificatie",
+    "metaMiss": "Vul alstublieft de assistentinformatie in voordat u deze indient. Dit moet de naam, beschrijving en labels bevatten",
+    "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
+    "tooltips": "Delen op de assistentenmarkt"
+  },
+  "tab": {
+    "agent": "Standaardassistent",
+    "common": "Algemene instellingen",
+    "llm": "Taalmodel",
+    "tts": "Spraakdienst"
+  },
+  "tools": {
+    "builtins": {
+      "groupName": "Ingebouwd"
+    },
+    "plugins": {
+      "enabled": "Ingeschakeld {{num}}",
+      "groupName": "Plug-ins",
+      "noEnabled": "Geen plug-ins ingeschakeld",
+      "store": "Plug-in store"
+    },
+    "title": "Uitbreidingsgereedschap"
+  }
+}

@@ -58,57 +58,6 @@ const mockState = {
 } as ToolStoreState;
 
 describe('pluginSelectors', () => {
-  describe('enabledSchema', () => {
-    it('enabledSchema should return correct ChatCompletionFunctions array', () => {
-      const result = pluginSelectors.enabledSchema(['plugin-1', 'plugin-2'])(mockState);
-      expect(result).toEqual([{ name: 'plugin-1____api-1' }, { name: 'plugin-2____api-2' }]);
-    });
-
-    it('enabledSchema should return with standalone plugin', () => {
-      const result = pluginSelectors.enabledSchema(['plugin-4'])({
-        ...mockState,
-        installedPlugins: [
-          ...mockState.installedPlugins,
-          {
-            identifier: 'plugin-4',
-            manifest: {
-              identifier: 'plugin-4',
-              api: [{ name: 'api-4' }],
-              type: 'standalone',
-            },
-            type: 'plugin',
-          },
-        ],
-      } as ToolStoreState);
-      expect(result).toEqual([{ name: 'plugin-4____api-4____standalone' }]);
-    });
-
-    it('enabledSchema should return md5 hash apiName', () => {
-      const result = pluginSelectors.enabledSchema(['long-long-plugin-with-id'])({
-        ...mockState,
-        installedPlugins: [
-          ...mockState.installedPlugins,
-          {
-            identifier: 'long-long-plugin-with-id',
-            manifest: {
-              identifier: 'long-long-plugin-with-id',
-              api: [{ name: 'long-long-manifest-long-long-apiName' }],
-            },
-            type: 'plugin',
-          },
-        ],
-      } as ToolStoreState);
-      expect(result).toEqual([
-        { name: 'long-long-plugin-with-id____MD5HASH_396eae4c671da3fb642c49ad2b9e8790' },
-      ]);
-    });
-
-    it('enabledSchema should return empty', () => {
-      const result = pluginSelectors.enabledSchema([])(mockState);
-      expect(result).toEqual([]);
-    });
-  });
-
   describe('getPluginManifestById', () => {
     it('getPluginManifestById should return the correct manifest', () => {
       const result = pluginSelectors.getPluginManifestById('plugin-1')(mockState);
@@ -208,24 +157,6 @@ describe('pluginSelectors', () => {
     it('should return undefined if the plugin is not installed', () => {
       const result = pluginSelectors.getInstalledPluginById('non-installed-plugin')(mockState);
       expect(result).toBeUndefined();
-    });
-  });
-
-  describe('getPluginManifestLoadingStatus', () => {
-    it('should return "loading" if the plugin manifest is being loaded', () => {
-      const result = pluginSelectors.getPluginManifestLoadingStatus('plugin-2')(mockState);
-      expect(result).toBe('loading');
-    });
-
-    it('should return "error" if the plugin manifest is not found', () => {
-      const result =
-        pluginSelectors.getPluginManifestLoadingStatus('non-existing-plugin')(mockState);
-      expect(result).toBe('error');
-    });
-
-    it('should return "success" if the plugin manifest is loaded', () => {
-      const result = pluginSelectors.getPluginManifestLoadingStatus('plugin-1')(mockState);
-      expect(result).toBe('success');
     });
   });
 

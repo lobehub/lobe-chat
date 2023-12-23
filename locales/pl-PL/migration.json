@@ -1,0 +1,45 @@
+{
+  "dbV1": {
+    "action": {
+      "clearDB": "Wyczyść lokalne dane",
+      "downloadBackup": "Pobierz kopię zapasową",
+      "reUpgrade": "Ponowne uaktualnienie",
+      "start": "Rozpocznij korzystanie",
+      "upgrade": "Uaktualnij"
+    },
+    "clear": {
+      "confirm": "Czy na pewno chcesz wyczyścić lokalne dane (ustawienia globalne nie zostaną dotknięte)? Upewnij się, że masz pobraną kopię zapasową danych."
+    },
+    "description": "W nowej wersji LobeChat nastąpił ogromny postęp w przechowywaniu danych. Dlatego musimy zaktualizować dane z poprzedniej wersji, aby zapewnić Ci lepsze doświadczenia z użytkowania.",
+    "features": {
+      "capability": {
+        "desc": "Dzięki technologii IndexedDB, pomieści ona wszystkie Twoje wiadomości z rozmów na całe życie.",
+        "title": "Duża pojemność"
+      },
+      "performance": {
+        "desc": "Automatyczne indeksowanie milionów wiadomości, co pozwala na błyskawiczne wyszukiwanie i odpowiedzi w milisekundach.",
+        "title": "Wysoka wydajność"
+      },
+      "use": {
+        "desc": "Wsparcie dla wyszukiwania tytułów, opisów, etykiet, treści wiadomości oraz tłumaczeń znacząco zwiększa wydajność codziennych wyszukiwań.",
+        "title": "Większa użyteczność"
+      }
+    },
+    "title": "Ewolucja danych w LobeChat",
+    "upgrade": {
+      "error": {
+        "subTitle": "Przepraszamy, wystąpił błąd podczas procesu aktualizacji bazy danych. Prosimy spróbować jednego z poniższych rozwiązań: A. Wyczyść lokalne dane i zaimportuj ponownie kopię zapasową danych; B. Kliknij przycisk „Ponowne uaktualnienie”.<br><br> Jeśli problem nadal występuje, prosimy <1>zgłosić problem</1>, a my natychmiast pomożemy Ci go rozwiązać.",
+        "title": "Błąd aktualizacji bazy danych"
+      },
+      "success": {
+        "subTitle": "Baza danych LobeChat została pomyślnie zaktualizowana do najnowszej wersji. Zacznij korzystać już teraz!",
+        "title": "Pomyślna aktualizacja bazy danych"
+      }
+    },
+    "upgradeTip": "Aktualizacja zazwyczaj trwa od 10 do 20 sekund. Prosimy nie zamykać LobeChat podczas procesu aktualizacji."
+  },
+  "migrateError": {
+    "missVersion": "Importowane dane nie zawierają numeru wersji. Prosimy sprawdzić plik i spróbować ponownie.",
+    "noMigration": "Nie znaleziono planu migracji dla bieżącej wersji. Prosimy sprawdzić numer wersji i spróbować ponownie. Jeśli problem nadal występuje, prosimy zgłosić problem."
+  }
+}

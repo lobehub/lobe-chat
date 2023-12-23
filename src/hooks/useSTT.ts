@@ -10,7 +10,8 @@ import { SWRConfiguration } from 'swr';
 
 import { createHeaderWithOpenAI } from '@/services/_header';
 import { OPENAI_URLS } from '@/services/_url';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 

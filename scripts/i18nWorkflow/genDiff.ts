@@ -7,15 +7,15 @@ import { existsSync } from 'node:fs';
 import {
   entryLocaleJsonFilepath,
   i18nConfig,
-  localesResourcesFilepath,
   outputLocaleJsonFilepath,
+  srcDefaultLocales,
 } from './const';
 import { readJSON, tagWhite, writeJSON } from './utils';
 
 export const genDiff = () => {
   consola.start(`Diff between Dev/Prod local...`);
 
-  const resources = require(localesResourcesFilepath(i18nConfig.entryLocale));
+  const resources = require(srcDefaultLocales);
   const data = Object.entries(resources.default);
 
   for (const [ns, devJSON] of data) {

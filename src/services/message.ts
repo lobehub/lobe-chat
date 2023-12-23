@@ -1,13 +1,13 @@
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
 import { DB_Message } from '@/database/schemas/message';
+import { LLMRoleType } from '@/types/llm';
 import {
   ChatMessage,
   ChatMessageError,
   ChatPluginPayload,
   ChatTTS,
   ChatTranslate,
-} from '@/types/chatMessage';
-import { LLMRoleType } from '@/types/llm';
+} from '@/types/message';
 
 export class MessageService {
   async create(data: CreateMessageParams) {

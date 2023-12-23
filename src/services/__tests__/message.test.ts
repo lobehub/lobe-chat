@@ -7,7 +7,7 @@ import {
   ChatPluginPayload,
   ChatTTS,
   ChatTranslate,
-} from '@/types/chatMessage';
+} from '@/types/message';
 
 import { messageService } from '../message';
 
