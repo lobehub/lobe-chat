@@ -16,7 +16,8 @@ import { ChatMessage } from '@/types/chatMessage';
 import { ChatTopic } from '@/types/topic';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../selectors';
+import { chatSelectors } from '../message/selectors';
+import { topicSelectors } from './selectors';
 
 const n = setNamespace('topic');
 

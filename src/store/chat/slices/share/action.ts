@@ -8,8 +8,8 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ShareGPTConversation } from '@/types/share';
 
-import { chatSelectors } from '../selectors';
-import { ChatStore } from '../store';
+import { chatSelectors } from '../../selectors';
+import { ChatStore } from '../../store';
 
 interface ShareMessage {
   from: 'human' | 'gpt';

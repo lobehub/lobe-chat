@@ -1,6 +1,6 @@
 import { ChatTopic } from '@/types/topic';
 
-import { ChatStore } from '../store';
+import { ChatStore } from '../../store';
 
 const currentTopics = (s: ChatStore): ChatTopic[] => s.topics;
 

@@ -1,7 +1,8 @@
 import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionExportSelectors, sessionSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/chatMessage';

@@ -8,10 +8,11 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import SelectWithTTSPreview from '@/features/AgentSetting/AgentTTS/SelectWithTTSPreview';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 
 import { useStore } from '../store';
+import SelectWithTTSPreview from './SelectWithTTSPreview';
 import { ttsOptions } from './options';
 
 const TTS_SETTING_KEY = 'tts';
