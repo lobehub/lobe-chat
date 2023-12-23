@@ -7,11 +7,11 @@ import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { ChatPluginPayload } from '@/types/chatMessage';
+import { ChatPluginPayload } from '@/types/message';
 import { OpenAIFunctionCall } from '@/types/openai/functionCall';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors } from '../selectors';
+import { chatSelectors } from '../../selectors';
 
 const n = setNamespace('plugin');
 
@@ -85,7 +85,6 @@ export const chatPlugin: StateCreator<
     const chats = chatSelectors.currentChats(get());
     await coreProcessMessage(chats, id);
   },
-
   triggerFunctionCall: async (id) => {
     const { invokeDefaultTypePlugin, invokeBuiltinTool, refreshMessages } = get();
 
@@ -146,7 +145,6 @@ export const chatPlugin: StateCreator<
       }
     }
   },
-
   updatePluginState: async (id, key, value) => {
     const { refreshMessages } = get();
 

@@ -1,5 +1,5 @@
 import { ImageGallery } from '@lobehub/ui';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 import GalleyGrid from '@/components/GalleyGrid';
 
@@ -10,9 +10,11 @@ interface FileListProps {
 }
 
 const FileList = memo<FileListProps>(({ items }) => {
+  const data = useMemo(() => items.map((id) => ({ id })), [items]);
+
   return (
     <ImageGallery>
-      <GalleyGrid items={items} renderItem={ImageFileItem} />
+      <GalleyGrid items={data} renderItem={ImageFileItem} />
     </ImageGallery>
   );
 });

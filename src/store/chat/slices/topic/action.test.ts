@@ -6,10 +6,10 @@ import { LOADING_FLAT } from '@/const/message';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 import { ChatTopic } from '@/types/topic';
 
-import { useChatStore } from '../store';
+import { useChatStore } from '../../store';
 
 // Mock topicService 和 messageService
 vi.mock('@/services/topic', () => ({

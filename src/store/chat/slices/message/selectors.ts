@@ -6,12 +6,12 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
-import { chatHelpers } from '../helpers';
-import type { ChatStore } from '../store';
+import { chatHelpers } from '../../helpers';
+import type { ChatStore } from '../../store';
 
 const getMeta = (message: ChatMessage) => {
   switch (message.role) {

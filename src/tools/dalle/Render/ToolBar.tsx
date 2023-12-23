@@ -5,7 +5,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatEnhanceSelectors } from '@/store/chat/selectors';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { DallEImageItem } from '@/types/tool/dalle';
 
 interface ToolBarProps {

@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 0.115.5](https://github.com/lobehub/lobe-chat/compare/v0.115.4...v0.115.5)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix image display error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix image display error, closes [#777](https://github.com/lobehub/lobe-chat/issues/777) ([08659d6](https://github.com/lobehub/lobe-chat/commit/08659d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.4](https://github.com/lobehub/lobe-chat/compare/v0.115.3...v0.115.4)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the ChatMessage type.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the ChatMessage type ([40375bd](https://github.com/lobehub/lobe-chat/commit/40375bd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.3](https://github.com/lobehub/lobe-chat/compare/v0.115.2...v0.115.3)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor and clean global store and chat store.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor and clean global store and chat store, closes [#774](https://github.com/lobehub/lobe-chat/issues/774) ([6120042](https://github.com/lobehub/lobe-chat/commit/6120042))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.115.2](https://github.com/lobehub/lobe-chat/compare/v0.115.1...v0.115.2)
 
 <sup>Released on **2023-12-23**</sup>

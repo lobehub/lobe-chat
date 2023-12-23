@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { LobeAgentConfig } from '@/types/agent';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 import { OpenAIChatMessage } from '@/types/openai/chat';
 import { encodeAsync } from '@/utils/tokenizer';
 import * as tokenizerObj from '@/utils/tokenizer';

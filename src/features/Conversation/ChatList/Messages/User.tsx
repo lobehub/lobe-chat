@@ -3,7 +3,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import FileList from '@/components/FileList';
 import { LOADING_FLAT } from '@/const/message';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 
 import BubblesLoading from '../Loading';
 

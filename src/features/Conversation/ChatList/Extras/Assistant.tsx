@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 
 import ExtraContainer from './ExtraContainer';
 import TTS from './TTS';

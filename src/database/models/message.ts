@@ -3,7 +3,7 @@ import { DeepPartial } from 'utility-types';
 import { BaseModel } from '@/database/core';
 import { DBModel } from '@/database/core/types/db';
 import { DB_Message, DB_MessageSchema } from '@/database/schemas/message';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
 
 export interface CreateMessageParams

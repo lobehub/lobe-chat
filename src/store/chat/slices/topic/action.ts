@@ -12,11 +12,12 @@ import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { ChatStore } from '@/store/chat';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 import { ChatTopic } from '@/types/topic';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../selectors';
+import { chatSelectors } from '../message/selectors';
+import { topicSelectors } from './selectors';
 
 const n = setNamespace('topic');
 

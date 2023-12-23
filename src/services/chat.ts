@@ -7,7 +7,7 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 import type { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
