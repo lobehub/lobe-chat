@@ -27,9 +27,23 @@ import { chatSelectors } from '../selectors';
 
 const n = setNamespace('message');
 
+/**
+ * 聊天消息发送、清理、删除、更新等动作的公共接口
+ *
+ * @author dongjak
+ * @created 2023/12/23
+ * @version 1.0
+ * @since 1.0
+ */
 export interface ChatMessageAction {
   // create
   resendMessage: (id: string) => Promise<void>;
+
+  /**
+   * 向ai服务器发送消息
+   * @param text - 文本类型的消息
+   * @param images - 图片类型的消息
+   */
   sendMessage: (text: string, images?: { id: string; url: string }[]) => Promise<void>;
   // delete
   /**
@@ -52,6 +66,8 @@ export interface ChatMessageAction {
   dispatchMessage: (payload: MessageDispatch) => void;
   /**
    * core process of the AI message (include preprocess and postprocess)
+   *
+   * AI消息的核心流程（包括预处理和后处理）
    */
   coreProcessMessage: (messages: ChatMessage[], parentId: string) => Promise<void>;
   /**
@@ -232,8 +248,6 @@ export const chatMessage: StateCreator<
   refreshMessages: async () => {
     await mutate([get().activeId, get().activeTopicId]);
   },
-
-  // the internal process method of the AI message
   coreProcessMessage: async (messages, userMessageId) => {
     const { fetchAIChatMessage, triggerFunctionCall, refreshMessages, activeTopicId } = get();
 

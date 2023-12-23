@@ -8,8 +8,10 @@ import { agentSelectors } from '@/store/session/slices/agent';
 
 import { useSendMessage } from './useSend';
 
+/**
+ * 聊天消息输入框相关的状态和交互逻辑
+ */
 export const useChatInput = () => {
-  //对
   const ref = useRef<TextAreaRef>(null);
   const [expand, setExpand] = useState<boolean>(false);
   const onSend = useSendMessage();

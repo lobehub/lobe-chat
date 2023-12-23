@@ -8,6 +8,9 @@ import { isFunctionMessageAtStart } from '@/utils/message';
 import Inspector from '../Plugins/Inspector';
 import { DefaultMessage } from './Default';
 
+/**
+ * 用于渲染机器人发出的消息
+ */
 export const AssistantMessage = memo<
   ChatMessage & {
     editableContent: ReactNode;

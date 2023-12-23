@@ -8,7 +8,7 @@ const Page = () => {
   const mobile = isMobileDevice();
 
   const ChatIndexPage = mobile ? MobilePage : ChatIndexPageForDesktop;
-
+  ChatIndexPage.displayName = 'ChatIndexPage';
   return (
     <Migration>
       <ChatIndexPage />

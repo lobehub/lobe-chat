@@ -15,6 +15,7 @@ import {
 import DragUpload from './DragUpload';
 import { LocalFiles } from './LocalFiles';
 
+ChatInputArea.displayName = 'ChatInputArea';
 /**
  * 聊天消息输入框
  *
@@ -109,5 +110,5 @@ const ChatInputDesktopLayout = memo(() => {
     </>
   );
 });
-
+ChatInputDesktopLayout.displayName = 'ChatInputDesktopLayout';
 export default ChatInputDesktopLayout;

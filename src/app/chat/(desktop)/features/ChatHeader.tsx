@@ -101,5 +101,5 @@ const Header = memo(() => {
     />
   );
 });
-
+Header.displayName = 'ChatHeader';
 export default Header;

@@ -12,6 +12,10 @@ import { DefaultMessage } from './Default';
 import { FunctionMessage } from './Function';
 import { UserMessage } from './User';
 
+AssistantMessage.displayName = 'AssistantMessage';
+DefaultMessage.displayName = 'DefaultMessage';
+FunctionMessage.displayName = 'FunctionMessage';
+UserMessage.displayName = 'UserMessage';
 export const renderMessages: ChatListProps['renderMessages'] = {
   assistant: AssistantMessage as any,
   default: DefaultMessage as any,
