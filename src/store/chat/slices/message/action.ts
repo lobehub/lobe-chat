@@ -343,6 +343,9 @@ export const chatMessage: StateCreator<
       if (!config.params.max_tokens) config.params.max_tokens = VISION_MODEL_DEFAULT_MAX_TOKENS;
     }
 
+    // 5. handle max_tokens
+    config.params.max_tokens = config.enableMaxTokens ? config.params.max_tokens : undefined;
+
     const fetcher = () =>
       chatService.createAssistantMessage(
         {
