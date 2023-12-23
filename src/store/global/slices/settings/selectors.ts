@@ -12,7 +12,7 @@ import { CustomModels, GlobalSettings } from '@/types/settings';
 import { isOnServerSide } from '@/utils/env';
 import { merge } from '@/utils/merge';
 
-import { GlobalStore } from '../store';
+import { GlobalStore } from '../../store';
 
 const currentSettings = (s: GlobalStore) => merge(DEFAULT_SETTINGS, s.settings);
 
@@ -24,8 +24,7 @@ const defaultAgentConfig = (s: GlobalStore) => merge(DEFAULT_AGENT_CONFIG, defau
 
 const defaultAgentMeta = (s: GlobalStore) => merge(DEFAULT_AGENT_META, defaultAgent(s).meta);
 
-const openAIAPIKeySelectors = (s: GlobalStore) =>
-  s.settings.languageModel.openAI.OPENAI_API_KEY || s.settings.OPENAI_API_KEY;
+const openAIAPIKeySelectors = (s: GlobalStore) => s.settings.languageModel.openAI.OPENAI_API_KEY;
 
 const openAIProxyUrlSelectors = (s: GlobalStore) => s.settings.languageModel.openAI.endpoint;
 
@@ -68,7 +67,7 @@ const modelListSelectors = (s: GlobalStore) => {
 
 export const exportSettings = (s: GlobalStore) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { OPENAI_API_KEY: _, password: __, ...settings } = s.settings;
+  const { password: _, ...settings } = s.settings;
 
   return settings as GlobalSettings;
 };

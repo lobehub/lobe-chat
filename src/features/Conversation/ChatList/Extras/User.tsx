@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 
 import ExtraContainer from './ExtraContainer';
 import TTS from './TTS';

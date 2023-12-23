@@ -1,8 +1,8 @@
 import { ErrorType } from '@/types/fetch';
 import { Translate } from '@/types/translate';
 
-import { LLMRoleType } from './llm';
-import { BaseDataModel } from './meta';
+import { LLMRoleType } from '../llm';
+import { BaseDataModel } from '../meta';
 
 /**
  * 聊天消息错误对象

@@ -5,12 +5,12 @@ import type { StateCreator } from 'zustand/vanilla';
 
 import { CURRENT_VERSION } from '@/const/version';
 import { globalService } from '@/services/global';
+import type { GlobalStore } from '@/store/global';
 import type { GlobalServerConfig } from '@/types/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import type { GlobalPreference, GlobalState, Guide, SidebarTabKey } from '../initialState';
-import type { GlobalStore } from '../store';
+import type { GlobalCommonState, GlobalPreference, Guide, SidebarTabKey } from './initialState';
 
 const n = setNamespace('settings');
 
@@ -66,7 +66,7 @@ export const createCommonSlice: StateCreator<
   },
   updatePreference: (preference, action) => {
     set(
-      produce((draft: GlobalState) => {
+      produce((draft: GlobalCommonState) => {
         draft.preference = merge(draft.preference, preference);
       }),
       false,

@@ -5,37 +5,8 @@ import { LocaleMode } from '@/types/locale';
 import type { LobeAgentSession } from '@/types/session';
 
 export interface GlobalBaseSettings {
-  /**
-   * @deprecated
-   */
-  OPENAI_API_KEY?: string;
-
   avatar: string;
-  /**
-   * @deprecated
-   */
-  compressThreshold?: number;
-  /**
-   * @deprecated
-   */
-  enableCompressThreshold?: boolean;
-  /**
-   * @deprecated
-   */
-  enableHistoryCount?: boolean;
-  /**
-   * @deprecated
-   */
-  enableMaxTokens?: boolean;
-  /**
-   * @deprecated
-   */
-  endpoint?: string;
   fontSize: number;
-  /**
-   * @deprecated
-   */
-  historyCount?: number;
   language: LocaleMode;
   neutralColor?: NeutralColors;
   password: string;
