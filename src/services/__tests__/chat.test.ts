@@ -1,6 +1,6 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';

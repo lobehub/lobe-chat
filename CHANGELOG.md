@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.115.2](https://github.com/lobehub/lobe-chat/compare/v0.115.1...v0.115.2)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix envs like `CUSTOM_MODELS` don't work with docker deployment.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix envs like `CUSTOM_MODELS` don't work with docker deployment, closes [#773](https://github.com/lobehub/lobe-chat/issues/773) ([54dc18b](https://github.com/lobehub/lobe-chat/commit/54dc18b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.115.1](https://github.com/lobehub/lobe-chat/compare/v0.115.0...v0.115.1)
 
 <sup>Released on **2023-12-22**</sup>
