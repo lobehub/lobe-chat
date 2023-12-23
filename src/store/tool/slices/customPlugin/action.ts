@@ -14,9 +14,6 @@ import { defaultCustomPlugin } from './initialState';
 
 const n = setNamespace('customPlugin');
 
-/**
- * 代理行为接口
- */
 export interface CustomPluginAction {
   installCustomPlugin: (value: LobeToolCustomPlugin) => Promise<void>;
   reinstallCustomPlugin: (id: string) => Promise<void>;

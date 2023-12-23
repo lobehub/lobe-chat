@@ -1,0 +1,53 @@
+{
+  "pluginSettings": {
+    "desc": "Wykonaj poniższą konfigurację, aby rozpocząć korzystanie z tego wtyczki",
+    "title": "Konfiguracja wtyczki {{name}}"
+  },
+  "response": {
+    "400": "Przepraszamy, serwer nie rozumie Twojego żądania. Proszę sprawdź, czy parametry żądania są poprawne",
+    "401": "Przepraszamy, serwer odrzucił Twoje żądanie, prawdopodobnie z powodu niewystarczających uprawnień lub braku ważnej autoryzacji",
+    "403": "Przepraszamy, serwer odrzucił Twoje żądanie, nie masz uprawnień dostępu do tego zasobu",
+    "404": "Przepraszamy, serwer nie może odnaleźć żądanej strony lub zasobu. Proszę sprawdź, czy URL jest poprawny",
+    "405": "Przepraszamy, serwer nie obsługuje używanej metody żądania. Proszę sprawdź, czy metoda żądania jest poprawna",
+    "429": "Przepraszamy, Twoje żądanie jest zbyt częste, serwer jest trochę przeciążony. Proszę spróbuj ponownie później",
+    "500": "Przepraszamy, serwer napotkał pewne trudności i tymczasowo nie może zrealizować Twojego żądania. Proszę spróbuj ponownie później",
+    "502": "Przepraszamy, serwer wydaje się zgubić kierunek i tymczasowo nie może świadczyć usług. Proszę spróbuj ponownie później",
+    "503": "Przepraszamy, serwer tymczasowo nie może przetworzyć Twojego żądania, prawdopodobnie z powodu przeciążenia lub konserwacji. Proszę spróbuj ponownie później",
+    "504": "Przepraszamy, serwer nie otrzymał odpowiedzi od serwera nadrzędnego. Proszę spróbuj ponownie później",
+    "InvalidAccessCode": "Nieprawidłowe lub puste hasło dostępu. Proszę podaj poprawne hasło dostępu lub dodaj niestandardowy klucz API OpenAI",
+    "NoAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
+    "OpenAIBizError": "Błąd żądania usługi OpenAI. Proszę sprawdź poniższe informacje i spróbuj ponownie",
+    "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
+    "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",
+    "PluginGatewayError": "Przepraszamy, wystąpił błąd bramy wtyczki. Proszę sprawdź, czy konfiguracja bramy wtyczki jest poprawna",
+    "PluginManifestInvalid": "Przepraszamy, walidacja manifestu opisowego wtyczki nie powiodła się. Proszę sprawdź, czy format pliku opisowego wtyczki jest zgodny z normami",
+    "PluginManifestNotFound": "Przepraszamy, serwer nie odnalazł manifestu opisowego wtyczki (manifest.json). Proszę sprawdź, czy adres pliku opisowego wtyczki jest poprawny",
+    "PluginMarketIndexInvalid": "Przepraszamy, walidacja indeksu wtyczek nie powiodła się. Proszę sprawdź, czy format pliku indeksu jest zgodny z normami",
+    "PluginMarketIndexNotFound": "Przepraszamy, serwer nie odnalazł indeksu wtyczek. Proszę sprawdź, czy adres indeksu jest poprawny",
+    "PluginMetaInvalid": "Przepraszamy, walidacja metadanych wtyczki nie powiodła się. Proszę sprawdź, czy format metadanych wtyczki jest zgodny z normami",
+    "PluginMetaNotFound": "Przepraszamy, nie znaleziono metadanych wtyczki w indeksie. Sprawdź, czy informacje konfiguracyjne wtyczki są obecne w indeksie",
+    "PluginOpenApiInitError": "Przepraszamy, inicjalizacja klienta OpenAPI nie powiodła się. Proszę sprawdź, czy informacje konfiguracyjne OpenAPI są poprawne",
+    "PluginServerError": "Błąd zwrócony przez serwer wtyczki. Proszę sprawdź plik opisowy wtyczki, konfigurację wtyczki lub implementację serwera zgodnie z poniższymi informacjami o błędzie",
+    "PluginSettingsInvalid": "Ta wtyczka wymaga poprawnej konfiguracji przed użyciem. Proszę sprawdź, czy Twoja konfiguracja jest poprawna"
+  },
+  "stt": {
+    "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
+  },
+  "tts": {
+    "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "Dodaj adres proxy OpenAI (opcjonalne)",
+      "description": "Wprowadź swój klucz API OpenAI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
+      "title": "Użyj niestandardowego klucza API"
+    },
+    "closeMessage": "Zamknij komunikat",
+    "confirm": "Potwierdź i spróbuj ponownie",
+    "password": {
+      "description": "Administrator włączył szyfrowanie aplikacji. Po wprowadzeniu hasła aplikacja zostanie odblokowana. Hasło należy wprowadzić tylko raz.",
+      "placeholder": "Wprowadź hasło",
+      "title": "Wprowadź hasło, aby odblokować aplikację"
+    }
+  }
+}

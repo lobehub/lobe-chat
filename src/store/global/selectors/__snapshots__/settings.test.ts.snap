@@ -147,6 +147,11 @@ exports[`settingsSelectors > currentSettings > should merge DEFAULT_SETTINGS and
   "password": "password123",
   "primaryColor": "blue",
   "themeMode": "light",
+  "tool": {
+    "dalle": {
+      "autoGenerate": false,
+    },
+  },
   "tts": {
     "openAI": {
       "sttModel": "whisper-1",

@@ -1,6 +1,6 @@
 import type { Locales } from '@/types/locale';
 
-import _resources from './resources';
+import { locales } from './resources';
 
 type LocaleOptions = {
   label: string;
@@ -45,21 +45,25 @@ export const localeOptions: LocaleOptions = [
     value: 'pt-BR',
   },
   {
-    label: 'Russian',
+    label: 'Русский',
     value: 'ru-RU',
   },
   {
-    label: 'Turkish',
+    label: 'Türkçe',
     value: 'tr-TR',
+  },
+  {
+    label: 'Polski',
+    value: 'pl-PL',
+  },
+  {
+    label: 'Nederlands',
+    value: 'nl-NL',
+  },
+  {
+    label: 'Italiano',
+    value: 'it-IT',
   },
 ] as LocaleOptions;
 
-export const supportLangs: string[] = localeOptions.map((i) => i.value);
-
-export const resources = {
-  ..._resources,
-  en: _resources['en-US'],
-  zh: _resources['zh-CN'],
-};
-
-export const supportLocales = Object.keys(resources);
+export const supportLocales: string[] = [...locales, 'en', 'zh'];

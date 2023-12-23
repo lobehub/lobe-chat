@@ -1,11 +1,9 @@
 import { consola } from 'consola';
 import { colors } from 'consola/utils';
-import { tocForResources } from 'i18next-resources-for-ts';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import i18nConfig from '../../.i18nrc';
-import { srcLocalesResources } from './const';
 
 export const readJSON = (filePath: string) => {
   const data = readFileSync(filePath, 'utf8');
@@ -46,15 +44,6 @@ export const genNamespaceList = (files: string[], locale: string) => {
     name: file.replace('.json', ''),
     path: resolve(i18nConfig.output, locale, file),
   }));
-};
-
-export const genToc = (files: string[], locale: string) => {
-  const ns = genNamespaceList(files, locale);
-  let toc = tocForResources(ns, srcLocalesResources).replaceAll('\\', '/');
-  if (locale === i18nConfig.entryLocale) {
-    toc = toc.replaceAll('.json', '').replaceAll('../../../locales/zh_CN', '../default');
-  }
-  return toc;
 };
 
 export const tagBlue = (text: string) => colors.bgBlueBright(colors.black(` ${text} `));

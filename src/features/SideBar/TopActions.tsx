@@ -1,6 +1,6 @@
 import { ActionIcon } from '@lobehub/ui';
 import { Bot, MessageSquare } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,37 +14,39 @@ export interface TopActionProps {
 }
 
 const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
-  const pathname = usePathname();
-  const router = useRouter();
   const { t } = useTranslation('common');
   const switchBackToChat = useSessionStore((s) => s.switchBackToChat);
+
   return (
     <>
-      <ActionIcon
-        active={tab === SidebarTabKey.Chat}
-        icon={MessageSquare}
-        onClick={() => {
-          // 如果已经在 chat 路径下了，那么就不用再跳转了
-          if (pathname?.startsWith('/chat')) return;
+      <Link
+        href={'/chat'}
+        onClick={(e) => {
+          e.preventDefault();
           switchBackToChat();
           setTab(SidebarTabKey.Chat);
         }}
-        placement={'right'}
-        size="large"
-        title={t('tab.chat')}
-      />
-      <ActionIcon
-        active={tab === SidebarTabKey.Market}
-        icon={Bot}
-        onClick={() => {
-          if (pathname?.startsWith('/market')) return;
-          router.push('/market');
-          setTab(SidebarTabKey.Market);
-        }}
-        placement={'right'}
-        size="large"
-        title={t('tab.market')}
-      />
+      >
+        <ActionIcon
+          active={tab === SidebarTabKey.Chat}
+          icon={MessageSquare}
+          placement={'right'}
+          size="large"
+          title={t('tab.chat')}
+        />
+      </Link>
+      <Link href={'/market'}>
+        <ActionIcon
+          active={tab === SidebarTabKey.Market}
+          icon={Bot}
+          onClick={() => {
+            setTab(SidebarTabKey.Market);
+          }}
+          placement={'right'}
+          size="large"
+          title={t('tab.market')}
+        />
+      </Link>
     </>
   );
 });
