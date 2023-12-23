@@ -335,7 +335,10 @@ export const chatMessage: StateCreator<
       preprocessMsgs.unshift({ content: config.systemRole, role: 'system' } as ChatMessage);
     }
 
-    // 4. handle config for the vision model
+    // 4. handle max_tokens
+    config.params.max_tokens = config.enableMaxTokens ? config.params.max_tokens : undefined;
+
+    // 5. handle config for the vision model
     // Due to vision model's default max_tokens is very small
     // we need to set the max_tokens a larger one.
     if (VISION_MODEL_WHITE_LIST.includes(config.model)) {

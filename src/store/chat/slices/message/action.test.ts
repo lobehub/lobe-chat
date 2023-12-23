@@ -63,54 +63,45 @@ afterEach(() => {
 });
 
 describe('chatMessage actions', () => {
-  it('clearMessage should remove messages from the active session and topic', async () => {
-    const { result } = renderHook(() => useChatStore());
-    const clearSpy = vi.spyOn(result.current, 'clearMessage');
-    const switchTopicSpy = vi.spyOn(result.current, 'switchTopic');
+  describe('deleteMessage', () => {
+    it('deleteMessage should remove a message by id', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const deleteSpy = vi.spyOn(result.current, 'deleteMessage');
 
-    await act(async () => {
-      await result.current.clearMessage();
+      await act(async () => {
+        await result.current.deleteMessage(messageId);
+      });
+
+      expect(deleteSpy).toHaveBeenCalledWith(messageId);
+      expect(result.current.refreshMessages).toHaveBeenCalled();
     });
-
-    expect(clearSpy).toHaveBeenCalled();
-    expect(result.current.refreshMessages).toHaveBeenCalled();
-    expect(result.current.refreshTopic).toHaveBeenCalled();
-    expect(switchTopicSpy).toHaveBeenCalled();
   });
 
-  it('deleteMessage should remove a message by id', async () => {
-    const { result } = renderHook(() => useChatStore());
-    const messageId = 'message-id';
-    const deleteSpy = vi.spyOn(result.current, 'deleteMessage');
+  describe('clearAllMessages', () => {
+    it('clearAllMessages should remove all messages', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const clearAllSpy = vi.spyOn(result.current, 'clearAllMessages');
 
-    await act(async () => {
-      await result.current.deleteMessage(messageId);
+      await act(async () => {
+        await result.current.clearAllMessages();
+      });
+
+      expect(clearAllSpy).toHaveBeenCalled();
+      expect(result.current.refreshMessages).toHaveBeenCalled();
     });
-
-    expect(deleteSpy).toHaveBeenCalledWith(messageId);
-    expect(result.current.refreshMessages).toHaveBeenCalled();
   });
 
-  it('clearAllMessages should remove all messages', async () => {
-    const { result } = renderHook(() => useChatStore());
-    const clearAllSpy = vi.spyOn(result.current, 'clearAllMessages');
+  describe('updateInputMessage', () => {
+    it('updateInputMessage should update the input message state', () => {
+      const { result } = renderHook(() => useChatStore());
+      const newInputMessage = 'Updated message';
+      act(() => {
+        result.current.updateInputMessage(newInputMessage);
+      });
 
-    await act(async () => {
-      await result.current.clearAllMessages();
+      expect(result.current.inputMessage).toEqual(newInputMessage);
     });
-
-    expect(clearAllSpy).toHaveBeenCalled();
-    expect(result.current.refreshMessages).toHaveBeenCalled();
-  });
-
-  it('updateInputMessage should update the input message state', () => {
-    const { result } = renderHook(() => useChatStore());
-    const newInputMessage = 'Updated message';
-    act(() => {
-      result.current.updateInputMessage(newInputMessage);
-    });
-
-    expect(result.current.inputMessage).toEqual(newInputMessage);
   });
 
   describe('clearMessage', () => {
@@ -121,6 +112,20 @@ describe('chatMessage actions', () => {
 
     afterEach(() => {
       vi.restoreAllMocks(); // 恢复所有模拟
+    });
+    it('clearMessage should remove messages from the active session and topic', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const clearSpy = vi.spyOn(result.current, 'clearMessage');
+      const switchTopicSpy = vi.spyOn(result.current, 'switchTopic');
+
+      await act(async () => {
+        await result.current.clearMessage();
+      });
+
+      expect(clearSpy).toHaveBeenCalled();
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(result.current.refreshTopic).toHaveBeenCalled();
+      expect(switchTopicSpy).toHaveBeenCalled();
     });
 
     it('should remove messages from the active session and topic, then refresh topics and messages', async () => {

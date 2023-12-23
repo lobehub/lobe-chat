@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.115.6](https://github.com/lobehub/lobe-chat/compare/v0.115.5...v0.115.6)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix maxTokens params still work when disable enableMaxTokens.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix maxTokens params still work when disable enableMaxTokens, closes [#779](https://github.com/lobehub/lobe-chat/issues/779) ([20956ea](https://github.com/lobehub/lobe-chat/commit/20956ea))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.115.5](https://github.com/lobehub/lobe-chat/compare/v0.115.4...v0.115.5)
 
 <sup>Released on **2023-12-23**</sup>
