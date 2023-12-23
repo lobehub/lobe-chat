@@ -12,7 +12,7 @@ import { CustomModels, GlobalSettings } from '@/types/settings';
 import { isOnServerSide } from '@/utils/env';
 import { merge } from '@/utils/merge';
 
-import { GlobalStore } from '../store';
+import { GlobalStore } from '../../store';
 
 const currentSettings = (s: GlobalStore) => merge(DEFAULT_SETTINGS, s.settings);
 

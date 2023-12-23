@@ -9,18 +9,16 @@ import { isDev } from '@/utils/env';
 
 import { createHyperStorage } from '../middleware/createHyperStorage';
 import { type GlobalState, initialState } from './initialState';
-import { type AgentAction, createAgentSlice } from './slices/agent';
-import { type CommonAction, createCommonSlice } from './slices/common';
-import { type SettingsAction, createSettingsSlice } from './slices/settings';
+import { type CommonAction, createCommonSlice } from './slices/common/action';
+import { type SettingsAction, createSettingsSlice } from './slices/settings/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type GlobalStore = CommonAction & GlobalState & AgentAction & SettingsAction;
+export type GlobalStore = CommonAction & GlobalState & SettingsAction;
 
 const createStore: StateCreator<GlobalStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createCommonSlice(...parameters),
-  ...createAgentSlice(...parameters),
   ...createSettingsSlice(...parameters),
 });
 
