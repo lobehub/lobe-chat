@@ -48,7 +48,7 @@ export const createSettingsSlice: StateCreator<
   importAppSettings: (importAppSettings) => {
     const { setSettings } = get();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { OPENAI_API_KEY: _, password: __, ...settings } = importAppSettings;
+    const { password: _, ...settings } = importAppSettings;
 
     setSettings({
       ...settings,

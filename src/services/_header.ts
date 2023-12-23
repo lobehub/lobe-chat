@@ -11,8 +11,8 @@ import { useGlobalStore } from '@/store/global';
 export const createHeaderWithOpenAI = (header?: HeadersInit): HeadersInit => {
   const openai = useGlobalStore.getState().settings.languageModel.openAI;
 
-  const apiKey = openai.OPENAI_API_KEY || useGlobalStore.getState().settings.OPENAI_API_KEY || '';
-  const endpoint = openai.endpoint || useGlobalStore.getState().settings.endpoint || '';
+  const apiKey = openai.OPENAI_API_KEY || '';
+  const endpoint = openai.endpoint || '';
 
   // eslint-disable-next-line no-undef
   const result: HeadersInit = {

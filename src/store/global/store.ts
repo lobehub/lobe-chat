@@ -36,24 +36,12 @@ const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
         if (!draft.defaultAgent) {
           draft.defaultAgent = DEFAULT_AGENT;
         }
-        delete draft.enableMaxTokens;
-        delete draft.enableHistoryCount;
-        delete draft.historyCount;
-        delete draft.enableCompressThreshold;
-        delete draft.compressThreshold;
 
         // migration to new data model
         if (!draft.languageModel) {
           draft.languageModel = {
-            openAI: {
-              ...DEFAULT_LLM_CONFIG.openAI,
-              OPENAI_API_KEY: draft.OPENAI_API_KEY || DEFAULT_LLM_CONFIG.openAI.OPENAI_API_KEY,
-              endpoint: draft.endpoint || DEFAULT_LLM_CONFIG.openAI.OPENAI_API_KEY,
-            },
+            openAI: DEFAULT_LLM_CONFIG.openAI,
           };
-
-          delete draft.OPENAI_API_KEY;
-          delete draft.endpoint;
         }
       }),
     };
