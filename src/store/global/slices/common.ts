@@ -5,6 +5,7 @@ import type { StateCreator } from 'zustand/vanilla';
 
 import { CURRENT_VERSION } from '@/const/version';
 import { globalService } from '@/services/global';
+import type { GlobalServerConfig } from '@/types/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -28,6 +29,7 @@ export interface CommonAction {
   updateGuideState: (guide: Partial<Guide>) => void;
   updatePreference: (preference: Partial<GlobalPreference>, action?: string) => void;
   useCheckLatestVersion: () => SWRResponse<string>;
+  useFetchGlobalConfig: () => SWRResponse;
 }
 
 export const createCommonSlice: StateCreator<
@@ -77,5 +79,12 @@ export const createCommonSlice: StateCreator<
         if (gt(data, CURRENT_VERSION))
           set({ hasNewVersion: true, latestVersion: data }, false, n('checkLatestVersion'));
       },
+    }),
+  useFetchGlobalConfig: () =>
+    useSWR<GlobalServerConfig>('fetchGlobalConfig', globalService.getGlobalConfig, {
+      onSuccess: (data) => {
+        if (data) set({ serverConfig: data });
+      },
+      revalidateOnFocus: false,
     }),
 });

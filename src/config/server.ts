@@ -5,6 +5,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       ACCESS_CODE?: string;
+      CUSTOM_MODELS?: string;
 
       OPENAI_API_KEY?: string;
       OPENAI_PROXY_URL?: string;
@@ -14,6 +15,9 @@ declare global {
       USE_AZURE_OPENAI?: string;
 
       IMGUR_CLIENT_ID?: string;
+
+      AGENTS_INDEX_URL?: string;
+      PLUGINS_INDEX_URL?: string;
     }
   }
 }
@@ -24,7 +28,7 @@ const DEFAULT_IMAGUR_CLIENT_ID = 'e415f320d6e24f9';
 
 export const getServerConfig = () => {
   if (typeof process === 'undefined') {
-    throw new Error('[Server Config] you are importing a nodejs-only module outside of nodejs');
+    throw new Error('[Server Config] you are importing a server-only module outside of server');
   }
 
   // region format: iad1,sfo1
@@ -37,6 +41,7 @@ export const getServerConfig = () => {
 
   return {
     ACCESS_CODES,
+    CUSTOM_MODELS: process.env.CUSTOM_MODELS,
 
     SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODES.length,
 
@@ -49,5 +54,13 @@ export const getServerConfig = () => {
     USE_AZURE_OPENAI: process.env.USE_AZURE_OPENAI === '1',
 
     IMGUR_CLIENT_ID: process.env.IMGUR_CLIENT_ID || DEFAULT_IMAGUR_CLIENT_ID,
+
+    AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL
+      ? process.env.AGENTS_INDEX_URL
+      : 'https://chat-agents.lobehub.com',
+
+    PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
+      ? process.env.PLUGINS_INDEX_URL
+      : 'https://chat-plugins.lobehub.com',
   };
 };

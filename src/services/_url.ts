@@ -1,4 +1,5 @@
 export const URLS = {
+  config: '/api/config',
   market: '/api/market',
   plugins: '/api/plugins',
 };
