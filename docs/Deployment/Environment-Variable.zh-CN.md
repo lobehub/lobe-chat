@@ -6,7 +6,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 
 - [通用变量](#通用变量)
   - [`ACCESS_CODE`](#access_code)
-  - [`NEXT_PUBLIC_CUSTOM_MODELS`](#next_public_custom_models)
+  - [`CUSTOM_MODELS`](#custom_models)
 - [OpenAI](#openai)
   - [`OPENAI_API_KEY`](#openai_api_key)
   - [`OPENAI_PROXY_URL`](#openai_proxy_url)
@@ -31,7 +31,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值：-
 - 示例：`awCTe)re_r74` or `rtrt_ewee3@09!`
 
-### `NEXT_PUBLIC_CUSTOM_MODELS`
+### `CUSTOM_MODELS`
 
 - 类型：可选
 - 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。

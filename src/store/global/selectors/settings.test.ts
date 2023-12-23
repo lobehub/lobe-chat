@@ -61,12 +61,13 @@ describe('settingsSelectors', () => {
   describe('CUSTOM_MODELS', () => {
     it('custom deletion, addition, and renaming of models', () => {
       const s = {
+        serverConfig: {
+          customModelName:
+            '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-1106-preview=gpt-4-turbo,gpt-4-1106-preview=gpt-4-32k',
+        },
         settings: {
           languageModel: {
-            openAI: {
-              customModelName:
-                '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-1106-preview=gpt-4-turbo,gpt-4-1106-preview=gpt-4-32k',
-            },
+            openAI: {},
           },
         },
       } as unknown as GlobalStore;
@@ -78,6 +79,7 @@ describe('settingsSelectors', () => {
 
     it('duplicate naming model', () => {
       const s = {
+        serverConfig: {},
         settings: {
           languageModel: {
             openAI: {
@@ -94,6 +96,7 @@ describe('settingsSelectors', () => {
 
     it('only add the model', () => {
       const s = {
+        serverConfig: {},
         settings: {
           languageModel: {
             openAI: {

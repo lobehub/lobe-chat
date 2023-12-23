@@ -9,29 +9,6 @@ vi.stubGlobal('process', {
 });
 
 describe('getClientConfig', () => {
-  it('should return default URLs when no environment variables are set', () => {
-    const config = getClientConfig();
-    expect(config.AGENTS_INDEX_URL).toBe('https://chat-agents.lobehub.com');
-    expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
-  });
-
-  it('should return custom URLs when environment variables are set', () => {
-    process.env.AGENTS_INDEX_URL = 'https://custom-agents-url.com';
-    process.env.PLUGINS_INDEX_URL = 'https://custom-plugins-url.com';
-    const config = getClientConfig();
-    expect(config.AGENTS_INDEX_URL).toBe('https://custom-agents-url.com');
-    expect(config.PLUGINS_INDEX_URL).toBe('https://custom-plugins-url.com');
-  });
-
-  it('should return default URLs when environment variables are empty string', () => {
-    process.env.AGENTS_INDEX_URL = '';
-    process.env.PLUGINS_INDEX_URL = '';
-
-    const config = getClientConfig();
-    expect(config.AGENTS_INDEX_URL).toBe('https://chat-agents.lobehub.com');
-    expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
-  });
-
   it('should correctly reflect boolean values for analytics flags', () => {
     process.env.NEXT_PUBLIC_ANALYTICS_VERCEL = '1';
     process.env.NEXT_PUBLIC_VERCEL_DEBUG = '1';

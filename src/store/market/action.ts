@@ -3,7 +3,7 @@ import { produce } from 'immer';
 import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { getAgentList, getAgentManifest } from '@/services/agentMarket';
+import { marketService } from '@/services/market';
 import { globalHelpers } from '@/store/global/helpers';
 import { AgentsMarketItem, LobeChatAgentsMarketIndex } from '@/types/market';
 
@@ -47,7 +47,7 @@ export const createMarketAction: StateCreator<
   useFetchAgent: (identifier) =>
     useSWR<AgentsMarketItem>(
       [identifier, globalHelpers.getCurrentLanguage()],
-      ([id, locale]) => getAgentManifest(id, locale as string),
+      ([id, locale]) => marketService.getAgentManifest(id, locale as string),
       {
         onError: () => {
           get().deactivateAgent();
@@ -58,13 +58,17 @@ export const createMarketAction: StateCreator<
       },
     ),
   useFetchAgentList: () =>
-    useSWR<LobeChatAgentsMarketIndex>(globalHelpers.getCurrentLanguage(), getAgentList, {
-      onSuccess: (agentMarketIndex) => {
-        set(
-          { agentList: agentMarketIndex.agents, tagList: agentMarketIndex.tags },
-          false,
-          'useFetchAgentList',
-        );
+    useSWR<LobeChatAgentsMarketIndex>(
+      globalHelpers.getCurrentLanguage(),
+      marketService.getAgentList,
+      {
+        onSuccess: (agentMarketIndex) => {
+          set(
+            { agentList: agentMarketIndex.agents, tagList: agentMarketIndex.tags },
+            false,
+            'useFetchAgentList',
+          );
+        },
       },
-    }),
+    ),
 });

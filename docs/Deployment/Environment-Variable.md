@@ -6,7 +6,7 @@ LobeChat provides additional configuration options during deployment, which can 
 
 - [General Variables](#general-variables)
   - [`ACCESS_CODE`](#access_code)
-  - [`NEXT_PUBLIC_CUSTOM_MODELS`](#next_public_custom_models)
+  - [`CUSTOM_MODELS`](#custom_models)
 - [OpenAI](#openai)
   - [`OPENAI_API_KEY`](#openai_api_key)
   - [`OPENAI_PROXY_URL`](#openai_proxy_url)
@@ -31,7 +31,7 @@ LobeChat provides additional configuration options during deployment, which can 
 - Default: `-`
 - Example: `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`
 
-### `NEXT_PUBLIC_CUSTOM_MODELS`
+### `CUSTOM_MODELS`
 
 - Type: Optional
 - Description: Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas.

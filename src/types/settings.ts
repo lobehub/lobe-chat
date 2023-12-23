@@ -91,3 +91,7 @@ export interface GlobalSettings extends GlobalBaseSettings {
 }
 
 export type ConfigKeys = keyof GlobalSettings;
+
+export interface GlobalServerConfig {
+  customModelName?: string;
+}
