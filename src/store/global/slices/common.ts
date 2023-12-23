@@ -83,7 +83,7 @@ export const createCommonSlice: StateCreator<
   useFetchGlobalConfig: () =>
     useSWR<GlobalServerConfig>('fetchGlobalConfig', globalService.getGlobalConfig, {
       onSuccess: (data) => {
-        set({ serverConfig: data });
+        if (data) set({ serverConfig: data });
       },
       revalidateOnFocus: false,
     }),
