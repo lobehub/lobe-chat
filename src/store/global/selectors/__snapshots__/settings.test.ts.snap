@@ -136,7 +136,6 @@ exports[`settingsSelectors > currentSettings > should merge DEFAULT_SETTINGS and
   "languageModel": {
     "openAI": {
       "OPENAI_API_KEY": "openai-api-key",
-      "customModelName": undefined,
       "endpoint": "https://openai-endpoint.com",
       "models": [
         "gpt-3.5-turbo",

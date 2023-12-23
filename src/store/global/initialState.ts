@@ -1,5 +1,5 @@
 import { DEFAULT_SETTINGS } from '@/const/settings';
-import type { GlobalSettings } from '@/types/settings';
+import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
 
 export enum SidebarTabKey {
   Chat = 'chat',
@@ -38,6 +38,7 @@ export interface GlobalState {
    *  @localStorage
    */
   preference: GlobalPreference;
+  serverConfig: GlobalServerConfig;
   /**
    * @localStorage
    * 用户设置
@@ -58,6 +59,7 @@ export const initialState: GlobalState = {
     showSessionPanel: true,
     showSystemRole: false,
   },
+  serverConfig: {},
   settings: DEFAULT_SETTINGS,
   settingsTab: SettingsTabs.Common,
   sidebarKey: SidebarTabKey.Chat,
