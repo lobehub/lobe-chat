@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.115.7](https://github.com/lobehub/lobe-chat/compare/v0.115.6...v0.115.7)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix auto scrolling when generating message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix auto scrolling when generating message, closes [#785](https://github.com/lobehub/lobe-chat/issues/785) ([1a236e6](https://github.com/lobehub/lobe-chat/commit/1a236e6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.115.6](https://github.com/lobehub/lobe-chat/compare/v0.115.5...v0.115.6)
 
 <sup>Released on **2023-12-23**</sup>
