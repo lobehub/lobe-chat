@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ChatMessageError } from '@/types/chatMessage';
+import { ChatMessageError } from '@/types/message';
 
 interface PlayerProps extends AudioPlayerProps {
   error?: ChatMessageError;

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { chatService } from '@/services/chat';
-import { ChatMessageError } from '@/types/chatMessage';
+import { ChatMessageError } from '@/types/message';
 
 import { getModelList } from './getModelList';
 

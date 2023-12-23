@@ -7,7 +7,7 @@ import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { ChatPluginPayload } from '@/types/chatMessage';
+import { ChatPluginPayload } from '@/types/message';
 import { OpenAIFunctionCall } from '@/types/openai/functionCall';
 import { setNamespace } from '@/utils/storeDebug';
 

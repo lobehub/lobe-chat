@@ -1,4 +1,4 @@
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 
 export interface ChatMessageState {
   abortController?: AbortController;
