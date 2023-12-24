@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { ChatTranslate } from '@/types/chatMessage';
+import { ChatTranslate } from '@/types/message';
 
 import BubblesLoading from '../Loading';
 

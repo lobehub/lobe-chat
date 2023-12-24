@@ -17,11 +17,10 @@ import PluginTag from '../../features/ChatHeader/PluginTag';
 import SettingButton from '../../features/ChatHeader/SettingButton';
 import ShareButton from '../../features/ChatHeader/ShareButton';
 
-const Header = memo(() => {
+const Left = memo(() => {
+  const { t } = useTranslation('chat');
   const init = useSessionChatInit();
   const router = useRouter();
-
-  const { t } = useTranslation('chat');
 
   const [isInbox, title, description, avatar, backgroundColor, model, plugins] = useSessionStore(
     (s) => [
@@ -35,66 +34,67 @@ const Header = memo(() => {
     ],
   );
 
+  const displayTitle = isInbox ? t('inbox.title') : title;
+  const displayDesc = isInbox ? t('inbox.desc') : description;
+
+  return !init ? (
+    <Flexbox horizontal>
+      <Skeleton
+        active
+        avatar={{ shape: 'circle', size: 'default' }}
+        paragraph={false}
+        title={{ style: { margin: 0, marginTop: 8 }, width: 200 }}
+      />
+    </Flexbox>
+  ) : (
+    <Flexbox align={'flex-start'} gap={12} horizontal>
+      <Avatar
+        avatar={avatar}
+        background={backgroundColor}
+        onClick={() =>
+          isInbox
+            ? router.push('/settings/agent')
+            : router.push(pathString('/chat/settings', { hash: location.hash }))
+        }
+        size={40}
+        title={title}
+      />
+      <ChatHeaderTitle
+        desc={displayDesc}
+        tag={
+          <>
+            <Tag icon={<SiOpenai size={'1em'} />}>{model}</Tag>
+            {plugins?.length > 0 && <PluginTag plugins={plugins} />}
+          </>
+        }
+        title={displayTitle}
+      />
+    </Flexbox>
+  );
+});
+
+const Right = memo(() => {
+  const { t } = useTranslation('chat');
+
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.preference.showChatSideBar,
     s.toggleChatSideBar,
   ]);
 
-  const displayTitle = isInbox ? t('inbox.title') : title;
-  const displayDesc = isInbox ? t('inbox.desc') : description;
-
   return (
-    <ChatHeader
-      left={
-        !init ? (
-          <Flexbox horizontal>
-            <Skeleton
-              active
-              avatar={{ shape: 'circle', size: 'default' }}
-              paragraph={false}
-              title={{ style: { margin: 0, marginTop: 8 }, width: 200 }}
-            />
-          </Flexbox>
-        ) : (
-          <Flexbox align={'flex-start'} gap={12} horizontal>
-            <Avatar
-              avatar={avatar}
-              background={backgroundColor}
-              onClick={() =>
-                isInbox
-                  ? router.push('/settings/agent')
-                  : router.push(pathString('/chat/settings', { hash: location.hash }))
-              }
-              size={40}
-              title={title}
-            />
-            <ChatHeaderTitle
-              desc={displayDesc}
-              tag={
-                <>
-                  <Tag icon={<SiOpenai size={'1em'} />}>{model}</Tag>
-                  {plugins?.length > 0 && <PluginTag plugins={plugins} />}
-                </>
-              }
-              title={displayTitle}
-            />
-          </Flexbox>
-        )
-      }
-      right={
-        <>
-          <ShareButton />
-          <ActionIcon
-            icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
-            onClick={() => toggleConfig()}
-            size={DESKTOP_HEADER_ICON_SIZE}
-            title={t('roleAndArchive')}
-          />
-          <SettingButton />
-        </>
-      }
-    />
+    <>
+      <ShareButton />
+      <ActionIcon
+        icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
+        onClick={() => toggleConfig()}
+        size={DESKTOP_HEADER_ICON_SIZE}
+        title={t('roleAndArchive')}
+      />
+      <SettingButton />
+    </>
   );
 });
+
+const Header = memo(() => <ChatHeader left={<Left />} right={<Right />} />);
 
 export default Header;

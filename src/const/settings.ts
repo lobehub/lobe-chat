@@ -1,4 +1,3 @@
-import { getClientConfig } from '@/config/client';
 import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
@@ -52,8 +51,6 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
 export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   openAI: {
     OPENAI_API_KEY: '',
-    // support user custom model names with env var
-    customModelName: getClientConfig().CUSTOM_MODELS,
     models: DEFAULT_OPENAI_MODEL_LIST,
   },
 };
@@ -72,9 +69,16 @@ export const DEFAULT_TTS_CONFIG: GlobalTTSConfig = {
   sttServer: 'openai',
 };
 
+export const DEFAULT_TOOL_CONFIG = {
+  dalle: {
+    autoGenerate: false,
+  },
+};
+
 export const DEFAULT_SETTINGS: GlobalSettings = {
   defaultAgent: DEFAULT_AGENT,
   languageModel: DEFAULT_LLM_CONFIG,
+  tool: DEFAULT_TOOL_CONFIG,
   tts: DEFAULT_TTS_CONFIG,
   ...DEFAULT_BASE_SETTINGS,
 };

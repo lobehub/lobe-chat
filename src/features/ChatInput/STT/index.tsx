@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useSTT } from '@/hooks/useSTT';
 import { useChatStore } from '@/store/chat';
-import { ChatMessageError } from '@/types/chatMessage';
+import { ChatMessageError } from '@/types/message';
 import { getMessageError } from '@/utils/fetch';
 
 const useStyles = createStyles(({ css, token }) => ({

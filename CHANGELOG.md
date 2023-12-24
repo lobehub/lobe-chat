@@ -2,6 +2,206 @@
 
 # Changelog
 
+### [Version 0.115.7](https://github.com/lobehub/lobe-chat/compare/v0.115.6...v0.115.7)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix auto scrolling when generating message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix auto scrolling when generating message, closes [#785](https://github.com/lobehub/lobe-chat/issues/785) ([1a236e6](https://github.com/lobehub/lobe-chat/commit/1a236e6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.6](https://github.com/lobehub/lobe-chat/compare/v0.115.5...v0.115.6)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix maxTokens params still work when disable enableMaxTokens.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix maxTokens params still work when disable enableMaxTokens, closes [#779](https://github.com/lobehub/lobe-chat/issues/779) ([20956ea](https://github.com/lobehub/lobe-chat/commit/20956ea))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.5](https://github.com/lobehub/lobe-chat/compare/v0.115.4...v0.115.5)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix image display error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix image display error, closes [#777](https://github.com/lobehub/lobe-chat/issues/777) ([08659d6](https://github.com/lobehub/lobe-chat/commit/08659d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.4](https://github.com/lobehub/lobe-chat/compare/v0.115.3...v0.115.4)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the ChatMessage type.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the ChatMessage type ([40375bd](https://github.com/lobehub/lobe-chat/commit/40375bd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.3](https://github.com/lobehub/lobe-chat/compare/v0.115.2...v0.115.3)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor and clean global store and chat store.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor and clean global store and chat store, closes [#774](https://github.com/lobehub/lobe-chat/issues/774) ([6120042](https://github.com/lobehub/lobe-chat/commit/6120042))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.2](https://github.com/lobehub/lobe-chat/compare/v0.115.1...v0.115.2)
+
+<sup>Released on **2023-12-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix envs like `CUSTOM_MODELS` don't work with docker deployment.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix envs like `CUSTOM_MODELS` don't work with docker deployment, closes [#773](https://github.com/lobehub/lobe-chat/issues/773) ([54dc18b](https://github.com/lobehub/lobe-chat/commit/54dc18b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.1](https://github.com/lobehub/lobe-chat/compare/v0.115.0...v0.115.1)
+
+<sup>Released on **2023-12-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Lock ui version to fix setting form style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Lock ui version to fix setting form style ([6cdf548](https://github.com/lobehub/lobe-chat/commit/6cdf548))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.115.0](https://github.com/lobehub/lobe-chat/compare/v0.114.9...v0.115.0)
+
+<sup>Released on **2023-12-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Support Dall·E 3.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support Dall·E 3, closes [#697](https://github.com/lobehub/lobe-chat/issues/697) ([e39d199](https://github.com/lobehub/lobe-chat/commit/e39d199))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.114.9](https://github.com/lobehub/lobe-chat/compare/v0.114.8...v0.114.9)
 
 <sup>Released on **2023-12-22**</sup>

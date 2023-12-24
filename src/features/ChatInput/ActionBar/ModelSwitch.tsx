@@ -1,10 +1,12 @@
 import { ActionIcon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
+import isEqual from 'fast-deep-equal';
 import { BrainCog } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { LanguageModel } from '@/types/llm';
@@ -16,7 +18,7 @@ const ModelSwitch = memo(() => {
     return [agentSelectors.currentAgentModel(s), s.updateAgentConfig];
   });
 
-  const modelList = useGlobalStore(settingsSelectors.modelList);
+  const modelList = useGlobalStore(settingsSelectors.modelList, isEqual);
 
   return (
     <Dropdown

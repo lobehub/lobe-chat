@@ -9,18 +9,16 @@ import { isDev } from '@/utils/env';
 
 import { createHyperStorage } from '../middleware/createHyperStorage';
 import { type GlobalState, initialState } from './initialState';
-import { type AgentAction, createAgentSlice } from './slices/agent';
-import { type CommonAction, createCommonSlice } from './slices/common';
-import { type SettingsAction, createSettingsSlice } from './slices/settings';
+import { type CommonAction, createCommonSlice } from './slices/common/action';
+import { type SettingsAction, createSettingsSlice } from './slices/settings/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type GlobalStore = CommonAction & GlobalState & AgentAction & SettingsAction;
+export type GlobalStore = CommonAction & GlobalState & SettingsAction;
 
 const createStore: StateCreator<GlobalStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createCommonSlice(...parameters),
-  ...createAgentSlice(...parameters),
   ...createSettingsSlice(...parameters),
 });
 
@@ -38,24 +36,12 @@ const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
         if (!draft.defaultAgent) {
           draft.defaultAgent = DEFAULT_AGENT;
         }
-        delete draft.enableMaxTokens;
-        delete draft.enableHistoryCount;
-        delete draft.historyCount;
-        delete draft.enableCompressThreshold;
-        delete draft.compressThreshold;
 
         // migration to new data model
         if (!draft.languageModel) {
           draft.languageModel = {
-            openAI: {
-              ...DEFAULT_LLM_CONFIG.openAI,
-              OPENAI_API_KEY: draft.OPENAI_API_KEY || DEFAULT_LLM_CONFIG.openAI.OPENAI_API_KEY,
-              endpoint: draft.endpoint || DEFAULT_LLM_CONFIG.openAI.OPENAI_API_KEY,
-            },
+            openAI: DEFAULT_LLM_CONFIG.openAI,
           };
-
-          delete draft.OPENAI_API_KEY;
-          delete draft.endpoint;
         }
       }),
     };

@@ -3,7 +3,7 @@ import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 
 import { AssistantMessageExtra } from './Assistant';
 

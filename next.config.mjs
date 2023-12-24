@@ -19,10 +19,6 @@ const withPWA = nextPWA({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   compress: isProd,
-  env: {
-    AGENTS_INDEX_URL: process.env.AGENTS_INDEX_URL ?? '',
-    PLUGINS_INDEX_URL: process.env.PLUGINS_INDEX_URL ?? '',
-  },
   experimental: {
     forceSwcTransforms: true,
     optimizePackageImports: [

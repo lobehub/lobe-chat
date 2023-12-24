@@ -21,7 +21,7 @@ describe('getServerConfig', () => {
     global.process = undefined;
 
     expect(() => getServerConfig()).toThrow(
-      '[Server Config] you are importing a nodejs-only module outside of nodejs',
+      '[Server Config] you are importing a server-only module outside of server',
     );
 
     global.process = originalProcess; // Restore the original process object
@@ -54,5 +54,30 @@ describe('getServerConfig', () => {
     process.env.IMGUR_CLIENT_ID = 'custom-client-id';
     const config = getServerConfig();
     expect(config.IMGUR_CLIENT_ID).toBe('custom-client-id');
+  });
+
+  describe('index url', () => {
+    it('should return default URLs when no environment variables are set', () => {
+      const config = getServerConfig();
+      expect(config.AGENTS_INDEX_URL).toBe('https://chat-agents.lobehub.com');
+      expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
+    });
+
+    it('should return custom URLs when environment variables are set', () => {
+      process.env.AGENTS_INDEX_URL = 'https://custom-agents-url.com';
+      process.env.PLUGINS_INDEX_URL = 'https://custom-plugins-url.com';
+      const config = getServerConfig();
+      expect(config.AGENTS_INDEX_URL).toBe('https://custom-agents-url.com');
+      expect(config.PLUGINS_INDEX_URL).toBe('https://custom-plugins-url.com');
+    });
+
+    it('should return default URLs when environment variables are empty string', () => {
+      process.env.AGENTS_INDEX_URL = '';
+      process.env.PLUGINS_INDEX_URL = '';
+
+      const config = getServerConfig();
+      expect(config.AGENTS_INDEX_URL).toBe('https://chat-agents.lobehub.com');
+      expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
+    });
   });
 });

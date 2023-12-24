@@ -1,14 +1,13 @@
+/**
+ * the client config is only used in Vercel deployment
+ */
+
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv {
-      AGENTS_INDEX_URL?: string;
-      PLUGINS_INDEX_URL?: string;
-
-      NEXT_PUBLIC_CUSTOM_MODELS?: string;
-
       NEXT_PUBLIC_ANALYTICS_VERCEL?: string;
       NEXT_PUBLIC_VERCEL_DEBUG?: string;
 
@@ -35,16 +34,6 @@ declare global {
 }
 
 export const getClientConfig = () => ({
-  AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL
-    ? process.env.AGENTS_INDEX_URL
-    : 'https://chat-agents.lobehub.com',
-  PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
-    ? process.env.PLUGINS_INDEX_URL
-    : 'https://chat-plugins.lobehub.com',
-
-  // custom model names
-  CUSTOM_MODELS: process.env.NEXT_PUBLIC_CUSTOM_MODELS,
-
   // Vercel Analytics
   ANALYTICS_VERCEL: process.env.NEXT_PUBLIC_ANALYTICS_VERCEL === '1',
   VERCEL_DEBUG: process.env.NEXT_PUBLIC_VERCEL_DEBUG === '1',

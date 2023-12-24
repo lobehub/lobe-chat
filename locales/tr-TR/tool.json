@@ -1,0 +1,8 @@
+{
+  "dalle": {
+    "autoGenerate": "Otomatik Oluştur",
+    "generate": "Oluştur",
+    "generating": "Oluşturuluyor...",
+    "images": "Görseller:"
+  }
+}

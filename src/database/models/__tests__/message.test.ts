@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { ChatMessage } from '@/types/chatMessage';
+import { ChatMessage } from '@/types/message';
 
 import { CreateMessageParams, MessageModel } from '../message';
 

@@ -4,9 +4,10 @@ import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useToolStore } from '@/store/tool';
-import { pluginSelectors } from '@/store/tool/slices/plugin/selectors';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
