@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.115.8](https://github.com/lobehub/lobe-chat/compare/v0.115.7...v0.115.8)
+
+<sup>Released on **2023-12-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix CUSTOM_MODEL `-` operator not working.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix CUSTOM_MODEL `-` operator not working, closes [#791](https://github.com/lobehub/lobe-chat/issues/791) ([26b968f](https://github.com/lobehub/lobe-chat/commit/26b968f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.115.7](https://github.com/lobehub/lobe-chat/compare/v0.115.6...v0.115.7)
 
 <sup>Released on **2023-12-23**</sup>
