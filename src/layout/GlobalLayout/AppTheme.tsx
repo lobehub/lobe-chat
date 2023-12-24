@@ -1,4 +1,4 @@
-import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@HemertonLabs/ui';
+import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@Lobehub/ui';
 import { ThemeAppearance } from 'antd-style';
 import Image from 'next/image';
 import { ReactNode, memo, useEffect } from 'react';
