@@ -1,7 +1,6 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getPluginIndexJSON } from '@/const/url';
 import { PluginModel } from '@/database/models/plugin';
 import { DB_Plugin } from '@/database/schemas/plugin';
 import { globalHelpers } from '@/store/global/helpers';
@@ -13,9 +12,7 @@ import openAPIV3 from './openai/OpenAPI_V3.json';
 import OpenAIPlugin from './openai/plugin.json';
 
 // Mocking modules and functions
-vi.mock('@/const/url', () => ({
-  getPluginIndexJSON: vi.fn(),
-}));
+
 vi.mock('@/store/global/helpers', () => ({
   globalHelpers: {
     getCurrentLanguage: vi.fn(),
@@ -40,9 +37,7 @@ describe('PluginService', () => {
     it('should fetch and return the plugin list', async () => {
       // Arrange
       const fakeResponse = { plugins: [{ name: 'TestPlugin' }] };
-      const fakeUrl = 'http://fake-url.com/plugins.json';
-      (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('en');
-      (getPluginIndexJSON as Mock).mockReturnValue(fakeUrl);
+      (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('tt');
       global.fetch = vi.fn(() =>
         Promise.resolve({
           json: () => Promise.resolve(fakeResponse),
@@ -54,8 +49,7 @@ describe('PluginService', () => {
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
-      expect(getPluginIndexJSON).toHaveBeenCalledWith('en');
-      expect(fetch).toHaveBeenCalledWith(fakeUrl);
+      expect(fetch).toHaveBeenCalledWith('/api/plugin/store?locale=tt');
       expect(pluginList).toEqual(fakeResponse);
     });
 
@@ -63,7 +57,6 @@ describe('PluginService', () => {
       // Arrange
       const fakeUrl = 'http://fake-url.com/plugins.json';
       (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('en');
-      (getPluginIndexJSON as Mock).mockReturnValue(fakeUrl);
       global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
 
       // Act & Assert
