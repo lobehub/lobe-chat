@@ -31,6 +31,7 @@ const openAIProxyUrlSelectors = (s: GlobalStore) => s.settings.languageModel.ope
 const modelListSelectors = (s: GlobalStore) => {
   let models: CustomModels = [];
 
+  const removedModels: string[] = [];
   const modelNames = [
     ...DEFAULT_OPENAI_MODEL_LIST,
     ...(s.serverConfig.customModelName || '').split(/[,，]/).filter(Boolean),
@@ -47,6 +48,7 @@ const modelListSelectors = (s: GlobalStore) => {
       if (name === 'all') {
         models = [];
       }
+      removedModels.push(name);
       continue;
     }
 
@@ -62,7 +64,7 @@ const modelListSelectors = (s: GlobalStore) => {
     });
   }
 
-  return models;
+  return models.filter((m) => !removedModels.includes(m.name));
 };
 
 export const exportSettings = (s: GlobalStore) => {
