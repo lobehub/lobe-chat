@@ -1,5 +1,7 @@
 import { css } from 'antd-style';
 
+import '@/styles/global.css';
+
 export default ({ prefixCls }: { prefixCls: string }) => css`
   html,
   body,
