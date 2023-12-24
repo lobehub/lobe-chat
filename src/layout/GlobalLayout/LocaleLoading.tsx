@@ -1,4 +1,4 @@
-import { Icon } from '@Hemertonlabs/ui';
+import { Icon } from '@Lobehub/ui';
 import { Loader2 } from 'lucide-react';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
