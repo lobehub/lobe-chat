@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 0.115.9](https://github.com/lobehub/lobe-chat/compare/v0.115.8...v0.115.9)
+
+<sup>Released on **2023-12-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `PLUGINS_INDEX_URL` not working, fix a translation error in Traditional Chinese.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `PLUGINS_INDEX_URL` not working, closes [#793](https://github.com/lobehub/lobe-chat/issues/793) ([152913e](https://github.com/lobehub/lobe-chat/commit/152913e))
+- **misc**: Fix a translation error in Traditional Chinese, closes [#789](https://github.com/lobehub/lobe-chat/issues/789) ([80c02ee](https://github.com/lobehub/lobe-chat/commit/80c02ee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.115.8](https://github.com/lobehub/lobe-chat/compare/v0.115.7...v0.115.8)
 
 <sup>Released on **2023-12-24**</sup>
