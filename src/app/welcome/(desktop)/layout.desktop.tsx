@@ -8,6 +8,7 @@ import AppLayoutDesktop from '@/layout/AppLayout.desktop';
 
 import { useStyles } from '../features/Banner/style';
 
+Logo.displayName = 'AppLogo';
 const Desktop = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   return (
@@ -27,5 +28,5 @@ const Desktop = memo<PropsWithChildren>(({ children }) => {
     </AppLayoutDesktop>
   );
 });
-
+Desktop.displayName = 'WelcomeDesktopLayout';
 export default Desktop;

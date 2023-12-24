@@ -6,18 +6,19 @@ import { Flexbox } from 'react-layout-kit';
 
 import Banner from '@/app/welcome/features/Banner';
 
+GridShowcase.displayName = 'GridShowcase';
 const Showcase = memo(() => (
   <Flexbox
     flex={1}
     justify={'center'}
     style={{ height: '100%', position: 'relative', width: '100%' }}
   >
-    <GridShowcase>
+    <GridShowcase id={'GridShowcase'}>
       <Banner />
     </GridShowcase>
     {/*TODO：暂时隐藏，待模板完成后再补回*/}
     {/*<AgentTemplate width={width} />*/}
   </Flexbox>
 ));
-
+Showcase.displayName = 'Showcase';
 export default Showcase;

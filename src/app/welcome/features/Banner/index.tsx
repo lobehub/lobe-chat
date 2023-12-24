@@ -22,7 +22,6 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
     s.router,
     s.isMobile,
   ]);
-
   return (
     <>
       <div className={styles.container}>
