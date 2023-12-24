@@ -1,6 +1,6 @@
 import { FileModel } from '@/database/models/file';
 import { DB_File } from '@/database/schemas/files';
-import { PROXY_URL } from '@/services/_url';
+import { URLS } from '@/services/_url';
 import { FilePreview } from '@/types/files';
 import compressImage from '@/utils/compressImage';
 
@@ -43,7 +43,7 @@ class FileService {
   }
 
   async uploadImageByUrl(url: string, file: Pick<DB_File, 'name' | 'metadata'>) {
-    const res = await fetch(PROXY_URL, { body: url, method: 'POST' });
+    const res = await fetch(URLS.proxy, { body: url, method: 'POST' });
     const data = await res.arrayBuffer();
     const fileType = res.headers.get('content-type') || 'image/webp';
 
