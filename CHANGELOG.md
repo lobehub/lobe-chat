@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 0.115.12](https://github.com/lobehub/lobe-chat/compare/v0.115.11...v0.115.12)
+
+<sup>Released on **2023-12-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix active setting tab after click agent setting button.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix active setting tab after click agent setting button ([c480fa9](https://github.com/lobehub/lobe-chat/commit/c480fa9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.11](https://github.com/lobehub/lobe-chat/compare/v0.115.10...v0.115.11)
+
+<sup>Released on **2023-12-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent system role modal scrolling when content is too long.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent system role modal scrolling when content is too long, closes [#801](https://github.com/lobehub/lobe-chat/issues/801) ([f482a80](https://github.com/lobehub/lobe-chat/commit/f482a80))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.10](https://github.com/lobehub/lobe-chat/compare/v0.115.9...v0.115.10)
+
+<sup>Released on **2023-12-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix some style problem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix some style problem ([447c006](https://github.com/lobehub/lobe-chat/commit/447c006))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.115.9](https://github.com/lobehub/lobe-chat/compare/v0.115.8...v0.115.9)
 
 <sup>Released on **2023-12-24**</sup>
