@@ -84,6 +84,7 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
             isLoading={isGlobalLoading}
             onInitPlay={start}
             onLoadingStop={stop}
+            showDonload={false}
             showSlider={false}
             showTime={false}
             style={{ flex: 'none', padding: 0, width: 'unset' }}
