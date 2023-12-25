@@ -185,12 +185,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                     | 助手说明                                                                                                                                                      |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Flutter 开发专家](https://chat-preview.lobehub.com/market?agent=flutter-dev)<br/><sup>By **[kamaravichow](https://github.com/kamaravichow)** on **2023-12-25**</sup>        | 一位精通 Flutter 框架和 Dart 编程语言的开发者<br/>`flutter` `development` `dart` `programming` `widgets`                                                      |
 | [Facebook 广告专家](https://chat-preview.lobehub.com/market?agent=facebook-ads-expert)<br/><sup>By **[alissonryan](https://github.com/alissonryan)** on **2023-12-20**</sup> | 与专家一起创建 Facebook 广告<br/>`文案撰写` `facebook广告` `潜在客户生成`                                                                                     |
 | [梦境画家](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                    | 一位能将你的梦想变成现实的梦境艺术家。<br/>`txt-2-img` `painter`                                                                                              |
 | [新闻搜索助手](https://chat-preview.lobehub.com/market?agent=news-hub)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                     | 新闻搜索助手，精通根据用户需求查找和呈现相关新闻。不仅能够搜索新闻，还可以根据用户的要求转变为不同领域的专家，提供精确深入的新闻解读<br/>`新闻` `搜索` `助手` |
-| [研究助理](https://chat-preview.lobehub.com/market?agent=research-assistant)<br/><sup>By **[ccsen](https://github.com/ccsen)** on **2023-12-19**</sup>                       | 能够回答问题，进行研究，起草内容等，利用科学研究论文。<br/>`research-assistant` `literature-retrieval` `writing` `scientific-research` `citation`             |
 
-> 📊 Total agents: [<kbd>**77**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**78**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
