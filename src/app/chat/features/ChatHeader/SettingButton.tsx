@@ -22,7 +22,7 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
       onClick={() => {
         if (isInbox) {
           useGlobalStore.setState({
-            settingsTab: SettingsTabs.Common,
+            settingsTab: SettingsTabs.Agent,
             sidebarKey: SidebarTabKey.Setting,
           });
           router.push('/settings/agent');
