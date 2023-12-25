@@ -78,6 +78,7 @@ const SystemRole = memo(() => {
             <EditableMessage
               classNames={{ markdown: styles.prompt }}
               editing={editing}
+              height={editing ? 'calc(70vh - 108px)' : 'calc(70vh - 357.43px)'}
               model={{
                 extra: (
                   <AgentInfo
