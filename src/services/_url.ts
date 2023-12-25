@@ -1,7 +1,12 @@
 export const URLS = {
   config: '/api/config',
   market: '/api/market',
-  plugins: '/api/plugins',
+  proxy: '/api/proxy',
+};
+
+export const PLUGINS_URLS = {
+  gateway: '/api/plugin/gateway',
+  store: '/api/plugin/store',
 };
 
 export const OPENAI_URLS = {
@@ -16,5 +21,3 @@ export const TTS_URL = {
   edge: '/api/tts/edge-speech',
   microsoft: '/api/tts/microsoft-speech',
 };
-
-export const PROXY_URL = '/api/proxy';

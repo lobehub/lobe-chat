@@ -13,7 +13,7 @@ import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
 import { createHeaderWithOpenAI } from './_header';
-import { OPENAI_URLS, URLS } from './_url';
+import { OPENAI_URLS, PLUGINS_URLS } from './_url';
 
 const isVisionModel = (model?: string) => model && VISION_MODEL_WHITE_LIST.includes(model);
 
@@ -92,7 +92,7 @@ class ChatService {
 
     const gatewayURL = manifest?.gateway;
 
-    const res = await fetch(gatewayURL ?? URLS.plugins, {
+    const res = await fetch(gatewayURL ?? PLUGINS_URLS.gateway, {
       body: JSON.stringify({ ...params, manifest }),
       headers: createHeadersWithPluginSettings(settings),
       method: 'POST',

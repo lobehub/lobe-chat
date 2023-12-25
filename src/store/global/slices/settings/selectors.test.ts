@@ -94,6 +94,48 @@ describe('settingsSelectors', () => {
       expect(result).toMatchSnapshot();
     });
 
+    it('should delete model', () => {
+      const s = {
+        serverConfig: {
+          customModelName: '-gpt-4',
+        },
+        settings: {
+          languageModel: {
+            openAI: {},
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.modelList(s);
+
+      expect(result).toEqual([
+        {
+          displayName: 'gpt-3.5-turbo',
+          name: 'gpt-3.5-turbo',
+        },
+        {
+          displayName: 'gpt-3.5-turbo-1106',
+          name: 'gpt-3.5-turbo-1106',
+        },
+        {
+          displayName: 'gpt-3.5-turbo-16k',
+          name: 'gpt-3.5-turbo-16k',
+        },
+        {
+          displayName: 'gpt-4-32k',
+          name: 'gpt-4-32k',
+        },
+        {
+          displayName: 'gpt-4-1106-preview',
+          name: 'gpt-4-1106-preview',
+        },
+        {
+          displayName: 'gpt-4-vision-preview',
+          name: 'gpt-4-vision-preview',
+        },
+      ]);
+    });
+
     it('only add the model', () => {
       const s = {
         serverConfig: {},
