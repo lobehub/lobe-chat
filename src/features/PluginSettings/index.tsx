@@ -15,8 +15,11 @@ export const transformPluginSettings = (pluginSettings: PluginSchema) => {
 
   return Object.entries(pluginSettings.properties).map(([name, i]) => ({
     desc: i.description,
+    enum: i.enum,
     format: i.format,
-    label: i.title,
+    label: i.title || name,
+    maximum: i.maximum,
+    minimum: i.minimum,
     name,
     tag: name,
     type: i.type,
@@ -63,7 +66,10 @@ const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) =>
         >
           <PluginSettingRender
             defaultValue={pluginSetting[item.name]}
+            enum={item.enum}
             format={item.format}
+            maximum={item.maximum}
+            minimum={item.minimum}
             onChange={(value) => {
               updatePluginSettings(id, { [item.name]: value });
             }}
