@@ -55,10 +55,9 @@ class ChatService {
     // 2. model is not in vision white list, because vision model can't use tools
     // TODO: we need to find some method to let vision model use tools
     const shouldUseTools = filterTools.length > 0 && !isVisionModel(payload.model);
+    const tools = shouldUseTools ? filterTools : undefined;
 
-    const functions = shouldUseTools ? filterTools : undefined;
-
-    return this.getChatCompletion({ ...params, functions, messages: oaiMessages }, options);
+    return this.getChatCompletion({ ...params, messages: oaiMessages, tools }, options);
   };
 
   getChatCompletion = (params: Partial<OpenAIChatStreamPayload>, options?: FetchOptions) => {
