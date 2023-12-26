@@ -2,6 +2,156 @@
 
 # Changelog
 
+### [Version 0.116.4](https://github.com/lobehub/lobe-chat/compare/v0.116.3...v0.116.4)
+
+<sup>Released on **2023-12-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix ShareModal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix ShareModal ([4592515](https://github.com/lobehub/lobe-chat/commit/4592515))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.116.3](https://github.com/lobehub/lobe-chat/compare/v0.116.2...v0.116.3)
+
+<sup>Released on **2023-12-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix typo.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix typo ([9d329a9](https://github.com/lobehub/lobe-chat/commit/9d329a9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.116.2](https://github.com/lobehub/lobe-chat/compare/v0.116.1...v0.116.2)
+
+<sup>Released on **2023-12-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Modal style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Modal style ([ac7d309](https://github.com/lobehub/lobe-chat/commit/ac7d309))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.116.1](https://github.com/lobehub/lobe-chat/compare/v0.116.0...v0.116.1)
+
+<sup>Released on **2023-12-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support slider and select plugin setting render.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support slider and select plugin setting render, closes [#819](https://github.com/lobehub/lobe-chat/issues/819) ([3190b44](https://github.com/lobehub/lobe-chat/commit/3190b44))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.116.0](https://github.com/lobehub/lobe-chat/compare/v0.115.13...v0.116.0)
+
+<sup>Released on **2023-12-26**</sup>
+
+#### ✨ Features
+
+- **misc**: Support OpenAI tool calls.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support OpenAI tool calls ([9681fdc](https://github.com/lobehub/lobe-chat/commit/9681fdc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.115.13](https://github.com/lobehub/lobe-chat/compare/v0.115.12...v0.115.13)
+
+<sup>Released on **2023-12-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix remove tts and translate not working.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix remove tts and translate not working, closes [#818](https://github.com/lobehub/lobe-chat/issues/818) ([4a275e9](https://github.com/lobehub/lobe-chat/commit/4a275e9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.115.12](https://github.com/lobehub/lobe-chat/compare/v0.115.11...v0.115.12)
 
 <sup>Released on **2023-12-25**</sup>

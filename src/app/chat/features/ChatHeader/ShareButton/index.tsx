@@ -1,4 +1,4 @@
-import { ActionIcon, Modal } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { Share2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
@@ -8,7 +8,7 @@ import useMergeState from 'use-merge-value';
 import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 
-const Inner = dynamic(() => import('./Inner'));
+const ShareModal = dynamic(() => import('./ShareModal'));
 interface ShareButtonProps {
   mobile?: boolean;
   open?: boolean;
@@ -34,15 +34,7 @@ const ShareButton = memo<ShareButtonProps>(({ mobile, setOpen, open }) => {
         title={t('share')}
       />
 
-      <Modal
-        centered={false}
-        footer={null}
-        onCancel={() => setIsModalOpen(false)}
-        open={isModalOpen}
-        title={t('share')}
-      >
-        <Inner />
-      </Modal>
+      <ShareModal onCancel={() => setIsModalOpen(false)} open={isModalOpen} />
     </>
   );
 });
