@@ -59,7 +59,7 @@ describe('ChatEnhanceAction', () => {
         await result.current.clearTTS(messageId);
       });
 
-      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { tts: null });
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { tts: false });
     });
   });
 
@@ -115,7 +115,7 @@ describe('ChatEnhanceAction', () => {
         await result.current.clearTranslate(messageId);
       });
 
-      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { translate: null });
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { translate: false });
     });
   });
 });

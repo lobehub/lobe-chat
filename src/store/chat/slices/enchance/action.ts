@@ -32,8 +32,8 @@ export interface ChatEnhanceAction {
     state?: { contentMd5?: string; file?: string; voice?: string },
   ) => Promise<void>;
   updateImageItem: (id: string, updater: (data: DallEImageItem[]) => void) => Promise<void>;
-  updateMessageTTS: (id: string, data: Partial<ChatTTS> | null) => Promise<void>;
-  updateMessageTranslate: (id: string, data: Partial<ChatTranslate> | null) => Promise<void>;
+  updateMessageTTS: (id: string, data: Partial<ChatTTS> | false) => Promise<void>;
+  updateMessageTranslate: (id: string, data: Partial<ChatTranslate> | false) => Promise<void>;
 }
 
 export const chatEnhance: StateCreator<
@@ -43,11 +43,11 @@ export const chatEnhance: StateCreator<
   ChatEnhanceAction
 > = (set, get) => ({
   clearTTS: async (id) => {
-    await get().updateMessageTTS(id, null);
+    await get().updateMessageTTS(id, false);
   },
 
   clearTranslate: async (id) => {
-    await get().updateMessageTranslate(id, null);
+    await get().updateMessageTranslate(id, false);
   },
 
   generateImageFromPrompts: async (items, messageId) => {
