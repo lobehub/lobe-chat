@@ -24,7 +24,7 @@ export const DB_MessageSchema = z.object({
   plugin: PluginSchema.optional(),
   pluginState: z.any().optional(),
   fromModel: z.string().optional(),
-  translate: TranslateSchema.optional().or(z.null()),
+  translate: TranslateSchema.optional().or(z.literal(false)),
   tts: z.any().optional(),
 
   // foreign keys

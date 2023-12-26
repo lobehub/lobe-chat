@@ -204,7 +204,7 @@ export const chatMessage: StateCreator<
     // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
     dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
 
-    await messageService.updateMessageContent(id, content);
+    await messageService.updateMessage(id, { content });
     await refreshMessages();
   },
   useFetchMessages: (sessionId, activeTopicId) =>
@@ -265,7 +265,7 @@ export const chatMessage: StateCreator<
       if (functionCallAtEnd) {
         // create a new separate message and remove the function call from the prev message
 
-        await messageService.updateMessageContent(mid, content.replace(functionCallContent, ''));
+        await get().updateMessageContent(mid, content.replace(functionCallContent, ''));
 
         const functionMessage: CreateMessageParams = {
           role: 'function',
@@ -294,7 +294,7 @@ export const chatMessage: StateCreator<
     set({ messages }, false, n(`dispatchMessage/${payload.type}`, payload));
   },
   fetchAIChatMessage: async (messages, assistantId) => {
-    const { toggleChatLoading, refreshMessages } = get();
+    const { toggleChatLoading, refreshMessages, updateMessageContent } = get();
 
     const abortController = toggleChatLoading(
       true,
@@ -369,14 +369,12 @@ export const chatMessage: StateCreator<
       },
       onFinish: async (content) => {
         // update the content after fetch result
-        await messageService.updateMessageContent(assistantId, content);
-        await refreshMessages();
+        await updateMessageContent(assistantId, content);
       },
       onMessageHandle: async (text) => {
         output += text;
 
-        await messageService.updateMessageContent(assistantId, output);
-        await refreshMessages();
+        await updateMessageContent(assistantId, output);
 
         // is this message is just a function call
         if (isFunctionMessageAtStart(output)) isFunctionCall = true;

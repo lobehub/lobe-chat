@@ -58,7 +58,7 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 messageService.updateMessageContent 是否被正确调用
-      expect(messageService.updateMessageContent).toHaveBeenCalledWith(messageId, newContent);
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
 
       // 验证 refreshMessages 是否被调用
       expect(result.current.refreshMessages).toHaveBeenCalled();
@@ -95,10 +95,9 @@ describe('ChatPluginAction', () => {
         expect.any(String),
       );
       expect(chatService.runPluginApi).toHaveBeenCalledWith(pluginPayload, { signal: undefined });
-      expect(messageService.updateMessageContent).toHaveBeenCalledWith(
-        messageId,
-        pluginApiResponse,
-      );
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, {
+        content: pluginApiResponse,
+      });
       expect(initialState.refreshMessages).toHaveBeenCalled();
       expect(initialState.coreProcessMessage).toHaveBeenCalled();
       expect(initialState.toggleChatLoading).toHaveBeenCalledWith(false);
