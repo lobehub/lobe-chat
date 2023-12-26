@@ -76,35 +76,39 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
           name: 'withSystemRole',
           valuePropName: 'checked',
         },
-        tab === Tab.Screenshot && {
+        {
           children: <Switch />,
+          hidden: tab !== Tab.Screenshot,
           label: t('shareModal.withBackground'),
           minWidth: undefined,
           name: 'withBackground',
           valuePropName: 'checked',
         },
-        tab === Tab.Screenshot && {
+        {
           children: <Switch />,
+          hidden: tab !== Tab.Screenshot,
           label: t('shareModal.withFooter'),
           minWidth: undefined,
           name: 'withFooter',
           valuePropName: 'checked',
         },
-        tab === Tab.Screenshot && {
+        {
           children: <Segmented options={imageTypeOptions} />,
+          hidden: tab !== Tab.Screenshot,
           label: t('shareModal.imageType'),
           minWidth: undefined,
           name: 'imageType',
         },
-        tab === Tab.ShareGPT && {
+        {
           children: <Switch />,
+          hidden: tab !== Tab.ShareGPT,
           label: t('shareModal.withPluginInfo'),
           minWidth: undefined,
           name: 'withPluginInfo',
           valuePropName: 'checked',
         },
-      ].filter(Boolean) as FormItemProps[],
-    [],
+      ],
+    [tab],
   );
 
   return (
