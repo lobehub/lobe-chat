@@ -61,7 +61,20 @@ describe('toolSelectors', () => {
   describe('enabledSchema', () => {
     it('enabledSchema should return correct ChatCompletionFunctions array', () => {
       const result = toolSelectors.enabledSchema(['plugin-1', 'plugin-2'])(mockState);
-      expect(result).toEqual([{ name: 'plugin-1____api-1' }, { name: 'plugin-2____api-2' }]);
+      expect(result).toEqual([
+        {
+          type: 'function',
+          function: {
+            name: 'plugin-1____api-1',
+          },
+        },
+        {
+          type: 'function',
+          function: {
+            name: 'plugin-2____api-2',
+          },
+        },
+      ]);
     });
 
     it('enabledSchema should return with standalone plugin', () => {
@@ -80,7 +93,14 @@ describe('toolSelectors', () => {
           },
         ],
       } as ToolStoreState);
-      expect(result).toEqual([{ name: 'plugin-4____api-4____standalone' }]);
+      expect(result).toEqual([
+        {
+          type: 'function',
+          function: {
+            name: 'plugin-4____api-4____standalone',
+          },
+        },
+      ]);
     });
 
     it('enabledSchema should return md5 hash apiName', () => {
@@ -99,7 +119,12 @@ describe('toolSelectors', () => {
         ],
       } as ToolStoreState);
       expect(result).toEqual([
-        { name: 'long-long-plugin-with-id____MD5HASH_396eae4c671da3fb642c49ad2b9e8790' },
+        {
+          type: 'function',
+          function: {
+            name: 'long-long-plugin-with-id____MD5HASH_396eae4c671da3fb642c49ad2b9e8790',
+          },
+        },
       ]);
     });
 

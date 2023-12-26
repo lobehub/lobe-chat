@@ -9,6 +9,7 @@ import { nanoid } from '@/utils/uuid';
 export interface CreateMessageParams
   extends Partial<Omit<ChatMessage, 'content' | 'role'>>,
     Pick<ChatMessage, 'content' | 'role'> {
+  fromModel?: string;
   sessionId: string;
 }
 
