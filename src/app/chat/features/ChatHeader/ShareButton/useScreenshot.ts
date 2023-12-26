@@ -54,7 +54,7 @@ export const useScreenshot = (imageType: ImageType) => {
 
   return {
     loading,
-    onDwnload: handleDownload,
+    onDownload: handleDownload,
     title,
   };
 };

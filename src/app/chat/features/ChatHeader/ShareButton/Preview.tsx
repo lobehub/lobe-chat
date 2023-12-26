@@ -1,6 +1,5 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
 import { Avatar, ChatHeaderTitle, Logo, Markdown, Tag } from '@lobehub/ui';
-import { SegmentedProps } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -13,32 +12,6 @@ import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import PluginTag from '../../ChatHeader/PluginTag';
 import { useStyles } from './style';
 import { FieldType } from './type';
-
-export enum ImageType {
-  JPG = 'jpg',
-  PNG = 'png',
-  SVG = 'svg',
-  WEBP = 'webp',
-}
-
-export const imageTypeOptions: SegmentedProps['options'] = [
-  {
-    label: 'JPG',
-    value: ImageType.JPG,
-  },
-  {
-    label: 'PNG',
-    value: ImageType.PNG,
-  },
-  {
-    label: 'SVG',
-    value: ImageType.SVG,
-  },
-  {
-    label: 'WEBP',
-    value: ImageType.WEBP,
-  },
-];
 
 const Preview = memo<FieldType & { title?: string }>(
   ({ title, withSystemRole, withBackground, withFooter }) => {
