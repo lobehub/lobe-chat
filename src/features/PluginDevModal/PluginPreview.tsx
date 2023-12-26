@@ -27,7 +27,7 @@ const PluginPreview = memo<{ form: FormInstance }>(({ form }) => {
   };
 
   return (
-    <Card size={'small'} title={t('dev.preview.card')}>
+    <Card bodyStyle={{ padding: '0 16px' }} size={'small'} title={t('dev.preview.card')}>
       <Form.Item {...items} colon={false} style={{ alignItems: 'center', marginBottom: 0 }} />
     </Card>
   );

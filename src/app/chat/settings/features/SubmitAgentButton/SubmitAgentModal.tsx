@@ -1,4 +1,4 @@
-import { Alert } from '@lobehub/ui';
+import { Alert, Modal, type ModalProps } from '@lobehub/ui';
 import { Button, Divider, Input } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
@@ -8,14 +8,13 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import MobilePadding from '@/components/MobilePadding';
 import { AGENTS_INDEX_GITHUB_ISSUE } from '@/const/url';
 import AgentInfo from '@/features/AgentInfo';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
-const Inner = memo(() => {
+const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const { t } = useTranslation('setting');
   const [identifier, setIdentifier] = useState('');
   const systemRole = useSessionStore(agentSelectors.currentAgentSystemRole);
@@ -54,8 +53,24 @@ const Inner = memo(() => {
   };
 
   return (
-    <Flexbox gap={16}>
-      <MobilePadding gap={16}>
+    <Modal
+      allowFullscreen
+      footer={
+        <Button
+          block
+          disabled={!isMetaPass || !identifier}
+          onClick={handleSubmit}
+          size={'large'}
+          type={'primary'}
+        >
+          {t('submitAgentModal.button')}
+        </Button>
+      }
+      onCancel={onCancel}
+      open={open}
+      title={t('submitAgentModal.tooltips')}
+    >
+      <Flexbox gap={16}>
         {!isMetaPass && (
           <Alert message={t('submitAgentModal.metaMiss')} showIcon type={'warning'} />
         )}
@@ -70,18 +85,9 @@ const Inner = memo(() => {
           placeholder={t('submitAgentModal.placeholder')}
           value={identifier}
         />
-        <Button
-          block
-          disabled={!isMetaPass || !identifier}
-          onClick={handleSubmit}
-          size={'large'}
-          type={'primary'}
-        >
-          {t('submitAgentModal.button')}
-        </Button>
-      </MobilePadding>
-    </Flexbox>
+      </Flexbox>
+    </Modal>
   );
 });
 
-export default Inner;
+export default SubmitAgentModal;

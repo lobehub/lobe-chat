@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
-import MobilePadding from '@/components/MobilePadding';
 import PluginSettingsConfig from '@/features/PluginSettings';
 import { pluginHelpers } from '@/store/tool';
 
@@ -33,6 +32,7 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
 
     return (
       <Modal
+        allowFullscreen
         cancelText={t('cancel', { ns: 'common' })}
         okText={t('ok', { ns: 'common' })}
         onCancel={onClose}
@@ -43,34 +43,32 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
         title={t('detailModal.title')}
         width={650}
       >
-        <MobilePadding>
-          <Center gap={8}>
-            <Meta id={id} />
-            <Divider style={{ marginBottom: 0, marginTop: 8 }} />
-            <TabsNav
-              activeKey={tabKey}
-              items={
-                [
-                  {
-                    key: 'info',
-                    label: t('detailModal.tabs.info'),
-                  },
-                  hasSettings && {
-                    key: 'settings',
-                    label: t('detailModal.tabs.settings'),
-                  },
-                ].filter(Boolean) as TabsProps['items']
-              }
-              onChange={setTabKey}
-              variant={'compact'}
-            />
-            {tabKey === 'settings' ? (
-              hasSettings && <PluginSettingsConfig id={id} schema={schema} />
-            ) : (
-              <APIs id={id} />
-            )}
-          </Center>
-        </MobilePadding>
+        <Center gap={8}>
+          <Meta id={id} />
+          <Divider style={{ marginBottom: 0, marginTop: 8 }} />
+          <TabsNav
+            activeKey={tabKey}
+            items={
+              [
+                {
+                  key: 'info',
+                  label: t('detailModal.tabs.info'),
+                },
+                hasSettings && {
+                  key: 'settings',
+                  label: t('detailModal.tabs.settings'),
+                },
+              ].filter(Boolean) as TabsProps['items']
+            }
+            onChange={setTabKey}
+            variant={'compact'}
+          />
+          {tabKey === 'settings' ? (
+            hasSettings && <PluginSettingsConfig id={id} schema={schema} />
+          ) : (
+            <APIs id={id} />
+          )}
+        </Center>
       </Modal>
     );
   },
