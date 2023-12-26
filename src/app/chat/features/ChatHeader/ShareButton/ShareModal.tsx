@@ -1,5 +1,4 @@
-import { Form, Modal, type ModalProps } from '@lobehub/ui';
-import { FormItemProps } from '@lobehub/ui/src';
+import { Form, type FormItemProps, Modal, type ModalProps } from '@lobehub/ui';
 import { Button, Segmented, SegmentedProps, Switch } from 'antd';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
