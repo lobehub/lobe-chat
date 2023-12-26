@@ -4,7 +4,7 @@ import { Md5 } from 'ts-md5';
 
 import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { MetaData } from '@/types/meta';
-import { ChatCompletionFunctions } from '@/types/openai/chat';
+import { ChatCompletionTool } from '@/types/openai/chat';
 import { LobeToolMeta } from '@/types/tool/tool';
 
 import { pluginHelpers } from '../helpers';
@@ -32,7 +32,7 @@ const getAPIName = (identifier: string, name: string, type?: string) => {
 
 const enabledSchema =
   (tools: string[] = []) =>
-  (s: ToolStoreState): ChatCompletionFunctions[] => {
+  (s: ToolStoreState): ChatCompletionTool[] => {
     const list = pluginSelectors
       .installedPluginManifestList(s)
       .concat(s.builtinTools.map((b) => b.manifest as LobeChatPluginManifest))
@@ -45,7 +45,7 @@ const enabledSchema =
         })),
       );
 
-    return uniqBy(list, 'name');
+    return uniqBy(list, 'name').map((i) => ({ function: i, type: 'function' }));
   };
 
 const enabledSystemRoles =

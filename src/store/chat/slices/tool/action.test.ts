@@ -139,7 +139,18 @@ describe('ChatPluginAction', () => {
   describe('triggerFunctionCall', () => {
     it('should trigger a function call and update the plugin message accordingly', async () => {
       const messageId = 'message-id';
-      const messageContent = `{"function_call": {"name": "pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName", "arguments": {"key": "value"}}}`;
+      const messageContent = JSON.stringify({
+        tool_calls: [
+          {
+            id: 'call_sbca',
+            type: 'function',
+            function: {
+              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName`,
+              arguments: { key: 'value' },
+            },
+          },
+        ],
+      });
       const messagePluginPayload = {
         apiName: 'apiName',
         identifier: 'pluginName',
@@ -183,7 +194,16 @@ describe('ChatPluginAction', () => {
       const id = 'pluginIdentifier';
       const md5ApiName = PLUGIN_SCHEMA_API_MD5_PREFIX + Md5.hashStr(apiName).toString();
       const messageContent = JSON.stringify({
-        function_call: { name: id + PLUGIN_SCHEMA_SEPARATOR + md5ApiName, arguments: {} },
+        tool_calls: [
+          {
+            id: 'call_sbca',
+            type: 'function',
+            function: {
+              name: id + PLUGIN_SCHEMA_SEPARATOR + md5ApiName,
+              arguments: {},
+            },
+          },
+        ],
       });
 
       const plugin = { identifier: id, manifest: { api: [{ name: apiName }] } } as LobeTool;
@@ -222,10 +242,15 @@ describe('ChatPluginAction', () => {
     it('should handle standalone plugin type', async () => {
       const messageId = 'message-id';
       const messageContent = JSON.stringify({
-        function_call: {
-          name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName${PLUGIN_SCHEMA_SEPARATOR}standalone`,
-          arguments: {},
-        },
+        tool_calls: [
+          {
+            id: 'call_scv',
+            function: {
+              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName${PLUGIN_SCHEMA_SEPARATOR}standalone`,
+              arguments: {},
+            },
+          },
+        ],
       });
 
       useChatStore.setState({
