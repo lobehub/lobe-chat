@@ -9,13 +9,32 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 
-import Preview, { ImageType, imageTypeOptions } from './Preview';
-import { FieldType } from './type';
+import Preview from './Preview';
+import { FieldType, ImageType } from './type';
 
 enum Tab {
   Screenshot = 'screenshot',
   ShareGPT = 'sharegpt',
 }
+
+export const imageTypeOptions: SegmentedProps['options'] = [
+  {
+    label: 'JPG',
+    value: ImageType.JPG,
+  },
+  {
+    label: 'PNG',
+    value: ImageType.PNG,
+  },
+  {
+    label: 'SVG',
+    value: ImageType.SVG,
+  },
+  {
+    label: 'WEBP',
+    value: ImageType.WEBP,
+  },
+];
 
 const DEFAULT_FIELD_VALUE: FieldType = {
   imageType: ImageType.JPG,
@@ -31,7 +50,7 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
   const { t } = useTranslation('chat');
   const avatar = useGlobalStore((s) => s.settings.avatar);
   const [shareLoading, shareToShareGPT] = useChatStore((s) => [s.shareLoading, s.shareToShareGPT]);
-  const { loading, onDwnload, title } = useScreenshot(fieldValue.imageType);
+  const { loading, onDownload, title } = useScreenshot(fieldValue.imageType);
 
   const options: SegmentedProps['options'] = useMemo(
     () => [
@@ -95,7 +114,7 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
       footer={
         <>
           {tab === Tab.Screenshot && (
-            <Button block loading={loading} onClick={onDwnload} size={'large'} type={'primary'}>
+            <Button block loading={loading} onClick={onDownload} size={'large'} type={'primary'}>
               {t('shareModal.download')}
             </Button>
           )}
