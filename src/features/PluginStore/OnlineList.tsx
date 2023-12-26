@@ -39,7 +39,7 @@ export const OnlineList = memo(() => {
   const isEmpty = pluginStoreList.length === 0;
 
   return (
-    <Flexbox gap={16}>
+    <>
       <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
         <Flexbox flex={1}>
           <SearchBar
@@ -88,7 +88,7 @@ export const OnlineList = memo(() => {
             ))}
         </Flexbox>
       )}
-    </Flexbox>
+    </>
   );
 });
 

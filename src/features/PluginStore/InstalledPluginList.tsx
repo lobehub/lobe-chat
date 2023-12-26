@@ -18,7 +18,7 @@ export const InstalledPluginList = memo(() => {
   const installedPlugins = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
 
   return (
-    <Flexbox gap={16}>
+    <>
       <Flexbox align={'center'} gap={16} horizontal justify={'space-between'}>
         <Flexbox flex={1}>
           <SearchBar
@@ -47,7 +47,7 @@ export const InstalledPluginList = memo(() => {
             <PluginItem {...i} key={i.identifier} />
           ))}
       </Flexbox>
-    </Flexbox>
+    </>
   );
 });
 
