@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.116.1](https://github.com/lobehub/lobe-chat/compare/v0.116.0...v0.116.1)
+
+<sup>Released on **2023-12-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support slider and select plugin setting render.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support slider and select plugin setting render, closes [#819](https://github.com/lobehub/lobe-chat/issues/819) ([3190b44](https://github.com/lobehub/lobe-chat/commit/3190b44))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.116.0](https://github.com/lobehub/lobe-chat/compare/v0.115.13...v0.116.0)
 
 <sup>Released on **2023-12-26**</sup>
