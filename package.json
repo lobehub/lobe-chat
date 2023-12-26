@@ -140,6 +140,7 @@
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^14",
     "@types/chroma-js": "^2",
+    "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4",
     "@types/lodash-es": "^4",
     "@types/node": "^20",
