@@ -20,7 +20,7 @@ vi.mock('@/services/message', () => ({
     createAssistantMessage: vi.fn(() => Promise.resolve('content-content-content')),
     removeMessages: vi.fn(() => Promise.resolve()),
     create: vi.fn(() => Promise.resolve('new-message-id')),
-    updateMessageContent: vi.fn(),
+    updateMessage: vi.fn(),
     clearAllMessage: vi.fn(() => Promise.resolve()),
   },
 }));
@@ -303,7 +303,7 @@ describe('chatMessage actions', () => {
         await result.current.updateMessageContent(messageId, newContent);
       });
 
-      expect(messageService.updateMessageContent).toHaveBeenCalledWith(messageId, newContent);
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
     });
 
     it('should dispatch message update action', async () => {

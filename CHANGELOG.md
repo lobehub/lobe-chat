@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.115.13](https://github.com/lobehub/lobe-chat/compare/v0.115.12...v0.115.13)
+
+<sup>Released on **2023-12-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix remove tts and translate not working.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix remove tts and translate not working, closes [#818](https://github.com/lobehub/lobe-chat/issues/818) ([4a275e9](https://github.com/lobehub/lobe-chat/commit/4a275e9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.115.12](https://github.com/lobehub/lobe-chat/compare/v0.115.11...v0.115.12)
 
 <sup>Released on **2023-12-25**</sup>
