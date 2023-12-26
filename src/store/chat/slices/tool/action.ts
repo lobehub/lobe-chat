@@ -8,7 +8,7 @@ import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { ChatPluginPayload } from '@/types/message';
-import { OpenAIFunctionCall } from '@/types/openai/functionCall';
+import { OpenAIToolCall } from '@/types/openai/functionCall';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors } from '../../selectors';
@@ -83,19 +83,21 @@ export const chatPlugin: StateCreator<
     await coreProcessMessage(chats, id);
   },
   triggerFunctionCall: async (id) => {
-    const { invokeDefaultTypePlugin, invokeBuiltinTool, refreshMessages } = get();
-
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
+
+    const { invokeDefaultTypePlugin, invokeBuiltinTool, refreshMessages } = get();
 
     let payload = { apiName: '', identifier: '' } as ChatPluginPayload;
 
     // 识别到内容是 function_call 的情况下
     // 将 function_call 转换为 plugin request payload
     if (message.content) {
-      const { function_call } = JSON.parse(message.content) as {
-        function_call: OpenAIFunctionCall;
+      const { tool_calls } = JSON.parse(message.content) as {
+        tool_calls: OpenAIToolCall[];
       };
+
+      const function_call = tool_calls[0].function;
 
       const [identifier, apiName, type] = function_call.name.split(PLUGIN_SCHEMA_SEPARATOR);
 
@@ -142,6 +144,7 @@ export const chatPlugin: StateCreator<
       }
     }
   },
+
   updatePluginState: async (id, key, value) => {
     const { refreshMessages } = get();
 

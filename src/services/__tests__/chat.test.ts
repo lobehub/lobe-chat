@@ -57,7 +57,14 @@ describe('ChatService', () => {
 
       expect(getChatCompletionSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          functions: expect.arrayContaining([{ name: 'plugin1____api1' }]),
+          tools: expect.arrayContaining([
+            {
+              type: 'function',
+              function: {
+                name: 'plugin1____api1',
+              },
+            },
+          ]),
           messages: expect.anything(),
         }),
         undefined,
@@ -77,7 +84,7 @@ describe('ChatService', () => {
 
       expect(getChatCompletionSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          functions: undefined,
+          tools: undefined,
           model: modelInWhitelist,
         }),
         undefined,
@@ -307,14 +314,17 @@ describe('ChatService', () => {
           {
             model: 'gpt-3.5-turbo-1106',
             top_p: 1,
-            functions: [
+            tools: [
               {
-                description: 'Get data from users',
-                name: 'seo____getData',
-                parameters: {
-                  properties: { keyword: { type: 'string' }, url: { type: 'string' } },
-                  required: ['keyword', 'url'],
-                  type: 'object',
+                type: 'function',
+                function: {
+                  description: 'Get data from users',
+                  name: 'seo____getData',
+                  parameters: {
+                    properties: { keyword: { type: 'string' }, url: { type: 'string' } },
+                    required: ['keyword', 'url'],
+                    type: 'object',
+                  },
                 },
               },
             ],
@@ -411,14 +421,17 @@ Get data from users`,
           {
             model: 'gpt-3.5-turbo-1106',
             top_p: 1,
-            functions: [
+            tools: [
               {
-                description: 'Get data from users',
-                name: 'seo____getData',
-                parameters: {
-                  properties: { keyword: { type: 'string' }, url: { type: 'string' } },
-                  required: ['keyword', 'url'],
-                  type: 'object',
+                type: 'function',
+                function: {
+                  description: 'Get data from users',
+                  name: 'seo____getData',
+                  parameters: {
+                    properties: { keyword: { type: 'string' }, url: { type: 'string' } },
+                    required: ['keyword', 'url'],
+                    type: 'object',
+                  },
                 },
               },
             ],
@@ -509,50 +522,53 @@ Get data from users`,
           {
             model: 'gpt-3.5-turbo-1106',
             top_p: 1,
-            functions: [
+            tools: [
               {
-                description: 'Create images from a text-only prompt.',
-                name: 'dalle3____text2image____builtin',
-                parameters: {
-                  properties: {
-                    prompts: {
-                      description:
-                        "The user's original image description, potentially modified to abide by the dalle policies. If the user does not suggest a number of captions to create, create four of them. If creating multiple captions, make them as diverse as possible. If the user requested modifications to previous images, the captions should not simply be longer, but rather it should be refactored to integrate the suggestions into each of the captions. Generate no more than 4 images, even if the user requests more.",
-                      items: { type: 'string' },
-                      maxItems: 4,
-                      minItems: 1,
-                      type: 'array',
+                type: 'function',
+                function: {
+                  description: 'Create images from a text-only prompt.',
+                  name: 'dalle3____text2image____builtin',
+                  parameters: {
+                    properties: {
+                      prompts: {
+                        description:
+                          "The user's original image description, potentially modified to abide by the dalle policies. If the user does not suggest a number of captions to create, create four of them. If creating multiple captions, make them as diverse as possible. If the user requested modifications to previous images, the captions should not simply be longer, but rather it should be refactored to integrate the suggestions into each of the captions. Generate no more than 4 images, even if the user requests more.",
+                        items: { type: 'string' },
+                        maxItems: 4,
+                        minItems: 1,
+                        type: 'array',
+                      },
+                      quality: {
+                        default: 'standard',
+                        description:
+                          'The quality of the image that will be generated. hd creates images with finer details and greater consistency across the image.',
+                        enum: ['standard', 'hd'],
+                        type: 'string',
+                      },
+                      seeds: {
+                        description:
+                          'A list of seeds to use for each prompt. If the user asks to modify a previous image, populate this field with the seed used to generate that image from the image dalle metadata.',
+                        items: { type: 'integer' },
+                        type: 'array',
+                      },
+                      size: {
+                        default: '1024x1024',
+                        description:
+                          'The resolution of the requested image, which can be wide, square, or tall. Use 1024x1024 (square) as the default unless the prompt suggests a wide image, 1792x1024, or a full-body portrait, in which case 1024x1792 (tall) should be used instead. Always include this parameter in the request.',
+                        enum: ['1792x1024', '1024x1024', '1024x1792'],
+                        type: 'string',
+                      },
+                      style: {
+                        default: 'vivid',
+                        description:
+                          'The style of the generated images. Must be one of vivid or natural. Vivid causes the model to lean towards generating hyper-real and dramatic images. Natural causes the model to produce more natural, less hyper-real looking images.',
+                        enum: ['vivid', 'natural'],
+                        type: 'string',
+                      },
                     },
-                    quality: {
-                      default: 'standard',
-                      description:
-                        'The quality of the image that will be generated. hd creates images with finer details and greater consistency across the image.',
-                      enum: ['standard', 'hd'],
-                      type: 'string',
-                    },
-                    seeds: {
-                      description:
-                        'A list of seeds to use for each prompt. If the user asks to modify a previous image, populate this field with the seed used to generate that image from the image dalle metadata.',
-                      items: { type: 'integer' },
-                      type: 'array',
-                    },
-                    size: {
-                      default: '1024x1024',
-                      description:
-                        'The resolution of the requested image, which can be wide, square, or tall. Use 1024x1024 (square) as the default unless the prompt suggests a wide image, 1792x1024, or a full-body portrait, in which case 1024x1792 (tall) should be used instead. Always include this parameter in the request.',
-                      enum: ['1792x1024', '1024x1024', '1024x1792'],
-                      type: 'string',
-                    },
-                    style: {
-                      default: 'vivid',
-                      description:
-                        'The style of the generated images. Must be one of vivid or natural. Vivid causes the model to lean towards generating hyper-real and dramatic images. Natural causes the model to produce more natural, less hyper-real looking images.',
-                      enum: ['vivid', 'natural'],
-                      type: 'string',
-                    },
+                    required: ['prompts'],
+                    type: 'object',
                   },
-                  required: ['prompts'],
-                  type: 'object',
                 },
               },
             ],

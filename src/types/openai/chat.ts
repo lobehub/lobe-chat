@@ -46,6 +46,9 @@ export interface OpenAIChatStreamPayload {
    * @default 0
    */
   frequency_penalty?: number;
+  /**
+   * @deprecated
+   */
   functions?: ChatCompletionFunctions[];
   /**
    * @title 生成文本的最大长度
@@ -82,7 +85,8 @@ export interface OpenAIChatStreamPayload {
    * @default 0.5
    */
   temperature: number;
-
+  tool_choice?: string;
+  tools?: ChatCompletionTool[];
   /**
    * @title 控制生成文本中最高概率的单个令牌
    * @default 1
@@ -111,4 +115,13 @@ export interface ChatCompletionFunctions {
   parameters?: {
     [key: string]: any;
   };
+}
+
+export interface ChatCompletionTool {
+  function: ChatCompletionFunctions;
+
+  /**
+   * The type of the tool. Currently, only `function` is supported.
+   */
+  type: 'function';
 }
