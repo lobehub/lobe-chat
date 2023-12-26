@@ -30,24 +30,22 @@ export const chatPlugin: StateCreator<
   ChatPluginAction
 > = (set, get) => ({
   fillPluginMessageContent: async (id, content) => {
-    const { coreProcessMessage, refreshMessages } = get();
+    const { coreProcessMessage, updateMessageContent } = get();
 
-    await messageService.updateMessageContent(id, content);
-    await refreshMessages();
+    await updateMessageContent(id, content);
 
     const chats = chatSelectors.currentChats(get());
     await coreProcessMessage(chats, id);
   },
   invokeBuiltinTool: async (id, payload) => {
-    const { toggleChatLoading, refreshMessages } = get();
+    const { toggleChatLoading, updateMessageContent } = get();
     const params = JSON.parse(payload.arguments);
     toggleChatLoading(true, id, n('invokeBuiltinTool') as string);
     const data = await useToolStore.getState().invokeBuiltinTool(payload.apiName, params);
     toggleChatLoading(false);
 
     if (data) {
-      await messageService.updateMessageContent(id, data);
-      await refreshMessages();
+      await updateMessageContent(id, data);
     }
 
     // postToolCalling
@@ -58,7 +56,7 @@ export const chatPlugin: StateCreator<
     await action(id, JSON.parse(data));
   },
   invokeDefaultTypePlugin: async (id, payload) => {
-    const { refreshMessages, coreProcessMessage, toggleChatLoading } = get();
+    const { updateMessageContent, refreshMessages, coreProcessMessage, toggleChatLoading } = get();
     let data: string;
 
     try {
@@ -79,8 +77,7 @@ export const chatPlugin: StateCreator<
     // 如果报错则结束了
     if (!data) return;
 
-    await messageService.updateMessageContent(id, data);
-    await refreshMessages();
+    await updateMessageContent(id, data);
 
     const chats = chatSelectors.currentChats(get());
     await coreProcessMessage(chats, id);

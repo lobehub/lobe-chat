@@ -11,6 +11,7 @@ import { imageGenerationService } from '@/services/imageGeneration';
 import { messageService } from '@/services/message';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
+import { ChatTTS, ChatTranslate } from '@/types/message';
 import { DallEImageItem } from '@/types/tool/dalle';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -31,6 +32,8 @@ export interface ChatEnhanceAction {
     state?: { contentMd5?: string; file?: string; voice?: string },
   ) => Promise<void>;
   updateImageItem: (id: string, updater: (data: DallEImageItem[]) => void) => Promise<void>;
+  updateMessageTTS: (id: string, data: Partial<ChatTTS> | false) => Promise<void>;
+  updateMessageTranslate: (id: string, data: Partial<ChatTranslate> | false) => Promise<void>;
 }
 
 export const chatEnhance: StateCreator<
@@ -40,13 +43,11 @@ export const chatEnhance: StateCreator<
   ChatEnhanceAction
 > = (set, get) => ({
   clearTTS: async (id) => {
-    await messageService.updateMessageTTS(id, null);
-    await get().refreshMessages();
+    await get().updateMessageTTS(id, false);
   },
 
   clearTranslate: async (id) => {
-    await messageService.updateMessageTranslate(id, null);
-    await get().refreshMessages();
+    await get().updateMessageTranslate(id, false);
   },
 
   generateImageFromPrompts: async (items, messageId) => {
@@ -94,16 +95,14 @@ export const chatEnhance: StateCreator<
       n('toggleDallEImageLoading'),
     );
   },
-
   translateMessage: async (id, targetLang) => {
-    const { toggleChatLoading, dispatchMessage, refreshMessages } = get();
+    const { toggleChatLoading, updateMessageTranslate, dispatchMessage } = get();
 
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
 
     // create translate extra
-    await messageService.updateMessageTranslate(id, { content: '', from: '', to: targetLang });
-    await refreshMessages();
+    await updateMessageTranslate(id, { content: '', from: '', to: targetLang });
 
     toggleChatLoading(true, id, n('translateMessage(start)', { id }) as string);
 
@@ -118,8 +117,7 @@ export const chatEnhance: StateCreator<
       .then(async (data) => {
         if (data && supportLocales.includes(data)) from = data;
 
-        await messageService.updateMessageTranslate(id, { content, from, to: targetLang });
-        await refreshMessages();
+        await updateMessageTranslate(id, { content, from, to: targetLang });
       });
 
     // translate to target language
@@ -138,15 +136,13 @@ export const chatEnhance: StateCreator<
       params: chainTranslate(message.content, targetLang),
     });
 
-    await messageService.updateMessageTranslate(id, { content, from, to: targetLang });
-    await refreshMessages();
+    await updateMessageTranslate(id, { content, from, to: targetLang });
 
     toggleChatLoading(false);
   },
 
   ttsMessage: async (id, state = {}) => {
-    await messageService.updateMessageTTS(id, state);
-    await get().refreshMessages();
+    await get().updateMessageTTS(id, state);
   },
 
   updateImageItem: async (id, updater) => {
@@ -156,7 +152,15 @@ export const chatEnhance: StateCreator<
     const data: DallEImageItem[] = JSON.parse(message.content);
 
     const nextContent = produce(data, updater);
-    await messageService.updateMessageContent(id, JSON.stringify(nextContent));
+    await get().updateMessageContent(id, JSON.stringify(nextContent));
+  },
+
+  updateMessageTTS: async (id, data) => {
+    await messageService.updateMessage(id, { tts: data as ChatTTS });
+    await get().refreshMessages();
+  },
+  updateMessageTranslate: async (id, data) => {
+    await messageService.updateMessage(id, { translate: data as ChatTranslate });
     await get().refreshMessages();
   },
 });

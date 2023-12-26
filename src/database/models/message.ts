@@ -179,11 +179,7 @@ class _MessageModel extends BaseModel {
     tts,
     ...item
   }: DBModel<DB_Message>): ChatMessage => {
-    return {
-      ...item,
-      extra: { fromModel: fromModel, translate: translate, tts: tts },
-      meta: {},
-    };
+    return { ...item, extra: { fromModel, translate, tts }, meta: {} };
   };
 }
 
