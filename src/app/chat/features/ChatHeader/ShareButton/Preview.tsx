@@ -1,9 +1,7 @@
 import { SiOpenai } from '@icons-pack/react-simple-icons';
 import { Avatar, ChatHeaderTitle, Logo, Markdown, Tag } from '@lobehub/ui';
-import { Button, SegmentedProps } from 'antd';
-import dayjs from 'dayjs';
-import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
-import { memo, useCallback, useState } from 'react';
+import { SegmentedProps } from 'antd';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -14,6 +12,7 @@ import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import PluginTag from '../../ChatHeader/PluginTag';
 import { useStyles } from './style';
+import { FieldType } from './type';
 
 export enum ImageType {
   JPG = 'jpg',
@@ -41,75 +40,25 @@ export const imageTypeOptions: SegmentedProps['options'] = [
   },
 ];
 
-interface PreviewProps {
-  imageType: ImageType;
-  withBackground: boolean;
-  withFooter: boolean;
-  withSystemRole: boolean;
-}
+const Preview = memo<FieldType & { title?: string }>(
+  ({ title, withSystemRole, withBackground, withFooter }) => {
+    const [isInbox, description, avatar, backgroundColor, model, plugins, systemRole] =
+      useSessionStore((s) => [
+        sessionSelectors.isInboxSession(s),
+        agentSelectors.currentAgentDescription(s),
+        agentSelectors.currentAgentAvatar(s),
+        agentSelectors.currentAgentBackgroundColor(s),
+        agentSelectors.currentAgentModel(s),
+        agentSelectors.currentAgentPlugins(s),
+        agentSelectors.currentAgentSystemRole(s),
+      ]);
+    const { t } = useTranslation('chat');
+    const { styles } = useStyles(withBackground);
 
-const Preview = memo<PreviewProps>(({ withSystemRole, imageType, withBackground, withFooter }) => {
-  const [loading, setLoading] = useState(false);
-  const [isInbox, title, description, avatar, backgroundColor, model, plugins, systemRole] =
-    useSessionStore((s) => [
-      sessionSelectors.isInboxSession(s),
-      agentSelectors.currentAgentTitle(s),
-      agentSelectors.currentAgentDescription(s),
-      agentSelectors.currentAgentAvatar(s),
-      agentSelectors.currentAgentBackgroundColor(s),
-      agentSelectors.currentAgentModel(s),
-      agentSelectors.currentAgentPlugins(s),
-      agentSelectors.currentAgentSystemRole(s),
-    ]);
-  const { t } = useTranslation('chat');
-  const { styles } = useStyles(withBackground);
+    const displayTitle = isInbox ? t('inbox.title') : title;
+    const displayDesc = isInbox ? t('inbox.desc') : description;
 
-  const displayTitle = isInbox ? t('inbox.title') : title;
-  const displayDesc = isInbox ? t('inbox.desc') : description;
-
-  const handleDownload = useCallback(async () => {
-    setLoading(true);
-    try {
-      let screenshotFn: any;
-      switch (imageType) {
-        case ImageType.JPG: {
-          screenshotFn = domToJpeg;
-          break;
-        }
-        case ImageType.PNG: {
-          screenshotFn = domToPng;
-          break;
-        }
-        case ImageType.SVG: {
-          screenshotFn = domToSvg;
-          break;
-        }
-        case ImageType.WEBP: {
-          screenshotFn = domToWebp;
-          break;
-        }
-      }
-
-      const dataUrl = await screenshotFn(document.querySelector('#preview') as HTMLDivElement, {
-        features: {
-          // 不启用移除控制符，否则会导致 safari emoji 报错
-          removeControlCharacter: false,
-        },
-        scale: 2,
-      });
-      const link = document.createElement('a');
-      link.download = `LobeChat_${title}_${dayjs().format('YYYY-MM-DD')}.${imageType}`;
-      link.href = dataUrl;
-      link.click();
-      setLoading(false);
-    } catch (error) {
-      console.error('Failed to download image', error);
-      setLoading(false);
-    }
-  }, [imageType, title]);
-
-  return (
-    <>
+    return (
       <div className={styles.preview}>
         <div className={withBackground ? styles.background : undefined} id={'preview'}>
           <Flexbox className={styles.container} gap={16}>
@@ -145,11 +94,8 @@ const Preview = memo<PreviewProps>(({ withSystemRole, imageType, withBackground,
           </Flexbox>
         </div>
       </div>
-      <Button block loading={loading} onClick={handleDownload} size={'large'} type={'primary'}>
-        {t('shareModal.download')}
-      </Button>
-    </>
-  );
-});
+    );
+  },
+);
 
 export default Preview;
