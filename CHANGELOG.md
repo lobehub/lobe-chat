@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.116.5](https://github.com/lobehub/lobe-chat/compare/v0.116.4...v0.116.5)
+
+<sup>Released on **2023-12-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix input box losing focus after sending a message on the desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix input box losing focus after sending a message on the desktop, closes [#830](https://github.com/lobehub/lobe-chat/issues/830) ([d491af9](https://github.com/lobehub/lobe-chat/commit/d491af9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.116.4](https://github.com/lobehub/lobe-chat/compare/v0.116.3...v0.116.4)
 
 <sup>Released on **2023-12-26**</sup>
