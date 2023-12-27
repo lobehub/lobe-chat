@@ -17,7 +17,9 @@ declare global {
       IMGUR_CLIENT_ID?: string;
 
       AGENTS_INDEX_URL?: string;
+
       PLUGINS_INDEX_URL?: string;
+      PLUGIN_SETTINGS?: string;
     }
   }
 }
@@ -62,5 +64,7 @@ export const getServerConfig = () => {
     PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
       ? process.env.PLUGINS_INDEX_URL
       : 'https://chat-plugins.lobehub.com',
+
+    PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
   };
 };
