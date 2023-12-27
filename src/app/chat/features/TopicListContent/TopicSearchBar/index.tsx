@@ -8,7 +8,7 @@ import { useChatStore } from '@/store/chat';
 const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
   const { t } = useTranslation('chat');
 
-  const [keywords, setKeywords] = useState<string | undefined>(undefined);
+  const [keywords, setKeywords] = useState('');
   const { mobile } = useResponsive();
 
   const useSearchTopics = useChatStore((s) => s.useSearchTopics);
