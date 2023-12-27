@@ -184,14 +184,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                         | 助手说明                                                                                                 |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [部署专家代理](https://chat-preview.lobehub.com/market?agent=deployment-agent)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2023-12-27**</sup>           | AI 部署专家是管理软件应用的完整部署生命周期的专家，特别是 Web 应用。<br/>`代码` `部署` `容器化`          |
-| [美式英语转译专家](https://chat-preview.lobehub.com/market?agent=to-local-english)<br/><sup>By **[doresu](https://github.com/doresu)** on **2023-12-27**</sup>                   | 粗鲁老编辑、资深作家和翻译家，擅长直译英文并转化为地道的美式英语<br/>`翻译` `编辑` `写作` `翻译家`       |
-| [学术润色专家](https://chat-preview.lobehub.com/market?agent=academic-paragraph-refiner)<br/><sup>By **[Feliks151450](https://github.com/Feliks151450)** on **2023-12-26**</sup> | 高级研究校对及语言编辑，专业于多个研究领域，精通学术英语。<br/>`校对` `写作` `研究`                      |
-| [Flutter 开发专家](https://chat-preview.lobehub.com/market?agent=flutter-dev)<br/><sup>By **[kamaravichow](https://github.com/kamaravichow)** on **2023-12-25**</sup>            | 一位精通 Flutter 框架和 Dart 编程语言的开发者<br/>`flutter` `development` `dart` `programming` `widgets` |
+| 最近新增                                                                                                                                                                         | 助手说明                                                                                           |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [部署专家代理](https://chat-preview.lobehub.com/market?agent=deployment-agent)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2023-12-27**</sup>           | AI 部署专家是管理软件应用的完整部署生命周期的专家，特别是 Web 应用。<br/>`代码` `部署` `容器化`    |
+| [美术论文概述专家](https://chat-preview.lobehub.com/market?agent=thesis-overview)<br/><sup>By **[caoyang2002](https://github.com/caoyang2002)** on **2023-12-27**</sup>          | 擅长论文简述与美术评论<br/>`美术` `论文` `评论`                                                    |
+| [美式英语转译专家](https://chat-preview.lobehub.com/market?agent=to-local-english)<br/><sup>By **[doresu](https://github.com/doresu)** on **2023-12-27**</sup>                   | 粗鲁老编辑、资深作家和翻译家，擅长直译英文并转化为地道的美式英语<br/>`翻译` `编辑` `写作` `翻译家` |
+| [学术润色专家](https://chat-preview.lobehub.com/market?agent=academic-paragraph-refiner)<br/><sup>By **[Feliks151450](https://github.com/Feliks151450)** on **2023-12-26**</sup> | 高级研究校对及语言编辑，专业于多个研究领域，精通学术英语。<br/>`校对` `写作` `研究`                |
 
-> 📊 Total agents: [<kbd>**81**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**82**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
