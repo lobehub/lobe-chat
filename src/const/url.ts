@@ -9,7 +9,7 @@ export const WIKI = urlJoin(GITHUB, 'wiki');
 export const WIKI_PLUGIN_GUIDE = urlJoin(WIKI, 'Plugin-Development');
 export const ABOUT = pkg.homepage;
 export const FEEDBACK = pkg.bugs.url;
-export const DISCORD = 'https://discord.gg/AYFPHvv2jT';
+export const DISCORD = 'https://discord.gg/6ZpUynRM';
 
 export const PLUGINS_INDEX_URL = 'https://chat-plugins.lobehub.com';
 
