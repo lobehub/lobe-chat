@@ -186,12 +186,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                         | 助手说明                                                                                                 |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [部署专家代理](https://chat-preview.lobehub.com/market?agent=deployment-agent)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2023-12-27**</sup>           | AI 部署专家是管理软件应用的完整部署生命周期的专家，特别是 Web 应用。<br/>`代码` `部署` `容器化`          |
+| [美式英语转译专家](https://chat-preview.lobehub.com/market?agent=to-local-english)<br/><sup>By **[doresu](https://github.com/doresu)** on **2023-12-27**</sup>                   | 粗鲁老编辑、资深作家和翻译家，擅长直译英文并转化为地道的美式英语<br/>`翻译` `编辑` `写作` `翻译家`       |
 | [学术润色专家](https://chat-preview.lobehub.com/market?agent=academic-paragraph-refiner)<br/><sup>By **[Feliks151450](https://github.com/Feliks151450)** on **2023-12-26**</sup> | 高级研究校对及语言编辑，专业于多个研究领域，精通学术英语。<br/>`校对` `写作` `研究`                      |
 | [Flutter 开发专家](https://chat-preview.lobehub.com/market?agent=flutter-dev)<br/><sup>By **[kamaravichow](https://github.com/kamaravichow)** on **2023-12-25**</sup>            | 一位精通 Flutter 框架和 Dart 编程语言的开发者<br/>`flutter` `development` `dart` `programming` `widgets` |
-| [Facebook 广告专家](https://chat-preview.lobehub.com/market?agent=facebook-ads-expert)<br/><sup>By **[alissonryan](https://github.com/alissonryan)** on **2023-12-20**</sup>     | 与专家一起创建 Facebook 广告<br/>`文案撰写` `facebook广告` `潜在客户生成`                                |
-| [梦境画家](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                        | 一位能将你的梦想变成现实的梦境艺术家。<br/>`txt-2-img` `painter`                                         |
 
-> 📊 Total agents: [<kbd>**79**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**81**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -339,6 +339,7 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 
@@ -351,6 +352,7 @@ $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 

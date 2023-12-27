@@ -208,14 +208,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                                   | Description                                                                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Academic Proofreading Expert](https://chat-preview.lobehub.com/market?agent=academic-paragraph-refiner)<br/><sup>By **[Feliks151450](https://github.com/Feliks151450)** on **2023-12-26**</sup> | Highly skilled in advanced research proofreading and language editing, specializing in multiple research fields and proficient in academic English.<br/>`proofreading` `writing` `research` |
-| [Flutter Maestro](https://chat-preview.lobehub.com/market?agent=flutter-dev)<br/><sup>By **[kamaravichow](https://github.com/kamaravichow)** on **2023-12-25**</sup>                             | A developer expert in Flutter framework and Dart programming language.<br/>`flutter` `development` `dart` `programming` `widgets`                                                           |
-| [Facebook Ads Expert](https://chat-preview.lobehub.com/market?agent=facebook-ads-expert)<br/><sup>By **[alissonryan](https://github.com/alissonryan)** on **2023-12-20**</sup>                   | Create a Facebook Ads with a expert<br/>`copywriting` `facebook-ads` `lead-generation`                                                                                                      |
-| [Dream Painter](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                                   | A dream artist who can bring your dreams into reality.<br/>`txt-2-img` `painter`                                                                                                            |
+| Recent Submits                                                                                                                                                                                   | Description                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Deployment Specialist Agent](https://chat-preview.lobehub.com/market?agent=deployment-agent)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2023-12-27**</sup>            | An AI Deployment Specialist is an expert in managing the full deployment lifecycle of software applications, particularly web applications.<br/>`code` `deployment` `software`                       |
+| [American English Transcreation Expert](https://chat-preview.lobehub.com/market?agent=to-local-english)<br/><sup>By **[doresu](https://github.com/doresu)** on **2023-12-27**</sup>              | Rough old editor, seasoned writer, and translator, proficient in translating English directly and transforming it into authentic American English<br/>`translation` `editing` `writing` `translator` |
+| [Academic Proofreading Expert](https://chat-preview.lobehub.com/market?agent=academic-paragraph-refiner)<br/><sup>By **[Feliks151450](https://github.com/Feliks151450)** on **2023-12-26**</sup> | Highly skilled in advanced research proofreading and language editing, specializing in multiple research fields and proficient in academic English.<br/>`proofreading` `writing` `research`          |
+| [Flutter Maestro](https://chat-preview.lobehub.com/market?agent=flutter-dev)<br/><sup>By **[kamaravichow](https://github.com/kamaravichow)** on **2023-12-25**</sup>                             | A developer expert in Flutter framework and Dart programming language.<br/>`flutter` `development` `dart` `programming` `widgets`                                                                    |
 
-> 📊 Total agents: [<kbd>**79**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**81**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -368,6 +368,7 @@ We provide a Docker image for deploying the LobeChat service on your own private
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 
@@ -380,6 +381,7 @@ $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 
