@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.117.1](https://github.com/lobehub/lobe-chat/compare/v0.117.0...v0.117.1)
+
+<sup>Released on **2023-12-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add image download functionality to DALL·E render component.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add image download functionality to DALL·E render component, closes [#778](https://github.com/lobehub/lobe-chat/issues/778) ([31b8047](https://github.com/lobehub/lobe-chat/commit/31b8047))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.117.0](https://github.com/lobehub/lobe-chat/compare/v0.116.5...v0.117.0)
 
 <sup>Released on **2023-12-27**</sup>
