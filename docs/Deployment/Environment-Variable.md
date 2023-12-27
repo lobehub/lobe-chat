@@ -16,6 +16,7 @@ LobeChat provides additional configuration options during deployment, which can 
   - [`AZURE_API_VERSION`](#azure_api_version)
 - [Plugin Service](#plugin-service)
   - [`PLUGINS_INDEX_URL`](#plugins_index_url)
+  - [`PLUGINS_SETTINGS`](#plugins_settings)
 - [Agent Service](#agent-service)
   - [`AGENTS_INDEX_URL`](#agents_index_url)
 - [Data Analytics](#data-analytics)

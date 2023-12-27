@@ -16,6 +16,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
   - [`AZURE_API_VERSION`](#azure_api_version)
 - [插件服务](#插件服务)
   - [`PLUGINS_INDEX_URL`](#plugins_index_url)
+  - [`PLUGINS_SETTINGS`](#plugins_settings)
 - [角色服务](#角色服务)
   - [`AGENTS_INDEX_URL`](#agents_index_url)
 - [数据统计](#数据统计)
