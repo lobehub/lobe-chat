@@ -1,5 +1,5 @@
 import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@lobehub/ui';
-import { ThemeAppearance } from 'antd-style';
+import { ThemeProvider as StyleThemeProvider, type ThemeAppearance } from 'antd-style';
 import Image from 'next/image';
 import { ReactNode, memo, useEffect } from 'react';
 
@@ -26,9 +26,10 @@ const AppTheme = memo<AppThemeProps>(
     // console.debug('server:neutralColor', defaultNeutralColor);
     const themeMode = useGlobalStore((s) => s.settings.themeMode);
 
-    const [primaryColor, neutralColor] = useGlobalStore((s) => [
+    const [primaryColor, neutralColor, fontSize] = useGlobalStore((s) => [
       s.settings.primaryColor,
       s.settings.neutralColor,
+      s.settings.fontSize,
     ]);
 
     useEffect(() => {
@@ -51,8 +52,10 @@ const AppTheme = memo<AppThemeProps>(
         }}
         themeMode={themeMode}
       >
-        <GlobalStyle />
-        <ConfigProvider config={{ imgAs: Image } as any}>{children}</ConfigProvider>
+        <StyleThemeProvider theme={{ token: { fontSize } }}>
+          <GlobalStyle />
+          <ConfigProvider config={{ imgAs: Image } as any}>{children}</ConfigProvider>
+        </StyleThemeProvider>
       </ThemeProvider>
     );
   },
