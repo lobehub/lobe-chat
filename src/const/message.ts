@@ -8,7 +8,7 @@ export const isFunctionMessageAtStart = (content: string) => {
 };
 
 export const testFunctionMessageAtEnd = (content: string) => {
-  const regExp = /{"function_call":.*?}}/;
+  const regExp = /{"tool_calls":.*?}}/;
   const match = content.match(regExp);
 
   return { content: match ? match[0] : '', valid: match };
