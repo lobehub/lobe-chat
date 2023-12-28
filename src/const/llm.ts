@@ -15,3 +15,17 @@ export const DEFAULT_OPENAI_MODEL_LIST: string[] = Object.values(LanguageModel);
 
 // vision model white list, these models will change the content from string to array
 export const VISION_MODEL_WHITE_LIST = ['gpt-4-vision-preview'];
+
+// refs to: https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
+export const ModelTokens: Record<LanguageModel, number> = {
+  [LanguageModel.GPT3_5]: 4096,
+  [LanguageModel.GPT3_5_1106]: 16_385,
+  [LanguageModel.GPT3_5_16K]: 16_385,
+  [LanguageModel.GPT4]: 8196,
+  [LanguageModel.GPT4_PREVIEW]: 128_000,
+  [LanguageModel.GPT4_VISION_PREVIEW]: 128_000,
+  [LanguageModel.GPT4_32K]: 32_768,
+};
+
+// refs: https://github.com/lobehub/lobe-chat/issues/837
+export const VISION_MODEL_DEFAULT_MAX_TOKENS = 2048;

@@ -5,9 +5,8 @@ import { template } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
-import { LOADING_FLAT } from '@/const/message';
-import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
+import { VISION_MODEL_DEFAULT_MAX_TOKENS, VISION_MODEL_WHITE_LIST } from '@/const/llm';
+import { LOADING_FLAT, isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/const/message';
 import { CreateMessageParams } from '@/database/models/message';
 import { DB_Message } from '@/database/schemas/message';
 import { chatService } from '@/services/chat';
@@ -19,7 +18,6 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 import { fetchSSE } from '@/utils/fetch';
-import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors } from '../../selectors';
