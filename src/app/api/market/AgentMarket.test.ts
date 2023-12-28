@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { AgentMarket } from './AgentMarket';
 
@@ -14,6 +14,18 @@ describe('AgentMarket', () => {
     const agentMarket = new AgentMarket();
     const url = agentMarket.getAgentIndexUrl('ko-KR');
     expect(url).toBe('https://chat-agents.lobehub.com/index.ko-KR.json');
+  });
+
+  it('should return the zh-CN URL for zh locale', () => {
+    const agentMarket = new AgentMarket();
+    const url = agentMarket.getAgentIndexUrl('zh' as any);
+    expect(url).toBe('https://chat-agents.lobehub.com/index.zh-CN.json');
+  });
+
+  it('should return the default URL for en locale', () => {
+    const agentMarket = new AgentMarket();
+    const url = agentMarket.getAgentIndexUrl('en' as any);
+    expect(url).toBe('https://chat-agents.lobehub.com');
   });
 
   it('should return the base URL if the provided language is not supported', () => {

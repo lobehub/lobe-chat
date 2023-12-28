@@ -1,4 +1,4 @@
-import { Locales, supportLocales } from '@/locales/resources';
+import { Locales, normalizeLocale, supportLocales } from '@/locales/resources';
 
 export const DEFAULT_LANG = 'en-US';
 export const LOBE_LOCALE_COOKIE = 'LOBE_LOCALE';
@@ -8,5 +8,5 @@ export const LOBE_LOCALE_COOKIE = 'LOBE_LOCALE';
  * @param locale
  */
 export const isLocaleNotSupport = (locale: Locales) => {
-  return locale === DEFAULT_LANG || !supportLocales.includes(locale);
+  return normalizeLocale(locale) === DEFAULT_LANG || !supportLocales.includes(locale);
 };
