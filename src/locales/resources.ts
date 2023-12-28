@@ -12,6 +12,7 @@ export const locales = [
   'tr-TR',
   'zh-CN',
   'zh-TW',
+  'vi-VN',
 ] as const;
 
 export type DefaultResources = typeof resources;
@@ -95,6 +96,10 @@ export const localeOptions: LocaleOptions = [
   {
     label: 'Italiano',
     value: 'it-IT',
+  },
+  {
+    label: 'Tiếng Việt',
+    value: 'vi-VN',
   },
 ] as LocaleOptions;
 
