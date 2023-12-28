@@ -47,12 +47,13 @@ export const chatTopic: StateCreator<
 > = (set, get) => ({
   // create
   openNewTopicOrSaveTopic: async () => {
-    const { switchTopic, saveToTopic, activeTopicId } = get();
+    const { switchTopic, saveToTopic, refreshMessages, activeTopicId } = get();
     const hasTopic = !!activeTopicId;
 
     if (hasTopic) switchTopic();
     else {
-      saveToTopic();
+      await saveToTopic();
+      refreshMessages();
     }
   },
 

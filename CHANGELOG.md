@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.117.4](https://github.com/lobehub/lobe-chat/compare/v0.117.3...v0.117.4)
+
+<sup>Released on **2023-12-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix messages not refresh when creating a new topic.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix messages not refresh when creating a new topic, closes [#856](https://github.com/lobehub/lobe-chat/issues/856) ([5e7985a](https://github.com/lobehub/lobe-chat/commit/5e7985a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.117.3](https://github.com/lobehub/lobe-chat/compare/v0.117.2...v0.117.3)
 
 <sup>Released on **2023-12-28**</sup>
