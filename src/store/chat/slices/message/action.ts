@@ -5,7 +5,7 @@ import { template } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { VISION_MODEL_DEFAULT_MAX_TOKENS, VISION_MODEL_WHITE_LIST } from '@/const/llm';
+import { GPT4_VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/llm';
 import { LOADING_FLAT, isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/const/message';
 import { CreateMessageParams } from '@/database/models/message';
 import { DB_Message } from '@/database/schemas/message';
@@ -337,11 +337,12 @@ export const chatMessage: StateCreator<
     config.params.max_tokens = config.enableMaxTokens ? config.params.max_tokens : undefined;
 
     // 5. handle config for the vision model
-    // Due to vision model's default max_tokens is very small
+    // Due to the gpt-4-vision-preview model's default max_tokens is very small
     // we need to set the max_tokens a larger one.
-    if (VISION_MODEL_WHITE_LIST.includes(config.model)) {
+    if (config.model === 'gpt-4-vision-preview') {
       /* eslint-disable unicorn/no-lonely-if */
-      if (!config.params.max_tokens) config.params.max_tokens = VISION_MODEL_DEFAULT_MAX_TOKENS;
+      if (!config.params.max_tokens)
+        config.params.max_tokens = GPT4_VISION_MODEL_DEFAULT_MAX_TOKENS;
     }
 
     const fetcher = () =>
