@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
-import { localeOptions } from '@/locales/options';
+import { localeOptions } from '@/locales/resources';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';

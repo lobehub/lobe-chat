@@ -6,6 +6,7 @@ import { initReactI18next } from 'react-i18next';
 import { getClientConfig } from '@/config/client';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { COOKIE_CACHE_DAYS } from '@/const/settings';
+import { normalizeLocale } from '@/locales/resources';
 import { isDev, isOnServerSide } from '@/utils/env';
 
 const { I18N_DEBUG, I18N_DEBUG_BROWSER, I18N_DEBUG_SERVER } = getClientConfig();
@@ -17,22 +18,9 @@ export const createI18nNext = (lang?: string) => {
     .use(LanguageDetector)
     .use(
       resourcesToBackend(async (lng: string, ns: string) => {
-        switch (lng) {
-          case 'zh-CN':
-          case 'zh': {
-            if (isDev) return import(`./default/${ns}`);
+        if (isDev && lng === 'zh-CN') return import(`./default/${ns}`);
 
-            return import(`@/../locales/zh-CN/${ns}.json`);
-          }
-
-          case 'en': {
-            return import(`@/../locales/en-US/${ns}.json`);
-          }
-
-          default: {
-            return import(`@/../locales/${lng}/${ns}.json`);
-          }
-        }
+        return import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
       }),
     );
 
