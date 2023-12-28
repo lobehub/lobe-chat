@@ -1,9 +1,9 @@
 import { ReactNode, memo } from 'react';
 
+import { isFunctionMessageAtStart } from '@/const/message';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
-import { isFunctionMessageAtStart } from '@/utils/message';
 
 import Inspector from '../Plugins/Inspector';
 import { DefaultMessage } from './Default';

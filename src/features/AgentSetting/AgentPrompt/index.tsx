@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { ModelTokens } from '@/const/modelTokens';
+import { ModelTokens } from '@/const/llm';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { LanguageModel } from '@/types/llm';
 

@@ -2,7 +2,6 @@ import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
@@ -74,7 +73,7 @@ describe('ChatService', () => {
     it('should not use tools for models in the vision model whitelist', async () => {
       const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
       const messages = [{ content: 'Hello', role: 'user' }] as ChatMessage[];
-      const modelInWhitelist = VISION_MODEL_WHITE_LIST[0];
+      const modelInWhitelist = 'gpt-4-vision-preview';
 
       await chatService.createAssistantMessage({
         messages,
