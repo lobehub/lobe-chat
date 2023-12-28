@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { chainLangDetect } from '@/chains/langDetect';
 import { chainTranslate } from '@/chains/translate';
-import { supportLocales } from '@/locales/options';
+import { supportLocales } from '@/locales/resources';
 import { chatService } from '@/services/chat';
 import { fileService } from '@/services/file';
 import { imageGenerationService } from '@/services/imageGeneration';
