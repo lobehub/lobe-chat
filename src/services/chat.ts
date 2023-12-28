@@ -2,7 +2,7 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
-import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
+import { isVisionModel } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
@@ -14,8 +14,6 @@ import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
 import { createHeaderWithOpenAI } from './_header';
 import { OPENAI_URLS, PLUGINS_URLS } from './_url';
-
-const isVisionModel = (model?: string) => model && VISION_MODEL_WHITE_LIST.includes(model);
 
 interface FetchOptions {
   signal?: AbortSignal | undefined;

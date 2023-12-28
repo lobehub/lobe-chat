@@ -2,6 +2,83 @@
 
 # Changelog
 
+### [Version 0.117.4](https://github.com/lobehub/lobe-chat/compare/v0.117.3...v0.117.4)
+
+<sup>Released on **2023-12-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix messages not refresh when creating a new topic.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix messages not refresh when creating a new topic, closes [#856](https://github.com/lobehub/lobe-chat/issues/856) ([5e7985a](https://github.com/lobehub/lobe-chat/commit/5e7985a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.117.3](https://github.com/lobehub/lobe-chat/compare/v0.117.2...v0.117.3)
+
+<sup>Released on **2023-12-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix tool calls at end, fix vision model max tokens, improve vision model checker.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix tool calls at end ([b0b615a](https://github.com/lobehub/lobe-chat/commit/b0b615a))
+- **misc**: Fix vision model max tokens ([8b704a0](https://github.com/lobehub/lobe-chat/commit/8b704a0))
+- **misc**: Improve vision model checker ([da7d177](https://github.com/lobehub/lobe-chat/commit/da7d177))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.117.2](https://github.com/lobehub/lobe-chat/compare/v0.117.1...v0.117.2)
+
+<sup>Released on **2023-12-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix market locale missing.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix market locale missing, closes [#851](https://github.com/lobehub/lobe-chat/issues/851) ([e23ec66](https://github.com/lobehub/lobe-chat/commit/e23ec66))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.117.1](https://github.com/lobehub/lobe-chat/compare/v0.117.0...v0.117.1)
 
 <sup>Released on **2023-12-27**</sup>

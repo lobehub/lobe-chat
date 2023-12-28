@@ -12,24 +12,27 @@ import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { PluginInstallError } from '@/types/tool/plugin';
 
-const ProxyChecker = memo<{ onChange?: (value: boolean) => void; value?: boolean }>(
-  ({ value, onChange }) => {
-    const { t } = useTranslation('plugin');
+interface ProxyCheckerProps {
+  onChange?: (value: boolean) => void;
+  value?: boolean;
+}
 
-    return (
-      <Flexbox
-        gap={8}
-        horizontal
-        onClick={() => {
-          onChange?.(!value);
-        }}
-        style={{ cursor: 'pointer' }}
-      >
-        <Checkbox checked={value} /> {t('dev.customParams.useProxy.label')}
-      </Flexbox>
-    );
-  },
-);
+const ProxyChecker = memo<ProxyCheckerProps>(({ value, onChange }) => {
+  const { t } = useTranslation('plugin');
+
+  return (
+    <Flexbox
+      gap={8}
+      horizontal
+      onClick={() => {
+        onChange?.(!value);
+      }}
+      style={{ cursor: 'pointer' }}
+    >
+      <Checkbox checked={value} /> {t('dev.customParams.useProxy.label')}
+    </Flexbox>
+  );
+});
 
 const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
   ({ form, isEditMode }) => {

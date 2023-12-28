@@ -2,7 +2,7 @@ import { TokenTag, Tooltip } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ModelTokens } from '@/const/modelTokens';
+import { ModelTokens } from '@/const/llm';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
