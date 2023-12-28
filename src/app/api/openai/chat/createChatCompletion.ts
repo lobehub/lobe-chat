@@ -51,7 +51,7 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
       console.error(errorResult);
 
       return createErrorResponse(ChatErrorType.OpenAIBizError, {
-        endpoint: openai.baseURL,
+        // endpoint: openai.baseURL,
         error: errorResult,
       });
     }
@@ -61,7 +61,7 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
 
     // return as a GatewayTimeout error
     return createErrorResponse(ChatErrorType.InternalServerError, {
-      endpoint: openai.baseURL,
+      // endpoint: openai.baseURL,
       error: JSON.stringify(error),
     });
   }
