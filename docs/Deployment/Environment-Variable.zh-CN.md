@@ -16,7 +16,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
   - [`AZURE_API_VERSION`](#azure_api_version)
 - [插件服务](#插件服务)
   - [`PLUGINS_INDEX_URL`](#plugins_index_url)
-  - [`PLUGINS_SETTINGS`](#plugins_settings)
+  - [`PLUGIN_SETTINGS`](#plugin_settings)
 - [角色服务](#角色服务)
   - [`AGENTS_INDEX_URL`](#agents_index_url)
 - [数据统计](#数据统计)
@@ -92,7 +92,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 描述：LobeChat 插件市场的索引地址，如果你自行部署了插件市场的服务，可以使用该变量来覆盖默认的插件市场地址
 - 默认值：`https://chat-plugins.lobehub.com`
 
-### `PLUGINS_SETTINGS`
+### `PLUGIN_SETTINGS`
 
 - 类型：可选
 - 描述：用于配置插件的设置，使用 `插件名:设置字段=设置值` 的格式来配置插件的设置，多个设置字段用英文分号 `;` 隔开，多个插件设置使用英文逗号`,`隔开。
