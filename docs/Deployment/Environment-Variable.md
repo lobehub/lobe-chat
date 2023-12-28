@@ -16,7 +16,7 @@ LobeChat provides additional configuration options during deployment, which can 
   - [`AZURE_API_VERSION`](#azure_api_version)
 - [Plugin Service](#plugin-service)
   - [`PLUGINS_INDEX_URL`](#plugins_index_url)
-  - [`PLUGINS_SETTINGS`](#plugins_settings)
+  - [`PLUGIN_SETTINGS`](#plugin_settings)
 - [Agent Service](#agent-service)
   - [`AGENTS_INDEX_URL`](#agents_index_url)
 - [Data Analytics](#data-analytics)
@@ -94,7 +94,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Description: The index address of the LobeChat plugin market. If you have deployed the plugin market service yourself, you can use this variable to override the default plugin market address
 - Default: `https://chat-plugins.lobehub.com`
 
-### `PLUGINS_SETTINGS`
+### `PLUGIN_SETTINGS`
 
 - Type: Optional
 - Description: Used to set the plugin settings, the format is `plugin-identifier:key1=value1;key2=value2`, multiple settings fields are separated by semicolons `;`, multiple plugin settings are separated by commas `,`.
