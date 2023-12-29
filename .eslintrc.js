@@ -14,5 +14,6 @@ config.rules['unicorn/no-useless-undefined'] = 0;
 config.rules['react/no-unknown-property'] = 0;
 config.rules['unicorn/prefer-ternary'] = 0;
 config.rules['unicorn/prefer-spread'] = 0;
+config.rules['@typescript-eslint/no-unused-vars'] = 1;
 
 module.exports = config;

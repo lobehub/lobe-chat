@@ -1,9 +1,33 @@
+import { RegexUtil } from '@dongjak-extensions/lang';
 import { Button, Input, Space } from 'antd';
 import React, { memo } from 'react';
+import { regex, string } from 'valibot';
 
 import Logo from '@/app/login/features/Logo/Logo';
+import useValibot from '@/hooks/useValibot';
+
+// 1.2 kB
+interface LoginParams {
+  code: string;
+  phoneNumber: string;
+}
 
 const LoginForm = memo(() => {
+  const [loginParams, _, handleChange, isValidated, errors] = useValibot(
+    {
+      code: string([regex(RegexUtil.CODE_SIX, '验证码必须是6位数字')]),
+      phoneNumber: string([regex(RegexUtil.PHONE, '这不是一个有效的手机号')]),
+    },
+    { code: '', phoneNumber: '' } as LoginParams,
+  );
+  const handleSend = () => {
+    isValidated((_) => {});
+  };
+  const handleSendCode = () => {
+    isValidated((_) => {
+      alert('发送验证码');
+    });
+  };
   return (
     <div className={'flex flex-col w-25% row-gap-1.5vh'} id={'LoginForm'}>
       <Logo />
@@ -52,13 +76,35 @@ const LoginForm = memo(() => {
         <div className="MainSignupLoginSection_orText__ssyEK">或者</div>
         <hr className="h-[1px] border-0 bg-#313535 flex-1" />
       </div>
-      <Input placeholder="请输入手机号" size="large" />
+      <Input
+        onChange={handleChange('phoneNumber')}
+        placeholder="请输入手机号"
+        size="large"
+        status={errors.errorPath === 'phoneNumber' ? 'error' : ''}
+        value={loginParams.phoneNumber}
+      />
+      {errors.errorPath === 'phoneNumber' && (
+        <div className="font-size-14px color-#e3567c">{errors.msg}</div>
+      )}
       <Space.Compact size="large" style={{ width: '100%' }}>
-        <Input placeholder="请输入验证码" />
-        <Button>发送验证码</Button>
+        <Input
+          onChange={handleChange('code')}
+          placeholder="请输入验证码"
+          status={errors.errorPath === 'code' ? 'error' : ''}
+          value={loginParams.code}
+        />
+        <Button className={'m-l-5px'} onClick={handleSendCode}>
+          发送验证码
+        </Button>
       </Space.Compact>
-
-      <Button style={{ backgroundColor: '#31316e', color: 'gray' }} type="text">
+      {errors.errorPath === 'code' && (
+        <div className="font-size-14px color-#e3567c">{errors.msg}</div>
+      )}
+      <Button
+        onClick={handleSend}
+        style={{ backgroundColor: '#31316e', color: 'gray' }}
+        type="text"
+      >
         登 录
       </Button>
 

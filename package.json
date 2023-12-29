@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5",
+    "@dongjak-extensions/lang": "^2.2.0",
     "@icons-pack/react-simple-icons": "^9",
     "@lobehub/chat-plugin-sdk": "latest",
     "@lobehub/chat-plugins-gateway": "latest",
@@ -125,6 +126,7 @@
     "use-merge-value": "^1",
     "utility-types": "^3",
     "uuid": "^9",
+    "valibot": "^0.25.0",
     "yaml": "^2",
     "zod": "^3",
     "zustand": "^4.4",
