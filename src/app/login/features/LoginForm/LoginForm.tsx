@@ -1,12 +1,12 @@
 import { RegexUtil } from "@dongjak-extensions/lang";
 import { Button, Input, Space } from "antd";
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { regex, string } from "valibot";
 
 import Logo from "@/app/login/features/Logo/Logo";
 import useValibot from "@/hooks/useValibot";
 import { authenticationApi } from "@/app/api/authentication";
-
+import { useCountDown } from "ahooks";
 // 1.2 kB
 interface LoginParams {
   code: string;
@@ -21,15 +21,35 @@ const LoginForm = memo(() => {
     },
     { code: "", phoneNumber: "" } as LoginParams,
   );
+  const [targetDate, setTargetDate] = useState<number>();
+  const [sendCodeBtn, setSendCodeBtn] = useState({
+    text: "发送验证码",
+    disabled: false,
+  });
+  const [countdown] = useCountDown({
+    targetDate,
+  });
   const handleSend = () => {
     isValidated((_) => {}, []);
   };
+  useEffect(() => {
+    // 更新文档的标题
+    setSendCodeBtn({
+      text: countdown
+        ? `${Math.round(countdown / 1000)}秒后重发`
+        : "发送验证码",
+      disabled: !!countdown,
+    });
+  }, [countdown]); // 仅在 count 更改时重新运行
   const handleSendCode = () => {
     isValidated(
       (success, data, errors) => {
         if (success)
           authenticationApi.sendCode(data.phoneNumber).then((res) => {
-            alert(res.isSuccessful());
+            // alert(res.isSuccessful());
+            if (res.isSuccessful()) {
+              setTargetDate(Date.now() + 60_000);
+            }
           });
       },
       ["code"],
@@ -100,8 +120,12 @@ const LoginForm = memo(() => {
           status={errors.errorPath === "code" ? "error" : ""}
           value={loginParams.code}
         />
-        <Button className={"m-l-5px"} onClick={handleSendCode}>
-          发送验证码
+        <Button
+          className={"m-l-5px"}
+          disabled={sendCodeBtn.disabled}
+          onClick={handleSendCode}
+        >
+          {sendCodeBtn.text}
         </Button>
       </Space.Compact>
       {errors.errorPath === "code" && (

@@ -14,8 +14,9 @@ httpClient.interceptors.request.use(
     return Promise.reject(error);
   },
 );
-//@ts-ignore
+
 httpClient.interceptors.response.use(
+  //@ts-ignore
   (response): Promise<JsonResponse<any>> => {
     const jsonResponse = new JsonResponse(
       response.data.code,
