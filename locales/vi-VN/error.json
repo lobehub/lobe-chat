@@ -1,0 +1,53 @@
+{
+  "pluginSettings": {
+    "desc": "Hoàn thành cấu hình sau đây để bắt đầu sử dụng plugin này",
+    "title": "Cài Đặt Plugin {{name}}"
+  },
+  "response": {
+    "400": "Xin lỗi, máy chủ không hiểu yêu cầu của bạn. Vui lòng đảm bảo các tham số yêu cầu của bạn là chính xác.",
+    "401": "Xin lỗi, máy chủ đã từ chối yêu cầu của bạn, có thể do không đủ quyền hạn hoặc xác thực không hợp lệ.",
+    "403": "Xin lỗi, máy chủ đã từ chối yêu cầu của bạn. Bạn không có quyền truy cập nội dung này.",
+    "404": "Xin lỗi, máy chủ không thể tìm thấy trang hoặc tài nguyên bạn yêu cầu. Vui lòng đảm bảo URL của bạn là chính xác.",
+    "405": "Xin lỗi, máy chủ không hỗ trợ phương thức yêu cầu bạn đang sử dụng. Vui lòng đảm bảo phương thức yêu cầu của bạn là chính xác.",
+    "429": "Xin lỗi, yêu cầu của bạn quá thường xuyên và máy chủ đang mệt. Vui lòng thử lại sau.",
+    "500": "Xin lỗi, máy chủ có vẻ đang gặp một số khó khăn và tạm thời không thể hoàn thành yêu cầu của bạn. Vui lòng thử lại sau.",
+    "502": "Xin lỗi, máy chủ có vẻ bị lạc và tạm thời không thể cung cấp dịch vụ. Vui lòng thử lại sau.",
+    "503": "Xin lỗi, máy chủ hiện tại không thể xử lý yêu cầu của bạn, có thể do quá tải hoặc bảo trì. Vui lòng thử lại sau.",
+    "504": "Xin lỗi, máy chủ không nhận được phản hồi từ máy chủ phía trước. Vui lòng thử lại sau.",
+    "InvalidAccessCode": "Mật khẩu không chính xác hoặc trống. Vui lòng nhập đúng mật khẩu truy cập hoặc thêm Khóa API OpenAI tùy chỉnh.",
+    "NoAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
+    "OpenAIBizError": "Lỗi khi yêu cầu dịch vụ OpenAI. Vui lòng chuẩn đoán hoặc thử lại dựa trên thông tin sau.",
+    "PluginApiNotFound": "Xin lỗi, API không tồn tại trong manifest của plugin. Vui lòng kiểm tra xem phương thức yêu cầu của bạn có khớp với API trong manifest của plugin không",
+    "PluginApiParamsError": "Xin lỗi, xác thực tham số đầu vào cho yêu cầu plugin thất bại. Vui lòng kiểm tra xem các tham số đầu vào có khớp với mô tả API không",
+    "PluginGatewayError": "Xin lỗi, đã xảy ra lỗi với cổng plugin. Vui lòng kiểm tra xem cấu hình cổng plugin có chính xác không.",
+    "PluginManifestInvalid": "Xin lỗi, việc xác thực manifest của plugin thất bại. Vui lòng kiểm tra xem định dạng manifest có chính xác không",
+    "PluginManifestNotFound": "Xin lỗi, máy chủ không thể tìm thấy file manifest của plugin (manifest.json). Vui lòng kiểm tra xem địa chỉ file manifest của plugin có chính xác không",
+    "PluginMarketIndexInvalid": "Xin lỗi, việc xác thực chỉ mục plugin thất bại. Vui lòng kiểm tra xem định dạng file chỉ mục có chính xác không",
+    "PluginMarketIndexNotFound": "Xin lỗi, máy chủ không thể tìm thấy chỉ mục plugin. Vui lòng kiểm tra xem địa chỉ chỉ mục có chính xác không",
+    "PluginMetaInvalid": "Xin lỗi, việc xác thực metadata của plugin thất bại. Vui lòng kiểm tra xem định dạng metadata của plugin có chính xác không",
+    "PluginMetaNotFound": "Xin lỗi, không tìm thấy plugin trong chỉ mục. Vui lòng kiểm tra thông tin cấu hình của plugin trong chỉ mục",
+    "PluginOpenApiInitError": "Xin lỗi, khách hàng OpenAPI không thể khởi tạo. Vui lòng kiểm tra xem thông tin cấu hình OpenAPI có chính xác không.",
+    "PluginServerError": "Yêu cầu máy chủ plugin trả về một lỗi. Vui lòng kiểm tra file manifest plugin, cấu hình plugin hoặc triển khai máy chủ dựa trên thông tin lỗi dưới đây",
+    "PluginSettingsInvalid": "Plugin này cần được cấu hình chính xác trước khi có thể sử dụng. Vui lòng kiểm tra xem cấu hình của bạn có chính xác không"
+  },
+  "stt": {
+    "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
+  },
+  "tts": {
+    "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "Thêm URL Proxy OpenAI (tùy chọn)",
+      "description": "Nhập Khóa API OpenAI của bạn để bắt đầu cuộc trò chuyện. Ứng dụng sẽ không ghi lại Khóa API của bạn.",
+      "title": "Sử Dụng Khóa API Tùy Chỉnh"
+    },
+    "closeMessage": "Đóng thông báo",
+    "confirm": "Xác nhận và Thử Lại",
+    "password": {
+      "description": "Mã hóa ứng dụng đã được quản trị viên kích hoạt. Nhập mật khẩu ứng dụng để mở khóa ứng dụng. Mật khẩu chỉ cần điền một lần.",
+      "placeholder": "Vui lòng nhập mật khẩu",
+      "title": "Nhập Mật Khẩu để Mở Khóa Ứng Dụng"
+    }
+  }
+}

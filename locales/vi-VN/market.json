@@ -1,0 +1,30 @@
+{
+  "addAgent": "Thêm Đại Lý",
+  "guide": {
+    "func1": {
+      "desc1": "Nhập vào trang cài đặt mà bạn muốn gửi cho trợ lý bằng cách nhấp vào biểu tượng cài đặt ở góc trên bên phải của cửa sổ trò chuyện.",
+      "desc2": "Nhấp vào nút 'Gửi đến Thị Trường Trợ Lý' ở góc trên bên phải.",
+      "tag": "Phương Pháp 1",
+      "title": "Gửi qua LobeChat"
+    },
+    "func2": {
+      "button": "Đi đến Kho Trợ Lý Github",
+      "desc": "Nếu bạn muốn thêm trợ lý vào chỉ mục, tạo một mục trong thư mục plugin sử dụng agent-template.json hoặc agent-template-full.json, viết mô tả ngắn gọn và các thẻ phù hợp, sau đó tạo một yêu cầu kéo.",
+      "tag": "Phương Pháp 2",
+      "title": "Gửi qua Github"
+    }
+  },
+  "search": {
+    "placeholder": "Tìm kiếm tên đại lý, mô tả hoặc từ khóa..."
+  },
+  "sidebar": {
+    "comment": "Bình Luận",
+    "prompt": "Lời Nhắc",
+    "title": "Chi Tiết Đại Lý"
+  },
+  "submitAgent": "Gửi Đại Lý",
+  "title": {
+    "allAgents": "Tất Cả Đại Lý",
+    "recentSubmits": "Gửi Gần Đây"
+  }
+}
