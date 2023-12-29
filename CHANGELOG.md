@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.117.5](https://github.com/lobehub/lobe-chat/compare/v0.117.4...v0.117.5)
+
+<sup>Released on **2023-12-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: The input box is prone to losing focus.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: The input box is prone to losing focus, closes [#834](https://github.com/lobehub/lobe-chat/issues/834) ([26a42f6](https://github.com/lobehub/lobe-chat/commit/26a42f6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.117.4](https://github.com/lobehub/lobe-chat/compare/v0.117.3...v0.117.4)
 
 <sup>Released on **2023-12-28**</sup>
