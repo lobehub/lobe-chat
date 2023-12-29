@@ -1,3 +1,4 @@
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { PropsWithChildren } from 'react';
@@ -32,6 +33,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
             defaultPrimaryColor={primaryColor?.value as any}
           >
             {children}
+            <SpeedInsights />
           </Layout>
         </StyleRegistry>
         <Analytics />
