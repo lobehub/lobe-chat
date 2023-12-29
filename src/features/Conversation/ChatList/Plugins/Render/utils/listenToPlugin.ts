@@ -63,3 +63,33 @@ export const useOnPluginFetchPluginSettings = (onRequest: () => void) => {
     };
   }, []);
 };
+
+export const useOnPluginTriggerAIMessage = (callback: (id: string) => void) => {
+  useEffect(() => {
+    const fn = (e: MessageEvent) => {
+      if (e.data.type === PluginChannel.triggerAIMessage) {
+        callback(e.data.id);
+      }
+    };
+
+    window.addEventListener('message', fn);
+    return () => {
+      window.removeEventListener('message', fn);
+    };
+  }, []);
+};
+
+export const useOnPluginCreateAssistantMessage = (callback: (content: string) => void) => {
+  useEffect(() => {
+    const fn = (e: MessageEvent) => {
+      if (e.data.type === PluginChannel.createAssistantMessage) {
+        callback(e.data.content);
+      }
+    };
+
+    window.addEventListener('message', fn);
+    return () => {
+      window.removeEventListener('message', fn);
+    };
+  }, []);
+};
