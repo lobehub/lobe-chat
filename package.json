@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5",
+    "@dongjak-extensions/http-client": "^2.0.0",
     "@dongjak-extensions/lang": "^2.2.0",
     "@icons-pack/react-simple-icons": "^9",
     "@lobehub/chat-plugin-sdk": "latest",
@@ -83,6 +84,7 @@
     "ai": "^2.2.22",
     "antd": "^5",
     "antd-style": "^3",
+    "axios": "^1.6.3",
     "brotli-wasm": "^1",
     "chroma-js": "^2",
     "copy-to-clipboard": "^3",
@@ -134,6 +136,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^18",
+    "@dongjak-public-types/commons": "^3.0.0",
     "@ducanh2912/next-pwa": "^9",
     "@lobehub/i18n-cli": "latest",
     "@lobehub/lint": "latest",
