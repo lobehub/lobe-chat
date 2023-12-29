@@ -15,8 +15,8 @@ interface LoginParams {
 const LoginForm = memo(() => {
   const [loginParams, _, handleChange, isValidated, errors] = useValibot(
     {
-      code: string([regex(RegexUtil.CODE_SIX, '验证码必须是6位数字')]),
       phoneNumber: string([regex(RegexUtil.PHONE, '这不是一个有效的手机号')]),
+      code: string([regex(RegexUtil.CODE_SIX, '验证码必须是6位数字')]),
     },
     { code: '', phoneNumber: '' } as LoginParams,
   );
