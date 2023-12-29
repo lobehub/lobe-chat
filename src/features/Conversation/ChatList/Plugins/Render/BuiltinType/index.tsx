@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { BuiltinToolsRenders } from '@/tools/renders';
 
@@ -17,13 +16,7 @@ const BuiltinType = memo<BuiltinTypeProps>(({ content, id, identifier, loading }
   const { isJSON, data } = useParseContent(content);
 
   if (!isJSON) {
-    return (
-      loading && (
-        <Flexbox gap={8}>
-          <Loading />
-        </Flexbox>
-      )
-    );
+    return loading && <Loading />;
   }
 
   const Render = BuiltinToolsRenders[identifier || ''];

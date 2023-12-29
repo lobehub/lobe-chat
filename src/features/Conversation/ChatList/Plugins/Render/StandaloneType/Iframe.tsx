@@ -9,10 +9,12 @@ import { pluginSelectors } from '@/store/tool/selectors';
 
 import { useOnPluginReadyForInteraction } from '../utils/iframeOnReady';
 import {
+  useOnPluginCreateAssistantMessage,
   useOnPluginFetchMessage,
   useOnPluginFetchPluginSettings,
   useOnPluginFetchPluginState,
   useOnPluginFillContent,
+  useOnPluginTriggerAIMessage,
 } from '../utils/listenToPlugin';
 import { useOnPluginSettingsUpdate } from '../utils/pluginSettings';
 import { useOnPluginStateUpdate } from '../utils/pluginState';
@@ -116,6 +118,21 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
     if (!payload?.identifier) return;
 
     updatePluginSettings(payload?.identifier, value);
+  });
+
+  // when plugin want to trigger AI message
+  const triggerAIMessage = useChatStore((s) => s.triggerAIMessage);
+  useOnPluginTriggerAIMessage((messageId) => {
+    // we need to know which message to trigger
+    if (messageId !== id) return;
+
+    triggerAIMessage(id);
+  });
+
+  // when plugin want to create an assistant message
+  const createAssistantMessage = useChatStore((s) => s.createAssistantMessageByPlugin);
+  useOnPluginCreateAssistantMessage((content) => {
+    createAssistantMessage(content, id);
   });
 
   return (
