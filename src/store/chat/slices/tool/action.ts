@@ -20,7 +20,7 @@ export interface ChatPluginAction {
   invokeBuiltinTool: (id: string, payload: ChatPluginPayload) => Promise<void>;
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<void>;
   invokeMarkdownTypePlugin: (id: string, payload: ChatPluginPayload) => Promise<void>;
-  runPluginApi: (id: string, payload: ChatPluginPayload) => Promise<void>;
+  runPluginApi: (id: string, payload: ChatPluginPayload) => Promise<string | undefined>;
   triggerFunctionCall: (id: string) => Promise<void>;
   updatePluginState: (id: string, key: string, value: any) => Promise<void>;
 }
@@ -62,7 +62,9 @@ export const chatPlugin: StateCreator<
   invokeDefaultTypePlugin: async (id, payload) => {
     const { runPluginApi, coreProcessMessage } = get();
 
-    await runPluginApi(id, payload);
+    const data = await runPluginApi(id, payload);
+
+    if (!data) return;
 
     const chats = chatSelectors.currentChats(get());
     await coreProcessMessage(chats, id);
@@ -98,6 +100,8 @@ export const chatPlugin: StateCreator<
     if (!data) return;
 
     await updateMessageContent(id, data);
+
+    return data;
   },
 
   triggerFunctionCall: async (id) => {
