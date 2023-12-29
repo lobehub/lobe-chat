@@ -14,6 +14,7 @@ import { useChatInput } from '@/features/ChatInput/useChatInput';
 
 import DragUpload from './DragUpload';
 import { LocalFiles } from './LocalFiles';
+import { useAutoFocus } from './useAutoFocus';
 
 ChatInputArea.displayName = 'ChatInputArea';
 /**
@@ -36,6 +37,8 @@ const ChatInputDesktopLayout = memo(() => {
     updatePreference,
     canUpload,
   } = useChatInput();
+
+  useAutoFocus(ref);
 
   const handleSizeChange = useCallback(
     (_: any, size: any) => {
@@ -90,6 +93,7 @@ const ChatInputDesktopLayout = memo(() => {
     <>
       {canUpload && <DragUpload />}
       <ChatInputArea
+        autoFocus
         bottomAddons={buttonAddons}
         expand={expand}
         heights={{
