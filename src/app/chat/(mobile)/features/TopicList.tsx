@@ -15,7 +15,12 @@ const Topics = memo(() => {
   const { t } = useTranslation('chat');
 
   return (
-    <Modal onCancel={() => toggleConfig(false)} open={showAgentSettings} title={t('topic.title')}>
+    <Modal
+      allowFullscreen
+      onCancel={() => toggleConfig(false)}
+      open={showAgentSettings}
+      title={t('topic.title')}
+    >
       <TopicListContent mobile />
     </Modal>
   );

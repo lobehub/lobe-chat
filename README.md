@@ -36,6 +36,8 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 [![][share-whatsapp-shield]][share-whatsapp-link]
 [![][share-reddit-shield]][share-reddit-link]
 [![][share-weibo-shield]][share-weibo-link]
+[![][share-mastodon-shield]][share-mastodon-link]
+[![][share-linkedin-shield]][share-linkedin-link]
 
 <sup>Pioneering the new age of thinking and creating. Built for you, the Super Individual.</sup>
 
@@ -206,14 +208,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                 | Description                                                                                                                                                                                                                                                                   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Facebook Ads Expert](https://chat-preview.lobehub.com/market?agent=facebook-ads-expert)<br/><sup>By **[alissonryan](https://github.com/alissonryan)** on **2023-12-20**</sup> | Create a Facebook Ads with a expert<br/>`copywriting` `facebook-ads` `lead-generation`                                                                                                                                                                                        |
-| [Dream Painter](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                 | A dream artist who can bring your dreams into reality.<br/>`txt-2-img` `painter`                                                                                                                                                                                              |
-| [News Hub](https://chat-preview.lobehub.com/market?agent=news-hub)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                           | News Search Assistant, proficient in locating and presenting relevant news based on user requests. Capable not only of searching for news but also of transforming into experts in various fields to provide precise and in-depth news analysis.<br/>`news` `search` `helper` |
-| [Research Assistant](https://chat-preview.lobehub.com/market?agent=research-assistant)<br/><sup>By **[ccsen](https://github.com/ccsen)** on **2023-12-19**</sup>               | Capable of answering questions, conducting research, drafting content, and more, utilizing scientific research papers.<br/>`research-assistant` `literature-retrieval` `writing` `scientific-research` `citation`                                                             |
+| Recent Submits                                                                                                                                                                                   | Description                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Deployment Specialist Agent](https://chat-preview.lobehub.com/market?agent=deployment-agent)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2023-12-27**</sup>            | An AI Deployment Specialist is an expert in managing the full deployment lifecycle of software applications, particularly web applications.<br/>`code` `deployment` `software`                       |
+| [Overview of Art Thesis Experts](https://chat-preview.lobehub.com/market?agent=thesis-overview)<br/><sup>By **[caoyang2002](https://github.com/caoyang2002)** on **2023-12-27**</sup>            | Specializing in brief thesis and art criticism<br/>`art` `thesis` `critique`                                                                                                                         |
+| [American English Transcreation Expert](https://chat-preview.lobehub.com/market?agent=to-local-english)<br/><sup>By **[doresu](https://github.com/doresu)** on **2023-12-27**</sup>              | Rough old editor, seasoned writer, and translator, proficient in translating English directly and transforming it into authentic American English<br/>`translation` `editing` `writing` `translator` |
+| [Academic Proofreading Expert](https://chat-preview.lobehub.com/market?agent=academic-paragraph-refiner)<br/><sup>By **[Feliks151450](https://github.com/Feliks151450)** on **2023-12-26**</sup> | Highly skilled in advanced research proofreading and language editing, specializing in multiple research fields and proficient in academic English.<br/>`proofreading` `writing` `research`          |
 
-> 📊 Total agents: [<kbd>**77**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**82**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -366,6 +368,7 @@ We provide a Docker image for deploying the LobeChat service on your own private
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 
@@ -378,6 +381,7 @@ $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 
@@ -625,6 +629,10 @@ This project is [MIT](./LICENSE) licensed.
 [pr-welcome-link]: https://github.com/lobehub/lobe-chat/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
 [profile-link]: https://github.com/lobehub
+[share-linkedin-link]: https://linkedin.com/feed
+[share-linkedin-shield]: https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
+[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source,%20extensible%20(Function%20Calling),%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT/LLM%20web%20application.%20https://github.com/lobehub/lobe-chat%20#chatbot%20#chatGPT%20#openAI
+[share-mastodon-shield]: https://img.shields.io/badge/-share%20on%20mastodon-black?labelColor=black&logo=mastodon&logoColor=white&style=flat-square
 [share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
 [share-reddit-shield]: https://img.shields.io/badge/-share%20on%20reddit-black?labelColor=black&logo=reddit&logoColor=white&style=flat-square
 [share-telegram-link]: https://t.me/share/url"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat

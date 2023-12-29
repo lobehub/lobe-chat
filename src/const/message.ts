@@ -1,6 +1,15 @@
 export const LOADING_FLAT = '...';
 
-// 只要 start with 这个，就可以判断为 function message
-export const FUNCTION_MESSAGE_FLAG = '{"function';
+//  start with this，it should be a function message
+export const FUNCTION_MESSAGE_FLAG = '{"tool_calls"';
 
-export const FUNCTION_LOADING = 'FUNCTION_LOADING';
+export const isFunctionMessageAtStart = (content: string) => {
+  return content.startsWith(FUNCTION_MESSAGE_FLAG);
+};
+
+export const testFunctionMessageAtEnd = (content: string) => {
+  const regExp = /{"tool_calls":.*?}}/;
+  const match = content.match(regExp);
+
+  return { content: match ? match[0] : '', valid: match };
+};

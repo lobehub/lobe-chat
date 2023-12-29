@@ -1,6 +1,5 @@
 import { Mock, describe, expect, it, vi } from 'vitest';
 
-import { ModelTokens } from '@/const/modelTokens';
 import { chatHelpers } from '@/store/chat/helpers';
 import { globalHelpers } from '@/store/global/helpers';
 import { LanguageModel } from '@/types/llm';

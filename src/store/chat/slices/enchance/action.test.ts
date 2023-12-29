@@ -12,7 +12,7 @@ import { useChatStore } from '../../store';
 vi.mock('@/services/message', () => ({
   messageService: {
     updateMessageTTS: vi.fn(),
-    updateMessageTranslate: vi.fn(),
+    updateMessage: vi.fn(),
   },
 }));
 
@@ -59,7 +59,7 @@ describe('ChatEnhanceAction', () => {
         await result.current.clearTTS(messageId);
       });
 
-      expect(messageService.updateMessageTTS).toHaveBeenCalledWith(messageId, null);
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { tts: false });
     });
   });
 
@@ -102,7 +102,7 @@ describe('ChatEnhanceAction', () => {
         await result.current.translateMessage(messageId, targetLang);
       });
 
-      expect(messageService.updateMessageTranslate).toHaveBeenCalled();
+      expect(messageService.updateMessage).toHaveBeenCalled();
     });
   });
 
@@ -115,25 +115,7 @@ describe('ChatEnhanceAction', () => {
         await result.current.clearTranslate(messageId);
       });
 
-      expect(messageService.updateMessageTranslate).toHaveBeenCalledWith(messageId, null);
-    });
-  });
-
-  describe('ttsMessage', () => {
-    it('should update TTS state for a message and refresh messages', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const messageId = 'message-id';
-      const ttsState = {
-        contentMd5: 'some-md5',
-        file: 'path-to-tts-file',
-        voice: 'voice-type',
-      };
-
-      await act(async () => {
-        await result.current.ttsMessage(messageId, ttsState);
-      });
-
-      expect(messageService.updateMessageTTS).toHaveBeenCalledWith(messageId, ttsState);
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { translate: false });
     });
   });
 });

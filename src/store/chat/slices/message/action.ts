@@ -5,9 +5,8 @@ import { template } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { VISION_MODEL_WHITE_LIST } from '@/const/llm';
-import { LOADING_FLAT } from '@/const/message';
-import { VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/settings';
+import { GPT4_VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/llm';
+import { LOADING_FLAT, isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/const/message';
 import { CreateMessageParams } from '@/database/models/message';
 import { DB_Message } from '@/database/schemas/message';
 import { chatService } from '@/services/chat';
@@ -19,7 +18,6 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 import { fetchSSE } from '@/utils/fetch';
-import { isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/utils/message';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors } from '../../selectors';
@@ -220,7 +218,7 @@ export const chatMessage: StateCreator<
     // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
     dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
 
-    await messageService.updateMessageContent(id, content);
+    await messageService.updateMessage(id, { content });
     await refreshMessages();
   },
   useFetchMessages: (sessionId, activeTopicId) =>
@@ -279,7 +277,7 @@ export const chatMessage: StateCreator<
       if (functionCallAtEnd) {
         // create a new separate message and remove the function call from the prev message
 
-        await messageService.updateMessageContent(mid, content.replace(functionCallContent, ''));
+        await get().updateMessageContent(mid, content.replace(functionCallContent, ''));
 
         const functionMessage: CreateMessageParams = {
           role: 'function',
@@ -308,7 +306,7 @@ export const chatMessage: StateCreator<
     set({ messages }, false, n(`dispatchMessage/${payload.type}`, payload));
   },
   fetchAIChatMessage: async (messages, assistantId) => {
-    const { toggleChatLoading, refreshMessages } = get();
+    const { toggleChatLoading, refreshMessages, updateMessageContent } = get();
 
     const abortController = toggleChatLoading(
       true,
@@ -353,11 +351,12 @@ export const chatMessage: StateCreator<
     config.params.max_tokens = config.enableMaxTokens ? config.params.max_tokens : undefined;
 
     // 5. handle config for the vision model
-    // Due to vision model's default max_tokens is very small
+    // Due to the gpt-4-vision-preview model's default max_tokens is very small
     // we need to set the max_tokens a larger one.
-    if (VISION_MODEL_WHITE_LIST.includes(config.model)) {
+    if (config.model === 'gpt-4-vision-preview') {
       /* eslint-disable unicorn/no-lonely-if */
-      if (!config.params.max_tokens) config.params.max_tokens = VISION_MODEL_DEFAULT_MAX_TOKENS;
+      if (!config.params.max_tokens)
+        config.params.max_tokens = GPT4_VISION_MODEL_DEFAULT_MAX_TOKENS;
     }
 
     const fetcher = () =>
@@ -383,14 +382,12 @@ export const chatMessage: StateCreator<
       },
       onFinish: async (content) => {
         // update the content after fetch result
-        await messageService.updateMessageContent(assistantId, content);
-        await refreshMessages();
+        await updateMessageContent(assistantId, content);
       },
       onMessageHandle: async (text) => {
         output += text;
 
-        await messageService.updateMessageContent(assistantId, output);
-        await refreshMessages();
+        await updateMessageContent(assistantId, output);
 
         // is this message is just a function call
         if (isFunctionMessageAtStart(output)) isFunctionCall = true;

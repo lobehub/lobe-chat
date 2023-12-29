@@ -15,7 +15,13 @@ const AgentDetail = memo(() => {
   const { t } = useTranslation('market');
 
   return (
-    <Modal onCancel={deactivateAgent} open={showAgentSidebar} title={t('sidebar.title')}>
+    <Modal
+      allowFullscreen
+      onCancel={deactivateAgent}
+      open={showAgentSidebar}
+      styles={{ body: { padding: 0 } }}
+      title={t('sidebar.title')}
+    >
       <AgentDetailContent />
     </Modal>
   );
