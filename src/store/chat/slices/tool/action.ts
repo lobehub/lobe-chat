@@ -19,6 +19,8 @@ export interface ChatPluginAction {
   fillPluginMessageContent: (id: string, content: string) => Promise<void>;
   invokeBuiltinTool: (id: string, payload: ChatPluginPayload) => Promise<void>;
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<void>;
+  invokeMarkdownTypePlugin: (id: string, payload: ChatPluginPayload) => Promise<void>;
+  runPluginApi: (id: string, payload: ChatPluginPayload) => Promise<void>;
   triggerFunctionCall: (id: string) => Promise<void>;
   updatePluginState: (id: string, key: string, value: any) => Promise<void>;
 }
@@ -37,6 +39,7 @@ export const chatPlugin: StateCreator<
     const chats = chatSelectors.currentChats(get());
     await coreProcessMessage(chats, id);
   },
+
   invokeBuiltinTool: async (id, payload) => {
     const { toggleChatLoading, updateMessageContent } = get();
     const params = JSON.parse(payload.arguments);
@@ -55,8 +58,24 @@ export const chatPlugin: StateCreator<
 
     await action(id, JSON.parse(data));
   },
+
   invokeDefaultTypePlugin: async (id, payload) => {
-    const { updateMessageContent, refreshMessages, coreProcessMessage, toggleChatLoading } = get();
+    const { runPluginApi, coreProcessMessage } = get();
+
+    await runPluginApi(id, payload);
+
+    const chats = chatSelectors.currentChats(get());
+    await coreProcessMessage(chats, id);
+  },
+
+  invokeMarkdownTypePlugin: async (id, payload) => {
+    const { runPluginApi } = get();
+
+    await runPluginApi(id, payload);
+  },
+
+  runPluginApi: async (id, payload) => {
+    const { updateMessageContent, refreshMessages, toggleChatLoading } = get();
     let data: string;
 
     try {
@@ -73,20 +92,24 @@ export const chatPlugin: StateCreator<
 
       data = '';
     }
+
     toggleChatLoading(false);
     // 如果报错则结束了
     if (!data) return;
 
     await updateMessageContent(id, data);
-
-    const chats = chatSelectors.currentChats(get());
-    await coreProcessMessage(chats, id);
   },
+
   triggerFunctionCall: async (id) => {
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
 
-    const { invokeDefaultTypePlugin, invokeBuiltinTool, refreshMessages } = get();
+    const {
+      invokeDefaultTypePlugin,
+      invokeMarkdownTypePlugin,
+      invokeBuiltinTool,
+      refreshMessages,
+    } = get();
 
     let payload = { apiName: '', identifier: '' } as ChatPluginPayload;
 
@@ -135,10 +158,16 @@ export const chatPlugin: StateCreator<
         // TODO: need to auth user's settings
         break;
       }
+      case 'markdown': {
+        await invokeMarkdownTypePlugin(id, payload);
+        break;
+      }
+
       case 'builtin': {
         await invokeBuiltinTool(id, payload);
         break;
       }
+
       default: {
         await invokeDefaultTypePlugin(id, payload);
       }
