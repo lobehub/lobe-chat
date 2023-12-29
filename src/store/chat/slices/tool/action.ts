@@ -59,19 +59,32 @@ export const chatPlugin: StateCreator<
     const { toggleChatLoading, updateMessageContent } = get();
     const params = JSON.parse(payload.arguments);
     toggleChatLoading(true, id, n('invokeBuiltinTool') as string);
-    const data = await useToolStore.getState().invokeBuiltinTool(payload.apiName, params);
+    let data;
+    try {
+      data = await useToolStore.getState().invokeBuiltinTool(payload.apiName, params);
+    } catch (error) {
+      console.log(error);
+    }
     toggleChatLoading(false);
 
-    if (data) {
-      await updateMessageContent(id, data);
-    }
+    if (!data) return;
+
+    await updateMessageContent(id, data);
 
     // postToolCalling
     // @ts-ignore
     const { [payload.apiName]: action } = get();
-    if (!action || !data) return;
+    if (!action) return;
 
-    await action(id, JSON.parse(data));
+    let content;
+
+    try {
+      content = JSON.parse(data);
+    } catch {}
+
+    if (!content) return;
+
+    await action(id, content);
   },
 
   invokeDefaultTypePlugin: async (id, payload) => {
