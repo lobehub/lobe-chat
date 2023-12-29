@@ -1,0 +1,8 @@
+{
+  "dalle": {
+    "autoGenerate": "Tự Động Tạo",
+    "generate": "Tạo",
+    "generating": "Đang Tạo...",
+    "images": "Hình Ảnh:"
+  }
+}

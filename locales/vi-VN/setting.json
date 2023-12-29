@@ -1,0 +1,306 @@
+{
+  "danger": {
+    "clear": {
+      "action": "Xóa Ngay",
+      "confirm": "Xác nhận để xóa tất cả dữ liệu trò chuyện?",
+      "desc": "Điều này sẽ xóa tất cả dữ liệu phiên, bao gồm đại lý, tệp, tin nhắn, plugins, v.v.",
+      "success": "Tất cả tin nhắn phiên đã được xóa",
+      "title": "Xóa Tất Cả Tin Nhắn Phiên"
+    },
+    "reset": {
+      "action": "Đặt Lại Ngay",
+      "confirm": "Xác nhận để đặt lại tất cả cài đặt?",
+      "currentVersion": "Phiên Bản Hiện Tại",
+      "desc": "Đặt lại tất cả cài đặt về giá trị mặc định",
+      "title": "Đặt Lại Tất Cả Cài Đặt"
+    }
+  },
+  "header": {
+    "global": "Cài Đặt Chung",
+    "session": "Cài Đặt Phiên",
+    "sessionWithName": "Cài Đặt Phiên · {{name}}"
+  },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "Giá trị này có thể tìm thấy trong phần 'Keys and Endpoints' khi kiểm tra tài nguyên trên cổng thông tin Azure",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Địa Chỉ API Azure"
+      },
+      "models": {
+        "desc": "Các mô hình được hỗ trợ",
+        "title": "Danh Sách Mô Hình"
+      },
+      "title": "Cài Đặt Azure OpenAI",
+      "token": {
+        "desc": "Giá trị này có thể tìm thấy trong phần 'Keys and Endpoints' khi kiểm tra tài nguyên trên cổng thông tin Azure. Bạn có thể sử dụng KEY1 hoặc KEY2",
+        "placeholder": "Khóa API Azure",
+        "title": "Khóa API"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "Phiên bản API cho Azure, theo định dạng YYYY-MM-DD, kiểm tra [phiên bản mới nhất](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Lấy Danh Sách",
+        "title": "Phiên Bản API Azure"
+      },
+      "check": {
+        "button": "Kiểm Tra",
+        "desc": "Kiểm tra xem Khóa Api và địa chỉ proxy đã được điền chính xác chưa",
+        "pass": "Kiểm Tra Thành Công",
+        "title": "Kiểm Tra Kết Nối"
+      },
+      "customModelName": {
+        "desc": "Thêm các mô hình tùy chỉnh, phân tách nhiều mô hình bằng dấu phẩy (,)",
+        "placeholder": "model1,model2,model3",
+        "title": "Tên Mô Hình Tùy Chỉnh"
+      },
+      "endpoint": {
+        "desc": "Phải bao gồm http(s):// ngoài địa chỉ mặc định",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "Địa Chỉ Proxy API"
+      },
+      "models": {
+        "count": "Hỗ trợ tổng cộng {{count}} mô hình",
+        "desc": "Các mô hình được hỗ trợ",
+        "fetch": "Lấy Danh Sách Mô Hình",
+        "notSupport": "Hiện tại Azure OpenAI không hỗ trợ xem danh sách mô hình",
+        "notSupportTip": "Bạn cần đảm bảo tên triển khai khớp với tên mô hình",
+        "refetch": "Lấy Lại Danh Sách Mô Hình",
+        "title": "Danh Sách Mô  Hình"
+      },
+      "title": "Cài Đặt OpenAI",
+      "token": {
+        "desc": "Sử dụng Khóa API OpenAI của riêng bạn",
+        "placeholder": "Khóa API OpenAI",
+        "title": "Khóa API"
+      },
+      "useAzure": {
+        "desc": "Sử dụng dịch vụ OpenAI do Azure cung cấp",
+        "fetch": "Lấy Danh Sách",
+        "serverConfig": "Người quản trị đã kích hoạt Azure OpenAI trên máy chủ, và không cho phép chuyển đổi",
+        "title": "Azure OpenAI"
+      }
+    },
+    "waitingForMore": "Dự kiến sẽ <1>thêm nhiều mô hình hơn</1>, hãy chờ đợi ✨"
+  },
+  "plugin": {
+    "addTooltip": "Plugin Tùy Chỉnh",
+    "clearDeprecated": "Loại Bỏ Các Plugin Lỗi Thời",
+    "empty": "Chưa có plugin nào được cài đặt, hãy khám phá <1>Cửa Hàng Plugin</1>",
+    "installStatus": {
+      "deprecated": "Đã Gỡ Cài Đặt"
+    },
+    "settings": {
+      "hint": "Vui lòng điền thông tin cấu hình dựa vào mô tả",
+      "title": "Cấu hình Plugin {{id}}",
+      "tooltip": "Cấu Hình Plugin"
+    },
+    "store": "Cửa Hàng Plugin"
+  },
+  "settingAgent": {
+    "avatar": {
+      "title": "Hình Đại Diện"
+    },
+    "backgroundColor": {
+      "title": "Màu Nền"
+    },
+    "description": {
+      "placeholder": "Nhập mô tả đại lý",
+      "title": "Mô Tả Đại Lý"
+    },
+    "name": {
+      "placeholder": "Nhập tên đại lý",
+      "title": "Tên"
+    },
+    "prompt": {
+      "placeholder": "Nhập lời nhắc vai trò",
+      "title": "Cài Đặt Vai Trò"
+    },
+    "tag": {
+      "placeholder": "Nhập thẻ",
+      "title": "Thẻ"
+    },
+    "title": "Thông Tin Đại Lý"
+  },
+  "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "Tự động tạo một chủ đề khi số lượng tin nhắn hiện tại vượt quá giá trị này",
+      "title": "Ngưỡng Tin Nhắn"
+    },
+    "chatStyleType": {
+      "title": "Phong Cách Cửa Sổ Trò Chuyện",
+      "type": {
+        "chat": "Chế Độ Hội Thoại",
+        "docs": "Chế Độ Tài Liệu"
+      }
+    },
+    "compressThreshold": {
+      "desc": "Khi số lượng tin nhắn lịch sử chưa được nén vượt quá giá trị này, nén sẽ được áp dụng",
+      "title": "Ngưỡng Nén Độ Dài Tin Nhắn Lịch Sử"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "Có tự động tạo chủ đề trong cuộc trò chuyện hay không, chỉ có hiệu lực trong chủ đề tạm thời",
+      "title": "Tự Động Tạo Chủ Đề"
+    },
+    "enableCompressThreshold": {
+      "title": "Kích Hoạt Ngưỡng Nén Độ Dài Tin Nhắn Lịch Sử"
+    },
+    "enableHistoryCount": {
+      "alias": "Không Giới Hạn",
+      "limited": "Chỉ bao gồm {{number}} tin nhắn trò chuyện",
+      "title": "Giới Hạn Số Lượng Tin Nhắn Lịch Sử",
+      "unlimited": "Số lượng tin nhắn lịch sử không giới hạn"
+    },
+    "historyCount": {
+      "desc": "Số lượng tin nhắn lịch sử được đính kèm với mỗi yêu cầu",
+      "title": "Số Lượng Tin Nhắn Lịch Sử Đính Kèm"
+    },
+    "inputTemplate": {
+      "desc": "Tin nhắn mới nhất của người dùng sẽ được điền vào mẫu này",
+      "placeholder": "Mẫu tiền xử lý {{text}} sẽ được thay thế bằng thông tin nhập vào thời gian thực",
+      "title": "Tiền Xử Lý Nhập Của Người Dùng"
+    },
+    "title": "Cài Đặt Trò Chuyện"
+  },
+  "settingModel": {
+    "enableMaxTokens": {
+      "title": "Kích Hoạt Giới Hạn Số Token Tối Đa"
+    },
+    "frequencyPenalty": {
+      "desc": "Giá trị càng cao, càng có khả năng giảm lặp lại từ",
+      "title": "Hình Phạt Tần Suất"
+    },
+    "maxTokens": {
+      "desc": "Số lượng token tối đa sử dụng cho mỗi tương tác",
+      "title": "Giới Hạn Số Token Tối Đa"
+    },
+    "model": {
+      "desc": "Mô hình ChatGPT",
+      "list": {
+        "gpt-3.5-turbo": "GPT 3.5",
+        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+        "gpt-4": "GPT 4",
+        "gpt-4-32k": "GPT 4 (32K)"
+      },
+      "title": "Mô Hình"
+    },
+    "presencePenalty": {
+      "desc": "Giá trị càng cao, càng có khả năng mở rộng sang chủ đề mới",
+      "title": "Hình Phạt Sự Hiện Diện"
+    },
+    "temperature": {
+      "desc": "Giá trị càng cao, phản hồi càng ngẫu nhiên",
+      "title": "Ngẫu Nhiên",
+      "titleWithValue": "Ngẫu Nhiên {{value}}"
+    },
+    "title": "Cài Đặt Mô Hình",
+    "topP": {
+      "desc": "Tương tự như ngẫu nhiên, nhưng không thay đổi cùng với ngẫu nhiên",
+      "title": "Mẫu Vẽ Top P"
+    }
+  },
+  "settingPlugin": {
+    "title": "Danh Sách Plugin"
+  },
+  "settingSystem": {
+    "accessCode": {
+      "desc": "Quản trị viên đã kích hoạt mã truy cập mật mã",
+      "placeholder": "Nhập mật khẩu truy cập",
+      "title": "Mật Khẩu Truy Cập"
+    },
+    "title": "Cài Đặt Hệ Thống"
+  },
+  "settingTTS": {
+    "openai": {
+      "sttModel": "Mô Hình Chuyển Đổi Văn Bản Thành Giọng Nói của OpenAI",
+      "ttsModel": "Mô Hình Chuyển Đổi Giọng Nói Thành Văn Bản của OpenAI"
+    },
+    "showAllLocaleVoice": {
+      "desc": "Nếu đóng, chỉ hiển thị giọng nói trong ngôn ngữ hiện tại",
+      "title": "Hiển Thị Tất Cả Giọng Nói Địa Phương"
+    },
+    "stt": "Cài Đặt Nhận Dạng Giọng Nói",
+    "sttAutoStop": {
+      "desc": "Khi đóng, nhận dạng giọng nói sẽ không kết thúc tự động và yêu cầu nhấp chuột để dừng",
+      "title": "Tự Động Dừng Nhận Dạng Giọng Nói"
+    },
+    "sttLocale": {
+      "desc": "Ngôn ngữ của đầu vào giọng nói, tùy chọn này có thể cải thiện độ chính xác của nhận dạng giọng nói",
+      "title": "Ngôn Ngữ Nhận Dạng Giọng Nói"
+    },
+    "sttService": {
+      "desc": "Nơi 'trình duyệt' là dịch vụ nhận dạng giọng nói gốc của trình duyệt",
+      "title": "Dịch Vụ Nhận Dạng Giọng Nói"
+    },
+    "title": "Dịch Vụ Giọng Nói",
+    "tts": "Cài Đặt Chuyển Đổi Văn Bản Thành Giọng Nói",
+    "ttsService": {
+      "desc": "Nếu sử dụng dịch vụ chuyển đổi văn bản thành giọng nói của OpenAI, hãy đảm bảo rằng dịch vụ mô hình OpenAI đã được kích hoạt",
+      "title": "Dịch Vụ Chuyển Đổi Văn Bản Thành Giọng Nói"
+    },
+    "voice": {
+      "desc": "Chọn một giọng nói cho đại lý hiện tại, các dịch vụ TTS khác nhau hỗ trợ các giọng nói khác nhau",
+      "preview": "Xem Trước Giọng Nói",
+      "title": "Giọng Nói Chuyển Đổi Văn Bản Thành Giọng Nói"
+    }
+  },
+  "settingTheme": {
+    "avatar": {
+      "title": "Hình Đại Diện"
+    },
+    "fontSize": {
+      "desc": "Kích thước phông chữ cho nội dung trò chuyện",
+      "marks": {
+        "large": "Lớn",
+        "normal": "Bình Thường",
+        "small": "Nhỏ"
+      },
+      "title": "Kích Thước Phông Chữ"
+    },
+    "lang": {
+      "autoMode": "Theo Dõi Hệ Thống",
+      "title": "Ngôn Ngữ"
+    },
+    "neutralColor": {
+      "desc": "Tùy chỉnh màu trung tính cho các xu hướng màu khác nhau",
+      "title": "Màu Trung Tính"
+    },
+    "primaryColor": {
+      "desc": "Tùy chỉnh màu chủ đạo cho theme",
+      "title": "Màu Chủ Đạo"
+    },
+    "themeMode": {
+      "auto": "Tự Động",
+      "dark": "Tối",
+      "light": "Sáng",
+      "title": "Theme"
+    },
+    "title": "Cài Đặt Theme"
+  },
+  "submitAgentModal": {
+    "button": "Nộp Đại Lý",
+    "identifier": "Định Danh Đại Lý",
+    "metaMiss": "Vui lòng hoàn thành thông tin đại lý trước khi nộp. Điều đó bao gồm tên, mô tả và thẻ",
+    "placeholder": "Nhập định danh duy nhất cho đại lý, ví dụ: web-development",
+    "tooltips": "Chia sẻ đến thị trường đại lý"
+  },
+  "tab": {
+    "agent": "Đại Lý Mặc Định",
+    "common": "Cài Đặt Chung",
+    "llm": "Mô Hình Ngôn Ngữ",
+    "tts": "Văn Bản Thành Giọng Nói"
+  },
+  "tools": {
+    "builtins": {
+      "groupName": "Đã Tích Hợp"
+    },
+    "plugins": {
+      "enabled": "Đã  Kích Hoạt: {{num}}",
+      "groupName": "Plugins",
+      "noEnabled": "Không có plugins nào được kích hoạt",
+      "store": "Cửa Hàng Plugin"
+    },
+    "title": "Công Cụ Mở Rộng"
+  }
+}

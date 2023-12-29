@@ -1,0 +1,45 @@
+{
+  "dbV1": {
+    "action": {
+      "clearDB": "Xóa Dữ Liệu Cục Bộ",
+      "downloadBackup": "Tải Xuống Sao Lưu Dữ Liệu",
+      "reUpgrade": "Nâng Cấp Lại",
+      "start": "Bắt Đầu",
+      "upgrade": "Nâng Cấp"
+    },
+    "clear": {
+      "confirm": "Bạn đang chuẩn bị xóa dữ liệu cục bộ (cài đặt toàn cầu sẽ không bị ảnh hưởng). Vui lòng xác nhận rằng bạn đã tải xuống sao lưu dữ liệu."
+    },
+    "description": "Trong phiên bản mới, kho dữ liệu của LobeChat đã có bước tiến lớn. Do đó, chúng ta cần nâng cấp dữ liệu phiên bản cũ để mang lại trải nghiệm người dùng tốt hơn.",
+    "features": {
+      "capability": {
+        "desc": "Dựa trên công nghệ IndexedDB, có thể lưu trữ tin nhắn hội thoại cả đời.",
+        "title": "Dung Lượng Cao"
+      },
+      "performance": {
+        "desc": "Hàng triệu tin nhắn được tự động lập chỉ mục, và truy vấn tìm kiếm phản hồi trong vài mili giây.",
+        "title": "Hiệu Suất Cao"
+      },
+      "use": {
+        "desc": "Hỗ trợ tìm kiếm tiêu đề, mô tả, thẻ, nội dung tin nhắn, và thậm chí cả văn bản đã dịch, làm tăng đáng kể hiệu quả tìm kiếm hàng ngày.",
+        "title": "Thân Thiện Với Người Dùng Hơn"
+      }
+    },
+    "title": "Quá Trình Tiến Hóa Dữ Liệu của LobeChat",
+    "upgrade": {
+      "error": {
+        "subTitle": "Chúng tôi xin lỗi, đã xảy ra lỗi trong quá trình nâng cấp cơ sở dữ liệu. Vui lòng thử các giải pháp sau: A. Xóa dữ liệu cục bộ và nhập lại dữ liệu sao lưu; B. Nhấp vào nút 'Thử Nâng Cấp Lại'.<br><br> Nếu sự cố vẫn tiếp diễn, vui lòng <1>nộp yêu cầu</1>, và chúng tôi sẽ hỗ trợ bạn càng sớm càng tốt.",
+        "title": "Nâng Cấp Cơ Sở Dữ Liệu Thất Bại"
+      },
+      "success": {
+        "subTitle": "Cơ sở dữ liệu của LobeChat đã được nâng cấp thành công lên phiên bản mới nhất. Bắt đầu trải nghiệm ngay bây giờ!",
+        "title": "Nâng Cấp Cơ Sở Dữ Liệu Thành Công"
+      }
+    },
+    "upgradeTip": "Quá trình nâng cấp sẽ mất khoảng 10 đến 20 giây. Vui lòng không đóng LobeChat trong khi nâng cấp."
+  },
+  "migrateError": {
+    "missVersion": "Dữ liệu nhập không có số phiên bản. Vui lòng kiểm tra tệp và thử lại.",
+    "noMigration": "Không tìm thấy giải pháp di chuyển cho phiên bản hiện tại. Vui lòng kiểm tra số phiên bản và thử lại. Nếu sự cố vẫn tiếp diễn, vui lòng nộp yêu cầu phản hồi."
+  }
+}
