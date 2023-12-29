@@ -1,7 +1,6 @@
 import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
 import { Suspense, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
@@ -24,13 +23,7 @@ const PluginDefaultType = memo<PluginDefaultTypeProps>(({ content, name, loading
   const { isJSON, data } = useParseContent(content);
 
   if (!isJSON) {
-    return (
-      loading && (
-        <Flexbox gap={8}>
-          <Loading />
-        </Flexbox>
-      )
-    );
+    return loading && <Loading />;
   }
 
   if (!manifest?.ui) return;

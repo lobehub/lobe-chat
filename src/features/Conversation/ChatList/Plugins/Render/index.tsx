@@ -5,6 +5,7 @@ import { LobeToolRenderType } from '@/types/tool';
 
 import BuiltinType from '././BuiltinType';
 import DefaultType from './DefaultType';
+import Markdown from './MarkdownType';
 import Standalone from './StandaloneType';
 
 export interface PluginRenderProps {
@@ -25,6 +26,10 @@ const PluginRender = memo<PluginRenderProps>(
 
       case 'builtin': {
         return <BuiltinType content={content} id={id} identifier={identifier} loading={loading} />;
+      }
+
+      case 'markdown': {
+        return <Markdown content={content} loading={loading} />;
       }
 
       default: {

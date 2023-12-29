@@ -3,10 +3,12 @@ import { renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  useOnPluginCreateAssistantMessage,
   useOnPluginFetchMessage,
   useOnPluginFetchPluginSettings,
   useOnPluginFetchPluginState,
   useOnPluginFillContent,
+  useOnPluginTriggerAIMessage,
 } from './listenToPlugin';
 
 afterEach(() => {
@@ -100,5 +102,63 @@ describe('useOnPluginFetchPluginSettings', () => {
     window.dispatchEvent(event);
 
     expect(mockOnRequest).toHaveBeenCalled();
+  });
+});
+
+describe('useOnPluginTriggerAIMessage', () => {
+  it('calls callback with id when a triggerAIMessage is received', () => {
+    const mockCallback = vi.fn();
+    renderHook(() => useOnPluginTriggerAIMessage(mockCallback));
+
+    const testId = 'testId';
+    const event = new MessageEvent('message', {
+      data: { type: PluginChannel.triggerAIMessage, id: testId },
+    });
+
+    window.dispatchEvent(event);
+
+    expect(mockCallback).toHaveBeenCalledWith(testId);
+  });
+
+  it('does not call callback for other message types', () => {
+    const mockCallback = vi.fn();
+    renderHook(() => useOnPluginTriggerAIMessage(mockCallback));
+
+    const event = new MessageEvent('message', {
+      data: { type: 'otherMessageType', id: 'testId' },
+    });
+
+    window.dispatchEvent(event);
+
+    expect(mockCallback).not.toHaveBeenCalled();
+  });
+});
+
+describe('useOnPluginCreateAssistantMessage', () => {
+  it('calls callback with content when a createAssistantMessage is received', () => {
+    const mockCallback = vi.fn();
+    renderHook(() => useOnPluginCreateAssistantMessage(mockCallback));
+
+    const testContent = 'testContent';
+    const event = new MessageEvent('message', {
+      data: { type: PluginChannel.createAssistantMessage, content: testContent },
+    });
+
+    window.dispatchEvent(event);
+
+    expect(mockCallback).toHaveBeenCalledWith(testContent);
+  });
+
+  it('does not call callback for other message types', () => {
+    const mockCallback = vi.fn();
+    renderHook(() => useOnPluginCreateAssistantMessage(mockCallback));
+
+    const event = new MessageEvent('message', {
+      data: { type: 'otherMessageType', content: 'testContent' },
+    });
+
+    window.dispatchEvent(event);
+
+    expect(mockCallback).not.toHaveBeenCalled();
   });
 });
