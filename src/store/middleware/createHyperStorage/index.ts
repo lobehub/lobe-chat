@@ -1,32 +1,31 @@
-import { PersistStorage } from 'zustand/middleware';
-import { StorageValue } from 'zustand/middleware/persist';
+import { PersistStorage } from "zustand/middleware";
+import { StorageValue } from "zustand/middleware/persist";
 
-import { createIndexedDB } from './indexedDB';
-import { createKeyMapper } from './keyMapper';
-import { createLocalStorage } from './localStorage';
-import { HyperStorageOptions } from './type';
-import { creatUrlStorage } from './urlStorage';
+import { createIndexedDB } from "./indexedDB";
+import { createKeyMapper } from "./keyMapper";
+import { createLocalStorage } from "./localStorage";
+import { HyperStorageOptions } from "./type";
+import { creatUrlStorage } from "./urlStorage";
+//根据配置（options）确定是否使用本地存储、使用 IndexedDB 还是默认的 Local Storage，以及数据库的名称。
+const getLocalStorageConfig = (options: HyperStorageOptions) => {
+  if (options.localStorage === false) {
+    return { dbName: "", skipLocalStorage: true, useIndexedDB: false };
+  }
 
+  const useIndexedDB = options.localStorage?.mode === "indexedDB";
+  const dbName = options.localStorage?.dbName || "indexedDB";
+
+  return { dbName, skipLocalStorage: false, useIndexedDB };
+};
+///在localstorage、indexeddb和查询字符串中存取数据的统一接口
 export const createHyperStorage = <T extends object>(
   options: HyperStorageOptions,
 ): PersistStorage<T> => {
-  const getLocalStorageConfig = () => {
-    if (options.localStorage === false) {
-      return { dbName: '', skipLocalStorage: true, useIndexedDB: false };
-    }
-
-    const useIndexedDB = options.localStorage?.mode === 'indexedDB';
-    const dbName = options.localStorage?.dbName || 'indexedDB';
-
-    return { dbName, skipLocalStorage: false, useIndexedDB };
-  };
-
   const hasUrl = !!options.url;
-
-  const { skipLocalStorage, useIndexedDB, dbName } = getLocalStorageConfig();
-
-  const { mapStateKeyToStorageKey, getStateKeyFromStorageKey } = createKeyMapper(options);
-
+  const { skipLocalStorage, useIndexedDB, dbName } =
+    getLocalStorageConfig(options);
+  const { mapStateKeyToStorageKey, getStateKeyFromStorageKey } =
+    createKeyMapper(options);
   const indexedDB = createIndexedDB(dbName);
   const localStorage = createLocalStorage();
   const urlStorage = creatUrlStorage(options.url?.mode);
@@ -49,7 +48,7 @@ export const createHyperStorage = <T extends object>(
         if (localState) {
           version = localState.version;
           for (const [k, v] of Object.entries(localState.state)) {
-            const key = getStateKeyFromStorageKey(k, 'localStorage');
+            const key = getStateKeyFromStorageKey(k, "localStorage");
             if (key) state[key] = v;
           }
         }
@@ -62,7 +61,7 @@ export const createHyperStorage = <T extends object>(
 
         if (urlState) {
           for (const [k, v] of Object.entries(urlState.state)) {
-            const key = getStateKeyFromStorageKey(k, 'url');
+            const key = getStateKeyFromStorageKey(k, "url");
             // 当存在 UrlSelector 逻辑，且 key 有效时，才将状态加入终态 state
             if (hasUrl && key) {
               state[key] = v;
@@ -85,7 +84,7 @@ export const createHyperStorage = <T extends object>(
 
       // ============== 处理 URL Storage  ============== //
       if (hasUrl) {
-        const storageKey = getStateKeyFromStorageKey(key, 'url');
+        const storageKey = getStateKeyFromStorageKey(key, "url");
 
         urlStorage.removeItem(storageKey);
       }
@@ -95,7 +94,7 @@ export const createHyperStorage = <T extends object>(
       // ============== 处理 Local Storage  ============== //
       const localState: Record<string, any> = {};
       for (const [k, v] of Object.entries(newValue.state)) {
-        const localKey = mapStateKeyToStorageKey(k, 'localStorage');
+        const localKey = mapStateKeyToStorageKey(k, "localStorage");
         if (localKey) localState[localKey] = v;
       }
 
@@ -112,7 +111,7 @@ export const createHyperStorage = <T extends object>(
         // 转换 key 为目标 key
         const finalEntries = Object.entries(newValue.state)
           .map(([k, v]) => {
-            const urlKey = mapStateKeyToStorageKey(k, 'url');
+            const urlKey = mapStateKeyToStorageKey(k, "url");
             if (!urlKey) return undefined;
             return [urlKey, v];
           })

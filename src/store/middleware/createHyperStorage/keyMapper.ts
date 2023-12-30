@@ -1,9 +1,10 @@
-import { HyperStorageOptions } from './type';
+import { HyperStorageOptions } from "./type";
 
 export const createKeyMapper = (options: HyperStorageOptions) => {
+  //将状态键映射到存储键
   const mapStateKeyToStorageKey = (
     key: string,
-    mode: keyof HyperStorageOptions = 'localStorage',
+    mode: keyof HyperStorageOptions = "localStorage",
   ) => {
     const media = options[mode];
     if (media === false) return key;
@@ -14,7 +15,7 @@ export const createKeyMapper = (options: HyperStorageOptions) => {
     let storageKey: string | undefined;
 
     for (const selector of selectors) {
-      if (typeof selector === 'string') {
+      if (typeof selector === "string") {
         if (selector === key) storageKey = key;
       } else {
         if (selector[key]) storageKey = selector[key];
@@ -23,10 +24,10 @@ export const createKeyMapper = (options: HyperStorageOptions) => {
 
     return storageKey;
   };
-
+  //从存储键映射回状态键
   const getStateKeyFromStorageKey = (
     key: string,
-    mode: keyof HyperStorageOptions = 'localStorage',
+    mode: keyof HyperStorageOptions = "localStorage",
   ) => {
     const media = options[mode];
     if (media === false) return key;
@@ -38,7 +39,7 @@ export const createKeyMapper = (options: HyperStorageOptions) => {
 
     for (const item of selectors) {
       // 对象如果是 字符串，直接返回该 item key
-      if (typeof item === 'string') {
+      if (typeof item === "string") {
         if (item === key) stateKey = key;
       } else {
         for (const [k, v] of Object.entries(item)) {

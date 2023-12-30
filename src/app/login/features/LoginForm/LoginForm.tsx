@@ -7,6 +7,9 @@ import Logo from "@/app/login/features/Logo/Logo";
 import useValibot from "@/hooks/useValibot";
 import { authenticationApi } from "@/app/api/authentication";
 import { useCountDown } from "ahooks";
+import { useRouter } from "next/navigation";
+import { useAuthenticationStore } from "@/store/authentication";
+
 // 1.2 kB
 interface LoginParams {
   code: string;
@@ -14,7 +17,8 @@ interface LoginParams {
 }
 
 const LoginForm = memo(() => {
-  const [loginParams, _, handleChange, isValidated, errors] = useValibot(
+  const router = useRouter();
+  const [loginParams, set, handleChange, isValidated, errors] = useValibot(
     {
       phoneNumber: string([regex(RegexUtil.PHONE, "这不是一个有效的手机号")]),
       code: string([regex(RegexUtil.CODE_SIX, "验证码必须是6位数字")]),
@@ -29,8 +33,29 @@ const LoginForm = memo(() => {
   const [countdown] = useCountDown({
     targetDate,
   });
-  const handleSend = () => {
-    isValidated((_) => {}, []);
+  const [loginErrorMsg, setLoginErrorMsg] = useState<string>("");
+  const authenticationStore = useAuthenticationStore();
+  const submitLogin = () => {
+    setLoginErrorMsg("");
+    isValidated((success) => {
+      if (success) {
+        authenticationApi
+          .login({
+            principal: loginParams.phoneNumber,
+            credentials: loginParams.code,
+          })
+          .then((res) => {
+            router.push("/chat");
+            authenticationStore.setToken(res.data!!);
+          })
+          .catch((error) => {
+            setLoginErrorMsg("登录失败,请联系管理员");
+
+            // router.push("/chat")
+            // authenticationStore.setToken("aaaaaa")
+          });
+      }
+    }, []);
   };
   useEffect(() => {
     // 更新文档的标题
@@ -43,10 +68,9 @@ const LoginForm = memo(() => {
   }, [countdown]); // 仅在 count 更改时重新运行
   const handleSendCode = () => {
     isValidated(
-      (success, data, errors) => {
+      (success, data) => {
         if (success)
           authenticationApi.sendCode(data.phoneNumber).then((res) => {
-            // alert(res.isSuccessful());
             if (res.isSuccessful()) {
               setTargetDate(Date.now() + 60_000);
             }
@@ -132,13 +156,15 @@ const LoginForm = memo(() => {
         <div className="font-size-14px color-#e3567c">{errors.msg}</div>
       )}
       <Button
-        onClick={handleSend}
+        onClick={submitLogin}
         style={{ backgroundColor: "#31316e", color: "gray" }}
         type="text"
       >
         登 录
       </Button>
-
+      {loginErrorMsg && (
+        <div className="font-size-14px color-#e3567c">{loginErrorMsg}</div>
+      )}
       <div className="py-2vh text-sm text-center text-gray-500 font-size-14px">
         继续使用，即表示您同意
         <br />

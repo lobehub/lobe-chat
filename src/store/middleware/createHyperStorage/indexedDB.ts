@@ -1,26 +1,48 @@
-import { createStore, delMany, getMany, setMany } from 'idb-keyval';
-import { StorageValue } from 'zustand/middleware/persist';
+import { createStore, delMany, getMany, setMany } from "idb-keyval";
+import { StorageValue } from "zustand/middleware/persist";
 
-export const createIndexedDB = <State extends any>(dbName: string = 'indexedDB') => ({
-  getItem: async <T extends State>(name: string): Promise<StorageValue<T> | undefined> => {
-    const [version, state] = await getMany(['version', 'state'], createStore(dbName, name));
+interface IndexedDBClient {
+  getItem: <T>(name: string) => Promise<StorageValue<T> | undefined>;
+  removeItem: (name: string) => Promise<void>;
+  setItem: (
+    name: string,
+    state: any,
+    version: number | undefined,
+  ) => Promise<void>;
+}
 
-    if (!state) return undefined;
+/**
+ * 创建 IndexedDB 客户端
+ * @param dbName 数据库名称
+ */
+export const createIndexedDB = <State extends any>(
+  dbName: string = "indexedDB",
+) =>
+  ({
+    getItem: async <T extends State>(
+      name: string,
+    ): Promise<StorageValue<T> | undefined> => {
+      const [version, state] = await getMany(
+        ["version", "state"],
+        createStore(dbName, name),
+      );
 
-    return { state, version };
-  },
-  removeItem: async (name: string) => {
-    await delMany(['version', 'state'], createStore(dbName, name));
-  },
-  setItem: async (name: string, state: any, version: number | undefined) => {
-    const store = createStore(dbName, name);
+      if (!state) return undefined;
 
-    await setMany(
-      [
-        ['version', version],
-        ['state', state],
-      ],
-      store,
-    );
-  },
-});
+      return { state, version };
+    },
+    removeItem: async (name: string) => {
+      await delMany(["version", "state"], createStore(dbName, name));
+    },
+    setItem: async (name: string, state: any, version: number | undefined) => {
+      const store = createStore(dbName, name);
+
+      await setMany(
+        [
+          ["version", version],
+          ["state", state],
+        ],
+        store,
+      );
+    },
+  }) as IndexedDBClient;
