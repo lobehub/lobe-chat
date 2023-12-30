@@ -49,7 +49,7 @@ const nextConfig = {
 
   transpilePackages: ['antd-style', '@lobehub/ui', '@lobehub/tts'],
 
-  webpack(config) {
+  webpack(config, { isServer }) {
     config.experiments = {
       asyncWebAssembly: true,
       layers: true,
@@ -64,7 +64,9 @@ const nextConfig = {
         fullySpecified: false,
       },
     });
-
+    /*if (!isServer) {
+      config.devtool = 'source-map'; // 为客户端代码生成源代码映射
+    }*/
     return config;
   },
 };
