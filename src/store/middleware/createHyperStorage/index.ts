@@ -10,26 +10,28 @@ import { creatUrlStorage } from './urlStorage';
 export const createHyperStorage = <T extends object>(
   options: HyperStorageOptions,
 ): PersistStorage<T> => {
+  const optionsObj = typeof options === 'function' ? options() : options;
+
   const getLocalStorageConfig = () => {
-    if (options.localStorage === false) {
+    if (optionsObj.localStorage === false) {
       return { dbName: '', skipLocalStorage: true, useIndexedDB: false };
     }
 
-    const useIndexedDB = options.localStorage?.mode === 'indexedDB';
-    const dbName = options.localStorage?.dbName || 'indexedDB';
+    const useIndexedDB = optionsObj.localStorage?.mode === 'indexedDB';
+    const dbName = optionsObj.localStorage?.dbName || 'indexedDB';
 
     return { dbName, skipLocalStorage: false, useIndexedDB };
   };
 
-  const hasUrl = !!options.url;
+  const hasUrl = !!optionsObj.url;
 
   const { skipLocalStorage, useIndexedDB, dbName } = getLocalStorageConfig();
 
-  const { mapStateKeyToStorageKey, getStateKeyFromStorageKey } = createKeyMapper(options);
+  const { mapStateKeyToStorageKey, getStateKeyFromStorageKey } = createKeyMapper(optionsObj);
 
   const indexedDB = createIndexedDB(dbName);
   const localStorage = createLocalStorage();
-  const urlStorage = creatUrlStorage(options.url?.mode);
+  const urlStorage = creatUrlStorage(optionsObj.url?.mode);
   return {
     getItem: async (name): Promise<StorageValue<T>> => {
       const state: any = {};
