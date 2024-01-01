@@ -382,7 +382,7 @@ export const chatMessage: StateCreator<
     toggleChatLoading(false, undefined, n('generateMessage(end)') as string);
 
     // also exist message like this:
-    // 请稍等，我帮您查询一下。{"tool_calls": {"name": "plugin-identifier____recommendClothes____standalone", "arguments": "{\n "mood": "",\n "gender": "man"\n}"}}
+    // 请稍等，我帮您查询一下。{"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}
     if (!isFunctionCall) {
       const { content, valid } = testFunctionMessageAtEnd(output);
 
