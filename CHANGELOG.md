@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.118.3](https://github.com/lobehub/lobe-chat/compare/v0.118.2...v0.118.3)
+
+<sup>Released on **2024-01-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix parse error of tool calls at end.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix parse error of tool calls at end, closes [#893](https://github.com/lobehub/lobe-chat/issues/893) ([f369b6e](https://github.com/lobehub/lobe-chat/commit/f369b6e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.118.2](https://github.com/lobehub/lobe-chat/compare/v0.118.1...v0.118.2)
 
 <sup>Released on **2023-12-31**</sup>
