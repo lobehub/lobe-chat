@@ -3,10 +3,12 @@ import useSWR, { mutate } from 'swr';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { chatSelectors } from '@/store/chat/selectors';
+import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../store';
@@ -41,6 +43,12 @@ vi.mock('@/store/chat/selectors', () => ({
   },
 }));
 
+vi.mock('@/store/session/selectors', () => ({
+  agentSelectors: {
+    currentAgentConfig: vi.fn(),
+  },
+}));
+
 const realCoreProcessMessage = useChatStore.getState().coreProcessMessage;
 const realRefreshMessages = useChatStore.getState().refreshMessages;
 // Mock state
@@ -57,6 +65,8 @@ const mockState = {
 beforeEach(() => {
   vi.clearAllMocks();
   useChatStore.setState(mockState, false);
+
+  (agentSelectors.currentAgentConfig as Mock).mockImplementation(() => DEFAULT_AGENT_CONFIG);
 });
 afterEach(() => {
   vi.restoreAllMocks();
@@ -226,29 +236,126 @@ describe('chatMessage actions', () => {
       expect(result.current.coreProcessMessage).toHaveBeenCalled();
     });
 
-    // it('should auto-create topic and switch to it if enabled and threshold is reached', async () => {
-    //   const { result } = renderHook(() => useChatStore());
-    //   const message = 'Test message';
-    //   const autoCreateTopicThreshold = 5;
-    //   const enableAutoCreateTopic = true;
-    //
-    //   // Mock state with the necessary settings
-    //   useChatStore.setState({
-    //     ...mockState,
-    //     messages: Array(autoCreateTopicThreshold).fill({}), // Fill with dummy messages to reach threshold
-    //   });
-    //
-    //   // Mock messageService.create to resolve with a message id
-    //   (messageService.create as vi.Mock).mockResolvedValue('new-message-id');
-    //
-    //   await act(async () => {
-    //     await result.current.sendMessage(message);
-    //   });
-    //
-    //   expect(result.current.saveToTopic).toHaveBeenCalled();
-    //   expect(result.current.switchTopic).toHaveBeenCalled();
-    // });
-    // 其他可能的测试用例...
+    describe('auto-create topic', () => {
+      it('should not auto-create topic if enableAutoCreateTopic is false', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const message = 'Test message';
+        const autoCreateTopicThreshold = 5;
+        const enableAutoCreateTopic = false;
+
+        // Mock messageService.create to resolve with a message id
+        (messageService.create as Mock).mockResolvedValue('new-message-id');
+
+        // Mock agent config to simulate auto-create topic behavior
+        (agentSelectors.currentAgentConfig as Mock).mockImplementation(() => ({
+          autoCreateTopicThreshold,
+          enableAutoCreateTopic,
+        }));
+
+        // Mock the currentChats selector to return a list that does not reach the threshold
+        (chatSelectors.currentChats as Mock).mockReturnValue(
+          Array.from({ length: autoCreateTopicThreshold + 1 }, (_, i) => ({ id: `msg-${i}` })),
+        );
+
+        // Mock saveToTopic and switchTopic to simulate not being called
+        const saveToTopicMock = vi.fn();
+        const switchTopicMock = vi.fn();
+
+        await act(async () => {
+          useChatStore.setState({
+            ...mockState,
+            activeTopicId: undefined,
+            saveToTopic: saveToTopicMock,
+            switchTopic: switchTopicMock,
+          });
+
+          await result.current.sendMessage(message);
+        });
+
+        expect(saveToTopicMock).not.toHaveBeenCalled();
+        expect(switchTopicMock).not.toHaveBeenCalled();
+      });
+
+      it('should auto-create topic and switch to it if enabled and threshold is reached', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const message = 'Test message';
+        const autoCreateTopicThreshold = 5;
+        const enableAutoCreateTopic = true;
+
+        // Mock agent config to simulate auto-create topic behavior
+        (agentSelectors.currentAgentConfig as Mock).mockImplementation(() => ({
+          autoCreateTopicThreshold,
+          enableAutoCreateTopic,
+        }));
+
+        // Mock messageService.create to resolve with a message id
+        (messageService.create as Mock).mockResolvedValue('new-message-id');
+
+        // Mock the currentChats selector to return a list that reaches the threshold
+        (chatSelectors.currentChats as Mock).mockReturnValue(
+          Array.from({ length: autoCreateTopicThreshold }, (_, i) => ({ id: `msg-${i}` })),
+        );
+
+        // Mock saveToTopic to resolve with a topic id and switchTopic to switch to the new topic
+        const saveToTopicMock = vi.fn(() => Promise.resolve('new-topic-id'));
+        const switchTopicMock = vi.fn();
+
+        act(() => {
+          useChatStore.setState({
+            ...mockState,
+            activeTopicId: undefined,
+            saveToTopic: saveToTopicMock,
+            switchTopic: switchTopicMock,
+          });
+        });
+
+        await act(async () => {
+          await result.current.sendMessage(message);
+        });
+
+        expect(saveToTopicMock).toHaveBeenCalled();
+        expect(switchTopicMock).toHaveBeenCalledWith('new-topic-id');
+      });
+
+      it('should not auto-create topic if autoCreateTopicThreshold is not reached', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const message = 'Test message';
+        const autoCreateTopicThreshold = 5;
+        const enableAutoCreateTopic = true;
+
+        // Mock messageService.create to resolve with a message id
+        (messageService.create as Mock).mockResolvedValue('new-message-id');
+
+        // Mock agent config to simulate auto-create topic behavior
+        (agentSelectors.currentAgentConfig as Mock).mockImplementation(() => ({
+          autoCreateTopicThreshold,
+          enableAutoCreateTopic,
+        }));
+
+        // Mock the currentChats selector to return a list that does not reach the threshold
+        (chatSelectors.currentChats as Mock).mockReturnValue(
+          Array.from({ length: autoCreateTopicThreshold - 1 }, (_, i) => ({ id: `msg-${i}` })),
+        );
+
+        // Mock saveToTopic and switchTopic to simulate not being called
+        const saveToTopicMock = vi.fn();
+        const switchTopicMock = vi.fn();
+
+        await act(async () => {
+          useChatStore.setState({
+            ...mockState,
+            activeTopicId: undefined,
+            saveToTopic: saveToTopicMock,
+            switchTopic: switchTopicMock,
+          });
+
+          await result.current.sendMessage(message);
+        });
+
+        expect(saveToTopicMock).not.toHaveBeenCalled();
+        expect(switchTopicMock).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe('resendMessage action', () => {
@@ -480,6 +587,82 @@ describe('chatMessage actions', () => {
       // 等待异步操作完成
       await waitFor(() => {
         expect(result.current.data).toEqual(messages);
+      });
+    });
+  });
+
+  describe('fetchAIChatMessage', () => {
+    it('should fetch AI chat message and return content', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [{ id: 'message-id', content: 'Hello', role: 'user' }] as ChatMessage[];
+      const assistantMessageId = 'assistant-message-id';
+      const aiResponse = 'Hello, human!';
+
+      // Mock chatService.createAssistantMessage to resolve with AI response
+      (chatService.createAssistantMessage as Mock).mockResolvedValue(new Response(aiResponse));
+
+      await act(async () => {
+        const response = await result.current.fetchAIChatMessage(messages, assistantMessageId);
+        expect(response.content).toEqual(aiResponse);
+        expect(response.isFunctionCall).toEqual(false);
+        expect(response.functionCallAtEnd).toEqual(false);
+        expect(response.functionCallContent).toEqual('');
+      });
+    });
+
+    it('should handle function call message at start of AI response', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [{ id: 'message-id', content: 'Hello', role: 'user' }] as ChatMessage[];
+      const assistantMessageId = 'assistant-message-id';
+      const aiResponse =
+        '{"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}';
+
+      // Mock chatService.createAssistantMessage to resolve with AI response containing function call
+      (chatService.createAssistantMessage as Mock).mockResolvedValue(new Response(aiResponse));
+
+      await act(async () => {
+        const response = await result.current.fetchAIChatMessage(messages, assistantMessageId);
+        expect(response.content).toEqual(aiResponse);
+        expect(response.isFunctionCall).toEqual(true);
+        expect(response.functionCallAtEnd).toEqual(false);
+        expect(response.functionCallContent).toEqual('');
+      });
+    });
+
+    it('should handle function message at end of AI response', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [{ id: 'message-id', content: 'Hello', role: 'user' }] as ChatMessage[];
+      const assistantMessageId = 'assistant-message-id';
+      const aiResponse =
+        'Hello, human! {"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}';
+
+      // Mock chatService.createAssistantMessage to resolve with AI response containing function call at end
+      (chatService.createAssistantMessage as Mock).mockResolvedValue(new Response(aiResponse));
+
+      await act(async () => {
+        const response = await result.current.fetchAIChatMessage(messages, assistantMessageId);
+        expect(response.content).toEqual(aiResponse);
+        expect(response.isFunctionCall).toEqual(true);
+        expect(response.functionCallAtEnd).toEqual(true);
+        expect(response.functionCallContent).toEqual(
+          '{"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}',
+        );
+      });
+    });
+
+    it('should handle errors during AI response fetching', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [{ id: 'message-id', content: 'Hello', role: 'user' }] as ChatMessage[];
+      const assistantMessageId = 'assistant-message-id';
+
+      // Mock chatService.createAssistantMessage to reject with an error
+      const errorMessage = 'Error fetching AI response';
+      (chatService.createAssistantMessage as Mock).mockRejectedValue(new Error(errorMessage));
+
+      await act(async () => {
+        await expect(
+          result.current.fetchAIChatMessage(messages, assistantMessageId),
+        ).rejects.toThrow(errorMessage);
       });
     });
   });
