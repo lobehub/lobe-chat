@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.118.5](https://github.com/lobehub/lobe-chat/compare/v0.118.4...v0.118.5)
+
+<sup>Released on **2024-01-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Mobile device return to the previous page error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Mobile device return to the previous page error, closes [#886](https://github.com/lobehub/lobe-chat/issues/886) ([99cfc0f](https://github.com/lobehub/lobe-chat/commit/99cfc0f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.118.4](https://github.com/lobehub/lobe-chat/compare/v0.118.3...v0.118.4)
 
 <sup>Released on **2024-01-02**</sup>

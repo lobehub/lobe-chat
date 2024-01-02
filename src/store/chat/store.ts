@@ -5,6 +5,8 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { createHyperStorage } from '@/store/middleware/createHyperStorage';
 import { isDev } from '@/utils/env';
+import { isInStandaloneMode } from '@/utils/matchMedia';
+import { isMobileScreen } from '@/utils/screen';
 
 import { ChatStoreState, initialState } from './initialState';
 import { ChatEnhanceAction, chatEnhance } from './slices/enchance/action';
@@ -40,12 +42,24 @@ const persistOptions: PersistOptions<ChatStore> = {
   // 手动控制 Hydration ，避免 ssr 报错
   skipHydration: true,
 
-  storage: createHyperStorage({
-    localStorage: false,
-    url: {
-      mode: 'hash',
-      selectors: [{ activeTopicId: 'topic' }],
-    },
+  storage: createHyperStorage(() => {
+    const isMobileAndPWA = isMobileScreen() && isInStandaloneMode();
+    const selectors = [{ activeTopicId: 'topic' }];
+
+    if (isMobileAndPWA)
+      return {
+        localStorage: {
+          selectors,
+        },
+      };
+
+    return {
+      localStorage: false,
+      url: {
+        mode: 'hash',
+        selectors,
+      },
+    };
   }),
   version: 0,
 };
