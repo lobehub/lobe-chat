@@ -9,7 +9,7 @@ export interface LocalStorageOptions {
   selectors: StorageSelector[];
 }
 
-export interface HyperStorageOptions {
+export type HyperStorageOptionsObj = {
   localStorage?: LocalStorageOptions | false;
   url?: {
     /**
@@ -18,4 +18,8 @@ export interface HyperStorageOptions {
     mode?: 'hash' | 'search';
     selectors: StorageSelector[];
   };
-}
+};
+
+export type HyperStorageOptionsFn = () => HyperStorageOptionsObj;
+
+export type HyperStorageOptions = HyperStorageOptionsObj | HyperStorageOptionsFn;
