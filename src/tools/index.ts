@@ -4,7 +4,7 @@ import { DalleManifest } from './dalle';
 
 export const builtinTools: LobeBuiltinTool[] = [
   {
-    identifier: 'dalle3',
+    identifier: DalleManifest.identifier,
     manifest: DalleManifest,
     type: 'builtin',
   },
