@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 
+import { isInStandaloneMode } from '@/utils/matchMedia';
+
 export const useIsPWA = () => {
   const [isPWA, setIsPWA] = useState(false);
 
   useEffect(() => {
-    const isInStandaloneMode = () => window.matchMedia('(display-mode: standalone)').matches;
-    if (isInStandaloneMode()) {
-      setIsPWA(true);
-    }
+    setIsPWA(isInStandaloneMode());
   }, []);
 
   return isPWA;
