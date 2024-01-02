@@ -4,6 +4,8 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
 import { isDev } from '@/utils/env';
+import { isInStandaloneMode } from '@/utils/matchMedia';
+import { isMobileScreen } from '@/utils/screen';
 
 import { createHyperStorage } from '../middleware/createHyperStorage';
 import { SessionStoreState, initialState } from './initialState';
@@ -27,15 +29,28 @@ const persistOptions: PersistOptions<SessionStore> = {
   // 手动控制 Hydration ，避免 ssr 报错
   skipHydration: true,
 
-  storage: createHyperStorage({
-    localStorage: false,
-    url: {
-      mode: 'hash',
-      selectors: [
-        // map state key to storage key
-        { activeId: 'session' },
-      ],
-    },
+  storage: createHyperStorage(() => {
+    const isMobileAndPWA = isMobileScreen() && isInStandaloneMode();
+
+    const selectors = [
+      // map state key to storage key
+      { activeId: 'session' },
+    ];
+
+    if (isMobileAndPWA)
+      return {
+        localStorage: {
+          selectors,
+        },
+      };
+
+    return {
+      localStorage: false,
+      url: {
+        mode: 'hash',
+        selectors,
+      },
+    };
   }),
 
   version: 2,
