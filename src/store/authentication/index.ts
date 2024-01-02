@@ -16,7 +16,7 @@ const persistOptions: PersistOptions<AuthenticationStore> = {
   name: persistName,
 
   // 手动控制 Hydration ，避免 ssr 报错
-  skipHydration: true,
+  // skipHydration: true,
 
   storage: createHyperStorage({
     localStorage: {

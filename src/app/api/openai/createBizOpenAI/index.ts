@@ -1,20 +1,23 @@
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
-import { checkAuth } from '@/app/api/auth';
-import { getServerConfig } from '@/config/server';
-import { getOpenAIAuthFromRequest } from '@/const/fetch';
-import { ChatErrorType, ErrorType } from '@/types/fetch';
+import { checkAuth } from "@/app/api/auth";
+import { getServerConfig } from "@/config/server";
+import { getOpenAIAuthFromRequest } from "@/const/fetch";
+import { ChatErrorType, ErrorType } from "@/types/fetch";
 
-import { createErrorResponse } from '../errorResponse';
-import { createAzureOpenai } from './createAzureOpenai';
-import { createOpenai } from './createOpenai';
+import { createErrorResponse } from "../errorResponse";
+import { createAzureOpenai } from "./createAzureOpenai";
+import { createOpenai } from "./createOpenai";
 
 /**
- * createOpenAI Instance with Auth and azure openai support
- * if auth not pass ,just return error response
+ *创建 OpenAI 客户端
  */
-export const createBizOpenAI = (req: Request, model: string): Response | OpenAI => {
-  const { apiKey, accessCode, endpoint, useAzure, apiVersion } = getOpenAIAuthFromRequest(req);
+export const createBizOpenAI = (
+  req: Request,
+  model: string,
+): Response | OpenAI => {
+  const { apiKey, accessCode, endpoint, useAzure, apiVersion } =
+    getOpenAIAuthFromRequest(req);
 
   const result = checkAuth({ accessCode, apiKey });
 
@@ -29,7 +32,12 @@ export const createBizOpenAI = (req: Request, model: string): Response | OpenAI 
 
   try {
     if (useAzureOpenAI) {
-      openai = createAzureOpenai({ apiVersion, endpoint, model, userApiKey: apiKey });
+      openai = createAzureOpenai({
+        apiVersion,
+        endpoint,
+        model,
+        userApiKey: apiKey,
+      });
     } else {
       openai = createOpenai(apiKey, endpoint);
     }

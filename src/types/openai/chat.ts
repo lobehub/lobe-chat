@@ -1,20 +1,22 @@
-import { LLMRoleType } from '@/types/llm';
+import { LLMRoleType } from "@/types/llm";
 
-import { OpenAIFunctionCall } from './functionCall';
+import { OpenAIFunctionCall } from "./functionCall";
 
 interface UserMessageContentPartText {
   text: string;
-  type: 'text';
+  type: "text";
 }
 interface UserMessageContentPartImage {
   image_url: {
-    detail?: 'auto' | 'low' | 'high';
+    detail?: "auto" | "low" | "high";
     url: string;
   };
-  type: 'image_url';
+  type: "image_url";
 }
 
-export type UserMessageContentPart = UserMessageContentPartText | UserMessageContentPartImage;
+export type UserMessageContentPart =
+  | UserMessageContentPartText
+  | UserMessageContentPartImage;
 
 export interface OpenAIChatMessage {
   /**
@@ -38,7 +40,7 @@ export interface OpenAIChatStringMessage {
 }
 
 /**
- * @title OpenAI Stream Payload
+ * openai 流(stream)式聊天请求载荷
  */
 export interface OpenAIChatStreamPayload {
   /**
@@ -59,7 +61,12 @@ export interface OpenAIChatStreamPayload {
    */
   messages: OpenAIChatMessage[];
   /**
-   * @title 模型名称
+   * 模型名称
+   *
+   * 可选值包括
+   *
+   * * gpt-3.5-turbo
+   * * gpt-4
    */
   model: string;
   /**
@@ -123,5 +130,5 @@ export interface ChatCompletionTool {
   /**
    * The type of the tool. Currently, only `function` is supported.
    */
-  type: 'function';
+  type: "function";
 }

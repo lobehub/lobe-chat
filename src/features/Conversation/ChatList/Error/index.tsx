@@ -1,15 +1,22 @@
-import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
-import { ChatListProps } from '@lobehub/ui';
+import { PluginErrorType } from "@lobehub/chat-plugin-sdk";
+import { ChatListProps } from "@lobehub/ui";
 
-import { ChatErrorType } from '@/types/fetch';
+import { ChatErrorType } from "@/types/fetch";
 
-import InvalidAccess from './InvalidAccess';
-import OpenAPIKey from './OpenAPIKey';
-import OpenAiBizError from './OpenAiBizError';
-import PluginError from './Plugin/PluginError';
-import PluginSettings from './Plugin/PluginSettings';
+import InvalidAccess from "./InvalidAccess";
+import OpenAPIKey from "./OpenAPIKey";
+import OpenAiBizError from "./OpenAiBizError";
+import PluginError from "./Plugin/PluginError";
+import PluginSettings from "./Plugin/PluginSettings";
 
-export const renderErrorMessages: ChatListProps['renderErrorMessages'] = {
+/**
+ * 定义了系统中的错误类型以及如何向用户渲染这些错误
+ * @author dongjak
+ * @created 2023/12/31
+ * @version 1.0
+ * @since 1.0
+ */
+export const renderErrorMessages: ChatListProps["renderErrorMessages"] = {
   [PluginErrorType.PluginMarketIndexNotFound]: {
     Render: PluginError,
   },
@@ -48,7 +55,7 @@ export const renderErrorMessages: ChatListProps['renderErrorMessages'] = {
     config: {
       extraDefaultExpand: true,
       extraIsolate: true,
-      type: 'warning',
+      type: "warning",
     },
   },
   [ChatErrorType.InvalidAccessCode]: {
@@ -56,7 +63,7 @@ export const renderErrorMessages: ChatListProps['renderErrorMessages'] = {
     config: {
       extraDefaultExpand: true,
       extraIsolate: true,
-      type: 'warning',
+      type: "warning",
     },
   },
   [ChatErrorType.NoAPIKey]: {
@@ -64,7 +71,7 @@ export const renderErrorMessages: ChatListProps['renderErrorMessages'] = {
     config: {
       extraDefaultExpand: true,
       extraIsolate: true,
-      type: 'warning',
+      type: "warning",
     },
   },
   [ChatErrorType.OpenAIBizError]: {
@@ -72,7 +79,7 @@ export const renderErrorMessages: ChatListProps['renderErrorMessages'] = {
     config: {
       extraDefaultExpand: true,
       extraIsolate: true,
-      type: 'warning',
+      type: "warning",
     },
   },
 };

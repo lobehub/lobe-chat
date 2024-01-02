@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { memo, useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import { memo, useEffect } from "react";
 
-import { messageService } from '@/services/message';
-import { sessionService } from '@/services/session';
-import { useSessionStore } from '@/store/session';
+import { messageService } from "@/services/message";
+import { sessionService } from "@/services/session";
+import { useSessionStore } from "@/store/session";
+import { useAuthenticationStore } from "@/store/authentication";
 
 /**
  * 检查当前是否存在历史会话
@@ -24,17 +25,23 @@ const checkHasConversation = async () => {
 const Redirect = memo(() => {
   const router = useRouter();
   const [switchSession] = useSessionStore((s) => [s.switchSession]);
-
+  const authenticationStore = useAuthenticationStore();
   useEffect(() => {
-    checkHasConversation().then((hasData) => {
-      if (hasData) {
-        router.push('/chat');
+    // checkHasConversation().then((hasData) => {
+    //   if (hasData) {
+    //     router.push('/chat');
+    //
+    //     switchSession();
+    //   } else {
+    //     router.push('/welcome');
+    //   }
+    // });
 
-        switchSession();
-      } else {
-        router.push('/welcome');
-      }
-    });
+    if (authenticationStore.token) {
+      router.push("/chat");
+    } else {
+      router.push("/login");
+    }
   }, []);
 
   return null;

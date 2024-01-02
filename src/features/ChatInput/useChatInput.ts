@@ -1,13 +1,13 @@
-import { TextAreaRef } from 'antd/es/input/TextArea';
-import { useCallback, useRef, useState } from 'react';
+import { TextAreaRef } from "antd/es/input/TextArea";
+import { useCallback, useRef, useState } from "react";
 
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agent';
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { useChatStore } from "@/store/chat";
+import { useGlobalStore } from "@/store/global";
+import { useSessionStore } from "@/store/session";
+import { agentSelectors } from "@/store/session/slices/agent";
 
-import { useSendMessage } from './useSend';
+import { useSendMessage } from "./useSend";
 
 /**
  * 聊天消息输入框相关的状态和交互逻辑
@@ -43,6 +43,9 @@ export const useChatInput = () => {
     inputHeight,
     loading,
     onInput,
+    /**
+     * 发送消息
+     */
     onSend: handleSend,
     onStop,
     ref,
