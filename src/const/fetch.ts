@@ -20,8 +20,6 @@ export const getOpenAIAuthFromRequest = (req: Request) => {
   const accessCode = req.headers.get(LOBE_CHAT_ACCESS_CODE);
   const useAzureStr = req.headers.get(USE_AZURE_OPENAI);
   const apiVersion = req.headers.get(AZURE_OPENAI_API_VERSION);
-
   const useAzure = !!useAzureStr;
-
   return { accessCode, apiKey, apiVersion, endpoint, useAzure };
 };
