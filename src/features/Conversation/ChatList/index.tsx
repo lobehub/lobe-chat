@@ -1,4 +1,3 @@
-import { ChatList } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -10,6 +9,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
+import ChatList from '../components/ChatList';
 import { renderActions, useActionsClick } from './Actions';
 import { renderErrorMessages } from './Error';
 import { renderMessagesExtra } from './Extras';

@@ -9,7 +9,7 @@ import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 
 import ChatList from './ChatList';
-import ChatScrollAnchor from './ScrollAnchor';
+import ChatScrollAnchor from './components/ScrollAnchor';
 import { useInitConversation } from './useInitConversation';
 
 const useStyles = createStyles(({ css, responsive, stylish, cx }, fontSize: number = 14) =>
