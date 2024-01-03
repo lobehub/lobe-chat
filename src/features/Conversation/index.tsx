@@ -10,7 +10,7 @@ import { settingsSelectors } from '@/store/global/selectors';
 
 import ChatScrollAnchor from './components/ScrollAnchor';
 import ChatList from './container';
-import { useInitConversation } from './useInitConversation';
+import { useInitConversation } from './hooks/useInitConversation';
 
 const useStyles = createStyles(({ css, responsive, stylish, cx }, fontSize: number = 14) =>
   cx(

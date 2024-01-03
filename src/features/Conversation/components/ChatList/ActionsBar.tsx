@@ -1,7 +1,7 @@
 import { ActionIconGroup, type ActionIconGroupProps } from '@lobehub/ui';
 import { memo } from 'react';
 
-import { useChatListActionsBar } from './useChatListActionsBar';
+import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
 
 export interface ActionsBarProps extends ActionIconGroupProps {
   text?: {
