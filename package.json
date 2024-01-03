@@ -32,6 +32,7 @@
     "dev": "next dev -p 3010",
     "docs": "lobe-i18n md && npm run workflow:docs",
     "i18n": "npm run workflow:i18n && lobe-i18n",
+    "i18n-md": "lobe-i18n md",
     "lint": "npm run lint:ts && npm run lint:style && npm run type-check && npm run lint:circular",
     "lint:circular": "dpdm src/**/*.ts  --warning false  --tree false  --exit-code circular:1  -T true",
     "lint:md": "remark . --quiet --frail --output",
