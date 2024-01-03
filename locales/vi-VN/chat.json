@@ -1,0 +1,77 @@
+{
+  "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay lập tức, hoặc đến [Cài đặt trợ lý](/chat/settings#session={{id}}) để hoàn thiện thông tin của tôi.",
+  "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu trò chuyện ngay!",
+  "backToBottom": "Quay về dưới cùng",
+  "clearCurrentMessages": "Xóa tin nhắn hiện tại",
+  "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
+  "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
+  "defaultAgent": "Trợ lý mặc định",
+  "defaultSession": "Trợ lý mặc định",
+  "historyRange": "Phạm vi lịch sử",
+  "inbox": {
+    "defaultMessage": "Xin chào, tôi là trợ lý thông minh của bạn, bạn có thể hỏi tôi bất kỳ câu hỏi nào và tôi sẽ cố gắng trả lời. Nếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn `+` để tạo trợ lý tùy chỉnh.",
+    "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
+    "title": "Chuyện phiếm"
+  },
+  "newAgent": "Tạo trợ lý mới",
+  "noDescription": "Chưa có mô tả",
+  "pin": "Ghim",
+  "pinOff": "Bỏ ghim",
+  "regenerate": "Tạo lại",
+  "roleAndArchive": "Vai trò và lưu trữ",
+  "searchAgentPlaceholder": "Tìm kiếm trợ lý và cuộc trò chuyện...",
+  "send": "Gửi",
+  "sendPlaceholder": "Nhập nội dung trò chuyện...",
+  "sessionList": "Danh sách trợ lý",
+  "shareModal": {
+    "download": "Tải xuống ảnh chụp màn hình",
+    "imageType": "Định dạng ảnh",
+    "screenshot": "Ảnh chụp màn hình",
+    "settings": "Cài đặt xuất",
+    "shareToShareGPT": "Tạo liên kết chia sẻ ShareGPT",
+    "withBackground": "Bao gồm hình nền",
+    "withFooter": "Bao gồm chân trang",
+    "withPluginInfo": "Bao gồm thông tin plugin",
+    "withSystemRole": "Bao gồm thiết lập vai trò trợ lý"
+  },
+  "stop": "Dừng",
+  "stt": {
+    "action": "Nhập bằng giọng nói",
+    "loading": "Đang nhận dạng...",
+    "prettifying": "Đang tinh chỉnh..."
+  },
+  "temp": "Tạm thời",
+  "tokenDetail": "Thiết lập vai trò: {{systemRoleToken}} · Tin nhắn cuộc trò chuyện: {{chatsToken}} · Thiết lập công cụ: {{toolsToken}}",
+  "tokenTag": {
+    "overload": "Vượt quá giới hạn",
+    "remained": "Còn lại",
+    "used": "Đã sử dụng"
+  },
+  "topic": {
+    "confirmRemoveAll": "Bạn sắp xóa tất cả chủ đề. Hành động này không thể hoàn tác, vui lòng xác nhận.",
+    "confirmRemoveTopic": "Bạn sắp xóa chủ đề này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
+    "confirmRemoveUnstarred": "Bạn sắp xóa các chủ đề chưa được đánh dấu. Hành động này không thể hoàn tác, vui lòng xác nhận.",
+    "defaultTitle": "Chủ đề mặc định",
+    "openNewTopic": "Mở chủ đề mới",
+    "removeAll": "Xóa tất cả chủ đề",
+    "removeUnstarred": "Xóa chủ đề chưa được đánh dấu",
+    "saveCurrentMessages": "Lưu cuộc trò chuyện hiện tại thành chủ đề",
+    "searchPlaceholder": "Tìm kiếm chủ đề...",
+    "title": "Danh sách chủ đề"
+  },
+  "translate": {
+    "action": "Dịch",
+    "clear": "Xóa dịch"
+  },
+  "tts": {
+    "action": "Đọc bằng giọng nói",
+    "clear": "Xóa giọng nói"
+  },
+  "updateAgent": "Cập nhật thông tin trợ lý",
+  "upload": {
+    "actionTooltip": "Tải lên hình ảnh",
+    "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh. Giữ phím Shift để gửi hình ảnh trực tiếp",
+    "dragTitle": "Tải lên hình ảnh"
+  },
+  "warp": "Xuống dòng"
+}

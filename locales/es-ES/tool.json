@@ -1,6 +1,7 @@
 {
   "dalle": {
     "autoGenerate": "Auto-generar",
+    "downloading": "El enlace de la imagen generada por DALL·E 3 solo es válido durante 1 hora, descargando la imagen al dispositivo local...",
     "generate": "Generar",
     "generating": "Generando...",
     "images": "Imágenes:"

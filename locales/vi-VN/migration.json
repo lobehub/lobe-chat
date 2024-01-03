@@ -1,0 +1,45 @@
+{
+  "dbV1": {
+    "action": {
+      "clearDB": "Xóa dữ liệu cục bộ",
+      "downloadBackup": "Tải sao lưu dữ liệu",
+      "reUpgrade": "Tái nâng cấp",
+      "start": "Bắt đầu sử dụng",
+      "upgrade": "Nâng cấp ngay"
+    },
+    "clear": {
+      "confirm": "Dữ liệu cục bộ sẽ được xóa (cài đặt toàn cầu không bị ảnh hưởng), vui lòng xác nhận bạn đã tải sao lưu dữ liệu."
+    },
+    "description": "Trong phiên bản mới, lưu trữ dữ liệu của LobeChat đã có bước tiến lớn. Do đó, chúng tôi cần nâng cấp dữ liệu phiên bản cũ để mang đến trải nghiệm sử dụng tốt hơn cho bạn.",
+    "features": {
+      "capability": {
+        "desc": "Dựa trên công nghệ IndexedDB, đủ lớn để chứa tin nhắn trò chuyện suốt đời của bạn",
+        "title": "Dung lượng lớn"
+      },
+      "performance": {
+        "desc": "Triệu bản tin nhắn tự động được chỉ mục, thời gian phản hồi truy vấn trong mili giây",
+        "title": "Hiệu suất cao"
+      },
+      "use": {
+        "desc": "Hỗ trợ tìm kiếm tiêu đề, mô tả, nhãn, nội dung tin nhắn và cả văn bản dịch, hiệu suất tìm kiếm hàng ngày được cải thiện đáng kể",
+        "title": "Dễ sử dụng hơn"
+      }
+    },
+    "title": "Tiến hóa dữ liệu LobeChat",
+    "upgrade": {
+      "error": {
+        "subTitle": "Rất tiếc, quá trình nâng cấp cơ sở dữ liệu gặp sự cố. Vui lòng thử một trong những cách sau: A. Xóa dữ liệu cục bộ sau đó, nhập lại dữ liệu sao lưu; B. Nhấn nút \"Tái nâng cấp\".<br><br> Nếu vẫn gặp sự cố, vui lòng <1>gửi vấn đề</1> , chúng tôi sẽ kiểm tra ngay lập tức cho bạn",
+        "title": "Nâng cấp cơ sở dữ liệu thất bại"
+      },
+      "success": {
+        "subTitle": "Cơ sở dữ liệu LobeChat đã được nâng cấp lên phiên bản mới nhất, hãy trải nghiệm ngay",
+        "title": "Nâng cấp cơ sở dữ liệu thành công"
+      }
+    },
+    "upgradeTip": "Quá trình nâng cấp mất khoảng 10~20 giây, trong quá trình nâng cấp vui lòng không đóng LobeChat"
+  },
+  "migrateError": {
+    "missVersion": "Dữ liệu nhập không có số phiên bản, vui lòng kiểm tra lại tệp và thử lại",
+    "noMigration": "Không tìm thấy phương án di chuyển tương ứng với phiên bản hiện tại, vui lòng kiểm tra lại số phiên bản. Nếu vẫn gặp vấn đề, vui lòng gửi phản hồi về vấn đề"
+  }
+}
