@@ -10,7 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { ChatTranslate } from '@/types/message';
 
-import BubblesLoading from '../Loading';
+import BubblesLoading from '../components/BubblesLoading';
 
 const useStyles = createStyles(({ stylish }) => ({
   markdown: stylish.markdownInChat,

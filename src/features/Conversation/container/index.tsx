@@ -1,4 +1,3 @@
-import { ChatList } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -10,11 +9,12 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
-import { renderActions, useActionsClick } from './Actions';
-import { renderErrorMessages } from './Error';
-import { renderMessagesExtra } from './Extras';
-import { renderMessages, useAvatarsClick } from './Messages';
-import SkeletonList from './SkeletonList';
+import { renderActions, useActionsClick } from '../Actions';
+import { renderErrorMessages } from '../Error';
+import { renderMessagesExtra } from '../Extras';
+import { renderMessages, useAvatarsClick } from '../Messages';
+import ChatList from '../components/ChatList';
+import SkeletonList from '../components/SkeletonList';
 
 const List = memo(() => {
   const { t } = useTranslation('common');
@@ -65,7 +65,6 @@ const List = memo(() => {
       renderErrorMessages={renderErrorMessages}
       renderMessages={renderMessages}
       renderMessagesExtra={renderMessagesExtra}
-      style={{ marginTop: 24 }}
       text={{
         cancel: t('cancel'),
         confirm: t('ok'),

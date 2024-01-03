@@ -20,7 +20,6 @@ const withPWA = nextPWA({
 const nextConfig = {
   compress: isProd,
   experimental: {
-    forceSwcTransforms: true,
     optimizePackageImports: [
       'modern-screenshot',
       'emoji-mart',

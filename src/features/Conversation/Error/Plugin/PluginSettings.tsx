@@ -1,4 +1,4 @@
-import { Avatar, RenderErrorMessage } from '@lobehub/ui';
+import { Avatar } from '@lobehub/ui';
 import { Button, Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
@@ -11,6 +11,7 @@ import { useChatStore } from '@/store/chat';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
+import { RenderErrorMessage } from '../../components/ChatList';
 import { ErrorActionContainer, useStyles } from '../style';
 
 const PluginSettings: RenderErrorMessage['Render'] = memo(({ id, plugin }) => {
