@@ -1,0 +1,14 @@
+{
+  "button": {
+    "import": "Nhập Cấu Hình",
+    "start": "Bắt Đầu Ngay"
+  },
+  "header": "Chào Mừng",
+  "pickAgent": "Hoặc chọn từ các mẫu đại lý sau",
+  "skip": "Bỏ Qua Tạo",
+  "slogan": {
+    "desc1": "Tiên phong trong kỷ nguyên mới của tư duy và sáng tạo. Được xây dựng cho bạn, Siêu Cá Nhân.",
+    "desc2": "Tạo đại lý đầu tiên và bắt đầu nào~",
+    "title": "Khám phá siêu năng lực của bộ não bạn"
+  }
+}
