@@ -67,47 +67,46 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
   );
 
   const settings: FormItemProps[] = useMemo(
-    () =>
-      [
-        {
-          children: <Switch />,
-          label: t('shareModal.withSystemRole'),
-          minWidth: undefined,
-          name: 'withSystemRole',
-          valuePropName: 'checked',
-        },
-        {
-          children: <Switch />,
-          hidden: tab !== Tab.Screenshot,
-          label: t('shareModal.withBackground'),
-          minWidth: undefined,
-          name: 'withBackground',
-          valuePropName: 'checked',
-        },
-        {
-          children: <Switch />,
-          hidden: tab !== Tab.Screenshot,
-          label: t('shareModal.withFooter'),
-          minWidth: undefined,
-          name: 'withFooter',
-          valuePropName: 'checked',
-        },
-        {
-          children: <Segmented options={imageTypeOptions} />,
-          hidden: tab !== Tab.Screenshot,
-          label: t('shareModal.imageType'),
-          minWidth: undefined,
-          name: 'imageType',
-        },
-        {
-          children: <Switch />,
-          hidden: tab !== Tab.ShareGPT,
-          label: t('shareModal.withPluginInfo'),
-          minWidth: undefined,
-          name: 'withPluginInfo',
-          valuePropName: 'checked',
-        },
-      ],
+    () => [
+      {
+        children: <Switch />,
+        label: t('shareModal.withSystemRole'),
+        minWidth: undefined,
+        name: 'withSystemRole',
+        valuePropName: 'checked',
+      },
+      {
+        children: <Switch />,
+        hidden: tab !== Tab.Screenshot,
+        label: t('shareModal.withBackground'),
+        minWidth: undefined,
+        name: 'withBackground',
+        valuePropName: 'checked',
+      },
+      {
+        children: <Switch />,
+        hidden: tab !== Tab.Screenshot,
+        label: t('shareModal.withFooter'),
+        minWidth: undefined,
+        name: 'withFooter',
+        valuePropName: 'checked',
+      },
+      {
+        children: <Segmented options={imageTypeOptions} />,
+        hidden: tab !== Tab.Screenshot,
+        label: t('shareModal.imageType'),
+        minWidth: undefined,
+        name: 'imageType',
+      },
+      {
+        children: <Switch />,
+        hidden: tab !== Tab.ShareGPT,
+        label: t('shareModal.withPluginInfo'),
+        minWidth: undefined,
+        name: 'withPluginInfo',
+        valuePropName: 'checked',
+      },
+    ],
     [tab],
   );
 
