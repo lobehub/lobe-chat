@@ -20,7 +20,7 @@ const SkeletonList = memo(() => {
   const { styles } = useStyles();
 
   return (
-    <Flexbox gap={24} padding={12} style={{ marginTop: 24 }}>
+    <Flexbox gap={24} padding={12} style={{ marginTop: 24 + 64 }}>
       <Skeleton
         active
         avatar={{ size: 40 }}

@@ -21,7 +21,7 @@ const Chat = memo(() => {
   return (
     <Layout>
       <Flexbox height={'calc(100% - 44px)'} horizontal>
-        <Conversation chatInput={<ChatInput />} mobile />
+        <Conversation chatInput={<ChatInput />} />
         <TopicList />
       </Flexbox>
     </Layout>
