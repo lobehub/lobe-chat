@@ -1,4 +1,3 @@
-import { ChatListProps } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
 import { useRouter } from 'next/navigation';
 
@@ -7,16 +6,17 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
 
+import { ChatListProps } from '../components/ChatList';
 import { AssistantMessage } from './Assistant';
 import { DefaultMessage } from './Default';
 import { FunctionMessage } from './Function';
 import { UserMessage } from './User';
 
 export const renderMessages: ChatListProps['renderMessages'] = {
-  assistant: AssistantMessage as any,
-  default: DefaultMessage as any,
-  function: FunctionMessage as any,
-  user: UserMessage as any,
+  assistant: AssistantMessage,
+  default: DefaultMessage,
+  function: FunctionMessage,
+  user: UserMessage,
 };
 
 export const useAvatarsClick = (): ChatListProps['onAvatarsClick'] => {
