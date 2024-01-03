@@ -1,6 +1,8 @@
-import { Highlighter, RenderErrorMessage } from '@lobehub/ui';
+import { Highlighter } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+
+import { RenderErrorMessage } from '../../components/ChatList';
 
 interface OpenAIError {
   code: 'invalid_api_key' | string;

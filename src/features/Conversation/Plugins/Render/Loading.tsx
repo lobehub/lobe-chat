@@ -1,11 +1,10 @@
-import {createStyles} from 'antd-style';
-import {useTranslation} from 'react-i18next';
-import {Flexbox} from 'react-layout-kit';
-import {memo} from "react";
-
+import { createStyles } from 'antd-style';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(
-  ({css, token}) => css`
+  ({ css, token }) => css`
     position: relative;
 
     overflow: hidden;
@@ -46,16 +45,16 @@ const useStyles = createStyles(
     }
   `,
 );
- const Loading = memo(() => {
-  const {t} = useTranslation('plugin');
-  const {styles} = useStyles();
+const Loading = memo(() => {
+  const { t } = useTranslation('plugin');
+  const { styles } = useStyles();
 
   return (
     <Flexbox align={'center'} gap={8} padding={16}>
-      <span className={styles}/>
+      <span className={styles} />
       {t('loading.content')}
     </Flexbox>
   );
 });
 
-export default Loading
+export default Loading;

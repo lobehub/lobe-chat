@@ -1,4 +1,4 @@
-import { Icon, RenderErrorMessage } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { Button, Input, Segmented } from 'antd';
 import { KeySquare, SquareAsterisk } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -8,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 
+import { RenderErrorMessage } from '../components/ChatList';
 import APIKeyForm from './ApiKeyForm';
 import { ErrorActionContainer, FormAction } from './style';
 

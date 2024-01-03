@@ -1,6 +1,6 @@
-import { RenderErrorMessage } from '@lobehub/ui';
 import { memo } from 'react';
 
+import { RenderErrorMessage } from '../components/ChatList';
 import APIKeyForm from './ApiKeyForm';
 import { ErrorActionContainer } from './style';
 
