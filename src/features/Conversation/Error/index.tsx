@@ -1,8 +1,8 @@
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
-import { ChatListProps } from '@lobehub/ui';
 
 import { ChatErrorType } from '@/types/fetch';
 
+import { ChatListProps } from '../components/ChatList';
 import InvalidAccess from './InvalidAccess';
 import OpenAPIKey from './OpenAPIKey';
 import OpenAiBizError from './OpenAiBizError';
