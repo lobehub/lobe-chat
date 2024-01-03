@@ -299,7 +299,6 @@ export const chatMessage: StateCreator<
   fetchAIChatMessage: async (messages, assistantId) => {
     const { toggleChatLoading, refreshMessages, updateMessageContent } = get();
 
-    console.log('123');
     const abortController = toggleChatLoading(
       true,
       assistantId,
