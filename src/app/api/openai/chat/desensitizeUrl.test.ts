@@ -15,7 +15,7 @@ describe('desensitizeUrl', () => {
     expect(result).toBe('https://ex****le.com/v1');
   });
 
-  it('should desensitize a URL without a abc subdomain', () => {
+  it('should desensitize a URL without a subdomain less then 5 chartarters', () => {
     const originalUrl = 'https://abc.com/v1';
     const result = desensitizeUrl(originalUrl);
     expect(result).toBe('https://***.com/v1');
