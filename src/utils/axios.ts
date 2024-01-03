@@ -1,6 +1,8 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
 import { JsonResponse } from "@dongjak-public-types/commons";
+import { useAuthenticationStore } from "@/store/authentication";
 
+/*
 const fetchAdapter = (config: InternalAxiosRequestConfig) => {
   // 将 Axios 配置转换为 Fetch API 配置
   const fetchConfig = {
@@ -12,18 +14,18 @@ const fetchAdapter = (config: InternalAxiosRequestConfig) => {
   }; //as RequestInit;
 
   // 处理请求超时
-  /*  const timeoutPromise = new Promise(function (resolve, reject) {
+  /!*  const timeoutPromise = new Promise(function (resolve, reject) {
       if (config.timeout) {
         setTimeout(() => {
           reject(new Error('Request timeout'));
         }, config.timeout);
       }
-    });*/
+    });*!/
 
   // 发送请求并返回一个 Promise
 
   return new Promise<AxiosResponse<any>>((resolve, reject) => {
-    /*Promise.race([
+    /!*Promise.race([
       fetch(`${config.baseURL}${config.url}`, fetchConfig)
         .then(response => {
           // 检查响应状态
@@ -55,7 +57,7 @@ const fetchAdapter = (config: InternalAxiosRequestConfig) => {
           config,
           request: error.request,
         })
-      });*/
+      });*!/
     //@ts-ignore
     fetch(`${config.baseURL}${config.url}`, fetchConfig).then((response) => {
       // 检查响应状态
@@ -78,20 +80,22 @@ const fetchAdapter = (config: InternalAxiosRequestConfig) => {
     });
   });
 };
+*/
 
 export const JAVA_URL = "http://localhost:8084";
 const httpClient = axios.create({
   baseURL: JAVA_URL,
   timeout: 1000 * 10,
   responseType: "json",
-  adapter: fetchAdapter,
+  // withCredentials: true,
+  // adapter: fetchAdapter,
 });
 httpClient.interceptors.request.use(
   (config) => {
-    // const token = useAuthenticationStore.getState().token;
-    // if (token) {
-    //   config.headers["Authorization"] = "Bearer " + token;
-    // }
+    const token = useAuthenticationStore.getState().token;
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
+    }
     /* const unsub1 = useAuthenticationStore.subscribe(state => {
   })
   unsub1()*/
