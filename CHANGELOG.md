@@ -2,6 +2,231 @@
 
 # Changelog
 
+### [Version 0.118.7](https://github.com/lobehub/lobe-chat/compare/v0.118.6...v0.118.7)
+
+<sup>Released on **2024-01-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Desensitize openai base url in the error response.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Desensitize openai base url in the error response, closes [#918](https://github.com/lobehub/lobe-chat/issues/918) ([ab0aeb7](https://github.com/lobehub/lobe-chat/commit/ab0aeb7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.118.6](https://github.com/lobehub/lobe-chat/compare/v0.118.5...v0.118.6)
+
+<sup>Released on **2024-01-03**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Migration the ChatList into Conversation.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Migration the ChatList into Conversation, closes [#916](https://github.com/lobehub/lobe-chat/issues/916) ([6ee3795](https://github.com/lobehub/lobe-chat/commit/6ee3795))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.118.5](https://github.com/lobehub/lobe-chat/compare/v0.118.4...v0.118.5)
+
+<sup>Released on **2024-01-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Mobile device return to the previous page error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Mobile device return to the previous page error, closes [#886](https://github.com/lobehub/lobe-chat/issues/886) ([99cfc0f](https://github.com/lobehub/lobe-chat/commit/99cfc0f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.118.4](https://github.com/lobehub/lobe-chat/compare/v0.118.3...v0.118.4)
+
+<sup>Released on **2024-01-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update dalle identifier to fix unstable dalle function call.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update dalle identifier to fix unstable dalle function call, closes [#896](https://github.com/lobehub/lobe-chat/issues/896) ([9d9ac32](https://github.com/lobehub/lobe-chat/commit/9d9ac32))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.118.3](https://github.com/lobehub/lobe-chat/compare/v0.118.2...v0.118.3)
+
+<sup>Released on **2024-01-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix parse error of tool calls at end.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix parse error of tool calls at end, closes [#893](https://github.com/lobehub/lobe-chat/issues/893) ([f369b6e](https://github.com/lobehub/lobe-chat/commit/f369b6e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.118.2](https://github.com/lobehub/lobe-chat/compare/v0.118.1...v0.118.2)
+
+<sup>Released on **2023-12-31**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin antd version to fix chat page crash.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin antd version to fix chat page crash, closes [#884](https://github.com/lobehub/lobe-chat/issues/884) ([31484ff](https://github.com/lobehub/lobe-chat/commit/31484ff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.118.1](https://github.com/lobehub/lobe-chat/compare/v0.118.0...v0.118.1)
+
+<sup>Released on **2023-12-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix dalle image download error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix dalle image download error, closes [#868](https://github.com/lobehub/lobe-chat/issues/868) ([5b6d11f](https://github.com/lobehub/lobe-chat/commit/5b6d11f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.118.0](https://github.com/lobehub/lobe-chat/compare/v0.117.5...v0.118.0)
+
+<sup>Released on **2023-12-29**</sup>
+
+#### ✨ Features
+
+- **misc**: Support markdown type plugin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support markdown type plugin, closes [#865](https://github.com/lobehub/lobe-chat/issues/865) ([2791166](https://github.com/lobehub/lobe-chat/commit/2791166))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.117.5](https://github.com/lobehub/lobe-chat/compare/v0.117.4...v0.117.5)
+
+<sup>Released on **2023-12-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: The input box is prone to losing focus.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: The input box is prone to losing focus, closes [#834](https://github.com/lobehub/lobe-chat/issues/834) ([26a42f6](https://github.com/lobehub/lobe-chat/commit/26a42f6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.117.4](https://github.com/lobehub/lobe-chat/compare/v0.117.3...v0.117.4)
 
 <sup>Released on **2023-12-28**</sup>
