@@ -1,6 +1,7 @@
 {
   "dalle": {
     "autoGenerate": "Auto-generato",
+    "downloading": "Il link dell'immagine generata da DALL·E3 è valido solo per 1 ora, sta scaricando l'immagine in locale...",
     "generate": "Genera",
     "generating": "Generazione in corso...",
     "images": "Immagini:"
