@@ -2,7 +2,7 @@ import { Highlighter } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { RenderErrorMessage } from '../components/ChatList';
+import { RenderErrorMessage } from '../types';
 import OpenAPIKey from './OpenAPIKey';
 
 interface OpenAIError {

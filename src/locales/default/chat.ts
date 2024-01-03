@@ -15,6 +15,10 @@ export default {
     desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
   },
+  messageAction: {
+    delAndRegenerate: '删除并重新生成',
+    regenerate: '重新生成',
+  },
   newAgent: '新建助手',
   noDescription: '暂无描述',
 

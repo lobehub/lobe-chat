@@ -1,12 +1,13 @@
 import { useChatStore } from '@/store/chat';
+import { LLMRoleType } from '@/types/llm';
 
-import { ChatListProps } from '../components/ChatList';
+import { OnActionsClick, RenderAction } from '../types';
 import { AssistantActionsBar } from './Assistant';
 import { DefaultActionsBar } from './Fallback';
 import { FunctionActionsBar } from './Function';
 import { UserActionsBar } from './User';
 
-export const renderActions: ChatListProps['renderActions'] = {
+export const renderActions: Record<LLMRoleType, RenderAction> = {
   assistant: AssistantActionsBar,
   function: FunctionActionsBar,
   system: DefaultActionsBar,
@@ -18,7 +19,7 @@ interface ActionsClick {
   trigger: boolean;
 }
 
-export const useActionsClick = (): ChatListProps['onActionsClick'] => {
+export const useActionsClick = (): OnActionsClick => {
   const [deleteMessage, resendMessage, translateMessage, ttsMessage] = useChatStore((s) => [
     s.deleteMessage,
     s.resendMessage,

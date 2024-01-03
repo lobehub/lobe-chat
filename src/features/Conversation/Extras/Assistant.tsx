@@ -8,41 +8,44 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
+import { RenderMessageExtra } from '../types';
 import ExtraContainer from './ExtraContainer';
 import TTS from './TTS';
 import Translate from './Translate';
 
-export const AssistantMessageExtra = memo<ChatMessage>(({ extra, id, content }) => {
-  const model = useSessionStore(agentSelectors.currentAgentModel);
-  const loading = useChatStore((s) => s.chatLoadingId === id);
+export const AssistantMessageExtra: RenderMessageExtra = memo<ChatMessage>(
+  ({ extra, id, content }) => {
+    const model = useSessionStore(agentSelectors.currentAgentModel);
+    const loading = useChatStore((s) => s.chatLoadingId === id);
 
-  const showModelTag = extra?.fromModel && model !== extra?.fromModel;
-  const showTranslate = !!extra?.translate;
-  const showTTS = !!extra?.tts;
+    const showModelTag = extra?.fromModel && model !== extra?.fromModel;
+    const showTranslate = !!extra?.translate;
+    const showTTS = !!extra?.tts;
 
-  const showExtra = showModelTag || showTranslate || showTTS;
+    const showExtra = showModelTag || showTranslate || showTTS;
 
-  if (!showExtra) return;
+    if (!showExtra) return;
 
-  return (
-    <Flexbox gap={8} style={{ marginTop: 8 }}>
-      {showModelTag && (
-        <div>
-          <Tag icon={<SiOpenai size={'1em'} />}>{extra?.fromModel as string}</Tag>
-        </div>
-      )}
-      <>
-        {extra?.tts && (
-          <ExtraContainer>
-            <TTS content={content} id={id} loading={loading} {...extra?.tts} />
-          </ExtraContainer>
+    return (
+      <Flexbox gap={8} style={{ marginTop: 8 }}>
+        {showModelTag && (
+          <div>
+            <Tag icon={<SiOpenai size={'1em'} />}>{extra?.fromModel as string}</Tag>
+          </div>
         )}
-        {extra?.translate && (
-          <ExtraContainer>
-            <Translate id={id} loading={loading} {...extra?.translate} />
-          </ExtraContainer>
-        )}
-      </>
-    </Flexbox>
-  );
-});
+        <>
+          {extra?.tts && (
+            <ExtraContainer>
+              <TTS content={content} id={id} loading={loading} {...extra?.tts} />
+            </ExtraContainer>
+          )}
+          {extra?.translate && (
+            <ExtraContainer>
+              <Translate id={id} loading={loading} {...extra?.translate} />
+            </ExtraContainer>
+          )}
+        </>
+      </Flexbox>
+    );
+  },
+);

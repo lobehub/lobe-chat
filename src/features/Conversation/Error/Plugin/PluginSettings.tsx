@@ -11,7 +11,7 @@ import { useChatStore } from '@/store/chat';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
-import { RenderErrorMessage } from '../../components/ChatList';
+import { RenderErrorMessage } from '../../types';
 import { ErrorActionContainer, useStyles } from '../style';
 
 const PluginSettings: RenderErrorMessage['Render'] = memo(({ id, plugin }) => {

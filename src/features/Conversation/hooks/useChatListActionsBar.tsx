@@ -1,30 +1,37 @@
 import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
 import { Copy, Edit, RotateCw, Trash } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ChatListActionsBar {
   copy: ActionIconGroupItems;
   del: ActionIconGroupItems;
+  delAndRegenerate: ActionIconGroupItems;
   divider: { type: 'divider' };
   edit: ActionIconGroupItems;
   regenerate: ActionIconGroupItems;
 }
 
-export const useChatListActionsBar = (text?: {
-  copy?: string;
-  delete?: string;
-  edit?: string;
-  regenerate?: string;
-}): ChatListActionsBar => {
+export const useChatListActionsBar = (): ChatListActionsBar => {
+  const { t } = useTranslation('common');
+
   return {
     copy: {
       icon: Copy,
       key: 'copy',
-      label: text?.copy || 'Copy',
+      label: t('copy', { defaultValue: 'Copy' }),
     },
     del: {
       icon: Trash,
       key: 'del',
-      label: text?.delete || 'Delete',
+      label: t('delete', { defaultValue: 'Delete' }),
+    },
+    delAndRegenerate: {
+      icon: RotateCw,
+      key: 'delAndRegenerate',
+      label: t('messageAction.delAndRegenerate', {
+        defaultValue: 'Delete and regenerate',
+        ns: 'chat',
+      }),
     },
     divider: {
       type: 'divider',
@@ -32,12 +39,12 @@ export const useChatListActionsBar = (text?: {
     edit: {
       icon: Edit,
       key: 'edit',
-      label: text?.edit || 'Edit',
+      label: t('edit', { defaultValue: 'Edit' }),
     },
     regenerate: {
       icon: RotateCw,
       key: 'regenerate',
-      label: text?.regenerate || 'Regenerate',
+      label: t('regenerate', { defaultValue: 'Regenerate' }),
     },
   };
 };
