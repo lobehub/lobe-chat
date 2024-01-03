@@ -78,7 +78,6 @@
     "@lobehub/tts": "latest",
     "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",
-    "@vercel/speed-insights": "^1.0.2",
     "ahooks": "^3",
     "ai": "^2.2.22",
     "antd": "^5",
