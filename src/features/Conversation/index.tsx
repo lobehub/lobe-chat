@@ -8,9 +8,9 @@ import SafeSpacing from '@/components/SafeSpacing';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 
-import ChatList from './ChatList';
-import ChatScrollAnchor from './ScrollAnchor';
-import { useInitConversation } from './useInitConversation';
+import ChatScrollAnchor from './components/ScrollAnchor';
+import ChatList from './container';
+import { useInitConversation } from './hooks/useInitConversation';
 
 const useStyles = createStyles(({ css, responsive, stylish, cx }, fontSize: number = 14) =>
   cx(

@@ -1,6 +1,8 @@
-import { ActionIconGroup, RenderAction, useChatListActionsBar } from '@lobehub/ui';
+import { ActionIconGroup } from '@lobehub/ui';
 import { memo } from 'react';
 
+import { RenderAction } from '../components/ChatList';
+import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import { useCustomActions } from './customAction';
 
 export const UserActionsBar: RenderAction = memo(({ text, onActionClick }) => {
