@@ -5,6 +5,7 @@ import { ChatErrorType } from '@/types/fetch';
 import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 import { createErrorResponse } from '../errorResponse';
+import { desensitizeUrl } from './desensitizeUrl';
 
 interface CreateChatCompletionOptions {
   openai: OpenAI;
@@ -29,6 +30,13 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
   } catch (error) {
+    let desensitizedEndpoint = openai.baseURL;
+
+    // refs: https://github.com/lobehub/lobe-chat/issues/842
+    if (openai.baseURL !== 'https://api.openai.com/v1') {
+      desensitizedEndpoint = desensitizeUrl(openai.baseURL);
+    }
+
     // Check if the error is an OpenAI APIError
     if (error instanceof OpenAI.APIError) {
       let errorResult: any;
@@ -51,7 +59,7 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
       console.error(errorResult);
 
       return createErrorResponse(ChatErrorType.OpenAIBizError, {
-        endpoint: openai.baseURL,
+        endpoint: desensitizedEndpoint,
         error: errorResult,
       });
     }
@@ -61,7 +69,7 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
 
     // return as a GatewayTimeout error
     return createErrorResponse(ChatErrorType.InternalServerError, {
-      endpoint: openai.baseURL,
+      endpoint: desensitizedEndpoint,
       error: JSON.stringify(error),
     });
   }
