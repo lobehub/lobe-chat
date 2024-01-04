@@ -7,11 +7,16 @@
   "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",
   "defaultAgent": "自定義助手",
   "defaultSession": "自定義助手",
+  "duplicateTitle": "{{title}} 副本",
   "historyRange": "歷史範圍",
   "inbox": {
     "defaultMessage": "你好，我是你的智能助手，你可以問我任何問題，我會盡力回答你。如果需要獲得更專業或定制的助手，可以點擊`+`創建自定義助手",
     "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
     "title": "隨便聊聊"
+  },
+  "messageAction": {
+    "delAndRegenerate": "刪除並重新生成",
+    "regenerate": "重新生成"
   },
   "newAgent": "新建助手",
   "noDescription": "暫無描述",
@@ -48,6 +53,11 @@
     "used": "使用"
   },
   "topic": {
+    "actions": {
+      "autoRename": "智能重新命名",
+      "duplicate": "建立副本",
+      "export": "匯出主題"
+    },
     "confirmRemoveAll": "即將刪除全部話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",

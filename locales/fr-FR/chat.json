@@ -7,11 +7,16 @@
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Cette action est irréversible. Veuillez confirmer.",
   "defaultAgent": "Agent par défaut",
   "defaultSession": "Session par défaut",
+  "duplicateTitle": "{{title}} Copie",
   "historyRange": "Plage d'historique",
   "inbox": {
     "defaultMessage": "Bonjour, je suis votre agent virtuel. Vous pouvez me poser n'importe quelle question et je ferai de mon mieux pour vous répondre. Si vous avez besoin d'un agent plus professionnel ou personnalisé, cliquez sur le `+` pour créer un agent personnalisé.",
     "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
     "title": "Discutons un peu"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Supprimer et régénérer",
+    "regenerate": "Régénérer"
   },
   "newAgent": "Nouvel agent",
   "noDescription": "Aucune description disponible",
@@ -48,6 +53,11 @@
     "used": "Utilisé"
   },
   "topic": {
+    "actions": {
+      "autoRename": "Renommer automatiquement",
+      "duplicate": "Créer une copie",
+      "export": "Exporter le sujet"
+    },
     "confirmRemoveAll": "Vous êtes sur le point de supprimer tous les sujets. Cette action est irréversible. Veuillez confirmer.",
     "confirmRemoveTopic": "Vous êtes sur le point de supprimer ce sujet. Cette action est irréversible. Veuillez confirmer.",
     "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible. Veuillez confirmer.",

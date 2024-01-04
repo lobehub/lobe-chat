@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { RenderErrorMessage } from '../components/ChatList';
+import { RenderErrorMessage } from '../types';
 import APIKeyForm from './ApiKeyForm';
 import { ErrorActionContainer } from './style';
 
