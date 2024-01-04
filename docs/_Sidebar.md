@@ -24,7 +24,7 @@
 #### ⌨️ Development
 
 - [Technical Development Getting Started Guide](https://github.com/lobehub/lobe-chat/wiki/index) | [技术开发上手指南](https://github.com/lobehub/lobe-chat/wiki/index.zh-CN)
-- [Environment Setup Guide](https://github.com/lobehub/lobe-chat/wiki/Steup-Development) | [开发环境设置](https://github.com/lobehub/lobe-chat/wiki/Steup-Development.zh-CN)
+- [Environment Setup Guide](https://github.com/lobehub/lobe-chat/wiki/Setup-Development) | [开发环境设置](https://github.com/lobehub/lobe-chat/wiki/Setup-Development.zh-CN)
 - [Architecture Design](https://github.com/lobehub/lobe-chat/wiki/Architecture) | [架构设计](https://github.com/lobehub/lobe-chat/wiki/Architecture.zh-CN)
 - [Directory Structure](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure) | [目录架构](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure.zh-CN)
 - [Data Store Selector](https://github.com/lobehub/lobe-chat/wiki/Data-Store-Selectors) | [数据存储取数模块](https://github.com/lobehub/lobe-chat/wiki/Data-Store-Selectors.zh-CN)
