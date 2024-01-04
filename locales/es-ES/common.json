@@ -17,6 +17,7 @@
   "defaultAgent": "Asistente predeterminado",
   "defaultSession": "Sesión predeterminada",
   "delete": "Eliminar",
+  "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuración",
   "exportType": {

@@ -1,7 +1,7 @@
 import { ActionIcon, EditableText, Icon } from '@lobehub/ui';
 import { App, Dropdown, type MenuProps, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { MoreVertical, PencilLine, Star, Trash } from 'lucide-react';
+import { LucideCopy, MoreVertical, PencilLine, Star, Trash, Wand2 } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -33,11 +33,22 @@ interface TopicContentProps {
 const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   const { t } = useTranslation('common');
 
-  const [editing, favoriteTopic, updateTopicTitle, removeTopic] = useChatStore((s) => [
+  const [
+    editing,
+    favoriteTopic,
+    updateTopicTitle,
+    removeTopic,
+    autoRenameTopicTitle,
+    duplicateTopic,
+    // sessionId,
+  ] = useChatStore((s) => [
     s.topicRenamingId === id,
     s.favoriteTopic,
     s.updateTopicTitle,
     s.removeTopic,
+    s.autoRenameTopicTitle,
+    s.duplicateTopic,
+    s.activeId,
   ]);
   const { styles, theme } = useStyles();
 
@@ -50,12 +61,42 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   const items = useMemo<MenuProps['items']>(
     () => [
       {
+        icon: <Icon icon={Wand2} />,
+        key: 'autoRename',
+        label: t('topic.actions.autoRename', { ns: 'chat' }),
+        onClick: () => {
+          autoRenameTopicTitle(id);
+        },
+      },
+      {
         icon: <Icon icon={PencilLine} />,
         key: 'rename',
         label: t('rename'),
         onClick: () => {
           toggleEditing(true);
         },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        icon: <Icon icon={LucideCopy} />,
+        key: 'duplicate',
+        label: t('topic.actions.duplicate', { ns: 'chat' }),
+        onClick: () => {
+          duplicateTopic(id);
+        },
+      },
+      // {
+      //   icon: <Icon icon={LucideDownload} />,
+      //   key: 'export',
+      //   label: t('topic.actions.export', { ns: 'chat' }),
+      //   onClick: () => {
+      //     configService.exportSingleTopic(sessionId, id);
+      //   },
+      // },
+      {
+        type: 'divider',
       },
       // {
       //   icon: <Icon icon={Share2} />,

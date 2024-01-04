@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 
-import { RenderErrorMessage } from '../components/ChatList';
+import { RenderErrorMessage } from '../types';
 import APIKeyForm from './ApiKeyForm';
 import { ErrorActionContainer, FormAction } from './style';
 

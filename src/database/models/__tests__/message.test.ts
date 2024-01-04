@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { DB_Message } from '@/database/schemas/message';
 import { ChatMessage } from '@/types/message';
 
 import { CreateMessageParams, MessageModel } from '../message';
@@ -322,6 +323,53 @@ describe('MessageModel', () => {
         topicId: messageData.topicId,
       });
       expect(messagesInDb).toHaveLength(0);
+    });
+  });
+
+  describe('duplicateMessages', () => {
+    it('should duplicate messages and update parentId for copied messages', async () => {
+      // 创建原始消息和父消息
+      const parentMessageData: DB_Message = {
+        content: 'Parent message content',
+        role: 'user',
+        sessionId: 'session1',
+      };
+      const parentMessage = await MessageModel.create(parentMessageData);
+
+      const childMessageData: DB_Message = {
+        content: 'Child message content',
+        role: 'user',
+        sessionId: 'session1',
+        parentId: parentMessage.id,
+      };
+
+      await MessageModel.create(childMessageData);
+
+      // 获取数据库中的消息以进行复制
+      const originalMessages = await MessageModel.queryAll();
+
+      // 执行复制操作
+      const duplicatedMessages = await MessageModel.duplicateMessages(originalMessages);
+
+      // 验证复制的消息数量是否正确
+      expect(duplicatedMessages.length).toBe(originalMessages.length);
+
+      // 验证每个复制的消息是否具有新的唯一ID，并且parentId被正确更新
+      for (const original of originalMessages) {
+        const copied = duplicatedMessages.find((m) => m.content === original.content);
+        expect(copied).toBeDefined();
+        expect(copied).not.toBeNull();
+        expect(copied!.id).not.toBe(original.id);
+        if (original.parentId) {
+          const originalParent = originalMessages.find((m) => m.id === original.parentId);
+          expect(originalParent).toBeDefined();
+          const copiedParent = duplicatedMessages.find(
+            (m) => m.content === originalParent!.content,
+          );
+
+          expect(copied!.parentId).toBe(copiedParent!.id);
+        }
+      }
     });
   });
 });

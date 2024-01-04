@@ -7,11 +7,16 @@
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
   "defaultAgent": "Asistente predeterminado",
   "defaultSession": "Asistente predeterminado",
+  "duplicateTitle": "{{title}} Copia",
   "historyRange": "Rango de historial",
   "inbox": {
     "defaultMessage": "Hola, soy tu asistente virtual, puedes preguntarme cualquier cosa y haré todo lo posible para responderte. Si necesitas un asistente más profesional o personalizado, haz clic en `+` para crear un asistente personalizado.",
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
     "title": "Charla casual"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Eliminar y Regenerar",
+    "regenerate": "Regenerar"
   },
   "newAgent": "Nuevo asistente",
   "noDescription": "Sin descripción",
@@ -48,6 +53,11 @@
     "used": "Usado"
   },
   "topic": {
+    "actions": {
+      "autoRename": "Renombrar automáticamente",
+      "duplicate": "Crear copia",
+      "export": "Exportar tema"
+    },
     "confirmRemoveAll": "Estás a punto de eliminar todos los temas. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",
     "confirmRemoveTopic": "Estás a punto de eliminar este tema. Una vez eliminado, no se podrá recuperar. Por favor, procede con precaución.",
     "confirmRemoveUnstarred": "Estás a punto de eliminar los temas no marcados como favoritos. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",

@@ -7,11 +7,16 @@
   "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be retrieved. Please confirm your action.",
   "defaultAgent": "Default Agent",
   "defaultSession": "Default Agent",
+  "duplicateTitle": "{{title}} Copy",
   "historyRange": "History Range",
   "inbox": {
     "defaultMessage": "Hello, I'm your virtual agent. You can ask me anything, and I'll do my best to answer you. If you need a more professional or customized agent, click on `+` to create a custom agent.",
     "desc": "Activate the brain cluster and spark creative thinking. Your virtual agent is here to communicate with you about everything.",
     "title": "Just Chat"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Delete and Regenerate",
+    "regenerate": "Regenerate"
   },
   "newAgent": "New Agent",
   "noDescription": "No description available",
@@ -48,6 +53,11 @@
     "used": "Used"
   },
   "topic": {
+    "actions": {
+      "autoRename": "Auto Rename",
+      "duplicate": "Create Copy",
+      "export": "Export Topic"
+    },
     "confirmRemoveAll": "You are about to delete all topics. Once deleted, they cannot be recovered. Please proceed with caution.",
     "confirmRemoveTopic": "You are about to delete this topic. Once deleted, it cannot be recovered. Please proceed with caution.",
     "confirmRemoveUnstarred": "You are about to delete unstarred topics. Once deleted, they cannot be recovered. Please proceed with caution.",
