@@ -2,14 +2,14 @@ import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
 
 import { ChatErrorType } from '@/types/fetch';
 
-import { ChatListProps } from '../components/ChatList';
+import { RenderErrorMessage } from '../types';
 import InvalidAccess from './InvalidAccess';
 import OpenAPIKey from './OpenAPIKey';
 import OpenAiBizError from './OpenAiBizError';
 import PluginError from './Plugin/PluginError';
 import PluginSettings from './Plugin/PluginSettings';
 
-export const renderErrorMessages: ChatListProps['renderErrorMessages'] = {
+export const renderErrorMessages: Record<string, RenderErrorMessage> = {
   [PluginErrorType.PluginMarketIndexNotFound]: {
     Render: PluginError,
   },

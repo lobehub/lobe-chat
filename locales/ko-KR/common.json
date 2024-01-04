@@ -17,6 +17,7 @@
   "defaultAgent": "기본 에이전트",
   "defaultSession": "기본 세션",
   "delete": "삭제",
+  "duplicate": "복제품 만들기",
   "edit": "편집",
   "export": "내보내기",
   "exportType": {

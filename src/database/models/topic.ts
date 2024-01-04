@@ -1,4 +1,6 @@
 import { BaseModel } from '@/database/core';
+import { DBModel } from '@/database/core/types/db';
+import { MessageModel } from '@/database/models/message';
 import { DB_Topic, DB_TopicSchema } from '@/database/schemas/topic';
 import { ChatTopic } from '@/types/topic';
 import { nanoid } from '@/utils/uuid';
@@ -53,14 +55,14 @@ class _TopicModel extends BaseModel {
     // handle pageSize
     const pagedTopics = sortedTopics.slice(offset, offset + pageSize);
 
-    return pagedTopics.map((i) => ({ ...i, favorite: !!i.favorite }));
+    return pagedTopics.map((i) => this.mapToChatTopic(i));
   }
 
   async findBySessionId(sessionId: string) {
     return this.table.where({ sessionId }).toArray();
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<DBModel<DB_Topic>> {
     return this.table.get(id);
   }
 
@@ -198,6 +200,36 @@ class _TopicModel extends BaseModel {
     console.timeEnd('queryTopicsByKeyword');
     return uniqueTopics.map((i) => ({ ...i, favorite: !!i.favorite }));
   }
+
+  async duplicateTopic(topicId: string, newTitle?: string) {
+    return this.db.transaction('rw', this.db.topics, this.db.messages, async () => {
+      // Step 1: get DB_Topic
+      const topic = await this.findById(topicId);
+
+      if (!topic) {
+        throw new Error(`Topic with id ${topicId} not found`);
+      }
+
+      // Step 3: 查询与 `topic` 关联的 `messages`
+      const originalMessages = await MessageModel.queryByTopicId(topicId);
+
+      const duplicateMessages = await MessageModel.duplicateMessages(originalMessages);
+
+      const { id } = await this.create({
+        ...this.mapToChatTopic(topic),
+        messages: duplicateMessages.map((m) => m.id),
+        sessionId: topic.sessionId!,
+        title: newTitle || topic.title,
+      });
+
+      return id;
+    });
+  }
+
+  private mapToChatTopic = (dbTopic: DBModel<DB_Topic>): ChatTopic => ({
+    ...dbTopic,
+    favorite: !!dbTopic.favorite,
+  });
 }
 
 export const TopicModel = new _TopicModel();

@@ -2,6 +2,7 @@ import { DeepPartial } from 'utility-types';
 
 import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
 import { BaseModel } from '@/database/core';
+import { DBModel } from '@/database/core/types/db';
 import { DB_Session, DB_SessionSchema } from '@/database/schemas/session';
 import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, LobeSessions, SessionGroupKey } from '@/types/session';
@@ -79,7 +80,7 @@ class _SessionModel extends BaseModel {
     return this.table.clear();
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<DBModel<DB_Session>> {
     return this.table.get(id);
   }
 
@@ -154,6 +155,15 @@ class _SessionModel extends BaseModel {
 
     console.timeEnd('queryByKeyword');
     return data;
+  }
+
+  async duplicate(id: string, newTitle?: string) {
+    const session = await this.findById(id);
+    if (!session) return;
+
+    const newSession = merge(session, { meta: { title: newTitle } });
+
+    return this._add(newSession, uuid());
   }
 }
 

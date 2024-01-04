@@ -8,8 +8,9 @@ import SafeSpacing from '@/components/SafeSpacing';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 
+import ChatList from './components/ChatList';
 import ChatScrollAnchor from './components/ScrollAnchor';
-import ChatList from './container';
+import SkeletonList from './components/SkeletonList';
 import { useInitConversation } from './hooks/useInitConversation';
 
 const useStyles = createStyles(({ css, responsive, stylish, cx }, fontSize: number = 14) =>
@@ -52,14 +53,14 @@ const Conversation = memo<ConversationProps>(({ mobile, chatInput }) => {
   const { styles } = useStyles(fontSize);
 
   // init conversation
-  useInitConversation();
+  const init = useInitConversation();
 
   return (
     <Flexbox flex={1} style={{ position: 'relative' }}>
       <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
         <div className={styles} ref={ref}>
           {!mobile && <SafeSpacing />}
-          <ChatList />
+          {init ? <ChatList /> : <SkeletonList />}
           <ChatScrollAnchor />
         </div>
         <BackBottom target={ref} text={t('backToBottom')} />

@@ -7,11 +7,16 @@
   "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan niet worden hersteld. Bevestig je actie.",
   "defaultAgent": "Standaard assistent",
   "defaultSession": "Standaard assistent",
+  "duplicateTitle": "{{title}} Kopie",
   "historyRange": "Geschiedenisbereik",
   "inbox": {
     "defaultMessage": "Hallo, ik ben je slimme assistent. Je kunt me alles vragen en ik zal mijn best doen om je te antwoorden. Als je een meer professionele of op maat gemaakte assistent nodig hebt, klik dan op het `+`-teken om een aangepaste assistent te maken.",
     "desc": "Activeer de hersencluster en laat de vonken van gedachten overslaan. Je slimme assistent, hier om met je over alles te praten.",
     "title": "Praat maar raak"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Verwijderen en opnieuw genereren",
+    "regenerate": "Opnieuw genereren"
   },
   "newAgent": "Nieuwe assistent",
   "noDescription": "Geen beschrijving beschikbaar",
@@ -48,6 +53,11 @@
     "used": "Gebruikt"
   },
   "topic": {
+    "actions": {
+      "autoRename": "Automatisch hernoemen",
+      "duplicate": "Dupliceren",
+      "export": "Exporteren"
+    },
     "confirmRemoveAll": "Alle onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",
     "confirmRemoveTopic": "Dit onderwerp wordt verwijderd en kan niet worden hersteld. Wees voorzichtig.",
     "confirmRemoveUnstarred": "Niet-gefavoriseerde onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",

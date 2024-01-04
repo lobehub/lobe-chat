@@ -5,11 +5,10 @@ import { FC, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ResponsiveIndex from '@/components/ResponsiveIndex';
-import Conversation from '@/features/Conversation';
 
 import PageTitle from '../features/PageTitle';
 import ChatHeader from './features/ChatHeader';
-import ChatInput from './features/ChatInput';
+import Conversation from './features/Conversation';
 import SideBar from './features/SideBar';
 import Layout from './layout.desktop';
 
@@ -21,7 +20,7 @@ const DesktopPage = memo(() => (
       <PageTitle />
       <ChatHeader />
       <Flexbox flex={1} height={'calc(100% - 64px)'} horizontal>
-        <Conversation chatInput={<ChatInput />} />
+        <Conversation />
         <SideBar />
       </Flexbox>
     </Layout>
