@@ -7,11 +7,16 @@
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
+  "duplicateTitle": "{{title}} Kopya",
   "historyRange": "Geçmiş Aralığı",
   "inbox": {
     "defaultMessage": "Merhaba, ben sanal asistanınızım. Bana herhangi bir şey sorabilirsiniz ve size cevap vermek için elimden geleni yapacağım. Daha profesyonel veya özelleştirilmiş bir asistana ihtiyacınız varsa, özel bir asistan oluşturmak için `+` simgesine tıklayabilirsiniz.",
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Sil ve Yeniden Oluştur",
+    "regenerate": "Yeniden Oluştur"
   },
   "newAgent": "Yeni Asistan",
   "noDescription": "Açıklama yok",
@@ -48,6 +53,11 @@
     "used": "Kullanılan"
   },
   "topic": {
+    "actions": {
+      "autoRename": "Akıllı Yeniden Adlandırma",
+      "duplicate": "Kopya Oluştur",
+      "export": "Konuyu Dışa Aktar"
+    },
     "confirmRemoveAll": "Tüm konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
     "confirmRemoveTopic": "Bu konuyu silmek üzeresiniz. Bir kere silindiğinde, geri alınamaz. Lütfen dikkatli bir şekilde devam edin.",
     "confirmRemoveUnstarred": "Yıldızlanmamış konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
