@@ -49,6 +49,12 @@ export const useActionsClick = (): OnActionsClick => {
         break;
       }
 
+      case 'delAndRegenerate': {
+        resendMessage(id);
+        deleteMessage(id);
+        break;
+      }
+
       case 'tts': {
         ttsMessage(id);
         break;
