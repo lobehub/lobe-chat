@@ -1,3 +1,8 @@
+import { copyToClipboard } from '@lobehub/ui';
+import { App } from 'antd';
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { useChatStore } from '@/store/chat';
 import { LLMRoleType } from '@/types/llm';
 
@@ -14,55 +19,48 @@ export const renderActions: Record<LLMRoleType, RenderAction> = {
   user: UserActionsBar,
 };
 
-interface ActionsClick {
-  onClick: () => void;
-  trigger: boolean;
-}
-
 export const useActionsClick = (): OnActionsClick => {
+  const { t } = useTranslation('common');
   const [deleteMessage, resendMessage, translateMessage, ttsMessage] = useChatStore((s) => [
     s.deleteMessage,
     s.resendMessage,
     s.translateMessage,
     s.ttsMessage,
   ]);
+  const { message } = App.useApp();
 
-  return (action, { id, error }) => {
-    const actionsClick: ActionsClick[] = [
-      {
-        onClick: () => {
-          deleteMessage(id);
-        },
-        trigger: action.key === 'del',
-      },
-      {
-        onClick: () => {
-          resendMessage(id);
-          // if this message is an error message, we need to delete it
-          if (error) deleteMessage(id);
-        },
-        trigger: action.key === 'regenerate',
-      },
-      {
-        onClick: () => {
-          ttsMessage(id);
-        },
-        trigger: action.key === 'tts',
-      },
-      {
-        onClick: () => {
-          /**
-           * @description Click the menu item with translate item, the result is:
-           * @key 'en-US'
-           * @keyPath ['en-US','translate']
-           */
-          const lang = action.keyPath[0];
-          translateMessage(id, lang);
-        },
-        trigger: action.keyPath.at(-1) === 'translate',
-      },
-    ];
+  return useCallback<OnActionsClick>(async (action, { id, content, error }) => {
+    switch (action.key) {
+      case 'copy': {
+        await copyToClipboard(content);
+        message.success(t('copySuccess', { defaultValue: 'Copy Success' }));
+        break;
+      }
 
-    actionsClick.find((item) => item.trigger)?.onClick();
-  };
+      case 'del': {
+        deleteMessage(id);
+        break;
+      }
+
+      case 'regenerate': {
+        resendMessage(id);
+        // if this message is an error message, we need to delete it
+        if (error) deleteMessage(id);
+        break;
+      }
+
+      case 'tts': {
+        ttsMessage(id);
+        break;
+      }
+    }
+
+    if (action.keyPath.at(-1) === 'translate') {
+      // click the menu item with translate item, the result is:
+      // key: 'en-US'
+      // keyPath: ['en-US','translate']
+      const lang = action.keyPath[0];
+      translateMessage(id, lang);
+    }
+  }, []);
 };

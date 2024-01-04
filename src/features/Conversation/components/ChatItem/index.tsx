@@ -1,145 +1,81 @@
-import { type AlertProps, ChatItem, type ChatItemProps } from '@lobehub/ui';
-import { copyToClipboard } from '@lobehub/ui';
-import { App } from 'antd';
-import { FC, ReactNode, memo, useCallback, useMemo, useState } from 'react';
+import { type AlertProps, ChatItem } from '@lobehub/ui';
+import isEqual from 'fast-deep-equal';
+import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agent';
-import { LLMRoleType } from '@/types/llm';
+import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
-import { renderActions, useActionsClick } from '../../Actions';
 import { renderErrorMessages } from '../../Error';
 import { renderMessagesExtra } from '../../Extras';
 import { renderMessages, useAvatarsClick } from '../../Messages';
-import { OnActionsClick, OnAvatarsClick, OnMessageChange } from '../../types';
 import ActionsBar from './ActionsBar';
 
-export type RenderRole = LLMRoleType | 'default' | string;
-export type RenderItem = FC<{ key: string } & ChatMessage & ListItemProps>;
-
-export interface ListItemProps {
-  groupNav?: ChatItemProps['avatarAddon'];
-  loading?: boolean;
-  /**
-   * @description 点击操作按钮的回调函数
-   */
-  onActionsClick?: OnActionsClick;
-  onAvatarsClick?: OnAvatarsClick;
-  /**
-   * @description 消息变化的回调函数
-   */
-  onMessageChange?: OnMessageChange;
-
-  renderItems?: {
-    [role: RenderRole]: RenderItem;
-  };
-
-  /**
-   * @description 是否显示聊天项的名称
-   * @default false
-   */
-  showTitle?: boolean;
+export interface ChatListItemProps {
+  index: number;
 }
 
-export type ChatListItemProps = ChatMessage & ListItemProps;
-
-const Item = memo<ChatListItemProps>((props) => {
+const Item = memo<ChatListItemProps>(({ index }) => {
   const { t } = useTranslation('common');
 
-  const { showTitle, groupNav, renderItems, ...item } = props;
-
-  const [loading, onMessageChange] = useChatStore((s) => [
-    s.chatLoadingId === item.id,
-    s.updateMessageContent,
-  ]);
-  const onActionsClick = useActionsClick();
-  const onAvatarsClick = useAvatarsClick();
-
+  const [editing, setEditing] = useState(false);
   const [type = 'chat'] = useSessionStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
     return [config.displayMode];
   });
 
-  const [editing, setEditing] = useState(false);
+  const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
+  const item = useChatStore(
+    (s) => chatSelectors.currentChatsWithGuideMessage(meta)(s)[index],
+    isEqual,
+  );
 
-  const { message } = App.useApp();
+  const [loading, onMessageChange] = useChatStore((s) => [
+    s.chatLoadingId === item.id,
+    s.updateMessageContent,
+  ]);
 
-  const RenderItem = useMemo(() => {
-    if (!renderItems || !item?.role) return;
-    let renderFunction;
-    if (renderItems?.[item.role]) renderFunction = renderItems[item.role];
-    if (!renderFunction && renderItems?.['default']) renderFunction = renderItems['default'];
-    if (!renderFunction) return;
-    return renderFunction;
-  }, [renderItems?.[item.role]]);
+  const onAvatarsClick = useAvatarsClick();
 
   const RenderMessage = useCallback(
     ({ editableContent, data }: { data: ChatMessage; editableContent: ReactNode }) => {
       if (!item?.role) return;
-      let RenderFunction;
-      if (renderMessages?.[item.role]) RenderFunction = renderMessages[item.role];
-      if (!RenderFunction && renderMessages?.['default'])
-        RenderFunction = renderMessages['default'];
+      const RenderFunction = renderMessages[item.role] ?? renderMessages['default'];
+
       if (!RenderFunction) return;
+
       return <RenderFunction {...data} editableContent={editableContent} />;
     },
-    [],
+    [item.role],
   );
 
-  const MessageExtra = useCallback(({ data }: { data: ChatMessage }) => {
-    if (!renderMessagesExtra || !item?.role) return;
-    let RenderFunction;
-    if (renderMessagesExtra?.[item.role]) RenderFunction = renderMessagesExtra[item.role];
-    if (renderMessagesExtra?.['default']) RenderFunction = renderMessagesExtra['default'];
-    if (!RenderFunction) return;
-    return <RenderFunction {...data} />;
-  }, []);
-
-  const ErrorMessage = useCallback(({ data }: { data: ChatMessage }) => {
-    if (!renderErrorMessages || !item?.error?.type) return;
-    let RenderFunction;
-    if (renderErrorMessages?.[item.error.type])
-      RenderFunction = renderErrorMessages[item.error.type].Render;
-    if (!RenderFunction && renderErrorMessages?.['default'])
-      RenderFunction = renderErrorMessages['default'].Render;
-    if (!RenderFunction) return;
-    return <RenderFunction {...data} />;
-  }, []);
-
-  const Actions = useCallback(
+  const MessageExtra = useCallback(
     ({ data }: { data: ChatMessage }) => {
-      if (!renderActions || !item?.role) return;
+      if (!renderMessagesExtra || !item?.role) return;
       let RenderFunction;
-      if (renderActions[item.role]) RenderFunction = renderActions[item.role];
+      if (renderMessagesExtra?.[item.role]) RenderFunction = renderMessagesExtra[item.role];
 
-      if (!RenderFunction) RenderFunction = ActionsBar;
-
-      const handleActionClick: ListItemProps['onActionsClick'] = async (action, data) => {
-        switch (action.key) {
-          case 'copy': {
-            await copyToClipboard(data.content);
-            message.success(t('copySuccess', { defaultValue: 'Copy Success' }));
-            break;
-          }
-          case 'edit': {
-            setEditing(true);
-          }
-        }
-
-        onActionsClick?.(action, data);
-      };
-
-      return (
-        <RenderFunction
-          {...data}
-          onActionClick={(actionKey) => handleActionClick?.(actionKey, data)}
-        />
-      );
+      if (!RenderFunction) return;
+      return <RenderFunction {...data} />;
     },
-    [onActionsClick],
+    [item.role],
+  );
+
+  const ErrorMessage = useCallback(
+    ({ data }: { data: ChatMessage }) => {
+      if (!renderErrorMessages || !item?.error?.type) return;
+      let RenderFunction;
+      if (renderErrorMessages?.[item.error.type])
+        RenderFunction = renderErrorMessages[item.error.type].Render;
+      if (!RenderFunction && renderErrorMessages?.['default'])
+        RenderFunction = renderErrorMessages['default'].Render;
+      if (!RenderFunction) return;
+      return <RenderFunction {...data} />;
+    },
+    [item.error],
   );
 
   const error = useMemo(() => {
@@ -149,19 +85,13 @@ const Item = memo<ChatListItemProps>((props) => {
     if (item.error.type && renderErrorMessages?.[item.error.type]) {
       alertConfig = renderErrorMessages[item.error.type]?.config as AlertProps;
     }
-    return {
-      message,
-      ...alertConfig,
-    };
-  }, [renderErrorMessages, item.error]);
-
-  if (RenderItem) return <RenderItem key={item.id} {...props} />;
+    return { message, ...alertConfig };
+  }, [item.error]);
 
   return (
     <ChatItem
-      actions={<Actions data={item} />}
+      actions={<ActionsBar index={index} setEditing={setEditing} />}
       avatar={item.meta}
-      avatarAddon={groupNav}
       editing={editing}
       error={error}
       errorMessage={<ErrorMessage data={item} />}
@@ -169,7 +99,7 @@ const Item = memo<ChatListItemProps>((props) => {
       message={item.content}
       messageExtra={<MessageExtra data={item} />}
       onAvatarClick={onAvatarsClick?.(item.role)}
-      onChange={(value) => onMessageChange?.(item.id, value)}
+      onChange={(value) => onMessageChange(item.id, value)}
       onDoubleClick={(e) => {
         if (item.id === 'default' || item.error) return;
         if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {
@@ -182,7 +112,6 @@ const Item = memo<ChatListItemProps>((props) => {
       renderMessage={(editableContent) => (
         <RenderMessage data={item} editableContent={editableContent} />
       )}
-      showTitle={showTitle}
       text={{
         cancel: t('cancel'),
         confirm: t('ok'),
