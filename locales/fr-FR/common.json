@@ -17,6 +17,7 @@
   "defaultAgent": "Agent par défaut",
   "defaultSession": "Session par défaut",
   "delete": "Supprimer",
+  "duplicate": "Dupliquer",
   "edit": "Modifier",
   "export": "Exporter",
   "exportType": {

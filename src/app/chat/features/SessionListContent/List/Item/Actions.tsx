@@ -1,7 +1,7 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { App, Dropdown, type MenuProps } from 'antd';
 import { createStyles } from 'antd-style';
-import { HardDriveDownload, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
+import { HardDriveDownload, LucideCopy, MoreVertical, Pin, PinOff, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -26,9 +26,14 @@ const Actions = memo<ActionProps>(({ id, setOpen }) => {
 
   const { styles } = useStyles();
 
-  const [pin, removeSession, pinSession] = useSessionStore((s) => {
+  const [pin, removeSession, pinSession, duplicateSession] = useSessionStore((s) => {
     const session = sessionSelectors.getSessionById(id)(s);
-    return [sessionHelpers.getSessionPinned(session), s.removeSession, s.pinSession];
+    return [
+      sessionHelpers.getSessionPinned(session),
+      s.removeSession,
+      s.pinSession,
+      s.duplicateSession,
+    ];
   });
 
   const { modal } = App.useApp();
@@ -63,6 +68,22 @@ const Actions = memo<ActionProps>(({ id, setOpen }) => {
         icon: <Icon icon={HardDriveDownload} />,
         key: 'export',
         label: t('export'),
+      },
+      {
+        type: 'divider',
+      },
+      {
+        icon: <Icon icon={LucideCopy} />,
+        key: 'duplicate',
+        label: t('duplicate'),
+        onClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
+
+          duplicateSession(id);
+        },
+      },
+      {
+        type: 'divider',
       },
       {
         danger: true,

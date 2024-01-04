@@ -17,6 +17,7 @@
   "defaultAgent": "Standardassistent",
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
+  "duplicate": "Duplikat erstellen",
   "edit": "Bearbeiten",
   "export": "Exportieren",
   "exportType": {

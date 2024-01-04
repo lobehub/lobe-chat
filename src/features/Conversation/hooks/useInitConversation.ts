@@ -8,7 +8,8 @@ import { useToolStore } from '@/store/tool';
 export const useInitConversation = () => {
   const [sessionId] = useSessionStore((s) => [s.activeId]);
   const plugins = useSessionStore((s) => agentSelectors.currentAgentPlugins(s));
-  const [activeTopicId, switchTopic, useFetchMessages, useFetchTopics] = useChatStore((s) => [
+  const [init, activeTopicId, switchTopic, useFetchMessages, useFetchTopics] = useChatStore((s) => [
+    s.messagesInit,
     s.activeTopicId,
     s.switchTopic,
     s.useFetchMessages,
@@ -40,4 +41,6 @@ export const useInitConversation = () => {
       unsubscribe();
     };
   }, []);
+
+  return init;
 };
