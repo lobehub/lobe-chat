@@ -1,7 +1,7 @@
 import { ActionIcon, EditableText, Icon } from '@lobehub/ui';
 import { App, Dropdown, type MenuProps, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { MoreVertical, PencilLine, Star, Trash } from 'lucide-react';
+import { MoreVertical, PencilLine, Star, Trash, Wand2 } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -33,12 +33,14 @@ interface TopicContentProps {
 const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   const { t } = useTranslation('common');
 
-  const [editing, favoriteTopic, updateTopicTitle, removeTopic] = useChatStore((s) => [
-    s.topicRenamingId === id,
-    s.favoriteTopic,
-    s.updateTopicTitle,
-    s.removeTopic,
-  ]);
+  const [editing, favoriteTopic, updateTopicTitle, removeTopic, autoRenameTopicTitle] =
+    useChatStore((s) => [
+      s.topicRenamingId === id,
+      s.favoriteTopic,
+      s.updateTopicTitle,
+      s.removeTopic,
+      s.autoRenameTopicTitle,
+    ]);
   const { styles, theme } = useStyles();
 
   const toggleEditing = (visible?: boolean) => {
@@ -55,6 +57,14 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         label: t('rename'),
         onClick: () => {
           toggleEditing(true);
+        },
+      },
+      {
+        icon: <Icon icon={Wand2} />,
+        key: 'autoRename',
+        label: t('topic.actions.autoRename', { ns: 'chat' }),
+        onClick: () => {
+          autoRenameTopicTitle(id);
         },
       },
       // {

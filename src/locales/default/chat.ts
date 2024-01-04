@@ -56,6 +56,9 @@ export default {
     used: '使用',
   },
   topic: {
+    actions: {
+      autoRename: '智能重命名',
+    },
     confirmRemoveAll: '即将删除全部话题，删除后将不可恢复，请谨慎操作。',
     confirmRemoveTopic: '即将删除该话题，删除后将不可恢复，请谨慎操作。',
     confirmRemoveUnstarred: '即将删除未收藏话题，删除后将不可恢复，请谨慎操作。',

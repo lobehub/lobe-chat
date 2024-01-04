@@ -30,6 +30,7 @@ export interface ChatTopicAction {
   removeTopic: (id: string) => Promise<void>;
   removeUnstarredTopic: () => void;
   saveToTopic: () => Promise<string | undefined>;
+  autoRenameTopicTitle: (id: string) => Promise<void>;
   summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
   switchTopic: (id?: string) => Promise<void>;
   updateTopicTitleInSummary: (id: string, title: string) => void;
@@ -114,6 +115,13 @@ export const chatTopic: StateCreator<
   updateTopicTitle: async (id, title) => {
     await topicService.updateTitle(id, title);
     await get().refreshTopic();
+  },
+
+  autoRenameTopicTitle: async (id) => {
+    const { activeId: sessionId, summaryTopicTitle } = get();
+    const messages = await messageService.getMessages(sessionId, id);
+    console.log(messages);
+    await summaryTopicTitle(id, messages);
   },
   // query
   useFetchTopics: (sessionId) =>
