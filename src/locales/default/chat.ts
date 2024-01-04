@@ -8,6 +8,7 @@ export default {
   confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
   defaultAgent: '自定义助手',
   defaultSession: '自定义助手',
+  duplicateTitle: '{{title}} 副本',
   historyRange: '历史范围',
   inbox: {
     defaultMessage:
@@ -21,7 +22,6 @@ export default {
   },
   newAgent: '新建助手',
   noDescription: '暂无描述',
-
   pin: '置顶',
   pinOff: '取消置顶',
   regenerate: '重新生成',
@@ -58,6 +58,8 @@ export default {
   topic: {
     actions: {
       autoRename: '智能重命名',
+      duplicate: '创建副本',
+      export: '导出话题',
     },
     confirmRemoveAll: '即将删除全部话题，删除后将不可恢复，请谨慎操作。',
     confirmRemoveTopic: '即将删除该话题，删除后将不可恢复，请谨慎操作。',
