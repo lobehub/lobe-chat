@@ -7,11 +7,16 @@
   "confirmRemoveSessionItemAlert": "Möchtest du diesen Assistenten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
   "defaultAgent": "Standardassistent",
   "defaultSession": "Standardassistent",
+  "duplicateTitle": "{{title}} Kopie",
   "historyRange": "Verlaufsbereich",
   "inbox": {
     "defaultMessage": "Hallo, ich bin dein intelligenter Assistent. Du kannst mir jede Frage stellen, und ich werde mein Bestes tun, um sie zu beantworten. Wenn du einen professionelleren oder maßgeschneiderten Assistenten benötigst, klicke auf das `+`, um einen benutzerdefinierten Assistenten zu erstellen.",
     "desc": "Aktiviere das Gehirncluster und entfache den Funken des Denkens. Dein intelligenter Assistent, der mit dir über alles kommuniziert.",
     "title": "Lass uns plaudern"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Löschen und neu generieren",
+    "regenerate": "Neu generieren"
   },
   "newAgent": "Neuer Assistent",
   "noDescription": "Keine Beschreibung vorhanden",
@@ -48,6 +53,11 @@
     "used": "Verwendet"
   },
   "topic": {
+    "actions": {
+      "autoRename": "Intelligent umbenennen",
+      "duplicate": "Kopie erstellen",
+      "export": "Thema exportieren"
+    },
     "confirmRemoveAll": "Möchtest du wirklich alle Themen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "confirmRemoveTopic": "Möchtest du dieses Thema wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "confirmRemoveUnstarred": "Möchtest du die nicht markierten Themen wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",

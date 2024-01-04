@@ -7,11 +7,16 @@
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
   "defaultAgent": "デフォルトエージェント",
   "defaultSession": "デフォルトセッション",
+  "duplicateTitle": "{{title}} のコピー",
   "historyRange": "履歴範囲",
   "inbox": {
     "defaultMessage": "こんにちは、私はあなたのスマートアシスタントです。何か質問があれば遠慮なく聞いてください。より専門的でカスタマイズされたアシスタントが必要な場合は、`+` をクリックしてカスタムエージェントを作成できます。",
     "desc": "脳のクラスターを起動し、創造性を引き出しましょう。あなたのスマートアシスタントは、あなたとすべてのことについてここでコミュニケーションします。",
     "title": "気軽におしゃべり"
+  },
+  "messageAction": {
+    "delAndRegenerate": "削除して再生成",
+    "regenerate": "再生成"
   },
   "newAgent": "新しいエージェント",
   "noDescription": "説明なし",
@@ -48,6 +53,11 @@
     "used": "使用済み"
   },
   "topic": {
+    "actions": {
+      "autoRename": "自動リネーム",
+      "duplicate": "コピーを作成",
+      "export": "トピックをエクスポート"
+    },
     "confirmRemoveAll": "すべてのトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveTopic": "このトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
