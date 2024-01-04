@@ -1,6 +1,6 @@
 import { ActionIcon, ChatInputArea, ChatSendButton } from '@lobehub/ui';
 import { Maximize2, Minimize2 } from 'lucide-react';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -77,6 +77,23 @@ const ChatInputDesktopLayout = memo(() => {
     ),
     [expand],
   );
+
+  const hasValue = !!value;
+
+  useEffect(() => {
+    const fn = (e: BeforeUnloadEvent) => {
+      if (hasValue) {
+        // set returnValue to trigger alert modal
+        // Note: No matter what value is set, the browser will display the standard text
+        e.returnValue = '你有正在输入中的内容，确定要离开吗？';
+      }
+    };
+
+    window.addEventListener('beforeunload', fn);
+    return () => {
+      window.removeEventListener('beforeunload', fn);
+    };
+  }, [hasValue]);
 
   return (
     <>

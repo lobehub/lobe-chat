@@ -1,0 +1,306 @@
+{
+  "danger": {
+    "clear": {
+      "action": "Xóa ngay",
+      "confirm": "Xác nhận xóa tất cả dữ liệu trò chuyện?",
+      "desc": "Dữ liệu cuộc trò chuyện, bao gồm trợ lý, tệp tin, tin nhắn, plugin, sẽ bị xóa",
+      "success": "Đã xóa tất cả tin nhắn cuộc trò chuyện",
+      "title": "Xóa tất cả tin nhắn cuộc trò chuyện"
+    },
+    "reset": {
+      "action": "Đặt lại ngay",
+      "confirm": "Xác nhận đặt lại tất cả cài đặt?",
+      "currentVersion": "Phiên bản hiện tại",
+      "desc": "Đặt lại tất cả cài đặt về giá trị mặc định",
+      "title": "Đặt lại tất cả cài đặt"
+    }
+  },
+  "header": {
+    "global": "Cài đặt toàn cầu",
+    "session": "Cài đặt cuộc trò chuyện",
+    "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}"
+  },
+  "llm": {
+    "AzureOpenAI": {
+      "endpoint": {
+        "desc": "Giá trị này có thể được tìm thấy trong phần “Khóa và Điểm cuối” khi kiểm tra tài nguyên trên Cổng thông tin Azure",
+        "placeholder": "https://docs-test-001.openai.azure.com",
+        "title": "Địa chỉ API Azure"
+      },
+      "models": {
+        "desc": "Các mô hình được hỗ trợ",
+        "title": "Danh sách mô hình"
+      },
+      "title": "Cài đặt Azure OpenAI",
+      "token": {
+        "desc": "Giá trị này có thể được tìm thấy trong phần “Khóa và Điểm cuối” khi kiểm tra tài nguyên trên Cổng thông tin Azure. Có thể sử dụng KEY1 hoặc KEY2",
+        "placeholder": "Khóa API Azure",
+        "title": "Khóa API"
+      }
+    },
+    "OpenAI": {
+      "azureApiVersion": {
+        "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, xem chi tiết tại [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Lấy danh sách",
+        "title": "Phiên bản API Azure"
+      },
+      "check": {
+        "button": "Kiểm tra",
+        "desc": "Kiểm tra xem Khóa API và Địa chỉ proxy đã được điền đúng chưa",
+        "pass": "Kiểm tra thành công",
+        "title": "Kiểm tra kết nối"
+      },
+      "customModelName": {
+        "desc": "Thêm mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,)",
+        "placeholder": "mô hình1, mô hình2, mô hình3",
+        "title": "Tên mô hình tùy chỉnh"
+      },
+      "endpoint": {
+        "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "Địa chỉ proxy giao diện"
+      },
+      "models": {
+        "count": "Tổng cộng có {{count}} mô hình",
+        "desc": "Các mô hình được hỗ trợ",
+        "fetch": "Lấy danh sách mô hình",
+        "notSupport": "Azure OpenAI tạm thời không hỗ trợ xem danh sách mô hình",
+        "notSupportTip": "Bạn cần tự đảm bảo rằng tên triển khai và tên mô hình phù hợp nhau",
+        "refetch": "Lấy lại danh sách mô hình",
+        "title": "Danh sách mô hình"
+      },
+      "title": "Cài đặt OpenAI",
+      "token": {
+        "desc": "Sử dụng Khóa OpenAI của riêng bạn",
+        "placeholder": "Khóa API OpenAI",
+        "title": "Khóa API"
+      },
+      "useAzure": {
+        "desc": "Sử dụng dịch vụ OpenAI do Azure cung cấp",
+        "fetch": "Lấy danh sách",
+        "serverConfig": "Quản trị viên đã cấu hình mở Azure OpenAI trên máy chủ, không cho phép chuyển đổi",
+        "title": "Sử dụng Azure OpenAI"
+      }
+    },
+    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
+  },
+  "plugin": {
+    "addTooltip": "Thêm tiện ích",
+    "clearDeprecated": "Xóa tiện ích không còn hỗ trợ",
+    "empty": "Hiện chưa có tiện ích nào được cài đặt, hãy truy cập <1>cửa hàng tiện ích</1> để khám phá",
+    "installStatus": {
+      "deprecated": "Đã gỡ bỏ"
+    },
+    "settings": {
+      "hint": "Vui lòng điền cấu hình dựa trên mô tả",
+      "title": "Cấu hình tiện ích {{id}}",
+      "tooltip": "Cấu hình tiện ích"
+    },
+    "store": "Cửa hàng tiện ích"
+  },
+  "settingAgent": {
+    "avatar": {
+      "title": "Hình đại diện"
+    },
+    "backgroundColor": {
+      "title": "Màu nền"
+    },
+    "description": {
+      "placeholder": "Vui lòng nhập mô tả trợ lý",
+      "title": "Mô tả trợ lý"
+    },
+    "name": {
+      "placeholder": "Vui lòng nhập tên trợ lý",
+      "title": "Tên"
+    },
+    "prompt": {
+      "placeholder": "Vui lòng nhập từ khóa Prompt cho vai diễn",
+      "title": "Thiết lập vai diễn"
+    },
+    "tag": {
+      "placeholder": "Vui lòng nhập nhãn",
+      "title": "Nhãn"
+    },
+    "title": "Thông tin trợ lý"
+  },
+  "settingChat": {
+    "autoCreateTopicThreshold": {
+      "desc": "Khi số tin nhắn hiện tại vượt quá giá trị này, chủ đề sẽ tự động được tạo",
+      "title": "Ngưỡng tự động tạo chủ đề"
+    },
+    "chatStyleType": {
+      "title": "Kiểu cửa sổ trò chuyện",
+      "type": {
+        "chat": "Chế độ trò chuyện",
+        "docs": "Chế độ tài liệu"
+      }
+    },
+    "compressThreshold": {
+      "desc": "Khi số tin nhắn lịch sử chưa được nén vượt quá giá trị này, sẽ thực hiện nén",
+      "title": "Ngưỡng nén độ dài lịch sử"
+    },
+    "enableAutoCreateTopic": {
+      "desc": "Có tự động tạo chủ đề trong quá trình trò chuyện hay không, chỉ áp dụng trong chủ đề tạm thời",
+      "title": "Tự động tạo chủ đề"
+    },
+    "enableCompressThreshold": {
+      "title": "Bật ngưỡng nén độ dài lịch sử"
+    },
+    "enableHistoryCount": {
+      "alias": "Không giới hạn",
+      "limited": "Chỉ chứa {{number}} tin nhắn trò chuyện",
+      "title": "Giới hạn số lượng tin nhắn lịch sử",
+      "unlimited": "Không giới hạn số lượng tin nhắn lịch sử"
+    },
+    "historyCount": {
+      "desc": "Số lượng tin nhắn được gửi mỗi lần yêu cầu (bao gồm cả câu hỏi mới nhất. Mỗi câu hỏi và câu trả lời đều tính là 1)",
+      "title": "Số lượng tin nhắn đi kèm"
+    },
+    "inputTemplate": {
+      "desc": "Tin nhắn mới nhất của người dùng sẽ được điền vào mẫu này",
+      "placeholder": "Mẫu xử lý trước {{text}} sẽ được thay thế bằng thông tin nhập thời gian thực",
+      "title": "Mẫu xử lý đầu vào của người dùng"
+    },
+    "title": "Cài đặt trò chuyện"
+  },
+  "settingModel": {
+    "enableMaxTokens": {
+      "title": "Bật giới hạn phản hồi một lần"
+    },
+    "frequencyPenalty": {
+      "desc": "Giá trị càng cao, càng có khả năng giảm sự lặp lại của từ/cụm từ",
+      "title": "Hình phạt tần suất"
+    },
+    "maxTokens": {
+      "desc": "Số lượng Token tối đa được sử dụng trong mỗi tương tác",
+      "title": "Giới hạn phản hồi một lần"
+    },
+    "model": {
+      "desc": "Mô hình ChatGPT",
+      "list": {
+        "gpt-3.5-turbo": "GPT 3.5",
+        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
+        "gpt-4": "GPT 4",
+        "gpt-4-32k": "GPT 4 (32K)"
+      },
+      "title": "Mô hình"
+    },
+    "presencePenalty": {
+      "desc": "Giá trị càng cao, càng có khả năng mở rộng đến chủ đề mới",
+      "title": "Độ mới của chủ đề"
+    },
+    "temperature": {
+      "desc": "Giá trị càng cao, phản hồi càng ngẫu nhiên",
+      "title": "Độ ngẫu nhiên",
+      "titleWithValue": "Độ ngẫu nhiên {{value}}"
+    },
+    "title": "Cài đặt mô hình",
+    "topP": {
+      "desc": "Tương tự như độ ngẫu nhiên, nhưng không nên thay đổi cùng lúc với độ ngẫu nhiên",
+      "title": "Lấy mẫu cốt lõi"
+    }
+  },
+  "settingPlugin": {
+    "title": "Danh sách plugin"
+  },
+  "settingSystem": {
+    "accessCode": {
+      "desc": "Quản trị viên đã bật mã hóa truy cập",
+      "placeholder": "Nhập mật khẩu truy cập",
+      "title": "Mật khẩu truy cập"
+    },
+    "title": "Cài đặt hệ thống"
+  },
+  "settingTTS": {
+    "openai": {
+      "sttModel": "Mô hình nhận dạng giọng nói OpenAI",
+      "ttsModel": "Mô hình tổng hợp giọng nói OpenAI"
+    },
+    "showAllLocaleVoice": {
+      "desc": "Tắt sẽ chỉ hiển thị nguồn âm thanh của ngôn ngữ hiện tại",
+      "title": "Hiển thị tất cả nguồn âm thanh ngôn ngữ"
+    },
+    "stt": "Cài đặt nhận dạng giọng nói",
+    "sttAutoStop": {
+      "desc": "Tắt sẽ không tự động dừng nhận dạng giọng nói, cần phải bấm nút dừng thủ công",
+      "title": "Tự động dừng nhận dạng giọng nói"
+    },
+    "sttLocale": {
+      "desc": "Ngôn ngữ đầu vào cho giọng nói, tùy chọn này có thể cải thiện độ chính xác của nhận dạng giọng nói",
+      "title": "Ngôn ngữ nhận dạng giọng nói"
+    },
+    "sttService": {
+      "desc": "Trong đó, trình duyệt là dịch vụ nhận dạng giọng nói nguyên bản của trình duyệt",
+      "title": "Dịch vụ nhận dạng giọng nói"
+    },
+    "title": "Dịch vụ giọng nói",
+    "tts": "Cài đặt tổng hợp giọng nói",
+    "ttsService": {
+      "desc": "Nếu sử dụng dịch vụ tổng hợp giọng nói OpenAI, cần đảm bảo dịch vụ mô hình OpenAI đã được bật",
+      "title": "Dịch vụ tổng hợp giọng nói"
+    },
+    "voice": {
+      "desc": "Chọn một giọng nói cho trợ lý hiện tại, các dịch vụ TTS khác nhau hỗ trợ các nguồn âm thanh khác nhau",
+      "preview": "Xem trước âm thanh",
+      "title": "Nguồn âm thanh tổng hợp giọng nói"
+    }
+  },
+  "settingTheme": {
+    "avatar": {
+      "title": "Hình đại diện"
+    },
+    "fontSize": {
+      "desc": "Kích cỡ chữ của nội dung trò chuyện",
+      "marks": {
+        "large": "Lớn",
+        "normal": "Bình thường",
+        "small": "Nhỏ"
+      },
+      "title": "Kích cỡ chữ"
+    },
+    "lang": {
+      "autoMode": "Theo hệ thống",
+      "title": "Ngôn ngữ"
+    },
+    "neutralColor": {
+      "desc": "Tùy chỉnh mức xám theo xu hướng màu sắc khác nhau",
+      "title": "Màu trung tính"
+    },
+    "primaryColor": {
+      "desc": "Tùy chỉnh màu chủ đề",
+      "title": "Màu chủ đề"
+    },
+    "themeMode": {
+      "auto": "Tự động",
+      "dark": "Tối",
+      "light": "Sáng",
+      "title": "Chủ đề"
+    },
+    "title": "Cài đặt chủ đề"
+  },
+  "submitAgentModal": {
+    "button": "Gửi trợ lý",
+    "identifier": "Nhận dạng trợ lý",
+    "metaMiss": "Vui lòng điền đầy đủ thông tin trợ lý trước khi gửi, cần bao gồm tên, mô tả và nhãn",
+    "placeholder": "Vui lòng nhập nhận dạng trợ lý, cần phải duy nhất, ví dụ như phát triển web",
+    "tooltips": "Chia sẻ lên thị trường trợ lý"
+  },
+  "tab": {
+    "agent": "Trợ lý mặc định",
+    "common": "Cài đặt chung",
+    "llm": "Mô hình ngôn ngữ",
+    "tts": "Dịch vụ giọng nói"
+  },
+  "tools": {
+    "builtins": {
+      "groupName": "Mở rộng tích hợp sẵn"
+    },
+    "plugins": {
+      "enabled": "Đã kích hoạt {{num}}",
+      "groupName": "Tiện ích",
+      "noEnabled": "Chưa có tiện ích nào được kích hoạt",
+      "store": "Cửa hàng tiện ích"
+    },
+    "title": "Công cụ mở rộng"
+  }
+}

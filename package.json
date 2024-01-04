@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.118.7",
+  "version": "0.118.10",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -32,6 +32,7 @@
     "dev": "next dev -p 3010",
     "docs": "lobe-i18n md && npm run workflow:docs",
     "i18n": "npm run workflow:i18n && lobe-i18n",
+    "i18n-md": "lobe-i18n md",
     "lint": "npm run lint:ts && npm run lint:style && npm run type-check && npm run lint:circular",
     "lint:circular": "dpdm src/**/*.ts  --warning false  --tree false  --exit-code circular:1  -T true",
     "lint:md": "remark . --quiet --frail --output",
@@ -107,7 +108,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hotkeys-hook": "^4",
-    "react-i18next": "^13",
+    "react-i18next": "^14.0.0",
     "react-intersection-observer": "^9",
     "react-layout-kit": "^1",
     "react-lazy-load": "^4",

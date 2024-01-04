@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 0.118.10](https://github.com/lobehub/lobe-chat/compare/v0.118.9...v0.118.10)
+
+<sup>Released on **2024-01-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add chat defaultNS.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add chat defaultNS, closes [#929](https://github.com/lobehub/lobe-chat/issues/929) ([94c2aa1](https://github.com/lobehub/lobe-chat/commit/94c2aa1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.118.9](https://github.com/lobehub/lobe-chat/compare/v0.118.8...v0.118.9)
+
+<sup>Released on **2024-01-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add leaving protect alert.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add leaving protect alert, closes [#927](https://github.com/lobehub/lobe-chat/issues/927) ([ea1d0c0](https://github.com/lobehub/lobe-chat/commit/ea1d0c0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.118.8](https://github.com/lobehub/lobe-chat/compare/v0.118.7...v0.118.8)
+
+<sup>Released on **2024-01-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Vietnamese files and add the vi-VN option in the General Settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Vietnamese files and add the vi-VN option in the General Settings, closes [#860](https://github.com/lobehub/lobe-chat/issues/860) ([c2e5606](https://github.com/lobehub/lobe-chat/commit/c2e5606))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.118.7](https://github.com/lobehub/lobe-chat/compare/v0.118.6...v0.118.7)
 
 <sup>Released on **2024-01-03**</sup>

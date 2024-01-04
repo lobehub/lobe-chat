@@ -75,6 +75,12 @@ export interface ChatMessageAction {
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
 
+const preventLeavingFn = (e: BeforeUnloadEvent) => {
+  // set returnValue to trigger alert modal
+  // Note: No matter what value is set, the browser will display the standard text
+  e.returnValue = '你有正在生成中的请求，确定要离开吗？';
+};
+
 export const chatMessage: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
@@ -398,11 +404,16 @@ export const chatMessage: StateCreator<
   },
   toggleChatLoading: (loading, id, action) => {
     if (loading) {
+      window.addEventListener('beforeunload', preventLeavingFn);
+
       const abortController = new AbortController();
       set({ abortController, chatLoadingId: id }, false, action);
+
       return abortController;
     } else {
       set({ abortController: undefined, chatLoadingId: undefined }, false, action);
+
+      window.removeEventListener('beforeunload', preventLeavingFn);
     }
   },
 });
