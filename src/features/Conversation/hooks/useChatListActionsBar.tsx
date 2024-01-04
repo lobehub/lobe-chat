@@ -23,6 +23,7 @@ export const useChatListActionsBar = (): ChatListActionsBar => {
         label: t('copy', { defaultValue: 'Copy' }),
       },
       del: {
+        danger: true,
         icon: Trash,
         key: 'del',
         label: t('delete', { defaultValue: 'Delete' }),
