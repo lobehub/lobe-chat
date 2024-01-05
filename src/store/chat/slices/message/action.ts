@@ -386,8 +386,10 @@ export const chatMessage: StateCreator<
       onFinish: async (content) => {
         stopAnimation();
 
-        // 如果还有内容没有显示，则继续动画
-        if (outputQueue.length > 0) {
+        // if there is still content not displayed,
+        // and the message is not a function call
+        // then continue the animation
+        if (outputQueue.length > 0 && !isFunctionCall) {
           await startAnimation(15);
         }
 
