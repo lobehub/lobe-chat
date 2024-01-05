@@ -1,13 +1,10 @@
-import { BackBottom } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ReactNode, memo, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 
-import ChatScrollAnchor from './components/ScrollAnchor';
 import SkeletonList from './components/SkeletonList';
 import ChatList from './components/VirtualizedList';
 import { useInitConversation } from './hooks/useInitConversation';
@@ -45,8 +42,6 @@ interface ConversationProps {
 }
 
 const Conversation = memo<ConversationProps>(({ chatInput }) => {
-  const ref = useRef(null);
-  const { t } = useTranslation('chat');
   const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
   const { styles } = useStyles(fontSize);
 
@@ -55,12 +50,7 @@ const Conversation = memo<ConversationProps>(({ chatInput }) => {
 
   return (
     <Flexbox data-id={'conversation'} flex={1}>
-      <div className={styles} ref={ref}>
-        {init ? <ChatList /> : <SkeletonList />}
-        <ChatScrollAnchor />
-        <BackBottom target={ref} text={t('backToBottom')} />
-      </div>
-
+      <div className={styles}>{init ? <ChatList /> : <SkeletonList />}</div>
       {chatInput}
     </Flexbox>
   );
