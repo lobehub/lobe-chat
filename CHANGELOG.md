@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.119.2](https://github.com/lobehub/lobe-chat/compare/v0.119.1...v0.119.2)
+
+<sup>Released on **2024-01-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix function call error with smooth animation.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix function call error with smooth animation, closes [#946](https://github.com/lobehub/lobe-chat/issues/946) ([7242aee](https://github.com/lobehub/lobe-chat/commit/7242aee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.119.1](https://github.com/lobehub/lobe-chat/compare/v0.119.0...v0.119.1)
 
 <sup>Released on **2024-01-05**</sup>
