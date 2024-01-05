@@ -11,13 +11,13 @@ export const getMessageError = async (response: Response) => {
     const data = (await response.json()) as ErrorResponse;
     chatMessageError = {
       body: data.body,
-      message: t(`response.${data.errorType}`),
+      message: t(`response.${data.errorType}` as any, { ns: 'error' }),
       type: data.errorType,
     };
   } catch {
     // 如果无法正常返回，说明是常规报错
     chatMessageError = {
-      message: t(`response.${response.status}`),
+      message: t(`response.${response.status}` as any, { ns: 'error' }),
       type: response.status as ErrorType,
     };
   }
@@ -25,9 +25,12 @@ export const getMessageError = async (response: Response) => {
   return chatMessageError;
 };
 
+type SSEFinishType = 'done' | 'error' | 'abort';
+
 export interface FetchSSEOptions {
+  onAbort?: (text: string) => Promise<void>;
   onErrorHandle?: (error: ChatMessageError) => void;
-  onFinish?: (text: string) => Promise<void>;
+  onFinish?: (text: string, type: SSEFinishType) => Promise<void>;
   onMessageHandle?: (text: string) => void;
 }
 
@@ -57,17 +60,30 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
   const decoder = new TextDecoder();
 
   let done = false;
+  let finishedType: SSEFinishType = 'done';
 
   while (!done) {
-    const { value, done: doneReading } = await reader.read();
-    done = doneReading;
-    const chunkValue = decoder.decode(value, { stream: true });
+    try {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value, { stream: true });
 
-    output += chunkValue;
-    options.onMessageHandle?.(chunkValue);
+      output += chunkValue;
+      options.onMessageHandle?.(chunkValue);
+    } catch (error) {
+      done = true;
+
+      if ((error as TypeError).name === 'AbortError') {
+        finishedType = 'abort';
+        options?.onAbort?.(output);
+      } else {
+        finishedType = 'error';
+        console.error(error);
+      }
+    }
   }
 
-  await options?.onFinish?.(output);
+  await options?.onFinish?.(output, finishedType);
 
   return returnRes;
 };

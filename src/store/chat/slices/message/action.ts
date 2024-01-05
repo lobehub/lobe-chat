@@ -71,6 +71,12 @@ export interface ChatMessageAction {
     action?: string,
   ) => AbortController | undefined;
   refreshMessages: () => Promise<void>;
+  createSmoothMessage: (id: string) => {
+    startAnimation: (speed?: number) => Promise<void>;
+    stopAnimation: () => void;
+    outputQueue: string[];
+    isAnimationActive: boolean;
+  };
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
@@ -297,7 +303,7 @@ export const chatMessage: StateCreator<
     set({ messages }, false, n(`dispatchMessage/${payload.type}`, payload));
   },
   fetchAIChatMessage: async (messages, assistantId) => {
-    const { toggleChatLoading, refreshMessages, updateMessageContent } = get();
+    const { toggleChatLoading, refreshMessages, updateMessageContent, createSmoothMessage } = get();
 
     const abortController = toggleChatLoading(
       true,
@@ -366,19 +372,35 @@ export const chatMessage: StateCreator<
     let functionCallAtEnd = false;
     let functionCallContent = '';
 
+    const { startAnimation, stopAnimation, outputQueue, isAnimationActive } =
+      createSmoothMessage(assistantId);
+
     await fetchSSE(fetcher, {
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(assistantId, error);
         await refreshMessages();
       },
+      onAbort: async () => {
+        stopAnimation();
+      },
       onFinish: async (content) => {
+        stopAnimation();
+
+        // 如果还有内容没有显示，则继续动画
+        if (outputQueue.length > 0) {
+          await startAnimation(15);
+        }
+
+        // 如果没有剩余内容，直接更新消息内容
         // update the content after fetch result
         await updateMessageContent(assistantId, content);
       },
       onMessageHandle: async (text) => {
         output += text;
+        outputQueue.push(...text.split(''));
 
-        await updateMessageContent(assistantId, output);
+        // 如果是第一次接收到消息，启动打字动画
+        if (!isAnimationActive) startAnimation();
 
         // is this message is just a function call
         if (isFunctionMessageAtStart(output)) isFunctionCall = true;
@@ -415,5 +437,70 @@ export const chatMessage: StateCreator<
 
       window.removeEventListener('beforeunload', preventLeavingFn);
     }
+  },
+
+  createSmoothMessage: (id) => {
+    const { dispatchMessage } = get();
+
+    let buffer = '';
+    // why use queue: https://shareg.pt/GLBrjpK
+    let outputQueue: string[] = [];
+
+    // eslint-disable-next-line no-undef
+    let animationTimeoutId: NodeJS.Timeout | null = null;
+    let isAnimationActive = false;
+
+    // when you need to stop the animation, call this function
+    const stopAnimation = () => {
+      isAnimationActive = false;
+      if (animationTimeoutId !== null) {
+        clearTimeout(animationTimeoutId);
+        animationTimeoutId = null;
+      }
+    };
+
+    // define startAnimation function to display the text in buffer smooth
+    // when you need to start the animation, call this function
+    const startAnimation = (speed = 2) =>
+      new Promise<void>((resolve) => {
+        if (isAnimationActive) {
+          resolve();
+          return;
+        }
+
+        isAnimationActive = true;
+
+        const updateText = () => {
+          // 如果动画已经不再激活，则停止更新文本
+          if (!isAnimationActive) {
+            clearTimeout(animationTimeoutId!);
+            animationTimeoutId = null;
+            resolve();
+          }
+
+          // 如果还有文本没有显示
+          // 检查队列中是否有字符待显示
+          if (outputQueue.length > 0) {
+            // 从队列中获取前两个字符（如果存在）
+            const charsToAdd = outputQueue.splice(0, speed).join('');
+            buffer += charsToAdd;
+
+            // 更新消息内容，这里可能需要结合实际情况调整
+            dispatchMessage({ id, key: 'content', type: 'updateMessage', value: buffer });
+
+            // 设置下一个字符的延迟
+            animationTimeoutId = setTimeout(updateText, 16); // 16 毫秒的延迟模拟打字机效果
+          } else {
+            // 当所有字符都显示完毕时，清除动画状态
+            isAnimationActive = false;
+            animationTimeoutId = null;
+            resolve();
+          }
+        };
+
+        updateText();
+      });
+
+    return { startAnimation, stopAnimation, outputQueue, isAnimationActive };
   },
 });

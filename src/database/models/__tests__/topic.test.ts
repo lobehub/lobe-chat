@@ -395,9 +395,9 @@ describe('TopicModel', () => {
     it('should fail if the database transaction fails', async () => {
       // 强制数据库事务失败，例如通过在复制过程中抛出异常
       const dbTransactionFailedError = new Error('DB transaction failed');
-      vi.spyOn(TopicModel['db'], 'transaction').mockImplementation(async () => {
+      vi.spyOn(TopicModel['db'], 'transaction').mockImplementation((async () => {
         throw dbTransactionFailedError;
-      });
+      }) as any);
 
       // 尝试复制主题并捕捉期望的错误
       await expect(TopicModel.duplicateTopic(originalTopic.id)).rejects.toThrow(
