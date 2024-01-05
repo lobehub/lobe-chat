@@ -386,12 +386,13 @@ export const chatMessage: StateCreator<
       onFinish: async (content) => {
         stopAnimation();
 
-        // 如果还有内容没有显示，则继续动画
-        if (outputQueue.length > 0) {
+        // if there is still content not displayed,
+        // and the message is not a function call
+        // then continue the animation
+        if (outputQueue.length > 0 && !isFunctionCall) {
           await startAnimation(15);
         }
 
-        // 如果没有剩余内容，直接更新消息内容
         // update the content after fetch result
         await updateMessageContent(assistantId, content);
       },
@@ -399,11 +400,16 @@ export const chatMessage: StateCreator<
         output += text;
         outputQueue.push(...text.split(''));
 
-        // 如果是第一次接收到消息，启动打字动画
-        if (!isAnimationActive) startAnimation();
-
         // is this message is just a function call
-        if (isFunctionMessageAtStart(output)) isFunctionCall = true;
+        if (isFunctionMessageAtStart(output)) {
+          stopAnimation();
+          isFunctionCall = true;
+        }
+
+        // if it's the first time to receive the message,
+        // and the message is not a function call
+        // then start the animation
+        if (!isAnimationActive && !isFunctionCall) startAnimation();
       },
     });
 
