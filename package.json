@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.119.0",
+  "version": "0.119.1",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -81,7 +81,7 @@
     "@vercel/analytics": "^1",
     "ahooks": "^3",
     "ai": "^2.2.22",
-    "antd": "5.12.5",
+    "antd": "^5.12.7",
     "antd-style": "^3",
     "brotli-wasm": "^1",
     "chroma-js": "^2",
@@ -107,7 +107,7 @@
     "query-string": "^8",
     "react": "^18",
     "react-dom": "^18",
-    "react-hotkeys-hook": "4.4.1",
+    "react-hotkeys-hook": "^4.4.3",
     "react-i18next": "^14.0.0",
     "react-intersection-observer": "^9",
     "react-layout-kit": "^1",
@@ -133,7 +133,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^18",
-    "@ducanh2912/next-pwa": "^10.0.0",
+    "@ducanh2912/next-pwa": "^10",
     "@lobehub/i18n-cli": "latest",
     "@lobehub/lint": "latest",
     "@next/bundle-analyzer": "^14",
@@ -152,7 +152,7 @@
     "@types/ua-parser-js": "^0.7",
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
-    "@vitest/coverage-v8": "^1",
+    "@vitest/coverage-v8": "1.1.1",
     "commitlint": "^18",
     "consola": "^3",
     "dpdm": "^3",
@@ -176,7 +176,7 @@
     "typescript": "^5",
     "unified": "^11",
     "unist-util-visit": "^5",
-    "vitest": "^1",
+    "vitest": "1.1.1",
     "vitest-canvas-mock": "^0.3.3"
   },
   "publishConfig": {
