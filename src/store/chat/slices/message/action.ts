@@ -400,16 +400,16 @@ export const chatMessage: StateCreator<
         output += text;
         outputQueue.push(...text.split(''));
 
-        // if it's the first time to receive the message,
-        // and the message is not a function call
-        // then start the animation
-        if (!isAnimationActive && !isFunctionCall) startAnimation();
-
         // is this message is just a function call
         if (isFunctionMessageAtStart(output)) {
           stopAnimation();
           isFunctionCall = true;
         }
+
+        // if it's the first time to receive the message,
+        // and the message is not a function call
+        // then start the animation
+        if (!isAnimationActive && !isFunctionCall) startAnimation();
       },
     });
 
