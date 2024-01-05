@@ -17,6 +17,7 @@
   "defaultAgent": "Trợ lý mặc định",
   "defaultSession": "Phiên mặc định",
   "delete": "Xóa",
+  "duplicate": "Tạo bản sao",
   "edit": "Chỉnh sửa",
   "export": "Xuất cấu hình",
   "exportType": {

@@ -168,6 +168,41 @@ class _MessageModel extends BaseModel {
     return this.table.where('sessionId').equals(sessionId).toArray();
   }
 
+  queryByTopicId = async (topicId: string) => {
+    const dbMessages = await this.table.where('topicId').equals(topicId).toArray();
+
+    return dbMessages.map((message) => this.mapToChatMessage(message));
+  };
+
+  async duplicateMessages(messages: ChatMessage[]): Promise<ChatMessage[]> {
+    const duplicatedMessages = await this.createDuplicateMessages(messages);
+    // 批量添加复制后的消息到数据库
+    await this.batchCreate(duplicatedMessages);
+    return duplicatedMessages;
+  }
+
+  async createDuplicateMessages(messages: ChatMessage[]): Promise<ChatMessage[]> {
+    // 创建一个映射来存储原始消息ID和复制消息ID之间的关系
+    const idMapping = new Map<string, string>();
+
+    // 首先复制所有消息，并为每个复制的消息生成新的ID
+    const duplicatedMessages = messages.map((originalMessage) => {
+      const newId = nanoid();
+      idMapping.set(originalMessage.id, newId);
+
+      return { ...originalMessage, id: newId };
+    });
+
+    // 更新 parentId 为复制后的新ID
+    for (const duplicatedMessage of duplicatedMessages) {
+      if (duplicatedMessage.parentId && idMapping.has(duplicatedMessage.parentId)) {
+        duplicatedMessage.parentId = idMapping.get(duplicatedMessage.parentId);
+      }
+    }
+
+    return duplicatedMessages;
+  }
+
   private mapChatMessageToDBMessage(message: ChatMessage): DB_Message {
     const { extra, ...messageData } = message;
 

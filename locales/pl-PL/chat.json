@@ -7,11 +7,16 @@
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
   "defaultAgent": "Domyślny asystent",
   "defaultSession": "Domyślna sesja",
+  "duplicateTitle": "{{title}} kopia",
   "historyRange": "Zakres historii",
   "inbox": {
     "defaultMessage": "Cześć, jestem twoim inteligentnym asystentem, możesz zadać mi dowolne pytanie, postaram się na nie odpowiedzieć. Jeśli potrzebujesz bardziej profesjonalnego lub spersonalizowanego asystenta, kliknij `+`, aby utworzyć niestandardowego asystenta.",
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
     "title": "Pogadajmy sobie"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Usuń i wygeneruj ponownie",
+    "regenerate": "Wygeneruj ponownie"
   },
   "newAgent": "Nowy asystent",
   "noDescription": "Brak opisu",
@@ -48,6 +53,11 @@
     "used": "Użyte"
   },
   "topic": {
+    "actions": {
+      "autoRename": "Automatyczna zmiana nazwy",
+      "duplicate": "Utwórz kopię",
+      "export": "Eksportuj temat"
+    },
     "confirmRemoveAll": "Czy na pewno chcesz usunąć wszystkie tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveTopic": "Czy na pewno chcesz usunąć ten temat? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveUnstarred": "Czy na pewno chcesz usunąć nieoznaczone tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",

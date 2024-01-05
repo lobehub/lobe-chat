@@ -17,6 +17,7 @@
   "defaultAgent": "自定义助手",
   "defaultSession": "自定义助手",
   "delete": "删除",
+  "duplicate": "创建副本",
   "edit": "编辑",
   "export": "导出配置",
   "exportType": {

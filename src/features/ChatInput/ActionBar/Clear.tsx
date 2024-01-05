@@ -2,7 +2,6 @@ import { ActionIcon } from '@lobehub/ui';
 import { Popconfirm } from 'antd';
 import { Eraser } from 'lucide-react';
 import { memo, useCallback } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
 import HotKeys from '@/components/HotKeys';
@@ -20,11 +19,6 @@ const Clear = memo(() => {
     clearMessage();
     clearImageList();
   }, []);
-
-  useHotkeys(hotkeys, resetConversation, {
-    enableOnFormTags: true,
-    preventDefault: true,
-  });
 
   return (
     <Popconfirm

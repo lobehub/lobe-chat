@@ -1,88 +1,44 @@
+import isEqual from 'fast-deep-equal';
 import { Fragment, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import type { ChatMessage } from '@/types/message';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 
+import Item from '../ChatItem';
 import HistoryDivider from './HistoryDivider';
-import Item, { ListItemProps } from './Item';
 import { useStyles } from './style';
 
-export interface ChatListProps extends ListItemProps {
-  className?: string;
-  /**
-   * @description Data of chat messages to be displayed
-   */
-  data: ChatMessage[];
-  enableHistoryCount?: boolean;
-  historyCount?: number;
-  loadingId?: string;
-}
-export type {
-  OnActionsClick,
-  OnAvatatsClick,
-  OnMessageChange,
-  RenderAction,
-  RenderErrorMessage,
-  RenderItem,
-  RenderMessage,
-  RenderMessageExtra,
-} from './Item';
+const ChatList = memo(() => {
+  const { styles } = useStyles();
 
-const ChatList = memo<ChatListProps>(
-  ({
-    onActionsClick,
-    onAvatarsClick,
-    renderMessagesExtra,
-    className,
-    data,
-    type = 'chat',
-    text,
-    showTitle,
-    onMessageChange,
-    renderMessages,
-    renderErrorMessages,
-    loadingId,
-    renderItems,
-    enableHistoryCount,
-    renderActions,
-    historyCount = 0,
-  }) => {
-    const { cx, styles } = useStyles();
+  const data = useChatStore(chatSelectors.currentChatIDsWithGuideMessage, isEqual);
 
-    return (
-      <Flexbox className={cx(styles.container, className)}>
-        {data.map((item, index) => {
-          const itemProps = {
-            loading: loadingId === item.id,
-            onActionsClick,
-            onAvatarsClick,
-            onMessageChange,
-            renderActions,
-            renderErrorMessages,
-            renderItems,
-            renderMessages,
-            renderMessagesExtra,
-            showTitle,
-            text,
-            type,
-          };
+  const [enableHistoryCount, historyCount = 0] = useSessionStore((s) => {
+    const config = agentSelectors.currentAgentConfig(s);
+    return [config.enableHistoryCount, config.historyCount];
+  });
 
-          const historyLength = data.length;
-          const enableHistoryDivider =
-            enableHistoryCount &&
-            historyLength > historyCount &&
-            historyCount === historyLength - index + 1;
+  return (
+    <Flexbox className={styles.container}>
+      {data.map((item, index) => {
+        const historyLength = data.length;
+        const enableHistoryDivider =
+          enableHistoryCount &&
+          historyLength > historyCount &&
+          historyCount === historyLength - index + 1;
 
-          return (
-            <Fragment key={item.id}>
-              <HistoryDivider enable={enableHistoryDivider} text={text?.history} />
-              <Item {...itemProps} {...item} />
-            </Fragment>
-          );
-        })}
-      </Flexbox>
-    );
-  },
-);
+        return (
+          <Fragment key={item}>
+            <HistoryDivider enable={enableHistoryDivider} />
+            <Item index={index} />
+          </Fragment>
+        );
+      })}
+    </Flexbox>
+  );
+});
 
 export default ChatList;

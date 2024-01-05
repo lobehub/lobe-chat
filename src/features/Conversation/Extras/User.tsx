@@ -3,11 +3,12 @@ import { memo } from 'react';
 import { useChatStore } from '@/store/chat';
 import { ChatMessage } from '@/types/message';
 
+import { RenderMessageExtra } from '../types';
 import ExtraContainer from './ExtraContainer';
 import TTS from './TTS';
 import Translate from './Translate';
 
-export const UserMessageExtra = memo<ChatMessage>(({ extra, id, content }) => {
+export const UserMessageExtra: RenderMessageExtra = memo<ChatMessage>(({ extra, id, content }) => {
   const loading = useChatStore((s) => s.chatLoadingId === id);
 
   const showTranslate = !!extra?.translate;

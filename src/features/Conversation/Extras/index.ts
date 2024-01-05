@@ -1,8 +1,8 @@
-import { ChatListProps, RenderMessageExtra } from '../components/ChatList';
+import { RenderMessageExtra } from '../types';
 import { AssistantMessageExtra } from './Assistant';
 import { UserMessageExtra } from './User';
 
-export const renderMessagesExtra: ChatListProps['renderMessagesExtra'] = {
-  assistant: AssistantMessageExtra as unknown as RenderMessageExtra,
-  user: UserMessageExtra as unknown as RenderMessageExtra,
+export const renderMessagesExtra: Record<string, RenderMessageExtra> = {
+  assistant: AssistantMessageExtra,
+  user: UserMessageExtra,
 };

@@ -12,9 +12,10 @@ const EditCustomPlugin = memo<{ identifier: string }>(({ identifier }) => {
   const { t } = useTranslation('plugin');
   const [showModal, setModal] = useState(false);
 
-  const [installCustomPlugin, updateNewDevPlugin] = useToolStore((s) => [
+  const [installCustomPlugin, updateNewDevPlugin, uninstallCustomPlugin] = useToolStore((s) => [
     s.installCustomPlugin,
     s.updateNewCustomPlugin,
+    s.uninstallCustomPlugin,
   ]);
 
   const customPlugin = useToolStore(pluginSelectors.getCustomPluginById(identifier), isEqual);
@@ -27,10 +28,14 @@ const EditCustomPlugin = memo<{ identifier: string }>(({ identifier }) => {
     >
       <DevModal
         mode={'edit'}
+        onDelete={() => {
+          uninstallCustomPlugin(identifier);
+          setModal(false);
+        }}
         onOpenChange={setModal}
         onSave={async (devPlugin) => {
           await installCustomPlugin(devPlugin);
-          // toggleAgentPlugin(devPlugin.identifier);
+          setModal(false);
         }}
         onValueChange={updateNewDevPlugin}
         open={showModal}

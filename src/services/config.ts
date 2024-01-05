@@ -127,6 +127,28 @@ class ConfigService {
     exportConfigFile(config, `${session.meta?.title}-session`);
   };
 
+  /**
+   * export a topic
+   */
+  exportSingleTopic = async (sessionId: string, topicId: string) => {
+    const session = this.getSession(sessionId);
+    if (!session) return;
+
+    const messages = await messageService.getMessages(sessionId, topicId);
+    const topics = await topicService.getTopics({ sessionId });
+
+    const topic = topics.find((item) => item.id === topicId);
+    if (!topic) return;
+
+    const config = createConfigFile('singleSession', {
+      messages,
+      sessions: [session],
+      topics: [topic],
+    });
+
+    exportConfigFile(config, `${topic.title}-topic`);
+  };
+
   exportSingleAgent = async (id: string) => {
     const agent = this.getAgent(id);
     if (!agent) return;

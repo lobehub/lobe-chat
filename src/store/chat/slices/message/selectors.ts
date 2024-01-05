@@ -84,6 +84,12 @@ const currentChatsWithGuideMessage =
     return [emptyInboxGuideMessage];
   };
 
+const currentChatIDsWithGuideMessage = (s: ChatStore) => {
+  const meta = agentSelectors.currentAgentMeta(useSessionStore.getState());
+
+  return currentChatsWithGuideMessage(meta)(s).map((s) => s.id);
+};
+
 const currentChatsWithHistoryConfig = (s: ChatStore): ChatMessage[] => {
   const chats = currentChats(s);
   const config = agentSelectors.currentAgentConfig(useSessionStore.getState());
@@ -109,11 +115,15 @@ const getFunctionMessageProps =
 
 const getMessageById = (id: string) => (s: ChatStore) => chatHelpers.getMessageById(s.messages, id);
 
+const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
+
 export const chatSelectors = {
   chatsMessageString,
+  currentChatIDsWithGuideMessage,
   currentChats,
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,
   getFunctionMessageProps,
   getMessageById,
+  latestMessage,
 };
