@@ -380,6 +380,9 @@ export const chatMessage: StateCreator<
         await messageService.updateMessageError(assistantId, error);
         await refreshMessages();
       },
+      onAbort: async () => {
+        stopAnimation();
+      },
       onFinish: async (content) => {
         stopAnimation();
 
