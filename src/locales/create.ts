@@ -28,7 +28,7 @@ export const createI18nNext = (lang?: string) => {
     init: () =>
       instance.init({
         debug: debugMode,
-        defaultNS: ['error', 'common', 'empty', 'chat'],
+        defaultNS: ['error', 'common', 'chat'],
         detection: {
           caches: ['cookie'],
           cookieMinutes: 60 * 24 * COOKIE_CACHE_DAYS,

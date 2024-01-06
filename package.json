@@ -112,6 +112,7 @@
     "react-intersection-observer": "^9",
     "react-layout-kit": "^1",
     "react-lazy-load": "^4",
+    "react-virtuoso": "^4.6.2",
     "react-wrap-balancer": "^1",
     "remark": "^14",
     "remark-gfm": "^3",
