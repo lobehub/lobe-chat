@@ -14,7 +14,7 @@ const itemContent = (index: number, id: string) => {
   const isMobile = isMobileScreen();
 
   return index === 0 ? (
-    <div style={{ height: isMobile ? 24 : 64 }} />
+    <div style={{ height: 24 + (isMobile ? 0 : 64) }} />
   ) : (
     <Item id={id} index={index - 1} />
   );

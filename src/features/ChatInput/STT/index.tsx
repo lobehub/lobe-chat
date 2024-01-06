@@ -134,7 +134,7 @@ const STT = memo<{ mobile?: boolean }>(({ mobile }) => {
         icon={isLoading ? MicOff : Mic}
         onClick={handleTriggerStartStop}
         placement={'bottom'}
-        size={mobile ? { blockSize: 36, fontSize: 16 } : {}}
+        size={mobile ? { blockSize: 36, fontSize: 16 } : { fontSize: 22 }}
         style={{ flex: 'none' }}
         title={desc}
       />
