@@ -8,6 +8,7 @@ export const useStyles = createStyles(({ token, css, stylish, cx, responsive }) 
       pointer-events: none;
 
       position: absolute;
+      z-index: 1000;
       right: 16px;
       bottom: 16px;
       transform: translateY(16px);
