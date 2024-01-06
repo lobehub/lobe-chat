@@ -62,6 +62,10 @@
     "confirmRemoveTopic": "Dit onderwerp wordt verwijderd en kan niet worden hersteld. Wees voorzichtig.",
     "confirmRemoveUnstarred": "Niet-gefavoriseerde onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",
     "defaultTitle": "Standaard onderwerp",
+    "guide": {
+      "desc": "Klik op de knop aan de linkerkant om het huidige gesprek op te slaan als een historisch onderwerp en een nieuw gesprek te starten",
+      "title": "Onderwerplijst"
+    },
     "openNewTopic": "Nieuw onderwerp openen",
     "removeAll": "Alle onderwerpen verwijderen",
     "removeUnstarred": "Niet-gefavoriseerde onderwerpen verwijderen",
