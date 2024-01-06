@@ -13,6 +13,7 @@ const useStyles = createStyles(({ css, responsive, stylish, cx }, fontSize: numb
   cx(
     css`
       position: relative;
+      overflow-y: auto;
       height: 100%;
 
       ${responsive.mobile} {
@@ -39,9 +40,10 @@ const useStyles = createStyles(({ css, responsive, stylish, cx }, fontSize: numb
 
 interface ConversationProps {
   chatInput: ReactNode;
+  mobile?: boolean;
 }
 
-const Conversation = memo<ConversationProps>(({ chatInput }) => {
+const Conversation = memo<ConversationProps>(({ chatInput, mobile }) => {
   const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
   const { styles } = useStyles(fontSize);
 
@@ -50,7 +52,9 @@ const Conversation = memo<ConversationProps>(({ chatInput }) => {
 
   return (
     <Flexbox data-id={'conversation'} flex={1}>
-      <div className={styles}>{init ? <ChatList /> : <SkeletonList />}</div>
+      <div className={styles}>
+        {init ? <ChatList mobile={mobile} /> : <SkeletonList mobile={mobile} />}
+      </div>
       {chatInput}
     </Flexbox>
   );

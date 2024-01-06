@@ -1,57 +1,58 @@
-import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
-import SafeSpacing from '@/components/SafeSpacing';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { isMobileScreen } from '@/utils/screen';
 
 import AutoScroll from '../AutoScroll';
 import Item from '../ChatItem';
 
-const itemContent = (index: number, id: string) =>
-  index === 0 ? <SafeSpacing /> : <Item id={id} index={index - 1} />;
+const itemContent = (index: number, id: string) => {
+  const isMobile = isMobileScreen();
 
-const useStyles = createStyles(({ css }) => {
-  return {
-    container: css`
-      position: relative;
-      overflow: hidden auto;
-      height: 100%;
-    `,
-  };
-});
+  return index === 0 ? (
+    <div style={{ height: isMobile ? 24 : 64 }} />
+  ) : (
+    <Item id={id} index={index - 1} />
+  );
+};
 
-const VirtualizedList = () => {
-  const { styles } = useStyles();
-
+interface VirtualizedListProps {
+  mobile?: boolean;
+}
+const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
+
   const data = useChatStore(
     (s) => ['empty', ...chatSelectors.currentChatIDsWithGuideMessage(s)],
     isEqual,
   );
-
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
-  const id = useChatStore((s) => s.activeId + s.activeTopicId);
+  const [id, chatLoading] = useChatStore((s) => [
+    chatSelectors.currentChatKey(s),
+    chatSelectors.currentChatLoadingState(s),
+  ]);
 
   useEffect(() => {
     if (virtuosoRef.current) {
-      virtuosoRef.current.scrollToIndex({ align: 'start', behavior: 'smooth', index: 'LAST' });
+      virtuosoRef.current.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
     }
   }, [id]);
 
-  return (
-    <Flexbox className={styles.container}>
+  return chatLoading && data.length === 2 ? null : (
+    <Flexbox height={'100%'}>
       <Virtuoso
         atBottomStateChange={setAtBottom}
-        atBottomThreshold={100}
+        atBottomThreshold={60 * (mobile ? 2 : 1)}
+        computeItemKey={(_, item) => item}
         data={data}
         followOutput={'auto'}
         initialTopMostItemIndex={data?.length - 1}
         itemContent={itemContent}
-        overscan={6}
+        overscan={70 * 10}
         ref={virtuosoRef}
       />
       <AutoScroll
@@ -60,7 +61,7 @@ const VirtualizedList = () => {
           const virtuoso = virtuosoRef.current;
           switch (type) {
             case 'auto': {
-              virtuoso?.scrollToIndex({ align: 'start', behavior: 'auto', index: 'LAST' });
+              virtuoso?.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
               break;
             }
             case 'click': {
@@ -72,6 +73,6 @@ const VirtualizedList = () => {
       />
     </Flexbox>
   );
-};
+});
 
 export default VirtualizedList;
