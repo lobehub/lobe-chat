@@ -62,6 +62,10 @@
     "confirmRemoveTopic": "Você está prestes a remover este tópico. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
     "confirmRemoveUnstarred": "Você está prestes a remover os tópicos não favoritados. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
     "defaultTitle": "Tópico Padrão",
+    "guide": {
+      "desc": "Clique em enviar no botão esquerdo para salvar a conversa atual como um tópico histórico e iniciar uma nova rodada de conversa",
+      "title": "Lista de Tópicos"
+    },
     "openNewTopic": "Abrir Novo Tópico",
     "removeAll": "Remover Todos os Tópicos",
     "removeUnstarred": "Remover Tópicos Não Favoritados",
