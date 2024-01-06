@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.119.6](https://github.com/lobehub/lobe-chat/compare/v0.119.5...v0.119.6)
+
+<sup>Released on **2024-01-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve conversation style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve conversation style, closes [#962](https://github.com/lobehub/lobe-chat/issues/962) ([b9cc862](https://github.com/lobehub/lobe-chat/commit/b9cc862))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.119.5](https://github.com/lobehub/lobe-chat/compare/v0.119.4...v0.119.5)
 
 <sup>Released on **2024-01-06**</sup>
