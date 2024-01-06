@@ -16,11 +16,14 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
     }
   `,
 }));
-const SkeletonList = memo(() => {
+interface SkeletonListProps {
+  mobile?: boolean;
+}
+const SkeletonList = memo<SkeletonListProps>(({ mobile }) => {
   const { styles } = useStyles();
 
   return (
-    <Flexbox gap={24} padding={12} style={{ marginTop: 24 }}>
+    <Flexbox gap={24} padding={12} style={{ marginTop: 24 + (mobile ? 0 : 64) }}>
       <Skeleton
         active
         avatar={{ size: 40 }}

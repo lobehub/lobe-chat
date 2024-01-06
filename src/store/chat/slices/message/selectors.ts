@@ -39,6 +39,8 @@ const getMeta = (message: ChatMessage) => {
   }
 };
 
+const currentChatKey = (s: ChatStore) => `${s.activeId}_${s.activeTopicId}`;
+
 // 当前激活的消息列表
 const currentChats = (s: ChatStore): ChatMessage[] => {
   if (!s.activeId) return [];
@@ -117,9 +119,13 @@ const getMessageById = (id: string) => (s: ChatStore) => chatHelpers.getMessageB
 
 const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
 
+const currentChatLoadingState = (s: ChatStore) => !s.messagesInit;
+
 export const chatSelectors = {
   chatsMessageString,
   currentChatIDsWithGuideMessage,
+  currentChatKey,
+  currentChatLoadingState,
   currentChats,
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,

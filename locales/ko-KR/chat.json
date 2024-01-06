@@ -62,6 +62,10 @@
     "confirmRemoveTopic": "이 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
     "confirmRemoveUnstarred": "별표가 없는 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
     "defaultTitle": "기본 주제",
+    "guide": {
+      "desc": "현재 대화를 히스토리 토픽으로 저장하고 새 대화를 시작하려면 왼쪽 버튼을 클릭하세요.",
+      "title": "토픽 목록"
+    },
     "openNewTopic": "새 주제 열기",
     "removeAll": "모든 주제 삭제",
     "removeUnstarred": "별표가 없는 주제 삭제",
