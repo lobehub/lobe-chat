@@ -62,6 +62,10 @@
     "confirmRemoveTopic": "Czy na pewno chcesz usunąć ten temat? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveUnstarred": "Czy na pewno chcesz usunąć nieoznaczone tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "defaultTitle": "Domyślne tematy",
+    "guide": {
+      "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako historię tematu i rozpocząć nową rundę rozmowy",
+      "title": "Lista tematów"
+    },
     "openNewTopic": "Otwórz nowy temat",
     "removeAll": "Usuń wszystkie tematy",
     "removeUnstarred": "Usuń nieoznaczone tematy",

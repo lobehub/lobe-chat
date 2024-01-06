@@ -11,8 +11,9 @@ const TopicListContent = memo<{ mobile?: boolean }>(({ mobile }) => {
       {mobile ? <TopicSearchBar /> : <Header />}
       <Flexbox
         gap={16}
+        height={'100%'}
         paddingInline={mobile ? 0 : 8}
-        style={{ overflowY: 'auto', paddingTop: 6, position: 'relative' }}
+        style={{ paddingTop: 6, position: 'relative' }}
       >
         <Topic />
       </Flexbox>
