@@ -75,7 +75,13 @@ const LLM = memo(() => {
         name: [configKey, 'openAI', 'endpoint'],
       },
       {
-        children: <Input allowClear placeholder={t('llm.OpenAI.customModelName.placeholder')} />,
+        children: (
+          <Input.TextArea
+            allowClear
+            placeholder={t('llm.OpenAI.customModelName.placeholder')}
+            style={{ height: 100 }}
+          />
+        ),
         desc: t('llm.OpenAI.customModelName.desc'),
         label: t('llm.OpenAI.customModelName.title'),
         name: [configKey, 'openAI', 'customModelName'],
