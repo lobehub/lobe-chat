@@ -62,6 +62,10 @@
     "confirmRemoveTopic": "Estás a punto de eliminar este tema. Una vez eliminado, no se podrá recuperar. Por favor, procede con precaución.",
     "confirmRemoveUnstarred": "Estás a punto de eliminar los temas no marcados como favoritos. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",
     "defaultTitle": "Tema predeterminado",
+    "guide": {
+      "desc": "Haz clic en el botón izquierdo para guardar la conversación actual como un tema histórico y comenzar una nueva sesión",
+      "title": "Lista de temas"
+    },
     "openNewTopic": "Abrir nuevo tema",
     "removeAll": "Eliminar todos los temas",
     "removeUnstarred": "Eliminar temas no marcados como favoritos",
