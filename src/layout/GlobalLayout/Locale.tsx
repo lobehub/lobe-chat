@@ -11,7 +11,7 @@ interface LocaleLayoutProps extends PropsWithChildren {
   lang?: string;
 }
 
-const InnerLocale = memo<LocaleLayoutProps>(({ children, lang }) => {
+const Locale = memo<LocaleLayoutProps>(({ children, lang }) => {
   const { data: locale } = useSWR(
     lang,
     async () =>
@@ -41,10 +41,4 @@ const InnerLocale = memo<LocaleLayoutProps>(({ children, lang }) => {
   return <ConfigProvider locale={locale}>{children}</ConfigProvider>;
 });
 
-// const Locale = memo<LocaleLayoutProps>((props) => (
-//   <Suspense fallback={<Loading />}>
-//     <InnerLocale {...props} />
-//   </Suspense>
-// ));
-
-export default InnerLocale;
+export default Locale;
