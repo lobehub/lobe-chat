@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.119.8](https://github.com/lobehub/lobe-chat/compare/v0.119.7...v0.119.8)
+
+<sup>Released on **2024-01-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix spotting tool call correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix spotting tool call correctly, closes [#972](https://github.com/lobehub/lobe-chat/issues/972) ([216e700](https://github.com/lobehub/lobe-chat/commit/216e700))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.119.7](https://github.com/lobehub/lobe-chat/compare/v0.119.6...v0.119.7)
 
 <sup>Released on **2024-01-07**</sup>
