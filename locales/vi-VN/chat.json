@@ -62,6 +62,10 @@
     "confirmRemoveTopic": "Bạn sắp xóa chủ đề này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
     "confirmRemoveUnstarred": "Bạn sắp xóa các chủ đề chưa được đánh dấu. Hành động này không thể hoàn tác, vui lòng xác nhận.",
     "defaultTitle": "Chủ đề mặc định",
+    "guide": {
+      "desc": "Nhấn vào nút bên trái để lưu cuộc trò chuyện hiện tại như một chủ đề lịch sử và bắt đầu một cuộc trò chuyện mới",
+      "title": "Danh sách chủ đề"
+    },
     "openNewTopic": "Mở chủ đề mới",
     "removeAll": "Xóa tất cả chủ đề",
     "removeUnstarred": "Xóa chủ đề chưa được đánh dấu",

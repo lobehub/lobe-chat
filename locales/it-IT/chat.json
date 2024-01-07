@@ -62,6 +62,10 @@
     "confirmRemoveTopic": "Stai per rimuovere questo argomento, l'operazione non potrà essere annullata. Procedere con cautela.",
     "confirmRemoveUnstarred": "Stai per rimuovere gli argomenti non contrassegnati, questa operazione non potrà essere annullata. Procedere con cautela.",
     "defaultTitle": "Argomento predefinito",
+    "guide": {
+      "desc": "Fare clic sul pulsante a sinistra per salvare l'attuale sessione come argomento storico e avviare una nuova sessione",
+      "title": "Elenco argomenti"
+    },
     "openNewTopic": "Apri nuovo argomento",
     "removeAll": "Rimuovi tutti gli argomenti",
     "removeUnstarred": "Rimuovi argomenti non contrassegnati",

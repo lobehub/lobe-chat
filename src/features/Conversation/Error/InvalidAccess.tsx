@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { Button, Input, Segmented } from 'antd';
-import { KeySquare, SquareAsterisk } from 'lucide-react';
+import { AsteriskSquare, KeySquare } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -30,7 +30,7 @@ const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
         onChange={(value) => setMode(value as Tab)}
         options={[
           {
-            icon: <Icon icon={SquareAsterisk} />,
+            icon: <Icon icon={AsteriskSquare} />,
             label: t('password', { ns: 'common' }),
             value: Tab.Password,
           },
