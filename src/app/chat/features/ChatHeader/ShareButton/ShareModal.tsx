@@ -4,13 +4,13 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useScreenshot } from '@/app/chat/features/ChatHeader/ShareButton/useScreenshot';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 
 import Preview from './Preview';
 import { FieldType, ImageType } from './type';
+import { useScreenshot } from './useScreenshot';
 
 enum Tab {
   Screenshot = 'screenshot',
@@ -147,6 +147,7 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
           style={{ width: '100%' }}
           value={tab}
         />
+        {tab === Tab.Screenshot && <Preview title={title} {...fieldValue} />}
         <Form
           initialValues={DEFAULT_FIELD_VALUE}
           items={settings}
@@ -154,7 +155,6 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
           onValuesChange={(_, v) => setFieldValue(v)}
           {...FORM_STYLE}
         />
-        {tab === Tab.Screenshot && <Preview title={title} {...fieldValue} />}
       </Flexbox>
     </Modal>
   );
