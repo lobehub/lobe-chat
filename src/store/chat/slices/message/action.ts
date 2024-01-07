@@ -303,7 +303,13 @@ export const chatMessage: StateCreator<
     set({ messages }, false, n(`dispatchMessage/${payload.type}`, payload));
   },
   fetchAIChatMessage: async (messages, assistantId) => {
-    const { toggleChatLoading, refreshMessages, updateMessageContent, createSmoothMessage } = get();
+    const {
+      toggleChatLoading,
+      refreshMessages,
+      updateMessageContent,
+      dispatchMessage,
+      createSmoothMessage,
+    } = get();
 
     const abortController = toggleChatLoading(
       true,
@@ -403,6 +409,12 @@ export const chatMessage: StateCreator<
         // is this message is just a function call
         if (isFunctionMessageAtStart(output)) {
           stopAnimation();
+          dispatchMessage({
+            id: assistantId,
+            key: 'content',
+            type: 'updateMessage',
+            value: output,
+          });
           isFunctionCall = true;
         }
 
