@@ -55,9 +55,7 @@ const Preview = memo<FieldType & { title?: string }>(
                 </div>
               )}
             </div>
-            <div style={{ marginTop: 24 }}>
-              <ChatList />
-            </div>
+            <ChatList />
             {withFooter ? (
               <Flexbox align={'center'} className={styles.footer} gap={4}>
                 <Logo extra={'chat'} type={'combine'} />
