@@ -73,6 +73,7 @@ describe('createChatCompletion', () => {
     expect(result).toBeInstanceOf(Response);
     expect(result.status).toBe(577); // Your custom error status code
   });
+
   it('should return an cause response when OpenAI.APIError is thrown with cause', async () => {
     // Arrange
     const errorInfo = {
@@ -101,6 +102,42 @@ describe('createChatCompletion', () => {
 
     const content = await result.json();
     expect(content.body).toHaveProperty('endpoint');
+    expect(content.body.endpoint).toEqual('https://api.openai.com/v1');
+    expect(content.body.error).toEqual(errorInfo);
+  });
+
+  it('should return an cause response with desensitize Url', async () => {
+    // Arrange
+    const errorInfo = {
+      stack: 'abc',
+      cause: { message: 'api is undefined' },
+    };
+    const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
+
+    openaiInstance = new OpenAI({
+      apiKey: 'test',
+      dangerouslyAllowBrowser: true,
+      baseURL: 'https://api.abc.com/v1',
+    });
+
+    vi.spyOn(openaiInstance.chat.completions, 'create').mockRejectedValue(apiError);
+
+    // Act
+    const result = await createChatCompletion({
+      openai: openaiInstance,
+      payload: {
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'gpt-3.5-turbo',
+        temperature: 0,
+      },
+    });
+
+    // Assert
+    expect(result).toBeInstanceOf(Response);
+    expect(result.status).toBe(577); // Your custom error status code
+
+    const content = await result.json();
+    expect(content.body.endpoint).toEqual('https://api.***.com/v1');
     expect(content.body.error).toEqual(errorInfo);
   });
 

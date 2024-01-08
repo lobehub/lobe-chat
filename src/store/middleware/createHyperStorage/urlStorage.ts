@@ -46,15 +46,32 @@ export const creatUrlStorage = <State extends object>(mode: 'hash' | 'search' = 
       const searchParameters = new URLSearchParams(getUrlSearch());
 
       for (const [urlKey, v] of Object.entries(state)) {
-        if (isEmpty(v)) {
-          searchParameters.delete(urlKey);
-          continue;
-        }
+        switch (typeof v) {
+          case 'boolean': {
+            searchParameters.set(urlKey, (v ? 1 : 0).toString());
+            break;
+          }
 
-        if (typeof v === 'string') {
-          searchParameters.set(urlKey, v);
-        } else {
-          searchParameters.set(urlKey, JSON.stringify(v));
+          case 'bigint':
+          case 'number': {
+            searchParameters.set(urlKey, v.toString());
+            break;
+          }
+
+          case 'string': {
+            searchParameters.set(urlKey, v);
+            break;
+          }
+
+          case 'object': {
+            if (isEmpty(v)) {
+              searchParameters.delete(urlKey);
+              continue;
+            }
+
+            searchParameters.set(urlKey, JSON.stringify(v));
+            break;
+          }
         }
       }
 

@@ -17,6 +17,7 @@
   "defaultAgent": "デフォルトエージェント",
   "defaultSession": "デフォルトセッション",
   "delete": "削除",
+  "duplicate": "コピーを作成する",
   "edit": "編集",
   "export": "エクスポート",
   "exportType": {

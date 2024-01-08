@@ -1,0 +1,166 @@
+{
+  "debug": {
+    "arguments": "Tham số gọi",
+    "function_call": "Gọi hàm",
+    "off": "Tắt gỡ lỗi",
+    "on": "Xem thông tin gọi plugin",
+    "response": "Kết quả trả về"
+  },
+  "detailModal": {
+    "info": {
+      "description": "Mô tả API",
+      "name": "Tên API"
+    },
+    "tabs": {
+      "info": "Khả năng plugin",
+      "manifest": "Tệp cài đặt",
+      "settings": "Cài đặt"
+    },
+    "title": "Chi tiết plugin"
+  },
+  "dev": {
+    "confirmDeleteDevPlugin": "Bạn sắp xóa plugin cục bộ này, sau khi xóa sẽ không thể khôi phục, bạn có muốn xóa plugin này không?",
+    "customParams": {
+      "useProxy": {
+        "label": "Cài đặt thông qua proxy (nếu gặp lỗi truy cập qua các miền, hãy thử bật tùy chọn này và cài đặt lại)"
+      }
+    },
+    "deleteSuccess": "Xóa plugin thành công",
+    "manifest": {
+      "identifier": {
+        "desc": "Định danh duy nhất của plugin",
+        "label": "Định danh"
+      },
+      "mode": {
+        "local": "Cấu hình trực quan",
+        "local-tooltip": "Tạm thời không hỗ trợ cấu hình trực quan",
+        "url": "Liên kết trực tuyến"
+      },
+      "name": {
+        "desc": "Tiêu đề plugin",
+        "label": "Tiêu đề",
+        "placeholder": "Tìm kiếm công cụ tìm kiếm"
+      }
+    },
+    "meta": {
+      "author": {
+        "desc": "Tác giả của plugin",
+        "label": "Tác giả"
+      },
+      "avatar": {
+        "desc": "Biểu tượng của plugin, có thể sử dụng Emoji hoặc URL",
+        "label": "Biểu tượng"
+      },
+      "description": {
+        "desc": "Mô tả plugin",
+        "label": "Mô tả",
+        "placeholder": "Tìm kiếm công cụ tìm kiếm để lấy thông tin"
+      },
+      "formFieldRequired": "Trường này là bắt buộc",
+      "homepage": {
+        "desc": "Trang chủ của plugin",
+        "label": "Trang chủ"
+      },
+      "identifier": {
+        "desc": "Định danh duy nhất của plugin, sẽ tự động nhận dạng từ manifest",
+        "errorDuplicate": "Định danh trùng với plugin đã có, vui lòng sửa đổi định danh",
+        "label": "Định danh",
+        "pattenErrorMessage": "Chỉ có thể nhập ký tự tiếng Anh, số, - và _"
+      },
+      "manifest": {
+        "desc": "LobeChat sẽ cài đặt plugin thông qua liên kết này",
+        "label": "Tệp mô tả plugin (Manifest) URL",
+        "preview": "Xem trước Manifest",
+        "refresh": "Làm mới"
+      },
+      "title": {
+        "desc": "Tiêu đề plugin",
+        "label": "Tiêu đề",
+        "placeholder": "Tìm kiếm công cụ tìm kiếm"
+      }
+    },
+    "metaConfig": "Cấu hình thông tin plugin",
+    "modalDesc": "Sau khi thêm plugin tùy chỉnh, có thể sử dụng để xác minh phát triển plugin, cũng có thể sử dụng trực tiếp trong cuộc trò chuyện. Vui lòng tham khảo<1>tài liệu phát triển↗</>",
+    "openai": {
+      "importUrl": "Nhập từ liên kết URL",
+      "schema": "Schema"
+    },
+    "preview": {
+      "card": "Xem trước hiệu ứng plugin",
+      "desc": "Xem trước mô tả plugin",
+      "title": "Xem trước tên plugin"
+    },
+    "save": "Cài đặt plugin",
+    "saveSuccess": "Lưu cài đặt plugin thành công",
+    "tabs": {
+      "manifest": "Danh sách mô tả chức năng (Manifest)",
+      "meta": "Thông tin plugin"
+    },
+    "title": {
+      "create": "Thêm plugin tùy chỉnh",
+      "edit": "Chỉnh sửa plugin tùy chỉnh"
+    },
+    "type": {
+      "lobe": "Plugin LobeChat",
+      "openai": "Plugin OpenAI"
+    },
+    "update": "Cập nhật",
+    "updateSuccess": "Cập nhật cài đặt plugin thành công"
+  },
+  "error": {
+    "fetchError": "Lỗi khi yêu cầu liên kết manifest, vui lòng đảm bảo tính hợp lệ của liên kết và kiểm tra xem liên kết có cho phép truy cập qua tên miền khác không",
+    "installError": "Cài đặt plugin {{name}} thất bại",
+    "manifestInvalid": "Manifest không tuân theo quy tắc, kết quả kiểm tra: \n\n {{error}}",
+    "noManifest": "Tệp mô tả không tồn tại",
+    "openAPIInvalid": "OpenAPI phân tích thất bại, lỗi: \n\n {{error}}",
+    "reinstallError": "Làm mới plugin {{name}} thất bại",
+    "urlError": "Liên kết này không trả về nội dung dạng JSON, vui lòng đảm bảo rằng đó là một liên kết hợp lệ"
+  },
+  "list": {
+    "item": {
+      "deprecated.title": "Đã loại bỏ",
+      "local.config": "Cấu hình",
+      "local.title": "Tùy chỉnh"
+    }
+  },
+  "loading": {
+    "content": "Đang gọi plugin...",
+    "plugin": "Plugin đang chạy..."
+  },
+  "pluginList": "Danh sách plugin",
+  "plugins": {
+    "loading": "Đang kiểm tra công cụ...",
+    "unknown": "Công cụ không xác định"
+  },
+  "setting": "Cài đặt plugin",
+  "settings": {
+    "indexUrl": {
+      "title": "Chỉ mục thị trường",
+      "tooltip": "Hiện không hỗ trợ chỉnh sửa trực tuyến, vui lòng thiết lập thông qua biến môi trường khi triển khai"
+    },
+    "modalDesc": "Sau khi cấu hình địa chỉ thị trường plugin, bạn có thể sử dụng thị trường plugin tùy chỉnh",
+    "title": "Cài đặt thị trường plugin"
+  },
+  "store": {
+    "actions": {
+      "confirmUninstall": "Sắp gỡ bỏ plugin này, sau khi gỡ bỏ sẽ xóa cấu hình của plugin này, vui lòng xác nhận hành động của bạn",
+      "detail": "Chi tiết",
+      "install": "Cài đặt",
+      "manifest": "Chỉnh sửa tệp cài đặt",
+      "settings": "Cài đặt",
+      "uninstall": "Gỡ bỏ"
+    },
+    "communityPlugin": "Cộng đồng bên thứ ba",
+    "customPlugin": "Tùy chỉnh",
+    "empty": "Hiện chưa có plugin được cài đặt",
+    "installAllPlugins": "Cài đặt tất cả",
+    "networkError": "Lấy cửa hàng plugin thất bại, vui lòng kiểm tra kết nối mạng và thử lại",
+    "placeholder": "Tìm kiếm tên hoặc mô tả plugin...",
+    "releasedAt": "Đã phát hành vào {{createdAt}}",
+    "tabs": {
+      "all": "Tất cả",
+      "installed": "Đã cài đặt"
+    },
+    "title": "Cửa hàng plugin"
+  }
+}

@@ -1,58 +1,92 @@
 import { EmptyCard } from '@lobehub/ui';
 import { useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import React, { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
+import { ChatTopic } from '@/types/topic';
 
-import SkeletonList from './SkeletonList';
+import { Placeholder, SkeletonList } from './SkeletonList';
 import TopicItem from './TopicItem';
 
-export const Topic = () => {
+export const Topic = memo(() => {
+  const { t } = useTranslation('chat');
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
   const { isDarkMode } = useThemeMode();
-
-  const topics = useChatStore(topicSelectors.displayTopics, isEqual);
-
-  const [topicsInit, activeTopicId] = useChatStore((s) => [s.topicsInit, s.activeTopicId]);
-
-  const { t } = useTranslation('empty');
+  const [topicsInit, activeTopicId, topicLength] = useChatStore((s) => [
+    s.topicsInit,
+    s.activeTopicId,
+    topicSelectors.currentTopicLength(s),
+  ]);
   const [visible, updateGuideState] = useGlobalStore((s) => [
     s.preference.guide?.topic,
     s.updateGuideState,
   ]);
 
+  const topics = useChatStore(
+    (s) => [
+      {
+        favorite: false,
+        id: 'default',
+        title: t('topic.defaultTitle'),
+      } as ChatTopic,
+      ...topicSelectors.displayTopics(s),
+    ],
+    isEqual,
+  );
+
+  const itemContent = useCallback(
+    (index: number, { id, favorite, title }: ChatTopic) =>
+      index === 0 ? (
+        <TopicItem active={!activeTopicId} fav={favorite} title={title} />
+      ) : (
+        <TopicItem active={activeTopicId === id} fav={favorite} id={id} key={id} title={title} />
+      ),
+    [activeTopicId],
+  );
+
+  const activeIndex = topics.findIndex((topic) => topic.id === activeTopicId);
+
   return !topicsInit ? (
     <SkeletonList />
   ) : (
-    <Flexbox gap={2} style={{ marginBottom: 12 }}>
-      {topics?.length === 0 && (
-        <EmptyCard
-          alt={t('topic.desc')}
-          cover={`/images/empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`}
-          desc={t('topic.desc')}
-          height={120}
-          onVisibleChange={(visible) => {
-            updateGuideState({ topic: visible });
-          }}
-          style={{ marginBottom: 6 }}
-          title={t('topic.title')}
-          visible={visible}
-          width={200}
-        />
+    <Flexbox gap={2} height={'100%'} style={{ marginBottom: 12 }}>
+      {topicLength === 0 && (
+        <Flexbox flex={1}>
+          <EmptyCard
+            alt={t('topic.guide.desc')}
+            cover={`/images/empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`}
+            desc={t('topic.guide.desc')}
+            height={120}
+            onVisibleChange={(visible) => {
+              updateGuideState({ topic: visible });
+            }}
+            style={{ marginBottom: 6 }}
+            title={t('topic.guide.title')}
+            visible={visible}
+            width={200}
+          />
+        </Flexbox>
       )}
-
-      <TopicItem
-        active={!activeTopicId}
-        fav={false}
-        title={t('topic.defaultTitle', { ns: 'chat' })}
+      <Virtuoso
+        components={{ ScrollSeekPlaceholder: Placeholder }}
+        computeItemKey={(_, item) => item.id}
+        data={topics}
+        fixedItemHeight={44}
+        initialTopMostItemIndex={Math.max(activeIndex, 0)}
+        itemContent={itemContent}
+        overscan={44 * 10}
+        ref={virtuosoRef}
+        scrollSeekConfiguration={{
+          enter: (velocity) => Math.abs(velocity) > 350,
+          exit: (velocity) => Math.abs(velocity) < 10,
+        }}
       />
-
-      {topics.map(({ id, favorite, title }) => (
-        <TopicItem active={activeTopicId === id} fav={favorite} id={id} key={id} title={title} />
-      ))}
     </Flexbox>
   );
-};
+});

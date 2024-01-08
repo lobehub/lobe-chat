@@ -1,7 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { DBModel } from '@/database/core/types/db';
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
 import { DB_Message } from '@/database/schemas/message';
+import { DB_Topic } from '@/database/schemas/topic';
 import { nanoid } from '@/utils/uuid';
 import * as uuidUtils from '@/utils/uuid';
 
@@ -286,5 +288,138 @@ describe('TopicModel', () => {
     });
     expect(messagesInDb1).toHaveLength(0);
     expect(messagesInDb2).toHaveLength(0);
+  });
+
+  describe('duplicateTopic', () => {
+    let originalTopic: DBModel<DB_Topic>;
+    let originalMessages: any[];
+
+    beforeEach(async () => {
+      // 创建一个原始主题
+      const { id } = await TopicModel.create({
+        title: 'Original Topic',
+        sessionId: 'session1',
+        favorite: false,
+      });
+      originalTopic = await TopicModel.findById(id);
+
+      // 创建一些关联到原始主题的消息
+      originalMessages = await Promise.all(
+        ['Message 1', 'Message 2'].map((text) =>
+          MessageModel.create({
+            content: text,
+            topicId: originalTopic.id,
+            sessionId: originalTopic.sessionId!,
+            role: 'user',
+          }),
+        ),
+      );
+    });
+
+    afterEach(async () => {
+      // 清理数据库中的所有主题和消息
+      await TopicModel.clearTable();
+      await MessageModel.clearTable();
+    });
+
+    it('should duplicate a topic with all associated messages', async () => {
+      // 执行复制操作
+      await TopicModel.duplicateTopic(originalTopic.id);
+
+      // 验证复制后的主题是否存在
+      const duplicatedTopic = await TopicModel.findBySessionId(originalTopic.sessionId!);
+      expect(duplicatedTopic).toHaveLength(2);
+
+      // 验证复制后的消息是否存在
+      const duplicatedMessages = await MessageModel.query({
+        sessionId: originalTopic.sessionId!,
+        topicId: duplicatedTopic[1].id, // 假设复制的主题是第二个
+      });
+      expect(duplicatedMessages).toHaveLength(originalMessages.length);
+    });
+
+    it('should throw an error if the topic does not exist', async () => {
+      // 尝试复制一个不存在的主题
+      const nonExistentTopicId = nanoid();
+      await expect(TopicModel.duplicateTopic(nonExistentTopicId)).rejects.toThrow(
+        `Topic with id ${nonExistentTopicId} not found`,
+      );
+    });
+
+    it('should preserve the properties of the duplicated topic', async () => {
+      // 执行复制操作
+      await TopicModel.duplicateTopic(originalTopic.id);
+
+      // 获取复制的主题
+      const topics = await TopicModel.findBySessionId(originalTopic.sessionId!);
+      const duplicatedTopic = topics.find((topic) => topic.id !== originalTopic.id);
+
+      // 验证复制的主题是否保留了原始主题的属性
+      expect(duplicatedTopic).toBeDefined();
+      expect(duplicatedTopic).toMatchObject({
+        title: originalTopic.title,
+        favorite: originalTopic.favorite,
+        sessionId: originalTopic.sessionId,
+      });
+      // 确保生成了新的 ID
+      expect(duplicatedTopic.id).not.toBe(originalTopic.id);
+    });
+
+    it('should properly handle the messages hierarchy when duplicating', async () => {
+      // 创建一个子消息关联到其中一个原始消息
+      const { id } = await MessageModel.create({
+        content: 'Child Message',
+        topicId: originalTopic.id,
+        parentId: originalMessages[0].id,
+        sessionId: originalTopic.sessionId!,
+        role: 'user',
+      });
+      const childMessage = await MessageModel.findById(id);
+
+      // 执行复制操作
+      await TopicModel.duplicateTopic(originalTopic.id);
+
+      // 获取复制的消息
+      const duplicatedMessages = await MessageModel.queryBySessionId(originalTopic.sessionId!);
+
+      // 验证复制的子消息是否存在并且 parentId 已更新
+      const duplicatedChildMessage = duplicatedMessages.find(
+        (message) => message.content === childMessage.content && message.id !== childMessage.id,
+      );
+
+      expect(duplicatedChildMessage).toBeDefined();
+      expect(duplicatedChildMessage.parentId).not.toBe(childMessage.parentId);
+      expect(duplicatedChildMessage.parentId).toBeDefined();
+    });
+
+    it('should fail if the database transaction fails', async () => {
+      // 强制数据库事务失败，例如通过在复制过程中抛出异常
+      const dbTransactionFailedError = new Error('DB transaction failed');
+      vi.spyOn(TopicModel['db'], 'transaction').mockImplementation((async () => {
+        throw dbTransactionFailedError;
+      }) as any);
+
+      // 尝试复制主题并捕捉期望的错误
+      await expect(TopicModel.duplicateTopic(originalTopic.id)).rejects.toThrow(
+        dbTransactionFailedError,
+      );
+    });
+
+    it('should not create partial duplicates if the process fails at some point', async () => {
+      // 假设复制消息的过程中发生了错误
+      vi.spyOn(MessageModel, 'duplicateMessages').mockImplementation(async () => {
+        throw new Error('Failed to duplicate messages');
+      });
+
+      // 尝试复制主题，期望会抛出错误
+      await expect(TopicModel.duplicateTopic(originalTopic.id)).rejects.toThrow();
+
+      // 确保没有创建任何副本
+      const topics = await TopicModel.findBySessionId(originalTopic.sessionId!);
+      expect(topics).toHaveLength(1); // 只有原始主题
+
+      const messages = await MessageModel.queryBySessionId(originalTopic.sessionId!);
+      expect(messages).toHaveLength(originalMessages.length); // 只有原始消息
+    });
   });
 });

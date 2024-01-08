@@ -17,6 +17,7 @@
   "defaultAgent": "預設助手",
   "defaultSession": "預設助手",
   "delete": "刪除",
+  "duplicate": "建立副本",
   "edit": "編輯",
   "export": "匯出設定",
   "exportType": {
