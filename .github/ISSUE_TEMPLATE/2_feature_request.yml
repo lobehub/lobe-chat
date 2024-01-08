@@ -1,21 +1,21 @@
-name: '🌠 功能需求 Feature Request'
-description: '需求或建议 | Suggest an idea'
+name: '🌠 Feature Request'
+description: 'Suggest an idea'
 title: '[Request] '
-labels: '🌠 Feature Request'
+labels: ['🌠 Feature Request']
 body:
   - type: textarea
     attributes:
-      label: '🥰 需求描述 | Feature Description'
+      label: '🥰 Feature Description'
       description: Please add a clear and concise description of the problem you are seeking to solve with this feature request.
     validations:
       required: true
   - type: textarea
     attributes:
-      label: '🧐 解决方案 | Proposed Solution'
+      label: '🧐 Proposed Solution'
       description: Describe the solution you'd like in a clear and concise manner.
     validations:
       required: true
   - type: textarea
     attributes:
-      label: '📝 补充信息 | Additional Information'
+      label: '📝 Additional Information'
       description: Add any other context about the problem here.
