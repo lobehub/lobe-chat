@@ -16,6 +16,13 @@ export default {
     desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
   },
+  input: {
+    onlySend: '仅发送',
+    send: '发送',
+    stop: '停止',
+    switchCmd: '使用 {{hotkey}} 发送',
+    warp: '换行',
+  },
   messageAction: {
     delAndRegenerate: '删除并重新生成',
     regenerate: '重新生成',
@@ -27,7 +34,6 @@ export default {
   regenerate: '重新生成',
   roleAndArchive: '角色与记录',
   searchAgentPlaceholder: '搜索助手和对话...',
-  send: '发送',
   sendPlaceholder: '输入聊天内容...',
   sessionList: '助手列表',
   shareModal: {
@@ -41,7 +47,6 @@ export default {
     withPluginInfo: '包含插件信息',
     withSystemRole: '包含助手角色设定',
   },
-  stop: '停止',
   stt: {
     action: '语音输入',
     loading: '识别中...',
@@ -90,5 +95,4 @@ export default {
     dragDesc: '拖拽文件到这里，支持上传多个图片。按住 Shift 直接发送图片',
     dragTitle: '上传图片',
   },
-  warp: '换行',
 };

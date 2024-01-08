@@ -1,32 +1,80 @@
 import { Icon } from '@lobehub/ui';
-import { Button } from 'antd';
-import { useTheme } from 'antd-style';
-import { ArrowBigUp, CornerDownLeft, Loader2 } from 'lucide-react';
+import { Button, Dropdown, Space } from 'antd';
+import { createStyles } from 'antd-style';
+import {
+  CornerDownLeft,
+  Loader2,
+  LucideChevronDown,
+  LucideCommand,
+  SendHorizontal,
+} from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
+import { useGlobalStore } from '@/store/global';
+import { preferenceSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
 import { LocalFiles } from './LocalFiles';
 
+const useStyles = createStyles(({ css, prefixCls }) => {
+  return {
+    arrow: css`
+      &.${prefixCls}-btn.${prefixCls}-btn-icon-only {
+        width: 28px;
+      }
+    `,
+    overrideAntdIcon: css`
+      .${prefixCls}-btn.${prefixCls}-btn-icon-only {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    `,
+  };
+});
 const Footer = memo(() => {
   const { t } = useTranslation('chat');
-  const theme = useTheme();
+
+  const { theme, styles } = useStyles();
   const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);
   const [loading, stopGenerateMessage] = useChatStore((s) => [
     !!s.chatLoadingId,
     s.stopGenerateMessage,
   ]);
-  const onSend = useSendMessage();
+  const [useCmdEnterToSend, updatePreference] = useGlobalStore((s) => [
+    preferenceSelectors.useCmdEnterToSend(s),
+    s.updatePreference,
+  ]);
+
+  const sendMessage = useSendMessage();
+
+  const cmdEnter = (
+    <Flexbox gap={2} horizontal>
+      <Icon icon={LucideCommand} />
+      <Icon icon={CornerDownLeft} />
+    </Flexbox>
+  );
+
+  const enter = (
+    <Center>
+      <Icon icon={CornerDownLeft} />
+    </Center>
+  );
+
+  const sendShortcut = useCmdEnterToSend ? cmdEnter : enter;
+
+  const wrapperShortcut = useCmdEnterToSend ? enter : cmdEnter;
 
   return (
     <Flexbox
       align={'end'}
+      className={styles.overrideAntdIcon}
       distribution={'space-between'}
       flex={'none'}
       gap={8}
@@ -42,25 +90,59 @@ const Footer = memo(() => {
           horizontal
           style={{ color: theme.colorTextDescription, fontSize: 12, marginRight: 12 }}
         >
-          <Icon icon={CornerDownLeft} />
-          <span>{t('send')}</span>
+          {sendShortcut}
+          <span>{t('input.send')}</span>
           <span>/</span>
-          <Flexbox horizontal>
-            <Icon icon={ArrowBigUp} />
-            <Icon icon={CornerDownLeft} />
-          </Flexbox>
-          <span>{t('warp')}</span>
+          {wrapperShortcut}
+          <span>{t('input.warp')}</span>
         </Flexbox>
         <SaveTopic />
-        {loading ? (
-          <Button icon={loading && <Icon icon={Loader2} spin />} onClick={stopGenerateMessage}>
-            {t('stop')}
-          </Button>
-        ) : (
-          <Button onClick={onSend} type={'primary'}>
-            {t('send')}
-          </Button>
-        )}
+        <Flexbox width={90}>
+          {loading ? (
+            <Button icon={loading && <Icon icon={Loader2} spin />} onClick={stopGenerateMessage}>
+              {t('input.stop')}
+            </Button>
+          ) : (
+            <Space.Compact>
+              <Button onClick={() => sendMessage()} type={'primary'}>
+                {t('input.send')}
+              </Button>
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      icon: <Icon icon={useCmdEnterToSend ? CornerDownLeft : LucideCommand} />,
+                      key: 'useCmdEnterToSend',
+                      label: t('input.switchCmd', {
+                        hotkey: useCmdEnterToSend ? 'Enter' : 'Cmd + Enter',
+                      }),
+                      onClick: () => {
+                        updatePreference({ useCmdEnterToSend: !useCmdEnterToSend });
+                      },
+                    },
+                    {
+                      icon: <Icon icon={SendHorizontal} />,
+                      key: 'onlySend',
+                      label: t('input.onlySend'),
+                      onClick: () => {
+                        sendMessage(true);
+                      },
+                    },
+                  ],
+                  style: { textAlign: 'right' },
+                }}
+                placement={'topRight'}
+                trigger={['hover']}
+              >
+                <Button
+                  className={styles.arrow}
+                  icon={<Icon icon={LucideChevronDown} />}
+                  type={'primary'}
+                />
+              </Dropdown>
+            </Space.Compact>
+          )}
+        </Flexbox>
       </Flexbox>
     </Flexbox>
   );

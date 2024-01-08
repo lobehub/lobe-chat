@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
+import { useGlobalStore } from '@/store/global';
+import { preferenceSelectors } from '@/store/global/selectors';
 
 import { useAutoFocus } from './useAutoFocus';
 
@@ -36,7 +38,9 @@ const InputArea = memo<{ setExpand: (expand: boolean) => void }>(({ setExpand })
     s.updateInputMessage,
   ]);
 
-  const onSend = useSendMessage();
+  const useCmdEnterToSend = useGlobalStore(preferenceSelectors.useCmdEnterToSend);
+
+  const sendMessage = useSendMessage();
 
   useAutoFocus(ref);
 
@@ -75,10 +79,24 @@ const InputArea = memo<{ setExpand: (expand: boolean) => void }>(({ setExpand })
           isChineseInput.current = true;
         }}
         onPressEnter={(e) => {
-          if (!loading && !e.shiftKey && !isChineseInput.current) {
-            e.preventDefault();
-            onSend();
+          // eslint-disable-next-line unicorn/consistent-function-scoping
+          const send = () => {
+            sendMessage();
             setExpand(false);
+          };
+
+          if (!loading && !e.shiftKey && !isChineseInput.current) {
+            if (useCmdEnterToSend) {
+              //  metaKey 被按下时才发送
+              if (e.metaKey) send();
+            } else {
+              if (e.metaKey) {
+                onInput?.((e.target as any).value + '\n');
+                return;
+              }
+
+              send();
+            }
           }
         }}
         placeholder={t('sendPlaceholder')}
