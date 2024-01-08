@@ -10,7 +10,7 @@ const ChatList = memo(() => {
   const ids = useChatStore(chatSelectors.currentChatIDsWithGuideMessage);
 
   return (
-    <Flexbox height={'100%'} style={{ position: 'relative' }}>
+    <Flexbox height={'100%'} style={{ paddingTop: 24, position: 'relative' }}>
       {ids.map((id, index) => (
         <Item id={id} index={index} key={id} />
       ))}
