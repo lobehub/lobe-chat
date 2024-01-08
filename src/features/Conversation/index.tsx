@@ -47,11 +47,11 @@ const Conversation = memo<ConversationProps>(({ chatInput, mobile }) => {
   const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
   const { styles } = useStyles(fontSize);
 
-  // init conversation
   const init = useInitConversation();
 
   return (
-    <Flexbox data-id={'conversation'} flex={1}>
+    //  relative is required, ChatInput's absolute position needs it
+    <Flexbox flex={1} style={{ position: 'relative' }}>
       <div className={styles}>
         {init ? <ChatList mobile={mobile} /> : <SkeletonList mobile={mobile} />}
       </div>
