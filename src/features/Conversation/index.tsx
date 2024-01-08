@@ -51,7 +51,7 @@ const Conversation = memo<ConversationProps>(({ chatInput, mobile }) => {
   const init = useInitConversation();
 
   return (
-    <Flexbox data-id={'conversation'} flex={1}>
+    <Flexbox flex={1} style={{ position: 'relative' }}>
       <div className={styles}>
         {init ? <ChatList mobile={mobile} /> : <SkeletonList mobile={mobile} />}
       </div>
