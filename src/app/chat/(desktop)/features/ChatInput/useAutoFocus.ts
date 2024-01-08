@@ -11,9 +11,12 @@ export const useAutoFocus = (inputRef: RefObject<TextAreaRef>) => {
       if (!element) return;
       let currentElement: Element | null = element;
       // 因为点击 Markdown 元素时，element 会是 article 标签的子元素
-      // 所以向上查找全局点击对象是否是 Markdown 或者 Input 元素
+      // Debug 信息时，element 会是 pre 标签
+      // 所以向上查找全局点击对象是否是 Markdown 或者 Input 或者 Debug 元素
       while (currentElement && !isInputOrMarkdown) {
-        isInputOrMarkdown = ['TEXTAREA', 'INPUT', 'ARTICLE'].includes(currentElement.tagName);
+        isInputOrMarkdown = ['TEXTAREA', 'INPUT', 'ARTICLE', 'PRE'].includes(
+          currentElement.tagName,
+        );
         currentElement = currentElement.parentElement;
       }
     };

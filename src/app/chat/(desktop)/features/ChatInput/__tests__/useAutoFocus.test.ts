@@ -7,6 +7,7 @@ enum ElType {
   div,
   input,
   markdown,
+  debug,
 }
 
 // 模拟elementFromPoint方法
@@ -17,6 +18,10 @@ document.elementFromPoint = function (x) {
 
   if (x === ElType.input) {
     return document.createElement('input');
+  }
+
+  if (x === ElType.debug) {
+    return document.createElement('pre');
   }
 
   if (x === ElType.markdown) {
@@ -68,11 +73,28 @@ describe('useAutoFocus', () => {
     const inputRef = { current: { focus: vi.fn() } } as RefObject<any>;
     renderHook(() => useAutoFocus(inputRef));
 
-    // Simulate a mousedown event on an input element
+    // Simulate a mousedown event on a markdown element
     act(() => {
       document.dispatchEvent(
         new MouseEvent('mousedown', { bubbles: true, clientX: ElType.markdown }),
       );
+    });
+
+    // Simulate a mouseup event
+    act(() => {
+      document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+    });
+
+    expect(inputRef.current?.focus).not.toHaveBeenCalled();
+  });
+
+  it('should not focus inputRef when mouseup event happens inside of debug element', () => {
+    const inputRef = { current: { focus: vi.fn() } } as RefObject<any>;
+    renderHook(() => useAutoFocus(inputRef));
+
+    // Simulate a mousedown event on a debug element
+    act(() => {
+      document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: ElType.debug }));
     });
 
     // Simulate a mouseup event
