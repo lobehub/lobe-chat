@@ -1,11 +1,11 @@
-name: '🐛 Bug Report'
-description: 'Report an bug'
+name: '🐛 反馈缺陷'
+description: '反馈一个问题缺陷'
 title: '[Bug] '
 labels: ['🐛 Bug']
 body:
   - type: dropdown
     attributes:
-      label: '💻 Operating System'
+      label: '💻 系统环境'
       options:
         - Windows
         - macOS
@@ -16,9 +16,10 @@ body:
         - Other
     validations:
       required: true
+
   - type: dropdown
     attributes:
-      label: '📦 Environment'
+      label: '📦 部署环境'
       options:
         - Official Preview
         - Vercel / Zeabur / Sealos
@@ -29,7 +30,7 @@ body:
 
   - type: dropdown
     attributes:
-      label: '🌐 Browser'
+      label: '🌐 浏览器'
       options:
         - Chrome
         - Edge
@@ -40,19 +41,19 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: '🐛 Bug Description'
-      description: A clear and concise description of the bug.
+      label: '🐛 问题描述'
+      description: 请提供一个清晰且简洁的问题描述。
     validations:
       required: true
   - type: textarea
     attributes:
-      label: '🚦 Expected Behavior'
-      description: A clear and concise description of what you expected to happen.
+      label: '🚦 期望结果'
+      description: 请提供一个清晰且简洁的描述，说明您期望发生什么。
   - type: textarea
     attributes:
-      label: '📷 Recurrence Steps'
-      description: A clear and concise description of how to recurrence.
+      label: '📷 复现步骤'
+      description: 请提供一个清晰且简洁的描述，说明如何复现问题。
   - type: textarea
     attributes:
-      label: '📝 Additional Information'
-      description: If your problem needs further explanation, or if the issue you're seeing cannot be reproduced in a gist, please add more information here.
+      label: '📝 补充信息'
+      description: 如果您的问题需要进一步说明，或者您遇到的问题无法在一个简单的示例中复现，请在这里添加更多信息。
