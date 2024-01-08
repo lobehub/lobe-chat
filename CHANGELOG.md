@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.119.10](https://github.com/lobehub/lobe-chat/compare/v0.119.9...v0.119.10)
+
+<sup>Released on **2024-01-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Debug information cannot be selected.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Debug information cannot be selected, closes [#980](https://github.com/lobehub/lobe-chat/issues/980) ([f02612d](https://github.com/lobehub/lobe-chat/commit/f02612d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.119.9](https://github.com/lobehub/lobe-chat/compare/v0.119.8...v0.119.9)
 
 <sup>Released on **2024-01-08**</sup>
