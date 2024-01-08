@@ -28,7 +28,6 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 - [Docker Deployment Guide](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment) | [Docker 部署指引](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment.zh-CN)
 - [Deploying with Azure OpenAI](https://github.com/lobehub/lobe-chat/wiki/Deploy-with-Azure-OpenAI) | [使用 Azure OpenAI 部署](https://github.com/lobehub/lobe-chat/wiki/Deploy-with-Azure-OpenAI.zh-CN)
 - [Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable) | [环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)
-- [Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable) | [环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)
 - [Upstream Sync](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync) | [自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN)
 - [Common Error](https://github.com/lobehub/lobe-chat/wiki/Common-Error) | [常见问题](https://github.com/lobehub/lobe-chat/wiki/Common-Error.zh-CN)
 - [Data Statistics](https://github.com/lobehub/lobe-chat/wiki/Analytics) | [数据统计](https://github.com/lobehub/lobe-chat/wiki/Analytics.zh-CN)
