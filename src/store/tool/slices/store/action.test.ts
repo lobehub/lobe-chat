@@ -19,12 +19,6 @@ vi.mock('@/services/plugin', () => ({
   },
 }));
 
-// Mock necessary modules and functions
-vi.mock('antd', () => ({
-  notification: {
-    error: vi.fn(),
-  },
-}));
 // Mock i18next
 vi.mock('i18next', () => ({
   t: vi.fn((key) => key),
@@ -179,6 +173,8 @@ describe('useToolStore:pluginStore', () => {
 
   describe('installPlugin', () => {
     it('should install a plugin with valid manifest', async () => {
+      vi.spyOn(notification, 'error');
+
       const pluginIdentifier = 'plugin1';
 
       const originalUpdateInstallLoadingState = useToolStore.getState().updateInstallLoadingState;
@@ -253,6 +249,8 @@ describe('useToolStore:pluginStore', () => {
 
       const error = new TypeError('noManifest');
 
+      // Mock necessary modules and functions
+      vi.spyOn(notification, 'error');
       (pluginService.getPluginManifest as Mock).mockRejectedValue(error);
 
       useToolStore.setState({
