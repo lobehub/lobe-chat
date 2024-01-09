@@ -26,13 +26,13 @@ const useStyles = createStyles(({ css }) => {
   };
 });
 
-const InputArea = memo<{ setExpand: (expand: boolean) => void }>(({ setExpand }) => {
+const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const ref = useRef<TextAreaRef>(null);
   const isChineseInput = useRef(false);
 
-  const [loading, value, onInput] = useChatStore((s) => [
+  const [loading, value, updateInputMessage] = useChatStore((s) => [
     !!s.chatLoadingId,
     s.inputMessage,
     s.updateInputMessage,
@@ -67,10 +67,10 @@ const InputArea = memo<{ setExpand: (expand: boolean) => void }>(({ setExpand })
         autoFocus
         className={styles.textarea}
         onBlur={(e) => {
-          onInput?.(e.target.value);
+          updateInputMessage?.(e.target.value);
         }}
         onChange={(e) => {
-          onInput?.(e.target.value);
+          updateInputMessage?.(e.target.value);
         }}
         onCompositionEnd={() => {
           isChineseInput.current = false;
@@ -79,24 +79,25 @@ const InputArea = memo<{ setExpand: (expand: boolean) => void }>(({ setExpand })
           isChineseInput.current = true;
         }}
         onPressEnter={(e) => {
+          if (loading || e.shiftKey || isChineseInput.current) return;
+
           // eslint-disable-next-line unicorn/consistent-function-scoping
           const send = () => {
             sendMessage();
-            setExpand(false);
+            setExpand?.(false);
           };
 
-          if (!loading && !e.shiftKey && !isChineseInput.current) {
-            if (useCmdEnterToSend) {
-              //  metaKey 被按下时才发送
-              if (e.metaKey) send();
-            } else {
-              if (e.metaKey) {
-                onInput?.((e.target as any).value + '\n');
-                return;
-              }
-
-              send();
+          // when user like cmd + enter to send message
+          if (useCmdEnterToSend) {
+            if (e.metaKey) send();
+          } else {
+            // cmd + enter to wrap
+            if (e.metaKey) {
+              updateInputMessage?.((e.target as any).value + '\n');
+              return;
             }
+
+            send();
           }
         }}
         placeholder={t('sendPlaceholder')}

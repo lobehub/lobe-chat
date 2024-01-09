@@ -4,9 +4,10 @@ import { createStyles } from 'antd-style';
 import {
   CornerDownLeft,
   Loader2,
+  LucideCheck,
   LucideChevronDown,
   LucideCommand,
-  SendHorizontal,
+  LucidePlus,
 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,7 @@ import { useGlobalStore } from '@/store/global';
 import { preferenceSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
+import { isMacOS } from '@/utils/platform';
 
 import { LocalFiles } from './LocalFiles';
 
@@ -38,6 +40,7 @@ const useStyles = createStyles(({ css, prefixCls }) => {
     `,
   };
 });
+
 const Footer = memo(() => {
   const { t } = useTranslation('chat');
 
@@ -111,25 +114,33 @@ const Footer = memo(() => {
                 menu={{
                   items: [
                     {
-                      icon: <Icon icon={useCmdEnterToSend ? CornerDownLeft : LucideCommand} />,
-                      key: 'useCmdEnterToSend',
-                      label: t('input.switchCmd', {
-                        hotkey: useCmdEnterToSend ? 'Enter' : 'Cmd + Enter',
+                      icon: useCmdEnterToSend ? <Icon icon={LucideCheck} /> : <div />,
+                      key: 'sendWithCmdEnter',
+                      label: t('input.sendWithCmdEnter', {
+                        meta: isMacOS() ? 'Cmd' : 'Ctrl',
                       }),
                       onClick: () => {
-                        updatePreference({ useCmdEnterToSend: !useCmdEnterToSend });
+                        updatePreference({ useCmdEnterToSend: true });
                       },
                     },
                     {
-                      icon: <Icon icon={SendHorizontal} />,
-                      key: 'onlySend',
-                      label: t('input.onlySend'),
+                      icon: !useCmdEnterToSend ? <Icon icon={LucideCheck} /> : <div />,
+                      key: 'sendWithEnter',
+                      label: t('input.sendWithEnter'),
+                      onClick: () => {
+                        updatePreference({ useCmdEnterToSend: false });
+                      },
+                    },
+                    { type: 'divider' },
+                    {
+                      icon: <Icon icon={LucidePlus} />,
+                      key: 'onlyAdd',
+                      label: t('input.onlyAdd'),
                       onClick: () => {
                         sendMessage(true);
                       },
                     },
                   ],
-                  style: { textAlign: 'right' },
                 }}
                 placement={'topRight'}
                 trigger={['hover']}

@@ -17,10 +17,11 @@ export default {
     title: '随便聊聊',
   },
   input: {
-    onlySend: '仅发送',
+    onlyAdd: '仅添加消息',
     send: '发送',
+    sendWithCmdEnter: '按 {{meta}} + Enter 键发送',
+    sendWithEnter: '按 Enter 键发送',
     stop: '停止',
-    switchCmd: '使用 {{hotkey}} 发送',
     warp: '换行',
   },
   messageAction: {

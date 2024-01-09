@@ -12,3 +12,7 @@ export const getPlatform = () => {
 export const getBrowser = () => {
   return getPaser().getResult().browser.name;
 };
+
+export const isMacOS = () => {
+  return getPlatform() === 'Mac OS';
+};
