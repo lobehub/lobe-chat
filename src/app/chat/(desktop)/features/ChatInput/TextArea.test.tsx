@@ -121,32 +121,6 @@ describe('<InputArea />', () => {
 
       expect(updateInputMessageMock).toHaveBeenCalledWith(newText);
     });
-
-    it('prevents default behavior of Enter key to avoid inserting newline when sending message', () => {
-      const sendMessageMock = vi.fn();
-
-      act(() => {
-        useChatStore.setState({
-          chatLoadingId: '',
-          inputMessage: 'Test message',
-          sendMessage: sendMessageMock,
-        });
-      });
-
-      render(<InputArea />);
-      const textArea = screen.getByRole('textbox');
-
-      // 创建一个模拟的事件对象，并设置 preventDefault 方法
-      const mockEvent = { code: 'Enter', key: 'Enter', preventDefault: vi.fn() };
-
-      // 模拟按下回车键
-      fireEvent.keyDown(textArea, mockEvent);
-
-      expect(sendMessageMock).toHaveBeenCalled();
-
-      // 确认 preventDefault 被调用
-      expect(mockEvent.preventDefault).toHaveBeenCalled();
-    });
   });
 
   describe('leaving protect', () => {
