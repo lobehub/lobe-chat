@@ -102,7 +102,7 @@ const Footer = memo(() => {
           <span>{t('input.warp')}</span>
         </Flexbox>
         <SaveTopic />
-        <Flexbox width={90}>
+        <Flexbox style={{ minWidth: 92 }}>
           {loading ? (
             <Button icon={loading && <Icon icon={Loader2} spin />} onClick={stopGenerateMessage}>
               {t('input.stop')}
