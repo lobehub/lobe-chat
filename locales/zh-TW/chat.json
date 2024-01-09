@@ -14,6 +14,14 @@
     "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
     "title": "隨便聊聊"
   },
+  "input": {
+    "onlyAdd": "僅新增訊息",
+    "send": "發送",
+    "sendWithCmdEnter": "按 {{meta}} + Enter 鍵發送",
+    "sendWithEnter": "按 Enter 鍵發送",
+    "stop": "停止",
+    "warp": "換行"
+  },
   "messageAction": {
     "delAndRegenerate": "刪除並重新生成",
     "regenerate": "重新生成"
@@ -25,7 +33,6 @@
   "regenerate": "重新生成",
   "roleAndArchive": "角色與記錄",
   "searchAgentPlaceholder": "搜索助手和對話...",
-  "send": "發送",
   "sendPlaceholder": "輸入聊天內容...",
   "sessionList": "助手列表",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "包含插件信息",
     "withSystemRole": "包含助手角色設定"
   },
-  "stop": "停止",
   "stt": {
     "action": "語音輸入",
     "loading": "識別中...",
@@ -86,6 +92,5 @@
     "actionTooltip": "上傳圖片",
     "dragDesc": "拖拽文件到這裡，支持上傳多個圖片。按住 Shift 直接發送圖片",
     "dragTitle": "上傳圖片"
-  },
-  "warp": "換行"
+  }
 }

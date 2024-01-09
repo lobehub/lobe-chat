@@ -14,6 +14,14 @@
     "desc": "Attiva il cluster cerebrale, accendi la scintilla del pensiero. Il tuo assistente intelligente, qui per comunicare con te su tutto.",
     "title": "Chiacchierata casuale"
   },
+  "input": {
+    "onlyAdd": "Solo aggiungi messaggio",
+    "send": "Invia",
+    "sendWithCmdEnter": "Invia premendo {{meta}} + Invio",
+    "sendWithEnter": "Invia premendo Invio",
+    "stop": "Ferma",
+    "warp": "A capo"
+  },
   "messageAction": {
     "delAndRegenerate": "Elimina e rigenera",
     "regenerate": "Rigenera"
@@ -25,7 +33,6 @@
   "regenerate": "Rigenera",
   "roleAndArchive": "Ruolo e archivio",
   "searchAgentPlaceholder": "Cerca assistente e conversazioni...",
-  "send": "Invia",
   "sendPlaceholder": "Inserisci il testo della chat...",
   "sessionList": "Elenco sessioni",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "Con informazioni sul plugin",
     "withSystemRole": "Con impostazione del ruolo dell'assistente"
   },
-  "stop": "Ferma",
   "stt": {
     "action": "Input vocale",
     "loading": "Riconoscimento in corso...",
@@ -86,6 +92,5 @@
     "actionTooltip": "Carica immagine",
     "dragDesc": "Trascina i file qui, supporta il caricamento di più immagini. Tieni premuto Shift per inviare direttamente le immagini",
     "dragTitle": "Carica immagine"
-  },
-  "warp": "A capo"
+  }
 }
