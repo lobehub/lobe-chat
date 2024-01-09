@@ -88,6 +88,7 @@ const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }
 
           // eslint-disable-next-line unicorn/consistent-function-scoping
           const send = () => {
+            e.preventDefault();
             sendMessage();
             setExpand?.(false);
           };
