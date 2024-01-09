@@ -14,5 +14,7 @@ export const getBrowser = () => {
 };
 
 export const isMacOS = () => {
-  return getPlatform() === 'Mac OS';
+  if (!navigator) return false;
+
+  return navigator.platform.toUpperCase().includes('MAC');
 };

@@ -12,6 +12,7 @@ let setExpandMock: (expand: boolean) => void;
 beforeEach(() => {
   setExpandMock = vi.fn();
 });
+
 describe('<InputArea />', () => {
   it('renders the TextArea component correctly', () => {
     render(<InputArea />);
@@ -223,7 +224,47 @@ describe('<InputArea />', () => {
     });
 
     describe('metaKey behavior for sending messages', () => {
-      it('sends message on cmd + enter when useCmdEnterToSend is true', () => {
+      it('windows: sends message on ctrl + enter when useCmdEnterToSend is true', () => {
+        const sendMessageMock = vi.fn();
+        act(() => {
+          useChatStore.setState({
+            chatLoadingId: '',
+            inputMessage: '123',
+            sendMessage: sendMessageMock,
+          });
+          useGlobalStore.getState().updatePreference({ useCmdEnterToSend: true });
+        });
+
+        render(<InputArea setExpand={setExpandMock} />);
+        const textArea = screen.getByRole('textbox');
+
+        fireEvent.keyDown(textArea, { code: 'Enter', ctrlKey: true, key: 'Enter' });
+        expect(sendMessageMock).toHaveBeenCalled();
+      });
+
+      it('windows: inserts a new line on ctrl + enter when useCmdEnterToSend is false', () => {
+        const sendMessageMock = vi.fn();
+        const updateInputMessageMock = vi.fn();
+        act(() => {
+          useChatStore.setState({
+            chatLoadingId: '',
+            inputMessage: 'Test',
+            sendMessage: sendMessageMock,
+            updateInputMessage: updateInputMessageMock,
+          });
+          useGlobalStore.getState().updatePreference({ useCmdEnterToSend: false });
+        });
+
+        render(<InputArea setExpand={setExpandMock} />);
+        const textArea = screen.getByRole('textbox');
+
+        fireEvent.keyDown(textArea, { code: 'Enter', ctrlKey: true, key: 'Enter' });
+        expect(updateInputMessageMock).toHaveBeenCalledWith('Test\n');
+        expect(sendMessageMock).not.toHaveBeenCalled(); // sendMessage should not be called
+      });
+
+      it('macOS: sends message on cmd + enter when useCmdEnterToSend is true', () => {
+        vi.stubGlobal('navigator', { platform: 'MacIntel' });
         const sendMessageMock = vi.fn();
         act(() => {
           useChatStore.setState({
@@ -239,9 +280,11 @@ describe('<InputArea />', () => {
 
         fireEvent.keyDown(textArea, { code: 'Enter', key: 'Enter', metaKey: true });
         expect(sendMessageMock).toHaveBeenCalled();
+        vi.restoreAllMocks();
       });
 
-      it('inserts a new line on cmd + enter when useCmdEnterToSend is false', () => {
+      it('macOS: inserts a new line on cmd + enter when useCmdEnterToSend is false', () => {
+        vi.stubGlobal('navigator', { platform: 'MacIntel' });
         const sendMessageMock = vi.fn();
         const updateInputMessageMock = vi.fn();
         act(() => {
@@ -260,6 +303,7 @@ describe('<InputArea />', () => {
         fireEvent.keyDown(textArea, { code: 'Enter', key: 'Enter', metaKey: true });
         expect(updateInputMessageMock).toHaveBeenCalledWith('Test\n');
         expect(sendMessageMock).not.toHaveBeenCalled(); // sendMessage should not be called
+        vi.restoreAllMocks();
       });
     });
   });

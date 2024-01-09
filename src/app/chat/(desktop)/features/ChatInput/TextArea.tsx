@@ -8,6 +8,7 @@ import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { preferenceSelectors } from '@/store/global/selectors';
+import { isCommandPressed } from '@/utils/keyboard';
 
 import { useAutoFocus } from './useAutoFocus';
 
@@ -86,13 +87,14 @@ const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }
             sendMessage();
             setExpand?.(false);
           };
+          const commandKey = isCommandPressed(e);
 
           // when user like cmd + enter to send message
           if (useCmdEnterToSend) {
-            if (e.metaKey) send();
+            if (commandKey) send();
           } else {
             // cmd + enter to wrap
-            if (e.metaKey) {
+            if (commandKey) {
               updateInputMessage?.((e.target as any).value + '\n');
               return;
             }
