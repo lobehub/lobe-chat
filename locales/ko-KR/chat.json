@@ -15,10 +15,11 @@
     "title": "무작위 대화"
   },
   "input": {
-    "onlySend": "전송만",
+    "onlyAdd": "메시지만 추가",
     "send": "전송",
+    "sendWithCmdEnter": "{{meta}} + Enter 키로 전송",
+    "sendWithEnter": "Enter 키로 전송",
     "stop": "중지",
-    "switchCmd": "{{hotkey}}를 사용하여 전송",
     "warp": "줄바꿈"
   },
   "messageAction": {

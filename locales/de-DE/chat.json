@@ -15,10 +15,11 @@
     "title": "Lass uns plaudern"
   },
   "input": {
-    "onlySend": "Nur senden",
+    "onlyAdd": "Nur Nachricht hinzufügen",
     "send": "Senden",
+    "sendWithCmdEnter": "Mit {{meta}} + Eingabetaste senden",
+    "sendWithEnter": "Mit Eingabetaste senden",
     "stop": "Stoppen",
-    "switchCmd": "Verwenden Sie {{hotkey}} zum Senden",
     "warp": "Zeilenumbruch"
   },
   "messageAction": {

@@ -15,10 +15,11 @@
     "title": "Chuyện phiếm"
   },
   "input": {
-    "onlySend": "Chỉ gửi",
+    "onlyAdd": "Chỉ thêm tin nhắn",
     "send": "Gửi",
+    "sendWithCmdEnter": "Nhấn {{meta}} + Enter để gửi",
+    "sendWithEnter": "Nhấn Enter để gửi",
     "stop": "Dừng",
-    "switchCmd": "Sử dụng {{hotkey}} để gửi",
     "warp": "Xuống dòng"
   },
   "messageAction": {

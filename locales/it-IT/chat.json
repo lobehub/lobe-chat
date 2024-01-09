@@ -15,10 +15,11 @@
     "title": "Chiacchierata casuale"
   },
   "input": {
-    "onlySend": "Solo invio",
+    "onlyAdd": "Solo aggiungi messaggio",
     "send": "Invia",
+    "sendWithCmdEnter": "Invia premendo {{meta}} + Invio",
+    "sendWithEnter": "Invia premendo Invio",
     "stop": "Ferma",
-    "switchCmd": "Usa {{hotkey}} per inviare",
     "warp": "A capo"
   },
   "messageAction": {

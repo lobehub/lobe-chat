@@ -15,10 +15,11 @@
     "title": "Praat maar raak"
   },
   "input": {
-    "onlySend": "Alleen verzenden",
+    "onlyAdd": "Alleen bericht toevoegen",
     "send": "Verzenden",
+    "sendWithCmdEnter": "Verzenden met {{meta}} + Enter",
+    "sendWithEnter": "Verzenden met Enter",
     "stop": "Stoppen",
-    "switchCmd": "Gebruik {{hotkey}} om te verzenden",
     "warp": "Nieuwe regel"
   },
   "messageAction": {

@@ -15,10 +15,11 @@
     "title": "Just Chat"
   },
   "input": {
-    "onlySend": "Only Send",
+    "onlyAdd": "Only add message",
     "send": "Send",
+    "sendWithCmdEnter": "Press {{meta}} + Enter to send",
+    "sendWithEnter": "Press Enter to send",
     "stop": "Stop",
-    "switchCmd": "Send using {{hotkey}}",
     "warp": "New Line"
   },
   "messageAction": {

@@ -15,10 +15,11 @@
     "title": "Pogadajmy sobie"
   },
   "input": {
-    "onlySend": "Tylko wysyłaj",
+    "onlyAdd": "Tylko dodaj wiadomość",
     "send": "Wyślij",
+    "sendWithCmdEnter": "Wyślij za pomocą klawisza {{meta}} + Enter",
+    "sendWithEnter": "Wyślij za pomocą klawisza Enter",
     "stop": "Zatrzymaj",
-    "switchCmd": "Użyj {{hotkey}} do wysłania",
     "warp": "Złamanie wiersza"
   },
   "messageAction": {

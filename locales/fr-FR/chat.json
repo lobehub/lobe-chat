@@ -15,10 +15,11 @@
     "title": "Discutons un peu"
   },
   "input": {
-    "onlySend": "Envoyer uniquement",
+    "onlyAdd": "Ajouter uniquement",
     "send": "Envoyer",
+    "sendWithCmdEnter": "Envoyer avec {{meta}} + Entrée",
+    "sendWithEnter": "Envoyer avec Entrée",
     "stop": "Arrêter",
-    "switchCmd": "Utiliser {{hotkey}} pour envoyer",
     "warp": "Saut de ligne"
   },
   "messageAction": {

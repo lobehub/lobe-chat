@@ -15,10 +15,11 @@
     "title": "気軽におしゃべり"
   },
   "input": {
-    "onlySend": "送信のみ",
+    "onlyAdd": "メッセージのみ追加",
     "send": "送信",
+    "sendWithCmdEnter": "{{meta}} + Enter キーで送信",
+    "sendWithEnter": "Enter キーで送信",
     "stop": "停止",
-    "switchCmd": "{{hotkey}} を使用して送信",
     "warp": "改行"
   },
   "messageAction": {

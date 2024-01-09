@@ -15,10 +15,11 @@
     "title": "Charla casual"
   },
   "input": {
-    "onlySend": "Solo enviar",
+    "onlyAdd": "Añadir solo",
     "send": "Enviar",
+    "sendWithCmdEnter": "Enviar con {{meta}} + Enter",
+    "sendWithEnter": "Enviar con Enter",
     "stop": "Detener",
-    "switchCmd": "Usar {{hotkey}} para enviar",
     "warp": "Salto de línea"
   },
   "messageAction": {

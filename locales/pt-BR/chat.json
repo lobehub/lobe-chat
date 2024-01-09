@@ -15,10 +15,11 @@
     "title": "Conversa Aleatória"
   },
   "input": {
-    "onlySend": "Apenas enviar",
+    "onlyAdd": "Apenas adicionar mensagem",
     "send": "Enviar",
+    "sendWithCmdEnter": "Pressione {{meta}} + Enter para enviar",
+    "sendWithEnter": "Pressione Enter para enviar",
     "stop": "Parar",
-    "switchCmd": "Usar {{hotkey}} para enviar",
     "warp": "Quebrar linha"
   },
   "messageAction": {

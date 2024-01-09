@@ -15,10 +15,11 @@
     "title": "Просто поболтаем"
   },
   "input": {
-    "onlySend": "Только отправить",
+    "onlyAdd": "Только добавить сообщение",
     "send": "Отправить",
+    "sendWithCmdEnter": "Отправить с помощью {{meta}} + Enter",
+    "sendWithEnter": "Отправить с помощью Enter",
     "stop": "Остановить",
-    "switchCmd": "Использовать {{hotkey}} для отправки",
     "warp": "Перенос строки"
   },
   "messageAction": {
