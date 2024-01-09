@@ -14,6 +14,13 @@
     "desc": "Ative o cluster cerebral, inspire faíscas de pensamento. Seu assistente inteligente, aqui para conversar sobre tudo.",
     "title": "Conversa Aleatória"
   },
+  "input": {
+    "onlySend": "Apenas enviar",
+    "send": "Enviar",
+    "stop": "Parar",
+    "switchCmd": "Usar {{hotkey}} para enviar",
+    "warp": "Quebrar linha"
+  },
   "messageAction": {
     "delAndRegenerate": "Excluir e Regenerar",
     "regenerate": "Regenerar"
@@ -25,7 +32,6 @@
   "regenerate": "Regenerar",
   "roleAndArchive": "Função e Arquivo",
   "searchAgentPlaceholder": "Pesquisar assistentes e conversas...",
-  "send": "Enviar",
   "sendPlaceholder": "Digite a mensagem...",
   "sessionList": "Lista de Assistentes",
   "shareModal": {
@@ -39,7 +45,6 @@
     "withPluginInfo": "Com Informações do Plugin",
     "withSystemRole": "Com Função do Assistente"
   },
-  "stop": "Parar",
   "stt": {
     "action": "Entrada de Voz",
     "loading": "Reconhecendo...",
@@ -86,6 +91,5 @@
     "actionTooltip": "Enviar Imagem",
     "dragDesc": "Arraste os arquivos aqui, suporta o envio de várias imagens. Pressione Shift para enviar as imagens diretamente.",
     "dragTitle": "Enviar Imagem"
-  },
-  "warp": "Quebrar Linha"
+  }
 }
