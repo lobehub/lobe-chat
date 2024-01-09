@@ -9,12 +9,19 @@ export const useSendMessage = () => {
     s.updateInputMessage,
   ]);
 
-  return useCallback(() => {
+  return useCallback((onlyAddUserMessage?: boolean) => {
     const store = useChatStore.getState();
     if (!!store.chatLoadingId) return;
+    if (!store.inputMessage) return;
+
     const imageList = filesSelectors.imageUrlOrBase64List(useFileStore.getState());
 
-    sendMessage(store.inputMessage, imageList);
+    sendMessage({
+      files: imageList,
+      message: store.inputMessage,
+      onlyAddUserMessage: onlyAddUserMessage,
+    });
+
     updateInputMessage('');
     useFileStore.getState().clearImageList();
   }, []);
