@@ -1,6 +1,8 @@
 import UAParser from 'ua-parser-js';
 
 const getPaser = () => {
+  if (typeof window === 'undefined') return new UAParser('Node');
+
   let ua = navigator.userAgent;
   return new UAParser(ua);
 };
@@ -13,8 +15,4 @@ export const getBrowser = () => {
   return getPaser().getResult().browser.name;
 };
 
-export const isMacOS = () => {
-  if (!navigator) return false;
-
-  return navigator.platform.toUpperCase().includes('MAC');
-};
+export const isMacOS = () => getPlatform()?.toUpperCase().includes('MAC');

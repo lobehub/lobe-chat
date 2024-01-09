@@ -2,6 +2,7 @@ import { Icon } from '@lobehub/ui';
 import { Button, Dropdown, Space } from 'antd';
 import { createStyles } from 'antd-style';
 import {
+  ChevronUp,
   CornerDownLeft,
   Loader2,
   LucideCheck,
@@ -41,6 +42,8 @@ const useStyles = createStyles(({ css, prefixCls }) => {
   };
 });
 
+const isMac = isMacOS();
+
 const Footer = memo(() => {
   const { t } = useTranslation('chat');
 
@@ -54,12 +57,11 @@ const Footer = memo(() => {
     preferenceSelectors.useCmdEnterToSend(s),
     s.updatePreference,
   ]);
-
   const sendMessage = useSendMessage();
 
   const cmdEnter = (
     <Flexbox gap={2} horizontal>
-      <Icon icon={LucideCommand} />
+      <Icon icon={isMac ? LucideCommand : ChevronUp} />
       <Icon icon={CornerDownLeft} />
     </Flexbox>
   );
@@ -114,21 +116,21 @@ const Footer = memo(() => {
                 menu={{
                   items: [
                     {
-                      icon: useCmdEnterToSend ? <Icon icon={LucideCheck} /> : <div />,
-                      key: 'sendWithCmdEnter',
-                      label: t('input.sendWithCmdEnter', {
-                        meta: isMacOS() ? 'Cmd' : 'Ctrl',
-                      }),
-                      onClick: () => {
-                        updatePreference({ useCmdEnterToSend: true });
-                      },
-                    },
-                    {
                       icon: !useCmdEnterToSend ? <Icon icon={LucideCheck} /> : <div />,
                       key: 'sendWithEnter',
                       label: t('input.sendWithEnter'),
                       onClick: () => {
                         updatePreference({ useCmdEnterToSend: false });
+                      },
+                    },
+                    {
+                      icon: useCmdEnterToSend ? <Icon icon={LucideCheck} /> : <div />,
+                      key: 'sendWithCmdEnter',
+                      label: t('input.sendWithCmdEnter', {
+                        meta: isMac ? 'Cmd' : 'Ctrl',
+                      }),
+                      onClick: () => {
+                        updatePreference({ useCmdEnterToSend: true });
                       },
                     },
                     { type: 'divider' },
