@@ -14,6 +14,14 @@
     "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
     "title": "Discutons un peu"
   },
+  "input": {
+    "onlyAdd": "Ajouter uniquement",
+    "send": "Envoyer",
+    "sendWithCmdEnter": "Envoyer avec {{meta}} + Entrée",
+    "sendWithEnter": "Envoyer avec Entrée",
+    "stop": "Arrêter",
+    "warp": "Saut de ligne"
+  },
   "messageAction": {
     "delAndRegenerate": "Supprimer et régénérer",
     "regenerate": "Régénérer"
@@ -25,7 +33,6 @@
   "regenerate": "Regénérer",
   "roleAndArchive": "Rôle et archivage",
   "searchAgentPlaceholder": "Rechercher des agents et des conversations...",
-  "send": "Envoyer",
   "sendPlaceholder": "Saisissez votre message...",
   "sessionList": "Liste des agents",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "Avec informations sur le plugin",
     "withSystemRole": "Avec rôle de l'agent"
   },
-  "stop": "Arrêter",
   "stt": {
     "action": "Entrée vocale",
     "loading": "En cours de reconnaissance...",
@@ -86,6 +92,5 @@
     "actionTooltip": "Télécharger une image",
     "dragDesc": "Faites glisser les fichiers ici pour télécharger plusieurs images. Maintenez la touche Maj enfoncée pour envoyer directement les images.",
     "dragTitle": "Télécharger une image"
-  },
-  "warp": "saut de ligne"
+  }
 }

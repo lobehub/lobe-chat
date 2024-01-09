@@ -14,6 +14,14 @@
     "desc": "Activate the brain cluster and spark creative thinking. Your virtual agent is here to communicate with you about everything.",
     "title": "Just Chat"
   },
+  "input": {
+    "onlyAdd": "Only add message",
+    "send": "Send",
+    "sendWithCmdEnter": "Press {{meta}} + Enter to send",
+    "sendWithEnter": "Press Enter to send",
+    "stop": "Stop",
+    "warp": "New Line"
+  },
   "messageAction": {
     "delAndRegenerate": "Delete and Regenerate",
     "regenerate": "Regenerate"
@@ -25,7 +33,6 @@
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
   "searchAgentPlaceholder": "Search agents and conversations...",
-  "send": "Send",
   "sendPlaceholder": "Type your message here...",
   "sessionList": "Agent List",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "Include Plugin Information",
     "withSystemRole": "Include Agent Role Setting"
   },
-  "stop": "Stop",
   "stt": {
     "action": "Voice Input",
     "loading": "Recognizing...",
@@ -86,6 +92,5 @@
     "actionTooltip": "Upload Image",
     "dragDesc": "Drag and drop files here, support uploading multiple images. Hold down Shift to send images directly.",
     "dragTitle": "Upload Image"
-  },
-  "warp": "Warp"
+  }
 }

@@ -1,124 +1,55 @@
-import { ActionIcon, ChatInputArea, ChatSendButton } from '@lobehub/ui';
-import { Maximize2, Minimize2 } from 'lucide-react';
-import { memo, useCallback, useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { DraggablePanel } from '@lobehub/ui';
+import { memo, useState } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import {
   CHAT_TEXTAREA_HEIGHT,
   CHAT_TEXTAREA_MAX_HEIGHT,
   HEADER_HEIGHT,
 } from '@/const/layoutTokens';
-import ActionBar from '@/features/ChatInput/ActionBar';
-import SaveTopic from '@/features/ChatInput/Topic';
-import { useChatInput } from '@/features/ChatInput/useChatInput';
+import { useGlobalStore } from '@/store/global';
 
-import DragUpload from './DragUpload';
-import { LocalFiles } from './LocalFiles';
-import { useAutoFocus } from './useAutoFocus';
+import Footer from './Footer';
+import Head from './Header';
+import TextArea from './TextArea';
 
-const ChatInputDesktopLayout = memo(() => {
-  const { t } = useTranslation('chat');
-  const {
-    ref,
-    onStop,
-    onSend,
-    loading,
-    value,
-    onInput,
-    expand,
-    setExpand,
-    inputHeight,
-    updatePreference,
-    canUpload,
-  } = useChatInput();
+const ChatInput = memo(() => {
+  const [expand, setExpand] = useState<boolean>(false);
 
-  useAutoFocus(ref);
-
-  const handleSizeChange = useCallback(
-    (_: any, size: any) => {
-      if (!size) return;
-      updatePreference({
-        inputHeight: typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
-      });
-    },
-    [updatePreference],
-  );
-
-  const buttonAddons = useMemo(
-    () => (
-      <ChatSendButton
-        leftAddons={canUpload && <LocalFiles />}
-        loading={loading}
-        onSend={onSend}
-        onStop={onStop}
-        rightAddons={<SaveTopic />}
-        texts={{
-          send: t('send'),
-          stop: t('stop'),
-          warp: t('warp'),
-        }}
-      />
-    ),
-    [canUpload, loading, onSend, onStop, t],
-  );
-
-  const topAddons = useMemo(
-    () => (
-      <ActionBar
-        rightAreaEndRender={
-          <ActionIcon
-            icon={expand ? Minimize2 : Maximize2}
-            onClick={() => {
-              setExpand(!expand);
-            }}
-          />
-        }
-      />
-    ),
-    [expand],
-  );
-
-  const hasValue = !!value;
-
-  useEffect(() => {
-    const fn = (e: BeforeUnloadEvent) => {
-      if (hasValue) {
-        // set returnValue to trigger alert modal
-        // Note: No matter what value is set, the browser will display the standard text
-        e.returnValue = '你有正在输入中的内容，确定要离开吗？';
-      }
-    };
-
-    window.addEventListener('beforeunload', fn);
-    return () => {
-      window.removeEventListener('beforeunload', fn);
-    };
-  }, [hasValue]);
+  const [inputHeight, updatePreference] = useGlobalStore((s) => [
+    s.preference.inputHeight,
+    s.updatePreference,
+  ]);
 
   return (
-    <>
-      {canUpload && <DragUpload />}
-      <ChatInputArea
-        autoFocus
-        bottomAddons={buttonAddons}
-        expand={expand}
-        heights={{
-          headerHeight: HEADER_HEIGHT,
-          inputHeight,
-          maxHeight: CHAT_TEXTAREA_MAX_HEIGHT,
-          minHeight: CHAT_TEXTAREA_HEIGHT,
-        }}
-        loading={loading}
-        onInput={onInput}
-        onSend={onSend}
-        onSizeChange={handleSizeChange}
-        placeholder={t('sendPlaceholder')}
-        ref={ref}
-        topAddons={topAddons}
-        value={value}
-      />
-    </>
+    <DraggablePanel
+      fullscreen={expand}
+      headerHeight={HEADER_HEIGHT}
+      maxHeight={CHAT_TEXTAREA_MAX_HEIGHT}
+      minHeight={CHAT_TEXTAREA_HEIGHT}
+      onSizeChange={(_, size) => {
+        if (!size) return;
+
+        updatePreference({
+          inputHeight: typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
+        });
+      }}
+      placement="bottom"
+      size={{ height: inputHeight, width: '100%' }}
+      style={{ zIndex: 10 }}
+    >
+      <Flexbox
+        gap={8}
+        height={'100%'}
+        padding={'12px 0 16px'}
+        style={{ minHeight: CHAT_TEXTAREA_HEIGHT, position: 'relative' }}
+      >
+        <Head expand={expand} setExpand={setExpand} />
+        <TextArea setExpand={setExpand} />
+        <Footer />
+      </Flexbox>
+    </DraggablePanel>
   );
 });
 
-export default ChatInputDesktopLayout;
+export default ChatInput;

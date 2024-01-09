@@ -14,6 +14,14 @@
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
     "title": "Charla casual"
   },
+  "input": {
+    "onlyAdd": "Añadir solo",
+    "send": "Enviar",
+    "sendWithCmdEnter": "Enviar con {{meta}} + Enter",
+    "sendWithEnter": "Enviar con Enter",
+    "stop": "Detener",
+    "warp": "Salto de línea"
+  },
   "messageAction": {
     "delAndRegenerate": "Eliminar y Regenerar",
     "regenerate": "Regenerar"
@@ -25,7 +33,6 @@
   "regenerate": "Regenerar",
   "roleAndArchive": "Rol y archivo",
   "searchAgentPlaceholder": "Buscar asistentes y conversaciones...",
-  "send": "Enviar",
   "sendPlaceholder": "Escribe tu mensaje...",
   "sessionList": "Lista de asistentes",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "Incluir información del plugin",
     "withSystemRole": "Incluir configuración de rol del asistente"
   },
-  "stop": "Detener",
   "stt": {
     "action": "Entrada de voz",
     "loading": "Reconociendo...",
@@ -86,6 +92,5 @@
     "actionTooltip": "Subir imagen",
     "dragDesc": "Arrastra y suelta archivos aquí, admite la carga de varias imágenes. Mantén presionada la tecla Shift para enviar las imágenes directamente.",
     "dragTitle": "Subir imagen"
-  },
-  "warp": "Salto de línea"
+  }
 }
