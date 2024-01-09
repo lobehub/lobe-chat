@@ -16,9 +16,13 @@ const useStyles = createStyles(({ css }) => {
   return {
     textarea: css`
       resize: none !important;
+
       height: 100% !important;
       padding: 0 24px;
+
       line-height: 1.5;
+
+      box-shadow: none !important;
     `,
     textareaContainer: css`
       position: relative;
