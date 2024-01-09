@@ -22,7 +22,8 @@ export const useSendMessage = () => {
       onlyAddUserMessage: onlyAddUserMessage,
     });
 
-    updateInputMessage('');
+    // fix the issue of having line breaks after sending messages
+    requestAnimationFrame(() => updateInputMessage(''));
     useFileStore.getState().clearImageList();
   }, []);
 };
