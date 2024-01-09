@@ -3,9 +3,8 @@ import { useCallback, useRef, useState } from 'react';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agent';
+import { agentSelectors } from '@/store/session/selectors';
 
 import { useSendMessage } from './useSend';
 

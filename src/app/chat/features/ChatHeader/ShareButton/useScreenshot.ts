@@ -3,7 +3,7 @@ import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 import { useCallback, useState } from 'react';
 
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agent';
+import { agentSelectors } from '@/store/session/selectors';
 
 import { ImageType } from './type';
 
