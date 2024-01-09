@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.119.11](https://github.com/lobehub/lobe-chat/compare/v0.119.10...v0.119.11)
+
+<sup>Released on **2024-01-09**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor ChatInput to support cmd+enter.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor ChatInput to support cmd+enter, closes [#983](https://github.com/lobehub/lobe-chat/issues/983) ([437a223](https://github.com/lobehub/lobe-chat/commit/437a223))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.119.10](https://github.com/lobehub/lobe-chat/compare/v0.119.9...v0.119.10)
 
 <sup>Released on **2024-01-08**</sup>
