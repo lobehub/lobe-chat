@@ -24,10 +24,16 @@ import { MessageDispatch, messagesReducer } from './reducer';
 
 const n = setNamespace('message');
 
+interface SendMessageParams {
+  message: string;
+  files?: { id: string; url: string }[];
+  onlyAddUserMessage?: boolean;
+}
+
 export interface ChatMessageAction {
   // create
   resendMessage: (id: string) => Promise<void>;
-  sendMessage: (text: string, images?: { id: string; url: string }[]) => Promise<void>;
+  sendMessage: (params: SendMessageParams) => Promise<void>;
   // delete
   /**
    * clear message on the active session
@@ -153,7 +159,7 @@ export const chatMessage: StateCreator<
 
     await coreProcessMessage(contextMessages, latestMsg.id);
   },
-  sendMessage: async (message, files) => {
+  sendMessage: async ({ message, files, onlyAddUserMessage }) => {
     const { coreProcessMessage, activeTopicId, activeId } = get();
     if (!activeId) return;
 
@@ -174,6 +180,9 @@ export const chatMessage: StateCreator<
 
     const id = await messageService.create(newMessage);
     await get().refreshMessages();
+
+    // if only add user message, then stop
+    if (onlyAddUserMessage) return;
 
     // Get the current messages to generate AI response
     const messages = chatSelectors.currentChats(get());

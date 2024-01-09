@@ -9,8 +9,7 @@ import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/slices/agent';
-import { sessionSelectors } from '@/store/session/slices/session/selectors';
+import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 const ChatHeaderTitle = memo(() => {
   const { t } = useTranslation('chat');

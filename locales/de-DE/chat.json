@@ -14,6 +14,14 @@
     "desc": "Aktiviere das Gehirncluster und entfache den Funken des Denkens. Dein intelligenter Assistent, der mit dir über alles kommuniziert.",
     "title": "Lass uns plaudern"
   },
+  "input": {
+    "onlyAdd": "Nur Nachricht hinzufügen",
+    "send": "Senden",
+    "sendWithCmdEnter": "Mit {{meta}} + Eingabetaste senden",
+    "sendWithEnter": "Mit Eingabetaste senden",
+    "stop": "Stoppen",
+    "warp": "Zeilenumbruch"
+  },
   "messageAction": {
     "delAndRegenerate": "Löschen und neu generieren",
     "regenerate": "Neu generieren"
@@ -25,7 +33,6 @@
   "regenerate": "Neu generieren",
   "roleAndArchive": "Rolle und Archiv",
   "searchAgentPlaceholder": "Assistenten und Unterhaltungen durchsuchen...",
-  "send": "Senden",
   "sendPlaceholder": "Chat-Nachricht eingeben...",
   "sessionList": "Assistentenliste",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "Mit Plugin-Informationen",
     "withSystemRole": "Mit Assistentenrolle"
   },
-  "stop": "Stoppen",
   "stt": {
     "action": "Spracheingabe",
     "loading": "Erkenne...",
@@ -86,6 +92,5 @@
     "actionTooltip": "Bild hochladen",
     "dragDesc": "Dateien hierher ziehen, um mehrere Bilder hochzuladen. Halte die Umschalttaste gedrückt, um Bilder direkt zu senden.",
     "dragTitle": "Bild hochladen"
-  },
-  "warp": "Zeilenumbruch"
+  }
 }
