@@ -186,12 +186,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                                  | 助手说明                                                                                                                          |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| [Emoji 生成](https://chat-preview.lobehub.com/market?agent=emoji-generate)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2024-01-09**</sup>                              | 可以根据内容生成 Emoji 表情<br/>`表情生成` `emoji` `创意`                                                                         |
 | [个人成长教练](https://chat-preview.lobehub.com/market?agent=personal-growth-coach)<br/><sup>By **[Ajasra](https://github.com/Ajasra)** on **2024-01-08**</sup>                           | 作为人工智能个人成长教练，您的主要目标是协助用户在自我提升和个人发展的旅程中。<br/>`个人成长` `辅导` `自我提升` `目标设定` `动力` |
 | [绩效评估超人](https://chat-preview.lobehub.com/market?agent=kpi-hero)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-05**</sup>                        | 擅长写绩效评估报告与年终总结<br/>`绩效评估` `报告撰写` `数据分析` `专业见解` `okr` `kpi`                                          |
 | [SVG 流程图解释助手](https://chat-preview.lobehub.com/market?agent=svg-flowchart-explanation-assistant)<br/><sup>By **[Justin3go](https://github.com/Justin3go)** on **2024-01-05**</sup> | SVG 流程图解释，输入 SVG 源代码，解释该流程图<br/>`流程图解释` `技术文档编写` `业务知识`                                          |
-| [周报助手](https://chat-preview.lobehub.com/market?agent=write-report-assistant-development)<br/><sup>By **[CaoYunzhou](https://github.com/CaoYunzhou)** on **2024-01-05**</sup>          | 周报生成助手<br/>`周报` `日报` `写作` `总结`                                                                                      |
 
-> 📊 Total agents: [<kbd>**92**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**93**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
