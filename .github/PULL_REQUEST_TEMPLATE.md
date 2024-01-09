@@ -7,6 +7,7 @@
 - [ ] ♻️ refactor
 - [ ] 💄 style
 - [ ] 🔨 chore
+- [ ] ⚡️ perf
 - [ ] 📝 docs
 
 #### 🔀 变更说明 | Description of Change
