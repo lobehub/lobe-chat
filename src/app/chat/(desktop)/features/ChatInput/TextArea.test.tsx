@@ -264,7 +264,10 @@ describe('<InputArea />', () => {
       });
 
       it('macOS: sends message on cmd + enter when useCmdEnterToSend is true', () => {
-        vi.stubGlobal('navigator', { platform: 'MacIntel' });
+        vi.stubGlobal('navigator', {
+          userAgent:
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        });
         const sendMessageMock = vi.fn();
         act(() => {
           useChatStore.setState({
@@ -284,7 +287,10 @@ describe('<InputArea />', () => {
       });
 
       it('macOS: inserts a new line on cmd + enter when useCmdEnterToSend is false', () => {
-        vi.stubGlobal('navigator', { platform: 'MacIntel' });
+        vi.stubGlobal('navigator', {
+          userAgent:
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        });
         const sendMessageMock = vi.fn();
         const updateInputMessageMock = vi.fn();
         act(() => {

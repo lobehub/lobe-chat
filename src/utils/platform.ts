@@ -15,4 +15,4 @@ export const getBrowser = () => {
   return getPaser().getResult().browser.name;
 };
 
-export const isMacOS = () => getPlatform()?.toUpperCase().includes('MAC');
+export const isMacOS = () => getPlatform() === 'Mac OS';
