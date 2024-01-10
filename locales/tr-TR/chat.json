@@ -14,6 +14,14 @@
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
   },
+  "input": {
+    "onlyAdd": "Sadece mesaj ekle",
+    "send": "Gönder",
+    "sendWithCmdEnter": "{{meta}} + Enter tuşuna basarak gönder",
+    "sendWithEnter": "Enter tuşuna basarak gönder",
+    "stop": "Dur",
+    "warp": "Satır atla"
+  },
   "messageAction": {
     "delAndRegenerate": "Sil ve Yeniden Oluştur",
     "regenerate": "Yeniden Oluştur"
@@ -25,7 +33,6 @@
   "regenerate": "Tekrarla",
   "roleAndArchive": "Rol ve Arşiv",
   "searchAgentPlaceholder": "Arama yardımcıları ve konuşmalar...",
-  "send": "Gönder",
   "sendPlaceholder": "Mesajınızı buraya yazın...",
   "sessionList": "Asistanlar",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "Plugin Bilgileri",
     "withSystemRole": "Asistan Rol"
   },
-  "stop": "Dur",
   "stt": {
     "action": "Ses Girişi",
     "loading": "Tanımlanıyor...",
@@ -86,6 +92,5 @@
     "actionTooltip": "Resim Yükle",
     "dragDesc": "Dosyaları buraya sürükleyip bırakın, birden fazla resim yüklemeyi destekler. Resimleri doğrudan göndermek için Shift tuşunu basılı tutun.",
     "dragTitle": "Resim Yükle"
-  },
-  "warp": "Warp"
+  }
 }

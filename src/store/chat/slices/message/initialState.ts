@@ -7,9 +7,6 @@ export interface ChatMessageState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string;
-  /**
-   * @deprecated
-   */
   chatLoadingId?: string;
   inputMessage: string;
   messageLoadingIds: [];

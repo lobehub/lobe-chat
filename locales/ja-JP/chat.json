@@ -14,6 +14,14 @@
     "desc": "脳のクラスターを起動し、創造性を引き出しましょう。あなたのスマートアシスタントは、あなたとすべてのことについてここでコミュニケーションします。",
     "title": "気軽におしゃべり"
   },
+  "input": {
+    "onlyAdd": "メッセージのみ追加",
+    "send": "送信",
+    "sendWithCmdEnter": "{{meta}} + Enter キーで送信",
+    "sendWithEnter": "Enter キーで送信",
+    "stop": "停止",
+    "warp": "改行"
+  },
   "messageAction": {
     "delAndRegenerate": "削除して再生成",
     "regenerate": "再生成"
@@ -25,7 +33,6 @@
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
   "searchAgentPlaceholder": "エージェントや会話を検索...",
-  "send": "送信",
   "sendPlaceholder": "チャット内容を入力してください...",
   "sessionList": "エージェントリスト",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "プラグイン情報を含む",
     "withSystemRole": "エージェントの役割を含む"
   },
-  "stop": "停止",
   "stt": {
     "action": "音声入力",
     "loading": "認識中...",
@@ -86,6 +92,5 @@
     "actionTooltip": "画像をアップロード",
     "dragDesc": "ファイルをここにドラッグしてください。複数の画像をアップロードできます。Shift キーを押しながら画像を直接送信することもできます。",
     "dragTitle": "画像をアップロード"
-  },
-  "warp": "改行"
+  }
 }

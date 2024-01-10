@@ -17,6 +17,7 @@ const useStyles = createStyles(({ css, token }) => ({
   content: css`
     display: flex;
     flex-direction: column;
+    height: 100% !important;
   `,
   drawer: css`
     background: ${token.colorBgLayout};
