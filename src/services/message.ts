@@ -53,8 +53,9 @@ export class MessageService {
   async updateMessagePlugin(id: string, plugin: ChatPluginPayload) {
     return MessageModel.update(id, { plugin });
   }
+
   async updateMessagePluginState(id: string, key: string, value: any) {
-    return MessageModel.update(id, { pluginState: { [key]: value } });
+    return MessageModel.updatePluginState(id, key, value);
   }
 
   async getAllMessages() {
