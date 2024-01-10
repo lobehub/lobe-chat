@@ -26,6 +26,7 @@ vi.mock('@/database/models/message', () => {
       clearTable: vi.fn(),
       batchUpdate: vi.fn(),
       queryAll: vi.fn(),
+      updatePluginState: vi.fn(),
     },
   };
 });
@@ -255,7 +256,7 @@ describe('MessageService', () => {
       const key = 'stateKey';
       const value = 'stateValue';
       const newPluginState = { [key]: value };
-      (MessageModel.update as Mock).mockResolvedValue({
+      (MessageModel.updatePluginState as Mock).mockResolvedValue({
         ...mockMessage,
         pluginState: newPluginState,
       });
@@ -264,9 +265,7 @@ describe('MessageService', () => {
       const result = await messageService.updateMessagePluginState(mockMessageId, key, value);
 
       // Assert
-      expect(MessageModel.update).toHaveBeenCalledWith(mockMessageId, {
-        pluginState: newPluginState,
-      });
+      expect(MessageModel.updatePluginState).toHaveBeenCalledWith(mockMessageId, key, value);
       expect(result).toEqual({ ...mockMessage, pluginState: newPluginState });
     });
   });
