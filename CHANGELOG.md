@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.119.13](https://github.com/lobehub/lobe-chat/compare/v0.119.12...v0.119.13)
+
+<sup>Released on **2024-01-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add delete and regenerate for function message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add delete and regenerate for function message, closes [#992](https://github.com/lobehub/lobe-chat/issues/992) ([7f8c717](https://github.com/lobehub/lobe-chat/commit/7f8c717))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.119.12](https://github.com/lobehub/lobe-chat/compare/v0.119.11...v0.119.12)
 
 <sup>Released on **2024-01-09**</sup>
