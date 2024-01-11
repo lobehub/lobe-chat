@@ -5,10 +5,10 @@ import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import { RenderAction } from '../types';
 
 export const FunctionActionsBar: RenderAction = memo(({ onActionClick }) => {
-  const { regenerate, divider, del } = useChatListActionsBar();
+  const { regenerate, divider, delAndRegenerate, del } = useChatListActionsBar();
   return (
     <ActionIconGroup
-      dropdownMenu={[regenerate, divider, del]}
+      dropdownMenu={[regenerate, divider, delAndRegenerate, del]}
       items={[regenerate]}
       onActionClick={onActionClick}
       type="ghost"
