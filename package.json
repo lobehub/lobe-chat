@@ -134,7 +134,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^18",
-    "@ducanh2912/next-pwa": "^10",
+    "@ducanh2912/next-pwa": "~10.1",
     "@lobehub/i18n-cli": "latest",
     "@lobehub/lint": "latest",
     "@next/bundle-analyzer": "^14",
