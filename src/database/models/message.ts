@@ -102,6 +102,12 @@ class _MessageModel extends BaseModel {
     return super._update(id, data);
   }
 
+  async updatePluginState(id: string, key: string, value: any) {
+    const item = await this.findById(id);
+
+    return this.update(id, { pluginState: { ...item.pluginState, [key]: value } });
+  }
+
   /**
    * Batch updates multiple fields of the specified messages.
    *

@@ -8,7 +8,7 @@ import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layou
 import { useGlobalStore } from '@/store/global';
 import { SettingsTabs, SidebarTabKey } from '@/store/global/slices/common/initialState';
 import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/slices/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
 
 const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {

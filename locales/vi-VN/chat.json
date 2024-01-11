@@ -14,6 +14,14 @@
     "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
     "title": "Chuyện phiếm"
   },
+  "input": {
+    "onlyAdd": "Chỉ thêm tin nhắn",
+    "send": "Gửi",
+    "sendWithCmdEnter": "Nhấn {{meta}} + Enter để gửi",
+    "sendWithEnter": "Nhấn Enter để gửi",
+    "stop": "Dừng",
+    "warp": "Xuống dòng"
+  },
   "messageAction": {
     "delAndRegenerate": "Xóa và tạo lại",
     "regenerate": "Tạo lại"
@@ -25,7 +33,6 @@
   "regenerate": "Tạo lại",
   "roleAndArchive": "Vai trò và lưu trữ",
   "searchAgentPlaceholder": "Tìm kiếm trợ lý và cuộc trò chuyện...",
-  "send": "Gửi",
   "sendPlaceholder": "Nhập nội dung trò chuyện...",
   "sessionList": "Danh sách trợ lý",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "Bao gồm thông tin plugin",
     "withSystemRole": "Bao gồm thiết lập vai trò trợ lý"
   },
-  "stop": "Dừng",
   "stt": {
     "action": "Nhập bằng giọng nói",
     "loading": "Đang nhận dạng...",
@@ -86,6 +92,5 @@
     "actionTooltip": "Tải lên hình ảnh",
     "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh. Giữ phím Shift để gửi hình ảnh trực tiếp",
     "dragTitle": "Tải lên hình ảnh"
-  },
-  "warp": "Xuống dòng"
+  }
 }

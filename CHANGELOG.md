@@ -2,6 +2,131 @@
 
 # Changelog
 
+### [Version 0.119.13](https://github.com/lobehub/lobe-chat/compare/v0.119.12...v0.119.13)
+
+<sup>Released on **2024-01-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add delete and regenerate for function message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add delete and regenerate for function message, closes [#992](https://github.com/lobehub/lobe-chat/issues/992) ([7f8c717](https://github.com/lobehub/lobe-chat/commit/7f8c717))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.119.12](https://github.com/lobehub/lobe-chat/compare/v0.119.11...v0.119.12)
+
+<sup>Released on **2024-01-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix new line after sending messages with enter key.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix new line after sending messages with enter key, closes [#990](https://github.com/lobehub/lobe-chat/issues/990) ([e6ab019](https://github.com/lobehub/lobe-chat/commit/e6ab019))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.119.11](https://github.com/lobehub/lobe-chat/compare/v0.119.10...v0.119.11)
+
+<sup>Released on **2024-01-09**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor ChatInput to support cmd+enter.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor ChatInput to support cmd+enter, closes [#983](https://github.com/lobehub/lobe-chat/issues/983) ([437a223](https://github.com/lobehub/lobe-chat/commit/437a223))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.119.10](https://github.com/lobehub/lobe-chat/compare/v0.119.9...v0.119.10)
+
+<sup>Released on **2024-01-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Debug information cannot be selected.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Debug information cannot be selected, closes [#980](https://github.com/lobehub/lobe-chat/issues/980) ([f02612d](https://github.com/lobehub/lobe-chat/commit/f02612d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.119.9](https://github.com/lobehub/lobe-chat/compare/v0.119.8...v0.119.9)
+
+<sup>Released on **2024-01-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix ChatInput fullscreen display not correct.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix ChatInput fullscreen display not correct, closes [#982](https://github.com/lobehub/lobe-chat/issues/982) ([e4012c4](https://github.com/lobehub/lobe-chat/commit/e4012c4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.119.8](https://github.com/lobehub/lobe-chat/compare/v0.119.7...v0.119.8)
 
 <sup>Released on **2024-01-07**</sup>

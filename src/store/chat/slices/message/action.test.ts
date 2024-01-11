@@ -179,7 +179,7 @@ describe('chatMessage actions', () => {
       const message = 'Test message';
 
       await act(async () => {
-        await result.current.sendMessage(message);
+        await result.current.sendMessage({ message });
       });
 
       expect(messageService.create).not.toHaveBeenCalled();
@@ -192,7 +192,7 @@ describe('chatMessage actions', () => {
       const message = '';
 
       await act(async () => {
-        await result.current.sendMessage(message);
+        await result.current.sendMessage({ message });
       });
 
       expect(messageService.create).not.toHaveBeenCalled();
@@ -205,7 +205,7 @@ describe('chatMessage actions', () => {
       const message = '';
 
       await act(async () => {
-        await result.current.sendMessage(message, []);
+        await result.current.sendMessage({ message, files: [] });
       });
 
       expect(messageService.create).not.toHaveBeenCalled();
@@ -222,7 +222,7 @@ describe('chatMessage actions', () => {
       (messageService.create as Mock).mockResolvedValue('new-message-id');
 
       await act(async () => {
-        await result.current.sendMessage(message, files);
+        await result.current.sendMessage({ message, files });
       });
 
       expect(messageService.create).toHaveBeenCalledWith({
@@ -269,7 +269,7 @@ describe('chatMessage actions', () => {
             switchTopic: switchTopicMock,
           });
 
-          await result.current.sendMessage(message);
+          await result.current.sendMessage({ message });
         });
 
         expect(saveToTopicMock).not.toHaveBeenCalled();
@@ -310,7 +310,7 @@ describe('chatMessage actions', () => {
         });
 
         await act(async () => {
-          await result.current.sendMessage(message);
+          await result.current.sendMessage({ message });
         });
 
         expect(saveToTopicMock).toHaveBeenCalled();
@@ -349,7 +349,7 @@ describe('chatMessage actions', () => {
             switchTopic: switchTopicMock,
           });
 
-          await result.current.sendMessage(message);
+          await result.current.sendMessage({ message });
         });
 
         expect(saveToTopicMock).not.toHaveBeenCalled();

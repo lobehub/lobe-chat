@@ -14,6 +14,14 @@
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
     "title": "Pogadajmy sobie"
   },
+  "input": {
+    "onlyAdd": "Tylko dodaj wiadomość",
+    "send": "Wyślij",
+    "sendWithCmdEnter": "Wyślij za pomocą klawisza {{meta}} + Enter",
+    "sendWithEnter": "Wyślij za pomocą klawisza Enter",
+    "stop": "Zatrzymaj",
+    "warp": "Złamanie wiersza"
+  },
   "messageAction": {
     "delAndRegenerate": "Usuń i wygeneruj ponownie",
     "regenerate": "Wygeneruj ponownie"
@@ -25,7 +33,6 @@
   "regenerate": "Wygeneruj ponownie",
   "roleAndArchive": "Rola i archiwum",
   "searchAgentPlaceholder": "Szukaj asystentów i rozmów...",
-  "send": "Wyślij",
   "sendPlaceholder": "Wpisz treść rozmowy...",
   "sessionList": "Lista sesji",
   "shareModal": {
@@ -39,7 +46,6 @@
     "withPluginInfo": "Z informacjami o wtyczce",
     "withSystemRole": "Z rolą asystenta"
   },
-  "stop": "Zatrzymaj",
   "stt": {
     "action": "Mowa na tekst",
     "loading": "Rozpoznawanie...",
@@ -86,6 +92,5 @@
     "actionTooltip": "Prześlij obraz",
     "dragDesc": "Przeciągnij pliki tutaj, obsługiwane jest przesyłanie wielu obrazów. Naciśnij klawisz Shift, aby wysłać obraz bezpośrednio",
     "dragTitle": "Prześlij obraz"
-  },
-  "warp": "Złamanie wiersza"
+  }
 }
