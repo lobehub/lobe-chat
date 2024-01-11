@@ -7,11 +7,24 @@
   "confirmRemoveSessionItemAlert": "Você está prestes a remover este assistente. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
   "defaultAgent": "Assistente Padrão",
   "defaultSession": "Sessão Padrão",
+  "duplicateTitle": "{{title}} Cópia",
   "historyRange": "Intervalo de Histórico",
   "inbox": {
     "defaultMessage": "Olá, eu sou seu assistente virtual, você pode me perguntar qualquer coisa e eu farei o meu melhor para responder. Se precisar de um assistente mais profissional ou personalizado, clique em `+` para criar um assistente personalizado.",
     "desc": "Ative o cluster cerebral, inspire faíscas de pensamento. Seu assistente inteligente, aqui para conversar sobre tudo.",
     "title": "Conversa Aleatória"
+  },
+  "input": {
+    "onlyAdd": "Apenas adicionar mensagem",
+    "send": "Enviar",
+    "sendWithCmdEnter": "Pressione {{meta}} + Enter para enviar",
+    "sendWithEnter": "Pressione Enter para enviar",
+    "stop": "Parar",
+    "warp": "Quebrar linha"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Excluir e Regenerar",
+    "regenerate": "Regenerar"
   },
   "newAgent": "Novo Assistente",
   "noDescription": "Sem descrição",
@@ -20,7 +33,6 @@
   "regenerate": "Regenerar",
   "roleAndArchive": "Função e Arquivo",
   "searchAgentPlaceholder": "Pesquisar assistentes e conversas...",
-  "send": "Enviar",
   "sendPlaceholder": "Digite a mensagem...",
   "sessionList": "Lista de Assistentes",
   "shareModal": {
@@ -34,7 +46,6 @@
     "withPluginInfo": "Com Informações do Plugin",
     "withSystemRole": "Com Função do Assistente"
   },
-  "stop": "Parar",
   "stt": {
     "action": "Entrada de Voz",
     "loading": "Reconhecendo...",
@@ -48,10 +59,19 @@
     "used": "Usado"
   },
   "topic": {
+    "actions": {
+      "autoRename": "Renomeação Automática",
+      "duplicate": "Criar Cópia",
+      "export": "Exportar Tópico"
+    },
     "confirmRemoveAll": "Você está prestes a remover todos os tópicos. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
     "confirmRemoveTopic": "Você está prestes a remover este tópico. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
     "confirmRemoveUnstarred": "Você está prestes a remover os tópicos não favoritados. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
     "defaultTitle": "Tópico Padrão",
+    "guide": {
+      "desc": "Clique em enviar no botão esquerdo para salvar a conversa atual como um tópico histórico e iniciar uma nova rodada de conversa",
+      "title": "Lista de Tópicos"
+    },
     "openNewTopic": "Abrir Novo Tópico",
     "removeAll": "Remover Todos os Tópicos",
     "removeUnstarred": "Remover Tópicos Não Favoritados",
@@ -72,6 +92,5 @@
     "actionTooltip": "Enviar Imagem",
     "dragDesc": "Arraste os arquivos aqui, suporta o envio de várias imagens. Pressione Shift para enviar as imagens diretamente.",
     "dragTitle": "Enviar Imagem"
-  },
-  "warp": "Quebrar Linha"
+  }
 }

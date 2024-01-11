@@ -58,6 +58,12 @@ class SessionService {
   async searchSessions(keyword: string) {
     return SessionModel.queryByKeyword(keyword);
   }
+
+  async duplicateSession(id: string, newTitle: string): Promise<string | undefined> {
+    const res = await SessionModel.duplicate(id, newTitle);
+
+    if (res) return res?.id;
+  }
 }
 
 export const sessionService = new SessionService();

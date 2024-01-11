@@ -7,11 +7,24 @@
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
   "defaultAgent": "Domyślny asystent",
   "defaultSession": "Domyślna sesja",
+  "duplicateTitle": "{{title}} kopia",
   "historyRange": "Zakres historii",
   "inbox": {
     "defaultMessage": "Cześć, jestem twoim inteligentnym asystentem, możesz zadać mi dowolne pytanie, postaram się na nie odpowiedzieć. Jeśli potrzebujesz bardziej profesjonalnego lub spersonalizowanego asystenta, kliknij `+`, aby utworzyć niestandardowego asystenta.",
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
     "title": "Pogadajmy sobie"
+  },
+  "input": {
+    "onlyAdd": "Tylko dodaj wiadomość",
+    "send": "Wyślij",
+    "sendWithCmdEnter": "Wyślij za pomocą klawisza {{meta}} + Enter",
+    "sendWithEnter": "Wyślij za pomocą klawisza Enter",
+    "stop": "Zatrzymaj",
+    "warp": "Złamanie wiersza"
+  },
+  "messageAction": {
+    "delAndRegenerate": "Usuń i wygeneruj ponownie",
+    "regenerate": "Wygeneruj ponownie"
   },
   "newAgent": "Nowy asystent",
   "noDescription": "Brak opisu",
@@ -20,7 +33,6 @@
   "regenerate": "Wygeneruj ponownie",
   "roleAndArchive": "Rola i archiwum",
   "searchAgentPlaceholder": "Szukaj asystentów i rozmów...",
-  "send": "Wyślij",
   "sendPlaceholder": "Wpisz treść rozmowy...",
   "sessionList": "Lista sesji",
   "shareModal": {
@@ -34,7 +46,6 @@
     "withPluginInfo": "Z informacjami o wtyczce",
     "withSystemRole": "Z rolą asystenta"
   },
-  "stop": "Zatrzymaj",
   "stt": {
     "action": "Mowa na tekst",
     "loading": "Rozpoznawanie...",
@@ -48,10 +59,19 @@
     "used": "Użyte"
   },
   "topic": {
+    "actions": {
+      "autoRename": "Automatyczna zmiana nazwy",
+      "duplicate": "Utwórz kopię",
+      "export": "Eksportuj temat"
+    },
     "confirmRemoveAll": "Czy na pewno chcesz usunąć wszystkie tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveTopic": "Czy na pewno chcesz usunąć ten temat? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveUnstarred": "Czy na pewno chcesz usunąć nieoznaczone tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "defaultTitle": "Domyślne tematy",
+    "guide": {
+      "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako historię tematu i rozpocząć nową rundę rozmowy",
+      "title": "Lista tematów"
+    },
     "openNewTopic": "Otwórz nowy temat",
     "removeAll": "Usuń wszystkie tematy",
     "removeUnstarred": "Usuń nieoznaczone tematy",
@@ -72,6 +92,5 @@
     "actionTooltip": "Prześlij obraz",
     "dragDesc": "Przeciągnij pliki tutaj, obsługiwane jest przesyłanie wielu obrazów. Naciśnij klawisz Shift, aby wysłać obraz bezpośrednio",
     "dragTitle": "Prześlij obraz"
-  },
-  "warp": "Złamanie wiersza"
+  }
 }

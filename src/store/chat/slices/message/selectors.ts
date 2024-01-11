@@ -39,6 +39,8 @@ const getMeta = (message: ChatMessage) => {
   }
 };
 
+const currentChatKey = (s: ChatStore) => `${s.activeId}_${s.activeTopicId}`;
+
 // 当前激活的消息列表
 const currentChats = (s: ChatStore): ChatMessage[] => {
   if (!s.activeId) return [];
@@ -84,6 +86,12 @@ const currentChatsWithGuideMessage =
     return [emptyInboxGuideMessage];
   };
 
+const currentChatIDsWithGuideMessage = (s: ChatStore) => {
+  const meta = agentSelectors.currentAgentMeta(useSessionStore.getState());
+
+  return currentChatsWithGuideMessage(meta)(s).map((s) => s.id);
+};
+
 const currentChatsWithHistoryConfig = (s: ChatStore): ChatMessage[] => {
   const chats = currentChats(s);
   const config = agentSelectors.currentAgentConfig(useSessionStore.getState());
@@ -109,11 +117,19 @@ const getFunctionMessageProps =
 
 const getMessageById = (id: string) => (s: ChatStore) => chatHelpers.getMessageById(s.messages, id);
 
+const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
+
+const currentChatLoadingState = (s: ChatStore) => !s.messagesInit;
+
 export const chatSelectors = {
   chatsMessageString,
+  currentChatIDsWithGuideMessage,
+  currentChatKey,
+  currentChatLoadingState,
   currentChats,
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,
   getFunctionMessageProps,
   getMessageById,
+  latestMessage,
 };

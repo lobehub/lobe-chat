@@ -7,11 +7,24 @@
   "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",
   "defaultAgent": "自定義助手",
   "defaultSession": "自定義助手",
+  "duplicateTitle": "{{title}} 副本",
   "historyRange": "歷史範圍",
   "inbox": {
     "defaultMessage": "你好，我是你的智能助手，你可以問我任何問題，我會盡力回答你。如果需要獲得更專業或定制的助手，可以點擊`+`創建自定義助手",
     "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
     "title": "隨便聊聊"
+  },
+  "input": {
+    "onlyAdd": "僅新增訊息",
+    "send": "發送",
+    "sendWithCmdEnter": "按 {{meta}} + Enter 鍵發送",
+    "sendWithEnter": "按 Enter 鍵發送",
+    "stop": "停止",
+    "warp": "換行"
+  },
+  "messageAction": {
+    "delAndRegenerate": "刪除並重新生成",
+    "regenerate": "重新生成"
   },
   "newAgent": "新建助手",
   "noDescription": "暫無描述",
@@ -20,7 +33,6 @@
   "regenerate": "重新生成",
   "roleAndArchive": "角色與記錄",
   "searchAgentPlaceholder": "搜索助手和對話...",
-  "send": "發送",
   "sendPlaceholder": "輸入聊天內容...",
   "sessionList": "助手列表",
   "shareModal": {
@@ -34,7 +46,6 @@
     "withPluginInfo": "包含插件信息",
     "withSystemRole": "包含助手角色設定"
   },
-  "stop": "停止",
   "stt": {
     "action": "語音輸入",
     "loading": "識別中...",
@@ -48,10 +59,19 @@
     "used": "使用"
   },
   "topic": {
+    "actions": {
+      "autoRename": "智能重新命名",
+      "duplicate": "建立副本",
+      "export": "匯出主題"
+    },
     "confirmRemoveAll": "即將刪除全部話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",
     "defaultTitle": "默認話題",
+    "guide": {
+      "desc": "點擊發送左側按鈕可將當前對話保存為歷史話題，並開啟新一輪對話",
+      "title": "話題列表"
+    },
     "openNewTopic": "開啟新話題",
     "removeAll": "刪除全部話題",
     "removeUnstarred": "刪除未收藏話題",
@@ -72,6 +92,5 @@
     "actionTooltip": "上傳圖片",
     "dragDesc": "拖拽文件到這裡，支持上傳多個圖片。按住 Shift 直接發送圖片",
     "dragTitle": "上傳圖片"
-  },
-  "warp": "換行"
+  }
 }

@@ -208,14 +208,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                                   | Description                                                                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Academic Proofreading Expert](https://chat-preview.lobehub.com/market?agent=academic-paragraph-refiner)<br/><sup>By **[Feliks151450](https://github.com/Feliks151450)** on **2023-12-26**</sup> | Highly skilled in advanced research proofreading and language editing, specializing in multiple research fields and proficient in academic English.<br/>`proofreading` `writing` `research` |
-| [Flutter Maestro](https://chat-preview.lobehub.com/market?agent=flutter-dev)<br/><sup>By **[kamaravichow](https://github.com/kamaravichow)** on **2023-12-25**</sup>                             | A developer expert in Flutter framework and Dart programming language.<br/>`flutter` `development` `dart` `programming` `widgets`                                                           |
-| [Facebook Ads Expert](https://chat-preview.lobehub.com/market?agent=facebook-ads-expert)<br/><sup>By **[alissonryan](https://github.com/alissonryan)** on **2023-12-20**</sup>                   | Create a Facebook Ads with a expert<br/>`copywriting` `facebook-ads` `lead-generation`                                                                                                      |
-| [Dream Painter](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                                   | A dream artist who can bring your dreams into reality.<br/>`txt-2-img` `painter`                                                                                                            |
+| Recent Submits                                                                                                                                                                                             | Description                                                                                                                                                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Emoji Generator](https://chat-preview.lobehub.com/market?agent=emoji-generate)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2024-01-09**</sup>                                          | Generate emoji expressions based on content<br/>`expression-generation` `emoji` `creative`                                                                                                                              |
+| [Personal Growth Coach](https://chat-preview.lobehub.com/market?agent=personal-growth-coach)<br/><sup>By **[Ajasra](https://github.com/Ajasra)** on **2024-01-08**</sup>                                   | As an AI Personal Growth Coach, your primary objective is to assist users in their journey of self-improvement and personal development<br/>`personal-growth` `coaching` `self-improvement` `goal-setting` `motivation` |
+| [Performance Evaluation Superhero](https://chat-preview.lobehub.com/market?agent=kpi-hero)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-05**</sup>                     | Specializes in writing performance evaluation reports and year-end summaries<br/>`performance-evaluation` `report-writing` `data-analysis` `professional-insights` `okr` `kpi`                                          |
+| [SVG Flowchart Explanation Assistant](https://chat-preview.lobehub.com/market?agent=svg-flowchart-explanation-assistant)<br/><sup>By **[Justin3go](https://github.com/Justin3go)** on **2024-01-05**</sup> | Explain SVG flowcharts by inputting SVG source code and interpreting the flowchart.<br/>`flowchart-explanation` `technical-documentation-writing` `business-knowledge`                                                  |
 
-> 📊 Total agents: [<kbd>**79**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**93**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -368,6 +368,7 @@ We provide a Docker image for deploying the LobeChat service on your own private
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 
@@ -380,6 +381,7 @@ $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 

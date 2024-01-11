@@ -1,3 +1,5 @@
+import { message } from 'antd';
+import { t } from 'i18next';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
@@ -17,7 +19,9 @@ import {
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { agentSelectors } from '../agent/selectors';
 import { initLobeSession } from './initialState';
+import { sessionSelectors } from './selectors';
 
 const n = setNamespace('session');
 
@@ -39,7 +43,7 @@ export interface SessionAction {
    * @returns sessionId
    */
   createSession: (agent?: DeepPartial<LobeAgentSettings>) => Promise<string>;
-
+  duplicateSession: (id: string) => Promise<void>;
   /**
    * Pins or unpins a session.
    *
@@ -48,20 +52,16 @@ export interface SessionAction {
    * @returns {Promise<void>} A promise that resolves when the session is successfully pinned or unpinned.
    */
   pinSession: (id: string, pinned?: boolean) => Promise<void>;
-
   /**
    * re-fetch the data
    */
   refreshSessions: () => Promise<void>;
-
   /**
    * remove session
    * @param id - sessionId
    */
   removeSession: (id: string) => void;
-
   switchBackToChat: () => void;
-
   /**
    * switch session url
    */
@@ -70,7 +70,6 @@ export interface SessionAction {
    * A custom hook that uses SWR to fetch sessions data.
    */
   useFetchSessions: () => SWRResponse<any>;
-
   useSearchSessions: (keyword?: string) => SWRResponse<any>;
 }
 
@@ -107,6 +106,27 @@ export const createSessionSlice: StateCreator<
     switchSession(id);
 
     return id;
+  },
+
+  duplicateSession: async (id) => {
+    const { switchSession, refreshSessions } = get();
+    const session = sessionSelectors.getSessionById(id)(get());
+
+    if (!session) return;
+    const title = agentSelectors.getTitle(session.meta);
+
+    const newTitle = t('duplicateTitle', { ns: 'chat', title: title });
+
+    const newId = await sessionService.duplicateSession(id, newTitle);
+
+    // duplicate Session Error
+    if (!newId) {
+      message.error('复制失败');
+      return;
+    }
+
+    await refreshSessions();
+    switchSession(newId);
   },
 
   pinSession: async (sessionId, pinned) => {

@@ -1,6 +1,7 @@
 {
   "dalle": {
     "autoGenerate": "자동 생성",
+    "downloading": "DallE3로 생성된 이미지 링크는 1시간 동안 유효하며, 로컬에 이미지를 캐시하는 중입니다...",
     "generate": "생성",
     "generating": "생성 중...",
     "images": "이미지:"

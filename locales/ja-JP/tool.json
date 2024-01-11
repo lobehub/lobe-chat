@@ -1,6 +1,7 @@
 {
   "dalle": {
     "autoGenerate": "自動生成",
+    "downloading": "DallE3 で生成された画像リンクは有効期間が1時間しかありません。画像をローカルにキャッシュしています...",
     "generate": "生成する",
     "generating": "生成中...",
     "images": "画像:"

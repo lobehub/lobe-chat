@@ -184,14 +184,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                         | 助手说明                                                                                                 |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [学术润色专家](https://chat-preview.lobehub.com/market?agent=academic-paragraph-refiner)<br/><sup>By **[Feliks151450](https://github.com/Feliks151450)** on **2023-12-26**</sup> | 高级研究校对及语言编辑，专业于多个研究领域，精通学术英语。<br/>`校对` `写作` `研究`                      |
-| [Flutter 开发专家](https://chat-preview.lobehub.com/market?agent=flutter-dev)<br/><sup>By **[kamaravichow](https://github.com/kamaravichow)** on **2023-12-25**</sup>            | 一位精通 Flutter 框架和 Dart 编程语言的开发者<br/>`flutter` `development` `dart` `programming` `widgets` |
-| [Facebook 广告专家](https://chat-preview.lobehub.com/market?agent=facebook-ads-expert)<br/><sup>By **[alissonryan](https://github.com/alissonryan)** on **2023-12-20**</sup>     | 与专家一起创建 Facebook 广告<br/>`文案撰写` `facebook广告` `潜在客户生成`                                |
-| [梦境画家](https://chat-preview.lobehub.com/market?agent=dream-painter)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2023-12-19**</sup>                        | 一位能将你的梦想变成现实的梦境艺术家。<br/>`txt-2-img` `painter`                                         |
+| 最近新增                                                                                                                                                                                  | 助手说明                                                                                                                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| [Emoji 生成](https://chat-preview.lobehub.com/market?agent=emoji-generate)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2024-01-09**</sup>                              | 可以根据内容生成 Emoji 表情<br/>`表情生成` `emoji` `创意`                                                                         |
+| [个人成长教练](https://chat-preview.lobehub.com/market?agent=personal-growth-coach)<br/><sup>By **[Ajasra](https://github.com/Ajasra)** on **2024-01-08**</sup>                           | 作为人工智能个人成长教练，您的主要目标是协助用户在自我提升和个人发展的旅程中。<br/>`个人成长` `辅导` `自我提升` `目标设定` `动力` |
+| [绩效评估超人](https://chat-preview.lobehub.com/market?agent=kpi-hero)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-05**</sup>                        | 擅长写绩效评估报告与年终总结<br/>`绩效评估` `报告撰写` `数据分析` `专业见解` `okr` `kpi`                                          |
+| [SVG 流程图解释助手](https://chat-preview.lobehub.com/market?agent=svg-flowchart-explanation-assistant)<br/><sup>By **[Justin3go](https://github.com/Justin3go)** on **2024-01-05**</sup> | SVG 流程图解释，输入 SVG 源代码，解释该流程图<br/>`流程图解释` `技术文档编写` `业务知识`                                          |
 
-> 📊 Total agents: [<kbd>**79**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**93**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -339,6 +339,7 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 
@@ -351,6 +352,7 @@ $ docker run -d -p 3210:3210 \
   -e OPENAI_API_KEY=sk-xxxx \
   -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
   -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
   lobehub/lobe-chat
 ```
 

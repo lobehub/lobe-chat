@@ -1,0 +1,72 @@
+{
+  "pluginSettings": {
+    "desc": "Hoàn thành cấu hình sau để bắt đầu sử dụng plugin này",
+    "title": "Cấu hình Plugin {{name}}"
+  },
+  "response": {
+    "400": "Xin lỗi, máy chủ không hiểu yêu cầu của bạn, vui lòng xác nhận tham số yêu cầu của bạn có đúng không",
+    "401": "Xin lỗi, máy chủ từ chối yêu cầu của bạn, có thể do quyền hạn của bạn không đủ hoặc không cung cấp xác thực danh tính hợp lệ",
+    "403": "Xin lỗi, máy chủ từ chối yêu cầu của bạn, bạn không có quyền truy cập nội dung này",
+    "404": "Xin lỗi, máy chủ không tìm thấy trang hoặc tài nguyên bạn yêu cầu, vui lòng xác nhận URL của bạn có đúng không",
+    "405": "Xin lỗi, máy chủ không hỗ trợ phương thức yêu cầu bạn đang sử dụng, vui lòng xác nhận phương thức yêu cầu của bạn có đúng không",
+    "406": "Xin lỗi, máy chủ không thể hoàn thành yêu cầu dựa trên đặc tính nội dung bạn yêu cầu",
+    "407": "Xin lỗi, bạn cần xác thực proxy trước khi tiếp tục yêu cầu này",
+    "408": "Xin lỗi, máy chủ đã vượt quá thời gian chờ khi đang chờ đợi yêu cầu, vui lòng kiểm tra kết nối mạng của bạn và thử lại",
+    "409": "Xin lỗi, yêu cầu gặp xung đột và không thể xử lý, có thể do trạng thái tài nguyên không tương thích với yêu cầu",
+    "410": "Xin lỗi, tài nguyên bạn yêu cầu đã bị xóa vĩnh viễn và không thể tìm thấy",
+    "411": "Xin lỗi, máy chủ không thể xử lý yêu cầu không chứa độ dài nội dung hợp lệ",
+    "412": "Xin lỗi, yêu cầu của bạn không đáp ứng điều kiện của máy chủ và không thể hoàn thành",
+    "413": "Xin lỗi, lượng dữ liệu yêu cầu của bạn quá lớn, máy chủ không thể xử lý",
+    "414": "Xin lỗi, URI của yêu cầu của bạn quá dài, máy chủ không thể xử lý",
+    "415": "Xin lỗi, máy chủ không thể xử lý định dạng phương tiện đi kèm với yêu cầu",
+    "416": "Xin lỗi, máy chủ không thể đáp ứng phạm vi yêu cầu của bạn",
+    "417": "Xin lỗi, máy chủ không thể đáp ứng giá trị kỳ vọng của bạn",
+    "422": "Xin lỗi, định dạng yêu cầu của bạn đúng, nhưng do chứa lỗi ngữ nghĩa nên không thể phản hồi",
+    "423": "Xin lỗi, tài nguyên bạn yêu cầu đã bị khóa",
+    "424": "Xin lỗi, yêu cầu hiện tại không thể hoàn thành do yêu cầu trước đó thất bại",
+    "426": "Xin lỗi, máy chủ yêu cầu bạn nâng cấp phiên bản giao thức của khách hàng lên cao hơn",
+    "428": "Xin lỗi, máy chủ yêu cầu điều kiện tiên quyết, yêu cầu của bạn phải chứa tiêu đề điều kiện chính xác",
+    "429": "Xin lỗi, yêu cầu của bạn quá nhiều, máy chủ hơi mệt, vui lòng thử lại sau",
+    "431": "Xin lỗi, trường tiêu đề yêu cầu của bạn quá lớn, máy chủ không thể xử lý",
+    "451": "Xin lỗi, do lý do pháp lý, máy chủ từ chối cung cấp tài nguyên này",
+    "500": "Xin lỗi, máy chủ có vẻ gặp một số khó khăn, tạm thời không thể hoàn thành yêu cầu của bạn, vui lòng thử lại sau",
+    "502": "Xin lỗi, máy chủ có vẻ lạc đường, tạm thời không thể cung cấp dịch vụ, vui lòng thử lại sau",
+    "503": "Xin lỗi, máy chủ hiện không thể xử lý yêu cầu của bạn, có thể do quá tải hoặc đang bảo trì, vui lòng thử lại sau",
+    "504": "Xin lỗi, máy chủ không đợi được phản hồi từ máy chủ upstream, vui lòng thử lại sau",
+    "InvalidAccessCode": "Mật khẩu không đúng hoặc trống, vui lòng nhập mật khẩu truy cập đúng, hoặc thêm Khóa API OpenAI tùy chỉnh",
+    "NoAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
+    "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp lỗi, vui lòng xác minh hoặc thử lại dựa trên thông tin dưới đây",
+    "PluginApiNotFound": "Xin lỗi, không có API nào trong tệp mô tả plugin, vui lòng kiểm tra phương thức yêu cầu của bạn có khớp với API mô tả plugin không",
+    "PluginApiParamsError": "Xin lỗi, kiểm tra tham số đầu vào yêu cầu của plugin không thông qua, vui lòng kiểm tra tham số đầu vào có khớp với thông tin mô tả API không",
+    "PluginGatewayError": "Xin lỗi, cổng plugin gặp lỗi, vui lòng kiểm tra cấu hình cổng plugin có đúng không",
+    "PluginManifestInvalid": "Xin lỗi, kiểm tra mô tả plugin không thông qua, vui lòng kiểm tra định dạng mô tả có đúng không",
+    "PluginManifestNotFound": "Xin lỗi, máy chủ không tìm thấy tệp mô tả plugin (manifest.json), vui lòng kiểm tra địa chỉ tệp mô tả plugin có đúng không",
+    "PluginMarketIndexInvalid": "Xin lỗi, kiểm tra chỉ mục plugin không thông qua, vui lòng kiểm tra định dạng tệp chỉ mục có đúng không",
+    "PluginMarketIndexNotFound": "Xin lỗi, máy chủ không tìm thấy chỉ mục plugin, vui lòng kiểm tra xem địa chỉ chỉ mục có đúng không",
+    "PluginMetaInvalid": "Xin lỗi, kiểm tra thông tin cấu hình plugin không thông qua, vui lòng kiểm tra định dạng thông tin cấu hình có đúng không",
+    "PluginMetaNotFound": "Xin lỗi, không tìm thấy thông tin cấu hình plugin trong chỉ mục",
+    "PluginOpenApiInitError": "Xin lỗi, khởi tạo khách hàng OpenAPI thất bại, vui lòng kiểm tra thông tin cấu hình OpenAPI có đúng không",
+    "PluginServerError": "Lỗi trả về từ máy chủ plugin, vui lòng kiểm tra tệp mô tả plugin, cấu hình plugin hoặc triển khai máy chủ theo thông tin lỗi dưới đây",
+    "PluginSettingsInvalid": "Plugin cần phải được cấu hình đúng trước khi sử dụng, vui lòng kiểm tra cấu hình của bạn có đúng không"
+  },
+  "stt": {
+    "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
+  },
+  "tts": {
+    "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
+  },
+  "unlock": {
+    "apikey": {
+      "addProxyUrl": "Thêm địa chỉ proxy OpenAI (tùy chọn)",
+      "description": "Nhập OpenAI API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu API Key của bạn",
+      "title": "Sử dụng API Key tùy chỉnh"
+    },
+    "closeMessage": "Đóng thông báo",
+    "confirm": "Xác nhận và thử lại",
+    "password": {
+      "description": "Quản trị viên đã kích hoạt mã hóa ứng dụng. Nhập mật khẩu ứng dụng để mở khóa. Chỉ cần nhập mật khẩu một lần",
+      "placeholder": "Nhập mật khẩu",
+      "title": "Nhập mật khẩu để mở khóa ứng dụng"
+    }
+  }
+}

@@ -7,11 +7,24 @@
   "confirmRemoveSessionItemAlert": "即将删除该助手，删除后该将无法找回，请确认你的操作",
   "defaultAgent": "自定义助手",
   "defaultSession": "自定义助手",
+  "duplicateTitle": "{{title}} 副本",
   "historyRange": "历史范围",
   "inbox": {
     "defaultMessage": "你好，我是你的智能助手，你可以问我任何问题，我会尽力回答你。如果需要获得更加专业或定制的助手，可以点击`+`创建自定义助手",
     "desc": "欢迎加入QQ交流群:148190284, 主站:https://zen-ai.top",
     "title": "随便聊聊"
+  },
+  "input": {
+    "onlyAdd": "仅添加消息",
+    "send": "发送",
+    "sendWithCmdEnter": "按 {{meta}} + Enter 键发送",
+    "sendWithEnter": "按 Enter 键发送",
+    "stop": "停止",
+    "warp": "换行"
+  },
+  "messageAction": {
+    "delAndRegenerate": "删除并重新生成",
+    "regenerate": "重新生成"
   },
   "newAgent": "新建助手",
   "noDescription": "暂无描述",
@@ -20,7 +33,6 @@
   "regenerate": "重新生成",
   "roleAndArchive": "角色与记录",
   "searchAgentPlaceholder": "搜索助手和对话...",
-  "send": "发送",
   "sendPlaceholder": "输入聊天内容...",
   "sessionList": "助手列表",
   "shareModal": {
@@ -34,7 +46,6 @@
     "withPluginInfo": "包含插件信息",
     "withSystemRole": "包含助手角色设定"
   },
-  "stop": "停止",
   "stt": {
     "action": "语音输入",
     "loading": "识别中...",
@@ -48,16 +59,25 @@
     "used": "使用"
   },
   "topic": {
+    "actions": {
+      "autoRename": "智能重命名",
+      "duplicate": "创建副本",
+      "export": "导出话题"
+    },
     "confirmRemoveAll": "即将删除全部话题，删除后将不可恢复，请谨慎操作。",
     "confirmRemoveTopic": "即将删除该话题，删除后将不可恢复，请谨慎操作。",
     "confirmRemoveUnstarred": "即将删除未收藏话题，删除后将不可恢复，请谨慎操作。",
     "defaultTitle": "默认话题",
+    "guide": {
+      "desc": "点击发送左侧按钮可将当前会话保存为历史话题，并开启新一轮会话",
+      "title": "话题列表"
+    },
     "openNewTopic": "开启新话题",
     "removeAll": "删除全部话题",
     "removeUnstarred": "删除未收藏话题",
     "saveCurrentMessages": "将当前会话保存为话题",
     "searchPlaceholder": "搜索话题...",
-    "title": "话题列表"
+    "title": "话题"
   },
   "translate": {
     "action": "翻译",
@@ -72,6 +92,5 @@
     "actionTooltip": "上传图片",
     "dragDesc": "拖拽文件到这里，支持上传多个图片。按住 Shift 直接发送图片",
     "dragTitle": "上传图片"
-  },
-  "warp": "换行"
+  }
 }
