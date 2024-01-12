@@ -386,17 +386,17 @@ API Key 是使用 LobeChat 进行大语言模型会话的必要信息，本节�
 
 1. 注册一个 [OpenAI 账户](https://platform.openai.com/signup)。你需要使用国际手机号、非大陆邮箱来注册；
 
-![](https://github.com/lobehub/lobe-chat/assets/28616219/efcace35-da1d-4a93-a9ce-b12a7f69c513)
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296251702-efcace35-da1d-4a93-a9ce-b12a7f69c513.png)
 
 2. 注册完毕后，前往 [API Keys](https://platform.openai.com/api-keys) 页面，点击 「Create new secret key」 创建新的 API Key:
 
 | 步骤1：打开创建窗口 | 步骤2：创建 API Key | 
 | --- | --- |
-| ![](https://github.com/lobehub/lobe-chat/assets/28616219/ff2193dd-f125-4e58-82e8-91bc376c0d68) | ![](https://github.com/lobehub/lobe-chat/assets/28616219/803bacf0-4471-4171-ae79-0eab08d621d1) |
+| ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296253192-ff2193dd-f125-4e58-82e8-91bc376c0d68.png) | ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296254170-803bacf0-4471-4171-ae79-0eab08d621d1.png) |
 
 然后你就能获得自己账户的 API Key ：
 
-![](https://github.com/lobehub/lobe-chat/assets/28616219/f2745f2b-f083-4ba8-bc78-9b558e0002de)
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296255167-f2745f2b-f083-4ba8-bc78-9b558e0002de.png)
 
 将此 API Key 填写到 LobeChat 的 API Key 配置中，即可开始使用。
 
