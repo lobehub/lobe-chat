@@ -386,30 +386,21 @@ API Key 是使用 LobeChat 进行大语言模型会话的必要信息，本节�
 
 #### `A` 通过 OpenAI 官方渠道
 
-<details>
-<summary><kbd>查看教学</kbd></summary>
+- 注册一个 [OpenAI 账户](https://platform.openai.com/signup)，你需要使用国际手机号、非大陆邮箱进行注册；
+- 注册完毕后，前往 [API Keys](https://platform.openai.com/api-keys) 页面，点击 `Create new secret key` 创建新的 API Key:
 
-1. 注册一个 [OpenAI 账户](https://platform.openai.com/signup)，你需要使用国际手机号、非大陆邮箱进行注册；
+| 步骤 1：打开创建窗口                                                                                                                               | 步骤 2：创建 API Key                                                                                                                               | 步骤 3：获取 API Key                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296253192-ff2193dd-f125-4e58-82e8-91bc376c0d68.png" height="200"/> | <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296254170-803bacf0-4471-4171-ae79-0eab08d621d1.png" height="200"/> | <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296255167-f2745f2b-f083-4ba8-bc78-9b558e0002de.png" height="200"/> |
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296251702-efcace35-da1d-4a93-a9ce-b12a7f69c513.png)
+- 将此 API Key 填写到 LobeChat 的 API Key 配置中，即可开始使用。
 
-2. 注册完毕后，前往 [API Keys](https://platform.openai.com/api-keys) 页面，点击 「Create new secret key」 创建新的 API Key:
-
-| 步骤 1：打开创建窗口                                                                                                          | 步骤 2：创建 API Key                                                                                                          |
-| ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296253192-ff2193dd-f125-4e58-82e8-91bc376c0d68.png) | ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296254170-803bacf0-4471-4171-ae79-0eab08d621d1.png) |
-
-然后你就能获得自己账户的 API Key，将此 API Key 填写到 LobeChat 的 API Key 配置中，即可开始使用。
-
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/296255167-f2745f2b-f083-4ba8-bc78-9b558e0002de.png)
-
-> \[!NOTE]
+> \[!TIP]
 >
 > 账户注册后，一般有 5 美元的免费额度，但有效期只有三个月。
+> 如果你希望长期使用你的 API Key，你需要完成支付的信用卡绑定。由于 OpenAI 只支持外币信用卡，因此你需要找到合适的支付渠道，此处不再详细展开。
 
-3. 如果你希望长期使用你的 API Key，你需要完成支付的信用卡绑定。由于 OpenAI 只支持外币信用卡，因此你需要找到合适的支付渠道，此处不再详细展开。
-
-</details>
+<br/>
 
 #### `B` 通过 OpenAI 第三方代理商
 
@@ -417,9 +408,9 @@ API Key 是使用 LobeChat 进行大语言模型会话的必要信息，本节�
 这可以有效降低获取 OpenAI API Key 的门槛。但与此同时，一旦使用三方服务，你可能也需要承担潜在的风险，
 请根据你自己的实际情况自行决策。以下是常见的第三方模型代理商列表，供你参考：
 
-|                                                                                        | 服务商       | 特性说明                                                  | Proxy 代理地址            | 链接                                           |
-| -------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------- | ------------------------- | ---------------------------------------------- |
-| <img src="https://yinchao.oss-cn-hangzhou.aliyuncs.com/orisoundlogo.jpg" width="32" /> | **AiHubMix** | 使用 OpenAI 企业接口，全站模型价格为官方一半（含 GPT-4 ） | <https://aihubmix.com/v1> | [注册](https://aihubmix.com/register?aff=8DBz) |
+|                                                                                                                                                   | 服务商       | 特性说明                                                  | Proxy 代理地址            | 链接                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------- | ------------------------- | ---------------------------------------------- |
+| <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/296272721-c3ac0bf3-e433-4496-89c4-ebdc20689c17.jpg" width="48" /> | **AiHubMix** | 使用 OpenAI 企业接口，全站模型价格为官方一半（含 GPT-4 ） | `https://aihubmix.com/v1` | [获取](https://aihubmix.com/register?aff=8DBz) |
 
 > \[!WARNING]
 >
