@@ -380,7 +380,7 @@ $ docker run -d -p 3210:3210 \
 
 ### 获取模型 API Key
 
-API Key 是借助 LobeChat 使用大模型会话的必要元素，本部分以获取 OpenAI API Key 进行简要介绍。
+API Key 是使用 LobeChat 进行大语言模型会话的必要信息，本节以 OpenAI  模型服务商为例，简要介绍获取 API Key 的方式。
 
 #### 从 OpenAI 官方服务获取 API Key
 
