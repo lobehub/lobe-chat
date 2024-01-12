@@ -377,6 +377,25 @@ $ docker run -d -p 3210:3210 \
 >
 > 完整环境变量可见 [📘环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)
 
+### OpenAI 第三方代理商
+
+如果你不方便注册 OpenAI 账户，可以考虑借助一些知名的 OpenAI 第三方代理商来获取 API Key。这可以有效降低获取 OpenAI API Key 的门槛。但与此同时，一旦使用三方服务，你可能也需要承担潜在的风险（如服务商跑路等），请根据你自己的实际情况自行决策。
+
+以下是经过我们自行验证过的第三方模型代理商，供你参考：
+
+| 服务商名称 |  特点 | 代理地址 | 注册链接 |
+| --- | --- | --- | --- |
+| AiHubMix |   使用 OpenAI 企业接口，全站模型价格为官方一半（含 GPT-4 ）| https://aihubmix.com/v1 |  [传送门](https://aihubmix.com/register?aff=8DBz) |
+
+> \[!Important] 
+>
+> **免责申明**
+> 
+> 在此推荐的 OpenAI API Key 由第三方代理商提供，所以我们不对 API Key 的有效性和安全性负责，请你自行承担购买和使用 API Key 的风险。
+
+
+
+
 <div align="right">
 
 [![][back-to-top]](#readme-top)
