@@ -377,7 +377,38 @@ $ docker run -d -p 3210:3210 \
 >
 > 完整环境变量可见 [📘环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)
 
-### OpenAI 第三方代理商
+
+### 获取模型 API Key
+
+API Key 是借助 LobeChat 使用大模型会话的必要元素，本部分以获取 OpenAI API Key 进行简要介绍。
+
+#### 从 OpenAI 官方服务获取 API Key
+
+1. 注册一个 [OpenAI 账户](https://platform.openai.com/signup)。你需要使用国际手机号、非大陆邮箱来注册；
+
+![注册 OpenAI 账户](https://github.com/lobehub/lobe-chat/assets/28616219/efcace35-da1d-4a93-a9ce-b12a7f69c513)
+
+2. 注册完毕后，前往 [API Keys](https://platform.openai.com/api-keys) 页面，点击 「Create new secret key」 创建新的 API Key:
+
+| 步骤1：打开创建窗口 | 步骤2：创建 API Key | 
+| --- | --- |
+| ![Group 79](https://github.com/lobehub/lobe-chat/assets/28616219/ff2193dd-f125-4e58-82e8-91bc376c0d68) | ![Group 80](https://github.com/lobehub/lobe-chat/assets/28616219/803bacf0-4471-4171-ae79-0eab08d621d1) |
+
+然后你就能获得自己账户的 API Key ：
+
+![421shots_so](https://github.com/lobehub/lobe-chat/assets/28616219/f2745f2b-f083-4ba8-bc78-9b558e0002de)
+
+将此 API Key 填写到 LobeChat 的 API Key 配置中，即可开始使用。
+
+> \[!Important]
+>
+> 注意事项
+> 
+> 账户注册后，一般有 5$ 的免费额度，但有效期只有几个月。
+
+3. 如果你希望长期使用你的 API Key，你需要完成支付的信用卡绑定。由于 OpenAI 只支持外币信用卡，因此你需要找到合适的支付渠道，此处不再详细展开。
+
+#### 借助 OpenAI 第三方代理商 获取 API Key
 
 如果你不方便注册 OpenAI 账户，可以考虑借助一些知名的 OpenAI 第三方代理商来获取 API Key。这可以有效降低获取 OpenAI API Key 的门槛。但与此同时，一旦使用三方服务，你可能也需要承担潜在的风险（如服务商跑路等），请根据你自己的实际情况自行决策。
 
@@ -393,7 +424,7 @@ $ docker run -d -p 3210:3210 \
 > 
 > 在此推荐的 OpenAI API Key 由第三方代理商提供，所以我们不对 API Key 的有效性和安全性负责，请你自行承担购买和使用 API Key 的风险。
 
-
+如果你是模型服务商，并认为自己的服务足够稳定且价格实惠，欢迎联系我们，我们会在自行体验和测试后酌情推荐。
 
 
 <div align="right">
