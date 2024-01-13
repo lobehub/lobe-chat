@@ -83,7 +83,7 @@
     "ai": "^2.2.22",
     "antd": "^5.12.7",
     "antd-style": "^3",
-    "brotli-wasm": "^1",
+    "brotli-wasm": "^2.0.0",
     "chroma-js": "^2",
     "copy-to-clipboard": "^3",
     "dayjs": "^1",
