@@ -118,7 +118,7 @@
     "remark-gfm": "^3",
     "remark-html": "^15",
     "semver": "^7",
-    "sharp": "^0.33",
+    "sharp": "0.33.1",
     "swr": "^2",
     "systemjs": "^6",
     "ts-md5": "^1",
