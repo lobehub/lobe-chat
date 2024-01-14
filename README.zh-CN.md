@@ -410,7 +410,7 @@ API Key 是使用 LobeChat 进行大语言模型会话的必要信息，本节�
 
 |                                                                                                                                                   | 服务商       | 特性说明                                                  | Proxy 代理地址            | 链接                            |
 | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------- | ------------------------- | ------------------------------- |
-| <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/296272721-c3ac0bf3-e433-4496-89c4-ebdc20689c17.jpg" width="48" /> | **AiHubMix** | 使用 OpenAI 企业接口，全站模型价格为官方一半（含 GPT-4 ） | `https://aihubmix.com/v1` | [获取](https://sourl.cn/9Kx3uu) |
+| <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/296272721-c3ac0bf3-e433-4496-89c4-ebdc20689c17.jpg" width="48" /> | **AiHubMix** | 使用 OpenAI 企业接口，全站模型价格为官方一半（含 GPT-4 ） | `https://aihubmix.com/v1` | [获取](https://lobe.li/XHnZIUP) |
 
 > \[!WARNING]
 >
