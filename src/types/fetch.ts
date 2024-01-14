@@ -6,6 +6,8 @@ export const ChatErrorType = {
   OpenAIBizError: 'OpenAIBizError', // OpenAI 返回的业务错误
   NoAPIKey: 'NoAPIKey',
 
+  FetchError: 'FetchError',
+
   // ******* 客户端错误 ******* //
   BadRequest: 400,
   Unauthorized: 401,

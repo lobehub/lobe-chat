@@ -40,7 +40,20 @@ export interface FetchSSEOptions {
  * @param options
  */
 export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchSSEOptions = {}) => {
-  const response = await fetchFn();
+  let response: Response | undefined;
+
+  try {
+    response = await fetchFn();
+  } catch (error) {
+    options.onErrorHandle?.({
+      body: JSON.stringify(error),
+      message: t('response.FetchError', { ns: 'error' }),
+      type: 'FetchError',
+    });
+    return;
+  }
+
+  if (!response) return;
 
   // 如果不 ok 说明有请求错误
   if (!response.ok) {

@@ -2,7 +2,7 @@ import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
 import { getPreferredRegion } from '../../config';
 import { createBizOpenAI } from '../createBizOpenAI';
-import { createChatCompletion } from './createChatCompletion';
+import { createChatCompletion } from './createChatCompletionLang';
 
 export const runtime = 'edge';
 export const preferredRegion = getPreferredRegion();
@@ -15,5 +15,5 @@ export const POST = async (req: Request) => {
   // if resOrOpenAI is a Response, it means there is an error,just return it
   if (openaiOrErrResponse instanceof Response) return openaiOrErrResponse;
 
-  return createChatCompletion({ openai: openaiOrErrResponse, payload });
+  return createChatCompletion({ payload });
 };
