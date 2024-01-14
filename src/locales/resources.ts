@@ -1,6 +1,7 @@
 import resources from './default';
 
 export const locales = [
+  'ar',
   'de-DE',
   'en-US',
   'es-ES',
@@ -41,6 +42,10 @@ type LocaleOptions = {
 }[];
 
 export const localeOptions: LocaleOptions = [
+  {
+    label: 'Arabic',
+    value: 'ar',
+  },
   {
     label: '简体中文',
     value: 'zh-CN',
