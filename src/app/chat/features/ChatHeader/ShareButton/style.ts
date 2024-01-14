@@ -46,7 +46,6 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
 
       * {
         pointer-events: none;
-        overflow: hidden;
 
         ::-webkit-scrollbar {
           width: 0 !important;
