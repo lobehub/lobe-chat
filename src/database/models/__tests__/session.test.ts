@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
-import { LobeAgentSession, LobeSessionType, SessionGroupKey } from '@/types/session';
+import { LobeAgentSession, LobeSessionType, SessionGroupId } from '@/types/session';
 
 import { SessionModel } from '../session';
 
@@ -60,7 +60,7 @@ describe('SessionModel', () => {
 
   it('should query sessions by group', async () => {
     // Create multiple sessions to test the queryByGroup method
-    const group: SessionGroupKey = 'testGroup';
+    const group: SessionGroupId = 'testGroup';
     await SessionModel.batchCreate([sessionData, sessionData] as LobeAgentSession[]);
 
     const sessionsByGroup = await SessionModel.queryByGroup(group);
@@ -72,12 +72,12 @@ describe('SessionModel', () => {
 
   it('should update a session', async () => {
     const createdSession = await SessionModel.create('agent', sessionData);
-    const updateData = { group: 'newGroup' };
+    const updateData = { group: 'createGroup' };
 
     await SessionModel.update(createdSession.id, updateData);
     const updatedSession = await SessionModel.findById(createdSession.id);
 
-    expect(updatedSession).toHaveProperty('group', 'newGroup');
+    expect(updatedSession).toHaveProperty('group', 'createGroup');
   });
 
   // 删除一个 session 时，也需要同步删除具有 sessionId 的 topic 和 message

@@ -12,8 +12,8 @@ import { sessionHelpers } from '@/store/session/helpers';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import ListItem from '../../ListItem';
+import CreateGroupModal from '../../Modals/CreateGroupModal';
 import Actions from './Actions';
-import CreateGroupModal from './CreateGroupModal';
 
 interface SessionItemProps {
   id: string;
@@ -21,47 +21,43 @@ interface SessionItemProps {
 
 const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
 
   const [defaultModel] = useGlobalStore((s) => [settingsSelectors.defaultAgentConfig(s).model]);
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [!!s.chatLoadingId && id === s.activeId]);
 
-  const [
-    pin,
-    title,
-    description,
-    systemRole,
-    avatar,
-    avatarBackground,
-    updateAt,
-    model,
-    group,
-    updateSessionGroup,
-  ] = useSessionStore((s) => {
-    const session = sessionSelectors.getSessionById(id)(s);
-    const meta = session.meta;
-    const systemRole = session.config.systemRole;
+  const [pin, title, description, systemRole, avatar, avatarBackground, updateAt, model, group] =
+    useSessionStore((s) => {
+      const session = sessionSelectors.getSessionById(id)(s);
+      const meta = session.meta;
+      const systemRole = session.config.systemRole;
 
-    return [
-      sessionHelpers.getSessionPinned(session),
-      agentSelectors.getTitle(meta),
-      agentSelectors.getDescription(meta),
-      systemRole,
-      agentSelectors.getAvatar(meta),
-      meta.backgroundColor,
-      session?.updatedAt,
-      session.config.model,
-      session?.group,
-      s.updateSessionGroup,
-    ];
-  });
+      return [
+        sessionHelpers.getSessionPinned(session),
+        agentSelectors.getTitle(meta),
+        agentSelectors.getDescription(meta),
+        systemRole,
+        agentSelectors.getAvatar(meta),
+        meta.backgroundColor,
+        session?.updatedAt,
+        session.config.model,
+        session?.group,
+      ];
+    });
 
   const showModel = model !== defaultModel;
 
   const actions = useMemo(
-    () => <Actions group={group} id={id} setIsModalOpen={setIsModalOpen} setOpen={setOpen} />,
-    [id],
+    () => (
+      <Actions
+        group={group}
+        id={id}
+        openCreateGroupModal={() => setCreateGroupModalOpen(true)}
+        setOpen={setOpen}
+      />
+    ),
+    [group, id],
   );
 
   const addon = useMemo(
@@ -90,10 +86,10 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         title={title}
       />
       <CreateGroupModal
-        onCancel={() => setIsModalOpen(false)}
-        onInputOk={(input) => updateSessionGroup(id, input)}
-        open={isModalOpen}
-      ></CreateGroupModal>
+        id={id}
+        onCancel={() => setCreateGroupModalOpen(false)}
+        open={createGroupModalOpen}
+      />
     </>
   );
 }, shallow);

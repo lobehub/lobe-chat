@@ -7,11 +7,17 @@ export enum LobeSessionType {
   Group = 'group',
 }
 
-export type SessionGroupKey = 'pinned' | 'default' | string;
+export type SessionGroupId = 'pinned' | 'default' | string;
 
-export enum SessionGroupDefaultKeys {
+export enum SessionDefaultGroup {
   Default = 'default',
   Pinned = 'pinned',
+}
+
+export interface SessionGroupItem {
+  id: SessionGroupId;
+  name: string;
+  sort?: number;
 }
 
 /**
@@ -19,7 +25,7 @@ export enum SessionGroupDefaultKeys {
  */
 export interface LobeAgentSession extends BaseDataModel {
   config: LobeAgentConfig;
-  group?: SessionGroupKey;
+  group?: SessionGroupId;
   type: LobeSessionType.Agent;
 }
 

@@ -1,7 +1,13 @@
 import { INBOX_SESSION_ID } from '@/const/session';
+import { groupHelpers } from '@/store/global/slices/common/helpers';
 import { sessionHelpers } from '@/store/session/slices/session/helpers';
 import { MetaData } from '@/types/meta';
-import { LobeAgentSession, LobeSessions, SessionGroupDefaultKeys } from '@/types/session';
+import {
+  LobeAgentSession,
+  LobeSessions,
+  SessionDefaultGroup,
+  SessionGroupItem,
+} from '@/types/session';
 
 import { SessionStore } from '../../../store';
 import { initLobeSession } from '../initialState';
@@ -10,26 +16,33 @@ const defaultSessions = (s: SessionStore): LobeSessions => s.sessions;
 
 const searchSessions = (s: SessionStore): LobeSessions => s.searchSessions;
 
-const pinnedSessionList = (s: SessionStore) =>
-  defaultSessions(s).filter((s) => s.group === SessionGroupDefaultKeys.Pinned);
+const sessionList = (sessionCustomGroups: SessionGroupItem[]) => (s: SessionStore) => {
+  const customList: Record<string, LobeAgentSession[]> = {};
+  const defaultList: LobeAgentSession[] = [];
+  const pinnedList: LobeAgentSession[] = [];
 
-const unpinnedSessionList = (s: SessionStore) =>
-  defaultSessions(s).filter((s) => s.group === SessionGroupDefaultKeys.Default);
-
-const customSessionGroup = (s: SessionStore) => {
-  const group2SessionList: Record<string, LobeAgentSession[]> = {};
-  // 1. 筛选用户自定义的session
-  const customList = defaultSessions(s).filter(
-    (s) =>
-      s.group !== SessionGroupDefaultKeys.Pinned && s.group !== SessionGroupDefaultKeys.Default,
-  );
-  // 2. 进行分组
-  for (const s of customList) {
-    if (!s.group) continue;
-    group2SessionList[s.group] = group2SessionList[s.group] || [];
-    group2SessionList[s.group].push(s);
+  for (const session of defaultSessions(s)) {
+    if (!session.group || session.group === SessionDefaultGroup.Default) {
+      defaultList.push(session);
+    } else if (session.group === SessionDefaultGroup.Pinned) {
+      pinnedList.push(session);
+    } else {
+      const group = groupHelpers.getGroupById(session.group, sessionCustomGroups);
+      if (!group) {
+        s.updateSessionGroup(session.id, SessionDefaultGroup.Default);
+        defaultList.push(session);
+        continue;
+      }
+      customList[session.group] = customList[session.group] || [];
+      customList[session.group].push(session);
+    }
   }
-  return group2SessionList;
+
+  return {
+    customList,
+    defaultList,
+    pinnedList,
+  };
 };
 
 const getSessionById =
@@ -56,11 +69,6 @@ const currentSessionSafe = (s: SessionStore): LobeAgentSession => {
   return currentSession(s) || initLobeSession;
 };
 
-const hasPinnedSessionList = (s: SessionStore) => {
-  const list = pinnedSessionList(s);
-  return list?.length > 0;
-};
-
 const hasCustomAgents = (s: SessionStore) => defaultSessions(s).length > 0;
 
 const isInboxSession = (s: SessionStore) => s.activeId === INBOX_SESSION_ID;
@@ -68,13 +76,10 @@ const isInboxSession = (s: SessionStore) => s.activeId === INBOX_SESSION_ID;
 export const sessionSelectors = {
   currentSession,
   currentSessionSafe,
-  customSessionGroup,
   getSessionById,
   getSessionMetaById,
   hasCustomAgents,
-  hasPinnedSessionList,
   isInboxSession,
-  pinnedSessionList,
   searchSessions,
-  unpinnedSessionList,
+  sessionList,
 };

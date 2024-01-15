@@ -22,8 +22,9 @@ const Clear = memo(() => {
 
   return (
     <Popconfirm
+      arrow={false}
       cancelText={t('cancel', { ns: 'common' })}
-      okButtonProps={{ danger: true }}
+      okButtonProps={{ danger: true, type: 'primary' }}
       okText={t('ok', { ns: 'common' })}
       onConfirm={() => {
         resetConversation();
