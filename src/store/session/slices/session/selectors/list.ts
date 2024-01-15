@@ -16,6 +16,22 @@ const pinnedSessionList = (s: SessionStore) =>
 const unpinnedSessionList = (s: SessionStore) =>
   defaultSessions(s).filter((s) => s.group === SessionGroupDefaultKeys.Default);
 
+const customSessionGroup = (s: SessionStore) => {
+  const group2SessionList: Record<string, LobeAgentSession[]> = {};
+  // 1. 筛选用户自定义的session
+  const customList = defaultSessions(s).filter(
+    (s) =>
+      s.group !== SessionGroupDefaultKeys.Pinned && s.group !== SessionGroupDefaultKeys.Default,
+  );
+  // 2. 进行分组
+  for (const s of customList) {
+    if (!s.group) continue;
+    group2SessionList[s.group] = group2SessionList[s.group] || [];
+    group2SessionList[s.group].push(s);
+  }
+  return group2SessionList;
+};
+
 const getSessionById =
   (id: string) =>
   (s: SessionStore): LobeAgentSession =>
@@ -57,6 +73,7 @@ const isSomeSessionActive = (s: SessionStore) => !!s.activeId && isSessionListIn
 export const sessionSelectors = {
   currentSession,
   currentSessionSafe,
+  customSessionGroup,
   getSessionById,
   getSessionMetaById,
   hasCustomAgents,
