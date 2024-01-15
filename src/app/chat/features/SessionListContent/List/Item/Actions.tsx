@@ -3,9 +3,11 @@ import { App, Dropdown, type MenuProps } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
-  ArrowLeftRight,
+  Check,
   HardDriveDownload,
+  ListTree,
   LucideCopy,
+  LucidePlus,
   MoreVertical,
   Pin,
   PinOff,
@@ -15,10 +17,12 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { configService } from '@/services/config';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
-import { SessionGroupDefaultKeys } from '@/types/session';
+import { SessionDefaultGroup } from '@/types/session';
 
 const useStyles = createStyles(({ css }) => ({
   modalRoot: css`
@@ -29,16 +33,16 @@ const useStyles = createStyles(({ css }) => ({
 interface ActionProps {
   group: string | undefined;
   id: string;
-  setIsModalOpen: (open: boolean) => void;
+  openCreateGroupModal: () => void;
   setOpen: (open: boolean) => void;
 }
 
-const Actions = memo<ActionProps>(({ group, id, setIsModalOpen, setOpen }) => {
-  const { t } = useTranslation('common');
+const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen }) => {
+  const { t } = useTranslation('chat');
 
   const { styles } = useStyles();
 
-  const customSessionGroup = useSessionStore(sessionSelectors.customSessionGroup, isEqual);
+  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
   const [pin, removeSession, pinSession, duplicateSession, updateSessionGroup] = useSessionStore(
     (s) => {
       const session = sessionSelectors.getSessionById(id)(s);
@@ -54,8 +58,8 @@ const Actions = memo<ActionProps>(({ group, id, setIsModalOpen, setOpen }) => {
 
   const { modal } = App.useApp();
 
-  const isDefault = group === SessionGroupDefaultKeys.Default;
-  const hasDivider = !isDefault || Object.keys(customSessionGroup).length > 0;
+  const isDefault = group === SessionDefaultGroup.Default;
+  // const hasDivider = !isDefault || Object.keys(sessionByGroup).length > 0;
 
   const items: MenuProps['items'] = useMemo(
     () => [
@@ -68,67 +72,9 @@ const Actions = memo<ActionProps>(({ group, id, setIsModalOpen, setOpen }) => {
         },
       },
       {
-        children: [
-          {
-            key: 'newGroup',
-            label: <div>{t('group.newGroup')}</div>,
-            onClick: ({ domEvent }) => {
-              domEvent.stopPropagation();
-              setIsModalOpen(true);
-            },
-          },
-          hasDivider && {
-            type: 'divider',
-          },
-          !isDefault && {
-            key: 'defaultList',
-            label: <div>{t('defaultList')}</div>,
-            onClick: () => {
-              updateSessionGroup(id, SessionGroupDefaultKeys.Default);
-            },
-          },
-          ...Object.keys(customSessionGroup)
-            .filter((key) => key !== group)
-            .map((key) => ({
-              key,
-              label: <div>{key}</div>,
-              onClick: () => {
-                updateSessionGroup(id, key);
-              },
-            })),
-        ],
-        icon: <Icon icon={ArrowLeftRight} />,
-        key: 'moveGroup',
-        label: t('group.moveGroup'),
-      },
-      {
-        children: [
-          {
-            key: 'agent',
-            label: <div>{t('exportType.agent')}</div>,
-            onClick: () => {
-              configService.exportSingleAgent(id);
-            },
-          },
-          {
-            key: 'agentWithMessage',
-            label: <div>{t('exportType.agentWithMessage')}</div>,
-            onClick: () => {
-              configService.exportSingleSession(id);
-            },
-          },
-        ],
-        icon: <Icon icon={HardDriveDownload} />,
-        key: 'export',
-        label: t('export'),
-      },
-      {
-        type: 'divider',
-      },
-      {
         icon: <Icon icon={LucideCopy} />,
         key: 'duplicate',
-        label: t('duplicate'),
+        label: t('duplicate', { ns: 'common' }),
         onClick: ({ domEvent }) => {
           domEvent.stopPropagation();
 
@@ -139,13 +85,71 @@ const Actions = memo<ActionProps>(({ group, id, setIsModalOpen, setOpen }) => {
         type: 'divider',
       },
       {
+        children: [
+          ...sessionCustomGroups.map(({ id: groupId, name }) => ({
+            icon: group === groupId ? <Icon icon={Check} /> : <div />,
+            key: groupId,
+            label: name,
+            onClick: () => {
+              updateSessionGroup(id, groupId);
+            },
+          })),
+          {
+            icon: isDefault ? <Icon icon={Check} /> : <div />,
+            key: 'defaultList',
+            label: t('defaultList'),
+            onClick: () => {
+              updateSessionGroup(id, SessionDefaultGroup.Default);
+            },
+          },
+          {
+            type: 'divider',
+          },
+          {
+            icon: <Icon icon={LucidePlus} />,
+            key: 'createGroup',
+            label: <div>{t('sessionGroup.createGroup')}</div>,
+            onClick: ({ domEvent }) => {
+              domEvent.stopPropagation();
+              openCreateGroupModal();
+            },
+          },
+        ],
+        icon: <Icon icon={ListTree} />,
+        key: 'moveGroup',
+        label: t('sessionGroup.moveGroup'),
+      },
+      {
+        type: 'divider',
+      },
+      {
+        children: [
+          {
+            key: 'agent',
+            label: t('exportType.agent', { ns: 'common' }),
+            onClick: () => {
+              configService.exportSingleAgent(id);
+            },
+          },
+          {
+            key: 'agentWithMessage',
+            label: t('exportType.agentWithMessage', { ns: 'common' }),
+            onClick: () => {
+              configService.exportSingleSession(id);
+            },
+          },
+        ],
+        icon: <Icon icon={HardDriveDownload} />,
+        key: 'export',
+        label: t('export', { ns: 'common' }),
+      },
+      {
         danger: true,
         icon: <Icon icon={Trash} />,
         key: 'delete',
-        label: t('delete'),
+        label: t('delete', { ns: 'common' }),
         onClick: ({ domEvent }) => {
           domEvent.stopPropagation();
-
           modal.confirm({
             centered: true,
             okButtonProps: { danger: true },

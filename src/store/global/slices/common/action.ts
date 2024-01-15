@@ -11,6 +11,7 @@ import type { GlobalStore } from '@/store/global';
 import type { GlobalServerConfig } from '@/types/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
+import { nanoid } from '@/utils/uuid';
 
 import type { GlobalCommonState, GlobalPreference, Guide, SidebarTabKey } from './initialState';
 
@@ -20,6 +21,7 @@ const n = setNamespace('settings');
  * 设置操作
  */
 export interface CommonAction {
+  addCustomGroup: (name: string) => string;
   switchBackToChat: (sessionId?: string) => void;
   /**
    * 切换侧边栏选项
@@ -41,6 +43,21 @@ export const createCommonSlice: StateCreator<
   [],
   CommonAction
 > = (set, get) => ({
+  addCustomGroup: (name) => {
+    const sessionCustomGroups = get().preference.sessionCustomGroups || [];
+
+    const groupId = nanoid();
+    const sessionGroupKeys = get().preference.sessionGroupKeys || [];
+    get().updatePreference(
+      {
+        sessionCustomGroups: [...sessionCustomGroups, { id: groupId, name }],
+        sessionGroupKeys: [...sessionGroupKeys, groupId],
+      },
+      'addCustomGroup',
+    );
+
+    return groupId;
+  },
   switchBackToChat: (sessionId) => {
     get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
   },

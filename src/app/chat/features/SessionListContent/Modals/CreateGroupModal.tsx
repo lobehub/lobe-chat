@@ -1,0 +1,59 @@
+import { Input, Modal, type ModalProps } from '@lobehub/ui';
+import { message } from 'antd';
+import isEqual from 'fast-deep-equal';
+import { memo, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
+import { useSessionStore } from '@/store/session';
+
+interface CreateGroupModalProps extends ModalProps {
+  id: string;
+}
+
+const CreateGroupModal = memo<CreateGroupModalProps>(
+  ({ id, open, onCancel }: CreateGroupModalProps) => {
+    const { t } = useTranslation('chat');
+    const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
+    const addCustomGroup = useGlobalStore((s) => s.addCustomGroup);
+    const updateSessionGroup = useSessionStore((s) => s.updateSessionGroup);
+    const [input, setInput] = useState('');
+
+    const handleSubmit = useCallback(
+      (e: any) => {
+        if (!input) return;
+        if (input.length === 0 || input.length > 20)
+          return message.warning(t('sessionGroup.tooLong'));
+
+        const groupId = addCustomGroup(input);
+        updateSessionGroup(id, groupId);
+        message.success(t('sessionGroup.createSuccess'));
+        onCancel?.(e);
+      },
+      [id, input, sessionCustomGroups],
+    );
+
+    return (
+      <div onClick={(e) => e.stopPropagation()}>
+        <Modal
+          allowFullscreen
+          onCancel={onCancel}
+          onOk={handleSubmit}
+          open={open}
+          title={t('sessionGroup.createGroup')}
+          width={400}
+        >
+          <Input
+            autoFocus
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t('sessionGroup.inputPlaceholder')}
+            value={input}
+          />
+        </Modal>
+      </div>
+    );
+  },
+);
+
+export default CreateGroupModal;

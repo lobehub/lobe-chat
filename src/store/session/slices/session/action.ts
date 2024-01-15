@@ -61,7 +61,7 @@ export interface SessionAction {
    * switch session url
    */
   switchSession: (sessionId?: string) => void;
-  updateSessionGroup: (sessionId: string, group: string) => Promise<void>;
+  updateSessionGroup: (sessionId: string, groupId: string) => void;
   /**
    * A custom hook that uses SWR to fetch sessions data.
    */
@@ -153,13 +153,11 @@ export const createSessionSlice: StateCreator<
     // TODO: 后续可以把 router 移除
     router?.push(SESSION_CHAT_URL(sessionId, isMobile));
   },
-
-  updateSessionGroup: async (sessionId, group) => {
-    await sessionService.updateSessionGroup(sessionId, group);
+  updateSessionGroup: async (sessionId, groupId) => {
+    await sessionService.updateSessionGroup(sessionId, groupId);
 
     await get().refreshSessions();
   },
-
   useFetchSessions: () =>
     useSWR<LobeSessions>(FETCH_SESSIONS_KEY, sessionService.getSessions, {
       onSuccess: (data) => {
