@@ -22,7 +22,7 @@ export const POST = async (req: Request) => {
   if (openaiOrErrResponse instanceof Response) return openaiOrErrResponse;
 
   const res = await createOpenaiAudioTranscriptions({
-    openai: openaiOrErrResponse as any,
+    openai: openaiOrErrResponse,
     payload,
   });
 
