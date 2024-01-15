@@ -15,6 +15,7 @@
   "copy": "Copia",
   "copySuccess": "Copia riuscita",
   "defaultAgent": "Assistente predefinito",
+  "defaultList": "Lista predefinita",
   "defaultSession": "Sessione predefinita",
   "delete": "Elimina",
   "duplicate": "Duplicato",
@@ -29,6 +30,18 @@
     "globalSetting": "Esporta impostazioni globali"
   },
   "feedback": "Feedback e suggerimenti",
+  "group": {
+    "config": "Gestione gruppi",
+    "confirmRemoveGroupAlert": "Stai per rimuovere questo gruppo. Dopo la rimozione, gli assistenti di questo gruppo verranno spostati nella lista predefinita. Conferma l'operazione.",
+    "createGroup": "Aggiungi nuovo gruppo",
+    "createSuccess": "Creazione riuscita",
+    "inputPlaceholder": "Inserisci il nome del gruppo...",
+    "moveGroup": "Sposta nel gruppo",
+    "newGroup": "Nuovo gruppo",
+    "rename": "Rinomina gruppo",
+    "renameSuccess": "Rinominazione riuscita",
+    "tooLong": "Il nome del gruppo deve essere lungo da 1 a 20 caratteri"
+  },
   "historyRange": "Intervallo cronologico",
   "import": "Importa configurazione",
   "importModal": {

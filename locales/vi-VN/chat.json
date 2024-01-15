@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "defaultAgent": "Trợ lý mặc định",
+  "defaultList": "Danh sách mặc định",
   "defaultSession": "Trợ lý mặc định",
   "duplicateTitle": "{{title}} Bản sao",
   "historyRange": "Phạm vi lịch sử",

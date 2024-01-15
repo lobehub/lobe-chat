@@ -15,6 +15,7 @@
   "copy": "Kopiuj",
   "copySuccess": "Skopiowano pomyślnie",
   "defaultAgent": "Domyślny asystent",
+  "defaultList": "Domyślna lista",
   "defaultSession": "Domyślna sesja",
   "delete": "Usuń",
   "duplicate": "Utwórz kopię",
@@ -29,6 +30,18 @@
     "globalSetting": "Eksportuj ustawienia globalne"
   },
   "feedback": "Opinie i sugestie",
+  "group": {
+    "config": "Zarządzanie grupami",
+    "confirmRemoveGroupAlert": "Czy na pewno chcesz usunąć tę grupę? Po usunięciu asystenci z tej grupy zostaną przeniesieni do domyślnej listy. Potwierdź swoje działanie.",
+    "createGroup": "Utwórz nową grupę",
+    "createSuccess": "Utworzenie powiodło się",
+    "inputPlaceholder": "Wprowadź nazwę grupy...",
+    "moveGroup": "Przenieś do grupy",
+    "newGroup": "Nowa grupa",
+    "rename": "Zmień nazwę grupy",
+    "renameSuccess": "Zmiana nazwy powiodła się",
+    "tooLong": "Nazwa grupy musi mieć od 1 do 20 znaków"
+  },
   "historyRange": "Zakres historii",
   "import": "Importuj ustawienia",
   "importModal": {

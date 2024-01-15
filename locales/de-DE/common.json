@@ -15,6 +15,7 @@
   "copy": "Kopieren",
   "copySuccess": "Kopieren erfolgreich",
   "defaultAgent": "Standardassistent",
+  "defaultList": "Standardliste",
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
   "duplicate": "Duplikat erstellen",
@@ -29,6 +30,18 @@
     "globalSetting": "Globale Einstellungen exportieren"
   },
   "feedback": "Feedback und Vorschläge",
+  "group": {
+    "config": "Gruppenverwaltung",
+    "confirmRemoveGroupAlert": "Die Gruppe wird bald gelöscht. Nach dem Löschen wird der Assistent in die Standardliste verschoben. Bitte bestätigen Sie Ihre Aktion.",
+    "createGroup": "Neue Gruppe erstellen",
+    "createSuccess": "Erstellung erfolgreich",
+    "inputPlaceholder": "Geben Sie den Gruppennamen ein...",
+    "moveGroup": "In Gruppe verschieben",
+    "newGroup": "Neue Gruppe",
+    "rename": "Gruppe umbenennen",
+    "renameSuccess": "Umbenennung erfolgreich",
+    "tooLong": "Der Gruppenname muss zwischen 1 und 20 Zeichen lang sein"
+  },
   "historyRange": "Verlaufsbereich",
   "import": "Importieren",
   "importModal": {

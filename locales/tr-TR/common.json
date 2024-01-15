@@ -15,6 +15,7 @@
   "copy": "Kopyala",
   "copySuccess": "Kopyalama Başarılı",
   "defaultAgent": "Varsayılan Asistan",
+  "defaultList": "Varsayılan Liste",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
   "duplicate": "Kopya oluştur",
@@ -29,6 +30,18 @@
     "globalSetting": "Ayarları Dışa Aktar"
   },
   "feedback": "Feedback",
+  "group": {
+    "config": "Grup Yönetimi",
+    "confirmRemoveGroupAlert": "Bu grup silinecek, silindikten sonra bu grubun yardımcıları varsayılan listeye taşınacak, işleminizi onaylayın",
+    "createGroup": "Yeni Grup Oluştur",
+    "createSuccess": "Oluşturma Başarılı",
+    "inputPlaceholder": "Grup adını girin...",
+    "moveGroup": "Gruba Taşı",
+    "newGroup": "Yeni Grup",
+    "rename": "Grup Adını Değiştir",
+    "renameSuccess": "Yeniden Adlandırma Başarılı",
+    "tooLong": "Grup adı 1-20 karakter arasında olmalıdır"
+  },
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe Aktar",
   "importModal": {

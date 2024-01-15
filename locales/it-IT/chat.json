@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
   "defaultAgent": "Assistente predefinito",
+  "defaultList": "Lista predefinita",
   "defaultSession": "Sessione predefinita",
   "duplicateTitle": "{{title}} Copia",
   "historyRange": "Intervallo cronologico",

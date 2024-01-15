@@ -15,6 +15,7 @@
   "copy": "Sao chép",
   "copySuccess": "Sao chép thành công",
   "defaultAgent": "Trợ lý mặc định",
+  "defaultList": "Danh sách mặc định",
   "defaultSession": "Phiên mặc định",
   "delete": "Xóa",
   "duplicate": "Tạo bản sao",
@@ -29,6 +30,18 @@
     "globalSetting": "Xuất cài đặt toàn cầu"
   },
   "feedback": "Phản hồi và đề xuất",
+  "group": {
+    "config": "Quản lý nhóm",
+    "confirmRemoveGroupAlert": "Bạn sắp xóa nhóm này. Sau khi xóa, trợ lý của nhóm sẽ được di chuyển vào danh sách mặc định. Hãy xác nhận hành động của bạn",
+    "createGroup": "Tạo nhóm mới",
+    "createSuccess": "Tạo thành công",
+    "inputPlaceholder": "Vui lòng nhập tên nhóm...",
+    "moveGroup": "Di chuyển vào nhóm",
+    "newGroup": "Nhóm mới",
+    "rename": "Đổi tên nhóm",
+    "renameSuccess": "Đổi tên thành công",
+    "tooLong": "Độ dài tên nhóm phải từ 1-20 ký tự"
+  },
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập cấu hình",
   "importModal": {
