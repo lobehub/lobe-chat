@@ -1,3 +1,5 @@
+import { SessionGroupItem } from '@/types/session';
+
 export enum SidebarTabKey {
   Chat = 'chat',
   Market = 'market',
@@ -20,6 +22,7 @@ export interface GlobalPreference {
   guide?: Guide;
   inputHeight: number;
   mobileShowTopic?: boolean;
+  sessionCustomGroups: SessionGroupItem[];
   sessionGroupKeys: string[];
   sessionsWidth: number;
   showChatSideBar?: boolean;
@@ -48,6 +51,7 @@ export const initialCommonState: GlobalCommonState = {
     guide: {},
     inputHeight: 200,
     mobileShowTopic: false,
+    sessionCustomGroups: [],
     sessionGroupKeys: ['pinned', 'sessionList'],
     sessionsWidth: 320,
     showChatSideBar: true,

@@ -7,7 +7,10 @@ const sessionGroupKeys = (s: GlobalStore): string[] =>
 
 const useCmdEnterToSend = (s: GlobalStore): boolean => s.preference.useCmdEnterToSend || false;
 
+const sessionCustomGroups = (s: GlobalStore) => s.preference.sessionCustomGroups || [];
+
 export const preferenceSelectors = {
+  sessionCustomGroups,
   sessionGroupKeys,
   useCmdEnterToSend,
 };

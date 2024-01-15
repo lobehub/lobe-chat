@@ -3,7 +3,7 @@ import { DeepPartial } from 'utility-types';
 import { SessionModel } from '@/database/models/session';
 import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
-import { LobeAgentSession, LobeSessionType, LobeSessions, SessionGroupKey } from '@/types/session';
+import { LobeAgentSession, LobeSessionType, LobeSessions, SessionGroupId } from '@/types/session';
 
 class SessionService {
   async createNewSession(
@@ -38,7 +38,7 @@ class SessionService {
     return SessionModel.clearTable();
   }
 
-  async updateSessionGroup(id: string, group: SessionGroupKey) {
+  async updateSessionGroup(id: string, group: SessionGroupId) {
     return SessionModel.update(id, { group });
   }
 

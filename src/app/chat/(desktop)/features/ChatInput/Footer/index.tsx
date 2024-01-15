@@ -10,6 +10,7 @@ import {
   LucideCommand,
   LucidePlus,
 } from 'lucide-react';
+import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -25,7 +26,7 @@ import { isMacOS } from '@/utils/platform';
 
 import { LocalFiles } from './LocalFiles';
 
-const useStyles = createStyles(({ css, prefixCls }) => {
+const useStyles = createStyles(({ css, prefixCls, token }) => {
   return {
     arrow: css`
       &.${prefixCls}-btn.${prefixCls}-btn-icon-only {
@@ -37,6 +38,12 @@ const useStyles = createStyles(({ css, prefixCls }) => {
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+
+      .${prefixCls}-btn.${prefixCls}-dropdown-trigger {
+        &::before {
+          background-color: ${rgba(token.colorBgLayout, 0.05)} !important;
+        }
       }
     `,
   };
