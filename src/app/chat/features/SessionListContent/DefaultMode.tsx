@@ -16,6 +16,8 @@ const SessionListContent = memo(() => {
   const { t } = useTranslation('chat');
   const unpinnedSessionList = useSessionStore(sessionSelectors.unpinnedSessionList, isEqual);
   const pinnedList = useSessionStore(sessionSelectors.pinnedSessionList, isEqual);
+  const customSessionGroup = useSessionStore(sessionSelectors.customSessionGroup, isEqual);
+
   const [hasPinnedSessionList, useFetchSessions] = useSessionStore((s) => [
     sessionSelectors.hasPinnedSessionList(s),
     s.useFetchSessions,
@@ -34,10 +36,15 @@ const SessionListContent = memo(() => {
       key: 'pinned',
       label: t('pin'),
     },
+    ...Object.keys(customSessionGroup).map((key) => ({
+      children: <SessionList dataSource={customSessionGroup[key]} />,
+      key,
+      label: key,
+    })),
     {
       children: <SessionList dataSource={unpinnedSessionList} />,
-      key: 'sessionList',
-      label: t('sessionList'),
+      key: 'defaultList',
+      label: t('defaultList'),
     },
   ].filter(Boolean) as CollapseProps['items'];
 
