@@ -13,6 +13,7 @@ import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import ListItem from '../../ListItem';
 import Actions from './Actions';
+import CreateGroupModal from './CreateGroupModal';
 
 interface SessionItemProps {
   id: string;
@@ -20,32 +21,48 @@ interface SessionItemProps {
 
 const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [defaultModel] = useGlobalStore((s) => [settingsSelectors.defaultAgentConfig(s).model]);
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [!!s.chatLoadingId && id === s.activeId]);
 
-  const [pin, title, description, systemRole, avatar, avatarBackground, updateAt, model] =
-    useSessionStore((s) => {
-      const session = sessionSelectors.getSessionById(id)(s);
-      const meta = session.meta;
-      const systemRole = session.config.systemRole;
+  const [
+    pin,
+    title,
+    description,
+    systemRole,
+    avatar,
+    avatarBackground,
+    updateAt,
+    model,
+    group,
+    updateSessionGroup,
+  ] = useSessionStore((s) => {
+    const session = sessionSelectors.getSessionById(id)(s);
+    const meta = session.meta;
+    const systemRole = session.config.systemRole;
 
-      return [
-        sessionHelpers.getSessionPinned(session),
-        agentSelectors.getTitle(meta),
-        agentSelectors.getDescription(meta),
-        systemRole,
-        agentSelectors.getAvatar(meta),
-        meta.backgroundColor,
-        session?.updatedAt,
-        session.config.model,
-      ];
-    });
+    return [
+      sessionHelpers.getSessionPinned(session),
+      agentSelectors.getTitle(meta),
+      agentSelectors.getDescription(meta),
+      systemRole,
+      agentSelectors.getAvatar(meta),
+      meta.backgroundColor,
+      session?.updatedAt,
+      session.config.model,
+      session?.group,
+      s.updateSessionGroup,
+    ];
+  });
 
   const showModel = model !== defaultModel;
 
-  const actions = useMemo(() => <Actions id={id} setOpen={setOpen} />, [id]);
+  const actions = useMemo(
+    () => <Actions group={group} id={id} setIsModalOpen={setIsModalOpen} setOpen={setOpen} />,
+    [id],
+  );
 
   const addon = useMemo(
     () =>
@@ -58,19 +75,26 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   );
 
   return (
-    <ListItem
-      actions={actions}
-      active={active}
-      addon={addon}
-      avatar={avatar}
-      avatarBackground={avatarBackground}
-      date={updateAt}
-      description={description || systemRole}
-      loading={loading}
-      pin={pin}
-      showAction={open}
-      title={title}
-    />
+    <>
+      <ListItem
+        actions={actions}
+        active={active}
+        addon={addon}
+        avatar={avatar}
+        avatarBackground={avatarBackground}
+        date={updateAt}
+        description={description || systemRole}
+        loading={loading}
+        pin={pin}
+        showAction={open}
+        title={title}
+      />
+      <CreateGroupModal
+        onCancel={() => setIsModalOpen(false)}
+        onInputOk={(input) => updateSessionGroup(id, input)}
+        open={isModalOpen}
+      ></CreateGroupModal>
+    </>
   );
 }, shallow);
 
