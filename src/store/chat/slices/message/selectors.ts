@@ -36,6 +36,11 @@ const getMeta = (message: ChatMessage) => {
         title: 'plugin-unknown',
       };
     }
+    case 'guide': {
+      return {
+        avatar: DEFAULT_INBOX_AVATAR,
+      };
+    }
   }
 };
 
@@ -69,7 +74,7 @@ const currentChatsWithGuideMessage =
     });
     const agentMsg = t('agentDefaultMessage', {
       id: activeId,
-      name: meta.title || t('defaultAgent'),
+      name: t('defaultAgent'),
       ns: 'chat',
     });
 
@@ -77,9 +82,9 @@ const currentChatsWithGuideMessage =
       content: isInbox ? inboxMsg : !!meta.description ? agentSystemRoleMsg : agentMsg,
       createdAt: initTime,
       extra: {},
-      id: 'default',
+      id: 'guide',
       meta: merge({ avatar: DEFAULT_INBOX_AVATAR }, meta),
-      role: 'assistant',
+      role: 'guide',
       updatedAt: initTime,
     } as ChatMessage;
 
