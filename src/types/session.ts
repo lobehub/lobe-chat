@@ -7,7 +7,7 @@ export enum LobeSessionType {
   Group = 'group',
 }
 
-export type SessionGroupId = 'pinned' | 'default' | string;
+export type SessionGroupId = SessionDefaultGroup | string;
 
 export enum SessionDefaultGroup {
   Default = 'default',
@@ -17,7 +17,6 @@ export enum SessionDefaultGroup {
 export interface SessionGroupItem {
   id: SessionGroupId;
   name: string;
-  sort?: number;
 }
 
 /**

@@ -7,10 +7,11 @@ import type { StateCreator } from 'zustand/vanilla';
 import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
 import type { GlobalStore } from '@/store/global';
 import { SettingsTabs } from '@/store/global/initialState';
-import { LobeAgentSettings } from '@/types/session';
+import { LobeAgentSettings, SessionGroupItem } from '@/types/session';
 import type { GlobalSettings, OpenAIConfig } from '@/types/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
+import { nanoid } from '@/utils/uuid';
 
 const n = setNamespace('settings');
 
@@ -18,24 +19,26 @@ const n = setNamespace('settings');
  * 设置操作
  */
 export interface SettingsAction {
+  addCustomGroup: (name: string) => string;
   importAppSettings: (settings: GlobalSettings) => void;
   /**
    * 重置设置
    */
   resetSettings: () => void;
   setOpenAIConfig: (config: Partial<OpenAIConfig>) => void;
-
   /**
    * 设置部分配置设置
    * @param settings - 部分配置设置
    */
   setSettings: (settings: DeepPartial<GlobalSettings>) => void;
+
   switchSettingTabs: (tab: SettingsTabs) => void;
   /**
    * 设置主题模式
    * @param themeMode - 主题模式
    */
   switchThemeMode: (themeMode: ThemeMode) => void;
+  updateCustomGroup: (groups: SessionGroupItem[]) => void;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => void;
 }
 
@@ -45,6 +48,21 @@ export const createSettingsSlice: StateCreator<
   [],
   SettingsAction
 > = (set, get) => ({
+  addCustomGroup: (name) => {
+    const sessionCustomGroups = get().settings.sessionCustomGroups || [];
+
+    const groupId = nanoid();
+    const sessionGroupKeys = get().preference.sessionGroupKeys || [];
+    get().updateCustomGroup([...sessionCustomGroups, { id: groupId, name }]);
+    get().updatePreference(
+      {
+        sessionGroupKeys: [...sessionGroupKeys, groupId],
+      },
+      'addCustomGroup',
+    );
+
+    return groupId;
+  },
   importAppSettings: (importAppSettings) => {
     const { setSettings } = get();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -68,7 +86,6 @@ export const createSettingsSlice: StateCreator<
   setOpenAIConfig: (config) => {
     get().setSettings({ languageModel: { openAI: config } });
   },
-
   setSettings: (settings) => {
     const prevSetting = get().settings;
     const nextSettings = merge(prevSetting, settings);
@@ -77,11 +94,15 @@ export const createSettingsSlice: StateCreator<
 
     set({ settings: merge(prevSetting, settings) }, false, n('setSettings', settings));
   },
+
   switchSettingTabs: (tab) => {
     set({ settingsTab: tab });
   },
   switchThemeMode: (themeMode) => {
     get().setSettings({ themeMode });
+  },
+  updateCustomGroup: (groups) => {
+    get().setSettings({ sessionCustomGroups: groups });
   },
   updateDefaultAgent: (agent) => {
     const settings = produce(get().settings, (draft: GlobalSettings) => {

@@ -1,5 +1,5 @@
 import { INBOX_SESSION_ID } from '@/const/session';
-import { groupHelpers } from '@/store/global/slices/common/helpers';
+import { groupHelpers } from '@/store/global/helpers';
 import { sessionHelpers } from '@/store/session/slices/session/helpers';
 import { MetaData } from '@/types/meta';
 import {

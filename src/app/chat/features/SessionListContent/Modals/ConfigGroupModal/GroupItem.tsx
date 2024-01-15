@@ -7,8 +7,8 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
-import { groupHelpers } from '@/store/global/slices/common/helpers';
+import { groupHelpers } from '@/store/global/helpers';
+import { settingsSelectors } from '@/store/global/selectors';
 import { SessionGroupItem } from '@/types/session';
 
 const useStyles = createStyles(({ css }) => ({
@@ -27,7 +27,7 @@ const useStyles = createStyles(({ css }) => ({
 
 const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
   const [editing, setEditing] = useState(false);
-  const sessionCustomGroups = useGlobalStore(preferenceSelectors.sessionCustomGroups, isEqual);
+  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
   const updateCustomGroup = useGlobalStore((s) => s.updateCustomGroup);
   const { t } = useTranslation('common');
   const { styles } = useStyles();

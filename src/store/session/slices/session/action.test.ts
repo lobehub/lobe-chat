@@ -133,4 +133,74 @@ describe('SessionAction', () => {
       );
     });
   });
+
+  describe('activeSession', () => {
+    it('should set the provided session id as active', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const sessionId = 'active-session-id';
+
+      act(() => {
+        result.current.activeSession(sessionId);
+      });
+
+      expect(result.current.activeId).toBe(sessionId);
+    });
+  });
+
+  describe('pinSession', () => {
+    it('should pin a session when pinned is true', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const sessionId = 'session-id-to-pin';
+
+      await act(async () => {
+        await result.current.pinSession(sessionId, true);
+      });
+
+      expect(sessionService.updateSessionGroup).toHaveBeenCalledWith(sessionId, 'pinned');
+      expect(mockRefresh).toHaveBeenCalled();
+    });
+
+    it('should unpin a session when pinned is false', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const sessionId = 'session-id-to-unpin';
+
+      await act(async () => {
+        await result.current.pinSession(sessionId, false);
+      });
+
+      expect(sessionService.updateSessionGroup).toHaveBeenCalledWith(sessionId, 'default');
+      expect(mockRefresh).toHaveBeenCalled();
+    });
+  });
+
+  describe('switchBackToChat', () => {
+    it('should switch back to chat for the active session', async () => {
+      const { result } = renderHook(() => useSessionStore());
+
+      act(() => {
+        result.current.switchBackToChat();
+      });
+
+      const expectedSessionId = result.current.activeId || INBOX_SESSION_ID;
+
+      expect(mockRouterPush).toHaveBeenCalledWith(
+        SESSION_CHAT_URL(expectedSessionId, result.current.isMobile),
+      );
+    });
+  });
+
+  describe('updateSessionGroup', () => {
+    it('should update the session group and refresh the list', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const sessionId = 'session-id';
+      const groupId = 'new-group-id';
+
+      await act(async () => {
+        await result.current.updateSessionGroup(sessionId, groupId);
+      });
+
+      expect(sessionService.updateSessionGroup).toHaveBeenCalledWith(sessionId, groupId);
+      expect(mockRefresh).toHaveBeenCalled();
+    });
+  });
 });
