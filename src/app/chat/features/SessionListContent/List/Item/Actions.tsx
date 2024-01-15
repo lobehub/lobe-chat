@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 
 import { configService } from '@/services/config';
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/slices/common/selectors';
+import { preferenceSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';

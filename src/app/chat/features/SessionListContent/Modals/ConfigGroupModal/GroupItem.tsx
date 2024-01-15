@@ -1,31 +1,17 @@
-import { ActionIcon, EditableText } from '@lobehub/ui';
-import { Popconfirm, Typography, message } from 'antd';
+import { ActionIcon, EditableText, SortableList } from '@lobehub/ui';
+import { Popconfirm, message } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PencilLine, Trash } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
+import { preferenceSelectors } from '@/store/global/selectors';
 import { groupHelpers } from '@/store/global/slices/common/helpers';
-import { preferenceSelectors } from '@/store/global/slices/common/selectors';
 import { SessionGroupItem } from '@/types/session';
 
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    height: 36px;
-    padding-right: 8px;
-    padding-left: 12px;
-
-    border-radius: ${token.borderRadius}px;
-
-    transition: background 0.2s ease-in-out;
-
-    &:hover {
-      background: ${token.colorFillTertiary};
-    }
-  `,
+const useStyles = createStyles(({ css }) => ({
   content: css`
     position: relative;
     overflow: hidden;
@@ -38,7 +24,6 @@ const useStyles = createStyles(({ css, token }) => ({
     text-align: start;
   `,
 }));
-const { Paragraph } = Typography;
 
 const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
   const [editing, setEditing] = useState(false);
@@ -58,18 +43,11 @@ const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
   );
 
   return (
-    <Flexbox
-      align={'center'}
-      className={styles.container}
-      gap={4}
-      horizontal
-      justify={'space-between'}
-    >
+    <>
+      <SortableList.DragHandle />
       {!editing ? (
         <>
-          <Paragraph className={styles.title} style={{ margin: 0 }}>
-            {name}
-          </Paragraph>
+          <span className={styles.title}>{name}</span>
           <ActionIcon icon={PencilLine} onClick={() => setEditing(true)} size={'small'} />
           <Popconfirm
             arrow={false}
@@ -104,7 +82,7 @@ const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
           value={name}
         />
       )}
-    </Flexbox>
+    </>
   );
 });
 
