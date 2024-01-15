@@ -13,6 +13,7 @@
   "close": "關閉",
   "confirmRemoveSessionItemAlert": "即將刪除此助手，刪除後將無法復原，請確認您的操作",
   "copy": "複製",
+  "copyFail": "複製失敗",
   "copySuccess": "複製成功",
   "defaultAgent": "預設助手",
   "defaultSession": "預設助手",
