@@ -51,6 +51,7 @@ export default {
     title: '导入数据',
   },
   lang: {
+    'ar': '阿拉伯语',
     'bn': '孟加拉语',
     'cs-CZ': '捷克语',
     'da-DK': '丹麦语',
