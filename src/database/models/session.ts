@@ -5,7 +5,7 @@ import { BaseModel } from '@/database/core';
 import { DBModel } from '@/database/core/types/db';
 import { DB_Session, DB_SessionSchema } from '@/database/schemas/session';
 import { LobeAgentConfig } from '@/types/agent';
-import { LobeAgentSession, LobeSessions, SessionGroupKey } from '@/types/session';
+import { LobeAgentSession, LobeSessions, SessionGroupId } from '@/types/session';
 import { merge } from '@/utils/merge';
 import { uuid } from '@/utils/uuid';
 
@@ -36,7 +36,7 @@ class _SessionModel extends BaseModel {
    * get sessions by group
    * @param group
    */
-  async queryByGroup(group: SessionGroupKey) {
+  async queryByGroup(group: SessionGroupId) {
     return this.table.where('group').equals(group).toArray();
   }
 

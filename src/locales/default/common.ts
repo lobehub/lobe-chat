@@ -16,7 +16,6 @@ export default {
   copyFail: '复制失败',
   copySuccess: '复制成功',
   defaultAgent: '自定义助手',
-  defaultList: '默认列表',
   defaultSession: '自定义助手',
   delete: '删除',
   duplicate: '创建副本',
@@ -31,12 +30,6 @@ export default {
     globalSetting: '导出全局设置',
   },
   feedback: '反馈与建议',
-  group: {
-    inputMsg: '组名长度需在1-10之内',
-    inputPlaceholder: '新建分组/移入指定分组',
-    moveGroup: '移入分组',
-    newGroup: '新建分组',
-  },
   historyRange: '历史范围',
   import: '导入配置',
   importModal: {
