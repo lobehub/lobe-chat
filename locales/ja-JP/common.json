@@ -15,6 +15,7 @@
   "copy": "コピー",
   "copySuccess": "コピーが成功しました",
   "defaultAgent": "デフォルトエージェント",
+  "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
   "delete": "削除",
   "duplicate": "コピーを作成する",
@@ -29,6 +30,18 @@
     "globalSetting": "グローバル設定のエクスポート"
   },
   "feedback": "フィードバック",
+  "group": {
+    "config": "グループ設定",
+    "confirmRemoveGroupAlert": "このグループを削除します。削除後、このグループのアシスタントはデフォルトリストに移動されます。操作を確認してください。",
+    "createGroup": "新しいグループを作成",
+    "createSuccess": "作成が成功しました",
+    "inputPlaceholder": "グループ名を入力してください...",
+    "moveGroup": "グループに移動",
+    "newGroup": "新しいグループ",
+    "rename": "グループ名を変更",
+    "renameSuccess": "名前の変更が成功しました",
+    "tooLong": "グループ名は1〜20文字で入力してください"
+  },
   "historyRange": "履歴範囲",
   "import": "インポート",
   "importModal": {

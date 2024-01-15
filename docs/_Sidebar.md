@@ -6,8 +6,6 @@
 
 <!-- DOCS LIST -->
 
-[New Locale Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale) | [新语种添加指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale.zh-CN)
-
 #### 🤯 Usage
 
 - [Custom Agents Guide](https://github.com/lobehub/lobe-chat/wiki/Usage-Agents) | [自定义助手指南](https://github.com/lobehub/lobe-chat/wiki/Usage-Agents.zh-CN)
@@ -25,13 +23,14 @@
 #### ⌨️ Development
 
 - [Technical Development Getting Started Guide](https://github.com/lobehub/lobe-chat/wiki/index) | [技术开发上手指南](https://github.com/lobehub/lobe-chat/wiki/index.zh-CN)
+- [New Locale Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale) | [新语种添加指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale.zh-CN)
 - [Environment Setup Guide](https://github.com/lobehub/lobe-chat/wiki/Setup-Development) | [开发环境设置](https://github.com/lobehub/lobe-chat/wiki/Setup-Development.zh-CN)
 - [Architecture Design](https://github.com/lobehub/lobe-chat/wiki/Architecture) | [架构设计](https://github.com/lobehub/lobe-chat/wiki/Architecture.zh-CN)
 - [Directory Structure](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure) | [目录架构](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure.zh-CN)
 - [Data Store Selector](https://github.com/lobehub/lobe-chat/wiki/Data-Store-Selectors) | [数据存储取数模块](https://github.com/lobehub/lobe-chat/wiki/Data-Store-Selectors.zh-CN)
 - [Conversation API Implementation Logic](https://github.com/lobehub/lobe-chat/wiki/Chat-API) | [会话 API 实现逻辑](https://github.com/lobehub/lobe-chat/wiki/Chat-API.zh-CN)
 - [How to Develop a New Feature](https://github.com/lobehub/lobe-chat/wiki/Feature-Development) | [如何开发一个新功能](https://github.com/lobehub/lobe-chat/wiki/Feature-Development.zh-CN)
-- [Testing Guide](https://github.com/lobehub/lobe-chat/wiki/Test) | [中文](https://github.com/lobehub/lobe-chat/wiki/Test.zh-CN)
+- [Testing Guide](https://github.com/lobehub/lobe-chat/wiki/Test) | [测试指南](https://github.com/lobehub/lobe-chat/wiki/Test.zh-CN)
 - [Resources and References](https://github.com/lobehub/lobe-chat/wiki/Resources) | [资源与参考](https://github.com/lobehub/lobe-chat/wiki/Resources.zh-CN)
 
 #### 🤖 Agents

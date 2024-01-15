@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "Mevcut oturum mesajlarını temizlemek üzeresiniz. Temizlendikten sonra geri alınamazlar. Lütfen eyleminizi onaylayın.",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "defaultAgent": "Varsayılan Asistan",
+  "defaultList": "Varsayılan Liste",
   "defaultSession": "Varsayılan Asistan",
   "duplicateTitle": "{{title}} Kopya",
   "historyRange": "Geçmiş Aralığı",

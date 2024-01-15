@@ -15,6 +15,7 @@
   "copy": "複製",
   "copySuccess": "複製成功",
   "defaultAgent": "預設助手",
+  "defaultList": "預設清單",
   "defaultSession": "預設助手",
   "delete": "刪除",
   "duplicate": "建立副本",
@@ -29,6 +30,18 @@
     "globalSetting": "匯出全域設定"
   },
   "feedback": "回饋與建議",
+  "group": {
+    "config": "分組管理",
+    "confirmRemoveGroupAlert": "即將刪除該分組，刪除後該分組的助手將移動到預設清單，請確認你的操作",
+    "createGroup": "新增新分組",
+    "createSuccess": "創建成功",
+    "inputPlaceholder": "請輸入分組名稱...",
+    "moveGroup": "移動到分組",
+    "newGroup": "新分組",
+    "rename": "重新命名分組",
+    "renameSuccess": "重新命名成功",
+    "tooLong": "分組名稱長度需在 1-20 之內"
+  },
   "historyRange": "歷史範圍",
   "import": "匯入設定",
   "importModal": {

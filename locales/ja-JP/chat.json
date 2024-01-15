@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
   "defaultAgent": "デフォルトエージェント",
+  "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
   "duplicateTitle": "{{title}} のコピー",
   "historyRange": "履歴範囲",

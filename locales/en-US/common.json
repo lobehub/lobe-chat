@@ -15,6 +15,7 @@
   "copy": "Copy",
   "copySuccess": "Copied successfully",
   "defaultAgent": "Default Agent",
+  "defaultList": "Default List",
   "defaultSession": "Default Agent",
   "delete": "Delete",
   "duplicate": "Create Duplicate",
@@ -29,6 +30,18 @@
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
+  "group": {
+    "config": "Group Management",
+    "confirmRemoveGroupAlert": "You are about to delete this group. After deletion, the assistants in this group will be moved to the default list. Please confirm your action.",
+    "createGroup": "Add New Group",
+    "createSuccess": "Creation Successful",
+    "inputPlaceholder": "Please enter group name...",
+    "moveGroup": "Move to Group",
+    "newGroup": "New Group",
+    "rename": "Rename Group",
+    "renameSuccess": "Rename Successful",
+    "tooLong": "Group name should be between 1-20 characters"
+  },
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {

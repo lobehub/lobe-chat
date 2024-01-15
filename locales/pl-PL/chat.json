@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
   "defaultAgent": "Domyślny asystent",
+  "defaultList": "Lista domyślna",
   "defaultSession": "Domyślna sesja",
   "duplicateTitle": "{{title}} kopia",
   "historyRange": "Zakres historii",

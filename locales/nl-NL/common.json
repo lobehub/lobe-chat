@@ -15,6 +15,7 @@
   "copy": "Kopiëren",
   "copySuccess": "Kopiëren gelukt",
   "defaultAgent": "Standaard assistent",
+  "defaultList": "Standaardlijst",
   "defaultSession": "Standaard assistent",
   "delete": "Verwijderen",
   "duplicate": "Dupliceren",
@@ -29,6 +30,18 @@
     "globalSetting": "Algemene instellingen exporteren"
   },
   "feedback": "Feedback en suggesties",
+  "group": {
+    "config": "Groepsbeheer",
+    "confirmRemoveGroupAlert": "Je staat op het punt deze groep te verwijderen. Na verwijdering zullen de assistenten van deze groep worden verplaatst naar de standaardlijst. Bevestig je actie.",
+    "createGroup": "Nieuwe groep toevoegen",
+    "createSuccess": "Succesvol aangemaakt",
+    "inputPlaceholder": "Voer de naam van de groep in...",
+    "moveGroup": "Verplaatsen naar groep",
+    "newGroup": "Nieuwe groep",
+    "rename": "Groepsnaam wijzigen",
+    "renameSuccess": "Succesvol hernoemd",
+    "tooLong": "De groepsnaam moet tussen 1 en 20 tekens lang zijn"
+  },
   "historyRange": "Geschiedenisbereik",
   "import": "Importeren",
   "importModal": {
