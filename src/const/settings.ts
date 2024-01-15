@@ -15,6 +15,7 @@ export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
   fontSize: 14,
   language: 'auto',
   password: '',
+  sessionCustomGroups: [],
   themeMode: 'auto',
 };
 

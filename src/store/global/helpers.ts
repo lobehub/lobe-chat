@@ -7,4 +7,4 @@ export const globalHelpers = {
   getCurrentLanguage,
 };
 
-export * from './slices/common/helpers';
+export * from './slices/settings/helpers';

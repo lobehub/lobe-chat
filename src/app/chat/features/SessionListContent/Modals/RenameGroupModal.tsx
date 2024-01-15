@@ -5,8 +5,8 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
-import { groupHelpers } from '@/store/global/slices/common/helpers';
+import { groupHelpers } from '@/store/global/helpers';
+import { settingsSelectors } from '@/store/global/selectors';
 
 interface RenameGroupModalProps extends ModalProps {
   id: string;
@@ -14,7 +14,7 @@ interface RenameGroupModalProps extends ModalProps {
 
 const RenameGroupModal = memo<RenameGroupModalProps>(({ id, open, onCancel }) => {
   const { t } = useTranslation('common');
-  const sessionCustomGroups = useGlobalStore(preferenceSelectors.sessionCustomGroups, isEqual);
+  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
   const updateCustomGroup = useGlobalStore((s) => s.updateCustomGroup);
   const group = groupHelpers.getGroupById(id, sessionCustomGroups);
   const [input, setInput] = useState<string>();

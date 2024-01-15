@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { settingsSelectors } from '@/store/global/selectors';
 import { SessionGroupItem } from '@/types/session';
 
 import GroupItem from './GroupItem';
@@ -30,7 +30,7 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
 const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
-  const sessionCustomGroups = useGlobalStore(preferenceSelectors.sessionCustomGroups, isEqual);
+  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
   const [addCustomGroup, updateCustomGroup] = useGlobalStore((s) => [
     s.addCustomGroup,
     s.updateCustomGroup,

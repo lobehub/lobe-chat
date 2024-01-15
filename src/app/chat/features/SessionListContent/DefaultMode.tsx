@@ -4,7 +4,7 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { preferenceSelectors, settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -20,7 +20,7 @@ const SessionListContent = memo(() => {
   const [renameGroupModalOpen, setRenameGroupModalOpen] = useState(false);
   const [configGroupModalOpen, setConfigGroupModalOpen] = useState(false);
   const { t } = useTranslation('chat');
-  const sessionCustomGroups = useGlobalStore(preferenceSelectors.sessionCustomGroups, isEqual);
+  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
   const sessionList =
     useSessionStore(sessionSelectors.sessionList(sessionCustomGroups), isEqual) || {};
   const [sessionGroupKeys, updatePreference] = useGlobalStore((s) => [

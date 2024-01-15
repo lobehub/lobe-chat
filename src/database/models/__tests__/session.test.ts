@@ -72,12 +72,12 @@ describe('SessionModel', () => {
 
   it('should update a session', async () => {
     const createdSession = await SessionModel.create('agent', sessionData);
-    const updateData = { group: 'createGroup' };
+    const updateData = { group: 'newGroup' };
 
     await SessionModel.update(createdSession.id, updateData);
     const updatedSession = await SessionModel.findById(createdSession.id);
 
-    expect(updatedSession).toHaveProperty('group', 'createGroup');
+    expect(updatedSession).toHaveProperty('group', 'newGroup');
   });
 
   // 删除一个 session 时，也需要同步删除具有 sessionId 的 topic 和 message

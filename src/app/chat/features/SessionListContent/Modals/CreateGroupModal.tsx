@@ -5,7 +5,7 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 
 interface CreateGroupModalProps extends ModalProps {
@@ -15,7 +15,7 @@ interface CreateGroupModalProps extends ModalProps {
 const CreateGroupModal = memo<CreateGroupModalProps>(
   ({ id, open, onCancel }: CreateGroupModalProps) => {
     const { t } = useTranslation('common');
-    const sessionCustomGroups = useGlobalStore(preferenceSelectors.sessionCustomGroups, isEqual);
+    const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
     const addCustomGroup = useGlobalStore((s) => s.addCustomGroup);
     const updateSessionGroup = useSessionStore((s) => s.updateSessionGroup);
     const [input, setInput] = useState('');

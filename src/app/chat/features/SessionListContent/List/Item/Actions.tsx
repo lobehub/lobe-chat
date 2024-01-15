@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 
 import { configService } from '@/services/config';
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -42,7 +42,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
 
   const { styles } = useStyles();
 
-  const sessionCustomGroups = useGlobalStore(preferenceSelectors.sessionCustomGroups, isEqual);
+  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
   const [pin, removeSession, pinSession, duplicateSession, updateSessionGroup] = useSessionStore(
     (s) => {
       const session = sessionSelectors.getSessionById(id)(s);
@@ -86,14 +86,6 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
       },
       {
         children: [
-          {
-            icon: isDefault ? <Icon icon={Check} /> : <div />,
-            key: 'defaultList',
-            label: t('defaultList'),
-            onClick: () => {
-              updateSessionGroup(id, SessionDefaultGroup.Default);
-            },
-          },
           ...sessionCustomGroups.map(({ id: groupId, name }) => ({
             icon: group === groupId ? <Icon icon={Check} /> : <div />,
             key: groupId,
@@ -102,6 +94,14 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
               updateSessionGroup(id, groupId);
             },
           })),
+          {
+            icon: isDefault ? <Icon icon={Check} /> : <div />,
+            key: 'defaultList',
+            label: t('defaultList'),
+            onClick: () => {
+              updateSessionGroup(id, SessionDefaultGroup.Default);
+            },
+          },
           {
             type: 'divider',
           },
