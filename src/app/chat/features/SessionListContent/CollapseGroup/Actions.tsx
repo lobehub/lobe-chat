@@ -7,8 +7,8 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
+import { preferenceSelectors } from '@/store/global/selectors';
 import { groupHelpers } from '@/store/global/slices/common/helpers';
-import { preferenceSelectors } from '@/store/global/slices/common/selectors';
 
 const useStyles = createStyles(({ css }) => ({
   modalRoot: css`

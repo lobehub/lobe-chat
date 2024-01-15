@@ -5,8 +5,8 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
+import { preferenceSelectors } from '@/store/global/selectors';
 import { groupHelpers } from '@/store/global/slices/common/helpers';
-import { preferenceSelectors } from '@/store/global/slices/common/selectors';
 
 interface RenameGroupModalProps extends ModalProps {
   id: string;

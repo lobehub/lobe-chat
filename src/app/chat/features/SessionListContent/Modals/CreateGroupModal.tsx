@@ -5,7 +5,7 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/slices/common/selectors';
+import { preferenceSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 
 interface CreateGroupModalProps extends ModalProps {
