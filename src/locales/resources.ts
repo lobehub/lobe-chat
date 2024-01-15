@@ -43,7 +43,7 @@ type LocaleOptions = {
 
 export const localeOptions: LocaleOptions = [
   {
-    label: 'Arabic',
+    label: 'العربية',
     value: 'ar',
   },
   {

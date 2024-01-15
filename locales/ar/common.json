@@ -4,7 +4,7 @@
   "agentMaxToken": "أقصى طول للجلسة",
   "agentModel": "النموذج",
   "agentProfile": "ملف المساعد",
-  "appInitializing": "جاري تهيئة LobeChat، يرجى الانتظار بصبر...",
+  "appInitializing": "جاري تهيئة LobeChat، يرجى الانتظار ...",
   "archive": "أرشيف",
   "autoGenerate": "توليد تلقائي",
   "autoGenerateTooltip": "إكمال تلقائي بناءً على الكلمات المقترحة لوصف المساعد",
