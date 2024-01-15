@@ -17,6 +17,7 @@ const SessionListContent = memo(() => {
   const unpinnedSessionList = useSessionStore(sessionSelectors.unpinnedSessionList, isEqual);
   const pinnedList = useSessionStore(sessionSelectors.pinnedSessionList, isEqual);
   const hasPinnedSessionList = useSessionStore(sessionSelectors.hasPinnedSessionList);
+  const customSessionGroup = useSessionStore(sessionSelectors.customSessionGroup, isEqual);
 
   const [sessionGroupKeys, updatePreference] = useGlobalStore((s) => [
     preferenceSelectors.sessionGroupKeys(s),
@@ -29,10 +30,15 @@ const SessionListContent = memo(() => {
       key: 'pinned',
       label: t('pin'),
     },
+    ...Object.keys(customSessionGroup).map((key) => ({
+      children: <SessionList dataSource={customSessionGroup[key]} />,
+      key,
+      label: key,
+    })),
     {
       children: <SessionList dataSource={unpinnedSessionList} />,
-      key: 'sessionList',
-      label: t('sessionList'),
+      key: 'defaultList',
+      label: t('defaultList'),
     },
   ].filter(Boolean) as CollapseProps['items'];
 

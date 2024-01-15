@@ -66,6 +66,7 @@ export interface SessionAction {
    * switch session url
    */
   switchSession: (sessionId?: string) => void;
+  updateSessionGroup: (sessionId: string, group: string) => Promise<void>;
   /**
    * A custom hook that uses SWR to fetch sessions data.
    */
@@ -157,12 +158,19 @@ export const createSessionSlice: StateCreator<
 
     router?.push(SESSION_CHAT_URL(id, get().isMobile));
   },
+
   switchSession: (sessionId = INBOX_SESSION_ID) => {
     const { isMobile, router } = get();
 
     get().activeSession(sessionId);
 
     router?.push(SESSION_CHAT_URL(sessionId, isMobile));
+  },
+
+  updateSessionGroup: async (sessionId, group) => {
+    await sessionService.updateSessionGroup(sessionId, group);
+
+    await get().refreshSessions();
   },
 
   useFetchSessions: () =>
