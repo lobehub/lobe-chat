@@ -34,23 +34,25 @@ const CreateGroupModal = memo<CreateGroupModalProps>(
     );
 
     return (
-      <Modal
-        allowFullscreen
-        cancelText={t('cancel')}
-        okText={t('ok')}
-        onCancel={onCancel}
-        onOk={handleSubmit}
-        open={open}
-        title={t('group.createGroup')}
-        width={400}
-      >
-        <Input
-          autoFocus
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={t('group.inputPlaceholder')}
-          value={input}
-        />
-      </Modal>
+      <div onClick={(e) => e.stopPropagation()}>
+        <Modal
+          allowFullscreen
+          cancelText={t('cancel')}
+          okText={t('ok')}
+          onCancel={onCancel}
+          onOk={handleSubmit}
+          open={open}
+          title={t('group.createGroup')}
+          width={400}
+        >
+          <Input
+            autoFocus
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t('group.inputPlaceholder')}
+            value={input}
+          />
+        </Modal>
+      </div>
     );
   },
 );
