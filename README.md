@@ -465,7 +465,7 @@ $ pnpm install
 $ pnpm dev
 ```
 
-If you would like to learn more details, please feel free to consult our [LobeChat Development Guide](https://github.com/lobehub/lobe-chat/wiki/index)
+If you would like to learn more details, please feel free to look at our [LobeChat Development Guide](https://github.com/lobehub/lobe-chat/wiki/index)
 
 <div align="right">
 
