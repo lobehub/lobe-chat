@@ -59,7 +59,7 @@ const run = async () => {
           child.links.cn,
         )}\n`;
         sidebarContent += `- ${genMdLink(child.titles.en, child.links.en)} | ${genMdLink(
-          '中文',
+          child.titles.cn,
           child.links.cn,
         )}\n`;
       });

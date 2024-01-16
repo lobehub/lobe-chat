@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",
   "defaultAgent": "المساعد الافتراضي",
+  "defaultList": "قائمة الافتراضية",
   "defaultSession": "المساعد الافتراضي",
   "duplicateTitle": "{{title}} نسخة",
   "historyRange": "نطاق التاريخ",
