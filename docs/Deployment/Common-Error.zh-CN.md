@@ -1,5 +1,23 @@
 # 常见问题
 
+## 配置 `OPENAI_PROXY_URL` 环境变量但返回值为空
+
+### 问题描述
+
+配置 `OPENAI_PROXY_URL` 环境变量后，可能会遇到 AI 的返回消息为空的情况。这可能是由于 `OPENAI_PROXY_URL` 配置不正确导致。
+
+### 解决方案
+
+重新检查并确认 `OPENAI_PROXY_URL` 是否设置正确，包括是否正确地添加了 `/v1` 后缀（如果需要）。
+
+### 相关讨论链接
+
+- [Docker 安装，配置好环境变量后，为何返回值是空白？](https://github.com/lobehub/lobe-chat/discussions/623)
+- [使用第三方接口报错的原因](https://github.com/lobehub/lobe-chat/discussions/734)
+- [代理服务器地址填了聊天没任何反应](https://github.com/lobehub/lobe-chat/discussions/1065)
+
+如果问题依旧无法解决，建议在社区中提出问题，附上相关日志和配置信息，以便其他开发者或维护者提供帮助。
+
 ## 使用代理中转请求时（例如：Surge），报 `UNABLE_TO_VERIFY_LEAF_SIGNATURE` 错误
 
 ### 问题描述
