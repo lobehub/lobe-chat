@@ -54,10 +54,21 @@ The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `g
 
 - Type: Optional
 - Description: If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL
-- Default: `https://api.openai.com`
-- Example: `https://api.chatanywhere.cn`
+- Default: `https://api.openai.com/v1`
+- Example: `https://api.chatanywhere.cn` or `https://aihubmix.com/v1`
 
-<br/>
+> !\[NOTE]
+>
+> Please check the request suffix of your proxy service provider. Some proxy service providers may add `/v1` to the request suffix, while others may not.
+> If you find that the AI returns an empty message during testing, try adding the `/v1` suffix and retrying.
+
+Whether to fill in `/v1` is closely related to the model service provider. For example, the default address of OpenAI is `api.openai.com/v1`. If your proxy forwards this interface, you can directly fill in `proxy.com`. However, if the model service provider directly forwards the `api.openai.com` domain, you need to add the `/v1` URL by yourself.
+
+Related discussions:
+
+- [Why is the return value blank after installing Docker, configuring the environment variables?](https://github.com/lobehub/lobe-chat/discussions/623)
+- [Reasons for errors when using third-party interfaces](https://github.com/lobehub/lobe-chat/discussions/734)
+- [No response when filling in the proxy server address for chatting](https://github.com/lobehub/lobe-chat/discussions/1065)
 
 ## Azure OpenAI
 

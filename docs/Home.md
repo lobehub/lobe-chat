@@ -12,8 +12,6 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 ![](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-[New Locale Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale) | [新语种添加指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale.zh-CN)
-
 <!-- DOCS LIST -->
 
 ### 🤯 Usage
@@ -37,6 +35,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 ### ⌨️ Development
 
 - [Technical Development Getting Started Guide](https://github.com/lobehub/lobe-chat/wiki/index) | [技术开发上手指南](https://github.com/lobehub/lobe-chat/wiki/index.zh-CN)
+- [New Locale Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale) | [新语种添加指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale.zh-CN)
 - [Environment Setup Guide](https://github.com/lobehub/lobe-chat/wiki/Setup-Development) | [开发环境设置](https://github.com/lobehub/lobe-chat/wiki/Setup-Development.zh-CN)
 - [Architecture Design](https://github.com/lobehub/lobe-chat/wiki/Architecture) | [架构设计](https://github.com/lobehub/lobe-chat/wiki/Architecture.zh-CN)
 - [Directory Structure](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure) | [目录架构](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure.zh-CN)
