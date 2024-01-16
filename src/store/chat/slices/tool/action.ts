@@ -18,7 +18,11 @@ const n = setNamespace('plugin');
 
 export interface ChatPluginAction {
   createAssistantMessageByPlugin: (content: string, parentId: string) => Promise<void>;
-  fillPluginMessageContent: (id: string, content: string) => Promise<void>;
+  fillPluginMessageContent: (
+    id: string,
+    content: string,
+    triggerAiMessage?: boolean,
+  ) => Promise<void>;
   invokeBuiltinTool: (id: string, payload: ChatPluginPayload) => Promise<void>;
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<void>;
   invokeMarkdownTypePlugin: (id: string, payload: ChatPluginPayload) => Promise<void>;
@@ -47,12 +51,12 @@ export const chatPlugin: StateCreator<
     await get().refreshMessages();
   },
 
-  fillPluginMessageContent: async (id, content) => {
+  fillPluginMessageContent: async (id, content, triggerAiMessage) => {
     const { triggerAIMessage, updateMessageContent } = get();
 
     await updateMessageContent(id, content);
 
-    await triggerAIMessage(id);
+    if (triggerAiMessage) await triggerAIMessage(id);
   },
 
   invokeBuiltinTool: async (id, payload) => {
