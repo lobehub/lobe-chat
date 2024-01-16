@@ -9,6 +9,7 @@
 - [本地开发环境设置](#本地开发环境设置)
 - [代码风格与贡献指南](#代码风格与贡献指南)
 - [国际化实现指南](#国际化实现指南)
+- [附录：资源与参考](#附录资源与参考)
 
 ## 基础技术栈
 
@@ -97,3 +98,11 @@ LobeChat 采用 `i18next` 和 `lobe-i18n` 实现多语言支持，确保用户�
 如果要添加新语种，需遵循特定步骤，详见 [新语种添加指南](Add-New-Locale.zh-CN)。 我们鼓励你参与我们的国际化努力，共同为全球用户提供更好的服务。
 
 详细的国际化实现指南指南，请参考 [国际化实现指南](Internationalization-Implementation.zh-CN)。
+
+## 附录：资源与参考
+
+为了支持开发者更好地理解和使用 LobeChat 的技术栈，我们提供了一份详尽的资源与参考列表 —— [LobeChat 资源与参考](https://github.com/lobehub/lobe-chat/wiki/Resources.zh-CN) - 访问我们维护的资源列表，包括教程、文章和其他有用的链接。
+
+我们鼓励开发者利用这些资源深入学习和提升技能，通过 [LobeChat GitHub Discussions](https://github.com/lobehub/lobe-chat/discussions) 或者 [Discord](https://discord.com/invite/AYFPHvv2jT) 加入社区讨论，提出问题或分享你的经验。
+
+如果你有任何疑问，或者需要进一步的帮助，请不要犹豫，请通过上述渠道与我们联系。
