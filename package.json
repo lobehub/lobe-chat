@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.120.0",
+  "version": "0.120.1",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -44,10 +44,11 @@
     "release": "semantic-release",
     "start": "next start",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
-    "test": "vitest --passWithNoTests",
-    "test-ci-temp-fixture": "echo 'please remove this script after new bun@1.0.24 released' && rm -rf node_modules && npx bun@1.0.22 install",
-    "test:coverage": "npm run test-ci-temp-fixture && vitest run --coverage --passWithNoTests",
-    "test:coverage-local": "vitest run --coverage --passWithNoTests",
+    "test": "npm run test-temp-fixture-ci && vitest",
+    "test-a-local": "vitest",
+    "test-temp-fixture-ci": "echo 'please remove this script after new bun@1.0.24 released' && rm -rf node_modules && npx bun@1.0.22 install",
+    "test:coverage": "npm run test-temp-fixture-ci && vitest run --coverage",
+    "test:coverage-local": "vitest run --coverage",
     "test:update": "vitest -u",
     "type-check": "tsc --noEmit",
     "workflow:docs": "bun scripts/docsWorkflow/index.ts",
