@@ -472,14 +472,14 @@ API Key 是使用 LobeChat 进行大语言模型会话的必要信息，本节�
 
 或者使用以下命令进行本地开发：
 
-[![][bun-shield]][bun-link]
-
 ```fish
 $ git clone https://github.com/lobehub/lobe-chat.git
 $ cd lobe-chat
-$ bun install
-$ bun run dev
+$ pnpm install
+$ pnpm run dev
 ```
+
+如果你希望了解更多详情，欢迎可以查阅我们的 [LobeChat 开发指南](https://github.com/lobehub/lobe-chat/wiki/index.zh-CN)
 
 <div align="right">
 
@@ -576,8 +576,6 @@ This project is [MIT](./LICENSE) licensed.
 <!-- LINK GROUP -->
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-[bun-link]: https://bun.sh
-[bun-shield]: https://img.shields.io/badge/-speedup%20with%20bun-black?logo=bun&style=for-the-badge
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
