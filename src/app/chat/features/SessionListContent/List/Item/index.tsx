@@ -20,7 +20,6 @@ interface SessionItemProps {
 }
 
 const SessionItem = memo<SessionItemProps>(({ id }) => {
-  const [open, setOpen] = useState(false);
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
 
   const [defaultModel] = useGlobalStore((s) => [settingsSelectors.defaultAgentConfig(s).model]);
@@ -48,18 +47,6 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
 
   const showModel = model !== defaultModel;
 
-  const actions = useMemo(
-    () => (
-      <Actions
-        group={group}
-        id={id}
-        openCreateGroupModal={() => setCreateGroupModalOpen(true)}
-        setOpen={setOpen}
-      />
-    ),
-    [group, id],
-  );
-
   const addon = useMemo(
     () =>
       !showModel ? undefined : (
@@ -72,19 +59,24 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
 
   return (
     <>
-      <ListItem
-        actions={actions}
-        active={active}
-        addon={addon}
-        avatar={avatar}
-        avatarBackground={avatarBackground}
-        date={updateAt}
-        description={description || systemRole}
-        loading={loading}
-        pin={pin}
-        showAction={open}
-        title={title}
-      />
+      <Actions
+        group={group}
+        id={id}
+        openCreateGroupModal={() => setCreateGroupModalOpen(true)}
+        trigger={['contextMenu']}
+      >
+        <ListItem
+          active={active}
+          addon={addon}
+          avatar={avatar}
+          avatarBackground={avatarBackground}
+          date={updateAt}
+          description={description || systemRole}
+          loading={loading}
+          pin={pin}
+          title={title}
+        />
+      </Actions>
       <CreateGroupModal
         id={id}
         onCancel={() => setCreateGroupModalOpen(false)}

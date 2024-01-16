@@ -25,11 +25,11 @@ const useStyles = createStyles(({ css, token, responsive }) => {
 });
 
 const ListItem = memo<ListItemProps & { avatar: string; avatarBackground?: string }>(
-  ({ avatar, avatarBackground, active, showAction, actions, ...props }) => {
+  ({ avatar, avatarBackground, active, className, ...props }) => {
     const ref = useRef(null);
     const isHovering = useHover(ref);
     const { mobile } = useResponsive();
-    const { styles } = useStyles();
+    const { cx, styles } = useStyles();
 
     const avatarRender = useMemo(
       () => (
@@ -46,12 +46,10 @@ const ListItem = memo<ListItemProps & { avatar: string; avatarBackground?: strin
 
     return (
       <Item
-        actions={actions}
         active={mobile ? false : active}
         avatar={avatarRender}
-        className={styles.container}
+        className={cx(styles.container, className)}
         ref={ref}
-        showAction={actions && (isHovering || showAction)}
         {...(props as any)}
       />
     );

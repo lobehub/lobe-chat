@@ -1,5 +1,5 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { App, Dropdown, type MenuProps } from 'antd';
+import { Icon } from '@lobehub/ui';
+import { App, Dropdown, type DropdownProps, type MenuProps } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
@@ -8,7 +8,6 @@ import {
   ListTree,
   LucideCopy,
   LucidePlus,
-  MoreVertical,
   Pin,
   PinOff,
   Trash,
@@ -30,14 +29,13 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-interface ActionProps {
+interface ActionProps extends DropdownProps {
   group: string | undefined;
   id: string;
   openCreateGroupModal: () => void;
-  setOpen: (open: boolean) => void;
 }
 
-const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen }) => {
+const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, ...rest }) => {
   const { t } = useTranslation('common');
 
   const { styles } = useStyles();
@@ -67,7 +65,8 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
         icon: <Icon icon={pin ? PinOff : Pin} />,
         key: 'pin',
         label: t(pin ? 'pinOff' : 'pin'),
-        onClick: () => {
+        onClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
           pinSession(id, !pin);
         },
       },
@@ -77,7 +76,6 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
         label: t('duplicate'),
         onClick: ({ domEvent }) => {
           domEvent.stopPropagation();
-
           duplicateSession(id);
         },
       },
@@ -118,6 +116,9 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
         icon: <Icon icon={ListTree} />,
         key: 'moveGroup',
         label: t('group.moveGroup'),
+        onClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
+        },
       },
       {
         type: 'divider',
@@ -142,6 +143,10 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
         icon: <Icon icon={HardDriveDownload} />,
         key: 'export',
         label: t('export'),
+        onClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
+        },
+        trigger: ['click'],
       },
       {
         danger: true,
@@ -172,21 +177,9 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
       arrow={false}
       menu={{
         items,
-        onClick: ({ domEvent }) => {
-          domEvent.stopPropagation();
-        },
       }}
-      onOpenChange={setOpen}
-      trigger={['click']}
-    >
-      <ActionIcon
-        icon={MoreVertical}
-        size={{
-          blockSize: 28,
-          fontSize: 16,
-        }}
-      />
-    </Dropdown>
+      {...rest}
+    />
   );
 });
 
