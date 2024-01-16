@@ -1,3 +1,5 @@
+import { Markdown } from '@lobehub/ui';
+import { TypographyProps } from 'antd';
 import { ReactNode, memo } from 'react';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -12,5 +14,17 @@ export const GuideMessage = memo<
 >(({ id, content }) => {
   if (content === LOADING_FLAT) return <BubblesLoading />;
 
-  return <div id={id}>{content}</div>;
+  return (
+    <div id={id}>
+      <Markdown
+        componentProps={{
+          a: {
+            target: '_self',
+          } as TypographyProps['Link'] & HTMLAnchorElement,
+        }}
+      >
+        {content}
+      </Markdown>
+    </div>
+  );
 });
