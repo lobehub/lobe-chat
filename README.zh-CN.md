@@ -185,14 +185,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                    | 助手说明                                                              |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| [乍得](https://chat-preview.lobehub.com/market?agent=chad)<br/><sup>By **[HerIsDia](https://github.com/HerIsDia)** on **2024-01-15**</sup>                                  | 只是乍得<br/>`幽默` `搞笑`                                            |
-| [英语解析师](https://chat-preview.lobehub.com/market?agent=english-teacher)<br/><sup>By **[fmaxyou](https://github.com/fmaxyou)** on **2024-01-11**</sup>                   | 擅长英语单词和短语解释与记忆技巧<br/>`英语教学` `解释` `记忆技巧`     |
-| [生活决策顾问](https://chat-preview.lobehub.com/market?agent=life-decision-advisor)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2024-01-11**</sup> | 生活决策顾问是一个虚拟指南，旨在帮助用户做出明智的生活决策<br/>`提示` |
-| [计算机科学论文润色](https://chat-preview.lobehub.com/market?agent=cs-research-paper)<br/><sup>By **[McKinleyLu](https://github.com/McKinleyLu)** on **2024-01-10**</sup>   | 擅长润色硕士学位论文<br/>`润色` `论文` `教育` `计算机科学`            |
+| 最近新增                                                                                                                                                                    | 助手说明                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [William](https://chat-preview.lobehub.com/market?agent=unreal-engine-development-engineer)<br/><sup>By **[Wutpeach](https://github.com/Wutpeach)** on **2024-01-16**</sup> | 虚幻引擎专家，精通 C++ 编程，渲染、内存、线程等管线架构，UE 在安卓平台应用，全面的美术认知，熟悉 Shader 编写，熟练掌握 3D 美术资产制作流程与工具。<br/>`虚幻引擎` `c-编程` `渲染管线` `内存管理` `线程架构` |
+| [乍得](https://chat-preview.lobehub.com/market?agent=chad)<br/><sup>By **[HerIsDia](https://github.com/HerIsDia)** on **2024-01-15**</sup>                                  | 只是乍得<br/>`幽默` `搞笑`                                                                                                                                                                                  |
+| [英语解析师](https://chat-preview.lobehub.com/market?agent=english-teacher)<br/><sup>By **[fmaxyou](https://github.com/fmaxyou)** on **2024-01-11**</sup>                   | 擅长英语单词和短语解释与记忆技巧<br/>`英语教学` `解释` `记忆技巧`                                                                                                                                           |
+| [生活决策顾问](https://chat-preview.lobehub.com/market?agent=life-decision-advisor)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2024-01-11**</sup> | 生活决策顾问是一个虚拟指南，旨在帮助用户做出明智的生活决策<br/>`提示`                                                                                                                                       |
 
-> 📊 Total agents: [<kbd>**97**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**98**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
