@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.120.1](https://github.com/lobehub/lobe-chat/compare/v0.120.0...v0.120.1)
+
+<sup>Released on **2024-01-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix list scrolling white screen on mobile.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix list scrolling white screen on mobile, closes [#1072](https://github.com/lobehub/lobe-chat/issues/1072) ([af10947](https://github.com/lobehub/lobe-chat/commit/af10947))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.120.0](https://github.com/lobehub/lobe-chat/compare/v0.119.13...v0.120.0)
 
 <sup>Released on **2024-01-15**</sup>
