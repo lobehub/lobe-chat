@@ -150,14 +150,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                        | 插件描述                                                                                   |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [天气 GPT](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Steven Tey** on **2023-12-16**</sup>  | 获取特定位置的当前天气信息。<br/>`天气`                                                    |
-| [AskYouPDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AskYourPDF** on **2023-12-16**</sup> | 释放您的 PDF 的力量！深入您的文档，找到答案，并将信息带到您的指尖。<br/>`pdf` `文档` `web` |
-| [时钟时间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>     | 显示一个时钟来展示当前时间<br/>`时钟` `时间`                                               |
-| [思维导图](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Moonlit7** on **2023-12-19**</sup>    | 思维导图生成助手<br/>`思维导图` `脑图`                                                     |
+| 最近新增                                                                                                        | 插件描述                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| [TikZJax](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Arvin Xu** on **2024-01-14**</sup>     | 将 LaTeX TikZ 代码转换为 SVG 图像，用于创建清晰、可缩放的数学图表和可视化效果。<br/>`latex` `svg` `可视化` `图表` `数学` |
+| [天气 GPT](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Steven Tey** on **2023-12-16**</sup>  | 获取特定位置的当前天气信息。<br/>`天气`                                                                                  |
+| [AskYouPDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AskYourPDF** on **2023-12-16**</sup> | 释放您的 PDF 的力量！深入您的文档，找到答案，并将信息带到您的指尖。<br/>`pdf` `文档` `web`                               |
+| [时钟时间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>     | 显示一个时钟来展示当前时间<br/>`时钟` `时间`                                                                             |
 
-> 📊 Total plugins: [<kbd>**9**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**10**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -187,12 +187,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                    | 助手说明                                                              |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| [乍得](https://chat-preview.lobehub.com/market?agent=chad)<br/><sup>By **[HerIsDia](https://github.com/HerIsDia)** on **2024-01-15**</sup>                                  | 只是乍得<br/>`幽默` `搞笑`                                            |
 | [英语解析师](https://chat-preview.lobehub.com/market?agent=english-teacher)<br/><sup>By **[fmaxyou](https://github.com/fmaxyou)** on **2024-01-11**</sup>                   | 擅长英语单词和短语解释与记忆技巧<br/>`英语教学` `解释` `记忆技巧`     |
 | [生活决策顾问](https://chat-preview.lobehub.com/market?agent=life-decision-advisor)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2024-01-11**</sup> | 生活决策顾问是一个虚拟指南，旨在帮助用户做出明智的生活决策<br/>`提示` |
 | [计算机科学论文润色](https://chat-preview.lobehub.com/market?agent=cs-research-paper)<br/><sup>By **[McKinleyLu](https://github.com/McKinleyLu)** on **2024-01-10**</sup>   | 擅长润色硕士学位论文<br/>`润色` `论文` `教育` `计算机科学`            |
-| [Emoji 生成](https://chat-preview.lobehub.com/market?agent=emoji-generate)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2024-01-09**</sup>                | 可以根据内容生成 Emoji 表情<br/>`表情生成` `emoji` `创意`             |
 
-> 📊 Total agents: [<kbd>**96**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**97**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
