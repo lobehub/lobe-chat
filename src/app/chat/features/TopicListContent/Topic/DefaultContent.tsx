@@ -14,7 +14,7 @@ const DefaultContent = memo(() => {
   const theme = useTheme();
 
   return (
-    <Flexbox align={'center'} gap={8} horizontal>
+    <Flexbox align={'center'} gap={8} horizontal onContextMenu={(e) => e.preventDefault()}>
       <Flexbox align={'center'} height={24} justify={'center'} width={24}>
         <Icon color={theme.colorTextDescription} icon={MessageSquareDashed} />
       </Flexbox>

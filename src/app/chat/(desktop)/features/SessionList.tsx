@@ -11,9 +11,12 @@ const useStyles = createStyles(({ stylish, css, cx }) =>
   cx(
     stylish.noScrollbar,
     css`
+      user-select: none;
+
       display: flex;
       flex-direction: column;
       gap: 2px;
+
       padding: 8px 8px 0;
     `,
   ),

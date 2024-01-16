@@ -8,6 +8,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSessionStore } from '@/store/session';
 
+import Actions from '../List/Item/Actions';
 import ListItem from '../ListItem';
 
 const Inbox = memo(() => {
@@ -24,11 +25,13 @@ const Inbox = memo(() => {
         switchSession(INBOX_SESSION_ID);
       }}
     >
-      <ListItem
-        active={activeId === INBOX_SESSION_ID}
-        avatar={DEFAULT_INBOX_AVATAR}
-        title={t('inbox.title')}
-      />
+      <Actions id={INBOX_SESSION_ID}>
+        <ListItem
+          active={activeId === INBOX_SESSION_ID}
+          avatar={DEFAULT_INBOX_AVATAR}
+          title={t('inbox.title')}
+        />
+      </Actions>
     </Link>
   );
 });

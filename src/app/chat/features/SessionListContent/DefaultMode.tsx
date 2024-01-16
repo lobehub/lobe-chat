@@ -7,6 +7,7 @@ import { useGlobalStore } from '@/store/global';
 import { preferenceSelectors, settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+import { SessionDefaultGroup } from '@/types/session';
 
 import Actions from '../SessionListContent/CollapseGroup/Actions';
 import CollapseGroup from './CollapseGroup';
@@ -16,7 +17,7 @@ import ConfigGroupModal from './Modals/ConfigGroupModal';
 import RenameGroupModal from './Modals/RenameGroupModal';
 
 const SessionListContent = memo(() => {
-  const [activeGroupId, setActiveGroupId] = useState<string>();
+  const [activeGroupId, setActiveGroupId] = useState<string>('');
   const [renameGroupModalOpen, setRenameGroupModalOpen] = useState(false);
   const [configGroupModalOpen, setConfigGroupModalOpen] = useState(false);
   const { t } = useTranslation('chat');
@@ -33,30 +34,42 @@ const SessionListContent = memo(() => {
       [
         sessionList.pinnedList?.length > 0 && {
           children: <SessionList dataSource={sessionList.pinnedList} />,
-          key: 'pinned',
-          label: t('pin'),
+          key: SessionDefaultGroup.Pinned,
+          label: (
+            <Actions
+              id={SessionDefaultGroup.Pinned}
+              openConfigModal={() => setConfigGroupModalOpen(true)}
+              title={t('pin')}
+            />
+          ),
         },
         ...sessionCustomGroups.map(({ id, name }) => ({
           children: sessionList.customList[id] && (
             <SessionList dataSource={sessionList.customList[id]} />
           ),
-          extra: (
+          key: id,
+          label: (
             <Actions
               id={id}
-              onOpenChange={(isOpen) => {
-                if (isOpen) setActiveGroupId(id);
-              }}
+              onOpenChange={(isOpen) => isOpen && setActiveGroupId(id)}
               openConfigModal={() => setConfigGroupModalOpen(true)}
-              openRenameModal={() => setRenameGroupModalOpen(true)}
+              openRenameModal={() => {
+                setRenameGroupModalOpen(true);
+              }}
+              title={name}
             />
           ),
-          key: id,
-          label: name,
         })),
         {
           children: <SessionList dataSource={sessionList.defaultList} />,
-          key: 'defaultList',
-          label: t('defaultList'),
+          key: SessionDefaultGroup.Default,
+          label: (
+            <Actions
+              id={SessionDefaultGroup.Default}
+              openConfigModal={() => setConfigGroupModalOpen(true)}
+              title={t('defaultList')}
+            />
+          ),
         },
       ].filter(Boolean) as CollapseProps['items'],
     [sessionCustomGroups, sessionList],
@@ -73,13 +86,11 @@ const SessionListContent = memo(() => {
           updatePreference({ sessionGroupKeys });
         }}
       />
-      {activeGroupId && (
-        <RenameGroupModal
-          id={activeGroupId}
-          onCancel={() => setRenameGroupModalOpen(false)}
-          open={renameGroupModalOpen}
-        />
-      )}
+      <RenameGroupModal
+        id={activeGroupId}
+        onCancel={() => setRenameGroupModalOpen(false)}
+        open={renameGroupModalOpen}
+      />
       <ConfigGroupModal
         onCancel={() => setConfigGroupModalOpen(false)}
         open={configGroupModalOpen}

@@ -3,9 +3,9 @@ import { App, Dropdown, type DropdownProps, type MenuProps } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
+  BetweenHorizontalStart,
   Check,
   HardDriveDownload,
-  ListTree,
   LucideCopy,
   LucidePlus,
   Pin,
@@ -15,6 +15,7 @@ import {
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { INBOX_SESSION_ID } from '@/const/session';
 import { configService } from '@/services/config';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
@@ -30,12 +31,12 @@ const useStyles = createStyles(({ css }) => ({
 }));
 
 interface ActionProps extends DropdownProps {
-  group: string | undefined;
+  group?: string;
   id: string;
-  openCreateGroupModal: () => void;
+  openCreateGroupModal?: () => void;
 }
 
-const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, ...rest }) => {
+const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, children }) => {
   const { t } = useTranslation('common');
 
   const { styles } = useStyles();
@@ -57,11 +58,12 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, ...rest })
   const { modal } = App.useApp();
 
   const isDefault = group === SessionDefaultGroup.Default;
-  // const hasDivider = !isDefault || Object.keys(sessionByGroup).length > 0;
+  const isInbox = id === INBOX_SESSION_ID;
 
   const items: MenuProps['items'] = useMemo(
     () => [
       {
+        disabled: isInbox,
         icon: <Icon icon={pin ? PinOff : Pin} />,
         key: 'pin',
         label: t(pin ? 'pinOff' : 'pin'),
@@ -71,6 +73,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, ...rest })
         },
       },
       {
+        disabled: isInbox,
         icon: <Icon icon={LucideCopy} />,
         key: 'duplicate',
         label: t('duplicate'),
@@ -109,14 +112,18 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, ...rest })
             label: <div>{t('group.createGroup')}</div>,
             onClick: ({ domEvent }) => {
               domEvent.stopPropagation();
-              openCreateGroupModal();
+              openCreateGroupModal?.();
             },
           },
         ],
-        icon: <Icon icon={ListTree} />,
+        disabled: isInbox,
+        icon: <Icon icon={BetweenHorizontalStart} />,
         key: 'moveGroup',
         label: t('group.moveGroup'),
         onClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
+        },
+        onTitleClick: ({ domEvent }) => {
           domEvent.stopPropagation();
         },
       },
@@ -146,10 +153,13 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, ...rest })
         onClick: ({ domEvent }) => {
           domEvent.stopPropagation();
         },
-        trigger: ['click'],
+        onTitleClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
+        },
       },
       {
         danger: true,
+        disabled: isInbox,
         icon: <Icon icon={Trash} />,
         key: 'delete',
         label: t('delete'),
@@ -178,8 +188,10 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, ...rest })
       menu={{
         items,
       }}
-      {...rest}
-    />
+      trigger={['contextMenu']}
+    >
+      {children}
+    </Dropdown>
   );
 });
 

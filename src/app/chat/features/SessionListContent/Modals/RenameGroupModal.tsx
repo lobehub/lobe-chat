@@ -34,6 +34,7 @@ const RenameGroupModal = memo<RenameGroupModalProps>(({ id, open, onCancel }) =>
     <Modal
       allowFullscreen
       cancelText={t('cancel')}
+      destroyOnClose={true}
       okText={t('ok')}
       onCancel={onCancel}
       onOk={handleSubmit}

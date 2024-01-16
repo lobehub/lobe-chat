@@ -59,12 +59,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
 
   return (
     <>
-      <Actions
-        group={group}
-        id={id}
-        openCreateGroupModal={() => setCreateGroupModalOpen(true)}
-        trigger={['contextMenu']}
-      >
+      <Actions group={group} id={id} openCreateGroupModal={() => setCreateGroupModalOpen(true)}>
         <ListItem
           active={active}
           addon={addon}

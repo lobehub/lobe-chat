@@ -1,7 +1,7 @@
 import { ActionIcon, EditableText, Icon } from '@lobehub/ui';
 import { App, Dropdown, type MenuProps, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { LucideCopy, MoreVertical, PencilLine, Star, Trash, Wand2 } from 'lucide-react';
+import { LucideCopy, PencilLine, Star, Trash, Wand2 } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -30,7 +30,7 @@ interface TopicContentProps {
   title: string;
 }
 
-const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
+const TopicContent = memo<TopicContentProps>(({ id, title, fav }) => {
   const { t } = useTranslation('common');
 
   const [
@@ -126,75 +126,65 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   );
 
   return (
-    <Flexbox
-      align={'center'}
-      gap={8}
-      horizontal
-      justify={'space-between'}
-      onDoubleClick={(e) => {
-        if (!id) return;
-        if (e.altKey) toggleEditing(true);
+    <Dropdown
+      arrow={false}
+      menu={{
+        items: items,
+        onClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
+        },
       }}
+      trigger={['contextMenu']}
     >
-      <ActionIcon
-        color={fav ? theme.colorWarning : undefined}
-        fill={fav ? theme.colorWarning : 'transparent'}
-        icon={Star}
-        onClick={() => {
+      <Flexbox
+        align={'center'}
+        gap={8}
+        horizontal
+        justify={'space-between'}
+        onDoubleClick={(e) => {
           if (!id) return;
-          favoriteTopic(id, !fav);
+          if (e.altKey) toggleEditing(true);
         }}
-        size={'small'}
-      />
-      {!editing ? (
-        <Paragraph
-          className={styles.title}
-          ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
-          style={{ margin: 0 }}
-        >
-          {title}
-        </Paragraph>
-      ) : (
-        <EditableText
-          editing={editing}
-          onChangeEnd={(v) => {
-            if (title !== v) {
-              updateTopicTitle(id, v);
-            }
-            toggleEditing(false);
+      >
+        <ActionIcon
+          color={fav ? theme.colorWarning : undefined}
+          fill={fav ? theme.colorWarning : 'transparent'}
+          icon={Star}
+          onClick={() => {
+            if (!id) return;
+            favoriteTopic(id, !fav);
           }}
-          onEditingChange={toggleEditing}
-          showEditIcon={false}
           size={'small'}
-          style={{
-            height: 28,
-          }}
-          type={'pure'}
-          value={title}
         />
-      )}
-      {showMore && !editing && (
-        <Dropdown
-          arrow={false}
-          menu={{
-            items: items,
-            onClick: ({ domEvent }) => {
-              domEvent.stopPropagation();
-            },
-          }}
-          trigger={['click']}
-        >
-          <ActionIcon
-            className="topic-more"
-            icon={MoreVertical}
-            onClick={(e) => {
-              e.stopPropagation();
+        {!editing ? (
+          <Paragraph
+            className={styles.title}
+            ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
+            style={{ margin: 0 }}
+          >
+            {title}
+          </Paragraph>
+        ) : (
+          <EditableText
+            editing={editing}
+            onChangeEnd={(v) => {
+              if (title !== v) {
+                updateTopicTitle(id, v);
+              }
+              toggleEditing(false);
             }}
+            onEditingChange={toggleEditing}
+            showEditIcon={false}
             size={'small'}
+            style={{
+              height: 28,
+            }}
+            type={'pure'}
+            value={title}
           />
-        </Dropdown>
-      )}
-    </Flexbox>
+        )}
+      </Flexbox>
+    </Dropdown>
   );
 });
 
