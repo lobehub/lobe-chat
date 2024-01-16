@@ -52,7 +52,7 @@ const Desktop = memo(() => {
         style={{
           flex: 'none',
           height: '100%',
-          maxHeight: '100vh',
+          maxHeight: '100dvh',
           minWidth: CHAT_SIDEBAR_WIDTH,
           overflow: 'auto',
         }}
