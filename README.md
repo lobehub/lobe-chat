@@ -208,14 +208,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                             | Description                                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Chad](https://chat-preview.lobehub.com/market?agent=chad)<br/><sup>By **[HerIsDia](https://github.com/HerIsDia)** on **2024-01-15**</sup>                                                 | Just chad<br/>`humor` `funny`                                                                                                                      |
-| [English Analyst](https://chat-preview.lobehub.com/market?agent=english-teacher)<br/><sup>By **[fmaxyou](https://github.com/fmaxyou)** on **2024-01-11**</sup>                             | Specializes in explaining and memorization techniques for English words and phrases<br/>`english-teaching` `explanation` `memorization-techniques` |
-| [Life Decision Advisor](https://chat-preview.lobehub.com/market?agent=life-decision-advisor)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2024-01-11**</sup>       | A Life Decision Advisor is a virtual guide designed to assist users in making informed life decisions<br/>`prompt`                                 |
-| [Computer Science Paper Proofreading](https://chat-preview.lobehub.com/market?agent=cs-research-paper)<br/><sup>By **[McKinleyLu](https://github.com/McKinleyLu)** on **2024-01-10**</sup> | Specializing in proofreading master's degree theses<br/>`proofreading` `paper` `education` `computer-science`                                      |
+| Recent Submits                                                                                                                                                                       | Description                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [William](https://chat-preview.lobehub.com/market?agent=unreal-engine-development-engineer)<br/><sup>By **[Wutpeach](https://github.com/Wutpeach)** on **2024-01-16**</sup>          | Unreal Engine expert, proficient in C++ programming, rendering, memory, thread and other pipeline architectures, UE application on Android platform, comprehensive artistic cognition, familiar with Shader writing, proficient in 3D art asset production process and tools.<br/>`unreal-engine` `c-programming` `rendering-pipeline` `memory-management` `thread-architecture` |
+| [Chad](https://chat-preview.lobehub.com/market?agent=chad)<br/><sup>By **[HerIsDia](https://github.com/HerIsDia)** on **2024-01-15**</sup>                                           | Just chad<br/>`humor` `funny`                                                                                                                                                                                                                                                                                                                                                    |
+| [English Analyst](https://chat-preview.lobehub.com/market?agent=english-teacher)<br/><sup>By **[fmaxyou](https://github.com/fmaxyou)** on **2024-01-11**</sup>                       | Specializes in explaining and memorization techniques for English words and phrases<br/>`english-teaching` `explanation` `memorization-techniques`                                                                                                                                                                                                                               |
+| [Life Decision Advisor](https://chat-preview.lobehub.com/market?agent=life-decision-advisor)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2024-01-11**</sup> | A Life Decision Advisor is a virtual guide designed to assist users in making informed life decisions<br/>`prompt`                                                                                                                                                                                                                                                               |
 
-> 📊 Total agents: [<kbd>**97**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**98**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -395,12 +395,12 @@ $ docker run -d -p 3210:3210 \
 
 This project provides some additional configuration items set with environment variables:
 
-| Environment Variable | Required | Description                                                                                                                                                               | Example                                                                                   |
-| -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                                                  | `sk-xxxxxx...xxxxxx`                                                                      |
-| `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL                             | `https://api.chatanywhere.cn/v1`<br/>The default value is<br/>`https://api.openai.com/v1` |
-| `ACCESS_CODE`        | No       | Add a password to access this service; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                 |
-| `CUSTOM_MODELS`      | No       | Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas. | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                     |
+| Environment Variable | Required | Description                                                                                                                                                               | Example                                                                                                              |
+| -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                                                  | `sk-xxxxxx...xxxxxx`                                                                                                 |
+| `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL                             | `https://api.chatanywhere.cn` or `https://aihubmix.com/v1` <br/>The default value is<br/>`https://api.openai.com/v1` |
+| `ACCESS_CODE`        | No       | Add a password to access this service; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                                            |
+| `CUSTOM_MODELS`      | No       | Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas. | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                                |
 
 > \[!NOTE]
 >
@@ -458,14 +458,14 @@ You can use GitHub Codespaces for online development:
 
 Or clone it for local development:
 
-[![][bun-shield]][bun-link]
-
 ```fish
 $ git clone https://github.com/lobehub/lobe-chat.git
 $ cd lobe-chat
-$ bun install
-$ bun dev
+$ pnpm install
+$ pnpm dev
 ```
+
+If you would like to learn more details, please feel free to look at our [LobeChat Development Guide](https://github.com/lobehub/lobe-chat/wiki/index)
 
 <div align="right">
 
@@ -562,8 +562,6 @@ This project is [MIT](./LICENSE) licensed.
 <!-- LINK GROUP -->
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-[bun-link]: https://bun.sh
-[bun-shield]: https://img.shields.io/badge/-speedup%20with%20bun-black?logo=bun&style=for-the-badge
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
