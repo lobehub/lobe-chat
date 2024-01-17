@@ -14,8 +14,11 @@ interface LocaleLayoutProps extends PropsWithChildren {
 const Locale = memo<LocaleLayoutProps>(({ children, lang }) => {
   const { data: locale } = useSWR(
     lang,
-    async () =>
-      await import(`antd/locale/${lang?.includes('-') ? lang?.replace('-', '_') : 'en_US'}.js`),
+    async () => {
+      const localeName = lang?.includes('-') ? lang?.replace('-', '_') : 'en_US';
+      const antdLocale = await import(`antd/locale/${localeName}.js`);
+      return antdLocale.default ?? antdLocale;
+    },
     { revalidateOnFocus: false },
   );
   const [i18n] = useState(createI18nNext(lang));
