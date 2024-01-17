@@ -12,6 +12,8 @@ import { pluginSelectors } from '@/store/tool/selectors';
 import { ChatPluginPayload } from '@/types/message';
 import { LobeTool } from '@/types/tool';
 
+const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
+
 // Mock messageService 和 chatSelectors
 vi.mock('@/services/message', () => ({
   messageService: {
@@ -41,7 +43,38 @@ beforeEach(() => {
 
 describe('ChatPluginAction', () => {
   describe('fillPluginMessageContent', () => {
-    it('should update message content and process the message', async () => {
+    it('should update message content and trigger the ai message', async () => {
+      // 设置模拟函数的返回值
+      const mockCurrentChats: any[] = [];
+      (chatSelectors.currentChats as Mock).mockReturnValue(mockCurrentChats);
+
+      // 设置初始状态
+      const initialState = {
+        messages: [],
+        coreProcessMessage: vi.fn(),
+        refreshMessages: vi.fn(),
+      };
+      useChatStore.setState(initialState);
+
+      const { result } = renderHook(() => useChatStore());
+
+      const messageId = 'message-id';
+      const newContent = 'Updated content';
+
+      await act(async () => {
+        await result.current.fillPluginMessageContent(messageId, newContent, true);
+      });
+
+      // 验证 messageService.updateMessageContent 是否被正确调用
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
+
+      // 验证 refreshMessages 是否被调用
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+
+      // 验证 coreProcessMessage 是否被正确调用
+      expect(result.current.coreProcessMessage).toHaveBeenCalledWith(mockCurrentChats, messageId);
+    });
+    it('should update message content and not trigger ai message', async () => {
       // 设置模拟函数的返回值
       const mockCurrentChats: any[] = [];
       (chatSelectors.currentChats as Mock).mockReturnValue(mockCurrentChats);
@@ -69,8 +102,8 @@ describe('ChatPluginAction', () => {
       // 验证 refreshMessages 是否被调用
       expect(result.current.refreshMessages).toHaveBeenCalled();
 
-      // 验证 coreProcessMessage 是否被正确调用
-      expect(result.current.coreProcessMessage).toHaveBeenCalledWith(mockCurrentChats, messageId);
+      // 验证 coreProcessMessage 没有被正确调用
+      expect(result.current.coreProcessMessage).not.toHaveBeenCalled();
     });
   });
 
@@ -259,9 +292,13 @@ describe('ChatPluginAction', () => {
         ],
       });
 
-      useChatStore.setState({
-        refreshMessages: vi.fn(),
-        invokeDefaultTypePlugin: vi.fn(),
+      const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
+
+      act(() => {
+        useChatStore.setState({
+          refreshMessages: vi.fn(),
+          invokeStandaloneTypePlugin: vi.fn(),
+        });
       });
 
       (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
@@ -280,6 +317,87 @@ describe('ChatPluginAction', () => {
 
       // 验证 invokeDefaultTypePlugin 是否没有被调用，因为类型是 standalone
       expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
+      expect(result.current.invokeStandaloneTypePlugin).toHaveBeenCalled();
+
+      useChatStore.setState({ invokeStandaloneTypePlugin });
+    });
+
+    it('should handle builtin plugin type', async () => {
+      const messageId = 'message-id';
+      const messageContent = JSON.stringify({
+        tool_calls: [
+          {
+            id: 'call_scv',
+            function: {
+              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName${PLUGIN_SCHEMA_SEPARATOR}builtin`,
+              arguments: {},
+            },
+          },
+        ],
+      });
+
+      const invokeBuiltinTool = useChatStore.getState().invokeBuiltinTool;
+      useChatStore.setState({ refreshMessages: vi.fn(), invokeBuiltinTool: vi.fn() });
+
+      (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
+        id: messageId,
+        content: messageContent,
+      }));
+
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.triggerFunctionCall(messageId);
+      });
+
+      // 验证 refreshMessages 是否被调用
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+
+      // 验证 invokeDefaultTypePlugin 是否没有被调用，因为类型是 standalone
+      expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
+      expect(result.current.invokeBuiltinTool).toHaveBeenCalled();
+
+      useChatStore.setState({ invokeBuiltinTool });
+    });
+
+    it('should handle markdown plugin type', async () => {
+      const messageId = 'message-id';
+      const messageContent = JSON.stringify({
+        tool_calls: [
+          {
+            id: 'call_scv',
+            function: {
+              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName${PLUGIN_SCHEMA_SEPARATOR}markdown`,
+              arguments: {},
+            },
+          },
+        ],
+      });
+
+      const invokeMarkdownTypePlugin = useChatStore.getState().invokeMarkdownTypePlugin;
+      useChatStore.setState({
+        refreshMessages: vi.fn(),
+        invokeMarkdownTypePlugin: vi.fn(),
+      });
+
+      (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
+        id: messageId,
+        content: messageContent,
+      }));
+
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.triggerFunctionCall(messageId);
+      });
+
+      // 验证 refreshMessages 是否被调用
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+
+      expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
+      expect(result.current.invokeMarkdownTypePlugin).toHaveBeenCalled();
+
+      useChatStore.setState({ invokeMarkdownTypePlugin });
     });
   });
 
@@ -472,6 +590,7 @@ describe('ChatPluginAction', () => {
       expect(result.current.toggleChatLoading).toHaveBeenCalledWith(false);
       expect(useChatStore.getState().text2image).not.toHaveBeenCalled();
     });
+
     it('should handle errors when invoking a builtin tool fails', async () => {
       const payload = {
         apiName: 'builtinApi',
@@ -525,8 +644,10 @@ describe('ChatPluginAction', () => {
       } as ChatPluginPayload;
       const messageId = 'message-id';
 
-      useChatStore.setState({
-        runPluginApi: vi.fn().mockResolvedValue('Markdown response'),
+      const runPluginApiMock = vi.fn();
+
+      act(() => {
+        useChatStore.setState({ runPluginApi: runPluginApiMock });
       });
 
       const { result } = renderHook(() => useChatStore());
@@ -536,7 +657,46 @@ describe('ChatPluginAction', () => {
       });
 
       // Verify that the markdown type plugin was invoked
-      expect(result.current.runPluginApi).toHaveBeenCalledWith(messageId, payload);
+      expect(runPluginApiMock).toHaveBeenCalledWith(messageId, payload);
+    });
+  });
+
+  describe('invokeStandaloneTypePlugin', () => {
+    it('should update message with error and refresh messages if plugin settings are invalid', async () => {
+      const messageId = 'message-id';
+
+      const payload = {
+        identifier: 'pluginName',
+      } as ChatPluginPayload;
+
+      act(() => {
+        useToolStore.setState({
+          validatePluginSettings: vi
+            .fn()
+            .mockResolvedValue({ valid: false, errors: ['Invalid setting'] }),
+        });
+
+        useChatStore.setState({ refreshMessages: vi.fn(), invokeStandaloneTypePlugin });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.invokeStandaloneTypePlugin(messageId, payload);
+      });
+
+      const call = vi.mocked(messageService.updateMessageError).mock.calls[0];
+
+      expect(call[1]).toEqual({
+        body: {
+          error: ['Invalid setting'],
+          message: '[plugin] your settings is invalid with plugin manifest setting schema',
+        },
+        message: undefined,
+        type: 'PluginSettingsInvalid',
+      });
+
+      expect(result.current.refreshMessages).toHaveBeenCalled();
     });
   });
 });
