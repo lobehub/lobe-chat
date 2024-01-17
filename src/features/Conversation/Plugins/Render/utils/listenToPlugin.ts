@@ -41,7 +41,6 @@ export const useOnPluginFillContent = (
         const triggerAiMessage = e.data.triggerAiMessage;
         const content = typeof data !== 'string' ? JSON.stringify(data) : data;
 
-        console.log(triggerAiMessage, 'triggerAiMessage');
         callback(content, triggerAiMessage);
       }
     };
