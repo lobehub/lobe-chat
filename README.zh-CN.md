@@ -150,14 +150,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                        | 插件描述                                                                                                                 |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| [TikZJax](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Arvin Xu** on **2024-01-14**</sup>     | 将 LaTeX TikZ 代码转换为 SVG 图像，用于创建清晰、可缩放的数学图表和可视化效果。<br/>`latex` `svg` `可视化` `图表` `数学` |
-| [天气 GPT](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Steven Tey** on **2023-12-16**</sup>  | 获取特定位置的当前天气信息。<br/>`天气`                                                                                  |
-| [AskYouPDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AskYourPDF** on **2023-12-16**</sup> | 释放您的 PDF 的力量！深入您的文档，找到答案，并将信息带到您的指尖。<br/>`pdf` `文档` `web`                               |
-| [时钟时间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>     | 显示一个时钟来展示当前时间<br/>`时钟` `时间`                                                                             |
+| 最近新增                                                                                                        | 插件描述                                                                           |
+| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [GIF 搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **giphy** on **2024-01-17**</sup>       | 搜索各种各样的 GIF - 由 Giphy 提供动力。<br/>`gif` `图片` `搜索`                   |
+| [Asset Ovi](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **assetovi** on **2024-01-17**</sup>   | 搜索和预览数百万款用于游戏、AIGC、AR/VR 等领域的 3D 资产。<br/>`3-d` `资产` `搜索` |
+| [Astrodaily](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **360macky** on **2024-01-17**</sup>  | 搜索和发现 NASA 图像。<br/>`nasa` `搜索` `图像`                                    |
+| [Boolio Invest](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **boolio** on **2024-01-17**</sup> | 使用 Boolio 的先进引擎分析来自任何国家的股票投资。<br/>`股票` `分析`               |
 
-> 📊 Total plugins: [<kbd>**10**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**20**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -192,7 +192,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [英语解析师](https://chat-preview.lobehub.com/market?agent=english-teacher)<br/><sup>By **[fmaxyou](https://github.com/fmaxyou)** on **2024-01-11**</sup>                   | 擅长英语单词和短语解释与记忆技巧<br/>`英语教学` `解释` `记忆技巧`                                                                                                                                           |
 | [生活决策顾问](https://chat-preview.lobehub.com/market?agent=life-decision-advisor)<br/><sup>By **[amitalokbera](https://github.com/amitalokbera)** on **2024-01-11**</sup> | 生活决策顾问是一个虚拟指南，旨在帮助用户做出明智的生活决策<br/>`提示`                                                                                                                                       |
 
-> 📊 Total agents: [<kbd>**98**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**99**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

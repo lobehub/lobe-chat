@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.120.2](https://github.com/lobehub/lobe-chat/compare/v0.120.1...v0.120.2)
+
+<sup>Released on **2024-01-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix setPluginMessage can not stop create ai message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix setPluginMessage can not stop create ai message, closes [#1078](https://github.com/lobehub/lobe-chat/issues/1078) ([67de28d](https://github.com/lobehub/lobe-chat/commit/67de28d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.120.1](https://github.com/lobehub/lobe-chat/compare/v0.120.0...v0.120.1)
 
 <sup>Released on **2024-01-16**</sup>
