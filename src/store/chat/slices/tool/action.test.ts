@@ -41,7 +41,38 @@ beforeEach(() => {
 
 describe('ChatPluginAction', () => {
   describe('fillPluginMessageContent', () => {
-    it('should update message content and process the message', async () => {
+    it('should update message content and trigger the ai message', async () => {
+      // 设置模拟函数的返回值
+      const mockCurrentChats: any[] = [];
+      (chatSelectors.currentChats as Mock).mockReturnValue(mockCurrentChats);
+
+      // 设置初始状态
+      const initialState = {
+        messages: [],
+        coreProcessMessage: vi.fn(),
+        refreshMessages: vi.fn(),
+      };
+      useChatStore.setState(initialState);
+
+      const { result } = renderHook(() => useChatStore());
+
+      const messageId = 'message-id';
+      const newContent = 'Updated content';
+
+      await act(async () => {
+        await result.current.fillPluginMessageContent(messageId, newContent, true);
+      });
+
+      // 验证 messageService.updateMessageContent 是否被正确调用
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
+
+      // 验证 refreshMessages 是否被调用
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+
+      // 验证 coreProcessMessage 是否被正确调用
+      expect(result.current.coreProcessMessage).toHaveBeenCalledWith(mockCurrentChats, messageId);
+    });
+    it('should update message content and not trigger ai message', async () => {
       // 设置模拟函数的返回值
       const mockCurrentChats: any[] = [];
       (chatSelectors.currentChats as Mock).mockReturnValue(mockCurrentChats);
@@ -69,8 +100,8 @@ describe('ChatPluginAction', () => {
       // 验证 refreshMessages 是否被调用
       expect(result.current.refreshMessages).toHaveBeenCalled();
 
-      // 验证 coreProcessMessage 是否被正确调用
-      expect(result.current.coreProcessMessage).toHaveBeenCalledWith(mockCurrentChats, messageId);
+      // 验证 coreProcessMessage 没有被正确调用
+      expect(result.current.coreProcessMessage).not.toHaveBeenCalled();
     });
   });
 

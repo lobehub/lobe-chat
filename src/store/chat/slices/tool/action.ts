@@ -1,3 +1,5 @@
+import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
+import { t } from 'i18next';
 import { Md5 } from 'ts-md5';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -26,6 +28,7 @@ export interface ChatPluginAction {
   invokeBuiltinTool: (id: string, payload: ChatPluginPayload) => Promise<void>;
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<void>;
   invokeMarkdownTypePlugin: (id: string, payload: ChatPluginPayload) => Promise<void>;
+  invokeStandaloneTypePlugin: (id: string, payload: ChatPluginPayload) => Promise<void>;
   runPluginApi: (id: string, payload: ChatPluginPayload) => Promise<string | undefined>;
   triggerAIMessage: (id: string) => Promise<void>;
   triggerFunctionCall: (id: string) => Promise<void>;
@@ -107,6 +110,26 @@ export const chatPlugin: StateCreator<
     await runPluginApi(id, payload);
   },
 
+  invokeStandaloneTypePlugin: async (id, payload) => {
+    const result = await useToolStore.getState().validatePluginSettings(payload.identifier);
+    if (!result) return;
+
+    // if the plugin settings is not valid, then set the message with error type
+    if (!result.valid) {
+      await messageService.updateMessageError(id, {
+        body: {
+          error: result.errors,
+          message: '[plugin] your settings is invalid with plugin manifest setting schema',
+        },
+        message: t('response.PluginSettingsInvalid', { ns: 'error' }),
+        type: PluginErrorType.PluginSettingsInvalid as any,
+      });
+
+      await get().refreshMessages();
+      return;
+    }
+  },
+
   runPluginApi: async (id, payload) => {
     const { updateMessageContent, refreshMessages, toggleChatLoading } = get();
     let data: string;
@@ -148,6 +171,7 @@ export const chatPlugin: StateCreator<
     const {
       invokeDefaultTypePlugin,
       invokeMarkdownTypePlugin,
+      invokeStandaloneTypePlugin,
       invokeBuiltinTool,
       refreshMessages,
     } = get();
@@ -196,9 +220,10 @@ export const chatPlugin: StateCreator<
 
     switch (payload.type) {
       case 'standalone': {
-        // TODO: need to auth user's settings
+        await invokeStandaloneTypePlugin(id, payload);
         break;
       }
+
       case 'markdown': {
         await invokeMarkdownTypePlugin(id, payload);
         break;

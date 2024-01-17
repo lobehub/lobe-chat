@@ -76,6 +76,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5",
+    "@cfworker/json-schema": "^1",
     "@icons-pack/react-simple-icons": "^9",
     "@lobehub/chat-plugin-sdk": "latest",
     "@lobehub/chat-plugins-gateway": "latest",
