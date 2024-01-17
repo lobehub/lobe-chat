@@ -171,12 +171,12 @@ e-commerce platform data access, and various third-party services.
 
 | Recent Submits                                                                                                     | Description                                                                                                                                              |
 | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [GIF Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **giphy** on **2024-01-17**</sup>        | Search through a wide range of gifs - Powered by Giphy.<br/>`gif` `image` `search`                                                                       |
 | [TikZJax](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Arvin Xu** on **2024-01-14**</sup>        | Convert LaTeX TikZ code into SVG images for crisp, scalable mathematical diagrams and visualizations.<br/>`latex` `svg` `visualization` `diagram` `math` |
 | [weather GPT](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Steven Tey** on **2023-12-16**</sup>  | Get current weather information for a specific location.<br/>`weather`                                                                                   |
 | [Ask Your PDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AskYourPDF** on **2023-12-16**</sup> | Unlock the power of your PDFs!, dive into your documents, find answers, and bring information to your fingertips.<br/>`pdf` `document` `web`             |
-| [Clock Time](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>      | Display a clock to show current time<br/>`clock` `time`                                                                                                  |
 
-> 📊 Total plugins: [<kbd>**10**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**20**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
