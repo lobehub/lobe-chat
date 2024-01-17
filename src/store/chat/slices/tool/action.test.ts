@@ -293,6 +293,7 @@ describe('ChatPluginAction', () => {
       useChatStore.setState({
         refreshMessages: vi.fn(),
         invokeDefaultTypePlugin: vi.fn(),
+        invokeStandaloneTypePlugin: vi.fn(),
       });
 
       (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
@@ -311,6 +312,84 @@ describe('ChatPluginAction', () => {
 
       // 验证 invokeDefaultTypePlugin 是否没有被调用，因为类型是 standalone
       expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
+      expect(result.current.invokeStandaloneTypePlugin).toHaveBeenCalled();
+    });
+
+    it('should handle builtin plugin type', async () => {
+      const messageId = 'message-id';
+      const messageContent = JSON.stringify({
+        tool_calls: [
+          {
+            id: 'call_scv',
+            function: {
+              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName${PLUGIN_SCHEMA_SEPARATOR}builtin`,
+              arguments: {},
+            },
+          },
+        ],
+      });
+
+      useChatStore.setState({
+        refreshMessages: vi.fn(),
+        invokeDefaultTypePlugin: vi.fn(),
+        invokeBuiltinTool: vi.fn(),
+      });
+
+      (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
+        id: messageId,
+        content: messageContent,
+      }));
+
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.triggerFunctionCall(messageId);
+      });
+
+      // 验证 refreshMessages 是否被调用
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+
+      // 验证 invokeDefaultTypePlugin 是否没有被调用，因为类型是 standalone
+      expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
+      expect(result.current.invokeBuiltinTool).toHaveBeenCalled();
+    });
+
+    it('should handle markdown plugin type', async () => {
+      const messageId = 'message-id';
+      const messageContent = JSON.stringify({
+        tool_calls: [
+          {
+            id: 'call_scv',
+            function: {
+              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName${PLUGIN_SCHEMA_SEPARATOR}markdown`,
+              arguments: {},
+            },
+          },
+        ],
+      });
+
+      useChatStore.setState({
+        refreshMessages: vi.fn(),
+        invokeDefaultTypePlugin: vi.fn(),
+        invokeMarkdownTypePlugin: vi.fn(),
+      });
+
+      (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
+        id: messageId,
+        content: messageContent,
+      }));
+
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.triggerFunctionCall(messageId);
+      });
+
+      // 验证 refreshMessages 是否被调用
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+
+      expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
+      expect(result.current.invokeMarkdownTypePlugin).toHaveBeenCalled();
     });
   });
 
@@ -568,6 +647,44 @@ describe('ChatPluginAction', () => {
 
       // Verify that the markdown type plugin was invoked
       expect(result.current.runPluginApi).toHaveBeenCalledWith(messageId, payload);
+    });
+  });
+
+  describe('invokeStandaloneTypePlugin', () => {
+    it('should update message with error and refresh messages if plugin settings are invalid', async () => {
+      const messageId = 'message-id';
+
+      const payload = {
+        identifier: 'pluginName',
+      } as ChatPluginPayload;
+
+      useToolStore.setState({
+        validatePluginSettings: vi
+          .fn()
+          .mockResolvedValue({ valid: false, errors: ['Invalid setting'] }),
+      });
+
+      useChatStore.setState({ refreshMessages: vi.fn() });
+
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.invokeStandaloneTypePlugin(messageId, payload);
+      });
+
+      const call = vi.mocked(messageService.updateMessageError).mock.calls[0];
+
+      expect(call[0]).toEqual(messageId);
+      expect(call[1]).toEqual({
+        body: {
+          error: ['Invalid setting'],
+          message: '[plugin] your settings is invalid with plugin manifest setting schema',
+        },
+        message: undefined,
+        type: 'PluginSettingsInvalid',
+      });
+
+      expect(result.current.refreshMessages).toHaveBeenCalled();
     });
   });
 });
