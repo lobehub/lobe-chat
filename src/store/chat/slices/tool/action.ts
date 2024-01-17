@@ -112,6 +112,9 @@ export const chatPlugin: StateCreator<
 
   invokeStandaloneTypePlugin: async (id, payload) => {
     const result = await useToolStore.getState().validatePluginSettings(payload.identifier);
+    console.log('------------------');
+    console.log(result);
+    console.log('------------------');
     if (!result) return;
 
     // if the plugin settings is not valid, then set the message with error type

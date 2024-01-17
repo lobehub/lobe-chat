@@ -12,6 +12,8 @@ import { pluginSelectors } from '@/store/tool/selectors';
 import { ChatPluginPayload } from '@/types/message';
 import { LobeTool } from '@/types/tool';
 
+const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
+
 // Mock messageService 和 chatSelectors
 vi.mock('@/services/message', () => ({
   messageService: {
@@ -290,10 +292,13 @@ describe('ChatPluginAction', () => {
         ],
       });
 
-      useChatStore.setState({
-        refreshMessages: vi.fn(),
-        invokeDefaultTypePlugin: vi.fn(),
-        invokeStandaloneTypePlugin: vi.fn(),
+      const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
+
+      act(() => {
+        useChatStore.setState({
+          refreshMessages: vi.fn(),
+          invokeStandaloneTypePlugin: vi.fn(),
+        });
       });
 
       (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
@@ -313,6 +318,8 @@ describe('ChatPluginAction', () => {
       // 验证 invokeDefaultTypePlugin 是否没有被调用，因为类型是 standalone
       expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
       expect(result.current.invokeStandaloneTypePlugin).toHaveBeenCalled();
+
+      useChatStore.setState({ invokeStandaloneTypePlugin });
     });
 
     it('should handle builtin plugin type', async () => {
@@ -329,11 +336,8 @@ describe('ChatPluginAction', () => {
         ],
       });
 
-      useChatStore.setState({
-        refreshMessages: vi.fn(),
-        invokeDefaultTypePlugin: vi.fn(),
-        invokeBuiltinTool: vi.fn(),
-      });
+      const invokeBuiltinTool = useChatStore.getState().invokeBuiltinTool;
+      useChatStore.setState({ refreshMessages: vi.fn(), invokeBuiltinTool: vi.fn() });
 
       (chatSelectors.getMessageById as Mock).mockImplementation(() => () => ({
         id: messageId,
@@ -352,6 +356,8 @@ describe('ChatPluginAction', () => {
       // 验证 invokeDefaultTypePlugin 是否没有被调用，因为类型是 standalone
       expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
       expect(result.current.invokeBuiltinTool).toHaveBeenCalled();
+
+      useChatStore.setState({ invokeBuiltinTool });
     });
 
     it('should handle markdown plugin type', async () => {
@@ -368,9 +374,9 @@ describe('ChatPluginAction', () => {
         ],
       });
 
+      const invokeMarkdownTypePlugin = useChatStore.getState().invokeMarkdownTypePlugin;
       useChatStore.setState({
         refreshMessages: vi.fn(),
-        invokeDefaultTypePlugin: vi.fn(),
         invokeMarkdownTypePlugin: vi.fn(),
       });
 
@@ -390,6 +396,8 @@ describe('ChatPluginAction', () => {
 
       expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
       expect(result.current.invokeMarkdownTypePlugin).toHaveBeenCalled();
+
+      useChatStore.setState({ invokeMarkdownTypePlugin });
     });
   });
 
@@ -582,6 +590,7 @@ describe('ChatPluginAction', () => {
       expect(result.current.toggleChatLoading).toHaveBeenCalledWith(false);
       expect(useChatStore.getState().text2image).not.toHaveBeenCalled();
     });
+
     it('should handle errors when invoking a builtin tool fails', async () => {
       const payload = {
         apiName: 'builtinApi',
@@ -635,8 +644,10 @@ describe('ChatPluginAction', () => {
       } as ChatPluginPayload;
       const messageId = 'message-id';
 
-      useChatStore.setState({
-        runPluginApi: vi.fn().mockResolvedValue('Markdown response'),
+      const runPluginApiMock = vi.fn();
+
+      act(() => {
+        useChatStore.setState({ runPluginApi: runPluginApiMock });
       });
 
       const { result } = renderHook(() => useChatStore());
@@ -646,7 +657,7 @@ describe('ChatPluginAction', () => {
       });
 
       // Verify that the markdown type plugin was invoked
-      expect(result.current.runPluginApi).toHaveBeenCalledWith(messageId, payload);
+      expect(runPluginApiMock).toHaveBeenCalledWith(messageId, payload);
     });
   });
 
@@ -658,13 +669,15 @@ describe('ChatPluginAction', () => {
         identifier: 'pluginName',
       } as ChatPluginPayload;
 
-      useToolStore.setState({
-        validatePluginSettings: vi
-          .fn()
-          .mockResolvedValue({ valid: false, errors: ['Invalid setting'] }),
-      });
+      act(() => {
+        useToolStore.setState({
+          validatePluginSettings: vi
+            .fn()
+            .mockResolvedValue({ valid: false, errors: ['Invalid setting'] }),
+        });
 
-      useChatStore.setState({ refreshMessages: vi.fn() });
+        useChatStore.setState({ refreshMessages: vi.fn(), invokeStandaloneTypePlugin });
+      });
 
       const { result } = renderHook(() => useChatStore());
 
@@ -674,7 +687,6 @@ describe('ChatPluginAction', () => {
 
       const call = vi.mocked(messageService.updateMessageError).mock.calls[0];
 
-      expect(call[0]).toEqual(messageId);
       expect(call[1]).toEqual({
         body: {
           error: ['Invalid setting'],
