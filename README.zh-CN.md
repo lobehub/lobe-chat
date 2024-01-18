@@ -168,14 +168,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                        | 插件描述                                                                           |
-| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [GIF 搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **giphy** on **2024-01-17**</sup>       | 搜索各种各样的 GIF - 由 Giphy 提供动力。<br/>`gif` `图片` `搜索`                   |
-| [Asset Ovi](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **assetovi** on **2024-01-17**</sup>   | 搜索和预览数百万款用于游戏、AIGC、AR/VR 等领域的 3D 资产。<br/>`3-d` `资产` `搜索` |
-| [Astrodaily](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **360macky** on **2024-01-17**</sup>  | 搜索和发现 NASA 图像。<br/>`nasa` `搜索` `图像`                                    |
-| [Boolio Invest](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **boolio** on **2024-01-17**</sup> | 使用 Boolio 的先进引擎分析来自任何国家的股票投资。<br/>`股票` `分析`               |
+| 最近新增                                                                                                       | 插件描述                                                                                                                                                                        |
+| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Midjourney](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-18**</sup>  | 通过简单的提示轻松释放创造力，利用 Midjourney 生成独特的 AI 驱动图像。通过 Midjourney 的艺术触感为您的对话增添视觉魅力。<br/>`ai-image-generation` `midjourney` `visualization` |
+| [GIF 搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **giphy** on **2024-01-17**</sup>      | 搜索各种各样的 GIF - 由 Giphy 提供动力。<br/>`gif` `图片` `搜索`                                                                                                                |
+| [Asset Ovi](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **assetovi** on **2024-01-17**</sup>  | 搜索和预览数百万款用于游戏、AIGC、AR/VR 等领域的 3D 资产。<br/>`3-d` `资产` `搜索`                                                                                              |
+| [Astrodaily](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **360macky** on **2024-01-17**</sup> | 搜索和发现 NASA 图像。<br/>`nasa` `搜索` `图像`                                                                                                                                 |
 
-> 📊 Total plugins: [<kbd>**20**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**21**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -203,14 +203,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                    | 助手说明                                                                                                                                                                                                                       |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Code Companion](https://chat-preview.lobehub.com/market?agent=code-companion)<br/><sup>By **[110rever](https://github.com/110rever)** on **2024-01-18**</sup>              | 程序员的最佳伴侣<br/>`code` `dev` `program`                                                                                                                                                                                    |
-| [William](https://chat-preview.lobehub.com/market?agent=unreal-engine-development-engineer)<br/><sup>By **[Wutpeach](https://github.com/Wutpeach)** on **2024-01-16**</sup> | 虚幻引擎专家，精通 C++ 编程，渲染、内存、线程等管线架构，UE 在安卓平台应用，全面的美术认知，熟悉 Shader 编写，熟练掌握 3D 美术资产制作流程与工具。<br/>`虚幻引擎` `c-编程` `渲染管线` `内存管理` `线程架构`                    |
-| [乍得](https://chat-preview.lobehub.com/market?agent=chad)<br/><sup>By **[HerIsDia](https://github.com/HerIsDia)** on **2024-01-15**</sup>                                  | 只是乍得<br/>`幽默` `搞笑`                                                                                                                                                                                                     |
-| [经过 SEO 优化的博客](https://chat-preview.lobehub.com/market?agent=seo-optimized-blog)<br/><sup>By **[Soyeb](https://github.com/sekhsoyebali)** on **2024-01-15**</sup>    | 人工撰写，100% 独特，一位经验丰富的 SEO 专家和内容撰写人员，专门致力于创建 100% 独特、人工撰写的博客文章，以满足用户需求。<br/>`博客` `seo` `撰写` `文章撰写` `经过seo优化的博客` `内容撰写` `100-独特的博客` `人工撰写的博客` |
+| 最近新增                                                                                                                                                                    | 助手说明                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [AE 脚本开发专家](https://chat-preview.lobehub.com/market?agent=ae-script-development)<br/><sup>By **[Wutpeach](https://github.com/Wutpeach)** on **2024-01-18**</sup>      | AE 脚本开发专家，精通 JavaScript 编程，理解 AE 软件工作原理，能够调试和优化脚本。<br/>`脚本开发` `程序员` `adobe-after-effects` `java-script` `算法设计` `调试` `优化` `编程规范` `用户沟通` `脚本使用说明` |
+| [Code Companion](https://chat-preview.lobehub.com/market?agent=code-companion)<br/><sup>By **[110rever](https://github.com/110rever)** on **2024-01-18**</sup>              | 程序员的最佳伴侣<br/>`code` `dev` `program`                                                                                                                                                                 |
+| [William](https://chat-preview.lobehub.com/market?agent=unreal-engine-development-engineer)<br/><sup>By **[Wutpeach](https://github.com/Wutpeach)** on **2024-01-16**</sup> | 虚幻引擎专家，精通 C++ 编程，渲染、内存、线程等管线架构，UE 在安卓平台应用，全面的美术认知，熟悉 Shader 编写，熟练掌握 3D 美术资产制作流程与工具。<br/>`虚幻引擎` `c-编程` `渲染管线` `内存管理` `线程架构` |
+| [乍得](https://chat-preview.lobehub.com/market?agent=chad)<br/><sup>By **[HerIsDia](https://github.com/HerIsDia)** on **2024-01-15**</sup>                                  | 只是乍得<br/>`幽默` `搞笑`                                                                                                                                                                                  |
 
-> 📊 Total agents: [<kbd>**100**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**101**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
