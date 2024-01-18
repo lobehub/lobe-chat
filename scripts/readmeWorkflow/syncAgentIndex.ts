@@ -10,7 +10,7 @@ const genAgentTable = (data: DataItem[], lang: string) => {
   const content = data.slice(0, 4).map((item) => [
     [
       genLink(
-        item.meta.title,
+        item.meta.title.replaceAll('|', ','),
         qs.stringifyUrl({
           query: { agent: item.identifier },
           url: MARKET_URL,
@@ -18,7 +18,7 @@ const genAgentTable = (data: DataItem[], lang: string) => {
       ),
       `<sup>By **${genLink(item.author, item.homepage)}** on **${(item as any).createAt}**</sup>`,
     ].join('<br/>'),
-    [item.meta.description, genTags(item.meta.tags)].join('<br/>'),
+    [item.meta.description.replaceAll('|', ','), genTags(item.meta.tags)].join('<br/>'),
   ]);
   return markdownTable([
     isCN ? ['最近新增', '助手说明'] : ['Recent Submits', 'Description'],
