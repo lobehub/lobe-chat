@@ -19,6 +19,7 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 [![][docker-release-shield]][docker-release-link]
 [![][vercel-shield]][vercel-link]
 [![][discord-shield]][discord-link]<br/>
+[![][codecov-shield]][codecov-link]
 [![][github-action-test-shield]][github-action-test-link]
 [![][github-action-release-shield]][github-action-release-link]
 [![][github-releasedate-shield]][github-releasedate-link]<br/>
@@ -569,6 +570,8 @@ This project is [MIT](./LICENSE) licensed.
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
+[codecov-link]: https://codecov.io/gh/lobehub/lobe-chat
+[codecov-shield]: https://img.shields.io/codecov/c/github/lobehub/lobe-chat?labelColor=black&style=flat-square&logo=codecov&logoColor=white
 [codespaces-link]: https://codespaces.new/lobehub/lobe-chat
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [deploy-button-image]: https://vercel.com/button
