@@ -492,6 +492,14 @@ If you would like to learn more details, please feel free to look at our [LobeCh
 
 Contributions of all types are more than welcome; if you are interested in contributing code, feel free to check out our GitHub [Issues][github-issues-link] and [Projects][github-project-link] to get stuck in to show us what you’re made of.
 
+> \[!TIP]
+>
+> We are creating a technology-driven forum, fostering knowledge interaction and the exchange of ideas that may culminate in mutual inspiration and collaborative innovation.
+>
+> Help us make LobeChat better. Welcome to provide product design feedback, user experience discussions directly to us.
+>
+> **Principal Maintainers:** [@arvinxx](https://github.com/arvinxx) [@canisminor1990](https://github.com/canisminor1990)
+
 [![][pr-welcome-shield]][pr-welcome-link]
 [![][submit-agents-shield]][submit-agents-link]
 [![][submit-plugin-shield]][submit-plugin-link]
