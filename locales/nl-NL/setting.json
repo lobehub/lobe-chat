@@ -252,9 +252,7 @@
     "fontSize": {
       "desc": "Lettergrootte van chatberichten",
       "marks": {
-        "large": "Groot",
-        "normal": "Normaal",
-        "small": "Klein"
+        "normal": "Normaal"
       },
       "title": "Lettergrootte"
     },

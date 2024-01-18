@@ -252,9 +252,7 @@
     "fontSize": {
       "desc": "Dimensione del carattere per i messaggi",
       "marks": {
-        "large": "Grande",
-        "normal": "Normale",
-        "small": "Piccola"
+        "normal": "Normale"
       },
       "title": "Dimensione del carattere"
     },
