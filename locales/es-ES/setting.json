@@ -252,9 +252,7 @@
     "fontSize": {
       "desc": "Tamaño de fuente para el contenido del chat",
       "marks": {
-        "large": "Grande",
-        "normal": "Normal",
-        "small": "Pequeño"
+        "normal": "Normal"
       },
       "title": "Tamaño de fuente"
     },
