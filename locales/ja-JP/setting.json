@@ -252,9 +252,7 @@
     "fontSize": {
       "desc": "チャットのフォントサイズ",
       "marks": {
-        "large": "大きい",
-        "normal": "標準",
-        "small": "小さい"
+        "normal": "標準"
       },
       "title": "フォントサイズ"
     },

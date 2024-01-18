@@ -136,20 +136,23 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
           <SliderWithInput
             marks={{
               12: {
-                label: t('settingTheme.fontSize.marks.small'),
+                label: 'A',
                 style: {
+                  fontSize: 12,
                   marginTop: 4,
                 },
               },
               14: {
                 label: t('settingTheme.fontSize.marks.normal'),
                 style: {
+                  fontSize: 14,
                   marginTop: 4,
                 },
               },
               18: {
-                label: t('settingTheme.fontSize.marks.large'),
+                label: 'A',
                 style: {
+                  fontSize: 18,
                   marginTop: 4,
                 },
               },
