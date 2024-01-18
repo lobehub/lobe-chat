@@ -73,7 +73,7 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 
 ## 👋🏻 Getting Started & Join Our Community
 
-Please be aware that LobeChat is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
+We are a group of e/acc design-engineers, hoping to provide modern design components and tools for AIGC. Whether for users or professional developers, LobeHub will be your AI Agent playground. Please be aware that LobeChat is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
 
 | [![][vercel-shield-badge]][vercel-link]   | No installation or registration necessary! Visit our website to experience it firsthand.                           |
 | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
@@ -143,9 +143,23 @@ Users can choose the voice that suits their personal preferences or specific sce
 
 </div>
 
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/297746445-0ff762b9-aa08-4337-afb7-12f932b6efbb.png)
+
+#### `3` Text to Image
+
+With support for the latest text-to-image generation technology, LobeChat now allows users to invoke image creation tools directly within conversations with the agent. By leveraging the capabilities of AI tools such as [`DALL-E 3`](https://openai.com/dall-e-3), [`MidJourney`](https://www.midjourney.com/), and [`Pollinations`](https://pollinations.ai/), the agents are now equipped to transform your ideas into images.
+
+This enables a more private and immersive creative process, allowing for the seamless integration of visual storytelling into your personal dialogue with the agent.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
 
-#### `3` Function Calling Plugin System
+#### `4` Function Calling Plugin System
 
 The plugin ecosystem of LobeChat is a significant extension of its core functionalities, greatly enhancing the practicality and flexibility of ChatGPT.
 By leveraging plugins, ChatGPT can perform real-time information retrieval and processing,
@@ -153,7 +167,7 @@ such as automatically fetching the latest news headlines to provide users with i
 Moreover, these plugins are not limited to news aggregation but can also extend to other practical functions, such as quick document retrieval,
 e-commerce platform data access, and various third-party services.
 
-[Learn More →](./docs/Usage/Plugins.md)
+> Learn More in [📘 Plugin Usage](https://github.com/lobehub/lobe-chat/wiki/Plugins)
 
 <video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
@@ -170,14 +184,14 @@ e-commerce platform data access, and various third-party services.
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                  | Description                                                                                              |
-| --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [GIF Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **giphy** on **2024-01-17**</sup>     | Search through a wide range of gifs - Powered by Giphy.<br/>`gif` `image` `search`                       |
-| [Asset Ovi](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **assetovi** on **2024-01-17**</sup>   | Search and preview millions of 3D assets for games, AIGC, AR/VR and others.<br/>`3-d` `assets` `search`  |
-| [Astrodaily](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **360macky** on **2024-01-17**</sup>  | Search and discover NASA images.<br/>`nasa` `search` `image`                                             |
-| [Boolio Invest](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **boolio** on **2024-01-17**</sup> | Analyze stock investments from any country, with Boolio's state-of-the-art engine.<br/>`stock` `analyze` |
+| Recent Submits                                                                                                 | Description                                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Midjourney](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-18**</sup>  | Unleash creativity with Midjourney, effortlessly generating unique AI-driven images through simple prompts. Add visual flair to your conversations with Midjourney's artistic touch.<br/>`ai-image-generation` `midjourney` `visualization` |
+| [GIF Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **giphy** on **2024-01-17**</sup>    | Search through a wide range of gifs - Powered by Giphy.<br/>`gif` `image` `search`                                                                                                                                                          |
+| [Asset Ovi](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **assetovi** on **2024-01-17**</sup>  | Search and preview millions of 3D assets for games, AIGC, AR/VR and others.<br/>`3-d` `assets` `search`                                                                                                                                     |
+| [Astrodaily](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **360macky** on **2024-01-17**</sup> | Search and discover NASA images.<br/>`nasa` `search` `image`                                                                                                                                                                                |
 
-> 📊 Total plugins: [<kbd>**20**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**21**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -189,7 +203,7 @@ e-commerce platform data access, and various third-party services.
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
 
-#### `4` Agent Market
+#### `5` Agent Market
 
 In the LobeChat Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
 which not only play an important role in work scenarios but also offer great convenience in learning processes.
@@ -209,14 +223,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                              | Description                                                                                                                                                                                                                                                                                                                                                                      |                                                                                                                                                                    |                                                                                                                                                                                                                                                                          |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Code Companion](https://chat-preview.lobehub.com/market?agent=code-companion)<br/><sup>By **[110rever](https://github.com/110rever)** on **2024-01-18**</sup>              | The best companion for programmers<br/>`code` `dev` `program`                                                                                                                                                                                                                                                                                                                    |                                                                                                                                                                    |                                                                                                                                                                                                                                                                          |
-| [William](https://chat-preview.lobehub.com/market?agent=unreal-engine-development-engineer)<br/><sup>By **[Wutpeach](https://github.com/Wutpeach)** on **2024-01-16**</sup> | Unreal Engine expert, proficient in C++ programming, rendering, memory, thread and other pipeline architectures, UE application on Android platform, comprehensive artistic cognition, familiar with Shader writing, proficient in 3D art asset production process and tools.<br/>`unreal-engine` `c-programming` `rendering-pipeline` `memory-management` `thread-architecture` |                                                                                                                                                                    |                                                                                                                                                                                                                                                                          |
-| [Chad](https://chat-preview.lobehub.com/market?agent=chad)<br/><sup>By **[HerIsDia](https://github.com/HerIsDia)** on **2024-01-15**</sup>                                  | Just chad<br/>`humor` `funny`                                                                                                                                                                                                                                                                                                                                                    |                                                                                                                                                                    |                                                                                                                                                                                                                                                                          |
-| \[SEO Optimized Blog                                                                                                                                                        | Human Written                                                                                                                                                                                                                                                                                                                                                                    | 100% Unique]\(<https://chat-preview.lobehub.com/market?agent=seo-optimized-blog>)<br/><sup>By **[Soyeb](https://github.com/sekhsoyebali)** on **2024-01-15**</sup> | An experienced SEO expert and content writer who specializes in creating 100% unique, human-written blog posts tailored to user requirements.<br/>`blog` `seo` `writing` `article-writing` `seo-optimized-blog` `content-writing` `100-unique-blog` `human-written-blog` |
+| Recent Submits                                                                                                                                                                      | Description                                                                                                                                                                                                                                                                                                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [AE Script Development Expert](https://chat-preview.lobehub.com/market?agent=ae-script-development)<br/><sup>By **[Wutpeach](https://github.com/Wutpeach)** on **2024-01-18**</sup> | An expert in AE script development, proficient in JavaScript programming, understanding of AE software principles, capable of debugging and optimizing scripts.<br/>`script-development` `programmer` `adobe-after-effects` `java-script` `algorithm-design` `debugging` `optimization` `coding-standards` `user-communication` `script-usage-instructions`                      |
+| [Code Companion](https://chat-preview.lobehub.com/market?agent=code-companion)<br/><sup>By **[110rever](https://github.com/110rever)** on **2024-01-18**</sup>                      | The best companion for programmers<br/>`code` `dev` `program`                                                                                                                                                                                                                                                                                                                    |
+| [William](https://chat-preview.lobehub.com/market?agent=unreal-engine-development-engineer)<br/><sup>By **[Wutpeach](https://github.com/Wutpeach)** on **2024-01-16**</sup>         | Unreal Engine expert, proficient in C++ programming, rendering, memory, thread and other pipeline architectures, UE application on Android platform, comprehensive artistic cognition, familiar with Shader writing, proficient in 3D art asset production process and tools.<br/>`unreal-engine` `c-programming` `rendering-pipeline` `memory-management` `thread-architecture` |
+| [Chad](https://chat-preview.lobehub.com/market?agent=chad)<br/><sup>By **[HerIsDia](https://github.com/HerIsDia)** on **2024-01-15**</sup>                                          | Just chad<br/>`humor` `funny`                                                                                                                                                                                                                                                                                                                                                    |
 
-> 📊 Total agents: [<kbd>**100**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**101**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -228,7 +242,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
 
-#### `5` Progress Web App
+#### `6` Progress Web App
 
 We deeply understand the importance of providing a seamless experience for users in today's multi-device environment.
 Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
@@ -255,7 +269,7 @@ providing smooth animations, responsive layouts, and adapting to different devic
 
 ![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
 
-#### `6` Mobile Device Adaptation
+#### `7` Mobile Device Adaptation
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
@@ -267,7 +281,7 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
-#### `7` Theme Mode Selection
+#### `8` Theme Mode Selection
 
 As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
 hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.
@@ -466,7 +480,7 @@ $ pnpm install
 $ pnpm dev
 ```
 
-If you would like to learn more details, please feel free to look at our [LobeChat Development Guide](https://github.com/lobehub/lobe-chat/wiki/index)
+If you would like to learn more details, please feel free to look at our [📘 Development Guide](https://github.com/lobehub/lobe-chat/wiki/index)
 
 <div align="right">
 
@@ -477,6 +491,14 @@ If you would like to learn more details, please feel free to look at our [LobeCh
 ## 🤝 Contributing
 
 Contributions of all types are more than welcome; if you are interested in contributing code, feel free to check out our GitHub [Issues][github-issues-link] and [Projects][github-project-link] to get stuck in to show us what you’re made of.
+
+> \[!TIP]
+>
+> We are creating a technology-driven forum, fostering knowledge interaction and the exchange of ideas that may culminate in mutual inspiration and collaborative innovation.
+>
+> Help us make LobeChat better. Welcome to provide product design feedback, user experience discussions directly to us.
+>
+> **Principal Maintainers:** [@arvinxx](https://github.com/arvinxx) [@canisminor1990](https://github.com/canisminor1990)
 
 [![][pr-welcome-shield]][pr-welcome-link]
 [![][submit-agents-shield]][submit-agents-link]
