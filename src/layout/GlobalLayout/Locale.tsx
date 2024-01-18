@@ -2,16 +2,20 @@ import { ConfigProvider } from 'antd';
 import { PropsWithChildren, memo, useState } from 'react';
 import useSWR from 'swr';
 
+import { DEFAULT_LANG } from '@/const/locale';
 import { createI18nNext } from '@/locales/create';
 import { useOnFinishHydrationGlobal } from '@/store/global';
 import { isOnServerSide } from '@/utils/env';
 import { switchLang } from '@/utils/switchLang';
 
 interface LocaleLayoutProps extends PropsWithChildren {
-  lang?: string;
+  defaultLang?: string;
 }
 
-const Locale = memo<LocaleLayoutProps>(({ children, lang }) => {
+const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
+  const [lang, setLang] = useState(defaultLang ?? DEFAULT_LANG);
+  const [i18n] = useState(createI18nNext(defaultLang));
+
   const { data: locale } = useSWR(
     lang,
     async () => {
@@ -21,7 +25,6 @@ const Locale = memo<LocaleLayoutProps>(({ children, lang }) => {
     },
     { revalidateOnFocus: false },
   );
-  const [i18n] = useState(createI18nNext(lang));
 
   // if run on server side, init i18n instance everytime
   if (isOnServerSide) {
@@ -35,11 +38,16 @@ const Locale = memo<LocaleLayoutProps>(({ children, lang }) => {
       });
   }
 
-  useOnFinishHydrationGlobal((s) => {
-    if (s.settings.language === 'auto') {
-      switchLang('auto');
-    }
-  }, []);
+  useOnFinishHydrationGlobal(
+    (s) => {
+      if (s.settings.language !== defaultLang) {
+        switchLang(s.settings.language);
+      } else {
+        i18n.instance.on('languageChanged', setLang);
+      }
+    },
+    [defaultLang],
+  );
 
   return <ConfigProvider locale={locale}>{children}</ConfigProvider>;
 });
