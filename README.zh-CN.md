@@ -497,7 +497,7 @@ $ pnpm install
 $ pnpm run dev
 ```
 
-如果你希望了解更多详情，欢迎可以查阅我们的 [LobeChat 开发指南](https://github.com/lobehub/lobe-chat/wiki/index.zh-CN)
+如果你希望了解更多详情，欢迎可以查阅我们的 [📘 开发指南](https://github.com/lobehub/lobe-chat/wiki/index.zh-CN)
 
 <div align="right">
 
