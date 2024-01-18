@@ -51,9 +51,9 @@
     "test:coverage-local": "vitest run --coverage",
     "test:update": "vitest -u",
     "type-check": "tsc --noEmit",
-    "workflow:docs": "bun scripts/docsWorkflow/index.ts",
-    "workflow:i18n": "ts-node --project ./tsconfig.json scripts/i18nWorkflow/index.ts",
-    "workflow:readme": "bun scripts/readmeWorkflow/index.ts"
+    "workflow:docs": "tsx scripts/docsWorkflow/index.ts",
+    "workflow:i18n": "tsx scripts/i18nWorkflow/index.ts",
+    "workflow:readme": "tsx scripts/readmeWorkflow/index.ts"
   },
   "lint-staged": {
     "*.md": [
@@ -179,7 +179,7 @@
     "remark-parse": "^10",
     "semantic-release": "^21",
     "stylelint": "^15",
-    "ts-node": "^10",
+    "tsx": "^4",
     "typescript": "^5",
     "unified": "^11",
     "unist-util-visit": "^5",
