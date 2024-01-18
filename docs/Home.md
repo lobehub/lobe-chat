@@ -17,6 +17,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 ### 🤯 Usage
 
 - [Custom Agents Guide](https://github.com/lobehub/lobe-chat/wiki/Usage-Agents) | [自定义助手指南](https://github.com/lobehub/lobe-chat/wiki/Usage-Agents.zh-CN)
+- [Plugin Usage](https://github.com/lobehub/lobe-chat/wiki/Plugins) | [插件使用](https://github.com/lobehub/lobe-chat/wiki/Plugins.zh-CN)
 - [Topic Guide](https://github.com/lobehub/lobe-chat/wiki/Usage-Topics) | [话题指南](https://github.com/lobehub/lobe-chat/wiki/Usage-Topics.zh-CN)
 
 <br/>
@@ -27,7 +28,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 - [Deploying with Azure OpenAI](https://github.com/lobehub/lobe-chat/wiki/Deploy-with-Azure-OpenAI) | [使用 Azure OpenAI 部署](https://github.com/lobehub/lobe-chat/wiki/Deploy-with-Azure-OpenAI.zh-CN)
 - [Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable) | [环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)
 - [Upstream Sync](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync) | [自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN)
-- [Common Error](https://github.com/lobehub/lobe-chat/wiki/Common-Error) | [常见问题](https://github.com/lobehub/lobe-chat/wiki/Common-Error.zh-CN)
+- [Frequently Asked Questions](https://github.com/lobehub/lobe-chat/wiki/Common-Error) | [常见问题](https://github.com/lobehub/lobe-chat/wiki/Common-Error.zh-CN)
 - [Data Statistics](https://github.com/lobehub/lobe-chat/wiki/Analytics) | [数据统计](https://github.com/lobehub/lobe-chat/wiki/Analytics.zh-CN)
 
 <br/>
@@ -35,22 +36,24 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 ### ⌨️ Development
 
 - [Technical Development Getting Started Guide](https://github.com/lobehub/lobe-chat/wiki/index) | [技术开发上手指南](https://github.com/lobehub/lobe-chat/wiki/index.zh-CN)
-- [Environment Setup Guide](https://github.com/lobehub/lobe-chat/wiki/Setup-Development) | [开发环境设置](https://github.com/lobehub/lobe-chat/wiki/Setup-Development.zh-CN)
+- [Code Style and Contribution Guidelines](https://github.com/lobehub/lobe-chat/wiki/Contributing-Guidelines) | [代码风格与贡献指南](https://github.com/lobehub/lobe-chat/wiki/Contributing-Guidelines.zh-CN)
+- [Environment Setup Guide](https://github.com/lobehub/lobe-chat/wiki/Setup-Development) | [环境设置指南](https://github.com/lobehub/lobe-chat/wiki/Setup-Development.zh-CN)
 - [Architecture Design](https://github.com/lobehub/lobe-chat/wiki/Architecture) | [架构设计](https://github.com/lobehub/lobe-chat/wiki/Architecture.zh-CN)
 - [Directory Structure](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure) | [目录架构](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure.zh-CN)
-- [State-Management](https://github.com/lobehub/lobe-chat/wiki/State-Management) | [状态管理](https://github.com/lobehub/lobe-chat/wiki/State-Management.zh-CN)
-  - [Selectors](https://github.com/lobehub/lobe-chat/wiki/State-Management/Selectors) | [取数模块](https://github.com/lobehub/lobe-chat/wiki/State-Management/Selectors.zh-CN)
+- [Best Practices for State Management](https://github.com/lobehub/lobe-chat/wiki/State-Management) | [状态管理最佳实践](https://github.com/lobehub/lobe-chat/wiki/State-Management)
+  - [Data Store Selector](https://github.com/lobehub/lobe-chat/wiki/State-Management) | [数据存储取数模块](https://github.com/lobehub/lobe-chat/wiki/State-Management)
 - [Conversation API Implementation Logic](https://github.com/lobehub/lobe-chat/wiki/Chat-API) | [会话 API 实现逻辑](https://github.com/lobehub/lobe-chat/wiki/Chat-API.zh-CN)
 - [How to Develop a New Feature](https://github.com/lobehub/lobe-chat/wiki/Feature-Development) | [如何开发一个新功能](https://github.com/lobehub/lobe-chat/wiki/Feature-Development.zh-CN)
-- [Testing Guide](https://github.com/lobehub/lobe-chat/wiki/Test) | [测试指南](https://github.com/lobehub/lobe-chat/wiki/Test.zh-CN)
+- [Internationalization Implementation Guide](https://github.com/lobehub/lobe-chat/wiki/Internationalization-Implementation) | [国际化实现指南](https://github.com/lobehub/lobe-chat/wiki/Internationalization-Implementation.zh-CN)
 - [New Locale Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale) | [新语种添加指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale.zh-CN)
+- [Testing Guide](https://github.com/lobehub/lobe-chat/wiki/Test) | [测试指南](https://github.com/lobehub/lobe-chat/wiki/Test.zh-CN)
 - [Resources and References](https://github.com/lobehub/lobe-chat/wiki/Resources) | [资源与参考](https://github.com/lobehub/lobe-chat/wiki/Resources.zh-CN)
 
 <br/>
 
 ### 🤖 Agents
 
-- [Agent Index and Submit](https://github.com/lobehub/lobe-chat-agents) | [助手市场与提交](https://github.com/lobehub/lobe-chat-agents/blob/main/README.zh-CN.md)
+- [Agent Index and Submit](https://github.com/lobehub/lobe-chat-agents) | [助手索引与提交](https://github.com/lobehub/lobe-chat-agents/blob/main/README.zh-CN.md)
 
 <br/>
 
