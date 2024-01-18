@@ -20,9 +20,15 @@ const run = async () => {
       const links = {
         cn: urlJoin(
           WIKI_URL,
-          relative(DOCS_DIR, paths.cn).split('/')[1].replace('.zh-CN.md', '.zh-CN'),
+          relative(DOCS_DIR, paths.cn)
+            .replaceAll('\\', '/')
+            .split('/')[1]
+            .replace('.zh-CN.md', '.zh-CN'),
         ),
-        en: urlJoin(WIKI_URL, relative(DOCS_DIR, paths.en).split('/')[1].replace('.md', '')),
+        en: urlJoin(
+          WIKI_URL,
+          relative(DOCS_DIR, paths.en).replaceAll('\\', '/').split('/')[1].replace('.md', ''),
+        ),
       };
       const titles = {
         cn: await getTitle(paths.cn),
@@ -59,7 +65,7 @@ const run = async () => {
           child.links.cn,
         )}\n`;
         sidebarContent += `- ${genMdLink(child.titles.en, child.links.en)} | ${genMdLink(
-          '中文',
+          child.titles.cn,
           child.links.cn,
         )}\n`;
       });
