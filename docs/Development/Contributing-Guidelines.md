@@ -1,0 +1,83 @@
+# Code Style and Contribution Guidelines
+
+Welcome to the Code Style and Contribution Guidelines for LobeChat. This guide will help you understand our code standards and contribution process, ensuring code consistency and smooth project progression.
+
+## TOC
+
+- [Code Style](#code-style)
+  - [ESLint](#eslint)
+  - [Prettier](#prettier)
+  - [remarklint](#remarklint)
+  - [stylelint](#stylelint)
+- [Contribution Process](#contribution-process)
+  - [Gitmoji](#gitmoji)
+  - [Semantic Release](#semantic-release)
+  - [Commitlint](#commitlint)
+  - [How to Contribute](#how-to-contribute)
+
+## Code Style
+
+In LobeChat, we use the `@lobehub/lint` package to maintain a unified code style. This package incorporates configurations for `ESLint`, `Prettier`, `remarklint`, and `stylelint` to ensure that our JavaScript, Markdown, and CSS files adhere to the same coding standards.
+
+### ESLint
+
+We use ESLint to check for issues in our JavaScript code. You can find the `.eslintrc.js` file in the project's root directory, which contains our extensions and custom rules for the ESLint configuration of `@lobehub/lint`.
+
+To ensure your code aligns with the project's standards, run ESLint before committing your code.
+
+### Prettier
+
+Prettier is responsible for code formatting to maintain consistency. Our Prettier configuration can be found in `.prettierrc.js`, imported from `@lobehub/lint`.
+
+It's recommended to configure your editor to run Prettier automatically upon saving files or manually run it before committing.
+
+### remarklint
+
+For Markdown files, we use remarklint to ensure consistent document formatting. You can find the corresponding configuration file in the project.
+
+### stylelint
+
+We utilize stylelint to standardize the style of our CSS code. In the configuration file for stylelint, we have made some custom rule adjustments based on `@lobehub/lint` configuration.
+
+Ensure that your style code passes stylelint checks before committing.
+
+## Contribution Process
+
+LobeChat follows the gitmoji and semantic release as our code submission and release process.
+
+### Gitmoji
+
+When committing code, please use gitmoji to label your commit messages. This helps other contributors quickly understand the content and purpose of your submission.
+
+Gitmoji commit messages use specific emojis to represent the type or intent of the commit. Here's an example:
+
+```
+📝 Update README with contribution guidelines
+
+- Added section about code style preferences
+- Included instructions for running tests
+- Corrected typos and improved formatting
+```
+
+In this example, the 📝 emoji represents a documentation update. The commit message clearly describes the changes and provides specific details.
+
+### Semantic Release
+
+We use semantic release to automate version control and release processes. Ensure that your commit messages adhere to the semantic release specifications so that when the code is merged into the main branch, the system can automatically create a new version and release it.
+
+### Commitlint
+
+To ensure consistency in commit messages, we use `commitlint` to check the format of commit messages. You can find the relevant rules in the `.commitlintrc.js` configuration file.
+
+Before committing your code, ensure that your commit messages adhere to our standards.
+
+### How to Contribute
+
+1. Fork the project to your account.
+2. Create a new branch for development.
+3. After completing the development, ensure that your code passes the aforementioned code style checks.
+4. Commit your changes and use appropriate gitmoji to label your commit message.
+5. Create a Pull Request to the main branch of the original project.
+6. Await code review and make necessary modifications based on feedback.
+
+Thank you for following these guidelines, as they help us maintain the quality and consistency of the project. We look forward to your contributions!
