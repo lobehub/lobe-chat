@@ -143,9 +143,23 @@ Users can choose the voice that suits their personal preferences or specific sce
 
 </div>
 
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/297746445-0ff762b9-aa08-4337-afb7-12f932b6efbb.png)
+
+#### `3` Text to Image
+
+With support for the latest text-to-image generation technology, LobeChat now allows users to invoke image creation tools directly within conversations with the agent. By leveraging the capabilities of AI tools such as [`DALL-E 3`](https://openai.com/dall-e-3), [`MidJourney`](https://www.midjourney.com/), and [`Pollinations`](https://pollinations.ai/), the agents are now equipped to transform your ideas into images.
+
+This enables a more private and immersive creative process, allowing for the seamless integration of visual storytelling into your personal dialogue with the agent.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
 
-#### `3` Function Calling Plugin System
+#### `4` Function Calling Plugin System
 
 The plugin ecosystem of LobeChat is a significant extension of its core functionalities, greatly enhancing the practicality and flexibility of ChatGPT.
 By leveraging plugins, ChatGPT can perform real-time information retrieval and processing,
@@ -189,7 +203,7 @@ e-commerce platform data access, and various third-party services.
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
 
-#### `4` Agent Market
+#### `5` Agent Market
 
 In the LobeChat Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
 which not only play an important role in work scenarios but also offer great convenience in learning processes.
@@ -228,7 +242,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
 
-#### `5` Progress Web App
+#### `6` Progress Web App
 
 We deeply understand the importance of providing a seamless experience for users in today's multi-device environment.
 Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
@@ -255,7 +269,7 @@ providing smooth animations, responsive layouts, and adapting to different devic
 
 ![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
 
-#### `6` Mobile Device Adaptation
+#### `7` Mobile Device Adaptation
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
@@ -267,7 +281,7 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
-#### `7` Theme Mode Selection
+#### `8` Theme Mode Selection
 
 As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
 hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.

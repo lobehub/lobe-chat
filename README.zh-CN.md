@@ -91,9 +91,9 @@ LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多�
 
 ## ✨ 特性一览
 
-#### `1` GPT 视觉认知
-
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png)
+
+#### `1` GPT 视觉认知
 
 LobeChat 已经支持 OpenAI 最新的 [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) 支持视觉识别的模型，这是一个具备视觉识别能力的多模态智能。
 用户可以轻松上传图片或者拖拽图片到对话框中，助手将能够识别图片内容，并在此基础上进行智能对话，构建更智能、更多元化的聊天场景。
@@ -106,9 +106,9 @@ LobeChat 已经支持 OpenAI 最新的 [`gpt-4-vision`](https://platform.openai.
 
 </div>
 
-#### `2` TTS & STT 语音会话
-
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png)
+
+#### `2` TTS & STT 语音会话
 
 LobeChat 支持文字转语音（Text-to-Speech，TTS）和语音转文字（Speech-to-Text，STT）技术，我们的应用能够将文本信息转化为清晰的语音输出，用户可以像与真人交谈一样与我们的对话代理进行交流。
 用户可以从多种声音中选择，给助手搭配合适的音源。 同时，对于那些倾向于听觉学习或者想要在忙碌中获取信息的用户来说，TTS 提供了一个极佳的解决方案。
@@ -129,9 +129,23 @@ LobeChat 支持文字转语音（Text-to-Speech，TTS）和语音转文字（Spe
 
 </div>
 
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/297746445-0ff762b9-aa08-4337-afb7-12f932b6efbb.png)
+
+#### `3` Text to Image 文生图
+
+支持最新的文本到图片生成技术，LobeChat 现在能够让用户在与助手对话中直接调用文成图工具进行创作。
+通过利用 [`DALL-E 3`](https://openai.com/dall-e-3)、[`MidJourney`](https://www.midjourney.com/) 和 [`Pollinations`](https://pollinations.ai/) 等 AI 工具的能力， 助手们现在可以将你的想法转化为图像。
+同时可以更私密和沉浸式的完成你的创造过程。
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
 
-#### `3` Function Calling 插件系统
+#### `4` Function Calling 插件系统
 
 LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地增强了 ChatGPT 的实用性和灵活性。通过利用插件，ChatGPT 能够实现实时信息的获取和处理，例如自动获取最新新闻头条，为用户提供即时且相关的资讯。
 此外，这些插件不仅局限于新闻聚合，还可以扩展到其他实用的功能，如快速检索文档、获取电商平台数据、以及其他各式各样的第三方服务。
@@ -170,7 +184,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
 
-#### `4` 助手市场
+#### `5` 助手市场
 
 在 LobeChat 的助手市场中，创作者们可以发现一个充满活力和创新的社区，它汇聚了众多精心设计的助手，这些助手不仅在工作场景中发挥着重要作用，也在学习过程中提供了极大的便利。
 我们的市场不仅是一个展示平台，更是一个协作的空间。在这里，每个人都可以贡献自己的智慧，分享个人开发的助手。
@@ -205,7 +219,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
 
-#### `5` PWA 渐进式 Web 应用
+#### `6` PWA 渐进式 Web 应用
 
 我们利深知在当今多设备环境下为用户提供无缝体验的重要性。为此，我们采用了渐进式 Web 应用 [PWA](https://support.google.com/chrome/answer/9658361) 技术，
 这是一种能够将网页应用提升至接近原生应用体验的现代 Web 技术。通过 PWA，LobeChat 能够在桌面和移动设备上提供高度优化的用户体验，同时保持轻量级和高性能的特点。
@@ -228,7 +242,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 ![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
 
-#### `6` 移动设备适配
+#### `7` 移动设备适配
 
 针对移动设备进行了一系列的优化设计，以提升用户的移动体验。目前，我们正在对移动端的用户体验进行版本迭代，以实现更加流畅和直观的交互。如果您有任何建议或想法，我们非常欢迎您通过 GitHub Issues 或者 Pull Requests 提供反馈。
 
@@ -240,7 +254,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
-#### `7` 主题模式选择
+#### `8` 自定义主题
 
 作为设计工程师出身 LobeChat 在界面设计上十分考虑用户的个性化体验，因此引入了灵活多变的主题模式，其中包括日间的亮色模式和夜间的深色模式。
 除了主题模式的切换，提供了一系列的颜色定制选项，允许用户根据自己的喜好来调整应用的主题色彩。无论是想要沉稳的深蓝，还是希望活泼的桃粉，或者是专业的灰白，用户都能够在 LobeChat 中找到匹配自己风格的颜色选择。
