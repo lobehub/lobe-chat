@@ -45,8 +45,8 @@ type LocaleOptions = {
 
 export const localeOptions: LocaleOptions = [
   {
-    label: 'العربية',
-    value: 'ar',
+    label: 'English',
+    value: 'en-US',
   },
   {
     label: '简体中文',
@@ -55,10 +55,6 @@ export const localeOptions: LocaleOptions = [
   {
     label: '繁體中文',
     value: 'zh-TW',
-  },
-  {
-    label: 'English',
-    value: 'en-US',
   },
   {
     label: '日本語',
@@ -75,6 +71,10 @@ export const localeOptions: LocaleOptions = [
   {
     label: 'Español',
     value: 'es-ES',
+  },
+  {
+    label: 'العربية',
+    value: 'ar',
   },
   {
     label: 'Français',
