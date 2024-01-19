@@ -49,10 +49,8 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
 
   const handleReset = useCallback(() => {
     modal.confirm({
-      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: { danger: true },
-      okText: t('ok', { ns: 'common' }),
       onOk: () => {
         resetSettings();
         form.setFieldsValue(DEFAULT_SETTINGS);
@@ -63,12 +61,10 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
 
   const handleClear = useCallback(() => {
     modal.confirm({
-      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: {
         danger: true,
       },
-      okText: t('ok', { ns: 'common' }),
       onOk: async () => {
         await clearSessions();
         await removeAllPlugins();
