@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.120.3](https://github.com/lobehub/lobe-chat/compare/v0.120.2...v0.120.3)
+
+<sup>Released on **2024-01-19**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor antd i18n and improve locale order.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor antd i18n and improve locale order, closes [#1103](https://github.com/lobehub/lobe-chat/issues/1103) [#1083](https://github.com/lobehub/lobe-chat/issues/1083) ([c89f527](https://github.com/lobehub/lobe-chat/commit/c89f527))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.120.2](https://github.com/lobehub/lobe-chat/compare/v0.120.1...v0.120.2)
 
 <sup>Released on **2024-01-17**</sup>
