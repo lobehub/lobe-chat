@@ -1,7 +1,6 @@
 import { ConfigProvider } from 'antd';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import useMergeState from 'use-merge-value';
 
 import { createI18nNext } from '@/locales/create';
 import { normalizeLocale } from '@/locales/resources';
@@ -29,13 +28,12 @@ interface LocaleLayoutProps extends PropsWithChildren {
 }
 
 const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
-  const [lang, setLang] = useMergeState(defaultLang);
+  const [i18n] = useState(createI18nNext(defaultLang));
+  const [lang, setLang] = useState(defaultLang);
 
   const { data: locale } = useSWR(['antd-locale', lang], ([, key]) => getAntdLocale(key), {
     revalidateOnFocus: false,
   });
-
-  const [i18n] = useState(createI18nNext(defaultLang));
 
   // if run on server side, init i18n instance everytime
   if (isOnServerSide) {
