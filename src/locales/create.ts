@@ -5,7 +5,7 @@ import { initReactI18next } from 'react-i18next';
 import { isRtlLang } from 'rtl-detect';
 
 import { getClientConfig } from '@/config/client';
-import { DEFAULT_LANG, LOBE_LOCALE_COOKIE, isLocaleNotSupport } from '@/const/locale';
+import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { COOKIE_CACHE_DAYS } from '@/const/settings';
 import { normalizeLocale } from '@/locales/resources';
 import { isDev, isOnServerSide } from '@/utils/env';
@@ -19,11 +19,9 @@ export const createI18nNext = (lang?: string) => {
     .use(LanguageDetector)
     .use(
       resourcesToBackend(async (lng: string, ns: string) => {
-        let normalizedLng = lng;
-        if (isLocaleNotSupport(lng)) normalizedLng = DEFAULT_LANG;
+        if (isDev && lng === 'zh-CN') return import(`./default/${ns}`);
 
-        if (isDev && normalizedLng === 'zh-CN') return import(`./default/${ns}`);
-        return import(`@/../locales/${normalizedLng}/${ns}.json`);
+        return import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
       }),
     );
   // Dynamically set HTML direction on language change
@@ -40,7 +38,6 @@ export const createI18nNext = (lang?: string) => {
         defaultNS: ['error', 'common', 'chat'],
         detection: {
           caches: ['cookie'],
-          convertDetectedLanguage: normalizeLocale,
           cookieMinutes: 60 * 24 * COOKIE_CACHE_DAYS,
           lookupCookie: LOBE_LOCALE_COOKIE,
         },
