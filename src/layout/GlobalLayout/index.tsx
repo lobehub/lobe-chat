@@ -48,7 +48,7 @@ interface GlobalLayoutProps extends AppThemeProps {
 
 const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) => (
   <AppTheme {...theme}>
-    <Locale lang={defaultLang}>
+    <Locale defaultLang={defaultLang}>
       <StoreHydration />
       <Container>{children}</Container>
       <DebugUI />
