@@ -9,18 +9,19 @@ import { useOnFinishHydrationGlobal } from '@/store/global';
 import { isOnServerSide } from '@/utils/env';
 import { switchLang } from '@/utils/switchLang';
 
-const getAntdLocale = async (lang: string) => {
+const getAntdLocale = async (lang?: string) => {
   let normalLang = normalizeLocale(lang);
 
   // due to antd only have ar-EG locale, we need to convert ar to ar-EG
   // refs: https://ant.design/docs/react/i18n
+
   // And we don't want to handle it in `normalizeLocale` function
   // because of other locale files are all `ar` not `ar-EG`
   if (normalLang === 'ar') normalLang = 'ar-EG';
 
-  const locale = await import(`antd/locale/${normalLang.replace('-', '_')}.js`);
+  const { default: locale } = await import(`antd/locale/${normalLang.replace('-', '_')}.js`);
 
-  return locale.default ?? locale;
+  return locale;
 };
 
 interface LocaleLayoutProps extends PropsWithChildren {
@@ -30,7 +31,9 @@ interface LocaleLayoutProps extends PropsWithChildren {
 const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
   const [lang, setLang] = useMergeState(defaultLang);
 
-  const { data: locale } = useSWR(lang, getAntdLocale, { revalidateOnFocus: false });
+  const { data: locale } = useSWR(['antd-locale', lang], ([, key]) => getAntdLocale(key), {
+    revalidateOnFocus: false,
+  });
 
   const [i18n] = useState(createI18nNext(defaultLang));
 
