@@ -112,41 +112,31 @@ LobeChat SessionStore
 └── store.ts
 ```
 
-根据您提供的 LobeChat SessionStore 的目录结构，我们可以更新前面的文档，并将示例转换为 LobeChat 的 SessionStore 的实现案例。以下是转换后的文档部分：
-
 ### LobeChat SessionStore 目录结构最佳实践
 
-在 LobeChat 应用中，由于会话管理是一个复杂的功能模块，因此我们采用了 Slice 模式来组织数据流。下面是 LobeChat SessionStore 的目录结构，其中每个目录和文件都有其特定的用途：
+在 LobeChat 应用中，由于会话管理是一个复杂的功能模块，因此我们采用了 [slice 模式](https://github.com/pmndrs/zustand/blob/main/docs/guides/slices-pattern.md) 来组织数据流。下面是 LobeChat SessionStore 的目录结构，其中每个目录和文件都有其特定的用途：
 
-```bash
+```fish
 src/store/session
-├── helpers.ts                         # 辅助函数
-├── hooks                              # 自定义 React 钩子
-│   ├── index.ts                       # 钩子的出口文件
-│   ├── useEffectAfterHydrated.ts      # 会话加载后的效果钩子
-│   ├── useOnFinishHydrationSession.ts # 会话水合完成钩子
-│   ├── useSessionChatInit.ts          # 会话聊天初始化钩子
-│   └── useSessionHydrated.ts          # 会话水合状态钩子
 ├── index.ts                           # SessionStore 的聚合导出文件
 ├── initialState.ts                    # 聚合了所有 slice 的 initialState
 ├── selectors.ts                       # 从各个 slices 导出的 selector
-├── slices                             # 分离的功能模块
-│   ├── agent                          # 代理相关的状态和操作
-│   │   ├── action.ts                  # 代理相关的 action 定义
-│   │   ├── index.ts                   # 代理 slice 的入口文件
-│   │   ├── selectors.test.ts          # 代理相关 selector 的测试
-│   │   └── selectors.ts               # 代理相关的 selector 定义
-│   └── session                        # 会话相关的状态和操作
-│   ├── action.test.ts                 # 会话相关 action 的测试
-│   ├── action.ts                      # 会话相关的 action 定义
-│   ├── helpers.ts                     # 会话相关的辅助函数
-│   ├── initialState.ts                # 会话 slice 的 initialState
-│   └── selectors                      # 会话相关的 selector 与其测试
-│   ├── export.ts                      # 会话 selector 的聚合导出
-│   ├── index.ts                       # 会话 selector 的入口文件
-│   ├── list.test.ts                   # 列表 selector 的测试
-│   └── list.ts                        # 列表相关的 selector 定义
-└── store.ts                           # SessionStore 的创建和使用
+├── store.ts                           # SessionStore 的创建和使用
+├── helpers.ts                         # 辅助函数
+└── slices                             # 各个独立的功能切片
+    ├── agent                          # 助理 Slice
+    │   ├── action.ts                  
+    │   ├── index.ts                   
+    │   └── selectors.ts               
+    └── session                        # 会话 Slice
+        ├── action.ts                  
+        ├── helpers.ts                 
+        ├── initialState.ts                
+        └── selectors                      
+            ├── export.ts                  
+            ├── list.ts                   
+            └── index.ts
+
 ```
 
 ## SessionStore 的实现
