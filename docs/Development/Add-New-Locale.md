@@ -1,6 +1,14 @@
-# LobeChat New Locale Guide
+# New Locale Guide
 
 LobeChat uses [lobe-i18n](https://github.com/lobehub/lobe-cli-toolbox/tree/master/packages/lobe-i18n) as the i18n solution, which allows for quick addition of new language support in the application.
+
+## TOC
+
+- [Adding New Language Support](#adding-new-language-support)
+  - [Step 1: Update the Internationalization Configuration File](#step-1-update-the-internationalization-configuration-file)
+  - [Step 2: Automatically Translate Language Files](#step-2-automatically-translate-language-files)
+  - [Step 3: Submit and Review Your Changes](#step-3-submit-and-review-your-changes)
+  - [Additional Information](#additional-information)
 
 ## Adding New Language Support
 

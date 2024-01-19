@@ -2,6 +2,13 @@
 
 LobeChat 不同于传统 CRUD 的网页，存在大量的富交互能力，如何设计一个易于开发与易于维护的数据流架构非常重要。本篇文档将介绍 LobeChat 中的数据流管理最佳实践。
 
+## TOC
+
+- [概念要素](#概念要素)
+- [结构分层](#结构分层)
+  - [LobeChat SessionStore 目录结构最佳实践](#lobechat-sessionstore-目录结构最佳实践)
+- [SessionStore 的实现](#sessionstore-的实现)
+
 ## 概念要素
 
 | 概念名词 | 解释                                                                                                                                                                                                                                                                 |
