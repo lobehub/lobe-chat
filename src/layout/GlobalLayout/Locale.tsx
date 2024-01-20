@@ -1,24 +1,39 @@
 import { ConfigProvider } from 'antd';
-import { PropsWithChildren, memo, useState } from 'react';
+import { PropsWithChildren, memo, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import { createI18nNext } from '@/locales/create';
+import { normalizeLocale } from '@/locales/resources';
 import { useOnFinishHydrationGlobal } from '@/store/global';
 import { isOnServerSide } from '@/utils/env';
 import { switchLang } from '@/utils/switchLang';
 
+const getAntdLocale = async (lang?: string) => {
+  let normalLang = normalizeLocale(lang);
+
+  // due to antd only have ar-EG locale, we need to convert ar to ar-EG
+  // refs: https://ant.design/docs/react/i18n
+
+  // And we don't want to handle it in `normalizeLocale` function
+  // because of other locale files are all `ar` not `ar-EG`
+  if (normalLang === 'ar') normalLang = 'ar-EG';
+
+  const { default: locale } = await import(`antd/locale/${normalLang.replace('-', '_')}.js`);
+
+  return locale;
+};
+
 interface LocaleLayoutProps extends PropsWithChildren {
-  lang?: string;
+  defaultLang?: string;
 }
 
-const Locale = memo<LocaleLayoutProps>(({ children, lang }) => {
-  const { data: locale } = useSWR(
-    lang,
-    async () =>
-      await import(`antd/locale/${lang?.includes('-') ? lang?.replace('-', '_') : 'en_US'}.js`),
-    { revalidateOnFocus: false },
-  );
-  const [i18n] = useState(createI18nNext(lang));
+const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
+  const [i18n] = useState(createI18nNext(defaultLang));
+  const [lang, setLang] = useState(defaultLang);
+
+  const { data: locale } = useSWR(['antd-locale', lang], ([, key]) => getAntdLocale(key), {
+    revalidateOnFocus: false,
+  });
 
   // if run on server side, init i18n instance everytime
   if (isOnServerSide) {
@@ -37,6 +52,18 @@ const Locale = memo<LocaleLayoutProps>(({ children, lang }) => {
       switchLang('auto');
     }
   }, []);
+
+  // handle i18n instance language change
+  useEffect(() => {
+    const handleLang = (e: string) => {
+      setLang(e);
+    };
+
+    i18n.instance.on('languageChanged', handleLang);
+    return () => {
+      i18n.instance.off('languageChanged', handleLang);
+    };
+  }, [i18n]);
 
   return <ConfigProvider locale={locale}>{children}</ConfigProvider>;
 });
