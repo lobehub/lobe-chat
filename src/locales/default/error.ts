@@ -55,6 +55,7 @@ export default {
     OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
     NoAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',
     FetchError: '很抱歉，网络请求失败',
+    InsufficientQuotaError: '很抱歉，您已超出当前的配额，请检查您的套餐和账单详情后重试。',
     /* eslint-enable */
   },
   stt: {

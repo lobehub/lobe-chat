@@ -1,4 +1,6 @@
-export const desensitizeUrl = (url: string) => {
+export const desensitizeUrl = (url?: string) => {
+  if (!url) return 'https://api.openai.com/v1';
+
   try {
     const urlObj = new URL(url);
     const hostnameParts = urlObj.hostname.split('.');

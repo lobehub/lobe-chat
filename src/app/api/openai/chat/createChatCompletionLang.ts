@@ -1,68 +1,93 @@
-import { ChatOpenAI } from '@langchain/openai';
+import { Runnable } from '@langchain/core/runnables';
 import { HttpResponseOutputParser } from 'langchain/output_parsers';
-import OpenAI from 'openai';
 
-import { createErrorResponse } from '@/app/api/openai/errorResponse';
-import { ChatErrorType } from '@/types/fetch';
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatErrorType, ErrorType } from '@/types/fetch';
+import { OpenAIChatMessage } from '@/types/openai/chat';
 
+import { createErrorResponse } from '../errorResponse';
 import { mapToLangChainMessages } from './utils';
 
-interface CreateChatCompletionOptions {
-  payload: OpenAIChatStreamPayload;
+interface LangChainError {
+  // like 429 You exceeded your current quota, please check your plan and billing details.
+  message?: string;
+  // error like 'InsufficientQuotaError'
+  name?: string;
 }
 
-export const createChatCompletion = async ({ payload }: CreateChatCompletionOptions) => {
+const isLangChainWrappedError = (modelError: any): modelError is LangChainError =>
+  'name' in modelError;
+
+interface ModelError {
+  cause?: object;
+  error: object;
+  headers: object;
+  stack?: string;
+  status: number;
+  type: string;
+}
+
+export const createChatCompletion = async (
+  model: Runnable,
+  messages: OpenAIChatMessage[],
+  desensitizedEndpoint: string,
+) => {
   // ============  1. preprocess messages   ============ //
-  const { messages, ...params } = payload;
-  const model = new ChatOpenAI({
-    configuration: { baseURL: process.env.OPENAI_PROXY_URL },
-    maxRetries: 0,
-    modelKwargs: params,
-    streaming: true,
-  });
+  const langChainMessages = mapToLangChainMessages(messages);
 
   try {
-    const parser = new HttpResponseOutputParser();
-    const msgs = mapToLangChainMessages(messages);
+    const http = new HttpResponseOutputParser({
+      contentType: 'text/event-stream',
+    });
 
-    const stream = await model.pipe(parser).stream(msgs);
+    const stream = await model.pipe(http).stream(langChainMessages);
 
     return new Response(stream);
-  } catch (error) {
-    // Check if the error is an OpenAI APIError
-    if (error instanceof OpenAI.APIError) {
-      let errorResult: any;
+  } catch (_error) {
+    const modelError = _error as ModelError;
 
-      // if error is definitely OpenAI APIError, there will be an error object
-      if (error.error) {
-        errorResult = error.error;
-      }
-      // Or if there is a cause, we use error cause
-      // This often happened when there is a bug of the `openai` package.
-      else if (error.cause) {
-        errorResult = error.cause;
-      }
-      // if there is no other request error, the error object is a Response like object
-      else {
-        errorResult = { headers: error.headers, stack: error.stack, status: error.status };
-      }
+    let errorResult: any;
 
-      // track the error at server side
-      console.error(errorResult);
+    // set default error type to OpenAIBizError
+    let errorType: ErrorType = ChatErrorType.OpenAIBizError;
 
-      return createErrorResponse(ChatErrorType.OpenAIBizError, {
-        error: errorResult,
-      });
+    // if error is definitely OpenAI APIError, there will be an error object
+    if (modelError.error) {
+      errorResult = modelError.error;
     }
 
-    // track the non-openai error
-    console.error(error);
+    // Or if there is a cause, we use error cause
+    // This often happened when there is a bug of in the code
+    else if (modelError.cause) {
+      errorResult = modelError.cause;
+    }
 
-    // return as a GatewayTimeout error
-    return createErrorResponse(ChatErrorType.InternalServerError, {
-      // endpoint: desensitizedEndpoint,
-      error: JSON.stringify(error),
+    // if there is no other request error, the error object is a Response like object
+    else if (modelError.headers) {
+      errorResult = {
+        headers: modelError.headers,
+        stack: modelError.stack,
+        status: modelError.status,
+      };
+    }
+
+    // if it is a LangChainError, we use the error message
+    else if (isLangChainWrappedError(modelError)) {
+      errorType = modelError.name as ErrorType;
+      errorResult = {
+        message: modelError.message,
+        type: modelError.name,
+      };
+    } else {
+      errorType = ChatErrorType.InternalServerError;
+      errorResult = JSON.stringify(modelError);
+    }
+
+    // track the error at server side
+    console.error(errorResult);
+
+    return createErrorResponse(errorType, {
+      endpoint: desensitizedEndpoint,
+      error: errorResult,
     });
   }
 };

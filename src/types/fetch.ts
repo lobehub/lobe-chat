@@ -3,6 +3,7 @@ export const ChatErrorType = {
   // ******* 业务错误语义 ******* //
 
   InvalidAccessCode: 'InvalidAccessCode', // 密码无效
+  InsufficientQuotaError: 'InsufficientQuotaError', // 没余额
   OpenAIBizError: 'OpenAIBizError', // OpenAI 返回的业务错误
   NoAPIKey: 'NoAPIKey',
 

@@ -7,8 +7,16 @@ export const getErrorStatus = (errorType: ErrorType) => {
       return 401;
     }
 
+    case ChatErrorType.InsufficientQuotaError: {
+      return 429;
+    }
+
     case ChatErrorType.OpenAIBizError: {
       return 577;
+    }
+
+    case ChatErrorType.FetchError: {
+      return 504;
     }
   }
   return errorType;
