@@ -78,7 +78,9 @@ const currentAgentMeta = (s: SessionStore): MetaData => {
   const defaultMeta = {
     avatar: isInbox ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR,
     backgroundColor: DEFAULT_BACKGROUND_COLOR,
-    description: isInbox ? t('inbox.desc') : currentAgentSystemRole(s) || t('noDescription'),
+    description: isInbox
+      ? t('inbox.desc', { ns: 'chat' })
+      : currentAgentSystemRole(s) || t('noDescription'),
     title: isInbox ? t('inbox.title', { ns: 'chat' }) : t('defaultSession'),
   };
 
