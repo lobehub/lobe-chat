@@ -124,7 +124,7 @@
     "remark-html": "^15",
     "rtl-detect": "^1",
     "semver": "^7",
-    "sharp": "0.33.1",
+    "sharp": "^0.33.2",
     "swr": "^2",
     "systemjs": "^6",
     "ts-md5": "^1",
