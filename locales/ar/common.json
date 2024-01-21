@@ -13,6 +13,7 @@
   "close": "إغلاق",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء",
   "copy": "نسخ",
+  "copyFail": "فشل في النسخ",
   "copySuccess": "تم النسخ بنجاح",
   "defaultAgent": "مساعد افتراضي",
   "defaultSession": "جلسة افتراضية",

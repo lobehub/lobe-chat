@@ -13,6 +13,7 @@
   "close": "Schließen",
   "confirmRemoveSessionItemAlert": "Möchten Sie diesen Assistenten wirklich löschen? Nach dem Löschen kann er nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
   "copy": "Kopieren",
+  "copyFail": "Kopieren fehlgeschlagen",
   "copySuccess": "Kopieren erfolgreich",
   "defaultAgent": "Standardassistent",
   "defaultSession": "Standardassistent",
