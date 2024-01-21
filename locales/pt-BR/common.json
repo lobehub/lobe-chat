@@ -13,6 +13,7 @@
   "close": "Fechar",
   "confirmRemoveSessionItemAlert": "Você está prestes a excluir este assistente. Após a exclusão, não será possível recuperá-lo. Por favor, confirme sua ação.",
   "copy": "Copiar",
+  "copyFail": "Falha ao copiar",
   "copySuccess": "Cópia bem-sucedida",
   "defaultAgent": "Assistente padrão",
   "defaultSession": "Sessão padrão",

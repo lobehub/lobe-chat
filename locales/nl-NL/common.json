@@ -13,6 +13,7 @@
   "close": "Sluiten",
   "confirmRemoveSessionItemAlert": "U staat op het punt deze assistent te verwijderen. Na verwijdering kan deze niet worden hersteld. Weet u zeker dat u door wilt gaan?",
   "copy": "Kopiëren",
+  "copyFail": "Kopiëren mislukt",
   "copySuccess": "Kopiëren gelukt",
   "defaultAgent": "Standaard assistent",
   "defaultSession": "Standaard assistent",
