@@ -24,11 +24,11 @@ const Redirect = memo(() => {
       useGlobalStore.getState().switchSideBar(SidebarTabKey.Chat);
 
       if (hasData) {
-        router.push('/chat');
+        router.replace('/chat');
 
         switchSession();
       } else {
-        router.push('/welcome');
+        router.replace('/welcome');
       }
     });
   }, []);
