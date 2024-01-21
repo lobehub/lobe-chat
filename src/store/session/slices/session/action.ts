@@ -1,5 +1,4 @@
 import { message } from 'antd';
-import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
@@ -157,7 +156,13 @@ export const createSessionSlice: StateCreator<
   useFetchSessions: () =>
     useSWR<LobeSessions>(FETCH_SESSIONS_KEY, sessionService.getSessions, {
       onSuccess: (data) => {
-        if (get().isSessionsFirstFetchFinished && isEqual(get().sessions, data)) return;
+        // 由于 https://github.com/lobehub/lobe-chat/pull/541 的关系
+        // 只有触发了 refreshSessions 才会更新 sessions，进而触发页面 rerender
+        // 因此这里不能补充判断，否则会导致页面不更新
+        // TODO：后续的根本解法应该是解除 inbox 和 session 的数据耦合
+        // 避免互相依赖的情况出现
+
+        // if (get().isSessionsFirstFetchFinished && isEqual(get().sessions, data)) return;
 
         set(
           {
