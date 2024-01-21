@@ -9,33 +9,36 @@ import useMergeState from 'use-merge-value';
 
 import AgentInfo from '@/features/AgentInfo';
 import { useGlobalStore } from '@/store/global';
-import { useSessionChatInit, useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
 
-import SidebarHeader from '../SidebarHeader';
+import SidebarHeader from '../../../../components/SidebarHeader';
 import { useStyles } from './style';
 
 const SystemRole = memo(() => {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const { styles } = useStyles();
-  const [systemRole, meta, updateAgentConfig] = useSessionStore((s) => [
+
+  const [init, systemRole, meta, updateAgentConfig] = useSessionStore((s) => [
+    sessionSelectors.isSomeSessionActive(s),
     agentSelectors.currentAgentSystemRole(s),
     agentSelectors.currentAgentMeta(s),
     s.updateAgentConfig,
   ]);
+
   const [showSystemRole, toggleSystemRole] = useGlobalStore((s) => [
     s.preference.showSystemRole,
     s.toggleSystemRole,
   ]);
+
   const [open, setOpen] = useMergeState(false, {
     defaultValue: showSystemRole,
     onChange: toggleSystemRole,
     value: showSystemRole,
   });
 
-  const init = useSessionChatInit();
   const { t } = useTranslation('common');
 
   const handleOpenWithEdit = () => {

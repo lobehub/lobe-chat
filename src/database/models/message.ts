@@ -46,14 +46,13 @@ class _MessageModel extends BaseModel {
   }: QueryMessageParams): Promise<ChatMessage[]> {
     const offset = current * pageSize;
 
-    const query =
-      topicId !== undefined
-        ? // TODO: The query {"sessionId":"xxx","topicId":"xxx"} on messages would benefit of a compound index [sessionId+topicId]
-          this.table.where({ sessionId, topicId }) // Use a compound index
-        : this.table
-            .where('sessionId')
-            .equals(sessionId)
-            .and((message) => !message.topicId);
+    const query = !!topicId
+      ? // TODO: The query {"sessionId":"xxx","topicId":"xxx"} on messages would benefit of a compound index [sessionId+topicId]
+        this.table.where({ sessionId, topicId }) // Use a compound index
+      : this.table
+          .where('sessionId')
+          .equals(sessionId)
+          .and((message) => !message.topicId);
 
     const dbMessages: DBModel<DB_Message>[] = await query
       .sortBy('createdAt')
@@ -221,7 +220,12 @@ class _MessageModel extends BaseModel {
     tts,
     ...item
   }: DBModel<DB_Message>): ChatMessage => {
-    return { ...item, extra: { fromModel, translate, tts }, meta: {} };
+    return {
+      ...item,
+      extra: { fromModel, translate, tts },
+      meta: {},
+      topicId: item.topicId ?? undefined,
+    };
   };
 }
 
