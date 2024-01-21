@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.120.5](https://github.com/lobehub/lobe-chat/compare/v0.120.4...v0.120.5)
+
+<sup>Released on **2024-01-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update locale and add test for globalStore.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update locale and add test for globalStore, closes [#1119](https://github.com/lobehub/lobe-chat/issues/1119) ([4545cf0](https://github.com/lobehub/lobe-chat/commit/4545cf0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.120.4](https://github.com/lobehub/lobe-chat/compare/v0.120.3...v0.120.4)
 
 <sup>Released on **2024-01-21**</sup>

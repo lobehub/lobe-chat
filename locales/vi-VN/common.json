@@ -13,6 +13,7 @@
   "close": "Đóng",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Sau khi xóa, bạn sẽ không thể khôi phục. Vui lòng xác nhận hành động của bạn",
   "copy": "Sao chép",
+  "copyFail": "Sao chép thất bại",
   "copySuccess": "Sao chép thành công",
   "defaultAgent": "Trợ lý mặc định",
   "defaultSession": "Phiên mặc định",

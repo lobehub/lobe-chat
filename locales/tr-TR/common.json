@@ -13,6 +13,7 @@
   "close": "Kapat",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "copy": "Kopyala",
+  "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
