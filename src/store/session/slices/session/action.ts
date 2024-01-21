@@ -46,10 +46,6 @@ export interface SessionAction {
   duplicateSession: (id: string) => Promise<void>;
   /**
    * Pins or unpins a session.
-   *
-   * @param {string} id - The ID of the session to pin or unpin.
-   * @param {boolean} [pinned] - Optional. If set to true, it pins the session. If set to false or omitted, it unpins the session.
-   * @returns {Promise<void>} A promise that resolves when the session is successfully pinned or unpinned.
    */
   pinSession: (id: string, pinned?: boolean) => Promise<void>;
   /**
@@ -61,7 +57,6 @@ export interface SessionAction {
    * @param id - sessionId
    */
   removeSession: (id: string) => void;
-  switchBackToChat: () => void;
   /**
    * switch session url
    */
@@ -80,7 +75,9 @@ export const createSessionSlice: StateCreator<
   SessionAction
 > = (set, get) => ({
   activeSession: (sessionId) => {
-    set({ activeId: sessionId }, false, n('activeSession'));
+    if (get().activeId === sessionId) return;
+
+    set({ activeId: sessionId }, false, n(`activeSession/${sessionId}`));
   },
 
   clearSessions: async () => {
@@ -147,30 +144,29 @@ export const createSessionSlice: StateCreator<
       get().switchSession();
     }
   },
-
-  switchBackToChat: () => {
-    const { activeId, router } = get();
-
-    const id = activeId || INBOX_SESSION_ID;
-
-    get().activeSession(id);
-
-    router?.push(SESSION_CHAT_URL(id, get().isMobile));
-  },
   switchSession: (sessionId = INBOX_SESSION_ID) => {
     const { isMobile, router } = get();
 
     get().activeSession(sessionId);
 
+    // TODO: 后续可以把 router 移除
     router?.push(SESSION_CHAT_URL(sessionId, isMobile));
   },
 
   useFetchSessions: () =>
     useSWR<LobeSessions>(FETCH_SESSIONS_KEY, sessionService.getSessions, {
       onSuccess: (data) => {
+        // 由于 https://github.com/lobehub/lobe-chat/pull/541 的关系
+        // 只有触发了 refreshSessions 才会更新 sessions，进而触发页面 rerender
+        // 因此这里不能补充判断，否则会导致页面不更新
+        // TODO：后续的根本解法应该是解除 inbox 和 session 的数据耦合
+        // 避免互相依赖的情况出现
+
+        // if (get().isSessionsFirstFetchFinished && isEqual(get().sessions, data)) return;
+
         set(
           {
-            fetchSessionsLoading: false,
+            isSessionsFirstFetchFinished: true,
             sessions: data,
           },
           false,

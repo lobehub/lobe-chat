@@ -1,10 +1,10 @@
 import { ActionIcon } from '@lobehub/ui';
-import { Bot, MessageSquare } from 'lucide-react';
+import { Compass, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { GlobalStore } from '@/store/global';
+import { GlobalStore, useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
@@ -15,7 +15,7 @@ export interface TopActionProps {
 
 const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
   const { t } = useTranslation('common');
-  const switchBackToChat = useSessionStore((s) => s.switchBackToChat);
+  const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
 
   return (
     <>
@@ -23,7 +23,7 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
         href={'/chat'}
         onClick={(e) => {
           e.preventDefault();
-          switchBackToChat();
+          switchBackToChat(useSessionStore.getState().activeId);
           setTab(SidebarTabKey.Chat);
         }}
       >
@@ -38,7 +38,7 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
       <Link href={'/market'}>
         <ActionIcon
           active={tab === SidebarTabKey.Market}
-          icon={Bot}
+          icon={Compass}
           onClick={() => {
             setTab(SidebarTabKey.Market);
           }}

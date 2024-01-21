@@ -1,3 +1,5 @@
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+
 export enum SidebarTabKey {
   Chat = 'chat',
   Market = 'market',
@@ -33,17 +35,20 @@ export interface GlobalPreference {
 
 export interface GlobalCommonState {
   hasNewVersion?: boolean;
+  isMobile?: boolean;
   latestVersion?: string;
   /**
    *  用户偏好的 UI 状态
    *  @localStorage
    */
   preference: GlobalPreference;
+  router?: AppRouterInstance;
   settingsTab: SettingsTabs;
   sidebarKey: SidebarTabKey;
 }
 
 export const initialCommonState: GlobalCommonState = {
+  isMobile: false,
   preference: {
     guide: {},
     inputHeight: 200,
