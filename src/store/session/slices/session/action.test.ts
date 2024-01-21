@@ -17,6 +17,7 @@ vi.mock('@/services/session', () => ({
     updateSessionGroup: vi.fn(),
     removeSession: vi.fn(),
     getSessions: vi.fn(),
+    updateSessionGroupId: vi.fn(),
     searchSessions: vi.fn(),
   },
 }));
@@ -156,7 +157,7 @@ describe('SessionAction', () => {
         await result.current.pinSession(sessionId, true);
       });
 
-      expect(sessionService.updateSessionGroup).toHaveBeenCalledWith(sessionId, 'pinned');
+      expect(sessionService.updateSessionGroupId).toHaveBeenCalledWith(sessionId, 'pinned');
       expect(mockRefresh).toHaveBeenCalled();
     });
 
@@ -168,22 +169,22 @@ describe('SessionAction', () => {
         await result.current.pinSession(sessionId, false);
       });
 
-      expect(sessionService.updateSessionGroup).toHaveBeenCalledWith(sessionId, 'default');
+      expect(sessionService.updateSessionGroupId).toHaveBeenCalledWith(sessionId, 'default');
       expect(mockRefresh).toHaveBeenCalled();
     });
   });
 
-  describe('updateSessionGroup', () => {
+  describe('updateSessionGroupId', () => {
     it('should update the session group and refresh the list', async () => {
       const { result } = renderHook(() => useSessionStore());
       const sessionId = 'session-id';
       const groupId = 'new-group-id';
 
       await act(async () => {
-        await result.current.updateSessionGroup(sessionId, groupId);
+        await result.current.updateSessionGroupId(sessionId, groupId);
       });
 
-      expect(sessionService.updateSessionGroup).toHaveBeenCalledWith(sessionId, groupId);
+      expect(sessionService.updateSessionGroupId).toHaveBeenCalledWith(sessionId, groupId);
       expect(mockRefresh).toHaveBeenCalled();
     });
   });

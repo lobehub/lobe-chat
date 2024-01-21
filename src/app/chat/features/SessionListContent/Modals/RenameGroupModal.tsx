@@ -1,12 +1,11 @@
 import { Input, Modal, type ModalProps } from '@lobehub/ui';
-import { message } from 'antd';
+import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { memo, useCallback, useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
-import { groupHelpers } from '@/store/global/helpers';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useSessionStore } from '@/store/session';
+import { sessionGroupSelectors } from '@/store/session/selectors';
 
 interface RenameGroupModalProps extends ModalProps {
   id: string;
@@ -14,28 +13,25 @@ interface RenameGroupModalProps extends ModalProps {
 
 const RenameGroupModal = memo<RenameGroupModalProps>(({ id, open, onCancel }) => {
   const { t } = useTranslation('chat');
-  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
-  const updateCustomGroup = useGlobalStore((s) => s.updateCustomGroup);
-  const group = groupHelpers.getGroupById(id, sessionCustomGroups);
+
+  const updateSessionGroupName = useSessionStore((s) => s.updateSessionGroupName);
+  const group = useSessionStore((s) => sessionGroupSelectors.getGroupById(id)(s), isEqual);
+
   const [input, setInput] = useState<string>();
 
-  const handleSubmit = useCallback(
-    (e: any) => {
-      if (!input) return;
-      if (input.length === 0 || input.length > 20)
-        return message.warning(t('sessionGroup.tooLong'));
-      updateCustomGroup(groupHelpers.renameGroup(id, input, sessionCustomGroups));
-      message.success(t('sessionGroup.renameSuccess'));
-      onCancel?.(e);
-    },
-    [id, input, sessionCustomGroups],
-  );
-
+  const { message } = App.useApp();
   return (
     <Modal
       allowFullscreen
       onCancel={onCancel}
-      onOk={handleSubmit}
+      onOk={(e) => {
+        if (!input) return;
+        if (input.length === 0 || input.length > 20)
+          return message.warning(t('sessionGroup.tooLong'));
+        updateSessionGroupName(id, input);
+        message.success(t('sessionGroup.renameSuccess'));
+        onCancel?.(e);
+      }}
       open={open}
       title={t('sessionGroup.rename')}
       width={400}

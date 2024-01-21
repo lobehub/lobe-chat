@@ -3,9 +3,16 @@ import { DeepPartial } from 'utility-types';
 import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
 import { BaseModel } from '@/database/core';
 import { DBModel } from '@/database/core/types/db';
+import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { DB_Session, DB_SessionSchema } from '@/database/schemas/session';
 import { LobeAgentConfig } from '@/types/agent';
-import { LobeAgentSession, LobeSessions, SessionGroupId } from '@/types/session';
+import {
+  ChatSessionList,
+  LobeAgentSession,
+  LobeSessions,
+  SessionDefaultGroup,
+  SessionGroupId,
+} from '@/types/session';
 import { merge } from '@/utils/merge';
 import { uuid } from '@/utils/uuid';
 
@@ -36,8 +43,17 @@ class _SessionModel extends BaseModel {
    * get sessions by group
    * @param group
    */
-  async queryByGroup(group: SessionGroupId) {
+  async queryByGroup(group: SessionGroupId): Promise<LobeSessions> {
     return this.table.where('group').equals(group).toArray();
+  }
+
+  async queryByGroupIds(groups: string[]) {
+    const pools = groups.map(async (id) => {
+      return [id, await this.queryByGroup(id)] as const;
+    });
+    const groupItems = await Promise.all(pools);
+
+    return Object.fromEntries(groupItems);
   }
 
   async update(id: string, data: Partial<DB_Session>) {
@@ -164,6 +180,26 @@ class _SessionModel extends BaseModel {
     const newSession = merge(session, { meta: { title: newTitle } });
 
     return this._add(newSession, uuid());
+  }
+
+  async queryWithGroups(): Promise<ChatSessionList> {
+    const groups = await SessionGroupModel.query();
+    const customGroups = await this.queryByGroupIds(groups.map((item) => item.id));
+
+    const defaultItems = await this.queryByGroup(SessionDefaultGroup.Default);
+    const pinnedItems = await this.queryByGroup(SessionDefaultGroup.Pinned);
+    // const pinnedItems = await this.table.where('pinned').equals(1).toArray();
+
+    const all = await this.query();
+    return {
+      all,
+      customGroup: groups.map((group) => ({
+        ...group,
+        children: customGroups[group.id],
+      })),
+      default: defaultItems,
+      pinned: pinnedItems,
+    };
   }
 }
 

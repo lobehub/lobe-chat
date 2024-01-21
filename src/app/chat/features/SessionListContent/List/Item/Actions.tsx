@@ -17,11 +17,9 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { configService } from '@/services/config';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
-import { sessionSelectors } from '@/store/session/selectors';
+import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
 import { SessionDefaultGroup } from '@/types/session';
 
 const useStyles = createStyles(({ css }) => ({
@@ -38,11 +36,10 @@ interface ActionProps {
 }
 
 const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen }) => {
+  const { styles } = useStyles();
   const { t } = useTranslation('chat');
 
-  const { styles } = useStyles();
-
-  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
+  const sessionCustomGroups = useSessionStore(sessionGroupSelectors.sessionGroupItems, isEqual);
   const [pin, removeSession, pinSession, duplicateSession, updateSessionGroup] = useSessionStore(
     (s) => {
       const session = sessionSelectors.getSessionById(id)(s);
@@ -51,7 +48,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
         s.removeSession,
         s.pinSession,
         s.duplicateSession,
-        s.updateSessionGroup,
+        s.updateSessionGroupId,
       ];
     },
   );

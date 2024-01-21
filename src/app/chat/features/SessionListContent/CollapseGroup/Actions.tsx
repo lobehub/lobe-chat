@@ -1,14 +1,11 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { App, Dropdown, DropdownProps, MenuProps } from 'antd';
 import { createStyles } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { MoreVertical, PencilLine, Settings2, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
-import { groupHelpers } from '@/store/global/helpers';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css }) => ({
   modalRoot: css`
@@ -25,8 +22,8 @@ const Actions = memo<ActionsProps>(({ id, openRenameModal, openConfigModal, onOp
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const { modal } = App.useApp();
-  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
-  const updateCustomGroup = useGlobalStore((s) => s.updateCustomGroup);
+
+  const [removeSessionGroup] = useSessionStore((s) => [s.removeSessionGroup]);
   const items: MenuProps['items'] = useMemo(
     () => [
       {
@@ -61,7 +58,7 @@ const Actions = memo<ActionsProps>(({ id, openRenameModal, openConfigModal, onOp
             centered: true,
             okButtonProps: { danger: true },
             onOk: () => {
-              updateCustomGroup(groupHelpers.removeGroup(id, sessionCustomGroups));
+              removeSessionGroup(id);
             },
             rootClassName: styles.modalRoot,
             title: t('sessionGroup.confirmRemoveGroupAlert'),

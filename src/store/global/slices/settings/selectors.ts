@@ -89,8 +89,6 @@ const currentLanguage = (s: GlobalStore) => {
 const dalleConfig = (s: GlobalStore) => s.settings.tool?.dalle || {};
 const isDalleAutoGenerating = (s: GlobalStore) => s.settings.tool?.dalle?.autoGenerate;
 
-const sessionCustomGroups = (s: GlobalStore) => s.settings.sessionCustomGroups || [];
-
 export const settingsSelectors = {
   currentLanguage,
   currentSettings,
@@ -104,5 +102,4 @@ export const settingsSelectors = {
   modelList: modelListSelectors,
   openAIAPI: openAIAPIKeySelectors,
   openAIProxyUrl: openAIProxyUrlSelectors,
-  sessionCustomGroups,
 };
