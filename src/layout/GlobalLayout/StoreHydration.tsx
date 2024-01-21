@@ -1,9 +1,8 @@
 import { useResponsive } from 'antd-style';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
-import { createStoreUpdater } from 'zustand-utils';
 
-import { useGlobalStore } from '@/store/global';
+import { useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
 
 const StoreHydration = memo(() => {
   const useFetchGlobalConfig = useGlobalStore((s) => s.useFetchGlobalConfig);
@@ -14,13 +13,26 @@ const StoreHydration = memo(() => {
     useGlobalStore.persist.rehydrate();
   }, []);
 
-  const useStoreUpdater = createStoreUpdater(useGlobalStore);
-
   const { mobile } = useResponsive();
-  useStoreUpdater('isMobile', mobile);
+  useEffectAfterGlobalHydrated(
+    (store) => {
+      const prevState = store.getState().isMobile;
+
+      if (prevState !== mobile) {
+        store.setState({ isMobile: mobile });
+      }
+    },
+    [mobile],
+  );
 
   const router = useRouter();
-  useStoreUpdater('router', router);
+
+  useEffectAfterGlobalHydrated(
+    (store) => {
+      store.setState({ router });
+    },
+    [router],
+  );
 
   useEffect(() => {
     router.prefetch('/chat');
