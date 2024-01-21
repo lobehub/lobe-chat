@@ -36,6 +36,7 @@ const StoreHydration = memo(() => {
 
   useEffect(() => {
     router.prefetch('/chat');
+    router.prefetch('/chat/settings');
     router.prefetch('/market');
     router.prefetch('/settings/common');
     router.prefetch('/settings/agent');
