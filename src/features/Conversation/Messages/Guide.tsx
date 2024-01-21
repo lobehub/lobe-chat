@@ -1,5 +1,4 @@
 import { Markdown } from '@lobehub/ui';
-import { TypographyProps } from 'antd';
 import { ReactNode, memo } from 'react';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -16,15 +15,7 @@ export const GuideMessage = memo<
 
   return (
     <div id={id}>
-      <Markdown
-        componentProps={{
-          a: {
-            target: '_self',
-          } as TypographyProps['Link'] & HTMLAnchorElement,
-        }}
-      >
-        {content}
-      </Markdown>
+      <Markdown>{content}</Markdown>
     </div>
   );
 });
