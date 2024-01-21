@@ -2,6 +2,7 @@ import { createStyles } from 'antd-style';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import ChatHydration from '@/components/StoreHydration/ChatHydration';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 
@@ -50,12 +51,16 @@ const Conversation = memo<ConversationProps>(({ chatInput, mobile }) => {
   const init = useInitConversation();
 
   return (
-    //  relative is required, ChatInput's absolute position needs it
-    <Flexbox flex={1} style={{ position: 'relative' }}>
+    <Flexbox
+      flex={1}
+      //  position: 'relative' is required, ChatInput's absolute position needs it
+      style={{ position: 'relative' }}
+    >
       <div className={styles}>
         {init ? <ChatList mobile={mobile} /> : <SkeletonList mobile={mobile} />}
       </div>
       {chatInput}
+      <ChatHydration />
     </Flexbox>
   );
 });
