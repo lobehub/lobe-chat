@@ -16,6 +16,8 @@ declare global {
 
       IMGUR_CLIENT_ID?: string;
 
+      METADATA_BASE_URL?: string;
+
       AGENTS_INDEX_URL?: string;
 
       PLUGINS_INDEX_URL?: string;
@@ -50,6 +52,8 @@ export const getServerConfig = () => {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,
     OPENAI_FUNCTION_REGIONS: regions,
+
+    METADATA_BASE_URL: process.env.METADATA_BASE_URL,
 
     AZURE_API_KEY: process.env.AZURE_API_KEY,
     AZURE_API_VERSION: process.env.AZURE_API_VERSION,
