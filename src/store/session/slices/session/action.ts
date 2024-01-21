@@ -157,7 +157,6 @@ export const createSessionSlice: StateCreator<
   useFetchSessions: () =>
     useSWR<LobeSessions>(FETCH_SESSIONS_KEY, sessionService.getSessions, {
       onSuccess: (data) => {
-        console.log('isSessionsFirstFetchFinished:', get().isSessionsFirstFetchFinished);
         if (get().isSessionsFirstFetchFinished && isEqual(get().sessions, data)) return;
 
         set(

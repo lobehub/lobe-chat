@@ -13,7 +13,7 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
 
-import SidebarHeader from '../SidebarHeader';
+import SidebarHeader from '../../../../components/SidebarHeader';
 import { useStyles } from './style';
 
 const SystemRole = memo(() => {
