@@ -54,6 +54,8 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
       if (!RenderFunction) return;
 
+      console.log(editableContent, item, data);
+
       return <RenderFunction {...data} editableContent={editableContent} />;
     },
     [item?.role],

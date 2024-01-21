@@ -82,9 +82,9 @@ const currentChatsWithGuideMessage =
       content: isInbox ? inboxMsg : !!meta.description ? agentSystemRoleMsg : agentMsg,
       createdAt: initTime,
       extra: {},
-      id: 'guide',
+      id: 'default',
       meta: merge({ avatar: DEFAULT_INBOX_AVATAR }, meta),
-      role: 'guide',
+      role: 'assistant',
       updatedAt: initTime,
     } as ChatMessage;
 
