@@ -49,10 +49,8 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
 
   const handleReset = useCallback(() => {
     modal.confirm({
-      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: { danger: true },
-      okText: t('ok', { ns: 'common' }),
       onOk: () => {
         resetSettings();
         form.setFieldsValue(DEFAULT_SETTINGS);
@@ -63,12 +61,10 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
 
   const handleClear = useCallback(() => {
     modal.confirm({
-      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: {
         danger: true,
       },
-      okText: t('ok', { ns: 'common' }),
       onOk: async () => {
         await clearSessions();
         await removeAllPlugins();
@@ -136,20 +132,23 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
           <SliderWithInput
             marks={{
               12: {
-                label: t('settingTheme.fontSize.marks.small'),
+                label: 'A',
                 style: {
+                  fontSize: 12,
                   marginTop: 4,
                 },
               },
               14: {
                 label: t('settingTheme.fontSize.marks.normal'),
                 style: {
+                  fontSize: 14,
                   marginTop: 4,
                 },
               },
               18: {
-                label: t('settingTheme.fontSize.marks.large'),
+                label: 'A',
                 style: {
+                  fontSize: 18,
                   marginTop: 4,
                 },
               },

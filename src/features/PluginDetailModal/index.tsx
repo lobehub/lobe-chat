@@ -33,8 +33,6 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
     return (
       <Modal
         allowFullscreen
-        cancelText={t('cancel', { ns: 'common' })}
-        okText={t('ok', { ns: 'common' })}
         onCancel={onClose}
         onOk={() => {
           onClose();

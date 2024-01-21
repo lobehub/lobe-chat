@@ -1,6 +1,7 @@
 import { Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { PropsWithChildren } from 'react';
+import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
@@ -20,9 +21,9 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   const neutralColor = cookieStore.get(LOBE_THEME_NEUTRAL_COLOR);
   const primaryColor = cookieStore.get(LOBE_THEME_PRIMARY_COLOR);
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
-
+  const direction = isRtlLang(lang?.value || DEFAULT_LANG) ? 'rtl' : 'ltr';
   return (
-    <html lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
+    <html dir={direction} lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
       <body>
         <StyleRegistry>
           <Layout

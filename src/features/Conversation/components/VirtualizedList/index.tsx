@@ -42,6 +42,9 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     }
   }, [id]);
 
+  // overscan should be 1.5 times the height of the window
+  const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
+
   return chatLoading && data.length === 2 ? null : (
     <Flexbox height={'100%'}>
       <Virtuoso
@@ -52,7 +55,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
         followOutput={'auto'}
         initialTopMostItemIndex={data?.length - 1}
         itemContent={itemContent}
-        overscan={70 * 10}
+        overscan={overscan}
         ref={virtuosoRef}
       />
       <AutoScroll

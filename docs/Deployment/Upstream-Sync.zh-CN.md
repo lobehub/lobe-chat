@@ -1,6 +1,12 @@
 # 自部署保持更新
 
-# `A` Vercel / Zeabur 部署
+## TOC
+
+- [`A` Vercel\`\` / Zeabur 部署](#a-vercel--zeabur-部署)
+  - [启动自动更新](#启动自动更新)
+- [`B` Docker 部署](#b-docker-部署)
+
+## `A` Vercel\`\` / Zeabur 部署
 
 如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示 “有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。我们建议按照以下步骤重新部署：
 
@@ -8,7 +14,7 @@
 - 使用页面右上角的 <kbd>Fork</kbd> 按钮，Fork 本项目；
 - 在 `Vercel` 上重新选择并部署。
 
-## 启动自动更新
+### 启动自动更新
 
 > \[!NOTE]
 >
@@ -19,7 +25,7 @@
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png)
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png)
 
-# `B` Docker 部署
+## `B` Docker 部署
 
 Docker 部署版本的升级非常简单，只需要重新部署 LobeChat 的最新镜像即可。 以下是执行这些步骤所需的指令：
 

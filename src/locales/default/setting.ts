@@ -252,9 +252,7 @@ export default {
     fontSize: {
       desc: '聊天内容的字体大小',
       marks: {
-        large: '大',
         normal: '标准',
-        small: '小',
       },
       title: '字体大小',
     },

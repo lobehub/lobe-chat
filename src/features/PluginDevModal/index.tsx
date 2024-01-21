@@ -96,7 +96,6 @@ const DevModal = memo<DevModalProps>(
       >
         <Modal
           allowFullscreen
-          cancelText={t('cancel', { ns: 'common' })}
           footer={footer}
           okText={t('dev.save')}
           onCancel={(e) => {

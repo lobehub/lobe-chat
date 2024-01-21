@@ -252,9 +252,7 @@
     "fontSize": {
       "desc": "Rozmiar czcionki wiadomości",
       "marks": {
-        "large": "Duży",
-        "normal": "Standardowy",
-        "small": "Mały"
+        "normal": "Standardowy"
       },
       "title": "Rozmiar czcionki"
     },
