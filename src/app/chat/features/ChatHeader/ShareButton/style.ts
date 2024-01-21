@@ -38,7 +38,7 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
       overflow: hidden scroll;
 
       width: 100%;
-      max-height: 40vh;
+      max-height: 40dvh;
 
       background: ${token.colorBgLayout};
       border: 1px solid ${token.colorBorder};
