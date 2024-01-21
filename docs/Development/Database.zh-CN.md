@@ -71,8 +71,48 @@ export const dbSchemaV3 = {
 
 ```
 
+3. 在 db 中加入 sessionGroups 表
 
-4. 定义 Model
+```diff
+
+import { dbSchemaV1, dbSchemaV2, dbSchemaV3, dbSchemaV4 } from './schemas';
+
+interface LobeDBSchemaMap {
+  files: DB_File;
+  messages: DB_Message;
+  plugins: DB_Plugin;
++ sessionGroups: DB_SessionGroup;
+  sessions: DB_Session;
+  topics: DB_Topic;
+}
+
+// Define a local DB
+export class LocalDB extends Dexie {
+  public files: LobeDBTable<'files'>;
+  public sessions: LobeDBTable<'sessions'>;
+  public messages: LobeDBTable<'messages'>;
+  public topics: LobeDBTable<'topics'>;
+  public plugins: LobeDBTable<'plugins'>;
++  public sessionGroups: LobeDBTable<'sessionGroups'>;
+
+  constructor() {
+    super('LOBE_CHAT_DB');
+    this.version(1).stores(dbSchemaV1);
+    this.version(2).stores(dbSchemaV2);
+    this.version(3).stores(dbSchemaV3);
++    this.version(4).stores(dbSchemaV4);
+
+    this.files = this.table('files');
+    this.sessions = this.table('sessions');
+    this.messages = this.table('messages');
+    this.topics = this.table('topics');
+    this.plugins = this.table('plugins');
++    this.sessionGroups = this.table('sessionGroups');
+  }
+}
+```
+
+5. 定义 Model
 
 model/sessionGroup.ts
 
@@ -97,3 +137,5 @@ class _SessionGroupModel extends BaseModel {
 
 export const SessionModel = new _SessionGroupModel();
 ```
+
+6. 按需在 Model 中实现功能逻辑
