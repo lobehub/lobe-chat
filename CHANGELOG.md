@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.120.4](https://github.com/lobehub/lobe-chat/compare/v0.120.3...v0.120.4)
+
+<sup>Released on **2024-01-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refactor url state management and fix some detail experience.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refactor url state management and fix some detail experience, closes [#1117](https://github.com/lobehub/lobe-chat/issues/1117) ([a355d2c](https://github.com/lobehub/lobe-chat/commit/a355d2c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.120.3](https://github.com/lobehub/lobe-chat/compare/v0.120.2...v0.120.3)
 
 <sup>Released on **2024-01-19**</sup>
