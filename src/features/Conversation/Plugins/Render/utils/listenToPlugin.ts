@@ -31,14 +31,17 @@ export const useOnPluginFetchPluginState = (onRequest: (key: string) => void) =>
   }, []);
 };
 
-export const useOnPluginFillContent = (callback: (content: string) => void) => {
+export const useOnPluginFillContent = (
+  callback: (content: string, triggerAiMessage?: boolean) => void,
+) => {
   useEffect(() => {
     const fn = (e: MessageEvent) => {
       if (e.data.type === PluginChannel.fillStandalonePluginContent) {
         const data = e.data.content;
+        const triggerAiMessage = e.data.triggerAiMessage;
         const content = typeof data !== 'string' ? JSON.stringify(data) : data;
 
-        callback(content);
+        callback(content, triggerAiMessage);
       }
     };
 

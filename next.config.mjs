@@ -21,11 +21,11 @@ const nextConfig = {
   compress: isProd,
   experimental: {
     optimizePackageImports: [
-      'modern-screenshot',
       'emoji-mart',
       '@emoji-mart/react',
       '@emoji-mart/data',
       '@icons-pack/react-simple-icons',
+      '@lobehub/ui',
       'gpt-tokenizer',
       'chroma-js',
     ],
@@ -46,7 +46,7 @@ const nextConfig = {
 
   reactStrictMode: true,
 
-  transpilePackages: ['antd-style', '@lobehub/ui', '@lobehub/tts'],
+  transpilePackages: ['antd-style'],
 
   webpack(config) {
     config.experiments = {

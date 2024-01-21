@@ -1,0 +1,108 @@
+# 技术开发上手指南
+
+欢迎来到 LobeChat 技术开发上手指南。LobeChat 是一款基于 Next.js 框架构建的 AI 会话应用，它汇集了一系列的技术栈，以实现多样化的功能和特性。本指南将详细介绍 LobeChat 的主要技术组成，以及如何在你的开发环境中配置和使用这些技术。
+
+#### TOC
+
+- [基础技术栈](#基础技术栈)
+- [文件夹目录架构](#文件夹目录架构)
+- [本地开发环境设置](#本地开发环境设置)
+- [代码风格与贡献指南](#代码风格与贡献指南)
+- [国际化实现指南](#国际化实现指南)
+- [附录：资源与参考](#附录资源与参考)
+
+## 基础技术栈
+
+LobeChat 的核心技术栈如下：
+
+- **框架**：我们选择了 [Next.js](https://nextjs.org/)，这是一款强大的 React 框架，为我们的项目提供了服务端渲染、路由框架、Router Handler 等关键功能。
+- **组件库**：我们使用了 [Ant Design (antd)](https://ant.design/) 作为基础组件库，同时引入了 [lobe-ui](https://github.com/lobehub/lobe-ui) 作为我们的业务组件库。
+- **状态管理**：我们选用了 [zustand](https://github.com/pmndrs/zustand)，一款轻量级且易于使用的状态管理库。
+- **网络请求**：我们采用 [swr](https://swr.vercel.app/)，这是一款用于数据获取的 React Hooks 库。
+- **路由**：路由管理我们直接使用 [Next.js](https://nextjs.org/) 自身提供的解决方案。
+- **国际化**：我们使用 [i18next](https://www.i18next.com/) 来实现应用的多语言支持。
+- **样式**：我们使用 [antd-style](https://github.com/ant-design/antd-style)，这是一款与 Ant Design 配套的 CSS-in-JS 库。
+- **单元测试**：我们使用 [vitest](https://github.com/vitest-dev/vitest) 进行单元测试。
+
+## 文件夹目录架构
+
+LobeChat 的文件夹目录架构如下：
+
+```bash
+src
+├── app        # 应用主要逻辑和状态管理相关的代码
+├── components # 可复用的 UI 组件
+├── config     # 应用的配置文件，包含客户端环境变量与服务端环境变量
+├── const      # 用于定义常量，如 action 类型、路由名等
+├── features   # 与业务功能相关的功能模块，如 Agent 设置、插件开发弹窗等
+├── hooks      # 全应用复用自定义的工具 Hooks
+├── layout     # 应用的布局组件，如导航栏、侧边栏等
+├── locales    # 国际化的语言文件
+├── services   # 封装的后端服务接口，如 HTTP 请求
+├── store      # 用于状态管理的 zustand store
+├── types      # TypeScript 的类型定义文件
+└── utils      # 通用的工具函数
+```
+
+有关目录架构的详细介绍，详见： [文件夹目录架构](Folder-Structure.zh-CN)
+
+## 本地开发环境设置
+
+本节将概述搭建开发环境并进行本地开发。 在开始之前，请确保你的本地环境中已安装 Node.js、Git 以及你选择的包管理器（Bun 或 PNPM）。
+
+我们推荐使用 WebStorm 作为你的集成开发环境（IDE）。
+
+1. **获取代码**：克隆 LobeChat 的代码库到本地：
+
+```bash
+git clone https://github.com/lobehub/lobe-chat.git
+```
+
+2. **安装依赖**：进入项目目录，并安装所需依赖：
+
+```bash
+cd lobe-chat
+# 如果你使用 Bun
+bun install
+# 如果你使用 PNPM
+pnpm install
+```
+
+3. **运行与调试**：启动本地开发服务器，开始你的开发之旅：
+
+```bash
+# 使用 Bun 启动开发服务器
+bun run dev
+# 访问 http://localhost:3010 查看应用
+```
+
+现在，你应该可以在浏览器中看到 LobeChat 的欢迎页面。详细的环境配置指南，请参考 [开发环境设置指南](Setup-Development.zh-CN)。
+
+## 代码风格与贡献指南
+
+在 LobeChat 项目中，我们十分重视代码的质量和一致性。为此，我们制定了一系列的代码风格规范和贡献流程，以确保每位开发者都能顺利地参与到项目中。以下是你作为开发者需要遵守的代码风格和贡献准则。
+
+- **代码风格**：我们使用 `@lobehub/lint` 统一代码风格，包括 ESLint、Prettier、remarklint 和 stylelint 配置。请遵守我们的代码规范，以保持代码的一致性和可读性。
+- **贡献流程**：我们采用 gitmoji 和 semantic release 作为代码提交和发布流程。请使用 gitmoji 标注您的提交信息，并确保遵循 semantic release 的规范，以便我们的自动化系统能够正确处理版本控制和发布。
+
+所有的贡献都将经过代码审查。维护者可能会提出修改建议或要求。请积极响应审查意见，并及时做出调整，我们期待你的参与和贡献。
+
+详细的代码风格和贡献指南，请参考 [代码风格与贡献指南](Contributing-Guidelines.zh-CN)。
+
+## 国际化实现指南
+
+LobeChat 采用 `i18next` 和 `lobe-i18n` 实现多语言支持，确保用户全球化体验。
+
+国际化文件位于 `src/locales`，包含默认语言（中文）。 我们会通过 `lobe-i18n` 自动生成其他的语言 JSON 文件。
+
+如果要添加新语种，需遵循特定步骤，详见 [新语种添加指南](Add-New-Locale.zh-CN)。 我们鼓励你参与我们的国际化努力，共同为全球用户提供更好的服务。
+
+详细的国际化实现指南指南，请参考 [国际化实现指南](Internationalization-Implementation.zh-CN)。
+
+## 附录：资源与参考
+
+为了支持开发者更好地理解和使用 LobeChat 的技术栈，我们提供了一份详尽的资源与参考列表 —— [LobeChat 资源与参考](https://github.com/lobehub/lobe-chat/wiki/Resources.zh-CN) - 访问我们维护的资源列表，包括教程、文章和其他有用的链接。
+
+我们鼓励开发者利用这些资源深入学习和提升技能，通过 [LobeChat GitHub Discussions](https://github.com/lobehub/lobe-chat/discussions) 或者 [Discord](https://discord.com/invite/AYFPHvv2jT) 加入社区讨论，提出问题或分享你的经验。
+
+如果你有任何疑问，或者需要进一步的帮助，请不要犹豫，请通过上述渠道与我们联系。

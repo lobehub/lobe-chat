@@ -252,9 +252,7 @@
     "fontSize": {
       "desc": "채팅 내용의 글꼴 크기",
       "marks": {
-        "large": "대",
-        "normal": "표준",
-        "small": "소"
+        "normal": "표준"
       },
       "title": "글꼴 크기"
     },

@@ -1,6 +1,12 @@
 # Upstream Sync
 
-# A. Vercel / Zeabur Deployment
+## TOC
+
+- [`A` Vercel / Zeabur Deployment](#a-vercel--zeabur-deployment)
+- [Enabling Automatic Updates](#enabling-automatic-updates)
+- [`B` Docker Deployment](#b-docker-deployment)
+
+## `A` Vercel / Zeabur Deployment
 
 If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available". This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to accurately detect updates. We suggest you redeploy using the following steps:
 
@@ -19,7 +25,7 @@ Once you have forked the project, due to Github restrictions, you will need to m
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png)
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png)
 
-# B. Docker Deployment
+## `B` Docker Deployment
 
 Upgrading the Docker deployment version is very simple, just redeploy the latest image of LobeChat. Here are the instructions to perform these steps:
 
