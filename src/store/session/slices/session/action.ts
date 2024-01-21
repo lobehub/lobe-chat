@@ -118,7 +118,7 @@ export const createSessionSlice: StateCreator<
 
     // duplicate Session Error
     if (!newId) {
-      message.error('复制失败');
+      message.error(t('copyFail', { ns: 'common' }));
       return;
     }
 

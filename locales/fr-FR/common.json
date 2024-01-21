@@ -13,6 +13,7 @@
   "close": "Fermer",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
   "copy": "Copier",
+  "copyFail": "Échec de la copie",
   "copySuccess": "Copie réussie",
   "defaultAgent": "Agent par défaut",
   "defaultSession": "Session par défaut",
