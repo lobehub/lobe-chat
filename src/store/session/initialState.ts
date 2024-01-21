@@ -10,9 +10,13 @@ export interface SessionState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string;
-  fetchSessionsLoading: boolean;
   isMobile?: boolean;
   isSearching: boolean;
+  isSessionsFirstFetchFinished: boolean;
+  /**
+   * 后续看看是否可以将 router 部分的逻辑移出去
+   * @deprecated
+   */
   router?: AppRouterInstance;
   searchKeywords: string;
   searchSessions: LobeAgentSession[];
@@ -21,9 +25,9 @@ export interface SessionState {
 
 export const initialState: SessionStoreState = {
   activeId: 'inbox',
-  fetchSessionsLoading: true,
   isMobile: false,
   isSearching: false,
+  isSessionsFirstFetchFinished: false,
   searchKeywords: '',
   searchSessions: [],
   sessions: [],

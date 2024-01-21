@@ -49,6 +49,11 @@ const hasCustomAgents = (s: SessionStore) => defaultSessions(s).length > 0;
 
 const isInboxSession = (s: SessionStore) => s.activeId === INBOX_SESSION_ID;
 
+const isSessionListInit = (s: SessionStore) => s.isSessionsFirstFetchFinished;
+
+// use to judge whether a session is fully activated
+const isSomeSessionActive = (s: SessionStore) => !!s.activeId && isSessionListInit(s);
+
 export const sessionSelectors = {
   currentSession,
   currentSessionSafe,
@@ -57,6 +62,8 @@ export const sessionSelectors = {
   hasCustomAgents,
   hasPinnedSessionList,
   isInboxSession,
+  isSessionListInit,
+  isSomeSessionActive,
   pinnedSessionList,
   searchSessions,
   unpinnedSessionList,

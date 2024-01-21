@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
-import { useSessionChatInit, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
 
@@ -19,11 +19,12 @@ import ShareButton from '../../features/ChatHeader/ShareButton';
 
 const Left = memo(() => {
   const { t } = useTranslation('chat');
-  const init = useSessionChatInit();
+
   const router = useRouter();
 
-  const [isInbox, title, description, avatar, backgroundColor, model, plugins] = useSessionStore(
-    (s) => [
+  const [init, isInbox, title, description, avatar, backgroundColor, model, plugins] =
+    useSessionStore((s) => [
+      sessionSelectors.isSomeSessionActive(s),
       sessionSelectors.isInboxSession(s),
       agentSelectors.currentAgentTitle(s),
       agentSelectors.currentAgentDescription(s),
@@ -31,8 +32,7 @@ const Left = memo(() => {
       agentSelectors.currentAgentBackgroundColor(s),
       agentSelectors.currentAgentModel(s),
       agentSelectors.currentAgentPlugins(s),
-    ],
-  );
+    ]);
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const displayDesc = isInbox ? t('inbox.desc') : description;
