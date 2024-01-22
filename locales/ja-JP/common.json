@@ -13,6 +13,7 @@
   "close": "閉じる",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除後は元に戻すことはできません。操作を確認してください。",
   "copy": "コピー",
+  "copyFail": "コピーに失敗しました",
   "copySuccess": "コピーが成功しました",
   "defaultAgent": "デフォルトエージェント",
   "defaultSession": "デフォルトセッション",

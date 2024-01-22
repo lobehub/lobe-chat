@@ -13,6 +13,7 @@
   "close": "关闭",
   "confirmRemoveSessionItemAlert": "即将删除该助手，删除后该将无法找回，请确认你的操作",
   "copy": "复制",
+  "copyFail": "复制失败",
   "copySuccess": "复制成功",
   "defaultAgent": "自定义助手",
   "defaultSession": "自定义助手",

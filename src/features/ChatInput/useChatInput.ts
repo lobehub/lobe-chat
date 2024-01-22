@@ -1,7 +1,6 @@
 import { TextAreaRef } from 'antd/es/input/TextArea';
 import { useCallback, useRef, useState } from 'react';
 
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
@@ -20,15 +19,12 @@ export const useChatInput = () => {
     s.updateInputMessage,
     s.stopGenerateMessage,
   ]);
-  const mobile = useIsMobile();
 
   const handleSend = useCallback(() => {
     setExpand(false);
-    if (mobile) {
-      ref?.current?.blur();
-    }
+
     onSend();
-  }, [onSend, mobile]);
+  }, [onSend]);
 
   return {
     canUpload,

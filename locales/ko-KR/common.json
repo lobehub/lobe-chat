@@ -13,6 +13,7 @@
   "close": "닫기",
   "confirmRemoveSessionItemAlert": "이 에이전트를 삭제하려고 합니다. 삭제 후에는 복구할 수 없습니다. 작업을 확인하십시오.",
   "copy": "복사",
+  "copyFail": "복사 실패",
   "copySuccess": "복사 성공",
   "defaultAgent": "기본 에이전트",
   "defaultSession": "기본 세션",

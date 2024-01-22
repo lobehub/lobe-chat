@@ -13,6 +13,7 @@
   "close": "Cerrar",
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción",
   "copy": "Copiar",
+  "copyFail": "Fallo al copiar",
   "copySuccess": "¡Copia exitosa!",
   "defaultAgent": "Asistente predeterminado",
   "defaultSession": "Sesión predeterminada",
