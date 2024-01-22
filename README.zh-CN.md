@@ -168,14 +168,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                               | 插件描述                                                                                                                                                                        |
-| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [AskYourPDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **askyourpdf** on **2024-01-20**</sup>       | 释放 PDF 的力量！深入文档，寻找答案，让信息触手可及。<br/>`pdf` `document` `web`                                                                                                |
-| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-01-20**</sup> | 实时股票、加密货币和其他投资数据。<br/>`股票` `分析`                                                                                                                            |
-| [Midjourney](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-18**</sup>          | 通过简单的提示轻松释放创造力，利用 Midjourney 生成独特的 AI 驱动图像。通过 Midjourney 的艺术触感为您的对话增添视觉魅力。<br/>`ai-image-generation` `midjourney` `visualization` |
-| [GIF 搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **efficiency** on **2024-01-17**</sup>         | 搜索各种各样的 GIF - 由 Giphy 提供动力。<br/>`gif` `图片` `搜索`                                                                                                                |
+| 最近新增                                                                                                           | 插件描述                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-22**</sup>  | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br/>`加密货币` `btc` `eth` `bnb` |
+| [Defillama](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **onrender** on **2024-01-22**</sup>      | 检索 DeFi 协议和区块链的数据。<br/>`加密货币` `去中心化金融`                                              |
+| [MintbaseSearch](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **mintbase** on **2024-01-22**</sup> | 在 NEAR 协议上查找任何 NFT 数据。<br/>`加密货币` `nft`                                                    |
+| [NFT Guru](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **swap** on **2024-01-22**</sup>           | 发现主要平台上 NFT 的当前价格，并通过实时跟踪快速变化的市场了解情况<br/>`加密货币` `nft`                  |
 
-> 📊 Total plugins: [<kbd>**20**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**25**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
