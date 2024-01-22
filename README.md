@@ -184,14 +184,14 @@ e-commerce platform data access, and various third-party services.
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                         | Description                                                                                                                                                                                                                                 |
-| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [AskYourPDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **askyourpdf** on **2024-01-20**</sup>       | Unlock the power of your PDFs!, dive into your documents, find answers, and bring information to your fingertips.<br/>`pdf` `document` `web`                                                                                                |
-| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-01-20**</sup> | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                                                                                                                                     |
-| [Midjourney](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-18**</sup>          | Unleash creativity with Midjourney, effortlessly generating unique AI-driven images through simple prompts. Add visual flair to your conversations with Midjourney's artistic touch.<br/>`ai-image-generation` `midjourney` `visualization` |
-| [GIF Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **efficiency** on **2024-01-17**</sup>       | Search through a wide range of gifs - Powered by Giphy.<br/>`gif` `image` `search`                                                                                                                                                          |
+| Recent Submits                                                                                                     | Description                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-22**</sup>  | Get realtime crypto price, BTC, ETH, BNB, and the latest insights.The latest coin news and airdrop opportunities.<br/>`crypto` `btc` `eth` `bnb` |
+| [Defillama](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **onrender** on **2024-01-22**</sup>      | Retrieve data on DeFi protocols and blockchains.<br/>`crypto` `de-fi`                                                                            |
+| [MintbaseSearch](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **mintbase** on **2024-01-22**</sup> | Find any NFT data on the NEAR Protocol.<br/>`crypto` `nft`                                                                                       |
+| [NFT Guru](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **swap** on **2024-01-22**</sup>           | Discover current prices of NFTs across major platforms and keep track of the rapidly changing marketplace with real-time<br/>`crypto` `nft`      |
 
-> 📊 Total plugins: [<kbd>**20**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**25**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
