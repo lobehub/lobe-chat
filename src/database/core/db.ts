@@ -1,4 +1,4 @@
-import Dexie from 'dexie';
+import Dexie, { Transaction } from 'dexie';
 
 import { DBModel } from '@/database/core/types/db';
 import { DB_File } from '@/database/schemas/files';
@@ -33,7 +33,9 @@ export class LocalDB extends Dexie {
     this.version(1).stores(dbSchemaV1);
     this.version(2).stores(dbSchemaV2);
     this.version(3).stores(dbSchemaV3);
-    this.version(4).stores(dbSchemaV4);
+    this.version(4)
+      .stores(dbSchemaV4)
+      .upgrade((trans) => this.upgradeToV4(trans));
 
     this.files = this.table('files');
     this.sessions = this.table('sessions');
@@ -42,6 +44,21 @@ export class LocalDB extends Dexie {
     this.plugins = this.table('plugins');
     this.sessionGroups = this.table('sessionGroups');
   }
+
+  /**
+   * 2024.01.22
+   *
+   * DB V3 to V4
+   * from `group = pinned` to `pinned:true`
+   */
+  upgradeToV4 = async (trans: Transaction) => {
+    const sessions = trans.table('sessions');
+    await sessions.toCollection().modify((session) => {
+      // translate boolean to number
+      session.pinned = session.group === 'pinned' ? 1 : 0;
+      session.group = 'default';
+    });
+  };
 }
 
 export const LocalDBInstance = new LocalDB();

@@ -19,6 +19,7 @@ vi.mock('@/services/session', () => ({
     getSessions: vi.fn(),
     updateSessionGroupId: vi.fn(),
     searchSessions: vi.fn(),
+    updateSessionPinned: vi.fn(),
   },
 }));
 
@@ -157,7 +158,7 @@ describe('SessionAction', () => {
         await result.current.pinSession(sessionId, true);
       });
 
-      expect(sessionService.updateSessionGroupId).toHaveBeenCalledWith(sessionId, 'pinned');
+      expect(sessionService.updateSessionPinned).toHaveBeenCalledWith(sessionId, true);
       expect(mockRefresh).toHaveBeenCalled();
     });
 
@@ -169,7 +170,7 @@ describe('SessionAction', () => {
         await result.current.pinSession(sessionId, false);
       });
 
-      expect(sessionService.updateSessionGroupId).toHaveBeenCalledWith(sessionId, 'default');
+      expect(sessionService.updateSessionPinned).toHaveBeenCalledWith(sessionId, false);
       expect(mockRefresh).toHaveBeenCalled();
     });
   });

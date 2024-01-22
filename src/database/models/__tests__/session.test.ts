@@ -63,7 +63,7 @@ describe('SessionModel', () => {
     const group: SessionGroupId = 'testGroup';
     await SessionModel.batchCreate([sessionData, sessionData] as LobeAgentSession[]);
 
-    const sessionsByGroup = await SessionModel.queryByGroup(group);
+    const sessionsByGroup = await SessionModel.querySessionsByGroupId(group);
 
     // Assuming all created sessions belong to the same group
     expect(sessionsByGroup).toHaveLength(2);

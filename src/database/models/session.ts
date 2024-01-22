@@ -27,7 +27,9 @@ class _SessionModel extends BaseModel {
   }
 
   async batchCreate(sessions: LobeAgentSession[]) {
-    return this._batchAdd(sessions, { idGenerator: uuid });
+    const DB_Sessions = sessions.map((s) => this.mapToDB_Session(s));
+
+    return this._batchAdd<DB_Session>(DB_Sessions, { idGenerator: uuid });
   }
 
   async query({
@@ -36,20 +38,52 @@ class _SessionModel extends BaseModel {
   }: { current?: number; pageSize?: number } = {}): Promise<LobeSessions> {
     const offset = current * pageSize;
 
-    return this.table.orderBy('updatedAt').reverse().offset(offset).limit(pageSize).toArray();
+    const items: DBModel<DB_Session>[] = await this.table
+      .orderBy('updatedAt')
+      .reverse()
+      .offset(offset)
+      .limit(pageSize)
+      .toArray();
+
+    return this.mapToAgentSessions(items);
+  }
+
+  async queryWithGroups(): Promise<ChatSessionList> {
+    const groups = await SessionGroupModel.query();
+    const customGroups = await this.queryByGroupIds(groups.map((item) => item.id));
+    const defaultItems = await this.querySessionsByGroupId(SessionDefaultGroup.Default);
+    const pinnedItems = await this.getPinnedSessions();
+
+    const all = await this.query();
+    return {
+      all,
+      customGroup: groups.map((group) => ({
+        ...group,
+        children: customGroups[group.id],
+      })),
+      default: defaultItems,
+      pinned: pinnedItems,
+    };
   }
 
   /**
    * get sessions by group
    * @param group
    */
-  async queryByGroup(group: SessionGroupId): Promise<LobeSessions> {
-    return this.table.where('group').equals(group).toArray();
+  async querySessionsByGroupId(group: SessionGroupId): Promise<LobeSessions> {
+    const items: DBModel<DB_Session>[] = await this.table
+      .where('group')
+      .equals(group)
+      .and((session) => !session.pinned)
+      .reverse()
+      .sortBy('updatedAt');
+
+    return this.mapToAgentSessions(items);
   }
 
   async queryByGroupIds(groups: string[]) {
     const pools = groups.map(async (id) => {
-      return [id, await this.queryByGroup(id)] as const;
+      return [id, await this.querySessionsByGroupId(id)] as const;
     });
     const groupItems = await Promise.all(pools);
 
@@ -60,6 +94,10 @@ class _SessionModel extends BaseModel {
     return super._update(id, data);
   }
 
+  async updatePinned(id: string, pinned: boolean) {
+    return this.update(id, { pinned: pinned ? 1 : 0 });
+  }
+
   async updateConfig(id: string, data: DeepPartial<LobeAgentConfig>) {
     const session = await this.findById(id);
     if (!session) return;
@@ -68,6 +106,7 @@ class _SessionModel extends BaseModel {
 
     return this.update(id, { config });
   }
+
   /**
    * Delete a session , also delete all messages and topic associated with it.
    */
@@ -164,13 +203,13 @@ class _SessionModel extends BaseModel {
     ]);
 
     // Retrieve unique sessions by IDs
-    const data = await this.table
+    const items: DBModel<DB_Session>[] = await this.table
       .where('id')
       .anyOf([...combinedSessionIds])
       .toArray();
 
     console.timeEnd('queryByKeyword');
-    return data;
+    return this.mapToAgentSessions(items);
   }
 
   async duplicate(id: string, newTitle?: string) {
@@ -182,24 +221,33 @@ class _SessionModel extends BaseModel {
     return this._add(newSession, uuid());
   }
 
-  async queryWithGroups(): Promise<ChatSessionList> {
-    const groups = await SessionGroupModel.query();
-    const customGroups = await this.queryByGroupIds(groups.map((item) => item.id));
+  async getPinnedSessions(): Promise<LobeSessions> {
+    const items: DBModel<DB_Session>[] = await this.table
+      .where('pinned')
+      .equals(1)
+      .reverse()
+      .sortBy('updatedAt');
 
-    const defaultItems = await this.queryByGroup(SessionDefaultGroup.Default);
-    const pinnedItems = await this.queryByGroup(SessionDefaultGroup.Pinned);
-    // const pinnedItems = await this.table.where('pinned').equals(1).toArray();
+    return this.mapToAgentSessions(items);
+  }
 
-    const all = await this.query();
+  private mapToDB_Session(session: LobeAgentSession): DBModel<DB_Session> {
     return {
-      all,
-      customGroup: groups.map((group) => ({
-        ...group,
-        children: customGroups[group.id],
-      })),
-      default: defaultItems,
-      pinned: pinnedItems,
+      ...session,
+      group: session.group || SessionDefaultGroup.Default,
+      pinned: session.pinned ? 1 : 0,
     };
+  }
+
+  private DB_SessionToAgentSession(session: DBModel<DB_Session>) {
+    return {
+      ...session,
+      pinned: !!session.pinned,
+    } as LobeAgentSession;
+  }
+
+  private mapToAgentSessions(session: DBModel<DB_Session>[]) {
+    return session.map((item) => this.DB_SessionToAgentSession(item));
   }
 }
 

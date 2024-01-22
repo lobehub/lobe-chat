@@ -65,6 +65,9 @@ class SessionService {
   async updateSessionGroupId(id: string, group: SessionGroupId) {
     return SessionModel.update(id, { group });
   }
+  async updateSessionPinned(id: string, pinned: boolean) {
+    return SessionModel.updatePinned(id, pinned);
+  }
 
   async updateSessionMeta(activeId: string, meta: Partial<MetaData>) {
     return SessionModel.update(activeId, { meta });

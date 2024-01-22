@@ -48,7 +48,7 @@ export interface SessionAction {
   /**
    * Pins or unpins a session.
    */
-  pinSession: (id: string, pinned?: boolean) => Promise<void>;
+  pinSession: (id: string, pinned: boolean) => Promise<void>;
   /**
    * re-fetch the data
    */
@@ -128,7 +128,7 @@ export const createSessionSlice: StateCreator<
   },
 
   pinSession: async (sessionId, pinned) => {
-    await sessionService.updateSessionGroupId(sessionId, pinned ? 'pinned' : 'default');
+    await sessionService.updateSessionPinned(sessionId, pinned);
 
     await get().refreshSessions();
   },
