@@ -1,9 +1,18 @@
 import { DeepPartial } from 'utility-types';
 
 import { SessionModel } from '@/database/models/session';
+import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
-import { LobeAgentSession, LobeSessionType, LobeSessions, SessionGroupId } from '@/types/session';
+import {
+  ChatSessionList,
+  LobeAgentSession,
+  LobeSessionType,
+  LobeSessions,
+  SessionGroupId,
+  SessionGroupItem,
+  SessionGroups,
+} from '@/types/session';
 
 class SessionService {
   async createNewSession(
@@ -21,33 +30,27 @@ class SessionService {
     return SessionModel.batchCreate(importSessions);
   }
 
+  async duplicateSession(id: string, newTitle: string): Promise<string | undefined> {
+    const res = await SessionModel.duplicate(id, newTitle);
+
+    if (res) return res?.id;
+  }
+
   async getSessions(): Promise<LobeSessions> {
+    const groups = await SessionGroupModel.query();
+    const data = await SessionModel.queryByGroupIds(groups.map((item) => item.id));
+
+    console.log(data);
     return SessionModel.query();
+  }
+
+  async getSessionsWithGroup(): Promise<ChatSessionList> {
+    return SessionModel.queryWithGroups();
   }
 
   async getAllAgents(): Promise<LobeSessions> {
     // TODO: add a filter to get only agents
     return await SessionModel.query();
-  }
-
-  async removeSession(id: string) {
-    return SessionModel.delete(id);
-  }
-
-  async removeAllSessions() {
-    return SessionModel.clearTable();
-  }
-
-  async updateSessionGroup(id: string, group: SessionGroupId) {
-    return SessionModel.update(id, { group });
-  }
-
-  async updateSessionMeta(activeId: string, meta: Partial<MetaData>) {
-    return SessionModel.update(activeId, { meta });
-  }
-
-  async updateSessionConfig(activeId: string, config: DeepPartial<LobeAgentConfig>) {
-    return SessionModel.updateConfig(activeId, config);
   }
 
   async hasSessions() {
@@ -59,10 +62,53 @@ class SessionService {
     return SessionModel.queryByKeyword(keyword);
   }
 
-  async duplicateSession(id: string, newTitle: string): Promise<string | undefined> {
-    const res = await SessionModel.duplicate(id, newTitle);
+  async updateSessionGroupId(id: string, group: SessionGroupId) {
+    return SessionModel.update(id, { group });
+  }
 
-    if (res) return res?.id;
+  async updateSessionMeta(activeId: string, meta: Partial<MetaData>) {
+    return SessionModel.update(activeId, { meta });
+  }
+
+  async updateSessionConfig(activeId: string, config: DeepPartial<LobeAgentConfig>) {
+    return SessionModel.updateConfig(activeId, config);
+  }
+
+  async removeSession(id: string) {
+    return SessionModel.delete(id);
+  }
+
+  async removeAllSessions() {
+    return SessionModel.clearTable();
+  }
+
+  // ************************************** //
+  // ***********  SessionGroup  *********** //
+  // ************************************** //
+
+  async createSessionGroup(name: string, sort?: number) {
+    const item = await SessionGroupModel.create(name, sort);
+    if (!item) {
+      throw new Error('session group create Error');
+    }
+
+    return item.id;
+  }
+
+  async batchCreateSessionGroups(groups: SessionGroups) {
+    return SessionGroupModel.batchCreate(groups);
+  }
+
+  async removeSessionGroup(id: string, removeChildren?: boolean) {
+    return SessionGroupModel.delete(id, removeChildren);
+  }
+
+  async updateSessionGroup(id: string, data: Partial<SessionGroupItem>) {
+    return SessionGroupModel.update(id, data);
+  }
+
+  async updateSessionGroupOrder(sortMap: { id: string; sort: number }[]) {
+    return SessionGroupModel.updateOrder(sortMap);
   }
 }
 

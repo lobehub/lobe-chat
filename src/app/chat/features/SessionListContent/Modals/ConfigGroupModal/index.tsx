@@ -7,8 +7,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useSessionStore } from '@/store/session';
+import { sessionGroupSelectors } from '@/store/session/selectors';
 import { SessionGroupItem } from '@/types/session';
 
 import GroupItem from './GroupItem';
@@ -30,10 +30,10 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
 const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
-  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
-  const [addCustomGroup, updateCustomGroup] = useGlobalStore((s) => [
-    s.addCustomGroup,
-    s.updateCustomGroup,
+  const sessionGroupItems = useSessionStore(sessionGroupSelectors.sessionGroupItems, isEqual);
+  const [addSessionGroup, updateSessionGroupSort] = useSessionStore((s) => [
+    s.addSessionGroup,
+    s.updateSessionGroupSort,
   ]);
 
   return (
@@ -47,8 +47,10 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
     >
       <Flexbox>
         <SortableList
-          items={sessionCustomGroups}
-          onChange={(item: SessionGroupItem[]) => updateCustomGroup(item)}
+          items={sessionGroupItems}
+          onChange={(items: SessionGroupItem[]) => {
+            updateSessionGroupSort(items);
+          }}
           renderItem={(item: SessionGroupItem) => (
             <SortableList.Item
               align={'center'}
@@ -65,7 +67,7 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
         <Button
           block
           icon={<Icon icon={Plus} />}
-          onClick={() => addCustomGroup(t('sessionGroup.newGroup'))}
+          onClick={() => addSessionGroup(t('sessionGroup.newGroup'))}
         >
           {t('sessionGroup.createGroup')}
         </Button>

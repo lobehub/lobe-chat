@@ -4,7 +4,7 @@ import { topicService } from '@/services/topic';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionExportSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 import { ConfigFile } from '@/types/exportConfig';
 import { ChatMessage } from '@/types/message';
 import { LobeSessions } from '@/types/session';
@@ -189,7 +189,7 @@ class ConfigService {
     sessionSelectors.getSessionById(id)(useSessionStore.getState());
 
   private getAgent = (id: string) =>
-    sessionExportSelectors.getExportAgent(id)(useSessionStore.getState());
+    sessionSelectors.getSessionById(id)(useSessionStore.getState());
 
   private mapImportResult = (input: {
     added: number;

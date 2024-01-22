@@ -21,11 +21,12 @@ export interface Guide {
 }
 
 export interface GlobalPreference {
+  // which sessionGroup should expand
+  expandSessionGroupKeys: SessionGroupId[];
   guide?: Guide;
   inputHeight: number;
   mobileShowTopic?: boolean;
   sessionCustomGroups: SessionGroupItem[];
-  sessionGroupKeys: SessionGroupId[];
   sessionsWidth: number;
 
   showChatSideBar?: boolean;
@@ -54,11 +55,11 @@ export interface GlobalCommonState {
 export const initialCommonState: GlobalCommonState = {
   isMobile: false,
   preference: {
+    expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
     guide: {},
     inputHeight: 200,
     mobileShowTopic: false,
     sessionCustomGroups: [],
-    sessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
     sessionsWidth: 320,
     showChatSideBar: true,
     showSessionPanel: true,

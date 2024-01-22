@@ -4,9 +4,10 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors, settingsSelectors } from '@/store/global/selectors';
+import { preferenceSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+import { SessionDefaultGroup } from '@/types/session';
 
 import Actions from '../SessionListContent/CollapseGroup/Actions';
 import CollapseGroup from './CollapseGroup';
@@ -16,35 +17,34 @@ import ConfigGroupModal from './Modals/ConfigGroupModal';
 import RenameGroupModal from './Modals/RenameGroupModal';
 
 const SessionListContent = memo(() => {
+  const { t } = useTranslation('chat');
+
   const [activeGroupId, setActiveGroupId] = useState<string>();
   const [renameGroupModalOpen, setRenameGroupModalOpen] = useState(false);
   const [configGroupModalOpen, setConfigGroupModalOpen] = useState(false);
-  const { t } = useTranslation('chat');
-  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
-  const sessionList =
-    useSessionStore(sessionSelectors.sessionList(sessionCustomGroups), isEqual) || {};
+
+  const [useFetchSessions] = useSessionStore((s) => [s.useFetchSessions]);
+  useFetchSessions();
+
+  const pinnedSessions = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
+  const defaultSessions = useSessionStore(sessionSelectors.defaultSessions, isEqual);
+  const customSessionGroups = useSessionStore(sessionSelectors.customSessionGroups, isEqual);
+
   const [sessionGroupKeys, updatePreference] = useGlobalStore((s) => [
     preferenceSelectors.sessionGroupKeys(s),
     s.updatePreference,
   ]);
-  const [ useFetchSessions] = useSessionStore((s) => [
-    s.useFetchSessions,
-  ]);
-  useFetchSessions();
-
 
   const items = useMemo(
     () =>
       [
-        sessionList.pinnedList?.length > 0 && {
-          children: <SessionList dataSource={sessionList.pinnedList} />,
-          key: 'pinned',
+        pinnedSessions.length > 0 && {
+          children: <SessionList dataSource={pinnedSessions} />,
+          key: SessionDefaultGroup.Pinned,
           label: t('pin'),
         },
-        ...sessionCustomGroups.map(({ id, name }) => ({
-          children: sessionList.customList[id] && (
-            <SessionList dataSource={sessionList.customList[id]} />
-          ),
+        ...customSessionGroups.map(({ id, name, children }) => ({
+          children: <SessionList dataSource={children} />,
           extra: (
             <Actions
               id={id}
@@ -59,12 +59,12 @@ const SessionListContent = memo(() => {
           label: name,
         })),
         {
-          children: <SessionList dataSource={sessionList.defaultList} />,
-          key: 'defaultList',
+          children: <SessionList dataSource={defaultSessions} />,
+          key: SessionDefaultGroup.Default,
           label: t('defaultList'),
         },
       ].filter(Boolean) as CollapseProps['items'],
-    [sessionCustomGroups, sessionList],
+    [customSessionGroups, pinnedSessions, defaultSessions],
   );
 
   return (
@@ -74,8 +74,9 @@ const SessionListContent = memo(() => {
         activeKey={sessionGroupKeys}
         items={items}
         onChange={(keys) => {
-          const sessionGroupKeys = typeof keys === 'string' ? [keys] : keys;
-          updatePreference({ sessionGroupKeys });
+          const expandSessionGroupKeys = typeof keys === 'string' ? [keys] : keys;
+
+          updatePreference({ expandSessionGroupKeys });
         }}
       />
       {activeGroupId && (

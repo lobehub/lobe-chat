@@ -21,6 +21,7 @@ vi.mock('@/database/models/session', () => {
       isEmpty: vi.fn(),
       queryByKeyword: vi.fn(),
       updateConfig: vi.fn(),
+      queryByGroupIds: vi.fn(),
     },
   };
 });
@@ -140,14 +141,14 @@ describe('SessionService', () => {
     });
   });
 
-  describe('updateSessionGroup', () => {
+  describe('updateSessionGroupId', () => {
     it('should update the group of a session', async () => {
       // Setup
       const groupId = 'new-group';
       (SessionModel.update as Mock).mockResolvedValue({ ...mockSession, group: groupId });
 
       // Execute
-      const result = await sessionService.updateSessionGroup(mockSessionId, groupId);
+      const result = await sessionService.updateSessionGroupId(mockSessionId, groupId);
 
       // Assert
       expect(SessionModel.update).toHaveBeenCalledWith(mockSessionId, { group: groupId });

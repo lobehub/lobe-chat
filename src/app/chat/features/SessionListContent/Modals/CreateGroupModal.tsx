@@ -1,11 +1,10 @@
 import { Input, Modal, type ModalProps } from '@lobehub/ui';
-import { message } from 'antd';
-import isEqual from 'fast-deep-equal';
-import { memo, useCallback, useState } from 'react';
+import { App } from 'antd';
+import { MouseEvent, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 
 interface CreateGroupModalProps extends ModalProps {
@@ -15,41 +14,46 @@ interface CreateGroupModalProps extends ModalProps {
 const CreateGroupModal = memo<CreateGroupModalProps>(
   ({ id, open, onCancel }: CreateGroupModalProps) => {
     const { t } = useTranslation('chat');
-    const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
-    const addCustomGroup = useGlobalStore((s) => s.addCustomGroup);
-    const updateSessionGroup = useSessionStore((s) => s.updateSessionGroup);
+
+    const toggleExpandSessionGroup = useGlobalStore((s) => s.toggleExpandSessionGroup);
+    const { message } = App.useApp();
+    const [updateSessionGroup, addCustomGroup] = useSessionStore((s) => [
+      s.updateSessionGroupId,
+      s.addSessionGroup,
+    ]);
     const [input, setInput] = useState('');
-
-    const handleSubmit = useCallback(
-      (e: any) => {
-        if (!input) return;
-        if (input.length === 0 || input.length > 20)
-          return message.warning(t('sessionGroup.tooLong'));
-
-        const groupId = addCustomGroup(input);
-        updateSessionGroup(id, groupId);
-        message.success(t('sessionGroup.createSuccess'));
-        onCancel?.(e);
-      },
-      [id, input, sessionCustomGroups],
-    );
 
     return (
       <div onClick={(e) => e.stopPropagation()}>
         <Modal
           allowFullscreen
+          centered
           onCancel={onCancel}
-          onOk={handleSubmit}
+          onOk={async (e: MouseEvent<HTMLButtonElement>) => {
+            if (!input) return;
+
+            if (input.length === 0 || input.length > 20)
+              return message.warning(t('sessionGroup.tooLong'));
+
+            const groupId = await addCustomGroup(input);
+            await updateSessionGroup(id, groupId);
+            toggleExpandSessionGroup(groupId, true);
+
+            message.success(t('sessionGroup.createSuccess'));
+            onCancel?.(e);
+          }}
           open={open}
           title={t('sessionGroup.createGroup')}
           width={400}
         >
-          <Input
-            autoFocus
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={t('sessionGroup.inputPlaceholder')}
-            value={input}
-          />
+          <Flexbox paddingBlock={16}>
+            <Input
+              autoFocus
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={t('sessionGroup.inputPlaceholder')}
+              value={input}
+            />
+          </Flexbox>
         </Modal>
       </div>
     );

@@ -5,8 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
 import { useGlobalStore } from '@/store/global';
 import { SettingsTabs } from '@/store/global/initialState';
-import { LanguageModel } from '@/types/llm';
-import { LobeAgentSettings, SessionGroupItem } from '@/types/session';
+import { LobeAgentSettings } from '@/types/session';
 import { GlobalSettings, OpenAIConfig } from '@/types/settings';
 
 beforeEach(() => {
@@ -18,23 +17,6 @@ vi.mock('@/utils/uuid', () => ({
 }));
 
 describe('SettingsAction', () => {
-  describe('addCustomGroup', () => {
-    it('should add a custom group and update session group keys', () => {
-      const { result } = renderHook(() => useGlobalStore());
-
-      act(() => {
-        const groupId = result.current.addCustomGroup('New Group');
-        expect(groupId).toBe('unique-id');
-      });
-
-      expect(result.current.settings.sessionCustomGroups).toContainEqual({
-        id: 'unique-id',
-        name: 'New Group',
-      });
-      expect(result.current.preference.sessionGroupKeys).toContain('unique-id');
-    });
-  });
-
   describe('importAppSettings', () => {
     it('should import app settings', () => {
       const { result } = renderHook(() => useGlobalStore());
@@ -112,19 +94,6 @@ describe('SettingsAction', () => {
       });
 
       expect(result.current.settings.themeMode).toEqual('light');
-    });
-  });
-
-  describe('updateCustomGroup', () => {
-    it('should update custom groups', () => {
-      const { result } = renderHook(() => useGlobalStore());
-      const updatedGroups: SessionGroupItem[] = [{ id: 'group-id', name: 'Updated Group' }];
-
-      act(() => {
-        result.current.updateCustomGroup(updatedGroups);
-      });
-
-      expect(result.current.settings.sessionCustomGroups).toEqual(updatedGroups);
     });
   });
 

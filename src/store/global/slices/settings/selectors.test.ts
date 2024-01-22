@@ -292,23 +292,4 @@ describe('settingsSelectors', () => {
       expect(result).toBe(true);
     });
   });
-
-  describe('sessionCustomGroups', () => {
-    it('should return session custom groups', () => {
-      const s = {
-        settings: {
-          sessionCustomGroups: [
-            {
-              name: 'Group 1',
-              id: 'group-1',
-            },
-          ],
-        },
-      } as unknown as GlobalStore;
-
-      const result = settingsSelectors.sessionCustomGroups(s);
-
-      expect(result).toMatchSnapshot();
-    });
-  });
 });

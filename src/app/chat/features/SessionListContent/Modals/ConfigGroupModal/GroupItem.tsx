@@ -1,14 +1,11 @@
 import { ActionIcon, EditableText, SortableList } from '@lobehub/ui';
-import { Popconfirm, message } from 'antd';
+import { App, Popconfirm } from 'antd';
 import { createStyles } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { PencilLine, Trash } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
-import { groupHelpers } from '@/store/global/helpers';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useSessionStore } from '@/store/session';
 import { SessionGroupItem } from '@/types/session';
 
 const useStyles = createStyles(({ css }) => ({
@@ -26,22 +23,15 @@ const useStyles = createStyles(({ css }) => ({
 }));
 
 const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
-  const [editing, setEditing] = useState(false);
-  const sessionCustomGroups = useGlobalStore(settingsSelectors.sessionCustomGroups, isEqual);
-  const updateCustomGroup = useGlobalStore((s) => s.updateCustomGroup);
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
+  const { message } = App.useApp();
 
-  const handleRename = useCallback(
-    (input: string) => {
-      if (!input) return;
-      if (input.length === 0 || input.length > 20)
-        return message.warning(t('sessionGroup.tooLong'));
-      updateCustomGroup(groupHelpers.renameGroup(id, input, sessionCustomGroups));
-      message.success(t('sessionGroup.renameSuccess'));
-    },
-    [id, sessionCustomGroups],
-  );
+  const [editing, setEditing] = useState(false);
+  const [updateSessionGroupName, removeSessionGroup] = useSessionStore((s) => [
+    s.updateSessionGroupName,
+    s.removeSessionGroup,
+  ]);
 
   return (
     <>
@@ -57,7 +47,7 @@ const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
               type: 'primary',
             }}
             onConfirm={() => {
-              updateCustomGroup(groupHelpers.removeGroup(id, sessionCustomGroups));
+              removeSessionGroup(id);
             }}
             title={t('sessionGroup.confirmRemoveGroupAlert')}
           >
@@ -67,8 +57,14 @@ const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
       ) : (
         <EditableText
           editing={editing}
-          onChangeEnd={(v) => {
-            if (name !== v) handleRename(v);
+          onChangeEnd={(input) => {
+            if (name !== input) {
+              if (!input) return;
+              if (input.length === 0 || input.length > 20)
+                return message.warning(t('sessionGroup.tooLong'));
+              updateSessionGroupName(id, input);
+              message.success(t('sessionGroup.renameSuccess'));
+            }
             setEditing(false);
           }}
           onEditingChange={(e) => setEditing(e)}

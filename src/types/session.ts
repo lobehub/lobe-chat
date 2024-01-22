@@ -15,9 +15,14 @@ export enum SessionDefaultGroup {
 }
 
 export interface SessionGroupItem {
-  id: SessionGroupId;
+  createdAt: number;
+  id: string;
   name: string;
+  sort?: number;
+  updatedAt: number;
 }
+
+export type SessionGroups = SessionGroupItem[];
 
 /**
  * Lobe Agent
@@ -37,3 +42,16 @@ export interface LobeAgentSettings {
 }
 
 export type LobeSessions = LobeAgentSession[];
+
+export interface CustomSessionGroup {
+  children: LobeSessions;
+  id: SessionGroupId;
+  name: string;
+}
+
+export interface ChatSessionList {
+  all: LobeSessions;
+  customGroup: CustomSessionGroup[];
+  default: LobeSessions;
+  pinned: LobeSessions;
+}

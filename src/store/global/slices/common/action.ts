@@ -11,7 +11,6 @@ import type { GlobalStore } from '@/store/global';
 import type { GlobalServerConfig } from '@/types/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
-import { nanoid } from '@/utils/uuid';
 
 import type { GlobalCommonState, GlobalPreference, Guide, SidebarTabKey } from './initialState';
 
@@ -21,7 +20,6 @@ const n = setNamespace('settings');
  * 设置操作
  */
 export interface CommonAction {
-  addCustomGroup: (name: string) => string;
   switchBackToChat: (sessionId?: string) => void;
   /**
    * 切换侧边栏选项
@@ -29,6 +27,7 @@ export interface CommonAction {
    */
   switchSideBar: (key: SidebarTabKey) => void;
   toggleChatSideBar: (visible?: boolean) => void;
+  toggleExpandSessionGroup: (id: string, expand: boolean) => void;
   toggleMobileTopic: (visible?: boolean) => void;
   toggleSystemRole: (visible?: boolean) => void;
   updateGuideState: (guide: Partial<Guide>) => void;
@@ -43,21 +42,6 @@ export const createCommonSlice: StateCreator<
   [],
   CommonAction
 > = (set, get) => ({
-  addCustomGroup: (name) => {
-    const sessionCustomGroups = get().preference.sessionCustomGroups || [];
-
-    const groupId = nanoid();
-    const sessionGroupKeys = get().preference.sessionGroupKeys || [];
-    get().updatePreference(
-      {
-        sessionCustomGroups: [...sessionCustomGroups, { id: groupId, name }],
-        sessionGroupKeys: [...sessionGroupKeys, groupId],
-      },
-      'addCustomGroup',
-    );
-
-    return groupId;
-  },
   switchBackToChat: (sessionId) => {
     get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
   },
@@ -69,6 +53,19 @@ export const createCommonSlice: StateCreator<
       typeof newValue === 'boolean' ? newValue : !get().preference.showChatSideBar;
 
     get().updatePreference({ showChatSideBar }, n('toggleAgentPanel', newValue) as string);
+  },
+  toggleExpandSessionGroup: (id, expand) => {
+    const { preference } = get();
+    const nextExpandSessionGroup = produce(preference.expandSessionGroupKeys, (draft) => {
+      if (expand) {
+        if (draft.includes(id)) return;
+        draft.push(id);
+      } else {
+        const index = draft.indexOf(id);
+        if (index !== -1) draft.splice(index, 1);
+      }
+    });
+    get().updatePreference({ expandSessionGroupKeys: nextExpandSessionGroup });
   },
   toggleMobileTopic: (newValue) => {
     const mobileShowTopic =

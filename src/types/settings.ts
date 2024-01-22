@@ -3,7 +3,6 @@ import type { ThemeMode } from 'antd-style';
 
 import { LocaleMode } from '@/types/locale';
 import type { LobeAgentSession } from '@/types/session';
-import { SessionGroupItem } from '@/types/session';
 
 export interface GlobalBaseSettings {
   avatar: string;
@@ -12,7 +11,6 @@ export interface GlobalBaseSettings {
   neutralColor?: NeutralColors;
   password: string;
   primaryColor?: PrimaryColors;
-  sessionCustomGroups: SessionGroupItem[];
   themeMode: ThemeMode;
 }
 
