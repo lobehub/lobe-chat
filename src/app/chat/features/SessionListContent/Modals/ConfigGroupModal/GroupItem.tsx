@@ -1,5 +1,5 @@
 import { ActionIcon, EditableText, SortableList } from '@lobehub/ui';
-import { Popconfirm, message } from 'antd';
+import { App, Popconfirm } from 'antd';
 import { createStyles } from 'antd-style';
 import { PencilLine, Trash } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -23,14 +23,15 @@ const useStyles = createStyles(({ css }) => ({
 }));
 
 const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
+  const { t } = useTranslation('chat');
+  const { styles } = useStyles();
+  const { message } = App.useApp();
+
   const [editing, setEditing] = useState(false);
   const [updateSessionGroupName, removeSessionGroup] = useSessionStore((s) => [
     s.updateSessionGroupName,
     s.removeSessionGroup,
   ]);
-
-  const { t } = useTranslation('chat');
-  const { styles } = useStyles();
 
   return (
     <>
