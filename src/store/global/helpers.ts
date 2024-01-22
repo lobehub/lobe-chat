@@ -6,5 +6,3 @@ const getCurrentLanguage = () => settingsSelectors.currentLanguage(useGlobalStor
 export const globalHelpers = {
   getCurrentLanguage,
 };
-
-export * from './slices/settings/helpers';
