@@ -14,6 +14,7 @@ export class MigrationV2ToV3 implements Migration {
       ...data,
       state: {
         ...data.state,
+        sessionGroups: [],
         sessions: sessions.map((s) => this.migrateSession(s)),
       },
     };

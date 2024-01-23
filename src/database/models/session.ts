@@ -27,7 +27,19 @@ class _SessionModel extends BaseModel {
   }
 
   async batchCreate(sessions: LobeAgentSession[]) {
-    const DB_Sessions = sessions.map((s) => this.mapToDB_Session(s));
+    const DB_Sessions = await Promise.all(
+      sessions.map(async (s) => {
+        if (s.group && s.group !== SessionDefaultGroup.Default) {
+          // Check if the group exists in the SessionGroup table
+          const groupExists = await SessionGroupModel.findById(s.group);
+          // If the group does not exist, set it to default
+          if (!groupExists) {
+            s.group = SessionDefaultGroup.Default;
+          }
+        }
+        return this.mapToDB_Session(s);
+      }),
+    );
 
     return this._batchAdd<DB_Session>(DB_Sessions, { idGenerator: uuid });
   }

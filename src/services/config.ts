@@ -7,7 +7,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { ConfigFile } from '@/types/exportConfig';
 import { ChatMessage } from '@/types/message';
-import { LobeSessions } from '@/types/session';
+import { LobeSessions, SessionGroupItem } from '@/types/session';
 import { GlobalSettings } from '@/types/settings';
 import { ChatTopic } from '@/types/topic';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
@@ -19,6 +19,7 @@ export interface ImportResult {
 }
 export interface ImportResults {
   messages?: ImportResult;
+  sessionGroups?: ImportResult;
   sessions: ImportResult;
   topics?: ImportResult;
 }
@@ -40,6 +41,9 @@ class ConfigService {
   importTopics = async (topics: ChatTopic[]) => {
     return topicService.batchCreateTopics(topics);
   };
+  importSessionGroups = async (sessionGroups: SessionGroupItem[]) => {
+    return sessionService.batchCreateSessionGroups(sessionGroups);
+  };
 
   importConfigState = async (config: ConfigFile): Promise<ImportResults | undefined> => {
     switch (config.exportType) {
@@ -59,6 +63,8 @@ class ConfigService {
       case 'all': {
         await this.importSettings(config.state.settings);
 
+        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
+
         const [sessions, messages, topics] = await Promise.all([
           this.importSessions(config.state.sessions),
           this.importMessages(config.state.messages),
@@ -67,12 +73,15 @@ class ConfigService {
 
         return {
           messages: this.mapImportResult(messages),
+          sessionGroups: this.mapImportResult(sessionGroups),
           sessions: this.mapImportResult(sessions),
           topics: this.mapImportResult(topics),
         };
       }
 
       case 'sessions': {
+        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
+
         const [sessions, messages, topics] = await Promise.all([
           this.importSessions(config.state.sessions),
           this.importMessages(config.state.messages),
@@ -81,6 +90,7 @@ class ConfigService {
 
         return {
           messages: this.mapImportResult(messages),
+          sessionGroups: this.mapImportResult(sessionGroups),
           sessions: this.mapImportResult(sessions),
           topics: this.mapImportResult(topics),
         };
@@ -104,10 +114,11 @@ class ConfigService {
    */
   exportSessions = async () => {
     const sessions = await sessionService.getSessions();
+    const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();
 
-    const config = createConfigFile('sessions', { messages, sessions, topics });
+    const config = createConfigFile('sessions', { messages, sessionGroups, sessions, topics });
 
     exportConfigFile(config, 'sessions');
   };
@@ -174,11 +185,12 @@ class ConfigService {
    */
   exportAll = async () => {
     const sessions = await sessionService.getSessions();
+    const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();
     const settings = this.getSettings();
 
-    const config = createConfigFile('all', { messages, sessions, settings, topics });
+    const config = createConfigFile('all', { messages, sessionGroups, sessions, settings, topics });
 
     exportConfigFile(config, 'config');
   };

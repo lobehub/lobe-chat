@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { SessionModel } from '@/database/models/session';
 import { SessionGroups } from '@/types/session';
 
 import { DB_SessionGroup } from '../../schemas/sessionGroup';
@@ -67,6 +68,26 @@ describe('SessionGroupModel', () => {
       await SessionGroupModel.delete(createdGroup.id);
       const fetchedGroups = await SessionGroupModel.query();
       expect(fetchedGroups).toHaveLength(0);
+    });
+    it('should delete a session group and update associated sessions', async () => {
+      // Create a new session group
+      const createdGroup = await SessionGroupModel.create(
+        sessionGroupData.name,
+        sessionGroupData.sort,
+      );
+
+      // Delete the created session group
+      await SessionGroupModel.delete(createdGroup.id);
+
+      // Fetch all session groups to confirm deletion
+      const fetchedGroups = await SessionGroupModel.query();
+      expect(fetchedGroups).toHaveLength(0);
+
+      // Fetch all sessions to confirm update
+      const fetchedSessions = await SessionModel.query();
+      fetchedSessions.forEach((session) => {
+        expect(session.group).not.toEqual(createdGroup.id);
+      });
     });
   });
 

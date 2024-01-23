@@ -24,9 +24,15 @@ class _SessionGroupModel extends BaseModel {
   }
 
   async delete(id: string, removeGroupItem: boolean = false) {
-    if (!removeGroupItem) return this.table.delete(id);
-
-    // TODO: delete all session associated with the sessionGroup
+    this.db.sessions.toCollection().modify((session) => {
+      //  update all session associated with the sessionGroup to default
+      if (session.group === id) session.group = 'default';
+    });
+    if (!removeGroupItem) {
+      return this.table.delete(id);
+    } else {
+      return this.db.sessions.where('group').equals(id).delete();
+    }
   }
 
   async query(): Promise<SessionGroups> {

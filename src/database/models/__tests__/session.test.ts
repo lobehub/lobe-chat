@@ -4,7 +4,12 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
 import { LobeAgentConfig } from '@/types/agent';
-import { LobeAgentSession, LobeSessionType, SessionGroupId } from '@/types/session';
+import {
+  LobeAgentSession,
+  LobeSessionType,
+  SessionDefaultGroup,
+  SessionGroupId,
+} from '@/types/session';
 
 import { SessionModel } from '../session';
 
@@ -49,6 +54,21 @@ describe('SessionModel', () => {
       for (const result of results.ids!) {
         const sessionInDb = await SessionModel.findById(result);
         expect(sessionInDb).toEqual(expect.objectContaining(sessionData));
+      }
+    });
+
+    it('should set group to default if it does not exist in SessionGroup', async () => {
+      const sessionDataWithInvalidGroup = {
+        ...sessionData,
+        group: 'nonExistentGroup',
+      } as LobeAgentSession;
+
+      const results = await SessionModel.batchCreate([sessionDataWithInvalidGroup]);
+
+      // Verify that the group has been set to default
+      for (const result of results.ids!) {
+        const sessionInDb = await SessionModel.findById(result);
+        expect(sessionInDb.group).toEqual(SessionDefaultGroup.Default);
       }
     });
   });

@@ -13,7 +13,6 @@ import { SessionStore } from '@/store/session';
 import {
   ChatSessionList,
   LobeAgentSession,
-  LobeAgentSettings,
   LobeSessionType,
   LobeSessions,
 } from '@/types/session';
@@ -43,7 +42,7 @@ export interface SessionAction {
    * @param agent
    * @returns sessionId
    */
-  createSession: (agent?: DeepPartial<LobeAgentSettings>) => Promise<string>;
+  createSession: (session?: DeepPartial<LobeAgentSession>) => Promise<string>;
   duplicateSession: (id: string) => Promise<void>;
   /**
    * Pins or unpins a session.

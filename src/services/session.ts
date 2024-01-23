@@ -103,7 +103,7 @@ class SessionService {
   }
 
   async removeSessionGroup(id: string, removeChildren?: boolean) {
-    return SessionGroupModel.delete(id, removeChildren);
+    return await SessionGroupModel.delete(id, removeChildren);
   }
 
   async updateSessionGroup(id: string, data: Partial<SessionGroupItem>) {
@@ -112,6 +112,10 @@ class SessionService {
 
   async updateSessionGroupOrder(sortMap: { id: string; sort: number }[]) {
     return SessionGroupModel.updateOrder(sortMap);
+  }
+
+  async getSessionGroups(): Promise<SessionGroupItem[]> {
+    return SessionGroupModel.query();
   }
 }
 

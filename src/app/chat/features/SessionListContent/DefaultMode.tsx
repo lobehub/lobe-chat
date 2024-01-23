@@ -44,7 +44,7 @@ const SessionListContent = memo(() => {
           label: t('pin'),
         },
         ...customSessionGroups.map(({ id, name, children }) => ({
-          children: <SessionList dataSource={children} />,
+          children: <SessionList dataSource={children} groupId={id} />,
           extra: (
             <Actions
               id={id}
