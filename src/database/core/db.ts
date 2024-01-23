@@ -52,14 +52,12 @@ export class LocalDB extends Dexie {
    * from `group = pinned` to `pinned:true`
    */
   upgradeToV4 = async (trans: Transaction) => {
-    console.log('start');
     const sessions = trans.table('sessions');
     await sessions.toCollection().modify((session) => {
       // translate boolean to number
       session.pinned = session.group === 'pinned' ? 1 : 0;
       session.group = 'default';
     });
-    console.log('finished');
   };
 }
 
