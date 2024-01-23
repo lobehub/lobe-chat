@@ -12,6 +12,12 @@ export interface OpenAIConfig {
   useAzure?: boolean;
 }
 
+export interface ZhiPuConfig {
+  ZHIPU_API_KEY: string;
+  enabled: boolean;
+}
+
 export interface GlobalLLMConfig {
   openAI: OpenAIConfig;
+  zhipu: ZhiPuConfig;
 }

@@ -50,6 +50,10 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     OPENAI_API_KEY: '',
     models: DEFAULT_OPENAI_MODEL_LIST,
   },
+  zhipu: {
+    ZHIPU_API_KEY: '',
+    enabled: false,
+  },
 };
 
 export const DEFAULT_AGENT: GlobalDefaultAgent = {

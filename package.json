@@ -95,6 +95,7 @@
     "i18next-resources-to-backend": "^1",
     "idb-keyval": "^6",
     "immer": "^10",
+    "jose": "^5.2.0",
     "lodash-es": "^4",
     "lucide-react": "latest",
     "modern-screenshot": "^4",

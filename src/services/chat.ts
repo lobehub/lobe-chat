@@ -4,22 +4,23 @@ import { merge } from 'lodash-es';
 
 import { isVisionModel } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/message';
-import type { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
+import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
 import { createHeaderWithOpenAI } from './_header';
-import { OPENAI_URLS, PLUGINS_URLS } from './_url';
+import { PLUGINS_URLS } from './_url';
 
 interface FetchOptions {
   signal?: AbortSignal | undefined;
 }
 
-interface GetChatCompletionPayload extends Partial<Omit<OpenAIChatStreamPayload, 'messages'>> {
+interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
   messages: ChatMessage[];
 }
 
@@ -58,17 +59,18 @@ class ChatService {
     return this.getChatCompletion({ ...params, messages: oaiMessages, tools }, options);
   };
 
-  getChatCompletion = (params: Partial<OpenAIChatStreamPayload>, options?: FetchOptions) => {
+  getChatCompletion = (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
+    const { provider = ModelProvider.OpenAI, ...res } = params;
     const payload = merge(
       {
         model: DEFAULT_AGENT_CONFIG.model,
         stream: true,
         ...DEFAULT_AGENT_CONFIG.params,
       },
-      params,
+      res,
     );
 
-    return fetch(OPENAI_URLS.chat, {
+    return fetch(`/api/chat/${provider}`, {
       body: JSON.stringify(payload),
       headers: createHeaderWithOpenAI({ 'Content-Type': 'application/json' }),
       method: 'POST',

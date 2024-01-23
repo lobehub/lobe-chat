@@ -7,6 +7,10 @@ const getStatus = (errorType: ErrorType) => {
       return 401;
     }
 
+    case ChatErrorType.LobeChatBizError: {
+      return 576;
+    }
+
     case ChatErrorType.OpenAIBizError: {
       return 577;
     }

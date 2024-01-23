@@ -31,7 +31,7 @@ export default {
         desc: '支持的模型',
         title: '模型列表',
       },
-      title: 'Azure OpenAI 设置',
+      title: 'Azure OpenAI',
       token: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值。 可以使用 KEY1 或 KEY2',
         placeholder: 'Azure API Key',
@@ -69,7 +69,7 @@ export default {
         refetch: '重新获取模型列表',
         title: '模型列表',
       },
-      title: 'OpenAI 设置',
+      title: 'OpenAI',
       token: {
         desc: '使用自己的 OpenAI Key',
         placeholder: 'OpenAI API Key',
@@ -80,6 +80,14 @@ export default {
         fetch: '获取列表',
         serverConfig: '管理员在服务端配置开启了 Azure OpenAI，禁止切换',
         title: 'Azure OpenAI',
+      },
+    },
+    Zhipu: {
+      title: '智谱',
+      token: {
+        desc: '填入来自智谱的 API Key',
+        placeholder: 'Zhipu API Key',
+        title: 'API Key',
       },
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',

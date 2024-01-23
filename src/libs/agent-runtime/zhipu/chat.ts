@@ -2,40 +2,33 @@ import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI from 'openai';
 
 import { ChatErrorType } from '@/types/fetch';
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
-import { createErrorResponse } from '../../errorResponse';
-import { desensitizeUrl } from './desensitizeUrl';
+import { CreateChatCompletionOptions, ModelProvider } from '../type';
 
-interface CreateChatCompletionOptions {
-  openai: OpenAI;
-  payload: OpenAIChatStreamPayload;
-}
-
-export const createChatCompletion = async ({ payload, openai }: CreateChatCompletionOptions) => {
+export const createChatCompletion = async ({ payload, chatModel }: CreateChatCompletionOptions) => {
   // ============  1. preprocess messages   ============ //
-  const { messages, ...params } = payload;
+  const { messages, top_p, ...params } = payload;
 
   // ============  2. send api   ============ //
 
+  console.log(top_p)
   try {
-    const response = await openai.chat.completions.create(
+    const response = await chatModel.chat.completions.create(
       {
         messages,
         ...params,
         stream: true,
+        // 当前的模型侧不支持 top_p=1 和 temperture 为 0
+        top_p: top_p === 1 ? 0.99 : top_p,
       } as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       { headers: { Accept: '*/*' } },
     );
+
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
   } catch (error) {
-    let desensitizedEndpoint = openai.baseURL;
-
-    // refs: https://github.com/lobehub/lobe-chat/issues/842
-    if (openai.baseURL !== 'https://api.openai.com/v1') {
-      desensitizedEndpoint = desensitizeUrl(openai.baseURL);
-    }
+    let errorType: any = ChatErrorType.OpenAIBizError;
+    let errorContent: any;
 
     // Check if the error is an OpenAI APIError
     if (error instanceof OpenAI.APIError) {
@@ -55,22 +48,15 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
         errorResult = { headers: error.headers, stack: error.stack, status: error.status };
       }
 
-      // track the error at server side
-      console.error(errorResult);
-
-      return createErrorResponse(ChatErrorType.OpenAIBizError, {
-        endpoint: desensitizedEndpoint,
-        error: errorResult,
-      });
+      errorContent = errorResult;
+    } else {
+      errorContent = JSON.stringify(error);
+      errorType = ChatErrorType.InternalServerError;
     }
-
-    // track the non-openai error
-    console.error(error);
-
-    // return as a GatewayTimeout error
-    return createErrorResponse(ChatErrorType.InternalServerError, {
-      endpoint: desensitizedEndpoint,
-      error: JSON.stringify(error),
-    });
+    throw {
+      error: errorContent,
+      errorType,
+      provider: ModelProvider.ZhiPu,
+    };
   }
 };

@@ -46,8 +46,6 @@ const nextConfig = {
 
   reactStrictMode: true,
 
-  transpilePackages: ['antd-style'],
-
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,

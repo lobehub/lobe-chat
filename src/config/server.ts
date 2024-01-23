@@ -7,12 +7,22 @@ declare global {
       ACCESS_CODE?: string;
       CUSTOM_MODELS?: string;
 
+      // OpenAI Model
       OPENAI_API_KEY?: string;
       OPENAI_PROXY_URL?: string;
 
+      // Azure OpenAI Model
       AZURE_API_KEY?: string;
       AZURE_API_VERSION?: string;
       USE_AZURE_OPENAI?: string;
+
+      // ZhiPu Model
+      ZHIPU_API_KEY?: string;
+
+      // AWS Credentials
+      AWS_REGION?: string;
+      AWS_ACCESS_KEY_ID?: string;
+      AWS_SECRET_ACCESS_KEY?: string;
 
       IMGUR_CLIENT_ID?: string;
 
@@ -43,6 +53,8 @@ export const getServerConfig = () => {
 
   const ACCESS_CODES = process.env.ACCESS_CODE?.split(',').filter(Boolean) || [];
 
+  const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY;
+
   return {
     ACCESS_CODES,
     CUSTOM_MODELS: process.env.CUSTOM_MODELS,
@@ -52,6 +64,13 @@ export const getServerConfig = () => {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,
     OPENAI_FUNCTION_REGIONS: regions,
+
+    ENABLED_ZHIPU: !!ZHIPU_API_KEY,
+    ZHIPU_API_KEY,
+
+    AWS_REGION: process.env.AWS_REGION,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
 
     METADATA_BASE_URL: process.env.METADATA_BASE_URL,
 

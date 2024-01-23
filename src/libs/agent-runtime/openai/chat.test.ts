@@ -1,7 +1,7 @@
 import OpenAI, { APIError } from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createChatCompletion } from './createChatCompletion';
+import { createChatCompletion } from './chat';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -31,7 +31,7 @@ describe('createChatCompletion', () => {
 
     // Act
     const result = await createChatCompletion({
-      openai: openaiInstance,
+      chatModel: openaiInstance,
       payload: {
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'text-davinci-003',
@@ -61,7 +61,7 @@ describe('createChatCompletion', () => {
 
     // Act
     const result = await createChatCompletion({
-      openai: openaiInstance,
+      chatModel: openaiInstance,
       payload: {
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'text-davinci-003',
@@ -88,7 +88,7 @@ describe('createChatCompletion', () => {
 
     // Act
     const result = await createChatCompletion({
-      openai: openaiInstance,
+      chatModel: openaiInstance,
       payload: {
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'text-davinci-003',
@@ -124,7 +124,7 @@ describe('createChatCompletion', () => {
 
     // Act
     const result = await createChatCompletion({
-      openai: openaiInstance,
+      chatModel: openaiInstance,
       payload: {
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'gpt-3.5-turbo',
@@ -149,7 +149,7 @@ describe('createChatCompletion', () => {
 
     // Act
     const result = await createChatCompletion({
-      openai: openaiInstance,
+      chatModel: openaiInstance,
       payload: {
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'text-davinci-003',

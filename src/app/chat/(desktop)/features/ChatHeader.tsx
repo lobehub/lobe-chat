@@ -1,5 +1,4 @@
-import { SiOpenai } from '@icons-pack/react-simple-icons';
-import { ActionIcon, Avatar, ChatHeader, ChatHeaderTitle, Tag } from '@lobehub/ui';
+import { ActionIcon, Avatar, ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -7,6 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import ModelTag from '@/components/ModelTag';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -63,7 +63,7 @@ const Left = memo(() => {
         desc={displayDesc}
         tag={
           <>
-            <Tag icon={<SiOpenai size={'1em'} />}>{model}</Tag>
+            <ModelTag name={model} />
             {plugins?.length > 0 && <PluginTag plugins={plugins} />}
           </>
         }

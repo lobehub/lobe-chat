@@ -7,7 +7,7 @@ import { useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
 import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
 
 import { chatService } from '../chat';
@@ -531,7 +531,7 @@ Get data from users`,
 
   describe('getChatCompletion', () => {
     it('should make a POST request with the correct payload', async () => {
-      const params: Partial<OpenAIChatStreamPayload> = {
+      const params: Partial<ChatStreamPayload> = {
         model: 'test-model',
         messages: [],
       };
