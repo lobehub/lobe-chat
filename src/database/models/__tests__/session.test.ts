@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { CreateMessageParams, MessageModel } from '@/database/models/message';
+import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { TopicModel } from '@/database/models/topic';
 import { LobeAgentConfig } from '@/types/agent';
 import {
@@ -88,6 +89,8 @@ describe('SessionModel', () => {
     it('should query sessions by group', async () => {
       // Create multiple sessions to test the queryByGroup method
       const group: SessionGroupId = 'testGroup';
+      await SessionGroupModel.create('测试分组', 0, group);
+
       await SessionModel.batchCreate([sessionData, sessionData] as LobeAgentSession[]);
 
       const sessionsByGroup = await SessionModel.querySessionsByGroupId(group);
