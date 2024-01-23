@@ -37,10 +37,6 @@ class SessionService {
   }
 
   async getSessions(): Promise<LobeSessions> {
-    const groups = await SessionGroupModel.query();
-    const data = await SessionModel.queryByGroupIds(groups.map((item) => item.id));
-
-    console.log(data);
     return SessionModel.query();
   }
 
