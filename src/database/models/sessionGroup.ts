@@ -11,9 +11,12 @@ class _SessionGroupModel extends BaseModel {
   async create(name: string, sort?: number, id = nanoid()) {
     return this._add({ name, sort }, id);
   }
-
   async batchCreate(groups: SessionGroups) {
     return this._batchAdd(groups, { idGenerator: nanoid });
+  }
+
+  async findById(id: string): Promise<DB_SessionGroup> {
+    return this.table.get(id);
   }
 
   async update(id: string, data: Partial<DB_SessionGroup>) {
@@ -33,6 +36,9 @@ class _SessionGroupModel extends BaseModel {
     return allGroups.sort((a, b) => {
       // 如果两个项都有 sort，则按 sort 排序
       if (a.sort !== undefined && b.sort !== undefined) {
+        // 如果sort 一样，按时间倒序排序
+        if (a.sort === b.sort) return b.createdAt - a.createdAt;
+
         return a.sort - b.sort;
       }
       // 如果 a 有 sort 而 b 没有，则 a 排在前面
@@ -44,10 +50,7 @@ class _SessionGroupModel extends BaseModel {
         return 1;
       }
       // 如果两个项都没有 sort，则按 createdAt 倒序排序
-      if (a.createdAt && b.createdAt) {
-        return b.createdAt - a.createdAt;
-      }
-      return 0;
+      return b.createdAt - a.createdAt;
     });
   }
 
@@ -57,6 +60,10 @@ class _SessionGroupModel extends BaseModel {
         await this.table.update(id, { sort });
       }
     });
+  }
+
+  async clear() {
+    this.table.clear();
   }
 }
 
