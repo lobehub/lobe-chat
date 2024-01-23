@@ -1,6 +1,6 @@
 import Dexie, { Transaction } from 'dexie';
 
-import { DBModel } from '@/database/core/types/db';
+import { DBModel, LOBE_CHAT_LOCAL_DB_NAME } from '@/database/core/types/db';
 import { DB_File } from '@/database/schemas/files';
 import { DB_Message } from '@/database/schemas/message';
 import { DB_Plugin } from '@/database/schemas/plugin';
@@ -29,7 +29,7 @@ export class LocalDB extends Dexie {
   public sessionGroups: LobeDBTable<'sessionGroups'>;
 
   constructor() {
-    super('LOBE_CHAT_DB');
+    super(LOBE_CHAT_LOCAL_DB_NAME);
     this.version(1).stores(dbSchemaV1);
     this.version(2).stores(dbSchemaV2);
     this.version(3).stores(dbSchemaV3);
@@ -52,12 +52,14 @@ export class LocalDB extends Dexie {
    * from `group = pinned` to `pinned:true`
    */
   upgradeToV4 = async (trans: Transaction) => {
+    console.log('start');
     const sessions = trans.table('sessions');
     await sessions.toCollection().modify((session) => {
       // translate boolean to number
       session.pinned = session.group === 'pinned' ? 1 : 0;
       session.group = 'default';
     });
+    console.log('finished');
   };
 }
 

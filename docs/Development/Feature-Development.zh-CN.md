@@ -90,7 +90,7 @@ export class LocalDB extends Dexie {
 + public sessionGroups: LobeDBTable<'sessionGroups'>;
 
   constructor() {
-    super('LOBE_CHAT_DB');
+    super(LOBE_CHAT_LOCAL_DB_NAME);
     this.version(1).stores(dbSchemaV1);
     this.version(2).stores(dbSchemaV2);
     this.version(3).stores(dbSchemaV3);
