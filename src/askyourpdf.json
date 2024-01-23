@@ -1,0 +1,14 @@
+{
+  "author": "askyourpdf",
+  "createdAt": "2024-01-20",
+  "homepage": "https://plugin.askyourpdf.com",
+  "identifier": "askyourpdf",
+  "manifest": "https://openai-collections.chat-plugin.lobehub.com/ask-your-pdf/manifest.json",
+  "meta": {
+    "avatar": "https://openai-collections.chat-plugin.lobehub.com/ask-your-pdf/logo.webp",
+    "description": "Unlock the power of your PDFs!, dive into your documents, find answers, and bring information to your fingertips.",
+    "tags": ["pdf", "document", "web"],
+    "title": "AskYourPDF"
+  },
+  "schemaVersion": 1
+}
