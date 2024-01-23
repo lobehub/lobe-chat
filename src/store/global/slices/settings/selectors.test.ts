@@ -15,12 +15,6 @@ describe('settingsSelectors', () => {
           password: 'password123',
           primaryColor: 'blue',
           themeMode: 'light',
-          sessionCustomGroups: [
-            {
-              name: 'Group 1',
-              id: 'group-1',
-            },
-          ],
           defaultAgent: {
             config: {
               systemRole: '',

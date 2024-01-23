@@ -145,12 +145,6 @@ exports[`settingsSelectors > currentSettings > should merge DEFAULT_SETTINGS and
   "neutralColor": "sand",
   "password": "password123",
   "primaryColor": "blue",
-  "sessionCustomGroups": [
-    {
-      "id": "group-1",
-      "name": "Group 1",
-    },
-  ],
   "themeMode": "light",
   "tool": {
     "dalle": {
@@ -249,13 +243,4 @@ exports[`settingsSelectors > defaultAgentMeta > should merge DEFAULT_AGENT_META 
   "avatar": "agent-avatar.jpg",
   "description": "Test agent",
 }
-`;
-
-exports[`settingsSelectors > sessionCustomGroups > should return session custom groups 1`] = `
-[
-  {
-    "id": "group-1",
-    "name": "Group 1",
-  },
-]
 `;
