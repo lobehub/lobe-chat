@@ -103,8 +103,9 @@ class ConfigService {
    */
   exportAgents = async () => {
     const agents = await sessionService.getAllAgents();
+    const sessionGroups = await sessionService.getSessionGroups();
 
-    const config = createConfigFile('agents', { sessions: agents });
+    const config = createConfigFile('agents', { sessionGroups, sessions: agents });
 
     exportConfigFile(config, 'agents');
   };
@@ -164,7 +165,7 @@ class ConfigService {
     const agent = this.getAgent(id);
     if (!agent) return;
 
-    const config = createConfigFile('agents', { sessions: [agent] });
+    const config = createConfigFile('agents', { sessionGroups: [], sessions: [agent] });
 
     exportConfigFile(config, agent.meta?.title || 'agent');
   };

@@ -61,6 +61,7 @@ export interface ConfigStateSingleSession {
  * 配置状态：角色
  */
 export interface ConfigStateAgents {
+  sessionGroups: SessionGroupItem[];
   sessions: LobeSessions;
 }
 

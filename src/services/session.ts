@@ -117,6 +117,10 @@ class SessionService {
   async getSessionGroups(): Promise<SessionGroupItem[]> {
     return SessionGroupModel.query();
   }
+
+  async clearSessionGroups() {
+    return SessionGroupModel.clear();
+  }
 }
 
 export const sessionService = new SessionService();
