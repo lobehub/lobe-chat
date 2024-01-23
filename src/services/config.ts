@@ -54,8 +54,11 @@ class ConfigService {
       }
 
       case 'agents': {
+        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
+
         const data = await this.importSessions(config.state.sessions);
         return {
+          sessionGroups: this.mapImportResult(sessionGroups),
           sessions: this.mapImportResult(data),
         };
       }
