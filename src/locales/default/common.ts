@@ -44,6 +44,7 @@ export default {
       added: '导入成功',
       errors: '导入出错',
       messages: '消息',
+      sessionGroups: '分组',
       sessions: '助手',
       skips: '重复跳过',
       topics: '话题',

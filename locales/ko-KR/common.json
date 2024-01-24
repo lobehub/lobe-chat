@@ -44,6 +44,7 @@
       "added": "가져오기 성공",
       "errors": "가져오기 오류",
       "messages": "메시지",
+      "sessionGroups": "세션 그룹",
       "sessions": "에이전트",
       "skips": "중복 건너뛰기",
       "topics": "주제",

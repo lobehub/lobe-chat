@@ -46,7 +46,7 @@ const ChatInput = memo(() => {
       >
         <Head expand={expand} setExpand={setExpand} />
         <TextArea setExpand={setExpand} />
-        <Footer />
+        <Footer setExpand={setExpand} />
       </Flexbox>
     </DraggablePanel>
   );

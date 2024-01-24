@@ -12,6 +12,7 @@ import { sessionHelpers } from '@/store/session/helpers';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import ListItem from '../../ListItem';
+import CreateGroupModal from '../../Modals/CreateGroupModal';
 import Actions from './Actions';
 
 interface SessionItemProps {
@@ -20,12 +21,13 @@ interface SessionItemProps {
 
 const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
+  const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
 
   const [defaultModel] = useGlobalStore((s) => [settingsSelectors.defaultAgentConfig(s).model]);
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [!!s.chatLoadingId && id === s.activeId]);
 
-  const [pin, title, description, systemRole, avatar, avatarBackground, updateAt, model] =
+  const [pin, title, description, systemRole, avatar, avatarBackground, updateAt, model, group] =
     useSessionStore((s) => {
       const session = sessionSelectors.getSessionById(id)(s);
       const meta = session.meta;
@@ -40,12 +42,23 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         meta.backgroundColor,
         session?.updatedAt,
         session.config.model,
+        session?.group,
       ];
     });
 
   const showModel = model !== defaultModel;
 
-  const actions = useMemo(() => <Actions id={id} setOpen={setOpen} />, [id]);
+  const actions = useMemo(
+    () => (
+      <Actions
+        group={group}
+        id={id}
+        openCreateGroupModal={() => setCreateGroupModalOpen(true)}
+        setOpen={setOpen}
+      />
+    ),
+    [group, id],
+  );
 
   const addon = useMemo(
     () =>
@@ -58,19 +71,26 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   );
 
   return (
-    <ListItem
-      actions={actions}
-      active={active}
-      addon={addon}
-      avatar={avatar}
-      avatarBackground={avatarBackground}
-      date={updateAt}
-      description={description || systemRole}
-      loading={loading}
-      pin={pin}
-      showAction={open}
-      title={title}
-    />
+    <>
+      <ListItem
+        actions={actions}
+        active={active}
+        addon={addon}
+        avatar={avatar}
+        avatarBackground={avatarBackground}
+        date={updateAt}
+        description={description || systemRole}
+        loading={loading}
+        pin={pin}
+        showAction={open}
+        title={title}
+      />
+      <CreateGroupModal
+        id={id}
+        onCancel={() => setCreateGroupModalOpen(false)}
+        open={createGroupModalOpen}
+      />
+    </>
   );
 }, shallow);
 
