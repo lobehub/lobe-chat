@@ -186,7 +186,12 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
   const system: SettingItemGroup = {
     children: [
       {
-        children: <Input.Password placeholder={t('settingSystem.accessCode.placeholder')} />,
+        children: (
+          <Input.Password
+            autoComplete={'new-password'}
+            placeholder={t('settingSystem.accessCode.placeholder')}
+          />
+        ),
         desc: t('settingSystem.accessCode.desc'),
         hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),
