@@ -329,14 +329,15 @@ describe('MessageModel', () => {
   describe('duplicateMessages', () => {
     it('should duplicate messages and update parentId for copied messages', async () => {
       // 创建原始消息和父消息
-      const parentMessageData: DB_Message = {
+      const parentMessageData: CreateMessageParams = {
         content: 'Parent message content',
         role: 'user',
         sessionId: 'session1',
+        topicId: undefined,
       };
       const parentMessage = await MessageModel.create(parentMessageData);
 
-      const childMessageData: DB_Message = {
+      const childMessageData: CreateMessageParams = {
         content: 'Child message content',
         role: 'user',
         sessionId: 'session1',

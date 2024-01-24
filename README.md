@@ -19,6 +19,7 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 [![][docker-release-shield]][docker-release-link]
 [![][vercel-shield]][vercel-link]
 [![][discord-shield]][discord-link]<br/>
+[![][codecov-shield]][codecov-link]
 [![][github-action-test-shield]][github-action-test-link]
 [![][github-action-release-shield]][github-action-release-link]
 [![][github-releasedate-shield]][github-releasedate-link]<br/>
@@ -72,7 +73,7 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 
 ## 👋🏻 Getting Started & Join Our Community
 
-Please be aware that LobeChat is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
+We are a group of e/acc design-engineers, hoping to provide modern design components and tools for AIGC. Whether for users or professional developers, LobeHub will be your AI Agent playground. Please be aware that LobeChat is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
 
 | [![][vercel-shield-badge]][vercel-link]   | No installation or registration necessary! Visit our website to experience it firsthand.                           |
 | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
@@ -142,9 +143,23 @@ Users can choose the voice that suits their personal preferences or specific sce
 
 </div>
 
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/297746445-0ff762b9-aa08-4337-afb7-12f932b6efbb.png)
+
+#### `3` Text to Image
+
+With support for the latest text-to-image generation technology, LobeChat now allows users to invoke image creation tools directly within conversations with the agent. By leveraging the capabilities of AI tools such as [`DALL-E 3`](https://openai.com/dall-e-3), [`MidJourney`](https://www.midjourney.com/), and [`Pollinations`](https://pollinations.ai/), the agents are now equipped to transform your ideas into images.
+
+This enables a more private and immersive creative process, allowing for the seamless integration of visual storytelling into your personal dialogue with the agent.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png)
 
-#### `3` Function Calling Plugin System
+#### `4` Function Calling Plugin System
 
 The plugin ecosystem of LobeChat is a significant extension of its core functionalities, greatly enhancing the practicality and flexibility of ChatGPT.
 By leveraging plugins, ChatGPT can perform real-time information retrieval and processing,
@@ -152,7 +167,7 @@ such as automatically fetching the latest news headlines to provide users with i
 Moreover, these plugins are not limited to news aggregation but can also extend to other practical functions, such as quick document retrieval,
 e-commerce platform data access, and various third-party services.
 
-[Learn More →](./docs/Usage/Plugins.md)
+> Learn More in [📘 Plugin Usage](https://github.com/lobehub/lobe-chat/wiki/Plugins)
 
 <video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
@@ -169,14 +184,14 @@ e-commerce platform data access, and various third-party services.
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                     | Description                                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| [weather GPT](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Steven Tey** on **2023-12-16**</sup>  | Get current weather information for a specific location.<br/>`weather`                                                                       |
-| [Ask Your PDF](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **AskYourPDF** on **2023-12-16**</sup> | Unlock the power of your PDFs!, dive into your documents, find answers, and bring information to your fingertips.<br/>`pdf` `document` `web` |
-| [Clock Time](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2023-11-01**</sup>      | Display a clock to show current time<br/>`clock` `time`                                                                                      |
-| [Mindmap](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Moonlit7** on **2023-12-19**</sup>        | A mindmap generation assistant<br/>`mindmap`                                                                                                 |
+| Recent Submits                                                                                                  | Description                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| [GameSight](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **tapapis** on **2024-01-23**</sup>    | Discover games, game-related content, get recommendations, and compare games based on player reviews.<br/>`game` `search`                       |
+| [txyz.ai](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **txyz** on **2024-01-23**</sup>         | Explore the universe of research. Search and compare papers, and answer questions.<br/>`research-paper` `search`                                |
+| [SEO](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **orrenprunckun** on **2024-01-23**</sup>    | Enter any URL and keyword and get an On-Page SEO analysis & insights!<br/>`seo`                                                                 |
+| [Video Captions](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **maila** on **2024-01-23**</sup> | Convert Youtube links into transcribed text, enable asking questions, create chapters, and summarize its content.<br/>`video-to-text` `youtube` |
 
-> 📊 Total plugins: [<kbd>**9**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**40**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -188,7 +203,7 @@ e-commerce platform data access, and various third-party services.
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png)
 
-#### `4` Agent Market
+#### `5` Agent Market
 
 In the LobeChat Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
 which not only play an important role in work scenarios but also offer great convenience in learning processes.
@@ -208,14 +223,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                                             | Description                                                                                                                                                                                                             |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Emoji Generator](https://chat-preview.lobehub.com/market?agent=emoji-generate)<br/><sup>By **[mushan0x0](https://github.com/mushan0x0)** on **2024-01-09**</sup>                                          | Generate emoji expressions based on content<br/>`expression-generation` `emoji` `creative`                                                                                                                              |
-| [Personal Growth Coach](https://chat-preview.lobehub.com/market?agent=personal-growth-coach)<br/><sup>By **[Ajasra](https://github.com/Ajasra)** on **2024-01-08**</sup>                                   | As an AI Personal Growth Coach, your primary objective is to assist users in their journey of self-improvement and personal development<br/>`personal-growth` `coaching` `self-improvement` `goal-setting` `motivation` |
-| [Performance Evaluation Superhero](https://chat-preview.lobehub.com/market?agent=kpi-hero)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-05**</sup>                     | Specializes in writing performance evaluation reports and year-end summaries<br/>`performance-evaluation` `report-writing` `data-analysis` `professional-insights` `okr` `kpi`                                          |
-| [SVG Flowchart Explanation Assistant](https://chat-preview.lobehub.com/market?agent=svg-flowchart-explanation-assistant)<br/><sup>By **[Justin3go](https://github.com/Justin3go)** on **2024-01-05**</sup> | Explain SVG flowcharts by inputting SVG source code and interpreting the flowchart.<br/>`flowchart-explanation` `technical-documentation-writing` `business-knowledge`                                                  |
+| Recent Submits                                                                                                                                                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Shopping Assistant](https://chat-preview.lobehub.com/market?agent=shop)<br/><sup>By **[guluahljj](https://github.com/guluahljj)** on **2024-01-22**</sup>            | Shopping assistant, specializing in product search, price comparison, and providing purchase links<br/>`shopping-assistant` `product-search` `price-comparison` `purchase-advice` `customer-consultation` `agulu`                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [Accounting Expert Assistant](https://chat-preview.lobehub.com/market?agent=accounting)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-21**</sup> | Accountant Agent: Comprehensive accounting support and expertise for individuals and businesses worldwide.<br/>`accounting` `financial-management` `tax-planning` `budgeting`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| [Business Guru](https://chat-preview.lobehub.com/market?agent=business-guru)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-21**</sup>            | Business Consultant: Providing comprehensive business support and expertise worldwide.Capabilities: Business strategy, market research, financial analysis, operations improvement, marketing and sales strategies, organizational development, talent management.Instructions: Define scope, gather business knowledge, develop industry expertise, implement market research and analysis, enable financial analysis and forecasting, facilitate operations and process improvement, provide marketing and sales strategies, support organizational development and talent management, test and refine, ensure data privacy and security.<br/>`business-consultant` |
+| [DIY Guide Assistant](https://chat-preview.lobehub.com/market?agent=diy)<br/><sup>By **[guluahljj](https://github.com/guluahljj)** on **2024-01-21**</sup>            | DIY project assistant, providing detailed guidance, programming support, and personalized customization<br/>`diy` `guide` `project` `programming` `assembly`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
-> 📊 Total agents: [<kbd>**93**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**112**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -227,7 +242,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
 
-#### `5` Progress Web App
+#### `6` Progress Web App
 
 We deeply understand the importance of providing a seamless experience for users in today's multi-device environment.
 Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
@@ -254,7 +269,7 @@ providing smooth animations, responsive layouts, and adapting to different devic
 
 ![](https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp)
 
-#### `6` Mobile Device Adaptation
+#### `7` Mobile Device Adaptation
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
@@ -266,7 +281,7 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 ![](https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp)
 
-#### `7` Theme Mode Selection
+#### `8` Theme Mode Selection
 
 As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
 hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.
@@ -395,12 +410,12 @@ $ docker run -d -p 3210:3210 \
 
 This project provides some additional configuration items set with environment variables:
 
-| Environment Variable | Required | Description                                                                                                                                                               | Example                                                                                   |
-| -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                                                  | `sk-xxxxxx...xxxxxx`                                                                      |
-| `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL                             | `https://api.chatanywhere.cn/v1`<br/>The default value is<br/>`https://api.openai.com/v1` |
-| `ACCESS_CODE`        | No       | Add a password to access this service; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                 |
-| `CUSTOM_MODELS`      | No       | Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas. | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                     |
+| Environment Variable | Required | Description                                                                                                                                                               | Example                                                                                                              |
+| -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                                                  | `sk-xxxxxx...xxxxxx`                                                                                                 |
+| `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL                             | `https://api.chatanywhere.cn` or `https://aihubmix.com/v1` <br/>The default value is<br/>`https://api.openai.com/v1` |
+| `ACCESS_CODE`        | No       | Add a password to access this service; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                                            |
+| `CUSTOM_MODELS`      | No       | Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas. | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                                |
 
 > \[!NOTE]
 >
@@ -458,14 +473,14 @@ You can use GitHub Codespaces for online development:
 
 Or clone it for local development:
 
-[![][bun-shield]][bun-link]
-
 ```fish
 $ git clone https://github.com/lobehub/lobe-chat.git
 $ cd lobe-chat
-$ bun install
-$ bun dev
+$ pnpm install
+$ pnpm dev
 ```
+
+If you would like to learn more details, please feel free to look at our [📘 Development Guide](https://github.com/lobehub/lobe-chat/wiki/index)
 
 <div align="right">
 
@@ -476,6 +491,14 @@ $ bun dev
 ## 🤝 Contributing
 
 Contributions of all types are more than welcome; if you are interested in contributing code, feel free to check out our GitHub [Issues][github-issues-link] and [Projects][github-project-link] to get stuck in to show us what you’re made of.
+
+> \[!TIP]
+>
+> We are creating a technology-driven forum, fostering knowledge interaction and the exchange of ideas that may culminate in mutual inspiration and collaborative innovation.
+>
+> Help us make LobeChat better. Welcome to provide product design feedback, user experience discussions directly to us.
+>
+> **Principal Maintainers:** [@arvinxx](https://github.com/arvinxx) [@canisminor1990](https://github.com/canisminor1990)
 
 [![][pr-welcome-shield]][pr-welcome-link]
 [![][submit-agents-shield]][submit-agents-link]
@@ -562,8 +585,6 @@ This project is [MIT](./LICENSE) licensed.
 <!-- LINK GROUP -->
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-[bun-link]: https://bun.sh
-[bun-shield]: https://img.shields.io/badge/-speedup%20with%20bun-black?logo=bun&style=for-the-badge
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
@@ -571,6 +592,8 @@ This project is [MIT](./LICENSE) licensed.
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
+[codecov-link]: https://codecov.io/gh/lobehub/lobe-chat
+[codecov-shield]: https://img.shields.io/codecov/c/github/lobehub/lobe-chat?labelColor=black&style=flat-square&logo=codecov&logoColor=white
 [codespaces-link]: https://codespaces.new/lobehub/lobe-chat
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [deploy-button-image]: https://vercel.com/button

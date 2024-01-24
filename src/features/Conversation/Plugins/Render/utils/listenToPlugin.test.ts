@@ -72,7 +72,7 @@ describe('useOnPluginFillContent', () => {
 
     window.dispatchEvent(event);
 
-    expect(mockCallback).toHaveBeenCalledWith(testContent);
+    expect(mockCallback).toHaveBeenCalledWith(testContent, undefined);
   });
 
   it('calls callback with JSON stringified content if content is not a string', () => {
@@ -86,7 +86,7 @@ describe('useOnPluginFillContent', () => {
 
     window.dispatchEvent(event);
 
-    expect(mockCallback).toHaveBeenCalledWith(JSON.stringify(testContent));
+    expect(mockCallback).toHaveBeenCalledWith(JSON.stringify(testContent), undefined);
   });
 });
 

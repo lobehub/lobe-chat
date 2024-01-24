@@ -252,9 +252,7 @@
     "fontSize": {
       "desc": "Kích cỡ chữ của nội dung trò chuyện",
       "marks": {
-        "large": "Lớn",
-        "normal": "Bình thường",
-        "small": "Nhỏ"
+        "normal": "Bình thường"
       },
       "title": "Kích cỡ chữ"
     },

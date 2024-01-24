@@ -4,7 +4,8 @@ import { memo } from 'react';
 import LazyLoad from 'react-lazy-load';
 
 import { SESSION_CHAT_URL } from '@/const/url';
-import { useSessionHydrated, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession } from '@/types/session';
 
 import AddButton from './AddButton';
@@ -21,9 +22,12 @@ interface SessionListProps {
   dataSource: LobeAgentSession[];
 }
 const SessionList = memo<SessionListProps>(({ dataSource }) => {
-  const [activeSession, switchSession] = useSessionStore((s) => [s.activeSession, s.switchSession]);
+  const [activeSession, switchSession, isInit] = useSessionStore((s) => [
+    s.activeSession,
+    s.switchSession,
+    sessionSelectors.isSessionListInit(s),
+  ]);
   const { styles } = useStyles();
-  const isInit = useSessionHydrated();
 
   const { mobile } = useResponsive();
 

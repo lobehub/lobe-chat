@@ -252,9 +252,7 @@
     "fontSize": {
       "desc": "聊天內容的字體大小",
       "marks": {
-        "large": "大",
-        "normal": "標準",
-        "small": "小"
+        "normal": "標準"
       },
       "title": "字體大小"
     },

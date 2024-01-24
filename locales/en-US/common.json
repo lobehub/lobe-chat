@@ -13,6 +13,7 @@
   "close": "Close",
   "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be recovered. Please confirm your action.",
   "copy": "Copy",
+  "copyFail": "Copy failed",
   "copySuccess": "Copied successfully",
   "defaultAgent": "Default Agent",
   "defaultSession": "Default Agent",
@@ -51,6 +52,7 @@
     "title": "Import Data"
   },
   "lang": {
+    "ar": "Arabic",
     "bn": "Bengali",
     "cs-CZ": "Czech",
     "da-DK": "Danish",

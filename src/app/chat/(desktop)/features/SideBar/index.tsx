@@ -3,15 +3,14 @@ import { createStyles } from 'antd-style';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
+import TopicListContent from '@/app/chat/features/TopicListContent';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import TopicListContent from '../../features/TopicListContent';
-
-const SystemRole = dynamic(() => import('../../features/SystemRole'));
+const SystemRole = dynamic(() => import('./SystemRole'));
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`

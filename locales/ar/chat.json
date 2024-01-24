@@ -1,0 +1,96 @@
+{
+  "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك البدء في الدردشة معي على الفور، أو يمكنك الانتقال إلى [إعدادات المساعد](/chat/settings#session={{id}}) لتحسين معلوماتي.",
+  "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
+  "backToBottom": "العودة إلى الأسفل",
+  "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
+  "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
+  "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",
+  "defaultAgent": "المساعد الافتراضي",
+  "defaultSession": "المساعد الافتراضي",
+  "duplicateTitle": "{{title}} نسخة",
+  "historyRange": "نطاق التاريخ",
+  "inbox": {
+    "defaultMessage": "مرحبًا، أنا مساعدك الذكي، يمكنك أن تسألني أي شيء وسأحاول الإجابة عليك. إذا كنت بحاجة إلى مساعد أكثر احترافية أو مخصصة، يمكنك النقر على `+` لإنشاء مساعد مخصص",
+    "desc": "قم بتشغيل مجموعة الدماغ وأشعل شرارة التفكير. مساعدك الذكي، هنا حيث يمكنك التواصل بكل شيء",
+    "title": "دردشة عشوائية"
+  },
+  "input": {
+    "onlyAdd": "إضافة الرسالة فقط",
+    "send": "إرسال",
+    "sendWithCmdEnter": "اضغط {{meta}} + Enter للإرسال",
+    "sendWithEnter": "اضغط Enter للإرسال",
+    "stop": "توقف",
+    "warp": "تغيير السطر"
+  },
+  "messageAction": {
+    "delAndRegenerate": "حذف وإعادة الإنشاء",
+    "regenerate": "إعادة الإنشاء"
+  },
+  "newAgent": "مساعد جديد",
+  "noDescription": "لا توجد وصف",
+  "pin": "تثبيت",
+  "pinOff": "إلغاء التثبيت",
+  "regenerate": "إعادة الإنشاء",
+  "roleAndArchive": "الدور والأرشيف",
+  "searchAgentPlaceholder": "البحث عن مساعد ومحادثة...",
+  "sendPlaceholder": "أدخل محتوى الدردشة...",
+  "sessionList": "قائمة المساعدين",
+  "shareModal": {
+    "download": "تحميل اللقطة",
+    "imageType": "نوع الصورة",
+    "screenshot": "لقطة شاشة",
+    "settings": "إعدادات التصدير",
+    "shareToShareGPT": "إنشاء رابط مشاركة ShareGPT",
+    "withBackground": "تضمين صورة الخلفية",
+    "withFooter": "تضمين تذييل",
+    "withPluginInfo": "تضمين معلومات البرنامج المساعد",
+    "withSystemRole": "تضمين دور المساعد"
+  },
+  "stt": {
+    "action": "إدخال صوتي",
+    "loading": "جارٍ التعرف...",
+    "prettifying": "جارٍ التجميل..."
+  },
+  "temp": "مؤقت",
+  "tokenDetail": "إعداد الدور: {{systemRoleToken}} · رسائل الجلسة: {{chatsToken}} · إعداد الأدوات: {{toolsToken}}",
+  "tokenTag": {
+    "overload": "تجاوز الحد",
+    "remained": "متبقي",
+    "used": "مستخدم"
+  },
+  "topic": {
+    "actions": {
+      "autoRename": "إعادة تسمية ذكية",
+      "duplicate": "إنشاء نسخة",
+      "export": "تصدير الموضوع"
+    },
+    "confirmRemoveAll": "سيتم حذف جميع المواضيع قريبًا، وبمجرد الحذف لن يمكن استعادتها، يرجى التحلي بالحذر.",
+    "confirmRemoveTopic": "سيتم حذف هذا الموضوع قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى التحلي بالحذر.",
+    "confirmRemoveUnstarred": "سيتم حذف المواضيع غير المحفوظة قريبًا، وبمجرد الحذف لن يمكن استعادتها، يرجى التحلي بالحذر.",
+    "defaultTitle": "الموضوع الافتراضي",
+    "guide": {
+      "desc": "انقر فوق زر الإرسال الأيسر لحفظ الجلسة الحالية كموضوع تاريخي وبدء جلسة جديدة",
+      "title": "قائمة المواضيع"
+    },
+    "openNewTopic": "فتح موضوع جديد",
+    "removeAll": "حذف جميع المواضيع",
+    "removeUnstarred": "حذف المواضيع غير المحفوظة",
+    "saveCurrentMessages": "حفظ الجلسة الحالية كموضوع",
+    "searchPlaceholder": "البحث في المواضيع...",
+    "title": "الموضوع"
+  },
+  "translate": {
+    "action": "ترجمة",
+    "clear": "مسح الترجمة"
+  },
+  "tts": {
+    "action": "قراءة صوتية",
+    "clear": "مسح الصوت"
+  },
+  "updateAgent": "تحديث معلومات المساعد",
+  "upload": {
+    "actionTooltip": "تحميل الصورة",
+    "dragDesc": "اسحب الملفات إلى هنا، يدعم تحميل عدة صور. اضغط على Shift لإرسال الصور مباشرة",
+    "dragTitle": "تحميل الصورة"
+  }
+}
