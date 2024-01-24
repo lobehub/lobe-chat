@@ -90,6 +90,7 @@
   },
   "layoutInitializing": "Layout wird geladen...",
   "noDescription": "Keine Beschreibung vorhanden",
+  "oauth": "SSO-Anmeldung",
   "ok": "OK",
   "password": "Passwort",
   "pin": "Anheften",

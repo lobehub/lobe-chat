@@ -90,6 +90,7 @@
   },
   "layoutInitializing": "Đang tải bố cục...",
   "noDescription": "Chưa có mô tả",
+  "oauth": "Đăng nhập SSO",
   "ok": "Đồng ý",
   "password": "Mật khẩu",
   "pin": "Ghim",

@@ -90,6 +90,7 @@
   },
   "layoutInitializing": "Inicjowanie układu...",
   "noDescription": "Brak opisu",
+  "oauth": "Logowanie SSO",
   "ok": "OK",
   "password": "Hasło",
   "pin": "Przypnij",

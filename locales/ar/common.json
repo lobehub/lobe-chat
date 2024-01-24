@@ -90,6 +90,7 @@
   },
   "layoutInitializing": "جاري تحميل التخطيط...",
   "noDescription": "لا توجد وصف",
+  "oauth": "تسجيل الدخول SSO",
   "ok": "موافق",
   "password": "كلمة المرور",
   "pin": "تثبيت في الأعلى",

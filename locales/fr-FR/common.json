@@ -90,6 +90,7 @@
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
   "noDescription": "Aucune description disponible",
+  "oauth": "Connexion SSO",
   "ok": "OK",
   "password": "Mot de passe",
   "pin": "Épingler",
