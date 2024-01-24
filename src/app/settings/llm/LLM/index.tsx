@@ -50,6 +50,7 @@ const LLM = memo(() => {
       {
         children: (
           <Input.Password
+            autoComplete={'new-password'}
             placeholder={
               useAzure ? t('llm.AzureOpenAI.token.placeholder') : t('llm.OpenAI.token.placeholder')
             }
