@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "Estás a punto de borrar los mensajes de esta sesión. Una vez borrados, no se podrán recuperar. Por favor, confirma tu acción.",
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
   "defaultAgent": "Asistente predeterminado",
+  "defaultList": "Lista predeterminada",
   "defaultSession": "Asistente predeterminado",
   "duplicateTitle": "{{title}} Copia",
   "historyRange": "Rango de historial",
@@ -34,7 +35,18 @@
   "roleAndArchive": "Rol y archivo",
   "searchAgentPlaceholder": "Buscar asistentes y conversaciones...",
   "sendPlaceholder": "Escribe tu mensaje...",
-  "sessionList": "Lista de asistentes",
+  "sessionGroup": {
+    "config": "Gestión de grupos",
+    "confirmRemoveGroupAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción.",
+    "createGroup": "Crear nuevo grupo",
+    "createSuccess": "Grupo creado con éxito",
+    "inputPlaceholder": "Introduce el nombre del grupo...",
+    "moveGroup": "Mover al grupo",
+    "newGroup": "Nuevo grupo",
+    "rename": "Renombrar grupo",
+    "renameSuccess": "Grupo renombrado con éxito",
+    "tooLong": "El nombre del grupo debe tener entre 1 y 20 caracteres"
+  },
   "shareModal": {
     "download": "Descargar captura de pantalla",
     "imageType": "Tipo de imagen",

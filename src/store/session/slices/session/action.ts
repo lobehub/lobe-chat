@@ -11,8 +11,8 @@ import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { SessionStore } from '@/store/session';
 import {
+  ChatSessionList,
   LobeAgentSession,
-  LobeAgentSettings,
   LobeSessionType,
   LobeSessions,
 } from '@/types/session';
@@ -42,12 +42,12 @@ export interface SessionAction {
    * @param agent
    * @returns sessionId
    */
-  createSession: (agent?: DeepPartial<LobeAgentSettings>) => Promise<string>;
+  createSession: (session?: DeepPartial<LobeAgentSession>) => Promise<string>;
   duplicateSession: (id: string) => Promise<void>;
   /**
    * Pins or unpins a session.
    */
-  pinSession: (id: string, pinned?: boolean) => Promise<void>;
+  pinSession: (id: string, pinned: boolean) => Promise<void>;
   /**
    * re-fetch the data
    */
@@ -127,7 +127,7 @@ export const createSessionSlice: StateCreator<
   },
 
   pinSession: async (sessionId, pinned) => {
-    await sessionService.updateSessionGroup(sessionId, pinned ? 'pinned' : 'default');
+    await sessionService.updateSessionPinned(sessionId, pinned);
 
     await get().refreshSessions();
   },
@@ -144,6 +144,7 @@ export const createSessionSlice: StateCreator<
       get().switchSession();
     }
   },
+
   switchSession: (sessionId = INBOX_SESSION_ID) => {
     const { isMobile, router } = get();
 
@@ -154,20 +155,23 @@ export const createSessionSlice: StateCreator<
   },
 
   useFetchSessions: () =>
-    useSWR<LobeSessions>(FETCH_SESSIONS_KEY, sessionService.getSessions, {
+    useSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getSessionsWithGroup, {
       onSuccess: (data) => {
         // 由于 https://github.com/lobehub/lobe-chat/pull/541 的关系
         // 只有触发了 refreshSessions 才会更新 sessions，进而触发页面 rerender
-        // 因此这里不能补充判断，否则会导致页面不更新
+        // 因此这里不能补充 equal 判断，否则会导致页面不更新
+        // if (get().isSessionsFirstFetchFinished && isEqual(get().sessions, data)) return;
+
         // TODO：后续的根本解法应该是解除 inbox 和 session 的数据耦合
         // 避免互相依赖的情况出现
 
-        // if (get().isSessionsFirstFetchFinished && isEqual(get().sessions, data)) return;
-
         set(
           {
+            customSessionGroups: data.customGroup,
+            defaultSessions: data.default,
             isSessionsFirstFetchFinished: true,
-            sessions: data,
+            pinnedSessions: data.pinned,
+            sessions: data.all,
           },
           false,
           n('useFetchSessions/onSuccess', data),

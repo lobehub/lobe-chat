@@ -24,12 +24,12 @@ export interface SettingsAction {
    */
   resetSettings: () => void;
   setOpenAIConfig: (config: Partial<OpenAIConfig>) => void;
-
   /**
    * 设置部分配置设置
    * @param settings - 部分配置设置
    */
   setSettings: (settings: DeepPartial<GlobalSettings>) => void;
+
   switchSettingTabs: (tab: SettingsTabs) => void;
   /**
    * 设置主题模式
@@ -68,7 +68,6 @@ export const createSettingsSlice: StateCreator<
   setOpenAIConfig: (config) => {
     get().setSettings({ languageModel: { openAI: config } });
   },
-
   setSettings: (settings) => {
     const prevSetting = get().settings;
     const nextSettings = merge(prevSetting, settings);
@@ -77,6 +76,7 @@ export const createSettingsSlice: StateCreator<
 
     set({ settings: merge(prevSetting, settings) }, false, n('setSettings', settings));
   },
+
   switchSettingTabs: (tab) => {
     set({ settingsTab: tab });
   },

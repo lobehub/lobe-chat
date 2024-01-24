@@ -44,6 +44,7 @@
       "added": "Succesvol geïmporteerd",
       "errors": "Fouten bij importeren",
       "messages": "Berichten",
+      "sessionGroups": "Sessiegroepen",
       "sessions": "Assistenten",
       "skips": "Overslaan van duplicaten",
       "topics": "Onderwerpen",

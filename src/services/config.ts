@@ -4,10 +4,10 @@ import { topicService } from '@/services/topic';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionExportSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 import { ConfigFile } from '@/types/exportConfig';
 import { ChatMessage } from '@/types/message';
-import { LobeSessions } from '@/types/session';
+import { LobeSessions, SessionGroupItem } from '@/types/session';
 import { GlobalSettings } from '@/types/settings';
 import { ChatTopic } from '@/types/topic';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
@@ -19,6 +19,7 @@ export interface ImportResult {
 }
 export interface ImportResults {
   messages?: ImportResult;
+  sessionGroups?: ImportResult;
   sessions: ImportResult;
   topics?: ImportResult;
 }
@@ -40,6 +41,9 @@ class ConfigService {
   importTopics = async (topics: ChatTopic[]) => {
     return topicService.batchCreateTopics(topics);
   };
+  importSessionGroups = async (sessionGroups: SessionGroupItem[]) => {
+    return sessionService.batchCreateSessionGroups(sessionGroups);
+  };
 
   importConfigState = async (config: ConfigFile): Promise<ImportResults | undefined> => {
     switch (config.exportType) {
@@ -50,8 +54,11 @@ class ConfigService {
       }
 
       case 'agents': {
+        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
+
         const data = await this.importSessions(config.state.sessions);
         return {
+          sessionGroups: this.mapImportResult(sessionGroups),
           sessions: this.mapImportResult(data),
         };
       }
@@ -59,6 +66,8 @@ class ConfigService {
       case 'all': {
         await this.importSettings(config.state.settings);
 
+        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
+
         const [sessions, messages, topics] = await Promise.all([
           this.importSessions(config.state.sessions),
           this.importMessages(config.state.messages),
@@ -67,12 +76,15 @@ class ConfigService {
 
         return {
           messages: this.mapImportResult(messages),
+          sessionGroups: this.mapImportResult(sessionGroups),
           sessions: this.mapImportResult(sessions),
           topics: this.mapImportResult(topics),
         };
       }
 
       case 'sessions': {
+        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
+
         const [sessions, messages, topics] = await Promise.all([
           this.importSessions(config.state.sessions),
           this.importMessages(config.state.messages),
@@ -81,6 +93,7 @@ class ConfigService {
 
         return {
           messages: this.mapImportResult(messages),
+          sessionGroups: this.mapImportResult(sessionGroups),
           sessions: this.mapImportResult(sessions),
           topics: this.mapImportResult(topics),
         };
@@ -93,8 +106,9 @@ class ConfigService {
    */
   exportAgents = async () => {
     const agents = await sessionService.getAllAgents();
+    const sessionGroups = await sessionService.getSessionGroups();
 
-    const config = createConfigFile('agents', { sessions: agents });
+    const config = createConfigFile('agents', { sessionGroups, sessions: agents });
 
     exportConfigFile(config, 'agents');
   };
@@ -104,10 +118,11 @@ class ConfigService {
    */
   exportSessions = async () => {
     const sessions = await sessionService.getSessions();
+    const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();
 
-    const config = createConfigFile('sessions', { messages, sessions, topics });
+    const config = createConfigFile('sessions', { messages, sessionGroups, sessions, topics });
 
     exportConfigFile(config, 'sessions');
   };
@@ -153,7 +168,7 @@ class ConfigService {
     const agent = this.getAgent(id);
     if (!agent) return;
 
-    const config = createConfigFile('agents', { sessions: [agent] });
+    const config = createConfigFile('agents', { sessionGroups: [], sessions: [agent] });
 
     exportConfigFile(config, agent.meta?.title || 'agent');
   };
@@ -174,11 +189,12 @@ class ConfigService {
    */
   exportAll = async () => {
     const sessions = await sessionService.getSessions();
+    const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();
     const settings = this.getSettings();
 
-    const config = createConfigFile('all', { messages, sessions, settings, topics });
+    const config = createConfigFile('all', { messages, sessionGroups, sessions, settings, topics });
 
     exportConfigFile(config, 'config');
   };
@@ -189,7 +205,7 @@ class ConfigService {
     sessionSelectors.getSessionById(id)(useSessionStore.getState());
 
   private getAgent = (id: string) =>
-    sessionExportSelectors.getExportAgent(id)(useSessionStore.getState());
+    sessionSelectors.getSessionById(id)(useSessionStore.getState());
 
   private mapImportResult = (input: {
     added: number;

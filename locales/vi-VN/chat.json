@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "defaultAgent": "Trợ lý mặc định",
+  "defaultList": "Danh sách mặc định",
   "defaultSession": "Trợ lý mặc định",
   "duplicateTitle": "{{title}} Bản sao",
   "historyRange": "Phạm vi lịch sử",
@@ -34,7 +35,18 @@
   "roleAndArchive": "Vai trò và lưu trữ",
   "searchAgentPlaceholder": "Tìm kiếm trợ lý và cuộc trò chuyện...",
   "sendPlaceholder": "Nhập nội dung trò chuyện...",
-  "sessionList": "Danh sách trợ lý",
+  "sessionGroup": {
+    "config": "Quản lý nhóm",
+    "confirmRemoveGroupAlert": "Bạn sẽ xóa nhóm này, sau khi xóa, trợ lý của nhóm sẽ được di chuyển vào danh sách mặc định, vui lòng xác nhận hành động của bạn",
+    "createGroup": "Thêm nhóm mới",
+    "createSuccess": "Tạo thành công",
+    "inputPlaceholder": "Vui lòng nhập tên nhóm...",
+    "moveGroup": "Di chuyển vào nhóm",
+    "newGroup": "Nhóm mới",
+    "rename": "Đổi tên nhóm",
+    "renameSuccess": "Đổi tên thành công",
+    "tooLong": "Tên nhóm phải có độ dài từ 1-20 ký tự"
+  },
   "shareModal": {
     "download": "Tải xuống ảnh chụp màn hình",
     "imageType": "Định dạng ảnh",

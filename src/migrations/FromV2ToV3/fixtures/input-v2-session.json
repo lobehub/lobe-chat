@@ -1,0 +1,72 @@
+{
+  "exportType": "sessions",
+  "state": {
+    "sessions": [
+      {
+        "config": {
+          "displayMode": "chat",
+          "historyCount": 1,
+          "model": "gpt-3.5-turbo",
+          "params": {
+            "frequency_penalty": 0,
+            "presence_penalty": 0,
+            "temperature": 0.6,
+            "top_p": 1,
+            "max_tokens": 2200
+          },
+          "plugins": [],
+          "systemRole": "你是一名 Postgresql 的数据库专家。用户是一名数据库小白，你需要使用简单直白的方式告诉用户如何使用 ostgresql 和它相应的 orm 工具 primsa",
+          "enableCompressThreshold": false,
+          "enableMaxTokens": false,
+          "inputTemplate": ""
+        },
+        "createdAt": 1698463356269,
+        "id": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "meta": {
+          "avatar": "🐘",
+          "backgroundColor": "rgba(0,0,0,0)",
+          "title": "Postgresql 指南",
+          "description": "PostgreSQL 数据库和 Prisma ORM 工具的简单使用指南",
+          "tags": ["数据库", "PostgreSQL", "教程", "ORM", "Prisma"]
+        },
+        "type": "agent",
+        "updatedAt": 1698463356269,
+        "group": "pinned"
+      },
+      {
+        "config": {
+          "displayMode": "chat",
+          "historyCount": 1,
+          "model": "gpt-3.5-turbo",
+          "params": {
+            "frequency_penalty": 0,
+            "presence_penalty": 0,
+            "temperature": 0.6,
+            "top_p": 1,
+            "max_tokens": 2200
+          },
+          "plugins": [],
+          "systemRole": "你是一名 Postgresql 的数据库专家。用户是一名数据库小白，你需要使用简单直白的方式告诉用户如何使用 ostgresql 和它相应的 orm 工具 primsa",
+          "enableCompressThreshold": false,
+          "enableMaxTokens": false,
+          "inputTemplate": ""
+        },
+        "createdAt": 1698463356269,
+        "id": "06cc3e20-e870-4098-a619-c07a849d74dd",
+        "meta": {
+          "avatar": "🐘",
+          "backgroundColor": "rgba(0,0,0,0)",
+          "title": "Postgresql 指南",
+          "description": "PostgreSQL 数据库和 Prisma ORM 工具的简单使用指南",
+          "tags": ["数据库", "PostgreSQL", "教程", "ORM", "Prisma"]
+        },
+        "type": "agent",
+        "updatedAt": 1698463356269,
+        "group": "default"
+      }
+    ],
+    "topics": [],
+    "messages": []
+  },
+  "version": 2
+}

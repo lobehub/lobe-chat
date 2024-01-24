@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "Mevcut oturum mesajlarını temizlemek üzeresiniz. Temizlendikten sonra geri alınamazlar. Lütfen eyleminizi onaylayın.",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "defaultAgent": "Varsayılan Asistan",
+  "defaultList": "Varsayılan Liste",
   "defaultSession": "Varsayılan Asistan",
   "duplicateTitle": "{{title}} Kopya",
   "historyRange": "Geçmiş Aralığı",
@@ -34,7 +35,18 @@
   "roleAndArchive": "Rol ve Arşiv",
   "searchAgentPlaceholder": "Arama yardımcıları ve konuşmalar...",
   "sendPlaceholder": "Mesajınızı buraya yazın...",
-  "sessionList": "Asistanlar",
+  "sessionGroup": {
+    "config": "Grup Yönetimi",
+    "confirmRemoveGroupAlert": "Bu grup silinecek, silindikten sonra bu grubun yardımcıları varsayılan listeye taşınacak, işleminizi onaylıyor musunuz?",
+    "createGroup": "Yeni Grup Ekle",
+    "createSuccess": "Oluşturma Başarılı",
+    "inputPlaceholder": "Grup adını girin...",
+    "moveGroup": "Gruba Taşı",
+    "newGroup": "Yeni Grup",
+    "rename": "Grup Adını Değiştir",
+    "renameSuccess": "Yeniden Adlandırma Başarılı",
+    "tooLong": "Grup adı 1-20 karakter arasında olmalıdır"
+  },
   "shareModal": {
     "download": "Ekran Görüntüsünü İndir",
     "imageType": "Format",

@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "defaultAgent": "기본 도우미",
+  "defaultList": "기본 목록",
   "defaultSession": "기본 도우미",
   "duplicateTitle": "{{title}} 복사본",
   "historyRange": "대화 기록 범위",
@@ -34,7 +35,18 @@
   "roleAndArchive": "역할 및 아카이브",
   "searchAgentPlaceholder": "도우미 및 대화 검색...",
   "sendPlaceholder": "채팅 내용 입력...",
-  "sessionList": "도우미 목록",
+  "sessionGroup": {
+    "config": "그룹 설정",
+    "confirmRemoveGroupAlert": "이 그룹을 삭제하려고 합니다. 삭제 후 이 그룹의 도우미는 기본 목록으로 이동됩니다. 작업을 확인하십시오.",
+    "createGroup": "새 그룹 추가",
+    "createSuccess": "생성 성공",
+    "inputPlaceholder": "그룹 이름을 입력하세요...",
+    "moveGroup": "그룹으로 이동",
+    "newGroup": "새 그룹",
+    "rename": "그룹 이름 변경",
+    "renameSuccess": "이름 변경 성공",
+    "tooLong": "그룹 이름은 1-20자여야 합니다"
+  },
   "shareModal": {
     "download": "스크린샷 다운로드",
     "imageType": "이미지 형식",
