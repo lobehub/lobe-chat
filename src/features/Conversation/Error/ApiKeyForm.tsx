@@ -31,6 +31,7 @@ const APIKeyForm = memo<{ id: string }>(({ id }) => {
         title={t('unlock.apikey.title')}
       >
         <Input.Password
+          autoComplete={'new-password'}
           onChange={(e) => {
             setConfig({ OPENAI_API_KEY: e.target.value });
           }}
