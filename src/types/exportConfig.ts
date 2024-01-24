@@ -1,5 +1,5 @@
 import { ChatMessage } from '@/types/message';
-import { LobeSessions } from '@/types/session';
+import { LobeSessions, SessionGroupItem } from '@/types/session';
 import { GlobalSettings } from '@/types/settings';
 import { ChatTopic } from '@/types/topic';
 
@@ -43,6 +43,7 @@ export interface ConfigModelMap {
  */
 export interface ConfigStateSessions {
   messages: ChatMessage[];
+  sessionGroups: SessionGroupItem[];
   sessions: LobeSessions;
   topics: ChatTopic[];
 }
@@ -60,6 +61,7 @@ export interface ConfigStateSingleSession {
  * 配置状态：角色
  */
 export interface ConfigStateAgents {
+  sessionGroups: SessionGroupItem[];
   sessions: LobeSessions;
 }
 

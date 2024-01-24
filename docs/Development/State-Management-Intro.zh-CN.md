@@ -125,16 +125,16 @@ src/store/session
 ├── helpers.ts                         # 辅助函数
 └── slices                             # 各个独立的功能切片
     ├── agent                          # 助理 Slice
-    │   ├── action.ts                  
-    │   ├── index.ts                   
-    │   └── selectors.ts               
+    │   ├── action.ts
+    │   ├── index.ts
+    │   └── selectors.ts
     └── session                        # 会话 Slice
-        ├── action.ts                  
-        ├── helpers.ts                 
-        ├── initialState.ts                
-        └── selectors                      
-            ├── export.ts                  
-            ├── list.ts                   
+        ├── action.ts
+        ├── helpers.ts
+        ├── initialState.ts
+        └── selectors
+            ├── export.ts
+            ├── list.ts
             └── index.ts
 
 ```

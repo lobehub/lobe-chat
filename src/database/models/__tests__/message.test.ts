@@ -373,4 +373,46 @@ describe('MessageModel', () => {
       }
     });
   });
+
+  describe('clearTable', () => {
+    it('should clear the table', async () => {
+      await MessageModel.create(messageData);
+      await MessageModel.clearTable();
+      const messages = await MessageModel.queryAll();
+      expect(messages).toHaveLength(0);
+    });
+  });
+
+  describe('updatePluginState', () => {
+    it('should update plugin state', async () => {
+      const createdMessage = await MessageModel.create(messageData);
+      await MessageModel.updatePluginState(createdMessage.id, 'testKey', 'testValue');
+      const updatedMessage = await MessageModel.findById(createdMessage.id);
+      expect(updatedMessage.pluginState).toHaveProperty('testKey', 'testValue');
+    });
+  });
+  describe('clearTable', () => {
+    it('should clear the table', async () => {
+      await MessageModel.create(messageData);
+      await MessageModel.clearTable();
+      const messages = await MessageModel.queryAll();
+      expect(messages).toHaveLength(0);
+    });
+  });
+
+  describe('updatePluginState', () => {
+    it('should update plugin state', async () => {
+      const createdMessage = await MessageModel.create(messageData);
+      await MessageModel.updatePluginState(createdMessage.id, 'testKey', 'testValue');
+      const updatedMessage = await MessageModel.findById(createdMessage.id);
+      expect(updatedMessage.pluginState).toHaveProperty('testKey', 'testValue');
+    });
+  });
+
+  describe('isEmpty', () => {
+    it('should return true if table is empty', async () => {
+      const isEmpty = await MessageModel.isEmpty();
+      expect(isEmpty).toBeTruthy();
+    });
+  });
 });

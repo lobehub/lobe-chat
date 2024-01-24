@@ -44,6 +44,7 @@
       "added": "Imported successfully",
       "errors": "Import errors",
       "messages": "Messages",
+      "sessionGroups": "Groups",
       "sessions": "Agents",
       "skips": "Duplicates skipped",
       "topics": "Topics",

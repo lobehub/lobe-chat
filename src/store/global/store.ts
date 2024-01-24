@@ -5,6 +5,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_AGENT, DEFAULT_LLM_CONFIG } from '@/const/settings';
+import { SessionDefaultGroup } from '@/types/session';
 import { isDev } from '@/utils/env';
 
 import { createHyperStorage } from '../middleware/createHyperStorage';
@@ -32,6 +33,12 @@ const persistOptions: PersistOptions<GlobalStore, GlobalPersist> = {
     return {
       ...currentState,
       ...state,
+      preference: produce(state.preference, (draft) => {
+        if (!draft.expandSessionGroupKeys) {
+          draft.expandSessionGroupKeys = [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default];
+          delete (draft as any).sessionGroupKeys;
+        }
+      }),
       settings: produce(state.settings, (draft) => {
         if (!draft.defaultAgent) {
           draft.defaultAgent = DEFAULT_AGENT;
