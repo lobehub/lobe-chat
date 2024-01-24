@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
   "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be retrieved. Please confirm your action.",
   "defaultAgent": "Default Agent",
+  "defaultList": "Default List",
   "defaultSession": "Default Agent",
   "duplicateTitle": "{{title}} Copy",
   "historyRange": "History Range",
@@ -34,7 +35,18 @@
   "roleAndArchive": "Role and Archive",
   "searchAgentPlaceholder": "Search agents and conversations...",
   "sendPlaceholder": "Type your message here...",
-  "sessionList": "Agent List",
+  "sessionGroup": {
+    "config": "Group Management",
+    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",
+    "createGroup": "Add New Group",
+    "createSuccess": "Created successfully",
+    "inputPlaceholder": "Please enter group name...",
+    "moveGroup": "Move to Group",
+    "newGroup": "New Group",
+    "rename": "Rename Group",
+    "renameSuccess": "Renamed successfully",
+    "tooLong": "Group name length should be between 1-20"
+  },
   "shareModal": {
     "download": "Download Screenshot",
     "imageType": "Image Format",

@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
   "defaultAgent": "Assistente predefinito",
+  "defaultList": "Lista predefinita",
   "defaultSession": "Sessione predefinita",
   "duplicateTitle": "{{title}} Copia",
   "historyRange": "Intervallo cronologico",
@@ -34,7 +35,18 @@
   "roleAndArchive": "Ruolo e archivio",
   "searchAgentPlaceholder": "Cerca assistente e conversazioni...",
   "sendPlaceholder": "Inserisci il testo della chat...",
-  "sessionList": "Elenco sessioni",
+  "sessionGroup": {
+    "config": "Gestione gruppi",
+    "confirmRemoveGroupAlert": "Stai per rimuovere questo gruppo. Dopo la rimozione, gli assistenti di questo gruppo verranno spostati nella lista predefinita. Confermi l'operazione?",
+    "createGroup": "Aggiungi nuovo gruppo",
+    "createSuccess": "Creazione riuscita",
+    "inputPlaceholder": "Inserisci il nome del gruppo...",
+    "moveGroup": "Sposta nel gruppo",
+    "newGroup": "Nuovo gruppo",
+    "rename": "Rinomina gruppo",
+    "renameSuccess": "Rinominazione riuscita",
+    "tooLong": "Il nome del gruppo deve essere lungo 1-20 caratteri"
+  },
   "shareModal": {
     "download": "Scarica screenshot",
     "imageType": "Tipo di immagine",

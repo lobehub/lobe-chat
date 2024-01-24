@@ -44,6 +44,7 @@
       "added": "匯入成功",
       "errors": "匯入出錯",
       "messages": "訊息",
+      "sessionGroups": "會話分組",
       "sessions": "助手",
       "skips": "重複跳過",
       "topics": "話題",

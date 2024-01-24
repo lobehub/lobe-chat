@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
   "defaultAgent": "デフォルトエージェント",
+  "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
   "duplicateTitle": "{{title}} のコピー",
   "historyRange": "履歴範囲",
@@ -34,7 +35,18 @@
   "roleAndArchive": "役割とアーカイブ",
   "searchAgentPlaceholder": "エージェントや会話を検索...",
   "sendPlaceholder": "チャット内容を入力してください...",
-  "sessionList": "エージェントリスト",
+  "sessionGroup": {
+    "config": "グループ設定",
+    "confirmRemoveGroupAlert": "このグループを削除します。削除後、このグループのアシスタントはデフォルトリストに移動されます。操作を確認してください。",
+    "createGroup": "新しいグループを作成",
+    "createSuccess": "作成が成功しました",
+    "inputPlaceholder": "グループ名を入力してください...",
+    "moveGroup": "グループに移動",
+    "newGroup": "新しいグループ",
+    "rename": "グループ名を変更",
+    "renameSuccess": "名前の変更が成功しました",
+    "tooLong": "グループ名は1〜20文字で入力してください"
+  },
   "shareModal": {
     "download": "スクリーンショットをダウンロード",
     "imageType": "画像形式",
