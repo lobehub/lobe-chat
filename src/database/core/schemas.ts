@@ -24,10 +24,23 @@ export const dbSchemaV2 = {
 // ************************************** //
 // ******* Version 3 - 2023-12-06 ******* //
 // ************************************** //
-// - Added `plugin` table
+// - Added `plugins` table
 
 export const dbSchemaV3 = {
   ...dbSchemaV2,
   plugins:
     '&identifier, type, manifest.type, manifest.meta.title, manifest.meta.description, manifest.meta.author, createdAt, updatedAt',
+};
+
+// ************************************** //
+// ******* Version 4 - 2024-01-21 ******* //
+// ************************************** //
+// - Added `sessionGroups` table
+// - Add `pinned` to sessions table
+
+export const dbSchemaV4 = {
+  ...dbSchemaV3,
+  sessionGroups: '&id, name, sort, createdAt, updatedAt',
+  sessions:
+    '&id, type, group, pinned, meta.title, meta.description, meta.tags, createdAt, updatedAt',
 };

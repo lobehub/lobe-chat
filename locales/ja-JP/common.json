@@ -44,6 +44,7 @@
       "added": "インポートが成功しました",
       "errors": "インポートエラー",
       "messages": "メッセージ",
+      "sessionGroups": "セッショングループ",
       "sessions": "セッション",
       "skips": "重複スキップ",
       "topics": "トピック",

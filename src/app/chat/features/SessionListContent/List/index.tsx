@@ -20,8 +20,10 @@ const useStyles = createStyles(
 
 interface SessionListProps {
   dataSource: LobeAgentSession[];
+  groupId?: string;
+  showAddButton?: boolean;
 }
-const SessionList = memo<SessionListProps>(({ dataSource }) => {
+const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
   const [activeSession, switchSession, isInit] = useSessionStore((s) => [
     s.activeSession,
     s.switchSession,
@@ -50,7 +52,7 @@ const SessionList = memo<SessionListProps>(({ dataSource }) => {
       </LazyLoad>
     ))
   ) : (
-    <AddButton />
+    showAddButton && <AddButton groupId={groupId} />
   );
 });
 

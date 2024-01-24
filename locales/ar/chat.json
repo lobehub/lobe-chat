@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",
   "defaultAgent": "المساعد الافتراضي",
+  "defaultList": "القائمة الافتراضية",
   "defaultSession": "المساعد الافتراضي",
   "duplicateTitle": "{{title}} نسخة",
   "historyRange": "نطاق التاريخ",
@@ -34,7 +35,18 @@
   "roleAndArchive": "الدور والأرشيف",
   "searchAgentPlaceholder": "البحث عن مساعد ومحادثة...",
   "sendPlaceholder": "أدخل محتوى الدردشة...",
-  "sessionList": "قائمة المساعدين",
+  "sessionGroup": {
+    "config": "إدارة المجموعات",
+    "confirmRemoveGroupAlert": "سيتم حذف هذه المجموعة قريبًا، وبعد الحذف، سيتم نقل مساعدي هذه المجموعة إلى القائمة الافتراضية، يرجى تأكيد إجراءك",
+    "createGroup": "إضافة مجموعة جديدة",
+    "createSuccess": "تم الإنشاء بنجاح",
+    "inputPlaceholder": "الرجاء إدخال اسم المجموعة...",
+    "moveGroup": "نقل إلى مجموعة",
+    "newGroup": "مجموعة جديدة",
+    "rename": "إعادة تسمية المجموعة",
+    "renameSuccess": "تمت إعادة التسمية بنجاح",
+    "tooLong": "يجب أن يكون طول اسم المجموعة بين 1 و 20"
+  },
   "shareModal": {
     "download": "تحميل اللقطة",
     "imageType": "نوع الصورة",
