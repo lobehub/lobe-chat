@@ -40,6 +40,7 @@ const SessionListContent = memo(() => {
       [
         pinnedSessions.length > 0 && {
           children: <SessionList dataSource={pinnedSessions} />,
+          extra: <Actions openConfigModal={() => setConfigGroupModalOpen(true)} />,
           key: SessionDefaultGroup.Pinned,
           label: t('pin'),
         },
@@ -48,6 +49,7 @@ const SessionListContent = memo(() => {
           extra: (
             <Actions
               id={id}
+              isCustomGroup
               onOpenChange={(isOpen) => {
                 if (isOpen) setActiveGroupId(id);
               }}
@@ -60,6 +62,7 @@ const SessionListContent = memo(() => {
         })),
         {
           children: <SessionList dataSource={defaultSessions} />,
+          extra: <Actions openConfigModal={() => setConfigGroupModalOpen(true)} />,
           key: SessionDefaultGroup.Default,
           label: t('defaultList'),
         },
