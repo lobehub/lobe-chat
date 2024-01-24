@@ -4,12 +4,13 @@ import { createStyles } from 'antd-style';
 import {
   ChevronUp,
   CornerDownLeft,
-  Loader2,
   LucideCheck,
   LucideChevronDown,
   LucideCommand,
   LucidePlus,
+  StopCircle,
 } from 'lucide-react';
+import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -25,7 +26,7 @@ import { isMacOS } from '@/utils/platform';
 
 import { LocalFiles } from './LocalFiles';
 
-const useStyles = createStyles(({ css, prefixCls }) => {
+const useStyles = createStyles(({ css, prefixCls, token }) => {
   return {
     arrow: css`
       &.${prefixCls}-btn.${prefixCls}-btn-icon-only {
@@ -38,13 +39,19 @@ const useStyles = createStyles(({ css, prefixCls }) => {
         align-items: center;
         justify-content: center;
       }
+
+      .${prefixCls}-btn.${prefixCls}-dropdown-trigger {
+        &::before {
+          background-color: ${rgba(token.colorBgLayout, 0.1)} !important;
+        }
+      }
     `,
   };
 });
 
 const isMac = isMacOS();
 
-const Footer = memo(() => {
+const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) => {
   const { t } = useTranslation('chat');
 
   const { theme, styles } = useStyles();
@@ -104,12 +111,18 @@ const Footer = memo(() => {
         <SaveTopic />
         <Flexbox style={{ minWidth: 92 }}>
           {loading ? (
-            <Button icon={loading && <Icon icon={Loader2} spin />} onClick={stopGenerateMessage}>
+            <Button icon={loading && <Icon icon={StopCircle} />} onClick={stopGenerateMessage}>
               {t('input.stop')}
             </Button>
           ) : (
             <Space.Compact>
-              <Button onClick={() => sendMessage()} type={'primary'}>
+              <Button
+                onClick={() => {
+                  sendMessage();
+                  setExpand?.(false);
+                }}
+                type={'primary'}
+              >
                 {t('input.send')}
               </Button>
               <Dropdown

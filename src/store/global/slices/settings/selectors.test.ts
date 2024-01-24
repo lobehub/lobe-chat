@@ -153,187 +153,137 @@ describe('settingsSelectors', () => {
       expect(result).toMatchSnapshot();
     });
   });
+  describe('defaultAgent', () => {
+    it('should merge DEFAULT_AGENT and s.settings.defaultAgent correctly', () => {
+      const s = {
+        settings: {
+          defaultAgent: {
+            config: {
+              systemRole: 'user',
+              model: LanguageModel.GPT3_5,
+            },
+            meta: {
+              avatar: 'agent-avatar.jpg',
+              description: 'Test agent',
+            },
+          },
+        },
+      } as unknown as GlobalStore;
 
-  // describe('defaultAgent', () => {
-  //   it('should merge DEFAULT_AGENT and s.settings.defaultAgent correctly', () => {
-  //     const s: GlobalStore = {
-  //       settings: {
-  //         defaultAgent: {
-  //           config: {
-  //             model: 'gpt-3.5-turbo',
-  //             maxTokens: 100,
-  //           },
-  //           meta: {
-  //             name: 'Default Agent',
-  //             description: 'Default agent for testing',
-  //           },
-  //         },
-  //       },
-  //     };
-  //
-  //     const result = settingsSelectors.defaultAgent(s);
-  //
-  //     expect(result).toEqual(expected);
-  //   });
-  // });
-  //
-  // describe('defaultAgentConfig', () => {
-  //   it('should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly', () => {
-  //     const s: GlobalStore = {
-  //       settings: {
-  //         defaultAgent: {
-  //           config: {
-  //             model: 'gpt-3.5-turbo',
-  //             maxTokens: 100,
-  //           },
-  //         },
-  //       },
-  //     };
-  //
-  //     const result = settingsSelectors.defaultAgentConfig(s);
-  //
-  //     const defaultAgent = settingsSelectors.defaultAgent(s);
-  //     const expected = merge({}, DEFAULT_AGENT_CONFIG, defaultAgent.config);
-  //
-  //     expect(result).toEqual(expected);
-  //   });
-  // });
-  //
-  // describe('defaultAgentMeta', () => {
-  //   it('should merge DEFAULT_AGENT_META and defaultAgent(s).meta correctly', () => {
-  //     const s: GlobalStore = {
-  //       settings: {
-  //         defaultAgent: {
-  //           meta: {
-  //             name: 'Default Agent',
-  //             description: 'Default agent for testing',
-  //           },
-  //         },
-  //       },
-  //     };
-  //
-  //     const result = settingsSelectors.defaultAgentMeta(s);
-  //
-  //     const defaultAgent = settingsSelectors.defaultAgent(s);
-  //     const expected = merge({}, DEFAULT_AGENT_META, defaultAgent.meta);
-  //
-  //     expect(result).toEqual(expected);
-  //   });
-  // });
-  //
-  // describe('exportSettings', () => {
-  //   it('should remove OPENAI_API_KEY and password fields from s.settings', () => {
-  //     const s: GlobalStore = {
-  //       settings: {
-  //         OPENAI_API_KEY: 'openai-api-key',
-  //         password: 'password123',
-  //         avatar: 'avatar.jpg',
-  //         fontSize: 14,
-  //         language: 'en',
-  //         neutralColor: 'white',
-  //         primaryColor: 'blue',
-  //         themeMode: 'light',
-  //         defaultAgent: {
-  //           config: {
-  //             model: 'gpt-3.5-turbo',
-  //             maxTokens: 100,
-  //           },
-  //           meta: {
-  //             name: 'Default Agent',
-  //             description: 'Default agent for testing',
-  //           },
-  //         },
-  //         languageModel: {
-  //           azureOpenAI: {
-  //             AZURE_API_KEY: 'azure-api-key',
-  //             apiVersion: 'v1',
-  //             endpoint: 'https://azure-openai-endpoint.com',
-  //             models: ['gpt-3.5-turbo'],
-  //           },
-  //           openAI: {
-  //             OPENAI_API_KEY: 'openai-api-key',
-  //             endpoint: 'https://openai-endpoint.com',
-  //             models: ['gpt-3.5-turbo'],
-  //           },
-  //         },
-  //       },
-  //     };
-  //
-  //     const result = settingsSelectors.exportSettings(s);
-  //
-  //     const expected = {
-  //       avatar: 'avatar.jpg',
-  //       fontSize: 14,
-  //       language: 'en',
-  //       neutralColor: 'white',
-  //       primaryColor: 'blue',
-  //       themeMode: 'light',
-  //       defaultAgent: {
-  //         config: {
-  //           model: 'gpt-3.5-turbo',
-  //           maxTokens: 100,
-  //         },
-  //         meta: {
-  //           name: 'Default Agent',
-  //           description: 'Default agent for testing',
-  //         },
-  //       },
-  //       languageModel: {
-  //         azureOpenAI: {
-  //           AZURE_API_KEY: 'azure-api-key',
-  //           apiVersion: 'v1',
-  //           endpoint: 'https://azure-openai-endpoint.com',
-  //           models: ['gpt-3.5-turbo'],
-  //         },
-  //         openAI: {
-  //           endpoint: 'https://openai-endpoint.com',
-  //           models: ['gpt-3.5-turbo'],
-  //         },
-  //       },
-  //     };
-  //
-  //     expect(result).toEqual(expected);
-  //   });
-  //
-  //   it('should return the result as GlobalSettings type', () => {
-  //     const s: GlobalStore = {
-  //       settings: {
-  //         avatar: 'avatar.jpg',
-  //         fontSize: 14,
-  //         language: 'en',
-  //         neutralColor: 'white',
-  //         password: 'password123',
-  //         primaryColor: 'blue',
-  //         themeMode: 'light',
-  //         defaultAgent: {
-  //           config: {
-  //             model: 'gpt-3.5-turbo',
-  //             maxTokens: 100,
-  //           },
-  //           meta: {
-  //             name: 'Default Agent',
-  //             description: 'Default agent for testing',
-  //           },
-  //         },
-  //         languageModel: {
-  //           azureOpenAI: {
-  //             AZURE_API_KEY: 'azure-api-key',
-  //             apiVersion: 'v1',
-  //             endpoint: 'https://azure-openai-endpoint.com',
-  //             models: ['gpt-3.5-turbo'],
-  //           },
-  //           openAI: {
-  //             OPENAI_API_KEY: 'openai-api-key',
-  //             endpoint: 'https://openai-endpoint.com',
-  //             models: ['gpt-3.5-turbo'],
-  //           },
-  //         },
-  //       },
-  //     };
-  //
-  //     const result = settingsSelectors.exportSettings(s);
-  //
-  //     expect(result).toBeInstanceOf(GlobalSettings);
-  //   });
-  // });
+      const result = settingsSelectors.defaultAgent(s);
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('defaultAgentConfig', () => {
+    it('should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly', () => {
+      const s = {
+        settings: {
+          defaultAgent: {
+            config: {
+              systemRole: 'user',
+              model: LanguageModel.GPT3_5,
+              params: {
+                temperature: 0.7,
+              },
+            },
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.defaultAgentConfig(s);
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('defaultAgentMeta', () => {
+    it('should merge DEFAULT_AGENT_META and defaultAgent(s).meta correctly', () => {
+      const s = {
+        settings: {
+          defaultAgent: {
+            meta: {
+              avatar: 'agent-avatar.jpg',
+              description: 'Test agent',
+            },
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.defaultAgentMeta(s);
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('currentTTS', () => {
+    it('should merge DEFAULT_TTS_CONFIG and s.settings.tts correctly', () => {
+      const s = {
+        settings: {
+          tts: {
+            sttAutoStop: false,
+            openAI: {
+              sttModel: 'whisper-2',
+            },
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.currentTTS(s);
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('currentLanguage', () => {
+    it('should return the correct language setting', () => {
+      const s = {
+        settings: {
+          language: 'fr',
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.currentLanguage(s);
+
+      expect(result).toBe('fr');
+    });
+  });
+
+  describe('dalleConfig', () => {
+    it('should return the dalle configuration', () => {
+      const s = {
+        settings: {
+          tool: {
+            dalle: {
+              apiKey: 'dalle-api-key',
+              autoGenerate: true,
+            },
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.dalleConfig(s);
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('isDalleAutoGenerating', () => {
+    it('should return the autoGenerate flag from dalle configuration', () => {
+      const s = {
+        settings: {
+          tool: {
+            dalle: {
+              autoGenerate: true,
+            },
+          },
+        },
+      } as unknown as GlobalStore;
+
+      const result = settingsSelectors.isDalleAutoGenerating(s);
+
+      expect(result).toBe(true);
+    });
+  });
 });

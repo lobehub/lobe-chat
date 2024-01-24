@@ -44,6 +44,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
   - [Data Store Selector](https://github.com/lobehub/lobe-chat/wiki/State-Management-Selector) | [数据存储取数模块](https://github.com/lobehub/lobe-chat/wiki/State-Management-Selector.zh-CN)
 - [Conversation API Implementation Logic](https://github.com/lobehub/lobe-chat/wiki/Chat-API) | [会话 API 实现逻辑](https://github.com/lobehub/lobe-chat/wiki/Chat-API.zh-CN)
 - [How to Develop a New Feature](https://github.com/lobehub/lobe-chat/wiki/Feature-Development) | [如何开发一个新功能](https://github.com/lobehub/lobe-chat/wiki/Feature-Development.zh-CN)
+  - [Frontend](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend) | [前端实现](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend.zh-CN)
 - [Internationalization Implementation Guide](https://github.com/lobehub/lobe-chat/wiki/Internationalization-Implementation) | [国际化实现指南](https://github.com/lobehub/lobe-chat/wiki/Internationalization-Implementation.zh-CN)
 - [New Locale Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale) | [新语种添加指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale.zh-CN)
 - [Testing Guide](https://github.com/lobehub/lobe-chat/wiki/Test) | [测试指南](https://github.com/lobehub/lobe-chat/wiki/Test.zh-CN)

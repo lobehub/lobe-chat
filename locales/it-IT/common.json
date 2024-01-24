@@ -44,6 +44,7 @@
       "added": "Importazione riuscita",
       "errors": "Errori di importazione",
       "messages": "Messaggi",
+      "sessionGroups": "Gruppi di sessione",
       "sessions": "Sessioni",
       "skips": "Elementi saltati",
       "topics": "Argomenti",

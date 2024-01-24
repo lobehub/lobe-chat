@@ -27,6 +27,7 @@ export interface CommonAction {
    */
   switchSideBar: (key: SidebarTabKey) => void;
   toggleChatSideBar: (visible?: boolean) => void;
+  toggleExpandSessionGroup: (id: string, expand: boolean) => void;
   toggleMobileTopic: (visible?: boolean) => void;
   toggleSystemRole: (visible?: boolean) => void;
   updateGuideState: (guide: Partial<Guide>) => void;
@@ -52,6 +53,19 @@ export const createCommonSlice: StateCreator<
       typeof newValue === 'boolean' ? newValue : !get().preference.showChatSideBar;
 
     get().updatePreference({ showChatSideBar }, n('toggleAgentPanel', newValue) as string);
+  },
+  toggleExpandSessionGroup: (id, expand) => {
+    const { preference } = get();
+    const nextExpandSessionGroup = produce(preference.expandSessionGroupKeys, (draft) => {
+      if (expand) {
+        if (draft.includes(id)) return;
+        draft.push(id);
+      } else {
+        const index = draft.indexOf(id);
+        if (index !== -1) draft.splice(index, 1);
+      }
+    });
+    get().updatePreference({ expandSessionGroupKeys: nextExpandSessionGroup });
   },
   toggleMobileTopic: (newValue) => {
     const mobileShowTopic =

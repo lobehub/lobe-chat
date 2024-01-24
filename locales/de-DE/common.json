@@ -44,6 +44,7 @@
       "added": "Erfolgreich importiert",
       "errors": "Fehler beim Import",
       "messages": "Nachrichten",
+      "sessionGroups": "Sitzungsgruppen",
       "sessions": "Assistenten",
       "skips": "Übersprungen (doppelt)",
       "topics": "Themen",

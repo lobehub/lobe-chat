@@ -132,7 +132,7 @@ class _MessageModel extends BaseModel {
 
   /**
    * Deletes multiple messages based on the assistantId and optionally the topicId.
-   * If topicId is not provided, it deletes messages where topicId is undefined.
+   * If topicId is not provided, it deletes messages where topicId is undefined or null.
    * If topicId is provided, it deletes messages with that specific topicId.
    *
    * @param {string} sessionId - The identifier of the assistant associated with the messages.
@@ -142,13 +142,12 @@ class _MessageModel extends BaseModel {
   async batchDelete(sessionId: string, topicId: string | undefined): Promise<void> {
     // If topicId is specified, use both assistantId and topicId as the filter criteria in the query.
     // Otherwise, filter by assistantId and require that topicId is undefined.
-    const query =
-      topicId !== undefined
-        ? this.table.where({ sessionId, topicId }) // Use a compound index
-        : this.table
-            .where('sessionId')
-            .equals(sessionId)
-            .and((message) => message.topicId === undefined);
+    const query = !!topicId
+      ? this.table.where({ sessionId, topicId }) // Use a compound index
+      : this.table
+          .where('sessionId')
+          .equals(sessionId)
+          .and((message) => !message.topicId);
 
     // Retrieve a collection of message IDs that satisfy the criteria
     const messageIds = await query.primaryKeys();

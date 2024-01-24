@@ -30,7 +30,10 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
-  const clearSessions = useSessionStore((s) => s.clearSessions);
+  const [clearSessions, clearSessionGroups] = useSessionStore((s) => [
+    s.clearSessions,
+    s.clearSessionGroups,
+  ]);
   const [clearTopics, clearAllMessages] = useChatStore((s) => [
     s.removeAllTopics,
     s.clearAllMessages,
@@ -71,6 +74,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
         await clearTopics();
         await removeAllFiles();
         await clearAllMessages();
+        await clearSessionGroups();
 
         message.success(t('danger.clear.success'));
       },
