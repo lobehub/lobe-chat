@@ -30,7 +30,10 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
-  const clearSessions = useSessionStore((s) => s.clearSessions);
+  const [clearSessions, clearSessionGroups] = useSessionStore((s) => [
+    s.clearSessions,
+    s.clearSessionGroups,
+  ]);
   const [clearTopics, clearAllMessages] = useChatStore((s) => [
     s.removeAllTopics,
     s.clearAllMessages,
@@ -71,6 +74,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
         await clearTopics();
         await removeAllFiles();
         await clearAllMessages();
+        await clearSessionGroups();
 
         message.success(t('danger.clear.success'));
       },
@@ -182,7 +186,12 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
   const system: SettingItemGroup = {
     children: [
       {
-        children: <Input.Password placeholder={t('settingSystem.accessCode.placeholder')} />,
+        children: (
+          <Input.Password
+            autoComplete={'new-password'}
+            placeholder={t('settingSystem.accessCode.placeholder')}
+          />
+        ),
         desc: t('settingSystem.accessCode.desc'),
         hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),

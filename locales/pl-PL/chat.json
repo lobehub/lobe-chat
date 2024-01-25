@@ -6,6 +6,7 @@
   "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
   "defaultAgent": "Domyślny asystent",
+  "defaultList": "Domyślna lista",
   "defaultSession": "Domyślna sesja",
   "duplicateTitle": "{{title}} kopia",
   "historyRange": "Zakres historii",
@@ -34,7 +35,18 @@
   "roleAndArchive": "Rola i archiwum",
   "searchAgentPlaceholder": "Szukaj asystentów i rozmów...",
   "sendPlaceholder": "Wpisz treść rozmowy...",
-  "sessionList": "Lista sesji",
+  "sessionGroup": {
+    "config": "Zarządzanie grupami",
+    "confirmRemoveGroupAlert": "Czy na pewno chcesz usunąć tę grupę? Po usunięciu asystenci z tej grupy zostaną przeniesieni do domyślnej listy. Potwierdź swoje działanie.",
+    "createGroup": "Dodaj nową grupę",
+    "createSuccess": "Utworzono pomyślnie",
+    "inputPlaceholder": "Wprowadź nazwę grupy...",
+    "moveGroup": "Przenieś do grupy",
+    "newGroup": "Nowa grupa",
+    "rename": "Zmień nazwę grupy",
+    "renameSuccess": "Zmiana nazwy pomyślna",
+    "tooLong": "Nazwa grupy musi mieć od 1 do 20 znaków"
+  },
   "shareModal": {
     "download": "Pobierz zrzut ekranu",
     "imageType": "Typ obrazu",

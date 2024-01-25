@@ -8,17 +8,24 @@ import { isDev } from '@/utils/env';
 import { SessionStoreState, initialState } from './initialState';
 import { AgentAction, createAgentSlice } from './slices/agent/action';
 import { SessionAction, createSessionSlice } from './slices/session/action';
+import { SessionGroupAction, createSessionGroupSlice } from './slices/sessionGroup/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type SessionStore = SessionAction & AgentAction & SessionStoreState;
+export interface SessionStore
+  extends SessionAction,
+    AgentAction,
+    SessionGroupAction,
+    SessionStoreState {}
+
 const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createAgentSlice(...parameters),
   ...createSessionSlice(...parameters),
+  ...createSessionGroupSlice(...parameters),
 });
 
-//  ===============  实装 useStore ============ //
+//  ===============  implement useStore ============ //
 
 export const useSessionStore = createWithEqualityFn<SessionStore>()(
   subscribeWithSelector(

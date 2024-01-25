@@ -2,6 +2,89 @@
 
 # Changelog
 
+### [Version 0.121.2](https://github.com/lobehub/lobe-chat/compare/v0.121.1...v0.121.2)
+
+<sup>Released on **2024-01-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Remove centered prop from CreateGroupModal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Remove centered prop from CreateGroupModal, closes [#1146](https://github.com/lobehub/lobe-chat/issues/1146) ([7b01676](https://github.com/lobehub/lobe-chat/commit/7b01676))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.121.1](https://github.com/lobehub/lobe-chat/compare/v0.121.0...v0.121.1)
+
+<sup>Released on **2024-01-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Automatically fill in the wrong password.
+
+#### 💄 Styles
+
+- **misc**: Fix default plugins height unstabled when scrolling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Automatically fill in the wrong password, closes [#1144](https://github.com/lobehub/lobe-chat/issues/1144) ([0159a1a](https://github.com/lobehub/lobe-chat/commit/0159a1a))
+
+#### Styles
+
+- **misc**: Fix default plugins height unstabled when scrolling, closes [#1142](https://github.com/lobehub/lobe-chat/issues/1142) ([abed417](https://github.com/lobehub/lobe-chat/commit/abed417))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.121.0](https://github.com/lobehub/lobe-chat/compare/v0.120.6...v0.121.0)
+
+<sup>Released on **2024-01-24**</sup>
+
+#### ✨ Features
+
+- **misc**: Add session group manager.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add session group manager, closes [#1055](https://github.com/lobehub/lobe-chat/issues/1055) [#1045](https://github.com/lobehub/lobe-chat/issues/1045) [#1126](https://github.com/lobehub/lobe-chat/issues/1126) [#1120](https://github.com/lobehub/lobe-chat/issues/1120) ([e3281fc](https://github.com/lobehub/lobe-chat/commit/e3281fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.120.6](https://github.com/lobehub/lobe-chat/compare/v0.120.5...v0.120.6)
 
 <sup>Released on **2024-01-22**</sup>
