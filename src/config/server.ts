@@ -70,5 +70,7 @@ export const getServerConfig = () => {
       : 'https://chat-plugins.lobehub.com',
 
     PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
+
+    SHOW_OAUTH_LOGIN: !!process.env.NEXT_PUBLIC_ENABLE_OAUTH,
   };
 };

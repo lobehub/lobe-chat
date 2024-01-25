@@ -25,9 +25,10 @@ type SettingItemGroup = ItemGroup;
 
 export interface SettingsCommonProps {
   showAccessCodeConfig: boolean;
+  showOAuthLogin: boolean;
 }
 
-const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
+const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin }) => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
@@ -223,6 +224,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
         desc: isOAuthLoggedIn
           ? `${session.user?.email} ${t('settingSystem.oauth.info.desc')}`
           : t('settingSystem.oauth.signin.desc'),
+        hidden: !showOAuthLogin,
         label: isOAuthLoggedIn
           ? t('settingSystem.oauth.info.title')
           : t('settingSystem.oauth.signin.title'),

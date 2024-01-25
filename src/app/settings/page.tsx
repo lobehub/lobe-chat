@@ -9,9 +9,9 @@ const Page = () => {
 
   const Page = mobile ? MobilePage : DesktopPage;
 
-  const { SHOW_ACCESS_CODE_CONFIG } = getServerConfig();
+  const { SHOW_ACCESS_CODE_CONFIG, SHOW_OAUTH_LOGIN } = getServerConfig();
 
-  return <Page showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG} />;
+  return <Page showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG} showOAuthLogin={SHOW_OAUTH_LOGIN} />;
 };
 
 export default Page;

@@ -10,7 +10,7 @@ import { useGlobalStore } from '@/store/global';
 
 import { RenderErrorMessage } from '../types';
 import APIKeyForm from './ApiKeyForm';
-import OAuthForm from './OAuthForm';
+import OAuthForm, { isEnableOauthTab } from './OAuthForm';
 import { ErrorActionContainer, FormAction } from './style';
 
 enum Tab {
@@ -21,7 +21,8 @@ enum Tab {
 
 const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
   const { t } = useTranslation('error');
-  const [mode, setMode] = useState<Tab>(Tab.Oauth);
+  const defaultTab = isEnableOauthTab ? Tab.Oauth : Tab.Password;
+  const [mode, setMode] = useState<Tab>(defaultTab);
 
   const [password, setSettings] = useGlobalStore((s) => [s.settings.password, s.setSettings]);
   const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
@@ -31,15 +32,30 @@ const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
       <Segmented
         block
         onChange={(value) => setMode(value as Tab)}
-        options={[
-          {
-            icon: <Icon icon={AsteriskSquare} />,
-            label: t('password', { ns: 'common' }),
-            value: Tab.Password,
-          },
-          { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: Tab.Api },
-          { icon: <Icon icon={ScanFace} />, label: t('oauth', { ns: 'common' }), value: Tab.Oauth },
-        ]}
+        options={
+          isEnableOauthTab
+            ? [
+                {
+                  icon: <Icon icon={ScanFace} />,
+                  label: t('oauth', { ns: 'common' }),
+                  value: Tab.Oauth,
+                },
+                {
+                  icon: <Icon icon={AsteriskSquare} />,
+                  label: t('password', { ns: 'common' }),
+                  value: Tab.Password,
+                },
+                { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: Tab.Api },
+              ]
+            : [
+                {
+                  icon: <Icon icon={AsteriskSquare} />,
+                  label: t('password', { ns: 'common' }),
+                  value: Tab.Password,
+                },
+                { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: Tab.Api },
+              ]
+        }
         style={{ width: '100%' }}
         value={mode}
       />
@@ -81,7 +97,7 @@ const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
           </>
         )}
         {mode === Tab.Api && <APIKeyForm id={id} />}
-        {mode === Tab.Oauth && <OAuthForm id={id} />}
+        {isEnableOauthTab && mode === Tab.Oauth && <OAuthForm id={id} />}
       </Flexbox>
     </ErrorActionContainer>
   );

@@ -1,4 +1,3 @@
-import { NextAuthRequest } from 'next-auth/lib';
 import OpenAI from 'openai';
 
 import { checkAuth } from '@/app/api/auth';
@@ -14,15 +13,14 @@ import { createOpenai } from './createOpenai';
  * createOpenAI Instance with Auth and azure openai support
  * if auth not pass ,just return error response
  */
-export const createBizOpenAI = (req: NextAuthRequest, model: string): Response | OpenAI => {
-  const { apiKey, accessCode, endpoint, useAzure, apiVersion } = getOpenAIAuthFromRequest(req);
+export const createBizOpenAI = (req: Request, model: string): Response | OpenAI => {
+  const { apiKey, accessCode, endpoint, useAzure, apiVersion, oauthAuthorized } =
+    getOpenAIAuthFromRequest(req);
 
-  const { auth } = req;
-
-  const result = checkAuth({ accessCode, apiKey });
+  const result = checkAuth({ accessCode, apiKey, oauthAuthorized });
 
   // TODO: Verify more auth conditions
-  if (!result.auth && !auth?.user && !auth?.user?.email) {
+  if (!result.auth) {
     return createErrorResponse(result.error as ErrorType);
   }
 
