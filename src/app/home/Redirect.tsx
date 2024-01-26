@@ -12,7 +12,7 @@ import { useSessionStore } from '@/store/session';
 const checkHasConversation = async () => {
   const hasMessages = await messageService.hasMessages();
   const hasAgents = await sessionService.hasSessions();
-  return hasMessages || hasAgents;
+  return hasMessages || hasAgents || 1;
 };
 
 const Redirect = memo(() => {
