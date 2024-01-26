@@ -8,7 +8,6 @@ import {
   LucideChevronDown,
   LucideCommand,
   LucidePlus,
-  StopCircle,
 } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo } from 'react';
@@ -25,6 +24,7 @@ import { agentSelectors } from '@/store/session/selectors';
 import { isMacOS } from '@/utils/platform';
 
 import { LocalFiles } from './LocalFiles';
+import StopLoadingIcon from './StopLoading';
 
 const useStyles = createStyles(({ css, prefixCls, token }) => {
   return {
@@ -32,6 +32,10 @@ const useStyles = createStyles(({ css, prefixCls, token }) => {
       &.${prefixCls}-btn.${prefixCls}-btn-icon-only {
         width: 28px;
       }
+    `,
+    loadingButton: css`
+      display: flex;
+      align-items: center;
     `,
     overrideAntdIcon: css`
       .${prefixCls}-btn.${prefixCls}-btn-icon-only {
@@ -111,7 +115,11 @@ const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) =
         <SaveTopic />
         <Flexbox style={{ minWidth: 92 }}>
           {loading ? (
-            <Button icon={loading && <Icon icon={StopCircle} />} onClick={stopGenerateMessage}>
+            <Button
+              className={styles.loadingButton}
+              icon={<StopLoadingIcon />}
+              onClick={stopGenerateMessage}
+            >
               {t('input.stop')}
             </Button>
           ) : (
