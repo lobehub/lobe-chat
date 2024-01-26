@@ -41,7 +41,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 - [Architecture Design](https://github.com/lobehub/lobe-chat/wiki/Architecture) | [架构设计](https://github.com/lobehub/lobe-chat/wiki/Architecture.zh-CN)
 - [Directory Structure](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure) | [目录架构](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure.zh-CN)
 - [Best Practices for State Management](https://github.com/lobehub/lobe-chat/wiki/State-Management-Intro) | [状态管理最佳实践](https://github.com/lobehub/lobe-chat/wiki/State-Management-Intro.zh-CN)
-  - [Data Store Selector](https://github.com/lobehub/lobe-chat/wiki/State-Management-Selector) | [数据存储取数模块](https://github.com/lobehub/lobe-chat/wiki/State-Management-Selector.zh-CN)
+  - [Data Store Selector](https://github.com/lobehub/lobe-chat/wiki/State-Management-Selectors) | [数据存储取数模块](https://github.com/lobehub/lobe-chat/wiki/State-Management-Selectors.zh-CN)
 - [Conversation API Implementation Logic](https://github.com/lobehub/lobe-chat/wiki/Chat-API) | [会话 API 实现逻辑](https://github.com/lobehub/lobe-chat/wiki/Chat-API.zh-CN)
 - [How to Develop a New Feature](https://github.com/lobehub/lobe-chat/wiki/Feature-Development) | [如何开发一个新功能](https://github.com/lobehub/lobe-chat/wiki/Feature-Development.zh-CN)
   - [Frontend](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend) | [前端实现](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend.zh-CN)
