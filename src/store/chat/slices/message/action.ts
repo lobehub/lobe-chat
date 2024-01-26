@@ -488,7 +488,7 @@ export const chatMessage: StateCreator<
 
     // define startAnimation function to display the text in buffer smooth
     // when you need to start the animation, call this function
-    const startAnimation = (speed = 2) =>
+    const startAnimation = (speed = 100) =>
       new Promise<void>((resolve) => {
         if (isAnimationActive) {
           resolve();
