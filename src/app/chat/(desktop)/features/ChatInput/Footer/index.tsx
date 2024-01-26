@@ -14,6 +14,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import StopLoadingIcon from '@/components/StopLoading';
 import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
@@ -24,7 +25,6 @@ import { agentSelectors } from '@/store/session/selectors';
 import { isMacOS } from '@/utils/platform';
 
 import { LocalFiles } from './LocalFiles';
-import StopLoadingIcon from './StopLoading';
 
 const useStyles = createStyles(({ css, prefixCls, token }) => {
   return {

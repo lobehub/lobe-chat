@@ -24,7 +24,7 @@ const StopLoadingIcon = memo(() => {
         >
           <animateTransform
             attributeName="transform"
-            dur="2s"
+            dur="1s"
             from="0 512 512"
             repeatCount="indefinite"
             to="360 512 512"
