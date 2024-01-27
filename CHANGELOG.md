@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.121.3](https://github.com/lobehub/lobe-chat/compare/v0.121.2...v0.121.3)
+
+<sup>Released on **2024-01-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve stop loading icon.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve stop loading icon, closes [#1154](https://github.com/lobehub/lobe-chat/issues/1154) ([6444fc2](https://github.com/lobehub/lobe-chat/commit/6444fc2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.121.2](https://github.com/lobehub/lobe-chat/compare/v0.121.1...v0.121.2)
 
 <sup>Released on **2024-01-25**</sup>
