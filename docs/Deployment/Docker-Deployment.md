@@ -71,6 +71,57 @@ $ docker run -d -p 3210:3210 \
 >
 > As the official Docker image build takes about half an hour, if there is a "update available" prompt after updating deployment, wait for the image to finish building before deploying again.
 
+#### Crontab Automatic Update Script
+
+If you want to automatically obtain the latest images, you can use the following script:
+
+```fish
+# auto-update-lobe-chat.sh
+
+# Set proxy (optional)
+export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+
+# Pull the latest image and store the output in a variable
+output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+
+# Check if the pull command executed successfully
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+# Check if the output contains a specific string
+echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+
+# If the image is already up to date, do nothing
+if [ $? -eq 0 ]; then
+    exit 0
+fi
+
+echo "Detected Lobe-Chat update"
+
+# Remove the old container
+echo "Removed: $(docker rm -f Lobe-Chat)"
+
+# Run the new container
+echo "Started: $(docker run -d --network=host -e OPENAI_API_KEY=sk-xxx -e --name=Lobe-Chat --restart=always lobehub/lobe-chat)"
+
+# Print the update time and version
+echo "Update time: $(date)"
+echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+
+# Clean up images that are no longer used
+docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+echo "Removed old images."
+```
+
+This script can be used in Crontab, but please make sure your Crontab can locate the correct Docker commands.
+
+Configure Crontab to execute the script every 5 minutes:
+
+```bash
+*/5 * * * * ~/auto-update-lobe-chat.sh >> ~/auto-update-lobe-chat.log 2>&1
+```
+
 ### `B` Docker Compose
 
 The configuration file for using `docker-compose` is as follows:

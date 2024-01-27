@@ -71,6 +71,57 @@ $ docker run -d -p 3210:3210 \
 >
 > 由于官方的 Docker 镜像构建大约需要半小时左右，如果在更新部署后会出现「存在更新」的提示，可以等待镜像构建完成后再次部署。
 
+#### Crontab 自动更新脚本
+
+如果你想自动获得最新的镜像，你可以使用以下脚本：
+
+```fish
+# auto-update-lobe-chat.sh
+
+# 设置代理（可选）
+export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+
+# 拉取最新的镜像并将输出存储在变量中
+output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+
+# 检查拉取命令是否成功执行
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+# 检查输出中是否包含特定的字符串
+echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+
+# 如果镜像已经是最新的，则不执行任何操作
+if [ $? -eq 0 ]; then
+    exit 0
+fi
+
+echo "Detected Lobe-Chat update"
+
+# 删除旧的容器
+echo "Removed: $(docker rm -f Lobe-Chat)"
+
+# 运行新的容器
+echo "Started: $(docker run -d --network=host -e OPENAI_API_KEY=sk-xxx --name=Lobe-Chat --restart=always lobehub/lobe-chat)"
+
+# 打印更新的时间和版本
+echo "Update time: $(date)"
+echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+
+# 清理不再使用的镜像
+docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+echo "Removed old images."
+```
+
+此脚本可以在 Crontab 中使用，但请确认你的 Crontab 可以找到正确的 Docker 命令。
+
+配置 Crontab，每 5 分钟执行一次脚本：
+
+```bash
+*/5 * * * * ~/auto-update-lobe-chat.sh >> ~/auto-update-lobe-chat.log 2>&1
+```
+
 ### `B` Docker Compose
 
 使用 `docker-compose` 时配置文件如下:
