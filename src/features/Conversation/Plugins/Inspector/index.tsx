@@ -118,7 +118,7 @@ const Inspector = memo<InspectorProps>(
                 label: t('debug.response'),
               },
             ]}
-            style={{ display: 'grid', maxWidth: 800 }}
+            style={{ display: 'grid', maxWidth: 800, minWidth: 400 }}
           />
         )}
       </Flexbox>
