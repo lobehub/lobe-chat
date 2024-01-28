@@ -168,14 +168,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                             | 插件描述                                                                             |
-| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| [当前时间助手](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-01-26**</sup>           | 提供当前时间信息的插件<br/>`时间`                                                    |
-| [AladinBooks](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **azurewebsites** on **2024-01-25**</sup> | 在阿拉丁上搜索书籍。<br/>`书籍` `搜索`                                               |
-| [Bardeen](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **prod** on **2024-01-25**</sup>              | 在最流行的网络服务上创建和运行自动化。<br/>`工作流程` `自动化`                       |
-| [ImageSearch](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **aigenprompt** on **2024-01-25**</sup>   | 发现免费图片，以增强您生成的文章，或突出来自 Unsplash 的特定段落。<br/>`图片` `搜索` |
+| 最近新增                                                                                                          | 插件描述                                                                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br/>`加密货币` `btc` `eth` `bnb`                                     |
+| [哔哩哔哩](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>       | 通过关键词视频搜索、回放访问、互动弹幕、热门视频推荐和热搜洞察等功能，深入体验哔哩哔哩丰富的内容，尽在您的指尖。<br/>`视频` `哔哩哔哩` `搜索` |
+| [Steam](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>          | 从 Steam 获取游戏信息和用户评论。<br/>`steam` `game`                                                                                          |
+| [当前时间助手](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-01-26**</sup>        | 提供当前时间信息的插件<br/>`时间`                                                                                                             |
 
-> 📊 Total plugins: [<kbd>**59**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**60**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -203,14 +203,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                      | 助手说明                                                                                                   |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| [烹饪 AI 导师](https://chat-preview.lobehub.com/market?agent=chef)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup>                              | AI 大厨助手：激发家庭厨师对国际美食、食谱和烹饪专业知识的热爱。<br/>`烹饪` `食谱` `烹饪` `技巧` `膳食规划` |
-| [AI 进出口顾问](https://chat-preview.lobehub.com/market?agent=import-and-export-advisor)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup>        | AI 进出口顾问：提供全球贸易、海关法规、文件、贸易协定和风险管理方面的指导。<br/>`进出口` `贸易` `咨询`     |
-| [OpenAPI 生成器](https://chat-preview.lobehub.com/market?agent=openapi-generator)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-26**</sup> | 解析接口文档并生成 ChatGPT Tool 所需要的 openapi.json<br/>`自动化工具` `接口文档` `工作流程` `openapi`     |
-| [ShieldsIO 徽章生成器](https://chat-preview.lobehub.com/market?agent=shields-io)<br/><sup>By **[Justin3go](https://github.com/Justin3go)** on **2024-01-26**</sup>            | 擅长使用`shields.io`生成美化徽章<br/>`徽章生成器` `美化` `ui设计` `markdown` `技术栈` `shields-io`         |
+| 最近新增                                                                                                                                                                  | 助手说明                                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Bilibili 助手](https://chat-preview.lobehub.com/market?agent=bilibili-agent)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-27**</sup> | Bilibili 助手，擅长解析视频内容、生成格式良好的文本、回应用户查询和推荐最新视频。<br/>`视频评论` `弹幕提取` `bilibili` `哔哩哔哩` `视频搜索` |
+| [Steam 游戏评测](https://chat-preview.lobehub.com/market?agent=steam-agent)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-27**</sup>   | Steam 游戏专家顾问，热门游戏推荐和深度游戏解析<br/>`steam` `游戏推荐` `游戏测评`                                                             |
+| [烹饪 AI 导师](https://chat-preview.lobehub.com/market?agent=chef)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup>                          | AI 大厨助手：激发家庭厨师对国际美食、食谱和烹饪专业知识的热爱。<br/>`烹饪` `食谱` `烹饪` `技巧` `膳食规划`                                   |
+| [AI 进出口顾问](https://chat-preview.lobehub.com/market?agent=import-and-export-advisor)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup>    | AI 进出口顾问：提供全球贸易、海关法规、文件、贸易协定和风险管理方面的指导。<br/>`进出口` `贸易` `咨询`                                       |
 
-> 📊 Total agents: [<kbd>**123**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**125**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
