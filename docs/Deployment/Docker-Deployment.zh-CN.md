@@ -156,7 +156,7 @@ services:
 
 #### Crontab 自动更新脚本
 
-类似地，你可以使用一下脚本来自动更新 Lobe Chat，使用 `Docker Compose` 时，环境变量无需额外配置。
+类似地，你可以使用以下脚本来自动更新 Lobe Chat，使用 `Docker Compose` 时，环境变量无需额外配置。
 
 ```bash
 #!/bin/bash
