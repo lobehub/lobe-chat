@@ -166,7 +166,7 @@
     "fake-indexeddb": "^5",
     "glob": "^10",
     "husky": "^8",
-    "jsdom": "^23",
+    "jsdom": "^24.0.0",
     "just-diff": "^6",
     "lint-staged": "^15",
     "lodash": "^4",
