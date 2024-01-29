@@ -83,6 +83,7 @@
     "ahooks": "^3",
     "ai": "^2",
     "antd": "^5",
+    "ahooks": "3.7.8",
     "antd-style": "^3",
     "brotli-wasm": "^2",
     "chroma-js": "^2",
