@@ -52,6 +52,7 @@ const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
               title={t('unlock.password.title')}
             >
               <Input.Password
+                autoComplete={'new-password'}
                 onChange={(e) => {
                   setSettings({ password: e.target.value });
                 }}
