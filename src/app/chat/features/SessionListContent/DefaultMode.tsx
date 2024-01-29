@@ -40,7 +40,7 @@ const SessionListContent = memo(() => {
       [
         pinnedSessions.length > 0 && {
           children: <SessionList dataSource={pinnedSessions} />,
-          extra: <Actions openConfigModal={() => setConfigGroupModalOpen(true)} />,
+          extra: <Actions isPinned openConfigModal={() => setConfigGroupModalOpen(true)} />,
           key: SessionDefaultGroup.Pinned,
           label: t('pin'),
         },
