@@ -23,7 +23,8 @@ class _SessionModel extends BaseModel {
 
   async create(type: 'agent' | 'group', defaultValue: Partial<LobeAgentSession>, id = uuid()) {
     const data = merge(DEFAULT_AGENT_LOBE_SESSION, { type, ...defaultValue });
-    return this._add(data, id);
+    const dataDB = this.mapToDB_Session(data);
+    return this._add(dataDB, id);
   }
 
   async batchCreate(sessions: LobeAgentSession[]) {
