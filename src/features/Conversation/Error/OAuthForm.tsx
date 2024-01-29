@@ -6,13 +6,9 @@ import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { getClientConfig } from '@/config/client';
 import { useChatStore } from '@/store/chat';
 
 import { FormAction } from './style';
-
-const { ENABLE_OAUTH } = getClientConfig();
-export const isEnableOauthTab = ENABLE_OAUTH;
 
 const OAuthForm = memo<{ id: string }>(({ id }) => {
   const { t } = useTranslation('error');

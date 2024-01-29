@@ -1,12 +1,16 @@
 import NextAuth from 'next-auth';
 import Auth0 from 'next-auth/providers/auth0';
 
+import { getServerConfig } from '@/config/server';
+
+const { AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_ISSUER } = getServerConfig();
+
 const nextAuth = NextAuth({
   providers: [
     Auth0({
-      clientId: process.env.AUTH0_CLIENT_ID || '',
-      clientSecret: process.env.AUTH0_CLIENT_SECRET || '',
-      issuer: process.env.AUTH0_ISSUER,
+      clientId: AUTH0_CLIENT_ID || '',
+      clientSecret: AUTH0_CLIENT_SECRET || '',
+      issuer: AUTH0_ISSUER,
     }),
   ],
 });

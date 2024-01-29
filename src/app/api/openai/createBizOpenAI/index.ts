@@ -19,7 +19,6 @@ export const createBizOpenAI = (req: Request, model: string): Response | OpenAI 
 
   const result = checkAuth({ accessCode, apiKey, oauthAuthorized });
 
-  // TODO: Verify more auth conditions
   if (!result.auth) {
     return createErrorResponse(result.error as ErrorType);
   }

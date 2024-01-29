@@ -1,5 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { Button, Input, Segmented } from 'antd';
+import { SegmentedLabeledOption } from 'antd/es/segmented';
 import { AsteriskSquare, KeySquare, ScanFace } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +11,7 @@ import { useGlobalStore } from '@/store/global';
 
 import { RenderErrorMessage } from '../types';
 import APIKeyForm from './ApiKeyForm';
-import OAuthForm, { isEnableOauthTab } from './OAuthForm';
+import OAuthForm from './OAuthForm';
 import { ErrorActionContainer, FormAction } from './style';
 
 enum Tab {
@@ -21,10 +22,14 @@ enum Tab {
 
 const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
   const { t } = useTranslation('error');
-  const defaultTab = isEnableOauthTab ? Tab.Oauth : Tab.Password;
+
+  const [isEnabledOAuth] = useGlobalStore((s) => [s.serverConfig.enabledOAuthSSO]);
+
+  const defaultTab = isEnabledOAuth ? Tab.Oauth : Tab.Password;
   const [mode, setMode] = useState<Tab>(defaultTab);
 
   const [password, setSettings] = useGlobalStore((s) => [s.settings.password, s.setSettings]);
+
   const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
 
   return (
@@ -33,28 +38,21 @@ const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
         block
         onChange={(value) => setMode(value as Tab)}
         options={
-          isEnableOauthTab
-            ? [
-                {
+          [
+            isEnabledOAuth
+              ? {
                   icon: <Icon icon={ScanFace} />,
                   label: t('oauth', { ns: 'common' }),
                   value: Tab.Oauth,
-                },
-                {
-                  icon: <Icon icon={AsteriskSquare} />,
-                  label: t('password', { ns: 'common' }),
-                  value: Tab.Password,
-                },
-                { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: Tab.Api },
-              ]
-            : [
-                {
-                  icon: <Icon icon={AsteriskSquare} />,
-                  label: t('password', { ns: 'common' }),
-                  value: Tab.Password,
-                },
-                { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: Tab.Api },
-              ]
+                }
+              : undefined,
+            {
+              icon: <Icon icon={AsteriskSquare} />,
+              label: t('password', { ns: 'common' }),
+              value: Tab.Password,
+            },
+            { icon: <Icon icon={KeySquare} />, label: 'OpenAI API Key', value: Tab.Api },
+          ].filter(Boolean) as SegmentedLabeledOption[]
         }
         style={{ width: '100%' }}
         value={mode}
@@ -98,7 +96,7 @@ const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
           </>
         )}
         {mode === Tab.Api && <APIKeyForm id={id} />}
-        {isEnableOauthTab && mode === Tab.Oauth && <OAuthForm id={id} />}
+        {isEnabledOAuth && mode === Tab.Oauth && <OAuthForm id={id} />}
       </Flexbox>
     </ErrorActionContainer>
   );

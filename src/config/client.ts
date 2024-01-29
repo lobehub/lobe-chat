@@ -57,7 +57,4 @@ export const getClientConfig = () => ({
 
   // developer debug mode
   DEBUG_MODE: process.env.NEXT_PUBLIC_DEVELOPER_DEBUG === '1',
-
-  //TODO: use a more extensible way to config whether to show the OAuth Tab
-  ENABLE_OAUTH: process.env.NEXT_PUBLIC_ENABLE_OAUTH === '1',
 });

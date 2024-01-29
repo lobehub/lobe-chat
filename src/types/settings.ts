@@ -65,4 +65,5 @@ export type ConfigKeys = keyof GlobalSettings;
 
 export interface GlobalServerConfig {
   customModelName?: string;
+  enabledOAuthSSO?: boolean;
 }
