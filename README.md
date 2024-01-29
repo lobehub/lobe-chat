@@ -42,6 +42,8 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 
 <sup>Pioneering the new age of thinking and creating. Built for you, the Super Individual.</sup>
 
+[![][github-trending-shield]][github-trending-url]
+
 ![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
 
 </div>
@@ -184,14 +186,14 @@ e-commerce platform data access, and various third-party services.
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                       | Description                                                                                                                             |
-| -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| [Current Time Assistant](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-01-26**</sup> | A plugin to provide current time information<br/>`time`                                                                                 |
-| [AladinBooks](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **azurewebsites** on **2024-01-25**</sup> | Search for books on Aladin.<br/>`book` `search`                                                                                         |
-| [Bardeen](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **prod** on **2024-01-25**</sup>              | Create and run automations on the most popular web services.<br/>`workflow` `automatic`                                                 |
-| [ImageSearch](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **aigenprompt** on **2024-01-25**</sup>   | Discover complimentary images to enhance your generated article or to highlight specific paragraphs from Unsplash.<br/>`image` `search` |
+| Recent Submits                                                                                                       | Description                                                                                                                                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup>    | Get realtime crypto price, BTC, ETH, BNB, and the latest insights.The latest coin news and airdrop opportunities.<br/>`crypto` `btc` `eth` `bnb`                                                                                |
+| [Bilibili](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>          | Dive into Bilibili's vast content with features like keyword video search, replay access, interactive danmaku, trending video recommendations, and hot-search insights, all at your fingertips.<br/>`video` `bilibili` `search` |
+| [Steam](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>             | Obtain game information and user reviews from Steam.<br/>`steam` `game`                                                                                                                                                         |
+| [Current Time Assistant](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-01-26**</sup> | A plugin to provide current time information<br/>`time`                                                                                                                                                                         |
 
-> 📊 Total plugins: [<kbd>**59**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**60**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -223,14 +225,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                    | Description                                                                                                                                                                           |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Culinary AI Mentor](https://chat-preview.lobehub.com/market?agent=chef)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup>                            | AI Master Chef Assistant: Inspiring home cooks with international cuisines, recipes, and culinary expertise.<br/>`cooking` `recipe` `culinary` `techniques` `meal-planning`           |
-| [AI Import/Export Advisor](https://chat-preview.lobehub.com/market?agent=import-and-export-advisor)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup> | AI Import and Export Advisor: Providing guidance on global trade, customs regulations, documentation, trade agreements, and risk management.<br/>`import-export` `trade` `consulting` |
-| [OpenAPI Generator](https://chat-preview.lobehub.com/market?agent=openapi-generator)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-26**</sup>  | Parse interface documents and generate openapi.json required by ChatGPT Tool<br/>`automation-tool` `interface-documents` `workflow` `openapi`                                         |
-| [ShieldsIO Badge Generator](https://chat-preview.lobehub.com/market?agent=shields-io)<br/><sup>By **[Justin3go](https://github.com/Justin3go)** on **2024-01-26**</sup>           | Specializes in using `shields.io` to generate stylish badges<br/>`badge-generator` `styling` `ui-design` `markdown` `technology-stack` `shields-io`                                   |
+| Recent Submits                                                                                                                                                                    | Description                                                                                                                                                                                                                             |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Bilibili Assistant](https://chat-preview.lobehub.com/market?agent=bilibili-agent)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-27**</sup>    | Bilibili Assistant, proficient in parsing video content, generating well-formatted text, responding to user queries, and recommending the latest videos.<br/>`video-comments` `danmaku-extraction` `bilibili` `bilibili` `video-search` |
+| [Steam Game Reviews](https://chat-preview.lobehub.com/market?agent=steam-agent)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-27**</sup>       | Steam game expert consultant, popular game recommendations and in-depth game analysis<br/>`steam` `game-recommendations` `game-reviews`                                                                                                 |
+| [Culinary AI Mentor](https://chat-preview.lobehub.com/market?agent=chef)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup>                            | AI Master Chef Assistant: Inspiring home cooks with international cuisines, recipes, and culinary expertise.<br/>`cooking` `recipe` `culinary` `techniques` `meal-planning`                                                             |
+| [AI Import/Export Advisor](https://chat-preview.lobehub.com/market?agent=import-and-export-advisor)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup> | AI Import and Export Advisor: Providing guidance on global trade, customs regulations, documentation, trade agreements, and risk management.<br/>`import-export` `trade` `consulting`                                                   |
 
-> 📊 Total agents: [<kbd>**123**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**125**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -355,7 +357,7 @@ If you want to deploy this service yourself on either Vercel or Zeabur, you can 
 
 <div align="center">
 
-|           Deploy with Vercel            |                     Deploy with Zeabur                      |                     Deploy with Sealos                      |
+|            Deploy with Vercel           |                      Deploy with Zeabur                     |                      Deploy with Sealos                     |
 | :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: |
 | [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] |
 
@@ -633,6 +635,8 @@ This project is [MIT](./LICENSE) licensed.
 [github-releasedate-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?labelColor=black&style=flat-square
 [github-stars-link]: https://github.com/lobehub/lobe-chat/network/stargazers
 [github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
+[github-trending-shield]: https://trendshift.io/api/badge/repositories/2256
+[github-trending-url]: https://trendshift.io/repositories/2256
 [github-wiki-link]: https://github.com/lobehub/lobe-chat/wiki
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets
@@ -654,7 +658,7 @@ This project is [MIT](./LICENSE) licensed.
 [profile-link]: https://github.com/lobehub
 [share-linkedin-link]: https://linkedin.com/feed
 [share-linkedin-shield]: https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
-[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source,%20extensible%20(Function%20Calling),%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT/LLM%20web%20application.%20https://github.com/lobehub/lobe-chat%20#chatbot%20#chatGPT%20#openAI
+[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source,%20extensible%20\(Function%20Calling\),%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT/LLM%20web%20application.%20https://github.com/lobehub/lobe-chat%20#chatbot%20#chatGPT%20#openAI
 [share-mastodon-shield]: https://img.shields.io/badge/-share%20on%20mastodon-black?labelColor=black&logo=mastodon&logoColor=white&style=flat-square
 [share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
 [share-reddit-shield]: https://img.shields.io/badge/-share%20on%20reddit-black?labelColor=black&logo=reddit&logoColor=white&style=flat-square
@@ -666,7 +670,7 @@ This project is [MIT](./LICENSE) licensed.
 [share-whatsapp-shield]: https://img.shields.io/badge/-share%20on%20whatsapp-black?labelColor=black&logo=whatsapp&logoColor=white&style=flat-square
 [share-x-link]: https://x.com/intent/tweet?hashtags=chatbot%2CchatGPT%2CopenAI&text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
 [share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
-[sponsor-link]: https://opencollective.com/lobehub 'Become 🩷 LobeHub Sponsor'
+[sponsor-link]: https://opencollective.com/lobehub "Become 🩷 LobeHub Sponsor"
 [sponsor-shield]: https://img.shields.io/badge/-Sponsor%20LobeHub-f04f88?logo=opencollective&logoColor=white&style=flat-square
 [submit-agents-link]: https://github.com/lobehub/lobe-chat-agents
 [submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-c4f042?labelColor=black&style=for-the-badge
