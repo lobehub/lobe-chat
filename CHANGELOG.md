@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.121.4](https://github.com/lobehub/lobe-chat/compare/v0.121.3...v0.121.4)
+
+<sup>Released on **2024-01-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin ahooks to fix test ci and settings crash.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin ahooks to fix test ci and settings crash, closes [#1178](https://github.com/lobehub/lobe-chat/issues/1178) ([bc223a4](https://github.com/lobehub/lobe-chat/commit/bc223a4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.121.3](https://github.com/lobehub/lobe-chat/compare/v0.121.2...v0.121.3)
 
 <sup>Released on **2024-01-26**</sup>
