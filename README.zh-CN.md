@@ -40,6 +40,8 @@ LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多�
 
 <sup>探索私人生产力的未来。在个体崛起的时代中为你打造.</sup>
 
+[![][github-trending-shield]][github-trending-url]
+
 ![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
 
 </div>
@@ -203,14 +205,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                  | 助手说明                                                                                                                                     |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Bilibili 助手](https://chat-preview.lobehub.com/market?agent=bilibili-agent)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-27**</sup> | Bilibili 助手，擅长解析视频内容、生成格式良好的文本、回应用户查询和推荐最新视频。<br/>`视频评论` `弹幕提取` `bilibili` `哔哩哔哩` `视频搜索` |
-| [Steam 游戏评测](https://chat-preview.lobehub.com/market?agent=steam-agent)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-27**</sup>   | Steam 游戏专家顾问，热门游戏推荐和深度游戏解析<br/>`steam` `游戏推荐` `游戏测评`                                                             |
-| [烹饪 AI 导师](https://chat-preview.lobehub.com/market?agent=chef)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup>                          | AI 大厨助手：激发家庭厨师对国际美食、食谱和烹饪专业知识的热爱。<br/>`烹饪` `食谱` `烹饪` `技巧` `膳食规划`                                   |
-| [AI 进出口顾问](https://chat-preview.lobehub.com/market?agent=import-and-export-advisor)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup>    | AI 进出口顾问：提供全球贸易、海关法规、文件、贸易协定和风险管理方面的指导。<br/>`进出口` `贸易` `咨询`                                       |
+| 最近新增                                                                                                                                                                             | 助手说明                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [领土推广策略师](https://chat-preview.lobehub.com/market?agent=biskaya)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-29**</sup>                                | 领土竞争力和推广专家<br/>`territorial-competitiveness` `promotion` `consulting` `marketing` `event-coordination`                                                                                                                                                                         |
+| [毕尔巴鄂创业专家](https://chat-preview.lobehub.com/market?agent=bizkaia-entrepreneurship-expert)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-29**</sup>      | 毕尔巴鄂代表处的创业和竞争力专家，为当地企业家提供定制指导和支持。<br/>`毕尔巴鄂` `创业` `咨询` `指导` `本地商业生态系统` `市场动态` `商业计划` `财务模型` `融资策略` `营销` `品牌塑造` `销售策略` `社交网络` `创业项目` `指导` `本地资源` `融资机会` `合作` `可持续商业实践` `经济发展` |
+| [英语 C1 级精通教练](https://chat-preview.lobehub.com/market?agent=english-language-c-1-mastery-coach)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-29**</sup> | C1 级别的英语会话伙伴<br/>`英语会话` `语言熟练度` `高级水平` `语言辅导` `流利度`                                                                                                                                                                                                         |
+| [软件架构策略师](https://chat-preview.lobehub.com/market?agent=software-architecture-strategist)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-29**</sup>       | 软件开发架构师：设计可扩展和安全的软件系统，指导开发团队，并将业务需求转化为技术解决方案。<br/>`软件开发` `架构` `设计` `领导力` `沟通`                                                                                                                                                  |
 
-> 📊 Total agents: [<kbd>**125**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**139**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -649,6 +651,8 @@ This project is [MIT](./LICENSE) licensed.
 [github-releasedate-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?labelColor=black&style=flat-square
 [github-stars-link]: https://github.com/lobehub/lobe-chat/network/stargazers
 [github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
+[github-trending-shield]: https://trendshift.io/api/badge/repositories/2256
+[github-trending-url]: https://trendshift.io/repositories/2256
 [github-wiki-link]: https://github.com/lobehub/lobe-chat/wiki
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets
