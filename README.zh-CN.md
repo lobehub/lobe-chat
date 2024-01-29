@@ -40,6 +40,8 @@ LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多�
 
 <sup>探索私人生产力的未来。在个体崛起的时代中为你打造.</sup>
 
+[![][github-trending-shield]][github-trending-url]
+
 ![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
 
 </div>
@@ -168,14 +170,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                     | 插件描述                                                                                          |
-| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| [GameSight](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **tapapis** on **2024-01-23**</sup> | 发现游戏、与游戏相关的内容、获取推荐，并根据玩家评价比较游戏。<br/>`游戏` `搜索`                  |
-| [txyz.ai](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **txyz** on **2024-01-23**</sup>      | 探索研究的宇宙。搜索和比较论文，并回答问题。<br/>`research-paper` `search`                        |
-| [SEO](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **orrenprunckun** on **2024-01-23**</sup> | 输入任何 URL 和关键词，获取页面 SEO 分析和见解！<br/>`seo`                                        |
-| [视频字幕](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **maila** on **2024-01-23**</sup>    | 将 Youtube 链接转换为转录文本，使其能够提问，创建章节，并总结其内容。<br/>`视频转文字` `you-tube` |
+| 最近新增                                                                                                          | 插件描述                                                                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br/>`加密货币` `btc` `eth` `bnb`                                     |
+| [哔哩哔哩](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>       | 通过关键词视频搜索、回放访问、互动弹幕、热门视频推荐和热搜洞察等功能，深入体验哔哩哔哩丰富的内容，尽在您的指尖。<br/>`视频` `哔哩哔哩` `搜索` |
+| [Steam](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>          | 从 Steam 获取游戏信息和用户评论。<br/>`steam` `game`                                                                                          |
+| [当前时间助手](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-01-26**</sup>        | 提供当前时间信息的插件<br/>`时间`                                                                                                             |
 
-> 📊 Total plugins: [<kbd>**40**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**60**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -203,14 +205,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                    | 助手说明                                                                                                                                                          |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [意图共鸣 GPT](https://chat-preview.lobehub.com/market?agent=intention-resonates-gpt)<br/><sup>By **[AIConductor](https://github.com/AIConductor)** on **2024-01-24**</sup> | 一个专注于深度理解用户需求的 AI，通过不断的意图对齐过程，精确捕捉用户意图和需求，并提供最适合的解决方案。<br/>`对话` `深度理解`                                   |
-| [初创科技律师](https://chat-preview.lobehub.com/market?agent=tech-lawyer)<br/><sup>By **[daniel-jojo](https://github.com/daniel-jojo)** on **2024-01-23**</sup>             | 初创科技公司的内部法律顾问，提供清晰、实用的法律建议，支持初创公司的增长并保护其利益。<br/>`知识产权法` `数据隐私合规` `合同谈判` `科技初创法律策略` `雇佣法指导` |
-| [购物助手](https://chat-preview.lobehub.com/market?agent=shop)<br/><sup>By **[guluahljj](https://github.com/guluahljj)** on **2024-01-22**</sup>                            | 购物助手，擅长商品搜索、比价和提供购买链接<br/>`购物助手` `商品搜索` `比价` `购买建议` `客户咨询` `agulu`                                                         |
-| [会计专家助手](https://chat-preview.lobehub.com/market?agent=accounting)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-21**</sup>                      | 会计代理：为全球个人和企业提供全面的会计支持和专业知识。<br/>`会计` `财务管理` `税务规划` `预算编制`                                                              |
+| 最近新增                                                                                                                                                                             | 助手说明                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [领土推广策略师](https://chat-preview.lobehub.com/market?agent=biskaya)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-29**</sup>                                | 领土竞争力和推广专家<br/>`territorial-competitiveness` `promotion` `consulting` `marketing` `event-coordination`                                                                                                                                                                         |
+| [毕尔巴鄂创业专家](https://chat-preview.lobehub.com/market?agent=bizkaia-entrepreneurship-expert)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-29**</sup>      | 毕尔巴鄂代表处的创业和竞争力专家，为当地企业家提供定制指导和支持。<br/>`毕尔巴鄂` `创业` `咨询` `指导` `本地商业生态系统` `市场动态` `商业计划` `财务模型` `融资策略` `营销` `品牌塑造` `销售策略` `社交网络` `创业项目` `指导` `本地资源` `融资机会` `合作` `可持续商业实践` `经济发展` |
+| [英语 C1 级精通教练](https://chat-preview.lobehub.com/market?agent=english-language-c-1-mastery-coach)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-29**</sup> | C1 级别的英语会话伙伴<br/>`英语会话` `语言熟练度` `高级水平` `语言辅导` `流利度`                                                                                                                                                                                                         |
+| [软件架构策略师](https://chat-preview.lobehub.com/market?agent=software-architecture-strategist)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-29**</sup>       | 软件开发架构师：设计可扩展和安全的软件系统，指导开发团队，并将业务需求转化为技术解决方案。<br/>`软件开发` `架构` `设计` `领导力` `沟通`                                                                                                                                                  |
 
-> 📊 Total agents: [<kbd>**114**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**139**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -649,6 +651,8 @@ This project is [MIT](./LICENSE) licensed.
 [github-releasedate-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?labelColor=black&style=flat-square
 [github-stars-link]: https://github.com/lobehub/lobe-chat/network/stargazers
 [github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
+[github-trending-shield]: https://trendshift.io/api/badge/repositories/2256
+[github-trending-url]: https://trendshift.io/repositories/2256
 [github-wiki-link]: https://github.com/lobehub/lobe-chat/wiki
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets

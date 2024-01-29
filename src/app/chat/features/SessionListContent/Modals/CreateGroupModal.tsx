@@ -27,7 +27,6 @@ const CreateGroupModal = memo<CreateGroupModalProps>(
       <div onClick={(e) => e.stopPropagation()}>
         <Modal
           allowFullscreen
-          centered
           onCancel={onCancel}
           onOk={async (e: MouseEvent<HTMLButtonElement>) => {
             if (!input) return;

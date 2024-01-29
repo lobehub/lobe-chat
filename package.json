@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.121.0",
+  "version": "0.121.4",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -80,7 +80,7 @@
     "@lobehub/tts": "latest",
     "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",
-    "ahooks": "^3",
+    "ahooks": "3.7.8",
     "ai": "^2",
     "antd": "^5",
     "antd-style": "^3",
@@ -167,7 +167,7 @@
     "fake-indexeddb": "^5",
     "glob": "^10",
     "husky": "^8",
-    "jsdom": "^23",
+    "jsdom": "^24.0.0",
     "just-diff": "^6",
     "lint-staged": "^15",
     "lodash": "^4",

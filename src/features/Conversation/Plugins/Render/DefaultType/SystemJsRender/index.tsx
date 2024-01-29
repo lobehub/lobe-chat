@@ -8,18 +8,23 @@ interface SystemJsRenderProps extends PluginRenderProps {
   url: string;
 }
 
+const RenderCache: {
+  [url: string]: PluginRender;
+} = {};
+
 const SystemJsRender = memo<SystemJsRenderProps>(({ url, ...props }) => {
-  const [component, setComp] = useState<PluginRender | null>(null);
+  const [component, setComp] = useState<PluginRender | undefined>(RenderCache[url]);
 
   useEffect(() => {
     system
       .import(url)
       .then((module1) => {
         setComp(module1.default);
+        RenderCache[url] = module1.default;
         // 使用module1模块
       })
       .catch((error) => {
-        setComp(null);
+        setComp(undefined);
         console.error(error);
       });
   }, [url]);
