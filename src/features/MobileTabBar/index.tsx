@@ -62,6 +62,7 @@ export default memo<{ className?: string }>(({ className }) => {
       className={className}
       items={items}
       onChange={(key) => setTab(key as any)}
+      safeArea
     />
   );
 });
