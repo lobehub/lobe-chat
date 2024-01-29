@@ -6,10 +6,11 @@ import {
   USE_AZURE_OPENAI,
 } from '@/const/fetch';
 import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/selectors';
 
 // eslint-disable-next-line no-undef
 export const createHeaderWithOpenAI = (header?: HeadersInit): HeadersInit => {
-  const openai = useGlobalStore.getState().settings.languageModel.openAI;
+  const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());
 
   const apiKey = openai.OPENAI_API_KEY || '';
   const endpoint = openai.endpoint || '';

@@ -1,22 +1,31 @@
 import { z } from 'zod';
 
-import { AgentSchema } from './session';
+import { AgentSchema } from '@/database/schemas/session';
+import { LobeMetaDataSchema } from '@/types/meta';
 
 const modelProviderSchema = z.object({
   openai: z.object({
-    OPENAI_API_KEY: z.string(),
+    OPENAI_API_KEY: z.string().optional(),
     azureApiVersion: z.string().optional(),
     customModelName: z.string().optional(),
     endpoint: z.string().optional(),
     models: z.array(z.string()).optional(),
     useAzure: z.boolean().optional(),
   }),
+  // zhipu: z.object({
+  //   ZHIPU_API_KEY: z.string().optional(),
+  //   enabled: z.boolean().default(false),
+  // }),
 });
 
 const settingsSchema = z.object({
-  defaultAgent: AgentSchema,
+  defaultAgent: z.object({
+    config: AgentSchema,
+    meta: LobeMetaDataSchema,
+  }),
   fontSize: z.number().default(14),
   language: z.string(),
+  languageModel: modelProviderSchema.partial(),
   password: z.string(),
   themeMode: z.string(),
   tts: z.object({
@@ -29,11 +38,20 @@ const settingsSchema = z.object({
   }),
 });
 
+// const patchSchema = z.array(
+//   z.object({
+//     op: z.string(),
+//     path: z.string(),
+//     value: z.any(),
+//   }),
+// );
+
 export const DB_UserSchema = z.object({
-  /**
-   * file data array buffer
-   */
-  avatar: z.instanceof(ArrayBuffer),
+  avatar: z.string().optional(),
+  settings: settingsSchema.partial(),
+  // settings: patchSchema,
 });
 
-export type DB_Topic = z.infer<typeof DB_UserSchema>;
+export type DB_User = z.infer<typeof DB_UserSchema>;
+
+export type DB_Settings = z.infer<typeof settingsSchema>;

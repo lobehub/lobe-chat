@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import { createI18nNext } from '@/locales/create';
 import { normalizeLocale } from '@/locales/resources';
 import { useOnFinishHydrationGlobal } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { isOnServerSide } from '@/utils/env';
 import { switchLang } from '@/utils/switchLang';
 
@@ -48,7 +49,7 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
   }
 
   useOnFinishHydrationGlobal((s) => {
-    if (s.settings.language === 'auto') {
+    if (settingsSelectors.currentSettings(s).language === 'auto') {
       switchLang('auto');
     }
   }, []);

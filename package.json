@@ -92,7 +92,6 @@
     "gpt-tokenizer": "^2",
     "i18next": "^23",
     "i18next-browser-languagedetector": "^7",
-    "i18next-resources-for-ts": "^1",
     "i18next-resources-to-backend": "^1",
     "idb-keyval": "^6",
     "immer": "^10",

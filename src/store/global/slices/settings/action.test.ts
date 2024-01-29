@@ -54,7 +54,7 @@ describe('SettingsAction', () => {
         result.current.setOpenAIConfig(openAIConfig);
       });
 
-      expect(result.current.settings.languageModel.openAI.OPENAI_API_KEY).toEqual(
+      expect(result.current.settings.languageModel?.openAI?.OPENAI_API_KEY).toEqual(
         openAIConfig.OPENAI_API_KEY,
       );
     });
