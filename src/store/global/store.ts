@@ -11,16 +11,18 @@ import { isDev } from '@/utils/env';
 import { createHyperStorage } from '../middleware/createHyperStorage';
 import { type GlobalState, initialState } from './initialState';
 import { type CommonAction, createCommonSlice } from './slices/common/action';
+import { type PreferenceAction, createPreferenceSlice } from './slices/preference/action';
 import { type SettingsAction, createSettingsSlice } from './slices/settings/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type GlobalStore = CommonAction & GlobalState & SettingsAction;
+export type GlobalStore = CommonAction & GlobalState & SettingsAction & PreferenceAction;
 
 const createStore: StateCreator<GlobalStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createCommonSlice(...parameters),
   ...createSettingsSlice(...parameters),
+  ...createPreferenceSlice(...parameters),
 });
 
 //  ===============  persist 本地缓存中间件配置 ============ //
