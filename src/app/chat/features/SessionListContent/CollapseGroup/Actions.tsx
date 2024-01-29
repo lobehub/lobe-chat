@@ -20,6 +20,9 @@ interface ActionsProps extends Pick<DropdownProps, 'onOpenChange'> {
   openRenameModal?: () => void;
 }
 
+type ItemOfType<T> = T extends (infer Item)[] ? Item : never;
+type MenuItemType = ItemOfType<MenuProps['items']>;
+
 const Actions = memo<ActionsProps>(
   ({ id, openRenameModal, openConfigModal, onOpenChange, isCustomGroup, isPinned }) => {
     const { t } = useTranslation('chat');
@@ -30,29 +33,33 @@ const Actions = memo<ActionsProps>(
       s.createSession,
       s.removeSessionGroup,
     ]);
-    const publicItems: MenuProps['items'] = [
-      {
-        icon: <Icon icon={Settings2} />,
-        key: 'config',
-        label: t('sessionGroup.config'),
-        onClick: ({ domEvent }) => {
-          domEvent.stopPropagation();
-          openConfigModal();
-        },
+
+    const sessionGroupConfigPublicItem: MenuItemType = {
+      icon: <Icon icon={Settings2} />,
+      key: 'config',
+      label: t('sessionGroup.config'),
+      onClick: ({ domEvent }) => {
+        domEvent.stopPropagation();
+        openConfigModal();
       },
-      {
-        icon: <Icon icon={Plus} />,
-        key: 'newAgent',
-        label: t('newAgent'),
-        onClick: ({ domEvent }) => {
-          domEvent.stopPropagation();
-          createSession({ group: id, pinned: isPinned });
-        },
+    };
+
+    const newAgentPublicItem: MenuItemType = {
+      icon: <Icon icon={Plus} />,
+      key: 'newAgent',
+      label: t('newAgent'),
+      onClick: ({ domEvent }) => {
+        domEvent.stopPropagation();
+        createSession({ group: id, pinned: isPinned });
       },
-    ];
+    };
 
     const customGroupItems: MenuProps['items'] = useMemo(
       () => [
+        newAgentPublicItem,
+        {
+          type: 'divider',
+        },
         {
           icon: <Icon icon={PencilLine} />,
           key: 'rename',
@@ -62,7 +69,7 @@ const Actions = memo<ActionsProps>(
             openRenameModal?.();
           },
         },
-        ...publicItems,
+        sessionGroupConfigPublicItem,
         {
           type: 'divider',
         },
@@ -89,7 +96,16 @@ const Actions = memo<ActionsProps>(
       [],
     );
 
-    const defaultItems: MenuProps['items'] = useMemo(() => [...publicItems], []);
+    const defaultItems: MenuProps['items'] = useMemo(
+      () => [
+        newAgentPublicItem,
+        {
+          type: 'divider',
+        },
+        sessionGroupConfigPublicItem,
+      ],
+      [],
+    );
 
     return (
       <Dropdown
