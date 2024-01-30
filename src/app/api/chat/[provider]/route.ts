@@ -1,5 +1,5 @@
 import { getPreferredRegion } from '@/app/api/config';
-import { createErrorResponse } from '@/app/api/openai/errorResponse';
+import { createErrorResponse } from '@/app/api/errorResponse';
 import {
   CompletionError,
   LobeOpenAI,

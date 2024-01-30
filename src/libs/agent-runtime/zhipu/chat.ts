@@ -1,17 +1,20 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
+import { consola } from 'consola';
 import OpenAI from 'openai';
 
+import { getServerConfig } from '@/config/server';
 import { ChatErrorType } from '@/types/fetch';
 
 import { CreateChatCompletionOptions, ModelProvider } from '../type';
+import { debugStream } from '../utils/debugStream';
 
+const { DEBUG_CHAT_COMPLETION } = getServerConfig();
 export const createChatCompletion = async ({ payload, chatModel }: CreateChatCompletionOptions) => {
   // ============  1. preprocess messages   ============ //
   const { messages, top_p, ...params } = payload;
 
   // ============  2. send api   ============ //
 
-  console.log(top_p)
   try {
     const response = await chatModel.chat.completions.create(
       {
@@ -23,8 +26,13 @@ export const createChatCompletion = async ({ payload, chatModel }: CreateChatCom
       } as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       { headers: { Accept: '*/*' } },
     );
+    const [debugResponseClone, returnResponse] = response.tee();
 
-    const stream = OpenAIStream(response);
+    if (DEBUG_CHAT_COMPLETION) {
+      debugStream(debugResponseClone.toReadableStream()).catch(consola.error);
+    }
+
+    const stream = OpenAIStream(returnResponse);
     return new StreamingTextResponse(stream);
   } catch (error) {
     let errorType: any = ChatErrorType.OpenAIBizError;

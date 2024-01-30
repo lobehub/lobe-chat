@@ -18,7 +18,7 @@ const LLM = memo(() => {
   const [form] = AntForm.useForm();
 
   const [enabledZhipu, setSettings] = useGlobalStore((s) => [
-    modelProviderSelectors.enabledZhipu(s),
+    modelProviderSelectors.enableZhipu(s),
     s.setSettings,
   ]);
 
@@ -28,7 +28,7 @@ const LLM = memo(() => {
     form.setFieldsValue(settings);
   }, []);
 
-  const openAI: ItemGroup = {
+  const model: ItemGroup = {
     children: [
       {
         children: (
@@ -51,8 +51,8 @@ const LLM = memo(() => {
     defaultActive: enabledZhipu,
     extra: (
       <Switch
-        onChange={(e) => {
-          console.log(e);
+        onChange={(enabled) => {
+          setSettings({ languageModel: { zhipu: { enabled } } });
         }}
         value={enabledZhipu}
       />
@@ -62,12 +62,7 @@ const LLM = memo(() => {
   };
 
   return (
-    <Form
-      form={form}
-      items={[openAI]}
-      onValuesChange={debounce(setSettings, 100)}
-      {...FORM_STYLE}
-    />
+    <Form form={form} items={[model]} onValuesChange={debounce(setSettings, 100)} {...FORM_STYLE} />
   );
 });
 

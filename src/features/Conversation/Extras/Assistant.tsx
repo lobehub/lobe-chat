@@ -29,7 +29,7 @@ export const AssistantMessageExtra: RenderMessageExtra = memo<ChatMessage>(
       <Flexbox gap={8} style={{ marginTop: 8 }}>
         {showModelTag && (
           <div>
-            <ModelTag name={extra?.fromModel as string} />
+            <ModelTag name={extra?.fromModel as string} provider={extra?.fromProvider} />
           </div>
         )}
         <>

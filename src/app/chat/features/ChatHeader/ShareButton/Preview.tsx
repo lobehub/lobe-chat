@@ -15,16 +15,25 @@ import { FieldType } from './type';
 
 const Preview = memo<FieldType & { title?: string }>(
   ({ title, withSystemRole, withBackground, withFooter }) => {
-    const [isInbox, description, avatar, backgroundColor, model, plugins, systemRole] =
-      useSessionStore((s) => [
-        sessionSelectors.isInboxSession(s),
-        agentSelectors.currentAgentDescription(s),
-        agentSelectors.currentAgentAvatar(s),
-        agentSelectors.currentAgentBackgroundColor(s),
-        agentSelectors.currentAgentModel(s),
-        agentSelectors.currentAgentPlugins(s),
-        agentSelectors.currentAgentSystemRole(s),
-      ]);
+    const [
+      isInbox,
+      description,
+      avatar,
+      backgroundColor,
+      model,
+      modelProvider,
+      plugins,
+      systemRole,
+    ] = useSessionStore((s) => [
+      sessionSelectors.isInboxSession(s),
+      agentSelectors.currentAgentDescription(s),
+      agentSelectors.currentAgentAvatar(s),
+      agentSelectors.currentAgentBackgroundColor(s),
+      agentSelectors.currentAgentModel(s),
+      agentSelectors.currentAgentModelProvider(s),
+      agentSelectors.currentAgentPlugins(s),
+      agentSelectors.currentAgentSystemRole(s),
+    ]);
     const { t } = useTranslation('chat');
     const { styles } = useStyles(withBackground);
 
@@ -42,7 +51,7 @@ const Preview = memo<FieldType & { title?: string }>(
                   desc={displayDesc}
                   tag={
                     <>
-                      <ModelTag name={model} />
+                      <ModelTag name={model} provider={modelProvider} />
                       {plugins?.length > 0 && <PluginTag plugins={plugins} />}
                     </>
                   }

@@ -12,7 +12,7 @@ import { generateApiToken } from './authToken';
  * if auth not pass ,just throw an error of {type:  }
  */
 export const createZhipu = async (req: Request): Promise<OpenAI> => {
-  const { accessCode, zhipuApiKey, zhipuProxyUrl } = getOpenAIAuthFromRequest(req);
+  const { accessCode, zhipuApiKey } = getOpenAIAuthFromRequest(req);
 
   const result = checkAuth({ accessCode, apiKey: zhipuApiKey });
 
@@ -20,9 +20,9 @@ export const createZhipu = async (req: Request): Promise<OpenAI> => {
     throw new TypeError(JSON.stringify({ type: result.error }));
   }
 
-  const { ZHIPU_API_KEY, ZHIPU_PROXY_URL } = getServerConfig();
+  const { ZHIPU_API_KEY } = getServerConfig();
 
-  const baseURL = zhipuProxyUrl || ZHIPU_PROXY_URL || 'https://open.bigmodel.cn/api/paas/v4';
+  const baseURL = 'https://open.bigmodel.cn/api/paas/v4';
 
   const apiKey = !zhipuApiKey ? ZHIPU_API_KEY : zhipuApiKey;
 

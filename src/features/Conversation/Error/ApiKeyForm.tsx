@@ -16,7 +16,7 @@ const APIKeyForm = memo<{ id: string }>(({ id }) => {
   const [showProxy, setShow] = useState(false);
 
   const [apiKey, proxyUrl, setConfig] = useGlobalStore((s) => [
-    modelProviderSelectors.openAIAPI(s),
+    modelProviderSelectors.openAIAPIKey(s),
     modelProviderSelectors.openAIProxyUrl(s),
     s.setOpenAIConfig,
   ]);

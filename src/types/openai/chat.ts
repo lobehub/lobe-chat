@@ -1,4 +1,3 @@
-import { ModelProvider } from '@/libs/agent-runtime';
 import { LLMRoleType } from '@/types/llm';
 
 import { OpenAIFunctionCall } from './functionCall';
@@ -70,7 +69,7 @@ export interface ChatStreamPayload {
   /**
    * @default openai
    */
-  provider?: ModelProvider;
+  provider?: string;
   /**
    * @title 是否开启流式请求
    * @default true

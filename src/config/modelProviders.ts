@@ -1,24 +1,6 @@
-interface ChatModelCard {
-  description?: string;
-  displayName?: string;
-  /**
-   * 是否支持 Function Call
-   */
-  functionCall?: boolean;
-  id: string;
-  tokens?: number;
-  /**
-   * 是否支持视觉识别
-   */
-  vision?: boolean;
-}
+import { ModelProviderCard } from '@/types/llm';
 
-interface ModelProvider {
-  chatModels: ChatModelCard[];
-  name: string;
-}
-
-export const ZhiPuModelCard: ModelProvider = {
+export const ZhiPuModelCard: ModelProviderCard = {
   chatModels: [
     {
       description: '最新的 GLM-4 、最大支持 128k 上下文、支持 Function Call 、Retreival',
@@ -41,10 +23,10 @@ export const ZhiPuModelCard: ModelProvider = {
       tokens: 128_000,
     },
   ],
-  name: 'zhipu',
+  id: 'zhipu',
 };
 
-export const OpenAIModelCard: ModelProvider = {
+export const OpenAIModelCard: ModelProviderCard = {
   chatModels: [
     {
       description: 'GPT 3.5 Turbo，适用于各种文本生成和理解任务',
@@ -86,5 +68,5 @@ export const OpenAIModelCard: ModelProvider = {
       vision: true, // 支持视觉任务
     },
   ],
-  name: 'openai',
+  id: 'openai',
 };

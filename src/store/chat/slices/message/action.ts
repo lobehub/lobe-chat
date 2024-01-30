@@ -255,13 +255,14 @@ export const chatMessage: StateCreator<
   coreProcessMessage: async (messages, userMessageId) => {
     const { fetchAIChatMessage, triggerFunctionCall, refreshMessages, activeTopicId } = get();
 
-    const { model } = getAgentConfig();
+    const { model, provider } = getAgentConfig();
 
     // 1. Add an empty message to place the AI response
     const assistantMessage: CreateMessageParams = {
       role: 'assistant',
       content: LOADING_FLAT,
       fromModel: model,
+      fromProvider: provider,
 
       parentId: userMessageId,
       sessionId: get().activeId,
@@ -288,13 +289,14 @@ export const chatMessage: StateCreator<
         const functionMessage: CreateMessageParams = {
           role: 'function',
           content: functionCallContent,
-          extra: {
-            fromModel: model,
-          },
+          fromModel: model,
+          fromProvider: provider,
+
           parentId: userMessageId,
           sessionId: get().activeId,
           topicId: activeTopicId,
         };
+
         functionId = await messageService.create(functionMessage);
       }
 
@@ -376,6 +378,7 @@ export const chatMessage: StateCreator<
         {
           messages: preprocessMsgs,
           model: config.model,
+          provider: config.provider,
           ...config.params,
           plugins: config.plugins,
         },

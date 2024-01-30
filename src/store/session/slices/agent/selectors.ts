@@ -36,6 +36,12 @@ const currentAgentModel = (s: SessionStore): LanguageModel | string => {
   return config?.model || LanguageModel.GPT3_5;
 };
 
+const currentAgentModelProvider = (s: SessionStore) => {
+  const config = currentAgentConfig(s);
+
+  return config?.provider;
+};
+
 const currentAgentPlugins = (s: SessionStore) => {
   const config = currentAgentConfig(s);
 
@@ -121,6 +127,7 @@ export const agentSelectors = {
   currentAgentDescription,
   currentAgentMeta,
   currentAgentModel,
+  currentAgentModelProvider,
   currentAgentPlugins,
   currentAgentSystemRole,
   currentAgentTTS,
