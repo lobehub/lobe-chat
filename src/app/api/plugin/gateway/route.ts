@@ -1,12 +1,13 @@
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { parserPluginSettings } from '@/app/api/plugin/gateway/settings';
 import { getServerConfig } from '@/config/server';
 import { getOpenAIAuthFromRequest } from '@/const/fetch';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 
-export const checkAuth = (accessCode: string | null) => {
+import { parserPluginSettings } from './settings';
+
+const checkAuth = (accessCode: string | null) => {
   const { ACCESS_CODES } = getServerConfig();
 
   // if accessCode doesn't exist
