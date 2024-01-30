@@ -63,7 +63,7 @@ export const createSettingsSlice: StateCreator<
   switchThemeMode: async (themeMode) => {
     await get().setSettings({ themeMode });
   },
-  updateDefaultAgent: async (agent) => {
-    await get().setSettings({ defaultAgent: agent });
+  updateDefaultAgent: async (defaultAgent) => {
+    await get().setSettings({ defaultAgent });
   },
 });
