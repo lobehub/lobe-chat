@@ -3,12 +3,12 @@ import { Form as AntForm, AutoComplete, Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { Webhook } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/selectors';
 
 import Checker from './Checker';
 
@@ -35,15 +35,22 @@ const LLM = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
   const { styles } = useStyles();
-  const [setSettings] = useGlobalStore((s) => [s.setSettings]);
+  const [useAzure, setSettings] = useGlobalStore((s) => [
+    modelProviderSelectors.enableAzure(s),
+    s.setSettings,
+  ]);
 
-  useEffectAfterGlobalHydrated((store) => {
-    const settings = settingsSelectors.currentSettings(store.getState());
-
-    form.setFieldsValue(settings);
+  useEffect(() => {
+    const unsubscribe = useGlobalStore.subscribe(
+      (s) => s.settings,
+      (settings) => {
+        form.setFieldsValue(settings);
+      },
+    );
+    return () => {
+      unsubscribe();
+    };
   }, []);
-
-  const useAzure = useGlobalStore((s) => s.settings.languageModel.openAI.useAzure);
 
   const openAI: ItemGroup = {
     children: [

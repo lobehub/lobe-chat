@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { modelProviderSelectors } from '@/store/global/selectors';
 
 import { useStore } from '../store';
 
@@ -21,7 +21,7 @@ const AgentConfig = memo(() => {
 
   const config = useStore((s) => s.config, isEqual);
 
-  const modelList = useGlobalStore(settingsSelectors.modelList);
+  const modelList = useGlobalStore(modelProviderSelectors.modelList);
 
   useEffect(() => {
     form.setFieldsValue(config);
