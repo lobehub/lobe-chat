@@ -1,5 +1,5 @@
 import { ErrorType } from '@/types/fetch';
-import { Translate } from '@/types/translate';
+import { Translate } from '@/types/message/translate';
 
 import { LLMRoleType } from '../llm';
 import { BaseDataModel } from '../meta';
