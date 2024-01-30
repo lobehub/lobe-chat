@@ -1,3 +1,4 @@
+import { Timeout } from 'ahooks/es/useRequest/src/types';
 import { t } from 'i18next';
 
 import { ErrorResponse, ErrorType } from '@/types/fetch';
@@ -56,6 +57,8 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
 
   if (!data) return;
   let output = '';
+  let interval: Timeout | null = null;
+  const queue: any[] = [];
   const reader = data.getReader();
   const decoder = new TextDecoder();
 
@@ -67,6 +70,19 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
       const { value, done: doneReading } = await reader.read();
       done = doneReading;
       const chunkValue = decoder.decode(value, { stream: true });
+
+      if (interval !== null) {
+        clearInterval(interval);
+      }
+      if (chunkValue.length > 0) {
+        queue.push(...chunkValue.split(''));
+      }
+
+      interval = setInterval(() => {
+        if (queue.length > 0) {
+          options.onMessageHandle?.(queue.shift());
+        }
+      }, 300 / queue.length);
 
       output += chunkValue;
       options.onMessageHandle?.(chunkValue);
@@ -81,6 +97,14 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
         console.error(error);
       }
     }
+  }
+
+  if (interval !== null) {
+    clearInterval(interval);
+  }
+
+  while (queue.length > 0) {
+    options.onMessageHandle?.(queue.shift());
   }
 
   await options?.onFinish?.(output, finishedType);
