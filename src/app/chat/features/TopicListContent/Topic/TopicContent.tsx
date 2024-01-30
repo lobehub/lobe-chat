@@ -140,7 +140,8 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         color={fav ? theme.colorWarning : undefined}
         fill={fav ? theme.colorWarning : 'transparent'}
         icon={Star}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           if (!id) return;
           favoriteTopic(id, !fav);
         }}
