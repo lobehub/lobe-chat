@@ -21,7 +21,8 @@ const defaultAgentConfig = (s: GlobalStore) => merge(DEFAULT_AGENT_CONFIG, defau
 
 const defaultAgentMeta = (s: GlobalStore) => merge(DEFAULT_AGENT_META, defaultAgent(s).meta);
 
-export const exportSettings = (s: GlobalStore) => {
+// TODO: Maybe we can also export settings difference
+const exportSettings = (s: GlobalStore) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _, ...settings } = currentSettings(s);
 
