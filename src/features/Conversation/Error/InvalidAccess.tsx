@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 
 import { RenderErrorMessage } from '../types';
 import APIKeyForm from './ApiKeyForm';
@@ -20,7 +21,10 @@ enum Tab {
 const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
   const { t } = useTranslation('error');
   const [mode, setMode] = useState<Tab>(Tab.Password);
-  const [password, setSettings] = useGlobalStore((s) => [s.settings.password, s.setSettings]);
+  const [password, setSettings] = useGlobalStore((s) => [
+    settingsSelectors.currentSettings(s).password,
+    s.setSettings,
+  ]);
   const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
 
   return (

@@ -9,7 +9,9 @@ export const runtime = 'edge';
 export const GET = async () => {
   const { CUSTOM_MODELS } = getServerConfig();
 
-  const config: GlobalServerConfig = { customModelName: CUSTOM_MODELS };
+  const config: GlobalServerConfig = {
+    customModelName: CUSTOM_MODELS,
+  };
 
   return new Response(JSON.stringify(config));
 };

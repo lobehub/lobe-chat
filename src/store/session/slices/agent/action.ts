@@ -58,7 +58,7 @@ export const createAgentSlice: StateCreator<
     // if is the inbox session, update the global config
     const isInbox = sessionSelectors.isInboxSession(get());
     if (isInbox) {
-      useGlobalStore.getState().updateDefaultAgent({ config });
+      await useGlobalStore.getState().updateDefaultAgent({ config });
     } else {
       const session = sessionSelectors.currentSession(get());
       if (!session) return;
