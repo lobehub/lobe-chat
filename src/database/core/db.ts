@@ -1,6 +1,5 @@
 import Dexie, { Transaction } from 'dexie';
 
-import { DBModel, LOBE_CHAT_LOCAL_DB_NAME } from '@/database/core/types/db';
 import { DB_File } from '@/database/schemas/files';
 import { DB_Message } from '@/database/schemas/message';
 import { DB_Plugin } from '@/database/schemas/plugin';
@@ -11,6 +10,7 @@ import { DB_User } from '@/database/schemas/user';
 
 import { migrateSettingsToUser } from './migrations/migrateSettingsToUser';
 import { dbSchemaV1, dbSchemaV2, dbSchemaV3, dbSchemaV4, dbSchemaV5 } from './schemas';
+import { DBModel, LOBE_CHAT_LOCAL_DB_NAME } from './types/db';
 
 interface LobeDBSchemaMap {
   files: DB_File;
@@ -85,7 +85,9 @@ export class LocalDB extends Dexie {
 
         try {
           json = JSON.parse(data);
-        } catch {}
+        } catch {
+          /* empty */
+        }
 
         if (!json?.state?.settings) return;
 

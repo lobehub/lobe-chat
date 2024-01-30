@@ -41,7 +41,7 @@ class _UserModel extends BaseModel {
   async resetSettings() {
     const user = await this.getUser();
 
-    return this.update(user.id, { settings: undefined });
+    return this.update(user.id, { avatar: undefined, settings: undefined });
   }
 
   async updateAvatar(avatar: string) {
