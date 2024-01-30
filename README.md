@@ -42,6 +42,8 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 
 <sup>Pioneering the new age of thinking and creating. Built for you, the Super Individual.</sup>
 
+[![][github-trending-shield]][github-trending-url]
+
 ![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
 
 </div>
@@ -223,14 +225,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                    | Description                                                                                                                                                                                                                             |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Bilibili Assistant](https://chat-preview.lobehub.com/market?agent=bilibili-agent)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-27**</sup>    | Bilibili Assistant, proficient in parsing video content, generating well-formatted text, responding to user queries, and recommending the latest videos.<br/>`video-comments` `danmaku-extraction` `bilibili` `bilibili` `video-search` |
-| [Steam Game Reviews](https://chat-preview.lobehub.com/market?agent=steam-agent)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-01-27**</sup>       | Steam game expert consultant, popular game recommendations and in-depth game analysis<br/>`steam` `game-recommendations` `game-reviews`                                                                                                 |
-| [Culinary AI Mentor](https://chat-preview.lobehub.com/market?agent=chef)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup>                            | AI Master Chef Assistant: Inspiring home cooks with international cuisines, recipes, and culinary expertise.<br/>`cooking` `recipe` `culinary` `techniques` `meal-planning`                                                             |
-| [AI Import/Export Advisor](https://chat-preview.lobehub.com/market?agent=import-and-export-advisor)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-26**</sup> | AI Import and Export Advisor: Providing guidance on global trade, customs regulations, documentation, trade agreements, and risk management.<br/>`import-export` `trade` `consulting`                                                   |
+| Recent Submits                                                                                                                                                                                                         | Description                                                                                                                                                                                                                                 |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [English Proficiency Coach](https://chat-preview.lobehub.com/market?agent=english-c-2-level)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-30**</sup>                                             | C2 Level English Conversation Partner<br/>`english-proficiency` `conversation-partner` `language-coaching`                                                                                                                                  |
+| [Entrepreneurship and Competitiveness Expert](https://chat-preview.lobehub.com/market?agent=entrepreneurship-and-competitiveness-expert)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-30**</sup> | Entrepreneurship and Competitiveness Expert: Guiding individuals to entrepreneurial success and market competitiveness.<br/>`entrepreneurship` `competitiveness` `consulting` `mentoring` `advising`                                        |
+| [Mathematical Research Advisor](https://chat-preview.lobehub.com/market?agent=mathematical-research-advisor)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-30**</sup>                             | Math Research Assistant: Assisting with mathematical research, problem-solving, and providing guidance in a wide range of mathematical concepts and techniques.<br/>`mathematics` `research` `assistance` `problem-solving` `communication` |
+| [Territory Promotion Strategist](https://chat-preview.lobehub.com/market?agent=biskaya)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-29**</sup>                                                  | Territorial Competitiveness and Promotion Expert<br/>`territorial-competitiveness` `promotion` `consulting` `marketing` `event-coordination`                                                                                                |
 
-> 📊 Total agents: [<kbd>**125**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**142**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -633,6 +635,8 @@ This project is [MIT](./LICENSE) licensed.
 [github-releasedate-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?labelColor=black&style=flat-square
 [github-stars-link]: https://github.com/lobehub/lobe-chat/network/stargazers
 [github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
+[github-trending-shield]: https://trendshift.io/api/badge/repositories/2256
+[github-trending-url]: https://trendshift.io/repositories/2256
 [github-wiki-link]: https://github.com/lobehub/lobe-chat/wiki
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets
