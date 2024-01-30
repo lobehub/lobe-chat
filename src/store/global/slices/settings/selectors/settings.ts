@@ -8,7 +8,10 @@ import { merge } from '@/utils/merge';
 
 import { GlobalStore } from '../../../store';
 
-export const currentSettings = (s: GlobalStore): GlobalSettings => merge(s.defaultSettings, s.settings);
+export const currentSettings = (s: GlobalStore): GlobalSettings =>
+  merge(s.defaultSettings, s.settings);
+
+const password = (s: GlobalStore) => currentSettings(s).password;
 
 const currentTTS = (s: GlobalStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
 
@@ -50,4 +53,5 @@ export const settingsSelectors = {
   defaultAgentMeta,
   exportSettings,
   isDalleAutoGenerating,
+  password,
 };
