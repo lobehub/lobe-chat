@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { modelProviderSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { LanguageModel } from '@/types/llm';
@@ -18,7 +18,7 @@ const ModelSwitch = memo(() => {
     return [agentSelectors.currentAgentModel(s), s.updateAgentConfig];
   });
 
-  const modelList = useGlobalStore(settingsSelectors.modelList, isEqual);
+  const modelList = useGlobalStore(modelProviderSelectors.modelList, isEqual);
 
   return (
     <Dropdown

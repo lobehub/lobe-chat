@@ -11,6 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import { AGENTS_INDEX_GITHUB_ISSUE } from '@/const/url';
 import AgentInfo from '@/features/AgentInfo';
 import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
@@ -20,7 +21,7 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const systemRole = useSessionStore(agentSelectors.currentAgentSystemRole);
   const theme = useTheme();
   const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
-  const language = useGlobalStore((s) => s.settings.language);
+  const language = useGlobalStore((s) => settingsSelectors.currentSettings(s).language);
 
   const isMetaPass = Boolean(
     meta && meta.title && meta.description && (meta.tags as string[])?.length > 0 && meta.avatar,
