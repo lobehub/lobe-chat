@@ -91,7 +91,8 @@ class ChatService {
 
     const res = await fetch(gatewayURL ?? PLUGINS_URLS.gateway, {
       body: JSON.stringify({ ...params, manifest }),
-      headers: createHeadersWithPluginSettings(settings),
+      // TODO: we can have a better auth way
+      headers: createHeadersWithPluginSettings(settings, createHeaderWithOpenAI()),
       method: 'POST',
       signal: options?.signal,
     });

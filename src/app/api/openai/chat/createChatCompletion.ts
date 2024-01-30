@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 import { ChatErrorType } from '@/types/fetch';
 import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
-import { createErrorResponse } from '../errorResponse';
+import { createErrorResponse } from '../../errorResponse';
 import { desensitizeUrl } from './desensitizeUrl';
 
 interface CreateChatCompletionOptions {
