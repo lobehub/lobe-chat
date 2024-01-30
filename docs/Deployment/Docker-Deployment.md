@@ -71,6 +71,69 @@ $ docker run -d -p 3210:3210 \
 >
 > As the official Docker image build takes about half an hour, if there is a "update available" prompt after updating deployment, wait for the image to finish building before deploying again.
 
+#### Crontab Auto-Update Script
+
+If you want to automatically get the latest images, you can do the following.
+
+First, create a `lobe.env` configuration file with various environment variables, for example:
+
+```env
+OPENAI_API_KEY=sk-xxxx
+OPENAI_PROXY_URL=https://api-proxy.com/v1
+ACCESS_CODE=arthals2333
+CUSTOM_MODELS=-gpt-4,-gpt-4-32k,-gpt-3.5-turbo-16k,gpt-3.5-turbo-1106=gpt-3.5-turbo-16k,gpt-4-1106-preview=gpt-4-turbo,gpt-4-vision-preview=gpt-4-vision
+```
+
+Then, you can use the following script to automatically update:
+
+```bash
+#!/bin/bash
+# auto-update-lobe-chat.sh
+
+# Set proxy (optional)
+export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+
+# Pull the latest image and store the output in a variable
+output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+
+# Check if the pull command executed successfully
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+# Check if the output contains a specific string
+echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+
+# If the image is already up to date, then do nothing
+if [ $? -eq 0 ]; then
+  exit 0
+fi
+
+echo "Detected Lobe-Chat update"
+
+# Remove old container
+echo "Removed: $(docker rm -f Lobe-Chat)"
+
+# Run new container
+echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=Lobe-Chat --restart=always lobehub/lobe-chat)"
+
+# Print the update time and version
+echo "Update time: $(date)"
+echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+
+# Clean up unused images
+docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+echo "Removed old images."
+```
+
+This script can be used in Crontab, but make sure your Crontab can find the correct Docker command. It's recommended to use absolute paths.
+
+Configure Crontab to execute the script every 5 minutes:
+
+```bash
+*/5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
+```
+
 ### `B` Docker Compose
 
 The configuration file for using `docker-compose` is as follows:
@@ -89,6 +152,61 @@ services:
       OPENAI_API_KEY: sk-xxxx
       OPENAI_PROXY_URL: https://api-proxy.com/v1
       ACCESS_CODE: lobe66
+```
+
+#### Crontab Auto-Update Script
+
+Similarly, you can use the following script to update Lobe Chat automatically. When using `Docker Compose`, environment variables do not need additional configuration.
+
+```bash
+#!/bin/bash
+# auto-update-lobe-chat.sh
+
+# Set proxy (optional)
+export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+
+# Pull the latest image and store the output in a variable
+output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+
+# Check if the pull command executed successfully
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+# Check if the output contains a specific string
+echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+
+# If the image is already up to date, then do nothing
+if [ $? -eq 0 ]; then
+  exit 0
+fi
+
+echo "Detected Lobe-Chat update"
+
+# Remove old container
+echo "Removed: $(docker rm -f Lobe-Chat)"
+
+# Maybe you need to enter the directory where `docker-compose.yml` is located first
+# cd /path/to/docker-compose-folder
+
+# Run new container
+echo "Started: $(docker-compose up)"
+
+# Print the update time and version
+echo "Update time: $(date)"
+echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+
+# Clean up unused images
+docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+echo "Removed old images."
+```
+
+This script can also be used in Crontab, but make sure your Crontab can find the correct Docker command. It's recommended to use absolute paths.
+
+Configure Crontab to execute the script every 5 minutes:
+
+```bash
+*/5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
 ```
 
 <!-- LINK GROUP -->
