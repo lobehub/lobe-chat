@@ -9,6 +9,7 @@ import { CURRENT_VERSION } from '@/const/version';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { useGlobalStore, useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
+import { commonSelectors } from '@/store/global/selectors';
 
 import List from '../../features/SideBar/List';
 import AvatarBanner from '../features/AvatarBanner';
@@ -28,7 +29,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const Setting = memo(() => {
   useSwitchSideBarOnInit(SidebarTabKey.Setting);
-  const avatar = useGlobalStore((s) => s.settings.avatar);
+  const avatar = useGlobalStore(commonSelectors.userAvatar);
   const { styles } = useStyles();
 
   return (

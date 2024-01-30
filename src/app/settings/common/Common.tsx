@@ -1,9 +1,8 @@
 import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
 import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { debounce } from 'lodash-es';
 import { AppWindow, Monitor, Moon, Palette, Sun } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
@@ -222,12 +221,24 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
     title: t('settingSystem.title'),
   };
 
+  useEffect(() => {
+    const unsubscribe = useGlobalStore.subscribe(
+      (s) => s.settings,
+      (settings) => {
+        form.setFieldsValue(settings);
+      },
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <Form
       form={form}
       initialValues={settings}
       items={[theme, system]}
-      onValuesChange={debounce(setSettings, 100)}
+      onValuesChange={setSettings}
       {...FORM_STYLE}
     />
   );

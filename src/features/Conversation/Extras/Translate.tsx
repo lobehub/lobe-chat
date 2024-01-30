@@ -1,7 +1,6 @@
-import { ActionIcon, Icon, Markdown, Tag } from '@lobehub/ui';
+import { ActionIcon, Icon, Markdown, Tag, copyToClipboard } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
-import copy from 'copy-to-clipboard';
 import { ChevronDown, ChevronUp, ChevronsRight, CopyIcon, TrashIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -41,8 +40,8 @@ const Translate = memo<TranslateProps>(({ content = '', from, to, id, loading })
         <Flexbox horizontal>
           <ActionIcon
             icon={CopyIcon}
-            onClick={() => {
-              copy(content);
+            onClick={async () => {
+              await copyToClipboard(content);
               message.success(t('copySuccess'));
             }}
             size={'small'}
