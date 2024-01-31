@@ -31,6 +31,7 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
     const data = await chatService.fetchPresetTaskResult({
       onError: (_, rawError) => {
         setError(rawError);
+        setPass(false);
       },
       onLoadingChange: (loading) => {
         setLoading(loading);
