@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
+import { commonSelectors } from '@/store/global/selectors';
 
 import Preview from './Preview';
 import { FieldType, ImageType } from './type';
@@ -48,7 +49,7 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
   const [fieldValue, setFieldValue] = useState<FieldType>(DEFAULT_FIELD_VALUE);
   const [tab, setTab] = useState<Tab>(Tab.Screenshot);
   const { t } = useTranslation('chat');
-  const avatar = useGlobalStore((s) => s.settings.avatar);
+  const avatar = useGlobalStore(commonSelectors.userAvatar);
   const [shareLoading, shareToShareGPT] = useChatStore((s) => [s.shareLoading, s.shareToShareGPT]);
   const { loading, onDownload, title } = useScreenshot(fieldValue.imageType);
 

@@ -1,121 +1,12 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`settingsSelectors > CUSTOM_MODELS > custom deletion, addition, and renaming of models 1`] = `
-[
-  {
-    "displayName": "llama",
-    "name": "llama",
-  },
-  {
-    "displayName": "claude-2",
-    "name": "claude-2",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "name": "gpt-4-1106-preview",
-  },
-]
-`;
-
-exports[`settingsSelectors > CUSTOM_MODELS > duplicate naming model 1`] = `
-[
-  {
-    "displayName": "gpt-3.5-turbo",
-    "name": "gpt-3.5-turbo",
-  },
-  {
-    "displayName": "gpt-3.5-turbo-1106",
-    "name": "gpt-3.5-turbo-1106",
-  },
-  {
-    "displayName": "gpt-3.5-turbo-16k",
-    "name": "gpt-3.5-turbo-16k",
-  },
-  {
-    "displayName": "gpt-4",
-    "name": "gpt-4",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "name": "gpt-4-32k",
-  },
-  {
-    "displayName": "gpt-4-vision-preview",
-    "name": "gpt-4-vision-preview",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "name": "gpt-4-1106-preview",
-  },
-]
-`;
-
-exports[`settingsSelectors > CUSTOM_MODELS > only add the model 1`] = `
-[
-  {
-    "displayName": "gpt-3.5-turbo",
-    "name": "gpt-3.5-turbo",
-  },
-  {
-    "displayName": "gpt-3.5-turbo-1106",
-    "name": "gpt-3.5-turbo-1106",
-  },
-  {
-    "displayName": "gpt-3.5-turbo-16k",
-    "name": "gpt-3.5-turbo-16k",
-  },
-  {
-    "displayName": "gpt-4",
-    "name": "gpt-4",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "name": "gpt-4-32k",
-  },
-  {
-    "displayName": "gpt-4-1106-preview",
-    "name": "gpt-4-1106-preview",
-  },
-  {
-    "displayName": "gpt-4-vision-preview",
-    "name": "gpt-4-vision-preview",
-  },
-  {
-    "displayName": "model1",
-    "name": "model1",
-  },
-  {
-    "displayName": "model2",
-    "name": "model2",
-  },
-  {
-    "displayName": "model3",
-    "name": "model3",
-  },
-  {
-    "displayName": "model4",
-    "name": "model4",
-  },
-]
-`;
-
 exports[`settingsSelectors > currentSettings > should merge DEFAULT_SETTINGS and s.settings correctly 1`] = `
 {
   "avatar": "avatar.jpg",
   "defaultAgent": {
     "config": {
-      "autoCreateTopicThreshold": 2,
-      "displayMode": "chat",
-      "enableAutoCreateTopic": true,
-      "historyCount": 1,
       "model": "gpt-3.5-turbo",
-      "params": {
-        "frequency_penalty": 0,
-        "presence_penalty": 0,
-        "temperature": 0.6,
-        "top_p": 1,
-      },
-      "plugins": [],
+      "params": {},
       "systemRole": "",
       "tts": {
         "showAllLocaleVoice": false,
@@ -146,11 +37,6 @@ exports[`settingsSelectors > currentSettings > should merge DEFAULT_SETTINGS and
   "password": "password123",
   "primaryColor": "blue",
   "themeMode": "light",
-  "tool": {
-    "dalle": {
-      "autoGenerate": false,
-    },
-  },
   "tts": {
     "openAI": {
       "sttModel": "whisper-1",
