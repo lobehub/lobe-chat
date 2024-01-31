@@ -27,7 +27,7 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
           });
           router.push('/settings/agent');
         } else {
-          router.push(pathString('/chat/settings', { hash: location.hash }));
+          router.push(pathString('/chat/settings', { search: location.search }));
         }
       }}
       size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}

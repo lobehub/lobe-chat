@@ -44,3 +44,13 @@ export const dbSchemaV4 = {
   sessions:
     '&id, type, group, pinned, meta.title, meta.description, meta.tags, createdAt, updatedAt',
 };
+
+// ************************************** //
+// ******* Version 5 - 2024-01-29 ******* //
+// ************************************** //
+// - Added `users` table
+
+export const dbSchemaV5 = {
+  ...dbSchemaV4,
+  users: '++id',
+};

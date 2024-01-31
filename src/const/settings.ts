@@ -11,7 +11,6 @@ import {
 } from '@/types/settings';
 
 export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
-  avatar: '',
   fontSize: 14,
   language: 'auto',
   password: '',
