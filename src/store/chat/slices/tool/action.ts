@@ -177,6 +177,8 @@ export const chatPlugin: StateCreator<
       invokeStandaloneTypePlugin,
       invokeBuiltinTool,
       refreshMessages,
+      resendMessage,
+      deleteMessage,
     } = get();
 
     let payload = { apiName: '', identifier: '' } as ChatPluginPayload;
@@ -198,6 +200,13 @@ export const chatPlugin: StateCreator<
         identifier,
         type: (type ?? 'default') as any,
       };
+
+      // fix https://github.com/lobehub/lobe-chat/issues/1094, remove and retry after experiencing plugin illusion
+      if (!apiName) {
+        resendMessage(id);
+        deleteMessage(id);
+        return;
+      }
 
       // if the apiName is md5, try to find the correct apiName in the plugins
       if (apiName.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX)) {
