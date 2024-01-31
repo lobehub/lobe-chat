@@ -1,5 +1,4 @@
-import { OpenAIModelCard, ZhiPuModelCard } from '@/config/modelProviders';
-import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
+import { ModelProviderList } from '@/config/modelProviders';
 import { ModelProviderCard } from '@/types/llm';
 import { CustomModels } from '@/types/settings';
 
@@ -20,7 +19,6 @@ const customModelList = (s: GlobalStore) => {
 
   const removedModels: string[] = [];
   const modelNames = [
-    ...DEFAULT_OPENAI_MODEL_LIST,
     ...(s.serverConfig.customModelName || '').split(/[,，]/).filter(Boolean),
     ...(currentSettings(s).languageModel.openAI.customModelName || '')
       .split(/[,，]/)
@@ -57,9 +55,22 @@ const customModelList = (s: GlobalStore) => {
 };
 
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
-  customModelList(s);
+  const customModels = customModelList(s);
 
-  return [OpenAIModelCard, ZhiPuModelCard];
+  const hasOneAPI = customModels.length > 0;
+  const baseList = ModelProviderList;
+
+  if (hasOneAPI) {
+    baseList.push({
+      chatModels: customModels.map((m) => ({
+        displayName: m.displayName,
+        id: m.name,
+      })),
+      id: 'oneapi',
+    });
+  }
+
+  return baseList;
 };
 
 const modelCardById = (id: string) => (s: GlobalStore) => {

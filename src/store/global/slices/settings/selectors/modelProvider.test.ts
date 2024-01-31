@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { agentSelectors } from '@/store/session/slices/agent';
+
 import { GlobalStore, useGlobalStore } from '../../../store';
 import { modelProviderSelectors } from './modelProvider';
 
@@ -122,6 +124,22 @@ describe('modelProviderSelectors', () => {
       );
 
       expect(hasAbility).toBeTruthy();
+    });
+  });
+
+  describe('modelEnabledVision', () => {
+    it('should return true if the model is in the list of models that show tokens', () => {
+      const show = modelProviderSelectors.modelHasMaxToken('gpt-3.5-turbo')(
+        useGlobalStore.getState(),
+      );
+      expect(show).toBeTruthy();
+    });
+
+    it('should return false if the model is not in the list of models that show tokens', () => {
+      const show = modelProviderSelectors.modelHasMaxToken('some-other-model')(
+        useGlobalStore.getState(),
+      );
+      expect(show).toBe(false);
     });
   });
 });

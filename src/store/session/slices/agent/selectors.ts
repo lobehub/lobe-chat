@@ -1,7 +1,6 @@
 import { VoiceList } from '@lobehub/tts';
 import { t } from 'i18next';
 
-import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { useGlobalStore } from '@/store/global';
@@ -105,11 +104,6 @@ const getTitle = (s: MetaData) => s.title || t('defaultSession', { ns: 'common' 
 export const getDescription = (s: MetaData) =>
   s.description || t('noDescription', { ns: 'common' });
 
-const showTokenTag = (s: SessionStore) => {
-  const model = currentAgentModel(s);
-
-  return DEFAULT_OPENAI_MODEL_LIST.includes(model);
-};
 const hasSystemRole = (s: SessionStore) => {
   const config = currentAgentConfig(s);
 
@@ -133,5 +127,4 @@ export const agentSelectors = {
   getDescription,
   getTitle,
   hasSystemRole,
-  showTokenTag,
 };

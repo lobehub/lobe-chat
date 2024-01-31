@@ -16,7 +16,7 @@ export const runtime = 'edge';
 
 export const preferredRegion = getPreferredRegion();
 
-export const POST = async (req: Request, { params }: { params: { provider: ModelProvider } }) => {
+export const POST = async (req: Request, { params }: { params: { provider: string } }) => {
   const payload = (await req.json()) as ChatStreamPayload;
 
   let runtimeModel: LobeRuntimeAI;
@@ -26,6 +26,7 @@ export const POST = async (req: Request, { params }: { params: { provider: Model
   try {
     switch (params.provider) {
       default:
+      case 'oneapi':
       case ModelProvider.OpenAI: {
         runtimeModel = new LobeOpenAI(req, payload.model);
         break;

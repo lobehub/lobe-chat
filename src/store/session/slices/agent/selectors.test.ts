@@ -177,28 +177,4 @@ describe('agentSelectors', () => {
       expect(description).toBe('noDescription'); // Assuming translation returns this key
     });
   });
-
-  describe('showTokenTag', () => {
-    it('should return true if the model is in the list of models that show tokens', () => {
-      const show = agentSelectors.showTokenTag(mockSessionStore);
-      expect(show).toBe(true);
-    });
-
-    it('should return false if the model is not in the list of models that show tokens', () => {
-      const modifiedSessionStore = {
-        ...mockSessionStore,
-        sessions: [
-          {
-            ...mockSessionStore.sessions[0],
-            config: {
-              ...mockSessionStore.sessions[0].config,
-              model: 'some-other-model',
-            },
-          },
-        ],
-      };
-      const show = agentSelectors.showTokenTag(modifiedSessionStore);
-      expect(show).toBe(false);
-    });
-  });
 });

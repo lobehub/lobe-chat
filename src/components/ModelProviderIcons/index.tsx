@@ -30,7 +30,7 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case 'zhipu':
     case ModelProvider.ChatGLM: {
-      return <ChatGLM size={18} />;
+      return <ChatGLM size={16} />;
     }
 
     case ModelProvider.Google: {
