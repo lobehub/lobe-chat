@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.122.5](https://github.com/lobehub/lobe-chat/compare/v0.122.4...v0.122.5)
+
+<sup>Released on **2024-01-31**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: The plugin has a hallucination and gets stuck.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: The plugin has a hallucination and gets stuck, closes [#1191](https://github.com/lobehub/lobe-chat/issues/1191) ([0189759](https://github.com/lobehub/lobe-chat/commit/0189759))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.122.4](https://github.com/lobehub/lobe-chat/compare/v0.122.3...v0.122.4)
 
 <sup>Released on **2024-01-30**</sup>
