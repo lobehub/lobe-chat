@@ -27,6 +27,7 @@ coverage
 # production
 dist
 es
+lib
 logs
 test-output
 
