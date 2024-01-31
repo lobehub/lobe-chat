@@ -1,4 +1,6 @@
-import { GlobalStore } from '../../../store';
+import { describe, expect, it } from 'vitest';
+
+import { GlobalStore, useGlobalStore } from '../../../store';
 import { modelProviderSelectors } from './modelProvider';
 
 describe('modelProviderSelectors', () => {
@@ -95,6 +97,31 @@ describe('modelProviderSelectors', () => {
       const result = modelProviderSelectors.modelList(s);
 
       expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('modelEnabledVision', () => {
+    it('should return true if the model has vision ability', () => {
+      const hasAbility = modelProviderSelectors.modelEnabledVision('gpt-4-vision-preview')(
+        useGlobalStore.getState(),
+      );
+      expect(hasAbility).toBeTruthy();
+    });
+
+    it('should return false if the model does not have vision ability', () => {
+      const hasAbility = modelProviderSelectors.modelEnabledVision('some-other-model')(
+        useGlobalStore.getState(),
+      );
+
+      expect(hasAbility).toBeFalsy();
+    });
+
+    it('should return false if the model include vision in id', () => {
+      const hasAbility = modelProviderSelectors.modelEnabledVision('some-other-model-vision')(
+        useGlobalStore.getState(),
+      );
+
+      expect(hasAbility).toBeTruthy();
     });
   });
 });

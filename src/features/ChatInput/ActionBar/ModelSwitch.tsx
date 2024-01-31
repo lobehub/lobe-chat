@@ -18,7 +18,6 @@ const ModelSwitch = memo(() => {
   const [model, updateAgentConfig] = useSessionStore((s) => {
     return [agentSelectors.currentAgentModel(s), s.updateAgentConfig];
   });
-
   const select = useGlobalStore(modelProviderSelectors.modelSelectList, isEqual);
 
   return (
@@ -28,7 +27,7 @@ const ModelSwitch = memo(() => {
         items: select.map((provider) => ({
           children: provider.chatModels.map((model) => ({
             key: model.id,
-            label: model.id,
+            label: model.displayName || model.id,
             onClick: () => {
               updateAgentConfig({ model: model.id, provider: provider?.id });
             },

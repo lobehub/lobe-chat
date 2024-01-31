@@ -62,10 +62,35 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
   return [OpenAIModelCard, ZhiPuModelCard];
 };
 
+const modelCardById = (id: string) => (s: GlobalStore) => {
+  const list = modelSelectList(s);
+
+  return list.flatMap((i) => i.chatModels).find((m) => m.id === id);
+};
+
+const modelEnabledFunctionCall = (id: string) => (s: GlobalStore) =>
+  modelCardById(id)(s)?.functionCall || false;
+
+// vision model white list, these models will change the content from string to array
+// refs: https://github.com/lobehub/lobe-chat/issues/790
+const modelEnabledVision = (id: string) => (s: GlobalStore) =>
+  modelCardById(id)(s)?.vision || id.includes('vision');
+
+const modelHasMaxToken = (id: string) => (s: GlobalStore) =>
+  typeof modelCardById(id)(s)?.tokens !== 'undefined';
+
+const modelMaxToken = (id: string) => (s: GlobalStore) => modelCardById(id)(s)?.tokens || 0;
+
 /* eslint-disable sort-keys-fix/sort-keys-fix,  */
 export const modelProviderSelectors = {
   modelList: customModelList,
   modelSelectList,
+
+  modelCardById,
+  modelMaxToken,
+  modelEnabledFunctionCall,
+  modelEnabledVision,
+  modelHasMaxToken,
   // OpenAI
   enableAzure,
   openAIAPIKey,

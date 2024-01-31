@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { ModelTokens } from '@/const/llm';
 import { useTokenCount } from '@/hooks/useTokenCount';
-import { LanguageModel } from '@/types/llm';
+import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/selectors';
 
 import { useStore } from '../store';
 
@@ -30,7 +30,8 @@ const AgentPrompt = memo(() => {
   const [systemRole, model] = useStore((s) => [s.config.systemRole, s.config.model]);
   const systemTokenCount = useTokenCount(systemRole);
 
-  const showTag = model in ModelTokens;
+  const showTag = useGlobalStore(modelProviderSelectors.modelHasMaxToken(model));
+  const modelMaxTokens = useGlobalStore(modelProviderSelectors.modelMaxToken(model));
 
   return (
     <FormGroup
@@ -39,7 +40,7 @@ const AgentPrompt = memo(() => {
           {showTag && (
             <TokenTag
               displayMode={'used'}
-              maxValue={ModelTokens[model as LanguageModel]}
+              maxValue={modelMaxTokens}
               shape={'square'}
               text={{
                 overload: t('tokenTag.overload', { ns: 'chat' }),

@@ -5,7 +5,6 @@ import { template } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { GPT4_VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/llm';
 import { LOADING_FLAT, isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/const/message';
 import { CreateMessageParams } from '@/database/models/message';
 import { chatService } from '@/services/chat';
@@ -370,7 +369,8 @@ export const chatMessage: StateCreator<
     if (config.model === 'gpt-4-vision-preview') {
       /* eslint-disable unicorn/no-lonely-if */
       if (!config.params.max_tokens)
-        config.params.max_tokens = GPT4_VISION_MODEL_DEFAULT_MAX_TOKENS;
+        // refs: https://github.com/lobehub/lobe-chat/issues/837
+        config.params.max_tokens = 2048;
     }
 
     const fetcher = () =>

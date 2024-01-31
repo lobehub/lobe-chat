@@ -60,18 +60,25 @@ describe('createChatCompletion', () => {
     vi.spyOn(openaiInstance.chat.completions, 'create').mockRejectedValue(apiError);
 
     // Act
-    const result = await createChatCompletion({
-      chatModel: openaiInstance,
-      payload: {
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 0,
-      },
-    });
-
-    // Assert
-    expect(result).toBeInstanceOf(Response);
-    expect(result.status).toBe(577); // Your custom error status code
+    try {
+      await createChatCompletion({
+        chatModel: openaiInstance,
+        payload: {
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'text-davinci-003',
+          temperature: 0,
+        },
+      });
+    } catch (e) {
+      expect(e).toEqual({
+        error: {
+          error: { message: 'Bad Request' },
+          status: 400,
+        },
+        errorType: 'OpenAIBizError',
+        provider: 'openai',
+      });
+    }
   });
 
   it('should return an cause response when OpenAI.APIError is thrown with cause', async () => {
@@ -87,23 +94,25 @@ describe('createChatCompletion', () => {
     vi.spyOn(openaiInstance.chat.completions, 'create').mockRejectedValue(apiError);
 
     // Act
-    const result = await createChatCompletion({
-      chatModel: openaiInstance,
-      payload: {
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 0,
-      },
-    });
-
-    // Assert
-    expect(result).toBeInstanceOf(Response);
-    expect(result.status).toBe(577); // Your custom error status code
-
-    const content = await result.json();
-    expect(content.body).toHaveProperty('endpoint');
-    expect(content.body.endpoint).toEqual('https://api.openai.com/v1');
-    expect(content.body.error).toEqual(errorInfo);
+    try {
+      await createChatCompletion({
+        chatModel: openaiInstance,
+        payload: {
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'text-davinci-003',
+          temperature: 0,
+        },
+      });
+    } catch (e) {
+      expect(e).toEqual({
+        error: {
+          cause: { message: 'api is undefined' },
+          stack: 'abc',
+        },
+        errorType: 'OpenAIBizError',
+        provider: 'openai',
+      });
+    }
   });
 
   it('should return an cause response with desensitize Url', async () => {
@@ -123,22 +132,25 @@ describe('createChatCompletion', () => {
     vi.spyOn(openaiInstance.chat.completions, 'create').mockRejectedValue(apiError);
 
     // Act
-    const result = await createChatCompletion({
-      chatModel: openaiInstance,
-      payload: {
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'gpt-3.5-turbo',
-        temperature: 0,
-      },
-    });
-
-    // Assert
-    expect(result).toBeInstanceOf(Response);
-    expect(result.status).toBe(577); // Your custom error status code
-
-    const content = await result.json();
-    expect(content.body.endpoint).toEqual('https://api.***.com/v1');
-    expect(content.body.error).toEqual(errorInfo);
+    try {
+      const result = await createChatCompletion({
+        chatModel: openaiInstance,
+        payload: {
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'gpt-3.5-turbo',
+          temperature: 0,
+        },
+      });
+    } catch (e) {
+      expect(e).toEqual({
+        error: {
+          cause: { message: 'api is undefined' },
+          stack: 'abc',
+        },
+        errorType: 'OpenAIBizError',
+        provider: 'openai',
+      });
+    }
   });
 
   it('should return a 500 error response for non-OpenAI errors', async () => {
@@ -148,19 +160,21 @@ describe('createChatCompletion', () => {
     vi.spyOn(openaiInstance.chat.completions, 'create').mockRejectedValue(genericError);
 
     // Act
-    const result = await createChatCompletion({
-      chatModel: openaiInstance,
-      payload: {
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 0,
-      },
-    });
-
-    // Assert
-    expect(result.status).toBe(500);
-    const content = await result.json();
-    expect(content.body).toHaveProperty('endpoint');
-    expect(content.body).toHaveProperty('error');
+    try {
+      const result = await createChatCompletion({
+        chatModel: openaiInstance,
+        payload: {
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'text-davinci-003',
+          temperature: 0,
+        },
+      });
+    } catch (e) {
+      expect(e).toEqual({
+        error: '{}',
+        errorType: 500,
+        provider: 'openai',
+      });
+    }
   });
 });

@@ -201,28 +201,4 @@ describe('agentSelectors', () => {
       expect(show).toBe(false);
     });
   });
-
-  describe('modelHasVisionAbility', () => {
-    it('should return true if the model has vision ability', () => {
-      const hasAbility = agentSelectors.modelHasVisionAbility(mockSessionStore);
-      expect(hasAbility).toBe(false);
-    });
-
-    it('should return false if the model does not have vision ability', () => {
-      const modifiedSessionStore = {
-        ...mockSessionStore,
-        sessions: [
-          {
-            ...mockSessionStore.sessions[0],
-            config: {
-              ...mockSessionStore.sessions[0].config,
-              model: 'some-other-model',
-            },
-          },
-        ],
-      };
-      const hasAbility = agentSelectors.modelHasVisionAbility(modifiedSessionStore);
-      expect(hasAbility).toBe(false);
-    });
-  });
 });

@@ -299,14 +299,15 @@ export default {
   },
   tools: {
     builtins: {
-      groupName: '内置扩展',
+      groupName: '内置插件',
     },
+    disabled: '当前模型不支持函数调用，无法使用插件',
     plugins: {
       enabled: '已启用 {{num}}',
-      groupName: '插件',
+      groupName: '三方插件',
       noEnabled: '暂无启用插件',
       store: '插件商店',
     },
-    title: '扩展工具',
+    title: '扩展插件',
   },
 };

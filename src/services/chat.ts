@@ -2,10 +2,11 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
-import { isVisionModel } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/slices/settings/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/message';
@@ -49,11 +50,15 @@ class ChatService {
 
     const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
+    // check this model can use function call
+    const canUseFC = modelProviderSelectors.modelEnabledFunctionCall(payload.model)(
+      useGlobalStore.getState(),
+    );
     // the rule that model can use tools:
     // 1. tools is not empty
-    // 2. model is not in vision white list, because vision model can't use tools
-    // TODO: we need to find some method to let vision model use tools
-    const shouldUseTools = filterTools.length > 0 && !isVisionModel(payload.model);
+    // 2. model can use function call
+    const shouldUseTools = filterTools.length > 0 && canUseFC;
+
     const tools = shouldUseTools ? filterTools : undefined;
 
     return this.getChatCompletion({ ...params, messages: oaiMessages, tools }, options);
@@ -114,7 +119,7 @@ class ChatService {
     model,
   }: {
     messages: ChatMessage[];
-    model?: string;
+    model: string;
     tools?: string[];
   }): OpenAIChatMessage[] => {
     // handle content type for vision model
@@ -127,7 +132,9 @@ class ChatService {
 
       if (imageList.length === 0) return m.content;
 
-      if (!isVisionModel(model)) {
+      const hasVision = modelProviderSelectors.modelEnabledVision(model)(useGlobalStore.getState());
+
+      if (!hasVision) {
         return m.content;
       }
 

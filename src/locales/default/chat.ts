@@ -66,8 +66,14 @@ export default {
     prettifying: '润色中...',
   },
   temp: '临时',
-  tokenDetail:
-    '角色设定: {{systemRoleToken}} · 会话消息: {{chatsToken}} · 工具设定: {{toolsToken}}',
+  tokenDetails: {
+    chats: '会话消息',
+    rest: '剩余可用',
+    systemRole: '角色设定',
+    tools: '插件设定',
+    total: '总共可用',
+    used: '总计使用',
+  },
   tokenTag: {
     overload: '超过限制',
     remained: '剩余',
@@ -105,6 +111,7 @@ export default {
   updateAgent: '更新助理信息',
   upload: {
     actionTooltip: '上传图片',
+    disabled: '当前模型不支持视觉识别，请切换模型后使用',
     dragDesc: '拖拽文件到这里，支持上传多个图片。按住 Shift 直接发送图片',
     dragTitle: '上传图片',
   },
