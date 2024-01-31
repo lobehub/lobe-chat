@@ -1,4 +1,5 @@
-import OpenAIModelCard from './openai';
-import ZhiPuModelCard from './zhipu';
+import Bedrock from './bedrock';
+import OpenAI from './openai';
+import ZhiPu from './zhipu';
 
-export const ModelProviderList = [OpenAIModelCard, ZhiPuModelCard];
+export const ModelProviderList = [OpenAI, ZhiPu, Bedrock];

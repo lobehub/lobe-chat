@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-const ZhiPuModelCard: ModelProviderCard = {
+const ZhiPu: ModelProviderCard = {
   chatModels: [
     {
       description: '最新的 GLM-4 、最大支持 128k 上下文、支持 Function Call 、Retreival',
@@ -28,4 +28,4 @@ const ZhiPuModelCard: ModelProviderCard = {
   id: 'zhipu',
 };
 
-export default ZhiPuModelCard;
+export default ZhiPu;

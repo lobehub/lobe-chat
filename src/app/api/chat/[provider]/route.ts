@@ -1,7 +1,9 @@
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
+import { getServerConfig } from '@/config/server';
 import {
   CompletionError,
+  LobeBedrockAI,
   LobeOpenAI,
   LobeRuntimeAI,
   LobeZhipuAI,
@@ -34,6 +36,18 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
 
       case ModelProvider.ZhiPu: {
         runtimeModel = await LobeZhipuAI.fromRequest(req);
+        break;
+      }
+
+      case ModelProvider.Bedrock: {
+        const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID } = getServerConfig();
+        if (!(AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY))
+          throw new TypeError(JSON.stringify({ type: ChatErrorType.NoAPIKey }));
+
+        runtimeModel = new LobeBedrockAI({
+          accessKeyId: AWS_ACCESS_KEY_ID,
+          accessKeySecret: AWS_SECRET_ACCESS_KEY,
+        });
       }
     }
   } catch (e) {

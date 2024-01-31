@@ -1,7 +1,7 @@
 import { ModelProviderCard } from '@/types/llm';
 
 // refs to: https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
-const OpenAIModelCard: ModelProviderCard = {
+const OpenAI: ModelProviderCard = {
   chatModels: [
     {
       description: 'GPT 3.5 Turbo，适用于各种文本生成和理解任务',
@@ -48,4 +48,4 @@ const OpenAIModelCard: ModelProviderCard = {
   id: 'openai',
 };
 
-export default OpenAIModelCard;
+export default OpenAI;
