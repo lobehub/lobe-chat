@@ -205,14 +205,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                                    | 助手说明                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| [SagePathfinder](https://chat-preview.lobehub.com/market?agent=sage-pathfinder)<br/><sup>By **[Ajasra](https://github.com/Ajasra)** on **2024-01-31**</sup>                                 | 专注于斯多葛主义、深度反思和战略性提问的个人成长教练专家。<br/>`个人成长` `教练` `反思` `目标设定` `幸福感`               |
-| [英语熟练度教练](https://chat-preview.lobehub.com/market?agent=english-c-2-level)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-30**</sup>                             | C2 级别英语会话伙伴<br/>`英语熟练度` `会话伙伴` `语言辅导`                                                                |
-| [创业和竞争力专家](https://chat-preview.lobehub.com/market?agent=entrepreneurship-and-competitiveness-expert)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-30**</sup> | 创业和竞争力专家：指导个人实现创业成功和市场竞争力。<br/>`创业` `竞争力` `咨询` `指导` `建议`                             |
-| [数学研究顾问](https://chat-preview.lobehub.com/market?agent=mathematical-research-advisor)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-30**</sup>                   | 数学研究助理：协助进行数学研究、解决问题，并在各种数学概念和技术方面提供指导。<br/>`数学` `研究` `协助` `问题解决` `沟通` |
+| 最近新增                                                                                                                                                                               | 助手说明                                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| [SagePathfinder](https://chat-preview.lobehub.com/market?agent=sage-pathfinder)<br/><sup>By **[Ajasra](https://github.com/Ajasra)** on **2024-01-31**</sup>                            | 专注于斯多葛主义、深度反思和战略性提问的个人成长教练专家。<br/>`个人成长` `教练` `反思` `目标设定` `幸福感`                 |
+| [变量命名大师](https://chat-preview.lobehub.com/market?agent=variable-naming-assistant)<br/><sup>By **[undefinedZNN](https://github.com/undefinedZNN)** on **2024-01-31**</sup>        | 精通编程变量命名，提供多个建议并解释使用场景。<br/>`变量命名` `编程` `建议`                                                 |
+| [C1 Level English Language Facilitator](https://chat-preview.lobehub.com/market?agent=c-1-level-english)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-30**</sup> | English Conversation Partner for C1 Level<br/>`english-conversation` `c-1-level` `language-proficiency` `language-coaching` |
+| [A2 英语会话辅导员](https://chat-preview.lobehub.com/market?agent=english-a-2-level)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-01-30**</sup>                     | A2 级别英语会话伙伴机器人：提升基础英语学习者的语言能力。<br/>`英语会话` `语言学习` `教学`                                  |
 
-> 📊 Total agents: [<kbd>**143**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**147**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
