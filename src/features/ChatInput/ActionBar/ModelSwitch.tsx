@@ -26,26 +26,29 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
       }
 
       &-item-group-list {
-        margin: 0;
+        margin: 0 !important;
       }
     }
   `,
   tag: css`
-    border-radius: 4px;
-    width: 20px;
-    height: 20px;
+    cursor: default;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: default;
+
+    width: 20px;
+    height: 20px;
+
+    border-radius: 4px;
   `,
   tagBlue: css`
-    background: ${token.geekblue1};
     color: ${token.geekblue};
+    background: ${token.geekblue1};
   `,
   tagGreen: css`
-    background: ${token.green1};
     color: ${token.green};
+    background: ${token.green1};
   `,
 }));
 
@@ -53,7 +56,11 @@ const ModelSwitch = memo(() => {
   const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
   const [model, updateAgentConfig] = useSessionStore((s) => {
-    return [agentSelectors.currentAgentModel(s), s.updateAgentConfig];
+    return [
+      agentSelectors.currentAgentModel(s),
+      s.updateAgentConfig,
+      // agentSelectors.currentAgentModelProvider(s),
+    ];
   });
   const select = useGlobalStore(modelProviderSelectors.modelSelectList, isEqual);
 
@@ -105,6 +112,8 @@ const ModelSwitch = memo(() => {
             </Flexbox>
           ),
           type: 'group',
+          // TODO: when we have more providers, need to use this. And some more style to fix
+          // type: activeProvider === provider.id ? 'group' : undefined,
         })),
         style: {
           maxHeight: 500,

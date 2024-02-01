@@ -61,7 +61,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       // Respond with the stream
       return new StreamingTextResponse(output);
     } catch (e) {
-      const err = e as Error;
+      const err = e as Error & { $metadata: any };
 
       const error: CompletionError = {
         error: {

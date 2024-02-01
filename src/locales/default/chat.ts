@@ -6,6 +6,7 @@ export default {
     },
     provider: {
       bedrock: 'AWS Bedrock',
+      google: 'Google',
       oneapi: 'One API',
       openai: 'OpenAI',
       zhipu: '智谱AI',

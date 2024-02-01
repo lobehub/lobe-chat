@@ -1,14 +1,13 @@
 import { Tag } from '@lobehub/ui';
 import { memo } from 'react';
 
-import ModelProviderIcon from './ModelProviderIcons';
+import ModelIcon from './ModelIcon';
 
 interface ModelTagProps {
-  name: string;
-  provider?: string;
+  model: string;
 }
-const ModelTag = memo<ModelTagProps>(({ provider, name }) => {
-  return <Tag icon={<ModelProviderIcon provider={provider} />}>{name}</Tag>;
-});
+const ModelTag = memo<ModelTagProps>(({ model }) => (
+  <Tag icon={<ModelIcon model={model} />}>{model}</Tag>
+));
 
 export default ModelTag;

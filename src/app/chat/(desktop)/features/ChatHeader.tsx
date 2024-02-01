@@ -22,27 +22,17 @@ const Left = memo(() => {
 
   const router = useRouter();
 
-  const [
-    init,
-    isInbox,
-    title,
-    description,
-    avatar,
-    backgroundColor,
-    model,
-    modelProvider,
-    plugins,
-  ] = useSessionStore((s) => [
-    sessionSelectors.isSomeSessionActive(s),
-    sessionSelectors.isInboxSession(s),
-    agentSelectors.currentAgentTitle(s),
-    agentSelectors.currentAgentDescription(s),
-    agentSelectors.currentAgentAvatar(s),
-    agentSelectors.currentAgentBackgroundColor(s),
-    agentSelectors.currentAgentModel(s),
-    agentSelectors.currentAgentModelProvider(s),
-    agentSelectors.currentAgentPlugins(s),
-  ]);
+  const [init, isInbox, title, description, avatar, backgroundColor, model, plugins] =
+    useSessionStore((s) => [
+      sessionSelectors.isSomeSessionActive(s),
+      sessionSelectors.isInboxSession(s),
+      agentSelectors.currentAgentTitle(s),
+      agentSelectors.currentAgentDescription(s),
+      agentSelectors.currentAgentAvatar(s),
+      agentSelectors.currentAgentBackgroundColor(s),
+      agentSelectors.currentAgentModel(s),
+      agentSelectors.currentAgentPlugins(s),
+    ]);
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const displayDesc = isInbox ? t('inbox.desc') : description;
@@ -73,7 +63,7 @@ const Left = memo(() => {
         desc={displayDesc}
         tag={
           <>
-            <ModelTag name={model} provider={modelProvider} />
+            <ModelTag model={model} />
             {plugins?.length > 0 && <PluginTag plugins={plugins} />}
           </>
         }
