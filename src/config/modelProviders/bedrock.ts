@@ -23,18 +23,18 @@ const Bedrock: ModelProviderCard = {
       id: 'anthropic.claude-v2:1',
       tokens: 200_000,
     },
-    // {
-    //   description: 'Llama 2 Chat 13B v1，上下文大小为 4k，Llama 2 模型的对话用例优化变体。',
-    //   displayName: 'Llama 2 Chat 13B',
-    //   id: 'meta.llama2-13b-chat-v1',
-    //   tokens: 4000,
-    // },
-    // {
-    //   description: 'Llama 2 Chat 70B v1，上下文大小为 4k，Llama 2 模型的对话用例优化变体。',
-    //   displayName: 'Llama 2 Chat 70B',
-    //   id: 'meta.llama2-70b-chat-v1',
-    //   tokens: 4000,
-    // },
+    {
+      description: 'Llama 2 Chat 13B v1，上下文大小为 4k，Llama 2 模型的对话用例优化变体。',
+      displayName: 'Llama 2 Chat 13B',
+      id: 'meta.llama2-13b-chat-v1',
+      tokens: 4000,
+    },
+    {
+      description: 'Llama 2 Chat 70B v1，上下文大小为 4k，Llama 2 模型的对话用例优化变体。',
+      displayName: 'Llama 2 Chat 70B',
+      id: 'meta.llama2-70b-chat-v1',
+      tokens: 4000,
+    },
   ],
   id: 'bedrock',
 };

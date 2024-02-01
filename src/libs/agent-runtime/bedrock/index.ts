@@ -2,8 +2,8 @@ import {
   BedrockRuntimeClient,
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
-import { AWSBedrockAnthropicStream, StreamingTextResponse } from 'ai';
-import { experimental_buildAnthropicPrompt } from 'ai/prompts';
+import { AWSBedrockAnthropicStream, AWSBedrockLlama2Stream, StreamingTextResponse } from 'ai';
+import { experimental_buildAnthropicPrompt, experimental_buildLlama2Prompt } from 'ai/prompts';
 
 import { ChatStreamPayload } from '@/types/openai/chat';
 
@@ -36,6 +36,12 @@ export class LobeBedrockAI implements LobeRuntimeAI {
   }
 
   async chat(payload: ChatStreamPayload) {
+    if (payload.model.startsWith('meta')) return this.invokeLlamaModel(payload);
+
+    return this.invokeClaudeModel(payload);
+  }
+
+  private invokeClaudeModel = async (payload: ChatStreamPayload) => {
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
       body: JSON.stringify({
@@ -76,7 +82,50 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
       throw error;
     }
-  }
+  };
+
+  private invokeLlamaModel = async (payload: ChatStreamPayload) => {
+    const command = new InvokeModelWithResponseStreamCommand({
+      accept: 'application/json',
+      body: JSON.stringify({
+        max_gen_len: payload.max_tokens || 400,
+        prompt: experimental_buildLlama2Prompt(payload.messages as any),
+      }),
+      contentType: 'application/json',
+      modelId: payload.model,
+    });
+
+    try {
+      // Ask Claude for a streaming chat completion given the prompt
+      const bedrockResponse = await this.client.send(command);
+
+      // Convert the response into a friendly text-stream
+      const stream = AWSBedrockLlama2Stream(bedrockResponse);
+
+      const [debug, output] = stream.tee();
+
+      if (DEBUG_CHAT_COMPLETION) {
+        debugStream(debug).catch(console.error);
+      }
+      // Respond with the stream
+      return new StreamingTextResponse(output);
+    } catch (e) {
+      const err = e as Error & { $metadata: any };
+
+      const error: CompletionError = {
+        error: {
+          body: err.$metadata,
+          message: err.message,
+          region: this.region,
+          type: err.name,
+        },
+        errorType: 'OpenAIBizError',
+        provider: ModelProvider.Bedrock,
+      };
+
+      throw error;
+    }
+  };
 }
 
 export default LobeBedrockAI;
