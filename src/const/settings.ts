@@ -49,6 +49,9 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   bedrock: {
     enabled: false,
   },
+  google: {
+    enabled: false,
+  },
   openAI: {
     OPENAI_API_KEY: '',
     models: [],

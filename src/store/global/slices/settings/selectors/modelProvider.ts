@@ -22,6 +22,8 @@ const zhipuAPIKey = (s: GlobalStore) => modelProvider(s).zhipu.ZHIPU_API_KEY;
 
 const enableBedrock = (s: GlobalStore) => modelProvider(s).bedrock.enabled;
 
+const enableGoogle = (s: GlobalStore) => modelProvider(s).google.enabled;
+
 const customModelList = (s: GlobalStore) => {
   let models: CustomModels = [];
 
@@ -70,7 +72,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
   return [
     OpenAIProvider,
     enableZhipu(s) ? ZhiPuProvider : null,
-    GoogleProvider,
+    enableGoogle(s) ? GoogleProvider : null,
     enableBedrock(s) ? BedrockProvider : null,
     hasOneAPI
       ? {

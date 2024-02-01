@@ -17,6 +17,11 @@ export interface ZhiPuConfig {
   enabled: boolean;
 }
 
+export interface GoogleConfig {
+  GOOGLE_API_KEY?: string;
+  enabled: boolean;
+}
+
 export interface AWSBedrockConfig {
   AWS_ACCESS_KEY_ID?: string;
   AWS_REGION?: string;
@@ -26,6 +31,7 @@ export interface AWSBedrockConfig {
 
 export interface GlobalLLMConfig {
   bedrock: AWSBedrockConfig;
+  google: GoogleConfig;
   openAI: OpenAIConfig;
   zhipu: ZhiPuConfig;
 }
