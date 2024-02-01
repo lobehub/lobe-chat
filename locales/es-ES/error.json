@@ -34,7 +34,7 @@
     "503": "Lo sentimos, el servidor no puede procesar su solicitud en este momento, posiblemente debido a una sobrecarga o mantenimiento. Por favor, inténtelo de nuevo más tarde",
     "504": "Lo sentimos, el servidor no recibió respuesta del servidor upstream. Por favor, inténtelo de nuevo más tarde",
     "InvalidAccessCode": "La contraseña es incorrecta o está vacía. Ingrese la contraseña de acceso correcta o agregue una clave de API de OpenAI personalizada",
-    "NoAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
+    "NoOpenAIAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
     "OpenAIBizError": "Error al solicitar el servicio OpenAI. Depure o reintente según la siguiente información",
     "PluginApiNotFound": "Lo sentimos, el API especificado no existe en el manifiesto del complemento. Verifique si su método de solicitud coincide con el API del manifiesto del complemento",
     "PluginApiParamsError": "Lo sentimos, la validación de los parámetros de entrada de la solicitud del complemento no ha pasado. Verifique si los parámetros de entrada coinciden con la información de descripción del API",

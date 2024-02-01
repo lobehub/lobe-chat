@@ -53,7 +53,9 @@ export default {
 
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
     OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
-    NoAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',
+    NoOpenAIAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',
+
+    InvalidZhipuAPIKey: 'Zhipu API Key 不正确或为空，请检查 Zhipu API Key',
     /* eslint-enable */
   },
   stt: {

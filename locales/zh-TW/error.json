@@ -34,7 +34,7 @@
     "503": "抱歉，伺服器目前無法處理您的請求，可能是因為過載或正在進行維護。請稍後再試。",
     "504": "抱歉，伺服器沒有收到上游伺服器的回應。請稍後再試。",
     "InvalidAccessCode": "密碼不正確或為空。請輸入正確的存取密碼，或新增自定義的 OpenAI API Key。",
-    "NoAPIKey": "OpenAI API 金鑰為空，請添加自訂 OpenAI API 金鑰",
+    "NoOpenAIAPIKey": "OpenAI API 金鑰為空，請添加自訂 OpenAI API 金鑰",
     "OpenAIBizError": "請求 OpenAI 服務出錯。請根據以下資訊進行排查或重試。",
     "PluginApiNotFound": "抱歉，外掛描述檔案中不存在該 API。請檢查您的請求方法與外掛清單 API 是否相符",
     "PluginApiParamsError": "抱歉，該外掛請求的輸入參數驗證失敗。請檢查輸入參數與 API 描述資訊是否相符",

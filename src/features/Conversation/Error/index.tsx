@@ -1,78 +1,66 @@
-import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
+import { IPluginErrorType, PluginErrorType } from '@lobehub/chat-plugin-sdk';
+import type { AlertProps } from '@lobehub/ui';
+import { memo } from 'react';
 
-import { ChatErrorType } from '@/types/fetch';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { ChatMessage, ChatMessageError } from '@/types/message';
 
-import { RenderErrorMessage } from '../types';
+import ErrorJsonViewer from './ErrorJsonViewer';
 import InvalidAccess from './InvalidAccess';
 import OpenAPIKey from './OpenAPIKey';
 import OpenAiBizError from './OpenAiBizError';
-import PluginError from './Plugin/PluginError';
-import PluginSettings from './Plugin/PluginSettings';
+import PluginSettings from './PluginSettings';
 
-export const renderErrorMessages: Record<string, RenderErrorMessage> = {
-  [PluginErrorType.PluginMarketIndexNotFound]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginMarketIndexInvalid]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginMetaInvalid]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginMetaNotFound]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginManifestInvalid]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginManifestNotFound]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginApiNotFound]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginApiParamsError]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginServerError]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginGatewayError]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginOpenApiInitError]: {
-    Render: PluginError,
-  },
-  [PluginErrorType.PluginSettingsInvalid]: {
-    Render: PluginSettings,
-    config: {
-      extraDefaultExpand: true,
-      extraIsolate: true,
-      type: 'warning',
-    },
-  },
-  [ChatErrorType.InvalidAccessCode]: {
-    Render: InvalidAccess,
-    config: {
-      extraDefaultExpand: true,
-      extraIsolate: true,
-      type: 'warning',
-    },
-  },
-  [ChatErrorType.NoAPIKey]: {
-    Render: OpenAPIKey,
-    config: {
-      extraDefaultExpand: true,
-      extraIsolate: true,
-      type: 'warning',
-    },
-  },
-  [ChatErrorType.OpenAIBizError]: {
-    Render: OpenAiBizError,
-    config: {
-      extraDefaultExpand: true,
-      extraIsolate: true,
-      type: 'warning',
-    },
-  },
+// Config for the errorMessage display
+export const getErrorAlertConfig = (
+  errorType?: IPluginErrorType | ILobeAgentRuntimeErrorType,
+): AlertProps | undefined => {
+  switch (errorType) {
+    case PluginErrorType.PluginSettingsInvalid:
+    case AgentRuntimeErrorType.InvalidAccessCode:
+    case AgentRuntimeErrorType.NoOpenAIAPIKey:
+    case AgentRuntimeErrorType.OpenAIBizError:
+    case AgentRuntimeErrorType.ZhipuBizError:
+    case AgentRuntimeErrorType.InvalidZhipuAPIKey: {
+      return {
+        extraDefaultExpand: true,
+        extraIsolate: true,
+        type: 'warning',
+      };
+    }
+    default: {
+      return undefined;
+    }
+  }
 };
+
+const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
+  const error = data.error as ChatMessageError;
+  if (!error?.type) return;
+
+  switch (error.type) {
+    case PluginErrorType.PluginSettingsInvalid: {
+      return <PluginSettings id={data.id} plugin={data.plugin} />;
+    }
+
+    case AgentRuntimeErrorType.OpenAIBizError: {
+      return <OpenAiBizError {...data} />;
+    }
+
+    case AgentRuntimeErrorType.InvalidAccessCode: {
+      return <InvalidAccess id={data.id} />;
+    }
+
+    // TODO: 独立的Zhipu api key 配置页面
+    case AgentRuntimeErrorType.InvalidZhipuAPIKey:
+    case AgentRuntimeErrorType.NoOpenAIAPIKey: {
+      return <OpenAPIKey id={data.id} />;
+    }
+
+    default: {
+      return <ErrorJsonViewer error={data.error} id={data.id} />;
+    }
+  }
+});
+
+export default ErrorMessageExtra;

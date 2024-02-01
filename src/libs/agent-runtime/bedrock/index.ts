@@ -5,10 +5,12 @@ import {
 import { AWSBedrockAnthropicStream, AWSBedrockLlama2Stream, StreamingTextResponse } from 'ai';
 import { experimental_buildAnthropicPrompt, experimental_buildLlama2Prompt } from 'ai/prompts';
 
+import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { AgentRuntimeError } from '@/libs/agent-runtime/utils/createError';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { CompletionError, ModelProvider } from '../type';
+import { ChatCompletionErrorPayload, ModelProvider } from '../types/type';
 import { debugStream } from '../utils/debugStream';
 import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 
@@ -67,20 +69,20 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       // Respond with the stream
       return new StreamingTextResponse(output);
     } catch (e) {
-      const err = e as Error & { $metadata: any };
+      const err = e as Error;
 
-      const error: CompletionError = {
-        error: {
-          body: err.$metadata,
-          message: err.message,
+      if ('$metadata' in err) {
+        throw AgentRuntimeError.chat({
+          error: {
+            body: err.$metadata,
+            message: err.message,
+            type: err.name,
+          },
+          errorType: AgentRuntimeErrorType.BedrockBizError,
+          provider: ModelProvider.Bedrock,
           region: this.region,
-          type: err.name,
-        },
-        errorType: 'OpenAIBizError',
-        provider: ModelProvider.Bedrock,
-      };
-
-      throw error;
+        });
+      }
     }
   };
 
@@ -112,7 +114,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     } catch (e) {
       const err = e as Error & { $metadata: any };
 
-      const error: CompletionError = {
+      const error: ChatCompletionErrorPayload = {
         error: {
           body: err.$metadata,
           message: err.message,

@@ -1,19 +1,10 @@
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { getServerConfig } from '@/config/server';
-import {
-  CompletionError,
-  LobeBedrockAI,
-  LobeOpenAI,
-  LobeRuntimeAI,
-  LobeZhipuAI,
-  ModelProvider,
-} from '@/libs/agent-runtime';
-import LobeGoogleAI from '@/libs/agent-runtime/google';
-import { ChatErrorType, ErrorType } from '@/types/fetch';
+import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
+import { ErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
-import { desensitizeUrl } from './desensitizeUrl';
+import AgentRuntime from './agentRuntime';
 
 // due to the Chinese region does not support accessing Google / OpenAI
 // we need to use proxy to access it
@@ -33,41 +24,12 @@ export const runtime = useProxy ? 'nodejs' : 'edge';
 export const preferredRegion = getPreferredRegion();
 
 export const POST = async (req: Request, { params }: { params: { provider: string } }) => {
-  const payload = (await req.json()) as ChatStreamPayload;
-
-  let runtimeModel: LobeRuntimeAI;
+  let agentRuntime: AgentRuntime;
 
   // ============  1. init chat model   ============ //
 
   try {
-    switch (params.provider) {
-      default:
-      case 'oneapi':
-      case ModelProvider.OpenAI: {
-        runtimeModel = new LobeOpenAI(req, payload.model);
-        break;
-      }
-
-      case ModelProvider.ZhiPu: {
-        runtimeModel = await LobeZhipuAI.fromRequest(req);
-        break;
-      }
-      case ModelProvider.Google: {
-        runtimeModel = new LobeGoogleAI(process.env.GOOGLE_API_KEY || '');
-        break;
-      }
-
-      case ModelProvider.Bedrock: {
-        const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID } = getServerConfig();
-        if (!(AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY))
-          throw new TypeError(JSON.stringify({ type: ChatErrorType.NoAPIKey }));
-
-        runtimeModel = new LobeBedrockAI({
-          accessKeyId: AWS_ACCESS_KEY_ID,
-          accessKeySecret: AWS_SECRET_ACCESS_KEY,
-        });
-      }
-    }
+    agentRuntime = await AgentRuntime.initFromRequest(params.provider, req.clone());
   } catch (e) {
     // if catch the error, just return it
     const err = JSON.parse((e as Error).message) as { type: ErrorType };
@@ -75,31 +37,29 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     return createErrorResponse(err.type);
   }
 
-  if (!runtimeModel)
-    return createErrorResponse(ChatErrorType.LobeChatBizError, {
-      error: {
-        message: 'chatModel is not initialized, please contact the lobehub team.',
-        type: ChatErrorType.LobeChatBizError,
-      },
-    });
-
   // ============  2. create chat completion   ============ //
 
   try {
-    return await runtimeModel.chat(payload);
+    const payload = (await req.json()) as ChatStreamPayload;
+
+    return await agentRuntime.chat(payload);
   } catch (e) {
-    let desensitizedEndpoint = runtimeModel.baseURL;
+    // let desensitizedEndpoint = runtimeModel.baseURL;
+    //
+    // // refs: https://github.com/lobehub/lobe-chat/issues/842
+    // if (runtimeModel.baseURL && runtimeModel.baseURL !== 'https://api.openai.com/v1') {
+    //   desensitizedEndpoint = desensitizeUrl(runtimeModel.baseURL);
+    // }
 
-    // refs: https://github.com/lobehub/lobe-chat/issues/842
-    if (runtimeModel.baseURL && runtimeModel.baseURL !== 'https://api.openai.com/v1') {
-      desensitizedEndpoint = desensitizeUrl(runtimeModel.baseURL);
-    }
-
-    const { errorType, error: errorContent } = e as CompletionError;
+    const { errorType, provider, error: errorContent, ...res } = e as ChatCompletionErrorPayload;
 
     // track the error at server side
-    console.error(errorContent);
+    console.error(`Route: [${errorType}]`, errorContent);
 
-    return createErrorResponse(errorType, { endpoint: desensitizedEndpoint, error: errorContent });
+    return createErrorResponse(errorType, {
+      error: errorContent,
+      provider,
+      ...res,
+    });
   }
 };

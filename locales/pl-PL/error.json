@@ -34,7 +34,7 @@
     "503": "Przepraszamy, serwer tymczasowo nie może przetworzyć Twojego żądania, prawdopodobnie z powodu przeciążenia lub konserwacji. Proszę spróbuj ponownie później",
     "504": "Przepraszamy, serwer nie otrzymał odpowiedzi od serwera nadrzędnego. Proszę spróbuj ponownie później",
     "InvalidAccessCode": "Nieprawidłowe lub puste hasło dostępu. Proszę podaj poprawne hasło dostępu lub dodaj niestandardowy klucz API OpenAI",
-    "NoAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
+    "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OpenAIBizError": "Błąd żądania usługi OpenAI. Proszę sprawdź poniższe informacje i spróbuj ponownie",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
     "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",

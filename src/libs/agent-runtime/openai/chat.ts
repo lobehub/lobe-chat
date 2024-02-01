@@ -1,11 +1,13 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
-import { consola } from 'consola';
 import OpenAI from 'openai';
 
-import { debugStream } from '@/libs/agent-runtime/utils/debugStream';
-import { ChatErrorType } from '@/types/fetch';
-
-import { CompletionError, CreateChatCompletionOptions, ModelProvider } from '../type';
+import { AgentRuntimeErrorType } from '../error';
+import {
+  ChatCompletionErrorPayload,
+  CreateChatCompletionOptions,
+  ModelProvider,
+} from '../types/type';
+import { debugStream } from '../utils/debugStream';
 import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 
 export const createChatCompletion = async ({ payload, chatModel }: CreateChatCompletionOptions) => {
@@ -29,12 +31,12 @@ export const createChatCompletion = async ({ payload, chatModel }: CreateChatCom
     const [debug, prod] = stream.tee();
 
     if (DEBUG_CHAT_COMPLETION) {
-      debugStream(debug).catch(consola.error);
+      debugStream(debug).catch(console.error);
     }
 
     return new StreamingTextResponse(prod);
   } catch (error) {
-    let errorType: any = ChatErrorType.OpenAIBizError;
+    let errorType: any = AgentRuntimeErrorType.OpenAIBizError;
     let errorContent: any;
 
     // Check if the error is an OpenAI APIError
@@ -58,13 +60,13 @@ export const createChatCompletion = async ({ payload, chatModel }: CreateChatCom
       errorContent = errorResult;
     } else {
       errorContent = JSON.stringify(error);
-      errorType = ChatErrorType.InternalServerError;
+      errorType = AgentRuntimeErrorType.InternalServerError;
     }
 
     throw {
       error: errorContent,
       errorType,
       provider: ModelProvider.OpenAI,
-    } as CompletionError;
+    } as ChatCompletionErrorPayload;
   }
 };

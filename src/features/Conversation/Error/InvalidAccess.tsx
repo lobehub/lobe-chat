@@ -9,7 +9,6 @@ import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 
-import { RenderErrorMessage } from '../types';
 import APIKeyForm from './ApiKeyForm';
 import { ErrorActionContainer, FormAction } from './style';
 
@@ -18,7 +17,11 @@ enum Tab {
   Password = 'password',
 }
 
-const InvalidAccess: RenderErrorMessage['Render'] = memo(({ id }) => {
+interface InvalidAccessProps {
+  id: string;
+}
+
+const InvalidAccess = memo<InvalidAccessProps>(({ id }) => {
   const { t } = useTranslation('error');
   const [mode, setMode] = useState<Tab>(Tab.Password);
   const [password, setSettings] = useGlobalStore((s) => [

@@ -34,7 +34,7 @@
     "503": "Desculpe, o servidor não pode processar sua solicitação no momento, possivelmente devido a sobrecarga ou manutenção. Por favor, tente novamente mais tarde",
     "504": "Desculpe, o servidor não recebeu resposta do servidor upstream. Por favor, tente novamente mais tarde",
     "InvalidAccessCode": "Senha incorreta ou em branco. Insira a senha de acesso correta ou adicione uma chave de API personalizada do OpenAI",
-    "NoAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
+    "NoOpenAIAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
     "OpenAIBizError": "Erro ao solicitar o serviço OpenAI. Verifique ou tente novamente com base nas informações abaixo",
     "PluginApiNotFound": "Desculpe, o API especificado não existe no manifesto do plugin. Verifique se o método de solicitação corresponde ao API do manifesto do plugin",
     "PluginApiParamsError": "Desculpe, a validação dos parâmetros de entrada da solicitação do plugin falhou. Verifique se os parâmetros de entrada correspondem às informações de descrição do API",

@@ -1,11 +1,11 @@
-import { getOpenAIAuthFromRequest } from '@/const/fetch';
+import { getLobeAuthFromRequest } from '@/const/fetch';
 
 import { createOpenai } from '../createBizOpenAI/createOpenai';
 
 export const runtime = 'edge';
 
 export const POST = async (req: Request) => {
-  const { apiKey, endpoint } = getOpenAIAuthFromRequest(req);
+  const { apiKey, endpoint } = getLobeAuthFromRequest(req);
 
   const openAI = createOpenai(apiKey, endpoint);
 

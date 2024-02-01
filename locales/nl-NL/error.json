@@ -34,7 +34,7 @@
     "503": "Sorry, de server kan uw verzoek momenteel niet verwerken vanwege overbelasting of onderhoud. Probeer het later opnieuw",
     "504": "Sorry, de server heeft geen reactie ontvangen van de upstream server. Probeer het later opnieuw",
     "InvalidAccessCode": "Ongeldige of lege toegangscode. Voer de juiste toegangscode in of voeg een aangepaste OpenAI API-sleutel toe",
-    "NoAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
+    "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",

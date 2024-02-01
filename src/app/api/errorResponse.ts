@@ -1,27 +1,37 @@
-import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { ErrorResponse } from '@/types/fetch';
 
-const getStatus = (errorType: ErrorType) => {
+const getStatus = (errorType: ILobeAgentRuntimeErrorType) => {
   switch (errorType) {
-    case ChatErrorType.NoAPIKey:
-    case ChatErrorType.InvalidAccessCode: {
+    case AgentRuntimeErrorType.NoOpenAIAPIKey:
+    case AgentRuntimeErrorType.InvalidZhipuAPIKey:
+    case AgentRuntimeErrorType.InvalidAccessCode: {
       return 401;
     }
 
-    case ChatErrorType.LobeChatBizError: {
+    case AgentRuntimeErrorType.LobeChatBizError: {
       return 576;
     }
 
-    case ChatErrorType.OpenAIBizError: {
+    case AgentRuntimeErrorType.AgentRuntimeError: {
+      return 470;
+    }
+    case AgentRuntimeErrorType.OpenAIBizError: {
       return 471;
     }
-    case ChatErrorType.BedrockBizError: {
+
+    case AgentRuntimeErrorType.ZhipuBizError: {
+      return 472;
+    }
+
+    case AgentRuntimeErrorType.BedrockBizError: {
       return 473;
     }
   }
   return errorType;
 };
 
-export const createErrorResponse = (errorType: ErrorType, body?: any) => {
+export const createErrorResponse = (errorType: ILobeAgentRuntimeErrorType, body?: any) => {
   const statusCode = getStatus(errorType);
 
   const data: ErrorResponse = { body, errorType };

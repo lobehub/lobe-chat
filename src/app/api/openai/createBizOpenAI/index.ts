@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 
 import { checkAuth } from '@/app/api/auth';
 import { getServerConfig } from '@/config/server';
-import { getOpenAIAuthFromRequest } from '@/const/fetch';
+import { getLobeAuthFromRequest } from '@/const/fetch';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 
 import { createErrorResponse } from '../../errorResponse';
@@ -14,7 +14,7 @@ import { createOpenai } from './createOpenai';
  * if auth not pass ,just return error response
  */
 export const createBizOpenAI = (req: Request, model: string): Response | OpenAI => {
-  const { apiKey, accessCode, endpoint, useAzure, apiVersion } = getOpenAIAuthFromRequest(req);
+  const { apiKey, accessCode, endpoint, useAzure, apiVersion } = getLobeAuthFromRequest(req);
 
   const result = checkAuth({ accessCode, apiKey });
 
@@ -34,8 +34,8 @@ export const createBizOpenAI = (req: Request, model: string): Response | OpenAI 
       openai = createOpenai(apiKey, endpoint);
     }
   } catch (error) {
-    if ((error as Error).cause === ChatErrorType.NoAPIKey) {
-      return createErrorResponse(ChatErrorType.NoAPIKey);
+    if ((error as Error).cause === ChatErrorType.NoOpenAIAPIKey) {
+      return createErrorResponse(ChatErrorType.NoOpenAIAPIKey);
     }
 
     console.error(error); // log error to trace it

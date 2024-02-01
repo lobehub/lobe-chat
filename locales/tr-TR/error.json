@@ -34,7 +34,7 @@
     "503": "Üzgünüm, sunucu şu anda isteğinizi işleyemiyor, muhtemelen aşırı yüklenme veya bakım nedeniyle. Lütfen daha sonra tekrar deneyin.",
     "504": "Üzgünüm, sunucu yukarı akış sunucusundan bir yanıt alamadı. Lütfen daha sonra tekrar deneyin.",
     "InvalidAccessCode": "Şifre yanlış veya boş. Lütfen doğru erişim şifresini girin veya özel bir OpenAI API Anahtarı ekleyin.",
-    "NoAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
+    "NoOpenAIAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
     "OpenAIBizError": "OpenAI hizmeti talep ederken hata oluştu. Aşağıdaki bilgilere dayanarak sorun giderin veya tekrar deneyin.",
     "PluginApiNotFound": "Üzgünüm, eklentinin bildiriminde API mevcut değil. Lütfen istek yönteminizin eklenti bildirim API'sı ile eşleşip eşleşmediğini kontrol edin",
     "PluginApiParamsError": "Üzgünüm, eklenti isteği için giriş parametre doğrulaması başarısız oldu. Lütfen giriş parametrelerinin API açıklamasıyla eşleşip eşleşmediğini kontrol edin",

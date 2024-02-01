@@ -1,3 +1,6 @@
+import { IPluginErrorType } from '@lobehub/chat-plugin-sdk/lib/error';
+
+import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ErrorType } from '@/types/fetch';
 import { Translate } from '@/types/message/translate';
 
@@ -11,7 +14,7 @@ import { ChatPluginPayload } from './tools';
 export interface ChatMessageError {
   body?: any;
   message: string;
-  type: ErrorType;
+  type: ErrorType | IPluginErrorType | ILobeAgentRuntimeErrorType;
 }
 
 export interface ChatTranslate extends Translate {
@@ -28,7 +31,7 @@ export * from './tools';
 
 export interface ChatMessage extends BaseDataModel {
   content: string;
-  error?: any;
+  error?: ChatMessageError;
   // 扩展字段
   extra?: {
     fromModel?: string;

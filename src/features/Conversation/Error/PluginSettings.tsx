@@ -10,11 +10,16 @@ import PluginSettingsConfig from '@/features/PluginSettings';
 import { useChatStore } from '@/store/chat';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
+import { ChatPluginPayload } from '@/types/message';
 
-import { RenderErrorMessage } from '../../types';
-import { ErrorActionContainer, useStyles } from '../style';
+import { ErrorActionContainer, useStyles } from './style';
 
-const PluginSettings: RenderErrorMessage['Render'] = memo(({ id, plugin }) => {
+interface PluginSettingsProps {
+  id: string;
+  plugin?: ChatPluginPayload;
+}
+
+const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('error');
   const theme = useTheme();

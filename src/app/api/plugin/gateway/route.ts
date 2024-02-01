@@ -2,7 +2,7 @@ import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { getServerConfig } from '@/config/server';
-import { getOpenAIAuthFromRequest } from '@/const/fetch';
+import { getLobeAuthFromRequest } from '@/const/fetch';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 
 import { parserPluginSettings } from './settings';
@@ -27,7 +27,7 @@ const defaultPluginSettings = parserPluginSettings(PLUGIN_SETTINGS);
 const handler = createGatewayOnEdgeRuntime({ defaultPluginSettings, pluginsIndexUrl });
 
 export const POST = async (req: Request) => {
-  const { accessCode } = getOpenAIAuthFromRequest(req);
+  const { accessCode } = getLobeAuthFromRequest(req);
 
   const result = checkAuth(accessCode);
 

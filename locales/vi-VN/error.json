@@ -34,7 +34,7 @@
     "503": "Xin lỗi, máy chủ hiện không thể xử lý yêu cầu của bạn, có thể do quá tải hoặc đang bảo trì, vui lòng thử lại sau",
     "504": "Xin lỗi, máy chủ không đợi được phản hồi từ máy chủ upstream, vui lòng thử lại sau",
     "InvalidAccessCode": "Mật khẩu không đúng hoặc trống, vui lòng nhập mật khẩu truy cập đúng, hoặc thêm Khóa API OpenAI tùy chỉnh",
-    "NoAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
+    "NoOpenAIAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
     "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp lỗi, vui lòng xác minh hoặc thử lại dựa trên thông tin dưới đây",
     "PluginApiNotFound": "Xin lỗi, không có API nào trong tệp mô tả plugin, vui lòng kiểm tra phương thức yêu cầu của bạn có khớp với API mô tả plugin không",
     "PluginApiParamsError": "Xin lỗi, kiểm tra tham số đầu vào yêu cầu của plugin không thông qua, vui lòng kiểm tra tham số đầu vào có khớp với thông tin mô tả API không",

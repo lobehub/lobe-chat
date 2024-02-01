@@ -34,7 +34,7 @@
     "503": "Spiacenti, il server non può elaborare la tua richiesta al momento, probabilmente a causa di sovraccarico o manutenzione in corso. Riprova più tardi",
     "504": "Spiacenti, il server non ha ricevuto risposta dal server upstream. Riprova più tardi",
     "InvalidAccessCode": "Password non corretta o vuota. Inserisci una password di accesso corretta o aggiungi una chiave API personalizzata OpenAI",
-    "NoAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
+    "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
     "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
     "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",

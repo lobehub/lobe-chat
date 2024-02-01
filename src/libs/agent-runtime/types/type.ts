@@ -1,12 +1,13 @@
 import OpenAI from 'openai';
 
-import { ErrorType } from '@/types/fetch';
-import { ChatStreamPayload } from '@/types/openai/chat';
+import { ILobeAgentRuntimeErrorType } from '../error';
+import { ChatStreamPayload } from './chat';
 
-export interface CompletionError {
+export interface ChatCompletionErrorPayload {
   [key: string]: any;
+  endpoint?: string;
   error: object;
-  errorType: ErrorType;
+  errorType: ILobeAgentRuntimeErrorType;
   provider: ModelProvider;
 }
 

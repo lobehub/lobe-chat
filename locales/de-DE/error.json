@@ -34,7 +34,7 @@
     "503": "Entschuldigung, der Server kann Ihre Anfrage derzeit nicht verarbeiten. Möglicherweise aufgrund von Überlastung oder Wartungsarbeiten. Bitte versuchen Sie es später erneut",
     "504": "Entschuldigung, der Server hat keine Antwort vom Upstream-Server erhalten. Bitte versuchen Sie es später erneut",
     "InvalidAccessCode": "Falsches oder leeres Passwort. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
-    "NoAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
+    "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OpenAIBizError": "Fehler bei der OpenAI-Serviceanfrage. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",

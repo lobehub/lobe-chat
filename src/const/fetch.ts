@@ -9,7 +9,7 @@ export const LOBE_CHAT_ACCESS_CODE = 'X-lobe-chat-access-code';
 
 export const ZHIPU_API_KEY_HEADER_KEY = 'X-zhipu-api-key';
 
-export const getOpenAIAuthFromRequest = (req: Request) => {
+export const getLobeAuthFromRequest = (req: Request) => {
   const apiKey = req.headers.get(OPENAI_API_KEY_HEADER_KEY);
   const endpoint = req.headers.get(OPENAI_PROXY_URL);
   const accessCode = req.headers.get(LOBE_CHAT_ACCESS_CODE);

@@ -1,4 +1,4 @@
-import OpenAI, { APIError } from 'openai';
+import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createChatCompletion } from './chat';
