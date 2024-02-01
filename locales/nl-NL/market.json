@@ -1,5 +1,7 @@
 {
   "addAgent": "Voeg een assistent toe",
+  "addAgentAndConverse": "Voeg een assistent toe en start een gesprek",
+  "addAgentSuccess": "Succesvol toegevoegd",
   "guide": {
     "func1": {
       "desc1": "Ga naar de instellingen in de rechterbovenhoek van het chatvenster om naar de pagina te gaan waar je de assistent kunt toevoegen.",
