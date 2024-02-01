@@ -5,20 +5,18 @@ import {
 import { AWSBedrockAnthropicStream, StreamingTextResponse } from 'ai';
 import { experimental_buildAnthropicPrompt } from 'ai/prompts';
 
-import { getServerConfig } from '@/config/server';
-import { CompletionError, ModelProvider } from '@/libs/agent-runtime';
-import { debugStream } from '@/libs/agent-runtime/utils/debugStream';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { LobeRuntimeAI } from '../BaseAI';
+import { CompletionError, ModelProvider } from '../type';
+import { debugStream } from '../utils/debugStream';
+import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 
 export interface LobeBedrockAIParams {
   accessKeyId: string;
   accessKeySecret: string;
   region?: string;
 }
-
-const { DEBUG_CHAT_COMPLETION } = getServerConfig();
 
 export class LobeBedrockAI implements LobeRuntimeAI {
   private client: BedrockRuntimeClient;

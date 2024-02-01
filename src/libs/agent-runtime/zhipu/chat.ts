@@ -2,13 +2,12 @@ import { OpenAIStream, StreamingTextResponse } from 'ai';
 import { consola } from 'consola';
 import OpenAI from 'openai';
 
-import { getServerConfig } from '@/config/server';
 import { ChatErrorType } from '@/types/fetch';
 
 import { CreateChatCompletionOptions, ModelProvider } from '../type';
 import { debugStream } from '../utils/debugStream';
+import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 
-const { DEBUG_CHAT_COMPLETION } = getServerConfig();
 export const createChatCompletion = async ({ payload, chatModel }: CreateChatCompletionOptions) => {
   // ============  1. preprocess messages   ============ //
   const { messages, top_p, ...params } = payload;

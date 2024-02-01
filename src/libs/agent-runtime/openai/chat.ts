@@ -1,9 +1,12 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
+import { consola } from 'consola';
 import OpenAI from 'openai';
 
+import { debugStream } from '@/libs/agent-runtime/utils/debugStream';
 import { ChatErrorType } from '@/types/fetch';
 
 import { CompletionError, CreateChatCompletionOptions, ModelProvider } from '../type';
+import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 
 export const createChatCompletion = async ({ payload, chatModel }: CreateChatCompletionOptions) => {
   // ============  1. preprocess messages   ============ //
@@ -22,7 +25,14 @@ export const createChatCompletion = async ({ payload, chatModel }: CreateChatCom
     );
 
     const stream = OpenAIStream(response);
-    return new StreamingTextResponse(stream);
+
+    const [debug, prod] = stream.tee();
+
+    if (DEBUG_CHAT_COMPLETION) {
+      debugStream(debug).catch(consola.error);
+    }
+
+    return new StreamingTextResponse(prod);
   } catch (error) {
     let errorType: any = ChatErrorType.OpenAIBizError;
     let errorContent: any;

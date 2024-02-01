@@ -9,6 +9,7 @@ import {
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
+import LobeGoogleAI from '@/libs/agent-runtime/google';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
@@ -36,6 +37,10 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
 
       case ModelProvider.ZhiPu: {
         runtimeModel = await LobeZhipuAI.fromRequest(req);
+        break;
+      }
+      case ModelProvider.Google: {
+        runtimeModel = new LobeGoogleAI(process.env.GOOGLE_API_KEY || '');
         break;
       }
 

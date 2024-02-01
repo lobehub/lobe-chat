@@ -1,4 +1,9 @@
-import { BedrockProvider, OpenAIProvider, ZhiPuProvider } from '@/config/modelProviders';
+import {
+  BedrockProvider,
+  GoogleProvider,
+  OpenAIProvider,
+  ZhiPuProvider,
+} from '@/config/modelProviders';
 import { ModelProviderCard } from '@/types/llm';
 import { CustomModels } from '@/types/settings';
 
@@ -65,6 +70,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
   return [
     OpenAIProvider,
     enableZhipu(s) ? ZhiPuProvider : null,
+    GoogleProvider,
     enableBedrock(s) ? BedrockProvider : null,
     hasOneAPI
       ? {
