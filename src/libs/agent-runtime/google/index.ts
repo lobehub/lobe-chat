@@ -1,13 +1,13 @@
 import { Content, GoogleGenerativeAI, Part } from '@google/generative-ai';
 import { GoogleGenerativeAIStream, Message, StreamingTextResponse } from 'ai';
 
-import { parseDataUri } from '@/libs/agent-runtime/utils/uriParser';
 import { ChatStreamPayload, UserMessageContentPart } from '@/types/openai/chat';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { CompletionError, ModelProvider } from '../type';
 import { debugStream } from '../utils/debugStream';
 import { DEBUG_CHAT_COMPLETION } from '../utils/env';
+import { parseDataUri } from '../utils/uriParser';
 
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;

@@ -15,7 +15,20 @@ import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { desensitizeUrl } from './desensitizeUrl';
 
-export const runtime = 'edge';
+// due to the Chinese region does not support accessing Google / OpenAI
+// we need to use proxy to access it
+// refs: https://github.com/google/generative-ai-js/issues/29#issuecomment-1866246513
+const proxyUrl = process.env.HTTP_PROXY_URL;
+const useProxy = !!proxyUrl;
+
+if (useProxy) {
+  const { setGlobalDispatcher, ProxyAgent } = require('undici');
+
+  setGlobalDispatcher(new ProxyAgent({ uri: proxyUrl }));
+}
+// undici only can be used in NodeJS.
+// So when using proxy, switch to NodeJS runtime
+export const runtime = useProxy ? 'nodejs' : 'edge';
 
 export const preferredRegion = getPreferredRegion();
 
