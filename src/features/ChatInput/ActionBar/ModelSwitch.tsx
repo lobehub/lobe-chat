@@ -1,8 +1,8 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { BrainCog } from 'lucide-react';
+import { BrainCog, LucideEye, ToyBrick } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -14,18 +14,44 @@ import { modelProviderSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
-const useStyles = createStyles(({ css, prefixCls }) => ({
+const useStyles = createStyles(({ css, token, prefixCls }) => ({
   menu: css`
     .${prefixCls}-dropdown-menu-item {
       display: flex;
       gap: 8px;
     }
+    .${prefixCls}-dropdown-menu {
+      &-item-group-title {
+        padding-inline: 8px;
+      }
+
+      &-item-group-list {
+        margin: 0;
+      }
+    }
+  `,
+  tag: css`
+    border-radius: 4px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+  `,
+  tagBlue: css`
+    background: ${token.geekblue1};
+    color: ${token.geekblue};
+  `,
+  tagGreen: css`
+    background: ${token.green1};
+    color: ${token.green};
   `,
 }));
 
 const ModelSwitch = memo(() => {
   const { t } = useTranslation('chat');
-  const { styles } = useStyles();
+  const { styles, cx } = useStyles();
   const [model, updateAgentConfig] = useSessionStore((s) => {
     return [agentSelectors.currentAgentModel(s), s.updateAgentConfig];
   });
@@ -40,7 +66,32 @@ const ModelSwitch = memo(() => {
           children: provider.chatModels.map((model) => ({
             icon: <ModelIcon model={model.id} size={20} />,
             key: model.id,
-            label: model.displayName || model.id,
+            label: (
+              <Flexbox align={'center'} gap={32} horizontal justify={'space-between'}>
+                {model.displayName || model.id}
+
+                <Flexbox gap={4} horizontal>
+                  {model.vision && (
+                    <Tooltip placement={'right'} title={t('ModelSwitch.featureTag.vision')}>
+                      <div className={cx(styles.tag, styles.tagGreen)}>
+                        <Icon icon={LucideEye} />
+                      </div>
+                    </Tooltip>
+                  )}
+                  {model.functionCall && (
+                    <Tooltip
+                      overlayStyle={{ maxWidth: 'unset' }}
+                      placement={'right'}
+                      title={t('ModelSwitch.featureTag.functionCall')}
+                    >
+                      <div className={cx(styles.tag, styles.tagBlue)}>
+                        <Icon icon={ToyBrick} />
+                      </div>
+                    </Tooltip>
+                  )}
+                </Flexbox>
+              </Flexbox>
+            ),
             onClick: () => {
               updateAgentConfig({ model: model.id, provider: provider?.id });
             },
@@ -48,7 +99,7 @@ const ModelSwitch = memo(() => {
 
           key: provider.id,
           label: (
-            <Flexbox align={'center'} gap={8} horizontal>
+            <Flexbox align={'center'} gap={4} horizontal>
               <ModelProviderIcon provider={provider.id} />
               {t(`ModelSwitch.provider.${provider.id}` as any)}
             </Flexbox>
@@ -56,7 +107,7 @@ const ModelSwitch = memo(() => {
           type: 'group',
         })),
         style: {
-          maxHeight: 700,
+          maxHeight: 500,
           overflowY: 'scroll',
         },
       }}

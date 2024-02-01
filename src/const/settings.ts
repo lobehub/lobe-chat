@@ -46,6 +46,9 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
 };
 
 export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
+  bedrock: {
+    enabled: false,
+  },
   openAI: {
     OPENAI_API_KEY: '',
     models: [],

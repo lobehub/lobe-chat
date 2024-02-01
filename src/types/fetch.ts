@@ -4,6 +4,9 @@ export const ChatErrorType = {
 
   InvalidAccessCode: 'InvalidAccessCode', // 密码无效
   OpenAIBizError: 'OpenAIBizError', // OpenAI 返回的业务错误
+
+  BedrockBizError: 'BedrockBizError', // Bedrock 返回的业务错误
+
   NoAPIKey: 'NoAPIKey',
 
   LobeChatBizError: 'LobeChatBizError', // LobeChat 层的业务代码错误

@@ -3,7 +3,7 @@ import { StreamingTextResponse } from 'ai';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 export interface LobeRuntimeAI {
-  baseURL: string;
+  baseURL?: string;
 
   chat(payload: ChatStreamPayload): Promise<StreamingTextResponse>;
 }

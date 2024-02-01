@@ -165,11 +165,14 @@ class ChatService {
 
     return produce(postMessages, (draft) => {
       if (!tools || tools.length === 0) return;
+      const hasFC = modelProviderSelectors.modelEnabledFunctionCall(model)(
+        useGlobalStore.getState(),
+      );
+      if (!hasFC) return;
 
       const systemMessage = draft.find((i) => i.role === 'system');
 
       const toolsSystemRoles = toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
-
       if (!toolsSystemRoles) return;
 
       if (systemMessage) {

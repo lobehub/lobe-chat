@@ -1,7 +1,7 @@
 import { Tag } from '@lobehub/ui';
 import { memo } from 'react';
 
-import ModelProviderIcon from '@/components/ModelProviderIcons';
+import ModelProviderIcon from './ModelProviderIcons';
 
 interface ModelTagProps {
   name: string;

@@ -73,7 +73,7 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     let desensitizedEndpoint = runtimeModel.baseURL;
 
     // refs: https://github.com/lobehub/lobe-chat/issues/842
-    if (runtimeModel.baseURL !== 'https://api.openai.com/v1') {
+    if (runtimeModel.baseURL && runtimeModel.baseURL !== 'https://api.openai.com/v1') {
       desensitizedEndpoint = desensitizeUrl(runtimeModel.baseURL);
     }
 

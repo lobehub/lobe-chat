@@ -4,6 +4,7 @@ import { ErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 export interface CompletionError {
+  [key: string]: any;
   error: object;
   errorType: ErrorType;
   provider: ModelProvider;
@@ -22,5 +23,5 @@ export enum ModelProvider {
   Mistral = 'mistral',
   OpenAI = 'openai',
   Tongyi = 'tongyi',
-  ZhiPu = 'zhipu'
+  ZhiPu = 'zhipu',
 }

@@ -1,5 +1,3 @@
-import Bedrock from './bedrock';
-import OpenAI from './openai';
-import ZhiPu from './zhipu';
-
-export const ModelProviderList = [OpenAI, ZhiPu, Bedrock];
+export { default as BedrockProvider } from './bedrock';
+export { default as OpenAIProvider } from './openai';
+export { default as ZhiPuProvider } from './zhipu';

@@ -1,18 +1,21 @@
-import { ModelProviderList } from '@/config/modelProviders';
+import { BedrockProvider, OpenAIProvider, ZhiPuProvider } from '@/config/modelProviders';
 import { ModelProviderCard } from '@/types/llm';
 import { CustomModels } from '@/types/settings';
 
 import { GlobalStore } from '../../../store';
 import { currentSettings } from './settings';
 
-const openAIConfig = (s: GlobalStore) => currentSettings(s).languageModel.openAI;
+const modelProvider = (s: GlobalStore) => currentSettings(s).languageModel;
+const openAIConfig = (s: GlobalStore) => modelProvider(s).openAI;
 
 const openAIAPIKey = (s: GlobalStore) => openAIConfig(s).OPENAI_API_KEY;
 const enableAzure = (s: GlobalStore) => openAIConfig(s).useAzure;
 const openAIProxyUrl = (s: GlobalStore) => openAIConfig(s).endpoint;
-const zhipuAPIKey = (s: GlobalStore) => currentSettings(s).languageModel.zhipu.ZHIPU_API_KEY;
 
-const enableZhipu = (s: GlobalStore) => currentSettings(s).languageModel.zhipu.enabled;
+const enableZhipu = (s: GlobalStore) => modelProvider(s).zhipu.enabled;
+const zhipuAPIKey = (s: GlobalStore) => modelProvider(s).zhipu.ZHIPU_API_KEY;
+
+const enableBedrock = (s: GlobalStore) => modelProvider(s).bedrock.enabled;
 
 const customModelList = (s: GlobalStore) => {
   let models: CustomModels = [];
@@ -40,37 +43,36 @@ const customModelList = (s: GlobalStore) => {
     }
 
     // Remove duplicate model entries.
-    const existingIndex = models.findIndex(({ name: n }) => n === name);
+    const existingIndex = models.findIndex(({ id: n }) => n === name);
     if (existingIndex !== -1) {
       models.splice(existingIndex, 1);
     }
 
     models.push({
       displayName: displayName || name,
-      name,
+      id: name,
     });
   }
 
-  return models.filter((m) => !removedModels.includes(m.name));
+  return models.filter((m) => !removedModels.includes(m.id));
 };
 
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
   const customModels = customModelList(s);
 
   const hasOneAPI = customModels.length > 0;
-  const baseList = ModelProviderList;
 
-  if (hasOneAPI) {
-    baseList.push({
-      chatModels: customModels.map((m) => ({
-        displayName: m.displayName,
-        id: m.name,
-      })),
-      id: 'oneapi',
-    });
-  }
-
-  return baseList;
+  return [
+    OpenAIProvider,
+    enableZhipu(s) ? ZhiPuProvider : null,
+    enableBedrock(s) ? BedrockProvider : null,
+    hasOneAPI
+      ? {
+          chatModels: customModels,
+          id: 'oneapi',
+        }
+      : null,
+  ].filter(Boolean) as ModelProviderCard[];
 };
 
 const modelCardById = (id: string) => (s: GlobalStore) => {
@@ -110,4 +112,7 @@ export const modelProviderSelectors = {
   // Zhipu
   enableZhipu,
   zhipuAPIKey,
+
+  // Bedrock
+  enableBedrock,
 };

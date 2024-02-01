@@ -12,7 +12,10 @@ const getStatus = (errorType: ErrorType) => {
     }
 
     case ChatErrorType.OpenAIBizError: {
-      return 577;
+      return 471;
+    }
+    case ChatErrorType.BedrockBizError: {
+      return 473;
     }
   }
   return errorType;

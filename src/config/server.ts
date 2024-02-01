@@ -54,6 +54,7 @@ export const getServerConfig = () => {
   const ACCESS_CODES = process.env.ACCESS_CODE?.split(',').filter(Boolean) || [];
 
   const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY;
+  const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || '';
 
   return {
     ACCESS_CODES,
@@ -68,9 +69,10 @@ export const getServerConfig = () => {
     ENABLED_ZHIPU: !!ZHIPU_API_KEY,
     ZHIPU_API_KEY,
 
+    ENABLED_AWS_BEDROCK: !!AWS_ACCESS_KEY_ID,
     AWS_REGION: process.env.AWS_REGION,
-    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || '',
 
     METADATA_BASE_URL: process.env.METADATA_BASE_URL,
 

@@ -117,9 +117,9 @@ const AgentConfig = memo(() => {
       {
         children: (
           <Select
-            options={modelList.map(({ name, displayName }) => ({
+            options={modelList.map(({ id, displayName }) => ({
               label: displayName,
-              value: name,
+              value: id,
             }))}
           />
         ),

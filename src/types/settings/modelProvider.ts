@@ -1,4 +1,4 @@
-export type CustomModels = { displayName: string; name: string }[];
+export type CustomModels = { displayName: string; id: string }[];
 
 export interface OpenAIConfig {
   OPENAI_API_KEY: string;
@@ -13,11 +13,19 @@ export interface OpenAIConfig {
 }
 
 export interface ZhiPuConfig {
-  ZHIPU_API_KEY: string;
+  ZHIPU_API_KEY?: string;
+  enabled: boolean;
+}
+
+export interface AWSBedrockConfig {
+  AWS_ACCESS_KEY_ID?: string;
+  AWS_REGION?: string;
+  AWS_SECRET_ACCESS_KEY?: string;
   enabled: boolean;
 }
 
 export interface GlobalLLMConfig {
+  bedrock: AWSBedrockConfig;
   openAI: OpenAIConfig;
   zhipu: ZhiPuConfig;
 }

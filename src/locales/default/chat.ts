@@ -1,6 +1,11 @@
 export default {
   ModelSwitch: {
+    featureTag: {
+      functionCall: '该模型支持函数调用（Function Call）',
+      vision: '该模型支持视觉识别',
+    },
     provider: {
+      bedrock: 'AWS Bedrock',
       oneapi: 'One API',
       openai: 'OpenAI',
       zhipu: '智谱AI',
