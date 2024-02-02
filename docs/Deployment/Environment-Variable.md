@@ -37,9 +37,9 @@ LobeChat provides additional configuration options during deployment, which can 
 - Type: Optional
 - Description: Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas.
 - Default: `-`
-- Example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-1106-preview=gpt-4-turbo`
+- Example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
 
-The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the model name `gpt-4-1106-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only `gpt-3.5-turbo` will be enabled.
+The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the model name `gpt-4-0125-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only `gpt-3.5-turbo` will be enabled.
 
 ## OpenAI
 
