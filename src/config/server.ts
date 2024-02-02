@@ -61,13 +61,13 @@ export const getServerConfig = () => {
 
     IMGUR_CLIENT_ID: process.env.IMGUR_CLIENT_ID || DEFAULT_IMAGUR_CLIENT_ID,
 
-    AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL
+    AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL 
       ? process.env.AGENTS_INDEX_URL
-      : 'https://chat-agents.lobehub.com',
+      : 'https://mock.apifox.com/m2/4003882-0-default/146985259',
 
-    PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
-      ? process.env.PLUGINS_INDEX_URL
-      : 'https://chat-plugins.lobehub.com',
+    // PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
+    //   ? process.env.PLUGINS_INDEX_URL
+    //   : 'https://chat-plugins.lobehub.com',
 
     PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
   };
