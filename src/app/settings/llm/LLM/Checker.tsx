@@ -54,11 +54,7 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
   };
   return (
     <Flexbox gap={8}>
-      <Flexbox align={'center'} gap={12} horizontal>
-        <Button loading={loading} onClick={checkConnection}>
-          {t('llm.OpenAI.check.button')}
-        </Button>
-
+      <Flexbox align={'center'} gap={12} horizontal justify={'flex-end'}>
         {pass && (
           <Flexbox gap={4} horizontal>
             <CheckCircleFilled
@@ -69,14 +65,17 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
             {t('llm.OpenAI.check.pass')}
           </Flexbox>
         )}
+        <Button loading={loading} onClick={checkConnection}>
+          {t('llm.OpenAI.check.button')}
+        </Button>
       </Flexbox>
 
       {error && (
-        <Flexbox gap={8}>
+        <Flexbox gap={8} width={'35vw'}>
           <Alert
             banner
             extra={
-              <Flexbox style={{ maxWidth: 600 }}>
+              <Flexbox>
                 <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
                   {JSON.stringify(error.body, null, 2)}
                 </Highlighter>
