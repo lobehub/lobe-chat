@@ -65,9 +65,9 @@ export const getServerConfig = () => {
       ? process.env.AGENTS_INDEX_URL
       : 'https://mock.apifox.com/m2/4003882-0-default/146985259',
 
-    // PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
-    //   ? process.env.PLUGINS_INDEX_URL
-    //   : 'https://chat-plugins.lobehub.com',
+    PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
+      ? process.env.PLUGINS_INDEX_URL
+      : 'https://chat-plugins.lobehub.com',
 
     PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
   };
