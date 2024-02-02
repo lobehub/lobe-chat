@@ -1,5 +1,5 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
-import OpenAI from 'openai';
+import OpenAI, { ClientOptions } from 'openai';
 
 import { ChatStreamPayload } from '@/types/openai/chat';
 
@@ -15,13 +15,13 @@ import { handleOpenAIError } from '../utils/handleOpenAIError';
 const DEFAULT_BASE_URL = 'https://api.openai.com/v1';
 
 export class LobeOpenAI implements LobeRuntimeAI {
-  private _llm: OpenAI;
+  private client: OpenAI;
 
-  constructor(apiKey?: string, baseURL?: string) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.NoOpenAIAPIKey);
+  constructor(options: ClientOptions) {
+    if (!options.apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.NoOpenAIAPIKey);
 
-    this._llm = new OpenAI({ apiKey, baseURL });
-    this.baseURL = this._llm.baseURL;
+    this.client = new OpenAI(options);
+    this.baseURL = this.client.baseURL;
   }
 
   baseURL: string;
@@ -33,7 +33,7 @@ export class LobeOpenAI implements LobeRuntimeAI {
     // ============  2. send api   ============ //
 
     try {
-      const response = await this._llm.chat.completions.create(
+      const response = await this.client.chat.completions.create(
         {
           messages,
           ...params,
