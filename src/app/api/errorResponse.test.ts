@@ -14,7 +14,7 @@ describe('createErrorResponse', () => {
 
   it('returns a 401 status for InvalidAccessCode error type', () => {
     const errorType = ChatErrorType.InvalidAccessCode;
-    const response = createErrorResponse(errorType);
+    const response = createErrorResponse(errorType as any);
     expect(response.status).toBe(401);
   });
 
@@ -27,7 +27,7 @@ describe('createErrorResponse', () => {
   // 测试默认情况
   it('returns the same error type as status for unknown error types', () => {
     const errorType = 500; // 假设500是一个未知的错误类型
-    const response = createErrorResponse(errorType);
+    const response = createErrorResponse(errorType as any);
     expect(response.status).toBe(errorType);
   });
 

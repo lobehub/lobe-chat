@@ -5,12 +5,10 @@ import {
 import { AWSBedrockAnthropicStream, AWSBedrockLlama2Stream, StreamingTextResponse } from 'ai';
 import { experimental_buildAnthropicPrompt, experimental_buildLlama2Prompt } from 'ai/prompts';
 
-import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
-import { AgentRuntimeError } from '@/libs/agent-runtime/utils/createError';
-import { ChatStreamPayload } from '@/types/openai/chat';
-
 import { LobeRuntimeAI } from '../BaseAI';
-import { ChatCompletionErrorPayload, ModelProvider } from '../types/type';
+import { AgentRuntimeErrorType } from '../error';
+import { ChatStreamPayload, ModelProvider } from '../types';
+import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 
@@ -23,9 +21,12 @@ export interface LobeBedrockAIParams {
 export class LobeBedrockAI implements LobeRuntimeAI {
   private client: BedrockRuntimeClient;
 
-  region: string = 'us-east-1';
+  region: string;
 
   constructor({ region, accessKeyId, accessKeySecret }: LobeBedrockAIParams) {
+    if (!(accessKeyId && accessKeySecret))
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidZhipuAPIKey);
+
     this.region = region ?? 'us-east-1';
 
     this.client = new BedrockRuntimeClient({
@@ -43,7 +44,9 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     return this.invokeClaudeModel(payload);
   }
 
-  private invokeClaudeModel = async (payload: ChatStreamPayload) => {
+  private invokeClaudeModel = async (
+    payload: ChatStreamPayload,
+  ): Promise<StreamingTextResponse> => {
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
       body: JSON.stringify({
@@ -66,23 +69,22 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       if (DEBUG_CHAT_COMPLETION) {
         debugStream(debug).catch(console.error);
       }
+
       // Respond with the stream
       return new StreamingTextResponse(output);
     } catch (e) {
-      const err = e as Error;
+      const err = e as Error & { $metadata: any };
 
-      if ('$metadata' in err) {
-        throw AgentRuntimeError.chat({
-          error: {
-            body: err.$metadata,
-            message: err.message,
-            type: err.name,
-          },
-          errorType: AgentRuntimeErrorType.BedrockBizError,
-          provider: ModelProvider.Bedrock,
-          region: this.region,
-        });
-      }
+      throw AgentRuntimeError.chat({
+        error: {
+          body: err.$metadata,
+          message: err.message,
+          type: err.name,
+        },
+        errorType: AgentRuntimeErrorType.BedrockBizError,
+        provider: ModelProvider.Bedrock,
+        region: this.region,
+      });
     }
   };
 
@@ -114,18 +116,17 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     } catch (e) {
       const err = e as Error & { $metadata: any };
 
-      const error: ChatCompletionErrorPayload = {
+      throw AgentRuntimeError.chat({
         error: {
           body: err.$metadata,
           message: err.message,
           region: this.region,
           type: err.name,
         },
-        errorType: 'OpenAIBizError',
+        errorType: AgentRuntimeErrorType.BedrockBizError,
         provider: ModelProvider.Bedrock,
-      };
-
-      throw error;
+        region: this.region,
+      });
     }
   };
 }

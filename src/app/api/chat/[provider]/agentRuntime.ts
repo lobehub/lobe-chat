@@ -1,8 +1,6 @@
 import { getServerConfig } from '@/config/server';
 import { getLobeAuthFromRequest } from '@/const/fetch';
 import {
-  AgentRuntimeError,
-  AgentRuntimeErrorType,
   ChatStreamPayload,
   LobeBedrockAI,
   LobeGoogleAI,
@@ -17,9 +15,11 @@ import { checkAuthWithProvider } from './checkAuthWithProvider';
 
 class AgentRuntime {
   private _runtime: LobeRuntimeAI;
+
   constructor(runtime: LobeRuntimeAI) {
     this._runtime = runtime;
   }
+
   async chat(payload: ChatStreamPayload) {
     return this._runtime.chat(payload);
   }
@@ -82,15 +82,19 @@ class AgentRuntime {
   }
 
   private static initBedrock(req: Request) {
-    console.log(req.url);
-    const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID } = getServerConfig();
-    if (!(AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY))
-      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidZhipuAPIKey);
+    const { accessCode, bedrockAwsSecretAccessKey, bedrockAwsAccessKeyId } =
+      getLobeAuthFromRequest(req);
 
-    return new LobeBedrockAI({
-      accessKeyId: AWS_ACCESS_KEY_ID,
-      accessKeySecret: AWS_SECRET_ACCESS_KEY,
-    });
+    const checkApiKey = (bedrockAwsSecretAccessKey || '') + (bedrockAwsAccessKeyId || '');
+
+    checkAuthWithProvider({ accessCode, apiKey: checkApiKey }, ChatErrorType.InvalidAccessCode);
+
+    const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID } = getServerConfig();
+
+    const accessKeyId = bedrockAwsAccessKeyId || AWS_ACCESS_KEY_ID;
+    const accessKeySecret = bedrockAwsSecretAccessKey || AWS_SECRET_ACCESS_KEY;
+
+    return new LobeBedrockAI({ accessKeyId, accessKeySecret });
   }
 }
 

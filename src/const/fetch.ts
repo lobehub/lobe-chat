@@ -12,6 +12,9 @@ export const ZHIPU_PROXY_URL_HEADER_KEY = 'X-zhipu-proxy-url';
 
 export const GOOGLE_API_KEY_HEADER_KEY = 'X-google-api-key';
 
+export const BEDROCK_AWS_SECRET_ACCESS_KEY = 'X-bedrock-aws-secret-access-key';
+export const BEDROCK_AWS_ACCESS_KEY_ID = 'X-bedrock-access-key-id';
+
 export const getLobeAuthFromRequest = (req: Request) => {
   const apiKey = req.headers.get(OPENAI_API_KEY_HEADER_KEY);
   const endpoint = req.headers.get(OPENAI_PROXY_URL);
@@ -22,12 +25,19 @@ export const getLobeAuthFromRequest = (req: Request) => {
   const zhipuProxyUrl = req.headers.get(ZHIPU_PROXY_URL_HEADER_KEY);
   const googleApiKey = req.headers.get(GOOGLE_API_KEY_HEADER_KEY);
 
+  const bedrockAwsSecretAccessKey = req.headers.get(BEDROCK_AWS_SECRET_ACCESS_KEY);
+  const bedrockAwsAccessKeyId = req.headers.get(BEDROCK_AWS_ACCESS_KEY_ID);
+
   const useAzure = !!useAzureStr;
 
   return {
     accessCode,
     apiKey,
     apiVersion,
+
+    bedrockAwsAccessKeyId,
+    bedrockAwsSecretAccessKey,
+
     endpoint,
 
     googleApiKey,
@@ -35,6 +45,7 @@ export const getLobeAuthFromRequest = (req: Request) => {
     useAzure,
 
     zhipuApiKey,
+
     zhipuProxyUrl,
   };
 };

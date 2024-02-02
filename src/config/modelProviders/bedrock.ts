@@ -13,7 +13,7 @@ const Bedrock: ModelProviderCard = {
       description:
         'Claude Instant 1.2 v1.2，上下文大小等于 100k，一个更快更便宜但仍然非常能干的模型，可以处理包括随意对话在内的多种任务。',
       displayName: 'Claude Instant 1.2',
-      id: 'anthropic.claude-instant-v1:2',
+      id: 'anthropic.claude-instant-v1',
       tokens: 100_000,
     },
     {

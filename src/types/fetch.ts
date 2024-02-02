@@ -31,5 +31,5 @@ export type IChatErrorType = (typeof ChatErrorType)[keyof typeof ChatErrorType];
 
 export interface ErrorResponse {
   body: any;
-  errorType: ILobeAgentRuntimeErrorType;
+  errorType: IChatErrorType | ILobeAgentRuntimeErrorType;
 }

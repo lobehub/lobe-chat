@@ -33,7 +33,10 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | IChatErrorType) => {
   return errorType;
 };
 
-export const createErrorResponse = (errorType: ILobeAgentRuntimeErrorType, body?: any) => {
+export const createErrorResponse = (
+  errorType: IChatErrorType | ILobeAgentRuntimeErrorType,
+  body?: any,
+) => {
   const statusCode = getStatus(errorType);
 
   const data: ErrorResponse = { body, errorType };

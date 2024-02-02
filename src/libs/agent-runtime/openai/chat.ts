@@ -60,7 +60,7 @@ export const createChatCompletion = async ({ payload, chatModel }: CreateChatCom
       errorContent = errorResult;
     } else {
       errorContent = JSON.stringify(error);
-      errorType = AgentRuntimeErrorType.InternalServerError;
+      errorType = 500;
     }
 
     throw {
