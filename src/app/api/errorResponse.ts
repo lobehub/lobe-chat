@@ -1,16 +1,17 @@
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
-import { ErrorResponse } from '@/types/fetch';
+import { ChatErrorType, ErrorResponse, IChatErrorType } from '@/types/fetch';
 
-const getStatus = (errorType: ILobeAgentRuntimeErrorType) => {
+const getStatus = (errorType: ILobeAgentRuntimeErrorType | IChatErrorType) => {
   switch (errorType) {
+    case ChatErrorType.InvalidAccessCode:
     case AgentRuntimeErrorType.NoOpenAIAPIKey:
     case AgentRuntimeErrorType.InvalidZhipuAPIKey:
-    case AgentRuntimeErrorType.InvalidAccessCode: {
+    case AgentRuntimeErrorType.InvalidGoogleAPIKey: {
       return 401;
     }
 
-    case AgentRuntimeErrorType.LobeChatBizError: {
-      return 576;
+    case AgentRuntimeErrorType.LocationNotSupportError: {
+      return 403;
     }
 
     case AgentRuntimeErrorType.AgentRuntimeError: {
@@ -19,13 +20,14 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType) => {
     case AgentRuntimeErrorType.OpenAIBizError: {
       return 471;
     }
-
     case AgentRuntimeErrorType.ZhipuBizError: {
       return 472;
     }
-
     case AgentRuntimeErrorType.BedrockBizError: {
       return 473;
+    }
+    case AgentRuntimeErrorType.GoogleBizError: {
+      return 474;
     }
   }
   return errorType;

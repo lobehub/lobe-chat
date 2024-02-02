@@ -4,46 +4,40 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv {
-      ACCESS_CODE?: string;
       CUSTOM_MODELS?: string;
 
-      // OpenAI Model
+      // OpenAI Provider
       OPENAI_API_KEY?: string;
       OPENAI_PROXY_URL?: string;
+      OPENAI_FUNCTION_REGIONS?: string;
 
-      // Azure OpenAI Model
+      // Azure OpenAI Provider
       AZURE_API_KEY?: string;
       AZURE_API_VERSION?: string;
       USE_AZURE_OPENAI?: string;
 
-      // ZhiPu Model
+      // ZhiPu Provider
       ZHIPU_API_KEY?: string;
+      ZHIPU_PROXY_URL?: string;
+
+      // Google Provider
+      GOOGLE_API_KEY?: string;
 
       // AWS Credentials
       AWS_REGION?: string;
       AWS_ACCESS_KEY_ID?: string;
       AWS_SECRET_ACCESS_KEY?: string;
 
-      IMGUR_CLIENT_ID?: string;
-
-      METADATA_BASE_URL?: string;
-
-      AGENTS_INDEX_URL?: string;
-
-      PLUGINS_INDEX_URL?: string;
-      PLUGIN_SETTINGS?: string;
+      DEBUG_CHAT_COMPLETION?: string;
     }
   }
 }
 
-// we apply a free imgur app to get a client id
-// refs: https://apidocs.imgur.com/
-const DEFAULT_IMAGUR_CLIENT_ID = 'e415f320d6e24f9';
+export const getProviderConfig = () => {
+  const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY || '';
+  const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || '';
 
-export const getServerConfig = () => {
-  if (typeof process === 'undefined') {
-    throw new Error('[Server Config] you are importing a server-only module outside of server');
-  }
+  const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || '';
 
   // region format: iad1,sfo1
   let regions: string[] = [];
@@ -51,16 +45,8 @@ export const getServerConfig = () => {
     regions = process.env.OPENAI_FUNCTION_REGIONS.split(',');
   }
 
-  const ACCESS_CODES = process.env.ACCESS_CODE?.split(',').filter(Boolean) || [];
-
-  const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY;
-  const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || '';
-
   return {
-    ACCESS_CODES,
     CUSTOM_MODELS: process.env.CUSTOM_MODELS,
-
-    SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODES.length,
 
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,
@@ -69,28 +55,17 @@ export const getServerConfig = () => {
     ENABLED_ZHIPU: !!ZHIPU_API_KEY,
     ZHIPU_API_KEY,
 
+    ENABLED_GOOGLE: !!GOOGLE_API_KEY,
+    GOOGLE_API_KEY,
+
     ENABLED_AWS_BEDROCK: !!AWS_ACCESS_KEY_ID,
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || '',
 
-    METADATA_BASE_URL: process.env.METADATA_BASE_URL,
-
     AZURE_API_KEY: process.env.AZURE_API_KEY,
     AZURE_API_VERSION: process.env.AZURE_API_VERSION,
     USE_AZURE_OPENAI: process.env.USE_AZURE_OPENAI === '1',
-
-    IMGUR_CLIENT_ID: process.env.IMGUR_CLIENT_ID || DEFAULT_IMAGUR_CLIENT_ID,
-
-    AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL
-      ? process.env.AGENTS_INDEX_URL
-      : 'https://chat-agents.lobehub.com',
-
-    PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
-      ? process.env.PLUGINS_INDEX_URL
-      : 'https://chat-plugins.lobehub.com',
-
-    PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
 
     DEBUG_CHAT_COMPLETION: process.env.DEBUG_CHAT_COMPLETION === '1',
   };

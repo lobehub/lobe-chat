@@ -1,17 +1,19 @@
-import { checkAuthWithProvider } from '@/app/api/chat/[provider]/checkAuthWithProvider';
 import { getServerConfig } from '@/config/server';
 import { getLobeAuthFromRequest } from '@/const/fetch';
 import {
+  AgentRuntimeError,
   AgentRuntimeErrorType,
+  ChatStreamPayload,
   LobeBedrockAI,
   LobeGoogleAI,
   LobeOpenAI,
   LobeRuntimeAI,
   LobeZhipuAI,
   ModelProvider,
-  createLobeRuntimeError,
 } from '@/libs/agent-runtime';
-import { ChatStreamPayload } from '@/types/openai/chat';
+import { ChatErrorType } from '@/types/fetch';
+
+import { checkAuthWithProvider } from './checkAuthWithProvider';
 
 class AgentRuntime {
   private _runtime: LobeRuntimeAI;
@@ -39,12 +41,12 @@ class AgentRuntime {
       }
 
       case ModelProvider.Google: {
-        runtimeModel = await this.initGoogle(req);
+        runtimeModel = this.initGoogle(req);
         break;
       }
 
       case ModelProvider.Bedrock: {
-        runtimeModel = await this.initBedrock(req);
+        runtimeModel = this.initBedrock(req);
       }
     }
 
@@ -60,10 +62,7 @@ class AgentRuntime {
   private static async initZhipu(req: Request) {
     const { accessCode, zhipuApiKey } = getLobeAuthFromRequest(req);
 
-    checkAuthWithProvider(
-      { accessCode, apiKey: zhipuApiKey },
-      AgentRuntimeErrorType.InvalidAccessCode,
-    );
+    checkAuthWithProvider({ accessCode, apiKey: zhipuApiKey }, ChatErrorType.InvalidAccessCode);
 
     const { ZHIPU_API_KEY } = getServerConfig();
     const apikey = zhipuApiKey || ZHIPU_API_KEY;
@@ -71,16 +70,22 @@ class AgentRuntime {
     return LobeZhipuAI.fromAPIKey(apikey);
   }
 
-  private static async initGoogle(req: Request) {
-    console.log(req.url);
-    return new LobeGoogleAI(process.env.GOOGLE_API_KEY || '');
+  private static initGoogle(req: Request) {
+    const { accessCode, googleApiKey } = getLobeAuthFromRequest(req);
+
+    checkAuthWithProvider({ accessCode, apiKey: googleApiKey }, ChatErrorType.InvalidAccessCode);
+
+    const { GOOGLE_API_KEY } = getServerConfig();
+    const apikey = googleApiKey || GOOGLE_API_KEY;
+
+    return new LobeGoogleAI(apikey);
   }
 
-  private static async initBedrock(req: Request) {
+  private static initBedrock(req: Request) {
     console.log(req.url);
     const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID } = getServerConfig();
     if (!(AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY))
-      throw createLobeRuntimeError(AgentRuntimeErrorType.InvalidZhipuAPIKey);
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidZhipuAPIKey);
 
     return new LobeBedrockAI({
       accessKeyId: AWS_ACCESS_KEY_ID,

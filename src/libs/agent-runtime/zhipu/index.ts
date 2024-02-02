@@ -1,16 +1,15 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI from 'openai';
 
-import { handleOpenAIError } from '@/libs/agent-runtime/utils/handleOpenAIError';
-import { parseDataUri } from '@/libs/agent-runtime/utils/uriParser';
-
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatStreamPayload, ModelProvider, OpenAIChatMessage } from '../types';
-import { AgentRuntimeError, createError } from '../utils/createError';
+import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
 import { DEBUG_CHAT_COMPLETION } from '../utils/env';
+import { handleOpenAIError } from '../utils/handleOpenAIError';
+import { parseDataUri } from '../utils/uriParser';
 import { generateApiToken } from './authToken';
 
 const DEFAULT_BASE_URL = 'https://open.bigmodel.cn/api/paas/v4';
@@ -26,7 +25,9 @@ export class LobeZhipuAI implements LobeRuntimeAI {
   }
 
   static async fromAPIKey(apiKey?: string, baseURL: string = DEFAULT_BASE_URL) {
-    const invalidZhipuAPIKey = createError(AgentRuntimeErrorType.InvalidZhipuAPIKey);
+    const invalidZhipuAPIKey = AgentRuntimeError.createError(
+      AgentRuntimeErrorType.InvalidZhipuAPIKey,
+    );
 
     let token: string;
 

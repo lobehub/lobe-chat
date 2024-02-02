@@ -1,6 +1,6 @@
 import { getServerConfig } from '@/config/server';
-import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
-import { createError } from '@/libs/agent-runtime/utils/createError';
+import { AgentRuntimeError } from '@/libs/agent-runtime';
+import { IChatErrorType } from '@/types/fetch';
 
 interface AuthConfig {
   accessCode?: string | null;
@@ -9,21 +9,18 @@ interface AuthConfig {
 
 export const checkAuthWithProvider = (
   { apiKey, accessCode }: AuthConfig,
-  error: ILobeAgentRuntimeErrorType,
+  error: IChatErrorType,
 ) => {
   const { ACCESS_CODES } = getServerConfig();
 
   // if apiKey exist
-  if (apiKey) {
-    return { auth: true };
-  }
+  if (apiKey) return;
 
   // if accessCode doesn't exist
-  if (!ACCESS_CODES.length) return { auth: true };
+  if (!ACCESS_CODES.length) return;
 
   if (!accessCode || !ACCESS_CODES.includes(accessCode)) {
-    throw createError(error);
+    console.warn('tracked an invalid access code, 检查到输入的错误密码：', accessCode);
+    throw AgentRuntimeError.createError(error);
   }
-
-  return { auth: true };
 };

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ErrorResponse, ErrorType } from '@/types/fetch';
+import { ErrorResponse, IChatErrorType } from '@/types/fetch';
 
 import { fetchAIFactory, fetchSSE, getMessageError } from './fetch';
 

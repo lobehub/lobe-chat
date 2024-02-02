@@ -3,6 +3,7 @@ import type { AlertProps } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { ChatErrorType, IChatErrorType } from '@/types/fetch';
 import { ChatMessage, ChatMessageError } from '@/types/message';
 
 import ErrorJsonViewer from './ErrorJsonViewer';
@@ -13,14 +14,27 @@ import PluginSettings from './PluginSettings';
 
 // Config for the errorMessage display
 export const getErrorAlertConfig = (
-  errorType?: IPluginErrorType | ILobeAgentRuntimeErrorType,
+  errorType?: IPluginErrorType | ILobeAgentRuntimeErrorType | IChatErrorType,
 ): AlertProps | undefined => {
+  // OpenAIBizError / ZhipuBizError / GoogleBizError / ...
+  if (typeof errorType === 'string' && errorType.includes('Biz'))
+    return {
+      extraDefaultExpand: true,
+      extraIsolate: true,
+      type: 'warning',
+    };
+
   switch (errorType) {
+    case AgentRuntimeErrorType.LocationNotSupportError: {
+      return {
+        type: 'warning',
+      };
+    }
+
     case PluginErrorType.PluginSettingsInvalid:
-    case AgentRuntimeErrorType.InvalidAccessCode:
+    case ChatErrorType.InvalidAccessCode:
     case AgentRuntimeErrorType.NoOpenAIAPIKey:
-    case AgentRuntimeErrorType.OpenAIBizError:
-    case AgentRuntimeErrorType.ZhipuBizError:
+    case AgentRuntimeErrorType.InvalidGoogleAPIKey:
     case AgentRuntimeErrorType.InvalidZhipuAPIKey: {
       return {
         extraDefaultExpand: true,
@@ -28,6 +42,7 @@ export const getErrorAlertConfig = (
         type: 'warning',
       };
     }
+
     default: {
       return undefined;
     }
@@ -47,12 +62,13 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
       return <OpenAiBizError {...data} />;
     }
 
-    case AgentRuntimeErrorType.InvalidAccessCode: {
+    case ChatErrorType.InvalidAccessCode: {
       return <InvalidAccess id={data.id} />;
     }
 
-    // TODO: 独立的Zhipu api key 配置页面
+    // TODO: 独立的 Zhipu / Google API key 配置页面
     case AgentRuntimeErrorType.InvalidZhipuAPIKey:
+    case AgentRuntimeErrorType.InvalidGoogleAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return <OpenAPIKey id={data.id} />;
     }

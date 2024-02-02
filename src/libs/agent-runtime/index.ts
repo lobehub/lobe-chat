@@ -4,5 +4,5 @@ export * from './error';
 export { LobeGoogleAI } from './google';
 export { LobeOpenAI } from './openai';
 export * from './types';
-export { createError as createLobeRuntimeError } from './utils/createError';
+export { AgentRuntimeError } from './utils/createError';
 export { LobeZhipuAI } from './zhipu';

@@ -11,8 +11,6 @@ export const ChatErrorType = {
 
   NoOpenAIAPIKey: 'NoOpenAIAPIKey',
 
-  LobeChatBizError: 'LobeChatBizError', // LobeChat 层的业务代码错误
-
   // ******* 客户端错误 ******* //
   BadRequest: 400,
   Unauthorized: 401,
@@ -29,7 +27,7 @@ export const ChatErrorType = {
 } as const;
 /* eslint-enable */
 
-export type ErrorType = (typeof ChatErrorType)[keyof typeof ChatErrorType];
+export type IChatErrorType = (typeof ChatErrorType)[keyof typeof ChatErrorType];
 
 export interface ErrorResponse {
   body: any;

@@ -52,10 +52,17 @@ export default {
     PluginOpenApiInitError: '很抱歉，OpenAPI 客户端初始化失败，请检查 OpenAPI 的配置信息是否正确',
 
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
+    LocationNotSupportError:
+      '很抱歉，你的所在位置不支持此模型服务，可能是由于地区限制或服务未开通。请确认当前位置是否支持使用此服务，或尝试使用其他位置信息。',
+
     OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
     NoOpenAIAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',
 
-    InvalidZhipuAPIKey: 'Zhipu API Key 不正确或为空，请检查 Zhipu API Key',
+    ZhipuBizError: '请求智谱服务出错，请根据以下信息排查或重试',
+    InvalidZhipuAPIKey: 'Zhipu API Key 不正确或为空，请检查 Zhipu API Key 后重试',
+
+    GoogleBizError: '请求 Google 服务出错，请根据以下信息排查或重试',
+    InvalidGoogleAPIKey: 'Google API Key 不正确或为空，请检查 Google API Key 后重试',
     /* eslint-enable */
   },
   stt: {

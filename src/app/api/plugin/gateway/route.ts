@@ -3,7 +3,7 @@ import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { getServerConfig } from '@/config/server';
 import { getLobeAuthFromRequest } from '@/const/fetch';
-import { ChatErrorType, ErrorType } from '@/types/fetch';
+import { ChatErrorType, IChatErrorType } from '@/types/fetch';
 
 import { parserPluginSettings } from './settings';
 
@@ -32,7 +32,7 @@ export const POST = async (req: Request) => {
   const result = checkAuth(accessCode);
 
   if (!result.auth) {
-    return createErrorResponse(result.error as ErrorType);
+    return createErrorResponse(result.error as IChatErrorType);
   }
 
   return handler(req);

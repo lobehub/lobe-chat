@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { checkAuth } from '@/app/api/auth';
 import { getServerConfig } from '@/config/server';
 import { getLobeAuthFromRequest } from '@/const/fetch';
-import { ChatErrorType, ErrorType } from '@/types/fetch';
+import { ChatErrorType, IChatErrorType } from '@/types/fetch';
 
 import { createAzureOpenai } from './createAzureOpenai';
 import { createOpenai } from './createOpenai';
@@ -34,7 +34,7 @@ export const createBizOpenAI = (req: Request, model: string): OpenAI => {
     }
   } catch (error) {
     // if there is an error when creating openai instance, it is an internal server error at default
-    let type: ErrorType = ChatErrorType.InternalServerError;
+    let type: IChatErrorType = ChatErrorType.InternalServerError;
 
     if ((error as Error).cause === ChatErrorType.NoOpenAIAPIKey) {
       type = ChatErrorType.NoOpenAIAPIKey;
