@@ -18,9 +18,10 @@ export class AgentMarket {
   };
 
   getAgentUrl = (identifier: string, lang: Locales = DEFAULT_LANG) => {
-    if (isLocaleNotSupport(lang)) return urlJoin(this.baseUrl, `${identifier}.json`);
+    // if (isLocaleNotSupport(lang)) return urlJoin(this.baseUrl, `${identifier}.json`);
 
-    return atob(identifier);
+    return this.baseUrl;
+    // return atob(identifier);
     // return urlJoin(this.baseUrl, `${identifier}.${normalizeLocale(lang)}.json`);
   };
 }
