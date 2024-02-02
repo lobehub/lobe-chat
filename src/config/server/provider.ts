@@ -15,6 +15,7 @@ declare global {
       AZURE_API_KEY?: string;
       AZURE_API_VERSION?: string;
       USE_AZURE_OPENAI?: string;
+      AZURE_ENDPOINT?: string;
 
       // ZhiPu Provider
       ZHIPU_API_KEY?: string;
@@ -65,6 +66,7 @@ export const getProviderConfig = () => {
 
     AZURE_API_KEY: process.env.AZURE_API_KEY,
     AZURE_API_VERSION: process.env.AZURE_API_VERSION,
+    AZURE_ENDPOINT: process.env.AZURE_ENDPOINT,
     USE_AZURE_OPENAI: process.env.USE_AZURE_OPENAI === '1',
 
     DEBUG_CHAT_COMPLETION: process.env.DEBUG_CHAT_COMPLETION === '1',

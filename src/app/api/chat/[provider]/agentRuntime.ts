@@ -2,6 +2,7 @@ import { getServerConfig } from '@/config/server';
 import { JWTPayload } from '@/const/fetch';
 import {
   ChatStreamPayload,
+  LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
   LobeOpenAI,
@@ -21,14 +22,19 @@ class AgentRuntime {
     return this._runtime.chat(payload);
   }
 
-  static async initFromRequest(provider: string, payload: JWTPayload, req: Request) {
+  static async initFromRequest(provider: string, payload: JWTPayload) {
     let runtimeModel: LobeRuntimeAI;
 
     switch (provider) {
       default:
       case 'oneapi':
       case ModelProvider.OpenAI: {
-        runtimeModel = await this.initOpenAI(req);
+        runtimeModel = await this.initOpenAI(payload);
+        break;
+      }
+
+      case ModelProvider.AzureOpenAI: {
+        runtimeModel = await this.initAzureOpenAI(payload);
         break;
       }
 
@@ -50,10 +56,21 @@ class AgentRuntime {
     return new AgentRuntime(runtimeModel);
   }
 
-  private static async initOpenAI(req: Request) {
-    const payload = (await req.json()) as ChatStreamPayload;
+  private static async initOpenAI(payload: JWTPayload) {
+    const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
+    const apiKey = payload?.apiKey || OPENAI_API_KEY;
+    const baseURL = payload?.endpoint || OPENAI_PROXY_URL;
 
-    return new LobeOpenAI(req, payload.model);
+    return new LobeOpenAI(apiKey, baseURL);
+  }
+
+  private static async initAzureOpenAI(payload: JWTPayload) {
+    const { AZURE_API_KEY, AZURE_API_VERSION, OPENAI_PROXY_URL } = getServerConfig();
+    const apiKey = payload?.apiKey || AZURE_API_KEY;
+    const endpoint = payload?.endpoint || OPENAI_PROXY_URL;
+    const apiVersion = payload?.apiKey || AZURE_API_VERSION;
+
+    return new LobeAzureOpenAI(endpoint, apiKey, apiVersion);
   }
 
   private static async initZhipu(payload: JWTPayload) {
@@ -71,12 +88,13 @@ class AgentRuntime {
   }
 
   private static initBedrock(payload: JWTPayload) {
-    const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID } = getServerConfig();
+    const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION } = getServerConfig();
 
     const accessKeyId = payload?.awsAccessKeyId || AWS_ACCESS_KEY_ID;
     const accessKeySecret = payload?.awsSecretAccessKey || AWS_SECRET_ACCESS_KEY;
+    const region = payload?.awsRegion || AWS_REGION;
 
-    return new LobeBedrockAI({ accessKeyId, accessKeySecret });
+    return new LobeBedrockAI({ accessKeyId, accessKeySecret, region });
   }
 }
 

@@ -22,6 +22,11 @@ export default {
   },
   llm: {
     AzureOpenAI: {
+      azureApiVersion: {
+        desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
+        fetch: '获取列表',
+        title: 'Azure Api Version',
+      },
       endpoint: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值',
         placeholder: 'https://docs-test-001.openai.azure.com',
@@ -90,7 +95,7 @@ export default {
       token: {
         desc: '使用自己的 OpenAI Key',
         placeholder: 'OpenAI API Key',
-        title: 'API Key',
+        title: 'OpenAI API Key',
       },
       useAzure: {
         desc: '使用 Azure 提供的 OpenAI 服务',

@@ -59,7 +59,7 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     const payload = await getJWTPayload(authorization);
     checkAuthWithProvider(payload);
 
-    agentRuntime = await AgentRuntime.initFromRequest(params.provider, payload, req.clone());
+    agentRuntime = await AgentRuntime.initFromRequest(params.provider, payload);
   } catch (e) {
     // if catch the error, just return it
     const err = JSON.parse((e as Error).message) as { type: ILobeAgentRuntimeErrorType };

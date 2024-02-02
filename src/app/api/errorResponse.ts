@@ -5,6 +5,7 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | IChatErrorType) => {
   switch (errorType) {
     case ChatErrorType.InvalidAccessCode:
     case AgentRuntimeErrorType.NoOpenAIAPIKey:
+    case AgentRuntimeErrorType.InvalidAzureOpenAIAPIKey:
     case AgentRuntimeErrorType.InvalidZhipuAPIKey:
     case AgentRuntimeErrorType.InvalidGoogleAPIKey: {
       return 401;

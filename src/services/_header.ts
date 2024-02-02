@@ -59,8 +59,7 @@ const getTokenByProvider = (provider: string) => {
       return { apiKey, awsAccessKeyId, awsRegion: AWS_REGION, awsSecretAccessKey };
     }
 
-    default:
-    case ModelProvider.OpenAI: {
+    case ModelProvider.AzureOpenAI: {
       const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());
       const apiKey = openai.OPENAI_API_KEY || '';
       const endpoint = openai.endpoint || '';
@@ -69,8 +68,16 @@ const getTokenByProvider = (provider: string) => {
         apiKey,
         azureApiVersion: openai.azureApiVersion,
         endpoint,
-        useAzure: openai.useAzure,
       };
+    }
+
+    default:
+    case ModelProvider.OpenAI: {
+      const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());
+      const apiKey = openai.OPENAI_API_KEY || '';
+      const endpoint = openai.endpoint || '';
+
+      return { apiKey, endpoint };
     }
   }
 };

@@ -1,6 +1,6 @@
-import { OpenAI } from '@lobehub/icons';
+import { Azure, OpenAI } from '@lobehub/icons';
 import { Form, type ItemGroup, Markdown } from '@lobehub/ui';
-import { Form as AntForm, AutoComplete, Input, Switch } from 'antd';
+import { Form as AntForm, AutoComplete, Divider, Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { memo, useEffect } from 'react';
@@ -37,7 +37,7 @@ const LLM = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
   const { styles } = useStyles();
-  const [useAzure, setSettings] = useGlobalStore((s) => [
+  const [enabled, setSettings] = useGlobalStore((s) => [
     modelProviderSelectors.enableAzure(s),
     s.setSettings,
   ]);
@@ -60,69 +60,27 @@ const LLM = memo(() => {
         children: (
           <Input.Password
             autoComplete={'new-password'}
-            placeholder={
-              useAzure ? t('llm.AzureOpenAI.token.placeholder') : t('llm.OpenAI.token.placeholder')
-            }
+            placeholder={t('llm.AzureOpenAI.token.placeholder')}
           />
         ),
-        desc: useAzure ? t('llm.AzureOpenAI.token.desc') : t('llm.OpenAI.token.desc'),
-        label: useAzure ? t('llm.AzureOpenAI.token.title') : t('llm.OpenAI.token.title'),
+        desc: t('llm.AzureOpenAI.token.desc'),
+        label: t('llm.AzureOpenAI.token.title'),
         name: [configKey, 'openAI', 'OPENAI_API_KEY'],
       },
       {
-        children: (
-          <Input
-            allowClear
-            placeholder={
-              useAzure
-                ? t('llm.AzureOpenAI.endpoint.placeholder')
-                : t('llm.OpenAI.endpoint.placeholder')
-            }
-          />
-        ),
-        desc: useAzure ? t('llm.AzureOpenAI.endpoint.desc') : t('llm.OpenAI.endpoint.desc'),
-        label: useAzure ? t('llm.AzureOpenAI.endpoint.title') : t('llm.OpenAI.endpoint.title'),
+        children: <Input allowClear placeholder={t('llm.AzureOpenAI.endpoint.placeholder')} />,
+        desc: t('llm.AzureOpenAI.endpoint.desc'),
+        label: t('llm.AzureOpenAI.endpoint.title'),
         name: [configKey, 'openAI', 'endpoint'],
-      },
-      {
-        children: (
-          <Input.TextArea
-            allowClear
-            placeholder={t('llm.OpenAI.customModelName.placeholder')}
-            style={{ height: 100 }}
-          />
-        ),
-        desc: t('llm.OpenAI.customModelName.desc'),
-        label: t('llm.OpenAI.customModelName.title'),
-        name: [configKey, 'openAI', 'customModelName'],
-      },
-      {
-        children: (
-          <Switch />
-          //   <Flexbox gap={4}>
-          //   <div>
-          //
-          //   </div>
-          //   {getClientConfig().USE_AZURE_OPENAI && (
-          //     <div className={styles.tip}>{t('llm.OpenAI.useAzure.serverConfig')}</div>
-          //   )}
-          // </Flexbox>
-        ),
-        desc: t('llm.OpenAI.useAzure.desc'),
-        label: t('llm.OpenAI.useAzure.title'),
-        minWidth: undefined,
-        name: [configKey, 'openAI', 'useAzure'],
-        valuePropName: 'checked',
       },
       {
         children: (
           <AutoComplete
             options={[
+              '2023-12-01-preview',
               '2023-08-01-preview',
               '2023-07-01-preview',
               '2023-06-01-preview',
-              '2023-05-15',
-              '2023-03-15-preview',
             ].map((i) => ({
               label: i,
               value: i,
@@ -131,24 +89,45 @@ const LLM = memo(() => {
           />
         ),
         desc: (
-          <Markdown className={styles.markdown}>{t('llm.OpenAI.azureApiVersion.desc')}</Markdown>
+          <Markdown className={styles.markdown}>
+            {t('llm.AzureOpenAI.azureApiVersion.desc')}
+          </Markdown>
         ),
-        hidden: !useAzure,
-        label: t('llm.OpenAI.azureApiVersion.title'),
+        label: t('llm.AzureOpenAI.azureApiVersion.title'),
         name: [configKey, 'openAI', 'azureApiVersion'],
       },
       {
         children: <Checker model={'gpt-3.5-turbo'} provider={ModelProvider.OpenAI} />,
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
-        minWidth: '100%',
+        minWidth: undefined,
       },
+
+      // {
+      //   children: useAzure ? <Flexbox>{t('llm.OpenAI.models.notSupport')}</Flexbox> : <ModelList />,
+      //   desc: useAzure ? t('llm.OpenAI.models.notSupportTip') : t('llm.OpenAI.models.desc'),
+      //   label: t('llm.OpenAI.models.title'),
+      //   name: [configKey, 'openAI', 'models'],
+      // },
     ],
+    defaultActive: enabled,
+    extra: (
+      <Switch
+        onChange={(enabled) => {
+          setSettings({ languageModel: { bedrock: { enabled } } });
+        }}
+        value={enabled}
+      />
+    ),
     title: (
       <Flexbox align={'center'} gap={8} horizontal>
+        <Azure.Combine size={24} type={'color'}></Azure.Combine>
+        <Divider style={{ margin: '0 4px' }} type={'vertical'} />
         <OpenAI.Combine size={24}></OpenAI.Combine>
+        {/*{t('llm.Google.title')}*/}
       </Flexbox>
     ),
+    // t('llm.OpenAI.title'),
   };
 
   return (

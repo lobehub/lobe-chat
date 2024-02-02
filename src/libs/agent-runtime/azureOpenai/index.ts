@@ -1,11 +1,14 @@
+import {
+  AzureKeyCredential,
+  ChatRequestMessage,
+  GetChatCompletionsOptions,
+  OpenAIClient,
+} from '@azure/openai';
 import { OpenAIStream, StreamingTextResponse } from 'ai';
-import OpenAI from 'openai';
-
-import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ModelProvider } from '../types';
+import { ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
@@ -14,32 +17,31 @@ import { handleOpenAIError } from '../utils/handleOpenAIError';
 
 const DEFAULT_BASE_URL = 'https://api.openai.com/v1';
 
-export class LobeOpenAI implements LobeRuntimeAI {
-  private _llm: OpenAI;
+export class LobeAzureOpenAI implements LobeRuntimeAI {
+  private _client: OpenAIClient;
 
-  constructor(apiKey?: string, baseURL?: string) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.NoOpenAIAPIKey);
+  constructor(endpoint?: string, apikey?: string, apiVersion?: string) {
+    if (!apikey || !endpoint)
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidAzureOpenAIAPIKey);
 
-    this._llm = new OpenAI({ apiKey, baseURL });
-    this.baseURL = this._llm.baseURL;
+    this._client = new OpenAIClient(endpoint, new AzureKeyCredential(apikey), { apiVersion });
+
+    this.baseURL = endpoint;
   }
 
   baseURL: string;
 
   async chat(payload: ChatStreamPayload) {
     // ============  1. preprocess messages   ============ //
-    const { messages, ...params } = payload;
+    const { messages, model, ...params } = payload;
 
     // ============  2. send api   ============ //
 
     try {
-      const response = await this._llm.chat.completions.create(
-        {
-          messages,
-          ...params,
-          stream: true,
-        } as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
-        { headers: { Accept: '*/*' } },
+      const response = await this._client.streamChatCompletions(
+        model,
+        messages as ChatRequestMessage[],
+        params as GetChatCompletionsOptions,
       );
 
       const stream = OpenAIStream(response);

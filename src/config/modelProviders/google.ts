@@ -7,12 +7,12 @@ const Google: ModelProviderCard = {
       id: 'gemini-pro',
       tokens: 32_768,
     },
-    // {
-    //   displayName: 'Gemini Pro Vision',
-    //   id: 'gemini-pro-vision',
-    //   tokens: 16_384,
-    //   vision: true,
-    // },
+    {
+      displayName: 'Gemini Pro Vision',
+      id: 'gemini-pro-vision',
+      tokens: 16_384,
+      vision: true,
+    },
   ],
   id: 'google',
 };

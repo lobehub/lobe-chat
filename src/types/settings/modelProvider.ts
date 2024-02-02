@@ -12,6 +12,13 @@ export interface OpenAIConfig {
   useAzure?: boolean;
 }
 
+export interface AzureOpenAIConfig {
+  AZURE_API_KEY: string;
+  azureApiVersion?: string;
+  enabled: boolean;
+  endpoint?: string;
+}
+
 export interface ZhiPuConfig {
   ZHIPU_API_KEY?: string;
   enabled: boolean;
@@ -30,6 +37,7 @@ export interface AWSBedrockConfig {
 }
 
 export interface GlobalLLMConfig {
+  azureOpenAI: AzureOpenAIConfig;
   bedrock: AWSBedrockConfig;
   google: GoogleConfig;
   openAI: OpenAIConfig;

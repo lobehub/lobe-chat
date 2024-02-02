@@ -2,13 +2,19 @@ export const LOBE_AI_PROVIDER_AUTH = 'X-lobe-ai-provider-auth';
 
 export const JWT_SECRET_KEY = ' LobeHub · LobeChat';
 
+/* eslint-disable sort-keys-fix/sort-keys-fix,typescript-sort-keys/interface */
 export interface JWTPayload {
   accessCode?: string;
+
   apiKey?: string;
+  endpoint?: string;
+  azureApiVersion?: string;
 
   awsAccessKeyId?: string;
+  awsRegion?: string;
   awsSecretAccessKey?: string;
 }
+/* eslint-enable */
 
 export const OPENAI_PROXY_URL = 'X-openai-end-point';
 export const OPENAI_API_KEY_HEADER_KEY = 'X-openai-api-key';
