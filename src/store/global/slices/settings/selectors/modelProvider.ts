@@ -21,8 +21,10 @@ const enableZhipu = (s: GlobalStore) => modelProvider(s).zhipu.enabled;
 const zhipuAPIKey = (s: GlobalStore) => modelProvider(s).zhipu.ZHIPU_API_KEY;
 
 const enableBedrock = (s: GlobalStore) => modelProvider(s).bedrock.enabled;
+const bedrockConfig = (s: GlobalStore) => modelProvider(s).bedrock;
 
 const enableGoogle = (s: GlobalStore) => modelProvider(s).google.enabled;
+const googleAPIKey = (s: GlobalStore) => modelProvider(s).google.GOOGLE_API_KEY;
 
 const customModelList = (s: GlobalStore) => {
   let models: CustomModels = [];
@@ -120,7 +122,10 @@ export const modelProviderSelectors = {
   // Zhipu
   enableZhipu,
   zhipuAPIKey,
-
+  // Google
+  enableGoogle,
+  googleAPIKey,
   // Bedrock
   enableBedrock,
+  bedrockConfig,
 };

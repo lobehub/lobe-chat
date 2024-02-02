@@ -79,7 +79,7 @@
     "@icons-pack/react-simple-icons": "^9",
     "@lobehub/chat-plugin-sdk": "latest",
     "@lobehub/chat-plugins-gateway": "latest",
-    "@lobehub/icons": "^1.7.0",
+    "@lobehub/icons": "^1.10.2",
     "@lobehub/tts": "latest",
     "@lobehub/ui": "latest",
     "@vercel/analytics": "^1",

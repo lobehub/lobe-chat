@@ -1,9 +1,7 @@
-import { Zhipu } from '@lobehub/icons';
+import { Google } from '@lobehub/icons';
 import { Form, type ItemGroup } from '@lobehub/ui';
 import { Form as AntForm, Input, Switch } from 'antd';
-import { useTheme } from 'antd-style';
 import { debounce } from 'lodash-es';
-import { lighten } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -20,9 +18,9 @@ const configKey = 'languageModel';
 const LLM = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
-  const theme = useTheme();
-  const [enabledZhipu, setSettings] = useGlobalStore((s) => [
-    modelProviderSelectors.enableZhipu(s),
+
+  const [enabled, setSettings] = useGlobalStore((s) => [
+    modelProviderSelectors.enableGoogle(s),
     s.setSettings,
   ]);
 
@@ -38,35 +36,33 @@ const LLM = memo(() => {
         children: (
           <Input.Password
             autoComplete={'new-password'}
-            placeholder={t('llm.Zhipu.token.placeholder')}
+            placeholder={t('llm.Google.token.placeholder')}
           />
         ),
-        desc: t('llm.Zhipu.token.desc'),
-        label: t('llm.Zhipu.token.title'),
-        name: [configKey, 'zhipu', 'ZHIPU_API_KEY'],
+        desc: t('llm.Google.token.desc'),
+        label: t('llm.Google.token.title'),
+        name: [configKey, 'google', 'GOOGLE_API_KEY'],
       },
       {
-        children: <Checker model={'glm-3-turbo'} provider={ModelProvider.ZhiPu} />,
+        children: <Checker model={'gemini-pro'} provider={ModelProvider.Google} />,
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
         minWidth: undefined,
       },
     ],
-    defaultActive: enabledZhipu,
+    defaultActive: enabled,
     extra: (
       <Switch
         onChange={(enabled) => {
-          setSettings({ languageModel: { zhipu: { enabled } } });
+          setSettings({ languageModel: { google: { enabled } } });
         }}
-        value={enabledZhipu}
+        value={enabled}
       />
     ),
     title: (
       <Flexbox align={'center'} gap={8} horizontal>
-        <Zhipu.Combine
-          color={theme.isDarkMode ? lighten(0.1, Zhipu.colorPrimary) : Zhipu.colorPrimary}
-          size={32}
-        />
+        <Google.BrandColor size={32}></Google.BrandColor>
+        {/*{t('llm.Google.title')}*/}
       </Flexbox>
     ),
   };

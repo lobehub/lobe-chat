@@ -1,6 +1,15 @@
+import { importJWK, jwtVerify } from 'jose';
+
+import { checkAuthWithProvider } from '@/app/api/chat/[provider]/checkAuthWithProvider';
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { ChatCompletionErrorPayload, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { JWTPayload, JWT_SECRET_KEY, LOBE_AI_PROVIDER_AUTH } from '@/const/fetch';
+import {
+  AgentRuntimeError,
+  ChatCompletionErrorPayload,
+  ILobeAgentRuntimeErrorType,
+} from '@/libs/agent-runtime';
+import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 import AgentRuntime from './agentRuntime';
@@ -22,13 +31,35 @@ export const runtime = useProxy ? 'nodejs' : 'edge';
 
 export const preferredRegion = getPreferredRegion();
 
+const getJWTPayload = async (token: string) => {
+  const encoder = new TextEncoder();
+  const secretKey = await crypto.subtle.digest('SHA-256', encoder.encode(JWT_SECRET_KEY));
+
+  const jwkSecretKey = await importJWK(
+    { k: Buffer.from(secretKey).toString('base64'), kty: 'oct' },
+    'HS256',
+  );
+
+  const { payload } = await jwtVerify(token, jwkSecretKey);
+
+  return payload as JWTPayload;
+};
+
 export const POST = async (req: Request, { params }: { params: { provider: string } }) => {
   let agentRuntime: AgentRuntime;
 
   // ============  1. init chat model   ============ //
 
   try {
-    agentRuntime = await AgentRuntime.initFromRequest(params.provider, req.clone());
+    // get Authorization from header
+    const authorization = req.headers.get(LOBE_AI_PROVIDER_AUTH);
+    if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
+
+    // check the Auth With payload
+    const payload = await getJWTPayload(authorization);
+    checkAuthWithProvider(payload);
+
+    agentRuntime = await AgentRuntime.initFromRequest(params.provider, payload, req.clone());
   } catch (e) {
     // if catch the error, just return it
     const err = JSON.parse((e as Error).message) as { type: ILobeAgentRuntimeErrorType };

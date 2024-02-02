@@ -1,9 +1,7 @@
-import { Zhipu } from '@lobehub/icons';
+import { Aws, Bedrock } from '@lobehub/icons';
 import { Form, type ItemGroup } from '@lobehub/ui';
-import { Form as AntForm, Input, Switch } from 'antd';
-import { useTheme } from 'antd-style';
+import { Form as AntForm, Divider, Input, Switch } from 'antd';
 import { debounce } from 'lodash-es';
-import { lighten } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,13 +14,14 @@ import { modelProviderSelectors, settingsSelectors } from '@/store/global/select
 import Checker from '../Checker';
 
 const configKey = 'languageModel';
+const ProviderKey = 'bedrock';
 
 const LLM = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
-  const theme = useTheme();
-  const [enabledZhipu, setSettings] = useGlobalStore((s) => [
-    modelProviderSelectors.enableZhipu(s),
+
+  const [enabled, setSettings] = useGlobalStore((s) => [
+    modelProviderSelectors.enableBedrock(s),
     s.setSettings,
   ]);
 
@@ -38,35 +37,47 @@ const LLM = memo(() => {
         children: (
           <Input.Password
             autoComplete={'new-password'}
-            placeholder={t('llm.Zhipu.token.placeholder')}
+            placeholder={t('llm.Bedrock.AWS_ACCESS_KEY_ID.placeholder')}
           />
         ),
-        desc: t('llm.Zhipu.token.desc'),
-        label: t('llm.Zhipu.token.title'),
-        name: [configKey, 'zhipu', 'ZHIPU_API_KEY'],
+        desc: t('llm.Bedrock.AWS_ACCESS_KEY_ID.desc'),
+        label: t('llm.Bedrock.AWS_ACCESS_KEY_ID.title'),
+        name: [configKey, ProviderKey, 'AWS_ACCESS_KEY_ID'],
       },
       {
-        children: <Checker model={'glm-3-turbo'} provider={ModelProvider.ZhiPu} />,
+        children: (
+          <Input.Password
+            autoComplete={'new-password'}
+            placeholder={t('llm.Bedrock.AWS_SECRET_ACCESS_KEY.placeholder')}
+          />
+        ),
+        desc: t('llm.Bedrock.AWS_SECRET_ACCESS_KEY.desc'),
+        label: t('llm.Bedrock.AWS_SECRET_ACCESS_KEY.title'),
+        name: [configKey, ProviderKey, 'AWS_SECRET_ACCESS_KEY'],
+      },
+      {
+        children: (
+          <Checker model={'anthropic.claude-instant-v1'} provider={ModelProvider.Bedrock} />
+        ),
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
         minWidth: undefined,
       },
     ],
-    defaultActive: enabledZhipu,
+    defaultActive: enabled,
     extra: (
       <Switch
         onChange={(enabled) => {
-          setSettings({ languageModel: { zhipu: { enabled } } });
+          setSettings({ languageModel: { bedrock: { enabled } } });
         }}
-        value={enabledZhipu}
+        value={enabled}
       />
     ),
     title: (
       <Flexbox align={'center'} gap={8} horizontal>
-        <Zhipu.Combine
-          color={theme.isDarkMode ? lighten(0.1, Zhipu.colorPrimary) : Zhipu.colorPrimary}
-          size={32}
-        />
+        <Aws.Color size={32} />
+        <Divider style={{ margin: '0 4px' }} type={'vertical'} />
+        <Bedrock.Combine size={24} type={'color'} />
       </Flexbox>
     ),
   };

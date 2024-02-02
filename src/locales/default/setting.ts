@@ -38,18 +38,35 @@ export default {
         title: 'API Key',
       },
     },
+    Bedrock: {
+      AWS_ACCESS_KEY_ID: {
+        desc: '填入Aws Access Key Id',
+        placeholder: 'Aws Access Key Id',
+        title: 'Aws Access Key Id',
+      },
+      AWS_SECRET_ACCESS_KEY: {
+        desc: '填入 Aws Secret Access Key',
+        placeholder: 'Aws Secret Access Key',
+        title: 'Aws Secret Access Key',
+      },
+      title: 'Bedrock',
+    },
+    Google: {
+      title: 'Google',
+      token: {
+        desc: '填入来自 Google 的 API Key',
+        placeholder: 'Google API Key',
+        title: 'API Key',
+      },
+    },
+
     OpenAI: {
       azureApiVersion: {
         desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
         fetch: '获取列表',
         title: 'Azure Api Version',
       },
-      check: {
-        button: '检查',
-        desc: '测试 Api Key 与代理地址是否正确填写',
-        pass: '检查通过',
-        title: '连通性检查',
-      },
+
       customModelName: {
         desc: '增加自定义模型，多个模型使用逗号（,） 隔开',
         placeholder: 'model1,model2,model3',
@@ -89,6 +106,13 @@ export default {
         placeholder: 'Zhipu API Key',
         title: 'API Key',
       },
+    },
+
+    checker: {
+      button: '检查',
+      desc: '测试 Api Key 与代理地址是否正确填写',
+      pass: '检查通过',
+      title: '连通性检查',
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
   },

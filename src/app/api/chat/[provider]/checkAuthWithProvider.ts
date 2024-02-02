@@ -1,16 +1,9 @@
 import { getServerConfig } from '@/config/server';
+import { JWTPayload } from '@/const/fetch';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
-import { IChatErrorType } from '@/types/fetch';
+import { ChatErrorType } from '@/types/fetch';
 
-interface AuthConfig {
-  accessCode?: string | null;
-  apiKey?: string | null;
-}
-
-export const checkAuthWithProvider = (
-  { apiKey, accessCode }: AuthConfig,
-  error: IChatErrorType,
-) => {
+export const checkAuthWithProvider = ({ apiKey, accessCode }: JWTPayload) => {
   const { ACCESS_CODES } = getServerConfig();
 
   // if apiKey exist
@@ -21,6 +14,6 @@ export const checkAuthWithProvider = (
 
   if (!accessCode || !ACCESS_CODES.includes(accessCode)) {
     console.warn('tracked an invalid access code, 检查到输入的错误密码：', accessCode);
-    throw AgentRuntimeError.createError(error);
+    throw AgentRuntimeError.createError(ChatErrorType.InvalidAccessCode);
   }
 };

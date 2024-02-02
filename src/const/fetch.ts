@@ -1,3 +1,15 @@
+export const LOBE_AI_PROVIDER_AUTH = 'X-lobe-ai-provider-auth';
+
+export const JWT_SECRET_KEY = ' LobeHub · LobeChat';
+
+export interface JWTPayload {
+  accessCode?: string;
+  apiKey?: string;
+
+  awsAccessKeyId?: string;
+  awsSecretAccessKey?: string;
+}
+
 export const OPENAI_PROXY_URL = 'X-openai-end-point';
 export const OPENAI_API_KEY_HEADER_KEY = 'X-openai-api-key';
 
@@ -7,26 +19,12 @@ export const AZURE_OPENAI_API_VERSION = 'X-azure-openai-api-version';
 
 export const LOBE_CHAT_ACCESS_CODE = 'X-lobe-chat-access-code';
 
-export const ZHIPU_API_KEY_HEADER_KEY = 'X-zhipu-api-key';
-export const ZHIPU_PROXY_URL_HEADER_KEY = 'X-zhipu-proxy-url';
-
-export const GOOGLE_API_KEY_HEADER_KEY = 'X-google-api-key';
-
-export const BEDROCK_AWS_SECRET_ACCESS_KEY = 'X-bedrock-aws-secret-access-key';
-export const BEDROCK_AWS_ACCESS_KEY_ID = 'X-bedrock-access-key-id';
-
 export const getLobeAuthFromRequest = (req: Request) => {
   const apiKey = req.headers.get(OPENAI_API_KEY_HEADER_KEY);
   const endpoint = req.headers.get(OPENAI_PROXY_URL);
   const accessCode = req.headers.get(LOBE_CHAT_ACCESS_CODE);
   const useAzureStr = req.headers.get(USE_AZURE_OPENAI);
   const apiVersion = req.headers.get(AZURE_OPENAI_API_VERSION);
-  const zhipuApiKey = req.headers.get(ZHIPU_API_KEY_HEADER_KEY);
-  const zhipuProxyUrl = req.headers.get(ZHIPU_PROXY_URL_HEADER_KEY);
-  const googleApiKey = req.headers.get(GOOGLE_API_KEY_HEADER_KEY);
-
-  const bedrockAwsSecretAccessKey = req.headers.get(BEDROCK_AWS_SECRET_ACCESS_KEY);
-  const bedrockAwsAccessKeyId = req.headers.get(BEDROCK_AWS_ACCESS_KEY_ID);
 
   const useAzure = !!useAzureStr;
 
@@ -35,17 +33,8 @@ export const getLobeAuthFromRequest = (req: Request) => {
     apiKey,
     apiVersion,
 
-    bedrockAwsAccessKeyId,
-    bedrockAwsSecretAccessKey,
-
     endpoint,
 
-    googleApiKey,
-
     useAzure,
-
-    zhipuApiKey,
-
-    zhipuProxyUrl,
   };
 };

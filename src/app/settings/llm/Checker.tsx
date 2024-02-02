@@ -6,11 +6,16 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ModelProvider } from '@/libs/agent-runtime';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { chatService } from '@/services/chat';
 import { ChatMessageError } from '@/types/message';
 
-const Checker = memo(() => {
+interface ConnectionCheckerProps {
+  model: string;
+  provider: string;
+}
+
+const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
   const { t } = useTranslation('setting');
 
   const [loading, setLoading] = useState(false);
@@ -23,6 +28,7 @@ const Checker = memo(() => {
     const data = await chatService.fetchPresetTaskResult({
       onError: (_, rawError) => {
         setError(rawError);
+        setPass(false);
       },
       onLoadingChange: (loading) => {
         setLoading(loading);
@@ -34,8 +40,8 @@ const Checker = memo(() => {
             role: 'user',
           },
         ],
-        model: 'glm-4',
-        provider: ModelProvider.ZhiPu,
+        model,
+        provider,
       },
     });
 
@@ -44,14 +50,11 @@ const Checker = memo(() => {
       setPass(true);
     }
   };
+  const isMobile = useIsMobile();
 
   return (
-    <Flexbox gap={8}>
-      <Flexbox align={'center'} gap={12} horizontal>
-        <Button loading={loading} onClick={checkConnection}>
-          {t('llm.OpenAI.check.button')}
-        </Button>
-
+    <Flexbox align={isMobile ? 'flex-start' : 'flex-end'} gap={8}>
+      <Flexbox align={'center'} direction={isMobile ? 'horizontal-reverse' : 'horizontal'} gap={12}>
         {pass && (
           <Flexbox gap={4} horizontal>
             <CheckCircleFilled
@@ -59,17 +62,19 @@ const Checker = memo(() => {
                 color: theme.colorSuccess,
               }}
             />
-            {t('llm.OpenAI.check.pass')}
+            {t('llm.checker.pass')}
           </Flexbox>
         )}
+        <Button loading={loading} onClick={checkConnection}>
+          {t('llm.checker.button')}
+        </Button>
       </Flexbox>
-
       {error && (
-        <Flexbox gap={8}>
+        <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
           <Alert
             banner
             extra={
-              <Flexbox style={{ maxWidth: 600 }}>
+              <Flexbox>
                 <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
                   {JSON.stringify(error.body, null, 2)}
                 </Highlighter>

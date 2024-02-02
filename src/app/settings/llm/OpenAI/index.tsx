@@ -1,16 +1,18 @@
+import { OpenAI } from '@lobehub/icons';
 import { Form, type ItemGroup, Markdown } from '@lobehub/ui';
 import { Form as AntForm, AutoComplete, Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
-import { Webhook } from 'lucide-react';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { ModelProvider } from '@/libs/agent-runtime';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 
-import Checker from './Checker';
+import Checker from '../Checker';
 
 const useStyles = createStyles(({ css, token }) => ({
   markdown: css`
@@ -136,11 +138,12 @@ const LLM = memo(() => {
         name: [configKey, 'openAI', 'azureApiVersion'],
       },
       {
-        children: <Checker checkModel={!useAzure} />,
-        desc: t('llm.OpenAI.check.desc'),
-        label: t('llm.OpenAI.check.title'),
+        children: <Checker model={'gpt-3.5-turbo'} provider={ModelProvider.OpenAI} />,
+        desc: t('llm.checker.desc'),
+        label: t('llm.checker.title'),
         minWidth: '100%',
       },
+
       // {
       //   children: useAzure ? <Flexbox>{t('llm.OpenAI.models.notSupport')}</Flexbox> : <ModelList />,
       //   desc: useAzure ? t('llm.OpenAI.models.notSupportTip') : t('llm.OpenAI.models.desc'),
@@ -148,8 +151,13 @@ const LLM = memo(() => {
       //   name: [configKey, 'openAI', 'models'],
       // },
     ],
-    icon: Webhook,
-    title: t('llm.OpenAI.title'),
+    title: (
+      <Flexbox align={'center'} gap={8} horizontal>
+        <OpenAI.Combine size={24}></OpenAI.Combine>
+        {/*{t('llm.Google.title')}*/}
+      </Flexbox>
+    ),
+    // t('llm.OpenAI.title'),
   };
 
   return (

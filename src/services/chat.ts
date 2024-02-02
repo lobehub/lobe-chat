@@ -2,11 +2,12 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
+import { LOBE_AI_PROVIDER_AUTH } from '@/const/fetch';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/slices/settings/selectors';
+import { modelProviderSelectors } from '@/store/global/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/message';
@@ -14,7 +15,7 @@ import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
-import { createHeaderWithOpenAI } from './_header';
+import { createBearAuthPayload, createHeaderWithOpenAI } from './_header';
 import { PLUGINS_URLS } from './_url';
 
 interface FetchOptions {
@@ -64,7 +65,7 @@ class ChatService {
     return this.getChatCompletion({ ...params, messages: oaiMessages, tools }, options);
   };
 
-  getChatCompletion = (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
+  getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
     const { provider = ModelProvider.OpenAI, ...res } = params;
     const payload = merge(
       {
@@ -75,9 +76,14 @@ class ChatService {
       res,
     );
 
+    const token = await createBearAuthPayload(provider);
+
     return fetch(`/api/chat/${provider}`, {
       body: JSON.stringify(payload),
-      headers: createHeaderWithOpenAI({ 'Content-Type': 'application/json' }),
+      headers: createHeaderWithOpenAI({
+        'Content-Type': 'application/json',
+        [LOBE_AI_PROVIDER_AUTH]: token,
+      }),
       method: 'POST',
       signal: options?.signal,
     });
