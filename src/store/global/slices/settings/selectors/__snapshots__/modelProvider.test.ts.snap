@@ -12,7 +12,7 @@ exports[`modelProviderSelectors > CUSTOM_MODELS > custom deletion, addition, and
   },
   {
     "displayName": "gpt-4-32k",
-    "name": "gpt-4-1106-preview",
+    "name": "gpt-4-0125-preview",
   },
 ]
 `;
@@ -45,7 +45,7 @@ exports[`modelProviderSelectors > CUSTOM_MODELS > duplicate naming model 1`] = `
   },
   {
     "displayName": "gpt-4-32k",
-    "name": "gpt-4-1106-preview",
+    "name": "gpt-4-0125-preview",
   },
 ]
 `;
@@ -73,8 +73,8 @@ exports[`modelProviderSelectors > CUSTOM_MODELS > only add the model 1`] = `
     "name": "gpt-4-32k",
   },
   {
-    "displayName": "gpt-4-1106-preview",
-    "name": "gpt-4-1106-preview",
+    "displayName": "gpt-4-0125-preview",
+    "name": "gpt-4-0125-preview",
   },
   {
     "displayName": "gpt-4-vision-preview",
