@@ -18,6 +18,7 @@ export class AgentMarket {
   };
 
   getAgentUrl = (identifier: string, lang: Locales = DEFAULT_LANG) => {
+    console.info(lang);
     // if (isLocaleNotSupport(lang)) return urlJoin(this.baseUrl, `${identifier}.json`);
 
     return this.baseUrl;
