@@ -21,8 +21,9 @@ export class AgentMarket {
     console.info(lang);
     // if (isLocaleNotSupport(lang)) return urlJoin(this.baseUrl, `${identifier}.json`);
 
-    return this.baseUrl;
+    // return this.baseUrl;
     // return atob(identifier);
+    return `${this.baseUrl}?agentId=${identifier}`;
     // return urlJoin(this.baseUrl, `${identifier}.${normalizeLocale(lang)}.json`);
   };
 }
