@@ -53,7 +53,7 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
     }
   };
   return (
-    <Flexbox gap={8}>
+    <Flexbox align="flex-end" gap={8}>
       <Flexbox align={'center'} gap={12} horizontal justify={'flex-end'}>
         {pass && (
           <Flexbox gap={4} horizontal>
@@ -71,7 +71,7 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
       </Flexbox>
 
       {error && (
-        <Flexbox gap={8} width={'35vw'}>
+        <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
           <Alert
             banner
             extra={
