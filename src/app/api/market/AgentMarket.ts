@@ -20,6 +20,7 @@ export class AgentMarket {
   getAgentUrl = (identifier: string, lang: Locales = DEFAULT_LANG) => {
     if (isLocaleNotSupport(lang)) return urlJoin(this.baseUrl, `${identifier}.json`);
 
-    return urlJoin(this.baseUrl, `${identifier}.${normalizeLocale(lang)}.json`);
+    return identifier;
+    // return urlJoin(this.baseUrl, `${identifier}.${normalizeLocale(lang)}.json`);
   };
 }
