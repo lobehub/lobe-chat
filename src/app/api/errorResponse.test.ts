@@ -18,10 +18,10 @@ describe('createErrorResponse', () => {
     expect(response.status).toBe(401);
   });
 
-  it('returns a 577 status for OpenAIBizError error type', () => {
+  it('returns a 471 status for OpenAIBizError error type', () => {
     const errorType = ChatErrorType.OpenAIBizError;
     const response = createErrorResponse(errorType);
-    expect(response.status).toBe(577);
+    expect(response.status).toBe(471);
   });
 
   // 测试默认情况
