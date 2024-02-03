@@ -33,16 +33,18 @@ const ModelSelect = memo(() => {
       onChange={(model, option) => {
         updateConfig({ model, provider: (option as unknown as ModelOption).provider });
       }}
-      options={select.map((provider) => ({
-        label: <ProviderItemRender provider={provider.id} />,
-        options: provider.chatModels
-          .filter((c) => !c.hidden)
-          .map((model) => ({
-            label: <ModelItemRender showInfoTag={false} {...model} />,
-            provider: provider.id,
-            value: model.id,
-          })),
-      }))}
+      options={select
+        .filter((s) => s.enabled)
+        .map((provider) => ({
+          label: <ProviderItemRender provider={provider.id} />,
+          options: provider.chatModels
+            .filter((c) => !c.hidden)
+            .map((model) => ({
+              label: <ModelItemRender showInfoTag={false} {...model} />,
+              provider: provider.id,
+              value: model.id,
+            })),
+        }))}
       value={model}
     />
   );

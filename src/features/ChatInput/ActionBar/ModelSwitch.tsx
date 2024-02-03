@@ -43,21 +43,23 @@ const ModelSwitch = memo(() => {
       menu={{
         activeKey: model,
         className: styles.menu,
-        items: select.map((provider) => ({
-          children: provider.chatModels
-            .filter((c) => !c.hidden)
-            .map((model) => ({
-              key: model.id,
-              label: <ModelItemRender {...model} />,
-              onClick: () => {
-                updateAgentConfig({ model: model.id, provider: provider?.id });
-              },
-            })),
+        items: select
+          .filter((s) => s.enabled)
+          .map((provider) => ({
+            children: provider.chatModels
+              .filter((c) => !c.hidden)
+              .map((model) => ({
+                key: model.id,
+                label: <ModelItemRender {...model} />,
+                onClick: () => {
+                  updateAgentConfig({ model: model.id, provider: provider?.id });
+                },
+              })),
 
-          key: provider.id,
-          label: <ProviderItemRender provider={provider.id} />,
-          type: 'group',
-        })),
+            key: provider.id,
+            label: <ProviderItemRender provider={provider.id} />,
+            type: 'group',
+          })),
         style: {
           maxHeight: 500,
           overflowY: 'scroll',

@@ -50,21 +50,17 @@ const azureModelList = (s: GlobalStore): ModelProviderCard => {
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
   const customModels = customModelList(s);
 
-  const hasOneAPI = customModels.length > 0;
-
   return [
-    OpenAIProvider,
-    enableAzure(s) ? azureModelList(s) : null,
-    enableZhipu(s) ? ZhiPuProvider : null,
-    enableGoogle(s) ? GoogleProvider : null,
-    enableBedrock(s) ? BedrockProvider : null,
-    hasOneAPI
-      ? {
-          chatModels: customModels,
-          id: 'oneapi',
-        }
-      : null,
-  ].filter(Boolean) as ModelProviderCard[];
+    {
+      ...OpenAIProvider,
+      chatModels: [...OpenAIProvider.chatModels, ...customModels],
+      enabled: true,
+    },
+    { ...azureModelList(s), enabled: enableAzure(s) },
+    { ...ZhiPuProvider, enabled: enableZhipu(s) },
+    { ...GoogleProvider, enabled: enableGoogle(s) },
+    { ...BedrockProvider, enabled: enableBedrock(s) },
+  ];
 };
 
 const modelCardById = (id: string) => (s: GlobalStore) => {

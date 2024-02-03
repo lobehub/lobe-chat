@@ -36,6 +36,7 @@ export interface ChatModelCard {
 
 export interface ModelProviderCard {
   chatModels: ChatModelCard[];
+  enabled?: boolean;
   id: string;
 }
 
