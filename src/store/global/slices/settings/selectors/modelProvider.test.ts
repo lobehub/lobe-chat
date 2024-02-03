@@ -7,7 +7,7 @@ describe('modelProviderSelectors', () => {
       const s = {
         serverConfig: {
           customModelName:
-            '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-1106-preview=gpt-4-turbo,gpt-4-1106-preview=gpt-4-32k',
+            '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo,gpt-4-0125-preview=gpt-4-32k',
         },
         settings: {
           languageModel: {
@@ -27,7 +27,7 @@ describe('modelProviderSelectors', () => {
         settings: {
           languageModel: {
             openAI: {
-              customModelName: 'gpt-4-1106-preview=gpt-4-turbo，gpt-4-1106-preview=gpt-4-32k',
+              customModelName: 'gpt-4-0125-preview=gpt-4-turbo，gpt-4-0125-preview=gpt-4-32k',
             },
           },
         },
@@ -70,8 +70,8 @@ describe('modelProviderSelectors', () => {
           name: 'gpt-4-32k',
         },
         {
-          displayName: 'gpt-4-1106-preview',
-          name: 'gpt-4-1106-preview',
+          displayName: 'gpt-4-0125-preview',
+          name: 'gpt-4-0125-preview',
         },
         {
           displayName: 'gpt-4-vision-preview',
