@@ -1,5 +1,7 @@
 {
   "addAgent": "Ajouter un assistant",
+  "addAgentAndConverse": "Ajouter un agent et converser",
+  "addAgentSuccess": "Ajout réussi",
   "guide": {
     "func1": {
       "desc1": "Accédez à la page de configuration de l'assistant que vous souhaitez soumettre en cliquant sur l'icône Paramètres en haut à droite de la fenêtre de conversation.",
