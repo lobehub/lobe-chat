@@ -116,10 +116,11 @@ export const modelProviderSelectors = {
   modelEnabledVision,
   modelHasMaxToken,
   // OpenAI
-  enableAzure,
-  openAIAPIKey,
   openAIConfig,
+  openAIAPIKey,
   openAIProxyUrl,
+  // Azure OpenAI
+  enableAzure,
   // Zhipu
   enableZhipu,
   zhipuAPIKey,

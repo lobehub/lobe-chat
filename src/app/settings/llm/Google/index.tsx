@@ -13,7 +13,7 @@ import { modelProviderSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
-import { LLMProviderConfigKey } from '../const';
+import { LLMProviderApiTokenKey, LLMProviderConfigKey } from '../const';
 import { useSyncSettings } from '../useSyncSettings';
 
 const providerKey: GlobalLLMProviderKey = 'google';
@@ -41,7 +41,7 @@ const GoogleProvider = memo(() => {
         ),
         desc: t('llm.Google.token.desc'),
         label: t('llm.Google.token.title'),
-        name: [LLMProviderConfigKey, providerKey, 'GOOGLE_API_KEY'],
+        name: [LLMProviderConfigKey, providerKey, LLMProviderApiTokenKey],
       },
       {
         children: <Checker model={'gemini-pro'} provider={ModelProvider.Google} />,
@@ -61,7 +61,7 @@ const GoogleProvider = memo(() => {
     ),
     title: (
       <Flexbox align={'center'} gap={8} horizontal>
-        <Google.BrandColor size={32} />
+        <Google.BrandColor size={28} />
       </Flexbox>
     ),
   };

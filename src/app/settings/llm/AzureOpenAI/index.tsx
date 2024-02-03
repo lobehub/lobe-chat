@@ -13,7 +13,7 @@ import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 
 import Checker from '../Checker';
-import { LLMProviderConfigKey } from '../const';
+import { LLMProviderApiTokenKey, LLMProviderBaseUrlKey, LLMProviderConfigKey } from '../const';
 import { useSyncSettings } from '../useSyncSettings';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -60,13 +60,13 @@ const AzureOpenAIProvider = memo(() => {
         ),
         desc: t('llm.AzureOpenAI.token.desc'),
         label: t('llm.AzureOpenAI.token.title'),
-        name: [LLMProviderConfigKey, providerKey, 'apikey'],
+        name: [LLMProviderConfigKey, providerKey, LLMProviderApiTokenKey],
       },
       {
         children: <Input allowClear placeholder={t('llm.AzureOpenAI.endpoint.placeholder')} />,
         desc: t('llm.AzureOpenAI.endpoint.desc'),
         label: t('llm.AzureOpenAI.endpoint.title'),
-        name: [LLMProviderConfigKey, providerKey, 'endpoint'],
+        name: [LLMProviderConfigKey, providerKey, LLMProviderBaseUrlKey],
       },
       {
         children: (

@@ -14,7 +14,7 @@ import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 
 import Checker from '../Checker';
-import { LLMProviderConfigKey } from '../const';
+import { LLMProviderApiTokenKey, LLMProviderConfigKey } from '../const';
 import { useSyncSettings } from '../useSyncSettings';
 
 const providerKey = 'zhipu';
@@ -42,7 +42,7 @@ const ZhipuProvider = memo(() => {
         ),
         desc: t('llm.Zhipu.token.desc'),
         label: t('llm.Zhipu.token.title'),
-        name: [LLMProviderConfigKey, providerKey, 'ZHIPU_API_KEY'],
+        name: [LLMProviderConfigKey, providerKey, LLMProviderApiTokenKey],
       },
       {
         children: <Checker model={'glm-3-turbo'} provider={ModelProvider.ZhiPu} />,

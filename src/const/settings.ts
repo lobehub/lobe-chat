@@ -52,9 +52,13 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     endpoint: '',
   },
   bedrock: {
+    accessKeyId: '',
     enabled: false,
+    region: 'us-east-1',
+    secretAccessKey: '',
   },
   google: {
+    apiKey: '',
     enabled: false,
   },
   openAI: {

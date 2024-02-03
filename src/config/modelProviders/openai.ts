@@ -11,9 +11,9 @@ const OpenAI: ModelProviderCard = {
       tokens: 4096,
     },
     {
-      displayName: 'GPT-3.5 Turbo (1106)',
+      displayName: 'GPT-3.5 Turbo (0125)',
       functionCall: true,
-      id: 'gpt-3.5-turbo-1106',
+      id: 'gpt-3.5-turbo-0125',
       tokens: 16_385,
     },
     {
@@ -28,13 +28,6 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-4 Turbo Preview (0125)',
       functionCall: true,
       id: 'gpt-4-0125-preview',
-      tokens: 128_000,
-    },
-    {
-      description: 'GPT-4 预览版，特定版本',
-      displayName: 'GPT-4 Turbo Preview (1106)',
-      functionCall: true,
-      id: 'gpt-4-1106-preview',
       tokens: 128_000,
     },
     {
