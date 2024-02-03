@@ -52,15 +52,13 @@ const getProviderAuthPayload = (provider: string) => {
       return { apiKey, awsAccessKeyId, awsRegion: region, awsSecretAccessKey };
     }
 
-    case ModelProvider.AzureOpenAI: {
-      const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());
-      const apiKey = openai.OPENAI_API_KEY || '';
-      const endpoint = openai.endpoint || '';
+    case ModelProvider.Azure: {
+      const azure = modelProviderSelectors.azureConfig(useGlobalStore.getState());
 
       return {
-        apiKey,
-        azureApiVersion: openai.azureApiVersion,
-        endpoint,
+        apiKey: azure.apiKey,
+        azureApiVersion: azure.apiVersion,
+        endpoint: azure.endpoint,
       };
     }
 

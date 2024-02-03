@@ -5,7 +5,7 @@ import {
   ZhiPuProvider,
 } from '@/config/modelProviders';
 import { ModelProviderCard } from '@/types/llm';
-import { CustomModels } from '@/types/settings';
+import { parseModelString } from '@/utils/parseModels';
 
 import { GlobalStore } from '../../../store';
 import { currentSettings } from './settings';
@@ -25,46 +25,26 @@ const bedrockConfig = (s: GlobalStore) => modelProvider(s).bedrock;
 const enableGoogle = (s: GlobalStore) => modelProvider(s).google.enabled;
 const googleAPIKey = (s: GlobalStore) => modelProvider(s).google.apiKey;
 
-const enableAzure = (s: GlobalStore) => modelProvider(s).azureOpenAI.enabled;
+const enableAzure = (s: GlobalStore) => modelProvider(s).azure.enabled;
+const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
 
 const customModelList = (s: GlobalStore) => {
-  let models: CustomModels = [];
+  const string = [
+    s.serverConfig.customModelName,
+    currentSettings(s).languageModel.openAI.customModelName,
+  ]
+    .filter(Boolean)
+    .join(',');
 
-  const removedModels: string[] = [];
-  const modelNames = [
-    ...(s.serverConfig.customModelName || '').split(/[,，]/).filter(Boolean),
-    ...(currentSettings(s).languageModel.openAI.customModelName || '')
-      .split(/[,，]/)
-      .filter(Boolean),
-  ];
+  return parseModelString(string);
+};
 
-  for (const item of modelNames) {
-    const disable = item.startsWith('-');
-    const nameConfig = item.startsWith('+') || item.startsWith('-') ? item.slice(1) : item;
-    const [name, displayName] = nameConfig.split('=');
-
-    if (disable) {
-      // Disable all models.
-      if (name === 'all') {
-        models = [];
-      }
-      removedModels.push(name);
-      continue;
-    }
-
-    // Remove duplicate model entries.
-    const existingIndex = models.findIndex(({ id: n }) => n === name);
-    if (existingIndex !== -1) {
-      models.splice(existingIndex, 1);
-    }
-
-    models.push({
-      displayName: displayName || name,
-      id: name,
-    });
-  }
-
-  return models.filter((m) => !removedModels.includes(m.id));
+const azureModelList = (s: GlobalStore): ModelProviderCard => {
+  const azure = azureConfig(s);
+  return {
+    chatModels: parseModelString(azure.deployments),
+    id: 'azure',
+  };
 };
 
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
@@ -74,6 +54,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
 
   return [
     OpenAIProvider,
+    enableAzure(s) ? azureModelList(s) : null,
     enableZhipu(s) ? ZhiPuProvider : null,
     enableGoogle(s) ? GoogleProvider : null,
     enableBedrock(s) ? BedrockProvider : null,
@@ -121,6 +102,7 @@ export const modelProviderSelectors = {
   openAIProxyUrl,
   // Azure OpenAI
   enableAzure,
+  azureConfig,
   // Zhipu
   enableZhipu,
   zhipuAPIKey,

@@ -33,7 +33,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const providerKey = 'azureOpenAI';
+const providerKey = 'azure';
 
 const AzureOpenAIProvider = memo(() => {
   const { t } = useTranslation('setting');
@@ -71,7 +71,13 @@ const AzureOpenAIProvider = memo(() => {
       {
         children: (
           <AutoComplete
-            options={['2023-12-01-preview'].map((i) => ({
+            options={[
+              '2023-12-01-preview',
+              '2023-08-01-preview',
+              '2023-07-01-preview',
+              '2023-06-01-preview',
+              '2023-03-15-preview',
+            ].map((i) => ({
               label: i,
               value: i,
             }))}
@@ -87,7 +93,22 @@ const AzureOpenAIProvider = memo(() => {
         name: [LLMProviderConfigKey, providerKey, 'apiVersion'],
       },
       {
-        children: <Checker model={'gpt-3.5-turbo'} provider={ModelProvider.OpenAI} />,
+        children: (
+          <Input.TextArea
+            allowClear
+            placeholder={'gpt-35-16k,my-gpt=gpt-35-turbo'}
+            style={{ height: 100 }}
+          />
+        ),
+        desc: (
+          <Markdown className={styles.markdown}>{t('llm.AzureOpenAI.deployments.desc')}</Markdown>
+        ),
+
+        label: t('llm.AzureOpenAI.deployments.title'),
+        name: [LLMProviderConfigKey, providerKey, 'deployments'],
+      },
+      {
+        children: <Checker model={'gpt-3.5-turbo'} provider={ModelProvider.Azure} />,
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
         minWidth: undefined,

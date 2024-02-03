@@ -15,6 +15,7 @@ export interface OpenAIConfig {
 export interface AzureOpenAIConfig {
   apiKey: string;
   apiVersion?: string;
+  deployments: string;
   enabled: boolean;
   endpoint?: string;
 }
@@ -37,7 +38,7 @@ export interface AWSBedrockConfig {
 }
 
 export interface GlobalLLMConfig {
-  azureOpenAI: AzureOpenAIConfig;
+  azure: AzureOpenAIConfig;
   bedrock: AWSBedrockConfig;
   google: GoogleConfig;
   openAI: OpenAIConfig;

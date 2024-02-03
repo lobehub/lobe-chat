@@ -11,18 +11,14 @@ import { AgentRuntimeErrorType } from '../error';
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
-import { desensitizeUrl } from '../utils/desensitizeUrl';
 import { DEBUG_CHAT_COMPLETION } from '../utils/env';
-import { handleOpenAIError } from '../utils/handleOpenAIError';
-
-const DEFAULT_BASE_URL = 'https://api.openai.com/v1';
 
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   private _client: OpenAIClient;
 
   constructor(endpoint?: string, apikey?: string, apiVersion?: string) {
     if (!apikey || !endpoint)
-      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidAzureOpenAIAPIKey);
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidAzureAPIKey);
 
     this._client = new OpenAIClient(endpoint, new AzureKeyCredential(apikey), { apiVersion });
 
@@ -53,23 +49,23 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       }
 
       return new StreamingTextResponse(prod);
-    } catch (error) {
-      const { errorResult, RuntimeError } = handleOpenAIError(error);
+    } catch (e) {
+      let error = e as { [key: string]: any; code: string; message: string };
 
-      const errorType = RuntimeError || AgentRuntimeErrorType.OpenAIBizError;
-
-      let desensitizedEndpoint = this.baseURL;
-
-      // refs: https://github.com/lobehub/lobe-chat/issues/842
-      if (this.baseURL !== DEFAULT_BASE_URL) {
-        desensitizedEndpoint = desensitizeUrl(this.baseURL);
+      switch (error.code) {
+        case 'DeploymentNotFound': {
+          error = { ...error, deployId: model };
+        }
       }
 
+      const errorType = error.code
+        ? AgentRuntimeErrorType.AzureBizError
+        : AgentRuntimeErrorType.AgentRuntimeError;
+
       throw AgentRuntimeError.chat({
-        endpoint: desensitizedEndpoint,
-        error: errorResult,
+        error,
         errorType,
-        provider: ModelProvider.OpenAI,
+        provider: ModelProvider.Azure,
       });
     }
   }

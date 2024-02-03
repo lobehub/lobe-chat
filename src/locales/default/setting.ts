@@ -27,6 +27,11 @@ export default {
         fetch: '获取列表',
         title: 'Azure Api Version',
       },
+      deployments: {
+        desc: '使用 id=name 的语法填写你的部署模型（如部署名和模型同名，可以只填写模型名称），多个模型使用逗号（,） 隔开',
+        title: 'Azure 部署模型列表',
+      },
+
       endpoint: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值',
         placeholder: 'https://docs-test-001.openai.azure.com',
@@ -73,12 +78,6 @@ export default {
       },
     },
     OpenAI: {
-      azureApiVersion: {
-        desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
-        fetch: '获取列表',
-        title: 'Azure Api Version',
-      },
-
       customModelName: {
         desc: '增加自定义模型，多个模型使用逗号（,） 隔开',
         placeholder: 'model1,model2,model3',

@@ -46,8 +46,9 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
 };
 
 export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
-  azureOpenAI: {
+  azure: {
     apiKey: '',
+    deployments: '',
     enabled: false,
     endpoint: '',
   },

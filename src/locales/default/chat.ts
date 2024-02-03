@@ -5,6 +5,7 @@ export default {
       vision: '该模型支持视觉识别',
     },
     provider: {
+      azure: 'Azure',
       bedrock: 'AWS Bedrock',
       google: 'Google',
       oneapi: 'One API',

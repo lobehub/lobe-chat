@@ -13,9 +13,9 @@ declare global {
 
       // Azure OpenAI Provider
       AZURE_API_KEY?: string;
+      AZURE_ENDPOINT?: string;
       AZURE_API_VERSION?: string;
       USE_AZURE_OPENAI?: string;
-      AZURE_ENDPOINT?: string;
 
       // ZhiPu Provider
       ZHIPU_API_KEY?: string;

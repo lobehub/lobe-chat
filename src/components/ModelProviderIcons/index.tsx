@@ -1,5 +1,6 @@
-import { Bedrock, OpenAI, Zhipu } from '@lobehub/icons';
+import { Azure, Bedrock, Google, OpenAI, Zhipu } from '@lobehub/icons';
 import { memo } from 'react';
+import { Center } from 'react-layout-kit';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 
@@ -15,6 +16,22 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Bedrock: {
       return <Bedrock size={20} />;
+    }
+
+    case ModelProvider.Google: {
+      return (
+        <Center height={20} width={20}>
+          <Google size={14} />
+        </Center>
+      );
+    }
+
+    case ModelProvider.Azure: {
+      return (
+        <Center height={20} width={20}>
+          <Azure size={14} />
+        </Center>
+      );
     }
 
     default:

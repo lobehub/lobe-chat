@@ -66,6 +66,11 @@ export default {
 
     InvalidBedrockCredentials: 'Bedrock 鉴权未通过，请检查 AccessKeyId/SecretAccessKey 后重试',
     BedrockBizError: '请求 Bedrock 服务出错，请根据以下信息排查或重试',
+
+    InvalidAzureAPIKey: 'Azure API Key 不正确或为空，请检查 Azure API Key 后重试',
+    AzureBizError: '请求 Azure AI 服务出错，请根据以下信息排查或重试',
+
+    AgentRuntimeError: 'Lobe 语言模型运行时执行出错，请根据以下信息排查或重试',
     /* eslint-enable */
   },
   stt: {

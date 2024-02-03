@@ -6,9 +6,11 @@ export const AgentRuntimeErrorType = {
   LocationNotSupportError: 'LocationNotSupportError',
 
   OpenAIBizError: 'OpenAIBizError', // OpenAI 返回的业务错误
+
   NoOpenAIAPIKey: 'NoOpenAIAPIKey',
 
-  InvalidAzureOpenAIAPIKey: 'InvalidAzureOpenAIAPIKey',
+  InvalidAzureAPIKey: 'InvalidAzureAPIKey',
+  AzureBizError: 'AzureBizError', // Azure 返回的业务错误
 
   InvalidZhipuAPIKey: 'InvalidZhipuAPIKey',
   ZhipuBizError: 'ZhipuBizError',

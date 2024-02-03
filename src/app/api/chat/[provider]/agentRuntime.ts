@@ -33,7 +33,7 @@ class AgentRuntime {
         break;
       }
 
-      case ModelProvider.AzureOpenAI: {
+      case ModelProvider.Azure: {
         runtimeModel = this.initAzureOpenAI(payload);
         break;
       }
@@ -65,10 +65,10 @@ class AgentRuntime {
   }
 
   private static initAzureOpenAI(payload: JWTPayload) {
-    const { AZURE_API_KEY, AZURE_API_VERSION, OPENAI_PROXY_URL } = getServerConfig();
+    const { AZURE_API_KEY, AZURE_API_VERSION, AZURE_ENDPOINT } = getServerConfig();
     const apiKey = payload?.apiKey || AZURE_API_KEY;
-    const endpoint = payload?.endpoint || OPENAI_PROXY_URL;
-    const apiVersion = payload?.apiKey || AZURE_API_VERSION;
+    const endpoint = payload?.endpoint || AZURE_ENDPOINT;
+    const apiVersion = payload?.azureApiVersion || AZURE_API_VERSION;
 
     return new LobeAzureOpenAI(endpoint, apiKey, apiVersion);
   }

@@ -1,0 +1,48 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parseModelString > custom deletion, addition, and renaming of models 1`] = `
+[
+  {
+    "displayName": "llama",
+    "id": "llama",
+  },
+  {
+    "displayName": "claude-2",
+    "id": "claude-2",
+  },
+  {
+    "displayName": "gpt-4-32k",
+    "id": "gpt-4-1106-preview",
+  },
+]
+`;
+
+exports[`parseModelString > duplicate naming model 1`] = `
+[
+  {
+    "displayName": "gpt-4-32k",
+    "id": "gpt-4-1106-preview",
+  },
+]
+`;
+
+exports[`parseModelString > only add the model 1`] = `
+[
+  {
+    "displayName": "model1",
+    "id": "model1",
+  },
+  {
+    "displayName": "model2",
+    "id": "model2",
+  },
+  {
+    "displayName": "model3",
+    "id": "model3",
+  },
+  {
+    "displayName": "model4",
+    "id": "model4",
+  },
+]
+`;

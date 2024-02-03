@@ -9,7 +9,7 @@ import PageTitle from '@/components/PageTitle';
 import { useSwitchSideBarOnInit } from '@/store/global/hooks/useSwitchSettingsOnInit';
 import { SettingsTabs } from '@/store/global/initialState';
 
-import AzureOpenAI from './AzureOpenAI';
+import AzureOpenAI from './Azure';
 import Bedrock from './Bedrock';
 import Google from './Google';
 import OpenAI from './OpenAI';

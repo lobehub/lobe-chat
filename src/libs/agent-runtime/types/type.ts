@@ -18,7 +18,7 @@ export interface CreateChatCompletionOptions {
 
 export enum ModelProvider {
   Anthropic = 'anthropic',
-  AzureOpenAI = 'azureOpenAI',
+  Azure = 'azure',
   Bedrock = 'bedrock',
   ChatGLM = 'chatglm',
   Google = 'google',
