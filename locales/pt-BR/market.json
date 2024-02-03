@@ -1,5 +1,7 @@
 {
   "addAgent": "Adicionar assistente",
+  "addAgentAndConverse": "Adicionar assistente e conversar",
+  "addAgentSuccess": "Adição bem-sucedida",
   "guide": {
     "func1": {
       "desc1": "Na janela de conversa, acesse a página de configurações que você deseja enviar para o assistente através do ícone no canto superior direito;",
