@@ -1,5 +1,7 @@
 {
   "addAgent": "Dodaj asystenta",
+  "addAgentAndConverse": "Dodaj asystenta i rozpocznij rozmowę",
+  "addAgentSuccess": "Dodano pomyślnie",
   "guide": {
     "func1": {
       "desc1": "Przejdź do strony ustawień, klikając prawy górny róg okna rozmowy, aby przejść do strony ustawień asystenta, którego chcesz złożyć.",
