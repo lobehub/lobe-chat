@@ -1,4 +1,11 @@
 export default {
+  ModelSelect: {
+    featureTag: {
+      functionCall: '该模型支持函数调用（Function Call）',
+      tokens: '该模型单个会话最多支持 {{tokens}} Tokens',
+      vision: '该模型支持视觉识别',
+    },
+  },
   about: '关于',
   advanceSettings: '高级设置',
   agentMaxToken: '会话最大长度',
@@ -89,6 +96,14 @@ export default {
     'zh-TW': '繁体中文',
   },
   layoutInitializing: '正在加载布局...',
+  modelProvider: {
+    azure: 'Azure',
+    bedrock: 'AWS Bedrock',
+    google: 'Google',
+    oneapi: 'One API',
+    openai: 'OpenAI',
+    zhipu: '智谱AI',
+  },
   noDescription: '暂无描述',
   ok: '确定',
   password: '密码',
