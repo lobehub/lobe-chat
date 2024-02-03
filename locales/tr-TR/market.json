@@ -1,5 +1,7 @@
 {
   "addAgent": "Asistan Ekle",
+  "addAgentAndConverse": "Asistan Ekle ve Konuşma Başlat",
+  "addAgentSuccess": "Ekleme Başarılı",
   "guide": {
     "func1": {
       "desc1": "Sohbet penceresinin sağ üst köşesindeki ayarlar simgesine tıklayarak asistana göndermek istediğiniz ayarlar sayfasına girin.",

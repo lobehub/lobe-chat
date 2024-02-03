@@ -1,5 +1,7 @@
 {
   "addAgent": "Añadir asistente",
+  "addAgentAndConverse": "Agregar agente y conversar",
+  "addAgentSuccess": "Agente agregado con éxito",
   "guide": {
     "func1": {
       "desc1": "En la ventana de chat, accede a la página de configuración del asistente a través del icono de ajustes en la esquina superior derecha.",
