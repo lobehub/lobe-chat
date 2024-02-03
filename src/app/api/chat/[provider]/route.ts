@@ -17,30 +17,20 @@ import AgentRuntime from './agentRuntime';
 // due to the Chinese region does not support accessing Google / OpenAI
 // we need to use proxy to access it
 // refs: https://github.com/google/generative-ai-js/issues/29#issuecomment-1866246513
-const proxyUrl = process.env.HTTP_PROXY_URL;
-const useProxy = !!proxyUrl;
+// const proxyUrl = process.env.HTTP_PROXY_URL;
+// const useProxy = !!proxyUrl;
+//
+// if (useProxy) {
+//   const { setGlobalDispatcher, ProxyAgent } = require('undici');
+//
+//   setGlobalDispatcher(new ProxyAgent({ uri: proxyUrl }));
+// }
 
 // undici only can be used in NodeJS.
 // So when using proxy, switch to NodeJS runtime
 export const runtime = 'edge';
 
 export const preferredRegion = getPreferredRegion();
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace globalThis {
-    // eslint-disable-next-line no-var
-    var EdgeRuntime: any;
-  }
-}
-
-console.log(typeof globalThis.EdgeRuntime !== 'string');
-
-if (typeof globalThis.EdgeRuntime !== 'string' && useProxy) {
-  const { setGlobalDispatcher, ProxyAgent } = require('undici');
-
-  setGlobalDispatcher(new ProxyAgent({ uri: proxyUrl }));
-}
 
 const getJWTPayload = async (token: string) => {
   const encoder = new TextEncoder();
