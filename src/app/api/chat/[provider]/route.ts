@@ -20,16 +20,17 @@ import AgentRuntime from './agentRuntime';
 const proxyUrl = process.env.HTTP_PROXY_URL;
 const useProxy = !!proxyUrl;
 
-if (useProxy) {
-  const { setGlobalDispatcher, ProxyAgent } = require('undici');
-
-  setGlobalDispatcher(new ProxyAgent({ uri: proxyUrl }));
-}
 // undici only can be used in NodeJS.
 // So when using proxy, switch to NodeJS runtime
 export const runtime = useProxy ? 'nodejs' : 'edge';
 
 export const preferredRegion = getPreferredRegion();
+
+if (useProxy) {
+  const { setGlobalDispatcher, ProxyAgent } = require('undici');
+
+  setGlobalDispatcher(new ProxyAgent({ uri: proxyUrl }));
+}
 
 const getJWTPayload = async (token: string) => {
   const encoder = new TextEncoder();
