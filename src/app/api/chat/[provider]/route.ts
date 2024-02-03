@@ -22,11 +22,21 @@ const useProxy = !!proxyUrl;
 
 // undici only can be used in NodeJS.
 // So when using proxy, switch to NodeJS runtime
-export const runtime = useProxy ? 'nodejs' : 'edge';
+export const runtime = 'edge';
 
 export const preferredRegion = getPreferredRegion();
 
-if (useProxy) {
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace globalThis {
+    // eslint-disable-next-line no-var
+    var EdgeRuntime: any;
+  }
+}
+
+console.log(typeof globalThis.EdgeRuntime !== 'string');
+
+if (typeof globalThis.EdgeRuntime !== 'string' && useProxy) {
   const { setGlobalDispatcher, ProxyAgent } = require('undici');
 
   setGlobalDispatcher(new ProxyAgent({ uri: proxyUrl }));
