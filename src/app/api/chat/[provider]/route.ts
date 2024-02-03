@@ -1,9 +1,9 @@
 import { importJWK, jwtVerify } from 'jose';
 
-import { checkAuthWithProvider } from '@/app/api/chat/[provider]/checkAuthWithProvider';
+import { checkPasswordOrUseUserApiKey } from '@/app/api/chat/[provider]/checkPasswordOrUseUserApiKey';
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { JWTPayload, JWT_SECRET_KEY, LOBE_AI_PROVIDER_AUTH } from '@/const/fetch';
+import { JWTPayload, JWT_SECRET_KEY, LOBE_CHAT_AUTH_HEADER } from '@/const/fetch';
 import {
   AgentRuntimeError,
   ChatCompletionErrorPayload,
@@ -52,14 +52,14 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
 
   try {
     // get Authorization from header
-    const authorization = req.headers.get(LOBE_AI_PROVIDER_AUTH);
+    const authorization = req.headers.get(LOBE_CHAT_AUTH_HEADER);
     if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
 
     // check the Auth With payload
     const payload = await getJWTPayload(authorization);
-    checkAuthWithProvider(payload);
+    checkPasswordOrUseUserApiKey(payload.accessCode, payload.apiKey);
 
-    agentRuntime = await AgentRuntime.initFromRequest(params.provider, payload);
+    agentRuntime = await AgentRuntime.initializeWithUserPayload(params.provider, payload);
   } catch (e) {
     // if catch the error, just return it
     const err = JSON.parse((e as Error).message) as { type: ILobeAgentRuntimeErrorType };

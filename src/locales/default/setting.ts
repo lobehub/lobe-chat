@@ -44,12 +44,20 @@ export default {
       },
     },
     Bedrock: {
-      AWS_ACCESS_KEY_ID: {
+      accessKeyId: {
         desc: '填入Aws Access Key Id',
         placeholder: 'Aws Access Key Id',
         title: 'Aws Access Key Id',
       },
-      AWS_SECRET_ACCESS_KEY: {
+      checker: {
+        desc: '测试 AccessKeyId / SecretAccessKey 是否填写正确',
+      },
+      region: {
+        desc: '填入 Aws Region',
+        placeholder: 'Aws Region',
+        title: 'Aws Region',
+      },
+      secretAccessKey: {
         desc: '填入 Aws Secret Access Key',
         placeholder: 'Aws Secret Access Key',
         title: 'Aws Secret Access Key',
@@ -64,7 +72,6 @@ export default {
         title: 'API Key',
       },
     },
-
     OpenAI: {
       azureApiVersion: {
         desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',

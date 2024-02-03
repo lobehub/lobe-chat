@@ -64,6 +64,7 @@ export default {
     GoogleBizError: '请求 Google 服务出错，请根据以下信息排查或重试',
     InvalidGoogleAPIKey: 'Google API Key 不正确或为空，请检查 Google API Key 后重试',
 
+    InvalidBedrockCredentials: 'Bedrock 鉴权未通过，请检查 AccessKeyId/SecretAccessKey 后重试',
     BedrockBizError: '请求 Bedrock 服务出错，请根据以下信息排查或重试',
     /* eslint-enable */
   },

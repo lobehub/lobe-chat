@@ -10,27 +10,26 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
-import { modelProviderSelectors, settingsSelectors } from '@/store/global/selectors';
+import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/selectors';
 
 import Checker from '../Checker';
+import { LLMProviderConfigKey } from '../const';
+import { useSyncSettings } from '../useSyncSettings';
 
-const configKey = 'languageModel';
+const providerKey = 'zhipu';
 
-const LLM = memo(() => {
+const ZhipuProvider = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
   const theme = useTheme();
-  const [enabledZhipu, setSettings] = useGlobalStore((s) => [
-    modelProviderSelectors.enableZhipu(s),
+  const [toggleProviderEnabled, setSettings] = useGlobalStore((s) => [
+    s.toggleProviderEnabled,
     s.setSettings,
   ]);
+  const enabled = useGlobalStore(modelProviderSelectors.enableZhipu);
 
-  useEffectAfterGlobalHydrated((store) => {
-    const settings = settingsSelectors.currentSettings(store.getState());
-
-    form.setFieldsValue(settings);
-  }, []);
+  useSyncSettings(form);
 
   const model: ItemGroup = {
     children: [
@@ -43,7 +42,7 @@ const LLM = memo(() => {
         ),
         desc: t('llm.Zhipu.token.desc'),
         label: t('llm.Zhipu.token.title'),
-        name: [configKey, 'zhipu', 'ZHIPU_API_KEY'],
+        name: [LLMProviderConfigKey, providerKey, 'ZHIPU_API_KEY'],
       },
       {
         children: <Checker model={'glm-3-turbo'} provider={ModelProvider.ZhiPu} />,
@@ -52,13 +51,13 @@ const LLM = memo(() => {
         minWidth: undefined,
       },
     ],
-    defaultActive: enabledZhipu,
+    defaultActive: enabled,
     extra: (
       <Switch
         onChange={(enabled) => {
-          setSettings({ languageModel: { zhipu: { enabled } } });
+          toggleProviderEnabled(providerKey, enabled);
         }}
-        value={enabledZhipu}
+        value={enabled}
       />
     ),
     title: (
@@ -76,4 +75,4 @@ const LLM = memo(() => {
   );
 });
 
-export default LLM;
+export default ZhipuProvider;

@@ -14,17 +14,18 @@ const modelProvider = (s: GlobalStore) => currentSettings(s).languageModel;
 const openAIConfig = (s: GlobalStore) => modelProvider(s).openAI;
 
 const openAIAPIKey = (s: GlobalStore) => openAIConfig(s).OPENAI_API_KEY;
-const enableAzure = (s: GlobalStore) => openAIConfig(s).useAzure;
 const openAIProxyUrl = (s: GlobalStore) => openAIConfig(s).endpoint;
 
 const enableZhipu = (s: GlobalStore) => modelProvider(s).zhipu.enabled;
-const zhipuAPIKey = (s: GlobalStore) => modelProvider(s).zhipu.ZHIPU_API_KEY;
+const zhipuAPIKey = (s: GlobalStore) => modelProvider(s).zhipu.apiKey;
 
 const enableBedrock = (s: GlobalStore) => modelProvider(s).bedrock.enabled;
 const bedrockConfig = (s: GlobalStore) => modelProvider(s).bedrock;
 
 const enableGoogle = (s: GlobalStore) => modelProvider(s).google.enabled;
-const googleAPIKey = (s: GlobalStore) => modelProvider(s).google.GOOGLE_API_KEY;
+const googleAPIKey = (s: GlobalStore) => modelProvider(s).google.apiKey;
+
+const enableAzure = (s: GlobalStore) => modelProvider(s).azureOpenAI.enabled;
 
 const customModelList = (s: GlobalStore) => {
   let models: CustomModels = [];

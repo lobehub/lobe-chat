@@ -22,19 +22,19 @@ class AgentRuntime {
     return this._runtime.chat(payload);
   }
 
-  static async initFromRequest(provider: string, payload: JWTPayload) {
+  static async initializeWithUserPayload(provider: string, payload: JWTPayload) {
     let runtimeModel: LobeRuntimeAI;
 
     switch (provider) {
       default:
       case 'oneapi':
       case ModelProvider.OpenAI: {
-        runtimeModel = await this.initOpenAI(payload);
+        runtimeModel = this.initOpenAI(payload);
         break;
       }
 
       case ModelProvider.AzureOpenAI: {
-        runtimeModel = await this.initAzureOpenAI(payload);
+        runtimeModel = this.initAzureOpenAI(payload);
         break;
       }
 
@@ -56,15 +56,15 @@ class AgentRuntime {
     return new AgentRuntime(runtimeModel);
   }
 
-  private static async initOpenAI(payload: JWTPayload) {
+  private static initOpenAI(payload: JWTPayload) {
     const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
     const apiKey = payload?.apiKey || OPENAI_API_KEY;
     const baseURL = payload?.endpoint || OPENAI_PROXY_URL;
 
-    return new LobeOpenAI(apiKey, baseURL);
+    return new LobeOpenAI({ apiKey, baseURL });
   }
 
-  private static async initAzureOpenAI(payload: JWTPayload) {
+  private static initAzureOpenAI(payload: JWTPayload) {
     const { AZURE_API_KEY, AZURE_API_VERSION, OPENAI_PROXY_URL } = getServerConfig();
     const apiKey = payload?.apiKey || AZURE_API_KEY;
     const endpoint = payload?.endpoint || OPENAI_PROXY_URL;
@@ -90,9 +90,15 @@ class AgentRuntime {
   private static initBedrock(payload: JWTPayload) {
     const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION } = getServerConfig();
 
-    const accessKeyId = payload?.awsAccessKeyId || AWS_ACCESS_KEY_ID;
-    const accessKeySecret = payload?.awsSecretAccessKey || AWS_SECRET_ACCESS_KEY;
-    const region = payload?.awsRegion || AWS_REGION;
+    let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
+    let accessKeySecret: string | undefined = AWS_SECRET_ACCESS_KEY;
+    let region = AWS_REGION;
+    // if the payload has the api key, use user
+    if (payload.apiKey) {
+      accessKeyId = payload?.awsAccessKeyId;
+      accessKeySecret = payload?.awsSecretAccessKey;
+      region = payload?.awsRegion;
+    }
 
     return new LobeBedrockAI({ accessKeyId, accessKeySecret, region });
   }

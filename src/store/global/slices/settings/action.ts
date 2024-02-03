@@ -7,7 +7,7 @@ import { userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
 import { SettingsTabs } from '@/store/global/initialState';
 import { LobeAgentSettings } from '@/types/session';
-import type { GlobalSettings, OpenAIConfig } from '@/types/settings';
+import { GlobalLLMProviderKey, GlobalSettings, OpenAIConfig } from '@/types/settings';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
@@ -21,6 +21,7 @@ export interface SettingsAction {
   setSettings: (settings: DeepPartial<GlobalSettings>) => Promise<void>;
   switchSettingTabs: (tab: SettingsTabs) => void;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
+  toggleProviderEnabled: (provider: GlobalLLMProviderKey, enabled: boolean) => Promise<void>;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
 }
 
@@ -62,6 +63,9 @@ export const createSettingsSlice: StateCreator<
   },
   switchThemeMode: async (themeMode) => {
     await get().setSettings({ themeMode });
+  },
+  toggleProviderEnabled: async (provider, enabled) => {
+    await get().setSettings({ languageModel: { [provider]: { enabled } } });
   },
   updateDefaultAgent: async (defaultAgent) => {
     await get().setSettings({ defaultAgent });

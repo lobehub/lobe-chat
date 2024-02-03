@@ -13,27 +13,27 @@ export interface OpenAIConfig {
 }
 
 export interface AzureOpenAIConfig {
-  AZURE_API_KEY: string;
-  azureApiVersion?: string;
+  apiKey: string;
+  apiVersion?: string;
   enabled: boolean;
   endpoint?: string;
 }
 
 export interface ZhiPuConfig {
-  ZHIPU_API_KEY?: string;
+  apiKey?: string;
   enabled: boolean;
 }
 
 export interface GoogleConfig {
-  GOOGLE_API_KEY?: string;
+  apiKey?: string;
   enabled: boolean;
 }
 
 export interface AWSBedrockConfig {
-  AWS_ACCESS_KEY_ID?: string;
-  AWS_REGION?: string;
-  AWS_SECRET_ACCESS_KEY?: string;
+  accessKeyId?: string;
   enabled: boolean;
+  region?: string;
+  secretAccessKey?: string;
 }
 
 export interface GlobalLLMConfig {
@@ -43,3 +43,5 @@ export interface GlobalLLMConfig {
   openAI: OpenAIConfig;
   zhipu: ZhiPuConfig;
 }
+
+export type GlobalLLMProviderKey = keyof GlobalLLMConfig;

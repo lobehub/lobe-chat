@@ -16,6 +16,7 @@ export const AgentRuntimeErrorType = {
   InvalidGoogleAPIKey: 'InvalidGoogleAPIKey',
   GoogleBizError: 'GoogleBizError',
 
+  InvalidBedrockCredentials: 'InvalidBedrockCredentials',
   BedrockBizError: 'BedrockBizError', // Bedrock 返回的业务错误
 } as const;
 

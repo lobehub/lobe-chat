@@ -8,27 +8,27 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
-import { modelProviderSelectors, settingsSelectors } from '@/store/global/selectors';
+import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/selectors';
+import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
+import { LLMProviderConfigKey } from '../const';
+import { useSyncSettings } from '../useSyncSettings';
 
-const configKey = 'languageModel';
+const providerKey: GlobalLLMProviderKey = 'google';
 
-const LLM = memo(() => {
+const GoogleProvider = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
+  useSyncSettings(form);
 
-  const [enabled, setSettings] = useGlobalStore((s) => [
-    modelProviderSelectors.enableGoogle(s),
+  const [toggleProviderEnabled, setSettings] = useGlobalStore((s) => [
+    s.toggleProviderEnabled,
     s.setSettings,
   ]);
 
-  useEffectAfterGlobalHydrated((store) => {
-    const settings = settingsSelectors.currentSettings(store.getState());
-
-    form.setFieldsValue(settings);
-  }, []);
+  const enabled = useGlobalStore(modelProviderSelectors.enableGoogle);
 
   const model: ItemGroup = {
     children: [
@@ -41,7 +41,7 @@ const LLM = memo(() => {
         ),
         desc: t('llm.Google.token.desc'),
         label: t('llm.Google.token.title'),
-        name: [configKey, 'google', 'GOOGLE_API_KEY'],
+        name: [LLMProviderConfigKey, providerKey, 'GOOGLE_API_KEY'],
       },
       {
         children: <Checker model={'gemini-pro'} provider={ModelProvider.Google} />,
@@ -54,15 +54,14 @@ const LLM = memo(() => {
     extra: (
       <Switch
         onChange={(enabled) => {
-          setSettings({ languageModel: { google: { enabled } } });
+          toggleProviderEnabled(providerKey, enabled);
         }}
         value={enabled}
       />
     ),
     title: (
       <Flexbox align={'center'} gap={8} horizontal>
-        <Google.BrandColor size={32}></Google.BrandColor>
-        {/*{t('llm.Google.title')}*/}
+        <Google.BrandColor size={32} />
       </Flexbox>
     ),
   };
@@ -72,4 +71,4 @@ const LLM = memo(() => {
   );
 });
 
-export default LLM;
+export default GoogleProvider;

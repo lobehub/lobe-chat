@@ -1,6 +1,6 @@
 import { Aws, Bedrock } from '@lobehub/icons';
 import { Form, type ItemGroup } from '@lobehub/ui';
-import { Form as AntForm, Divider, Input, Switch } from 'antd';
+import { Form as AntForm, Divider, Input, Select, Switch } from 'antd';
 import { debounce } from 'lodash-es';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,28 +8,26 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useEffectAfterGlobalHydrated, useGlobalStore } from '@/store/global';
-import { modelProviderSelectors, settingsSelectors } from '@/store/global/selectors';
+import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/selectors';
+import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
+import { LLMProviderConfigKey } from '../const';
+import { useSyncSettings } from '../useSyncSettings';
 
-const configKey = 'languageModel';
-const ProviderKey = 'bedrock';
+const providerKey: GlobalLLMProviderKey = 'bedrock';
 
-const LLM = memo(() => {
+const BedrockProvider = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
-
-  const [enabled, setSettings] = useGlobalStore((s) => [
-    modelProviderSelectors.enableBedrock(s),
+  const [toggleProviderEnabled, setSettings] = useGlobalStore((s) => [
+    s.toggleProviderEnabled,
     s.setSettings,
   ]);
+  const enabled = useGlobalStore(modelProviderSelectors.enableBedrock);
 
-  useEffectAfterGlobalHydrated((store) => {
-    const settings = settingsSelectors.currentSettings(store.getState());
-
-    form.setFieldsValue(settings);
-  }, []);
+  useSyncSettings(form);
 
   const model: ItemGroup = {
     children: [
@@ -37,41 +35,62 @@ const LLM = memo(() => {
         children: (
           <Input.Password
             autoComplete={'new-password'}
-            placeholder={t('llm.Bedrock.AWS_ACCESS_KEY_ID.placeholder')}
+            placeholder={t('llm.Bedrock.accessKeyId.placeholder')}
           />
         ),
-        desc: t('llm.Bedrock.AWS_ACCESS_KEY_ID.desc'),
-        label: t('llm.Bedrock.AWS_ACCESS_KEY_ID.title'),
-        name: [configKey, ProviderKey, 'AWS_ACCESS_KEY_ID'],
+        desc: t('llm.Bedrock.accessKeyId.desc'),
+        label: t('llm.Bedrock.accessKeyId.title'),
+        name: [LLMProviderConfigKey, providerKey, 'accessKeyId'],
       },
       {
         children: (
           <Input.Password
             autoComplete={'new-password'}
-            placeholder={t('llm.Bedrock.AWS_SECRET_ACCESS_KEY.placeholder')}
+            placeholder={t('llm.Bedrock.secretAccessKey.placeholder')}
           />
         ),
-        desc: t('llm.Bedrock.AWS_SECRET_ACCESS_KEY.desc'),
-        label: t('llm.Bedrock.AWS_SECRET_ACCESS_KEY.title'),
-        name: [configKey, ProviderKey, 'AWS_SECRET_ACCESS_KEY'],
+        desc: t('llm.Bedrock.secretAccessKey.desc'),
+        label: t('llm.Bedrock.secretAccessKey.title'),
+        name: [LLMProviderConfigKey, providerKey, 'secretAccessKey'],
+      },
+      {
+        children: (
+          <Select
+            allowClear
+            options={['us-east-1', 'us-west-2', 'ap-southeast-1'].map((i) => ({
+              label: i,
+              value: i,
+            }))}
+            placeholder={'us-east-1'}
+          />
+        ),
+        desc: t('llm.Bedrock.region.desc'),
+        label: t('llm.Bedrock.region.title'),
+        name: [LLMProviderConfigKey, providerKey, 'region'],
       },
       {
         children: (
           <Checker model={'anthropic.claude-instant-v1'} provider={ModelProvider.Bedrock} />
         ),
-        desc: t('llm.checker.desc'),
+        desc: t('llm.Bedrock.checker.desc'),
         label: t('llm.checker.title'),
         minWidth: undefined,
       },
     ],
     defaultActive: enabled,
     extra: (
-      <Switch
-        onChange={(enabled) => {
-          setSettings({ languageModel: { bedrock: { enabled } } });
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
         }}
-        value={enabled}
-      />
+      >
+        <Switch
+          onChange={(enabled) => {
+            toggleProviderEnabled(providerKey, enabled);
+          }}
+          value={enabled}
+        />
+      </div>
     ),
     title: (
       <Flexbox align={'center'} gap={8} horizontal>
@@ -87,4 +106,4 @@ const LLM = memo(() => {
   );
 });
 
-export default LLM;
+export default BedrockProvider;

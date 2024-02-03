@@ -13,8 +13,8 @@ import { debugStream } from '../utils/debugStream';
 import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 
 export interface LobeBedrockAIParams {
-  accessKeyId: string;
-  accessKeySecret: string;
+  accessKeyId?: string;
+  accessKeySecret?: string;
   region?: string;
 }
 
@@ -25,7 +25,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   constructor({ region, accessKeyId, accessKeySecret }: LobeBedrockAIParams) {
     if (!(accessKeyId && accessKeySecret))
-      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidZhipuAPIKey);
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
 
     this.region = region ?? 'us-east-1';
 

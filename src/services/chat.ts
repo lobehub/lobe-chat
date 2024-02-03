@@ -2,7 +2,6 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
-import { LOBE_AI_PROVIDER_AUTH } from '@/const/fetch';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
@@ -15,7 +14,7 @@ import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
-import { createBearAuthPayload, createHeaderWithOpenAI } from './_header';
+import { createHeaderWithAuth } from './_header';
 import { PLUGINS_URLS } from './_url';
 
 interface FetchOptions {
@@ -76,14 +75,14 @@ class ChatService {
       res,
     );
 
-    const token = await createBearAuthPayload(provider);
+    const headers = await createHeaderWithAuth({
+      headers: { 'Content-Type': 'application/json' },
+      provider,
+    });
 
     return fetch(`/api/chat/${provider}`, {
       body: JSON.stringify(payload),
-      headers: createHeaderWithOpenAI({
-        'Content-Type': 'application/json',
-        [LOBE_AI_PROVIDER_AUTH]: token,
-      }),
+      headers,
       method: 'POST',
       signal: options?.signal,
     });
@@ -102,10 +101,13 @@ class ChatService {
 
     const gatewayURL = manifest?.gateway;
 
+    const headers = await createHeaderWithAuth({
+      headers: { 'Content-Type': 'application/json', ...createHeadersWithPluginSettings(settings) },
+    });
+
     const res = await fetch(gatewayURL ?? PLUGINS_URLS.gateway, {
       body: JSON.stringify({ ...params, manifest }),
-      // TODO: we can have a better auth way
-      headers: createHeadersWithPluginSettings(settings, createHeaderWithOpenAI()),
+      headers,
       method: 'POST',
       signal: options?.signal,
     });

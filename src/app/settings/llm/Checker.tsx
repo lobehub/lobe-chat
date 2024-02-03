@@ -76,11 +76,11 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
             extra={
               <Flexbox>
                 <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
-                  {JSON.stringify(error.body, null, 2)}
+                  {JSON.stringify(error.body || error, null, 2)}
                 </Highlighter>
               </Flexbox>
             }
-            message={error.message}
+            message={t(`response.${error.type}` as any, { ns: 'error' })}
             showIcon
             type={'error'}
           />

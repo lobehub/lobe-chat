@@ -8,12 +8,13 @@ import {
 import isEqual from 'fast-deep-equal';
 import { SWRConfiguration } from 'swr';
 
-import { createHeaderWithOpenAI } from '@/services/_header';
 import { OPENAI_URLS } from '@/services/_url';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
+
+import { createHeaderWithOpenAI } from './_header';
 
 interface STTConfig extends SWRConfiguration {
   onTextChange: (value: string) => void;

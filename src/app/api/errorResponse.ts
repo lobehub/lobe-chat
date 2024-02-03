@@ -6,6 +6,7 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | IChatErrorType) => {
     case ChatErrorType.InvalidAccessCode:
     case AgentRuntimeErrorType.NoOpenAIAPIKey:
     case AgentRuntimeErrorType.InvalidAzureOpenAIAPIKey:
+    case AgentRuntimeErrorType.InvalidBedrockCredentials:
     case AgentRuntimeErrorType.InvalidZhipuAPIKey:
     case AgentRuntimeErrorType.InvalidGoogleAPIKey: {
       return 401;

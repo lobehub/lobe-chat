@@ -1,9 +1,15 @@
 import { getServerConfig } from '@/config/server';
-import { JWTPayload } from '@/const/fetch';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
-export const checkAuthWithProvider = ({ apiKey, accessCode }: JWTPayload) => {
+/**
+ * Check if the provided access code is valid or if a user API key should be used.
+ *
+ * @param {string} accessCode - The access code to check.
+ * @param {string} apiKey - The user API key.
+ * @throws {AgentRuntimeError} If the access code is invalid and no user API key is provided.
+ */
+export const checkPasswordOrUseUserApiKey = (accessCode?: string, apiKey?: string) => {
   const { ACCESS_CODES } = getServerConfig();
 
   // if apiKey exist

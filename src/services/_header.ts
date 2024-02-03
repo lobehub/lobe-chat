@@ -1,14 +1,6 @@
 import { SignJWT, importJWK } from 'jose';
 
-import {
-  AZURE_OPENAI_API_VERSION,
-  JWTPayload,
-  JWT_SECRET_KEY,
-  LOBE_CHAT_ACCESS_CODE,
-  OPENAI_API_KEY_HEADER_KEY,
-  OPENAI_PROXY_URL,
-  USE_AZURE_OPENAI,
-} from '@/const/fetch';
+import { JWTPayload, JWT_SECRET_KEY, LOBE_CHAT_AUTH_HEADER } from '@/const/fetch';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors, settingsSelectors } from '@/store/global/selectors';
@@ -38,7 +30,7 @@ const createJWT = async (payload: JWTPayload) => {
     .sign(jwkSecretKey);
 };
 
-const getTokenByProvider = (provider: string) => {
+const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
     case ModelProvider.ZhiPu: {
       return { apiKey: modelProviderSelectors.zhipuAPIKey(useGlobalStore.getState()) };
@@ -49,14 +41,15 @@ const getTokenByProvider = (provider: string) => {
     }
 
     case ModelProvider.Bedrock: {
-      const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } =
-        modelProviderSelectors.bedrockConfig(useGlobalStore.getState());
-      const awsSecretAccessKey = AWS_SECRET_ACCESS_KEY;
-      const awsAccessKeyId = AWS_ACCESS_KEY_ID;
+      const { accessKeyId, region, secretAccessKey } = modelProviderSelectors.bedrockConfig(
+        useGlobalStore.getState(),
+      );
+      const awsSecretAccessKey = secretAccessKey;
+      const awsAccessKeyId = accessKeyId;
 
       const apiKey = (awsSecretAccessKey || '') + (awsAccessKeyId || '');
 
-      return { apiKey, awsAccessKeyId, awsRegion: AWS_REGION, awsSecretAccessKey };
+      return { apiKey, awsAccessKeyId, awsRegion: region, awsSecretAccessKey };
     }
 
     case ModelProvider.AzureOpenAI: {
@@ -82,34 +75,29 @@ const getTokenByProvider = (provider: string) => {
   }
 };
 
-export const createBearAuthPayload = async (provider: string) => {
+const createAuthTokenWithPayload = async (payload = {}) => {
   const accessCode = settingsSelectors.password(useGlobalStore.getState());
-  const payload = getTokenByProvider(provider);
 
   return await createJWT({ accessCode, ...payload });
 };
 
-// eslint-disable-next-line no-undef
-export const createHeaderWithOpenAI = (header?: HeadersInit): HeadersInit => {
-  const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());
-
-  const apiKey = openai.OPENAI_API_KEY || '';
-  const endpoint = openai.endpoint || '';
-
+interface AuthParams {
   // eslint-disable-next-line no-undef
-  const result: HeadersInit = {
-    ...header,
-    [LOBE_CHAT_ACCESS_CODE]: settingsSelectors.password(useGlobalStore.getState()),
-    [OPENAI_API_KEY_HEADER_KEY]: apiKey,
-    [OPENAI_PROXY_URL]: endpoint,
-  };
+  headers?: HeadersInit;
+  payload?: Record<string, any>;
+  provider?: string;
+}
 
-  if (openai.useAzure) {
-    Object.assign(result, {
-      [AZURE_OPENAI_API_VERSION]: openai.azureApiVersion || '',
-      [USE_AZURE_OPENAI]: '1',
-    });
+// eslint-disable-next-line no-undef
+export const createHeaderWithAuth = async (params?: AuthParams): Promise<HeadersInit> => {
+  let payload = params?.payload || {};
+
+  if (params?.provider) {
+    payload = { ...payload, ...getProviderAuthPayload(params?.provider) };
   }
 
-  return result;
+  const token = await createAuthTokenWithPayload(payload);
+
+  // eslint-disable-next-line no-undef
+  return { ...params?.headers, [LOBE_CHAT_AUTH_HEADER]: token };
 };

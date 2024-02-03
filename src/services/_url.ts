@@ -1,4 +1,3 @@
-
 export const URLS = {
   config: '/api/config',
   market: '/api/market',
@@ -12,7 +11,6 @@ export const PLUGINS_URLS = {
 
 export const OPENAI_URLS = {
   images: '/api/openai/images',
-  models: '/api/openai/models',
   stt: '/api/openai/stt',
   tts: '/api/openai/tts',
 };

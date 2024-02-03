@@ -47,7 +47,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
 
 export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   azureOpenAI: {
-    AZURE_API_KEY: '',
+    apiKey: '',
     enabled: false,
     endpoint: '',
   },
@@ -62,7 +62,7 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     models: [],
   },
   zhipu: {
-    ZHIPU_API_KEY: '',
+    apiKey: '',
     enabled: false,
   },
 };

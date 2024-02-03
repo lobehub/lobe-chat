@@ -3,7 +3,7 @@ import { Form, type ItemGroup, Markdown } from '@lobehub/ui';
 import { Form as AntForm, AutoComplete, Divider, Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -13,6 +13,8 @@ import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 
 import Checker from '../Checker';
+import { LLMProviderConfigKey } from '../const';
+import { useSyncSettings } from '../useSyncSettings';
 
 const useStyles = createStyles(({ css, token }) => ({
   markdown: css`
@@ -31,28 +33,21 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const configKey = 'languageModel';
+const providerKey = 'azureOpenAI';
 
-const LLM = memo(() => {
+const AzureOpenAIProvider = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
   const { styles } = useStyles();
-  const [enabled, setSettings] = useGlobalStore((s) => [
-    modelProviderSelectors.enableAzure(s),
+
+  const [toggleProviderEnabled, setSettings] = useGlobalStore((s) => [
+    s.toggleProviderEnabled,
     s.setSettings,
   ]);
 
-  useEffect(() => {
-    const unsubscribe = useGlobalStore.subscribe(
-      (s) => s.settings,
-      (settings) => {
-        form.setFieldsValue(settings);
-      },
-    );
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  const enabled = useGlobalStore(modelProviderSelectors.enableAzure);
+
+  useSyncSettings(form);
 
   const openAI: ItemGroup = {
     children: [
@@ -65,23 +60,18 @@ const LLM = memo(() => {
         ),
         desc: t('llm.AzureOpenAI.token.desc'),
         label: t('llm.AzureOpenAI.token.title'),
-        name: [configKey, 'openAI', 'OPENAI_API_KEY'],
+        name: [LLMProviderConfigKey, providerKey, 'apikey'],
       },
       {
         children: <Input allowClear placeholder={t('llm.AzureOpenAI.endpoint.placeholder')} />,
         desc: t('llm.AzureOpenAI.endpoint.desc'),
         label: t('llm.AzureOpenAI.endpoint.title'),
-        name: [configKey, 'openAI', 'endpoint'],
+        name: [LLMProviderConfigKey, providerKey, 'endpoint'],
       },
       {
         children: (
           <AutoComplete
-            options={[
-              '2023-12-01-preview',
-              '2023-08-01-preview',
-              '2023-07-01-preview',
-              '2023-06-01-preview',
-            ].map((i) => ({
+            options={['2023-12-01-preview'].map((i) => ({
               label: i,
               value: i,
             }))}
@@ -94,7 +84,7 @@ const LLM = memo(() => {
           </Markdown>
         ),
         label: t('llm.AzureOpenAI.azureApiVersion.title'),
-        name: [configKey, 'openAI', 'azureApiVersion'],
+        name: [LLMProviderConfigKey, providerKey, 'apiVersion'],
       },
       {
         children: <Checker model={'gpt-3.5-turbo'} provider={ModelProvider.OpenAI} />,
@@ -102,19 +92,12 @@ const LLM = memo(() => {
         label: t('llm.checker.title'),
         minWidth: undefined,
       },
-
-      // {
-      //   children: useAzure ? <Flexbox>{t('llm.OpenAI.models.notSupport')}</Flexbox> : <ModelList />,
-      //   desc: useAzure ? t('llm.OpenAI.models.notSupportTip') : t('llm.OpenAI.models.desc'),
-      //   label: t('llm.OpenAI.models.title'),
-      //   name: [configKey, 'openAI', 'models'],
-      // },
     ],
     defaultActive: enabled,
     extra: (
       <Switch
         onChange={(enabled) => {
-          setSettings({ languageModel: { bedrock: { enabled } } });
+          toggleProviderEnabled(providerKey, enabled);
         }}
         value={enabled}
       />
@@ -124,10 +107,8 @@ const LLM = memo(() => {
         <Azure.Combine size={24} type={'color'}></Azure.Combine>
         <Divider style={{ margin: '0 4px' }} type={'vertical'} />
         <OpenAI.Combine size={24}></OpenAI.Combine>
-        {/*{t('llm.Google.title')}*/}
       </Flexbox>
     ),
-    // t('llm.OpenAI.title'),
   };
 
   return (
@@ -140,4 +121,4 @@ const LLM = memo(() => {
   );
 });
 
-export default LLM;
+export default AzureOpenAIProvider;
