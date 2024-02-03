@@ -145,7 +145,7 @@ describe('LobeOpenAI chat', () => {
       }
     });
 
-    it.only('should return a 500 error response for non-OpenAI errors', async () => {
+    it('should return a 500 error response for non-OpenAI errors', async () => {
       // Arrange
       const genericError = new Error('Generic Error');
 
