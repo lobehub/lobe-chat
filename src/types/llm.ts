@@ -24,7 +24,9 @@ export interface ChatModelCard {
    * 是否支持 Function Call
    */
   functionCall?: boolean;
+  hidden?: boolean;
   id: string;
+  legacy?: boolean;
   tokens?: number;
   /**
    * 是否支持视觉识别

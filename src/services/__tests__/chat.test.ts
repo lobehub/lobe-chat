@@ -10,6 +10,7 @@ import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
 
+// import { createHeaderWithAuth } from '../_header';
 import { chatService } from '../chat';
 
 // Mocking external dependencies
@@ -21,6 +22,11 @@ vi.stubGlobal(
 vi.mock('@/utils/fetch', () => ({
   fetchAIFactory: vi.fn(),
   getMessageError: vi.fn(),
+}));
+
+// mock auth
+vi.mock('../_header', () => ({
+  createHeaderWithAuth: vi.fn().mockResolvedValue({}),
 }));
 
 describe('ChatService', () => {

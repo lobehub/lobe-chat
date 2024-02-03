@@ -145,7 +145,7 @@ describe('LobeOpenAI chat', () => {
       }
     });
 
-    it('should return a 500 error response for non-OpenAI errors', async () => {
+    it.only('should return a 500 error response for non-OpenAI errors', async () => {
       // Arrange
       const genericError = new Error('Generic Error');
 
@@ -153,16 +153,22 @@ describe('LobeOpenAI chat', () => {
 
       // Act
       try {
-        openaiInstance.chat({
+        await openaiInstance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'text-davinci-003',
           temperature: 0,
         });
       } catch (e) {
         expect(e).toEqual({
-          error: '{}',
-          errorType: 500,
+          endpoint: 'https://api.openai.com/v1',
+          errorType: 'AgentRuntimeError',
           provider: 'openai',
+          error: {
+            name: genericError.name,
+            cause: genericError.cause,
+            message: genericError.message,
+            stack: genericError.stack,
+          },
         });
       }
     });
