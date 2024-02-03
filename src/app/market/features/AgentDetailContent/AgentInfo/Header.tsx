@@ -55,23 +55,23 @@ const Header = memo(() => {
         onClick={() => {
           if (!agentItem) return;
 
-          createSession({ config, meta }, false);
-          message.success(t('addAgentSuccess'));
-        }}
-      >
-        {t('addAgent')}
-      </Button>
-      <Button
-        block
-        onClick={() => {
-          if (!agentItem) return;
-
           createSession({ config, meta });
           switchSideBar(SidebarTabKey.Chat);
         }}
         type={'primary'}
       >
         {t('addAgentAndConverse')}
+      </Button>
+      <Button
+        block
+        onClick={() => {
+          if (!agentItem) return;
+
+          createSession({ config, meta }, false);
+          message.success(t('addAgentSuccess'));
+        }}
+      >
+        {t('addAgent')}
       </Button>
       <div className={styles.date}>{createAt}</div>
     </Center>
