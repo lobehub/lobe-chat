@@ -95,6 +95,7 @@ const OpenAI: ModelProviderCard = {
       tokens: 32_768,
     },
   ],
+  enabled: true,
   id: 'openai',
 };
 

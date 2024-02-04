@@ -1,10 +1,13 @@
+import { produce } from 'immer';
+
 import {
   BedrockProvider,
   GoogleProvider,
+  LOBE_DEFAULT_MODEL_LIST,
   OpenAIProvider,
   ZhiPuProvider,
 } from '@/config/modelProviders';
-import { ModelProviderCard } from '@/types/llm';
+import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import { parseModelString } from '@/utils/parseModels';
 
 import { GlobalStore } from '../../../store';
@@ -30,17 +33,6 @@ const googleProxyUrl = (s: GlobalStore) => modelProvider(s).google.endpoint;
 const enableAzure = (s: GlobalStore) => modelProvider(s).openAI.useAzure;
 const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
 
-const customModelList = (s: GlobalStore) => {
-  const string = [
-    s.serverConfig.customModelName,
-    currentSettings(s).languageModel.openAI.customModelName,
-  ]
-    .filter(Boolean)
-    .join(',');
-
-  return parseModelString(string);
-};
-
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
 //   return {
@@ -49,14 +41,65 @@ const customModelList = (s: GlobalStore) => {
 //   };
 // };
 
+// 提取处理 chatModels 的专门方法
+const processChatModels = (modelConfig: ReturnType<typeof parseModelString>): ChatModelCard[] => {
+  let chatModels = modelConfig.removeAll ? [] : OpenAIProvider.chatModels;
+
+  // 处理移除逻辑
+  if (!modelConfig.removeAll) {
+    chatModels = chatModels.filter((m) => !modelConfig.removed.includes(m.id));
+  }
+
+  return produce(chatModels, (draft) => {
+    // 处理添加或替换逻辑
+    for (const customModel of modelConfig.add) {
+      // 首先尝试在 LOBE_DEFAULT_MODEL_LIST 中查找模型
+      const defaultModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === customModel.id);
+
+      // 如果在默认列表中找到了模型，则基于该模型进行更新
+      if (defaultModel) {
+        const model = draft.find((model) => model.id === customModel.id);
+        // 如果当前 chatModels 中已有该模型，更新它
+        if (model) {
+          if (model.hidden) delete model.hidden;
+          if (customModel.displayName) model.displayName = customModel.displayName;
+        } else {
+          // 如果当前 chatModels 中没有该模型，添加它
+          draft.push({
+            ...defaultModel,
+            displayName: customModel.displayName || defaultModel.displayName,
+          });
+        }
+      } else {
+        // 如果在默认列表中未找到模型，作为新的自定义模型添加
+        draft.push({
+          ...customModel,
+          displayName: customModel.displayName || customModel.id,
+          functionCall: true,
+          isCustom: true,
+          vision: true,
+        });
+      }
+    }
+  });
+};
+
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
-  const customModels = customModelList(s);
+  const string = [
+    s.serverConfig.customModelName,
+    currentSettings(s).languageModel.openAI.customModelName,
+  ]
+    .filter(Boolean)
+    .join(',');
+
+  const modelConfig = parseModelString(string);
+
+  const chatModels = processChatModels(modelConfig);
 
   return [
     {
       ...OpenAIProvider,
-      chatModels: [...OpenAIProvider.chatModels, ...customModels],
-      enabled: true,
+      chatModels,
     },
     // { ...azureModelList(s), enabled: enableAzure(s) },
     { ...ZhiPuProvider, enabled: enableZhipu(s) },
@@ -86,7 +129,6 @@ const modelMaxToken = (id: string) => (s: GlobalStore) => modelCardById(id)(s)?.
 
 /* eslint-disable sort-keys-fix/sort-keys-fix,  */
 export const modelProviderSelectors = {
-  modelList: customModelList,
   modelSelectList,
 
   modelCardById,

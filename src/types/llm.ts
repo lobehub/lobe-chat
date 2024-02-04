@@ -26,6 +26,10 @@ export interface ChatModelCard {
   functionCall?: boolean;
   hidden?: boolean;
   id: string;
+  /**
+   * user defined model
+   */
+  isCustom?: boolean;
   legacy?: boolean;
   tokens?: number;
   /**

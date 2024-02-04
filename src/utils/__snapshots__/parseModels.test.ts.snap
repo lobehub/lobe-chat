@@ -1,48 +1,63 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`parseModelString > custom deletion, addition, and renaming of models 1`] = `
-[
-  {
-    "displayName": "llama",
-    "id": "llama",
-  },
-  {
-    "displayName": "claude-2",
-    "id": "claude-2",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "id": "gpt-4-1106-preview",
-  },
-]
+{
+  "add": [
+    {
+      "displayName": undefined,
+      "id": "llama",
+    },
+    {
+      "displayName": undefined,
+      "id": "claude-2",
+    },
+    {
+      "displayName": "gpt-4-32k",
+      "id": "gpt-4-1106-preview",
+    },
+  ],
+  "removeAll": true,
+  "removed": [
+    "all",
+    "gpt-3.5-turbo",
+  ],
+}
 `;
 
 exports[`parseModelString > duplicate naming model 1`] = `
-[
-  {
-    "displayName": "gpt-4-32k",
-    "id": "gpt-4-1106-preview",
-  },
-]
+{
+  "add": [
+    {
+      "displayName": "gpt-4-32k",
+      "id": "gpt-4-1106-preview",
+    },
+  ],
+  "removeAll": false,
+  "removed": [],
+}
 `;
 
 exports[`parseModelString > only add the model 1`] = `
-[
-  {
-    "displayName": "model1",
-    "id": "model1",
-  },
-  {
-    "displayName": "model2",
-    "id": "model2",
-  },
-  {
-    "displayName": "model3",
-    "id": "model3",
-  },
-  {
-    "displayName": "model4",
-    "id": "model4",
-  },
-]
+{
+  "add": [
+    {
+      "displayName": undefined,
+      "id": "model1",
+    },
+    {
+      "displayName": undefined,
+      "id": "model2",
+    },
+    {
+      "displayName": undefined,
+      "id": "model3",
+    },
+    {
+      "displayName": undefined,
+      "id": "model4",
+    },
+  ],
+  "removeAll": false,
+  "removed": [],
+}
 `;

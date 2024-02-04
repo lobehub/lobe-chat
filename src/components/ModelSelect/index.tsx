@@ -2,15 +2,27 @@ import { Icon, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LucideEye, ToyBrick } from 'lucide-react';
 import numeral from 'numeral';
+import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
+import ModelIcon from 'src/components/ModelIcon';
+import ModelProviderIcon from 'src/components/ModelProviderIcon';
 
-import ModelIcon from '@/components/ModelIcons';
-import ModelProviderIcon from '@/components/ModelProviderIcons';
 import { ChatModelCard } from '@/types/llm';
 
 const useStyles = createStyles(({ css, token }) => ({
+  custom: css`
+    width: 36px;
+    height: 20px;
+
+    font-family: ${token.fontFamilyCode};
+    font-size: 12px;
+    color: ${rgba(token.colorWarning, 0.75)};
+
+    background: ${token.colorWarningBg};
+    border-radius: 4px;
+  `,
   tag: css`
     cursor: default;
 
@@ -32,13 +44,8 @@ const useStyles = createStyles(({ css, token }) => ({
     background: ${token.green1};
   `,
   token: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
     width: 36px;
     height: 20px;
-    padding: 0 4px;
 
     font-family: ${token.fontFamilyCode};
     font-size: 11px;
@@ -92,7 +99,16 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
                 tokens: numeral(model.tokens).format('0,0'),
               })}
             >
-              <div className={styles.token}>{Math.floor(model.tokens / 1000)}K</div>
+              <Center className={styles.token}>{Math.floor(model.tokens / 1000)}K</Center>
+            </Tooltip>
+          )}
+          {model.isCustom && (
+            <Tooltip
+              overlayStyle={{ maxWidth: 300 }}
+              placement={'right'}
+              title={t('ModelSelect.featureTag.custom')}
+            >
+              <Center className={styles.custom}>DIY</Center>
             </Tooltip>
           )}
         </Flexbox>
