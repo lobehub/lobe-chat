@@ -1,6 +1,23 @@
+import { importJWK, jwtVerify } from 'jose';
+
 import { getServerConfig } from '@/config/server';
+import { JWTPayload, JWT_SECRET_KEY } from '@/const/auth';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
+
+export const getJWTPayload = async (token: string) => {
+  const encoder = new TextEncoder();
+  const secretKey = await crypto.subtle.digest('SHA-256', encoder.encode(JWT_SECRET_KEY));
+
+  const jwkSecretKey = await importJWK(
+    { k: Buffer.from(secretKey).toString('base64'), kty: 'oct' },
+    'HS256',
+  );
+
+  const { payload } = await jwtVerify(token, jwkSecretKey);
+
+  return payload as JWTPayload;
+};
 
 /**
  * Check if the provided access code is valid or if a user API key should be used.
