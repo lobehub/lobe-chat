@@ -1,6 +1,7 @@
 import { Aws } from '@lobehub/icons';
 import { Icon } from '@lobehub/ui';
 import { Button, Input, Select } from 'antd';
+import { useTheme } from 'antd-style';
 import { Network } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,9 +23,10 @@ const BedrockForm = memo(() => {
     s.setModelProviderConfig,
   ]);
 
+  const theme = useTheme();
   return (
     <FormAction
-      avatar={<Aws.Avatar size={80} />}
+      avatar={<Aws.Color color={theme.colorText} size={56} />}
       description={t('unlock.apikey.Bedrock.description')}
       title={t('unlock.apikey.Bedrock.title')}
     >

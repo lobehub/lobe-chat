@@ -21,7 +21,7 @@ const GoogleForm = memo(() => {
 
   return (
     <FormAction
-      avatar={<Google.Color size={48} />}
+      avatar={<Google.Color size={56} />}
       description={t('unlock.apikey.Google.description')}
       title={t('unlock.apikey.Google.title')}
     >
