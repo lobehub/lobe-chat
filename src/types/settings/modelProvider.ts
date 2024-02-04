@@ -23,11 +23,13 @@ export interface AzureOpenAIConfig {
 export interface ZhiPuConfig {
   apiKey?: string;
   enabled: boolean;
+  endpoint?: string;
 }
 
 export interface GoogleConfig {
   apiKey?: string;
   enabled: boolean;
+  endpoint?: string;
 }
 
 export interface AWSBedrockConfig {

@@ -3,6 +3,11 @@ import OpenAI from 'openai';
 import { ILobeAgentRuntimeErrorType } from '../error';
 import { ChatStreamPayload } from './chat';
 
+export interface AgentInitErrorPayload {
+  error: object;
+  type: string | number;
+}
+
 export interface ChatCompletionErrorPayload {
   [key: string]: any;
   endpoint?: string;

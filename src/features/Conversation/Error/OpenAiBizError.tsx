@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { ChatMessage } from '@/types/message';
 
 import ErrorJsonViewer from './ErrorJsonViewer';
-import OpenAPIKey from './OpenAPIKey';
+import InvalidAPIKey from './InvalidAPIKey';
 
 interface OpenAIError {
   code: 'invalid_api_key' | 'insufficient_quota' | string;
@@ -16,14 +16,12 @@ interface OpenAIErrorResponse {
   error: OpenAIError;
 }
 
-const OpenAiBizError = memo<ChatMessage>(({ error, id, ...props }) => {
+const OpenAiBizError = memo<ChatMessage>(({ error, id }) => {
   const errorBody: OpenAIErrorResponse = (error as any)?.body;
 
   const errorCode = errorBody.error?.code;
 
-  if (errorCode === 'invalid_api_key')
-    // @ts-ignore
-    return <OpenAPIKey error={error} id={id} {...props} />;
+  if (errorCode === 'invalid_api_key') return <InvalidAPIKey id={id} />;
 
   return <ErrorJsonViewer error={error} id={id} />;
 });

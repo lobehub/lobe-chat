@@ -18,12 +18,14 @@ const openAIProxyUrl = (s: GlobalStore) => openAIConfig(s).endpoint;
 
 const enableZhipu = (s: GlobalStore) => modelProvider(s).zhipu.enabled;
 const zhipuAPIKey = (s: GlobalStore) => modelProvider(s).zhipu.apiKey;
+const zhipuProxyUrl = (s: GlobalStore) => modelProvider(s).zhipu.endpoint;
 
 const enableBedrock = (s: GlobalStore) => modelProvider(s).bedrock.enabled;
 const bedrockConfig = (s: GlobalStore) => modelProvider(s).bedrock;
 
 const enableGoogle = (s: GlobalStore) => modelProvider(s).google.enabled;
 const googleAPIKey = (s: GlobalStore) => modelProvider(s).google.apiKey;
+const googleProxyUrl = (s: GlobalStore) => modelProvider(s).google.endpoint;
 
 const enableAzure = (s: GlobalStore) => modelProvider(s).azure.enabled;
 const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
@@ -102,9 +104,11 @@ export const modelProviderSelectors = {
   // Zhipu
   enableZhipu,
   zhipuAPIKey,
+  zhipuProxyUrl,
   // Google
   enableGoogle,
   googleAPIKey,
+  googleProxyUrl,
   // Bedrock
   enableBedrock,
   bedrockConfig,

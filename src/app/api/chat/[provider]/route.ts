@@ -5,6 +5,7 @@ import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { JWTPayload, JWT_SECRET_KEY, LOBE_CHAT_AUTH_HEADER } from '@/const/fetch';
 import {
+  AgentInitErrorPayload,
   AgentRuntimeError,
   ChatCompletionErrorPayload,
   ILobeAgentRuntimeErrorType,
@@ -63,9 +64,12 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     agentRuntime = await AgentRuntime.initializeWithUserPayload(params.provider, payload);
   } catch (e) {
     // if catch the error, just return it
-    const err = JSON.parse((e as Error).message) as { type: ILobeAgentRuntimeErrorType };
+    const err = e as AgentInitErrorPayload;
 
-    return createErrorResponse(err.type);
+    return createErrorResponse(err.type as ILobeAgentRuntimeErrorType, {
+      error: err.error,
+      provider: params.provider,
+    });
   }
 
   // ============  2. create chat completion   ============ //

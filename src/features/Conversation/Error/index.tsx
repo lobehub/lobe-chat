@@ -7,8 +7,8 @@ import { ChatErrorType, IChatErrorType } from '@/types/fetch';
 import { ChatMessage, ChatMessageError } from '@/types/message';
 
 import ErrorJsonViewer from './ErrorJsonViewer';
-import InvalidAccess from './InvalidAccess';
-import OpenAPIKey from './OpenAPIKey';
+import InvalidAPIKey from './InvalidAPIKey';
+import InvalidAccessCode from './InvalidAccessCode';
 import OpenAiBizError from './OpenAiBizError';
 import PluginSettings from './PluginSettings';
 
@@ -34,6 +34,7 @@ export const getErrorAlertConfig = (
     case PluginErrorType.PluginSettingsInvalid:
     case ChatErrorType.InvalidAccessCode:
     case AgentRuntimeErrorType.NoOpenAIAPIKey:
+    case AgentRuntimeErrorType.InvalidBedrockCredentials:
     case AgentRuntimeErrorType.InvalidGoogleAPIKey:
     case AgentRuntimeErrorType.InvalidZhipuAPIKey: {
       return {
@@ -63,14 +64,14 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
     }
 
     case ChatErrorType.InvalidAccessCode: {
-      return <InvalidAccess id={data.id} />;
+      return <InvalidAccessCode id={data.id} provider={data.error?.body?.provider} />;
     }
 
-    // TODO: 独立的 Zhipu / Google API key 配置页面
+    case AgentRuntimeErrorType.InvalidBedrockCredentials:
     case AgentRuntimeErrorType.InvalidZhipuAPIKey:
     case AgentRuntimeErrorType.InvalidGoogleAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
-      return <OpenAPIKey id={data.id} />;
+      return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
     }
 
     default: {

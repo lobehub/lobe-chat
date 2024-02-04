@@ -7,7 +7,12 @@ import { userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
 import { SettingsTabs } from '@/store/global/initialState';
 import { LobeAgentSettings } from '@/types/session';
-import { GlobalLLMProviderKey, GlobalSettings, OpenAIConfig } from '@/types/settings';
+import {
+  GlobalLLMConfig,
+  GlobalLLMProviderKey,
+  GlobalSettings,
+  OpenAIConfig,
+} from '@/types/settings';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
@@ -17,7 +22,10 @@ import { merge } from '@/utils/merge';
 export interface SettingsAction {
   importAppSettings: (settings: GlobalSettings) => Promise<void>;
   resetSettings: () => Promise<void>;
-  setOpenAIConfig: (config: Partial<OpenAIConfig>) => Promise<void>;
+  setModelProviderConfig: <T extends GlobalLLMProviderKey>(
+    provider: T,
+    config: Partial<GlobalLLMConfig[T]>,
+  ) => Promise<void>;
   setSettings: (settings: DeepPartial<GlobalSettings>) => Promise<void>;
   switchSettingTabs: (tab: SettingsTabs) => void;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
@@ -42,8 +50,8 @@ export const createSettingsSlice: StateCreator<
     await userService.resetUserSettings();
     await get().refreshUserConfig();
   },
-  setOpenAIConfig: async (config) => {
-    await get().setSettings({ languageModel: { openAI: config } });
+  setModelProviderConfig: async (provider, config) => {
+    await get().setSettings({ languageModel: { [provider]: config } });
   },
   setSettings: async (settings) => {
     const { settings: prevSetting, defaultSettings } = get();

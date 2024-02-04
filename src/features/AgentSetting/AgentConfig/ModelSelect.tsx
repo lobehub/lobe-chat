@@ -40,11 +40,12 @@ const ModelSelect = memo(() => {
           options: provider.chatModels
             .filter((c) => !c.hidden)
             .map((model) => ({
-              label: <ModelItemRender showInfoTag={false} {...model} />,
+              label: <ModelItemRender {...model} />,
               provider: provider.id,
               value: model.id,
             })),
         }))}
+      popupMatchSelectWidth={false}
       value={model}
     />
   );
