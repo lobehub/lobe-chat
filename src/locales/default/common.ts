@@ -1,7 +1,7 @@
 export default {
   ModelSelect: {
     featureTag: {
-      custom: '自定义模型，默认设定同时支持 Function Call 与视觉识别，实际情况请根据自行验证可用性',
+      custom: '自定义模型，默认设定同时支持函数调用与视觉识别，请根据实际情况验证上述能力的可用性',
       functionCall: '该模型支持函数调用（Function Call）',
       tokens: '该模型单个会话最多支持 {{tokens}} Tokens',
       vision: '该模型支持视觉识别',
