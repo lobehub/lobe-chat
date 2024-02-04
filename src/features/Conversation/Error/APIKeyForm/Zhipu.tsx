@@ -1,6 +1,6 @@
 import { Zhipu } from '@lobehub/icons';
 import { Input } from 'antd';
-import { lighten, rgba } from 'polished';
+import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 

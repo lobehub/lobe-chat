@@ -1,5 +1,7 @@
+import { OpenAI } from '@lobehub/icons';
 import { Icon } from '@lobehub/ui';
 import { Button, Input } from 'antd';
+import { useTheme } from 'antd-style';
 import { Network } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,10 +20,10 @@ const OpenAIForm = memo(() => {
     modelProviderSelectors.openAIProxyUrl(s),
     s.setModelProviderConfig,
   ]);
-
+  const theme = useTheme();
   return (
     <FormAction
-      avatar={'🔑'}
+      avatar={<OpenAI color={theme.colorText} size={64} />}
       description={t('unlock.apikey.OpenAI.description')}
       title={t('unlock.apikey.OpenAI.title')}
     >

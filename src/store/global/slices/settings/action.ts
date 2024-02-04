@@ -7,12 +7,7 @@ import { userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
 import { SettingsTabs } from '@/store/global/initialState';
 import { LobeAgentSettings } from '@/types/session';
-import {
-  GlobalLLMConfig,
-  GlobalLLMProviderKey,
-  GlobalSettings,
-  OpenAIConfig,
-} from '@/types/settings';
+import { GlobalLLMConfig, GlobalLLMProviderKey, GlobalSettings } from '@/types/settings';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
