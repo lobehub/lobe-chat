@@ -27,9 +27,9 @@ export const ChatErrorType = {
 } as const;
 /* eslint-enable */
 
-export type IChatErrorType = (typeof ChatErrorType)[keyof typeof ChatErrorType];
+export type ErrorType = (typeof ChatErrorType)[keyof typeof ChatErrorType];
 
 export interface ErrorResponse {
   body: any;
-  errorType: IChatErrorType | ILobeAgentRuntimeErrorType;
+  errorType: ErrorType | ILobeAgentRuntimeErrorType;
 }

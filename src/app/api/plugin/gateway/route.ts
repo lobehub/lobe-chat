@@ -2,8 +2,8 @@ import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { getServerConfig } from '@/config/server';
-import { getLobeAuthFromRequest } from '@/const/fetch';
-import { ChatErrorType, IChatErrorType } from '@/types/fetch';
+import { getOpenAIAuthFromRequest } from '@/const/fetch';
+import { ChatErrorType, ErrorType } from '@/types/fetch';
 
 import { parserPluginSettings } from './settings';
 
@@ -27,12 +27,12 @@ const defaultPluginSettings = parserPluginSettings(PLUGIN_SETTINGS);
 const handler = createGatewayOnEdgeRuntime({ defaultPluginSettings, pluginsIndexUrl });
 
 export const POST = async (req: Request) => {
-  const { accessCode } = getLobeAuthFromRequest(req);
+  const { accessCode } = getOpenAIAuthFromRequest(req);
 
   const result = checkAuth(accessCode);
 
   if (!result.auth) {
-    return createErrorResponse(result.error as IChatErrorType);
+    return createErrorResponse(result.error as ErrorType);
   }
 
   return handler(req);

@@ -1,9 +1,9 @@
 import { consola } from 'consola';
 
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
-import { ChatErrorType, ErrorResponse, IChatErrorType } from '@/types/fetch';
+import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
 
-const getStatus = (errorType: ILobeAgentRuntimeErrorType | IChatErrorType) => {
+const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
   switch (errorType) {
     case ChatErrorType.InvalidAccessCode:
     case AgentRuntimeErrorType.NoOpenAIAPIKey:
@@ -42,7 +42,7 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | IChatErrorType) => {
 };
 
 export const createErrorResponse = (
-  errorType: IChatErrorType | ILobeAgentRuntimeErrorType,
+  errorType: ErrorType | ILobeAgentRuntimeErrorType,
   body?: any,
 ) => {
   const statusCode = getStatus(errorType);

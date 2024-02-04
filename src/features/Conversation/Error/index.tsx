@@ -3,7 +3,7 @@ import type { AlertProps } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
-import { ChatErrorType, IChatErrorType } from '@/types/fetch';
+import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { ChatMessage, ChatMessageError } from '@/types/message';
 
 import ErrorJsonViewer from './ErrorJsonViewer';
@@ -14,7 +14,7 @@ import PluginSettings from './PluginSettings';
 
 // Config for the errorMessage display
 export const getErrorAlertConfig = (
-  errorType?: IPluginErrorType | ILobeAgentRuntimeErrorType | IChatErrorType,
+  errorType?: IPluginErrorType | ILobeAgentRuntimeErrorType | ErrorType,
 ): AlertProps | undefined => {
   // OpenAIBizError / ZhipuBizError / GoogleBizError / ...
   if (typeof errorType === 'string' && errorType.includes('Biz'))

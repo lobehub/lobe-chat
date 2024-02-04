@@ -2,8 +2,8 @@ import OpenAI from 'openai';
 
 import { checkAuth } from '@/app/api/auth';
 import { getServerConfig } from '@/config/server';
-import { getLobeAuthFromRequest } from '@/const/fetch';
-import { ChatErrorType, IChatErrorType } from '@/types/fetch';
+import { getOpenAIAuthFromRequest } from '@/const/fetch';
+import { ChatErrorType, ErrorType } from '@/types/fetch';
 
 import { createErrorResponse } from '../../errorResponse';
 import { createAzureOpenai } from './createAzureOpenai';
@@ -14,12 +14,12 @@ import { createOpenai } from './createOpenai';
  * if auth not pass ,just return error response
  */
 export const createBizOpenAI = (req: Request, model: string): Response | OpenAI => {
-  const { apiKey, accessCode, endpoint, useAzure, apiVersion } = getLobeAuthFromRequest(req);
+  const { apiKey, accessCode, endpoint, useAzure, apiVersion } = getOpenAIAuthFromRequest(req);
 
   const result = checkAuth({ accessCode, apiKey });
 
   if (!result.auth) {
-    return createErrorResponse(result.error as IChatErrorType);
+    return createErrorResponse(result.error as ErrorType);
   }
 
   let openai: OpenAI;
