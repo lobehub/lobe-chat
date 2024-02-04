@@ -6,14 +6,13 @@ LobeChat provides additional configuration options during deployment, which can 
 
 - [General Variables](#general-variables)
   - [`ACCESS_CODE`](#access_code)
+- [Model Service Providers](#model-service-providers)
+  - [OpenAI](#openai)
   - [`CUSTOM_MODELS`](#custom_models)
-- [OpenAI](#openai)
-  - [`OPENAI_API_KEY`](#openai_api_key)
-  - [`OPENAI_PROXY_URL`](#openai_proxy_url)
-- [Azure OpenAI](#azure-openai)
-  - [`USE_AZURE_OPENAI`](#use_azure_openai)
-  - [`AZURE_API_KEY`](#azure_api_key)
-  - [`AZURE_API_VERSION`](#azure_api_version)
+  - [Azure OpenAI](#azure-openai)
+  - [Zhipu AI](#zhipu-ai)
+  - [Google AI](#google-ai)
+  - [AWS Bedrock](#aws-bedrock)
 - [Plugin Service](#plugin-service)
   - [`PLUGINS_INDEX_URL`](#plugins_index_url)
   - [`PLUGIN_SETTINGS`](#plugin_settings)
@@ -28,29 +27,22 @@ LobeChat provides additional configuration options during deployment, which can 
 ### `ACCESS_CODE`
 
 - Type: Optional
-- Description: Add a password to access the LobeChat service, ; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.
+- Description: Add a password to access the LobeChat service; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.
 - Default: `-`
 - Example: `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`
 
-### `CUSTOM_MODELS`
+## Model Service Providers
 
-- Type: Optional
-- Description: Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas.
-- Default: `-`
-- Example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
+### OpenAI
 
-The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the model name `gpt-4-0125-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only `gpt-3.5-turbo` will be enabled.
-
-## OpenAI
-
-### `OPENAI_API_KEY`
+#### `OPENAI_API_KEY`
 
 - Type: Required
 - Description: This is the API key you apply for on the OpenAI account page, you can go [here][openai-api-page] to view
 - Default: `-`
 - Example: `sk-xxxxxx...xxxxxx`
 
-### `OPENAI_PROXY_URL`
+#### `OPENAI_PROXY_URL`
 
 - Type: Optional
 - Description: If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL
@@ -70,25 +62,34 @@ Related discussions:
 - [Reasons for errors when using third-party interfaces](https://github.com/lobehub/lobe-chat/discussions/734)
 - [No response when filling in the proxy server address for chatting](https://github.com/lobehub/lobe-chat/discussions/1065)
 
-## Azure OpenAI
+### `CUSTOM_MODELS`
+
+- Type: Optional
+- Description: Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas.
+- Default: `-`
+- Example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
+
+The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the model name `gpt-4-0125-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only `gpt-3.5-turbo` will be enabled.
+
+### Azure OpenAI
 
 If you need to use Azure OpenAI to provide model services, you can refer to the [Deploy with Azure OpenAI](Deploy-with-Azure-OpenAI.zh-CN.md) section for detailed steps. Here are the environment variables related to Azure OpenAI.
 
-### `USE_AZURE_OPENAI`
+#### `USE_AZURE_OPENAI`
 
 - Type: Optional
 - Description: Set this value to `1` to enable Azure OpenAI configuration
 - Default: `-`
 - Example: `1`
 
-### `AZURE_API_KEY`
+#### `AZURE_API_KEY`
 
 - Type: Optional
 - Description: This is the API key you apply for on the Azure OpenAI account page
 - Default: `-`
 - Example: `c55168be3874490ef0565d9779ecd5a6`
 
-### `AZURE_API_VERSION`
+#### `AZURE_API_VERSION`
 
 - Type: Optional
 - Description: Azure's API version, following the YYYY-MM-DD format
@@ -96,6 +97,47 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Example: `2023-05-15`, refer to [latest version][azure-api-verion-url]
 
 <br/>
+
+### Zhipu AI
+
+#### `ZHIPU_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Zhipu AI service
+- Default Value: -
+- Example: `4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
+
+### Google AI
+
+#### `GOOGLE_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for on Google Cloud Platform, used to access Google AI services
+- Default Value: -
+- Example: `AIraDyDwcw254kwJaGjI9wwaHcdDCS__Vt3xQE`
+
+### AWS Bedrock
+
+#### `AWS_ACCESS_KEY_ID`
+
+- Type: Required
+- Description: The access key ID for AWS service authentication
+- Default Value: -
+- Example: `AKIA5STVRLFSB4S9HWBR`
+
+#### `AWS_SECRET_ACCESS_KEY`
+
+- Type: Required
+- Description: The secret key for AWS service authentication
+- Default Value: -
+- Example: `Th3vXxLYpuKcv2BARktPSTPxx+jbSiFT6/0w7oEC`
+
+#### `AWS_REGION`
+
+- Type: Optional
+- Description: The region setting for AWS services
+- Default Value: `us-east-1`
+- Example: `us-east-1`
 
 ## Plugin Service
 
