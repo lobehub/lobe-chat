@@ -1,4 +1,20 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, lütfen yukarıdaki yeteneklerin kullanılabilirliğini doğrulayın",
+      "functionCall": "Bu model fonksiyon çağrısını destekler (Function Call)",
+      "tokens": "Bu model, tek bir oturumda en fazla {{tokens}} Token'ı destekler",
+      "vision": "Bu model görüntü tanımı destekler"
+    },
+    "modelProvider": {
+      "azure": "Azure",
+      "bedrock": "AWS Bedrock",
+      "google": "Google",
+      "oneapi": "One API",
+      "openai": "OpenAI",
+      "zhipu": "智谱AI"
+    }
+  },
   "about": "Hakkında",
   "advanceSettings": "Gelişmiş Ayarlar",
   "agentMaxToken": "Maksimum Oturum Süresi",

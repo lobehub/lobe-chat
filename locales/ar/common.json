@@ -1,4 +1,20 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "نموذج مخصص، يدعم الوظائف والتعرف على الرؤية، يرجى التحقق من قدرة النموذج على القيام بذلك وفقًا للحالة الفعلية",
+      "functionCall": "يدعم هذا النموذج استدعاء الوظائف",
+      "tokens": "هذا النموذج يدعم حتى {{tokens}} رموز في جلسة واحدة",
+      "vision": "يدعم هذا النموذج التعرف على الرؤية"
+    },
+    "modelProvider": {
+      "azure": "Azure",
+      "bedrock": "AWS Bedrock",
+      "google": "Google",
+      "oneapi": "One API",
+      "openai": "OpenAI",
+      "zhipu": "智谱AI"
+    }
+  },
   "about": "حول",
   "advanceSettings": "إعدادات متقدمة",
   "agentMaxToken": "أقصى طول للجلسة",

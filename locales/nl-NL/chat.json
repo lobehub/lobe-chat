@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Modelen"
+  },
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me praten of naar [Assistentinstellingen](/chat/settings#session={{id}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
   "backToBottom": "Terug naar onderen",
@@ -64,7 +67,14 @@
     "prettifying": "Aan het verfraaien..."
   },
   "temp": "Tijdelijk",
-  "tokenDetail": "Rolinstelling: {{systemRoleToken}} · Chatbericht: {{chatsToken}} · Toolinstelling: {{toolsToken}}",
+  "tokenDetails": {
+    "chats": "Chats",
+    "rest": "Rust",
+    "systemRole": "Systeemrol",
+    "tools": "Tools",
+    "total": "Totaal",
+    "used": "Gebruikt"
+  },
   "tokenTag": {
     "overload": "Overschrijding van limiet",
     "remained": "Resterend",
@@ -102,6 +112,7 @@
   "updateAgent": "Assistentgegevens bijwerken",
   "upload": {
     "actionTooltip": "Upload afbeelding",
+    "disabled": "Het huidige model ondersteunt geen visuele herkenning. Schakel over naar een ander model om dit te gebruiken.",
     "dragDesc": "Sleep bestanden hierheen om meerdere afbeeldingen te uploaden. Houd Shift ingedrukt om afbeeldingen direct te verzenden",
     "dragTitle": "Upload afbeelding"
   }

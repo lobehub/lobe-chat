@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Modelli"
+  },
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare a chattare con me subito o andare a [impostazioni assistente](/chat/settings#session={{id}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
   "backToBottom": "Torna in fondo",
@@ -64,7 +67,14 @@
     "prettifying": "Miglioramento in corso..."
   },
   "temp": "Temporaneo",
-  "tokenDetail": "Impostazione ruolo: {{systemRoleToken}} · Messaggi di sessione: {{chatsToken}} · Impostazione strumenti: {{toolsToken}}",
+  "tokenDetails": {
+    "chats": "Chat",
+    "rest": "Rimanenti",
+    "systemRole": "Ruolo di sistema",
+    "tools": "Strumenti",
+    "total": "Totale",
+    "used": "Utilizzati"
+  },
   "tokenTag": {
     "overload": "Superamento limite",
     "remained": "Rimasti",
@@ -102,6 +112,7 @@
   "updateAgent": "Aggiorna informazioni assistente",
   "upload": {
     "actionTooltip": "Carica immagine",
+    "disabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello prima di utilizzarlo",
     "dragDesc": "Trascina i file qui, supporta il caricamento di più immagini. Tieni premuto Shift per inviare direttamente le immagini",
     "dragTitle": "Carica immagine"
   }

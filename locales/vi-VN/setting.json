@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, xem chi tiết [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Lấy danh sách",
+        "title": "Phiên bản API của Azure"
+      },
+      "deployments": {
+        "desc": "Sử dụng cú pháp id=name để điền tên triển khai của bạn (ví dụ: nếu tên triển khai và tên mô hình giống nhau, bạn chỉ cần điền tên mô hình), nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
+        "title": "Danh sách triển khai của Azure"
+      },
       "endpoint": {
         "desc": "Giá trị này có thể được tìm thấy trong phần “Khóa và Điểm cuối” khi kiểm tra tài nguyên trên Cổng thông tin Azure",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,40 @@
         "title": "Khóa API"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Nhập Aws Access Key Id",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "Kiểm tra xem AccessKeyId / SecretAccessKey đã được điền đúng chưa"
+      },
+      "region": {
+        "desc": "Nhập Aws Region",
+        "placeholder": "Aws Region",
+        "title": "Aws Region"
+      },
+      "secretAccessKey": {
+        "desc": "Nhập Aws Secret Access Key",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Nhập API Key từ Google",
+        "placeholder": "Google API Key",
+        "title": "API Key"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, xem chi tiết tại [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Lấy danh sách",
         "title": "Phiên bản API Azure"
-      },
-      "check": {
-        "button": "Kiểm tra",
-        "desc": "Kiểm tra xem Khóa API và Địa chỉ proxy đã được điền đúng chưa",
-        "pass": "Kiểm tra thành công",
-        "title": "Kiểm tra kết nối"
       },
       "customModelName": {
         "desc": "Thêm mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,)",
@@ -81,6 +113,20 @@
         "serverConfig": "Quản trị viên đã cấu hình mở Azure OpenAI trên máy chủ, không cho phép chuyển đổi",
         "title": "Sử dụng Azure OpenAI"
       }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "Nhập API Key từ Zhipu",
+        "placeholder": "Zhipu API Key",
+        "title": "API Key"
+      }
+    },
+    "checker": {
+      "button": "Kiểm tra",
+      "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
+      "pass": "Kiểm tra thành công",
+      "title": "Kiểm tra kết nối"
     },
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
   },
@@ -293,6 +339,7 @@
     "builtins": {
       "groupName": "Mở rộng tích hợp sẵn"
     },
+    "disabled": "Mô hình hiện tại không hỗ trợ gọi hàm, không thể sử dụng plugin",
     "plugins": {
       "enabled": "Đã kích hoạt {{num}}",
       "groupName": "Tiện ích",
