@@ -9,7 +9,6 @@ import PageTitle from '@/components/PageTitle';
 import { useSwitchSideBarOnInit } from '@/store/global/hooks/useSwitchSettingsOnInit';
 import { SettingsTabs } from '@/store/global/initialState';
 
-import AzureOpenAI from './Azure';
 import Bedrock from './Bedrock';
 import Google from './Google';
 import OpenAI from './OpenAI';
@@ -22,7 +21,7 @@ export default memo(() => {
     <>
       <PageTitle title={t('tab.llm')} />
       <OpenAI />
-      <AzureOpenAI />
+      {/*<AzureOpenAI />*/}
       <Zhipu />
       <Google />
       <Bedrock />

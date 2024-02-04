@@ -78,6 +78,11 @@ export default {
       },
     },
     OpenAI: {
+      azureApiVersion: {
+        desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
+        fetch: '获取列表',
+        title: 'Azure Api Version',
+      },
       customModelName: {
         desc: '增加自定义模型，多个模型使用逗号（,） 隔开',
         placeholder: 'model1,model2,model3',

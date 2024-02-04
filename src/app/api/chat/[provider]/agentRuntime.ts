@@ -11,6 +11,11 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 
+interface AzureOpenAIParams {
+  apiVersion?: string;
+  model: string;
+  useAzure?: boolean;
+}
 class AgentRuntime {
   private _runtime: LobeRuntimeAI;
 
@@ -22,14 +27,18 @@ class AgentRuntime {
     return this._runtime.chat(payload);
   }
 
-  static async initializeWithUserPayload(provider: string, payload: JWTPayload) {
+  static async initializeWithUserPayload(
+    provider: string,
+    payload: JWTPayload,
+    azureOpenAI?: AzureOpenAIParams,
+  ) {
     let runtimeModel: LobeRuntimeAI;
 
     switch (provider) {
       default:
       case 'oneapi':
       case ModelProvider.OpenAI: {
-        runtimeModel = this.initOpenAI(payload);
+        runtimeModel = this.initOpenAI(payload, azureOpenAI);
         break;
       }
 
@@ -56,12 +65,25 @@ class AgentRuntime {
     return new AgentRuntime(runtimeModel);
   }
 
-  private static initOpenAI(payload: JWTPayload) {
-    const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
+  private static initOpenAI(payload: JWTPayload, azureOpenAI?: AzureOpenAIParams) {
+    const { OPENAI_API_KEY, OPENAI_PROXY_URL, AZURE_API_VERSION, AZURE_API_KEY, USE_AZURE_OPENAI } =
+      getServerConfig();
     const apiKey = payload?.apiKey || OPENAI_API_KEY;
     const baseURL = payload?.endpoint || OPENAI_PROXY_URL;
 
-    return new LobeOpenAI({ apiKey, baseURL });
+    const azureApiKey = payload.apiKey || AZURE_API_KEY;
+    const useAzure = azureOpenAI?.useAzure || USE_AZURE_OPENAI;
+    const apiVersion = azureOpenAI?.apiVersion || AZURE_API_VERSION;
+
+    return new LobeOpenAI({
+      apiKey: azureOpenAI?.useAzure ? azureApiKey : apiKey,
+      azureOptions: {
+        apiVersion,
+        model: azureOpenAI?.model,
+      },
+      baseURL,
+      useAzure,
+    });
   }
 
   private static initAzureOpenAI(payload: JWTPayload) {

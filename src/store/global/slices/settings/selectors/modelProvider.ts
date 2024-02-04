@@ -27,7 +27,7 @@ const enableGoogle = (s: GlobalStore) => modelProvider(s).google.enabled;
 const googleAPIKey = (s: GlobalStore) => modelProvider(s).google.apiKey;
 const googleProxyUrl = (s: GlobalStore) => modelProvider(s).google.endpoint;
 
-const enableAzure = (s: GlobalStore) => modelProvider(s).azure.enabled;
+const enableAzure = (s: GlobalStore) => modelProvider(s).openAI.useAzure;
 const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
 
 const customModelList = (s: GlobalStore) => {
@@ -41,13 +41,13 @@ const customModelList = (s: GlobalStore) => {
   return parseModelString(string);
 };
 
-const azureModelList = (s: GlobalStore): ModelProviderCard => {
-  const azure = azureConfig(s);
-  return {
-    chatModels: parseModelString(azure.deployments),
-    id: 'azure',
-  };
-};
+// const azureModelList = (s: GlobalStore): ModelProviderCard => {
+//   const azure = azureConfig(s);
+//   return {
+//     chatModels: parseModelString(azure.deployments),
+//     id: 'azure',
+//   };
+// };
 
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
   const customModels = customModelList(s);
@@ -58,7 +58,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
       chatModels: [...OpenAIProvider.chatModels, ...customModels],
       enabled: true,
     },
-    { ...azureModelList(s), enabled: enableAzure(s) },
+    // { ...azureModelList(s), enabled: enableAzure(s) },
     { ...ZhiPuProvider, enabled: enableZhipu(s) },
     { ...GoogleProvider, enabled: enableGoogle(s) },
     { ...BedrockProvider, enabled: enableBedrock(s) },

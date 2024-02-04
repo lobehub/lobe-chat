@@ -8,6 +8,9 @@ export interface OpenAIConfig {
    */
   customModelName?: string;
   endpoint?: string;
+  /**
+   * @deprecated
+   */
   models?: string[];
   useAzure?: boolean;
 }

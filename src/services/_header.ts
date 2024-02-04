@@ -68,7 +68,12 @@ const getProviderAuthPayload = (provider: string) => {
       const apiKey = openai.OPENAI_API_KEY || '';
       const endpoint = openai.endpoint || '';
 
-      return { apiKey, endpoint };
+      return {
+        apiKey,
+        azureApiVersion: openai.azureApiVersion,
+        endpoint,
+        useAzure: openai.useAzure,
+      };
     }
   }
 };

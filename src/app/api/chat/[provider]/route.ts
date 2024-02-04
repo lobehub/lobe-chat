@@ -61,7 +61,12 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     const payload = await getJWTPayload(authorization);
     checkPasswordOrUseUserApiKey(payload.accessCode, payload.apiKey);
 
-    agentRuntime = await AgentRuntime.initializeWithUserPayload(params.provider, payload);
+    const body = await req.clone().json();
+    agentRuntime = await AgentRuntime.initializeWithUserPayload(params.provider, payload, {
+      apiVersion: payload.azureApiVersion,
+      model: body.model,
+      useAzure: payload.useAzure,
+    });
   } catch (e) {
     // if catch the error, just return it
     const err = e as AgentInitErrorPayload;
