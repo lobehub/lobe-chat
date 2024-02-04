@@ -1,5 +1,5 @@
 import { getServerConfig } from '@/config/server';
-import { JWTPayload } from '@/const/fetch';
+import { JWTPayload } from '@/const/auth';
 import {
   ChatStreamPayload,
   LobeAzureOpenAI,

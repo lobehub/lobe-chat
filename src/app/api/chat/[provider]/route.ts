@@ -1,9 +1,8 @@
 import { importJWK, jwtVerify } from 'jose';
 
-import { checkPasswordOrUseUserApiKey } from '@/app/api/chat/[provider]/checkPasswordOrUseUserApiKey';
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { JWTPayload, JWT_SECRET_KEY, LOBE_CHAT_AUTH_HEADER } from '@/const/fetch';
+import { JWTPayload, JWT_SECRET_KEY, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import {
   AgentInitErrorPayload,
   AgentRuntimeError,
@@ -14,6 +13,7 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 import AgentRuntime from './agentRuntime';
+import { checkPasswordOrUseUserApiKey } from './checkPasswordOrUseUserApiKey';
 
 // due to the Chinese region does not support accessing Google / OpenAI
 // we need to use proxy to access it

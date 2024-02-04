@@ -8,7 +8,7 @@ import { Center } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/slices/settings/selectors';
+import { modelProviderSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 

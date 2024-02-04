@@ -35,6 +35,10 @@ declare global {
 }
 
 export const getProviderConfig = () => {
+  if (typeof process === 'undefined') {
+    throw new Error('[Server Config] you are importing a server-only module outside of server');
+  }
+
   const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY || '';
   const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || '';
 

@@ -9,14 +9,13 @@ import {
 } from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 
+import { createHeaderWithOpenAI } from '@/services/_header';
 import { OPENAI_URLS, TTS_URL } from '@/services/_url';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { TTSServer } from '@/types/agent';
-
-import { createHeaderWithOpenAI } from './_header';
 
 interface TTSConfig extends TTSOptions {
   onUpload?: (currentVoice: string, arraybuffers: ArrayBuffer[]) => void;

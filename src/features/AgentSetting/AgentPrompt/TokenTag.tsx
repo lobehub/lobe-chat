@@ -10,7 +10,7 @@ import { modelProviderSelectors } from '@/store/global/selectors';
 import { useStore } from '../store';
 
 const Tokens = memo(() => {
-  const { t } = useTranslation('setting');
+  const { t } = useTranslation('chat');
   const [systemRole, model] = useStore((s) => [s.config.systemRole, s.config.model]);
   const systemTokenCount = useTokenCount(systemRole);
 
@@ -25,9 +25,9 @@ const Tokens = memo(() => {
           maxValue={modelMaxTokens}
           shape={'square'}
           text={{
-            overload: t('tokenTag.overload', { ns: 'chat' }),
-            remained: t('tokenTag.remained', { ns: 'chat' }),
-            used: t('tokenTag.used', { ns: 'chat' }),
+            overload: t('tokenTag.overload'),
+            remained: t('tokenTag.remained'),
+            used: t('tokenTag.used'),
           }}
           value={systemTokenCount}
         />

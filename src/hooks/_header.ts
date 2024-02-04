@@ -2,7 +2,7 @@ import {
   AZURE_OPENAI_API_VERSION,
   LOBE_CHAT_ACCESS_CODE,
   OPENAI_API_KEY_HEADER_KEY,
-  OPENAI_PROXY_URL,
+  OPENAI_END_POINT,
   USE_AZURE_OPENAI,
 } from '@/const/fetch';
 import { useGlobalStore } from '@/store/global';
@@ -21,7 +21,7 @@ export const createHeaderWithOpenAI = (header?: HeadersInit): HeadersInit => {
     ...header,
     [LOBE_CHAT_ACCESS_CODE]: settingsSelectors.password(useGlobalStore.getState()),
     [OPENAI_API_KEY_HEADER_KEY]: apiKey,
-    [OPENAI_PROXY_URL]: endpoint,
+    [OPENAI_END_POINT]: endpoint,
   };
 
   if (openai.useAzure) {

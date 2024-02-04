@@ -23,6 +23,10 @@ declare global {
 const DEFAULT_IMAGUR_CLIENT_ID = 'e415f320d6e24f9';
 
 export const getAppConfig = () => {
+  if (typeof process === 'undefined') {
+    throw new Error('[Server Config] you are importing a server-only module outside of server');
+  }
+
   const ACCESS_CODES = process.env.ACCESS_CODE?.split(',').filter(Boolean) || [];
 
   return {

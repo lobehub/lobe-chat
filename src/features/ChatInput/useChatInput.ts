@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/slices/settings/selectors';
+import { modelProviderSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 

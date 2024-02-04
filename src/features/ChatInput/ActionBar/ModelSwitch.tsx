@@ -5,8 +5,8 @@ import isEqual from 'fast-deep-equal';
 import { BrainCog } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ModelItemRender, ProviderItemRender } from 'src/components/ModelSelect';
 
+import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';

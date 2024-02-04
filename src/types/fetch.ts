@@ -6,9 +6,6 @@ export const ChatErrorType = {
 
   InvalidAccessCode: 'InvalidAccessCode', // 密码无效
   OpenAIBizError: 'OpenAIBizError', // OpenAI 返回的业务错误
-
-  BedrockBizError: 'BedrockBizError', // Bedrock 返回的业务错误
-
   NoOpenAIAPIKey: 'NoOpenAIAPIKey',
 
   // ******* 客户端错误 ******* //

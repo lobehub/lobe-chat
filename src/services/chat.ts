@@ -14,7 +14,8 @@ import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
-import { createHeaderWithAuth } from './_header';
+import { createHeaderWithAuth } from './_auth';
+import { createHeaderWithOpenAI } from './_header';
 import { PLUGINS_URLS } from './_url';
 
 interface FetchOptions {
@@ -101,13 +102,10 @@ class ChatService {
 
     const gatewayURL = manifest?.gateway;
 
-    const headers = await createHeaderWithAuth({
-      headers: { 'Content-Type': 'application/json', ...createHeadersWithPluginSettings(settings) },
-    });
-
     const res = await fetch(gatewayURL ?? PLUGINS_URLS.gateway, {
       body: JSON.stringify({ ...params, manifest }),
-      headers,
+      // TODO: we can have a better auth way
+      headers: createHeadersWithPluginSettings(settings, createHeaderWithOpenAI()),
       method: 'POST',
       signal: options?.signal,
     });
