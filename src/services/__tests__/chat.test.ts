@@ -25,7 +25,7 @@ vi.mock('@/utils/fetch', () => ({
 }));
 
 // mock auth
-vi.mock('../_header', () => ({
+vi.mock('../_auth', () => ({
   createHeaderWithAuth: vi.fn().mockResolvedValue({}),
 }));
 
