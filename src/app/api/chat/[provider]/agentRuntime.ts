@@ -10,12 +10,14 @@ import {
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
+import LobeMoonshotAI from '@/libs/agent-runtime/moonshot';
 
 interface AzureOpenAIParams {
   apiVersion?: string;
   model: string;
   useAzure?: boolean;
 }
+
 class AgentRuntime {
   private _runtime: LobeRuntimeAI;
 
@@ -59,6 +61,11 @@ class AgentRuntime {
 
       case ModelProvider.Bedrock: {
         runtimeModel = this.initBedrock(payload);
+        break;
+      }
+
+      case ModelProvider.Moonshot: {
+        runtimeModel = this.initMoonshot(payload);
       }
     }
 
@@ -100,6 +107,13 @@ class AgentRuntime {
     const apiKey = payload?.apiKey || ZHIPU_API_KEY;
 
     return LobeZhipuAI.fromAPIKey(apiKey);
+  }
+
+  private static initMoonshot(payload: JWTPayload) {
+    const { MOONSHOT_API_KEY, MOONSHOT_PROXY_URL } = getServerConfig();
+    const apiKey = payload?.apiKey || MOONSHOT_API_KEY;
+
+    return new LobeMoonshotAI(apiKey, MOONSHOT_PROXY_URL);
   }
 
   private static initGoogle(payload: JWTPayload) {
