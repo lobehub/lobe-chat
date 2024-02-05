@@ -1,4 +1,3 @@
-import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { getServerConfig } from '@/config/server';
 import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
@@ -27,7 +26,7 @@ import { checkPasswordOrUseUserApiKey, getJWTPayload } from '../auth';
 
 export const runtime = 'edge';
 
-export const preferredRegion = getPreferredRegion([
+export const preferredRegion = [
   'bom1',
   'cle1',
   'cpt1',
@@ -40,7 +39,7 @@ export const preferredRegion = getPreferredRegion([
   'sfo1',
   'sin1',
   'syd1',
-]);
+];
 
 export const POST = async (req: Request) => {
   let agentRuntime: LobeGoogleAI;
