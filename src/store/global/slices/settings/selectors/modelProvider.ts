@@ -122,6 +122,11 @@ const modelEnabledFunctionCall = (id: string) => (s: GlobalStore) =>
 const modelEnabledVision = (id: string) => (s: GlobalStore) =>
   modelCardById(id)(s)?.vision || id.includes('vision');
 
+const modelEnabledFiles = (id: string) => (s: GlobalStore) => modelCardById(id)(s)?.files;
+
+const modelEnabledUpload = (id: string) => (s: GlobalStore) =>
+  modelEnabledVision(id)(s) || modelEnabledFiles(id)(s);
+
 const modelHasMaxToken = (id: string) => (s: GlobalStore) =>
   typeof modelCardById(id)(s)?.tokens !== 'undefined';
 
@@ -133,9 +138,13 @@ export const modelProviderSelectors = {
 
   modelCardById,
   modelMaxToken,
+  modelHasMaxToken,
+
   modelEnabledFunctionCall,
   modelEnabledVision,
-  modelHasMaxToken,
+  modelEnabledFiles,
+  modelEnabledUpload,
+
   // OpenAI
   openAIConfig,
   openAIAPIKey,
