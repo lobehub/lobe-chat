@@ -68,6 +68,9 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
             {t('llm.OpenAI.check.pass')}
           </Flexbox>
         )}
+        <Button loading={loading} onClick={checkConnection}>
+          {t('llm.OpenAI.check.button')}
+        </Button>
       </Flexbox>
       {error && (
         <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
