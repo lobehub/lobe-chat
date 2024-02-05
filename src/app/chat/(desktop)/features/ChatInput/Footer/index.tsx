@@ -71,7 +71,7 @@ const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) =
   ]);
 
   const model = useSessionStore(agentSelectors.currentAgentModel);
-  const canUpload = useGlobalStore(modelProviderSelectors.modelEnabledVision(model));
+  const canUpload = useGlobalStore(modelProviderSelectors.modelEnabledUpload(model));
 
   const sendMessage = useSendMessage();
 

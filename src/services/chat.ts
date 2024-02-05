@@ -138,9 +138,11 @@ class ChatService {
 
       if (imageList.length === 0) return m.content;
 
-      const hasVision = modelProviderSelectors.modelEnabledVision(model)(useGlobalStore.getState());
+      const canUploadFile = modelProviderSelectors.modelEnabledUpload(model)(
+        useGlobalStore.getState(),
+      );
 
-      if (!hasVision) {
+      if (!canUploadFile) {
         return m.content;
       }
 

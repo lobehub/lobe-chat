@@ -8,7 +8,10 @@ import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { parserPluginSettings } from './settings';
 
 const checkAuth = (accessCode: string | null) => {
-  const { ACCESS_CODES } = getServerConfig();
+  const { ACCESS_CODES, PLUGIN_SETTINGS } = getServerConfig();
+
+  // if there is no plugin settings, just skip the auth
+  if (!PLUGIN_SETTINGS) return { auth: true };
 
   // if accessCode doesn't exist
   if (!ACCESS_CODES.length) return { auth: true };

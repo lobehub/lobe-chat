@@ -47,7 +47,7 @@ $ docker run -d -p 3210:3210 \
 >
 > - The default mapped port is `3210`. Make sure it is not occupied or manually change the port mapping.
 > - Replace `sk-xxxx` in the above command with your own OpenAI API Key.
-> - The password set in the official Docker image is `lobe66` by default. Replace it with your own password to improve security.
+> - The official Docker doesn't set password by default. Please add your own password to improve security.
 > - For a complete list of environment variables supported by LobeChat, please refer to the [Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN) section.
 
 > \[!WARNING]
