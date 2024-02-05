@@ -1,4 +1,12 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "カスタムモデル、デフォルトでは関数呼び出しとビジョン認識の両方をサポートしています。上記の機能の有効性を実際の状況で検証してください。",
+      "functionCall": "このモデルは関数呼び出し（Function Call）をサポートしています。",
+      "tokens": "このモデルは1つのセッションあたり最大{{tokens}}トークンをサポートしています。",
+      "vision": "このモデルはビジョン認識をサポートしています。"
+    }
+  },
   "about": "概要",
   "advanceSettings": "高度な設定",
   "agentMaxToken": "エージェントの最大トークン数",
@@ -89,6 +97,14 @@
     "zh-TW": "繁体字中国語"
   },
   "layoutInitializing": "レイアウトを初期化中...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWSベッドロック",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "智譜AI"
+  },
   "noDescription": "説明はありません",
   "ok": "OK",
   "password": "パスワード",

@@ -1,4 +1,4 @@
-import { type AlertProps, ChatItem } from '@lobehub/ui';
+import { AlertProps, ChatItem } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
@@ -10,7 +10,7 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
-import { renderErrorMessages } from '../../Error';
+import ErrorMessageExtra, { getErrorAlertConfig } from '../../Error';
 import { renderMessagesExtra } from '../../Extras';
 import { renderMessages, useAvatarsClick } from '../../Messages';
 import ActionsBar from './ActionsBar';
@@ -81,28 +81,13 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     [item?.role],
   );
 
-  const ErrorMessage = useCallback(
-    ({ data }: { data: ChatMessage }) => {
-      if (!renderErrorMessages || !item?.error?.type) return;
-      let RenderFunction;
-      if (renderErrorMessages?.[item.error.type])
-        RenderFunction = renderErrorMessages[item.error.type].Render;
-      if (!RenderFunction && renderErrorMessages?.['default'])
-        RenderFunction = renderErrorMessages['default'].Render;
-      if (!RenderFunction) return;
-      return <RenderFunction {...data} />;
-    },
-    [item?.error],
-  );
-
-  const error = useMemo(() => {
+  const error = useMemo<AlertProps | undefined>(() => {
     if (!item?.error) return;
-    const message = item.error?.message;
-    let alertConfig = {};
-    if (item.error.type && renderErrorMessages?.[item.error.type]) {
-      alertConfig = renderErrorMessages[item.error.type]?.config as AlertProps;
-    }
-    return { message, ...alertConfig };
+    const messageError = item.error;
+
+    const alertConfig = getErrorAlertConfig(messageError.type);
+
+    return { message: t(`response.${messageError.type}` as any, { ns: 'error' }), ...alertConfig };
   }, [item?.error]);
 
   const enableHistoryDivider = useSessionStore((s) => {
@@ -124,7 +109,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           className={styles.message}
           editing={editing}
           error={error}
-          errorMessage={<ErrorMessage data={item} />}
+          errorMessage={<ErrorMessageExtra data={item} />}
           loading={loading}
           message={item.content}
           messageExtra={<MessageExtra data={item} />}

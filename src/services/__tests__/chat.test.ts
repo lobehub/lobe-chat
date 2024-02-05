@@ -7,9 +7,10 @@ import { useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
 import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
 
+// import { createHeaderWithAuth } from '../_header';
 import { chatService } from '../chat';
 
 // Mocking external dependencies
@@ -21,6 +22,11 @@ vi.stubGlobal(
 vi.mock('@/utils/fetch', () => ({
   fetchAIFactory: vi.fn(),
   getMessageError: vi.fn(),
+}));
+
+// mock auth
+vi.mock('../_auth', () => ({
+  createHeaderWithAuth: vi.fn().mockResolvedValue({}),
 }));
 
 describe('ChatService', () => {
@@ -531,7 +537,7 @@ Get data from users`,
 
   describe('getChatCompletion', () => {
     it('should make a POST request with the correct payload', async () => {
-      const params: Partial<OpenAIChatStreamPayload> = {
+      const params: Partial<ChatStreamPayload> = {
         model: 'test-model',
         messages: [],
       };

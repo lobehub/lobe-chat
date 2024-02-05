@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { chainLangDetect } from '../langDetect';
 
@@ -12,7 +12,7 @@ describe('chainLangDetect', () => {
     const userContent = 'Hola';
 
     // 预期的返回值结构
-    const expectedPayload: Partial<OpenAIChatStreamPayload> = {
+    const expectedPayload: Partial<ChatStreamPayload> = {
       messages: [
         {
           content:

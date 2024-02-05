@@ -22,6 +22,16 @@ export default {
   },
   llm: {
     AzureOpenAI: {
+      azureApiVersion: {
+        desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
+        fetch: '获取列表',
+        title: 'Azure Api Version',
+      },
+      deployments: {
+        desc: '使用 id=name 的语法填写你的部署模型（如部署名和模型同名，可以只填写模型名称），多个模型使用逗号（,） 隔开',
+        title: 'Azure 部署模型列表',
+      },
+
       endpoint: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值',
         placeholder: 'https://docs-test-001.openai.azure.com',
@@ -31,10 +41,39 @@ export default {
         desc: '支持的模型',
         title: '模型列表',
       },
-      title: 'Azure OpenAI 设置',
+      title: 'Azure OpenAI',
       token: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值。 可以使用 KEY1 或 KEY2',
         placeholder: 'Azure API Key',
+        title: 'API Key',
+      },
+    },
+    Bedrock: {
+      accessKeyId: {
+        desc: '填入Aws Access Key Id',
+        placeholder: 'Aws Access Key Id',
+        title: 'Aws Access Key Id',
+      },
+      checker: {
+        desc: '测试 AccessKeyId / SecretAccessKey 是否填写正确',
+      },
+      region: {
+        desc: '填入 Aws Region',
+        placeholder: 'Aws Region',
+        title: 'Aws Region',
+      },
+      secretAccessKey: {
+        desc: '填入 Aws Secret Access Key',
+        placeholder: 'Aws Secret Access Key',
+        title: 'Aws Secret Access Key',
+      },
+      title: 'Bedrock',
+    },
+    Google: {
+      title: 'Google',
+      token: {
+        desc: '填入来自 Google 的 API Key',
+        placeholder: 'Google API Key',
         title: 'API Key',
       },
     },
@@ -43,12 +82,6 @@ export default {
         desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
         fetch: '获取列表',
         title: 'Azure Api Version',
-      },
-      check: {
-        button: '检查',
-        desc: '测试 Api Key 与代理地址是否正确填写',
-        pass: '检查通过',
-        title: '连通性检查',
       },
       customModelName: {
         desc: '增加自定义模型，多个模型使用逗号（,） 隔开',
@@ -69,11 +102,11 @@ export default {
         refetch: '重新获取模型列表',
         title: '模型列表',
       },
-      title: 'OpenAI 设置',
+      title: 'OpenAI',
       token: {
         desc: '使用自己的 OpenAI Key',
         placeholder: 'OpenAI API Key',
-        title: 'API Key',
+        title: 'OpenAI API Key',
       },
       useAzure: {
         desc: '使用 Azure 提供的 OpenAI 服务',
@@ -81,6 +114,21 @@ export default {
         serverConfig: '管理员在服务端配置开启了 Azure OpenAI，禁止切换',
         title: 'Azure OpenAI',
       },
+    },
+    Zhipu: {
+      title: '智谱',
+      token: {
+        desc: '填入来自智谱的 API Key',
+        placeholder: 'Zhipu API Key',
+        title: 'API Key',
+      },
+    },
+
+    checker: {
+      button: '检查',
+      desc: '测试 Api Key 与代理地址是否正确填写',
+      pass: '检查通过',
+      title: '连通性检查',
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
   },
@@ -291,14 +339,15 @@ export default {
   },
   tools: {
     builtins: {
-      groupName: '内置扩展',
+      groupName: '内置插件',
     },
+    disabled: '当前模型不支持函数调用，无法使用插件',
     plugins: {
       enabled: '已启用 {{num}}',
-      groupName: '插件',
+      groupName: '三方插件',
       noEnabled: '暂无启用插件',
       store: '插件商店',
     },
-    title: '扩展工具',
+    title: '扩展插件',
   },
 };

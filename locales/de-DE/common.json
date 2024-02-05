@@ -1,4 +1,12 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Benutzerdefiniertes Modell, das standardmäßig sowohl Funktionsaufrufe als auch visuelle Erkennung unterstützt. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Anforderungen.",
+      "functionCall": "Dieses Modell unterstützt Funktionsaufrufe (Function Call).",
+      "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro einzelner Sitzung.",
+      "vision": "Dieses Modell unterstützt visuelle Erkennung."
+    }
+  },
   "about": "Über",
   "advanceSettings": "Erweiterte Einstellungen",
   "agentMaxToken": "Maximale Sitzungslänge",
@@ -89,6 +97,14 @@
     "zh-TW": "Chinesisch (traditionell)"
   },
   "layoutInitializing": "Layout wird geladen...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Keine Beschreibung vorhanden",
   "ok": "OK",
   "password": "Passwort",

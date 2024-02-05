@@ -7,6 +7,9 @@ export const AZURE_OPENAI_API_VERSION = 'X-azure-openai-api-version';
 
 export const LOBE_CHAT_ACCESS_CODE = 'X-lobe-chat-access-code';
 
+/**
+ * @deprecated
+ */
 export const getOpenAIAuthFromRequest = (req: Request) => {
   const apiKey = req.headers.get(OPENAI_API_KEY_HEADER_KEY);
   const endpoint = req.headers.get(OPENAI_END_POINT);

@@ -1,4 +1,12 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modello personalizzato, di default supporta sia la chiamata di funzioni che il riconoscimento visivo. Si prega di verificare l'effettiva disponibilità di tali funzionalità in base alle esigenze specifiche.",
+      "functionCall": "Questo modello supporta la chiamata di funzioni (Function Call)",
+      "tokens": "Questo modello supporta un massimo di {{tokens}} token per singola sessione",
+      "vision": "Questo modello supporta il riconoscimento visivo"
+    }
+  },
   "about": "Informazioni",
   "advanceSettings": "Impostazioni avanzate",
   "agentMaxToken": "Massima lunghezza della sessione",
@@ -89,6 +97,14 @@
     "zh-TW": "Cinese tradizionale"
   },
   "layoutInitializing": "Inizializzazione layout in corso...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Nessuna descrizione disponibile",
   "ok": "OK",
   "password": "Password",
