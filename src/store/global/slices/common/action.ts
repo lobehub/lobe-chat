@@ -1,5 +1,6 @@
 import { gt } from 'semver';
 import useSWR, { SWRResponse, mutate } from 'swr';
+import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -8,7 +9,7 @@ import { CURRENT_VERSION } from '@/const/version';
 import { globalService } from '@/services/global';
 import { UserConfig, userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
-import type { GlobalServerConfig } from '@/types/settings';
+import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -63,7 +64,12 @@ export const createCommonSlice: StateCreator<
     useSWR<GlobalServerConfig>('fetchGlobalConfig', globalService.getGlobalConfig, {
       onSuccess: (data) => {
         if (data) {
-          const defaultSettings = merge(get().defaultSettings, { defaultAgent: data.defaultAgent });
+          const serverSettings: DeepPartial<GlobalSettings> = {
+            defaultAgent: data.defaultAgent,
+            languageModel: data.languageModel,
+          };
+
+          const defaultSettings = merge(get().defaultSettings, serverSettings);
           set({ defaultSettings, serverConfig: data }, false, n('initGlobalConfig'));
         }
       },

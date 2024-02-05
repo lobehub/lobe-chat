@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "模型"
+  },
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即與我開始對話，也可以前往 [助手設置](/chat/settings#session={{id}}) 完善我的信息。",
   "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，{{systemRole}}，讓我們開始對話吧！",
   "backToBottom": "返回底部",
@@ -64,7 +67,14 @@
     "prettifying": "潤色中..."
   },
   "temp": "臨時",
-  "tokenDetail": "角色設定: {{systemRoleToken}} · 歷史消息: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "聊天訊息",
+    "rest": "剩餘可用",
+    "systemRole": "角色設定",
+    "tools": "外掛程式設定",
+    "total": "總共可用",
+    "used": "總計使用"
+  },
   "tokenTag": {
     "overload": "超過限制",
     "remained": "剩餘",
@@ -102,6 +112,7 @@
   "updateAgent": "更新助理信息",
   "upload": {
     "actionTooltip": "上傳圖片",
+    "disabled": "當前模型不支援視覺識別，請切換模型後使用",
     "dragDesc": "拖拽文件到這裡，支持上傳多個圖片。按住 Shift 直接發送圖片",
     "dragTitle": "上傳圖片"
   }

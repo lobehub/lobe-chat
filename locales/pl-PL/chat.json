@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Przełącz model"
+  },
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu zacząć ze mną rozmawiać, lub udoskonalić moje informacje, przechodząc do [Ustawień asystenta](/chat/settings#session={{id}}).",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
   "backToBottom": "Przewiń na dół",
@@ -64,7 +67,14 @@
     "prettifying": "Upiększanie..."
   },
   "temp": "Tymczasowy",
-  "tokenDetail": "Ustawienia roli: {{systemRoleToken}} · Wiadomości sesji: {{chatsToken}} · Ustawienia narzędzi: {{toolsToken}}",
+  "tokenDetails": {
+    "chats": "Rozmowy",
+    "rest": "Pozostałe",
+    "systemRole": "Rola systemowa",
+    "tools": "Narzędzia",
+    "total": "Razem",
+    "used": "Wykorzystane"
+  },
   "tokenTag": {
     "overload": "Przekroczenie limitu",
     "remained": "Pozostało",
@@ -102,6 +112,7 @@
   "updateAgent": "Aktualizuj informacje asystenta",
   "upload": {
     "actionTooltip": "Prześlij obraz",
+    "disabled": "Obecny model nie obsługuje rozpoznawania wizyjnego. Proszę przełączyć model.",
     "dragDesc": "Przeciągnij pliki tutaj, obsługiwane jest przesyłanie wielu obrazów. Naciśnij klawisz Shift, aby wysłać obraz bezpośrednio",
     "dragTitle": "Prześlij obraz"
   }
