@@ -21,19 +21,26 @@ export interface ChatModelCard {
   description?: string;
   displayName?: string;
   /**
-   * 是否支持 Function Call
+   * whether model supports file upload
+   */
+  files?: boolean;
+  /**
+   * whether model supports function call
    */
   functionCall?: boolean;
   hidden?: boolean;
   id: string;
   /**
-   * user defined model
+   * whether model is custom
    */
   isCustom?: boolean;
+  /**
+   * whether model is legacy (deprecated but not removed yet)
+   */
   legacy?: boolean;
   tokens?: number;
   /**
-   * 是否支持视觉识别
+   *  whether model supports vision
    */
   vision?: boolean;
 }

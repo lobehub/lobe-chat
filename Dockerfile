@@ -57,7 +57,7 @@ ENV HOSTNAME "0.0.0.0"
 ENV PORT=3210
 
 # General Variables
-ENV ACCESS_CODE "lobe66"
+ENV ACCESS_CODE ""
 ENV CUSTOM_MODELS ""
 
 # OpenAI
@@ -68,5 +68,11 @@ ENV OPENAI_PROXY_URL ""
 ENV USE_AZURE_OPENAI ""
 ENV AZURE_API_KEY ""
 ENV AZURE_API_VERSION ""
+
+# Google
+ENV GOOGLE_API_KEY ""
+
+# Zhipu
+ENV Zhipu_API_KEY ""
 
 CMD ["node", "server.js"]
