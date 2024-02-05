@@ -37,7 +37,7 @@
     "AzureBizError": "Yêu cầu dịch vụ Azure AI gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
     "BedrockBizError": "Yêu cầu dịch vụ Bedrock gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
     "GoogleBizError": "Yêu cầu dịch vụ Google gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
-    "InvalidAccessCode": "Mật khẩu không đúng hoặc trống, vui lòng nhập mật khẩu truy cập đúng, hoặc thêm Khóa API OpenAI tùy chỉnh",
+    "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
     "InvalidAzureAPIKey": "Khóa API Azure không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Azure và thử lại",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidGoogleAPIKey": "Khóa API Google không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Google và thử lại",

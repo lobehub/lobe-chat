@@ -37,7 +37,7 @@
     "AzureBizError": "Errore nella richiesta del servizio Azure AI, controlla le informazioni seguenti o riprova",
     "BedrockBizError": "Errore nella richiesta del servizio Bedrock, controlla le informazioni seguenti o riprova",
     "GoogleBizError": "Errore nella richiesta del servizio Google, controlla le informazioni seguenti o riprova",
-    "InvalidAccessCode": "Password non corretta o vuota. Inserisci una password di accesso corretta o aggiungi una chiave API personalizzata OpenAI",
+    "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
     "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",

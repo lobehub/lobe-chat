@@ -5,14 +5,6 @@
       "functionCall": "يدعم هذا النموذج استدعاء الوظائف",
       "tokens": "هذا النموذج يدعم حتى {{tokens}} رموز في جلسة واحدة",
       "vision": "يدعم هذا النموذج التعرف على الرؤية"
-    },
-    "modelProvider": {
-      "azure": "Azure",
-      "bedrock": "AWS Bedrock",
-      "google": "Google",
-      "oneapi": "One API",
-      "openai": "OpenAI",
-      "zhipu": "智谱AI"
     }
   },
   "about": "حول",
@@ -105,6 +97,14 @@
     "zh-TW": "الصينية التقليدية"
   },
   "layoutInitializing": "جاري تحميل التخطيط...",
+  "modelProvider": {
+    "azure": "أزور",
+    "bedrock": "بيدروك لأمازون ويب سيرفيس",
+    "google": "جوجل",
+    "oneapi": "وان آبي آي",
+    "openai": "أوبن إيه آي",
+    "zhipu": "زهيبو"
+  },
   "noDescription": "لا توجد وصف",
   "ok": "موافق",
   "password": "كلمة المرور",

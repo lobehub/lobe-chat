@@ -37,7 +37,7 @@
     "AzureBizError": "Erro ao solicitar o serviço Azure AI, por favor, verifique as informações abaixo ou tente novamente",
     "BedrockBizError": "Erro ao solicitar o serviço Bedrock, por favor, verifique as informações abaixo ou tente novamente",
     "GoogleBizError": "Erro ao solicitar o serviço Google, por favor, verifique as informações abaixo ou tente novamente",
-    "InvalidAccessCode": "Senha incorreta ou em branco. Insira a senha de acesso correta ou adicione uma chave de API personalizada do OpenAI",
+    "InvalidAccessCode": "Senha de acesso inválida ou em branco. Por favor, insira a senha de acesso correta ou adicione uma Chave de API personalizada.",
     "InvalidAzureAPIKey": "Chave de API Azure incorreta ou vazia, por favor, verifique a chave de API Azure e tente novamente",
     "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
     "InvalidGoogleAPIKey": "Chave de API Google incorreta ou vazia, por favor, verifique a chave de API Google e tente novamente",

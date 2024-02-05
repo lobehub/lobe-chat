@@ -5,14 +5,6 @@
       "functionCall": "Эта модель поддерживает вызов функций (Function Call).",
       "tokens": "Эта модель поддерживает до {{tokens}} токенов в одной сессии.",
       "vision": "Эта модель поддерживает визуальное распознавание."
-    },
-    "modelProvider": {
-      "azure": "Azure",
-      "bedrock": "AWS Bedrock",
-      "google": "Google",
-      "oneapi": "One API",
-      "openai": "OpenAI",
-      "zhipu": "智谱AI"
     }
   },
   "about": "О нас",
@@ -105,6 +97,14 @@
     "zh-TW": "Традиционный китайский"
   },
   "layoutInitializing": "Инициализация макета...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Нет описания",
   "ok": "ОК",
   "password": "Пароль",

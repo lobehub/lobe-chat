@@ -37,7 +37,7 @@
     "AzureBizError": "請求 Azure AI 服務出錯，請根據以下信息排查或重試",
     "BedrockBizError": "請求 Bedrock 服務出錯，請根據以下信息排查或重試",
     "GoogleBizError": "請求 Google 服務出錯，請根據以下信息排查或重試",
-    "InvalidAccessCode": "密碼不正確或為空。請輸入正確的存取密碼，或新增自定義的 OpenAI API Key。",
+    "InvalidAccessCode": "密碼不正確或為空，請輸入正確的訪問密碼，或添加自定義 API 金鑰",
     "InvalidAzureAPIKey": "Azure API Key 不正確或為空，請檢查 Azure API Key 後重試",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
     "InvalidGoogleAPIKey": "Google API Key 不正確或為空，請檢查 Google API Key 後重試",

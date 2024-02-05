@@ -37,7 +37,7 @@
     "AzureBizError": "Error requesting Azure AI service. Please troubleshoot or retry based on the following information.",
     "BedrockBizError": "Error requesting Bedrock service. Please troubleshoot or retry based on the following information.",
     "GoogleBizError": "Error requesting Google service. Please troubleshoot or retry based on the following information.",
-    "InvalidAccessCode": "The password is incorrect or empty. Please enter the correct access password or add a custom OpenAI API Key.",
+    "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
     "InvalidAzureAPIKey": "Azure API Key is incorrect or empty. Please check the Azure API Key and retry.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
     "InvalidGoogleAPIKey": "Google API Key is incorrect or empty. Please check the Google API Key and retry.",

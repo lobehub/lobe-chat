@@ -5,14 +5,6 @@
       "functionCall": "Ten model obsługuje wywołania funkcji (Function Call).",
       "tokens": "Ten model obsługuje maksymalnie {{tokens}} tokenów w pojedynczej sesji.",
       "vision": "Ten model obsługuje rozpoznawanie wizualne."
-    },
-    "modelProvider": {
-      "azure": "Azure",
-      "bedrock": "AWS Bedrock",
-      "google": "Google",
-      "oneapi": "One API",
-      "openai": "OpenAI",
-      "zhipu": "智谱AI"
     }
   },
   "about": "O nas",
@@ -105,6 +97,14 @@
     "zh-TW": "Chiński tradycyjny"
   },
   "layoutInitializing": "Inicjowanie układu...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "智谱AI"
+  },
   "noDescription": "Brak opisu",
   "ok": "OK",
   "password": "Hasło",

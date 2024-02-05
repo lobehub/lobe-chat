@@ -5,14 +5,6 @@
       "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
       "tokens": "Mô hình này hỗ trợ tối đa {{tokens}} Tokens cho mỗi phiên",
       "vision": "Mô hình này hỗ trợ nhận diện thị giác"
-    },
-    "modelProvider": {
-      "azure": "Azure",
-      "bedrock": "AWS Bedrock",
-      "google": "Google",
-      "oneapi": "One API",
-      "openai": "OpenAI",
-      "zhipu": "智谱AI"
     }
   },
   "about": "Giới thiệu",
@@ -105,6 +97,14 @@
     "zh-TW": "Tiếng Trung (phồn thể)"
   },
   "layoutInitializing": "Đang tải bố cục...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Chưa có mô tả",
   "ok": "Đồng ý",
   "password": "Mật khẩu",

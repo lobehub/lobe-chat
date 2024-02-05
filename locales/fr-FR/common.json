@@ -5,14 +5,6 @@
       "functionCall": "Ce modèle prend en charge l'appel de fonction (Function Call).",
       "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
       "vision": "Ce modèle prend en charge la reconnaissance visuelle."
-    },
-    "modelProvider": {
-      "azure": "Azure",
-      "bedrock": "AWS Bedrock",
-      "google": "Google",
-      "oneapi": "One API",
-      "openai": "OpenAI",
-      "zhipu": "智谱AI"
     }
   },
   "about": "À propos",
@@ -105,6 +97,14 @@
     "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Aucune description disponible",
   "ok": "OK",
   "password": "Mot de passe",

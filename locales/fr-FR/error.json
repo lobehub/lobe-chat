@@ -37,7 +37,7 @@
     "AzureBizError": "Erreur lors de la demande de service Azure AI, veuillez vérifier les informations ci-dessous ou réessayer",
     "BedrockBizError": "Erreur lors de la demande de service Bedrock, veuillez vérifier les informations ci-dessous ou réessayer",
     "GoogleBizError": "Erreur lors de la demande de service Google, veuillez vérifier les informations ci-dessous ou réessayer",
-    "InvalidAccessCode": "Mot de passe incorrect ou vide. Veuillez saisir un mot de passe d'accès correct ou ajouter une clé API OpenAI personnalisée",
+    "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
     "InvalidAzureAPIKey": "Clé API Azure incorrecte ou vide, veuillez vérifier la clé API Azure et réessayer",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
     "InvalidGoogleAPIKey": "Clé API Google incorrecte ou vide, veuillez vérifier la clé API Google et réessayer",
