@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Model Değiştir"
+  },
   "agentDefaultMessage": "Merhaba, Ben **{{name}}**. Hemen benimle sohbet etmeye başlayabilirsiniz veya [Asistan Ayarları](/chat/settings#session={{id}}) sayfasına giderek bilgilerimi tamamlayabilirsiniz.",
   "agentDefaultMessageWithSystemRole": "Merhaba, Ben **{{name}}**, {{systemRole}}. Hemen sohbet etmeye başlayalım!",
   "backToBottom": "En alta git",
@@ -64,7 +67,14 @@
     "prettifying": "İyileştiriliyor..."
   },
   "temp": "Geçici",
-  "tokenDetail": "Rol Ayarı: {{systemRoleToken}} · Sohbet Geçmişi: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "Sohbetler",
+    "rest": "Kalan",
+    "systemRole": "Sistem Rolü",
+    "tools": "Araçlar",
+    "total": "Toplam",
+    "used": "Kullanılan"
+  },
   "tokenTag": {
     "overload": "Limit Aşıldı",
     "remained": "Kalan",
@@ -102,6 +112,7 @@
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upload": {
     "actionTooltip": "Resim Yükle",
+    "disabled": "Geçerli model görüntü tanıma desteğini desteklemiyor, lütfen modeli değiştirerek kullanın",
     "dragDesc": "Dosyaları buraya sürükleyip bırakın, birden fazla resim yüklemeyi destekler. Resimleri doğrudan göndermek için Shift tuşunu basılı tutun.",
     "dragTitle": "Resim Yükle"
   }

@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "獲取列表",
+        "title": "Azure API 版本"
+      },
+      "deployments": {
+        "desc": "使用 id=name 的語法填寫你的部署模型（如部署名和模型同名，可以只填寫模型名稱），多個模型使用逗號（,） 隔開",
+        "title": "Azure 部署模型列表"
+      },
       "endpoint": {
         "desc": "從 Azure 門戶檢查資源時，可在“金鑰和終結點”部分中找到此值",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,40 @@
         "title": "API 金鑰"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "填入 AWS Access Key ID",
+        "placeholder": "AWS Access Key ID",
+        "title": "AWS Access Key ID"
+      },
+      "checker": {
+        "desc": "測試 Access Key ID / Secret Access Key 是否填寫正確"
+      },
+      "region": {
+        "desc": "填入 AWS Region",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
+      },
+      "secretAccessKey": {
+        "desc": "填入 AWS Secret Access Key",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "填入來自 Google 的 API 金鑰",
+        "placeholder": "Google API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "獲取列表",
         "title": "Azure Api 版本"
-      },
-      "check": {
-        "button": "檢查",
-        "desc": "測試 Api 金鑰與代理地址是否正確填寫",
-        "pass": "檢查通過",
-        "title": "連通性檢查"
       },
       "customModelName": {
         "desc": "增加自訂模型，多個模型使用逗號（,） 隔開",
@@ -81,6 +113,20 @@
         "serverConfig": "管理員在服務端配置開啟了 Azure OpenAI，禁止切換",
         "title": "Azure OpenAI"
       }
+    },
+    "Zhipu": {
+      "title": "智譜",
+      "token": {
+        "desc": "填入來自智譜的 API 金鑰",
+        "placeholder": "智譜 API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
+    "checker": {
+      "button": "檢查",
+      "desc": "測試 API 金鑰與代理地址是否正確填寫",
+      "pass": "檢查通過",
+      "title": "連通性檢查"
     },
     "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨"
   },
@@ -293,6 +339,7 @@
     "builtins": {
       "groupName": "內置"
     },
+    "disabled": "當前模型不支持函數調用，無法使用插件",
     "plugins": {
       "enabled": "已啟用 {{num}}",
       "groupName": "插件",

@@ -33,8 +33,17 @@
     "502": "Spiacenti, il server sembra smarrito e non può fornire servizio al momento. Riprova più tardi",
     "503": "Spiacenti, il server non può elaborare la tua richiesta al momento, probabilmente a causa di sovraccarico o manutenzione in corso. Riprova più tardi",
     "504": "Spiacenti, il server non ha ricevuto risposta dal server upstream. Riprova più tardi",
-    "InvalidAccessCode": "Password non corretta o vuota. Inserisci una password di accesso corretta o aggiungi una chiave API personalizzata OpenAI",
-    "NoAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
+    "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
+    "AzureBizError": "Errore nella richiesta del servizio Azure AI, controlla le informazioni seguenti o riprova",
+    "BedrockBizError": "Errore nella richiesta del servizio Bedrock, controlla le informazioni seguenti o riprova",
+    "GoogleBizError": "Errore nella richiesta del servizio Google, controlla le informazioni seguenti o riprova",
+    "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
+    "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
+    "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
+    "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",
+    "InvalidZhipuAPIKey": "Chiave API Zhipu non corretta o vuota, controlla la chiave API Zhipu e riprova",
+    "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
+    "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
     "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
     "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",
@@ -47,7 +56,8 @@
     "PluginMetaNotFound": "Spiacenti, il plugin non è stato trovato nell'indice. Verifica che le informazioni di configurazione del plugin siano presenti nell'indice",
     "PluginOpenApiInitError": "Spiacenti, inizializzazione fallita del client OpenAPI. Verifica che le informazioni di configurazione di OpenAPI siano corrette",
     "PluginServerError": "Errore nella risposta del server del plugin. Verifica il file descrittivo del plugin, la configurazione del plugin o l'implementazione del server",
-    "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta"
+    "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta",
+    "ZhipuBizError": "Errore nella richiesta del servizio Zhipu, controlla le informazioni seguenti o riprova"
   },
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
@@ -57,9 +67,24 @@
   },
   "unlock": {
     "apikey": {
-      "addProxyUrl": "Aggiungi URL del proxy OpenAI (opzionale)",
-      "description": "Inserisci la tua chiave API OpenAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API.",
-      "title": "Utilizza una chiave API personalizzata"
+      "Bedrock": {
+        "customRegion": "Regione del servizio personalizzata",
+        "description": "Inserisci il tuo Aws AccessKeyId / SecretAccessKey per iniziare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
+        "title": "Utilizza le informazioni di autenticazione personalizzate di Bedrock"
+      },
+      "Google": {
+        "description": "Inserisci la tua chiave API Google per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+        "title": "Utilizza la chiave API Google personalizzata"
+      },
+      "OpenAI": {
+        "addProxyUrl": "Aggiungi l'indirizzo del proxy OpenAI (opzionale)",
+        "description": "Inserisci la tua chiave API OpenAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+        "title": "Utilizza la chiave API OpenAI personalizzata"
+      },
+      "Zhipu": {
+        "description": "Inserisci la tua chiave API Zhipu per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+        "title": "Utilizza la chiave API Zhipu personalizzata"
+      }
     },
     "closeMessage": "Chiudi messaggio",
     "confirm": "Conferma e riprova",
@@ -67,6 +92,10 @@
       "description": "L'amministratore ha attivato la crittografia dell'applicazione. Inserisci la password dell'applicazione per sbloccarla. La password va inserita solo una volta.",
       "placeholder": "Inserisci la password",
       "title": "Inserisci la password per sbloccare l'applicazione"
+    },
+    "tabs": {
+      "apiKey": "Chiave API personalizzata",
+      "password": "Password"
     }
   }
 }

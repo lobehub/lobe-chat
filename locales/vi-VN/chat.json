@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Mô hình"
+  },
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay lập tức, hoặc đến [Cài đặt trợ lý](/chat/settings#session={{id}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu trò chuyện ngay!",
   "backToBottom": "Quay về dưới cùng",
@@ -64,7 +67,14 @@
     "prettifying": "Đang tinh chỉnh..."
   },
   "temp": "Tạm thời",
-  "tokenDetail": "Thiết lập vai trò: {{systemRoleToken}} · Tin nhắn cuộc trò chuyện: {{chatsToken}} · Thiết lập công cụ: {{toolsToken}}",
+  "tokenDetails": {
+    "chats": "Tin nhắn trò chuyện",
+    "rest": "Còn lại",
+    "systemRole": "Vai trò hệ thống",
+    "tools": "Công cụ",
+    "total": "Tổng cộng",
+    "used": "Đã sử dụng"
+  },
   "tokenTag": {
     "overload": "Vượt quá giới hạn",
     "remained": "Còn lại",
@@ -102,6 +112,7 @@
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upload": {
     "actionTooltip": "Tải lên hình ảnh",
+    "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình trước khi sử dụng",
     "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh. Giữ phím Shift để gửi hình ảnh trực tiếp",
     "dragTitle": "Tải lên hình ảnh"
   }

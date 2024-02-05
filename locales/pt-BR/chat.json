@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Modelo"
+  },
   "agentDefaultMessage": "Olá, eu sou **{{name}}**, você pode começar a conversar comigo agora ou ir para [Configurações do Assistente](/chat/settings#session={{id}}) para completar minhas informações.",
   "agentDefaultMessageWithSystemRole": "Olá, eu sou **{{name}}**, {{systemRole}}, vamos conversar!",
   "backToBottom": "Voltar para o início",
@@ -64,7 +67,14 @@
     "prettifying": "Embelezando..."
   },
   "temp": "Temporário",
-  "tokenDetail": "Função: {{systemRoleToken}} · Mensagens: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "Mensagens de bate-papo",
+    "rest": "Restante disponível",
+    "systemRole": "Configuração de papel do sistema",
+    "tools": "Configuração de plug-ins",
+    "total": "Total disponível",
+    "used": "Total utilizado"
+  },
   "tokenTag": {
     "overload": "Limite Excedido",
     "remained": "Restante",
@@ -102,6 +112,7 @@
   "updateAgent": "Atualizar Informações do Assistente",
   "upload": {
     "actionTooltip": "Enviar Imagem",
+    "disabled": "O modelo atual não suporta reconhecimento visual. Por favor, altere o modelo antes de usar.",
     "dragDesc": "Arraste os arquivos aqui, suporta o envio de várias imagens. Pressione Shift para enviar as imagens diretamente.",
     "dragTitle": "Enviar Imagem"
   }

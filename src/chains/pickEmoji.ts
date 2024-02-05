@@ -1,10 +1,10 @@
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 
 /**
  * pick emoji for user prompt
  * @param content
  */
-export const chainPickEmoji = (content: string): Partial<OpenAIChatStreamPayload> => ({
+export const chainPickEmoji = (content: string): Partial<ChatStreamPayload> => ({
   messages: [
     {
       content:
