@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.122.9](https://github.com/lobehub/lobe-chat/compare/v0.122.8...v0.122.9)
+
+<sup>Released on **2024-02-05**</sup>
+
+#### 💄 Styles
+
+- **settings**: Improve LLM connection checker style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **settings**: Improve LLM connection checker style, closes [#1222](https://github.com/lobehub/lobe-chat/issues/1222) ([8c349a1](https://github.com/lobehub/lobe-chat/commit/8c349a1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.122.8](https://github.com/lobehub/lobe-chat/compare/v0.122.7...v0.122.8)
 
 <sup>Released on **2024-02-03**</sup>
