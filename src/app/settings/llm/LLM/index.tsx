@@ -139,7 +139,7 @@ const LLM = memo(() => {
         children: <Checker checkModel={!useAzure} />,
         desc: t('llm.OpenAI.check.desc'),
         label: t('llm.OpenAI.check.title'),
-        minWidth: undefined,
+        minWidth: '100%',
       },
       // {
       //   children: useAzure ? <Flexbox>{t('llm.OpenAI.models.notSupport')}</Flexbox> : <ModelList />,
