@@ -2,10 +2,11 @@ import { CheckCircleFilled } from '@ant-design/icons';
 import { Alert, Highlighter } from '@lobehub/ui';
 import { Button } from 'antd';
 import { useTheme } from 'antd-style';
-import { memo, useState } from 'react';
+import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { chatService } from '@/services/chat';
 import { ChatMessageError } from '@/types/message';
 
@@ -52,31 +53,32 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
       setPass(true);
     }
   };
+  const isMobile = useIsMobile();
+  const DOMCheckSuccess: ReactNode = (
+    <Flexbox gap={4} horizontal>
+      <CheckCircleFilled
+        style={{
+          color: theme.colorSuccess,
+        }}
+      />
+      {t('llm.OpenAI.check.pass')}
+    </Flexbox>
+  );
   return (
-    <Flexbox gap={8}>
-      <Flexbox align={'center'} gap={12} horizontal>
+    <Flexbox align={isMobile ? 'flex-start' : 'flex-end'} gap={8}>
+      <Flexbox align={'center'} gap={12} horizontal justify={'flex-end'}>
+        {!isMobile && pass ? DOMCheckSuccess : null}
         <Button loading={loading} onClick={checkConnection}>
           {t('llm.OpenAI.check.button')}
         </Button>
-
-        {pass && (
-          <Flexbox gap={4} horizontal>
-            <CheckCircleFilled
-              style={{
-                color: theme.colorSuccess,
-              }}
-            />
-            {t('llm.OpenAI.check.pass')}
-          </Flexbox>
-        )}
+        {isMobile && pass ? DOMCheckSuccess : null}
       </Flexbox>
-
       {error && (
-        <Flexbox gap={8}>
+        <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
           <Alert
             banner
             extra={
-              <Flexbox style={{ maxWidth: 600 }}>
+              <Flexbox>
                 <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
                   {JSON.stringify(error.body, null, 2)}
                 </Highlighter>
