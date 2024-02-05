@@ -2,7 +2,7 @@ import { CheckCircleFilled } from '@ant-design/icons';
 import { Alert, Highlighter } from '@lobehub/ui';
 import { Button } from 'antd';
 import { useTheme } from 'antd-style';
-import { ReactNode, memo, useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
