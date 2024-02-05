@@ -9,6 +9,9 @@ export const LOBE_CHAT_ACCESS_CODE = 'X-lobe-chat-access-code';
 
 export const OAUTH_AUTHORIZED = 'X-oauth-authorized';
 
+/**
+ * @deprecated
+ */
 export const getOpenAIAuthFromRequest = (req: Request) => {
   const apiKey = req.headers.get(OPENAI_API_KEY_HEADER_KEY);
   const endpoint = req.headers.get(OPENAI_END_POINT);

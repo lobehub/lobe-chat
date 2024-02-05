@@ -4,6 +4,9 @@ import analyzer from '@next/bundle-analyzer';
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
 
+// if you need to proxy the api endpoint to remote server
+const API_PROXY_ENDPOINT = process.env.API_PROXY_ENDPOINT || '';
+
 const withBundleAnalyzer = analyzer({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -44,9 +47,12 @@ const nextConfig = {
   },
   output: buildWithDocker ? 'standalone' : undefined,
 
+  rewrites: async () => [
+    // due to google api not work correct in some countries
+    // we need a proxy to bypass the restriction
+    { source: '/api/chat/google', destination: `${API_PROXY_ENDPOINT}/api/chat/google` },
+  ],
   reactStrictMode: true,
-
-  transpilePackages: ['antd-style'],
 
   webpack(config) {
     config.experiments = {

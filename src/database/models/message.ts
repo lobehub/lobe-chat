@@ -10,6 +10,7 @@ export interface CreateMessageParams
   extends Partial<Omit<ChatMessage, 'content' | 'role'>>,
     Pick<ChatMessage, 'content' | 'role'> {
   fromModel?: string;
+  fromProvider?: string;
   sessionId: string;
 }
 
@@ -215,13 +216,14 @@ class _MessageModel extends BaseModel {
 
   private mapToChatMessage = ({
     fromModel,
+    fromProvider,
     translate,
     tts,
     ...item
   }: DBModel<DB_Message>): ChatMessage => {
     return {
       ...item,
-      extra: { fromModel, translate, tts },
+      extra: { fromModel, fromProvider, translate, tts },
       meta: {},
       topicId: item.topicId ?? undefined,
     };

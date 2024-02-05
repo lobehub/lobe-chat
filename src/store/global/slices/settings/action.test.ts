@@ -1,75 +1,102 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { DeepPartial } from 'utility-types';
 import { describe, expect, it, vi } from 'vitest';
+import { withSWR } from '~test-utils';
 
 import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
+import { userService } from '@/services/user';
 import { useGlobalStore } from '@/store/global';
 import { SettingsTabs } from '@/store/global/initialState';
 import { LobeAgentSettings } from '@/types/session';
 import { GlobalSettings, OpenAIConfig } from '@/types/settings';
 
-beforeEach(() => {
-  vi.clearAllMocks();
-});
-
-vi.mock('@/utils/uuid', () => ({
-  nanoid: vi.fn(() => 'unique-id'),
+// Mock userService
+vi.mock('@/services/user', () => ({
+  userService: {
+    updateUserSettings: vi.fn(),
+    resetUserSettings: vi.fn(),
+  },
 }));
 
 describe('SettingsAction', () => {
   describe('importAppSettings', () => {
-    it('should import app settings', () => {
+    it('should import app settings', async () => {
       const { result } = renderHook(() => useGlobalStore());
       const newSettings: GlobalSettings = {
         ...DEFAULT_SETTINGS,
         themeMode: 'dark',
       };
 
-      act(() => {
-        result.current.importAppSettings(newSettings);
+      // Mock the internal setSettings function call
+      const setSettingsSpy = vi.spyOn(result.current, 'setSettings');
+
+      // Perform the action
+      await act(async () => {
+        await result.current.importAppSettings(newSettings);
       });
 
-      expect(result.current.settings).toEqual(newSettings);
+      // Assert that setSettings was called with the correct settings
+      expect(setSettingsSpy).toHaveBeenCalledWith({
+        ...DEFAULT_SETTINGS,
+        password: undefined,
+        themeMode: 'dark',
+      });
+
+      // Assert that the state has been updated
+      expect(userService.updateUserSettings).toHaveBeenCalledWith({ themeMode: 'dark' });
+
+      // Restore the spy
+      setSettingsSpy.mockRestore();
     });
   });
 
   describe('resetSettings', () => {
-    it('should reset settings to default', () => {
+    it('should reset settings to default', async () => {
       const { result } = renderHook(() => useGlobalStore());
 
-      act(() => {
-        result.current.resetSettings();
+      // Perform the action
+      await act(async () => {
+        await result.current.resetSettings();
       });
 
-      expect(result.current.settings).toEqual(DEFAULT_SETTINGS);
+      // Assert that resetUserSettings was called
+      expect(userService.resetUserSettings).toHaveBeenCalled();
+
+      // Assert that the state has been updated to default settings
+      expect(result.current.settings).toEqual({});
     });
   });
 
-  describe('setOpenAIConfig', () => {
-    it('should set OpenAI configuration', () => {
+  describe('setModelProviderConfig', () => {
+    it('should set OpenAI configuration', async () => {
       const { result } = renderHook(() => useGlobalStore());
-      const openAIConfig: Partial<OpenAIConfig> = { OPENAI_API_KEY: 'test' };
+      const openAIConfig: Partial<OpenAIConfig> = { OPENAI_API_KEY: 'test-key' };
 
-      act(() => {
-        result.current.setOpenAIConfig(openAIConfig);
+      // Perform the action
+      await act(async () => {
+        await result.current.setModelProviderConfig('openAI', openAIConfig);
       });
 
-      expect(result.current.settings.languageModel.openAI.OPENAI_API_KEY).toEqual(
-        openAIConfig.OPENAI_API_KEY,
-      );
+      // Assert that updateUserSettings was called with the correct OpenAI configuration
+      expect(userService.updateUserSettings).toHaveBeenCalledWith({
+        languageModel: {
+          openAI: openAIConfig,
+        },
+      });
     });
   });
-
   describe('setSettings', () => {
-    it('should set partial settings', () => {
+    it('should set partial settings', async () => {
       const { result } = renderHook(() => useGlobalStore());
       const partialSettings: Partial<GlobalSettings> = { themeMode: 'dark' };
 
-      act(() => {
-        result.current.setSettings(partialSettings);
+      // Perform the action
+      await act(async () => {
+        await result.current.setSettings(partialSettings);
       });
 
-      expect(result.current.settings.themeMode).toEqual('dark');
+      // Assert that updateUserSettings was called with the correct settings
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(partialSettings);
     });
   });
 
@@ -86,32 +113,34 @@ describe('SettingsAction', () => {
   });
 
   describe('switchThemeMode', () => {
-    it('should switch theme mode', () => {
+    it('should switch theme mode', async () => {
       const { result } = renderHook(() => useGlobalStore());
+      const themeMode = 'light';
 
-      act(() => {
-        result.current.switchThemeMode('light');
+      // Perform the action
+      await act(async () => {
+        await result.current.switchThemeMode(themeMode);
       });
 
-      expect(result.current.settings.themeMode).toEqual('light');
+      // Assert that updateUserSettings was called with the correct theme mode
+      expect(userService.updateUserSettings).toHaveBeenCalledWith({ themeMode });
     });
   });
 
   describe('updateDefaultAgent', () => {
-    it('should update default agent settings', () => {
+    it('should update default agent settings', async () => {
       const { result } = renderHook(() => useGlobalStore());
-      const updatedAgent: DeepPartial<LobeAgentSettings> = {
+      const updatedAgent: Partial<LobeAgentSettings> = {
         meta: { title: 'docs' },
       };
 
-      act(() => {
-        result.current.updateDefaultAgent(updatedAgent);
+      // Perform the action
+      await act(async () => {
+        await result.current.updateDefaultAgent(updatedAgent);
       });
 
-      expect(result.current.settings.defaultAgent).toEqual({
-        ...DEFAULT_AGENT,
-        ...updatedAgent,
-      });
+      // Assert that updateUserSettings was called with the merged agent settings
+      expect(userService.updateUserSettings).toHaveBeenCalledWith({ defaultAgent: updatedAgent });
     });
   });
 });
