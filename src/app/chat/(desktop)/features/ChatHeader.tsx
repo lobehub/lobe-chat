@@ -1,5 +1,4 @@
-import { SiOpenai } from '@icons-pack/react-simple-icons';
-import { ActionIcon, Avatar, ChatHeader, ChatHeaderTitle, Tag } from '@lobehub/ui';
+import { ActionIcon, Avatar, ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -7,8 +6,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import ModelTag from '@/components/ModelTag';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/slices/settings/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
@@ -34,6 +35,7 @@ const Left = memo(() => {
       agentSelectors.currentAgentPlugins(s),
     ]);
 
+  const showPlugin = useGlobalStore(modelProviderSelectors.modelEnabledFunctionCall(model));
   const displayTitle = isInbox ? t('inbox.title') : title;
   const displayDesc = isInbox ? t('inbox.desc') : description;
 
@@ -63,8 +65,8 @@ const Left = memo(() => {
         desc={displayDesc}
         tag={
           <>
-            <Tag icon={<SiOpenai size={'1em'} />}>{model}</Tag>
-            {plugins?.length > 0 && <PluginTag plugins={plugins} />}
+            <ModelTag model={model} />
+            {showPlugin && plugins?.length > 0 && <PluginTag plugins={plugins} />}
           </>
         }
         title={displayTitle}

@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "النموذج"
+  },
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك البدء في الدردشة معي على الفور، أو يمكنك الانتقال إلى [إعدادات المساعد](/chat/settings#session={{id}}) لتحسين معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
   "backToBottom": "العودة إلى الأسفل",
@@ -64,7 +67,14 @@
     "prettifying": "جارٍ التجميل..."
   },
   "temp": "مؤقت",
-  "tokenDetail": "إعداد الدور: {{systemRoleToken}} · رسائل الجلسة: {{chatsToken}} · إعداد الأدوات: {{toolsToken}}",
+  "tokenDetails": {
+    "chats": "رسائل المحادثة",
+    "rest": "المتبقي",
+    "systemRole": "تعيين الدور",
+    "tools": "تعيين الإضافات",
+    "total": "الإجمالي",
+    "used": "المستخدم"
+  },
   "tokenTag": {
     "overload": "تجاوز الحد",
     "remained": "متبقي",
@@ -102,6 +112,7 @@
   "updateAgent": "تحديث معلومات المساعد",
   "upload": {
     "actionTooltip": "تحميل الصورة",
+    "disabled": "النموذج الحالي لا يدعم التعرف على الرؤية، يرجى تغيير النموذج المستخدم",
     "dragDesc": "اسحب الملفات إلى هنا، يدعم تحميل عدة صور. اضغط على Shift لإرسال الصور مباشرة",
     "dragTitle": "تحميل الصورة"
   }

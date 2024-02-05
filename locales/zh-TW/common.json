@@ -1,4 +1,12 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "自訂模型，預設支援函數呼叫與視覺辨識，請根據實際情況驗證上述能力的可用性",
+      "functionCall": "該模型支援函數呼叫（Function Call）",
+      "tokens": "該模型單個會話最多支援 {{tokens}} Tokens",
+      "vision": "該模型支援視覺辨識"
+    }
+  },
   "about": "關於",
   "advanceSettings": "進階設定",
   "agentMaxToken": "助手最大標記",
@@ -89,6 +97,14 @@
     "zh-TW": "繁體中文"
   },
   "layoutInitializing": "正在載入版面配置...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "智譜AI"
+  },
   "noDescription": "暫無描述",
   "ok": "確定",
   "password": "密碼",
