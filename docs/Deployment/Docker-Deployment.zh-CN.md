@@ -47,7 +47,7 @@ $ docker run -d -p 3210:3210 \
 >
 > - 默认映射端口为 `3210`, 请确保未被占用或手动更改端口映射
 > - 使用你的 OpenAI API Key 替换上述命令中的 `sk-xxxx`
-> - 官方 Docker 镜像中设定的密码默认为 `lobe66`，请将其替换为自己的密码以提升安全性
+> - 官方 Docker 镜像中未设定密码，强烈建议添加密码以提升安全性，否则你可能会遇到 [My API Key was stolen!!!](https://github.com/lobehub/lobe-chat/issues/1123) 这样的情况
 > - LobeChat 支持的完整环境变量列表请参考 [环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN) 部分
 
 > \[!WARNING]
