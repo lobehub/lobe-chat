@@ -15,7 +15,7 @@ export const useChatInput = () => {
   const onSend = useSendMessage();
 
   const model = useSessionStore(agentSelectors.currentAgentModel);
-  const canUpload = useGlobalStore(modelProviderSelectors.modelEnabledVision(model));
+  const canUpload = useGlobalStore(modelProviderSelectors.modelEnabledUpload(model));
 
   const [loading, value, onInput, onStop] = useChatStore((s) => [
     !!s.chatLoadingId,

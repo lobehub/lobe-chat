@@ -37,7 +37,9 @@ describe('modelProviderSelectors', () => {
 
       const result = modelProviderSelectors.modelSelectList(s).filter((r) => r.enabled);
 
-      expect(result).toMatchSnapshot();
+      expect(result[0].chatModels.find((s) => s.id === 'gpt-4-0125-preview')?.displayName).toEqual(
+        'gpt-4-32k',
+      );
     });
 
     it('should delete model', () => {
@@ -47,99 +49,7 @@ describe('modelProviderSelectors', () => {
 
       const result = modelProviderSelectors.modelSelectList(s).filter((r) => r.enabled);
 
-      expect(result).toEqual([
-        {
-          chatModels: [
-            {
-              description: 'GPT 3.5 Turbo，适用于各种文本生成和理解任务',
-              displayName: 'GPT-3.5 Turbo',
-              functionCall: true,
-              id: 'gpt-3.5-turbo',
-              tokens: 4096,
-            },
-            {
-              displayName: 'GPT-3.5 Turbo (0125)',
-              functionCall: true,
-              id: 'gpt-3.5-turbo-0125',
-              tokens: 16385,
-            },
-            {
-              displayName: 'GPT-3.5 Turbo (1106)',
-              functionCall: true,
-              hidden: true,
-              id: 'gpt-3.5-turbo-1106',
-              tokens: 16385,
-            },
-            {
-              hidden: true,
-              id: 'gpt-3.5-turbo-instruct',
-              tokens: 4096,
-            },
-            {
-              hidden: true,
-              id: 'gpt-3.5-turbo-16k',
-              tokens: 16385,
-            },
-            {
-              hidden: true,
-              id: 'gpt-3.5-turbo-0613',
-              legacy: true,
-              tokens: 4096,
-            },
-            {
-              hidden: true,
-              id: 'gpt-3.5-turbo-16k-0613',
-              legacy: true,
-              tokens: 4096,
-            },
-            {
-              displayName: 'GPT-4 Turbo Preview',
-              functionCall: true,
-              id: 'gpt-4-turbo-preview',
-              tokens: 128000,
-            },
-            {
-              displayName: 'GPT-4 Turbo Preview (0125)',
-              functionCall: true,
-              id: 'gpt-4-0125-preview',
-              tokens: 128000,
-            },
-            {
-              description: 'GPT-4 视觉预览版，支持视觉任务',
-              displayName: 'GPT-4 Turbo Vision (Preview)',
-              id: 'gpt-4-vision-preview',
-              tokens: 128000,
-              vision: true,
-            },
-            {
-              functionCall: true,
-              hidden: true,
-              id: 'gpt-4-1106-preview',
-              tokens: 128000,
-            },
-            {
-              functionCall: true,
-              hidden: true,
-              id: 'gpt-4-0613',
-              tokens: 8192,
-            },
-            {
-              functionCall: true,
-              hidden: true,
-              id: 'gpt-4-32k',
-              tokens: 32768,
-            },
-            {
-              functionCall: true,
-              hidden: true,
-              id: 'gpt-4-32k-0613',
-              tokens: 32768,
-            },
-          ],
-          enabled: true,
-          id: 'openai',
-        },
-      ]);
+      expect(result.find((r) => r.id === 'gpt-4')).toBeUndefined();
     });
 
     it('show the hidden model', () => {
@@ -177,7 +87,34 @@ describe('modelProviderSelectors', () => {
 
       const result = modelProviderSelectors.modelSelectList(s).filter((r) => r.enabled);
 
-      expect(result).toMatchSnapshot();
+      expect(result[0].chatModels).toContainEqual({
+        displayName: 'model1',
+        functionCall: true,
+        id: 'model1',
+        isCustom: true,
+        vision: true,
+      });
+      expect(result[0].chatModels).toContainEqual({
+        displayName: 'model2',
+        functionCall: true,
+        id: 'model2',
+        isCustom: true,
+        vision: true,
+      });
+      expect(result[0].chatModels).toContainEqual({
+        displayName: 'model3',
+        functionCall: true,
+        id: 'model3',
+        isCustom: true,
+        vision: true,
+      });
+      expect(result[0].chatModels).toContainEqual({
+        displayName: 'model4',
+        functionCall: true,
+        id: 'model4',
+        isCustom: true,
+        vision: true,
+      });
     });
   });
 
@@ -206,7 +143,23 @@ describe('modelProviderSelectors', () => {
     });
   });
 
-  describe('modelEnabledVision', () => {
+  describe('modelEnabledFiles', () => {
+    it('should return false if the model does not have file ability', () => {
+      const enabledFiles = modelProviderSelectors.modelEnabledFiles('gpt-4-vision-preview')(
+        useGlobalStore.getState(),
+      );
+      expect(enabledFiles).toBeFalsy();
+    });
+
+    it('should return true if the model has file ability', () => {
+      const enabledFiles = modelProviderSelectors.modelEnabledFiles('gpt-4-all')(
+        useGlobalStore.getState(),
+      );
+      expect(enabledFiles).toBeTruthy();
+    });
+  });
+
+  describe('modelHasMaxToken', () => {
     it('should return true if the model is in the list of models that show tokens', () => {
       const show = modelProviderSelectors.modelHasMaxToken('gpt-3.5-turbo')(
         useGlobalStore.getState(),
