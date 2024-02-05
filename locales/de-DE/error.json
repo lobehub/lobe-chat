@@ -33,8 +33,17 @@
     "502": "Entschuldigung, der Server scheint die Orientierung verloren zu haben und kann vorübergehend keinen Service bereitstellen. Bitte versuchen Sie es später erneut",
     "503": "Entschuldigung, der Server kann Ihre Anfrage derzeit nicht verarbeiten. Möglicherweise aufgrund von Überlastung oder Wartungsarbeiten. Bitte versuchen Sie es später erneut",
     "504": "Entschuldigung, der Server hat keine Antwort vom Upstream-Server erhalten. Bitte versuchen Sie es später erneut",
-    "InvalidAccessCode": "Falsches oder leeres Passwort. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
-    "NoAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
+    "AgentRuntimeError": "Es ist ein Fehler bei der Ausführung des Lobe-Sprachmodells aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "AzureBizError": "Es ist ein Fehler bei der Anforderung des Azure AI-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "BedrockBizError": "Es ist ein Fehler bei der Anforderung des Bedrock-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "GoogleBizError": "Es ist ein Fehler bei der Anforderung des Google-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
+    "InvalidAzureAPIKey": "Der Azure API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Azure API-Schlüssel und versuchen Sie es erneut.",
+    "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
+    "InvalidGoogleAPIKey": "Der Google API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Google API-Schlüssel und versuchen Sie es erneut.",
+    "InvalidZhipuAPIKey": "Der Zhipu API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Zhipu API-Schlüssel und versuchen Sie es erneut.",
+    "LocationNotSupportError": "Entschuldigung, Ihr Standort unterstützt diesen Modellservice möglicherweise aufgrund von regionalen Einschränkungen oder nicht aktivierten Diensten nicht. Bitte überprüfen Sie, ob der aktuelle Standort die Verwendung dieses Dienstes unterstützt, oder versuchen Sie, andere Standortinformationen zu verwenden.",
+    "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OpenAIBizError": "Fehler bei der OpenAI-Serviceanfrage. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
@@ -47,7 +56,8 @@
     "PluginMetaNotFound": "Entschuldigung, das Plugin wurde im Index nicht gefunden. Bitte überprüfen Sie die Konfigurationsinformationen des Plugins im Index",
     "PluginOpenApiInitError": "Entschuldigung, die Initialisierung des OpenAPI-Clients ist fehlgeschlagen. Bitte überprüfen Sie die Konfigurationsinformationen des OpenAPI auf Richtigkeit",
     "PluginServerError": "Fehler bei der Serveranfrage des Plugins. Bitte überprüfen Sie die Fehlerinformationen unten in Ihrer Plugin-Beschreibungsdatei, Plugin-Konfiguration oder Serverimplementierung",
-    "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit"
+    "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit",
+    "ZhipuBizError": "Es ist ein Fehler bei der Anforderung des Zhipu-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
   },
   "stt": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
@@ -57,9 +67,24 @@
   },
   "unlock": {
     "apikey": {
-      "addProxyUrl": "Proxy-URL hinzufügen (optional)",
-      "description": "Gib deinen OpenAI API-Schlüssel ein, um eine Sitzung zu starten. Die App speichert deinen API-Schlüssel nicht.",
-      "title": "Benutzerdefinierten API-Schlüssel verwenden"
+      "Bedrock": {
+        "customRegion": "Benutzerdefinierte Region",
+        "description": "Geben Sie Ihre Aws AccessKeyId / SecretAccessKey ein, um die Sitzung zu starten. Die Anwendung speichert Ihre Authentifizierungsinformationen nicht.",
+        "title": "Verwenden von benutzerdefinierten Bedrock-Authentifizierungsinformationen"
+      },
+      "Google": {
+        "description": "Geben Sie Ihren Google API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
+        "title": "Verwenden von benutzerdefinierten Google API-Schlüssel"
+      },
+      "OpenAI": {
+        "addProxyUrl": "Proxy-URL hinzufügen (optional)",
+        "description": "Geben Sie Ihren OpenAI API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
+        "title": "Verwenden von benutzerdefinierten OpenAI API-Schlüssel"
+      },
+      "Zhipu": {
+        "description": "Geben Sie Ihren Zhipu API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
+        "title": "Verwenden von benutzerdefinierten Zhipu API-Schlüssel"
+      }
     },
     "closeMessage": "Hinweis schließen",
     "confirm": "Bestätigen und erneut versuchen",
@@ -67,6 +92,10 @@
       "description": "Der Administrator hat die App-Verschlüsselung aktiviert. Gib das App-Passwort ein, um die App zu entsperren. Das Passwort muss nur einmal eingegeben werden.",
       "placeholder": "Passwort eingeben",
       "title": "App entsperren durch Passworteingabe"
+    },
+    "tabs": {
+      "apiKey": "Benutzerdefinierter API-Schlüssel",
+      "password": "Passwort"
     }
   }
 }

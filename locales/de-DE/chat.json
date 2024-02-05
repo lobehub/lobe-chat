@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Modell"
+  },
   "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir chatten oder gehe zu [Assistenteneinstellungen](/chat/settings#session={{id}}), um meine Informationen zu vervollständigen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**, {{systemRole}}. Lass uns chatten!",
   "backToBottom": "Zurück zum Ende",
@@ -64,7 +67,14 @@
     "prettifying": "Verschönern..."
   },
   "temp": "Temporär",
-  "tokenDetail": "Rollen-Einstellung: {{systemRoleToken}} · Chat-Nachrichten: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "Chats",
+    "rest": "Verbleibend",
+    "systemRole": "Systemrolle",
+    "tools": "Werkzeuge",
+    "total": "Insgesamt",
+    "used": "Verwendet"
+  },
   "tokenTag": {
     "overload": "Überlastung",
     "remained": "Verbleibend",
@@ -102,6 +112,7 @@
   "updateAgent": "Assistenteninformationen aktualisieren",
   "upload": {
     "actionTooltip": "Bild hochladen",
+    "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um es zu verwenden.",
     "dragDesc": "Dateien hierher ziehen, um mehrere Bilder hochzuladen. Halte die Umschalttaste gedrückt, um Bilder direkt zu senden.",
     "dragTitle": "Bild hochladen"
   }

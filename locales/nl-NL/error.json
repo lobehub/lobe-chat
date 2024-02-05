@@ -33,8 +33,17 @@
     "502": "Sorry, de server lijkt de weg kwijt te zijn en kan tijdelijk geen service verlenen. Probeer het later opnieuw",
     "503": "Sorry, de server kan uw verzoek momenteel niet verwerken vanwege overbelasting of onderhoud. Probeer het later opnieuw",
     "504": "Sorry, de server heeft geen reactie ontvangen van de upstream server. Probeer het later opnieuw",
-    "InvalidAccessCode": "Ongeldige of lege toegangscode. Voer de juiste toegangscode in of voeg een aangepaste OpenAI API-sleutel toe",
-    "NoAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
+    "AgentRuntimeError": "Lobe language model runtime execution error, please troubleshoot or retry based on the following information",
+    "AzureBizError": "Error requesting Azure AI service, please troubleshoot or retry based on the following information",
+    "BedrockBizError": "Error requesting Bedrock service, please troubleshoot or retry based on the following information",
+    "GoogleBizError": "Error requesting Google service, please troubleshoot or retry based on the following information",
+    "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
+    "InvalidAzureAPIKey": "Incorrect or empty Azure API Key, please check the Azure API Key and retry",
+    "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
+    "InvalidGoogleAPIKey": "Incorrect or empty Google API Key, please check the Google API Key and retry",
+    "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
+    "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
+    "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
@@ -47,7 +56,8 @@
     "PluginMetaNotFound": "Sorry, de plug-in is niet gevonden in de index. Controleer of de plug-inconfiguratie in de index staat",
     "PluginOpenApiInitError": "Sorry, initialisatie van de OpenAPI-client is mislukt. Controleer of de configuratie van OpenAPI juist is",
     "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
-    "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is"
+    "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is",
+    "ZhipuBizError": "Error requesting Zhipu service, please troubleshoot or retry based on the following information"
   },
   "stt": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
@@ -57,9 +67,24 @@
   },
   "unlock": {
     "apikey": {
-      "addProxyUrl": "Voeg optionele OpenAI-proxyadres toe",
-      "description": "Voer uw OpenAI API-sleutel in om een sessie te starten. De app slaat uw API-sleutel niet op.",
-      "title": "Gebruik aangepaste API-sleutel"
+      "Bedrock": {
+        "customRegion": "Custom service region",
+        "description": "Enter your Aws AccessKeyId / SecretAccessKey to start the session. The app will not record your authentication configuration",
+        "title": "Use custom Bedrock authentication information"
+      },
+      "Google": {
+        "description": "Enter your Google API Key to start the session. The app will not record your API Key",
+        "title": "Use custom Google API Key"
+      },
+      "OpenAI": {
+        "addProxyUrl": "Add OpenAI proxy address (optional)",
+        "description": "Enter your OpenAI API Key to start the session. The app will not record your API Key",
+        "title": "Use custom OpenAI API Key"
+      },
+      "Zhipu": {
+        "description": "Enter your Zhipu API Key to start the session. The app will not record your API Key",
+        "title": "Use custom Zhipu API Key"
+      }
     },
     "closeMessage": "Sluit bericht",
     "confirm": "Bevestigen en opnieuw proberen",
@@ -67,6 +92,10 @@
       "description": "De beheerder heeft app-encryptie ingeschakeld. Voer het app-wachtwoord in om de app te ontgrendelen. Het wachtwoord hoeft slechts één keer te worden ingevoerd.",
       "placeholder": "Voer het wachtwoord in",
       "title": "Voer het wachtwoord in om de app te ontgrendelen"
+    },
+    "tabs": {
+      "apiKey": "Custom API Key",
+      "password": "Password"
     }
   }
 }

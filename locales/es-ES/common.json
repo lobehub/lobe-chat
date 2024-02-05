@@ -1,4 +1,12 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modelo personalizado: admite tanto la llamada de funciones como el reconocimiento visual. Por favor, verifique la disponibilidad de estas capacidades según sea necesario.",
+      "functionCall": "Este modelo admite la llamada de funciones (Function Call).",
+      "tokens": "Este modelo admite un máximo de {{tokens}} tokens por sesión.",
+      "vision": "Este modelo admite el reconocimiento visual."
+    }
+  },
   "about": "Acerca de",
   "advanceSettings": "Configuración avanzada",
   "agentMaxToken": "Máximo de tokens de sesión",
@@ -89,6 +97,14 @@
     "zh-TW": "Chino tradicional"
   },
   "layoutInitializing": "Inicializando diseño...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Sin descripción",
   "ok": "Aceptar",
   "password": "Contraseña",

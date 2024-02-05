@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Model"
+  },
   "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away, or go to [Agent Settings](/chat/settings#session={{id}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
   "backToBottom": "Back to bottom",
@@ -37,7 +40,7 @@
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {
     "config": "Group Management",
-    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",
+    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the agents in this group will be moved to the default list. Please confirm your operation.",
     "createGroup": "Add New Group",
     "createSuccess": "Created successfully",
     "inputPlaceholder": "Please enter group name...",
@@ -64,7 +67,14 @@
     "prettifying": "Polishing..."
   },
   "temp": "Temporary",
-  "tokenDetail": "Role Setting: {{systemRoleToken}} · Chat History: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "Chat Messages",
+    "rest": "Remaining",
+    "systemRole": "Role Settings",
+    "tools": "Plugin Settings",
+    "total": "Total Available",
+    "used": "Total Used"
+  },
   "tokenTag": {
     "overload": "Exceeded Limit",
     "remained": "Remaining",
@@ -102,6 +112,7 @@
   "updateAgent": "Update Agent Information",
   "upload": {
     "actionTooltip": "Upload Image",
+    "disabled": "The current model does not support visual recognition. Please switch models to use this feature.",
     "dragDesc": "Drag and drop files here, support uploading multiple images. Hold down Shift to send images directly.",
     "dragTitle": "Upload Image"
   }

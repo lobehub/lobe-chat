@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure'nin API sürümü, YYYY-MM-DD biçimini takip eder, [en son sürümü buradan bulabilirsiniz](https://learn.microsoft.com/tr-tr/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Listeyi Al",
+        "title": "Azure API Sürümü"
+      },
+      "deployments": {
+        "desc": "id=name sözdizimini kullanarak dağıtım modelinizi doldurun (örneğin, dağıtım adı ve model aynıysa, yalnızca model adını doldurabilirsiniz), birden fazla model için virgül (,) kullanın",
+        "title": "Azure Dağıtımları"
+      },
       "endpoint": {
         "desc": "Bu değer, Azure portalındaki kaynağı kontrol ederken 'Keys and Endpoints' bölümünde bulunabilir",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,40 @@
         "title": "API Anahtarı"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Aws Access Key Id'sini girin",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "AccessKeyId / SecretAccessKey'in doğru şekilde doldurulup doldurulmadığını test eder"
+      },
+      "region": {
+        "desc": "Aws Bölgesini girin",
+        "placeholder": "Aws Bölgesi",
+        "title": "Aws Bölgesi"
+      },
+      "secretAccessKey": {
+        "desc": "Aws Secret Access Key'i girin",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Google'dan alınan API Anahtarını girin",
+        "placeholder": "Google API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure için API sürümü, YYYY-MM-DD formatını takip eder, [en son sürümü kontrol edin](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Listeyi Al",
         "title": "Azure API Sürümü"
-      },
-      "check": {
-        "button": "Kontrol Et",
-        "desc": "Api Anahtarı ve proxy adresinin doğru şekilde doldurulup doldurulmadığını test eder",
-        "pass": "Kontrol Başarılı",
-        "title": "Bağlantı Kontrolü"
       },
       "customModelName": {
         "desc": "Özel modeller ekleyin, birden fazla modeli virgülle (,) ayırarak yazın",
@@ -81,6 +113,20 @@
         "serverConfig": "Yönetici, sunucu tarafında Azure OpenAI'yi etkinleştirdi ve değiştirme yasağı getirdi",
         "title": "Azure OpenAI"
       }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "Zhipu'dan alınan API Anahtarını girin",
+        "placeholder": "Zhipu API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "checker": {
+      "button": "Kontrol Et",
+      "desc": "Api Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
+      "pass": "Kontrol Başarılı",
+      "title": "Bağlantı Kontrolü"
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
   },
@@ -293,6 +339,7 @@
     "builtins": {
       "groupName": "Dahili Araçlar"
     },
+    "disabled": "Mevcut model fonksiyon çağrılarını desteklemez, eklenti kullanılamaz",
     "plugins": {
       "enabled": "Etkin: {{num}}",
       "groupName": "Eklentiler",

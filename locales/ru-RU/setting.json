@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Версия API Azure, следуйте формату YYYY-MM-DD, см. [последнюю версию](https://learn.microsoft.com/ru-ru/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Получить список",
+        "title": "Версия API Azure"
+      },
+      "deployments": {
+        "desc": "Используйте синтаксис id=name для указания вашего развертывания модели (например, если имя развертывания и модели совпадают, можно указать только имя модели), для нескольких моделей используйте запятую (,)",
+        "title": "Список развертываний Azure"
+      },
       "endpoint": {
         "desc": "Это значение можно найти в разделе 'Ключи и конечные точки' при проверке ресурсов на портале Azure",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,40 @@
         "title": "API-ключ"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Введите идентификатор ключа доступа AWS",
+        "placeholder": "Идентификатор ключа доступа AWS",
+        "title": "Идентификатор ключа доступа AWS"
+      },
+      "checker": {
+        "desc": "Проверьте правильность заполнения AccessKeyId / SecretAccessKey"
+      },
+      "region": {
+        "desc": "Введите регион AWS",
+        "placeholder": "Регион AWS",
+        "title": "Регион AWS"
+      },
+      "secretAccessKey": {
+        "desc": "Введите секретный ключ доступа AWS",
+        "placeholder": "Секретный ключ доступа AWS",
+        "title": "Секретный ключ доступа AWS"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Введите API-ключ от Google",
+        "placeholder": "Ключ API Google",
+        "title": "API-ключ"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Версия API Azure, следуйте формату ГГГГ-ММ-ДД, см. [последнюю версию](https://learn.microsoft.com/ru-ru/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Получить список",
         "title": "Версия API Azure"
-      },
-      "check": {
-        "button": "Проверить",
-        "desc": "Проверьте правильность заполнения ключа API и адреса прокси",
-        "pass": "Проверка успешно пройдена",
-        "title": "Проверка соединения"
       },
       "customModelName": {
         "desc": "Добавьте пользовательскую модель, разделяя их запятыми (,)",
@@ -81,6 +113,20 @@
         "serverConfig": "Администратор сервера настроил использование Azure OpenAI, переключение запрещено",
         "title": "Использовать Azure OpenAI"
       }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "Введите API-ключ от Zhipu",
+        "placeholder": "Ключ API Zhipu",
+        "title": "API-ключ"
+      }
+    },
+    "checker": {
+      "button": "Проверить",
+      "desc": "Проверьте правильность заполнения ключа API и адреса прокси",
+      "pass": "Проверка пройдена",
+      "title": "Проверка доступности"
     },
     "waitingForMore": "Больше моделей доступно в <1>плане подключения</1>, ожидайте ✨"
   },
@@ -293,6 +339,7 @@
     "builtins": {
       "groupName": "Встроенные инструменты"
     },
+    "disabled": "Текущая модель не поддерживает вызов функций и не может использовать плагины",
     "plugins": {
       "enabled": "Активировано {{num}}",
       "groupName": "Плагины",

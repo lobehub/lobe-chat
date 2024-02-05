@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Modèle"
+  },
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**. Vous pouvez commencer à discuter avec moi dès maintenant ou aller dans [Paramètres de l'agent](/chat/settings#session={{id}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}. Commençons la conversation !",
   "backToBottom": "Retour en bas",
@@ -37,7 +40,7 @@
   "sendPlaceholder": "Saisissez votre message...",
   "sessionGroup": {
     "config": "Gestion des groupes",
-    "confirmRemoveGroupAlert": "Vous êtes sur le point de supprimer ce groupe. Une fois supprimé, les assistants de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
+    "confirmRemoveGroupAlert": "Vous êtes sur le point de supprimer ce groupe. Une fois supprimé, les agents de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
     "createGroup": "Créer un nouveau groupe",
     "createSuccess": "Création réussie",
     "inputPlaceholder": "Veuillez saisir le nom du groupe...",
@@ -64,7 +67,14 @@
     "prettifying": "En cours d'embellissement..."
   },
   "temp": "Temporaire",
-  "tokenDetail": "Rôle : {{systemRoleToken}} · Messages archivés : {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "Messages de discussion",
+    "rest": "Restant disponible",
+    "systemRole": "Rôle système",
+    "tools": "Paramètres du plugin",
+    "total": "Total disponible",
+    "used": "Total utilisé"
+  },
   "tokenTag": {
     "overload": "Dépassement de limite",
     "remained": "Restant",
@@ -102,6 +112,7 @@
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upload": {
     "actionTooltip": "Télécharger une image",
+    "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle. Veuillez changer de modèle pour utiliser cette fonctionnalité.",
     "dragDesc": "Faites glisser les fichiers ici pour télécharger plusieurs images. Maintenez la touche Maj enfoncée pour envoyer directement les images.",
     "dragTitle": "Télécharger une image"
   }
