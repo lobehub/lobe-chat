@@ -6,6 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { chatService } from '@/services/chat';
 import { ChatMessageError } from '@/types/message';
 
@@ -52,13 +53,11 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
       setPass(true);
     }
   };
-  return (
-    <Flexbox gap={8}>
-      <Flexbox align={'center'} gap={12} horizontal>
-        <Button loading={loading} onClick={checkConnection}>
-          {t('llm.OpenAI.check.button')}
-        </Button>
+  const isMobile = useIsMobile();
 
+  return (
+    <Flexbox align={isMobile ? 'flex-start' : 'flex-end'} gap={8}>
+      <Flexbox align={'center'} direction={isMobile ? 'horizontal-reverse' : 'horizontal'} gap={12}>
         {pass && (
           <Flexbox gap={4} horizontal>
             <CheckCircleFilled
@@ -69,14 +68,16 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
             {t('llm.OpenAI.check.pass')}
           </Flexbox>
         )}
+        <Button loading={loading} onClick={checkConnection}>
+          {t('llm.OpenAI.check.button')}
+        </Button>
       </Flexbox>
-
       {error && (
-        <Flexbox gap={8}>
+        <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
           <Alert
             banner
             extra={
-              <Flexbox style={{ maxWidth: 600 }}>
+              <Flexbox>
                 <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
                   {JSON.stringify(error.body, null, 2)}
                 </Highlighter>
