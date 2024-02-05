@@ -1,11 +1,11 @@
 import { globalHelpers } from '@/store/global/helpers';
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 
 /**
  * summary agent name for user prompt
  * @param content
  */
-export const chainSummaryAgentName = (content: string): Partial<OpenAIChatStreamPayload> => ({
+export const chainSummaryAgentName = (content: string): Partial<ChatStreamPayload> => ({
   messages: [
     {
       content: `你是一名擅长起名的起名大师，名字需要有文学内涵，注重精炼和赋子意境，你需要将用户的描述总结为 10 个字以内的角色，并翻译为目标语言。格式要求如下：\n输入: {文本作为JSON引用字符串} [locale]\n输出: {角色名}`,

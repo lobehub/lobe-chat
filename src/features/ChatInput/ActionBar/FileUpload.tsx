@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 
@@ -16,9 +18,8 @@ const FileUpload = memo(() => {
   const theme = useTheme();
   const upload = useFileStore((s) => s.uploadFile);
 
-  const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);
-
-  if (!canUpload) return null;
+  const model = useSessionStore(agentSelectors.currentAgentModel);
+  const canUpload = useGlobalStore(modelProviderSelectors.modelEnabledVision(model));
 
   return (
     <Upload
@@ -31,6 +32,7 @@ const FileUpload = memo(() => {
         setLoading(false);
         return false;
       }}
+      disabled={!canUpload}
       multiple={true}
       showUploadList={false}
     >
@@ -44,7 +46,12 @@ const FileUpload = memo(() => {
           ></Icon>
         </Center>
       ) : (
-        <ActionIcon icon={LucideImage} placement={'bottom'} title={t('upload.actionTooltip')} />
+        <ActionIcon
+          disable={!canUpload}
+          icon={LucideImage}
+          placement={'bottom'}
+          title={t(canUpload ? 'upload.actionTooltip' : 'upload.disabled')}
+        />
       )}
     </Upload>
   );

@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "モデル"
+  },
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐにチャットを開始するか、[エージェント設定](/chat/settings#session={{id}}) に移動して私の情報を完全にすることができます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、チャットを始めましょう！",
   "backToBottom": "現在に戻る",
@@ -64,7 +67,14 @@
     "prettifying": "整形中..."
   },
   "temp": "一時的",
-  "tokenDetail": "役割設定: {{systemRoleToken}} · チャット履歴: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "チャットメッセージ",
+    "rest": "残り利用可能",
+    "systemRole": "システムロール設定",
+    "tools": "ツール設定",
+    "total": "合計利用可能",
+    "used": "合計使用"
+  },
   "tokenTag": {
     "overload": "制限を超えています",
     "remained": "残り",
@@ -102,6 +112,7 @@
   "updateAgent": "エージェント情報を更新",
   "upload": {
     "actionTooltip": "画像をアップロード",
+    "disabled": "現在のモデルはビジュアル認識をサポートしていません。モデルを切り替えて使用してください",
     "dragDesc": "ファイルをここにドラッグしてください。複数の画像をアップロードできます。Shift キーを押しながら画像を直接送信することもできます。",
     "dragTitle": "画像をアップロード"
   }

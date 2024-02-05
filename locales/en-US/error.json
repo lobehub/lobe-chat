@@ -33,8 +33,17 @@
     "502": "Sorry, the server seems to be lost and is temporarily unable to provide service. Please try again later.",
     "503": "Sorry, the server is currently unable to process your request, possibly due to overload or maintenance. Please try again later.",
     "504": "Sorry, the server did not receive a response from the upstream server. Please try again later.",
-    "InvalidAccessCode": "The password is incorrect or empty. Please enter the correct access password or add a custom OpenAI API Key.",
-    "NoAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
+    "AgentRuntimeError": "Lobe language model runtime execution error. Please troubleshoot or retry based on the following information.",
+    "AzureBizError": "Error requesting Azure AI service. Please troubleshoot or retry based on the following information.",
+    "BedrockBizError": "Error requesting Bedrock service. Please troubleshoot or retry based on the following information.",
+    "GoogleBizError": "Error requesting Google service. Please troubleshoot or retry based on the following information.",
+    "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
+    "InvalidAzureAPIKey": "Azure API Key is incorrect or empty. Please check the Azure API Key and retry.",
+    "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
+    "InvalidGoogleAPIKey": "Google API Key is incorrect or empty. Please check the Google API Key and retry.",
+    "InvalidZhipuAPIKey": "Zhipu API Key is incorrect or empty. Please check the Zhipu API Key and retry.",
+    "LocationNotSupportError": "We're sorry, your current location does not support this model service. This may be due to regional restrictions or the service not being available. Please confirm if the current location supports using this service, or try using a different location.",
+    "NoOpenAIAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
     "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information.",
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
@@ -47,7 +56,8 @@
     "PluginMetaNotFound": "Sorry, the plugin was not found in the index. Please check the plugin's configuration information in the index",
     "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct.",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
-    "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct"
+    "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
+    "ZhipuBizError": "Error requesting Zhipu service. Please troubleshoot or retry based on the following information."
   },
   "stt": {
     "responseError": "Service request failed, please check the configuration or try again"
@@ -57,9 +67,24 @@
   },
   "unlock": {
     "apikey": {
-      "addProxyUrl": "Add OpenAI Proxy URL (optional)",
-      "description": "Enter your OpenAI API Key to start the conversation. The application will not record your API Key.",
-      "title": "Use Custom API Key"
+      "Bedrock": {
+        "customRegion": "Custom service region",
+        "description": "Enter your Aws AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration.",
+        "title": "Use custom Bedrock authentication information"
+      },
+      "Google": {
+        "description": "Enter your Google API Key to start the session. The app will not store your API Key.",
+        "title": "Use custom Google API Key"
+      },
+      "OpenAI": {
+        "addProxyUrl": "Add OpenAI proxy address (optional)",
+        "description": "Enter your OpenAI API Key to start the session. The app will not store your API Key.",
+        "title": "Use custom OpenAI API Key"
+      },
+      "Zhipu": {
+        "description": "Enter your Zhipu API Key to start the session. The app will not store your API Key.",
+        "title": "Use custom Zhipu API Key"
+      }
     },
     "closeMessage": "Close message",
     "confirm": "Confirm and Retry",
@@ -67,6 +92,10 @@
       "description": "The application encryption has been enabled by the administrator. Enter the application password to unlock the application. The password only needs to be filled in once.",
       "placeholder": "Please enter password",
       "title": "Enter Password to Unlock Application"
+    },
+    "tabs": {
+      "apiKey": "Custom API Key",
+      "password": "Password"
     }
   }
 }

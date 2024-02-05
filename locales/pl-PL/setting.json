@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Wersja API usługi Azure, zgodna z formatem RRRR-MM-DD, zobacz [najnowszą wersję](https://learn.microsoft.com/pl-pl/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Pobierz listę",
+        "title": "Wersja interfejsu API usługi Azure"
+      },
+      "deployments": {
+        "desc": "Użyj składni id=nazwa, aby wprowadzić listę modeli wdrożeń (np. jeśli nazwa modelu i wdrożenia są takie same, można wpisać tylko nazwę modelu), użyj przecinka (,) do oddzielenia wielu modeli",
+        "title": "Lista wdrożeń usługi Azure"
+      },
       "endpoint": {
         "desc": "Wartość znajdująca się w sekcji „Klucze i punkty końcowe” podczas sprawdzania zasobów w portalu Azure",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,40 @@
         "title": "Klucz API"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Wprowadź Aws Access Key Id",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "Sprawdź poprawność wypełnienia AccessKeyId / SecretAccessKey"
+      },
+      "region": {
+        "desc": "Wprowadź region Aws",
+        "placeholder": "Aws Region",
+        "title": "Aws Region"
+      },
+      "secretAccessKey": {
+        "desc": "Wprowadź Aws Secret Access Key",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Wprowadź klucz API z Google",
+        "placeholder": "Google API Key",
+        "title": "Klucz API"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Wersja API dla usługi Azure, zgodna z formatem RRRR-MM-DD. Zobacz [najnowszą wersję](https://learn.microsoft.com/pl-pl/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Pobierz listę",
         "title": "Wersja interfejsu API Azure"
-      },
-      "check": {
-        "button": "Sprawdź",
-        "desc": "Testuje poprawność wprowadzenia klucza API i adresu proxy",
-        "pass": "Test zakończony pomyślnie",
-        "title": "Test łączności"
       },
       "customModelName": {
         "desc": "Dodaj niestandardowe modele, oddzielając je przecinkami (,)",
@@ -81,6 +113,20 @@
         "serverConfig": "Administrator skonfigurował usługę Azure OpenAI po stronie serwera, co uniemożliwia przełączenie",
         "title": "Użyj Azure OpenAI"
       }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "Wprowadź klucz API z Zhipu",
+        "placeholder": "Zhipu API Key",
+        "title": "Klucz API"
+      }
+    },
+    "checker": {
+      "button": "Sprawdź",
+      "desc": "Sprawdź poprawność wypełnienia klucza API i adresu proxy",
+      "pass": "Połączenie udane",
+      "title": "Test połączenia"
     },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
   },
@@ -293,6 +339,7 @@
     "builtins": {
       "groupName": "Wbudowane"
     },
+    "disabled": "Aktualny model nie obsługuje wywołań funkcji i nie można użyć wtyczki",
     "plugins": {
       "enabled": "Włączone {{num}}",
       "groupName": "Wtyczki",
