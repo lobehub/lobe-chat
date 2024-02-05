@@ -54,24 +54,20 @@ const Checker = memo<CheckerProps>(({ checkModel }) => {
     }
   };
   const isMobile = useIsMobile();
-  const DOMCheckSuccess: ReactNode = (
-    <Flexbox gap={4} horizontal>
-      <CheckCircleFilled
-        style={{
-          color: theme.colorSuccess,
-        }}
-      />
-      {t('llm.OpenAI.check.pass')}
-    </Flexbox>
-  );
+
   return (
     <Flexbox align={isMobile ? 'flex-start' : 'flex-end'} gap={8}>
-      <Flexbox align={'center'} gap={12} horizontal justify={'flex-end'}>
-        {!isMobile && pass ? DOMCheckSuccess : null}
-        <Button loading={loading} onClick={checkConnection}>
-          {t('llm.OpenAI.check.button')}
-        </Button>
-        {isMobile && pass ? DOMCheckSuccess : null}
+      <Flexbox align={'center'} direction={isMobile ? 'horizontal-reverse' : 'horizontal'} gap={12}>
+        {pass && (
+          <Flexbox gap={4} horizontal>
+            <CheckCircleFilled
+              style={{
+                color: theme.colorSuccess,
+              }}
+            />
+            {t('llm.OpenAI.check.pass')}
+          </Flexbox>
+        )}
       </Flexbox>
       {error && (
         <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
