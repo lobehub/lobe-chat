@@ -27,16 +27,22 @@ export const ErrorActionContainer = memo<{ children: ReactNode }>(({ children })
 });
 
 export const FormAction = memo<{
-  avatar: string;
+  avatar: ReactNode;
+  background?: string;
   children: ReactNode;
   description: string;
   title: string;
-}>(({ children, title, description, avatar }) => {
+}>(({ children, background, title, description, avatar }) => {
   const { styles, theme } = useStyles();
 
   return (
     <Center gap={16} style={{ maxWidth: 300 }}>
-      <Avatar avatar={avatar} background={theme.colorFillContent} gap={12} size={80} />
+      <Avatar
+        avatar={avatar}
+        background={background ?? theme.colorFillContent}
+        gap={12}
+        size={80}
+      />
       <Flexbox style={{ fontSize: 20 }}>{title}</Flexbox>
       <Flexbox className={styles.desc}>{description}</Flexbox>
       {children}

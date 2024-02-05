@@ -1,9 +1,9 @@
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 
 export const chainTranslate = (
   content: string,
   targetLang: string,
-): Partial<OpenAIChatStreamPayload> => ({
+): Partial<ChatStreamPayload> => ({
   messages: [
     {
       content: '你是一名擅长翻译的助理，你需要将输入的语言翻译为目标语言',

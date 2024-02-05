@@ -1,4 +1,12 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modèle personnalisé, par défaut prend en charge à la fois l'appel de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités selon les besoins réels.",
+      "functionCall": "Ce modèle prend en charge l'appel de fonction (Function Call).",
+      "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
+      "vision": "Ce modèle prend en charge la reconnaissance visuelle."
+    }
+  },
   "about": "À propos",
   "advanceSettings": "Paramètres avancés",
   "agentMaxToken": "Longueur maximale de la session",
@@ -89,6 +97,14 @@
     "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Aucune description disponible",
   "ok": "OK",
   "password": "Mot de passe",

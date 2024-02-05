@@ -42,6 +42,7 @@ export const AgentSchema = z.object({
     top_p: z.number().default(1).optional(),
   }),
   plugins: z.array(z.string()).optional(),
+  provider: z.string().default('openai').optional(),
   systemRole: z.string().default(''),
   tts: ttsSchema.optional(),
 });

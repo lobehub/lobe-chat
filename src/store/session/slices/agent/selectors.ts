@@ -1,7 +1,6 @@
 import { VoiceList } from '@lobehub/tts';
 import { t } from 'i18next';
 
-import { DEFAULT_OPENAI_MODEL_LIST, isVisionModel } from '@/const/llm';
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { useGlobalStore } from '@/store/global';
@@ -34,6 +33,12 @@ const currentAgentModel = (s: SessionStore): LanguageModel | string => {
   const config = currentAgentConfig(s);
 
   return config?.model || LanguageModel.GPT3_5;
+};
+
+const currentAgentModelProvider = (s: SessionStore) => {
+  const config = currentAgentConfig(s);
+
+  return config?.provider;
 };
 
 const currentAgentPlugins = (s: SessionStore) => {
@@ -99,19 +104,10 @@ const getTitle = (s: MetaData) => s.title || t('defaultSession', { ns: 'common' 
 export const getDescription = (s: MetaData) =>
   s.description || t('noDescription', { ns: 'common' });
 
-const showTokenTag = (s: SessionStore) => {
-  const model = currentAgentModel(s);
-
-  return DEFAULT_OPENAI_MODEL_LIST.includes(model);
-};
 const hasSystemRole = (s: SessionStore) => {
   const config = currentAgentConfig(s);
 
   return !!config.systemRole;
-};
-const modelHasVisionAbility = (s: SessionStore): boolean => {
-  const model = currentAgentModel(s);
-  return isVisionModel(model);
 };
 
 export const agentSelectors = {
@@ -121,6 +117,7 @@ export const agentSelectors = {
   currentAgentDescription,
   currentAgentMeta,
   currentAgentModel,
+  currentAgentModelProvider,
   currentAgentPlugins,
   currentAgentSystemRole,
   currentAgentTTS,
@@ -130,6 +127,4 @@ export const agentSelectors = {
   getDescription,
   getTitle,
   hasSystemRole,
-  modelHasVisionAbility,
-  showTokenTag,
 };

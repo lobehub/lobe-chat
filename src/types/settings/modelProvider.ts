@@ -1,4 +1,4 @@
-export type CustomModels = { displayName: string; name: string }[];
+export type CustomModels = { displayName: string; id: string }[];
 
 export interface OpenAIConfig {
   OPENAI_API_KEY: string;
@@ -8,10 +8,46 @@ export interface OpenAIConfig {
    */
   customModelName?: string;
   endpoint?: string;
+  /**
+   * @deprecated
+   */
   models?: string[];
   useAzure?: boolean;
 }
 
-export interface GlobalLLMConfig {
-  openAI: OpenAIConfig;
+export interface AzureOpenAIConfig {
+  apiKey: string;
+  apiVersion?: string;
+  deployments: string;
+  enabled: boolean;
+  endpoint?: string;
 }
+
+export interface ZhiPuConfig {
+  apiKey?: string;
+  enabled: boolean;
+  endpoint?: string;
+}
+
+export interface GoogleConfig {
+  apiKey?: string;
+  enabled: boolean;
+  endpoint?: string;
+}
+
+export interface AWSBedrockConfig {
+  accessKeyId?: string;
+  enabled: boolean;
+  region?: string;
+  secretAccessKey?: string;
+}
+
+export interface GlobalLLMConfig {
+  azure: AzureOpenAIConfig;
+  bedrock: AWSBedrockConfig;
+  google: GoogleConfig;
+  openAI: OpenAIConfig;
+  zhipu: ZhiPuConfig;
+}
+
+export type GlobalLLMProviderKey = keyof GlobalLLMConfig;

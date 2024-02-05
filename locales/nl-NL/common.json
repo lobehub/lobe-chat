@@ -1,4 +1,12 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Aangepast model, standaard ingesteld om zowel functieoproep als visuele herkenning te ondersteunen. Verifieer de beschikbaarheid van deze mogelijkheden op basis van de werkelijke situatie.",
+      "functionCall": "Dit model ondersteunt functieoproep (Function Call).",
+      "tokens": "Dit model ondersteunt maximaal {{tokens}} tokens per sessie.",
+      "vision": "Dit model ondersteunt visuele herkenning."
+    }
+  },
   "about": "Over",
   "advanceSettings": "Geavanceerde instellingen",
   "agentMaxToken": "Maximale sessielengte",
@@ -89,6 +97,14 @@
     "zh-TW": "Traditioneel Chinees"
   },
   "layoutInitializing": "Lay-out wordt geladen...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "zhipu": "智谱AI"
+  },
   "noDescription": "Geen beschrijving beschikbaar",
   "ok": "Oké",
   "password": "Wachtwoord",
