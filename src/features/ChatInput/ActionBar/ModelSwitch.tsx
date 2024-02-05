@@ -3,7 +3,7 @@ import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { BrainCog } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
@@ -11,6 +11,7 @@ import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
+import { ModelProviderCard } from '@/types/llm';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   menu: css`
@@ -37,29 +38,38 @@ const ModelSwitch = memo(() => {
   const updateAgentConfig = useSessionStore((s) => s.updateAgentConfig);
 
   const select = useGlobalStore(modelProviderSelectors.modelSelectList, isEqual);
+  const enabledList = select.filter((s) => s.enabled);
 
+  const items = useMemo(() => {
+    const getModelItems = (provider: ModelProviderCard) =>
+      provider.chatModels
+        .filter((c) => !c.hidden)
+        .map((model) => ({
+          key: model.id,
+          label: <ModelItemRender {...model} />,
+          onClick: () => {
+            updateAgentConfig({ model: model.id, provider: provider.id });
+          },
+        }));
+
+    if (enabledList.length === 1) {
+      const provider = enabledList[0];
+      return getModelItems(provider);
+    }
+
+    return enabledList.map((provider) => ({
+      children: getModelItems(provider),
+      key: provider.id,
+      label: <ProviderItemRender provider={provider.id} />,
+      type: 'group',
+    }));
+  }, [enabledList]);
   return (
     <Dropdown
       menu={{
         activeKey: model,
         className: styles.menu,
-        items: select
-          .filter((s) => s.enabled)
-          .map((provider) => ({
-            children: provider.chatModels
-              .filter((c) => !c.hidden)
-              .map((model) => ({
-                key: model.id,
-                label: <ModelItemRender {...model} />,
-                onClick: () => {
-                  updateAgentConfig({ model: model.id, provider: provider?.id });
-                },
-              })),
-
-            key: provider.id,
-            label: <ProviderItemRender provider={provider.id} />,
-            type: 'group',
-          })),
+        items,
         style: {
           maxHeight: 500,
           overflowY: 'scroll',
