@@ -19,11 +19,14 @@ const FileUpload = memo(() => {
   const upload = useFileStore((s) => s.uploadFile);
 
   const model = useSessionStore(agentSelectors.currentAgentModel);
-  const canUpload = useGlobalStore(modelProviderSelectors.modelEnabledVision(model));
+  const [canUpload, enabledFiles] = useGlobalStore((s) => [
+    modelProviderSelectors.modelEnabledUpload(model)(s),
+    modelProviderSelectors.modelEnabledFiles(model)(s),
+  ]);
 
   return (
     <Upload
-      accept="image/*"
+      accept={enabledFiles ? undefined : 'image/*'}
       beforeUpload={async (file) => {
         setLoading(true);
 
