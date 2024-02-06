@@ -5,12 +5,12 @@ import {
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
+  LobeMoonshotAI,
   LobeOpenAI,
   LobeRuntimeAI,
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
-import LobeMoonshotAI from '@/libs/agent-runtime/moonshot';
 
 interface AzureOpenAIParams {
   apiVersion?: string;
@@ -59,13 +59,13 @@ class AgentRuntime {
         break;
       }
 
-      case ModelProvider.Bedrock: {
-        runtimeModel = this.initBedrock(payload);
+      case ModelProvider.Moonshot: {
+        runtimeModel = this.initMoonshot(payload);
         break;
       }
 
-      case ModelProvider.Moonshot: {
-        runtimeModel = this.initMoonshot(payload);
+      case ModelProvider.Bedrock: {
+        runtimeModel = this.initBedrock(payload);
       }
     }
 
