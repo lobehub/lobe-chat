@@ -2,6 +2,7 @@
   "ModelSelect": {
     "featureTag": {
       "custom": "Chọn mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện thị giác, vui lòng xác minh khả năng sử dụng của các tính năng trên dựa trên tình hình thực tế",
+      "file": "Mô hình này hỗ trợ tải lên tệp để đọc và nhận dạng",
       "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
       "tokens": "Mô hình này hỗ trợ tối đa {{tokens}} Tokens cho mỗi phiên",
       "vision": "Mô hình này hỗ trợ nhận diện thị giác"

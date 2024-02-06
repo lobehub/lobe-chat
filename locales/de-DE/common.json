@@ -2,6 +2,7 @@
   "ModelSelect": {
     "featureTag": {
       "custom": "Benutzerdefiniertes Modell, das standardmäßig sowohl Funktionsaufrufe als auch visuelle Erkennung unterstützt. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Anforderungen.",
+      "file": "Dieses Modell unterstützt das Hochladen von Dateien zur Erkennung.",
       "functionCall": "Dieses Modell unterstützt Funktionsaufrufe (Function Call).",
       "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro einzelner Sitzung.",
       "vision": "Dieses Modell unterstützt visuelle Erkennung."

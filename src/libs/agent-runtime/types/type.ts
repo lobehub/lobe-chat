@@ -5,7 +5,7 @@ import { ChatStreamPayload } from './chat';
 
 export interface AgentInitErrorPayload {
   error: object;
-  type: string | number;
+  errorType: string | number;
 }
 
 export interface ChatCompletionErrorPayload {
