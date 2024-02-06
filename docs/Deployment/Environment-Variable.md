@@ -71,6 +71,8 @@ Related discussions:
 
 The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the model name `gpt-4-0125-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only `gpt-3.5-turbo` will be enabled.
 
+You can find all current model names in [modelProviders](https://github.com/lobehub/lobe-chat/tree/main/src/config/modelProviders).
+
 ### Azure OpenAI
 
 If you need to use Azure OpenAI to provide model services, you can refer to the [Deploy with Azure OpenAI](Deploy-with-Azure-OpenAI.zh-CN.md) section for detailed steps. Here are the environment variables related to Azure OpenAI.
