@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 0.124.2](https://github.com/lobehub/lobe-chat/compare/v0.124.1...v0.124.2)
+
+<sup>Released on **2024-02-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add moonshot i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add moonshot i18n, closes [#1251](https://github.com/lobehub/lobe-chat/issues/1251) ([4b6663b](https://github.com/lobehub/lobe-chat/commit/4b6663b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.124.1](https://github.com/lobehub/lobe-chat/compare/v0.124.0...v0.124.1)
+
+<sup>Released on **2024-02-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve direction UX.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve direction UX, closes [#1169](https://github.com/lobehub/lobe-chat/issues/1169) ([e3929dc](https://github.com/lobehub/lobe-chat/commit/e3929dc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.124.0](https://github.com/lobehub/lobe-chat/compare/v0.123.4...v0.124.0)
 
 <sup>Released on **2024-02-06**</sup>

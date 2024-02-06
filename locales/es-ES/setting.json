@@ -76,6 +76,14 @@
         "title": "Clave API"
       }
     },
+    "Moonshot": {
+      "title": "Lado oscuro de la luna",
+      "token": {
+        "desc": "Ingrese la clave API de Moonshot AI",
+        "placeholder": "Clave API de Moonshot AI",
+        "title": "Clave API"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Versión de la API de Azure, sigue el formato YYYY-MM-DD, consulta la [última versión](https://learn.microsoft.com/es-es/azure/ai-services/openai/reference#chat-completions)",
