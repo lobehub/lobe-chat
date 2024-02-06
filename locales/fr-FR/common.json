@@ -2,6 +2,7 @@
   "ModelSelect": {
     "featureTag": {
       "custom": "Modèle personnalisé, par défaut prend en charge à la fois l'appel de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités selon les besoins réels.",
+      "file": "Ce modèle prend en charge la lecture et la reconnaissance de fichiers",
       "functionCall": "Ce modèle prend en charge l'appel de fonction (Function Call).",
       "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
       "vision": "Ce modèle prend en charge la reconnaissance visuelle."
