@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.124.0](https://github.com/lobehub/lobe-chat/compare/v0.123.4...v0.124.0)
+
+<sup>Released on **2024-02-06**</sup>
+
+#### ✨ Features
+
+- **misc**: Support Moonshot AI Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support Moonshot AI Provider, closes [#1232](https://github.com/lobehub/lobe-chat/issues/1232) ([a6de202](https://github.com/lobehub/lobe-chat/commit/a6de202))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.123.4](https://github.com/lobehub/lobe-chat/compare/v0.123.3...v0.123.4)
 
 <sup>Released on **2024-02-06**</sup>
