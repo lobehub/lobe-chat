@@ -76,6 +76,14 @@
         "title": "API Key"
       }
     },
+    "Moonshot": {
+      "title": "Dark Side of the Moon",
+      "token": {
+        "desc": "Enter the API Key from Moonshot AI",
+        "placeholder": "Moonshot AI API Key",
+        "title": "API Key"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "The API version for Azure, following the format YYYY-MM-DD, check the [latest version](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
