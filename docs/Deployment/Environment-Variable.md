@@ -10,6 +10,7 @@ LobeChat provides additional configuration options during deployment, which can 
   - [OpenAI](#openai)
   - [Azure OpenAI](#azure-openai)
   - [Zhipu AI](#zhipu-ai)
+  - [Moonshot AI](#moonshot-ai)
   - [Google AI](#google-ai)
   - [AWS Bedrock](#aws-bedrock)
 - [Plugin Service](#plugin-service)
@@ -107,6 +108,15 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Description: This is the API key you applied for in the Zhipu AI service
 - Default Value: -
 - Example: `4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
+
+### Moonshot AI
+
+#### `MOONSHOT_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Zhipu AI service
+- Default Value: -
+- Example: `Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
 
 ### Google AI
 

@@ -19,6 +19,9 @@ export const AgentRuntimeErrorType = {
 
   InvalidBedrockCredentials: 'InvalidBedrockCredentials',
   BedrockBizError: 'BedrockBizError',
+
+  InvalidMoonshotAPIKey: 'InvalidMoonshotAPIKey',
+  MoonshotBizError: 'MoonshotBizError',
 } as const;
 
 export type ILobeAgentRuntimeErrorType =
