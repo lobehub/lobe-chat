@@ -116,12 +116,18 @@ const AzureOpenAIProvider = memo(() => {
     ],
     defaultActive: enabled,
     extra: (
-      <Switch
-        onChange={(enabled) => {
-          toggleProviderEnabled(providerKey, enabled);
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
         }}
-        value={enabled}
-      />
+      >
+        <Switch
+          onChange={(enabled) => {
+            toggleProviderEnabled(providerKey, enabled);
+          }}
+          value={enabled}
+        />
+      </div>
     ),
     title: (
       <Flexbox align={'center'} gap={8} horizontal>
