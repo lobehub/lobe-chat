@@ -21,6 +21,7 @@ exports[`modelProviderSelectors > CUSTOM_MODELS > custom deletion, addition, and
       {
         "displayName": "gpt-4-32k",
         "functionCall": true,
+        "hidden": undefined,
         "id": "gpt-4-0125-preview",
         "tokens": 128000,
       },

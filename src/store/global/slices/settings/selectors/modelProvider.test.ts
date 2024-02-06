@@ -123,6 +123,7 @@ describe('modelProviderSelectors', () => {
       const result = modelProviderSelectors.modelSelectList(s).filter((r) => r.enabled);
 
       expect(result[0].chatModels.find((o) => o.id === 'gpt-4-1106-preview')).toEqual({
+        displayName: 'GPT-4 Turbo Preview (1106)',
         functionCall: true,
         id: 'gpt-4-1106-preview',
         tokens: 128000,
