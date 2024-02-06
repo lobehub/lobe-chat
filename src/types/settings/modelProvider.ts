@@ -29,6 +29,11 @@ export interface ZhiPuConfig {
   endpoint?: string;
 }
 
+export interface MoonshotConfig {
+  apiKey?: string;
+  enabled: boolean;
+}
+
 export interface GoogleConfig {
   apiKey?: string;
   enabled: boolean;
@@ -46,6 +51,7 @@ export interface GlobalLLMConfig {
   azure: AzureOpenAIConfig;
   bedrock: AWSBedrockConfig;
   google: GoogleConfig;
+  moonshot: MoonshotConfig;
   openAI: OpenAIConfig;
   zhipu: ZhiPuConfig;
 }

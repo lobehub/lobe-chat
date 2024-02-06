@@ -8,6 +8,7 @@ import { useChatStore } from '@/store/chat';
 
 import BedrockForm from './Bedrock';
 import GoogleForm from './Google';
+import MoonshotForm from './Moonshot';
 import OpenAIForm from './OpenAI';
 import ZhipuForm from './Zhipu';
 
@@ -33,6 +34,10 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
 
       case ModelProvider.ZhiPu: {
         return <ZhipuForm />;
+      }
+
+      case ModelProvider.Moonshot: {
+        return <MoonshotForm />;
       }
 
       default:
