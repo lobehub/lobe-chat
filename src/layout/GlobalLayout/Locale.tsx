@@ -33,6 +33,7 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
   const [lang, setLang] = useState(defaultLang);
 
   const { data: locale } = useSWR(['antd-locale', lang], ([, key]) => getAntdLocale(key), {
+    dedupingInterval: 0,
     revalidateOnFocus: false,
   });
 
