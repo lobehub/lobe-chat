@@ -145,6 +145,7 @@
     "@lobehub/lint": "latest",
     "@next/bundle-analyzer": "^14",
     "@next/eslint-plugin-next": "^14",
+    "@peculiar/webcrypto": "^1.4.5",
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^14",
     "@types/chroma-js": "^2",
