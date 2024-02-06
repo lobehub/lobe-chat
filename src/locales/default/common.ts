@@ -102,6 +102,7 @@ export default {
     azure: 'Azure',
     bedrock: 'AWS Bedrock',
     google: 'Google',
+    moonshot: 'Moonshot AI',
     oneapi: 'One API',
     openai: 'OpenAI',
     zhipu: '智谱AI',

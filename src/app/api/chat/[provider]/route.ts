@@ -40,11 +40,13 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
   } catch (e) {
     // if catch the error, just return it
     const err = e as AgentInitErrorPayload;
-
-    return createErrorResponse(err.errorType as ILobeAgentRuntimeErrorType, {
-      error: err.error,
-      provider: params.provider,
-    });
+    return createErrorResponse(
+      (err.errorType || ChatErrorType.InternalServerError) as ILobeAgentRuntimeErrorType,
+      {
+        error: err.error || e,
+        provider: params.provider,
+      },
+    );
   }
 
   // ============  2. create chat completion   ============ //

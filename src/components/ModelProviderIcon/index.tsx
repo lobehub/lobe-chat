@@ -1,4 +1,4 @@
-import { Azure, Bedrock, Google, OpenAI, Zhipu } from '@lobehub/icons';
+import { Azure, Bedrock, Google, Moonshot, OpenAI, Zhipu } from '@lobehub/icons';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
@@ -34,9 +34,16 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
       );
     }
 
-    default:
+    case ModelProvider.Moonshot: {
+      return <Moonshot size={20} />;
+    }
+
     case ModelProvider.OpenAI: {
       return <OpenAI size={20} />;
+    }
+
+    default: {
+      return null;
     }
   }
 });
