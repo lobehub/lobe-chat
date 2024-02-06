@@ -76,6 +76,14 @@
         "title": "Klucz API"
       }
     },
+    "Moonshot": {
+      "title": "Ciemna strona Księżyca",
+      "token": {
+        "desc": "Wprowadź klucz API od Moonshot AI",
+        "placeholder": "Klucz API Moonshot AI",
+        "title": "Klucz API"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Wersja API dla usługi Azure, zgodna z formatem RRRR-MM-DD. Zobacz [najnowszą wersję](https://learn.microsoft.com/pl-pl/azure/ai-services/openai/reference#chat-completions)",

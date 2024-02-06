@@ -1,5 +1,6 @@
 import { ConfigProvider } from 'antd';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
+import { isRtlLang } from 'rtl-detect';
 import useSWR from 'swr';
 
 import { createI18nNext } from '@/locales/create';
@@ -67,7 +68,14 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
     };
   }, [i18n]);
 
-  return <ConfigProvider locale={locale}>{children}</ConfigProvider>;
+  // detect document direction
+  const documentDir = isRtlLang(lang!) ? 'rtl' : 'ltr';
+
+  return (
+    <ConfigProvider direction={documentDir} locale={locale}>
+      {children}
+    </ConfigProvider>
+  );
 });
 
 export default Locale;
