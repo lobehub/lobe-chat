@@ -17,7 +17,7 @@ export const getErrorAlertConfig = (
   errorType?: IPluginErrorType | ILobeAgentRuntimeErrorType | ErrorType,
 ): AlertProps | undefined => {
   // OpenAIBizError / ZhipuBizError / GoogleBizError / ...
-  if (typeof errorType === 'string' && errorType.includes('Biz'))
+  if (typeof errorType === 'string' && (errorType.includes('Biz') || errorType.includes('Invalid')))
     return {
       extraDefaultExpand: true,
       extraIsolate: true,
@@ -31,12 +31,7 @@ export const getErrorAlertConfig = (
       };
     }
 
-    case PluginErrorType.PluginSettingsInvalid:
-    case ChatErrorType.InvalidAccessCode:
-    case AgentRuntimeErrorType.NoOpenAIAPIKey:
-    case AgentRuntimeErrorType.InvalidBedrockCredentials:
-    case AgentRuntimeErrorType.InvalidGoogleAPIKey:
-    case AgentRuntimeErrorType.InvalidZhipuAPIKey: {
+    case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return {
         extraDefaultExpand: true,
         extraIsolate: true,
@@ -69,6 +64,7 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
 
     case AgentRuntimeErrorType.InvalidBedrockCredentials:
     case AgentRuntimeErrorType.InvalidZhipuAPIKey:
+    case AgentRuntimeErrorType.InvalidMoonshotAPIKey:
     case AgentRuntimeErrorType.InvalidGoogleAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
