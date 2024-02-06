@@ -5,7 +5,7 @@ import { ChatStreamPayload } from './chat';
 
 export interface AgentInitErrorPayload {
   error: object;
-  type: string | number;
+  errorType: string | number;
 }
 
 export interface ChatCompletionErrorPayload {
@@ -28,6 +28,7 @@ export enum ModelProvider {
   ChatGLM = 'chatglm',
   Google = 'google',
   Mistral = 'mistral',
+  Moonshot = 'moonshot',
   OpenAI = 'openai',
   Tongyi = 'tongyi',
   ZhiPu = 'zhipu',

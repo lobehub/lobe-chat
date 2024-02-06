@@ -76,6 +76,14 @@
         "title": "API-Schlüssel"
       }
     },
+    "Moonshot": {
+      "title": "月球着陆",
+      "token": {
+        "desc": "Geben Sie den API-Schlüssel von Moonshot AI ein",
+        "placeholder": "Moonshot AI API-Schlüssel",
+        "title": "API-Schlüssel"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Die API-Version von Azure, im Format YYYY-MM-DD. Siehe [Neueste Version](https://learn.microsoft.com/de-de/azure/ai-services/openai/reference#chat-completions)",

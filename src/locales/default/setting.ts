@@ -77,6 +77,14 @@ export default {
         title: 'API Key',
       },
     },
+    Moonshot: {
+      title: '月之暗面',
+      token: {
+        desc: '填入来自 Moonshot AI 的 API Key',
+        placeholder: 'Moonshot AI API Key',
+        title: 'API Key',
+      },
+    },
     OpenAI: {
       azureApiVersion: {
         desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',

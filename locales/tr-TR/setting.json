@@ -76,6 +76,14 @@
         "title": "API Anahtarı"
       }
     },
+    "Moonshot": {
+      "title": "月球背面",
+      "token": {
+        "desc": "Moonshot AI 的 API 密钥",
+        "placeholder": "Moonshot AI API 密钥",
+        "title": "API 密钥"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure için API sürümü, YYYY-MM-DD formatını takip eder, [en son sürümü kontrol edin](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",

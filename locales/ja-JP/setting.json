@@ -76,6 +76,14 @@
         "title": "APIキー"
       }
     },
+    "Moonshot": {
+      "title": "月の裏側",
+      "token": {
+        "desc": "Moonshot AI からの API キーを入力してください",
+        "placeholder": "Moonshot AI API キー",
+        "title": "API キー"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure の API バージョンは YYYY-MM-DD 形式に従い、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照してください",

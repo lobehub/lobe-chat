@@ -41,8 +41,10 @@
     "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",
+    "InvalidMoonshotAPIKey": "La chiave API di Moonshot AI non è corretta o è vuota, si prega di controllare la chiave API di Moonshot e riprovare",
     "InvalidZhipuAPIKey": "Chiave API Zhipu non corretta o vuota, controlla la chiave API Zhipu e riprova",
     "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
+    "MoonshotBizError": "Si è verificato un errore nel servizio Moonshot, si prega di controllare le informazioni seguenti o riprovare",
     "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
     "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
@@ -75,6 +77,10 @@
       "Google": {
         "description": "Inserisci la tua chiave API Google per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
         "title": "Utilizza la chiave API Google personalizzata"
+      },
+      "Moonshot": {
+        "description": "Inserisci la tua chiave API di Moonshot AI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+        "title": "Utilizza una chiave API personalizzata per Moonshot AI"
       },
       "OpenAI": {
         "addProxyUrl": "Aggiungi l'indirizzo del proxy OpenAI (opzionale)",

@@ -76,6 +76,14 @@
         "title": "مفتاح واجهة برمجة التطبيقات"
       }
     },
+    "Moonshot": {
+      "title": "الجانب المظلم من القمر",
+      "token": {
+        "desc": "أدخل مفتاح API من Moonshot AI",
+        "placeholder": "مفتاح API Moonshot AI",
+        "title": "مفتاح API"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "إصدار واجهة برمجة التطبيقات لـ Azure، يتبع تنسيق YYYY-MM-DD، اطلع على [أحدث الإصدارات](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",

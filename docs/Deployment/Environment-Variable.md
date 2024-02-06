@@ -12,9 +12,9 @@ LobeChat provides additional configuration options during deployment, which can 
   - [Auth0](#auth0)
 - [Model Service Providers](#model-service-providers)
   - [OpenAI](#openai)
-  - [`CUSTOM_MODELS`](#custom_models)
   - [Azure OpenAI](#azure-openai)
   - [Zhipu AI](#zhipu-ai)
+  - [Moonshot AI](#moonshot-ai)
   - [Google AI](#google-ai)
   - [AWS Bedrock](#aws-bedrock)
 - [Plugin Service](#plugin-service)
@@ -111,7 +111,7 @@ Related discussions:
 - [Reasons for errors when using third-party interfaces](https://github.com/lobehub/lobe-chat/discussions/734)
 - [No response when filling in the proxy server address for chatting](https://github.com/lobehub/lobe-chat/discussions/1065)
 
-### `CUSTOM_MODELS`
+#### `CUSTOM_MODELS`
 
 - Type: Optional
 - Description: Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas.
@@ -119,6 +119,8 @@ Related discussions:
 - Example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
 
 The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the model name `gpt-4-0125-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only `gpt-3.5-turbo` will be enabled.
+
+You can find all current model names in [modelProviders](https://github.com/lobehub/lobe-chat/tree/main/src/config/modelProviders).
 
 ### Azure OpenAI
 
@@ -155,6 +157,15 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Description: This is the API key you applied for in the Zhipu AI service
 - Default Value: -
 - Example: `4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
+
+### Moonshot AI
+
+#### `MOONSHOT_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Zhipu AI service
+- Default Value: -
+- Example: `Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
 
 ### Google AI
 

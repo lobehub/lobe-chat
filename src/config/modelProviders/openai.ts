@@ -29,6 +29,7 @@ const OpenAI: ModelProviderCard = {
       tokens: 4096,
     },
     {
+      displayName: 'GPT-3.5 Turbo 16K',
       hidden: true,
       id: 'gpt-3.5-turbo-16k',
       tokens: 16_385,
@@ -65,12 +66,14 @@ const OpenAI: ModelProviderCard = {
       vision: true,
     },
     {
+      displayName: 'GPT-4 Turbo Preview (1106)',
       functionCall: true,
       hidden: true,
       id: 'gpt-4-1106-preview',
       tokens: 128_000,
     },
     {
+      displayName: 'GPT-4',
       functionCall: true,
       hidden: true,
       id: 'gpt-4',

@@ -61,6 +61,9 @@ export default {
     ZhipuBizError: '请求智谱服务出错，请根据以下信息排查或重试',
     InvalidZhipuAPIKey: 'Zhipu API Key 不正确或为空，请检查 Zhipu API Key 后重试',
 
+    MoonshotBizError: '请求月之暗面服务出错，请根据以下信息排查或重试',
+    InvalidMoonshotAPIKey: 'Moonshot AI API Key 不正确或为空，请检查 Moonshot API Key 后重试',
+
     GoogleBizError: '请求 Google 服务出错，请根据以下信息排查或重试',
     InvalidGoogleAPIKey: 'Google API Key 不正确或为空，请检查 Google API Key 后重试',
 
@@ -90,6 +93,10 @@ export default {
       Google: {
         description: '输入你的 Google API Key 即可开始会话。应用不会记录你的 API Key',
         title: '使用自定义 Google API Key',
+      },
+      Moonshot: {
+        description: '输入你的 Moonshot AI API Key 即可开始会话。应用不会记录你的 API Key',
+        title: '使用自定义 Moonshot AI API Key',
       },
       OpenAI: {
         addProxyUrl: '添加 OpenAI 代理地址（可选）',

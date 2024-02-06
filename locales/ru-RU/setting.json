@@ -76,6 +76,14 @@
         "title": "API-ключ"
       }
     },
+    "Moonshot": {
+      "title": "Лунная тень",
+      "token": {
+        "desc": "Введите ключ API от Moonshot AI",
+        "placeholder": "Ключ API Moonshot AI",
+        "title": "Ключ API"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Версия API Azure, следуйте формату ГГГГ-ММ-ДД, см. [последнюю версию](https://learn.microsoft.com/ru-ru/azure/ai-services/openai/reference#chat-completions)",

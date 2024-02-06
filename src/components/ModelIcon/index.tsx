@@ -7,6 +7,7 @@ import {
   Meta,
   Minimax,
   Mistral,
+  Moonshot,
   OpenAI,
   Tongyi,
 } from '@lobehub/icons';
@@ -29,6 +30,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model, size = 12 }) => {
   if (model.includes('gemini')) return <Gemini.Avatar size={size} />;
   if (model.includes('qwen')) return <Tongyi.Avatar background={Tongyi.colorPrimary} size={size} />;
   if (model.includes('minmax')) return <Minimax.Avatar size={size} />;
+  if (model.includes('moonshot')) return <Moonshot.Avatar size={size} />;
   if (model.includes('baichuan'))
     return <Baichuan.Avatar background={Baichuan.colorPrimary} size={size} />;
   if (model.includes('mistral')) return <Mistral.Avatar size={size} />;

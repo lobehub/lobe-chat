@@ -1,6 +1,6 @@
 import { Icon, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { LucideEye, ToyBrick } from 'lucide-react';
+import { LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
 import numeral from 'numeral';
 import { rgba } from 'polished';
 import { memo } from 'react';
@@ -72,6 +72,13 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
 
       {showInfoTag && (
         <Flexbox gap={4} horizontal>
+          {model.files && (
+            <Tooltip placement={'right'} title={t('ModelSelect.featureTag.file')}>
+              <div className={cx(styles.tag, styles.tagGreen)}>
+                <Icon icon={LucidePaperclip} />
+              </div>
+            </Tooltip>
+          )}
           {model.vision && (
             <Tooltip placement={'right'} title={t('ModelSelect.featureTag.vision')}>
               <div className={cx(styles.tag, styles.tagGreen)}>
@@ -90,7 +97,6 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
               </div>
             </Tooltip>
           )}
-
           {model.tokens && (
             <Tooltip
               overlayStyle={{ maxWidth: 'unset' }}

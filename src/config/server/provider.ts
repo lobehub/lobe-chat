@@ -24,6 +24,10 @@ declare global {
       // Google Provider
       GOOGLE_API_KEY?: string;
 
+      // Moonshot Provider
+      MOONSHOT_API_KEY?: string;
+      MOONSHOT_PROXY_URL?: string;
+
       // AWS Credentials
       AWS_REGION?: string;
       AWS_ACCESS_KEY_ID?: string;
@@ -44,6 +48,8 @@ export const getProviderConfig = () => {
 
   const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || '';
 
+  const MOONSHOT_API_KEY = process.env.MOONSHOT_API_KEY || '';
+
   // region format: iad1,sfo1
   let regions: string[] = [];
   if (process.env.OPENAI_FUNCTION_REGIONS) {
@@ -62,6 +68,10 @@ export const getProviderConfig = () => {
 
     ENABLED_GOOGLE: !!GOOGLE_API_KEY,
     GOOGLE_API_KEY,
+
+    ENABLED_MOONSHOT: !!MOONSHOT_API_KEY,
+    MOONSHOT_API_KEY,
+    MOONSHOT_PROXY_URL: process.env.MOONSHOT_PROXY_URL,
 
     ENABLED_AWS_BEDROCK: !!AWS_ACCESS_KEY_ID,
     AWS_REGION: process.env.AWS_REGION,
