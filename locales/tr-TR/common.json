@@ -2,6 +2,7 @@
   "ModelSelect": {
     "featureTag": {
       "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, lütfen yukarıdaki yeteneklerin kullanılabilirliğini doğrulayın",
+      "file": "Bu model dosya yükleme ve tanıma desteği sağlar",
       "functionCall": "Bu model fonksiyon çağrısını destekler (Function Call)",
       "tokens": "Bu model, tek bir oturumda en fazla {{tokens}} Token'ı destekler",
       "vision": "Bu model görüntü tanımı destekler"

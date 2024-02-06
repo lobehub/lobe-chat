@@ -2,6 +2,7 @@
   "ModelSelect": {
     "featureTag": {
       "custom": "Aangepast model, standaard ingesteld om zowel functieoproep als visuele herkenning te ondersteunen. Verifieer de beschikbaarheid van deze mogelijkheden op basis van de werkelijke situatie.",
+      "file": "Dit model ondersteunt het uploaden van bestanden voor lezen en herkenning",
       "functionCall": "Dit model ondersteunt functieoproep (Function Call).",
       "tokens": "Dit model ondersteunt maximaal {{tokens}} tokens per sessie.",
       "vision": "Dit model ondersteunt visuele herkenning."
