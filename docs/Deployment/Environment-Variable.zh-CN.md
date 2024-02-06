@@ -8,7 +8,6 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
   - [`ACCESS_CODE`](#access_code)
 - [模型服务商](#模型服务商)
   - [OpenAI](#openai)
-  - [`CUSTOM_MODELS`](#custom_models)
   - [Azure OpenAI](#azure-openai)
   - [智谱 AI](#智谱-ai)
   - [Google AI](#google-ai)
@@ -62,7 +61,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - [使用第三方接口报错的原因](https://github.com/lobehub/lobe-chat/discussions/734)
 - [代理服务器地址填了聊天没任何反应](https://github.com/lobehub/lobe-chat/discussions/1065)
 
-### `CUSTOM_MODELS`
+#### `CUSTOM_MODELS`
 
 - 类型：可选
 - 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。
