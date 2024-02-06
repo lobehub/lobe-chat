@@ -71,6 +71,8 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 
 上面示例表示增加 `qwen-7b-chat` 和 `glm-6b` 到模型列表，而从列表中删除 `gpt-3.5-turbo`，并将 `gpt-4-0125-preview` 模型名字展示为 `gpt-4-turbo`。如果你想先禁用所有模型，再启用指定模型，可以使用 `-all,+gpt-3.5-turbo`，则表示仅启用 `gpt-3.5-turbo`。
 
+你可以在 [modelProviders](https://github.com/lobehub/lobe-chat/tree/main/src/config/modelProviders) 查找到当前的所有模型名。
+
 ### Azure OpenAI
 
 如果你需要使用 Azure OpenAI 来提供模型服务，可以查阅 [使用 Azure OpenAI 部署](Deploy-with-Azure-OpenAI.zh-CN.md) 章节查看详细步骤，这里将列举和 Azure OpenAI 相关的环境变量。
