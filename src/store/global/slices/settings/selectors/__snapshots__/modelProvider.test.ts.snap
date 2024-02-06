@@ -3,98 +3,30 @@
 exports[`modelProviderSelectors > CUSTOM_MODELS > custom deletion, addition, and renaming of models 1`] = `
 [
   {
-    "displayName": "llama",
-    "name": "llama",
-  },
-  {
-    "displayName": "claude-2",
-    "name": "claude-2",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "name": "gpt-4-0125-preview",
-  },
-]
-`;
-
-exports[`modelProviderSelectors > CUSTOM_MODELS > duplicate naming model 1`] = `
-[
-  {
-    "displayName": "gpt-3.5-turbo",
-    "name": "gpt-3.5-turbo",
-  },
-  {
-    "displayName": "gpt-3.5-turbo-1106",
-    "name": "gpt-3.5-turbo-1106",
-  },
-  {
-    "displayName": "gpt-3.5-turbo-16k",
-    "name": "gpt-3.5-turbo-16k",
-  },
-  {
-    "displayName": "gpt-4",
-    "name": "gpt-4",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "name": "gpt-4-32k",
-  },
-  {
-    "displayName": "gpt-4-vision-preview",
-    "name": "gpt-4-vision-preview",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "name": "gpt-4-0125-preview",
-  },
-]
-`;
-
-exports[`modelProviderSelectors > CUSTOM_MODELS > only add the model 1`] = `
-[
-  {
-    "displayName": "gpt-3.5-turbo",
-    "name": "gpt-3.5-turbo",
-  },
-  {
-    "displayName": "gpt-3.5-turbo-1106",
-    "name": "gpt-3.5-turbo-1106",
-  },
-  {
-    "displayName": "gpt-3.5-turbo-16k",
-    "name": "gpt-3.5-turbo-16k",
-  },
-  {
-    "displayName": "gpt-4",
-    "name": "gpt-4",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "name": "gpt-4-32k",
-  },
-  {
-    "displayName": "gpt-4-0125-preview",
-    "name": "gpt-4-0125-preview",
-  },
-  {
-    "displayName": "gpt-4-vision-preview",
-    "name": "gpt-4-vision-preview",
-  },
-  {
-    "displayName": "model1",
-    "name": "model1",
-  },
-  {
-    "displayName": "model2",
-    "name": "model2",
-  },
-  {
-    "displayName": "model3",
-    "name": "model3",
-  },
-  {
-    "displayName": "model4",
-    "name": "model4",
+    "chatModels": [
+      {
+        "displayName": "llama",
+        "functionCall": true,
+        "id": "llama",
+        "isCustom": true,
+        "vision": true,
+      },
+      {
+        "displayName": "claude-2",
+        "functionCall": true,
+        "id": "claude-2",
+        "isCustom": true,
+        "vision": true,
+      },
+      {
+        "displayName": "gpt-4-32k",
+        "functionCall": true,
+        "id": "gpt-4-0125-preview",
+        "tokens": 128000,
+      },
+    ],
+    "enabled": true,
+    "id": "openai",
   },
 ]
 `;

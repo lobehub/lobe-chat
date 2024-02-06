@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "모델"
+  },
   "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 즉시 대화를 시작하거나 [도우미 설정](/chat/settings#session={{id}})으로 이동하여 내 정보를 완성할 수 있습니다.",
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
   "backToBottom": "하단으로 이동",
@@ -64,7 +67,14 @@
     "prettifying": "정제 중..."
   },
   "temp": "임시",
-  "tokenDetail": "역할 설정: {{systemRoleToken}} · 대화 기록: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "채팅 메시지",
+    "rest": "남은 사용량",
+    "systemRole": "시스템 역할",
+    "tools": "도구 설정",
+    "total": "총 사용량",
+    "used": "총 사용"
+  },
   "tokenTag": {
     "overload": "한도 초과",
     "remained": "남음",
@@ -102,6 +112,7 @@
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
     "actionTooltip": "이미지 업로드",
+    "disabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 전환한 후 사용해주세요.",
     "dragDesc": "여기로 파일을 끌어다 놓거나 여러 이미지를 업로드할 수 있습니다. Shift를 누른 채로 이미지를 직접 보내기",
     "dragTitle": "이미지 업로드"
   }

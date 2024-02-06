@@ -33,8 +33,17 @@
     "502": "Desculpe, o servidor parece estar temporariamente indisponível. Por favor, tente novamente mais tarde",
     "503": "Desculpe, o servidor não pode processar sua solicitação no momento, possivelmente devido a sobrecarga ou manutenção. Por favor, tente novamente mais tarde",
     "504": "Desculpe, o servidor não recebeu resposta do servidor upstream. Por favor, tente novamente mais tarde",
-    "InvalidAccessCode": "Senha incorreta ou em branco. Insira a senha de acesso correta ou adicione uma chave de API personalizada do OpenAI",
-    "NoAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
+    "AgentRuntimeError": "Erro de execução do modelo de linguagem Lobe, por favor, verifique as informações abaixo ou tente novamente",
+    "AzureBizError": "Erro ao solicitar o serviço Azure AI, por favor, verifique as informações abaixo ou tente novamente",
+    "BedrockBizError": "Erro ao solicitar o serviço Bedrock, por favor, verifique as informações abaixo ou tente novamente",
+    "GoogleBizError": "Erro ao solicitar o serviço Google, por favor, verifique as informações abaixo ou tente novamente",
+    "InvalidAccessCode": "Senha de acesso inválida ou em branco. Por favor, insira a senha de acesso correta ou adicione uma Chave de API personalizada.",
+    "InvalidAzureAPIKey": "Chave de API Azure incorreta ou vazia, por favor, verifique a chave de API Azure e tente novamente",
+    "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
+    "InvalidGoogleAPIKey": "Chave de API Google incorreta ou vazia, por favor, verifique a chave de API Google e tente novamente",
+    "InvalidZhipuAPIKey": "Chave de API Zhipu incorreta ou vazia, por favor, verifique a chave de API Zhipu e tente novamente",
+    "LocationNotSupportError": "Desculpe, sua localização atual não suporta este serviço de modelo, pode ser devido a restrições geográficas ou serviço não disponível. Por favor, verifique se a localização atual suporta o uso deste serviço ou tente usar outras informações de localização.",
+    "NoOpenAIAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
     "OpenAIBizError": "Erro ao solicitar o serviço OpenAI. Verifique ou tente novamente com base nas informações abaixo",
     "PluginApiNotFound": "Desculpe, o API especificado não existe no manifesto do plugin. Verifique se o método de solicitação corresponde ao API do manifesto do plugin",
     "PluginApiParamsError": "Desculpe, a validação dos parâmetros de entrada da solicitação do plugin falhou. Verifique se os parâmetros de entrada correspondem às informações de descrição do API",
@@ -47,7 +56,8 @@
     "PluginMetaNotFound": "Desculpe, o plugin não foi encontrado no índice. Verifique as informações de configuração do plugin no índice",
     "PluginOpenApiInitError": "Desculpe, a inicialização do cliente OpenAPI falhou. Verifique se as informações de configuração do OpenAPI estão corretas",
     "PluginServerError": "Erro na resposta do servidor do plugin. Verifique o arquivo de descrição do plugin, a configuração do plugin ou a implementação do servidor de acordo com as informações de erro abaixo",
-    "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta"
+    "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta",
+    "ZhipuBizError": "Erro ao solicitar o serviço Zhipu, por favor, verifique as informações abaixo ou tente novamente"
   },
   "stt": {
     "responseError": "Falha na solicitação de serviço. Verifique a configuração ou tente novamente"
@@ -57,9 +67,24 @@
   },
   "unlock": {
     "apikey": {
-      "addProxyUrl": "Adicionar URL do Proxy OpenAI (opcional)",
-      "description": "Insira sua chave de API OpenAI para iniciar a sessão. O aplicativo não irá armazenar sua chave de API.",
-      "title": "Usar chave de API personalizada"
+      "Bedrock": {
+        "customRegion": "Região de serviço personalizada",
+        "description": "Digite seu Aws AccessKeyId / SecretAccessKey para iniciar a sessão. O aplicativo não irá armazenar suas configurações de autenticação",
+        "title": "Usar informações de autenticação personalizadas do Bedrock"
+      },
+      "Google": {
+        "description": "Digite sua chave de API Google para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
+        "title": "Usar chave de API Google personalizada"
+      },
+      "OpenAI": {
+        "addProxyUrl": "Adicionar endereço do proxy OpenAI (opcional)",
+        "description": "Digite sua chave de API OpenAI para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
+        "title": "Usar chave de API OpenAI personalizada"
+      },
+      "Zhipu": {
+        "description": "Digite sua chave de API Zhipu para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
+        "title": "Usar chave de API Zhipu personalizada"
+      }
     },
     "closeMessage": "Fechar mensagem",
     "confirm": "Confirmar e tentar novamente",
@@ -67,6 +92,10 @@
       "description": "O administrador ativou a criptografia do aplicativo. Insira a senha do aplicativo para desbloqueá-lo. A senha só precisa ser inserida uma vez.",
       "placeholder": "Insira a senha",
       "title": "Insira a senha para desbloquear o aplicativo"
+    },
+    "tabs": {
+      "apiKey": "Chave de API personalizada",
+      "password": "Senha"
     }
   }
 }

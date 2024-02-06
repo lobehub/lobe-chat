@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Cambiar modelo"
+  },
   "agentDefaultMessage": "Hola, soy **{{name}}**, puedes comenzar a chatear conmigo de inmediato o ir a [Configuración del asistente](/chat/settings#session={{id}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, {{systemRole}}, ¡comencemos a chatear!",
   "backToBottom": "Volver al fondo",
@@ -64,7 +67,14 @@
     "prettifying": "Embelleciendo..."
   },
   "temp": "Temporal",
-  "tokenDetail": "Configuración de rol: {{systemRoleToken}} · Mensajes de sesión: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "Mensajes de chat",
+    "rest": "Restante",
+    "systemRole": "Rol del sistema",
+    "tools": "Herramientas",
+    "total": "Total",
+    "used": "Utilizado"
+  },
   "tokenTag": {
     "overload": "Excedido",
     "remained": "Restante",
@@ -102,6 +112,7 @@
   "updateAgent": "Actualizar información del asistente",
   "upload": {
     "actionTooltip": "Subir imagen",
+    "disabled": "El modelo actual no admite reconocimiento visual. Por favor, cambia de modelo para usar esta función",
     "dragDesc": "Arrastra y suelta archivos aquí, admite la carga de varias imágenes. Mantén presionada la tecla Shift para enviar las imágenes directamente.",
     "dragTitle": "Subir imagen"
   }

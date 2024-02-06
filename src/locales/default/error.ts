@@ -51,9 +51,26 @@ export default {
     PluginGatewayError: '很抱歉，插件网关出现错误，请检查插件网关配置是否正确',
     PluginOpenApiInitError: '很抱歉，OpenAPI 客户端初始化失败，请检查 OpenAPI 的配置信息是否正确',
 
-    InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
+    InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key',
+    LocationNotSupportError:
+      '很抱歉，你的所在位置不支持此模型服务，可能是由于地区限制或服务未开通。请确认当前位置是否支持使用此服务，或尝试使用其他位置信息。',
+
     OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
-    NoAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',
+    NoOpenAIAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',
+
+    ZhipuBizError: '请求智谱服务出错，请根据以下信息排查或重试',
+    InvalidZhipuAPIKey: 'Zhipu API Key 不正确或为空，请检查 Zhipu API Key 后重试',
+
+    GoogleBizError: '请求 Google 服务出错，请根据以下信息排查或重试',
+    InvalidGoogleAPIKey: 'Google API Key 不正确或为空，请检查 Google API Key 后重试',
+
+    InvalidBedrockCredentials: 'Bedrock 鉴权未通过，请检查 AccessKeyId/SecretAccessKey 后重试',
+    BedrockBizError: '请求 Bedrock 服务出错，请根据以下信息排查或重试',
+
+    InvalidAzureAPIKey: 'Azure API Key 不正确或为空，请检查 Azure API Key 后重试',
+    AzureBizError: '请求 Azure AI 服务出错，请根据以下信息排查或重试',
+
+    AgentRuntimeError: 'Lobe 语言模型运行时执行出错，请根据以下信息排查或重试',
     /* eslint-enable */
   },
   stt: {
@@ -64,9 +81,25 @@ export default {
   },
   unlock: {
     apikey: {
-      addProxyUrl: '添加 OpenAI 代理地址（可选）',
-      description: '输入你的 OpenAI API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 API Key',
+      Bedrock: {
+        customRegion: '自定义服务区域',
+        description:
+          '输入你的 Aws AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
+        title: '使用自定义 Bedrock 鉴权信息',
+      },
+      Google: {
+        description: '输入你的 Google API Key 即可开始会话。应用不会记录你的 API Key',
+        title: '使用自定义 Google API Key',
+      },
+      OpenAI: {
+        addProxyUrl: '添加 OpenAI 代理地址（可选）',
+        description: '输入你的 OpenAI API Key 即可开始会话。应用不会记录你的 API Key',
+        title: '使用自定义 OpenAI API Key',
+      },
+      Zhipu: {
+        description: '输入你的 Zhipu API Key 即可开始会话。应用不会记录你的 API Key',
+        title: '使用自定义 Zhipu API Key',
+      },
     },
     closeMessage: '关闭提示',
     confirm: '确认并重试',
@@ -74,6 +107,10 @@ export default {
       description: '管理员已开启应用加密，输入应用密码后即可解锁应用。密码只需填写一次',
       placeholder: '请输入密码',
       title: '输入密码解锁应用',
+    },
+    tabs: {
+      apiKey: '自定义 API Key',
+      password: '密码',
     },
   },
 };

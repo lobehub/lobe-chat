@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "AzureのAPIバージョン。YYYY-MM-DD形式に従う。[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照",
+        "fetch": "リストを取得",
+        "title": "Azure APIバージョン"
+      },
+      "deployments": {
+        "desc": "id=nameの構文を使用して、デプロイモデルを記入します（デプロイ名とモデルが同じ場合、モデル名のみを記入できます）。複数のモデルは、カンマ（,）で区切ります",
+        "title": "Azureデプロイリスト"
+      },
       "endpoint": {
         "desc": "Azure ポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,40 @@
         "title": "API キー"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Aws Access Key Idを入力",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "AccessKeyId / SecretAccessKeyが正しく記入されているかをテスト"
+      },
+      "region": {
+        "desc": "Aws Regionを入力",
+        "placeholder": "Aws Region",
+        "title": "Aws Region"
+      },
+      "secretAccessKey": {
+        "desc": "Aws Secret Access Keyを入力",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Googleから取得したAPIキーを入力",
+        "placeholder": "Google API Key",
+        "title": "APIキー"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure の API バージョンは YYYY-MM-DD 形式に従い、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照してください",
         "fetch": "リストを取得",
         "title": "Azure API バージョン"
-      },
-      "check": {
-        "button": "チェック",
-        "desc": "API キーとプロキシアドレスが正しく入力されているかをテストします",
-        "pass": "チェックに合格",
-        "title": "接続性チェック"
       },
       "customModelName": {
         "desc": "カスタムモデルを追加し、複数のモデルはカンマ（,）で区切って使用します",
@@ -81,6 +113,20 @@
         "serverConfig": "管理者はサーバー側で Azure OpenAI を有効にし、切り替えを禁止しています",
         "title": "Azure OpenAI を使用"
       }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "智谱から取得したAPIキーを入力",
+        "placeholder": "Zhipu API Key",
+        "title": "APIキー"
+      }
+    },
+    "checker": {
+      "button": "チェック",
+      "desc": "APIキーとプロキシアドレスが正しく記入されているかをテスト",
+      "pass": "チェック合格",
+      "title": "接続性チェック"
     },
     "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに ✨"
   },
@@ -293,6 +339,7 @@
     "builtins": {
       "groupName": "組み込み"
     },
+    "disabled": "現在のモデルは関数呼び出しをサポートしていません。プラグインを使用できません",
     "plugins": {
       "enabled": "{{num}} が有効",
       "groupName": "プラグイン",

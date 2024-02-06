@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "إصدار واجهة برمجة التطبيقات لـ Azure، يتبع تنسيق YYYY-MM-DD، راجع [أحدث الإصدار](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "الحصول على قائمة",
+        "title": "إصدار واجهة برمجة التطبيقات لـ Azure"
+      },
+      "deployments": {
+        "desc": "املأ نموذج نشرك باستخدام بنية id=name (مثل اسم النشر والنموذج متطابقان، يمكنك ملء اسم النموذج فقط)، استخدم فاصلة (,) للنماذج المتعددة",
+        "title": "قائمة نماذج النشر لـ Azure"
+      },
       "endpoint": {
         "desc": "يمكن العثور على هذه القيمة في قسم 'المفتاح والنقطة النهائية' عند التحقق من الموارد في بوابة Azure",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,40 @@
         "title": "مفتاح واجهة برمجة التطبيقات"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "املأ معرف مفتاح الوصول لـ Aws",
+        "placeholder": "معرف مفتاح الوصول لـ Aws",
+        "title": "معرف مفتاح الوصول لـ Aws"
+      },
+      "checker": {
+        "desc": "اختبار ما إذا كان معرف الوصول / مفتاح الوصول السري مملوء بشكل صحيح"
+      },
+      "region": {
+        "desc": "املأ منطقة Aws",
+        "placeholder": "منطقة Aws",
+        "title": "منطقة Aws"
+      },
+      "secretAccessKey": {
+        "desc": "املأ مفتاح الوصول السري لـ Aws",
+        "placeholder": "مفتاح الوصول السري لـ Aws",
+        "title": "مفتاح الوصول السري لـ Aws"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "املأ مفتاح واجهة برمجة التطبيقات الخاص بك من Google",
+        "placeholder": "مفتاح واجهة برمجة التطبيقات الخاص بـ Google",
+        "title": "مفتاح واجهة برمجة التطبيقات"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "إصدار واجهة برمجة التطبيقات لـ Azure، يتبع تنسيق YYYY-MM-DD، اطلع على [أحدث الإصدارات](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "الحصول على القائمة",
         "title": "إصدار واجهة برمجة التطبيقات لـ Azure"
-      },
-      "check": {
-        "button": "فحص",
-        "desc": "اختبار مفتاح واجهة البرمجة التطبيقية وعنوان الوكيل للتأكد من ملئهما بشكل صحيح",
-        "pass": "تم الفحص بنجاح",
-        "title": "فحص الاتصال"
       },
       "customModelName": {
         "desc": "إضافة نموذج مخصص، يمكن استخدام فاصلة (,) للنماذج المتعددة",
@@ -81,6 +113,20 @@
         "serverConfig": "المسؤول قام بتكوين خدمة Azure OpenAI على الخادم، ويتم منع التبديل",
         "title": "استخدام Azure OpenAI"
       }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "املأ مفتاح واجهة برمجة التطبيقات الخاص بـ Zhipu",
+        "placeholder": "مفتاح واجهة برمجة التطبيقات الخاص بـ Zhipu",
+        "title": "مفتاح واجهة برمجة التطبيقات"
+      }
+    },
+    "checker": {
+      "button": "فحص",
+      "desc": "اختبار ما إذا كان مفتاح واجهة البرمجة وعنوان الوكيل مملوء بشكل صحيح",
+      "pass": "تمت المراقبة",
+      "title": "فحص الاتصال"
     },
     "waitingForMore": "يتم <1>التخطيط لتوفير</1> المزيد من النماذج، ترقبوا المزيد ✨"
   },
@@ -293,6 +339,7 @@
     "builtins": {
       "groupName": "الامتدادات المدمجة"
     },
+    "disabled": "النموذج الحالي لا يدعم استدعاء الوظائف، ولا يمكن استخدام الإضافة",
     "plugins": {
       "enabled": "ممكّنة {{num}}",
       "groupName": "الإضافات",

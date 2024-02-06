@@ -17,6 +17,40 @@ export enum LanguageModel {
   GPT4_VISION_PREVIEW = 'gpt-4-vision-preview',
 }
 
+export interface ChatModelCard {
+  description?: string;
+  displayName?: string;
+  /**
+   * whether model supports file upload
+   */
+  files?: boolean;
+  /**
+   * whether model supports function call
+   */
+  functionCall?: boolean;
+  hidden?: boolean;
+  id: string;
+  /**
+   * whether model is custom
+   */
+  isCustom?: boolean;
+  /**
+   * whether model is legacy (deprecated but not removed yet)
+   */
+  legacy?: boolean;
+  tokens?: number;
+  /**
+   *  whether model supports vision
+   */
+  vision?: boolean;
+}
+
+export interface ModelProviderCard {
+  chatModels: ChatModelCard[];
+  enabled?: boolean;
+  id: string;
+}
+
 // 语言模型的设置参数
 export interface LLMParams {
   /**

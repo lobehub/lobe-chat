@@ -1,9 +1,12 @@
+import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
+
+import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ErrorType } from '@/types/fetch';
-import { Translate } from '@/types/translate';
 
 import { LLMRoleType } from '../llm';
 import { BaseDataModel } from '../meta';
 import { ChatPluginPayload } from './tools';
+import { Translate } from './translate';
 
 /**
  * 聊天消息错误对象
@@ -11,7 +14,7 @@ import { ChatPluginPayload } from './tools';
 export interface ChatMessageError {
   body?: any;
   message: string;
-  type: ErrorType;
+  type: ErrorType | IPluginErrorType | ILobeAgentRuntimeErrorType;
 }
 
 export interface ChatTranslate extends Translate {
@@ -28,10 +31,11 @@ export * from './tools';
 
 export interface ChatMessage extends BaseDataModel {
   content: string;
-  error?: any;
+  error?: ChatMessageError;
   // 扩展字段
   extra?: {
     fromModel?: string;
+    fromProvider?: string;
     // 翻译
     translate?: ChatTranslate | false;
     // TTS

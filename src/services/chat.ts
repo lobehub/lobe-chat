@@ -2,24 +2,27 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
-import { isVisionModel } from '@/const/llm';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
+import { modelProviderSelectors } from '@/store/global/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/message';
-import type { OpenAIChatMessage, OpenAIChatStreamPayload } from '@/types/openai/chat';
+import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
+import { createHeaderWithAuth } from './_auth';
 import { createHeaderWithOpenAI } from './_header';
-import { OPENAI_URLS, PLUGINS_URLS } from './_url';
+import { PLUGINS_URLS } from './_url';
 
 interface FetchOptions {
   signal?: AbortSignal | undefined;
 }
 
-interface GetChatCompletionPayload extends Partial<Omit<OpenAIChatStreamPayload, 'messages'>> {
+interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
   messages: ChatMessage[];
 }
 
@@ -48,29 +51,39 @@ class ChatService {
 
     const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
+    // check this model can use function call
+    const canUseFC = modelProviderSelectors.modelEnabledFunctionCall(payload.model)(
+      useGlobalStore.getState(),
+    );
     // the rule that model can use tools:
     // 1. tools is not empty
-    // 2. model is not in vision white list, because vision model can't use tools
-    // TODO: we need to find some method to let vision model use tools
-    const shouldUseTools = filterTools.length > 0 && !isVisionModel(payload.model);
+    // 2. model can use function call
+    const shouldUseTools = filterTools.length > 0 && canUseFC;
+
     const tools = shouldUseTools ? filterTools : undefined;
 
     return this.getChatCompletion({ ...params, messages: oaiMessages, tools }, options);
   };
 
-  getChatCompletion = (params: Partial<OpenAIChatStreamPayload>, options?: FetchOptions) => {
+  getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
+    const { provider = ModelProvider.OpenAI, ...res } = params;
     const payload = merge(
       {
         model: DEFAULT_AGENT_CONFIG.model,
         stream: true,
         ...DEFAULT_AGENT_CONFIG.params,
       },
-      params,
+      res,
     );
 
-    return fetch(OPENAI_URLS.chat, {
+    const headers = await createHeaderWithAuth({
+      headers: { 'Content-Type': 'application/json' },
+      provider,
+    });
+
+    return fetch(`/api/chat/${provider}`, {
       body: JSON.stringify(payload),
-      headers: createHeaderWithOpenAI({ 'Content-Type': 'application/json' }),
+      headers,
       method: 'POST',
       signal: options?.signal,
     });
@@ -112,7 +125,7 @@ class ChatService {
     model,
   }: {
     messages: ChatMessage[];
-    model?: string;
+    model: string;
     tools?: string[];
   }): OpenAIChatMessage[] => {
     // handle content type for vision model
@@ -125,7 +138,11 @@ class ChatService {
 
       if (imageList.length === 0) return m.content;
 
-      if (!isVisionModel(model)) {
+      const canUploadFile = modelProviderSelectors.modelEnabledUpload(model)(
+        useGlobalStore.getState(),
+      );
+
+      if (!canUploadFile) {
         return m.content;
       }
 
@@ -156,11 +173,14 @@ class ChatService {
 
     return produce(postMessages, (draft) => {
       if (!tools || tools.length === 0) return;
+      const hasFC = modelProviderSelectors.modelEnabledFunctionCall(model)(
+        useGlobalStore.getState(),
+      );
+      if (!hasFC) return;
 
       const systemMessage = draft.find((i) => i.role === 'system');
 
       const toolsSystemRoles = toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
-
       if (!toolsSystemRoles) return;
 
       if (systemMessage) {

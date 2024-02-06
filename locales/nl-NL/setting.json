@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure API-versie, in het formaat YYYY-MM-DD, raadpleeg de [laatste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Ophalen van lijst",
+        "title": "Azure API-versie"
+      },
+      "deployments": {
+        "desc": "Vul de syntaxis id=naam in voor uw implementatiemodellen (bijv. als de implementatienaam en het model dezelfde naam hebben, kunt u alleen de modelnaam invullen), meerdere modellen worden gescheiden door een komma (,)",
+        "title": "Azure implementatiemodellen"
+      },
       "endpoint": {
         "desc": "Deze waarde is te vinden in het gedeelte 'Sleutels en eindpunten' wanneer u de bron controleert in het Azure-portal",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,40 @@
         "title": "API-sleutel"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Vul de AWS Access Key ID in",
+        "placeholder": "AWS Access Key ID",
+        "title": "AWS Access Key ID"
+      },
+      "checker": {
+        "desc": "Test of AccessKeyId / SecretAccessKey correct zijn ingevuld"
+      },
+      "region": {
+        "desc": "Vul de AWS-regio in",
+        "placeholder": "AWS-regio",
+        "title": "AWS-regio"
+      },
+      "secretAccessKey": {
+        "desc": "Vul de AWS Secret Access Key in",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Vul de API-sleutel van Google in",
+        "placeholder": "Google API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "API-versie van Azure, in het formaat YYYY-MM-DD, zie [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Lijst ophalen",
         "title": "Azure API-versie"
-      },
-      "check": {
-        "button": "Controleren",
-        "desc": "Test of de API-sleutel en proxy-adres correct zijn ingevuld",
-        "pass": "Controle geslaagd",
-        "title": "Connectiviteitscontrole"
       },
       "customModelName": {
         "desc": "Voeg aangepaste modellen toe, gescheiden door een komma (,)",
@@ -81,6 +113,20 @@
         "serverConfig": "Beheerder heeft Azure OpenAI aan de serverzijde geconfigureerd, overschakelen is niet toegestaan",
         "title": "Azure OpenAI gebruiken"
       }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "Vul de API-sleutel van Zhipu in",
+        "placeholder": "Zhipu API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
+    "checker": {
+      "button": "Controleren",
+      "desc": "Test of de API-sleutel en proxyadres correct zijn ingevuld",
+      "pass": "Succesvol gecontroleerd",
+      "title": "Connectiviteitscontrole"
     },
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨"
   },
@@ -293,6 +339,7 @@
     "builtins": {
       "groupName": "Ingebouwd"
     },
+    "disabled": "Dit model ondersteunt momenteel geen functieaanroepen en kan geen plug-ins gebruiken",
     "plugins": {
       "enabled": "Ingeschakeld {{num}}",
       "groupName": "Plug-ins",

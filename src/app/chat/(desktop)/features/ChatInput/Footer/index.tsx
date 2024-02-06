@@ -19,11 +19,12 @@ import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { modelProviderSelectors, preferenceSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { isMacOS } from '@/utils/platform';
 
+import DragUpload from './DragUpload';
 import { LocalFiles } from './LocalFiles';
 
 const useStyles = createStyles(({ css, prefixCls, token }) => {
@@ -59,7 +60,7 @@ const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) =
   const { t } = useTranslation('chat');
 
   const { theme, styles } = useStyles();
-  const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);
+
   const [loading, stopGenerateMessage] = useChatStore((s) => [
     !!s.chatLoadingId,
     s.stopGenerateMessage,
@@ -68,6 +69,10 @@ const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) =
     preferenceSelectors.useCmdEnterToSend(s),
     s.updatePreference,
   ]);
+
+  const model = useSessionStore(agentSelectors.currentAgentModel);
+  const canUpload = useGlobalStore(modelProviderSelectors.modelEnabledUpload(model));
+
   const sendMessage = useSendMessage();
 
   const cmdEnter = (
@@ -98,7 +103,12 @@ const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) =
       padding={'0 24px'}
     >
       <Flexbox align={'center'} gap={8} horizontal>
-        {canUpload && <LocalFiles />}
+        {canUpload && (
+          <>
+            <DragUpload />
+            <LocalFiles />
+          </>
+        )}
       </Flexbox>
       <Flexbox align={'center'} gap={8} horizontal>
         <Flexbox
