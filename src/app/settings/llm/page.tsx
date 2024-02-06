@@ -11,6 +11,7 @@ import { SettingsTabs } from '@/store/global/initialState';
 
 import Bedrock from './Bedrock';
 import Google from './Google';
+import Moonshot from './Moonshot';
 import OpenAI from './OpenAI';
 import Zhipu from './Zhipu';
 
@@ -23,6 +24,7 @@ export default memo(() => {
       <OpenAI />
       {/*<AzureOpenAI />*/}
       <Zhipu />
+      <Moonshot />
       <Google />
       <Bedrock />
       <Footer>

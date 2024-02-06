@@ -5,6 +5,7 @@ import {
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
+  LobeMoonshotAI,
   LobeOpenAI,
   LobeRuntimeAI,
   LobeZhipuAI,
@@ -16,6 +17,7 @@ interface AzureOpenAIParams {
   model: string;
   useAzure?: boolean;
 }
+
 class AgentRuntime {
   private _runtime: LobeRuntimeAI;
 
@@ -54,6 +56,11 @@ class AgentRuntime {
 
       case ModelProvider.Google: {
         runtimeModel = this.initGoogle(payload);
+        break;
+      }
+
+      case ModelProvider.Moonshot: {
+        runtimeModel = this.initMoonshot(payload);
         break;
       }
 
@@ -100,6 +107,13 @@ class AgentRuntime {
     const apiKey = payload?.apiKey || ZHIPU_API_KEY;
 
     return LobeZhipuAI.fromAPIKey(apiKey);
+  }
+
+  private static initMoonshot(payload: JWTPayload) {
+    const { MOONSHOT_API_KEY, MOONSHOT_PROXY_URL } = getServerConfig();
+    const apiKey = payload?.apiKey || MOONSHOT_API_KEY;
+
+    return new LobeMoonshotAI(apiKey, MOONSHOT_PROXY_URL);
   }
 
   private static initGoogle(payload: JWTPayload) {
