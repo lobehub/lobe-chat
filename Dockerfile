@@ -73,6 +73,6 @@ ENV AZURE_API_VERSION ""
 ENV GOOGLE_API_KEY ""
 
 # Zhipu
-ENV Zhipu_API_KEY ""
+ENV ZHIPU_API_KEY ""
 
 CMD ["node", "server.js"]

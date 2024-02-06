@@ -34,9 +34,12 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
       );
     }
 
-    default:
     case ModelProvider.OpenAI: {
       return <OpenAI size={20} />;
+    }
+
+    default: {
+      return null;
     }
   }
 });
