@@ -41,7 +41,7 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     // if catch the error, just return it
     const err = e as AgentInitErrorPayload;
 
-    return createErrorResponse(err.type as ILobeAgentRuntimeErrorType, {
+    return createErrorResponse(err.errorType as ILobeAgentRuntimeErrorType, {
       error: err.error,
       provider: params.provider,
     });
