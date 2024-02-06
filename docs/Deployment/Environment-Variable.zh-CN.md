@@ -10,6 +10,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
   - [OpenAI](#openai)
   - [Azure OpenAI](#azure-openai)
   - [智谱 AI](#智谱-ai)
+  - [Moonshot AI](#moonshot-ai)
   - [Google AI](#google-ai)
   - [AWS Bedrock](#aws-bedrock)
 - [插件服务](#插件服务)
@@ -105,6 +106,15 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 描述：这是你在 智谱 AI 服务中申请的 API 密钥
 - 默认值：-
 - 示例：`4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
+
+### Moonshot AI
+
+#### `MOONSHOT_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Moonshot AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
 
 ### Google AI
 

@@ -28,6 +28,7 @@ export enum ModelProvider {
   ChatGLM = 'chatglm',
   Google = 'google',
   Mistral = 'mistral',
+  Moonshot = 'moonshot',
   OpenAI = 'openai',
   Tongyi = 'tongyi',
   ZhiPu = 'zhipu',
