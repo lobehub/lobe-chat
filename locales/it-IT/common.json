@@ -2,6 +2,7 @@
   "ModelSelect": {
     "featureTag": {
       "custom": "Modello personalizzato, di default supporta sia la chiamata di funzioni che il riconoscimento visivo. Si prega di verificare l'effettiva disponibilità di tali funzionalità in base alle esigenze specifiche.",
+      "file": "Questo modello supporta il caricamento e il riconoscimento dei file",
       "functionCall": "Questo modello supporta la chiamata di funzioni (Function Call)",
       "tokens": "Questo modello supporta un massimo di {{tokens}} token per singola sessione",
       "vision": "Questo modello supporta il riconoscimento visivo"

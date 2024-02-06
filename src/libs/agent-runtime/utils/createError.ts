@@ -6,5 +6,5 @@ export const AgentRuntimeError = {
   createError: (
     errorType: ILobeAgentRuntimeErrorType | string | number,
     error?: any,
-  ): AgentInitErrorPayload => ({ error, type: errorType }),
+  ): AgentInitErrorPayload => ({ error, errorType }),
 };
