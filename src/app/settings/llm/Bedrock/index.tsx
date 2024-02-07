@@ -74,7 +74,7 @@ const BedrockProvider = memo(() => {
         ),
         desc: t('llm.Bedrock.checker.desc'),
         label: t('llm.checker.title'),
-        minWidth: undefined,
+        minWidth: '100%',
       },
     ],
     defaultActive: enabled,

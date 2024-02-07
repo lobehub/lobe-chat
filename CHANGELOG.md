@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.124.3](https://github.com/lobehub/lobe-chat/compare/v0.124.2...v0.124.3)
+
+<sup>Released on **2024-02-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix use azure api key error.
+
+#### 💄 Styles
+
+- **settings**: Improve LLM connection checker style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix use azure api key error, closes [#1263](https://github.com/lobehub/lobe-chat/issues/1263) ([4e08f63](https://github.com/lobehub/lobe-chat/commit/4e08f63))
+
+#### Styles
+
+- **settings**: Improve LLM connection checker style, closes [#1252](https://github.com/lobehub/lobe-chat/issues/1252) ([4905d9e](https://github.com/lobehub/lobe-chat/commit/4905d9e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.124.2](https://github.com/lobehub/lobe-chat/compare/v0.124.1...v0.124.2)
 
 <sup>Released on **2024-02-06**</sup>
