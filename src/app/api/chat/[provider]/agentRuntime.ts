@@ -83,7 +83,7 @@ class AgentRuntime {
     const apiVersion = azureOpenAI?.apiVersion || AZURE_API_VERSION;
 
     return new LobeOpenAI({
-      apiKey: azureOpenAI?.useAzure ? azureApiKey : apiKey,
+      apiKey: useAzure ? azureApiKey : apiKey,
       azureOptions: {
         apiVersion,
         model: azureOpenAI?.model,
