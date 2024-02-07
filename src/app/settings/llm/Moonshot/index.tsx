@@ -47,7 +47,7 @@ const MoonshotProvider = memo(() => {
         children: <Checker model={'moonshot-v1-8k'} provider={ModelProvider.Moonshot} />,
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
-        minWidth: undefined,
+        minWidth: '100%',
       },
     ],
     defaultActive: enabled,

@@ -47,7 +47,7 @@ const GoogleProvider = memo(() => {
         children: <Checker model={'gemini-pro'} provider={ModelProvider.Google} />,
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
-        minWidth: undefined,
+        minWidth: '100%',
       },
     ],
     defaultActive: enabled,
