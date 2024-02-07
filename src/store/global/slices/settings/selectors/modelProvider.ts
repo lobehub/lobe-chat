@@ -4,6 +4,7 @@ import {
   BedrockProvider,
   GoogleProvider,
   LOBE_DEFAULT_MODEL_LIST,
+  MoonshotProvider,
   OpenAIProvider,
   ZhiPuProvider,
 } from '@/config/modelProviders';
@@ -33,6 +34,9 @@ const googleProxyUrl = (s: GlobalStore) => modelProvider(s).google.endpoint;
 const enableAzure = (s: GlobalStore) => modelProvider(s).openAI.useAzure;
 const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
 
+const enableMoonshot = (s: GlobalStore) => modelProvider(s).moonshot.enabled;
+const moonshotAPIKey = (s: GlobalStore) => modelProvider(s).moonshot.apiKey;
+
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
 //   return {
@@ -52,29 +56,31 @@ const processChatModels = (modelConfig: ReturnType<typeof parseModelString>): Ch
 
   return produce(chatModels, (draft) => {
     // 处理添加或替换逻辑
-    for (const customModel of modelConfig.add) {
-      // 首先尝试在 LOBE_DEFAULT_MODEL_LIST 中查找模型
-      const defaultModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === customModel.id);
+    for (const toAddModel of modelConfig.add) {
+      // first try to find the model in LOBE_DEFAULT_MODEL_LIST to confirm if it is a known model
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === toAddModel.id);
 
-      // 如果在默认列表中找到了模型，则基于该模型进行更新
-      if (defaultModel) {
-        const model = draft.find((model) => model.id === customModel.id);
-        // 如果当前 chatModels 中已有该模型，更新它
-        if (model) {
-          if (model.hidden) delete model.hidden;
-          if (customModel.displayName) model.displayName = customModel.displayName;
+      // if the model is known, update it based on the known model
+      if (knownModel) {
+        const modelInList = draft.find((model) => model.id === toAddModel.id);
+
+        // if the model is already in chatModels, update it
+        if (modelInList) {
+          if (modelInList.hidden) delete modelInList.hidden;
+          if (toAddModel.displayName) modelInList.displayName = toAddModel.displayName;
         } else {
-          // 如果当前 chatModels 中没有该模型，添加它
+          // if the model is not in chatModels, add it
           draft.push({
-            ...defaultModel,
-            displayName: customModel.displayName || defaultModel.displayName,
+            ...knownModel,
+            displayName: toAddModel.displayName || knownModel.displayName || knownModel.id,
+            hidden: undefined,
           });
         }
       } else {
-        // 如果在默认列表中未找到模型，作为新的自定义模型添加
+        // if the model is not in LOBE_DEFAULT_MODEL_LIST, add it as a new custom model
         draft.push({
-          ...customModel,
-          displayName: customModel.displayName || customModel.id,
+          ...toAddModel,
+          displayName: toAddModel.displayName || toAddModel.id,
           functionCall: true,
           isCustom: true,
           vision: true,
@@ -103,6 +109,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
     },
     // { ...azureModelList(s), enabled: enableAzure(s) },
     { ...ZhiPuProvider, enabled: enableZhipu(s) },
+    { ...MoonshotProvider, enabled: enableMoonshot(s) },
     { ...GoogleProvider, enabled: enableGoogle(s) },
     { ...BedrockProvider, enabled: enableBedrock(s) },
   ];
@@ -163,4 +170,8 @@ export const modelProviderSelectors = {
   // Bedrock
   enableBedrock,
   bedrockConfig,
+
+  // Moonshot
+  enableMoonshot,
+  moonshotAPIKey,
 };

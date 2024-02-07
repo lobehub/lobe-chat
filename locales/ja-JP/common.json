@@ -102,6 +102,7 @@
     "azure": "Azure",
     "bedrock": "AWSベッドロック",
     "google": "Google",
+    "moonshot": "Moonshot AI",
     "oneapi": "One API",
     "openai": "OpenAI",
     "zhipu": "智譜AI"
