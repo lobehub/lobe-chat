@@ -263,6 +263,22 @@
       "placeholder": "Voer toegangswachtwoord in",
       "title": "Toegangswachtwoord"
     },
+    "oauth": {
+      "info": {
+        "desc": "已登录",
+        "title": "Account Information"
+      },
+      "signin": {
+        "action": "Sign In",
+        "desc": "Sign in using SSO to unlock the app",
+        "title": "Sign In to Your Account"
+      },
+      "signout": {
+        "action": "Sign Out",
+        "confirm": "Confirm sign out?",
+        "success": "Sign out successful"
+      }
+    },
     "title": "Systeeminstellingen"
   },
   "settingTTS": {

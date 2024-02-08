@@ -263,6 +263,22 @@
       "placeholder": "Veuillez entrer le mot de passe d'accès",
       "title": "Mot de passe d'accès"
     },
+    "oauth": {
+      "info": {
+        "desc": "Connecté",
+        "title": "Informations sur le compte"
+      },
+      "signin": {
+        "action": "Se connecter",
+        "desc": "Connectez-vous avec SSO pour débloquer l'application",
+        "title": "Se connecter"
+      },
+      "signout": {
+        "action": "Se déconnecter",
+        "confirm": "Confirmez-vous la déconnexion ?",
+        "success": "Déconnexion réussie"
+      }
+    },
     "title": "Paramètres du système"
   },
   "settingTTS": {

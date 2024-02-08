@@ -6,6 +6,10 @@ LobeChat provides additional configuration options during deployment, which can 
 
 - [General Variables](#general-variables)
   - [`ACCESS_CODE`](#access_code)
+  - [`ENABLE_OAUTH_SSO`](#enable_oauth_sso)
+- [Authentication Service Providers](#authentication-service-providers)
+  - [Common Settings](#common-settings)
+  - [Auth0](#auth0)
 - [Model Service Providers](#model-service-providers)
   - [OpenAI](#openai)
   - [Azure OpenAI](#azure-openai)
@@ -30,6 +34,51 @@ LobeChat provides additional configuration options during deployment, which can 
 - Description: Add a password to access the LobeChat service; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.
 - Default: `-`
 - Example: `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`
+
+### `ENABLE_OAUTH_SSO`
+
+- Type: Optional
+- Description: Enable OAuth single sign-on (SSO) for LobeChat. Set to `1` to enable OAuth SSO. See [Authentication Service Providers](#authentication-service-providers) for more details.
+- Default: `-`
+- Example: `1` or `0`
+
+## Authentication Service Providers
+
+### Common Settings
+
+#### `NEXTAUTH_SECRET`
+
+- Type: Required
+- Description: The secret key used to encrypt the Auth.js session token. You can generate a secret key using the following command: `openssl rand -base64 32`
+- Default: `-`
+- Example: `Tfhi2t2pelSMEA8eaV61KaqPNEndFFdMIxDaJnS1CUI=`
+
+### Auth0
+
+> !\[NOTE]
+>
+> We only support the Auth0 authentication service provider at the moment. If you need to use other authentication service providers, you can submit a feature request or pull request.
+
+#### `AUTH0_CLIENT_ID`
+
+- Type: Required
+- Description: The Client ID of the Auth0 application, you can go [here][auth0-client-page] and navigate to the application settings to view
+- Default: `-`
+- Example: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
+
+#### `AUTH0_CLIENT_SECRET`
+
+- Type: Required
+- Description: The Client Secret of the Auth0 application
+- Default: `-`
+- Example: `wnX7UbZg85ZUzF6ioxPLnJVEQa1Elbs7aqBUSF16xleBS5AdkVfASS49-fQIC8Rm`
+
+#### `AUTH0_ISSUER`
+
+- Type: Required
+- Description: The issuer/domain of the Auth0 application
+- Default: `-`
+- Example: `https://example.auth0.com`
 
 ## Model Service Providers
 
@@ -237,6 +286,7 @@ The above example adds `search-engine` plugin settings, and sets the `SERPAPI_AP
 - Default: -
 - Example: `1`
 
+[auth0-client-page]: https://manage.auth0.com/dashboard
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
 [openai-api-page]: https://platform.openai.com/account/api-keys
 [posthog-analytics-url]: https://posthog.com
