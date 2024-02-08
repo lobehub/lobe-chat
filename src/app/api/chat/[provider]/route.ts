@@ -1,6 +1,6 @@
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
+import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
 import {
   AgentInitErrorPayload,
   AgentRuntimeError,
@@ -10,7 +10,7 @@ import {
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
-import { checkPasswordOrUseUserApiKey, getJWTPayload } from '../auth';
+import { checkAuthMethod, getJWTPayload } from '../auth';
 import AgentRuntime from './agentRuntime';
 
 export const runtime = 'edge';
@@ -25,11 +25,13 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
   try {
     // get Authorization from header
     const authorization = req.headers.get(LOBE_CHAT_AUTH_HEADER);
+    const oauthAuthorized = !!req.headers.get(OAUTH_AUTHORIZED);
+
     if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
 
     // check the Auth With payload
     const payload = await getJWTPayload(authorization);
-    checkPasswordOrUseUserApiKey(payload.accessCode, payload.apiKey);
+    checkAuthMethod(payload.accessCode, payload.apiKey, oauthAuthorized);
 
     const body = await req.clone().json();
     agentRuntime = await AgentRuntime.initializeWithUserPayload(params.provider, payload, {

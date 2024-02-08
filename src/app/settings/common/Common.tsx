@@ -2,6 +2,7 @@ import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/u
 import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { AppWindow, Monitor, Moon, Palette, Sun } from 'lucide-react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -23,11 +24,15 @@ type SettingItemGroup = ItemGroup;
 
 export interface SettingsCommonProps {
   showAccessCodeConfig: boolean;
+  showOAuthLogin: boolean;
 }
 
-const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
+const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin }) => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
+
+  const { data: session, status } = useSession();
+  const isOAuthLoggedIn = status === 'authenticated' && session && session.user;
 
   const [clearSessions, clearSessionGroups] = useSessionStore((s) => [
     s.clearSessions,
@@ -48,6 +53,22 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
   ]);
 
   const { message, modal } = App.useApp();
+
+  const handleSignOut = useCallback(() => {
+    modal.confirm({
+      centered: true,
+      okButtonProps: { danger: true },
+      onOk: () => {
+        signOut();
+        message.success(t('settingSystem.oauth.signout.success'));
+      },
+      title: t('settingSystem.oauth.signout.confirm'),
+    });
+  }, []);
+
+  const handleSignIn = useCallback(() => {
+    signIn('auth0');
+  }, []);
 
   const handleReset = useCallback(() => {
     modal.confirm({
@@ -195,6 +216,23 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
         hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),
         name: 'password',
+      },
+      {
+        children: isOAuthLoggedIn ? (
+          <Button onClick={handleSignOut}>{t('settingSystem.oauth.signout.action')}</Button>
+        ) : (
+          <Button onClick={handleSignIn} type="primary">
+            {t('settingSystem.oauth.signin.action')}
+          </Button>
+        ),
+        desc: isOAuthLoggedIn
+          ? `${session.user?.email} ${t('settingSystem.oauth.info.desc')}`
+          : t('settingSystem.oauth.signin.desc'),
+        hidden: !showOAuthLogin,
+        label: isOAuthLoggedIn
+          ? t('settingSystem.oauth.info.title')
+          : t('settingSystem.oauth.signin.title'),
+        minWidth: undefined,
       },
       {
         children: (

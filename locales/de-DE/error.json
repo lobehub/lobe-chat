@@ -94,6 +94,12 @@
     },
     "closeMessage": "Hinweis schließen",
     "confirm": "Bestätigen und erneut versuchen",
+    "oauth": {
+      "description": "Der Administrator hat die einheitliche Anmeldeauthentifizierung aktiviert. Klicken Sie unten auf die Schaltfläche, um sich anzumelden und die App zu entsperren.",
+      "success": "Anmeldung erfolgreich",
+      "title": "Anmelden",
+      "welcome": "Willkommen!"
+    },
     "password": {
       "description": "Der Administrator hat die App-Verschlüsselung aktiviert. Gib das App-Passwort ein, um die App zu entsperren. Das Passwort muss nur einmal eingegeben werden.",
       "placeholder": "Passwort eingeben",

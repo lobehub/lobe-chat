@@ -110,6 +110,12 @@ export default {
     },
     closeMessage: '关闭提示',
     confirm: '确认并重试',
+    oauth: {
+      description: '管理员已开启统一登录认证，点击下方按钮登录，即可解锁应用',
+      success: '登录成功',
+      title: '登录账号',
+      welcome: '欢迎你！',
+    },
     password: {
       description: '管理员已开启应用加密，输入应用密码后即可解锁应用。密码只需填写一次',
       placeholder: '请输入密码',
