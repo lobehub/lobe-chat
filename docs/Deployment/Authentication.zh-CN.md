@@ -24,6 +24,14 @@ LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用�
 
 ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/a1ed996b-95ef-4b7d-a50d-b4666eccfecb)
 
+在应用配置页面中，还需要配置 Allowed Callback URLs，在此处填写 `http(s)://<your-domain>/api/auth/callback/auth0`
+
+![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b)
+
+> \[!NOTE]
+>
+> 可以在部署后再填写或修改 Allowed Callback URLs，但是务必保证填写的 URL 与部署的 URL 一致
+
 ## 新增用户
 
 点击左侧导航栏的「Users Management」，进入用户管理界面，可以为你的组织新建用户，用以登录 LobeChat
