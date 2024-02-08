@@ -21,6 +21,7 @@ export interface GlobalTool {
 export interface GlobalServerConfig {
   customModelName?: string;
   defaultAgent?: DeepPartial<GlobalDefaultAgent>;
+  enabledOAuthSSO?: boolean;
   languageModel?: DeepPartial<GlobalLLMConfig>;
 }
 

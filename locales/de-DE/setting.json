@@ -263,6 +263,22 @@
       "placeholder": "Bitte geben Sie das Zugangspasswort ein",
       "title": "Zugangspasswort"
     },
+    "oauth": {
+      "info": {
+        "desc": "Angemeldet",
+        "title": "Kontoinformationen"
+      },
+      "signin": {
+        "action": "Anmelden",
+        "desc": "Mit SSO anmelden, um die Anwendung freizuschalten",
+        "title": "Konto anmelden"
+      },
+      "signout": {
+        "action": "Abmelden",
+        "confirm": "Abmelden bestätigen?",
+        "success": "Abmeldung erfolgreich"
+      }
+    },
     "title": "Systemeinstellungen"
   },
   "settingTTS": {

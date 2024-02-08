@@ -94,6 +94,12 @@
     },
     "closeMessage": "Chiudi messaggio",
     "confirm": "Conferma e riprova",
+    "oauth": {
+      "description": "L'amministratore ha abilitato l'autenticazione di accesso unificata. Fai clic sul pulsante sottostante per accedere e sbloccare l'applicazione.",
+      "success": "Accesso riuscito",
+      "title": "Accedi all'account",
+      "welcome": "Benvenuto!"
+    },
     "password": {
       "description": "L'amministratore ha attivato la crittografia dell'applicazione. Inserisci la password dell'applicazione per sbloccarla. La password va inserita solo una volta.",
       "placeholder": "Inserisci la password",

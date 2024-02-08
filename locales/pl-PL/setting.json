@@ -263,6 +263,22 @@
       "placeholder": "Wprowadź hasło dostępu",
       "title": "Hasło dostępu"
     },
+    "oauth": {
+      "info": {
+        "desc": "Zalogowano",
+        "title": "Informacje o koncie"
+      },
+      "signin": {
+        "action": "Zaloguj się",
+        "desc": "Zaloguj się za pomocą SSO, aby odblokować aplikację",
+        "title": "Zaloguj się na konto"
+      },
+      "signout": {
+        "action": "Wyloguj się",
+        "confirm": "Czy na pewno chcesz się wylogować?",
+        "success": "Wylogowanie zakończone pomyślnie"
+      }
+    },
     "title": "Ustawienia systemowe"
   },
   "settingTTS": {

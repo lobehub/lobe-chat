@@ -94,6 +94,12 @@
     },
     "closeMessage": "Mesajı kapat",
     "confirm": "Onayla ve Yeniden Dene",
+    "oauth": {
+      "description": "Yönetici, tek oturum açma kimlik doğrulamasını etkinleştirdi. Aşağıdaki düğmeye tıklayarak giriş yapabilir ve uygulamayı kilidini açabilirsiniz.",
+      "success": "Giriş başarılı",
+      "title": "Hesaba giriş yap",
+      "welcome": "Hoş geldiniz!"
+    },
     "password": {
       "description": "Uygulama şifrelemesi yönetici tarafından etkinleştirilmiştir. Uygulamayı açmak için uygulama şifresini girin. Şifre sadece bir kez doldurulmalıdır.",
       "placeholder": "Lütfen şifre girin",

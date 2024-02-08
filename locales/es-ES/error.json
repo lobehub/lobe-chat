@@ -94,6 +94,12 @@
     },
     "closeMessage": "Cerrar mensaje",
     "confirm": "Confirmar y volver a intentar",
+    "oauth": {
+      "description": "El administrador ha habilitado la autenticación de inicio de sesión única. Haz clic en el botón a continuación para iniciar sesión y desbloquear la aplicación.",
+      "success": "Inicio de sesión exitoso",
+      "title": "Iniciar sesión",
+      "welcome": "¡Bienvenido!"
+    },
     "password": {
       "description": "El administrador ha activado el cifrado de la aplicación. Ingresa la contraseña de la aplicación para desbloquearla. La contraseña solo se necesita ingresar una vez",
       "placeholder": "Ingresa la contraseña",

@@ -94,6 +94,12 @@
     },
     "closeMessage": "Fechar mensagem",
     "confirm": "Confirmar e tentar novamente",
+    "oauth": {
+      "description": "O administrador ativou a autenticação de login unificado. Clique no botão abaixo para fazer login e desbloquear o aplicativo.",
+      "success": "Login bem-sucedido",
+      "title": "Faça login na sua conta",
+      "welcome": "Bem-vindo!"
+    },
     "password": {
       "description": "O administrador ativou a criptografia do aplicativo. Insira a senha do aplicativo para desbloqueá-lo. A senha só precisa ser inserida uma vez.",
       "placeholder": "Insira a senha",
