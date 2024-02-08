@@ -1,6 +1,5 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
-
 export enum SidebarTabKey {
   Chat = 'chat',
   Market = 'market',

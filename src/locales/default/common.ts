@@ -108,6 +108,7 @@ export default {
     zhipu: '智谱AI',
   },
   noDescription: '暂无描述',
+  oauth: 'SSO 登录',
   ok: '确定',
   password: '密码',
   pin: '置顶',

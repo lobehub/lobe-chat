@@ -263,6 +263,22 @@
       "placeholder": "Digite a senha de acesso",
       "title": "Senha de acesso"
     },
+    "oauth": {
+      "info": {
+        "desc": "Logado",
+        "title": "Informações da conta"
+      },
+      "signin": {
+        "action": "Entrar",
+        "desc": "Faça login com SSO para desbloquear o aplicativo",
+        "title": "Entrar na conta"
+      },
+      "signout": {
+        "action": "Sair",
+        "confirm": "Confirmar saída?",
+        "success": "Saiu da conta com sucesso"
+      }
+    },
     "title": "Configurações do sistema"
   },
   "settingTTS": {
