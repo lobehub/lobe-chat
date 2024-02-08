@@ -48,7 +48,7 @@ const ZhipuProvider = memo(() => {
         children: <Checker model={'glm-3-turbo'} provider={ModelProvider.ZhiPu} />,
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
-        minWidth: undefined,
+        minWidth: '100%',
       },
     ],
     defaultActive: enabled,
