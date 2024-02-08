@@ -21,9 +21,11 @@ const Clear = memo(() => {
     clearImageList();
   }, []);
 
-  const actionTitle: any = confirmOpened
-    ? void 0
-    : <HotKeys desc={t('clearCurrentMessages', { ns: 'chat' })} keys={hotkeys} />
+  const actionTitle: any = confirmOpened ? (
+    void 0
+  ) : (
+    <HotKeys desc={t('clearCurrentMessages', { ns: 'chat' })} keys={hotkeys} />
+  );
 
   return (
     <Popconfirm
@@ -35,11 +37,7 @@ const Clear = memo(() => {
       placement={'topRight'}
       title={t('confirmClearCurrentMessages', { ns: 'chat' })}
     >
-      <ActionIcon
-        icon={Eraser}
-        placement={'bottom'}
-        title={actionTitle}
-      />
+      <ActionIcon icon={Eraser} placement={'bottom'} title={actionTitle} />
     </Popconfirm>
   );
 });

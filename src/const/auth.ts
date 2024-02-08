@@ -1,5 +1,7 @@
 export const LOBE_CHAT_AUTH_HEADER = 'X-lobe-chat-auth';
 
+export const OAUTH_AUTHORIZED = 'X-oauth-authorized';
+
 export const JWT_SECRET_KEY = 'LobeHub · LobeChat';
 export const NON_HTTP_PREFIX = 'http_nosafe';
 

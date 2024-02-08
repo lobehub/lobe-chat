@@ -94,6 +94,12 @@
     },
     "closeMessage": "Đóng thông báo",
     "confirm": "Xác nhận và thử lại",
+    "oauth": {
+      "description": "Quản trị viên đã mở tính năng xác thực đăng nhập thống nhất. Nhấn vào nút bên dưới để đăng nhập và mở khóa ứng dụng",
+      "success": "Đăng nhập thành công",
+      "title": "Đăng nhập tài khoản",
+      "welcome": "Chào mừng bạn!"
+    },
     "password": {
       "description": "Quản trị viên đã kích hoạt mã hóa ứng dụng. Nhập mật khẩu ứng dụng để mở khóa. Chỉ cần nhập mật khẩu một lần",
       "placeholder": "Nhập mật khẩu",

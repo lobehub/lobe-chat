@@ -31,14 +31,22 @@ export const getJWTPayload = async (token: string): Promise<JWTPayload> => {
 };
 
 /**
- * Check if the provided access code is valid or if a user API key should be used.
+ * Check if the provided access code is valid, a user API key should be used or the OAuth 2 header is provided.
  *
  * @param {string} accessCode - The access code to check.
  * @param {string} apiKey - The user API key.
+ * @param {boolean} oauthAuthorized - Whether the OAuth 2 header is provided.
  * @throws {AgentRuntimeError} If the access code is invalid and no user API key is provided.
  */
-export const checkPasswordOrUseUserApiKey = (accessCode?: string, apiKey?: string) => {
-  const { ACCESS_CODES } = getServerConfig();
+export const checkAuthMethod = (
+  accessCode?: string,
+  apiKey?: string,
+  oauthAuthorized?: boolean,
+) => {
+  const { ACCESS_CODES, ENABLE_OAUTH_SSO } = getServerConfig();
+
+  // if OAuth 2 header is provided
+  if (ENABLE_OAUTH_SSO && oauthAuthorized) return;
 
   // if apiKey exist
   if (apiKey) return;
