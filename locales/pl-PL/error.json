@@ -94,6 +94,12 @@
     },
     "closeMessage": "Zamknij komunikat",
     "confirm": "Potwierdź i spróbuj ponownie",
+    "oauth": {
+      "description": "Administrator włączył jednolite uwierzytelnianie logowania. Kliknij poniższy przycisk, aby się zalogować i odblokować aplikację.",
+      "success": "Zalogowano pomyślnie",
+      "title": "Zaloguj się",
+      "welcome": "Witaj!"
+    },
     "password": {
       "description": "Administrator włączył szyfrowanie aplikacji. Po wprowadzeniu hasła aplikacja zostanie odblokowana. Hasło należy wprowadzić tylko raz.",
       "placeholder": "Wprowadź hasło",

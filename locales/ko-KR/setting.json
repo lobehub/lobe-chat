@@ -263,6 +263,22 @@
       "placeholder": "액세스 암호를 입력하세요",
       "title": "액세스 암호"
     },
+    "oauth": {
+      "info": {
+        "desc": "로그인됨",
+        "title": "계정 정보"
+      },
+      "signin": {
+        "action": "로그인",
+        "desc": "SSO를 사용하여 앱 잠금 해제",
+        "title": "계정 로그인"
+      },
+      "signout": {
+        "action": "로그아웃",
+        "confirm": "로그아웃 하시겠습니까?",
+        "success": "로그아웃 성공"
+      }
+    },
     "title": "시스템 설정"
   },
   "settingTTS": {

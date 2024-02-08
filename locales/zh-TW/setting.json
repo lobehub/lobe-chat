@@ -263,6 +263,22 @@
       "placeholder": "請輸入訪問密碼",
       "title": "訪問密碼"
     },
+    "oauth": {
+      "info": {
+        "desc": "已登錄",
+        "title": "帳戶資訊"
+      },
+      "signin": {
+        "action": "登錄",
+        "desc": "使用 SSO 登錄以解鎖應用",
+        "title": "登錄帳號"
+      },
+      "signout": {
+        "action": "退出登錄",
+        "confirm": "確認退出？",
+        "success": "退出登錄成功"
+      }
+    },
     "title": "系統設定"
   },
   "settingTTS": {

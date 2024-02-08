@@ -7,6 +7,8 @@ export const AZURE_OPENAI_API_VERSION = 'X-azure-openai-api-version';
 
 export const LOBE_CHAT_ACCESS_CODE = 'X-lobe-chat-access-code';
 
+export const OAUTH_AUTHORIZED = 'X-oauth-authorized';
+
 /**
  * @deprecated
  */
@@ -16,8 +18,10 @@ export const getOpenAIAuthFromRequest = (req: Request) => {
   const accessCode = req.headers.get(LOBE_CHAT_ACCESS_CODE);
   const useAzureStr = req.headers.get(USE_AZURE_OPENAI);
   const apiVersion = req.headers.get(AZURE_OPENAI_API_VERSION);
+  const oauthAuthorizedStr = req.headers.get(OAUTH_AUTHORIZED);
 
+  const oauthAuthorized = !!oauthAuthorizedStr;
   const useAzure = !!useAzureStr;
 
-  return { accessCode, apiKey, apiVersion, endpoint, useAzure };
+  return { accessCode, apiKey, apiVersion, endpoint, oauthAuthorized, useAzure };
 };

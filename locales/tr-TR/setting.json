@@ -263,6 +263,22 @@
       "placeholder": "Erişim şifresini girin",
       "title": "Erişim Şifresi"
     },
+    "oauth": {
+      "info": {
+        "desc": "Oturum açıldı",
+        "title": "Hesap Bilgisi"
+      },
+      "signin": {
+        "action": "Oturum aç",
+        "desc": "Uygulamayı kilidini açmak için SSO ile oturum açın",
+        "title": "Hesaba Giriş Yap"
+      },
+      "signout": {
+        "action": "Oturumu kapat",
+        "confirm": "Çıkış yapmak istediğinize emin misiniz?",
+        "success": "Oturum kapatma başarılı"
+      }
+    },
     "title": "Sistem Ayarları"
   },
   "settingTTS": {

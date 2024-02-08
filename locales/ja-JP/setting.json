@@ -263,6 +263,22 @@
       "placeholder": "アクセスコードを入力してください",
       "title": "アクセスコード"
     },
+    "oauth": {
+      "info": {
+        "desc": "ログイン済み",
+        "title": "アカウント情報"
+      },
+      "signin": {
+        "action": "ログイン",
+        "desc": "SSO ログインを使用してアプリをロック解除",
+        "title": "アカウントにログイン"
+      },
+      "signout": {
+        "action": "ログアウト",
+        "confirm": "ログアウトしますか？",
+        "success": "ログアウトに成功しました"
+      }
+    },
     "title": "システム設定"
   },
   "settingTTS": {
