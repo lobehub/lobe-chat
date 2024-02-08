@@ -263,6 +263,22 @@
       "placeholder": "Nhập mật khẩu truy cập",
       "title": "Mật khẩu truy cập"
     },
+    "oauth": {
+      "info": {
+        "desc": "Đã đăng nhập",
+        "title": "Thông tin tài khoản"
+      },
+      "signin": {
+        "action": "Đăng nhập",
+        "desc": "Đăng nhập bằng SSO để mở khóa ứng dụng",
+        "title": "Đăng nhập tài khoản"
+      },
+      "signout": {
+        "action": "Đăng xuất",
+        "confirm": "Xác nhận đăng xuất?",
+        "success": "Đăng xuất thành công"
+      }
+    },
     "title": "Cài đặt hệ thống"
   },
   "settingTTS": {

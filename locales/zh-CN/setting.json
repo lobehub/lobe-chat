@@ -263,6 +263,22 @@
       "placeholder": "请输入访问密码",
       "title": "访问密码"
     },
+    "oauth": {
+      "info": {
+        "desc": "已登录",
+        "title": "账户信息"
+      },
+      "signin": {
+        "action": "登录",
+        "desc": "使用 SSO 登录以解锁应用",
+        "title": "登录账号"
+      },
+      "signout": {
+        "action": "退出登录",
+        "confirm": "确认退出？",
+        "success": "退出登录成功"
+      }
+    },
     "title": "系统设置"
   },
   "settingTTS": {

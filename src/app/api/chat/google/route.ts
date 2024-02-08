@@ -1,6 +1,6 @@
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { getServerConfig } from '@/config/server';
-import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
+import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
 import {
   AgentInitErrorPayload,
   AgentRuntimeError,
@@ -11,7 +11,7 @@ import {
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
-import { checkPasswordOrUseUserApiKey, getJWTPayload } from '../auth';
+import { checkAuthMethod, getJWTPayload } from '../auth';
 
 // due to the Chinese region does not support accessing Google
 // we need to use proxy to access it
@@ -49,11 +49,13 @@ export const POST = async (req: Request) => {
   try {
     // get Authorization from header
     const authorization = req.headers.get(LOBE_CHAT_AUTH_HEADER);
+    const oauthAuthorized = !!req.headers.get(OAUTH_AUTHORIZED);
+
     if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
 
     // check the Auth With payload
     const payload = await getJWTPayload(authorization);
-    checkPasswordOrUseUserApiKey(payload.accessCode, payload.apiKey);
+    checkAuthMethod(payload.accessCode, payload.apiKey, oauthAuthorized);
 
     const { GOOGLE_API_KEY } = getServerConfig();
     const apiKey = payload?.apiKey || GOOGLE_API_KEY;

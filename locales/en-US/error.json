@@ -94,6 +94,12 @@
     },
     "closeMessage": "Close message",
     "confirm": "Confirm and Retry",
+    "oauth": {
+      "description": "The administrator has enabled unified login authentication. Click the button below to log in and unlock the application.",
+      "success": "Login successful",
+      "title": "Log in to your account",
+      "welcome": "Welcome!"
+    },
     "password": {
       "description": "The application encryption has been enabled by the administrator. Enter the application password to unlock the application. The password only needs to be filled in once.",
       "placeholder": "Please enter password",

@@ -263,6 +263,22 @@
       "placeholder": "Ingrese la contraseña de acceso",
       "title": "Contraseña de acceso"
     },
+    "oauth": {
+      "info": {
+        "desc": "Sesión iniciada",
+        "title": "Información de la cuenta"
+      },
+      "signin": {
+        "action": "Iniciar sesión",
+        "desc": "Inicia sesión con SSO para desbloquear la aplicación",
+        "title": "Iniciar sesión en la cuenta"
+      },
+      "signout": {
+        "action": "Cerrar sesión",
+        "confirm": "¿Confirmar cierre de sesión?",
+        "success": "Sesión cerrada con éxito"
+      }
+    },
     "title": "Configuración del sistema"
   },
   "settingTTS": {
