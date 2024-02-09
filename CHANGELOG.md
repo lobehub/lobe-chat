@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.126.3](https://github.com/lobehub/lobe-chat/compare/v0.126.2...v0.126.3)
+
+<sup>Released on **2024-02-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix auth layout error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix auth layout error ([efd7d14](https://github.com/lobehub/lobe-chat/commit/efd7d14))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.126.2](https://github.com/lobehub/lobe-chat/compare/v0.126.1...v0.126.2)
 
 <sup>Released on **2024-02-09**</sup>
