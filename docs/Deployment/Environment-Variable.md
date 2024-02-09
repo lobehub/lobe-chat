@@ -64,7 +64,7 @@ LobeChat provides additional configuration options during deployment, which can 
 
 ### Auth0
 
-> !\[NOTE]
+> \[!NOTE]
 >
 > We only support the Auth0 authentication service provider at the moment. If you need to use other authentication service providers, you can submit a feature request or pull request.
 
@@ -107,7 +107,7 @@ LobeChat provides additional configuration options during deployment, which can 
 - Default: `https://api.openai.com/v1`
 - Example: `https://api.chatanywhere.cn` or `https://aihubmix.com/v1`
 
-> !\[NOTE]
+> \[!NOTE]
 >
 > Please check the request suffix of your proxy service provider. Some proxy service providers may add `/v1` to the request suffix, while others may not.
 > If you find that the AI returns an empty message during testing, try adding the `/v1` suffix and retrying.

@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import { FC, PropsWithChildren, memo } from 'react';
 
 import { getClientConfig } from '@/config/client';
+import { API_ENDPOINTS } from '@/services/_url';
 
 import AppTheme, { AppThemeProps } from './AppTheme';
 import Locale from './Locale';
@@ -45,10 +46,16 @@ const Container = memo<PropsWithChildren>(({ children }) => {
 
 interface GlobalLayoutProps extends AppThemeProps {
   defaultLang?: string;
+  enableOAuthSSO?: boolean;
 }
 
-const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) => (
-  <SessionProvider basePath="/api/oauth">
+const GlobalLayout = ({
+  children,
+  defaultLang,
+  enableOAuthSSO = false,
+  ...theme
+}: GlobalLayoutProps) => {
+  const content = (
     <AppTheme {...theme}>
       <Locale defaultLang={defaultLang}>
         <StoreHydration />
@@ -56,7 +63,13 @@ const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) =>
         <DebugUI />
       </Locale>
     </AppTheme>
-  </SessionProvider>
-);
+  );
+
+  return enableOAuthSSO ? (
+    <SessionProvider basePath={API_ENDPOINTS.oauth}>{content}</SessionProvider>
+  ) : (
+    content
+  );
+};
 
 export default GlobalLayout;
