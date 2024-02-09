@@ -25,6 +25,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - [数据统计](#数据统计)
   - [Vercel Analytics](#vercel-analytics)
   - [Posthog Analytics](#posthog-analytics)
+  - [Umami Analytics](#umami-analytics)
 
 ## 通用变量
 
@@ -282,7 +283,32 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值： `-`
 - 示例：`1`
 
+### Umami Analytics
+
+#### `NEXT_PUBLIC_ANALYTICS_UMAMI`
+
+- 类型：可选
+- 描述：用于开启 [Umami Analytics][umami-analytics-url] 的环境变量，设为 `1`
+  时开启 Umami Analytics
+- 默认值： `-`
+- 示例：`1`
+
+#### `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
+
+- 类型：可选
+- 描述：Umami 脚本的网址，默认为 Umami Cloud 提供的脚本网址
+- 默认值：`https://analytics.umami.is/script.js`
+- 示例：`https://umami.your-site.com/script.js`
+
+#### `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
+
+- 类型：必选
+- 描述：你的 Umami 的 Website ID
+- 默认值：`-`
+- 示例：`E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
+
 [auth0-client-page]: https://manage.auth0.com/dashboard
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
 [openai-api-page]: https://platform.openai.com/account/api-keys
 [posthog-analytics-url]: https://posthog.com
+[umami-analytics-url]: https://umami.is

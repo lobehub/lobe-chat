@@ -25,6 +25,7 @@ LobeChat provides additional configuration options during deployment, which can 
 - [Data Analytics](#data-analytics)
   - [Vercel Analytics](#vercel-analytics)
   - [Posthog Analytics](#posthog-analytics)
+  - [Umami Analytics](#umami-analytics)
 
 ## General Variables
 
@@ -286,8 +287,32 @@ The above example adds `search-engine` plugin settings, and sets the `SERPAPI_AP
 - Default: -
 - Example: `1`
 
+### Umami Analytics
+
+#### `NEXT_PUBLIC_ANALYTICS_UMAMI`
+
+- Type: Optional
+- Description: Environment variable to enable [Umami Analytics][umami-analytics-url]. Set to `1` to enable Umami Analytics.
+- Default: `-`
+- Example: `1`
+
+#### `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
+
+- Type: Optional
+- Description: Set the url of the umami script. Default is the script address of Umami Cloud.
+- Default: `https://analytics.umami.is/script.js`
+- Example: `https://umami.your-site.com/script.js`
+
+#### `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
+
+- Type: Required
+- Description: The website ID in umami
+- Default: `-`
+- Example: `E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
+
 [auth0-client-page]: https://manage.auth0.com/dashboard
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
 [openai-api-page]: https://platform.openai.com/account/api-keys
 [posthog-analytics-url]: https://posthog.com
+[umami-analytics-url]: https://umami.is
 [vercel-analytics-url]: https://vercel.com/analytics
