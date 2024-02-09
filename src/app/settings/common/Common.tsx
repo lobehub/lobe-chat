@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
+import { imageUrl } from '@/const/url';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { localeOptions } from '@/locales/resources';
 import { useChatStore } from '@/store/chat';
@@ -118,19 +119,19 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
             options={[
               {
                 icon: Sun,
-                img: '/images/theme_light.webp',
+                img: imageUrl('theme_light.webp'),
                 label: t('settingTheme.themeMode.light'),
                 value: 'light',
               },
               {
                 icon: Moon,
-                img: '/images/theme_dark.webp',
+                img: imageUrl('theme_dark.webp'),
                 label: t('settingTheme.themeMode.dark'),
                 value: 'dark',
               },
               {
                 icon: Monitor,
-                img: '/images/theme_auto.webp',
+                img: imageUrl('theme_auto.webp'),
                 label: t('settingTheme.themeMode.auto'),
                 value: 'auto',
               },
