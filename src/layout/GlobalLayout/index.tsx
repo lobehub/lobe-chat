@@ -48,7 +48,7 @@ interface GlobalLayoutProps extends AppThemeProps {
 }
 
 const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) => (
-  <SessionProvider basePath="api/oauth">
+  <SessionProvider basePath="/api/oauth">
     <AppTheme {...theme}>
       <Locale defaultLang={defaultLang}>
         <StoreHydration />
