@@ -7,6 +7,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - [通用变量](#通用变量)
   - [`ACCESS_CODE`](#access_code)
   - [`ENABLE_OAUTH_SSO`](#enable_oauth_sso)
+  - [`NEXT_PUBLIC_BASE_PATH`](#next_public_base_path)
 - [身份验证服务](#身份验证服务)
   - [通用设置](#通用设置)
   - [Auth0](#auth0)
@@ -41,7 +42,14 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 类型：可选
 - 描述：为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。有关详细信息，请参阅[身份验证服务](#身份验证服务)。
 - 默认值: `-`
-- 示例: `1` 或 `0`
+- 示例: `1`
+
+### `NEXT_PUBLIC_BASE_PATH`
+
+- 类型：可选
+- 描述：为 LobeChat 添加 `basePath`
+- 默认值: `-`
+- 示例: `/test`
 
 ## 身份验证服务
 
