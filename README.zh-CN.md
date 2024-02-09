@@ -205,14 +205,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                          | 助手说明                                                                                                                                                   |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [CAN: 编程大师](https://chat-preview.lobehub.com/market?agent=can)<br/><sup>By **[MrHuangJser](https://github.com/MrHuangJser)** on **2024-02-06**</sup>          | CAN: 专业编程专家，多年经验，无字符限制。提供创意命名、标语、用户画像、痛点、价值主张、销售渠道、收入流、成本结构等创业计划服务。<br/>`编程` `交流` `提问` |
-| [Golang 架构师](https://chat-preview.lobehub.com/market?agent=golang-architect)<br/><sup>By **[dalefengs](https://github.com/dalefengs)** on **2024-02-06**</sup> | 为您提供高效、安全、稳定的代码方案<br/>`架构设计` `代码方案` `技术咨询` `golang` `代码开发`                                                                |
-| [数据库专家](https://chat-preview.lobehub.com/market?agent=dba)<br/><sup>By **[xuzhen1994](https://github.com/xuzhen1994)** on **2024-02-03**</sup>               | 提供关于数据库设计范式、索引优化、查询性能调优、数据安全、备份与恢复等方面的专业建议<br/>`数据库` `dba` `mysql` `clickhouse` `doris` `mongo-db` `oracle`   |
-| [演示向导](https://chat-preview.lobehub.com/market?agent=word)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-02-03**</sup>                      | Word 应用演示制作机器人：帮助在 Microsoft Word 中创建令人印象深刻和专业的应用程序演示。<br/>`应用程序演示` `微软-word` `机器人` `辅助` `模板`              |
+| 最近新增                                                                                                                                                                                        | 助手说明                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| [填空练习生成器](https://chat-preview.lobehub.com/market?agent=cloze-exercise-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup>                      | 专门用于生成摘要填空练习。请提供段落的主题。<br/>`摘要` `练习` `生成器` `写作` `教育` |
+| [阅读理解向导](https://chat-preview.lobehub.com/market?agent=reading-comprehension-exercise-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup>        | 专门生成阅读理解练习<br/>`阅读理解` `练习生成` `教育`                                 |
+| [主题词汇工作表创建器](https://chat-preview.lobehub.com/market?agent=thematic-vocabulary-worksheet-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup> | 擅长创建英语主题词汇工作表<br/>`写作` `语言学习` `教学` `评估` `教育资源`             |
+| [词汇工作表向导](https://chat-preview.lobehub.com/market?agent=vocabulary-worksheet-wizard)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup>                   | 专注于生成英语词汇工作表<br/>`词汇` `工作表` `教育` `语言学习`                        |
 
-> 📊 Total agents: [<kbd>**151**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**164**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

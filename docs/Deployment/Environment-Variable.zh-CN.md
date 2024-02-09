@@ -6,6 +6,10 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 
 - [通用变量](#通用变量)
   - [`ACCESS_CODE`](#access_code)
+  - [`ENABLE_OAUTH_SSO`](#enable_oauth_sso)
+- [身份验证服务](#身份验证服务)
+  - [通用设置](#通用设置)
+  - [Auth0](#auth0)
 - [模型服务商](#模型服务商)
   - [OpenAI](#openai)
   - [Azure OpenAI](#azure-openai)
@@ -21,6 +25,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - [数据统计](#数据统计)
   - [Vercel Analytics](#vercel-analytics)
   - [Posthog Analytics](#posthog-analytics)
+  - [Umami Analytics](#umami-analytics)
 
 ## 通用变量
 
@@ -30,6 +35,51 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 描述：添加访问 LobeChat 服务的密码，你可以设置一个长密码以防被爆破
 - 默认值：-
 - 示例：`awCTe)re_r74` or `rtrt_ewee3@09!`
+
+### `ENABLE_OAUTH_SSO`
+
+- 类型：可选
+- 描述：为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。有关详细信息，请参阅[身份验证服务](#身份验证服务)。
+- 默认值: `-`
+- 示例: `1` 或 `0`
+
+## 身份验证服务
+
+### 通用设置
+
+#### `NEXTAUTH_SECRET`
+
+- 类型：必须
+- 描述：用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`.
+- 默认值: `-`
+- 示例: `Tfhi2t2pelSMEA8eaV61KaqPNEndFFdMIxDaJnS1CUI=`
+
+### Auth0
+
+> !\[NOTE] 注意事项：
+>
+> 目前我们只支持 Auth0 身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交功能请求或 Pull Request。
+
+#### `AUTH0_CLIENT_ID`
+
+- 类型：必须
+- 描述: Auth0 应用程序的 Client ID，您可以访问[这里][auth0-client-page]并导航至应用程序设置来查看
+- 默认值: `-`
+- 示例: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
+
+#### `AUTH0_CLIENT_SECRET`
+
+- 类型：必须
+- 描述: Auth0 应用程序的 Client Secret
+- 默认值: `-`
+- 示例: `wnX7UbZg85ZUzF6ioxPLnJVEQa1Elbs7aqBUSF16xleBS5AdkVfASS49-fQIC8Rm`
+
+#### `AUTH0_ISSUER`
+
+- 类型：必须
+- 描述: Auth0 应用程序的签发人 / 域
+- 默认值: `-`
+- 示例: `https://example.auth0.com`
 
 ## 模型服务商
 
@@ -233,6 +283,32 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值： `-`
 - 示例：`1`
 
+### Umami Analytics
+
+#### `NEXT_PUBLIC_ANALYTICS_UMAMI`
+
+- 类型：可选
+- 描述：用于开启 [Umami Analytics][umami-analytics-url] 的环境变量，设为 `1`
+  时开启 Umami Analytics
+- 默认值： `-`
+- 示例：`1`
+
+#### `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
+
+- 类型：可选
+- 描述：Umami 脚本的网址，默认为 Umami Cloud 提供的脚本网址
+- 默认值：`https://analytics.umami.is/script.js`
+- 示例：`https://umami.your-site.com/script.js`
+
+#### `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
+
+- 类型：必选
+- 描述：你的 Umami 的 Website ID
+- 默认值：`-`
+- 示例：`E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
+
+[auth0-client-page]: https://manage.auth0.com/dashboard
 [azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
 [openai-api-page]: https://platform.openai.com/account/api-keys
 [posthog-analytics-url]: https://posthog.com
+[umami-analytics-url]: https://umami.is

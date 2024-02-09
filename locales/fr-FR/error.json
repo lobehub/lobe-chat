@@ -94,6 +94,12 @@
     },
     "closeMessage": "Fermer le message",
     "confirm": "Confirmer et réessayer",
+    "oauth": {
+      "description": "L'administrateur a activé l'authentification de connexion unique. Cliquez sur le bouton ci-dessous pour vous connecter et déverrouiller l'application.",
+      "success": "Connexion réussie",
+      "title": "Se connecter",
+      "welcome": "Bienvenue !"
+    },
     "password": {
       "description": "L'administrateur a activé le cryptage de l'application. Entrez le mot de passe de l'application pour déverrouiller. Le mot de passe ne doit être saisi qu'une seule fois.",
       "placeholder": "Entrez le mot de passe",
