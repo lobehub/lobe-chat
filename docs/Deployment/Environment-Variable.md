@@ -7,6 +7,7 @@ LobeChat provides additional configuration options during deployment, which can 
 - [General Variables](#general-variables)
   - [`ACCESS_CODE`](#access_code)
   - [`ENABLE_OAUTH_SSO`](#enable_oauth_sso)
+  - [`NEXT_PUBLIC_BASE_PATH`](#next_public_base_path)
 - [Authentication Service Providers](#authentication-service-providers)
   - [Common Settings](#common-settings)
   - [Auth0](#auth0)
@@ -41,7 +42,14 @@ LobeChat provides additional configuration options during deployment, which can 
 - Type: Optional
 - Description: Enable OAuth single sign-on (SSO) for LobeChat. Set to `1` to enable OAuth SSO. See [Authentication Service Providers](#authentication-service-providers) for more details.
 - Default: `-`
-- Example: `1` or `0`
+- Example: `1`
+
+### `NEXT_PUBLIC_BASE_PATH`
+
+- Type：Optional
+- Description：add `basePath` for LobeChat
+- Default: `-`
+- Example: `/test`
 
 ## Authentication Service Providers
 
@@ -56,7 +64,7 @@ LobeChat provides additional configuration options during deployment, which can 
 
 ### Auth0
 
-> !\[NOTE]
+> \[!NOTE]
 >
 > We only support the Auth0 authentication service provider at the moment. If you need to use other authentication service providers, you can submit a feature request or pull request.
 
@@ -99,7 +107,7 @@ LobeChat provides additional configuration options during deployment, which can 
 - Default: `https://api.openai.com/v1`
 - Example: `https://api.chatanywhere.cn` or `https://aihubmix.com/v1`
 
-> !\[NOTE]
+> \[!NOTE]
 >
 > Please check the request suffix of your proxy service provider. Some proxy service providers may add `/v1` to the request suffix, while others may not.
 > If you find that the AI returns an empty message during testing, try adding the `/v1` suffix and retrying.

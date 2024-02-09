@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import { FC, PropsWithChildren, memo } from 'react';
 
 import { getClientConfig } from '@/config/client';
+import { API_ENDPOINTS } from '@/services/_url';
 
 import AppTheme, { AppThemeProps } from './AppTheme';
 import Locale from './Locale';
@@ -47,16 +48,18 @@ interface GlobalLayoutProps extends AppThemeProps {
   defaultLang?: string;
 }
 
-const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) => (
-  <SessionProvider basePath="/api/oauth">
-    <AppTheme {...theme}>
-      <Locale defaultLang={defaultLang}>
-        <StoreHydration />
-        <Container>{children}</Container>
-        <DebugUI />
-      </Locale>
-    </AppTheme>
-  </SessionProvider>
-);
+const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) => {
+  return (
+    <SessionProvider basePath={API_ENDPOINTS.oauth}>
+      <AppTheme {...theme}>
+        <Locale defaultLang={defaultLang}>
+          <StoreHydration />
+          <Container>{children}</Container>
+          <DebugUI />
+        </Locale>
+      </AppTheme>
+    </SessionProvider>
+  );
+};
 
 export default GlobalLayout;

@@ -27,6 +27,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 - [Docker Deployment Guide](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment) | [Docker 部署指引](https://github.com/lobehub/lobe-chat/wiki/Docker-Deployment.zh-CN)
 - [Deploying with Azure OpenAI](https://github.com/lobehub/lobe-chat/wiki/Deploy-with-Azure-OpenAI) | [使用 Azure OpenAI 部署](https://github.com/lobehub/lobe-chat/wiki/Deploy-with-Azure-OpenAI.zh-CN)
 - [Environment Variables](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable) | [环境变量](https://github.com/lobehub/lobe-chat/wiki/Environment-Variable.zh-CN)
+- [Authentication Service](https://github.com/lobehub/lobe-chat/wiki/Authentication) | [身份验证服务](https://github.com/lobehub/lobe-chat/wiki/Authentication.zh-CN)
 - [Upstream Sync](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync) | [自部署保持更新](https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN)
 - [Frequently Asked Questions](https://github.com/lobehub/lobe-chat/wiki/Common-Error) | [常见问题](https://github.com/lobehub/lobe-chat/wiki/Common-Error.zh-CN)
 - [Data Statistics](https://github.com/lobehub/lobe-chat/wiki/Analytics) | [数据统计](https://github.com/lobehub/lobe-chat/wiki/Analytics.zh-CN)
@@ -47,6 +48,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
   - [Frontend](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend) | [前端实现](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend.zh-CN)
 - [Internationalization Implementation Guide](https://github.com/lobehub/lobe-chat/wiki/Internationalization-Implementation) | [国际化实现指南](https://github.com/lobehub/lobe-chat/wiki/Internationalization-Implementation.zh-CN)
 - [New Locale Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale) | [新语种添加指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale.zh-CN)
+- [New Authentication Provider Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Authentication-Providers) | [新身份验证方式开发指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Authentication-Providers.zh-CN)
 - [Testing Guide](https://github.com/lobehub/lobe-chat/wiki/Test) | [测试指南](https://github.com/lobehub/lobe-chat/wiki/Test.zh-CN)
 - [Resources and References](https://github.com/lobehub/lobe-chat/wiki/Resources) | [资源与参考](https://github.com/lobehub/lobe-chat/wiki/Resources.zh-CN)
 
