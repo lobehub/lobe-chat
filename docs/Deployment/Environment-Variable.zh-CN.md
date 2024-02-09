@@ -7,6 +7,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - [通用变量](#通用变量)
   - [`ACCESS_CODE`](#access_code)
   - [`ENABLE_OAUTH_SSO`](#enable_oauth_sso)
+  - [`NEXT_PUBLIC_BASE_PATH`](#next_public_base_path)
 - [身份验证服务](#身份验证服务)
   - [通用设置](#通用设置)
   - [Auth0](#auth0)
@@ -41,7 +42,14 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 类型：可选
 - 描述：为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。有关详细信息，请参阅[身份验证服务](#身份验证服务)。
 - 默认值: `-`
-- 示例: `1` 或 `0`
+- 示例: `1`
+
+### `NEXT_PUBLIC_BASE_PATH`
+
+- 类型：可选
+- 描述：为 LobeChat 添加 `basePath`
+- 默认值: `-`
+- 示例: `/test`
 
 ## 身份验证服务
 
@@ -56,7 +64,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 
 ### Auth0
 
-> !\[NOTE] 注意事项：
+> \[!NOTE] 注意事项：
 >
 > 目前我们只支持 Auth0 身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交功能请求或 Pull Request。
 
@@ -99,7 +107,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值：`https://api.openai.com/v1`
 - 示例：`https://api.chatanywhere.cn` 或 `https://aihubmix.com/v1`
 
-> !\[NOTE] 注意事项：
+> \[!NOTE] 注意事项：
 >
 > 请检查你的代理服务商的请求后缀，有的代理服务商会在请求后缀添加 `/v1`，有的则不会。
 > 如果你在测试时发现 AI 返回的消息为空，请尝试添加 `/v1` 后缀后重试。

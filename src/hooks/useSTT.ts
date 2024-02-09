@@ -9,7 +9,7 @@ import isEqual from 'fast-deep-equal';
 import { SWRConfiguration } from 'swr';
 
 import { createHeaderWithOpenAI } from '@/services/_header';
-import { OPENAI_URLS } from '@/services/_url';
+import { API_ENDPOINTS } from '@/services/_url';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
@@ -39,7 +39,7 @@ export const useSTT = (config: STTConfig) => {
       options = {
         api: {
           headers: createHeaderWithOpenAI(),
-          serviceUrl: OPENAI_URLS.stt,
+          serviceUrl: API_ENDPOINTS.stt,
         },
         autoStop,
         options: {
