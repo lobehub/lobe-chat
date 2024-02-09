@@ -205,14 +205,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                              | 助手说明                                                                                                                                                   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Jira 故事协助工具](https://chat-preview.lobehub.com/market?agent=jira-product-manager)<br/><sup>By **[emad-pg](https://github.com/emad-pg)** on **2024-02-07**</sup>                 | 一款专门将功能点子转化为全面的 Jira 故事草稿，供团队选择的产品经理代理。<br/>`产品管理` `故事创建` `jira`                                                  |
-| [文本变体生成器](https://chat-preview.lobehub.com/market?agent=text-variator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-07**</sup>                       | 请提供您希望我生成不同版本的文本<br/>`文案撰写` `编辑` `创意写作`                                                                                          |
-| [土耳其语 / 英语翻译器](https://chat-preview.lobehub.com/market?agent=turkish-english-translator)<br/><sup>By **[Zisan-uzum](https://github.com/Zisan-uzum)** on **2024-02-07**</sup> | 根据需要将文本翻译成土耳其语或英语<br/>`土耳其语` `英语` `翻译` `写作`                                                                                     |
-| [CAN: 编程大师](https://chat-preview.lobehub.com/market?agent=can)<br/><sup>By **[MrHuangJser](https://github.com/MrHuangJser)** on **2024-02-06**</sup>                              | CAN: 专业编程专家，多年经验，无字符限制。提供创意命名、标语、用户画像、痛点、价值主张、销售渠道、收入流、成本结构等创业计划服务。<br/>`编程` `交流` `提问` |
+| 最近新增                                                                                                                                                                                        | 助手说明                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| [填空练习生成器](https://chat-preview.lobehub.com/market?agent=cloze-exercise-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup>                      | 专门用于生成摘要填空练习。请提供段落的主题。<br/>`摘要` `练习` `生成器` `写作` `教育` |
+| [阅读理解向导](https://chat-preview.lobehub.com/market?agent=reading-comprehension-exercise-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup>        | 专门生成阅读理解练习<br/>`阅读理解` `练习生成` `教育`                                 |
+| [主题词汇工作表创建器](https://chat-preview.lobehub.com/market?agent=thematic-vocabulary-worksheet-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup> | 擅长创建英语主题词汇工作表<br/>`写作` `语言学习` `教学` `评估` `教育资源`             |
+| [词汇工作表向导](https://chat-preview.lobehub.com/market?agent=vocabulary-worksheet-wizard)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup>                   | 专注于生成英语词汇工作表<br/>`词汇` `工作表` `教育` `语言学习`                        |
 
-> 📊 Total agents: [<kbd>**159**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**164**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
