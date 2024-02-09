@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
+import { imageUrl } from '@/const/url';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -60,7 +61,7 @@ export const Topic = memo(() => {
         <Flexbox flex={1}>
           <EmptyCard
             alt={t('topic.guide.desc')}
-            cover={`/images/empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`}
+            cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
             desc={t('topic.guide.desc')}
             height={120}
             onVisibleChange={(visible) => {

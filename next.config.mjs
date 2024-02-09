@@ -7,6 +7,8 @@ const buildWithDocker = process.env.DOCKER === 'true';
 // if you need to proxy the api endpoint to remote server
 const API_PROXY_ENDPOINT = process.env.API_PROXY_ENDPOINT || '';
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
+
 const withBundleAnalyzer = analyzer({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -22,6 +24,7 @@ const withPWA = nextPWA({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   compress: isProd,
+  basePath,
   experimental: {
     optimizePackageImports: [
       'emoji-mart',
