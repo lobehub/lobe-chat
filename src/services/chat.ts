@@ -16,7 +16,7 @@ import { fetchAIFactory, getMessageError } from '@/utils/fetch';
 
 import { createHeaderWithAuth } from './_auth';
 import { createHeaderWithOpenAI } from './_header';
-import { PLUGINS_URLS } from './_url';
+import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
   signal?: AbortSignal | undefined;
@@ -81,7 +81,7 @@ class ChatService {
       provider,
     });
 
-    return fetch(`/api/chat/${provider}`, {
+    return fetch(API_ENDPOINTS.chat(provider), {
       body: JSON.stringify(payload),
       headers,
       method: 'POST',
@@ -102,7 +102,7 @@ class ChatService {
 
     const gatewayURL = manifest?.gateway;
 
-    const res = await fetch(gatewayURL ?? PLUGINS_URLS.gateway, {
+    const res = await fetch(gatewayURL ?? API_ENDPOINTS.gateway, {
       body: JSON.stringify({ ...params, manifest }),
       // TODO: we can have a better auth way
       headers: createHeadersWithPluginSettings(settings, createHeaderWithOpenAI()),

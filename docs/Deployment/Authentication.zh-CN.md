@@ -1,6 +1,6 @@
 # 身份验证服务
 
-LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用，统一管理用户授权，目前支持 [Auth0][auth0-client-page] 本文将介绍如何配置身份验证服务。
+LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用，统一管理用户授权，目前支持 [Auth0][auth0-client-page]，本文将介绍如何配置身份验证服务。
 
 ### TOC
 
@@ -23,6 +23,14 @@ LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用�
 创建成功后，点击相应的应用，进入应用详情页，切换到「Settings」标签页，就可以看到相应的配置信息
 
 ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/a1ed996b-95ef-4b7d-a50d-b4666eccfecb)
+
+在应用配置页面中，还需要配置 Allowed Callback URLs，在此处填写 `http(s)://<your-domain>/api/auth/callback/auth0`
+
+![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b)
+
+> \[!NOTE]
+>
+> 可以在部署后再填写或修改 Allowed Callback URLs，但是务必保证填写的 URL 与部署的 URL 一致
 
 ## 新增用户
 
