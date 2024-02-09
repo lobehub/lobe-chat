@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 
 import { getServerConfig } from '@/config/server';
+import { withBasePath } from '@/utils/basePath';
 
 import pkg from '../../package.json';
 
@@ -22,7 +23,7 @@ const metadata: Metadata = {
     shortcut:
       'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon.ico',
   },
-  manifest: 'manifest.json',
+  manifest: withBasePath('manifest.json'),
   metadataBase: new URL(METADATA_BASE_URL),
   openGraph: {
     description: description,
