@@ -23,7 +23,7 @@ LobeChat 使用 [Auth.js v5](https://authjs.dev/) 作为外部身份验证服务
 
 ### 步骤 1: 新增关键代码
 
-打开 `src/app/api/oauth/next-auth.ts` 文件，引入 `next-auth/providers/okta`
+打开 `src/app/api/auth/next-auth.ts` 文件，引入 `next-auth/providers/okta`
 
 ```ts
 import { NextAuth } from 'next-auth';
