@@ -1,7 +1,7 @@
 // export { auth as middleware } from './app/api/next-auth';
 import { NextResponse } from 'next/server';
 
-import { auth } from './app/api/oauth/next-auth';
+import { auth } from './app/api/auth/next-auth';
 import { OAUTH_AUTHORIZED } from './const/auth';
 
 export const config = {

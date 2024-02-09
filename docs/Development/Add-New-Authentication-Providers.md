@@ -23,7 +23,7 @@ Next, I will use [Okta](https://authjs.dev/reference/core/providers/okta) as an 
 
 ### Step 1: Add Authenticator Core Code
 
-Open the `src/app/api/oauth/next-auth.ts` file and import `next-auth/providers/okta`.
+Open the `src/app/api/auth/next-auth.ts` file and import `next-auth/providers/okta`.
 
 ```ts
 import { NextAuth } from 'next-auth';

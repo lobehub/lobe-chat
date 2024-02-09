@@ -1,5 +1,7 @@
 import urlJoin from 'url-join';
 
+import { withBasePath } from '@/utils/basePath';
+
 import pkg from '../../package.json';
 import { INBOX_SESSION_ID } from './session';
 
@@ -19,3 +21,5 @@ export const AGENTS_INDEX_GITHUB_ISSUE = urlJoin(AGENTS_INDEX_GITHUB, 'issues/ne
 export const SESSION_CHAT_URL = (id: string = INBOX_SESSION_ID, mobile?: boolean) =>
   mobile ? `/chat/mobile?session=${id}` : `/chat?session=${id}`;
 export const MANUAL_UPGRADE_URL = 'https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync';
+
+export const imageUrl = (filename: string) => withBasePath(`/images/${filename}`);

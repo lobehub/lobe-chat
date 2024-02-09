@@ -205,14 +205,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                                        | 助手说明                                                                              |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| [填空练习生成器](https://chat-preview.lobehub.com/market?agent=cloze-exercise-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup>                      | 专门用于生成摘要填空练习。请提供段落的主题。<br/>`摘要` `练习` `生成器` `写作` `教育` |
-| [阅读理解向导](https://chat-preview.lobehub.com/market?agent=reading-comprehension-exercise-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup>        | 专门生成阅读理解练习<br/>`阅读理解` `练习生成` `教育`                                 |
-| [主题词汇工作表创建器](https://chat-preview.lobehub.com/market?agent=thematic-vocabulary-worksheet-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup> | 擅长创建英语主题词汇工作表<br/>`写作` `语言学习` `教学` `评估` `教育资源`             |
-| [词汇工作表向导](https://chat-preview.lobehub.com/market?agent=vocabulary-worksheet-wizard)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-08**</sup>                   | 专注于生成英语词汇工作表<br/>`词汇` `工作表` `教育` `语言学习`                        |
+| 最近新增                                                                                                                                                                         | 助手说明                                                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [词汇大师](https://chat-preview.lobehub.com/market?agent=awl-vocab-wizard)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-09**</sup>                     | 擅长生成词汇列表和多项选择测试<br/>`词汇` `学术词汇表` `语言学习` `测试`                         |
+| [英语熟练度评估器](https://chat-preview.lobehub.com/market?agent=english-proficiency-assessor)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-09**</sup> | 专业创建自适应英语熟练度诊断测试的专家<br/>`测试创建` `英语熟练度` `评估`                        |
+| [术语表生成器](https://chat-preview.lobehub.com/market?agent=glossary-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-09**</sup>               | 擅长生成带有英文定义和例句的术语表<br/>`术语表` `翻译` `语言`                                    |
+| [语法工作表生成器](https://chat-preview.lobehub.com/market?agent=grammar-revision-worksheets)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-09**</sup>  | 专注于创建英语语法学习材料和练习<br/>`english-grammar` `worksheet` `learning` `practice` `mc-qs` |
 
-> 📊 Total agents: [<kbd>**164**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**170**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
