@@ -60,7 +60,7 @@ export const Topic = memo(() => {
         <Flexbox flex={1}>
           <EmptyCard
             alt={t('topic.guide.desc')}
-            cover={`/images/empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`}
+            cover={`images/empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`}
             desc={t('topic.guide.desc')}
             height={120}
             onVisibleChange={(visible) => {

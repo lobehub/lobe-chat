@@ -38,6 +38,7 @@ declare global {
 }
 
 export const getClientConfig = () => ({
+  BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
   // Vercel Analytics
   ANALYTICS_VERCEL: process.env.NEXT_PUBLIC_ANALYTICS_VERCEL === '1',
   VERCEL_DEBUG: process.env.NEXT_PUBLIC_VERCEL_DEBUG === '1',

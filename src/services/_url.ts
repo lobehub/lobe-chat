@@ -1,21 +1,24 @@
-export const URLS = {
-  config: '/api/config',
-  market: '/api/market',
-  proxy: '/api/proxy',
-};
+/* eslint-disable sort-keys-fix/sort-keys-fix */
+export const API_ENDPOINTS = {
+  config: 'api/config',
+  proxy: 'api/proxy',
 
-export const PLUGINS_URLS = {
-  gateway: '/api/plugin/gateway',
-  store: '/api/plugin/store',
-};
+  // agent markets
+  market: 'api/market',
 
-export const OPENAI_URLS = {
-  images: '/api/openai/images',
-  stt: '/api/openai/stt',
-  tts: '/api/openai/tts',
-};
+  // plugins
+  gateway: 'api/plugin/gateway',
+  pluginStore: 'api/plugin/store',
 
-export const TTS_URL = {
-  edge: '/api/tts/edge-speech',
-  microsoft: '/api/tts/microsoft-speech',
+  // chat
+  chat: (provider: string) => `api/chat/${provider}`,
+
+  // image
+  images: 'api/openai/images',
+
+  // TTS & STT
+  stt: 'api/openai/stt',
+  tts: 'api/openai/tts',
+  edge: 'api/tts/edge-speech',
+  microsoft: 'api/tts/microsoft-speech',
 };
