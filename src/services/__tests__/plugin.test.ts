@@ -49,7 +49,7 @@ describe('PluginService', () => {
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
-      expect(fetch).toHaveBeenCalledWith('/api/plugin/store?locale=tt');
+      expect(fetch).toHaveBeenCalledWith('api/plugin/store?locale=tt');
       expect(pluginList).toEqual(fakeResponse);
     });
 
