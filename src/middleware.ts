@@ -5,7 +5,7 @@ import { auth } from './app/api/oauth/next-auth';
 import { OAUTH_AUTHORIZED } from './const/auth';
 
 export const config = {
-  matcher: 'api/:path*',
+  matcher: (process.env.NEXT_PUBLIC_BASE_PATH || '') + '/api/:path*',
 };
 
 export default auth((req) => {
