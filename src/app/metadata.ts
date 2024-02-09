@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
+import { getClientConfig } from '@/config/client';
 import { getServerConfig } from '@/config/server';
-import { withBasePath } from '@/utils/basePath';
 
 import pkg from '../../package.json';
 
@@ -9,6 +9,10 @@ const title = 'LobeChat';
 const { description, homepage } = pkg;
 
 const { METADATA_BASE_URL = 'https://chat-preview.lobehub.com/' } = getServerConfig();
+const { BASE_PATH } = getClientConfig();
+
+// if there is a base path, then we don't need the manifest
+const noManifest = !!BASE_PATH;
 
 const metadata: Metadata = {
   appleWebApp: {
@@ -23,7 +27,7 @@ const metadata: Metadata = {
     shortcut:
       'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon.ico',
   },
-  manifest: withBasePath('manifest.json'),
+  manifest: noManifest ? undefined : '/manifest.json',
   metadataBase: new URL(METADATA_BASE_URL),
   openGraph: {
     description: description,
