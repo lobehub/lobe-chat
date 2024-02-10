@@ -55,16 +55,16 @@ const OpenAI: ModelProviderCard = {
       tokens: 24_000,
     },
     {
-      hidden: true,
       displayName: 'GPT-4 Turbo Preview (0125)',
+      hidden: true,
       functionCall: true,
       id: 'gpt-4-0125-preview',
       tokens: 128_000,
     },
     {
       description: 'GPT-4 视觉预览版，支持视觉任务、文件上传、编辑等各种操作',
-      files: true,
       displayName: 'GPT-4 Vision (Preview)',
+      files: true,
       id: 'gpt-4-vision-preview',
       tokens: 24_000,
       vision: true,
