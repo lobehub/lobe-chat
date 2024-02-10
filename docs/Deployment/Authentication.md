@@ -24,6 +24,14 @@ Once the application is successfully created, click on the respective applicatio
 
 ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/a1ed996b-95ef-4b7d-a50d-b4666eccfecb)
 
+On the application configuration page, you also need to configure the **_Allowed Callback URLs_** to be `http(s)://<your-domain>/api/auth/callback/auth0`
+
+![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b)
+
+> \[!NOTE]
+>
+> You can fill in or modify the Allowed Callback URLs after deployment, but make sure the URLs are consistent with the deployed URLs!
+
 ## Adding Users
 
 Navigate to the **_Users Management_** section in the left sidebar to access the user management interface. You can create new users for your organization to log in to LobeChat.

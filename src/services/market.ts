@@ -1,9 +1,10 @@
-import { URLS } from '@/services/_url';
 import { LobeChatAgentsMarketIndex } from '@/types/market';
+
+import { API_ENDPOINTS } from './_url';
 
 class MarketService {
   getAgentList = async (locale: string): Promise<LobeChatAgentsMarketIndex> => {
-    const res = await fetch(`${URLS.market}?locale=${locale}`);
+    const res = await fetch(`${API_ENDPOINTS.market}?locale=${locale}`);
 
     return res.json();
   };
@@ -13,7 +14,7 @@ class MarketService {
    */
   getAgentManifest = async (identifier: string, locale: string) => {
     if (!identifier) return;
-    const res = await fetch(`${URLS.market}/${identifier}?locale=${locale}`);
+    const res = await fetch(`${API_ENDPOINTS.market}/${identifier}?locale=${locale}`);
 
     return res.json();
   };
