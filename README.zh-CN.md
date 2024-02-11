@@ -205,14 +205,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                         | 助手说明                                                                                         |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| [词汇大师](https://chat-preview.lobehub.com/market?agent=awl-vocab-wizard)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-09**</sup>                     | 擅长生成词汇列表和多项选择测试<br/>`词汇` `学术词汇表` `语言学习` `测试`                         |
-| [英语熟练度评估器](https://chat-preview.lobehub.com/market?agent=english-proficiency-assessor)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-09**</sup> | 专业创建自适应英语熟练度诊断测试的专家<br/>`测试创建` `英语熟练度` `评估`                        |
-| [术语表生成器](https://chat-preview.lobehub.com/market?agent=glossary-generator)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-09**</sup>               | 擅长生成带有英文定义和例句的术语表<br/>`术语表` `翻译` `语言`                                    |
-| [语法工作表生成器](https://chat-preview.lobehub.com/market?agent=grammar-revision-worksheets)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-09**</sup>  | 专注于创建英语语法学习材料和练习<br/>`english-grammar` `worksheet` `learning` `practice` `mc-qs` |
+| 最近新增                                                                                                                                                               | 助手说明                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [产品评价](https://chat-preview.lobehub.com/market?agent=product-reviews)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-11**</sup>                    | 擅长撰写有说服力的产品推荐，突出 \[您的产品 / 服务] 的优势和价值主张。<br/>`电子商务`          |
+| [塔罗占卜师](https://chat-preview.lobehub.com/market?agent=augur)<br/><sup>By **[CLOT-LIU](https://github.com/CLOT-LIU)** on **2024-02-10**</sup>                      | 擅长塔罗占卜，会对塔罗牌进行解读<br/>`塔罗占卜` `解读` `建议`                                  |
+| [新年快乐](https://chat-preview.lobehub.com/market?agent=happy-loong-year)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-02-10**</sup> | 龙年拜年小助手，结合传统与现代元素，创造有趣的龙年祝福语。<br/>`拜年祝福` `创意` `文案` `龙年` |
+| [词汇大师](https://chat-preview.lobehub.com/market?agent=awl-vocab-wizard)<br/><sup>By **[bentwnghk](https://github.com/bentwnghk)** on **2024-02-09**</sup>           | 擅长生成词汇列表和多项选择测试<br/>`词汇` `学术词汇表` `语言学习` `测试`                       |
 
-> 📊 Total agents: [<kbd>**170**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**173**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
