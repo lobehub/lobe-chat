@@ -33,7 +33,7 @@ const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
         }}
       >
         {/* Utilisation d'une balise <img> pour afficher le GIF */}
-        <img alt="Logo" src={logoGifUrl} style={{ height: '80%', width: '80%' }} />
+        <img alt="Logo" src={logoGifUrl} style={{ height: '80%', width: '100%' }} />
       </Flexbox>
       <div className={styles.title} style={{ fontSize: size.title }}>
         <strong style={mobile ? { fontSize: '1.2em' } : {}}>AiFenschTech </strong>
