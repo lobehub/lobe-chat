@@ -1,13 +1,8 @@
-import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { genSize, useStyles } from './style';
-
-// Mise à jour des importations pour les nouveaux logos
-const NewLogoOne = dynamic(() => import('https://i.gifer.com/origin/ef/ef943f2ddd1f9acafa70c9d03012a71c_w200.gif'));
-const NewLogoTwo = dynamic(() => import('https://i.gifer.com/origin/ef/ef943f2ddd1f9acafa70c9d03012a71c_w200.gif'));
 
 const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
   const size: any = {
@@ -24,6 +19,9 @@ const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
 
   const { t } = useTranslation('welcome');
 
+  // URL de votre GIF
+  const logoGifUrl = "https://i.gifer.com/origin/ef/ef943f2ddd1f9acafa70c9d03012a71c_w200.gif";
+
   return (
     <>
       <Flexbox
@@ -34,7 +32,8 @@ const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
           position: 'relative',
         }}
       >
-        {mobile ? <NewLogoOne size={size.logo} /> : <NewLogoTwo height={'100%'} width={'100%'} />}
+        {/* Utilisation d'une balise <img> pour afficher le GIF */}
+        <img src={logoGifUrl} alt="Logo" style={{ height: '100%', width: '100%' }} />
       </Flexbox>
       <div className={styles.title} style={{ fontSize: size.title }}>
         <strong style={mobile ? { fontSize: '1.2em' } : {}}>AiFenschTech </strong>
