@@ -36,6 +36,7 @@ const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
         {mobile ? <LogoThree size={size.logo} /> : <LogoSpline height={'100%'} width={'100%'} />}
       </Flexbox>
       <div className={styles.title} style={{ fontSize: size.title }}>
+            <img src="https://i.gifer.com/79uk.gif" alt="Test GIF">
         <strong style={mobile ? { fontSize: '1.2em' } : {}}>Ai Fensch Tech</strong>
         {mobile ? <br /> : ' '}
       </div>
