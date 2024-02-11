@@ -33,7 +33,8 @@ const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
           position: 'relative',
         }}
       >
-        {mobile ? <LogoThree size={size.logo} /> : <LogoSpline height={'100%'} width={'100%'} />}
+        {/* Remplacer le logo par votre GIF */}
+        {mobile ? <img src="https://i.gifer.com/79uk.gif" alt="GIF" style={{ width: size.logo, height: size.logo }} /> : <LogoSpline height={'100%'} width={'100%'} />}
       </Flexbox>
       <div className={styles.title} style={{ fontSize: size.title }}>
         <strong style={mobile ? { fontSize: '1.2em' } : {}}>Ai Fensch Tech</strong>
