@@ -5,7 +5,7 @@ import { getServerConfig } from '@/config/server';
 
 import pkg from '../../package.json';
 
-const title = 'LobeChat';
+const title = 'AiFenschTech';
 const { description, homepage } = pkg;
 
 const { METADATA_BASE_URL = 'https://chat-preview.lobehub.com/' } = getServerConfig();
