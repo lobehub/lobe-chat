@@ -46,19 +46,29 @@ const Container = memo<PropsWithChildren>(({ children }) => {
 
 interface GlobalLayoutProps extends AppThemeProps {
   defaultLang?: string;
+  enableOAuthSSO?: boolean;
 }
 
-const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) => {
-  return (
-    <SessionProvider basePath={API_ENDPOINTS.oauth}>
-      <AppTheme {...theme}>
-        <Locale defaultLang={defaultLang}>
-          <StoreHydration />
-          <Container>{children}</Container>
-          <DebugUI />
-        </Locale>
-      </AppTheme>
-    </SessionProvider>
+const GlobalLayout = ({
+  children,
+  defaultLang,
+  enableOAuthSSO = false,
+  ...theme
+}: GlobalLayoutProps) => {
+  const content = (
+    <AppTheme {...theme}>
+      <Locale defaultLang={defaultLang}>
+        <StoreHydration />
+        <Container>{children}</Container>
+        <DebugUI />
+      </Locale>
+    </AppTheme>
+  );
+
+  return enableOAuthSSO ? (
+    <SessionProvider basePath={API_ENDPOINTS.oauth}>{content}</SessionProvider>
+  ) : (
+    content
   );
 };
 
