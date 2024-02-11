@@ -1,39 +1,38 @@
 import { set } from 'lodash-es';
-import { DeepPartial } from 'utility-types';
-
-import { LobeAgentConfig } from '@/types/agent';
 
 /**
- * Parses a string of environment variables and converts it into a structured configuration object.
- * It automatically converts values containing commas (either English or Chinese) into arrays.
- *
+ * Improved parsing function that handles numbers, booleans, semicolons, and equals signs in values.
  * @param {string} envStr - The environment variable string to be parsed.
  */
-export const parseAgentConfig = (envStr: string): DeepPartial<LobeAgentConfig> => {
-  if (!envStr) return {};
+export const parseAgentConfig = (envStr: string) => {
+  const config = {};
 
-  const config: DeepPartial<LobeAgentConfig> = {};
+  envStr.split(';').forEach((entry) => {
+    const firstEqualIndex = entry.indexOf('=');
+    if (firstEqualIndex === -1) return;
 
-  // Split the environment variable string into individual entries based on the semicolon separator.
-  const entries = envStr.split(';');
-
-  for (const entry of entries) {
-    if (!entry) continue;
-
-    let [key, value] = entry.split('=');
-    if (!key || !value) continue;
+    const key = entry.slice(0, Math.max(0, firstEqualIndex));
+    let value = entry.slice(Math.max(0, firstEqualIndex + 1));
+    if (!key || !value) return;
 
     let finalValue: any = value;
 
-    // Check if the value contains either English or Chinese commas, and convert to an array if so.
-    // This replaces all Chinese commas with English ones, then splits the string into an array.
-    if (value.includes(',') || value.includes('，')) {
-      finalValue = value.replaceAll('，', ',').split(',') as string[];
+    // Handle numeric values
+    if (!isNaN(value as any)) {
+      finalValue = Number(value);
+    }
+    // Handle boolean values
+    else if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
+      finalValue = value.toLowerCase() === 'true';
+    }
+    // Handle arrays
+    else if (value.includes(',') || value.includes('，')) {
+      const array = value.replaceAll('，', ',').split(',');
+      finalValue = array.map((item) => (isNaN(item as any) ? item : Number(item)));
     }
 
-    // Use lodash `set` to handle nested configuration by setting the value at the path specified by the key.
     set(config, key, finalValue);
-  }
+  });
 
   return config;
 };
