@@ -1,11 +1,12 @@
 import { Icon } from '@lobehub/ui';
 import { App, Button } from 'antd';
 import { ScanFace } from 'lucide-react';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { useOAuthSession } from '@/hooks/useOAuthSession';
 import { useChatStore } from '@/store/chat';
 
 import { FormAction } from './style';
@@ -13,8 +14,7 @@ import { FormAction } from './style';
 const OAuthForm = memo<{ id: string }>(({ id }) => {
   const { t } = useTranslation('error');
 
-  const { data: session, status } = useSession();
-  const isOAuthLoggedIn = status === 'authenticated' && session && session.user;
+  const { user, isOAuthLoggedIn } = useOAuthSession();
 
   const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
 
@@ -38,7 +38,7 @@ const OAuthForm = memo<{ id: string }>(({ id }) => {
         avatar={isOAuthLoggedIn ? '✅' : '🕵️‍♂️'}
         description={
           isOAuthLoggedIn
-            ? `${t('unlock.oauth.welcome')} ${session?.user?.name}`
+            ? `${t('unlock.oauth.welcome')} ${user?.name}`
             : t('unlock.oauth.description')
         }
         title={isOAuthLoggedIn ? t('unlock.oauth.success') : t('unlock.oauth.title')}
