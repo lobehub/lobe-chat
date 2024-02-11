@@ -1,0 +1,29 @@
+name: Docker Build and Push
+
+# 定义触发工作流的事件
+on:
+  push:
+    branches:
+      - main  # 或者您的默认分支，如master
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest  # 运行工作流的虚拟机环境
+
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2  # 检出您的代码到工作流中
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}  # 使用GitHub Secrets安全存储Docker Hub用户名
+        password: ${{ secrets.DOCKER_PASSWORD }}  # 使用GitHub Secrets安全存储Docker Hub密码或访问令牌
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .  # Docker构建上下文路径
+        file: ./Dockerfile  # Dockerfile的路径
+        push: true  # 推送镜像到Docker Hub
+        tags: yixuan/lobe-chat:latest  # 替换为您的Docker Hub用户名和镜像名，可选地指定标签（如latest）
