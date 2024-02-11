@@ -73,6 +73,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5",
+    "@auth/core": "^0.26.3",
     "@aws-sdk/client-bedrock-runtime": "^3.503.1",
     "@azure/openai": "^1.0.0-beta.11",
     "@cfworker/json-schema": "^1",
