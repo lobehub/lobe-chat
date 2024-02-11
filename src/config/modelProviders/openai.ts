@@ -62,6 +62,14 @@ const OpenAI: ModelProviderCard = {
       tokens: 128_000,
     },
     {
+      description: 'GPT-4 纯文字版本，文本处理能力较强',
+      displayName: 'GPT-4 Classic',
+      functionCall: false,
+      hidden: true,
+      id: 'gpt-4',
+      tokens: 8192,
+    },
+    {
       description: 'GPT-4 视觉预览版，支持视觉任务、文件上传、编辑等各种操作',
       displayName: 'GPT-4 Vision (Preview)',
       files: true,
@@ -75,14 +83,6 @@ const OpenAI: ModelProviderCard = {
       hidden: true,
       id: 'gpt-4-1106-preview',
       tokens: 128_000,
-    },
-    {
-      description: 'GPT-4 纯文字版本，文本处理能力较强',
-      displayName: 'GPT-4-Classical',
-      functionCall: false,
-      hidden: true,
-      id: 'gpt-4',
-      tokens: 8192,
     },
     {
       functionCall: true,
