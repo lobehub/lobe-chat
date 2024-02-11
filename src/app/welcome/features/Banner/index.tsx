@@ -25,7 +25,8 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (
     <>
       <div className={styles.container}>
-        <Hero mobile={mobile} width={mobile ? 640 : 1024} />
+       <img src="https://i.gifer.com/79uk.gif" alt="Test GIF">
+
       </div>
       <Flexbox
         className={styles.buttonGroup}
