@@ -22,7 +22,7 @@ const metadata: Metadata = {
   description,
   icons: {
     apple:
-      'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/apple-touch-icon.png',
+      'https://upload.wikimedia.org/wikipedia/commons/6/67/Nivea_Logo.png',
     icon: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon-32x32.png',
     shortcut:
       'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon.ico',
