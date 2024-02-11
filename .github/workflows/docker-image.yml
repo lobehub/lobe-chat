@@ -26,4 +26,4 @@ jobs:
         context: .  # Docker构建上下文路径
         file: ./Dockerfile  # Dockerfile的路径
         push: true  # 推送镜像到Docker Hub
-        tags: yixuan/lobe-chat:latest  # 替换为您的Docker Hub用户名和镜像名，可选地指定标签（如latest）
+        tags: yixuanc/lobe-chat:latest  # 替换为您的Docker Hub用户名和镜像名，可选地指定标签（如latest）
