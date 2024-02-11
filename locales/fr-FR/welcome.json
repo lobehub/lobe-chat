@@ -3,12 +3,12 @@
     "import": "Importer la configuration",
     "start": "Démarrer maintenant"
   },
-  "header": "Bienvenue",
+  "header": "Salut",
   "pickAgent": "Ou choisissez parmi les modèles d'agent suivants",
-  "skip": "Passer",
+  "skip": "Laisser tomber",
   "slogan": {
-    "desc1": "Déployez un cluster cérébral, suscitez des étincelles de réflexion. Votre agent intelligent est toujours là.",
+    "desc1": "Éveillez votre potentiel, Inspirez l'innovation. Avec AIFenschTech, l'intelligence est à votre service.",
     "desc2": "Créez votre premier agent, commençons maintenant~",
-    "title": "Offrez-vous un cerveau plus intelligent"
+    "title": "Apprendre sans limites & Dialoguer vers le futur"
   }
 }
