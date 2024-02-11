@@ -38,7 +38,6 @@ const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
       <div className={styles.title} style={{ fontSize: size.title }}>
         <strong style={mobile ? { fontSize: '1.2em' } : {}}>Ai Fensch Tech</strong>
         {mobile ? <br /> : ' '}
-        {t('slogan.title')}
       </div>
       <div className={styles.desc} style={{ fontSize: size.desc }}>
         {t('slogan.desc1')}
