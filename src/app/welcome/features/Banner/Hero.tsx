@@ -20,7 +20,7 @@ const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
   const { t } = useTranslation('welcome');
 
   // URL de votre GIF
-  const logoGifUrl = 'https://i.gifer.com/origin/ef/ef943f2ddd1f9acafa70c9d03012a71c_w200.gif';
+  const logoGifUrl = 'https://aifenschtech.com/wp-content/uploads/2024/02/DD.png';
 
   return (
     <>
@@ -33,7 +33,7 @@ const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
         }}
       >
         {/* Utilisation d'une balise <img> pour afficher le GIF */}
-        <img alt="Logo" src={logoGifUrl} style={{ height: '100%', width: '100%' }} />
+        <img alt="Logo" src={logoGifUrl} style={{ height: '80%', width: '80%' }} />
       </Flexbox>
       <div className={styles.title} style={{ fontSize: size.title }}>
         <strong style={mobile ? { fontSize: '1.2em' } : {}}>AiFenschTech </strong>
