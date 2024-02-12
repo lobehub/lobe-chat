@@ -1,6 +1,8 @@
 import { getServerConfig } from '@/config/server';
 import { GlobalServerConfig } from '@/types/settings';
 
+import { parseAgentConfig } from './parseDefaultAgent';
+
 export const runtime = 'edge';
 
 /**
@@ -15,10 +17,14 @@ export const GET = async () => {
     ENABLED_GOOGLE,
     ENABLE_OAUTH_SSO,
     ENABLE_OLLAMA,
+    DEFAULT_AGENT_CONFIG,
   } = getServerConfig();
 
   const config: GlobalServerConfig = {
     customModelName: CUSTOM_MODELS,
+    defaultAgent: {
+      config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
+    },
     enabledOAuthSSO: ENABLE_OAUTH_SSO,
     languageModel: {
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
