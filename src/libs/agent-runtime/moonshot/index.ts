@@ -20,9 +20,7 @@ export class LobeMoonshotAI implements LobeRuntimeAI {
   constructor(apiKey?: string, baseURL: string = DEFAULT_BASE_URL) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidMoonshotAPIKey);
 
-    const header = { Authorization: `Bearer ${apiKey}` };
-
-    this._llm = new OpenAI({ apiKey, baseURL, defaultHeaders: header });
+    this._llm = new OpenAI({ apiKey, baseURL });
     this.baseURL = this._llm.baseURL;
   }
 
