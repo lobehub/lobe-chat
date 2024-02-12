@@ -80,7 +80,7 @@ describe('parseAgentConfig', () => {
     });
 
     it('parses inputTemplate with special characters correctly', () => {
-      const envStr = 'inputTemplate=Hello, I am {name}';
+      const envStr = 'inputTemplate="Hello, I am {name}"';
       const expected = { inputTemplate: 'Hello, I am {name}' };
       expect(parseAgentConfig(envStr)).toEqual(expected);
     });
@@ -160,14 +160,14 @@ describe('parseAgentConfig', () => {
 
   // 测试值中包含分号的情况
   it('handles values with semicolons correctly', () => {
-    const envStr = 'inputTemplate=Hello; I am a bot;';
+    const envStr = 'inputTemplate="Hello; I am a bot;"';
     const expected = { inputTemplate: 'Hello; I am a bot;' };
     expect(parseAgentConfig(envStr)).toEqual(expected);
   });
 
   // 测试值中包含等号的情况
   it('handles values with equals signs correctly', () => {
-    const envStr = 'inputTemplate=Hello=world';
+    const envStr = 'inputTemplate="Hello=world"';
     const expected = { inputTemplate: 'Hello=world' };
     expect(parseAgentConfig(envStr)).toEqual(expected);
   });
