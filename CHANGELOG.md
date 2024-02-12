@@ -2,6 +2,73 @@
 
 # Changelog
 
+### [Version 0.126.5](https://github.com/lobehub/lobe-chat/compare/v0.126.4...v0.126.5)
+
+<sup>Released on **2024-02-12**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor with the auth code.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix middleware auth console error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor with the auth code ([8cee01f](https://github.com/lobehub/lobe-chat/commit/8cee01f))
+
+#### What's fixed
+
+- **misc**: Fix middleware auth console error ([ad3ade8](https://github.com/lobehub/lobe-chat/commit/ad3ade8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.126.4](https://github.com/lobehub/lobe-chat/compare/v0.126.3...v0.126.4)
+
+<sup>Released on **2024-02-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Update Model provider request url.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix auth error in console, fix token tag usage display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Update Model provider request url ([b64acc0](https://github.com/lobehub/lobe-chat/commit/b64acc0))
+
+#### What's fixed
+
+- **misc**: Fix auth error in console ([8e7ee82](https://github.com/lobehub/lobe-chat/commit/8e7ee82))
+- **misc**: Fix token tag usage display ([6e7134b](https://github.com/lobehub/lobe-chat/commit/6e7134b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.126.3](https://github.com/lobehub/lobe-chat/compare/v0.126.2...v0.126.3)
 
 <sup>Released on **2024-02-09**</sup>

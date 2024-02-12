@@ -4,6 +4,7 @@ import { PropsWithChildren } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
+import { getServerConfig } from '@/config/server';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import {
   LOBE_THEME_APPEARANCE,
@@ -13,6 +14,8 @@ import {
 import Layout from '@/layout/GlobalLayout';
 
 import StyleRegistry from './StyleRegistry';
+
+const { ENABLE_OAUTH_SSO } = getServerConfig();
 
 const RootLayout = ({ children }: PropsWithChildren) => {
   // get default theme config to use with ssr
@@ -32,6 +35,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
             defaultLang={lang?.value}
             defaultNeutralColor={neutralColor?.value as any}
             defaultPrimaryColor={primaryColor?.value as any}
+            enableOAuthSSO={ENABLE_OAUTH_SSO}
           >
             {children}
           </Layout>
