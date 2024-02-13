@@ -84,6 +84,22 @@
         "title": "Clave API"
       }
     },
+    "Ollama": {
+      "checker": {
+        "desc": "Verifica si la dirección del proxy está correctamente escrita"
+      },
+      "customModelName": {
+        "desc": "Agrega modelos personalizados, separados por comas (,)",
+        "placeholder": "vicuña,llama,codellama,llama2:13b-text",
+        "title": "Nombre del modelo personalizado"
+      },
+      "endpoint": {
+        "desc": "Ingresa la dirección del proxy de la interfaz de Ollama, déjalo en blanco si no se especifica localmente",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "Dirección del proxy de la interfaz"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Versión de la API de Azure, sigue el formato YYYY-MM-DD, consulta la [última versión](https://learn.microsoft.com/es-es/azure/ai-services/openai/reference#chat-completions)",

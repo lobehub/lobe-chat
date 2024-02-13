@@ -78,4 +78,7 @@ ENV ZHIPU_API_KEY ""
 # Moonshot
 ENV MOONSHOT_API_KEY ""
 
+# Ollama
+ENV OLLAMA_PROXY_URL ""
+
 CMD ["node", "server.js"]

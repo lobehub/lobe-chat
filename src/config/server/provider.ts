@@ -33,6 +33,9 @@ declare global {
       AWS_ACCESS_KEY_ID?: string;
       AWS_SECRET_ACCESS_KEY?: string;
 
+      // Ollama Provider;
+      OLLAMA_PROXY_URL?: string;
+
       DEBUG_CHAT_COMPLETION?: string;
     }
   }
@@ -82,6 +85,9 @@ export const getProviderConfig = () => {
     AZURE_API_VERSION: process.env.AZURE_API_VERSION,
     AZURE_ENDPOINT: process.env.AZURE_ENDPOINT,
     USE_AZURE_OPENAI: process.env.USE_AZURE_OPENAI === '1',
+
+    ENABLE_OLLAMA: !!process.env.OLLAMA_PROXY_URL,
+    OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
 
     DEBUG_CHAT_COMPLETION: process.env.DEBUG_CHAT_COMPLETION === '1',
   };

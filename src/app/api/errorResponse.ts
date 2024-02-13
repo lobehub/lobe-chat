@@ -37,6 +37,9 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.MoonshotBizError: {
       return 476;
     }
+    case AgentRuntimeErrorType.OllamaBizError: {
+      return 478;
+    }
   }
   return errorType as number;
 };

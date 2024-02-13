@@ -22,6 +22,9 @@ export const AgentRuntimeErrorType = {
 
   InvalidMoonshotAPIKey: 'InvalidMoonshotAPIKey',
   MoonshotBizError: 'MoonshotBizError',
+
+  InvalidOllamaArgs: 'InvalidOllamaArgs',
+  OllamaBizError: 'OllamaBizError',
 } as const;
 
 export type ILobeAgentRuntimeErrorType =
