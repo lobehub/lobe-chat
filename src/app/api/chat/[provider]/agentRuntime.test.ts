@@ -2,7 +2,9 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { JWTPayload } from '@/const/auth';
+import { TraceNameMap } from '@/const/trace';
 import {
+  ChatStreamPayload,
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
@@ -14,7 +16,7 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 
-import AgentRuntime from './agentRuntime';
+import AgentRuntime, { AgentChatOptions } from './agentRuntime';
 
 // 模拟依赖项
 vi.mock('@/config/server', () => ({
@@ -263,6 +265,55 @@ describe('AgentRuntime', () => {
       // 根据实际实现，你可能需要检查是否返回了默认的 runtime 实例，或者是否抛出了异常
       // 例如，如果默认使用 OpenAI:
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
+    });
+  });
+
+  describe('AgentRuntime chat method', () => {
+    it('should run correctly', async () => {
+      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
+      const runtime = await AgentRuntime.initializeWithUserPayload(
+        ModelProvider.OpenAI,
+        jwtPayload,
+      );
+
+      const payload: ChatStreamPayload = {
+        messages: [{ role: 'user', content: 'Hello, world!' }],
+        model: 'text-davinci-002',
+        temperature: 0,
+      };
+
+      vi.spyOn(LobeOpenAI.prototype, 'chat').mockResolvedValue(new Response(''));
+
+      await runtime.chat(payload, { provider: 'openai' });
+    });
+    it('should handle options correctly', async () => {
+      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
+      const runtime = await AgentRuntime.initializeWithUserPayload(
+        ModelProvider.OpenAI,
+        jwtPayload,
+      );
+
+      const payload: ChatStreamPayload = {
+        messages: [{ role: 'user', content: 'Hello, world!' }],
+        model: 'text-davinci-002',
+        temperature: 0,
+      };
+
+      const options: AgentChatOptions = {
+        provider: 'openai',
+        trace: {
+          traceId: 'test-trace-id',
+          traceName: TraceNameMap.Conversation,
+          sessionId: 'test-session-id',
+          topicId: 'test-topic-id',
+          tags: [],
+          userId: 'test-user-id',
+        },
+      };
+
+      vi.spyOn(LobeOpenAI.prototype, 'chat').mockResolvedValue(new Response(''));
+
+      await runtime.chat(payload, options);
     });
   });
 });

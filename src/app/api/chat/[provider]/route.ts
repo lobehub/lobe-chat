@@ -9,6 +9,7 @@ import {
 } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
+import { getTracePayload } from '@/utils/trace';
 
 import { checkAuthMethod, getJWTPayload } from '../auth';
 import AgentRuntime from './agentRuntime';
@@ -54,7 +55,9 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
   try {
     const payload = (await req.json()) as ChatStreamPayload;
 
-    return await agentRuntime.chat(payload);
+    const tracePayload = getTracePayload(req);
+
+    return await agentRuntime.chat(payload, { provider, trace: tracePayload });
   } catch (e) {
     const { errorType, provider, error: errorContent, ...res } = e as ChatCompletionErrorPayload;
 

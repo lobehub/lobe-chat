@@ -102,6 +102,8 @@
     "idb-keyval": "^6",
     "immer": "^10",
     "jose": "^5.2.0",
+    "langfuse": "^3.2.0",
+    "langfuse-core": "^3.2.0",
     "lodash-es": "^4",
     "lucide-react": "latest",
     "modern-screenshot": "^4",

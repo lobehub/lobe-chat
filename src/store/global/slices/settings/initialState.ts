@@ -8,6 +8,7 @@ export interface GlobalSettingsState {
   defaultSettings: GlobalSettings;
   serverConfig: GlobalServerConfig;
   settings: DeepPartial<GlobalSettings>;
+  userId?: string;
 }
 
 export const initialSettingsState: GlobalSettingsState = {

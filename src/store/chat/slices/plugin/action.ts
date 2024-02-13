@@ -14,7 +14,7 @@ import { ChatPluginPayload } from '@/types/message';
 import { OpenAIToolCall } from '@/types/openai/functionCall';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors } from '../../selectors';
+import { chatSelectors } from '../../slices/message/selectors';
 
 const n = setNamespace('plugin');
 
@@ -136,8 +136,21 @@ export const chatPlugin: StateCreator<
 
     try {
       const abortController = toggleChatLoading(true, id, n('fetchPlugin') as string);
-      data = await chatService.runPluginApi(payload, { signal: abortController?.signal });
+
+      const message = chatSelectors.getMessageById(id)(get());
+
+      const res = await chatService.runPluginApi(payload, {
+        signal: abortController?.signal,
+        trace: { traceId: message?.traceId },
+      });
+      data = res.text;
+
+      // save traceId
+      if (res.traceId) {
+        await messageService.updateMessage(id, { traceId: res.traceId });
+      }
     } catch (error) {
+      console.log(error);
       const err = error as Error;
 
       // ignore the aborted request error
@@ -157,7 +170,6 @@ export const chatPlugin: StateCreator<
 
     return data;
   },
-
   triggerAIMessage: async (id) => {
     const { coreProcessMessage } = get();
     const chats = chatSelectors.currentChats(get());

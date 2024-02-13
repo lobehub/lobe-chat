@@ -12,6 +12,7 @@ export interface CreateMessageParams
   fromModel?: string;
   fromProvider?: string;
   sessionId: string;
+  traceId?: string;
 }
 
 export interface QueryMessageParams {

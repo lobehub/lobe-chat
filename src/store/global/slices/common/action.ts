@@ -84,7 +84,11 @@ export const createCommonSlice: StateCreator<
         onSuccess: (data) => {
           if (!data) return;
 
-          set({ avatar: data.avatar, settings: data.settings }, false, n('fetchUserConfig', data));
+          set(
+            { avatar: data.avatar, settings: data.settings, userId: data.uuid },
+            false,
+            n('fetchUserConfig', data),
+          );
 
           const { language } = settingsSelectors.currentSettings(get());
           if (language === 'auto') {

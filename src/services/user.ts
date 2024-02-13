@@ -5,8 +5,8 @@ import { GlobalSettings } from '@/types/settings';
 
 export interface UserConfig {
   avatar?: string;
-  // settings: JSONPatch
   settings: DeepPartial<GlobalSettings>;
+  uuid: string;
 }
 
 class UserService {

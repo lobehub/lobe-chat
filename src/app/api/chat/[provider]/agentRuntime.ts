@@ -1,7 +1,7 @@
 import { getServerConfig } from '@/config/server';
 import { JWTPayload } from '@/const/auth';
+import { LOBE_CHAT_TRACE_ID, TracePayload, TraceTagType } from '@/const/trace';
 import {
-  ChatCompetitionOptions,
   ChatStreamPayload,
   LobeAzureOpenAI,
   LobeBedrockAI,
@@ -14,6 +14,7 @@ import {
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
+import { traceClient } from '@/libs/traces';
 
 import apiKeyManager from '../apiKeyManager';
 
@@ -23,6 +24,11 @@ interface AzureOpenAIParams {
   useAzure?: boolean;
 }
 
+export interface AgentChatOptions {
+  provider: string;
+  trace?: TracePayload;
+}
+
 class AgentRuntime {
   private _runtime: LobeRuntimeAI;
 
@@ -30,8 +36,56 @@ class AgentRuntime {
     this._runtime = runtime;
   }
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
-    return this._runtime.chat(payload, options);
+  async chat(payload: ChatStreamPayload, { trace: tracePayload, provider }: AgentChatOptions) {
+    const { messages, model, tools, ...parameters } = payload;
+
+    // create a trace to monitor the completion
+    const trace = traceClient.createTrace({
+      id: tracePayload?.traceId,
+      input: messages,
+      metadata: { provider },
+      name: tracePayload?.traceName,
+      sessionId: `${tracePayload?.sessionId || 'unknown'}@${tracePayload?.topicId || 'start'}`,
+      tags: tracePayload?.tags,
+      userId: tracePayload?.userId,
+    });
+
+    const generation = trace?.generation({
+      input: messages,
+      metadata: { provider },
+      model,
+      modelParameters: parameters as any,
+      name: `Chat Completion (${provider})`,
+      startTime: new Date(),
+    });
+
+    return this._runtime.chat(payload, {
+      callback: {
+        experimental_onToolCall: async () => {
+          trace?.update({
+            tags: [...(tracePayload?.tags || []), TraceTagType.ToolsCall],
+          });
+        },
+        onCompletion: async (completion) => {
+          generation?.update({
+            endTime: new Date(),
+            metadata: { provider, tools },
+            output: completion,
+          });
+
+          trace?.update({ output: completion });
+        },
+        onFinal: async () => {
+          await traceClient.shutdownAsync();
+        },
+        onStart: () => {
+          generation?.update({ completionStartTime: new Date() });
+        },
+      },
+      headers: {
+        [LOBE_CHAT_TRACE_ID]: trace?.id,
+      },
+    });
   }
 
   static async initializeWithUserPayload(

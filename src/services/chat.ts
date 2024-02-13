@@ -3,6 +3,7 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { TracePayload, TraceTagType } from '@/const/trace';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
@@ -12,13 +13,15 @@ import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
-import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
+import {OnFinishHandler, fetchSSE, getMessageError, FetchSSEOptions} from '@/utils/fetch';
+import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
   signal?: AbortSignal | undefined;
+  trace?: TracePayload;
 }
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
@@ -46,11 +49,13 @@ interface FetchAITaskResultParams {
    * 请求对象
    */
   params: Partial<ChatStreamPayload>;
+  trace?: TracePayload;
 }
 
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
   params: GetChatCompletionPayload;
+  trace?: TracePayload;
 }
 class ChatService {
   createAssistantMessage = async (
@@ -120,8 +125,13 @@ class ChatService {
       res,
     );
 
+    const traceHeader = createTraceHeader({
+      ...options?.trace,
+      userId: useGlobalStore.getState().userId,
+    });
+
     const headers = await createHeaderWithAuth({
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...traceHeader },
       provider,
     });
 
@@ -144,13 +154,20 @@ class ChatService {
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
     const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
 
+    const traceHeader = createTraceHeader({
+      ...options?.trace,
+      tags: [TraceTagType.ToolCalling],
+      userId: useGlobalStore.getState().userId,
+    });
+
     const headers = await createHeaderWithAuth({
-      headers: { ...createHeadersWithPluginSettings(settings) },
+      headers: { ...createHeadersWithPluginSettings(settings),        ...traceHeader,},
     });
 
     const gatewayURL = manifest?.gateway ?? API_ENDPOINTS.gateway;
 
     const res = await fetch(gatewayURL, {
+
       body: JSON.stringify({ ...params, manifest }),
       headers,
       method: 'POST',
@@ -161,7 +178,8 @@ class ChatService {
       throw await getMessageError(res);
     }
 
-    return await res.text();
+    const text = await res.text();
+    return { text, traceId: getTraceId(res) };
   };
 
   fetchPresetTaskResult = async ({
@@ -171,6 +189,7 @@ class ChatService {
     onError,
     onLoadingChange,
     abortController,
+    trace,
   }: FetchAITaskResultParams) => {
     const errorHandle = (error: Error, errorContent?: any) => {
       onLoadingChange?.(false);
@@ -183,7 +202,11 @@ class ChatService {
     onLoadingChange?.(true);
 
     const data = await fetchSSE(
-      () => this.getChatCompletion(params, { signal: abortController?.signal }),
+      () => this.getChatCompletion(params, { signal: abortController?.signal, trace: {
+          tags: [TraceTagType.SystemChain],
+          ...trace,
+          userId: useGlobalStore.getState().userId,
+        }, }),
       {
         onErrorHandle: (error) => {
           errorHandle(new Error(error.message), error);
