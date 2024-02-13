@@ -103,6 +103,7 @@
     "bedrock": "AWS Bedrock",
     "google": "Google",
     "moonshot": "Искусственный интеллект Moonshot",
+    "ollama": "Оллама",
     "oneapi": "One API",
     "openai": "OpenAI",
     "zhipu": "Zhipu AI"

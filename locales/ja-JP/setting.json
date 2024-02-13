@@ -84,6 +84,22 @@
         "title": "API キー"
       }
     },
+    "Ollama": {
+      "checker": {
+        "desc": "プロキシアドレスが正しく入力されているかをテストします"
+      },
+      "customModelName": {
+        "desc": "カスタムモデルを追加します。複数のモデルはコンマ（,）で区切ってください",
+        "placeholder": "ビクーニャ、リャマ、コードリャマ、リャマ2:13b-テキスト",
+        "title": "カスタムモデル名"
+      },
+      "endpoint": {
+        "desc": "Ollama インターフェースプロキシアドレスを入力します。ローカルで追加指定がない場合は空白のままにしてください",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "インターフェースプロキシアドレス"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure の API バージョンは YYYY-MM-DD 形式に従い、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照してください",

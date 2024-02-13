@@ -84,6 +84,22 @@
         "title": "API 金鑰"
       }
     },
+    "Ollama": {
+      "checker": {
+        "desc": "檢查代理地址是否正確填寫"
+      },
+      "customModelName": {
+        "desc": "新增自定義模型，多個模型使用逗號（,）隔開",
+        "placeholder": "維庫納,利亞瓦,科迪拉瑪,拉瑪2:13b-文本",
+        "title": "自定義模型名稱"
+      },
+      "endpoint": {
+        "desc": "填入 Ollama 接口代理地址，本地未額外指定可留空",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "接口代理地址"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
