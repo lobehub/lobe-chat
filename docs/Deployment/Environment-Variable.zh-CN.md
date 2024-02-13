@@ -18,6 +18,7 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
   - [Moonshot AI](#moonshot-ai)
   - [Google AI](#google-ai)
   - [AWS Bedrock](#aws-bedrock)
+  - [Ollama](#ollama)
 - [插件服务](#插件服务)
   - [`PLUGINS_INDEX_URL`](#plugins_index_url)
   - [`PLUGIN_SETTINGS`](#plugin_settings)
@@ -205,6 +206,15 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 描述：AWS 服务的区域设置
 - 默认值：`us-east-1`
 - 示例：`us-east-1`
+
+### Ollama
+
+#### `OLLAMA_PROXY_URL`
+
+- 类型：可选
+- 描述：用于启用 Ollama 服务，设置后可在语言模型列表内展示可选开源语言模型，也可以指定自定义语言模型
+- 默认值：-
+- 示例：`http://127.0.0.1:11434/v1`
 
 ## 插件服务
 

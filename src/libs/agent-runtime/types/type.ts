@@ -29,6 +29,7 @@ export enum ModelProvider {
   Google = 'google',
   Mistral = 'mistral',
   Moonshot = 'moonshot',
+  Ollama = 'ollama',
   OpenAI = 'openai',
   Tongyi = 'tongyi',
   ZhiPu = 'zhipu',
