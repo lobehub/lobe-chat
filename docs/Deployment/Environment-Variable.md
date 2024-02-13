@@ -18,6 +18,7 @@ LobeChat provides additional configuration options during deployment, which can 
   - [Moonshot AI](#moonshot-ai)
   - [Google AI](#google-ai)
   - [AWS Bedrock](#aws-bedrock)
+  - [Ollama](#ollama)
 - [Plugin Service](#plugin-service)
   - [`PLUGINS_INDEX_URL`](#plugins_index_url)
   - [`PLUGIN_SETTINGS`](#plugin_settings)
@@ -207,6 +208,15 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Description: The region setting for AWS services
 - Default Value: `us-east-1`
 - Example: `us-east-1`
+
+### Ollama
+
+#### `OLLAMA_PROXY_URL`
+
+- Type: Optional
+- Description: To enable the Ollama service provider, if set up which will appear as selectable model card in the language model setting page, you can also specify a custom language model.
+- Default: -
+- Example: `http://127.0.0.1:11434/v1`
 
 ## Plugin Service
 
