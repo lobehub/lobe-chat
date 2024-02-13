@@ -1,4 +1,4 @@
-import { Azure, Bedrock, Google, Moonshot, OpenAI, Zhipu } from '@lobehub/icons';
+import { Azure, Bedrock, Google, Moonshot, Ollama, OpenAI, Zhipu } from '@lobehub/icons';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
@@ -40,6 +40,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.OpenAI: {
       return <OpenAI size={20} />;
+    }
+
+    case ModelProvider.Ollama: {
+      return <Ollama size={20} />;
     }
 
     default: {
