@@ -85,6 +85,22 @@ export default {
         title: 'API Key',
       },
     },
+    Ollama: {
+      checker: {
+        desc: '测试代理地址是否正确填写',
+      },
+      customModelName: {
+        desc: '增加自定义模型，多个模型使用逗号（,）隔开',
+        placeholder: 'vicuna,llava,codellama,llama2:13b-text',
+        title: '自定义模型名称',
+      },
+      endpoint: {
+        desc: '填入 Ollama 接口代理地址，本地未额外指定可留空',
+        placeholder: 'http://127.0.0.1:11434/v1',
+        title: '接口代理地址',
+      },
+      title: 'Ollama',
+    },
     OpenAI: {
       azureApiVersion: {
         desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
