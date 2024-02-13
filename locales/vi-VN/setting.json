@@ -84,6 +84,22 @@
         "title": "Khóa API"
       }
     },
+    "Ollama": {
+      "checker": {
+        "desc": "Kiểm tra xem địa chỉ proxy có được điền đúng không"
+      },
+      "customModelName": {
+        "desc": "Thêm mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
+        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+        "title": "Tên mô hình tùy chỉnh"
+      },
+      "endpoint": {
+        "desc": "Nhập địa chỉ proxy giao diện Ollama, để trống nếu không được chỉ định cụ thể",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "Địa chỉ proxy giao diện"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, xem chi tiết tại [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
