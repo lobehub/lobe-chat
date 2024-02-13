@@ -14,6 +14,7 @@ export const GET = async () => {
     ENABLED_AWS_BEDROCK,
     ENABLED_GOOGLE,
     ENABLE_OAUTH_SSO,
+    ENABLE_OLLAMA,
   } = getServerConfig();
 
   const config: GlobalServerConfig = {
@@ -23,6 +24,7 @@ export const GET = async () => {
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       google: { enabled: ENABLED_GOOGLE },
       moonshot: { enabled: ENABLED_MOONSHOT },
+      ollama: { enabled: ENABLE_OLLAMA },
       zhipu: { enabled: ENABLED_ZHIPU },
     },
   };

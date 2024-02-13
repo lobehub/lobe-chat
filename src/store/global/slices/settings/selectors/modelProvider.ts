@@ -5,6 +5,7 @@ import {
   GoogleProvider,
   LOBE_DEFAULT_MODEL_LIST,
   MoonshotProvider,
+  OllamaProvider,
   OpenAIProvider,
   ZhiPuProvider,
 } from '@/config/modelProviders';
@@ -37,6 +38,12 @@ const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
 const enableMoonshot = (s: GlobalStore) => modelProvider(s).moonshot.enabled;
 const moonshotAPIKey = (s: GlobalStore) => modelProvider(s).moonshot.apiKey;
 
+const enableOllamaConfigInSettings = (s: GlobalStore) =>
+  s.serverConfig.languageModel?.ollama?.enabled || false;
+
+const enableOllama = (s: GlobalStore) => modelProvider(s).ollama.enabled;
+const ollamaProxyUrl = (s: GlobalStore) => modelProvider(s).ollama.endpoint;
+
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
 //   return {
@@ -46,8 +53,11 @@ const moonshotAPIKey = (s: GlobalStore) => modelProvider(s).moonshot.apiKey;
 // };
 
 // 提取处理 chatModels 的专门方法
-const processChatModels = (modelConfig: ReturnType<typeof parseModelString>): ChatModelCard[] => {
-  let chatModels = modelConfig.removeAll ? [] : OpenAIProvider.chatModels;
+const processChatModels = (
+  modelConfig: ReturnType<typeof parseModelString>,
+  defaultChartModels = OpenAIProvider.chatModels,
+): ChatModelCard[] => {
+  let chatModels = modelConfig.removeAll ? [] : defaultChartModels;
 
   // 处理移除逻辑
   if (!modelConfig.removeAll) {
@@ -102,6 +112,12 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
 
   const chatModels = processChatModels(modelConfig);
 
+  const ollamaModelConfig = parseModelString(
+    currentSettings(s).languageModel.ollama.customModelName,
+  );
+
+  const ollamaChatModels = processChatModels(ollamaModelConfig, OllamaProvider.chatModels);
+
   return [
     {
       ...OpenAIProvider,
@@ -112,6 +128,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
     { ...MoonshotProvider, enabled: enableMoonshot(s) },
     { ...GoogleProvider, enabled: enableGoogle(s) },
     { ...BedrockProvider, enabled: enableBedrock(s) },
+    { ...OllamaProvider, chatModels: ollamaChatModels, enabled: enableOllama(s) },
   ];
 };
 
@@ -174,4 +191,9 @@ export const modelProviderSelectors = {
   // Moonshot
   enableMoonshot,
   moonshotAPIKey,
+
+  // Ollama
+  enableOllamaConfigInSettings,
+  enableOllama,
+  ollamaProxyUrl,
 };
