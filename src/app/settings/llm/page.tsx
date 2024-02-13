@@ -22,7 +22,7 @@ import Zhipu from './Zhipu';
 export default memo(() => {
   useSwitchSideBarOnInit(SettingsTabs.LLM);
   const enableOllamaFormServerConfig = useGlobalStore(
-    modelProviderSelectors.enableOllamaFromServerConfig,
+    modelProviderSelectors.enableOllamaConfigInSettings,
   );
   const { t } = useTranslation('setting');
   return (
@@ -34,7 +34,7 @@ export default memo(() => {
       <Moonshot />
       <Google />
       <Bedrock />
-      {enableOllamaFormServerConfig ? <Ollama /> : null}
+      {enableOllamaFormServerConfig && <Ollama />}
       <Footer>
         <Trans i18nKey="llm.waitingForMore" ns={'setting'}>
           更多模型正在

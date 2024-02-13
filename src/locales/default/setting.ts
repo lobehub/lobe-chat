@@ -91,7 +91,7 @@ export default {
       },
       customModelName: {
         desc: '增加自定义模型，多个模型使用逗号（,）隔开',
-        placeholder: 'model1,model2,model3',
+        placeholder: 'vicuna,llava,codellama,llama2:13b-text',
         title: '自定义模型名称',
       },
       endpoint: {

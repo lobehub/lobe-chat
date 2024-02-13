@@ -39,7 +39,13 @@ const OllamaProvider = memo(() => {
         name: [LLMProviderConfigKey, providerKey, LLMProviderBaseUrlKey],
       },
       {
-        children: <Input allowClear placeholder={t('llm.Ollama.customModelName.placeholder')} />,
+        children: (
+          <Input.TextArea
+            allowClear
+            placeholder={t('llm.Ollama.customModelName.placeholder')}
+            style={{ height: 100 }}
+          />
+        ),
         desc: t('llm.Ollama.customModelName.desc'),
         label: t('llm.Ollama.customModelName.title'),
         name: [LLMProviderConfigKey, providerKey, 'customModelName'],

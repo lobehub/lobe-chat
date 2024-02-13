@@ -38,8 +38,9 @@ const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
 const enableMoonshot = (s: GlobalStore) => modelProvider(s).moonshot.enabled;
 const moonshotAPIKey = (s: GlobalStore) => modelProvider(s).moonshot.apiKey;
 
-const enableOllamaFromServerConfig = (s: GlobalStore) =>
-  s.serverConfig.languageModel?.ollama?.enabled;
+const enableOllamaConfigInSettings = (s: GlobalStore) =>
+  s.serverConfig.languageModel?.ollama?.enabled || false;
+
 const enableOllama = (s: GlobalStore) => modelProvider(s).ollama.enabled;
 const ollamaProxyUrl = (s: GlobalStore) => modelProvider(s).ollama.endpoint;
 
@@ -192,7 +193,7 @@ export const modelProviderSelectors = {
   moonshotAPIKey,
 
   // Ollama
-  enableOllamaFromServerConfig,
+  enableOllamaConfigInSettings,
   enableOllama,
   ollamaProxyUrl,
 };
