@@ -28,7 +28,6 @@ const Ollama: ModelProviderCard = {
     {
       displayName: 'Code Llama 7B',
       functionCall: false,
-      hidden: true,
       id: 'codellama',
       tokens: 16_000,
       vision: false,
