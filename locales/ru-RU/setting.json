@@ -84,6 +84,22 @@
         "title": "Ключ API"
       }
     },
+    "Ollama": {
+      "checker": {
+        "desc": "Проверьте правильность заполнения адреса прокси"
+      },
+      "customModelName": {
+        "desc": "Добавьте пользовательскую модель, разделяя их запятыми (,)",
+        "placeholder": "викунья,льама,кодельльама,льама2:13b-текст",
+        "title": "Имя пользовательской модели"
+      },
+      "endpoint": {
+        "desc": "Введите адрес прокси-сервера Ollama, оставьте пустым, если не указано локально",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "Адрес прокси-сервера"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Версия API Azure, следуйте формату ГГГГ-ММ-ДД, см. [последнюю версию](https://learn.microsoft.com/ru-ru/azure/ai-services/openai/reference#chat-completions)",

@@ -59,6 +59,8 @@
     "BedrockBizError": "请求 Bedrock 服务出错，请根据以下信息排查或重试",
     "InvalidAzureAPIKey": "Azure API Key 不正确或为空，请检查 Azure API Key 后重试",
     "AzureBizError": "请求 Azure AI 服务出错，请根据以下信息排查或重试",
+    "InvalidOllamaArgs": "Ollama 配置不正确，请检查 Ollama 配置后重试",
+    "OllamaBizError": "请求 Ollama 服务出错，请根据以下信息排查或重试",
     "AgentRuntimeError": "Lobe 语言模型运行时执行出错，请根据以下信息排查或重试"
   },
   "stt": {
