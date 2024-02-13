@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.127.0](https://github.com/lobehub/lobe-chat/compare/v0.126.5...v0.127.0)
+
+<sup>Released on **2024-02-13**</sup>
+
+#### ✨ Features
+
+- **llm**: Support Ollama AI Provider for local LLM.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **llm**: Support Ollama AI Provider for local LLM ([3b6f249](https://github.com/lobehub/lobe-chat/commit/3b6f249))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.126.5](https://github.com/lobehub/lobe-chat/compare/v0.126.4...v0.126.5)
 
 <sup>Released on **2024-02-12**</sup>
