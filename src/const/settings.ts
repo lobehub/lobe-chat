@@ -72,6 +72,7 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   },
   openAI: {
     OPENAI_API_KEY: '',
+    enabled: true,
     models: [],
   },
   zhipu: {
