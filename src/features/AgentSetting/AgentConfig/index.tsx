@@ -22,8 +22,8 @@ const AgentConfig = memo(() => {
     displayMode,
     enableAutoCreateTopic,
     enableHistoryCount,
-    enableMaxTokens,
     enableCompressThreshold,
+    enableMaxTokens,
     updateConfig,
   ] = useStore((s) => [
     s.config.displayMode,
