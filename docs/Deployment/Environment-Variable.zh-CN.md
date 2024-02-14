@@ -52,6 +52,32 @@ LobeChat 在部署时提供了一些额外的配置项，使用环境变量进�
 - 默认值: `-`
 - 示例: `/test`
 
+#### `DEFAULT_AGENT_CONFIG`
+
+- 类型：可选
+- 描述：用于配置 LobeChat 默认助理的默认配置。它支持多种数据类型和结构，包括键值对、嵌套字段、数组值等。
+- 默认值：`-`
+- 示例：`'model=gpt-4-1106-preview;params.max_tokens=300;plugins=search-engine,lobe-image-designer`
+
+`DEFAULT_AGENT_CONFIG` 用于配置 LobeChat 默认助理的默认配置。它支持多种数据类型和结构，包括键值对、嵌套字段、数组值等。下表详细说明了 `DEFAULT_AGENT_CONFIG` 环境变量的配置项、示例以及相应解释：
+
+| 配置项类型 | 示例                                         | 解释                                                                         |
+| ---------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
+| 基本键值对 | `model=gpt-4`                                | 设置模型为 `gpt-4`。                                                         |
+| 嵌套字段   | `tts.sttLocale=en-US`                        | 设置文本到语音服务的语言区域为 `en-US`。                                     |
+| 数组       | `plugins=search-engine,lobe-image-designer`  | 启用 `search-engine` 和 `lobe-image-designer` 插件。                         |
+| 中文逗号   | `plugins=search-engine，lobe-image-designer` | 同上，演示支持中文逗号分隔。                                                 |
+| 多个配置项 | `model=glm-4;provider=zhipu`                 | 设置模型为 `glm-4` 且模型服务商为 `zhipu`。                                  |
+| 数字值     | `params.max_tokens=300`                      | 设置最大令牌数为 `300`。                                                     |
+| 布尔值     | `enableAutoCreateTopic=true`                 | 启用自动创建主题。                                                           |
+| 特殊字符   | `inputTemplate="Hello; I am a bot;"`         | 设置输入模板为 `Hello; I am a bot;`。                                        |
+| 错误处理   | `model=gpt-4;maxToken`                       | 忽略无效条目 `maxToken`，仅解析出 `model=gpt-4`。                            |
+| 值覆盖     | `model=gpt-4;model=gpt-4-1106-preview`       | 如果键重复，使用最后一次出现的值，此处 `model` 的值为 `gpt-4-1106-preview`。 |
+
+相关阅读：
+
+- [\[RFC\] 022 - 环境变量配置默认助手参数](https://github.com/lobehub/lobe-chat/discussions/913)
+
 ## 身份验证服务
 
 ### 通用设置

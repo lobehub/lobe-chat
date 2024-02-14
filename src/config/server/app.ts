@@ -14,6 +14,8 @@ declare global {
 
       PLUGINS_INDEX_URL?: string;
       PLUGIN_SETTINGS?: string;
+
+      DEFAULT_AGENT_CONFIG?: string;
     }
   }
 }
@@ -31,6 +33,8 @@ export const getAppConfig = () => {
 
   return {
     ACCESS_CODES,
+
+    DEFAULT_AGENT_CONFIG: process.env.DEFAULT_AGENT_CONFIG || '',
 
     SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODES.length,
 
