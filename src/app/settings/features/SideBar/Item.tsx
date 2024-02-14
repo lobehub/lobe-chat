@@ -8,8 +8,8 @@ const { Item } = List;
 const useStyles = createStyles(({ css, token, responsive }) => ({
   container: css`
     position: relative;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 16px;
+    padding-bottom: 16px;
     border-radius: ${token.borderRadius}px;
     ${responsive.mobile} {
       border-radius: 0;
@@ -31,7 +31,7 @@ const SettingItem = memo<ItemProps>(({ label, icon, active = false, style, class
   return (
     <Item
       active={active}
-      avatar={<Icon icon={icon} size={{ fontSize: 16 }} />}
+      avatar={<Icon icon={icon} size={{ fontSize: 20 }} />}
       className={cx(styles.container, className)}
       style={style}
       title={label as string}
