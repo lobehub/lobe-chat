@@ -6,6 +6,7 @@ import {
   LobeBedrockAI,
   LobeGoogleAI,
   LobeMoonshotAI,
+  LobeOllamaAI,
   LobeOpenAI,
   LobeRuntimeAI,
   LobeZhipuAI,
@@ -66,6 +67,12 @@ class AgentRuntime {
 
       case ModelProvider.Bedrock: {
         runtimeModel = this.initBedrock(payload);
+        break;
+      }
+
+      case ModelProvider.Ollama: {
+        runtimeModel = this.initOllama(payload);
+        break;
       }
     }
 
@@ -137,6 +144,13 @@ class AgentRuntime {
     }
 
     return new LobeBedrockAI({ accessKeyId, accessKeySecret, region });
+  }
+
+  private static initOllama(payload: JWTPayload) {
+    const { OLLAMA_PROXY_URL } = getServerConfig();
+    const baseUrl = payload?.endpoint || OLLAMA_PROXY_URL;
+
+    return new LobeOllamaAI(baseUrl);
   }
 }
 

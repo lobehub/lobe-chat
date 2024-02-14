@@ -40,6 +40,14 @@ const getProviderAuthPayload = (provider: string) => {
       };
     }
 
+    case ModelProvider.Ollama: {
+      const endpoint = modelProviderSelectors.ollamaProxyUrl(useGlobalStore.getState());
+
+      return {
+        endpoint,
+      };
+    }
+
     default:
     case ModelProvider.OpenAI: {
       const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());
