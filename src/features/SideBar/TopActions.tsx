@@ -9,11 +9,10 @@ import { SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
 export interface TopActionProps {
-  setTab: GlobalStore['switchSideBar'];
-  tab: GlobalStore['sidebarKey'];
+  tab?: GlobalStore['sidebarKey'];
 }
 
-const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
+const TopActions = memo<TopActionProps>(({ tab }) => {
   const { t } = useTranslation('common');
   const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
 
@@ -24,7 +23,6 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
         onClick={(e) => {
           e.preventDefault();
           switchBackToChat(useSessionStore.getState().activeId);
-          setTab(SidebarTabKey.Chat);
         }}
       >
         <ActionIcon
@@ -39,9 +37,6 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
         <ActionIcon
           active={tab === SidebarTabKey.Market}
           icon={Compass}
-          onClick={() => {
-            setTab(SidebarTabKey.Market);
-          }}
           placement={'right'}
           size="large"
           title={t('tab.market')}
