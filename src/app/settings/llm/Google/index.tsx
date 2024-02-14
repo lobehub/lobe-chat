@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
-import Checker from '../Checker';
+import Checker from '../components/Checker';
 import ProviderConfig from '../components/ProviderConfig';
 import { LLMProviderApiTokenKey, LLMProviderConfigKey } from '../const';
 

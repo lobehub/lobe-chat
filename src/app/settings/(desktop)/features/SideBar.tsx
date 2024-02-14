@@ -1,10 +1,10 @@
-import { createStyles } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import UpgradeAlert from '../UpgradeAlert';
-import List from './List';
+import SettingList, { SettingListProps } from '../../features/SettingList';
+import UpgradeAlert from '../../features/UpgradeAlert';
 
 const useStyles = createStyles(({ stylish, token, css }) => ({
   body: stylish.noScrollbar,
@@ -20,18 +20,20 @@ const useStyles = createStyles(({ stylish, token, css }) => ({
   `,
 }));
 
-const SideBar = memo(() => {
+const SideBar = memo<SettingListProps>(({ activeTab }) => {
   const { styles } = useStyles();
 
   const { t } = useTranslation('common');
+  const { mobile } = useResponsive();
+
   return (
-    <Flexbox className={styles.container} width={300}>
+    <Flexbox className={styles.container} width={280}>
       <Flexbox className={styles.top} padding={16}>
         {t('setting')}
       </Flexbox>
       <Flexbox gap={8} style={{ paddingInline: 8 }}>
         <UpgradeAlert />
-        <List />
+        <SettingList activeTab={activeTab} mobile={mobile} />
       </Flexbox>
     </Flexbox>
   );
