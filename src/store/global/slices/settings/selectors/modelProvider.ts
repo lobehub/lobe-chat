@@ -10,12 +10,16 @@ import {
   ZhiPuProvider,
 } from '@/config/modelProviders';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
+import { GlobalLLMProviderKey } from '@/types/settings';
 import { parseModelString } from '@/utils/parseModels';
 
 import { GlobalStore } from '../../../store';
 import { currentSettings } from './settings';
 
 const modelProvider = (s: GlobalStore) => currentSettings(s).languageModel;
+const providerEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) =>
+  currentSettings(s).languageModel[provider]?.enabled || false;
+
 const openAIConfig = (s: GlobalStore) => modelProvider(s).openAI;
 
 const openAIAPIKey = (s: GlobalStore) => openAIConfig(s).OPENAI_API_KEY;
@@ -168,6 +172,9 @@ export const modelProviderSelectors = {
   modelEnabledVision,
   modelEnabledFiles,
   modelEnabledUpload,
+
+  modelProviderConfig: modelProvider,
+  providerEnabled,
 
   // OpenAI
   openAIConfig,

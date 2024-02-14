@@ -1,16 +1,16 @@
-import { PropsWithChildren, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import { isMobileDevice } from '@/utils/responsive';
 
-interface ServerResponsiveLayoutProps {
-  Desktop: (props: PropsWithChildren) => ReactNode;
-  Mobile: (props: PropsWithChildren) => ReactNode;
+interface ServerResponsiveLayoutProps extends Record<string, any> {
+  Desktop: (props: any) => ReactNode;
+  Mobile: (props: any) => ReactNode;
   children?: ReactNode;
 }
-const ResponsiveLayout = ({ children, Desktop, Mobile }: ServerResponsiveLayoutProps) => {
+const ResponsiveLayout = ({ children, Desktop, Mobile, ...res }: ServerResponsiveLayoutProps) => {
   const mobile = isMobileDevice();
 
-  return mobile ? <Mobile>{children}</Mobile> : <Desktop>{children}</Desktop>;
+  return mobile ? <Mobile {...res}>{children}</Mobile> : <Desktop {...res}>{children}</Desktop>;
 };
 
 export default ResponsiveLayout;
