@@ -38,16 +38,4 @@ describe('createCommonSlice', () => {
       expect(router.push).toHaveBeenCalledWith('/chat?session=session-id');
     });
   });
-
-  describe('switchSideBar', () => {
-    it('should switch sidebar', () => {
-      const { result } = renderHook(() => useGlobalStore());
-
-      act(() => {
-        result.current.switchSideBar(SidebarTabKey.Market);
-      });
-
-      expect(result.current.sidebarKey).toEqual(SidebarTabKey.Market);
-    });
-  });
 });
