@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.127.1](https://github.com/lobehub/lobe-chat/compare/v0.127.0...v0.127.1)
+
+<sup>Released on **2024-02-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve settings tabs style and refactor the LLM setting page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve settings tabs style and refactor the LLM setting page, closes [#1299](https://github.com/lobehub/lobe-chat/issues/1299) ([31f6f15](https://github.com/lobehub/lobe-chat/commit/31f6f15))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.127.0](https://github.com/lobehub/lobe-chat/compare/v0.126.5...v0.127.0)
 
 <sup>Released on **2024-02-13**</sup>
