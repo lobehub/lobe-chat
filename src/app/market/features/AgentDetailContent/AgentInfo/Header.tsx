@@ -5,8 +5,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
-import { SidebarTabKey } from '@/store/global/initialState';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 import { useSessionStore } from '@/store/session';
 
@@ -18,7 +16,6 @@ const Header = memo(() => {
   const { t } = useTranslation('market');
   const { styles, theme } = useStyles();
   const createSession = useSessionStore((s) => s.createSession);
-  const switchSideBar = useGlobalStore((s) => s.switchSideBar);
   const agentItem = useMarketStore(agentMarketSelectors.currentAgentItem);
   const { message } = App.useApp();
 
@@ -56,7 +53,6 @@ const Header = memo(() => {
           if (!agentItem) return;
 
           createSession({ config, meta });
-          switchSideBar(SidebarTabKey.Chat);
         }}
         type={'primary'}
       >
