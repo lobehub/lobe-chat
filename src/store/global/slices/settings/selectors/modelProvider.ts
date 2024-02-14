@@ -169,6 +169,8 @@ export const modelProviderSelectors = {
   modelEnabledFiles,
   modelEnabledUpload,
 
+  modelProviderConfig: modelProvider,
+
   // OpenAI
   openAIConfig,
   openAIAPIKey,
