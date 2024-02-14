@@ -6,19 +6,23 @@ import { set } from 'lodash-es';
  */
 export const parseAgentConfig = (envStr: string) => {
   const config = {};
+  // use regex to match key-value pairs, considering the possibility of semicolons in values
+  const regex = /([^;=]+)=("[^"]+"|[^;]+)/g;
+  let match;
 
-  envStr.split(';').forEach((entry) => {
-    const firstEqualIndex = entry.indexOf('=');
-    if (firstEqualIndex === -1) return;
-
-    const key = entry.slice(0, Math.max(0, firstEqualIndex));
-    let value = entry.slice(Math.max(0, firstEqualIndex + 1));
+  while ((match = regex.exec(envStr)) !== null) {
+    const key = match[1].trim();
+    let value = match[2].trim();
     if (!key || !value) return;
 
     let finalValue: any = value;
 
+    // Handle string value
+    if (value.startsWith('"') && value.endsWith('"')) {
+      finalValue = value.slice(1, -1);
+    }
     // Handle numeric values
-    if (!isNaN(value as any)) {
+    else if (!isNaN(value as any)) {
       finalValue = Number(value);
     }
     // Handle boolean values
@@ -32,7 +36,7 @@ export const parseAgentConfig = (envStr: string) => {
     }
 
     set(config, key, finalValue);
-  });
+  }
 
   return config;
 };
