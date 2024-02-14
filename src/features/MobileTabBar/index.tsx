@@ -6,7 +6,6 @@ import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -17,8 +16,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-export default memo<{ className?: string }>(({ className }) => {
-  const [tab, setTab] = useGlobalStore((s) => [s.sidebarKey, s.switchSideBar]);
+interface Props {
+  className?: string;
+  tabBarKey?: SidebarTabKey;
+}
+
+export default memo<Props>(({ className, tabBarKey }) => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const router = useRouter();
@@ -30,7 +33,6 @@ export default memo<{ className?: string }>(({ className }) => {
         ),
         key: SidebarTabKey.Chat,
         onClick: () => {
-          setTab(SidebarTabKey.Chat);
           router.push('/chat');
         },
         title: t('tab.chat'),
@@ -39,7 +41,6 @@ export default memo<{ className?: string }>(({ className }) => {
         icon: (active) => <Icon className={active ? styles.active : undefined} icon={Bot} />,
         key: SidebarTabKey.Market,
         onClick: () => {
-          setTab(SidebarTabKey.Market);
           router.push('/market');
         },
         title: t('tab.market'),
@@ -48,7 +49,6 @@ export default memo<{ className?: string }>(({ className }) => {
         icon: (active) => <Icon className={active ? styles.active : undefined} icon={User} />,
         key: SidebarTabKey.Setting,
         onClick: () => {
-          setTab(SidebarTabKey.Setting);
           router.push('/settings');
         },
         title: t('tab.setting'),
@@ -56,12 +56,5 @@ export default memo<{ className?: string }>(({ className }) => {
     ],
     [t],
   );
-  return (
-    <MobileTabBar
-      activeKey={tab}
-      className={className}
-      items={items}
-      onChange={(key) => setTab(key as any)}
-    />
-  );
+  return <MobileTabBar activeKey={tabBarKey} className={className} items={items} />;
 });

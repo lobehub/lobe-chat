@@ -7,7 +7,6 @@ import { Center, Flexbox } from 'react-layout-kit';
 import SafeSpacing from '@/components/SafeSpacing';
 import { MAX_WIDTH } from '@/const/layoutTokens';
 import AppLayoutDesktop from '@/layout/AppLayout.desktop';
-import { useSwitchSideBarOnInit } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
 import Header from './features/Header';
@@ -30,10 +29,8 @@ const useStyles = createStyles(({ css }) => ({
 const MarketLayout = memo<PropsWithChildren>(({ children }) => {
   const { theme, styles } = useStyles();
 
-  useSwitchSideBarOnInit(SidebarTabKey.Market);
-
   return (
-    <AppLayoutDesktop>
+    <AppLayoutDesktop sidebarKey={SidebarTabKey.Market}>
       <Flexbox
         flex={1}
         height={'100%'}

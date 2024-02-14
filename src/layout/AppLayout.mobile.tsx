@@ -5,6 +5,7 @@ import { CSSProperties, PropsWithChildren, ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
+import { SidebarTabKey } from '@/store/global/slices/common/initialState';
 
 const MobileTabBar = dynamic(() => import('@/features/MobileTabBar'));
 
@@ -39,11 +40,12 @@ interface AppMobileLayoutProps extends PropsWithChildren {
   navBar?: ReactNode;
   showTabBar?: boolean;
   style?: CSSProperties;
+  tabBarKey?: SidebarTabKey;
   title?: MobileNavBarTitleProps;
 }
 
 const AppLayoutMobile = memo<AppMobileLayoutProps>(
-  ({ children, showTabBar, navBar, style, className }) => {
+  ({ children, showTabBar, tabBarKey, navBar, style, className }) => {
     const { styles, cx } = useStyles();
 
     return (
@@ -58,7 +60,7 @@ const AppLayoutMobile = memo<AppMobileLayoutProps>(
         {showTabBar && (
           <>
             <SafeSpacing mobile position={'bottom'} />
-            <MobileTabBar className={styles.mobileTabBar} />
+            <MobileTabBar className={styles.mobileTabBar} tabBarKey={tabBarKey} />
           </>
         )}
       </Flexbox>
