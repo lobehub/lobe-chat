@@ -24,7 +24,12 @@ const SettingList = memo<SettingListProps>(({ activeTab, mobile }) => {
 
   return items.map(({ value, icon, label }) => (
     <Link aria-label={label} href={`/settings/${value}`} key={value}>
-      <Item active={mobile ? false : activeTab === value} icon={icon} label={label} />
+      <Item
+        active={mobile ? false : activeTab === value}
+        hoverable={!mobile}
+        icon={icon}
+        label={label}
+      />
     </Link>
   ));
 });
