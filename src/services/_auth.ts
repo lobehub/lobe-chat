@@ -4,7 +4,7 @@ import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors, settingsSelectors } from '@/store/global/selectors';
 import { createJWT } from '@/utils/jwt';
 
-const getProviderAuthPayload = (provider: string) => {
+export const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
     case ModelProvider.ZhiPu: {
       return { apiKey: modelProviderSelectors.zhipuAPIKey(useGlobalStore.getState()) };
