@@ -23,11 +23,10 @@ import { GlobalStore, useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 
 export interface BottomActionProps {
-  setTab: GlobalStore['switchSideBar'];
-  tab: GlobalStore['sidebarKey'];
+  tab?: GlobalStore['sidebarKey'];
 }
 
-const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
+const BottomActions = memo<BottomActionProps>(({ tab }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
 
@@ -113,10 +112,6 @@ const BottomActions = memo<BottomActionProps>(({ tab, setTab }) => {
         </Flexbox>
       ),
       onClick: () => {
-        setTab(SidebarTabKey.Setting);
-        useGlobalStore.setState({
-          sidebarKey: SidebarTabKey.Setting,
-        });
         router.push('/settings/common');
       },
     },
