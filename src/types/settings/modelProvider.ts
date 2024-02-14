@@ -7,6 +7,7 @@ export interface OpenAIConfig {
    * custom mode name for fine-tuning or openai like model
    */
   customModelName?: string;
+  enabled: boolean;
   endpoint?: string;
   /**
    * @deprecated

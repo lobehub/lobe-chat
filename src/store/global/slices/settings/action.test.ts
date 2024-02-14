@@ -6,7 +6,6 @@ import { withSWR } from '~test-utils';
 import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
 import { userService } from '@/services/user';
 import { useGlobalStore } from '@/store/global';
-import { SettingsTabs } from '@/store/global/initialState';
 import { LobeAgentSettings } from '@/types/session';
 import { GlobalSettings, OpenAIConfig } from '@/types/settings';
 
@@ -97,18 +96,6 @@ describe('SettingsAction', () => {
 
       // Assert that updateUserSettings was called with the correct settings
       expect(userService.updateUserSettings).toHaveBeenCalledWith(partialSettings);
-    });
-  });
-
-  describe('switchSettingTabs', () => {
-    it('should switch settings tabs', () => {
-      const { result } = renderHook(() => useGlobalStore());
-
-      act(() => {
-        result.current.switchSettingTabs(SettingsTabs.Agent);
-      });
-
-      expect(result.current.settingsTab).toEqual(SettingsTabs.Agent);
     });
   });
 
