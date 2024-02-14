@@ -5,7 +5,6 @@ import type { StateCreator } from 'zustand/vanilla';
 
 import { userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
-import { SettingsTabs } from '@/store/global/initialState';
 import { LobeAgentSettings } from '@/types/session';
 import { GlobalLLMConfig, GlobalLLMProviderKey, GlobalSettings } from '@/types/settings';
 import { difference } from '@/utils/difference';
@@ -22,7 +21,6 @@ export interface SettingsAction {
     config: Partial<GlobalLLMConfig[T]>,
   ) => Promise<void>;
   setSettings: (settings: DeepPartial<GlobalSettings>) => Promise<void>;
-  switchSettingTabs: (tab: SettingsTabs) => void;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
   toggleProviderEnabled: (provider: GlobalLLMProviderKey, enabled: boolean) => Promise<void>;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
@@ -61,9 +59,6 @@ export const createSettingsSlice: StateCreator<
     await get().refreshUserConfig();
   },
 
-  switchSettingTabs: (tab) => {
-    set({ settingsTab: tab });
-  },
   switchThemeMode: async (themeMode) => {
     await get().setSettings({ themeMode });
   },
