@@ -1,18 +1,19 @@
-import { useResponsive } from 'antd-style';
 import { Bot, Mic2, Settings2, Webhook } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import Item from './Item';
 
-const List = memo(() => {
+export interface SettingListProps {
+  activeTab?: SettingsTabs;
+  mobile?: boolean;
+}
+
+const SettingList = memo<SettingListProps>(({ activeTab, mobile }) => {
   const { t } = useTranslation('setting');
-  const [tab, switchSettingTabs] = useGlobalStore((s) => [s.settingsTab, s.switchSettingTabs]);
-  const { mobile } = useResponsive();
 
   const items = [
     { icon: Settings2, label: t('tab.common'), value: SettingsTabs.Common },
@@ -22,17 +23,15 @@ const List = memo(() => {
   ];
 
   return items.map(({ value, icon, label }) => (
-    <Link
-      aria-label={label}
-      href={`/settings/${value}`}
-      key={value}
-      onClick={() => {
-        switchSettingTabs(value);
-      }}
-    >
-      <Item active={mobile ? false : tab === value} icon={icon} label={label} />
+    <Link aria-label={label} href={`/settings/${value}`} key={value}>
+      <Item
+        active={mobile ? false : activeTab === value}
+        hoverable={!mobile}
+        icon={icon}
+        label={label}
+      />
     </Link>
   ));
 });
 
-export default List;
+export default SettingList;
