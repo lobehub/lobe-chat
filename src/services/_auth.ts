@@ -61,12 +61,6 @@ export const getProviderAuthPayload = (provider: string) => {
         useAzure: openai.useAzure,
       };
     }
-
-    // default: {
-    //   const config = modelProviderSelectors.modelProviderConfig(useGlobalStore.getState());
-    //
-    //   return config[provider as GlobalLLMProviderKey];
-    // }
   }
 };
 
