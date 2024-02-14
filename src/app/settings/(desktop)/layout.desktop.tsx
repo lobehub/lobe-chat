@@ -5,7 +5,6 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import AppLayoutDesktop from '@/layout/AppLayout.desktop';
-import { useSwitchSideBarOnInit } from '@/store/global';
 import { SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 
 import Header from './features/Header';
@@ -17,10 +16,8 @@ export interface DesktopLayoutProps {
 }
 
 const DesktopLayout = memo<DesktopLayoutProps>(({ children, activeTab }) => {
-  useSwitchSideBarOnInit(SidebarTabKey.Setting);
-
   return (
-    <AppLayoutDesktop>
+    <AppLayoutDesktop sidebarKey={SidebarTabKey.Setting}>
       <SideBar activeTab={activeTab} />
       <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>
         <Header activeTab={activeTab} />
