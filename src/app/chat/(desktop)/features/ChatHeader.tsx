@@ -56,7 +56,7 @@ const Left = memo(() => {
         onClick={() =>
           isInbox
             ? router.push('/settings/agent')
-            : router.push(pathString('/chat/settings', { hash: location.hash }))
+            : router.push(pathString('/chat/settings', { search: location.search }))
         }
         size={40}
         title={title}
