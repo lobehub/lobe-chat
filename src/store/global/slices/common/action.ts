@@ -12,6 +12,9 @@ import type { GlobalStore } from '@/store/global';
 import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
+import { switchLang } from '@/utils/switchLang';
+
+import { settingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('common');
 
@@ -82,6 +85,11 @@ export const createCommonSlice: StateCreator<
           if (!data) return;
 
           set({ avatar: data.avatar, settings: data.settings }, false, n('fetchUserConfig', data));
+
+          const { language } = settingsSelectors.currentSettings(get());
+          if (language === 'auto') {
+            switchLang('auto');
+          }
         },
         revalidateOnFocus: false,
       },

@@ -5,10 +5,7 @@ import useSWR from 'swr';
 
 import { createI18nNext } from '@/locales/create';
 import { normalizeLocale } from '@/locales/resources';
-import { useOnFinishHydrationGlobal } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 import { isOnServerSide } from '@/utils/env';
-import { switchLang } from '@/utils/switchLang';
 
 const getAntdLocale = async (lang?: string) => {
   let normalLang = normalizeLocale(lang);
@@ -49,12 +46,6 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
         // console.debug('inited.');
       });
   }
-
-  useOnFinishHydrationGlobal((s) => {
-    if (settingsSelectors.currentSettings(s).language === 'auto') {
-      switchLang('auto');
-    }
-  }, []);
 
   // handle i18n instance language change
   useEffect(() => {
