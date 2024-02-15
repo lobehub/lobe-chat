@@ -32,7 +32,7 @@ export const useAvatarsClick = (): OnAvatarsClick => {
           isInbox
             ? router.push('/settings/agent')
             : mobile
-              ? router.push(pathString('/chat/settings', { hash: location.hash }))
+              ? router.push(pathString('/chat/settings', { search: location.search }))
               : toggleSystemRole(true);
       }
     }
