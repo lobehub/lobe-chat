@@ -1,23 +1,26 @@
 'use client';
 
-import { PropsWithChildren, memo } from 'react';
+import { ReactNode, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import AppLayoutDesktop from '@/layout/AppLayout.desktop';
-import { useSwitchSideBarOnInit } from '@/store/global';
-import { SidebarTabKey } from '@/store/global/initialState';
+import { SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 
-import SideBar from '../features/SideBar';
 import Header from './features/Header';
+import SideBar from './features/SideBar';
 
-export default memo(({ children }: PropsWithChildren) => {
-  useSwitchSideBarOnInit(SidebarTabKey.Setting);
+export interface DesktopLayoutProps {
+  activeTab: SettingsTabs;
+  children: ReactNode;
+}
+
+const DesktopLayout = memo<DesktopLayoutProps>(({ children, activeTab }) => {
   return (
-    <AppLayoutDesktop>
-      <SideBar />
+    <AppLayoutDesktop sidebarKey={SidebarTabKey.Setting}>
+      <SideBar activeTab={activeTab} />
       <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>
-        <Header />
+        <Header activeTab={activeTab} />
         <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
           <SafeSpacing />
           <Center gap={16} width={'100%'}>
@@ -28,3 +31,5 @@ export default memo(({ children }: PropsWithChildren) => {
     </AppLayoutDesktop>
   );
 });
+
+export default DesktopLayout;

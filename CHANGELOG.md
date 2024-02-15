@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 0.128.1](https://github.com/lobehub/lobe-chat/compare/v0.128.0...v0.128.1)
+
+<sup>Released on **2024-02-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix auto lang switch.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix auto lang switch, closes [#1305](https://github.com/lobehub/lobe-chat/issues/1305) ([7a51329](https://github.com/lobehub/lobe-chat/commit/7a51329))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.128.0](https://github.com/lobehub/lobe-chat/compare/v0.127.2...v0.128.0)
+
+<sup>Released on **2024-02-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Support define default agent config with `DEFAULT_AGENT_CONFIG` ENV.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support define default agent config with `DEFAULT_AGENT_CONFIG` ENV, closes [#1291](https://github.com/lobehub/lobe-chat/issues/1291) ([c7c096e](https://github.com/lobehub/lobe-chat/commit/c7c096e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.127.2](https://github.com/lobehub/lobe-chat/compare/v0.127.1...v0.127.2)
+
+<sup>Released on **2024-02-14**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the sidebar to fix first render state.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the sidebar to fix first render state, closes [#1301](https://github.com/lobehub/lobe-chat/issues/1301) ([c477491](https://github.com/lobehub/lobe-chat/commit/c477491))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.127.1](https://github.com/lobehub/lobe-chat/compare/v0.127.0...v0.127.1)
+
+<sup>Released on **2024-02-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve settings tabs style and refactor the LLM setting page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve settings tabs style and refactor the LLM setting page, closes [#1299](https://github.com/lobehub/lobe-chat/issues/1299) ([31f6f15](https://github.com/lobehub/lobe-chat/commit/31f6f15))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.127.0](https://github.com/lobehub/lobe-chat/compare/v0.126.5...v0.127.0)
 
 <sup>Released on **2024-02-13**</sup>
