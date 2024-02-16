@@ -88,7 +88,7 @@ const SystemRole = memo(() => {
                     onAvatarClick={() => {
                       setOpen(false);
                       setEditing(false);
-                      router.push(pathString('/chat/settings', { hash: location.hash }));
+                      router.push(pathString('/chat/settings', { search: location.search }));
                     }}
                     style={{ marginBottom: 16 }}
                   />
