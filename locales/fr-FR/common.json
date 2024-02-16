@@ -13,7 +13,7 @@
   "agentMaxToken": "Longueur maximale de la session",
   "agentModel": "Modèle",
   "agentProfile": "Profil de l'agent",
-  "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
+  "appInitializing": "AiFenschTech  est en cours de démarrage, veuillez patienter...",
   "archive": "Archiver",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
@@ -48,9 +48,9 @@
       "subTitle": "Importation des données réussie, durée : {{duration}} secondes. Détails de l'importation :",
       "title": "Importation des données terminée"
     },
-    "loading": "Importation des données en cours, veuillez patienter...",
+    "loading": "Importation du profil en cours, veuillez patienter...",
     "result": {
-      "added": "Importation réussie",
+      "added": "Importation  du profil réussie",
       "errors": "Erreurs d'importation",
       "messages": "Messages",
       "sessionGroups": "Groupes de session",
@@ -59,7 +59,7 @@
       "topics": "Sujets",
       "type": "Type de données"
     },
-    "title": "Importer des données"
+    "title": "Importer un profil"
   },
   "lang": {
     "ar": "arabe",
@@ -97,7 +97,7 @@
     "zh-CN": "Chinois simplifié",
     "zh-TW": "Chinois traditionnel"
   },
-  "layoutInitializing": "Initialisation de la mise en page en cours...",
+  "layoutInitializing": "Initialisation de AiFenschTech en cours...",
   "modelProvider": {
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
