@@ -1,4 +1,3 @@
-```markdown
 import { Callout, Steps, Tabs } from 'nextra/components';
 
 # Docker Compose Deployment Guide
@@ -13,25 +12,21 @@ We provide a [Docker image][docker-release-link] for deploying the LobeChat serv
 
 (Skip this step if already installed)
 
-\<Tabs items={\['Ubuntu', 'CentOS']}>
-\<Tabs.Tab>
+<Tabs items={['Ubuntu', 'CentOS']}>
+<Tabs.Tab>
 
-````
 ```fish
 $ apt install docker.io
 ```
-````
 
-\</Tabs.Tab>
-\<Tabs.Tab>
+</Tabs.Tab>
+<Tabs.Tab>
 
-````
 ```fish
 $ yum install docker
 ```
-````
 
-\</Tabs.Tab>
+</Tabs.Tab>
 
 </Tabs>
 
@@ -117,7 +112,6 @@ Configure Crontab to execute the script every 5 minutes:
 ```
 
 </Steps>
-```
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square

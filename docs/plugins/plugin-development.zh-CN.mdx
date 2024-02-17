@@ -1,21 +1,5 @@
 # 插件开发指南
 
-#### TOC
-
-- [插件构成](#插件构成)
-- [自定义插件流程](#自定义插件流程)
-  - [**`1`** 创建并启动插件项目](#1-创建并启动插件项目)
-  - [**`2`** 在 LobeChat 角色设置中添加本地插件](#2-在-lobechat-角色设置中添加本地插件)
-  - [**`3`** 会话测试插件功能](#3-会话测试插件功能)
-- [本地插件开发](#本地插件开发)
-  - [manifest](#manifest)
-  - [项目结构](#项目结构)
-  - [服务端](#服务端)
-  - [插件 UI 界面](#插件-ui-界面)
-- [插件部署与发布](#插件部署与发布)
-  - [插件 Shield](#插件-shield)
-- [链接](#链接)
-
 ## 插件构成
 
 一个 LobeChat 的插件由以下几个部分组成：
@@ -25,8 +9,6 @@
 3. **插件服务**：用于实现插件描述清单中所描述的服务端和前端模块，分别如下：
    - **服务端**：需要实现 manifest 中描述的 `api` 部分的接口能力；
    - **前端 UI**（可选）：需要实现 manifest 中描述的 `ui` 部分的界面，该界面将会在插件消息中透出，进而实现比文本更加丰富的信息展示方式。
-
-<br/>
 
 ## 自定义插件流程
 
@@ -53,7 +35,7 @@ $ npm run dev
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259643-1a9cc34a-76f3-4ccf-928b-129654670efd.png)
 
-点击插件列表右侧的 <kbd>添加<kbd/> 按钮，打开自定义插件添加弹窗：
+点击插件列表右侧的 <kbd>添加</kbd> 按钮，打开自定义插件添加弹窗：
 
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259748-2ef6a244-39bb-483c-b359-f156ffcbe1a4.png)
 
@@ -81,7 +63,7 @@ $ npm run dev
 
 当完成这些操作后，你已经了解了添加自定义插件，并在 LobeChat 中使用的基础流程。
 
-<br/>
+<br />
 
 ## 本地插件开发
 
@@ -192,7 +174,7 @@ export default async (req: Request) => {
 
 由于 LobeChat 默认的插件网关是云端服务 `/api/plugins`，云端服务通过 manifest 上的 `api.url` 地址发送请求，以解决跨域问题。
 
-针对自定义插件，插件请求需要发送给本地服务， 因此通过在 manifest 中指定网关 (<http://localhost:3400/api/gateway>)，LobeChat 将会直接请求该地址，然后只需要在该地址下创建对应的网关即可。
+针对自定义插件，插件请求需要发送给本地服务， 因此通过在 manifest 中指定网关 (http://localhost:3400/api/gateway)，LobeChat 将会直接请求该地址，然后只需要在该地址下创建对应的网关即可。
 
 ```ts
 import { createLobeChatPluginGateway } from '@lobehub/chat-plugins-gateway';
@@ -201,7 +183,7 @@ export const config = {
   runtime: 'edge',
 };
 
-export default async createLobeChatPluginGateway();
+export default createLobeChatPluginGateway();
 ```
 
 [`@lobehub/chat-plugins-gateway`](https://github.com/lobehub/chat-plugins-gateway) 包含了 LobeChat 中插件网关的[实现](https://github.com/lobehub/lobe-chat/blob/main/src/pages/api/plugins.api.ts)，你可以直接使用该包创建网关，进而让 LobeChat 访问到本地的插件服务。
@@ -248,8 +230,6 @@ const Render = memo(() => {
 export default Render;
 ```
 
-<br/>
-
 ## 插件部署与发布
 
 当你完成插件的开发后，你可以使用你习惯的方式进行插件的部署。例如使用 vercel ，或者打包成 docker 发布等等。
@@ -266,17 +246,13 @@ export default Render;
 [![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF%20%26%20%F0%9F%A7%A9%20LobeHub-Plugin-95f3d9?labelColor=black&style=flat-square)](https://github.com/lobehub/lobe-chat-plugins)
 ```
 
-<br/>
-
 ## 链接
 
-- **📘 Pluging SDK 文档**: <https://chat-plugin-sdk.lobehub.com>
-- **🚀 chat-plugin-template**: <https://github.com/lobehub/chat-plugin-template>
-- **🧩 chat-plugin-sdk**: <https://github.com/lobehub/chat-plugin-sdk>
-- **🚪 chat-plugin-gateway**: <https://github.com/lobehub/chat-plugins-gateway>
-- **🏪 lobe-chat-plugins**: <https://github.com/lobehub/lobe-chat-plugins>
-
-<!-- LINK GROUP -->
+- **📘 Pluging SDK 文档**: https://chat-plugin-sdk.lobehub.com
+- **🚀 chat-plugin-template**: https://github.com/lobehub/chat-plugin-template
+- **🧩 chat-plugin-sdk**: https://github.com/lobehub/chat-plugin-sdk
+- **🚪 chat-plugin-gateway**: https://github.com/lobehub/chat-plugins-gateway
+- **🏪 lobe-chat-plugins**: https://github.com/lobehub/lobe-chat-plugins
 
 [fetch-plugin-message-url]: https://github.com/lobehub/chat-plugin-template
 [lobe-chat-plugin-template-url]: https://github.com/lobehub/chat-plugin-template

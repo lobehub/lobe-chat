@@ -1,4 +1,3 @@
-```markdown
 import { Callout, Steps } from 'nextra/components';
 
 # Identity Verification Service
@@ -31,10 +30,10 @@ http(s)://your-domain/api/auth/callback/auth0
 
 ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b)
 
-{' '}
-
-\<Callout type={'info'}>
-You can fill in or modify Allowed Callback URLs after deployment, but make sure the filled URL is consistent with the deployed URL. </Callout>
+<Callout type={'info'}>
+  You can fill in or modify Allowed Callback URLs after deployment, but make sure the filled URL is
+  consistent with the deployed URL.
+</Callout>
 
 ### Add Users
 
@@ -47,7 +46,7 @@ Click on the "Users Management" in the left navigation bar to enter the user man
 When deploying LobeChat, you need to configure the following environment variables:
 
 | Environment Variable | Type | Description |
-| --------------------- | ---- | ----------- |
+| --- | --- | --- |
 | `ENABLE_OAUTH_SSO` | Required | Enable single sign-on (SSO) for LobeChat. Set to `1` to enable single sign-on. |
 | `NEXTAUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate a key using the following command: `openssl rand -base64 32` |
 | `AUTH0_CLIENT_ID` | Required | Client ID of the Auth0 application |
@@ -59,8 +58,10 @@ You can refer to the related variable details at [Environment Variables](/en/sel
 
 </Steps>
 
-<Callout>After successful deployment, users will be able to authenticate and use LobeChat using the users configured in Auth0.</Callout>
-```
+<Callout>
+  After successful deployment, users will be able to authenticate and use LobeChat using the users
+  configured in Auth0.
+</Callout>
 
 ## Advanced Configuration
 
@@ -79,8 +80,14 @@ If your enterprise or organization needs to support external user logins, you ca
 ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/7b6f6a6c-2686-49d8-9dbd-0516053f1efa)
 
 <Callout type={'warning'}>
-Configuring social login services by default allows anyone to authenticate, which may lead to LobeChat being abused by external users. </Callout> <Callout>
-If you need to restrict login users, be sure to configure a **blocking policy**: After enabling the social login option, refer to [this article][auth0-login-actions-manual] to create an Action to set up a blocking/allow list. </Callout>
+  Configuring social login services by default allows anyone to authenticate, which may lead to
+  LobeChat being abused by external users.
+</Callout>
+<Callout>
+  If you need to restrict login users, be sure to configure a **blocking policy**: After enabling
+  the social login option, refer to [this article][auth0-login-actions-manual] to create an Action
+  to set up a blocking/allow list.
+</Callout>
 
 [auth0-client-page]: https://manage.auth0.com/dashboard
 [auth0-login-actions-manual]: https://auth0.com/blog/permit-or-deny-login-requests-using-auth0-actions/
