@@ -1,11 +1,10 @@
-# 数据统计
+import {Callout} from "nextra/components";
+
+# 数据分析
 
 为更好地帮助分析 LobeChat 的用户使用情况，我们在 LobeChat 中集成了若干免费 / 开源的数据统计服务，用于收集用户的使用情况，你可以按需开启。
 
-#### TOC
-
-- [Vercel Analytics](#vercel-analytics)
-- [🚧 Posthog](#-posthog)
+<Callout type={'warning'}>目前集成的数据分析平台，均只支持 Vercel / Zeabur 平台部署使用，不支持 Docker/Docker Compose 部署</Callout>
 
 ## Vercel Analytics
 
@@ -15,6 +14,4 @@
 
 Vercel Analytics 提供了 2500 次 / 月的免费 Web Analytics Events (可以理解为 PV)，对于个人部署自用的产品来说基本够用。
 
-如果你需要了解 Vercel Analytics 的详细使用教程，请查阅[Vercel Web Analytics 快速开始](https://vercel.com/docs/analytics/quickstart)
-
-## 🚧 Posthog
+如果你需要了解 Vercel Analytics 的详细使用教程，请查阅 [Vercel Web Analytics 快速开始](https://vercel.com/docs/analytics/quickstart)

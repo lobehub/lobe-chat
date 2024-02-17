@@ -1,22 +1,5 @@
 # 自定义助手指南
 
-#### TOC
-
-- [添加自定义助手](#添加自定义助手)
-  - [`A` 通过角色市场添加](#a-通过角色市场添加)
-  - [`B` 通过新建自定义助手](#b-通过新建自定义助手)
-- [Prompt 基本概念](#prompt-基本概念)
-  - [如何写好一个结构化 prompt](#如何写好一个结构化-prompt)
-  - [如何提升其质量和效果](#如何提升其质量和效果)
-- [模型的概念](#模型的概念)
-  - [ChatGPT](#chatgpt)
-- [模型参数概念](#模型参数概念)
-  - [`temperature`](#temperature)
-  - [`top_p`](#top_p)
-  - [`presence_penalty`](#presence_penalty)
-  - [`frequency_penalty`](#frequency_penalty)
-- [扩展阅读](#扩展阅读)
-
 ## 添加自定义助手
 
 作为 LobeChat 的基础职能单位，助手的添加和迭代是非常重要的。现在你可以通过两种方式将助手添加到你的常用列表中
