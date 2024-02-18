@@ -164,7 +164,7 @@
     "@types/ua-parser-js": "^0.7",
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
-    "@vitest/coverage-v8": "^1",
+    "@vitest/coverage-v8": "~1.2.2",
     "ajv-keywords": "^5.1.0",
     "commitlint": "^18",
     "consola": "^3",
@@ -189,7 +189,8 @@
     "typescript": "^5",
     "unified": "^11",
     "unist-util-visit": "^5",
-    "vitest": "^1",
+    "vite": "5.1.1",
+    "vitest": "~1.2.2",
     "vitest-canvas-mock": "^0.3"
   },
   "publishConfig": {
