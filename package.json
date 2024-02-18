@@ -189,6 +189,7 @@
     "typescript": "^5",
     "unified": "^11",
     "unist-util-visit": "^5",
+    "vite": "5.0.11",
     "vitest": "^1",
     "vitest-canvas-mock": "^0.3"
   },
