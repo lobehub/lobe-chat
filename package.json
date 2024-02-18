@@ -172,7 +172,7 @@
     "eslint": "^8",
     "fake-indexeddb": "^5",
     "glob": "^10",
-    "husky": "^8",
+    "husky": "^9.0.0",
     "jsdom": "^24.0.0",
     "just-diff": "^6",
     "lint-staged": "^15",
