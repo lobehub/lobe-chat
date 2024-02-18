@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.128.4](https://github.com/lobehub/lobe-chat/compare/v0.128.3...v0.128.4)
+
+<sup>Released on **2024-02-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix documents i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix documents i18n, closes [#1319](https://github.com/lobehub/lobe-chat/issues/1319) ([a0600dc](https://github.com/lobehub/lobe-chat/commit/a0600dc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.128.3](https://github.com/lobehub/lobe-chat/compare/v0.128.2...v0.128.3)
 
 <sup>Released on **2024-02-18**</sup>
