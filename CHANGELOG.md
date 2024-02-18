@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.128.3](https://github.com/lobehub/lobe-chat/compare/v0.128.2...v0.128.3)
+
+<sup>Released on **2024-02-18**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor with chat docs site.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor with chat docs site, closes [#1309](https://github.com/lobehub/lobe-chat/issues/1309) ([c131fa6](https://github.com/lobehub/lobe-chat/commit/c131fa6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.128.2](https://github.com/lobehub/lobe-chat/compare/v0.128.1...v0.128.2)
 
 <sup>Released on **2024-02-15**</sup>
