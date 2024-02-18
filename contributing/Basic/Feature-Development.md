@@ -178,7 +178,7 @@ class SessionService {
 
 ## 3. Store Action Section
 
-In the LobeChat application, the Store module is used to manage the frontend state of the application. The Actions within it are functions that trigger state updates, usually by calling methods in the service layer to perform actual data processing operations and then updating the state in the Store. We use `zustand` as the underlying dependency for the Store module. For a detailed practical introduction to state management, you can refer to [📘 Best Practices for State Management](./State-Management-Intro.zh-CN).
+In the LobeChat application, the Store module is used to manage the frontend state of the application. The Actions within it are functions that trigger state updates, usually by calling methods in the service layer to perform actual data processing operations and then updating the state in the Store. We use `zustand` as the underlying dependency for the Store module. For a detailed practical introduction to state management, you can refer to [📘 Best Practices for State Management](../State-Management/State-Management-Intro.zh-CN.md).
 
 ### sessionGroup CRUD
 

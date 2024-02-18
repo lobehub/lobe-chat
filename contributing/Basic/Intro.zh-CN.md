@@ -44,7 +44,7 @@ src
 └── utils      # 通用的工具函数
 ```
 
-有关目录架构的详细介绍，详见： [文件夹目录架构](Folder-Structure.zh-CN)
+有关目录架构的详细介绍，详见： [文件夹目录架构](Folder-Structure.zh-CN.md)
 
 ## 本地开发环境设置
 
@@ -76,7 +76,7 @@ bun run dev
 # 访问 http://localhost:3010 查看应用
 ```
 
-现在，你应该可以在浏览器中看到 LobeChat 的欢迎页面。详细的环境配置指南，请参考 [开发环境设置指南](Setup-Development.zh-CN)。
+现在，你应该可以在浏览器中看到 LobeChat 的欢迎页面。详细的环境配置指南，请参考 [开发环境设置指南](Setup-Development.zh-CN.md)。
 
 ## 代码风格与贡献指南
 
@@ -87,7 +87,7 @@ bun run dev
 
 所有的贡献都将经过代码审查。维护者可能会提出修改建议或要求。请积极响应审查意见，并及时做出调整，我们期待你的参与和贡献。
 
-详细的代码风格和贡献指南，请参考 [代码风格与贡献指南](Contributing-Guidelines.zh-CN)。
+详细的代码风格和贡献指南，请参考 [代码风格与贡献指南](Contributing-Guidelines.zh-CN.md)。
 
 ## 国际化实现指南
 
@@ -95,9 +95,9 @@ LobeChat 采用 `i18next` 和 `lobe-i18n` 实现多语言支持，确保用户�
 
 国际化文件位于 `src/locales`，包含默认语言（中文）。 我们会通过 `lobe-i18n` 自动生成其他的语言 JSON 文件。
 
-如果要添加新语种，需遵循特定步骤，详见 [新语种添加指南](Add-New-Locale.zh-CN)。 我们鼓励你参与我们的国际化努力，共同为全球用户提供更好的服务。
+如果要添加新语种，需遵循特定步骤，详见 [新语种添加指南](../Internationalization/Add-New-Locale.zh-CN.md)。 我们鼓励你参与我们的国际化努力，共同为全球用户提供更好的服务。
 
-详细的国际化实现指南指南，请参考 [国际化实现指南](Internationalization-Implementation.zh-CN)。
+详细的国际化实现指南指南，请参考 [国际化实现指南](../Internationalization/Internationalization-Implementation.zh-CN.md)。
 
 ## 附录：资源与参考
 

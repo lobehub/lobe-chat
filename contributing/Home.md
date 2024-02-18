@@ -42,6 +42,7 @@ LobeChat is a open-source, extensible ([Function Calling][fc-url]), high-perform
 
 ### 🧩 Plugins
 
+- [Plugin Development Guide](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development) | [插件开发指南](https://github.com/lobehub/lobe-chat/wiki/Plugin-Development.zh-CN)
 - [Plugin Index and Submit](https://github.com/lobehub/lobe-chat-plugins) | [插件索引与提交](https://github.com/lobehub/lobe-chat-plugins/blob/main/README.zh-CN.md)
 - [Plugin SDK Docs](https://chat-plugin-sdk.lobehub.com) | [插件 SDK 文档](https://chat-plugin-sdk.lobehub.com)
 

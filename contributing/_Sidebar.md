@@ -2,7 +2,7 @@
 
 #### 🏠 Home
 
-- [TOC](Home) | [目录](Home)
+- [TOC](Home.md) | [目录](Home.md)
 
 <!-- DOCS LIST -->
 
