@@ -22,7 +22,7 @@ module.exports = defineConfig({
     'vi-VN',
   ],
   temperature: 0,
-  modelName: 'gpt-3.5-turbo-0125',
+  modelName: 'gpt-3.5-turbo-1106',
   splitToken: 1024,
   experimental: {
     jsonMode: true,
