@@ -1,4 +1,4 @@
-## Lobe Chat Wiki
+## Lobe Chat Contributing Wiki
 
 #### 🏠 Home
 
