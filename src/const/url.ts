@@ -1,5 +1,6 @@
 import urlJoin from 'url-join';
 
+import { getClientConfig } from '@/config/client';
 import { withBasePath } from '@/utils/basePath';
 
 import pkg from '../../package.json';
@@ -7,8 +8,12 @@ import { INBOX_SESSION_ID } from './session';
 
 export const GITHUB = pkg.homepage;
 export const CHANGELOG = urlJoin(GITHUB, 'blob/master/CHANGELOG.md');
-export const WIKI = urlJoin(GITHUB, 'wiki');
-export const WIKI_PLUGIN_GUIDE = urlJoin(WIKI, 'Plugin-Development');
+
+const { LOBE_CHAT_DOCS } = getClientConfig();
+
+export const DOCUMENTS = LOBE_CHAT_DOCS;
+
+export const WIKI_PLUGIN_GUIDE = urlJoin(DOCUMENTS, 'Plugin-Development');
 export const ABOUT = pkg.homepage;
 export const FEEDBACK = pkg.bugs.url;
 export const DISCORD = 'https://discord.gg/AYFPHvv2jT';
