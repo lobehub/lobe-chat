@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.128.5](https://github.com/lobehub/lobe-chat/compare/v0.128.4...v0.128.5)
+
+<sup>Released on **2024-02-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the document url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the document url ([43b5677](https://github.com/lobehub/lobe-chat/commit/43b5677))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.128.4](https://github.com/lobehub/lobe-chat/compare/v0.128.3...v0.128.4)
 
 <sup>Released on **2024-02-18**</sup>
