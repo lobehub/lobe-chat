@@ -121,13 +121,13 @@ const BottomActions = memo<BottomActionProps>(({ tab }) => {
     <>
       <ActionIcon
         icon={Github}
-        onClick={() => window.open(GITHUB, '__blank')}
+        onClick={() => window.open(GITHUB)}
         placement={'right'}
         title={'GitHub'}
       />
       <ActionIcon
         icon={Book}
-        onClick={() => window.open(DOCUMENTS, '__blank')}
+        onClick={() => window.open(DOCUMENTS)}
         placement={'right'}
         title={t('document')}
       />

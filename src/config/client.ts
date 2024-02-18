@@ -43,7 +43,7 @@ export const getClientConfig = () => ({
   BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
 
   // docs
-  LOBE_CHAT_DOCS: process.env.NEXT_PUBLIC_LOBE_CHAT_DOCS || 'https://chat-docs.lobehub.com',
+  LOBE_CHAT_DOCS: process.env.NEXT_PUBLIC_LOBE_CHAT_DOCS,
 
   // Vercel Analytics
   ANALYTICS_VERCEL: process.env.NEXT_PUBLIC_ANALYTICS_VERCEL === '1',
