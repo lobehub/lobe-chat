@@ -55,7 +55,10 @@ const nextConfig = {
     // due to google api not work correct in some countries
     // we need a proxy to bypass the restriction
     { source: '/api/chat/google', destination: `${API_PROXY_ENDPOINT}/api/chat/google` },
-    { source: '/docs', destination: `${docsBasePath}/docs` },
+    {
+      source: '/docs/:path*',
+      destination: `${docsBasePath}/docs/:path*`,
+    },
   ],
   reactStrictMode: true,
 
