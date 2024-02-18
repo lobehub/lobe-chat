@@ -1,9 +1,5 @@
 {
   "name": "@lobehub-docs/lobe-chat",
   "version": "1.0.0",
-  "private": true,
-  "files": [
-    "*.md",
-    "**/**.md"
-  ]
+  "private": true
 }
