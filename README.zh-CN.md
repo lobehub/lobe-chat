@@ -10,7 +10,7 @@
 
 LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多模态、可扩展的（[Function Call][fc-link]）插件系统。<br/> 支持一键免费部署私人 ChatGPT/LLM 网页应用程序。
 
-[English](./README.md) · **简体中文** · [更新日志](./CHANGELOG.md) · [文档][github-wiki-link] · [报告问题][github-issues-link] · [请求功能][github-issues-link]
+[English](./README.md) · **简体中文** · [更新日志](./CHANGELOG.md) · [文档][github-document-link] · [报告问题][github-issues-link] · [请求功能][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -155,7 +155,7 @@ LobeChat 支持文字转语音（Text-to-Speech，TTS）和语音转文字（Spe
 LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地增强了 ChatGPT 的实用性和灵活性。通过利用插件，ChatGPT 能够实现实时信息的获取和处理，例如自动获取最新新闻头条，为用户提供即时且相关的资讯。
 此外，这些插件不仅局限于新闻聚合，还可以扩展到其他实用的功能，如快速检索文档、获取电商平台数据、以及其他各式各样的第三方服务。
 
-> 通过 Wiki 了解更多 [📘 插件使用](https://github.com/lobehub/lobe-chat/wiki/Plugins.zh-CN)
+> 通过文档了解更多 [📘 插件使用](https://chat-docs.lobehub.com/zh/usage/plugins/basic)
 
 <video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
@@ -207,12 +207,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                   | 助手说明                                                                                                              |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [SPI 生成器](https://chat-preview.lobehub.com/market?agent=spi-generator)<br/><sup>By **[fanling](https://github.com/fanling)** on **2024-02-18**</sup>    | 请输入潜在客户名称，生成 SPI<br/>`特赞`                                                                               |
 | [产品文案撰写](https://chat-preview.lobehub.com/market?agent=copywriting)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-14**</sup>        | 精通有说服力的文案撰写和消费者心理学<br/>`电子商务`                                                                   |
 | [私域运营专家](https://chat-preview.lobehub.com/market?agent=gl-syyy)<br/><sup>By **[guling-io](https://github.com/guling-io)** on **2024-02-14**</sup>    | 擅长私域运营、引流、承接、转化和内容策划，熟悉营销理论和相关经典著作。<br/>`私域运营` `引流` `承接` `转化` `内容策划` |
 | [自媒体运营专家](https://chat-preview.lobehub.com/market?agent=gl-zmtyy)<br/><sup>By **[guling-io](https://github.com/guling-io)** on **2024-02-14**</sup> | 擅长自媒体运营与内容创作<br/>`自媒体运营` `社交媒体` `内容创作` `粉丝增长` `品牌推广`                                 |
-| [产品描述](https://chat-preview.lobehub.com/market?agent=product-description)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-14**</sup>    | 打造引人入胜的产品描述，提升电子商务销售业绩<br/>`电子商务`                                                           |
 
-> 📊 Total agents: [<kbd>**177**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**178**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -638,6 +638,7 @@ This project is [MIT](./LICENSE) licensed.
 [github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
 [github-contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
 [github-contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat?color=c4f042&labelColor=black&style=flat-square
+[github-document-link]: https://chat-docs.lobehub.com/zh
 [github-forks-link]: https://github.com/lobehub/lobe-chat/network/members
 [github-forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat?color=8ae8ff&labelColor=black&style=flat-square
 [github-issues-link]: https://github.com/lobehub/lobe-chat/issues
@@ -653,7 +654,6 @@ This project is [MIT](./LICENSE) licensed.
 [github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
 [github-trending-shield]: https://trendshift.io/api/badge/repositories/2256
 [github-trending-url]: https://trendshift.io/repositories/2256
-[github-wiki-link]: https://github.com/lobehub/lobe-chat/wiki
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins

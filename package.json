@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.128.2",
+  "version": "0.128.5",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -38,7 +38,7 @@
     "lint:md": "remark . --quiet --frail --output",
     "lint:style": "stylelint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
     "lint:ts": "eslint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
-    "prepare": "husky install",
+    "prepare": "husky",
     "prettier": "prettier -c --write \"**/**\"",
     "pull": "git pull",
     "release": "semantic-release",
@@ -172,7 +172,7 @@
     "eslint": "^8",
     "fake-indexeddb": "^5",
     "glob": "^10",
-    "husky": "^8",
+    "husky": "^9",
     "jsdom": "^24.0.0",
     "just-diff": "^6",
     "lint-staged": "^15",

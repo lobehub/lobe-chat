@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 0.128.5](https://github.com/lobehub/lobe-chat/compare/v0.128.4...v0.128.5)
+
+<sup>Released on **2024-02-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the document url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the document url ([43b5677](https://github.com/lobehub/lobe-chat/commit/43b5677))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.128.4](https://github.com/lobehub/lobe-chat/compare/v0.128.3...v0.128.4)
+
+<sup>Released on **2024-02-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix documents i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix documents i18n, closes [#1319](https://github.com/lobehub/lobe-chat/issues/1319) ([a0600dc](https://github.com/lobehub/lobe-chat/commit/a0600dc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.128.3](https://github.com/lobehub/lobe-chat/compare/v0.128.2...v0.128.3)
+
+<sup>Released on **2024-02-18**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor with chat docs site.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor with chat docs site, closes [#1309](https://github.com/lobehub/lobe-chat/issues/1309) ([c131fa6](https://github.com/lobehub/lobe-chat/commit/c131fa6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.128.2](https://github.com/lobehub/lobe-chat/compare/v0.128.1...v0.128.2)
 
 <sup>Released on **2024-02-15**</sup>
