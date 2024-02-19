@@ -11,6 +11,7 @@ import {
   Settings,
   Settings2,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -125,13 +126,9 @@ const BottomActions = memo<BottomActionProps>(({ tab }) => {
         placement={'right'}
         title={'GitHub'}
       />
-      <ActionIcon
-        icon={Book}
-        onClick={() => window.open(DOCUMENTS)}
-        placement={'right'}
-        title={t('document')}
-      />
-
+      <Link href={DOCUMENTS} target={'_blank'}>
+        <ActionIcon icon={Book} placement={'right'} title={t('document')} />
+      </Link>
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
         {hasNewVersion ? (
           <Flexbox>
