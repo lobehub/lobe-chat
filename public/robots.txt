@@ -1,0 +1,9 @@
+Host: /
+
+Sitemap: /sitemap.xml
+
+User-agent: *
+Allow: /$
+Allow: /welcome$
+Allow: /market$
+Disallow: /

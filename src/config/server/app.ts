@@ -1,5 +1,4 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
-import { OFFICIAL_URL } from '@/const/url';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -39,7 +38,7 @@ export const getAppConfig = () => {
 
     SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODES.length,
 
-    SITE_URL: process.env.SITE_URL || OFFICIAL_URL,
+    SITE_URL: process.env.SITE_URL,
 
     IMGUR_CLIENT_ID: process.env.IMGUR_CLIENT_ID || DEFAULT_IMAGUR_CLIENT_ID,
 

@@ -27,6 +27,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "next build",
+    "postbuild": "next-sitemap --config next-sitemap.config.mjs",
     "build:analyze": "ANALYZE=true next build",
     "build:docker": "DOCKER=true next build",
     "dev": "next dev -p 3010",
@@ -107,6 +108,7 @@
     "nanoid": "^5",
     "next": "^14.1",
     "next-auth": "5.0.0-beta.11",
+    "next-sitemap": "^4.2.3",
     "numeral": "^2.0.6",
     "nuqs": "^1.15.4",
     "openai": "^4.22",

@@ -9,7 +9,7 @@ import pkg from '../../package.json';
 const title = 'LobeChat';
 const { description, homepage } = pkg;
 
-const { SITE_URL } = getServerConfig();
+const { SITE_URL = OFFICIAL_URL } = getServerConfig();
 const { BASE_PATH } = getClientConfig();
 
 // if there is a base path, then we don't need the manifest
