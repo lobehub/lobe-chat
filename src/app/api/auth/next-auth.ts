@@ -17,6 +17,7 @@ const nextAuth = NextAuth({
       ]
     : [],
   secret: NEXTAUTH_SECRET,
+  trustHost: true,
 });
 
 export const {

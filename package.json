@@ -106,7 +106,7 @@
     "modern-screenshot": "^4",
     "nanoid": "^5",
     "next": "^14.1",
-    "next-auth": "beta",
+    "next-auth": "5.0.0-beta.11",
     "numeral": "^2.0.6",
     "nuqs": "^1.15.4",
     "openai": "^4.22",
