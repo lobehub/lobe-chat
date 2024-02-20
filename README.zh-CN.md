@@ -205,14 +205,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                   | 助手说明                                                                                                              |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [SPI 生成器](https://chat-preview.lobehub.com/market?agent=spi-generator)<br/><sup>By **[fanling](https://github.com/fanling)** on **2024-02-18**</sup>    | 请输入潜在客户名称，生成 SPI<br/>`特赞`                                                                               |
-| [产品文案撰写](https://chat-preview.lobehub.com/market?agent=copywriting)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-14**</sup>        | 精通有说服力的文案撰写和消费者心理学<br/>`电子商务`                                                                   |
-| [私域运营专家](https://chat-preview.lobehub.com/market?agent=gl-syyy)<br/><sup>By **[guling-io](https://github.com/guling-io)** on **2024-02-14**</sup>    | 擅长私域运营、引流、承接、转化和内容策划，熟悉营销理论和相关经典著作。<br/>`私域运营` `引流` `承接` `转化` `内容策划` |
-| [自媒体运营专家](https://chat-preview.lobehub.com/market?agent=gl-zmtyy)<br/><sup>By **[guling-io](https://github.com/guling-io)** on **2024-02-14**</sup> | 擅长自媒体运营与内容创作<br/>`自媒体运营` `社交媒体` `内容创作` `粉丝增长` `品牌推广`                                 |
+| 最近新增                                                                                                                                                                             | 助手说明                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Facebook 广告撰写专家](https://chat-preview.lobehub.com/market?agent=facebook-advertising-writing-expert)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-19**</sup> | 专注于创建引人注目的标题、引人入胜的主体文本和有效的广告文案<br/>`facebook` `advertising` `writing` `expert` `ecommerce`                       |
+| [Jira 故事协助工具](https://chat-preview.lobehub.com/market?agent=jira-product-manager)<br/><sup>By **[emad-pg](https://github.com/emad-pg)** on **2024-02-19**</sup>                | 专注于将功能点子转化为全面的 Jira 故事<br/>`技术产品管理` `故事创建` `jira`                                                                    |
+| [ThinkTank360](https://chat-preview.lobehub.com/market?agent=think-tank-business-strategy)<br/><sup>By **[mikelix](https://github.com/mikelix)** on **2024-02-19**</sup>             | 熟练的顾问，汲取史蒂夫・乔布斯、埃隆・马斯克、马云、柏拉图和雷・达里奥的智慧，用于决策审查、判断和建议。<br/>`创新` `智慧` `智囊团` `商业策略` |
+| [翻译专家](https://chat-preview.lobehub.com/market?agent=translation-specialist)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-02-19**</sup>                       | 精通西班牙语和英语的专业翻译人员<br/>`翻译` `语言` `专家` `指南`                                                                               |
 
-> 📊 Total agents: [<kbd>**178**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**181**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
