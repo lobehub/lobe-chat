@@ -42,8 +42,8 @@ LobeChat 是开源的高性能聊天机器人框架，支持语音合成、多�
 
 [![][github-trending-shield]][github-trending-url]
 
-![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/306133914-09b93d33-aa7b-4094-a7f8-8f63ed51ffff.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240220%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240220T042829Z&X-Amz-Expires=300&X-Amz-Signature=c7a3ff728ab5756c7b552cecf51fc7148f29ea6d59a45b4a8f08e3f82e3708a5&X-Amz-SignedHeaders=host&actor_id=28616219&key_id=0&repo_id=643445235)
+![](https://github.com/lobehub/lobe-chat/assets/28616219/9f155dff-4737-429f-9cad-a70a1a860c5f)
+![](https://github.com/lobehub/lobe-chat/assets/28616219/69ab8600-dc60-46b1-a733-372a76c98b53)
 
 </div>
 
