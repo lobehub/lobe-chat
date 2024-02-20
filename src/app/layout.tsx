@@ -2,6 +2,7 @@ import { Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { PropsWithChildren } from 'react';
 import { isRtlLang } from 'rtl-detect';
+import urlJoin from 'url-join';
 
 import Analytics from '@/components/Analytics';
 import { getServerConfig } from '@/config/server';
@@ -11,6 +12,7 @@ import {
   LOBE_THEME_NEUTRAL_COLOR,
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
+import { OFFICIAL_URL } from '@/const/url';
 import Layout from '@/layout/GlobalLayout';
 
 import StyleRegistry from './StyleRegistry';
@@ -62,3 +64,13 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
   width: 'device-width',
 };
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+
+  return {
+    alternates: {
+      canonical: urlJoin(OFFICIAL_URL, slug),
+    },
+  };
+}

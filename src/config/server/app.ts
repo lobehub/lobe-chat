@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
+import { OFFICIAL_URL } from '@/const/url';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -8,7 +9,7 @@ declare global {
 
       IMGUR_CLIENT_ID?: string;
 
-      METADATA_BASE_URL?: string;
+      SITE_URL?: string;
 
       AGENTS_INDEX_URL?: string;
 
@@ -38,7 +39,7 @@ export const getAppConfig = () => {
 
     SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODES.length,
 
-    METADATA_BASE_URL: process.env.METADATA_BASE_URL,
+    SITE_URL: process.env.SITE_URL || OFFICIAL_URL,
 
     IMGUR_CLIENT_ID: process.env.IMGUR_CLIENT_ID || DEFAULT_IMAGUR_CLIENT_ID,
 
