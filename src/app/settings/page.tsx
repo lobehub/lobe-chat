@@ -1,8 +1,4 @@
-import { Metadata } from 'next';
-import urlJoin from 'url-join';
-
 import { getServerConfig } from '@/config/server';
-import { OFFICIAL_URL } from '@/const/url';
 import { isMobileDevice } from '@/utils/responsive';
 
 import DesktopPage from './(desktop)';
@@ -19,7 +15,3 @@ const Page = () => {
 };
 
 export default Page;
-
-export const metadata: Metadata = {
-  alternates: { canonical: urlJoin(OFFICIAL_URL, '/settings') },
-};
