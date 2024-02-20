@@ -1,0 +1,33 @@
+import { Callout } from 'nextra/components';
+
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/306134212-5943c9a1-0965-4011-8028-f06b2cb1a9bc.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240220%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240220T042726Z&X-Amz-Expires=300&X-Amz-Signature=7169fe97cdd550a0240b5b6aceb5fe22cccfda437d51dc1ffcc8b9841a6f59b0&X-Amz-SignedHeaders=host&actor_id=28616219&key_id=0&repo_id=643445235)
+
+# Support for Local LLM
+
+<Callout>Available in >=v0.127.0, currently only supports Docker deployment</Callout>
+
+With the release of LobeChat v0.127.0, we are excited to introduce an exciting feature - Ollama AI support! 🤯 With the collaborative efforts of the [community] (<https://github.com/lobehub/lobe-chat/pull/1265>) and the powerful infrastructure support of [Ollama AI](https://ollama.ai/), you can now engage in conversations with a local LLM (Large Language Model) in LobeChat! 🤩
+
+We are thrilled to introduce this revolutionary feature to all LobeChat users at this special moment. The integration of Ollama AI not only signifies a huge leap forward for us technologically, but also promises to continuously pursue more efficient and intelligent communication for our users.
+
+### How to start a conversation with a local LLM?
+
+The startup process is extremely simple! You just need to run the following Docker command to experience a conversation with a local LLM in LobeChat:
+
+```bash
+$ docker run -d -p 3210:3210 -e OLLAMA_PROXY_URL=http://host.docker.internal:11434/v1 lobehub/lobe-chat
+```
+
+Yes, it's that simple! 🤩 You don't need to go through complicated configurations or worry about a complex installation process. We have prepared everything for you. With just one command, you can engage in deep conversations with AI.
+
+### Experience unprecedented interaction speed
+
+With the powerful capabilities of Ollama AI, LobeChat has greatly improved its efficiency in natural language processing. Whether it's processing speed or response time, it has reached new heights. This means that your conversation experience will be smoother, without any waiting, and you will receive immediate responses.
+
+### Why choose a local LLM?
+
+Compared to cloud-based solutions, a local LLM provides higher privacy and security. All your conversations are processed locally, without going through any external servers, ensuring the security of your data. In addition, local processing can also reduce network latency, providing you with a more immediate communication experience.
+
+### Embark on your journey with LobeChat & Ollama AI
+
+Now, let's embark on this exciting journey together! Through the collaboration of LobeChat and Ollama AI, explore the infinite possibilities brought by AI. Whether you are a tech enthusiast or simply curious about AI communication, LobeChat will provide you with an unprecedented experience.
