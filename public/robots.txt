@@ -1,5 +1,3 @@
-Host: /
-
 Sitemap: /sitemap.xml
 
 User-agent: *
