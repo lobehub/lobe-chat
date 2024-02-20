@@ -9,6 +9,7 @@ import {
   Mistral,
   Moonshot,
   OpenAI,
+  Perplexity,
   Tongyi,
 } from '@lobehub/icons';
 import { memo } from 'react';
@@ -31,7 +32,8 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.includes('qwen')) return <Tongyi size={size} />;
   if (model.includes('minmax')) return <Minimax size={size} />;
   if (model.includes('baichuan')) return <Baichuan size={size} />;
-  if (model.includes('mistral')) return <Mistral size={size} />;
+  if (model.includes('mistral') || model.includes('mixtral')) return <Mistral size={size} />;
+  if (model.includes('pplx')) return <Perplexity size={size} />;
 });
 
 export default ModelIcon;
