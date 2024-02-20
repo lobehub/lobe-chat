@@ -2,6 +2,6 @@ Sitemap: /sitemap.xml
 
 User-agent: *
 Allow: /$
-Allow: /welcome$
-Allow: /market$
+Allow: /welcome
+Allow: /market*
 Disallow: /
