@@ -1,0 +1,135 @@
+import { Callout } from 'nextra/components';
+
+# Model Service Providers
+
+When deploying LobeChat, a rich set of environment variables related to model service providers is provided, allowing you to easily define the model service providers to be enabled in LobeChat.
+
+## OpenAI
+
+### `OPENAI_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for on the OpenAI account page, you can check it out [here](openai-api-page)
+- Default: -
+- Example: `sk-xxxxxx...xxxxxx`
+
+### `OPENAI_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL
+- Default: `https://api.openai.com/v1`
+- Example: `https://api.chatanywhere.cn` or `https://aihubmix.com/v1`
+
+<Callout type={'warning'}>
+  Please check the request suffix of your proxy service provider. Some proxy service providers may
+  add `/v1` to the request suffix, while others may not. If you find that the AI returns an empty
+  message during testing, try adding the `/v1` suffix and retry.{' '}
+</Callout>
+
+<Callout type={'info'}>
+  Whether to fill in `/v1` is closely related to the model service provider. For example, the
+  default address of openai is `api.openai.com/v1`. If your proxy forwards the `/v1` interface, you
+  can simply fill in `proxy.com`. However, if the model service provider directly forwards the
+  `api.openai.com` domain, then you need to add `/v1` to the URL yourself.{' '}
+</Callout>
+
+Related discussions:
+
+- [Why is the return value blank after installing Docker, configuring environment variables?](https://github.com/lobehub/lobe-chat/discussions/623)
+- [Reasons for errors when using third-party interfaces](https://github.com/lobehub/lobe-chat/discussions/734)
+- [No response in chat after filling in the proxy server address](https://github.com/lobehub/lobe-chat/discussions/1065)
+
+### `CUSTOM_MODELS`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas.
+- Default: `-`
+- Example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
+
+The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the name of `gpt-4-0125-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only `gpt-3.5-turbo` will be enabled.
+
+You can find all current model names in [modelProviders](https://github.com/lobehub/lobe-chat/tree/main/src/config/modelProviders).
+
+## Azure OpenAI
+
+If you need to use Azure OpenAI to provide model services, you can refer to the [Deploying with Azure OpenAI](../Deployment/Deploy-with-Azure-OpenAI.en-US.md) section for detailed steps. Here, we will list the environment variables related to Azure OpenAI.
+
+### `USE_AZURE_OPENAI`
+
+- Type: Optional
+- Description: Set this value to `1` to enable Azure OpenAI configuration
+- Default: -
+- Example: `1`
+
+### `AZURE_API_KEY`
+
+- Type: Optional
+- Description: This is the API key you applied for on the Azure OpenAI account page
+- Default: -
+- Example: `c55168be3874490ef0565d9779ecd5a6`
+
+### `AZURE_API_VERSION`
+
+- Type: Optional
+- Description: The API version of Azure, following the format YYYY-MM-DD
+- Default: `2023-08-01-preview`
+- Example: `2023-05-15`, refer to [latest version][azure-api-verion-url]
+
+## ZHIPU AI
+
+### `ZHIPU_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the ZHIPU AI service
+- Default: -
+- Example: `4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
+
+## Moonshot AI
+
+### `MOONSHOT_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Moonshot AI service
+- Default: -
+- Example: `Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
+
+## Google AI
+
+### `GOOGLE_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Google AI Platform to access Google AI services
+- Default: -
+- Example: `AIraDyDwcw254kwJaGjI9wwaHcdDCS__Vt3xQE`
+
+## AWS Bedrock
+
+### `AWS_ACCESS_KEY_ID`
+
+- Type: Required
+- Description: Access key ID for AWS service authentication
+- Default: -
+- Example: `AKIA5STVRLFSB4S9HWBR`
+
+### `AWS_SECRET_ACCESS_KEY`
+
+- Type: Required
+- Description: Key for AWS service authentication
+- Default: -
+- Example: `Th3vXxLYpuKcv2BARktPSTPxx+jbSiFT6/0w7oEC`
+
+### `AWS_REGION`
+
+- Type: Optional
+- Description: Region setting for AWS services
+- Default: `us-east-1`
+- Example: `us-east-1`
+
+## Ollama
+
+### `OLLAMA_PROXY_URL`
+
+- Type: Optional
+- Description: Used to enable the Ollama service, setting this will display optional open-source language models in the language model list and can also specify custom language models
+- Default: -
+- Example: `http://127.0.0.1:11434/v1`

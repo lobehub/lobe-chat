@@ -11,7 +11,7 @@
 LobeChat is an open-source, high-performance chatbot framework<br/>that supports speech synthesis, multimodal, and extensible ([Function Call][fc-link]) plugin system. <br/>
 Supports one-click free deployment of your private ChatGPT/LLM web application.
 
-**English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Wiki][github-wiki-link] · [Report Bug][github-issues-link] · [Request Feature][github-issues-link]
+**English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Documents][github-document-link] · [Report Bug][github-issues-link] · [Request Feature][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -44,7 +44,8 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 
 [![][github-trending-shield]][github-trending-url]
 
-![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
+![](https://github.com/lobehub/lobe-chat/assets/28616219/9f155dff-4737-429f-9cad-a70a1a860c5f)
+![](https://github.com/lobehub/lobe-chat/assets/28616219/8b04c3c9-3d71-4fb4-bd9b-a4f415c5876d)
 
 </div>
 
@@ -169,7 +170,7 @@ such as automatically fetching the latest news headlines to provide users with i
 Moreover, these plugins are not limited to news aggregation but can also extend to other practical functions, such as quick document retrieval,
 e-commerce platform data access, and various third-party services.
 
-> Learn More in [📘 Plugin Usage](https://github.com/lobehub/lobe-chat/wiki/Plugins)
+> Learn More in [📘 Plugin Usage](https://chat-docs.lobehub.com/en/usage/plugins/basic)
 
 <video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
@@ -225,14 +226,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                              | Description                                                                                                                                                                                                                                                                          |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Product Copywriting](https://chat-preview.lobehub.com/market?agent=copywriting)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-14**</sup>                  | Expert in persuasive copywriting and consumer psychology<br/>`ecommerce`                                                                                                                                                                                                             |
-| [Private Domain Operations Expert](https://chat-preview.lobehub.com/market?agent=gl-syyy)<br/><sup>By **[guling-io](https://github.com/guling-io)** on **2024-02-14**</sup> | Specializing in private domain operations, traffic acquisition, user retention, conversion, and content planning. Familiar with marketing theories and related classic works.<br/>`private-domain-operations` `traffic-acquisition` `user-retention` `conversion` `content-planning` |
-| [Self-Media Operation Expert](https://chat-preview.lobehub.com/market?agent=gl-zmtyy)<br/><sup>By **[guling-io](https://github.com/guling-io)** on **2024-02-14**</sup>     | Specialized in self-media operation and content creation<br/>`self-media-operation` `social-media` `content-creation` `fan-growth` `brand-promotion`                                                                                                                                 |
-| [Product Description](https://chat-preview.lobehub.com/market?agent=product-description)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-14**</sup>          | Craft compelling product descriptions that boost e-commerce sales<br/>`ecommerce`                                                                                                                                                                                                    |
+| Recent Submits                                                                                                                                                                                     | Description                                                                                                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Facebook Advertising Writing Expert](https://chat-preview.lobehub.com/market?agent=facebook-advertising-writing-expert)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-19**</sup> | Specializing in creating attention-grabbing headlines, compelling primary texts, and effective ad copy<br/>`facebook` `advertising` `writing` `expert` `ecommerce`                                   |
+| [Jira Story Facilitator](https://chat-preview.lobehub.com/market?agent=jira-product-manager)<br/><sup>By **[emad-pg](https://github.com/emad-pg)** on **2024-02-19**</sup>                         | Specialized in transforming feature ideas into comprehensive Jira stories<br/>`technical-product-management` `story-creation` `jira`                                                                 |
+| [ThinkTank360](https://chat-preview.lobehub.com/market?agent=think-tank-business-strategy)<br/><sup>By **[mikelix](https://github.com/mikelix)** on **2024-02-19**</sup>                           | Skilled consultant channeling wisdom of Steve Jobs, Elon Musk, MA Yun, Plato, and Ray Dalio for decision reviews, judgements, and advice.<br/>`innovation` `wisdom` `think-tank` `business-strategy` |
+| [Translation Specialist](https://chat-preview.lobehub.com/market?agent=translation-specialist)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-02-19**</sup>                       | Expert translator fluent in Spanish and English<br/>`translation` `language` `expert` `guidelines`                                                                                                   |
 
-> 📊 Total agents: [<kbd>**177**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**181**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -244,7 +245,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 ![](https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp)
 
-#### `6` Progress Web App
+#### `6` Progressive Web App
 
 We deeply understand the importance of providing a seamless experience for users in today's multi-device environment.
 Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
@@ -622,6 +623,7 @@ This project is [MIT](./LICENSE) licensed.
 [github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
 [github-contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
 [github-contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat?color=c4f042&labelColor=black&style=flat-square
+[github-document-link]: https://chat-docs.lobehub.com/en
 [github-forks-link]: https://github.com/lobehub/lobe-chat/network/members
 [github-forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat?color=8ae8ff&labelColor=black&style=flat-square
 [github-issues-link]: https://github.com/lobehub/lobe-chat/issues
@@ -637,7 +639,6 @@ This project is [MIT](./LICENSE) licensed.
 [github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
 [github-trending-shield]: https://trendshift.io/api/badge/repositories/2256
 [github-trending-url]: https://trendshift.io/repositories/2256
-[github-wiki-link]: https://github.com/lobehub/lobe-chat/wiki
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-assets-github]: https://github.com/lobehub/lobe-assets
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins

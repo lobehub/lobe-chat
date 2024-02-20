@@ -11,12 +11,13 @@ import {
   Settings,
   Settings2,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ABOUT, CHANGELOG, DISCORD, FEEDBACK, GITHUB, WIKI } from '@/const/url';
+import { ABOUT, CHANGELOG, DISCORD, DOCUMENTS, FEEDBACK, GITHUB } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
 import { configService } from '@/services/config';
 import { GlobalStore, useGlobalStore } from '@/store/global';
@@ -89,10 +90,10 @@ const BottomActions = memo<BottomActionProps>(({ tab }) => {
       onClick: () => window.open(CHANGELOG, '__blank'),
     },
     {
-      icon: <Icon icon={Book} />,
+      icon: <Icon icon={DiscordIcon} />,
       key: 'wiki',
-      label: 'WIKI',
-      onClick: () => window.open(WIKI, '__blank'),
+      label: 'Discord',
+      onClick: () => window.open(DISCORD, '__blank'),
     },
     {
       icon: <Icon icon={Heart} />,
@@ -120,17 +121,14 @@ const BottomActions = memo<BottomActionProps>(({ tab }) => {
   return (
     <>
       <ActionIcon
-        icon={DiscordIcon}
-        onClick={() => window.open(DISCORD, '__blank')}
-        placement={'right'}
-        title={'Discord'}
-      />
-      <ActionIcon
         icon={Github}
-        onClick={() => window.open(GITHUB, '__blank')}
+        onClick={() => window.open(GITHUB)}
         placement={'right'}
         title={'GitHub'}
       />
+      <Link href={DOCUMENTS} target={'_blank'}>
+        <ActionIcon icon={Book} placement={'right'} title={t('document')} />
+      </Link>
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
         {hasNewVersion ? (
           <Flexbox>

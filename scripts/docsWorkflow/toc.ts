@@ -1,15 +1,15 @@
 export default [
   {
-    dir: 'Usage',
-    title: '🤯 Usage',
+    dir: 'Basic',
+    title: '🤯 Basic',
   },
   {
-    dir: 'Deployment',
-    title: '🛳 Self-Hosting',
+    dir: 'Internationalization',
+    title: '🌎 Internationalization',
   },
   {
-    dir: 'Development',
-    title: '⌨️ Development',
+    dir: 'State-Management',
+    title: '⌨️ State Management',
   },
   {
     dir: 'Agents',
