@@ -44,7 +44,8 @@ Supports one-click free deployment of your private ChatGPT/LLM web application.
 
 [![][github-trending-shield]][github-trending-url]
 
-![](https://gw.alipayobjects.com/zos/kitchen/RKnWrrfuMl/welcome.webp)
+![](https://github.com/lobehub/lobe-chat/assets/28616219/9f155dff-4737-429f-9cad-a70a1a860c5f)
+![](https://github.com/lobehub/lobe-chat/assets/28616219/69ab8600-dc60-46b1-a733-372a76c98b53)
 
 </div>
 

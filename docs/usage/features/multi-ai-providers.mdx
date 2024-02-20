@@ -1,0 +1,24 @@
+import { Callout } from 'nextra/components';
+
+# Multi-Model Service Provider Support
+
+<Callout>Available in >=v0.123.0, currently only supports Docker deployment</Callout>
+
+In the continuous development of LobeChat, we deeply understand the importance of diversity in model service providers for meeting the needs of the community when providing AI conversation services. Therefore, we have expanded our support to multiple model service providers, rather than being limited to a single one, in order to provide users with a richer and more diverse selection of conversations.
+
+In this way, LobeChat can more flexibly adapt to the needs of different users, while also providing developers with a wider range of choices.
+
+## Supported Model Service Providers
+
+We have implemented support for the following model service providers:
+
+- **AWS Bedrock**: Integrated AWS's Bedrock model, providing powerful natural language processing capabilities. [AWS Bedrock Details](https://aws.amazon.com/bedrock)
+- **Google AI (Gemini Pro, Gemini Vision)**: Access to Google's Gemini series models, including Gemini and Gemini Pro, to support advanced language understanding and generation. [Google AI Details](https://deepmind.google/technologies/gemini/)
+- **ChatGLM**: Added the ChatGLM series models (GLM-4/GLM-4-vision/GLM-3-turbo) from Zhīpǔ AI, providing users with another efficient conversation model choice. [Zhīpǔ AI Details](https://www.zhipuai.cn/)
+- **Moonshot AI (Dark Side of the Moon)**: Integrated Moonshot AI's models, an innovative AI startup from China, aimed at providing deeper conversation understanding. [Moonshot AI](https://www.moonshot.cn/)
+
+At the same time, we are also planning to support more model service providers, such as Replicate and Perplexity, to further enrich our service provider library. If you would like LobeChat to support your favorite service provider, feel free to join our [community discussions](https://github.com/lobehub/lobe-chat/discussions/1284).
+
+## Local Model Support
+
+To meet the specific needs of users, LobeChat also supports the use of local models based on [Ollama](https://ollama.ai), allowing users to more flexibly use their own or third-party models. For more details, see [Local Model Support](/en/features/local-llm).
