@@ -33,12 +33,18 @@ declare global {
       NEXT_PUBLIC_I18N_DEBUG_SERVER: string;
 
       NEXT_PUBLIC_DEVELOPER_DEBUG: string;
+
+      NEXT_PUBLIC_LOBE_CHAT_DOCS: string;
     }
   }
 }
 
 export const getClientConfig = () => ({
   BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
+
+  // docs
+  LOBE_CHAT_DOCS: process.env.NEXT_PUBLIC_LOBE_CHAT_DOCS,
+
   // Vercel Analytics
   ANALYTICS_VERCEL: process.env.NEXT_PUBLIC_ANALYTICS_VERCEL === '1',
   VERCEL_DEBUG: process.env.NEXT_PUBLIC_VERCEL_DEBUG === '1',
