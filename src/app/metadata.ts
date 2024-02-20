@@ -16,7 +16,6 @@ const { BASE_PATH } = getClientConfig();
 const noManifest = !!BASE_PATH;
 
 const metadata: Metadata = {
-  alternates: { canonical: OFFICIAL_URL },
   appleWebApp: {
     statusBarStyle: 'black-translucent',
     title,
