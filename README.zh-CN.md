@@ -96,6 +96,10 @@ LobeHub 旨在成为所有人的 AI Agent 实验场，LobeChat 目前正在积�
 
 ## ✨ 特性一览
 
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/306133914-09b93d33-aa7b-4094-a7f8-8f63ed51ffff.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240220%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240220T042829Z&X-Amz-Expires=300&X-Amz-Signature=c7a3ff728ab5756c7b552cecf51fc7148f29ea6d59a45b4a8f08e3f82e3708a5&X-Amz-SignedHeaders=host&actor_id=28616219&key_id=0&repo_id=643445235)
+
+---
+
 ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png)
 
 #### `1` GPT 视觉认知
