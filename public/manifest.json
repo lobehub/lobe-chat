@@ -54,7 +54,7 @@
       "type": "image/png"
     }
   ],
-  "short_name": "LobeChat",
+  "short_name": "My Dashboard",
   "splash_pages": null,
   "start_url": ".",
   "theme_color": "#000000"
