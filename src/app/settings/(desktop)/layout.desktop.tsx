@@ -1,13 +1,12 @@
 'use client';
 
-import { ReactNode, memo } from 'react';
+import { ReactNode, memo } from 'react'; // S'assure que React est importé si nécessaire
 import { Center, Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import AppLayoutDesktop from '@/layout/AppLayout.desktop';
 import { SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 
-//import Header from './features/Header';
 import SideBar from './features/SideBar';
 
 export interface DesktopLayoutProps {
@@ -15,12 +14,8 @@ export interface DesktopLayoutProps {
   children: ReactNode;
 }
 
-// Définissez une interface pour les props de votre composant Header
-interface HeaderProps {
-  activeTab: SettingsTabs; // Utilisez le type approprié pour activeTab
-}
-
-const Header: React.FC<HeaderProps> = ({ activeTab }) => {
+// Comme activeTab n'est pas utilisé dans Header, nous simplifions les props
+const Header = () => {
   return (
     <div>
       <h1>DASHDASH</h1> {/* Ajout du titre ici */}
@@ -29,17 +24,16 @@ const Header: React.FC<HeaderProps> = ({ activeTab }) => {
   );
 };
 
-
 const DesktopLayout = memo<DesktopLayoutProps>(({ children, activeTab }) => {
   return (
     <AppLayoutDesktop sidebarKey={SidebarTabKey.Setting}>
       <SideBar activeTab={activeTab} />
       <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>
-        <Header activeTab={activeTab} />
+        <Header /> {/* activeTab retiré car non utilisé */}
         <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
           <SafeSpacing />
           <Center gap={16} width={'100%'}>
-            <h1>DASHDASH</h1> {/* Ajout du titre ici */}
+            {/* Suppression du titre en double ici, car il est déjà présent dans Header */}
             {children}
           </Center>
         </Flexbox>
@@ -47,6 +41,5 @@ const DesktopLayout = memo<DesktopLayoutProps>(({ children, activeTab }) => {
     </AppLayoutDesktop>
   );
 });
-
 
 export default DesktopLayout;
