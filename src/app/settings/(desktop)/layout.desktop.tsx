@@ -15,8 +15,6 @@ export interface DesktopLayoutProps {
   children: ReactNode;
 }
 
-import React from 'react'; // Assurez-vous d'importer React si vous ne l'avez pas déjà fait
-
 // Définissez une interface pour les props de votre composant Header
 interface HeaderProps {
   activeTab: SettingsTabs; // Utilisez le type approprié pour activeTab
