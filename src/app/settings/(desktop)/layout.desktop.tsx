@@ -35,6 +35,7 @@ const DesktopLayout = memo<DesktopLayoutProps>(({ children, activeTab }) => {
         <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
           <SafeSpacing />
           <Center gap={16} width={'100%'}>
+            <h1>DASHDASH</h1> {/* Ajout du titre ici */}
             {children}
           </Center>
         </Flexbox>
@@ -42,5 +43,6 @@ const DesktopLayout = memo<DesktopLayoutProps>(({ children, activeTab }) => {
     </AppLayoutDesktop>
   );
 });
+
 
 export default DesktopLayout;
