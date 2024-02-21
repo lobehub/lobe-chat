@@ -138,6 +138,14 @@
         "title": "Azure OpenAI を使用"
       }
     },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Perplexity AI の API キーを入力してください",
+        "placeholder": "Perplexity AI API キー",
+        "title": "API キー"
+      }
+    },
     "Zhipu": {
       "title": "智谱",
       "token": {
