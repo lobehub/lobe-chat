@@ -14,7 +14,13 @@ const AppLayoutDesktop = memo<AppLayoutDesktopProps>(({ children, sidebarKey }) 
   const isPWA = useIsPWA();
   const theme = useTheme();
 
-  return (
+  return (    
+    <Flexbox
+      height={'100%'}
+      horizontal
+      style={isPWA ? { borderTop: `1px solid ${theme.colorBorder}` } : {}}
+      width={'100%'}
+    >
 
       <SideBar sidebarKey={sidebarKey} />
       {children}
