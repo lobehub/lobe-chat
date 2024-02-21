@@ -2,6 +2,98 @@
 
 # Changelog
 
+### [Version 0.128.9](https://github.com/lobehub/lobe-chat/compare/v0.128.8...v0.128.9)
+
+<sup>Released on **2024-02-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the robots.txt config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the robots.txt config ([34901b4](https://github.com/lobehub/lobe-chat/commit/34901b4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.128.8](https://github.com/lobehub/lobe-chat/compare/v0.128.7...v0.128.8)
+
+<sup>Released on **2024-02-20**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.128.7](https://github.com/lobehub/lobe-chat/compare/v0.128.6...v0.128.7)
+
+<sup>Released on **2024-02-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve docs url and add more docs.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve docs url and add more docs, closes [#1329](https://github.com/lobehub/lobe-chat/issues/1329) ([85b3136](https://github.com/lobehub/lobe-chat/commit/85b3136))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.128.6](https://github.com/lobehub/lobe-chat/compare/v0.128.5...v0.128.6)
+
+<sup>Released on **2024-02-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix OAuth errors on Docker deployment.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix OAuth errors on Docker deployment, closes [#1323](https://github.com/lobehub/lobe-chat/issues/1323) ([922e843](https://github.com/lobehub/lobe-chat/commit/922e843))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.128.5](https://github.com/lobehub/lobe-chat/compare/v0.128.4...v0.128.5)
 
 <sup>Released on **2024-02-18**</sup>
