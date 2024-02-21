@@ -7,13 +7,24 @@ import SafeSpacing from '@/components/SafeSpacing';
 import AppLayoutDesktop from '@/layout/AppLayout.desktop';
 import { SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 
-import Header from './features/Header';
+//import Header from './features/Header';
 import SideBar from './features/SideBar';
 
 export interface DesktopLayoutProps {
   activeTab: SettingsTabs;
   children: ReactNode;
 }
+
+// Dans votre composant Header, vous pouvez ajouter le titre directement :
+const Header = ({ activeTab }) => {
+  return (
+    <div>
+      <h1>DASHDASH</h1> {/* Ajout du titre ici */}
+      {/* Autres éléments du Header */}
+    </div>
+  );
+};
+
 
 const DesktopLayout = memo<DesktopLayoutProps>(({ children, activeTab }) => {
   return (
