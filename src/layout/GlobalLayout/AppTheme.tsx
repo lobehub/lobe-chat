@@ -1,7 +1,13 @@
-import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@lobehub/ui';
+
+import {
+  ConfigProvider,
+  NeutralColors,
+  PrimaryColors,
+  ThemeProvider,
+} from '@lobehub/ui';
 import { ThemeAppearance } from 'antd-style';
 import Image from 'next/image';
-import { ReactNode, memo, useEffect } from 'react';
+import React, { ReactNode, memo, useEffect } from 'react'; // Explicit React import
 
 import {
   LOBE_THEME_APPEARANCE,
@@ -10,10 +16,10 @@ import {
 } from '@/const/theme';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
-import { GlobalStyle } from '@/styles';
-import { setCookie } from '@/utils/cookie';
+import GlobalStyle from '@/styles';
+import setCookie from '@/utils/cookie';
 
-export interface AppThemeProps {
+interface AppThemeProps {
   children?: ReactNode;
   defaultAppearance?: ThemeAppearance;
   defaultNeutralColor?: NeutralColors;
@@ -21,16 +27,23 @@ export interface AppThemeProps {
 }
 
 const AppTheme = memo<AppThemeProps>(
-  ({ children, defaultAppearance, defaultPrimaryColor, defaultNeutralColor }) => {
-    // console.debug('server:appearance', defaultAppearance);
-    // console.debug('server:primaryColor', defaultPrimaryColor);
-    // console.debug('server:neutralColor', defaultNeutralColor);
-    const themeMode = useGlobalStore((s) => settingsSelectors.currentSettings(s).themeMode);
+  ({
+    children,
+    defaultAppearance,
+    defaultPrimaryColor,
+    defaultNeutralColor,
+  }) => {
+    const themeMode = useGlobalStore((s) =>
+      settingsSelectors.currentSettings(s).themeMode
+    );
 
     const [primaryColor, neutralColor] = useGlobalStore((s) => [
       settingsSelectors.currentSettings(s).primaryColor,
       settingsSelectors.currentSettings(s).neutralColor,
     ]);
+
+    // Use a constant for image URL
+    const imageUrl = 'https://your-new-image-url.com';
 
     useEffect(() => {
       setCookie(LOBE_THEME_PRIMARY_COLOR, primaryColor);
@@ -45,6 +58,7 @@ const AppTheme = memo<AppThemeProps>(
         customTheme={{
           neutralColor: neutralColor ?? defaultNeutralColor,
           primaryColor: primaryColor ?? defaultPrimaryColor,
+          image: { src: imageUrl, alt: 'Your alternative image' }, // Add image to theme
         }}
         defaultAppearance={defaultAppearance}
         onAppearanceChange={(appearance) => {
@@ -53,10 +67,11 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
-        <ConfigProvider config={{ imgAs: Image } as any}>{children}</ConfigProvider>
+        {/* <ConfigProvider config={{ imgAs: Image }}>{children}</ConfigProvider> */}
+        <Image src={imageUrl} alt="Your alternative image" width={640} height={480} />
       </ThemeProvider>
     );
-  },
+  }
 );
 
 export default AppTheme;
