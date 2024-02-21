@@ -13,7 +13,10 @@ const defaultMiddleware = () => NextResponse.next();
 const withAuthMiddleware = auth((req) => {
   // Just check if session exists
   const session = req.auth;
-  const isLoggedIn = !!session;
+
+  // Check if next-auth throws errors
+  // refs: https://github.com/lobehub/lobe-chat/pull/1323
+  const isLoggedIn = !!session?.expires;
 
   // Remove & amend OAuth authorized header
   const requestHeaders = new Headers(req.headers);
