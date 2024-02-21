@@ -15,8 +15,14 @@ export interface DesktopLayoutProps {
   children: ReactNode;
 }
 
-// Dans votre composant Header, vous pouvez ajouter le titre directement :
-const Header = ({ activeTab }) => {
+import React from 'react'; // Assurez-vous d'importer React si vous ne l'avez pas déjà fait
+
+// Définissez une interface pour les props de votre composant Header
+interface HeaderProps {
+  activeTab: SettingsTabs; // Utilisez le type approprié pour activeTab
+}
+
+const Header: React.FC<HeaderProps> = ({ activeTab }) => {
   return (
     <div>
       <h1>DASHDASH</h1> {/* Ajout du titre ici */}
