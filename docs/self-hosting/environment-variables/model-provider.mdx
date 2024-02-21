@@ -54,6 +54,17 @@ You can find all current model names in [modelProviders](https://github.com/lobe
 
 If you need to use Azure OpenAI to provide model services, you can refer to the [Deploying with Azure OpenAI](../Deployment/Deploy-with-Azure-OpenAI.en-US.md) section for detailed steps. Here, we will list the environment variables related to Azure OpenAI.
 
+### `API_KEY_SELECT_MODE`
+
+- Type：Optional
+- Description：Controls the mode for selecting the API Key when multiple API Keys are available. Currently supports `random` and `turn`.
+- Default：`random`
+- Example：`random` or `turn`
+
+When using the `random` mode, a random API Key will be selected from the available multiple API Keys.
+
+When using the `turn` mode, the API Keys will be retrieved in a round-robin manner according to the specified order.
+
 ### `USE_AZURE_OPENAI`
 
 - Type: Optional
