@@ -53,7 +53,7 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
-     
+        <ConfigProvider config={{ imgAs: Image } as any}>{children}</ConfigProvider>
       </ThemeProvider>
     );
   },
