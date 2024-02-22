@@ -1,4 +1,4 @@
-import { Viewport } from 'next';
+import { ResolvingViewport } from 'next';
 import { cookies } from 'next/headers';
 import { PropsWithChildren } from 'react';
 import { isRtlLang } from 'rtl-detect';
@@ -12,6 +12,7 @@ import {
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
 import Layout from '@/layout/GlobalLayout';
+import { isMobileDevice } from '@/utils/responsive';
 
 import StyleRegistry from './StyleRegistry';
 
@@ -50,15 +51,20 @@ export default RootLayout;
 
 export { default as metadata } from './metadata';
 
-export const viewport: Viewport = {
-  initialScale: 1,
-  maximumScale: 1,
-  minimumScale: 1,
-  themeColor: [
-    { color: '#f8f8f8', media: '(prefers-color-scheme: light)' },
-    { color: '#000', media: '(prefers-color-scheme: dark)' },
-  ],
-  userScalable: false,
-  viewportFit: 'cover',
-  width: 'device-width',
+export const generateViewport = async (): ResolvingViewport => {
+  const isMobile = isMobileDevice();
+
+  const dynamicScale = isMobile ? { maximumScale: 1, userScalable: false } : {};
+
+  return {
+    ...dynamicScale,
+    initialScale: 1,
+    minimumScale: 1,
+    themeColor: [
+      { color: '#f8f8f8', media: '(prefers-color-scheme: light)' },
+      { color: '#000', media: '(prefers-color-scheme: dark)' },
+    ],
+    viewportFit: 'cover',
+    width: 'device-width',
+  };
 };

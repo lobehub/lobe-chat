@@ -19,6 +19,7 @@
     "title": "隨便聊聊"
   },
   "input": {
+    "more": "更多",
     "onlyAdd": "僅新增訊息",
     "send": "發送",
     "sendWithCmdEnter": "按 {{meta}} + Enter 鍵發送",

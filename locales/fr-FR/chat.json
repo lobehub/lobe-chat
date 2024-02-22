@@ -19,6 +19,7 @@
     "title": "Parlon un moment tous les deux"
   },
   "input": {
+    "more": "Plus",
     "onlyAdd": "Ajouter uniquement",
     "send": "Envoyer",
     "sendWithCmdEnter": "Envoyer avec {{meta}} + Entrée",

@@ -19,6 +19,7 @@
     "title": "دردشة عشوائية"
   },
   "input": {
+    "more": "المزيد",
     "onlyAdd": "إضافة الرسالة فقط",
     "send": "إرسال",
     "sendWithCmdEnter": "اضغط {{meta}} + Enter للإرسال",
