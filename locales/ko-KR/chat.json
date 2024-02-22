@@ -19,6 +19,7 @@
     "title": "무작위 대화"
   },
   "input": {
+    "more": "더 많은",
     "onlyAdd": "메시지만 추가",
     "send": "전송",
     "sendWithCmdEnter": "{{meta}} + Enter 키로 전송",
