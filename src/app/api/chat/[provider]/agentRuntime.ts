@@ -13,7 +13,7 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 
-import keyMgr from '../keyManager';
+import apiKeyManager from '../apiKeyManager';
 
 interface AzureOpenAIParams {
   apiVersion?: string;
@@ -82,15 +82,9 @@ class AgentRuntime {
   }
 
   private static initOpenAI(payload: JWTPayload, azureOpenAI?: AzureOpenAIParams) {
-    const {
-      OPENAI_API_KEY,
-      OPENAI_PROXY_URL,
-      AZURE_API_VERSION,
-      AZURE_API_KEY,
-      USE_AZURE_OPENAI,
-      API_KEY_SELECT_MODE,
-    } = getServerConfig();
-    const apiKey = payload?.apiKey || keyMgr.pick(OPENAI_API_KEY, API_KEY_SELECT_MODE);
+    const { OPENAI_API_KEY, OPENAI_PROXY_URL, AZURE_API_VERSION, AZURE_API_KEY, USE_AZURE_OPENAI } =
+      getServerConfig();
+    const apiKey = payload?.apiKey || apiKeyManager.pick(OPENAI_API_KEY);
     const baseURL = payload?.endpoint || OPENAI_PROXY_URL;
 
     const azureApiKey = payload.apiKey || AZURE_API_KEY;
@@ -109,9 +103,8 @@ class AgentRuntime {
   }
 
   private static initAzureOpenAI(payload: JWTPayload) {
-    const { AZURE_API_KEY, AZURE_API_VERSION, AZURE_ENDPOINT, API_KEY_SELECT_MODE } =
-      getServerConfig();
-    const apiKey = payload?.apiKey || keyMgr.pick(AZURE_API_KEY, API_KEY_SELECT_MODE);
+    const { AZURE_API_KEY, AZURE_API_VERSION, AZURE_ENDPOINT } = getServerConfig();
+    const apiKey = payload?.apiKey || apiKeyManager.pick(AZURE_API_KEY);
     const endpoint = payload?.endpoint || AZURE_ENDPOINT;
     const apiVersion = payload?.azureApiVersion || AZURE_API_VERSION;
 
@@ -119,22 +112,22 @@ class AgentRuntime {
   }
 
   private static async initZhipu(payload: JWTPayload) {
-    const { ZHIPU_API_KEY, API_KEY_SELECT_MODE } = getServerConfig();
-    const apiKey = payload?.apiKey || keyMgr.pick(ZHIPU_API_KEY, API_KEY_SELECT_MODE);
+    const { ZHIPU_API_KEY } = getServerConfig();
+    const apiKey = payload?.apiKey || apiKeyManager.pick(ZHIPU_API_KEY);
 
     return LobeZhipuAI.fromAPIKey(apiKey);
   }
 
   private static initMoonshot(payload: JWTPayload) {
-    const { MOONSHOT_API_KEY, MOONSHOT_PROXY_URL, API_KEY_SELECT_MODE } = getServerConfig();
-    const apiKey = payload?.apiKey || keyMgr.pick(MOONSHOT_API_KEY, API_KEY_SELECT_MODE);
+    const { MOONSHOT_API_KEY, MOONSHOT_PROXY_URL } = getServerConfig();
+    const apiKey = payload?.apiKey || apiKeyManager.pick(MOONSHOT_API_KEY);
 
     return new LobeMoonshotAI(apiKey, MOONSHOT_PROXY_URL);
   }
 
   private static initGoogle(payload: JWTPayload) {
-    const { GOOGLE_API_KEY, API_KEY_SELECT_MODE } = getServerConfig();
-    const apiKey = payload?.apiKey || keyMgr.pick(GOOGLE_API_KEY, API_KEY_SELECT_MODE);
+    const { GOOGLE_API_KEY } = getServerConfig();
+    const apiKey = payload?.apiKey || apiKeyManager.pick(GOOGLE_API_KEY);
 
     return new LobeGoogleAI(apiKey);
   }
