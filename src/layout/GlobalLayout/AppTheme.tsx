@@ -20,11 +20,14 @@ export interface AppThemeProps {
   defaultPrimaryColor?: PrimaryColors;
 }
 
+// Composant d'image personnalisé
+const CustomImage = ({ src = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_1280.png', alt, ...props }) => {
+  // Utilise l'URL par défaut ou celle passée en prop
+  return <Image src={src} alt={alt} {...props} />;
+};
+
 const AppTheme = memo<AppThemeProps>(
   ({ children, defaultAppearance, defaultPrimaryColor, defaultNeutralColor }) => {
-    // console.debug('server:appearance', defaultAppearance);
-    // console.debug('server:primaryColor', defaultPrimaryColor);
-    // console.debug('server:neutralColor', defaultNeutralColor);
     const themeMode = useGlobalStore((s) => settingsSelectors.currentSettings(s).themeMode);
 
     const [primaryColor, neutralColor] = useGlobalStore((s) => [
@@ -53,7 +56,8 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
-        <ConfigProvider config={{ imgAs: Image } as any}>{children}</ConfigProvider>
+        {/* Utiliser CustomImage comme composant par défaut pour les images dans ConfigProvider */}
+        <ConfigProvider config={{ imgAs: CustomImage }}>{children}</ConfigProvider>
       </ThemeProvider>
     );
   },
