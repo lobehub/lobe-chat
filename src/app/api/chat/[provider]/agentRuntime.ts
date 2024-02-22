@@ -8,6 +8,7 @@ import {
   LobeMoonshotAI,
   LobeOllamaAI,
   LobeOpenAI,
+  LobePerplexityAI,
   LobeRuntimeAI,
   LobeZhipuAI,
   ModelProvider,
@@ -72,6 +73,11 @@ class AgentRuntime {
 
       case ModelProvider.Ollama: {
         runtimeModel = this.initOllama(payload);
+        break;
+      }
+
+      case ModelProvider.Perplexity: {
+        runtimeModel = this.initPerplexity(payload);
         break;
       }
     }
@@ -151,6 +157,13 @@ class AgentRuntime {
     const baseUrl = payload?.endpoint || OLLAMA_PROXY_URL;
 
     return new LobeOllamaAI(baseUrl);
+  }
+
+  private static initPerplexity(payload: JWTPayload) {
+    const { PERPLEXITY_API_KEY } = getServerConfig();
+    const apiKey = payload?.apiKey || PERPLEXITY_API_KEY;
+
+    return new LobePerplexityAI(apiKey);
   }
 }
 
