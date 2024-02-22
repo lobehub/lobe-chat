@@ -43,12 +43,14 @@
     "InvalidGoogleAPIKey": "Der Google API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Google API-Schlüssel und versuchen Sie es erneut.",
     "InvalidMoonshotAPIKey": "Ungültiger oder leerer Moonshot AI API-Schlüssel. Bitte überprüfen Sie den Moonshot API-Schlüssel und versuchen Sie es erneut.",
     "InvalidOllamaArgs": "Ollama-Konfiguration ist ungültig. Bitte überprüfen Sie die Ollama-Konfiguration und versuchen Sie es erneut.",
+    "InvalidPerplexityAPIKey": "Perplexity API Key ist ungültig oder leer. Bitte überprüfen Sie den Perplexity API Key und versuchen Sie es erneut.",
     "InvalidZhipuAPIKey": "Der Zhipu API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Zhipu API-Schlüssel und versuchen Sie es erneut.",
     "LocationNotSupportError": "Entschuldigung, Ihr Standort unterstützt diesen Modellservice möglicherweise aufgrund von regionalen Einschränkungen oder nicht aktivierten Diensten nicht. Bitte überprüfen Sie, ob der aktuelle Standort die Verwendung dieses Dienstes unterstützt, oder versuchen Sie, andere Standortinformationen zu verwenden.",
     "MoonshotBizError": "Fehler beim Abrufen des Dark Side of the Moon-Services. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OllamaBizError": "Fehler bei der Anforderung des Ollama-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "OpenAIBizError": "Fehler bei der OpenAI-Serviceanfrage. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut",
+    "PerplexityBizError": "Fehler bei der Anforderung des Perplexity AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
     "PluginGatewayError": "Entschuldigung, es ist ein Fehler im Plugin-Gateway aufgetreten. Bitte überprüfen Sie die Plugin-Gateway-Konfiguration auf Richtigkeit",
@@ -88,6 +90,10 @@
         "addProxyUrl": "Proxy-URL hinzufügen (optional)",
         "description": "Geben Sie Ihren OpenAI API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
         "title": "Verwenden von benutzerdefinierten OpenAI API-Schlüssel"
+      },
+      "Perplexity": {
+        "description": "Geben Sie Ihren eigenen Perplexity API Key ein, um das Gespräch zu beginnen. Die App speichert Ihren API Key nicht.",
+        "title": "Verwenden Sie einen benutzerdefinierten Perplexity API Key"
       },
       "Zhipu": {
         "description": "Geben Sie Ihren Zhipu API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
