@@ -1,6 +1,6 @@
 import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@lobehub/ui';
 import { ThemeAppearance } from 'antd-style';
-import Image from 'next/image';
+import Image, { ImageProps } from 'next/image';
 import { ReactNode, memo, useEffect } from 'react';
 
 import {
@@ -20,10 +20,14 @@ export interface AppThemeProps {
   defaultPrimaryColor?: PrimaryColors;
 }
 
-// Composant d'image personnalisé
-const CustomImage = ({ src = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_1280.png', alt, ...props }) => {
-  // Utilise l'URL par défaut ou celle passée en prop
-  return <Image src={src} alt={alt} {...props} />;
+// Définition des types pour les props de CustomImage
+interface CustomImageProps extends Omit<ImageProps, 'src'> {
+  src?: string;
+}
+
+// Composant d'image personnalisé avec types TypeScript
+const CustomImage: React.FC<CustomImageProps> = ({ src = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_1280.png', alt, ...props }) => {
+  return <Image src={src} alt={alt || ''} {...props} />;
 };
 
 const AppTheme = memo<AppThemeProps>(
@@ -56,7 +60,6 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
-        {/* Utiliser CustomImage comme composant par défaut pour les images dans ConfigProvider */}
         <ConfigProvider config={{ imgAs: CustomImage }}>{children}</ConfigProvider>
       </ThemeProvider>
     );
