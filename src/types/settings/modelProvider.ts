@@ -54,6 +54,12 @@ export interface OllamaConfig {
   endpoint?: string;
 }
 
+export interface PerplexityConfig {
+  apiKey?: string;
+  enabled: boolean;
+  endpoint?: string;
+}
+
 export interface GlobalLLMConfig {
   azure: AzureOpenAIConfig;
   bedrock: AWSBedrockConfig;
@@ -61,6 +67,7 @@ export interface GlobalLLMConfig {
   moonshot: MoonshotConfig;
   ollama: OllamaConfig;
   openAI: OpenAIConfig;
+  perplexity: PerplexityConfig;
   zhipu: ZhiPuConfig;
 }
 
