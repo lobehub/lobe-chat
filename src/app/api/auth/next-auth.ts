@@ -16,12 +16,11 @@ declare module '@auth/core/jwt' {
 const nextAuth = NextAuth({
   callbacks: {
     // Note: Data processing order of callback: authorize --> jwt --> session
-    async jwt({ token, profile }) {
-      // Add userId to token from the Auth0 Profile.
-      // Default values for profile.sub: 'auth0|USER-ID'.
-      // ref: https://auth0.com/docs/get-started/apis/scopes/sample-use-cases-scopes-and-claims#authenticate-a-user-and-request-standard-claims
-      if (profile) {
-        token.userId = profile.sub ?? token.sub;
+    async jwt({ token, account }) {
+      // Auth.js will process the `providerAccountId` automatically
+      // ref: https://authjs.dev/reference/core/types#provideraccountid
+      if (account) {
+        token.userId = account.providerAccountId;
       }
       return token;
     },
