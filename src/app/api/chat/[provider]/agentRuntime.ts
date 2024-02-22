@@ -84,10 +84,10 @@ class AgentRuntime {
   private static initOpenAI(payload: JWTPayload, azureOpenAI?: AzureOpenAIParams) {
     const { OPENAI_API_KEY, OPENAI_PROXY_URL, AZURE_API_VERSION, AZURE_API_KEY, USE_AZURE_OPENAI } =
       getServerConfig();
-    const apiKey = payload?.apiKey || apiKeyManager.pick(OPENAI_API_KEY);
+    const apiKey = apiKeyManager.pick(payload?.apiKey || OPENAI_API_KEY);
     const baseURL = payload?.endpoint || OPENAI_PROXY_URL;
 
-    const azureApiKey = payload.apiKey || AZURE_API_KEY;
+    const azureApiKey = apiKeyManager.pick(payload.apiKey || AZURE_API_KEY);
     const useAzure = azureOpenAI?.useAzure || USE_AZURE_OPENAI;
     const apiVersion = azureOpenAI?.apiVersion || AZURE_API_VERSION;
 
@@ -104,7 +104,7 @@ class AgentRuntime {
 
   private static initAzureOpenAI(payload: JWTPayload) {
     const { AZURE_API_KEY, AZURE_API_VERSION, AZURE_ENDPOINT } = getServerConfig();
-    const apiKey = payload?.apiKey || apiKeyManager.pick(AZURE_API_KEY);
+    const apiKey = apiKeyManager.pick(payload?.apiKey || AZURE_API_KEY);
     const endpoint = payload?.endpoint || AZURE_ENDPOINT;
     const apiVersion = payload?.azureApiVersion || AZURE_API_VERSION;
 
@@ -113,21 +113,21 @@ class AgentRuntime {
 
   private static async initZhipu(payload: JWTPayload) {
     const { ZHIPU_API_KEY } = getServerConfig();
-    const apiKey = payload?.apiKey || apiKeyManager.pick(ZHIPU_API_KEY);
+    const apiKey = apiKeyManager.pick(payload?.apiKey || ZHIPU_API_KEY);
 
     return LobeZhipuAI.fromAPIKey(apiKey);
   }
 
   private static initMoonshot(payload: JWTPayload) {
     const { MOONSHOT_API_KEY, MOONSHOT_PROXY_URL } = getServerConfig();
-    const apiKey = payload?.apiKey || apiKeyManager.pick(MOONSHOT_API_KEY);
+    const apiKey = apiKeyManager.pick(payload?.apiKey || MOONSHOT_API_KEY);
 
     return new LobeMoonshotAI(apiKey, MOONSHOT_PROXY_URL);
   }
 
   private static initGoogle(payload: JWTPayload) {
     const { GOOGLE_API_KEY } = getServerConfig();
-    const apiKey = payload?.apiKey || apiKeyManager.pick(GOOGLE_API_KEY);
+    const apiKey = apiKeyManager.pick(payload?.apiKey || GOOGLE_API_KEY);
 
     return new LobeGoogleAI(apiKey);
   }

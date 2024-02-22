@@ -59,7 +59,7 @@ export const POST = async (req: Request) => {
     checkAuthMethod(payload.accessCode, payload.apiKey, oauthAuthorized);
 
     const { GOOGLE_API_KEY } = getServerConfig();
-    const apiKey = payload?.apiKey || apiKeyManager.pick(GOOGLE_API_KEY);
+    const apiKey = apiKeyManager.pick(payload?.apiKey || GOOGLE_API_KEY);
 
     agentRuntime = new LobeGoogleAI(apiKey);
   } catch (e) {
