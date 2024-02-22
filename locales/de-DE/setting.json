@@ -138,8 +138,16 @@
         "title": "Azure OpenAI verwenden"
       }
     },
+    "Perplexity": {
+      "title": "perplexity",
+      "token": {
+        "desc": "Geben Sie den API-Schlüssel von Perplexity AI ein",
+        "placeholder": "Perplexity AI API-Schlüssel",
+        "title": "API-Schlüssel"
+      }
+    },
     "Zhipu": {
-      "title": "智谱",
+      "title": "Zhipu AI",
       "token": {
         "desc": "Geben Sie den API-Schlüssel von Zhipu ein",
         "placeholder": "Zhipu API Key",

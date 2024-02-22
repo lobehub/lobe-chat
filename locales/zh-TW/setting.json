@@ -138,6 +138,14 @@
         "title": "Azure OpenAI"
       }
     },
+    "Perplexity": {
+      "title": "Perplexity AI",
+      "token": {
+        "desc": "請填入來自 Perplexity AI 的 API 金鑰",
+        "placeholder": "Perplexity AI API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
     "Zhipu": {
       "title": "智譜",
       "token": {
