@@ -19,6 +19,7 @@
     "title": "Charla casual"
   },
   "input": {
+    "more": "más",
     "onlyAdd": "Añadir solo",
     "send": "Enviar",
     "sendWithCmdEnter": "Enviar con {{meta}} + Enter",

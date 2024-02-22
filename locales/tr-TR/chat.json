@@ -19,6 +19,7 @@
     "title": "Sohbet Et"
   },
   "input": {
+    "more": "Daha fazla",
     "onlyAdd": "Sadece mesaj ekle",
     "send": "Gönder",
     "sendWithCmdEnter": "{{meta}} + Enter tuşuna basarak gönder",

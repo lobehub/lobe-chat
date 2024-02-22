@@ -19,6 +19,7 @@
     "title": "Chiacchierata casuale"
   },
   "input": {
+    "more": "Ulteriori",
     "onlyAdd": "Solo aggiungi messaggio",
     "send": "Invia",
     "sendWithCmdEnter": "Invia premendo {{meta}} + Invio",
