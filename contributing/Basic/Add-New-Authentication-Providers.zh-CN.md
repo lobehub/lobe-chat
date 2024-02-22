@@ -10,6 +10,7 @@ LobeChat 使用 [Auth.js v5](https://authjs.dev/) 作为外部身份验证服务
   - [步骤 2: 更新服务端配置代码](#步骤-2-更新服务端配置代码)
   - [步骤 3: 修改前端页面](#步骤-3-修改前端页面)
   - [步骤 4: 配置环境变量](#步骤-4-配置环境变量)
+  - [步骤 5: 修改服务端用户信息处理逻辑](#步骤-5-修改服务端用户信息处理逻辑)
 
 ## 添加新的身份验证提供者
 
@@ -81,3 +82,111 @@ export const getAppConfig = () => {
 ### 步骤 4: 配置环境变量
 
 在部署时新增 Okta 相关的环境变量 `OKTA_CLIENT_ID`、`OKTA_CLIENT_SECRET`、`OKTA_ISSUER`，并填入相应的值，即可使用
+
+### 步骤 5: 修改服务端用户信息处理逻辑
+
+#### 在前端获取用户信息
+
+在前端页面中使用 `useOAuthSession()` 方法获取后端返回的用户信息 `user`：
+
+```ts
+import { useOAuthSession } from '@/hooks/useOAuthSession';
+
+const { user, isOAuthLoggedIn } = useOAuthSession();
+```
+
+默认的 `user` 类型为 `User`，类型定义为：
+
+```ts
+interface User {
+  id?: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+}
+```
+
+#### 修改用户 `id` 处理逻辑
+
+`user.id` 用于标识用户。当引入新身份 OAuth 提供者后，您需要在 `src/app/api/auth/next-auth.ts` 中处理 OAuth 回调所携带的信息。您需要从中选取用户的 `id`。在此之前，我们需要了解 `Auth.js` 的数据处理顺序：
+
+```txt
+authorize --> jwt --> session
+```
+
+默认情况下，在 `jwt --> session` 过程中，`Auth.js` 会[自动根据登陆类型](https://authjs.dev/reference/core/types#provideraccountid)将用户 `id` 赋值到 `account.providerAccountId` 中。 如果您需要选取其他值作为用户 `id` ，您需要实现以下处理逻辑。
+
+```ts
+  callbacks: {
+    async jwt({ token, account, profile }) {
+      if (account) {
+        // 您可以从 `account` 或 `profile` 中选取其他值
+        token.userId = account.providerAccountId;
+      }
+      return token;
+    },
+  },
+```
+
+#### 自定义 `session` 返回
+
+如果您想在 `session` 中携带更多关于 `profile` 及 `account` 的信息，根据上面提到的 `Auth.js` 数据处理顺序，那必须先将该信息复制到 `token` 上。
+示例：把用户头像 URL：`profile.picture` 添加到`session` 中：
+
+```diff
+  callbacks: {
+    async jwt({ token, profile, account }) {
+      if (profile && account) {
+        token.userId = account.providerAccountId;
++       token.avatar = profile.picture;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.userId ?? session.user.id;
++       session.user.avatar = token.avatar;
+      }
+      return session;
+    },
+  },
+```
+
+然后补充对新增参数的类型定义：
+
+```ts
+declare module '@auth/core/jwt' {
+  interface JWT {
+    // ...
+    avatar?: string;
+  }
+}
+
+declare module 'next-auth' {
+  interface User {
+    avatar?: string;
+  }
+}
+```
+
+> [更多`Auth.js`内置类型拓展](https://authjs.dev/getting-started/typescript#module-augmentation)
+
+#### 在处理逻辑中区分多个身份验证提供者
+
+如果您配置了多个身份验证提供者，并且他们的 `userId` 映射各不相同，可以在 `jwt` 方法中的 `account.provider` 参数获取身份提供者的默认 id ，从而进入不同的处理逻辑。
+
+```ts
+  callbacks: {
+    async jwt({ token, profile, account }) {
+      if (profile && account) {
+        if (account.provider === 'Authing')
+          token.userId = account.providerAccountId ?? token.sub;
+        else if (acount.provider === 'Okta')
+          token.userId = profile.sub ?? token.sub;
+        else
+          // other providers
+      }
+      return token;
+    },
+  }
+```
