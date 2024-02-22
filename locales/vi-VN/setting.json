@@ -138,8 +138,16 @@
         "title": "Sử dụng Azure OpenAI"
       }
     },
+    "Perplexity": {
+      "title": "Perplexity AI",
+      "token": {
+        "desc": "Nhập API Key từ Perplexity AI",
+        "placeholder": "Khóa API Perplexity AI",
+        "title": "API Key"
+      }
+    },
     "Zhipu": {
-      "title": "智谱",
+      "title": "Zhipu AI",
       "token": {
         "desc": "Nhập API Key từ Zhipu",
         "placeholder": "Zhipu API Key",

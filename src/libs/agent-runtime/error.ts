@@ -25,6 +25,9 @@ export const AgentRuntimeErrorType = {
 
   InvalidOllamaArgs: 'InvalidOllamaArgs',
   OllamaBizError: 'OllamaBizError',
+
+  InvalidPerplexityAPIKey: 'InvalidPerplexityAPIKey',
+  PerplexityBizError: 'PerplexityBizError',
 } as const;
 
 export type ILobeAgentRuntimeErrorType =

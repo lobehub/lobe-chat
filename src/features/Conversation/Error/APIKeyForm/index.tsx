@@ -10,6 +10,7 @@ import BedrockForm from './Bedrock';
 import GoogleForm from './Google';
 import MoonshotForm from './Moonshot';
 import OpenAIForm from './OpenAI';
+import PerplexityForm from './Perplexity';
 import ZhipuForm from './Zhipu';
 
 interface APIKeyFormProps {
@@ -38,6 +39,10 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
 
       case ModelProvider.Moonshot: {
         return <MoonshotForm />;
+      }
+
+      case ModelProvider.Perplexity: {
+        return <PerplexityForm />;
       }
 
       default:
