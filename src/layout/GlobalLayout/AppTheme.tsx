@@ -1,6 +1,6 @@
 import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@lobehub/ui';
 import { ThemeAppearance } from 'antd-style';
-import Image, { ImageProps } from 'next/image';
+import Image from 'next/image';
 import { ReactNode, memo, useEffect } from 'react';
 
 import {
@@ -20,18 +20,11 @@ export interface AppThemeProps {
   defaultPrimaryColor?: PrimaryColors;
 }
 
-// Définition des types pour les props de CustomImage
-interface CustomImageProps extends Omit<ImageProps, 'src'> {
-  src?: string;
-}
-
-// Composant d'image personnalisé avec types TypeScript
-const CustomImage: React.FC<CustomImageProps> = ({ src = 'https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_1280.png', alt, ...props }) => {
-  return <Image src={src} alt={alt || ''} {...props} />;
-};
-
 const AppTheme = memo<AppThemeProps>(
   ({ children, defaultAppearance, defaultPrimaryColor, defaultNeutralColor }) => {
+    // console.debug('server:appearance', defaultAppearance);
+    // console.debug('server:primaryColor', defaultPrimaryColor);
+    // console.debug('server:neutralColor', defaultNeutralColor);
     const themeMode = useGlobalStore((s) => settingsSelectors.currentSettings(s).themeMode);
 
     const [primaryColor, neutralColor] = useGlobalStore((s) => [
@@ -60,7 +53,7 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
-        <ConfigProvider config={{ imgAs: CustomImage }}>{children}</ConfigProvider>
+        <ConfigProvider config={{ imgAs: Image } as any}>{children}</ConfigProvider>
       </ThemeProvider>
     );
   },
