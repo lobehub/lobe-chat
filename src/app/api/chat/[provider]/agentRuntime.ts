@@ -163,7 +163,7 @@ class AgentRuntime {
 
   private static initPerplexity(payload: JWTPayload) {
     const { PERPLEXITY_API_KEY } = getServerConfig();
-    const apiKey = payload?.apiKey || PERPLEXITY_API_KEY;
+    const apiKey = apiKeyManager.pick(payload?.apiKey || PERPLEXITY_API_KEY);
 
     return new LobePerplexityAI(apiKey);
   }
