@@ -19,6 +19,7 @@ const TopActions = memo<TopActionProps>(({ tab }) => {
   return (
     <>
       <Link
+        aria-label={t('tab.chat')}
         href={'/chat'}
         onClick={(e) => {
           e.preventDefault();
@@ -33,7 +34,7 @@ const TopActions = memo<TopActionProps>(({ tab }) => {
           title={t('tab.chat')}
         />
       </Link>
-      <Link href={'/market'}>
+      <Link aria-label={t('tab.market')} href={'/market'}>
         <ActionIcon
           active={tab === SidebarTabKey.Market}
           icon={Compass}
