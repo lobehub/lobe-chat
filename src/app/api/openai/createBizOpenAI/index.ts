@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { Request, Response } from 'express'; // Importing Request and Response from express library
 
 import { checkAuth } from '@/app/api/auth';
 import { getServerConfig } from '@/config/server';
@@ -35,7 +36,7 @@ export const createBizOpenAI = (req: Request, model: string): Response | OpenAI 
       openai = createOpenai(apiKey, endpoint);
     }
   } catch (error) {
-    if ((error as Error).cause === ChatErrorType.NoOpenAIAPIKey) {
+    if (error instanceof Error && (error as Error).message === ChatErrorType.NoOpenAIAPIKey) {
       return createErrorResponse(ChatErrorType.NoOpenAIAPIKey);
     }
 
