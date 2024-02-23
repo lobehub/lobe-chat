@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.129.3](https://github.com/lobehub/lobe-chat/compare/v0.129.2...v0.129.3)
+
+<sup>Released on **2024-02-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add gemma model logo for ollama.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add gemma model logo for ollama, closes [#1369](https://github.com/lobehub/lobe-chat/issues/1369) ([e2fb3a3](https://github.com/lobehub/lobe-chat/commit/e2fb3a3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.129.2](https://github.com/lobehub/lobe-chat/compare/v0.129.1...v0.129.2)
 
 <sup>Released on **2024-02-23**</sup>
