@@ -8,6 +8,8 @@ RUN corepack enable
 
 WORKDIR /app
 
+# If you want to build docker in China
+# RUN npm config set registry https://registry.npmmirror.com/
 RUN pnpm add sharp
 
 ## Install dependencies only when needed
@@ -20,8 +22,6 @@ WORKDIR /app
 
 COPY package.json ./
 
-# If you want to build docker in China
-# RUN npm config set registry https://registry.npmmirror.com/
 RUN pnpm i
 
 COPY . .
