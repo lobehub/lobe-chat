@@ -51,13 +51,13 @@
 
 - [👋🏻 开始使用 & 交流](#-开始使用--交流)
 - [✨ 特性一览](#-特性一览)
-  - [`1` 模型视觉识别 (Model Visual)](#1-模型视觉识别-model-visual)
-  - [`2` TTS & STT 语音会话](#2-tts--stt-语音会话)
-  - [`3` Text to Image 文生图](#3-text-to-image-文生图)
-  - [`4` 插件系统 (Function Calling)](#4-插件系统-function-calling)
-  - [`5` 助手市场 (GPTs)](#5-助手市场-gpts)
-  - [`6` 多模型服务商支持](#6-多模型服务商支持)
-  - [`7` 支持本地大语言模型 (LLM)](#7-支持本地大语言模型-llm)
+  - [`1` 多模型服务商支持](#1-多模型服务商支持)
+  - [`2` 支持本地大语言模型 (LLM)](#2-支持本地大语言模型-llm)
+  - [`3` 模型视觉识别 (Model Visual)](#3-模型视觉识别-model-visual)
+  - [`4` TTS & STT 语音会话](#4-tts--stt-语音会话)
+  - [`5` Text to Image 文生图](#5-text-to-image-文生图)
+  - [`6` 插件系统 (Function Calling)](#6-插件系统-function-calling)
+  - [`7` 助手市场 (GPTs)](#7-助手市场-gpts)
   - [`8` 渐进式 Web 应用 (PWA)](#8-渐进式-web-应用-pwa)
   - [`9` 移动设备适配](#9-移动设备适配)
   - [`10` 自定义主题](#10-自定义主题)
@@ -83,8 +83,10 @@
 
 ## 👋🏻 开始使用 & 交流
 
-我们是一群充满热情的设计工程师，希望为 AIGC 提供现代化的设计组件和工具，并以开源的方式分享。不论普通用户与专业开发者
-LobeHub 旨在成为所有人的 AI Agent 实验场，LobeChat 目前正在积极开发中，有需求或者问题，欢迎提交 [issues][issues-link]
+我们是一群充满热情的设计工程师，希望为 AIGC 提供现代化的设计组件和工具，并以开源的方式分享。
+同时通过 Bootstrapping 的方式，我们希望能够为开发者和用户提供一个更加开放、更加透明友好的产品生态。
+
+不论普通用户与专业开发者 LobeHub 旨在成为所有人的 AI Agent 实验场，LobeChat 目前正在积极开发中，有需求或者问题，欢迎提交 [issues][issues-link]
 
 | [![][vercel-shield-badge]][vercel-link]   | 无需安装或注册！访问我们的网站，快速体验                            |
 | :---------------------------------------- | :---------------------------------------------- |
@@ -105,9 +107,50 @@ LobeHub 旨在成为所有人的 AI Agent 实验场，LobeChat 目前正在积�
 
 ## ✨ 特性一览
 
+[![][image-feat-privoder]][docs-feat-provider]
+
+### `1` [多模型服务商支持][docs-feat-provider]
+
+在 LobeChat 的不断发展过程中，我们深刻理解到在提供 AI 会话服务时模型服务商的多样性对于满足社区需求的重要性。因此，我们不再局限于单一的模型服务商，而是拓展了对多种模型服务商的支持，以便为用户提供更为丰富和多样化的会话选择。
+
+通过这种方式，LobeChat 能够更灵活地适应不同用户的需求，同时也为开发者提供了更为广泛的选择空间。
+
+#### 已支持的模型服务商
+
+我们已经实现了对以下模型服务商的支持：
+
+- **AWS Bedrock**：集成了 AWS Bedrock 服务，支持了 **Claude / LLama2** 等模型，提供了强大的自然语言处理能力。[了解更多](https://aws.amazon.com/cn/bedrock)
+- **Google AI (Gemini Pro、Gemini Vision)**：接入了 Google 的 **Gemini** 系列模型，包括 Gemini 和 Gemini Pro，以支持更高级的语言理解和生成。[了解更多](https://deepmind.google/technologies/gemini/)
+- **ChatGLM**：加入了智谱的 **ChatGLM** 系列模型（GLM-4/GLM-4-vision/GLM-3-turbo），为用户提供了另一种高效的会话模型选择。[了解更多](https://www.zhipuai.cn/)
+- **Moonshot AI (月之暗面)**：集成了 Moonshot 系列模型，这是一家来自中国的创新性 AI 创业公司，旨在提供更深层次的会话理解。[了解更多](https://www.moonshot.cn/)
+
+同时，我们也在计划支持更多的模型服务商，如 Replicate 和 Perplexity 等，以进一步丰富我们的服务商库。如果你希望让 LobeChat 支持你喜爱的服务商，欢迎加入我们的[社区讨论](https://github.com/lobehub/lobe-chat/discussions/1284)。
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+[![][image-feat-local]][docs-feat-local]
+
+### `2` [支持本地大语言模型 (LLM)][docs-feat-local]
+
+为了满足特定用户的需求，LobeChat 还基于 [Ollama](https://ollama.ai) 支持了本地模型的使用，让用户能够更灵活地使用自己的或第三方的模型。
+
+> \[!TIP]
+>
+> 查阅 [📘 在 LobeChat 中使用 Ollama][docs-usage-ollama] 获得更多信息
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 [![][image-feat-vision]][docs-feat-vision]
 
-### `1` [模型视觉识别 (Model Visual)][docs-feat-vision]
+### `3` [模型视觉识别 (Model Visual)][docs-feat-vision]
 
 LobeChat 已经支持 OpenAI 最新的 [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) 支持视觉识别的模型，这是一个具备视觉识别能力的多模态智能。
 用户可以轻松上传图片或者拖拽图片到对话框中，助手将能够识别图片内容，并在此基础上进行智能对话，构建更智能、更多元化的聊天场景。
@@ -122,7 +165,7 @@ LobeChat 已经支持 OpenAI 最新的 [`gpt-4-vision`](https://platform.openai.
 
 [![][image-feat-tts]][docs-feat-tts]
 
-### `2` [TTS & STT 语音会话][docs-feat-tts]
+### `4` [TTS & STT 语音会话][docs-feat-tts]
 
 LobeChat 支持文字转语音（Text-to-Speech，TTS）和语音转文字（Speech-to-Text，STT）技术，我们的应用能够将文本信息转化为清晰的语音输出，用户可以像与真人交谈一样与我们的对话代理进行交流。
 用户可以从多种声音中选择，给助手搭配合适的音源。 同时，对于那些倾向于听觉学习或者想要在忙碌中获取信息的用户来说，TTS 提供了一个极佳的解决方案。
@@ -137,7 +180,7 @@ LobeChat 支持文字转语音（Text-to-Speech，TTS）和语音转文字（Spe
 
 [![][image-feat-t2i]][docs-feat-t2i]
 
-### `3` [Text to Image 文生图][docs-feat-t2i]
+### `5` [Text to Image 文生图][docs-feat-t2i]
 
 支持最新的文本到图片生成技术，LobeChat 现在能够让用户在与助手对话中直接调用文成图工具进行创作。
 通过利用 [`DALL-E 3`](https://openai.com/dall-e-3)、[`MidJourney`](https://www.midjourney.com/) 和 [`Pollinations`](https://pollinations.ai/) 等 AI 工具的能力， 助手们现在可以将你的想法转化为图像。
@@ -151,7 +194,7 @@ LobeChat 支持文字转语音（Text-to-Speech，TTS）和语音转文字（Spe
 
 [![][image-feat-plugin]][docs-feat-plugin]
 
-### `4` [插件系统 (Function Calling)][docs-feat-plugin]
+### `6` [插件系统 (Function Calling)][docs-feat-plugin]
 
 LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地增强了 ChatGPT 的实用性和灵活性。
 
@@ -184,7 +227,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 [![][image-feat-agent]][docs-feat-agent]
 
-### `5` [助手市场 (GPTs)][docs-feat-agent]
+### `7` [助手市场 (GPTs)][docs-feat-agent]
 
 在 LobeChat 的助手市场中，创作者们可以发现一个充满活力和创新的社区，它汇聚了众多精心设计的助手，这些助手不仅在工作场景中发挥着重要作用，也在学习过程中提供了极大的便利。
 我们的市场不仅是一个展示平台，更是一个协作的空间。在这里，每个人都可以贡献自己的智慧，分享个人开发的助手。
@@ -210,47 +253,6 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 > 📊 Total agents: [<kbd>**181**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
-[![][image-feat-privoder]][docs-feat-provider]
-
-### `6` [多模型服务商支持][docs-feat-provider]
-
-在 LobeChat 的不断发展过程中，我们深刻理解到在提供 AI 会话服务时模型服务商的多样性对于满足社区需求的重要性。因此，我们不再局限于单一的模型服务商，而是拓展了对多种模型服务商的支持，以便为用户提供更为丰富和多样化的会话选择。
-
-通过这种方式，LobeChat 能够更灵活地适应不同用户的需求，同时也为开发者提供了更为广泛的选择空间。
-
-#### 已支持的模型服务商
-
-我们已经实现了对以下模型服务商的支持：
-
-- **AWS Bedrock**：集成了 AWS Bedrock 服务，支持了 **Claude / LLama2** 等模型，提供了强大的自然语言处理能力。[了解更多](https://aws.amazon.com/cn/bedrock)
-- **Google AI (Gemini Pro、Gemini Vision)**：接入了 Google 的 **Gemini** 系列模型，包括 Gemini 和 Gemini Pro，以支持更高级的语言理解和生成。[了解更多](https://deepmind.google/technologies/gemini/)
-- **ChatGLM**：加入了智谱的 **ChatGLM** 系列模型（GLM-4/GLM-4-vision/GLM-3-turbo），为用户提供了另一种高效的会话模型选择。[了解更多](https://www.zhipuai.cn/)
-- **Moonshot AI (月之暗面)**：集成了 Moonshot 系列模型，这是一家来自中国的创新性 AI 创业公司，旨在提供更深层次的会话理解。[了解更多](https://www.moonshot.cn/)
-
-同时，我们也在计划支持更多的模型服务商，如 Replicate 和 Perplexity 等，以进一步丰富我们的服务商库。如果你希望让 LobeChat 支持你喜爱的服务商，欢迎加入我们的[社区讨论](https://github.com/lobehub/lobe-chat/discussions/1284)。
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
-[![][image-feat-local]][docs-feat-local]
-
-### `7` [支持本地大语言模型 (LLM)][docs-feat-local]
-
-为了满足特定用户的需求，LobeChat 还基于 [Ollama](https://ollama.ai) 支持了本地模型的使用，让用户能够更灵活地使用自己的或第三方的模型。
-
-> \[!TIP]
->
-> 查阅 [📘 在 LobeChat 中使用 Ollama][docs-usage-ollama] 获得更多信息
 
 <div align="right">
 
@@ -486,12 +488,12 @@ API Key 是使用 LobeChat 进行大语言模型会话的必要信息，本节�
 
 ## 📦 生态系统
 
-| NPM                               | 仓库                                     | 描述                                                                            | 版本                                        |
-| --------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------- |
-| [@lobehub/ui][lobe-ui-link]       | [lobehub/lobe-ui][lobe-ui-github]      | 构建 AIGC 网页应用程序而设计的开源 UI 组件库                                                   | [![][lobe-ui-shield]][lobe-ui-link]       |
-| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-icons][lobe-icons-github]| 主流 AI / LLM 模型和公司 SVG Logo 与 Icon 合集                                          | [![][lobe-icons-shield]][lobe-icons-link] |
-| [@lobehub/tts][lobe-tts-link]     | [lobehub/lobe-tts][lobe-tts-github]    | AI TTS / STT 语音合成 / 识别 React Hooks 库                                          | [![][lobe-tts-shield]][lobe-tts-link]     |
-| [@lobehub/lint][lobe-lint-link]   | [lobehub/lobe-lint][lobe-lint-github]  | LobeHub 代码样式规范 ESlint，Stylelint，Commitlint，Prettier，Remark 和 Semantic Release | [![][lobe-lint-shield]][lobe-lint-link]   |
+| NPM                               | 仓库                                      | 描述                                                                            | 版本                                        |
+| --------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------- |
+| [@lobehub/ui][lobe-ui-link]       | [lobehub/lobe-ui][lobe-ui-github]       | 构建 AIGC 网页应用程序而设计的开源 UI 组件库                                                   | [![][lobe-ui-shield]][lobe-ui-link]       |
+| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-icons][lobe-icons-github] | 主流 AI / LLM 模型和公司 SVG Logo 与 Icon 合集                                          | [![][lobe-icons-shield]][lobe-icons-link] |
+| [@lobehub/tts][lobe-tts-link]     | [lobehub/lobe-tts][lobe-tts-github]     | AI TTS / STT 语音合成 / 识别 React Hooks 库                                          | [![][lobe-tts-shield]][lobe-tts-link]     |
+| [@lobehub/lint][lobe-lint-link]   | [lobehub/lobe-lint][lobe-lint-github]   | LobeHub 代码样式规范 ESlint，Stylelint，Commitlint，Prettier，Remark 和 Semantic Release | [![][lobe-lint-shield]][lobe-lint-link]   |
 
 <div align="right">
 
