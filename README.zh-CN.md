@@ -4,8 +4,9 @@
 
 <h1>Lobe Chat</h1>
 
-开源、现代化设计的 ChatGPT/LLMs 聊天应用与开发框架，支持语音合成、多模态、可扩展的（[function call][docs-functionc-call]）插件系统。<br/>
-一键**免费**拥有你自己的 ChatGPT/Gemini/Ollama 应用。
+开源、现代化设计的 ChatGPT/LLMs 聊天应用与开发框架<br/>
+支持语音合成、多模态、可扩展的（[function call][docs-functionc-call]）插件系统<br/>
+一键**免费**拥有你自己的 ChatGPT/Gemini/Ollama 应用
 
 [English](./README.md) · **简体中文** · [更新日志](./CHANGELOG.md) · [文档][github-document-link] · [报告问题][github-issues-link] · [请求功能][github-issues-link]
 
@@ -39,8 +40,7 @@
 
 [![][github-trending-shield]][github-trending-url]
 
-![](https://github.com/lobehub/lobe-chat/assets/28616219/9f155dff-4737-429f-9cad-a70a1a860c5f)
-![](https://github.com/lobehub/lobe-chat/assets/28616219/8b04c3c9-3d71-4fb4-bd9b-a4f415c5876d)
+[![][image-overview]][vercel-link]
 
 </div>
 
@@ -486,12 +486,12 @@ API Key 是使用 LobeChat 进行大语言模型会话的必要信息，本节�
 
 ## 📦 生态系统
 
-| NPM                               | 仓库                                    | 描述                                                                            | 版本                                        |
-| --------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------- |
-| [@lobehub/ui][lobe-ui-link]       | [lobehub/lobe-ui][lobe-ui-github]     | 构建 AIGC 网页应用程序而设计的开源 UI 组件库                                                   | [![][lobe-ui-shield]][lobe-ui-link]       |
-| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-ui][lobe-icons-github]  | 主流 AI / LLM 模型和公司 SVG Logo 与 Icon 合集                                          | [![][lobe-icons-shield]][lobe-icons-link] |
-| [@lobehub/tts][lobe-tts-link]     | [lobehub/lobe-tts][lobe-tts-github]   | AI TTS / STT 语音合成 / 识别 React Hooks 库                                          | [![][lobe-tts-shield]][lobe-tts-link]     |
-| [@lobehub/lint][lobe-lint-link]   | [lobehub/lobe-lint][lobe-lint-github] | LobeHub 代码样式规范 ESlint，Stylelint，Commitlint，Prettier，Remark 和 Semantic Release | [![][lobe-lint-shield]][lobe-lint-link]   |
+| NPM                               | 仓库                                     | 描述                                                                            | 版本                                        |
+| --------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------- |
+| [@lobehub/ui][lobe-ui-link]       | [lobehub/lobe-ui][lobe-ui-github]      | 构建 AIGC 网页应用程序而设计的开源 UI 组件库                                                   | [![][lobe-ui-shield]][lobe-ui-link]       |
+| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-icons][lobe-icons-github]| 主流 AI / LLM 模型和公司 SVG Logo 与 Icon 合集                                          | [![][lobe-icons-shield]][lobe-icons-link] |
+| [@lobehub/tts][lobe-tts-link]     | [lobehub/lobe-tts][lobe-tts-github]    | AI TTS / STT 语音合成 / 识别 React Hooks 库                                          | [![][lobe-tts-shield]][lobe-tts-link]     |
+| [@lobehub/lint][lobe-lint-link]   | [lobehub/lobe-lint][lobe-lint-github]  | LobeHub 代码样式规范 ESlint，Stylelint，Commitlint，Prettier，Remark 和 Semantic Release | [![][lobe-lint-shield]][lobe-lint-link]   |
 
 <div align="right">
 
@@ -723,6 +723,7 @@ This project is [MIT](./LICENSE) licensed.
 [image-feat-theme]: https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp
 [image-feat-tts]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png
 [image-feat-vision]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png
+[image-overview]: https://github.com/lobehub/lobe-chat/assets/28616219/8b04c3c9-3d71-4fb4-bd9b-a4f415c5876d
 [image-star]: https://github.com/lobehub/lobe-chat/assets/17870709/cb06b748-513f-47c2-8740-d876858d7855
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
