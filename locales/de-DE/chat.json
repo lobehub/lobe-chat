@@ -19,6 +19,7 @@
     "title": "Lass uns plaudern"
   },
   "input": {
+    "more": "Mehr",
     "onlyAdd": "Nur Nachricht hinzufügen",
     "send": "Senden",
     "sendWithCmdEnter": "Mit {{meta}} + Eingabetaste senden",

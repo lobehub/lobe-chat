@@ -19,6 +19,7 @@
     "title": "Pogadajmy sobie"
   },
   "input": {
+    "more": "więcej",
     "onlyAdd": "Tylko dodaj wiadomość",
     "send": "Wyślij",
     "sendWithCmdEnter": "Wyślij za pomocą klawisza {{meta}} + Enter",
