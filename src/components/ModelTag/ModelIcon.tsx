@@ -4,6 +4,7 @@ import {
   Baichuan,
   ChatGLM,
   Gemini,
+  Gemma,
   Meta,
   Minimax,
   Mistral,
@@ -28,6 +29,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.includes('titan')) return <Aws size={size} />;
   if (model.includes('llama')) return <Meta size={size} />;
   if (model.includes('gemini')) return <Gemini size={size} />;
+  if (model.includes('gemma')) return <Gemma.Simple size={size} />;
   if (model.includes('moonshot')) return <Moonshot size={size} />;
   if (model.includes('qwen')) return <Tongyi size={size} />;
   if (model.includes('minmax')) return <Minimax size={size} />;
