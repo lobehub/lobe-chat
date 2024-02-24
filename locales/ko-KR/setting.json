@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "자동 생성",
       "placeholderContent": "입력 안내 이름",
-      "placeholderName": "입력 안내 템플릿 내용. 변수로 {{var_name}}을 사용합니다",
-      "title": "생성/편집"
+      "placeholderName": "입력 안내 템플릿 내용. 변수로 {{var_name}}을 사용합니다"
     },
-    "title": "사용자 입력 안내"
+    "titleV1": "설정 만들기/편집"
   },
   "settingSystem": {
     "accessCode": {

@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "Automatisch generieren",
       "placeholderContent": "Eingabetipp-Name",
-      "placeholderName": "Vorlageninhalt für Eingabetipp. Verwenden Sie {{var_name}} als Variable",
-      "title": "Erstellen / Bearbeiten"
+      "placeholderName": "Vorlageninhalt für Eingabetipp. Verwenden Sie {{var_name}} als Variable"
     },
-    "title": "Benutzerhinweise"
+    "titleV1": "Erstellen / Bearbeiten"
   },
   "settingSystem": {
     "accessCode": {

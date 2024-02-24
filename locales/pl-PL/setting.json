@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "Automatyczne generowanie",
       "placeholderContent": "Treść zastępcza",
-      "placeholderName": "Nazwa zastępcza. Użyj {{var_name}} jako zmiennej",
-      "title": "Utwórz/edytuj"
+      "placeholderName": "Nazwa zastępcza. Użyj {{var_name}} jako zmiennej"
     },
-    "title": "Komunikaty użytkownika"
+    "titleV1": "Utwórz/edytuj"
   },
   "settingSystem": {
     "accessCode": {

@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "自動生成",
       "placeholderContent": "入力ヒント名",
-      "placeholderName": "入力ヒントのテンプレート内容。変数として {{var_name}} を使用してください",
-      "title": "作成/編集"
+      "placeholderName": "入力ヒントのテンプレート内容。変数として {{var_name}} を使用してください"
     },
-    "title": "ユーザープロンプト"
+    "titleV1": "設定の作成/編集"
   },
   "settingSystem": {
     "accessCode": {

@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "Tự động tạo",
       "placeholderContent": "Nhập tên gợi ý",
-      "placeholderName": "Nhập nội dung mẫu gợi ý. Sử dụng {{var_name}} làm biến",
-      "title": "Tạo/Chỉnh sửa"
+      "placeholderName": "Nhập nội dung mẫu gợi ý. Sử dụng {{var_name}} làm biến"
     },
-    "title": "Gợi ý người dùng"
+    "titleV1": "Tạo/Chỉnh sửa"
   },
   "settingSystem": {
     "accessCode": {

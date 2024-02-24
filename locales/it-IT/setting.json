@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "Generazione automatica",
       "placeholderContent": "Inserisci il nome suggerito",
-      "placeholderName": "Inserisci il contenuto del modello di suggerimento. Utilizza {{var_name}} come variabile",
-      "title": "Creare/Modificare"
+      "placeholderName": "Inserisci il contenuto del modello di suggerimento. Utilizza {{var_name}} come variabile"
     },
-    "title": "Suggerimenti Utente"
+    "titleV1": "Creare/Modificare"
   },
   "settingSystem": {
     "accessCode": {

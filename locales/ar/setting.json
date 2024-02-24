@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "توليد تلقائي",
       "placeholderContent": "محتوى النص البديل",
-      "placeholderName": "محتوى قالب النص البديل. استخدم {{var_name}} كمتغير",
-      "title": "إنشاء/تحرير"
+      "placeholderName": "محتوى قالب النص البديل. استخدم {{var_name}} كمتغير"
     },
-    "title": "تعليمات المستخدم"
+    "titleV1": "إنشاء/تحرير"
   },
   "settingSystem": {
     "accessCode": {

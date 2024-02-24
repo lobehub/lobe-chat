@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "Otomatik Oluştur",
       "placeholderContent": "Giriş ipucu adını girin",
-      "placeholderName": "Giriş ipucu şablon içeriğini girin. Değişken olarak {{var_name}} kullanın",
-      "title": "Oluştur/Düzenle"
+      "placeholderName": "Giriş ipucu şablon içeriğini girin. Değişken olarak {{var_name}} kullanın"
     },
-    "title": "Kullanıcı İpucu"
+    "titleV1": "Oluştur/Düzenle"
   },
   "settingSystem": {
     "accessCode": {

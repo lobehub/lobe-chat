@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "Automatisch genereren",
       "placeholderContent": "Invoertips naam",
-      "placeholderName": "Invoertips sjablooninhoud. Gebruik {{var_name}} als variabele",
-      "title": "Aanmaken/bewerken"
+      "placeholderName": "Invoertips sjablooninhoud. Gebruik {{var_name}} als variabele"
     },
-    "title": "Gebruikersprompts"
+    "titleV1": "Instellen/bewerken"
   },
   "settingSystem": {
     "accessCode": {

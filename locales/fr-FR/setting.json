@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "Générer automatiquement",
       "placeholderContent": "Contenu de l'espace réservé",
-      "placeholderName": "Nom de l'espace réservé. Utilisez {{var_name}} comme variable",
-      "title": "Créer/Modifier"
+      "placeholderName": "Nom de l'espace réservé. Utilisez {{var_name}} comme variable"
     },
-    "title": "Invitations utilisateur"
+    "titleV1": "Créer/Éditer"
   },
   "settingSystem": {
     "accessCode": {

@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "Generación automática",
       "placeholderContent": "Introducir nombre de sugerencia",
-      "placeholderName": "Introducir contenido de plantilla de sugerencia. Utilizar {{var_name}} como variable",
-      "title": "Crear/Editar"
+      "placeholderName": "Introducir contenido de plantilla de sugerencia. Utilizar {{var_name}} como variable"
     },
-    "title": "Sugerencias de usuario"
+    "titleV1": "Crear/Editar"
   },
   "settingSystem": {
     "accessCode": {

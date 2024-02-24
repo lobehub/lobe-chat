@@ -285,10 +285,9 @@
     "input": {
       "autoGenerate": "Auto Generate",
       "placeholderContent": "Enter prompt name",
-      "placeholderName": "Enter prompt template content. Use {{var_name}} as variable",
-      "title": "Create/Edit"
+      "placeholderName": "Enter prompt template content. Use {{var_name}} as variable"
     },
-    "title": "User Prompts"
+    "titleV1": "Create/Edit"
   },
   "settingSystem": {
     "accessCode": {
