@@ -1,17 +1,17 @@
 [
   {
     "name": "unity_ecs_lookup_generate",
-    "content": "Generate ComponentLookup code for a Component name. For example, if the Component name is \"CMoveSpeed\", the code should be:\n\n1. Private define:\n```\nprivate ComponentLookup<CMoveSpeed> _lMoveSpeed;\n```\n\n2. Init:\n```\n_lMoveSpeed = GetComponentLookup<CMoveSpeed>(true);\n```\n\n3. Use in Update:\n```\n_lMoveSpeed.Update(this);\n```\n\n4. Pass to ISystem:\n```\nLMoveSpeed = _lMoveSpeed,\n```\n\n5. Public define:\n```\n[ReadOnly]\npublic ComponentLookup<CMoveSpeed> LMoveSpeed;\n```\n\n6. Usage:\n```\nif (EcsUtility.TryGetRefRO(LMoveSpeed, e, out var roMoveSpeed)) {\n    // do something\n}\n```\n\nMy Component name is \"\"",
+    "content": "Generate ComponentLookup code for a Component name. For example, if the Component name is \"CMoveSpeed\", the code should be:\n\n1. Private define:\n```\nprivate ComponentLookup<CMoveSpeed> _lMoveSpeed;\n```\n\n2. Init:\n```\n_lMoveSpeed = GetComponentLookup<CMoveSpeed>(true);\n```\n\n3. Use in Update:\n```\n_lMoveSpeed.Update(this);\n```\n\n4. Pass to ISystem:\n```\nLMoveSpeed = _lMoveSpeed,\n```\n\n5. Public define:\n```\n[ReadOnly]\npublic ComponentLookup<CMoveSpeed> LMoveSpeed;\n```\n\n6. Usage:\n```\nif (EcsUtility.TryGetRefRO(LMoveSpeed, e, out var roMoveSpeed)) {\n    // do something\n}\n```\n\nMy Component name is \"{{component name}}\"",
     "category": "1681141260062"
   },
   {
     "name": "fix_code",
-    "content": "I need help fixing my code:\n\n```\n\n```\n\nFind and fix potential bugs",
+    "content": "I need help fixing aaa my code:\n\n```\n{{code}}\n```\n\nFind and fix potential bugs",
     "category": "1681141260062"
   },
   {
     "name": "clean_optimize_improve_code",
-    "content": "Help me improve, clean, and optimize the algorithm for my code:\n\n```\n\n```",
+    "content": "Help me improve, clean, and optimize the algorithm for my code:\n\n```\n{{code}}\n```",
     "category": "1681141260062"
   },
   {

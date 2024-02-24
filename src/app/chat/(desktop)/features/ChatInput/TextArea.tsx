@@ -9,7 +9,12 @@ import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { preferenceSelectors } from '@/store/global/selectors';
-import { handleVariableNavigation, isCommandPressed, isUserPromptRequest } from '@/utils/keyboard';
+import {
+  handleVariableNavigation,
+  isCommandPressed,
+  isUserPromptRequest,
+  navigateToNextVariable,
+} from '@/utils/keyboard';
 
 import { useAutoFocus } from './useAutoFocus';
 
@@ -38,6 +43,7 @@ const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }
   const ref = useRef<TextAreaRef>(null);
   const isChineseInput = useRef(false);
   const [openUserPrompts, setOpenUserPrompts] = useState(false);
+  const [chosenUserPrompt, setChosenUserPrompt] = useState<any>(null);
 
   const [loading, value, updateInputMessage] = useChatStore((s) => [
     !!s.chatLoadingId,
@@ -67,6 +73,19 @@ const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }
       window.removeEventListener('beforeunload', fn);
     };
   }, [hasValue]);
+
+  useEffect(() => {
+    if (!chosenUserPrompt) return;
+
+    if (ref.current?.resizableTextArea?.textArea) {
+      const textArea = ref.current?.resizableTextArea?.textArea as HTMLTextAreaElement;
+      textArea.selectionStart = textArea.selectionEnd = 0;
+      textArea.blur();
+      textArea.focus();
+      navigateToNextVariable(textArea);
+    }
+    setChosenUserPrompt(null);
+  }, [chosenUserPrompt]);
 
   return (
     <div className={styles.textareaContainer}>
@@ -129,8 +148,9 @@ const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }
             setOpenUserPrompts(false);
             ref?.current?.focus();
           }}
-          onSelect={(item) => {
-            updateInputMessage?.(item.content);
+          onSelect={(userPrompt) => {
+            updateInputMessage?.(userPrompt.content);
+            setChosenUserPrompt(userPrompt);
           }}
           open={openUserPrompts}
         />

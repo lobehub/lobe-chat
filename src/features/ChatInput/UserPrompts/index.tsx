@@ -111,6 +111,7 @@ const UserPrompts = memo<Props>(({ open, onCancel, onSelect, maxItems = 10 }) =>
         case 'Enter': {
           if (highlightIndex >= 0 && highlightIndex < list.length) {
             onOk(list[highlightIndex]);
+            event.preventDefault();
           }
           break;
         }

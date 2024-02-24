@@ -45,8 +45,7 @@ export const extractVariables = (
   return variables;
 };
 
-export const navigateToNextVariable = (e: KeyboardEvent): boolean => {
-  const textArea = e.target as HTMLTextAreaElement;
+export const navigateToNextVariable = (textArea: HTMLTextAreaElement): boolean => {
   const value = textArea?.value || '';
   const variables = extractVariables(value);
 
@@ -74,7 +73,7 @@ export const navigateToNextVariable = (e: KeyboardEvent): boolean => {
 
 export const handleVariableNavigation = (e: KeyboardEvent, navigateKey = 'Tab') => {
   if (e.key !== navigateKey) return;
-  if (navigateToNextVariable(e)) {
+  if (navigateToNextVariable(e.target as HTMLTextAreaElement)) {
     e.preventDefault();
   }
 };
