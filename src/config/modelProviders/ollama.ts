@@ -5,14 +5,14 @@ const Ollama: ModelProviderCard = {
     {
       displayName: 'Gemma 7B',
       functionCall: false,
-      id: 'gemma:7b',
+      id: 'gemma',
       tokens: 4000,
       vision: false,
     },
     {
       displayName: 'Gemma 2B',
       functionCall: false,
-      id: 'gemma',
+      id: 'gemma:2b',
       tokens: 4000,
       vision: false,
     },
