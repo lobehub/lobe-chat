@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "自動生成",
-      "placeholderContent": "入力ヒント名",
-      "placeholderName": "入力ヒントのテンプレート内容。変数として {{var_name}} を使用してください"
+      "placeholderContent1": "入力のプロンプトテンプレート内容。変数として {{var_name}} を使用します",
+      "placeholderName1": "入力のプロンプト名"
     },
     "title": "設定の作成/編集"
   },

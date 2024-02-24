@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "Automatyczne generowanie",
-      "placeholderContent": "Treść zastępcza",
-      "placeholderName": "Nazwa zastępcza. Użyj {{var_name}} jako zmiennej"
+      "placeholderContent1": "Wprowadź treść szablonu. Użyj {{var_name}} jako zmiennej",
+      "placeholderName1": "Wprowadź nazwę sugestii"
     },
     "title": "Utwórz/edytuj"
   },

@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "Automatisch genereren",
-      "placeholderContent": "Invoertips naam",
-      "placeholderName": "Invoertips sjablooninhoud. Gebruik {{var_name}} als variabele"
+      "placeholderContent1": "Voer de sjablooninhoud in. Gebruik {{var_name}} als variabele",
+      "placeholderName1": "Voer de naam van de prompt in"
     },
     "title": "Instellingen aanmaken/bewerken"
   },

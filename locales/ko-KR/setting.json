@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "자동 생성",
-      "placeholderContent": "입력 안내 이름",
-      "placeholderName": "입력 안내 템플릿 내용. 변수로 {{var_name}}을 사용합니다"
+      "placeholderContent1": "입력 안내 템플릿 내용을 입력하세요. 변수로 {{var_name}}을(를) 사용합니다.",
+      "placeholderName1": "입력 안내 이름을 입력하세요"
     },
     "title": "설정 만들기/편집"
   },

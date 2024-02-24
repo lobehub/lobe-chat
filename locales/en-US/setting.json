@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "Auto Generate",
-      "placeholderContent": "Enter prompt name",
-      "placeholderName": "Enter prompt template content. Use {{var_name}} as variable"
+      "placeholderContent1": "Enter the prompt template content. Use {{var_name}} as a variable",
+      "placeholderName1": "Enter the prompt name"
     },
     "title": "Create/Edit"
   },

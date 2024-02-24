@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "Auto Completar",
-      "placeholderContent": "Digite o nome da dica",
-      "placeholderName": "Digite o conteúdo do modelo de dica. Use {{var_name}} como variável"
+      "placeholderContent1": "Insira o conteúdo do modelo de dica. Use {{var_name}} como variável",
+      "placeholderName1": "Insira o nome da dica"
     },
     "title": "Criar/Editar"
   },

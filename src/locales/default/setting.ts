@@ -286,8 +286,8 @@ export default {
   settingPrompt: {
     input: {
       autoGenerate: '自动补全',
-      placeholderContent: '輸入提示範本內容。使用 {{var_name}} 作為變數',
-      placeholderName: '輸入提示名稱',
+      placeholderContent1: '輸入提示範本內容。使用 {{var_name}} 作為變數',
+      placeholderName1: '輸入提示名稱',
     },
     title: '建立/編輯',
   },

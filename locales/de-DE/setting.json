@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "Automatisch generieren",
-      "placeholderContent": "Eingabetipp-Name",
-      "placeholderName": "Vorlageninhalt für Eingabetipp. Verwenden Sie {{var_name}} als Variable"
+      "placeholderContent1": "Geben Sie den Platzhalterinhalt ein. Verwenden Sie {{var_name}} als Variable",
+      "placeholderName1": "Geben Sie den Platzhalternamen ein"
     },
     "title": "Erstellen / Bearbeiten"
   },

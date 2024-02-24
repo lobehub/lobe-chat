@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "توليد تلقائي",
-      "placeholderContent": "محتوى النص البديل",
-      "placeholderName": "محتوى قالب النص البديل. استخدم {{var_name}} كمتغير"
+      "placeholderContent1": "أدخل محتوى النموذج التوضيحي. استخدم {{var_name}} كمتغير",
+      "placeholderName1": "أدخل اسم التلميح"
     },
     "title": "إنشاء/تحرير"
   },

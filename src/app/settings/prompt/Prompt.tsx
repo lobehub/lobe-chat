@@ -24,7 +24,7 @@ export default memo(() => {
     children: (
       <Flexbox gap={16} paddingBlock={16}>
         <Input
-          placeholder={t('settingPrompt.input.placeholderName')}
+          placeholder={t('settingPrompt.input.placeholderName1')}
           suffix={
             <ActionIcon
               active
@@ -45,7 +45,7 @@ export default memo(() => {
           height={'auto'}
           inputType={'ghost'}
           onChange={() => {}}
-          placeholder={t('settingPrompt.input.placeholderContent')}
+          placeholder={t('settingPrompt.input.placeholderContent1')}
           showEditWhenEmpty
           text={{
             cancel: t('cancel', { ns: 'common' }),

@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "Generación automática",
-      "placeholderContent": "Introducir nombre de sugerencia",
-      "placeholderName": "Introducir contenido de plantilla de sugerencia. Utilizar {{var_name}} como variable"
+      "placeholderContent1": "Introduce el contenido del ejemplo de sugerencia. Utiliza {{var_name}} como variable",
+      "placeholderName1": "Introduce el nombre de la sugerencia"
     },
     "title": "Crear/Editar"
   },

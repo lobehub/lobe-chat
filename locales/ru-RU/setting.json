@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "Автозаполнение",
-      "placeholderContent": "Введите название подсказки",
-      "placeholderName": "Введите шаблон подсказки. Используйте {{var_name}} в качестве переменной"
+      "placeholderContent1": "Введите образец подсказки. Используйте {{var_name}} в качестве переменной",
+      "placeholderName1": "Введите имя подсказки"
     },
     "title": "Создать/редактировать"
   },

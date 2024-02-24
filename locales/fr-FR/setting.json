@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "Générer automatiquement",
-      "placeholderContent": "Contenu de l'espace réservé",
-      "placeholderName": "Nom de l'espace réservé. Utilisez {{var_name}} comme variable"
+      "placeholderContent1": "Entrez le contenu de l'exemple de message. Utilisez {{var_name}} comme variable",
+      "placeholderName1": "Entrez le nom de l'exemple de message"
     },
     "title": "Créer/Éditer"
   },

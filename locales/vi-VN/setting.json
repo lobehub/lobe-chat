@@ -284,8 +284,8 @@
   "settingPrompt": {
     "input": {
       "autoGenerate": "Tự động tạo",
-      "placeholderContent": "Nhập tên gợi ý",
-      "placeholderName": "Nhập nội dung mẫu gợi ý. Sử dụng {{var_name}} làm biến"
+      "placeholderContent1": "Nhập nội dung mẫu gợi ý. Sử dụng {{var_name}} làm biến",
+      "placeholderName1": "Nhập tên gợi ý"
     },
     "title": "Tạo/Chỉnh sửa"
   },
