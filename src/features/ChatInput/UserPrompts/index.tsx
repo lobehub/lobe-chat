@@ -162,7 +162,7 @@ const UserPrompts = memo<Props>(({ open, onCancel, onSelect, maxItems = 10 }) =>
     >
       <div className={styles.itemList}>
         <div>
-          {/*<div className={styles.notFound}>Nothing found...</div>*/}
+          {list.length === 0 && <div className={styles.notFound}>Nothing found...</div>}
           {map(list, (item, index) => {
             return (
               <PromptSelectItem
