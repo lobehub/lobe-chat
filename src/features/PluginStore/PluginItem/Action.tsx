@@ -69,7 +69,9 @@ const Actions = memo<ActionsProps>(({ identifier, type }) => {
                     label: (
                       <Popconfirm
                         arrow={false}
+                        cancelText={t('cancel', { ns: 'common' })}
                         okButtonProps={{ danger: true }}
+                        okText={t('ok', { ns: 'common' })}
                         onConfirm={() => {
                           unInstallPlugin(identifier);
                         }}

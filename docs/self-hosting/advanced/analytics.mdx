@@ -1,0 +1,20 @@
+import { Callout } from 'nextra/components';
+
+# Data Analysis
+
+To better help analyze the usage of LobeChat users, we have integrated several free/open-source data analytics services in LobeChat for collecting user usage data, which you can enable as needed.
+
+<Callout type={'warning'}>
+  Currently, the integrated data analytics platforms only support deployment and usage on
+  Vercel/Zeit platforms and do not support Docker/Docker Compose deployment.
+</Callout>
+
+## Vercel Analytics
+
+[Vercel Analytics](https://vercel.com/analytics) is a data analytics service launched by Vercel, which can help you collect website visit data, including traffic, sources, and devices used for access.
+
+We have integrated Vercel Analytics into the code, and you can enable it by setting the environment variable `NEXT_PUBLIC_ANALYTICS_VERCEL=1`, and then open the Analytics tab in your Vercel deployment project to view your app's visit data.
+
+Vercel Analytics provides 2500 free Web Analytics Events per month (which can be understood as page views), which is generally sufficient for personal deployment and self-use products.
+
+If you need to learn more about using Vercel Analytics, please refer to the [Vercel Web Analytics Quick Start](https://vercel.com/docs/analytics/quickstart).

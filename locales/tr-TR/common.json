@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, lütfen yukarıdaki yeteneklerin kullanılabilirliğini doğrulayın",
+      "file": "Bu model dosya yükleme ve tanıma desteği sağlar",
+      "functionCall": "Bu model fonksiyon çağrısını destekler (Function Call)",
+      "tokens": "Bu model, tek bir oturumda en fazla {{tokens}} Token'ı destekler",
+      "vision": "Bu model görüntü tanımı destekler"
+    }
+  },
   "about": "Hakkında",
   "advanceSettings": "Gelişmiş Ayarlar",
   "agentMaxToken": "Maksimum Oturum Süresi",
@@ -13,10 +22,12 @@
   "close": "Kapat",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "copy": "Kopyala",
+  "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
+  "document": "Belge",
   "duplicate": "Kopya oluştur",
   "edit": "Düzenle",
   "export": "Dışa Aktar",
@@ -43,6 +54,7 @@
       "added": "Başarıyla içe aktarıldı",
       "errors": "İçe Aktarma Hataları",
       "messages": "Mesajlar",
+      "sessionGroups": "Gruplar",
       "sessions": "Asistanlar",
       "skips": "Geç",
       "topics": "Konular",
@@ -51,6 +63,7 @@
     "title": "Veri İçe Aktar"
   },
   "lang": {
+    "ar": "Arapça",
     "bn": "Bengalce",
     "cs-CZ": "Çekçe",
     "da-DK": "Danca",
@@ -86,7 +99,19 @@
     "zh-TW": "Geleneksel Çince"
   },
   "layoutInitializing": "Başlatılıyor...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Açıklama yok",
+  "oauth": "SSO Girişi",
   "ok": "Tamam",
   "password": "Password",
   "pin": "Pin",

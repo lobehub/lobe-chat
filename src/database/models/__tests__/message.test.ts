@@ -329,14 +329,15 @@ describe('MessageModel', () => {
   describe('duplicateMessages', () => {
     it('should duplicate messages and update parentId for copied messages', async () => {
       // 创建原始消息和父消息
-      const parentMessageData: DB_Message = {
+      const parentMessageData: CreateMessageParams = {
         content: 'Parent message content',
         role: 'user',
         sessionId: 'session1',
+        topicId: undefined,
       };
       const parentMessage = await MessageModel.create(parentMessageData);
 
-      const childMessageData: DB_Message = {
+      const childMessageData: CreateMessageParams = {
         content: 'Child message content',
         role: 'user',
         sessionId: 'session1',
@@ -370,6 +371,48 @@ describe('MessageModel', () => {
           expect(copied!.parentId).toBe(copiedParent!.id);
         }
       }
+    });
+  });
+
+  describe('clearTable', () => {
+    it('should clear the table', async () => {
+      await MessageModel.create(messageData);
+      await MessageModel.clearTable();
+      const messages = await MessageModel.queryAll();
+      expect(messages).toHaveLength(0);
+    });
+  });
+
+  describe('updatePluginState', () => {
+    it('should update plugin state', async () => {
+      const createdMessage = await MessageModel.create(messageData);
+      await MessageModel.updatePluginState(createdMessage.id, 'testKey', 'testValue');
+      const updatedMessage = await MessageModel.findById(createdMessage.id);
+      expect(updatedMessage.pluginState).toHaveProperty('testKey', 'testValue');
+    });
+  });
+  describe('clearTable', () => {
+    it('should clear the table', async () => {
+      await MessageModel.create(messageData);
+      await MessageModel.clearTable();
+      const messages = await MessageModel.queryAll();
+      expect(messages).toHaveLength(0);
+    });
+  });
+
+  describe('updatePluginState', () => {
+    it('should update plugin state', async () => {
+      const createdMessage = await MessageModel.create(messageData);
+      await MessageModel.updatePluginState(createdMessage.id, 'testKey', 'testValue');
+      const updatedMessage = await MessageModel.findById(createdMessage.id);
+      expect(updatedMessage.pluginState).toHaveProperty('testKey', 'testValue');
+    });
+  });
+
+  describe('isEmpty', () => {
+    it('should return true if table is empty', async () => {
+      const isEmpty = await MessageModel.isEmpty();
+      expect(isEmpty).toBeTruthy();
     });
   });
 });

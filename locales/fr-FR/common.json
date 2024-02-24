@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modèle personnalisé, par défaut prend en charge à la fois l'appel de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités selon les besoins réels.",
+      "file": "Ce modèle prend en charge la lecture et la reconnaissance de fichiers",
+      "functionCall": "Ce modèle prend en charge l'appel de fonction (Function Call).",
+      "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
+      "vision": "Ce modèle prend en charge la reconnaissance visuelle."
+    }
+  },
   "about": "À propos",
   "advanceSettings": "Paramètres avancés",
   "agentMaxToken": "Longueur maximale de la session",
@@ -13,10 +22,12 @@
   "close": "Fermer",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
   "copy": "Copier",
+  "copyFail": "Échec de la copie",
   "copySuccess": "Copie réussie",
   "defaultAgent": "Agent par défaut",
   "defaultSession": "Session par défaut",
   "delete": "Supprimer",
+  "document": "Document d'utilisation",
   "duplicate": "Dupliquer",
   "edit": "Modifier",
   "export": "Exporter",
@@ -43,6 +54,7 @@
       "added": "Importation réussie",
       "errors": "Erreurs d'importation",
       "messages": "Messages",
+      "sessionGroups": "Groupes de session",
       "sessions": "Agents",
       "skips": "Éléments ignorés en double",
       "topics": "Sujets",
@@ -51,6 +63,7 @@
     "title": "Importer des données"
   },
   "lang": {
+    "ar": "arabe",
     "bn": "Bengali",
     "cs-CZ": "Tchèque",
     "da-DK": "Danois",
@@ -86,7 +99,19 @@
     "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "moonshot": "Moonshot IA",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Aucune description disponible",
+  "oauth": "Connexion SSO",
   "ok": "OK",
   "password": "Mot de passe",
   "pin": "Épingler",

@@ -1,0 +1,85 @@
+# 代码风格与贡献指南
+
+欢迎来到 LobeChat 的代码风格与贡献指南。本指南将帮助您理解我们的代码规范和贡献流程，确保代码的一致性和项目的顺利进行。
+
+## TOC
+
+- [代码风格](#代码风格)
+  - [ESLint](#eslint)
+  - [Prettier](#prettier)
+  - [remarklint](#remarklint)
+  - [stylelint](#stylelint)
+- [贡献流程](#贡献流程)
+  - [Gitmoji](#gitmoji)
+  - [Semantic Release](#semantic-release)
+  - [Commitlint](#commitlint)
+  - [如何贡献](#如何贡献)
+
+## 代码风格
+
+在 LobeChat 中，我们使用 `@lobehub/lint` 程序包来统一代码风格。该程序包内置了 `ESLint`、`Prettier`、`remarklint` 和 `stylelint` 的配置，以确保我们的 JavaScript、Markdown 和 CSS 文件遵循相同的编码标准。
+
+### ESLint
+
+我们的项目使用 ESLint 来检查 JavaScript 代码中的问题。您可以在项目根目录下找到 `.eslintrc.js` 文件，其中包含了我们对 `@lobehub/lint` 的 ESLint 配置的扩展和自定义规则。
+
+为了与 Next.js 框架兼容，我们在配置中添加了 `plugin:@next/next/recommended`。此外，我们禁用了一些规则，以适应我们项目的特定需求。
+
+请在提交代码前运行 ESLint，以确保您的代码符合项目规范。
+
+### Prettier
+
+Prettier 负责代码格式化，以保证代码的一致性。您可以在 `.prettierrc.js` 中找到我们的 Prettier 配置，它是从 `@lobehub/lint` 导入的。
+
+在保存文件时，建议您配置您的编辑器以自动运行 Prettier，或者在提交前手动运行它。
+
+### remarklint
+
+对于 Markdown 文件，我们使用 remarklint 来确保文档格式的统一。您可以在项目中找到相应的配置文件。
+
+### stylelint
+
+我们使用 stylelint 来规范 CSS 代码的风格。在 `stylelint` 的配置文件中，我们基于 `@lobehub/lint` 的配置进行了一些自定义规则的调整。
+
+确保您的样式代码在提交前通过了 stylelint 的检查。
+
+## 贡献流程
+
+LobeChat 采用 gitmoji 和 semantic release 作为我们的代码提交和发布流程。
+
+### Gitmoji
+
+在提交代码时，请使用 gitmoji 来标注您的提交信息。这有助于其他贡献者快速理解您提交的内容和目的。
+
+Gitmoji commit messages 使用特定的 emoji 来表示提交的类型或意图。以下是一个示例：
+
+```
+📝 Update README with contribution guidelines
+
+- Added section about code style preferences
+- Included instructions for running tests
+- Corrected typos and improved formatting
+```
+
+在这个示例中，📝 emoji 代表了文档的更新。提交信息清晰地描述了更改的内容，提供了具体的细节。
+
+### Semantic Release
+
+我们使用 semantic release 来自动化版本控制和发布流程。请确保您的提交信息遵循 semantic release 的规范，这样当代码合并到主分支后，系统就可以自动创建新的版本并发布。
+
+### Commitlint
+
+为了确保提交信息的一致性，我们使用 `commitlint` 来检查提交信息格式。您可以在 `.commitlintrc.js` 配置文件中找到相关规则。
+
+在您提交代码之前，请确保您的提交信息遵循我们的规范。
+
+### 如何贡献
+
+1. Fork 项目到您的账户。
+2. 创建一个新的分支进行开发。
+3. 开发完成后，确保您的代码通过了上述的代码风格检查。
+4. 提交您的更改，并使用合适的 gitmoji 标注您的提交信息。
+5. 创建一个 Pull Request 到原项目的主分支。
+6. 等待代码审查，并根据反馈进行必要的修改。
+
+感谢您遵循这些指导原则，它们有助于我们维护项目的质量和一致性。我们期待您的贡献！

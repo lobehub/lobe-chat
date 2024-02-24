@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "カスタムモデル、デフォルトでは関数呼び出しとビジョン認識の両方をサポートしています。上記の機能の有効性を実際の状況で検証してください。",
+      "file": "このモデルはファイルのアップロードと認識をサポートしています",
+      "functionCall": "このモデルは関数呼び出し（Function Call）をサポートしています。",
+      "tokens": "このモデルは1つのセッションあたり最大{{tokens}}トークンをサポートしています。",
+      "vision": "このモデルはビジョン認識をサポートしています。"
+    }
+  },
   "about": "概要",
   "advanceSettings": "高度な設定",
   "agentMaxToken": "エージェントの最大トークン数",
@@ -13,10 +22,12 @@
   "close": "閉じる",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除後は元に戻すことはできません。操作を確認してください。",
   "copy": "コピー",
+  "copyFail": "コピーに失敗しました",
   "copySuccess": "コピーが成功しました",
   "defaultAgent": "デフォルトエージェント",
   "defaultSession": "デフォルトセッション",
   "delete": "削除",
+  "document": "ドキュメント",
   "duplicate": "コピーを作成する",
   "edit": "編集",
   "export": "エクスポート",
@@ -43,6 +54,7 @@
       "added": "インポートが成功しました",
       "errors": "インポートエラー",
       "messages": "メッセージ",
+      "sessionGroups": "セッショングループ",
       "sessions": "セッション",
       "skips": "重複スキップ",
       "topics": "トピック",
@@ -51,6 +63,7 @@
     "title": "データのインポート"
   },
   "lang": {
+    "ar": "アラビア語",
     "bn": "ベンガル語",
     "cs-CZ": "チェコ語",
     "da-DK": "デンマーク語",
@@ -86,7 +99,19 @@
     "zh-TW": "繁体字中国語"
   },
   "layoutInitializing": "レイアウトを初期化中...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWSベッドロック",
+    "google": "Google",
+    "moonshot": "Moonshot AI",
+    "ollama": "オラマ",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "perplexity": "Perplexity AI",
+    "zhipu": "智譜AI"
+  },
   "noDescription": "説明はありません",
+  "oauth": "SSO ログイン",
   "ok": "OK",
   "password": "パスワード",
   "pin": "ピン留め",

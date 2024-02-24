@@ -1,0 +1,55 @@
+{
+  "avatar": "",
+  "defaultAgent": {
+    "config": {
+      "autoCreateTopicThreshold": 2,
+      "displayMode": "chat",
+      "enableAutoCreateTopic": true,
+      "historyCount": 1,
+      "model": "gpt-3.5-turbo-1106",
+      "params": {
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+        "temperature": 0.7,
+        "top_p": 0.7
+      },
+      "plugins": ["website-crawler"],
+      "systemRole": "",
+      "tts": {
+        "showAllLocaleVoice": false,
+        "sttLocale": "auto",
+        "ttsService": "openai",
+        "voice": { "openai": "alloy" }
+      },
+      "enableHistoryCount": true
+    },
+    "meta": {}
+  },
+  "fontSize": 14,
+  "language": "auto",
+  "languageModel": {
+    "openAI": {
+      "OPENAI_API_KEY": "dfdf",
+      "models": [
+        "gpt-3.5-turbo",
+        "gpt-3.5-turbo-1106",
+        "gpt-3.5-turbo-16k",
+        "gpt-4",
+        "gpt-4-32k",
+        "gpt-4-0125-preview",
+        "gpt-4-vision-preview"
+      ],
+      "customModelName": "+glm-4,+glm-4v",
+      "endpoint": "sdaddsd"
+    },
+    "zhipu": { "ZHIPU_API_KEY": "", "enabled": false }
+  },
+  "password": "",
+  "themeMode": "auto",
+  "tool": { "dalle": { "autoGenerate": false } },
+  "tts": {
+    "openAI": { "sttModel": "whisper-1", "ttsModel": "tts-1" },
+    "sttAutoStop": true,
+    "sttServer": "openai"
+  }
+}

@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure'nin API sürümü, YYYY-MM-DD biçimini takip eder, [en son sürümü buradan bulabilirsiniz](https://learn.microsoft.com/tr-tr/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Listeyi Al",
+        "title": "Azure API Sürümü"
+      },
+      "deployments": {
+        "desc": "id=name sözdizimini kullanarak dağıtım modelinizi doldurun (örneğin, dağıtım adı ve model aynıysa, yalnızca model adını doldurabilirsiniz), birden fazla model için virgül (,) kullanın",
+        "title": "Azure Dağıtımları"
+      },
       "endpoint": {
         "desc": "Bu değer, Azure portalındaki kaynağı kontrol ederken 'Keys and Endpoints' bölümünde bulunabilir",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,64 @@
         "title": "API Anahtarı"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Aws Access Key Id'sini girin",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "AccessKeyId / SecretAccessKey'in doğru şekilde doldurulup doldurulmadığını test eder"
+      },
+      "region": {
+        "desc": "Aws Bölgesini girin",
+        "placeholder": "Aws Bölgesi",
+        "title": "Aws Bölgesi"
+      },
+      "secretAccessKey": {
+        "desc": "Aws Secret Access Key'i girin",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Google'dan alınan API Anahtarını girin",
+        "placeholder": "Google API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "Moonshot": {
+      "title": "月球背面",
+      "token": {
+        "desc": "Moonshot AI 的 API 密钥",
+        "placeholder": "Moonshot AI API 密钥",
+        "title": "API 密钥"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "Proxy adresinin doğru şekilde doldurulup doldurulmadığını test edin"
+      },
+      "customModelName": {
+        "desc": "Özel model ekleyin, birden fazla model virgül (,) ile ayrılır",
+        "placeholder": "vicuna,llama,codellama,llama2:13b-text",
+        "title": "Özel Model Adı"
+      },
+      "endpoint": {
+        "desc": "Ollama arayüzü proxy adresini girin, yerel olarak özel bir adres belirtilmemişse boş bırakın",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "Proxy Adresi"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure için API sürümü, YYYY-MM-DD formatını takip eder, [en son sürümü kontrol edin](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Listeyi Al",
         "title": "Azure API Sürümü"
-      },
-      "check": {
-        "button": "Kontrol Et",
-        "desc": "Api Anahtarı ve proxy adresinin doğru şekilde doldurulup doldurulmadığını test eder",
-        "pass": "Kontrol Başarılı",
-        "title": "Bağlantı Kontrolü"
       },
       "customModelName": {
         "desc": "Özel modeller ekleyin, birden fazla modeli virgülle (,) ayırarak yazın",
@@ -81,6 +137,28 @@
         "serverConfig": "Yönetici, sunucu tarafında Azure OpenAI'yi etkinleştirdi ve değiştirme yasağı getirdi",
         "title": "Azure OpenAI"
       }
+    },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Perplexity AI'dan gelen API Anahtarı'nı girin",
+        "placeholder": "Perplexity AI API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "Zhipu": {
+      "title": "Zhipu AI",
+      "token": {
+        "desc": "Zhipu'dan alınan API Anahtarını girin",
+        "placeholder": "Zhipu API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "checker": {
+      "button": "Kontrol Et",
+      "desc": "Api Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
+      "pass": "Kontrol Başarılı",
+      "title": "Bağlantı Kontrolü"
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
   },
@@ -209,6 +287,22 @@
       "placeholder": "Erişim şifresini girin",
       "title": "Erişim Şifresi"
     },
+    "oauth": {
+      "info": {
+        "desc": "Oturum açıldı",
+        "title": "Hesap Bilgisi"
+      },
+      "signin": {
+        "action": "Oturum aç",
+        "desc": "Uygulamayı kilidini açmak için SSO ile oturum açın",
+        "title": "Hesaba Giriş Yap"
+      },
+      "signout": {
+        "action": "Oturumu kapat",
+        "confirm": "Çıkış yapmak istediğinize emin misiniz?",
+        "success": "Oturum kapatma başarılı"
+      }
+    },
     "title": "Sistem Ayarları"
   },
   "settingTTS": {
@@ -252,9 +346,7 @@
     "fontSize": {
       "desc": "Sohbet içeriği için yazı boyutu",
       "marks": {
-        "large": "Büyük",
-        "normal": "Normal",
-        "small": "Küçük"
+        "normal": "Normal"
       },
       "title": "Yazı Boyutu"
     },
@@ -295,6 +387,7 @@
     "builtins": {
       "groupName": "Dahili Araçlar"
     },
+    "disabled": "Mevcut model fonksiyon çağrılarını desteklemez, eklenti kullanılamaz",
     "plugins": {
       "enabled": "Etkin: {{num}}",
       "groupName": "Eklentiler",

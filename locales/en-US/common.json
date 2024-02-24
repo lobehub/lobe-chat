@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
+      "file": "This model supports file upload for reading and recognition",
+      "functionCall": "This model supports function call.",
+      "tokens": "This model supports a maximum of {{tokens}} tokens per session.",
+      "vision": "This model supports visual recognition."
+    }
+  },
   "about": "About",
   "advanceSettings": "Advanced Settings",
   "agentMaxToken": "Max Session Length",
@@ -13,10 +22,12 @@
   "close": "Close",
   "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be recovered. Please confirm your action.",
   "copy": "Copy",
+  "copyFail": "Copy failed",
   "copySuccess": "Copied successfully",
   "defaultAgent": "Default Agent",
   "defaultSession": "Default Agent",
   "delete": "Delete",
+  "document": "User Manual",
   "duplicate": "Create Duplicate",
   "edit": "Edit",
   "export": "Export Configuration",
@@ -43,6 +54,7 @@
       "added": "Imported successfully",
       "errors": "Import errors",
       "messages": "Messages",
+      "sessionGroups": "Groups",
       "sessions": "Agents",
       "skips": "Duplicates skipped",
       "topics": "Topics",
@@ -51,6 +63,7 @@
     "title": "Import Data"
   },
   "lang": {
+    "ar": "Arabic",
     "bn": "Bengali",
     "cs-CZ": "Czech",
     "da-DK": "Danish",
@@ -86,7 +99,19 @@
     "zh-TW": "Traditional Chinese"
   },
   "layoutInitializing": "Initializing layout...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "No description available",
+  "oauth": "SSO Login",
   "ok": "OK",
   "password": "Password",
   "pin": "Pin",

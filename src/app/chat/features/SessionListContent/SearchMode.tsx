@@ -9,7 +9,7 @@ import SessionList from './List';
 const SessionListContent = memo(() => {
   const searchSessions = useSessionStore(sessionSelectors.searchSessions, isEqual);
 
-  return <SessionList dataSource={searchSessions} />;
+  return <SessionList dataSource={searchSessions} showAddButton={false} />;
 });
 
 export default SessionListContent;

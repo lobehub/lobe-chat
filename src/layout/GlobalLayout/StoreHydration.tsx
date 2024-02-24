@@ -3,31 +3,37 @@ import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
 import { useGlobalStore } from '@/store/global';
-import { useEffectAfterSessionHydrated, useSessionStore } from '@/store/session';
+import { useEffectAfterGlobalHydrated } from '@/store/global/hooks/useEffectAfterHydrated';
 
 const StoreHydration = memo(() => {
-  const router = useRouter();
+  const [useFetchServerConfig, useFetchUserConfig] = useGlobalStore((s) => [
+    s.useFetchServerConfig,
+    s.useFetchUserConfig,
+  ]);
+  const { isLoading } = useFetchServerConfig();
 
-  const useFetchGlobalConfig = useGlobalStore((s) => s.useFetchGlobalConfig);
+  useFetchUserConfig(!isLoading);
 
   useEffect(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
-    useSessionStore.persist.rehydrate();
     useGlobalStore.persist.rehydrate();
   }, []);
 
-  useFetchGlobalConfig();
-
   const { mobile } = useResponsive();
-
-  useEffectAfterSessionHydrated(
+  useEffectAfterGlobalHydrated(
     (store) => {
-      store.setState({ isMobile: mobile });
+      const prevState = store.getState().isMobile;
+
+      if (prevState !== mobile) {
+        store.setState({ isMobile: mobile });
+      }
     },
     [mobile],
   );
 
-  useEffectAfterSessionHydrated(
+  const router = useRouter();
+
+  useEffectAfterGlobalHydrated(
     (store) => {
       store.setState({ router });
     },
@@ -36,6 +42,7 @@ const StoreHydration = memo(() => {
 
   useEffect(() => {
     router.prefetch('/chat');
+    router.prefetch('/chat/settings');
     router.prefetch('/market');
     router.prefetch('/settings/common');
     router.prefetch('/settings/agent');

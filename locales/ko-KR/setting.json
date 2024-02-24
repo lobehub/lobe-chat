@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure의 API 버전은 YYYY-MM-DD 형식을 따르며, [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 확인하세요.",
+        "fetch": "목록 가져오기",
+        "title": "Azure API 버전"
+      },
+      "deployments": {
+        "desc": "id=name 구문을 사용하여 배포 모델을 작성합니다(예: 배포 이름과 모델이 동일한 경우 모델 이름만 작성할 수 있습니다). 여러 모델은 쉼표(,)로 구분합니다.",
+        "title": "Azure 배포 모델 목록"
+      },
       "endpoint": {
         "desc": "Azure 포털에서 리소스를 확인할 때 이 값을“키 및 엔드포인트” 섹션에서 찾을 수 있습니다",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,64 @@
         "title": "API 키"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Aws Access Key Id를 입력하세요",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "AccessKeyId / SecretAccessKey를 올바르게 입력했는지 테스트합니다"
+      },
+      "region": {
+        "desc": "Aws 지역을 입력하세요",
+        "placeholder": "Aws Region",
+        "title": "Aws 지역"
+      },
+      "secretAccessKey": {
+        "desc": "Aws Secret Access Key를 입력하세요",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Google의 API Key를 입력하세요",
+        "placeholder": "Google API Key",
+        "title": "API Key"
+      }
+    },
+    "Moonshot": {
+      "title": "달의 그림자",
+      "token": {
+        "desc": "Moonshot AI에서 제공하는 API 키를 입력하세요",
+        "placeholder": "Moonshot AI API 키",
+        "title": "API 키"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "프록시 주소가 올바르게 입력되었는지 확인합니다."
+      },
+      "customModelName": {
+        "desc": "사용자 정의 모델을 추가하고, 여러 모델은 쉼표(,)로 구분합니다.",
+        "placeholder": "비쿠나, 람라, 코데람라, 람라2:13b-텍스트",
+        "title": "사용자 정의 모델 이름"
+      },
+      "endpoint": {
+        "desc": "Ollama 인터페이스 프록시 주소를 입력하고, 로컬에서 별도로 지정하지 않은 경우 비워 둡니다.",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "인터페이스 프록시 주소"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure의 API 버전으로 YYYY-MM-DD 형식을 따르며 [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 확인하세요",
         "fetch": "목록 가져오기",
         "title": "Azure API 버전"
-      },
-      "check": {
-        "button": "확인",
-        "desc": "API 키 및 프록시 주소가 올바르게 입력되었는지 테스트합니다",
-        "pass": "확인 완료",
-        "title": "연결성 확인"
       },
       "customModelName": {
         "desc": "사용자 정의 모델 추가, 여러 모델은 쉼표(,)로 구분합니다",
@@ -81,6 +137,28 @@
         "serverConfig": "관리자가 서버에서 Azure OpenAI를 구성했으므로 변경이 금지되었습니다",
         "title": "Azure OpenAI"
       }
+    },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Perplexity AI 에서 제공하는 API 키를 입력하세요",
+        "placeholder": "Perplexity AI API 키",
+        "title": "API 키"
+      }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "智谱의 API Key를 입력하세요",
+        "placeholder": "Zhipu API Key",
+        "title": "API Key"
+      }
+    },
+    "checker": {
+      "button": "확인",
+      "desc": "API Key 및 프록시 주소가 올바르게 입력되었는지 테스트합니다",
+      "pass": "확인 통과",
+      "title": "연결성 확인"
     },
     "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요 ✨"
   },
@@ -209,6 +287,22 @@
       "placeholder": "액세스 암호를 입력하세요",
       "title": "액세스 암호"
     },
+    "oauth": {
+      "info": {
+        "desc": "로그인됨",
+        "title": "계정 정보"
+      },
+      "signin": {
+        "action": "로그인",
+        "desc": "SSO를 사용하여 앱 잠금 해제",
+        "title": "계정 로그인"
+      },
+      "signout": {
+        "action": "로그아웃",
+        "confirm": "로그아웃 하시겠습니까?",
+        "success": "로그아웃 성공"
+      }
+    },
     "title": "시스템 설정"
   },
   "settingTTS": {
@@ -252,9 +346,7 @@
     "fontSize": {
       "desc": "채팅 내용의 글꼴 크기",
       "marks": {
-        "large": "대",
-        "normal": "표준",
-        "small": "소"
+        "normal": "표준"
       },
       "title": "글꼴 크기"
     },
@@ -295,6 +387,7 @@
     "builtins": {
       "groupName": "내장"
     },
+    "disabled": "현재 모델은 함수 호출을 지원하지 않으며 플러그인을 사용할 수 없습니다",
     "plugins": {
       "enabled": "활성화됨 {{num}}",
       "groupName": "플러그인",

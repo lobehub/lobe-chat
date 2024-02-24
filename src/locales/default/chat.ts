@@ -1,4 +1,7 @@
 export default {
+  ModelSwitch: {
+    title: '模型',
+  },
   agentDefaultMessage:
     '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置](/chat/settings#session={{id}}) 完善我的信息。',
   agentDefaultMessageWithSystemRole: '你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！',
@@ -7,6 +10,7 @@ export default {
   confirmClearCurrentMessages: '即将清空当前会话消息，清空后将无法找回，请确认你的操作',
   confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
   defaultAgent: '自定义助手',
+  defaultList: '默认列表',
   defaultSession: '自定义助手',
   duplicateTitle: '{{title}} 副本',
   historyRange: '历史范围',
@@ -17,6 +21,7 @@ export default {
     title: '随便聊聊',
   },
   input: {
+    more: '更多',
     onlyAdd: '仅添加消息',
     send: '发送',
     sendWithCmdEnter: '按 {{meta}} + Enter 键发送',
@@ -36,7 +41,18 @@ export default {
   roleAndArchive: '角色与记录',
   searchAgentPlaceholder: '搜索助手和对话...',
   sendPlaceholder: '输入聊天内容...',
-  sessionList: '助手列表',
+  sessionGroup: {
+    config: '分组管理',
+    confirmRemoveGroupAlert: '即将删除该分组，删除后该分组的助手将移动到默认列表，请确认你的操作',
+    createGroup: '添加新分组',
+    createSuccess: '创建成功',
+    inputPlaceholder: '请输入分组名称...',
+    moveGroup: '移动到分组',
+    newGroup: '新分组',
+    rename: '重命名分组',
+    renameSuccess: '重命名成功',
+    tooLong: '分组名称长度需在 1-20 之内',
+  },
   shareModal: {
     download: '下载截图',
     imageType: '图片格式',
@@ -54,8 +70,14 @@ export default {
     prettifying: '润色中...',
   },
   temp: '临时',
-  tokenDetail:
-    '角色设定: {{systemRoleToken}} · 会话消息: {{chatsToken}} · 工具设定: {{toolsToken}}',
+  tokenDetails: {
+    chats: '会话消息',
+    rest: '剩余可用',
+    systemRole: '角色设定',
+    tools: '插件设定',
+    total: '总共可用',
+    used: '总计使用',
+  },
   tokenTag: {
     overload: '超过限制',
     remained: '剩余',
@@ -93,6 +115,7 @@ export default {
   updateAgent: '更新助理信息',
   upload: {
     actionTooltip: '上传图片',
+    disabled: '当前模型不支持视觉识别，请切换模型后使用',
     dragDesc: '拖拽文件到这里，支持上传多个图片。按住 Shift 直接发送图片',
     dragTitle: '上传图片',
   },

@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Model Değiştir"
+  },
   "agentDefaultMessage": "Merhaba, Ben **{{name}}**. Hemen benimle sohbet etmeye başlayabilirsiniz veya [Asistan Ayarları](/chat/settings#session={{id}}) sayfasına giderek bilgilerimi tamamlayabilirsiniz.",
   "agentDefaultMessageWithSystemRole": "Merhaba, Ben **{{name}}**, {{systemRole}}. Hemen sohbet etmeye başlayalım!",
   "backToBottom": "En alta git",
@@ -6,6 +9,7 @@
   "confirmClearCurrentMessages": "Mevcut oturum mesajlarını temizlemek üzeresiniz. Temizlendikten sonra geri alınamazlar. Lütfen eyleminizi onaylayın.",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "defaultAgent": "Varsayılan Asistan",
+  "defaultList": "Varsayılan Liste",
   "defaultSession": "Varsayılan Asistan",
   "duplicateTitle": "{{title}} Kopya",
   "historyRange": "Geçmiş Aralığı",
@@ -15,6 +19,7 @@
     "title": "Sohbet Et"
   },
   "input": {
+    "more": "Daha fazla",
     "onlyAdd": "Sadece mesaj ekle",
     "send": "Gönder",
     "sendWithCmdEnter": "{{meta}} + Enter tuşuna basarak gönder",
@@ -34,7 +39,18 @@
   "roleAndArchive": "Rol ve Arşiv",
   "searchAgentPlaceholder": "Arama yardımcıları ve konuşmalar...",
   "sendPlaceholder": "Mesajınızı buraya yazın...",
-  "sessionList": "Asistanlar",
+  "sessionGroup": {
+    "config": "Grup Yönetimi",
+    "confirmRemoveGroupAlert": "Bu grup silinecek, silindikten sonra bu grubun yardımcıları varsayılan listeye taşınacak, işleminizi onaylıyor musunuz?",
+    "createGroup": "Yeni Grup Ekle",
+    "createSuccess": "Oluşturma Başarılı",
+    "inputPlaceholder": "Grup adını girin...",
+    "moveGroup": "Gruba Taşı",
+    "newGroup": "Yeni Grup",
+    "rename": "Grup Adını Değiştir",
+    "renameSuccess": "Yeniden Adlandırma Başarılı",
+    "tooLong": "Grup adı 1-20 karakter arasında olmalıdır"
+  },
   "shareModal": {
     "download": "Ekran Görüntüsünü İndir",
     "imageType": "Format",
@@ -52,7 +68,14 @@
     "prettifying": "İyileştiriliyor..."
   },
   "temp": "Geçici",
-  "tokenDetail": "Rol Ayarı: {{systemRoleToken}} · Sohbet Geçmişi: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "Sohbetler",
+    "rest": "Kalan",
+    "systemRole": "Sistem Rolü",
+    "tools": "Araçlar",
+    "total": "Toplam",
+    "used": "Kullanılan"
+  },
   "tokenTag": {
     "overload": "Limit Aşıldı",
     "remained": "Kalan",
@@ -90,6 +113,7 @@
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upload": {
     "actionTooltip": "Resim Yükle",
+    "disabled": "Geçerli model görüntü tanıma desteğini desteklemiyor, lütfen modeli değiştirerek kullanın",
     "dragDesc": "Dosyaları buraya sürükleyip bırakın, birden fazla resim yüklemeyi destekler. Resimleri doğrudan göndermek için Shift tuşunu basılı tutun.",
     "dragTitle": "Resim Yükle"
   }

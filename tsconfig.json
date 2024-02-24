@@ -18,7 +18,8 @@
     "baseUrl": ".",
     "types": ["vitest/globals"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "~test-utils": ["./tests/utils.tsx"]
     },
     "plugins": [
       {

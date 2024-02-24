@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`modelProviderSelectors > CUSTOM_MODELS > custom deletion, addition, and renaming of models 1`] = `
+[
+  {
+    "chatModels": [
+      {
+        "displayName": "llama",
+        "functionCall": true,
+        "id": "llama",
+        "isCustom": true,
+        "vision": true,
+      },
+      {
+        "displayName": "claude-2",
+        "functionCall": true,
+        "id": "claude-2",
+        "isCustom": true,
+        "vision": true,
+      },
+      {
+        "displayName": "gpt-4-32k",
+        "functionCall": true,
+        "hidden": undefined,
+        "id": "gpt-4-0125-preview",
+        "tokens": 128000,
+      },
+    ],
+    "enabled": true,
+    "id": "openai",
+  },
+]
+`;

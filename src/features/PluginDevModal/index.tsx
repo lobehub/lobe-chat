@@ -41,10 +41,13 @@ const DevModal = memo<DevModalProps>(
       <Flexbox flex={1} gap={12} horizontal justify={'flex-end'}>
         {isEditMode ? (
           <Popconfirm
+            arrow={false}
+            cancelText={t('cancel', { ns: 'common' })}
             okButtonProps={{
               danger: true,
               type: 'primary',
             }}
+            okText={t('ok', { ns: 'common' })}
             onConfirm={() => {
               onDelete?.();
               message.success(t('dev.deleteSuccess'));
@@ -96,7 +99,6 @@ const DevModal = memo<DevModalProps>(
       >
         <Modal
           allowFullscreen
-          cancelText={t('cancel', { ns: 'common' })}
           footer={footer}
           okText={t('dev.save')}
           onCancel={(e) => {

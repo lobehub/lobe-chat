@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "모델"
+  },
   "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 즉시 대화를 시작하거나 [도우미 설정](/chat/settings#session={{id}})으로 이동하여 내 정보를 완성할 수 있습니다.",
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
   "backToBottom": "하단으로 이동",
@@ -6,6 +9,7 @@
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "defaultAgent": "기본 도우미",
+  "defaultList": "기본 목록",
   "defaultSession": "기본 도우미",
   "duplicateTitle": "{{title}} 복사본",
   "historyRange": "대화 기록 범위",
@@ -15,6 +19,7 @@
     "title": "무작위 대화"
   },
   "input": {
+    "more": "더 많은",
     "onlyAdd": "메시지만 추가",
     "send": "전송",
     "sendWithCmdEnter": "{{meta}} + Enter 키로 전송",
@@ -34,7 +39,18 @@
   "roleAndArchive": "역할 및 아카이브",
   "searchAgentPlaceholder": "도우미 및 대화 검색...",
   "sendPlaceholder": "채팅 내용 입력...",
-  "sessionList": "도우미 목록",
+  "sessionGroup": {
+    "config": "그룹 설정",
+    "confirmRemoveGroupAlert": "이 그룹을 삭제하려고 합니다. 삭제 후 이 그룹의 도우미는 기본 목록으로 이동됩니다. 작업을 확인하십시오.",
+    "createGroup": "새 그룹 추가",
+    "createSuccess": "생성 성공",
+    "inputPlaceholder": "그룹 이름을 입력하세요...",
+    "moveGroup": "그룹으로 이동",
+    "newGroup": "새 그룹",
+    "rename": "그룹 이름 변경",
+    "renameSuccess": "이름 변경 성공",
+    "tooLong": "그룹 이름은 1-20자여야 합니다"
+  },
   "shareModal": {
     "download": "스크린샷 다운로드",
     "imageType": "이미지 형식",
@@ -52,7 +68,14 @@
     "prettifying": "정제 중..."
   },
   "temp": "임시",
-  "tokenDetail": "역할 설정: {{systemRoleToken}} · 대화 기록: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "채팅 메시지",
+    "rest": "남은 사용량",
+    "systemRole": "시스템 역할",
+    "tools": "도구 설정",
+    "total": "총 사용량",
+    "used": "총 사용"
+  },
   "tokenTag": {
     "overload": "한도 초과",
     "remained": "남음",
@@ -90,6 +113,7 @@
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
     "actionTooltip": "이미지 업로드",
+    "disabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 전환한 후 사용해주세요.",
     "dragDesc": "여기로 파일을 끌어다 놓거나 여러 이미지를 업로드할 수 있습니다. Shift를 누른 채로 이미지를 직접 보내기",
     "dragTitle": "이미지 업로드"
   }

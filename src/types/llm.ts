@@ -13,8 +13,42 @@ export enum LanguageModel {
    */
   GPT4 = 'gpt-4',
   GPT4_32K = 'gpt-4-32k',
-  GPT4_PREVIEW = 'gpt-4-1106-preview',
+  GPT4_PREVIEW = 'gpt-4-0125-preview',
   GPT4_VISION_PREVIEW = 'gpt-4-vision-preview',
+}
+
+export interface ChatModelCard {
+  description?: string;
+  displayName?: string;
+  /**
+   * whether model supports file upload
+   */
+  files?: boolean;
+  /**
+   * whether model supports function call
+   */
+  functionCall?: boolean;
+  hidden?: boolean;
+  id: string;
+  /**
+   * whether model is custom
+   */
+  isCustom?: boolean;
+  /**
+   * whether model is legacy (deprecated but not removed yet)
+   */
+  legacy?: boolean;
+  tokens?: number;
+  /**
+   *  whether model supports vision
+   */
+  vision?: boolean;
+}
+
+export interface ModelProviderCard {
+  chatModels: ChatModelCard[];
+  enabled?: boolean;
+  id: string;
 }
 
 // 语言模型的设置参数

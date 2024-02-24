@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure API-versie, in het formaat YYYY-MM-DD, raadpleeg de [laatste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Ophalen van lijst",
+        "title": "Azure API-versie"
+      },
+      "deployments": {
+        "desc": "Vul de syntaxis id=naam in voor uw implementatiemodellen (bijv. als de implementatienaam en het model dezelfde naam hebben, kunt u alleen de modelnaam invullen), meerdere modellen worden gescheiden door een komma (,)",
+        "title": "Azure implementatiemodellen"
+      },
       "endpoint": {
         "desc": "Deze waarde is te vinden in het gedeelte 'Sleutels en eindpunten' wanneer u de bron controleert in het Azure-portal",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,64 @@
         "title": "API-sleutel"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Vul de AWS Access Key ID in",
+        "placeholder": "AWS Access Key ID",
+        "title": "AWS Access Key ID"
+      },
+      "checker": {
+        "desc": "Test of AccessKeyId / SecretAccessKey correct zijn ingevuld"
+      },
+      "region": {
+        "desc": "Vul de AWS-regio in",
+        "placeholder": "AWS-regio",
+        "title": "AWS-regio"
+      },
+      "secretAccessKey": {
+        "desc": "Vul de AWS Secret Access Key in",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Vul de API-sleutel van Google in",
+        "placeholder": "Google API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
+    "Moonshot": {
+      "title": "月球计划",
+      "token": {
+        "desc": "请输入来自 Moonshot AI 的 API 密钥",
+        "placeholder": "Moonshot AI API 密钥",
+        "title": "API 密钥"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "Check of de proxy-adres correct is ingevuld"
+      },
+      "customModelName": {
+        "desc": "Voeg aangepast model toe, gebruik komma's (,) om meerdere modellen te scheiden",
+        "placeholder": "vicuna,llama,codellama,llama2:13b-text",
+        "title": "Aangepaste modelnaam"
+      },
+      "endpoint": {
+        "desc": "Vul het Ollama-interface proxy-adres in, laat leeg als lokaal niet apart is gespecificeerd",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "Interface proxy-adres"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "API-versie van Azure, in het formaat YYYY-MM-DD, zie [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Lijst ophalen",
         "title": "Azure API-versie"
-      },
-      "check": {
-        "button": "Controleren",
-        "desc": "Test of de API-sleutel en proxy-adres correct zijn ingevuld",
-        "pass": "Controle geslaagd",
-        "title": "Connectiviteitscontrole"
       },
       "customModelName": {
         "desc": "Voeg aangepaste modellen toe, gescheiden door een komma (,)",
@@ -81,6 +137,28 @@
         "serverConfig": "Beheerder heeft Azure OpenAI aan de serverzijde geconfigureerd, overschakelen is niet toegestaan",
         "title": "Azure OpenAI gebruiken"
       }
+    },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Voer de API-sleutel in van Perplexity AI",
+        "placeholder": "Perplexity AI API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "Vul de API-sleutel van Zhipu in",
+        "placeholder": "Zhipu API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
+    "checker": {
+      "button": "Controleren",
+      "desc": "Test of de API-sleutel en proxyadres correct zijn ingevuld",
+      "pass": "Succesvol gecontroleerd",
+      "title": "Connectiviteitscontrole"
     },
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨"
   },
@@ -209,6 +287,22 @@
       "placeholder": "Voer toegangswachtwoord in",
       "title": "Toegangswachtwoord"
     },
+    "oauth": {
+      "info": {
+        "desc": "已登录",
+        "title": "Account Information"
+      },
+      "signin": {
+        "action": "Sign In",
+        "desc": "Sign in using SSO to unlock the app",
+        "title": "Sign In to Your Account"
+      },
+      "signout": {
+        "action": "Sign Out",
+        "confirm": "Confirm sign out?",
+        "success": "Sign out successful"
+      }
+    },
     "title": "Systeeminstellingen"
   },
   "settingTTS": {
@@ -252,9 +346,7 @@
     "fontSize": {
       "desc": "Lettergrootte van chatberichten",
       "marks": {
-        "large": "Groot",
-        "normal": "Normaal",
-        "small": "Klein"
+        "normal": "Normaal"
       },
       "title": "Lettergrootte"
     },
@@ -295,6 +387,7 @@
     "builtins": {
       "groupName": "Ingebouwd"
     },
+    "disabled": "Dit model ondersteunt momenteel geen functieaanroepen en kan geen plug-ins gebruiken",
     "plugins": {
       "enabled": "Ingeschakeld {{num}}",
       "groupName": "Plug-ins",

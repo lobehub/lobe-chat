@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Benutzerdefiniertes Modell, das standardmäßig sowohl Funktionsaufrufe als auch visuelle Erkennung unterstützt. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Anforderungen.",
+      "file": "Dieses Modell unterstützt das Hochladen von Dateien zur Erkennung.",
+      "functionCall": "Dieses Modell unterstützt Funktionsaufrufe (Function Call).",
+      "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro einzelner Sitzung.",
+      "vision": "Dieses Modell unterstützt visuelle Erkennung."
+    }
+  },
   "about": "Über",
   "advanceSettings": "Erweiterte Einstellungen",
   "agentMaxToken": "Maximale Sitzungslänge",
@@ -13,10 +22,12 @@
   "close": "Schließen",
   "confirmRemoveSessionItemAlert": "Möchten Sie diesen Assistenten wirklich löschen? Nach dem Löschen kann er nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
   "copy": "Kopieren",
+  "copyFail": "Kopieren fehlgeschlagen",
   "copySuccess": "Kopieren erfolgreich",
   "defaultAgent": "Standardassistent",
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
+  "document": "Dokumentation",
   "duplicate": "Duplikat erstellen",
   "edit": "Bearbeiten",
   "export": "Exportieren",
@@ -43,6 +54,7 @@
       "added": "Erfolgreich importiert",
       "errors": "Fehler beim Import",
       "messages": "Nachrichten",
+      "sessionGroups": "Sitzungsgruppen",
       "sessions": "Assistenten",
       "skips": "Übersprungen (doppelt)",
       "topics": "Themen",
@@ -51,6 +63,7 @@
     "title": "Daten importieren"
   },
   "lang": {
+    "ar": "Arabisch",
     "bn": "Bengalisch",
     "cs-CZ": "Tschechisch",
     "da-DK": "Dänisch",
@@ -86,7 +99,19 @@
     "zh-TW": "Chinesisch (traditionell)"
   },
   "layoutInitializing": "Layout wird geladen...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "moonshot": "Moonshot KI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Keine Beschreibung vorhanden",
+  "oauth": "SSO-Anmeldung",
   "ok": "OK",
   "password": "Passwort",
   "pin": "Anheften",

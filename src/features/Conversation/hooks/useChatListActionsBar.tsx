@@ -1,5 +1,5 @@
 import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
-import { Copy, Edit, RotateCw, Trash } from 'lucide-react';
+import { Copy, Edit, ListRestart, RotateCcw, Trash } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -29,7 +29,7 @@ export const useChatListActionsBar = (): ChatListActionsBar => {
         label: t('delete', { defaultValue: 'Delete' }),
       },
       delAndRegenerate: {
-        icon: RotateCw,
+        icon: ListRestart,
         key: 'delAndRegenerate',
         label: t('messageAction.delAndRegenerate', {
           defaultValue: 'Delete and regenerate',
@@ -45,7 +45,7 @@ export const useChatListActionsBar = (): ChatListActionsBar => {
         label: t('edit', { defaultValue: 'Edit' }),
       },
       regenerate: {
-        icon: RotateCw,
+        icon: RotateCcw,
         key: 'regenerate',
         label: t('regenerate', { defaultValue: 'Regenerate' }),
       },

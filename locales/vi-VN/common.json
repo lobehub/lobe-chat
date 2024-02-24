@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Chọn mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện thị giác, vui lòng xác minh khả năng sử dụng của các tính năng trên dựa trên tình hình thực tế",
+      "file": "Mô hình này hỗ trợ tải lên tệp để đọc và nhận dạng",
+      "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
+      "tokens": "Mô hình này hỗ trợ tối đa {{tokens}} Tokens cho mỗi phiên",
+      "vision": "Mô hình này hỗ trợ nhận diện thị giác"
+    }
+  },
   "about": "Giới thiệu",
   "advanceSettings": "Cài đặt nâng cao",
   "agentMaxToken": "Số ký tự tối đa của phiên",
@@ -13,10 +22,12 @@
   "close": "Đóng",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Sau khi xóa, bạn sẽ không thể khôi phục. Vui lòng xác nhận hành động của bạn",
   "copy": "Sao chép",
+  "copyFail": "Sao chép thất bại",
   "copySuccess": "Sao chép thành công",
   "defaultAgent": "Trợ lý mặc định",
   "defaultSession": "Phiên mặc định",
   "delete": "Xóa",
+  "document": "Tài Liệu Sử Dụng",
   "duplicate": "Tạo bản sao",
   "edit": "Chỉnh sửa",
   "export": "Xuất cấu hình",
@@ -43,6 +54,7 @@
       "added": "Nhập thành công",
       "errors": "Lỗi nhập",
       "messages": "Tin nhắn",
+      "sessionGroups": "Nhóm phiên",
       "sessions": "Trợ lý",
       "skips": "Bỏ qua trùng lặp",
       "topics": "Chủ đề",
@@ -51,6 +63,7 @@
     "title": "Nhập dữ liệu"
   },
   "lang": {
+    "ar": "Tiếng Ả Rập",
     "bn": "Tiếng Bengal",
     "cs-CZ": "Tiếng Séc",
     "da-DK": "Tiếng Đan Mạch",
@@ -86,7 +99,19 @@
     "zh-TW": "Tiếng Trung (phồn thể)"
   },
   "layoutInitializing": "Đang tải bố cục...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "perplexity": "Perplexity AI",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Chưa có mô tả",
+  "oauth": "Đăng nhập SSO",
   "ok": "Đồng ý",
   "password": "Mật khẩu",
   "pin": "Ghim",

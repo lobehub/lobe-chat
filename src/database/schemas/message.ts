@@ -24,6 +24,7 @@ export const DB_MessageSchema = z.object({
   plugin: PluginSchema.optional(),
   pluginState: z.any().optional(),
   fromModel: z.string().optional(),
+  fromProvider: z.string().optional(),
   translate: TranslateSchema.optional().or(z.literal(false)),
   tts: z.any().optional(),
 
@@ -31,7 +32,7 @@ export const DB_MessageSchema = z.object({
   parentId: z.string().optional(),
   quotaId: z.string().optional(),
   sessionId: z.string(),
-  topicId: z.string().optional(),
+  topicId: z.string().nullable().optional(),
 });
 
 export type DB_Message = z.infer<typeof DB_MessageSchema>;

@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Mô hình"
+  },
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay lập tức, hoặc đến [Cài đặt trợ lý](/chat/settings#session={{id}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu trò chuyện ngay!",
   "backToBottom": "Quay về dưới cùng",
@@ -6,6 +9,7 @@
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "defaultAgent": "Trợ lý mặc định",
+  "defaultList": "Danh sách mặc định",
   "defaultSession": "Trợ lý mặc định",
   "duplicateTitle": "{{title}} Bản sao",
   "historyRange": "Phạm vi lịch sử",
@@ -15,6 +19,7 @@
     "title": "Chuyện phiếm"
   },
   "input": {
+    "more": "Thêm",
     "onlyAdd": "Chỉ thêm tin nhắn",
     "send": "Gửi",
     "sendWithCmdEnter": "Nhấn {{meta}} + Enter để gửi",
@@ -34,7 +39,18 @@
   "roleAndArchive": "Vai trò và lưu trữ",
   "searchAgentPlaceholder": "Tìm kiếm trợ lý và cuộc trò chuyện...",
   "sendPlaceholder": "Nhập nội dung trò chuyện...",
-  "sessionList": "Danh sách trợ lý",
+  "sessionGroup": {
+    "config": "Quản lý nhóm",
+    "confirmRemoveGroupAlert": "Bạn sẽ xóa nhóm này, sau khi xóa, trợ lý của nhóm sẽ được di chuyển vào danh sách mặc định, vui lòng xác nhận hành động của bạn",
+    "createGroup": "Thêm nhóm mới",
+    "createSuccess": "Tạo thành công",
+    "inputPlaceholder": "Vui lòng nhập tên nhóm...",
+    "moveGroup": "Di chuyển vào nhóm",
+    "newGroup": "Nhóm mới",
+    "rename": "Đổi tên nhóm",
+    "renameSuccess": "Đổi tên thành công",
+    "tooLong": "Tên nhóm phải có độ dài từ 1-20 ký tự"
+  },
   "shareModal": {
     "download": "Tải xuống ảnh chụp màn hình",
     "imageType": "Định dạng ảnh",
@@ -52,7 +68,14 @@
     "prettifying": "Đang tinh chỉnh..."
   },
   "temp": "Tạm thời",
-  "tokenDetail": "Thiết lập vai trò: {{systemRoleToken}} · Tin nhắn cuộc trò chuyện: {{chatsToken}} · Thiết lập công cụ: {{toolsToken}}",
+  "tokenDetails": {
+    "chats": "Tin nhắn trò chuyện",
+    "rest": "Còn lại",
+    "systemRole": "Vai trò hệ thống",
+    "tools": "Công cụ",
+    "total": "Tổng cộng",
+    "used": "Đã sử dụng"
+  },
   "tokenTag": {
     "overload": "Vượt quá giới hạn",
     "remained": "Còn lại",
@@ -90,6 +113,7 @@
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upload": {
     "actionTooltip": "Tải lên hình ảnh",
+    "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình trước khi sử dụng",
     "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh. Giữ phím Shift để gửi hình ảnh trực tiếp",
     "dragTitle": "Tải lên hình ảnh"
   }

@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Aangepast model, standaard ingesteld om zowel functieoproep als visuele herkenning te ondersteunen. Verifieer de beschikbaarheid van deze mogelijkheden op basis van de werkelijke situatie.",
+      "file": "Dit model ondersteunt het uploaden van bestanden voor lezen en herkenning",
+      "functionCall": "Dit model ondersteunt functieoproep (Function Call).",
+      "tokens": "Dit model ondersteunt maximaal {{tokens}} tokens per sessie.",
+      "vision": "Dit model ondersteunt visuele herkenning."
+    }
+  },
   "about": "Over",
   "advanceSettings": "Geavanceerde instellingen",
   "agentMaxToken": "Maximale sessielengte",
@@ -13,10 +22,12 @@
   "close": "Sluiten",
   "confirmRemoveSessionItemAlert": "U staat op het punt deze assistent te verwijderen. Na verwijdering kan deze niet worden hersteld. Weet u zeker dat u door wilt gaan?",
   "copy": "Kopiëren",
+  "copyFail": "Kopiëren mislukt",
   "copySuccess": "Kopiëren gelukt",
   "defaultAgent": "Standaard assistent",
   "defaultSession": "Standaard assistent",
   "delete": "Verwijderen",
+  "document": "Gebruiksaanwijzing",
   "duplicate": "Dupliceren",
   "edit": "Bewerken",
   "export": "Exporteren",
@@ -43,6 +54,7 @@
       "added": "Succesvol geïmporteerd",
       "errors": "Fouten bij importeren",
       "messages": "Berichten",
+      "sessionGroups": "Sessiegroepen",
       "sessions": "Assistenten",
       "skips": "Overslaan van duplicaten",
       "topics": "Onderwerpen",
@@ -51,6 +63,7 @@
     "title": "Gegevens importeren"
   },
   "lang": {
+    "ar": "Arabisch",
     "bn": "Bengaals",
     "cs-CZ": "Tsjechisch",
     "da-DK": "Deens",
@@ -86,7 +99,19 @@
     "zh-TW": "Traditioneel Chinees"
   },
   "layoutInitializing": "Lay-out wordt geladen...",
+  "modelProvider": {
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Geen beschrijving beschikbaar",
+  "oauth": "SSO inloggen",
   "ok": "Oké",
   "password": "Wachtwoord",
   "pin": "Vastzetten",

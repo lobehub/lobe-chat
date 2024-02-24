@@ -22,6 +22,15 @@
   },
   "llm": {
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Versión de la API de Azure, en formato YYYY-MM-DD. Consulta la [última versión](https://learn.microsoft.com/es-es/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Obtener lista",
+        "title": "Versión de la API de Azure"
+      },
+      "deployments": {
+        "desc": "Especifica los modelos de implementación utilizando la sintaxis id=nombre (por ejemplo, si el nombre del modelo y el de la implementación son iguales, puedes especificar solo el nombre del modelo). Para varios modelos, utiliza comas (,) para separarlos",
+        "title": "Lista de implementaciones de Azure"
+      },
       "endpoint": {
         "desc": "Puedes encontrar este valor en la sección 'Claves y puntos de conexión' al revisar los recursos en el portal de Azure",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +47,64 @@
         "title": "Clave de la API"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Ingresa el ID de clave de acceso de AWS",
+        "placeholder": "ID de clave de acceso de AWS",
+        "title": "ID de clave de acceso de AWS"
+      },
+      "checker": {
+        "desc": "Comprueba si la clave de acceso/clave de acceso secreta de AWS está escrita correctamente"
+      },
+      "region": {
+        "desc": "Ingresa la región de AWS",
+        "placeholder": "Región de AWS",
+        "title": "Región de AWS"
+      },
+      "secretAccessKey": {
+        "desc": "Ingresa la clave de acceso secreta de AWS",
+        "placeholder": "Clave de acceso secreta de AWS",
+        "title": "Clave de acceso secreta de AWS"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Ingresa la clave API de Google",
+        "placeholder": "Clave API de Google",
+        "title": "Clave API"
+      }
+    },
+    "Moonshot": {
+      "title": "Lado oscuro de la luna",
+      "token": {
+        "desc": "Ingrese la clave API de Moonshot AI",
+        "placeholder": "Clave API de Moonshot AI",
+        "title": "Clave API"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "Verifica si la dirección del proxy está correctamente escrita"
+      },
+      "customModelName": {
+        "desc": "Agrega modelos personalizados, separados por comas (,)",
+        "placeholder": "vicuña,llama,codellama,llama2:13b-text",
+        "title": "Nombre del modelo personalizado"
+      },
+      "endpoint": {
+        "desc": "Ingresa la dirección del proxy de la interfaz de Ollama, déjalo en blanco si no se especifica localmente",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "Dirección del proxy de la interfaz"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Versión de la API de Azure, sigue el formato YYYY-MM-DD, consulta la [última versión](https://learn.microsoft.com/es-es/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Obtener lista",
         "title": "Versión de la API de Azure"
-      },
-      "check": {
-        "button": "Comprobar",
-        "desc": "Comprueba si la clave de la API y la dirección del proxy están escritas correctamente",
-        "pass": "Comprobación exitosa",
-        "title": "Comprobación de conectividad"
       },
       "customModelName": {
         "desc": "Añade modelos personalizados, separados por comas (,)",
@@ -81,6 +137,28 @@
         "serverConfig": "El administrador ha configurado Azure OpenAI en el servidor, por lo que no se permite cambiar",
         "title": "Azure OpenAI"
       }
+    },
+    "Perplexity": {
+      "title": "Perplexity AI",
+      "token": {
+        "desc": "Introduce la clave API de Perplexity AI",
+        "placeholder": "Clave API de Perplexity AI",
+        "title": "Clave API"
+      }
+    },
+    "Zhipu": {
+      "title": "Zhipu AI",
+      "token": {
+        "desc": "Ingresa la clave API de Zhipu",
+        "placeholder": "Clave API de Zhipu",
+        "title": "Clave API"
+      }
+    },
+    "checker": {
+      "button": "Comprobar",
+      "desc": "Comprueba si la clave API y la dirección del proxy están escritas correctamente",
+      "pass": "Comprobación exitosa",
+      "title": "Comprobación de conectividad"
     },
     "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos! ✨"
   },
@@ -209,6 +287,22 @@
       "placeholder": "Ingrese la contraseña de acceso",
       "title": "Contraseña de acceso"
     },
+    "oauth": {
+      "info": {
+        "desc": "Sesión iniciada",
+        "title": "Información de la cuenta"
+      },
+      "signin": {
+        "action": "Iniciar sesión",
+        "desc": "Inicia sesión con SSO para desbloquear la aplicación",
+        "title": "Iniciar sesión en la cuenta"
+      },
+      "signout": {
+        "action": "Cerrar sesión",
+        "confirm": "¿Confirmar cierre de sesión?",
+        "success": "Sesión cerrada con éxito"
+      }
+    },
     "title": "Configuración del sistema"
   },
   "settingTTS": {
@@ -252,9 +346,7 @@
     "fontSize": {
       "desc": "Tamaño de fuente para el contenido del chat",
       "marks": {
-        "large": "Grande",
-        "normal": "Normal",
-        "small": "Pequeño"
+        "normal": "Normal"
       },
       "title": "Tamaño de fuente"
     },
@@ -295,6 +387,7 @@
     "builtins": {
       "groupName": "Incorporados"
     },
+    "disabled": "El modelo actual no admite llamadas de función y no se puede utilizar el complemento",
     "plugins": {
       "enabled": "Habilitados {{num}}",
       "groupName": "Complementos",

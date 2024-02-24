@@ -1,14 +1,16 @@
 import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
 import { Form as AntForm, App, Button, Input, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { debounce } from 'lodash-es';
 import { AppWindow, Monitor, Moon, Palette, Sun } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { signIn, signOut } from 'next-auth/react';
+import { memo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
+import { imageUrl } from '@/const/url';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
+import { useOAuthSession } from '@/hooks/useOAuthSession';
 import { localeOptions } from '@/locales/resources';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
@@ -24,13 +26,19 @@ type SettingItemGroup = ItemGroup;
 
 export interface SettingsCommonProps {
   showAccessCodeConfig: boolean;
+  showOAuthLogin: boolean;
 }
 
-const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
+const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin }) => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
-  const clearSessions = useSessionStore((s) => s.clearSessions);
+  const { user, isOAuthLoggedIn } = useOAuthSession();
+
+  const [clearSessions, clearSessionGroups] = useSessionStore((s) => [
+    s.clearSessions,
+    s.clearSessionGroups,
+  ]);
   const [clearTopics, clearAllMessages] = useChatStore((s) => [
     s.removeAllTopics,
     s.clearAllMessages,
@@ -47,12 +55,26 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
 
   const { message, modal } = App.useApp();
 
-  const handleReset = useCallback(() => {
+  const handleSignOut = useCallback(() => {
     modal.confirm({
-      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: { danger: true },
-      okText: t('ok', { ns: 'common' }),
+      onOk: () => {
+        signOut();
+        message.success(t('settingSystem.oauth.signout.success'));
+      },
+      title: t('settingSystem.oauth.signout.confirm'),
+    });
+  }, []);
+
+  const handleSignIn = useCallback(() => {
+    signIn('auth0');
+  }, []);
+
+  const handleReset = useCallback(() => {
+    modal.confirm({
+      centered: true,
+      okButtonProps: { danger: true },
       onOk: () => {
         resetSettings();
         form.setFieldsValue(DEFAULT_SETTINGS);
@@ -63,18 +85,17 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
 
   const handleClear = useCallback(() => {
     modal.confirm({
-      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: {
         danger: true,
       },
-      okText: t('ok', { ns: 'common' }),
       onOk: async () => {
         await clearSessions();
         await removeAllPlugins();
         await clearTopics();
         await removeAllFiles();
         await clearAllMessages();
+        await clearSessionGroups();
 
         message.success(t('danger.clear.success'));
       },
@@ -98,19 +119,19 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
             options={[
               {
                 icon: Sun,
-                img: '/images/theme_light.webp',
+                img: imageUrl('theme_light.webp'),
                 label: t('settingTheme.themeMode.light'),
                 value: 'light',
               },
               {
                 icon: Moon,
-                img: '/images/theme_dark.webp',
+                img: imageUrl('theme_dark.webp'),
                 label: t('settingTheme.themeMode.dark'),
                 value: 'dark',
               },
               {
                 icon: Monitor,
-                img: '/images/theme_auto.webp',
+                img: imageUrl('theme_auto.webp'),
                 label: t('settingTheme.themeMode.auto'),
                 value: 'auto',
               },
@@ -136,20 +157,23 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
           <SliderWithInput
             marks={{
               12: {
-                label: t('settingTheme.fontSize.marks.small'),
+                label: 'A',
                 style: {
+                  fontSize: 12,
                   marginTop: 4,
                 },
               },
               14: {
                 label: t('settingTheme.fontSize.marks.normal'),
                 style: {
+                  fontSize: 14,
                   marginTop: 4,
                 },
               },
               18: {
-                label: t('settingTheme.fontSize.marks.large'),
+                label: 'A',
                 style: {
+                  fontSize: 18,
                   marginTop: 4,
                 },
               },
@@ -183,11 +207,33 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
   const system: SettingItemGroup = {
     children: [
       {
-        children: <Input.Password placeholder={t('settingSystem.accessCode.placeholder')} />,
+        children: (
+          <Input.Password
+            autoComplete={'new-password'}
+            placeholder={t('settingSystem.accessCode.placeholder')}
+          />
+        ),
         desc: t('settingSystem.accessCode.desc'),
         hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),
         name: 'password',
+      },
+      {
+        children: isOAuthLoggedIn ? (
+          <Button onClick={handleSignOut}>{t('settingSystem.oauth.signout.action')}</Button>
+        ) : (
+          <Button onClick={handleSignIn} type="primary">
+            {t('settingSystem.oauth.signin.action')}
+          </Button>
+        ),
+        desc: isOAuthLoggedIn
+          ? `${user?.email} ${t('settingSystem.oauth.info.desc')}`
+          : t('settingSystem.oauth.signin.desc'),
+        hidden: !showOAuthLogin,
+        label: isOAuthLoggedIn
+          ? t('settingSystem.oauth.info.title')
+          : t('settingSystem.oauth.signin.title'),
+        minWidth: undefined,
       },
       {
         children: (
@@ -214,12 +260,24 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
     title: t('settingSystem.title'),
   };
 
+  useEffect(() => {
+    const unsubscribe = useGlobalStore.subscribe(
+      (s) => s.settings,
+      (settings) => {
+        form.setFieldsValue(settings);
+      },
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <Form
       form={form}
       initialValues={settings}
       items={[theme, system]}
-      onValuesChange={debounce(setSettings, 100)}
+      onValuesChange={setSettings}
       {...FORM_STYLE}
     />
   );

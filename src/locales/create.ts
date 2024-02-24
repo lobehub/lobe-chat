@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import { initReactI18next } from 'react-i18next';
+import { isRtlLang } from 'rtl-detect';
 
 import { getClientConfig } from '@/config/client';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
@@ -23,7 +24,13 @@ export const createI18nNext = (lang?: string) => {
         return import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
       }),
     );
-
+  // Dynamically set HTML direction on language change
+  instance.on('languageChanged', (lng) => {
+    if (typeof window !== 'undefined') {
+      const direction = isRtlLang(lng) ? 'rtl' : 'ltr';
+      document.documentElement.dir = direction;
+    }
+  });
   return {
     init: () =>
       instance.init({

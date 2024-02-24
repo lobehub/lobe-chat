@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Cambiar modelo"
+  },
   "agentDefaultMessage": "Hola, soy **{{name}}**, puedes comenzar a chatear conmigo de inmediato o ir a [Configuración del asistente](/chat/settings#session={{id}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, {{systemRole}}, ¡comencemos a chatear!",
   "backToBottom": "Volver al fondo",
@@ -6,6 +9,7 @@
   "confirmClearCurrentMessages": "Estás a punto de borrar los mensajes de esta sesión. Una vez borrados, no se podrán recuperar. Por favor, confirma tu acción.",
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
   "defaultAgent": "Asistente predeterminado",
+  "defaultList": "Lista predeterminada",
   "defaultSession": "Asistente predeterminado",
   "duplicateTitle": "{{title}} Copia",
   "historyRange": "Rango de historial",
@@ -15,6 +19,7 @@
     "title": "Charla casual"
   },
   "input": {
+    "more": "más",
     "onlyAdd": "Añadir solo",
     "send": "Enviar",
     "sendWithCmdEnter": "Enviar con {{meta}} + Enter",
@@ -34,7 +39,18 @@
   "roleAndArchive": "Rol y archivo",
   "searchAgentPlaceholder": "Buscar asistentes y conversaciones...",
   "sendPlaceholder": "Escribe tu mensaje...",
-  "sessionList": "Lista de asistentes",
+  "sessionGroup": {
+    "config": "Gestión de grupos",
+    "confirmRemoveGroupAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción.",
+    "createGroup": "Crear nuevo grupo",
+    "createSuccess": "Grupo creado con éxito",
+    "inputPlaceholder": "Introduce el nombre del grupo...",
+    "moveGroup": "Mover al grupo",
+    "newGroup": "Nuevo grupo",
+    "rename": "Renombrar grupo",
+    "renameSuccess": "Grupo renombrado con éxito",
+    "tooLong": "El nombre del grupo debe tener entre 1 y 20 caracteres"
+  },
   "shareModal": {
     "download": "Descargar captura de pantalla",
     "imageType": "Tipo de imagen",
@@ -52,7 +68,14 @@
     "prettifying": "Embelleciendo..."
   },
   "temp": "Temporal",
-  "tokenDetail": "Configuración de rol: {{systemRoleToken}} · Mensajes de sesión: {{chatsToken}}",
+  "tokenDetails": {
+    "chats": "Mensajes de chat",
+    "rest": "Restante",
+    "systemRole": "Rol del sistema",
+    "tools": "Herramientas",
+    "total": "Total",
+    "used": "Utilizado"
+  },
   "tokenTag": {
     "overload": "Excedido",
     "remained": "Restante",
@@ -90,6 +113,7 @@
   "updateAgent": "Actualizar información del asistente",
   "upload": {
     "actionTooltip": "Subir imagen",
+    "disabled": "El modelo actual no admite reconocimiento visual. Por favor, cambia de modelo para usar esta función",
     "dragDesc": "Arrastra y suelta archivos aquí, admite la carga de varias imágenes. Mantén presionada la tecla Shift para enviar las imágenes directamente.",
     "dragTitle": "Subir imagen"
   }
