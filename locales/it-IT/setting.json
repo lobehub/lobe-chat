@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Elenco dei plugin"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Generazione automatica",
+      "placeholderContent": "Inserisci il nome suggerito",
+      "placeholderName": "Inserisci il contenuto del modello di suggerimento. Utilizza {{var_name}} come variabile",
+      "title": "Creare/Modificare"
+    },
+    "title": "Suggerimenti Utente"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "L'amministratore ha abilitato l'accesso crittografato",
@@ -381,6 +390,7 @@
     "agent": "Assistente predefinito",
     "common": "Impostazioni comuni",
     "llm": "Modello linguistico",
+    "prompt": "Suggerimenti Utente",
     "tts": "Servizio vocale"
   },
   "tools": {

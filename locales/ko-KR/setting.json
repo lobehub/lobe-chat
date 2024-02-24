@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "플러그인 목록"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "자동 생성",
+      "placeholderContent": "입력 안내 이름",
+      "placeholderName": "입력 안내 템플릿 내용. 변수로 {{var_name}}을 사용합니다",
+      "title": "생성/편집"
+    },
+    "title": "사용자 입력 안내"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "관리자가 암호화된 액세스를 활성화했습니다",
@@ -381,6 +390,7 @@
     "agent": "기본 에이전트",
     "common": "일반 설정",
     "llm": "언어 모델",
+    "prompt": "사용자 입력 안내",
     "tts": "음성 서비스"
   },
   "tools": {

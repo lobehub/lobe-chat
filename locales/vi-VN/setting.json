@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Danh sách plugin"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Tự động tạo",
+      "placeholderContent": "Nhập tên gợi ý",
+      "placeholderName": "Nhập nội dung mẫu gợi ý. Sử dụng {{var_name}} làm biến",
+      "title": "Tạo/Chỉnh sửa"
+    },
+    "title": "Gợi ý người dùng"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "Quản trị viên đã bật mã hóa truy cập",
@@ -381,6 +390,7 @@
     "agent": "Trợ lý mặc định",
     "common": "Cài đặt chung",
     "llm": "Mô hình ngôn ngữ",
+    "prompt": "Gợi ý người dùng",
     "tts": "Dịch vụ giọng nói"
   },
   "tools": {

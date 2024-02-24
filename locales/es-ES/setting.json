@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Lista de complementos"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Generación automática",
+      "placeholderContent": "Introducir nombre de sugerencia",
+      "placeholderName": "Introducir contenido de plantilla de sugerencia. Utilizar {{var_name}} como variable",
+      "title": "Crear/Editar"
+    },
+    "title": "Sugerencias de usuario"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "El administrador ha habilitado el acceso cifrado",
@@ -381,6 +390,7 @@
     "agent": "Asistente predeterminado",
     "common": "Configuración común",
     "llm": "Modelo de lenguaje",
+    "prompt": "Sugerencias de usuario",
     "tts": "Servicio de voz"
   },
   "tools": {

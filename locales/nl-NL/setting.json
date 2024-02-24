@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Plugin-lijst"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Automatisch genereren",
+      "placeholderContent": "Invoertips naam",
+      "placeholderName": "Invoertips sjablooninhoud. Gebruik {{var_name}} als variabele",
+      "title": "Aanmaken/bewerken"
+    },
+    "title": "Gebruikersprompts"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "Beheerder heeft versleutelde toegang ingeschakeld",
@@ -381,6 +390,7 @@
     "agent": "Standaardassistent",
     "common": "Algemene instellingen",
     "llm": "Taalmodel",
+    "prompt": "Gebruikersprompts",
     "tts": "Spraakdienst"
   },
   "tools": {

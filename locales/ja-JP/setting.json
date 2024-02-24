@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "プラグインリスト"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "自動生成",
+      "placeholderContent": "入力ヒント名",
+      "placeholderName": "入力ヒントのテンプレート内容。変数として {{var_name}} を使用してください",
+      "title": "作成/編集"
+    },
+    "title": "ユーザープロンプト"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "管理者が暗号化アクセスを有効にしています",
@@ -381,6 +390,7 @@
     "agent": "デフォルトエージェント",
     "common": "一般設定",
     "llm": "言語モデル",
+    "prompt": "ユーザープロンプト",
     "tts": "音声サービス"
   },
   "tools": {

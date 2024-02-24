@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Liste des plugins"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Générer automatiquement",
+      "placeholderContent": "Contenu de l'espace réservé",
+      "placeholderName": "Nom de l'espace réservé. Utilisez {{var_name}} comme variable",
+      "title": "Créer/Modifier"
+    },
+    "title": "Invitations utilisateur"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "L'administrateur a activé l'accès chiffré",
@@ -381,6 +390,7 @@
     "agent": "Agent par défaut",
     "common": "Paramètres généraux",
     "llm": "Modèle de langue",
+    "prompt": "Invitations utilisateur",
     "tts": "Service vocal"
   },
   "tools": {

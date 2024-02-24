@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "قائمة الإضافات"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "توليد تلقائي",
+      "placeholderContent": "محتوى النص البديل",
+      "placeholderName": "محتوى قالب النص البديل. استخدم {{var_name}} كمتغير",
+      "title": "إنشاء/تحرير"
+    },
+    "title": "تعليمات المستخدم"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "قام المسؤول بتمكين الوصول المشفر",
@@ -381,6 +390,7 @@
     "agent": "المساعد الافتراضي",
     "common": "إعدادات عامة",
     "llm": "نموذج اللغة",
+    "prompt": "تعليمات المستخدم",
     "tts": "خدمة الكلام"
   },
   "tools": {

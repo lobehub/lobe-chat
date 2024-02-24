@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Lista de plugins"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Auto Completar",
+      "placeholderContent": "Digite o nome da dica",
+      "placeholderName": "Digite o conteúdo do modelo de dica. Use {{var_name}} como variável",
+      "title": "Criar/Editar"
+    },
+    "title": "Dicas do Usuário"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "O administrador habilitou o acesso criptografado",
@@ -381,6 +390,7 @@
     "agent": "Assistente Padrão",
     "common": "Configurações Comuns",
     "llm": "Modelo de Linguagem",
+    "prompt": "Dicas do Usuário",
     "tts": "Serviço de Voz"
   },
   "tools": {

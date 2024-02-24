@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Eklenti Listesi"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Otomatik Oluştur",
+      "placeholderContent": "Giriş ipucu adını girin",
+      "placeholderName": "Giriş ipucu şablon içeriğini girin. Değişken olarak {{var_name}} kullanın",
+      "title": "Oluştur/Düzenle"
+    },
+    "title": "Kullanıcı İpucu"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "Yönetici tarafından şifreleme erişimi etkinleştirildi",
@@ -381,6 +390,7 @@
     "agent": "Varsayılan Asistan",
     "common": "Genel Ayarlar",
     "llm": "Modeller",
+    "prompt": "Kullanıcı İpuçları",
     "tts": "Metin Seslendirme"
   },
   "tools": {

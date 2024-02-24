@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Plugin-Liste"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Automatisch generieren",
+      "placeholderContent": "Eingabetipp-Name",
+      "placeholderName": "Vorlageninhalt für Eingabetipp. Verwenden Sie {{var_name}} als Variable",
+      "title": "Erstellen / Bearbeiten"
+    },
+    "title": "Benutzerhinweise"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "Der Administrator hat den verschlüsselten Zugriff aktiviert",
@@ -381,6 +390,7 @@
     "agent": "Standard-Assistent",
     "common": "Allgemeine Einstellungen",
     "llm": "Sprachmodell",
+    "prompt": "Benutzerhinweise",
     "tts": "Sprachdienste"
   },
   "tools": {

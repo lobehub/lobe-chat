@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Plugin List"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Auto Generate",
+      "placeholderContent": "Enter prompt name",
+      "placeholderName": "Enter prompt template content. Use {{var_name}} as variable",
+      "title": "Create/Edit"
+    },
+    "title": "User Prompts"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "Encryption access is enabled by the administrator",
@@ -381,6 +390,7 @@
     "agent": "Default Agent",
     "common": "Common Settings",
     "llm": "Language Model",
+    "prompt": "User Prompts",
     "tts": "Text-to-Speech"
   },
   "tools": {

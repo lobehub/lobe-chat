@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "Lista wtyczek"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "Automatyczne generowanie",
+      "placeholderContent": "Treść zastępcza",
+      "placeholderName": "Nazwa zastępcza. Użyj {{var_name}} jako zmiennej",
+      "title": "Utwórz/edytuj"
+    },
+    "title": "Komunikaty użytkownika"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "Administrator włączył szyfrowany dostęp",
@@ -381,6 +390,7 @@
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
     "llm": "Model językowy",
+    "prompt": "Komunikaty użytkownika",
     "tts": "Usługa głosowa"
   },
   "tools": {

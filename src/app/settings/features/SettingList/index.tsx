@@ -1,4 +1,4 @@
-import { Bot, Mic2, Settings2, Webhook } from 'lucide-react';
+import { BookX, Bot, Mic2, Settings2, Webhook } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,7 @@ const SettingList = memo<SettingListProps>(({ activeTab, mobile }) => {
     { icon: Settings2, label: t('tab.common'), value: SettingsTabs.Common },
     { icon: Webhook, label: t('tab.llm'), value: SettingsTabs.LLM },
     { icon: Mic2, label: t('tab.tts'), value: SettingsTabs.TTS },
+    { icon: BookX, label: t('tab.prompt'), value: SettingsTabs.Prompt },
     { icon: Bot, label: t('tab.agent'), value: SettingsTabs.Agent },
   ];
 

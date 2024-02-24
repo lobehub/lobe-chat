@@ -281,6 +281,15 @@
   "settingPlugin": {
     "title": "插件列表"
   },
+  "settingPrompt": {
+    "input": {
+      "autoGenerate": "自動生成",
+      "placeholderContent": "輸入提示內容",
+      "placeholderName": "輸入提示模板內容。使用 {{var_name}} 作為變數",
+      "title": "建立/編輯"
+    },
+    "title": "使用者提示"
+  },
   "settingSystem": {
     "accessCode": {
       "desc": "管理員已開啟加密訪問",
@@ -381,6 +390,7 @@
     "agent": "默認助手",
     "common": "通用設置",
     "llm": "語言模型",
+    "prompt": "使用者提示",
     "tts": "語音服務"
   },
   "tools": {
