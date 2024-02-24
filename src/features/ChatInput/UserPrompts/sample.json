@@ -6,7 +6,7 @@
   },
   {
     "name": "fix_code",
-    "content": "I need help fixing aaa my code:\n\n```\n{{code}}\n```\n\nFind and fix potential bugs",
+    "content": "I need help fixing aaa my code:\n\n```\n{{code}}\n```\n\n{{bugs info}}",
     "category": "1681141260062"
   },
   {

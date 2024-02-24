@@ -2,7 +2,9 @@
 
 import { Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ComponentPropsWithRef, memo } from 'react';
+import { ComponentPropsWithRef, memo, useMemo } from 'react';
+
+import { extractVariables } from '@/utils/keyboard';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -46,48 +48,48 @@ const useStyles = createStyles(({ css, token }) => ({
 
 type Props = ComponentPropsWithRef<'div'> & {
   isActive?: boolean;
-  subtitle?: string;
-  title?: string;
-  variables?: string[];
+  subtitle: string;
+  title: string;
 };
 
-const PromptSelectItem = memo<Props>(
-  ({ title, subtitle, variables = ['name', 'code', 'issues'], isActive, ...props }) => {
-    const { styles, theme, cx } = useStyles();
+const PromptSelectItem = memo<Props>(({ title, subtitle, isActive, ...props }) => {
+  const { styles, theme, cx } = useStyles();
+  const variables = useMemo(() => {
+    return extractVariables(subtitle);
+  }, [subtitle]);
 
-    return (
-      <div
-        className={cx(styles.container, props.className, {
-          [styles.containerActive]: isActive,
-        })}
-        {...props}
-      >
-        <div className={styles.title}>
-          <div>{title}</div>
-        </div>
-        <div className={styles.subtitle} title={subtitle}>
-          {subtitle}
-        </div>
-        {variables?.length && (
-          <div className={styles.variables}>
-            {variables.map((variable, i) => {
-              return (
-                <Tag
-                  bordered
-                  className={styles.variable}
-                  color={theme.colorBgTextActive}
-                  key={i}
-                  size={'small'}
-                >
-                  {`{{ ${variable} }}`}
-                </Tag>
-              );
-            })}
-          </div>
-        )}
+  return (
+    <div
+      className={cx(styles.container, props.className, {
+        [styles.containerActive]: isActive,
+      })}
+      {...props}
+    >
+      <div className={styles.title}>
+        <div>{title}</div>
       </div>
-    );
-  },
-);
+      <div className={styles.subtitle} title={subtitle}>
+        {subtitle}
+      </div>
+      {variables?.length > 0 && (
+        <div className={styles.variables}>
+          {variables.map((variable, i) => {
+            return (
+              <Tag
+                bordered
+                className={styles.variable}
+                color={theme.colorBgTextActive}
+                key={i}
+                size={'small'}
+              >
+                {`{{ ${variable.name} }}`}
+              </Tag>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+});
 
 export default PromptSelectItem;
