@@ -82,7 +82,7 @@ const PromptSelectItem = memo<Props>(({ title, subtitle, isActive, ...props }) =
                 key={i}
                 size={'small'}
               >
-                {`{{ ${variable.name} }}`}
+                {`{{ ${variable.name.trim()} }}`}
               </Tag>
             );
           })}
