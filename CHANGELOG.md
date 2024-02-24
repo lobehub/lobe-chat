@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.129.4](https://github.com/lobehub/lobe-chat/compare/v0.129.3...v0.129.4)
+
+<sup>Released on **2024-02-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **ollama**: Fix gemma model id.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **ollama**: Fix gemma model id, closes [#1377](https://github.com/lobehub/lobe-chat/issues/1377) ([3da50ff](https://github.com/lobehub/lobe-chat/commit/3da50ff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.129.3](https://github.com/lobehub/lobe-chat/compare/v0.129.2...v0.129.3)
 
 <sup>Released on **2024-02-23**</sup>
