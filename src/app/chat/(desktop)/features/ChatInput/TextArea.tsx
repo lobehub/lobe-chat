@@ -13,6 +13,7 @@ import {
   handleVariableNavigation,
   isCommandPressed,
   isUserPromptRequest,
+  navigateCursor,
   navigateToNextVariable,
 } from '@/utils/keyboard';
 
@@ -79,9 +80,7 @@ const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }
 
     if (ref.current?.resizableTextArea?.textArea) {
       const textArea = ref.current?.resizableTextArea?.textArea as HTMLTextAreaElement;
-      textArea.selectionStart = textArea.selectionEnd = 0;
-      textArea.blur();
-      textArea.focus();
+      navigateCursor(textArea, 0);
       navigateToNextVariable(textArea);
     }
     setChosenUserPrompt(null);

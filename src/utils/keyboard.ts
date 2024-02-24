@@ -45,11 +45,25 @@ export const extractVariables = (
   return variables;
 };
 
+export const navigateCursor = (textArea: HTMLTextAreaElement, position: number) => {
+  textArea.selectionStart = textArea.selectionEnd = position;
+  textArea.blur();
+  textArea.focus();
+};
+
+export const navigateToEnd = (textArea: HTMLTextAreaElement) => {
+  if (textArea.selectionEnd !== textArea.value.length) {
+    navigateCursor(textArea, textArea.value.length);
+    return true;
+  }
+  return false;
+};
+
 export const navigateToNextVariable = (textArea: HTMLTextAreaElement): boolean => {
   const value = textArea?.value || '';
   const variables = extractVariables(value);
 
-  if (!variables.length) return false;
+  if (!variables.length) return navigateToEnd(textArea);
 
   const currentMousePosition = textArea.selectionStart;
   const nextVariable = variables.find((variable) => {
@@ -59,13 +73,10 @@ export const navigateToNextVariable = (textArea: HTMLTextAreaElement): boolean =
     return currentMousePosition < variable.to;
   });
 
-  if (!nextVariable) return false;
+  if (!nextVariable) return navigateToEnd(textArea);
 
   // Select the {{variable}} text and scroll to it
-  textArea.selectionStart = textArea.selectionEnd = nextVariable.from;
-  textArea.blur();
-  textArea.focus();
-  textArea.selectionStart = nextVariable.from;
+  navigateCursor(textArea, nextVariable.from);
   textArea.selectionEnd = nextVariable.to;
 
   return true;
