@@ -287,7 +287,7 @@
       "placeholderContent": "輸入提示內容",
       "placeholderName": "輸入提示模板內容。使用 {{var_name}} 作為變數"
     },
-    "titleV1": "建立/編輯"
+    "title": "建立/編輯"
   },
   "settingSystem": {
     "accessCode": {

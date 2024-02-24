@@ -55,7 +55,7 @@ export default memo(() => {
         />
       </Flexbox>
     ),
-    title: t('settingPrompt.titleV1'),
+    title: t('settingPrompt.title'),
   };
 
   return (

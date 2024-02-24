@@ -287,7 +287,7 @@
       "placeholderContent": "Introducir nombre de sugerencia",
       "placeholderName": "Introducir contenido de plantilla de sugerencia. Utilizar {{var_name}} como variable"
     },
-    "titleV1": "Crear/Editar"
+    "title": "Crear/Editar"
   },
   "settingSystem": {
     "accessCode": {

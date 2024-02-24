@@ -287,7 +287,7 @@
       "placeholderContent": "Contenu de l'espace réservé",
       "placeholderName": "Nom de l'espace réservé. Utilisez {{var_name}} comme variable"
     },
-    "titleV1": "Créer/Éditer"
+    "title": "Créer/Éditer"
   },
   "settingSystem": {
     "accessCode": {

@@ -287,7 +287,7 @@
       "placeholderContent": "Inserisci il nome suggerito",
       "placeholderName": "Inserisci il contenuto del modello di suggerimento. Utilizza {{var_name}} come variabile"
     },
-    "titleV1": "Creare/Modificare"
+    "title": "Creare/Modificare"
   },
   "settingSystem": {
     "accessCode": {

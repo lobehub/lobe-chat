@@ -287,7 +287,7 @@
       "placeholderContent": "Digite o nome da dica",
       "placeholderName": "Digite o conteúdo do modelo de dica. Use {{var_name}} como variável"
     },
-    "titleV1": "Criar/Editar"
+    "title": "Criar/Editar"
   },
   "settingSystem": {
     "accessCode": {

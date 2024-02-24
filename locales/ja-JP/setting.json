@@ -287,7 +287,7 @@
       "placeholderContent": "入力ヒント名",
       "placeholderName": "入力ヒントのテンプレート内容。変数として {{var_name}} を使用してください"
     },
-    "titleV1": "設定の作成/編集"
+    "title": "設定の作成/編集"
   },
   "settingSystem": {
     "accessCode": {
