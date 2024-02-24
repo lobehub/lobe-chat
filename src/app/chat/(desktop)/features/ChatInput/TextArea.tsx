@@ -1,14 +1,15 @@
 import { TextArea } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { TextAreaRef } from 'antd/es/input/TextArea';
-import { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import UserPrompts from '@/features/ChatInput/UserPrompts';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { preferenceSelectors } from '@/store/global/selectors';
-import { isCommandPressed } from '@/utils/keyboard';
+import { handleVariableNavigation, isCommandPressed, isUserPromptRequest } from '@/utils/keyboard';
 
 import { useAutoFocus } from './useAutoFocus';
 
@@ -36,6 +37,7 @@ const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }
   const { styles } = useStyles();
   const ref = useRef<TextAreaRef>(null);
   const isChineseInput = useRef(false);
+  const [openUserPrompts, setOpenUserPrompts] = useState(false);
 
   const [loading, value, updateInputMessage] = useChatStore((s) => [
     !!s.chatLoadingId,
@@ -83,6 +85,12 @@ const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }
         onCompositionStart={() => {
           isChineseInput.current = true;
         }}
+        onKeyDown={(e) => {
+          if (isUserPromptRequest(e)) {
+            setOpenUserPrompts(true);
+          }
+          handleVariableNavigation(e);
+        }}
         onPressEnter={(e) => {
           if (loading || e.shiftKey || isChineseInput.current) return;
 
@@ -115,6 +123,18 @@ const InputArea = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }
         type={'pure'}
         value={value}
       />
+      {openUserPrompts && (
+        <UserPrompts
+          onCancel={() => {
+            setOpenUserPrompts(false);
+            ref?.current?.focus();
+          }}
+          onSelect={(item) => {
+            updateInputMessage?.(item.content);
+          }}
+          open={openUserPrompts}
+        />
+      )}
     </div>
   );
 });

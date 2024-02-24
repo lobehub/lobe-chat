@@ -95,6 +95,7 @@
     "dayjs": "^1",
     "dexie": "^3",
     "fast-deep-equal": "^3",
+    "fuse.js": "^7.0.0",
     "gpt-tokenizer": "^2",
     "i18next": "^23",
     "i18next-browser-languagedetector": "^7",
