@@ -56,7 +56,7 @@ const AvatarWithUpload = memo<AvatarWithUploadProps>(
       <div className={styles} id={id} style={{ maxHeight: size, maxWidth: size, ...style }}>
         <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
           <Avatar
-            alt={avatar ? 'userAvatar' : 'LobeChat'}
+            alt={avatar ? 'userAvatar' : 'GriotIA'}
             height={size}
             src={!!avatar ? avatar : imageUrl('logo.png')}
             width={size}

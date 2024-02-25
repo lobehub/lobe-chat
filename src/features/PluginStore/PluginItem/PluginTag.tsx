@@ -1,4 +1,4 @@
-import { Icon, Tag } from '@lobehub/ui';
+import { Icon, Tag } from '@GriotHub/ui';
 import { createStyles } from 'antd-style';
 import { BadgeCheck, CircleUser, Package } from 'lucide-react';
 import { rgba } from 'polished';
@@ -43,7 +43,7 @@ const PluginTag = memo<PluginTagProps>(({ showIcon = true, author, type, showTex
   const { t } = useTranslation('plugin');
   const { styles, cx } = useStyles();
   const isCustom = type === 'customPlugin';
-  const isOfficial = author === 'LobeHub';
+  const isOfficial = author === 'GriotHub';
 
   return (
     <Tag

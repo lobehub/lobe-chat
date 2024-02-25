@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, DiscordIcon } from '@lobehub/ui';
+import { ActionIcon, DiscordIcon } from '@GriotHub/ui';
 import { useTheme } from 'antd-style';
 import { Book, Github } from 'lucide-react';
 import { memo } from 'react';
@@ -16,7 +16,7 @@ const Footer = memo(() => {
   return (
     <Flexbox align={'center'} horizontal justify={'space-between'} style={{ padding: 16 }}>
       <span style={{ color: theme.colorTextDescription }}>
-        ©{new Date().getFullYear()} LobeHub
+        ©{new Date().getFullYear()} GriotHub
       </span>
       <Flexbox horizontal>
         <ActionIcon

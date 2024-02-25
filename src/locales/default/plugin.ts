@@ -68,7 +68,7 @@ export default {
         pattenErrorMessage: '只能输入英文字符、数字 、- 和_ 这两个符号',
       },
       manifest: {
-        desc: 'LobeChat 将会通过该链接安装插件',
+        desc: 'GriotIA 将会通过该链接安装插件',
         label: '插件描述文件 (Manifest) URL',
         preview: '预览 Manifest',
         refresh: '刷新',
@@ -102,7 +102,7 @@ export default {
       edit: '编辑自定义插件',
     },
     type: {
-      lobe: 'LobeChat 插件',
+      lobe: 'GriotIA 插件',
       openai: 'OpenAI 插件',
     },
     update: '更新',

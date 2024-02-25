@@ -68,7 +68,7 @@
         "pattenErrorMessage": "Seuls les caractères alphanumériques, - et _ sont autorisés"
       },
       "manifest": {
-        "desc": "Lien d'installation du plugin pour LobeChat",
+        "desc": "Lien d'installation du plugin pour GriotIA",
         "label": "URL du fichier de description du plugin (Manifest)",
         "preview": "Aperçu du Manifest",
         "refresh": "Actualiser"
@@ -101,7 +101,7 @@
       "edit": "Modifier un plugin personnalisé"
     },
     "type": {
-      "lobe": "Plugin LobeChat",
+      "lobe": "Plugin GriotIA",
       "openai": "Plugin OpenAI"
     },
     "update": "Mettre à jour",

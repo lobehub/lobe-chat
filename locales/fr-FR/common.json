@@ -13,7 +13,7 @@
   "agentMaxToken": "Longueur maximale de la session",
   "agentModel": "Modèle",
   "agentProfile": "Profil de l'agent",
-  "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
+  "appInitializing": "GriotIA est en cours de démarrage, veuillez patienter...",
   "archive": "Archiver",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",

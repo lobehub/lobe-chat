@@ -68,7 +68,7 @@
         "pattenErrorMessage": "Only alphanumeric characters, hyphen -, and underscore _ are allowed"
       },
       "manifest": {
-        "desc": "LobeChat will install the plugin using this link",
+        "desc": "GriotIA will install the plugin using this link",
         "label": "Plugin Description (Manifest) URL",
         "preview": "Preview Manifest",
         "refresh": "Refresh"
@@ -101,7 +101,7 @@
       "edit": "Edit Custom Plugin"
     },
     "type": {
-      "lobe": "LobeChat Plugin",
+      "lobe": "GriotIA Plugin",
       "openai": "OpenAI Plugin"
     },
     "update": "Update",

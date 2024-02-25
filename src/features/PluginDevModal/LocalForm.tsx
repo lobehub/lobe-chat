@@ -1,4 +1,4 @@
-import { Form, FormItemProps, Input, TextArea } from '@lobehub/ui';
+import { Form, FormItemProps, Input, TextArea } from '@GriotHub/ui';
 import { FormInstance } from 'antd';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
@@ -9,7 +9,7 @@ import { settingsSelectors } from '@/store/global/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
-const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
+const EmojiPicker = dynamic(() => import('@GriotHub/ui/es/EmojiPicker'), { ssr: false });
 
 const LocalForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form, mode }) => {
   const isEditMode = mode === 'edit';
@@ -57,13 +57,13 @@ const LocalForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form
       name: ['manifest', 'meta', 'description'],
     },
     {
-      children: <Input placeholder={'LobeHub'} />,
+      children: <Input placeholder={'GriotHub'} />,
       desc: t('dev.meta.author.desc'),
       label: t('dev.meta.author.label'),
       name: ['manifest', 'author'],
     },
     {
-      children: <Input placeholder={'https://www.lobehub.com'} />,
+      children: <Input placeholder={'https://www.hub.mongriot.com'} />,
       desc: t('dev.meta.homepage.desc'),
       label: t('dev.meta.homepage.label'),
       name: ['manifest', 'homepage'],

@@ -29,7 +29,7 @@
     }
   ],
   "id": "/",
-  "name": "LobeChat",
+  "name": "GriotIA",
   "orientation": "portrait",
   "scope": "/",
   "screenshots": [
@@ -54,7 +54,7 @@
       "type": "image/png"
     }
   ],
-  "short_name": "LobeChat",
+  "short_name": "GriotIA",
   "splash_pages": null,
   "start_url": ".",
   "theme_color": "#000000"

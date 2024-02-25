@@ -36,7 +36,7 @@ const Hero = memo<{ mobile?: boolean; width: number }>(({ width, mobile }) => {
         {mobile ? <LogoThree size={size.logo} /> : <LogoSpline height={'100%'} width={'100%'} />}
       </Flexbox>
       <div className={styles.title} style={{ fontSize: size.title }}>
-        <strong style={mobile ? { fontSize: '1.2em' } : {}}>LobeChat</strong>
+        <strong style={mobile ? { fontSize: '1.2em' } : {}}>GriotIA</strong>
         {mobile ? <br /> : ' '}
         {t('slogan.title')}
       </div>

@@ -27,9 +27,9 @@ export const chainSummaryDescription = (content: string): Partial<ChatStreamPayl
 用户正常书写面向开发者的 API 用户使用文档。你需要从用户的视角来提供比较易用易读的文档内容。\n\n一个标准的 API 文档示例如下：\n\n\`\`\`markdown
 ---
 title: useWatchPluginMessage
-description: 监听获取 LobeChat 发过来的插件消息
+description: 监听获取 GriotIA 发过来的插件消息
 nav: API
----\n\n\`useWatchPluginMessage\` 是 Chat Plugin SDK 封装一个的 React Hook，用于监听从 LobeChat 发过来的插件消息。
+---\n\n\`useWatchPluginMessage\` 是 Chat Plugin SDK 封装一个的 React Hook，用于监听从 GriotIA 发过来的插件消息。
 } [ru-RU]`,
       role: 'user',
     },
