@@ -39,7 +39,7 @@ const MarketLayout = memo<PropsWithChildren>(({ children }) => {
       >
         <Header />
         <Flexbox flex={1} height={'calc(100% - 64px)'} horizontal>
-          <Flexbox align={'center'} flex={1} style={{ overflow: 'auto', padding: 16 }}>
+          <Flexbox align={'center'} flex={1} style={{ overflow: 'scroll', padding: 16 }}>
             <SafeSpacing />
 
             <Flexbox gap={16} style={{ maxWidth: MAX_WIDTH, position: 'relative', width: '100%' }}>
