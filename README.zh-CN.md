@@ -245,12 +245,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                                 | 助手说明                                                                                                                                       |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| [命名专家](https://chat-preview.lobehub.com/market?agent=variable-naming)<br/><sup>By **[zsio](https://github.com/zsio)** on **2024-02-24**</sup>                                        | 擅长生成变量名和函数名<br/>`编程` `变量命名` `函数命名`                                                                                        |
 | [LobeChat 技术文档专家](https://chat-preview.lobehub.com/market?agent=lobe-chat-developer-document-writer)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2024-02-22**</sup> | LobeChat 是一个 Next.js 框架构建的 AI 会话应用，我将会帮你一起书写 LobeChat 的开发文档<br/>`开发文档` `技术介绍` `next-js` `react` `lobe-chat` |
+| [您的日常人工智能伴侣。](https://chat-preview.lobehub.com/market?agent=causal)<br/><sup>By **[richards199999](https://github.com/richards199999)** on **2024-02-21**</sup>               | 我一直是一位优秀的必应。😊<br/>`bing` `conversation` `creative`                                                                                |
 | [Facebook 广告撰写专家](https://chat-preview.lobehub.com/market?agent=facebook-advertising-writing-expert)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-19**</sup>     | 专注于创建引人注目的标题、引人入胜的主体文本和有效的广告文案<br/>`facebook` `advertising` `writing` `expert` `ecommerce`                       |
-| [Jira 故事协助工具](https://chat-preview.lobehub.com/market?agent=jira-product-manager)<br/><sup>By **[emad-pg](https://github.com/emad-pg)** on **2024-02-19**</sup>                    | 专注于将功能点子转化为全面的 Jira 故事<br/>`技术产品管理` `故事创建` `jira`                                                                    |
-| [ThinkTank360](https://chat-preview.lobehub.com/market?agent=think-tank-business-strategy)<br/><sup>By **[mikelix](https://github.com/mikelix)** on **2024-02-19**</sup>                 | 熟练的顾问，汲取史蒂夫・乔布斯、埃隆・马斯克、马云、柏拉图和雷・达里奥的智慧，用于决策审查、判断和建议。<br/>`创新` `智慧` `智囊团` `商业策略` |
 
-> 📊 Total agents: [<kbd>**181**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**183**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
