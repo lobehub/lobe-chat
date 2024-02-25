@@ -245,12 +245,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                                 | 助手说明                                                                                                                                       |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| [GitHub Finder](https://chat-preview.lobehub.com/market?agent=github-finder)<br/><sup>By **[nullmastermind](https://github.com/nullmastermind)** on **2024-02-25**</sup>                 | 专门根据自定义公式在 GitHub 上建议开源存储库。<br/>`编码` `开源` `github` `算法` `排序`                                                        |
 | [命名专家](https://chat-preview.lobehub.com/market?agent=variable-naming)<br/><sup>By **[zsio](https://github.com/zsio)** on **2024-02-24**</sup>                                        | 擅长生成变量名和函数名<br/>`编程` `变量命名` `函数命名`                                                                                        |
 | [LobeChat 技术文档专家](https://chat-preview.lobehub.com/market?agent=lobe-chat-developer-document-writer)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2024-02-22**</sup> | LobeChat 是一个 Next.js 框架构建的 AI 会话应用，我将会帮你一起书写 LobeChat 的开发文档<br/>`开发文档` `技术介绍` `next-js` `react` `lobe-chat` |
 | [您的日常人工智能伴侣。](https://chat-preview.lobehub.com/market?agent=causal)<br/><sup>By **[richards199999](https://github.com/richards199999)** on **2024-02-21**</sup>               | 我一直是一位优秀的必应。😊<br/>`bing` `conversation` `creative`                                                                                |
-| [Facebook 广告撰写专家](https://chat-preview.lobehub.com/market?agent=facebook-advertising-writing-expert)<br/><sup>By **[pllz7](https://github.com/pllz7)** on **2024-02-19**</sup>     | 专注于创建引人注目的标题、引人入胜的主体文本和有效的广告文案<br/>`facebook` `advertising` `writing` `expert` `ecommerce`                       |
 
-> 📊 Total agents: [<kbd>**183**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**184**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
