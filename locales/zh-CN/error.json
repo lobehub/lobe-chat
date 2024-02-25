@@ -59,6 +59,8 @@
     "BedrockBizError": "请求 Bedrock 服务出错，请根据以下信息排查或重试",
     "InvalidAzureAPIKey": "Azure API Key 不正确或为空，请检查 Azure API Key 后重试",
     "AzureBizError": "请求 Azure AI 服务出错，请根据以下信息排查或重试",
+    "InvalidPerplexityAPIKey": "Perplexity API Key 不正确或为空，请检查 Perplexity API Key 后重试",
+    "PerplexityBizError": "请求 Perplexity AI 服务出错，请根据以下信息排查或重试",
     "InvalidOllamaArgs": "Ollama 配置不正确，请检查 Ollama 配置后重试",
     "OllamaBizError": "请求 Ollama 服务出错，请根据以下信息排查或重试",
     "AgentRuntimeError": "Lobe 语言模型运行时执行出错，请根据以下信息排查或重试"
@@ -88,6 +90,10 @@
         "addProxyUrl": "添加 OpenAI 代理地址（可选）",
         "description": "输入你的 OpenAI API Key 即可开始会话。应用不会记录你的 API Key",
         "title": "使用自定义 OpenAI API Key"
+      },
+      "Perplexity": {
+        "description": "输入你的 Perplexity API Key 即可开始会话。应用不会记录你的 API Key",
+        "title": "使用自定义 Perplexity API Key"
       },
       "Zhipu": {
         "description": "输入你的 Zhipu API Key 即可开始会话。应用不会记录你的 API Key",

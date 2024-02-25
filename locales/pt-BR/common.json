@@ -27,6 +27,7 @@
   "defaultAgent": "Assistente padrão",
   "defaultSession": "Sessão padrão",
   "delete": "Excluir",
+  "document": "Documento de Uso",
   "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuração",
@@ -106,6 +107,7 @@
     "ollama": "Ollama",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Sem descrição",

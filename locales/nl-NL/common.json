@@ -27,6 +27,7 @@
   "defaultAgent": "Standaard assistent",
   "defaultSession": "Standaard assistent",
   "delete": "Verwijderen",
+  "document": "Gebruiksaanwijzing",
   "duplicate": "Dupliceren",
   "edit": "Bewerken",
   "export": "Exporteren",
@@ -106,7 +107,8 @@
     "ollama": "Ollama",
     "oneapi": "One API",
     "openai": "OpenAI",
-    "zhipu": "智谱AI"
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
   },
   "noDescription": "Geen beschrijving beschikbaar",
   "oauth": "SSO inloggen",

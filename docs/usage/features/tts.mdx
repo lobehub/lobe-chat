@@ -1,0 +1,32 @@
+import { Callout } from 'nextra/components';
+
+# TTS & STT Voice Conversation
+
+<Image
+  alt={'TTS & STT Voice Conversation'}
+  src={
+    'https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png'
+  }
+  cover
+/>
+
+LobeChat supports Text-to-Speech (TTS) and Speech-to-Text (STT) technologies. Our application can convert text information into clear voice output, allowing users to interact with our conversational agents as if they were talking to a real person. Users can choose from a variety of voices and pair the appropriate audio with the assistant. Additionally, for users who prefer auditory learning or need to obtain information while busy, TTS provides an excellent solution.
+
+In LobeChat, we have carefully selected a series of high-quality voice options (OpenAI Audio, Microsoft Edge Speech) to meet the needs of users from different regions and cultural backgrounds. Users can choose suitable voices based on personal preferences or specific scenarios, thereby obtaining a personalized communication experience.
+
+## Lobe TTS
+
+![](https://camo.githubusercontent.com/278c08d77b754726f5ed40cb03bfc7a5632a69750518d11d140ae13ae06d0f48/68747470733a2f2f6769746875622d70726f64756374696f6e2d757365722d61737365742d3632313064662e73332e616d617a6f6e6177732e636f6d2f31373837303730392f3238343037373930392d38353463633039612d623363372d346663342d396561372d6637313337616262613335312e706e67)
+
+[@lobehub/tts](https://tts.lobehub.com) is a high-quality TTS toolkit developed using the TS language, supporting usage in both server and browser environments.
+
+- **Server**: With just 15 lines of code, it can achieve high-quality speech generation capabilities comparable to OpenAI TTS services. It currently supports EdgeSpeechTTS, MicrosoftTTS, OpenAITTS, and OpenAISTT.
+- **Browser**: It provides high-quality React Hooks and visual audio components, supporting common functions such as loading, playing, pausing, and dragging the timeline, and offering extensive audio track style adjustment capabilities.
+
+<Callout type={'info'}>
+  During the implementation of the TTS feature in LobeChat, we found that there was no good frontend
+  TTS library on the market, which resulted in a lot of effort being spent on implementation,
+  including data conversion, audio progress management, and speech visualization. Adhering to the
+  "Community First" concept, we have polished and open-sourced this implementation, hoping to help
+  community developers who want to implement TTS.
+</Callout>

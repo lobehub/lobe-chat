@@ -27,6 +27,7 @@
   "defaultAgent": "Пользовательский агент",
   "defaultSession": "Пользовательский агент",
   "delete": "Удалить",
+  "document": "Документация",
   "duplicate": "Создать копию",
   "edit": "Редактировать",
   "export": "Экспорт настроек",
@@ -106,6 +107,7 @@
     "ollama": "Оллама",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity AI",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Нет описания",

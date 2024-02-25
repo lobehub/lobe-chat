@@ -179,6 +179,7 @@ const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) =
                 trigger={['hover']}
               >
                 <Button
+                  aria-label={t('input.more')}
                   className={styles.arrow}
                   icon={<Icon icon={LucideChevronDown} />}
                   type={'primary'}

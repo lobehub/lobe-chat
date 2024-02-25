@@ -27,6 +27,7 @@
   "defaultAgent": "مساعد افتراضي",
   "defaultSession": "جلسة افتراضية",
   "delete": "حذف",
+  "document": "وثيقة الاستخدام",
   "duplicate": "إنشاء نسخة",
   "edit": "تحرير",
   "export": "تصدير الإعدادات",
@@ -106,7 +107,8 @@
     "ollama": "أولاما",
     "oneapi": "وان آبي آي",
     "openai": "أوبن إيه آي",
-    "zhipu": "زهيبو"
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu"
   },
   "noDescription": "لا توجد وصف",
   "oauth": "تسجيل الدخول SSO",

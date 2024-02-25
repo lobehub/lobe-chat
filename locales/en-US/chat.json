@@ -19,6 +19,7 @@
     "title": "Just Chat"
   },
   "input": {
+    "more": "more",
     "onlyAdd": "Only add message",
     "send": "Send",
     "sendWithCmdEnter": "Press {{meta}} + Enter to send",

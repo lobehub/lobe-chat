@@ -27,6 +27,7 @@
   "defaultAgent": "デフォルトエージェント",
   "defaultSession": "デフォルトセッション",
   "delete": "削除",
+  "document": "ドキュメント",
   "duplicate": "コピーを作成する",
   "edit": "編集",
   "export": "エクスポート",
@@ -106,6 +107,7 @@
     "ollama": "オラマ",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity AI",
     "zhipu": "智譜AI"
   },
   "noDescription": "説明はありません",

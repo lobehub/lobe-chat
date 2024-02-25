@@ -27,6 +27,7 @@
   "defaultAgent": "Agent par défaut",
   "defaultSession": "Session par défaut",
   "delete": "Supprimer",
+  "document": "Document d'utilisation",
   "duplicate": "Dupliquer",
   "edit": "Modifier",
   "export": "Exporter",
@@ -106,6 +107,7 @@
     "ollama": "Ollama",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Aucune description disponible",
