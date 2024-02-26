@@ -1,0 +1,82 @@
+import { Steps } from 'nextra/components';
+
+# 使用 Netlify 部署
+
+如果想在 Netlify 上部署 LobeChat，可以按照以下步骤进行操作：
+
+## Netlify 部署流程
+
+<Steps>
+
+### 准备好你的 OpenAI API Key
+
+前往 [OpenAI API Key](https://platform.openai.com/account/api-keys) 获取你的 OpenAI API Key
+
+### 点击下方按钮进行部署
+
+[![][deploy-button-image]][deploy-link]
+
+[deploy-button-image]: https://www.netlify.com/img/deploy/button.svg
+[deploy-link]: https://app.netlify.com/start/deploy?repository=https://github.com/lobehub/lobe-chat
+
+### 授权 Netlify 访问你的 GitHub 账号
+
+点击 「Connect to GitHub」，授权 Netlify 访问你的 GitHub 账号：
+
+<Image
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/8ee533d5-f7e9-4523-991b-2c23a72c1530'}
+  bordered
+  width={790}
+  height={556}
+/>
+
+### 配置你的站点
+
+如果没有特殊要求，按照默认填写即可，然后点击 「Save & Deploy」
+
+<Image
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/260d86a3-e03f-4179-8c56-86b3e6f79d38'}
+  bordered
+  width={790}
+  height={450}
+/>
+
+### 等待部署完成
+
+接下来你会看到下述界面，这意味着你的 LobeChat 正在部署中，只需等待部署完成即可。
+
+<Image
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/1ed8b13d-046e-47c8-bd61-116ffdf5d01b'}
+  bordered
+  width={790}
+  height={325}
+/>
+
+部署构建过程中：
+
+<Image
+  alt={'部署构建中'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/1c82d707-cb6f-4924-b246-a5235a919864'}
+  bordered
+  width={790}
+  height={558}
+/>
+### 部署成功，开始使用
+
+如果你的界面中的 Deploy Log 如下所示，意味着你的 LobeChat 部署成功了。
+
+<Image
+  alt={'部署成功'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/c1f945d1-f3e2-4100-b6bb-24d4cb13c438'}
+  bordered
+  width={790}
+  height={558}
+/>
+
+此时，你可以点击「Open production deploy」，即可访问你的 LobeChat 站点
+
+### 绑定自定义域名（可选）
+
+你可以使用 Netlify 提供的子域名，也可以选择绑定自定义域名。目前 Netlify 提供的域名还未被污染，大多数地区都可以直连。
+
+</Steps>
