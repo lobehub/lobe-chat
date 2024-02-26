@@ -4,15 +4,16 @@ import { ActionIcon, Input, Modal } from '@lobehub/ui';
 import { useDebounceEffect, useDebounceFn } from 'ahooks';
 import { InputRef } from 'antd';
 import { createStyles } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import Fuse from 'fuse.js';
-import { map } from 'lodash-es';
+import { cloneDeep, map } from 'lodash-es';
 import { SearchIcon } from 'lucide-react';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAutoFocus } from '@/app/chat/(desktop)/features/ChatInput/useAutoFocus';
 import PromptSelectItem from '@/features/ChatInput/UserPrompts/PromptSelectItem';
-
-import samples from './sample.json';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/slices/settings/selectors';
 
 type Props = {
   maxItems?: number;
@@ -36,19 +37,19 @@ const useStyles = createStyles(({ css, token }) => ({
 
     .ant-modal-body {
       padding: 0 !important;
-      padding-inline: 8px !important;
       padding-block: 8px !important;
+      padding-inline: 8px !important;
     }
   `,
   notFound: css`
-    opacity: 0.6;
     text-align: center;
+    opacity: 0.6;
   `,
   searchHeader: css`
-    width: 100%;
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
+    width: 100%;
   `,
 }));
 
@@ -56,11 +57,15 @@ const UserPrompts = memo<Props>(({ open, onCancel, onSelect, maxItems = 10 }) =>
   const { styles } = useStyles();
   const searchInputRef = useRef<InputRef>(null);
   const [searchValue, setSearchValue] = useState('');
+  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
+  const userPrompts = useMemo(() => {
+    return cloneDeep(settings.userPrompts);
+  }, [settings.userPrompts]);
   const fuse = useMemo(() => {
-    return new Fuse(samples, {
+    return new Fuse(userPrompts, {
       keys: ['name'],
     });
-  }, []);
+  }, [userPrompts]);
   const list = useMemo(() => {
     if (searchValue) {
       const results = fuse.search(searchValue).map((v) => v.item);
@@ -68,7 +73,7 @@ const UserPrompts = memo<Props>(({ open, onCancel, onSelect, maxItems = 10 }) =>
       return results.splice(0, maxItems);
     }
 
-    return samples.slice(0, maxItems);
+    return userPrompts.slice(0, maxItems);
   }, [fuse, searchValue, maxItems]);
   const [highlightIndex, setHighlightIndex] = useState(-1);
 
