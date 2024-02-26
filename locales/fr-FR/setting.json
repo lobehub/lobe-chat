@@ -282,14 +282,11 @@
     "title": "Liste des plugins"
   },
   "settingPrompt": {
+    "delete": "Supprimer cette invite",
     "input": {
-      "autoGenerate": "Générer automatiquement",
-      "placeholderContent1": "Entrez le contenu de l'exemple de message. Utilisez {{var_name}} comme variable",
-      "placeholderName1": "Entrez le nom de l'exemple de message"
-    },
-    "save": {
-      "error": "Veuillez vous assurer que le nom du champ et le contenu sont remplis !",
-      "success": "La notification de l'utilisateur a été enregistrée."
+      "add": "Ajouter une invite",
+      "content": "Saisissez le contenu du modèle d'invite. Utilisez {{var_name}} comme variable",
+      "name": "Saisissez le nom de l'invite"
     },
     "title": "Créer/Éditer"
   },

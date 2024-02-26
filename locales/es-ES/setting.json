@@ -282,14 +282,11 @@
     "title": "Lista de complementos"
   },
   "settingPrompt": {
+    "delete": "Eliminar esta sugerencia",
     "input": {
-      "autoGenerate": "Generación automática",
-      "placeholderContent1": "Introduce el contenido del ejemplo de sugerencia. Utiliza {{var_name}} como variable",
-      "placeholderName1": "Introduce el nombre de la sugerencia"
-    },
-    "save": {
-      "error": "¡Asegúrate de que se hayan completado los campos de nombre y contenido!",
-      "success": "La sugerencia del usuario ha sido guardada."
+      "add": "Agregar sugerencia",
+      "content": "Ingrese el contenido de la plantilla de sugerencia. Use {{var_name}} como variable",
+      "name": "Ingrese el nombre de la sugerencia"
     },
     "title": "Crear/Editar"
   },

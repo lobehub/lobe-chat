@@ -282,14 +282,11 @@
     "title": "Lista wtyczek"
   },
   "settingPrompt": {
+    "delete": "Usuń ten komunikat",
     "input": {
-      "autoGenerate": "Automatyczne generowanie",
-      "placeholderContent1": "Wprowadź treść szablonu. Użyj {{var_name}} jako zmiennej",
-      "placeholderName1": "Wprowadź nazwę sugestii"
-    },
-    "save": {
-      "error": "Upewnij się, że nazwa pola i treść zostały wprowadzone!",
-      "success": "Komunikat dla użytkownika został zapisany."
+      "add": "Dodaj komunikat",
+      "content": "Wprowadź treść szablonu komunikatu. Użyj {{var_name}} jako zmiennej",
+      "name": "Wprowadź nazwę komunikatu"
     },
     "title": "Utwórz/edytuj"
   },

@@ -282,14 +282,11 @@
     "title": "Eklenti Listesi"
   },
   "settingPrompt": {
+    "delete": "Bu ipucunu sil",
     "input": {
-      "autoGenerate": "Otomatik Oluştur",
-      "placeholderContent1": "Giriş ipucu şablon içeriğini girin. Değişken olarak {{var_name}} kullanın",
-      "placeholderName1": "Giriş ipucu adını girin"
-    },
-    "save": {
-      "error": "Lütfen giriş alanı adı ve içeriğinin doldurulduğundan emin olun!",
-      "success": "Kullanıcı ipucu kaydedildi."
+      "add": "İpucu ekle",
+      "content": "İpucu şablon içeriğini girin. Değişken olarak {{var_name}} kullanın",
+      "name": "İpucu adını girin"
     },
     "title": "Oluştur/Düzenle"
   },

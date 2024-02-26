@@ -282,14 +282,11 @@
     "title": "Plugin-lijst"
   },
   "settingPrompt": {
+    "delete": "Verwijder deze prompt",
     "input": {
-      "autoGenerate": "Automatisch genereren",
-      "placeholderContent1": "Voer de sjablooninhoud in. Gebruik {{var_name}} als variabele",
-      "placeholderName1": "Voer de naam van de prompt in"
-    },
-    "save": {
-      "error": "Zorg ervoor dat zowel de veldnaam als de inhoud zijn ingevuld!",
-      "success": "Gebruikersprompt is opgeslagen."
+      "add": "Voeg prompt toe",
+      "content": "Voer de inhoud van de prompt-sjabloon in. Gebruik {{var_name}} als variabele",
+      "name": "Voer de naam van de prompt in"
     },
     "title": "Instellingen aanmaken/bewerken"
   },

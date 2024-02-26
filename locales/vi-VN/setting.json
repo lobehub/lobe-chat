@@ -282,14 +282,11 @@
     "title": "Danh sách plugin"
   },
   "settingPrompt": {
+    "delete": "Xóa lời nhắc này",
     "input": {
-      "autoGenerate": "Tự động tạo",
-      "placeholderContent1": "Nhập nội dung mẫu gợi ý. Sử dụng {{var_name}} làm biến",
-      "placeholderName1": "Nhập tên gợi ý"
-    },
-    "save": {
-      "error": "Vui lòng đảm bảo rằng tên trường và nội dung đã được điền đầy đủ!",
-      "success": "Lưu ý người dùng đã được lưu."
+      "add": "Thêm lời nhắc",
+      "content": "Nhập nội dung mẫu lời nhắc. Sử dụng {{var_name}} làm biến",
+      "name": "Nhập tên lời nhắc"
     },
     "title": "Tạo/Chỉnh sửa"
   },

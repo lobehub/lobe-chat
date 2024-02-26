@@ -282,14 +282,11 @@
     "title": "Plugin List"
   },
   "settingPrompt": {
+    "delete": "Delete this prompt",
     "input": {
-      "autoGenerate": "Auto Generate",
-      "placeholderContent1": "Enter the prompt template content. Use {{var_name}} as a variable",
-      "placeholderName1": "Enter the prompt name"
-    },
-    "save": {
-      "error": "Please make sure the input field name and content are filled in!",
-      "success": "User prompt has been saved."
+      "add": "Add prompt",
+      "content": "Enter the content of the prompt template. Use {{var_name}} as a variable",
+      "name": "Enter prompt name"
     },
     "title": "Create/Edit"
   },

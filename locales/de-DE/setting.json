@@ -282,14 +282,11 @@
     "title": "Plugin-Liste"
   },
   "settingPrompt": {
+    "delete": "Löschen Sie diesen Hinweis",
     "input": {
-      "autoGenerate": "Automatisch generieren",
-      "placeholderContent1": "Geben Sie den Platzhalterinhalt ein. Verwenden Sie {{var_name}} als Variable",
-      "placeholderName1": "Geben Sie den Platzhalternamen ein"
-    },
-    "save": {
-      "error": "Bitte stellen Sie sicher, dass Feldname und Inhalt ausgefüllt sind!",
-      "success": "Benutzerhinweis wurde gespeichert."
+      "add": "Hinweis hinzufügen",
+      "content": "Geben Sie den Hinweisvorlageninhalt ein. Verwenden Sie {{var_name}} als Variable",
+      "name": "Geben Sie den Hinweisnamen ein"
     },
     "title": "Erstellen / Bearbeiten"
   },

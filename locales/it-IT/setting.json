@@ -282,14 +282,11 @@
     "title": "Elenco dei plugin"
   },
   "settingPrompt": {
+    "delete": "Elimina questo prompt",
     "input": {
-      "autoGenerate": "Generazione automatica",
-      "placeholderContent1": "Inserisci il contenuto del modello di suggerimento. Utilizza {{var_name}} come variabile",
-      "placeholderName1": "Inserisci il nome del suggerimento"
-    },
-    "save": {
-      "error": "Assicurati di aver compilato correttamente i campi di input e il contenuto!",
-      "success": "Promemoria utente salvato."
+      "add": "Aggiungi prompt",
+      "content": "Inserisci il contenuto del modello di prompt. Usa {{var_name}} come variabile",
+      "name": "Inserisci il nome del prompt"
     },
     "title": "Creare/Modificare"
   },

@@ -284,14 +284,11 @@ export default {
     title: '插件列表',
   },
   settingPrompt: {
+    delete: '刪除這個提示',
     input: {
-      autoGenerate: '自动补全',
-      placeholderContent1: '輸入提示範本內容。使用 {{var_name}} 作為變數',
-      placeholderName1: '輸入提示名稱',
-    },
-    save: {
-      error: '請確保輸入欄位名稱和內容已填寫！',
-      success: '用戶提示已保存。',
+      add: '新增提示',
+      content: '輸入提示範本內容。使用 {{var_name}} 作為變數',
+      name: '輸入提示名稱',
     },
     title: '建立/編輯',
   },
