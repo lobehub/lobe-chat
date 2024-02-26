@@ -287,6 +287,10 @@
       "placeholderContent1": "입력 안내 템플릿 내용을 입력하세요. 변수로 {{var_name}}을(를) 사용합니다.",
       "placeholderName1": "입력 안내 이름을 입력하세요"
     },
+    "save": {
+      "error": "입력 필드 이름과 내용이 작성되었는지 확인하십시오!",
+      "success": "사용자 프롬프트가 저장되었습니다."
+    },
     "title": "설정 만들기/편집"
   },
   "settingSystem": {

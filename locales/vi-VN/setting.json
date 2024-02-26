@@ -287,6 +287,10 @@
       "placeholderContent1": "Nhập nội dung mẫu gợi ý. Sử dụng {{var_name}} làm biến",
       "placeholderName1": "Nhập tên gợi ý"
     },
+    "save": {
+      "error": "Vui lòng đảm bảo rằng tên trường và nội dung đã được điền đầy đủ!",
+      "success": "Lưu ý người dùng đã được lưu."
+    },
     "title": "Tạo/Chỉnh sửa"
   },
   "settingSystem": {

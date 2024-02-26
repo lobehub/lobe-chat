@@ -12,6 +12,12 @@ export * from './base';
 export * from './modelProvider';
 export * from './tts';
 
+export type UserPrompt = {
+  content: string;
+  id: string;
+  name: string;
+};
+
 export interface GlobalTool {
   dalle: {
     autoGenerate: boolean;
@@ -33,4 +39,5 @@ export interface GlobalSettings extends GlobalBaseSettings {
   languageModel: GlobalLLMConfig;
   tool: GlobalTool;
   tts: GlobalTTSConfig;
+  userPrompts: UserPrompt[];
 }

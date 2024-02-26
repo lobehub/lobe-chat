@@ -287,6 +287,10 @@
       "placeholderContent1": "Entrez le contenu de l'exemple de message. Utilisez {{var_name}} comme variable",
       "placeholderName1": "Entrez le nom de l'exemple de message"
     },
+    "save": {
+      "error": "Veuillez vous assurer que le nom du champ et le contenu sont remplis !",
+      "success": "La notification de l'utilisateur a été enregistrée."
+    },
     "title": "Créer/Éditer"
   },
   "settingSystem": {

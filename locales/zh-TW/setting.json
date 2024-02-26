@@ -287,6 +287,10 @@
       "placeholderContent1": "輸入提示範本內容。使用 {{var_name}} 作為變數",
       "placeholderName1": "輸入提示名稱"
     },
+    "save": {
+      "error": "請確保輸入欄位名稱和內容已填寫！",
+      "success": "使用者提示已儲存。"
+    },
     "title": "建立/編輯"
   },
   "settingSystem": {

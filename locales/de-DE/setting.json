@@ -287,6 +287,10 @@
       "placeholderContent1": "Geben Sie den Platzhalterinhalt ein. Verwenden Sie {{var_name}} als Variable",
       "placeholderName1": "Geben Sie den Platzhalternamen ein"
     },
+    "save": {
+      "error": "Bitte stellen Sie sicher, dass Feldname und Inhalt ausgefüllt sind!",
+      "success": "Benutzerhinweis wurde gespeichert."
+    },
     "title": "Erstellen / Bearbeiten"
   },
   "settingSystem": {

@@ -287,6 +287,10 @@
       "placeholderContent1": "Giriş ipucu şablon içeriğini girin. Değişken olarak {{var_name}} kullanın",
       "placeholderName1": "Giriş ipucu adını girin"
     },
+    "save": {
+      "error": "Lütfen giriş alanı adı ve içeriğinin doldurulduğundan emin olun!",
+      "success": "Kullanıcı ipucu kaydedildi."
+    },
     "title": "Oluştur/Düzenle"
   },
   "settingSystem": {

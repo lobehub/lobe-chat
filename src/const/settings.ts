@@ -7,6 +7,7 @@ import {
   GlobalLLMConfig,
   GlobalSettings,
   GlobalTTSConfig,
+  UserPrompt,
 } from '@/types/settings';
 
 export const DEFAULT_BASE_SETTINGS: GlobalBaseSettings = {
@@ -105,10 +106,13 @@ export const DEFAULT_TOOL_CONFIG = {
   },
 };
 
+export const DEFAULT_USER_PROMPTS: UserPrompt[] = [];
+
 export const DEFAULT_SETTINGS: GlobalSettings = {
   defaultAgent: DEFAULT_AGENT,
   languageModel: DEFAULT_LLM_CONFIG,
   tool: DEFAULT_TOOL_CONFIG,
   tts: DEFAULT_TTS_CONFIG,
+  userPrompts: DEFAULT_USER_PROMPTS,
   ...DEFAULT_BASE_SETTINGS,
 };

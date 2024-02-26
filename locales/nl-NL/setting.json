@@ -287,6 +287,10 @@
       "placeholderContent1": "Voer de sjablooninhoud in. Gebruik {{var_name}} als variabele",
       "placeholderName1": "Voer de naam van de prompt in"
     },
+    "save": {
+      "error": "Zorg ervoor dat zowel de veldnaam als de inhoud zijn ingevuld!",
+      "success": "Gebruikersprompt is opgeslagen."
+    },
     "title": "Instellingen aanmaken/bewerken"
   },
   "settingSystem": {

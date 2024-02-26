@@ -287,6 +287,10 @@
       "placeholderContent1": "Insira o conteúdo do modelo de dica. Use {{var_name}} como variável",
       "placeholderName1": "Insira o nome da dica"
     },
+    "save": {
+      "error": "Certifique-se de que o nome do campo e o conteúdo tenham sido preenchidos!",
+      "success": "Dica do usuário salva com sucesso."
+    },
     "title": "Criar/Editar"
   },
   "settingSystem": {

@@ -287,6 +287,10 @@
       "placeholderContent1": "Enter the prompt template content. Use {{var_name}} as a variable",
       "placeholderName1": "Enter the prompt name"
     },
+    "save": {
+      "error": "Please make sure the input field name and content are filled in!",
+      "success": "User prompt has been saved."
+    },
     "title": "Create/Edit"
   },
   "settingSystem": {

@@ -21,6 +21,8 @@ const defaultAgentConfig = (s: GlobalStore) => merge(DEFAULT_AGENT_CONFIG, defau
 
 const defaultAgentMeta = (s: GlobalStore) => merge(DEFAULT_AGENT_META, defaultAgent(s).meta);
 
+const userPrompts = (s: GlobalStore) => currentSettings(s).userPrompts;
+
 // TODO: Maybe we can also export settings difference
 const exportSettings = (s: GlobalStore) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -55,4 +57,5 @@ export const settingsSelectors = {
   exportSettings,
   isDalleAutoGenerating,
   password,
+  userPrompts,
 };
