@@ -27,6 +27,7 @@
   "defaultAgent": "Trợ lý mặc định",
   "defaultSession": "Phiên mặc định",
   "delete": "Xóa",
+  "document": "Tài Liệu Sử Dụng",
   "duplicate": "Tạo bản sao",
   "edit": "Chỉnh sửa",
   "export": "Xuất cấu hình",
@@ -106,6 +107,7 @@
     "ollama": "Ollama",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity AI",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Chưa có mô tả",

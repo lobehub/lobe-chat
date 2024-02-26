@@ -27,6 +27,7 @@
   "defaultAgent": "Standardassistent",
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
+  "document": "Dokumentation",
   "duplicate": "Duplikat erstellen",
   "edit": "Bearbeiten",
   "export": "Exportieren",
@@ -106,6 +107,7 @@
     "ollama": "Ollama",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Keine Beschreibung vorhanden",

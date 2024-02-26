@@ -43,12 +43,14 @@
     "InvalidGoogleAPIKey": "Google APIキーが正しくないか空です。Google APIキーを確認してから再試行してください。",
     "InvalidMoonshotAPIKey": "Moonshot AI APIキーが正しくないか空です。Moonshot APIキーを確認して再試行してください。",
     "InvalidOllamaArgs": "Ollamaの設定が正しくありません。Ollamaの設定を確認してからもう一度お試しください",
+    "InvalidPerplexityAPIKey": "Perplexity APIキーが正しくないか空です。Perplexity APIキーを確認してもう一度お試しください",
     "InvalidZhipuAPIKey": "Zhipu APIキーが正しくないか空です。Zhipu APIキーを確認してから再試行してください。",
     "LocationNotSupportError": "申し訳ありませんが、お住まいの地域ではこのモデルサービスをサポートしていません。地域制限またはサービスが利用できない可能性があります。現在の位置がこのサービスをサポートしているかどうかを確認するか、他の位置情報を使用してみてください。",
     "MoonshotBizError": "月の裏側サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "NoOpenAIAPIKey": "OpenAI APIキーが空です。カスタムOpenAI APIキーを追加してください。",
     "OllamaBizError": "Ollamaサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再度お試しください",
     "OpenAIBizError": "OpenAIサービスのリクエストエラーが発生しました。以下の情報に基づいて問題を解決したり、再試行したりしてください",
+    "PerplexityBizError": "Perplexity AIサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングするか、再度お試しください",
     "PluginApiNotFound": "申し訳ありませんが、プラグインのマニフェストに指定されたAPIが見つかりませんでした。リクエストメソッドとプラグインのマニフェストのAPIが一致しているかどうかを確認してください",
     "PluginApiParamsError": "申し訳ありませんが、プラグインのリクエストパラメータの検証に失敗しました。パラメータとAPIの説明が一致しているかどうか確認してください",
     "PluginGatewayError": "申し訳ありませんが、プラグインゲートウェイでエラーが発生しました。プラグインゲートウェイの設定を確認してください。",
@@ -88,6 +90,10 @@
         "addProxyUrl": "OpenAIプロキシアドレスを追加（オプション）",
         "description": "OpenAI APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
         "title": "カスタムOpenAI APIキーを使用"
+      },
+      "Perplexity": {
+        "description": "Perplexity APIキーを入力して会話を開始します。アプリはAPIキーを記録しません",
+        "title": "カスタムPerplexity APIキーを使用"
       },
       "Zhipu": {
         "description": "Zhipu APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",

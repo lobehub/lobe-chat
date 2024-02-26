@@ -27,6 +27,7 @@
   "defaultAgent": "기본 에이전트",
   "defaultSession": "기본 세션",
   "delete": "삭제",
+  "document": "사용 설명서",
   "duplicate": "복제품 만들기",
   "edit": "편집",
   "export": "내보내기",
@@ -106,6 +107,7 @@
     "ollama": "올라마",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity",
     "zhipu": "지푸 AI"
   },
   "noDescription": "설명 없음",

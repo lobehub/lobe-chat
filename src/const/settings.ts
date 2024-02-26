@@ -75,6 +75,10 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     enabled: true,
     models: [],
   },
+  perplexity: {
+    apiKey: '',
+    enabled: false,
+  },
   zhipu: {
     apiKey: '',
     enabled: false,

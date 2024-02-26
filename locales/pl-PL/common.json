@@ -27,6 +27,7 @@
   "defaultAgent": "Domyślny asystent",
   "defaultSession": "Domyślna sesja",
   "delete": "Usuń",
+  "document": "Dokumentacja",
   "duplicate": "Utwórz kopię",
   "edit": "Edytuj",
   "export": "Eksportuj ustawienia",
@@ -106,7 +107,8 @@
     "ollama": "Ollama",
     "oneapi": "One API",
     "openai": "OpenAI",
-    "zhipu": "智谱AI"
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
   },
   "noDescription": "Brak opisu",
   "oauth": "Logowanie SSO",

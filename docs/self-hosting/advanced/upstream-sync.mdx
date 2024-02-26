@@ -1,0 +1,66 @@
+import { Callout, Steps } from 'nextra/components';
+
+## `A` Vercel / Zeabur Deployment
+
+If you deployed your project according to the one-click deployment steps in the README, you may have noticed that you are always prompted with "updates available." This is because Vercel defaults to creating a new project for you instead of forking the original project, which prevents accurate update detection. We recommend following these steps to redeploy:
+
+- Delete the original repository;
+- Use the <kbd>Fork</kbd> button in the top right corner of the page to fork the original project;
+- Redeploy on `Vercel`.
+
+### Enable Automatic Updates
+
+<Callout>
+  If you encounter an error when executing `Upstream Sync`, please try executing it manually again
+</Callout>
+
+After forking the project, due to Github's limitations, you need to manually enable Workflows on the Actions page of your forked project and start the Upstream Sync Action. Once enabled, you can set up automatic updates to occur every hour.
+
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png) ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png)
+
+## `B` Docker Deployment
+
+Upgrading the Docker deployment version is very simple, you just need to redeploy the latest LobeChat image. Here are the commands required to perform these steps:
+
+<Steps>
+### Stop and Remove the Current Running LobeChat Container
+
+Assuming the LobeChat container is named `lobe-chat`, use the following commands to stop and remove the currently running LobeChat container:
+
+```fish
+docker stop lobe-chat
+docker rm lobe-chat
+```
+
+### Pull the Latest LobeChat Image
+
+Use the following command to pull the latest Docker image for LobeChat:
+
+```fish
+docker pull lobehub/lobe-chat
+```
+
+### Restart the Docker Container
+
+Redeploy the LobeChat container using the newly pulled image:
+
+```fish
+docker run -d -p 3210:3210 \
+  -e OPENAI_API_KEY=sk-xxxx \
+  -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
+  -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
+  lobehub/lobe-chat
+```
+
+</Steps>
+
+Ensure that you have sufficient permissions to stop and remove the container before executing these commands, and that Docker has sufficient permissions to pull the new image.
+
+<Callout type={'info'}>
+
+**If I redeploy, will I lose my local chat records?**
+
+No need to worry, you won't. All of LobeChat's chat records are stored in your local browser. Therefore, when redeploying LobeChat using Docker, your chat records will not be lost.
+
+</Callout>
