@@ -90,15 +90,17 @@ class AgentRuntime {
   private static initOpenAI(payload: JWTPayload, azureOpenAI?: AzureOpenAIParams) {
     const { OPENAI_API_KEY, OPENAI_PROXY_URL, AZURE_API_VERSION, AZURE_API_KEY, USE_AZURE_OPENAI } =
       getServerConfig();
-    const apiKey = payload?.apiKey || OPENAI_API_KEY;
+    const openaiApiKey = payload?.apiKey || OPENAI_API_KEY;
     const baseURL = payload?.endpoint || OPENAI_PROXY_URL;
 
     const azureApiKey = payload.apiKey || AZURE_API_KEY;
     const useAzure = azureOpenAI?.useAzure || USE_AZURE_OPENAI;
     const apiVersion = azureOpenAI?.apiVersion || AZURE_API_VERSION;
 
+    const apiKey = apiKeyManager.pick(useAzure ? azureApiKey : openaiApiKey);
+
     return new LobeOpenAI({
-      apiKey: apiKeyManager.pick(useAzure ? azureApiKey : apiKey),
+      apiKey,
       azureOptions: {
         apiVersion,
         model: azureOpenAI?.model,
