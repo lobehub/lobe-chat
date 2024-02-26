@@ -21,7 +21,7 @@ const DesktopLayout = memo<DesktopLayoutProps>(({ children, activeTab }) => {
       <SideBar activeTab={activeTab} />
       <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>
         <Header activeTab={activeTab} />
-        <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'auto' }}>
+        <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'scroll' }}>
           <SafeSpacing />
           <Center gap={16} width={'100%'}>
             {children}

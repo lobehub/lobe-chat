@@ -10,7 +10,7 @@ import Header from './features/Header';
 export default memo(({ children }: PropsWithChildren) => (
   <Layout>
     <Header />
-    <Flexbox align={'center'} flex={1} gap={16} padding={24} style={{ overflow: 'auto' }}>
+    <Flexbox align={'center'} flex={1} gap={16} padding={24} style={{ overflow: 'scroll' }}>
       <SafeSpacing height={HEADER_HEIGHT - 16} />
       {children}
     </Flexbox>
