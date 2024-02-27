@@ -27,6 +27,7 @@ module.exports = defineConfig({
   experimental: {
     jsonMode: true,
   },
+  reference: '你需要保持 mdx 的组件格式，输出文本不需要在最外层包裹任何代码块语法',
   markdown: {
     entry: ['./README.zh-CN.md', './docs/**/*.zh-CN.md', './docs/**/*.zh-CN.mdx'],
     entryLocale: 'zh-CN',

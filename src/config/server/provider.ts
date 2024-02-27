@@ -6,6 +6,8 @@ declare global {
     interface ProcessEnv {
       CUSTOM_MODELS?: string;
 
+      API_KEY_SELECT_MODE?: string;
+
       // OpenAI Provider
       OPENAI_API_KEY?: string;
       OPENAI_PROXY_URL?: string;
@@ -66,6 +68,8 @@ export const getProviderConfig = () => {
 
   return {
     CUSTOM_MODELS: process.env.CUSTOM_MODELS,
+
+    API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
 
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,

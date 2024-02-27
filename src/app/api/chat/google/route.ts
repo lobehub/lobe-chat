@@ -11,6 +11,7 @@ import {
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
+import apiKeyManager from '../apiKeyManager';
 import { checkAuthMethod, getJWTPayload } from '../auth';
 
 // due to the Chinese region does not support accessing Google
@@ -58,7 +59,7 @@ export const POST = async (req: Request) => {
     checkAuthMethod(payload.accessCode, payload.apiKey, oauthAuthorized);
 
     const { GOOGLE_API_KEY } = getServerConfig();
-    const apiKey = payload?.apiKey || GOOGLE_API_KEY;
+    const apiKey = apiKeyManager.pick(payload?.apiKey || GOOGLE_API_KEY);
 
     agentRuntime = new LobeGoogleAI(apiKey);
   } catch (e) {
