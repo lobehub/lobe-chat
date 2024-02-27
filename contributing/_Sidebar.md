@@ -4,7 +4,7 @@
 
 - [TOC](Home.md) | [目录](Home.md)
 
-<!-- DOCS LIST -->
+<!-- DOCS LIST --> 
 
 #### 🤯 Basic
 
@@ -20,28 +20,36 @@
 - [Technical Development Getting Started Guide](https://github.com/lobehub/lobe-chat/wiki/Intro) | [技术开发上手指南](https://github.com/lobehub/lobe-chat/wiki/Intro.zh-CN)
 - [Testing Guide](https://github.com/lobehub/lobe-chat/wiki/Test) | [测试指南](https://github.com/lobehub/lobe-chat/wiki/Test.zh-CN)
 
+
 #### 🌎 Internationalization
 
 - [Internationalization Implementation Guide](https://github.com/lobehub/lobe-chat/wiki/Internationalization-Implementation) | [国际化实现指南](https://github.com/lobehub/lobe-chat/wiki/Internationalization-Implementation.zh-CN)
 - [New Locale Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale) | [新语种添加指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Locale.zh-CN)
+
 
 #### ⌨️ State Management
 
 - [Best Practices for State Management](https://github.com/lobehub/lobe-chat/wiki/State-Management-Intro) | [状态管理最佳实践](https://github.com/lobehub/lobe-chat/wiki/State-Management-Intro.zh-CN)
 - [Data Store Selector](https://github.com/lobehub/lobe-chat/wiki/State-Management-Selectors) | [数据存储取数模块](https://github.com/lobehub/lobe-chat/wiki/State-Management-Selectors.zh-CN)
 
+
 #### 🤖 Agents
 
 - [Agent Index and Submit](https://github.com/lobehub/lobe-chat-agents) | [助手索引与提交](https://github.com/lobehub/lobe-chat-agents/blob/main/README.zh-CN.md)
+
 
 #### 🧩 Plugins
 
 - [Plugin Index and Submit](https://github.com/lobehub/lobe-chat-plugins) | [插件索引与提交](https://github.com/lobehub/lobe-chat-plugins/blob/main/README.zh-CN.md)
 - [Plugin SDK Docs](https://chat-plugin-sdk.lobehub.com) | [插件 SDK 文档](https://chat-plugin-sdk.lobehub.com)
 
+
 #### 📊 Others
 
 - [Lighthouse Reports](https://github.com/lobehub/lobe-chat/wiki/Lighthouse) | [Lighthouse 测试报告](https://github.com/lobehub/lobe-chat/wiki/Lighthouse.zh-CN)
+
+
+
 
  <!-- DOCS LIST -->
 
