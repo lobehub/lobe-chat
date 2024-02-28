@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.130.1](https://github.com/lobehub/lobe-chat/compare/v0.130.0...v0.130.1)
+
+<sup>Released on **2024-02-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **google**: Add safetySettings to avoid error response with google AI model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **google**: Add safetySettings to avoid error response with google AI model, closes [#1418](https://github.com/lobehub/lobe-chat/issues/1418) ([87bf1fb](https://github.com/lobehub/lobe-chat/commit/87bf1fb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.130.0](https://github.com/lobehub/lobe-chat/compare/v0.129.6...v0.130.0)
 
 <sup>Released on **2024-02-27**</sup>
