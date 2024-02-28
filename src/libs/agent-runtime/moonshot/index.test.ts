@@ -2,76 +2,40 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// 引入模块以便于对函数进行spy
 import { ChatStreamCallbacks } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
-import { LobeOpenAI } from './index';
+import { LobeMoonshotAI } from './index';
+
+const provider = 'moonshot';
+const defaultBaseURL = 'https://api.moonshot.cn/v1';
+const bizErrorType = 'MoonshotBizError';
+const invalidErrorType = 'InvalidMoonshotAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
-describe('LobeOpenAI', () => {
-  let instance: LobeOpenAI;
+let instance: LobeMoonshotAI;
 
-  beforeEach(() => {
-    instance = new LobeOpenAI({ apiKey: 'test' });
+beforeEach(() => {
+  instance = new LobeMoonshotAI({ apiKey: 'test' });
 
-    // 使用 vi.spyOn 来模拟 chat.completions.create 方法
-    vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
-      new ReadableStream() as any,
-    );
-  });
+  // 使用 vi.spyOn 来模拟 chat.completions.create 方法
+  vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+    new ReadableStream() as any,
+  );
+});
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
+describe('LobeMoonshotAI', () => {
   describe('init', () => {
-    it('should correctly initialize with Azure options', () => {
-      const baseURL = 'https://abc.com';
-      const modelName = 'abc';
-      const client = new LobeOpenAI({
-        apiKey: 'test',
-        useAzure: true,
-        baseURL,
-        azureOptions: {
-          apiVersion: '2023-08-01-preview',
-          model: 'abc',
-        },
-      });
-
-      expect(client.baseURL).toEqual(baseURL + '/openai/deployments/' + modelName);
-    });
-
-    describe('initWithAzureOpenAI', () => {
-      it('should correctly initialize with Azure options', () => {
-        const baseURL = 'https://abc.com';
-        const modelName = 'abc';
-        const client = LobeOpenAI.initWithAzureOpenAI({
-          apiKey: 'test',
-          useAzure: true,
-          baseURL,
-          azureOptions: {
-            apiVersion: '2023-08-01-preview',
-            model: 'abc',
-          },
-        });
-
-        expect(client.baseURL).toEqual(baseURL + '/openai/deployments/' + modelName);
-      });
-
-      it('should use default Azure options when not explicitly provided', () => {
-        const baseURL = 'https://abc.com';
-
-        const client = LobeOpenAI.initWithAzureOpenAI({
-          apiKey: 'test',
-          useAzure: true,
-          baseURL,
-        });
-
-        expect(client.baseURL).toEqual(baseURL + '/openai/deployments/');
-      });
+    it('should correctly initialize with an API key', async () => {
+      const instance = new LobeMoonshotAI({ apiKey: 'test_api_key' });
+      expect(instance).toBeInstanceOf(LobeMoonshotAI);
+      expect(instance.baseURL).toEqual(defaultBaseURL);
     });
   });
 
@@ -120,22 +84,22 @@ describe('LobeOpenAI', () => {
           });
         } catch (e) {
           expect(e).toEqual({
-            endpoint: 'https://api.openai.com/v1',
+            endpoint: defaultBaseURL,
             error: {
               error: { message: 'Bad Request' },
               status: 400,
             },
-            errorType: 'OpenAIBizError',
-            provider: 'openai',
+            errorType: bizErrorType,
+            provider,
           });
         }
       });
 
       it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
         try {
-          new LobeOpenAI({});
+          new LobeMoonshotAI({});
         } catch (e) {
-          expect(e).toEqual({ errorType: 'NoOpenAIAPIKey' });
+          expect(e).toEqual({ errorType: invalidErrorType });
         }
       });
 
@@ -160,13 +124,13 @@ describe('LobeOpenAI', () => {
           });
         } catch (e) {
           expect(e).toEqual({
-            endpoint: 'https://api.openai.com/v1',
+            endpoint: defaultBaseURL,
             error: {
               cause: { message: 'api is undefined' },
               stack: 'abc',
             },
-            errorType: 'OpenAIBizError',
-            provider: 'openai',
+            errorType: bizErrorType,
+            provider,
           });
         }
       });
@@ -179,7 +143,7 @@ describe('LobeOpenAI', () => {
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
-        instance = new LobeOpenAI({
+        instance = new LobeMoonshotAI({
           apiKey: 'test',
 
           baseURL: 'https://api.abc.com/v1',
@@ -201,8 +165,31 @@ describe('LobeOpenAI', () => {
               cause: { message: 'api is undefined' },
               stack: 'abc',
             },
-            errorType: 'OpenAIBizError',
-            provider: 'openai',
+            errorType: bizErrorType,
+            provider,
+          });
+        }
+      });
+
+      it('should throw an InvalidMoonshotAPIKey error type on 401 status code', async () => {
+        // Mock the API call to simulate a 401 error
+        const error = new Error('Unauthorized') as any;
+        error.status = 401;
+        vi.mocked(instance['client'].chat.completions.create).mockRejectedValue(error);
+
+        try {
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'gpt-3.5-turbo',
+            temperature: 0,
+          });
+        } catch (e) {
+          // Expect the chat method to throw an error with InvalidMoonshotAPIKey
+          expect(e).toEqual({
+            endpoint: defaultBaseURL,
+            error: new Error('Unauthorized'),
+            errorType: invalidErrorType,
+            provider,
           });
         }
       });
@@ -222,9 +209,9 @@ describe('LobeOpenAI', () => {
           });
         } catch (e) {
           expect(e).toEqual({
-            endpoint: 'https://api.openai.com/v1',
+            endpoint: defaultBaseURL,
             errorType: 'AgentRuntimeError',
-            provider: 'openai',
+            provider,
             error: {
               name: genericError.name,
               cause: genericError.cause,
@@ -236,7 +223,7 @@ describe('LobeOpenAI', () => {
       });
     });
 
-    describe('LobeOpenAI chat with callback and headers', () => {
+    describe('LobeMoonshotAI chat with callback and headers', () => {
       it('should handle callback and headers correctly', async () => {
         // 模拟 chat.completions.create 方法返回一个可读流
         const mockCreateMethod = vi
@@ -290,7 +277,7 @@ describe('LobeOpenAI', () => {
     });
 
     describe('DEBUG', () => {
-      it('should call debugStream and return StreamingTextResponse when DEBUG_OPENAI_CHAT_COMPLETION is 1', async () => {
+      it('should call debugStream and return StreamingTextResponse when DEBUG_MOONSHOT_CHAT_COMPLETION is 1', async () => {
         // Arrange
         const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
         const mockDebugStream = new ReadableStream({
@@ -307,10 +294,10 @@ describe('LobeOpenAI', () => {
         });
 
         // 保存原始环境变量值
-        const originalDebugValue = process.env.DEBUG_OPENAI_CHAT_COMPLETION;
+        const originalDebugValue = process.env.DEBUG_MOONSHOT_CHAT_COMPLETION;
 
         // 模拟环境变量
-        process.env.DEBUG_OPENAI_CHAT_COMPLETION = '1';
+        process.env.DEBUG_MOONSHOT_CHAT_COMPLETION = '1';
         vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
 
         // 执行测试
@@ -326,7 +313,7 @@ describe('LobeOpenAI', () => {
         expect(debugStreamModule.debugStream).toHaveBeenCalled();
 
         // 恢复原始环境变量值
-        process.env.DEBUG_OPENAI_CHAT_COMPLETION = originalDebugValue;
+        process.env.DEBUG_MOONSHOT_CHAT_COMPLETION = originalDebugValue;
       });
     });
   });
