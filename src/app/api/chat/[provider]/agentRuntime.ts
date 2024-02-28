@@ -1,6 +1,7 @@
 import { getServerConfig } from '@/config/server';
 import { JWTPayload } from '@/const/auth';
 import {
+  ChatCompetitionOptions,
   ChatStreamPayload,
   LobeAzureOpenAI,
   LobeBedrockAI,
@@ -29,8 +30,8 @@ class AgentRuntime {
     this._runtime = runtime;
   }
 
-  async chat(payload: ChatStreamPayload) {
-    return this._runtime.chat(payload);
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+    return this._runtime.chat(payload, options);
   }
 
   static async initializeWithUserPayload(
@@ -123,14 +124,14 @@ class AgentRuntime {
     const { ZHIPU_API_KEY } = getServerConfig();
     const apiKey = apiKeyManager.pick(payload?.apiKey || ZHIPU_API_KEY);
 
-    return LobeZhipuAI.fromAPIKey(apiKey);
+    return LobeZhipuAI.fromAPIKey({ apiKey });
   }
 
   private static initMoonshot(payload: JWTPayload) {
     const { MOONSHOT_API_KEY, MOONSHOT_PROXY_URL } = getServerConfig();
     const apiKey = apiKeyManager.pick(payload?.apiKey || MOONSHOT_API_KEY);
 
-    return new LobeMoonshotAI(apiKey, MOONSHOT_PROXY_URL);
+    return new LobeMoonshotAI({ apiKey, baseURL: MOONSHOT_PROXY_URL });
   }
 
   private static initGoogle(payload: JWTPayload) {
@@ -158,16 +159,16 @@ class AgentRuntime {
 
   private static initOllama(payload: JWTPayload) {
     const { OLLAMA_PROXY_URL } = getServerConfig();
-    const baseUrl = payload?.endpoint || OLLAMA_PROXY_URL;
+    const baseURL = payload?.endpoint || OLLAMA_PROXY_URL;
 
-    return new LobeOllamaAI(baseUrl);
+    return new LobeOllamaAI({ baseURL });
   }
 
   private static initPerplexity(payload: JWTPayload) {
     const { PERPLEXITY_API_KEY } = getServerConfig();
     const apiKey = apiKeyManager.pick(payload?.apiKey || PERPLEXITY_API_KEY);
 
-    return new LobePerplexityAI(apiKey);
+    return new LobePerplexityAI({ apiKey });
   }
 }
 

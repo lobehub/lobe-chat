@@ -5,7 +5,19 @@ import { theme } from 'antd';
 // refs: https://github.com/dumbmatter/fakeIndexedDB#dexie-and-other-indexeddb-api-wrappers
 import 'fake-indexeddb/auto';
 import React from 'react';
-import 'vitest-canvas-mock';
+
+if (typeof window !== 'undefined') {
+  // test with canvas
+  await import('vitest-canvas-mock');
+} else {
+  // test with polyfill crypto
+  const { Crypto } = await import('@peculiar/webcrypto');
+
+  Object.defineProperty(global, 'crypto', {
+    value: new Crypto(),
+    writable: true,
+  });
+}
 
 // remove antd hash on test
 theme.defaultConfig.hashed = false;
