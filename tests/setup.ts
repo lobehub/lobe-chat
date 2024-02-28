@@ -6,9 +6,17 @@ import { theme } from 'antd';
 import 'fake-indexeddb/auto';
 import React from 'react';
 
-// test with canvas
 if (typeof window !== 'undefined') {
+  // test with canvas
   await import('vitest-canvas-mock');
+} else {
+  // test with polyfill crypto
+  const { Crypto } = await import('@peculiar/webcrypto');
+
+  Object.defineProperty(global, 'crypto', {
+    value: new Crypto(),
+    writable: true,
+  });
 }
 
 // remove antd hash on test
