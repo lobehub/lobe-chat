@@ -1,30 +1,29 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
-import OpenAI from 'openai';
+import OpenAI, { ClientOptions } from 'openai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatStreamPayload, ModelProvider } from '../types';
+import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
-import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 import { handleOpenAIError } from '../utils/handleOpenAIError';
 
 const DEFAULT_BASE_URL = 'https://api.perplexity.ai';
 
 export class LobePerplexityAI implements LobeRuntimeAI {
-  private _llm: OpenAI;
+  private client: OpenAI;
 
   baseURL: string;
 
-  constructor(apiKey?: string, baseURL: string = DEFAULT_BASE_URL) {
+  constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidPerplexityAPIKey);
 
-    this._llm = new OpenAI({ apiKey, baseURL });
-    this.baseURL = this._llm.baseURL;
+    this.client = new OpenAI({ apiKey, baseURL, ...res });
+    this.baseURL = this.client.baseURL;
   }
 
-  async chat(payload: ChatStreamPayload) {
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
       // Set a default frequency penalty value greater than 0
       const defaultFrequencyPenalty = 0.1;
@@ -32,19 +31,18 @@ export class LobePerplexityAI implements LobeRuntimeAI {
         ...payload,
         frequency_penalty: payload.frequency_penalty || defaultFrequencyPenalty,
       };
-      const response = await this._llm.chat.completions.create(
+      const response = await this.client.chat.completions.create(
         chatPayload as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       );
+      const [prod, debug] = response.tee();
 
-      const stream = OpenAIStream(response);
-
-      const [debug, returnStream] = stream.tee();
-
-      if (DEBUG_CHAT_COMPLETION) {
-        debugStream(debug).catch(console.error);
+      if (process.env.DEBUG_PERPLEXITY_CHAT_COMPLETION === '1') {
+        debugStream(debug.toReadableStream()).catch(console.error);
       }
 
-      return new StreamingTextResponse(returnStream);
+      return new StreamingTextResponse(OpenAIStream(prod, options?.callback), {
+        headers: options?.headers,
+      });
     } catch (error) {
       let desensitizedEndpoint = this.baseURL;
 
