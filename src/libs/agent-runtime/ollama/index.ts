@@ -1,44 +1,42 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
-import OpenAI from 'openai';
+import OpenAI, { ClientOptions } from 'openai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatStreamPayload, ModelProvider } from '../types';
+import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
-import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 import { handleOpenAIError } from '../utils/handleOpenAIError';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:11434/v1';
 
 export class LobeOllamaAI implements LobeRuntimeAI {
-  private _llm: OpenAI;
+  private client: OpenAI;
 
   baseURL: string;
 
-  constructor(baseURL: string = DEFAULT_BASE_URL) {
+  constructor({ apiKey = 'ollama', baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
     if (!baseURL) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs);
 
-    this._llm = new OpenAI({ apiKey: 'ollama', baseURL });
+    this.client = new OpenAI({ apiKey, baseURL, ...res });
     this.baseURL = baseURL;
   }
 
-  async chat(payload: ChatStreamPayload) {
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
-      const response = await this._llm.chat.completions.create(
+      const response = await this.client.chat.completions.create(
         payload as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       );
+      const [prod, debug] = response.tee();
 
-      const stream = OpenAIStream(response);
-
-      const [debug, returnStream] = stream.tee();
-
-      if (DEBUG_CHAT_COMPLETION) {
-        debugStream(debug).catch(console.error);
+      if (process.env.DEBUG_OLLAMA_CHAT_COMPLETION === '1') {
+        debugStream(debug.toReadableStream()).catch(console.error);
       }
 
-      return new StreamingTextResponse(returnStream);
+      return new StreamingTextResponse(OpenAIStream(prod, options?.callback), {
+        headers: options?.headers,
+      });
     } catch (error) {
       let desensitizedEndpoint = this.baseURL;
 
