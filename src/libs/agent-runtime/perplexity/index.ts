@@ -26,7 +26,7 @@ export class LobePerplexityAI implements LobeRuntimeAI {
 
   private buildCompletionsParams({
     presence_penalty,
-    frequency_penalty = 0,
+    frequency_penalty = 0.1,
     ...res
   }: ChatStreamPayload) {
     let payload;
@@ -35,7 +35,7 @@ export class LobePerplexityAI implements LobeRuntimeAI {
     if (presence_penalty !== 0) {
       payload = { presence_penalty };
     } else {
-      payload = { frequency_penalty: frequency_penalty <= 0 ? 0.1 : frequency_penalty };
+      payload = { frequency_penalty };
     }
 
     return { ...res, ...payload } as unknown as OpenAI.ChatCompletionCreateParamsStreaming;
