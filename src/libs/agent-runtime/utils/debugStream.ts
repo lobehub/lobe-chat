@@ -8,7 +8,7 @@ export const debugStream = async (stream: ReadableStream) => {
     const { value, done: _done } = await reader.read();
     const chunkValue = decoder.decode(value, { stream: true });
     if (!_done) {
-      console.log(`chunk ${chunk}:`);
+      console.log(`[chunk ${chunk}]`);
       console.log(chunkValue);
     }
 
