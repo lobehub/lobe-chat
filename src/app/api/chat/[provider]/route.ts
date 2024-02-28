@@ -19,6 +19,7 @@ export const preferredRegion = getPreferredRegion();
 
 export const POST = async (req: Request, { params }: { params: { provider: string } }) => {
   let agentRuntime: AgentRuntime;
+  const { provider } = params;
 
   // ============  1. init chat model   ============ //
 
@@ -34,7 +35,7 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     checkAuthMethod(payload.accessCode, payload.apiKey, oauthAuthorized);
 
     const body = await req.clone().json();
-    agentRuntime = await AgentRuntime.initializeWithUserPayload(params.provider, payload, {
+    agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, payload, {
       apiVersion: payload.azureApiVersion,
       model: body.model,
       useAzure: payload.useAzure,
@@ -44,10 +45,7 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     const err = e as AgentInitErrorPayload;
     return createErrorResponse(
       (err.errorType || ChatErrorType.InternalServerError) as ILobeAgentRuntimeErrorType,
-      {
-        error: err.error || e,
-        provider: params.provider,
-      },
+      { error: err.error || e, provider },
     );
   }
 

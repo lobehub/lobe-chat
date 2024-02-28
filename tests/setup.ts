@@ -5,7 +5,11 @@ import { theme } from 'antd';
 // refs: https://github.com/dumbmatter/fakeIndexedDB#dexie-and-other-indexeddb-api-wrappers
 import 'fake-indexeddb/auto';
 import React from 'react';
-import 'vitest-canvas-mock';
+
+// test with canvas
+if (typeof window !== 'undefined') {
+  await import('vitest-canvas-mock');
+}
 
 // remove antd hash on test
 theme.defaultConfig.hashed = false;
