@@ -7,7 +7,7 @@ import { CURRENT_VERSION } from '@/const/version';
 /**
  * We use langfuse as the tracing system to trace the request and response
  */
-class TraceClient {
+export class TraceClient {
   private _client?: Langfuse;
 
   constructor() {
