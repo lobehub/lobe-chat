@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.130.3](https://github.com/lobehub/lobe-chat/compare/v0.130.2...v0.130.3)
+
+<sup>Released on **2024-02-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the google api route and add more tests for chat route.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the google api route and add more tests for chat route, closes [#1424](https://github.com/lobehub/lobe-chat/issues/1424) ([063a4d5](https://github.com/lobehub/lobe-chat/commit/063a4d5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.130.2](https://github.com/lobehub/lobe-chat/compare/v0.130.1...v0.130.2)
 
 <sup>Released on **2024-02-29**</sup>
