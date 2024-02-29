@@ -95,6 +95,7 @@ const LLM = memo(() => {
           children: (
             <AutoComplete
               options={[
+                '2024-02-15-preview',
                 '2023-12-01-preview',
                 '2023-08-01-preview',
                 '2023-07-01-preview',
