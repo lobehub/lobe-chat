@@ -138,7 +138,7 @@ class AgentRuntime {
     const { GOOGLE_API_KEY } = getServerConfig();
     const apiKey = apiKeyManager.pick(payload?.apiKey || GOOGLE_API_KEY);
 
-    return new LobeGoogleAI(apiKey);
+    return new LobeGoogleAI({ apiKey });
   }
 
   private static initBedrock(payload: JWTPayload) {

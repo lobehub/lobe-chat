@@ -27,10 +27,18 @@ export const getMessageError = async (response: Response) => {
 
 type SSEFinishType = 'done' | 'error' | 'abort';
 
+export type OnFinishHandler = (
+  text: string,
+  context?: {
+    traceId?: string | null;
+    type?: SSEFinishType;
+  },
+) => Promise<void>;
+
 export interface FetchSSEOptions {
   onAbort?: (text: string) => Promise<void>;
   onErrorHandle?: (error: ChatMessageError) => void;
-  onFinish?: (text: string, type: SSEFinishType) => Promise<void>;
+  onFinish?: OnFinishHandler;
   onMessageHandle?: (text: string) => void;
 }
 
@@ -83,63 +91,7 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
     }
   }
 
-  await options?.onFinish?.(output, finishedType);
+  await options?.onFinish?.(output, { type: finishedType });
 
   return returnRes;
 };
-
-interface FetchAITaskResultParams<T> {
-  abortController?: AbortController;
-  /**
-   * 错误处理函数
-   */
-  onError?: (e: Error, rawError?: any) => void;
-  onFinish?: (text: string) => Promise<void>;
-  /**
-   * 加载状态变化处理函数
-   * @param loading - 是否处于加载状态
-   */
-  onLoadingChange?: (loading: boolean) => void;
-  /**
-   * 消息处理函数
-   * @param text - 消息内容
-   */
-  onMessageHandle?: (text: string) => void;
-  /**
-   * 请求对象
-   */
-  params: T;
-}
-
-export const fetchAIFactory =
-  <T>(fetcher: (params: T, options: { signal?: AbortSignal }) => Promise<Response>) =>
-  async ({
-    params,
-    onMessageHandle,
-    onFinish,
-    onError,
-    onLoadingChange,
-    abortController,
-  }: FetchAITaskResultParams<T>) => {
-    const errorHandle = (error: Error, errorContent?: any) => {
-      onLoadingChange?.(false);
-      if (abortController?.signal.aborted) {
-        return;
-      }
-      onError?.(error, errorContent);
-    };
-
-    onLoadingChange?.(true);
-
-    const data = await fetchSSE(() => fetcher(params, { signal: abortController?.signal }), {
-      onErrorHandle: (error) => {
-        errorHandle(new Error(error.message), error);
-      },
-      onFinish,
-      onMessageHandle,
-    }).catch(errorHandle);
-
-    onLoadingChange?.(false);
-
-    return await data?.text();
-  };
