@@ -6,10 +6,19 @@ import { theme } from 'antd';
 import 'fake-indexeddb/auto';
 import React from 'react';
 
-if (typeof window !== 'undefined') {
+// only inject in the dom environment
+if (
+  // not node runtime
+  typeof window !== 'undefined' &&
+  // not edge runtime
+  typeof (globalThis as any).EdgeRuntime !== 'string'
+) {
   // test with canvas
   await import('vitest-canvas-mock');
-} else {
+}
+
+// node runtime
+if (typeof window === 'undefined') {
   // test with polyfill crypto
   const { Crypto } = await import('@peculiar/webcrypto');
 
