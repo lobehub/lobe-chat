@@ -574,10 +574,10 @@ Get data from users`,
 
       global.fetch = vi.fn(() => Promise.resolve(mockResponse));
 
-      const text = await chatService.runPluginApi(params, options);
+      const result = await chatService.runPluginApi(params, options);
 
       expect(global.fetch).toHaveBeenCalledWith(expect.any(String), expect.any(Object));
-      expect(text).toBe('Plugin Result');
+      expect(result).toBe('Plugin Result');
     });
 
     // Add more test cases to cover different scenarios and edge cases
