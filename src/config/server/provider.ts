@@ -40,8 +40,6 @@ declare global {
 
       // Ollama Provider;
       OLLAMA_PROXY_URL?: string;
-
-      DEBUG_CHAT_COMPLETION?: string;
     }
   }
 }
@@ -100,7 +98,5 @@ export const getProviderConfig = () => {
 
     ENABLE_OLLAMA: !!process.env.OLLAMA_PROXY_URL,
     OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
-
-    DEBUG_CHAT_COMPLETION: process.env.DEBUG_CHAT_COMPLETION === '1',
   };
 };

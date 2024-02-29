@@ -8,9 +8,9 @@ import { POST as UniverseRoute } from '../[provider]/route';
 //
 //   setGlobalDispatcher(new ProxyAgent({ uri: process.env.HTTP_PROXY_URL }));
 // }
-// undici only can be used in NodeJS
-// export const runtime = 'nodejs';
 
+// but undici only can be used in NodeJS
+// so if you want to use with proxy, you need comment the code below
 export const runtime = 'edge';
 
 export const preferredRegion = [
