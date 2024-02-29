@@ -151,7 +151,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       error: { message },
       errorType: AgentRuntimeErrorType.GoogleBizError,
     };
-    console.log(message);
 
     if (message.includes('location is not supported'))
       return { error: { message }, errorType: AgentRuntimeErrorType.LocationNotSupportError };
