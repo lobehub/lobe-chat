@@ -13,13 +13,17 @@ import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../store';
 
+vi.stubGlobal(
+  'fetch',
+  vi.fn(() => Promise.resolve(new Response('mock'))),
+);
+
 // Mock service
 vi.mock('@/services/message', () => ({
   messageService: {
     getMessages: vi.fn(),
     updateMessageError: vi.fn(),
     removeMessage: vi.fn(),
-    createAssistantMessage: vi.fn(() => Promise.resolve('content-content-content')),
     removeMessages: vi.fn(() => Promise.resolve()),
     create: vi.fn(() => Promise.resolve('new-message-id')),
     updateMessage: vi.fn(),
@@ -31,11 +35,16 @@ vi.mock('@/services/topic', () => ({
     removeTopic: vi.fn(() => Promise.resolve()),
   },
 }));
-vi.mock('@/services/chat', () => ({
-  chatService: {
-    createAssistantMessage: vi.fn(() => Promise.resolve('assistant-message')),
-  },
-}));
+vi.mock('@/services/chat', async (importOriginal) => {
+  const module = await importOriginal();
+
+  return {
+    chatService: {
+      createAssistantMessage: vi.fn(() => Promise.resolve('assistant-message')),
+      createAssistantMessageStream: (module as any).chatService.createAssistantMessageStream,
+    },
+  };
+});
 
 vi.mock('@/store/chat/selectors', () => ({
   chatSelectors: {
@@ -65,10 +74,11 @@ const mockState = {
 beforeEach(() => {
   vi.clearAllMocks();
   useChatStore.setState(mockState, false);
-
   (agentSelectors.currentAgentConfig as Mock).mockImplementation(() => DEFAULT_AGENT_CONFIG);
 });
 afterEach(() => {
+  process.env.NEXT_PUBLIC_BASE_PATH = undefined;
+
   vi.restoreAllMocks();
 });
 
@@ -461,7 +471,7 @@ describe('chatMessage actions', () => {
       // 模拟 AI 响应
       const aiResponse = 'Hello, human!';
       (chatService.createAssistantMessage as Mock).mockResolvedValue(aiResponse);
-
+      const spy = vi.spyOn(chatService, 'createAssistantMessageStream');
       // 模拟消息创建
       (messageService.create as Mock).mockResolvedValue('assistant-message-id');
 
@@ -482,7 +492,7 @@ describe('chatMessage actions', () => {
       );
 
       // 验证 AI 服务是否被调用
-      expect(chatService.createAssistantMessage).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
 
       // 验证消息列表是否刷新
       expect(mockState.refreshMessages).toHaveBeenCalled();
@@ -598,8 +608,7 @@ describe('chatMessage actions', () => {
       const assistantMessageId = 'assistant-message-id';
       const aiResponse = 'Hello, human!';
 
-      // Mock chatService.createAssistantMessage to resolve with AI response
-      (chatService.createAssistantMessage as Mock).mockResolvedValue(new Response(aiResponse));
+      (fetch as Mock).mockResolvedValueOnce(new Response(aiResponse));
 
       await act(async () => {
         const response = await result.current.fetchAIChatMessage(messages, assistantMessageId);
@@ -617,8 +626,8 @@ describe('chatMessage actions', () => {
       const aiResponse =
         '{"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}';
 
-      // Mock chatService.createAssistantMessage to resolve with AI response containing function call
-      (chatService.createAssistantMessage as Mock).mockResolvedValue(new Response(aiResponse));
+      // Mock fetch to resolve with AI response containing function call
+      vi.mocked(fetch).mockResolvedValueOnce(new Response(aiResponse));
 
       await act(async () => {
         const response = await result.current.fetchAIChatMessage(messages, assistantMessageId);
@@ -636,8 +645,8 @@ describe('chatMessage actions', () => {
       const aiResponse =
         'Hello, human! {"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}';
 
-      // Mock chatService.createAssistantMessage to resolve with AI response containing function call at end
-      (chatService.createAssistantMessage as Mock).mockResolvedValue(new Response(aiResponse));
+      // Mock fetch to resolve with AI response containing function call at end
+      vi.mocked(fetch).mockResolvedValue(new Response(aiResponse));
 
       await act(async () => {
         const response = await result.current.fetchAIChatMessage(messages, assistantMessageId);
@@ -655,9 +664,9 @@ describe('chatMessage actions', () => {
       const messages = [{ id: 'message-id', content: 'Hello', role: 'user' }] as ChatMessage[];
       const assistantMessageId = 'assistant-message-id';
 
-      // Mock chatService.createAssistantMessage to reject with an error
+      // Mock fetch to reject with an error
       const errorMessage = 'Error fetching AI response';
-      (chatService.createAssistantMessage as Mock).mockRejectedValue(new Error(errorMessage));
+      vi.mocked(fetch).mockRejectedValue(new Error(errorMessage));
 
       await act(async () => {
         await expect(

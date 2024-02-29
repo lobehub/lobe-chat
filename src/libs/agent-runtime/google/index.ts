@@ -7,7 +7,6 @@ import { ChatStreamPayload, OpenAIChatMessage, UserMessageContentPart } from '..
 import { ModelProvider } from '../types/type';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
-import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 import { parseDataUri } from '../utils/uriParser';
 
 type GoogleChatErrors = GoogleChatError[];
@@ -35,7 +34,7 @@ enum HarmBlockThreshold {
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
 
-  constructor(apiKey: string) {
+  constructor({ apiKey }: { apiKey?: string }) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidGoogleAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
@@ -78,7 +77,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const [debug, output] = stream.tee();
 
-      if (DEBUG_CHAT_COMPLETION) {
+      if (process.env.DEBUG_GOOGLE_CHAT_COMPLETION === '1') {
         debugStream(debug).catch(console.error);
       }
 
@@ -154,7 +153,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     };
 
     if (message.includes('location is not supported'))
-      return { error: message, errorType: AgentRuntimeErrorType.LocationNotSupportError };
+      return { error: { message }, errorType: AgentRuntimeErrorType.LocationNotSupportError };
 
     try {
       const startIndex = message.lastIndexOf('[');
