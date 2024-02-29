@@ -15,7 +15,6 @@ import { UserMessageContentPart } from '@/types/openai/chat';
 import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
 
 import { createHeaderWithAuth } from './_auth';
-import { createHeaderWithOpenAI } from './_header';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
