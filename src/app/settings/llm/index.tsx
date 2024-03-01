@@ -13,6 +13,7 @@ import Google from './Google';
 import Moonshot from './Moonshot';
 import Ollama from './Ollama';
 import OpenAI from './OpenAI';
+import Perplexity from './Perplexity';
 import Zhipu from './Zhipu';
 
 export default memo<{ showOllama: boolean }>(({ showOllama }) => {
@@ -27,6 +28,7 @@ export default memo<{ showOllama: boolean }>(({ showOllama }) => {
       <Moonshot />
       <Google />
       <Bedrock />
+      <Perplexity />
       {showOllama && <Ollama />}
       <Footer>
         <Trans i18nKey="llm.waitingForMore" ns={'setting'}>

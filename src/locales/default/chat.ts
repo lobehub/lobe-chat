@@ -21,6 +21,7 @@ export default {
     title: '随便聊聊',
   },
   input: {
+    more: '更多',
     onlyAdd: '仅添加消息',
     send: '发送',
     sendWithCmdEnter: '按 {{meta}} + Enter 键发送',

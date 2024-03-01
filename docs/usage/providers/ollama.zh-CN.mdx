@@ -1,0 +1,80 @@
+import { Callout, Steps, Tabs } from 'nextra/components';
+
+# 在 LobeChat 中使用 Ollama
+
+<Image
+  alt={'在 LobeChat 中使用 Ollama'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/a2a091b8-ac45-4679-b5e0-21d711e17fef'}
+  cover
+/>
+
+Ollama 是一款强大的本地运行大型语言模型（LLM）的框架，支持多种语言模型，包括 Llama 2, Mistral 等。现在，LobeChat 已经支持与 Ollama 的集成，这意味着你可以在 LobeChat 中轻松使用 Ollama 提供的语言模型来增强你的应用。
+
+本文档将指导你如何在 LobeChat 中使用 Ollama：
+
+<Steps>
+  ### 本地安装 Ollama
+
+首先，你需要安装 Ollama，Ollama 支持 macOS、Windows 和 Linux 系统。 根据你的操作系统，选择以下安装方式之一：
+
+  <Tabs items={['macOS', 'Linux','Windows (预览版)','Docker']}>
+    <Tabs.Tab>[下载 Ollama for macOS](https://ollama.com/download) 并解压。</Tabs.Tab>
+    <Tabs.Tab>
+
+      通过以下命令安装：
+
+      ```bash
+      curl -fsSL https://ollama.com/install.sh | sh
+      ```
+
+      或者，你也可以参考 [Linux 手动安装指南](https://github.com/ollama/ollama/blob/main/docs/linux.md)。
+
+    </Tabs.Tab>
+    <Tabs.Tab>[下载 Ollama for Windows](https://ollama.com/download) 并安装。</Tabs.Tab>
+    <Tabs.Tab>
+
+      如果你更倾向于使用 Docker，Ollama 也提供了官方 Docker 镜像，你可以通过以下命令拉取：
+
+      ```bash
+      docker pull ollama/ollama
+      ```
+
+    </Tabs.Tab>
+
+  </Tabs>
+
+### 用 Ollama 拉取模型到本地
+
+在安装完成 Ollama 后，你可以通过以下命安装模型，以 llama2 为例：
+
+```bash
+ollama pull llama2
+```
+
+Ollama 支持多种模型，你可以在 [Ollama Library](https://ollama.com/library) 中查看可用的模型列表，并根据需求选择合适的模型。
+
+</Steps>
+
+接下来，你就可以使用 LobeChat 与本地 LLM 对话了。
+
+<Video
+  width={832}
+  height={468}
+  src="https://github.com/lobehub/lobe-chat/assets/28616219/95828c11-0ae5-4dfa-84ed-854124e927a6"
+/>
+
+<Callout type={'info'}>
+  你可以前往 [与 Ollama 集成](/zh/self-hosting/examples/ollama) 了解如何部署 LobeChat ，以满足与
+  Ollama 的集成需求。
+</Callout>
+
+## 自定义配置
+
+你可以在 `设置` -> `语言模型` 中找到 Ollama 的配置选项，你可以在这里配置 Ollama 的代理、模型名称等。
+
+<Image
+  alt={'Ollama 服务商设置'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/da0db930-78ce-4262-b648-2b9e43c565c3'}
+  width={832}
+  height={274}
+/>

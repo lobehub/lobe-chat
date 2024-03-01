@@ -139,6 +139,14 @@ export default {
         title: 'Azure OpenAI',
       },
     },
+    Perplexity: {
+      title: 'Perplexity',
+      token: {
+        desc: '填入来自 Perplexity AI 的 API Key',
+        placeholder: 'Perplexity AI API Key',
+        title: 'API Key',
+      },
+    },
     Zhipu: {
       title: '智谱',
       token: {

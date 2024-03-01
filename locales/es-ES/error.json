@@ -43,12 +43,14 @@
     "InvalidGoogleAPIKey": "La clave de API de Google es incorrecta o está vacía, por favor, verifica la clave de API de Google e inténtalo de nuevo",
     "InvalidMoonshotAPIKey": "La clave de API de Moonshot AI no es válida o está vacía. Por favor, revise la clave de API de Moonshot e inténtelo de nuevo.",
     "InvalidOllamaArgs": "La configuración de Ollama no es válida, por favor revisa la configuración de Ollama e inténtalo de nuevo",
+    "InvalidPerplexityAPIKey": "La clave de API de Perplexity es inválida o está vacía. Por favor, verifica la clave de API de Perplexity e inténtalo de nuevo",
     "InvalidZhipuAPIKey": "La clave de API de Zhipu es incorrecta o está vacía, por favor, verifica la clave de API de Zhipu e inténtalo de nuevo",
     "LocationNotSupportError": "Lo sentimos, tu ubicación actual no es compatible con este servicio de modelo, puede ser debido a restricciones geográficas o a que el servicio no está disponible. Por favor, verifica si tu ubicación actual es compatible con este servicio o intenta usar otra información de ubicación.",
     "MoonshotBizError": "Se produjo un error al solicitar el servicio de Moonshot en el lado oscuro de la luna. Por favor, revise la siguiente información o inténtelo de nuevo.",
     "NoOpenAIAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
     "OllamaBizError": "Error al solicitar el servicio de Ollama, por favor verifica la siguiente información o inténtalo de nuevo",
     "OpenAIBizError": "Error al solicitar el servicio OpenAI. Depure o reintente según la siguiente información",
+    "PerplexityBizError": "Error comercial al solicitar el servicio de IA de Perplexity. Por favor, revisa la siguiente información o inténtalo de nuevo",
     "PluginApiNotFound": "Lo sentimos, el API especificado no existe en el manifiesto del complemento. Verifique si su método de solicitud coincide con el API del manifiesto del complemento",
     "PluginApiParamsError": "Lo sentimos, la validación de los parámetros de entrada de la solicitud del complemento no ha pasado. Verifique si los parámetros de entrada coinciden con la información de descripción del API",
     "PluginGatewayError": "Lo sentimos, se ha producido un error en la puerta de enlace del complemento. Verifique si la configuración de la puerta de enlace del complemento es correcta",
@@ -88,6 +90,10 @@
         "addProxyUrl": "Agregar dirección de proxy de OpenAI (opcional)",
         "description": "Ingresa tu clave de API de OpenAI para comenzar la sesión. La aplicación no guardará tu clave de API",
         "title": "Usar clave de API personalizada de OpenAI"
+      },
+      "Perplexity": {
+        "description": "Ingresa tu clave de API de Perplexity para comenzar la sesión. La aplicación no guardará tu clave de API",
+        "title": "Usar tu propia clave de API de Perplexity"
       },
       "Zhipu": {
         "description": "Ingresa tu clave de API de Zhipu para comenzar la sesión. La aplicación no guardará tu clave de API",

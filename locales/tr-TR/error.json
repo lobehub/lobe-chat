@@ -43,12 +43,14 @@
     "InvalidGoogleAPIKey": "Google API Anahtarı yanlış veya boş, lütfen Google API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidMoonshotAPIKey": "Geçersiz veya boş Moonshot AI API Anahtarı, lütfen Moonshot API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidOllamaArgs": "Ollama yapılandırması yanlış, lütfen Ollama yapılandırmasını kontrol edip tekrar deneyin",
+    "InvalidPerplexityAPIKey": "Perplexity API Key geçersiz veya boş, lütfen Perplexity API Key'inizi kontrol edip tekrar deneyin",
     "InvalidZhipuAPIKey": "Zhipu API Anahtarı yanlış veya boş, lütfen Zhipu API Anahtarınızı kontrol edip tekrar deneyin",
     "LocationNotSupportError": "Üzgünüz, bulunduğunuz konum bu model hizmetini desteklemiyor, muhtemelen bölge kısıtlamaları veya hizmetin henüz açılmamış olması nedeniyle. Lütfen mevcut konumun bu hizmeti kullanmaya uygun olup olmadığını doğrulayın veya başka bir konum bilgisi kullanmayı deneyin.",
     "MoonshotBizError": "Moonshot hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "NoOpenAIAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
     "OllamaBizError": "Ollama servisine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "OpenAIBizError": "OpenAI hizmeti talep ederken hata oluştu. Aşağıdaki bilgilere dayanarak sorun giderin veya tekrar deneyin.",
+    "PerplexityBizError": "Perplexity AI hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "PluginApiNotFound": "Üzgünüm, eklentinin bildiriminde API mevcut değil. Lütfen istek yönteminizin eklenti bildirim API'sı ile eşleşip eşleşmediğini kontrol edin",
     "PluginApiParamsError": "Üzgünüm, eklenti isteği için giriş parametre doğrulaması başarısız oldu. Lütfen giriş parametrelerinin API açıklamasıyla eşleşip eşleşmediğini kontrol edin",
     "PluginGatewayError": "Üzgünüz, eklenti ağ geçidinde bir hata oluştu, lütfen eklenti ağ geçidi yapılandırmasını kontrol edin",
@@ -88,6 +90,10 @@
         "addProxyUrl": "Proxy adresi ekle (isteğe bağlı)",
         "description": "OpenAI API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez",
         "title": "Özel OpenAI API Anahtarını kullan"
+      },
+      "Perplexity": {
+        "description": "Sohbeti başlatmak için Perplexity API Key'inizi girin. Uygulama API Key'inizi kaydetmez",
+        "title": "Özel Perplexity API Key'i Kullan"
       },
       "Zhipu": {
         "description": "Zhipu API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez",

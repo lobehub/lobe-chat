@@ -1,5 +1,3 @@
-Sitemap: /sitemap.xml
-
 User-agent: *
 Allow: /
 Disallow: /settings

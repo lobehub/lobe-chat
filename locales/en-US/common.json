@@ -107,6 +107,7 @@
     "ollama": "Ollama",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "No description available",

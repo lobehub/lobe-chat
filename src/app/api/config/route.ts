@@ -17,6 +17,7 @@ export const GET = async () => {
     ENABLED_GOOGLE,
     ENABLE_OAUTH_SSO,
     ENABLE_OLLAMA,
+    ENABLED_PERPLEXITY,
     DEFAULT_AGENT_CONFIG,
   } = getServerConfig();
 
@@ -31,6 +32,7 @@ export const GET = async () => {
       google: { enabled: ENABLED_GOOGLE },
       moonshot: { enabled: ENABLED_MOONSHOT },
       ollama: { enabled: ENABLE_OLLAMA },
+      perplexity: { enabled: ENABLED_PERPLEXITY },
       zhipu: { enabled: ENABLED_ZHIPU },
     },
   };

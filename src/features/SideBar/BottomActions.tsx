@@ -120,13 +120,10 @@ const BottomActions = memo<BottomActionProps>(({ tab }) => {
 
   return (
     <>
-      <ActionIcon
-        icon={Github}
-        onClick={() => window.open(GITHUB)}
-        placement={'right'}
-        title={'GitHub'}
-      />
-      <Link href={DOCUMENTS} target={'_blank'}>
+      <Link aria-label={'GitHub'} href={GITHUB} target={'_blank'}>
+        <ActionIcon icon={Github} placement={'right'} title={'GitHub'} />
+      </Link>
+      <Link aria-label={t('document')} href={DOCUMENTS} target={'_blank'}>
         <ActionIcon icon={Book} placement={'right'} title={t('document')} />
       </Link>
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>

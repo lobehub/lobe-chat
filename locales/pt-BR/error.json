@@ -43,12 +43,14 @@
     "InvalidGoogleAPIKey": "Chave de API Google incorreta ou vazia, por favor, verifique a chave de API Google e tente novamente",
     "InvalidMoonshotAPIKey": "A chave da API Moonshot AI está incorreta ou vazia. Por favor, verifique a chave da API Moonshot e tente novamente.",
     "InvalidOllamaArgs": "Configuração Ollama inválida, verifique a configuração do Ollama e tente novamente",
+    "InvalidPerplexityAPIKey": "Chave da API Perplexity inválida ou em branco, verifique a chave da API Perplexity e tente novamente",
     "InvalidZhipuAPIKey": "Chave de API Zhipu incorreta ou vazia, por favor, verifique a chave de API Zhipu e tente novamente",
     "LocationNotSupportError": "Desculpe, sua localização atual não suporta este serviço de modelo, pode ser devido a restrições geográficas ou serviço não disponível. Por favor, verifique se a localização atual suporta o uso deste serviço ou tente usar outras informações de localização.",
     "MoonshotBizError": "O serviço Moonshot na face oculta da lua encontrou um erro. Por favor, verifique as informações abaixo ou tente novamente.",
     "NoOpenAIAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
     "OllamaBizError": "Erro de negócio ao solicitar o serviço Ollama, verifique as informações a seguir ou tente novamente",
     "OpenAIBizError": "Erro ao solicitar o serviço OpenAI. Verifique ou tente novamente com base nas informações abaixo",
+    "PerplexityBizError": "Erro de negócios ao solicitar o serviço de IA Perplexity, verifique as informações a seguir ou tente novamente",
     "PluginApiNotFound": "Desculpe, o API especificado não existe no manifesto do plugin. Verifique se o método de solicitação corresponde ao API do manifesto do plugin",
     "PluginApiParamsError": "Desculpe, a validação dos parâmetros de entrada da solicitação do plugin falhou. Verifique se os parâmetros de entrada correspondem às informações de descrição do API",
     "PluginGatewayError": "Desculpe, ocorreu um erro no gateway do plugin. Verifique se a configuração do gateway do plugin está correta",
@@ -88,6 +90,10 @@
         "addProxyUrl": "Adicionar endereço do proxy OpenAI (opcional)",
         "description": "Digite sua chave de API OpenAI para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
         "title": "Usar chave de API OpenAI personalizada"
+      },
+      "Perplexity": {
+        "description": "Insira sua chave da API Perplexity para iniciar a sessão. O aplicativo não irá armazenar sua chave da API",
+        "title": "Usar chave da API Perplexity personalizada"
       },
       "Zhipu": {
         "description": "Digite sua chave de API Zhipu para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",

@@ -6,6 +6,8 @@ declare global {
     interface ProcessEnv {
       CUSTOM_MODELS?: string;
 
+      API_KEY_SELECT_MODE?: string;
+
       // OpenAI Provider
       OPENAI_API_KEY?: string;
       OPENAI_PROXY_URL?: string;
@@ -28,6 +30,9 @@ declare global {
       MOONSHOT_API_KEY?: string;
       MOONSHOT_PROXY_URL?: string;
 
+      // Perplexity Provider
+      PERPLEXITY_API_KEY?: string;
+
       // AWS Credentials
       AWS_REGION?: string;
       AWS_ACCESS_KEY_ID?: string;
@@ -35,8 +40,6 @@ declare global {
 
       // Ollama Provider;
       OLLAMA_PROXY_URL?: string;
-
-      DEBUG_CHAT_COMPLETION?: string;
     }
   }
 }
@@ -53,6 +56,8 @@ export const getProviderConfig = () => {
 
   const MOONSHOT_API_KEY = process.env.MOONSHOT_API_KEY || '';
 
+  const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY || '';
+
   // region format: iad1,sfo1
   let regions: string[] = [];
   if (process.env.OPENAI_FUNCTION_REGIONS) {
@@ -61,6 +66,8 @@ export const getProviderConfig = () => {
 
   return {
     CUSTOM_MODELS: process.env.CUSTOM_MODELS,
+
+    API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
 
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,
@@ -71,6 +78,9 @@ export const getProviderConfig = () => {
 
     ENABLED_GOOGLE: !!GOOGLE_API_KEY,
     GOOGLE_API_KEY,
+
+    ENABLED_PERPLEXITY: !!PERPLEXITY_API_KEY,
+    PERPLEXITY_API_KEY,
 
     ENABLED_MOONSHOT: !!MOONSHOT_API_KEY,
     MOONSHOT_API_KEY,
@@ -88,7 +98,5 @@ export const getProviderConfig = () => {
 
     ENABLE_OLLAMA: !!process.env.OLLAMA_PROXY_URL,
     OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
-
-    DEBUG_CHAT_COMPLETION: process.env.DEBUG_CHAT_COMPLETION === '1',
   };
 };

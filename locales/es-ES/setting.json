@@ -138,8 +138,16 @@
         "title": "Azure OpenAI"
       }
     },
+    "Perplexity": {
+      "title": "Perplexity AI",
+      "token": {
+        "desc": "Introduce la clave API de Perplexity AI",
+        "placeholder": "Clave API de Perplexity AI",
+        "title": "Clave API"
+      }
+    },
     "Zhipu": {
-      "title": "智谱",
+      "title": "Zhipu AI",
       "token": {
         "desc": "Ingresa la clave API de Zhipu",
         "placeholder": "Clave API de Zhipu",

@@ -7,7 +7,6 @@ import { ChatStreamPayload, OpenAIChatMessage, UserMessageContentPart } from '..
 import { ModelProvider } from '../types/type';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
-import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 import { parseDataUri } from '../utils/uriParser';
 
 type GoogleChatErrors = GoogleChatError[];
@@ -21,10 +20,21 @@ interface GoogleChatError {
   'reason': string;
 }
 
+enum HarmCategory {
+  HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
+  HARM_CATEGORY_HARASSMENT = 'HARM_CATEGORY_HARASSMENT',
+  HARM_CATEGORY_HATE_SPEECH = 'HARM_CATEGORY_HATE_SPEECH',
+  HARM_CATEGORY_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+}
+
+enum HarmBlockThreshold {
+  BLOCK_NONE = 'BLOCK_NONE',
+}
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
 
-  constructor(apiKey: string) {
+  constructor({ apiKey }: { apiKey?: string }) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidGoogleAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
@@ -41,6 +51,24 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             topP: payload.top_p,
           },
           model,
+          safetySettings: [
+            {
+              category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+              threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+            {
+              category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+              threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+            {
+              category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+              threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+            {
+              category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+              threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+          ],
         })
         .generateContentStream({ contents });
 
@@ -49,7 +77,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const [debug, output] = stream.tee();
 
-      if (DEBUG_CHAT_COMPLETION) {
+      if (process.env.DEBUG_GOOGLE_CHAT_COMPLETION === '1') {
         debugStream(debug).catch(console.error);
       }
 
@@ -125,7 +153,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     };
 
     if (message.includes('location is not supported'))
-      return { error: message, errorType: AgentRuntimeErrorType.LocationNotSupportError };
+      return { error: { message }, errorType: AgentRuntimeErrorType.LocationNotSupportError };
 
     try {
       const startIndex = message.lastIndexOf('[');

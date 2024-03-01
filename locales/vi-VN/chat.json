@@ -19,6 +19,7 @@
     "title": "Chuyện phiếm"
   },
   "input": {
+    "more": "Thêm",
     "onlyAdd": "Chỉ thêm tin nhắn",
     "send": "Gửi",
     "sendWithCmdEnter": "Nhấn {{meta}} + Enter để gửi",

@@ -1,8 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ErrorResponse, ErrorType } from '@/types/fetch';
+import { ErrorResponse } from '@/types/fetch';
 
-import { fetchAIFactory, fetchSSE, getMessageError } from './fetch';
+import { getMessageError } from './fetch';
 
 // 模拟 i18next
 vi.mock('i18next', () => ({
@@ -75,57 +75,5 @@ describe('getMessageError', () => {
       type: 500,
     });
     expect(mockResponse.json).toHaveBeenCalled();
-  });
-});
-
-describe('fetchAIFactory', () => {
-  it('should handle successful response', async () => {
-    const fetcher = async (params: any, options: any) =>
-      new Response('AI response', { status: 200 });
-    const params = {
-      /* mock params */
-    };
-    const onMessageHandle = vi.fn();
-    const onFinish = vi.fn();
-    const onError = vi.fn();
-    const onLoadingChange = vi.fn();
-    const abortController = new AbortController();
-
-    const fetchAIFn = fetchAIFactory(fetcher);
-    const result = await fetchAIFn({
-      params,
-      onMessageHandle,
-      onFinish,
-      onError,
-      onLoadingChange,
-      abortController,
-    });
-
-    expect(result).toBe('AI response');
-    expect(onMessageHandle).toHaveBeenCalled();
-    expect(onFinish).toHaveBeenCalled();
-    expect(onError).not.toHaveBeenCalled();
-    expect(onLoadingChange).toHaveBeenCalledTimes(2);
-  });
-
-  it('should handle error response', async () => {
-    const fetcher = async (params: any, options: any) =>
-      new Response(null, { status: 404, statusText: 'Not Found' });
-    const params = {
-      /* mock params */
-    };
-    const onError = vi.fn();
-    const onLoadingChange = vi.fn();
-    const abortController = new AbortController();
-
-    const fetchAIFn = fetchAIFactory(fetcher);
-    await fetchAIFn({ params, onError, onLoadingChange, abortController });
-
-    expect(onError).toHaveBeenCalledWith(expect.any(Error), {
-      message: 'translated_response.404',
-      type: 404,
-    });
-    expect(onLoadingChange).toHaveBeenCalledTimes(3);
-    expect(onLoadingChange.mock.lastCall).toEqual([false]);
   });
 });

@@ -12,10 +12,9 @@ import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
-import { fetchAIFactory, getMessageError } from '@/utils/fetch';
+import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
 
 import { createHeaderWithAuth } from './_auth';
-import { createHeaderWithOpenAI } from './_header';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
@@ -26,6 +25,33 @@ interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'mess
   messages: ChatMessage[];
 }
 
+interface FetchAITaskResultParams {
+  abortController?: AbortController;
+  /**
+   * 错误处理函数
+   */
+  onError?: (e: Error, rawError?: any) => void;
+  onFinish?: OnFinishHandler;
+  /**
+   * 加载状态变化处理函数
+   * @param loading - 是否处于加载状态
+   */
+  onLoadingChange?: (loading: boolean) => void;
+  /**
+   * 消息处理函数
+   * @param text - 消息内容
+   */
+  onMessageHandle?: (text: string) => void;
+  /**
+   * 请求对象
+   */
+  params: Partial<ChatStreamPayload>;
+}
+
+interface CreateAssistantMessageStream extends FetchSSEOptions {
+  abortController?: AbortController;
+  params: GetChatCompletionPayload;
+}
 class ChatService {
   createAssistantMessage = async (
     { plugins: enabledPlugins, messages, ...params }: GetChatCompletionPayload,
@@ -65,7 +91,25 @@ class ChatService {
     return this.getChatCompletion({ ...params, messages: oaiMessages, tools }, options);
   };
 
+  createAssistantMessageStream = async ({
+    params,
+    abortController,
+    onAbort,
+    onMessageHandle,
+    onErrorHandle,
+    onFinish,
+  }: CreateAssistantMessageStream) => {
+    await fetchSSE(() => this.createAssistantMessage(params, { signal: abortController?.signal }), {
+      onAbort,
+      onErrorHandle,
+      onFinish,
+      onMessageHandle,
+    });
+  };
+
   getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
+    const { signal } = options ?? {};
+
     const { provider = ModelProvider.OpenAI, ...res } = params;
     const payload = merge(
       {
@@ -85,7 +129,7 @@ class ChatService {
       body: JSON.stringify(payload),
       headers,
       method: 'POST',
-      signal: options?.signal,
+      signal,
     });
   };
 
@@ -100,12 +144,15 @@ class ChatService {
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
     const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
 
-    const gatewayURL = manifest?.gateway;
+    const headers = await createHeaderWithAuth({
+      headers: { ...createHeadersWithPluginSettings(settings) },
+    });
 
-    const res = await fetch(gatewayURL ?? API_ENDPOINTS.gateway, {
+    const gatewayURL = manifest?.gateway ?? API_ENDPOINTS.gateway;
+
+    const res = await fetch(gatewayURL, {
       body: JSON.stringify({ ...params, manifest }),
-      // TODO: we can have a better auth way
-      headers: createHeadersWithPluginSettings(settings, createHeaderWithOpenAI()),
+      headers,
       method: 'POST',
       signal: options?.signal,
     });
@@ -117,7 +164,39 @@ class ChatService {
     return await res.text();
   };
 
-  fetchPresetTaskResult = fetchAIFactory(this.getChatCompletion);
+  fetchPresetTaskResult = async ({
+    params,
+    onMessageHandle,
+    onFinish,
+    onError,
+    onLoadingChange,
+    abortController,
+  }: FetchAITaskResultParams) => {
+    const errorHandle = (error: Error, errorContent?: any) => {
+      onLoadingChange?.(false);
+      if (abortController?.signal.aborted) {
+        return;
+      }
+      onError?.(error, errorContent);
+    };
+
+    onLoadingChange?.(true);
+
+    const data = await fetchSSE(
+      () => this.getChatCompletion(params, { signal: abortController?.signal }),
+      {
+        onErrorHandle: (error) => {
+          errorHandle(new Error(error.message), error);
+        },
+        onFinish,
+        onMessageHandle,
+      },
+    ).catch(errorHandle);
+
+    onLoadingChange?.(false);
+
+    return await data?.text();
+  };
 
   private processMessages = ({
     messages,

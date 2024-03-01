@@ -43,12 +43,14 @@
     "InvalidGoogleAPIKey": "Nieprawidłowy lub pusty klucz API Google, prosimy sprawdzić klucz API Google i spróbować ponownie.",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
+    "InvalidPerplexityAPIKey": "Klucz API Perplexity jest nieprawidłowy lub pusty. Sprawdź klucz API Perplexity i spróbuj ponownie.",
     "InvalidZhipuAPIKey": "Nieprawidłowy lub pusty klucz API Zhipu, prosimy sprawdzić klucz API Zhipu i spróbować ponownie.",
     "LocationNotSupportError": "Przepraszamy, Twoja lokalizacja nie obsługuje tego usługi modelu, być może ze względu na ograniczenia regionalne lub brak dostępności usługi. Proszę sprawdź, czy bieżąca lokalizacja obsługuje tę usługę, lub spróbuj użyć innych informacji o lokalizacji.",
     "MoonshotBizError": "请求月球AI服务出错，请根据以下信息排查或重试",
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
     "OpenAIBizError": "Błąd żądania usługi OpenAI. Proszę sprawdź poniższe informacje i spróbuj ponownie",
+    "PerplexityBizError": "Błąd biznesowy podczas żądania usługi Perplexity AI. Sprawdź poniższe informacje lub spróbuj ponownie.",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
     "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",
     "PluginGatewayError": "Przepraszamy, wystąpił błąd bramy wtyczki. Proszę sprawdź, czy konfiguracja bramy wtyczki jest poprawna",
@@ -88,6 +90,10 @@
         "addProxyUrl": "Dodaj adres proxy OpenAI (opcjonalnie)",
         "description": "Wprowadź swój klucz API OpenAI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
         "title": "Użyj niestandardowego klucza API OpenAI"
+      },
+      "Perplexity": {
+        "description": "Wprowadź swój klucz API Perplexity, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
+        "title": "Użyj niestandardowego klucza API Perplexity"
       },
       "Zhipu": {
         "description": "Wprowadź swój klucz API Zhipu, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",

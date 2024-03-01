@@ -7,6 +7,7 @@ import {
   MoonshotProvider,
   OllamaProvider,
   OpenAIProvider,
+  PerplexityProvider,
   ZhiPuProvider,
 } from '@/config/modelProviders';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
@@ -47,6 +48,9 @@ const enableOllamaConfigInSettings = (s: GlobalStore) =>
 
 const enableOllama = (s: GlobalStore) => modelProvider(s).ollama.enabled;
 const ollamaProxyUrl = (s: GlobalStore) => modelProvider(s).ollama.endpoint;
+
+const enablePerplexity = (s: GlobalStore) => modelProvider(s).perplexity.enabled;
+const perplexityAPIKey = (s: GlobalStore) => modelProvider(s).perplexity.apiKey;
 
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
@@ -133,6 +137,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
     { ...GoogleProvider, enabled: enableGoogle(s) },
     { ...BedrockProvider, enabled: enableBedrock(s) },
     { ...OllamaProvider, chatModels: ollamaChatModels, enabled: enableOllama(s) },
+    { ...PerplexityProvider, enabled: enablePerplexity(s) },
   ];
 };
 
@@ -203,4 +208,8 @@ export const modelProviderSelectors = {
   enableOllamaConfigInSettings,
   enableOllama,
   ollamaProxyUrl,
+
+  // Perplexity
+  enablePerplexity,
+  perplexityAPIKey,
 };

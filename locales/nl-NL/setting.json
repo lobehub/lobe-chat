@@ -138,6 +138,14 @@
         "title": "Azure OpenAI gebruiken"
       }
     },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Voer de API-sleutel in van Perplexity AI",
+        "placeholder": "Perplexity AI API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
     "Zhipu": {
       "title": "智谱",
       "token": {

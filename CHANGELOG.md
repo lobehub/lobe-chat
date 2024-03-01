@@ -2,6 +2,323 @@
 
 # Changelog
 
+### [Version 0.130.4](https://github.com/lobehub/lobe-chat/compare/v0.130.3...v0.130.4)
+
+<sup>Released on **2024-02-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the core chatStream and plugin gateway auth.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the core chatStream and plugin gateway auth, closes [#1426](https://github.com/lobehub/lobe-chat/issues/1426) ([7d3c1b6](https://github.com/lobehub/lobe-chat/commit/7d3c1b6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.130.3](https://github.com/lobehub/lobe-chat/compare/v0.130.2...v0.130.3)
+
+<sup>Released on **2024-02-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the google api route and add more tests for chat route.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the google api route and add more tests for chat route, closes [#1424](https://github.com/lobehub/lobe-chat/issues/1424) ([063a4d5](https://github.com/lobehub/lobe-chat/commit/063a4d5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.130.2](https://github.com/lobehub/lobe-chat/compare/v0.130.1...v0.130.2)
+
+<sup>Released on **2024-02-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update azure OpenAI api version options to latest.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update azure OpenAI api version options to latest, closes [#1423](https://github.com/lobehub/lobe-chat/issues/1423) ([d992262](https://github.com/lobehub/lobe-chat/commit/d992262))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.130.1](https://github.com/lobehub/lobe-chat/compare/v0.130.0...v0.130.1)
+
+<sup>Released on **2024-02-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **google**: Add safetySettings to avoid error response with google AI model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **google**: Add safetySettings to avoid error response with google AI model, closes [#1418](https://github.com/lobehub/lobe-chat/issues/1418) ([87bf1fb](https://github.com/lobehub/lobe-chat/commit/87bf1fb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.130.0](https://github.com/lobehub/lobe-chat/compare/v0.129.6...v0.130.0)
+
+<sup>Released on **2024-02-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Support multiple API Keys.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support multiple API Keys, closes [#1345](https://github.com/lobehub/lobe-chat/issues/1345) ([17c5da3](https://github.com/lobehub/lobe-chat/commit/17c5da3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.129.6](https://github.com/lobehub/lobe-chat/compare/v0.129.5...v0.129.6)
+
+<sup>Released on **2024-02-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix github url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix github url ([42ea0f5](https://github.com/lobehub/lobe-chat/commit/42ea0f5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.129.5](https://github.com/lobehub/lobe-chat/compare/v0.129.4...v0.129.5)
+
+<sup>Released on **2024-02-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix eliminate UI jitter on navigation, improving experience for users sensitive to motion.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix eliminate UI jitter on navigation, improving experience for users sensitive to motion, closes [#1381](https://github.com/lobehub/lobe-chat/issues/1381) ([9231413](https://github.com/lobehub/lobe-chat/commit/9231413))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.129.4](https://github.com/lobehub/lobe-chat/compare/v0.129.3...v0.129.4)
+
+<sup>Released on **2024-02-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **ollama**: Fix gemma model id.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **ollama**: Fix gemma model id, closes [#1377](https://github.com/lobehub/lobe-chat/issues/1377) ([3da50ff](https://github.com/lobehub/lobe-chat/commit/3da50ff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.129.3](https://github.com/lobehub/lobe-chat/compare/v0.129.2...v0.129.3)
+
+<sup>Released on **2024-02-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add gemma model logo for ollama.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add gemma model logo for ollama, closes [#1369](https://github.com/lobehub/lobe-chat/issues/1369) ([e2fb3a3](https://github.com/lobehub/lobe-chat/commit/e2fb3a3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.129.2](https://github.com/lobehub/lobe-chat/compare/v0.129.1...v0.129.2)
+
+<sup>Released on **2024-02-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix OAuth don't get user id from session.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix OAuth don't get user id from session, closes [#1347](https://github.com/lobehub/lobe-chat/issues/1347) ([ce4d6ca](https://github.com/lobehub/lobe-chat/commit/ce4d6ca))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.129.1](https://github.com/lobehub/lobe-chat/compare/v0.129.0...v0.129.1)
+
+<sup>Released on **2024-02-22**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.129.0](https://github.com/lobehub/lobe-chat/compare/v0.128.10...v0.129.0)
+
+<sup>Released on **2024-02-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Support perplexity AI provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support perplexity AI provider, closes [#1339](https://github.com/lobehub/lobe-chat/issues/1339) ([61c88fb](https://github.com/lobehub/lobe-chat/commit/61c88fb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.128.10](https://github.com/lobehub/lobe-chat/compare/v0.128.9...v0.128.10)
+
+<sup>Released on **2024-02-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the robots.txt config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the robots.txt config ([c4adfe4](https://github.com/lobehub/lobe-chat/commit/c4adfe4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.128.9](https://github.com/lobehub/lobe-chat/compare/v0.128.8...v0.128.9)
 
 <sup>Released on **2024-02-20**</sup>

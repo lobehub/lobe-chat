@@ -138,6 +138,14 @@
         "title": "Azure OpenAI"
       }
     },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Perplexity AI 에서 제공하는 API 키를 입력하세요",
+        "placeholder": "Perplexity AI API 키",
+        "title": "API 키"
+      }
+    },
     "Zhipu": {
       "title": "智谱",
       "token": {

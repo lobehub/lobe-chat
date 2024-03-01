@@ -1,9 +1,9 @@
-import { Logo } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import Avatar from 'next/image';
 import { CSSProperties, memo } from 'react';
 
+import { imageUrl } from '@/const/url';
 import { useGlobalStore } from '@/store/global';
 import { commonSelectors } from '@/store/global/selectors';
 import { imageToBase64 } from '@/utils/imageToBase64';
@@ -55,11 +55,12 @@ const AvatarWithUpload = memo<AvatarWithUploadProps>(
     return (
       <div className={styles} id={id} style={{ maxHeight: size, maxWidth: size, ...style }}>
         <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
-          {avatar ? (
-            <Avatar alt={'avatar'} height={size} src={avatar} width={size} />
-          ) : (
-            <Logo size={size} />
-          )}
+          <Avatar
+            alt={avatar ? 'userAvatar' : 'LobeChat'}
+            height={size}
+            src={!!avatar ? avatar : imageUrl('logo.png')}
+            width={size}
+          />
         </Upload>
       </div>
     );

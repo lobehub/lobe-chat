@@ -19,6 +19,7 @@
     "title": "Conversa Aleatória"
   },
   "input": {
+    "more": "mais",
     "onlyAdd": "Apenas adicionar mensagem",
     "send": "Enviar",
     "sendWithCmdEnter": "Pressione {{meta}} + Enter para enviar",

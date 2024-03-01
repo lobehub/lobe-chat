@@ -138,8 +138,16 @@
         "title": "Использовать Azure OpenAI"
       }
     },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Введите API-ключ от Perplexity AI",
+        "placeholder": "Ключ API Perplexity AI",
+        "title": "API-ключ"
+      }
+    },
     "Zhipu": {
-      "title": "智谱",
+      "title": "Zhipu AI",
       "token": {
         "desc": "Введите API-ключ от Zhipu",
         "placeholder": "Ключ API Zhipu",
