@@ -1,121 +1,102 @@
 import { act, renderHook } from '@testing-library/react';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { chainLangDetect } from '@/chains/langDetect';
-import { chainTranslate } from '@/chains/translate';
-import { chatService } from '@/services/chat';
-import { messageService } from '@/services/message';
+import { fileService } from '@/services/file';
+import { imageGenerationService } from '@/services/imageGeneration';
+import { chatSelectors } from '@/store/chat/selectors';
+import { ChatMessage } from '@/types/message';
+import { DallEImageItem } from '@/types/tool/dalle';
 
 import { useChatStore } from '../../store';
 
-// Mock messageService 和 chatService
-vi.mock('@/services/message', () => ({
-  messageService: {
-    updateMessageTTS: vi.fn(),
-    updateMessage: vi.fn(),
-  },
-}));
-
-vi.mock('@/services/chat', () => ({
-  chatService: {
-    fetchPresetTaskResult: vi.fn(),
-  },
-}));
-
-vi.mock('@/chains/langDetect', () => ({
-  chainLangDetect: vi.fn(),
-}));
-
-vi.mock('@/chains/translate', () => ({
-  chainTranslate: vi.fn(),
-}));
-
-// Mock supportLocales
-vi.mock('@/locales/options', () => ({
-  supportLocales: ['en-US', 'zh-CN'],
-}));
-
-beforeEach(() => {
-  vi.clearAllMocks();
-  useChatStore.setState(
-    {
-      // ... 初始状态
-    },
-    false,
-  );
-});
-
-afterEach(() => {
-  vi.restoreAllMocks();
-});
-
-describe('ChatEnhanceAction', () => {
-  describe('clearTTS', () => {
-    it('should clear TTS for a message and refresh messages', async () => {
+describe('chatToolSlice', () => {
+  describe('generateImageFromPrompts', () => {
+    it('should generate images from prompts, update items, and upload images', async () => {
       const { result } = renderHook(() => useChatStore());
+
+      const initialMessageContent = JSON.stringify([
+        { prompt: 'test prompt', previewUrl: 'old-url', imageId: 'old-id' },
+      ]);
+
+      vi.spyOn(chatSelectors, 'getMessageById').mockImplementationOnce(
+        (id) => () =>
+          ({
+            id,
+            content: initialMessageContent,
+          }) as ChatMessage,
+      );
+
       const messageId = 'message-id';
+      const prompts = [
+        { prompt: 'test prompt 1' },
+        { prompt: 'test prompt 2' },
+      ] as DallEImageItem[];
+      const mockUrl = 'https://example.com/image.png';
+      const mockId = 'image-id';
+
+      vi.spyOn(imageGenerationService, 'generateImage').mockResolvedValue(mockUrl);
+      vi.spyOn(fileService, 'uploadImageByUrl').mockResolvedValue({ id: mockId });
+      vi.spyOn(result.current, 'toggleDallEImageLoading');
 
       await act(async () => {
-        await result.current.clearTTS(messageId);
+        await result.current.generateImageFromPrompts(prompts, messageId);
       });
+      // For each prompt, loading is toggled on and then off
+      expect(imageGenerationService.generateImage).toHaveBeenCalledTimes(prompts.length);
+      expect(fileService.uploadImageByUrl).toHaveBeenCalledTimes(prompts.length);
 
-      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { tts: false });
+      expect(result.current.toggleDallEImageLoading).toHaveBeenCalledTimes(prompts.length * 2);
     });
   });
 
-  describe('translateMessage', () => {
-    it('should translate a message to the target language and refresh messages', async () => {
+  describe('updateImageItem', () => {
+    it('should update image item correctly', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
-      const targetLang = 'zh-CN';
-      const messageContent = 'Hello World';
-      const detectedLang = 'en-US';
+      const initialMessageContent = JSON.stringify([
+        { prompt: 'test prompt', previewUrl: 'old-url', imageId: 'old-id' },
+      ]);
+      const updateFunction = (draft: any) => {
+        draft[0].previewUrl = 'new-url';
+        draft[0].imageId = 'new-id';
+      };
+      vi.spyOn(result.current, 'updateMessageContent');
 
-      act(() => {
-        useChatStore.setState({
-          messages: [
-            {
-              id: messageId,
-              content: messageContent,
-              createdAt: Date.now(),
-              updatedAt: Date.now(),
-              role: 'user',
-              sessionId: 'test',
-              topicId: 'test',
-              meta: {},
-            },
-          ],
-        });
-      });
-
-      (chatService.fetchPresetTaskResult as Mock).mockImplementation(({ params }) => {
-        if (params === chainLangDetect(messageContent)) {
-          return Promise.resolve(detectedLang);
-        }
-        if (params === chainTranslate(messageContent, targetLang)) {
-          return Promise.resolve('Hola Mundo');
-        }
-        return Promise.resolve(undefined);
-      });
+      // 模拟 getMessageById 返回消息内容
+      vi.spyOn(chatSelectors, 'getMessageById').mockImplementationOnce(
+        (id) => () =>
+          ({
+            id,
+            content: initialMessageContent,
+          }) as ChatMessage,
+      );
 
       await act(async () => {
-        await result.current.translateMessage(messageId, targetLang);
+        await result.current.updateImageItem(messageId, updateFunction);
       });
 
-      expect(messageService.updateMessage).toHaveBeenCalled();
+      // 验证 updateMessageContent 是否被正确调用以更新内容
+      expect(result.current.updateMessageContent).toHaveBeenCalledWith(
+        messageId,
+        JSON.stringify([{ prompt: 'test prompt', previewUrl: 'new-url', imageId: 'new-id' }]),
+      );
     });
   });
 
-  describe('clearTranslate', () => {
-    it('should clear translation for a message and refresh messages', async () => {
+  describe('text2image', () => {
+    it('should call generateImageFromPrompts with provided data', async () => {
       const { result } = renderHook(() => useChatStore());
-      const messageId = 'message-id';
+      const id = 'message-id';
+      const data = [{ prompt: 'prompt 1' }, { prompt: 'prompt 2' }] as DallEImageItem[];
+
+      // Mock generateImageFromPrompts
+      const generateImageFromPromptsMock = vi.spyOn(result.current, 'generateImageFromPrompts');
 
       await act(async () => {
-        await result.current.clearTranslate(messageId);
+        await result.current.text2image(id, data);
       });
 
-      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { translate: false });
+      expect(generateImageFromPromptsMock).toHaveBeenCalledWith(data, id);
     });
   });
 });
