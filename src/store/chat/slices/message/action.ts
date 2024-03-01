@@ -15,7 +15,6 @@ import { ChatStore } from '@/store/chat/store';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
-import { fetchSSE } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors } from '../../selectors';
@@ -373,18 +372,6 @@ export const chatMessage: StateCreator<
         config.params.max_tokens = 2048;
     }
 
-    const fetcher = () =>
-      chatService.createAssistantMessage(
-        {
-          messages: preprocessMsgs,
-          model: config.model,
-          provider: config.provider,
-          ...config.params,
-          plugins: config.plugins,
-        },
-        { signal: abortController?.signal },
-      );
-
     let output = '';
     let isFunctionCall = false;
     let functionCallAtEnd = false;
@@ -393,7 +380,15 @@ export const chatMessage: StateCreator<
     const { startAnimation, stopAnimation, outputQueue, isAnimationActive } =
       createSmoothMessage(assistantId);
 
-    await fetchSSE(fetcher, {
+    await chatService.createAssistantMessageStream({
+      abortController,
+      params: {
+        messages: preprocessMsgs,
+        model: config.model,
+        provider: config.provider,
+        ...config.params,
+        plugins: config.plugins,
+      },
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(assistantId, error);
         await refreshMessages();
