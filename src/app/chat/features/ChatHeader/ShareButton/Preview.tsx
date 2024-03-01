@@ -9,7 +9,7 @@ import ChatList from '@/features/Conversation/components/ChatList';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
 
-import PluginTag from '../../ChatHeader/PluginTag';
+import PluginTag from '../../PluginTag';
 import { useStyles } from './style';
 import { FieldType } from './type';
 

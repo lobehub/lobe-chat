@@ -56,6 +56,8 @@ export const chatEnhance: StateCreator<
     const getMessageById = (id: string) => chatSelectors.getMessageById(id)(get());
 
     const message = getMessageById(messageId);
+    if (!message) return;
+
     const parent = getMessageById(message!.parentId!);
     const originPrompt = parent?.content;
 
