@@ -5,7 +5,7 @@ import { shareGPTService } from '@/services/share';
 import { useChatStore } from '@/store/chat';
 
 describe('shareSlice actions', () => {
-  let shareGPTServiceSpy;
+  let shareGPTServiceSpy: any;
   let windowOpenSpy;
 
   beforeEach(() => {
