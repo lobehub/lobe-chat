@@ -140,7 +140,14 @@ describe('POST handler', () => {
 
       expect(response.status).toBe(500);
       expect(await response.json()).toEqual({
-        body: { errorMessage: 'Something went wrong' },
+        body: {
+          errorMessage: 'Something went wrong',
+          error: {
+            errorMessage: 'Something went wrong',
+            errorType: 500,
+          },
+          provider: 'test-provider',
+        },
         errorType: 500,
       });
     });

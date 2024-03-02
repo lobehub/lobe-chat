@@ -1,12 +1,7 @@
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
-import {
-  AgentInitErrorPayload,
-  AgentRuntimeError,
-  ChatCompletionErrorPayload,
-  ILobeAgentRuntimeErrorType,
-} from '@/libs/agent-runtime';
+import { AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { getTracePayload } from '@/utils/trace';
@@ -19,12 +14,11 @@ export const runtime = 'edge';
 export const preferredRegion = getPreferredRegion();
 
 export const POST = async (req: Request, { params }: { params: { provider: string } }) => {
-  let agentRuntime: AgentRuntime;
   const { provider } = params;
 
-  // ============  1. init chat model   ============ //
-
   try {
+    // ============  1. init chat model   ============ //
+
     // get Authorization from header
     const authorization = req.headers.get(LOBE_CHAT_AUTH_HEADER);
     const oauthAuthorized = !!req.headers.get(OAUTH_AUTHORIZED);
@@ -32,38 +26,34 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
 
     // check the Auth With payload
-    const payload = await getJWTPayload(authorization);
-    checkAuthMethod(payload.accessCode, payload.apiKey, oauthAuthorized);
+    const jwtPayload = await getJWTPayload(authorization);
+    checkAuthMethod(jwtPayload.accessCode, jwtPayload.apiKey, oauthAuthorized);
 
     const body = await req.clone().json();
-    agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, payload, {
-      apiVersion: payload.azureApiVersion,
+    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, jwtPayload, {
+      apiVersion: jwtPayload.azureApiVersion,
       model: body.model,
-      useAzure: payload.useAzure,
+      useAzure: jwtPayload.useAzure,
     });
-  } catch (e) {
-    // if catch the error, just return it
-    const err = e as AgentInitErrorPayload;
-    return createErrorResponse(
-      (err.errorType || ChatErrorType.InternalServerError) as ILobeAgentRuntimeErrorType,
-      { error: err.error || e, provider },
-    );
-  }
 
-  // ============  2. create chat completion   ============ //
+    // ============  2. create chat completion   ============ //
 
-  try {
-    const payload = (await req.json()) as ChatStreamPayload;
+    const data = (await req.json()) as ChatStreamPayload;
 
     const tracePayload = getTracePayload(req);
 
-    return await agentRuntime.chat(payload, { provider, trace: tracePayload });
+    return await agentRuntime.chat(data, { provider, trace: tracePayload });
   } catch (e) {
-    const { errorType, provider, error: errorContent, ...res } = e as ChatCompletionErrorPayload;
+    const {
+      errorType = ChatErrorType.InternalServerError,
+      error: errorContent,
+      ...res
+    } = e as ChatCompletionErrorPayload;
 
+    const error = errorContent || e;
     // track the error at server side
-    console.error(`Route: [${provider}] ${errorType}:`, errorContent);
+    console.error(`Route: [${provider}] ${errorType}:`, error);
 
-    return createErrorResponse(errorType, { error: errorContent, provider, ...res });
+    return createErrorResponse(errorType, { error, ...res, provider });
   }
 };
