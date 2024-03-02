@@ -44,5 +44,3 @@ export class TraceClient {
     await this._client?.shutdownAsync();
   }
 }
-
-export const traceClient = new TraceClient();

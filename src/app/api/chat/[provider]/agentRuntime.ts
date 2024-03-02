@@ -14,7 +14,7 @@ import {
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
-import { traceClient } from '@/libs/traces';
+import { TraceClient } from '@/libs/traces';
 
 import apiKeyManager from '../apiKeyManager';
 
@@ -40,6 +40,7 @@ class AgentRuntime {
     const { messages, model, tools, ...parameters } = payload;
 
     // create a trace to monitor the completion
+    const traceClient = new TraceClient();
     const trace = traceClient.createTrace({
       id: tracePayload?.traceId,
       input: messages,

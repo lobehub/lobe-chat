@@ -7,7 +7,7 @@ import { getServerConfig } from '@/config/server';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
 import { LOBE_CHAT_TRACE_ID, TraceNameMap } from '@/const/trace';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
-import { traceClient } from '@/libs/traces';
+import { TraceClient } from '@/libs/traces';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { getTracePayload } from '@/utils/trace';
 
@@ -54,6 +54,7 @@ export const POST = async (req: Request) => {
 
   // add trace
   const tracePayload = getTracePayload(req);
+  const traceClient = new TraceClient();
   const trace = traceClient.createTrace({
     id: tracePayload?.traceId,
     ...tracePayload,
