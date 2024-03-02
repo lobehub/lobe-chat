@@ -42,10 +42,14 @@ export interface ChatMessageAction {
   clearAllMessages: () => Promise<void>;
   // update
   updateInputMessage: (message: string) => void;
-  updateMessageContent: (id: string, content: string) => Promise<void>;
+  // internalUpdateMessageContent: (id: string, content: string) => Promise<void>;
   // query
   useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
   stopGenerateMessage: () => void;
+
+  // =========  ↓ Internal Method ↓  ========== //
+  // ========================================== //
+  // ========================================== //
 
   /**
    * update message at the frontend point
@@ -77,12 +81,19 @@ export interface ChatMessageAction {
     action?: string,
   ) => AbortController | undefined;
   refreshMessages: () => Promise<void>;
+  // TODO: 后续 smoothMessage 实现考虑落到 sse 这一层
   createSmoothMessage: (id: string) => {
     startAnimation: (speed?: number) => Promise<void>;
     stopAnimation: () => void;
     outputQueue: string[];
     isAnimationActive: boolean;
   };
+  /**
+   * a method used by other action
+   * @param id
+   * @param content
+   */
+  internalUpdateMessageContent: (id: string, content: string) => Promise<void>;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
@@ -214,17 +225,6 @@ export const chatMessage: StateCreator<
   updateInputMessage: (message) => {
     set({ inputMessage: message }, false, n('updateInputMessage', message));
   },
-  updateMessageContent: async (id, content) => {
-    const { dispatchMessage, refreshMessages } = get();
-
-    // Due to the async update method and refresh need about 100ms
-    // we need to update the message content at the frontend to avoid the update flick
-    // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
-    dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
-
-    await messageService.updateMessage(id, { content });
-    await refreshMessages();
-  },
   useFetchMessages: (sessionId, activeTopicId) =>
     useSWR<ChatMessage[]>(
       [sessionId, activeTopicId],
@@ -284,7 +284,7 @@ export const chatMessage: StateCreator<
       if (functionCallAtEnd) {
         // create a new separate message and remove the function call from the prev message
 
-        await get().updateMessageContent(mid, content.replace(functionCallContent, ''));
+        await get().internalUpdateMessageContent(mid, content.replace(functionCallContent, ''));
 
         const functionMessage: CreateMessageParams = {
           role: 'function',
@@ -318,7 +318,7 @@ export const chatMessage: StateCreator<
     const {
       toggleChatLoading,
       refreshMessages,
-      updateMessageContent,
+      internalUpdateMessageContent,
       dispatchMessage,
       createSmoothMessage,
     } = get();
@@ -430,7 +430,7 @@ export const chatMessage: StateCreator<
         }
 
         // update the content after fetch result
-        await updateMessageContent(assistantId, content);
+        await internalUpdateMessageContent(assistantId, content);
       },
       onMessageHandle: async (text) => {
         output += text;
@@ -491,6 +491,17 @@ export const chatMessage: StateCreator<
 
       window.removeEventListener('beforeunload', preventLeavingFn);
     }
+  },
+  internalUpdateMessageContent: async (id, content) => {
+    const { dispatchMessage, refreshMessages } = get();
+
+    // Due to the async update method and refresh need about 100ms
+    // we need to update the message content at the frontend to avoid the update flick
+    // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
+    dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
+
+    await messageService.updateMessage(id, { content });
+    await refreshMessages();
   },
 
   createSmoothMessage: (id) => {

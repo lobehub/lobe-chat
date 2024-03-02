@@ -410,14 +410,14 @@ describe('chatMessage actions', () => {
     });
   });
 
-  describe('updateMessageContent action', () => {
-    it('should call messageService.updateMessageContent with correct parameters', async () => {
+  describe('internalUpdateMessageContent action', () => {
+    it('should call messageService.internalUpdateMessageContent with correct parameters', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const newContent = 'Updated content';
 
       await act(async () => {
-        await result.current.updateMessageContent(messageId, newContent);
+        await result.current.internalUpdateMessageContent(messageId, newContent);
       });
 
       expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
@@ -430,7 +430,7 @@ describe('chatMessage actions', () => {
       const dispatchMessageSpy = vi.spyOn(result.current, 'dispatchMessage');
 
       await act(async () => {
-        await result.current.updateMessageContent(messageId, newContent);
+        await result.current.internalUpdateMessageContent(messageId, newContent);
       });
 
       expect(dispatchMessageSpy).toHaveBeenCalledWith({
@@ -447,7 +447,7 @@ describe('chatMessage actions', () => {
       const newContent = 'Updated content';
 
       await act(async () => {
-        await result.current.updateMessageContent(messageId, newContent);
+        await result.current.internalUpdateMessageContent(messageId, newContent);
       });
 
       expect(result.current.refreshMessages).toHaveBeenCalled();

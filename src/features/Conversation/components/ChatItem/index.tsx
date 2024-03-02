@@ -52,7 +52,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
   const [loading, onMessageChange] = useChatStore((s) => [
     s.chatLoadingId === id,
-    s.updateMessageContent,
+    s.internalUpdateMessageContent,
   ]);
 
   const onAvatarsClick = useAvatarsClick();

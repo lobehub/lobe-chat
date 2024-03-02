@@ -55,15 +55,15 @@ export const chatPlugin: StateCreator<
   },
 
   fillPluginMessageContent: async (id, content, triggerAiMessage) => {
-    const { triggerAIMessage, updateMessageContent } = get();
+    const { triggerAIMessage, internalUpdateMessageContent } = get();
 
-    await updateMessageContent(id, content);
+    await internalUpdateMessageContent(id, content);
 
     if (triggerAiMessage) await triggerAIMessage(id);
   },
 
   invokeBuiltinTool: async (id, payload) => {
-    const { toggleChatLoading, updateMessageContent } = get();
+    const { toggleChatLoading, internalUpdateMessageContent } = get();
     const params = JSON.parse(payload.arguments);
     toggleChatLoading(true, id, n('invokeBuiltinTool') as string);
     let data;
@@ -76,7 +76,7 @@ export const chatPlugin: StateCreator<
 
     if (!data) return;
 
-    await updateMessageContent(id, data);
+    await internalUpdateMessageContent(id, data);
 
     // postToolCalling
     // @ts-ignore
@@ -131,7 +131,7 @@ export const chatPlugin: StateCreator<
   },
 
   runPluginApi: async (id, payload) => {
-    const { updateMessageContent, refreshMessages, toggleChatLoading } = get();
+    const { internalUpdateMessageContent, refreshMessages, toggleChatLoading } = get();
     let data: string;
 
     try {
@@ -166,7 +166,7 @@ export const chatPlugin: StateCreator<
     // 如果报错则结束了
     if (!data) return;
 
-    await updateMessageContent(id, data);
+    await internalUpdateMessageContent(id, data);
 
     return data;
   },

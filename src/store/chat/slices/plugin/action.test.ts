@@ -16,7 +16,7 @@ const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypeP
 // Mock messageService
 vi.mock('@/services/message', () => ({
   messageService: {
-    updateMessageContent: vi.fn(),
+    internalUpdateMessageContent: vi.fn(),
     updateMessage: vi.fn(),
     updateMessageError: vi.fn(),
     updateMessagePluginState: vi.fn(),
@@ -52,7 +52,7 @@ describe('ChatPluginAction', () => {
         await result.current.fillPluginMessageContent(messageId, newContent, true);
       });
 
-      // 验证 messageService.updateMessageContent 是否被正确调用
+      // 验证 messageService.internalUpdateMessageContent 是否被正确调用
       expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
 
       // 验证 refreshMessages 是否被调用
@@ -83,7 +83,7 @@ describe('ChatPluginAction', () => {
         await result.current.fillPluginMessageContent(messageId, newContent);
       });
 
-      // 验证 messageService.updateMessageContent 是否被正确调用
+      // 验证 messageService.internalUpdateMessageContent 是否被正确调用
       expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
 
       // 验证 refreshMessages 是否被调用
@@ -510,7 +510,7 @@ describe('ChatPluginAction', () => {
 
       useChatStore.setState({
         toggleChatLoading: vi.fn(),
-        updateMessageContent: vi.fn(),
+        internalUpdateMessageContent: vi.fn(),
         text2image: vi.fn(),
       });
 
@@ -527,7 +527,10 @@ describe('ChatPluginAction', () => {
       );
 
       // Verify that the message content was updated with the tool response
-      expect(result.current.updateMessageContent).toHaveBeenCalledWith(messageId, toolResponse);
+      expect(result.current.internalUpdateMessageContent).toHaveBeenCalledWith(
+        messageId,
+        toolResponse,
+      );
 
       // Verify that loading was toggled correctly
       expect(result.current.toggleChatLoading).toHaveBeenCalledWith(
@@ -557,7 +560,7 @@ describe('ChatPluginAction', () => {
         useChatStore.setState({
           toggleChatLoading: vi.fn(),
           text2image: vi.fn(),
-          updateMessageContent: vi.fn(),
+          internalUpdateMessageContent: vi.fn(),
         });
       });
       const { result } = renderHook(() => useChatStore());
@@ -573,7 +576,10 @@ describe('ChatPluginAction', () => {
       );
 
       // Verify that the message content was updated with the tool response
-      expect(result.current.updateMessageContent).toHaveBeenCalledWith(messageId, toolResponse);
+      expect(result.current.internalUpdateMessageContent).toHaveBeenCalledWith(
+        messageId,
+        toolResponse,
+      );
 
       // Verify that loading was toggled correctly
       expect(result.current.toggleChatLoading).toHaveBeenCalledWith(
@@ -600,7 +606,7 @@ describe('ChatPluginAction', () => {
 
       useChatStore.setState({
         toggleChatLoading: vi.fn(),
-        updateMessageContent: vi.fn(),
+        internalUpdateMessageContent: vi.fn(),
         text2image: vi.fn(),
         refreshMessages: vi.fn(),
       });
@@ -620,7 +626,7 @@ describe('ChatPluginAction', () => {
       expect(result.current.toggleChatLoading).toHaveBeenCalledWith(false);
 
       // Verify that the message content was not updated
-      expect(result.current.updateMessageContent).not.toHaveBeenCalled();
+      expect(result.current.internalUpdateMessageContent).not.toHaveBeenCalled();
 
       // Verify that messages were not refreshed
       expect(result.current.refreshMessages).not.toHaveBeenCalled();
