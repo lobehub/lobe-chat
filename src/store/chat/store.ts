@@ -8,8 +8,9 @@ import { isDev } from '@/utils/env';
 import { ChatStoreState, initialState } from './initialState';
 import { ChatEnhanceAction, chatEnhance } from './slices/enchance/action';
 import { ChatMessageAction, chatMessage } from './slices/message/action';
+import { ChatPluginAction, chatPlugin } from './slices/plugin/action';
 import { ShareAction, chatShare } from './slices/share/action';
-import { ChatPluginAction, chatPlugin } from './slices/tool/action';
+import { ChatToolAction, chatToolSlice } from './slices/tool/action';
 import { ChatTopicAction, chatTopic } from './slices/topic/action';
 
 export interface ChatStoreAction
@@ -17,7 +18,8 @@ export interface ChatStoreAction
     ChatTopicAction,
     ShareAction,
     ChatEnhanceAction,
-    ChatPluginAction {}
+    ChatPluginAction,
+    ChatToolAction {}
 
 export type ChatStore = ChatStoreAction & ChatStoreState;
 
@@ -30,6 +32,7 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   ...chatTopic(...params),
   ...chatShare(...params),
   ...chatEnhance(...params),
+  ...chatToolSlice(...params),
   ...chatPlugin(...params),
 });
 

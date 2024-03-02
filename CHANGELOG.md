@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 0.130.6](https://github.com/lobehub/lobe-chat/compare/v0.130.5...v0.130.6)
+
+<sup>Released on **2024-03-01**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the plugin and tool slice.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the plugin and tool slice, closes [#1437](https://github.com/lobehub/lobe-chat/issues/1437) ([003e230](https://github.com/lobehub/lobe-chat/commit/003e230))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.130.5](https://github.com/lobehub/lobe-chat/compare/v0.130.4...v0.130.5)
+
+<sup>Released on **2024-03-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support switch model with tag.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support switch model with tag, closes [#1435](https://github.com/lobehub/lobe-chat/issues/1435) ([233150e](https://github.com/lobehub/lobe-chat/commit/233150e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.130.4](https://github.com/lobehub/lobe-chat/compare/v0.130.3...v0.130.4)
 
 <sup>Released on **2024-02-29**</sup>
