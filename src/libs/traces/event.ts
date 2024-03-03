@@ -13,7 +13,7 @@ import {
 /**
  * trace 事件得分
  */
-enum EventScore {
+export enum EventScore {
   DeleteAndRegenerate = -1,
   Regenerate = -0.6,
   Modify = -0.3,
