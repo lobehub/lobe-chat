@@ -52,12 +52,6 @@ vi.mock('@/store/chat/selectors', () => ({
   },
 }));
 
-vi.mock('@/store/session/selectors', () => ({
-  agentSelectors: {
-    currentAgentConfig: vi.fn(),
-  },
-}));
-
 const realCoreProcessMessage = useChatStore.getState().coreProcessMessage;
 const realRefreshMessages = useChatStore.getState().refreshMessages;
 // Mock state
@@ -74,8 +68,10 @@ const mockState = {
 beforeEach(() => {
   vi.clearAllMocks();
   useChatStore.setState(mockState, false);
-  (agentSelectors.currentAgentConfig as Mock).mockImplementation(() => DEFAULT_AGENT_CONFIG);
+  vi.spyOn(agentSelectors, 'currentAgentConfig').mockImplementation(() => DEFAULT_AGENT_CONFIG);
+  vi.spyOn(agentSelectors, 'currentAgentMeta').mockImplementation(() => ({ tags: [] }));
 });
+
 afterEach(() => {
   process.env.NEXT_PUBLIC_BASE_PATH = undefined;
 
@@ -388,7 +384,11 @@ describe('chatMessage actions', () => {
       });
 
       expect(messageService.removeMessage).not.toHaveBeenCalledWith(messageId);
-      expect(mockState.coreProcessMessage).toHaveBeenCalledWith(expect.any(Array), messageId);
+      expect(mockState.coreProcessMessage).toHaveBeenCalledWith(
+        expect.any(Array),
+        messageId,
+        undefined,
+      );
     });
 
     it('should not perform any action if the message id does not exist', async () => {

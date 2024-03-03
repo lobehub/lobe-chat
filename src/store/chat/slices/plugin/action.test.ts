@@ -59,7 +59,11 @@ describe('ChatPluginAction', () => {
       expect(result.current.refreshMessages).toHaveBeenCalled();
 
       // 验证 coreProcessMessage 是否被正确调用
-      expect(result.current.coreProcessMessage).toHaveBeenCalledWith(mockCurrentChats, messageId);
+      expect(result.current.coreProcessMessage).toHaveBeenCalledWith(
+        mockCurrentChats,
+        messageId,
+        undefined,
+      );
     });
     it('should update message content and not trigger ai message', async () => {
       // 设置模拟函数的返回值
