@@ -73,6 +73,7 @@ class AgentRuntime {
             tags: [...(tracePayload?.tags || []), TraceTagMap.ToolsCall],
           });
         },
+
         onCompletion: async (completion) => {
           generation?.update({
             endTime: new Date(),
@@ -82,9 +83,11 @@ class AgentRuntime {
 
           trace?.update({ output: completion });
         },
+
         onFinal: async () => {
           await traceClient.shutdownAsync();
         },
+
         onStart: () => {
           generation?.update({ completionStartTime: new Date() });
         },

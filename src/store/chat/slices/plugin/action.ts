@@ -142,7 +142,7 @@ export const chatPlugin: StateCreator<
 
       const res = await chatService.runPluginApi(payload, {
         signal: abortController?.signal,
-        trace: { traceId: message?.traceId },
+        trace: { observationId: message?.observationId, traceId: message?.traceId },
       });
       data = res.text;
 

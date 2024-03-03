@@ -65,8 +65,10 @@ export const POST = async (req: Request) => {
   const span = trace?.span({
     input,
     metadata: { indexUrl, manifest },
-    name: TraceNameMap.InvokePlugin,
+    name: TraceNameMap.FetchPluginAPI,
   });
+
+  span?.update({ parentObservationId: tracePayload?.observationId });
 
   const res = await handler(req);
 

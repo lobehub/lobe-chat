@@ -6,6 +6,7 @@ export enum TraceNameMap {
   ConnectivityChecker = 'Connectivity Checker',
   Conversation = 'Conversation',
   EmojiPicker = 'Emoji Picker',
+  FetchPluginAPI = 'Fetch Plugin API',
   InvokePlugin = 'Invoke Plugin',
   LanguageDetect = 'Language Detect',
   SummaryAgentDescription = 'Summary Agent Description',
@@ -36,6 +37,7 @@ export enum TraceTagMap {
 }
 
 export interface TracePayload {
+  observationId?: string;
   /**
    * chat session: agentId or groupId
    */
