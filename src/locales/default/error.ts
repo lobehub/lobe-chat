@@ -134,6 +134,13 @@ export default {
     },
     closeMessage: '关闭提示',
     confirm: '确认并重试',
+    model: {
+      Ollama: {
+        confirm: '拉取',
+        description: '输入你的 Ollama 模型标签，完成即可继续会话',
+        title: '拉取未下载的 Ollama 模型',
+      },
+    },
     oauth: {
       description: '管理员已开启统一登录认证，点击下方按钮登录，即可解锁应用',
       success: '登录成功',
