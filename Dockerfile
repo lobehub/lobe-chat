@@ -83,4 +83,10 @@ ENV MOONSHOT_API_KEY ""
 # Ollama
 ENV OLLAMA_PROXY_URL ""
 
+# Perplexity
+ENV PERPLEXITY_API_KEY ""
+
+# Anthropic
+ENV ANTHROPIC_API_KEY ""
+
 CMD ["node", "server.js"]
