@@ -120,6 +120,7 @@
     "next-sitemap": "^4",
     "numeral": "^2",
     "nuqs": "^1",
+    "ollama": "^0.4.9",
     "openai": "^4.22",
     "polished": "^4",
     "posthog-js": "^1",

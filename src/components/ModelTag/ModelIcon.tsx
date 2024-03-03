@@ -28,6 +28,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.includes('claude')) return <Claude size={size} />;
   if (model.includes('titan')) return <Aws size={size} />;
   if (model.includes('llama')) return <Meta size={size} />;
+  if (model.includes('llava')) return <Meta size={size} />;
   if (model.includes('gemini')) return <Gemini size={size} />;
   if (model.includes('gemma')) return <Gemma.Simple size={size} />;
   if (model.includes('moonshot')) return <Moonshot size={size} />;
