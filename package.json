@@ -169,7 +169,7 @@
     "@umijs/lint": "^4",
     "@vitest/coverage-v8": "~1.2.2",
     "ajv-keywords": "^5.1.0",
-    "commitlint": "^18",
+    "commitlint": "^19.0.0",
     "consola": "^3",
     "dpdm": "^3",
     "eslint": "^8",
