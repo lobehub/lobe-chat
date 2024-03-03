@@ -2,7 +2,6 @@ import { Mock, describe, expect, it, vi } from 'vitest';
 
 import { chatHelpers } from '@/store/chat/helpers';
 import { globalHelpers } from '@/store/global/helpers';
-import { LanguageModel } from '@/types/llm';
 import { OpenAIChatMessage } from '@/types/openai/chat';
 
 import { chainSummaryTitle } from '../summaryTitle';
@@ -50,7 +49,7 @@ describe('chainSummaryTitle', () => {
           role: 'user',
         },
       ],
-      model: LanguageModel.GPT3_5_16K,
+      model: 'gpt-4-turbo-preview',
     });
 
     // Verify that getMessagesTokenCount was called with the correct messages
@@ -96,7 +95,7 @@ describe('chainSummaryTitle', () => {
           role: 'user',
         },
       ],
-      model: 'gpt-3.5-turbo-16k',
+      // No model specified since the token count is below the limit
     });
 
     // Verify that getMessagesTokenCount was called with the correct messages
