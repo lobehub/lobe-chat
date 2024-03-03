@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.130.7](https://github.com/lobehub/lobe-chat/compare/v0.130.6...v0.130.7)
+
+<sup>Released on **2024-03-03**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Update gpt-3.5-turbo model card.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Update gpt-3.5-turbo model card, closes [#1449](https://github.com/lobehub/lobe-chat/issues/1449) ([d0be0c7](https://github.com/lobehub/lobe-chat/commit/d0be0c7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.130.6](https://github.com/lobehub/lobe-chat/compare/v0.130.5...v0.130.6)
 
 <sup>Released on **2024-03-01**</sup>
