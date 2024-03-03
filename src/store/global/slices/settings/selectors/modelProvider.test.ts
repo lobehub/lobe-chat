@@ -33,51 +33,7 @@ describe('modelProviderSelectors', () => {
 
       const result = modelProviderSelectors.modelSelectList(s).filter((r) => r.enabled);
 
-      expect(result[0].chatModels).toEqual([
-        {
-          displayName: 'GPT-3.5 Turbo (1106)',
-          functionCall: true,
-          id: 'gpt-3.5-turbo-1106',
-          tokens: 16385,
-        },
-        {
-          description: 'GPT 3.5 Turbo，适用于各种文本生成和理解任务',
-          displayName: 'GPT-3.5 Turbo',
-          functionCall: true,
-          id: 'gpt-3.5-turbo',
-          tokens: 4096,
-        },
-        {
-          displayName: 'GPT-3.5 Turbo 16K',
-          id: 'gpt-3.5-turbo-16k',
-          tokens: 16385,
-        },
-        {
-          displayName: 'GPT-4',
-          functionCall: true,
-          id: 'gpt-4',
-          tokens: 8192,
-        },
-        {
-          displayName: 'gpt-4-32k',
-          functionCall: true,
-          id: 'gpt-4-32k',
-          tokens: 32768,
-        },
-        {
-          displayName: 'GPT-4 Turbo Preview (1106)',
-          functionCall: true,
-          id: 'gpt-4-1106-preview',
-          tokens: 128000,
-        },
-        {
-          description: 'GPT-4 视觉预览版，支持视觉任务',
-          displayName: 'GPT-4 Turbo Vision (Preview)',
-          id: 'gpt-4-vision-preview',
-          tokens: 128000,
-          vision: true,
-        },
-      ]);
+      expect(result[0].chatModels).toMatchSnapshot();
     });
     it('duplicate naming model', () => {
       const s = merge(initialSettingsState, {
