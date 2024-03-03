@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "Azure API Key 不正確或為空，請檢查 Azure API Key 後重試",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
     "InvalidGoogleAPIKey": "Google API Key 不正確或為空，請檢查 Google API Key 後重試",
+    "InvalidMistralAPIKey": "Mistral AI API Key 不正確或為空，請檢查 Mistral API Key 後重試",
     "InvalidMoonshotAPIKey": "Moonshot AI API 金鑰不正確或為空，請檢查 Moonshot API 金鑰後重試",
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",
     "InvalidPerplexityAPIKey": "Perplexity API Key 不正確或為空，請檢查 Perplexity API Key 後重試",
     "InvalidZhipuAPIKey": "Zhipu API Key 不正確或為空，請檢查 Zhipu API Key 後重試",
     "LocationNotSupportError": "很抱歉，你的所在位置不支持此模型服務，可能是由於地區限制或服務未開通。請確認當前位置是否支持使用此服務，或嘗試使用其他位置信息。",
+    "MistralBizError": "請求 Mistral AI 服務出錯，請根據以下信息排查或重試",
     "MoonshotBizError": "請求月球背面服務出錯，請根據以下信息排查或重試",
     "NoOpenAIAPIKey": "OpenAI API 金鑰為空，請添加自訂 OpenAI API 金鑰",
     "OllamaBizError": "請求 Ollama 服務出錯，請根據以下資訊排查或重試",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "輸入你的 Google API Key 即可開始會話。應用不會記錄你的 API Key",
         "title": "使用自定義 Google API Key"
+      },
+      "Mistral": {
+        "description": "輸入你的 Mistral AI API Key 即可開始會話。應用不會記錄你的 API Key",
+        "title": "使用自定義 Mistral AI API Key"
       },
       "Moonshot": {
         "description": "輸入你的 Moonshot AI API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",

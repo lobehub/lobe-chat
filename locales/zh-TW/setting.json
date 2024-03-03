@@ -94,6 +94,14 @@
         "title": "API 金鑰"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "填入來自 Mistral AI 的 API 金鑰",
+        "placeholder": "Mistral AI API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
     "Moonshot": {
       "title": "月球背面",
       "token": {

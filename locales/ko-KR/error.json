@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "잘못된 또는 비어 있는 Azure API Key입니다. Azure API Key를 확인한 후 다시 시도하십시오.",
     "InvalidBedrockCredentials": "Bedrock 인증에 실패했습니다. AccessKeyId/SecretAccessKey를 확인한 후 다시 시도하십시오.",
     "InvalidGoogleAPIKey": "잘못된 또는 비어 있는 Google API Key입니다. Google API Key를 확인한 후 다시 시도하십시오.",
+    "InvalidMistralAPIKey": "Mistral AI API 키가 잘못되었거나 비어 있습니다. Mistral API 키를 확인한 후 다시 시도해주세요.",
     "InvalidMoonshotAPIKey": "Moonshot AI API 키가 잘못되었거나 비어 있습니다. Moonshot API 키를 확인한 후 다시 시도해주세요.",
     "InvalidOllamaArgs": "Ollama 구성이 잘못되었습니다. Ollama 구성을 확인한 후 다시 시도하십시오.",
     "InvalidPerplexityAPIKey": "Perplexity API 키가 잘못되었거나 비어 있습니다. Perplexity API 키를 확인한 후 다시 시도하십시오.",
     "InvalidZhipuAPIKey": "잘못된 또는 비어 있는 Zhipu API Key입니다. Zhipu API Key를 확인한 후 다시 시도하십시오.",
     "LocationNotSupportError": "죄송합니다. 귀하의 현재 위치는 해당 모델 서비스를 지원하지 않습니다. 지역 제한 또는 서비스 미개통으로 인한 것일 수 있습니다. 현재 위치가 해당 서비스를 지원하는지 확인하거나 다른 위치 정보를 사용해 보십시오.",
+    "MistralBizError": "Mistral AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "MoonshotBizError": "요청한 문샷 비즈니스에 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "NoOpenAIAPIKey": "OpenAI API 키가 비어 있습니다. 사용자 정의 OpenAI API 키를 추가해주세요.",
     "OllamaBizError": "Ollama 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Google API Key를 입력하여 세션을 시작합니다. 앱은 귀하의 API Key를 기록하지 않습니다.",
         "title": "사용자 정의 Google API Key 사용"
+      },
+      "Mistral": {
+        "description": "Mistral AI API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+        "title": "사용자 지정 Mistral AI API 키 사용"
       },
       "Moonshot": {
         "description": "Moonshot AI API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",

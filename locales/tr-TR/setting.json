@@ -94,6 +94,14 @@
         "title": "API Anahtarı"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Mistral AI 的 API 密钥",
+        "placeholder": "Mistral AI API 密钥",
+        "title": "API 密钥"
+      }
+    },
     "Moonshot": {
       "title": "月球背面",
       "token": {

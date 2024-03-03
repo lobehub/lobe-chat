@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "Incorrect or empty Azure API Key, please check the Azure API Key and retry",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidGoogleAPIKey": "Incorrect or empty Google API Key, please check the Google API Key and retry",
+    "InvalidMistralAPIKey": "Ongeldige of lege Mistral AI API-sleutel. Controleer de Mistral API-sleutel en probeer het opnieuw.",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
     "InvalidPerplexityAPIKey": "Perplexity API Key is onjuist of leeg. Controleer de Perplexity API Key en probeer het opnieuw.",
     "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
+    "MistralBizError": "Er is een fout opgetreden bij het aanroepen van de Mistral AI-service. Controleer de onderstaande informatie of probeer het opnieuw.",
     "MoonshotBizError": "请求月球AI服务出错，请根据以下信息排查或重试",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Enter your Google API Key to start the session. The app will not record your API Key",
         "title": "Use custom Google API Key"
+      },
+      "Mistral": {
+        "description": "Voer je Mistral AI API-sleutel in om een sessie te starten. De app slaat je API-sleutel niet op.",
+        "title": "Gebruik aangepaste Mistral AI API-sleutel"
       },
       "Moonshot": {
         "description": "输入您的Moonshot AI API密钥即可开始会话。应用不会记录您的API密钥",

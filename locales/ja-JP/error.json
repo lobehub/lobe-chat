@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "Azure APIキーが正しくないか空です。Azure APIキーを確認してから再試行してください。",
     "InvalidBedrockCredentials": "Bedrockの認証に失敗しました。AccessKeyId/SecretAccessKeyを確認してから再試行してください。",
     "InvalidGoogleAPIKey": "Google APIキーが正しくないか空です。Google APIキーを確認してから再試行してください。",
+    "InvalidMistralAPIKey": "Mistral AI API キーが正しくないか空です。Mistral API キーを確認して再試行してください。",
     "InvalidMoonshotAPIKey": "Moonshot AI APIキーが正しくないか空です。Moonshot APIキーを確認して再試行してください。",
     "InvalidOllamaArgs": "Ollamaの設定が正しくありません。Ollamaの設定を確認してからもう一度お試しください",
     "InvalidPerplexityAPIKey": "Perplexity APIキーが正しくないか空です。Perplexity APIキーを確認してもう一度お試しください",
     "InvalidZhipuAPIKey": "Zhipu APIキーが正しくないか空です。Zhipu APIキーを確認してから再試行してください。",
     "LocationNotSupportError": "申し訳ありませんが、お住まいの地域ではこのモデルサービスをサポートしていません。地域制限またはサービスが利用できない可能性があります。現在の位置がこのサービスをサポートしているかどうかを確認するか、他の位置情報を使用してみてください。",
+    "MistralBizError": "Mistral AI サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "MoonshotBizError": "月の裏側サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "NoOpenAIAPIKey": "OpenAI APIキーが空です。カスタムOpenAI APIキーを追加してください。",
     "OllamaBizError": "Ollamaサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再度お試しください",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Google APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
         "title": "カスタムGoogle APIキーを使用"
+      },
+      "Mistral": {
+        "description": "Mistral AI API キーを入力してセッションを開始できます。アプリは API キーを記録しません。",
+        "title": "カスタム Mistral AI API キーの使用"
       },
       "Moonshot": {
         "description": "Moonshot AI APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
