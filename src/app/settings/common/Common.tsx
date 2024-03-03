@@ -68,7 +68,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
   }, []);
 
   const handleSignIn = useCallback(() => {
-    signIn('auth0');
+    signIn();
   }, []);
 
   const handleReset = useCallback(() => {
