@@ -29,6 +29,7 @@ export const DB_MessageSchema = z.object({
   tts: z.any().optional(),
 
   traceId: z.string().optional(),
+  observationId: z.string().optional(),
 
   // foreign keys
   parentId: z.string().optional(),

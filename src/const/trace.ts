@@ -1,5 +1,6 @@
 export const LOBE_CHAT_TRACE_HEADER = 'X-lobe-trace';
-export const LOBE_CHAT_TRACE_ID = 'X-chat-completion-trace-id';
+export const LOBE_CHAT_TRACE_ID = 'X-lobe-chat-trace-id';
+export const LOBE_CHAT_OBSERVATION_ID = 'X-lobe-observation-id';
 
 export enum TraceNameMap {
   ConnectivityChecker = 'Connectivity Checker',
@@ -12,13 +13,22 @@ export enum TraceNameMap {
   SummaryAgentTitle = 'Summary Agent Title',
   SummaryTopicTitle = 'Summary Topic Title',
   Translator = 'Translator',
+  // mean user have relative events
+  UserEvents = 'User Events',
+}
+
+export enum TraceEventType {
+  CopyMessage = 'Copy Message',
+  DeleteAndRegenerateMessage = 'Delete And Regenerate Message',
+  ModifyMessage = 'Modify Message',
+  RegenerateMessage = 'Regenerate Message',
 }
 
 export enum TraceTopicType {
   AgentSettings = 'Agent Settings',
 }
 
-export enum TraceTagType {
+export enum TraceTagMap {
   Chat = 'Chat Competition',
   SystemChain = 'System Chain',
   ToolCalling = 'Tool Calling',

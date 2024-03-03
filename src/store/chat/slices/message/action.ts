@@ -1,21 +1,23 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-// Note: DON'T REMOVE THE FIRST LINE
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { copyToClipboard } from '@lobehub/ui';
 import { template } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/const/message';
-import { TraceNameMap, TraceTagType } from '@/const/trace';
+import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { CreateMessageParams } from '@/database/models/message';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
+import { traceService } from '@/services/trace';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
+import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors } from '../../selectors';
@@ -31,21 +33,29 @@ interface SendMessageParams {
 
 export interface ChatMessageAction {
   // create
-  resendMessage: (id: string) => Promise<void>;
   sendMessage: (params: SendMessageParams) => Promise<void>;
+  /**
+   * regenerate message
+   * trace enabled
+   * @param id
+   */
+  regenerateMessage: (id: string) => Promise<void>;
+
   // delete
   /**
    * clear message on the active session
    */
   clearMessage: () => Promise<void>;
   deleteMessage: (id: string) => Promise<void>;
+  delAndRegenerateMessage: (id: string) => Promise<void>;
   clearAllMessages: () => Promise<void>;
   // update
   updateInputMessage: (message: string) => void;
-  // internalUpdateMessageContent: (id: string, content: string) => Promise<void>;
+  modifyMessageContent: (id: string, content: string) => Promise<void>;
   // query
   useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
   stopGenerateMessage: () => void;
+  copyMessage: (id: string, content: string) => Promise<void>;
 
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
@@ -59,7 +69,11 @@ export interface ChatMessageAction {
   /**
    * core process of the AI message (include preprocess and postprocess)
    */
-  coreProcessMessage: (messages: ChatMessage[], parentId: string) => Promise<void>;
+  coreProcessMessage: (
+    messages: ChatMessage[],
+    parentId: string,
+    traceId?: string,
+  ) => Promise<void>;
   /**
    * 实际获取 AI 响应
    * @param messages - 聊天消息数组
@@ -68,6 +82,7 @@ export interface ChatMessageAction {
   fetchAIChatMessage: (
     messages: ChatMessage[],
     assistantMessageId: string,
+    traceId?: string,
   ) => Promise<{
     content: string;
     functionCallAtEnd: boolean;
@@ -94,6 +109,8 @@ export interface ChatMessageAction {
    * @param content
    */
   internalUpdateMessageContent: (id: string, content: string) => Promise<void>;
+  internalResendMessage: (id: string, traceId?: string) => Promise<void>;
+  internalTraceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
@@ -114,6 +131,21 @@ export const chatMessage: StateCreator<
     await messageService.removeMessage(id);
     await get().refreshMessages();
   },
+  delAndRegenerateMessage: async (id) => {
+    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
+    get().internalResendMessage(id, traceId);
+    get().deleteMessage(id);
+
+    // trace the delete and regenerate message
+    get().internalTraceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
+  },
+  regenerateMessage: async (id: string) => {
+    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
+    await get().internalResendMessage(id, traceId);
+
+    // trace the delete and regenerate message
+    get().internalTraceMessage(id, { eventType: TraceEventType.RegenerateMessage });
+  },
   clearMessage: async () => {
     const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
 
@@ -133,7 +165,7 @@ export const chatMessage: StateCreator<
     await messageService.clearAllMessage();
     await refreshMessages();
   },
-  resendMessage: async (messageId) => {
+  internalResendMessage: async (messageId, traceId) => {
     // 1. 构造所有相关的历史记录
     const chats = chatSelectors.currentChats(get());
 
@@ -168,7 +200,7 @@ export const chatMessage: StateCreator<
 
     if (!latestMsg) return;
 
-    await coreProcessMessage(contextMessages, latestMsg.id);
+    await coreProcessMessage(contextMessages, latestMsg.id, traceId);
   },
   sendMessage: async ({ message, files, onlyAddUserMessage }) => {
     const { coreProcessMessage, activeTopicId, activeId } = get();
@@ -214,6 +246,12 @@ export const chatMessage: StateCreator<
     }
   },
 
+  copyMessage: async (id, content) => {
+    await copyToClipboard(content);
+
+    get().internalTraceMessage(id, { eventType: TraceEventType.CopyMessage });
+  },
+
   stopGenerateMessage: () => {
     const { abortController, toggleChatLoading } = get();
     if (!abortController) return;
@@ -224,6 +262,16 @@ export const chatMessage: StateCreator<
   },
   updateInputMessage: (message) => {
     set({ inputMessage: message }, false, n('updateInputMessage', message));
+  },
+  modifyMessageContent: async (id, content) => {
+    // tracing the diff of update
+    // due to message content will change, so we need send trace before update,or will get wrong data
+    get().internalTraceMessage(id, {
+      eventType: TraceEventType.ModifyMessage,
+      nextContent: content,
+    });
+
+    await get().internalUpdateMessageContent(id, content);
   },
   useFetchMessages: (sessionId, activeTopicId) =>
     useSWR<ChatMessage[]>(
@@ -252,7 +300,7 @@ export const chatMessage: StateCreator<
   },
 
   // the internal process method of the AI message
-  coreProcessMessage: async (messages, userMessageId) => {
+  coreProcessMessage: async (messages, userMessageId, trace) => {
     const { fetchAIChatMessage, triggerFunctionCall, refreshMessages, activeTopicId } = get();
 
     const { model, provider } = getAgentConfig();
@@ -274,7 +322,7 @@ export const chatMessage: StateCreator<
 
     // 2. fetch the AI response
     const { isFunctionCall, content, functionCallAtEnd, functionCallContent, traceId } =
-      await fetchAIChatMessage(messages, mid);
+      await fetchAIChatMessage(messages, mid, trace);
 
     // 3. if it's the function call message, trigger the function method
     if (isFunctionCall) {
@@ -314,7 +362,7 @@ export const chatMessage: StateCreator<
 
     set({ messages }, false, n(`dispatchMessage/${payload.type}`, payload));
   },
-  fetchAIChatMessage: async (messages, assistantId) => {
+  fetchAIChatMessage: async (messages, assistantId, traceId) => {
     const {
       toggleChatLoading,
       refreshMessages,
@@ -375,13 +423,6 @@ export const chatMessage: StateCreator<
         config.params.max_tokens = 2048;
     }
 
-    // get latest assistant or function message to check if they have traceId
-    // and use this id to trace whole the conversation
-    const latestAssistantMessage = preprocessMsgs
-      .filter((m) => ['assistant', 'function'].includes(m.role))
-      .at(-1);
-    const traceId = latestAssistantMessage?.traceId;
-
     let output = '';
     let isFunctionCall = false;
     let functionCallAtEnd = false;
@@ -405,7 +446,6 @@ export const chatMessage: StateCreator<
         sessionId: get().activeId,
         topicId: get().activeTopicId,
         traceName: TraceNameMap.Conversation,
-        tags: [TraceTagType.Chat],
       },
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(assistantId, error);
@@ -414,12 +454,15 @@ export const chatMessage: StateCreator<
       onAbort: async () => {
         stopAnimation();
       },
-      onFinish: async (content, { traceId }) => {
+      onFinish: async (content, { traceId, observationId }) => {
         stopAnimation();
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
-          await messageService.updateMessage(assistantId, { traceId });
+          await messageService.updateMessage(assistantId, {
+            traceId,
+            observationId: observationId ?? undefined,
+          });
         }
 
         // if there is still content not displayed,
@@ -567,5 +610,20 @@ export const chatMessage: StateCreator<
       });
 
     return { startAnimation, stopAnimation, outputQueue, isAnimationActive };
+  },
+
+  internalTraceMessage: async (id, payload) => {
+    // tracing the diff of update
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
+
+    const traceId = message?.traceId;
+    const observationId = message?.observationId;
+
+    if (traceId && message?.role === 'assistant') {
+      traceService
+        .traceEvent({ traceId, observationId, content: message.content, ...payload })
+        .catch();
+    }
   },
 });

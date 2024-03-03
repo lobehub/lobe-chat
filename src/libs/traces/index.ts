@@ -3,6 +3,7 @@ import { CreateLangfuseTraceBody } from 'langfuse-core';
 
 import { getServerConfig } from '@/config/server';
 import { CURRENT_VERSION } from '@/const/version';
+import { TraceEventClient } from '@/libs/traces/event';
 
 /**
  * We use langfuse as the tracing system to trace the request and response
@@ -34,10 +35,15 @@ export class TraceClient {
     });
   }
 
+  createEvent(traceId: string) {
+    const trace = this.createTrace({ id: traceId });
+    if (!trace) return;
+
+    return new TraceEventClient(trace);
+  }
+
   createTrace(param: CreateLangfuseTraceBody) {
-    return this._client?.trace({
-      ...param,
-    });
+    return this._client?.trace({ ...param });
   }
 
   async shutdownAsync() {

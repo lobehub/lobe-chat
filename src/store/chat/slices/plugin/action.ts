@@ -30,7 +30,7 @@ export interface ChatPluginAction {
   invokeMarkdownTypePlugin: (id: string, payload: ChatPluginPayload) => Promise<void>;
   invokeStandaloneTypePlugin: (id: string, payload: ChatPluginPayload) => Promise<void>;
   runPluginApi: (id: string, payload: ChatPluginPayload) => Promise<string | undefined>;
-  triggerAIMessage: (id: string) => Promise<void>;
+  triggerAIMessage: (id: string, traceId?: string) => Promise<void>;
   triggerFunctionCall: (id: string) => Promise<void>;
   updatePluginState: (id: string, key: string, value: any) => Promise<void>;
 }
@@ -100,8 +100,9 @@ export const chatPlugin: StateCreator<
     const data = await runPluginApi(id, payload);
 
     if (!data) return;
+    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
 
-    await triggerAIMessage(id);
+    await triggerAIMessage(id, traceId);
   },
 
   invokeMarkdownTypePlugin: async (id, payload) => {
@@ -170,10 +171,11 @@ export const chatPlugin: StateCreator<
 
     return data;
   },
-  triggerAIMessage: async (id) => {
+
+  triggerAIMessage: async (id, traceId) => {
     const { coreProcessMessage } = get();
     const chats = chatSelectors.currentChats(get());
-    await coreProcessMessage(chats, id);
+    await coreProcessMessage(chats, id, traceId);
   },
 
   triggerFunctionCall: async (id) => {
@@ -186,7 +188,7 @@ export const chatPlugin: StateCreator<
       invokeStandaloneTypePlugin,
       invokeBuiltinTool,
       refreshMessages,
-      resendMessage,
+      internalResendMessage,
       deleteMessage,
     } = get();
 
@@ -212,7 +214,7 @@ export const chatPlugin: StateCreator<
 
       // fix https://github.com/lobehub/lobe-chat/issues/1094, remove and retry after experiencing plugin illusion
       if (!apiName) {
-        resendMessage(id);
+        internalResendMessage(id);
         deleteMessage(id);
         return;
       }

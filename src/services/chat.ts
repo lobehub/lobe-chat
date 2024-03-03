@@ -3,17 +3,19 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { TracePayload, TraceTagType } from '@/const/trace';
+import { TracePayload, TraceTagMap } from '@/const/trace';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
-import {OnFinishHandler, fetchSSE, getMessageError, FetchSSEOptions} from '@/utils/fetch';
+import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth } from './_auth';
@@ -57,6 +59,7 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
   params: GetChatCompletionPayload;
   trace?: TracePayload;
 }
+
 class ChatService {
   createAssistantMessage = async (
     { plugins: enabledPlugins, messages, ...params }: GetChatCompletionPayload,
@@ -103,13 +106,21 @@ class ChatService {
     onMessageHandle,
     onErrorHandle,
     onFinish,
+    trace,
   }: CreateAssistantMessageStream) => {
-    await fetchSSE(() => this.createAssistantMessage(params, { signal: abortController?.signal }), {
-      onAbort,
-      onErrorHandle,
-      onFinish,
-      onMessageHandle,
-    });
+    await fetchSSE(
+      () =>
+        this.createAssistantMessage(params, {
+          signal: abortController?.signal,
+          trace: this.mapTrace(trace, TraceTagMap.Chat),
+        }),
+      {
+        onAbort,
+        onErrorHandle,
+        onFinish,
+        onMessageHandle,
+      },
+    );
   };
 
   getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
@@ -125,10 +136,7 @@ class ChatService {
       res,
     );
 
-    const traceHeader = createTraceHeader({
-      ...options?.trace,
-      userId: useGlobalStore.getState().userId,
-    });
+    const traceHeader = createTraceHeader({ ...options?.trace });
 
     const headers = await createHeaderWithAuth({
       headers: { 'Content-Type': 'application/json', ...traceHeader },
@@ -154,20 +162,15 @@ class ChatService {
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
     const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
 
-    const traceHeader = createTraceHeader({
-      ...options?.trace,
-      tags: [TraceTagType.ToolCalling],
-      userId: useGlobalStore.getState().userId,
-    });
+    const traceHeader = createTraceHeader(this.mapTrace(options?.trace, TraceTagMap.ToolCalling));
 
     const headers = await createHeaderWithAuth({
-      headers: { ...createHeadersWithPluginSettings(settings),        ...traceHeader,},
+      headers: { ...createHeadersWithPluginSettings(settings), ...traceHeader },
     });
 
     const gatewayURL = manifest?.gateway ?? API_ENDPOINTS.gateway;
 
     const res = await fetch(gatewayURL, {
-
       body: JSON.stringify({ ...params, manifest }),
       headers,
       method: 'POST',
@@ -202,11 +205,11 @@ class ChatService {
     onLoadingChange?.(true);
 
     const data = await fetchSSE(
-      () => this.getChatCompletion(params, { signal: abortController?.signal, trace: {
-          tags: [TraceTagType.SystemChain],
-          ...trace,
-          userId: useGlobalStore.getState().userId,
-        }, }),
+      () =>
+        this.getChatCompletion(params, {
+          signal: abortController?.signal,
+          trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+        }),
       {
         onErrorHandle: (error) => {
           errorHandle(new Error(error.message), error);
@@ -295,6 +298,16 @@ class ChatService {
       }
     });
   };
+
+  private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
+    const tags = agentSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
+
+    return {
+      ...trace,
+      tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
+      userId: useGlobalStore.getState().userId,
+    };
+  }
 }
 
 export const chatService = new ChatService();

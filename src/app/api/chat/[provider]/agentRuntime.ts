@@ -1,6 +1,12 @@
 import { getServerConfig } from '@/config/server';
 import { JWTPayload } from '@/const/auth';
-import { LOBE_CHAT_TRACE_ID, TracePayload, TraceTagType } from '@/const/trace';
+import { INBOX_SESSION_ID } from '@/const/session';
+import {
+  LOBE_CHAT_OBSERVATION_ID,
+  LOBE_CHAT_TRACE_ID,
+  TracePayload,
+  TraceTagMap,
+} from '@/const/trace';
 import {
   ChatStreamPayload,
   LobeAzureOpenAI,
@@ -46,7 +52,7 @@ class AgentRuntime {
       input: messages,
       metadata: { provider },
       name: tracePayload?.traceName,
-      sessionId: `${tracePayload?.sessionId || 'unknown'}@${tracePayload?.topicId || 'start'}`,
+      sessionId: `${tracePayload?.sessionId || INBOX_SESSION_ID}@${tracePayload?.topicId || 'start'}`,
       tags: tracePayload?.tags,
       userId: tracePayload?.userId,
     });
@@ -64,7 +70,7 @@ class AgentRuntime {
       callback: {
         experimental_onToolCall: async () => {
           trace?.update({
-            tags: [...(tracePayload?.tags || []), TraceTagType.ToolsCall],
+            tags: [...(tracePayload?.tags || []), TraceTagMap.ToolsCall],
           });
         },
         onCompletion: async (completion) => {
@@ -84,6 +90,7 @@ class AgentRuntime {
         },
       },
       headers: {
+        [LOBE_CHAT_OBSERVATION_ID]: generation?.id,
         [LOBE_CHAT_TRACE_ID]: trace?.id,
       },
     });

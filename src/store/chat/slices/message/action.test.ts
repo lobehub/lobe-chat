@@ -368,7 +368,7 @@ describe('chatMessage actions', () => {
     });
   });
 
-  describe('resendMessage action', () => {
+  describe('internalResendMessage action', () => {
     it('should resend a message by id and refresh messages', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
@@ -384,7 +384,7 @@ describe('chatMessage actions', () => {
       mockState.coreProcessMessage.mockResolvedValue(undefined);
 
       await act(async () => {
-        await result.current.resendMessage(messageId);
+        await result.current.internalResendMessage(messageId);
       });
 
       expect(messageService.removeMessage).not.toHaveBeenCalledWith(messageId);
@@ -401,7 +401,7 @@ describe('chatMessage actions', () => {
       ]);
 
       await act(async () => {
-        await result.current.resendMessage(messageId);
+        await result.current.internalResendMessage(messageId);
       });
 
       expect(messageService.removeMessage).not.toHaveBeenCalledWith(messageId);

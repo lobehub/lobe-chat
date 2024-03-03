@@ -43,25 +43,33 @@ export interface ChatMessage extends BaseDataModel {
   } & Record<string, any>;
 
   files?: string[];
+  /**
+   * observation id
+   */
+  observationId?: string;
+  /**
+   * parent message id
+   */
   parentId?: string;
   plugin?: ChatPluginPayload;
-  pluginState?: any;
 
-  // 引用
+  pluginState?: any;
+  /**
+   * quoted other message's id
+   */
   quotaId?: string;
   /**
-   * 角色
-   * @description 消息发送者的角色
+   * message role type
    */
   role: LLMRoleType;
   sessionId?: string;
+
   /**
    * 保存到主题的消息
    */
   topicId?: string;
-
   /**
-   * 观测 id
+   * 观测链路 id
    */
   traceId?: string;
 }
