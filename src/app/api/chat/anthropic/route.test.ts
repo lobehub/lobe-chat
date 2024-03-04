@@ -19,10 +19,10 @@ describe('Configuration tests', () => {
   });
 });
 
-describe('Google POST function tests', () => {
+describe('Anthropic POST function tests', () => {
   it('should call UniverseRoute with correct parameters', async () => {
     const mockRequest = new Request('https://example.com', { method: 'POST' });
     await POST(mockRequest);
-    expect(UniverseRoute).toHaveBeenCalledWith(mockRequest, { params: { provider: 'google' } });
+    expect(UniverseRoute).toHaveBeenCalledWith(mockRequest, { params: { provider: 'anthropic' } });
   });
 });

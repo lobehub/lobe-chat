@@ -1,10 +1,5 @@
 // @vitest-environment node
-import Anthropic from '@anthropic-ai/sdk';
-import { GenerateContentRequest, GenerateContentStreamResult, Part } from '@google/generative-ai';
-import OpenAI from 'openai';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { ChatStreamCallbacks, OpenAIChatMessage } from '@/libs/agent-runtime';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeAnthropicAI } from './index';
