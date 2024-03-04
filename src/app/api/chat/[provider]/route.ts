@@ -42,7 +42,11 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
 
     const tracePayload = getTracePayload(req);
 
-    return await agentRuntime.chat(data, { provider, trace: tracePayload });
+    return await agentRuntime.chat(data, {
+      enableTrace: tracePayload?.enabled,
+      provider,
+      trace: tracePayload,
+    });
   } catch (e) {
     const {
       errorType = ChatErrorType.InternalServerError,

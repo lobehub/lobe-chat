@@ -37,6 +37,10 @@ export enum TraceTagMap {
 }
 
 export interface TracePayload {
+  /**
+   * if user allow to trace
+   */
+  enabled?: boolean;
   observationId?: string;
   /**
    * chat session: agentId or groupId

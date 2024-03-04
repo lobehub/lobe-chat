@@ -11,11 +11,11 @@ import { TraceEventClient } from '@/libs/traces/event';
 export class TraceClient {
   private _client?: Langfuse;
 
-  constructor() {
+  constructor(enable?: boolean) {
     const { ENABLE_LANGFUSE, LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, LANGFUSE_HOST } =
       getServerConfig();
 
-    if (!ENABLE_LANGFUSE) return;
+    if (!ENABLE_LANGFUSE || !enable) return;
 
     // when enabled langfuse, make sure the key are ready in envs
     if (!LANGFUSE_PUBLIC_KEY || !LANGFUSE_SECRET_KEY) {

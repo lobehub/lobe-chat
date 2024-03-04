@@ -7,7 +7,7 @@ import { TracePayload, TraceTagMap } from '@/const/trace';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelProviderSelectors, preferenceSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -302,8 +302,13 @@ class ChatService {
   private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
     const tags = agentSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
 
+    const enabled = preferenceSelectors.userAllowTrace(useGlobalStore.getState());
+
+    if (!enabled) return { enabled: false };
+
     return {
       ...trace,
+      enabled: true,
       tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
       userId: useGlobalStore.getState().userId,
     };

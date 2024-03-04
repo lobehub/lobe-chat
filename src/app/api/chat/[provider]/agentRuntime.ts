@@ -31,6 +31,7 @@ interface AzureOpenAIParams {
 }
 
 export interface AgentChatOptions {
+  enableTrace?: boolean;
   provider: string;
   trace?: TracePayload;
 }
@@ -42,11 +43,14 @@ class AgentRuntime {
     this._runtime = runtime;
   }
 
-  async chat(payload: ChatStreamPayload, { trace: tracePayload, provider }: AgentChatOptions) {
+  async chat(
+    payload: ChatStreamPayload,
+    { trace: tracePayload, provider, enableTrace }: AgentChatOptions,
+  ) {
     const { messages, model, tools, ...parameters } = payload;
 
     // create a trace to monitor the completion
-    const traceClient = new TraceClient();
+    const traceClient = new TraceClient(enableTrace);
     const trace = traceClient.createTrace({
       id: tracePayload?.traceId,
       input: messages,
