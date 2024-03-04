@@ -6,7 +6,8 @@ interface UserMessageContentPartText {
   text: string;
   type: 'text';
 }
-interface UserMessageContentPartImage {
+
+export interface UserMessageContentPartImage {
   image_url: {
     detail?: 'auto' | 'low' | 'high';
     url: string;
