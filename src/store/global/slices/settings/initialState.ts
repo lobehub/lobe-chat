@@ -13,6 +13,8 @@ export interface GlobalSettingsState {
 
 export const initialSettingsState: GlobalSettingsState = {
   defaultSettings: DEFAULT_SETTINGS,
-  serverConfig: {},
+  serverConfig: {
+    telemetry: {},
+  },
   settings: {},
 };

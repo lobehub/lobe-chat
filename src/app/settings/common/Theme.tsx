@@ -25,6 +25,8 @@ const Theme = memo(() => {
   const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
   const [setThemeMode, setSettings] = useGlobalStore((s) => [s.switchThemeMode, s.setSettings]);
 
+  useSyncSettings(form);
+
   const theme: SettingItemGroup = {
     children: [
       {
@@ -125,8 +127,6 @@ const Theme = memo(() => {
     icon: Palette,
     title: t('settingTheme.title'),
   };
-
-  useSyncSettings(form);
 
   return (
     <Form

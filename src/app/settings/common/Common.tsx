@@ -3,16 +3,17 @@ import { Form as AntForm, App, Button, Input } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { AppWindow } from 'lucide-react';
 import { signIn, signOut } from 'next-auth/react';
-import { memo, useCallback, useEffect } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSyncSettings } from '@/app/settings/hooks/useSyncSettings';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import { useOAuthSession } from '@/hooks/useOAuthSession';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/slices/settings/selectors';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { useToolStore } from '@/store/tool';
 
@@ -148,17 +149,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
     title: t('settingSystem.title'),
   };
 
-  useEffect(() => {
-    const unsubscribe = useGlobalStore.subscribe(
-      (s) => s.settings,
-      (settings) => {
-        form.setFieldsValue(settings);
-      },
-    );
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  useSyncSettings(form);
 
   return (
     <Form

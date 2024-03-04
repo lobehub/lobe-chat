@@ -86,25 +86,25 @@ describe('MessageService', () => {
   describe('hasMessages', () => {
     it('should return true if there are messages', async () => {
       // Setup
-      (MessageModel.isEmpty as Mock).mockResolvedValue(false);
+      (MessageModel.count as Mock).mockResolvedValue(false);
 
       // Execute
       const hasMessages = await messageService.hasMessages();
 
       // Assert
-      expect(MessageModel.isEmpty).toHaveBeenCalled();
+      expect(MessageModel.count).toHaveBeenCalled();
       expect(hasMessages).toBe(true);
     });
 
     it('should return false if there are no messages', async () => {
       // Setup
-      (MessageModel.isEmpty as Mock).mockResolvedValue(true);
+      (MessageModel.count as Mock).mockResolvedValue(true);
 
       // Execute
       const hasMessages = await messageService.hasMessages();
 
       // Assert
-      expect(MessageModel.isEmpty).toHaveBeenCalled();
+      expect(MessageModel.count).toHaveBeenCalled();
       expect(hasMessages).toBe(false);
     });
   });
