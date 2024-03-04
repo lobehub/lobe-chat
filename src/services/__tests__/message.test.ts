@@ -17,7 +17,7 @@ vi.mock('@/database/models/message', () => {
     MessageModel: {
       create: vi.fn(),
       batchCreate: vi.fn(),
-      isEmpty: vi.fn(),
+      count: vi.fn(),
       query: vi.fn(),
       delete: vi.fn(),
       queryBySessionId: vi.fn(),
@@ -86,7 +86,7 @@ describe('MessageService', () => {
   describe('hasMessages', () => {
     it('should return true if there are messages', async () => {
       // Setup
-      (MessageModel.count as Mock).mockResolvedValue(false);
+      (MessageModel.count as Mock).mockResolvedValue(1);
 
       // Execute
       const hasMessages = await messageService.hasMessages();
@@ -98,7 +98,7 @@ describe('MessageService', () => {
 
     it('should return false if there are no messages', async () => {
       // Setup
-      (MessageModel.count as Mock).mockResolvedValue(true);
+      (MessageModel.count as Mock).mockResolvedValue(0);
 
       // Execute
       const hasMessages = await messageService.hasMessages();

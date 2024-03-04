@@ -49,8 +49,11 @@ class AgentRuntime {
   ) {
     const { messages, model, tools, ...parameters } = payload;
 
+    // if not enabled trace then just call the runtime
+    if (!enableTrace) return this._runtime.chat(payload);
+
     // create a trace to monitor the completion
-    const traceClient = new TraceClient(enableTrace);
+    const traceClient = new TraceClient();
     const trace = traceClient.createTrace({
       id: tracePayload?.traceId,
       input: messages,

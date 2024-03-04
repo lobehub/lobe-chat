@@ -342,6 +342,7 @@ describe('AgentRuntime', () => {
           tags: [],
           userId: 'test-user-id',
         },
+        enableTrace: true,
       };
 
       const updateMock = vi.fn();
