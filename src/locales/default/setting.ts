@@ -1,4 +1,7 @@
 export default {
+  about: {
+    title: '关于',
+  },
   analytics: {
     telemetry: {
       desc: '通过选择发送遥测数据，你可以帮助我们改善 LobeChat 整体用户体验',
