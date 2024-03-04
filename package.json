@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.130.6",
+  "version": "0.130.7",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -74,7 +74,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5",
-    "@auth/core": "^0.27.0",
+    "@auth/core": "latest",
     "@aws-sdk/client-bedrock-runtime": "^3.503.1",
     "@azure/openai": "^1.0.0-beta.11",
     "@cfworker/json-schema": "^1",
@@ -87,7 +87,7 @@
     "@lobehub/ui": "^1.129.2",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
-    "ai": "^2",
+    "ai": "^3.0.0",
     "antd": "^5",
     "antd-style": "^3",
     "brotli-wasm": "^2",
@@ -114,7 +114,7 @@
     "openai": "^4.22",
     "polished": "^4",
     "posthog-js": "^1",
-    "query-string": "^8",
+    "query-string": "^9.0.0",
     "react": "^18",
     "react-dom": "^18",
     "react-hotkeys-hook": "^4",
@@ -143,7 +143,7 @@
     "zustand-utils": "^1.3.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18",
+    "@commitlint/cli": "^19.0.0",
     "@ducanh2912/next-pwa": "^10",
     "@edge-runtime/vm": "^3.2.0",
     "@lobehub/i18n-cli": "latest",
@@ -169,7 +169,7 @@
     "@umijs/lint": "^4",
     "@vitest/coverage-v8": "~1.2.2",
     "ajv-keywords": "^5.1.0",
-    "commitlint": "^18",
+    "commitlint": "^19.0.0",
     "consola": "^3",
     "dpdm": "^3",
     "eslint": "^8",
