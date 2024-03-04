@@ -1,8 +1,8 @@
 import { memo } from 'react';
-import TelemetryNotification from 'src/app/chat/features/TelemetryNotification';
 
 import RawConversation from '@/features/Conversation';
 
+import TelemetryNotification from '../../features/TelemetryNotification';
 import ChatInput from './ChatInput';
 import HotKeys from './HotKeys';
 

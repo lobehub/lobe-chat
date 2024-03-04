@@ -31,6 +31,11 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   desc: css`
     color: ${token.colorTextSecondary};
   `,
+  mobileContainer: css`
+    bottom: 8px;
+    inset-inline-start: 8px;
+    width: calc(100% - 16px);
+  `,
   title: css`
     font-size: 18px;
     font-weight: bold;
@@ -46,8 +51,8 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
 }));
 
-const TelemetryNotification = memo(() => {
-  const { styles, theme } = useStyles();
+const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
+  const { styles, theme, cx } = useStyles();
 
   const { t } = useTranslation('common');
   const [shouldCheck, useCheckTrace, updatePreference] = useGlobalStore((s) => [
@@ -65,7 +70,7 @@ const TelemetryNotification = memo(() => {
 
   return (
     showModal && (
-      <Flexbox className={styles.container}>
+      <Flexbox className={cx(styles.container, mobile && styles.mobileContainer)}>
         <Flexbox className={styles.wrapper} gap={16} horizontal>
           <Flexbox>
             <Avatar
