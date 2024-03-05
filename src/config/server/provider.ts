@@ -33,6 +33,9 @@ declare global {
       // Perplexity Provider
       PERPLEXITY_API_KEY?: string;
 
+      // Anthropic Provider
+      ANTHROPIC_API_KEY?: string;
+
       // AWS Credentials
       AWS_REGION?: string;
       AWS_ACCESS_KEY_ID?: string;
@@ -58,6 +61,8 @@ export const getProviderConfig = () => {
 
   const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY || '';
 
+  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
+
   // region format: iad1,sfo1
   let regions: string[] = [];
   if (process.env.OPENAI_FUNCTION_REGIONS) {
@@ -81,6 +86,9 @@ export const getProviderConfig = () => {
 
     ENABLED_PERPLEXITY: !!PERPLEXITY_API_KEY,
     PERPLEXITY_API_KEY,
+
+    ENABLED_ANTHROPIC: !!ANTHROPIC_API_KEY,
+    ANTHROPIC_API_KEY,
 
     ENABLED_MOONSHOT: !!MOONSHOT_API_KEY,
     MOONSHOT_API_KEY,

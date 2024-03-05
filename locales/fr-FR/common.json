@@ -100,6 +100,7 @@
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
   "modelProvider": {
+    "anthropic": "Anthropic",
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",

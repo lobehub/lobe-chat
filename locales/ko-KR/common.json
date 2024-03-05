@@ -100,6 +100,7 @@
   },
   "layoutInitializing": "레이아웃을 불러오는 중...",
   "modelProvider": {
+    "anthropic": "Anthropic",
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",

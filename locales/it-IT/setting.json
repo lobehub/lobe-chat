@@ -31,6 +31,14 @@
     "sessionWithName": "Impostazioni della sessione · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Inserisci la chiave API di Anthropic",
+        "placeholder": "Chiave API di Anthropic",
+        "title": "Chiave API"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Versione dell'API di Azure, nel formato YYYY-MM-DD, consulta la [versione più recente](https://learn.microsoft.com/it-it/azure/ai-services/openai/reference#chat-completions)",
