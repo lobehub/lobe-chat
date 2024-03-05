@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "À propos"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "En choisissant d'envoyer des données de télémétrie, vous pouvez nous aider à améliorer l'expérience utilisateur globale de LobeChat",
+      "title": "Envoyer des données d'utilisation anonymes"
+    },
+    "title": "Analytique"
+  },
   "danger": {
     "clear": {
       "action": "Effacer immédiatement",
@@ -378,6 +388,7 @@
     "tooltips": "Partager sur le marché des agents"
   },
   "tab": {
+    "about": "À propos",
     "agent": "Agent par défaut",
     "common": "Paramètres généraux",
     "llm": "Modèle de langue",

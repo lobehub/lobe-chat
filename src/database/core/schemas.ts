@@ -54,3 +54,15 @@ export const dbSchemaV5 = {
   ...dbSchemaV4,
   users: '++id',
 };
+
+// ************************************** //
+// ******* Version 6 - 2024-02-27 ******* //
+// ************************************** //
+// - Added uuid to `users` table
+// - Added traceId to `messages` table
+export const dbSchemaV6 = {
+  ...dbSchemaV5,
+  messages:
+    '&id, role, content, fromModel, favorite, plugin.identifier, plugin.apiName, translate.content, createdAt, updatedAt, sessionId, topicId, quotaId, parentId, [sessionId+topicId], traceId',
+  users: '++id, uuid',
+};

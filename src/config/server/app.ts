@@ -16,6 +16,11 @@ declare global {
       PLUGIN_SETTINGS?: string;
 
       DEFAULT_AGENT_CONFIG?: string;
+
+      ENABLE_LANGFUSE?: string;
+      LANGFUSE_PUBLIC_KEY?: string;
+      LANGFUSE_SECRET_KEY?: string;
+      LANGFUSE_HOST?: string;
     }
   }
 }
@@ -61,5 +66,10 @@ export const getAppConfig = () => {
     AZURE_AD_CLIENT_SECRET: process.env.AZURE_AD_CLIENT_SECRET || '',
     AZURE_AD_TENANT_ID: process.env.AZURE_AD_TENANT_ID || '',
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || '',
+
+    ENABLE_LANGFUSE: process.env.ENABLE_LANGFUSE === '1',
+    LANGFUSE_SECRET_KEY: process.env.LANGFUSE_SECRET_KEY || '',
+    LANGFUSE_PUBLIC_KEY: process.env.LANGFUSE_PUBLIC_KEY || '',
+    LANGFUSE_HOST: process.env.LANGFUSE_HOST || 'https://cloud.langfuse.com',
   };
 };

@@ -16,7 +16,7 @@ const OAuthForm = memo<{ id: string }>(({ id }) => {
 
   const { user, isOAuthLoggedIn } = useOAuthSession();
 
-  const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.internalResendMessage, s.deleteMessage]);
 
   const { message, modal } = App.useApp();
 

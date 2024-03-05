@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 
+import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
 import { ErrorResponse, ErrorType } from '@/types/fetch';
 import { ChatMessageError } from '@/types/message';
 
@@ -29,7 +30,8 @@ type SSEFinishType = 'done' | 'error' | 'abort';
 
 export type OnFinishHandler = (
   text: string,
-  context?: {
+  context: {
+    observationId?: string | null;
     traceId?: string | null;
     type?: SSEFinishType;
   },
@@ -91,7 +93,9 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
     }
   }
 
-  await options?.onFinish?.(output, { type: finishedType });
+  const traceId = response.headers.get(LOBE_CHAT_TRACE_ID);
+  const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
+  await options?.onFinish?.(output, { observationId, traceId, type: finishedType });
 
   return returnRes;
 };

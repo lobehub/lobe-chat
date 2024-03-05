@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "O nas"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Poprzez wybór wysyłania danych telemetrycznych możesz pomóc nam poprawić ogólny użytkowy interfejs LobeChat",
+      "title": "Wysyłanie anonimowych danych użytkowych"
+    },
+    "title": "Analiza danych"
+  },
   "danger": {
     "clear": {
       "action": "Wyczyść teraz",
@@ -378,6 +388,7 @@
     "tooltips": "Udostępnij na rynku asystentów"
   },
   "tab": {
+    "about": "O nas",
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
     "llm": "Model językowy",

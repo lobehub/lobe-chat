@@ -3,22 +3,27 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { TracePayload, TraceTagMap } from '@/const/trace';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelProviderSelectors, preferenceSelectors } from '@/store/global/selectors';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
+import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
   signal?: AbortSignal | undefined;
+  trace?: TracePayload;
 }
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
@@ -46,12 +51,15 @@ interface FetchAITaskResultParams {
    * 请求对象
    */
   params: Partial<ChatStreamPayload>;
+  trace?: TracePayload;
 }
 
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
   params: GetChatCompletionPayload;
+  trace?: TracePayload;
 }
+
 class ChatService {
   createAssistantMessage = async (
     { plugins: enabledPlugins, messages, ...params }: GetChatCompletionPayload,
@@ -98,13 +106,21 @@ class ChatService {
     onMessageHandle,
     onErrorHandle,
     onFinish,
+    trace,
   }: CreateAssistantMessageStream) => {
-    await fetchSSE(() => this.createAssistantMessage(params, { signal: abortController?.signal }), {
-      onAbort,
-      onErrorHandle,
-      onFinish,
-      onMessageHandle,
-    });
+    await fetchSSE(
+      () =>
+        this.createAssistantMessage(params, {
+          signal: abortController?.signal,
+          trace: this.mapTrace(trace, TraceTagMap.Chat),
+        }),
+      {
+        onAbort,
+        onErrorHandle,
+        onFinish,
+        onMessageHandle,
+      },
+    );
   };
 
   getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
@@ -120,8 +136,10 @@ class ChatService {
       res,
     );
 
+    const traceHeader = createTraceHeader({ ...options?.trace });
+
     const headers = await createHeaderWithAuth({
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...traceHeader },
       provider,
     });
 
@@ -144,8 +162,10 @@ class ChatService {
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
     const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
 
+    const traceHeader = createTraceHeader(this.mapTrace(options?.trace, TraceTagMap.ToolCalling));
+
     const headers = await createHeaderWithAuth({
-      headers: { ...createHeadersWithPluginSettings(settings) },
+      headers: { ...createHeadersWithPluginSettings(settings), ...traceHeader },
     });
 
     const gatewayURL = manifest?.gateway ?? API_ENDPOINTS.gateway;
@@ -161,7 +181,8 @@ class ChatService {
       throw await getMessageError(res);
     }
 
-    return await res.text();
+    const text = await res.text();
+    return { text, traceId: getTraceId(res) };
   };
 
   fetchPresetTaskResult = async ({
@@ -171,6 +192,7 @@ class ChatService {
     onError,
     onLoadingChange,
     abortController,
+    trace,
   }: FetchAITaskResultParams) => {
     const errorHandle = (error: Error, errorContent?: any) => {
       onLoadingChange?.(false);
@@ -183,7 +205,11 @@ class ChatService {
     onLoadingChange?.(true);
 
     const data = await fetchSSE(
-      () => this.getChatCompletion(params, { signal: abortController?.signal }),
+      () =>
+        this.getChatCompletion(params, {
+          signal: abortController?.signal,
+          trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+        }),
       {
         onErrorHandle: (error) => {
           errorHandle(new Error(error.message), error);
@@ -272,6 +298,21 @@ class ChatService {
       }
     });
   };
+
+  private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
+    const tags = agentSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
+
+    const enabled = preferenceSelectors.userAllowTrace(useGlobalStore.getState());
+
+    if (!enabled) return { enabled: false };
+
+    return {
+      ...trace,
+      enabled: true,
+      tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
+      userId: useGlobalStore.getState().userId,
+    };
+  }
 }
 
 export const chatService = new ChatService();
