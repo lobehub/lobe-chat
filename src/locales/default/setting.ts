@@ -1,4 +1,14 @@
 export default {
+  about: {
+    title: '关于',
+  },
+  analytics: {
+    telemetry: {
+      desc: '通过选择发送遥测数据，你可以帮助我们改善 LobeChat 整体用户体验',
+      title: '发送匿名使用数据',
+    },
+    title: '数据统计',
+  },
   danger: {
     clear: {
       action: '立即清除',
@@ -380,11 +390,13 @@ export default {
     tooltips: '分享到助手市场',
   },
   tab: {
+    about: '关于',
     agent: '默认助手',
     common: '通用设置',
     llm: '语言模型',
     tts: '语音服务',
   },
+
   tools: {
     builtins: {
       groupName: '内置插件',

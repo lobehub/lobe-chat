@@ -4,7 +4,10 @@ const sessionGroupKeys = (s: GlobalStore): string[] => s.preference.expandSessio
 
 const useCmdEnterToSend = (s: GlobalStore): boolean => s.preference.useCmdEnterToSend || false;
 
+const userAllowTrace = (s: GlobalStore) => s.preference.telemetry;
+
 export const preferenceSelectors = {
   sessionGroupKeys,
   useCmdEnterToSend,
+  userAllowTrace,
 };

@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Hakkında"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Anonim kullanım verilerini göndererek LobeChat'in genel kullanıcı deneyimini iyileştirmemize yardımcı olabilirsiniz",
+      "title": "Anonim Kullanım Verileri Gönder"
+    },
+    "title": "Analitik"
+  },
   "danger": {
     "clear": {
       "action": "Temizle",
@@ -378,6 +388,7 @@
     "tooltips": "Asistan pazarına paylaşın"
   },
   "tab": {
+    "about": "Hakkında",
     "agent": "Varsayılan Asistan",
     "common": "Genel Ayarlar",
     "llm": "Modeller",

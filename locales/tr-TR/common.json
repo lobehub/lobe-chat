@@ -129,6 +129,13 @@
     "market": "Keşfet",
     "setting": "Ayarlar"
   },
+  "telemetry": {
+    "allow": "İzin ver",
+    "deny": "Reddet",
+    "desc": "Anonim kullanım bilgilerinizi toplamamıza izin vererek LobeChat'i geliştirmemize ve size daha iyi bir ürün deneyimi sunmamıza yardımcı olabilirsiniz. Dilediğiniz zaman 'Ayarlar' - 'Hakkında' bölümünden devre dışı bırakabilirsiniz.",
+    "learnMore": "Daha Fazla Bilgi",
+    "title": "LobeChat'i Geliştirmemize Yardımcı Olun"
+  },
   "temp": "Geçici",
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upgradeVersion": {
