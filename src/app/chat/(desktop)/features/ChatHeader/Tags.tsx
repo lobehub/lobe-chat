@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import ModelTag from '@/components/ModelTag';
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
@@ -18,12 +19,12 @@ const TitleTags = memo(() => {
   const showPlugin = useGlobalStore(modelProviderSelectors.modelEnabledFunctionCall(model));
 
   return (
-    <>
+    <Flexbox gap={8} horizontal>
       <ModelSwitchPanel>
         <ModelTag model={model} />
       </ModelSwitchPanel>
       {showPlugin && plugins?.length > 0 && <PluginTag plugins={plugins} />}
-    </>
+    </Flexbox>
   );
 });
 

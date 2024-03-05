@@ -34,10 +34,12 @@
     "503": "Spiacenti, il server non può elaborare la tua richiesta al momento, probabilmente a causa di sovraccarico o manutenzione in corso. Riprova più tardi",
     "504": "Spiacenti, il server non ha ricevuto risposta dal server upstream. Riprova più tardi",
     "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
+    "AnthropicBizError": "Si è verificato un errore durante la richiesta del servizio Anthropic AI. Si prega di controllare le informazioni seguenti o riprovare.",
     "AzureBizError": "Errore nella richiesta del servizio Azure AI, controlla le informazioni seguenti o riprova",
     "BedrockBizError": "Errore nella richiesta del servizio Bedrock, controlla le informazioni seguenti o riprova",
     "GoogleBizError": "Errore nella richiesta del servizio Google, controlla le informazioni seguenti o riprova",
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
+    "InvalidAnthropicAPIKey": "La chiave API Anthropic non è valida o è vuota. Si prega di controllare la chiave API Anthropic e riprovare.",
     "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Inserisci la tua chiave API Anthropic per avviare la sessione. L'applicazione non memorizzerà la tua chiave API.",
+        "title": "Utilizza una chiave API Anthropic personalizzata"
+      },
       "Bedrock": {
         "customRegion": "Regione del servizio personalizzata",
         "description": "Inserisci il tuo Aws AccessKeyId / SecretAccessKey per iniziare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
