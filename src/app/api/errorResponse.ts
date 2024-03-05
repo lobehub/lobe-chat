@@ -43,6 +43,9 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.PerplexityBizError: {
       return 479;
     }
+    case AgentRuntimeErrorType.AnthropicBizError: {
+      return 480;
+    }
   }
   return errorType as number;
 };

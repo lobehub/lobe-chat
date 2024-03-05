@@ -1,4 +1,5 @@
 import {
+  Anthropic,
   Azure,
   Bedrock,
   Google,
@@ -62,6 +63,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Mistral: {
       return <Mistral size={20} />;
+    }
+
+    case ModelProvider.Anthropic: {
+      return <Anthropic size={20} />;
     }
 
     default: {

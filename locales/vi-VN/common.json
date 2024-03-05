@@ -100,6 +100,7 @@
   },
   "layoutInitializing": "Đang tải bố cục...",
   "modelProvider": {
+    "anthropic": "Anthropic",
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",
