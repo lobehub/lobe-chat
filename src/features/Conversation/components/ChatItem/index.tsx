@@ -50,9 +50,9 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
   const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
 
-  const [loading, onMessageChange] = useChatStore((s) => [
+  const [loading, updateMessageContent] = useChatStore((s) => [
     s.chatLoadingId === id,
-    s.updateMessageContent,
+    s.modifyMessageContent,
   ]);
 
   const onAvatarsClick = useAvatarsClick();
@@ -114,7 +114,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           message={item.content}
           messageExtra={<MessageExtra data={item} />}
           onAvatarClick={onAvatarsClick?.(item.role)}
-          onChange={(value) => onMessageChange(item.id, value)}
+          onChange={(value) => updateMessageContent(item.id, value)}
           onDoubleClick={(e) => {
             if (item.id === 'default' || item.error) return;
             if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {

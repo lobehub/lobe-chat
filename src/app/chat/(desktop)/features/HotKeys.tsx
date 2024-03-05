@@ -10,7 +10,10 @@ import { useFileStore } from '@/store/file';
 const HotKeys = () => {
   const resendHotkeys = [PREFIX_KEY, REGENERATE_KEY].join('+');
 
-  const [resendMessage, clearMessage] = useChatStore((s) => [s.resendMessage, s.clearMessage]);
+  const [regenerateMessage, clearMessage] = useChatStore((s) => [
+    s.regenerateMessage,
+    s.clearMessage,
+  ]);
   const lastMessage = useChatStore(chatSelectors.latestMessage, isEqual);
 
   const [clearImageList] = useFileStore((s) => [s.clearImageList]);
@@ -30,7 +33,7 @@ const HotKeys = () => {
     resendHotkeys,
     () => {
       if (!lastMessage || lastMessage.id === 'default' || lastMessage.role === 'system') return;
-      resendMessage(lastMessage.id);
+      regenerateMessage(lastMessage.id);
     },
     {
       enableOnFormTags: true,

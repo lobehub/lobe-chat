@@ -11,6 +11,7 @@ import { agentSelectors } from '@/store/session/selectors';
 
 const EditPage = memo(() => {
   const { t } = useTranslation('setting');
+  const id = useSessionStore((s) => s.activeId);
   const config = useSessionStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
   const [updateAgentConfig, updateAgentMeta, title] = useSessionStore((s) => [
@@ -24,6 +25,7 @@ const EditPage = memo(() => {
       <PageTitle title={t('header.sessionWithName', { name: title })} />
       <AgentSetting
         config={config}
+        id={id}
         meta={meta}
         onConfigChange={updateAgentConfig}
         onMetaChange={updateAgentMeta}

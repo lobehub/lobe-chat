@@ -6,6 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { TraceNameMap } from '@/const/trace';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { chatService } from '@/services/chat';
 import { ChatMessageError } from '@/types/message';
@@ -42,6 +43,11 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
         ],
         model,
         provider,
+      },
+      trace: {
+        sessionId: `connection:${provider}`,
+        topicId: model,
+        traceName: TraceNameMap.ConnectivityChecker,
       },
     });
 

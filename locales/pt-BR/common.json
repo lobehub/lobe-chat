@@ -129,6 +129,13 @@
     "market": "Descobrir",
     "setting": "Configuração"
   },
+  "telemetry": {
+    "allow": "Permitir",
+    "deny": "Negar",
+    "desc": "Queremos coletar anonimamente suas informações de uso para nos ajudar a melhorar o LobeChat e oferecer uma experiência de produto melhor para você. Você pode desativar a qualquer momento em Configurações - Sobre.",
+    "learnMore": "Saiba mais",
+    "title": "Ajude o LobeChat a melhorar"
+  },
   "temp": "Temporário",
   "updateAgent": "Atualizar informações do assistente",
   "upgradeVersion": {
