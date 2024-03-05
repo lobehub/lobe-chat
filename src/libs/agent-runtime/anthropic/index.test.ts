@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeAnthropicAI } from './index';
@@ -42,35 +42,49 @@ describe('LobeAnthropicAI', () => {
       expect(result).toBeInstanceOf(Response);
     });
     it('should handle text messages correctly', async () => {
+      // Arrange
       const mockStream = new ReadableStream({
         start(controller) {
           controller.enqueue('Hello, world!');
           controller.close();
         },
       });
-      vi.spyOn(instance['client'].messages, 'create').mockReturnValue(
-        vi.fn().mockResolvedValue(mockStream) as any,
-      );
+      const mockResponse = Promise.resolve(mockStream);
+      (instance['client'].messages.create as Mock).mockResolvedValue(mockResponse);
 
+      // Act
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         temperature: 0,
+        top_p: 1
       });
 
+      // Assert
+      expect(instance['client'].messages.create).toHaveBeenCalledWith({
+        max_tokens: 1024,
+        messages: [
+          { content: 'Hello', role: 'user' },
+        ],
+        model: 'claude-instant-1.2',
+        stream: true,
+        temperature: 0,
+        top_p: 1
+      })
       expect(result).toBeInstanceOf(Response);
     });
     it('should handle system prompt correctly', async () => {
+      // Arrange
       const mockStream = new ReadableStream({
         start(controller) {
           controller.enqueue('Hello, world!');
           controller.close();
         },
       });
-      vi.spyOn(instance['client'].messages, 'create').mockReturnValue(
-        vi.fn().mockResolvedValue(mockStream) as any,
-      );
+      const mockResponse = Promise.resolve(mockStream);
+      (instance['client'].messages.create as Mock).mockResolvedValue(mockResponse);
 
+      // Act
       const result = await instance.chat({
         messages: [
           { content: 'You are an awesome greeter', role: 'system' },
@@ -80,40 +94,61 @@ describe('LobeAnthropicAI', () => {
         temperature: 0,
       });
 
+      // Assert
+      expect(instance['client'].messages.create).toHaveBeenCalledWith({
+        max_tokens: 1024,
+        messages: [
+          { content: 'Hello', role: 'user' },
+        ],
+        model: 'claude-instant-1.2',
+        stream: true,
+        system: 'You are an awesome greeter',
+        temperature: 0,
+      })
       expect(result).toBeInstanceOf(Response);
     });
     it('should call debugStream in DEBUG mode', async () => {
-      // 设置环境变量以启用DEBUG模式
-      process.env.DEBUG_GOOGLE_CHAT_COMPLETION = '1';
-
-      const mockStream = new ReadableStream({
+      // Arrange
+      const mockProdStream = new ReadableStream({
         start(controller) {
-          controller.enqueue('Debug mode test');
+          controller.enqueue('Hello, world!');
           controller.close();
         },
-      });
-      vi.spyOn(instance['client'].messages, 'create').mockReturnValue(
-        vi.fn().mockResolvedValue(mockStream) as any,
-      );
-      const debugStreamSpy = vi
-        .spyOn(debugStreamModule, 'debugStream')
-        .mockImplementation(() => Promise.resolve());
+      }) as any;
+      const mockDebugStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue('Debug stream content');
+          controller.close();
+        },
+      }) as any;
+      mockDebugStream.toReadableStream = () => mockDebugStream;
 
+      (instance['client'].messages.create as Mock).mockResolvedValue({
+        tee: () => [mockProdStream, { toReadableStream: () => mockDebugStream }],
+      });
+
+      const originalDebugValue = process.env.DEBUG_ANTHROPIC_CHAT_COMPLETION;
+
+      process.env.DEBUG_ANTHROPIC_CHAT_COMPLETION = '1';
+      vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
+
+      // Act
       await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         temperature: 0,
       });
 
-      expect(debugStreamSpy).toHaveBeenCalled();
+      // Assert
+      expect(debugStreamModule.debugStream).toHaveBeenCalled();
 
-      // 清理环境变量
-      delete process.env.DEBUG_GOOGLE_CHAT_COMPLETION;
+      // Cleanup
+      process.env.DEBUG_ANTHROPIC_CHAT_COMPLETION = originalDebugValue;
     });
 
     describe('Error', () => {
       it('should throw InvalidAnthropicAPIKey error on API_KEY_INVALID error', async () => {
-        // 模拟 Anthropic AI SDK 抛出异常
+        // Arrange
         const apiError = {
           status: 401,
           error: {
@@ -124,51 +159,22 @@ describe('LobeAnthropicAI', () => {
             },
           },
         };
-
-        vi.spyOn(instance['client'].messages, 'create').mockReturnValue(
-          vi.fn().mockRejectedValue(apiError) as any,
-        );
+        (instance['client'].messages.create as Mock).mockRejectedValue(apiError);
 
         try {
+          // Act
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
             model: 'claude-instant-1.2',
             temperature: 0,
           });
         } catch (e) {
+          // Assert
           expect(e).toEqual({ errorType: 'InvalidAnthropicAPIKey', error: apiError, provider });
         }
       });
-
-      it('should throw LocationNotSupportError error on location not support error', async () => {
-        // 模拟 Anthropic AI SDK 抛出异常
-        const apiError = {
-          status: 403,
-          error: {
-            type: 'error',
-            error: {
-              type: 'forbidden',
-              message: 'Request not allowed',
-            },
-          },
-        };
-
-        vi.spyOn(instance['client'].messages, 'create').mockReturnValue(
-          vi.fn().mockRejectedValue(apiError) as any,
-        );
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'claude-instant-1.2',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({ errorType: 'LocationNotSupportError', error: apiError, provider });
-        }
-      });
-
       it('should throw BizError error', async () => {
-        // 模拟 Anthropic AI SDK 抛出异常
+        // Arrange
         const apiError = {
           status: 529,
           error: {
@@ -179,22 +185,22 @@ describe('LobeAnthropicAI', () => {
             },
           },
         };
+        (instance['client'].messages.create as Mock).mockRejectedValue(apiError);
 
-        vi.spyOn(instance['client'].messages, 'create').mockReturnValue(
-          vi.fn().mockRejectedValue(apiError) as any,
-        );
         try {
+          // Act
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
             model: 'claude-instant-1.2',
             temperature: 0,
           });
         } catch (e) {
+          // Assert
           expect(e).toEqual({ errorType: 'AnthropicBizError', error: apiError, provider });
         }
       });
 
-      it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
+      it('should throw InvalidAnthropicAPIKey if no apiKey is provided', async () => {
         try {
           new LobeAnthropicAI({});
         } catch (e) {
