@@ -15,7 +15,6 @@ import {
 } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
-import { handleOpenAIError } from '../utils/handleOpenAIError';
 import { parseDataUri } from '../utils/uriParser';
 
 export class LobeAnthropicAI implements LobeRuntimeAI {
