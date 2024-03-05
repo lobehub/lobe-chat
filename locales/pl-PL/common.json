@@ -129,6 +129,13 @@
     "market": "Odkrywaj",
     "setting": "Ustawienia"
   },
+  "telemetry": {
+    "allow": "Zezwalaj",
+    "deny": "Odmów",
+    "desc": "Chcemy anonimowo zbierać informacje o twoim użytkowaniu, aby pomóc nam ulepszyć LobeChat i zapewnić ci lepsze doświadczenia z naszym produktem. Możesz wyłączyć to w każdej chwili w „Ustawienia” - „O nas”.",
+    "learnMore": "Dowiedz się więcej",
+    "title": "Pomóż LobeChat stawać się lepszym"
+  },
   "temp": "Tymczasowy",
   "updateAgent": "Zaktualizuj informacje o agencie",
   "upgradeVersion": {

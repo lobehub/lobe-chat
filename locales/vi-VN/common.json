@@ -129,6 +129,13 @@
     "market": "Thị trường",
     "setting": "Cài đặt"
   },
+  "telemetry": {
+    "allow": "Cho phép",
+    "deny": "Từ chối",
+    "desc": "Chúng tôi muốn thu thập thông tin về cách bạn sử dụng một cách ẩn danh để giúp chúng tôi cải thiện LobeChat và cung cấp trải nghiệm sản phẩm tốt hơn cho bạn. Bạn có thể tắt tính năng này bất kỳ lúc nào trong \"Cài đặt\" - \"Về\".",
+    "learnMore": "Tìm hiểu thêm",
+    "title": "Hỗ trợ LobeChat hoạt động tốt hơn"
+  },
   "temp": "Tạm thời",
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upgradeVersion": {

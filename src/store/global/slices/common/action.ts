@@ -7,6 +7,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
 import { globalService } from '@/services/global';
+import { messageService } from '@/services/message';
 import { UserConfig, userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
 import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
@@ -14,6 +15,7 @@ import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 import { switchLang } from '@/utils/switchLang';
 
+import { preferenceSelectors } from '../preference/selectors';
 import { settingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('common');
@@ -26,6 +28,7 @@ export interface CommonAction {
   switchBackToChat: (sessionId?: string) => void;
   updateAvatar: (avatar: string) => Promise<void>;
   useCheckLatestVersion: () => SWRResponse<string>;
+  useCheckTrace: (shouldFetch: boolean) => SWRResponse;
   useFetchServerConfig: () => SWRResponse;
   useFetchUserConfig: (initServer: boolean) => SWRResponse<UserConfig | undefined>;
 }
@@ -58,6 +61,23 @@ export const createCommonSlice: StateCreator<
           set({ hasNewVersion: true, latestVersion: data }, false, n('checkLatestVersion'));
       },
     }),
+  useCheckTrace: (shouldFetch) =>
+    useSWR<boolean>(
+      ['checkTrace', shouldFetch],
+      () => {
+        const userAllowTrace = preferenceSelectors.userAllowTrace(get());
+        // if not init with server side, return false
+        if (!shouldFetch) return Promise.resolve(false);
+
+        // if user have set the trace, return false
+        if (typeof userAllowTrace === 'boolean') return Promise.resolve(false);
+
+        return messageService.messageCountToCheckTrace();
+      },
+      {
+        revalidateOnFocus: false,
+      },
+    ),
   useFetchServerConfig: () =>
     useSWR<GlobalServerConfig>('fetchGlobalConfig', globalService.getGlobalConfig, {
       onSuccess: (data) => {
@@ -84,7 +104,11 @@ export const createCommonSlice: StateCreator<
         onSuccess: (data) => {
           if (!data) return;
 
-          set({ avatar: data.avatar, settings: data.settings }, false, n('fetchUserConfig', data));
+          set(
+            { avatar: data.avatar, settings: data.settings, userId: data.uuid },
+            false,
+            n('fetchUserConfig', data),
+          );
 
           const { language } = settingsSelectors.currentSettings(get());
           if (language === 'auto') {

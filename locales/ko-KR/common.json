@@ -129,6 +129,13 @@
     "market": "발견",
     "setting": "설정"
   },
+  "telemetry": {
+    "allow": "허용",
+    "deny": "거부",
+    "desc": "우리는 익명으로 당신의 사용 정보를 수집하여 LobeChat을 개선하고 더 나은 제품 경험을 제공하기를 희망합니다. \"설정\" - \"정보\"에서 언제든지 비활성화할 수 있습니다.",
+    "learnMore": "더 알아보기",
+    "title": "LobeChat을 더 나아지게 하는 데 도와주세요"
+  },
   "temp": "임시",
   "updateAgent": "에이전트 정보 업데이트",
   "upgradeVersion": {

@@ -8,6 +8,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT } from '@/const/message';
+import { TraceNameMap } from '@/const/trace';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -119,6 +120,7 @@ export const chatTopic: StateCreator<
         updateTopicTitleInSummary(topicId, output);
       },
       params: await chainSummaryTitle(messages),
+      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryTopicTitle, topicId }),
     });
     await refreshTopic();
   },

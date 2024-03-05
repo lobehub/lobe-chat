@@ -60,7 +60,7 @@ describe('chatToolSlice', () => {
         draft[0].previewUrl = 'new-url';
         draft[0].imageId = 'new-id';
       };
-      vi.spyOn(result.current, 'updateMessageContent');
+      vi.spyOn(result.current, 'internalUpdateMessageContent');
 
       // 模拟 getMessageById 返回消息内容
       vi.spyOn(chatSelectors, 'getMessageById').mockImplementationOnce(
@@ -75,8 +75,8 @@ describe('chatToolSlice', () => {
         await result.current.updateImageItem(messageId, updateFunction);
       });
 
-      // 验证 updateMessageContent 是否被正确调用以更新内容
-      expect(result.current.updateMessageContent).toHaveBeenCalledWith(
+      // 验证 internalUpdateMessageContent 是否被正确调用以更新内容
+      expect(result.current.internalUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         JSON.stringify([{ prompt: 'test prompt', previewUrl: 'new-url', imageId: 'new-id' }]),
       );

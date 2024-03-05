@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Over"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Door te kiezen om telemetrische gegevens te verzenden, kun je ons helpen om de algehele gebruikerservaring van LobeChat te verbeteren",
+      "title": "Anonieme gebruiksgegevens verzenden"
+    },
+    "title": "Analytics"
+  },
   "danger": {
     "clear": {
       "action": "Direct verwijderen",
@@ -378,6 +388,7 @@
     "tooltips": "Delen op de assistentenmarkt"
   },
   "tab": {
+    "about": "Over",
     "agent": "Standaardassistent",
     "common": "Algemene instellingen",
     "llm": "Taalmodel",

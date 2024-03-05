@@ -9,6 +9,7 @@ import Conversation from '@/features/Conversation';
 import AppLayoutMobile from '@/layout/AppLayout.mobile';
 import { useSessionStore } from '@/store/session';
 
+import TelemetryNotification from '../../features/TelemetryNotification';
 import ChatInput from '../features/ChatInput';
 
 const TopicList = dynamic(() => import('../features/TopicList'));
@@ -24,6 +25,7 @@ const Chat = memo(() => {
       <Flexbox height={'calc(100% - 44px)'} horizontal>
         <Conversation chatInput={<ChatInput />} mobile />
         <TopicList />
+        <TelemetryNotification mobile />
       </Flexbox>
     </AppLayoutMobile>
   );

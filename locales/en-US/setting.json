@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "About"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "By opting to send telemetry data, you can help us improve the overall user experience of LobeChat",
+      "title": "Send Anonymous Usage Data"
+    },
+    "title": "Analytics"
+  },
   "danger": {
     "clear": {
       "action": "Clear Now",
@@ -378,6 +388,7 @@
     "tooltips": "Share to the agent marketplace"
   },
   "tab": {
+    "about": "About",
     "agent": "Default Agent",
     "common": "Common Settings",
     "llm": "Language Model",
