@@ -34,10 +34,12 @@
     "503": "Lo sentimos, el servidor no puede procesar su solicitud en este momento, posiblemente debido a una sobrecarga o mantenimiento. Por favor, inténtelo de nuevo más tarde",
     "504": "Lo sentimos, el servidor no recibió respuesta del servidor upstream. Por favor, inténtelo de nuevo más tarde",
     "AgentRuntimeError": "Se produjo un error en la ejecución del tiempo de ejecución del modelo de lenguaje Lobe, por favor, verifica la siguiente información o inténtalo de nuevo",
+    "AnthropicBizError": "Se ha producido un error al solicitar el servicio de inteligencia artificial de Anthropic. Por favor, revisa la siguiente información o inténtalo de nuevo.",
     "AzureBizError": "Se produjo un error al solicitar el servicio de Azure AI, por favor, verifica la siguiente información o inténtalo de nuevo",
     "BedrockBizError": "Se produjo un error al solicitar el servicio de Bedrock, por favor, verifica la siguiente información o inténtalo de nuevo",
     "GoogleBizError": "Se produjo un error al solicitar el servicio de Google, por favor, verifica la siguiente información o inténtalo de nuevo",
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
+    "InvalidAnthropicAPIKey": "La clave de API de Anthropic es incorrecta o está vacía. Por favor, revisa la clave de API de Anthropic e inténtalo de nuevo.",
     "InvalidAzureAPIKey": "La clave de API de Azure es incorrecta o está vacía, por favor, verifica la clave de API de Azure e inténtalo de nuevo",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
     "InvalidGoogleAPIKey": "La clave de API de Google es incorrecta o está vacía, por favor, verifica la clave de API de Google e inténtalo de nuevo",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Ingresa tu clave de API de Anthropic para comenzar la sesión. La aplicación no almacenará tu clave de API.",
+        "title": "Usar una clave de API personalizada de Anthropic"
+      },
       "Bedrock": {
         "customRegion": "Región de servicio personalizada",
         "description": "Ingresa tu AccessKeyId/SecretAccessKey de Aws para comenzar la sesión. La aplicación no guardará tu configuración de autenticación",

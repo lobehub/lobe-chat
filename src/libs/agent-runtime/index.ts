@@ -1,3 +1,4 @@
+export { LobeAnthropicAI } from './anthropic';
 export { LobeAzureOpenAI } from './azureOpenai';
 export * from './BaseAI';
 export { LobeBedrockAI } from './bedrock';

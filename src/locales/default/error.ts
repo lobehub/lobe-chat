@@ -76,6 +76,9 @@ export default {
     InvalidPerplexityAPIKey: 'Perplexity API Key 不正确或为空，请检查 Perplexity API Key 后重试',
     PerplexityBizError: '请求 Perplexity AI 服务出错，请根据以下信息排查或重试',
 
+    InvalidAnthropicAPIKey: 'Anthropic API Key 不正确或为空，请检查 Anthropic API Key 后重试',
+    AnthropicBizError: '请求 Anthropic AI 服务出错，请根据以下信息排查或重试',
+
     InvalidOllamaArgs: 'Ollama 配置不正确，请检查 Ollama 配置后重试',
     OllamaBizError: '请求 Ollama 服务出错，请根据以下信息排查或重试',
 
@@ -90,6 +93,10 @@ export default {
   },
   unlock: {
     apikey: {
+      Anthropic: {
+        description: '输入你的 Anthropic API Key 即可开始会话。应用不会记录你的 API Key',
+        title: '使用自定义 Anthropic API Key',
+      },
       Bedrock: {
         customRegion: '自定义服务区域',
         description:

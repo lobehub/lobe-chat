@@ -31,6 +31,14 @@
     "sessionWithName": "会话设置 · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "填入来自 Anthropic 的 API Key",
+        "placeholder": "Anthropic API Key",
+        "title": "API Key"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
