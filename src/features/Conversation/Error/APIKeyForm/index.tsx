@@ -6,6 +6,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useChatStore } from '@/store/chat';
 
+import AnthropicForm from './Anthropic';
 import BedrockForm from './Bedrock';
 import GoogleForm from './Google';
 import MoonshotForm from './Moonshot';
@@ -21,7 +22,7 @@ interface APIKeyFormProps {
 const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
   const { t } = useTranslation('error');
 
-  const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.internalResendMessage, s.deleteMessage]);
 
   const action = useMemo(() => {
     switch (provider as ModelProvider) {
@@ -43,6 +44,10 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
 
       case ModelProvider.Perplexity: {
         return <PerplexityForm />;
+      }
+
+      case ModelProvider.Anthropic: {
+        return <AnthropicForm />;
       }
 
       default:

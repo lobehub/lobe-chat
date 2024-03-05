@@ -34,10 +34,12 @@
     "503": "Sorry, the server is currently unable to process your request, possibly due to overload or maintenance. Please try again later.",
     "504": "Sorry, the server did not receive a response from the upstream server. Please try again later.",
     "AgentRuntimeError": "Lobe language model runtime execution error. Please troubleshoot or retry based on the following information.",
+    "AnthropicBizError": "Error requesting Anthropic service. Please troubleshoot or retry based on the following information.",
     "AzureBizError": "Error requesting Azure AI service. Please troubleshoot or retry based on the following information.",
     "BedrockBizError": "Error requesting Bedrock service. Please troubleshoot or retry based on the following information.",
     "GoogleBizError": "Error requesting Google service. Please troubleshoot or retry based on the following information.",
     "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
+    "InvalidAnthropicAPIKey": "The Anthropic API Key is incorrect or empty. Please check the Anthropic API Key and retry.",
     "InvalidAzureAPIKey": "Azure API Key is incorrect or empty. Please check the Azure API Key and retry.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
     "InvalidGoogleAPIKey": "Google API Key is incorrect or empty. Please check the Google API Key and retry.",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Enter your Anthropic API Key to start the session. The application will not store your API Key.",
+        "title": "Use Custom Anthropic API Key"
+      },
       "Bedrock": {
         "customRegion": "Custom service region",
         "description": "Enter your Aws AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration.",

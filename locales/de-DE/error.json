@@ -34,10 +34,12 @@
     "503": "Entschuldigung, der Server kann Ihre Anfrage derzeit nicht verarbeiten. Möglicherweise aufgrund von Überlastung oder Wartungsarbeiten. Bitte versuchen Sie es später erneut",
     "504": "Entschuldigung, der Server hat keine Antwort vom Upstream-Server erhalten. Bitte versuchen Sie es später erneut",
     "AgentRuntimeError": "Es ist ein Fehler bei der Ausführung des Lobe-Sprachmodells aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "AnthropicBizError": "Fehler beim Anfordern des Anthropic AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "AzureBizError": "Es ist ein Fehler bei der Anforderung des Azure AI-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "BedrockBizError": "Es ist ein Fehler bei der Anforderung des Bedrock-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "GoogleBizError": "Es ist ein Fehler bei der Anforderung des Google-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
+    "InvalidAnthropicAPIKey": "Ungültiger oder leerer Anthropic API-Schlüssel. Bitte überprüfen Sie den Anthropic API-Schlüssel und versuchen Sie es erneut.",
     "InvalidAzureAPIKey": "Der Azure API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Azure API-Schlüssel und versuchen Sie es erneut.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidGoogleAPIKey": "Der Google API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Google API-Schlüssel und versuchen Sie es erneut.",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Geben Sie Ihren Anthropic API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
+        "title": "Verwenden Sie einen benutzerdefinierten Anthropic API-Schlüssel"
+      },
       "Bedrock": {
         "customRegion": "Benutzerdefinierte Region",
         "description": "Geben Sie Ihre Aws AccessKeyId / SecretAccessKey ein, um die Sitzung zu starten. Die Anwendung speichert Ihre Authentifizierungsinformationen nicht.",

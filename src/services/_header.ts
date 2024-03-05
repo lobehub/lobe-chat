@@ -8,7 +8,10 @@ import {
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors, settingsSelectors } from '@/store/global/selectors';
 
-// TODO: Need to be removed after tts refactor
+/**
+ * TODO: Need to be removed after tts refactor
+ * @deprecated
+ */
 // eslint-disable-next-line no-undef
 export const createHeaderWithOpenAI = (header?: HeadersInit): HeadersInit => {
   const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());

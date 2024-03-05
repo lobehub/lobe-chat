@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "について"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "匿名の使用データを送信することで、LobeChat の全体的なユーザーエクスペリエンスの向上にご協力いただけます",
+      "title": "匿名使用データの送信"
+    },
+    "title": "データ分析"
+  },
   "danger": {
     "clear": {
       "action": "すぐにクリア",
@@ -21,6 +31,14 @@
     "sessionWithName": "セッション設定 · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Anthropic の API キーを入力してください",
+        "placeholder": "Anthropic API キー",
+        "title": "API キー"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "AzureのAPIバージョン。YYYY-MM-DD形式に従う。[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照",
@@ -378,6 +396,7 @@
     "tooltips": "エージェントマーケットに共有"
   },
   "tab": {
+    "about": "について",
     "agent": "デフォルトエージェント",
     "common": "一般設定",
     "llm": "言語モデル",

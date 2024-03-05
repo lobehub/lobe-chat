@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "소개"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "익명 사용 데이터를 보내는 것으로 LobeChat의 전반적인 사용자 경험을 개선하는 데 도움을 줄 수 있습니다",
+      "title": "익명 사용 데이터 전송"
+    },
+    "title": "분석"
+  },
   "danger": {
     "clear": {
       "action": "모두 지우기",
@@ -21,6 +31,14 @@
     "sessionWithName": "세션 설정 · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Anthropic의 API 키를 입력하세요",
+        "placeholder": "Anthropic API 키",
+        "title": "API 키"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Azure의 API 버전은 YYYY-MM-DD 형식을 따르며, [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 확인하세요.",
@@ -378,6 +396,7 @@
     "tooltips": "에이전트 마켓에 공유"
   },
   "tab": {
+    "about": "소개",
     "agent": "기본 에이전트",
     "common": "일반 설정",
     "llm": "언어 모델",

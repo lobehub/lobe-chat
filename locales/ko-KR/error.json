@@ -34,10 +34,12 @@
     "503": "죄송합니다. 서버가 현재 요청을 처리할 수 없습니다. 과부하 또는 유지 보수 중일 수 있습니다. 잠시 후에 다시 시도해주세요.",
     "504": "죄송합니다. 서버가 상위 서버의 응답을 기다리지 못했습니다. 잠시 후에 다시 시도해주세요.",
     "AgentRuntimeError": "Lobe 언어 모델 실행 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
+    "AnthropicBizError": "Anthropic AI 서비스 요청 중 오류가 발생했습니다. 다음 정보를 확인하고 다시 시도하십시오.",
     "AzureBizError": "Azure AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "BedrockBizError": "Bedrock 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "GoogleBizError": "Google 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "InvalidAccessCode": "액세스 코드가 잘못되었거나 비어 있습니다. 올바른 액세스 코드를 입력하거나 사용자 지정 API 키를 추가하십시오.",
+    "InvalidAnthropicAPIKey": "Anthropic API 키가 잘못되었거나 비어 있습니다. Anthropic API 키를 확인하고 다시 시도하십시오.",
     "InvalidAzureAPIKey": "잘못된 또는 비어 있는 Azure API Key입니다. Azure API Key를 확인한 후 다시 시도하십시오.",
     "InvalidBedrockCredentials": "Bedrock 인증에 실패했습니다. AccessKeyId/SecretAccessKey를 확인한 후 다시 시도하십시오.",
     "InvalidGoogleAPIKey": "잘못된 또는 비어 있는 Google API Key입니다. Google API Key를 확인한 후 다시 시도하십시오.",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "사용자 정의 Anthropic API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+        "title": "사용자 정의 Anthropic API 키 사용"
+      },
       "Bedrock": {
         "customRegion": "사용자 정의 서비스 지역",
         "description": "Aws AccessKeyId / SecretAccessKey를 입력하여 세션을 시작합니다. 앱은 귀하의 인증 구성을 기록하지 않습니다.",

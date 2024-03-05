@@ -34,10 +34,12 @@
     "503": "Desculpe, o servidor não pode processar sua solicitação no momento, possivelmente devido a sobrecarga ou manutenção. Por favor, tente novamente mais tarde",
     "504": "Desculpe, o servidor não recebeu resposta do servidor upstream. Por favor, tente novamente mais tarde",
     "AgentRuntimeError": "Erro de execução do modelo de linguagem Lobe, por favor, verifique as informações abaixo ou tente novamente",
+    "AnthropicBizError": "Erro de negócios ao solicitar o serviço Anthropic AI. Por favor, verifique as informações abaixo ou tente novamente.",
     "AzureBizError": "Erro ao solicitar o serviço Azure AI, por favor, verifique as informações abaixo ou tente novamente",
     "BedrockBizError": "Erro ao solicitar o serviço Bedrock, por favor, verifique as informações abaixo ou tente novamente",
     "GoogleBizError": "Erro ao solicitar o serviço Google, por favor, verifique as informações abaixo ou tente novamente",
     "InvalidAccessCode": "Senha de acesso inválida ou em branco. Por favor, insira a senha de acesso correta ou adicione uma Chave de API personalizada.",
+    "InvalidAnthropicAPIKey": "A chave da API Anthropic está incorreta ou vazia. Por favor, verifique a chave da API Anthropic e tente novamente.",
     "InvalidAzureAPIKey": "Chave de API Azure incorreta ou vazia, por favor, verifique a chave de API Azure e tente novamente",
     "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
     "InvalidGoogleAPIKey": "Chave de API Google incorreta ou vazia, por favor, verifique a chave de API Google e tente novamente",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Insira sua chave da API Anthropic para iniciar a sessão. O aplicativo não irá armazenar sua chave da API.",
+        "title": "Usar chave da API Anthropic personalizada"
+      },
       "Bedrock": {
         "customRegion": "Região de serviço personalizada",
         "description": "Digite seu Aws AccessKeyId / SecretAccessKey para iniciar a sessão. O aplicativo não irá armazenar suas configurações de autenticação",

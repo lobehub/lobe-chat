@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Über"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Durch das Senden von Telemetriedaten können Sie uns dabei helfen, die Gesamtnutzererfahrung von LobeChat zu verbessern",
+      "title": "Anonyme Nutzungsdaten senden"
+    },
+    "title": "Analytics"
+  },
   "danger": {
     "clear": {
       "action": "Alle löschen",
@@ -21,6 +31,14 @@
     "sessionWithName": "Sitzungseinstellungen · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Geben Sie den API-Schlüssel von Anthropic ein",
+        "placeholder": "Anthropic API-Schlüssel",
+        "title": "API-Schlüssel"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Die API-Version von Azure, die dem Format JJJJ-MM-TT folgt. Siehe [Neueste Version](https://learn.microsoft.com/de-de/azure/ai-services/openai/reference#chat-completions)",
@@ -378,6 +396,7 @@
     "tooltips": "Auf dem Assistentenmarkt teilen"
   },
   "tab": {
+    "about": "Über",
     "agent": "Standard-Assistent",
     "common": "Allgemeine Einstellungen",
     "llm": "Sprachmodell",

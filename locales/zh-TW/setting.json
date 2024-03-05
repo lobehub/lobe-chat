@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "關於"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "通過選擇發送遙測數據，你可以幫助我們改善 LobeChat 整體用戶體驗",
+      "title": "發送匿名使用數據"
+    },
+    "title": "數據統計"
+  },
   "danger": {
     "clear": {
       "action": "立即清除",
@@ -21,6 +31,14 @@
     "sessionWithName": "對話設定 · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "填入來自 Anthropic 的 API 金鑰",
+        "placeholder": "Anthropic API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
@@ -378,6 +396,7 @@
     "tooltips": "分享到助手市場"
   },
   "tab": {
+    "about": "關於",
     "agent": "默認助手",
     "common": "通用設置",
     "llm": "語言模型",

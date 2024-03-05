@@ -3,7 +3,12 @@ import { GoogleGenerativeAIStream, StreamingTextResponse } from 'ai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../error';
-import { ChatStreamPayload, OpenAIChatMessage, UserMessageContentPart } from '../types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  OpenAIChatMessage,
+  UserMessageContentPart,
+} from '../types';
 import { ModelProvider } from '../types/type';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
@@ -40,7 +45,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     this.client = new GoogleGenerativeAI(apiKey);
   }
 
-  async chat(payload: ChatStreamPayload) {
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
       const { contents, model } = this.buildGoogleMessages(payload.messages, payload.model);
       const geminiStream = await this.client
@@ -73,7 +78,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         .generateContentStream({ contents });
 
       // Convert the response into a friendly text-stream
-      const stream = GoogleGenerativeAIStream(geminiStream);
+      const stream = GoogleGenerativeAIStream(geminiStream, options?.callback);
 
       const [debug, output] = stream.tee();
 
@@ -82,7 +87,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       }
 
       // Respond with the stream
-      return new StreamingTextResponse(output);
+      return new StreamingTextResponse(output, { headers: options?.headers });
     } catch (e) {
       const err = e as Error;
 

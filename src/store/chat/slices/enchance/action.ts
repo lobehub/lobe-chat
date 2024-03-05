@@ -3,6 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { chainLangDetect } from '@/chains/langDetect';
 import { chainTranslate } from '@/chains/translate';
+import { TraceNameMap, TracePayload } from '@/const/trace';
 import { supportLocales } from '@/locales/resources';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
@@ -19,6 +20,7 @@ const n = setNamespace('enhance');
 export interface ChatEnhanceAction {
   clearTTS: (id: string) => Promise<void>;
   clearTranslate: (id: string) => Promise<void>;
+  getCurrentTracePayload: (data: Partial<TracePayload>) => TracePayload;
   translateMessage: (id: string, targetLang: string) => Promise<void>;
   ttsMessage: (
     id: string,
@@ -41,7 +43,11 @@ export const chatEnhance: StateCreator<
   clearTranslate: async (id) => {
     await get().updateMessageTranslate(id, false);
   },
-
+  getCurrentTracePayload: (data) => ({
+    sessionId: get().activeId,
+    topicId: get().activeTopicId,
+    ...data,
+  }),
   translateMessage: async (id, targetLang) => {
     const { toggleChatLoading, updateMessageTranslate, dispatchMessage } = get();
 
@@ -60,6 +66,7 @@ export const chatEnhance: StateCreator<
     chatService
       .fetchPresetTaskResult({
         params: chainLangDetect(message.content),
+        trace: get().getCurrentTracePayload({ traceName: TraceNameMap.LanguageDetect }),
       })
       .then(async (data) => {
         if (data && supportLocales.includes(data)) from = data;
@@ -81,6 +88,7 @@ export const chatEnhance: StateCreator<
         });
       },
       params: chainTranslate(message.content, targetLang),
+      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.Translator }),
     });
 
     await updateMessageTranslate(id, { content, from, to: targetLang });
