@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Informazioni"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Attivando l'invio dei dati di telemetria, ci aiuti a migliorare complessivamente l'esperienza utente di LobeChat",
+      "title": "Invio dati anonimi"
+    },
+    "title": "Analisi"
+  },
   "danger": {
     "clear": {
       "action": "Cancella subito",
@@ -378,6 +388,7 @@
     "tooltips": "Condividi sul mercato degli assistenti"
   },
   "tab": {
+    "about": "Informazioni",
     "agent": "Assistente predefinito",
     "common": "Impostazioni comuni",
     "llm": "Modello linguistico",
