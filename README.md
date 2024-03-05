@@ -223,7 +223,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | Get realtime crypto price, BTC, ETH, BNB, and the latest insights.The latest coin news and airdrop opportunities.<br/>`crypto` `btc` `eth` `bnb`                                                                                |
 | [Bilibili](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>       | Dive into Bilibili's vast content with features like keyword video search, replay access, interactive danmaku, trending video recommendations, and hot-search insights, all at your fingertips.<br/>`video` `bilibili` `search` |
 
-> 📊 Total plugins: [<kbd>**61**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**58**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
