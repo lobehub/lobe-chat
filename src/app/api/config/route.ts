@@ -18,6 +18,7 @@ export const GET = async () => {
     ENABLE_OAUTH_SSO,
     ENABLE_OLLAMA,
     ENABLED_PERPLEXITY,
+    ENABLED_ANTHROPIC,
     DEFAULT_AGENT_CONFIG,
     ENABLE_LANGFUSE,
   } = getServerConfig();
@@ -30,6 +31,7 @@ export const GET = async () => {
 
     enabledOAuthSSO: ENABLE_OAUTH_SSO,
     languageModel: {
+      anthropic: { enabled: ENABLED_ANTHROPIC },
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       google: { enabled: ENABLED_GOOGLE },
       moonshot: { enabled: ENABLED_MOONSHOT },

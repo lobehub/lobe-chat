@@ -100,6 +100,7 @@
   },
   "layoutInitializing": "Inizializzazione layout in corso...",
   "modelProvider": {
+    "anthropic": "Antropico",
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",

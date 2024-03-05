@@ -100,6 +100,7 @@
   },
   "layoutInitializing": "レイアウトを初期化中...",
   "modelProvider": {
+    "anthropic": "Anthropic",
     "azure": "Azure",
     "bedrock": "AWSベッドロック",
     "google": "Google",
