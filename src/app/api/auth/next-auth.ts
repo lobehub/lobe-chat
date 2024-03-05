@@ -47,6 +47,9 @@ const nextAuth = NextAuth({
         switch (provider) {
           case 'auth0': {
             return Auth0({
+              // Specify auth scope, at least include 'openid email'
+              // all scopes in Auth0 ref: https://auth0.com/docs/get-started/apis/scopes/openid-connect-scopes#standard-claims
+              authorization: { params: { scope: 'openid email profile' } },
               clientId: AUTH0_CLIENT_ID,
               clientSecret: AUTH0_CLIENT_SECRET,
               issuer: AUTH0_ISSUER,
@@ -54,6 +57,9 @@ const nextAuth = NextAuth({
           }
           case 'azure-ad': {
             return AzureAd({
+              // Specify auth scope, at least include 'openid email'
+              // all scopes in Azure AD ref: https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc#openid-connect-scopes
+              authorization: { params: { scope: 'openid email profile' } },
               clientId: AZURE_AD_CLIENT_ID,
               clientSecret: AZURE_AD_CLIENT_SECRET,
               tenantId: AZURE_AD_TENANT_ID,
