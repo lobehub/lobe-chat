@@ -100,6 +100,7 @@ export default {
   },
   layoutInitializing: '正在加载布局...',
   modelProvider: {
+    anthropic: 'Anthropic',
     azure: 'Azure',
     bedrock: 'AWS Bedrock',
     google: 'Google',

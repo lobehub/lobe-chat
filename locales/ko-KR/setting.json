@@ -31,6 +31,14 @@
     "sessionWithName": "세션 설정 · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Anthropic의 API 키를 입력하세요",
+        "placeholder": "Anthropic API 키",
+        "title": "API 키"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Azure의 API 버전은 YYYY-MM-DD 형식을 따르며, [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 확인하세요.",

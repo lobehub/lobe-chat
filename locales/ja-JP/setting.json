@@ -31,6 +31,14 @@
     "sessionWithName": "セッション設定 · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Anthropic の API キーを入力してください",
+        "placeholder": "Anthropic API キー",
+        "title": "API キー"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "AzureのAPIバージョン。YYYY-MM-DD形式に従う。[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照",

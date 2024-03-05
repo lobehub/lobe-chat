@@ -31,6 +31,14 @@
     "sessionWithName": "Настройки сеанса · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Антропный",
+      "token": {
+        "desc": "Введите ключ API от Anthropic",
+        "placeholder": "Ключ API Anthropic",
+        "title": "Ключ API"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Версия API Azure, следуйте формату YYYY-MM-DD, см. [последнюю версию](https://learn.microsoft.com/ru-ru/azure/ai-services/openai/reference#chat-completions)",

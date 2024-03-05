@@ -34,10 +34,12 @@
     "503": "Xin lỗi, máy chủ hiện không thể xử lý yêu cầu của bạn, có thể do quá tải hoặc đang bảo trì, vui lòng thử lại sau",
     "504": "Xin lỗi, máy chủ không đợi được phản hồi từ máy chủ upstream, vui lòng thử lại sau",
     "AgentRuntimeError": "Lobe mô hình ngôn ngữ thực thi gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
+    "AnthropicBizError": "Yêu cầu dịch vụ AI Anthropic gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "AzureBizError": "Yêu cầu dịch vụ Azure AI gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
     "BedrockBizError": "Yêu cầu dịch vụ Bedrock gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
     "GoogleBizError": "Yêu cầu dịch vụ Google gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
     "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
+    "InvalidAnthropicAPIKey": "Khóa API Anthropic không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
     "InvalidAzureAPIKey": "Khóa API Azure không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Azure và thử lại",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidGoogleAPIKey": "Khóa API Google không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Google và thử lại",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Nhập Khóa API Anthropic của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+        "title": "Sử dụng Khóa API Anthropic tùy chỉnh"
+      },
       "Bedrock": {
         "customRegion": "Vùng dịch vụ tùy chỉnh",
         "description": "Nhập Aws AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",

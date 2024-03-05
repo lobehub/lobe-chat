@@ -9,6 +9,7 @@ import {
 } from '@/const/trace';
 import {
   ChatStreamPayload,
+  LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
@@ -155,6 +156,11 @@ class AgentRuntime {
         runtimeModel = this.initPerplexity(payload);
         break;
       }
+
+      case ModelProvider.Anthropic: {
+        runtimeModel = this.initAnthropic(payload);
+        break;
+      }
     }
 
     return new AgentRuntime(runtimeModel);
@@ -241,6 +247,13 @@ class AgentRuntime {
     const apiKey = apiKeyManager.pick(payload?.apiKey || PERPLEXITY_API_KEY);
 
     return new LobePerplexityAI({ apiKey });
+  }
+
+  private static initAnthropic(payload: JWTPayload) {
+    const { ANTHROPIC_API_KEY } = getServerConfig();
+    const apiKey = apiKeyManager.pick(payload?.apiKey || ANTHROPIC_API_KEY);
+
+    return new LobeAnthropicAI({ apiKey });
   }
 }
 

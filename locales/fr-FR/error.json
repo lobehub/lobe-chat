@@ -34,10 +34,12 @@
     "503": "Désolé, le serveur ne peut actuellement pas traiter votre requête, probablement en raison d'une surcharge ou de travaux de maintenance. Veuillez réessayer plus tard",
     "504": "Désolé, le serveur n'a pas reçu de réponse de la part du serveur amont. Veuillez réessayer plus tard",
     "AgentRuntimeError": "Erreur d'exécution du modèle linguistique Lobe, veuillez vérifier les informations ci-dessous ou réessayer",
+    "AnthropicBizError": "Erreur commerciale lors de la demande de service Anthropic AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
     "AzureBizError": "Erreur lors de la demande de service Azure AI, veuillez vérifier les informations ci-dessous ou réessayer",
     "BedrockBizError": "Erreur lors de la demande de service Bedrock, veuillez vérifier les informations ci-dessous ou réessayer",
     "GoogleBizError": "Erreur lors de la demande de service Google, veuillez vérifier les informations ci-dessous ou réessayer",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
+    "InvalidAnthropicAPIKey": "La clé API Anthropic est incorrecte ou manquante. Veuillez vérifier la clé API Anthropic et réessayer.",
     "InvalidAzureAPIKey": "Clé API Azure incorrecte ou vide, veuillez vérifier la clé API Azure et réessayer",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
     "InvalidGoogleAPIKey": "Clé API Google incorrecte ou vide, veuillez vérifier la clé API Google et réessayer",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Entrez votre clé API Anthropic pour commencer la session. L'application ne stockera pas votre clé API.",
+        "title": "Utiliser une clé API Anthropic personnalisée"
+      },
       "Bedrock": {
         "customRegion": "Région de service personnalisée",
         "description": "Entrez votre AccessKeyId/SecretAccessKey AWS pour commencer la session. L'application ne conservera pas votre configuration d'authentification",
