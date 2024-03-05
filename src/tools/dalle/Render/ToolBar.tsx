@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatEnhanceSelectors } from '@/store/chat/selectors';
+import { chatToolSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { DallEImageItem } from '@/types/tool/dalle';
@@ -17,7 +17,7 @@ interface ToolBarProps {
 const ToolBar = memo<ToolBarProps>(({ content, messageId }) => {
   const { t } = useTranslation('tool');
   const generateImageFromPrompts = useChatStore((s) => s.generateImageFromPrompts);
-  const isLoading = useChatStore(chatEnhanceSelectors.isGeneratingDallEImage);
+  const isLoading = useChatStore(chatToolSelectors.isGeneratingDallEImage);
 
   const [isAutoGenerate, setSettings] = useGlobalStore((s) => [
     settingsSelectors.isDalleAutoGenerating(s),

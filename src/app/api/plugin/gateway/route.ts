@@ -1,11 +1,15 @@
+import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
 import { getJWTPayload } from '@/app/api/chat/auth';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { getServerConfig } from '@/config/server';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
+import { LOBE_CHAT_TRACE_ID, TraceNameMap } from '@/const/trace';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
+import { TraceClient } from '@/libs/traces';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
+import { getTracePayload } from '@/utils/trace';
 
 import { parserPluginSettings } from './settings';
 
@@ -48,5 +52,31 @@ export const POST = async (req: Request) => {
     return createErrorResponse(result.error as ErrorType);
   }
 
-  return handler(req);
+  // add trace
+  const tracePayload = getTracePayload(req);
+  const traceClient = new TraceClient();
+  const trace = traceClient.createTrace({
+    id: tracePayload?.traceId,
+    ...tracePayload,
+  });
+
+  const { manifest, indexUrl, ...input } = (await req.clone().json()) as PluginRequestPayload;
+
+  const span = trace?.span({
+    input,
+    metadata: { indexUrl, manifest },
+    name: TraceNameMap.FetchPluginAPI,
+  });
+
+  span?.update({ parentObservationId: tracePayload?.observationId });
+
+  const res = await handler(req);
+
+  span?.end({ output: await res.clone().text() });
+
+  if (trace?.id) {
+    res.headers.set(LOBE_CHAT_TRACE_ID, trace.id);
+  }
+
+  return res;
 };

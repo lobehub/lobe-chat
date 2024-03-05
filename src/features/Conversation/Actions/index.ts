@@ -1,4 +1,3 @@
-import { copyToClipboard } from '@lobehub/ui';
 import { App } from 'antd';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,18 +20,27 @@ export const renderActions: Record<LLMRoleType, RenderAction> = {
 
 export const useActionsClick = (): OnActionsClick => {
   const { t } = useTranslation('common');
-  const [deleteMessage, resendMessage, translateMessage, ttsMessage] = useChatStore((s) => [
+  const [
+    deleteMessage,
+    regenerateMessage,
+    translateMessage,
+    ttsMessage,
+    delAndRegenerateMessage,
+    copyMessage,
+  ] = useChatStore((s) => [
     s.deleteMessage,
-    s.resendMessage,
+    s.regenerateMessage,
     s.translateMessage,
     s.ttsMessage,
+    s.delAndRegenerateMessage,
+    s.copyMessage,
   ]);
   const { message } = App.useApp();
 
   return useCallback<OnActionsClick>(async (action, { id, content, error }) => {
     switch (action.key) {
       case 'copy': {
-        await copyToClipboard(content);
+        await copyMessage(id, content);
         message.success(t('copySuccess', { defaultValue: 'Copy Success' }));
         break;
       }
@@ -43,15 +51,14 @@ export const useActionsClick = (): OnActionsClick => {
       }
 
       case 'regenerate': {
-        resendMessage(id);
+        regenerateMessage(id);
         // if this message is an error message, we need to delete it
         if (error) deleteMessage(id);
         break;
       }
 
       case 'delAndRegenerate': {
-        resendMessage(id);
-        deleteMessage(id);
+        delAndRegenerateMessage(id);
         break;
       }
 

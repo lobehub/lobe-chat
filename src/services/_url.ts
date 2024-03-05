@@ -21,6 +21,7 @@ export const API_ENDPOINTS = mapWithBasePath({
 
   // agent markets
   market: '/api/market',
+  marketItem: (identifier: string) => withBasePath(`/api/market/${identifier}`),
 
   // plugins
   gateway: '/api/plugin/gateway',
@@ -28,6 +29,9 @@ export const API_ENDPOINTS = mapWithBasePath({
 
   // chat
   chat: (provider: string) => withBasePath(`/api/chat/${provider}`),
+
+  // trace
+  trace: '/api/trace',
 
   // image
   images: '/api/openai/images',

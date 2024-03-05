@@ -5,7 +5,7 @@ const isDallEImageGenerating = (id: string) => (s: ChatStoreState) => s.dalleIma
 const isGeneratingDallEImage = (s: ChatStoreState) =>
   Object.values(s.dalleImageLoading).some(Boolean);
 
-export const chatEnhanceSelectors = {
+export const chatToolSelectors = {
   isDallEImageGenerating,
   isGeneratingDallEImage,
 };

@@ -129,6 +129,13 @@
     "market": "发现",
     "setting": "设置"
   },
+  "telemetry": {
+    "allow": "Toestaan",
+    "deny": "Weigeren",
+    "desc": "We willen graag anonieme gebruiksgegevens verzamelen om LobeChat te verbeteren en een betere productervaring te bieden. Je kunt dit op elk moment uitschakelen in 'Instellingen' - 'Over'.",
+    "learnMore": "Meer informatie",
+    "title": "Help LobeChat verbeteren"
+  },
   "temp": "临时",
   "updateAgent": "更新助理信息",
   "upgradeVersion": {

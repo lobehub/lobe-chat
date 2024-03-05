@@ -380,7 +380,7 @@ describe('topic action', () => {
       // Mock the `chatService.fetchPresetTaskResult` to simulate the AI response
       vi.spyOn(chatService, 'fetchPresetTaskResult').mockImplementation((params) => {
         if (params) {
-          params.onFinish?.('Summarized Title');
+          params.onFinish?.('Summarized Title', { type: 'done' });
         }
         return Promise.resolve(undefined);
       });

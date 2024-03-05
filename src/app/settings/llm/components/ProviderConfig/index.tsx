@@ -4,12 +4,11 @@ import { Form as AntForm, Switch } from 'antd';
 import { debounce } from 'lodash-es';
 import { ReactNode, memo } from 'react';
 
+import { useSyncSettings } from '@/app/settings/hooks/useSyncSettings';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
-
-import { useSyncSettings } from './useSyncSettings';
 
 interface ProviderConfigProps {
   canDeactivate?: boolean;

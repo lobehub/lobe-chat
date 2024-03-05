@@ -14,8 +14,13 @@ export class MessageService {
   }
 
   async hasMessages() {
-    const isEmpty = await MessageModel.isEmpty();
-    return !isEmpty;
+    const number = await MessageModel.count();
+    return number > 0;
+  }
+
+  async messageCountToCheckTrace() {
+    const number = await MessageModel.count();
+    return number >= 4;
   }
 
   async getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]> {
