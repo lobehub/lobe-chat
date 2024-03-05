@@ -115,7 +115,9 @@ describe('POST handler', () => {
       const response = await POST(request as unknown as Request, { params: mockParams });
 
       expect(response).toEqual(mockChatResponse);
-      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload);
+      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, {
+        provider: 'test-provider',
+      });
     });
 
     it('should return an error response when chat completion fails', async () => {
@@ -138,7 +140,14 @@ describe('POST handler', () => {
 
       expect(response.status).toBe(500);
       expect(await response.json()).toEqual({
-        body: { errorMessage: 'Something went wrong' },
+        body: {
+          errorMessage: 'Something went wrong',
+          error: {
+            errorMessage: 'Something went wrong',
+            errorType: 500,
+          },
+          provider: 'test-provider',
+        },
         errorType: 500,
       });
     });

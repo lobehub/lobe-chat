@@ -9,6 +9,7 @@ import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
+import { FetchSSEOptions, fetchSSE } from '@/utils/fetch';
 
 import { chatService } from '../chat';
 
@@ -577,7 +578,7 @@ Get data from users`,
       const result = await chatService.runPluginApi(params, options);
 
       expect(global.fetch).toHaveBeenCalledWith(expect.any(String), expect.any(Object));
-      expect(result).toBe('Plugin Result');
+      expect(result.text).toBe('Plugin Result');
     });
 
     // Add more test cases to cover different scenarios and edge cases
@@ -596,6 +597,7 @@ Get data from users`,
       const onError = vi.fn();
       const onLoadingChange = vi.fn();
       const abortController = new AbortController();
+      const trace = {};
 
       const result = await chatService.fetchPresetTaskResult({
         params,
@@ -604,6 +606,7 @@ Get data from users`,
         onError,
         onLoadingChange,
         abortController,
+        trace,
       });
 
       expect(result).toBe('AI response');
@@ -627,12 +630,16 @@ Get data from users`,
       const onError = vi.fn();
       const onLoadingChange = vi.fn();
       const abortController = new AbortController();
+      const trace = {
+        /* 填充跟踪信息 */
+      };
 
       await chatService.fetchPresetTaskResult({
         params,
         onError,
         onLoadingChange,
         abortController,
+        trace,
       });
 
       expect(onError).toHaveBeenCalledWith(expect.any(Error), {

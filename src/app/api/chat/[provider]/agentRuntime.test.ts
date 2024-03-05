@@ -1,8 +1,13 @@
-// @vitest-environment edge-runtime
-import { describe, expect, it, vi } from 'vitest';
+// @vitest-environment node
+import { Langfuse } from 'langfuse';
+import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { getServerConfig } from '@/config/server';
 import { JWTPayload } from '@/const/auth';
+import { TraceNameMap } from '@/const/trace';
 import {
+  ChatStreamPayload,
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
@@ -14,7 +19,7 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 
-import AgentRuntime from './agentRuntime';
+import AgentRuntime, { AgentChatOptions } from './agentRuntime';
 
 // 模拟依赖项
 vi.mock('@/config/server', () => ({
@@ -263,6 +268,167 @@ describe('AgentRuntime', () => {
       // 根据实际实现，你可能需要检查是否返回了默认的 runtime 实例，或者是否抛出了异常
       // 例如，如果默认使用 OpenAI:
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
+    });
+  });
+
+  describe('AgentRuntime chat method', () => {
+    it('should run correctly', async () => {
+      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
+      const runtime = await AgentRuntime.initializeWithUserPayload(
+        ModelProvider.OpenAI,
+        jwtPayload,
+      );
+
+      const payload: ChatStreamPayload = {
+        messages: [{ role: 'user', content: 'Hello, world!' }],
+        model: 'text-davinci-002',
+        temperature: 0,
+      };
+
+      vi.spyOn(LobeOpenAI.prototype, 'chat').mockResolvedValue(new Response(''));
+
+      await runtime.chat(payload, { provider: 'openai' });
+    });
+    it('should handle options correctly', async () => {
+      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
+      const runtime = await AgentRuntime.initializeWithUserPayload(
+        ModelProvider.OpenAI,
+        jwtPayload,
+      );
+
+      const payload: ChatStreamPayload = {
+        messages: [{ role: 'user', content: 'Hello, world!' }],
+        model: 'text-davinci-002',
+        temperature: 0,
+      };
+
+      const options: AgentChatOptions = {
+        provider: 'openai',
+        trace: {
+          traceId: 'test-trace-id',
+          traceName: TraceNameMap.Conversation,
+          sessionId: 'test-session-id',
+          topicId: 'test-topic-id',
+          tags: [],
+          userId: 'test-user-id',
+        },
+      };
+
+      vi.spyOn(LobeOpenAI.prototype, 'chat').mockResolvedValue(new Response(''));
+
+      await runtime.chat(payload, options);
+    });
+
+    describe('callback', async () => {
+      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
+      const runtime = await AgentRuntime.initializeWithUserPayload(
+        ModelProvider.OpenAI,
+        jwtPayload,
+      );
+
+      const payload: ChatStreamPayload = {
+        messages: [{ role: 'user', content: 'Hello, world!' }],
+        model: 'text-davinci-002',
+        temperature: 0,
+      };
+
+      const options: AgentChatOptions = {
+        provider: 'openai',
+        trace: {
+          traceId: 'test-trace-id',
+          traceName: TraceNameMap.Conversation,
+          sessionId: 'test-session-id',
+          topicId: 'test-topic-id',
+          tags: [],
+          userId: 'test-user-id',
+        },
+        enableTrace: true,
+      };
+
+      const updateMock = vi.fn();
+      beforeEach(() => {
+        vi.mocked(getServerConfig).mockReturnValue({
+          ENABLE_LANGFUSE: true,
+          LANGFUSE_PUBLIC_KEY: 'abc',
+          LANGFUSE_SECRET_KEY: 'DDD',
+        } as any);
+      });
+
+      it('should call experimental_onToolCall correctly', async () => {
+        // 使用 spyOn 模拟 chat 方法
+        vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
+          async (payload, { callback }: any) => {
+            // 模拟 experimental_onToolCall 回调的触发
+            if (callback?.experimental_onToolCall) {
+              await callback.experimental_onToolCall();
+            }
+            return new Response('abc');
+          },
+        );
+        vi.spyOn(LangfuseTraceClient.prototype, 'update').mockImplementation(updateMock);
+
+        await runtime.chat(payload, options);
+
+        expect(updateMock).toHaveBeenCalledWith({ tags: ['Tools Call'] });
+      });
+      it('should call onStart correctly', async () => {
+        vi.spyOn(LangfuseGenerationClient.prototype, 'update').mockImplementation(updateMock);
+        vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
+          async (payload, { callback }: any) => {
+            if (callback?.onStart) {
+              callback.onStart();
+            }
+            return new Response('Success');
+          },
+        );
+
+        await runtime.chat(payload, options);
+
+        // Verify onStart was called
+        expect(updateMock).toHaveBeenCalledWith({ completionStartTime: expect.any(Date) });
+      });
+
+      it('should call onCompletion correctly', async () => {
+        // Spy on the chat method and trigger onCompletion callback
+        vi.spyOn(LangfuseGenerationClient.prototype, 'update').mockImplementation(updateMock);
+        vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
+          async (payload, { callback }: any) => {
+            if (callback?.onCompletion) {
+              await callback.onCompletion('Test completion');
+            }
+            return new Response('Success');
+          },
+        );
+
+        await runtime.chat(payload, options);
+
+        // Verify onCompletion was called with expected output
+        expect(updateMock).toHaveBeenCalledWith({
+          endTime: expect.any(Date),
+          metadata: {
+            provider: 'openai',
+            tools: undefined,
+          },
+          output: 'Test completion',
+        });
+      });
+      it('should call onFinal correctly', async () => {
+        vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
+          async (payload, { callback }: any) => {
+            if (callback?.onFinal) {
+              await callback.onFinal('Test completion');
+            }
+            return new Response('Success');
+          },
+        );
+        const shutdownAsyncMock = vi.fn();
+        vi.spyOn(Langfuse.prototype, 'shutdownAsync').mockImplementation(shutdownAsyncMock);
+
+        await runtime.chat(payload, options);
+
+        // Verify onCompletion was called with expected output
+        expect(shutdownAsyncMock).toHaveBeenCalled();
+      });
     });
   });
 });

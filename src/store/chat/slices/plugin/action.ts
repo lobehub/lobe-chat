@@ -14,7 +14,7 @@ import { ChatPluginPayload } from '@/types/message';
 import { OpenAIToolCall } from '@/types/openai/functionCall';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors } from '../../selectors';
+import { chatSelectors } from '../../slices/message/selectors';
 
 const n = setNamespace('plugin');
 
@@ -30,7 +30,7 @@ export interface ChatPluginAction {
   invokeMarkdownTypePlugin: (id: string, payload: ChatPluginPayload) => Promise<void>;
   invokeStandaloneTypePlugin: (id: string, payload: ChatPluginPayload) => Promise<void>;
   runPluginApi: (id: string, payload: ChatPluginPayload) => Promise<string | undefined>;
-  triggerAIMessage: (id: string) => Promise<void>;
+  triggerAIMessage: (id: string, traceId?: string) => Promise<void>;
   triggerFunctionCall: (id: string) => Promise<void>;
   updatePluginState: (id: string, key: string, value: any) => Promise<void>;
 }
@@ -55,15 +55,15 @@ export const chatPlugin: StateCreator<
   },
 
   fillPluginMessageContent: async (id, content, triggerAiMessage) => {
-    const { triggerAIMessage, updateMessageContent } = get();
+    const { triggerAIMessage, internalUpdateMessageContent } = get();
 
-    await updateMessageContent(id, content);
+    await internalUpdateMessageContent(id, content);
 
     if (triggerAiMessage) await triggerAIMessage(id);
   },
 
   invokeBuiltinTool: async (id, payload) => {
-    const { toggleChatLoading, updateMessageContent } = get();
+    const { toggleChatLoading, internalUpdateMessageContent } = get();
     const params = JSON.parse(payload.arguments);
     toggleChatLoading(true, id, n('invokeBuiltinTool') as string);
     let data;
@@ -76,7 +76,7 @@ export const chatPlugin: StateCreator<
 
     if (!data) return;
 
-    await updateMessageContent(id, data);
+    await internalUpdateMessageContent(id, data);
 
     // postToolCalling
     // @ts-ignore
@@ -100,8 +100,9 @@ export const chatPlugin: StateCreator<
     const data = await runPluginApi(id, payload);
 
     if (!data) return;
+    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
 
-    await triggerAIMessage(id);
+    await triggerAIMessage(id, traceId);
   },
 
   invokeMarkdownTypePlugin: async (id, payload) => {
@@ -131,13 +132,26 @@ export const chatPlugin: StateCreator<
   },
 
   runPluginApi: async (id, payload) => {
-    const { updateMessageContent, refreshMessages, toggleChatLoading } = get();
+    const { internalUpdateMessageContent, refreshMessages, toggleChatLoading } = get();
     let data: string;
 
     try {
       const abortController = toggleChatLoading(true, id, n('fetchPlugin') as string);
-      data = await chatService.runPluginApi(payload, { signal: abortController?.signal });
+
+      const message = chatSelectors.getMessageById(id)(get());
+
+      const res = await chatService.runPluginApi(payload, {
+        signal: abortController?.signal,
+        trace: { observationId: message?.observationId, traceId: message?.traceId },
+      });
+      data = res.text;
+
+      // save traceId
+      if (res.traceId) {
+        await messageService.updateMessage(id, { traceId: res.traceId });
+      }
     } catch (error) {
+      console.log(error);
       const err = error as Error;
 
       // ignore the aborted request error
@@ -153,15 +167,15 @@ export const chatPlugin: StateCreator<
     // 如果报错则结束了
     if (!data) return;
 
-    await updateMessageContent(id, data);
+    await internalUpdateMessageContent(id, data);
 
     return data;
   },
 
-  triggerAIMessage: async (id) => {
+  triggerAIMessage: async (id, traceId) => {
     const { coreProcessMessage } = get();
     const chats = chatSelectors.currentChats(get());
-    await coreProcessMessage(chats, id);
+    await coreProcessMessage(chats, id, traceId);
   },
 
   triggerFunctionCall: async (id) => {
@@ -174,7 +188,7 @@ export const chatPlugin: StateCreator<
       invokeStandaloneTypePlugin,
       invokeBuiltinTool,
       refreshMessages,
-      resendMessage,
+      internalResendMessage,
       deleteMessage,
     } = get();
 
@@ -200,7 +214,7 @@ export const chatPlugin: StateCreator<
 
       // fix https://github.com/lobehub/lobe-chat/issues/1094, remove and retry after experiencing plugin illusion
       if (!apiName) {
-        resendMessage(id);
+        internalResendMessage(id);
         deleteMessage(id);
         return;
       }

@@ -21,7 +21,7 @@ interface APIKeyFormProps {
 const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
   const { t } = useTranslation('error');
 
-  const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.internalResendMessage, s.deleteMessage]);
 
   const action = useMemo(() => {
     switch (provider as ModelProvider) {
