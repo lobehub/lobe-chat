@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Về chúng tôi"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Bằng cách chọn gửi dữ liệu telemetri, bạn có thể giúp chúng tôi cải thiện trải nghiệm người dùng toàn diện của LobeChat",
+      "title": "Gửi dữ liệu sử dụng ẩn danh"
+    },
+    "title": "Thống kê dữ liệu"
+  },
   "danger": {
     "clear": {
       "action": "Xóa ngay",
@@ -378,6 +388,7 @@
     "tooltips": "Chia sẻ lên thị trường trợ lý"
   },
   "tab": {
+    "about": "Về chúng tôi",
     "agent": "Trợ lý mặc định",
     "common": "Cài đặt chung",
     "llm": "Mô hình ngôn ngữ",

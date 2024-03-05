@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "關於"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "通過選擇發送遙測數據，你可以幫助我們改善 LobeChat 整體用戶體驗",
+      "title": "發送匿名使用數據"
+    },
+    "title": "數據統計"
+  },
   "danger": {
     "clear": {
       "action": "立即清除",
@@ -378,6 +388,7 @@
     "tooltips": "分享到助手市場"
   },
   "tab": {
+    "about": "關於",
     "agent": "默認助手",
     "common": "通用設置",
     "llm": "語言模型",

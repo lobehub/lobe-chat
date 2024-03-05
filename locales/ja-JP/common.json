@@ -129,6 +129,13 @@
     "market": "探す",
     "setting": "設定"
   },
+  "telemetry": {
+    "allow": "許可する",
+    "deny": "拒否する",
+    "desc": "匿名の使用情報を収集し、LobeChat の改善やより良い製品体験を提供するためにご協力いただけると嬉しいです。いつでも「設定」-「情報」から無効にできます。",
+    "learnMore": "詳細を見る",
+    "title": "LobeChat の改善にご協力ください"
+  },
   "temp": "一時的",
   "updateAgent": "エージェント情報を更新",
   "upgradeVersion": {

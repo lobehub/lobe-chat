@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Über"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Durch das Senden von Telemetriedaten können Sie uns dabei helfen, die Gesamtnutzererfahrung von LobeChat zu verbessern",
+      "title": "Anonyme Nutzungsdaten senden"
+    },
+    "title": "Analytics"
+  },
   "danger": {
     "clear": {
       "action": "Alle löschen",
@@ -378,6 +388,7 @@
     "tooltips": "Auf dem Assistentenmarkt teilen"
   },
   "tab": {
+    "about": "Über",
     "agent": "Standard-Assistent",
     "common": "Allgemeine Einstellungen",
     "llm": "Sprachmodell",

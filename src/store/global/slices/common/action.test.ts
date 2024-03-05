@@ -113,6 +113,7 @@ describe('createCommonSlice', () => {
       const mockServerConfig = {
         defaultAgent: 'agent1',
         languageModel: 'model1',
+        telemetry: {},
       } as GlobalServerConfig;
       vi.spyOn(globalService, 'getGlobalConfig').mockResolvedValueOnce(mockServerConfig);
 

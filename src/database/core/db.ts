@@ -7,9 +7,10 @@ import { DB_Session } from '@/database/schemas/session';
 import { DB_SessionGroup } from '@/database/schemas/sessionGroup';
 import { DB_Topic } from '@/database/schemas/topic';
 import { DB_User } from '@/database/schemas/user';
+import { uuid } from '@/utils/uuid';
 
 import { migrateSettingsToUser } from './migrations/migrateSettingsToUser';
-import { dbSchemaV1, dbSchemaV2, dbSchemaV3, dbSchemaV4, dbSchemaV5 } from './schemas';
+import { dbSchemaV1, dbSchemaV2, dbSchemaV3, dbSchemaV4, dbSchemaV5, dbSchemaV6 } from './schemas';
 import { DBModel, LOBE_CHAT_LOCAL_DB_NAME } from './types/db';
 
 interface LobeDBSchemaMap {
@@ -44,6 +45,10 @@ export class LocalDB extends Dexie {
     this.version(5)
       .stores(dbSchemaV5)
       .upgrade((trans) => this.upgradeToV5(trans));
+
+    this.version(6)
+      .stores(dbSchemaV6)
+      .upgrade((trans) => this.upgradeToV6(trans));
 
     this.files = this.table('files');
     this.sessions = this.table('sessions');
@@ -97,6 +102,18 @@ export class LocalDB extends Dexie {
         await users.add(user);
       }
     }
+  };
+
+  /**
+   * 2024.02.27
+   * add uuid to user
+   */
+  upgradeToV6 = async (trans: Transaction) => {
+    const users = trans.table('users');
+
+    await users.toCollection().modify((user: DB_User) => {
+      if (!user.uuid) user.uuid = uuid();
+    });
   };
 }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, Suspense } from 'react';
+import { ReactNode, Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FullscreenLoading from '@/components/FullscreenLoading';
@@ -11,17 +11,22 @@ interface ServerResponsiveLayoutProps extends Record<string, any> {
   Mobile: (props: any) => ReactNode;
   children?: ReactNode;
 }
-const ResponsiveLayout = ({ children, Desktop, Mobile, ...res }: ServerResponsiveLayoutProps) => {
-  const { t } = useTranslation();
-  const mobile = useIsMobile();
 
-  return mobile ? (
-    <Suspense fallback={<FullscreenLoading title={t('layoutInitializing', { ns: 'common' })} />}>
-      <Mobile {...res}>{children}</Mobile>
-    </Suspense>
-  ) : (
-    <Desktop {...res}>{children}</Desktop>
-  );
-};
+const ResponsiveLayout = memo(
+  ({ children, Desktop, Mobile, ...res }: ServerResponsiveLayoutProps) => {
+    const { t } = useTranslation();
+    const mobile = useIsMobile();
+
+    return mobile ? (
+      <Suspense fallback={<FullscreenLoading title={t('layoutInitializing', { ns: 'common' })} />}>
+        <Mobile {...res}>{children}</Mobile>
+      </Suspense>
+    ) : (
+      <Desktop {...res}>{children}</Desktop>
+    );
+  },
+);
+
+ResponsiveLayout.displayName = 'ClientResponsiveLayout';
 
 export default ResponsiveLayout;

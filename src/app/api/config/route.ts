@@ -19,6 +19,7 @@ export const GET = async () => {
     ENABLE_OLLAMA,
     ENABLED_PERPLEXITY,
     DEFAULT_AGENT_CONFIG,
+    ENABLE_LANGFUSE,
   } = getServerConfig();
 
   const config: GlobalServerConfig = {
@@ -26,6 +27,7 @@ export const GET = async () => {
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
+
     enabledOAuthSSO: ENABLE_OAUTH_SSO,
     languageModel: {
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
@@ -34,6 +36,9 @@ export const GET = async () => {
       ollama: { enabled: ENABLE_OLLAMA },
       perplexity: { enabled: ENABLED_PERPLEXITY },
       zhipu: { enabled: ENABLED_ZHIPU },
+    },
+    telemetry: {
+      langfuse: ENABLE_LANGFUSE,
     },
   };
 
