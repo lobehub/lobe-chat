@@ -160,7 +160,7 @@ describe('LobeMistralAI', () => {
           });
         } catch (e) {
           expect(e).toEqual({
-            endpoint: 'https://api.mistral.ai/v1',
+            endpoint: 'https://api.***.com/v1',
             error: {
               cause: { message: 'api is undefined' },
               stack: 'abc',
