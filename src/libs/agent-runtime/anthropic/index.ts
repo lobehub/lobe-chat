@@ -80,26 +80,14 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
               provider: ModelProvider.Anthropic,
             });
           }
-          case 403: {
-            throw AgentRuntimeError.chat({
-              error: error as any,
-              errorType: AgentRuntimeErrorType.LocationNotSupportError,
-              provider: ModelProvider.Anthropic,
-            });
-          }
           default: {
             break;
           }
         }
       }
-
-      const { errorResult, RuntimeError } = handleOpenAIError(error);
-
-      const errorType = RuntimeError || AgentRuntimeErrorType.AnthropicBizError;
-
       throw AgentRuntimeError.chat({
-        error: errorResult,
-        errorType,
+        error: error as any,
+        errorType: AgentRuntimeErrorType.AnthropicBizError,
         provider: ModelProvider.Anthropic,
       });
     }
