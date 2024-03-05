@@ -6,7 +6,7 @@ import { getServerConfig } from '@/config/server';
 
 const {
   ENABLE_OAUTH_SSO,
-  SSO_PROVIDER,
+  SSO_PROVIDERS,
   AUTH0_CLIENT_ID,
   AUTH0_CLIENT_SECRET,
   AUTH0_ISSUER,
@@ -43,7 +43,7 @@ const nextAuth = NextAuth({
     },
   },
   providers: ENABLE_OAUTH_SSO
-    ? SSO_PROVIDER.split(',').map((provider) => {
+    ? SSO_PROVIDERS.split(',').map((provider) => {
         switch (provider) {
           case 'auth0': {
             return Auth0({

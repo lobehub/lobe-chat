@@ -49,7 +49,7 @@ http(s)://your-domain/api/auth/callback/auth0
 | 环境变量 | 类型 | 描述 |
 | --- | --- | --- |
 | `ENABLE_OAUTH_SSO` | 必选 | 为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。 |
-| `SSO_PROVIDER` | 可选 | 选择 LoboChat 的单点登录提供商。默认为 `auth0`，您可以启用多个单点登录提供商，使用逗号 `,` 进行分割，目前支持 `auth0` 和 `azure-ad`。 | 
+| `SSO_PROVIDERS` | 可选 | 选择 LoboChat 的单点登录提供商。默认为 `auth0`，您可以启用多个单点登录提供商，使用逗号 `,` 进行分割，目前支持 `auth0` 和 `azure-ad`。 | 
 | `NEXTAUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32` |
 | `AUTH0_CLIENT_ID` | 必选(auth0) | Auth0 应用程序的 Client ID |
 | `AUTH0_CLIENT_SECRET` | 必选(auth0) | Auth0 应用程序的 Client Secret |

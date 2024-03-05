@@ -48,7 +48,7 @@ When deploying LobeChat, you need to configure the following environment variabl
 | Environment Variable | Type | Description |
 | --- | --- | --- |
 | `ENABLE_OAUTH_SSO` | Required | Enable single sign-on (SSO) for LobeChat. Set to `1` to enable single sign-on. |
-| `SSO_PROVIDER` | Optional | Choose the SSO Provider For LoboChat. Default is `auth0`, you can enable multipual sso provider, split by `,`, currently support `auth0`,`azure-ad` | 
+| `SSO_PROVIDERS` | Optional | Choose the SSO Provider For LoboChat. Default is `auth0`, you can enable multipual sso provider, split by `,`, currently support `auth0`,`azure-ad` | 
 | `NEXTAUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate a key using the following command: `openssl rand -base64 32` |
 | `AUTH0_CLIENT_ID` | Required(auth0) | Client ID of the Auth0 application |
 | `AUTH0_CLIENT_SECRET` | Required(auth0) | Client Secret of the Auth0 application |
