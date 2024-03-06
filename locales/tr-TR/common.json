@@ -100,6 +100,7 @@
   },
   "layoutInitializing": "Başlatılıyor...",
   "modelProvider": {
+    "anthropic": "Antropik",
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",

@@ -19,6 +19,7 @@ export interface ChatModelCard {
    * whether model is legacy (deprecated but not removed yet)
    */
   legacy?: boolean;
+  maxOutput?: number;
   tokens?: number;
   /**
    *  whether model supports vision

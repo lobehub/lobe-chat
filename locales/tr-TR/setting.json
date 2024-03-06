@@ -31,6 +31,14 @@
     "sessionWithName": "Oturum Ayarları · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Anthropic 的 API 密钥",
+        "placeholder": "Anthropic API 密钥",
+        "title": "API 密钥"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Azure'nin API sürümü, YYYY-MM-DD biçimini takip eder, [en son sürümü buradan bulabilirsiniz](https://learn.microsoft.com/tr-tr/azure/ai-services/openai/reference#chat-completions)",
