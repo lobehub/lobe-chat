@@ -58,6 +58,64 @@ describe('LobeMistralAI', () => {
       expect(result).toBeInstanceOf(Response);
     });
 
+    it('should call Mistral API with supported options in streaming mode', async () => {
+      // Arrange
+      const mockStream = new ReadableStream();
+      const mockResponse = Promise.resolve(mockStream);
+
+      (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+      // Act
+      const result = await instance.chat({
+        max_tokens: 1024,
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'open-mistral-7b',
+        temperature: 0.7,
+        top_p: 1,
+      });
+
+      // Assert
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
+        max_tokens: 1024,
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'open-mistral-7b',
+        stream: true,
+        temperature: 0.7,
+        top_p: 1,
+      })
+      expect(result).toBeInstanceOf(Response);
+    });
+
+    it('should call Mistral API without unsupported options', async () => {
+      // Arrange
+      const mockStream = new ReadableStream();
+      const mockResponse = Promise.resolve(mockStream);
+
+      (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+      // Act
+      const result = await instance.chat({
+        frequency_penalty: 0.5, // unsupported option
+        max_tokens: 1024,
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'open-mistral-7b',
+        presence_penalty: 0.5, // unsupported option
+        temperature: 0.7,
+        top_p: 1,
+      });
+
+      // Assert
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
+        max_tokens: 1024,
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'open-mistral-7b',
+        stream: true,
+        temperature: 0.7,
+        top_p: 1,
+      })
+      expect(result).toBeInstanceOf(Response);
+    });   
+
     describe('Error', () => {
       it('should return MistralBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange
