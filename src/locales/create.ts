@@ -43,6 +43,7 @@ export const createI18nNext = (lang?: string) => {
              Set `sameSite` to `lax` so that the i18n cookie can be passed to the
              server side when returning from the OAuth authorization website.
              ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value
+             discussion: https://github.com/lobehub/lobe-chat/pull/1474
           */
           cookieOptions: {
             sameSite: 'lax',
