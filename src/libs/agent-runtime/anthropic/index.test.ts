@@ -59,20 +59,18 @@ describe('LobeAnthropicAI', () => {
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         temperature: 0,
-        top_p: 1
+        top_p: 1,
       });
 
       // Assert
       expect(instance['client'].messages.create).toHaveBeenCalledWith({
         max_tokens: 1024,
-        messages: [
-          { content: 'Hello', role: 'user' },
-        ],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         stream: true,
         temperature: 0,
-        top_p: 1
-      })
+        top_p: 1,
+      });
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -100,14 +98,12 @@ describe('LobeAnthropicAI', () => {
       // Assert
       expect(instance['client'].messages.create).toHaveBeenCalledWith({
         max_tokens: 1024,
-        messages: [
-          { content: 'Hello', role: 'user' },
-        ],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         stream: true,
         system: 'You are an awesome greeter',
         temperature: 0,
-      })
+      });
       expect(result).toBeInstanceOf(Response);
     });
 
