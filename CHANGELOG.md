@@ -2,6 +2,56 @@
 
 # Changelog
 
+## [Version 0.132.0](https://github.com/lobehub/lobe-chat/compare/v0.131.0...v0.132.0)
+
+<sup>Released on **2024-03-05**</sup>
+
+#### ✨ Features
+
+- **misc**: Support anthropic as model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support anthropic as model provider, closes [#1409](https://github.com/lobehub/lobe-chat/issues/1409) ([a42cf8c](https://github.com/lobehub/lobe-chat/commit/a42cf8c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.131.0](https://github.com/lobehub/lobe-chat/compare/v0.130.7...v0.131.0)
+
+<sup>Released on **2024-03-05**</sup>
+
+#### ✨ Features
+
+- **misc**: Support langfuse integration.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support langfuse integration, closes [#1325](https://github.com/lobehub/lobe-chat/issues/1325) ([aaedfa7](https://github.com/lobehub/lobe-chat/commit/aaedfa7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.130.7](https://github.com/lobehub/lobe-chat/compare/v0.130.6...v0.130.7)
 
 <sup>Released on **2024-03-03**</sup>

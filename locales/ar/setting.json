@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "حول"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "من خلال اختيار إرسال بيانات التحليل، يمكنك مساعدتنا في تحسين تجربة مستخدم LobeChat بشكل عام",
+      "title": "إرسال بيانات الاستخدام المجهولة"
+    },
+    "title": "تحليلات"
+  },
   "danger": {
     "clear": {
       "action": "مسح الآن",
@@ -21,6 +31,14 @@
     "sessionWithName": "إعدادات الجلسة · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "أنثروبيك",
+      "token": {
+        "desc": "أدخل مفتاح API من أنثروبيك",
+        "placeholder": "مفتاح API من أنثروبيك",
+        "title": "مفتاح API"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "إصدار واجهة برمجة التطبيقات لـ Azure، يتبع تنسيق YYYY-MM-DD، راجع [أحدث الإصدار](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
@@ -378,6 +396,7 @@
     "tooltips": "مشاركة في سوق المساعدين"
   },
   "tab": {
+    "about": "حول",
     "agent": "المساعد الافتراضي",
     "common": "إعدادات عامة",
     "llm": "نموذج اللغة",

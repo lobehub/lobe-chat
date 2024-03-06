@@ -49,6 +49,7 @@ const settingsSchema = z.object({
 export const DB_UserSchema = z.object({
   avatar: z.string().optional(),
   settings: settingsSchema.partial(),
+  uuid: z.string(),
   // settings: patchSchema,
 });
 

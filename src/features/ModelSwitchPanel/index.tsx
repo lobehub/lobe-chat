@@ -75,6 +75,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
           overflowY: 'scroll',
         },
       }}
+      placement={'topLeft'}
       trigger={['click']}
     >
       <div className={styles.tag}>{children}</div>

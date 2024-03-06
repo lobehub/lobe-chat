@@ -23,6 +23,9 @@ export interface GlobalServerConfig {
   defaultAgent?: DeepPartial<GlobalDefaultAgent>;
   enabledOAuthSSO?: boolean;
   languageModel?: DeepPartial<GlobalLLMConfig>;
+  telemetry: {
+    langfuse?: boolean;
+  };
 }
 
 /**

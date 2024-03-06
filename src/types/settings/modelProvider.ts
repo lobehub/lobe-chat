@@ -60,7 +60,13 @@ export interface PerplexityConfig {
   endpoint?: string;
 }
 
+export interface AnthropicConfig {
+  apiKey?: string;
+  enabled: boolean;
+}
+
 export interface GlobalLLMConfig {
+  anthropic: AnthropicConfig;
   azure: AzureOpenAIConfig;
   bedrock: AWSBedrockConfig;
   google: GoogleConfig;

@@ -16,6 +16,7 @@ export interface GlobalPreference {
   showChatSideBar?: boolean;
   showSessionPanel?: boolean;
   showSystemRole?: boolean;
+  telemetry: boolean | null;
   /**
    * whether to use cmd + enter to send message
    */
@@ -40,6 +41,7 @@ export const initialPreferenceState: GlobalPreferenceState = {
     showChatSideBar: true,
     showSessionPanel: true,
     showSystemRole: false,
+    telemetry: null,
     useCmdEnterToSend: false,
   },
 };

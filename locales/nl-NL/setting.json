@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Over"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Door te kiezen om telemetrische gegevens te verzenden, kun je ons helpen om de algehele gebruikerservaring van LobeChat te verbeteren",
+      "title": "Anonieme gebruiksgegevens verzenden"
+    },
+    "title": "Analytics"
+  },
   "danger": {
     "clear": {
       "action": "Direct verwijderen",
@@ -21,6 +31,14 @@
     "sessionWithName": "Sessie-instellingen · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Voer de API-sleutel van Anthropic in",
+        "placeholder": "Anthropic API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Azure API-versie, in het formaat YYYY-MM-DD, raadpleeg de [laatste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
@@ -378,6 +396,7 @@
     "tooltips": "Delen op de assistentenmarkt"
   },
   "tab": {
+    "about": "Over",
     "agent": "Standaardassistent",
     "common": "Algemene instellingen",
     "llm": "Taalmodel",

@@ -117,6 +117,7 @@ const getFunctionMessageProps =
   });
 
 const getMessageById = (id: string) => (s: ChatStore) => chatHelpers.getMessageById(s.messages, id);
+const getTraceIdByMessageId = (id: string) => (s: ChatStore) => getMessageById(id)(s)?.traceId;
 
 const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
 
@@ -132,5 +133,6 @@ export const chatSelectors = {
   currentChatsWithHistoryConfig,
   getFunctionMessageProps,
   getMessageById,
+  getTraceIdByMessageId,
   latestMessage,
 };

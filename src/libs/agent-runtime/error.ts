@@ -28,6 +28,9 @@ export const AgentRuntimeErrorType = {
 
   InvalidPerplexityAPIKey: 'InvalidPerplexityAPIKey',
   PerplexityBizError: 'PerplexityBizError',
+
+  InvalidAnthropicAPIKey: 'InvalidAnthropicAPIKey',
+  AnthropicBizError: 'AnthropicBizError',
 } as const;
 
 export type ILobeAgentRuntimeErrorType =

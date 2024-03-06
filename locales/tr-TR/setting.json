@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Hakkında"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Anonim kullanım verilerini göndererek LobeChat'in genel kullanıcı deneyimini iyileştirmemize yardımcı olabilirsiniz",
+      "title": "Anonim Kullanım Verileri Gönder"
+    },
+    "title": "Analitik"
+  },
   "danger": {
     "clear": {
       "action": "Temizle",
@@ -21,6 +31,14 @@
     "sessionWithName": "Oturum Ayarları · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Anthropic 的 API 密钥",
+        "placeholder": "Anthropic API 密钥",
+        "title": "API 密钥"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Azure'nin API sürümü, YYYY-MM-DD biçimini takip eder, [en son sürümü buradan bulabilirsiniz](https://learn.microsoft.com/tr-tr/azure/ai-services/openai/reference#chat-completions)",
@@ -378,6 +396,7 @@
     "tooltips": "Asistan pazarına paylaşın"
   },
   "tab": {
+    "about": "Hakkında",
     "agent": "Varsayılan Asistan",
     "common": "Genel Ayarlar",
     "llm": "Modeller",

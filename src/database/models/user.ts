@@ -2,6 +2,7 @@ import { DeepPartial } from 'utility-types';
 
 import { BaseModel } from '@/database/core';
 import { GlobalSettings } from '@/types/settings';
+import { uuid } from '@/utils/uuid';
 
 import { DB_User, DB_UserSchema } from '../schemas/user';
 
@@ -11,11 +12,11 @@ class _UserModel extends BaseModel {
   }
 
   getUser = async (): Promise<DB_User & { id: number }> => {
-    const hasUSer = !!(await this.table.count());
+    const noUser = !(await this.table.count());
 
-    if (!hasUSer) await this.table.put({});
+    if (noUser) await this.table.put({ uuid: uuid() });
 
-    const list = await this.table.toArray();
+    const list = (await this.table.toArray()) as (DB_User & { id: number })[];
 
     return list[0];
   };

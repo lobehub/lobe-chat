@@ -1,5 +1,6 @@
 import { ChatModelCard } from '@/types/llm';
 
+import AnthropicProvider from './anthropic';
 import BedrockProvider from './bedrock';
 import GoogleProvider from './google';
 import MoonshotProvider from './moonshot';
@@ -16,8 +17,10 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   MoonshotProvider.chatModels,
   OllamaProvider.chatModels,
   PerplexityProvider.chatModels,
+  AnthropicProvider.chatModels,
 ].flat();
 
+export { default as AnthropicProvider } from './anthropic';
 export { default as BedrockProvider } from './bedrock';
 export { default as GoogleProvider } from './google';
 export { default as MoonshotProvider } from './moonshot';

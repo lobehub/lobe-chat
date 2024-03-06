@@ -34,10 +34,12 @@
     "503": "抱歉，伺服器目前無法處理您的請求，可能是因為過載或正在進行維護。請稍後再試。",
     "504": "抱歉，伺服器沒有收到上游伺服器的回應。請稍後再試。",
     "AgentRuntimeError": "Lobe 語言模型運行時執行出錯，請根據以下信息排查或重試",
+    "AnthropicBizError": "請求 Anthropic AI 服務出錯，請根據以下信息排查或重試",
     "AzureBizError": "請求 Azure AI 服務出錯，請根據以下信息排查或重試",
     "BedrockBizError": "請求 Bedrock 服務出錯，請根據以下信息排查或重試",
     "GoogleBizError": "請求 Google 服務出錯，請根據以下信息排查或重試",
     "InvalidAccessCode": "密碼不正確或為空，請輸入正確的訪問密碼，或添加自定義 API 金鑰",
+    "InvalidAnthropicAPIKey": "Anthropic API 金鑰不正確或為空，請檢查 Anthropic API 金鑰後重試",
     "InvalidAzureAPIKey": "Azure API Key 不正確或為空，請檢查 Azure API Key 後重試",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
     "InvalidGoogleAPIKey": "Google API Key 不正確或為空，請檢查 Google API Key 後重試",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "輸入你的 Anthropic API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
+        "title": "使用自定義 Anthropic API 金鑰"
+      },
       "Bedrock": {
         "customRegion": "自定義服務區域",
         "description": "輸入你的 Aws AccessKeyId / SecretAccessKey 即可開始會話。應用不會記錄你的驗證配置",

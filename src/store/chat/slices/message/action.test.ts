@@ -52,12 +52,6 @@ vi.mock('@/store/chat/selectors', () => ({
   },
 }));
 
-vi.mock('@/store/session/selectors', () => ({
-  agentSelectors: {
-    currentAgentConfig: vi.fn(),
-  },
-}));
-
 const realCoreProcessMessage = useChatStore.getState().coreProcessMessage;
 const realRefreshMessages = useChatStore.getState().refreshMessages;
 // Mock state
@@ -74,8 +68,10 @@ const mockState = {
 beforeEach(() => {
   vi.clearAllMocks();
   useChatStore.setState(mockState, false);
-  (agentSelectors.currentAgentConfig as Mock).mockImplementation(() => DEFAULT_AGENT_CONFIG);
+  vi.spyOn(agentSelectors, 'currentAgentConfig').mockImplementation(() => DEFAULT_AGENT_CONFIG);
+  vi.spyOn(agentSelectors, 'currentAgentMeta').mockImplementation(() => ({ tags: [] }));
 });
+
 afterEach(() => {
   process.env.NEXT_PUBLIC_BASE_PATH = undefined;
 
@@ -368,7 +364,7 @@ describe('chatMessage actions', () => {
     });
   });
 
-  describe('resendMessage action', () => {
+  describe('internalResendMessage action', () => {
     it('should resend a message by id and refresh messages', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
@@ -384,11 +380,15 @@ describe('chatMessage actions', () => {
       mockState.coreProcessMessage.mockResolvedValue(undefined);
 
       await act(async () => {
-        await result.current.resendMessage(messageId);
+        await result.current.internalResendMessage(messageId);
       });
 
       expect(messageService.removeMessage).not.toHaveBeenCalledWith(messageId);
-      expect(mockState.coreProcessMessage).toHaveBeenCalledWith(expect.any(Array), messageId);
+      expect(mockState.coreProcessMessage).toHaveBeenCalledWith(
+        expect.any(Array),
+        messageId,
+        undefined,
+      );
     });
 
     it('should not perform any action if the message id does not exist', async () => {
@@ -401,7 +401,7 @@ describe('chatMessage actions', () => {
       ]);
 
       await act(async () => {
-        await result.current.resendMessage(messageId);
+        await result.current.internalResendMessage(messageId);
       });
 
       expect(messageService.removeMessage).not.toHaveBeenCalledWith(messageId);
@@ -410,14 +410,14 @@ describe('chatMessage actions', () => {
     });
   });
 
-  describe('updateMessageContent action', () => {
-    it('should call messageService.updateMessageContent with correct parameters', async () => {
+  describe('internalUpdateMessageContent action', () => {
+    it('should call messageService.internalUpdateMessageContent with correct parameters', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const newContent = 'Updated content';
 
       await act(async () => {
-        await result.current.updateMessageContent(messageId, newContent);
+        await result.current.internalUpdateMessageContent(messageId, newContent);
       });
 
       expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
@@ -430,7 +430,7 @@ describe('chatMessage actions', () => {
       const dispatchMessageSpy = vi.spyOn(result.current, 'dispatchMessage');
 
       await act(async () => {
-        await result.current.updateMessageContent(messageId, newContent);
+        await result.current.internalUpdateMessageContent(messageId, newContent);
       });
 
       expect(dispatchMessageSpy).toHaveBeenCalledWith({
@@ -447,7 +447,7 @@ describe('chatMessage actions', () => {
       const newContent = 'Updated content';
 
       await act(async () => {
-        await result.current.updateMessageContent(messageId, newContent);
+        await result.current.internalUpdateMessageContent(messageId, newContent);
       });
 
       expect(result.current.refreshMessages).toHaveBeenCalled();

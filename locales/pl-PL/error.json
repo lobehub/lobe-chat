@@ -34,10 +34,12 @@
     "503": "Przepraszamy, serwer tymczasowo nie może przetworzyć Twojego żądania, prawdopodobnie z powodu przeciążenia lub konserwacji. Proszę spróbuj ponownie później",
     "504": "Przepraszamy, serwer nie otrzymał odpowiedzi od serwera nadrzędnego. Proszę spróbuj ponownie później",
     "AgentRuntimeError": "Wystąpił błąd wykonania modelu językowego Lobe, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
+    "AnthropicBizError": "Wystąpił błąd biznesowy podczas żądania usługi Anthropic AI. Sprawdź poniższe informacje i spróbuj ponownie.",
     "AzureBizError": "Wystąpił błąd żądania usługi Azure AI, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
     "BedrockBizError": "Wystąpił błąd żądania usługi Bedrock, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
     "GoogleBizError": "Wystąpił błąd żądania usługi Google, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
     "InvalidAccessCode": "Nieprawidłowy kod dostępu: Hasło jest nieprawidłowe lub puste. Proszę wprowadzić poprawne hasło dostępu lub dodać niestandardowy klucz API.",
+    "InvalidAnthropicAPIKey": "Anthropic API Key jest nieprawidłowy lub pusty. Sprawdź poprawność klucza API Anthropic i spróbuj ponownie.",
     "InvalidAzureAPIKey": "Nieprawidłowy lub pusty klucz API Azure, prosimy sprawdzić klucz API Azure i spróbować ponownie.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
     "InvalidGoogleAPIKey": "Nieprawidłowy lub pusty klucz API Google, prosimy sprawdzić klucz API Google i spróbować ponownie.",
@@ -73,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Wprowadź swój klucz API Anthropic, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
+        "title": "Użyj niestandardowego klucza API Anthropic"
+      },
       "Bedrock": {
         "customRegion": "Własny obszar usług",
         "description": "Wprowadź swój Aws AccessKeyId / SecretAccessKey, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojej konfiguracji uwierzytelniania.",
