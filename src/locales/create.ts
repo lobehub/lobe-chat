@@ -39,6 +39,14 @@ export const createI18nNext = (lang?: string) => {
         detection: {
           caches: ['cookie'],
           cookieMinutes: 60 * 24 * COOKIE_CACHE_DAYS,
+          /**
+             Set `sameSite` to `lax` so that the i18n cookie can be passed to the
+             server side when returning from the OAuth authorization website.
+             ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value
+          */
+          cookieOptions: {
+            sameSite: 'lax',
+          },
           lookupCookie: LOBE_LOCALE_COOKIE,
         },
         fallbackLng: DEFAULT_LANG,
