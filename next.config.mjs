@@ -8,6 +8,7 @@ const buildWithDocker = process.env.DOCKER === 'true';
 const API_PROXY_ENDPOINT = process.env.API_PROXY_ENDPOINT || '';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
+const docsBasePath = process.env.NEXT_PUBLIC_LOBE_CHAT_DOCS || '';
 
 const withBundleAnalyzer = analyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -54,6 +55,10 @@ const nextConfig = {
     // due to google api not work correct in some countries
     // we need a proxy to bypass the restriction
     { source: '/api/chat/google', destination: `${API_PROXY_ENDPOINT}/api/chat/google` },
+    { source: '/docs', destination: `${docsBasePath}/docs` },
+    { source: '/docs/zh', destination: `${docsBasePath}/docs/zh` },
+    { source: '/docs/en', destination: `${docsBasePath}/docs/en` },
+    { source: '/docs/:path*', destination: `${docsBasePath}/docs/:path*` },
   ],
   reactStrictMode: true,
 

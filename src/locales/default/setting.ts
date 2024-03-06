@@ -1,4 +1,14 @@
 export default {
+  about: {
+    title: '关于',
+  },
+  analytics: {
+    telemetry: {
+      desc: '通过选择发送遥测数据，你可以帮助我们改善 LobeChat 整体用户体验',
+      title: '发送匿名使用数据',
+    },
+    title: '数据统计',
+  },
   danger: {
     clear: {
       action: '立即清除',
@@ -21,6 +31,14 @@ export default {
     sessionWithName: '会话设置 · {{name}}',
   },
   llm: {
+    Anthropic: {
+      title: 'Anthropic',
+      token: {
+        desc: '填入来自 Anthropic 的 API Key',
+        placeholder: 'Anthropic API Key',
+        title: 'API Key',
+      },
+    },
     AzureOpenAI: {
       azureApiVersion: {
         desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
@@ -137,6 +155,14 @@ export default {
         fetch: '获取列表',
         serverConfig: '管理员在服务端配置开启了 Azure OpenAI，禁止切换',
         title: 'Azure OpenAI',
+      },
+    },
+    Perplexity: {
+      title: 'Perplexity',
+      token: {
+        desc: '填入来自 Perplexity AI 的 API Key',
+        placeholder: 'Perplexity AI API Key',
+        title: 'API Key',
       },
     },
     Zhipu: {
@@ -372,11 +398,13 @@ export default {
     tooltips: '分享到助手市场',
   },
   tab: {
+    about: '关于',
     agent: '默认助手',
     common: '通用设置',
     llm: '语言模型',
     tts: '语音服务',
   },
+
   tools: {
     builtins: {
       groupName: '内置插件',

@@ -48,6 +48,14 @@ export const getProviderAuthPayload = (provider: string) => {
       };
     }
 
+    case ModelProvider.Perplexity: {
+      return { apiKey: modelProviderSelectors.perplexityAPIKey(useGlobalStore.getState()) };
+    }
+
+    case ModelProvider.Anthropic: {
+      return { apiKey: modelProviderSelectors.anthropicAPIKey(useGlobalStore.getState()) };
+    }
+
     default:
     case ModelProvider.OpenAI: {
       const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());

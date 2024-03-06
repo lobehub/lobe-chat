@@ -1,0 +1,80 @@
+import { Callout, Steps, Tabs } from 'nextra/components';
+
+# Using Ollama in LobeChat
+
+<Image
+  alt={'Using Ollama in LobeChat'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/a2a091b8-ac45-4679-b5e0-21d711e17fef'}
+  cover
+/>
+
+Ollama is a powerful framework for running large language models (LLMs) locally, supporting various language models including Llama 2, Mistral, and more. Now, LobeChat supports integration with Ollama, meaning you can easily use the language models provided by Ollama to enhance your application within LobeChat.
+
+This document will guide you on how to use Ollama in LobeChat:
+
+<Steps>
+  ### Local Installation of Ollama
+
+First, you need to install Ollama, which supports macOS, Windows, and Linux systems. Depending on your operating system, choose one of the following installation methods:
+
+<Tabs items={['macOS', 'Linux', 'Windows (Preview)', 'Docker']}>
+<Tabs.Tab>[Download Ollama for macOS](https://ollama.com/download) and unzip it.</Tabs.Tab>
+<Tabs.Tab>
+
+````bash
+  Install using the following command:
+
+  ```bash
+  curl -fsSL https://ollama.com/install.sh | sh
+````
+
+Alternatively, you can refer to the [Linux manual installation guide](https://github.com/jmorganca/ollama/blob/main/docs/linux.md).
+
+</Tabs.Tab>
+<Tabs.Tab>[Download Ollama for Windows](https://ollama.com/download) and install it.</Tabs.Tab>
+<Tabs.Tab>
+
+If you prefer using Docker, Ollama also provides an official Docker image, which you can pull using the following command:
+
+```bash
+docker pull ollama/ollama
+```
+
+</Tabs.Tab>
+</Tabs>
+
+### Pulling Models to Local with Ollama
+
+After installing Ollama, you can install models locally, for example, llama2:
+
+```bash
+ollama pull llama2
+```
+
+Ollama supports various models, and you can view the available model list in the [Ollama Library](https://ollama.com/library) and choose the appropriate model based on your needs.
+
+</Steps>
+
+Next, you can start conversing with the local LLM using LobeChat.
+
+<Video
+  width={832}
+  height={468}
+  src="https://github.com/lobehub/lobe-chat/assets/28616219/063788c8-9fef-4c6b-b837-96668ad6bc41"
+/>
+
+<Callout type={'info'}>
+  You can visit [Integrating with Ollama](/en/self-hosting/examples/ollama) to learn how to deploy
+  LobeChat to meet the integration requirements with Ollama.
+</Callout>
+
+## Custom Configuration
+
+You can find Ollama's configuration options in `Settings` -> `Language Model`, where you can configure Ollama's proxy, model name, and more.
+
+<Image
+  alt={'Ollama Service Provider Settings'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/da0db930-78ce-4262-b648-2b9e43c565c3'}
+  width={832}
+  height={274}
+/>

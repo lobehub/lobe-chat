@@ -27,6 +27,7 @@
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
+  "document": "Belge",
   "duplicate": "Kopya oluştur",
   "edit": "Düzenle",
   "export": "Dışa Aktar",
@@ -99,6 +100,7 @@
   },
   "layoutInitializing": "Başlatılıyor...",
   "modelProvider": {
+    "anthropic": "Antropik",
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",
@@ -106,6 +108,7 @@
     "ollama": "Ollama",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Açıklama yok",
@@ -126,6 +129,13 @@
     "chat": "Chat",
     "market": "Keşfet",
     "setting": "Ayarlar"
+  },
+  "telemetry": {
+    "allow": "İzin ver",
+    "deny": "Reddet",
+    "desc": "Anonim kullanım bilgilerinizi toplamamıza izin vererek LobeChat'i geliştirmemize ve size daha iyi bir ürün deneyimi sunmamıza yardımcı olabilirsiniz. Dilediğiniz zaman 'Ayarlar' - 'Hakkında' bölümünden devre dışı bırakabilirsiniz.",
+    "learnMore": "Daha Fazla Bilgi",
+    "title": "LobeChat'i Geliştirmemize Yardımcı Olun"
   },
   "temp": "Geçici",
   "updateAgent": "Asistan Bilgilerini Güncelle",

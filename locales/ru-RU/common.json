@@ -27,6 +27,7 @@
   "defaultAgent": "Пользовательский агент",
   "defaultSession": "Пользовательский агент",
   "delete": "Удалить",
+  "document": "Документация",
   "duplicate": "Создать копию",
   "edit": "Редактировать",
   "export": "Экспорт настроек",
@@ -99,6 +100,7 @@
   },
   "layoutInitializing": "Инициализация макета...",
   "modelProvider": {
+    "anthropic": "Антропный",
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",
@@ -106,6 +108,7 @@
     "ollama": "Оллама",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity AI",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Нет описания",
@@ -126,6 +129,13 @@
     "chat": "Чат",
     "market": "Обзор",
     "setting": "Настройки"
+  },
+  "telemetry": {
+    "allow": "Разрешить",
+    "deny": "Отказать",
+    "desc": "Мы хотели бы анонимно собирать информацию о вашем использовании, чтобы помочь нам улучшить LobeChat и предоставить вам лучший опыт использования продукта. Вы можете отключить это в любое время в «Настройки» - «О программе».",
+    "learnMore": "Узнать больше",
+    "title": "Помогите улучшить LobeChat"
   },
   "temp": "Временный",
   "updateAgent": "Обновить информацию об агенте",

@@ -66,6 +66,8 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
     case AgentRuntimeErrorType.InvalidZhipuAPIKey:
     case AgentRuntimeErrorType.InvalidMoonshotAPIKey:
     case AgentRuntimeErrorType.InvalidGoogleAPIKey:
+    case AgentRuntimeErrorType.InvalidPerplexityAPIKey:
+    case AgentRuntimeErrorType.InvalidAnthropicAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
     }

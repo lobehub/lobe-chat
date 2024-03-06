@@ -19,6 +19,7 @@
     "title": "Praat maar raak"
   },
   "input": {
+    "more": "Meer",
     "onlyAdd": "Alleen bericht toevoegen",
     "send": "Verzenden",
     "sendWithCmdEnter": "Verzenden met {{meta}} + Enter",

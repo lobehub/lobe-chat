@@ -9,20 +9,25 @@ import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
+import { FetchSSEOptions, fetchSSE } from '@/utils/fetch';
 
-// import { createHeaderWithAuth } from '../_header';
 import { chatService } from '../chat';
 
 // Mocking external dependencies
+vi.mock('i18next', () => ({
+  t: vi.fn((key) => `translated_${key}`),
+}));
+
 vi.stubGlobal(
   'fetch',
   vi.fn(() => Promise.resolve(new Response(JSON.stringify({ some: 'data' })))),
-); // 用你的模拟响应替换这里的内容
+);
 
-vi.mock('@/utils/fetch', () => ({
-  fetchAIFactory: vi.fn(),
-  getMessageError: vi.fn(),
-}));
+vi.mock('@/utils/fetch', async (importOriginal) => {
+  const module = await importOriginal();
+
+  return { ...(module as any), getMessageError: vi.fn() };
+});
 
 // mock auth
 vi.mock('../_auth', () => ({
@@ -573,9 +578,75 @@ Get data from users`,
       const result = await chatService.runPluginApi(params, options);
 
       expect(global.fetch).toHaveBeenCalledWith(expect.any(String), expect.any(Object));
-      expect(result).toBe('Plugin Result');
+      expect(result.text).toBe('Plugin Result');
     });
 
     // Add more test cases to cover different scenarios and edge cases
+  });
+
+  describe('fetchPresetTaskResult', () => {
+    it('should handle successful chat completion response', async () => {
+      // 模拟 fetch 抛出错误的情况
+      vi.mocked(fetch).mockResolvedValueOnce(new Response('AI response'));
+      const params = {
+        /* 填充参数 */
+      };
+
+      const onMessageHandle = vi.fn();
+      const onFinish = vi.fn();
+      const onError = vi.fn();
+      const onLoadingChange = vi.fn();
+      const abortController = new AbortController();
+      const trace = {};
+
+      const result = await chatService.fetchPresetTaskResult({
+        params,
+        onMessageHandle,
+        onFinish,
+        onError,
+        onLoadingChange,
+        abortController,
+        trace,
+      });
+
+      expect(result).toBe('AI response');
+
+      expect(onFinish).toHaveBeenCalled();
+      expect(onError).not.toHaveBeenCalled();
+      expect(onMessageHandle).toHaveBeenCalled();
+      expect(onLoadingChange).toHaveBeenCalledWith(false); // 确认加载状态已经被设置为 false
+      expect(onLoadingChange).toHaveBeenCalledTimes(2);
+    });
+
+    it('should handle error in chat completion', async () => {
+      // 模拟 fetch 抛出错误的情况
+      vi.mocked(fetch).mockResolvedValueOnce(
+        new Response(null, { status: 404, statusText: 'Not Found' }),
+      );
+
+      const params = {
+        /* 填充参数 */
+      };
+      const onError = vi.fn();
+      const onLoadingChange = vi.fn();
+      const abortController = new AbortController();
+      const trace = {
+        /* 填充跟踪信息 */
+      };
+
+      await chatService.fetchPresetTaskResult({
+        params,
+        onError,
+        onLoadingChange,
+        abortController,
+        trace,
+      });
+
+      expect(onError).toHaveBeenCalledWith(expect.any(Error), {
+        message: 'translated_response.404',
+        type: 404,
+      });
+      expect(onLoadingChange).toHaveBeenCalledWith(false); // 确认加载状态已经被设置为 false
+    });
   });
 });

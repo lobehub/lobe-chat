@@ -3,11 +3,15 @@ import { GoogleGenerativeAIStream, StreamingTextResponse } from 'ai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../error';
-import { ChatStreamPayload, OpenAIChatMessage, UserMessageContentPart } from '../types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  OpenAIChatMessage,
+  UserMessageContentPart,
+} from '../types';
 import { ModelProvider } from '../types/type';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
-import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 import { parseDataUri } from '../utils/uriParser';
 
 type GoogleChatErrors = GoogleChatError[];
@@ -21,16 +25,27 @@ interface GoogleChatError {
   'reason': string;
 }
 
+enum HarmCategory {
+  HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
+  HARM_CATEGORY_HARASSMENT = 'HARM_CATEGORY_HARASSMENT',
+  HARM_CATEGORY_HATE_SPEECH = 'HARM_CATEGORY_HATE_SPEECH',
+  HARM_CATEGORY_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+}
+
+enum HarmBlockThreshold {
+  BLOCK_NONE = 'BLOCK_NONE',
+}
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
 
-  constructor(apiKey: string) {
+  constructor({ apiKey }: { apiKey?: string }) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidGoogleAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
   }
 
-  async chat(payload: ChatStreamPayload) {
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
       const { contents, model } = this.buildGoogleMessages(payload.messages, payload.model);
       const geminiStream = await this.client
@@ -41,20 +56,38 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             topP: payload.top_p,
           },
           model,
+          safetySettings: [
+            {
+              category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+              threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+            {
+              category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+              threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+            {
+              category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+              threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+            {
+              category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+              threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+          ],
         })
         .generateContentStream({ contents });
 
       // Convert the response into a friendly text-stream
-      const stream = GoogleGenerativeAIStream(geminiStream);
+      const stream = GoogleGenerativeAIStream(geminiStream, options?.callback);
 
       const [debug, output] = stream.tee();
 
-      if (DEBUG_CHAT_COMPLETION) {
+      if (process.env.DEBUG_GOOGLE_CHAT_COMPLETION === '1') {
         debugStream(debug).catch(console.error);
       }
 
       // Respond with the stream
-      return new StreamingTextResponse(output);
+      return new StreamingTextResponse(output, { headers: options?.headers });
     } catch (e) {
       const err = e as Error;
 
@@ -125,7 +158,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     };
 
     if (message.includes('location is not supported'))
-      return { error: message, errorType: AgentRuntimeErrorType.LocationNotSupportError };
+      return { error: { message }, errorType: AgentRuntimeErrorType.LocationNotSupportError };
 
     try {
       const startIndex = message.lastIndexOf('[');

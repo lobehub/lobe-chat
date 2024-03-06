@@ -411,8 +411,8 @@ describe('MessageModel', () => {
 
   describe('isEmpty', () => {
     it('should return true if table is empty', async () => {
-      const isEmpty = await MessageModel.isEmpty();
-      expect(isEmpty).toBeTruthy();
+      const number = await MessageModel.count();
+      expect(number === 0).toBeTruthy();
     });
   });
 });

@@ -1,5 +1,5 @@
 import { Icon, SearchBar } from '@lobehub/ui';
-import { Button, Empty } from 'antd';
+import { Empty } from 'antd';
 import { useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ServerCrash } from 'lucide-react';
@@ -24,15 +24,8 @@ export const OnlineList = memo(() => {
 
     return [...custom, ...store];
   }, isEqual);
-  const storePluginIds = useToolStore(
-    (s) => pluginStoreSelectors.onlinePluginStore(s).map((s) => s.identifier),
-    isEqual,
-  );
 
-  const [useFetchPluginList, installPlugins] = useToolStore((s) => [
-    s.useFetchPluginStore,
-    s.installPlugins,
-  ]);
+  const useFetchPluginList = useToolStore((s) => s.useFetchPluginStore);
 
   const { isLoading, error } = useFetchPluginList();
 
@@ -51,13 +44,6 @@ export const OnlineList = memo(() => {
           />
         </Flexbox>
         <AddPluginButton />
-        <Button
-          onClick={() => {
-            installPlugins(storePluginIds);
-          }}
-        >
-          {t('store.installAllPlugins')}
-        </Button>
       </Flexbox>
 
       {isLoading ? (

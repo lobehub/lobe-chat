@@ -34,21 +34,25 @@
     "503": "Spiacenti, il server non può elaborare la tua richiesta al momento, probabilmente a causa di sovraccarico o manutenzione in corso. Riprova più tardi",
     "504": "Spiacenti, il server non ha ricevuto risposta dal server upstream. Riprova più tardi",
     "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
+    "AnthropicBizError": "Si è verificato un errore durante la richiesta del servizio Anthropic AI. Si prega di controllare le informazioni seguenti o riprovare.",
     "AzureBizError": "Errore nella richiesta del servizio Azure AI, controlla le informazioni seguenti o riprova",
     "BedrockBizError": "Errore nella richiesta del servizio Bedrock, controlla le informazioni seguenti o riprova",
     "GoogleBizError": "Errore nella richiesta del servizio Google, controlla le informazioni seguenti o riprova",
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
+    "InvalidAnthropicAPIKey": "La chiave API Anthropic non è valida o è vuota. Si prega di controllare la chiave API Anthropic e riprovare.",
     "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",
     "InvalidMoonshotAPIKey": "La chiave API di Moonshot AI non è corretta o è vuota, si prega di controllare la chiave API di Moonshot e riprovare",
     "InvalidOllamaArgs": "Configurazione Ollama non valida, controllare la configurazione di Ollama e riprovare",
+    "InvalidPerplexityAPIKey": "Chiave API Perplexity non valida o vuota, controlla la chiave API Perplexity e riprova",
     "InvalidZhipuAPIKey": "Chiave API Zhipu non corretta o vuota, controlla la chiave API Zhipu e riprova",
     "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
     "MoonshotBizError": "Si è verificato un errore nel servizio Moonshot, si prega di controllare le informazioni seguenti o riprovare",
     "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
     "OllamaBizError": "Errore di servizio Ollama, controllare le informazioni seguenti o riprovare",
     "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
+    "PerplexityBizError": "Errore di business nella richiesta del servizio Perplexity AI, controlla le informazioni seguenti o riprova",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
     "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",
     "PluginGatewayError": "Spiacenti, si è verificato un errore nel gateway del plugin. Verifica che la configurazione del gateway del plugin sia corretta",
@@ -71,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Inserisci la tua chiave API Anthropic per avviare la sessione. L'applicazione non memorizzerà la tua chiave API.",
+        "title": "Utilizza una chiave API Anthropic personalizzata"
+      },
       "Bedrock": {
         "customRegion": "Regione del servizio personalizzata",
         "description": "Inserisci il tuo Aws AccessKeyId / SecretAccessKey per iniziare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
@@ -88,6 +96,10 @@
         "addProxyUrl": "Aggiungi l'indirizzo del proxy OpenAI (opzionale)",
         "description": "Inserisci la tua chiave API OpenAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
         "title": "Utilizza la chiave API OpenAI personalizzata"
+      },
+      "Perplexity": {
+        "description": "Inserisci la tua chiave API Perplexity per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+        "title": "Utilizza la tua chiave API Perplexity personalizzata"
       },
       "Zhipu": {
         "description": "Inserisci la tua chiave API Zhipu per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",

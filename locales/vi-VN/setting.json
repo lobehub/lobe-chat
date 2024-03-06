@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Về chúng tôi"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Bằng cách chọn gửi dữ liệu telemetri, bạn có thể giúp chúng tôi cải thiện trải nghiệm người dùng toàn diện của LobeChat",
+      "title": "Gửi dữ liệu sử dụng ẩn danh"
+    },
+    "title": "Thống kê dữ liệu"
+  },
   "danger": {
     "clear": {
       "action": "Xóa ngay",
@@ -21,6 +31,14 @@
     "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Nhập API Key từ Anthropic",
+        "placeholder": "Khóa API Anthropic",
+        "title": "Khóa API"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, xem chi tiết [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
@@ -138,8 +156,16 @@
         "title": "Sử dụng Azure OpenAI"
       }
     },
+    "Perplexity": {
+      "title": "Perplexity AI",
+      "token": {
+        "desc": "Nhập API Key từ Perplexity AI",
+        "placeholder": "Khóa API Perplexity AI",
+        "title": "API Key"
+      }
+    },
     "Zhipu": {
-      "title": "智谱",
+      "title": "Zhipu AI",
       "token": {
         "desc": "Nhập API Key từ Zhipu",
         "placeholder": "Zhipu API Key",
@@ -370,6 +396,7 @@
     "tooltips": "Chia sẻ lên thị trường trợ lý"
   },
   "tab": {
+    "about": "Về chúng tôi",
     "agent": "Trợ lý mặc định",
     "common": "Cài đặt chung",
     "llm": "Mô hình ngôn ngữ",

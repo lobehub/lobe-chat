@@ -27,6 +27,7 @@
   "defaultAgent": "Asistente predeterminado",
   "defaultSession": "Sesión predeterminada",
   "delete": "Eliminar",
+  "document": "Documento de uso",
   "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuración",
@@ -99,6 +100,7 @@
   },
   "layoutInitializing": "Inicializando diseño...",
   "modelProvider": {
+    "anthropic": "Antropico",
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",
@@ -106,6 +108,7 @@
     "ollama": "Ollama",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "perplexity": "Perplexity",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Sin descripción",
@@ -126,6 +129,13 @@
     "chat": "Chat",
     "market": "Descubrir",
     "setting": "Configuración"
+  },
+  "telemetry": {
+    "allow": "Permitir",
+    "deny": "Denegar",
+    "desc": "Queremos recopilar información sobre tu uso de forma anónima para ayudarnos a mejorar LobeChat y ofrecerte una mejor experiencia de producto. Puedes desactivarlo en 'Configuración' - 'Acerca de' en cualquier momento.",
+    "learnMore": "Más información",
+    "title": "Ayuda a mejorar LobeChat"
   },
   "temp": "Temporal",
   "updateAgent": "Actualizar información del asistente",

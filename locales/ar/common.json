@@ -27,6 +27,7 @@
   "defaultAgent": "مساعد افتراضي",
   "defaultSession": "جلسة افتراضية",
   "delete": "حذف",
+  "document": "وثيقة الاستخدام",
   "duplicate": "إنشاء نسخة",
   "edit": "تحرير",
   "export": "تصدير الإعدادات",
@@ -99,6 +100,7 @@
   },
   "layoutInitializing": "جاري تحميل التخطيط...",
   "modelProvider": {
+    "anthropic": "Anthropic",
     "azure": "أزور",
     "bedrock": "بيدروك لأمازون ويب سيرفيس",
     "google": "جوجل",
@@ -106,7 +108,8 @@
     "ollama": "أولاما",
     "oneapi": "وان آبي آي",
     "openai": "أوبن إيه آي",
-    "zhipu": "زهيبو"
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu"
   },
   "noDescription": "لا توجد وصف",
   "oauth": "تسجيل الدخول SSO",
@@ -126,6 +129,13 @@
     "chat": "الدردشة",
     "market": "الاكتشاف",
     "setting": "الإعدادات"
+  },
+  "telemetry": {
+    "allow": "السماح",
+    "deny": "رفض",
+    "desc": "نحن نأمل في الحصول على معلومات استخدامك بشكل مجهول لمساعدتنا في تحسين LobeChat وتوفير تجربة منتج أفضل لك. يمكنك إيقاف ذلك في أي وقت من \"الإعدادات\" - \"حول\".",
+    "learnMore": "معرفة المزيد",
+    "title": "مساعدة LobeChat في التحسن"
   },
   "temp": "مؤقت",
   "updateAgent": "تحديث معلومات الوكيل",

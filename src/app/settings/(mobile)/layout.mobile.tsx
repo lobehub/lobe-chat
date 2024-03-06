@@ -15,7 +15,7 @@ export interface SettingLayoutProps {
 export default memo(({ children, activeTab }: SettingLayoutProps) => {
   return (
     <AppLayoutMobile navBar={<Header activeTab={activeTab} />} tabBarKey={SidebarTabKey.Setting}>
-      <Flexbox style={{ overflow: 'auto' }}>{children}</Flexbox>
+      <Flexbox style={{ overflow: 'scroll' }}>{children}</Flexbox>
     </AppLayoutMobile>
   );
 });

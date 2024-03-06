@@ -19,6 +19,7 @@
     "title": "Discutons un peu"
   },
   "input": {
+    "more": "Plus",
     "onlyAdd": "Ajouter uniquement",
     "send": "Envoyer",
     "sendWithCmdEnter": "Envoyer avec {{meta}} + Entrée",

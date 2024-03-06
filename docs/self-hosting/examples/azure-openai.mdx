@@ -1,0 +1,48 @@
+import { Callout } from 'nextra/components';
+
+# Integrating with Azure OpenAI
+
+LobeChat supports using [Azure OpenAI][azure-openai-url] as the model service provider for OpenAI. This article will explain how to configure Azure OpenAI.
+
+## Usage Limitations
+
+Due to development costs ([#178][rfc]), the current version of LobeChat does not fully comply with the implementation model of Azure OpenAI. Instead, it adopts a solution based on `openai` to be compatible with Azure OpenAI. As a result, the following limitations exist:
+
+- Only one of OpenAI and Azure OpenAI can be selected. Once you enable Azure OpenAI, you will not be able to use OpenAI as the model service provider.
+- LobeChat requires the deployment name to be the same as the model name in order to function properly. For example, the deployment name for the `gpt-35-turbo` model must be `gpt-35-turbo`. Otherwise, LobeChat will not be able to match the corresponding model correctly. ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267082091-d89d53d3-1c8c-40ca-ba15-0a9af2a79264.png)
+- Due to the complexity of integrating with Azure OpenAI's SDK, it is currently not possible to query the list of configured models.
+
+## Configuring in the Interface
+
+Click in the bottom left corner "Actions" - "Settings", then switch to the "Language Model" tab and enable the "Azure OpenAI" switch to start using Azure OpenAI.
+
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267083420-422a3714-627e-4bef-9fbc-141a2a8ca916.png)
+
+You can fill in the corresponding configuration items as needed:
+
+- **API Key**: The API key you applied for on the Azure OpenAI account page, which can be found in the "Keys and Endpoints" section.
+- **API Address**: Azure API address, which can be found in the "Keys and Endpoints" section when checking resources in the Azure portal.
+- **Azure API Version**: The API version of Azure, following the format YYYY-MM-DD. Refer to the [latest version][azure-api-verion-url].
+
+After completing the configuration of the above fields, click "Check". If it prompts "Check passed", it means the configuration was successful.
+
+## Configuration during Deployment
+
+If you want the deployed version to be pre-configured with Azure OpenAI for end users to use directly, you need to configure the following environment variables during deployment:
+
+| Environment Variable | Type | Description | Default Value | Example |
+| --- | --- | --- | --- | --- |
+| `USE_AZURE_OPENAI` | Required | Set this value to `1` to enable Azure OpenAI configuration | - | `1` |
+| `AZURE_API_KEY` | Required | This is the API key you obtained from the Azure OpenAI account page | - | `c55168be3874490ef0565d9779ecd5a6` |
+| `OPENAI_PROXY_URL` | Required | Azure API address, can be found in the "Keys and Endpoints" section when checking resources in the Azure portal | - | `https://docs-test-001.openai.azure.com` |
+| `AZURE_API_VERSION` | Optional | Azure API version, following the format YYYY-MM-DD | 2023-08-01-preview | `2023-05-15`, see [latest version][azure-api-verion-url] |
+| `ACCESS_CODE` | Optional | Add a password to access this service. You can set a long password to prevent brute force attacks. When this value is separated by commas, it becomes an array of passwords | - | `awCT74` or `e3@09!` or `code1,code2,code3` |
+
+<Callout>
+  When you enable `USE_AZURE_OPENAI` on the server, users will be unable to modify and use the
+  OpenAI API key in the frontend configuration.
+</Callout>
+
+[azure-api-verion-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions
+[azure-openai-url]: https://learn.microsoft.com/zh-cn/azure/ai-services/openai/concepts/models
+[rfc]: https://github.com/lobehub/lobe-chat/discussions/178

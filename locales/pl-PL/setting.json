@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "O nas"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Poprzez wybór wysyłania danych telemetrycznych możesz pomóc nam poprawić ogólny użytkowy interfejs LobeChat",
+      "title": "Wysyłanie anonimowych danych użytkowych"
+    },
+    "title": "Analiza danych"
+  },
   "danger": {
     "clear": {
       "action": "Wyczyść teraz",
@@ -21,6 +31,14 @@
     "sessionWithName": "Ustawienia sesji · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Antropijny",
+      "token": {
+        "desc": "Wprowadź klucz API z Anthropic",
+        "placeholder": "Klucz API Anthropic",
+        "title": "Klucz API"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Wersja API usługi Azure, zgodna z formatem RRRR-MM-DD, zobacz [najnowszą wersję](https://learn.microsoft.com/pl-pl/azure/ai-services/openai/reference#chat-completions)",
@@ -136,6 +154,14 @@
         "fetch": "Pobierz listę",
         "serverConfig": "Administrator skonfigurował usługę Azure OpenAI po stronie serwera, co uniemożliwia przełączenie",
         "title": "Użyj Azure OpenAI"
+      }
+    },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Wprowadź klucz API od Perplexity AI",
+        "placeholder": "Klucz API Perplexity AI",
+        "title": "Klucz API"
       }
     },
     "Zhipu": {
@@ -370,6 +396,7 @@
     "tooltips": "Udostępnij na rynku asystentów"
   },
   "tab": {
+    "about": "O nas",
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
     "llm": "Model językowy",

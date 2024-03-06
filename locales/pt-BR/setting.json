@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Sobre"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Ao optar por enviar dados de telemetria, você pode nos ajudar a melhorar a experiência do usuário do LobeChat como um todo",
+      "title": "Enviar dados de uso anônimo"
+    },
+    "title": "Análise de dados"
+  },
   "danger": {
     "clear": {
       "action": "Limpar Agora",
@@ -21,6 +31,14 @@
     "sessionWithName": "Configurações de Sessão · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Insira a chave da API da Anthropic",
+        "placeholder": "Chave da API da Anthropic",
+        "title": "Chave da API"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Versão da API do Azure, seguindo o formato YYYY-MM-DD, consulte a [última versão](https://learn.microsoft.com/pt-br/azure/ai-services/openai/reference#chat-completions)",
@@ -138,8 +156,16 @@
         "title": "Usar Azure OpenAI"
       }
     },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Insira a chave da API do Perplexity AI",
+        "placeholder": "Chave da API do Perplexity AI",
+        "title": "Chave da API"
+      }
+    },
     "Zhipu": {
-      "title": "智谱",
+      "title": "Zhipu AI",
       "token": {
         "desc": "Insira a API Key do Zhipu",
         "placeholder": "Zhipu API Key",
@@ -370,6 +396,7 @@
     "tooltips": "Compartilhar no mercado de assistentes"
   },
   "tab": {
+    "about": "Sobre",
     "agent": "Assistente Padrão",
     "common": "Configurações Comuns",
     "llm": "Modelo de Linguagem",

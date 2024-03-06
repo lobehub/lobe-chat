@@ -1,22 +1,40 @@
 import { getServerConfig } from '@/config/server';
 import { JWTPayload } from '@/const/auth';
+import { INBOX_SESSION_ID } from '@/const/session';
+import {
+  LOBE_CHAT_OBSERVATION_ID,
+  LOBE_CHAT_TRACE_ID,
+  TracePayload,
+  TraceTagMap,
+} from '@/const/trace';
 import {
   ChatStreamPayload,
+  LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
   LobeMoonshotAI,
   LobeOllamaAI,
   LobeOpenAI,
+  LobePerplexityAI,
   LobeRuntimeAI,
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
+import { TraceClient } from '@/libs/traces';
+
+import apiKeyManager from '../apiKeyManager';
 
 interface AzureOpenAIParams {
   apiVersion?: string;
   model: string;
   useAzure?: boolean;
+}
+
+export interface AgentChatOptions {
+  enableTrace?: boolean;
+  provider: string;
+  trace?: TracePayload;
 }
 
 class AgentRuntime {
@@ -26,8 +44,67 @@ class AgentRuntime {
     this._runtime = runtime;
   }
 
-  async chat(payload: ChatStreamPayload) {
-    return this._runtime.chat(payload);
+  async chat(
+    payload: ChatStreamPayload,
+    { trace: tracePayload, provider, enableTrace }: AgentChatOptions,
+  ) {
+    const { messages, model, tools, ...parameters } = payload;
+
+    // if not enabled trace then just call the runtime
+    if (!enableTrace) return this._runtime.chat(payload);
+
+    // create a trace to monitor the completion
+    const traceClient = new TraceClient();
+    const trace = traceClient.createTrace({
+      id: tracePayload?.traceId,
+      input: messages,
+      metadata: { provider },
+      name: tracePayload?.traceName,
+      sessionId: `${tracePayload?.sessionId || INBOX_SESSION_ID}@${tracePayload?.topicId || 'start'}`,
+      tags: tracePayload?.tags,
+      userId: tracePayload?.userId,
+    });
+
+    const generation = trace?.generation({
+      input: messages,
+      metadata: { provider },
+      model,
+      modelParameters: parameters as any,
+      name: `Chat Completion (${provider})`,
+      startTime: new Date(),
+    });
+
+    return this._runtime.chat(payload, {
+      callback: {
+        experimental_onToolCall: async () => {
+          trace?.update({
+            tags: [...(tracePayload?.tags || []), TraceTagMap.ToolsCall],
+          });
+        },
+
+        onCompletion: async (completion) => {
+          generation?.update({
+            endTime: new Date(),
+            metadata: { provider, tools },
+            output: completion,
+          });
+
+          trace?.update({ output: completion });
+        },
+
+        onFinal: async () => {
+          await traceClient.shutdownAsync();
+        },
+
+        onStart: () => {
+          generation?.update({ completionStartTime: new Date() });
+        },
+      },
+      headers: {
+        [LOBE_CHAT_OBSERVATION_ID]: generation?.id,
+        [LOBE_CHAT_TRACE_ID]: trace?.id,
+      },
+    });
   }
 
   static async initializeWithUserPayload(
@@ -74,6 +151,16 @@ class AgentRuntime {
         runtimeModel = this.initOllama(payload);
         break;
       }
+
+      case ModelProvider.Perplexity: {
+        runtimeModel = this.initPerplexity(payload);
+        break;
+      }
+
+      case ModelProvider.Anthropic: {
+        runtimeModel = this.initAnthropic(payload);
+        break;
+      }
     }
 
     return new AgentRuntime(runtimeModel);
@@ -82,15 +169,17 @@ class AgentRuntime {
   private static initOpenAI(payload: JWTPayload, azureOpenAI?: AzureOpenAIParams) {
     const { OPENAI_API_KEY, OPENAI_PROXY_URL, AZURE_API_VERSION, AZURE_API_KEY, USE_AZURE_OPENAI } =
       getServerConfig();
-    const apiKey = payload?.apiKey || OPENAI_API_KEY;
+    const openaiApiKey = payload?.apiKey || OPENAI_API_KEY;
     const baseURL = payload?.endpoint || OPENAI_PROXY_URL;
 
     const azureApiKey = payload.apiKey || AZURE_API_KEY;
     const useAzure = azureOpenAI?.useAzure || USE_AZURE_OPENAI;
     const apiVersion = azureOpenAI?.apiVersion || AZURE_API_VERSION;
 
+    const apiKey = apiKeyManager.pick(useAzure ? azureApiKey : openaiApiKey);
+
     return new LobeOpenAI({
-      apiKey: useAzure ? azureApiKey : apiKey,
+      apiKey,
       azureOptions: {
         apiVersion,
         model: azureOpenAI?.model,
@@ -102,7 +191,7 @@ class AgentRuntime {
 
   private static initAzureOpenAI(payload: JWTPayload) {
     const { AZURE_API_KEY, AZURE_API_VERSION, AZURE_ENDPOINT } = getServerConfig();
-    const apiKey = payload?.apiKey || AZURE_API_KEY;
+    const apiKey = apiKeyManager.pick(payload?.apiKey || AZURE_API_KEY);
     const endpoint = payload?.endpoint || AZURE_ENDPOINT;
     const apiVersion = payload?.azureApiVersion || AZURE_API_VERSION;
 
@@ -111,23 +200,23 @@ class AgentRuntime {
 
   private static async initZhipu(payload: JWTPayload) {
     const { ZHIPU_API_KEY } = getServerConfig();
-    const apiKey = payload?.apiKey || ZHIPU_API_KEY;
+    const apiKey = apiKeyManager.pick(payload?.apiKey || ZHIPU_API_KEY);
 
-    return LobeZhipuAI.fromAPIKey(apiKey);
+    return LobeZhipuAI.fromAPIKey({ apiKey });
   }
 
   private static initMoonshot(payload: JWTPayload) {
     const { MOONSHOT_API_KEY, MOONSHOT_PROXY_URL } = getServerConfig();
-    const apiKey = payload?.apiKey || MOONSHOT_API_KEY;
+    const apiKey = apiKeyManager.pick(payload?.apiKey || MOONSHOT_API_KEY);
 
-    return new LobeMoonshotAI(apiKey, MOONSHOT_PROXY_URL);
+    return new LobeMoonshotAI({ apiKey, baseURL: MOONSHOT_PROXY_URL });
   }
 
   private static initGoogle(payload: JWTPayload) {
     const { GOOGLE_API_KEY } = getServerConfig();
-    const apiKey = payload?.apiKey || GOOGLE_API_KEY;
+    const apiKey = apiKeyManager.pick(payload?.apiKey || GOOGLE_API_KEY);
 
-    return new LobeGoogleAI(apiKey);
+    return new LobeGoogleAI({ apiKey });
   }
 
   private static initBedrock(payload: JWTPayload) {
@@ -148,9 +237,23 @@ class AgentRuntime {
 
   private static initOllama(payload: JWTPayload) {
     const { OLLAMA_PROXY_URL } = getServerConfig();
-    const baseUrl = payload?.endpoint || OLLAMA_PROXY_URL;
+    const baseURL = payload?.endpoint || OLLAMA_PROXY_URL;
 
-    return new LobeOllamaAI(baseUrl);
+    return new LobeOllamaAI({ baseURL });
+  }
+
+  private static initPerplexity(payload: JWTPayload) {
+    const { PERPLEXITY_API_KEY } = getServerConfig();
+    const apiKey = apiKeyManager.pick(payload?.apiKey || PERPLEXITY_API_KEY);
+
+    return new LobePerplexityAI({ apiKey });
+  }
+
+  private static initAnthropic(payload: JWTPayload) {
+    const { ANTHROPIC_API_KEY } = getServerConfig();
+    const apiKey = apiKeyManager.pick(payload?.apiKey || ANTHROPIC_API_KEY);
+
+    return new LobeAnthropicAI({ apiKey });
   }
 }
 

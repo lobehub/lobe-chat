@@ -6,26 +6,26 @@ import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ModelProvider } from '../types';
+import { ChatCompetitionOptions, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
-import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 import { handleOpenAIError } from '../utils/handleOpenAIError';
 
 const DEFAULT_BASE_URL = 'https://api.openai.com/v1';
 
-interface AzureOpenAIOptions extends ClientOptions {
+interface LobeOpenAIOptions extends ClientOptions {
   azureOptions?: {
     apiVersion?: string;
     model?: string;
   };
   useAzure?: boolean;
 }
+
 export class LobeOpenAI implements LobeRuntimeAI {
   private client: OpenAI;
 
-  constructor(options: AzureOpenAIOptions) {
+  constructor(options: LobeOpenAIOptions) {
     if (!options.apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.NoOpenAIAPIKey);
 
     if (options.useAzure) {
@@ -39,7 +39,7 @@ export class LobeOpenAI implements LobeRuntimeAI {
 
   baseURL: string;
 
-  async chat(payload: ChatStreamPayload) {
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     // ============  1. preprocess messages   ============ //
     const { messages, ...params } = payload;
 
@@ -55,15 +55,15 @@ export class LobeOpenAI implements LobeRuntimeAI {
         { headers: { Accept: '*/*' } },
       );
 
-      const stream = OpenAIStream(response);
+      const [prod, debug] = response.tee();
 
-      const [debug, prod] = stream.tee();
-
-      if (DEBUG_CHAT_COMPLETION) {
-        debugStream(debug).catch(console.error);
+      if (process.env.DEBUG_OPENAI_CHAT_COMPLETION === '1') {
+        debugStream(debug.toReadableStream()).catch(console.error);
       }
 
-      return new StreamingTextResponse(prod);
+      return new StreamingTextResponse(OpenAIStream(prod, options?.callback), {
+        headers: options?.headers,
+      });
     } catch (error) {
       const { errorResult, RuntimeError } = handleOpenAIError(error);
 
@@ -85,7 +85,7 @@ export class LobeOpenAI implements LobeRuntimeAI {
     }
   }
 
-  static initWithAzureOpenAI(options: AzureOpenAIOptions) {
+  static initWithAzureOpenAI(options: LobeOpenAIOptions) {
     const endpoint = options.baseURL!;
     const model = options.azureOptions?.model || '';
 
@@ -96,6 +96,7 @@ export class LobeOpenAI implements LobeRuntimeAI {
     const apiKey = options.apiKey!;
 
     const config: ClientOptions = {
+      ...options,
       apiKey,
       baseURL,
       defaultHeaders: { 'api-key': apiKey },

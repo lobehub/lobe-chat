@@ -8,11 +8,13 @@ import PageTitle from '@/components/PageTitle';
 import { MORE_MODEL_PROVIDER_REQUEST_URL } from '@/const/url';
 
 import Footer from '../features/Footer';
+import Anthropic from './Anthropic';
 import Bedrock from './Bedrock';
 import Google from './Google';
 import Moonshot from './Moonshot';
 import Ollama from './Ollama';
 import OpenAI from './OpenAI';
+import Perplexity from './Perplexity';
 import Zhipu from './Zhipu';
 
 export default memo<{ showOllama: boolean }>(({ showOllama }) => {
@@ -27,6 +29,8 @@ export default memo<{ showOllama: boolean }>(({ showOllama }) => {
       <Moonshot />
       <Google />
       <Bedrock />
+      <Perplexity />
+      <Anthropic />
       {showOllama && <Ollama />}
       <Footer>
         <Trans i18nKey="llm.waitingForMore" ns={'setting'}>

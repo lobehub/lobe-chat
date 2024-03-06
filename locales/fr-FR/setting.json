@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "À propos"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "En choisissant d'envoyer des données de télémétrie, vous pouvez nous aider à améliorer l'expérience utilisateur globale de LobeChat",
+      "title": "Envoyer des données d'utilisation anonymes"
+    },
+    "title": "Analytique"
+  },
   "danger": {
     "clear": {
       "action": "Effacer immédiatement",
@@ -21,6 +31,14 @@
     "sessionWithName": "Paramètres de session · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "title": "Anthropic",
+      "token": {
+        "desc": "Entrez votre clé API Anthropic",
+        "placeholder": "Clé API Anthropic",
+        "title": "Clé API"
+      }
+    },
     "AzureOpenAI": {
       "azureApiVersion": {
         "desc": "Version de l'API Azure, au format YYYY-MM-DD. Consultez la [dernière version](https://learn.microsoft.com/fr-fr/azure/ai-services/openai/reference#chat-completions)",
@@ -136,6 +154,14 @@
         "fetch": "Obtenir la liste",
         "serverConfig": "L'administrateur a activé Azure OpenAI côté serveur, le changement est interdit",
         "title": "Azure OpenAI"
+      }
+    },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Entrez la clé API de Perplexity AI",
+        "placeholder": "Clé API Perplexity AI",
+        "title": "Clé API"
       }
     },
     "Zhipu": {
@@ -370,6 +396,7 @@
     "tooltips": "Partager sur le marché des agents"
   },
   "tab": {
+    "about": "À propos",
     "agent": "Agent par défaut",
     "common": "Paramètres généraux",
     "llm": "Modèle de langue",

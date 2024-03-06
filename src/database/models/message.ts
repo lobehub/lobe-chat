@@ -12,6 +12,7 @@ export interface CreateMessageParams
   fromModel?: string;
   fromProvider?: string;
   sessionId: string;
+  traceId?: string;
 }
 
 export interface QueryMessageParams {
@@ -163,10 +164,8 @@ class _MessageModel extends BaseModel {
     return data.map((element) => this.mapToChatMessage(element));
   }
 
-  async isEmpty() {
-    const count = await this.table.count();
-
-    return count === 0;
+  async count() {
+    return this.table.count();
   }
 
   async queryBySessionId(sessionId: string) {

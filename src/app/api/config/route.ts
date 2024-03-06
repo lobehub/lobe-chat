@@ -17,7 +17,10 @@ export const GET = async () => {
     ENABLED_GOOGLE,
     ENABLE_OAUTH_SSO,
     ENABLE_OLLAMA,
+    ENABLED_PERPLEXITY,
+    ENABLED_ANTHROPIC,
     DEFAULT_AGENT_CONFIG,
+    ENABLE_LANGFUSE,
   } = getServerConfig();
 
   const config: GlobalServerConfig = {
@@ -25,13 +28,19 @@ export const GET = async () => {
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
+
     enabledOAuthSSO: ENABLE_OAUTH_SSO,
     languageModel: {
+      anthropic: { enabled: ENABLED_ANTHROPIC },
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       google: { enabled: ENABLED_GOOGLE },
       moonshot: { enabled: ENABLED_MOONSHOT },
       ollama: { enabled: ENABLE_OLLAMA },
+      perplexity: { enabled: ENABLED_PERPLEXITY },
       zhipu: { enabled: ENABLED_ZHIPU },
+    },
+    telemetry: {
+      langfuse: ENABLE_LANGFUSE,
     },
   };
 

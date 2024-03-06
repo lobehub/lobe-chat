@@ -34,21 +34,25 @@
     "503": "Sorry, de server kan uw verzoek momenteel niet verwerken vanwege overbelasting of onderhoud. Probeer het later opnieuw",
     "504": "Sorry, de server heeft geen reactie ontvangen van de upstream server. Probeer het later opnieuw",
     "AgentRuntimeError": "Lobe language model runtime execution error, please troubleshoot or retry based on the following information",
+    "AnthropicBizError": "Er is een fout opgetreden bij het aanvragen van de Anthropic AI-service. Controleer de onderstaande informatie en probeer het opnieuw.",
     "AzureBizError": "Error requesting Azure AI service, please troubleshoot or retry based on the following information",
     "BedrockBizError": "Error requesting Bedrock service, please troubleshoot or retry based on the following information",
     "GoogleBizError": "Error requesting Google service, please troubleshoot or retry based on the following information",
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
+    "InvalidAnthropicAPIKey": "Anthropic API Key is onjuist of leeg. Controleer de Anthropic API Key en probeer het opnieuw.",
     "InvalidAzureAPIKey": "Incorrect or empty Azure API Key, please check the Azure API Key and retry",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidGoogleAPIKey": "Incorrect or empty Google API Key, please check the Google API Key and retry",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
+    "InvalidPerplexityAPIKey": "Perplexity API Key is onjuist of leeg. Controleer de Perplexity API Key en probeer het opnieuw.",
     "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
     "MoonshotBizError": "请求月球AI服务出错，请根据以下信息排查或重试",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
     "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
+    "PerplexityBizError": "Er is een fout opgetreden bij het aanvragen van de Perplexity AI-service. Controleer de onderstaande informatie en probeer het opnieuw.",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
     "PluginGatewayError": "Sorry, er is een fout opgetreden in de plug-in gateway. Controleer of de plug-in gatewayconfiguratie juist is",
@@ -71,6 +75,10 @@
   },
   "unlock": {
     "apikey": {
+      "Anthropic": {
+        "description": "Voer uw eigen Anthropic API Key in om een sessie te starten. De app zal uw API Key niet opslaan.",
+        "title": "Gebruik een aangepaste Anthropic API Key"
+      },
       "Bedrock": {
         "customRegion": "Custom service region",
         "description": "Enter your Aws AccessKeyId / SecretAccessKey to start the session. The app will not record your authentication configuration",
@@ -88,6 +96,10 @@
         "addProxyUrl": "Add OpenAI proxy address (optional)",
         "description": "Enter your OpenAI API Key to start the session. The app will not record your API Key",
         "title": "Use custom OpenAI API Key"
+      },
+      "Perplexity": {
+        "description": "Voer uw eigen Perplexity API Key in om het gesprek te starten. De app zal uw API Key niet opslaan.",
+        "title": "Gebruik een aangepaste Perplexity API Key"
       },
       "Zhipu": {
         "description": "Enter your Zhipu API Key to start the session. The app will not record your API Key",

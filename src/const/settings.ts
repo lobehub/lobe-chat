@@ -46,6 +46,10 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
 };
 
 export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
+  anthropic: {
+    apiKey: '',
+    enabled: false,
+  },
   azure: {
     apiKey: '',
     deployments: '',
@@ -74,6 +78,10 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     OPENAI_API_KEY: '',
     enabled: true,
     models: [],
+  },
+  perplexity: {
+    apiKey: '',
+    enabled: false,
   },
   zhipu: {
     apiKey: '',
