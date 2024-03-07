@@ -115,7 +115,7 @@
     "next-sitemap": "^4.2.3",
     "numeral": "^2.0.6",
     "nuqs": "^1.15.4",
-    "openai": "^4.22",
+    "openai": "file:./openai-node/dist",
     "polished": "^4",
     "posthog-js": "^1",
     "query-string": "^9.0.0",
