@@ -94,6 +94,14 @@
         "title": "مفتاح واجهة برمجة التطبيقات"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "أدخل مفتاح API من Mistral AI",
+        "placeholder": "مفتاح API من Mistral AI",
+        "title": "مفتاح API"
+      }
+    },
     "Moonshot": {
       "title": "الجانب المظلم من القمر",
       "token": {

@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "Chave de API Azure incorreta ou vazia, por favor, verifique a chave de API Azure e tente novamente",
     "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
     "InvalidGoogleAPIKey": "Chave de API Google incorreta ou vazia, por favor, verifique a chave de API Google e tente novamente",
+    "InvalidMistralAPIKey": "Chave de API Mistral AI inválida ou vazia. Por favor, verifique a chave de API Mistral e tente novamente.",
     "InvalidMoonshotAPIKey": "A chave da API Moonshot AI está incorreta ou vazia. Por favor, verifique a chave da API Moonshot e tente novamente.",
     "InvalidOllamaArgs": "Configuração Ollama inválida, verifique a configuração do Ollama e tente novamente",
     "InvalidPerplexityAPIKey": "Chave da API Perplexity inválida ou em branco, verifique a chave da API Perplexity e tente novamente",
     "InvalidZhipuAPIKey": "Chave de API Zhipu incorreta ou vazia, por favor, verifique a chave de API Zhipu e tente novamente",
     "LocationNotSupportError": "Desculpe, sua localização atual não suporta este serviço de modelo, pode ser devido a restrições geográficas ou serviço não disponível. Por favor, verifique se a localização atual suporta o uso deste serviço ou tente usar outras informações de localização.",
+    "MistralBizError": "Ocorreu um erro ao solicitar o serviço Mistral AI. Por favor, verifique as informações abaixo ou tente novamente.",
     "MoonshotBizError": "O serviço Moonshot na face oculta da lua encontrou um erro. Por favor, verifique as informações abaixo ou tente novamente.",
     "NoOpenAIAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
     "OllamaBizError": "Erro de negócio ao solicitar o serviço Ollama, verifique as informações a seguir ou tente novamente",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Digite sua chave de API Google para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
         "title": "Usar chave de API Google personalizada"
+      },
+      "Mistral": {
+        "description": "Insira sua chave de API Mistral AI para iniciar a sessão. O aplicativo não irá armazenar sua chave de API.",
+        "title": "Usar chave de API Mistral AI personalizada"
       },
       "Moonshot": {
         "description": "Insira a sua chave de API Moonshot AI para iniciar a sessão. O aplicativo não irá armazenar a sua chave de API.",

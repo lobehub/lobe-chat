@@ -94,6 +94,14 @@
         "title": "Clé API"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Veuillez saisir la clé API de Mistral AI",
+        "placeholder": "Clé API Mistral AI",
+        "title": "Clé API"
+      }
+    },
     "Moonshot": {
       "title": "月球着陆",
       "token": {

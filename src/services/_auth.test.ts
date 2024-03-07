@@ -11,6 +11,8 @@ import { getProviderAuthPayload } from './_auth';
 const mockZhiPuAPIKey = 'zhipu-api-key';
 const mockMoonshotAPIKey = 'moonshot-api-key';
 const mockGoogleAPIKey = 'google-api-key';
+const mockAnthropicAPIKey = 'anthropic-api-key';
+const mockMistralAPIKey = 'mistral-api-key';
 
 // mock the traditional zustand
 vi.mock('zustand/traditional');
@@ -41,6 +43,24 @@ describe('getProviderAuthPayload', () => {
 
     const payload = getProviderAuthPayload(ModelProvider.Moonshot);
     expect(payload).toEqual({ apiKey: mockMoonshotAPIKey });
+  });
+
+  it('should return correct payload for Anthropic provider', () => {
+    act(() => {
+      setModelProviderConfig('anthropic', { apiKey: mockAnthropicAPIKey });
+    });
+
+    const payload = getProviderAuthPayload(ModelProvider.Anthropic);
+    expect(payload).toEqual({ apiKey: mockAnthropicAPIKey });
+  });
+
+  it('should return correct payload for Mistral provider', () => {
+    act(() => {
+      setModelProviderConfig('mistral', { apiKey: mockMistralAPIKey });
+    });
+
+    const payload = getProviderAuthPayload(ModelProvider.Mistral);
+    expect(payload).toEqual({ apiKey: mockMistralAPIKey });
   });
 
   it('should return correct payload for Google provider', () => {
