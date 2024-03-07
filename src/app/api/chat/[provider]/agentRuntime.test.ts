@@ -8,9 +8,11 @@ import { JWTPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
 import {
   ChatStreamPayload,
+  LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
+  LobeMistralAI,
   LobeMoonshotAI,
   LobeOllamaAI,
   LobeOpenAI,
@@ -38,6 +40,8 @@ vi.mock('@/config/server', () => ({
     AWS_REGION: 'test-aws-region',
     OLLAMA_PROXY_URL: 'test-ollama-url',
     PERPLEXITY_API_KEY: 'test-perplexity-key',
+    ANTHROPIC_API_KEY: 'test-anthropic-key',
+    MISTRAL_API_KEY: 'test-mistral-key',
   })),
 }));
 
@@ -258,6 +262,54 @@ describe('AgentRuntime', () => {
 
         // 假设 LobePerplexityAI 是 Perplexity 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobePerplexityAI);
+      });
+    });
+
+    describe('Anthropic AI provider', () => {
+      it('should initialize correctly', async () => {
+        const jwtPayload: JWTPayload = { apiKey: 'user-anthropic-key' };
+        const runtime = await AgentRuntime.initializeWithUserPayload(
+          ModelProvider.Anthropic,
+          jwtPayload,
+        );
+
+        // 假设 LobeAnthropicAI 是 Anthropic 提供者的实现类
+        expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
+      });
+
+      it('should initialize correctly without apiKey', async () => {
+        const jwtPayload: JWTPayload = {};
+        const runtime = await AgentRuntime.initializeWithUserPayload(
+          ModelProvider.Anthropic,
+          jwtPayload,
+        );
+
+        // 假设 LobeAnthropicAI 是 Anthropic 提供者的实现类
+        expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
+      });
+    });
+
+    describe('Mistral AI provider', () => {
+      it('should initialize correctly', async () => {
+        const jwtPayload: JWTPayload = { apiKey: 'user-mistral-key' };
+        const runtime = await AgentRuntime.initializeWithUserPayload(
+          ModelProvider.Mistral,
+          jwtPayload,
+        );
+
+        // 假设 LobeMistralAI 是 Mistral 提供者的实现类
+        expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
+      });
+
+      it('should initialize correctly without apiKey', async () => {
+        const jwtPayload: JWTPayload = {};
+        const runtime = await AgentRuntime.initializeWithUserPayload(
+          ModelProvider.Mistral,
+          jwtPayload,
+        );
+
+        // 假设 LobeMistralAI 是 Mistral 提供者的实现类
+        expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
       });
     });
 
