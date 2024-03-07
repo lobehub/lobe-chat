@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "Nieprawidłowy lub pusty klucz API Azure, prosimy sprawdzić klucz API Azure i spróbować ponownie.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
     "InvalidGoogleAPIKey": "Nieprawidłowy lub pusty klucz API Google, prosimy sprawdzić klucz API Google i spróbować ponownie.",
+    "InvalidMistralAPIKey": "Mistral AI API Key 不正确或为空，请检查 Mistral API Key 后重试",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
     "InvalidPerplexityAPIKey": "Klucz API Perplexity jest nieprawidłowy lub pusty. Sprawdź klucz API Perplexity i spróbuj ponownie.",
     "InvalidZhipuAPIKey": "Nieprawidłowy lub pusty klucz API Zhipu, prosimy sprawdzić klucz API Zhipu i spróbować ponownie.",
     "LocationNotSupportError": "Przepraszamy, Twoja lokalizacja nie obsługuje tego usługi modelu, być może ze względu na ograniczenia regionalne lub brak dostępności usługi. Proszę sprawdź, czy bieżąca lokalizacja obsługuje tę usługę, lub spróbuj użyć innych informacji o lokalizacji.",
+    "MistralBizError": "请求 Mistral AI 服务出错，请根据以下信息排查或重试",
     "MoonshotBizError": "请求月球AI服务出错，请根据以下信息排查或重试",
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Wprowadź swój klucz API Google, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
         "title": "Użyj niestandardowego klucza API Google"
+      },
+      "Mistral": {
+        "description": "输入你的 Mistral AI API Key 即可开始会话。应用不会记录你的 API Key",
+        "title": "使用自定义 Mistral AI API Key"
       },
       "Moonshot": {
         "description": "输入您的Moonshot AI API密钥即可开始会话。应用不会记录您的API密钥",

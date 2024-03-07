@@ -94,6 +94,14 @@
         "title": "API Key"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Insira a chave da API do Mistral AI",
+        "placeholder": "Chave da API do Mistral AI",
+        "title": "Chave da API"
+      }
+    },
     "Moonshot": {
       "title": "Lado Escuro da Lua",
       "token": {

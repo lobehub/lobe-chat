@@ -94,6 +94,14 @@
         "title": "API Key"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Enter the API Key from Mistral AI",
+        "placeholder": "Mistral AI API Key",
+        "title": "API Key"
+      }
+    },
     "Moonshot": {
       "title": "Dark Side of the Moon",
       "token": {
