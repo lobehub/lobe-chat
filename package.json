@@ -74,7 +74,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5",
-    "@anthropic-ai/sdk": "^0.16.0",
+    "@anthropic-ai/sdk": "^0.17.0",
     "@auth/core": "latest",
     "@aws-sdk/client-bedrock-runtime": "^3.503.1",
     "@azure/openai": "^1.0.0-beta.11",
