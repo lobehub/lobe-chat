@@ -43,7 +43,7 @@ const nextAuth = NextAuth({
     },
   },
   providers: ENABLE_OAUTH_SSO
-    ? SSO_PROVIDERS.split(',').map((provider) => {
+    ? SSO_PROVIDERS.split(/[,，]/).map((provider) => {
         switch (provider) {
           case 'auth0': {
             return Auth0({
