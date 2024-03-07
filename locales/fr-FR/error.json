@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "Clé API Azure incorrecte ou vide, veuillez vérifier la clé API Azure et réessayer",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
     "InvalidGoogleAPIKey": "Clé API Google incorrecte ou vide, veuillez vérifier la clé API Google et réessayer",
+    "InvalidMistralAPIKey": "Clé API Mistral AI incorrecte ou manquante. Veuillez vérifier la clé API Mistral et réessayer.",
     "InvalidMoonshotAPIKey": "Clé API Moonshot AI incorrecte ou manquante. Veuillez vérifier la clé API Moonshot et réessayer.",
     "InvalidOllamaArgs": "La configuration d'Ollama n'est pas valide, veuillez vérifier la configuration d'Ollama et réessayer",
     "InvalidPerplexityAPIKey": "La clé API Perplexity est incorrecte ou vide. Veuillez vérifier la clé API Perplexity et réessayer.",
     "InvalidZhipuAPIKey": "Clé API Zhipu incorrecte ou vide, veuillez vérifier la clé API Zhipu et réessayer",
     "LocationNotSupportError": "Désolé, votre emplacement actuel ne prend pas en charge ce service de modèle, peut-être en raison de restrictions géographiques ou de services non disponibles. Veuillez vérifier si votre emplacement actuel prend en charge ce service ou essayer avec une autre localisation.",
+    "MistralBizError": "Erreur de service Mistral AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
     "MoonshotBizError": "Erreur de service Moonshot : une erreur s'est produite lors de la demande du service Côté Obscur de la Lune. Veuillez vérifier les informations suivantes ou réessayer.",
     "NoOpenAIAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée",
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Entrez votre clé API Google pour commencer la session. L'application ne conservera pas votre clé API",
         "title": "Utiliser une clé API Google personnalisée"
+      },
+      "Mistral": {
+        "description": "Entrez votre clé API Mistral AI pour commencer la session. L'application ne stockera pas votre clé API.",
+        "title": "Utiliser une clé API Mistral AI personnalisée"
       },
       "Moonshot": {
         "description": "Entrez votre clé API Moonshot AI personnalisée pour commencer la session. L'application ne conservera pas votre clé API.",

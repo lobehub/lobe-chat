@@ -19,6 +19,7 @@ export const GET = async () => {
     ENABLE_OLLAMA,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
+    ENABLED_MISTRAL,
     DEFAULT_AGENT_CONFIG,
     ENABLE_LANGFUSE,
   } = getServerConfig();
@@ -34,6 +35,7 @@ export const GET = async () => {
       anthropic: { enabled: ENABLED_ANTHROPIC },
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       google: { enabled: ENABLED_GOOGLE },
+      mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
       ollama: { enabled: ENABLE_OLLAMA },
       perplexity: { enabled: ENABLED_PERPLEXITY },
