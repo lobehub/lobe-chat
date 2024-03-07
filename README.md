@@ -397,6 +397,9 @@ If you want to deploy this service yourself on either Vercel or Zeabur, you can 
 
 </div>
 
+#### After Fork
+After fork, only retain the upstream sync action and disable other actions in your repository on GitHub.
+
 #### Keep Updated
 
 If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available." This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to detect updates accurately.
