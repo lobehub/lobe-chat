@@ -257,10 +257,10 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 | Recent Submits                                                                                                                                                                                    | Description                                                                                                                                                                                                                                                                                                                       |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [日程管理助手](https://chat-preview.lobehub.com/market?agent=calendar-manager)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2024-03-07**</sup>                                  | 日程管理助手，调用时间插件，处理新增、查询、删除日程请求，支持多种操作和提醒。<br/>`日程管理` `时间插件` `新增日程` `查询日程` `删除日程`                                                                                                                                                                                         |
 | [Business Email Writing Expert](https://chat-preview.lobehub.com/market?agent=business-email)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-03-06**</sup>         | Business email writing expert specializing in bilingual business emails in Chinese and English, cross-cultural communication, and engagement in the GitHub open-source community.<br/>`business-email-writing` `business-cooperation` `business-authorization` `cross-cultural-communication` `git-hub-and-open-source-community` |
 | [Discord Style Copywriting Expert](https://chat-preview.lobehub.com/market?agent=discord-copywriting)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-03-06**</sup> | A copywriting expert in Discord style, prioritizing humor and user experience, specializing in personalized software copywriting.<br/>`copywriting` `creation` `user-experience` `humor` `software-system`                                                                                                                        |
 | [AI Image Prompt Architect](https://chat-preview.lobehub.com/market?agent=9-somboon)<br/><sup>By **[9Somboon](https://github.com/9Somboon)** on **2024-03-05**</sup>                              | Specialises in creating detailed prompts for AI image generation.<br/>`stable-diffusion` `ai-image-generation` `prompts` `photography` `creative` `art`                                                                                                                                                                           |
-| [F1 Data Analyst](https://chat-preview.lobehub.com/market?agent=f-1-bot)<br/><sup>By **[SpaceX-Vision](https://github.com/SpaceX-Vision)** on **2024-03-05**</sup>                                | Specializes in F1 race data analysis and predictive commentary<br/>`f-1` `data-analysis` `race-prediction`                                                                                                                                                                                                                        |
 
 > 📊 Total agents: [<kbd>**199**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
@@ -396,6 +396,10 @@ If you want to deploy this service yourself on either Vercel or Zeabur, you can 
 | [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] |
 
 </div>
+
+#### After Fork
+
+After fork, only retain the upstream sync action and disable other actions in your repository on GitHub.
 
 #### Keep Updated
 
