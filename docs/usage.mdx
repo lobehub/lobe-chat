@@ -3,11 +3,6 @@ title: Get Start
 image: https://github.com/lobehub/lobe-chat/assets/28616219/9be1a584-8b66-4bc4-ac96-14c4f94dc499
 ---
 
-import { LucideAppWindow, LucidePalette, LucideTabletSmartphone } from 'lucide-react';
-import { Cards } from 'nextra/components';
-
-import FeatureCards from '../../../src/components/FeatureCards';
-
 # ✨ Feature Overview
 
 <Image
@@ -32,12 +27,8 @@ import FeatureCards from '../../../src/components/FeatureCards';
 
 ## Experience Features
 
-<Cards>
-  <Cards.Card href={'features/pwa'} icon={<LucideAppWindow />} title={'Progressive Web App'} />
-  <Cards.Card
-    href={'features/mobile'}
-    icon={<LucideTabletSmartphone />}
-    title={'Mobile Device Adaptation'}
-  />
-  <Cards.Card href={'features/theme'} icon={<LucidePalette />} title={'Custom Themes'} />
-</Cards>
+<ExperienceCards
+  mobile={'Mobile Device Adaptation'}
+  theme={'Custom Themes'}
+  pwa={'Progressive Web App'}
+/>
