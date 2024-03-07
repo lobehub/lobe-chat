@@ -94,6 +94,14 @@
         "title": "APIキー"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Mistral AI からの API キーを入力してください",
+        "placeholder": "Mistral AI API キー",
+        "title": "API キー"
+      }
+    },
     "Moonshot": {
       "title": "月の裏側",
       "token": {

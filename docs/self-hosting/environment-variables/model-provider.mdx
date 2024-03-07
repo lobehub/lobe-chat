@@ -163,8 +163,11 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Default: -
 - Example: `sk-ant-apixx-xxxxxxxxx-xxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx`
 
+## Mistral AI
 
-<Callout type={'warning'}>
-  There's [a known issue](https://github.com/anthropics/anthropic-sdk-typescript/issues/292) with the official Anthropic SDK on Vercel/Cloudflare edge runtime, which causes chat streams to be interrupted randomly. If you want to use the Anthropic provider, do not use Vercel/Cloudflare for now; the Anthropic provider should be working fine with other hosting options.
-</Callout>
+### `MISTRAL_API_KEY`
 
+- Type: Required
+- Description: This is the API key you applied for in the Mistral AI service
+- Default: -
+- Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`

@@ -94,6 +94,14 @@
         "title": "API-sleutel"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Voer de API-sleutel van Mistral AI in",
+        "placeholder": "Mistral AI API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
     "Moonshot": {
       "title": "月球计划",
       "token": {

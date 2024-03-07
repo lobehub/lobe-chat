@@ -20,6 +20,9 @@ export const AgentRuntimeErrorType = {
   InvalidBedrockCredentials: 'InvalidBedrockCredentials',
   BedrockBizError: 'BedrockBizError',
 
+  InvalidMistralAPIKey: 'InvalidMistralAPIKey',
+  MistralBizError: 'MistralBizError',
+
   InvalidMoonshotAPIKey: 'InvalidMoonshotAPIKey',
   MoonshotBizError: 'MoonshotBizError',
 

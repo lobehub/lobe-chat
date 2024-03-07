@@ -94,6 +94,14 @@
         "title": "API Key"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Nhập API Key từ Mistral AI",
+        "placeholder": "Mistral AI API Key",
+        "title": "API Key"
+      }
+    },
     "Moonshot": {
       "title": "Mặt trăng",
       "token": {
