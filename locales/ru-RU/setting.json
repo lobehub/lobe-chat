@@ -94,6 +94,14 @@
         "title": "API-ключ"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Введите API-ключ от Mistral AI",
+        "placeholder": "Ключ API Mistral AI",
+        "title": "API-ключ"
+      }
+    },
     "Moonshot": {
       "title": "Лунная тень",
       "token": {

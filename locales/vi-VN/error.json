@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "Khóa API Azure không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Azure và thử lại",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidGoogleAPIKey": "Khóa API Google không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Google và thử lại",
+    "InvalidMistralAPIKey": "Mistral AI API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại Mistral API Key và thử lại",
     "InvalidMoonshotAPIKey": "Khóa API Moonshot AI không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Moonshot và thử lại",
     "InvalidOllamaArgs": "Cấu hình Ollama không hợp lệ, vui lòng kiểm tra lại cấu hình Ollama và thử lại",
     "InvalidPerplexityAPIKey": "Khóa API Perplexity không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại sau",
     "InvalidZhipuAPIKey": "Khóa API Zhipu không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Zhipu và thử lại",
     "LocationNotSupportError": "Xin lỗi, vị trí của bạn không hỗ trợ dịch vụ mô hình này, có thể do hạn chế vùng miền hoặc dịch vụ chưa được mở. Vui lòng xác nhận xem vị trí hiện tại có hỗ trợ sử dụng dịch vụ này không, hoặc thử sử dụng thông tin vị trí khác.",
+    "MistralBizError": "Yêu cầu dịch vụ Mistral AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "MoonshotBizError": "Yêu cầu dịch vụ Mặt Trăng Tối gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "NoOpenAIAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
     "OllamaBizError": "Yêu cầu dịch vụ Ollama gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Nhập Google API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
         "title": "Sử dụng thông tin xác thực tùy chỉnh của Google"
+      },
+      "Mistral": {
+        "description": "Nhập Mistral AI API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
+        "title": "Sử dụng Mistral AI API Key tùy chỉnh"
       },
       "Moonshot": {
         "description": "Nhập Khóa API Moonshot AI của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",

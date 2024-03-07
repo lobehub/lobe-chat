@@ -94,6 +94,14 @@
         "title": "API-Schlüssel"
       }
     },
+    "Mistral": {
+      "title": "Mistral KI",
+      "token": {
+        "desc": "Geben Sie den API-Schlüssel von Mistral KI ein",
+        "placeholder": "Mistral KI API-Schlüssel",
+        "title": "API-Schlüssel"
+      }
+    },
     "Moonshot": {
       "title": "月球着陆",
       "token": {

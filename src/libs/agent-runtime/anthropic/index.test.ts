@@ -31,6 +31,7 @@ describe('LobeAnthropicAI', () => {
   });
 
   describe('chat', () => {
+
     it('should return a StreamingTextResponse on successful API call', async () => {
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
@@ -41,6 +42,7 @@ describe('LobeAnthropicAI', () => {
       // Assert
       expect(result).toBeInstanceOf(Response);
     });
+
     it('should handle text messages correctly', async () => {
       // Arrange
       const mockStream = new ReadableStream({
@@ -73,6 +75,7 @@ describe('LobeAnthropicAI', () => {
       })
       expect(result).toBeInstanceOf(Response);
     });
+
     it('should handle system prompt correctly', async () => {
       // Arrange
       const mockStream = new ReadableStream({
@@ -107,6 +110,81 @@ describe('LobeAnthropicAI', () => {
       })
       expect(result).toBeInstanceOf(Response);
     });
+
+    it('should call Anthropic API with supported opions in streaming mode', async () => {
+      // Arrange
+      const mockStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue('Hello, world!');
+          controller.close();
+        },
+      });
+      const mockResponse = Promise.resolve(mockStream);
+      (instance['client'].messages.create as Mock).mockResolvedValue(mockResponse);
+
+      // Act
+      const result = await instance.chat({
+        max_tokens: 2048,
+        messages: [
+          { content: 'Hello', role: 'user' },
+        ],
+        model: 'claude-instant-1.2',
+        temperature: 0.5,
+        top_p: 1,
+      });
+
+      // Assert
+      expect(instance['client'].messages.create).toHaveBeenCalledWith({
+        max_tokens: 2048,
+        messages: [
+          { content: 'Hello', role: 'user' },
+        ],
+        model: 'claude-instant-1.2',
+        stream: true,
+        temperature: 0.5,
+        top_p: 1,
+      })
+      expect(result).toBeInstanceOf(Response);
+    });
+
+    it('should call Anthropic API without unsupported opions', async () => {
+      // Arrange
+      const mockStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue('Hello, world!');
+          controller.close();
+        },
+      });
+      const mockResponse = Promise.resolve(mockStream);
+      (instance['client'].messages.create as Mock).mockResolvedValue(mockResponse);
+
+      // Act
+      const result = await instance.chat({
+        frequency_penalty: 0.5, // Unsupported option
+        max_tokens: 2048,
+        messages: [
+          { content: 'Hello', role: 'user' },
+        ],
+        model: 'claude-instant-1.2',
+        presence_penalty: 0.5,
+        temperature: 0.5,
+        top_p: 1,
+      });
+
+      // Assert
+      expect(instance['client'].messages.create).toHaveBeenCalledWith({
+        max_tokens: 2048,
+        messages: [
+          { content: 'Hello', role: 'user' },
+        ],
+        model: 'claude-instant-1.2',
+        stream: true,
+        temperature: 0.5,
+        top_p: 1,
+      })
+      expect(result).toBeInstanceOf(Response);
+    });
+
     it('should call debugStream in DEBUG mode', async () => {
       // Arrange
       const mockProdStream = new ReadableStream({

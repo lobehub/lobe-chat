@@ -104,6 +104,7 @@
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",
+    "mistral": "Mistral AI",
     "moonshot": "Moonshot AI",
     "ollama": "奧拉馬",
     "oneapi": "One API",

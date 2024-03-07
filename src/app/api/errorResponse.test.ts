@@ -99,6 +99,21 @@ describe('createErrorResponse', () => {
       const response = createErrorResponse(errorType);
       expect(response.status).toBe(479);
     });
+
+    // 测试 AnthropicBizError 错误类型返回480状态码
+    it('returns a 480 status for AnthropicBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.AnthropicBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(480);
+    });
+
+    // 测试 MistralBizError 错误类型返回481状态码
+    it('returns a 481 status for MistralBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.MistralBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(481);
+    });
+
   });
 
   // 测试状态码不在200-599范围内的情况
