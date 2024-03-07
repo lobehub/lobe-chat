@@ -161,9 +161,11 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 默认值：-
 - 示例：`sk-ant-apixx-xxxxxxxxx-xxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx`
 
-<Callout type={'warning'}>
-  官方 Anthropic SDK 在 Vercel/Cloudflare
-  边缘节点运行时存在一个[已知问题](https://github.com/anthropics/anthropic-sdk-typescript/issues/292)
-  ，会导致聊天流出现随机中断。如果您希望在 lobe-chat 中使用 Anthropic 模型，请暂时不要部署到
-  Vercel/Cloudflare。Anthropic 模型在其他部署方式下可以正常工作。
-</Callout>
+## Mistral AI
+
+### `MISTRAL_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Mistral AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`

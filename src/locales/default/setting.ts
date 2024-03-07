@@ -95,6 +95,14 @@ export default {
         title: 'API Key',
       },
     },
+    Mistral: {
+      title: 'Mistral AI',
+      token: {
+        desc: '填入来自 Mistral AI 的 API Key',
+        placeholder: 'Mistral AI API Key',
+        title: 'API Key',
+      },
+    },
     Moonshot: {
       title: '月之暗面',
       token: {

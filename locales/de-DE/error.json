@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "Der Azure API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Azure API-Schlüssel und versuchen Sie es erneut.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidGoogleAPIKey": "Der Google API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Google API-Schlüssel und versuchen Sie es erneut.",
+    "InvalidMistralAPIKey": "Der Mistral AI-API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Mistral-API-Schlüssel und versuchen Sie es erneut.",
     "InvalidMoonshotAPIKey": "Ungültiger oder leerer Moonshot AI API-Schlüssel. Bitte überprüfen Sie den Moonshot API-Schlüssel und versuchen Sie es erneut.",
     "InvalidOllamaArgs": "Ollama-Konfiguration ist ungültig. Bitte überprüfen Sie die Ollama-Konfiguration und versuchen Sie es erneut.",
     "InvalidPerplexityAPIKey": "Perplexity API Key ist ungültig oder leer. Bitte überprüfen Sie den Perplexity API Key und versuchen Sie es erneut.",
     "InvalidZhipuAPIKey": "Der Zhipu API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Zhipu API-Schlüssel und versuchen Sie es erneut.",
     "LocationNotSupportError": "Entschuldigung, Ihr Standort unterstützt diesen Modellservice möglicherweise aufgrund von regionalen Einschränkungen oder nicht aktivierten Diensten nicht. Bitte überprüfen Sie, ob der aktuelle Standort die Verwendung dieses Dienstes unterstützt, oder versuchen Sie, andere Standortinformationen zu verwenden.",
+    "MistralBizError": "Beim Anfordern des Mistral AI-Dienstes ist ein Fehler aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "MoonshotBizError": "Fehler beim Abrufen des Dark Side of the Moon-Services. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OllamaBizError": "Fehler bei der Anforderung des Ollama-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Geben Sie Ihren Google API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
         "title": "Verwenden von benutzerdefinierten Google API-Schlüssel"
+      },
+      "Mistral": {
+        "description": "Geben Sie Ihren eigenen Mistral AI-API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
+        "title": "Verwenden Sie einen benutzerdefinierten Mistral AI-API-Schlüssel"
       },
       "Moonshot": {
         "description": "Geben Sie Ihren individuellen Moonshot AI API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
