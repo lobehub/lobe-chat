@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "مفتاح Azure API غير صحيح أو فارغ، يرجى التحقق من مفتاح Azure API وإعادة المحاولة",
     "InvalidBedrockCredentials": "فشلت مصادقة Bedrock، يرجى التحقق من AccessKeyId/SecretAccessKey وإعادة المحاولة",
     "InvalidGoogleAPIKey": "مفتاح Google API غير صحيح أو فارغ، يرجى التحقق من مفتاح Google API وإعادة المحاولة",
+    "InvalidMistralAPIKey": "مفتاح Mistral AI API غير صحيح أو فارغ، يرجى التحقق من مفتاح Mistral API وإعادة المحاولة",
     "InvalidMoonshotAPIKey": "مفتاح API لـ Moonshot AI غير صحيح أو فارغ، يرجى التحقق من مفتاح API لـ Moonshot وإعادة المحاولة",
     "InvalidOllamaArgs": "تكوين Ollama غير صحيح، يرجى التحقق من تكوين Ollama وإعادة المحاولة",
     "InvalidPerplexityAPIKey": "مفتاح Perplexity API غير صحيح أو فارغ، يرجى التحقق من مفتاح Perplexity API وإعادة المحاولة",
     "InvalidZhipuAPIKey": "مفتاح Zhipu API غير صحيح أو فارغ، يرجى التحقق من مفتاح Zhipu API وإعادة المحاولة",
     "LocationNotSupportError": "عذرًا، لا يدعم موقعك الحالي خدمة هذا النموذج، قد يكون ذلك بسبب قيود المنطقة أو عدم توفر الخدمة. يرجى التحقق مما إذا كان الموقع الحالي يدعم استخدام هذه الخدمة، أو محاولة استخدام معلومات الموقع الأخرى.",
+    "MistralBizError": "طلب خدمة Mistral AI خاطئ، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
     "MoonshotBizError": "حدث خطأ في خدمة جانب القمر، يرجى التحقق من المعلومات أدناه أو إعادة المحاولة",
     "NoOpenAIAPIKey": "مفتاح API الخاص بـ OpenAI فارغ، يرجى إضافة مفتاح API الخاص بـ OpenAI",
     "OllamaBizError": "خطأ في طلب خدمة Ollama، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "أدخل مفتاح Google API الخاص بك لبدء الجلسة. لن يقوم التطبيق بتسجيل مفتاح الواجهة البرمجية الخاص بك",
         "title": "استخدام مفتاح Google API المخصص"
+      },
+      "Mistral": {
+        "description": "أدخل مفتاح Mistral AI API الخاص بك لبدء الجلسة. لن يتم تسجيل مفتاح الواجهة البرمجية الخاص بك من قبل التطبيق",
+        "title": "استخدام مفتاح Mistral AI API المخصص"
       },
       "Moonshot": {
         "description": "قم بإدخال مفتاح API الخاص بك لـ Moonshot AI لبدء الجلسة. لن يتم تسجيل مفتاح الـ API الخاص بك من قبل التطبيق",

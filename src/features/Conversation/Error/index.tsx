@@ -64,6 +64,7 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
 
     case AgentRuntimeErrorType.InvalidBedrockCredentials:
     case AgentRuntimeErrorType.InvalidZhipuAPIKey:
+    case AgentRuntimeErrorType.InvalidMistralAPIKey:
     case AgentRuntimeErrorType.InvalidMoonshotAPIKey:
     case AgentRuntimeErrorType.InvalidGoogleAPIKey:
     case AgentRuntimeErrorType.InvalidPerplexityAPIKey:

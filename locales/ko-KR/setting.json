@@ -94,6 +94,14 @@
         "title": "API Key"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Mistral AI의 API 키를 입력하세요",
+        "placeholder": "Mistral AI API 키",
+        "title": "API 키"
+      }
+    },
     "Moonshot": {
       "title": "달의 그림자",
       "token": {

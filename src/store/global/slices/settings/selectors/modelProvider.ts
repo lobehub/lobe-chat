@@ -5,6 +5,7 @@ import {
   BedrockProvider,
   GoogleProvider,
   LOBE_DEFAULT_MODEL_LIST,
+  MistralProvider,
   MoonshotProvider,
   OllamaProvider,
   OpenAIProvider,
@@ -40,6 +41,9 @@ const googleProxyUrl = (s: GlobalStore) => modelProvider(s).google.endpoint;
 
 const enableAzure = (s: GlobalStore) => modelProvider(s).openAI.useAzure;
 const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
+
+const enableMistral = (s: GlobalStore) => modelProvider(s).mistral.enabled;
+const mistralAPIKey = (s: GlobalStore) => modelProvider(s).mistral.apiKey;
 
 const enableMoonshot = (s: GlobalStore) => modelProvider(s).moonshot.enabled;
 const moonshotAPIKey = (s: GlobalStore) => modelProvider(s).moonshot.apiKey;
@@ -143,6 +147,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
     { ...OllamaProvider, chatModels: ollamaChatModels, enabled: enableOllama(s) },
     { ...PerplexityProvider, enabled: enablePerplexity(s) },
     { ...AnthropicProvider, enabled: enableAnthropic(s) },
+    { ...MistralProvider, enabled: enableMistral(s) },
   ];
 };
 
@@ -221,4 +226,8 @@ export const modelProviderSelectors = {
   // Anthropic
   enableAnthropic,
   anthropicAPIKey,
+  
+  // Mistral
+  enableMistral,
+  mistralAPIKey,
 };
