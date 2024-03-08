@@ -97,6 +97,7 @@
     "dexie": "^3",
     "diff": "^5.2.0",
     "fast-deep-equal": "^3",
+    "fast-xml-parser": "^4.3.5",
     "gpt-tokenizer": "^2",
     "i18next": "^23",
     "i18next-browser-languagedetector": "^7",
