@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /settings
-Disallow: /chat
