@@ -94,6 +94,14 @@
         "title": "Klucz API"
       }
     },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Wprowadź klucz API Mistral AI",
+        "placeholder": "Klucz API Mistral AI",
+        "title": "Klucz API"
+      }
+    },
     "Moonshot": {
       "title": "Ciemna strona Księżyca",
       "token": {

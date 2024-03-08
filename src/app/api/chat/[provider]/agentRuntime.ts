@@ -13,6 +13,7 @@ import {
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
+  LobeMistralAI,
   LobeMoonshotAI,
   LobeOllamaAI,
   LobeOpenAI,
@@ -161,6 +162,11 @@ class AgentRuntime {
         runtimeModel = this.initAnthropic(payload);
         break;
       }
+      
+      case ModelProvider.Mistral: {
+        runtimeModel = this.initMistral(payload);
+        break;
+      }
     }
 
     return new AgentRuntime(runtimeModel);
@@ -254,6 +260,13 @@ class AgentRuntime {
     const apiKey = apiKeyManager.pick(payload?.apiKey || ANTHROPIC_API_KEY);
 
     return new LobeAnthropicAI({ apiKey });
+  }
+  
+  private static initMistral(payload: JWTPayload) {
+    const { MISTRAL_API_KEY } = getServerConfig();
+    const apiKey = apiKeyManager.pick(payload?.apiKey || MISTRAL_API_KEY);
+
+    return new LobeMistralAI({ apiKey });
   }
 }
 

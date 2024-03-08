@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "La clave de API de Azure es incorrecta o está vacía, por favor, verifica la clave de API de Azure e inténtalo de nuevo",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
     "InvalidGoogleAPIKey": "La clave de API de Google es incorrecta o está vacía, por favor, verifica la clave de API de Google e inténtalo de nuevo",
+    "InvalidMistralAPIKey": "La clave de API de Mistral AI es incorrecta o está vacía. Por favor, revise la clave de API de Mistral y vuelva a intentarlo.",
     "InvalidMoonshotAPIKey": "La clave de API de Moonshot AI no es válida o está vacía. Por favor, revise la clave de API de Moonshot e inténtelo de nuevo.",
     "InvalidOllamaArgs": "La configuración de Ollama no es válida, por favor revisa la configuración de Ollama e inténtalo de nuevo",
     "InvalidPerplexityAPIKey": "La clave de API de Perplexity es inválida o está vacía. Por favor, verifica la clave de API de Perplexity e inténtalo de nuevo",
     "InvalidZhipuAPIKey": "La clave de API de Zhipu es incorrecta o está vacía, por favor, verifica la clave de API de Zhipu e inténtalo de nuevo",
     "LocationNotSupportError": "Lo sentimos, tu ubicación actual no es compatible con este servicio de modelo, puede ser debido a restricciones geográficas o a que el servicio no está disponible. Por favor, verifica si tu ubicación actual es compatible con este servicio o intenta usar otra información de ubicación.",
+    "MistralBizError": "Se produjo un error al solicitar el servicio Mistral AI. Por favor, revise la siguiente información o inténtelo de nuevo.",
     "MoonshotBizError": "Se produjo un error al solicitar el servicio de Moonshot en el lado oscuro de la luna. Por favor, revise la siguiente información o inténtelo de nuevo.",
     "NoOpenAIAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
     "OllamaBizError": "Error al solicitar el servicio de Ollama, por favor verifica la siguiente información o inténtalo de nuevo",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Ingresa tu clave de API de Google para comenzar la sesión. La aplicación no guardará tu clave de API",
         "title": "Usar clave de API personalizada de Google"
+      },
+      "Mistral": {
+        "description": "Ingrese su clave de API de Mistral AI para comenzar la sesión. La aplicación no almacenará su clave de API.",
+        "title": "Usar clave de API personalizada de Mistral AI"
       },
       "Moonshot": {
         "description": "Ingrese su clave de API de Moonshot AI personalizada para comenzar la sesión. La aplicación no almacenará su clave de API.",

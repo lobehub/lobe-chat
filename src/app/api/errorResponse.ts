@@ -46,6 +46,9 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.AnthropicBizError: {
       return 480;
     }
+    case AgentRuntimeErrorType.MistralBizError: {
+      return 481;
+    }
   }
   return errorType as number;
 };

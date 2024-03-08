@@ -43,11 +43,13 @@
     "InvalidAzureAPIKey": "Azure API Key is incorrect or empty. Please check the Azure API Key and retry.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
     "InvalidGoogleAPIKey": "Google API Key is incorrect or empty. Please check the Google API Key and retry.",
+    "InvalidMistralAPIKey": "Incorrect or empty Mistral AI API Key. Please check your Mistral API Key and try again.",
     "InvalidMoonshotAPIKey": "The Moonshot AI API Key is incorrect or empty, please check the Moonshot API Key and try again.",
     "InvalidOllamaArgs": "Invalid Ollama configuration, please check Ollama configuration and try again",
     "InvalidPerplexityAPIKey": "Perplexity API Key is incorrect or empty. Please check the Perplexity API Key and retry.",
     "InvalidZhipuAPIKey": "Zhipu API Key is incorrect or empty. Please check the Zhipu API Key and retry.",
     "LocationNotSupportError": "We're sorry, your current location does not support this model service. This may be due to regional restrictions or the service not being available. Please confirm if the current location supports using this service, or try using a different location.",
+    "MistralBizError": "Error occurred while requesting Mistral AI service. Please troubleshoot based on the following information or retry.",
     "MoonshotBizError": "There was an error with the Moonshot service, please troubleshoot or retry based on the following information.",
     "NoOpenAIAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
     "OllamaBizError": "Error requesting Ollama service, please troubleshoot or retry based on the following information",
@@ -87,6 +89,10 @@
       "Google": {
         "description": "Enter your Google API Key to start the session. The app will not store your API Key.",
         "title": "Use custom Google API Key"
+      },
+      "Mistral": {
+        "description": "Enter your Mistral AI API Key to start the session. The application will not store your API Key.",
+        "title": "Use Custom Mistral AI API Key"
       },
       "Moonshot": {
         "description": "Enter your Moonshot AI API Key to start the session. The app will not store your API Key.",
