@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.133.3](https://github.com/lobehub/lobe-chat/compare/v0.133.2...v0.133.3)
+
+<sup>Released on **2024-03-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the max token of claude 3.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the max token of claude 3, closes [#1526](https://github.com/lobehub/lobe-chat/issues/1526) ([222fae3](https://github.com/lobehub/lobe-chat/commit/222fae3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.133.2](https://github.com/lobehub/lobe-chat/compare/v0.133.1...v0.133.2)
 
 <sup>Released on **2024-03-10**</sup>
