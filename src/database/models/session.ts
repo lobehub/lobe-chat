@@ -173,7 +173,7 @@ class _SessionModel extends BaseModel {
   async create(type: 'agent' | 'group', defaultValue: Partial<LobeAgentSession>, id = uuid()) {
     const data = merge(DEFAULT_AGENT_LOBE_SESSION, { type, ...defaultValue });
     const dataDB = this.mapToDB_Session(data);
-    return this._add(dataDB, id);
+    return this._addWithSync(dataDB, id);
   }
 
   async batchCreate(sessions: LobeAgentSession[]) {
@@ -200,7 +200,7 @@ class _SessionModel extends BaseModel {
 
     const newSession = merge(session, { meta: { title: newTitle } });
 
-    return this._add(newSession, uuid());
+    return this._addWithSync(newSession, uuid());
   }
 
   // **************** Delete *************** //
@@ -225,7 +225,7 @@ class _SessionModel extends BaseModel {
       }
 
       // Finally, delete the session itself
-      await this.table.delete(id);
+      await this._deleteWithSync(id);
     });
   }
 
@@ -236,7 +236,7 @@ class _SessionModel extends BaseModel {
   // **************** Update *************** //
 
   async update(id: string, data: Partial<DB_Session>) {
-    return this._update(id, data);
+    return super._updateWithSync(id, data);
   }
 
   async updatePinned(id: string, pinned: boolean) {

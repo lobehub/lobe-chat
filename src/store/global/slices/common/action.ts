@@ -11,7 +11,9 @@ import { messageService } from '@/services/message';
 import { UserConfig, userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
 import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
+import { OnSyncEvent } from '@/types/sync';
 import { merge } from '@/utils/merge';
+import { browserInfo } from '@/utils/platform';
 import { setNamespace } from '@/utils/storeDebug';
 import { switchLang } from '@/utils/switchLang';
 
@@ -24,11 +26,13 @@ const n = setNamespace('common');
  * 设置操作
  */
 export interface CommonAction {
+  refreshConnection: (onEvent: OnSyncEvent) => Promise<void>;
   refreshUserConfig: () => Promise<void>;
   switchBackToChat: (sessionId?: string) => void;
   updateAvatar: (avatar: string) => Promise<void>;
   useCheckLatestVersion: () => SWRResponse<string>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
+  useEnabledSync: (userId: string | undefined, onEvent: OnSyncEvent) => SWRResponse;
   useFetchServerConfig: () => SWRResponse;
   useFetchUserConfig: (initServer: boolean) => SWRResponse<UserConfig | undefined>;
 }
@@ -41,13 +45,38 @@ export const createCommonSlice: StateCreator<
   [],
   CommonAction
 > = (set, get) => ({
+  refreshConnection: async (onEvent) => {
+    const sync = settingsSelectors.syncConfig(get());
+    if (!sync.channelName) return;
+
+    await globalService.reconnect({
+      channel: {
+        name: sync.channelName,
+        password: sync.channelPassword,
+      },
+      onAwarenessChange(state) {
+        set({ syncAwareness: state });
+      },
+      onSyncEvent: onEvent,
+      onSyncStatusChange: (status) => {
+        set({ syncStatus: status });
+      },
+      signaling: sync.signaling,
+      user: {
+        // name: userId,
+        id: get().userId!,
+        ...browserInfo,
+      },
+    });
+  },
+
   refreshUserConfig: async () => {
     await mutate([USER_CONFIG_FETCH_KEY, true]);
   },
+
   switchBackToChat: (sessionId) => {
     get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
   },
-
   updateAvatar: async (avatar) => {
     await userService.updateAvatar(avatar);
     await get().refreshUserConfig();
@@ -75,6 +104,42 @@ export const createCommonSlice: StateCreator<
         return messageService.messageCountToCheckTrace();
       },
       {
+        revalidateOnFocus: false,
+      },
+    ),
+  useEnabledSync: (userId, onEvent) =>
+    useSWR<boolean>(
+      ['enableSync', userId],
+      async () => {
+        if (!userId) return false;
+
+        const sync = settingsSelectors.syncConfig(get());
+        if (!sync.channelName) return false;
+
+        return globalService.enabledSync({
+          channel: {
+            name: sync.channelName,
+            password: sync.channelPassword,
+          },
+          onAwarenessChange(state) {
+            set({ syncAwareness: state });
+          },
+          onSyncEvent: onEvent,
+          onSyncStatusChange: (status) => {
+            set({ syncStatus: status });
+          },
+          signaling: sync.signaling,
+          user: {
+            // name: userId,
+            id: userId,
+            ...browserInfo,
+          },
+        });
+      },
+      {
+        onSuccess: (syncEnabled) => {
+          set({ syncEnabled });
+        },
         revalidateOnFocus: false,
       },
     ),

@@ -107,7 +107,7 @@ class _MessageModel extends BaseModel {
 
     const messageData: DB_Message = this.mapChatMessageToDBMessage(data as ChatMessage);
 
-    return this._add(messageData, id);
+    return this._addWithSync(messageData, id);
   }
 
   async batchCreate(messages: ChatMessage[]) {
@@ -148,11 +148,11 @@ class _MessageModel extends BaseModel {
   // **************** Delete *************** //
 
   async delete(id: string) {
-    return this.table.delete(id);
+    return super._deleteWithSync(id);
   }
 
   async clearTable() {
-    return this.table.clear();
+    return this._clearWithSync();
   }
 
   /**
@@ -178,13 +178,13 @@ class _MessageModel extends BaseModel {
     const messageIds = await query.primaryKeys();
 
     // Use the bulkDelete method to delete all selected messages in bulk
-    return this.table.bulkDelete(messageIds);
+    return this._bulkDeleteWithSync(messageIds);
   }
 
   // **************** Update *************** //
 
   async update(id: string, data: DeepPartial<DB_Message>) {
-    return this._update(id, data);
+    return super._updateWithSync(id, data);
   }
 
   async updatePluginState(id: string, key: string, value: any) {

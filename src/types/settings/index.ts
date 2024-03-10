@@ -28,12 +28,19 @@ export interface GlobalServerConfig {
   };
 }
 
+export interface GlobalSyncSettings {
+  channelName?: string;
+  channelPassword?: string;
+  signaling?: string;
+}
+
 /**
  * 配置设置
  */
 export interface GlobalSettings extends GlobalBaseSettings {
   defaultAgent: GlobalDefaultAgent;
   languageModel: GlobalLLMConfig;
+  sync: GlobalSyncSettings;
   tool: GlobalTool;
   tts: GlobalTTSConfig;
 }

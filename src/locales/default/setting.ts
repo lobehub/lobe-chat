@@ -442,12 +442,26 @@ export default {
     placeholder: '请输入助手的标识符，需要是唯一的，比如 web-development',
     tooltips: '分享到助手市场',
   },
-
+  sync: {
+    webrtc: {
+      channelName: {
+        desc: 'WebRTC 将使用此名创建同步频道，确保频道名称唯一',
+        placeholder: '请输入同步频道名称',
+        title: '同步频道名称',
+      },
+      channelPassword: {
+        desc: '请输入一个同步频道密码',
+        title: '同步频道密码',
+      },
+      title: 'WebRTC 同步',
+    },
+  },
   tab: {
     about: '关于',
     agent: '默认助手',
     common: '通用设置',
     llm: '语言模型',
+    sync: '云端同步',
     tts: '语音服务',
   },
   tools: {

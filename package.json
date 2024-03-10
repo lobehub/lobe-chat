@@ -148,7 +148,9 @@
     "use-merge-value": "^1",
     "utility-types": "^3",
     "uuid": "^9",
+    "y-webrtc": "^10.3.0",
     "yaml": "^2",
+    "yjs": "^13.6.14",
     "zod": "^3",
     "zustand": "^4.5.2",
     "zustand-utils": "^1.3.2"

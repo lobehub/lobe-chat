@@ -42,7 +42,7 @@ class _SessionGroupModel extends BaseModel {
   // **************** Create *************** //
 
   async create(name: string, sort?: number, id = nanoid()) {
-    return this._add({ name, sort }, id);
+    return this._addWithSync({ name, sort }, id);
   }
 
   async batchCreate(groups: SessionGroups) {
@@ -69,7 +69,7 @@ class _SessionGroupModel extends BaseModel {
   // **************** Update *************** //
 
   async update(id: string, data: Partial<DB_SessionGroup>) {
-    return super._update(id, data);
+    return super._updateWithSync(id, data);
   }
 
   async updateOrder(sortMap: { id: string; sort: number }[]) {

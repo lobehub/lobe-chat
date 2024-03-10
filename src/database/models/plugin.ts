@@ -21,7 +21,6 @@ class _PluginModel extends BaseModel {
   getList = async (): Promise<DB_Plugin[]> => {
     return this.table.toArray();
   };
-
   // **************** Create *************** //
 
   create = async (plugin: InstallPluginParams) => {
@@ -39,10 +38,10 @@ class _PluginModel extends BaseModel {
   // **************** Delete *************** //
 
   delete(id: string) {
-    return this.table.delete(id);
+    return this._deleteWithSync(id);
   }
   clear() {
-    return this.table.clear();
+    return this._clearWithSync();
   }
 
   // **************** Update *************** //

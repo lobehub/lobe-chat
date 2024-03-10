@@ -1,4 +1,6 @@
+import { syncBus } from '@/database/core';
 import { GlobalServerConfig } from '@/types/settings';
+import { StartDataSyncParams } from '@/types/sync';
 
 import { API_ENDPOINTS } from './_url';
 
@@ -19,6 +21,21 @@ class GlobalService {
     const res = await fetch(API_ENDPOINTS.config);
 
     return res.json();
+  };
+
+  enabledSync = async (params: StartDataSyncParams) => {
+    if (typeof window === 'undefined') return false;
+
+    await syncBus.startDataSync(params);
+    return true;
+  };
+
+  reconnect = async (params: StartDataSyncParams) => {
+    if (typeof window === 'undefined') return false;
+
+    await syncBus.reconnect(params);
+    await syncBus.manualSync();
+    return true;
   };
 }
 
