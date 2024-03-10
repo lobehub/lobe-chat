@@ -101,10 +101,10 @@ const Ollama: ModelProviderCard = {
       vision: false,
     },
     {
-      displayName: 'Qwen Chat 70B',
+      displayName: 'Qwen Chat 72B',
       functionCall: false,
       hidden: true,
-      id: 'qwen:70b',
+      id: 'qwen:72b',
       tokens: 32_768,
       vision: false,
     },
