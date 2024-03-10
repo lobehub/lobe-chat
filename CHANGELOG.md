@@ -1,3 +1,32 @@
+<a name="readme-top"></a>
+
+# Changelog
+
+### [Version 0.133.2](https://github.com/lobehub/lobe-chat/compare/v0.133.1...v0.133.2)
+
+<sup>Released on **2024-03-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix qwen model id and improve anthropic logo text color.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix qwen model id and improve anthropic logo text color, closes [#1524](https://github.com/lobehub/lobe-chat/issues/1524) ([c68f5da](https://github.com/lobehub/lobe-chat/commit/c68f5da))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 <a name="readme-top" />
 
 # Changelog
