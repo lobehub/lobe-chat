@@ -36,18 +36,18 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 
 `DEFAULT_AGENT_CONFIG` 用于配置 LobeChat 默认助理的默认配置。它支持多种数据类型和结构，包括键值对、嵌套字段、数组值等。下表详细说明了 `DEFAULT_AGENT_CONFIG` 环境变量的配置项、示例以及相应解释：
 
-| 配置项类型 | 示例 | 解释 |
-| --- | --- | --- |
-| 基本键值对 | `model=gpt-4` | 设置模型为 `gpt-4`。 |
-| 嵌套字段 | `tts.sttLocale=en-US` | 设置文本到语音服务的语言区域为 `en-US`。 |
-| 数组 | `plugins=search-engine,lobe-image-designer` | 启用 `search-engine` 和 `lobe-image-designer` 插件。 |
-| 中文逗号 | `plugins=search-engine，lobe-image-designer` | 同上，演示支持中文逗号分隔。 |
-| 多个配置项 | `model=glm-4;provider=zhipu` | 设置模型为 `glm-4` 且模型服务商为 `zhipu`。 |
-| 数字值 | `params.max_tokens=300` | 设置最大令牌数为 `300`。 |
-| 布尔值 | `enableAutoCreateTopic=true` | 启用自动创建主题。 |
-| 特殊字符 | `inputTemplate="Hello; I am a bot;"` | 设置输入模板为 `Hello; I am a bot;`。 |
-| 错误处理 | `model=gpt-4;maxToken` | 忽略无效条目 `maxToken`，仅解析出 `model=gpt-4`。 |
-| 值覆盖 | `model=gpt-4;model=gpt-4-1106-preview` | 如果键重复，使用最后一次出现的值，此处 `model` 的值为 `gpt-4-1106-preview`。 |
+| 配置项类型 | 示例                                          | 解释                                                    |
+| ----- | ------------------------------------------- | ----------------------------------------------------- |
+| 基本键值对 | `model=gpt-4`                               | 设置模型为 `gpt-4`。                                        |
+| 嵌套字段  | `tts.sttLocale=en-US`                       | 设置文本到语音服务的语言区域为 `en-US`。                              |
+| 数组    | `plugins=search-engine,lobe-image-designer` | 启用 `search-engine` 和 `lobe-image-designer` 插件。        |
+| 中文逗号  | `plugins=search-engine，lobe-image-designer` | 同上，演示支持中文逗号分隔。                                        |
+| 多个配置项 | `model=glm-4;provider=zhipu`                | 设置模型为 `glm-4` 且模型服务商为 `zhipu`。                        |
+| 数字值   | `params.max_tokens=300`                     | 设置最大令牌数为 `300`。                                       |
+| 布尔值   | `enableAutoCreateTopic=true`                | 启用自动创建主题。                                             |
+| 特殊字符  | `inputTemplate="Hello; I am a bot;"`        | 设置输入模板为 `Hello; I am a bot;`。                         |
+| 错误处理  | `model=gpt-4;maxToken`                      | 忽略无效条目 `maxToken`，仅解析出 `model=gpt-4`。                 |
+| 值覆盖   | `model=gpt-4;model=gpt-4-1106-preview`      | 如果键重复，使用最后一次出现的值，此处 `model` 的值为 `gpt-4-1106-preview`。 |
 
 相关阅读：
 
@@ -74,7 +74,7 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 #### `NEXTAUTH_URL`
 
 - 类型：可选
-- 描述：该URL用于指定Auth.js在执行OAuth验证时的回调地址，在Vercel上部署时无需设置。
+- 描述：该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，在 Vercel 上部署时无需设置。
 - 默认值：`-`
 - 示例：`https://example.com/api/auth`
 
@@ -215,7 +215,5 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 示例：`E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
 
 [auth0-client-page]: https://manage.auth0.com/dashboard
-[azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
-[openai-api-page]: https://platform.openai.com/account/api-keys
 [posthog-analytics-url]: https://posthog.com
 [umami-analytics-url]: https://umami.is
