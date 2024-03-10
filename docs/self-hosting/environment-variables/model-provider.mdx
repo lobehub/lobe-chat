@@ -23,14 +23,14 @@ When deploying LobeChat, a rich set of environment variables related to model se
 <Callout type={'warning'}>
   Please check the request suffix of your proxy service provider. Some proxy service providers may
   add `/v1` to the request suffix, while others may not. If you find that the AI returns an empty
-  message during testing, try adding the `/v1` suffix and retry.{' '}
+  message during testing, try adding the `/v1` suffix and retry.
 </Callout>
 
 <Callout type={'info'}>
   Whether to fill in `/v1` is closely related to the model service provider. For example, the
   default address of openai is `api.openai.com/v1`. If your proxy forwards the `/v1` interface, you
   can simply fill in `proxy.com`. However, if the model service provider directly forwards the
-  `api.openai.com` domain, then you need to add `/v1` to the URL yourself.{' '}
+  `api.openai.com` domain, then you need to add `/v1` to the URL yourself.
 </Callout>
 
 Related discussions:
@@ -171,3 +171,7 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Description: This is the API key you applied for in the Mistral AI service
 - Default: -
 - Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`
+
+
+[azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
+[openai-api-page]: https://platform.openai.com/account/api-keys
