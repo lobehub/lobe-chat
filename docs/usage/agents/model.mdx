@@ -37,10 +37,10 @@ This parameter controls the randomness of the model's output. The higher the val
 
 ### `top_p`
 
-Top-p is also a sampling parameter, but it differs from temperature in its sampling method. Before outputting, the model generates a bunch of tokens, and these tokens are ranked based on their quality. In the top-p sampling mode, the candidate word list is dynamic, and tokens are selected from the tokens based on a percentage. Top-p introduces randomness in token selection, allowing other high-scoring tokens to have a chance of being selected, rather than always choosing the highest-scoring one.
+Top_p is also a sampling parameter, but it differs from temperature in its sampling method. Before outputting, the model generates a bunch of tokens, and these tokens are ranked based on their quality. In the top-p sampling mode, the candidate word list is dynamic, and tokens are selected from the tokens based on a percentage. Top_p introduces randomness in token selection, allowing other high-scoring tokens to have a chance of being selected, rather than always choosing the highest-scoring one.
 
 <Callout>
-  Top-p is similar to randomness, and it is generally not recommended to change it together with the
+  Top_p is similar to randomness, and it is generally not recommended to change it together with the
   randomness of temperature.
 </Callout>
 
@@ -66,8 +66,8 @@ The presence penalty parameter can be seen as a punishment for repetitive conten
 
 It is a mechanism that penalizes frequently occurring new vocabulary in the text to reduce the likelihood of the model repeating the same word. The larger the value, the more likely it is to reduce repeated words.
 
-- `-2.0` When the morning news started broadcasting, I found that my TV now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now  **(The highest frequency word is "now", accounting for 44.79%)**
-- `-1.0` He always watches the news in the early morning, in front of the TV watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch  **(The highest frequency word is "watch", accounting for 57.69%)**
+- `-2.0` When the morning news started broadcasting, I found that my TV now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now now **(The highest frequency word is "now", accounting for 44.79%)**
+- `-1.0` He always watches the news in the early morning, in front of the TV watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch **(The highest frequency word is "watch", accounting for 57.69%)**
 - `0.0` When the morning sun poured into the small diner, a tired postman appeared at the door, carrying a bag of letters in his hands. The owner warmly prepared a breakfast for him, and he started sorting the mail while enjoying his breakfast. **(The highest frequency word is "of", accounting for 8.45%)**
 - `1.0` A girl in deep sleep was woken up by a warm ray of sunshine, she saw the first ray of morning light, surrounded by birdsong and flowers, everything was full of vitality. \_ (The highest frequency word is "of", accounting for 5.45%)
 - `2.0` Every morning, he would sit on the balcony to have breakfast. Under the soft setting sun, everything looked very peaceful. However, one day, when he was about to pick up his breakfast, an optimistic little bird flew by, bringing him a good mood for the day. \_ (The highest frequency word is "of", accounting for 4.94%)
