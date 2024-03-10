@@ -202,7 +202,7 @@
     "typescript": "^5",
     "unified": "^11",
     "unist-util-visit": "^5",
-    "vite": "5.1.4",
+    "vite": "5.1.5",
     "vitest": "~1.2.2",
     "vitest-canvas-mock": "^0.3"
   },
