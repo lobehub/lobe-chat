@@ -21,7 +21,10 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
   const [modelToPull, setModelToPull] = useState(model);
   const [percent, setPercent] = useState(0);
 
-  const [resendMessage, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
+  const [delAndRegenerateMessage, deleteMessage] = useChatStore((s) => [
+    s.delAndRegenerateMessage,
+    s.deleteMessage,
+  ]);
   const theme = useTheme();
 
   const { mutate, isLoading } = useSWR(
@@ -37,8 +40,7 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
     },
     {
       onSuccess: () => {
-        resendMessage(id);
-        deleteMessage(id);
+        delAndRegenerateMessage(id);
       },
       revalidateOnFocus: false,
       revalidateOnMount: false,

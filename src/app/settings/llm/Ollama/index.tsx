@@ -4,7 +4,7 @@ import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Checker from '../components/OllamaChecker';
+import Checker from './Checker';
 import ProviderConfig from '../components/ProviderConfig';
 import { LLMProviderBaseUrlKey, LLMProviderConfigKey } from '../const';
 
