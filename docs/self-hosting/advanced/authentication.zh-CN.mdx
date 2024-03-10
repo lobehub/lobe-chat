@@ -7,57 +7,53 @@ LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用�
 ## 配置身份验证服务
 
 <Steps>
+  ### 创建 Auth0 应用
 
-### 创建 Auth0 应用
+  注册并登录 [Auth0][auth0-client-page]，点击左侧导航栏的「Applications」，切换到应用管理界面，点击右上角「Create Application」以创建应用。
 
-注册并登录 [Auth0][auth0-client-page]，点击左侧导航栏的「Applications」，切换到应用管理界面，点击右上角「Create Application」以创建应用。
+  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/1b405347-f4c3-4c55-82f6-47116f2210d0)
 
-![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/1b405347-f4c3-4c55-82f6-47116f2210d0)
+  填写你想向组织用户显示的应用名称，可选择任意应用类型，点击「Create」。
 
-填写你想向组织用户显示的应用名称，可选择任意应用类型，点击「Create」。
+  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/75c92f85-3ad3-4473-a9c6-e667e28d428d)
 
-![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/75c92f85-3ad3-4473-a9c6-e667e28d428d)
+  创建成功后，点击相应的应用，进入应用详情页，切换到「Settings」标签页，就可以看到相应的配置信息
 
-创建成功后，点击相应的应用，进入应用详情页，切换到「Settings」标签页，就可以看到相应的配置信息
+  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/a1ed996b-95ef-4b7d-a50d-b4666eccfecb)
 
-![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/a1ed996b-95ef-4b7d-a50d-b4666eccfecb)
+  在应用配置页面中，还需要配置 Allowed Callback URLs，在此处填写:
 
-在应用配置页面中，还需要配置 Allowed Callback URLs，在此处填写:
+  ```bash
+  http(s)://your-domain/api/auth/callback/auth0
+  ```
 
-```bash
-http(s)://your-domain/api/auth/callback/auth0
-```
+  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b)
 
-![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b)
+  <Callout type={'info'}>
+    可以在部署后再填写或修改 Allowed Callback URLs，但是务必保证填写的 URL 与部署的 URL 一致
+  </Callout>
 
-{' '}
+  ### 新增用户
 
-<Callout type={'info'}>
-  可以在部署后再填写或修改 Allowed Callback URLs，但是务必保证填写的 URL 与部署的 URL 一致
-</Callout>
+  点击左侧导航栏的「Users Management」，进入用户管理界面，可以为你的组织新建用户，用以登录 LobeChat
 
-### 新增用户
+  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/3b8127ab-dc4f-4ff9-a4cb-dec3ef0295cc)
 
-点击左侧导航栏的「Users Management」，进入用户管理界面，可以为你的组织新建用户，用以登录 LobeChat
+  ### 配置环境变量
 
-![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/3b8127ab-dc4f-4ff9-a4cb-dec3ef0295cc)
+  在部署 LobeChat 时，你需要配置以下环境变量：
 
-### 配置环境变量
+  | 环境变量                  | 类型 | 描述                                                                                          |
+  | --------------------- | -- | ------------------------------------------------------------------------------------------- |
+  | `ENABLE_OAUTH_SSO`    | 必选 | 为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。                                                    |
+  | `NEXTAUTH_SECRET`     | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`                               |
+  | `AUTH0_CLIENT_ID`     | 必选 | Auth0 应用程序的 Client ID                                                                       |
+  | `AUTH0_CLIENT_SECRET` | 必选 | Auth0 应用程序的 Client Secret                                                                   |
+  | `AUTH0_ISSUER`        | 必选 | Auth0 应用程序的 Domain，`https://example.auth0.com`                                              |
+  | `ACCESS_CODE`         | 必选 | 添加访问此服务的密码，你可以设置一个足够长的随机密码以 “禁用” 访问码授权                                                      |
+  | `NEXTAUTH_URL`        | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
 
-在部署 LobeChat 时，你需要配置以下环境变量：
-
-| 环境变量 | 类型 | 描述 |
-| --- | --- | --- |
-| `ENABLE_OAUTH_SSO` | 必选 | 为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。 |
-| `NEXTAUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32` |
-| `AUTH0_CLIENT_ID` | 必选 | Auth0 应用程序的 Client ID |
-| `AUTH0_CLIENT_SECRET` | 必选 | Auth0 应用程序的 Client Secret |
-| `AUTH0_ISSUER` | 必选 | Auth0 应用程序的 Domain，`https://example.auth0.com` |
-| `ACCESS_CODE` | 必选 | 添加访问此服务的密码，你可以设置一个足够长的随机密码以 “禁用” 访问码授权 |
-| `NEXTAUTH_URL` | 可选 | 该URL用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
-
-前往 [环境变量](/zh/self-hosting/environment-variable#auth0) 可查阅相关变量详情。
-
+  前往 [环境变量](/zh/self-hosting/environment-variable#auth0) 可查阅相关变量详情。
 </Steps>
 
 <Callout>部署成功后，用户将可以使用 Auth0 中配置的用户通过身份认证并使用 LobeChat。</Callout>
@@ -81,6 +77,7 @@ Auth0 支持 Azure Active Directory / Slack / Google Workspace / Office 365 / Zo
 <Callout type={'warning'}>
   配置社交登录服务默认会允许所有人通过认证，这可能会导致 LobeChat 被外部人员滥用。
 </Callout>
+
 <Callout>
   如果你需要限制登录人员，务必配置 **阻止策略**： 请在打开社交登录选项后，参考
   [这篇文章][auth0-login-actions-manual] 创建 Action 来设置阻止 / 允许列表。
