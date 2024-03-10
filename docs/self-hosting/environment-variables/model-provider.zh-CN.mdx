@@ -9,7 +9,7 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 ### `OPENAI_API_KEY`
 
 - 类型：必选
-- 描述：这是你在 OpenAI 账户页面申请的 API 密钥，可以前往[这里][openai-api-page]查看
+- 描述：这是你在 OpenAI 账户页面申请的 API 密钥，可以前往 \[这里]\[openai-api-page] 查看
 - 默认值：-
 - 示例：`sk-xxxxxx...xxxxxx`
 
@@ -51,13 +51,13 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 ### `API_KEY_SELECT_MODE`
 
 - 类型：可选
-- 描述：用于控制多个API Keys时，选择Key的模式，当前支持 `random` 和 `turn`
+- 描述：用于控制多个 API Keys 时，选择 Key 的模式，当前支持 `random` 和 `turn`
 - 默认值：`random`
 - 示例：`random` 或 `turn`
 
-使用 `random` 模式下，将在多个API Keys中随机获取一个API Key。
+使用 `random` 模式下，将在多个 API Keys 中随机获取一个 API Key。
 
-使用 `turn` 模式下，将按照填写的顺序，轮训获取得到API Key。
+使用 `turn` 模式下，将按照填写的顺序，轮训获取得到 API Key。
 
 ## Azure OpenAI
 
@@ -82,7 +82,7 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 类型：可选
 - 描述：Azure 的 API 版本，遵循 YYYY-MM-DD 格式
 - 默认值：`2023-08-01-preview`
-- 示例：`2023-05-15`，查阅[最新版本][azure-api-verion-url]
+- 示例：`2023-05-15`，查阅 [最新版本][azure-api-verion-url]
 
 ## 智谱 AI
 
@@ -169,3 +169,6 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 描述：这是你在 Mistral AI 服务中申请的 API 密钥
 - 默认值：-
 - 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`
+
+[azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
+[openai-api-page]: https://platform.openai.com/account/api-keys

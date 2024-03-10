@@ -7,140 +7,137 @@ import { Callout, Steps, Tabs } from 'nextra/components';
 We provide a [Docker image][docker-release-link] for you to deploy the LobeChat service on your private device.
 
 <Steps>
+  ### Install Docker Container Environment
 
-### Install Docker Container Environment
+  (If already installed, skip this step)
 
-(If already installed, skip this step)
+  <Tabs items={['Ubuntu', 'CentOS']}>
+    <Tabs.Tab>
+      ```fish
+      $ apt install docker.io
+      ```
+    </Tabs.Tab>
 
-<Tabs items={['Ubuntu', 'CentOS']}>
-  <Tabs.Tab>
+    <Tabs.Tab>
+      ```fish
+      $ yum install docker
+      ```
+    </Tabs.Tab>
+  </Tabs>
 
-```fish
-$ apt install docker.io
-```
+  ### Docker Command Deployment
 
-</Tabs.Tab>
-  <Tabs.Tab>
+  Use the following command to start the LobeChat service with one click:
 
-```fish
-$ yum install docker
-```
+  ```fish
+  $ docker run -d -p 3210:3210 \
+    -e OPENAI_API_KEY=sk-xxxx \
+    -e ACCESS_CODE=lobe66 \
+    --name lobe-chat \
+    lobehub/lobe-chat
+  ```
 
-</Tabs.Tab>
-</Tabs>
+  Command explanation:
 
-### Docker Command Deployment
+  - The default port mapping is `3210`, please ensure it is not occupied or manually change the port mapping.
 
-Use the following command to start the LobeChat service with one click:
+  - Replace `sk-xxxx` in the above command with your OpenAI API Key.
 
-```fish
-$ docker run -d -p 3210:3210 \
-  -e OPENAI_API_KEY=sk-xxxx \
-  -e ACCESS_CODE=lobe66 \
-  --name lobe-chat \
-  lobehub/lobe-chat
-```
+  - For the complete list of environment variables supported by LobeChat, please refer to the [Environment Variables](/zh/self-hosting/environment-ariable) section.
 
-Command explanation:
+  <Callout>
+    Since the official Docker image build takes about half an hour, if you see the "update available"
+    prompt after deployment, you can wait for the image to finish building before deploying again.
+  </Callout>
 
-- The default port mapping is `3210`, please ensure it is not occupied or manually change the port mapping.
+  <Callout type="warning">
+    The official Docker image does not have a password set. It is strongly recommended to add a
+    password to enhance security, otherwise you may encounter situations like [My API Key was
+    stolen!!!](https://github.com/lobehub/lobe-chat/issues/1123).
+  </Callout>
 
-- Replace `sk-xxxx` in the above command with your OpenAI API Key.
+  <Callout type="info">
+    Note that when the **deployment architecture is inconsistent with the image**, you need to
+    cross-compile **Sharp**, see [Sharp
+    Cross-Compilation](https://sharp.pixelplumbing.com/install#cross-platform) for details.
+  </Callout>
 
-- For the complete list of environment variables supported by LobeChat, please refer to the [Environment Variables](/zh/self-hosting/environment-ariable) section.
+  #### Using a Proxy Address
 
-<Callout>
-  Since the official Docker image build takes about half an hour, if you see the "update available"
-  prompt after deployment, you can wait for the image to finish building before deploying again.
-</Callout>
+  If you need to use the OpenAI service through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
 
-<Callout type="warning">
-  The official Docker image does not have a password set. It is strongly recommended to add a
-  password to enhance security, otherwise you may encounter situations like [My API Key was
-  stolen!!!](https://github.com/lobehub/lobe-chat/issues/1123).
-</Callout>
+  ```fish
+  $ docker run -d -p 3210:3210 \
+    -e OPENAI_API_KEY=sk-xxxx \
+    -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
+    -e ACCESS_CODE=lobe66 \
+    --name lobe-chat \
+    lobehub/lobe-chat
+  ```
 
-<Callout type="info">
-  Note that when the **deployment architecture is inconsistent with the image**, you need to
-  cross-compile **Sharp**, see [Sharp
-  Cross-Compilation](https://sharp.pixelplumbing.com/install#cross-platform) for details.
-</Callout>
+  ### Crontab Automatic Update Script (Optional)
 
-#### Using a Proxy Address
+  If you want to automatically obtain the latest image, you can follow these steps.
 
-If you need to use the OpenAI service through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
+  First, create a `lobe.env` configuration file with various environment variables, for example:
 
-```fish
-$ docker run -d -p 3210:3210 \
-  -e OPENAI_API_KEY=sk-xxxx \
-  -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
-  -e ACCESS_CODE=lobe66 \
-  --name lobe-chat \
-  lobehub/lobe-chat
-```
+  ```env
+  OPENAI_API_KEY=sk-xxxx
+  OPENAI_PROXY_URL=https://api-proxy.com/v1
+  ACCESS_CODE=arthals2333
+  CUSTOM_MODELS=-gpt-4,-gpt-4-32k,-gpt-3.5-turbo-16k,gpt-3.5-turbo-1106=gpt-3.5-turbo-16k,gpt-4-0125-preview=gpt-4-turbo,gpt-4-vision-preview=gpt-4-vision
+  ```
 
-### Crontab Automatic Update Script (Optional)
+  Then, you can use the following script to automate the update:
 
-If you want to automatically obtain the latest image, you can follow these steps.
+  ```bash
+  #!/bin/bash
+  # auto-update-lobe-chat.sh
 
-First, create a `lobe.env` configuration file with various environment variables, for example:
+  # Set up proxy (optional)
+  export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
 
-```env
-OPENAI_API_KEY=sk-xxxx
-OPENAI_PROXY_URL=https://api-proxy.com/v1
-ACCESS_CODE=arthals2333
-CUSTOM_MODELS=-gpt-4,-gpt-4-32k,-gpt-3.5-turbo-16k,gpt-3.5-turbo-1106=gpt-3.5-turbo-16k,gpt-4-0125-preview=gpt-4-turbo,gpt-4-vision-preview=gpt-4-vision
-```
+  # Pull the latest image and store the output in a variable
+  output=$(docker pull lobehub/lobe-chat:latest 2>&1)
 
-Then, you can use the following script to automate the update:
+  # Check if the pull command was executed successfully
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
 
-```bash
-#!/bin/bash
-# auto-update-lobe-chat.sh
+  # Check if the output contains a specific string
+  echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
 
-# Set up proxy (optional)
-export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+  # If the image is already up to date, do nothing
+  if [ $? -eq 0 ]; then
+    exit 0
+  fi
 
-# Pull the latest image and store the output in a variable
-output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+  echo "Detected Lobe-Chat update"
 
-# Check if the pull command was executed successfully
-if [ $? -ne 0 ]; then
-  exit 1
-fi
+  # Remove the old container
+  echo "Removed: $(docker rm -f Lobe-Chat)"
 
-# Check if the output contains a specific string
-echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+  # Run the new container
+  echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=Lobe-Chat --restart=always lobehub/lobe-chat)"
 
-# If the image is already up to date, do nothing
-if [ $? -eq 0 ]; then
-  exit 0
-fi
+  # Print the update time and version
+  echo "Update time: $(date)"
+  echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
 
-echo "Detected Lobe-Chat update"
+  # Clean up unused images
+  docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+  echo "Removed old images."
+  ```
 
-# Remove the old container
-echo "Removed: $(docker rm -f Lobe-Chat)"
+  This script can be used in Crontab, but please ensure that your Crontab can find the correct Docker command. It is recommended to use absolute paths.
 
-# Run the new container
-echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=Lobe-Chat --restart=always lobehub/lobe-chat)"
+  Configure Crontab to execute the script every 5 minutes:
 
-# Print the update time and version
-echo "Update time: $(date)"
-echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
-
-# Clean up unused images
-docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
-echo "Removed old images."
-```
-
-This script can be used in Crontab, but please ensure that your Crontab can find the correct Docker command. It is recommended to use absolute paths.
-
-Configure Crontab to execute the script every 5 minutes:
-
-```bash
-*/5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
-```
+  ```bash
+  */5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
+  ```
+</Steps>
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
@@ -148,5 +145,3 @@ Configure Crontab to execute the script every 5 minutes:
 [docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
 [docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
-
-</Steps>
