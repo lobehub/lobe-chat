@@ -89,7 +89,7 @@
     "@lobehub/chat-plugins-gateway": "latest",
     "@lobehub/icons": "^1.13.0",
     "@lobehub/tts": "latest",
-    "@lobehub/ui": "latest",
+    "@lobehub/ui": "^1.129.2",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
     "ai": "^3.0.0",
@@ -108,7 +108,7 @@
     "idb-keyval": "^6",
     "immer": "^10",
     "jose": "^5",
-    "langfuse": "^3.",
+    "langfuse": "^3",
     "langfuse-core": "^3",
     "lodash-es": "^4",
     "lucide-react": "latest",
@@ -203,6 +203,7 @@
     "unified": "^11",
     "unist-util-visit": "^5",
     "vite": "5.1.4",
+    "vitest": "~1.2.2",
     "vitest-canvas-mock": "^0.3"
   },
   "publishConfig": {
