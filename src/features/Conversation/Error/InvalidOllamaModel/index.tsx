@@ -1,7 +1,7 @@
 import { Ollama } from '@lobehub/icons';
 import { Button, Input, Progress } from 'antd';
 import { useTheme } from 'antd-style';
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import useSWR from 'swr';
@@ -9,7 +9,8 @@ import useSWR from 'swr';
 import { ollamaService } from '@/services/ollama';
 import { useChatStore } from '@/store/chat';
 
-import { ErrorActionContainer, FormAction } from './style';
+import { ErrorActionContainer, FormAction } from '../style';
+import { useDownloadMonitor } from './useDownloadMonitor';
 
 interface OllamaModelFormProps {
   id: string;
@@ -19,7 +20,12 @@ interface OllamaModelFormProps {
 const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
   const { t } = useTranslation('error');
   const [modelToPull, setModelToPull] = useState(model);
-  const [percent, setPercent] = useState(0);
+  const [completed, setCompleted] = useState(0);
+  const [total, setTotal] = useState(0);
+  const { remainingTime, downloadSpeed } = useDownloadMonitor(total, completed);
+  const percent = useMemo(() => {
+    return total ? Number(((completed / total) * 100).toFixed(0)) : 0;
+  }, [completed, total]);
 
   const [delAndRegenerateMessage, deleteMessage] = useChatStore((s) => [
     s.delAndRegenerateMessage,
@@ -32,9 +38,10 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
     async ([, model]) => {
       const generator = await ollamaService.pullModel(model);
       for await (const progress of generator) {
-        setPercent(
-          progress?.total ? Number(((progress.completed / progress.total) * 100).toFixed(0)) : 0,
-        );
+        if (progress.completed) {
+          setCompleted(progress.completed);
+          setTotal(progress.total);
+        }
       }
       return null;
     },
@@ -63,12 +70,17 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
         />
       </FormAction>
       {isLoading && (
-        <Progress
-          percent={percent}
-          showInfo
-          strokeColor={theme.colorSuccess}
-          trailColor={theme.colorSuccessBg}
-        />
+        <div>
+          <Progress
+            percent={percent}
+            showInfo
+            strokeColor={theme.colorSuccess}
+            trailColor={theme.colorSuccessBg}
+          />
+          <div>
+            Speed:{downloadSpeed} ETA: {remainingTime}
+          </div>
+        </div>
       )}
       <Flexbox gap={12} width={'100%'}>
         <Button
