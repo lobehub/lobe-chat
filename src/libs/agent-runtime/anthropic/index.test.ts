@@ -31,7 +31,6 @@ describe('LobeAnthropicAI', () => {
   });
 
   describe('chat', () => {
-
     it('should return a StreamingTextResponse on successful API call', async () => {
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
@@ -59,20 +58,18 @@ describe('LobeAnthropicAI', () => {
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         temperature: 0,
-        top_p: 1
+        top_p: 1,
       });
 
       // Assert
       expect(instance['client'].messages.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [
-          { content: 'Hello', role: 'user' },
-        ],
+        max_tokens: 4096,
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         stream: true,
         temperature: 0,
-        top_p: 1
-      })
+        top_p: 1,
+      });
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -99,15 +96,13 @@ describe('LobeAnthropicAI', () => {
 
       // Assert
       expect(instance['client'].messages.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [
-          { content: 'Hello', role: 'user' },
-        ],
+        max_tokens: 4096,
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         stream: true,
         system: 'You are an awesome greeter',
         temperature: 0,
-      })
+      });
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -125,9 +120,7 @@ describe('LobeAnthropicAI', () => {
       // Act
       const result = await instance.chat({
         max_tokens: 2048,
-        messages: [
-          { content: 'Hello', role: 'user' },
-        ],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         temperature: 0.5,
         top_p: 1,
@@ -136,14 +129,12 @@ describe('LobeAnthropicAI', () => {
       // Assert
       expect(instance['client'].messages.create).toHaveBeenCalledWith({
         max_tokens: 2048,
-        messages: [
-          { content: 'Hello', role: 'user' },
-        ],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         stream: true,
         temperature: 0.5,
         top_p: 1,
-      })
+      });
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -162,9 +153,7 @@ describe('LobeAnthropicAI', () => {
       const result = await instance.chat({
         frequency_penalty: 0.5, // Unsupported option
         max_tokens: 2048,
-        messages: [
-          { content: 'Hello', role: 'user' },
-        ],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         presence_penalty: 0.5,
         temperature: 0.5,
@@ -174,14 +163,12 @@ describe('LobeAnthropicAI', () => {
       // Assert
       expect(instance['client'].messages.create).toHaveBeenCalledWith({
         max_tokens: 2048,
-        messages: [
-          { content: 'Hello', role: 'user' },
-        ],
+        messages: [{ content: 'Hello', role: 'user' }],
         model: 'claude-instant-1.2',
         stream: true,
         temperature: 0.5,
         top_p: 1,
-      })
+      });
       expect(result).toBeInstanceOf(Response);
     });
 

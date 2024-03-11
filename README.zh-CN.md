@@ -245,12 +245,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                              | 助手说明                                                                                                                                          |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Gen Z Engagement Specialist](https://chat-preview.lobehub.com/market?agent=gen-z)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-03-09**</sup>                      | 专注于通过定制互动反映他们的偏好和价值观，与 Gen Z 用户进行互动。<br/>`engagement` `gen-z` `communication` `advice` `interaction`                 |
 | [日程管理助手](https://chat-preview.lobehub.com/market?agent=calendar-manager)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2024-03-07**</sup>                      | 日程管理助手，调用时间插件，处理新增、查询、删除日程请求，支持多种操作和提醒。<br/>`日程管理` `时间插件` `新增日程` `查询日程` `删除日程`         |
 | [商务邮件撰写专家](https://chat-preview.lobehub.com/market?agent=business-email)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-03-06**</sup>          | 商务邮件撰写专家，擅长中英文商务邮件，跨文化沟通，GitHub 开源社区交流。<br/>`商务邮件撰写` `商业合作` `商务授权` `跨文化沟通` `git-hub和开源社区` |
 | [Discord 风格文案大师](https://chat-preview.lobehub.com/market?agent=discord-copywriting)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-03-06**</sup> | Discord 风格文案专家，幽默风趣、用户体验优先，个性化设计软件文案。<br/>`文案生成` `创作` `用户体验` `幽默风趣` `软件系统`                         |
-| [AI 图像提示建筑师](https://chat-preview.lobehub.com/market?agent=9-somboon)<br/><sup>By **[9Somboon](https://github.com/9Somboon)** on **2024-03-05**</sup>                          | 专门为 AI 图像生成创建详细提示。<br/>`stable-diffusion` `ai-image-generation` `prompts` `photography` `creative` `art`                            |
 
-> 📊 Total agents: [<kbd>**199**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**200**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
