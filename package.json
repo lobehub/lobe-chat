@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.133.3",
+  "version": "0.133.4",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -27,9 +27,10 @@
   "sideEffects": false,
   "scripts": {
     "build": "next build",
-    "postbuild": "next-sitemap --config next-sitemap.config.mjs",
+    "postbuild": "npm run build-sitemap",
+    "build-sitemap": "next-sitemap --config next-sitemap.config.mjs",
     "build:analyze": "ANALYZE=true next build",
-    "build:docker": "DOCKER=true next build",
+    "build:docker": "DOCKER=true next build && npm run build-sitemap",
     "dev": "next dev -p 3010",
     "docs": "lobe-i18n md && npm run workflow:docs",
     "i18n": "npm run workflow:i18n && lobe-i18n",
