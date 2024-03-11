@@ -137,9 +137,9 @@ export default {
     confirm: '确认并重试',
     model: {
       Ollama: {
-        confirm: '拉取',
+        confirm: '下载',
         description: '输入你的 Ollama 模型标签，完成即可继续会话',
-        title: '拉取未下载的 Ollama 模型',
+        title: '下载指定的 Ollama 模型',
       },
     },
     oauth: {

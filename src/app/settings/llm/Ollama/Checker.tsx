@@ -26,7 +26,7 @@ const OllamaChecker = memo(() => {
   return (
     <Flexbox align={isMobile ? 'flex-start' : 'flex-end'} gap={8}>
       <Flexbox align={'center'} direction={isMobile ? 'horizontal-reverse' : 'horizontal'} gap={12}>
-        {data?.models && (
+        {!error && data?.models && (
           <Flexbox gap={4} horizontal>
             <CheckCircleFilled
               style={{
