@@ -26,7 +26,7 @@ class OllamaService {
       response = await this.getOllamaClient().pull({ insecure: true, model, stream: true });
       return response;
     } catch {
-      response = createErrorResponse(ChatErrorType.ServiceUnavailable, {
+      response = createErrorResponse(ChatErrorType.OllamaServiceUnavailable, {
         host: this.getHost(),
         message: 'please check whether your ollama service is available',
         provider: ModelProvider.Ollama,
@@ -46,7 +46,7 @@ class OllamaService {
       const response = await this.getOllamaClient().list();
       return response;
     } catch {
-      response = createErrorResponse(ChatErrorType.ServiceUnavailable, {
+      response = createErrorResponse(ChatErrorType.OllamaServiceUnavailable, {
         host: this.getHost(),
         message: 'please check whether your ollama service is available',
         provider: ModelProvider.Ollama,

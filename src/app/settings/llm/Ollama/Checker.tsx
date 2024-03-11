@@ -1,12 +1,11 @@
 import { CheckCircleFilled } from '@ant-design/icons';
 import { Alert, Highlighter } from '@lobehub/ui';
+import { useRequest } from 'ahooks';
 import { Button } from 'antd';
 import { useTheme } from 'antd-style';
-import { ListResponse } from 'ollama';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import useSWR from 'swr';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { ollamaService } from '@/services/ollama';
@@ -16,18 +15,10 @@ const OllamaChecker = memo(() => {
 
   const theme = useTheme();
 
-  const { data, error, isLoading, mutate } = useSWR<ListResponse>(
-    'ollama.list',
-    ollamaService.getModels,
-    {
-      revalidateOnFocus: false,
-      revalidateOnMount: false,
-      revalidateOnReconnect: false,
-    },
-  );
+  const { data, error, loading, run } = useRequest(ollamaService.getModels, { manual: true });
 
   const checkConnection = () => {
-    mutate();
+    run();
   };
 
   const isMobile = useIsMobile();
@@ -45,7 +36,7 @@ const OllamaChecker = memo(() => {
             {t('llm.checker.pass')}
           </Flexbox>
         )}
-        <Button loading={isLoading} onClick={checkConnection}>
+        <Button loading={loading} onClick={checkConnection}>
           {t('llm.checker.button')}
         </Button>
       </Flexbox>
