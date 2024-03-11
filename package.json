@@ -27,9 +27,10 @@
   "sideEffects": false,
   "scripts": {
     "build": "next build",
-    "postbuild": "next-sitemap --config next-sitemap.config.mjs",
+    "postbuild": "npm run build-sitemap",
     "build:analyze": "ANALYZE=true next build",
-    "build:docker": "DOCKER=true next build",
+    "build:docker": "DOCKER=true next build && npm run build-sitemap",
+    "build-sitemap": "next-sitemap --config next-sitemap.config.mjs",
     "dev": "next dev -p 3010",
     "docs": "lobe-i18n md && npm run workflow:docs",
     "i18n": "npm run workflow:i18n && lobe-i18n",
