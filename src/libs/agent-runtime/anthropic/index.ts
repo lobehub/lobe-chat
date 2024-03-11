@@ -53,7 +53,6 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     const { messages, model, max_tokens, temperature, top_p } = payload;
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
-    console.log(this.client.baseURL);
 
     const requestParams: Anthropic.MessageCreateParams = {
       max_tokens: max_tokens || 1024,
