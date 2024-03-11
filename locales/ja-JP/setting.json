@@ -32,6 +32,11 @@
   },
   "llm": {
     "Anthropic": {
+      "endpoint": {
+        "desc": "デフォルトのアドレスに加えて、http(s)://を含める必要があります",
+        "placeholder": "https://api.anthropic.com",
+        "title": "APIプロキシアドレス"
+      },
       "title": "Anthropic",
       "token": {
         "desc": "Anthropic の API キーを入力してください",
