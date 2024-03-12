@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode, memo } from 'react';
 
-import ResponsiveLayout from '@/layout/ResponsiveLayout.server';
+import ResponsiveLayout from '@/layout/ServerResponsiveLayout';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import DesktopLayout from './(desktop)/layout.responsive';
