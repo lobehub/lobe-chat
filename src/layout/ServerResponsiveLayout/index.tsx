@@ -7,10 +7,15 @@ interface ServerResponsiveLayoutProps extends Record<string, any> {
   Mobile: (props: any) => ReactNode;
   children?: ReactNode;
 }
-const ResponsiveLayout = ({ children, Desktop, Mobile, ...res }: ServerResponsiveLayoutProps) => {
+const ServerResponsiveLayout = ({
+  children,
+  Desktop,
+  Mobile,
+  ...res
+}: ServerResponsiveLayoutProps) => {
   const mobile = isMobileDevice();
 
   return mobile ? <Mobile {...res}>{children}</Mobile> : <Desktop {...res}>{children}</Desktop>;
 };
 
-export default ResponsiveLayout;
+export default ServerResponsiveLayout;
