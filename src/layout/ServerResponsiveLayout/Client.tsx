@@ -1,9 +1,7 @@
 'use client';
 
-import { ReactNode, Suspense, memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { ReactNode, memo } from 'react';
 
-import FullscreenLoading from '@/components/FullscreenLoading';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface ServerResponsiveLayoutProps extends Record<string, any> {
@@ -14,16 +12,9 @@ interface ServerResponsiveLayoutProps extends Record<string, any> {
 
 const ResponsiveLayout = memo(
   ({ children, Desktop, Mobile, ...res }: ServerResponsiveLayoutProps) => {
-    const { t } = useTranslation();
     const mobile = useIsMobile();
 
-    return mobile ? (
-      <Suspense fallback={<FullscreenLoading title={t('layoutInitializing', { ns: 'common' })} />}>
-        <Mobile {...res}>{children}</Mobile>
-      </Suspense>
-    ) : (
-      <Desktop {...res}>{children}</Desktop>
-    );
+    return mobile ? <Mobile {...res}>{children}</Mobile> : <Desktop {...res}>{children}</Desktop>;
   },
 );
 
