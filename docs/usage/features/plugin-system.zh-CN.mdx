@@ -4,10 +4,10 @@ import { Callout, Steps } from 'nextra/components';
 
 <Image
   alt={'插件系统'}
+  cover
   src={
     'https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png'
   }
-  cover
 />
 
 LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地增强了 LobeChat 助手的实用性和灵活性。
@@ -30,12 +30,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 📊 Total plugins: [<kbd>**61**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
-| 最近新增 | 插件描述 |
-| --- | --- |
-| [图表和图示](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **pyxl** on **2024-02-05**</sup> | 美人鱼图表，演示文稿方案，分析，研究网站，饼图。<br/>`图表` `图示` |
-| [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-02-02**</sup> | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br/>`社交` `推特` `x` `搜索` |
-| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br/>`加密货币` `btc` `eth` `bnb` |
-| [哔哩哔哩](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup> | 通过关键词视频搜索、回放访问、互动弹幕、热门视频推荐和热搜洞察等功能，深入体验哔哩哔哩丰富的内容，尽在您的指尖。<br/>`视频` `哔哩哔哩` `搜索` |
+| 最近新增                                                                                                               | 插件描述                                                                           |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| [图表和图示](https://chat-preview.lobehub.com/settings/agent)<br /><sup>By **pyxl** on **2024-02-05**</sup>             | 美人鱼图表，演示文稿方案，分析，研究网站，饼图。<br />`图表` `图示`                                        |
+| [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br /><sup>By **say-apps** on **2024-02-02**</sup>          | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br />`社交` `推特` `x` `搜索`                            |
+| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br /><sup>By **feednews** on **2024-01-27**</sup> | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br />`加密货币` `btc` `eth` `bnb`        |
+| [哔哩哔哩](https://chat-preview.lobehub.com/settings/agent)<br /><sup>By **LobeHub** on **2024-01-27**</sup>           | 通过关键词视频搜索、回放访问、互动弹幕、热门视频推荐和热搜洞察等功能，深入体验哔哩哔哩丰富的内容，尽在您的指尖。<br />`视频` `哔哩哔哩` `搜索` |
 
 ## 插件生态体系
 
@@ -48,31 +48,29 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 - [@lobehub/chat-plugin-sdk][chat-plugin-sdk]：LobeChat 插件 SDK 可帮助您创建出色的 Lobe Chat 插件。
 - [@lobehub/chat-plugins-gateway][chat-plugins-gateway]：LobeChat 插件网关是一个后端服务，作为 LobeChat 插件的网关。我们使用 Vercel 部署此服务。
 
-[lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
-[chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
-[chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
-[chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
-
 ### 路线进展
 
 LobeChat 的插件系统目前已初步进入一个稳定阶段，我们已基本完成大部分插件系统所需的功能，但我们仍然在规划与思考插件能为我们带来的全新可能性。您可以在以下 Issues 中了解更多信息:
 
 <Steps>
+  ### ✅ 插件一期
 
-### ✅ 插件一期
+  实现插件与主体分离，将插件拆分为独立仓库维护，并实现插件的动态加载。 [**#73**](https://github.com/lobehub/lobe-chat/issues/73)
 
-实现插件与主体分离，将插件拆分为独立仓库维护，并实现插件的动态加载。 [**#73**](https://github.com/lobehub/lobe-chat/issues/73)
+  ### ✅ 插件二期
 
-### ✅ 插件二期
+  插件的安全性与使用的稳定性，更加精准地呈现异常状态，插件架构的可维护性与开发者友好。[**#97**](https://github.com/lobehub/lobe-chat/issues/97)
 
-插件的安全性与使用的稳定性，更加精准地呈现异常状态，插件架构的可维护性与开发者友好。[**#97**](https://github.com/lobehub/lobe-chat/issues/97)
+  ### ✅ 插件三期
 
-### ✅ 插件三期
+  更高阶与完善的自定义能力，支持 OpenAPI schema 调用、兼容 ChatGPT 插件、新增 Midjourney 插件。 [**#411**](https://github.com/lobehub/lobe-chat/discussions/#411)
 
-更高阶与完善的自定义能力，支持 OpenAPI schema 调用、兼容 ChatGPT 插件、新增 Midjourney 插件。 [**#411**](https://github.com/lobehub/lobe-chat/discussions/#411)
+  ### 💭 插件四期
 
-### 💭 插件四期
-
-完善的鉴权、可视化配置插件定义、 Plugin SDK CLI 、 Python 语言研发模板、还有什么想法？欢迎参与讨论： [**#1310**](https://github.com/lobehub/lobe-chat/discussions/#1310)
-
+  完善的鉴权、可视化配置插件定义、 Plugin SDK CLI 、 Python 语言研发模板、还有什么想法？欢迎参与讨论： [**#1310**](https://github.com/lobehub/lobe-chat/discussions/#1310)
 </Steps>
+
+[chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
+[chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
+[chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
+[lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins

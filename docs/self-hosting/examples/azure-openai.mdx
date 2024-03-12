@@ -30,13 +30,13 @@ After completing the configuration of the above fields, click "Check". If it pro
 
 If you want the deployed version to be pre-configured with Azure OpenAI for end users to use directly, you need to configure the following environment variables during deployment:
 
-| Environment Variable | Type | Description | Default Value | Example |
-| --- | --- | --- | --- | --- |
-| `USE_AZURE_OPENAI` | Required | Set this value to `1` to enable Azure OpenAI configuration | - | `1` |
-| `AZURE_API_KEY` | Required | This is the API key you obtained from the Azure OpenAI account page | - | `c55168be3874490ef0565d9779ecd5a6` |
-| `OPENAI_PROXY_URL` | Required | Azure API address, can be found in the "Keys and Endpoints" section when checking resources in the Azure portal | - | `https://docs-test-001.openai.azure.com` |
-| `AZURE_API_VERSION` | Optional | Azure API version, following the format YYYY-MM-DD | 2023-08-01-preview | `2023-05-15`, see [latest version][azure-api-verion-url] |
-| `ACCESS_CODE` | Optional | Add a password to access this service. You can set a long password to prevent brute force attacks. When this value is separated by commas, it becomes an array of passwords | - | `awCT74` or `e3@09!` or `code1,code2,code3` |
+| Environment Variable | Type     | Description                                                                                                                                                                 | Default Value      | Example                                                  |
+| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | -------------------------------------------------------- |
+| `USE_AZURE_OPENAI`   | Required | Set this value to `1` to enable Azure OpenAI configuration                                                                                                                  | -                  | `1`                                                      |
+| `AZURE_API_KEY`      | Required | This is the API key you obtained from the Azure OpenAI account page                                                                                                         | -                  | `c55168be3874490ef0565d9779ecd5a6`                       |
+| `OPENAI_PROXY_URL`   | Required | Azure API address, can be found in the "Keys and Endpoints" section when checking resources in the Azure portal                                                             | -                  | `https://docs-test-001.openai.azure.com`                 |
+| `AZURE_API_VERSION`  | Optional | Azure API version, following the format YYYY-MM-DD                                                                                                                          | 2023-08-01-preview | `2023-05-15`, see [latest version][azure-api-verion-url] |
+| `ACCESS_CODE`        | Optional | Add a password to access this service. You can set a long password to prevent brute force attacks. When this value is separated by commas, it becomes an array of passwords | -                  | `awCT74` or `e3@09!` or `code1,code2,code3`              |
 
 <Callout>
   When you enable `USE_AZURE_OPENAI` on the server, users will be unable to modify and use the
