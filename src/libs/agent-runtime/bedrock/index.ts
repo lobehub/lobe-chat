@@ -79,11 +79,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       const bedrockResponse = await this.client.send(command);
 
       // Convert the response into a friendly text-stream
-      const stream = AWSBedrockStream(bedrockResponse, options?.callback, (chunk) => {
-        if (chunk.type === 'content_block_delta') {
-          return chunk.delta?.text;
-        }
-      });
+      const stream = AWSBedrockStream(bedrockResponse, options?.callback, (chunk) => chunk.delta?.text);
 
       const [debug, output] = stream.tee();
 
