@@ -32,6 +32,11 @@
   },
   "llm": {
     "Anthropic": {
+      "endpoint": {
+        "desc": "除預設地址外，必須包含 http(s)://",
+        "placeholder": "https://api.anthropic.com",
+        "title": "API 代理地址"
+      },
       "title": "Anthropic",
       "token": {
         "desc": "填入來自 Anthropic 的 API 金鑰",

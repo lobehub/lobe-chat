@@ -24,10 +24,19 @@ afterEach(() => {
 
 describe('LobeAnthropicAI', () => {
   describe('init', () => {
+
     it('should correctly initialize with an API key', async () => {
       const instance = new LobeAnthropicAI({ apiKey: 'test_api_key' });
       expect(instance).toBeInstanceOf(LobeAnthropicAI);
+      expect(instance.baseURL).toBe('https://api.anthropic.com');
     });
+    
+    it('should correctly initialize with a baseURL', async () => {
+      const instance = new LobeAnthropicAI({ apiKey: 'test_api_key', baseURL: 'https://api.anthropic.proxy' });
+      expect(instance).toBeInstanceOf(LobeAnthropicAI);
+      expect(instance.baseURL).toBe('https://api.anthropic.proxy');
+    });
+  
   });
 
   describe('chat', () => {
@@ -235,7 +244,12 @@ describe('LobeAnthropicAI', () => {
           });
         } catch (e) {
           // Assert
-          expect(e).toEqual({ errorType: 'InvalidAnthropicAPIKey', error: apiError, provider });
+          expect(e).toEqual({
+            endpoint: "https://api.anthropic.com",
+            error: apiError,
+            errorType: 'InvalidAnthropicAPIKey',
+            provider
+          });
         }
       });
       it('should throw BizError error', async () => {
@@ -261,7 +275,12 @@ describe('LobeAnthropicAI', () => {
           });
         } catch (e) {
           // Assert
-          expect(e).toEqual({ errorType: 'AnthropicBizError', error: apiError, provider });
+          expect(e).toEqual({
+            endpoint: "https://api.anthropic.com",
+            error: apiError,
+            errorType: 'AnthropicBizError',
+            provider
+          });
         }
       });
 
