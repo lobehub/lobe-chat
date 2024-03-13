@@ -12,6 +12,8 @@ const Index = () => (
   </>
 );
 
+export const runtime = 'edge';
+
 export default Index;
 
 export const metadata: Metadata = {
