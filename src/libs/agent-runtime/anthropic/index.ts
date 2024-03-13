@@ -15,15 +15,21 @@ import {
 } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { desensitizeUrl } from '../utils/desensitizeUrl';
 import { parseDataUri } from '../utils/uriParser';
+
+const DEFAULT_BASE_URL = 'https://api.anthropic.com';
 
 export class LobeAnthropicAI implements LobeRuntimeAI {
   private client: Anthropic;
+  
+  baseURL: string;
 
-  constructor({ apiKey }: ClientOptions) {
+  constructor({ apiKey, baseURL = DEFAULT_BASE_URL }: ClientOptions) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidAnthropicAPIKey);
-
-    this.client = new Anthropic({ apiKey });
+    
+    this.client = new Anthropic({ apiKey, baseURL });
+    this.baseURL = this.client.baseURL;
   }
 
   private buildAnthropicMessages = (
@@ -70,10 +76,17 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         headers: options?.headers,
       });
     } catch (error) {
+      let desensitizedEndpoint = this.baseURL;
+
+      if (this.baseURL !== DEFAULT_BASE_URL) {
+        desensitizedEndpoint = desensitizeUrl(this.baseURL);
+      }
+
       if ('status' in (error as any)) {
         switch ((error as Response).status) {
           case 401: {
             throw AgentRuntimeError.chat({
+              endpoint: desensitizedEndpoint,
               error: error as any,
               errorType: AgentRuntimeErrorType.InvalidAnthropicAPIKey,
               provider: ModelProvider.Anthropic,
@@ -85,6 +98,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         }
       }
       throw AgentRuntimeError.chat({
+        endpoint: desensitizedEndpoint,
         error: error as any,
         errorType: AgentRuntimeErrorType.AnthropicBizError,
         provider: ModelProvider.Anthropic,

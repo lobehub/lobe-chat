@@ -63,6 +63,7 @@ export interface PerplexityConfig {
 export interface AnthropicConfig {
   apiKey?: string;
   enabled: boolean;
+  endpoint?: string;
 }
 
 export interface MistralConfig {
