@@ -35,6 +35,7 @@ declare global {
 
       // Anthropic Provider
       ANTHROPIC_API_KEY?: string;
+      ANTHROPIC_PROXY_URL?: string;
       
       // Mistral Provider
       MISTRAL_API_KEY?: string;
@@ -94,6 +95,7 @@ export const getProviderConfig = () => {
 
     ENABLED_ANTHROPIC: !!ANTHROPIC_API_KEY,
     ANTHROPIC_API_KEY,
+    ANTHROPIC_PROXY_URL: process.env.ANTHROPIC_PROXY_URL,
     
     ENABLED_MISTRAL: !!MISTRAL_API_KEY,
     MISTRAL_API_KEY,

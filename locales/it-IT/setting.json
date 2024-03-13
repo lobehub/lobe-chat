@@ -32,6 +32,11 @@
   },
   "llm": {
     "Anthropic": {
+      "endpoint": {
+        "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
+        "placeholder": "https://api.anthropic.com",
+        "title": "Indirizzo dell'API proxy"
+      },
       "title": "Anthropic",
       "token": {
         "desc": "Inserisci la chiave API di Anthropic",
