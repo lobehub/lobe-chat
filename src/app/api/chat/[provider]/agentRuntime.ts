@@ -256,10 +256,10 @@ class AgentRuntime {
   }
 
   private static initAnthropic(payload: JWTPayload) {
-    const { ANTHROPIC_API_KEY } = getServerConfig();
+    const { ANTHROPIC_API_KEY, ANTHROPIC_PROXY_URL } = getServerConfig();
     const apiKey = apiKeyManager.pick(payload?.apiKey || ANTHROPIC_API_KEY);
-
-    return new LobeAnthropicAI({ apiKey });
+    const baseURL = payload?.endpoint || ANTHROPIC_PROXY_URL;
+    return new LobeAnthropicAI({ apiKey, baseURL });
   }
   
   private static initMistral(payload: JWTPayload) {

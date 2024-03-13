@@ -32,6 +32,11 @@
   },
   "llm": {
     "Anthropic": {
+      "endpoint": {
+        "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다",
+        "placeholder": "https://api.anthropic.com",
+        "title": "API 프록시 주소"
+      },
       "title": "Anthropic",
       "token": {
         "desc": "Anthropic의 API 키를 입력하세요",

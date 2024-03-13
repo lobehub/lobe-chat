@@ -32,6 +32,11 @@
   },
   "llm": {
     "Anthropic": {
+      "endpoint": {
+        "desc": "بخلاف العنوان الافتراضي، يجب أن يتضمن http(s)://",
+        "placeholder": "https://api.anthropic.com",
+        "title": "عنوان وكيل الواجهة البرمجية للتطبيقات"
+      },
       "title": "أنثروبيك",
       "token": {
         "desc": "أدخل مفتاح API من أنثروبيك",
