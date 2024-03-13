@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.134.1](https://github.com/lobehub/lobe-chat/compare/v0.134.0...v0.134.1)
+
+<sup>Released on **2024-03-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add more model display name.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add more model display name, closes [#1554](https://github.com/lobehub/lobe-chat/issues/1554) ([31c987a](https://github.com/lobehub/lobe-chat/commit/31c987a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.134.0](https://github.com/lobehub/lobe-chat/compare/v0.133.5...v0.134.0)
 
 <sup>Released on **2024-03-13**</sup>
