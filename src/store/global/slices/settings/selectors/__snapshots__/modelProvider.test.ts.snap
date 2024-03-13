@@ -63,7 +63,7 @@ exports[`modelProviderSelectors > CUSTOM_MODELS > should work correct with gpt-4
     "tokens": 8192,
   },
   {
-    "displayName": "gpt-4-32k",
+    "displayName": "GPT-4 32K",
     "functionCall": true,
     "hidden": undefined,
     "id": "gpt-4-32k",
