@@ -32,6 +32,11 @@ export default {
   },
   llm: {
     Anthropic: {
+      endpoint: {
+        desc: '除默认地址外，必须包含 http(s)://',
+        placeholder: 'https://api.anthropic.com',
+        title: 'API 代理地址',
+      },
       title: 'Anthropic',
       token: {
         desc: '填入来自 Anthropic 的 API Key',
