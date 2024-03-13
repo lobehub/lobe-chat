@@ -4,6 +4,7 @@ import {
   AnthropicProvider,
   BedrockProvider,
   GoogleProvider,
+  GroqProvider,
   LOBE_DEFAULT_MODEL_LIST,
   MistralProvider,
   MoonshotProvider,
@@ -60,6 +61,9 @@ const perplexityAPIKey = (s: GlobalStore) => modelProvider(s).perplexity.apiKey;
 const enableAnthropic = (s: GlobalStore) => modelProvider(s).anthropic.enabled;
 const anthropicAPIKey = (s: GlobalStore) => modelProvider(s).anthropic.apiKey;
 const anthropicProxyUrl = (s: GlobalStore) => modelProvider(s).anthropic.endpoint;
+
+const enableGroq = (s: GlobalStore) => modelProvider(s).groq.enabled;
+const groqAPIKey = (s: GlobalStore) => modelProvider(s).groq.apiKey;
 
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
@@ -149,6 +153,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
     { ...PerplexityProvider, enabled: enablePerplexity(s) },
     { ...AnthropicProvider, enabled: enableAnthropic(s) },
     { ...MistralProvider, enabled: enableMistral(s) },
+    { ...GroqProvider, enabled: enableGroq(s) },
   ];
 };
 
@@ -228,8 +233,12 @@ export const modelProviderSelectors = {
   enableAnthropic,
   anthropicAPIKey,
   anthropicProxyUrl,
-  
+
   // Mistral
   enableMistral,
   mistralAPIKey,
+
+  // Groq
+  enableGroq,
+  groqAPIKey,
 };
