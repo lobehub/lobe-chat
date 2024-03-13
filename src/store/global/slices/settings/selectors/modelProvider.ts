@@ -59,6 +59,7 @@ const perplexityAPIKey = (s: GlobalStore) => modelProvider(s).perplexity.apiKey;
 
 const enableAnthropic = (s: GlobalStore) => modelProvider(s).anthropic.enabled;
 const anthropicAPIKey = (s: GlobalStore) => modelProvider(s).anthropic.apiKey;
+const anthropicProxyUrl = (s: GlobalStore) => modelProvider(s).anthropic.endpoint;
 
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
@@ -226,6 +227,7 @@ export const modelProviderSelectors = {
   // Anthropic
   enableAnthropic,
   anthropicAPIKey,
+  anthropicProxyUrl,
   
   // Mistral
   enableMistral,
