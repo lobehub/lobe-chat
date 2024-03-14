@@ -6,6 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
+import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
@@ -154,7 +155,7 @@ export const createSessionSlice: StateCreator<
   },
 
   useFetchSessions: () =>
-    useSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getSessionsWithGroup, {
+    useClientDataSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getSessionsWithGroup, {
       onSuccess: (data) => {
         // 由于 https://github.com/lobehub/lobe-chat/pull/541 的关系
         // 只有触发了 refreshSessions 才会更新 sessions，进而触发页面 rerender
