@@ -2,12 +2,13 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { copyToClipboard } from '@lobehub/ui';
 import { template } from 'lodash-es';
-import useSWR, { SWRResponse, mutate } from 'swr';
+import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { CreateMessageParams } from '@/database/models/message';
+import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -24,6 +25,8 @@ import { chatSelectors } from '../../selectors';
 import { MessageDispatch, messagesReducer } from './reducer';
 
 const n = setNamespace('message');
+
+const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 
 interface SendMessageParams {
   message: string;
@@ -274,9 +277,9 @@ export const chatMessage: StateCreator<
     await get().internalUpdateMessageContent(id, content);
   },
   useFetchMessages: (sessionId, activeTopicId) =>
-    useSWR<ChatMessage[]>(
-      [sessionId, activeTopicId],
-      async ([sessionId, topicId]: [string, string | undefined]) =>
+    useClientDataSWR<ChatMessage[]>(
+      [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId],
+      async ([, sessionId, topicId]: [string, string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),
       {
         onSuccess: (messages, key) => {
@@ -289,14 +292,10 @@ export const chatMessage: StateCreator<
             }),
           );
         },
-        // default is 2000ms ,it makes the user's quick switch don't work correctly.
-        // Cause issue like this: https://github.com/lobehub/lobe-chat/issues/532
-        // we need to set it to 0.
-        dedupingInterval: 0,
       },
     ),
   refreshMessages: async () => {
-    await mutate([get().activeId, get().activeTopicId]);
+    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
   },
 
   // the internal process method of the AI message
