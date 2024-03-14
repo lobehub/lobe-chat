@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 export const DB_PluginSchema = z.object({
   identifier: z.string(),
+  id: z.string(),
   type: z.enum(['plugin', 'customPlugin']),
   manifest: z.any().optional(),
   settings: z.any().optional(),
