@@ -559,7 +559,7 @@ describe('chatMessage actions', () => {
       });
 
       // 确保 mutate 调用了正确的参数
-      expect(mutate).toHaveBeenCalledWith([activeId, activeTopicId]);
+      expect(mutate).toHaveBeenCalledWith(['SWR_USE_FETCH_MESSAGES', activeId, activeTopicId]);
     });
     it('should handle errors during refreshing messages', async () => {
       useChatStore.setState({ refreshMessages: realRefreshMessages });
