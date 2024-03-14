@@ -2,15 +2,23 @@ import {
   BedrockRuntimeClient,
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
-import { AWSBedrockAnthropicStream, AWSBedrockLlama2Stream, StreamingTextResponse } from 'ai';
-import { experimental_buildAnthropicPrompt, experimental_buildLlama2Prompt } from 'ai/prompts';
+import {
+  AWSBedrockLlama2Stream,
+  AWSBedrockStream,
+  StreamingTextResponse
+} from 'ai';
+import { experimental_buildLlama2Prompt } from 'ai/prompts';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatStreamPayload, ModelProvider } from '../types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  ModelProvider,
+} from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
-import { DEBUG_CHAT_COMPLETION } from '../utils/env';
+import { buildAnthropicMessages } from '../utils/anthropicHelpers';
 
 export interface LobeBedrockAIParams {
   accessKeyId?: string;
@@ -38,23 +46,32 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     });
   }
 
-  async chat(payload: ChatStreamPayload) {
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     if (payload.model.startsWith('meta')) return this.invokeLlamaModel(payload);
 
-    return this.invokeClaudeModel(payload);
+    return this.invokeClaudeModel(payload, options);
   }
 
   private invokeClaudeModel = async (
     payload: ChatStreamPayload,
+    options?: ChatCompetitionOptions
   ): Promise<StreamingTextResponse> => {
+    const { max_tokens, messages, model, temperature, top_p } = payload;
+    const system_message = messages.find((m) => m.role === 'system');
+    const user_messages = messages.filter((m) => m.role !== 'system');
+
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
       body: JSON.stringify({
-        max_tokens_to_sample: payload.max_tokens || 400,
-        prompt: experimental_buildAnthropicPrompt(payload.messages as any),
+        anthropic_version: "bedrock-2023-05-31",
+        max_tokens: max_tokens || 4096,
+        messages: buildAnthropicMessages(user_messages),
+        system: system_message?.content as string,
+        temperature: temperature,
+        top_p: top_p,
       }),
       contentType: 'application/json',
-      modelId: payload.model,
+      modelId: model,
     });
 
     try {
@@ -62,11 +79,11 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       const bedrockResponse = await this.client.send(command);
 
       // Convert the response into a friendly text-stream
-      const stream = AWSBedrockAnthropicStream(bedrockResponse);
+      const stream = AWSBedrockStream(bedrockResponse, options?.callback, (chunk) => chunk.delta?.text);
 
       const [debug, output] = stream.tee();
 
-      if (DEBUG_CHAT_COMPLETION) {
+      if (process.env.DEBUG_BEDROCK_CHAT_COMPLETION === '1') {
         debugStream(debug).catch(console.error);
       }
 
@@ -88,15 +105,18 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     }
   };
 
-  private invokeLlamaModel = async (payload: ChatStreamPayload) => {
+  private invokeLlamaModel = async (
+    payload: ChatStreamPayload
+  ): Promise<StreamingTextResponse> => {
+    const { max_tokens, messages, model } = payload;
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
       body: JSON.stringify({
-        max_gen_len: payload.max_tokens || 400,
-        prompt: experimental_buildLlama2Prompt(payload.messages as any),
+        max_gen_len: max_tokens || 400,
+        prompt: experimental_buildLlama2Prompt(messages as any),
       }),
       contentType: 'application/json',
-      modelId: payload.model,
+      modelId: model,
     });
 
     try {
@@ -108,7 +128,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
       const [debug, output] = stream.tee();
 
-      if (DEBUG_CHAT_COMPLETION) {
+      if (process.env.DEBUG_BEDROCK_CHAT_COMPLETION === '1') {
         debugStream(debug).catch(console.error);
       }
       // Respond with the stream
@@ -129,6 +149,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       });
     }
   };
+
 }
 
 export default LobeBedrockAI;
