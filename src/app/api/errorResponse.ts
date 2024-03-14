@@ -50,6 +50,9 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.MistralBizError: {
       return 481;
     }
+    case AgentRuntimeErrorType.GroqBizError: {
+      return 482;
+    }
   }
   return errorType as number;
 };

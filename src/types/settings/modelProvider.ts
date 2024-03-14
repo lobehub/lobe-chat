@@ -71,11 +71,17 @@ export interface MistralConfig {
   enabled: boolean;
 }
 
+export interface GroqConfig {
+  apiKey?: string;
+  enabled: boolean;
+}
+
 export interface GlobalLLMConfig {
   anthropic: AnthropicConfig;
   azure: AzureOpenAIConfig;
   bedrock: AWSBedrockConfig;
   google: GoogleConfig;
+  groq: GroqConfig;
   mistral: MistralConfig;
   moonshot: MoonshotConfig;
   ollama: OllamaConfig;

@@ -4,6 +4,7 @@ export * from './BaseAI';
 export { LobeBedrockAI } from './bedrock';
 export * from './error';
 export { LobeGoogleAI } from './google';
+export { LobeGroq } from './groq';
 export { LobeMistralAI } from './mistral';
 export { LobeMoonshotAI } from './moonshot';
 export { LobeOllamaAI } from './ollama';
