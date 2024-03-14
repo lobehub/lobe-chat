@@ -148,7 +148,7 @@
     "uuid": "^9",
     "yaml": "^2",
     "zod": "^3",
-    "zustand": "^4.4",
+    "zustand": "^4.5.2",
     "zustand-utils": "^1.3.2"
   },
   "devDependencies": {

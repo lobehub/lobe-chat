@@ -23,19 +23,7 @@ class _TopicModel extends BaseModel {
     super('topics', DB_TopicSchema);
   }
 
-  async create({ title, favorite, sessionId, messages }: CreateTopicParams, id = nanoid()) {
-    const topic = await this._add({ favorite: favorite ? 1 : 0, sessionId, title: title }, id);
-
-    // add topicId to these messages
-    if (messages) {
-      await this.db.messages.where('id').anyOf(messages).modify({ topicId: topic.id });
-    }
-    return topic;
-  }
-
-  async batchCreate(topics: CreateTopicParams[]) {
-    return this._batchAdd(topics.map((t) => ({ ...t, favorite: t.favorite ? 1 : 0 })));
-  }
+  // **************** Query *************** //
 
   async query({ pageSize = 9999, current = 0, sessionId }: QueryTopicParams): Promise<ChatTopic[]> {
     const offset = current * pageSize;
@@ -56,90 +44,6 @@ class _TopicModel extends BaseModel {
     const pagedTopics = sortedTopics.slice(offset, offset + pageSize);
 
     return pagedTopics.map((i) => this.mapToChatTopic(i));
-  }
-
-  async findBySessionId(sessionId: string) {
-    return this.table.where({ sessionId }).toArray();
-  }
-
-  async findById(id: string): Promise<DBModel<DB_Topic>> {
-    return this.table.get(id);
-  }
-
-  /**
-   * Deletes a topic and all messages associated with it.
-   */
-  async delete(id: string) {
-    return this.db.transaction('rw', [this.table, this.db.messages], async () => {
-      // Delete all messages associated with the topic
-      const messages = await this.db.messages.where('topicId').equals(id).toArray();
-
-      if (messages.length > 0) {
-        const messageIds = messages.map((msg) => msg.id);
-        await this.db.messages.bulkDelete(messageIds);
-      }
-
-      await this.table.delete(id);
-    });
-  }
-
-  /**
-   * Deletes multiple topic based on the sessionId.
-   *
-   * @param {string} sessionId - The identifier of the assistant associated with the messages.
-   * @returns {Promise<void>}
-   */
-  async batchDeleteBySessionId(sessionId: string): Promise<void> {
-    // use sessionId as the filter criteria in the query.
-    const query = this.table.where('sessionId').equals(sessionId);
-
-    // Retrieve a collection of message IDs that satisfy the criteria
-    const topicIds = await query.primaryKeys();
-
-    // Use the bulkDelete method to delete all selected messages in bulk
-    return this.table.bulkDelete(topicIds);
-  }
-
-  async clearTable() {
-    return this.table.clear();
-  }
-
-  async update(id: string, data: Partial<DB_Topic>) {
-    return super._update(id, { ...data, updatedAt: Date.now() });
-  }
-
-  async toggleFavorite(id: string, newState?: boolean) {
-    const topic = await this.findById(id);
-    if (!topic) {
-      throw new Error(`Topic with id ${id} not found`);
-    }
-
-    // Toggle the 'favorite' status
-    const nextState = typeof newState !== 'undefined' ? newState : !topic.favorite;
-
-    await this.update(id, { favorite: nextState ? 1 : 0 });
-
-    return nextState;
-  }
-
-  /**
-   * Deletes multiple topics and all messages associated with them in a transaction.
-   */
-  async batchDelete(topicIds: string[]) {
-    return this.db.transaction('rw', [this.table, this.db.messages], async () => {
-      // Iterate over each topicId and delete related messages, then delete the topic itself
-      for (const topicId of topicIds) {
-        // Delete all messages associated with the topic
-        const messages = await this.db.messages.where('topicId').equals(topicId).toArray();
-        if (messages.length > 0) {
-          const messageIds = messages.map((msg) => msg.id);
-          await this.db.messages.bulkDelete(messageIds);
-        }
-
-        // Delete the topic
-        await this.table.delete(topicId);
-      }
-    });
   }
 
   queryAll() {
@@ -201,6 +105,29 @@ class _TopicModel extends BaseModel {
     return uniqueTopics.map((i) => ({ ...i, favorite: !!i.favorite }));
   }
 
+  async findBySessionId(sessionId: string) {
+    return this.table.where({ sessionId }).toArray();
+  }
+
+  async findById(id: string): Promise<DBModel<DB_Topic>> {
+    return this.table.get(id);
+  }
+
+  // **************** Create *************** //
+
+  async create({ title, favorite, sessionId, messages }: CreateTopicParams, id = nanoid()) {
+    const topic = await this._add({ favorite: favorite ? 1 : 0, sessionId, title: title }, id);
+
+    // add topicId to these messages
+    if (messages) {
+      await this.db.messages.where('id').anyOf(messages).modify({ topicId: topic.id });
+    }
+    return topic;
+  }
+  async batchCreate(topics: CreateTopicParams[]) {
+    return this._batchAdd(topics.map((t) => ({ ...t, favorite: t.favorite ? 1 : 0 })));
+  }
+
   async duplicateTopic(topicId: string, newTitle?: string) {
     return this.db.transaction('rw', this.db.topics, this.db.messages, async () => {
       // Step 1: get DB_Topic
@@ -225,6 +152,86 @@ class _TopicModel extends BaseModel {
       return id;
     });
   }
+
+  // **************** Delete *************** //
+
+  /**
+   * Deletes a topic and all messages associated with it.
+   */
+  async delete(id: string) {
+    return this.db.transaction('rw', [this.table, this.db.messages], async () => {
+      // Delete all messages associated with the topic
+      const messages = await this.db.messages.where('topicId').equals(id).toArray();
+
+      if (messages.length > 0) {
+        const messageIds = messages.map((msg) => msg.id);
+        await this.db.messages.bulkDelete(messageIds);
+      }
+
+      await this.table.delete(id);
+    });
+  }
+
+  /**
+   * Deletes multiple topic based on the sessionId.
+   *
+   * @param {string} sessionId - The identifier of the assistant associated with the messages.
+   * @returns {Promise<void>}
+   */
+  async batchDeleteBySessionId(sessionId: string): Promise<void> {
+    // use sessionId as the filter criteria in the query.
+    const query = this.table.where('sessionId').equals(sessionId);
+
+    // Retrieve a collection of message IDs that satisfy the criteria
+    const topicIds = await query.primaryKeys();
+
+    // Use the bulkDelete method to delete all selected messages in bulk
+    return this.table.bulkDelete(topicIds);
+  }
+  /**
+   * Deletes multiple topics and all messages associated with them in a transaction.
+   */
+  async batchDelete(topicIds: string[]) {
+    return this.db.transaction('rw', [this.table, this.db.messages], async () => {
+      // Iterate over each topicId and delete related messages, then delete the topic itself
+      for (const topicId of topicIds) {
+        // Delete all messages associated with the topic
+        const messages = await this.db.messages.where('topicId').equals(topicId).toArray();
+        if (messages.length > 0) {
+          const messageIds = messages.map((msg) => msg.id);
+          await this.db.messages.bulkDelete(messageIds);
+        }
+
+        // Delete the topic
+        await this.table.delete(topicId);
+      }
+    });
+  }
+
+  async clearTable() {
+    return this.table.clear();
+  }
+
+  // **************** Update *************** //
+  async update(id: string, data: Partial<DB_Topic>) {
+    return this._update(id, data);
+  }
+
+  async toggleFavorite(id: string, newState?: boolean) {
+    const topic = await this.findById(id);
+    if (!topic) {
+      throw new Error(`Topic with id ${id} not found`);
+    }
+
+    // Toggle the 'favorite' status
+    const nextState = typeof newState !== 'undefined' ? newState : !topic.favorite;
+
+    await this.update(id, { favorite: nextState ? 1 : 0 });
+
+    return nextState;
+  }
+
+  // **************** Helper *************** //
 
   private mapToChatTopic = (dbTopic: DBModel<DB_Topic>): ChatTopic => ({
     ...dbTopic,
