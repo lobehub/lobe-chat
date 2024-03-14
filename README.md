@@ -216,14 +216,14 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                    | Description                                                                                                                                                                                                                     |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Charts & Diagrams](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **pyxl** on **2024-02-05**</sup> | Mermaid Diagrams, Schemes for Presentations, Analysis, research websites, pie charts.<br/>`chart` `diagram`                                                                                                                     |
-| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-02-02**</sup> | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                                                                                                      |
-| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | Get realtime crypto price, BTC, ETH, BNB, and the latest insights.The latest coin news and airdrop opportunities.<br/>`crypto` `btc` `eth` `bnb`                                                                                |
-| [Bilibili](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>       | Dive into Bilibili's vast content with features like keyword video search, replay access, interactive danmaku, trending video recommendations, and hot-search insights, all at your fingertips.<br/>`video` `bilibili` `search` |
+| Recent Submits                                                                                                    | Description                                                                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Calendar Assistant](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-03-13**</sup>  | A plugin to manage your calendar events # will auto generate i18n in workflow<br/>`calendar` `schedule` `will-auto-generate-i-18-n-in-workflow`  |
+| [Charts & Diagrams](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **pyxl** on **2024-02-05**</sup> | Mermaid Diagrams, Schemes for Presentations, Analysis, research websites, pie charts.<br/>`chart` `diagram`                                      |
+| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-02-02**</sup> | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                       |
+| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | Get realtime crypto price, BTC, ETH, BNB, and the latest insights.The latest coin news and airdrop opportunities.<br/>`crypto` `btc` `eth` `bnb` |
 
-> 📊 Total plugins: [<kbd>**58**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**59**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
