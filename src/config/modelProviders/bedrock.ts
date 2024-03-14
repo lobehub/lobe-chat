@@ -12,9 +12,17 @@ const Bedrock: ModelProviderCard = {
     },
     {
       description:
-        'Claude 3 Sonnet，上下文大小等于 200k。Anthropic 推出的 Claude 3 Sonnet 模型在智能和速度之间取得理想的平衡，尤其是在处理企业工作负载方面。该模型提供最大的效用，同时价格低于竞争产品，并且其经过精心设计，是大规模部署人工智能的可信赖、高耐久性骨干模型。',
+        'Anthropic 推出的 Claude 3 Sonnet 模型在智能和速度之间取得理想的平衡，尤其是在处理企业工作负载方面。该模型提供最大的效用，同时价格低于竞争产品，并且其经过精心设计，是大规模部署人工智能的可信赖、高耐久性骨干模型。 Claude 3 Sonnet 可以处理图像和返回文本输出，并且提供 200K 上下文窗口。',
       displayName: 'Claude 3 Sonnet',
       id: 'anthropic.claude-3-sonnet-20240229-v1:0',
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
+        'Claude 3 Haiku 是 Anthropic 最快速、最紧凑的模型，具有近乎即时的响应能力。该模型可以快速回答简单的查询和请求。客户将能够构建模仿人类交互的无缝人工智能体验。 Claude 3 Haiku 可以处理图像和返回文本输出，并且提供 200K 上下文窗口。',
+      displayName: 'Claude 3 Haiku',
+      id: 'anthropic.claude-3-haiku-20240307-v1:0',
       tokens: 200_000,
       vision: true,
     },
