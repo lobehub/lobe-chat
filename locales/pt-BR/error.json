@@ -43,6 +43,7 @@
     "InvalidAzureAPIKey": "Chave de API Azure incorreta ou vazia, por favor, verifique a chave de API Azure e tente novamente",
     "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
     "InvalidGoogleAPIKey": "Chave de API Google incorreta ou vazia, por favor, verifique a chave de API Google e tente novamente",
+    "InvalidGroqAPIKey": "Chave de API Groq AI inválida ou em branco, verifique a chave de API Groq e tente novamente",
     "InvalidMistralAPIKey": "Chave de API Mistral AI inválida ou vazia. Por favor, verifique a chave de API Mistral e tente novamente.",
     "InvalidMoonshotAPIKey": "A chave da API Moonshot AI está incorreta ou vazia. Por favor, verifique a chave da API Moonshot e tente novamente.",
     "InvalidOllamaArgs": "Configuração Ollama inválida, verifique a configuração do Ollama e tente novamente",

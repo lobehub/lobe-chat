@@ -43,6 +43,7 @@
     "InvalidAzureAPIKey": "Der Azure API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Azure API-Schlüssel und versuchen Sie es erneut.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidGoogleAPIKey": "Der Google API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Google API-Schlüssel und versuchen Sie es erneut.",
+    "InvalidGroqAPIKey": "Der Groq API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Groq API-Schlüssel und versuchen Sie es erneut.",
     "InvalidMistralAPIKey": "Der Mistral AI-API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Mistral-API-Schlüssel und versuchen Sie es erneut.",
     "InvalidMoonshotAPIKey": "Ungültiger oder leerer Moonshot AI API-Schlüssel. Bitte überprüfen Sie den Moonshot API-Schlüssel und versuchen Sie es erneut.",
     "InvalidOllamaArgs": "Ollama-Konfiguration ist ungültig. Bitte überprüfen Sie die Ollama-Konfiguration und versuchen Sie es erneut.",

@@ -43,6 +43,7 @@
     "InvalidAzureAPIKey": "잘못된 또는 비어 있는 Azure API Key입니다. Azure API Key를 확인한 후 다시 시도하십시오.",
     "InvalidBedrockCredentials": "Bedrock 인증에 실패했습니다. AccessKeyId/SecretAccessKey를 확인한 후 다시 시도하십시오.",
     "InvalidGoogleAPIKey": "잘못된 또는 비어 있는 Google API Key입니다. Google API Key를 확인한 후 다시 시도하십시오.",
+    "InvalidGroqAPIKey": "잘못된 또는 비어 있는 Groq API Key입니다. Groq API Key를 확인한 후 다시 시도하십시오.",
     "InvalidMistralAPIKey": "Mistral AI API 키가 잘못되었거나 비어 있습니다. Mistral API 키를 확인한 후 다시 시도해주세요.",
     "InvalidMoonshotAPIKey": "Moonshot AI API 키가 잘못되었거나 비어 있습니다. Moonshot API 키를 확인한 후 다시 시도해주세요.",
     "InvalidOllamaArgs": "Ollama 구성이 잘못되었습니다. Ollama 구성을 확인한 후 다시 시도하십시오.",

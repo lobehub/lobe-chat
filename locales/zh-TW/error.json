@@ -43,6 +43,7 @@
     "InvalidAzureAPIKey": "Azure API Key 不正確或為空，請檢查 Azure API Key 後重試",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
     "InvalidGoogleAPIKey": "Google API Key 不正確或為空，請檢查 Google API Key 後重試",
+    "InvalidGroqAPIKey": "Groq API 金鑰不正確或為空，請檢查 Groq API 金鑰後重試",
     "InvalidMistralAPIKey": "Mistral AI API Key 不正確或為空，請檢查 Mistral API Key 後重試",
     "InvalidMoonshotAPIKey": "Moonshot AI API 金鑰不正確或為空，請檢查 Moonshot API 金鑰後重試",
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",

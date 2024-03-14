@@ -43,6 +43,7 @@
     "InvalidAzureAPIKey": "Nieprawidłowy lub pusty klucz API Azure, prosimy sprawdzić klucz API Azure i spróbować ponownie.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
     "InvalidGoogleAPIKey": "Nieprawidłowy lub pusty klucz API Google, prosimy sprawdzić klucz API Google i spróbować ponownie.",
+    "InvalidGroqAPIKey": "Nieprawidłowy klucz API Groq, prosimy sprawdzić klucz API Groq i spróbować ponownie.",
     "InvalidMistralAPIKey": "Mistral AI API Key 不正确或为空，请检查 Mistral API Key 后重试",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",

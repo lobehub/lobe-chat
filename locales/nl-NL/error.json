@@ -43,6 +43,7 @@
     "InvalidAzureAPIKey": "Incorrect or empty Azure API Key, please check the Azure API Key and retry",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidGoogleAPIKey": "Incorrect or empty Google API Key, please check the Google API Key and retry",
+    "InvalidGroqAPIKey": "Groq API Key is onjuist of leeg. Controleer de Groq API Key en probeer het opnieuw.",
     "InvalidMistralAPIKey": "Ongeldige of lege Mistral AI API-sleutel. Controleer de Mistral API-sleutel en probeer het opnieuw.",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",

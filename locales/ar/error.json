@@ -43,6 +43,7 @@
     "InvalidAzureAPIKey": "مفتاح Azure API غير صحيح أو فارغ، يرجى التحقق من مفتاح Azure API وإعادة المحاولة",
     "InvalidBedrockCredentials": "فشلت مصادقة Bedrock، يرجى التحقق من AccessKeyId/SecretAccessKey وإعادة المحاولة",
     "InvalidGoogleAPIKey": "مفتاح Google API غير صحيح أو فارغ، يرجى التحقق من مفتاح Google API وإعادة المحاولة",
+    "InvalidGroqAPIKey": "مفتاح Groq API غير صحيح أو فارغ، يرجى التحقق من مفتاح Groq API وإعادة المحاولة",
     "InvalidMistralAPIKey": "مفتاح Mistral AI API غير صحيح أو فارغ، يرجى التحقق من مفتاح Mistral API وإعادة المحاولة",
     "InvalidMoonshotAPIKey": "مفتاح API لـ Moonshot AI غير صحيح أو فارغ، يرجى التحقق من مفتاح API لـ Moonshot وإعادة المحاولة",
     "InvalidOllamaArgs": "تكوين Ollama غير صحيح، يرجى التحقق من تكوين Ollama وإعادة المحاولة",
