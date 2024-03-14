@@ -10,6 +10,7 @@ class _UserModel extends BaseModel {
   constructor() {
     super('users', DB_UserSchema);
   }
+  // **************** Query *************** //
 
   getUser = async (): Promise<DB_User & { id: number }> => {
     const noUser = !(await this.table.count());
@@ -21,17 +22,19 @@ class _UserModel extends BaseModel {
     return list[0];
   };
 
+  // **************** Create *************** //
+
   create = async (user: DB_User) => {
     return this.table.put(user);
   };
 
-  private update = async (id: number, value: DeepPartial<DB_User>) => {
-    return this.table.update(id, value);
-  };
+  // **************** Delete *************** //
 
   clear() {
     return this.table.clear();
   }
+
+  // **************** Update *************** //
 
   async updateSettings(settings: DeepPartial<GlobalSettings>) {
     const user = await this.getUser();
@@ -50,6 +53,12 @@ class _UserModel extends BaseModel {
 
     return this.update(user.id, { avatar });
   }
+
+  // **************** Helper *************** //
+
+  private update = async (id: number, value: DeepPartial<DB_User>) => {
+    return this.table.update(id, value);
+  };
 }
 
 export const UserModel = new _UserModel();
