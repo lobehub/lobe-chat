@@ -99,6 +99,14 @@
         "title": "API-ключ"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Введите API-ключ от Groq",
+        "placeholder": "Ключ API Groq",
+        "title": "API-ключ"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {

@@ -43,6 +43,7 @@
     "InvalidAzureAPIKey": "Неверный или пустой ключ API Azure, пожалуйста, проверьте ключ API Azure и повторите попытку",
     "InvalidBedrockCredentials": "Аутентификация Bedrock не прошла, пожалуйста, проверьте AccessKeyId/SecretAccessKey и повторите попытку",
     "InvalidGoogleAPIKey": "Неверный или пустой ключ API Google, пожалуйста, проверьте ключ API Google и повторите попытку",
+    "InvalidGroqAPIKey": "Неверный или пустой ключ API Groq, пожалуйста, проверьте ключ API Groq и повторите попытку",
     "InvalidMistralAPIKey": "Неверный или пустой ключ API Mistral AI. Пожалуйста, проверьте ключ API Mistral и повторите попытку",
     "InvalidMoonshotAPIKey": "Moonshot AI API Key неверный или пустой, пожалуйста, проверьте ключ API Moonshot и повторите попытку",
     "InvalidOllamaArgs": "Неверная конфигурация Ollama, пожалуйста, проверьте конфигурацию Ollama и повторите попытку",
