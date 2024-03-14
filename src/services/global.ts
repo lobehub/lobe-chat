@@ -1,4 +1,4 @@
-import { syncBus } from '@/database/core';
+import { dataSync } from '@/database/core';
 import { GlobalServerConfig } from '@/types/settings';
 import { StartDataSyncParams } from '@/types/sync';
 
@@ -26,15 +26,15 @@ class GlobalService {
   enabledSync = async (params: StartDataSyncParams) => {
     if (typeof window === 'undefined') return false;
 
-    await syncBus.startDataSync(params);
+    await dataSync.startDataSync(params);
     return true;
   };
 
   reconnect = async (params: StartDataSyncParams) => {
     if (typeof window === 'undefined') return false;
 
-    await syncBus.reconnect(params);
-    await syncBus.manualSync();
+    await dataSync.reconnect(params);
+    await dataSync.manualSync();
     return true;
   };
 }

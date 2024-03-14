@@ -7,6 +7,7 @@ import {
   LucideCloudy,
   LucideLaptop,
   LucideRefreshCw,
+  LucideRouter,
   LucideSmartphone,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -90,7 +91,7 @@ const SyncStatusTag = memo(() => {
                     )}
                   </Flexbox>
                   <Typography.Text type={'secondary'}>
-                    {user.device} · {user.os} · {user.browser}
+                    {user.device} · {user.os} · {user.browser} · {user.clientID}
                   </Typography.Text>
                 </Flexbox>
               </Flexbox>
@@ -98,13 +99,20 @@ const SyncStatusTag = memo(() => {
           </Flexbox>
         </Flexbox>
       }
-      // open
+      open
       placement={'bottomLeft'}
     >
       <ATag
         bordered={false}
         color={syncStatus !== 'synced' ? 'blue' : 'green'}
-        icon={<Icon icon={isSyncing ? LucideRefreshCw : LucideCloudy} spin={isSyncing} />}
+        icon={
+          <Icon
+            icon={
+              syncStatus === 'ready' ? LucideRouter : isSyncing ? LucideRefreshCw : LucideCloudy
+            }
+            spin={isSyncing}
+          />
+        }
       >
         {text[syncStatus]}
       </ATag>

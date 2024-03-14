@@ -2,6 +2,7 @@ import { LobeDBSchemaMap } from '@/database/core/db';
 
 export type OnSyncEvent = (tableKey: keyof LobeDBSchemaMap) => void;
 export type OnSyncStatusChange = (status: PeerSyncStatus) => void;
+export type OnAwarenessChange = (state: SyncAwarenessState[]) => void;
 
 export type PeerSyncStatus = 'syncing' | 'synced' | 'ready';
 
@@ -10,7 +11,7 @@ export interface StartDataSyncParams {
     name: string;
     password?: string;
   };
-  onAwarenessChange: (state: SyncAwarenessState[]) => void;
+  onAwarenessChange: OnAwarenessChange;
   onSyncEvent: OnSyncEvent;
   onSyncStatusChange: OnSyncStatusChange;
   signaling?: string;

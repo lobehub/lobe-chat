@@ -1,8 +1,13 @@
 import { throttle } from 'lodash-es';
-import { WebrtcProvider } from 'y-webrtc';
-import { Doc } from 'yjs';
+import type { WebrtcProvider } from 'y-webrtc';
+import type { Doc, Transaction } from 'yjs';
 
-import { OnSyncEvent, OnSyncStatusChange, StartDataSyncParams } from '@/types/sync';
+import {
+  OnAwarenessChange,
+  OnSyncEvent,
+  OnSyncStatusChange,
+  StartDataSyncParams,
+} from '@/types/sync';
 
 import { LobeDBSchemaMap, LocalDBInstance } from './db';
 
@@ -12,27 +17,35 @@ declare global {
   }
 }
 
-let ydoc: Doc;
-
-if (typeof window !== 'undefined') {
-  ydoc = new Doc();
-}
-
-class SyncBus {
-  private ydoc: Doc = ydoc;
+class DataSync {
+  private _ydoc: Doc | null = null;
   private provider: WebrtcProvider | null = null;
 
+  private syncParams!: StartDataSyncParams;
+  private onAwarenessChange!: OnAwarenessChange;
+
+  transact(fn: (transaction: Transaction) => unknown) {
+    this._ydoc?.transact(fn);
+  }
+
+  getYMap = (tableKey: keyof LobeDBSchemaMap) => {
+    return this._ydoc?.getMap(tableKey);
+  };
+
   startDataSync = async (params: StartDataSyncParams) => {
+    this.syncParams = params;
+    this.onAwarenessChange = params.onAwarenessChange;
+
     // 开发时由于存在 fast refresh 全局实例会缓存在运行时中
     // 因此需要在每次重新连接时清理上一次的实例
     if (window.__ONLY_USE_FOR_CLEANUP_IN_DEV) {
-      this.cleanProvider(window.__ONLY_USE_FOR_CLEANUP_IN_DEV);
+      await this.cleanConnection(window.__ONLY_USE_FOR_CLEANUP_IN_DEV);
     }
 
-    this.connect(params);
+    await this.connect(params);
   };
 
-  connect = (params: StartDataSyncParams) => {
+  connect = async (params: StartDataSyncParams) => {
     const {
       channel,
       onSyncEvent,
@@ -41,12 +54,16 @@ class SyncBus {
       onAwarenessChange,
       signaling = 'wss://y-webrtc-signaling.lobehub.com',
     } = params;
+    await this.initYDoc();
+
     console.log('[YJS] start to listen sync event...');
     this.initYjsObserve(onSyncEvent, onSyncStatusChange);
 
     console.log(`[WebRTC] init provider... room: ${channel.name}`);
+    const { WebrtcProvider } = await import('y-webrtc');
+
     // clients connected to the same room-name share document updates
-    this.provider = new WebrtcProvider(channel.name, this.ydoc, {
+    this.provider = new WebrtcProvider(channel.name, this._ydoc!, {
       password: channel.password,
       signaling: [signaling],
     });
@@ -70,10 +87,6 @@ class SyncBus {
       }
     });
 
-    // provider.on('peers', (peers) => {
-    //   console.log(peers);
-    // });
-
     // 当各方的数据均完成同步后，YJS 对象之间的数据已经一致时，触发 synced 事件
     provider.on('synced', async ({ synced }) => {
       console.log('[WebRTC] peer sync status:', synced);
@@ -85,54 +98,60 @@ class SyncBus {
         console.groupEnd();
         console.log('[WebRTC] yjs data init success');
       } else {
-        console.log('[WebRTC] sync failed,try to reconnect...');
-        await this.reconnect(params);
+        console.log('[WebRTC] data not sync, try to reconnect in 1s...');
+        // await this.reconnect(params);
+        setTimeout(() => {
+          onSyncStatusChange?.('syncing');
+          this.reconnect(params);
+        }, 1000);
       }
     });
 
-    const awareness = provider.awareness;
-
-    awareness.setLocalState({ clientID: awareness.clientID, user });
-    onAwarenessChange?.([{ ...user, clientID: awareness.clientID, current: true }]);
-
-    awareness.on('change', () => {
-      const state = Array.from(awareness.getStates().values()).map((s) => ({
-        ...s.user,
-        clientID: s.clientID,
-        current: s.clientID === awareness.clientID,
-      }));
-
-      onAwarenessChange?.(state);
-    });
+    this.initAwareness({ onAwarenessChange, user });
 
     return provider;
   };
 
-  reconnect = async (params: StartDataSyncParams) => {
-    this.cleanProvider(this.provider);
-
-    this.connect(params);
+  manualSync = async () => {
+    console.log('[WebRTC] try to manual init sync...');
+    await this.reconnect(this.syncParams);
   };
 
-  private cleanProvider(provider: WebrtcProvider | null) {
+  reconnect = async (params: StartDataSyncParams) => {
+    await this.cleanConnection(this.provider);
+
+    await this.connect(params);
+  };
+
+  private initYDoc = async () => {
+    if (typeof window === 'undefined') return;
+
+    console.log('[YJS] init YDoc...');
+    const { Doc } = await import('yjs');
+    this._ydoc = new Doc();
+  };
+
+  private async cleanConnection(provider: WebrtcProvider | null) {
     if (provider) {
-      console.log(`[WebRTC] clean provider...`);
+      console.groupCollapsed(`[WebRTC] clean Connection...`);
+      console.log(`[WebRTC] clean awareness...`);
+      provider.awareness.destroy();
+
+      console.log(`[WebRTC] clean room...`);
+      provider.room?.disconnect();
       provider.room?.destroy();
-      provider.awareness?.destroy();
+
+      console.log(`[WebRTC] clean provider...`);
+      provider.disconnect();
       provider.destroy();
-      console.log(`[WebRTC] clean success`);
+
+      console.log(`[WebRTC] clean yjs doc...`);
+      this._ydoc?.destroy();
+      console.groupEnd();
+
       console.log(`[WebRTC] -------------------`);
     }
   }
-
-  manualSync = async () => {
-    console.log('[WebRTC] try to manual init sync...');
-    await this.initSync();
-  };
-
-  getYMap = (tableKey: keyof LobeDBSchemaMap) => {
-    return this.ydoc.getMap(tableKey);
-  };
 
   private initSync = async () => {
     await Promise.all(
@@ -162,7 +181,7 @@ class SyncBus {
     // eslint-disable-next-line no-undef
     let debounceTimer: NodeJS.Timeout;
 
-    yItemMap.observe(async (event) => {
+    yItemMap?.observe(async (event) => {
       // abort local change
       if (event.transaction.local) return;
 
@@ -198,10 +217,10 @@ class SyncBus {
 
       updateSyncEvent(tableKey);
 
-      // 设置定时器，500ms 后更新状态为'synced'
+      // 设置定时器，2000ms 后更新状态为'synced'
       debounceTimer = setTimeout(() => {
         onSyncStatusChange('synced');
-      }, 1000);
+      }, 2000);
     });
   };
 
@@ -225,17 +244,40 @@ class SyncBus {
       const batchItems = items.slice(start, end);
 
       // 将当前批次的数据推送到 Yjs 中
-
-      this.ydoc.transact(() => {
+      this._ydoc?.transact(() => {
         batchItems.forEach((item) => {
-          // TODO: 需要改表，所有 table 都需要有 id 字段
-          yItemMap.set(item.id || (item as any).identifier, item);
+          yItemMap!.set(item.id, item);
         });
       });
     }
 
-    console.log('[DB]:', tableKey, yItemMap.size);
+    console.log('[DB]:', tableKey, yItemMap?.size);
+  };
+
+  private initAwareness = ({ user }: Pick<StartDataSyncParams, 'user' | 'onAwarenessChange'>) => {
+    if (!this.provider) return;
+
+    const awareness = this.provider.awareness;
+
+    awareness.setLocalState({ clientID: awareness.clientID, user });
+    this.onAwarenessChange?.([{ ...user, clientID: awareness.clientID, current: true }]);
+
+    awareness.on('change', () => this.syncAwarenessToUI());
+  };
+
+  private syncAwarenessToUI = async () => {
+    const awareness = this.provider?.awareness;
+
+    if (!awareness) return;
+
+    const state = Array.from(awareness.getStates().values()).map((s) => ({
+      ...s.user,
+      clientID: s.clientID,
+      current: s.clientID === awareness.clientID,
+    }));
+
+    this.onAwarenessChange?.(state);
   };
 }
 
-export const syncBus = new SyncBus();
+export const dataSync = new DataSync();

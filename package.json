@@ -148,6 +148,7 @@
     "use-merge-value": "^1",
     "utility-types": "^3",
     "uuid": "^9",
+    "y-protocols": "^1.0.6",
     "y-webrtc": "^10.3.0",
     "yaml": "^2",
     "yjs": "^13.6.14",

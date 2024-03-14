@@ -1,3 +1,3 @@
 export { LocalDBInstance } from './db';
 export * from './model';
-export { syncBus } from './sync';
+export { dataSync } from './sync';

@@ -5,7 +5,7 @@ import { DBBaseFieldsSchema } from '@/database/core/types/db';
 import { nanoid } from '@/utils/uuid';
 
 import { LocalDB, LocalDBInstance, LocalDBSchema } from './db';
-import { syncBus } from './sync';
+import { dataSync } from './sync';
 
 export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]['table']> {
   protected readonly db: LocalDB;
@@ -23,7 +23,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
   }
 
   get yMap() {
-    return syncBus.getYMap(this._tableName);
+    return dataSync.getYMap(this._tableName);
   }
 
   /**
@@ -183,7 +183,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
   protected async _deleteWithSync(id: string) {
     const result = await this.table.delete(id);
     // sync delete data to yjs data map
-    this.yMap.delete(id);
+    this.yMap?.delete(id);
     return result;
   }
 
@@ -191,20 +191,22 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     await this.table.bulkDelete(keys);
     // sync delete data to yjs data map
 
-    keys.forEach((id) => {
-      this.yMap.delete(id);
+    dataSync.transact(() => {
+      keys.forEach((id) => {
+        this.yMap?.delete(id);
+      });
     });
   }
 
   protected async _clearWithSync() {
     const result = await this.table.clear();
     // sync clear data to yjs data map
-    this.yMap.clear();
+    this.yMap?.clear();
     return result;
   }
 
   private updateYMapItem = async (id: string) => {
     const newData = await this.table.get(id);
-    this.yMap.set(id, newData);
+    this.yMap?.set(id, newData);
   };
 }
