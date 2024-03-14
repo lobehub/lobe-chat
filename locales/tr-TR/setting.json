@@ -32,6 +32,11 @@
   },
   "llm": {
     "Anthropic": {
+      "endpoint": {
+        "desc": "默认地址以外，必须包含 http(s)://",
+        "placeholder": "https://api.anthropic.com",
+        "title": "API Proxy Adresi"
+      },
       "title": "Anthropic",
       "token": {
         "desc": "Anthropic 的 API 密钥",

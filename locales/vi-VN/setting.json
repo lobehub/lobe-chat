@@ -32,6 +32,11 @@
   },
   "llm": {
     "Anthropic": {
+      "endpoint": {
+        "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
+        "placeholder": "https://api.anthropic.com",
+        "title": "Địa chỉ Proxy API"
+      },
       "title": "Anthropic",
       "token": {
         "desc": "Nhập API Key từ Anthropic",

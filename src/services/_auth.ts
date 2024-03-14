@@ -53,7 +53,9 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Anthropic: {
-      return { apiKey: modelProviderSelectors.anthropicAPIKey(useGlobalStore.getState()) };
+      const apiKey = modelProviderSelectors.anthropicAPIKey(useGlobalStore.getState());
+      const endpoint = modelProviderSelectors.anthropicProxyUrl(useGlobalStore.getState());
+      return { apiKey, endpoint };
     }
     
     case ModelProvider.Mistral: {
