@@ -15,12 +15,7 @@ import { LLMProviderConfigKey } from '../const';
 
 const useStyles = createStyles(({ css, token }) => ({
   markdown: css`
-    a {
-      font-size: 12px !important;
-    }
-
     p {
-      font-size: 12px !important;
       color: ${token.colorTextDescription} !important;
     }
   `,
@@ -110,7 +105,9 @@ const LLM = memo(() => {
             />
           ),
           desc: (
-            <Markdown className={styles.markdown}>{t('llm.OpenAI.azureApiVersion.desc')}</Markdown>
+            <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
+              {t('llm.OpenAI.azureApiVersion.desc')}
+            </Markdown>
           ),
           hidden: !useAzure,
           label: t('llm.OpenAI.azureApiVersion.title'),
