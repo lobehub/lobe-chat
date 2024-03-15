@@ -38,11 +38,13 @@
     "AzureBizError": "حدث خطأ في طلب خدمة Azure AI، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
     "BedrockBizError": "حدث خطأ في طلب خدمة Bedrock، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
     "GoogleBizError": "حدث خطأ في طلب خدمة Google، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
+    "GroqBizError": "حدث خطأ في خدمة Groq ، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
     "InvalidAccessCode": "كلمة المرور غير صحيحة أو فارغة، يرجى إدخال كلمة مرور الوصول الصحيحة أو إضافة مفتاح API مخصص",
     "InvalidAnthropicAPIKey": "مفتاح Anthropic API غير صحيح أو فارغ، يرجى التحقق من مفتاح Anthropic API وإعادة المحاولة",
     "InvalidAzureAPIKey": "مفتاح Azure API غير صحيح أو فارغ، يرجى التحقق من مفتاح Azure API وإعادة المحاولة",
     "InvalidBedrockCredentials": "فشلت مصادقة Bedrock، يرجى التحقق من AccessKeyId/SecretAccessKey وإعادة المحاولة",
     "InvalidGoogleAPIKey": "مفتاح Google API غير صحيح أو فارغ، يرجى التحقق من مفتاح Google API وإعادة المحاولة",
+    "InvalidGroqAPIKey": "مفتاح Groq API غير صحيح أو فارغ، يرجى التحقق من مفتاح Groq API وإعادة المحاولة",
     "InvalidMistralAPIKey": "مفتاح Mistral AI API غير صحيح أو فارغ، يرجى التحقق من مفتاح Mistral API وإعادة المحاولة",
     "InvalidMoonshotAPIKey": "مفتاح API لـ Moonshot AI غير صحيح أو فارغ، يرجى التحقق من مفتاح API لـ Moonshot وإعادة المحاولة",
     "InvalidOllamaArgs": "تكوين Ollama غير صحيح، يرجى التحقق من تكوين Ollama وإعادة المحاولة",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "أدخل مفتاح Google API الخاص بك لبدء الجلسة. لن يقوم التطبيق بتسجيل مفتاح الواجهة البرمجية الخاص بك",
         "title": "استخدام مفتاح Google API المخصص"
+      },
+      "Groq": {
+        "description": "قم بإدخال مفتاح API الخاص بك لـ Groq للبدء في الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
+        "title": "استخدام مفتاح API الخاص بـ Groq المخصص"
       },
       "Mistral": {
         "description": "أدخل مفتاح Mistral AI API الخاص بك لبدء الجلسة. لن يتم تسجيل مفتاح الواجهة البرمجية الخاص بك من قبل التطبيق",

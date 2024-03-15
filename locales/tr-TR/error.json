@@ -38,11 +38,13 @@
     "AzureBizError": "Azure AI servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "BedrockBizError": "Bedrock servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "GoogleBizError": "Google servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
+    "GroqBizError": "Groq hizmeti isteği sırasında bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "InvalidAccessCode": "Geçersiz Erişim Kodu: Geçersiz veya boş bir şifre girdiniz. Lütfen doğru erişim şifresini girin veya özel API Anahtarı ekleyin.",
     "InvalidAnthropicAPIKey": "Anthropic API Key geçersiz veya boş, lütfen Anthropic API Key'inizi kontrol edip tekrar deneyin",
     "InvalidAzureAPIKey": "Azure API Anahtarı yanlış veya boş, lütfen Azure API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidBedrockCredentials": "Bedrock kimlik doğrulaması geçersiz, lütfen AccessKeyId/SecretAccessKey bilgilerinizi kontrol edip tekrar deneyin",
     "InvalidGoogleAPIKey": "Google API Anahtarı yanlış veya boş, lütfen Google API Anahtarınızı kontrol edip tekrar deneyin",
+    "InvalidGroqAPIKey": "Groq API Anahtarı yanlış veya boş, lütfen Groq API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidMistralAPIKey": "Mistral AI API Anahtarı geçersiz veya boş. Lütfen Mistral API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidMoonshotAPIKey": "Geçersiz veya boş Moonshot AI API Anahtarı, lütfen Moonshot API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidOllamaArgs": "Ollama yapılandırması yanlış, lütfen Ollama yapılandırmasını kontrol edip tekrar deneyin",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Google API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez",
         "title": "Özel Google API Anahtarını kullan"
+      },
+      "Groq": {
+        "description": "Oturumu başlatmak için Groq API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
+        "title": "Özel Groq API Anahtarını Kullan"
       },
       "Mistral": {
         "description": "Mistral AI API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez",

@@ -99,6 +99,14 @@
         "title": "API 金鑰"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "填入來自 Groq 的 API 金鑰",
+        "placeholder": "Groq API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {
