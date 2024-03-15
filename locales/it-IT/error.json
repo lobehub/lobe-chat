@@ -53,6 +53,7 @@
     "MoonshotBizError": "Si è verificato un errore nel servizio Moonshot, si prega di controllare le informazioni seguenti o riprovare",
     "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
     "OllamaBizError": "Errore di servizio Ollama, controllare le informazioni seguenti o riprovare",
+    "OllamaServiceUnavailable": "Servizio Ollama non disponibile: controlla se è avviato correttamente",
     "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
     "PerplexityBizError": "Errore di business nella richiesta del servizio Perplexity AI, controlla le informazioni seguenti o riprova",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "Chiudi messaggio",
     "confirm": "Conferma e riprova",
+    "model": {
+      "Ollama": {
+        "confirm": "Scarica",
+        "description": "Inserisci l'etichetta del tuo modello Ollama per continuare la sessione",
+        "title": "Scarica il modello Ollama specificato"
+      }
+    },
     "oauth": {
       "description": "L'amministratore ha abilitato l'autenticazione di accesso unificata. Fai clic sul pulsante sottostante per accedere e sbloccare l'applicazione.",
       "success": "Accesso riuscito",

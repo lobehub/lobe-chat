@@ -193,6 +193,14 @@
     },
     "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates ✨"
   },
+  "ollama": {
+    "download": {
+      "desc": "Ollama lädt dieses Modell herunter. Bitte schließen Sie diese Seite nicht. Der Download wird an der abgebrochenen Stelle fortgesetzt, wenn Sie ihn erneut starten.",
+      "remainingTime": "Verbleibende Zeit",
+      "speed": "Download-Geschwindigkeit",
+      "title": "Modell {{model}} wird heruntergeladen"
+    }
+  },
   "plugin": {
     "addTooltip": "Benutzerdefiniertes Plugin",
     "clearDeprecated": "Entfernen Sie ungültige Plugins",

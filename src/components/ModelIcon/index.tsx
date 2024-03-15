@@ -5,6 +5,7 @@ import {
   Claude,
   Gemini,
   Gemma,
+  LLaVA,
   Meta,
   Minimax,
   Mistral,
@@ -29,6 +30,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model, size = 12 }) => {
   if (model.includes('claude')) return <Claude.Avatar size={size} />;
   if (model.includes('titan')) return <Aws.Avatar size={size} />;
   if (model.includes('llama')) return <Meta.Avatar size={size} />;
+  if (model.includes('llava')) return <LLaVA.Avatar size={size} />;
   if (model.includes('gemini')) return <Gemini.Avatar size={size} />;
   if (model.includes('gemma')) return <Gemma.Avatar size={size} />;
   if (model.includes('qwen')) return <Tongyi.Avatar background={Tongyi.colorPrimary} size={size} />;
