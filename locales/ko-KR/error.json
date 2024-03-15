@@ -53,6 +53,7 @@
     "MoonshotBizError": "요청한 문샷 비즈니스에 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "NoOpenAIAPIKey": "OpenAI API 키가 비어 있습니다. 사용자 정의 OpenAI API 키를 추가해주세요.",
     "OllamaBizError": "Ollama 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
+    "OllamaServiceUnavailable": "Ollama 서비스를 찾을 수 없습니다. 정상적으로 시작되었는지 확인하십시오.",
     "OpenAIBizError": "OpenAI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 문제를 해결하거나 다시 시도해주세요.",
     "PerplexityBizError": "Perplexity AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "PluginApiNotFound": "죄송합니다. 플러그인 설명서에 해당 API가 없습니다. 요청 메서드와 플러그인 설명서 API가 일치하는지 확인해주세요.",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "알림 닫기",
     "confirm": "확인 및 다시 시도",
+    "model": {
+      "Ollama": {
+        "confirm": "다운로드",
+        "description": "Ollama 모델 태그를 입력하여 세션을 계속할 수 있습니다.",
+        "title": "지정된 Ollama 모델 다운로드"
+      }
+    },
     "oauth": {
       "description": "관리자가 통합 로그인 인증을 활성화했습니다. 아래 버튼을 클릭하여 로그인하면 앱을 잠금 해제할 수 있습니다.",
       "success": "로그인 성공",

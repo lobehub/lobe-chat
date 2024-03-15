@@ -193,6 +193,14 @@
     },
     "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに ✨"
   },
+  "ollama": {
+    "download": {
+      "desc": "Ollama はモデルをダウンロード中です。ページを閉じないようにしてください。再度ダウンロードすると、中断した箇所から再開されます。",
+      "remainingTime": "残り時間",
+      "speed": "ダウンロード速度",
+      "title": "モデル {{model}} をダウンロード中"
+    }
+  },
   "plugin": {
     "addTooltip": "カスタムプラグイン",
     "clearDeprecated": "無効なプラグインをクリア",

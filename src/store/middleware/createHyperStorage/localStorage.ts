@@ -1,4 +1,4 @@
-import { StorageValue } from 'zustand/middleware/persist';
+import { StorageValue } from 'zustand/middleware';
 
 export const createLocalStorage = <State extends any>() => ({
   getItem: <T extends State>(name: string): StorageValue<T> | undefined => {
