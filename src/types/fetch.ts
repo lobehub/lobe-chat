@@ -7,6 +7,7 @@ export const ChatErrorType = {
   InvalidAccessCode: 'InvalidAccessCode', // 密码无效
   OpenAIBizError: 'OpenAIBizError', // OpenAI 返回的业务错误
   NoOpenAIAPIKey: 'NoOpenAIAPIKey',
+  OllamaServiceUnavailable: 'OllamaServiceUnavailable', // 未启动/检测到 Ollama 服务
 
   // ******* 客户端错误 ******* //
   BadRequest: 400,

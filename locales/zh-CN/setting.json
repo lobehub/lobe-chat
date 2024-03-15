@@ -99,6 +99,14 @@
         "title": "API Key"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "填入来自 Groq 的 API Key",
+        "placeholder": "Groq API Key",
+        "title": "API Key"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {
@@ -192,6 +200,14 @@
       "title": "连通性检查"
     },
     "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待 ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续",
+      "remainingTime": "剩余时间",
+      "speed": "下载速度",
+      "title": "正在下载模型 {{model}} "
+    }
   },
   "plugin": {
     "addTooltip": "自定义插件",

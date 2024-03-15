@@ -99,6 +99,14 @@
         "title": "Chiave API"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Inserisci la chiave API da Groq",
+        "placeholder": "Chiave API Groq",
+        "title": "Chiave API"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {
@@ -192,6 +200,14 @@
       "title": "Verifica di connettività"
     },
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama sta scaricando questo modello. Si prega di non chiudere questa pagina. Il download verrà ripreso dal punto in cui è stato interrotto in caso di riavvio.",
+      "remainingTime": "Tempo rimanente",
+      "speed": "Velocità di download",
+      "title": "Download del modello {{model}} in corso"
+    }
   },
   "plugin": {
     "addTooltip": "Aggiungi plugin personalizzato",

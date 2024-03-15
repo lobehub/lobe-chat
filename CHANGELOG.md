@@ -2,6 +2,123 @@
 
 # Changelog
 
+## [Version 0.138.0](https://github.com/lobehub/lobe-chat/compare/v0.137.0...v0.138.0)
+
+<sup>Released on **2024-03-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Support groq as a model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support groq as a model provider, closes [#1569](https://github.com/lobehub/lobe-chat/issues/1569) [#1562](https://github.com/lobehub/lobe-chat/issues/1562) [#1570](https://github.com/lobehub/lobe-chat/issues/1570) ([a04c364](https://github.com/lobehub/lobe-chat/commit/a04c364))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.137.0](https://github.com/lobehub/lobe-chat/compare/v0.136.0...v0.137.0)
+
+<sup>Released on **2024-03-15**</sup>
+
+#### ✨ Features
+
+- **ollama**: Improve connection check method and provide selector for user to control model options.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **ollama**: Improve connection check method and provide selector for user to control model options, closes [#1397](https://github.com/lobehub/lobe-chat/issues/1397) ([675902f](https://github.com/lobehub/lobe-chat/commit/675902f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.136.0](https://github.com/lobehub/lobe-chat/compare/v0.135.4...v0.136.0)
+
+<sup>Released on **2024-03-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Support azure-ad as a new sso provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support azure-ad as a new sso provider, closes [#1456](https://github.com/lobehub/lobe-chat/issues/1456) ([6649cd1](https://github.com/lobehub/lobe-chat/commit/6649cd1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.135.4](https://github.com/lobehub/lobe-chat/compare/v0.135.3...v0.135.4)
+
+<sup>Released on **2024-03-15**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.135.3](https://github.com/lobehub/lobe-chat/compare/v0.135.2...v0.135.3)
+
+<sup>Released on **2024-03-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **ollama**: Fix duplicate llama model and add llama2-chinese models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **ollama**: Fix duplicate llama model and add llama2-chinese models, closes [#1579](https://github.com/lobehub/lobe-chat/issues/1579) ([6b9b5c8](https://github.com/lobehub/lobe-chat/commit/6b9b5c8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.135.2](https://github.com/lobehub/lobe-chat/compare/v0.135.1...v0.135.2)
 
 <sup>Released on **2024-03-14**</sup>
