@@ -53,6 +53,7 @@
     "MoonshotBizError": "There was an error with the Moonshot service, please troubleshoot or retry based on the following information.",
     "NoOpenAIAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
     "OllamaBizError": "Error requesting Ollama service, please troubleshoot or retry based on the following information",
+    "OllamaServiceUnavailable": "Ollama service not detected, please check if it is running properly",
     "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information.",
     "PerplexityBizError": "Error requesting Perplexity AI service. Please troubleshoot or retry based on the following information.",
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "Close message",
     "confirm": "Confirm and Retry",
+    "model": {
+      "Ollama": {
+        "confirm": "Download",
+        "description": "Enter your Ollama model label to proceed with the conversation",
+        "title": "Download specified Ollama model"
+      }
+    },
     "oauth": {
       "description": "The administrator has enabled unified login authentication. Click the button below to log in and unlock the application.",
       "success": "Login successful",

@@ -53,6 +53,7 @@
     "MoonshotBizError": "Moonshot hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "NoOpenAIAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
     "OllamaBizError": "Ollama servisine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
+    "OllamaServiceUnavailable": "Ollama 服务不可用，请检查是否已正常启动",
     "OpenAIBizError": "OpenAI hizmeti talep ederken hata oluştu. Aşağıdaki bilgilere dayanarak sorun giderin veya tekrar deneyin.",
     "PerplexityBizError": "Perplexity AI hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "PluginApiNotFound": "Üzgünüm, eklentinin bildiriminde API mevcut değil. Lütfen istek yönteminizin eklenti bildirim API'sı ile eşleşip eşleşmediğini kontrol edin",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "Mesajı kapat",
     "confirm": "Onayla ve Yeniden Dene",
+    "model": {
+      "Ollama": {
+        "confirm": "下载",
+        "description": "Ollama model etiketinizi girin ve devam etmek için tamamlayın",
+        "title": "Belirli Ollama modelini indir"
+      }
+    },
     "oauth": {
       "description": "Yönetici, tek oturum açma kimlik doğrulamasını etkinleştirdi. Aşağıdaki düğmeye tıklayarak giriş yapabilir ve uygulamayı kilidini açabilirsiniz.",
       "success": "Giriş başarılı",
