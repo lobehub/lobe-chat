@@ -64,6 +64,13 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 默认值: `-`
 - 示例: `1`
 
+#### `SSO_PROVIDERS`
+
+- Type: 必需
+- 描述: 选择LoboChat的单点登录提供商。如果有多个单点登录提供商，请用逗号分隔，例如 `auth0,azure-ad`
+- 默认值: `auth0`
+- 示例: `auth0,azure-ad`
+
 #### `NEXTAUTH_SECRET`
 
 - 类型：必选
@@ -81,7 +88,7 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 ### Auth0
 
 <Callout>
-  目前我们只支持 Auth0 身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交
+  目前，我们仅支持 Auth0 和 Microsoft Entra ID 身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交
   [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
 </Callout>
 
@@ -105,6 +112,34 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 描述: Auth0 应用程序的签发人 / 域
 - 默认值: `-`
 - 示例: `https://example.auth0.com`
+
+### Microsoft Entra ID
+
+<Callout>
+  目前，我们仅支持 Auth0 和 Microsoft Entra ID 身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交
+  [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
+</Callout>
+
+#### `AZURE_AD_CLIENT_ID`
+
+- 类型：必需
+- 描述：Microsoft Entra ID 应用程序的客户端 ID。
+- 默认值：`-`
+- 示例：`be8f6da1-58c3-4f16-ff1b-78f5148e10df`
+
+#### `AZURE_AD_CLIENT_SECRET`
+
+- 类型：必需
+- 描述：Microsoft Entra ID 应用程序的客户端密钥。
+- 默认值：`-`
+- 示例：`~gI8Q.pTiN1vwB6Gl.E1yFT1ojcXABkdACfJXaNj`
+
+#### `AZURE_AD_TENANT_ID`
+
+- 类型：必需
+- 描述：Microsoft Entra ID 应用程序的租户 ID。
+- 默认值：`-`
+- 示例：`c8ae2f36-edf6-4cda-96b9-d3e198a47cba`
 
 ## 插件服务
 
