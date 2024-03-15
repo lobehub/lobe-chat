@@ -1,5 +1,3 @@
-import { Callout, Steps } from 'nextra/components';
-
 # Configuration of Microsoft Entra ID Authentication Service
 
 <Steps>
@@ -21,7 +19,7 @@ import { Callout, Steps } from 'nextra/components';
   </Callout>
 
   ![App Register](https://github.com/lobehub/lobe-chat/assets/13883964/4f9d83bd-b3fc-4abc-bcf4-ccbad65c219d)
-  
+
   Click on "Register".
 
   After successfully creating the application, click on the corresponding application to enter the application details page, and switch to the "Overview" tab to view the corresponding configuration information.
@@ -32,10 +30,7 @@ import { Callout, Steps } from 'nextra/components';
 
   ![Create App Client Secret](https://github.com/lobehub/lobe-chat/assets/13883964/c9d66fa0-158c-4bd3-a1fa-969e638259d2)
 
-  <Callout type={'info'}>
-    - Please make sure to save your client secret as this is your only chance to view it.
-  </Callout>
-
+  <Callout type={'info'}>Please make sure to save your client secret as this is your only chance to view it.</Callout>
 
   ### Add Users
 
@@ -45,17 +40,18 @@ import { Callout, Steps } from 'nextra/components';
 
   When deploying LobeChat, you need to configure the following environment variables:
 
-| Environment Variable     | Type     | Description                                                                                                                                                                                                                |
-| ------------------------ | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ENABLE_OAUTH_SSO`       | Required | Enable single sign-on (SSO) for LobeChat. Set to `1` to enable single sign-on.                                                                                                                                             |
-| `NEXTAUTH_SECRET`        | Required | Key used to encrypt Auth.js session tokens. You can generate the key using the following command: `openssl rand -base64 32`                                                                                                |
-| `SSO_PROVIDERS`          | Required | Select the single sign-on provider for LoboChat. Use `azure-ad` for Microsoft Entra ID.                                                                                                                                    |  |
-| `AZURE_AD_CLIENT_ID`     | Required | Client ID of the Microsoft Entra ID application.                                                                                                                                                                           |
-| `AZURE_AD_CLIENT_SECRET` | Required | Client Secret of the Microsoft Entra ID application.                                                                                                                                                                       |
-| `AZURE_AD_TENANT_ID`     | Required | Tenant ID of the Microsoft Entra ID application.                                                                                                                                                                           |
-| `ACCESS_CODE`            | Required | Add a password for accessing this service, you can set a sufficiently long random password to "disable" access code authorization.                                                                                         |
-| `NEXTAUTH_URL`           | Optional | This URL is used to specify the callback address for Auth.js when performing OAuth authentication. It is only necessary to set it when the default generated redirect address is incorrect. `https://example.com/api/auth` |
-  You can refer to [environment variables](/en/self-hosting/environment-variable#microsoft-entra-id) for details on related variables.
+  | Environment Variable     | Type     | Description                                                                                                                                                                                                                |   |
+  | ------------------------ | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | - |
+  | `ENABLE_OAUTH_SSO`       | Required | Enable single sign-on (SSO) for LobeChat. Set to `1` to enable single sign-on.                                                                                                                                             |   |
+  | `NEXTAUTH_SECRET`        | Required | Key used to encrypt Auth.js session tokens. You can generate the key using the following command: `openssl rand -base64 32`                                                                                                |   |
+  | `SSO_PROVIDERS`          | Required | Select the single sign-on provider for LoboChat. Use `azure-ad` for Microsoft Entra ID.                                                                                                                                    |   |
+  | `AZURE_AD_CLIENT_ID`     | Required | Client ID of the Microsoft Entra ID application.                                                                                                                                                                           |   |
+  | `AZURE_AD_CLIENT_SECRET` | Required | Client Secret of the Microsoft Entra ID application.                                                                                                                                                                       |   |
+  | `AZURE_AD_TENANT_ID`     | Required | Tenant ID of the Microsoft Entra ID application.                                                                                                                                                                           |   |
+  | `ACCESS_CODE`            | Required | Add a password for accessing this service, you can set a sufficiently long random password to "disable" access code authorization.                                                                                         |   |
+  | `NEXTAUTH_URL`           | Optional | This URL is used to specify the callback address for Auth.js when performing OAuth authentication. It is only necessary to set it when the default generated redirect address is incorrect. `https://example.com/api/auth` |   |
+
+  <Callout type={'info'}>You can refer to [📘 environment variables](/en/self-hosting/environment-variable#microsoft-entra-id) for details on related variables.</Callout>
 </Steps>
 
 <Callout>After successful deployment, users will be able to authenticate and use LobeChat using the users configured in Microsoft Entra ID.</Callout>
@@ -68,7 +64,6 @@ Please explore further in the [Microsoft Entra ID Learning Center][microsoft-lea
 
 - [Quickstart: Register an app][microsoft-entra-register-app]
 
-[microsoft-learn-entra]: https://learn.microsoft.com/en-us/entra/identity/
-[microsoft-entra-register-app]: https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app
 [microsoft-azure-portal]: https://portal.azure.com/
-[microsoft-entra-id]: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id
+[microsoft-entra-register-app]: https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app
+[microsoft-learn-entra]: https://learn.microsoft.com/en-us/entra/identity/
