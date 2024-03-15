@@ -39,21 +39,21 @@ import { Callout, Steps } from 'nextra/components';
 
   在部署 LobeChat 时，你需要配置以下环境变量：
 
-| 环境变量                     | 类型           | 描述                                                                                        |
-| ------------------------ | ------------ | ----------------------------------------------------------------------------------------- |
-| `ENABLE_OAUTH_SSO`       | 必选           | 为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。                                                  |
-| `NEXTAUTH_SECRET`        | 必选           | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`                             |
-| `SSO_PROVIDERS`          | 必选           | 选择 LoboChat 的单点登录提供商。使用 Auth0 请填写 `auth0`。                                                 | 
-| `AUTH0_CLIENT_ID`        | 必选           | Auth0 应用程序的 Client ID                                                                     |
-| `AUTH0_CLIENT_SECRET`    | 必选           | Auth0 应用程序的 Client Secret                                                                 |
-| `AUTH0_ISSUER`           | 必选           | Auth0 应用程序的 Domain，`https://example.auth0.com`                                            |
-| `ACCESS_CODE`            | 必选           | 添加访问此服务的密码，你可以设置一个足够长的随机密码以 “禁用” 访问码授权                                                    |
-| `NEXTAUTH_URL`           | 可选           | 该URL用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
+  | 环境变量                  | 类型 | 描述                                                                                          |
+  | --------------------- | -- | ------------------------------------------------------------------------------------------- |
+  | `ENABLE_OAUTH_SSO`    | 必选 | 为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。                                                    |
+  | `NEXTAUTH_SECRET`     | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`                               |
+  | `SSO_PROVIDERS`       | 必选 | 选择 LoboChat 的单点登录提供商。使用 Auth0 请填写 `auth0`。                                                  |
+  | `AUTH0_CLIENT_ID`     | 必选 | Auth0 应用程序的 Client ID                                                                       |
+  | `AUTH0_CLIENT_SECRET` | 必选 | Auth0 应用程序的 Client Secret                                                                   |
+  | `AUTH0_ISSUER`        | 必选 | Auth0 应用程序的 Domain，`https://example.auth0.com`                                              |
+  | `ACCESS_CODE`         | 必选 | 添加访问此服务的密码，你可以设置一个足够长的随机密码以 “禁用” 访问码授权                                                      |
+  | `NEXTAUTH_URL`        | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
 
-  前往 [环境变量](/zh/self-hosting/environment-variable#auth0) 可查阅相关变量详情。
+  <Callout type={'info'}> 前往 [📘 环境变量](/zh/self-hosting/environment-variable#auth0) 可查阅相关变量详情。</Callout>
 </Steps>
 
-<Callout>部署成功后，用户将可以使用 Auth0 中配置的用户通过身份认证并使用 LobeChat。</Callout>
+<Callout type={'info'}>部署成功后，用户将可以使用 Auth0 中配置的用户通过身份认证并使用 LobeChat。</Callout>
 
 ## 进阶配置
 
