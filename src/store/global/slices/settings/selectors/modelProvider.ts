@@ -147,15 +147,15 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
       chatModels: openaiChatModels,
     },
     // { ...azureModelList(s), enabled: enableAzure(s) },
-    { ...ZhiPuProvider, enabled: enableZhipu(s) },
-    { ...MoonshotProvider, enabled: enableMoonshot(s) },
+    { ...OllamaProvider, chatModels: ollamaChatModels, enabled: enableOllama(s) },
+    { ...AnthropicProvider, enabled: enableAnthropic(s) },
     { ...GoogleProvider, enabled: enableGoogle(s) },
     { ...BedrockProvider, enabled: enableBedrock(s) },
-    { ...OllamaProvider, chatModels: ollamaChatModels, enabled: enableOllama(s) },
     { ...PerplexityProvider, enabled: enablePerplexity(s) },
-    { ...AnthropicProvider, enabled: enableAnthropic(s) },
     { ...MistralProvider, enabled: enableMistral(s) },
     { ...GroqProvider, enabled: enableGroq(s) },
+    { ...ZhiPuProvider, enabled: enableZhipu(s) },
+    { ...MoonshotProvider, enabled: enableMoonshot(s) },
   ];
 };
 

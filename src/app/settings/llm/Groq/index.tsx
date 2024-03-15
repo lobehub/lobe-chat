@@ -1,4 +1,4 @@
-import { Perplexity } from '@lobehub/icons';
+import { Groq } from '@lobehub/icons';
 import { Input } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
@@ -39,12 +39,7 @@ const GroqProvider = memo(() => {
         },
       ]}
       provider={providerKey}
-      title={
-        <Perplexity.Combine
-          color={theme.isDarkMode ? theme.colorText : Perplexity.colorPrimary}
-          size={24}
-        />
-      }
+      title={<Groq.Text color={theme.isDarkMode ? theme.colorText : Groq.colorPrimary} size={24} />}
     />
   );
 });
