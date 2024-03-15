@@ -59,15 +59,15 @@ import { Callout, Steps } from 'nextra/components';
 
 ### 连接现有的单点登录服务
 
-如果你的企业或组织已有现有的统一身份认证设施，可在 Applications -> SSO Integrations 中，连接现有的单点登录服务。
+如果你的企业或组织已有现有的统一身份认证设施，可在 Applications -&gt; SSO Integrations 中，连接现有的单点登录服务。
 
-Auth0 支持 Azure Active Directory / Slack / Google Workspace / Office 365 / Zoom 等单点登录服务，详细支持列表可参考 [这里][auth0-sso-integrations]
+Auth0 支持 Azure Active Directory / Slack / Google Workspace / Office 365 / Zoom 等单点登录服务，详细支持列表可参考 
 
 ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/32650f4f-d0b0-4843-b26d-d35bad11d8a3)
 
 ### 配置社交登录
 
-如果你的企业或组织需要支持外部人员登录，可以在 Authentication -> Social 中，配置社交登录服务。
+如果你的企业或组织需要支持外部人员登录，可以在 Authentication -&gt; Social 中，配置社交登录服务。
 
 ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/7b6f6a6c-2686-49d8-9dbd-0516053f1efa)
 
@@ -79,7 +79,3 @@ Auth0 支持 Azure Active Directory / Slack / Google Workspace / Office 365 / Zo
   如果你需要限制登录人员，务必配置 **阻止策略**： 请在打开社交登录选项后，参考
   [这篇文章][auth0-login-actions-manual] 创建 Action 来设置阻止 / 允许列表。
 </Callout>
-
-[auth0-client-page]: https://manage.auth0.com/dashboard
-[auth0-login-actions-manual]: https://auth0.com/blog/permit-or-deny-login-requests-using-auth0-actions/
-[auth0-sso-integrations]: https://marketplace.auth0.com/features/sso-integrations
