@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version 0.135.4](https://github.com/lobehub/lobe-chat/compare/v0.135.3...v0.135.4)
+
+<sup>Released on **2024-03-15**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.135.3](https://github.com/lobehub/lobe-chat/compare/v0.135.2...v0.135.3)
+
+<sup>Released on **2024-03-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **ollama**: Fix duplicate llama model and add llama2-chinese models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **ollama**: Fix duplicate llama model and add llama2-chinese models, closes [#1579](https://github.com/lobehub/lobe-chat/issues/1579) ([6b9b5c8](https://github.com/lobehub/lobe-chat/commit/6b9b5c8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.135.2](https://github.com/lobehub/lobe-chat/compare/v0.135.1...v0.135.2)
 
 <sup>Released on **2024-03-14**</sup>
