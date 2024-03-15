@@ -80,6 +80,23 @@ const nextConfig = {
 
     return config;
   },
+  async headers() {
+    const enablePlausible = process.env.NEXT_PUBLIC_ANALYTICS_PLAUSIBLE === '1';
+    const plausibleScriptBaseUrl =
+      process.env.NEXT_PUBLIC_PLAUSIBLE_SCRIPT_BASE_URL || 'https://plausible.io';
+
+    return [
+      enablePlausible && {
+        source: `${plausibleScriptBaseUrl}/js/script.js`,
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000', // cache it for 30 days
+          },
+        ],
+      },
+    ].filter(Boolean);
+  },
 };
 
 export default isProd ? withBundleAnalyzer(withPWA(nextConfig)) : nextConfig;
