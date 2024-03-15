@@ -53,6 +53,7 @@
     "MoonshotBizError": "请求月球AI服务出错，请根据以下信息排查或重试",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
+    "OllamaServiceUnavailable": "Ollama 服务不可用，请检查是否已正常启动",
     "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
     "PerplexityBizError": "Er is een fout opgetreden bij het aanvragen van de Perplexity AI-service. Controleer de onderstaande informatie en probeer het opnieuw.",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "Sluit bericht",
     "confirm": "Bevestigen en opnieuw proberen",
+    "model": {
+      "Ollama": {
+        "confirm": "下载",
+        "description": "输入您的 Ollama 模型标签，完成后即可继续会话",
+        "title": "下载指定的 Ollama 模型"
+      }
+    },
     "oauth": {
       "description": "De beheerder heeft een uniforme aanmeldingsverificatie ingeschakeld. Klik op de onderstaande knop om in te loggen en de app te ontgrendelen.",
       "success": "Succesvol ingelogd",

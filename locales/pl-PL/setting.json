@@ -193,6 +193,14 @@
     },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
   },
+  "ollama": {
+    "download": {
+      "desc": "Ollama pobiera ten model. Prosimy nie zamykać tej strony. Gdy pobieranie zostanie wznowione, będzie kontynuowane od miejsca przerwania.",
+      "remainingTime": "Czas pozostały",
+      "speed": "Prędkość pobierania",
+      "title": "Pobieranie modelu {{model}}"
+    }
+  },
   "plugin": {
     "addTooltip": "Dodaj niestandardowy dodatek",
     "clearDeprecated": "Usuń przestarzałe dodatki",

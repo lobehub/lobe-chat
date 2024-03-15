@@ -193,6 +193,14 @@
     },
     "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨"
   },
+  "ollama": {
+    "download": {
+      "desc": "Ollama 正在下載該模型，請儘量不要關閉本頁面。重新下載時將會中斷處繼續",
+      "remainingTime": "剩餘時間",
+      "speed": "下載速度",
+      "title": "正在下載模型 {{model}}"
+    }
+  },
   "plugin": {
     "addTooltip": "新增自訂外掛程式",
     "clearDeprecated": "清除已棄用的外掛",
