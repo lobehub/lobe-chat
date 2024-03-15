@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
@@ -31,6 +33,7 @@ export interface ChatListItemProps {
 }
 
 const Item = memo<ChatListItemProps>(({ index, id }) => {
+  const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const [editing, setEditing] = useState(false);
@@ -111,6 +114,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           editing={editing}
           error={error}
           errorMessage={<ErrorMessageExtra data={item} />}
+          fontSize={fontSize}
           loading={loading}
           message={item.content}
           messageExtra={<MessageExtra data={item} />}
