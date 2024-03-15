@@ -57,7 +57,7 @@ const OAuthForm = memo<{ id: string }>(({ id }) => {
             block
             icon={<Icon icon={ScanFace} />}
             loading={status === 'loading'}
-            onClick={() => signIn('auth0')}
+            onClick={() => signIn()}
             style={{ marginTop: 8 }}
             type={'primary'}
           >
