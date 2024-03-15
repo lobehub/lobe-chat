@@ -19,6 +19,8 @@ interface OllamaModelFormProps {
 
 const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
   const { t } = useTranslation('error');
+  const { t: settingT } = useTranslation('setting');
+
   const [modelToPull, setModelToPull] = useState(model);
   const [completed, setCompleted] = useState(0);
   const [total, setTotal] = useState(0);
@@ -33,7 +35,7 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
   ]);
   const theme = useTheme();
 
-  const { mutate, isLoading } = useSWR(
+  const { mutate, isLoading: isDownloading } = useSWR(
     [id, modelToPull],
     async ([, model]) => {
       const generator = await ollamaService.pullModel(model);
@@ -55,37 +57,53 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
   );
 
   return (
-    <Center gap={16} style={{ maxWidth: 300 }}>
+    <Center gap={16} style={{ maxWidth: 300, width: '100%' }}>
       <FormAction
         avatar={<Ollama color={theme.colorPrimary} size={64} />}
-        description={t('unlock.model.Ollama.description')}
-        title={t('unlock.model.Ollama.title')}
+        description={
+          isDownloading ? settingT('ollama.download.desc') : t('unlock.model.Ollama.description')
+        }
+        title={
+          isDownloading
+            ? settingT('ollama.download.title', { model: modelToPull })
+            : t('unlock.model.Ollama.title')
+        }
       >
-        <Input
-          disabled={isLoading}
-          onChange={(e) => {
-            setModelToPull(e.target.value);
-          }}
-          value={modelToPull}
-        />
+        {!isDownloading && (
+          <Input
+            onChange={(e) => {
+              setModelToPull(e.target.value);
+            }}
+            value={modelToPull}
+          />
+        )}
       </FormAction>
-      {isLoading && (
-        <div>
+      {isDownloading && (
+        <Flexbox flex={1} gap={8} width={'100%'}>
           <Progress
             percent={percent}
             showInfo
             strokeColor={theme.colorSuccess}
             trailColor={theme.colorSuccessBg}
           />
-          <div>
-            Speed:{downloadSpeed} ETA: {remainingTime}
-          </div>
-        </div>
+          <Flexbox
+            distribution={'space-between'}
+            horizontal
+            style={{ color: theme.colorTextDescription, fontSize: 12 }}
+          >
+            <span>
+              {settingT('ollama.download.remainingTime')}: {remainingTime}
+            </span>
+            <span>
+              {settingT('ollama.download.speed')}: {downloadSpeed}
+            </span>
+          </Flexbox>
+        </Flexbox>
       )}
       <Flexbox gap={12} width={'100%'}>
         <Button
           block
-          loading={isLoading}
+          loading={isDownloading}
           onClick={() => {
             mutate();
           }}
