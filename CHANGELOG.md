@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 0.135.2](https://github.com/lobehub/lobe-chat/compare/v0.135.1...v0.135.2)
+
+<sup>Released on **2024-03-14**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Upgrade plugin db schema.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Upgrade plugin db schema, closes [#1571](https://github.com/lobehub/lobe-chat/issues/1571) ([757574a](https://github.com/lobehub/lobe-chat/commit/757574a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.135.1](https://github.com/lobehub/lobe-chat/compare/v0.135.0...v0.135.1)
+
+<sup>Released on **2024-03-14**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the db model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the db model, closes [#1567](https://github.com/lobehub/lobe-chat/issues/1567) ([3d56dd6](https://github.com/lobehub/lobe-chat/commit/3d56dd6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.135.0](https://github.com/lobehub/lobe-chat/compare/v0.134.1...v0.135.0)
+
+<sup>Released on **2024-03-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Add claude 3 to bedrock provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add claude 3 to bedrock provider, closes [#1551](https://github.com/lobehub/lobe-chat/issues/1551) ([6e1fe33](https://github.com/lobehub/lobe-chat/commit/6e1fe33))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.134.1](https://github.com/lobehub/lobe-chat/compare/v0.134.0...v0.134.1)
 
 <sup>Released on **2024-03-13**</sup>

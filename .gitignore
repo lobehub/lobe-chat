@@ -59,3 +59,4 @@ bun.lockb
 sitemap*.xml
 robots.txt
 
+*.patch
