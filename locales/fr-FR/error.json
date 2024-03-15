@@ -53,6 +53,7 @@
     "MoonshotBizError": "Erreur de service Moonshot : une erreur s'est produite lors de la demande du service Côté Obscur de la Lune. Veuillez vérifier les informations suivantes ou réessayer.",
     "NoOpenAIAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée",
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",
+    "OllamaServiceUnavailable": "Service Ollama non disponible, veuillez vérifier s'il est démarré correctement",
     "OpenAIBizError": "Erreur de service OpenAI. Veuillez diagnostiquer ou réessayer en fonction des informations ci-dessous",
     "PerplexityBizError": "Erreur commerciale lors de la demande de service Perplexity AI. Veuillez vérifier les informations suivantes ou réessayer.",
     "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "Fermer le message",
     "confirm": "Confirmer et réessayer",
+    "model": {
+      "Ollama": {
+        "confirm": "Télécharger",
+        "description": "Saisissez l'étiquette de votre modèle Ollama pour continuer la session",
+        "title": "Télécharger le modèle Ollama spécifié"
+      }
+    },
     "oauth": {
       "description": "L'administrateur a activé l'authentification de connexion unique. Cliquez sur le bouton ci-dessous pour vous connecter et déverrouiller l'application.",
       "success": "Connexion réussie",

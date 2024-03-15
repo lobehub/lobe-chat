@@ -10,6 +10,7 @@ export const runtime = 'edge';
  */
 export const GET = async () => {
   const {
+    ENABLE_LANGFUSE,
     CUSTOM_MODELS,
     ENABLED_MOONSHOT,
     ENABLED_ZHIPU,
@@ -21,7 +22,7 @@ export const GET = async () => {
     ENABLED_ANTHROPIC,
     ENABLED_MISTRAL,
     DEFAULT_AGENT_CONFIG,
-    ENABLE_LANGFUSE,
+    OLLAMA_CUSTOM_MODELS,
   } = getServerConfig();
 
   const config: GlobalServerConfig = {
@@ -37,7 +38,7 @@ export const GET = async () => {
       google: { enabled: ENABLED_GOOGLE },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
-      ollama: { enabled: ENABLE_OLLAMA },
+      ollama: { customModelName: OLLAMA_CUSTOM_MODELS, enabled: ENABLE_OLLAMA },
       perplexity: { enabled: ENABLED_PERPLEXITY },
       zhipu: { enabled: ENABLED_ZHIPU },
     },

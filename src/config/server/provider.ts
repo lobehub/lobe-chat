@@ -47,6 +47,7 @@ declare global {
 
       // Ollama Provider;
       OLLAMA_PROXY_URL?: string;
+      OLLAMA_CUSTOM_MODELS?: string;
     }
   }
 }
@@ -116,5 +117,6 @@ export const getProviderConfig = () => {
 
     ENABLE_OLLAMA: !!process.env.OLLAMA_PROXY_URL,
     OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
+    OLLAMA_CUSTOM_MODELS: process.env.OLLAMA_CUSTOM_MODELS,
   };
 };
