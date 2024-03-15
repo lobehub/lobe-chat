@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.137.0](https://github.com/lobehub/lobe-chat/compare/v0.136.0...v0.137.0)
+
+<sup>Released on **2024-03-15**</sup>
+
+#### ✨ Features
+
+- **ollama**: Improve connection check method and provide selector for user to control model options.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **ollama**: Improve connection check method and provide selector for user to control model options, closes [#1397](https://github.com/lobehub/lobe-chat/issues/1397) ([675902f](https://github.com/lobehub/lobe-chat/commit/675902f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.136.0](https://github.com/lobehub/lobe-chat/compare/v0.135.4...v0.136.0)
 
 <sup>Released on **2024-03-15**</sup>
