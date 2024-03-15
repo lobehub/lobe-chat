@@ -64,6 +64,11 @@ export const Topic = memo(() => {
             cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
             desc={t('topic.guide.desc')}
             height={120}
+            imageProps={
+              {
+                priority: true,
+              } as any
+            }
             onVisibleChange={(visible) => {
               updateGuideState({ topic: visible });
             }}
