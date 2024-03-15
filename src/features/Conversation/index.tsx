@@ -3,40 +3,22 @@ import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ChatHydration from '@/components/StoreHydration/ChatHydration';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 
 import SkeletonList from './components/SkeletonList';
 import ChatList from './components/VirtualizedList';
 import { useInitConversation } from './hooks/useInitConversation';
 
-const useStyles = createStyles(({ css, responsive, stylish, cx }, fontSize: number = 14) =>
-  cx(
-    css`
-      position: relative;
-      overflow-y: auto;
-      height: 100%;
+const useStyles = createStyles(
+  ({ css, responsive, stylish }) => css`
+    position: relative;
+    overflow-y: auto;
+    height: 100%;
 
-      ${responsive.mobile} {
-        ${stylish.noScrollbar}
-        width: 100vw;
-      }
-    `,
-    fontSize !== 14 &&
-      css`
-        article[data-code-type='markdown'] {
-          p,
-          code,
-          pre,
-          ul,
-          ol,
-          li,
-          blockquote {
-            font-size: ${fontSize}px;
-          }
-        }
-      `,
-  ),
+    ${responsive.mobile} {
+      ${stylish.noScrollbar}
+      width: 100vw;
+    }
+  `,
 );
 
 interface ConversationProps {
@@ -45,8 +27,7 @@ interface ConversationProps {
 }
 
 const Conversation = memo<ConversationProps>(({ chatInput, mobile }) => {
-  const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
-  const { styles } = useStyles(fontSize);
+  const { styles } = useStyles();
 
   const init = useInitConversation();
 
