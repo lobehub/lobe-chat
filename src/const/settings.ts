@@ -66,6 +66,10 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     apiKey: '',
     enabled: false,
   },
+  groq: {
+    apiKey: '',
+    enabled: false,
+  },
   mistral: {
     apiKey: '',
     enabled: false,

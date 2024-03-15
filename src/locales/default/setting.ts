@@ -100,6 +100,14 @@ export default {
         title: 'API Key',
       },
     },
+    Groq: {
+      title: 'Groq',
+      token: {
+        desc: '填入来自 Groq 的 API Key',
+        placeholder: 'Groq API Key',
+        title: 'API Key',
+      },
+    },
     Mistral: {
       title: 'Mistral AI',
       token: {

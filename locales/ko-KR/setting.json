@@ -99,6 +99,14 @@
         "title": "API Key"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Groq의 API 키를 입력하세요",
+        "placeholder": "Groq API 키",
+        "title": "API 키"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {

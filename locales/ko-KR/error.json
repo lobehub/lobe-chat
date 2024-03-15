@@ -38,11 +38,13 @@
     "AzureBizError": "Azure AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "BedrockBizError": "Bedrock 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "GoogleBizError": "Google 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
+    "GroqBizError": "Groq 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "InvalidAccessCode": "액세스 코드가 잘못되었거나 비어 있습니다. 올바른 액세스 코드를 입력하거나 사용자 지정 API 키를 추가하십시오.",
     "InvalidAnthropicAPIKey": "Anthropic API 키가 잘못되었거나 비어 있습니다. Anthropic API 키를 확인하고 다시 시도하십시오.",
     "InvalidAzureAPIKey": "잘못된 또는 비어 있는 Azure API Key입니다. Azure API Key를 확인한 후 다시 시도하십시오.",
     "InvalidBedrockCredentials": "Bedrock 인증에 실패했습니다. AccessKeyId/SecretAccessKey를 확인한 후 다시 시도하십시오.",
     "InvalidGoogleAPIKey": "잘못된 또는 비어 있는 Google API Key입니다. Google API Key를 확인한 후 다시 시도하십시오.",
+    "InvalidGroqAPIKey": "잘못된 또는 비어 있는 Groq API Key입니다. Groq API Key를 확인한 후 다시 시도하십시오.",
     "InvalidMistralAPIKey": "Mistral AI API 키가 잘못되었거나 비어 있습니다. Mistral API 키를 확인한 후 다시 시도해주세요.",
     "InvalidMoonshotAPIKey": "Moonshot AI API 키가 잘못되었거나 비어 있습니다. Moonshot API 키를 확인한 후 다시 시도해주세요.",
     "InvalidOllamaArgs": "Ollama 구성이 잘못되었습니다. Ollama 구성을 확인한 후 다시 시도하십시오.",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Google API Key를 입력하여 세션을 시작합니다. 앱은 귀하의 API Key를 기록하지 않습니다.",
         "title": "사용자 정의 Google API Key 사용"
+      },
+      "Groq": {
+        "description": "Groq API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+        "title": "사용자 지정 Groq API 키 사용"
       },
       "Mistral": {
         "description": "Mistral AI API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
