@@ -81,13 +81,14 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     [item?.role],
   );
 
+  const { t: errorT } = useTranslation('error');
   const error = useMemo<AlertProps | undefined>(() => {
     if (!item?.error) return;
     const messageError = item.error;
 
     const alertConfig = getErrorAlertConfig(messageError.type);
 
-    return { message: t(`response.${messageError.type}` as any, { ns: 'error' }), ...alertConfig };
+    return { message: errorT(`response.${messageError.type}` as any), ...alertConfig };
   }, [item?.error]);
 
   const enableHistoryDivider = useSessionStore((s) => {

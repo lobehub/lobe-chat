@@ -38,11 +38,13 @@
     "AzureBizError": "Erreur lors de la demande de service Azure AI, veuillez vérifier les informations ci-dessous ou réessayer",
     "BedrockBizError": "Erreur lors de la demande de service Bedrock, veuillez vérifier les informations ci-dessous ou réessayer",
     "GoogleBizError": "Erreur lors de la demande de service Google, veuillez vérifier les informations ci-dessous ou réessayer",
+    "GroqBizError": "Une erreur s'est produite lors de la demande de service Groq. Veuillez vérifier les informations ci-dessous ou réessayer.",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
     "InvalidAnthropicAPIKey": "La clé API Anthropic est incorrecte ou manquante. Veuillez vérifier la clé API Anthropic et réessayer.",
     "InvalidAzureAPIKey": "Clé API Azure incorrecte ou vide, veuillez vérifier la clé API Azure et réessayer",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
     "InvalidGoogleAPIKey": "Clé API Google incorrecte ou vide, veuillez vérifier la clé API Google et réessayer",
+    "InvalidGroqAPIKey": "Clé API Groq incorrecte ou vide, veuillez vérifier la clé API Groq et réessayer",
     "InvalidMistralAPIKey": "Clé API Mistral AI incorrecte ou manquante. Veuillez vérifier la clé API Mistral et réessayer.",
     "InvalidMoonshotAPIKey": "Clé API Moonshot AI incorrecte ou manquante. Veuillez vérifier la clé API Moonshot et réessayer.",
     "InvalidOllamaArgs": "La configuration d'Ollama n'est pas valide, veuillez vérifier la configuration d'Ollama et réessayer",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Entrez votre clé API Google pour commencer la session. L'application ne conservera pas votre clé API",
         "title": "Utiliser une clé API Google personnalisée"
+      },
+      "Groq": {
+        "description": "Entrez votre clé d'API Groq pour commencer la session. L'application ne stockera pas votre clé d'API.",
+        "title": "Utiliser une clé d'API Groq personnalisée"
       },
       "Mistral": {
         "description": "Entrez votre clé API Mistral AI pour commencer la session. L'application ne stockera pas votre clé API.",

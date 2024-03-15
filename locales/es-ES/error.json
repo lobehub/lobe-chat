@@ -38,11 +38,13 @@
     "AzureBizError": "Se produjo un error al solicitar el servicio de Azure AI, por favor, verifica la siguiente información o inténtalo de nuevo",
     "BedrockBizError": "Se produjo un error al solicitar el servicio de Bedrock, por favor, verifica la siguiente información o inténtalo de nuevo",
     "GoogleBizError": "Se produjo un error al solicitar el servicio de Google, por favor, verifica la siguiente información o inténtalo de nuevo",
+    "GroqBizError": "Se produjo un error al solicitar el servicio Groq. Por favor, revise la siguiente información o inténtelo de nuevo",
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
     "InvalidAnthropicAPIKey": "La clave de API de Anthropic es incorrecta o está vacía. Por favor, revisa la clave de API de Anthropic e inténtalo de nuevo.",
     "InvalidAzureAPIKey": "La clave de API de Azure es incorrecta o está vacía, por favor, verifica la clave de API de Azure e inténtalo de nuevo",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
     "InvalidGoogleAPIKey": "La clave de API de Google es incorrecta o está vacía, por favor, verifica la clave de API de Google e inténtalo de nuevo",
+    "InvalidGroqAPIKey": "La clave de API de Groq es incorrecta o está vacía. Por favor, revisa la clave de API de Groq e inténtalo de nuevo.",
     "InvalidMistralAPIKey": "La clave de API de Mistral AI es incorrecta o está vacía. Por favor, revise la clave de API de Mistral y vuelva a intentarlo.",
     "InvalidMoonshotAPIKey": "La clave de API de Moonshot AI no es válida o está vacía. Por favor, revise la clave de API de Moonshot e inténtelo de nuevo.",
     "InvalidOllamaArgs": "La configuración de Ollama no es válida, por favor revisa la configuración de Ollama e inténtalo de nuevo",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Ingresa tu clave de API de Google para comenzar la sesión. La aplicación no guardará tu clave de API",
         "title": "Usar clave de API personalizada de Google"
+      },
+      "Groq": {
+        "description": "Ingresa tu clave de API de Groq para comenzar la sesión. La aplicación no almacenará tu clave de API",
+        "title": "Usar clave de API personalizada de Groq"
       },
       "Mistral": {
         "description": "Ingrese su clave de API de Mistral AI para comenzar la sesión. La aplicación no almacenará su clave de API.",

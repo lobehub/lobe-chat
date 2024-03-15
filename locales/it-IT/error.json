@@ -38,11 +38,13 @@
     "AzureBizError": "Errore nella richiesta del servizio Azure AI, controlla le informazioni seguenti o riprova",
     "BedrockBizError": "Errore nella richiesta del servizio Bedrock, controlla le informazioni seguenti o riprova",
     "GoogleBizError": "Errore nella richiesta del servizio Google, controlla le informazioni seguenti o riprova",
+    "GroqBizError": "Errore del servizio Groq, controlla le informazioni seguenti o riprova",
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
     "InvalidAnthropicAPIKey": "La chiave API Anthropic non è valida o è vuota. Si prega di controllare la chiave API Anthropic e riprovare.",
     "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",
+    "InvalidGroqAPIKey": "Chiave API Groq non valida o vuota, controlla la chiave API Groq e riprova",
     "InvalidMistralAPIKey": "Chiave API Mistral AI non valida o vuota. Si prega di controllare la chiave API Mistral e riprovare.",
     "InvalidMoonshotAPIKey": "La chiave API di Moonshot AI non è corretta o è vuota, si prega di controllare la chiave API di Moonshot e riprovare",
     "InvalidOllamaArgs": "Configurazione Ollama non valida, controllare la configurazione di Ollama e riprovare",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Inserisci la tua chiave API Google per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
         "title": "Utilizza la chiave API Google personalizzata"
+      },
+      "Groq": {
+        "description": "Inserisci la tua chiave API Groq per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+        "title": "Usa una chiave API Groq personalizzata"
       },
       "Mistral": {
         "description": "Inserisci la tua chiave API Mistral AI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API.",

@@ -38,11 +38,13 @@
     "AzureBizError": "Error requesting Azure AI service, please troubleshoot or retry based on the following information",
     "BedrockBizError": "Error requesting Bedrock service, please troubleshoot or retry based on the following information",
     "GoogleBizError": "Error requesting Google service, please troubleshoot or retry based on the following information",
+    "GroqBizError": "Er is een fout opgetreden bij het aanroepen van de Groq-service. Controleer de onderstaande informatie of probeer het opnieuw.",
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
     "InvalidAnthropicAPIKey": "Anthropic API Key is onjuist of leeg. Controleer de Anthropic API Key en probeer het opnieuw.",
     "InvalidAzureAPIKey": "Incorrect or empty Azure API Key, please check the Azure API Key and retry",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidGoogleAPIKey": "Incorrect or empty Google API Key, please check the Google API Key and retry",
+    "InvalidGroqAPIKey": "Groq API Key is onjuist of leeg. Controleer de Groq API Key en probeer het opnieuw.",
     "InvalidMistralAPIKey": "Ongeldige of lege Mistral AI API-sleutel. Controleer de Mistral API-sleutel en probeer het opnieuw.",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Enter your Google API Key to start the session. The app will not record your API Key",
         "title": "Use custom Google API Key"
+      },
+      "Groq": {
+        "description": "Voer je Groq API-sleutel in om te beginnen met de sessie. De app zal je API-sleutel niet opslaan.",
+        "title": "Gebruik een aangepaste Groq API-sleutel"
       },
       "Mistral": {
         "description": "Voer je Mistral AI API-sleutel in om een sessie te starten. De app slaat je API-sleutel niet op.",

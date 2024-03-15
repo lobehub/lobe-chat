@@ -38,11 +38,13 @@
     "AzureBizError": "Yêu cầu dịch vụ Azure AI gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
     "BedrockBizError": "Yêu cầu dịch vụ Bedrock gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
     "GoogleBizError": "Yêu cầu dịch vụ Google gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
+    "GroqBizError": "Yêu cầu dịch vụ Groq gặp sự cố, vui lòng kiểm tra thông tin bên dưới hoặc thử lại",
     "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
     "InvalidAnthropicAPIKey": "Khóa API Anthropic không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
     "InvalidAzureAPIKey": "Khóa API Azure không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Azure và thử lại",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidGoogleAPIKey": "Khóa API Google không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Google và thử lại",
+    "InvalidGroqAPIKey": "Khóa API Groq không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Groq và thử lại",
     "InvalidMistralAPIKey": "Mistral AI API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại Mistral API Key và thử lại",
     "InvalidMoonshotAPIKey": "Khóa API Moonshot AI không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Moonshot và thử lại",
     "InvalidOllamaArgs": "Cấu hình Ollama không hợp lệ, vui lòng kiểm tra lại cấu hình Ollama và thử lại",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Nhập Google API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
         "title": "Sử dụng thông tin xác thực tùy chỉnh của Google"
+      },
+      "Groq": {
+        "description": "Nhập Groq API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
+        "title": "Sử dụng Groq API Key tùy chỉnh"
       },
       "Mistral": {
         "description": "Nhập Mistral AI API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
