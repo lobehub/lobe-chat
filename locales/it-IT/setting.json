@@ -193,6 +193,14 @@
     },
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
   },
+  "ollama": {
+    "download": {
+      "desc": "Ollama sta scaricando questo modello. Si prega di non chiudere questa pagina. Il download verrà ripreso dal punto in cui è stato interrotto in caso di riavvio.",
+      "remainingTime": "Tempo rimanente",
+      "speed": "Velocità di download",
+      "title": "Download del modello {{model}} in corso"
+    }
+  },
   "plugin": {
     "addTooltip": "Aggiungi plugin personalizzato",
     "clearDeprecated": "Rimuovi plugin non validi",

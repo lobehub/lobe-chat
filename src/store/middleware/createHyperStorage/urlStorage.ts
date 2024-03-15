@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash-es';
-import { StorageValue } from 'zustand/middleware/persist';
+import { StorageValue } from 'zustand/middleware';
 
 interface UrlSearchHelper {
   getUrlSearch: () => string;

@@ -53,6 +53,7 @@
     "MoonshotBizError": "O serviço Moonshot na face oculta da lua encontrou um erro. Por favor, verifique as informações abaixo ou tente novamente.",
     "NoOpenAIAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
     "OllamaBizError": "Erro de negócio ao solicitar o serviço Ollama, verifique as informações a seguir ou tente novamente",
+    "OllamaServiceUnavailable": "O serviço Ollama não está disponível, verifique se está iniciado corretamente",
     "OpenAIBizError": "Erro ao solicitar o serviço OpenAI. Verifique ou tente novamente com base nas informações abaixo",
     "PerplexityBizError": "Erro de negócios ao solicitar o serviço de IA Perplexity, verifique as informações a seguir ou tente novamente",
     "PluginApiNotFound": "Desculpe, o API especificado não existe no manifesto do plugin. Verifique se o método de solicitação corresponde ao API do manifesto do plugin",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "Fechar mensagem",
     "confirm": "Confirmar e tentar novamente",
+    "model": {
+      "Ollama": {
+        "confirm": "Baixar",
+        "description": "Digite as tags do seu modelo Ollama para continuar a sessão",
+        "title": "Baixar o modelo Ollama especificado"
+      }
+    },
     "oauth": {
       "description": "O administrador ativou a autenticação de login unificado. Clique no botão abaixo para fazer login e desbloquear o aplicativo.",
       "success": "Login bem-sucedido",

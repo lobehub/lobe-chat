@@ -53,6 +53,7 @@
     "MoonshotBizError": "请求月球AI服务出错，请根据以下信息排查或重试",
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
+    "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy została poprawnie uruchomiona.",
     "OpenAIBizError": "Błąd żądania usługi OpenAI. Proszę sprawdź poniższe informacje i spróbuj ponownie",
     "PerplexityBizError": "Błąd biznesowy podczas żądania usługi Perplexity AI. Sprawdź poniższe informacje lub spróbuj ponownie.",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "Zamknij komunikat",
     "confirm": "Potwierdź i spróbuj ponownie",
+    "model": {
+      "Ollama": {
+        "confirm": "Pobierz",
+        "description": "Wprowadź etykietę modelu Ollama, aby kontynuować sesję.",
+        "title": "Pobierz określony model Ollama"
+      }
+    },
     "oauth": {
       "description": "Administrator włączył jednolite uwierzytelnianie logowania. Kliknij poniższy przycisk, aby się zalogować i odblokować aplikację.",
       "success": "Zalogowano pomyślnie",
