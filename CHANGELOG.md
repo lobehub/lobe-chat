@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.138.2](https://github.com/lobehub/lobe-chat/compare/v0.138.1...v0.138.2)
+
+<sup>Released on **2024-03-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Markdown in ChatItem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Markdown in ChatItem ([be75549](https://github.com/lobehub/lobe-chat/commit/be75549))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.138.1](https://github.com/lobehub/lobe-chat/compare/v0.138.0...v0.138.1)
 
 <sup>Released on **2024-03-15**</sup>
