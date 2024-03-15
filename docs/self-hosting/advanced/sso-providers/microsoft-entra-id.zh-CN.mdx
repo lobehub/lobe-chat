@@ -21,7 +21,7 @@ import { Callout, Steps } from 'nextra/components';
   </Callout>
 
   ![App Register](https://github.com/lobehub/lobe-chat/assets/13883964/4f9d83bd-b3fc-4abc-bcf4-ccbad65c219d)
-  
+
   点击「Register」
 
   创建成功后，点击相应的应用，进入应用详情页，切换到「Overview」标签页，就可以看到相应的配置信息。
@@ -47,7 +47,7 @@ import { Callout, Steps } from 'nextra/components';
 | ------------------------ | ------------ | ----------------------------------------------------------------------------------------- |
 | `ENABLE_OAUTH_SSO`       | 必选           | 为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。                                                  |
 | `NEXTAUTH_SECRET`        | 必选           | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`                             |
-| `SSO_PROVIDERS`          | 必选           | 选择 LoboChat 的单点登录提供商。使用 Microsoft Entra ID 请填写 `azure-ad`。                            | 
+| `SSO_PROVIDERS`          | 必选           | 选择 LoboChat 的单点登录提供商。使用 Microsoft Entra ID 请填写 `azure-ad`。                            |
 | `AZURE_AD_CLIENT_ID`     | 必选           | Microsoft Entra ID 应用程序的 Client ID                                                            |
 | `AZURE_AD_CLIENT_SECRET` | 必选           | Microsoft Entra ID 应用程序的 Client Secret                                                        |
 | `AZURE_AD_TENANT_ID`     | 必选           | Microsoft Entra ID 应用程序的 Tenant ID                                                            |
@@ -57,4 +57,18 @@ import { Callout, Steps } from 'nextra/components';
 <Callout type={'info'}>  前往 [📘 环境变量](/zh/self-hosting/environment-variable#microsoft-entra-id) 可查阅相关变量详情。</Callout>
 </Steps>
 
-<Callout type={'info'}>部署成功后，用户将可以使用 Microsoft Entra ID 中配置的用户通过身份认证并使用 LobeChat。</Callout>
+<Callout  type={'info'}>部署成功后，用户将可以使用 Microsoft Entra ID 中配置的用户通过身份认证并使用 LobeChat。</Callout>
+
+## 进阶配置
+
+请在 [Microsoft Entra ID 学习中心][microsoft-learn-entra]，做进一步探索。
+
+
+## 相关资料
+
+- [快速注册应用指导][microsoft-entra-register-app]
+
+[microsoft-learn-entra]: https://learn.microsoft.com/en-us/entra/identity/
+[microsoft-entra-register-app]: https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app
+[microsoft-azure-portal]: https://portal.azure.com/
+[microsoft-entra-id]: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id
