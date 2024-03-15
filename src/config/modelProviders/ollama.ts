@@ -32,14 +32,6 @@ const Ollama: ModelProviderCard = {
       vision: false,
     },
     {
-      displayName: 'Llama2 Chat 13B',
-      functionCall: false,
-      hidden: true,
-      id: 'llama2:13b',
-      tokens: 4000,
-      vision: false,
-    },
-    {
       displayName: 'Llama2 Chat 70B',
       functionCall: false,
       hidden: true,
