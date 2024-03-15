@@ -27,6 +27,7 @@ export enum ModelProvider {
   Bedrock = 'bedrock',
   ChatGLM = 'chatglm',
   Google = 'google',
+  Groq = 'groq',
   Mistral = 'mistral',
   Moonshot = 'moonshot',
   Ollama = 'ollama',

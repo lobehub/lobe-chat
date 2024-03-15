@@ -99,6 +99,14 @@
         "title": "API-sleutel"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Voer de API-sleutel van Groq in",
+        "placeholder": "Groq API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {
