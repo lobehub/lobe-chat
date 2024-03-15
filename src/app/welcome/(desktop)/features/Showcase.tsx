@@ -15,14 +15,6 @@ const Showcase = memo(() => (
     <GridShowcase>
       <Banner />
     </GridShowcase>
-    <button
-  onClick={() => {
-    throw new Error("Sentry Frontend Error");
-  }}
-  type="button"
->
-  Throw error
-</button>
     {/*TODO：暂时隐藏，待模板完成后再补回*/}
     {/*<AgentTemplate width={width} />*/}
   </Flexbox>
