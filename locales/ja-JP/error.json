@@ -38,6 +38,7 @@
     "AzureBizError": "Azure AIサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再試行してください。",
     "BedrockBizError": "Bedrockサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再試行してください。",
     "GoogleBizError": "Googleサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再試行してください。",
+    "GroqBizError": "Groqサービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "InvalidAccessCode": "パスワードが正しくないか空です。正しいアクセスパスワードを入力するか、カスタムAPIキーを追加してください",
     "InvalidAnthropicAPIKey": "Anthropic APIキーが正しくないか空です。Anthropic APIキーを確認してもう一度お試しください。",
     "InvalidAzureAPIKey": "Azure APIキーが正しくないか空です。Azure APIキーを確認してから再試行してください。",
@@ -91,6 +92,10 @@
       "Google": {
         "description": "Google APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
         "title": "カスタムGoogle APIキーを使用"
+      },
+      "Groq": {
+        "description": "Groq APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
+        "title": "カスタムGroq APIキーを使用"
       },
       "Mistral": {
         "description": "Mistral AI API キーを入力してセッションを開始できます。アプリは API キーを記録しません。",
