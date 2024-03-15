@@ -16,10 +16,10 @@ const Showcase = memo(() => (
       <Banner />
     </GridShowcase>
     <button
-  type="button"
   onClick={() => {
     throw new Error("Sentry Frontend Error");
   }}
+  type="button"
 >
   Throw error
 </button>
