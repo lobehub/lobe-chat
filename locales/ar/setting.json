@@ -99,6 +99,14 @@
         "title": "مفتاح واجهة برمجة التطبيقات"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ Groq",
+        "placeholder": "مفتاح API Groq",
+        "title": "مفتاح API"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {

@@ -104,6 +104,7 @@ export default {
     azure: 'Azure',
     bedrock: 'AWS Bedrock',
     google: 'Google',
+    groq: 'Groq',
     mistral: 'Mistral AI',
     moonshot: 'Moonshot AI',
     ollama: 'Ollama',

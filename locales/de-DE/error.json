@@ -38,11 +38,13 @@
     "AzureBizError": "Es ist ein Fehler bei der Anforderung des Azure AI-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "BedrockBizError": "Es ist ein Fehler bei der Anforderung des Bedrock-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "GoogleBizError": "Es ist ein Fehler bei der Anforderung des Google-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "GroqBizError": "Die Anfrage an den Groq-Dienst ist fehlgeschlagen. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
     "InvalidAnthropicAPIKey": "Ungültiger oder leerer Anthropic API-Schlüssel. Bitte überprüfen Sie den Anthropic API-Schlüssel und versuchen Sie es erneut.",
     "InvalidAzureAPIKey": "Der Azure API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Azure API-Schlüssel und versuchen Sie es erneut.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidGoogleAPIKey": "Der Google API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Google API-Schlüssel und versuchen Sie es erneut.",
+    "InvalidGroqAPIKey": "Der Groq API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Groq API-Schlüssel und versuchen Sie es erneut.",
     "InvalidMistralAPIKey": "Der Mistral AI-API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Mistral-API-Schlüssel und versuchen Sie es erneut.",
     "InvalidMoonshotAPIKey": "Ungültiger oder leerer Moonshot AI API-Schlüssel. Bitte überprüfen Sie den Moonshot API-Schlüssel und versuchen Sie es erneut.",
     "InvalidOllamaArgs": "Ollama-Konfiguration ist ungültig. Bitte überprüfen Sie die Ollama-Konfiguration und versuchen Sie es erneut.",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Geben Sie Ihren Google API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
         "title": "Verwenden von benutzerdefinierten Google API-Schlüssel"
+      },
+      "Groq": {
+        "description": "Geben Sie Ihren individuellen Groq-API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
+        "title": "Verwenden Sie einen benutzerdefinierten Groq-API-Schlüssel"
       },
       "Mistral": {
         "description": "Geben Sie Ihren eigenen Mistral AI-API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",

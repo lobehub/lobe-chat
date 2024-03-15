@@ -99,6 +99,14 @@
         "title": "API Key"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Nhập API Key từ Groq",
+        "placeholder": "Groq API Key",
+        "title": "API Key"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {
