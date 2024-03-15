@@ -193,6 +193,14 @@
     },
     "waitingForMore": "Mais modelos estão sendo <1>planejados para serem adicionados</1>, aguarde ansiosamente ✨"
   },
+  "ollama": {
+    "download": {
+      "desc": "Ollama está baixando este modelo. Por favor, evite fechar esta página. O download será retomado do ponto em que parou, caso seja reiniciado.",
+      "remainingTime": "Tempo restante",
+      "speed": "Velocidade de download",
+      "title": "Baixando modelo {{model}}"
+    }
+  },
   "plugin": {
     "addTooltip": "Adicionar plug-in personalizado",
     "clearDeprecated": "Remover plug-ins inválidos",

@@ -193,6 +193,14 @@
     },
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨"
   },
+  "ollama": {
+    "download": {
+      "desc": "Ollama is bezig met het downloaden van dit model. Gelieve deze pagina niet te sluiten. Het downloaden zal worden hervat vanaf het onderbroken punt als u opnieuw begint te downloaden.",
+      "remainingTime": "Resterende tijd",
+      "speed": "Downloadsnelheid",
+      "title": "Model {{model}} wordt gedownload"
+    }
+  },
   "plugin": {
     "addTooltip": "Voeg aangepaste plug-in toe",
     "clearDeprecated": "Verwijder verouderde plug-ins",

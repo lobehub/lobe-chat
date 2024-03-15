@@ -16,6 +16,28 @@ interface ConnectionCheckerProps {
   provider: string;
 }
 
+const Error = memo<{ error: ChatMessageError }>(({ error }) => {
+  const { t } = useTranslation('error');
+
+  return (
+    <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
+      <Alert
+        banner
+        extra={
+          <Flexbox>
+            <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+              {JSON.stringify(error.body || error, null, 2)}
+            </Highlighter>
+          </Flexbox>
+        }
+        message={t(`response.${error.type}` as any)}
+        showIcon
+        type={'error'}
+      />
+    </Flexbox>
+  );
+});
+
 const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
   const { t } = useTranslation('setting');
 
@@ -75,23 +97,7 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
           {t('llm.checker.button')}
         </Button>
       </Flexbox>
-      {error && (
-        <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
-          <Alert
-            banner
-            extra={
-              <Flexbox>
-                <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
-                  {JSON.stringify(error.body || error, null, 2)}
-                </Highlighter>
-              </Flexbox>
-            }
-            message={t(`response.${error.type}` as any, { ns: 'error' })}
-            showIcon
-            type={'error'}
-          />
-        </Flexbox>
-      )}
+      {error && <Error error={error} />}
     </Flexbox>
   );
 });

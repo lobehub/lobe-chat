@@ -53,6 +53,7 @@
     "MoonshotBizError": "Se produjo un error al solicitar el servicio de Moonshot en el lado oscuro de la luna. Por favor, revise la siguiente información o inténtelo de nuevo.",
     "NoOpenAIAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
     "OllamaBizError": "Error al solicitar el servicio de Ollama, por favor verifica la siguiente información o inténtalo de nuevo",
+    "OllamaServiceUnavailable": "Servicio Ollama no disponible: Ollama no detectado. Por favor, verifica si está iniciado correctamente.",
     "OpenAIBizError": "Error al solicitar el servicio OpenAI. Depure o reintente según la siguiente información",
     "PerplexityBizError": "Error comercial al solicitar el servicio de IA de Perplexity. Por favor, revisa la siguiente información o inténtalo de nuevo",
     "PluginApiNotFound": "Lo sentimos, el API especificado no existe en el manifiesto del complemento. Verifique si su método de solicitud coincide con el API del manifiesto del complemento",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "Cerrar mensaje",
     "confirm": "Confirmar y volver a intentar",
+    "model": {
+      "Ollama": {
+        "confirm": "Descargar",
+        "description": "Ingresa las etiquetas de tu modelo Ollama para continuar la sesión",
+        "title": "Descargar el modelo Ollama especificado"
+      }
+    },
     "oauth": {
       "description": "El administrador ha habilitado la autenticación de inicio de sesión única. Haz clic en el botón a continuación para iniciar sesión y desbloquear la aplicación.",
       "success": "Inicio de sesión exitoso",

@@ -36,14 +36,14 @@ export const FormAction = memo<{
   const { styles, theme } = useStyles();
 
   return (
-    <Center gap={16} style={{ maxWidth: 300 }}>
+    <Center gap={16} style={{ maxWidth: 300, width: '100%' }}>
       <Avatar
         avatar={avatar}
         background={background ?? theme.colorFillContent}
         gap={12}
         size={80}
       />
-      <Flexbox style={{ fontSize: 20 }}>{title}</Flexbox>
+      <Flexbox style={{ fontSize: 20, textAlign: 'center' }}>{title}</Flexbox>
       <Flexbox className={styles.desc}>{description}</Flexbox>
       {children}
     </Center>
