@@ -99,6 +99,14 @@
         "title": "API Anahtarı"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Groq'dan alınan API Anahtarını girin",
+        "placeholder": "Groq API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {

@@ -38,11 +38,13 @@
     "AzureBizError": "Error requesting Azure AI service. Please troubleshoot or retry based on the following information.",
     "BedrockBizError": "Error requesting Bedrock service. Please troubleshoot or retry based on the following information.",
     "GoogleBizError": "Error requesting Google service. Please troubleshoot or retry based on the following information.",
+    "GroqBizError": "Error occurred while requesting Groq service. Please troubleshoot based on the following information or retry.",
     "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
     "InvalidAnthropicAPIKey": "The Anthropic API Key is incorrect or empty. Please check the Anthropic API Key and retry.",
     "InvalidAzureAPIKey": "Azure API Key is incorrect or empty. Please check the Azure API Key and retry.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
     "InvalidGoogleAPIKey": "Google API Key is incorrect or empty. Please check the Google API Key and retry.",
+    "InvalidGroqAPIKey": "Groq API Key is incorrect or empty. Please check the Groq API Key and retry.",
     "InvalidMistralAPIKey": "Incorrect or empty Mistral AI API Key. Please check your Mistral API Key and try again.",
     "InvalidMoonshotAPIKey": "The Moonshot AI API Key is incorrect or empty, please check the Moonshot API Key and try again.",
     "InvalidOllamaArgs": "Invalid Ollama configuration, please check Ollama configuration and try again",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Enter your Google API Key to start the session. The app will not store your API Key.",
         "title": "Use custom Google API Key"
+      },
+      "Groq": {
+        "description": "Enter your Groq API Key to start the session. The application will not store your API Key.",
+        "title": "Use Custom Groq API Key"
       },
       "Mistral": {
         "description": "Enter your Mistral AI API Key to start the session. The application will not store your API Key.",

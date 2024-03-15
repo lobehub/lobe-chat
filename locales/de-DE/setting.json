@@ -99,6 +99,14 @@
         "title": "API-Schlüssel"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Geben Sie den API-Schlüssel von Groq ein",
+        "placeholder": "Groq API-Schlüssel",
+        "title": "API-Schlüssel"
+      }
+    },
     "Mistral": {
       "title": "Mistral KI",
       "token": {
