@@ -169,7 +169,7 @@
     "@types/lodash-es": "^4",
     "@types/node": "^20",
     "@types/numeral": "^2",
-    "@types/react": "^18",
+    "@types/react": "18.2.65",
     "@types/react-dom": "^18",
     "@types/rtl-detect": "^1",
     "@types/semver": "^7",
