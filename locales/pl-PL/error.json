@@ -38,11 +38,13 @@
     "AzureBizError": "Wystąpił błąd żądania usługi Azure AI, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
     "BedrockBizError": "Wystąpił błąd żądania usługi Bedrock, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
     "GoogleBizError": "Wystąpił błąd żądania usługi Google, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
+    "GroqBizError": "Wystąpił błąd usługi Groq. Sprawdź poniższe informacje lub spróbuj ponownie.",
     "InvalidAccessCode": "Nieprawidłowy kod dostępu: Hasło jest nieprawidłowe lub puste. Proszę wprowadzić poprawne hasło dostępu lub dodać niestandardowy klucz API.",
     "InvalidAnthropicAPIKey": "Anthropic API Key jest nieprawidłowy lub pusty. Sprawdź poprawność klucza API Anthropic i spróbuj ponownie.",
     "InvalidAzureAPIKey": "Nieprawidłowy lub pusty klucz API Azure, prosimy sprawdzić klucz API Azure i spróbować ponownie.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
     "InvalidGoogleAPIKey": "Nieprawidłowy lub pusty klucz API Google, prosimy sprawdzić klucz API Google i spróbować ponownie.",
+    "InvalidGroqAPIKey": "Nieprawidłowy klucz API Groq, prosimy sprawdzić klucz API Groq i spróbować ponownie.",
     "InvalidMistralAPIKey": "Mistral AI API Key 不正确或为空，请检查 Mistral API Key 后重试",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
@@ -90,6 +92,10 @@
       "Google": {
         "description": "Wprowadź swój klucz API Google, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
         "title": "Użyj niestandardowego klucza API Google"
+      },
+      "Groq": {
+        "description": "Wprowadź swój klucz API Groq, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
+        "title": "Użyj niestandardowego klucza API Groq"
       },
       "Mistral": {
         "description": "输入你的 Mistral AI API Key 即可开始会话。应用不会记录你的 API Key",

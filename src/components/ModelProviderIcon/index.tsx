@@ -3,6 +3,7 @@ import {
   Azure,
   Bedrock,
   Google,
+  Groq,
   Mistral,
   Moonshot,
   Ollama,
@@ -67,6 +68,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Anthropic: {
       return <Anthropic size={20} />;
+    }
+
+    case ModelProvider.Groq: {
+      return <Groq size={20} />;
     }
 
     default: {

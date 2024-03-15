@@ -104,6 +104,7 @@
     "azure": "Azure",
     "bedrock": "AWS Bedrock",
     "google": "Google",
+    "groq": "Groq",
     "mistral": "Mistral KI",
     "moonshot": "Moonshot KI",
     "ollama": "Ollama",
