@@ -40,6 +40,21 @@ const Ollama: ModelProviderCard = {
       vision: false,
     },
     {
+      displayName: 'Llama2 CN 13B',
+      functionCall: false,
+      hidden: true,
+      id: 'llama2-chinese:13b',
+      tokens: 4000,
+      vision: false,
+    },
+    {
+      displayName: 'Llama2 CN 7B',
+      functionCall: false,
+      id: 'llama2-chinese',
+      tokens: 4000,
+      vision: false,
+    },
+    {
       displayName: 'Code Llama 7B',
       functionCall: false,
       id: 'codellama',
