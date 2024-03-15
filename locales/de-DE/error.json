@@ -53,6 +53,7 @@
     "MoonshotBizError": "Fehler beim Abrufen des Dark Side of the Moon-Services. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OllamaBizError": "Fehler bei der Anforderung des Ollama-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "OllamaServiceUnavailable": "Ollama-Dienst nicht verfügbar. Bitte überprüfen Sie, ob er ordnungsgemäß gestartet wurde.",
     "OpenAIBizError": "Fehler bei der OpenAI-Serviceanfrage. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut",
     "PerplexityBizError": "Fehler bei der Anforderung des Perplexity AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
@@ -114,6 +115,13 @@
     },
     "closeMessage": "Hinweis schließen",
     "confirm": "Bestätigen und erneut versuchen",
+    "model": {
+      "Ollama": {
+        "confirm": "Herunterladen",
+        "description": "Geben Sie Ihre Ollama-Modellbezeichnung ein, um fortzufahren",
+        "title": "Bestimmtes Ollama-Modell herunterladen"
+      }
+    },
     "oauth": {
       "description": "Der Administrator hat die einheitliche Anmeldeauthentifizierung aktiviert. Klicken Sie unten auf die Schaltfläche, um sich anzumelden und die App zu entsperren.",
       "success": "Anmeldung erfolgreich",

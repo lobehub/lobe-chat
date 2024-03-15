@@ -195,6 +195,14 @@ export default {
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
   },
+  ollama: {
+    download: {
+      desc: 'Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续',
+      remainingTime: '剩余时间',
+      speed: '下载速度',
+      title: '正在下载模型 {{model}} ',
+    },
+  },
   plugin: {
     addTooltip: '自定义插件',
     clearDeprecated: '移除无效插件',
@@ -410,6 +418,7 @@ export default {
     placeholder: '请输入助手的标识符，需要是唯一的，比如 web-development',
     tooltips: '分享到助手市场',
   },
+
   tab: {
     about: '关于',
     agent: '默认助手',
@@ -417,7 +426,6 @@ export default {
     llm: '语言模型',
     tts: '语音服务',
   },
-
   tools: {
     builtins: {
       groupName: '内置插件',

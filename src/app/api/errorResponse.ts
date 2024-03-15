@@ -1,5 +1,5 @@
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
-import { ErrorResponse, ErrorType } from '@/types/fetch';
+import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
 
 const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
   // InvalidAccessCode / InvalidAzureAPIKey / InvalidOpenAIAPIKey / InvalidZhipuAPIKey ....
@@ -37,6 +37,7 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.MoonshotBizError: {
       return 476;
     }
+    case ChatErrorType.OllamaServiceUnavailable:
     case AgentRuntimeErrorType.OllamaBizError: {
       return 478;
     }

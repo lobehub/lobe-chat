@@ -48,9 +48,6 @@ const mistralAPIKey = (s: GlobalStore) => modelProvider(s).mistral.apiKey;
 const enableMoonshot = (s: GlobalStore) => modelProvider(s).moonshot.enabled;
 const moonshotAPIKey = (s: GlobalStore) => modelProvider(s).moonshot.apiKey;
 
-const enableOllamaConfigInSettings = (s: GlobalStore) =>
-  s.serverConfig.languageModel?.ollama?.enabled || false;
-
 const enableOllama = (s: GlobalStore) => modelProvider(s).ollama.enabled;
 const ollamaProxyUrl = (s: GlobalStore) => modelProvider(s).ollama.endpoint;
 
@@ -118,27 +115,32 @@ const processChatModels = (
 };
 
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
-  const string = [
+  const openaiModelString = [
     s.serverConfig.customModelName,
     currentSettings(s).languageModel.openAI.customModelName,
   ]
     .filter(Boolean)
     .join(',');
 
-  const modelConfig = parseModelString(string);
+  const openaiModelConfig = parseModelString(openaiModelString);
 
-  const chatModels = processChatModels(modelConfig);
+  const openaiChatModels = processChatModels(openaiModelConfig);
 
-  const ollamaModelConfig = parseModelString(
+  const ollamaModelString = [
+    s.serverConfig.languageModel?.ollama?.customModelName,
     currentSettings(s).languageModel.ollama.customModelName,
-  );
+  ]
+    .filter(Boolean)
+    .join(',');
+
+  const ollamaModelConfig = parseModelString(ollamaModelString);
 
   const ollamaChatModels = processChatModels(ollamaModelConfig, OllamaProvider.chatModels);
 
   return [
     {
       ...OpenAIProvider,
-      chatModels,
+      chatModels: openaiChatModels,
     },
     // { ...azureModelList(s), enabled: enableAzure(s) },
     { ...ZhiPuProvider, enabled: enableZhipu(s) },
@@ -216,7 +218,6 @@ export const modelProviderSelectors = {
   moonshotAPIKey,
 
   // Ollama
-  enableOllamaConfigInSettings,
   enableOllama,
   ollamaProxyUrl,
 

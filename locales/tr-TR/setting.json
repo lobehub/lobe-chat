@@ -193,6 +193,14 @@
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
   },
+  "ollama": {
+    "download": {
+      "desc": "Ollama bu modeli indiriyor, lütfen bu sayfayı kapatmamaya çalışın. Yeniden indirme durumunda kaldığı yerden devam edecektir.",
+      "remainingTime": "Kalan Zaman",
+      "speed": "İndirme Hızı",
+      "title": "{{model}} Modeli İndiriliyor"
+    }
+  },
   "plugin": {
     "addTooltip": "Eklenti Ekle",
     "clearDeprecated": "Kullanım Dışı Eklentileri Kaldır",
