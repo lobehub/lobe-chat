@@ -12,6 +12,7 @@ import {
   Settings,
   Settings2,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
@@ -126,8 +127,8 @@ const BottomActions = memo<BottomActionProps>(({ tab }) => {
         placement="right"
         title={
           <div>
-            <img
-              alt="supermenit微信二维码"
+            <Image
+              alt={'supermenit微信二维码'}
               src="https://imgcdn.qqshsh.com/chat/supermenit.jpg"
               width={168}
             />

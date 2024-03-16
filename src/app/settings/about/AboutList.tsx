@@ -1,4 +1,5 @@
 import { Heart } from 'lucide-react';
+import Image from 'next/image';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -43,8 +44,8 @@ const AboutList = memo(() => {
             为了能够持续免费为大家服务，我们面临着不小的成本挑战。我们诚挚邀请您加入我们的购物群(全网实时低价和羊毛信息)。在这里，您不仅可以支持我们的持续运营，还能享受到专属的购物优惠和精彩内容。让我们携手共创更美好的AI服务体验，让免费成为可能。
           </p>
           <div>
-            <img alt="" src="https://imgcdn.qqshsh.com/chat/qwgwkht.jpg" width={168} />
-            <img alt="" src="https://imgcdn.qqshsh.com/chat/myhzp.jpg" width={168} />
+            <Image alt={'全网折扣'} src="https://imgcdn.qqshsh.com/chat/qwgwkht.jpg" width={168} />
+            <Image alt={'母婴化妆品'} src="https://imgcdn.qqshsh.com/chat/myhzp.jpg" width={168} />
           </div>
         </div>
 
