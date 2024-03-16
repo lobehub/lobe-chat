@@ -9,6 +9,7 @@ export { LobeMistralAI } from './mistral';
 export { LobeMoonshotAI } from './moonshot';
 export { LobeOllamaAI } from './ollama';
 export { LobeOpenAI } from './openai';
+export { LobeOpenRouterAI } from './openrouter';
 export { LobePerplexityAI } from './perplexity';
 export * from './types';
 export { AgentRuntimeError } from './utils/createError';

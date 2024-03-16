@@ -48,6 +48,7 @@
     "InvalidMistralAPIKey": "Ongeldige of lege Mistral AI API-sleutel. Controleer de Mistral API-sleutel en probeer het opnieuw.",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
+    "InvalidOpenRouterAPIKey": "OpenRouter API Key is onjuist of leeg. Controleer de OpenRouter API Key en probeer het opnieuw.",
     "InvalidPerplexityAPIKey": "Perplexity API Key is onjuist of leeg. Controleer de Perplexity API Key en probeer het opnieuw.",
     "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
@@ -57,6 +58,7 @@
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
     "OllamaServiceUnavailable": "Ollama 服务不可用，请检查是否已正常启动",
     "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
+    "OpenRouterBizError": "Fout bij het aanvragen van OpenRouter AI-service. Controleer de onderstaande informatie en probeer opnieuw.",
     "PerplexityBizError": "Er is een fout opgetreden bij het aanvragen van de Perplexity AI-service. Controleer de onderstaande informatie en probeer het opnieuw.",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
@@ -109,6 +111,10 @@
         "addProxyUrl": "Add OpenAI proxy address (optional)",
         "description": "Enter your OpenAI API Key to start the session. The app will not record your API Key",
         "title": "Use custom OpenAI API Key"
+      },
+      "OpenRouter": {
+        "description": "Voer uw OpenRouter API Key in om de sessie te starten. De app zal uw API Key niet opslaan.",
+        "title": "Gebruik aangepaste OpenRouter API Key"
       },
       "Perplexity": {
         "description": "Voer uw eigen Perplexity API Key in om het gesprek te starten. De app zal uw API Key niet opslaan.",
