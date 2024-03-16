@@ -177,6 +177,22 @@
         "title": "Usa Azure OpenAI"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"
+      },
+      "customModelName": {
+        "desc": "Aggiungi un modello personalizzato, separando più modelli con virgola (,)",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Nome del modello personalizzato"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "Inserisci la chiave API da OpenRouter AI",
+        "placeholder": "Chiave API OpenRouter AI",
+        "title": "Chiave API"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity",
       "token": {

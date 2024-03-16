@@ -177,6 +177,22 @@
         "title": "استخدام Azure OpenAI"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "اختبار صحة عنوان الوكيل"
+      },
+      "customModelName": {
+        "desc": "إضافة نموذج مخصص، استخدم فاصلة (،) للنماذج المتعددة",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "اسم النموذج المخصص"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "أدخل مفتاح API من OpenRouter AI",
+        "placeholder": "مفتاح API من OpenRouter AI",
+        "title": "مفتاح API"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity AI",
       "token": {
