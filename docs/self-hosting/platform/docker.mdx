@@ -1,8 +1,12 @@
-import { Callout, Steps, Tabs } from 'nextra/components';
-
 # Docker Deployment Guide
 
-[![][docker-release-shield]][docker-release-link][![][docker-size-shield]][docker-size-link][![][docker-pulls-shield]][docker-pulls-link]
+<div style={{display:"flex", gap: 4}}>
+  [![][docker-release-shield]][docker-release-link]
+
+  [![][docker-size-shield]][docker-size-link]
+
+  [![][docker-pulls-shield]][docker-pulls-link]
+</div>
 
 We provide a [Docker image][docker-release-link] for you to deploy the LobeChat service on your private device.
 
@@ -45,7 +49,7 @@ We provide a [Docker image][docker-release-link] for you to deploy the LobeChat 
 
   - For the complete list of environment variables supported by LobeChat, please refer to the [Environment Variables](/zh/self-hosting/environment-ariable) section.
 
-  <Callout>
+  <Callout type="tip">
     Since the official Docker image build takes about half an hour, if you see the "update available"
     prompt after deployment, you can wait for the image to finish building before deploying again.
   </Callout>
@@ -56,7 +60,7 @@ We provide a [Docker image][docker-release-link] for you to deploy the LobeChat 
     stolen!!!](https://github.com/lobehub/lobe-chat/issues/1123).
   </Callout>
 
-  <Callout type="info">
+  <Callout type="important">
     Note that when the **deployment architecture is inconsistent with the image**, you need to
     cross-compile **Sharp**, see [Sharp
     Cross-Compilation](https://sharp.pixelplumbing.com/install#cross-platform) for details.
