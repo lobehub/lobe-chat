@@ -110,6 +110,7 @@ export default {
     ollama: 'Ollama',
     oneapi: 'One API',
     openai: 'OpenAI',
+    openrouter: 'OpenRouter',
     perplexity: 'Perplexity',
     zhipu: '智谱AI',
   },

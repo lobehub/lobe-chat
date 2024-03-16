@@ -48,6 +48,7 @@
     "InvalidMistralAPIKey": "Mistral AI API Key 不正確或為空，請檢查 Mistral API Key 後重試",
     "InvalidMoonshotAPIKey": "Moonshot AI API 金鑰不正確或為空，請檢查 Moonshot API 金鑰後重試",
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",
+    "InvalidOpenRouterAPIKey": "OpenRouter API 金鑰不正確或為空，請檢查 OpenRouter API 金鑰後重試",
     "InvalidPerplexityAPIKey": "Perplexity API Key 不正確或為空，請檢查 Perplexity API Key 後重試",
     "InvalidZhipuAPIKey": "Zhipu API Key 不正確或為空，請檢查 Zhipu API Key 後重試",
     "LocationNotSupportError": "很抱歉，你的所在位置不支持此模型服務，可能是由於地區限制或服務未開通。請確認當前位置是否支持使用此服務，或嘗試使用其他位置信息。",
@@ -57,6 +58,7 @@
     "OllamaBizError": "請求 Ollama 服務出錯，請根據以下資訊排查或重試",
     "OllamaServiceUnavailable": "未偵測到 Ollama 服務，請檢查是否正常啟動",
     "OpenAIBizError": "請求 OpenAI 服務出錯。請根據以下資訊進行排查或重試。",
+    "OpenRouterBizError": "請求 OpenRouter AI 服務出錯，請根據以下信息排查或重試",
     "PerplexityBizError": "請求 Perplexity AI 服務出錯，請根據以下信息排查或重試",
     "PluginApiNotFound": "抱歉，外掛描述檔案中不存在該 API。請檢查您的請求方法與外掛清單 API 是否相符",
     "PluginApiParamsError": "抱歉，該外掛請求的輸入參數驗證失敗。請檢查輸入參數與 API 描述資訊是否相符",
@@ -109,6 +111,10 @@
         "addProxyUrl": "添加 OpenAI 代理地址（可選）",
         "description": "輸入你的 OpenAI API Key 即可開始會話。應用不會記錄你的 API Key",
         "title": "使用自定義 OpenAI API Key"
+      },
+      "OpenRouter": {
+        "description": "輸入你的 OpenRouter API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
+        "title": "使用自定義 OpenRouter API 金鑰"
       },
       "Perplexity": {
         "description": "輸入你的 Perplexity API Key 即可開始會話。應用不會記錄你的 API Key",

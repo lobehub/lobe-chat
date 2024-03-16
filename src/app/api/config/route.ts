@@ -22,6 +22,7 @@ export const GET = async () => {
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
     ENABLED_MISTRAL,
+    ENABLED_OPENROUTER,
     DEFAULT_AGENT_CONFIG,
     OLLAMA_CUSTOM_MODELS,
   } = getServerConfig();
@@ -41,6 +42,7 @@ export const GET = async () => {
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
       ollama: { customModelName: OLLAMA_CUSTOM_MODELS, enabled: ENABLE_OLLAMA },
+      openrouter: { enabled: ENABLED_OPENROUTER },
       perplexity: { enabled: ENABLED_PERPLEXITY },
       zhipu: { enabled: ENABLED_ZHIPU },
     },

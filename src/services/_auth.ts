@@ -65,6 +65,10 @@ export const getProviderAuthPayload = (provider: string) => {
     case ModelProvider.Groq: {
       return { apiKey: modelProviderSelectors.groqAPIKey(useGlobalStore.getState()) };
     }
+    
+    case ModelProvider.OpenRouter: {
+      return { apiKey: modelProviderSelectors.openrouterAPIKey(useGlobalStore.getState()) };
+    }
 
     default:
     case ModelProvider.OpenAI: {
