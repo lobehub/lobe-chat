@@ -53,9 +53,11 @@ export class LobeZhipuAI implements LobeRuntimeAI {
     try {
       const params = this.buildCompletionsParams(payload);
 
-      const response = await this.client.chat.completions.create(
+      let response = await this.client.chat.completions.create(
         params as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       );
+
+      response = this.handleZhipuResponse(response);
 
       const [prod, debug] = response.tee();
 
@@ -124,6 +126,13 @@ export class LobeZhipuAI implements LobeRuntimeAI {
             }),
     };
   };
+  // TODO: fix delta问题以及消息回复有base64图片时问题，临时处理，后续需要移除
+  private handleZhipuResponse(response: any) {
+    if (response.delta.role === 'assistant' && response.delta.content === '') {
+      return;
+    }
+    return this.transformMessage(response);
+  }
 }
 
 export default LobeZhipuAI;
