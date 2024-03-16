@@ -48,6 +48,7 @@
     "InvalidMistralAPIKey": "Clé API Mistral AI incorrecte ou manquante. Veuillez vérifier la clé API Mistral et réessayer.",
     "InvalidMoonshotAPIKey": "Clé API Moonshot AI incorrecte ou manquante. Veuillez vérifier la clé API Moonshot et réessayer.",
     "InvalidOllamaArgs": "La configuration d'Ollama n'est pas valide, veuillez vérifier la configuration d'Ollama et réessayer",
+    "InvalidOpenRouterAPIKey": "La clé d'API OpenRouter est incorrecte ou manquante. Veuillez vérifier la clé d'API OpenRouter et réessayer.",
     "InvalidPerplexityAPIKey": "La clé API Perplexity est incorrecte ou vide. Veuillez vérifier la clé API Perplexity et réessayer.",
     "InvalidZhipuAPIKey": "Clé API Zhipu incorrecte ou vide, veuillez vérifier la clé API Zhipu et réessayer",
     "LocationNotSupportError": "Désolé, votre emplacement actuel ne prend pas en charge ce service de modèle, peut-être en raison de restrictions géographiques ou de services non disponibles. Veuillez vérifier si votre emplacement actuel prend en charge ce service ou essayer avec une autre localisation.",
@@ -57,6 +58,7 @@
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",
     "OllamaServiceUnavailable": "Service Ollama non disponible, veuillez vérifier s'il est démarré correctement",
     "OpenAIBizError": "Erreur de service OpenAI. Veuillez diagnostiquer ou réessayer en fonction des informations ci-dessous",
+    "OpenRouterBizError": "Erreur commerciale lors de la demande de service OpenRouter AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
     "PerplexityBizError": "Erreur commerciale lors de la demande de service Perplexity AI. Veuillez vérifier les informations suivantes ou réessayer.",
     "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
     "PluginApiParamsError": "Désolé, la validation des paramètres d'entrée de la requête de ce plugin a échoué. Veuillez vérifier que les paramètres d'entrée correspondent aux informations de l'API",
@@ -109,6 +111,10 @@
         "addProxyUrl": "Ajouter une adresse proxy OpenAI (facultatif)",
         "description": "Entrez votre clé API OpenAI pour commencer la session. L'application ne conservera pas votre clé API",
         "title": "Utiliser une clé API OpenAI personnalisée"
+      },
+      "OpenRouter": {
+        "description": "Entrez votre clé d'API OpenRouter pour commencer la session. L'application ne stockera pas votre clé d'API.",
+        "title": "Utiliser une clé d'API OpenRouter personnalisée"
       },
       "Perplexity": {
         "description": "Entrez votre clé API Perplexity pour commencer la session. L'application ne conservera pas votre clé API.",

@@ -2,6 +2,81 @@
 
 # Changelog
 
+## [Version 0.139.0](https://github.com/lobehub/lobe-chat/compare/v0.138.2...v0.139.0)
+
+<sup>Released on **2024-03-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Support openrouter as a new model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support openrouter as a new model provider, closes [#1572](https://github.com/lobehub/lobe-chat/issues/1572) ([780b1a2](https://github.com/lobehub/lobe-chat/commit/780b1a2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.138.2](https://github.com/lobehub/lobe-chat/compare/v0.138.1...v0.138.2)
+
+<sup>Released on **2024-03-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Markdown in ChatItem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Markdown in ChatItem ([be75549](https://github.com/lobehub/lobe-chat/commit/be75549))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.138.1](https://github.com/lobehub/lobe-chat/compare/v0.138.0...v0.138.1)
+
+<sup>Released on **2024-03-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix URL typo.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix URL typo, closes [#1590](https://github.com/lobehub/lobe-chat/issues/1590) ([97137a9](https://github.com/lobehub/lobe-chat/commit/97137a9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.138.0](https://github.com/lobehub/lobe-chat/compare/v0.137.0...v0.138.0)
 
 <sup>Released on **2024-03-15**</sup>

@@ -92,4 +92,7 @@ ENV ANTHROPIC_API_KEY ""
 # Mistral
 ENV MISTRAL_API_KEY ""
 
+# OpenRouter
+ENV OPENROUTER_API_KEY ""
+
 CMD ["node", "server.js"]

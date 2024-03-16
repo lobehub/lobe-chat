@@ -84,6 +84,9 @@ export default {
 
     InvalidGroqAPIKey: 'Groq API Key 不正确或为空，请检查 Groq API Key 后重试',
     GroqBizError: '请求 Groq 服务出错，请根据以下信息排查或重试',
+    
+    InvalidOpenRouterAPIKey: 'OpenRouter API Key 不正确或为空，请检查 OpenRouter API Key 后重试',
+    OpenRouterBizError: '请求 OpenRouter AI 服务出错，请根据以下信息排查或重试',
 
     InvalidOllamaArgs: 'Ollama 配置不正确，请检查 Ollama 配置后重试',
     OllamaBizError: '请求 Ollama 服务出错，请根据以下信息排查或重试',
@@ -130,6 +133,10 @@ export default {
         addProxyUrl: '添加 OpenAI 代理地址（可选）',
         description: '输入你的 OpenAI API Key 即可开始会话。应用不会记录你的 API Key',
         title: '使用自定义 OpenAI API Key',
+      },
+      OpenRouter: {
+        description: '输入你的 OpenRouter API Key 即可开始会话。应用不会记录你的 API Key',
+        title: '使用自定义 OpenRouter API Key',
       },
       Perplexity: {
         description: '输入你的 Perplexity API Key 即可开始会话。应用不会记录你的 API Key',
