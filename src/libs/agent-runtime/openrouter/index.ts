@@ -19,14 +19,22 @@ export class LobeOpenRouterAI implements LobeRuntimeAI {
   constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOpenRouterAPIKey);
     
-    this.client = new OpenAI({ apiKey, baseURL, ...res });
+    this.client = new OpenAI({
+      apiKey,
+      baseURL,
+      defaultHeaders: {
+        "HTTP-Referer": "https://chat-preview.lobehub.com",
+        "X-Title": "Lobe Chat"
+      },
+      ...res
+    });
     this.baseURL = this.client.baseURL;
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
       const response = await this.client.chat.completions.create(
-        payload as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
+        payload as unknown as OpenAI.ChatCompletionCreateParamsStreaming
       );
       const [prod, debug] = response.tee();
 
