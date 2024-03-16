@@ -48,6 +48,7 @@
     "InvalidMistralAPIKey": "Mistral AI API 키가 잘못되었거나 비어 있습니다. Mistral API 키를 확인한 후 다시 시도해주세요.",
     "InvalidMoonshotAPIKey": "Moonshot AI API 키가 잘못되었거나 비어 있습니다. Moonshot API 키를 확인한 후 다시 시도해주세요.",
     "InvalidOllamaArgs": "Ollama 구성이 잘못되었습니다. Ollama 구성을 확인한 후 다시 시도하십시오.",
+    "InvalidOpenRouterAPIKey": "OpenRouter API 키가 잘못되었거나 비어 있습니다. OpenRouter API 키를 확인한 후 다시 시도하십시오.",
     "InvalidPerplexityAPIKey": "Perplexity API 키가 잘못되었거나 비어 있습니다. Perplexity API 키를 확인한 후 다시 시도하십시오.",
     "InvalidZhipuAPIKey": "잘못된 또는 비어 있는 Zhipu API Key입니다. Zhipu API Key를 확인한 후 다시 시도하십시오.",
     "LocationNotSupportError": "죄송합니다. 귀하의 현재 위치는 해당 모델 서비스를 지원하지 않습니다. 지역 제한 또는 서비스 미개통으로 인한 것일 수 있습니다. 현재 위치가 해당 서비스를 지원하는지 확인하거나 다른 위치 정보를 사용해 보십시오.",
@@ -57,6 +58,7 @@
     "OllamaBizError": "Ollama 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "OllamaServiceUnavailable": "Ollama 서비스를 찾을 수 없습니다. 정상적으로 시작되었는지 확인하십시오.",
     "OpenAIBizError": "OpenAI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 문제를 해결하거나 다시 시도해주세요.",
+    "OpenRouterBizError": "OpenRouter AI 서비스 요청 중 오류가 발생했습니다. 다음 정보를 확인하고 다시 시도하십시오.",
     "PerplexityBizError": "Perplexity AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "PluginApiNotFound": "죄송합니다. 플러그인 설명서에 해당 API가 없습니다. 요청 메서드와 플러그인 설명서 API가 일치하는지 확인해주세요.",
     "PluginApiParamsError": "죄송합니다. 플러그인 요청의 입력 매개변수 유효성 검사에 실패했습니다. 입력 매개변수와 API 설명 정보가 일치하는지 확인해주세요.",
@@ -109,6 +111,10 @@
         "addProxyUrl": "OpenAI 프록시 주소 추가(선택 사항)",
         "description": "OpenAI API Key를 입력하여 세션을 시작합니다. 앱은 귀하의 API Key를 기록하지 않습니다.",
         "title": "사용자 정의 OpenAI API Key 사용"
+      },
+      "OpenRouter": {
+        "description": "OpenRouter API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+        "title": "사용자 지정 OpenRouter API 키 사용"
       },
       "Perplexity": {
         "description": "Perplexity API 키를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",

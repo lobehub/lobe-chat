@@ -177,6 +177,22 @@
         "title": "Sử dụng Azure OpenAI"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "Kiểm tra xem địa chỉ proxy đã được điền đúng chưa"
+      },
+      "customModelName": {
+        "desc": "Thêm tên mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Tên mô hình tùy chỉnh"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "Nhập API Key từ OpenRouter AI",
+        "placeholder": "OpenRouter AI API Key",
+        "title": "API Key"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity AI",
       "token": {
