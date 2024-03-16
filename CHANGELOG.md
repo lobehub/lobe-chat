@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.139.0](https://github.com/lobehub/lobe-chat/compare/v0.138.2...v0.139.0)
+
+<sup>Released on **2024-03-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Support openrouter as a new model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support openrouter as a new model provider, closes [#1572](https://github.com/lobehub/lobe-chat/issues/1572) ([780b1a2](https://github.com/lobehub/lobe-chat/commit/780b1a2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.138.2](https://github.com/lobehub/lobe-chat/compare/v0.138.1...v0.138.2)
 
 <sup>Released on **2024-03-15**</sup>
