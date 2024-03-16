@@ -51,7 +51,7 @@ const Preview = memo<FieldType & { title?: string }>(
               </Flexbox>
               {withSystemRole && systemRole && (
                 <div className={styles.role}>
-                  <Markdown className={styles.markdown}>{systemRole}</Markdown>
+                  <Markdown variant={'chat'}>{systemRole}</Markdown>
                 </div>
               )}
             </div>

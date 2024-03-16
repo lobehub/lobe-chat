@@ -99,6 +99,14 @@
         "title": "API Key"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Groq의 API 키를 입력하세요",
+        "placeholder": "Groq API 키",
+        "title": "API 키"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {
@@ -192,6 +200,14 @@
       "title": "연결성 확인"
     },
     "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요 ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama 모델을 다운로드 중입니다. 이 페이지를 닫지 말아주세요. 다시 다운로드하면 중단된 곳부터 계속됩니다.",
+      "remainingTime": "남은 시간",
+      "speed": "다운로드 속도",
+      "title": "{{model}} 모델 다운로드 중"
+    }
   },
   "plugin": {
     "addTooltip": "플러그인 추가",

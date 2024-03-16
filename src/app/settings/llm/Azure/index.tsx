@@ -14,12 +14,7 @@ import { LLMProviderApiTokenKey, LLMProviderBaseUrlKey, LLMProviderConfigKey } f
 
 const useStyles = createStyles(({ css, token }) => ({
   markdown: css`
-    a {
-      font-size: 12px !important;
-    }
-
     p {
-      font-size: 12px !important;
       color: ${token.colorTextDescription} !important;
     }
   `,
@@ -73,7 +68,7 @@ const AzureOpenAIProvider = memo(() => {
             />
           ),
           desc: (
-            <Markdown className={styles.markdown}>
+            <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
               {t('llm.AzureOpenAI.azureApiVersion.desc')}
             </Markdown>
           ),
@@ -89,7 +84,9 @@ const AzureOpenAIProvider = memo(() => {
             />
           ),
           desc: (
-            <Markdown className={styles.markdown}>{t('llm.AzureOpenAI.deployments.desc')}</Markdown>
+            <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
+              {t('llm.AzureOpenAI.deployments.desc')}
+            </Markdown>
           ),
 
           label: t('llm.AzureOpenAI.deployments.title'),

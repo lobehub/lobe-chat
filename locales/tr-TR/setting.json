@@ -99,6 +99,14 @@
         "title": "API Anahtarı"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Groq'dan alınan API Anahtarını girin",
+        "placeholder": "Groq API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {
@@ -192,6 +200,14 @@
       "title": "Bağlantı Kontrolü"
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama bu modeli indiriyor, lütfen bu sayfayı kapatmamaya çalışın. Yeniden indirme durumunda kaldığı yerden devam edecektir.",
+      "remainingTime": "Kalan Zaman",
+      "speed": "İndirme Hızı",
+      "title": "{{model}} Modeli İndiriliyor"
+    }
   },
   "plugin": {
     "addTooltip": "Eklenti Ekle",

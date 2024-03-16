@@ -11,7 +11,7 @@ export const OFFICIAL_URL = 'https://chat-preview.lobehub.com/';
 export const getCanonicalUrl = (path: string) => urlJoin(OFFICIAL_URL, path);
 
 export const GITHUB = pkg.homepage;
-export const CHANGELOG = urlJoin(GITHUB, 'blob/master/CHANGELOG.md');
+export const CHANGELOG = urlJoin(GITHUB, 'blob/main/CHANGELOG.md');
 
 const { LOBE_CHAT_DOCS } = getClientConfig();
 
