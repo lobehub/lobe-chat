@@ -110,6 +110,7 @@
     "ollama": "Оллама",
     "oneapi": "One API",
     "openai": "OpenAI",
+    "openrouter": "OpenRouter",
     "perplexity": "Perplexity AI",
     "zhipu": "Zhipu AI"
   },

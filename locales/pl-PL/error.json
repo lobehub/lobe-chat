@@ -48,6 +48,7 @@
     "InvalidMistralAPIKey": "Mistral AI API Key 不正确或为空，请检查 Mistral API Key 后重试",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
+    "InvalidOpenRouterAPIKey": "OpenRouter API Key jest nieprawidłowy lub pusty. Sprawdź klucz API OpenRouter i spróbuj ponownie.",
     "InvalidPerplexityAPIKey": "Klucz API Perplexity jest nieprawidłowy lub pusty. Sprawdź klucz API Perplexity i spróbuj ponownie.",
     "InvalidZhipuAPIKey": "Nieprawidłowy lub pusty klucz API Zhipu, prosimy sprawdzić klucz API Zhipu i spróbować ponownie.",
     "LocationNotSupportError": "Przepraszamy, Twoja lokalizacja nie obsługuje tego usługi modelu, być może ze względu na ograniczenia regionalne lub brak dostępności usługi. Proszę sprawdź, czy bieżąca lokalizacja obsługuje tę usługę, lub spróbuj użyć innych informacji o lokalizacji.",
@@ -57,6 +58,7 @@
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
     "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy została poprawnie uruchomiona.",
     "OpenAIBizError": "Błąd żądania usługi OpenAI. Proszę sprawdź poniższe informacje i spróbuj ponownie",
+    "OpenRouterBizError": "Wystąpił błąd biznesowy podczas żądania usługi OpenRouter AI. Sprawdź poniższe informacje lub spróbuj ponownie.",
     "PerplexityBizError": "Błąd biznesowy podczas żądania usługi Perplexity AI. Sprawdź poniższe informacje lub spróbuj ponownie.",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
     "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",
@@ -109,6 +111,10 @@
         "addProxyUrl": "Dodaj adres proxy OpenAI (opcjonalnie)",
         "description": "Wprowadź swój klucz API OpenAI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
         "title": "Użyj niestandardowego klucza API OpenAI"
+      },
+      "OpenRouter": {
+        "description": "Wprowadź swój klucz API OpenRouter, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
+        "title": "Użyj niestandardowego klucza API OpenRouter"
       },
       "Perplexity": {
         "description": "Wprowadź swój klucz API Perplexity, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
