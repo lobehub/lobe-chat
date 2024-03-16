@@ -177,6 +177,22 @@
         "title": "Azure OpenAI gebruiken"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "Check of de proxy-adres correct is ingevuld"
+      },
+      "customModelName": {
+        "desc": "Voeg aangepast model toe, gebruik een komma (,) om meerdere modellen te scheiden",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Aangepaste modelnaam"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "Voer de API-sleutel in van OpenRouter AI",
+        "placeholder": "OpenRouter AI API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity",
       "token": {

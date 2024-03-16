@@ -32,6 +32,7 @@ export enum ModelProvider {
   Moonshot = 'moonshot',
   Ollama = 'ollama',
   OpenAI = 'openai',
+  OpenRouter = 'openrouter',
   Perplexity = 'perplexity',
   Tongyi = 'tongyi',
   ZhiPu = 'zhipu',

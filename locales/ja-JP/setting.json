@@ -177,6 +177,22 @@
         "title": "Azure OpenAI を使用"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "プロキシアドレスが正しく入力されているかをテストします"
+      },
+      "customModelName": {
+        "desc": "カスタムモデルを追加します。複数のモデルはコンマ（,）で区切ってください",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "カスタムモデル名"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "OpenRouter AIから取得したAPIキーを入力してください",
+        "placeholder": "OpenRouter AI APIキー",
+        "title": "APIキー"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity",
       "token": {
