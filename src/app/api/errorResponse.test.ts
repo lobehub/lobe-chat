@@ -114,6 +114,13 @@ describe('createErrorResponse', () => {
       expect(response.status).toBe(481);
     });
 
+    // 测试 OpenRouterBizError 错误类型返回482状态码
+    it('returns a 482 status for OpenRouterBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.OpenRouterBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(482);
+    });
+
   });
 
   // 测试状态码不在200-599范围内的情况
