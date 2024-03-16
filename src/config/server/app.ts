@@ -58,9 +58,13 @@ export const getAppConfig = () => {
     PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
 
     ENABLE_OAUTH_SSO: !!process.env.ENABLE_OAUTH_SSO,
+    SSO_PROVIDERS: process.env.SSO_PROVIDERS || 'auth0',
     AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID || '',
     AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET || '',
     AUTH0_ISSUER: process.env.AUTH0_ISSUER || '',
+    AZURE_AD_CLIENT_ID: process.env.AZURE_AD_CLIENT_ID || '',
+    AZURE_AD_CLIENT_SECRET: process.env.AZURE_AD_CLIENT_SECRET || '',
+    AZURE_AD_TENANT_ID: process.env.AZURE_AD_TENANT_ID || '',
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || '',
 
     ENABLE_LANGFUSE: process.env.ENABLE_LANGFUSE === '1',

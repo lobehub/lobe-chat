@@ -4,6 +4,7 @@ import {
   AnthropicProvider,
   BedrockProvider,
   GoogleProvider,
+  GroqProvider,
   LOBE_DEFAULT_MODEL_LIST,
   MistralProvider,
   MoonshotProvider,
@@ -48,9 +49,6 @@ const mistralAPIKey = (s: GlobalStore) => modelProvider(s).mistral.apiKey;
 const enableMoonshot = (s: GlobalStore) => modelProvider(s).moonshot.enabled;
 const moonshotAPIKey = (s: GlobalStore) => modelProvider(s).moonshot.apiKey;
 
-const enableOllamaConfigInSettings = (s: GlobalStore) =>
-  s.serverConfig.languageModel?.ollama?.enabled || false;
-
 const enableOllama = (s: GlobalStore) => modelProvider(s).ollama.enabled;
 const ollamaProxyUrl = (s: GlobalStore) => modelProvider(s).ollama.endpoint;
 
@@ -60,6 +58,9 @@ const perplexityAPIKey = (s: GlobalStore) => modelProvider(s).perplexity.apiKey;
 const enableAnthropic = (s: GlobalStore) => modelProvider(s).anthropic.enabled;
 const anthropicAPIKey = (s: GlobalStore) => modelProvider(s).anthropic.apiKey;
 const anthropicProxyUrl = (s: GlobalStore) => modelProvider(s).anthropic.endpoint;
+
+const enableGroq = (s: GlobalStore) => modelProvider(s).groq.enabled;
+const groqAPIKey = (s: GlobalStore) => modelProvider(s).groq.apiKey;
 
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
@@ -118,37 +119,43 @@ const processChatModels = (
 };
 
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
-  const string = [
+  const openaiModelString = [
     s.serverConfig.customModelName,
     currentSettings(s).languageModel.openAI.customModelName,
   ]
     .filter(Boolean)
     .join(',');
 
-  const modelConfig = parseModelString(string);
+  const openaiModelConfig = parseModelString(openaiModelString);
 
-  const chatModels = processChatModels(modelConfig);
+  const openaiChatModels = processChatModels(openaiModelConfig);
 
-  const ollamaModelConfig = parseModelString(
+  const ollamaModelString = [
+    s.serverConfig.languageModel?.ollama?.customModelName,
     currentSettings(s).languageModel.ollama.customModelName,
-  );
+  ]
+    .filter(Boolean)
+    .join(',');
+
+  const ollamaModelConfig = parseModelString(ollamaModelString);
 
   const ollamaChatModels = processChatModels(ollamaModelConfig, OllamaProvider.chatModels);
 
   return [
     {
       ...OpenAIProvider,
-      chatModels,
+      chatModels: openaiChatModels,
     },
     // { ...azureModelList(s), enabled: enableAzure(s) },
-    { ...ZhiPuProvider, enabled: enableZhipu(s) },
-    { ...MoonshotProvider, enabled: enableMoonshot(s) },
+    { ...OllamaProvider, chatModels: ollamaChatModels, enabled: enableOllama(s) },
+    { ...AnthropicProvider, enabled: enableAnthropic(s) },
     { ...GoogleProvider, enabled: enableGoogle(s) },
     { ...BedrockProvider, enabled: enableBedrock(s) },
-    { ...OllamaProvider, chatModels: ollamaChatModels, enabled: enableOllama(s) },
     { ...PerplexityProvider, enabled: enablePerplexity(s) },
-    { ...AnthropicProvider, enabled: enableAnthropic(s) },
     { ...MistralProvider, enabled: enableMistral(s) },
+    { ...GroqProvider, enabled: enableGroq(s) },
+    { ...ZhiPuProvider, enabled: enableZhipu(s) },
+    { ...MoonshotProvider, enabled: enableMoonshot(s) },
   ];
 };
 
@@ -216,7 +223,6 @@ export const modelProviderSelectors = {
   moonshotAPIKey,
 
   // Ollama
-  enableOllamaConfigInSettings,
   enableOllama,
   ollamaProxyUrl,
 
@@ -228,8 +234,12 @@ export const modelProviderSelectors = {
   enableAnthropic,
   anthropicAPIKey,
   anthropicProxyUrl,
-  
+
   // Mistral
   enableMistral,
   mistralAPIKey,
+
+  // Groq
+  enableGroq,
+  groqAPIKey,
 };

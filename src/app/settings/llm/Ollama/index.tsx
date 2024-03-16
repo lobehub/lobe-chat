@@ -4,9 +4,7 @@ import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ModelProvider } from '@/libs/agent-runtime';
-
-import Checker from '../components/Checker';
+import Checker from './Checker';
 import ProviderConfig from '../components/ProviderConfig';
 import { LLMProviderBaseUrlKey, LLMProviderConfigKey } from '../const';
 
@@ -38,7 +36,7 @@ const OllamaProvider = memo(() => {
           name: [LLMProviderConfigKey, providerKey, 'customModelName'],
         },
         {
-          children: <Checker model={'llama2'} provider={ModelProvider.Ollama} />,
+          children: <Checker />,
           desc: t('llm.Ollama.checker.desc'),
           label: t('llm.checker.title'),
           minWidth: undefined,

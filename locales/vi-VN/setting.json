@@ -99,6 +99,14 @@
         "title": "API Key"
       }
     },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Nhập API Key từ Groq",
+        "placeholder": "Groq API Key",
+        "title": "API Key"
+      }
+    },
     "Mistral": {
       "title": "Mistral AI",
       "token": {
@@ -192,6 +200,14 @@
       "title": "Kiểm tra kết nối"
     },
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama đang tải xuống mô hình này, vui lòng không đóng trang này. Quá trình tải xuống sẽ tiếp tục từ nơi đã bị gián đoạn khi tải lại",
+      "remainingTime": "Thời gian còn lại",
+      "speed": "Tốc độ tải xuống",
+      "title": "Đang tải xuống mô hình {{model}}"
+    }
   },
   "plugin": {
     "addTooltip": "Thêm tiện ích",
