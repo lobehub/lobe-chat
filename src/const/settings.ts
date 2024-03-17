@@ -87,6 +87,10 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     enabled: true,
     models: [],
   },
+  openrouter: {
+    apiKey: '',
+    enabled: false,
+  },
   perplexity: {
     apiKey: '',
     enabled: false,

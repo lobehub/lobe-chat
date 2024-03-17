@@ -13,6 +13,7 @@ const mockMoonshotAPIKey = 'moonshot-api-key';
 const mockGoogleAPIKey = 'google-api-key';
 const mockAnthropicAPIKey = 'anthropic-api-key';
 const mockMistralAPIKey = 'mistral-api-key';
+const mockOpenRouterAPIKey = 'openrouter-api-key';
 
 // mock the traditional zustand
 vi.mock('zustand/traditional');
@@ -61,6 +62,15 @@ describe('getProviderAuthPayload', () => {
 
     const payload = getProviderAuthPayload(ModelProvider.Mistral);
     expect(payload).toEqual({ apiKey: mockMistralAPIKey });
+  });
+
+  it('should return correct payload for OpenRouter provider', () => {
+    act(() => {
+      setModelProviderConfig('openrouter', { apiKey: mockOpenRouterAPIKey });
+    });
+
+    const payload = getProviderAuthPayload(ModelProvider.OpenRouter);
+    expect(payload).toEqual({ apiKey: mockOpenRouterAPIKey });
   });
 
   it('should return correct payload for Google provider', () => {

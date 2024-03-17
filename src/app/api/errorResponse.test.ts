@@ -86,6 +86,13 @@ describe('createErrorResponse', () => {
       expect(response.status).toBe(476);
     });
 
+    // 测试 OpenRouterBizError 错误类型返回477状态码
+    it('returns a 477 status for OpenRouterBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.OpenRouterBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(477);
+    });
+
     // 测试 OllamaBizError 错误类型返回478状态码
     it('returns a 478 status for OllamaBizError error type', () => {
       const errorType = AgentRuntimeErrorType.OllamaBizError;
