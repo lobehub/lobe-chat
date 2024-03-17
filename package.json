@@ -91,6 +91,7 @@
     "@lobehub/icons": "latest",
     "@lobehub/tts": "latest",
     "@lobehub/ui": "^1.133.3",
+    "@theguild/remark-mermaid": "^0.0.6",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
     "ai": "^3.0.0",

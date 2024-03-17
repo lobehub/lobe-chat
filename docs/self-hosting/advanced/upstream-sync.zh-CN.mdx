@@ -1,4 +1,4 @@
-import { Callout, Steps } from 'nextra/components';
+# 启动自动更新
 
 ## `A` Vercel / Zeabur 部署
 
@@ -14,7 +14,9 @@ import { Callout, Steps } from 'nextra/components';
 
 当你 Fork 了项目后，由于 Github 的限制，你需要手动在你 Fork 的项目的 Actions 页面启用 Workflows，并启动 Upstream Sync Action。启用后，你可以设置每小时进行一次自动更新。
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png) ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png)
+<Image alt="启动自动更新 S1" src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png" />
+
+<Image alt="启动自动更新 S2" src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png" />
 
 ## `B` Docker 部署
 
@@ -54,7 +56,7 @@ Docker 部署版本的升级非常简单，只需要重新部署 LobeChat 的最
 
 确保在执行这些命令之前，您有足够的权限来停止和删除容器，并且 Docker 有足够的权限来拉取新的镜像。
 
-<Callout type={'info'}>
+<Callout type={'tip'}>
   **重新部署的话，我本地的聊天记录会丢失吗？**
 
   放心，不会的。LobeChat 的聊天记录全部都存储在你的本地浏览器中。因此使用 Docker 重新部署 LobeChat 时，你的聊天记录并不会丢失。
