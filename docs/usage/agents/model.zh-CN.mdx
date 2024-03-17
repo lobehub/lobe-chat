@@ -1,5 +1,3 @@
-import { Callout } from 'nextra/components';
-
 # 模型指南
 
 ## ChatGPT
@@ -31,9 +29,9 @@ LLM 看似很神奇，但本质还是一个概率问题，神经网络根据输�
 
 ### `top_p`
 
-核采样 top_p 也是采样参数，跟 temperature 不一样的采样方式。模型在输出之前，会生成一堆 token，这些 token 根据质量高低排名，核采样模式中候选词列表是动态的，从 tokens 里按百分比选择候选词。 top_p 为选择 token 引入了随机性，让其他高分的 token 有被选择的机会，不会总是选最高分的。
+核采样 top\_p 也是采样参数，跟 temperature 不一样的采样方式。模型在输出之前，会生成一堆 token，这些 token 根据质量高低排名，核采样模式中候选词列表是动态的，从 tokens 里按百分比选择候选词。 top\_p 为选择 token 引入了随机性，让其他高分的 token 有被选择的机会，不会总是选最高分的。
 
-<Callout>top_p 与随机性类似，一般来说不建议和随机性 temperature 一起更改</Callout>
+<Callout>top\_p 与随机性类似，一般来说不建议和随机性 temperature 一起更改</Callout>
 
 <br />
 

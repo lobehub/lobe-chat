@@ -5,7 +5,7 @@ image: https://github.com/lobehub/lobe-chat/assets/28616219/bb5b3611-3aa8-4ec7-a
 
 # Using Ollama in LobeChat
 
-<Image alt={'Using Ollama in LobeChat'} cover src={'https://github.com/lobehub/lobe-chat/assets/28616219/a2a091b8-ac45-4679-b5e0-21d711e17fef'} />
+<Image alt={'Using Ollama in LobeChat'} borderless cover src={'https://github.com/lobehub/lobe-chat/assets/28616219/a2a091b8-ac45-4679-b5e0-21d711e17fef'} />
 
 Ollama is a powerful framework for running large language models (LLMs) locally, supporting various language models including Llama 2, Mistral, and more. Now, LobeChat supports integration with Ollama, meaning you can easily use the language models provided by Ollama to enhance your application within LobeChat.
 
@@ -50,19 +50,21 @@ This document will guide you on how to use Ollama in LobeChat:
   ```
 
   Ollama supports various models, and you can view the available model list in the [Ollama Library](https://ollama.com/library) and choose the appropriate model based on your needs.
+
+  ### Use LLM in LobeChat
+
+  Next, you can start conversing with the local LLM using LobeChat.
+
+  <Video height={524} inStep src="https://github.com/lobehub/lobe-chat/assets/28616219/063788c8-9fef-4c6b-b837-96668ad6bc41" />
+
+  <Callout type={'info'}>
+    You can visit [Integrating with Ollama](/en/self-hosting/examples/ollama) to learn how to deploy
+    LobeChat to meet the integration requirements with Ollama.
+  </Callout>
 </Steps>
-
-Next, you can start conversing with the local LLM using LobeChat.
-
-<Video height={468} src="https://github.com/lobehub/lobe-chat/assets/28616219/063788c8-9fef-4c6b-b837-96668ad6bc41" width={832} />
-
-<Callout type={'info'}>
-  You can visit [Integrating with Ollama](/en/self-hosting/examples/ollama) to learn how to deploy
-  LobeChat to meet the integration requirements with Ollama.
-</Callout>
 
 ## Custom Configuration
 
 You can find Ollama's configuration options in `Settings` -> `Language Model`, where you can configure Ollama's proxy, model name, and more.
 
-<Image alt={'Ollama Service Provider Settings'} height={274} src={'https://github.com/lobehub/lobe-chat/assets/28616219/da0db930-78ce-4262-b648-2b9e43c565c3'} width={832} />
+<Image alt={'Ollama Service Provider Settings'} height={274} src={'https://github.com/lobehub/lobe-chat/assets/28616219/da0db930-78ce-4262-b648-2b9e43c565c3'} />

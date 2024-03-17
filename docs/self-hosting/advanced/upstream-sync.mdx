@@ -1,4 +1,4 @@
-import { Callout, Steps } from 'nextra/components';
+# Upstream Sync
 
 ## `A` Vercel / Zeabur Deployment
 
@@ -16,7 +16,9 @@ If you deployed your project according to the one-click deployment steps in the 
 
 After forking the project, due to Github's limitations, you need to manually enable Workflows on the Actions page of your forked project and start the Upstream Sync Action. Once enabled, you can set up automatic updates to occur every hour.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png) ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png)
+<Image alt="Enable Automatic Updates S1" src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png" />
+
+<Image alt="Enable Automatic Updates S2" src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png" />
 
 ## `B` Docker Deployment
 
@@ -56,7 +58,7 @@ Upgrading the Docker deployment version is very simple, you just need to redeplo
 
 Ensure that you have sufficient permissions to stop and remove the container before executing these commands, and that Docker has sufficient permissions to pull the new image.
 
-<Callout type={'info'}>
+<Callout type={'tip'}>
   **If I redeploy, will I lose my local chat records?**
 
   No need to worry, you won't. All of LobeChat's chat records are stored in your local browser. Therefore, when redeploying LobeChat using Docker, your chat records will not be lost.
