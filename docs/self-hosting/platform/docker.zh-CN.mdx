@@ -1,8 +1,12 @@
-import { Callout, Steps, Tabs } from 'nextra/components';
-
 # Docker 部署指引
 
-[![][docker-release-shield]][docker-release-link][![][docker-size-shield]][docker-size-link][![][docker-pulls-shield]][docker-pulls-link]
+<div style={{display:"flex", gap: 4}}>
+  [![][docker-release-shield]][docker-release-link]
+
+  [![][docker-size-shield]][docker-size-link]
+
+  [![][docker-pulls-shield]][docker-pulls-link]
+</div>
 
 我们提供了 [Docker 镜像][docker-release-link]，供你在自己的私有设备上部署 LobeChat 服务。
 
@@ -42,7 +46,7 @@ import { Callout, Steps, Tabs } from 'nextra/components';
   - 默认映射端口为 `3210`, 请确保未被占用或手动更改端口映射
   - 使用你的 OpenAI API Key 替换上述命令中的 `sk-xxxx`
 
-  <Callout type={'info'}>
+  <Callout type={'tip'}>
     LobeChat 支持的完整环境变量列表请参考 [📘 环境变量](/zh/self-hosting/environment-variables) 部分
   </Callout>
 
@@ -56,7 +60,7 @@ import { Callout, Steps, Tabs } from 'nextra/components';
     stolen!!!](https://github.com/lobehub/lobe-chat/issues/1123) 这样的情况
   </Callout>
 
-  <Callout type="info">
+  <Callout type="important">
     注意，当**部署架构与镜像的不一致时**，需要对 **Sharp** 进行交叉编译，详见 [Sharp
     交叉编译](https://sharp.pixelplumbing.com/install#cross-platform)
   </Callout>

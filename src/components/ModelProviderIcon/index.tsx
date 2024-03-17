@@ -8,6 +8,7 @@ import {
   Moonshot,
   Ollama,
   OpenAI,
+  OpenRouter,
   Perplexity,
   Zhipu,
 } from '@lobehub/icons';
@@ -72,6 +73,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Groq: {
       return <Groq size={20} />;
+    }
+
+    case ModelProvider.OpenRouter: {
+      return <OpenRouter size={20} />;
     }
 
     default: {
