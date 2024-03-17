@@ -2,7 +2,7 @@ name: Lighthouse Badger
 
 env:
   TOKEN_NAME: 'GH_TOKEN'
-  REPO_BRANCH: 'lobehub/lobe-chat lighthouse'
+  REPO_BRANCH: 'denvey/lobe-chat lighthouse'
   USER_NAME: 'lobehubbot'
   USER_EMAIL: 'i@lobehub.com'
   AUDIT_TYPE: 'both'
@@ -25,19 +25,19 @@ jobs:
       matrix:
         include:
           - NAME: 'LobeChat | Welcome'
-            URLS: 'https://chat-preview.lobehub.com/welcome'
+            URLS: 'https://chat.qqshsh.com/welcome'
             BADGES_ARGS: '-b pagespeed -o lighthouse/welcome -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Welcome'
           - NAME: 'LobeChat | Chat'
-            URLS: 'https://chat-preview.lobehub.com/chat'
+            URLS: 'https://chat.qqshsh.com/chat'
             BADGES_ARGS: '-b pagespeed -o lighthouse/chat -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Chat'
           - NAME: 'LobeChat | Market'
-            URLS: 'https://chat-preview.lobehub.com/market'
+            URLS: 'https://chat.qqshsh.com/market'
             BADGES_ARGS: '-b pagespeed -o lighthouse/market -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Market'
           - NAME: 'LobeChat | Settings'
-            URLS: 'https://chat-preview.lobehub.com/settings'
+            URLS: 'https://chat.qqshsh.com/settings'
             BADGES_ARGS: '-b pagespeed -o lighthouse/settings -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Settings'
 
