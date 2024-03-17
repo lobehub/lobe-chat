@@ -10,6 +10,7 @@ import {
   MoonshotProvider,
   OllamaProvider,
   OpenAIProvider,
+  OpenRouterProvider,
   PerplexityProvider,
   ZhiPuProvider,
 } from '@/config/modelProviders';
@@ -61,6 +62,9 @@ const anthropicProxyUrl = (s: GlobalStore) => modelProvider(s).anthropic.endpoin
 
 const enableGroq = (s: GlobalStore) => modelProvider(s).groq.enabled;
 const groqAPIKey = (s: GlobalStore) => modelProvider(s).groq.apiKey;
+
+const enableOpenrouter = (s: GlobalStore) => modelProvider(s).openrouter.enabled;
+const openrouterAPIKey = (s: GlobalStore) => modelProvider(s).openrouter.apiKey;
 
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
@@ -141,6 +145,11 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
 
   const ollamaChatModels = processChatModels(ollamaModelConfig, OllamaProvider.chatModels);
 
+  const openrouterModelConfig = parseModelString(
+    currentSettings(s).languageModel.openrouter.customModelName,
+  )
+  const openrouterChatModels = processChatModels(openrouterModelConfig, OpenRouterProvider.chatModels);
+
   return [
     {
       ...OpenAIProvider,
@@ -156,6 +165,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
     { ...GroqProvider, enabled: enableGroq(s) },
     { ...ZhiPuProvider, enabled: enableZhipu(s) },
     { ...MoonshotProvider, enabled: enableMoonshot(s) },
+    { ...OpenRouterProvider, chatModels: openrouterChatModels, enabled: enableOpenrouter(s)}
   ];
 };
 
@@ -242,4 +252,8 @@ export const modelProviderSelectors = {
   // Groq
   enableGroq,
   groqAPIKey,
+  
+  // OpenRouter
+  enableOpenrouter,
+  openrouterAPIKey,
 };

@@ -16,6 +16,7 @@ import Mistral from './Mistral';
 import Moonshot from './Moonshot';
 import Ollama from './Ollama';
 import OpenAI from './OpenAI';
+import OpenRouter from './OpenRouter';
 import Perplexity from './Perplexity';
 import Zhipu from './Zhipu';
 
@@ -34,6 +35,7 @@ export default memo<{ showOllama: boolean }>(({ showOllama }) => {
       <Bedrock />
       <Perplexity />
       <Mistral />
+      <OpenRouter />
       <Moonshot />
       <Zhipu />
       <Footer>

@@ -48,6 +48,7 @@
     "InvalidMistralAPIKey": "Chiave API Mistral AI non valida o vuota. Si prega di controllare la chiave API Mistral e riprovare.",
     "InvalidMoonshotAPIKey": "La chiave API di Moonshot AI non è corretta o è vuota, si prega di controllare la chiave API di Moonshot e riprovare",
     "InvalidOllamaArgs": "Configurazione Ollama non valida, controllare la configurazione di Ollama e riprovare",
+    "InvalidOpenRouterAPIKey": "La chiave API di OpenRouter non è valida o è vuota. Si prega di controllare la chiave API di OpenRouter e riprovare.",
     "InvalidPerplexityAPIKey": "Chiave API Perplexity non valida o vuota, controlla la chiave API Perplexity e riprova",
     "InvalidZhipuAPIKey": "Chiave API Zhipu non corretta o vuota, controlla la chiave API Zhipu e riprova",
     "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
@@ -57,6 +58,7 @@
     "OllamaBizError": "Errore di servizio Ollama, controllare le informazioni seguenti o riprovare",
     "OllamaServiceUnavailable": "Servizio Ollama non disponibile: controlla se è avviato correttamente",
     "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
+    "OpenRouterBizError": "Errore di richiesta del servizio OpenRouter AI. Si prega di controllare le informazioni seguenti o riprovare.",
     "PerplexityBizError": "Errore di business nella richiesta del servizio Perplexity AI, controlla le informazioni seguenti o riprova",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
     "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",
@@ -109,6 +111,10 @@
         "addProxyUrl": "Aggiungi l'indirizzo del proxy OpenAI (opzionale)",
         "description": "Inserisci la tua chiave API OpenAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
         "title": "Utilizza la chiave API OpenAI personalizzata"
+      },
+      "OpenRouter": {
+        "description": "Inserisci la tua chiave API di OpenRouter per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API.",
+        "title": "Utilizza la tua chiave API personalizzata di OpenRouter"
       },
       "Perplexity": {
         "description": "Inserisci la tua chiave API Perplexity per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",

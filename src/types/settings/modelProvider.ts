@@ -76,6 +76,12 @@ export interface GroqConfig {
   enabled: boolean;
 }
 
+export interface OpenRouterConfig {
+  apiKey?: string;
+  customModelName?: string;
+  enabled?: boolean;
+}
+
 export interface GlobalLLMConfig {
   anthropic: AnthropicConfig;
   azure: AzureOpenAIConfig;
@@ -86,6 +92,7 @@ export interface GlobalLLMConfig {
   moonshot: MoonshotConfig;
   ollama: OllamaConfig;
   openAI: OpenAIConfig;
+  openrouter: OpenRouterConfig;
   perplexity: PerplexityConfig;
   zhipu: ZhiPuConfig;
 }
