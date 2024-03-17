@@ -1,5 +1,3 @@
-import { Callout } from 'nextra/components';
-
 # Integrating with Azure OpenAI
 
 LobeChat supports using [Azure OpenAI][azure-openai-url] as the model service provider for OpenAI. This article will explain how to configure Azure OpenAI.
@@ -9,14 +7,14 @@ LobeChat supports using [Azure OpenAI][azure-openai-url] as the model service pr
 Due to development costs ([#178][rfc]), the current version of LobeChat does not fully comply with the implementation model of Azure OpenAI. Instead, it adopts a solution based on `openai` to be compatible with Azure OpenAI. As a result, the following limitations exist:
 
 - Only one of OpenAI and Azure OpenAI can be selected. Once you enable Azure OpenAI, you will not be able to use OpenAI as the model service provider.
-- LobeChat requires the deployment name to be the same as the model name in order to function properly. For example, the deployment name for the `gpt-35-turbo` model must be `gpt-35-turbo`. Otherwise, LobeChat will not be able to match the corresponding model correctly. ![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267082091-d89d53d3-1c8c-40ca-ba15-0a9af2a79264.png)
+- LobeChat requires the deployment name to be the same as the model name in order to function properly. For example, the deployment name for the `gpt-35-turbo` model must be `gpt-35-turbo`. Otherwise, LobeChat will not be able to match the corresponding model correctly. <Image alt="Usage Limitations" src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267082091-d89d53d3-1c8c-40ca-ba15-0a9af2a79264.png" />
 - Due to the complexity of integrating with Azure OpenAI's SDK, it is currently not possible to query the list of configured models.
 
 ## Configuring in the Interface
 
 Click in the bottom left corner "Actions" - "Settings", then switch to the "Language Model" tab and enable the "Azure OpenAI" switch to start using Azure OpenAI.
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267083420-422a3714-627e-4bef-9fbc-141a2a8ca916.png)
+<Image alt="Configuring in the Interface" src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267083420-422a3714-627e-4bef-9fbc-141a2a8ca916.png" />
 
 You can fill in the corresponding configuration items as needed:
 
