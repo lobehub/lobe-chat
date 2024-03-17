@@ -33,7 +33,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
         <StyleRegistry>
           <Layout
             defaultAppearance={appearance?.value}
-            defaultLang={lang?.value}
+            defaultLang={lang?.value || DEFAULT_LANG}
             defaultNeutralColor={neutralColor?.value as any}
             defaultPrimaryColor={primaryColor?.value as any}
             enableOAuthSSO={ENABLE_OAUTH_SSO}
