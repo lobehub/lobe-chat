@@ -3,8 +3,6 @@ title: LLM Guide
 description: Explore the capabilities of ChatGPT models from gpt-3.5-turbo to gpt-4-32k, understanding their speed, context limits, and cost. Learn about model parameters like temperature and top-p for better output.
 ---
 
-import { Callout } from 'nextra/components';
-
 # Model Guide
 
 ## ChatGPT
@@ -37,10 +35,10 @@ This parameter controls the randomness of the model's output. The higher the val
 
 ### `top_p`
 
-Top_p is also a sampling parameter, but it differs from temperature in its sampling method. Before outputting, the model generates a bunch of tokens, and these tokens are ranked based on their quality. In the top-p sampling mode, the candidate word list is dynamic, and tokens are selected from the tokens based on a percentage. Top_p introduces randomness in token selection, allowing other high-scoring tokens to have a chance of being selected, rather than always choosing the highest-scoring one.
+Top\_p is also a sampling parameter, but it differs from temperature in its sampling method. Before outputting, the model generates a bunch of tokens, and these tokens are ranked based on their quality. In the top-p sampling mode, the candidate word list is dynamic, and tokens are selected from the tokens based on a percentage. Top\_p introduces randomness in token selection, allowing other high-scoring tokens to have a chance of being selected, rather than always choosing the highest-scoring one.
 
 <Callout>
-  Top_p is similar to randomness, and it is generally not recommended to change it together with the
+  Top\_p is similar to randomness, and it is generally not recommended to change it together with the
   randomness of temperature.
 </Callout>
 
