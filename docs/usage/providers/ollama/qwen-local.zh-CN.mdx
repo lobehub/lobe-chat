@@ -1,0 +1,38 @@
+---
+title: 使用本地通义千问 Qwen 模型
+---
+
+# 使用本地通义千问 Qwen 模型
+
+[通义千问](https://github.com/QwenLM/Qwen1.5) 是阿里云开源的一款大语言模型（LLM），官方定义是一个不断进化的 AI 大模型，并通过更多的训练集内容达到更精准的中文识别能力。现在，通过 LobeChat 与 [Ollama](https://ollama.com/) 的集成，你可以轻松地在 LobeChat 中使用 通义千问。
+
+本文档将指导你如何在 LobeChat 中使用通义千问本地部署版：
+
+<Steps>
+  ### 本地安装 Ollama
+
+  首先，你需要安装 Ollama，安装过程请查阅 [Ollama 使用文件](/zh/usage/providers/ollama)。
+
+  ### 用 Ollama 拉取 Qwen 模型到本地
+
+  在安装完成 Ollama 后，你可以通过以下命令安装 Qwen 模型，以 14b 模型为例：
+
+  ```bash
+  ollama pull qwen:14b
+  ```
+
+  <Image alt={'使用 Ollama 拉取 Qwen 模型'} height={473} inStep src={''} width={791} />
+
+  ### 选择 Qwen 模型
+
+  在会话页面中，选择模型面板打开，然后选择 Qwen 模型。
+
+  <Image alt={'模型选择面板中选择 Qwen 模型'} height={629} inStep src={''} width={791} />
+
+  <Callout type={'info'}>
+    如果你没有在模型选择面板中看到 Ollama 服务商，请查阅 [与 Ollama
+    集成](/zh/self-hosting/examples/ollama) 了解如何在 LobeChat 中开启 Ollama 服务商。
+  </Callout>
+</Steps>
+
+接下来，你就可以使用 LobeChat 与本地 Qwen 模型对话了。
