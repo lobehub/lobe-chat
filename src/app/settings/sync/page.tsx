@@ -1,17 +1,17 @@
-'use client';
-
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 
-import PageTitle from '@/components/PageTitle';
+import { gerServerDeviceInfo } from '@/utils/responsive';
 
+import DeviceCard from './DeviceInfo';
+import PageTitle from './PageTitle';
 import WebRTC from './WebRTC';
 
 export default memo(() => {
-  const { t } = useTranslation('setting');
+  const { os, browser, isMobile } = gerServerDeviceInfo();
   return (
     <>
-      <PageTitle title={t('tab.sync')} />
+      <PageTitle />
+      <DeviceCard browser={browser} isMobile={isMobile} os={os} />
       <WebRTC />
     </>
   );

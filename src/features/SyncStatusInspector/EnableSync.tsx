@@ -116,7 +116,7 @@ const EnableSync = memo(() => {
                     )}
                   </Flexbox>
                   <Typography.Text type={'secondary'}>
-                    {user.os} · {user.browser} · {user.clientID}
+                    {user.os} · {user.browser}
                   </Typography.Text>
                 </Flexbox>
               </Flexbox>

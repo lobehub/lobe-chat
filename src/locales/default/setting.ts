@@ -443,6 +443,16 @@ export default {
     tooltips: '分享到助手市场',
   },
   sync: {
+    device: {
+      deviceName: {
+        hint: '添加名称以便于识别',
+        placeholder: '请输入设备名称',
+        title: '设备名称',
+      },
+      title: '设备信息',
+      unknownBrowser: '未知浏览器',
+      unknownOS: '未知系统',
+    },
     webrtc: {
       channelName: {
         desc: 'WebRTC 将使用此名创建同步频道，确保频道名称唯一',

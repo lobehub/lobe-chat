@@ -1,3 +1,5 @@
+'use client';
+
 import { SiWebrtc } from '@icons-pack/react-simple-icons';
 import { ActionIcon, Form, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Form as AntForm, Input, Switch, Typography } from 'antd';
@@ -15,7 +17,7 @@ import { useSyncSettings } from '../hooks/useSyncSettings';
 
 type SettingItemGroup = ItemGroup;
 
-const Theme = memo(() => {
+const WebRTC = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
@@ -113,4 +115,4 @@ const Theme = memo(() => {
   );
 });
 
-export default Theme;
+export default WebRTC;

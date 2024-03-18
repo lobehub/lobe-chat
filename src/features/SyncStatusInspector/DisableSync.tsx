@@ -3,17 +3,19 @@ import { Badge, Button, Popover } from 'antd';
 import { LucideCloudCog, LucideCloudy } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 interface DisableSyncProps {
   noPopover?: boolean;
 }
 const DisableSync = memo<DisableSyncProps>(({ noPopover }) => {
+  const { t } = useTranslation('common');
   const tag = (
     <div>
       <Tag>
         <Badge status="default" />
-        同步未开启
+        {t('sync.status.disabled')}
       </Tag>
     </div>
   );
@@ -25,10 +27,10 @@ const DisableSync = memo<DisableSyncProps>(({ noPopover }) => {
       arrow={false}
       content={
         <Flexbox gap={12} width={320}>
-          当前会话数据仅存储于此浏览器中。如果你需要在多个设备间同步数据，请配置并开启云端同步。
+          {t('sync.disabled.desc')}
           <Link href={'/settings/sync'}>
             <Button block icon={<Icon icon={LucideCloudCog} />} type={'primary'}>
-              配置云端同步
+              {t('sync.disabled.actions.settings')}
             </Button>
           </Link>
         </Flexbox>
@@ -37,7 +39,7 @@ const DisableSync = memo<DisableSyncProps>(({ noPopover }) => {
       title={
         <Flexbox gap={8} horizontal>
           <Icon icon={LucideCloudy} />
-          数据同步未开启
+          {t('sync.disabled.title')}
         </Flexbox>
       }
     >

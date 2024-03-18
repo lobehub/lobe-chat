@@ -134,11 +134,18 @@ export default {
       current: '当前设备',
     },
     channel: '频道',
+    disabled: {
+      actions: { settings: '配置云端同步' },
+      desc: '当前会话数据仅存储于此浏览器中。如果你需要在多个设备间同步数据，请配置并开启云端同步。',
+      title: '数据同步未开启',
+    },
     status: {
+      disabled: '同步未开启',
       ready: '已连接',
       synced: '已同步',
       syncing: '同步中',
     },
+
     title: '同步状态',
   },
   tab: {

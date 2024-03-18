@@ -17,7 +17,6 @@ export const getBrowser = () => {
 
 export const browserInfo = {
   browser: getBrowser(),
-  device: getParser().getDevice().vendor,
   isMobile: getParser().getDevice().type === 'mobile',
   os: getParser().getOS().name,
 };

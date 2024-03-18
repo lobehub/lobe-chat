@@ -19,6 +19,7 @@ import { switchLang } from '@/utils/switchLang';
 
 import { preferenceSelectors } from '../preference/selectors';
 import { settingsSelectors, syncSettingsSelectors } from '../settings/selectors';
+import { commonSelectors } from './selectors';
 
 const n = setNamespace('common');
 
@@ -29,6 +30,7 @@ export interface CommonAction {
   refreshConnection: (onEvent: OnSyncEvent) => Promise<void>;
   refreshUserConfig: () => Promise<void>;
   switchBackToChat: (sessionId?: string) => void;
+  triggerEnableSync: (userId: string, onEvent: OnSyncEvent) => Promise<boolean>;
   updateAvatar: (avatar: string) => Promise<void>;
   useCheckLatestVersion: () => SWRResponse<string>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
@@ -50,10 +52,29 @@ export const createCommonSlice: StateCreator<
   CommonAction
 > = (set, get) => ({
   refreshConnection: async (onEvent) => {
-    const sync = syncSettingsSelectors.webrtcConfig(get());
-    if (!sync.channelName) return;
+    const userId = commonSelectors.userId(get());
 
-    await globalService.reconnect({
+    if (!userId) return;
+
+    await get().triggerEnableSync(userId, onEvent);
+  },
+
+  refreshUserConfig: async () => {
+    await mutate([USER_CONFIG_FETCH_KEY, true]);
+  },
+
+  switchBackToChat: (sessionId) => {
+    get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
+  },
+  triggerEnableSync: async (userId: string, onEvent: OnSyncEvent) => {
+    // double-check the sync ability
+    // if there is no channelName, don't start sync
+    const sync = syncSettingsSelectors.webrtcConfig(get());
+    if (!sync.channelName) return false;
+
+    const name = syncSettingsSelectors.deviceName(get());
+
+    return globalService.enabledSync({
       channel: {
         name: sync.channelName,
         password: sync.channelPassword,
@@ -66,20 +87,8 @@ export const createCommonSlice: StateCreator<
         set({ syncStatus: status });
       },
       signaling: sync.signaling,
-      user: {
-        // name: userId,
-        id: get().userId!,
-        ...browserInfo,
-      },
+      user: { id: userId, name: name, ...browserInfo },
     });
-  },
-
-  refreshUserConfig: async () => {
-    await mutate([USER_CONFIG_FETCH_KEY, true]);
-  },
-
-  switchBackToChat: (sessionId) => {
-    get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
   },
   updateAvatar: async (avatar) => {
     await userService.updateAvatar(avatar);
@@ -111,6 +120,7 @@ export const createCommonSlice: StateCreator<
         revalidateOnFocus: false,
       },
     ),
+
   useEnabledSync: (userEnableSync, userId, onEvent) =>
     useSWR<boolean>(
       ['enableSync', userEnableSync, userId],
@@ -118,30 +128,7 @@ export const createCommonSlice: StateCreator<
         // if user don't enable sync or no userId ,don't start sync
         if (!userEnableSync || !userId) return false;
 
-        // double-check the sync ability
-        // if there is no channelName, don't start sync
-        const sync = syncSettingsSelectors.webrtcConfig(get());
-        if (!sync.channelName) return false;
-
-        return globalService.enabledSync({
-          channel: {
-            name: sync.channelName,
-            password: sync.channelPassword,
-          },
-          onAwarenessChange(state) {
-            set({ syncAwareness: state });
-          },
-          onSyncEvent: onEvent,
-          onSyncStatusChange: (status) => {
-            set({ syncStatus: status });
-          },
-          signaling: sync.signaling,
-          user: {
-            // name: userId,
-            id: userId,
-            ...browserInfo,
-          },
-        });
+        return get().triggerEnableSync(userId, onEvent);
       },
       {
         onSuccess: (syncEnabled) => {
