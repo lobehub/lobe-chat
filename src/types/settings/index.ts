@@ -4,12 +4,14 @@ import type { LobeAgentSession } from '@/types/session';
 
 import { GlobalBaseSettings } from './base';
 import { GlobalLLMConfig } from './modelProvider';
+import { GlobalSyncSettings } from './sync';
 import { GlobalTTSConfig } from './tts';
 
 export type GlobalDefaultAgent = Pick<LobeAgentSession, 'config' | 'meta'>;
 
 export * from './base';
 export * from './modelProvider';
+export * from './sync';
 export * from './tts';
 
 export interface GlobalTool {
@@ -26,12 +28,6 @@ export interface GlobalServerConfig {
   telemetry: {
     langfuse?: boolean;
   };
-}
-
-export interface GlobalSyncSettings {
-  channelName?: string;
-  channelPassword?: string;
-  signaling?: string;
 }
 
 /**

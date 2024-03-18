@@ -1,5 +1,5 @@
-import { Avatar, Icon, Tag } from '@lobehub/ui';
-import { Tag as ATag, Badge, Button, Popover, Typography } from 'antd';
+import { ActionIcon, Avatar, Icon } from '@lobehub/ui';
+import { Tag as ATag, Popover, Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
@@ -12,24 +12,33 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSyncEvent } from '@/hooks/useSyncData';
 import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { syncSettingsSelectors } from '@/store/global/selectors';
+import { pathString } from '@/utils/url';
 
-const text = {
-  ready: '已连接',
-  synced: '已同步',
-  syncing: '同步中',
-} as const;
+const { Text } = Typography;
 
-const SyncStatusTag = memo(() => {
-  const [syncStatus, isSyncing, enableSync, channelName] = useGlobalStore((s) => [
+const EllipsisChannelName = memo<{ text: string }>(({ text }) => {
+  const start = text.slice(0, 16);
+  const suffix = text.slice(-4).trim();
+
+  return (
+    <Text copyable={{ text }} ellipsis={{ suffix }} style={{ maxWidth: '100%' }} type={'secondary'}>
+      {start}...
+    </Text>
+  );
+});
+
+const EnableSync = memo(() => {
+  const { t } = useTranslation('common');
+  const [syncStatus, isSyncing, channelName] = useGlobalStore((s) => [
     s.syncStatus,
     s.syncStatus === 'syncing',
-    s.syncEnabled,
-    settingsSelectors.syncConfig(s).channelName,
+    syncSettingsSelectors.webrtcConfig(s).channelName,
     s.setSettings,
   ]);
   const users = useGlobalStore((s) => s.syncAwareness, isEqual);
@@ -38,23 +47,39 @@ const SyncStatusTag = memo(() => {
 
   const theme = useTheme();
 
-  return enableSync ? (
+  return (
     <Popover
       arrow={false}
       content={
-        <Flexbox gap={12}>
-          <Flexbox align={'center'} distribution={'space-between'} horizontal>
-            <span>频道：{channelName} </span>
-            <Button
-              icon={<Icon icon={LucideRefreshCw} />}
-              loading={isSyncing}
-              onClick={() => {
-                refreshConnection(syncEvent);
-              }}
-              size={'small'}
-            >
-              同步
-            </Button>
+        <Flexbox gap={24}>
+          <Flexbox align={'center'} distribution={'space-between'} gap={24} horizontal>
+            <Flexbox>
+              {t('sync.title')}
+              <Typography.Text type={'secondary'}>
+                {t('sync.channel')}：
+                <EllipsisChannelName text={channelName!} />
+              </Typography.Text>
+            </Flexbox>
+            <Flexbox horizontal>
+              <Link href={pathString('/settings/sync')}>
+                <ActionIcon
+                  icon={LucideCloudCog}
+                  loading={isSyncing}
+                  onClick={() => {
+                    refreshConnection(syncEvent);
+                  }}
+                  title={t('sync.actions.settings')}
+                />
+              </Link>
+              <ActionIcon
+                icon={LucideRefreshCw}
+                loading={isSyncing}
+                onClick={() => {
+                  refreshConnection(syncEvent);
+                }}
+                title={t('sync.actions.sync')}
+              />
+            </Flexbox>
             {/*<div>*/}
             {/*  <Input*/}
             {/*    onChange={(e) => {*/}
@@ -86,12 +111,12 @@ const SyncStatusTag = memo(() => {
                     {user.name || user.id}
                     {user.current && (
                       <ATag bordered={false} color={'blue'}>
-                        current
+                        {t('sync.awareness.current')}
                       </ATag>
                     )}
                   </Flexbox>
                   <Typography.Text type={'secondary'}>
-                    {user.device} · {user.os} · {user.browser} · {user.clientID}
+                    {user.os} · {user.browser} · {user.clientID}
                   </Typography.Text>
                 </Flexbox>
               </Flexbox>
@@ -114,31 +139,10 @@ const SyncStatusTag = memo(() => {
           />
         }
       >
-        {text[syncStatus]}
+        {t(`sync.status.${syncStatus}`)}
       </ATag>
-    </Popover>
-  ) : (
-    <Popover
-      arrow={false}
-      content={
-        <Flexbox gap={12} width={320}>
-          会话数据仅存储于当前使用的浏览器。如果使用不同浏览器打开时，数据不会互相同步。如你需要在多个设备间同步数据，请配置并开启云端同步。
-          <Link href={'/settings/sync'}>
-            <Button block icon={<Icon icon={LucideCloudCog} />} type={'primary'}>
-              配置云端同步
-            </Button>
-          </Link>
-        </Flexbox>
-      }
-      placement={'bottomLeft'}
-    >
-      <div>
-        <Tag>
-          <Badge status="default" /> 本地
-        </Tag>
-      </div>
     </Popover>
   );
 });
 
-export default SyncStatusTag;
+export default EnableSync;

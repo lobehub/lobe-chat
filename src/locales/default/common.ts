@@ -128,6 +128,19 @@ export default {
   setting: '设置',
   share: '分享',
   stop: '停止',
+  sync: {
+    actions: { settings: '同步设置', sync: '立即同步' },
+    awareness: {
+      current: '当前设备',
+    },
+    channel: '频道',
+    status: {
+      ready: '已连接',
+      synced: '已同步',
+      syncing: '同步中',
+    },
+    title: '同步状态',
+  },
   tab: {
     chat: '会话',
     market: '发现',

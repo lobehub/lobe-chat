@@ -44,8 +44,6 @@ const currentLanguage = (s: GlobalStore) => {
 const dalleConfig = (s: GlobalStore) => currentSettings(s).tool?.dalle || {};
 const isDalleAutoGenerating = (s: GlobalStore) => currentSettings(s).tool?.dalle?.autoGenerate;
 
-const syncConfig = (s: GlobalStore) => currentSettings(s).sync;
-
 export const settingsSelectors = {
   currentLanguage,
   currentSettings,
@@ -57,5 +55,4 @@ export const settingsSelectors = {
   exportSettings,
   isDalleAutoGenerating,
   password,
-  syncConfig,
 };

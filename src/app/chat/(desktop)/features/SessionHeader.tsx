@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import SyncStatusTag from '@/features/SyncStatusInspector';
 import { useSessionStore } from '@/store/session';
 
 import SessionSearchBar from '../../features/SessionSearchBar';
-import SyncStatusTag from '../../features/SyncStatusTag';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`

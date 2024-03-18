@@ -18,7 +18,7 @@ import { setNamespace } from '@/utils/storeDebug';
 import { switchLang } from '@/utils/switchLang';
 
 import { preferenceSelectors } from '../preference/selectors';
-import { settingsSelectors } from '../settings/selectors';
+import { settingsSelectors, syncSettingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('common');
 
@@ -32,7 +32,11 @@ export interface CommonAction {
   updateAvatar: (avatar: string) => Promise<void>;
   useCheckLatestVersion: () => SWRResponse<string>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
-  useEnabledSync: (userId: string | undefined, onEvent: OnSyncEvent) => SWRResponse;
+  useEnabledSync: (
+    userEnableSync: boolean,
+    userId: string | undefined,
+    onEvent: OnSyncEvent,
+  ) => SWRResponse;
   useFetchServerConfig: () => SWRResponse;
   useFetchUserConfig: (initServer: boolean) => SWRResponse<UserConfig | undefined>;
 }
@@ -46,7 +50,7 @@ export const createCommonSlice: StateCreator<
   CommonAction
 > = (set, get) => ({
   refreshConnection: async (onEvent) => {
-    const sync = settingsSelectors.syncConfig(get());
+    const sync = syncSettingsSelectors.webrtcConfig(get());
     if (!sync.channelName) return;
 
     await globalService.reconnect({
@@ -107,13 +111,16 @@ export const createCommonSlice: StateCreator<
         revalidateOnFocus: false,
       },
     ),
-  useEnabledSync: (userId, onEvent) =>
+  useEnabledSync: (userEnableSync, userId, onEvent) =>
     useSWR<boolean>(
-      ['enableSync', userId],
+      ['enableSync', userEnableSync, userId],
       async () => {
-        if (!userId) return false;
+        // if user don't enable sync or no userId ,don't start sync
+        if (!userEnableSync || !userId) return false;
 
-        const sync = settingsSelectors.syncConfig(get());
+        // double-check the sync ability
+        // if there is no channelName, don't start sync
+        const sync = syncSettingsSelectors.webrtcConfig(get());
         if (!sync.channelName) return false;
 
         return globalService.enabledSync({

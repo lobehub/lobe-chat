@@ -447,11 +447,19 @@ export default {
       channelName: {
         desc: 'WebRTC 将使用此名创建同步频道，确保频道名称唯一',
         placeholder: '请输入同步频道名称',
+        shuffle: '随机生成',
         title: '同步频道名称',
       },
       channelPassword: {
-        desc: '请输入一个同步频道密码',
+        desc: '添加密码确保频道私密性，只有密码正确时，设备才可加入频道',
+        placeholder: '请输入同步频道密码',
         title: '同步频道密码',
+      },
+      desc: '实时、点对点的设备数据同步，此模式需确保设备同时在线时才可进行同步',
+      enabled: {
+        invalid: '请填写同步频道名称后再开启',
+        // desc: 'WebRTC 将使用此名创建同步频道，确保频道名称唯一',
+        title: '开启同步',
       },
       title: 'WebRTC 同步',
     },

@@ -1,4 +1,4 @@
-import { throttle } from 'lodash-es';
+import { throttle, uniqBy } from 'lodash-es';
 import type { WebrtcProvider } from 'y-webrtc';
 import type { Doc, Transaction } from 'yjs';
 
@@ -276,7 +276,7 @@ class DataSync {
       current: s.clientID === awareness.clientID,
     }));
 
-    this.onAwarenessChange?.(state);
+    this.onAwarenessChange?.(uniqBy(state, 'id'));
   };
 }
 

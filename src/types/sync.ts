@@ -20,7 +20,6 @@ export interface StartDataSyncParams {
 
 export interface SyncUserInfo {
   browser?: string;
-  device?: string;
   id: string;
   isMobile: boolean;
   name?: string;

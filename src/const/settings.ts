@@ -123,7 +123,7 @@ export const DEFAULT_TOOL_CONFIG = {
 };
 
 const DEFAULT_SYNC_CONFIG: GlobalSyncSettings = {
-  channelName: 'atc',
+  webrtc: { enabled: false },
 };
 
 export const DEFAULT_SETTINGS: GlobalSettings = {
