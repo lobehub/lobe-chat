@@ -56,6 +56,9 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.GroqBizError: {
       return 482;
     }
+    case AgentRuntimeErrorType.ZeroOneBizError: {
+      return 483;
+    }
   }
   return errorType as number;
 };
