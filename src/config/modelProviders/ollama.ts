@@ -129,7 +129,6 @@ const Ollama: ModelProviderCard = {
       tokens: 32_768,
       vision: false,
     },
-
     {
       displayName: 'LLaVA 7B',
       functionCall: false,
