@@ -1,14 +1,14 @@
 import { ActionIcon, Avatar, Icon } from '@lobehub/ui';
-import { Tag as ATag, Popover, Typography } from 'antd';
-import { useTheme } from 'antd-style';
+import { Divider, Popover, Switch, Tag, Typography } from 'antd';
+import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
-  LucideCloudCog,
   LucideCloudy,
   LucideLaptop,
   LucideRefreshCw,
   LucideRouter,
   LucideSmartphone,
+  SettingsIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -22,75 +22,65 @@ import { pathString } from '@/utils/url';
 
 const { Text } = Typography;
 
-const EllipsisChannelName = memo<{ text: string }>(({ text }) => {
-  const start = text.slice(0, 16);
-  const suffix = text.slice(-4).trim();
+const useStyles = createStyles(({ css, token, prefixCls }) => ({
+  text: css`
+    max-width: 100%;
+    color: ${token.colorTextTertiary};
+    .${prefixCls}-typography-copy {
+      color: ${token.colorTextTertiary};
+    }
+  `,
+  title: css`
+    color: ${token.colorTextTertiary};
+  `,
+}));
 
-  return (
-    <Text copyable={{ text }} ellipsis={{ suffix }} style={{ maxWidth: '100%' }} type={'secondary'}>
-      {start}...
-    </Text>
-  );
-});
+interface EnableSyncProps {
+  hiddenActions?: boolean;
+}
 
-const EnableSync = memo(() => {
+const EnableSync = memo<EnableSyncProps>(({ hiddenActions }) => {
   const { t } = useTranslation('common');
-  const [syncStatus, isSyncing, channelName] = useGlobalStore((s) => [
-    s.syncStatus,
-    s.syncStatus === 'syncing',
-    syncSettingsSelectors.webrtcConfig(s).channelName,
-    s.setSettings,
-  ]);
+
+  const { styles, theme } = useStyles();
+  const [syncStatus, isSyncing, channelName, enableWebRTC, setSettings, refreshConnection] =
+    useGlobalStore((s) => [
+      s.syncStatus,
+      s.syncStatus === 'syncing',
+      syncSettingsSelectors.webrtcChannelName(s),
+      syncSettingsSelectors.enableWebRTC(s),
+      s.setSettings,
+      s.refreshConnection,
+    ]);
+
   const users = useGlobalStore((s) => s.syncAwareness, isEqual);
-  const refreshConnection = useGlobalStore((s) => s.refreshConnection);
+
   const syncEvent = useSyncEvent();
 
-  const theme = useTheme();
+  const switchSync = (enabled: boolean) => {
+    setSettings({ sync: { webrtc: { enabled } } });
+  };
 
   return (
     <Popover
       arrow={false}
       content={
-        <Flexbox gap={24}>
-          <Flexbox align={'center'} distribution={'space-between'} gap={24} horizontal>
-            <Flexbox>
-              {t('sync.title')}
-              <Typography.Text type={'secondary'}>
-                {t('sync.channel')}：
-                <EllipsisChannelName text={channelName!} />
-              </Typography.Text>
+        <Flexbox gap={16}>
+          <Flexbox align={'center'} gap={24} horizontal>
+            <Flexbox
+              align={'center'}
+              className={styles.title}
+              gap={4}
+              horizontal
+              style={{ paddingInlineEnd: 12 }}
+            >
+              {t('sync.channel')}
+              <Text className={styles.text} copyable>
+                {channelName}
+              </Text>
             </Flexbox>
-            <Flexbox horizontal>
-              <Link href={pathString('/settings/sync')}>
-                <ActionIcon
-                  icon={LucideCloudCog}
-                  loading={isSyncing}
-                  onClick={() => {
-                    refreshConnection(syncEvent);
-                  }}
-                  title={t('sync.actions.settings')}
-                />
-              </Link>
-              <ActionIcon
-                icon={LucideRefreshCw}
-                loading={isSyncing}
-                onClick={() => {
-                  refreshConnection(syncEvent);
-                }}
-                title={t('sync.actions.sync')}
-              />
-            </Flexbox>
-            {/*<div>*/}
-            {/*  <Input*/}
-            {/*    onChange={(e) => {*/}
-            {/*      setSettings({ sync: { channelName: e.target.value } });*/}
-            {/*    }}*/}
-            {/*    size={'small'}*/}
-            {/*    value={channelName}*/}
-            {/*    variant={'borderless'}*/}
-            {/*  />*/}
-            {/*</div>*/}
           </Flexbox>
+          <Divider dashed style={{ margin: 0 }} />
           <Flexbox gap={12}>
             {users.map((user) => (
               <Flexbox gap={12} horizontal key={user.clientID}>
@@ -110,9 +100,20 @@ const EnableSync = memo(() => {
                   <Flexbox gap={8} horizontal>
                     {user.name || user.id}
                     {user.current && (
-                      <ATag bordered={false} color={'blue'}>
-                        {t('sync.awareness.current')}
-                      </ATag>
+                      <Flexbox horizontal>
+                        <Tag bordered={false} color={'blue'}>
+                          {t('sync.awareness.current')}
+                        </Tag>
+                        <ActionIcon
+                          icon={LucideRefreshCw}
+                          loading={isSyncing}
+                          onClick={() => {
+                            refreshConnection(syncEvent);
+                          }}
+                          size={'small'}
+                          title={t('sync.actions.sync')}
+                        />
+                      </Flexbox>
                     )}
                   </Flexbox>
                   <Typography.Text type={'secondary'}>
@@ -124,10 +125,33 @@ const EnableSync = memo(() => {
           </Flexbox>
         </Flexbox>
       }
-      open
       placement={'bottomLeft'}
+      title={
+        <Flexbox distribution={'space-between'} horizontal>
+          <Flexbox align={'center'} gap={8} horizontal>
+            <Icon icon={LucideCloudy} />
+            {t('sync.title')}
+            {!hiddenActions && (
+              <Switch checked={enableWebRTC} onChange={switchSync} size={'small'} />
+            )}
+          </Flexbox>
+          {!hiddenActions && (
+            <Link href={pathString('/settings/sync')}>
+              <ActionIcon
+                icon={SettingsIcon}
+                loading={isSyncing}
+                onClick={() => {
+                  refreshConnection(syncEvent);
+                }}
+                // size={'small'}
+                title={t('sync.actions.settings')}
+              />
+            </Link>
+          )}
+        </Flexbox>
+      }
     >
-      <ATag
+      <Tag
         bordered={false}
         color={syncStatus !== 'synced' ? 'blue' : 'green'}
         icon={
@@ -140,7 +164,7 @@ const EnableSync = memo(() => {
         }
       >
         {t(`sync.status.${syncStatus}`)}
-      </ATag>
+      </Tag>
     </Popover>
   );
 });

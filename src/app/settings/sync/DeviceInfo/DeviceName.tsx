@@ -25,14 +25,14 @@ const DeviceName = memo(() => {
   };
 
   return (
-    <Flexbox
-      align={'flex-end'}
-      gap={4}
-      style={{ maxWidth: 292, paddingInlineEnd: 8 }}
-      width={'100%'}
-    >
-      <div>{t('sync.device.deviceName.title')}</div>
-      <Flexbox align={'center'} height={32} horizontal justify={'flex-end'} width={'100%'}>
+    <Flexbox gap={4}>
+      <Flexbox
+        align={'center'}
+        height={40}
+        horizontal
+        style={{ fontSize: 20, fontWeight: 'bold' }}
+        width={'100%'}
+      >
         {!deviceName && !editing && (
           <Flexbox
             onClick={() => {
@@ -53,6 +53,9 @@ const DeviceName = memo(() => {
           }}
           onEditingChange={setEditing}
           placeholder={t('sync.device.deviceName.placeholder')}
+          size={'large'}
+          style={{ maxWidth: 200 }}
+          type={'block'}
           value={deviceName}
         />
       </Flexbox>

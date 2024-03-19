@@ -135,9 +135,12 @@ export default {
     },
     channel: '频道',
     disabled: {
-      actions: { settings: '配置云端同步' },
+      actions: { enable: '开启云端同步', settings: '配置同步参数' },
       desc: '当前会话数据仅存储于此浏览器中。如果你需要在多个设备间同步数据，请配置并开启云端同步。',
       title: '数据同步未开启',
+    },
+    enabled: {
+      title: '数据同步',
     },
     status: {
       disabled: '同步未开启',

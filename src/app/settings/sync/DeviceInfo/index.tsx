@@ -1,17 +1,15 @@
 'use client';
 
-import { Avatar, Icon } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { LucideLaptop, LucideSmartphone } from 'lucide-react';
 import { rgba } from 'polished';
-import { PropsWithChildren, memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { BrowserIcon } from '@/components/BrowserIcon';
 import { MAX_WIDTH } from '@/const/layoutTokens';
 
-import { BrowserIcon } from '../../../../components/BrowserIcon';
 import SystemIcon from '../components/SystemIcon';
 import Card from './Card';
 import DeviceName from './DeviceName';
@@ -51,11 +49,11 @@ const useStyles = createStyles(({ css, cx, responsive, isDarkMode, token, stylis
 
 interface DeviceCardProps {
   browser?: string;
-  isMobile?: boolean;
   os?: string;
 }
-const DeviceCard = memo<PropsWithChildren<DeviceCardProps>>(({ browser, isMobile, os }) => {
-  const { styles, theme } = useStyles();
+
+const DeviceCard = memo<DeviceCardProps>(({ browser, os }) => {
+  const { styles } = useStyles();
   const { t } = useTranslation('setting');
 
   return (
@@ -79,31 +77,14 @@ const DeviceCard = memo<PropsWithChildren<DeviceCardProps>>(({ browser, isMobile
         horizontal
         padding={12}
       >
+        <DeviceName />
         <Flexbox className={styles.cards} gap={12}>
           <Card icon={<SystemIcon title={os} />} title={os || t('sync.device.unknownOS')} />
           <Card
             icon={browser && <BrowserIcon browser={browser} size={32} />}
             title={browser || t('sync.device.unknownBrowser')}
           />
-          <Card
-            icon={
-              <Avatar
-                avatar={
-                  <Icon
-                    color={theme.geekblue}
-                    icon={isMobile ? LucideSmartphone : LucideLaptop}
-                    size={{ fontSize: 32, strokeWidth: 1.5 }}
-                  />
-                }
-                background={theme.geekblue2}
-                shape={'square'}
-              />
-            }
-            title={isMobile ? 'Mobile' : 'Desktop'}
-          />
         </Flexbox>
-
-        <DeviceName />
       </Flexbox>
       <Flexbox
         className={styles.glow}

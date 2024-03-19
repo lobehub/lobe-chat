@@ -6,11 +6,24 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useGlobalStore } from '@/store/global';
+import { syncSettingsSelectors } from '@/store/global/slices/settings/selectors';
+
 interface DisableSyncProps {
   noPopover?: boolean;
 }
+
 const DisableSync = memo<DisableSyncProps>(({ noPopover }) => {
   const { t } = useTranslation('common');
+  const [haveConfig, setSettings] = useGlobalStore((s) => [
+    !!syncSettingsSelectors.webrtcConfig(s).channelName,
+    s.setSettings,
+  ]);
+
+  const enableSync = () => {
+    setSettings({ sync: { webrtc: { enabled: true } } });
+  };
+
   const tag = (
     <div>
       <Tag>
@@ -28,11 +41,24 @@ const DisableSync = memo<DisableSyncProps>(({ noPopover }) => {
       content={
         <Flexbox gap={12} width={320}>
           {t('sync.disabled.desc')}
-          <Link href={'/settings/sync'}>
-            <Button block icon={<Icon icon={LucideCloudCog} />} type={'primary'}>
-              {t('sync.disabled.actions.settings')}
-            </Button>
-          </Link>
+          {haveConfig ? (
+            <Flexbox gap={8} horizontal>
+              <Link href={'/settings/sync'}>
+                <Button block icon={<Icon icon={LucideCloudCog} />}>
+                  {t('sync.disabled.actions.settings')}
+                </Button>
+              </Link>
+              <Button block onClick={enableSync} type={'primary'}>
+                {t('sync.disabled.actions.enable')}
+              </Button>
+            </Flexbox>
+          ) : (
+            <Link href={'/settings/sync'}>
+              <Button block icon={<Icon icon={LucideCloudCog} />} type={'primary'}>
+                {t('sync.disabled.actions.settings')}
+              </Button>
+            </Link>
+          )}
         </Flexbox>
       }
       placement={'bottomLeft'}
