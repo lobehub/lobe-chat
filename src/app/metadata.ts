@@ -1,13 +1,19 @@
 import { Metadata } from 'next';
 
+import { getClientConfig } from '@/config/client';
 import { getServerConfig } from '@/config/server';
+import { OFFICIAL_URL } from '@/const/url';
 
 import pkg from '../../package.json';
 
 const title = 'LobeChat';
 const { description, homepage } = pkg;
 
-const { METADATA_BASE_URL = 'https://chat-preview.lobehub.com/' } = getServerConfig();
+const { SITE_URL = OFFICIAL_URL } = getServerConfig();
+const { BASE_PATH } = getClientConfig();
+
+// if there is a base path, then we don't need the manifest
+const noManifest = !!BASE_PATH;
 
 const metadata: Metadata = {
   appleWebApp: {
@@ -22,8 +28,8 @@ const metadata: Metadata = {
     shortcut:
       'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon.ico',
   },
-  manifest: '/manifest.json',
-  metadataBase: new URL(METADATA_BASE_URL),
+  manifest: noManifest ? undefined : '/manifest.json',
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     description: description,
     images: [
@@ -53,11 +59,11 @@ const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    creator: '@lobehub',
     description,
     images: [
       'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-960x540.png',
     ],
+    site: '@lobehub',
     title,
   },
 };

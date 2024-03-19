@@ -1,7 +1,6 @@
-import { DEFAULT_OPENAI_MODEL_LIST } from '@/const/llm';
 import { DEFAULT_AGENT_META } from '@/const/meta';
+import { ModelProvider } from '@/libs/agent-runtime';
 import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
-import { LanguageModel } from '@/types/llm';
 import {
   GlobalBaseSettings,
   GlobalDefaultAgent,
@@ -33,7 +32,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   displayMode: 'chat',
   enableAutoCreateTopic: true,
   historyCount: 1,
-  model: LanguageModel.GPT3_5,
+  model: 'gpt-3.5-turbo',
   params: {
     frequency_penalty: 0,
     presence_penalty: 0,
@@ -41,14 +40,64 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
     top_p: 1,
   },
   plugins: [],
+  provider: ModelProvider.OpenAI,
   systemRole: '',
   tts: DEFAUTT_AGENT_TTS_CONFIG,
 };
 
 export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
+  anthropic: {
+    apiKey: '',
+    enabled: false,
+  },
+  azure: {
+    apiKey: '',
+    deployments: '',
+    enabled: false,
+    endpoint: '',
+  },
+  bedrock: {
+    accessKeyId: '',
+    enabled: false,
+    region: 'us-east-1',
+    secretAccessKey: '',
+  },
+  google: {
+    apiKey: '',
+    enabled: false,
+  },
+  groq: {
+    apiKey: '',
+    enabled: false,
+  },
+  mistral: {
+    apiKey: '',
+    enabled: false,
+  },
+  moonshot: {
+    apiKey: '',
+    enabled: false,
+  },
+  ollama: {
+    enabled: false,
+    endpoint: '',
+  },
   openAI: {
     OPENAI_API_KEY: '',
-    models: DEFAULT_OPENAI_MODEL_LIST,
+    enabled: true,
+    models: [],
+  },
+  openrouter: {
+    apiKey: '',
+    enabled: false,
+  },
+  perplexity: {
+    apiKey: '',
+    enabled: false,
+  },
+  zhipu: {
+    apiKey: '',
+    enabled: false,
   },
 };
 

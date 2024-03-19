@@ -1,5 +1,6 @@
-import { URLS } from '@/services/_url';
 import { GlobalServerConfig } from '@/types/settings';
+
+import { API_ENDPOINTS } from './_url';
 
 const VERSION_URL = 'https://registry.npmmirror.com/@lobehub/chat';
 
@@ -15,7 +16,7 @@ class GlobalService {
   };
 
   getGlobalConfig = async (): Promise<GlobalServerConfig> => {
-    const res = await fetch(URLS.config);
+    const res = await fetch(API_ENDPOINTS.config);
 
     return res.json();
   };

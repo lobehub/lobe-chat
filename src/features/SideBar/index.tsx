@@ -2,20 +2,22 @@ import { SideNav } from '@lobehub/ui';
 import { memo } from 'react';
 
 import AvatarWithUpload from '@/features/AvatarWithUpload';
-import { useGlobalStore } from '@/store/global';
+import { SidebarTabKey } from '@/store/global/initialState';
 
 import BottomActions from './BottomActions';
 import TopActions from './TopActions';
 
-export default memo(() => {
-  const [tab, setTab] = useGlobalStore((s) => [s.sidebarKey, s.switchSideBar]);
+interface Props {
+  sidebarKey?: SidebarTabKey;
+}
 
+export default memo<Props>(({ sidebarKey }) => {
   return (
     <SideNav
       avatar={<AvatarWithUpload id={'avatar'} />}
-      bottomActions={<BottomActions setTab={setTab} tab={tab} />}
+      bottomActions={<BottomActions tab={sidebarKey} />}
       style={{ height: '100%' }}
-      topActions={<TopActions setTab={setTab} tab={tab} />}
+      topActions={<TopActions tab={sidebarKey} />}
     />
   );
 });

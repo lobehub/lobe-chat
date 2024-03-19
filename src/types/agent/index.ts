@@ -1,4 +1,4 @@
-import { FewShots, LLMParams, LanguageModel } from '@/types/llm';
+import { FewShots, LLMParams } from '@/types/llm';
 
 export type TTSServer = 'openai' | 'edge' | 'microsoft';
 
@@ -37,7 +37,7 @@ export interface LobeAgentConfig {
    * 角色所使用的语言模型
    * @default gpt-3.5-turbo
    */
-  model: LanguageModel | string;
+  model: string;
   /**
    * 语言模型参数
    */
@@ -46,6 +46,10 @@ export interface LobeAgentConfig {
    * 启用的插件
    */
   plugins?: string[];
+  /**
+   *  模型供应商
+   */
+  provider?: string;
   /**
    * 系统角色
    */

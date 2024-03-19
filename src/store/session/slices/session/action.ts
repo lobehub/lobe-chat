@@ -6,16 +6,12 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
+import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { SessionStore } from '@/store/session';
-import {
-  ChatSessionList,
-  LobeAgentSession,
-  LobeSessionType,
-  LobeSessions,
-} from '@/types/session';
+import { ChatSessionList, LobeAgentSession, LobeSessionType, LobeSessions } from '@/types/session';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -42,7 +38,10 @@ export interface SessionAction {
    * @param agent
    * @returns sessionId
    */
-  createSession: (session?: DeepPartial<LobeAgentSession>) => Promise<string>;
+  createSession: (
+    session?: DeepPartial<LobeAgentSession>,
+    isSwitchSession?: boolean,
+  ) => Promise<string>;
   duplicateSession: (id: string) => Promise<void>;
   /**
    * Pins or unpins a session.
@@ -86,7 +85,7 @@ export const createSessionSlice: StateCreator<
     get().refreshSessions();
   },
 
-  createSession: async (agent) => {
+  createSession: async (agent, isSwitchSession = true) => {
     const { switchSession, refreshSessions } = get();
 
     // 合并 settings 里的 defaultAgent
@@ -100,7 +99,8 @@ export const createSessionSlice: StateCreator<
     const id = await sessionService.createNewSession(LobeSessionType.Agent, newSession);
     await refreshSessions();
 
-    switchSession(id);
+    // 创建后是否跳转到对应会话，默认跳转
+    if (isSwitchSession) switchSession(id);
 
     return id;
   },
@@ -155,7 +155,7 @@ export const createSessionSlice: StateCreator<
   },
 
   useFetchSessions: () =>
-    useSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getSessionsWithGroup, {
+    useClientDataSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getSessionsWithGroup, {
       onSuccess: (data) => {
         // 由于 https://github.com/lobehub/lobe-chat/pull/541 的关系
         // 只有触发了 refreshSessions 才会更新 sessions，进而触发页面 rerender

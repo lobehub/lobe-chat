@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "關於"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "通過選擇發送遙測數據，你可以幫助我們改善 LobeChat 整體用戶體驗",
+      "title": "發送匿名使用數據"
+    },
+    "title": "數據統計"
+  },
   "danger": {
     "clear": {
       "action": "立即清除",
@@ -21,7 +31,29 @@
     "sessionWithName": "對話設定 · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "endpoint": {
+        "desc": "除預設地址外，必須包含 http(s)://",
+        "placeholder": "https://api.anthropic.com",
+        "title": "API 代理地址"
+      },
+      "title": "Anthropic",
+      "token": {
+        "desc": "填入來自 Anthropic 的 API 金鑰",
+        "placeholder": "Anthropic API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "獲取列表",
+        "title": "Azure API 版本"
+      },
+      "deployments": {
+        "desc": "使用 id=name 的語法填寫你的部署模型（如部署名和模型同名，可以只填寫模型名稱），多個模型使用逗號（,） 隔開",
+        "title": "Azure 部署模型列表"
+      },
       "endpoint": {
         "desc": "從 Azure 門戶檢查資源時，可在“金鑰和終結點”部分中找到此值",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +70,80 @@
         "title": "API 金鑰"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "填入 AWS Access Key ID",
+        "placeholder": "AWS Access Key ID",
+        "title": "AWS Access Key ID"
+      },
+      "checker": {
+        "desc": "測試 Access Key ID / Secret Access Key 是否填寫正確"
+      },
+      "region": {
+        "desc": "填入 AWS Region",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
+      },
+      "secretAccessKey": {
+        "desc": "填入 AWS Secret Access Key",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "填入來自 Google 的 API 金鑰",
+        "placeholder": "Google API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "填入來自 Groq 的 API 金鑰",
+        "placeholder": "Groq API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "填入來自 Mistral AI 的 API 金鑰",
+        "placeholder": "Mistral AI API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
+    "Moonshot": {
+      "title": "月球背面",
+      "token": {
+        "desc": "請填入來自 Moonshot AI 的 API 金鑰",
+        "placeholder": "Moonshot AI API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "檢查代理地址是否正確填寫"
+      },
+      "customModelName": {
+        "desc": "新增自定義模型，多個模型使用逗號（,）隔開",
+        "placeholder": "維庫納,利亞瓦,科迪拉瑪,拉瑪2:13b-文本",
+        "title": "自定義模型名稱"
+      },
+      "endpoint": {
+        "desc": "填入 Ollama 接口代理地址，本地未額外指定可留空",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "接口代理地址"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "獲取列表",
         "title": "Azure Api 版本"
-      },
-      "check": {
-        "button": "檢查",
-        "desc": "測試 Api 金鑰與代理地址是否正確填寫",
-        "pass": "檢查通過",
-        "title": "連通性檢查"
       },
       "customModelName": {
         "desc": "增加自訂模型，多個模型使用逗號（,） 隔開",
@@ -82,7 +177,53 @@
         "title": "Azure OpenAI"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "測試代理地址是否正確填寫"
+      },
+      "customModelName": {
+        "desc": "增加自定義模型，多個模型使用逗號（,）隔開",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "自定義模型名稱"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "填入來自 OpenRouter AI 的 API 金鑰",
+        "placeholder": "OpenRouter AI API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
+    "Perplexity": {
+      "title": "Perplexity AI",
+      "token": {
+        "desc": "請填入來自 Perplexity AI 的 API 金鑰",
+        "placeholder": "Perplexity AI API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
+    "Zhipu": {
+      "title": "智譜",
+      "token": {
+        "desc": "填入來自智譜的 API 金鑰",
+        "placeholder": "智譜 API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
+    "checker": {
+      "button": "檢查",
+      "desc": "測試 API 金鑰與代理地址是否正確填寫",
+      "pass": "檢查通過",
+      "title": "連通性檢查"
+    },
     "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama 正在下載該模型，請儘量不要關閉本頁面。重新下載時將會中斷處繼續",
+      "remainingTime": "剩餘時間",
+      "speed": "下載速度",
+      "title": "正在下載模型 {{model}}"
+    }
   },
   "plugin": {
     "addTooltip": "新增自訂外掛程式",
@@ -209,6 +350,22 @@
       "placeholder": "請輸入訪問密碼",
       "title": "訪問密碼"
     },
+    "oauth": {
+      "info": {
+        "desc": "已登錄",
+        "title": "帳戶資訊"
+      },
+      "signin": {
+        "action": "登錄",
+        "desc": "使用 SSO 登錄以解鎖應用",
+        "title": "登錄帳號"
+      },
+      "signout": {
+        "action": "退出登錄",
+        "confirm": "確認退出？",
+        "success": "退出登錄成功"
+      }
+    },
     "title": "系統設定"
   },
   "settingTTS": {
@@ -284,6 +441,7 @@
     "tooltips": "分享到助手市場"
   },
   "tab": {
+    "about": "關於",
     "agent": "默認助手",
     "common": "通用設置",
     "llm": "語言模型",
@@ -293,6 +451,7 @@
     "builtins": {
       "groupName": "內置"
     },
+    "disabled": "當前模型不支持函數調用，無法使用插件",
     "plugins": {
       "enabled": "已啟用 {{num}}",
       "groupName": "插件",

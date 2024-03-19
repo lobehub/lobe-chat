@@ -1,6 +1,6 @@
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 
-export const chainLangDetect = (content: string): Partial<OpenAIChatStreamPayload> => ({
+export const chainLangDetect = (content: string): Partial<ChatStreamPayload> => ({
   messages: [
     {
       content:

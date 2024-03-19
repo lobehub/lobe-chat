@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Aangepast model, standaard ingesteld om zowel functieoproep als visuele herkenning te ondersteunen. Verifieer de beschikbaarheid van deze mogelijkheden op basis van de werkelijke situatie.",
+      "file": "Dit model ondersteunt het uploaden van bestanden voor lezen en herkenning",
+      "functionCall": "Dit model ondersteunt functieoproep (Function Call).",
+      "tokens": "Dit model ondersteunt maximaal {{tokens}} tokens per sessie.",
+      "vision": "Dit model ondersteunt visuele herkenning."
+    }
+  },
   "about": "Over",
   "advanceSettings": "Geavanceerde instellingen",
   "agentMaxToken": "Maximale sessielengte",
@@ -18,6 +27,7 @@
   "defaultAgent": "Standaard assistent",
   "defaultSession": "Standaard assistent",
   "delete": "Verwijderen",
+  "document": "Gebruiksaanwijzing",
   "duplicate": "Dupliceren",
   "edit": "Bewerken",
   "export": "Exporteren",
@@ -89,7 +99,23 @@
     "zh-TW": "Traditioneel Chinees"
   },
   "layoutInitializing": "Lay-out wordt geladen...",
+  "modelProvider": {
+    "anthropic": "Anthropic",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral AI",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Geen beschrijving beschikbaar",
+  "oauth": "SSO inloggen",
   "ok": "Oké",
   "password": "Wachtwoord",
   "pin": "Vastzetten",
@@ -106,6 +132,13 @@
     "chat": "会话",
     "market": "发现",
     "setting": "设置"
+  },
+  "telemetry": {
+    "allow": "Toestaan",
+    "deny": "Weigeren",
+    "desc": "We willen graag anonieme gebruiksgegevens verzamelen om LobeChat te verbeteren en een betere productervaring te bieden. Je kunt dit op elk moment uitschakelen in 'Instellingen' - 'Over'.",
+    "learnMore": "Meer informatie",
+    "title": "Help LobeChat verbeteren"
   },
   "temp": "临时",
   "updateAgent": "更新助理信息",

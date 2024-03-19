@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "About"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "By opting to send telemetry data, you can help us improve the overall user experience of LobeChat",
+      "title": "Send Anonymous Usage Data"
+    },
+    "title": "Analytics"
+  },
   "danger": {
     "clear": {
       "action": "Clear Now",
@@ -21,7 +31,29 @@
     "sessionWithName": "Session Settings · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "endpoint": {
+        "desc": "Must include http(s):// besides the default address",
+        "placeholder": "https://api.anthropic.com",
+        "title": "API Proxy Address"
+      },
+      "title": "Anthropic",
+      "token": {
+        "desc": "Enter the API Key from Anthropic",
+        "placeholder": "Anthropic API Key",
+        "title": "API Key"
+      }
+    },
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "The API version of Azure, following the format YYYY-MM-DD. Check the [latest version](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Fetch List",
+        "title": "Azure API Version"
+      },
+      "deployments": {
+        "desc": "Fill in your deployment model using the syntax id=name (e.g. if the deployment name is the same as the model name, you can just fill in the model name). Use commas (,) to separate multiple models",
+        "title": "Azure Deployment Models List"
+      },
       "endpoint": {
         "desc": "This value can be found in the 'Keys and Endpoints' section when checking the resource on the Azure portal",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +70,80 @@
         "title": "API Key"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Enter your Aws Access Key Id",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "Test if AccessKeyId / SecretAccessKey are filled in correctly"
+      },
+      "region": {
+        "desc": "Enter Aws Region",
+        "placeholder": "Aws Region",
+        "title": "Aws Region"
+      },
+      "secretAccessKey": {
+        "desc": "Enter Aws Secret Access Key",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Enter the API Key from Google",
+        "placeholder": "Google API Key",
+        "title": "API Key"
+      }
+    },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Enter the API Key from Groq",
+        "placeholder": "Groq API Key",
+        "title": "API Key"
+      }
+    },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Enter the API Key from Mistral AI",
+        "placeholder": "Mistral AI API Key",
+        "title": "API Key"
+      }
+    },
+    "Moonshot": {
+      "title": "Dark Side of the Moon",
+      "token": {
+        "desc": "Enter the API Key from Moonshot AI",
+        "placeholder": "Moonshot AI API Key",
+        "title": "API Key"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "Check if the proxy address is filled in correctly"
+      },
+      "customModelName": {
+        "desc": "Add custom models, separate multiple models with commas",
+        "placeholder": "vicuna,llama,codellama,llama2:13b-text",
+        "title": "Custom Model Name"
+      },
+      "endpoint": {
+        "desc": "Enter the Ollama API proxy address, leave blank if not specifically set locally",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "API Proxy Address"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "The API version for Azure, following the format YYYY-MM-DD, check the [latest version](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Fetch List",
         "title": "Azure API Version"
-      },
-      "check": {
-        "button": "Check",
-        "desc": "Test if the Api Key and proxy address are filled in correctly",
-        "pass": "Check Passed",
-        "title": "Connectivity Check"
       },
       "customModelName": {
         "desc": "Add custom models, separate multiple models with commas (,)",
@@ -82,7 +177,53 @@
         "title": "Azure OpenAI"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "Test if the proxy address is filled in correctly"
+      },
+      "customModelName": {
+        "desc": "Add custom model, separate multiple models with comma (,)",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Custom Model Name"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "Enter the API Key from OpenRouter AI",
+        "placeholder": "OpenRouter AI API Key",
+        "title": "API Key"
+      }
+    },
+    "Perplexity": {
+      "title": "Perplexity AI",
+      "token": {
+        "desc": "Enter the API Key from Perplexity",
+        "placeholder": "Perplexity API Key",
+        "title": "API Key"
+      }
+    },
+    "Zhipu": {
+      "title": "Zhipu",
+      "token": {
+        "desc": "Enter the API Key from Zhipu",
+        "placeholder": "Zhipu API Key",
+        "title": "API Key"
+      }
+    },
+    "checker": {
+      "button": "Check",
+      "desc": "Test if the Api Key and proxy address are filled in correctly",
+      "pass": "Check Passed",
+      "title": "Connectivity Check"
+    },
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama is currently downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
+    }
   },
   "plugin": {
     "addTooltip": "Custom Plugin",
@@ -209,6 +350,22 @@
       "placeholder": "Enter access password",
       "title": "Access Password"
     },
+    "oauth": {
+      "info": {
+        "desc": "Logged in",
+        "title": "Account Information"
+      },
+      "signin": {
+        "action": "Sign In",
+        "desc": "Sign in using SSO to unlock the app",
+        "title": "Sign In to Your Account"
+      },
+      "signout": {
+        "action": "Sign Out",
+        "confirm": "Confirm sign out?",
+        "success": "Sign out successful"
+      }
+    },
     "title": "System Settings"
   },
   "settingTTS": {
@@ -284,6 +441,7 @@
     "tooltips": "Share to the agent marketplace"
   },
   "tab": {
+    "about": "About",
     "agent": "Default Agent",
     "common": "Common Settings",
     "llm": "Language Model",
@@ -293,6 +451,7 @@
     "builtins": {
       "groupName": "Built-ins"
     },
+    "disabled": "The current model does not support function calls and cannot use the plugin",
     "plugins": {
       "enabled": "Enabled: {{num}}",
       "groupName": "Plugins",

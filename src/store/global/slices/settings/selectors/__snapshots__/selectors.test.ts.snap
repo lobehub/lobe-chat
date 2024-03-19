@@ -81,6 +81,7 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
       "top_p": 1,
     },
     "plugins": [],
+    "provider": "openai",
     "systemRole": "user",
     "tts": {
       "showAllLocaleVoice": false,
@@ -112,6 +113,7 @@ exports[`settingsSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CON
     "top_p": 1,
   },
   "plugins": [],
+  "provider": "openai",
   "systemRole": "user",
   "tts": {
     "showAllLocaleVoice": false,

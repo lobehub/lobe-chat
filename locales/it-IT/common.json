@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modello personalizzato, di default supporta sia la chiamata di funzioni che il riconoscimento visivo. Si prega di verificare l'effettiva disponibilità di tali funzionalità in base alle esigenze specifiche.",
+      "file": "Questo modello supporta il caricamento e il riconoscimento dei file",
+      "functionCall": "Questo modello supporta la chiamata di funzioni (Function Call)",
+      "tokens": "Questo modello supporta un massimo di {{tokens}} token per singola sessione",
+      "vision": "Questo modello supporta il riconoscimento visivo"
+    }
+  },
   "about": "Informazioni",
   "advanceSettings": "Impostazioni avanzate",
   "agentMaxToken": "Massima lunghezza della sessione",
@@ -18,6 +27,7 @@
   "defaultAgent": "Assistente predefinito",
   "defaultSession": "Sessione predefinita",
   "delete": "Elimina",
+  "document": "Documento di utilizzo",
   "duplicate": "Duplicato",
   "edit": "Modifica",
   "export": "Esporta configurazione",
@@ -89,7 +99,23 @@
     "zh-TW": "Cinese tradizionale"
   },
   "layoutInitializing": "Inizializzazione layout in corso...",
+  "modelProvider": {
+    "anthropic": "Antropico",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral AI",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Nessuna descrizione disponibile",
+  "oauth": "Accesso SSO",
   "ok": "OK",
   "password": "Password",
   "pin": "Fissa in alto",
@@ -106,6 +132,13 @@
     "chat": "Chat",
     "market": "Scopri",
     "setting": "Impostazioni"
+  },
+  "telemetry": {
+    "allow": "Consenti",
+    "deny": "Rifiuta",
+    "desc": "Speriamo di acquisire in modo anonimo le tue informazioni sull'uso per aiutarci a migliorare LobeChat e offrirti un'esperienza prodotto migliore. Puoi disattivarlo in qualsiasi momento in Impostazioni - Informazioni su.",
+    "learnMore": "Ulteriori informazioni",
+    "title": "Aiuta LobeChat a migliorare"
   },
   "temp": "Temporaneo",
   "updateAgent": "Aggiorna informazioni agente",

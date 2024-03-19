@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modelo personalizado: admite tanto la llamada de funciones como el reconocimiento visual. Por favor, verifique la disponibilidad de estas capacidades según sea necesario.",
+      "file": "Este modelo admite la carga y reconocimiento de archivos",
+      "functionCall": "Este modelo admite la llamada de funciones (Function Call).",
+      "tokens": "Este modelo admite un máximo de {{tokens}} tokens por sesión.",
+      "vision": "Este modelo admite el reconocimiento visual."
+    }
+  },
   "about": "Acerca de",
   "advanceSettings": "Configuración avanzada",
   "agentMaxToken": "Máximo de tokens de sesión",
@@ -18,6 +27,7 @@
   "defaultAgent": "Asistente predeterminado",
   "defaultSession": "Sesión predeterminada",
   "delete": "Eliminar",
+  "document": "Documento de uso",
   "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuración",
@@ -89,7 +99,23 @@
     "zh-TW": "Chino tradicional"
   },
   "layoutInitializing": "Inicializando diseño...",
+  "modelProvider": {
+    "anthropic": "Antropico",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral IA",
+    "moonshot": "Moonshot IA",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Sin descripción",
+  "oauth": "Inicio de sesión SSO",
   "ok": "Aceptar",
   "password": "Contraseña",
   "pin": "Fijar",
@@ -106,6 +132,13 @@
     "chat": "Chat",
     "market": "Descubrir",
     "setting": "Configuración"
+  },
+  "telemetry": {
+    "allow": "Permitir",
+    "deny": "Denegar",
+    "desc": "Queremos recopilar información sobre tu uso de forma anónima para ayudarnos a mejorar LobeChat y ofrecerte una mejor experiencia de producto. Puedes desactivarlo en 'Configuración' - 'Acerca de' en cualquier momento.",
+    "learnMore": "Más información",
+    "title": "Ayuda a mejorar LobeChat"
   },
   "temp": "Temporal",
   "updateAgent": "Actualizar información del asistente",

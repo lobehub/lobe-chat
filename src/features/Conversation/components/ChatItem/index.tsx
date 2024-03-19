@@ -1,4 +1,4 @@
-import { type AlertProps, ChatItem } from '@lobehub/ui';
+import { AlertProps, ChatItem } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
@@ -6,11 +6,13 @@ import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
-import { renderErrorMessages } from '../../Error';
+import ErrorMessageExtra, { getErrorAlertConfig } from '../../Error';
 import { renderMessagesExtra } from '../../Extras';
 import { renderMessages, useAvatarsClick } from '../../Messages';
 import ActionsBar from './ActionsBar';
@@ -31,6 +33,7 @@ export interface ChatListItemProps {
 }
 
 const Item = memo<ChatListItemProps>(({ index, id }) => {
+  const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const [editing, setEditing] = useState(false);
@@ -50,9 +53,9 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
   const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
 
-  const [loading, onMessageChange] = useChatStore((s) => [
+  const [loading, updateMessageContent] = useChatStore((s) => [
     s.chatLoadingId === id,
-    s.updateMessageContent,
+    s.modifyMessageContent,
   ]);
 
   const onAvatarsClick = useAvatarsClick();
@@ -81,28 +84,14 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     [item?.role],
   );
 
-  const ErrorMessage = useCallback(
-    ({ data }: { data: ChatMessage }) => {
-      if (!renderErrorMessages || !item?.error?.type) return;
-      let RenderFunction;
-      if (renderErrorMessages?.[item.error.type])
-        RenderFunction = renderErrorMessages[item.error.type].Render;
-      if (!RenderFunction && renderErrorMessages?.['default'])
-        RenderFunction = renderErrorMessages['default'].Render;
-      if (!RenderFunction) return;
-      return <RenderFunction {...data} />;
-    },
-    [item?.error],
-  );
-
-  const error = useMemo(() => {
+  const { t: errorT } = useTranslation('error');
+  const error = useMemo<AlertProps | undefined>(() => {
     if (!item?.error) return;
-    const message = item.error?.message;
-    let alertConfig = {};
-    if (item.error.type && renderErrorMessages?.[item.error.type]) {
-      alertConfig = renderErrorMessages[item.error.type]?.config as AlertProps;
-    }
-    return { message, ...alertConfig };
+    const messageError = item.error;
+
+    const alertConfig = getErrorAlertConfig(messageError.type);
+
+    return { message: errorT(`response.${messageError.type}` as any), ...alertConfig };
   }, [item?.error]);
 
   const enableHistoryDivider = useSessionStore((s) => {
@@ -124,12 +113,13 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           className={styles.message}
           editing={editing}
           error={error}
-          errorMessage={<ErrorMessage data={item} />}
+          errorMessage={<ErrorMessageExtra data={item} />}
+          fontSize={fontSize}
           loading={loading}
           message={item.content}
           messageExtra={<MessageExtra data={item} />}
           onAvatarClick={onAvatarsClick?.(item.role)}
-          onChange={(value) => onMessageChange(item.id, value)}
+          onChange={(value) => updateMessageContent(item.id, value)}
           onDoubleClick={(e) => {
             if (item.id === 'default' || item.error) return;
             if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {

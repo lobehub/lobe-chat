@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { chainPickEmoji } from '../pickEmoji';
 
@@ -12,7 +12,7 @@ describe('chainPickEmoji', () => {
     const userContent = '你是一名星际探索者';
 
     // 预期的返回值结构
-    const expectedPayload: Partial<OpenAIChatStreamPayload> = {
+    const expectedPayload: Partial<ChatStreamPayload> = {
       messages: [
         {
           content:

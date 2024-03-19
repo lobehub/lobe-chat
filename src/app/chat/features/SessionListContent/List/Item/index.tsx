@@ -1,9 +1,8 @@
-import { SiOpenai } from '@icons-pack/react-simple-icons';
-import { Tag } from '@lobehub/ui';
 import { memo, useMemo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
+import ModelTag from '@/components/ModelTag';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
@@ -64,7 +63,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
     () =>
       !showModel ? undefined : (
         <Flexbox gap={4} horizontal style={{ flexWrap: 'wrap' }}>
-          {showModel && <Tag icon={<SiOpenai size={'1em'} />}>{model}</Tag>}
+          {showModel && <ModelTag model={model} />}
         </Flexbox>
       ),
     [showModel, model],

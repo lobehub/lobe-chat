@@ -20,7 +20,7 @@ const EditableFileList = memo<EditableFileListProps>(
         gap={mobile ? 4 : 6}
         horizontal
         padding={padding}
-        style={{ overflow: 'auto', width: '100%' }}
+        style={{ overflow: 'scroll', width: '100%' }}
       >
         <ImageGallery>
           {items.map((i) => (

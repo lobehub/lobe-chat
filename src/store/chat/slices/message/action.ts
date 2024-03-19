@@ -1,28 +1,32 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-// Note: DON'T REMOVE THE FIRST LINE
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { copyToClipboard } from '@lobehub/ui';
 import { template } from 'lodash-es';
-import useSWR, { SWRResponse, mutate } from 'swr';
+import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { GPT4_VISION_MODEL_DEFAULT_MAX_TOKENS } from '@/const/llm';
 import { LOADING_FLAT, isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/const/message';
+import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { CreateMessageParams } from '@/database/models/message';
+import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
+import { traceService } from '@/services/trace';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
-import { fetchSSE } from '@/utils/fetch';
+import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors } from '../../selectors';
 import { MessageDispatch, messagesReducer } from './reducer';
 
 const n = setNamespace('message');
+
+const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 
 interface SendMessageParams {
   message: string;
@@ -32,21 +36,33 @@ interface SendMessageParams {
 
 export interface ChatMessageAction {
   // create
-  resendMessage: (id: string) => Promise<void>;
   sendMessage: (params: SendMessageParams) => Promise<void>;
+  /**
+   * regenerate message
+   * trace enabled
+   * @param id
+   */
+  regenerateMessage: (id: string) => Promise<void>;
+
   // delete
   /**
    * clear message on the active session
    */
   clearMessage: () => Promise<void>;
   deleteMessage: (id: string) => Promise<void>;
+  delAndRegenerateMessage: (id: string) => Promise<void>;
   clearAllMessages: () => Promise<void>;
   // update
   updateInputMessage: (message: string) => void;
-  updateMessageContent: (id: string, content: string) => Promise<void>;
+  modifyMessageContent: (id: string, content: string) => Promise<void>;
   // query
   useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
   stopGenerateMessage: () => void;
+  copyMessage: (id: string, content: string) => Promise<void>;
+
+  // =========  ↓ Internal Method ↓  ========== //
+  // ========================================== //
+  // ========================================== //
 
   /**
    * update message at the frontend point
@@ -56,7 +72,11 @@ export interface ChatMessageAction {
   /**
    * core process of the AI message (include preprocess and postprocess)
    */
-  coreProcessMessage: (messages: ChatMessage[], parentId: string) => Promise<void>;
+  coreProcessMessage: (
+    messages: ChatMessage[],
+    parentId: string,
+    traceId?: string,
+  ) => Promise<void>;
   /**
    * 实际获取 AI 响应
    * @param messages - 聊天消息数组
@@ -65,11 +85,13 @@ export interface ChatMessageAction {
   fetchAIChatMessage: (
     messages: ChatMessage[],
     assistantMessageId: string,
+    traceId?: string,
   ) => Promise<{
     content: string;
     functionCallAtEnd: boolean;
     functionCallContent: string;
     isFunctionCall: boolean;
+    traceId?: string;
   }>;
   toggleChatLoading: (
     loading: boolean,
@@ -77,12 +99,21 @@ export interface ChatMessageAction {
     action?: string,
   ) => AbortController | undefined;
   refreshMessages: () => Promise<void>;
+  // TODO: 后续 smoothMessage 实现考虑落到 sse 这一层
   createSmoothMessage: (id: string) => {
     startAnimation: (speed?: number) => Promise<void>;
     stopAnimation: () => void;
     outputQueue: string[];
     isAnimationActive: boolean;
   };
+  /**
+   * a method used by other action
+   * @param id
+   * @param content
+   */
+  internalUpdateMessageContent: (id: string, content: string) => Promise<void>;
+  internalResendMessage: (id: string, traceId?: string) => Promise<void>;
+  internalTraceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
@@ -103,6 +134,21 @@ export const chatMessage: StateCreator<
     await messageService.removeMessage(id);
     await get().refreshMessages();
   },
+  delAndRegenerateMessage: async (id) => {
+    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
+    get().internalResendMessage(id, traceId);
+    get().deleteMessage(id);
+
+    // trace the delete and regenerate message
+    get().internalTraceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
+  },
+  regenerateMessage: async (id: string) => {
+    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
+    await get().internalResendMessage(id, traceId);
+
+    // trace the delete and regenerate message
+    get().internalTraceMessage(id, { eventType: TraceEventType.RegenerateMessage });
+  },
   clearMessage: async () => {
     const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
 
@@ -122,7 +168,7 @@ export const chatMessage: StateCreator<
     await messageService.clearAllMessage();
     await refreshMessages();
   },
-  resendMessage: async (messageId) => {
+  internalResendMessage: async (messageId, traceId) => {
     // 1. 构造所有相关的历史记录
     const chats = chatSelectors.currentChats(get());
 
@@ -157,7 +203,7 @@ export const chatMessage: StateCreator<
 
     if (!latestMsg) return;
 
-    await coreProcessMessage(contextMessages, latestMsg.id);
+    await coreProcessMessage(contextMessages, latestMsg.id, traceId);
   },
   sendMessage: async ({ message, files, onlyAddUserMessage }) => {
     const { coreProcessMessage, activeTopicId, activeId } = get();
@@ -203,6 +249,12 @@ export const chatMessage: StateCreator<
     }
   },
 
+  copyMessage: async (id, content) => {
+    await copyToClipboard(content);
+
+    get().internalTraceMessage(id, { eventType: TraceEventType.CopyMessage });
+  },
+
   stopGenerateMessage: () => {
     const { abortController, toggleChatLoading } = get();
     if (!abortController) return;
@@ -214,21 +266,20 @@ export const chatMessage: StateCreator<
   updateInputMessage: (message) => {
     set({ inputMessage: message }, false, n('updateInputMessage', message));
   },
-  updateMessageContent: async (id, content) => {
-    const { dispatchMessage, refreshMessages } = get();
+  modifyMessageContent: async (id, content) => {
+    // tracing the diff of update
+    // due to message content will change, so we need send trace before update,or will get wrong data
+    get().internalTraceMessage(id, {
+      eventType: TraceEventType.ModifyMessage,
+      nextContent: content,
+    });
 
-    // Due to the async update method and refresh need about 100ms
-    // we need to update the message content at the frontend to avoid the update flick
-    // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
-    dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
-
-    await messageService.updateMessage(id, { content });
-    await refreshMessages();
+    await get().internalUpdateMessageContent(id, content);
   },
   useFetchMessages: (sessionId, activeTopicId) =>
-    useSWR<ChatMessage[]>(
-      [sessionId, activeTopicId],
-      async ([sessionId, topicId]: [string, string | undefined]) =>
+    useClientDataSWR<ChatMessage[]>(
+      [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId],
+      async ([, sessionId, topicId]: [string, string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),
       {
         onSuccess: (messages, key) => {
@@ -241,27 +292,24 @@ export const chatMessage: StateCreator<
             }),
           );
         },
-        // default is 2000ms ,it makes the user's quick switch don't work correctly.
-        // Cause issue like this: https://github.com/lobehub/lobe-chat/issues/532
-        // we need to set it to 0.
-        dedupingInterval: 0,
       },
     ),
   refreshMessages: async () => {
-    await mutate([get().activeId, get().activeTopicId]);
+    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
   },
 
   // the internal process method of the AI message
-  coreProcessMessage: async (messages, userMessageId) => {
+  coreProcessMessage: async (messages, userMessageId, trace) => {
     const { fetchAIChatMessage, triggerFunctionCall, refreshMessages, activeTopicId } = get();
 
-    const { model } = getAgentConfig();
+    const { model, provider } = getAgentConfig();
 
     // 1. Add an empty message to place the AI response
     const assistantMessage: CreateMessageParams = {
       role: 'assistant',
       content: LOADING_FLAT,
       fromModel: model,
+      fromProvider: provider,
 
       parentId: userMessageId,
       sessionId: get().activeId,
@@ -272,8 +320,8 @@ export const chatMessage: StateCreator<
     await refreshMessages();
 
     // 2. fetch the AI response
-    const { isFunctionCall, content, functionCallAtEnd, functionCallContent } =
-      await fetchAIChatMessage(messages, mid);
+    const { isFunctionCall, content, functionCallAtEnd, functionCallContent, traceId } =
+      await fetchAIChatMessage(messages, mid, trace);
 
     // 3. if it's the function call message, trigger the function method
     if (isFunctionCall) {
@@ -283,18 +331,20 @@ export const chatMessage: StateCreator<
       if (functionCallAtEnd) {
         // create a new separate message and remove the function call from the prev message
 
-        await get().updateMessageContent(mid, content.replace(functionCallContent, ''));
+        await get().internalUpdateMessageContent(mid, content.replace(functionCallContent, ''));
 
         const functionMessage: CreateMessageParams = {
           role: 'function',
           content: functionCallContent,
-          extra: {
-            fromModel: model,
-          },
+          fromModel: model,
+          fromProvider: provider,
+
           parentId: userMessageId,
           sessionId: get().activeId,
           topicId: activeTopicId,
+          traceId,
         };
+
         functionId = await messageService.create(functionMessage);
       }
 
@@ -311,11 +361,11 @@ export const chatMessage: StateCreator<
 
     set({ messages }, false, n(`dispatchMessage/${payload.type}`, payload));
   },
-  fetchAIChatMessage: async (messages, assistantId) => {
+  fetchAIChatMessage: async (messages, assistantId, traceId) => {
     const {
       toggleChatLoading,
       refreshMessages,
-      updateMessageContent,
+      internalUpdateMessageContent,
       dispatchMessage,
       createSmoothMessage,
     } = get();
@@ -368,29 +418,34 @@ export const chatMessage: StateCreator<
     if (config.model === 'gpt-4-vision-preview') {
       /* eslint-disable unicorn/no-lonely-if */
       if (!config.params.max_tokens)
-        config.params.max_tokens = GPT4_VISION_MODEL_DEFAULT_MAX_TOKENS;
+        // refs: https://github.com/lobehub/lobe-chat/issues/837
+        config.params.max_tokens = 2048;
     }
-
-    const fetcher = () =>
-      chatService.createAssistantMessage(
-        {
-          messages: preprocessMsgs,
-          model: config.model,
-          ...config.params,
-          plugins: config.plugins,
-        },
-        { signal: abortController?.signal },
-      );
 
     let output = '';
     let isFunctionCall = false;
     let functionCallAtEnd = false;
     let functionCallContent = '';
+    let msgTraceId: string | undefined;
 
     const { startAnimation, stopAnimation, outputQueue, isAnimationActive } =
       createSmoothMessage(assistantId);
 
-    await fetchSSE(fetcher, {
+    await chatService.createAssistantMessageStream({
+      abortController,
+      params: {
+        messages: preprocessMsgs,
+        model: config.model,
+        provider: config.provider,
+        ...config.params,
+        plugins: config.plugins,
+      },
+      trace: {
+        traceId,
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
+        traceName: TraceNameMap.Conversation,
+      },
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(assistantId, error);
         await refreshMessages();
@@ -398,8 +453,16 @@ export const chatMessage: StateCreator<
       onAbort: async () => {
         stopAnimation();
       },
-      onFinish: async (content) => {
+      onFinish: async (content, { traceId, observationId }) => {
         stopAnimation();
+        // if there is traceId, update it
+        if (traceId) {
+          msgTraceId = traceId;
+          await messageService.updateMessage(assistantId, {
+            traceId,
+            observationId: observationId ?? undefined,
+          });
+        }
 
         // if there is still content not displayed,
         // and the message is not a function call
@@ -409,7 +472,7 @@ export const chatMessage: StateCreator<
         }
 
         // update the content after fetch result
-        await updateMessageContent(assistantId, content);
+        await internalUpdateMessageContent(assistantId, content);
       },
       onMessageHandle: async (text) => {
         output += text;
@@ -449,7 +512,13 @@ export const chatMessage: StateCreator<
       }
     }
 
-    return { content: output, functionCallAtEnd, functionCallContent, isFunctionCall };
+    return {
+      content: output,
+      functionCallAtEnd,
+      functionCallContent,
+      isFunctionCall,
+      traceId: msgTraceId,
+    };
   },
   toggleChatLoading: (loading, id, action) => {
     if (loading) {
@@ -464,6 +533,17 @@ export const chatMessage: StateCreator<
 
       window.removeEventListener('beforeunload', preventLeavingFn);
     }
+  },
+  internalUpdateMessageContent: async (id, content) => {
+    const { dispatchMessage, refreshMessages } = get();
+
+    // Due to the async update method and refresh need about 100ms
+    // we need to update the message content at the frontend to avoid the update flick
+    // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
+    dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
+
+    await messageService.updateMessage(id, { content });
+    await refreshMessages();
   },
 
   createSmoothMessage: (id) => {
@@ -529,5 +609,20 @@ export const chatMessage: StateCreator<
       });
 
     return { startAnimation, stopAnimation, outputQueue, isAnimationActive };
+  },
+
+  internalTraceMessage: async (id, payload) => {
+    // tracing the diff of update
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
+
+    const traceId = message?.traceId;
+    const observationId = message?.observationId;
+
+    if (traceId && message?.role === 'assistant') {
+      traceService
+        .traceEvent({ traceId, observationId, content: message.content, ...payload })
+        .catch();
+    }
   },
 });

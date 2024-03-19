@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "について"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "匿名の使用データを送信することで、LobeChat の全体的なユーザーエクスペリエンスの向上にご協力いただけます",
+      "title": "匿名使用データの送信"
+    },
+    "title": "データ分析"
+  },
   "danger": {
     "clear": {
       "action": "すぐにクリア",
@@ -21,7 +31,29 @@
     "sessionWithName": "セッション設定 · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "endpoint": {
+        "desc": "デフォルトのアドレスに加えて、http(s)://を含める必要があります",
+        "placeholder": "https://api.anthropic.com",
+        "title": "APIプロキシアドレス"
+      },
+      "title": "Anthropic",
+      "token": {
+        "desc": "Anthropic の API キーを入力してください",
+        "placeholder": "Anthropic API キー",
+        "title": "API キー"
+      }
+    },
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "AzureのAPIバージョン。YYYY-MM-DD形式に従う。[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照",
+        "fetch": "リストを取得",
+        "title": "Azure APIバージョン"
+      },
+      "deployments": {
+        "desc": "id=nameの構文を使用して、デプロイモデルを記入します（デプロイ名とモデルが同じ場合、モデル名のみを記入できます）。複数のモデルは、カンマ（,）で区切ります",
+        "title": "Azureデプロイリスト"
+      },
       "endpoint": {
         "desc": "Azure ポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +70,80 @@
         "title": "API キー"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Aws Access Key Idを入力",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "AccessKeyId / SecretAccessKeyが正しく記入されているかをテスト"
+      },
+      "region": {
+        "desc": "Aws Regionを入力",
+        "placeholder": "Aws Region",
+        "title": "Aws Region"
+      },
+      "secretAccessKey": {
+        "desc": "Aws Secret Access Keyを入力",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Googleから取得したAPIキーを入力",
+        "placeholder": "Google API Key",
+        "title": "APIキー"
+      }
+    },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Groq からの API キーを入力してください",
+        "placeholder": "Groq API キー",
+        "title": " API キー"
+      }
+    },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Mistral AI からの API キーを入力してください",
+        "placeholder": "Mistral AI API キー",
+        "title": "API キー"
+      }
+    },
+    "Moonshot": {
+      "title": "月の裏側",
+      "token": {
+        "desc": "Moonshot AI からの API キーを入力してください",
+        "placeholder": "Moonshot AI API キー",
+        "title": "API キー"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "プロキシアドレスが正しく入力されているかをテストします"
+      },
+      "customModelName": {
+        "desc": "カスタムモデルを追加します。複数のモデルはコンマ（,）で区切ってください",
+        "placeholder": "ビクーニャ、リャマ、コードリャマ、リャマ2:13b-テキスト",
+        "title": "カスタムモデル名"
+      },
+      "endpoint": {
+        "desc": "Ollama インターフェースプロキシアドレスを入力します。ローカルで追加指定がない場合は空白のままにしてください",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "インターフェースプロキシアドレス"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure の API バージョンは YYYY-MM-DD 形式に従い、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照してください",
         "fetch": "リストを取得",
         "title": "Azure API バージョン"
-      },
-      "check": {
-        "button": "チェック",
-        "desc": "API キーとプロキシアドレスが正しく入力されているかをテストします",
-        "pass": "チェックに合格",
-        "title": "接続性チェック"
       },
       "customModelName": {
         "desc": "カスタムモデルを追加し、複数のモデルはカンマ（,）で区切って使用します",
@@ -82,7 +177,53 @@
         "title": "Azure OpenAI を使用"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "プロキシアドレスが正しく入力されているかをテストします"
+      },
+      "customModelName": {
+        "desc": "カスタムモデルを追加します。複数のモデルはコンマ（,）で区切ってください",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "カスタムモデル名"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "OpenRouter AIから取得したAPIキーを入力してください",
+        "placeholder": "OpenRouter AI APIキー",
+        "title": "APIキー"
+      }
+    },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Perplexity AI の API キーを入力してください",
+        "placeholder": "Perplexity AI API キー",
+        "title": "API キー"
+      }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "智谱から取得したAPIキーを入力",
+        "placeholder": "Zhipu API Key",
+        "title": "APIキー"
+      }
+    },
+    "checker": {
+      "button": "チェック",
+      "desc": "APIキーとプロキシアドレスが正しく記入されているかをテスト",
+      "pass": "チェック合格",
+      "title": "接続性チェック"
+    },
     "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama はモデルをダウンロード中です。ページを閉じないようにしてください。再度ダウンロードすると、中断した箇所から再開されます。",
+      "remainingTime": "残り時間",
+      "speed": "ダウンロード速度",
+      "title": "モデル {{model}} をダウンロード中"
+    }
   },
   "plugin": {
     "addTooltip": "カスタムプラグイン",
@@ -209,6 +350,22 @@
       "placeholder": "アクセスコードを入力してください",
       "title": "アクセスコード"
     },
+    "oauth": {
+      "info": {
+        "desc": "ログイン済み",
+        "title": "アカウント情報"
+      },
+      "signin": {
+        "action": "ログイン",
+        "desc": "SSO ログインを使用してアプリをロック解除",
+        "title": "アカウントにログイン"
+      },
+      "signout": {
+        "action": "ログアウト",
+        "confirm": "ログアウトしますか？",
+        "success": "ログアウトに成功しました"
+      }
+    },
     "title": "システム設定"
   },
   "settingTTS": {
@@ -284,6 +441,7 @@
     "tooltips": "エージェントマーケットに共有"
   },
   "tab": {
+    "about": "について",
     "agent": "デフォルトエージェント",
     "common": "一般設定",
     "llm": "言語モデル",
@@ -293,6 +451,7 @@
     "builtins": {
       "groupName": "組み込み"
     },
+    "disabled": "現在のモデルは関数呼び出しをサポートしていません。プラグインを使用できません",
     "plugins": {
       "enabled": "{{num}} が有効",
       "groupName": "プラグイン",

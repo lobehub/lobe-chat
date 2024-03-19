@@ -1,0 +1,27 @@
+# Identity Verification Service
+
+LobeChat supports the configuration of external identity verification services for internal use within enterprises/organizations to centrally manage user authorization.
+
+Currently supported identity verification services include:
+
+- [Auth0](/en/self-hosting/advanced/sso-providers/auth0)
+- [Microsoft Entra ID](/en/self-hosting/advanced/sso-providers/microsoft-entra-id)
+
+Click on the links to view the corresponding platform's configuration documentation.
+
+## Advanced Configuration
+
+To simultaneously enable multiple identity verification sources, please set the `SSO_PROVIDERS` environment variable, separating them with commas, for example, `auth0,azure-ad`.
+
+The order corresponds to the display order of the SSO providers.
+
+| SSO Provider       | Value      |
+| ------------------ | ---------- |
+| Auth0              | `auth0`    |
+| Microsoft Entra ID | `azure-ad` |
+
+## Other SSO Providers
+
+Please refer to the [NextAuth.js][next-auth-js] documentation and feel free to submit a Pull Request.
+
+[next-auth-js]: https://next-auth.js.org/providers

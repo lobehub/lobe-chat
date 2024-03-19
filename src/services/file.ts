@@ -1,8 +1,9 @@
 import { FileModel } from '@/database/models/file';
 import { DB_File } from '@/database/schemas/files';
-import { URLS } from '@/services/_url';
 import { FilePreview } from '@/types/files';
 import compressImage from '@/utils/compressImage';
+
+import { API_ENDPOINTS } from './_url';
 
 class FileService {
   private isImage(fileType: string) {
@@ -33,8 +34,7 @@ class FileService {
       }))();
 
     // 压缩图片
-    const fileType = 'image/webp';
-    const base64String = compressImage({ img, type: fileType });
+    const base64String = compressImage({ img, type: file.fileType });
     const binaryString = atob(base64String.split('base64,')[1]);
     const uint8Array = Uint8Array.from(binaryString, (char) => char.charCodeAt(0));
     file.data = uint8Array.buffer;
@@ -43,7 +43,7 @@ class FileService {
   }
 
   async uploadImageByUrl(url: string, file: Pick<DB_File, 'name' | 'metadata'>) {
-    const res = await fetch(URLS.proxy, { body: url, method: 'POST' });
+    const res = await fetch(API_ENDPOINTS.proxy, { body: url, method: 'POST' });
     const data = await res.arrayBuffer();
     const fileType = res.headers.get('content-type') || 'image/webp';
 

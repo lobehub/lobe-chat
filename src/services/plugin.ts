@@ -5,11 +5,12 @@ import {
 } from '@lobehub/chat-plugin-sdk';
 
 import { PluginModel } from '@/database/models/plugin';
-import { PLUGINS_URLS, URLS } from '@/services/_url';
 import { globalHelpers } from '@/store/global/helpers';
 import { OpenAIPluginManifest } from '@/types/openai/plugin';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
+
+import { API_ENDPOINTS } from './_url';
 
 export interface InstallPluginParams {
   identifier: string;
@@ -21,7 +22,7 @@ class PluginService {
     // 2. 发送请求
     let res: Response;
     try {
-      res = await (proxy ? fetch(URLS.proxy, { body: url, method: 'POST' }) : fetch(url));
+      res = await (proxy ? fetch(API_ENDPOINTS.proxy, { body: url, method: 'POST' }) : fetch(url));
     } catch {
       throw new TypeError('fetchError');
     }
@@ -54,7 +55,7 @@ class PluginService {
   getPluginList = async (): Promise<LobeChatPluginsMarketIndex> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    const res = await fetch(`${PLUGINS_URLS.store}?locale=${locale}`);
+    const res = await fetch(`${API_ENDPOINTS.pluginStore}?locale=${locale}`);
 
     return res.json();
   };

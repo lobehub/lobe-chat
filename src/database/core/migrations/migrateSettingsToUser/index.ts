@@ -1,25 +1,10 @@
-import type { NeutralColors, PrimaryColors } from '@lobehub/ui';
-import type { ThemeMode } from 'antd-style';
+import { DB_Settings } from '@/database/schemas/user';
 
-import { DB_Settings, DB_User } from '@/database/schemas/user';
-import { LocaleMode } from '@/types/locale';
-import { GlobalDefaultAgent, GlobalLLMConfig, GlobalTTSConfig, GlobalTool } from '@/types/settings';
+import { V4Settings } from './type';
 
-export interface V4Settings {
-  avatar: string;
-  defaultAgent: GlobalDefaultAgent;
-  fontSize: number;
-  language: LocaleMode;
-  languageModel: GlobalLLMConfig;
-  neutralColor?: NeutralColors;
-  password: string;
-  primaryColor?: PrimaryColors;
-  themeMode: ThemeMode;
-  tool: GlobalTool;
-  tts: GlobalTTSConfig;
-}
-
-export const migrateSettingsToUser = (settings: V4Settings): DB_User => {
+export const migrateSettingsToUser = (
+  settings: V4Settings,
+): { avatar: string; settings: DB_Settings } => {
   const dbSettings: DB_Settings = {
     defaultAgent: settings.defaultAgent,
     fontSize: settings.fontSize,

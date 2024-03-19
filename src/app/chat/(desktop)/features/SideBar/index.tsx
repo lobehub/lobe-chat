@@ -19,6 +19,7 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 100% !important;
   `,
   drawer: css`
+    z-index: 0;
     background: ${token.colorBgLayout};
   `,
   header: css`
@@ -53,7 +54,7 @@ const Desktop = memo(() => {
           height: '100%',
           maxHeight: '100vh',
           minWidth: CHAT_SIDEBAR_WIDTH,
-          overflow: 'auto',
+          overflow: 'scroll',
         }}
       >
         <SafeSpacing />

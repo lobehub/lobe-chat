@@ -3,10 +3,12 @@
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
+import { SessionProvider } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { FC, PropsWithChildren, memo } from 'react';
 
 import { getClientConfig } from '@/config/client';
+import { API_ENDPOINTS } from '@/services/_url';
 
 import AppTheme, { AppThemeProps } from './AppTheme';
 import Locale from './Locale';
@@ -44,16 +46,30 @@ const Container = memo<PropsWithChildren>(({ children }) => {
 
 interface GlobalLayoutProps extends AppThemeProps {
   defaultLang?: string;
+  enableOAuthSSO?: boolean;
 }
 
-const GlobalLayout = ({ children, defaultLang, ...theme }: GlobalLayoutProps) => (
-  <AppTheme {...theme}>
-    <Locale defaultLang={defaultLang}>
-      <StoreHydration />
-      <Container>{children}</Container>
-      <DebugUI />
-    </Locale>
-  </AppTheme>
-);
+const GlobalLayout = ({
+  children,
+  defaultLang,
+  enableOAuthSSO = false,
+  ...theme
+}: GlobalLayoutProps) => {
+  const content = (
+    <AppTheme {...theme}>
+      <Locale defaultLang={defaultLang}>
+        <StoreHydration />
+        <Container>{children}</Container>
+        <DebugUI />
+      </Locale>
+    </AppTheme>
+  );
+
+  return enableOAuthSSO ? (
+    <SessionProvider basePath={API_ENDPOINTS.oauth}>{content}</SessionProvider>
+  ) : (
+    content
+  );
+};
 
 export default GlobalLayout;

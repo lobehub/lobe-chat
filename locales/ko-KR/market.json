@@ -1,5 +1,7 @@
 {
   "addAgent": "보조 프로그램 추가",
+  "addAgentAndConverse": "에이전트 추가 및 대화",
+  "addAgentSuccess": "추가 성공",
   "guide": {
     "func1": {
       "desc1": "세션 창에서 오른쪽 상단 설정으로 이동하여 도우미를 제출할 설정 페이지로 이동합니다.",

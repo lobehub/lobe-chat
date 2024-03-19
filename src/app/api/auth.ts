@@ -4,9 +4,15 @@ import { ChatErrorType } from '@/types/fetch';
 interface AuthConfig {
   accessCode?: string | null;
   apiKey?: string | null;
+  oauthAuthorized?: boolean;
 }
 
-export const checkAuth = ({ apiKey, accessCode }: AuthConfig) => {
+export const checkAuth = ({ apiKey, accessCode, oauthAuthorized }: AuthConfig) => {
+  // If authorized by oauth
+  if (oauthAuthorized) {
+    return { auth: true };
+  }
+
   const { ACCESS_CODES } = getServerConfig();
 
   // if apiKey exist

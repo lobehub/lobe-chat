@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modèle personnalisé, par défaut prend en charge à la fois l'appel de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités selon les besoins réels.",
+      "file": "Ce modèle prend en charge la lecture et la reconnaissance de fichiers",
+      "functionCall": "Ce modèle prend en charge l'appel de fonction (Function Call).",
+      "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
+      "vision": "Ce modèle prend en charge la reconnaissance visuelle."
+    }
+  },
   "about": "À propos",
   "advanceSettings": "Paramètres avancés",
   "agentMaxToken": "Longueur maximale de la session",
@@ -18,6 +27,7 @@
   "defaultAgent": "Agent par défaut",
   "defaultSession": "Session par défaut",
   "delete": "Supprimer",
+  "document": "Document d'utilisation",
   "duplicate": "Dupliquer",
   "edit": "Modifier",
   "export": "Exporter",
@@ -89,7 +99,23 @@
     "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
+  "modelProvider": {
+    "anthropic": "Anthropic",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral AI",
+    "moonshot": "Moonshot IA",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Aucune description disponible",
+  "oauth": "Connexion SSO",
   "ok": "OK",
   "password": "Mot de passe",
   "pin": "Épingler",
@@ -106,6 +132,13 @@
     "chat": "Conversation",
     "market": "Découvrir",
     "setting": "Paramètre"
+  },
+  "telemetry": {
+    "allow": "Autoriser",
+    "deny": "Refuser",
+    "desc": "Nous aimerions recueillir anonymement des informations sur votre utilisation afin de nous aider à améliorer LobeChat et à vous offrir une meilleure expérience produit. Vous pouvez désactiver cette fonctionnalité à tout moment dans les paramètres - À propos.",
+    "learnMore": "En savoir plus",
+    "title": "Aider LobeChat à s'améliorer"
   },
   "temp": "Temporaire",
   "updateAgent": "Mettre à jour les informations de l'agent",

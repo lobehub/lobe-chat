@@ -60,8 +60,14 @@ const Inspector = memo<InspectorProps>(
       <Icon icon={LucideToyBrick} />
     );
 
-    const args = JSON.stringify(command, null, 2);
-    const params = JSON.stringify(JSON.parse(requestArgs), null, 2);
+    let args, params;
+    try {
+      args = JSON.stringify(command, null, 2);
+      params = JSON.stringify(JSON.parse(requestArgs), null, 2);
+    } catch {
+      args = '';
+      params = '';
+    }
 
     return (
       <Flexbox gap={8}>

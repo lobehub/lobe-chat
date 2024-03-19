@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
+      "file": "This model supports file upload for reading and recognition",
+      "functionCall": "This model supports function call.",
+      "tokens": "This model supports a maximum of {{tokens}} tokens per session.",
+      "vision": "This model supports visual recognition."
+    }
+  },
   "about": "About",
   "advanceSettings": "Advanced Settings",
   "agentMaxToken": "Max Session Length",
@@ -18,6 +27,7 @@
   "defaultAgent": "Default Agent",
   "defaultSession": "Default Agent",
   "delete": "Delete",
+  "document": "User Manual",
   "duplicate": "Create Duplicate",
   "edit": "Edit",
   "export": "Export Configuration",
@@ -89,7 +99,23 @@
     "zh-TW": "Traditional Chinese"
   },
   "layoutInitializing": "Initializing layout...",
+  "modelProvider": {
+    "anthropic": "Anthropic",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral AI",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "No description available",
+  "oauth": "SSO Login",
   "ok": "OK",
   "password": "Password",
   "pin": "Pin",
@@ -106,6 +132,13 @@
     "chat": "Chat",
     "market": "Discover",
     "setting": "Settings"
+  },
+  "telemetry": {
+    "allow": "Allow",
+    "deny": "Deny",
+    "desc": "We would like to anonymously collect usage information to help us improve LobeChat and provide you with a better product experience. You can disable this at any time in Settings - About.",
+    "learnMore": "Learn More",
+    "title": "Help LobeChat be better"
   },
   "temp": "Temporary",
   "updateAgent": "Update Agent Information",

@@ -76,6 +76,30 @@ describe('SessionAction', () => {
         SESSION_CHAT_URL(newSessionId, result.current.isMobile),
       );
     });
+
+    it('should create a new session but not switch to it if isSwitchSession is false', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const newSessionId = 'new-session-id';
+      vi.mocked(sessionService.createNewSession).mockResolvedValue(newSessionId);
+
+      let createdSessionId;
+
+      await act(async () => {
+        createdSessionId = await result.current.createSession(
+          { config: { displayMode: 'docs' } },
+          false,
+        );
+      });
+
+      const call = vi.mocked(sessionService.createNewSession).mock.calls[0];
+      expect(call[0]).toEqual(LobeSessionType.Agent);
+      expect(call[1]).toMatchObject({ config: { displayMode: 'docs' } });
+
+      expect(createdSessionId).toBe(newSessionId);
+      expect(mockRouterPush).not.toHaveBeenCalledWith(
+        SESSION_CHAT_URL(newSessionId, result.current.isMobile),
+      );
+    });
   });
 
   describe('duplicateSession', () => {

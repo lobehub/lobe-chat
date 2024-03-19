@@ -1,5 +1,7 @@
 {
   "addAgent": "新增助理",
+  "addAgentAndConverse": "新增助理並開始對話",
+  "addAgentSuccess": "新增成功",
   "guide": {
     "func1": {
       "desc1": "在會話視窗中通過右上角設置進入你想提交助手的設置頁面;",

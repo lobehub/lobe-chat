@@ -9,6 +9,6 @@ import Header from '../features/Header/Home';
 
 export default memo(({ children }: PropsWithChildren) => (
   <AppLayoutMobile navBar={<Header />} showTabBar>
-    <Flexbox style={{ overflow: 'auto' }}>{children}</Flexbox>
+    <Flexbox style={{ overflow: 'scroll' }}>{children}</Flexbox>
   </AppLayoutMobile>
 ));

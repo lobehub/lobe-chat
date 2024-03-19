@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "自定义模型，默认设定同时支持函数调用与视觉识别，请根据实际情况验证上述能力的可用性",
+      "file": "该模型支持上传文件读取与识别",
+      "functionCall": "该模型支持函数调用（Function Call）",
+      "tokens": "该模型单个会话最多支持 {{tokens}} Tokens",
+      "vision": "该模型支持视觉识别"
+    }
+  },
   "about": "关于",
   "advanceSettings": "高级设置",
   "agentMaxToken": "会话最大长度",
@@ -18,6 +27,7 @@
   "defaultAgent": "自定义助手",
   "defaultSession": "自定义助手",
   "delete": "删除",
+  "document": "使用文档",
   "duplicate": "创建副本",
   "edit": "编辑",
   "export": "导出配置",
@@ -89,7 +99,23 @@
     "zh-TW": "繁体中文"
   },
   "layoutInitializing": "正在加载布局...",
+  "modelProvider": {
+    "anthropic": "Anthropic",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral AI",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "智谱AI"
+  },
   "noDescription": "暂无描述",
+  "oauth": "SSO 登录",
   "ok": "确定",
   "password": "密码",
   "pin": "置顶",
@@ -106,6 +132,13 @@
     "chat": "会话",
     "market": "发现",
     "setting": "设置"
+  },
+  "telemetry": {
+    "allow": "允许",
+    "deny": "拒绝",
+    "desc": "我们希望匿名获取你的使用信息，进而帮助我们改进 LobeChat，并为你提供更好的产品体验。你可以在「设置」 - 「关于」随时关闭。",
+    "learnMore": "了解更多",
+    "title": "帮助 LobeChat 做得更好"
   },
   "temp": "临时",
   "updateAgent": "更新助理信息",

@@ -1,0 +1,35 @@
+# Deploy LobeChat with Vercel
+
+If you want to deploy LobeChat on Vercel, you can follow the steps below:
+
+## Vercel Deployment Process
+
+<Steps>
+  ### Prepare your OpenAI API Key
+
+  Go to [OpenAI API Key](https://platform.openai.com/account/api-keys) to get your OpenAI API Key.
+
+  ### Click the button below to deploy
+
+  [![][deploy-button-image]][deploy-link]
+
+  Simply log in with your GitHub account, and remember to fill in `OPENAI_API_KEY` (required) and `ACCESS_CODE` (recommended) in the environment variables page.
+
+  ### After deployment, you can start using it
+
+  ### Bind a custom domain (optional)
+
+  Vercel's assigned domain DNS may be polluted in some regions, so binding a custom domain can establish a direct connection.
+</Steps>
+
+## Automatic Synchronization of Updates
+
+If you have deployed your project using the one-click deployment steps mentioned above, you may find that you are always prompted with "updates available." This is because Vercel creates a new project for you by default instead of forking this project, which causes the inability to accurately detect updates.
+
+<Callout>
+  We recommend following the [Self-Hosting Upstream Sync](/zh/self-hosting/upstream-sync) steps to
+  Redeploy.
+</Callout>
+
+[deploy-button-image]: https://vercel.com/button
+[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY,ACCESS_CODE&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%7C%20Access%20Code%20can%20protect%20your%20website&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat

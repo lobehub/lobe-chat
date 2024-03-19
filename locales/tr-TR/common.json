@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, lütfen yukarıdaki yeteneklerin kullanılabilirliğini doğrulayın",
+      "file": "Bu model dosya yükleme ve tanıma desteği sağlar",
+      "functionCall": "Bu model fonksiyon çağrısını destekler (Function Call)",
+      "tokens": "Bu model, tek bir oturumda en fazla {{tokens}} Token'ı destekler",
+      "vision": "Bu model görüntü tanımı destekler"
+    }
+  },
   "about": "Hakkında",
   "advanceSettings": "Gelişmiş Ayarlar",
   "agentMaxToken": "Maksimum Oturum Süresi",
@@ -18,6 +27,7 @@
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
+  "document": "Belge",
   "duplicate": "Kopya oluştur",
   "edit": "Düzenle",
   "export": "Dışa Aktar",
@@ -89,7 +99,23 @@
     "zh-TW": "Geleneksel Çince"
   },
   "layoutInitializing": "Başlatılıyor...",
+  "modelProvider": {
+    "anthropic": "Antropik",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral AI",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "AçıkYönlendirici",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Açıklama yok",
+  "oauth": "SSO Girişi",
   "ok": "Tamam",
   "password": "Password",
   "pin": "Pin",
@@ -106,6 +132,13 @@
     "chat": "Chat",
     "market": "Keşfet",
     "setting": "Ayarlar"
+  },
+  "telemetry": {
+    "allow": "İzin ver",
+    "deny": "Reddet",
+    "desc": "Anonim kullanım bilgilerinizi toplamamıza izin vererek LobeChat'i geliştirmemize ve size daha iyi bir ürün deneyimi sunmamıza yardımcı olabilirsiniz. Dilediğiniz zaman 'Ayarlar' - 'Hakkında' bölümünden devre dışı bırakabilirsiniz.",
+    "learnMore": "Daha Fazla Bilgi",
+    "title": "LobeChat'i Geliştirmemize Yardımcı Olun"
   },
   "temp": "Geçici",
   "updateAgent": "Asistan Bilgilerini Güncelle",

@@ -1,5 +1,7 @@
 {
   "addAgent": "Helfer hinzufügen",
+  "addAgentAndConverse": "Assistent hinzufügen und Konversation starten",
+  "addAgentSuccess": "Erfolgreich hinzugefügt",
   "guide": {
     "func1": {
       "desc1": "Gehen Sie im Chatfenster über das Einstellungssymbol oben rechts zur Seite, auf der Sie die Einstellungen für Ihren Helfer einreichen können.",

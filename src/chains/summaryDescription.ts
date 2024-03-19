@@ -1,7 +1,7 @@
 import { globalHelpers } from '@/store/global/helpers';
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 
-export const chainSummaryDescription = (content: string): Partial<OpenAIChatStreamPayload> => ({
+export const chainSummaryDescription = (content: string): Partial<ChatStreamPayload> => ({
   messages: [
     {
       content: `你是一名擅长技能总结的助理，你需要将用户的输入的内容总结为一个角色技能简介，不超过 20 个字。内容需要确保信息清晰、逻辑清晰，并有效地传达角色的技能和经验，需要并翻译为目标语言:${globalHelpers.getCurrentLanguage()}。格式要求如下：\n输入: {文本作为JSON引用字符串} [locale]\n输出: {简介}`,

@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Niestandardowy model, domyślnie obsługujący zarówno wywołania funkcji, jak i rozpoznawanie wizualne. Proszę zweryfikować możliwość użycia tych funkcji w praktyce.",
+      "file": "Ten model obsługuje wczytywanie plików i rozpoznawanie",
+      "functionCall": "Ten model obsługuje wywołania funkcji (Function Call).",
+      "tokens": "Ten model obsługuje maksymalnie {{tokens}} tokenów w pojedynczej sesji.",
+      "vision": "Ten model obsługuje rozpoznawanie wizualne."
+    }
+  },
   "about": "O nas",
   "advanceSettings": "Zaawansowane ustawienia",
   "agentMaxToken": "Maksymalna długość sesji",
@@ -18,6 +27,7 @@
   "defaultAgent": "Domyślny asystent",
   "defaultSession": "Domyślna sesja",
   "delete": "Usuń",
+  "document": "Dokumentacja",
   "duplicate": "Utwórz kopię",
   "edit": "Edytuj",
   "export": "Eksportuj ustawienia",
@@ -89,7 +99,23 @@
     "zh-TW": "Chiński tradycyjny"
   },
   "layoutInitializing": "Inicjowanie układu...",
+  "modelProvider": {
+    "anthropic": "Antropiczny",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral AI",
+    "moonshot": "Moonshot AI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Brak opisu",
+  "oauth": "Logowanie SSO",
   "ok": "OK",
   "password": "Hasło",
   "pin": "Przypnij",
@@ -106,6 +132,13 @@
     "chat": "Czat",
     "market": "Odkrywaj",
     "setting": "Ustawienia"
+  },
+  "telemetry": {
+    "allow": "Zezwalaj",
+    "deny": "Odmów",
+    "desc": "Chcemy anonimowo zbierać informacje o twoim użytkowaniu, aby pomóc nam ulepszyć LobeChat i zapewnić ci lepsze doświadczenia z naszym produktem. Możesz wyłączyć to w każdej chwili w „Ustawienia” - „O nas”.",
+    "learnMore": "Dowiedz się więcej",
+    "title": "Pomóż LobeChat stawać się lepszym"
   },
   "temp": "Tymczasowy",
   "updateAgent": "Zaktualizuj informacje o agencie",

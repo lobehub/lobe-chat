@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "حول"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "من خلال اختيار إرسال بيانات التحليل، يمكنك مساعدتنا في تحسين تجربة مستخدم LobeChat بشكل عام",
+      "title": "إرسال بيانات الاستخدام المجهولة"
+    },
+    "title": "تحليلات"
+  },
   "danger": {
     "clear": {
       "action": "مسح الآن",
@@ -21,7 +31,29 @@
     "sessionWithName": "إعدادات الجلسة · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "endpoint": {
+        "desc": "بخلاف العنوان الافتراضي، يجب أن يتضمن http(s)://",
+        "placeholder": "https://api.anthropic.com",
+        "title": "عنوان وكيل الواجهة البرمجية للتطبيقات"
+      },
+      "title": "أنثروبيك",
+      "token": {
+        "desc": "أدخل مفتاح API من أنثروبيك",
+        "placeholder": "مفتاح API من أنثروبيك",
+        "title": "مفتاح API"
+      }
+    },
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "إصدار واجهة برمجة التطبيقات لـ Azure، يتبع تنسيق YYYY-MM-DD، راجع [أحدث الإصدار](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "الحصول على قائمة",
+        "title": "إصدار واجهة برمجة التطبيقات لـ Azure"
+      },
+      "deployments": {
+        "desc": "املأ نموذج نشرك باستخدام بنية id=name (مثل اسم النشر والنموذج متطابقان، يمكنك ملء اسم النموذج فقط)، استخدم فاصلة (,) للنماذج المتعددة",
+        "title": "قائمة نماذج النشر لـ Azure"
+      },
       "endpoint": {
         "desc": "يمكن العثور على هذه القيمة في قسم 'المفتاح والنقطة النهائية' عند التحقق من الموارد في بوابة Azure",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +70,80 @@
         "title": "مفتاح واجهة برمجة التطبيقات"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "املأ معرف مفتاح الوصول لـ Aws",
+        "placeholder": "معرف مفتاح الوصول لـ Aws",
+        "title": "معرف مفتاح الوصول لـ Aws"
+      },
+      "checker": {
+        "desc": "اختبار ما إذا كان معرف الوصول / مفتاح الوصول السري مملوء بشكل صحيح"
+      },
+      "region": {
+        "desc": "املأ منطقة Aws",
+        "placeholder": "منطقة Aws",
+        "title": "منطقة Aws"
+      },
+      "secretAccessKey": {
+        "desc": "املأ مفتاح الوصول السري لـ Aws",
+        "placeholder": "مفتاح الوصول السري لـ Aws",
+        "title": "مفتاح الوصول السري لـ Aws"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "املأ مفتاح واجهة برمجة التطبيقات الخاص بك من Google",
+        "placeholder": "مفتاح واجهة برمجة التطبيقات الخاص بـ Google",
+        "title": "مفتاح واجهة برمجة التطبيقات"
+      }
+    },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ Groq",
+        "placeholder": "مفتاح API Groq",
+        "title": "مفتاح API"
+      }
+    },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "أدخل مفتاح API من Mistral AI",
+        "placeholder": "مفتاح API من Mistral AI",
+        "title": "مفتاح API"
+      }
+    },
+    "Moonshot": {
+      "title": "الجانب المظلم من القمر",
+      "token": {
+        "desc": "أدخل مفتاح API من Moonshot AI",
+        "placeholder": "مفتاح API Moonshot AI",
+        "title": "مفتاح API"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "تحقق من صحة عنوان الوكيل"
+      },
+      "customModelName": {
+        "desc": "إضافة نموذج مخصص، استخدم فاصلة (،) للنماذج المتعددة",
+        "placeholder": "فيكونا، للافا، كوديلاما، لاما2:13b-نص",
+        "title": "اسم النموذج المخصص"
+      },
+      "endpoint": {
+        "desc": "أدخل عنوان وكيل واجهة Ollama، اتركه فارغًا إذا لم يتم تحديده محليًا",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "عنوان وكيل الواجهة"
+      },
+      "title": "أولاما"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "إصدار واجهة برمجة التطبيقات لـ Azure، يتبع تنسيق YYYY-MM-DD، اطلع على [أحدث الإصدارات](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "الحصول على القائمة",
         "title": "إصدار واجهة برمجة التطبيقات لـ Azure"
-      },
-      "check": {
-        "button": "فحص",
-        "desc": "اختبار مفتاح واجهة البرمجة التطبيقية وعنوان الوكيل للتأكد من ملئهما بشكل صحيح",
-        "pass": "تم الفحص بنجاح",
-        "title": "فحص الاتصال"
       },
       "customModelName": {
         "desc": "إضافة نموذج مخصص، يمكن استخدام فاصلة (,) للنماذج المتعددة",
@@ -82,7 +177,53 @@
         "title": "استخدام Azure OpenAI"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "اختبار صحة عنوان الوكيل"
+      },
+      "customModelName": {
+        "desc": "إضافة نموذج مخصص، استخدم فاصلة (،) للنماذج المتعددة",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "اسم النموذج المخصص"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "أدخل مفتاح API من OpenRouter AI",
+        "placeholder": "مفتاح API من OpenRouter AI",
+        "title": "مفتاح API"
+      }
+    },
+    "Perplexity": {
+      "title": "Perplexity AI",
+      "token": {
+        "desc": "أدخل مفتاح API من Perplexity AI",
+        "placeholder": "مفتاح API Perplexity AI",
+        "title": "مفتاح الواجهة البرمجية للتطبيق"
+      }
+    },
+    "Zhipu": {
+      "title": "Zhipu AI",
+      "token": {
+        "desc": "املأ مفتاح واجهة برمجة التطبيقات الخاص بـ Zhipu",
+        "placeholder": "مفتاح واجهة برمجة التطبيقات الخاص بـ Zhipu",
+        "title": "مفتاح واجهة برمجة التطبيقات"
+      }
+    },
+    "checker": {
+      "button": "فحص",
+      "desc": "اختبار ما إذا كان مفتاح واجهة البرمجة وعنوان الوكيل مملوء بشكل صحيح",
+      "pass": "تمت المراقبة",
+      "title": "فحص الاتصال"
+    },
     "waitingForMore": "يتم <1>التخطيط لتوفير</1> المزيد من النماذج، ترقبوا المزيد ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "جارٍ تنزيل النموذج، يرجى عدم إغلاق هذه الصفحة. سيتم استئناف التنزيل من حيث توقف في حالة إعادة التنزيل",
+      "remainingTime": "الوقت المتبقي",
+      "speed": "سرعة التنزيل",
+      "title": "جارٍ تنزيل النموذج {{model}}"
+    }
   },
   "plugin": {
     "addTooltip": "إضافة البرنامج المساعد",
@@ -209,6 +350,22 @@
       "placeholder": "الرجاء إدخال كلمة المرور",
       "title": "كلمة المرور"
     },
+    "oauth": {
+      "info": {
+        "desc": "تم تسجيل الدخول",
+        "title": "معلومات الحساب"
+      },
+      "signin": {
+        "action": "تسجيل الدخول",
+        "desc": "قم بتسجيل الدخول باستخدام SSO لفتح التطبيق",
+        "title": "تسجيل الدخول إلى الحساب"
+      },
+      "signout": {
+        "action": "تسجيل الخروج",
+        "confirm": "هل ترغب في تأكيد الخروج؟",
+        "success": "تم تسجيل الخروج بنجاح"
+      }
+    },
     "title": "إعدادات النظام"
   },
   "settingTTS": {
@@ -284,6 +441,7 @@
     "tooltips": "مشاركة في سوق المساعدين"
   },
   "tab": {
+    "about": "حول",
     "agent": "المساعد الافتراضي",
     "common": "إعدادات عامة",
     "llm": "نموذج اللغة",
@@ -293,6 +451,7 @@
     "builtins": {
       "groupName": "الامتدادات المدمجة"
     },
+    "disabled": "النموذج الحالي لا يدعم استدعاء الوظائف، ولا يمكن استخدام الإضافة",
     "plugins": {
       "enabled": "ممكّنة {{num}}",
       "groupName": "الإضافات",

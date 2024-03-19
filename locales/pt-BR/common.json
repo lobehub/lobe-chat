@@ -1,4 +1,13 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modelo personalizado, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",
+      "file": "Este modelo suporta o carregamento de arquivos para leitura e reconhecimento",
+      "functionCall": "Este modelo suporta chamadas de função (Function Call)",
+      "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão",
+      "vision": "Este modelo suporta reconhecimento visual"
+    }
+  },
   "about": "Sobre",
   "advanceSettings": "Configurações avançadas",
   "agentMaxToken": "Máximo de tokens da sessão",
@@ -18,6 +27,7 @@
   "defaultAgent": "Assistente padrão",
   "defaultSession": "Sessão padrão",
   "delete": "Excluir",
+  "document": "Documento de Uso",
   "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuração",
@@ -89,7 +99,23 @@
     "zh-TW": "Chinês tradicional"
   },
   "layoutInitializing": "Inicializando layout...",
+  "modelProvider": {
+    "anthropic": "Antropogênico",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral AI",
+    "moonshot": "Moonshot IA",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Sem descrição",
+  "oauth": "Login SSO",
   "ok": "OK",
   "password": "Senha",
   "pin": "Fixar",
@@ -106,6 +132,13 @@
     "chat": "Chat",
     "market": "Descobrir",
     "setting": "Configuração"
+  },
+  "telemetry": {
+    "allow": "Permitir",
+    "deny": "Negar",
+    "desc": "Queremos coletar anonimamente suas informações de uso para nos ajudar a melhorar o LobeChat e oferecer uma experiência de produto melhor para você. Você pode desativar a qualquer momento em Configurações - Sobre.",
+    "learnMore": "Saiba mais",
+    "title": "Ajude o LobeChat a melhorar"
   },
   "temp": "Temporário",
   "updateAgent": "Atualizar informações do assistente",
