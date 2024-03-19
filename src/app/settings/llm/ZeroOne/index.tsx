@@ -32,31 +32,14 @@ const ZeroOneProvider = memo(() => {
           name: [LLMProviderConfigKey, providerKey, LLMProviderApiTokenKey],
         },
         {
-          children: (
-            <Input.TextArea
-              allowClear
-              placeholder={t('llm.ZeroOne.customModelName.placeholder')}
-              style={{ height: 100 }}
-            />
-          ),
-          desc: t('llm.ZeroOne.customModelName.desc'),
-          label: t('llm.ZeroOne.customModelName.title'),
-          name: [LLMProviderConfigKey, providerKey, 'customModelName'],
-        },
-        {
-          children: <Checker model={'mistralai/mistral-7b-instruct:free'} provider={ModelProvider.ZeroOne} />,
+          children: <Checker model={'yi-34b-chat-0205'} provider={ModelProvider.ZeroOne} />,
           desc: t('llm.checker.desc'),
           label: t('llm.checker.title'),
           minWidth: '100%',
         },
       ]}
       provider={providerKey}
-      title={
-        <ZeroOne.Combine
-          color={theme.isDarkMode ? theme.colorText : ZeroOne.colorPrimary}
-          size={24}
-        />
-      }
+      title={<ZeroOne.Text color={theme.isDarkMode ? theme.colorText : ZeroOne.colorPrimary} size={24} />}
     />
   );
 });

@@ -89,7 +89,7 @@ export default {
     OpenRouterBizError: '请求 OpenRouter AI 服务出错，请根据以下信息排查或重试',
 
     ZeroOneBizError: '请求零一万物服务出错，请根据以下信息排查或重试',
-    InvalidZeroOneAPIKey: '零一万物 AI API Key 不正确或为空，请检查零一万物 API Key 后重试',
+    InvalidZeroOneAPIKey: '零一万物 API Key 不正确或为空，请检查零一万物 API Key 后重试',
 
     InvalidOllamaArgs: 'Ollama 配置不正确，请检查 Ollama 配置后重试',
     OllamaBizError: '请求 Ollama 服务出错，请根据以下信息排查或重试',
