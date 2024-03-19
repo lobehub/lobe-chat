@@ -18,13 +18,14 @@ enum InfoTabs {
 }
 
 const AgentModalInner = memo(() => {
-  const [useFetchAgent, currentIdentifier] = useMarketStore((s) => [
+  const [useFetchAgent, currentIdentifier, currentMarketId] = useMarketStore((s) => [
     s.useFetchAgent,
     s.currentIdentifier,
+    s.currentMarketId,
   ]);
   const { t } = useTranslation('market');
   const [tab, setTab] = useState<string>(InfoTabs.prompt);
-  const { data, isLoading } = useFetchAgent(currentIdentifier);
+  const { data, isLoading } = useFetchAgent(currentIdentifier, currentMarketId);
   const { styles } = useStyles();
 
   if (isLoading || !data?.meta) return <Loading />;

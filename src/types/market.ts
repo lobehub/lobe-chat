@@ -7,6 +7,7 @@ export interface AgentsMarketIndexItem {
   homepage: string;
   identifier: string;
   manifest: string;
+  marketId?: number;
   meta: MetaData;
   schemaVersion: 1;
 }
