@@ -10,11 +10,11 @@ import { AgentsMarketItem, LobeChatAgentsMarketIndex } from '@/types/market';
 import type { Store } from './store';
 
 export interface StoreAction {
-  activateAgent: (identifier: string) => void;
+  activateAgent: (identifier: string, marketId: number) => void;
   deactivateAgent: () => void;
   setSearchKeywords: (keywords: string) => void;
   updateAgentMap: (key: string, value: AgentsMarketItem) => void;
-  useFetchAgent: (identifier: string) => SWRResponse<AgentsMarketItem>;
+  useFetchAgent: (identifier: string, marketId: number) => SWRResponse<AgentsMarketItem>;
   useFetchAgentList: () => SWRResponse<LobeChatAgentsMarketIndex>;
 }
 
@@ -24,8 +24,9 @@ export const createMarketAction: StateCreator<
   [],
   StoreAction
 > = (set, get) => ({
-  activateAgent: (identifier) => {
+  activateAgent: (identifier, marketId) => {
     set({ currentIdentifier: identifier });
+    set({ currentMarketId: marketId });
   },
   deactivateAgent: () => {
     set({ currentIdentifier: undefined }, false, 'deactivateAgent');
@@ -47,7 +48,8 @@ export const createMarketAction: StateCreator<
   useFetchAgent: (identifier) =>
     useSWR<AgentsMarketItem>(
       [identifier, globalHelpers.getCurrentLanguage()],
-      ([id, locale]) => marketService.getAgentManifest(id, locale as string),
+      ([id, locale, marketId]) =>
+        marketService.getAgentManifest(id, locale as string, marketId as number),
       {
         onError: () => {
           get().deactivateAgent();

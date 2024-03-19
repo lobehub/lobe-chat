@@ -12,9 +12,11 @@ class MarketService {
   /**
    * 请求助手 manifest
    */
-  getAgentManifest = async (identifier: string, locale: string) => {
+  getAgentManifest = async (identifier: string, locale: string, marketId: number = 0) => {
     if (!identifier) return;
-    const res = await fetch(`${API_ENDPOINTS.marketItem(identifier)}?locale=${locale}`);
+    const res = await fetch(
+      `${API_ENDPOINTS.marketItem(identifier)}?locale=${locale}&marketId=${marketId}`,
+    );
 
     return res.json();
   };
