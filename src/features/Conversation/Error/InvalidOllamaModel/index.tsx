@@ -10,7 +10,7 @@ import { ollamaService } from '@/services/ollama';
 import { useChatStore } from '@/store/chat';
 
 import { ErrorActionContainer, FormAction } from '../style';
-import { useDownloadMonitor } from './useDownloadMonitor';
+import { formatSize, useDownloadMonitor } from './useDownloadMonitor';
 
 interface OllamaModelFormProps {
   id: string;
@@ -110,15 +110,30 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
           style={{ marginTop: 8 }}
           type={'primary'}
         >
-          {t('unlock.model.Ollama.confirm')}
+          {isDownloading
+            ? t('unlock.model.Ollama.downloaded', {
+                completed: formatSize(completed),
+                total: formatSize(total),
+              })
+            : t('unlock.model.Ollama.confirm')}
         </Button>
-        <Button
-          onClick={() => {
-            deleteMessage(id);
-          }}
-        >
-          {t('unlock.closeMessage')}
-        </Button>
+        {isDownloading ? (
+          <Button
+            onClick={() => {
+              ollamaService.abort();
+            }}
+          >
+            {t('unlock.model.Ollama.cancel')}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              deleteMessage(id);
+            }}
+          >
+            {t('unlock.closeMessage')}
+          </Button>
+        )}
       </Flexbox>
     </Center>
   );

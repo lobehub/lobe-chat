@@ -84,7 +84,7 @@ export default {
 
     InvalidGroqAPIKey: 'Groq API Key 不正确或为空，请检查 Groq API Key 后重试',
     GroqBizError: '请求 Groq 服务出错，请根据以下信息排查或重试',
-    
+
     InvalidOpenRouterAPIKey: 'OpenRouter API Key 不正确或为空，请检查 OpenRouter API Key 后重试',
     OpenRouterBizError: '请求 OpenRouter AI 服务出错，请根据以下信息排查或重试',
 
@@ -151,8 +151,10 @@ export default {
     confirm: '确认并重试',
     model: {
       Ollama: {
+        cancel: '取消下载',
         confirm: '下载',
         description: '输入你的 Ollama 模型标签，完成即可继续会话',
+        downloaded: '下载中 {{completed}}/{{total}}',
         title: '下载指定的 Ollama 模型',
       },
     },
