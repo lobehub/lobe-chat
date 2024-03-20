@@ -113,8 +113,10 @@ export default {
     confirm: '确认并重试',
     model: {
       Ollama: {
+        cancel: '取消下载',
         confirm: '下载',
         description: '输入你的 Ollama 模型标签，完成即可继续会话',
+        downloaded: '下载中 {{completed}}/{{total}}',
         title: '下载指定的 Ollama 模型',
       },
     },

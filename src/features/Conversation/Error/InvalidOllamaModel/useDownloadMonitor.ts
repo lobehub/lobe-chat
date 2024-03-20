@@ -1,13 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
 
-const formatSpeed = (speed: number): string => {
-  const kbPerSecond = speed / 1024;
-  if (kbPerSecond < 1024) {
-    return `${kbPerSecond.toFixed(1)} KB/s`;
+export const formatSize = (bytes: number): string => {
+  const kbSize = bytes / 1024;
+  if (kbSize < 1024) {
+    return `${kbSize.toFixed(1)} KB`;
+  } else if (kbSize < 1_048_576) {
+    const mbSize = kbSize / 1024;
+    return `${mbSize.toFixed(1)} MB`;
   } else {
-    const mbPerSecond = kbPerSecond / 1024;
-    return `${mbPerSecond.toFixed(1)} MB/s`;
+    const gbSize = kbSize / 1_048_576;
+    return `${gbSize.toFixed(1)} GB`;
   }
+};
+
+const formatSpeed = (speed: number): string => {
+  return `${formatSize(speed)}/s`;
 };
 
 const formatTime = (timeInSeconds: number): string => {
