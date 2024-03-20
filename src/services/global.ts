@@ -30,14 +30,6 @@ class GlobalService {
     return true;
   };
 
-  reconnect = async (params: StartDataSyncParams) => {
-    if (typeof window === 'undefined') return false;
-
-    await dataSync.reconnect(params);
-    await dataSync.manualSync();
-    return true;
-  };
-
   disableSync = async () => {
     await dataSync.disconnect();
 

@@ -1,3 +1,4 @@
+import Debug from 'debug';
 import { throttle, uniqBy } from 'lodash-es';
 import type { WebrtcProvider } from 'y-webrtc';
 import type { Doc, Transaction } from 'yjs';
@@ -12,6 +13,8 @@ import {
 
 import { LobeDBSchemaMap, LocalDBInstance } from './db';
 
+const LOG_NAME_SPACE = 'DataSync';
+
 class DataSync {
   private _ydoc: Doc | null = null;
   private provider: WebrtcProvider | null = null;
@@ -20,6 +23,8 @@ class DataSync {
   private onAwarenessChange!: OnAwarenessChange;
 
   private waitForConnecting: any;
+
+  logger = Debug(LOG_NAME_SPACE);
 
   transact(fn: (transaction: Transaction) => unknown) {
     this._ydoc?.transact(fn);
@@ -55,11 +60,11 @@ class DataSync {
 
     await this.initYDoc();
 
-    console.log('[YJS] start to listen sync event...');
+    this.logger('[YJS] start to listen sync event...');
     this.initYjsObserve(onSyncEvent, onSyncStatusChange);
 
     // ====== 2. init webrtc provider ====== //
-    console.log(`[WebRTC] init provider... room: ${channel.name}`);
+    this.logger(`[WebRTC] init provider... room: ${channel.name}`);
     const { WebrtcProvider } = await import('y-webrtc');
 
     // clients connected to the same room-name share document updates
@@ -74,14 +79,14 @@ class DataSync {
       window.__ONLY_USE_FOR_CLEANUP_IN_DEV = this.provider;
     }
 
-    console.log(`[WebRTC] provider init success`);
+    this.logger(`[WebRTC] provider init success`);
 
     // ====== 3. check signaling server connection  ====== //
 
     // 当本地设备正确连接到 WebRTC Provider 后，触发 status 事件
     // 当开始连接，则开始监听事件
     this.provider.on('status', async ({ connected }) => {
-      console.log('[WebRTC] peer status:', connected);
+      this.logger('[WebRTC] peer status:', connected);
       if (connected) {
         // this.initObserve(onSyncEvent, onSyncStatusChange);
         onSyncStatusChange?.(PeerSyncStatus.Connecting);
@@ -113,16 +118,15 @@ class DataSync {
 
     // 当各方的数据均完成同步后，YJS 对象之间的数据已经一致时，触发 synced 事件
     this.provider.on('synced', async ({ synced }) => {
-      console.log('[WebRTC] peer sync status:', synced);
+      this.logger('[WebRTC] peer sync status:', synced);
       if (synced) {
-        console.groupCollapsed('[WebRTC] start to init yjs data...');
+        this.logger('[WebRTC] start to init yjs data...');
         onSyncStatusChange?.(PeerSyncStatus.Syncing);
         await this.initSync();
         onSyncStatusChange?.(PeerSyncStatus.Synced);
-        console.groupEnd();
-        console.log('[WebRTC] yjs data init success');
+        this.logger('[WebRTC] yjs data init success');
       } else {
-        console.log('[WebRTC] data not sync, try to reconnect in 1s...');
+        this.logger('[WebRTC] data not sync, try to reconnect in 1s...');
         // await this.reconnect(params);
         setTimeout(() => {
           onSyncStatusChange?.(PeerSyncStatus.Syncing);
@@ -138,11 +142,6 @@ class DataSync {
     return this.provider;
   };
 
-  manualSync = async () => {
-    console.log('[WebRTC] try to manual init sync...');
-    await this.reconnect(this.syncParams);
-  };
-
   reconnect = async (params: StartDataSyncParams) => {
     await this.cleanConnection(this.provider);
 
@@ -156,30 +155,29 @@ class DataSync {
   private initYDoc = async () => {
     if (typeof window === 'undefined') return;
 
-    console.log('[YJS] init YDoc...');
+    this.logger('[YJS] init YDoc...');
     const { Doc } = await import('yjs');
     this._ydoc = new Doc();
   };
 
   private async cleanConnection(provider: WebrtcProvider | null) {
     if (provider) {
-      console.groupCollapsed(`[WebRTC] clean Connection...`);
-      console.log(`[WebRTC] clean awareness...`);
+      this.logger(`[WebRTC] clean Connection...`);
+      this.logger(`[WebRTC] clean awareness...`);
       provider.awareness.destroy();
 
-      console.log(`[WebRTC] clean room...`);
+      this.logger(`[WebRTC] clean room...`);
       provider.room?.disconnect();
       provider.room?.destroy();
 
-      console.log(`[WebRTC] clean provider...`);
+      this.logger(`[WebRTC] clean provider...`);
       provider.disconnect();
       provider.destroy();
 
-      console.log(`[WebRTC] clean yjs doc...`);
+      this.logger(`[WebRTC] clean yjs doc...`);
       this._ydoc?.destroy();
-      console.groupEnd();
 
-      console.log(`[WebRTC] -------------------`);
+      this.logger(`[WebRTC] -------------------`);
     }
   }
 
@@ -220,7 +218,7 @@ class DataSync {
 
       onSyncStatusChange(PeerSyncStatus.Syncing);
 
-      console.log(`[YJS] observe ${tableKey} changes:`, event.keysChanged.size);
+      this.logger(`[YJS] observe ${tableKey} changes:`, event.keysChanged.size);
       const pools = Array.from(event.keys).map(async ([id, payload]) => {
         const item: any = yItemMap.get(id);
 
@@ -277,7 +275,7 @@ class DataSync {
       });
     }
 
-    console.log('[DB]:', tableKey, yItemMap?.size);
+    this.logger('[DB]:', tableKey, yItemMap?.size);
   };
 
   private initAwareness = ({ user }: Pick<StartDataSyncParams, 'user' | 'onAwarenessChange'>) => {
