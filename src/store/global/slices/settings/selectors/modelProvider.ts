@@ -1,4 +1,3 @@
-import { ZeroOne } from '@lobehub/icons';
 import { produce } from 'immer';
 
 import {
