@@ -1,5 +1,3 @@
-import { Callout, Steps } from 'nextra/components';
-
 # Configure Auth0 Identity Verification Service
 
 <Steps>
@@ -7,15 +5,15 @@ import { Callout, Steps } from 'nextra/components';
 
   Register and log in to [Auth0][auth0-client-page], click on the "Applications" in the left navigation bar to switch to the application management interface, and click "Create Application" in the upper right corner to create an application.
 
-  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/1b405347-f4c3-4c55-82f6-47116f2210d0)
+  <Image alt="Create Auth0 Application S1" inStep src="hhttps://github.com/CloudPassenger/lobe-chat/assets/30863298/1b405347-f4c3-4c55-82f6-47116f2210d0" />
 
   Fill in the application name you want to display to the organization users, choose any application type, and click "Create".
 
-  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/75c92f85-3ad3-4473-a9c6-e667e28d428d)
+  <Image alt="Create Auth0 Application S2" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/75c92f85-3ad3-4473-a9c6-e667e28d428d" />
 
   After successful creation, click on the corresponding application to enter the application details page, switch to the "Settings" tab, and you can see the corresponding configuration information.
 
-  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/a1ed996b-95ef-4b7d-a50d-b4666eccfecb)
+  <Image alt="Create Auth0 Application S3" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/a1ed996b-95ef-4b7d-a50d-b4666eccfecb" />
 
   In the application configuration page, you also need to configure Allowed Callback URLs, where you should fill in:
 
@@ -23,9 +21,9 @@ import { Callout, Steps } from 'nextra/components';
   http(s)://your-domain/api/auth/callback/auth0
   ```
 
-  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b)
+  <Image alt="Create Auth0 Application S4" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b" />
 
-  <Callout type={'info'}>
+  <Callout type={'important'}>
     You can fill in or modify Allowed Callback URLs after deployment, but make sure the filled URL is
     consistent with the deployed URL.
   </Callout>
@@ -34,7 +32,7 @@ import { Callout, Steps } from 'nextra/components';
 
   Click on the "Users Management" in the left navigation bar to enter the user management interface, where you can create users for your organization to log in to LobeChat.
 
-  ![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/3b8127ab-dc4f-4ff9-a4cb-dec3ef0295cc)
+  <Image alt="Add Users" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/3b8127ab-dc4f-4ff9-a4cb-dec3ef0295cc" />
 
   ### Configure Environment Variables
 
@@ -51,7 +49,9 @@ import { Callout, Steps } from 'nextra/components';
   | `ACCESS_CODE`         | Required | Add a password to access this service. You can set a sufficiently long random password to "disable" access code authorization.                                                                      |
   | `NEXTAUTH_URL`        | Optional | The URL is used to specify the callback address for the execution of OAuth authentication in Auth.js. It needs to be set only when the default address is incorrect. `https://example.com/api/auth` |
 
-  <Callout type={'info'}>You can refer to the related variable details at [📘Environment Variables](/en/self-hosting/environment-variable#auth0).</Callout>
+  <Callout type={'tip'}>
+    You can refer to the related variable details at [📘Environment Variables](/en/self-hosting/environment-variable#auth0).
+  </Callout>
 </Steps>
 
 <Callout>
@@ -67,13 +67,13 @@ If your enterprise or organization already has a unified identity authentication
 
 Auth0 supports single sign-on services such as Azure Active Directory, Slack, Google Workspace, Office 365, Zoom, and more. For a detailed list of supported services, please refer to [this link][auth0-sso-integrations].
 
-![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/32650f4f-d0b0-4843-b26d-d35bad11d8a3)
+<Image alt="Connecting to an Existing Single Sign-On Service" src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/32650f4f-d0b0-4843-b26d-d35bad11d8a3" />
 
 ### Configuring Social Login
 
 If your enterprise or organization needs to support external user logins, you can configure social login services in Authentication -> Social.
 
-![](https://github.com/CloudPassenger/lobe-chat/assets/30863298/7b6f6a6c-2686-49d8-9dbd-0516053f1efa)
+<Image alt="Configuring Social Login" src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/7b6f6a6c-2686-49d8-9dbd-0516053f1efa" />
 
 <Callout type={'warning'}>
   Configuring social login services by default allows anyone to authenticate, which may lead to
