@@ -39,7 +39,12 @@ const ZeroOneProvider = memo(() => {
         },
       ]}
       provider={providerKey}
-      title={<ZeroOne.Combine color={theme.isDarkMode ? theme.colorText : ZeroOne.colorPrimary} size={24} />}
+      title={
+        <ZeroOne.Combine
+          color={theme.isDarkMode ? theme.colorText : ZeroOne.colorPrimary}
+          size={32}
+        />
+      }
     />
   );
 });
