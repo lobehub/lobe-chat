@@ -135,11 +135,11 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
       await this.table.bulkAdd(validatedData);
 
       if (withSync) {
-        dataSync.transact(async () => {
+        dataSync.transact(() => {
           const pools = validatedData.map(async (item) => {
             await this.updateYMapItem(item.id);
           });
-          await Promise.all(pools);
+          Promise.all(pools);
         });
       }
 

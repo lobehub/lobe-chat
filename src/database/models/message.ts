@@ -199,7 +199,7 @@ class _MessageModel extends BaseModel {
    */
   async batchUpdate(messageIds: string[], updateFields: Partial<DB_Message>): Promise<number> {
     // Retrieve the messages by their IDs
-    const messagesToUpdate = await this.table.where(':id').anyOf(messageIds).toArray();
+    const messagesToUpdate = await this.table.where('id').anyOf(messageIds).toArray();
 
     // Update the specified fields of each message
     const updatedMessages = messagesToUpdate.map((message) => ({

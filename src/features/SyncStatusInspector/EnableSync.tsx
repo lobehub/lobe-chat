@@ -2,19 +2,12 @@ import { ActionIcon, Avatar, Icon } from '@lobehub/ui';
 import { Divider, Popover, Switch, Tag, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import {
-  LucideCloudy,
-  LucideLaptop,
-  LucideRefreshCw,
-  LucideSmartphone,
-  SettingsIcon,
-} from 'lucide-react';
+import { LucideCloudy, LucideLaptop, LucideSmartphone, SettingsIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSyncEvent } from '@/hooks/useSyncData';
 import { useGlobalStore } from '@/store/global';
 import { syncSettingsSelectors } from '@/store/global/selectors';
 import { pathString } from '@/utils/url';
@@ -44,19 +37,15 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions }) => {
   const { t } = useTranslation('common');
 
   const { styles, theme } = useStyles();
-  const [syncStatus, isSyncing, channelName, enableWebRTC, setSettings, refreshConnection] =
-    useGlobalStore((s) => [
-      s.syncStatus,
-      s.syncStatus === 'syncing',
-      syncSettingsSelectors.webrtcChannelName(s),
-      syncSettingsSelectors.enableWebRTC(s),
-      s.setSettings,
-      s.refreshConnection,
-    ]);
+  const [syncStatus, isSyncing, channelName, enableWebRTC, setSettings] = useGlobalStore((s) => [
+    s.syncStatus,
+    s.syncStatus === 'syncing',
+    syncSettingsSelectors.webrtcChannelName(s),
+    syncSettingsSelectors.enableWebRTC(s),
+    s.setSettings,
+  ]);
 
   const users = useGlobalStore((s) => s.syncAwareness, isEqual);
-
-  const syncEvent = useSyncEvent();
 
   const switchSync = (enabled: boolean) => {
     setSettings({ sync: { webrtc: { enabled } } });
@@ -105,15 +94,6 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions }) => {
                         <Tag bordered={false} color={'blue'}>
                           {t('sync.awareness.current')}
                         </Tag>
-                        <ActionIcon
-                          icon={LucideRefreshCw}
-                          loading={isSyncing}
-                          onClick={() => {
-                            refreshConnection(syncEvent);
-                          }}
-                          size={'small'}
-                          title={t('sync.actions.sync')}
-                        />
                       </Flexbox>
                     )}
                   </Flexbox>
@@ -138,15 +118,7 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions }) => {
           </Flexbox>
           {!hiddenActions && (
             <Link href={pathString('/settings/sync')}>
-              <ActionIcon
-                icon={SettingsIcon}
-                loading={isSyncing}
-                onClick={() => {
-                  refreshConnection(syncEvent);
-                }}
-                // size={'small'}
-                title={t('sync.actions.settings')}
-              />
+              <ActionIcon icon={SettingsIcon} title={t('sync.actions.settings')} />
             </Link>
           )}
         </Flexbox>

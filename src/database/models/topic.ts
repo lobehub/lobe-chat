@@ -134,7 +134,7 @@ class _TopicModel extends BaseModel {
   }
 
   async duplicateTopic(topicId: string, newTitle?: string) {
-    return this.db.transaction('rw', this.db.topics, this.db.messages, async () => {
+    return this.db.transaction('rw', [this.db.topics, this.db.messages], async () => {
       // Step 1: get DB_Topic
       const topic = await this.findById(topicId);
 

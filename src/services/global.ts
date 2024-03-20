@@ -37,6 +37,12 @@ class GlobalService {
     await dataSync.manualSync();
     return true;
   };
+
+  disableSync = async () => {
+    await dataSync.disconnect();
+
+    return false;
+  };
 }
 
 export const globalService = new GlobalService();

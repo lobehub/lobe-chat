@@ -149,6 +149,10 @@ class DataSync {
     await this.connect(params);
   };
 
+  async disconnect() {
+    await this.cleanConnection(this.provider);
+  }
+
   private initYDoc = async () => {
     if (typeof window === 'undefined') return;
 
@@ -223,12 +227,8 @@ class DataSync {
         switch (payload.action) {
           case 'add':
           case 'update': {
-            const itemInTable = await table.get(id);
-            if (!itemInTable) {
-              await table.add(item, id);
-            } else {
-              await table.update(id, item);
-            }
+            await table.put(item, id);
+
             break;
           }
 

@@ -126,7 +126,10 @@ export const createCommonSlice: StateCreator<
       ['enableSync', userEnableSync, userId],
       async () => {
         // if user don't enable sync or no userId ,don't start sync
-        if (!userEnableSync || !userId) return false;
+        if (!userId) return false;
+
+        // if user don't enable sync, stop sync
+        if (!userEnableSync) return globalService.disableSync();
 
         return get().triggerEnableSync(userId, onEvent);
       },
