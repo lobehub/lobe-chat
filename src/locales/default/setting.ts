@@ -453,6 +453,9 @@ export default {
       unknownBrowser: '未知浏览器',
       unknownOS: '未知系统',
     },
+    warning: {
+      message: '本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。',
+    },
     webrtc: {
       channelName: {
         desc: 'WebRTC 将使用此名创建同步频道，确保频道名称唯一',
@@ -478,6 +481,7 @@ export default {
     about: '关于',
     agent: '默认助手',
     common: '通用设置',
+    experiment: '实验',
     llm: '语言模型',
     sync: '云端同步',
     tts: '语音服务',

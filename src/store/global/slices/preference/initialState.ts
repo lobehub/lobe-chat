@@ -15,6 +15,7 @@ export interface GlobalPreference {
 
   showChatSideBar?: boolean;
   showSessionPanel?: boolean;
+  showSyncAlert: boolean;
   showSystemRole?: boolean;
   telemetry: boolean | null;
   /**
@@ -40,6 +41,7 @@ export const initialPreferenceState: GlobalPreferenceState = {
     sessionsWidth: 320,
     showChatSideBar: true,
     showSessionPanel: true,
+    showSyncAlert: true,
     showSystemRole: false,
     telemetry: null,
     useCmdEnterToSend: false,

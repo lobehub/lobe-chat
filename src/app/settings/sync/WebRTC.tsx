@@ -8,10 +8,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { generateRandomRoomName } from '@/app/settings/sync/util';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import SyncStatusInspector from '@/features/SyncStatusInspector';
 import { useGlobalStore } from '@/store/global';
-import { uuid } from '@/utils/uuid';
 
 import { useSyncSettings } from '../hooks/useSyncSettings';
 
@@ -37,8 +37,8 @@ const WebRTC = memo(() => {
               <ActionIcon
                 active
                 icon={LucideDices}
-                onClick={() => {
-                  const name = uuid();
+                onClick={async () => {
+                  const name = await generateRandomRoomName();
                   form.setFieldValue(['sync', 'webrtc', 'channelName'], name);
                   form.submit();
                 }}

@@ -126,6 +126,7 @@
     "polished": "^4",
     "posthog-js": "^1",
     "query-string": "^9",
+    "random-words": "^2.0.1",
     "react": "^18",
     "react-dom": "^18",
     "react-hotkeys-hook": "^4",
