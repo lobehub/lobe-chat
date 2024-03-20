@@ -4,7 +4,16 @@ export type OnSyncEvent = (tableKey: keyof LobeDBSchemaMap) => void;
 export type OnSyncStatusChange = (status: PeerSyncStatus) => void;
 export type OnAwarenessChange = (state: SyncAwarenessState[]) => void;
 
-export type PeerSyncStatus = 'syncing' | 'synced' | 'ready';
+// export type PeerSyncStatus = 'syncing' | 'synced' | 'ready' | 'unconnected';
+
+export enum PeerSyncStatus {
+  Connecting = 'connecting',
+  Disabled = 'disabled',
+  Ready = 'ready',
+  Synced = 'synced',
+  Syncing = 'syncing',
+  Unconnected = 'unconnected',
+}
 
 export interface StartDataSyncParams {
   channel: {

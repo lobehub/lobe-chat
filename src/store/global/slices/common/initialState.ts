@@ -38,5 +38,5 @@ export const initialCommonState: GlobalCommonState = {
   sidebarKey: SidebarTabKey.Chat,
   syncAwareness: [],
   syncEnabled: false,
-  syncStatus: 'ready',
+  syncStatus: PeerSyncStatus.Disabled,
 };

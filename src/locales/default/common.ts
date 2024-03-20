@@ -10,17 +10,14 @@ export default {
   },
   about: '关于',
   advanceSettings: '高级设置',
-  agentMaxToken: '会话最大长度',
-  agentModel: '模型',
-  agentProfile: '助手信息',
+
   appInitializing: 'LobeChat 启动中，请耐心等待...',
-  archive: '归档',
+
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
   cancel: '取消',
   changelog: '更新日志',
   close: '关闭',
-  confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
   copy: '复制',
   copyFail: '复制失败',
   copySuccess: '复制成功',
@@ -143,13 +140,15 @@ export default {
       title: '数据同步',
     },
     status: {
+      connecting: '连接中',
       disabled: '同步未开启',
       ready: '已连接',
       synced: '已同步',
       syncing: '同步中',
+      unconnected: '连接失败',
     },
-
     title: '同步状态',
+    unconnected: { tip: '信令服务器连接失败，将无法建立点对点通信频道，请检查网络后重试' },
   },
   tab: {
     chat: '会话',

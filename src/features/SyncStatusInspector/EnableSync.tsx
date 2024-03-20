@@ -6,7 +6,6 @@ import {
   LucideCloudy,
   LucideLaptop,
   LucideRefreshCw,
-  LucideRouter,
   LucideSmartphone,
   SettingsIcon,
 } from 'lucide-react';
@@ -19,6 +18,8 @@ import { useSyncEvent } from '@/hooks/useSyncData';
 import { useGlobalStore } from '@/store/global';
 import { syncSettingsSelectors } from '@/store/global/selectors';
 import { pathString } from '@/utils/url';
+
+import EnableTag from './EnableTag';
 
 const { Text } = Typography;
 
@@ -151,20 +152,9 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions }) => {
         </Flexbox>
       }
     >
-      <Tag
-        bordered={false}
-        color={syncStatus !== 'synced' ? 'blue' : 'green'}
-        icon={
-          <Icon
-            icon={
-              syncStatus === 'ready' ? LucideRouter : isSyncing ? LucideRefreshCw : LucideCloudy
-            }
-            spin={isSyncing}
-          />
-        }
-      >
-        {t(`sync.status.${syncStatus}`)}
-      </Tag>
+      <div>
+        <EnableTag isSyncing={isSyncing} status={syncStatus} />
+      </div>
     </Popover>
   );
 });

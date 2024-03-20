@@ -6,10 +6,26 @@ import {
   OnAwarenessChange,
   OnSyncEvent,
   OnSyncStatusChange,
+  PeerSyncStatus,
   StartDataSyncParams,
 } from '@/types/sync';
 
 import { LobeDBSchemaMap, LocalDBInstance } from './db';
+
+interface IWebsocketClient {
+  binaryType: 'arraybuffer' | 'blob' | null;
+  connect(): void;
+  connected: boolean;
+  connecting: boolean;
+  destroy(): void;
+  disconnect(): void;
+  lastMessageReceived: number;
+  send(message: any): void;
+  shouldConnect: boolean;
+  unsuccessfulReconnects: number;
+  url: string;
+  ws: WebSocket;
+}
 
 declare global {
   interface Window {
@@ -23,6 +39,8 @@ class DataSync {
 
   private syncParams!: StartDataSyncParams;
   private onAwarenessChange!: OnAwarenessChange;
+
+  private waitForConnecting: any;
 
   transact(fn: (transaction: Transaction) => unknown) {
     this._ydoc?.transact(fn);
@@ -54,11 +72,14 @@ class DataSync {
       onAwarenessChange,
       signaling = 'wss://y-webrtc-signaling.lobehub.com',
     } = params;
+    // ====== 1. init yjs doc ====== //
+
     await this.initYDoc();
 
     console.log('[YJS] start to listen sync event...');
     this.initYjsObserve(onSyncEvent, onSyncStatusChange);
 
+    // ====== 2. init webrtc provider ====== //
     console.log(`[WebRTC] init provider... room: ${channel.name}`);
     const { WebrtcProvider } = await import('y-webrtc');
 
@@ -68,48 +89,74 @@ class DataSync {
       signaling: [signaling],
     });
 
-    // 只在开发时解决全局实例缓存问题
+    // when fast refresh in dev, the provider will be cached in window
+    // so we need to clean it in destory
     if (process.env.NODE_ENV === 'development') {
       window.__ONLY_USE_FOR_CLEANUP_IN_DEV = this.provider;
     }
 
-    const provider = this.provider;
-
     console.log(`[WebRTC] provider init success`);
+
+    // ====== 3. check signaling server connection  ====== //
 
     // 当本地设备正确连接到 WebRTC Provider 后，触发 status 事件
     // 当开始连接，则开始监听事件
-    provider.on('status', async ({ connected }) => {
-      console.log('[WebRTC] peer connected status:', connected);
+    this.provider.on('status', async ({ connected }) => {
+      console.log('[WebRTC] peer status:', connected);
       if (connected) {
         // this.initObserve(onSyncEvent, onSyncStatusChange);
-        onSyncStatusChange?.('ready');
+        onSyncStatusChange?.(PeerSyncStatus.Connecting);
       }
     });
 
+    // check the connection with signaling server
+    let connectionCheckCount = 0;
+
+    this.waitForConnecting = setInterval(() => {
+      const signalingConnection: IWebsocketClient = this.provider!.signalingConns[0];
+
+      if (signalingConnection.connected) {
+        onSyncStatusChange?.(PeerSyncStatus.Ready);
+        clearInterval(this.waitForConnecting);
+        return;
+      }
+
+      connectionCheckCount += 1;
+
+      // check for 5 times, or make it failed
+      if (connectionCheckCount > 5) {
+        onSyncStatusChange?.(PeerSyncStatus.Unconnected);
+        clearInterval(this.waitForConnecting);
+      }
+    }, 2000);
+
+    // ====== 4. handle data sync  ====== //
+
     // 当各方的数据均完成同步后，YJS 对象之间的数据已经一致时，触发 synced 事件
-    provider.on('synced', async ({ synced }) => {
+    this.provider.on('synced', async ({ synced }) => {
       console.log('[WebRTC] peer sync status:', synced);
       if (synced) {
         console.groupCollapsed('[WebRTC] start to init yjs data...');
-        onSyncStatusChange?.('syncing');
+        onSyncStatusChange?.(PeerSyncStatus.Syncing);
         await this.initSync();
-        onSyncStatusChange?.('synced');
+        onSyncStatusChange?.(PeerSyncStatus.Synced);
         console.groupEnd();
         console.log('[WebRTC] yjs data init success');
       } else {
         console.log('[WebRTC] data not sync, try to reconnect in 1s...');
         // await this.reconnect(params);
         setTimeout(() => {
-          onSyncStatusChange?.('syncing');
+          onSyncStatusChange?.(PeerSyncStatus.Syncing);
           this.reconnect(params);
         }, 1000);
       }
     });
 
+    // ====== 5. handle awareness  ====== //
+
     this.initAwareness({ onAwarenessChange, user });
 
-    return provider;
+    return this.provider;
   };
 
   manualSync = async () => {
@@ -188,7 +235,7 @@ class DataSync {
       // 每次有变更时，都先清除之前的定时器（如果有的话），然后设置新的定时器
       clearTimeout(debounceTimer);
 
-      onSyncStatusChange('syncing');
+      onSyncStatusChange(PeerSyncStatus.Syncing);
 
       console.log(`[YJS] observe ${tableKey} changes:`, event.keysChanged.size);
       const pools = Array.from(event.keys).map(async ([id, payload]) => {
@@ -219,7 +266,7 @@ class DataSync {
 
       // 设置定时器，2000ms 后更新状态为'synced'
       debounceTimer = setTimeout(() => {
-        onSyncStatusChange('synced');
+        onSyncStatusChange(PeerSyncStatus.Synced);
       }, 2000);
     });
   };

@@ -55,17 +55,17 @@ const WebRTC = memo(() => {
         label: t('sync.webrtc.channelName.title'),
         name: ['sync', 'webrtc', 'channelName'],
       },
-      // {
-      //   children: (
-      //     <Input.Password
-      //       autoComplete={'nw-password'}
-      //       placeholder={t('sync.webrtc.channelPassword.placeholder')}
-      //     />
-      //   ),
-      //   desc: t('sync.webrtc.channelPassword.desc'),
-      //   label: t('sync.webrtc.channelPassword.title'),
-      //   name: ['sync', 'webrtc', 'channelPassword'],
-      // },
+      {
+        children: (
+          <Input.Password
+            autoComplete={'nw-password'}
+            placeholder={t('sync.webrtc.channelPassword.placeholder')}
+          />
+        ),
+        desc: t('sync.webrtc.channelPassword.desc'),
+        label: t('sync.webrtc.channelPassword.title'),
+        name: ['sync', 'webrtc', 'channelPassword'],
+      },
       {
         children: !channelName ? (
           <Tooltip title={t('sync.webrtc.enabled.invalid')}>
