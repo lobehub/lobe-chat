@@ -123,10 +123,12 @@ class _TopicModel extends BaseModel {
 
     // add topicId to these messages
     if (messages) {
-      await this.db.messages.where('id').anyOf(messages).modify({ topicId: topic.id });
+      await MessageModel.batchUpdate(messages, { topicId: topic.id });
     }
+
     return topic;
   }
+
   async batchCreate(topics: CreateTopicParams[]) {
     return this._batchAdd(topics.map((t) => ({ ...t, favorite: t.favorite ? 1 : 0 })));
   }
@@ -164,14 +166,9 @@ class _TopicModel extends BaseModel {
   async delete(id: string) {
     return this.db.transaction('rw', [this.table, this.db.messages], async () => {
       // Delete all messages associated with the topic
-      const messages = await this.db.messages.where('topicId').equals(id).toArray();
+      await MessageModel.batchDeleteByTopicId(id);
 
-      if (messages.length > 0) {
-        const messageIds = messages.map((msg) => msg.id);
-        await this.db.messages.bulkDelete(messageIds);
-      }
-
-      await this.table.delete(id);
+      await this._deleteWithSync(id);
     });
   }
 
@@ -189,7 +186,7 @@ class _TopicModel extends BaseModel {
     const topicIds = await query.primaryKeys();
 
     // Use the bulkDelete method to delete all selected messages in bulk
-    return this.table.bulkDelete(topicIds);
+    return this._bulkDeleteWithSync(topicIds);
   }
   /**
    * Deletes multiple topics and all messages associated with them in a transaction.
@@ -199,20 +196,13 @@ class _TopicModel extends BaseModel {
       // Iterate over each topicId and delete related messages, then delete the topic itself
       for (const topicId of topicIds) {
         // Delete all messages associated with the topic
-        const messages = await this.db.messages.where('topicId').equals(topicId).toArray();
-        if (messages.length > 0) {
-          const messageIds = messages.map((msg) => msg.id);
-          await this.db.messages.bulkDelete(messageIds);
-        }
-
-        // Delete the topic
-        await this.table.delete(topicId);
+        await this.delete(topicId);
       }
     });
   }
 
   async clearTable() {
-    return this.table.clear();
+    return this._clearWithSync();
   }
 
   // **************** Update *************** //

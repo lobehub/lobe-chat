@@ -27,7 +27,7 @@ class _PluginModel extends BaseModel {
     const old = await this.table.get(plugin.identifier);
     const dbPlugin = this.mapToDBPlugin(plugin);
 
-    return this.table.put(merge(old, dbPlugin), plugin.identifier);
+    return this._putWithSync(merge(old, dbPlugin), plugin.identifier);
   };
 
   batchCreate = async (plugins: LobeTool[]) => {
@@ -47,7 +47,9 @@ class _PluginModel extends BaseModel {
   // **************** Update *************** //
 
   update: (id: string, value: Partial<DB_Plugin>) => Promise<number> = async (id, value) => {
-    return this.table.update(id, value);
+    const { success } = await this._updateWithSync(id, value);
+
+    return success;
   };
 
   // **************** Helper *************** //

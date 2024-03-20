@@ -3,6 +3,8 @@ import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/schemas/sessi
 import { SessionGroups } from '@/types/session';
 import { nanoid } from '@/utils/uuid';
 
+import { SessionModel } from './session';
+
 class _SessionGroupModel extends BaseModel {
   constructor() {
     super('sessionGroups', DB_SessionGroupSchema);
@@ -51,19 +53,24 @@ class _SessionGroupModel extends BaseModel {
 
   // **************** Delete *************** //
   async delete(id: string, removeGroupItem: boolean = false) {
-    this.db.sessions.toCollection().modify((session) => {
+    this.db.sessions.toCollection().modify(async (session) => {
       //  update all session associated with the sessionGroup to default
-      if (session.group === id) session.group = 'default';
+      if (session.group === id) {
+        await SessionModel.update(session.id, { group: 'default' });
+      }
     });
+
     if (!removeGroupItem) {
-      return this.table.delete(id);
+      return this._deleteWithSync(id);
     } else {
-      return this.db.sessions.where('group').equals(id).delete();
+      const sessionIds = await this.db.sessions.where('group').equals(id).primaryKeys();
+
+      return await SessionModel.batchDelete(sessionIds);
     }
   }
 
   async clear() {
-    this.table.clear();
+    await this._clearWithSync();
   }
 
   // **************** Update *************** //
@@ -75,7 +82,7 @@ class _SessionGroupModel extends BaseModel {
   async updateOrder(sortMap: { id: string; sort: number }[]) {
     return this.db.transaction('rw', this.table, async () => {
       for (const { id, sort } of sortMap) {
-        await this.table.update(id, { sort });
+        await this.update(id, { sort });
       }
     });
   }

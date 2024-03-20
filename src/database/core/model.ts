@@ -1,11 +1,11 @@
 import Dexie, { BulkError } from 'dexie';
 import { ZodObject } from 'zod';
 
-import { DBBaseFieldsSchema } from '@/database/core/types/db';
 import { nanoid } from '@/utils/uuid';
 
 import { LocalDB, LocalDBInstance, LocalDBSchema } from './db';
 import { dataSync } from './sync';
+import { DBBaseFieldsSchema } from './types/db';
 
 export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]['table']> {
   protected readonly db: LocalDB;
@@ -25,6 +25,8 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
   get yMap() {
     return dataSync.getYMap(this._tableName);
   }
+
+  // **************** Create *************** //
 
   /**
    * create a new record
@@ -57,7 +59,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     const newId = await this.db[tableName].add(record);
 
     // sync data to yjs data map
-    await this.updateYMapItem(newId);
+    this.updateYMapItem(newId);
 
     return { id: newId };
   }
@@ -77,6 +79,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
        */
       createWithNewId?: boolean;
       idGenerator?: () => string;
+      withSync?: boolean;
     } = {},
   ): Promise<{
     added: number;
@@ -85,8 +88,8 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     skips: string[];
     success: boolean;
   }> {
-    const { idGenerator = nanoid, createWithNewId = false } = options;
-    const validatedData = [];
+    const { idGenerator = nanoid, createWithNewId = false, withSync = true } = options;
+    const validatedData: any[] = [];
     const errors = [];
     const skips: string[] = [];
 
@@ -130,10 +133,15 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     // Using bulkAdd to insert validated data
     try {
       await this.table.bulkAdd(validatedData);
-      const pools = validatedData.map(async (item) => {
-        await this.updateYMapItem(item.id);
-      });
-      await Promise.all(pools);
+
+      if (withSync) {
+        dataSync.transact(async () => {
+          const pools = validatedData.map(async (item) => {
+            await this.updateYMapItem(item.id);
+          });
+          await Promise.all(pools);
+        });
+      }
 
       return {
         added: validatedData.length,
@@ -156,29 +164,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     }
   }
 
-  protected async _updateWithSync(id: string, data: Partial<T>) {
-    // we need to check whether the data is valid
-    // pick data related schema from the full schema
-    const keys = Object.keys(data);
-    const partialSchema = this.schema.pick(Object.fromEntries(keys.map((key) => [key, true])));
-
-    const result = partialSchema.safeParse(data);
-    if (!result.success) {
-      const errorMsg = `[${this.db.name}][${this._tableName}] Failed to update the record:${id}. Error: ${result.error}`;
-
-      const newError = new TypeError(errorMsg);
-      // make this error show on console to help debug
-      console.error(newError);
-      throw newError;
-    }
-
-    const success = await this.table.update(id, { ...data, updatedAt: Date.now() });
-
-    // sync data to yjs data map
-    await this.updateYMapItem(id);
-
-    return { success };
-  }
+  // **************** Delete *************** //
 
   protected async _deleteWithSync(id: string) {
     const result = await this.table.delete(id);
@@ -204,6 +190,53 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     this.yMap?.clear();
     return result;
   }
+
+  // **************** Update *************** //
+
+  protected async _updateWithSync(id: string, data: Partial<T>) {
+    // we need to check whether the data is valid
+    // pick data related schema from the full schema
+    const keys = Object.keys(data);
+    const partialSchema = this.schema.pick(Object.fromEntries(keys.map((key) => [key, true])));
+
+    const result = partialSchema.safeParse(data);
+    if (!result.success) {
+      const errorMsg = `[${this.db.name}][${this._tableName}] Failed to update the record:${id}. Error: ${result.error}`;
+
+      const newError = new TypeError(errorMsg);
+      // make this error show on console to help debug
+      console.error(newError);
+      throw newError;
+    }
+
+    const success = await this.table.update(id, { ...data, updatedAt: Date.now() });
+
+    // sync data to yjs data map
+    this.updateYMapItem(id);
+
+    return { success };
+  }
+
+  protected async _putWithSync(data: any, id: string) {
+    const result = await this.table.put(data, id);
+
+    // sync data to yjs data map
+    this.updateYMapItem(id);
+
+    return result;
+  }
+
+  protected async _bulkPutWithSync(items: T[]) {
+    await this.table.bulkPut(items);
+
+    await dataSync.transact(() => {
+      items.forEach((items) => {
+        this.updateYMapItem((items as any).id);
+      });
+    });
+  }
+
+  // **************** Helper *************** //
 
   private updateYMapItem = async (id: string) => {
     const newData = await this.table.get(id);

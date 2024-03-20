@@ -113,35 +113,13 @@ class _MessageModel extends BaseModel {
   async batchCreate(messages: ChatMessage[]) {
     const data: DB_Message[] = messages.map((m) => this.mapChatMessageToDBMessage(m));
 
-    return this._batchAdd(data);
+    return this._batchAdd(data, { withSync: true });
   }
 
   async duplicateMessages(messages: ChatMessage[]): Promise<ChatMessage[]> {
     const duplicatedMessages = await this.createDuplicateMessages(messages);
     // 批量添加复制后的消息到数据库
     await this.batchCreate(duplicatedMessages);
-    return duplicatedMessages;
-  }
-
-  async createDuplicateMessages(messages: ChatMessage[]): Promise<ChatMessage[]> {
-    // 创建一个映射来存储原始消息ID和复制消息ID之间的关系
-    const idMapping = new Map<string, string>();
-
-    // 首先复制所有消息，并为每个复制的消息生成新的ID
-    const duplicatedMessages = messages.map((originalMessage) => {
-      const newId = nanoid();
-      idMapping.set(originalMessage.id, newId);
-
-      return { ...originalMessage, id: newId };
-    });
-
-    // 更新 parentId 为复制后的新ID
-    for (const duplicatedMessage of duplicatedMessages) {
-      if (duplicatedMessage.parentId && idMapping.has(duplicatedMessage.parentId)) {
-        duplicatedMessage.parentId = idMapping.get(duplicatedMessage.parentId);
-      }
-    }
-
     return duplicatedMessages;
   }
 
@@ -181,6 +159,25 @@ class _MessageModel extends BaseModel {
     return this._bulkDeleteWithSync(messageIds);
   }
 
+  async batchDeleteBySessionId(sessionId: string): Promise<void> {
+    // If topicId is specified, use both assistantId and topicId as the filter criteria in the query.
+    // Otherwise, filter by assistantId and require that topicId is undefined.
+    const messageIds = await this.table.where('sessionId').equals(sessionId).primaryKeys();
+
+    // Use the bulkDelete method to delete all selected messages in bulk
+    return this._bulkDeleteWithSync(messageIds);
+  }
+
+  /**
+   * Delete all messages associated with the topicId
+   * @param topicId
+   */
+  async batchDeleteByTopicId(topicId: string): Promise<void> {
+    const messageIds = await this.table.where('topicId').equals(topicId).primaryKeys();
+
+    return this._bulkDeleteWithSync(messageIds);
+  }
+
   // **************** Update *************** //
 
   async update(id: string, data: DeepPartial<DB_Message>) {
@@ -211,12 +208,34 @@ class _MessageModel extends BaseModel {
     }));
 
     // Use the bulkPut method to update the messages in bulk
-    await this.table.bulkPut(updatedMessages);
+    await this._bulkPutWithSync(updatedMessages);
 
     return updatedMessages.length;
   }
 
   // **************** Helper *************** //
+
+  private async createDuplicateMessages(messages: ChatMessage[]): Promise<ChatMessage[]> {
+    // 创建一个映射来存储原始消息ID和复制消息ID之间的关系
+    const idMapping = new Map<string, string>();
+
+    // 首先复制所有消息，并为每个复制的消息生成新的ID
+    const duplicatedMessages = messages.map((originalMessage) => {
+      const newId = nanoid();
+      idMapping.set(originalMessage.id, newId);
+
+      return { ...originalMessage, id: newId };
+    });
+
+    // 更新 parentId 为复制后的新ID
+    for (const duplicatedMessage of duplicatedMessages) {
+      if (duplicatedMessage.parentId && idMapping.has(duplicatedMessage.parentId)) {
+        duplicatedMessage.parentId = idMapping.get(duplicatedMessage.parentId);
+      }
+    }
+
+    return duplicatedMessages;
+  }
 
   private mapChatMessageToDBMessage(message: ChatMessage): DB_Message {
     const { extra, ...messageData } = message;

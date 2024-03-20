@@ -12,27 +12,6 @@ import {
 
 import { LobeDBSchemaMap, LocalDBInstance } from './db';
 
-interface IWebsocketClient {
-  binaryType: 'arraybuffer' | 'blob' | null;
-  connect(): void;
-  connected: boolean;
-  connecting: boolean;
-  destroy(): void;
-  disconnect(): void;
-  lastMessageReceived: number;
-  send(message: any): void;
-  shouldConnect: boolean;
-  unsuccessfulReconnects: number;
-  url: string;
-  ws: WebSocket;
-}
-
-declare global {
-  interface Window {
-    __ONLY_USE_FOR_CLEANUP_IN_DEV?: WebrtcProvider | null;
-  }
-}
-
 class DataSync {
   private _ydoc: Doc | null = null;
   private provider: WebrtcProvider | null = null;
@@ -328,3 +307,24 @@ class DataSync {
 }
 
 export const dataSync = new DataSync();
+
+interface IWebsocketClient {
+  binaryType: 'arraybuffer' | 'blob' | null;
+  connect(): void;
+  connected: boolean;
+  connecting: boolean;
+  destroy(): void;
+  disconnect(): void;
+  lastMessageReceived: number;
+  send(message: any): void;
+  shouldConnect: boolean;
+  unsuccessfulReconnects: number;
+  url: string;
+  ws: WebSocket;
+}
+
+declare global {
+  interface Window {
+    __ONLY_USE_FOR_CLEANUP_IN_DEV?: WebrtcProvider | null;
+  }
+}

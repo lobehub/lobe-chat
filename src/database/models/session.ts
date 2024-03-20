@@ -16,6 +16,9 @@ import {
 import { merge } from '@/utils/merge';
 import { uuid } from '@/utils/uuid';
 
+import { MessageModel } from './message';
+import { TopicModel } from './topic';
+
 class _SessionModel extends BaseModel {
   constructor() {
     super('sessions', DB_SessionSchema);
@@ -211,26 +214,22 @@ class _SessionModel extends BaseModel {
   async delete(id: string) {
     return this.db.transaction('rw', [this.table, this.db.topics, this.db.messages], async () => {
       // Delete all topics associated with the session
-      const topics = await this.db.topics.where('sessionId').equals(id).toArray();
-      const topicIds = topics.map((topic) => topic.id);
-      if (topicIds.length > 0) {
-        await this.db.topics.bulkDelete(topicIds);
-      }
+      await TopicModel.batchDeleteBySessionId(id);
 
       // Delete all messages associated with the session
-      const messages = await this.db.messages.where('sessionId').equals(id).toArray();
-      const messageIds = messages.map((message) => message.id);
-      if (messageIds.length > 0) {
-        await this.db.messages.bulkDelete(messageIds);
-      }
+      await MessageModel.batchDeleteBySessionId(id);
 
       // Finally, delete the session itself
       await this._deleteWithSync(id);
     });
   }
 
+  async batchDelete(ids: string[]) {
+    return this._bulkDeleteWithSync(ids);
+  }
+
   async clearTable() {
-    return this.table.clear();
+    return this._clearWithSync();
   }
 
   // **************** Update *************** //
