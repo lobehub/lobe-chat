@@ -9,13 +9,13 @@ export interface GlobalPreference {
   // which sessionGroup should expand
   expandSessionGroupKeys: SessionGroupId[];
   guide?: Guide;
+  hideSyncAlert?: boolean;
   inputHeight: number;
   mobileShowTopic?: boolean;
-  sessionsWidth: number;
 
+  sessionsWidth: number;
   showChatSideBar?: boolean;
   showSessionPanel?: boolean;
-  showSyncAlert: boolean;
   showSystemRole?: boolean;
   telemetry: boolean | null;
   /**
@@ -41,7 +41,6 @@ export const initialPreferenceState: GlobalPreferenceState = {
     sessionsWidth: 320,
     showChatSideBar: true,
     showSessionPanel: true,
-    showSyncAlert: true,
     showSystemRole: false,
     telemetry: null,
     useCmdEnterToSend: false,

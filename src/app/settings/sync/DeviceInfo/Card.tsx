@@ -2,10 +2,14 @@ import { createStyles } from 'antd-style';
 import { ReactNode, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, responsive }) => ({
   container: css`
     background: ${token.colorFillTertiary};
     border-radius: 12px;
+
+    .${responsive.mobile} {
+      width: 100%;
+    }
   `,
   icon: css`
     width: 40px;

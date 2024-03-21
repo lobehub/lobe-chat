@@ -1,6 +1,7 @@
 import { ActionIcon, Avatar, Icon } from '@lobehub/ui';
 import { Divider, Popover, Switch, Tag, Typography } from 'antd';
 import { createStyles } from 'antd-style';
+import { TooltipPlacement } from 'antd/es/tooltip';
 import isEqual from 'fast-deep-equal';
 import { LucideCloudy, LucideLaptop, LucideSmartphone, SettingsIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -31,9 +32,10 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
 
 interface EnableSyncProps {
   hiddenActions?: boolean;
+  placement?: TooltipPlacement;
 }
 
-const EnableSync = memo<EnableSyncProps>(({ hiddenActions }) => {
+const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLeft' }) => {
   const { t } = useTranslation('common');
 
   const { styles, theme } = useStyles();
@@ -106,7 +108,7 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions }) => {
           </Flexbox>
         </Flexbox>
       }
-      placement={'bottomLeft'}
+      placement={placement}
       title={
         <Flexbox distribution={'space-between'} horizontal>
           <Flexbox align={'center'} gap={8} horizontal>

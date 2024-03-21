@@ -6,11 +6,11 @@ const useCmdEnterToSend = (s: GlobalStore): boolean => s.preference.useCmdEnterT
 
 const userAllowTrace = (s: GlobalStore) => s.preference.telemetry;
 
-const showSyncAlert = (s: GlobalStore) => s.preference.showSyncAlert;
+const hideSyncAlert = (s: GlobalStore) => s.preference.hideSyncAlert;
 
 export const preferenceSelectors = {
+  hideSyncAlert,
   sessionGroupKeys,
-  showSyncAlert,
   useCmdEnterToSend,
   userAllowTrace,
 };

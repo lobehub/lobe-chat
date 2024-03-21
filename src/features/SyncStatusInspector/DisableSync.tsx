@@ -1,5 +1,6 @@
 import { Icon, Tag } from '@lobehub/ui';
 import { Badge, Button, Popover } from 'antd';
+import { TooltipPlacement } from 'antd/es/tooltip';
 import { LucideCloudCog, LucideCloudy } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -7,13 +8,14 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
-import { syncSettingsSelectors } from '@/store/global/slices/settings/selectors';
+import { syncSettingsSelectors } from '@/store/global/selectors';
 
 interface DisableSyncProps {
   noPopover?: boolean;
+  placement?: TooltipPlacement;
 }
 
-const DisableSync = memo<DisableSyncProps>(({ noPopover }) => {
+const DisableSync = memo<DisableSyncProps>(({ noPopover, placement = 'bottomLeft' }) => {
   const { t } = useTranslation('common');
   const [haveConfig, setSettings] = useGlobalStore((s) => [
     !!syncSettingsSelectors.webrtcConfig(s).channelName,
@@ -61,7 +63,7 @@ const DisableSync = memo<DisableSyncProps>(({ noPopover }) => {
           )}
         </Flexbox>
       }
-      placement={'bottomLeft'}
+      placement={placement}
       title={
         <Flexbox gap={8} horizontal>
           <Icon icon={LucideCloudy} />

@@ -40,6 +40,7 @@ const WebRTC = memo(() => {
                 onClick={async () => {
                   const name = await generateRandomRoomName();
                   form.setFieldValue(['sync', 'webrtc', 'channelName'], name);
+                  form.setFieldValue(['sync', 'webrtc', 'enabled'], false);
                   form.submit();
                 }}
                 size={'small'}
