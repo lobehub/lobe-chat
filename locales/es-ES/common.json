@@ -10,17 +10,12 @@
   },
   "about": "Acerca de",
   "advanceSettings": "Configuración avanzada",
-  "agentMaxToken": "Máximo de tokens de sesión",
-  "agentModel": "Modelo",
-  "agentProfile": "Perfil del asistente",
   "appInitializing": "LobeChat está inicializando, por favor espere...",
-  "archive": "Archivar",
   "autoGenerate": "Generación automática",
   "autoGenerateTooltip": "Completar automáticamente la descripción del asistente basándose en las sugerencias",
   "cancel": "Cancelar",
   "changelog": "Registro de cambios",
   "close": "Cerrar",
-  "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción",
   "copy": "Copiar",
   "copyFail": "Fallo al copiar",
   "copySuccess": "¡Copia exitosa!",
@@ -128,6 +123,39 @@
   "setting": "Configuración",
   "share": "Compartir",
   "stop": "Detener",
+  "sync": {
+    "actions": {
+      "settings": "Configuración de sincronización",
+      "sync": "Sincronizar ahora"
+    },
+    "awareness": {
+      "current": "Dispositivo actual"
+    },
+    "channel": "Canal",
+    "disabled": {
+      "actions": {
+        "enable": "Habilitar sincronización en la nube",
+        "settings": "Configurar parámetros de sincronización"
+      },
+      "desc": "Los datos de esta sesión se almacenan solo en este navegador. Si necesitas sincronizar datos entre varios dispositivos, configura y habilita la sincronización en la nube.",
+      "title": "Sincronización de datos deshabilitada"
+    },
+    "enabled": {
+      "title": "Sincronización de datos"
+    },
+    "status": {
+      "connecting": "Conectando",
+      "disabled": "Sincronización deshabilitada",
+      "ready": "Listo",
+      "synced": "Sincronizado",
+      "syncing": "Sincronizando",
+      "unconnected": "Sin conexión"
+    },
+    "title": "Estado de sincronización",
+    "unconnected": {
+      "tip": "Fallo al conectar con el servidor de señal. No se podrá establecer un canal de comunicación punto a punto. Por favor, verifica la red e inténtalo de nuevo."
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Descubrir",

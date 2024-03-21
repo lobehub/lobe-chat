@@ -10,17 +10,12 @@
   },
   "about": "關於",
   "advanceSettings": "進階設定",
-  "agentMaxToken": "助手最大標記",
-  "agentModel": "模型",
-  "agentProfile": "助手資訊",
   "appInitializing": "LobeChat 初始化中，請耐心等候...",
-  "archive": "歸檔",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
   "cancel": "取消",
   "changelog": "變更日誌",
   "close": "關閉",
-  "confirmRemoveSessionItemAlert": "即將刪除此助手，刪除後將無法復原，請確認您的操作",
   "copy": "複製",
   "copyFail": "複製失敗",
   "copySuccess": "複製成功",
@@ -128,6 +123,39 @@
   "setting": "設定",
   "share": "分享",
   "stop": "停止",
+  "sync": {
+    "actions": {
+      "settings": "同步設定",
+      "sync": "立即同步"
+    },
+    "awareness": {
+      "current": "當前裝置"
+    },
+    "channel": "頻道",
+    "disabled": {
+      "actions": {
+        "enable": "開啟雲端同步",
+        "settings": "配置同步參數"
+      },
+      "desc": "當前會話數據僅存儲於此瀏覽器中。如果你需要在多個裝置間同步數據，請配置並開啟雲端同步。",
+      "title": "數據同步未開啟"
+    },
+    "enabled": {
+      "title": "數據同步"
+    },
+    "status": {
+      "connecting": "連接中",
+      "disabled": "同步未開啟",
+      "ready": "已連接",
+      "synced": "已同步",
+      "syncing": "同步中",
+      "unconnected": "連接失敗"
+    },
+    "title": "同步狀態",
+    "unconnected": {
+      "tip": "信令伺服器連接失敗，將無法建立點對點通訊頻道，請檢查網路後重試"
+    }
+  },
   "tab": {
     "chat": "對話",
     "market": "發現",

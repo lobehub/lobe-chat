@@ -440,6 +440,44 @@
     "placeholder": "Inserisci l'identificatore dell'assistente, deve essere univoco, ad esempio sviluppo-web",
     "tooltips": "Condividi sul mercato degli assistenti"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Aggiungi un nome per identificare il dispositivo",
+        "placeholder": "Inserisci il nome del dispositivo",
+        "title": "Nome del dispositivo"
+      },
+      "title": "Informazioni sul dispositivo",
+      "unknownBrowser": "Browser sconosciuto",
+      "unknownOS": "Sistema operativo sconosciuto"
+    },
+    "tab": {
+      "experiment": "Esperimento",
+      "sync": "Sincronizzazione cloud"
+    },
+    "warning": {
+      "message": "Questa funzione è attualmente sperimentale e potrebbe comportare comportamenti imprevisti o instabili. In caso di problemi, invia tempestivamente un feedback.",
+      "webrtc": {
+        "channelName": {
+          "desc": "WebRTC utilizzerà questo nome per creare un canale di sincronizzazione. Assicurati che il nome del canale sia univoco",
+          "placeholder": "Inserisci il nome del canale di sincronizzazione",
+          "shuffle": "Genera casuale",
+          "title": "Nome del canale di sincronizzazione"
+        },
+        "channelPassword": {
+          "desc": "Aggiungi una password per garantire la privacy del canale. Solo con la password corretta i dispositivi potranno unirsi al canale",
+          "placeholder": "Inserisci la password del canale di sincronizzazione",
+          "title": "Password del canale di sincronizzazione"
+        },
+        "desc": "Comunicazione dati in tempo reale e punto-punto. I dispositivi devono essere online contemporaneamente per sincronizzarsi",
+        "enabled": {
+          "invalid": "Inserisci prima il nome del canale di sincronizzazione per abilitare",
+          "title": "Abilita la sincronizzazione"
+        },
+        "title": "Sincronizzazione WebRTC"
+      }
+    }
+  },
   "tab": {
     "about": "Informazioni",
     "agent": "Assistente predefinito",
