@@ -11,7 +11,7 @@ import { messageService } from '@/services/message';
 import { UserConfig, userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
 import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
-import { OnSyncEvent } from '@/types/sync';
+import { OnSyncEvent, PeerSyncStatus } from '@/types/sync';
 import { merge } from '@/utils/merge';
 import { browserInfo } from '@/utils/platform';
 import { setNamespace } from '@/utils/storeDebug';
@@ -74,6 +74,9 @@ export const createCommonSlice: StateCreator<
 
     const name = syncSettingsSelectors.deviceName(get());
 
+    const defaultUserName = `My ${browserInfo.browser} (${browserInfo.os})`;
+
+    set({ syncStatus: PeerSyncStatus.Connecting });
     return globalService.enabledSync({
       channel: {
         name: sync.channelName,
@@ -87,7 +90,12 @@ export const createCommonSlice: StateCreator<
         set({ syncStatus: status });
       },
       signaling: sync.signaling,
-      user: { id: userId, name: name, ...browserInfo },
+      user: {
+        id: userId,
+        // if user don't set the name, use default name
+        name: name || defaultUserName,
+        ...browserInfo,
+      },
     });
   },
   updateAvatar: async (avatar) => {
