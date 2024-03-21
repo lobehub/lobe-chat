@@ -1,19 +1,18 @@
 'use client';
 
 import { SiWebrtc } from '@icons-pack/react-simple-icons';
-import { ActionIcon, Form, type ItemGroup, Tooltip } from '@lobehub/ui';
+import { Form, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Form as AntForm, Input, Switch, Typography } from 'antd';
-import { LucideDices } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { generateRandomRoomName } from '@/app/settings/sync/util';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import SyncStatusInspector from '@/features/SyncStatusInspector';
 import { useGlobalStore } from '@/store/global';
 
-import { useSyncSettings } from '../hooks/useSyncSettings';
+import { useSyncSettings } from '../../hooks/useSyncSettings';
+import ChannelNameInput from './ChannelNameInput';
 
 type SettingItemGroup = ItemGroup;
 
@@ -30,28 +29,7 @@ const WebRTC = memo(() => {
   const config: SettingItemGroup = {
     children: [
       {
-        children: (
-          <Input
-            placeholder={t('sync.webrtc.channelName.placeholder')}
-            suffix={
-              <ActionIcon
-                active
-                icon={LucideDices}
-                onClick={async () => {
-                  const name = await generateRandomRoomName();
-                  form.setFieldValue(['sync', 'webrtc', 'channelName'], name);
-                  form.setFieldValue(['sync', 'webrtc', 'enabled'], false);
-                  form.submit();
-                }}
-                size={'small'}
-                style={{
-                  marginRight: -4,
-                }}
-                title={t('sync.webrtc.channelName.shuffle')}
-              />
-            }
-          />
-        ),
+        children: <ChannelNameInput form={form} />,
         desc: t('sync.webrtc.channelName.desc'),
         label: t('sync.webrtc.channelName.title'),
         name: ['sync', 'webrtc', 'channelName'],
