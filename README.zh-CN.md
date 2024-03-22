@@ -248,12 +248,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                                  | 助手说明                                                                                                         |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| [老中医](https://chat-preview.lobehub.com/market?agent=claude-national-medical-master)<br/><sup>By **[GalileoFe](https://github.com/GalileoFe)** on **2024-03-22**</sup>                  | 让我康康！<br/>`咨询` `健康`                                                                                     |
 | [电子学导师](https://chat-preview.lobehub.com/market?agent=elec-circuit-tutor-prompt)<br/><sup>By **[XUANJI233](https://github.com/XUANJI233)** on **2024-03-22**</sup>                   | 擅长数字和模拟电路原理解释，提供电子学基础指导。<br/>`电子学` `导师` `解释` `电路` `原理`                        |
 | [游戏文本翻译师](https://chat-preview.lobehub.com/market?agent=translation-tutor-prompt)<br/><sup>By **[XUANJI233](https://github.com/XUANJI233)** on **2024-03-22**</sup>                | 游戏文本的翻译与双关、俚语解释 (请使用 claude)，如果有特殊符号请使用 \`\`\` 包裹<br/>`游戏` `文本` `翻译` `辅助` |
 | [亚马逊清单文案撰稿员](https://chat-preview.lobehub.com/market?agent=amazon-listing-copywriter)<br/><sup>By **[SpeedupMaster](https://github.com/SpeedupMaster)** on **2024-03-19**</sup> | 擅长撰写具有优化关键词的有说服力的亚马逊清单的专家。<br/>`撰稿` `亚马逊产品详情页` `搜索引擎优化` `关键词`       |
-| [协作逻辑思维团队](https://chat-preview.lobehub.com/market?agent=gpt-tot)<br/><sup>By **[luciouskami](https://github.com/luciouskami)** on **2024-03-19**</sup>                           | 使用思维树方法，三位逻辑思维专家协作解答问题，以 Markdown 表格展示。<br/>`协作` `逻辑思维` `解答`                |
 
-> 📊 Total agents: [<kbd>**213**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**214**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
