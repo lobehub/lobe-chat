@@ -10,7 +10,7 @@ declare global {
 
       // Google Analytics
       ENABLE_GOOGLE_ANALYTICS?: string;
-      GOOGLE_ANALYTICS_ID?: string;
+      GOOGLE_ANALYTICS_MEASUREMENT_ID?: string;
     }
   }
 }
@@ -27,6 +27,6 @@ export const getAnalyticsConfig = () => {
 
     // Google Analytics
     ENABLE_GOOGLE_ANALYTICS: process.env.ENABLE_GOOGLE_ANALYTICS === '1',
-    GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
+    GOOGLE_ANALYTICS_MEASUREMENT_ID: process.env.GOOGLE_ANALYTICS_MEASUREMENT_ID,
   };
 };
