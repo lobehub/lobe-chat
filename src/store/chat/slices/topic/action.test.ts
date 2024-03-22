@@ -148,7 +148,7 @@ describe('topic action', () => {
       });
 
       // Check if mutate has been called with the active session ID
-      expect(mutate).toHaveBeenCalledWith(activeId);
+      expect(mutate).toHaveBeenCalledWith(['SWR_USE_FETCH_TOPIC', activeId]);
     });
 
     it('should handle errors during refreshing topics', async () => {

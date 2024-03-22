@@ -10,17 +10,12 @@
   },
   "about": "Informazioni",
   "advanceSettings": "Impostazioni avanzate",
-  "agentMaxToken": "Massima lunghezza della sessione",
-  "agentModel": "Modello",
-  "agentProfile": "Profilo assistente",
   "appInitializing": "LobeChat inizializzazione in corso, attendere prego...",
-  "archive": "Archivio",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
   "close": "Chiudi",
-  "confirmRemoveSessionItemAlert": "Stai per eliminare questo assistente. Una volta eliminato, non sarà possibile recuperarlo. Confermi l'operazione?",
   "copy": "Copia",
   "copyFail": "Copia non riuscita",
   "copySuccess": "Copia riuscita",
@@ -128,6 +123,39 @@
   "setting": "Impostazioni",
   "share": "Condividi",
   "stop": "Ferma",
+  "sync": {
+    "actions": {
+      "settings": "Impostazioni di sincronizzazione",
+      "sync": "Sincronizza ora"
+    },
+    "awareness": {
+      "current": "Dispositivo corrente"
+    },
+    "channel": "Canale",
+    "disabled": {
+      "actions": {
+        "enable": "Abilita la sincronizzazione cloud",
+        "settings": "Configura le impostazioni di sincronizzazione"
+      },
+      "desc": "I dati della sessione corrente sono memorizzati solo in questo browser. Se hai bisogno di sincronizzare i dati tra più dispositivi, configura e abilita la sincronizzazione cloud.",
+      "title": "Sincronizzazione dati disabilitata"
+    },
+    "enabled": {
+      "title": "Sincronizzazione dati"
+    },
+    "status": {
+      "connecting": "Connessione in corso",
+      "disabled": "Sincronizzazione disabilitata",
+      "ready": "Pronto",
+      "synced": "Sincronizzato",
+      "syncing": "Sincronizzazione in corso",
+      "unconnected": "Connessione non riuscita"
+    },
+    "title": "Stato di sincronizzazione",
+    "unconnected": {
+      "tip": "Connessione al server di segnalazione non riuscita. Impossibile stabilire un canale di comunicazione punto a punto. Controlla la rete e riprova."
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Scopri",

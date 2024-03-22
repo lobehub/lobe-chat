@@ -2,6 +2,7 @@ import { useResponsive } from 'antd-style';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
+import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useGlobalStore } from '@/store/global';
 import { useEffectAfterGlobalHydrated } from '@/store/global/hooks/useEffectAfterHydrated';
 
@@ -10,9 +11,12 @@ const StoreHydration = memo(() => {
     s.useFetchServerConfig,
     s.useFetchUserConfig,
   ]);
+
   const { isLoading } = useFetchServerConfig();
 
   useFetchUserConfig(!isLoading);
+
+  useEnabledDataSync();
 
   useEffect(() => {
     // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
@@ -46,6 +50,7 @@ const StoreHydration = memo(() => {
     router.prefetch('/market');
     router.prefetch('/settings/common');
     router.prefetch('/settings/agent');
+    router.prefetch('/settings/sync');
   }, [router]);
 
   return null;

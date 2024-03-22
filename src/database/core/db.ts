@@ -21,7 +21,7 @@ import {
 } from './schemas';
 import { DBModel, LOBE_CHAT_LOCAL_DB_NAME } from './types/db';
 
-interface LobeDBSchemaMap {
+export interface LobeDBSchemaMap {
   files: DB_File;
   messages: DB_Message;
   plugins: DB_Plugin;
