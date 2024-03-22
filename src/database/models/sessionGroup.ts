@@ -3,8 +3,6 @@ import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/schemas/sessi
 import { SessionGroups } from '@/types/session';
 import { nanoid } from '@/utils/uuid';
 
-import { SessionModel } from './session';
-
 class _SessionGroupModel extends BaseModel {
   constructor() {
     super('sessionGroups', DB_SessionGroupSchema);
@@ -53,6 +51,7 @@ class _SessionGroupModel extends BaseModel {
 
   // **************** Delete *************** //
   async delete(id: string, removeGroupItem: boolean = false) {
+    const { SessionModel } = await import('./session');
     this.db.sessions.toCollection().modify(async (session) => {
       //  update all session associated with the sessionGroup to default
       if (session.group === id) {

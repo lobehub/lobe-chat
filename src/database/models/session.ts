@@ -3,7 +3,6 @@ import { DeepPartial } from 'utility-types';
 import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
 import { BaseModel } from '@/database/core';
 import { DBModel } from '@/database/core/types/db';
-import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { DB_Session, DB_SessionSchema } from '@/database/schemas/session';
 import { LobeAgentConfig } from '@/types/agent';
 import {
@@ -17,6 +16,7 @@ import { merge } from '@/utils/merge';
 import { uuid } from '@/utils/uuid';
 
 import { MessageModel } from './message';
+import { SessionGroupModel } from './sessionGroup';
 import { TopicModel } from './topic';
 
 class _SessionModel extends BaseModel {
