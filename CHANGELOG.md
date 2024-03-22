@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.141.2](https://github.com/lobehub/lobe-chat/compare/v0.141.1...v0.141.2)
+
+<sup>Released on **2024-03-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix window icon and scrollbar style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix window icon and scrollbar style, closes [#1691](https://github.com/lobehub/lobe-chat/issues/1691) ([4f46845](https://github.com/lobehub/lobe-chat/commit/4f46845))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.141.1](https://github.com/lobehub/lobe-chat/compare/v0.141.0...v0.141.1)
 
 <sup>Released on **2024-03-22**</sup>
