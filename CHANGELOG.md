@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.139.2](https://github.com/lobehub/lobe-chat/compare/v0.139.1...v0.139.2)
+
+<sup>Released on **2024-03-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix code block display issue.
+
+#### 💄 Styles
+
+- **misc**: The bottom safe area height of iOS.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix code block display issue, closes [#1675](https://github.com/lobehub/lobe-chat/issues/1675) ([7707dda](https://github.com/lobehub/lobe-chat/commit/7707dda))
+
+#### Styles
+
+- **misc**: The bottom safe area height of iOS, closes [#1637](https://github.com/lobehub/lobe-chat/issues/1637) [#1181](https://github.com/lobehub/lobe-chat/issues/1181) ([44fae5e](https://github.com/lobehub/lobe-chat/commit/44fae5e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.139.1](https://github.com/lobehub/lobe-chat/compare/v0.139.0...v0.139.1)
 
 <sup>Released on **2024-03-17**</sup>
