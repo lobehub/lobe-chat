@@ -1,6 +1,6 @@
 import UAParser from 'ua-parser-js';
 
-const getPaser = () => {
+const getParser = () => {
   if (typeof window === 'undefined') return new UAParser('Node');
 
   let ua = navigator.userAgent;
@@ -8,11 +8,17 @@ const getPaser = () => {
 };
 
 export const getPlatform = () => {
-  return getPaser().getOS().name;
+  return getParser().getOS().name;
 };
 
 export const getBrowser = () => {
-  return getPaser().getResult().browser.name;
+  return getParser().getResult().browser.name;
+};
+
+export const browserInfo = {
+  browser: getBrowser(),
+  isMobile: getParser().getDevice().type === 'mobile',
+  os: getParser().getOS().name,
 };
 
 export const isMacOS = () => getPlatform() === 'Mac OS';

@@ -23,6 +23,7 @@ const ChatInputMobileLayout = memo(() => {
       onSend={onSend}
       placeholder={t('sendPlaceholder')}
       ref={ref}
+      safeArea
       setExpand={setExpand}
       style={{
         background: `linear-gradient(to bottom, ${theme.colorFillQuaternary}, transparent)`,

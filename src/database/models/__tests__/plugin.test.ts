@@ -59,11 +59,14 @@ describe('PluginModel', () => {
   describe('update', () => {
     it('should update a plugin', async () => {
       await PluginModel.create(pluginData);
-      const updatedPluginData: DB_Plugin = { ...pluginData, type: 'customPlugin' };
+      const updatedPluginData: DB_Plugin = {
+        ...pluginData,
+        type: 'customPlugin',
+      };
       await PluginModel.update(pluginData.identifier, updatedPluginData);
       const plugins = await PluginModel.getList();
       expect(plugins).toHaveLength(1);
-      expect(plugins[0]).toEqual(updatedPluginData);
+      expect(plugins[0]).toEqual({ ...updatedPluginData, updatedAt: expect.any(Number) });
     });
   });
 

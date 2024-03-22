@@ -440,11 +440,47 @@
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
     "tooltips": "Udostępnij na rynku asystentów"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "添加名称以便于识别",
+        "placeholder": "请输入设备名称",
+        "title": "设备名称"
+      },
+      "title": "设备信息",
+      "unknownBrowser": "未知浏览器",
+      "unknownOS": "未知系统"
+    },
+    "warning": {
+      "message": "本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。"
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC 将使用此名创建同步频道，确保频道名称唯一",
+        "placeholder": "请输入同步频道名称",
+        "shuffle": "随机生成",
+        "title": "同步频道名称"
+      },
+      "channelPassword": {
+        "desc": "添加密码确保频道私密性，只有密码正确时，设备才可加入频道",
+        "placeholder": "请输入同步频道密码",
+        "title": "同步频道密码"
+      },
+      "desc": "实时、点对点的数据通信，需设备同时在线才可同步",
+      "enabled": {
+        "invalid": "请填写同步频道名称后再开启",
+        "title": "开启同步"
+      },
+      "title": "WebRTC 同步"
+    }
+  },
   "tab": {
     "about": "O nas",
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
+    "experiment": "实验",
     "llm": "Model językowy",
+    "sync": "云端同步",
     "tts": "Usługa głosowa"
   },
   "tools": {

@@ -10,17 +10,12 @@
   },
   "about": "概要",
   "advanceSettings": "高度な設定",
-  "agentMaxToken": "エージェントの最大トークン数",
-  "agentModel": "モデル",
-  "agentProfile": "エージェントプロフィール",
   "appInitializing": "LobeChatを初期化中です。しばらくお待ちください...",
-  "archive": "アーカイブ",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントに基づいてエージェントの説明を自動生成します",
   "cancel": "キャンセル",
   "changelog": "変更履歴",
   "close": "閉じる",
-  "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除後は元に戻すことはできません。操作を確認してください。",
   "copy": "コピー",
   "copyFail": "コピーに失敗しました",
   "copySuccess": "コピーが成功しました",
@@ -128,6 +123,39 @@
   "setting": "設定",
   "share": "共有",
   "stop": "停止",
+  "sync": {
+    "actions": {
+      "settings": "同期設定",
+      "sync": "即時同期"
+    },
+    "awareness": {
+      "current": "現在のデバイス"
+    },
+    "channel": "チャンネル",
+    "disabled": {
+      "actions": {
+        "enable": "クラウド同期を有効にする",
+        "settings": "同期設定"
+      },
+      "desc": "現在のセッションデータはこのブラウザにのみ保存されます。複数のデバイス間でデータを同期するには、クラウド同期を設定して有効にしてください。",
+      "title": "データ同期が無効です"
+    },
+    "enabled": {
+      "title": "データ同期"
+    },
+    "status": {
+      "connecting": "接続中",
+      "disabled": "同期が無効です",
+      "ready": "接続済み",
+      "synced": "同期済み",
+      "syncing": "同期中",
+      "unconnected": "接続失敗"
+    },
+    "title": "同期状態",
+    "unconnected": {
+      "tip": "シグナリングサーバーに接続できません。ピア間通信チャンネルを確立できません。ネットワークを確認して再試行してください。"
+    }
+  },
   "tab": {
     "chat": "チャット",
     "market": "探す",

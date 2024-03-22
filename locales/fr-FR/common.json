@@ -10,17 +10,12 @@
   },
   "about": "À propos",
   "advanceSettings": "Paramètres avancés",
-  "agentMaxToken": "Longueur maximale de la session",
-  "agentModel": "Modèle",
-  "agentProfile": "Profil de l'agent",
   "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
-  "archive": "Archiver",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
   "close": "Fermer",
-  "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
   "copy": "Copier",
   "copyFail": "Échec de la copie",
   "copySuccess": "Copie réussie",
@@ -128,6 +123,39 @@
   "setting": "Paramètre",
   "share": "Partager",
   "stop": "Arrêter",
+  "sync": {
+    "actions": {
+      "settings": "Paramètres de synchronisation",
+      "sync": "Synchroniser maintenant"
+    },
+    "awareness": {
+      "current": "Appareil actuel"
+    },
+    "channel": "Canal",
+    "disabled": {
+      "actions": {
+        "enable": "Activer la synchronisation cloud",
+        "settings": "Paramètres de configuration"
+      },
+      "desc": "Les données de cette session sont uniquement stockées dans ce navigateur. Si vous avez besoin de synchroniser les données entre plusieurs appareils, veuillez configurer et activer la synchronisation cloud.",
+      "title": "La synchronisation des données n'est pas activée"
+    },
+    "enabled": {
+      "title": "Synchronisation des données"
+    },
+    "status": {
+      "connecting": "Connexion en cours",
+      "disabled": "Synchronisation désactivée",
+      "ready": "Connecté",
+      "synced": "Synchronisé",
+      "syncing": "Synchronisation en cours",
+      "unconnected": "Échec de la connexion"
+    },
+    "title": "État de synchronisation",
+    "unconnected": {
+      "tip": "Échec de la connexion au serveur de signalisation. Impossible d'établir un canal de communication peer-to-peer. Veuillez vérifier votre réseau et réessayer."
+    }
+  },
   "tab": {
     "chat": "Conversation",
     "market": "Découvrir",

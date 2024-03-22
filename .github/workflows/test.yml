@@ -9,6 +9,8 @@ jobs:
 
       - name: Install bun
         uses: oven-sh/setup-bun@v1
+        with:
+            bun-version: ${{ secrets.BUN_VERSION }}
 
       - name: Install deps
         run: bun i
@@ -20,4 +22,4 @@ jobs:
         run: bun run test:coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
