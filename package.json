@@ -92,6 +92,7 @@
     "@lobehub/tts": "latest",
     "@lobehub/ui": "^1.135.4",
     "@vercel/analytics": "^1",
+    "@vercel/speed-insights": "^1.0.10",
     "ahooks": "^3",
     "ai": "^3.0.0",
     "antd": "^5",
