@@ -91,6 +91,7 @@
     "@lobehub/icons": "latest",
     "@lobehub/tts": "latest",
     "@lobehub/ui": "^1.135.4",
+    "@supabase/supabase-js": "^2.39.8",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
     "ai": "^3.0.0",
