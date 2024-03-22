@@ -440,11 +440,47 @@
     "placeholder": "Vui lòng nhập nhận dạng trợ lý, cần phải duy nhất, ví dụ như phát triển web",
     "tooltips": "Chia sẻ lên thị trường trợ lý"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Thêm tên để dễ nhận biết",
+        "placeholder": "Nhập tên thiết bị",
+        "title": "Tên thiết bị"
+      },
+      "title": "Thông tin thiết bị",
+      "unknownBrowser": "Trình duyệt không xác định",
+      "unknownOS": "Hệ điều hành không xác định"
+    },
+    "warning": {
+      "message": "Chức năng này hiện vẫn đang trong thử nghiệm, có thể gặp phải tình huống ngoài dự kiến hoặc không ổn định, nếu gặp vấn đề vui lòng gửi phản hồi ngay lập tức."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC sẽ sử dụng tên này để tạo kênh đồng bộ, đảm bảo tên kênh là duy nhất",
+        "placeholder": "Nhập tên kênh đồng bộ",
+        "shuffle": "Tạo ngẫu nhiên",
+        "title": "Tên kênh đồng bộ"
+      },
+      "channelPassword": {
+        "desc": "Thêm mật khẩu để đảm bảo tính riêng tư của kênh, chỉ khi mật khẩu đúng, thiết bị mới có thể tham gia kênh",
+        "placeholder": "Nhập mật khẩu kênh đồng bộ",
+        "title": "Mật khẩu kênh đồng bộ"
+      },
+      "desc": "Truyền thông dữ liệu thời gian thực, điểm-điểm, cần thiết bị cùng online mới có thể đồng bộ",
+      "enabled": {
+        "invalid": "Vui lòng nhập tên kênh đồng bộ trước khi bật",
+        "title": "Bật đồng bộ"
+      },
+      "title": "WebRTC Đồng bộ"
+    }
+  },
   "tab": {
     "about": "Về chúng tôi",
     "agent": "Trợ lý mặc định",
     "common": "Cài đặt chung",
+    "experiment": "Thử nghiệm",
     "llm": "Mô hình ngôn ngữ",
+    "sync": "Đồng bộ trên đám mây",
     "tts": "Dịch vụ giọng nói"
   },
   "tools": {

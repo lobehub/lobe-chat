@@ -1,10 +1,11 @@
 import Dexie, { BulkError } from 'dexie';
 import { ZodObject } from 'zod';
 
-import { DBBaseFieldsSchema } from '@/database/core/types/db';
 import { nanoid } from '@/utils/uuid';
 
 import { LocalDB, LocalDBInstance, LocalDBSchema } from './db';
+import { dataSync } from './sync';
+import { DBBaseFieldsSchema } from './types/db';
 
 export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]['table']> {
   protected readonly db: LocalDB;
@@ -21,10 +22,16 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     return this.db[this._tableName] as Dexie.Table;
   }
 
+  get yMap() {
+    return dataSync.getYMap(this._tableName);
+  }
+
+  // **************** Create *************** //
+
   /**
    * create a new record
    */
-  protected async _add<T = LocalDBSchema[N]['model']>(
+  protected async _addWithSync<T = LocalDBSchema[N]['model']>(
     data: T,
     id: string | number = nanoid(),
     primaryKey: string = 'id',
@@ -51,6 +58,9 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
 
     const newId = await this.db[tableName].add(record);
 
+    // sync data to yjs data map
+    this.updateYMapItem(newId);
+
     return { id: newId };
   }
 
@@ -69,6 +79,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
        */
       createWithNewId?: boolean;
       idGenerator?: () => string;
+      withSync?: boolean;
     } = {},
   ): Promise<{
     added: number;
@@ -77,8 +88,8 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     skips: string[];
     success: boolean;
   }> {
-    const { idGenerator = nanoid, createWithNewId = false } = options;
-    const validatedData = [];
+    const { idGenerator = nanoid, createWithNewId = false, withSync = true } = options;
+    const validatedData: any[] = [];
     const errors = [];
     const skips: string[] = [];
 
@@ -123,6 +134,15 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     try {
       await this.table.bulkAdd(validatedData);
 
+      if (withSync) {
+        dataSync.transact(() => {
+          const pools = validatedData.map(async (item) => {
+            await this.updateYMapItem(item.id);
+          });
+          Promise.all(pools);
+        });
+      }
+
       return {
         added: validatedData.length,
         ids: validatedData.map((item) => item.id),
@@ -144,7 +164,36 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
     }
   }
 
-  protected async _update(id: string, data: Partial<T>) {
+  // **************** Delete *************** //
+
+  protected async _deleteWithSync(id: string) {
+    const result = await this.table.delete(id);
+    // sync delete data to yjs data map
+    this.yMap?.delete(id);
+    return result;
+  }
+
+  protected async _bulkDeleteWithSync(keys: string[]) {
+    await this.table.bulkDelete(keys);
+    // sync delete data to yjs data map
+
+    dataSync.transact(() => {
+      keys.forEach((id) => {
+        this.yMap?.delete(id);
+      });
+    });
+  }
+
+  protected async _clearWithSync() {
+    const result = await this.table.clear();
+    // sync clear data to yjs data map
+    this.yMap?.clear();
+    return result;
+  }
+
+  // **************** Update *************** //
+
+  protected async _updateWithSync(id: string, data: Partial<T>) {
     // we need to check whether the data is valid
     // pick data related schema from the full schema
     const keys = Object.keys(data);
@@ -162,6 +211,35 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
 
     const success = await this.table.update(id, { ...data, updatedAt: Date.now() });
 
+    // sync data to yjs data map
+    this.updateYMapItem(id);
+
     return { success };
   }
+
+  protected async _putWithSync(data: any, id: string) {
+    const result = await this.table.put(data, id);
+
+    // sync data to yjs data map
+    this.updateYMapItem(id);
+
+    return result;
+  }
+
+  protected async _bulkPutWithSync(items: T[]) {
+    await this.table.bulkPut(items);
+
+    await dataSync.transact(() => {
+      items.forEach((items) => {
+        this.updateYMapItem((items as any).id);
+      });
+    });
+  }
+
+  // **************** Helper *************** //
+
+  private updateYMapItem = async (id: string) => {
+    const newData = await this.table.get(id);
+    this.yMap?.set(id, newData);
+  };
 }

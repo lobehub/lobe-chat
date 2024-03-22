@@ -42,7 +42,7 @@ class _SessionGroupModel extends BaseModel {
   // **************** Create *************** //
 
   async create(name: string, sort?: number, id = nanoid()) {
-    return this._add({ name, sort }, id);
+    return this._addWithSync({ name, sort }, id);
   }
 
   async batchCreate(groups: SessionGroups) {
@@ -51,31 +51,37 @@ class _SessionGroupModel extends BaseModel {
 
   // **************** Delete *************** //
   async delete(id: string, removeGroupItem: boolean = false) {
-    this.db.sessions.toCollection().modify((session) => {
+    const { SessionModel } = await import('./session');
+    this.db.sessions.toCollection().modify(async (session) => {
       //  update all session associated with the sessionGroup to default
-      if (session.group === id) session.group = 'default';
+      if (session.group === id) {
+        await SessionModel.update(session.id, { group: 'default' });
+      }
     });
+
     if (!removeGroupItem) {
-      return this.table.delete(id);
+      return this._deleteWithSync(id);
     } else {
-      return this.db.sessions.where('group').equals(id).delete();
+      const sessionIds = await this.db.sessions.where('group').equals(id).primaryKeys();
+
+      return await SessionModel.batchDelete(sessionIds);
     }
   }
 
   async clear() {
-    this.table.clear();
+    await this._clearWithSync();
   }
 
   // **************** Update *************** //
 
   async update(id: string, data: Partial<DB_SessionGroup>) {
-    return super._update(id, data);
+    return super._updateWithSync(id, data);
   }
 
   async updateOrder(sortMap: { id: string; sort: number }[]) {
     return this.db.transaction('rw', this.table, async () => {
       for (const { id, sort } of sortMap) {
-        await this.table.update(id, { sort });
+        await this.update(id, { sort });
       }
     });
   }

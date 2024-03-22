@@ -440,11 +440,47 @@
     "placeholder": "Veuillez entrer l'identifiant de l'agent, qui doit être unique, par exemple développement-web",
     "tooltips": "Partager sur le marché des agents"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Ajoutez un nom pour l'identifier",
+        "placeholder": "Entrez le nom de l'appareil",
+        "title": "Nom de l'appareil"
+      },
+      "title": "Informations sur l'appareil",
+      "unknownBrowser": "Navigateur inconnu",
+      "unknownOS": "Système d'exploitation inconnu"
+    },
+    "warning": {
+      "message": "Cette fonctionnalité est actuellement expérimentale et peut présenter des comportements inattendus ou instables. En cas de problème, veuillez soumettre vos commentaires rapidement."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC utilisera ce nom pour créer un canal de synchronisation. Assurez-vous que le nom du canal est unique",
+        "placeholder": "Entrez le nom du canal de synchronisation",
+        "shuffle": "Générer aléatoirement",
+        "title": "Nom du canal de synchronisation"
+      },
+      "channelPassword": {
+        "desc": "Ajoutez un mot de passe pour assurer la confidentialité du canal. Seuls les appareils avec le bon mot de passe pourront rejoindre le canal",
+        "placeholder": "Entrez le mot de passe du canal de synchronisation",
+        "title": "Mot de passe du canal de synchronisation"
+      },
+      "desc": "Communication de données en temps réel et en pair-à-pair. Les appareils doivent être en ligne simultanément pour se synchroniser",
+      "enabled": {
+        "invalid": "Veuillez entrer un nom de canal de synchronisation avant d'activer",
+        "title": "Activer la synchronisation"
+      },
+      "title": "Synchronisation WebRTC"
+    }
+  },
   "tab": {
     "about": "À propos",
     "agent": "Agent par défaut",
     "common": "Paramètres généraux",
+    "experiment": "Expérience",
     "llm": "Modèle de langue",
+    "sync": "Synchronisation cloud",
     "tts": "Service vocal"
   },
   "tools": {
