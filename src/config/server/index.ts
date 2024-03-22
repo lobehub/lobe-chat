@@ -1,3 +1,4 @@
+import { getAnalyticsConfig } from './analytics';
 import { getAppConfig } from './app';
 import { getProviderConfig } from './provider';
 
@@ -8,6 +9,7 @@ export const getServerConfig = () => {
 
   const provider = getProviderConfig();
   const app = getAppConfig();
+  const analytics = getAnalyticsConfig();
 
-  return { ...provider, ...app };
+  return { ...provider, ...app, ...analytics };
 };
