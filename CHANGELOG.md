@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.140.1](https://github.com/lobehub/lobe-chat/compare/v0.140.0...v0.140.1)
+
+<sup>Released on **2024-03-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: add Moonshot Kimi Reverse model to Moonshot model provider..
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: add Moonshot Kimi Reverse model to Moonshot model provider., closes [#1659](https://github.com/lobehub/lobe-chat/issues/1659) ([5bae263](https://github.com/lobehub/lobe-chat/commit/5bae263))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.140.0](https://github.com/lobehub/lobe-chat/compare/v0.139.2...v0.140.0)
 
 <sup>Released on **2024-03-22**</sup>
