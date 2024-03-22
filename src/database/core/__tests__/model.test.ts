@@ -37,7 +37,7 @@ describe('BaseModel', () => {
         content: 'Hello, World!',
       };
 
-      const result = await baseModel['_add'](validData);
+      const result = await baseModel['_addWithSync'](validData);
 
       expect(result).toHaveProperty('id');
       expect(console.error).not.toHaveBeenCalled();
@@ -49,7 +49,7 @@ describe('BaseModel', () => {
         content: 'Hello, World!',
       };
 
-      await expect(baseModel['_add'](invalidData)).rejects.toThrow(TypeError);
+      await expect(baseModel['_addWithSync'](invalidData)).rejects.toThrow(TypeError);
     });
   });
 });

@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { DB_Message } from '@/database/schemas/message';
 import { ChatMessage } from '@/types/message';
 
 import { CreateMessageParams, MessageModel } from '../message';

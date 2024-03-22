@@ -440,11 +440,47 @@
     "placeholder": "請輸入助手的標識符，需要是唯一的，比如 web-development",
     "tooltips": "分享到助手市場"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "添加名稱以便於識別",
+        "placeholder": "請輸入裝置名稱",
+        "title": "裝置名稱"
+      },
+      "title": "裝置資訊",
+      "unknownBrowser": "未知瀏覽器",
+      "unknownOS": "未知系統"
+    },
+    "warning": {
+      "message": "本功能目前仍為實驗性功能，可能存在預期外或不穩定的情況，如遇到問題請及時提交反饋。"
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC 將使用此名創建同步頻道，確保頻道名稱唯一",
+        "placeholder": "請輸入同步頻道名稱",
+        "shuffle": "隨機生成",
+        "title": "同步頻道名稱"
+      },
+      "channelPassword": {
+        "desc": "添加密碼確保頻道私密性，只有密碼正確時，裝置才可加入頻道",
+        "placeholder": "請輸入同步頻道密碼",
+        "title": "同步頻道密碼"
+      },
+      "desc": "實時、點對點的數據通信，需裝置同時在線才可同步",
+      "enabled": {
+        "invalid": "請填寫同步頻道名稱後再開啟",
+        "title": "開啟同步"
+      },
+      "title": "WebRTC 同步"
+    }
+  },
   "tab": {
     "about": "關於",
     "agent": "默認助手",
     "common": "通用設置",
+    "experiment": "實驗",
     "llm": "語言模型",
+    "sync": "雲端同步",
     "tts": "語音服務"
   },
   "tools": {
