@@ -440,6 +440,44 @@
     "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
     "tooltips": "Delen op de assistentenmarkt"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "添加名称以便于识别",
+        "placeholder": "Voer de apparaatnaam in",
+        "title": "Apparaatnaam"
+      },
+      "title": "Apparaatinformatie",
+      "unknownBrowser": "Onbekende browser",
+      "unknownOS": "Onbekend besturingssysteem"
+    },
+    "tab": {
+      "experiment": "Experiment",
+      "sync": "Cloudsynchronisatie"
+    },
+    "warning": {
+      "message": "Deze functie is momenteel experimenteel en kan onverwachte of onstabiele situaties veroorzaken. Als u problemen ondervindt, geef dan tijdig feedback.",
+      "webrtc": {
+        "channelName": {
+          "desc": "WebRTC zal dit gebruiken om een synchronisatiekanaal te maken. Zorg ervoor dat de kanaalnaam uniek is",
+          "placeholder": "Voer de synchronisatiekanaalnaam in",
+          "shuffle": "Willekeurig genereren",
+          "title": "Synchronisatiekanaalnaam"
+        },
+        "channelPassword": {
+          "desc": "Voeg een wachtwoord toe om de privacy van het kanaal te waarborgen. Alleen met het juiste wachtwoord kan het apparaat aan het kanaal deelnemen",
+          "placeholder": "Voer het synchronisatiekanaalwachtwoord in",
+          "title": "Synchronisatiekanaalwachtwoord"
+        },
+        "desc": "Realtime, point-to-point datacommunicatie. Apparaten moeten tegelijkertijd online zijn om te synchroniseren",
+        "enabled": {
+          "invalid": "Schakel de synchronisatie in nadat u de synchronisatiekanaalnaam heeft ingevoerd",
+          "title": "Synchronisatie inschakelen"
+        },
+        "title": "WebRTC-synchronisatie"
+      }
+    }
+  },
   "tab": {
     "about": "Over",
     "agent": "Standaardassistent",

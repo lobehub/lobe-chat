@@ -440,11 +440,47 @@
     "placeholder": "Ingrese el identificador único del asistente, por ejemplo desarrollo-web",
     "tooltips": "Compartir en el mercado de asistentes"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Agrega un nombre para identificar el dispositivo",
+        "placeholder": "Introduce el nombre del dispositivo",
+        "title": "Nombre del dispositivo"
+      },
+      "title": "Información del dispositivo",
+      "unknownBrowser": "Navegador desconocido",
+      "unknownOS": "Sistema operativo desconocido"
+    },
+    "warning": {
+      "message": "Esta función todavía está en fase experimental y puede presentar situaciones inesperadas o inestables. Si encuentras algún problema, por favor envía tus comentarios de inmediato."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC utilizará este nombre para crear un canal de sincronización. Asegúrate de que el nombre del canal sea único",
+        "placeholder": "Introduce el nombre del canal de sincronización",
+        "shuffle": "Generar aleatoriamente",
+        "title": "Nombre del canal de sincronización"
+      },
+      "channelPassword": {
+        "desc": "Agrega una contraseña para garantizar la privacidad del canal. Solo los dispositivos con la contraseña correcta podrán unirse al canal",
+        "placeholder": "Introduce la contraseña del canal de sincronización",
+        "title": "Contraseña del canal de sincronización"
+      },
+      "desc": "Comunicación de datos en tiempo real y punto a punto. Los dispositivos deben estar en línea simultáneamente para sincronizarse",
+      "enabled": {
+        "invalid": "Por favor, introduce el nombre del canal de sincronización antes de activar",
+        "title": "Activar sincronización"
+      },
+      "title": "Sincronización WebRTC"
+    }
+  },
   "tab": {
     "about": "Acerca de",
     "agent": "Asistente predeterminado",
     "common": "Configuración común",
+    "experiment": "Experimento",
     "llm": "Modelo de lenguaje",
+    "sync": "Sincronización en la nube",
     "tts": "Servicio de voz"
   },
   "tools": {

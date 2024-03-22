@@ -10,17 +10,12 @@
   },
   "about": "Über",
   "advanceSettings": "Erweiterte Einstellungen",
-  "agentMaxToken": "Maximale Sitzungslänge",
-  "agentModel": "Modell",
-  "agentProfile": "Assistentenprofil",
   "appInitializing": "LobeChat wird initialisiert. Bitte haben Sie einen Moment Geduld...",
-  "archive": "Archiv",
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
   "close": "Schließen",
-  "confirmRemoveSessionItemAlert": "Möchten Sie diesen Assistenten wirklich löschen? Nach dem Löschen kann er nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
   "copy": "Kopieren",
   "copyFail": "Kopieren fehlgeschlagen",
   "copySuccess": "Kopieren erfolgreich",
@@ -128,6 +123,39 @@
   "setting": "Einstellung",
   "share": "Teilen",
   "stop": "Stoppen",
+  "sync": {
+    "actions": {
+      "settings": "同步设置",
+      "sync": "立即同步"
+    },
+    "awareness": {
+      "current": "当前设备"
+    },
+    "channel": "频道",
+    "disabled": {
+      "actions": {
+        "enable": "开启云端同步",
+        "settings": "配置同步参数"
+      },
+      "desc": "当前会话数据仅存储于此浏览器中。如果你需要在多个设备间同步数据，请配置并开启云端同步。",
+      "title": "数据同步未开启"
+    },
+    "enabled": {
+      "title": "数据同步"
+    },
+    "status": {
+      "connecting": "连接中",
+      "disabled": "同步未开启",
+      "ready": "已连接",
+      "synced": "已同步",
+      "syncing": "同步中",
+      "unconnected": "连接失败"
+    },
+    "title": "同步状态",
+    "unconnected": {
+      "tip": "信令服务器连接失败，将无法建立点对点通信频道，请检查网络后重试"
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Entdecken",

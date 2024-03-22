@@ -440,11 +440,47 @@
     "placeholder": "Insira o identificador único do assistente, como por exemplo, desenvolvimento-web",
     "tooltips": "Compartilhar no mercado de assistentes"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Adicione um nome para facilitar a identificação",
+        "placeholder": "Insira o nome do dispositivo",
+        "title": "Nome do dispositivo"
+      },
+      "title": "Informações do dispositivo",
+      "unknownBrowser": "Navegador desconhecido",
+      "unknownOS": "Sistema operacional desconhecido"
+    },
+    "warning": {
+      "message": "Esta função ainda é experimental e pode apresentar comportamento inesperado ou instável. Se encontrar problemas, envie um feedback imediatamente."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "O WebRTC usará este nome para criar um canal de sincronização. Certifique-se de que o nome do canal seja único",
+        "placeholder": "Insira o nome do canal de sincronização",
+        "shuffle": "Gerar aleatoriamente",
+        "title": "Nome do canal de sincronização"
+      },
+      "channelPassword": {
+        "desc": "Adicione uma senha para garantir a privacidade do canal. Apenas com a senha correta os dispositivos poderão ingressar no canal",
+        "placeholder": "Insira a senha do canal de sincronização",
+        "title": "Senha do canal de sincronização"
+      },
+      "desc": "Comunicação de dados em tempo real ponto a ponto. Os dispositivos precisam estar online simultaneamente para sincronizar",
+      "enabled": {
+        "invalid": "Por favor, insira o nome do canal de sincronização antes de ativar",
+        "title": "Ativar sincronização"
+      },
+      "title": "Sincronização WebRTC"
+    }
+  },
   "tab": {
     "about": "Sobre",
     "agent": "Assistente Padrão",
     "common": "Configurações Comuns",
+    "experiment": "Experimento",
     "llm": "Modelo de Linguagem",
+    "sync": "Sincronização na nuvem",
     "tts": "Serviço de Voz"
   },
   "tools": {

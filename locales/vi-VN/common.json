@@ -10,17 +10,12 @@
   },
   "about": "Giới thiệu",
   "advanceSettings": "Cài đặt nâng cao",
-  "agentMaxToken": "Số ký tự tối đa của phiên",
-  "agentModel": "Mô hình",
-  "agentProfile": "Hồ sơ trợ lý",
   "appInitializing": "LobeChat đang khởi động, vui lòng chờ...",
-  "archive": "Lưu trữ",
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
   "close": "Đóng",
-  "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Sau khi xóa, bạn sẽ không thể khôi phục. Vui lòng xác nhận hành động của bạn",
   "copy": "Sao chép",
   "copyFail": "Sao chép thất bại",
   "copySuccess": "Sao chép thành công",
@@ -128,6 +123,39 @@
   "setting": "Cài đặt",
   "share": "Chia sẻ",
   "stop": "Dừng",
+  "sync": {
+    "actions": {
+      "settings": "Cài đặt đồng bộ hóa",
+      "sync": "Đồng bộ ngay"
+    },
+    "awareness": {
+      "current": "Thiết bị hiện tại"
+    },
+    "channel": "Kênh",
+    "disabled": {
+      "actions": {
+        "enable": "Bật đồng bộ hóa đám mây",
+        "settings": "Cấu hình tham số đồng bộ hóa"
+      },
+      "desc": "Dữ liệu phiên hiện tại chỉ lưu trữ trong trình duyệt này. Nếu bạn cần đồng bộ dữ liệu qua nhiều thiết bị, vui lòng cấu hình và bật đồng bộ hóa đám mây.",
+      "title": "Dữ liệu chưa được đồng bộ hóa"
+    },
+    "enabled": {
+      "title": "Đồng bộ dữ liệu"
+    },
+    "status": {
+      "connecting": "Đang kết nối",
+      "disabled": "Đồng bộ hóa chưa được bật",
+      "ready": "Đã kết nối",
+      "synced": "Đã đồng bộ",
+      "syncing": "Đang đồng bộ",
+      "unconnected": "Kết nối không thành công"
+    },
+    "title": "Trạng thái đồng bộ hóa",
+    "unconnected": {
+      "tip": "Kết nối đến máy chủ tín hiệu thất bại, không thể thiết lập kênh truyền thông điểm-điểm, vui lòng kiểm tra lại mạng và thử lại"
+    }
+  },
   "tab": {
     "chat": "Trò chuyện",
     "market": "Thị trường",

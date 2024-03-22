@@ -1,6 +1,8 @@
 import { ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
+import { Tag } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { SettingsTabs } from '@/store/global/initialState';
 
@@ -11,7 +13,15 @@ const Header = memo(({ activeTab }: { activeTab: SettingsTabs }) => {
     <ChatHeader
       left={
         <div style={{ paddingLeft: 8 }}>
-          <ChatHeaderTitle title={t(`tab.${activeTab}`)} />
+          <ChatHeaderTitle
+            title={
+              <Flexbox align={'center'} gap={8} horizontal>
+                {t(`tab.${activeTab}`)}
+
+                {activeTab === SettingsTabs.Sync && <Tag color={'gold'}>{t('tab.experiment')}</Tag>}
+              </Flexbox>
+            }
+          />
         </div>
       }
     />
