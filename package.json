@@ -90,7 +90,7 @@
     "@lobehub/chat-plugins-gateway": "latest",
     "@lobehub/icons": "latest",
     "@lobehub/tts": "latest",
-    "@lobehub/ui": "^1.133.3",
+    "@lobehub/ui": "^1.135.4",
     "@theguild/remark-mermaid": "^0.0.6",
     "@vercel/analytics": "^1",
     "ahooks": "^3",
