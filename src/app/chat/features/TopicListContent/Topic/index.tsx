@@ -19,9 +19,10 @@ export const Topic = memo(() => {
   const { t } = useTranslation('chat');
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const { isDarkMode } = useThemeMode();
-  const [topicsInit, activeTopicId, topicLength] = useChatStore((s) => [
+  const [topicsInit, activeTopicId, activeSessionId, topicLength] = useChatStore((s) => [
     s.topicsInit,
     s.activeTopicId,
+    s.activeId,
     topicSelectors.currentTopicLength(s),
   ]);
   const [visible, updateGuideState] = useGlobalStore((s) => [
@@ -34,6 +35,7 @@ export const Topic = memo(() => {
       {
         favorite: false,
         id: 'default',
+        sessionId: activeSessionId,
         title: t('topic.defaultTitle'),
       } as ChatTopic,
       ...topicSelectors.displayTopics(s),
@@ -42,11 +44,18 @@ export const Topic = memo(() => {
   );
 
   const itemContent = useCallback(
-    (index: number, { id, favorite, title }: ChatTopic) =>
+    (index: number, { id, favorite, sessionId, title }: ChatTopic) =>
       index === 0 ? (
-        <TopicItem active={!activeTopicId} fav={favorite} title={title} />
+        <TopicItem active={!activeTopicId} fav={favorite} sessionId={sessionId} title={title} />
       ) : (
-        <TopicItem active={activeTopicId === id} fav={favorite} id={id} key={id} title={title} />
+        <TopicItem
+          active={activeTopicId === id}
+          fav={favorite}
+          id={id}
+          key={id}
+          sessionId={sessionId}
+          title={title}
+        />
       ),
     [activeTopicId],
   );

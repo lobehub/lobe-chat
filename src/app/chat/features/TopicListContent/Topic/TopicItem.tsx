@@ -4,6 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
 
 import DefaultContent from './DefaultContent';
 import TopicContent from './TopicContent';
@@ -35,13 +36,15 @@ export interface ConfigCellProps {
   active?: boolean;
   fav?: boolean;
   id?: string;
+  sessionId?: string;
   title: string;
 }
 
-const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
+const TopicItem = memo<ConfigCellProps>(({ title, active, id, sessionId, fav }) => {
   const { styles, cx } = useStyles();
   const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
   const [toggleTopic] = useChatStore((s) => [s.switchTopic]);
+  const switchSession = useSessionStore((s) => s.switchSession);
   const [isHover, setHovering] = useState(false);
 
   return (
@@ -51,6 +54,7 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
       distribution={'space-between'}
       horizontal
       onClick={() => {
+        switchSession(sessionId);
         toggleTopic(id);
         toggleConfig(false);
       }}
