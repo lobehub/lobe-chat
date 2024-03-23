@@ -1,6 +1,4 @@
-import { OpenRouter } from '@lobehub/icons';
 import { Input } from 'antd';
-import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +13,8 @@ const providerKey = 'togetherai';
 const TogetherAIProvider = memo(() => {
   const { t } = useTranslation('setting');
 
-  const theme = useTheme();
+  // TODO: add icon for TogetherAI
+  // const theme = useTheme();
 
   return (
     <ProviderConfig
@@ -53,15 +52,8 @@ const TogetherAIProvider = memo(() => {
         },
       ]}
       provider={providerKey}
-      //FIXME: add icone for TogetherAI
-      title={
-        <OpenRouter.Combine
-          color={theme.isDarkMode ? theme.colorText : OpenRouter.colorPrimary}
-          showLogo={false}
-          size={24}
-          title={'TogetherAI'}
-        />
-      }
+      //TODO: add icon for TogetherAI
+      title="TogetherAI"
     />
   );
 });
