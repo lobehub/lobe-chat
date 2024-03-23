@@ -202,6 +202,14 @@ export default {
         title: 'API Key',
       },
     },
+    ZeroOne: {
+      title: '01.AI 零一万物',
+      token: {
+        desc: '填入来自 01.AI 零一万物的 API Key',
+        placeholder: '01.AI 零一万物 API Key',
+        title: 'API Key',
+      }
+    },
     Zhipu: {
       title: '智谱',
       token: {

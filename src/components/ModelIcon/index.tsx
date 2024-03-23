@@ -34,7 +34,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model, size = 12 }) => {
   if (model.includes('llava')) return <LLaVA.Avatar size={size} />;
   if (model.includes('gemini')) return <Gemini.Avatar size={size} />;
   if (model.includes('gemma')) return <Gemma.Avatar size={size} />;
-  if (model.startsWith('qwen')) return <Tongyi.Avatar background={Tongyi.colorPrimary} size={size} />;
+  if (model.includes('qwen')) return <Tongyi.Avatar background={Tongyi.colorPrimary} size={size} />;
   if (model.includes('minmax')) return <Minimax.Avatar size={size} />;
   if (model.includes('moonshot')) return <Moonshot.Avatar size={size} />;
   if (model.includes('baichuan'))

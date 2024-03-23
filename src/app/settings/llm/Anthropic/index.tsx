@@ -1,9 +1,8 @@
 import { Anthropic, Claude } from '@lobehub/icons';
-import { Input, Divider } from 'antd';
+import { Input } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 
@@ -56,11 +55,10 @@ const AnthropicProvider = memo(() => {
       ]}
       provider={providerKey}
       title={
-        <Flexbox align={'center'} gap={8} horizontal>
-          <Anthropic.Text size={18} />
-          <Divider style={{ margin: '0 4px' }} type={'vertical'} />
-          <Claude.Combine size={24} type={'color'} />
-        </Flexbox>
+        <Anthropic.Text
+          color={theme.isDarkMode ? theme.colorText : Claude.colorPrimary}
+          size={18}
+        />
       }
     />
   );
