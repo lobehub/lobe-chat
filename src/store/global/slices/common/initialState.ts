@@ -1,3 +1,7 @@
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+
+import { PeerSyncStatus, SyncAwarenessState } from '@/types/sync';
+
 export enum SidebarTabKey {
   Chat = 'chat',
   Market = 'market',
@@ -5,9 +9,11 @@ export enum SidebarTabKey {
 }
 
 export enum SettingsTabs {
+  About = 'about',
   Agent = 'agent',
   Common = 'common',
   LLM = 'llm',
+  Sync = 'sync',
   TTS = 'tts',
 }
 
@@ -16,45 +22,21 @@ export interface Guide {
   topic?: boolean;
 }
 
-export interface GlobalPreference {
-  guide?: Guide;
-  inputHeight: number;
-  mobileShowTopic?: boolean;
-  sessionGroupKeys: string[];
-  sessionsWidth: number;
-  showChatSideBar?: boolean;
-  showSessionPanel?: boolean;
-  showSystemRole?: boolean;
-  /**
-   * whether to use cmd + enter to send message
-   */
-  useCmdEnterToSend?: boolean;
-}
-
 export interface GlobalCommonState {
   hasNewVersion?: boolean;
+  isMobile?: boolean;
   latestVersion?: string;
-  /**
-   *  用户偏好的 UI 状态
-   *  @localStorage
-   */
-  preference: GlobalPreference;
-  settingsTab: SettingsTabs;
+  router?: AppRouterInstance;
   sidebarKey: SidebarTabKey;
+  syncAwareness: SyncAwarenessState[];
+  syncEnabled: boolean;
+  syncStatus: PeerSyncStatus;
 }
 
 export const initialCommonState: GlobalCommonState = {
-  preference: {
-    guide: {},
-    inputHeight: 200,
-    mobileShowTopic: false,
-    sessionGroupKeys: ['pinned', 'sessionList'],
-    sessionsWidth: 320,
-    showChatSideBar: true,
-    showSessionPanel: true,
-    showSystemRole: false,
-    useCmdEnterToSend: false,
-  },
-  settingsTab: SettingsTabs.Common,
+  isMobile: false,
   sidebarKey: SidebarTabKey.Chat,
+  syncAwareness: [],
+  syncEnabled: false,
+  syncStatus: PeerSyncStatus.Disabled,
 };

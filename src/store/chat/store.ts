@@ -1,18 +1,16 @@
-import { PersistOptions, devtools, persist } from 'zustand/middleware';
+import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { createHyperStorage } from '@/store/middleware/createHyperStorage';
 import { isDev } from '@/utils/env';
-import { isInStandaloneMode } from '@/utils/matchMedia';
-import { isMobileScreen } from '@/utils/screen';
 
 import { ChatStoreState, initialState } from './initialState';
 import { ChatEnhanceAction, chatEnhance } from './slices/enchance/action';
 import { ChatMessageAction, chatMessage } from './slices/message/action';
+import { ChatPluginAction, chatPlugin } from './slices/plugin/action';
 import { ShareAction, chatShare } from './slices/share/action';
-import { ChatPluginAction, chatPlugin } from './slices/tool/action';
+import { ChatToolAction, chatToolSlice } from './slices/tool/action';
 import { ChatTopicAction, chatTopic } from './slices/topic/action';
 
 export interface ChatStoreAction
@@ -20,7 +18,8 @@ export interface ChatStoreAction
     ChatTopicAction,
     ShareAction,
     ChatEnhanceAction,
-    ChatPluginAction {}
+    ChatPluginAction,
+    ChatToolAction {}
 
 export type ChatStore = ChatStoreAction & ChatStoreState;
 
@@ -33,45 +32,17 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   ...chatTopic(...params),
   ...chatShare(...params),
   ...chatEnhance(...params),
+  ...chatToolSlice(...params),
   ...chatPlugin(...params),
 });
-
-const persistOptions: PersistOptions<ChatStore> = {
-  name: 'LobeChat_Chat',
-
-  // 手动控制 Hydration ，避免 ssr 报错
-  skipHydration: true,
-
-  storage: createHyperStorage(() => {
-    const isMobileAndPWA = isMobileScreen() && isInStandaloneMode();
-    const selectors = [{ activeTopicId: 'topic' }];
-
-    if (isMobileAndPWA)
-      return {
-        localStorage: {
-          selectors,
-        },
-      };
-
-    return {
-      localStorage: false,
-      url: {
-        mode: 'hash',
-        selectors,
-      },
-    };
-  }),
-  version: 0,
-};
 
 //  ===============  实装 useStore ============ //
 
 export const useChatStore = createWithEqualityFn<ChatStore>()(
-  persist(
+  subscribeWithSelector(
     devtools(createStore, {
       name: 'LobeChat_Chat' + (isDev ? '_DEV' : ''),
     }),
-    persistOptions,
   ),
   shallow,
 );

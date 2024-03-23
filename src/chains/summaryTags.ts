@@ -1,7 +1,7 @@
 import { globalHelpers } from '@/store/global/helpers';
-import { OpenAIChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload } from '@/types/openai/chat';
 
-export const chainSummaryTags = (content: string): Partial<OpenAIChatStreamPayload> => ({
+export const chainSummaryTags = (content: string): Partial<ChatStreamPayload> => ({
   messages: [
     {
       content:

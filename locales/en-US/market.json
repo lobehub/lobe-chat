@@ -1,5 +1,7 @@
 {
   "addAgent": "Add Agent",
+  "addAgentAndConverse": "Add Agent and Converse",
+  "addAgentSuccess": "Successfully Added",
   "guide": {
     "func1": {
       "desc1": "Enter the settings page you want to submit to the assistant by clicking on the settings icon in the upper right corner of the chat window.",

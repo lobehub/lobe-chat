@@ -5,7 +5,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 const FullscreenLoading = memo<{ title?: string }>(({ title }) => {
   return (
-    <Flexbox height={'100%'} width={'100%'}>
+    <Flexbox height={'100%'} style={{ userSelect: 'none' }} width={'100%'}>
       <Center flex={1} gap={12} width={'100%'}>
         <Logo extra={'Chat'} size={48} type={'combine'} />
         <Center gap={16} horizontal>

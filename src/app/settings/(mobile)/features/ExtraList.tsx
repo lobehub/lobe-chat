@@ -1,21 +1,23 @@
 import { Upload } from 'antd';
 import { useResponsive } from 'antd-style';
-import { Feather, FileClock, HardDriveDownload, HardDriveUpload, Heart } from 'lucide-react';
+import { Feather, FileClock, HardDriveDownload, HardDriveUpload } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ABOUT, CHANGELOG, FEEDBACK } from '@/const/url';
+import { CHANGELOG, FEEDBACK } from '@/const/url';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { configService } from '@/services/config';
-import { useGlobalStore } from '@/store/global';
+import { SettingsTabs } from '@/store/global/initialState';
 
-import Item from '../../features/SideBar/Item';
+import Item from '../../features/SettingList/Item';
 
-const ExtraList = memo(() => {
+interface ExtraListProps {
+  activeTab?: SettingsTabs;
+}
+const ExtraList = memo<ExtraListProps>(({ activeTab }) => {
   const { t } = useTranslation('common');
 
   const { importConfig } = useImportConfig();
-  const tab = useGlobalStore((s) => s.settingsTab);
   const { mobile } = useResponsive();
   const items = [
     {
@@ -36,12 +38,6 @@ const ExtraList = memo(() => {
       onClick: () => window.open(CHANGELOG, '__blank'),
       value: 'changelog',
     },
-    {
-      icon: Heart,
-      label: t('about'),
-      onClick: () => window.open(ABOUT, '__blank'),
-      value: 'about',
-    },
   ];
 
   return (
@@ -59,7 +55,7 @@ const ExtraList = memo(() => {
       </Upload>
       {items.map(({ value, icon, label, onClick }) => (
         <div key={value} onClick={onClick}>
-          <Item active={mobile ? false : tab === value} icon={icon} label={label} />
+          <Item active={mobile ? false : activeTab === value} icon={icon} label={label} />
         </div>
       ))}
     </>

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
-import { SettingsTabs, SidebarTabKey } from '@/store/global/slices/common/initialState';
+import { SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
@@ -22,12 +22,11 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
       onClick={() => {
         if (isInbox) {
           useGlobalStore.setState({
-            settingsTab: SettingsTabs.Agent,
             sidebarKey: SidebarTabKey.Setting,
           });
           router.push('/settings/agent');
         } else {
-          router.push(pathString('/chat/settings', { hash: location.hash }));
+          router.push(pathString('/chat/settings', { search: location.search }));
         }
       }}
       size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}

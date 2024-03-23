@@ -1,11 +1,13 @@
 import { createStyles } from 'antd-style';
 
+import { imageUrl } from '@/const/url';
+
 export const useStyles = createStyles(({ css, token, stylish, cx }, withBackground: boolean) => ({
   background: css`
     padding: 24px;
 
     background-color: ${token.colorBgLayout};
-    background-image: url('/images/screenshot_background.webp');
+    background-image: url(${imageUrl('screenshot_background.webp')});
     background-position: center;
     background-size: 120% 120%;
   `,
@@ -31,14 +33,13 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
     background: ${token.colorBgContainer};
     border-bottom: 1px solid ${token.colorBorder};
   `,
-  markdown: stylish.markdownInChat,
   preview: cx(
     stylish.noScrollbar,
     css`
       overflow: hidden scroll;
 
       width: 100%;
-      max-height: 40vh;
+      max-height: 40dvh;
 
       background: ${token.colorBgLayout};
       border: 1px solid ${token.colorBorder};
@@ -46,7 +47,6 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
 
       * {
         pointer-events: none;
-        overflow: hidden;
 
         ::-webkit-scrollbar {
           width: 0 !important;

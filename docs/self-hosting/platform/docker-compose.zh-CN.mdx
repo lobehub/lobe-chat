@@ -1,0 +1,119 @@
+# Docker Compose 部署指引
+
+<div style={{display:"flex", gap: 4}}>
+  [![][docker-release-shield]][docker-release-link]
+
+  [![][docker-size-shield]][docker-size-link]
+
+  [![][docker-pulls-shield]][docker-pulls-link]
+</div>
+
+我们提供了 [Docker 镜像][docker-release-link]，供你在自己的私有设备上部署 LobeChat 服务。
+
+<Steps>
+  ### 安装 Docker 容器环境
+
+  （如果已安装，请跳过此步）
+
+  <Tabs items={['Ubuntu', 'CentOS']}>
+    <Tabs.Tab>
+      ```fish
+      $ apt install docker.io
+      ```
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+      ```fish
+      $ yum install docker
+      ```
+    </Tabs.Tab>
+  </Tabs>
+
+  ### 运行 Docker Compose 部署指令
+
+  使用 `docker-compose` 时配置文件如下:
+
+  ```yml
+  version: '3.8'
+
+  services:
+    lobe-chat:
+      image: lobehub/lobe-chat
+      container_name: lobe-chat
+      restart: always
+      ports:
+        - '3210:3210'
+      environment:
+        OPENAI_API_KEY: sk-xxxx
+        OPENAI_PROXY_URL: https://api-proxy.com/v1
+        ACCESS_CODE: lobe66
+  ```
+
+  运行以下命令启动 Lobe Chat 服务：
+
+  ```bash
+  $ docker-compose up -d
+  ```
+
+  ### Crontab 自动更新脚本（可选）
+
+  类似地，你可以使用以下脚本来自动更新 Lobe Chat，使用 `Docker Compose` 时，环境变量无需额外配置。
+
+  ```bash
+  #!/bin/bash
+  # auto-update-lobe-chat.sh
+
+  # 设置代理（可选）
+  export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+
+  # 拉取最新的镜像并将输出存储在变量中
+  output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+
+  # 检查拉取命令是否成功执行
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
+
+  # 检查输出中是否包含特定的字符串
+  echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+
+  # 如果镜像已经是最新的，则不执行任何操作
+  if [ $? -eq 0 ]; then
+    exit 0
+  fi
+
+  echo "Detected Lobe-Chat update"
+
+  # 删除旧的容器
+  echo "Removed: $(docker rm -f Lobe-Chat)"
+
+  # 也许需要先进入 `docker-compose.yml` 所在的目录
+  # cd /path/to/docker-compose-folder
+
+  # 运行新的容器
+  echo "Started: $(docker-compose up)"
+
+  # 打印更新的时间和版本
+  echo "Update time: $(date)"
+  echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+
+  # 清理不再使用的镜像
+  docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+  echo "Removed old images."
+  ```
+
+  此脚本亦可以在 Crontab 中使用，但请确认你的 Crontab 可以找到正确的 Docker 命令。建议使用绝对路径。
+
+  配置 Crontab，每 5 分钟执行一次脚本：
+
+  ```bash
+  */5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
+  ```
+</Steps>
+
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
+[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square

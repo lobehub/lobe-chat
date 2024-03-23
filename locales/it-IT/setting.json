@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Informazioni"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Attivando l'invio dei dati di telemetria, ci aiuti a migliorare complessivamente l'esperienza utente di LobeChat",
+      "title": "Invio dati anonimi"
+    },
+    "title": "Analisi"
+  },
   "danger": {
     "clear": {
       "action": "Cancella subito",
@@ -21,7 +31,29 @@
     "sessionWithName": "Impostazioni della sessione · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "endpoint": {
+        "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
+        "placeholder": "https://api.anthropic.com",
+        "title": "Indirizzo dell'API proxy"
+      },
+      "title": "Anthropic",
+      "token": {
+        "desc": "Inserisci la chiave API di Anthropic",
+        "placeholder": "Chiave API di Anthropic",
+        "title": "Chiave API"
+      }
+    },
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Versione dell'API di Azure, nel formato YYYY-MM-DD, consulta la [versione più recente](https://learn.microsoft.com/it-it/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Ottieni elenco",
+        "title": "Versione dell'API di Azure"
+      },
+      "deployments": {
+        "desc": "Inserisci i tuoi modelli di distribuzione utilizzando la sintassi id=nome (ad esempio, se il nome del modello e della distribuzione sono gli stessi, è possibile inserire solo il nome del modello). Per più modelli, separali con virgola (,)",
+        "title": "Elenco dei modelli di distribuzione di Azure"
+      },
       "endpoint": {
         "desc": "Puoi trovarlo nella sezione 'Chiavi e endpoint' quando controlli le risorse su Azure Portal",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +70,80 @@
         "title": "Chiave API"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Inserisci Aws Access Key Id",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "Verifica se AccessKeyId / SecretAccessKey sono stati inseriti correttamente"
+      },
+      "region": {
+        "desc": "Inserisci Aws Region",
+        "placeholder": "Aws Region",
+        "title": "Aws Region"
+      },
+      "secretAccessKey": {
+        "desc": "Inserisci Aws Secret Access Key",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Inserisci la chiave API da Google",
+        "placeholder": "Chiave API Google",
+        "title": "Chiave API"
+      }
+    },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Inserisci la chiave API da Groq",
+        "placeholder": "Chiave API Groq",
+        "title": "Chiave API"
+      }
+    },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Inserisci la chiave API da Mistral AI",
+        "placeholder": "Chiave API Mistral AI",
+        "title": "Chiave API"
+      }
+    },
+    "Moonshot": {
+      "title": "Lato Oscuro della Luna",
+      "token": {
+        "desc": "Inserisci la chiave API da Moonshot AI",
+        "placeholder": "Chiave API Moonshot AI",
+        "title": "Chiave API"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"
+      },
+      "customModelName": {
+        "desc": "Aggiungi un modello personalizzato, separando i modelli multipli con una virgola (,)",
+        "placeholder": "vicuna,llama,codellama,llama2:13b-text",
+        "title": "Nome del modello personalizzato"
+      },
+      "endpoint": {
+        "desc": "Inserisci l'indirizzo del proxy dell'interfaccia Ollama, lascialo vuoto se non è stato specificato localmente",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "Indirizzo del proxy dell'interfaccia"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Versione dell'API di Azure, nel formato YYYY-MM-DD, consulta [ultima versione](https://learn.microsoft.com/it-it/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Ottieni elenco",
         "title": "Versione API di Azure"
-      },
-      "check": {
-        "button": "Controlla",
-        "desc": "Verifica se la chiave API e l'indirizzo del proxy sono compilati correttamente",
-        "pass": "Controllo superato",
-        "title": "Controllo di connettività"
       },
       "customModelName": {
         "desc": "Aggiungi modelli personalizzati, separati da virgola (,)",
@@ -82,7 +177,53 @@
         "title": "Usa Azure OpenAI"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"
+      },
+      "customModelName": {
+        "desc": "Aggiungi un modello personalizzato, separando più modelli con virgola (,)",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Nome del modello personalizzato"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "Inserisci la chiave API da OpenRouter AI",
+        "placeholder": "Chiave API OpenRouter AI",
+        "title": "Chiave API"
+      }
+    },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Inserisci la chiave API di Perplexity AI",
+        "placeholder": "Chiave API di Perplexity AI",
+        "title": "Chiave API"
+      }
+    },
+    "Zhipu": {
+      "title": "智谱",
+      "token": {
+        "desc": "Inserisci la chiave API da Zhipu",
+        "placeholder": "Chiave API Zhipu",
+        "title": "Chiave API"
+      }
+    },
+    "checker": {
+      "button": "Verifica",
+      "desc": "Verifica se la chiave API e l'indirizzo del proxy sono stati inseriti correttamente",
+      "pass": "Verifica superata",
+      "title": "Verifica di connettività"
+    },
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama sta scaricando questo modello. Si prega di non chiudere questa pagina. Il download verrà ripreso dal punto in cui è stato interrotto in caso di riavvio.",
+      "remainingTime": "Tempo rimanente",
+      "speed": "Velocità di download",
+      "title": "Download del modello {{model}} in corso"
+    }
   },
   "plugin": {
     "addTooltip": "Aggiungi plugin personalizzato",
@@ -209,6 +350,22 @@
       "placeholder": "Inserisci la password di accesso",
       "title": "Password di accesso"
     },
+    "oauth": {
+      "info": {
+        "desc": "Accesso effettuato",
+        "title": "Informazioni account"
+      },
+      "signin": {
+        "action": "Accedi",
+        "desc": "Accedi tramite SSO per sbloccare l'applicazione",
+        "title": "Accedi all'account"
+      },
+      "signout": {
+        "action": "Esci",
+        "confirm": "Confermi l'uscita?",
+        "success": "Disconnessione avvenuta con successo"
+      }
+    },
     "title": "Impostazioni di sistema"
   },
   "settingTTS": {
@@ -283,7 +440,46 @@
     "placeholder": "Inserisci l'identificatore dell'assistente, deve essere univoco, ad esempio sviluppo-web",
     "tooltips": "Condividi sul mercato degli assistenti"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Aggiungi un nome per identificare il dispositivo",
+        "placeholder": "Inserisci il nome del dispositivo",
+        "title": "Nome del dispositivo"
+      },
+      "title": "Informazioni sul dispositivo",
+      "unknownBrowser": "Browser sconosciuto",
+      "unknownOS": "Sistema operativo sconosciuto"
+    },
+    "tab": {
+      "experiment": "Esperimento",
+      "sync": "Sincronizzazione cloud"
+    },
+    "warning": {
+      "message": "Questa funzione è attualmente sperimentale e potrebbe comportare comportamenti imprevisti o instabili. In caso di problemi, invia tempestivamente un feedback.",
+      "webrtc": {
+        "channelName": {
+          "desc": "WebRTC utilizzerà questo nome per creare un canale di sincronizzazione. Assicurati che il nome del canale sia univoco",
+          "placeholder": "Inserisci il nome del canale di sincronizzazione",
+          "shuffle": "Genera casuale",
+          "title": "Nome del canale di sincronizzazione"
+        },
+        "channelPassword": {
+          "desc": "Aggiungi una password per garantire la privacy del canale. Solo con la password corretta i dispositivi potranno unirsi al canale",
+          "placeholder": "Inserisci la password del canale di sincronizzazione",
+          "title": "Password del canale di sincronizzazione"
+        },
+        "desc": "Comunicazione dati in tempo reale e punto-punto. I dispositivi devono essere online contemporaneamente per sincronizzarsi",
+        "enabled": {
+          "invalid": "Inserisci prima il nome del canale di sincronizzazione per abilitare",
+          "title": "Abilita la sincronizzazione"
+        },
+        "title": "Sincronizzazione WebRTC"
+      }
+    }
+  },
   "tab": {
+    "about": "Informazioni",
     "agent": "Assistente predefinito",
     "common": "Impostazioni comuni",
     "llm": "Modello linguistico",
@@ -293,6 +489,7 @@
     "builtins": {
       "groupName": "Predefiniti"
     },
+    "disabled": "Il modello attuale non supporta le chiamate di funzione e non è possibile utilizzare il plugin",
     "plugins": {
       "enabled": "Abilitato {{num}}",
       "groupName": "Plugin",

@@ -1,0 +1,91 @@
+# Configure Auth0 Identity Verification Service
+
+<Steps>
+  ### Create Auth0 Application
+
+  Register and log in to [Auth0][auth0-client-page], click on the "Applications" in the left navigation bar to switch to the application management interface, and click "Create Application" in the upper right corner to create an application.
+
+  <Image alt="Create Auth0 Application S1" inStep src="hhttps://github.com/CloudPassenger/lobe-chat/assets/30863298/1b405347-f4c3-4c55-82f6-47116f2210d0" />
+
+  Fill in the application name you want to display to the organization users, choose any application type, and click "Create".
+
+  <Image alt="Create Auth0 Application S2" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/75c92f85-3ad3-4473-a9c6-e667e28d428d" />
+
+  After successful creation, click on the corresponding application to enter the application details page, switch to the "Settings" tab, and you can see the corresponding configuration information.
+
+  <Image alt="Create Auth0 Application S3" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/a1ed996b-95ef-4b7d-a50d-b4666eccfecb" />
+
+  In the application configuration page, you also need to configure Allowed Callback URLs, where you should fill in:
+
+  ```bash
+  http(s)://your-domain/api/auth/callback/auth0
+  ```
+
+  <Image alt="Create Auth0 Application S4" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b" />
+
+  <Callout type={'important'}>
+    You can fill in or modify Allowed Callback URLs after deployment, but make sure the filled URL is
+    consistent with the deployed URL.
+  </Callout>
+
+  ### Add Users
+
+  Click on the "Users Management" in the left navigation bar to enter the user management interface, where you can create users for your organization to log in to LobeChat.
+
+  <Image alt="Add Users" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/3b8127ab-dc4f-4ff9-a4cb-dec3ef0295cc" />
+
+  ### Configure Environment Variables
+
+  When deploying LobeChat, you need to configure the following environment variables:
+
+  | Environment Variable  | Type     | Description                                                                                                                                                                                         |
+  | --------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `ENABLE_OAUTH_SSO`    | Required | Enable single sign-on (SSO) for LobeChat. Set to `1` to enable single sign-on.                                                                                                                      |
+  | `NEXTAUTH_SECRET`     | Required | Key used to encrypt Auth.js session tokens. You can generate a key using the following command: `openssl rand -base64 32`                                                                           |
+  | `SSO_PROVIDERS`       | Optional | Select the single sign-on provider for LoboChat. Use `auth0` for Auth0.                                                                                                                             |
+  | `AUTH0_CLIENT_ID`     | Required | Client ID of the Auth0 application                                                                                                                                                                  |
+  | `AUTH0_CLIENT_SECRET` | Required | Client Secret of the Auth0 application                                                                                                                                                              |
+  | `AUTH0_ISSUER`        | Required | Domain of the Auth0 application, `https://example.auth0.com`                                                                                                                                        |
+  | `ACCESS_CODE`         | Required | Add a password to access this service. You can set a sufficiently long random password to "disable" access code authorization.                                                                      |
+  | `NEXTAUTH_URL`        | Optional | The URL is used to specify the callback address for the execution of OAuth authentication in Auth.js. It needs to be set only when the default address is incorrect. `https://example.com/api/auth` |
+
+  <Callout type={'tip'}>
+    You can refer to the related variable details at [📘Environment Variables](/en/self-hosting/environment-variable#auth0).
+  </Callout>
+</Steps>
+
+<Callout>
+  After successful deployment, users will be able to authenticate and use LobeChat using the users
+  configured in Auth0.
+</Callout>
+
+## Advanced Configuration
+
+### Connecting to an Existing Single Sign-On Service
+
+If your enterprise or organization already has a unified identity authentication infrastructure, you can connect to an existing single sign-on service in Applications -> SSO Integrations.
+
+Auth0 supports single sign-on services such as Azure Active Directory, Slack, Google Workspace, Office 365, Zoom, and more. For a detailed list of supported services, please refer to [this link][auth0-sso-integrations].
+
+<Image alt="Connecting to an Existing Single Sign-On Service" src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/32650f4f-d0b0-4843-b26d-d35bad11d8a3" />
+
+### Configuring Social Login
+
+If your enterprise or organization needs to support external user logins, you can configure social login services in Authentication -> Social.
+
+<Image alt="Configuring Social Login" src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/7b6f6a6c-2686-49d8-9dbd-0516053f1efa" />
+
+<Callout type={'warning'}>
+  Configuring social login services by default allows anyone to authenticate, which may lead to
+  LobeChat being abused by external users.
+</Callout>
+
+<Callout>
+  If you need to restrict login users, be sure to configure a **blocking policy**: After enabling
+  the social login option, refer to [this article][auth0-login-actions-manual] to create an Action
+  to set up a blocking/allow list.
+</Callout>
+
+[auth0-client-page]: https://manage.auth0.com/dashboard
+[auth0-login-actions-manual]: https://auth0.com/blog/permit-or-deny-login-requests-using-auth0-actions/
+[auth0-sso-integrations]: https://marketplace.auth0.com/features/sso-integrations

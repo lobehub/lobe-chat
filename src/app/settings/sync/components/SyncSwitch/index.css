@@ -1,0 +1,237 @@
+/* stylelint-disable */
+.wrapper {
+  --hue: 223;
+  --off-hue: 3;
+  --on-hue1: 123;
+  --on-hue2: 168;
+  --fg: hsl(var(--hue), 10%, 90%);
+  --primary: hsl(var(--hue), 90%, 50%);
+  --trans-dur: 0.6s;
+  --trans-timing: cubic-bezier(0.65, 0, 0.35, 1);
+
+  font-size: 14px;
+}
+
+.switch,
+.switch__input {
+  -webkit-tap-highlight-color: #0000;
+}
+
+.switch {
+  position: relative;
+
+  display: block;
+
+  width: 5em;
+  height: 3em;
+  margin: auto;
+}
+
+.switch__base-outer,
+.switch__base-inner {
+  position: absolute;
+  display: block;
+}
+
+.switch__base-outer {
+  top: 0.125em;
+  left: 0.125em;
+
+  width: 4.75em;
+  height: 2.75em;
+
+  border-radius: 1.25em;
+  box-shadow:
+    -0.125em -0.125em 0.25em hsl(var(--hue), 10%, 30%),
+    0.125em 0.125em 0.125em hsl(var(--hue), 10%, 30%) inset,
+    0.125em 0.125em 0.25em hsl(0deg, 0%, 0%),
+    -0.125em -0.125em 0.125em hsl(var(--hue), 10%, 5%) inset;
+}
+
+.switch__base-inner {
+  top: 0.375em;
+  left: 0.375em;
+
+  width: 4.25em;
+  height: 2.25em;
+
+  border-radius: 1.125em;
+  box-shadow:
+    -0.25em -0.25em 0.25em hsl(var(--hue), 10%, 30%) inset,
+    0.0625em 0.0625em 0.125em hsla(var(--hue), 10%, 30%),
+    0.125em 0.25em 0.25em hsl(var(--hue), 10%, 5%) inset,
+    -0.0625em -0.0625em 0.125em hsla(var(--hue), 10%, 5%);
+}
+
+.switch__base-neon {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  overflow: visible;
+  display: block;
+
+  width: 100%;
+  height: auto;
+}
+
+.switch__base-neon path {
+  stroke-dasharray: 0 104.26 0;
+  transition: stroke-dasharray var(--trans-dur) var(--trans-timing);
+}
+
+.switch__input {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  outline: transparent;
+}
+
+.switch__input::before {
+  content: '';
+
+  position: absolute;
+  inset: -0.125em;
+
+  display: block;
+
+  border-radius: 0.125em;
+  box-shadow: 0 0 0 0.125em hsla(var(--hue), 90%, 50%, 0%);
+
+  transition: box-shadow 0.15s linear;
+}
+
+.switch__input:focus-visible::before {
+  box-shadow: 0 0 0 0.125em var(--primary);
+}
+
+.switch__knob,
+.switch__knob-container {
+  position: absolute;
+  display: block;
+  border-radius: 1em;
+}
+
+.switch__knob {
+  width: 2em;
+  height: 2em;
+
+  background-color: hsl(var(--hue), 10%, 15%);
+  background-image: radial-gradient(
+      88% 88% at 50% 50%,
+      hsl(var(--hue), 10%, 20%) 47%,
+      hsla(var(--hue), 10%, 20%, 0%) 50%
+    ),
+    radial-gradient(
+      88% 88% at 47% 47%,
+      hsl(var(--hue), 10%, 85%) 45%,
+      hsla(var(--hue), 10%, 85%, 0%) 50%
+    ),
+    radial-gradient(
+      65% 70% at 40% 60%,
+      hsl(var(--hue), 10%, 20%) 46%,
+      hsla(var(--hue), 10%, 20%, 0%) 50%
+    );
+  box-shadow:
+    -0.0625em -0.0625em 0.0625em hsl(var(--hue), 10%, 15%) inset,
+    -0.125em -0.125em 0.0625em hsl(var(--hue), 10%, 5%) inset,
+    0.75em 0.25em 0.125em hsla(0deg, 0%, 0%, 80%);
+
+  transition: transform var(--trans-dur) var(--trans-timing);
+}
+
+.switch__knob-container {
+  top: 0.5em;
+  left: 0.5em;
+
+  overflow: hidden;
+
+  width: 4em;
+  height: 2em;
+}
+
+.switch__knob-neon {
+  display: block;
+  width: 2em;
+  height: auto;
+}
+
+.switch__knob-neon circle {
+  opacity: 0;
+  stroke-dasharray: 0 90.32 0 54.19;
+  transition:
+    opacity var(--trans-dur) steps(1, end),
+    stroke-dasharray var(--trans-dur) var(--trans-timing);
+}
+
+.switch__knob-shadow {
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
+
+  display: block;
+
+  width: 2em;
+  height: 2em;
+
+  border-radius: 50%;
+  box-shadow: 0.125em 0.125em 0.125em hsla(0deg, 0%, 0%, 90%);
+
+  transition: transform var(--trans-dur) var(--trans-timing);
+}
+
+.switch__led {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: block;
+
+  width: 0.25em;
+  height: 0.25em;
+
+  background-color: hsl(var(--off-hue), 90%, 70%);
+  border-radius: 50%;
+  box-shadow:
+    0 -0.0625em 0.0625em hsl(var(--off-hue), 90%, 40%) inset,
+    0 0 0.125em hsla(var(--off-hue), 90%, 70%, 30%),
+    0 0 0.125em hsla(var(--off-hue), 90%, 70%, 30%),
+    0.125em 0.125em 0.125em hsla(0deg, 0%, 0%, 50%);
+
+  transition:
+    background-color var(--trans-dur) var(--trans-timing),
+    box-shadow var(--trans-dur) var(--trans-timing);
+}
+
+.switch__text {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+}
+
+.switch__input:checked ~ .switch__led {
+  background-color: hsl(var(--on-hue1), 90%, 70%);
+  box-shadow:
+    0 -0.0625em 0.0625em hsl(var(--on-hue1), 90%, 40%) inset,
+    0 -0.125em 0.125em hsla(var(--on-hue1), 90%, 70%, 30%),
+    0 0.125em 0.125em hsla(var(--on-hue1), 90%, 70%, 30%),
+    0.125em 0.125em 0.125em hsla(0deg, 0%, 0%, 50%);
+}
+
+.switch__input:checked ~ .switch__base-neon path {
+  stroke-dasharray: 52.13 0 52.13;
+}
+
+.switch__input:checked ~ .switch__knob-shadow,
+.switch__input:checked ~ .switch__knob-container .switch__knob {
+  transform: translateX(100%);
+}
+
+.switch__input:checked ~ .switch__knob-container .switch__knob-neon circle {
+  opacity: 1;
+  stroke-dasharray: 45.16 0 45.16 54.19;
+  transition-timing-function: steps(1, start), var(--trans-timing);
+}

@@ -8,7 +8,7 @@ export default ({ prefixCls }: { prefixCls: string }) => css`
     position: relative;
     overscroll-behavior: none;
     height: 100% !important;
-    min-height: 100% !important;
+    max-height: 100dvh !important;
 
     ::-webkit-scrollbar {
       display: none;

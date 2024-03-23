@@ -1,8 +1,7 @@
-import { SiOpenai } from '@icons-pack/react-simple-icons';
-import { Tag } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import ModelTag from '@/components/ModelTag';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
@@ -30,7 +29,7 @@ export const AssistantMessageExtra: RenderMessageExtra = memo<ChatMessage>(
       <Flexbox gap={8} style={{ marginTop: 8 }}>
         {showModelTag && (
           <div>
-            <Tag icon={<SiOpenai size={'1em'} />}>{extra?.fromModel as string}</Tag>
+            <ModelTag model={extra?.fromModel as string} />
           </div>
         )}
         <>

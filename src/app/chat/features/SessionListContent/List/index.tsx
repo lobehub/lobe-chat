@@ -4,7 +4,8 @@ import { memo } from 'react';
 import LazyLoad from 'react-lazy-load';
 
 import { SESSION_CHAT_URL } from '@/const/url';
-import { useSessionHydrated, useSessionStore } from '@/store/session';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession } from '@/types/session';
 
 import AddButton from './AddButton';
@@ -19,11 +20,16 @@ const useStyles = createStyles(
 
 interface SessionListProps {
   dataSource: LobeAgentSession[];
+  groupId?: string;
+  showAddButton?: boolean;
 }
-const SessionList = memo<SessionListProps>(({ dataSource }) => {
-  const [activeSession, switchSession] = useSessionStore((s) => [s.activeSession, s.switchSession]);
+const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
+  const [activeSession, switchSession, isInit] = useSessionStore((s) => [
+    s.activeSession,
+    s.switchSession,
+    sessionSelectors.isSessionListInit(s),
+  ]);
   const { styles } = useStyles();
-  const isInit = useSessionHydrated();
 
   const { mobile } = useResponsive();
 
@@ -46,7 +52,7 @@ const SessionList = memo<SessionListProps>(({ dataSource }) => {
       </LazyLoad>
     ))
   ) : (
-    <AddButton />
+    showAddButton && <AddButton groupId={groupId} />
   );
 });
 

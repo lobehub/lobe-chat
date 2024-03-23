@@ -18,7 +18,13 @@ const useStyles = createStyles(({ css, prefixCls, token, responsive }) => ({
       &:hover {
         color: ${token.colorText} !important;
         background: ${token.colorFillTertiary};
+        .${prefixCls}-collapse-extra {
+          display: block;
+        }
       }
+    }
+    .${prefixCls}-collapse-extra {
+      display: none;
     }
     .${prefixCls}-collapse-content {
       border-radius: 0 !important;

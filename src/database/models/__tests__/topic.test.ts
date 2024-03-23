@@ -25,6 +25,7 @@ describe('TopicModel', () => {
     // Clean up the database after each test
     await TopicModel.clearTable();
   });
+
   describe('create', () => {
     it('should create a topic record', async () => {
       const result = await TopicModel.create(topicData);
@@ -395,7 +396,7 @@ describe('TopicModel', () => {
     it('should fail if the database transaction fails', async () => {
       // 强制数据库事务失败，例如通过在复制过程中抛出异常
       const dbTransactionFailedError = new Error('DB transaction failed');
-      vi.spyOn(TopicModel['db'], 'transaction').mockImplementation((async () => {
+      const spyOn = vi.spyOn(TopicModel['db'], 'transaction').mockImplementation((async () => {
         throw dbTransactionFailedError;
       }) as any);
 
@@ -403,6 +404,7 @@ describe('TopicModel', () => {
       await expect(TopicModel.duplicateTopic(originalTopic.id)).rejects.toThrow(
         dbTransactionFailedError,
       );
+      spyOn.mockRestore();
     });
 
     it('should not create partial duplicates if the process fails at some point', async () => {
@@ -420,6 +422,79 @@ describe('TopicModel', () => {
 
       const messages = await MessageModel.queryBySessionId(originalTopic.sessionId!);
       expect(messages).toHaveLength(originalMessages.length); // 只有原始消息
+    });
+  });
+
+  describe('clearTable', () => {
+    it('should clear the table', async () => {
+      // Create a topic to ensure the table is not empty
+      await TopicModel.create(topicData);
+
+      // Clear the table
+      await TopicModel.clearTable();
+
+      // Verify the table is empty
+      const topics = await TopicModel.queryAll();
+      expect(topics).toHaveLength(0);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a topic', async () => {
+      // Create a topic
+      const createdTopic = await TopicModel.create(topicData);
+
+      // Update the topic
+      const newTitle = 'Updated Title';
+      await TopicModel.update(createdTopic.id, { title: newTitle });
+
+      // Verify the topic is updated
+      const updatedTopic = await TopicModel.findById(createdTopic.id);
+      expect(updatedTopic.title).toBe(newTitle);
+    });
+  });
+
+  describe('batchDelete', () => {
+    it('should batch delete topics', async () => {
+      // Create multiple topics
+      const topic1 = await TopicModel.create(topicData);
+      const topic2 = await TopicModel.create(topicData);
+
+      await TopicModel.create(topicData);
+
+      const ids = [topic1.id, topic2.id];
+      // Batch delete the topics
+      await TopicModel.batchDelete(ids);
+
+      expect(await TopicModel.table.count()).toEqual(1);
+    });
+  });
+
+  describe('queryAll', () => {
+    it('should query all topics', async () => {
+      // Create multiple topics
+      await TopicModel.batchCreate([topicData, topicData]);
+
+      // Query all topics
+      const topics = await TopicModel.queryAll();
+
+      // Verify all topics are queried
+      expect(topics).toHaveLength(2);
+    });
+  });
+
+  describe('queryByKeyword', () => {
+    it('should query topics by keyword', async () => {
+      // Create a topic with a unique title
+      const uniqueTitle = 'Unique Title';
+      await TopicModel.create({ ...topicData, title: uniqueTitle });
+
+      // Query topics by the unique title
+      const topics = await TopicModel.queryByKeyword(uniqueTitle);
+
+      // Verify the correct topic is queried
+      expect(topics).toHaveLength(1);
+      expect(topics[0].title).toBe(uniqueTitle);
     });
   });
 });

@@ -9,6 +9,7 @@ export default defineConfig({
   test: {
     alias: {
       '@': resolve(__dirname, './src'),
+      '~test-utils': resolve(__dirname, './tests/utils.tsx'),
     },
     coverage: {
       all: false,

@@ -4,33 +4,39 @@ import { createStyles } from 'antd-style';
 import {
   ChevronUp,
   CornerDownLeft,
-  Loader2,
   LucideCheck,
   LucideChevronDown,
   LucideCommand,
   LucidePlus,
 } from 'lucide-react';
+import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import StopLoadingIcon from '@/components/StopLoading';
 import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { modelProviderSelectors, preferenceSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { isMacOS } from '@/utils/platform';
 
+import DragUpload from './DragUpload';
 import { LocalFiles } from './LocalFiles';
 
-const useStyles = createStyles(({ css, prefixCls }) => {
+const useStyles = createStyles(({ css, prefixCls, token }) => {
   return {
     arrow: css`
       &.${prefixCls}-btn.${prefixCls}-btn-icon-only {
         width: 28px;
       }
+    `,
+    loadingButton: css`
+      display: flex;
+      align-items: center;
     `,
     overrideAntdIcon: css`
       .${prefixCls}-btn.${prefixCls}-btn-icon-only {
@@ -38,17 +44,23 @@ const useStyles = createStyles(({ css, prefixCls }) => {
         align-items: center;
         justify-content: center;
       }
+
+      .${prefixCls}-btn.${prefixCls}-dropdown-trigger {
+        &::before {
+          background-color: ${rgba(token.colorBgLayout, 0.1)} !important;
+        }
+      }
     `,
   };
 });
 
 const isMac = isMacOS();
 
-const Footer = memo(() => {
+const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) => {
   const { t } = useTranslation('chat');
 
   const { theme, styles } = useStyles();
-  const canUpload = useSessionStore(agentSelectors.modelHasVisionAbility);
+
   const [loading, stopGenerateMessage] = useChatStore((s) => [
     !!s.chatLoadingId,
     s.stopGenerateMessage,
@@ -57,6 +69,10 @@ const Footer = memo(() => {
     preferenceSelectors.useCmdEnterToSend(s),
     s.updatePreference,
   ]);
+
+  const model = useSessionStore(agentSelectors.currentAgentModel);
+  const canUpload = useGlobalStore(modelProviderSelectors.modelEnabledUpload(model));
+
   const sendMessage = useSendMessage();
 
   const cmdEnter = (
@@ -87,7 +103,12 @@ const Footer = memo(() => {
       padding={'0 24px'}
     >
       <Flexbox align={'center'} gap={8} horizontal>
-        {canUpload && <LocalFiles />}
+        {canUpload && (
+          <>
+            <DragUpload />
+            <LocalFiles />
+          </>
+        )}
       </Flexbox>
       <Flexbox align={'center'} gap={8} horizontal>
         <Flexbox
@@ -104,12 +125,22 @@ const Footer = memo(() => {
         <SaveTopic />
         <Flexbox style={{ minWidth: 92 }}>
           {loading ? (
-            <Button icon={loading && <Icon icon={Loader2} spin />} onClick={stopGenerateMessage}>
+            <Button
+              className={styles.loadingButton}
+              icon={<StopLoadingIcon />}
+              onClick={stopGenerateMessage}
+            >
               {t('input.stop')}
             </Button>
           ) : (
             <Space.Compact>
-              <Button onClick={() => sendMessage()} type={'primary'}>
+              <Button
+                onClick={() => {
+                  sendMessage();
+                  setExpand?.(false);
+                }}
+                type={'primary'}
+              >
                 {t('input.send')}
               </Button>
               <Dropdown
@@ -148,6 +179,7 @@ const Footer = memo(() => {
                 trigger={['hover']}
               >
                 <Button
+                  aria-label={t('input.more')}
                   className={styles.arrow}
                   icon={<Icon icon={LucideChevronDown} />}
                   type={'primary'}

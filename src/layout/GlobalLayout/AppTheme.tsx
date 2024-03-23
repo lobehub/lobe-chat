@@ -9,6 +9,7 @@ import {
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
 import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { GlobalStyle } from '@/styles';
 import { setCookie } from '@/utils/cookie';
 
@@ -24,11 +25,11 @@ const AppTheme = memo<AppThemeProps>(
     // console.debug('server:appearance', defaultAppearance);
     // console.debug('server:primaryColor', defaultPrimaryColor);
     // console.debug('server:neutralColor', defaultNeutralColor);
-    const themeMode = useGlobalStore((s) => s.settings.themeMode);
+    const themeMode = useGlobalStore((s) => settingsSelectors.currentSettings(s).themeMode);
 
     const [primaryColor, neutralColor] = useGlobalStore((s) => [
-      s.settings.primaryColor,
-      s.settings.neutralColor,
+      settingsSelectors.currentSettings(s).primaryColor,
+      settingsSelectors.currentSettings(s).neutralColor,
     ]);
 
     useEffect(() => {

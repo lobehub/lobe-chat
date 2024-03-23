@@ -11,7 +11,7 @@ export const UserActionsBar: RenderAction = memo(({ onActionClick }) => {
 
   return (
     <ActionIconGroup
-      dropdownMenu={[edit, copy, regenerate, divider, tts, translate, divider, del]}
+      dropdownMenu={[edit, copy, divider, tts, translate, divider, regenerate, del]}
       items={[regenerate, edit]}
       onActionClick={onActionClick}
       type="ghost"

@@ -1,4 +1,7 @@
 {
+  "ModelSwitch": {
+    "title": "Modelli"
+  },
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare a chattare con me subito o andare a [impostazioni assistente](/chat/settings#session={{id}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
   "backToBottom": "Torna in fondo",
@@ -6,6 +9,7 @@
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
   "defaultAgent": "Assistente predefinito",
+  "defaultList": "Lista predefinita",
   "defaultSession": "Sessione predefinita",
   "duplicateTitle": "{{title}} Copia",
   "historyRange": "Intervallo cronologico",
@@ -15,6 +19,7 @@
     "title": "Chiacchierata casuale"
   },
   "input": {
+    "more": "Ulteriori",
     "onlyAdd": "Solo aggiungi messaggio",
     "send": "Invia",
     "sendWithCmdEnter": "Invia premendo {{meta}} + Invio",
@@ -34,7 +39,18 @@
   "roleAndArchive": "Ruolo e archivio",
   "searchAgentPlaceholder": "Cerca assistente e conversazioni...",
   "sendPlaceholder": "Inserisci il testo della chat...",
-  "sessionList": "Elenco sessioni",
+  "sessionGroup": {
+    "config": "Gestione gruppi",
+    "confirmRemoveGroupAlert": "Stai per rimuovere questo gruppo. Dopo la rimozione, gli assistenti di questo gruppo verranno spostati nella lista predefinita. Confermi l'operazione?",
+    "createGroup": "Aggiungi nuovo gruppo",
+    "createSuccess": "Creazione riuscita",
+    "inputPlaceholder": "Inserisci il nome del gruppo...",
+    "moveGroup": "Sposta nel gruppo",
+    "newGroup": "Nuovo gruppo",
+    "rename": "Rinomina gruppo",
+    "renameSuccess": "Rinominazione riuscita",
+    "tooLong": "Il nome del gruppo deve essere lungo 1-20 caratteri"
+  },
   "shareModal": {
     "download": "Scarica screenshot",
     "imageType": "Tipo di immagine",
@@ -52,7 +68,14 @@
     "prettifying": "Miglioramento in corso..."
   },
   "temp": "Temporaneo",
-  "tokenDetail": "Impostazione ruolo: {{systemRoleToken}} · Messaggi di sessione: {{chatsToken}} · Impostazione strumenti: {{toolsToken}}",
+  "tokenDetails": {
+    "chats": "Chat",
+    "rest": "Rimanenti",
+    "systemRole": "Ruolo di sistema",
+    "tools": "Strumenti",
+    "total": "Totale",
+    "used": "Utilizzati"
+  },
   "tokenTag": {
     "overload": "Superamento limite",
     "remained": "Rimasti",
@@ -90,6 +113,7 @@
   "updateAgent": "Aggiorna informazioni assistente",
   "upload": {
     "actionTooltip": "Carica immagine",
+    "disabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello prima di utilizzarlo",
     "dragDesc": "Trascina i file qui, supporta il caricamento di più immagini. Tieni premuto Shift per inviare direttamente le immagini",
     "dragTitle": "Carica immagine"
   }

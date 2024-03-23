@@ -4,6 +4,7 @@ import { t } from 'i18next';
 import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useGlobalStore } from '@/store/global';
+import { commonSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
@@ -17,7 +18,7 @@ const getMeta = (message: ChatMessage) => {
   switch (message.role) {
     case 'user': {
       return {
-        avatar: useGlobalStore.getState().settings.avatar || DEFAULT_USER_AVATAR,
+        avatar: commonSelectors.userAvatar(useGlobalStore.getState()) || DEFAULT_USER_AVATAR,
       };
     }
 
@@ -121,6 +122,7 @@ const getFunctionMessageProps =
   });
 
 const getMessageById = (id: string) => (s: ChatStore) => chatHelpers.getMessageById(s.messages, id);
+const getTraceIdByMessageId = (id: string) => (s: ChatStore) => getMessageById(id)(s)?.traceId;
 
 const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
 
@@ -136,5 +138,6 @@ export const chatSelectors = {
   currentChatsWithHistoryConfig,
   getFunctionMessageProps,
   getMessageById,
+  getTraceIdByMessageId,
   latestMessage,
 };

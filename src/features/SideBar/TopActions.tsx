@@ -1,30 +1,29 @@
 import { ActionIcon } from '@lobehub/ui';
-import { Bot, MessageSquare } from 'lucide-react';
+import { Compass, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { GlobalStore } from '@/store/global';
+import { GlobalStore, useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
 export interface TopActionProps {
-  setTab: GlobalStore['switchSideBar'];
-  tab: GlobalStore['sidebarKey'];
+  tab?: GlobalStore['sidebarKey'];
 }
 
-const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
+const TopActions = memo<TopActionProps>(({ tab }) => {
   const { t } = useTranslation('common');
-  const switchBackToChat = useSessionStore((s) => s.switchBackToChat);
+  const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
 
   return (
     <>
       <Link
+        aria-label={t('tab.chat')}
         href={'/chat'}
         onClick={(e) => {
           e.preventDefault();
-          switchBackToChat();
-          setTab(SidebarTabKey.Chat);
+          switchBackToChat(useSessionStore.getState().activeId);
         }}
       >
         <ActionIcon
@@ -35,13 +34,10 @@ const TopActions = memo<TopActionProps>(({ tab, setTab }) => {
           title={t('tab.chat')}
         />
       </Link>
-      <Link href={'/market'}>
+      <Link aria-label={t('tab.market')} href={'/market'}>
         <ActionIcon
           active={tab === SidebarTabKey.Market}
-          icon={Bot}
-          onClick={() => {
-            setTab(SidebarTabKey.Market);
-          }}
+          icon={Compass}
           placement={'right'}
           size="large"
           title={t('tab.market')}

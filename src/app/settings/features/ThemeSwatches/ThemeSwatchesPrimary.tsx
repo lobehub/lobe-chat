@@ -8,10 +8,11 @@ import {
 import { memo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 
 const ThemeSwatchesPrimary = memo(() => {
   const [primaryColor, setSettings] = useGlobalStore((s) => [
-    s.settings.primaryColor,
+    settingsSelectors.currentSettings(s).primaryColor,
     s.setSettings,
   ]);
 

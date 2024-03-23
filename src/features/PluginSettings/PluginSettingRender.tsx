@@ -22,6 +22,7 @@ const PluginSettingRender = memo<PluginSettingsProps>(
             return (
               <Input.Password
                 {...props}
+                autoComplete={'new-password'}
                 defaultValue={defaultValue}
                 onChange={(v) => {
                   onChange(v.target.value);

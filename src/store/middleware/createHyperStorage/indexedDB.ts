@@ -1,5 +1,5 @@
 import { createStore, delMany, getMany, setMany } from 'idb-keyval';
-import { StorageValue } from 'zustand/middleware/persist';
+import { StorageValue } from 'zustand/middleware';
 
 export const createIndexedDB = <State extends any>(dbName: string = 'indexedDB') => ({
   getItem: async <T extends State>(name: string): Promise<StorageValue<T> | undefined> => {

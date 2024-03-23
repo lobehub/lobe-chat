@@ -31,6 +31,7 @@ const Loading = memo(() => {
           }}
         />
         <Skeleton.Button active block />
+        <Skeleton.Button active block />
         <Skeleton
           active
           className={styles.loading}

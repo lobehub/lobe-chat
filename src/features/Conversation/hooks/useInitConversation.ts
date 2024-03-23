@@ -28,8 +28,6 @@ export const useInitConversation = () => {
   checkPluginsIsInstalled(plugins);
 
   useEffect(() => {
-    useChatStore.persist.rehydrate();
-
     // // when activeId changed, switch topic to undefined
     const unsubscribe = useSessionStore.subscribe(
       (s) => s.activeId,

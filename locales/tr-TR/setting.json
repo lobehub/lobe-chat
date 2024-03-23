@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Hakkında"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Anonim kullanım verilerini göndererek LobeChat'in genel kullanıcı deneyimini iyileştirmemize yardımcı olabilirsiniz",
+      "title": "Anonim Kullanım Verileri Gönder"
+    },
+    "title": "Analitik"
+  },
   "danger": {
     "clear": {
       "action": "Temizle",
@@ -21,7 +31,29 @@
     "sessionWithName": "Oturum Ayarları · {{name}}"
   },
   "llm": {
+    "Anthropic": {
+      "endpoint": {
+        "desc": "默认地址以外，必须包含 http(s)://",
+        "placeholder": "https://api.anthropic.com",
+        "title": "API Proxy Adresi"
+      },
+      "title": "Anthropic",
+      "token": {
+        "desc": "Anthropic 的 API 密钥",
+        "placeholder": "Anthropic API 密钥",
+        "title": "API 密钥"
+      }
+    },
     "AzureOpenAI": {
+      "azureApiVersion": {
+        "desc": "Azure'nin API sürümü, YYYY-MM-DD biçimini takip eder, [en son sürümü buradan bulabilirsiniz](https://learn.microsoft.com/tr-tr/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Listeyi Al",
+        "title": "Azure API Sürümü"
+      },
+      "deployments": {
+        "desc": "id=name sözdizimini kullanarak dağıtım modelinizi doldurun (örneğin, dağıtım adı ve model aynıysa, yalnızca model adını doldurabilirsiniz), birden fazla model için virgül (,) kullanın",
+        "title": "Azure Dağıtımları"
+      },
       "endpoint": {
         "desc": "Bu değer, Azure portalındaki kaynağı kontrol ederken 'Keys and Endpoints' bölümünde bulunabilir",
         "placeholder": "https://docs-test-001.openai.azure.com",
@@ -38,17 +70,80 @@
         "title": "API Anahtarı"
       }
     },
+    "Bedrock": {
+      "accessKeyId": {
+        "desc": "Aws Access Key Id'sini girin",
+        "placeholder": "Aws Access Key Id",
+        "title": "Aws Access Key Id"
+      },
+      "checker": {
+        "desc": "AccessKeyId / SecretAccessKey'in doğru şekilde doldurulup doldurulmadığını test eder"
+      },
+      "region": {
+        "desc": "Aws Bölgesini girin",
+        "placeholder": "Aws Bölgesi",
+        "title": "Aws Bölgesi"
+      },
+      "secretAccessKey": {
+        "desc": "Aws Secret Access Key'i girin",
+        "placeholder": "Aws Secret Access Key",
+        "title": "Aws Secret Access Key"
+      },
+      "title": "Bedrock"
+    },
+    "Google": {
+      "title": "Google",
+      "token": {
+        "desc": "Google'dan alınan API Anahtarını girin",
+        "placeholder": "Google API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "Groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Groq'dan alınan API Anahtarını girin",
+        "placeholder": "Groq API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "Mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Mistral AI 的 API 密钥",
+        "placeholder": "Mistral AI API 密钥",
+        "title": "API 密钥"
+      }
+    },
+    "Moonshot": {
+      "title": "月球背面",
+      "token": {
+        "desc": "Moonshot AI 的 API 密钥",
+        "placeholder": "Moonshot AI API 密钥",
+        "title": "API 密钥"
+      }
+    },
+    "Ollama": {
+      "checker": {
+        "desc": "Proxy adresinin doğru şekilde doldurulup doldurulmadığını test edin"
+      },
+      "customModelName": {
+        "desc": "Özel model ekleyin, birden fazla model virgül (,) ile ayrılır",
+        "placeholder": "vicuna,llama,codellama,llama2:13b-text",
+        "title": "Özel Model Adı"
+      },
+      "endpoint": {
+        "desc": "Ollama arayüzü proxy adresini girin, yerel olarak özel bir adres belirtilmemişse boş bırakın",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "Proxy Adresi"
+      },
+      "title": "Ollama"
+    },
     "OpenAI": {
       "azureApiVersion": {
         "desc": "Azure için API sürümü, YYYY-MM-DD formatını takip eder, [en son sürümü kontrol edin](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Listeyi Al",
         "title": "Azure API Sürümü"
-      },
-      "check": {
-        "button": "Kontrol Et",
-        "desc": "Api Anahtarı ve proxy adresinin doğru şekilde doldurulup doldurulmadığını test eder",
-        "pass": "Kontrol Başarılı",
-        "title": "Bağlantı Kontrolü"
       },
       "customModelName": {
         "desc": "Özel modeller ekleyin, birden fazla modeli virgülle (,) ayırarak yazın",
@@ -82,7 +177,53 @@
         "title": "Azure OpenAI"
       }
     },
+    "OpenRouter": {
+      "checker": {
+        "desc": "测试代理地址是否正确填写"
+      },
+      "customModelName": {
+        "desc": "增加自定义模型，多个模型使用逗号（,）隔开",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "自定义模型名称"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "填入来自 OpenRouter AI 的 API Key",
+        "placeholder": "OpenRouter AI API Key",
+        "title": "API Key"
+      }
+    },
+    "Perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Perplexity AI'dan gelen API Anahtarı'nı girin",
+        "placeholder": "Perplexity AI API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "Zhipu": {
+      "title": "Zhipu AI",
+      "token": {
+        "desc": "Zhipu'dan alınan API Anahtarını girin",
+        "placeholder": "Zhipu API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "checker": {
+      "button": "Kontrol Et",
+      "desc": "Api Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
+      "pass": "Kontrol Başarılı",
+      "title": "Bağlantı Kontrolü"
+    },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama bu modeli indiriyor, lütfen bu sayfayı kapatmamaya çalışın. Yeniden indirme durumunda kaldığı yerden devam edecektir.",
+      "remainingTime": "Kalan Zaman",
+      "speed": "İndirme Hızı",
+      "title": "{{model}} Modeli İndiriliyor"
+    }
   },
   "plugin": {
     "addTooltip": "Eklenti Ekle",
@@ -209,6 +350,22 @@
       "placeholder": "Erişim şifresini girin",
       "title": "Erişim Şifresi"
     },
+    "oauth": {
+      "info": {
+        "desc": "Oturum açıldı",
+        "title": "Hesap Bilgisi"
+      },
+      "signin": {
+        "action": "Oturum aç",
+        "desc": "Uygulamayı kilidini açmak için SSO ile oturum açın",
+        "title": "Hesaba Giriş Yap"
+      },
+      "signout": {
+        "action": "Oturumu kapat",
+        "confirm": "Çıkış yapmak istediğinize emin misiniz?",
+        "success": "Oturum kapatma başarılı"
+      }
+    },
     "title": "Sistem Ayarları"
   },
   "settingTTS": {
@@ -283,16 +440,54 @@
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
     "tooltips": "Asistan pazarına paylaşın"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "添加名称以便于识别",
+        "placeholder": "请输入设备名称",
+        "title": "设备名称"
+      },
+      "title": "设备信息",
+      "unknownBrowser": "未知浏览器",
+      "unknownOS": "未知系统"
+    },
+    "warning": {
+      "message": "本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。"
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC 将使用此名创建同步频道，确保频道名称唯一",
+        "placeholder": "请输入同步频道名称",
+        "shuffle": "随机生成",
+        "title": "同步频道名称"
+      },
+      "channelPassword": {
+        "desc": "添加密码确保频道私密性，只有密码正确时，设备才可加入频道",
+        "placeholder": "请输入同步频道密码",
+        "title": "同步频道密码"
+      },
+      "desc": "实时、点对点的数据通信，需设备同时在线才可同步",
+      "enabled": {
+        "invalid": "请填写同步频道名称后再开启",
+        "title": "开启同步"
+      },
+      "title": "WebRTC 同步"
+    }
+  },
   "tab": {
+    "about": "Hakkında",
     "agent": "Varsayılan Asistan",
     "common": "Genel Ayarlar",
+    "experiment": "实验",
     "llm": "Modeller",
+    "sync": "云端同步",
     "tts": "Metin Seslendirme"
   },
   "tools": {
     "builtins": {
       "groupName": "Dahili Araçlar"
     },
+    "disabled": "Mevcut model fonksiyon çağrılarını desteklemez, eklenti kullanılamaz",
     "plugins": {
       "enabled": "Etkin: {{num}}",
       "groupName": "Eklentiler",

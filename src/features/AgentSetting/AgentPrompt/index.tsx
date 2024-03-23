@@ -1,4 +1,4 @@
-import { EditableMessage, FormGroup, TokenTag } from '@lobehub/ui';
+import { EditableMessage, FormGroup } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { Bot } from 'lucide-react';
@@ -7,11 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { ModelTokens } from '@/const/llm';
-import { useTokenCount } from '@/hooks/useTokenCount';
-import { LanguageModel } from '@/types/llm';
 
 import { useStore } from '../store';
+import TokenTag from './TokenTag';
 
 export const useStyles = createStyles(({ css, token }) => ({
   markdown: css`
@@ -26,31 +24,11 @@ const AgentPrompt = memo(() => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
   const [editing, setEditing] = useState(false);
-  const updateConfig = useStore((s) => s.setAgentConfig);
-  const [systemRole, model] = useStore((s) => [s.config.systemRole, s.config.model]);
-  const systemTokenCount = useTokenCount(systemRole);
-
-  const showTag = model in ModelTokens;
+  const [systemRole, updateConfig] = useStore((s) => [s.config.systemRole, s.setAgentConfig]);
 
   return (
     <FormGroup
-      extra={
-        <Flexbox align={'center'} gap={8} horizontal>
-          {showTag && (
-            <TokenTag
-              displayMode={'used'}
-              maxValue={ModelTokens[model as LanguageModel]}
-              shape={'square'}
-              text={{
-                overload: t('tokenTag.overload', { ns: 'chat' }),
-                remained: t('tokenTag.remained', { ns: 'chat' }),
-                used: t('tokenTag.used', { ns: 'chat' }),
-              }}
-              value={systemTokenCount}
-            />
-          )}
-        </Flexbox>
-      }
+      extra={<TokenTag />}
       icon={Bot}
       style={FORM_STYLE.style}
       title={t('settingAgent.prompt.title')}

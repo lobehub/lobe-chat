@@ -19,11 +19,11 @@ export const AssistantActionsBar: RenderAction = memo(({ id, onActionClick, erro
       dropdownMenu={[
         edit,
         copy,
-        regenerate,
         divider,
         tts,
         translate,
         divider,
+        regenerate,
         delAndRegenerate,
         del,
       ]}

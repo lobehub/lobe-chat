@@ -42,6 +42,7 @@ export const AgentSchema = z.object({
     top_p: z.number().default(1).optional(),
   }),
   plugins: z.array(z.string()).optional(),
+  provider: z.string().default('openai').optional(),
   systemRole: z.string().default(''),
   tts: ttsSchema.optional(),
 });
@@ -50,6 +51,7 @@ export const DB_SessionSchema = z.object({
   config: AgentSchema,
   group: z.string().default('default'),
   meta: LobeMetaDataSchema,
+  pinned: z.number().int().min(0).max(1).optional(),
   type: z.enum(['agent', 'group']).default('agent'),
 });
 

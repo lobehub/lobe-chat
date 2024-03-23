@@ -63,8 +63,10 @@ const Failed = memo<FailedProps>(({ error, state, setUpgradeStatus, setError, up
           >
             <ExportConfigButton primary state={state} />
             <Popconfirm
+              arrow={false}
               okButtonProps={{
                 danger: true,
+                type: 'primary',
               }}
               onConfirm={clearLocal}
               overlayInnerStyle={{ background: lighten(0.03, theme.colorBgElevated) }}

@@ -1,22 +1,28 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Benutzerdefiniertes Modell, das standardmäßig sowohl Funktionsaufrufe als auch visuelle Erkennung unterstützt. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Anforderungen.",
+      "file": "Dieses Modell unterstützt das Hochladen von Dateien zur Erkennung.",
+      "functionCall": "Dieses Modell unterstützt Funktionsaufrufe (Function Call).",
+      "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro einzelner Sitzung.",
+      "vision": "Dieses Modell unterstützt visuelle Erkennung."
+    }
+  },
   "about": "Über",
   "advanceSettings": "Erweiterte Einstellungen",
-  "agentMaxToken": "Maximale Sitzungslänge",
-  "agentModel": "Modell",
-  "agentProfile": "Assistentenprofil",
   "appInitializing": "LobeChat wird initialisiert. Bitte haben Sie einen Moment Geduld...",
-  "archive": "Archiv",
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
   "close": "Schließen",
-  "confirmRemoveSessionItemAlert": "Möchten Sie diesen Assistenten wirklich löschen? Nach dem Löschen kann er nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
   "copy": "Kopieren",
+  "copyFail": "Kopieren fehlgeschlagen",
   "copySuccess": "Kopieren erfolgreich",
   "defaultAgent": "Standardassistent",
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
+  "document": "Dokumentation",
   "duplicate": "Duplikat erstellen",
   "edit": "Bearbeiten",
   "export": "Exportieren",
@@ -43,6 +49,7 @@
       "added": "Erfolgreich importiert",
       "errors": "Fehler beim Import",
       "messages": "Nachrichten",
+      "sessionGroups": "Sitzungsgruppen",
       "sessions": "Assistenten",
       "skips": "Übersprungen (doppelt)",
       "topics": "Themen",
@@ -87,7 +94,23 @@
     "zh-TW": "Chinesisch (traditionell)"
   },
   "layoutInitializing": "Layout wird geladen...",
+  "modelProvider": {
+    "anthropic": "Anthropic",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral KI",
+    "moonshot": "Moonshot KI",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Keine Beschreibung vorhanden",
+  "oauth": "SSO-Anmeldung",
   "ok": "OK",
   "password": "Passwort",
   "pin": "Anheften",
@@ -100,10 +123,50 @@
   "setting": "Einstellung",
   "share": "Teilen",
   "stop": "Stoppen",
+  "sync": {
+    "actions": {
+      "settings": "同步设置",
+      "sync": "立即同步"
+    },
+    "awareness": {
+      "current": "当前设备"
+    },
+    "channel": "频道",
+    "disabled": {
+      "actions": {
+        "enable": "开启云端同步",
+        "settings": "配置同步参数"
+      },
+      "desc": "当前会话数据仅存储于此浏览器中。如果你需要在多个设备间同步数据，请配置并开启云端同步。",
+      "title": "数据同步未开启"
+    },
+    "enabled": {
+      "title": "数据同步"
+    },
+    "status": {
+      "connecting": "连接中",
+      "disabled": "同步未开启",
+      "ready": "已连接",
+      "synced": "已同步",
+      "syncing": "同步中",
+      "unconnected": "连接失败"
+    },
+    "title": "同步状态",
+    "unconnected": {
+      "tip": "信令服务器连接失败，将无法建立点对点通信频道，请检查网络后重试"
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Entdecken",
     "setting": "Einstellung"
+  },
+  "telemetry": {
+    "allow": "Erlauben",
+    "deny": "Verweigern",
+    "desc": "Wir möchten anonyme Nutzungsdaten sammeln, um uns bei der Verbesserung von LobeChat zu helfen und dir ein besseres Produkterlebnis zu bieten. Du kannst dies jederzeit in den „Einstellungen“ - „Über“ deaktivieren.",
+    "learnMore": "Mehr erfahren",
+    "title": "Hilf LobeChat, besser zu werden"
   },
   "temp": "Temporär",
   "updateAgent": "Assistentenprofil aktualisieren",

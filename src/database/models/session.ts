@@ -5,23 +5,26 @@ import { BaseModel } from '@/database/core';
 import { DBModel } from '@/database/core/types/db';
 import { DB_Session, DB_SessionSchema } from '@/database/schemas/session';
 import { LobeAgentConfig } from '@/types/agent';
-import { LobeAgentSession, LobeSessions, SessionGroupKey } from '@/types/session';
+import {
+  ChatSessionList,
+  LobeAgentSession,
+  LobeSessions,
+  SessionDefaultGroup,
+  SessionGroupId,
+} from '@/types/session';
 import { merge } from '@/utils/merge';
 import { uuid } from '@/utils/uuid';
+
+import { MessageModel } from './message';
+import { SessionGroupModel } from './sessionGroup';
+import { TopicModel } from './topic';
 
 class _SessionModel extends BaseModel {
   constructor() {
     super('sessions', DB_SessionSchema);
   }
 
-  async create(type: 'agent' | 'group', defaultValue: Partial<LobeAgentSession>, id = uuid()) {
-    const data = merge(DEFAULT_AGENT_LOBE_SESSION, { type, ...defaultValue });
-    return this._add(data, id);
-  }
-
-  async batchCreate(sessions: LobeAgentSession[]) {
-    return this._batchAdd(sessions, { idGenerator: uuid });
-  }
+  // **************** Query *************** //
 
   async query({
     pageSize = 9999,
@@ -29,63 +32,56 @@ class _SessionModel extends BaseModel {
   }: { current?: number; pageSize?: number } = {}): Promise<LobeSessions> {
     const offset = current * pageSize;
 
-    return this.table.orderBy('updatedAt').reverse().offset(offset).limit(pageSize).toArray();
+    const items: DBModel<DB_Session>[] = await this.table
+      .orderBy('updatedAt')
+      .reverse()
+      .offset(offset)
+      .limit(pageSize)
+      .toArray();
+
+    return this.mapToAgentSessions(items);
+  }
+
+  async queryWithGroups(): Promise<ChatSessionList> {
+    const groups = await SessionGroupModel.query();
+    const customGroups = await this.queryByGroupIds(groups.map((item) => item.id));
+    const defaultItems = await this.querySessionsByGroupId(SessionDefaultGroup.Default);
+    const pinnedItems = await this.getPinnedSessions();
+
+    const all = await this.query();
+    return {
+      all,
+      customGroup: groups.map((group) => ({
+        ...group,
+        children: customGroups[group.id],
+      })),
+      default: defaultItems,
+      pinned: pinnedItems,
+    };
   }
 
   /**
    * get sessions by group
    * @param group
    */
-  async queryByGroup(group: SessionGroupKey) {
-    return this.table.where('group').equals(group).toArray();
+  async querySessionsByGroupId(group: SessionGroupId): Promise<LobeSessions> {
+    const items: DBModel<DB_Session>[] = await this.table
+      .where('group')
+      .equals(group)
+      .and((session) => !session.pinned)
+      .reverse()
+      .sortBy('updatedAt');
+
+    return this.mapToAgentSessions(items);
   }
 
-  async update(id: string, data: Partial<DB_Session>) {
-    return super._update(id, data);
-  }
-
-  async updateConfig(id: string, data: DeepPartial<LobeAgentConfig>) {
-    const session = await this.findById(id);
-    if (!session) return;
-
-    const config = merge(session.config, data);
-
-    return this.update(id, { config });
-  }
-  /**
-   * Delete a session , also delete all messages and topic associated with it.
-   */
-  async delete(id: string) {
-    return this.db.transaction('rw', [this.table, this.db.topics, this.db.messages], async () => {
-      // Delete all topics associated with the session
-      const topics = await this.db.topics.where('sessionId').equals(id).toArray();
-      const topicIds = topics.map((topic) => topic.id);
-      if (topicIds.length > 0) {
-        await this.db.topics.bulkDelete(topicIds);
-      }
-
-      // Delete all messages associated with the session
-      const messages = await this.db.messages.where('sessionId').equals(id).toArray();
-      const messageIds = messages.map((message) => message.id);
-      if (messageIds.length > 0) {
-        await this.db.messages.bulkDelete(messageIds);
-      }
-
-      // Finally, delete the session itself
-      await this.table.delete(id);
+  async queryByGroupIds(groups: string[]) {
+    const pools = groups.map(async (id) => {
+      return [id, await this.querySessionsByGroupId(id)] as const;
     });
-  }
+    const groupItems = await Promise.all(pools);
 
-  async clearTable() {
-    return this.table.clear();
-  }
-
-  async findById(id: string): Promise<DBModel<DB_Session>> {
-    return this.table.get(id);
-  }
-
-  async isEmpty() {
-    return (await this.table.count()) === 0;
+    return Object.fromEntries(groupItems);
   }
 
   /**
@@ -148,13 +144,57 @@ class _SessionModel extends BaseModel {
     ]);
 
     // Retrieve unique sessions by IDs
-    const data = await this.table
+    const items: DBModel<DB_Session>[] = await this.table
       .where('id')
       .anyOf([...combinedSessionIds])
       .toArray();
 
     console.timeEnd('queryByKeyword');
-    return data;
+    return this.mapToAgentSessions(items);
+  }
+
+  async getPinnedSessions(): Promise<LobeSessions> {
+    const items: DBModel<DB_Session>[] = await this.table
+      .where('pinned')
+      .equals(1)
+      .reverse()
+      .sortBy('updatedAt');
+
+    return this.mapToAgentSessions(items);
+  }
+
+  async findById(id: string): Promise<DBModel<DB_Session>> {
+    return this.table.get(id);
+  }
+
+  async isEmpty() {
+    return (await this.table.count()) === 0;
+  }
+
+  // **************** Create *************** //
+
+  async create(type: 'agent' | 'group', defaultValue: Partial<LobeAgentSession>, id = uuid()) {
+    const data = merge(DEFAULT_AGENT_LOBE_SESSION, { type, ...defaultValue });
+    const dataDB = this.mapToDB_Session(data);
+    return this._addWithSync(dataDB, id);
+  }
+
+  async batchCreate(sessions: LobeAgentSession[]) {
+    const DB_Sessions = await Promise.all(
+      sessions.map(async (s) => {
+        if (s.group && s.group !== SessionDefaultGroup.Default) {
+          // Check if the group exists in the SessionGroup table
+          const groupExists = await SessionGroupModel.findById(s.group);
+          // If the group does not exist, set it to default
+          if (!groupExists) {
+            s.group = SessionDefaultGroup.Default;
+          }
+        }
+        return this.mapToDB_Session(s);
+      }),
+    );
+
+    return this._batchAdd<DB_Session>(DB_Sessions, { idGenerator: uuid });
   }
 
   async duplicate(id: string, newTitle?: string) {
@@ -163,7 +203,73 @@ class _SessionModel extends BaseModel {
 
     const newSession = merge(session, { meta: { title: newTitle } });
 
-    return this._add(newSession, uuid());
+    return this._addWithSync(newSession, uuid());
+  }
+
+  // **************** Delete *************** //
+
+  /**
+   * Delete a session , also delete all messages and topic associated with it.
+   */
+  async delete(id: string) {
+    return this.db.transaction('rw', [this.table, this.db.topics, this.db.messages], async () => {
+      // Delete all topics associated with the session
+      await TopicModel.batchDeleteBySessionId(id);
+
+      // Delete all messages associated with the session
+      await MessageModel.batchDeleteBySessionId(id);
+
+      // Finally, delete the session itself
+      await this._deleteWithSync(id);
+    });
+  }
+
+  async batchDelete(ids: string[]) {
+    return this._bulkDeleteWithSync(ids);
+  }
+
+  async clearTable() {
+    return this._clearWithSync();
+  }
+
+  // **************** Update *************** //
+
+  async update(id: string, data: Partial<DB_Session>) {
+    return super._updateWithSync(id, data);
+  }
+
+  async updatePinned(id: string, pinned: boolean) {
+    return this.update(id, { pinned: pinned ? 1 : 0 });
+  }
+
+  async updateConfig(id: string, data: DeepPartial<LobeAgentConfig>) {
+    const session = await this.findById(id);
+    if (!session) return;
+
+    const config = merge(session.config, data);
+
+    return this.update(id, { config });
+  }
+
+  // **************** Helper *************** //
+
+  private mapToDB_Session(session: LobeAgentSession): DBModel<DB_Session> {
+    return {
+      ...session,
+      group: session.group || SessionDefaultGroup.Default,
+      pinned: session.pinned ? 1 : 0,
+    };
+  }
+
+  private DB_SessionToAgentSession(session: DBModel<DB_Session>) {
+    return {
+      ...session,
+      pinned: !!session.pinned,
+    } as LobeAgentSession;
+  }
+
+  private mapToAgentSessions(session: DBModel<DB_Session>[]) {
+    return session.map((item) => this.DB_SessionToAgentSession(item));
   }
 }
 

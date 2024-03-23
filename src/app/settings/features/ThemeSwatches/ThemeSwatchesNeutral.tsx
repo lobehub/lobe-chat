@@ -8,10 +8,11 @@ import {
 import { memo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 
 const ThemeSwatchesNeutral = memo(() => {
   const [neutralColor, setSettings] = useGlobalStore((s) => [
-    s.settings.neutralColor,
+    settingsSelectors.currentSettings(s).neutralColor,
     s.setSettings,
   ]);
 

@@ -1,22 +1,28 @@
 {
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modèle personnalisé, par défaut prend en charge à la fois l'appel de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités selon les besoins réels.",
+      "file": "Ce modèle prend en charge la lecture et la reconnaissance de fichiers",
+      "functionCall": "Ce modèle prend en charge l'appel de fonction (Function Call).",
+      "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
+      "vision": "Ce modèle prend en charge la reconnaissance visuelle."
+    }
+  },
   "about": "À propos",
   "advanceSettings": "Paramètres avancés",
-  "agentMaxToken": "Longueur maximale de la session",
-  "agentModel": "Modèle",
-  "agentProfile": "Profil de l'agent",
   "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
-  "archive": "Archiver",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
   "close": "Fermer",
-  "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
   "copy": "Copier",
+  "copyFail": "Échec de la copie",
   "copySuccess": "Copie réussie",
   "defaultAgent": "Agent par défaut",
   "defaultSession": "Session par défaut",
   "delete": "Supprimer",
+  "document": "Document d'utilisation",
   "duplicate": "Dupliquer",
   "edit": "Modifier",
   "export": "Exporter",
@@ -43,6 +49,7 @@
       "added": "Importation réussie",
       "errors": "Erreurs d'importation",
       "messages": "Messages",
+      "sessionGroups": "Groupes de session",
       "sessions": "Agents",
       "skips": "Éléments ignorés en double",
       "topics": "Sujets",
@@ -87,7 +94,23 @@
     "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
+  "modelProvider": {
+    "anthropic": "Anthropic",
+    "azure": "Azure",
+    "bedrock": "AWS Bedrock",
+    "google": "Google",
+    "groq": "Groq",
+    "mistral": "Mistral AI",
+    "moonshot": "Moonshot IA",
+    "ollama": "Ollama",
+    "oneapi": "One API",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter",
+    "perplexity": "Perplexity",
+    "zhipu": "Zhipu AI"
+  },
   "noDescription": "Aucune description disponible",
+  "oauth": "Connexion SSO",
   "ok": "OK",
   "password": "Mot de passe",
   "pin": "Épingler",
@@ -100,10 +123,50 @@
   "setting": "Paramètre",
   "share": "Partager",
   "stop": "Arrêter",
+  "sync": {
+    "actions": {
+      "settings": "Paramètres de synchronisation",
+      "sync": "Synchroniser maintenant"
+    },
+    "awareness": {
+      "current": "Appareil actuel"
+    },
+    "channel": "Canal",
+    "disabled": {
+      "actions": {
+        "enable": "Activer la synchronisation cloud",
+        "settings": "Paramètres de configuration"
+      },
+      "desc": "Les données de cette session sont uniquement stockées dans ce navigateur. Si vous avez besoin de synchroniser les données entre plusieurs appareils, veuillez configurer et activer la synchronisation cloud.",
+      "title": "La synchronisation des données n'est pas activée"
+    },
+    "enabled": {
+      "title": "Synchronisation des données"
+    },
+    "status": {
+      "connecting": "Connexion en cours",
+      "disabled": "Synchronisation désactivée",
+      "ready": "Connecté",
+      "synced": "Synchronisé",
+      "syncing": "Synchronisation en cours",
+      "unconnected": "Échec de la connexion"
+    },
+    "title": "État de synchronisation",
+    "unconnected": {
+      "tip": "Échec de la connexion au serveur de signalisation. Impossible d'établir un canal de communication peer-to-peer. Veuillez vérifier votre réseau et réessayer."
+    }
+  },
   "tab": {
     "chat": "Conversation",
     "market": "Découvrir",
     "setting": "Paramètre"
+  },
+  "telemetry": {
+    "allow": "Autoriser",
+    "deny": "Refuser",
+    "desc": "Nous aimerions recueillir anonymement des informations sur votre utilisation afin de nous aider à améliorer LobeChat et à vous offrir une meilleure expérience produit. Vous pouvez désactiver cette fonctionnalité à tout moment dans les paramètres - À propos.",
+    "learnMore": "En savoir plus",
+    "title": "Aider LobeChat à s'améliorer"
   },
   "temp": "Temporaire",
   "updateAgent": "Mettre à jour les informations de l'agent",

@@ -1,12 +1,12 @@
-import { Highlighter } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
-import { RenderErrorMessage } from '../types';
-import OpenAPIKey from './OpenAPIKey';
+import { ChatMessage } from '@/types/message';
+
+import ErrorJsonViewer from './ErrorJsonViewer';
+import InvalidAPIKey from './InvalidAPIKey';
 
 interface OpenAIError {
-  code: 'invalid_api_key' | string;
+  code: 'invalid_api_key' | 'insufficient_quota' | string;
   message: string;
   param?: any;
   type: string;
@@ -16,22 +16,14 @@ interface OpenAIErrorResponse {
   error: OpenAIError;
 }
 
-const OpenAiBizError: RenderErrorMessage['Render'] = memo(({ error, id, ...props }) => {
+const OpenAiBizError = memo<ChatMessage>(({ error, id }) => {
   const errorBody: OpenAIErrorResponse = (error as any)?.body;
 
   const errorCode = errorBody.error?.code;
 
-  if (errorCode === 'invalid_api_key')
-    // @ts-ignore
-    return <OpenAPIKey error={error} id={id} {...props} />;
+  if (errorCode === 'invalid_api_key') return <InvalidAPIKey id={id} />;
 
-  return (
-    <Flexbox style={{ maxWidth: 600 }}>
-      <Highlighter copyButtonSize={'small'} language={'json'}>
-        {JSON.stringify(errorBody, null, 2)}
-      </Highlighter>
-    </Flexbox>
-  );
+  return <ErrorJsonViewer error={error} id={id} />;
 });
 
 export default OpenAiBizError;

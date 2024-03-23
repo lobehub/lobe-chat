@@ -1,15 +1,20 @@
+import { DeepPartial } from 'utility-types';
+
 import { DEFAULT_SETTINGS } from '@/const/settings';
-import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
+import { GlobalServerConfig, GlobalSettings } from '@/types/settings';
 
 export interface GlobalSettingsState {
+  avatar?: string;
+  defaultSettings: GlobalSettings;
   serverConfig: GlobalServerConfig;
-  /**
-   * @localStorage
-   */
-  settings: GlobalSettings;
+  settings: DeepPartial<GlobalSettings>;
+  userId?: string;
 }
 
 export const initialSettingsState: GlobalSettingsState = {
-  serverConfig: {},
-  settings: DEFAULT_SETTINGS,
+  defaultSettings: DEFAULT_SETTINGS,
+  serverConfig: {
+    telemetry: {},
+  },
+  settings: {},
 };

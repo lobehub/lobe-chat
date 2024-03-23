@@ -1,36 +1,49 @@
-import { produce } from 'immer';
 import { gt } from 'semver';
-import useSWR, { SWRResponse } from 'swr';
+import useSWR, { SWRResponse, mutate } from 'swr';
+import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { INBOX_SESSION_ID } from '@/const/session';
+import { SESSION_CHAT_URL } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
 import { globalService } from '@/services/global';
+import { messageService } from '@/services/message';
+import { UserConfig, userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
-import type { GlobalServerConfig } from '@/types/settings';
+import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
+import { OnSyncEvent, PeerSyncStatus } from '@/types/sync';
 import { merge } from '@/utils/merge';
+import { browserInfo } from '@/utils/platform';
 import { setNamespace } from '@/utils/storeDebug';
+import { switchLang } from '@/utils/switchLang';
 
-import type { GlobalCommonState, GlobalPreference, Guide, SidebarTabKey } from './initialState';
+import { preferenceSelectors } from '../preference/selectors';
+import { settingsSelectors, syncSettingsSelectors } from '../settings/selectors';
+import { commonSelectors } from './selectors';
 
-const n = setNamespace('settings');
+const n = setNamespace('common');
 
 /**
  * 设置操作
  */
 export interface CommonAction {
-  /**
-   * 切换侧边栏选项
-   * @param key - 选中的侧边栏选项
-   */
-  switchSideBar: (key: SidebarTabKey) => void;
-  toggleChatSideBar: (visible?: boolean) => void;
-  toggleMobileTopic: (visible?: boolean) => void;
-  toggleSystemRole: (visible?: boolean) => void;
-  updateGuideState: (guide: Partial<Guide>) => void;
-  updatePreference: (preference: Partial<GlobalPreference>, action?: string) => void;
+  refreshConnection: (onEvent: OnSyncEvent) => Promise<void>;
+  refreshUserConfig: () => Promise<void>;
+  switchBackToChat: (sessionId?: string) => void;
+  triggerEnableSync: (userId: string, onEvent: OnSyncEvent) => Promise<boolean>;
+  updateAvatar: (avatar: string) => Promise<void>;
   useCheckLatestVersion: () => SWRResponse<string>;
-  useFetchGlobalConfig: () => SWRResponse;
+  useCheckTrace: (shouldFetch: boolean) => SWRResponse;
+  useEnabledSync: (
+    userEnableSync: boolean,
+    userId: string | undefined,
+    onEvent: OnSyncEvent,
+  ) => SWRResponse;
+  useFetchServerConfig: () => SWRResponse;
+  useFetchUserConfig: (initServer: boolean) => SWRResponse<UserConfig | undefined>;
 }
+
+const USER_CONFIG_FETCH_KEY = 'fetchUserConfig';
 
 export const createCommonSlice: StateCreator<
   GlobalStore,
@@ -38,40 +51,56 @@ export const createCommonSlice: StateCreator<
   [],
   CommonAction
 > = (set, get) => ({
-  switchSideBar: (key) => {
-    set({ sidebarKey: key }, false, n('switchSideBar', key));
-  },
-  toggleChatSideBar: (newValue) => {
-    const showChatSideBar =
-      typeof newValue === 'boolean' ? newValue : !get().preference.showChatSideBar;
+  refreshConnection: async (onEvent) => {
+    const userId = commonSelectors.userId(get());
 
-    get().updatePreference({ showChatSideBar }, n('toggleAgentPanel', newValue) as string);
-  },
-  toggleMobileTopic: (newValue) => {
-    const mobileShowTopic =
-      typeof newValue === 'boolean' ? newValue : !get().preference.mobileShowTopic;
+    if (!userId) return;
 
-    get().updatePreference({ mobileShowTopic }, n('toggleMobileTopic', newValue) as string);
+    await get().triggerEnableSync(userId, onEvent);
   },
-  toggleSystemRole: (newValue) => {
-    const showSystemRole =
-      typeof newValue === 'boolean' ? newValue : !get().preference.mobileShowTopic;
 
-    get().updatePreference({ showSystemRole }, n('toggleMobileTopic', newValue) as string);
+  refreshUserConfig: async () => {
+    await mutate([USER_CONFIG_FETCH_KEY, true]);
   },
-  updateGuideState: (guide) => {
-    const { updatePreference } = get();
-    const nextGuide = merge(get().preference.guide, guide);
-    updatePreference({ guide: nextGuide });
+
+  switchBackToChat: (sessionId) => {
+    get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
   },
-  updatePreference: (preference, action) => {
-    set(
-      produce((draft: GlobalCommonState) => {
-        draft.preference = merge(draft.preference, preference);
-      }),
-      false,
-      action,
-    );
+  triggerEnableSync: async (userId: string, onEvent: OnSyncEvent) => {
+    // double-check the sync ability
+    // if there is no channelName, don't start sync
+    const sync = syncSettingsSelectors.webrtcConfig(get());
+    if (!sync.channelName) return false;
+
+    const name = syncSettingsSelectors.deviceName(get());
+
+    const defaultUserName = `My ${browserInfo.browser} (${browserInfo.os})`;
+
+    set({ syncStatus: PeerSyncStatus.Connecting });
+    return globalService.enabledSync({
+      channel: {
+        name: sync.channelName,
+        password: sync.channelPassword,
+      },
+      onAwarenessChange(state) {
+        set({ syncAwareness: state });
+      },
+      onSyncEvent: onEvent,
+      onSyncStatusChange: (status) => {
+        set({ syncStatus: status });
+      },
+      signaling: sync.signaling,
+      user: {
+        id: userId,
+        // if user don't set the name, use default name
+        name: name || defaultUserName,
+        ...browserInfo,
+      },
+    });
+  },
+  updateAvatar: async (avatar) => {
+    await userService.updateAvatar(avatar);
+    await get().refreshUserConfig();
   },
   useCheckLatestVersion: () =>
     useSWR('checkLatestVersion', globalService.getLatestVersion, {
@@ -82,11 +111,81 @@ export const createCommonSlice: StateCreator<
           set({ hasNewVersion: true, latestVersion: data }, false, n('checkLatestVersion'));
       },
     }),
-  useFetchGlobalConfig: () =>
+  useCheckTrace: (shouldFetch) =>
+    useSWR<boolean>(
+      ['checkTrace', shouldFetch],
+      () => {
+        const userAllowTrace = preferenceSelectors.userAllowTrace(get());
+        // if not init with server side, return false
+        if (!shouldFetch) return Promise.resolve(false);
+
+        // if user have set the trace, return false
+        if (typeof userAllowTrace === 'boolean') return Promise.resolve(false);
+
+        return messageService.messageCountToCheckTrace();
+      },
+      {
+        revalidateOnFocus: false,
+      },
+    ),
+
+  useEnabledSync: (userEnableSync, userId, onEvent) =>
+    useSWR<boolean>(
+      ['enableSync', userEnableSync, userId],
+      async () => {
+        // if user don't enable sync or no userId ,don't start sync
+        if (!userId) return false;
+
+        // if user don't enable sync, stop sync
+        if (!userEnableSync) return globalService.disableSync();
+
+        return get().triggerEnableSync(userId, onEvent);
+      },
+      {
+        onSuccess: (syncEnabled) => {
+          set({ syncEnabled });
+        },
+        revalidateOnFocus: false,
+      },
+    ),
+  useFetchServerConfig: () =>
     useSWR<GlobalServerConfig>('fetchGlobalConfig', globalService.getGlobalConfig, {
       onSuccess: (data) => {
-        if (data) set({ serverConfig: data });
+        if (data) {
+          const serverSettings: DeepPartial<GlobalSettings> = {
+            defaultAgent: data.defaultAgent,
+            languageModel: data.languageModel,
+          };
+
+          const defaultSettings = merge(get().defaultSettings, serverSettings);
+          set({ defaultSettings, serverConfig: data }, false, n('initGlobalConfig'));
+        }
       },
       revalidateOnFocus: false,
     }),
+  useFetchUserConfig: (initServer) =>
+    useSWR<UserConfig | undefined>(
+      [USER_CONFIG_FETCH_KEY, initServer],
+      async () => {
+        if (!initServer) return;
+        return userService.getUserConfig();
+      },
+      {
+        onSuccess: (data) => {
+          if (!data) return;
+
+          set(
+            { avatar: data.avatar, settings: data.settings, userId: data.uuid },
+            false,
+            n('fetchUserConfig', data),
+          );
+
+          const { language } = settingsSelectors.currentSettings(get());
+          if (language === 'auto') {
+            switchLang('auto');
+          }
+        },
+        revalidateOnFocus: false,
+      },
+    ),
 });

@@ -1,5 +1,7 @@
 {
   "addAgent": "Thêm trợ lý",
+  "addAgentAndConverse": "Thêm trợ lý và trò chuyện",
+  "addAgentSuccess": "Thêm thành công",
   "guide": {
     "func1": {
       "desc1": "Trong cửa sổ trò chuyện, nhấp vào cài đặt ở góc trên bên phải để vào trang cài đặt trợ lý bạn muốn gửi;",
