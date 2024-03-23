@@ -193,6 +193,22 @@
         "title": "API Key"
       }
     },
+    "TogetherAI": {
+      "checker": {
+        "desc": "Verifica si la dirección del proxy está correctamente escrita"
+      },
+      "customModelName": {
+        "desc": "Agrega modelos personalizados, separados por comas (,) si son varios",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Nombre del modelo personalizado"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "Ingresa la API Key de TogetherAI AI",
+        "placeholder": "API Key de TogetherAI AI",
+        "title": "API Key"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity AI",
       "token": {

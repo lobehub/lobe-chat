@@ -193,6 +193,22 @@
         "title": "API-ключ"
       }
     },
+    "TogetherAI": {
+      "checker": {
+        "desc": "Проверьте правильность заполнения адреса прокси"
+      },
+      "customModelName": {
+        "desc": "Добавьте пользовательскую модель, используя запятую (,) для разделения нескольких моделей",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Имя пользовательской модели"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "Введите API-ключ от TogetherAI AI",
+        "placeholder": "Ключ API TogetherAI AI",
+        "title": "API-ключ"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity",
       "token": {

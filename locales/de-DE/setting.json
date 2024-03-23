@@ -193,6 +193,22 @@
         "title": "API-Schlüssel"
       }
     },
+    "TogetherAI": {
+      "checker": {
+        "desc": "Überprüfen Sie, ob die Proxy-Adresse korrekt eingegeben wurde"
+      },
+      "customModelName": {
+        "desc": "Fügen Sie benutzerdefinierte Modelle hinzu. Verwenden Sie zur Angabe mehrerer Modelle ein Komma (,)",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Benutzerdefinierte Modellnamen"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "Geben Sie den API-Schlüssel von TogetherAI AI ein",
+        "placeholder": "TogetherAI AI API-Schlüssel",
+        "title": "API-Schlüssel"
+      }
+    },
     "Perplexity": {
       "title": "perplexity",
       "token": {

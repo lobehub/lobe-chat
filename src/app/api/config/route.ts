@@ -23,6 +23,7 @@ export const GET = async () => {
     ENABLED_ANTHROPIC,
     ENABLED_MISTRAL,
     ENABLED_OPENROUTER,
+    ENABLED_TOGETHERAI,
     DEFAULT_AGENT_CONFIG,
     OLLAMA_CUSTOM_MODELS,
   } = getServerConfig();
@@ -44,6 +45,7 @@ export const GET = async () => {
       ollama: { customModelName: OLLAMA_CUSTOM_MODELS, enabled: ENABLE_OLLAMA },
       openrouter: { enabled: ENABLED_OPENROUTER },
       perplexity: { enabled: ENABLED_PERPLEXITY },
+      togetherai: { enabled: ENABLED_TOGETHERAI },
       zhipu: { enabled: ENABLED_ZHIPU },
     },
     telemetry: {

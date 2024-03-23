@@ -12,6 +12,7 @@ import {
   OpenAIProvider,
   OpenRouterProvider,
   PerplexityProvider,
+  TogetherAIProvider,
   ZhiPuProvider,
 } from '@/config/modelProviders';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
@@ -65,6 +66,9 @@ const groqAPIKey = (s: GlobalStore) => modelProvider(s).groq.apiKey;
 
 const enableOpenrouter = (s: GlobalStore) => modelProvider(s).openrouter.enabled;
 const openrouterAPIKey = (s: GlobalStore) => modelProvider(s).openrouter.apiKey;
+
+const enableTogetherAI = (s: GlobalStore) => modelProvider(s).togetherai.enabled;
+const togetheraiAPIKey = (s: GlobalStore) => modelProvider(s).togetherai.apiKey;
 
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
@@ -147,8 +151,19 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
 
   const openrouterModelConfig = parseModelString(
     currentSettings(s).languageModel.openrouter.customModelName,
-  )
-  const openrouterChatModels = processChatModels(openrouterModelConfig, OpenRouterProvider.chatModels);
+  );
+  const openrouterChatModels = processChatModels(
+    openrouterModelConfig,
+    OpenRouterProvider.chatModels,
+  );
+
+  const togetheraiModelConfig = parseModelString(
+    currentSettings(s).languageModel.togetherai.customModelName,
+  );
+  const togetheraiChatModels = processChatModels(
+    togetheraiModelConfig,
+    TogetherAIProvider.chatModels,
+  );
 
   return [
     {
@@ -165,7 +180,8 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
     { ...GroqProvider, enabled: enableGroq(s) },
     { ...ZhiPuProvider, enabled: enableZhipu(s) },
     { ...MoonshotProvider, enabled: enableMoonshot(s) },
-    { ...OpenRouterProvider, chatModels: openrouterChatModels, enabled: enableOpenrouter(s)}
+    { ...OpenRouterProvider, chatModels: openrouterChatModels, enabled: enableOpenrouter(s) },
+    { ...TogetherAIProvider, chatModels: togetheraiChatModels, enabled: enableTogetherAI(s) },
   ];
 };
 
@@ -252,8 +268,12 @@ export const modelProviderSelectors = {
   // Groq
   enableGroq,
   groqAPIKey,
-  
+
   // OpenRouter
   enableOpenrouter,
   openrouterAPIKey,
+
+  // TogetherAI
+  enableTogetherAI,
+  togetheraiAPIKey,
 };

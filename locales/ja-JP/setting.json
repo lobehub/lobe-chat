@@ -193,6 +193,22 @@
         "title": "APIキー"
       }
     },
+    "TogetherAI": {
+      "checker": {
+        "desc": "プロキシアドレスが正しく入力されているかをテストします"
+      },
+      "customModelName": {
+        "desc": "カスタムモデルを追加します。複数のモデルはコンマ（,）で区切ってください",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "カスタムモデル名"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "TogetherAI AIから取得したAPIキーを入力してください",
+        "placeholder": "TogetherAI AI APIキー",
+        "title": "APIキー"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity",
       "token": {
