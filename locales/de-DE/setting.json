@@ -440,11 +440,47 @@
     "placeholder": "Geben Sie die Kennung des Assistenten ein, die eindeutig sein muss, z. B. Web-Entwicklung",
     "tooltips": "Auf dem Assistentenmarkt teilen"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Fügen Sie einen Namen hinzu, um das Gerät zu identifizieren",
+        "placeholder": "Geben Sie den Gerätenamen ein",
+        "title": "Gerätename"
+      },
+      "title": "Geräteinformationen",
+      "unknownBrowser": "Unbekannter Browser",
+      "unknownOS": "Unbekanntes Betriebssystem"
+    },
+    "warning": {
+      "message": "Diese Funktion ist derzeit experimentell und kann unerwartete oder instabile Situationen aufweisen. Bitte geben Sie bei Problemen rechtzeitig Feedback ab."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC verwendet diesen Namen, um einen Synchronisierungskanal zu erstellen. Stellen Sie sicher, dass der Kanalname eindeutig ist",
+        "placeholder": "Geben Sie den Synchronisierungskanalnamen ein",
+        "shuffle": "Zufällige Generierung",
+        "title": "Synchronisierungskanalname"
+      },
+      "channelPassword": {
+        "desc": "Fügen Sie ein Passwort hinzu, um die Vertraulichkeit des Kanals zu gewährleisten. Nur wenn das Passwort korrekt ist, kann das Gerät dem Kanal beitreten",
+        "placeholder": "Geben Sie das Synchronisierungskennwort ein",
+        "title": "Synchronisierungskennwort"
+      },
+      "desc": "Echtzeit, Punkt-zu-Punkt-Datenkommunikation, bei der die Geräte gleichzeitig online sein müssen, um synchronisiert zu werden",
+      "enabled": {
+        "invalid": "Bitte geben Sie zuerst den Synchronisierungskanalnamen ein, bevor Sie die Synchronisierung aktivieren",
+        "title": "Synchronisierung aktivieren"
+      },
+      "title": "WebRTC-Synchronisierung"
+    }
+  },
   "tab": {
     "about": "Über",
     "agent": "Standard-Assistent",
     "common": "Allgemeine Einstellungen",
+    "experiment": "Experiment",
     "llm": "Sprachmodell",
+    "sync": "Cloud-Synchronisierung",
     "tts": "Sprachdienste"
   },
   "tools": {

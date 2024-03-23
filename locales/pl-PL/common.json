@@ -10,17 +10,12 @@
   },
   "about": "O nas",
   "advanceSettings": "Zaawansowane ustawienia",
-  "agentMaxToken": "Maksymalna długość sesji",
-  "agentModel": "Model",
-  "agentProfile": "Profil asystenta",
   "appInitializing": "LobeChat inicjuje, proszę czekać...",
-  "archive": "Archiwum",
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
   "cancel": "Anuluj",
   "changelog": "Dziennik zmian",
   "close": "Zamknij",
-  "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Po usunięciu nie będzie możliwe jego odzyskanie.",
   "copy": "Kopiuj",
   "copyFail": "Nie udało się skopiować",
   "copySuccess": "Skopiowano pomyślnie",
@@ -128,6 +123,39 @@
   "setting": "Ustawienia",
   "share": "Udostępnij",
   "stop": "Zatrzymaj",
+  "sync": {
+    "actions": {
+      "settings": "Ustawienia synchronizacji",
+      "sync": "Synchronizuj teraz"
+    },
+    "awareness": {
+      "current": "Bieżące urządzenie"
+    },
+    "channel": "Kanał",
+    "disabled": {
+      "actions": {
+        "enable": "Włącz synchronizację chmurową",
+        "settings": "Konfiguruj parametry synchronizacji"
+      },
+      "desc": "Dane bieżącej sesji są przechowywane tylko w tej przeglądarce. Jeśli chcesz synchronizować dane między wieloma urządzeniami, skonfiguruj i włącz synchronizację chmurową.",
+      "title": "Synchronizacja danych wyłączona"
+    },
+    "enabled": {
+      "title": "Synchronizacja danych"
+    },
+    "status": {
+      "connecting": "Łączenie",
+      "disabled": "Synchronizacja wyłączona",
+      "ready": "Gotowy",
+      "synced": "Synchronizacja zakończona",
+      "syncing": "Synchronizacja w toku",
+      "unconnected": "Brak połączenia"
+    },
+    "title": "Stan synchronizacji",
+    "unconnected": {
+      "tip": "Błąd połączenia z serwerem sygnalizacyjnym, nie można nawiązać kanału komunikacyjnego punkt-punkt, sprawdź sieć i spróbuj ponownie"
+    }
+  },
   "tab": {
     "chat": "Czat",
     "market": "Odkrywaj",

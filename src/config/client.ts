@@ -8,9 +8,6 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv {
-      NEXT_PUBLIC_ANALYTICS_VERCEL?: string;
-      NEXT_PUBLIC_VERCEL_DEBUG?: string;
-
       NEXT_PUBLIC_ANALYTICS_MIXPANEL?: string;
       NEXT_PUBLIC_MIXPANEL_PROJECT_TOKEN?: string;
       NEXT_PUBLIC_MIXPANEL_DEBUG?: string;
@@ -44,10 +41,6 @@ export const getClientConfig = () => ({
 
   // docs
   LOBE_CHAT_DOCS: process.env.NEXT_PUBLIC_LOBE_CHAT_DOCS,
-
-  // Vercel Analytics
-  ANALYTICS_VERCEL: process.env.NEXT_PUBLIC_ANALYTICS_VERCEL === '1',
-  VERCEL_DEBUG: process.env.NEXT_PUBLIC_VERCEL_DEBUG === '1',
 
   // Plausible Analytics
   ANALYTICS_PLAUSIBLE: process.env.NEXT_PUBLIC_ANALYTICS_PLAUSIBLE === '1',
