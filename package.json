@@ -34,7 +34,7 @@
     "dev": "next dev -p 3010",
     "docs": "lobe-i18n md && npm run workflow:docs",
     "i18n": "npm run workflow:i18n && lobe-i18n",
-    "i18n:docs": "lobe-i18n md && npm run workflow:docs",
+    "i18n:docs": "lobe-i18n md && npm run workflow:mdx && npm run lint:mdx",
     "lint": "npm run lint:ts && npm run lint:style && npm run type-check && npm run lint:circular",
     "lint:circular": "dpdm src/**/*.ts  --warning false  --tree false  --exit-code circular:1  -T true --skip-dynamic-imports circular",
     "lint:md": "remark . --quiet --frail --output",
@@ -53,6 +53,7 @@
     "type-check": "tsc --noEmit",
     "workflow:docs": "tsx scripts/docsWorkflow/index.ts",
     "workflow:i18n": "tsx scripts/i18nWorkflow/index.ts",
+    "workflow:mdx": "tsx scripts/mdxWorkflow/index.ts",
     "workflow:readme": "tsx scripts/readmeWorkflow/index.ts"
   },
   "lint-staged": {
@@ -165,6 +166,7 @@
     "@edge-runtime/vm": "^3",
     "@lobehub/i18n-cli": "latest",
     "@lobehub/lint": "latest",
+    "@lobehub/seo-cli": "latest",
     "@next/bundle-analyzer": "^14",
     "@next/eslint-plugin-next": "^14",
     "@peculiar/webcrypto": "^1",
