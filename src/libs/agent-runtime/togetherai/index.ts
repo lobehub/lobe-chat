@@ -38,8 +38,6 @@ export class LobeTogetherAI implements LobeRuntimeAI {
       );
       const [prod, debug] = response.tee();
 
-      console.log('Debug payload: ' + JSON.stringify(payload));
-
       if (process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION === '1') {
         debugStream(debug.toReadableStream()).catch(console.error);
       }
