@@ -5,6 +5,7 @@ description: >-
   Crontab 自动更新脚本。
 tags: 'Docker, LobeChat, 部署指引, 私有设备, 环境变量, 代理地址, Crontab, 自动更新'
 ---
+
 # Docker 部署指引
 
 <div style={{display:"flex", gap: 4}}>
@@ -27,14 +28,17 @@ tags: 'Docker, LobeChat, 部署指引, 私有设备, 环境变量, 代理地址,
       ```fish
       $ apt install docker.io
       ```
-    </Tabs.Tab>
+   
+</Tabs.Tab>
 
     <Tabs.Tab>
       ```fish
       $ yum install docker
       ```
-    </Tabs.Tab>
-  </Tabs>
+   
+</Tabs.Tab>
+ 
+</Tabs>
 
   ### Docker 指令部署
 
@@ -55,22 +59,26 @@ tags: 'Docker, LobeChat, 部署指引, 私有设备, 环境变量, 代理地址,
 
   <Callout type={'tip'}>
     LobeChat 支持的完整环境变量列表请参考 [📘 环境变量](/zh/self-hosting/environment-variables) 部分
-  </Callout>
+ 
+</Callout>
 
   <Callout>
     由于官方的 Docker
     镜像构建大约需要半小时左右，如果在更新部署后会出现「存在更新」的提示，可以等待镜像构建完成后再次部署。
-  </Callout>
+ 
+</Callout>
 
   <Callout type="warning">
     官方 Docker 镜像中未设定密码，强烈建议添加密码以提升安全性，否则你可能会遇到 [My API Key was
     stolen!!!](https://github.com/lobehub/lobe-chat/issues/1123) 这样的情况
-  </Callout>
+ 
+</Callout>
 
   <Callout type="important">
     注意，当**部署架构与镜像的不一致时**，需要对 **Sharp** 进行交叉编译，详见 [Sharp
     交叉编译](https://sharp.pixelplumbing.com/install#cross-platform)
-  </Callout>
+ 
+</Callout>
 
   #### 使用代理地址
 

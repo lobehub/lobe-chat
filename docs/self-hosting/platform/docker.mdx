@@ -8,6 +8,7 @@ tags: >-
   Docker Deployment, LobeChat Service, Docker Command, OpenAI API Key, Proxy
   Configuration, Automatic Update Script
 ---
+
 # Docker Deployment Guide
 
 <div style={{display:"flex", gap: 4}}>
@@ -30,14 +31,17 @@ We provide a [Docker image][docker-release-link] for you to deploy the LobeChat 
       ```fish
       $ apt install docker.io
       ```
-    </Tabs.Tab>
+   
+</Tabs.Tab>
 
     <Tabs.Tab>
       ```fish
       $ yum install docker
       ```
-    </Tabs.Tab>
-  </Tabs>
+   
+</Tabs.Tab>
+ 
+</Tabs>
 
   ### Docker Command Deployment
 
@@ -62,19 +66,22 @@ We provide a [Docker image][docker-release-link] for you to deploy the LobeChat 
   <Callout type="tip">
     Since the official Docker image build takes about half an hour, if you see the "update available"
     prompt after deployment, you can wait for the image to finish building before deploying again.
-  </Callout>
+ 
+</Callout>
 
   <Callout type="warning">
     The official Docker image does not have a password set. It is strongly recommended to add a
     password to enhance security, otherwise you may encounter situations like [My API Key was
     stolen!!!](https://github.com/lobehub/lobe-chat/issues/1123).
-  </Callout>
+ 
+</Callout>
 
   <Callout type="important">
     Note that when the **deployment architecture is inconsistent with the image**, you need to
     cross-compile **Sharp**, see [Sharp
     Cross-Compilation](https://sharp.pixelplumbing.com/install#cross-platform) for details.
-  </Callout>
+ 
+</Callout>
 
   #### Using a Proxy Address
 
