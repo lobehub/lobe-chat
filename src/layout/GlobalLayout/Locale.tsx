@@ -1,4 +1,3 @@
-import { useWhyDidYouUpdate } from 'ahooks';
 import { ConfigProvider } from 'antd';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 import { isRtlLang } from 'rtl-detect';
@@ -33,6 +32,9 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
   useEffect(() => {
     const handleLang = async (lng: string) => {
       setLang(lng);
+
+      if (lang === lng) return;
+
       const newLocale = await getAntdLocale(lng);
       setLocale(newLocale);
     };
@@ -41,12 +43,10 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
     return () => {
       i18n.instance.off('languageChanged', handleLang);
     };
-  }, [i18n]);
+  }, [i18n, lang]);
 
   // detect document direction
   const documentDir = isRtlLang(lang!) ? 'rtl' : 'ltr';
-
-  useWhyDidYouUpdate('Locale', { children, defaultLang, lang, locale });
 
   return (
     <ConfigProvider direction={documentDir} locale={locale}>
