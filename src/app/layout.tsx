@@ -13,13 +13,14 @@ import {
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
 import Layout from '@/layout/GlobalLayout';
+import { getAntdLocale } from '@/utils/locale';
 import { isMobileDevice } from '@/utils/responsive';
 
 import StyleRegistry from './StyleRegistry';
 
 const { ENABLE_OAUTH_SSO } = getServerConfig();
 
-const RootLayout = ({ children }: PropsWithChildren) => {
+const RootLayout = async ({ children }: PropsWithChildren) => {
   // get default theme config to use with ssr
   const cookieStore = cookies();
   const appearance = cookieStore.get(LOBE_THEME_APPEARANCE);
@@ -28,11 +29,13 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
   const direction = isRtlLang(lang?.value || DEFAULT_LANG) ? 'rtl' : 'ltr';
 
+  const antdLocale = await getAntdLocale(lang?.value);
   return (
     <html dir={direction} lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
       <body>
         <StyleRegistry>
           <Layout
+            antdLocale={antdLocale}
             defaultAppearance={appearance?.value}
             defaultLang={lang?.value}
             defaultNeutralColor={neutralColor?.value as any}

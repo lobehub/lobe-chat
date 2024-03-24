@@ -45,6 +45,7 @@ const Container = memo<PropsWithChildren>(({ children }) => {
 });
 
 interface GlobalLayoutProps extends AppThemeProps {
+  antdLocale?: any;
   defaultLang?: string;
   enableOAuthSSO?: boolean;
 }
@@ -53,11 +54,12 @@ const GlobalLayout = ({
   children,
   defaultLang,
   enableOAuthSSO = false,
+  antdLocale,
   ...theme
 }: GlobalLayoutProps) => {
   const content = (
     <AppTheme {...theme}>
-      <Locale defaultLang={defaultLang}>
+      <Locale antdLocale={antdLocale} defaultLang={defaultLang}>
         <StoreHydration />
         <Container>{children}</Container>
         <DebugUI />

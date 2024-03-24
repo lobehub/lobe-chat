@@ -1,39 +1,21 @@
+import { useWhyDidYouUpdate } from 'ahooks';
 import { ConfigProvider } from 'antd';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 import { isRtlLang } from 'rtl-detect';
-import useSWR from 'swr';
 
 import { createI18nNext } from '@/locales/create';
-import { normalizeLocale } from '@/locales/resources';
 import { isOnServerSide } from '@/utils/env';
-
-const getAntdLocale = async (lang?: string) => {
-  let normalLang = normalizeLocale(lang);
-
-  // due to antd only have ar-EG locale, we need to convert ar to ar-EG
-  // refs: https://ant.design/docs/react/i18n
-
-  // And we don't want to handle it in `normalizeLocale` function
-  // because of other locale files are all `ar` not `ar-EG`
-  if (normalLang === 'ar') normalLang = 'ar-EG';
-
-  const { default: locale } = await import(`antd/locale/${normalLang.replace('-', '_')}.js`);
-
-  return locale;
-};
+import { getAntdLocale } from '@/utils/locale';
 
 interface LocaleLayoutProps extends PropsWithChildren {
+  antdLocale?: any;
   defaultLang?: string;
 }
 
-const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
+const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) => {
   const [i18n] = useState(createI18nNext(defaultLang));
   const [lang, setLang] = useState(defaultLang);
-
-  const { data: locale } = useSWR(['antd-locale', lang], ([, key]) => getAntdLocale(key), {
-    dedupingInterval: 0,
-    revalidateOnFocus: false,
-  });
+  const [locale, setLocale] = useState(antdLocale);
 
   // if run on server side, init i18n instance everytime
   if (isOnServerSide) {
@@ -49,8 +31,10 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
 
   // handle i18n instance language change
   useEffect(() => {
-    const handleLang = (e: string) => {
-      setLang(e);
+    const handleLang = async (lng: string) => {
+      setLang(lng);
+      const newLocale = await getAntdLocale(lng);
+      setLocale(newLocale);
     };
 
     i18n.instance.on('languageChanged', handleLang);
@@ -62,11 +46,15 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang }) => {
   // detect document direction
   const documentDir = isRtlLang(lang!) ? 'rtl' : 'ltr';
 
+  useWhyDidYouUpdate('Locale', { children, defaultLang, lang, locale });
+
   return (
     <ConfigProvider direction={documentDir} locale={locale}>
       {children}
     </ConfigProvider>
   );
 });
+
+Locale.displayName = 'Locale';
 
 export default Locale;

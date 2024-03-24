@@ -7,7 +7,7 @@ import { globalService } from '@/services/global';
 import { userService } from '@/services/user';
 import { useGlobalStore } from '@/store/global';
 import { GlobalServerConfig } from '@/types/settings';
-import { switchLang } from '@/utils/switchLang';
+import { switchLang } from '@/utils/client/switchLang';
 
 vi.mock('zustand/traditional');
 
