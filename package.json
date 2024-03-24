@@ -63,7 +63,7 @@
     ],
     "*.mdx": [
       "npm run workflow:mdx",
-      "eslint --fix --quiet"
+      "eslint --quiet --fix"
     ],
     "*.json": [
       "prettier --write --no-error-on-unmatched-pattern"

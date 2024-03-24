@@ -30,16 +30,17 @@ module.exports = defineConfig({
   reference:
     'You need to maintain the component format of MDX, and the output text does not need to be wrapped in any code block syntax at the outermost level.',
   markdown: {
-    entry: ['./README.zh-CN.md', './docs/**/*.zh-CN.md', './docs/**/*.zh-CN.mdx'],
+    entry: ['./README.zh-CN.md', './contributing/**/*.zh-CN.md', './docs/**/*.zh-CN.mdx'],
+    entryExtension: '.zh-CN.mdx',
     entryLocale: 'zh-CN',
     outputLocales: ['en-US'],
-    outputExtensions: (locale, { getDefaultExtension, filePath }) => {
+    outputExtensions: (locale, { filePath }) => {
       if (filePath.includes('.mdx')) {
         if (locale === 'en-US') return '.mdx';
         return `.${locale}.mdx`;
       } else {
         if (locale === 'en-US') return '.md';
-        return getDefaultExtension(locale);
+        return `.${locale}.md`;
       }
     },
   },

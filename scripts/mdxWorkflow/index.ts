@@ -18,8 +18,7 @@ const run = () => {
       .replaceAll(`"<`, `"`)
       .replaceAll(`>'`, `'`)
       .replaceAll(`>"`, `"`)
-      .replaceAll(' </', '\n</')
-      .replaceAll(' </', '\n</')
+      .replaceAll(/(?<=\S) <\//g, '\n</')
       .replaceAll(`\\*\\* `, '** ')
       .replaceAll(` \\*\\*`, ' **')
       .replaceAll(/\n{2,}/g, '\n\n');
