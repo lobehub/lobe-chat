@@ -26,6 +26,7 @@ export const GET = async () => {
     ENABLED_ZEROONE,
     DEFAULT_AGENT_CONFIG,
     OLLAMA_CUSTOM_MODELS,
+    OPENROUTER_CUSTOM_MODELS,
   } = getServerConfig();
 
   const config: GlobalServerConfig = {
@@ -43,7 +44,7 @@ export const GET = async () => {
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
       ollama: { customModelName: OLLAMA_CUSTOM_MODELS, enabled: ENABLE_OLLAMA },
-      openrouter: { enabled: ENABLED_OPENROUTER },
+      openrouter: { customModelName: OPENROUTER_CUSTOM_MODELS, enabled: ENABLED_OPENROUTER },
       perplexity: { enabled: ENABLED_PERPLEXITY },
       zeroone: { enabled: ENABLED_ZEROONE },
       zhipu: { enabled: ENABLED_ZHIPU },

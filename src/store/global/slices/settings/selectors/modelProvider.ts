@@ -149,9 +149,15 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
 
   const ollamaChatModels = processChatModels(ollamaModelConfig, OllamaProvider.chatModels);
 
-  const openrouterModelConfig = parseModelString(
-    currentSettings(s).languageModel.openrouter.customModelName,
-  )
+  const openrouterModelString = [
+    s.serverConfig.languageModel?.openrouter?.customModelName,
+    currentSettings(s).languageModel.openrouter.customModelName
+  ]
+    .filter(Boolean)
+    .join(',');
+  
+  const openrouterModelConfig = parseModelString(openrouterModelString);
+  
   const openrouterChatModels = processChatModels(openrouterModelConfig, OpenRouterProvider.chatModels);
 
   return [
