@@ -4,11 +4,11 @@ import { SessionProvider } from 'next-auth/react';
 import { cookies } from 'next/headers';
 import { PropsWithChildren } from 'react';
 import { isRtlLang } from 'rtl-detect';
-import GlobalProvider from 'src/layout/GlobalProvider';
 
 import Analytics from '@/components/Analytics';
 import { getServerConfig } from '@/config/server';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
+import GlobalProvider from '@/layout/GlobalProvider';
 import { API_ENDPOINTS } from '@/services/_url';
 import { isMobileDevice } from '@/utils/responsive';
 
