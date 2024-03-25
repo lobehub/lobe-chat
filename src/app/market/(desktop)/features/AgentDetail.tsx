@@ -38,7 +38,7 @@ const SideBar = memo(() => {
         setTempId(useMarketStore.getState().currentIdentifier);
         deactivateAgent();
       } else if (tempId) {
-        activateAgent(tempId);
+        activateAgent(tempId, useMarketStore.getState().currentMarketId);
       }
     },
     [deactivateAgent, activateAgent, tempId],

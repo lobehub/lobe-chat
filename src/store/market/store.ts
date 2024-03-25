@@ -27,7 +27,7 @@ const persistOptions: PersistOptions<Store> = {
       mode: 'search',
       selectors: [
         // map state key to storage key
-        { currentIdentifier: 'agent' },
+        { currentIdentifier: 'agent', currentMarketId: 'market' },
       ],
     },
   }),

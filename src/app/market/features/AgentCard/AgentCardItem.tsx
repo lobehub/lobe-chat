@@ -14,7 +14,7 @@ import { useStyles } from './style';
 
 const { Paragraph } = Typography;
 
-const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
+const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier, marketId }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
   const onAgentCardClick = useMarketStore((s) => s.activateAgent);
@@ -24,7 +24,10 @@ const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
   const { avatar, title, description, tags, backgroundColor } = meta;
 
   return (
-    <Flexbox className={styles.container} onClick={() => onAgentCardClick(identifier)}>
+    <Flexbox
+      className={styles.container}
+      onClick={() => onAgentCardClick(identifier, marketId || 0)}
+    >
       <AgentCardBanner meta={meta} style={{ opacity: isDarkMode ? 0.9 : 0.4 }} />
       <Flexbox className={styles.inner} gap={8} ref={ref}>
         <Avatar
