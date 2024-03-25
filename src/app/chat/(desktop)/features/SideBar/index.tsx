@@ -54,7 +54,6 @@ const Desktop = memo(() => {
           height: '100%',
           maxHeight: '100vh',
           minWidth: CHAT_SIDEBAR_WIDTH,
-          overflow: 'scroll',
         }}
       >
         <SafeSpacing />

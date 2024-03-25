@@ -10,17 +10,12 @@
   },
   "about": "소개",
   "advanceSettings": "고급 설정",
-  "agentMaxToken": "최대 대화 길이",
-  "agentModel": "모델",
-  "agentProfile": "에이전트 프로필",
   "appInitializing": "LobeChat이 초기화 중입니다. 잠시 기다려주세요...",
-  "archive": "보관",
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
   "cancel": "취소",
   "changelog": "변경 로그",
   "close": "닫기",
-  "confirmRemoveSessionItemAlert": "이 에이전트를 삭제하려고 합니다. 삭제 후에는 복구할 수 없습니다. 작업을 확인하십시오.",
   "copy": "복사",
   "copyFail": "복사 실패",
   "copySuccess": "복사 성공",
@@ -128,6 +123,39 @@
   "setting": "설정",
   "share": "공유",
   "stop": "중지",
+  "sync": {
+    "actions": {
+      "settings": "동기화 설정",
+      "sync": "즉시 동기화"
+    },
+    "awareness": {
+      "current": "현재 장치"
+    },
+    "channel": "채널",
+    "disabled": {
+      "actions": {
+        "enable": "클라우드 동기화 활성화",
+        "settings": "동기화 설정 구성"
+      },
+      "desc": "현재 세션 데이터는 이 브라우저에만 저장됩니다. 여러 장치 간에 데이터를 동기화해야 하는 경우 클라우드 동기화를 구성하고 활성화하세요.",
+      "title": "데이터 동기화가 비활성화됨"
+    },
+    "enabled": {
+      "title": "데이터 동기화"
+    },
+    "status": {
+      "connecting": "연결 중",
+      "disabled": "동기화가 비활성화됨",
+      "ready": "연결됨",
+      "synced": "동기화됨",
+      "syncing": "동기화 중",
+      "unconnected": "연결 실패"
+    },
+    "title": "동기화 상태",
+    "unconnected": {
+      "tip": "시그널 서버 연결 실패로 인해 피어 투 피어 통신 채널을 설정할 수 없습니다. 네트워크를 확인한 후 다시 시도하세요."
+    }
+  },
   "tab": {
     "chat": "채팅",
     "market": "발견",

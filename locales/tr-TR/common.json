@@ -10,17 +10,12 @@
   },
   "about": "Hakkında",
   "advanceSettings": "Gelişmiş Ayarlar",
-  "agentMaxToken": "Maksimum Oturum Süresi",
-  "agentModel": "Model",
-  "agentProfile": "Asistan Profili",
   "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
-  "archive": "Arşiv",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "cancel": "İptal",
   "changelog": "Changelog",
   "close": "Kapat",
-  "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "copy": "Kopyala",
   "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
@@ -128,6 +123,39 @@
   "setting": "Ayarlar",
   "share": "Paylaş",
   "stop": "Dur",
+  "sync": {
+    "actions": {
+      "settings": "Senkronizasyon Ayarları",
+      "sync": "Hemen Senkronize Et"
+    },
+    "awareness": {
+      "current": "Mevcut Cihaz"
+    },
+    "channel": "Kanal",
+    "disabled": {
+      "actions": {
+        "enable": "Bulut Senkronizasyonunu Etkinleştir",
+        "settings": "Senkronizasyon Ayarlarını Yapılandır"
+      },
+      "desc": "Mevcut oturum verileri sadece bu tarayıcıda depolanır. Verilerinizi birden fazla cihaz arasında senkronize etmeniz gerekiyorsa bulut senkronizasyonunu yapılandırın ve etkinleştirin.",
+      "title": "Veri Senkronizasyonu Devre Dışı"
+    },
+    "enabled": {
+      "title": "Veri Senkronizasyonu"
+    },
+    "status": {
+      "connecting": "Bağlanılıyor",
+      "disabled": "Senkronizasyon Devre Dışı",
+      "ready": "Bağlandı",
+      "synced": "Senkronize Edildi",
+      "syncing": "Senkronize Ediliyor",
+      "unconnected": "Bağlantı Başarısız"
+    },
+    "title": "Senkronizasyon Durumu",
+    "unconnected": {
+      "tip": "Sinyal sunucusuna bağlantı başarısız oldu, noktadan noktaya iletişim kanalı kurulamayabilir, lütfen ağı kontrol edip tekrar deneyin"
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Keşfet",
