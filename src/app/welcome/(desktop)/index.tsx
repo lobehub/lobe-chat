@@ -8,7 +8,6 @@ import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 
 import Footer from './features/Footer';
 import Showcase from './features/Showcase';
-import Layout from './layout.desktop';
 
 const Mobile: FC = dynamic(() => import('../(mobile)'), {
   loading: MobileSwitchLoading,
@@ -17,9 +16,7 @@ const Mobile: FC = dynamic(() => import('../(mobile)'), {
 
 export default memo(() => (
   <ResponsiveContainer Mobile={Mobile}>
-    <Layout>
-      <Showcase />
-      <Footer />
-    </Layout>
+    <Showcase />
+    <Footer />
   </ResponsiveContainer>
 ));

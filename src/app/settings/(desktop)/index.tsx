@@ -5,11 +5,9 @@ import { FC, memo } from 'react';
 
 import ResponsiveContainer from '@/components/ResponsiveContainer';
 import MobileSwitchLoading from '@/features/MobileSwitchLoading';
-import { SettingsTabs } from '@/store/global/initialState';
 
 import Common from '../common';
 import { SettingsCommonProps } from '../common/Common';
-import DesktopLayout from './layout.desktop';
 
 const Mobile: FC = dynamic(() => import('../(mobile)'), {
   loading: MobileSwitchLoading,
@@ -18,8 +16,6 @@ const Mobile: FC = dynamic(() => import('../(mobile)'), {
 
 export default memo<SettingsCommonProps>((props) => (
   <ResponsiveContainer Mobile={Mobile}>
-    <DesktopLayout activeTab={SettingsTabs.Common}>
-      <Common {...props} />
-    </DesktopLayout>
+    <Common {...props} />
   </ResponsiveContainer>
 ));

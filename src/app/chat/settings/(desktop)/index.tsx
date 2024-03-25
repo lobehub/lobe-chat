@@ -8,7 +8,7 @@ import ResponsiveContainer from '@/components/ResponsiveContainer';
 import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 
 import EditPage from '../features/EditPage';
-import Layout from './layout.desktop';
+import Layout from './layout';
 
 const Mobile: FC = dynamic(() => import('../(mobile)'), {
   loading: MobileSwitchLoading,
