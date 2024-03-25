@@ -11,7 +11,7 @@ import { switchLang } from '@/utils/client/switchLang';
 
 vi.mock('zustand/traditional');
 
-vi.mock('@/utils/switchLang', () => ({
+vi.mock('@/utils/client/switchLang', () => ({
   switchLang: vi.fn(),
 }));
 
