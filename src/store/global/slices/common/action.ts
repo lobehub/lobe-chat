@@ -12,10 +12,10 @@ import { UserConfig, userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
 import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
 import { OnSyncEvent, PeerSyncStatus } from '@/types/sync';
+import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
 import { browserInfo } from '@/utils/platform';
 import { setNamespace } from '@/utils/storeDebug';
-import { switchLang } from '@/utils/switchLang';
 
 import { preferenceSelectors } from '../preference/selectors';
 import { settingsSelectors, syncSettingsSelectors } from '../settings/selectors';
