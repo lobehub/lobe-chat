@@ -4,7 +4,7 @@
 
 <h1>Lobe Chat</h1>
 
-开源、现代化设计的 ChatGPT/LLMs 聊天应用与开发框架<br/>
+现代化设计的开源 ChatGPT/LLMs 聊天应用与开发框架<br/>
 支持语音合成、多模态、可扩展的（[function call][docs-functionc-call]）插件系统<br/>
 一键**免费**拥有你自己的 ChatGPT/Gemini/Claude/Ollama 应用
 
@@ -211,14 +211,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                          | 插件描述                                                                                                       |
-| ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [日历助手](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-03-13**</sup>            | 一个用于管理日历事件的插件 # 将自动生成工作流程中的 i18n<br/>`日历` `日程安排` `将自动生成工作流程中的-i-18-n` |
-| [图表和图示](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **pyxl** on **2024-02-05**</sup>        | 美人鱼图表，演示文稿方案，分析，研究网站，饼图。<br/>`图表` `图示`                                             |
-| [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-02-02**</sup>      | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br/>`社交` `推特` `x` `搜索`                            |
-| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br/>`加密货币` `btc` `eth` `bnb`      |
+| 最近新增                                                                                                          | 插件描述                                                                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| [日历助手](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-03-13**</sup>            | 一个用于管理日历事件的插件 # 将自动生成工作流程中的 i18n<br/>`日历` `日程安排` `将自动生成工作流程中的-i-18-n`                                |
+| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br/>`加密货币` `btc` `eth` `bnb`                                     |
+| [哔哩哔哩](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>       | 通过关键词视频搜索、回放访问、互动弹幕、热门视频推荐和热搜洞察等功能，深入体验哔哩哔哩丰富的内容，尽在您的指尖。<br/>`视频` `哔哩哔哩` `搜索` |
+| [Steam](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>          | 从 Steam 获取游戏信息和用户评论。<br/>`steam` `game`                                                                                          |
 
-> 📊 Total plugins: [<kbd>**59**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**57**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -246,14 +246,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                                  | 助手说明                                                                                                         |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| [老中医](https://chat-preview.lobehub.com/market?agent=claude-national-medical-master)<br/><sup>By **[GalileoFe](https://github.com/GalileoFe)** on **2024-03-22**</sup>                  | 让我康康！<br/>`咨询` `健康`                                                                                     |
-| [电子学导师](https://chat-preview.lobehub.com/market?agent=elec-circuit-tutor-prompt)<br/><sup>By **[XUANJI233](https://github.com/XUANJI233)** on **2024-03-22**</sup>                   | 擅长数字和模拟电路原理解释，提供电子学基础指导。<br/>`电子学` `导师` `解释` `电路` `原理`                        |
-| [游戏文本翻译师](https://chat-preview.lobehub.com/market?agent=translation-tutor-prompt)<br/><sup>By **[XUANJI233](https://github.com/XUANJI233)** on **2024-03-22**</sup>                | 游戏文本的翻译与双关、俚语解释 (请使用 claude)，如果有特殊符号请使用 \`\`\` 包裹<br/>`游戏` `文本` `翻译` `辅助` |
-| [亚马逊清单文案撰稿员](https://chat-preview.lobehub.com/market?agent=amazon-listing-copywriter)<br/><sup>By **[SpeedupMaster](https://github.com/SpeedupMaster)** on **2024-03-19**</sup> | 擅长撰写具有优化关键词的有说服力的亚马逊清单的专家。<br/>`撰稿` `亚马逊产品详情页` `搜索引擎优化` `关键词`       |
+| 最近新增                                                                                                                                                                  | 助手说明                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| [索赔分析器](https://chat-preview.lobehub.com/market?agent=fact-checking)<br/><sup>By **[pedroespecial101](https://github.com/pedroespecial101)** on **2024-03-25**</sup> | 详细的真相分析器（来自 <https://github.com/danielmiessler/fabric）><br/>`https-github-com-danielmiessler-fabric` |
+| [Rap 说唱歌词大师](https://chat-preview.lobehub.com/market?agent=rap-writer)<br/><sup>By **[aoocar](https://github.com/aoocar)** on **2024-03-25**</sup>                  | 将歌词以 rap 歌词的形式进行匹配，按照参考格式进行 rap 歌词创作<br/>`说唱` `歌词`                                 |
+| [Mdx SEO 专家](https://chat-preview.lobehub.com/market?agent=mdx-seo)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-03-24**</sup>         | 擅长将 Markdown 文章内容转换为优化的 JSON 格式数据，增强文章的在线可见性和搜索引擎排名。<br/>`seo` `markdown`    |
+| [老中医](https://chat-preview.lobehub.com/market?agent=claude-national-medical-master)<br/><sup>By **[GalileoFe](https://github.com/GalileoFe)** on **2024-03-22**</sup>  | 让我康康！<br/>`咨询` `健康`                                                                                     |
 
-> 📊 Total agents: [<kbd>**214**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**218**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
