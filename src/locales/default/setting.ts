@@ -202,6 +202,22 @@ export default {
         title: 'API Key',
       },
     },
+    TogetherAI: {
+      checker: {
+        desc: '测试代理地址是否正确填写',
+      },
+      customModelName: {
+        desc: '增加自定义模型，多个模型使用逗号（,）隔开',
+        placeholder: 'togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B',
+        title: '自定义模型名称',
+      },
+      title: 'TogetherAI',
+      token: {
+        desc: '填入来自 TogetherAI AI 的 API Key',
+        placeholder: 'TogetherAI AI API Key',
+        title: 'API Key',
+      },
+    },
     Zhipu: {
       title: '智谱',
       token: {

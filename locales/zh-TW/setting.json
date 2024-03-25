@@ -193,6 +193,22 @@
         "title": "API 金鑰"
       }
     },
+    "TogetherAI": {
+      "checker": {
+        "desc": "測試代理地址是否正確填寫"
+      },
+      "customModelName": {
+        "desc": "增加自定義模型，多個模型使用逗號（,）隔開",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "自定義模型名稱"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "填入來自 TogetherAI AI 的 API 金鑰",
+        "placeholder": "TogetherAI AI API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity AI",
       "token": {

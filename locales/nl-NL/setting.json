@@ -193,6 +193,22 @@
         "title": "API-sleutel"
       }
     },
+    "TogetherAI": {
+      "checker": {
+        "desc": "Check of de proxy-adres correct is ingevuld"
+      },
+      "customModelName": {
+        "desc": "Voeg aangepast model toe, gebruik een komma (,) om meerdere modellen te scheiden",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Aangepaste modelnaam"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "Voer de API-sleutel in van TogetherAI AI",
+        "placeholder": "TogetherAI AI API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity",
       "token": {

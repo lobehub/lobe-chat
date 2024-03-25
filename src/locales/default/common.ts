@@ -109,6 +109,7 @@ export default {
     openai: 'OpenAI',
     openrouter: 'OpenRouter',
     perplexity: 'Perplexity',
+    togetherai: 'TogetherAI',
     zhipu: '智谱AI',
   },
   noDescription: '暂无描述',

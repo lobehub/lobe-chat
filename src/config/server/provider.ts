@@ -42,9 +42,12 @@ declare global {
 
       // Groq Provider
       GROQ_API_KEY?: string;
-      
+
       // OpenRouter Provider
       OPENROUTER_API_KEY?: string;
+
+      // TogetherAI Provider
+      TOGETHERAI_API_KEY?: string;
 
       // AWS Credentials
       AWS_REGION?: string;
@@ -77,8 +80,10 @@ export const getProviderConfig = () => {
   const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || '';
 
   const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
-  
+
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '';
+
+  const TOGETHERAI_API_KEY = process.env.TOGETHERAI_API_KEY || '';
 
   // region format: iad1,sfo1
   let regions: string[] = [];
@@ -113,6 +118,9 @@ export const getProviderConfig = () => {
 
     ENABLED_OPENROUTER: !!OPENROUTER_API_KEY,
     OPENROUTER_API_KEY,
+
+    ENABLED_TOGETHERAI: !!TOGETHERAI_API_KEY,
+    TOGETHERAI_API_KEY,
 
     ENABLED_MOONSHOT: !!MOONSHOT_API_KEY,
     MOONSHOT_API_KEY,

@@ -34,6 +34,7 @@ export enum ModelProvider {
   OpenAI = 'openai',
   OpenRouter = 'openrouter',
   Perplexity = 'perplexity',
+  TogetherAI = 'togetherai',
   Tongyi = 'tongyi',
-  ZhiPu = 'zhipu',
+  ZhiPu = 'zhipu'
 }

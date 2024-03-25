@@ -179,18 +179,34 @@
     },
     "OpenRouter": {
       "checker": {
-        "desc": "测试代理地址是否正确填写"
+        "desc": "Proxy adresinin doğru şekilde doldurulup doldurulmadığını test edin"
       },
       "customModelName": {
-        "desc": "增加自定义模型，多个模型使用逗号（,）隔开",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "自定义模型名称"
+        "desc": "Özel modeller ekleyin, birden fazla modeli virgülle (,) ayırarak yazın",
+        "placeholder": "model1,model2,model3",
+        "title": "Özel Model Adı"
       },
       "title": "OpenRouter",
       "token": {
-        "desc": "填入来自 OpenRouter AI 的 API Key",
-        "placeholder": "OpenRouter AI API Key",
-        "title": "API Key"
+        "desc": "OpenRouter AI'dan gelen API Anahtarı'nı girin",
+        "placeholder": "OpenRouter AI API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
+    "TogetherAI": {
+      "checker": {
+        "desc": "Proxy adresinin doğru şekilde doldurulup doldurulmadığını test edin"
+      },
+      "customModelName": {
+        "desc": "Özel modeller ekleyin, birden fazla modeli virgülle (,) ayırarak yazın",
+        "placeholder": "model1,model2,model3",
+        "title": "Özel Model Adı"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "TogetherAI AI'dan gelen API Anahtarı'nı girin",
+        "placeholder": "TogetherAI AI API Anahtarı",
+        "title": "API Anahtarı"
       }
     },
     "Perplexity": {

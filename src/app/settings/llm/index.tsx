@@ -18,6 +18,7 @@ import Ollama from './Ollama';
 import OpenAI from './OpenAI';
 import OpenRouter from './OpenRouter';
 import Perplexity from './Perplexity';
+import TogetherAI from './TogetherAI';
 import Zhipu from './Zhipu';
 
 export default memo<{ showOllama: boolean }>(({ showOllama }) => {
@@ -38,6 +39,7 @@ export default memo<{ showOllama: boolean }>(({ showOllama }) => {
       <OpenRouter />
       <Moonshot />
       <Zhipu />
+      <TogetherAI />
       <Footer>
         <Trans i18nKey="llm.waitingForMore" ns={'setting'}>
           更多模型正在
