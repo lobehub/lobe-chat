@@ -2,9 +2,9 @@
 
 import dynamic from 'next/dynamic';
 import { FC, memo } from 'react';
-import WithMobileContent from 'src/components/WithMobileContent';
 
 import MobileSwitchLoading from '@/features/MobileSwitchLoading';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 import Common from '../common';
 import { SettingsCommonProps } from '../common/Common';
@@ -14,8 +14,9 @@ const Mobile: FC = dynamic(() => import('../(mobile)'), {
   ssr: false,
 }) as FC;
 
-export default memo<SettingsCommonProps>((props) => (
-  <WithMobileContent Mobile={Mobile}>
-    <Common {...props} />
-  </WithMobileContent>
-));
+const Desktop = memo<SettingsCommonProps>((props) => {
+  const mobile = useIsMobile();
+  return mobile ? <Mobile /> : <Common {...props} />;
+});
+
+export default Desktop;

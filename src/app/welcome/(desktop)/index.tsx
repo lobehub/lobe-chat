@@ -2,21 +2,23 @@
 
 import dynamic from 'next/dynamic';
 import { FC, memo } from 'react';
-import WithMobileContent from 'src/components/WithMobileContent';
 
+import ClientResponsiveContent from '@/components/client/ClientResponsiveContent';
 import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 
 import Footer from './features/Footer';
 import Showcase from './features/Showcase';
 
-const Mobile: FC = dynamic(() => import('../(mobile)'), {
+const Desktop = memo(() => (
+  <>
+    <Showcase />
+    <Footer />
+  </>
+));
+
+const Mobile = dynamic(() => import('../(mobile)'), {
   loading: MobileSwitchLoading,
   ssr: false,
 }) as FC;
 
-export default memo(() => (
-  <WithMobileContent Mobile={Mobile}>
-    <Showcase />
-    <Footer />
-  </WithMobileContent>
-));
+export default ClientResponsiveContent({ Desktop, Mobile });
