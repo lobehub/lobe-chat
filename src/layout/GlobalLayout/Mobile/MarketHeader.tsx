@@ -1,10 +1,10 @@
 import { Logo, MobileNavBar } from '@lobehub/ui';
 import { memo } from 'react';
 
-import ShareAgentButton from '../../features/ShareAgentButton';
+import ShareAgentButton from '@/app/market/features/ShareAgentButton';
 
-const Header = memo(() => {
+const MarketHeader = memo(() => {
   return <MobileNavBar center={<Logo type={'text'} />} right={<ShareAgentButton mobile />} />;
 });
 
-export default Header;
+export default MarketHeader;

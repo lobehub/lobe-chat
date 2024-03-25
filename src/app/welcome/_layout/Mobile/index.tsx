@@ -3,7 +3,7 @@
 import { useTheme } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
 
-import AppLayoutMobile from '@/layout/AppLayout.mobile';
+import AppLayoutMobile from '@/layout/GlobalLayout/Mobile/Client';
 
 import Header from './Header';
 

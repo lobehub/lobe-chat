@@ -8,12 +8,12 @@ import { Flexbox } from 'react-layout-kit';
 
 import { SettingsTabs } from '@/store/global/initialState';
 
-import { useActiveKey } from './useActiveKey';
+import { useActiveSettingsKey } from '../../../../hooks/useActiveSettingsKey';
 
 const Header = memo(() => {
   const { t } = useTranslation('setting');
 
-  const activeKey = useActiveKey();
+  const activeKey = useActiveSettingsKey();
 
   return (
     <ChatHeader

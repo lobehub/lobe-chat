@@ -5,9 +5,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useActiveSettingsKey } from '../../../../hooks/useActiveSettingsKey';
 import SettingList from '../../features/SettingList';
 import UpgradeAlert from '../../features/UpgradeAlert';
-import { useActiveKey } from './useActiveKey';
 
 const useStyles = createStyles(({ stylish, token, css }) => ({
   body: stylish.noScrollbar,
@@ -25,7 +25,7 @@ const useStyles = createStyles(({ stylish, token, css }) => ({
 
 const SideBar = memo(() => {
   const { styles } = useStyles();
-  const activeKey = useActiveKey();
+  const activeKey = useActiveSettingsKey();
 
   const { t } = useTranslation('common');
   const { mobile } = useResponsive();

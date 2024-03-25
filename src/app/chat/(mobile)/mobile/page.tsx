@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import ChatHeader from '@/app/chat/(mobile)/features/ChatHeader';
 import Conversation from '@/features/Conversation';
-import AppLayoutMobile from '@/layout/AppLayout.mobile';
+import AppLayoutMobile from '@/layout/GlobalLayout/Mobile/Client';
 import { useSessionStore } from '@/store/session';
 
 import TelemetryNotification from '../../features/TelemetryNotification';

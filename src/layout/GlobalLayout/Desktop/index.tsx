@@ -8,6 +8,7 @@ import Client from './Client';
 const DesktopLayout = memo<PropsWithChildren>(({ children }) => {
   const pathname = usePathname();
 
+  console.log('desktopLayout', pathname);
   if (pathname === '/') return children;
 
   return <Client>{children}</Client>;
