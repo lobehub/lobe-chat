@@ -201,6 +201,14 @@
         "title": "API-Schlüssel"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI ZeroOne",
+      "token": {
+        "desc": "Geben Sie den API-Schlüssel von 01.AI ZeroOne ein",
+        "placeholder": "01.AI ZeroOne API-Schlüssel",
+        "title": "API-Schlüssel"
+      }
+    },
     "Zhipu": {
       "title": "Zhipu AI",
       "token": {

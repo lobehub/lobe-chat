@@ -12,6 +12,7 @@ import {
   OpenAIProvider,
   OpenRouterProvider,
   PerplexityProvider,
+  ZeroOneProvider,
   ZhiPuProvider,
 } from '@/config/modelProviders';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
@@ -65,6 +66,9 @@ const groqAPIKey = (s: GlobalStore) => modelProvider(s).groq.apiKey;
 
 const enableOpenrouter = (s: GlobalStore) => modelProvider(s).openrouter.enabled;
 const openrouterAPIKey = (s: GlobalStore) => modelProvider(s).openrouter.apiKey;
+
+const enableZeroone = (s: GlobalStore) => modelProvider(s).zeroone.enabled;
+const zerooneAPIKey = (s: GlobalStore) => modelProvider(s).zeroone.apiKey;
 
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
@@ -165,7 +169,8 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
     { ...GroqProvider, enabled: enableGroq(s) },
     { ...ZhiPuProvider, enabled: enableZhipu(s) },
     { ...MoonshotProvider, enabled: enableMoonshot(s) },
-    { ...OpenRouterProvider, chatModels: openrouterChatModels, enabled: enableOpenrouter(s)}
+    { ...OpenRouterProvider, chatModels: openrouterChatModels, enabled: enableOpenrouter(s)},
+    { ...ZeroOneProvider, enabled: enableZeroone(s) }
   ];
 };
 
@@ -252,8 +257,12 @@ export const modelProviderSelectors = {
   // Groq
   enableGroq,
   groqAPIKey,
-  
+
   // OpenRouter
   enableOpenrouter,
   openrouterAPIKey,
+
+  // ZeroOne 零一万物
+  enableZeroone,
+  zerooneAPIKey,
 };

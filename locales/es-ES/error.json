@@ -50,6 +50,7 @@
     "InvalidOllamaArgs": "La configuración de Ollama no es válida, por favor revisa la configuración de Ollama e inténtalo de nuevo",
     "InvalidOpenRouterAPIKey": "La clave de API de OpenRouter es incorrecta o está vacía. Por favor, revisa la clave de API de OpenRouter e inténtalo de nuevo",
     "InvalidPerplexityAPIKey": "La clave de API de Perplexity es inválida o está vacía. Por favor, verifica la clave de API de Perplexity e inténtalo de nuevo",
+    "InvalidZeroOneAPIKey": "La clave de API de ZeroOneBiz es incorrecta o está vacía. Por favor, revise la clave de API de ZeroOneBiz e inténtelo de nuevo.",
     "InvalidZhipuAPIKey": "La clave de API de Zhipu es incorrecta o está vacía, por favor, verifica la clave de API de Zhipu e inténtalo de nuevo",
     "LocationNotSupportError": "Lo sentimos, tu ubicación actual no es compatible con este servicio de modelo, puede ser debido a restricciones geográficas o a que el servicio no está disponible. Por favor, verifica si tu ubicación actual es compatible con este servicio o intenta usar otra información de ubicación.",
     "MistralBizError": "Se produjo un error al solicitar el servicio Mistral AI. Por favor, revise la siguiente información o inténtelo de nuevo.",
@@ -72,6 +73,7 @@
     "PluginOpenApiInitError": "Lo sentimos, la inicialización del cliente OpenAPI ha fallado. Verifique si la información de configuración de OpenAPI es correcta",
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
+    "ZeroOneBizError": "Se produjo un error al solicitar el servicio ZeroOneBiz. Por favor, revise la siguiente información o inténtelo de nuevo.",
     "ZhipuBizError": "Se produjo un error al solicitar el servicio Zhipu, por favor, verifica la siguiente información o inténtalo de nuevo"
   },
   "stt": {
@@ -119,6 +121,10 @@
       "Perplexity": {
         "description": "Ingresa tu clave de API de Perplexity para comenzar la sesión. La aplicación no guardará tu clave de API",
         "title": "Usar tu propia clave de API de Perplexity"
+      },
+      "ZeroOne": {
+        "description": "Ingrese su clave de API de ZeroOneBiz para comenzar la sesión. La aplicación no almacenará su clave de API.",
+        "title": "Usar clave de API personalizada de ZeroOneBiz"
       },
       "Zhipu": {
         "description": "Ingresa tu clave de API de Zhipu para comenzar la sesión. La aplicación no guardará tu clave de API",

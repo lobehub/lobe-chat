@@ -50,6 +50,7 @@
     "InvalidOllamaArgs": "Ollamaの設定が正しくありません。Ollamaの設定を確認してからもう一度お試しください",
     "InvalidOpenRouterAPIKey": "OpenRouter API キーが正しくないか空です。OpenRouter API キーを確認してもう一度お試しください。",
     "InvalidPerplexityAPIKey": "Perplexity APIキーが正しくないか空です。Perplexity APIキーを確認してもう一度お試しください",
+    "InvalidZeroOneAPIKey": "ZeroOne APIキーが正しくないか空です。ZeroOne APIキーを確認して再試行してください。",
     "InvalidZhipuAPIKey": "Zhipu APIキーが正しくないか空です。Zhipu APIキーを確認してから再試行してください。",
     "LocationNotSupportError": "申し訳ありませんが、お住まいの地域ではこのモデルサービスをサポートしていません。地域制限またはサービスが利用できない可能性があります。現在の位置がこのサービスをサポートしているかどうかを確認するか、他の位置情報を使用してみてください。",
     "MistralBizError": "Mistral AI サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
@@ -72,6 +73,7 @@
     "PluginOpenApiInitError": "申し訳ありませんが、OpenAPIクライアントの初期化に失敗しました。OpenAPIの設定情報を確認してください。",
     "PluginServerError": "プラグインサーバーのリクエストエラーが発生しました。以下のエラーメッセージを参考に、プラグインのマニフェストファイル、設定、サーバー実装を確認してください",
     "PluginSettingsInvalid": "このプラグインを使用するには、正しい設定が必要です。設定が正しいかどうか確認してください",
+    "ZeroOneBizError": "リクエストがZeroOneサービスでエラーが発生しました。以下の情報を確認して再試行してください。",
     "ZhipuBizError": "Zhipuサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再試行してください。"
   },
   "stt": {
@@ -119,6 +121,10 @@
       "Perplexity": {
         "description": "Perplexity APIキーを入力して会話を開始します。アプリはAPIキーを記録しません",
         "title": "カスタムPerplexity APIキーを使用"
+      },
+      "ZeroOne": {
+        "description": "カスタムのZeroOne APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
+        "title": "カスタムZeroOne APIキーの使用"
       },
       "Zhipu": {
         "description": "Zhipu APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
