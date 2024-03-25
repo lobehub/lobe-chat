@@ -50,6 +50,7 @@
     "InvalidOllamaArgs": "Ollama 구성이 잘못되었습니다. Ollama 구성을 확인한 후 다시 시도하십시오.",
     "InvalidOpenRouterAPIKey": "OpenRouter API 키가 잘못되었거나 비어 있습니다. OpenRouter API 키를 확인한 후 다시 시도하십시오.",
     "InvalidPerplexityAPIKey": "Perplexity API 키가 잘못되었거나 비어 있습니다. Perplexity API 키를 확인한 후 다시 시도하십시오.",
+    "InvalidZeroOneAPIKey": "잘못된 또는 빈 제로원물 API 키입니다. 제로원물 API 키를 확인하고 다시 시도해주세요.",
     "InvalidZhipuAPIKey": "잘못된 또는 비어 있는 Zhipu API Key입니다. Zhipu API Key를 확인한 후 다시 시도하십시오.",
     "LocationNotSupportError": "죄송합니다. 귀하의 현재 위치는 해당 모델 서비스를 지원하지 않습니다. 지역 제한 또는 서비스 미개통으로 인한 것일 수 있습니다. 현재 위치가 해당 서비스를 지원하는지 확인하거나 다른 위치 정보를 사용해 보십시오.",
     "MistralBizError": "Mistral AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
@@ -72,6 +73,7 @@
     "PluginOpenApiInitError": "죄송합니다. OpenAPI 클라이언트 초기화에 실패했습니다. OpenAPI 구성 정보를 확인해주세요.",
     "PluginServerError": "플러그인 서버 요청이 오류로 반환되었습니다. 플러그인 설명 파일, 플러그인 구성 또는 서버 구현을 확인해주세요.",
     "PluginSettingsInvalid": "플러그인을 사용하려면 올바른 구성이 필요합니다. 구성이 올바른지 확인해주세요.",
+    "ZeroOneBizError": "제로원물 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "ZhipuBizError": "Zhipu 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오."
   },
   "stt": {
@@ -119,6 +121,10 @@
       "Perplexity": {
         "description": "Perplexity API 키를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
         "title": "사용자 지정 Perplexity API 키 사용"
+      },
+      "ZeroOne": {
+        "description": "제로원물 API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+        "title": "사용자 지정 제로원물 API 키 사용"
       },
       "Zhipu": {
         "description": "Zhipu API Key를 입력하여 세션을 시작합니다. 앱은 귀하의 API Key를 기록하지 않습니다.",

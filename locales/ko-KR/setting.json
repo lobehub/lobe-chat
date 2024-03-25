@@ -201,6 +201,14 @@
         "title": "API 키"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI ZeroOne 만물",
+      "token": {
+        "desc": "01.AI ZeroOne의 API 키를 입력하세요",
+        "placeholder": "01.AI ZeroOne API 키",
+        "title": "API 키"
+      }
+    },
     "Zhipu": {
       "title": "智谱",
       "token": {

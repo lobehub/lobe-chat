@@ -201,6 +201,14 @@
         "title": "API-sleutel"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI 零一万物",
+      "token": {
+        "desc": "填入来自 01.AI 零一万物的 API 密钥",
+        "placeholder": "01.AI 零一万物 API 密钥",
+        "title": "API 密钥"
+      }
+    },
     "Zhipu": {
       "title": "智谱",
       "token": {
@@ -451,38 +459,36 @@
       "unknownBrowser": "Onbekende browser",
       "unknownOS": "Onbekend besturingssysteem"
     },
-    "tab": {
-      "experiment": "Experiment",
-      "sync": "Cloudsynchronisatie"
-    },
     "warning": {
-      "message": "Deze functie is momenteel experimenteel en kan onverwachte of onstabiele situaties veroorzaken. Als u problemen ondervindt, geef dan tijdig feedback.",
-      "webrtc": {
-        "channelName": {
-          "desc": "WebRTC zal dit gebruiken om een synchronisatiekanaal te maken. Zorg ervoor dat de kanaalnaam uniek is",
-          "placeholder": "Voer de synchronisatiekanaalnaam in",
-          "shuffle": "Willekeurig genereren",
-          "title": "Synchronisatiekanaalnaam"
-        },
-        "channelPassword": {
-          "desc": "Voeg een wachtwoord toe om de privacy van het kanaal te waarborgen. Alleen met het juiste wachtwoord kan het apparaat aan het kanaal deelnemen",
-          "placeholder": "Voer het synchronisatiekanaalwachtwoord in",
-          "title": "Synchronisatiekanaalwachtwoord"
-        },
-        "desc": "Realtime, point-to-point datacommunicatie. Apparaten moeten tegelijkertijd online zijn om te synchroniseren",
-        "enabled": {
-          "invalid": "Schakel de synchronisatie in nadat u de synchronisatiekanaalnaam heeft ingevoerd",
-          "title": "Synchronisatie inschakelen"
-        },
-        "title": "WebRTC-synchronisatie"
-      }
+      "message": "Deze functie is momenteel experimenteel en kan onverwachte of onstabiele situaties veroorzaken. Als u problemen ondervindt, geef dan tijdig feedback."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC zal deze naam gebruiken om een synchronisatiekanaal te maken, zorg ervoor dat de kanaalnaam uniek is",
+        "placeholder": "Voer de synchronisatiekanaalnaam in",
+        "shuffle": "Willekeurig genereren",
+        "title": "Synchronisatiekanaalnaam"
+      },
+      "channelPassword": {
+        "desc": "Voeg een wachtwoord toe om de privacy van het kanaal te waarborgen, alleen apparaten met het juiste wachtwoord kunnen het kanaal betreden",
+        "placeholder": "Voer het synchronisatiekanaalwachtwoord in",
+        "title": "Synchronisatiekanaalwachtwoord"
+      },
+      "desc": "Realtime, point-to-point datacommunicatie, apparaten moeten tegelijkertijd online zijn om te synchroniseren",
+      "enabled": {
+        "invalid": "Schakel de synchronisatie in nadat u de synchronisatiekanaalnaam heeft ingevuld",
+        "title": "Synchronisatie inschakelen"
+      },
+      "title": "WebRTC Synchronisatie"
     }
   },
   "tab": {
     "about": "Over",
     "agent": "Standaardassistent",
     "common": "Algemene instellingen",
+    "experiment": "Experiment",
     "llm": "Taalmodel",
+    "sync": "Cloudsynchronisatie",
     "tts": "Spraakdienst"
   },
   "tools": {

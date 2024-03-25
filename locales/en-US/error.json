@@ -61,7 +61,6 @@
     "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information.",
     "OpenRouterBizError": "Error requesting OpenRouter AI service. Please troubleshoot or retry based on the following information.",
     "PerplexityBizError": "Error requesting Perplexity AI service. Please troubleshoot or retry based on the following information.",
-    "ZeroOneBizError": "Error requesting 01-AI service. Please troubleshoot or retry based on the following information.",
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
     "PluginGatewayError": "Sorry, there was an error with the plugin gateway. Please check if the plugin gateway configuration is correct.",
@@ -74,6 +73,7 @@
     "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct.",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
+    "ZeroOneBizError": "Error requesting 01-AI service. Please troubleshoot or retry based on the following information.",
     "ZhipuBizError": "Error requesting Zhipu service. Please troubleshoot or retry based on the following information."
   },
   "stt": {
