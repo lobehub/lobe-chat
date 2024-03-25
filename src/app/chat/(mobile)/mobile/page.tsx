@@ -4,9 +4,7 @@ import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ChatHeader from '@/app/chat/(mobile)/features/ChatHeader';
 import Conversation from '@/features/Conversation';
-import AppLayoutMobile from '@/layout/GlobalLayout/Mobile/Client';
 import { useSessionStore } from '@/store/session';
 
 import TelemetryNotification from '../../features/TelemetryNotification';
@@ -21,13 +19,11 @@ const Chat = memo(() => {
   useFetchSessions();
 
   return (
-    <AppLayoutMobile navBar={<ChatHeader />}>
-      <Flexbox height={'calc(100% - 44px)'} horizontal>
-        <Conversation chatInput={<ChatInput />} mobile />
-        <TopicList />
-        <TelemetryNotification mobile />
-      </Flexbox>
-    </AppLayoutMobile>
+    <Flexbox height={'calc(100% - 44px)'} horizontal>
+      <Conversation chatInput={<ChatInput />} mobile />
+      <TopicList />
+      <TelemetryNotification mobile />
+    </Flexbox>
   );
 });
 export default Chat;

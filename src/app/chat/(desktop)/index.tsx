@@ -19,14 +19,12 @@ const Mobile: FC = dynamic(() => import('../(mobile)'), {
 
 const DesktopPage = memo(() => (
   <ResponsiveContainer Mobile={Mobile}>
-    {/*<Layout>*/}
     <PageTitle />
     <ChatHeader />
     <Flexbox flex={1} height={'calc(100% - 64px)'} horizontal>
       <Conversation />
       <SideBar />
     </Flexbox>
-    {/*</Layout>*/}
   </ResponsiveContainer>
 ));
 export default DesktopPage;

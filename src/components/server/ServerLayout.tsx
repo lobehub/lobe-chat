@@ -7,11 +7,11 @@ interface ServerLayoutProps {
   Mobile: FC<PropsWithChildren>;
 }
 
-const mobile = isMobileDevice();
-
 const ServerLayout =
   ({ Desktop, Mobile }: ServerLayoutProps) =>
   ({ children }: PropsWithChildren) => {
+    const mobile = isMobileDevice();
+
     return mobile ? <Mobile>{children}</Mobile> : <Desktop>{children}</Desktop>;
   };
 

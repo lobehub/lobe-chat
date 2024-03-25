@@ -1,14 +1,8 @@
-import { PropsWithChildren } from 'react';
-
-import { isMobileDevice } from '@/utils/responsive';
+import ServerLayout from '@/components/server/ServerLayout';
 
 import Desktop from './Desktop';
 import Mobile from './Mobile';
 
-const mobile = isMobileDevice();
-
-const GlobalLayout = ({ children }: PropsWithChildren) => {
-  return mobile ? <Mobile>{children}</Mobile> : <Desktop>{children}</Desktop>;
-};
+const GlobalLayout = ServerLayout({ Desktop, Mobile });
 
 export default GlobalLayout;

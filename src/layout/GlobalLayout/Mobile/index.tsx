@@ -5,6 +5,7 @@ import { PropsWithChildren, useMemo } from 'react';
 
 import { SidebarTabKey } from '@/store/global/initialState';
 
+import ChatHeader from './ChatHeader';
 import AppLayoutMobile from './Client';
 import MarketHeader from './MarketHeader';
 import SessionHeader from './SessionHeader';
@@ -18,28 +19,16 @@ const MobileLayout = ({ children }: PropsWithChildren) => {
   const sidebarKey = slugs[0] as SidebarTabKey;
   const isSubPath = slugs.length > 1;
 
-  const Header = useMemo(() => {
-    switch (sidebarKey) {
-      case SidebarTabKey.Chat: {
-        return SessionHeader;
-      }
-
-      case SidebarTabKey.Market: {
-        return MarketHeader;
-      }
-
-      case SidebarTabKey.Setting: {
-        return SettingHeader;
-      }
-    }
-  }, [sidebarKey]);
+  const header = useMemo(() => {
+    if (pathname === '/chat') return <SessionHeader />;
+    if (pathname === '/chat/mobile') return <ChatHeader />;
+    if (pathname === '/settings') return <SettingHeader />;
+    if (pathname === '/market') return <MarketHeader />;
+    if (pathname.startsWith('/settings')) return <SettingSubPageHeader />;
+  }, [pathname]);
 
   return (
-    <AppLayoutMobile
-      navBar={isSubPath ? <SettingSubPageHeader /> : <Header />}
-      showTabBar={!isSubPath}
-      tabBarKey={sidebarKey}
-    >
+    <AppLayoutMobile navBar={header} showTabBar={!isSubPath} tabBarKey={sidebarKey}>
       {children}
     </AppLayoutMobile>
   );

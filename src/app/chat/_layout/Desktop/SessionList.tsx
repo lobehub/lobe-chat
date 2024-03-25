@@ -4,9 +4,10 @@ import { DraggablePanelBody } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-import Header from '@/app/chat/(desktop)/features/SessionHeader';
-import SessionListContent from '@/app/chat/features/SessionListContent';
 import FolderPanel from '@/features/FolderPanel';
+
+import SessionListContent from '../../features/SessionListContent';
+import Header from './SessionHeader';
 
 const useStyles = createStyles(({ stylish, css, cx }) =>
   cx(

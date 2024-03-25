@@ -2,8 +2,9 @@ import { MobileNavBar } from '@lobehub/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 
-import SettingButton from '../../features/ChatHeader/SettingButton';
-import ShareButton from '../../features/ChatHeader/ShareButton';
+import SettingButton from '@/app/chat/features/ChatHeader/SettingButton';
+import ShareButton from '@/app/chat/features/ChatHeader/ShareButton';
+
 import ChatHeaderTitle from './ChatHeaderTitle';
 
 const MobileHeader = memo(() => {
