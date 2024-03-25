@@ -39,7 +39,7 @@ const GroqProvider = memo(() => {
         },
       ]}
       provider={providerKey}
-      title={<Groq.Combine color={theme.isDarkMode ? theme.colorText : Groq.colorPrimary} size={24} />}
+      title={<Groq.Text color={theme.isDarkMode ? theme.colorText : Groq.colorPrimary} size={24} />}
     />
   );
 });
