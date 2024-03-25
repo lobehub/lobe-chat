@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { FC, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ResponsiveContainer from '@/components/ResponsiveContainer';
+import WithMobileContent from '@/components/WithMobileContent';
 import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 
 import PageTitle from '../features/PageTitle';
@@ -18,13 +18,14 @@ const Mobile: FC = dynamic(() => import('../(mobile)'), {
 }) as FC;
 
 const DesktopPage = memo(() => (
-  <ResponsiveContainer Mobile={Mobile}>
+  <WithMobileContent Mobile={Mobile}>
     <PageTitle />
     <ChatHeader />
     <Flexbox flex={1} height={'calc(100% - 64px)'} horizontal>
       <Conversation />
       <SideBar />
     </Flexbox>
-  </ResponsiveContainer>
+  </WithMobileContent>
 ));
+
 export default DesktopPage;

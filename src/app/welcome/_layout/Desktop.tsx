@@ -1,8 +1,12 @@
 'use client';
 
 import { Logo } from '@lobehub/ui';
-import { PropsWithChildren, memo } from 'react';
+import dynamic from 'next/dynamic';
+import { FC, PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
+
+import ClientLayout from '@/components/client/ClientLayout';
+import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 
 import { useStyles } from '../features/Banner/style';
 
@@ -24,4 +28,9 @@ const Desktop = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default Desktop;
+const Mobile = dynamic(() => import('./Mobile'), {
+  loading: MobileSwitchLoading,
+  ssr: false,
+}) as FC<PropsWithChildren>;
+
+export default ClientLayout({ Desktop, Mobile });

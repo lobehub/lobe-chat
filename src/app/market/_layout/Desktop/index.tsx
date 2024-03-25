@@ -3,11 +3,13 @@
 import { GridBackground } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { PropsWithChildren, memo } from 'react';
+import { FC, PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
+import ClientLayout from '@/components/client/ClientLayout';
 import { MAX_WIDTH } from '@/const/layoutTokens';
+import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 
 import Header from './Header';
 
@@ -26,7 +28,7 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const MarketLayout = memo<PropsWithChildren>(({ children }) => {
+const Desktop = memo<PropsWithChildren>(({ children }) => {
   const { theme, styles } = useStyles();
 
   return (
@@ -55,4 +57,9 @@ const MarketLayout = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default MarketLayout;
+const Mobile = dynamic(() => import('../Mobile'), {
+  loading: MobileSwitchLoading,
+  ssr: false,
+}) as FC<PropsWithChildren>;
+
+export default ClientLayout({ Desktop, Mobile });

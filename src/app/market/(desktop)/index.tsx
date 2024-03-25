@@ -3,8 +3,8 @@
 import { SpotlightCard, SpotlightCardProps } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { FC, memo } from 'react';
+import WithMobileContent from 'src/components/WithMobileContent';
 
-import ResponsiveContainer from '@/components/ResponsiveContainer';
 import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 
 import AgentCard from '../features/AgentCard';
@@ -16,8 +16,8 @@ const Mobile: FC = dynamic(() => import('../(mobile)'), {
 }) as FC;
 
 export default memo(() => (
-  <ResponsiveContainer Mobile={Mobile}>
+  <WithMobileContent Mobile={Mobile}>
     <Index />
     <AgentCard CardRender={SpotlightCard as FC<SpotlightCardProps>} />
-  </ResponsiveContainer>
+  </WithMobileContent>
 ));

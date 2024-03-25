@@ -1,18 +1,18 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { PropsWithChildren, useMemo } from 'react';
+import { PropsWithChildren, memo, useMemo } from 'react';
 
 import { SidebarTabKey } from '@/store/global/initialState';
 
 import ChatHeader from './ChatHeader';
 import AppLayoutMobile from './Client';
+import SettingHeader from './DefaultHeader';
 import MarketHeader from './MarketHeader';
 import SessionHeader from './SessionHeader';
-import SettingHeader from './SettingHeader';
 import SettingSubPageHeader from './SettingSubPageHeader';
 
-const MobileLayout = ({ children }: PropsWithChildren) => {
+const MobileLayout = memo<PropsWithChildren>(({ children }) => {
   const pathname = usePathname();
 
   const slugs = pathname.split('/').filter(Boolean);
@@ -20,9 +20,9 @@ const MobileLayout = ({ children }: PropsWithChildren) => {
   const isSubPath = slugs.length > 1;
 
   const header = useMemo(() => {
+    if (['/settings', '/welcome'].includes(pathname)) return <SettingHeader />;
     if (pathname === '/chat') return <SessionHeader />;
     if (pathname === '/chat/mobile') return <ChatHeader />;
-    if (pathname === '/settings') return <SettingHeader />;
     if (pathname === '/market') return <MarketHeader />;
     if (pathname.startsWith('/settings')) return <SettingSubPageHeader />;
   }, [pathname]);
@@ -32,6 +32,6 @@ const MobileLayout = ({ children }: PropsWithChildren) => {
       {children}
     </AppLayoutMobile>
   );
-};
+});
 
 export default MobileLayout;

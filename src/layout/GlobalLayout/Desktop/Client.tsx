@@ -1,20 +1,24 @@
 'use client';
 
 import { useTheme } from 'antd-style';
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
-import { ReactNode, memo } from 'react';
+import { FC, PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import ClientLayout from '@/components/client/ClientLayout';
+import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 import { useIsPWA } from '@/hooks/useIsPWA';
 import { SidebarTabKey } from '@/store/global/initialState';
 
 import SideBar from './SideBar';
 
-interface AppLayoutDesktopProps {
-  children: ReactNode;
-  sidebarKey?: SidebarTabKey;
-}
-const Client = memo<AppLayoutDesktopProps>(({ children }) => {
+const Mobile = dynamic(() => import('../Mobile'), {
+  loading: MobileSwitchLoading,
+  ssr: false,
+}) as FC<PropsWithChildren>;
+
+const Desktop = memo<PropsWithChildren>(({ children }) => {
   const pathname = usePathname();
 
   const isPWA = useIsPWA();
@@ -35,4 +39,4 @@ const Client = memo<AppLayoutDesktopProps>(({ children }) => {
   );
 });
 
-export default Client;
+export default ClientLayout({ Desktop, Mobile });

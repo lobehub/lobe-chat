@@ -2,9 +2,9 @@
 
 import dynamic from 'next/dynamic';
 import { FC, memo } from 'react';
+import WithMobileContent from 'src/components/WithMobileContent';
 
 import SessionHydration from '@/app/chat/components/SessionHydration';
-import ResponsiveContainer from '@/components/ResponsiveContainer';
 import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 
 import EditPage from '../features/EditPage';
@@ -17,11 +17,11 @@ const Mobile: FC = dynamic(() => import('../(mobile)'), {
 
 const ChatSettings = memo(() => (
   <>
-    <ResponsiveContainer Mobile={Mobile}>
+    <WithMobileContent Mobile={Mobile}>
       <Layout>
         <EditPage />
       </Layout>
-    </ResponsiveContainer>
+    </WithMobileContent>
     <SessionHydration />
   </>
 ));

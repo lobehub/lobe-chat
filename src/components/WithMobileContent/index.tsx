@@ -4,17 +4,17 @@ import { FC, ReactNode, memo } from 'react';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 
-interface ResponsiveContainerProps {
+interface WithMobileContentProps {
   Mobile: FC;
   children: ReactNode;
 }
 
-const ResponsiveContainer = memo(({ children, Mobile }: ResponsiveContainerProps) => {
+const WithMobileContent = memo(({ children, Mobile }: WithMobileContentProps) => {
   const mobile = useIsMobile();
 
   return mobile ? <Mobile /> : children;
 });
 
-ResponsiveContainer.displayName = 'ResponsiveContainer';
+WithMobileContent.displayName = 'ResponsiveContainer';
 
-export default ResponsiveContainer;
+export default WithMobileContent;

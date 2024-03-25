@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { FC, memo } from 'react';
+import WithMobileContent from 'src/components/WithMobileContent';
 
-import ResponsiveContainer from '@/components/ResponsiveContainer';
 import MobileSwitchLoading from '@/features/MobileSwitchLoading';
 
 import Footer from './features/Footer';
@@ -15,8 +15,8 @@ const Mobile: FC = dynamic(() => import('../(mobile)'), {
 }) as FC;
 
 export default memo(() => (
-  <ResponsiveContainer Mobile={Mobile}>
+  <WithMobileContent Mobile={Mobile}>
     <Showcase />
     <Footer />
-  </ResponsiveContainer>
+  </WithMobileContent>
 ));
