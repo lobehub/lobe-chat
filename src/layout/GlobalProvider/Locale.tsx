@@ -1,3 +1,5 @@
+'use client';
+
 import { ConfigProvider } from 'antd';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 import { isRtlLang } from 'rtl-detect';
