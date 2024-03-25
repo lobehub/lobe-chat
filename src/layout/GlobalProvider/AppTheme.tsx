@@ -1,7 +1,11 @@
+'use client';
+
 import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@lobehub/ui';
-import { ThemeAppearance } from 'antd-style';
+import { App } from 'antd';
+import { ThemeAppearance, createStyles } from 'antd-style';
+import 'antd/dist/reset.css';
 import Image from 'next/image';
-import { ReactNode, memo, useEffect } from 'react';
+import { PropsWithChildren, ReactNode, memo, useEffect } from 'react';
 
 import {
   LOBE_THEME_APPEARANCE,
@@ -12,6 +16,25 @@ import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { GlobalStyle } from '@/styles';
 import { setCookie } from '@/utils/cookie';
+
+const useStyles = createStyles(({ css, token }) => ({
+  bg: css`
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    height: 100%;
+
+    background: ${token.colorBgLayout};
+  `,
+}));
+
+const Container = memo<PropsWithChildren>(({ children }) => {
+  const { styles } = useStyles();
+
+  return <App className={styles.bg}>{children}</App>;
+});
 
 export interface AppThemeProps {
   children?: ReactNode;
@@ -53,7 +76,9 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
-        <ConfigProvider config={{ imgAs: Image } as any}>{children}</ConfigProvider>
+        <ConfigProvider config={{ imgAs: Image } as any}>
+          <Container>{children}</Container>
+        </ConfigProvider>
       </ThemeProvider>
     );
   },
