@@ -1,20 +1,21 @@
-import { Google, Gemini } from '@lobehub/icons';
-import { Input, Divider } from 'antd';
+import { ZeroOne } from '@lobehub/icons';
+import { Input } from 'antd';
+import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { ModelProvider } from '@/libs/agent-runtime';
-import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../components/Checker';
 import ProviderConfig from '../components/ProviderConfig';
 import { LLMProviderApiTokenKey, LLMProviderConfigKey } from '../const';
 
-const providerKey: GlobalLLMProviderKey = 'google';
+const providerKey = 'zeroone';
 
-const GoogleProvider = memo(() => {
+const ZeroOneProvider = memo(() => {
   const { t } = useTranslation('setting');
+
+  const theme = useTheme();
 
   return (
     <ProviderConfig
@@ -23,15 +24,15 @@ const GoogleProvider = memo(() => {
           children: (
             <Input.Password
               autoComplete={'new-password'}
-              placeholder={t('llm.Google.token.placeholder')}
+              placeholder={t('llm.ZeroOne.token.placeholder')}
             />
           ),
-          desc: t('llm.Google.token.desc'),
-          label: t('llm.Google.token.title'),
+          desc: t('llm.ZeroOne.token.desc'),
+          label: t('llm.ZeroOne.token.title'),
           name: [LLMProviderConfigKey, providerKey, LLMProviderApiTokenKey],
         },
         {
-          children: <Checker model={'gemini-pro'} provider={ModelProvider.Google} />,
+          children: <Checker model={'yi-34b-chat-0205'} provider={ModelProvider.ZeroOne} />,
           desc: t('llm.checker.desc'),
           label: t('llm.checker.title'),
           minWidth: '100%',
@@ -39,14 +40,13 @@ const GoogleProvider = memo(() => {
       ]}
       provider={providerKey}
       title={
-        <Flexbox align={'center'} gap={8} horizontal>
-          <Google.BrandColor size={28} />
-          <Divider style={{ margin: '0 4px' }} type={'vertical'} />
-          <Gemini.Combine size={24} type={'color'} />
-        </Flexbox>
+        <ZeroOne.Combine
+          color={theme.isDarkMode ? theme.colorText : ZeroOne.colorPrimary}
+          size={32}
+        />
       }
     />
   );
 });
 
-export default GoogleProvider;
+export default ZeroOneProvider;

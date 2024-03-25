@@ -95,4 +95,7 @@ ENV MISTRAL_API_KEY ""
 # OpenRouter
 ENV OPENROUTER_API_KEY ""
 
+# 01.AI
+ENV ZEROONE_API_KEY ""
+
 CMD ["node", "server.js"]

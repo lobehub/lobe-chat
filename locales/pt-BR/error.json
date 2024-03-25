@@ -50,6 +50,7 @@
     "InvalidOllamaArgs": "Configuração Ollama inválida, verifique a configuração do Ollama e tente novamente",
     "InvalidOpenRouterAPIKey": "Chave da API do OpenRouter inválida ou em branco. Por favor, verifique a chave da API do OpenRouter e tente novamente.",
     "InvalidPerplexityAPIKey": "Chave da API Perplexity inválida ou em branco, verifique a chave da API Perplexity e tente novamente",
+    "InvalidZeroOneAPIKey": "Chave de API ZeroOne inválida ou vazia, verifique a chave de API ZeroOne e tente novamente",
     "InvalidZhipuAPIKey": "Chave de API Zhipu incorreta ou vazia, por favor, verifique a chave de API Zhipu e tente novamente",
     "LocationNotSupportError": "Desculpe, sua localização atual não suporta este serviço de modelo, pode ser devido a restrições geográficas ou serviço não disponível. Por favor, verifique se a localização atual suporta o uso deste serviço ou tente usar outras informações de localização.",
     "MistralBizError": "Ocorreu um erro ao solicitar o serviço Mistral AI. Por favor, verifique as informações abaixo ou tente novamente.",
@@ -72,6 +73,7 @@
     "PluginOpenApiInitError": "Desculpe, a inicialização do cliente OpenAPI falhou. Verifique se as informações de configuração do OpenAPI estão corretas",
     "PluginServerError": "Erro na resposta do servidor do plugin. Verifique o arquivo de descrição do plugin, a configuração do plugin ou a implementação do servidor de acordo com as informações de erro abaixo",
     "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta",
+    "ZeroOneBizError": "Erro no serviço ZeroOneBiz, verifique as informações abaixo e tente novamente",
     "ZhipuBizError": "Erro ao solicitar o serviço Zhipu, por favor, verifique as informações abaixo ou tente novamente"
   },
   "stt": {
@@ -119,6 +121,10 @@
       "Perplexity": {
         "description": "Insira sua chave da API Perplexity para iniciar a sessão. O aplicativo não irá armazenar sua chave da API",
         "title": "Usar chave da API Perplexity personalizada"
+      },
+      "ZeroOne": {
+        "description": "Insira sua chave de API ZeroOne para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
+        "title": "Usar chave de API ZeroOne personalizada"
       },
       "Zhipu": {
         "description": "Digite sua chave de API Zhipu para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",

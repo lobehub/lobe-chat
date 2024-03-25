@@ -201,6 +201,14 @@
         "title": "API 金鑰"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI 零一萬物",
+      "token": {
+        "desc": "填入來自 01.AI 零一萬物的 API 金鑰",
+        "placeholder": "01.AI 零一萬物 API 金鑰",
+        "title": "API 金鑰"
+      }
+    },
     "Zhipu": {
       "title": "智譜",
       "token": {
