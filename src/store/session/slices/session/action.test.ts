@@ -31,6 +31,9 @@ beforeEach(() => {
   vi.clearAllMocks();
   useSessionStore.setState({
     refreshSessions: mockRefresh,
+    router: {
+      push: mockRouterPush,
+    } as unknown as AppRouterInstance,
   });
 });
 
@@ -125,6 +128,35 @@ describe('SessionAction', () => {
 
       expect(sessionService.removeSession).toHaveBeenCalledWith(sessionId);
       expect(mockRefresh).toHaveBeenCalled();
+    });
+  });
+
+  describe('switchSession', () => {
+    it('should switch to the provided session id', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const sessionId = 'session-id';
+
+      act(() => {
+        result.current.switchSession(sessionId);
+      });
+
+      expect(result.current.activeId).toBe(sessionId);
+      expect(mockRouterPush).toHaveBeenCalledWith(
+        SESSION_CHAT_URL(sessionId, result.current.isMobile),
+      );
+    });
+
+    it('should switch to the inbox session id if none is provided', async () => {
+      const { result } = renderHook(() => useSessionStore());
+
+      act(() => {
+        result.current.switchSession();
+      });
+
+      expect(result.current.activeId).toBe(INBOX_SESSION_ID);
+      expect(mockRouterPush).toHaveBeenCalledWith(
+        SESSION_CHAT_URL(INBOX_SESSION_ID, result.current.isMobile),
+      );
     });
   });
 
