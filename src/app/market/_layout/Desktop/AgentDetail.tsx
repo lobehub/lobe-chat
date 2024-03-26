@@ -2,10 +2,11 @@ import { DraggablePanel, DraggablePanelBody, DraggablePanelContainer } from '@lo
 import { createStyles } from 'antd-style';
 import { memo, useCallback, useState } from 'react';
 
-import AgentDetailContent from '@/app/market/features/AgentDetailContent';
 import SafeSpacing from '@/components/SafeSpacing';
 import { MARKET_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
+
+import AgentDetailContent from '../../features/AgentDetailContent';
 
 const useStyles = createStyles(({ css, token, stylish }) => ({
   content: css`
