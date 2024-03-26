@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.142.6](https://github.com/lobehub/lobe-chat/compare/v0.142.5...v0.142.6)
+
+<sup>Released on **2024-03-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix normalize german locale.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix normalize german locale, closes [#1750](https://github.com/lobehub/lobe-chat/issues/1750) ([69fcc78](https://github.com/lobehub/lobe-chat/commit/69fcc78))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.142.5](https://github.com/lobehub/lobe-chat/compare/v0.142.4...v0.142.5)
 
 <sup>Released on **2024-03-26**</sup>

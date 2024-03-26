@@ -1,9 +1,9 @@
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
-import Avatar from 'next/image';
+import NextImage from 'next/image';
 import { CSSProperties, memo, useCallback } from 'react';
 
-import { imageUrl } from '@/const/url';
+import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { useGlobalStore } from '@/store/global';
 import { commonSelectors } from '@/store/global/selectors';
 import { imageToBase64 } from '@/utils/imageToBase64';
@@ -58,10 +58,11 @@ const AvatarWithUpload = memo<AvatarWithUploadProps>(
     return (
       <div className={styles} id={id} style={{ maxHeight: size, maxWidth: size, ...style }}>
         <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
-          <Avatar
+          <NextImage
             alt={avatar ? 'userAvatar' : 'LobeChat'}
             height={size}
-            src={!!avatar ? avatar : imageUrl('logo.png')}
+            src={!!avatar ? avatar : DEFAULT_USER_AVATAR_URL}
+            unoptimized
             width={size}
           />
         </Upload>

@@ -247,14 +247,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                  | 助手说明                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| [索赔分析器](https://chat-preview.lobehub.com/market?agent=fact-checking)<br/><sup>By **[pedroespecial101](https://github.com/pedroespecial101)** on **2024-03-25**</sup> | 详细的真相分析器（来自 <https://github.com/danielmiessler/fabric）><br/>`https-github-com-danielmiessler-fabric` |
-| [Rap 说唱歌词大师](https://chat-preview.lobehub.com/market?agent=rap-writer)<br/><sup>By **[aoocar](https://github.com/aoocar)** on **2024-03-25**</sup>                  | 将歌词以 rap 歌词的形式进行匹配，按照参考格式进行 rap 歌词创作<br/>`说唱` `歌词`                                 |
-| [Mdx SEO 专家](https://chat-preview.lobehub.com/market?agent=mdx-seo)<br/><sup>By **[canisminor1990](https://github.com/canisminor1990)** on **2024-03-24**</sup>         | 擅长将 Markdown 文章内容转换为优化的 JSON 格式数据，增强文章的在线可见性和搜索引擎排名。<br/>`seo` `markdown`    |
-| [老中医](https://chat-preview.lobehub.com/market?agent=claude-national-medical-master)<br/><sup>By **[GalileoFe](https://github.com/GalileoFe)** on **2024-03-22**</sup>  | 让我康康！<br/>`咨询` `健康`                                                                                     |
+| 最近新增                                                                                                                                                                          | 助手说明                                                                                                                  |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| [女朋友潜台词专家](https://chat-preview.lobehub.com/market?agent=girlfriend-subtext)<br/><sup>By **[vayron](https://github.com/vayron)** on **2024-03-26**</sup>                  | 解读女生话背后的「潜台词」，尖酸刻薄，强势回复！🔥<br/>`女朋友` `女生` `潜台词` `彪悍` `强势` `解读`                      |
+| [面试问题提炼助手](https://chat-preview.lobehub.com/market?agent=question-extraction-assistant)<br/><sup>By **[couldnice](https://github.com/couldnice)** on **2024-03-26**</sup> | 面试问题生成助手，根据文章内容和职位描述生成针对性面试问题。<br/>`面试问题` `定制服务` `java工程师` `资料收集` `面试准备` |
+| [索赔分析器](https://chat-preview.lobehub.com/market?agent=fact-checking)<br/><sup>By **[pedroespecial101](https://github.com/pedroespecial101)** on **2024-03-25**</sup>         | 详细的真相分析器（来自 <https://github.com/danielmiessler/fabric）><br/>`https-github-com-danielmiessler-fabric`          |
+| [Rap 说唱歌词大师](https://chat-preview.lobehub.com/market?agent=rap-writer)<br/><sup>By **[aoocar](https://github.com/aoocar)** on **2024-03-25**</sup>                          | 将歌词以 rap 歌词的形式进行匹配，按照参考格式进行 rap 歌词创作<br/>`说唱` `歌词`                                          |
 
-> 📊 Total agents: [<kbd>**218**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**220**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
