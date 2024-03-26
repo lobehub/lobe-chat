@@ -8,7 +8,7 @@ const isBuiltinTool = (id: string) => (s: ToolStoreState) =>
 
 const metaList = (s: ToolStoreState): LobeToolMeta[] =>
   s.builtinTools.map((t) => ({
-    author: 'LobeHub',
+    author: 'HwBaby',
     identifier: t.identifier,
     meta: t.manifest.meta,
     type: 'builtin',
