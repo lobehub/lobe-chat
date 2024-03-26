@@ -45,6 +45,7 @@ declare global {
 
       // OpenRouter Provider
       OPENROUTER_API_KEY?: string;
+      OPENROUTER_CUSTOM_MODELS?: string;
 
       // ZeroOne Provider
       ZEROONE_API_KEY?: string;
@@ -118,6 +119,7 @@ export const getProviderConfig = () => {
 
     ENABLED_OPENROUTER: !!OPENROUTER_API_KEY,
     OPENROUTER_API_KEY,
+    OPENROUTER_CUSTOM_MODELS: process.env.OPENROUTER_CUSTOM_MODELS,
 
     ENABLED_MOONSHOT: !!MOONSHOT_API_KEY,
     MOONSHOT_API_KEY,
