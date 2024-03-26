@@ -50,6 +50,7 @@
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
     "InvalidOpenRouterAPIKey": "OpenRouter API Key jest nieprawidłowy lub pusty. Sprawdź klucz API OpenRouter i spróbuj ponownie.",
     "InvalidPerplexityAPIKey": "Klucz API Perplexity jest nieprawidłowy lub pusty. Sprawdź klucz API Perplexity i spróbuj ponownie.",
+    "InvalidZeroOneAPIKey": "零一万物 API Key 不正确或为空，请检查零一万物 API Key 后重试",
     "InvalidZhipuAPIKey": "Nieprawidłowy lub pusty klucz API Zhipu, prosimy sprawdzić klucz API Zhipu i spróbować ponownie.",
     "LocationNotSupportError": "Przepraszamy, Twoja lokalizacja nie obsługuje tego usługi modelu, być może ze względu na ograniczenia regionalne lub brak dostępności usługi. Proszę sprawdź, czy bieżąca lokalizacja obsługuje tę usługę, lub spróbuj użyć innych informacji o lokalizacji.",
     "MistralBizError": "请求 Mistral AI 服务出错，请根据以下信息排查或重试",
@@ -72,6 +73,7 @@
     "PluginOpenApiInitError": "Przepraszamy, inicjalizacja klienta OpenAPI nie powiodła się. Proszę sprawdź, czy informacje konfiguracyjne OpenAPI są poprawne",
     "PluginServerError": "Błąd zwrócony przez serwer wtyczki. Proszę sprawdź plik opisowy wtyczki, konfigurację wtyczki lub implementację serwera zgodnie z poniższymi informacjami o błędzie",
     "PluginSettingsInvalid": "Ta wtyczka wymaga poprawnej konfiguracji przed użyciem. Proszę sprawdź, czy Twoja konfiguracja jest poprawna",
+    "ZeroOneBizError": "请求零一万物服务出错，请根据以下信息排查或重试",
     "ZhipuBizError": "Wystąpił błąd żądania usługi Zhipu, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie."
   },
   "stt": {
@@ -119,6 +121,10 @@
       "Perplexity": {
         "description": "Wprowadź swój klucz API Perplexity, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
         "title": "Użyj niestandardowego klucza API Perplexity"
+      },
+      "ZeroOne": {
+        "description": "输入你的零一万物 API Key 即可开始会话。应用不会记录你的 API Key",
+        "title": "使用自定义零一万物 API Key"
       },
       "Zhipu": {
         "description": "Wprowadź swój klucz API Zhipu, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",

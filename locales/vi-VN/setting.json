@@ -201,6 +201,14 @@
         "title": "API Key"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI ZeroOne",
+      "token": {
+        "desc": "Nhập API Key từ 01.AI ZeroOne",
+        "placeholder": "01.AI ZeroOne API Key",
+        "title": "API Key"
+      }
+    },
     "Zhipu": {
       "title": "Zhipu AI",
       "token": {

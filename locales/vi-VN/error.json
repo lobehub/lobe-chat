@@ -50,6 +50,7 @@
     "InvalidOllamaArgs": "Cấu hình Ollama không hợp lệ, vui lòng kiểm tra lại cấu hình Ollama và thử lại",
     "InvalidOpenRouterAPIKey": "OpenRouter API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
     "InvalidPerplexityAPIKey": "Khóa API Perplexity không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại sau",
+    "InvalidZeroOneAPIKey": "Khóa API ZeroOne không hợp lệ hoặc trống, vui lòng kiểm tra lại khóa API ZeroOne và thử lại",
     "InvalidZhipuAPIKey": "Khóa API Zhipu không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Zhipu và thử lại",
     "LocationNotSupportError": "Xin lỗi, vị trí của bạn không hỗ trợ dịch vụ mô hình này, có thể do hạn chế vùng miền hoặc dịch vụ chưa được mở. Vui lòng xác nhận xem vị trí hiện tại có hỗ trợ sử dụng dịch vụ này không, hoặc thử sử dụng thông tin vị trí khác.",
     "MistralBizError": "Yêu cầu dịch vụ Mistral AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
@@ -72,6 +73,7 @@
     "PluginOpenApiInitError": "Xin lỗi, khởi tạo khách hàng OpenAPI thất bại, vui lòng kiểm tra thông tin cấu hình OpenAPI có đúng không",
     "PluginServerError": "Lỗi trả về từ máy chủ plugin, vui lòng kiểm tra tệp mô tả plugin, cấu hình plugin hoặc triển khai máy chủ theo thông tin lỗi dưới đây",
     "PluginSettingsInvalid": "Plugin cần phải được cấu hình đúng trước khi sử dụng, vui lòng kiểm tra cấu hình của bạn có đúng không",
+    "ZeroOneBizError": "Yêu cầu dịch vụ ZeroOneBiz gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "ZhipuBizError": "Yêu cầu dịch vụ Zhipu gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây"
   },
   "stt": {
@@ -119,6 +121,10 @@
       "Perplexity": {
         "description": "Nhập Khóa API Perplexity của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không ghi lại Khóa API của bạn",
         "title": "Sử dụng Khóa API Perplexity tùy chỉnh"
+      },
+      "ZeroOne": {
+        "description": "Nhập khóa API ZeroOne của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ khóa API của bạn",
+        "title": "Sử dụng khóa API ZeroOne tùy chỉnh"
       },
       "Zhipu": {
         "description": "Nhập Zhipu API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
