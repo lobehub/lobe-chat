@@ -1,7 +1,6 @@
 'use client';
 
 import { useResponsive } from 'antd-style';
-import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { parseAsString } from 'nuqs/server';
 import { memo, useEffect } from 'react';
@@ -15,10 +14,6 @@ const SessionHydration = memo(() => {
 
   const { mobile } = useResponsive();
   useStoreUpdater('isMobile', mobile);
-
-  const router = useRouter();
-  // TODO: 后续可以把 router 从 useSessionStore 移除
-  useStoreUpdater('router', router);
 
   // two-way bindings the url and session store
   const [session, setSession] = useQueryState(
