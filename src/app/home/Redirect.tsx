@@ -5,7 +5,6 @@ import { memo, useEffect } from 'react';
 
 import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
-import { useSessionStore } from '@/store/session';
 
 const checkHasConversation = async () => {
   const hasMessages = await messageService.hasMessages();
@@ -15,14 +14,11 @@ const checkHasConversation = async () => {
 
 const Redirect = memo(() => {
   const router = useRouter();
-  const [switchSession] = useSessionStore((s) => [s.switchSession]);
 
   useEffect(() => {
     checkHasConversation().then((hasData) => {
       if (hasData) {
         router.replace('/chat');
-
-        switchSession();
       } else {
         router.replace('/welcome');
       }
