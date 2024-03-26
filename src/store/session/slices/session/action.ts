@@ -149,7 +149,6 @@ export const createSessionSlice: StateCreator<
     const { isMobile, router } = get();
 
     get().activeSession(sessionId);
-    console.log(isMobile, router);
 
     // TODO: 后续可以把 router 移除
     router?.push(SESSION_CHAT_URL(sessionId, isMobile));
