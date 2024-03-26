@@ -1,11 +1,9 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { FC, PropsWithChildren, memo } from 'react';
+import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ClientLayout from '@/components/client/ClientLayout';
-import MobileSwitchLoading from '@/features/MobileSwitchLoading';
+import ClientResponsiveLayout from '@/components/client/ClientResponsiveLayout';
 
 import ResponsiveSessionList from './SessionList';
 
@@ -25,9 +23,4 @@ const Desktop = memo(({ children }: PropsWithChildren) => {
   );
 });
 
-const Mobile = dynamic(() => import('../Mobile'), {
-  loading: MobileSwitchLoading,
-  ssr: false,
-}) as FC<PropsWithChildren>;
-
-export default ClientLayout({ Desktop, Mobile });
+export default ClientResponsiveLayout({ Desktop, Mobile: () => import('../Mobile') });

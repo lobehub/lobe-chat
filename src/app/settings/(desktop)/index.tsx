@@ -16,6 +16,7 @@ const Mobile: FC = dynamic(() => import('../(mobile)'), {
 
 const Desktop = memo<SettingsCommonProps>((props) => {
   const mobile = useIsMobile();
+
   return mobile ? <Mobile /> : <Common {...props} />;
 });
 

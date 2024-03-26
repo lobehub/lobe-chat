@@ -27,6 +27,8 @@ const MobileLayout = memo<PropsWithChildren>(({ children }) => {
     if (pathname.startsWith('/settings')) return <SettingSubPageHeader />;
   }, [pathname]);
 
+  if (pathname === '/') return children;
+
   return (
     <AppLayoutMobile navBar={header} showTabBar={!isSubPath} tabBarKey={sidebarKey}>
       {children}

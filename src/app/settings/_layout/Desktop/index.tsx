@@ -1,17 +1,15 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { FC, PropsWithChildren } from 'react';
+import { PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
-import ClientLayout from '@/components/client/ClientLayout';
-import MobileSwitchLoading from '@/features/MobileSwitchLoading';
+import ClientResponsiveLayout from '@/components/client/ClientResponsiveLayout';
 
 import Header from './Header';
 import SideBar from './SideBar';
 
-const Desktop = ({ children }: PropsWithChildren) => (
+const Desktop = memo<PropsWithChildren>(({ children }) => (
   <>
     <SideBar />
     <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>
@@ -24,11 +22,6 @@ const Desktop = ({ children }: PropsWithChildren) => (
       </Flexbox>
     </Flexbox>
   </>
-);
+));
 
-const Mobile = dynamic(() => import('../Mobile'), {
-  loading: MobileSwitchLoading,
-  ssr: false,
-}) as FC<PropsWithChildren>;
-
-export default ClientLayout({ Desktop, Mobile });
+export default ClientResponsiveLayout({ Desktop, Mobile: () => import('../Mobile') });
