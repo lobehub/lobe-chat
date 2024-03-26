@@ -3,7 +3,7 @@
 import { useResponsive } from 'antd-style';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { parseAsString } from 'nuqs/parsers';
+import { parseAsString } from 'nuqs/server';
 import { memo, useEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 

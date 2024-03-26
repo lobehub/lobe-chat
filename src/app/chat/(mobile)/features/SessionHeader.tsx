@@ -1,10 +1,12 @@
-import { ActionIcon, Avatar, Logo, MobileNavBar } from '@lobehub/ui';
+import { ActionIcon, Avatar, MobileNavBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { MessageSquarePlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Logo from '@/components/Logo';
+import LogoText from '@/components/Logo/Text';
 import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import SyncStatusInspector from '@/features/SyncStatusInspector';
 import { useGlobalStore } from '@/store/global';
@@ -33,7 +35,7 @@ const Header = memo(() => {
           <div onClick={() => router.push('/settings')}>
             {avatar ? <Avatar avatar={avatar} size={28} /> : <Logo size={28} />}
           </div>
-          <Logo type={'text'} />
+          <LogoText />
           <SyncStatusInspector placement={'bottom'} />
         </Flexbox>
       }
