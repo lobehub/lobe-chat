@@ -1,7 +1,7 @@
 import { globSync } from 'glob';
 import { resolve } from 'node:path';
 
-export const WIKI_URL = 'https://github.com/aipuz/chat-hw-baby/wiki/';
+export const WIKI_URL = 'https://github.com/lobehub/lobe-chat/wiki/';
 export const ROOT = resolve(__dirname, '../..');
 export const DOCS_DIR = resolve(ROOT, 'contributing');
 export const HOME_PATH = resolve(DOCS_DIR, 'Home.md');

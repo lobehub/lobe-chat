@@ -1,1 +1,1 @@
-This is the **🤯 / 🤖 Lobe Chat** wiki. [Wiki Home](https://github.com/aipuz/chat-hw-baby/wiki)
+This is the **🤯 / 🤖 Lobe Chat** wiki. [Wiki Home](https://github.com/lobehub/lobe-chat/wiki)

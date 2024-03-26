@@ -23,8 +23,8 @@ export class LobeOpenRouterAI implements LobeRuntimeAI {
       apiKey,
       baseURL,
       defaultHeaders: {
-        "HTTP-Referer": "https://chat.hw.baby",
-        "X-Title": "Chat Hw Baby"
+        "HTTP-Referer": "https://chat-preview.lobehub.com",
+        "X-Title": "Lobe Chat"
       },
       ...res
     });
