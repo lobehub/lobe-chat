@@ -8,8 +8,8 @@ export interface DataItem {
 
 export const MARKET_URL = 'https://chat.hw.baby/market';
 export const PLGUIN_URL = 'https://chat.hw.baby/settings/agent';
-export const AGENT_EN_URL = 'https://chat.hw.baby/index.json';
-export const AGENT_CN_URL = 'https://chat.hw.baby/index.zh-CN.json';
+export const AGENT_EN_URL = 'https://chat-agents.lobehub.com/index.json';
+export const AGENT_CN_URL = 'https://chat-agents.lobehub.com/index.zh-CN.json';
 export const AGENT_REPO = 'https://github.com/lobehub/lobe-chat-agents';
 export const PLUGIN_EN_URL = 'https://chat-plugins.lobehub.com/index.json';
 export const PLUGIN_CN_URL = 'https://chat-plugins.lobehub.com/index.zh-CN.json';
