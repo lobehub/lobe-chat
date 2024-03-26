@@ -14,7 +14,7 @@ const Desktop = memo<PropsWithChildren>(({ children }) => (
     <SideBar />
     <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>
       <Header />
-      <Flexbox align={'center'} flex={1} padding={24} style={{ overflow: 'scroll' }}>
+      <Flexbox align={'center'} flex={1} padding={24} style={{ overflowY: 'scroll' }}>
         <SafeSpacing />
         <Center gap={16} width={'100%'}>
           {children}
