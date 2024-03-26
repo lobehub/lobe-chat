@@ -55,7 +55,7 @@ src
 1. **获取代码**：克隆 LobeChat 的代码库到本地：
 
 ```bash
-git clone https://github.com/lobehub/lobe-chat.git
+git clone https://github.com/aipuz/chat-hw-baby.git
 ```
 
 2. **安装依赖**：进入项目目录，并安装所需依赖：

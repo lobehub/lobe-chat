@@ -64,7 +64,7 @@ Please keep your commits focused and clear. And remember to be kind to your fell
 ⚙️ Periodically, sync your forked repository with the original (upstream) repository to stay up-to-date with the latest changes.
 
 ```bash
-git remote add upstream https://github.com/lobehub/lobe-chat.git
+git remote add upstream https://github.com/aipuz/chat-hw-baby.git
 git fetch upstream
 git merge upstream/main
 ```

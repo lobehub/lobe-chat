@@ -36,7 +36,7 @@
 1. **获取代码**：首先，你需要从 GitHub 上克隆 LobeChat 的代码库。在终端中运行以下命令：
 
 ```bash
-git clone https://github.com/lobehub/lobe-chat.git
+git clone https://github.com/aipuz/chat-hw-baby.git
 ```
 
 2. **安装依赖**：然后，进入项目目录，并使用 bun 安装项目的依赖包：

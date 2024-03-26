@@ -539,7 +539,7 @@ API Key 是使用 LobeChat 进行大语言模型会话的必要信息，本节�
 或者使用以下命令进行本地开发：
 
 ```fish
-$ git clone https://github.com/lobehub/lobe-chat.git
+$ git clone https://github.com/aipuz/chat-hw-baby.git
 $ cd lobe-chat
 $ pnpm install
 $ pnpm run dev

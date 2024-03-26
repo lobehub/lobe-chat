@@ -518,7 +518,7 @@ You can use GitHub Codespaces for online development:
 Or clone it for local development:
 
 ```fish
-$ git clone https://github.com/lobehub/lobe-chat.git
+$ git clone https://github.com/aipuz/chat-hw-baby.git
 $ cd lobe-chat
 $ pnpm install
 $ pnpm dev
