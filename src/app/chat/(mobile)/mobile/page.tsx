@@ -9,6 +9,7 @@ import { useSessionStore } from '@/store/session';
 
 import TelemetryNotification from '../../features/TelemetryNotification';
 import ChatInput from '../features/ChatInput';
+import ChatHeader from './ChatHeader';
 
 const TopicList = dynamic(() => import('../features/TopicList'));
 
@@ -19,11 +20,14 @@ const Chat = memo(() => {
   useFetchSessions();
 
   return (
-    <Flexbox height={'calc(100% - 44px)'} horizontal>
-      <Conversation chatInput={<ChatInput />} mobile />
-      <TopicList />
-      <TelemetryNotification mobile />
-    </Flexbox>
+    <>
+      <ChatHeader />
+      <Flexbox height={'calc(100% - 44px)'} horizontal>
+        <Conversation chatInput={<ChatInput />} mobile />
+        <TopicList />
+        <TelemetryNotification mobile />
+      </Flexbox>
+    </>
   );
 });
 export default Chat;

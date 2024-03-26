@@ -3,8 +3,10 @@ import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import HeaderContent from '@/app/chat/settings/features/HeaderContent';
+import { mobileHeaderSticky } from '@/styles/mobileHeader';
 import { pathString } from '@/utils/url';
+
+import HeaderContent from '../features/HeaderContent';
 
 const Header = memo(() => {
   const { t } = useTranslation('setting');
@@ -16,6 +18,7 @@ const Header = memo(() => {
       onBackClick={() => router.push(pathString('/chat/mobile', { search: location.search }))}
       right={<HeaderContent />}
       showBackButton
+      style={mobileHeaderSticky}
     />
   );
 });

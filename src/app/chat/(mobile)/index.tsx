@@ -3,11 +3,12 @@
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
-import PageTitle from '../features/PageTitle';
+import SessionHeader from './features/SessionHeader';
 import SessionList from './features/SessionList';
 
 const ChatMobilePage = memo(() => {
   const router = useRouter();
+
   useEffect(() => {
     router.prefetch('/chat/mobile');
     router.prefetch('/settings');
@@ -15,7 +16,7 @@ const ChatMobilePage = memo(() => {
 
   return (
     <>
-      <PageTitle />
+      <SessionHeader />
       <SessionList />
     </>
   );
