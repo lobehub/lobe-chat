@@ -24,7 +24,11 @@ interface SessionListProps {
   showAddButton?: boolean;
 }
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
-  const isInit = useSessionStore((s) => sessionSelectors.isSessionListInit(s));
+  const [activeSession, switchSession, isInit] = useSessionStore((s) => [
+    s.activeSession,
+    s.switchSession,
+    sessionSelectors.isSessionListInit(s),
+  ]);
   const { styles } = useStyles();
 
   const { mobile } = useResponsive();
@@ -34,7 +38,15 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
   ) : dataSource.length > 0 ? (
     dataSource.map(({ id }) => (
       <LazyLoad className={styles} key={id}>
-        <Link aria-label={id} href={SESSION_CHAT_URL(id, mobile)}>
+        <Link
+          aria-label={id}
+          href={SESSION_CHAT_URL(id, mobile)}
+          onClick={(e) => {
+            e.preventDefault();
+            if (mobile) switchSession(id);
+            else activeSession(id);
+          }}
+        >
           <SessionItem id={id} />
         </Link>
       </LazyLoad>
