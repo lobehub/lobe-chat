@@ -5,7 +5,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useActiveSettingsKey } from '../../../../hooks/useActiveSettingsKey';
+import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
+
 import SettingList from '../../features/SettingList';
 import UpgradeAlert from '../../features/UpgradeAlert';
 

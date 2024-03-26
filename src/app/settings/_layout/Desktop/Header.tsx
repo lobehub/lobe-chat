@@ -6,9 +6,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 import { SettingsTabs } from '@/store/global/initialState';
-
-import { useActiveSettingsKey } from '../../../../hooks/useActiveSettingsKey';
 
 const Header = memo(() => {
   const { t } = useTranslation('setting');
