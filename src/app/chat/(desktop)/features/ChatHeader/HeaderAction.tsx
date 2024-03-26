@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 
-import SettingButton from '../../../features/ChatHeader/SettingButton';
-import ShareButton from '../../../features/ChatHeader/ShareButton';
+import SettingButton from '../../../features/SettingButton';
+import ShareButton from '../../../features/ShareButton';
 
 const HeaderAction = memo(() => {
   const { t } = useTranslation('chat');

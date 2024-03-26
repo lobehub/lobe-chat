@@ -18,6 +18,7 @@ import Ollama from './Ollama';
 import OpenAI from './OpenAI';
 import OpenRouter from './OpenRouter';
 import Perplexity from './Perplexity';
+import ZeroOne from './ZeroOne';
 import Zhipu from './Zhipu';
 
 export default memo<{ showOllama: boolean }>(({ showOllama }) => {
@@ -37,6 +38,7 @@ export default memo<{ showOllama: boolean }>(({ showOllama }) => {
       <Mistral />
       <OpenRouter />
       <Moonshot />
+      <ZeroOne />
       <Zhipu />
       <Footer>
         <Trans i18nKey="llm.waitingForMore" ns={'setting'}>

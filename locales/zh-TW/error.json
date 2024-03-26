@@ -50,6 +50,7 @@
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",
     "InvalidOpenRouterAPIKey": "OpenRouter API 金鑰不正確或為空，請檢查 OpenRouter API 金鑰後重試",
     "InvalidPerplexityAPIKey": "Perplexity API Key 不正確或為空，請檢查 Perplexity API Key 後重試",
+    "InvalidZeroOneAPIKey": "零一萬物 API Key 不正確或為空，請檢查零一萬物 API Key 後重試",
     "InvalidZhipuAPIKey": "Zhipu API Key 不正確或為空，請檢查 Zhipu API Key 後重試",
     "LocationNotSupportError": "很抱歉，你的所在位置不支持此模型服務，可能是由於地區限制或服務未開通。請確認當前位置是否支持使用此服務，或嘗試使用其他位置信息。",
     "MistralBizError": "請求 Mistral AI 服務出錯，請根據以下信息排查或重試",
@@ -72,6 +73,7 @@
     "PluginOpenApiInitError": "很抱歉，OpenAPI 客戶端初始化失敗，請檢查 OpenAPI 的配置信息是否正確",
     "PluginServerError": "外掛伺服器請求回傳錯誤。請根據下面的錯誤資訊檢查您的外掛描述檔案、外掛設定或伺服器實作",
     "PluginSettingsInvalid": "該外掛需要正確設定後才可以使用。請檢查您的設定是否正確",
+    "ZeroOneBizError": "請求零一萬物服務出錯，請根據以下信息排查或重試",
     "ZhipuBizError": "請求智譜服務出錯，請根據以下信息排查或重試"
   },
   "stt": {
@@ -119,6 +121,10 @@
       "Perplexity": {
         "description": "輸入你的 Perplexity API Key 即可開始會話。應用不會記錄你的 API Key",
         "title": "使用自定義 Perplexity API Key"
+      },
+      "ZeroOne": {
+        "description": "輸入你的零一萬物 API Key 即可開始會話。應用不會記錄你的 API Key",
+        "title": "使用自定義零一萬物 API Key"
       },
       "Zhipu": {
         "description": "輸入你的 Zhipu API Key 即可開始會話。應用不會記錄你的 API Key",

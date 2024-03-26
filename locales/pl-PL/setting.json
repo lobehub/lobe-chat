@@ -201,6 +201,14 @@
         "title": "Klucz API"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI ZeroOne万物",
+      "token": {
+        "desc": "请输入来自01.AI ZeroOne万物的API密钥",
+        "placeholder": "01.AI ZeroOne万物API密钥",
+        "title": "API密钥"
+      }
+    },
     "Zhipu": {
       "title": "智谱",
       "token": {

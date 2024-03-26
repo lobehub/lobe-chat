@@ -50,6 +50,7 @@
     "InvalidOllamaArgs": "Invalid Ollama configuration, please check Ollama configuration and try again",
     "InvalidOpenRouterAPIKey": "Invalid or empty OpenRouter API Key. Please check your OpenRouter API Key and try again.",
     "InvalidPerplexityAPIKey": "Perplexity API Key is incorrect or empty. Please check the Perplexity API Key and retry.",
+    "InvalidZeroOneAPIKey": "01-AI API Key is incorrect or empty. Please check the 01-AI API Key and retry.",
     "InvalidZhipuAPIKey": "Zhipu API Key is incorrect or empty. Please check the Zhipu API Key and retry.",
     "LocationNotSupportError": "We're sorry, your current location does not support this model service. This may be due to regional restrictions or the service not being available. Please confirm if the current location supports using this service, or try using a different location.",
     "MistralBizError": "Error occurred while requesting Mistral AI service. Please troubleshoot based on the following information or retry.",
@@ -72,6 +73,7 @@
     "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct.",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
+    "ZeroOneBizError": "Error requesting 01-AI service. Please troubleshoot or retry based on the following information.",
     "ZhipuBizError": "Error requesting Zhipu service. Please troubleshoot or retry based on the following information."
   },
   "stt": {
@@ -119,6 +121,10 @@
       "Perplexity": {
         "description": "Enter your Perplexity API Key to start the session. The app will not store your API Key.",
         "title": "Use custom Perplexity API Key"
+      },
+      "ZeroOne": {
+        "description": "Enter your 01-AI API Key to start the session. The application will not store your API Key.",
+        "title": "Use Custom 01-AI API Key"
       },
       "Zhipu": {
         "description": "Enter your Zhipu API Key to start the session. The app will not store your API Key.",

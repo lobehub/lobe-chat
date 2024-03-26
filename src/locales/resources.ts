@@ -28,6 +28,10 @@ export const normalizeLocale = (locale?: string) => {
       return 'zh-CN';
     }
 
+    case 'de': {
+      return 'de-DE';
+    }
+
     case 'en': {
       return 'en-US';
     }

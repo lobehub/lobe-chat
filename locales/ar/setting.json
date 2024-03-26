@@ -201,6 +201,14 @@
         "title": "مفتاح الواجهة البرمجية للتطبيق"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI الصفر والواحد",
+      "token": {
+        "desc": "أدخل مفتاح API من 01.AI الصفر والواحد",
+        "placeholder": "مفتاح API من 01.AI الصفر والواحد",
+        "title": "مفتاح API"
+      }
+    },
     "Zhipu": {
       "title": "Zhipu AI",
       "token": {

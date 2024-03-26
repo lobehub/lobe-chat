@@ -50,6 +50,7 @@
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
     "InvalidOpenRouterAPIKey": "OpenRouter API Key is onjuist of leeg. Controleer de OpenRouter API Key en probeer het opnieuw.",
     "InvalidPerplexityAPIKey": "Perplexity API Key is onjuist of leeg. Controleer de Perplexity API Key en probeer het opnieuw.",
+    "InvalidZeroOneAPIKey": "零一万物 API Key 不正确或为空，请检查零一万物 API Key 后重试",
     "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
     "MistralBizError": "Er is een fout opgetreden bij het aanroepen van de Mistral AI-service. Controleer de onderstaande informatie of probeer het opnieuw.",
@@ -72,6 +73,7 @@
     "PluginOpenApiInitError": "Sorry, initialisatie van de OpenAPI-client is mislukt. Controleer of de configuratie van OpenAPI juist is",
     "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
     "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is",
+    "ZeroOneBizError": "请求零一万物服务出错，请根据以下信息排查或重试",
     "ZhipuBizError": "Error requesting Zhipu service, please troubleshoot or retry based on the following information"
   },
   "stt": {
@@ -119,6 +121,10 @@
       "Perplexity": {
         "description": "Voer uw eigen Perplexity API Key in om het gesprek te starten. De app zal uw API Key niet opslaan.",
         "title": "Gebruik een aangepaste Perplexity API Key"
+      },
+      "ZeroOne": {
+        "description": "输入你的零一万物 API Key 即可开始会话。应用不会记录你的 API Key",
+        "title": "使用自定义零一万物 API Key"
       },
       "Zhipu": {
         "description": "Enter your Zhipu API Key to start the session. The app will not record your API Key",

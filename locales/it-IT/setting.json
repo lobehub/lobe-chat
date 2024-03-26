@@ -201,6 +201,14 @@
         "title": "Chiave API"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI ZeroOne万物",
+      "token": {
+        "desc": "填入01.AI ZeroOne万物的API密钥",
+        "placeholder": "01.AI ZeroOne万物API密钥",
+        "title": "API密钥"
+      }
+    },
     "Zhipu": {
       "title": "智谱",
       "token": {
@@ -451,38 +459,36 @@
       "unknownBrowser": "Browser sconosciuto",
       "unknownOS": "Sistema operativo sconosciuto"
     },
-    "tab": {
-      "experiment": "Esperimento",
-      "sync": "Sincronizzazione cloud"
-    },
     "warning": {
-      "message": "Questa funzione è attualmente sperimentale e potrebbe comportare comportamenti imprevisti o instabili. In caso di problemi, invia tempestivamente un feedback.",
-      "webrtc": {
-        "channelName": {
-          "desc": "WebRTC utilizzerà questo nome per creare un canale di sincronizzazione. Assicurati che il nome del canale sia univoco",
-          "placeholder": "Inserisci il nome del canale di sincronizzazione",
-          "shuffle": "Genera casuale",
-          "title": "Nome del canale di sincronizzazione"
-        },
-        "channelPassword": {
-          "desc": "Aggiungi una password per garantire la privacy del canale. Solo con la password corretta i dispositivi potranno unirsi al canale",
-          "placeholder": "Inserisci la password del canale di sincronizzazione",
-          "title": "Password del canale di sincronizzazione"
-        },
-        "desc": "Comunicazione dati in tempo reale e punto-punto. I dispositivi devono essere online contemporaneamente per sincronizzarsi",
-        "enabled": {
-          "invalid": "Inserisci prima il nome del canale di sincronizzazione per abilitare",
-          "title": "Abilita la sincronizzazione"
-        },
-        "title": "Sincronizzazione WebRTC"
-      }
+      "message": "Questa funzione è attualmente sperimentale e potrebbe comportare comportamenti imprevisti o instabili. In caso di problemi, invia tempestivamente un feedback."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC将使用此名称创建同步频道，请确保频道名称唯一",
+        "placeholder": "请输入同步频道名称",
+        "shuffle": "随机生成",
+        "title": "同步频道名称"
+      },
+      "channelPassword": {
+        "desc": "添加密码以确保频道私密性，只有密码正确时，设备才能加入频道",
+        "placeholder": "请输入同步频道密码",
+        "title": "同步频道密码"
+      },
+      "desc": "实时、点对点的数据通信，需要设备同时在线才能同步",
+      "enabled": {
+        "invalid": "请填写同步频道名称后再开启",
+        "title": "开启同步"
+      },
+      "title": "WebRTC同步"
     }
   },
   "tab": {
     "about": "Informazioni",
     "agent": "Assistente predefinito",
     "common": "Impostazioni comuni",
+    "experiment": "实验",
     "llm": "Modello linguistico",
+    "sync": "云端同步",
     "tts": "Servizio vocale"
   },
   "tools": {
