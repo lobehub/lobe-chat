@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.142.3](https://github.com/lobehub/lobe-chat/compare/v0.142.2...v0.142.3)
+
+<sup>Released on **2024-03-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `next-auth` temporary to fix build error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin `next-auth` temporary to fix build error, closes [#1739](https://github.com/lobehub/lobe-chat/issues/1739) ([e9ece9f](https://github.com/lobehub/lobe-chat/commit/e9ece9f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.142.2](https://github.com/lobehub/lobe-chat/compare/v0.142.1...v0.142.2)
 
 <sup>Released on **2024-03-25**</sup>
