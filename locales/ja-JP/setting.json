@@ -201,6 +201,14 @@
         "title": "API キー"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI 零一万物",
+      "token": {
+        "desc": "填入来自 01.AI 零一万物的 API Key",
+        "placeholder": "01.AI 零一万物 API Key",
+        "title": "API Key"
+      }
+    },
     "Zhipu": {
       "title": "智谱",
       "token": {
@@ -451,38 +459,36 @@
       "unknownBrowser": "不明なブラウザ",
       "unknownOS": "不明なOS"
     },
-    "tab": {
-      "experiment": "実験",
-      "sync": "クラウド同期"
-    },
     "warning": {
-      "message": "この機能は現在実験的なものであり、予期しない不安定な状況が発生する可能性があります。問題が発生した場合はフィードバックを提出してください。",
-      "webrtc": {
-        "channelName": {
-          "desc": "WebRTC はこの名前で同期チャネルを作成します。チャネル名が一意であることを確認してください。",
-          "placeholder": "同期チャネル名を入力",
-          "shuffle": "ランダム生成",
-          "title": "同期チャネル名"
-        },
-        "channelPassword": {
-          "desc": "チャネルのプライバシーを保護するためにパスワードを追加し、デバイスがチャネルに参加できるのはパスワードが正しい場合のみです。",
-          "placeholder": "同期チャネルのパスワードを入力",
-          "title": "同期チャネルのパスワード"
-        },
-        "desc": "リアルタイムでピアツーピアのデータ通信であり、デバイスが同時にオンラインである必要があります。",
-        "enabled": {
-          "invalid": "同期チャネル名を入力してから有効にしてください",
-          "title": "同期を有効にする"
-        },
-        "title": "WebRTC 同期"
-      }
+      "message": "この機能は現在実験的なものであり、予期しない不安定な状況が発生する可能性があります。問題が発生した場合はフィードバックを提出してください。"
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC 将使用此名创建同步频道，确保频道名称唯一",
+        "placeholder": "请输入同步频道名称",
+        "shuffle": "随机生成",
+        "title": "同步频道名称"
+      },
+      "channelPassword": {
+        "desc": "添加密码确保频道私密性，只有密码正确时，设备才可加入频道",
+        "placeholder": "请输入同步频道密码",
+        "title": "同步频道密码"
+      },
+      "desc": "实时、点对点的数据通信，需设备同时在线才可同步",
+      "enabled": {
+        "invalid": "请填写同步频道名称后再开启",
+        "title": "开启同步"
+      },
+      "title": "WebRTC 同步"
     }
   },
   "tab": {
     "about": "について",
     "agent": "デフォルトエージェント",
     "common": "一般設定",
+    "experiment": "実験",
     "llm": "言語モデル",
+    "sync": "クラウド同期",
     "tts": "音声サービス"
   },
   "tools": {

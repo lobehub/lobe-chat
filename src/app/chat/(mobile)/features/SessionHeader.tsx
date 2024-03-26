@@ -10,6 +10,7 @@ import SyncStatusInspector from '@/features/SyncStatusInspector';
 import { useGlobalStore } from '@/store/global';
 import { commonSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
+import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
@@ -43,6 +44,7 @@ const Header = memo(() => {
           size={MOBILE_HEADER_ICON_SIZE}
         />
       }
+      style={mobileHeaderSticky}
     />
   );
 });

@@ -201,6 +201,14 @@
         "title": "API Anahtarı"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI SıfırBir Her Şey",
+      "token": {
+        "desc": "01.AI SıfırBir Her Şey'den API Anahtarı girin",
+        "placeholder": "01.AI SıfırBir Her Şey API Anahtarı",
+        "title": "API Anahtarı"
+      }
+    },
     "Zhipu": {
       "title": "Zhipu AI",
       "token": {

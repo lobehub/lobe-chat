@@ -201,6 +201,14 @@
         "title": "Clé API"
       }
     },
+    "ZeroOne": {
+      "title": "01.AI ZéroUn Tout-en-un",
+      "token": {
+        "desc": "Entrez la clé API de 01.AI ZéroUn Tout-en-un",
+        "placeholder": "Clé API 01.AI ZéroUn Tout-en-un",
+        "title": "Clé API"
+      }
+    },
     "Zhipu": {
       "title": "智谱",
       "token": {

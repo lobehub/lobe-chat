@@ -37,7 +37,10 @@ export const AgentRuntimeErrorType = {
 
   InvalidGroqAPIKey: 'InvalidGroqAPIKey',
   GroqBizError: 'GroqBizError',
-  
+
+  InvalidZeroOneAPIKey: 'InvalidZeroOneAPIKey',
+  ZeroOneBizError: 'ZeroOneBizError',
+
   InvalidOpenRouterAPIKey: 'InvalidOpenRouterAPIKey',
   OpenRouterBizError: 'OpenRouterBizError',
 } as const;

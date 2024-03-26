@@ -12,7 +12,7 @@ import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { localeOptions } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
-import { switchLang } from '@/utils/switchLang';
+import { switchLang } from '@/utils/client/switchLang';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../features/ThemeSwatches';
 
@@ -60,6 +60,7 @@ const Theme = memo(() => {
                 value: 'auto',
               },
             ]}
+            unoptimized={false}
             width={100}
           />
         ),

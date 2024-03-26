@@ -201,6 +201,14 @@
         "title": "API Key"
       }
     },
+    "ZeroOne": {
+      "title": "01-AI",
+      "token": {
+        "desc": "Enter the API Key from 01-AI",
+        "placeholder": "01-AI API Key",
+        "title": "API Key"
+      }
+    },
     "Zhipu": {
       "title": "Zhipu",
       "token": {
