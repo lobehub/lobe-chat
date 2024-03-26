@@ -1,15 +1,16 @@
 import { SearchBar } from '@lobehub/ui';
-import { useResponsive } from 'antd-style';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useMarketStore } from '@/store/market';
 
-const AgentSearchBar = memo(() => {
+const AgentSearchBar = memo<{ mobile?: boolean }>(({ mobile: controlledMobile }) => {
   const { t } = useTranslation('market');
   const [keywords, setKeywords] = useMarketStore((s) => [s.searchKeywords, s.setSearchKeywords]);
   const [value, setValue] = useState(keywords);
-  const { mobile } = useResponsive();
+  const isMobile = useIsMobile();
+  const mobile = controlledMobile ?? isMobile;
 
   const handleSearch = useCallback(() => {
     setKeywords(value);

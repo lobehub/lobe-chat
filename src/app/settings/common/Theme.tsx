@@ -60,6 +60,7 @@ const Theme = memo(() => {
                 value: 'auto',
               },
             ]}
+            unoptimized={false}
             width={100}
           />
         ),
