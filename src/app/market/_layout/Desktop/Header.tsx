@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 
-import ShareAgentButton from '@/app/market/features/ShareAgentButton';
+import ShareAgentButton from '../../features/ShareAgentButton';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
