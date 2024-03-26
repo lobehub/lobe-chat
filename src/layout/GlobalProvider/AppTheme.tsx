@@ -76,7 +76,7 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
-        <ConfigProvider config={{ imgAs: Image } as any}>
+        <ConfigProvider config={{ imgAs: Image, imgUnoptimized: true }}>
           <Container>{children}</Container>
         </ConfigProvider>
       </ThemeProvider>

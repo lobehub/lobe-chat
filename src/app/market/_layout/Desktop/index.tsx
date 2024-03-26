@@ -34,7 +34,7 @@ const Desktop = memo<PropsWithChildren>(({ children }) => {
     <Flexbox flex={1} height={'100%'} id={'lobe-market-container'} style={{ position: 'relative' }}>
       <Header />
       <Flexbox flex={1} height={'calc(100% - 64px)'} horizontal>
-        <Flexbox align={'center'} flex={1} style={{ overflow: 'scroll', padding: 16 }}>
+        <Flexbox align={'center'} flex={1} style={{ overflowY: 'scroll', padding: 16 }}>
           <SafeSpacing />
 
           <Flexbox gap={16} style={{ maxWidth: MAX_WIDTH, position: 'relative', width: '100%' }}>
