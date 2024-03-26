@@ -5,7 +5,6 @@ import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
-import { SESSION_CHAT_URL } from '@/const/url';
 import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
@@ -57,10 +56,6 @@ export interface SessionAction {
    */
   removeSession: (id: string) => void;
   /**
-   * switch session url
-   */
-  switchSession: (sessionId?: string) => void;
-  /**
    * A custom hook that uses SWR to fetch sessions data.
    */
   useFetchSessions: () => SWRResponse<any>;
@@ -86,9 +81,9 @@ export const createSessionSlice: StateCreator<
   },
 
   createSession: async (agent, isSwitchSession = true) => {
-    const { switchSession, refreshSessions } = get();
+    const { activeSession, refreshSessions } = get();
 
-    // 合并 settings 里的 defaultAgent
+    // merge the defaultAgent in settings
     const defaultAgent = merge(
       initLobeSession,
       settingsSelectors.defaultAgent(useGlobalStore.getState()),
@@ -99,14 +94,14 @@ export const createSessionSlice: StateCreator<
     const id = await sessionService.createNewSession(LobeSessionType.Agent, newSession);
     await refreshSessions();
 
-    // 创建后是否跳转到对应会话，默认跳转
-    if (isSwitchSession) switchSession(id);
+    // Whether to goto  to the new session after creation, the default is to switch to
+    if (isSwitchSession) activeSession(id);
 
     return id;
   },
 
   duplicateSession: async (id) => {
-    const { switchSession, refreshSessions } = get();
+    const { activeSession, refreshSessions } = get();
     const session = sessionSelectors.getSessionById(id)(get());
 
     if (!session) return;
@@ -123,7 +118,7 @@ export const createSessionSlice: StateCreator<
     }
 
     await refreshSessions();
-    switchSession(newId);
+    activeSession(newId);
   },
 
   pinSession: async (sessionId, pinned) => {
@@ -140,18 +135,10 @@ export const createSessionSlice: StateCreator<
     await sessionService.removeSession(sessionId);
     await get().refreshSessions();
 
+    // If the active session deleted, switch to the inbox session
     if (sessionId === get().activeId) {
-      get().switchSession();
+      get().activeSession(INBOX_SESSION_ID);
     }
-  },
-
-  switchSession: (sessionId = INBOX_SESSION_ID) => {
-    const { isMobile, router } = get();
-
-    get().activeSession(sessionId);
-
-    // TODO: 后续可以把 router 移除
-    router?.push(SESSION_CHAT_URL(sessionId, isMobile));
   },
 
   useFetchSessions: () =>
