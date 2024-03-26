@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
+import { imageUrl } from '@/const/url';
 
 export const useStyles = createStyles(({ css, token }) => ({
   banner: css`
@@ -54,7 +54,7 @@ const AvatarBanner = memo<AgentCardBannerProps>(
             alt={'banner'}
             className={styles.bannerImg}
             height={size}
-            src={avatar || DEFAULT_USER_AVATAR_URL}
+            src={avatar || imageUrl('logo.png')}
             width={size}
           />
         </Flexbox>

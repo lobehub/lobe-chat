@@ -32,7 +32,7 @@ const Setting = memo(() => {
   return (
     <Flexbox style={{ overflow: 'scroll' }}>
       <AvatarBanner avatar={avatar}>
-        <Center style={{ position: 'absolute', zIndex: 2 }}>
+        <Center style={{ marginTop: 16, position: 'absolute', zIndex: 2 }}>
           <AvatarWithUpload size={88} />
         </Center>
       </AvatarBanner>

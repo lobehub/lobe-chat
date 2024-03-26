@@ -8,5 +8,9 @@ import { SettingsTabs } from '@/store/global/initialState';
 export const useActiveSettingsKey = () => {
   const pathname = usePathname();
 
-  return pathname.split('/').at(-1) as SettingsTabs;
+  const tabs = pathname.split('/').at(-1);
+
+  if (tabs === 'settings') return SettingsTabs.Common;
+
+  return tabs as SettingsTabs;
 };
