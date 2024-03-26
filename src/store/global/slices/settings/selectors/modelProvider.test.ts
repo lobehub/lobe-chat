@@ -131,6 +131,32 @@ describe('modelProviderSelectors', () => {
     });
   });
 
+  describe('OPENROUTER_CUSTOM_MODELS', () => {
+    it('custom deletion, addition, and renaming of models', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            openrouter: {
+              enabled: true,
+            },
+          }
+        },
+        serverConfig: {
+          languageModel: {
+            openrouter: {
+              apiKey: 'test-openrouter-api-key',
+              customModelName:
+                '-all,+google/gemma-7b-it,+mistralai/mistral-7b-instruct=Mistral-7B-Instruct',
+            },
+          }
+        },
+      }) as unknown as GlobalStore;
+
+      const result = modelProviderSelectors.modelSelectList(s).filter((r) => r.enabled);
+      expect(result).toMatchSnapshot();
+    });
+  });
+
   describe('modelEnabledVision', () => {
     it('should return true if the model has vision ability', () => {
       const hasAbility = modelProviderSelectors.modelEnabledVision('gpt-4-vision-preview')(
