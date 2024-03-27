@@ -107,7 +107,7 @@
     "openai": "OpenAI",
     "openrouter": "OpenRouter",
     "perplexity": "Perplexity",
-    "zeroone": "01.AI Null Eins Alles",
+    "zeroone": "01-AI",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Keine Beschreibung vorhanden",
@@ -126,35 +126,35 @@
   "stop": "Stoppen",
   "sync": {
     "actions": {
-      "settings": "同步设置",
-      "sync": "立即同步"
+      "settings": "Sync Einstellungen",
+      "sync": "Jetzt Syncen"
     },
     "awareness": {
-      "current": "当前设备"
+      "current": "Aktuelles Gerät"
     },
-    "channel": "频道",
+    "channel": "Kanal",
     "disabled": {
       "actions": {
-        "enable": "开启云端同步",
-        "settings": "配置同步参数"
+        "enable": "Cloud Sync Aktivieren",
+        "settings": "Sync Einstellungen"
       },
-      "desc": "当前会话数据仅存储于此浏览器中。如果你需要在多个设备间同步数据，请配置并开启云端同步。",
-      "title": "数据同步未开启"
+      "desc": "Momentane Session Daten ist nur im Brwoser gespeichert. Wenn Sie Daten über mehrere Geräte syncen möchten, konfigurieren und aktivieren Sie bitte cloud sync.",
+      "title": "Daten Sync Deaktiviert"
     },
     "enabled": {
-      "title": "数据同步"
+      "title": "Daten Sync Aktiviert"
     },
     "status": {
-      "connecting": "连接中",
-      "disabled": "同步未开启",
-      "ready": "已连接",
-      "synced": "已同步",
-      "syncing": "同步中",
-      "unconnected": "连接失败"
+      "connecting": "Verbinden",
+      "disabled": "Sync Deaktiviert",
+      "ready": "Verbunden",
+      "synced": "Synchronisiert",
+      "syncing": "Synchronisierung",
+      "unconnected": "Verbindung gescheitert"
     },
-    "title": "同步状态",
+    "title": "Sync Status",
     "unconnected": {
-      "tip": "信令服务器连接失败，将无法建立点对点通信频道，请检查网络后重试"
+      "tip": "Die Verbindung zum Signalisierungsserver ist fehlgeschlagen, und der Peer-to-Peer-Kommunikationskanal kann nicht hergestellt werden. Bitte überprüfen Sie das Netzwerk und versuchen Sie es erneut."
     }
   },
   "tab": {
