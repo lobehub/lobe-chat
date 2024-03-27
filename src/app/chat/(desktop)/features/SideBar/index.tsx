@@ -27,6 +27,8 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+DraggablePanel.displayName = 'DraggablePanel';
+
 const Desktop = memo(() => {
   const { styles } = useStyles();
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
@@ -47,6 +49,7 @@ const Desktop = memo(() => {
       mode={'fixed'}
       onExpandChange={toggleConfig}
       placement={'right'}
+      showHandlerWideArea={false}
     >
       <DraggablePanelContainer
         style={{
