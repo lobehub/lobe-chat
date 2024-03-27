@@ -4,7 +4,7 @@ export default {
   },
   analytics: {
     telemetry: {
-      desc: '通过选择发送遥测数据，你可以帮助我们改善 LobeChat 整体用户体验',
+      desc: '通过选择发送遥测数据，你可以帮助我们改善 ChatHwBaby 整体用户体验',
       title: '发送匿名使用数据',
     },
     title: '数据统计',
@@ -208,7 +208,7 @@ export default {
         desc: '填入来自 01.AI 零一万物的 API Key',
         placeholder: '01.AI 零一万物 API Key',
         title: 'API Key',
-      }
+      },
     },
     Zhipu: {
       title: '智谱',

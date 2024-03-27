@@ -11,7 +11,7 @@ export default {
   about: '关于',
   advanceSettings: '高级设置',
 
-  appInitializing: 'LobeChat 启动中，请耐心等待...',
+  appInitializing: 'ChatHwBaby 启动中，请耐心等待...',
 
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
@@ -159,9 +159,9 @@ export default {
   telemetry: {
     allow: '允许',
     deny: '拒绝',
-    desc: '我们希望匿名获取你的使用信息，进而帮助我们改进 LobeChat，并为你提供更好的产品体验。你可以在「设置」 - 「关于」随时关闭。',
+    desc: '我们希望匿名获取你的使用信息，进而帮助我们改进 ChatHwBaby，并为你提供更好的产品体验。你可以在「设置」 - 「关于」随时关闭。',
     learnMore: '了解更多',
-    title: '帮助 LobeChat 做得更好',
+    title: '帮助 ChatHwBaby 做得更好',
   },
   temp: '临时',
   updateAgent: '更新助理信息',
