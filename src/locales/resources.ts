@@ -22,24 +22,13 @@ export type Locales = (typeof locales)[number];
 export const normalizeLocale = (locale?: string) => {
   if (!locale) return 'en-US';
 
-  switch (locale) {
-    case 'zh-CN':
-    case 'zh': {
-      return 'zh-CN';
-    }
-
-    case 'de': {
-      return 'de-DE';
-    }
-
-    case 'en': {
-      return 'en-US';
-    }
-
-    default: {
-      return locale;
+  for (const l of locales) {
+    if (l.startsWith(locale)) {
+      return l;
     }
   }
+
+  return 'en-US';
 };
 
 type LocaleOptions = {
