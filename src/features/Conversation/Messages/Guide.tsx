@@ -1,5 +1,4 @@
 import { Markdown } from '@lobehub/ui';
-import { TypographyProps } from 'antd';
 import { ReactNode, memo } from 'react';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -7,7 +6,7 @@ import { ChatMessage } from '@/types/message';
 
 import BubblesLoading from '../components/BubblesLoading';
 
-export const DefaultMessage = memo<
+export const GuideMessage = memo<
   ChatMessage & {
     editableContent: ReactNode;
   }
@@ -16,15 +15,7 @@ export const DefaultMessage = memo<
 
   return (
     <div id={id}>
-      <Markdown
-        componentProps={{
-          a: {
-            target: '_self',
-          } as TypographyProps['Link'] & HTMLAnchorElement,
-        }}
-      >
-        {content}
-      </Markdown>
+      <Markdown>{content}</Markdown>
     </div>
   );
 });

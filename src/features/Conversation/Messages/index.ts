@@ -10,12 +10,14 @@ import { OnAvatarsClick, RenderMessage } from '../types';
 import { AssistantMessage } from './Assistant';
 import { DefaultMessage } from './Default';
 import { FunctionMessage } from './Function';
+import { GuideMessage } from './Guide';
 import { UserMessage } from './User';
 
 export const renderMessages: Record<string, RenderMessage> = {
   assistant: AssistantMessage,
   default: DefaultMessage,
   function: FunctionMessage,
+  guide: GuideMessage,
   user: UserMessage,
 };
 

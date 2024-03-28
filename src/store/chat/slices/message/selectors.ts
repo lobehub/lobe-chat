@@ -37,6 +37,11 @@ const getMeta = (message: ChatMessage) => {
         title: 'plugin-unknown',
       };
     }
+    case 'guide': {
+      return {
+        avatar: DEFAULT_INBOX_AVATAR,
+      };
+    }
   }
 };
 
@@ -70,7 +75,7 @@ const currentChatsWithGuideMessage =
     });
     const agentMsg = t('agentDefaultMessage', {
       id: activeId,
-      name: meta.title || t('defaultAgent'),
+      name: t('defaultAgent'),
       ns: 'chat',
     });
 

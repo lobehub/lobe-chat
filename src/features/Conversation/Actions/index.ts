@@ -14,6 +14,7 @@ import { UserActionsBar } from './User';
 export const renderActions: Record<LLMRoleType, RenderAction> = {
   assistant: AssistantActionsBar,
   function: FunctionActionsBar,
+  guide: DefaultActionsBar,
   system: DefaultActionsBar,
   user: UserActionsBar,
 };
