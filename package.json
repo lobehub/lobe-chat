@@ -186,7 +186,7 @@
     "@types/ua-parser-js": "^0.7",
     "@types/uuid": "^9",
     "@umijs/lint": "^4",
-    "@vitest/coverage-v8": "~1.2.2",
+    "@vitest/coverage-v8": "~1.4.0",
     "ajv-keywords": "^5",
     "commitlint": "^19",
     "consola": "^3",
