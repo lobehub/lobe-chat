@@ -206,7 +206,7 @@
     "prettier": "^3",
     "remark-cli": "^11",
     "remark-parse": "^10",
-    "semantic-release": "^21",
+    "semantic-release": "^23.0.0",
     "stylelint": "^15",
     "tsx": "^4",
     "typescript": "^5",
