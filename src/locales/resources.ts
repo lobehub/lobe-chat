@@ -114,7 +114,7 @@ export const localeOptions: LocaleOptions = [
     value: 'vi-VN',
   },
   {
-    label: 'Bulgarian',
+    label: 'Български',
     value: 'bg-BG',
   },
 ] as LocaleOptions;
