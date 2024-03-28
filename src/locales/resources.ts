@@ -2,7 +2,7 @@ import resources from './default';
 
 export const locales = [
   'ar',
-  'bg_BG',
+  'bg-BG',
   'de-DE',
   'en-US',
   'es-ES',
@@ -115,7 +115,7 @@ export const localeOptions: LocaleOptions = [
   },
   {
     label: 'Bulgarian',
-    value: 'bg_BG',
+    value: 'bg-BG',
   },
 ] as LocaleOptions;
 
