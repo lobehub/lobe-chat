@@ -192,7 +192,7 @@
     "consola": "^3",
     "dpdm": "^3",
     "eslint": "^8",
-    "eslint-plugin-mdx": "^2",
+    "eslint-plugin-mdx": "^3.0.0",
     "fake-indexeddb": "^5",
     "glob": "^10",
     "husky": "^9",
