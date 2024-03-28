@@ -135,7 +135,7 @@ const Ollama: ModelProviderCard = {
       hidden: true,
       id: 'llava',
       tokens: 4000,
-      vision: false,
+      vision: true,
     },
     {
       displayName: 'LLaVA 13B',
@@ -143,7 +143,7 @@ const Ollama: ModelProviderCard = {
       hidden: true,
       id: 'llava:13b',
       tokens: 4000,
-      vision: false,
+      vision: true,
     },
     {
       displayName: 'LLaVA 34B',
@@ -151,7 +151,7 @@ const Ollama: ModelProviderCard = {
       hidden: true,
       id: 'llava:34b',
       tokens: 4000,
-      vision: false,
+      vision: true,
     },
   ],
   id: 'ollama',
