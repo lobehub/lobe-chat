@@ -34,18 +34,18 @@ LobeChat provides some additional configuration options during deployment, which
 
 The `DEFAULT_AGENT_CONFIG` is used to configure the default settings for the LobeChat default agent. It supports various data types and structures, including key-value pairs, nested fields, array values, and more. The table below provides detailed information on the configuration options, examples, and corresponding explanations for the `DEFAULT_AGENT_CONFIG` environment variable:
 
-| Configuration Type      | Example                                     | Explanation                                                                                                        |
-| ----------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Basic Key-Value Pair    | `model=gpt-4`                               | Set the model to `gpt-4`.                                                                                          |
-| Nested Field            | `tts.sttLocale=en-US`                       | Set the language locale for the text-to-speech service to `en-US`.                                                 |
-| Array                   | `plugins=search-engine,lobe-image-designer` | Enable the `search-engine` and `lobe-image-designer` plugins.                                                      |
-| Chinese Comma           | `plugins=search-engine，lobe-image-designer` | Same as above, demonstrating support for Chinese comma separation.                                                 |
-| Multiple Configurations | `model=glm-4;provider=zhipu`                | Set the model to `glm-4` and the model provider to `zhipu`.                                                        |
-| Numeric Value           | `params.max_tokens=300`                     | Set the maximum tokens to `300`.                                                                                   |
-| Boolean Value           | `enableAutoCreateTopic=true`                | Enable automatic topic creation.                                                                                   |
-| Special Characters      | `inputTemplate="Hello; I am a bot;"`        | Set the input template to `Hello; I am a bot;`.                                                                    |
-| Error Handling          | `model=gpt-4;maxToken`                      | Ignore invalid entry `maxToken` and only parse `model=gpt-4`.                                                      |
-| Value Override          | `model=gpt-4;model=gpt-4-1106-preview`      | If a key is repeated, use the value that appears last; in this case, the value of `model` is `gpt-4-1106-preview`. |
+| Configuration Type | Example | Explanation |
+| --- | --- | --- |
+| Basic Key-Value Pair | `model=gpt-4` | Set the model to `gpt-4`. |
+| Nested Field | `tts.sttLocale=en-US` | Set the language locale for the text-to-speech service to `en-US`. |
+| Array | `plugins=search-engine,lobe-image-designer` | Enable the `search-engine` and `lobe-image-designer` plugins. |
+| Chinese Comma | `plugins=search-engine，lobe-image-designer` | Same as above, demonstrating support for Chinese comma separation. |
+| Multiple Configurations | `model=glm-4;provider=zhipu` | Set the model to `glm-4` and the model provider to `zhipu`. |
+| Numeric Value | `params.max_tokens=300` | Set the maximum tokens to `300`. |
+| Boolean Value | `enableAutoCreateTopic=true` | Enable automatic topic creation. |
+| Special Characters | `inputTemplate="Hello; I am a bot;"` | Set the input template to `Hello; I am a bot;`. |
+| Error Handling | `model=gpt-4;maxToken` | Ignore invalid entry `maxToken` and only parse `model=gpt-4`. |
+| Value Override | `model=gpt-4;model=gpt-4-1106-preview` | If a key is repeated, use the value that appears last; in this case, the value of `model` is `gpt-4-1106-preview`. |
 
 Further reading:
 
@@ -86,8 +86,8 @@ Further reading:
 ### Auth0
 
 <Callout>
-  Currently, we only support the Auth0, Microsoft Entra ID identity verification service providers. If you need to use
-  other identity verification service providers, you can submit a [feature
+  Currently, we only support the Auth0, Microsoft Entra ID identity verification service providers.
+  If you need to use other identity verification service providers, you can submit a [feature
   request](https://github.com/lobehub/lobe-chat/issues/new/choose) or Pull Request.
 </Callout>
 
@@ -115,8 +115,8 @@ Further reading:
 ### Microsoft Entra ID
 
 <Callout>
-  Currently, we only support the Auth0, Microsoft Entra ID identity verification service providers. If you need to use
-  other identity verification service providers, you can submit a [feature
+  Currently, we only support the Auth0, Microsoft Entra ID identity verification service providers.
+  If you need to use other identity verification service providers, you can submit a [feature
   request](https://github.com/lobehub/lobe-chat/issues/new/choose) or Pull Request.
 </Callout>
 
@@ -178,77 +178,4 @@ The above example sets the `SERPAPI_API_KEY` of the `search-engine` plugin to `x
 - Description: Index address of the LobeChat assistant market. If you have deployed the assistant market service on your own, you can use this variable to override the default market address.
 - Default: `https://chat-agents.lobehub.com`
 
-## Data Statistics
-
-### Vercel Analytics
-
-#### `NEXT_PUBLIC_ANALYTICS_VERCEL`
-
-- Type: Optional
-- Description: Used to configure the environment variable for Vercel Analytics. Set to `1` to enable Vercel Analytics.
-- Default: `-`
-- Example: `1`
-
-#### `NEXT_PUBLIC_VERCEL_DEBUG`
-
-- Type: Optional
-- Description: Used to enable the debug mode for Vercel Analytics.
-- Default: `-`
-- Example: `1`
-
-### Posthog Analytics
-
-#### `NEXT_PUBLIC_ANALYTICS_POSTHOG`
-
-- Type: Optional
-- Description: Used to enable the environment variable for [PostHog Analytics][posthog-analytics-url]. Set to `1` to enable PostHog Analytics.
-- Default: `-`
-- Example: `1`
-
-#### `NEXT_PUBLIC_POSTHOG_KEY`
-
-- Type: Optional
-- Description: Set the PostHog project Key.
-- Default: `-`
-- Example: `phc_xxxxxxxx`
-
-#### `NEXT_PUBLIC_POSTHOG_HOST`
-
-- Type: Optional
-- Description: Set the deployment address of the PostHog service, defaulting to the official SAAS address.
-- Default: `https://app.posthog.com`
-- Example: `https://example.com`
-
-#### `NEXT_PUBLIC_POSTHOG_DEBUG`
-
-- Type: Optional
-- Description: Enable the debug mode for PostHog.
-- Default: `-`
-- Example: `1`
-
-### Umami Analytics
-
-#### `NEXT_PUBLIC_ANALYTICS_UMAMI`
-
-- Type: Optional
-- Description: Used to enable the environment variable for [Umami Analytics][umami-analytics-url]. Set to `1` to enable Umami Analytics.
-- Default: `-`
-- Example: `1`
-
-#### `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
-
-- Type: Optional
-- Description: The URL of the Umami script, defaulting to the script URL provided by Umami Cloud.
-- Default: `https://analytics.umami.is/script.js`
-- Example: `https://umami.your-site.com/script.js`
-
-#### `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
-
-- Type: Required
-- Description: Your Umami Website ID.
-- Default: `-`
-- Example: `E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
-
 [auth0-client-page]: https://manage.auth0.com/dashboard
-[posthog-analytics-url]: https://posthog.com
-[umami-analytics-url]: https://umami.is

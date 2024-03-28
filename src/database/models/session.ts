@@ -3,7 +3,6 @@ import { DeepPartial } from 'utility-types';
 import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
 import { BaseModel } from '@/database/core';
 import { DBModel } from '@/database/core/types/db';
-import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { DB_Session, DB_SessionSchema } from '@/database/schemas/session';
 import { LobeAgentConfig } from '@/types/agent';
 import {
@@ -15,6 +14,10 @@ import {
 } from '@/types/session';
 import { merge } from '@/utils/merge';
 import { uuid } from '@/utils/uuid';
+
+import { MessageModel } from './message';
+import { SessionGroupModel } from './sessionGroup';
+import { TopicModel } from './topic';
 
 class _SessionModel extends BaseModel {
   constructor() {
@@ -173,7 +176,7 @@ class _SessionModel extends BaseModel {
   async create(type: 'agent' | 'group', defaultValue: Partial<LobeAgentSession>, id = uuid()) {
     const data = merge(DEFAULT_AGENT_LOBE_SESSION, { type, ...defaultValue });
     const dataDB = this.mapToDB_Session(data);
-    return this._add(dataDB, id);
+    return this._addWithSync(dataDB, id);
   }
 
   async batchCreate(sessions: LobeAgentSession[]) {
@@ -200,7 +203,7 @@ class _SessionModel extends BaseModel {
 
     const newSession = merge(session, { meta: { title: newTitle } });
 
-    return this._add(newSession, uuid());
+    return this._addWithSync(newSession, uuid());
   }
 
   // **************** Delete *************** //
@@ -211,32 +214,28 @@ class _SessionModel extends BaseModel {
   async delete(id: string) {
     return this.db.transaction('rw', [this.table, this.db.topics, this.db.messages], async () => {
       // Delete all topics associated with the session
-      const topics = await this.db.topics.where('sessionId').equals(id).toArray();
-      const topicIds = topics.map((topic) => topic.id);
-      if (topicIds.length > 0) {
-        await this.db.topics.bulkDelete(topicIds);
-      }
+      await TopicModel.batchDeleteBySessionId(id);
 
       // Delete all messages associated with the session
-      const messages = await this.db.messages.where('sessionId').equals(id).toArray();
-      const messageIds = messages.map((message) => message.id);
-      if (messageIds.length > 0) {
-        await this.db.messages.bulkDelete(messageIds);
-      }
+      await MessageModel.batchDeleteBySessionId(id);
 
       // Finally, delete the session itself
-      await this.table.delete(id);
+      await this._deleteWithSync(id);
     });
   }
 
+  async batchDelete(ids: string[]) {
+    return this._bulkDeleteWithSync(ids);
+  }
+
   async clearTable() {
-    return this.table.clear();
+    return this._clearWithSync();
   }
 
   // **************** Update *************** //
 
   async update(id: string, data: Partial<DB_Session>) {
-    return this._update(id, data);
+    return super._updateWithSync(id, data);
   }
 
   async updatePinned(id: string, pinned: boolean) {

@@ -1,0 +1,91 @@
+# Data Statistics
+
+We have integrated several free/open-source data analytics services in LobeChat for collecting user usage data. Here are environment variables that you can use.
+
+## Vercel Analytics
+
+### `ENABLE_VERCEL_ANALYTICS`
+
+- Type: Optional
+- Description: Used to configure the environment variable for Vercel Analytics. Set to `1` to enable Vercel Analytics.
+- Default: `-`
+- Example: `1`
+
+### `DEBUG_VERCEL_ANALYTICS`
+
+- Type: Optional
+- Description: Used to enable the debug mode for Vercel Analytics.
+- Default: `-`
+- Example: `1`
+
+## Google Analytics
+
+### `ENABLE_GOOGLE_ANALYTICS`
+
+- Type: Optional
+- Description: Used to configure the environment variable for Google Analytics. Set to `1` to enable Google Analytics.
+- Default: `-`
+- Example: `1`
+
+### `GOOGLE_ANALYTICS_MEASUREMENT_ID`
+
+- Type: Required
+- Description: Google Analytics Measurement ID，you can get it from the Google Analytics dashboard.
+- Default: `-`
+- Example: `G-63LP2TV03T`
+
+## Posthog Analytics
+
+### `NEXT_PUBLIC_ANALYTICS_POSTHOG`
+
+- Type: Optional
+- Description: Used to enable the environment variable for [PostHog Analytics][posthog-analytics-url]. Set to `1` to enable PostHog Analytics.
+- Default: `-`
+- Example: `1`
+
+### `NEXT_PUBLIC_POSTHOG_KEY`
+
+- Type: Optional
+- Description: Set the PostHog project Key.
+- Default: `-`
+- Example: `phc_xxxxxxxx`
+
+### `NEXT_PUBLIC_POSTHOG_HOST`
+
+- Type: Optional
+- Description: Set the deployment address of the PostHog service, defaulting to the official SAAS address.
+- Default: `https://app.posthog.com`
+- Example: `https://example.com`
+
+### `NEXT_PUBLIC_POSTHOG_DEBUG`
+
+- Type: Optional
+- Description: Enable the debug mode for PostHog.
+- Default: `-`
+- Example: `1`
+
+## Umami Analytics
+
+### `NEXT_PUBLIC_ANALYTICS_UMAMI`
+
+- Type: Optional
+- Description: Used to enable the environment variable for [Umami Analytics][umami-analytics-url]. Set to `1` to enable Umami Analytics.
+- Default: `-`
+- Example: `1`
+
+### `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
+
+- Type: Optional
+- Description: The URL of the Umami script, defaulting to the script URL provided by Umami Cloud.
+- Default: `https://analytics.umami.is/script.js`
+- Example: `https://umami.your-site.com/script.js`
+
+### `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
+
+- Type: Required
+- Description: Your Umami Website ID.
+- Default: `-`
+- Example: `E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
+
+[posthog-analytics-url]: https://posthog.com
+[umami-analytics-url]: https://umami.is

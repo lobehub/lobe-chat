@@ -3,7 +3,6 @@ import { createStyles } from 'antd-style';
 import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css }) => ({
-  avatar: css``,
   paragraph: css`
     height: 12px !important;
     margin-top: 12px !important;
