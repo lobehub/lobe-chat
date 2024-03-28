@@ -6,6 +6,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
+import { SESSION_CHAT_URL } from '@/const/url';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 import { useSessionStore } from '@/store/session';
 
@@ -24,12 +26,14 @@ const Header = memo(() => {
   const { meta, createAt, author, homepage, config } = agentItem;
   const { avatar, title, description, tags, backgroundColor } = meta;
 
+  const isMobile = useIsMobile();
+
   const handleAddAgentAndConverse = async () => {
     if (!agentItem) return;
 
     const session = await createSession({ config, meta });
     message.success(t('addAgentSuccess'));
-    router.push(`/chat?session=${session}`);
+    router.push(SESSION_CHAT_URL(session, isMobile));
   };
 
   const handleAddAgent = () => {
