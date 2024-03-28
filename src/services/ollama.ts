@@ -10,6 +10,14 @@ import { getMessageError } from '@/utils/fetch';
 const DEFAULT_BASE_URL = 'http://127.0.0.1:11434/v1';
 
 class OllamaService {
+  private _host: string;
+  private _client: OllamaBrowser;
+
+  constructor() {
+    this._host = this.getHost();
+    this._client = new OllamaBrowser({ host: this._host });
+  }
+
   getHost = (): string => {
     const endpoint = modelProviderSelectors.ollamaProxyUrl(useGlobalStore.getState());
     const url = new URL(endpoint || DEFAULT_BASE_URL);
@@ -17,7 +25,15 @@ class OllamaService {
   };
 
   getOllamaClient = () => {
-    return new OllamaBrowser({ host: this.getHost() });
+    if (this.getHost() !== this._host) {
+      this._host = this.getHost();
+      this._client = new OllamaBrowser({ host: this.getHost() });
+    }
+    return this._client;
+  };
+
+  abort = () => {
+    this._client.abort();
   };
 
   pullModel = async (model: string): Promise<AsyncGenerator<ProgressResponse>> => {

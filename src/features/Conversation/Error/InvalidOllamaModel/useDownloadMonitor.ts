@@ -1,13 +1,20 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+export const formatSize = (bytes: number): string => {
+  const kbSize = bytes / 1024;
+  if (kbSize < 1024) {
+    return `${kbSize.toFixed(1)} KB`;
+  } else if (kbSize < 1_048_576) {
+    const mbSize = kbSize / 1024;
+    return `${mbSize.toFixed(1)} MB`;
+  } else {
+    const gbSize = kbSize / 1_048_576;
+    return `${gbSize.toFixed(1)} GB`;
+  }
+};
 
 const formatSpeed = (speed: number): string => {
-  const kbPerSecond = speed / 1024;
-  if (kbPerSecond < 1024) {
-    return `${kbPerSecond.toFixed(1)} KB/s`;
-  } else {
-    const mbPerSecond = kbPerSecond / 1024;
-    return `${mbPerSecond.toFixed(1)} MB/s`;
-  }
+  return `${formatSize(speed)}/s`;
 };
 
 const formatTime = (timeInSeconds: number): string => {
@@ -21,28 +28,27 @@ const formatTime = (timeInSeconds: number): string => {
 };
 
 export const useDownloadMonitor = (totalSize: number, completedSize: number) => {
-  const [startTime, setStartTime] = useState<number>(Date.now());
   const [downloadSpeed, setDownloadSpeed] = useState<string>('0 KB/s');
   const [remainingTime, setRemainingTime] = useState<string>('-');
 
-  const isReady = useMemo(() => completedSize > 0, [completedSize]);
+  const lastCompletedRef = useRef(completedSize);
+  const lastTimedRef = useRef(Date.now());
 
   useEffect(() => {
     const currentTime = Date.now();
-    // mark as start download
-    if (isReady) {
-      const elapsedTime = (currentTime - startTime) / 1000; // in seconds
-      const speed = completedSize / elapsedTime; // in bytes per second
+    const elapsedTime = (currentTime - lastTimedRef.current) / 1000; // in seconds
+    if (completedSize > 0 && elapsedTime > 1) {
+      const speed = Math.max(0, (completedSize - lastCompletedRef.current) / elapsedTime); // in bytes per second
+      setDownloadSpeed(formatSpeed(speed));
 
       const remainingSize = totalSize - completedSize;
       const time = remainingSize / speed; // in seconds
-
-      setDownloadSpeed(formatSpeed(speed));
       setRemainingTime(formatTime(time));
-    } else {
-      setStartTime(currentTime);
+
+      lastCompletedRef.current = completedSize;
+      lastTimedRef.current = currentTime;
     }
-  }, [isReady, completedSize]);
+  }, [completedSize]);
 
   return { downloadSpeed, remainingTime };
 };
