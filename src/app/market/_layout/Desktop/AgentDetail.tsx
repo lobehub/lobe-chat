@@ -55,6 +55,7 @@ const SideBar = memo(() => {
       mode={'fixed'}
       onExpandChange={handleExpandChange}
       placement={'right'}
+      showHandlerWideArea={false}
     >
       <DraggablePanelContainer
         style={{
