@@ -6,12 +6,13 @@ LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用�
 
 - [Auth0](/zh/self-hosting/advanced/sso-providers/auth0)
 - [Microsoft Entra ID](/zh/self-hosting/advanced/sso-providers/microsoft-entra-id)
+- [Authentik](/zh/self-hosting/advanced/sso-providers/authentik)
 
 点击链接可以查看对应平台的配置文档。
 
 ## 进阶配置
 
-同时启用多个身份验证源请设置 `SSO_PROVIDERS` 环境变量，以逗号 `,` 分割，例如 `auth0,azure-ad`。
+同时启用多个身份验证源请设置 `SSO_PROVIDERS` 环境变量，以逗号 `,` 分割，例如 `auth0,azure-ad,authentik`。
 
 顺序为 SSO 提供商的显示顺序。
 
@@ -19,6 +20,7 @@ LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用�
 | ------------------ | ---------- |
 | Auth0              | `auth0`    |
 | Microsoft Entra ID | `azure-ad` |
+| Authentik          | `authentik` |
 
 ## 其他 SSO 提供商
 

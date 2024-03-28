@@ -65,9 +65,9 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 #### `SSO_PROVIDERS`
 
 - Type: 必需
-- 描述：选择 LoboChat 的单点登录提供商。如果有多个单点登录提供商，请用逗号分隔，例如 `auth0,azure-ad`
+- 描述：选择 LoboChat 的单点登录提供商。如果有多个单点登录提供商，请用逗号分隔，例如 `auth0,azure-ad,authentik`
 - 默认值: `auth0`
-- 示例: `auth0,azure-ad`
+- 示例: `auth0,azure-ad,authentik`
 
 #### `NEXTAUTH_SECRET`
 
@@ -86,9 +86,8 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 ### Auth0
 
 <Callout>
-  目前，我们仅支持 Auth0 和 Microsoft Entra ID
-  身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交
-  [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
+  目前，我们仅支持 Auth0,Microsoft Entra ID,Authentik 作为身份验证服务提供商。
+  如果您需要使用其他身份验证服务提供商，可以提交 [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
 </Callout>
 
 #### `AUTH0_CLIENT_ID`
@@ -115,9 +114,8 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 ### Microsoft Entra ID
 
 <Callout>
-  目前，我们仅支持 Auth0 和 Microsoft Entra ID
-  身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交
-  [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
+  目前，我们仅支持 Auth0,Microsoft Entra ID,Authentik 作为身份验证服务提供商。
+  如果您需要使用其他身份验证服务提供商，可以提交 [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
 </Callout>
 
 #### `AZURE_AD_CLIENT_ID`
@@ -140,6 +138,34 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 描述：Microsoft Entra ID 应用程序的租户 ID。
 - 默认值：`-`
 - 示例：`c8ae2f36-edf6-4cda-96b9-d3e198a47cba`
+
+### Authentik
+
+<Callout>
+  目前，我们仅支持 Auth0,Microsoft Entra ID,Authentik 作为身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交
+  [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
+</Callout>
+
+#### `AUTHENTIK_CLIENT_ID`
+
+- 类型：必选
+- 描述: Authentik 提供程序的 Client ID
+- 默认值: `-`
+- 示例: `YNtbIRlYF8Kj66mTLue59nsGLlb7HNyx1qjPH6VS`
+
+#### `AUTHENTIK_CLIENT_SECRET`
+
+- 类型：必选
+- 描述: Authentik 提供程序的 Client Secret
+- 默认值: `-`
+- 示例: `h3lMI1vPUzqyqqeIDUbH5UNNOxyQLXk35h89yETeaAwHk7qVXBG3sJQWeqHBU5pyggwhP9u0eaZ1eq6DHUddVPLoS4gncqD37yuCr8jI8dY66WAt45MStDsDcQm0Ygze`
+
+#### `AUTHENTIK_ISSUER`
+
+- 类型：必选
+- 描述: Authentik 提供程序的 OpenID Connect 颁发者
+- 默认值: `-`
+- 示例: `https://your-authentik-domain.com/application/o/slug/`
 
 ## 插件服务
 

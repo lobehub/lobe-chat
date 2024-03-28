@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import Auth0 from 'next-auth/providers/auth0';
+import Authentik from 'next-auth/providers/authentik';
 import AzureAd from 'next-auth/providers/azure-ad';
 
 import { getServerConfig } from '@/config/server';
@@ -13,6 +14,9 @@ const {
   AZURE_AD_CLIENT_ID,
   AZURE_AD_CLIENT_SECRET,
   AZURE_AD_TENANT_ID,
+  AUTHENTIK_CLIENT_ID,
+  AUTHENTIK_CLIENT_SECRET,
+  AUTHENTIK_ISSUER,
   NEXTAUTH_SECRET,
 } = getServerConfig();
 
@@ -63,6 +67,16 @@ const nextAuth = NextAuth({
               clientId: AZURE_AD_CLIENT_ID,
               clientSecret: AZURE_AD_CLIENT_SECRET,
               tenantId: AZURE_AD_TENANT_ID,
+            });
+          }
+          case 'authentik': {
+            return Authentik({
+              // Specify auth scope, at least include 'openid email'
+              // all scopes in Authentik ref: https://goauthentik.io/docs/providers/oauth2
+              authorization: { params: { scope: 'openid email profile' } },
+              clientId: AUTHENTIK_CLIENT_ID,
+              clientSecret: AUTHENTIK_CLIENT_SECRET,
+              issuer: AUTHENTIK_ISSUER,
             });
           }
           default: {
