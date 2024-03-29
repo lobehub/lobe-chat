@@ -31,6 +31,7 @@ const Google: ModelProviderCard = {
       id: 'gemini-1.0-pro-vision-latest',
       maxOutput: 4096,
       tokens: 16_384,
+      vision: true,
     },
     {
       description: 'The best image understanding model to handle a broad range of applications',
