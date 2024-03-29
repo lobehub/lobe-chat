@@ -1,16 +1,18 @@
 Apache License Version 2.0
 
-Copyright (c) 2023 - current LobeHub LLC. All rights reserved.
+Copyright (c) 2024/03/29 - current LobeHub LLC. All rights reserved.
 
-LobeChat is licensed under the Apache License 2.0, with the following additional conditions:
+----------
 
-1. about the commercial usage of LobeChat:
+From 1.0, LobeChat is licensed under the Apache License 2.0 , with the following additional conditions:
+
+1. The commercial usage of LobeChat:
 
   a. LobeChat may be utilized commercially, including as a frontend and backend service without modifying the source code.
 
   b. a commercial license must be obtained from the producer if you want to develop and distribute a derivative work based on LobeChat.
 
-Please contact [business@lobehub.com](mailto:business@lobehub.com) by email to inquire about licensing matters.
+Please contact business@lobehub.com by email to inquire about licensing matters.
 
 
 2. As a contributor, you should agree that:
@@ -22,6 +24,7 @@ Please contact [business@lobehub.com](mailto:business@lobehub.com) by email to i
 Apart from the specific conditions mentioned above, all other rights and restrictions follow the Apache License 2.0. Detailed information about the Apache License 2.0 can be found at http://www.apache.org/licenses/LICENSE-2.0.
 
 ----------
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
