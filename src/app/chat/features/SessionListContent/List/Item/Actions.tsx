@@ -148,8 +148,10 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
         onClick: ({ domEvent }) => {
           domEvent.stopPropagation();
           modal.confirm({
+            cancelText: t('cancel', { ns: 'common' }),
             centered: true,
             okButtonProps: { danger: true },
+            okText: t('ok', { ns: 'common' }),
             onOk: () => {
               removeSession(id);
             },

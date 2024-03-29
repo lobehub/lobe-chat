@@ -22,8 +22,10 @@ const OAuthForm = memo<{ id: string }>(({ id }) => {
 
   const handleSignOut = useCallback(() => {
     modal.confirm({
+      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: { danger: true },
+      okText: t('ok', { ns: 'common' }),
       onOk: () => {
         signOut();
         message.success(t('settingSystem.oauth.signout.success', { ns: 'setting' }));

@@ -112,8 +112,10 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           if (!id) return;
 
           modal.confirm({
+            cancelText: t('cancel', { ns: 'common' }),
             centered: true,
             okButtonProps: { danger: true },
+            okText: t('ok', { ns: 'common' }),
             onOk: () => {
               removeTopic(id);
             },

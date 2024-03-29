@@ -30,8 +30,10 @@ const Header = memo(() => {
         label: t('topic.removeUnstarred'),
         onClick: () => {
           modal.confirm({
+            cancelText: t('cancel', { ns: 'common' }),
             centered: true,
             okButtonProps: { danger: true },
+            okText: t('ok', { ns: 'common' }),
             onOk: removeUnstarredTopic,
             title: t('topic.confirmRemoveUnstarred', { ns: 'chat' }),
           });
@@ -44,8 +46,10 @@ const Header = memo(() => {
         label: t('topic.removeAll'),
         onClick: () => {
           modal.confirm({
+            cancelText: t('cancel', { ns: 'common' }),
             centered: true,
             okButtonProps: { danger: true },
+            okText: t('ok', { ns: 'common' }),
             onOk: removeAllTopic,
             title: t('topic.confirmRemoveAll', { ns: 'chat' }),
           });

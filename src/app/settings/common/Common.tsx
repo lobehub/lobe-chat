@@ -47,8 +47,10 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
 
   const handleSignOut = useCallback(() => {
     modal.confirm({
+      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: { danger: true },
+      okText: t('ok', { ns: 'common' }),
       onOk: () => {
         signOut();
         message.success(t('settingSystem.oauth.signout.success'));
@@ -63,8 +65,10 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
 
   const handleReset = useCallback(() => {
     modal.confirm({
+      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: { danger: true },
+      okText: t('ok', { ns: 'common' }),
       onOk: () => {
         resetSettings();
         form.setFieldsValue(DEFAULT_SETTINGS);
@@ -75,10 +79,12 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
 
   const handleClear = useCallback(() => {
     modal.confirm({
+      cancelText: t('cancel', { ns: 'common' }),
       centered: true,
       okButtonProps: {
         danger: true,
       },
+      okText: t('ok', { ns: 'common' }),
       onOk: async () => {
         await clearSessions();
         await removeAllPlugins();
