@@ -13,6 +13,7 @@ import {
   OpenAI,
   Perplexity,
   Tongyi,
+  ZeroOne,
 } from '@lobehub/icons';
 import { memo } from 'react';
 
@@ -38,6 +39,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.includes('baichuan')) return <Baichuan size={size} />;
   if (model.includes('mistral') || model.includes('mixtral')) return <Mistral size={size} />;
   if (model.includes('pplx')) return <Perplexity size={size} />;
+  if (model.startsWith('yi-')) return <ZeroOne size={size} />;
 });
 
 export default ModelIcon;

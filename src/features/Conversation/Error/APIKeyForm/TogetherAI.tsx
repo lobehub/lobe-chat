@@ -1,4 +1,4 @@
-import { OpenRouter } from '@lobehub/icons';
+import { Together } from '@lobehub/icons';
 import { Input } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,9 +19,8 @@ const TogetherAIForm = memo(() => {
   ]);
 
   return (
-    // TODO: update avater for TogetherAI
     <FormAction
-      avatar={<OpenRouter size={56} />}
+      avatar={<Together size={56} />}
       description={t('unlock.apikey.TogetherAI.description')}
       title={t('unlock.apikey.TogetherAI.title')}
     >

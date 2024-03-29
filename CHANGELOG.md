@@ -2,6 +2,291 @@
 
 # Changelog
 
+## [Version 0.144.0](https://github.com/lobehub/lobe-chat/compare/v0.143.0...v0.144.0)
+
+<sup>Released on **2024-03-29**</sup>
+
+#### ✨ Features
+
+- **misc**: Support authentik as sso.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support authentik as sso, closes [#1650](https://github.com/lobehub/lobe-chat/issues/1650) ([181dfa5](https://github.com/lobehub/lobe-chat/commit/181dfa5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.143.0](https://github.com/lobehub/lobe-chat/compare/v0.142.9...v0.143.0)
+
+<sup>Released on **2024-03-28**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Bulgarian translation.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Bulgarian translation, closes [#1732](https://github.com/lobehub/lobe-chat/issues/1732) ([e181dd1](https://github.com/lobehub/lobe-chat/commit/e181dd1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.142.9](https://github.com/lobehub/lobe-chat/compare/v0.142.8...v0.142.9)
+
+<sup>Released on **2024-03-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Add agent and Converse button not jump.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Add agent and Converse button not jump, closes [#1785](https://github.com/lobehub/lobe-chat/issues/1785) ([a52799c](https://github.com/lobehub/lobe-chat/commit/a52799c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.142.8](https://github.com/lobehub/lobe-chat/compare/v0.142.7...v0.142.8)
+
+<sup>Released on **2024-03-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix gemini 1.5 pro model id to support gemini new models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix gemini 1.5 pro model id to support gemini new models, closes [#1776](https://github.com/lobehub/lobe-chat/issues/1776) ([591dcb3](https://github.com/lobehub/lobe-chat/commit/591dcb3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.142.7](https://github.com/lobehub/lobe-chat/compare/v0.142.6...v0.142.7)
+
+<sup>Released on **2024-03-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the missing German locale.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the missing German locale, closes [#1753](https://github.com/lobehub/lobe-chat/issues/1753) ([a452612](https://github.com/lobehub/lobe-chat/commit/a452612))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.142.6](https://github.com/lobehub/lobe-chat/compare/v0.142.5...v0.142.6)
+
+<sup>Released on **2024-03-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix normalize german locale.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix normalize german locale, closes [#1750](https://github.com/lobehub/lobe-chat/issues/1750) ([69fcc78](https://github.com/lobehub/lobe-chat/commit/69fcc78))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.142.5](https://github.com/lobehub/lobe-chat/compare/v0.142.4...v0.142.5)
+
+<sup>Released on **2024-03-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mobile click, fix mobile click issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix mobile click ([3775b28](https://github.com/lobehub/lobe-chat/commit/3775b28))
+- **misc**: Fix mobile click issue, closes [#1744](https://github.com/lobehub/lobe-chat/issues/1744) ([a6b1234](https://github.com/lobehub/lobe-chat/commit/a6b1234))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.142.4](https://github.com/lobehub/lobe-chat/compare/v0.142.3...v0.142.4)
+
+<sup>Released on **2024-03-26**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.142.3](https://github.com/lobehub/lobe-chat/compare/v0.142.2...v0.142.3)
+
+<sup>Released on **2024-03-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `next-auth` temporary to fix build error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin `next-auth` temporary to fix build error, closes [#1739](https://github.com/lobehub/lobe-chat/issues/1739) ([e9ece9f](https://github.com/lobehub/lobe-chat/commit/e9ece9f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.142.2](https://github.com/lobehub/lobe-chat/compare/v0.142.1...v0.142.2)
+
+<sup>Released on **2024-03-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Support openrouter custom models env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Support openrouter custom models env, closes [#1647](https://github.com/lobehub/lobe-chat/issues/1647) ([78baa16](https://github.com/lobehub/lobe-chat/commit/78baa16))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.142.1](https://github.com/lobehub/lobe-chat/compare/v0.142.0...v0.142.1)
+
+<sup>Released on **2024-03-25**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.142.0](https://github.com/lobehub/lobe-chat/compare/v0.141.2...v0.142.0)
+
+<sup>Released on **2024-03-25**</sup>
+
+#### ✨ Features
+
+- **misc**: Support 01.AI as a new provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support 01.AI as a new provider, closes [#1627](https://github.com/lobehub/lobe-chat/issues/1627) ([08342fd](https://github.com/lobehub/lobe-chat/commit/08342fd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.141.2](https://github.com/lobehub/lobe-chat/compare/v0.141.1...v0.141.2)
 
 <sup>Released on **2024-03-22**</sup>

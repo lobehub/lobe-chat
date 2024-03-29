@@ -121,10 +121,10 @@ describe('createErrorResponse', () => {
       expect(response.status).toBe(481);
     });
 
-    it('returns a 483 status for TogetherAIBizError error type', () => {
+    it('returns a 484 status for TogetherAIBizError error type', () => {
       const errorType = AgentRuntimeErrorType.TogetherAIBizError;
       const response = createErrorResponse(errorType);
-      expect(response.status).toBe(483);
+      expect(response.status).toBe(484);
     });
   });
 

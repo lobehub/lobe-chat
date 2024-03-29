@@ -13,6 +13,7 @@ import {
   OpenRouterProvider,
   PerplexityProvider,
   TogetherAIProvider,
+  ZeroOneProvider,
   ZhiPuProvider,
 } from '@/config/modelProviders';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
@@ -69,6 +70,9 @@ const openrouterAPIKey = (s: GlobalStore) => modelProvider(s).openrouter.apiKey;
 
 const enableTogetherAI = (s: GlobalStore) => modelProvider(s).togetherai.enabled;
 const togetheraiAPIKey = (s: GlobalStore) => modelProvider(s).togetherai.apiKey;
+
+const enableZeroone = (s: GlobalStore) => modelProvider(s).zeroone.enabled;
+const zerooneAPIKey = (s: GlobalStore) => modelProvider(s).zeroone.apiKey;
 
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
@@ -149,9 +153,15 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
 
   const ollamaChatModels = processChatModels(ollamaModelConfig, OllamaProvider.chatModels);
 
-  const openrouterModelConfig = parseModelString(
+  const openrouterModelString = [
+    s.serverConfig.languageModel?.openrouter?.customModelName,
     currentSettings(s).languageModel.openrouter.customModelName,
-  );
+  ]
+    .filter(Boolean)
+    .join(',');
+
+  const openrouterModelConfig = parseModelString(openrouterModelString);
+
   const openrouterChatModels = processChatModels(
     openrouterModelConfig,
     OpenRouterProvider.chatModels,
@@ -181,6 +191,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
     { ...ZhiPuProvider, enabled: enableZhipu(s) },
     { ...MoonshotProvider, enabled: enableMoonshot(s) },
     { ...OpenRouterProvider, chatModels: openrouterChatModels, enabled: enableOpenrouter(s) },
+    { ...ZeroOneProvider, enabled: enableZeroone(s) },
     { ...TogetherAIProvider, chatModels: togetheraiChatModels, enabled: enableTogetherAI(s) },
   ];
 };
@@ -272,6 +283,10 @@ export const modelProviderSelectors = {
   // OpenRouter
   enableOpenrouter,
   openrouterAPIKey,
+
+  // ZeroOne 零一万物
+  enableZeroone,
+  zerooneAPIKey,
 
   // TogetherAI
   enableTogetherAI,

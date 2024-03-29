@@ -82,6 +82,12 @@ export interface OpenRouterConfig {
   enabled?: boolean;
 }
 
+export interface ZeroOneConfig {
+  apiKey?: string;
+  customModelName?: string;
+  enabled?: boolean;
+}
+
 export interface TogetherAIConfig {
   apiKey?: string;
   customModelName?: string;
@@ -101,6 +107,7 @@ export interface GlobalLLMConfig {
   openrouter: OpenRouterConfig;
   perplexity: PerplexityConfig;
   togetherai: TogetherAIConfig;
+  zeroone: ZeroOneConfig;
   zhipu: ZhiPuConfig;
 }
 

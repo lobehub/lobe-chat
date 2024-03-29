@@ -19,6 +19,7 @@ import OpenAI from './OpenAI';
 import OpenRouter from './OpenRouter';
 import Perplexity from './Perplexity';
 import TogetherAI from './TogetherAI';
+import ZeroOne from './ZeroOne';
 import Zhipu from './Zhipu';
 
 export default memo<{ showOllama: boolean }>(({ showOllama }) => {
@@ -38,6 +39,7 @@ export default memo<{ showOllama: boolean }>(({ showOllama }) => {
       <Mistral />
       <OpenRouter />
       <Moonshot />
+      <ZeroOne />
       <Zhipu />
       <TogetherAI />
       <Footer>

@@ -36,5 +36,6 @@ export enum ModelProvider {
   Perplexity = 'perplexity',
   TogetherAI = 'togetherai',
   Tongyi = 'tongyi',
-  ZhiPu = 'zhipu'
+  ZeroOne = 'zeroone',
+  ZhiPu = 'zhipu',
 }

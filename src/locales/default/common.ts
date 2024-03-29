@@ -61,6 +61,7 @@ export default {
   },
   lang: {
     'ar': '阿拉伯语',
+    'bg-BG': '保加利亚语',
     'bn': '孟加拉语',
     'cs-CZ': '捷克语',
     'da-DK': '丹麦语',
@@ -110,6 +111,7 @@ export default {
     openrouter: 'OpenRouter',
     perplexity: 'Perplexity',
     togetherai: 'TogetherAI',
+    zeroone: '01.AI 零一万物',
     zhipu: '智谱AI',
   },
   noDescription: '暂无描述',

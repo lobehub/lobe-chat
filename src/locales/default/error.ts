@@ -91,6 +91,9 @@ export default {
     InvalidTogetherAIAPIKey: 'TogetherAI API Key 不正确或为空，请检查 TogetherAI API Key 后重试',
     TogetherAIBizError: '请求 TogetherAI AI 服务出错，请根据以下信息排查或重试',
 
+    ZeroOneBizError: '请求零一万物服务出错，请根据以下信息排查或重试',
+    InvalidZeroOneAPIKey: '零一万物 API Key 不正确或为空，请检查零一万物 API Key 后重试',
+
     InvalidOllamaArgs: 'Ollama 配置不正确，请检查 Ollama 配置后重试',
     OllamaBizError: '请求 Ollama 服务出错，请根据以下信息排查或重试',
     OllamaServiceUnavailable: '未检测到 Ollama 服务，请检查是否正常启动',
@@ -148,6 +151,10 @@ export default {
       TogetherAI: {
         description: '输入你的 TogetherAI API Key 即可开始会话。应用不会记录你的 API Key',
         title: '使用自定义 TogetherAI API Key',
+      },
+      ZeroOne: {
+        description: '输入你的零一万物 API Key 即可开始会话。应用不会记录你的 API Key',
+        title: '使用自定义零一万物 API Key',
       },
       Zhipu: {
         description: '输入你的 Zhipu API Key 即可开始会话。应用不会记录你的 API Key',

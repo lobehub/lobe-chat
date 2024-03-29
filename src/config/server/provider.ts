@@ -45,6 +45,10 @@ declare global {
 
       // OpenRouter Provider
       OPENROUTER_API_KEY?: string;
+      OPENROUTER_CUSTOM_MODELS?: string;
+
+      // ZeroOne Provider
+      ZEROONE_API_KEY?: string;
 
       // TogetherAI Provider
       TOGETHERAI_API_KEY?: string;
@@ -83,6 +87,8 @@ export const getProviderConfig = () => {
 
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '';
 
+  const ZEROONE_API_KEY = process.env.ZEROONE_API_KEY || '';
+
   const TOGETHERAI_API_KEY = process.env.TOGETHERAI_API_KEY || '';
 
   // region format: iad1,sfo1
@@ -118,6 +124,7 @@ export const getProviderConfig = () => {
 
     ENABLED_OPENROUTER: !!OPENROUTER_API_KEY,
     OPENROUTER_API_KEY,
+    OPENROUTER_CUSTOM_MODELS: process.env.OPENROUTER_CUSTOM_MODELS,
 
     ENABLED_TOGETHERAI: !!TOGETHERAI_API_KEY,
     TOGETHERAI_API_KEY,
@@ -128,6 +135,9 @@ export const getProviderConfig = () => {
 
     ENABLED_GROQ: !!GROQ_API_KEY,
     GROQ_API_KEY,
+
+    ENABLED_ZEROONE: !!ZEROONE_API_KEY,
+    ZEROONE_API_KEY,
 
     ENABLED_AWS_BEDROCK: !!AWS_ACCESS_KEY_ID,
     AWS_REGION: process.env.AWS_REGION,

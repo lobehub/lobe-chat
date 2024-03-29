@@ -1,4 +1,6 @@
+import { Together } from '@lobehub/icons';
 import { Input } from 'antd';
+import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,8 +15,7 @@ const providerKey = 'togetherai';
 const TogetherAIProvider = memo(() => {
   const { t } = useTranslation('setting');
 
-  // TODO: add icon for TogetherAI
-  // const theme = useTheme();
+  const theme = useTheme();
 
   return (
     <ProviderConfig
@@ -52,8 +53,12 @@ const TogetherAIProvider = memo(() => {
         },
       ]}
       provider={providerKey}
-      //TODO: add icon for TogetherAI
-      title="TogetherAI"
+      title={
+        <Together.Combine
+          color={theme.isDarkMode ? theme.colorText : Together.colorPrimary}
+          size={24}
+        />
+      }
     />
   );
 });

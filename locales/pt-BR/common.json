@@ -59,6 +59,7 @@
   },
   "lang": {
     "ar": "árabe",
+    "bg-BG": "Búlgaro",
     "bn": "Bengali",
     "cs-CZ": "Tcheco",
     "da-DK": "Dinamarquês",
@@ -108,6 +109,7 @@
     "openrouter": "OpenRouter",
     "togetherai": "TogetherAI",
     "perplexity": "Perplexity",
+    "zeroone": "01. IA ZeroOne",
     "zhipu": "Zhipu AI"
   },
   "noDescription": "Sem descrição",
