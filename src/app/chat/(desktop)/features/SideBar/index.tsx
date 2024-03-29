@@ -27,8 +27,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-DraggablePanel.displayName = 'DraggablePanel';
-
 const Desktop = memo(() => {
   const { styles } = useStyles();
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
