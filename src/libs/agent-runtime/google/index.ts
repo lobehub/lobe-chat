@@ -14,17 +14,6 @@ import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { parseDataUri } from '../utils/uriParser';
 
-type GoogleChatErrors = GoogleChatError[];
-
-interface GoogleChatError {
-  '@type': string;
-  'domain': string;
-  'metadata': {
-    service: string;
-  };
-  'reason': string;
-}
-
 enum HarmCategory {
   HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
   HARM_CATEGORY_HARASSMENT = 'HARM_CATEGORY_HARASSMENT',
@@ -49,32 +38,39 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     try {
       const { contents, model } = this.buildGoogleMessages(payload.messages, payload.model);
       const geminiStream = await this.client
-        .getGenerativeModel({
-          generationConfig: {
-            maxOutputTokens: payload.max_tokens,
-            temperature: payload.temperature,
-            topP: payload.top_p,
+        .getGenerativeModel(
+          {
+            generationConfig: {
+              maxOutputTokens: payload.max_tokens,
+              temperature: payload.temperature,
+              topP: payload.top_p,
+            },
+            model,
+            // avoid wide sensitive words
+            // refs: https://github.com/lobehub/lobe-chat/pull/1418
+            safetySettings: [
+              {
+                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                threshold: HarmBlockThreshold.BLOCK_NONE,
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                threshold: HarmBlockThreshold.BLOCK_NONE,
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+                threshold: HarmBlockThreshold.BLOCK_NONE,
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold: HarmBlockThreshold.BLOCK_NONE,
+              },
+            ],
           },
-          model,
-          safetySettings: [
-            {
-              category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-              threshold: HarmBlockThreshold.BLOCK_NONE,
-            },
-            {
-              category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-              threshold: HarmBlockThreshold.BLOCK_NONE,
-            },
-            {
-              category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-              threshold: HarmBlockThreshold.BLOCK_NONE,
-            },
-            {
-              category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-              threshold: HarmBlockThreshold.BLOCK_NONE,
-            },
-          ],
-        })
+          {
+            apiVersion: this.shouldUseBetaApi(model) ? 'v1beta1' : undefined,
+          },
+        )
         .generateContentStream({ contents });
 
       // Convert the response into a friendly text-stream
@@ -188,6 +184,21 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       return defaultError;
     }
   }
+
+  private shouldUseBetaApi(model: string) {
+    return ['gemini-1.5-pro-latest', 'gemini-ultra-latest'].includes(model);
+  }
 }
 
 export default LobeGoogleAI;
+
+type GoogleChatErrors = GoogleChatError[];
+
+interface GoogleChatError {
+  '@type': string;
+  'domain': string;
+  'metadata': {
+    service: string;
+  };
+  'reason': string;
+}
