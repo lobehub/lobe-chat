@@ -1,8 +1,8 @@
-import { notification } from 'antd';
 import { t } from 'i18next';
 import { merge } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
+import { notification } from '@/components/AntdStaticMethods';
 import { pluginService } from '@/services/plugin';
 import { pluginHelpers } from '@/store/tool/helpers';
 import { LobeToolCustomPlugin, PluginInstallError } from '@/types/tool/plugin';
