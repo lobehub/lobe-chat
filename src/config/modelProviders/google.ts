@@ -21,6 +21,7 @@ const Google: ModelProviderCard = {
     {
       description: 'The best model for scaling across a wide range of tasks',
       displayName: 'Gemini 1.0 Pro',
+      functionCall: true,
       id: 'gemini-pro',
       maxOutput: 2048,
       tokens: 32_768,

@@ -1,10 +1,21 @@
-import { Content, GoogleGenerativeAI, Part } from '@google/generative-ai';
+import {
+  Content,
+  FunctionDeclaration,
+  FunctionDeclarationSchemaProperty,
+  FunctionDeclarationSchemaType,
+  Tool as GoogleFunctionCallTool,
+  GoogleGenerativeAI,
+  Part,
+} from '@google/generative-ai';
 import { GoogleGenerativeAIStream, StreamingTextResponse } from 'ai';
+import { JSONSchema7 } from 'json-schema';
+import { transform } from 'lodash-es';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../error';
 import {
   ChatCompetitionOptions,
+  ChatCompletionTool,
   ChatStreamPayload,
   OpenAIChatMessage,
   UserMessageContentPart,
@@ -72,7 +83,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           },
           { apiVersion: 'v1beta' },
         )
-        .generateContentStream({ contents });
+        .generateContentStream({ contents, tools: this.buildGoogleTools(payload.tools) });
 
       // Convert the response into a friendly text-stream
       const stream = GoogleGenerativeAIStream(geminiStream, options?.callback);
@@ -94,38 +105,19 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     }
   }
 
-  private convertContentToGooglePart = (content: UserMessageContentPart): Part => {
-    switch (content.type) {
-      case 'text': {
-        return { text: content.text };
-      }
-      case 'image_url': {
-        const { mimeType, base64 } = parseDataUri(content.image_url.url);
+  private convertModel = (model: string, messages: OpenAIChatMessage[]) => {
+    let finalModel: string = model;
 
-        if (!base64) {
-          throw new TypeError("Image URL doesn't contain base64 data");
-        }
+    if (model.includes('pro-vision')) {
+      // if message are all text message, use vision will return an error:
+      // "[400 Bad Request] Add an image to use models/gemini-pro-vision, or switch your model to a text model."
+      const noNeedVision = messages.every((m) => typeof m.content === 'string');
 
-        return {
-          inlineData: {
-            data: base64,
-            mimeType: mimeType || 'image/png',
-          },
-        };
-      }
+      // so we need to downgrade to gemini-pro
+      if (noNeedVision) finalModel = 'gemini-pro';
     }
-  };
 
-  private convertOAIMessagesToGoogleMessage = (message: OpenAIChatMessage): Content => {
-    const content = message.content as string | UserMessageContentPart[];
-
-    return {
-      parts:
-        typeof content === 'string'
-          ? [{ text: content }]
-          : content.map((c) => this.convertContentToGooglePart(c)),
-      role: message.role === 'assistant' ? 'model' : 'user',
-    };
+    return finalModel;
   };
 
   // convert messages from the Vercel AI SDK Format to the format
@@ -169,19 +161,113 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     return contents;
   };
 
-  private convertModel = (model: string, messages: OpenAIChatMessage[]) => {
-    let finalModel: string = model;
+  private buildGoogleTools(
+    tools: ChatCompletionTool[] | undefined,
+  ): GoogleFunctionCallTool[] | undefined {
+    if (!tools || tools.length === 0) return;
 
-    if (model.includes('pro-vision')) {
-      // if message are all text message, use vision will return an error:
-      // "[400 Bad Request] Add an image to use models/gemini-pro-vision, or switch your model to a text model."
-      const noNeedVision = messages.every((m) => typeof m.content === 'string');
+    return [
+      {
+        functionDeclarations: tools.map((tool) => {
+          const t = this.convertToolToGoogleTool(tool);
+          console.log('output Schema', t);
+          return t;
+        }),
+      },
+    ];
+  }
 
-      // so we need to downgrade to gemini-pro
-      if (noNeedVision) finalModel = 'gemini-pro';
+  private convertToolToGoogleTool = (tool: ChatCompletionTool): FunctionDeclaration => {
+    const functionDeclaration = tool.function;
+    const parameters = functionDeclaration.parameters;
+
+    console.log('input Schema', JSON.stringify(parameters, null, 2));
+
+    return {
+      description: functionDeclaration.description,
+      name: functionDeclaration.name,
+      parameters: {
+        description: parameters?.description,
+        properties: transform(parameters?.properties, (result, value, key: string) => {
+          result[key] = this.convertSchemaObject(value as JSONSchema7);
+        }),
+        required: parameters?.required,
+        type: FunctionDeclarationSchemaType.OBJECT,
+      },
+    };
+  };
+
+  private convertSchemaObject(schema: JSONSchema7): FunctionDeclarationSchemaProperty {
+    console.log('input:', schema);
+
+    switch (schema.type) {
+      case 'object': {
+        return {
+          ...schema,
+          properties: Object.fromEntries(
+            Object.entries(schema.properties || {}).map(([key, value]) => [
+              key,
+              this.convertSchemaObject(value as JSONSchema7),
+            ]),
+          ),
+          type: FunctionDeclarationSchemaType.OBJECT,
+        };
+      }
+
+      case 'array': {
+        return {
+          ...schema,
+          items: this.convertSchemaObject(schema.items as JSONSchema7),
+          type: FunctionDeclarationSchemaType.ARRAY,
+        };
+      }
+
+      case 'string': {
+        return { ...schema, type: FunctionDeclarationSchemaType.STRING };
+      }
+
+      case 'number': {
+        return { ...schema, type: FunctionDeclarationSchemaType.NUMBER };
+      }
+
+      case 'boolean': {
+        return { ...schema, type: FunctionDeclarationSchemaType.BOOLEAN };
+      }
     }
+  }
 
-    return finalModel;
+  private convertContentToGooglePart = (content: UserMessageContentPart): Part => {
+    switch (content.type) {
+      case 'text': {
+        return { text: content.text };
+      }
+      case 'image_url': {
+        const { mimeType, base64 } = parseDataUri(content.image_url.url);
+
+        if (!base64) {
+          throw new TypeError("Image URL doesn't contain base64 data");
+        }
+
+        return {
+          inlineData: {
+            data: base64,
+            mimeType: mimeType || 'image/png',
+          },
+        };
+      }
+    }
+  };
+
+  private convertOAIMessagesToGoogleMessage = (message: OpenAIChatMessage): Content => {
+    const content = message.content as string | UserMessageContentPart[];
+
+    return {
+      parts:
+        typeof content === 'string'
+          ? [{ text: content }]
+          : content.map((c) => this.convertContentToGooglePart(c)),
+      role: message.role === 'assistant' ? 'model' : 'user',
+    };
   };
 
   private parseErrorMessage(message: string): {
