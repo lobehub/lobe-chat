@@ -49,6 +49,7 @@
     "InvalidMoonshotAPIKey": "Khóa API Moonshot AI không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Moonshot và thử lại",
     "InvalidOllamaArgs": "Cấu hình Ollama không hợp lệ, vui lòng kiểm tra lại cấu hình Ollama và thử lại",
     "InvalidOpenRouterAPIKey": "OpenRouter API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
+    "InvalidTogetherAIAPIKey": "TogetherAI API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
     "InvalidPerplexityAPIKey": "Khóa API Perplexity không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại sau",
     "InvalidZeroOneAPIKey": "Khóa API ZeroOne không hợp lệ hoặc trống, vui lòng kiểm tra lại khóa API ZeroOne và thử lại",
     "InvalidZhipuAPIKey": "Khóa API Zhipu không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Zhipu và thử lại",
@@ -60,6 +61,7 @@
     "OllamaServiceUnavailable": "Dịch vụ Ollama không khả dụng, vui lòng kiểm tra xem nó đã được khởi động chưa",
     "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp lỗi, vui lòng xác minh hoặc thử lại dựa trên thông tin dưới đây",
     "OpenRouterBizError": "Yêu cầu dịch vụ OpenRouter AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
+    "TogetherAIBizError": "Yêu cầu dịch vụ TogetherAI AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "PerplexityBizError": "Yêu cầu dịch vụ AI Perplexity gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại sau",
     "PluginApiNotFound": "Xin lỗi, không có API nào trong tệp mô tả plugin, vui lòng kiểm tra phương thức yêu cầu của bạn có khớp với API mô tả plugin không",
     "PluginApiParamsError": "Xin lỗi, kiểm tra tham số đầu vào yêu cầu của plugin không thông qua, vui lòng kiểm tra tham số đầu vào có khớp với thông tin mô tả API không",
@@ -117,6 +119,10 @@
       "OpenRouter": {
         "description": "Nhập OpenRouter API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
         "title": "Sử dụng OpenRouter API Key tùy chỉnh"
+      },
+      "TogetherAI": {
+        "description": "Nhập TogetherAI API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
+        "title": "Sử dụng TogetherAI API Key tùy chỉnh"
       },
       "Perplexity": {
         "description": "Nhập Khóa API Perplexity của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không ghi lại Khóa API của bạn",

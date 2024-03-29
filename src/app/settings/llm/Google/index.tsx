@@ -1,5 +1,5 @@
-import { Google, Gemini } from '@lobehub/icons';
-import { Input, Divider } from 'antd';
+import { Gemini, Google } from '@lobehub/icons';
+import { Divider, Input } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';

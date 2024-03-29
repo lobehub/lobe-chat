@@ -88,6 +88,9 @@ export default {
     InvalidOpenRouterAPIKey: 'OpenRouter API Key 不正确或为空，请检查 OpenRouter API Key 后重试',
     OpenRouterBizError: '请求 OpenRouter AI 服务出错，请根据以下信息排查或重试',
 
+    InvalidTogetherAIAPIKey: 'TogetherAI API Key 不正确或为空，请检查 TogetherAI API Key 后重试',
+    TogetherAIBizError: '请求 TogetherAI AI 服务出错，请根据以下信息排查或重试',
+
     ZeroOneBizError: '请求零一万物服务出错，请根据以下信息排查或重试',
     InvalidZeroOneAPIKey: '零一万物 API Key 不正确或为空，请检查零一万物 API Key 后重试',
 
@@ -144,6 +147,10 @@ export default {
       Perplexity: {
         description: '输入你的 Perplexity API Key 即可开始会话。应用不会记录你的 API Key',
         title: '使用自定义 Perplexity API Key',
+      },
+      TogetherAI: {
+        description: '输入你的 TogetherAI API Key 即可开始会话。应用不会记录你的 API Key',
+        title: '使用自定义 TogetherAI API Key',
       },
       ZeroOne: {
         description: '输入你的零一万物 API Key 即可开始会话。应用不会记录你的 API Key',
