@@ -67,9 +67,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               },
             ],
           },
-          {
-            apiVersion: 'v1beta',
-          },
+          { apiVersion: 'v1beta' },
         )
         .generateContentStream({ contents });
 
@@ -137,9 +135,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       .filter((message) => message.role === 'user' || message.role === 'assistant')
       .map((msg) => this.convertOAIMessagesToGoogleMessage(msg));
 
-    // if message are all text message, use vision will return error
-    // use add an image to use models/gemini-pro-vision, or switch your model to a text model
-    const noImage = messages.every((m) => typeof m.content === 'string');
+    // if message are all text message, use vision will return an error:
+    // [400 Bad Request] Add an image to use models/gemini-pro-vision, or switch your model to a text model."
+    const noImage =
+      model === 'gemini-pro-vision' && messages.every((m) => typeof m.content === 'string');
 
     return { contents, model: noImage ? 'gemini-pro' : model };
   };
@@ -183,10 +182,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       // 如果解析失败，则返回原始错误消息
       return defaultError;
     }
-  }
-
-  private shouldUseBetaApi(model: string) {
-    return ['gemini-1.5-pro-latest', 'gemini-ultra-latest'].includes(model);
   }
 }
 
