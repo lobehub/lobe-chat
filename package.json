@@ -210,6 +210,7 @@
     "stylelint": "^15",
     "tsx": "^4",
     "typescript": "^5",
+    "undici": "6.5.0",
     "unified": "^11",
     "unist-util-visit": "^5",
     "vite": "^5",
