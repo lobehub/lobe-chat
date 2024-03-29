@@ -1,9 +1,9 @@
-import { message } from 'antd';
 import { t } from 'i18next';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
+import { message } from '@/components/AntdStaticMethods';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';

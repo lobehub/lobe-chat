@@ -7,6 +7,7 @@ import 'antd/dist/reset.css';
 import Image from 'next/image';
 import { PropsWithChildren, ReactNode, memo, useEffect } from 'react';
 
+import AntdStaticMethods from '@/components/AntdStaticMethods';
 import {
   LOBE_THEME_APPEARANCE,
   LOBE_THEME_NEUTRAL_COLOR,
@@ -76,6 +77,7 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
+        <AntdStaticMethods />
         <ConfigProvider config={{ imgAs: Image, imgUnoptimized: true }}>
           <Container>{children}</Container>
         </ConfigProvider>
