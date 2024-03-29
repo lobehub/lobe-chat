@@ -17,9 +17,9 @@ const TogetherAI: ModelProviderCard = {
       vision: false,
     },
     {
-      displayName: 'Gemma Instruct (7B)',
+      displayName: 'Gemma Instruct (2B)',
       functionCall: false,
-      id: 'google/gemma-7b-it',
+      id: 'google/gemma-2b-it',
       tokens: 8192,
       vision: false,
     },
