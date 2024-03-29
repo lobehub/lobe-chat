@@ -1,5 +1,4 @@
 // @vitest-environment edge-runtime
-import { GenerateContentRequest, GenerateContentStreamResult, Part } from '@google/generative-ai';
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -317,17 +316,55 @@ describe('LobeGoogleAI', () => {
     });
 
     describe('buildGoogleMessages', () => {
-      it('should use default text model when no images are included in messages', () => {
+      it('get default result with gemini-pro', () => {
+        const messages: OpenAIChatMessage[] = [{ content: 'Hello', role: 'user' }];
+
+        const contents = instance['buildGoogleMessages'](messages, 'gemini-pro');
+
+        expect(contents).toHaveLength(1);
+        expect(contents).toEqual([{ parts: [{ text: 'Hello' }], role: 'user' }]);
+      });
+
+      it('messages should end with user if using gemini-pro', () => {
         const messages: OpenAIChatMessage[] = [
           { content: 'Hello', role: 'user' },
           { content: 'Hi', role: 'assistant' },
         ];
-        const model = 'text-davinci-003';
 
-        // 调用 buildGoogleMessages 方法
-        const { contents, model: usedModel } = instance['buildGoogleMessages'](messages, model);
+        const contents = instance['buildGoogleMessages'](messages, 'gemini-pro');
 
-        expect(usedModel).toEqual('gemini-pro'); // 假设 'gemini-pro' 是默认文本模型
+        expect(contents).toHaveLength(3);
+        expect(contents).toEqual([
+          { parts: [{ text: 'Hello' }], role: 'user' },
+          { parts: [{ text: 'Hi' }], role: 'model' },
+          { parts: [{ text: '' }], role: 'user' },
+        ]);
+      });
+
+      it('should include system role if there is a system role prompt', () => {
+        const messages: OpenAIChatMessage[] = [
+          { content: 'you are ChatGPT', role: 'system' },
+          { content: 'Who are you', role: 'user' },
+        ];
+
+        const contents = instance['buildGoogleMessages'](messages, 'gemini-pro');
+
+        expect(contents).toHaveLength(3);
+        expect(contents).toEqual([
+          { parts: [{ text: 'you are ChatGPT' }], role: 'user' },
+          { parts: [{ text: '' }], role: 'model' },
+          { parts: [{ text: 'Who are you' }], role: 'user' },
+        ]);
+      });
+
+      it('should not modify the length if model is gemini-1.5-pro', () => {
+        const messages: OpenAIChatMessage[] = [
+          { content: 'Hello', role: 'user' },
+          { content: 'Hi', role: 'assistant' },
+        ];
+
+        const contents = instance['buildGoogleMessages'](messages, 'gemini-1.5-pro-latest');
+
         expect(contents).toHaveLength(2);
         expect(contents).toEqual([
           { parts: [{ text: 'Hello' }], role: 'user' },
@@ -348,9 +385,8 @@ describe('LobeGoogleAI', () => {
         const model = 'gemini-pro-vision';
 
         // 调用 buildGoogleMessages 方法
-        const { contents, model: usedModel } = instance['buildGoogleMessages'](messages, model);
+        const contents = instance['buildGoogleMessages'](messages, model);
 
-        expect(usedModel).toEqual(model);
         expect(contents).toHaveLength(1);
         expect(contents).toEqual([
           {
@@ -358,6 +394,36 @@ describe('LobeGoogleAI', () => {
             role: 'user',
           },
         ]);
+      });
+    });
+
+    describe('convertModel', () => {
+      it('should use default text model when no images are included in messages', () => {
+        const messages: OpenAIChatMessage[] = [
+          { content: 'Hello', role: 'user' },
+          { content: 'Hi', role: 'assistant' },
+        ];
+
+        // 调用 buildGoogleMessages 方法
+        const model = instance['convertModel']('gemini-pro-vision', messages);
+
+        expect(model).toEqual('gemini-pro'); // 假设 'gemini-pro' 是默认文本模型
+      });
+
+      it('should use specified model when images are included in messages', () => {
+        const messages: OpenAIChatMessage[] = [
+          {
+            content: [
+              { type: 'text', text: 'Hello' },
+              { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } },
+            ],
+            role: 'user',
+          },
+        ];
+
+        const model = instance['convertModel']('gemini-pro-vision', messages);
+
+        expect(model).toEqual('gemini-pro-vision');
       });
     });
   });

@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.145.1](https://github.com/lobehub/lobe-chat/compare/v0.145.0...v0.145.1)
+
+<sup>Released on **2024-03-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Google Gemini pro 1.5 and system role not take effect.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Google Gemini pro 1.5 and system role not take effect, closes [#1801](https://github.com/lobehub/lobe-chat/issues/1801) ([0a3e3f7](https://github.com/lobehub/lobe-chat/commit/0a3e3f7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.145.0](https://github.com/lobehub/lobe-chat/compare/v0.144.1...v0.145.0)
 
 <sup>Released on **2024-03-29**</sup>
