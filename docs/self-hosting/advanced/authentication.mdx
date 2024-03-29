@@ -6,12 +6,13 @@ Currently supported identity verification services include:
 
 - [Auth0](/en/self-hosting/advanced/sso-providers/auth0)
 - [Microsoft Entra ID](/en/self-hosting/advanced/sso-providers/microsoft-entra-id)
+- [Authentik](/en/self-hosting/advanced/sso-providers/authentik)
 
 Click on the links to view the corresponding platform's configuration documentation.
 
 ## Advanced Configuration
 
-To simultaneously enable multiple identity verification sources, please set the `SSO_PROVIDERS` environment variable, separating them with commas, for example, `auth0,azure-ad`.
+To simultaneously enable multiple identity verification sources, please set the `SSO_PROVIDERS` environment variable, separating them with commas, for example, `auth0,azure-ad,authentik`.
 
 The order corresponds to the display order of the SSO providers.
 
@@ -19,6 +20,7 @@ The order corresponds to the display order of the SSO providers.
 | ------------------ | ---------- |
 | Auth0              | `auth0`    |
 | Microsoft Entra ID | `azure-ad` |
+| Authentik          | `authentik` |
 
 ## Other SSO Providers
 
