@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.145.2](https://github.com/lobehub/lobe-chat/compare/v0.145.1...v0.145.2)
+
+<sup>Released on **2024-03-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix google ultra model id.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix google ultra model id, closes [#1813](https://github.com/lobehub/lobe-chat/issues/1813) ([c96ba12](https://github.com/lobehub/lobe-chat/commit/c96ba12))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.145.1](https://github.com/lobehub/lobe-chat/compare/v0.145.0...v0.145.1)
 
 <sup>Released on **2024-03-29**</sup>
