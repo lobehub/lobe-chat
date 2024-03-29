@@ -65,6 +65,9 @@ export const getAppConfig = () => {
     AZURE_AD_CLIENT_ID: process.env.AZURE_AD_CLIENT_ID || '',
     AZURE_AD_CLIENT_SECRET: process.env.AZURE_AD_CLIENT_SECRET || '',
     AZURE_AD_TENANT_ID: process.env.AZURE_AD_TENANT_ID || '',
+    AUTHENTIK_CLIENT_ID: process.env.AUTHENTIK_CLIENT_ID || '',
+    AUTHENTIK_CLIENT_SECRET: process.env.AUTHENTIK_CLIENT_SECRET || '',
+    AUTHENTIK_ISSUER: process.env.AUTHENTIK_ISSUER || '',
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || '',
 
     ENABLE_LANGFUSE: process.env.ENABLE_LANGFUSE === '1',
