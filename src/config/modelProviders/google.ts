@@ -79,8 +79,7 @@ const Google: ModelProviderCard = {
     {
       description: 'The most capable model for highly complex tasks',
       displayName: 'Gemini 1.0 Ultra',
-      hidden: true,
-      id: 'gemini-ultra-latest',
+      id: 'gemini-ultra',
       maxOutput: 2048,
       tokens: 32_768,
     },
