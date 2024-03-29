@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.144.0](https://github.com/lobehub/lobe-chat/compare/v0.143.0...v0.144.0)
+
+<sup>Released on **2024-03-29**</sup>
+
+#### ✨ Features
+
+- **misc**: Support authentik as sso.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support authentik as sso, closes [#1650](https://github.com/lobehub/lobe-chat/issues/1650) ([181dfa5](https://github.com/lobehub/lobe-chat/commit/181dfa5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.143.0](https://github.com/lobehub/lobe-chat/compare/v0.142.9...v0.143.0)
 
 <sup>Released on **2024-03-28**</sup>
