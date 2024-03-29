@@ -17,6 +17,7 @@ const Google: ModelProviderCard = {
       displayName: 'Gemini 1.5 Pro',
       id: 'gemini-1.5-pro-latest',
       tokens: 1_048_576,
+      vision: true,
     },
     {
       displayName: 'Gemini Ultra',
