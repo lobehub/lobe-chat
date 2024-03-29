@@ -219,7 +219,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [哔哩哔哩](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>       | 通过关键词视频搜索、回放访问、互动弹幕、热门视频推荐和热搜洞察等功能，深入体验哔哩哔哩丰富的内容，尽在您的指尖。<br/>`视频` `哔哩哔哩` `搜索` |
 | [Steam](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **LobeHub** on **2024-01-27**</sup>          | 从 Steam 获取游戏信息和用户评论。<br/>`steam` `game`                                                                                          |
 
-> 📊 Total plugins: [<kbd>**57**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**55**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -247,14 +247,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                          | 助手说明                                                                                                                  |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| [女朋友潜台词专家](https://chat-preview.lobehub.com/market?agent=girlfriend-subtext)<br/><sup>By **[vayron](https://github.com/vayron)** on **2024-03-26**</sup>                  | 解读女生话背后的「潜台词」，尖酸刻薄，强势回复！🔥<br/>`女朋友` `女生` `潜台词` `彪悍` `强势` `解读`                      |
-| [面试问题提炼助手](https://chat-preview.lobehub.com/market?agent=question-extraction-assistant)<br/><sup>By **[couldnice](https://github.com/couldnice)** on **2024-03-26**</sup> | 面试问题生成助手，根据文章内容和职位描述生成针对性面试问题。<br/>`面试问题` `定制服务` `java工程师` `资料收集` `面试准备` |
-| [索赔分析器](https://chat-preview.lobehub.com/market?agent=fact-checking)<br/><sup>By **[pedroespecial101](https://github.com/pedroespecial101)** on **2024-03-25**</sup>         | 详细的真相分析器（来自 <https://github.com/danielmiessler/fabric）><br/>`https-github-com-danielmiessler-fabric`          |
-| [Rap 说唱歌词大师](https://chat-preview.lobehub.com/market?agent=rap-writer)<br/><sup>By **[aoocar](https://github.com/aoocar)** on **2024-03-25**</sup>                          | 将歌词以 rap 歌词的形式进行匹配，按照参考格式进行 rap 歌词创作<br/>`说唱` `歌词`                                          |
+| 最近新增                                                                                                                                                                 | 助手说明                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| [血液检测分析师](https://chat-preview.lobehub.com/market?agent=blood-analyst)<br/><sup>By **[SimoMay](https://github.com/SimoMay)** on **2024-03-27**</sup>              | 擅长分析血液检测结果，使用表情符号提供清晰反馈，便于理解。<br/>`医疗保健` `分析` `结果` `咨询` `摘要` |
+| [高情商马屁助手](https://chat-preview.lobehub.com/market?agent=gpts-big-fart-chat)<br/><sup>By **[MapleEve](https://github.com/MapleEve)** on **2024-03-27**</sup>       | 精准的聊天夸赞专家，适宜的赞美和吹捧<br/>`夸赞` `情商` `聊天`                                         |
+| [Suno.ai 音乐创作助手](https://chat-preview.lobehub.com/market?agent=suno-music-creator)<br/><sup>By **[MapleEve](https://github.com/MapleEve)** on **2024-03-27**</sup> | 基于 SunoAI 的歌曲创作与翻译<br/>`suno` `作词` `歌词` `音乐制作`                                      |
+| [识图小红书文案](https://chat-preview.lobehub.com/market?agent=xiaonghongshu-vision)<br/><sup>By **[HansKing98](https://github.com/HansKing98)** on **2024-03-27**</sup> | 你可以用这么 agent 结合多模态的模型，进行上传图片，生成小红书格式文案。<br/>`vision`                  |
 
-> 📊 Total agents: [<kbd>**220**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**224**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
