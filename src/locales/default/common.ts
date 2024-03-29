@@ -110,6 +110,7 @@ export default {
     openai: 'OpenAI',
     openrouter: 'OpenRouter',
     perplexity: 'Perplexity',
+    togetherai: 'TogetherAI',
     zeroone: '01.AI 零一万物',
     zhipu: '智谱AI',
   },

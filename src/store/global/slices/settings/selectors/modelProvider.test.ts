@@ -139,7 +139,7 @@ describe('modelProviderSelectors', () => {
             openrouter: {
               enabled: true,
             },
-          }
+          },
         },
         serverConfig: {
           languageModel: {
@@ -148,7 +148,7 @@ describe('modelProviderSelectors', () => {
               customModelName:
                 '-all,+google/gemma-7b-it,+mistralai/mistral-7b-instruct=Mistral-7B-Instruct',
             },
-          }
+          },
         },
       }) as unknown as GlobalStore;
 

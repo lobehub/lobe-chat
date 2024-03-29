@@ -49,6 +49,7 @@
     "InvalidMoonshotAPIKey": "Ungültiger oder leerer Moonshot AI API-Schlüssel. Bitte überprüfen Sie den Moonshot API-Schlüssel und versuchen Sie es erneut.",
     "InvalidOllamaArgs": "Ollama-Konfiguration ist ungültig. Bitte überprüfen Sie die Ollama-Konfiguration und versuchen Sie es erneut.",
     "InvalidOpenRouterAPIKey": "OpenRouter API-Schlüssel ungültig oder leer. Bitte überprüfen Sie den OpenRouter API-Schlüssel und versuchen Sie es erneut.",
+    "InvalidTogetherAIAPIKey": "TogetherAI API-Schlüssel ungültig oder leer. Bitte überprüfen Sie den TogetherAI API-Schlüssel und versuchen Sie es erneut.",
     "InvalidPerplexityAPIKey": "Perplexity API Key ist ungültig oder leer. Bitte überprüfen Sie den Perplexity API Key und versuchen Sie es erneut.",
     "InvalidZeroOneAPIKey": "Ungültiger oder leerer ZeroOne-API-Schlüssel. Bitte überprüfen Sie den ZeroOne-API-Schlüssel und versuchen Sie es erneut.",
     "InvalidZhipuAPIKey": "Der Zhipu API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Zhipu API-Schlüssel und versuchen Sie es erneut.",
@@ -60,6 +61,7 @@
     "OllamaServiceUnavailable": "Ollama-Dienst nicht verfügbar. Bitte überprüfen Sie, ob er ordnungsgemäß gestartet wurde.",
     "OpenAIBizError": "Fehler bei der OpenAI-Serviceanfrage. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut",
     "OpenRouterBizError": "Fehler bei der Anforderung des OpenRouter AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "TogetherAIBizError": "Fehler bei der Anforderung des TogetherAI AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PerplexityBizError": "Fehler bei der Anforderung des Perplexity AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
@@ -117,6 +119,10 @@
       "OpenRouter": {
         "description": "Geben Sie Ihren OpenRouter API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
         "title": "Verwenden Sie einen benutzerdefinierten OpenRouter API-Schlüssel"
+      },
+      "TogetherAI": {
+        "description": "Geben Sie Ihren TogetherAI API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
+        "title": "Verwenden Sie einen benutzerdefinierten TogetherAI API-Schlüssel"
       },
       "Perplexity": {
         "description": "Geben Sie Ihren eigenen Perplexity API Key ein, um das Gespräch zu beginnen. Die App speichert Ihren API Key nicht.",

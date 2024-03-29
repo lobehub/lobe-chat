@@ -49,6 +49,7 @@
     "InvalidMoonshotAPIKey": "Moonshot AI API 金鑰不正確或為空，請檢查 Moonshot API 金鑰後重試",
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",
     "InvalidOpenRouterAPIKey": "OpenRouter API 金鑰不正確或為空，請檢查 OpenRouter API 金鑰後重試",
+    "InvalidTogetherAIAPIKey": "TogetherAI API 金鑰不正確或為空，請檢查 TogetherAI API 金鑰後重試",
     "InvalidPerplexityAPIKey": "Perplexity API Key 不正確或為空，請檢查 Perplexity API Key 後重試",
     "InvalidZeroOneAPIKey": "零一萬物 API Key 不正確或為空，請檢查零一萬物 API Key 後重試",
     "InvalidZhipuAPIKey": "Zhipu API Key 不正確或為空，請檢查 Zhipu API Key 後重試",
@@ -60,6 +61,7 @@
     "OllamaServiceUnavailable": "未偵測到 Ollama 服務，請檢查是否正常啟動",
     "OpenAIBizError": "請求 OpenAI 服務出錯。請根據以下資訊進行排查或重試。",
     "OpenRouterBizError": "請求 OpenRouter AI 服務出錯，請根據以下信息排查或重試",
+    "TogetherAIBizError": "請求 TogetherAI AI 服務出錯，請根據以下信息排查或重試",
     "PerplexityBizError": "請求 Perplexity AI 服務出錯，請根據以下信息排查或重試",
     "PluginApiNotFound": "抱歉，外掛描述檔案中不存在該 API。請檢查您的請求方法與外掛清單 API 是否相符",
     "PluginApiParamsError": "抱歉，該外掛請求的輸入參數驗證失敗。請檢查輸入參數與 API 描述資訊是否相符",
@@ -117,6 +119,10 @@
       "OpenRouter": {
         "description": "輸入你的 OpenRouter API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
         "title": "使用自定義 OpenRouter API 金鑰"
+      },
+      "TogetherAI": {
+        "description": "輸入你的 TogetherAI API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
+        "title": "使用自定義 TogetherAI API 金鑰"
       },
       "Perplexity": {
         "description": "輸入你的 Perplexity API Key 即可開始會話。應用不會記錄你的 API Key",
