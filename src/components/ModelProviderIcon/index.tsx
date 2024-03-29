@@ -10,6 +10,7 @@ import {
   OpenAI,
   OpenRouter,
   Perplexity,
+  Together,
   ZeroOne,
   Zhipu,
 } from '@lobehub/icons';
@@ -82,6 +83,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.ZeroOne: {
       return <ZeroOne size={20} />;
+    }
+
+    case ModelProvider.TogetherAI: {
+      return <Together size={20} />;
     }
 
     default: {

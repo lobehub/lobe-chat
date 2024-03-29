@@ -18,6 +18,7 @@ import {
   LobeOpenAI,
   LobeOpenRouterAI,
   LobePerplexityAI,
+  LobeTogetherAI,
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
@@ -44,6 +45,7 @@ vi.mock('@/config/server', () => ({
     ANTHROPIC_API_KEY: 'test-anthropic-key',
     MISTRAL_API_KEY: 'test-mistral-key',
     OPENROUTER_API_KEY: 'test-openrouter-key',
+    TOGETHERAI_API_KEY: 'test-togetherai-key',
   })),
 }));
 
@@ -336,6 +338,30 @@ describe('AgentRuntime', () => {
 
         // 假设 LobeOpenRouterAI 是 OpenRouter 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
+      });
+    });
+
+    describe('Together AI provider', () => {
+      it('should initialize correctly', async () => {
+        const jwtPayload: JWTPayload = { apiKey: 'user-togetherai-key' };
+        const runtime = await AgentRuntime.initializeWithUserPayload(
+          ModelProvider.TogetherAI,
+          jwtPayload,
+        );
+
+        // 假设 LobeTogetherAI 是 TogetherAI 提供者的实现类
+        expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
+      });
+
+      it('should initialize correctly without apiKey', async () => {
+        const jwtPayload: JWTPayload = {};
+        const runtime = await AgentRuntime.initializeWithUserPayload(
+          ModelProvider.TogetherAI,
+          jwtPayload,
+        );
+
+        // 假设 LobeTogetherAI 是 TogetherAI 提供者的实现类
+        expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
       });
     });
 

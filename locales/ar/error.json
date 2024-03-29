@@ -49,6 +49,7 @@
     "InvalidMoonshotAPIKey": "مفتاح API لـ Moonshot AI غير صحيح أو فارغ، يرجى التحقق من مفتاح API لـ Moonshot وإعادة المحاولة",
     "InvalidOllamaArgs": "تكوين Ollama غير صحيح، يرجى التحقق من تكوين Ollama وإعادة المحاولة",
     "InvalidOpenRouterAPIKey": "مفتاح OpenRouter API غير صحيح أو فارغ، يرجى التحقق من مفتاح OpenRouter API وإعادة المحاولة",
+    "InvalidTogetherAIAPIKey": "مفتاح TogetherAI API غير صحيح أو فارغ، يرجى التحقق من مفتاح TogetherAI API وإعادة المحاولة",
     "InvalidPerplexityAPIKey": "مفتاح Perplexity API غير صحيح أو فارغ، يرجى التحقق من مفتاح Perplexity API وإعادة المحاولة",
     "InvalidZeroOneAPIKey": "مفتاح ZeroOne API غير صحيح أو فارغ، يرجى التحقق من مفتاح ZeroOne API وإعادة المحاولة",
     "InvalidZhipuAPIKey": "مفتاح Zhipu API غير صحيح أو فارغ، يرجى التحقق من مفتاح Zhipu API وإعادة المحاولة",
@@ -60,6 +61,7 @@
     "OllamaServiceUnavailable": "خدمة Ollama غير متوفرة، يرجى التحقق مما إذا كانت قد تم تشغيلها بشكل صحيح",
     "OpenAIBizError": "حدث خطأ في طلب خدمة OpenAI، يرجى التحقق من المعلومات أدناه وإعادة المحاولة",
     "OpenRouterBizError": "خطأ في طلب خدمة OpenRouter AI، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
+    "TogetherAIBizError": "خطأ في طلب خدمة TogetherAI AI، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
     "PerplexityBizError": "خطأ في طلب خدمة Perplexity AI، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
     "PluginApiNotFound": "عذرًا، لا يوجد API للإضافة في وصف الإضافة، يرجى التحقق من تطابق طريقة الطلب الخاصة بك مع API الوصف",
     "PluginApiParamsError": "عذرًا، فشلت التحقق من صحة معلمات الطلب للإضافة، يرجى التحقق من تطابق المعلمات مع معلومات الوصف",
@@ -117,6 +119,10 @@
       "OpenRouter": {
         "description": "أدخل مفتاح OpenRouter API الخاص بك للبدء في الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
         "title": "استخدام مفتاح OpenRouter API المخصص"
+      },
+      "TogetherAI": {
+        "description": "أدخل مفتاح TogetherAI API الخاص بك للبدء في الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
+        "title": "استخدام مفتاح TogetherAI API المخصص"
       },
       "Perplexity": {
         "description": "أدخل مفتاح Perplexity API الخاص بك للبدء في الجلسة. لن يتم تسجيل مفتاح الواجهة البرمجية لتطبيقات الجلسة",

@@ -9,17 +9,25 @@ import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
 import { handleOpenAIError } from '../utils/handleOpenAIError';
 
-const DEFAULT_BASE_URL = 'https://api.lingyiwanwu.com/v1';
+const DEFAULT_BASE_URL = 'https://api.together.xyz/v1';
 
-export class LobeZeroOneAI implements LobeRuntimeAI {
+export class LobeTogetherAI implements LobeRuntimeAI {
   private client: OpenAI;
 
   baseURL: string;
 
   constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidZeroOneAPIKey);
+    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidTogetherAIAPIKey);
 
-    this.client = new OpenAI({ apiKey, baseURL, ...res });
+    this.client = new OpenAI({
+      apiKey,
+      baseURL,
+      defaultHeaders: {
+        'HTTP-Referer': 'https://chat-preview.lobehub.com',
+        'X-Title': 'Lobe Chat',
+      },
+      ...res,
+    });
     this.baseURL = this.client.baseURL;
   }
 
@@ -30,7 +38,7 @@ export class LobeZeroOneAI implements LobeRuntimeAI {
       );
       const [prod, debug] = response.tee();
 
-      if (process.env.DEBUG_ZEROONE_CHAT_COMPLETION === '1') {
+      if (process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION === '1') {
         debugStream(debug.toReadableStream()).catch(console.error);
       }
 
@@ -50,8 +58,8 @@ export class LobeZeroOneAI implements LobeRuntimeAI {
             throw AgentRuntimeError.chat({
               endpoint: desensitizedEndpoint,
               error: error as any,
-              errorType: AgentRuntimeErrorType.InvalidZeroOneAPIKey,
-              provider: ModelProvider.ZeroOne,
+              errorType: AgentRuntimeErrorType.InvalidTogetherAIAPIKey,
+              provider: ModelProvider.TogetherAI,
             });
           }
 
@@ -63,16 +71,16 @@ export class LobeZeroOneAI implements LobeRuntimeAI {
 
       const { errorResult, RuntimeError } = handleOpenAIError(error);
 
-      const errorType = RuntimeError || AgentRuntimeErrorType.ZeroOneBizError;
+      const errorType = RuntimeError || AgentRuntimeErrorType.TogetherAIBizError;
 
       throw AgentRuntimeError.chat({
         endpoint: desensitizedEndpoint,
         error: errorResult,
         errorType,
-        provider: ModelProvider.ZeroOne,
+        provider: ModelProvider.TogetherAI,
       });
     }
   }
 }
 
-export default LobeZeroOneAI;
+export default LobeTogetherAI;

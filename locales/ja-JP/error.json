@@ -49,6 +49,7 @@
     "InvalidMoonshotAPIKey": "Moonshot AI APIキーが正しくないか空です。Moonshot APIキーを確認して再試行してください。",
     "InvalidOllamaArgs": "Ollamaの設定が正しくありません。Ollamaの設定を確認してからもう一度お試しください",
     "InvalidOpenRouterAPIKey": "OpenRouter API キーが正しくないか空です。OpenRouter API キーを確認してもう一度お試しください。",
+    "InvalidTogetherAIAPIKey": "TogetherAI API キーが正しくないか空です。TogetherAI API キーを確認してもう一度お試しください。",
     "InvalidPerplexityAPIKey": "Perplexity APIキーが正しくないか空です。Perplexity APIキーを確認してもう一度お試しください",
     "InvalidZeroOneAPIKey": "ZeroOne APIキーが正しくないか空です。ZeroOne APIキーを確認して再試行してください。",
     "InvalidZhipuAPIKey": "Zhipu APIキーが正しくないか空です。Zhipu APIキーを確認してから再試行してください。",
@@ -60,6 +61,7 @@
     "OllamaServiceUnavailable": "Ollamaサービスが利用できません。正常に起動しているかどうかを確認してください",
     "OpenAIBizError": "OpenAIサービスのリクエストエラーが発生しました。以下の情報に基づいて問題を解決したり、再試行したりしてください",
     "OpenRouterBizError": "OpenRouter AI サービスのリクエスト中にエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、もう一度お試しください。",
+    "TogetherAIBizError": "TogetherAI AI サービスのリクエスト中にエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、もう一度お試しください。",
     "PerplexityBizError": "Perplexity AIサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングするか、再度お試しください",
     "PluginApiNotFound": "申し訳ありませんが、プラグインのマニフェストに指定されたAPIが見つかりませんでした。リクエストメソッドとプラグインのマニフェストのAPIが一致しているかどうかを確認してください",
     "PluginApiParamsError": "申し訳ありませんが、プラグインのリクエストパラメータの検証に失敗しました。パラメータとAPIの説明が一致しているかどうか確認してください",
@@ -117,6 +119,10 @@
       "OpenRouter": {
         "description": "OpenRouter API キーを入力するとセッションが開始されます。アプリは API キーを記録しません。",
         "title": "カスタム OpenRouter API キーを使用する"
+      },
+      "TogetherAI": {
+        "description": "TogetherAI API キーを入力するとセッションが開始されます。アプリは API キーを記録しません。",
+        "title": "カスタム TogetherAI API キーを使用する"
       },
       "Perplexity": {
         "description": "Perplexity APIキーを入力して会話を開始します。アプリはAPIキーを記録しません",
