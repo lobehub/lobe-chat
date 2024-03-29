@@ -75,6 +75,7 @@ const Google: ModelProviderCard = {
     },
     {
       displayName: 'Gemini Ultra',
+      hidden: true,
       id: 'gemini-ultra-latest',
       tokens: 30_720,
     },

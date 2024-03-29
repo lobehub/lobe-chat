@@ -36,7 +36,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
-      const { contents, model } = this.buildGoogleMessages(payload.messages, payload.model);
+      const model = this.convertModel(payload.model, payload.messages);
+
+      const contents = this.buildGoogleMessages(payload.messages, model);
+
       const geminiStream = await this.client
         .getGenerativeModel(
           {
@@ -121,26 +124,64 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         typeof content === 'string'
           ? [{ text: content }]
           : content.map((c) => this.convertContentToGooglePart(c)),
-      role: message.role === 'user' ? 'user' : 'model',
+      role: message.role === 'assistant' ? 'model' : 'user',
     };
   };
 
   // convert messages from the Vercel AI SDK Format to the format
   // that is expected by the Google GenAI SDK
-  private buildGoogleMessages = (
-    messages: OpenAIChatMessage[],
-    model: string,
-  ): { contents: Content[]; model: string } => {
-    const contents = messages
-      .filter((message) => message.role === 'user' || message.role === 'assistant')
-      .map((msg) => this.convertOAIMessagesToGoogleMessage(msg));
+  private buildGoogleMessages = (messages: OpenAIChatMessage[], model: string): Content[] => {
+    // if the model is gemini-1.5-pro-latest, we don't need any special handling
+    if (model === 'gemini-1.5-pro-latest') {
+      return messages
+        .filter((message) => message.role !== 'function')
+        .map((msg) => this.convertOAIMessagesToGoogleMessage(msg));
+    }
 
-    // if message are all text message, use vision will return an error:
-    // [400 Bad Request] Add an image to use models/gemini-pro-vision, or switch your model to a text model."
-    const noImage =
-      model === 'gemini-pro-vision' && messages.every((m) => typeof m.content === 'string');
+    const contents: Content[] = [];
+    let lastRole = 'model';
 
-    return { contents, model: noImage ? 'gemini-pro' : model };
+    messages.forEach((message) => {
+      // current to filter function message
+      if (message.role === 'function') {
+        return;
+      }
+      const googleMessage = this.convertOAIMessagesToGoogleMessage(message);
+
+      // if the last message is a model message and the current message is a model message
+      // then we need to add a user message to separate them
+      if (lastRole === googleMessage.role) {
+        contents.push({ parts: [{ text: '' }], role: lastRole === 'user' ? 'model' : 'user' });
+      }
+
+      // add the current message to the contents
+      contents.push(googleMessage);
+
+      // update the last role
+      lastRole = googleMessage.role;
+    });
+
+    // if the last message is a user message, then we need to add a model message to separate them
+    if (lastRole === 'model') {
+      contents.push({ parts: [{ text: '' }], role: 'user' });
+    }
+
+    return contents;
+  };
+
+  private convertModel = (model: string, messages: OpenAIChatMessage[]) => {
+    let finalModel: string = model;
+
+    if (model === 'gemini-pro-vision') {
+      // if message are all text message, use vision will return an error:
+      // "[400 Bad Request] Add an image to use models/gemini-pro-vision, or switch your model to a text model."
+      const noNeedVision = messages.every((m) => typeof m.content === 'string');
+
+      // so we need to downgrade to gemini-pro
+      if (noNeedVision) finalModel = 'gemini-pro';
+    }
+
+    return finalModel;
   };
 
   private parseErrorMessage(message: string): {
