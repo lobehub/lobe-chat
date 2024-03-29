@@ -68,7 +68,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             ],
           },
           {
-            apiVersion: this.shouldUseBetaApi(model) ? 'v1beta' : undefined,
+            apiVersion: 'v1beta',
           },
         )
         .generateContentStream({ contents });
