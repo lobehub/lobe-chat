@@ -20,6 +20,9 @@ export interface ChatModelCard {
    */
   legacy?: boolean;
   maxOutput?: number;
+  /**
+   * the context window
+   */
   tokens?: number;
   /**
    *  whether model supports vision
