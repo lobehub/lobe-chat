@@ -14,6 +14,7 @@ const mockGoogleAPIKey = 'google-api-key';
 const mockAnthropicAPIKey = 'anthropic-api-key';
 const mockMistralAPIKey = 'mistral-api-key';
 const mockOpenRouterAPIKey = 'openrouter-api-key';
+const mockTogetherAIAPIKey = 'togetherai-api-key';
 
 // mock the traditional zustand
 vi.mock('zustand/traditional');
@@ -71,6 +72,15 @@ describe('getProviderAuthPayload', () => {
 
     const payload = getProviderAuthPayload(ModelProvider.OpenRouter);
     expect(payload).toEqual({ apiKey: mockOpenRouterAPIKey });
+  });
+
+  it('should return correct payload for TogetherAI provider', () => {
+    act(() => {
+      setModelProviderConfig('togetherai', { apiKey: mockTogetherAIAPIKey });
+    });
+
+    const payload = getProviderAuthPayload(ModelProvider.TogetherAI);
+    expect(payload).toEqual({ apiKey: mockTogetherAIAPIKey });
   });
 
   it('should return correct payload for Google provider', () => {

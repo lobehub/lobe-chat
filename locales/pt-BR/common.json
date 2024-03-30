@@ -59,6 +59,7 @@
   },
   "lang": {
     "ar": "árabe",
+    "bg-BG": "Búlgaro",
     "bn": "Bengali",
     "cs-CZ": "Tcheco",
     "da-DK": "Dinamarquês",
@@ -106,6 +107,7 @@
     "oneapi": "One API",
     "openai": "OpenAI",
     "openrouter": "OpenRouter",
+    "togetherai": "TogetherAI",
     "perplexity": "Perplexity",
     "zeroone": "01. IA ZeroOne",
     "zhipu": "Zhipu AI"

@@ -49,6 +49,7 @@
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
     "InvalidOpenRouterAPIKey": "OpenRouter API Key is onjuist of leeg. Controleer de OpenRouter API Key en probeer het opnieuw.",
+    "InvalidTogetherAIAPIKey": "TogetherAI API Key is onjuist of leeg. Controleer de TogetherAI API Key en probeer het opnieuw.",
     "InvalidPerplexityAPIKey": "Perplexity API Key is onjuist of leeg. Controleer de Perplexity API Key en probeer het opnieuw.",
     "InvalidZeroOneAPIKey": "零一万物 API Key 不正确或为空，请检查零一万物 API Key 后重试",
     "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
@@ -60,6 +61,7 @@
     "OllamaServiceUnavailable": "Ollama 服务不可用，请检查是否已正常启动",
     "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
     "OpenRouterBizError": "Fout bij het aanvragen van OpenRouter AI-service. Controleer de onderstaande informatie en probeer opnieuw.",
+    "TogetherAIBizError": "Fout bij het aanvragen van TogetherAI AI-service. Controleer de onderstaande informatie en probeer opnieuw.",
     "PerplexityBizError": "Er is een fout opgetreden bij het aanvragen van de Perplexity AI-service. Controleer de onderstaande informatie en probeer het opnieuw.",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
@@ -117,6 +119,10 @@
       "OpenRouter": {
         "description": "Voer uw OpenRouter API Key in om de sessie te starten. De app zal uw API Key niet opslaan.",
         "title": "Gebruik aangepaste OpenRouter API Key"
+      },
+      "TogetherAI": {
+        "description": "Voer uw TogetherAI API Key in om de sessie te starten. De app zal uw API Key niet opslaan.",
+        "title": "Gebruik aangepaste TogetherAI API Key"
       },
       "Perplexity": {
         "description": "Voer uw eigen Perplexity API Key in om het gesprek te starten. De app zal uw API Key niet opslaan.",

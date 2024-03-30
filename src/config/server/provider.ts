@@ -50,6 +50,9 @@ declare global {
       // ZeroOne Provider
       ZEROONE_API_KEY?: string;
 
+      // TogetherAI Provider
+      TOGETHERAI_API_KEY?: string;
+
       // AWS Credentials
       AWS_REGION?: string;
       AWS_ACCESS_KEY_ID?: string;
@@ -86,6 +89,8 @@ export const getProviderConfig = () => {
 
   const ZEROONE_API_KEY = process.env.ZEROONE_API_KEY || '';
 
+  const TOGETHERAI_API_KEY = process.env.TOGETHERAI_API_KEY || '';
+
   // region format: iad1,sfo1
   let regions: string[] = [];
   if (process.env.OPENAI_FUNCTION_REGIONS) {
@@ -120,6 +125,9 @@ export const getProviderConfig = () => {
     ENABLED_OPENROUTER: !!OPENROUTER_API_KEY,
     OPENROUTER_API_KEY,
     OPENROUTER_CUSTOM_MODELS: process.env.OPENROUTER_CUSTOM_MODELS,
+
+    ENABLED_TOGETHERAI: !!TOGETHERAI_API_KEY,
+    TOGETHERAI_API_KEY,
 
     ENABLED_MOONSHOT: !!MOONSHOT_API_KEY,
     MOONSHOT_API_KEY,

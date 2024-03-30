@@ -96,6 +96,10 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     apiKey: '',
     enabled: false,
   },
+  togetherai: {
+    apiKey: '',
+    enabled: false,
+  },
   zeroone: {
     apiKey: '',
     enabled: false,

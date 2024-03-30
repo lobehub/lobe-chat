@@ -59,6 +59,9 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.ZeroOneBizError: {
       return 483;
     }
+    case AgentRuntimeErrorType.TogetherAIBizError: {
+      return 484;
+    }
   }
   return errorType as number;
 };

@@ -9,7 +9,8 @@ const ZeroOne: ModelProviderCard = {
       tokens: 4000,
     },
     {
-      description: '支持通用图片问答、图表理解、OCR、视觉推理，能处理高分辨率（1024*1024）的图像，能在复杂视觉任务上提供优秀性能，同时支持多种语言。',
+      description:
+        '支持通用图片问答、图表理解、OCR、视觉推理，能处理高分辨率（1024*1024）的图像，能在复杂视觉任务上提供优秀性能，同时支持多种语言。',
       displayName: 'YI Vision Plus',
       id: 'yi-vl-plus',
       tokens: 4000,
