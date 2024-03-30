@@ -99,4 +99,7 @@ ENV OPENROUTER_CUSTOM_MODELS ""
 # 01.AI
 ENV ZEROONE_API_KEY ""
 
+# TogetherAI
+ENV TOGETHERAI_API_KEY ""
+
 CMD ["node", "server.js"]

@@ -49,6 +49,7 @@
     "InvalidMoonshotAPIKey": "Clé API Moonshot AI incorrecte ou manquante. Veuillez vérifier la clé API Moonshot et réessayer.",
     "InvalidOllamaArgs": "La configuration d'Ollama n'est pas valide, veuillez vérifier la configuration d'Ollama et réessayer",
     "InvalidOpenRouterAPIKey": "La clé d'API OpenRouter est incorrecte ou manquante. Veuillez vérifier la clé d'API OpenRouter et réessayer.",
+    "InvalidTogetherAIAPIKey": "La clé d'API TogetherAI est incorrecte ou manquante. Veuillez vérifier la clé d'API TogetherAI et réessayer.",
     "InvalidPerplexityAPIKey": "La clé API Perplexity est incorrecte ou vide. Veuillez vérifier la clé API Perplexity et réessayer.",
     "InvalidZeroOneAPIKey": "零一万物 API Key 不正确或为空，请检查零一万物 API Key 后重试",
     "InvalidZhipuAPIKey": "Clé API Zhipu incorrecte ou vide, veuillez vérifier la clé API Zhipu et réessayer",
@@ -60,6 +61,7 @@
     "OllamaServiceUnavailable": "Service Ollama non disponible, veuillez vérifier s'il est démarré correctement",
     "OpenAIBizError": "Erreur de service OpenAI. Veuillez diagnostiquer ou réessayer en fonction des informations ci-dessous",
     "OpenRouterBizError": "Erreur commerciale lors de la demande de service OpenRouter AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
+    "TogetherAIBizError": "Erreur commerciale lors de la demande de service TogetherAI AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
     "PerplexityBizError": "Erreur commerciale lors de la demande de service Perplexity AI. Veuillez vérifier les informations suivantes ou réessayer.",
     "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
     "PluginApiParamsError": "Désolé, la validation des paramètres d'entrée de la requête de ce plugin a échoué. Veuillez vérifier que les paramètres d'entrée correspondent aux informations de l'API",
@@ -117,6 +119,10 @@
       "OpenRouter": {
         "description": "Entrez votre clé d'API OpenRouter pour commencer la session. L'application ne stockera pas votre clé d'API.",
         "title": "Utiliser une clé d'API OpenRouter personnalisée"
+      },
+      "TogetherAI": {
+        "description": "Entrez votre clé d'API TogetherAI pour commencer la session. L'application ne stockera pas votre clé d'API.",
+        "title": "Utiliser une clé d'API TogetherAI personnalisée"
       },
       "Perplexity": {
         "description": "Entrez votre clé API Perplexity pour commencer la session. L'application ne conservera pas votre clé API.",

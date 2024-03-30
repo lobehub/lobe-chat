@@ -1,10 +1,10 @@
 import { LobeChatPluginsMarketIndex } from '@lobehub/chat-plugin-sdk';
-import { notification } from 'antd';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { notification } from '@/components/AntdStaticMethods';
 import { pluginService } from '@/services/plugin';
 import { pluginStoreSelectors } from '@/store/tool/selectors';
 import { LobeTool } from '@/types/tool';
@@ -40,9 +40,8 @@ export const createPluginStoreSlice: StateCreator<
     const plugin = pluginStoreSelectors.getPluginById(name)(get());
     if (!plugin) return;
 
+    const { updateInstallLoadingState, refreshPlugins } = get();
     try {
-      const { updateInstallLoadingState, refreshPlugins } = get();
-
       updateInstallLoadingState(name, true);
       const data = await pluginService.getPluginManifest(plugin.manifest);
       updateInstallLoadingState(name, undefined);
@@ -52,8 +51,9 @@ export const createPluginStoreSlice: StateCreator<
       await refreshPlugins();
     } catch (error) {
       console.error(error);
-      const err = error as PluginInstallError;
+      updateInstallLoadingState(name, undefined);
 
+      const err = error as PluginInstallError;
       notification.error({
         description: t(`error.${err.message}`, { ns: 'plugin' }),
         message: t('error.installError', { name: plugin.meta.title, ns: 'plugin' }),

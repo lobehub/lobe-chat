@@ -44,17 +44,17 @@ const GlobalLayout = async ({ children }: GlobalLayoutProps) => {
 
   return (
     <StyleRegistry>
-      <AppTheme
-        defaultAppearance={appearance?.value}
-        defaultNeutralColor={neutralColor?.value as any}
-        defaultPrimaryColor={primaryColor?.value as any}
-      >
-        <Locale antdLocale={antdLocale} defaultLang={defaultLang?.value}>
+      <Locale antdLocale={antdLocale} defaultLang={defaultLang?.value}>
+        <AppTheme
+          defaultAppearance={appearance?.value}
+          defaultNeutralColor={neutralColor?.value as any}
+          defaultPrimaryColor={primaryColor?.value as any}
+        >
           <StoreHydration />
           {children}
           <DebugUI />
-        </Locale>
-      </AppTheme>
+        </AppTheme>
+      </Locale>
     </StyleRegistry>
   );
 };
