@@ -65,7 +65,7 @@ const nextAuth = NextAuth({
           case 'github': {
             return Github({
               // Specify auth scope, at least include 'openid email'
-              authorization: { params: { scope: 'openid email profile' } },
+              authorization: { params: { scope: 'read:user user:email' } },
               clientId: GITHUB_CLIENT_ID,
               clientSecret: GITHUB_CLIENT_SECRET,
             });
