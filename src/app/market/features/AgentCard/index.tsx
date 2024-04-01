@@ -7,9 +7,9 @@ import LazyLoad from 'react-lazy-load';
 
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 
+import Loading from '../../components/Loading';
 import TagList from '../TagList';
 import AgentCardItem from './AgentCardItem';
-import Loading from './Loading';
 import { useStyles } from './style';
 
 export interface AgentCardProps {
