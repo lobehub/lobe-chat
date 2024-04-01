@@ -21,14 +21,13 @@ class _PluginModel extends BaseModel {
   getList = async (): Promise<DB_Plugin[]> => {
     return this.table.toArray();
   };
-
   // **************** Create *************** //
 
   create = async (plugin: InstallPluginParams) => {
     const old = await this.table.get(plugin.identifier);
     const dbPlugin = this.mapToDBPlugin(plugin);
 
-    return this.table.put(merge(old, dbPlugin), plugin.identifier);
+    return this._putWithSync(merge(old, dbPlugin), plugin.identifier);
   };
 
   batchCreate = async (plugins: LobeTool[]) => {
@@ -39,16 +38,18 @@ class _PluginModel extends BaseModel {
   // **************** Delete *************** //
 
   delete(id: string) {
-    return this.table.delete(id);
+    return this._deleteWithSync(id);
   }
   clear() {
-    return this.table.clear();
+    return this._clearWithSync();
   }
 
   // **************** Update *************** //
 
   update: (id: string, value: Partial<DB_Plugin>) => Promise<number> = async (id, value) => {
-    return this.table.update(id, value);
+    const { success } = await this._updateWithSync(id, value);
+
+    return success;
   };
 
   // **************** Helper *************** //

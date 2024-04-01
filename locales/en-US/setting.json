@@ -193,11 +193,35 @@
         "title": "API Key"
       }
     },
+    "TogetherAI": {
+      "checker": {
+        "desc": "Test if the proxy address is filled in correctly"
+      },
+      "customModelName": {
+        "desc": "Add custom model, separate multiple models with comma (,)",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Custom Model Name"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "Enter the API Key from TogetherAI AI",
+        "placeholder": "TogetherAI AI API Key",
+        "title": "API Key"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity AI",
       "token": {
         "desc": "Enter the API Key from Perplexity",
         "placeholder": "Perplexity API Key",
+        "title": "API Key"
+      }
+    },
+    "ZeroOne": {
+      "title": "01-AI",
+      "token": {
+        "desc": "Enter the API Key from 01-AI",
+        "placeholder": "01-AI API Key",
         "title": "API Key"
       }
     },
@@ -440,11 +464,47 @@
     "placeholder": "Enter a unique identifier for the agent, e.g. web-development",
     "tooltips": "Share to the agent marketplace"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Add a name for easy identification",
+        "placeholder": "Enter device name",
+        "title": "Device Name"
+      },
+      "title": "Device Information",
+      "unknownBrowser": "Unknown Browser",
+      "unknownOS": "Unknown OS"
+    },
+    "warning": {
+      "message": "This feature is currently experimental and may have unexpected or unstable behavior. If you encounter any issues, please submit feedback promptly."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC will use this name to create a sync channel. Ensure the channel name is unique.",
+        "placeholder": "Enter sync channel name",
+        "shuffle": "Generate Randomly",
+        "title": "Sync Channel Name"
+      },
+      "channelPassword": {
+        "desc": "Add a password to ensure channel privacy. Only devices with the correct password can join the channel.",
+        "placeholder": "Enter sync channel password",
+        "title": "Sync Channel Password"
+      },
+      "desc": "Real-time, peer-to-peer data communication requires all devices to be online for synchronization.",
+      "enabled": {
+        "invalid": "Please enter a sync channel name before enabling",
+        "title": "Enable Sync"
+      },
+      "title": "WebRTC Sync"
+    }
+  },
   "tab": {
     "about": "About",
     "agent": "Default Agent",
     "common": "Common Settings",
+    "experiment": "Experiment",
     "llm": "Language Model",
+    "sync": "Cloud Sync",
     "tts": "Text-to-Speech"
   },
   "tools": {

@@ -1,5 +1,4 @@
-import { notification } from 'antd';
-
+import { notification } from '@/components/AntdStaticMethods';
 import { CURRENT_CONFIG_VERSION, Migration } from '@/migrations';
 import {
   ConfigFile,

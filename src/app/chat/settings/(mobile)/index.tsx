@@ -3,12 +3,13 @@
 import { memo } from 'react';
 
 import EditPage from '../features/EditPage';
-import Layout from './layout.mobile';
+import Header from './Header';
 
 const ChatSettings = memo(() => (
-  <Layout>
+  <>
+    <Header />
     <EditPage />
-  </Layout>
+  </>
 ));
 
 export default ChatSettings;

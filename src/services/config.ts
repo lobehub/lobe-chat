@@ -42,7 +42,7 @@ class ConfigService {
     return topicService.batchCreateTopics(topics);
   };
   importSessionGroups = async (sessionGroups: SessionGroupItem[]) => {
-    return sessionService.batchCreateSessionGroups(sessionGroups);
+    return sessionService.batchCreateSessionGroups(sessionGroups || []);
   };
 
   importConfigState = async (config: ConfigFile): Promise<ImportResults | undefined> => {

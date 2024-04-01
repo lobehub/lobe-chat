@@ -13,6 +13,8 @@ jobs:
 
       - name: Install bun
         uses: oven-sh/setup-bun@v1
+        with:
+            bun-version: ${{ secrets.BUN_VERSION }}
 
       - name: Install deps
         run: bun i
