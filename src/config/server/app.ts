@@ -64,7 +64,6 @@ export const getAppConfig = () => {
     AUTH0_ISSUER: process.env.AUTH0_ISSUER || '',
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID || '',
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET || '',
-    GITHUB_ISSUER: process.env.GITHUB_ISSUER || '',
     AZURE_AD_CLIENT_ID: process.env.AZURE_AD_CLIENT_ID || '',
     AZURE_AD_CLIENT_SECRET: process.env.AZURE_AD_CLIENT_SECRET || '',
     AZURE_AD_TENANT_ID: process.env.AZURE_AD_TENANT_ID || '',

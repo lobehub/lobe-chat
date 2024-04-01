@@ -14,7 +14,6 @@ const {
   AUTH0_ISSUER,
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
-  GITHUB_ISSUER,
   AZURE_AD_CLIENT_ID,
   AZURE_AD_CLIENT_SECRET,
   AZURE_AD_TENANT_ID,
@@ -69,7 +68,6 @@ const nextAuth = NextAuth({
               authorization: { params: { scope: 'openid email profile' } },
               clientId: GITHUB_CLIENT_ID,
               clientSecret: GITHUB_CLIENT_SECRET,
-              issuer: GITHUB_ISSUER,
             });
           }
           case 'azure-ad': {
