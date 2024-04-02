@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.145.7](https://github.com/lobehub/lobe-chat/compare/v0.145.6...v0.145.7)
+
+<sup>Released on **2024-04-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix DraggablePanel bar interfere with the operation of the scrollbar.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix DraggablePanel bar interfere with the operation of the scrollbar, closes [#1775](https://github.com/lobehub/lobe-chat/issues/1775) ([4b7b243](https://github.com/lobehub/lobe-chat/commit/4b7b243))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.145.6](https://github.com/lobehub/lobe-chat/compare/v0.145.5...v0.145.6)
 
 <sup>Released on **2024-04-02**</sup>
