@@ -168,6 +168,27 @@ Further reading:
 - Default: `-`
 - Example: `https://your-authentik-domain.com/application/o/slug/`
 
+### Github
+
+<Callout>
+  Currently, we only support the Auth0, Microsoft Entra ID, Authentik, Github identity verification service providers.
+  If you need to use other identity verification service providers, you can submit a [feature request](https://github.com/lobehub/lobe-chat/issues/new/choose) or Pull Request.
+</Callout>
+
+#### `GITHUB_CLIENT_ID`
+
+- Type: Required
+- Description: Client ID of the Github application. You can access it [here][github-client-page] and navigate to the application settings to view.
+- Default: `-`
+- Example: `abd94200333283550508`
+
+#### `GITHUB_CLIENT_SECRET`
+
+- Type: Required
+- Description: Client Secret of the Github application.
+- Default: `-`
+- Example: `dd262976ac0931d947e104891586a053f3d3750b`
+
 ## Plugin Service
 
 ### `PLUGINS_INDEX_URL`
@@ -206,3 +227,4 @@ The above example sets the `SERPAPI_API_KEY` of the `search-engine` plugin to `x
 - Default: `https://chat-agents.lobehub.com`
 
 [auth0-client-page]: https://manage.auth0.com/dashboard
+[github-client-page]: https://github.com/settings/apps

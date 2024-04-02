@@ -167,6 +167,29 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 默认值: `-`
 - 示例: `https://your-authentik-domain.com/application/o/slug/`
 
+
+### Github
+
+<Callout>
+  目前，我们仅支持 Auth0,Microsoft Entra ID,Authentik,Github 作为身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交
+  [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
+</Callout>
+
+#### `GITHUB_CLIENT_ID`
+
+- Type: Required
+- Description: Github应用的客户端ID。您可以在[这里][github-client-page]访问，并导航到应用程序设置以查看。
+- Default: `-`
+- Example: `abd94200333283550508`
+
+#### `GITHUB_CLIENT_SECRET`
+
+- Type: Required
+- Description: Github应用的客户端密钥。
+- Default: `-`
+- Example: `dd262976ac0931d947e104891586a053f3d3750b`
+
+
 ## 插件服务
 
 ### `PLUGINS_INDEX_URL`
@@ -205,3 +228,4 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 默认值：`https://chat-agents.lobehub.com`
 
 [auth0-client-page]: https://manage.auth0.com/dashboard
+[github-client-page]: https://github.com/settings/apps
