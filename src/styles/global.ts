@@ -9,25 +9,13 @@ export default ({ prefixCls }: { prefixCls: string }) => css`
     overscroll-behavior: none;
     height: 100% !important;
     max-height: 100dvh !important;
+  }
 
-    ::-webkit-scrollbar {
-      display: none;
-      width: 0;
-      height: 0;
-    }
+  * {
+    scrollbar-width: thin;
   }
 
   p {
     margin-bottom: 0;
-  }
-
-  @media (max-width: 575px) {
-    * {
-      ::-webkit-scrollbar {
-        display: none;
-        width: 0;
-        height: 0;
-      }
-    }
   }
 `;
