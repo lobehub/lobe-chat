@@ -1,6 +1,6 @@
-import { css } from 'antd-style';
+import { Theme, css } from 'antd-style';
 
-export default ({ prefixCls }: { prefixCls: string }) => css`
+export default ({ prefixCls, token }: { prefixCls: string; token: Theme }) => css`
   html,
   body,
   #__next,
@@ -12,6 +12,7 @@ export default ({ prefixCls }: { prefixCls: string }) => css`
   }
 
   * {
+    scrollbar-color: ${token.colorFill} transparent;
     scrollbar-width: thin;
   }
 
