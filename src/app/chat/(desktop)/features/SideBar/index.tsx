@@ -47,6 +47,7 @@ const Desktop = memo(() => {
       mode={'fixed'}
       onExpandChange={toggleConfig}
       placement={'right'}
+      showHandlerWideArea={false}
     >
       <DraggablePanelContainer
         style={{
