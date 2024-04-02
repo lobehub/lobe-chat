@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import Auth0 from 'next-auth/providers/auth0';
 import Authentik from 'next-auth/providers/authentik';
 import AzureAd from 'next-auth/providers/azure-ad';
+import Github from 'next-auth/providers/github';
 
 import { getServerConfig } from '@/config/server';
 
@@ -11,6 +12,8 @@ const {
   AUTH0_CLIENT_ID,
   AUTH0_CLIENT_SECRET,
   AUTH0_ISSUER,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
   AZURE_AD_CLIENT_ID,
   AZURE_AD_CLIENT_SECRET,
   AZURE_AD_TENANT_ID,
@@ -57,6 +60,14 @@ const nextAuth = NextAuth({
               clientId: AUTH0_CLIENT_ID,
               clientSecret: AUTH0_CLIENT_SECRET,
               issuer: AUTH0_ISSUER,
+            });
+          }
+          case 'github': {
+            return Github({
+              // Specify auth scope, at least include 'openid email'
+              authorization: { params: { scope: 'read:user user:email' } },
+              clientId: GITHUB_CLIENT_ID,
+              clientSecret: GITHUB_CLIENT_SECRET,
             });
           }
           case 'azure-ad': {
