@@ -11,6 +11,10 @@ export default ({ prefixCls }: { prefixCls: string }) => css`
     max-height: 100dvh !important;
   }
 
+  * {
+    scrollbar-width: thin;
+  }
+
   p {
     margin-bottom: 0;
   }
