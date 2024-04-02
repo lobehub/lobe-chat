@@ -52,11 +52,7 @@ const AgentCard = memo<AgentCardProps>(({ CardRender, mobile }) => {
           <div className={styles.subTitle}>{t('title.recentSubmits')}</div>
           <CardRender items={agentList.slice(0, 3)} renderItem={GridRender} />
           <div className={styles.subTitle}>{t('title.allAgents')}</div>
-          <CardRender
-            items={agentList.slice(3)}
-            renderItem={GridRender}
-            spotlight={mobile ? undefined : false}
-          />
+          <CardRender items={agentList.slice(3)} renderItem={GridRender} />
         </>
       )}
     </Flexbox>

@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.145.9](https://github.com/lobehub/lobe-chat/compare/v0.145.8...v0.145.9)
+
+<sup>Released on **2024-04-02**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve scrollbar style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve scrollbar style, closes [#1869](https://github.com/lobehub/lobe-chat/issues/1869) ([33d857f](https://github.com/lobehub/lobe-chat/commit/33d857f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.145.8](https://github.com/lobehub/lobe-chat/compare/v0.145.7...v0.145.8)
 
 <sup>Released on **2024-04-02**</sup>
