@@ -25,6 +25,7 @@ export interface LobeAgentConfig {
    * 开启历史记录条数
    */
   enableHistoryCount?: boolean;
+  enableIntelligentTopicName: boolean;
   enableMaxTokens?: boolean;
 
   fewShots?: FewShots;

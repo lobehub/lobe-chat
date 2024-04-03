@@ -308,6 +308,10 @@
       "desc": "Có tự động tạo chủ đề trong quá trình trò chuyện hay không, chỉ áp dụng trong chủ đề tạm thời",
       "title": "Tự động tạo chủ đề"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Có nên tạo tên chủ đề dựa trên tin nhắn đầu tiên của cuộc trò chuyện bằng cách sử dụng mô hình hiện đang được chọn hay không",
+      "title": "Tên chủ đề thông minh"
+    },
     "enableCompressThreshold": {
       "title": "Bật ngưỡng nén độ dài lịch sử"
     },

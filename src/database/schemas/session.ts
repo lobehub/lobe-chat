@@ -29,6 +29,7 @@ export const AgentSchema = z.object({
   enableAutoCreateTopic: z.boolean().default(true),
   enableCompressThreshold: z.boolean().optional(),
   enableHistoryCount: z.boolean().optional(),
+  enableIntelligentTopicName: z.boolean().default(true),
   enableMaxTokens: z.boolean().optional(),
   fewShots: fewShotsSchema.optional(),
   historyCount: z.number().default(8).optional(),

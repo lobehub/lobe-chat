@@ -308,6 +308,10 @@
       "desc": "Automatisch een onderwerp maken tijdens het gesprek, alleen van toepassing op tijdelijke onderwerpen",
       "title": "Automatisch onderwerp maken"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Of er een onderwerpnaam moet worden gegenereerd op basis van het eerste bericht van het gesprek met behulp van het momenteel geselecteerde model",
+      "title": "Intelligente onderwerpnaam"
+    },
     "enableCompressThreshold": {
       "title": "Compressiedrempel voor berichtlengte inschakelen"
     },

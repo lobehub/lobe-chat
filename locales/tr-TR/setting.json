@@ -308,6 +308,10 @@
       "desc": "Sohbet sırasında otomatik olarak bir konu oluşturup oluşturmayacağınız, yalnızca geçici konularda etkilidir",
       "title": "Otomatik Konu Oluştur"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Şu anda seçili modeli kullanarak konuşmanın ilk mesajına dayalı bir konu adı oluşturulup oluşturulmayacağı",
+      "title": "Akıllı Konu Adı"
+    },
     "enableCompressThreshold": {
       "title": "Geçmiş Mesaj Uzunluğu Sıkıştırma Eşiği Kullan"
     },

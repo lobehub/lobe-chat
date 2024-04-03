@@ -308,6 +308,10 @@
       "desc": "Automatyczne tworzenie tematu podczas rozmowy, działa tylko w przypadku tymczasowych tematów",
       "title": "Automatyczne tworzenie tematu"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Czy wygenerować nazwę tematu na podstawie pierwszej wiadomości rozmowy, używając aktualnie wybranego modelu",
+      "title": "Inteligentna nazwa tematu"
+    },
     "enableCompressThreshold": {
       "title": "Włącz próg kompresji historii"
     },

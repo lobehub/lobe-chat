@@ -37,6 +37,7 @@ interface SendMessageParams {
 export interface ChatMessageAction {
   // create
   sendMessage: (params: SendMessageParams) => Promise<void>;
+  createIntelligentTitle: (message: string) => Promise<string>;
   /**
    * regenerate message
    * trace enabled
@@ -243,8 +244,11 @@ export const chatMessage: StateCreator<
     if (!agentConfig.enableAutoCreateTopic) return;
 
     if (!activeTopicId && chats.length >= agentConfig.autoCreateTopicThreshold) {
-      const { saveToTopic, switchTopic } = get();
-      const id = await saveToTopic();
+      const { saveToTopic, switchTopic, createIntelligentTitle } = get();
+      const intelligentTitle = agentConfig.enableIntelligentTopicName
+        ? await createIntelligentTitle(message).catch(() => undefined)
+        : undefined;
+      const id = await saveToTopic(intelligentTitle);
       if (id) switchTopic(id);
     }
   },
@@ -296,6 +300,43 @@ export const chatMessage: StateCreator<
     ),
   refreshMessages: async () => {
     await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
+  },
+
+  createIntelligentTitle: async (message) => {
+    const config = getAgentConfig();
+
+    interface IntelligentTitleResponse {
+      title: string;
+    }
+
+    const prompt = `Generate a very short title for the following conversation, based on the first message. Preserve the language of the message. Provide your response in JSON format according to the following schema:
+
+{
+  "title": string
+}
+
+Example:
+Input:
+First message: I'm excited about my upcoming vacation to Hawaii. I can't wait to relax on the beach and explore the islands.
+
+Output:
+{
+  "title": "Upcoming Hawaii Vacation"
+}
+
+Now, generate a title for this conversation:
+
+First message: ${message}`;
+
+    const result = await chatService.getChatCompletion({
+      messages: [{ content: prompt, role: 'user' }],
+      model: config.model,
+      provider: config.provider,
+      ...config.params,
+    });
+
+    const intelligentTitleResponse = (await result.json()) as IntelligentTitleResponse;
+    return intelligentTitleResponse.title;
   },
 
   // the internal process method of the AI message

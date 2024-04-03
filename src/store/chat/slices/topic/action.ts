@@ -34,7 +34,7 @@ export interface ChatTopicAction {
   removeSessionTopics: () => Promise<void>;
   removeTopic: (id: string) => Promise<void>;
   removeUnstarredTopic: () => void;
-  saveToTopic: () => Promise<string | undefined>;
+  saveToTopic: (title?: string) => Promise<string | undefined>;
   autoRenameTopicTitle: (id: string) => Promise<void>;
   duplicateTopic: (id: string) => Promise<void>;
   summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
@@ -64,7 +64,7 @@ export const chatTopic: StateCreator<
     }
   },
 
-  saveToTopic: async () => {
+  saveToTopic: async (title?: string) => {
     // if there is no message, stop
     const messages = chatSelectors.currentChats(get());
     if (messages.length === 0) return;
@@ -74,7 +74,7 @@ export const chatTopic: StateCreator<
     // 1. create topic and bind these messages
     const topicId = await topicService.createTopic({
       sessionId: activeId,
-      title: t('topic.defaultTitle', { ns: 'chat' }),
+      title: title ?? t('topic.defaultTitle', { ns: 'chat' }),
       messages: messages.map((m) => m.id),
     });
     await refreshTopic();

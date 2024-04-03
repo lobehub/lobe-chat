@@ -308,6 +308,10 @@
       "desc": "Se creare automaticamente un argomento durante la conversazione, valido solo per le conversazioni temporanee",
       "title": "Abilita la creazione automatica di argomenti"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Se generare un nome di argomento basato sul primo messaggio della conversazione utilizzando il modello attualmente selezionato",
+      "title": "Nome di argomento intelligente"
+    },
     "enableCompressThreshold": {
       "title": "Abilita la soglia di compressione della lunghezza dei messaggi storici"
     },

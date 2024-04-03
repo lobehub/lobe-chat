@@ -308,6 +308,10 @@
       "desc": "Activer la création automatique de sujets pendant la conversation, uniquement valable pour les sujets temporaires",
       "title": "Activer la création automatique de sujets"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Si un nom de sujet doit être généré en fonction du premier message de la conversation en utilisant le modèle actuellement sélectionné",
+      "title": "Nom de sujet intelligent"
+    },
     "enableCompressThreshold": {
       "title": "Activer le seuil de compression de la longueur des messages"
     },

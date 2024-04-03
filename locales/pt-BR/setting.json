@@ -308,6 +308,10 @@
       "desc": "Se deve criar automaticamente um tópico durante a conversa, apenas válido em tópicos temporários",
       "title": "Criar tópico automaticamente"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Se um nome de tópico deve ser gerado com base na primeira mensagem da conversa usando o modelo atualmente selecionado",
+      "title": "Nome de tópico inteligente"
+    },
     "enableCompressThreshold": {
       "title": "Ativar limite de compactação de mensagens"
     },

@@ -319,6 +319,10 @@ export default {
       title: '限制历史消息数',
       unlimited: '不限历史消息数',
     },
+    enableIntelligentTopicName: {
+      desc: '是否使用当前选定的模型根据对话的第一条消息生成主题名称',
+      title: '智能主题名称',
+    },
     historyCount: {
       desc: '每次请求携带的消息数（包括最新编写的提问。每个提问和回答都计算1）',
       title: '附带消息数',

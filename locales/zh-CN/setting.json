@@ -308,6 +308,10 @@
       "desc": "会话过程中是否自动创建话题，仅在临时话题中生效",
       "title": "自动创建话题"
     },
+    "enableIntelligentTopicName": {
+      "desc": "是否使用当前选定的模型根据对话的第一条消息生成主题名称",
+      "title": "智能主题名称"
+    },
     "enableCompressThreshold": {
       "title": "是否开启历史消息长度压缩阈值"
     },

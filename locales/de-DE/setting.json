@@ -308,6 +308,10 @@
       "desc": "Automatische Erstellung eines Themas während des Gesprächs, nur in temporären Themen aktiv",
       "title": "Automatische Themen-Erstellung aktivieren"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Ob ein Themenname basierend auf der ersten Nachricht des Gesprächs unter Verwendung des aktuell ausgewählten Modells generiert werden soll",
+      "title": "Intelligenter Themenname"
+    },
     "enableCompressThreshold": {
       "title": "Aktivieren der Komprimierungsschwelle für Historienlänge"
     },

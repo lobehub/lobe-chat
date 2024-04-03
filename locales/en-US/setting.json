@@ -308,6 +308,10 @@
       "desc": "Whether to automatically create a topic during the conversation, only effective in temporary topics",
       "title": "Auto Create Topic"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Whether to generate a topic name based on the first message of the conversation using the currently selected model",
+      "title": "Intelligent Topic Name"
+    },
     "enableCompressThreshold": {
       "title": "Enable History Message Length Compression Threshold"
     },

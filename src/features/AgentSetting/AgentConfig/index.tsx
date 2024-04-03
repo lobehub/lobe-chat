@@ -81,6 +81,16 @@ const AgentConfig = memo(() => {
           valuePropName: 'checked',
         },
         {
+          children: <Switch />,
+          desc: t('settingChat.enableIntelligentTopicName.desc'),
+          divider: false,
+          hidden: !enableAutoCreateTopic,
+          label: t('settingChat.enableIntelligentTopicName.title'),
+          minWidth: undefined,
+          name: 'enableIntelligentTopicName',
+          valuePropName: 'checked',
+        },
+        {
           children: <SliderWithInput max={8} min={0} />,
           desc: t('settingChat.autoCreateTopicThreshold.desc'),
           divider: false,

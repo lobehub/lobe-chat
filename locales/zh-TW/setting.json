@@ -308,6 +308,10 @@
       "desc": "對話過程中是否自動建立話題，僅在臨時話題中生效",
       "title": "自動建立話題"
     },
+    "enableIntelligentTopicName": {
+      "desc": "是否使用目前選取的模型根據對話的第一則訊息產生主題名稱",
+      "title": "智慧型主題名稱"
+    },
     "enableCompressThreshold": {
       "title": "是否開啟歷史訊息長度壓縮閾值"
     },

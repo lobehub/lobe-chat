@@ -32,6 +32,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   autoCreateTopicThreshold: 2,
   displayMode: 'chat',
   enableAutoCreateTopic: true,
+  enableIntelligentTopicName: true,
   historyCount: 1,
   model: 'gpt-3.5-turbo',
   params: {

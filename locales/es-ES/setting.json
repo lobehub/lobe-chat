@@ -308,6 +308,10 @@
       "desc": "Indica si se debe crear automáticamente un tema durante la conversación, solo se aplica en temas temporales",
       "title": "Crear tema automáticamente"
     },
+    "enableIntelligentTopicName": {
+      "desc": "Si se debe generar un nombre de tema basado en el primer mensaje de la conversación utilizando el modelo seleccionado actualmente",
+      "title": "Nombre de tema inteligente"
+    },
     "enableCompressThreshold": {
       "title": "Activar umbral de compresión de longitud de mensajes históricos"
     },
