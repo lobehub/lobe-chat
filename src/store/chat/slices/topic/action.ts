@@ -14,6 +14,8 @@ import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { ChatStore } from '@/store/chat';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 import { ChatTopic } from '@/types/topic';
 import { setNamespace } from '@/utils/storeDebug';
@@ -45,6 +47,8 @@ export interface ChatTopicAction {
   useFetchTopics: (sessionId: string) => SWRResponse<ChatTopic[]>;
   useSearchTopics: (keywords?: string) => SWRResponse<ChatTopic[]>;
 }
+
+const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
 
 export const chatTopic: StateCreator<
   ChatStore,
@@ -100,6 +104,7 @@ export const chatTopic: StateCreator<
   },
   // update
   summaryTopicTitle: async (topicId, messages) => {
+    const config = getAgentConfig();
     const { updateTopicTitleInSummary, updateTopicLoading, refreshTopic } = get();
     const topic = topicSelectors.getTopicById(topicId)(get());
     if (!topic) return;
@@ -123,7 +128,7 @@ export const chatTopic: StateCreator<
         output += x;
         updateTopicTitleInSummary(topicId, output);
       },
-      params: await chainSummaryTitle(messages),
+      params: await chainSummaryTitle(config, messages),
       trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryTopicTitle, topicId }),
     });
     await refreshTopic();

@@ -1,8 +1,9 @@
-import { chatHelpers } from '@/store/chat/helpers';
 import { globalHelpers } from '@/store/global/helpers';
+import { LobeAgentConfig } from '@/types/agent';
 import { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 
 export const chainSummaryTitle = async (
+  agentConfig: LobeAgentConfig,
   messages: OpenAIChatMessage[],
 ): Promise<Partial<ChatStreamPayload>> => {
   const lang = globalHelpers.getCurrentLanguage();
@@ -19,15 +20,9 @@ export const chainSummaryTitle = async (
       role: 'user',
     },
   ];
-  // 如果超过 16k，则使用 GPT-4-turbo 模型
-  const tokens = await chatHelpers.getMessagesTokenCount(finalMessages);
-  let model: string | undefined = undefined;
-  if (tokens > 16_000) {
-    model = 'gpt-4-turbo-preview';
-  }
 
   return {
     messages: finalMessages,
-    model,
+    ...agentConfig,
   };
 };
