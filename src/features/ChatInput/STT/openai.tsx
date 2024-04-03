@@ -21,7 +21,7 @@ interface STTConfig extends SWRConfiguration {
   onTextChange: (value: string) => void;
 }
 
-export const useOpenaiSTT = (config: STTConfig) => {
+const useOpenaiSTT = (config: STTConfig) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
   const locale = useGlobalStore(settingsSelectors.currentLanguage);
