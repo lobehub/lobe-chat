@@ -19,7 +19,7 @@ interface STTConfig extends SWRConfiguration {
   onTextChange: (value: string) => void;
 }
 
-export const useSTT = (config: STTConfig) => {
+export const useOpenaiSTT = (config: STTConfig) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
   const locale = useGlobalStore(settingsSelectors.currentLanguage);
@@ -30,13 +30,8 @@ export const useSTT = (config: STTConfig) => {
       ? ttsAgentSettings.sttLocale
       : locale;
 
-  let useSelectedSTT;
-  let options: any = {};
-
-  switch (ttsSettings.sttServer) {
-    case 'openai': {
-      useSelectedSTT = useOpenAISTT;
-      options = {
+  return useOpenAISTT(sttLocale, {
+        ...config,
         api: {
           headers: createHeaderWithOpenAI(),
           serviceUrl: API_ENDPOINTS.stt,
@@ -46,17 +41,22 @@ export const useSTT = (config: STTConfig) => {
           mineType: getRecordMineType(),
           model: ttsSettings.openAI.sttModel,
         },
-      } as OpenAISTTOptions;
-      break;
-    }
-    case 'browser': {
-      options = {
-        autoStop,
-      } as SpeechRecognitionOptions;
-      useSelectedSTT = useSpeechRecognition;
-      break;
-    }
-  }
+      } as OpenAISTTOptions)
+}
 
-  return useSelectedSTT(sttLocale, { ...config, ...options });
-};
+export const useBrowserSTT = (config: STTConfig) => {
+  const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
+  const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
+  const locale = useGlobalStore(settingsSelectors.currentLanguage);
+
+  const autoStop = ttsSettings.sttAutoStop;
+  const sttLocale =
+    ttsAgentSettings?.sttLocale && ttsAgentSettings.sttLocale !== 'auto'
+      ? ttsAgentSettings.sttLocale
+      : locale;
+
+  return useSpeechRecognition(sttLocale, {
+        ...config,
+        autoStop,
+      } as SpeechRecognitionOptions)
+} 
