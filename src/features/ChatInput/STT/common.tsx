@@ -89,7 +89,7 @@ const CommonSTT = memo<{
       trigger={['click']}
     >
       <ActionIcon
-        active={mobile}
+        active={isRecording}
         icon={isLoading ? MicOff : Mic}
         onClick={handleTriggerStartStop}
         placement={'bottom'}
