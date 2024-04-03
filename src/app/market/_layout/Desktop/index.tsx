@@ -10,6 +10,7 @@ import SafeSpacing from '@/components/SafeSpacing';
 import ClientResponsiveLayout from '@/components/client/ClientResponsiveLayout';
 import { MAX_WIDTH } from '@/const/layoutTokens';
 
+import AgentSearchBar from '../../features/AgentSearchBar';
 import Header from './Header';
 
 const SideBar = dynamic(() => import('./AgentDetail'));
@@ -47,6 +48,7 @@ const Desktop = memo<PropsWithChildren>(({ children }) => {
                 random
               />
             </Center>
+            <AgentSearchBar />
             {children}
           </Flexbox>
         </Flexbox>

@@ -2,6 +2,123 @@
 
 # Changelog
 
+### [Version 0.145.10](https://github.com/lobehub/lobe-chat/compare/v0.145.9...v0.145.10)
+
+<sup>Released on **2024-04-02**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.145.9](https://github.com/lobehub/lobe-chat/compare/v0.145.8...v0.145.9)
+
+<sup>Released on **2024-04-02**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve scrollbar style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve scrollbar style, closes [#1869](https://github.com/lobehub/lobe-chat/issues/1869) ([33d857f](https://github.com/lobehub/lobe-chat/commit/33d857f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.145.8](https://github.com/lobehub/lobe-chat/compare/v0.145.7...v0.145.8)
+
+<sup>Released on **2024-04-02**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor SSO providers.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix plugins dropdown menu overflow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor SSO providers, closes [#1865](https://github.com/lobehub/lobe-chat/issues/1865) ([290d33b](https://github.com/lobehub/lobe-chat/commit/290d33b))
+
+#### What's fixed
+
+- **misc**: Fix plugins dropdown menu overflow, closes [#1855](https://github.com/lobehub/lobe-chat/issues/1855) ([00e9068](https://github.com/lobehub/lobe-chat/commit/00e9068))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.145.7](https://github.com/lobehub/lobe-chat/compare/v0.145.6...v0.145.7)
+
+<sup>Released on **2024-04-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix DraggablePanel bar interfere with the operation of the scrollbar.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix DraggablePanel bar interfere with the operation of the scrollbar, closes [#1775](https://github.com/lobehub/lobe-chat/issues/1775) ([4b7b243](https://github.com/lobehub/lobe-chat/commit/4b7b243))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.145.6](https://github.com/lobehub/lobe-chat/compare/v0.145.5...v0.145.6)
+
+<sup>Released on **2024-04-02**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.145.5](https://github.com/lobehub/lobe-chat/compare/v0.145.4...v0.145.5)
 
 <sup>Released on **2024-03-30**</sup>

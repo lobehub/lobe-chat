@@ -5,15 +5,15 @@
 
   注册并登录 [Auth0][auth0-client-page]，点击左侧导航栏的「Applications」，切换到应用管理界面，点击右上角「Create Application」以创建应用。
 
-  <Image alt="创建 Auth0 应用 S1" inStep src="hhttps://github.com/CloudPassenger/lobe-chat/assets/30863298/1b405347-f4c3-4c55-82f6-47116f2210d0" />
+  <Image alt="创建 Auth0 应用 S1" inStep src="https://github.com/lobehub/lobe-chat/assets/30863298/f068190f-0027-4d3b-8667-d632e43d5a86" />
 
   填写你想向组织用户显示的应用名称，可选择任意应用类型，点击「Create」。
 
-  <Image alt="创建 Auth0 应用 S2" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/75c92f85-3ad3-4473-a9c6-e667e28d428d" />
+  <Image alt="创建 Auth0 应用 S2" inStep src="https://github.com/lobehub/lobe-chat/assets/30863298/3e0082df-9b6f-46f3-b67f-bdc79e1eb2cc" />
 
   创建成功后，点击相应的应用，进入应用详情页，切换到「Settings」标签页，就可以看到相应的配置信息
 
-  <Image alt="创建 Auth0 应用 S3" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/a1ed996b-95ef-4b7d-a50d-b4666eccfecb" />
+  <Image alt="创建 Auth0 应用 S3" inStep src="https://github.com/lobehub/lobe-chat/assets/30863298/df4cea85-616a-46f5-b2de-42725d9b82a6" />
 
   在应用配置页面中，还需要配置 Allowed Callback URLs，在此处填写:
 
@@ -21,7 +21,7 @@
   http(s)://your-domain/api/auth/callback/auth0
   ```
 
-  <Image alt="创建 Auth0 应用 S4" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/575f46aa-f485-49bd-8b90-dbb1ce1a5c1b" />
+  <Image alt="创建 Auth0 应用 S4" inStep src="https://github.com/lobehub/lobe-chat/assets/30863298/62fbd09f-a69a-4460-949b-0f6285fa65b9" />
 
   <Callout type={'important'}>
     可以在部署后再填写或修改 Allowed Callback URLs，但是务必保证填写的 URL 与部署的 URL 一致
@@ -31,7 +31,7 @@
 
   点击左侧导航栏的「Users Management」，进入用户管理界面，可以为你的组织新建用户，用以登录 LobeChat
 
-  <Image alt="新增用户" inStep src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/3b8127ab-dc4f-4ff9-a4cb-dec3ef0295cc" />
+  <Image alt="新增用户" inStep src="https://github.com/lobehub/lobe-chat/assets/30863298/0beda150-d0b6-43cf-a9f1-fce928b83a96" />
 
   ### 配置环境变量
 
@@ -63,13 +63,13 @@
 
 Auth0 支持 Azure Active Directory / Slack / Google Workspace / Office 365 / Zoom 等单点登录服务，详细支持列表可参考 [这里][auth0-sso-integrations]
 
-<Image alt="Connecting to an Existing Single Sign-On Service" src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/32650f4f-d0b0-4843-b26d-d35bad11d8a3" />
+<Image alt="Connecting to an Existing Single Sign-On Service" src="https://github.com/lobehub/lobe-chat/assets/30863298/9891347e-a338-4aa9-8714-f16c8dbcfcec" />
 
 ### 配置社交登录
 
 如果你的企业或组织需要支持外部人员登录，可以在 Authentication -> Social 中，配置社交登录服务。
 
-<Image alt="Configuring Social Login" src="https://github.com/CloudPassenger/lobe-chat/assets/30863298/7b6f6a6c-2686-49d8-9dbd-0516053f1efa" />
+<Image alt="Configuring Social Login" src="https://github.com/lobehub/lobe-chat/assets/30863298/880749a6-5ba4-4e20-a968-b583a54de7fa" />
 
 <Callout type={'warning'}>
   配置社交登录服务默认会允许所有人通过认证，这可能会导致 LobeChat 被外部人员滥用。
