@@ -1,11 +1,50 @@
+import { getRecordMineType } from '@lobehub/tts';
+import { OpenAISTTOptions, useOpenAISTT } from '@lobehub/tts/react';
+import { isEqual } from 'lodash';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SWRConfiguration } from 'swr';
 
-import { useOpenaiSTT } from '@/hooks/useSTT';
+import { createHeaderWithOpenAI } from '@/services/_header';
+import { API_ENDPOINTS } from '@/services/_url';
 import { useChatStore } from '@/store/chat';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessageError } from '@/types/message';
 import { getMessageError } from '@/utils/fetch';
+
 import CommonSTT from './common';
+
+interface STTConfig extends SWRConfiguration {
+  onTextChange: (value: string) => void;
+}
+
+export const useOpenaiSTT = (config: STTConfig) => {
+  const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
+  const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
+  const locale = useGlobalStore(settingsSelectors.currentLanguage);
+
+  const autoStop = ttsSettings.sttAutoStop;
+  const sttLocale =
+    ttsAgentSettings?.sttLocale && ttsAgentSettings.sttLocale !== 'auto'
+      ? ttsAgentSettings.sttLocale
+      : locale;
+
+  return useOpenAISTT(sttLocale, {
+    ...config,
+    api: {
+      headers: createHeaderWithOpenAI(),
+      serviceUrl: API_ENDPOINTS.stt,
+    },
+    autoStop,
+    options: {
+      mineType: getRecordMineType(),
+      model: ttsSettings.openAI.sttModel,
+    },
+  } as OpenAISTTOptions);
+};
 
 const OpenaiSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [error, setError] = useState<ChatMessageError>();
@@ -71,19 +110,19 @@ const OpenaiSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
   }, [start]);
 
   return (
-    <CommonSTT 
+    <CommonSTT
       desc={desc}
       error={error}
       formattedTime={formattedTime}
-      handleCloseError={handleCloseError} 
+      handleCloseError={handleCloseError}
       handleRetry={handleRetry}
-      handleTriggerStartStop={handleTriggerStartStop} 
+      handleTriggerStartStop={handleTriggerStartStop}
       isLoading={isLoading}
       isRecording={isRecording}
-      mobile={mobile} 
+      mobile={mobile}
       time={time}
-      />
-  )
+    />
+  );
 });
 
 export default OpenaiSTT;
