@@ -9,10 +9,11 @@ export interface GlobalPreference {
   // which sessionGroup should expand
   expandSessionGroupKeys: SessionGroupId[];
   guide?: Guide;
+  hideSyncAlert?: boolean;
   inputHeight: number;
   mobileShowTopic?: boolean;
-  sessionsWidth: number;
 
+  sessionsWidth: number;
   showChatSideBar?: boolean;
   showSessionPanel?: boolean;
   showSystemRole?: boolean;

@@ -127,3 +127,10 @@ export interface ChatCompletionTool {
 }
 
 export type ChatStreamCallbacks = OpenAIStreamCallbacks;
+
+export interface OllamaChatMessage extends OpenAIChatMessage {
+  /**
+   * @description images for ollama vision models (https://ollama.com/blog/vision-models)
+   */
+  images?: string[];
+}

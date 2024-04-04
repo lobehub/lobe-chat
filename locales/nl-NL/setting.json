@@ -193,12 +193,36 @@
         "title": "API-sleutel"
       }
     },
+    "TogetherAI": {
+      "checker": {
+        "desc": "Check of de proxy-adres correct is ingevuld"
+      },
+      "customModelName": {
+        "desc": "Voeg aangepast model toe, gebruik een komma (,) om meerdere modellen te scheiden",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Aangepaste modelnaam"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "Voer de API-sleutel in van TogetherAI AI",
+        "placeholder": "TogetherAI AI API-sleutel",
+        "title": "API-sleutel"
+      }
+    },
     "Perplexity": {
       "title": "Perplexity",
       "token": {
         "desc": "Voer de API-sleutel in van Perplexity AI",
         "placeholder": "Perplexity AI API-sleutel",
         "title": "API-sleutel"
+      }
+    },
+    "ZeroOne": {
+      "title": "01.AI 零一万物",
+      "token": {
+        "desc": "填入来自 01.AI 零一万物的 API 密钥",
+        "placeholder": "01.AI 零一万物 API 密钥",
+        "title": "API 密钥"
       }
     },
     "Zhipu": {
@@ -440,11 +464,47 @@
     "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
     "tooltips": "Delen op de assistentenmarkt"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "添加名称以便于识别",
+        "placeholder": "Voer de apparaatnaam in",
+        "title": "Apparaatnaam"
+      },
+      "title": "Apparaatinformatie",
+      "unknownBrowser": "Onbekende browser",
+      "unknownOS": "Onbekend besturingssysteem"
+    },
+    "warning": {
+      "message": "Deze functie is momenteel experimenteel en kan onverwachte of onstabiele situaties veroorzaken. Als u problemen ondervindt, geef dan tijdig feedback."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC zal deze naam gebruiken om een synchronisatiekanaal te maken, zorg ervoor dat de kanaalnaam uniek is",
+        "placeholder": "Voer de synchronisatiekanaalnaam in",
+        "shuffle": "Willekeurig genereren",
+        "title": "Synchronisatiekanaalnaam"
+      },
+      "channelPassword": {
+        "desc": "Voeg een wachtwoord toe om de privacy van het kanaal te waarborgen, alleen apparaten met het juiste wachtwoord kunnen het kanaal betreden",
+        "placeholder": "Voer het synchronisatiekanaalwachtwoord in",
+        "title": "Synchronisatiekanaalwachtwoord"
+      },
+      "desc": "Realtime, point-to-point datacommunicatie, apparaten moeten tegelijkertijd online zijn om te synchroniseren",
+      "enabled": {
+        "invalid": "Schakel de synchronisatie in nadat u de synchronisatiekanaalnaam heeft ingevuld",
+        "title": "Synchronisatie inschakelen"
+      },
+      "title": "WebRTC Synchronisatie"
+    }
+  },
   "tab": {
     "about": "Over",
     "agent": "Standaardassistent",
     "common": "Algemene instellingen",
+    "experiment": "Experiment",
     "llm": "Taalmodel",
+    "sync": "Cloudsynchronisatie",
     "tts": "Spraakdienst"
   },
   "tools": {

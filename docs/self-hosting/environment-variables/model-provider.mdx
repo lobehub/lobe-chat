@@ -82,7 +82,7 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Type: Optional
 - Description: The API version of Azure, following the format YYYY-MM-DD
 - Default: `2023-08-01-preview`
-- Example: `2023-05-15`, refer to [latest version][azure-api-verion-url]
+- Example: `2023-05-15`, refer to [latest version](https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version)
 
 ## ZHIPU AI
 
@@ -188,5 +188,27 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Default: -
 - Example: `sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`
 
+### `OPENROUTER_CUSTOM_MODELS`
 
-[azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas.
+- Default: `-`
+- Example: `-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
+
+## 01.AI
+
+### `ZEROONE_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the 01.AI service
+- Default: -
+- 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+## TogetherAI
+
+### `TOGETHERAI_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the TogetherAI service
+- Default: -
+- Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`

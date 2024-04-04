@@ -2,7 +2,7 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, OpenAIChatMessage } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeOllamaAI } from './index';
@@ -314,6 +314,51 @@ describe('LobeOllamaAI', () => {
 
         // 恢复原始环境变量值
         process.env.DEBUG_OLLAMA_CHAT_COMPLETION = originalDebugValue;
+      });
+    });
+  });
+
+  describe('private method', () => {
+    describe('convertContentToOllamaMessage', () => {
+      it('should format message array content of UserMessageContentPart to match ollama api', () => {
+        const message: OpenAIChatMessage = {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: 'Hello',
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                detail: 'auto',
+                url: 'data:image/png;base64,iVBO...',
+              },
+            },
+          ],
+        };
+
+        const ollamaMessage = instance['convertContentToOllamaMessage'](message);
+
+        expect(ollamaMessage).toEqual({
+          role: 'user',
+          content: 'Hello',
+          images: ['iVBO...'],
+        });
+      });
+
+      it('should not affect string type message content', () => {
+        const message: OpenAIChatMessage = {
+          role: 'user',
+          content: 'Hello',
+        };
+
+        const ollamaMessage = instance['convertContentToOllamaMessage'](message);
+
+        expect(ollamaMessage).toEqual({
+          role: 'user',
+          content: 'Hello',
+        });
       });
     });
   });

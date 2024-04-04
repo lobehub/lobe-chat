@@ -15,6 +15,8 @@ import MoonshotForm from './Moonshot';
 import OpenAIForm from './OpenAI';
 import OpenRouterForm from './OpenRouter';
 import PerplexityForm from './Perplexity';
+import TogetherAIForm from './TogetherAI';
+import ZeroOneForm from './ZeroOne';
 import ZhipuForm from './Zhipu';
 
 interface APIKeyFormProps {
@@ -60,9 +62,17 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
       case ModelProvider.Groq: {
         return <GroqForm />;
       }
-      
+
       case ModelProvider.OpenRouter: {
         return <OpenRouterForm />;
+      }
+
+      case ModelProvider.TogetherAI: {
+        return <TogetherAIForm />;
+      }
+
+      case ModelProvider.ZeroOne: {
+        return <ZeroOneForm />;
       }
 
       default:

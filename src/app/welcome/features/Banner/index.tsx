@@ -10,7 +10,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import DataImporter from '@/features/DataImporter';
 import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
 
 import Hero from './Hero';
 import { useStyles } from './style';
@@ -19,7 +18,6 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('welcome');
   const router = useRouter();
   const { styles } = useStyles();
-  const [switchSession] = useSessionStore((s) => [s.switchSession]);
   const [switchBackToChat, isMobile] = useGlobalStore((s) => [s.switchBackToChat, s.isMobile]);
 
   return (
@@ -36,7 +34,7 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
       >
         <DataImporter
           onFinishImport={() => {
-            switchSession();
+            router.push('/chat');
           }}
         >
           <Button block={mobile} size={'large'}>
