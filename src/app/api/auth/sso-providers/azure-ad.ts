@@ -5,7 +5,7 @@ import { getServerConfig } from '@/config/server';
 const { AZURE_AD_CLIENT_ID, AZURE_AD_CLIENT_SECRET, AZURE_AD_TENANT_ID } = getServerConfig();
 
 const provider = {
-  id: 'azureAd',
+  id: 'azure-ad',
   provider: AzureAD({
     // Specify auth scope, at least include 'openid email'
     // all scopes in Azure AD ref: https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc#openid-connect-scopes
