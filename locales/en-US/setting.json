@@ -359,6 +359,14 @@
       "title": "WebRTC Sync"
     }
   },
+  "systemAgent": {
+    "title": "System Agents",
+    "translation": {
+      "title": "Translation Settings",
+      "label": "Translation Agent",
+      "modelDesc": "Specific model for translate message"
+    }
+  },
   "tab": {
     "about": "About",
     "agent": "Default Agent",
