@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.145.12](https://github.com/lobehub/lobe-chat/compare/v0.145.11...v0.145.12)
+
+<sup>Released on **2024-04-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix typo of azure-id sso provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix typo of azure-id sso provider, closes [#1898](https://github.com/lobehub/lobe-chat/issues/1898) ([6925b25](https://github.com/lobehub/lobe-chat/commit/6925b25))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.145.11](https://github.com/lobehub/lobe-chat/compare/v0.145.10...v0.145.11)
 
 <sup>Released on **2024-04-03**</sup>
