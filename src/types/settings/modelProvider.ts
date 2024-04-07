@@ -1,6 +1,6 @@
 export type CustomModels = { displayName: string; id: string }[];
 
-interface GeneralModelProviderConfig {
+export interface GeneralModelProviderConfig {
   apiKey?: string;
   enabled: boolean;
   endpoint?: string;

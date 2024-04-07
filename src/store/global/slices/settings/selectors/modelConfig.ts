@@ -1,13 +1,30 @@
 import { ModelProviderCard } from '@/types/llm';
-import { GlobalLLMProviderKey } from '@/types/settings';
+import { GeneralModelProviderConfig, GlobalLLMProviderKey } from '@/types/settings';
 
 import { GlobalStore } from '../../../store';
 import { modelProviderSelectors } from './modelProvider';
 import { currentSettings } from './settings';
 
 const modelProvider = (s: GlobalStore) => currentSettings(s).languageModel;
-const providerEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) =>
-  currentSettings(s).languageModel[provider]?.enabled || false;
+
+const providerConfig = (provider: string) => (s: GlobalStore) =>
+  currentSettings(s).languageModel[provider as GlobalLLMProviderKey] as
+    | GeneralModelProviderConfig
+    | undefined;
+
+const providerEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) => {
+  // TODO: we need to migrate the 'openAI' key to 'openai'
+  // @ts-ignore
+  if (provider === 'openai') return true;
+
+  return currentSettings(s).languageModel[provider]?.enabled || false;
+};
+
+const providerEnableModels =
+  (provider: string) =>
+  (s: GlobalStore): string[] | undefined => {
+    return providerConfig(provider)(s)?.models;
+  };
 
 const openAIConfig = (s: GlobalStore) => modelProvider(s).openAI;
 
@@ -67,14 +84,34 @@ const zerooneAPIKey = (s: GlobalStore) => modelProvider(s).zeroone.apiKey;
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
   return modelProviderSelectors.providerModelList(s).map((list) => ({
     ...list,
+    chatModels: list.chatModels.map((model) => {
+      const models = providerEnableModels(list.id)(s);
+
+      if (!models) return model;
+
+      return {
+        ...model,
+        hidden: !models?.some((m) => m === model.id),
+      };
+    }),
     enabled: providerEnabled(list.id as any)(s),
   }));
 };
 
+const enabledModelProviderList = (s: GlobalStore): ModelProviderCard[] =>
+  modelSelectList(s)
+    .filter((s) => s.enabled)
+    .map((provider) => ({
+      ...provider,
+      chatModels: provider.chatModels.filter((model) => !model.hidden),
+    }));
+
 /* eslint-disable sort-keys-fix/sort-keys-fix,  */
 export const modelConfigSelectors = {
   providerEnabled,
+  providerConfig,
   modelSelectList,
+  enabledModelProviderList,
 
   // OpenAI
   openAIConfig,

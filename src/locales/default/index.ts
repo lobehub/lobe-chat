@@ -1,6 +1,7 @@
 import tool from '../default/tool';
 import chat from './chat';
 import common from './common';
+import components from './components';
 import error from './error';
 import market from './market';
 import migration from './migration';
@@ -11,6 +12,7 @@ import welcome from './welcome';
 const resources = {
   chat,
   common,
+  components,
   error,
   market,
   migration,

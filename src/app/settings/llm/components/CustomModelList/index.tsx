@@ -5,7 +5,8 @@ import { memo } from 'react';
 
 import { filterEnabledModels } from '@/config/modelProviders';
 import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors, modelProviderSelectors } from '@/store/global/selectors';
+import { GlobalLLMProviderKey } from '@/types/settings';
 
 import { OptionRender } from './Option';
 
@@ -18,22 +19,31 @@ const popup = css`
 `;
 
 interface CustomModelSelectProps {
+  onChange?: (value: string[]) => void;
   placeholder?: string;
   provider: string;
+  value?: string[];
 }
 
-const CustomModelSelect = memo<CustomModelSelectProps>(({ provider, placeholder }) => {
+const CustomModelSelect = memo<CustomModelSelectProps>(({ provider, placeholder, onChange }) => {
   const providerCard = useGlobalStore(
-    (s) => modelConfigSelectors.modelSelectList(s).find((s) => s.id === provider),
+    (s) => modelProviderSelectors.providerModelList(s).find((s) => s.id === provider),
     isEqual,
   );
+  const providerConfig = useGlobalStore((s) =>
+    modelConfigSelectors.providerConfig(provider as GlobalLLMProviderKey)(s),
+  );
+
   const defaultEnableModel = providerCard ? filterEnabledModels(providerCard) : [];
 
   return (
-    <Select
+    <Select<string[]>
       allowClear
       defaultValue={defaultEnableModel}
       mode="tags"
+      onChange={(value) => {
+        onChange?.(value.filter(Boolean));
+      }}
       optionFilterProp="label"
       optionRender={({ label, value }) => (
         <OptionRender displayName={label as string} id={value as string} />
@@ -45,6 +55,7 @@ const CustomModelSelect = memo<CustomModelSelectProps>(({ provider, placeholder 
       placeholder={placeholder}
       popupClassName={cx(popup)}
       popupMatchSelectWidth={false}
+      value={providerConfig?.models.filter(Boolean)}
     />
   );
 });

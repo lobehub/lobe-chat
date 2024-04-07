@@ -22,7 +22,6 @@ const OllamaProvider = memo(() => {
       }}
       provider={ModelProvider.Ollama}
       showApiKey={false}
-      showCustomModelName
       showEndpoint
       title={
         <Ollama.Combine color={theme.isDarkMode ? theme.colorText : theme.colorPrimary} size={24} />

@@ -63,7 +63,7 @@ interface ModelInfoTagsProps extends ChatModelCard {
 }
 export const ModelInfoTags = memo<ModelInfoTagsProps>(
   ({ directionReverse, placement = 'right', ...model }) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
 
     return (
