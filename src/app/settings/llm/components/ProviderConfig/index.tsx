@@ -17,6 +17,7 @@ import { modelProviderSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
+import CustomModelSelect from '../CustomModelList';
 
 interface ProviderConfigProps {
   canDeactivate?: boolean;
@@ -33,7 +34,7 @@ interface ProviderConfigProps {
 const ProviderConfig = memo<ProviderConfigProps>(
   ({
     provider,
-    showCustomModelName,
+    showCustomModelName = true,
     showEndpoint,
     showApiKey = true,
     checkModel,
@@ -74,14 +75,13 @@ const ProviderConfig = memo<ProviderConfigProps>(
       },
       showCustomModelName && {
         children: (
-          <Input.TextArea
-            allowClear
+          <CustomModelSelect
             placeholder={t(`llm.${provider}.customModelName.placeholder` as any)}
-            style={{ height: 100 }}
+            provider={provider}
           />
         ),
-        desc: t(`llm.${provider}.customModelName.desc` as any),
-        label: t(`llm.${provider}.customModelName.title` as any),
+        desc: t('llm.modelList.desc'),
+        label: t('llm.modelList.title'),
         name: [LLMProviderConfigKey, provider, LLMProviderCustomModelKey],
       },
       checkerItem ?? {
@@ -113,6 +113,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         items={[model]}
         onValuesChange={debounce(setSettings, 100)}
         {...FORM_STYLE}
+        itemMinWidth={'max(50%,400px)'}
       />
     );
   },

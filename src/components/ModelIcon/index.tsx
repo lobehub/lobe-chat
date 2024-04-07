@@ -22,8 +22,11 @@ interface ModelProviderIconProps {
   size?: number;
 }
 
-const ModelIcon = memo<ModelProviderIconProps>(({ model, size = 12 }) => {
-  if (!model) return;
+const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 }) => {
+  if (!originModel) return;
+
+  // lower case the origin model so to better match more model id case
+  const model = originModel.toLowerCase();
 
   if (model.startsWith('gpt-3')) return <OpenAI.Avatar size={size} type={'gpt3'} />;
   if (model.startsWith('gpt-4')) return <OpenAI.Avatar size={size} type={'gpt4'} />;
@@ -41,7 +44,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model, size = 12 }) => {
     return <Baichuan.Avatar background={Baichuan.colorPrimary} size={size} />;
   if (model.includes('mistral') || model.includes('mixtral')) return <Mistral.Avatar size={size} />;
   if (model.includes('pplx')) return <Perplexity.Avatar size={size} />;
-  if (model.startsWith('yi-')) return <Yi.Avatar size={size} />;
+  if (model.includes('yi-')) return <Yi.Avatar size={size} />;
 });
 
 export default ModelIcon;

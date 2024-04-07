@@ -122,6 +122,10 @@ export default {
         title: 'API Key',
       },
     },
+    modelList: {
+      desc: '选择在会话中展示的模型，多个模型使用逗号（,） 隔开',
+      title: '模型列表',
+    },
     moonshot: {
       title: '月之暗面',
       token: {

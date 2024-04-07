@@ -6,10 +6,11 @@ import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-import ModelIcon from 'src/components/ModelIcon';
-import ModelProviderIcon from 'src/components/ModelProviderIcon';
 
 import { ChatModelCard } from '@/types/llm';
+
+import ModelIcon from '../ModelIcon';
+import ModelProviderIcon from '../ModelProviderIcon';
 
 const useStyles = createStyles(({ css, token }) => ({
   custom: css`
@@ -56,13 +57,71 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+interface ModelInfoTagsProps extends ChatModelCard {
+  directionReverse?: boolean;
+  placement?: 'top' | 'right';
+}
+export const ModelInfoTags = memo<ModelInfoTagsProps>(
+  ({ directionReverse, placement = 'right', ...model }) => {
+    const { t } = useTranslation('common');
+    const { styles, cx } = useStyles();
+
+    return (
+      <Flexbox direction={directionReverse ? 'horizontal-reverse' : 'horizontal'} gap={4}>
+        {model.files && (
+          <Tooltip placement={placement} title={t('ModelSelect.featureTag.file')}>
+            <div className={cx(styles.tag, styles.tagGreen)}>
+              <Icon icon={LucidePaperclip} />
+            </div>
+          </Tooltip>
+        )}
+        {model.vision && (
+          <Tooltip placement={placement} title={t('ModelSelect.featureTag.vision')}>
+            <div className={cx(styles.tag, styles.tagGreen)}>
+              <Icon icon={LucideEye} />
+            </div>
+          </Tooltip>
+        )}
+        {model.functionCall && (
+          <Tooltip
+            overlayStyle={{ maxWidth: 'unset' }}
+            placement={placement}
+            title={t('ModelSelect.featureTag.functionCall')}
+          >
+            <div className={cx(styles.tag, styles.tagBlue)}>
+              <Icon icon={ToyBrick} />
+            </div>
+          </Tooltip>
+        )}
+        {model.tokens && (
+          <Tooltip
+            overlayStyle={{ maxWidth: 'unset' }}
+            placement={placement}
+            title={t('ModelSelect.featureTag.tokens', {
+              tokens: numeral(model.tokens).format('0,0'),
+            })}
+          >
+            <Center className={styles.token}>{Math.floor(model.tokens / 1000)}K</Center>
+          </Tooltip>
+        )}
+        {model.isCustom && (
+          <Tooltip
+            overlayStyle={{ maxWidth: 300 }}
+            placement={placement}
+            title={t('ModelSelect.featureTag.custom')}
+          >
+            <Center className={styles.custom}>DIY</Center>
+          </Tooltip>
+        )}
+      </Flexbox>
+    );
+  },
+);
+
 interface ModelItemRenderProps extends ChatModelCard {
   showInfoTag?: boolean;
 }
 export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true, ...model }) => {
-  const { styles, cx } = useStyles();
-  const { t } = useTranslation('common');
-
   return (
     <Flexbox align={'center'} gap={32} horizontal justify={'space-between'}>
       <Flexbox align={'center'} gap={8} horizontal>
@@ -70,55 +129,7 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
         {model.displayName || model.id}
       </Flexbox>
 
-      {showInfoTag && (
-        <Flexbox gap={4} horizontal>
-          {model.files && (
-            <Tooltip placement={'right'} title={t('ModelSelect.featureTag.file')}>
-              <div className={cx(styles.tag, styles.tagGreen)}>
-                <Icon icon={LucidePaperclip} />
-              </div>
-            </Tooltip>
-          )}
-          {model.vision && (
-            <Tooltip placement={'right'} title={t('ModelSelect.featureTag.vision')}>
-              <div className={cx(styles.tag, styles.tagGreen)}>
-                <Icon icon={LucideEye} />
-              </div>
-            </Tooltip>
-          )}
-          {model.functionCall && (
-            <Tooltip
-              overlayStyle={{ maxWidth: 'unset' }}
-              placement={'right'}
-              title={t('ModelSelect.featureTag.functionCall')}
-            >
-              <div className={cx(styles.tag, styles.tagBlue)}>
-                <Icon icon={ToyBrick} />
-              </div>
-            </Tooltip>
-          )}
-          {model.tokens && (
-            <Tooltip
-              overlayStyle={{ maxWidth: 'unset' }}
-              placement={'right'}
-              title={t('ModelSelect.featureTag.tokens', {
-                tokens: numeral(model.tokens).format('0,0'),
-              })}
-            >
-              <Center className={styles.token}>{Math.floor(model.tokens / 1000)}K</Center>
-            </Tooltip>
-          )}
-          {model.isCustom && (
-            <Tooltip
-              overlayStyle={{ maxWidth: 300 }}
-              placement={'right'}
-              title={t('ModelSelect.featureTag.custom')}
-            >
-              <Center className={styles.custom}>DIY</Center>
-            </Tooltip>
-          )}
-        </Flexbox>
-      )}
+      {showInfoTag && <ModelInfoTags {...model} />}
     </Flexbox>
   );
 });

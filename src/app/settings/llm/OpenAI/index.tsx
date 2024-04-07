@@ -10,6 +10,7 @@ import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 
 import Checker from '../components/Checker';
+import CustomModelSelect from '../components/CustomModelList';
 import ProviderConfig from '../components/ProviderConfig';
 import { LLMProviderConfigKey } from '../const';
 
@@ -66,10 +67,9 @@ const LLM = memo(() => {
         },
         {
           children: (
-            <Input.TextArea
-              allowClear
+            <CustomModelSelect
               placeholder={t('llm.openai.customModelName.placeholder')}
-              style={{ height: 100 }}
+              provider={'openai'}
             />
           ),
           desc: t('llm.openai.customModelName.desc'),
