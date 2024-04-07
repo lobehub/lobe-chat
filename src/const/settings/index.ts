@@ -66,7 +66,7 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   anthropic: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(AnthropicProvider),
+    enabledModels: filterEnabledModels(AnthropicProvider),
   },
   azure: {
     apiKey: '',
@@ -84,22 +84,22 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   google: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(GoogleProvider),
+    enabledModels: filterEnabledModels(GoogleProvider),
   },
   groq: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(GroqProvider),
+    enabledModels: filterEnabledModels(GroqProvider),
   },
   mistral: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(MistralProvider),
+    enabledModels: filterEnabledModels(MistralProvider),
   },
   moonshot: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(MoonshotProvider),
+    enabledModels: filterEnabledModels(MoonshotProvider),
   },
   ollama: {
     enabled: false,
@@ -119,7 +119,7 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   perplexity: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(PerplexityProvider),
+    enabledModels: filterEnabledModels(PerplexityProvider),
   },
   togetherai: {
     apiKey: '',
@@ -129,12 +129,12 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   zeroone: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(ZeroOneProvider),
+    enabledModels: filterEnabledModels(ZeroOneProvider),
   },
   zhipu: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(ZhiPuProvider),
+    enabledModels: filterEnabledModels(ZhiPuProvider),
   },
 };
 

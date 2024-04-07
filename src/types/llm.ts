@@ -9,6 +9,9 @@ export interface ChatModelCard {
    * whether model supports function call
    */
   functionCall?: boolean;
+  /**
+   * whether the model is visible or hidden
+   */
   hidden?: boolean;
   id: string;
   /**

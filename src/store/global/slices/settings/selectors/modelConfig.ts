@@ -20,11 +20,8 @@ const providerEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) => 
   return currentSettings(s).languageModel[provider]?.enabled || false;
 };
 
-const providerEnableModels =
-  (provider: string) =>
-  (s: GlobalStore): string[] | undefined => {
-    return providerConfig(provider)(s)?.models;
-  };
+const providerEnableModels = (provider: string) => (s: GlobalStore) =>
+  providerConfig(provider)(s)?.enabledModels;
 
 const openAIConfig = (s: GlobalStore) => modelProvider(s).openAI;
 

@@ -10,8 +10,8 @@ import { useGlobalStore } from '@/store/global';
 import { modelConfigSelectors } from '@/store/global/selectors';
 
 import Checker from '../components/Checker';
-import CustomModelSelect from '../components/CustomModelList';
 import ProviderConfig from '../components/ProviderConfig';
+import ProviderModelListSelect from '../components/ProviderModelList';
 import { LLMProviderConfigKey } from '../const';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -67,14 +67,14 @@ const LLM = memo(() => {
         },
         {
           children: (
-            <CustomModelSelect
+            <ProviderModelListSelect
               placeholder={t('llm.openai.customModelName.placeholder')}
               provider={'openai'}
             />
           ),
           desc: t('llm.openai.customModelName.desc'),
           label: t('llm.openai.customModelName.title'),
-          name: [LLMProviderConfigKey, providerKey, 'customModelName'],
+          name: [LLMProviderConfigKey, providerKey, 'enabledModels'],
         },
         {
           children: <Switch />,

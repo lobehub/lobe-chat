@@ -8,7 +8,7 @@ import { ModelInfoTags } from '@/components/ModelSelect';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 
-export const OptionRender = memo<{ displayName: string; id: string }>(({ displayName, id: id }) => {
+const CustomModelOption = memo<{ displayName: string; id: string }>(({ displayName, id: id }) => {
   const model = useGlobalStore((s) => modelProviderSelectors.modelCardById(id)(s), isEqual);
 
   return (
@@ -26,3 +26,5 @@ export const OptionRender = memo<{ displayName: string; id: string }>(({ display
     </Flexbox>
   );
 });
+
+export default CustomModelOption;

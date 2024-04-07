@@ -18,7 +18,7 @@ import { modelConfigSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
-import CustomModelSelect from '../CustomModelList';
+import ProviderModelListSelect from '../ProviderModelList';
 
 interface ProviderConfigProps {
   canDeactivate?: boolean;
@@ -88,7 +88,10 @@ const ProviderConfig = memo<ProviderConfigProps>(
       },
       {
         children: (
-          <CustomModelSelect placeholder={t('llm.modelList.placeholder')} provider={provider} />
+          <ProviderModelListSelect
+            placeholder={t('llm.modelList.placeholder')}
+            provider={provider}
+          />
         ),
         desc: t('llm.modelList.desc'),
         label: t('llm.modelList.title'),
