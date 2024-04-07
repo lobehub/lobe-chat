@@ -49,8 +49,8 @@
     "InvalidMoonshotAPIKey": "Geçersiz veya boş Moonshot AI API Anahtarı, lütfen Moonshot API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidOllamaArgs": "Ollama yapılandırması yanlış, lütfen Ollama yapılandırmasını kontrol edip tekrar deneyin",
     "InvalidOpenRouterAPIKey": "OpenRouter API Anahtarı geçersiz veya boş, lütfen OpenRouter API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidTogetherAIAPIKey": "TogetherAI API Anahtarı geçersiz veya boş, lütfen TogetherAI API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidPerplexityAPIKey": "Perplexity API Key geçersiz veya boş, lütfen Perplexity API Key'inizi kontrol edip tekrar deneyin",
+    "InvalidTogetherAIAPIKey": "TogetherAI API Anahtarı geçersiz veya boş, lütfen TogetherAI API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidZeroOneAPIKey": "SıfırBirIoT API Anahtarı geçersiz veya boş. Lütfen SıfırBirIoT API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidZhipuAPIKey": "Zhipu API Anahtarı yanlış veya boş, lütfen Zhipu API Anahtarınızı kontrol edip tekrar deneyin",
     "LocationNotSupportError": "Üzgünüz, bulunduğunuz konum bu model hizmetini desteklemiyor, muhtemelen bölge kısıtlamaları veya hizmetin henüz açılmamış olması nedeniyle. Lütfen mevcut konumun bu hizmeti kullanmaya uygun olup olmadığını doğrulayın veya başka bir konum bilgisi kullanmayı deneyin.",
@@ -61,7 +61,6 @@
     "OllamaServiceUnavailable": "Ollama 服务不可用，请检查是否已正常启动",
     "OpenAIBizError": "OpenAI hizmeti talep ederken hata oluştu. Aşağıdaki bilgilere dayanarak sorun giderin veya tekrar deneyin.",
     "OpenRouterBizError": "OpenRouter AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "TogetherAIBizError": "TogetherAI AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "PerplexityBizError": "Perplexity AI hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "PluginApiNotFound": "Üzgünüm, eklentinin bildiriminde API mevcut değil. Lütfen istek yönteminizin eklenti bildirim API'sı ile eşleşip eşleşmediğini kontrol edin",
     "PluginApiParamsError": "Üzgünüm, eklenti isteği için giriş parametre doğrulaması başarısız oldu. Lütfen giriş parametrelerinin API açıklamasıyla eşleşip eşleşmediğini kontrol edin",
@@ -75,6 +74,7 @@
     "PluginOpenApiInitError": "Üzgünüz, OpenAPI istemci başlatma hatası, lütfen OpenAPI yapılandırma bilgilerini kontrol edin",
     "PluginServerError": "Eklenti sunucusu isteği bir hata ile döndü. Lütfen aşağıdaki hata bilgilerine dayanarak eklenti bildirim dosyanızı, eklenti yapılandırmanızı veya sunucu uygulamanızı kontrol edin",
     "PluginSettingsInvalid": "Bu eklenti, kullanılmadan önce doğru şekilde yapılandırılmalıdır. Lütfen yapılandırmanızın doğru olup olmadığını kontrol edin",
+    "TogetherAIBizError": "TogetherAI AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "ZeroOneBizError": "SıfırBirIoT hizmetine yapılan istekte bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "ZhipuBizError": "Zhipu servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin"
   },
@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "Özel bölgeyi kullan",
-        "description": "Aws AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama yapılandırmanızı kaydetmez",
+        "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama yapılandırmanızı kaydetmez",
         "title": "Özel Bedrock kimlik bilgilerini kullan"
       },
       "Google": {
@@ -120,13 +120,13 @@
         "description": "Oturuma başlamak için OpenRouter API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
         "title": "Özel OpenRouter API Anahtarını Kullan"
       },
-      "TogetherAI": {
-        "description": "Oturuma başlamak için TogetherAI API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel TogetherAI API Anahtarını Kullan"
-      },
       "Perplexity": {
         "description": "Sohbeti başlatmak için Perplexity API Key'inizi girin. Uygulama API Key'inizi kaydetmez",
         "title": "Özel Perplexity API Key'i Kullan"
+      },
+      "TogetherAI": {
+        "description": "Oturuma başlamak için TogetherAI API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
+        "title": "Özel TogetherAI API Anahtarını Kullan"
       },
       "ZeroOne": {
         "description": "Oturumu başlatmak için SıfırBirIoT API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
