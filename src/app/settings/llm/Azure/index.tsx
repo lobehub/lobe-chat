@@ -38,17 +38,17 @@ const AzureOpenAIProvider = memo(() => {
           children: (
             <Input.Password
               autoComplete={'new-password'}
-              placeholder={t('llm.AzureOpenAI.token.placeholder')}
+              placeholder={t('llm.azure.token.placeholder')}
             />
           ),
-          desc: t('llm.AzureOpenAI.token.desc'),
-          label: t('llm.AzureOpenAI.token.title'),
+          desc: t('llm.azure.token.desc'),
+          label: t('llm.azure.token.title'),
           name: [LLMProviderConfigKey, providerKey, LLMProviderApiTokenKey],
         },
         {
-          children: <Input allowClear placeholder={t('llm.AzureOpenAI.endpoint.placeholder')} />,
-          desc: t('llm.AzureOpenAI.endpoint.desc'),
-          label: t('llm.AzureOpenAI.endpoint.title'),
+          children: <Input allowClear placeholder={t('llm.azure.endpoint.placeholder')} />,
+          desc: t('llm.azure.endpoint.desc'),
+          label: t('llm.azure.endpoint.title'),
           name: [LLMProviderConfigKey, providerKey, LLMProviderBaseUrlKey],
         },
         {
@@ -69,10 +69,10 @@ const AzureOpenAIProvider = memo(() => {
           ),
           desc: (
             <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
-              {t('llm.AzureOpenAI.azureApiVersion.desc')}
+              {t('llm.azure.azureApiVersion.desc')}
             </Markdown>
           ),
-          label: t('llm.AzureOpenAI.azureApiVersion.title'),
+          label: t('llm.azure.azureApiVersion.title'),
           name: [LLMProviderConfigKey, providerKey, 'apiVersion'],
         },
         {
@@ -85,11 +85,11 @@ const AzureOpenAIProvider = memo(() => {
           ),
           desc: (
             <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
-              {t('llm.AzureOpenAI.deployments.desc')}
+              {t('llm.azure.deployments.desc')}
             </Markdown>
           ),
 
-          label: t('llm.AzureOpenAI.deployments.title'),
+          label: t('llm.azure.deployments.title'),
           name: [LLMProviderConfigKey, providerKey, 'deployments'],
         },
         {

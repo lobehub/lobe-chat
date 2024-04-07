@@ -31,207 +31,65 @@
     "sessionWithName": "إعدادات الجلسة · {{name}}"
   },
   "llm": {
-    "Anthropic": {
+    "anthropic": {
       "endpoint": {
-        "desc": "بخلاف العنوان الافتراضي، يجب أن يتضمن http(s)://",
+        "desc": "يجب أن يتضمن العنوان، بخلاف الافتراضي، http(s)://",
         "placeholder": "https://api.anthropic.com",
-        "title": "عنوان وكيل الواجهة البرمجية للتطبيقات"
+        "title": "عنوان وكيل API"
       },
-      "title": "أنثروبيك",
+      "title": "Anthropic",
       "token": {
-        "desc": "أدخل مفتاح API من أنثروبيك",
-        "placeholder": "مفتاح API من أنثروبيك",
+        "desc": "أدخل مفتاح API الخاص بـ Anthropic",
+        "placeholder": "Anthropic API Key",
         "title": "مفتاح API"
       }
     },
-    "AzureOpenAI": {
+    "azure": {
       "azureApiVersion": {
-        "desc": "إصدار واجهة برمجة التطبيقات لـ Azure، يتبع تنسيق YYYY-MM-DD، راجع [أحدث الإصدار](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "الحصول على قائمة",
-        "title": "إصدار واجهة برمجة التطبيقات لـ Azure"
+        "desc": "نسخة API الخاصة بـ Azure، والتي تتبع تنسيق YYYY-MM-DD، راجع [الإصدارات الأحدث](https://learn.microsoft.com/zh-en/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "جلب القائمة",
+        "title": "Azure Api Version"
       },
       "deployments": {
-        "desc": "املأ نموذج نشرك باستخدام بنية id=name (مثل اسم النشر والنموذج متطابقان، يمكنك ملء اسم النموذج فقط)، استخدم فاصلة (,) للنماذج المتعددة",
-        "title": "قائمة نماذج النشر لـ Azure"
+        "desc": "املأ نماذج التنصيب باستخدام صيغة id=name (إذا كان اسم التنصيب والنموذج متطابقين، يمكنك كتابة اسم النموذج فقط)، استخدم الفاصلة (،) لفصل عدة نماذج",
+        "title": "قائمة نماذج التنصيب Azure"
       },
       "endpoint": {
-        "desc": "يمكن العثور على هذه القيمة في قسم 'المفتاح والنقطة النهائية' عند التحقق من الموارد في بوابة Azure",
+        "desc": "يمكن العثور على هذه القيمة في قسم 'المفاتيح والنقاط النهائية' عند فحص الموارد في بوابة Azure",
         "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "عنوان واجهة برمجة التطبيقات لـ Azure"
+        "title": "عنوان Azure API"
       },
       "models": {
         "desc": "النماذج المدعومة",
         "title": "قائمة النماذج"
       },
-      "title": "إعدادات Azure OpenAI",
+      "title": "Azure OpenAI",
       "token": {
-        "desc": "يمكن العثور على هذه القيمة في قسم 'المفتاح والنقطة النهائية' عند التحقق من الموارد في بوابة Azure. يمكن استخدام KEY1 أو KEY2",
-        "placeholder": "مفتاح واجهة برمجة التطبيقات لـ Azure",
-        "title": "مفتاح واجهة برمجة التطبيقات"
+        "desc": "يمكن العثور على هذه القيمة في قسم 'المفاتيح والنقاط النهائية' عند فحص الموارد في بوابة Azure. يمكن استخدام KEY1 أو KEY2",
+        "placeholder": "Azure API Key",
+        "title": "مفتاح API"
       }
     },
-    "Bedrock": {
+    "bedrock": {
       "accessKeyId": {
-        "desc": "املأ معرف مفتاح الوصول لـ Aws",
-        "placeholder": "معرف مفتاح الوصول لـ Aws",
-        "title": "معرف مفتاح الوصول لـ Aws"
+        "desc": "أدخل AWS Access Key Id",
+        "placeholder": "AWS Access Key Id",
+        "title": "AWS Access Key Id"
       },
       "checker": {
-        "desc": "اختبار ما إذا كان معرف الوصول / مفتاح الوصول السري مملوء بشكل صحيح"
+        "desc": "اختبر ما إذا كان AccessKeyId / SecretAccessKey مدخلاً بشكل صحيح"
       },
       "region": {
-        "desc": "املأ منطقة Aws",
-        "placeholder": "منطقة Aws",
-        "title": "منطقة Aws"
+        "desc": "أدخل AWS Region",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
       },
       "secretAccessKey": {
-        "desc": "املأ مفتاح الوصول السري لـ Aws",
-        "placeholder": "مفتاح الوصول السري لـ Aws",
-        "title": "مفتاح الوصول السري لـ Aws"
+        "desc": "أدخل AWS Secret Access Key",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"
-    },
-    "Google": {
-      "title": "Google",
-      "token": {
-        "desc": "املأ مفتاح واجهة برمجة التطبيقات الخاص بك من Google",
-        "placeholder": "مفتاح واجهة برمجة التطبيقات الخاص بـ Google",
-        "title": "مفتاح واجهة برمجة التطبيقات"
-      }
-    },
-    "Groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "أدخل مفتاح API الخاص بـ Groq",
-        "placeholder": "مفتاح API Groq",
-        "title": "مفتاح API"
-      }
-    },
-    "Mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "أدخل مفتاح API من Mistral AI",
-        "placeholder": "مفتاح API من Mistral AI",
-        "title": "مفتاح API"
-      }
-    },
-    "Moonshot": {
-      "title": "الجانب المظلم من القمر",
-      "token": {
-        "desc": "أدخل مفتاح API من Moonshot AI",
-        "placeholder": "مفتاح API Moonshot AI",
-        "title": "مفتاح API"
-      }
-    },
-    "Ollama": {
-      "checker": {
-        "desc": "تحقق من صحة عنوان الوكيل"
-      },
-      "customModelName": {
-        "desc": "إضافة نموذج مخصص، استخدم فاصلة (،) للنماذج المتعددة",
-        "placeholder": "فيكونا، للافا، كوديلاما، لاما2:13b-نص",
-        "title": "اسم النموذج المخصص"
-      },
-      "endpoint": {
-        "desc": "أدخل عنوان وكيل واجهة Ollama، اتركه فارغًا إذا لم يتم تحديده محليًا",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "عنوان وكيل الواجهة"
-      },
-      "title": "أولاما"
-    },
-    "OpenAI": {
-      "azureApiVersion": {
-        "desc": "إصدار واجهة برمجة التطبيقات لـ Azure، يتبع تنسيق YYYY-MM-DD، اطلع على [أحدث الإصدارات](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "الحصول على القائمة",
-        "title": "إصدار واجهة برمجة التطبيقات لـ Azure"
-      },
-      "customModelName": {
-        "desc": "إضافة نموذج مخصص، يمكن استخدام فاصلة (,) للنماذج المتعددة",
-        "placeholder": "نموذج1،نموذج2،نموذج3",
-        "title": "اسم النموذج المخصص"
-      },
-      "endpoint": {
-        "desc": "بالإضافة إلى العنوان الافتراضي، يجب أن يتضمن http(s)://",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "عنوان وكيل الواجهة"
-      },
-      "models": {
-        "count": "يدعم {{count}} نموذج",
-        "desc": "النماذج المدعومة",
-        "fetch": "الحصول على قائمة النماذج",
-        "notSupport": "Azure OpenAI غير مدعوم حالياً لعرض قائمة النماذج",
-        "notSupportTip": "يجب عليك التأكد بنفسك من تطابق اسم النموذج مع اسم النشر",
-        "refetch": "الحصول على قائمة النماذج مرة أخرى",
-        "title": "قائمة النماذج"
-      },
-      "title": "إعدادات OpenAI",
-      "token": {
-        "desc": "استخدام مفتاح OpenAI الخاص بك",
-        "placeholder": "مفتاح واجهة برمجة التطبيقات لـ OpenAI",
-        "title": "مفتاح واجهة برمجة التطبيقات"
-      },
-      "useAzure": {
-        "desc": "استخدام خدمة OpenAI المقدمة من Azure",
-        "fetch": "الحصول على القائمة",
-        "serverConfig": "المسؤول قام بتكوين خدمة Azure OpenAI على الخادم، ويتم منع التبديل",
-        "title": "استخدام Azure OpenAI"
-      }
-    },
-    "OpenRouter": {
-      "checker": {
-        "desc": "اختبار صحة عنوان الوكيل"
-      },
-      "customModelName": {
-        "desc": "إضافة نموذج مخصص، استخدم فاصلة (،) للنماذج المتعددة",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "اسم النموذج المخصص"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "أدخل مفتاح API من OpenRouter AI",
-        "placeholder": "مفتاح API من OpenRouter AI",
-        "title": "مفتاح API"
-      }
-    },
-    "TogetherAI": {
-      "checker": {
-        "desc": "اختبار صحة عنوان الوكيل"
-      },
-      "customModelName": {
-        "desc": "إضافة نموذج مخصص، استخدم فاصلة (،) للنماذج المتعددة",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "اسم النموذج المخصص"
-      },
-      "title": "TogetherAI",
-      "token": {
-        "desc": "أدخل مفتاح API من TogetherAI AI",
-        "placeholder": "مفتاح API من TogetherAI AI",
-        "title": "مفتاح API"
-      }
-    },
-    "Perplexity": {
-      "title": "Perplexity AI",
-      "token": {
-        "desc": "أدخل مفتاح API من Perplexity AI",
-        "placeholder": "مفتاح API Perplexity AI",
-        "title": "مفتاح الواجهة البرمجية للتطبيق"
-      }
-    },
-    "ZeroOne": {
-      "title": "01.AI الصفر والواحد",
-      "token": {
-        "desc": "أدخل مفتاح API من 01.AI الصفر والواحد",
-        "placeholder": "مفتاح API من 01.AI الصفر والواحد",
-        "title": "مفتاح API"
-      }
-    },
-    "Zhipu": {
-      "title": "Zhipu AI",
-      "token": {
-        "desc": "املأ مفتاح واجهة برمجة التطبيقات الخاص بـ Zhipu",
-        "placeholder": "مفتاح واجهة برمجة التطبيقات الخاص بـ Zhipu",
-        "title": "مفتاح واجهة برمجة التطبيقات"
-      }
     },
     "checker": {
       "button": "فحص",
@@ -239,7 +97,149 @@
       "pass": "تمت المراقبة",
       "title": "فحص الاتصال"
     },
-    "waitingForMore": "يتم <1>التخطيط لتوفير</1> المزيد من النماذج، ترقبوا المزيد ✨"
+    "google": {
+      "title": "Google",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ Google",
+        "placeholder": "Google API Key",
+        "title": "مفتاح API"
+      }
+    },
+    "groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ Groq",
+        "placeholder": "Groq API Key",
+        "title": "مفتاح API"
+      }
+    },
+    "mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ Mistral AI",
+        "placeholder": "Mistral AI API Key",
+        "title": "مفتاح API"
+      }
+    },
+    "moonshot": {
+      "title": "الجانب المظلم للقمر",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ Moonshot AI",
+        "placeholder": "Moonshot AI API Key",
+        "title": "مفتاح API"
+      }
+    },
+    "ollama": {
+      "checker": {
+        "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح"
+      },
+      "customModelName": {
+        "desc": "أضف نماذج مخصصة، استخدم الفاصلة (،) لفصل عدة نماذج",
+        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+        "title": "أسماء النماذج المخصصة"
+      },
+      "endpoint": {
+        "desc": "أدخل عنوان واجهة برمجة التطبيقات الخاص بـ Ollama، إذا لم يتم تحديده محليًا، يمكن تركه فارغًا",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "عنوان وكيل الواجهة"
+      },
+      "title": "Ollama"
+    },
+    "openai": {
+      "azureApiVersion": {
+        "desc": "نسخة API الخاصة بـ Azure، والتي تتبع تنسيق YYYY-MM-DD، راجع [الإصدارات الأحدث](https://learn.microsoft.com/zh-en/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "جلب القائمة",
+        "title": "Azure Api Version"
+      },
+      "customModelName": {
+        "desc": "أضف نماذج مخصصة، استخدم الفاصلة (،) لفصل عدة نماذج",
+        "placeholder": "model1,model2,model3",
+        "title": "أسماء النماذج المخصصة"
+      },
+      "endpoint": {
+        "desc": "يجب أن يتضمن العنوان، بخلاف الافتراضي، http(s)://",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "عنوان وكيل الواجهة"
+      },
+      "models": {
+        "count": "يدعم مجموع {{count}} من النماذج",
+        "desc": "النماذج المدعومة",
+        "fetch": "جلب قائمة النماذج",
+        "notSupport": "Azure OpenAI لا يدعم حاليًا مشاهدة قائمة النماذج",
+        "notSupportTip": "تحتاج إلى التأكد بنفسك من أن اسم التنصيب يتوافق مع اسم النموذج",
+        "refetch": "إعادة جلب قائمة النماذج",
+        "title": "قائمة النماذج"
+      },
+      "title": "OpenAI",
+      "token": {
+        "desc": "استخدم مفتاح OpenAI الخاص بك",
+        "placeholder": "OpenAI API Key",
+        "title": "مفتاح OpenAI"
+      },
+      "useAzure": {
+        "desc": "استخدم خدمة OpenAI التي يوفرها Azure",
+        "fetch": "جلب القائمة",
+        "serverConfig": "قد وفر المسؤول تكوين Azure OpenAI على الخادم، ولا يسمح بالتبديل",
+        "title": "Azure OpenAI"
+      }
+    },
+    "openrouter": {
+      "checker": {
+        "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح"
+      },
+      "customModelName": {
+        "desc": "أضف نماذج مخصصة، استخدم الفاصلة (،) لفصل عدة نماذج",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "أسماء النماذج المخصصة"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ OpenRouter AI",
+        "placeholder": "OpenRouter AI API Key",
+        "title": "مفتاح API"
+      }
+    },
+    "perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ Perplexity AI",
+        "placeholder": "Perplexity AI API Key",
+        "title": "مفتاح API"
+      }
+    },
+    "togetherai": {
+      "checker": {
+        "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح"
+      },
+      "customModelName": {
+        "desc": "أضف نماذج مخصصة، استخدم الفاصلة (،) لفصل عدة نماذج",
+        "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+        "title": "أسماء النماذج المخصصة"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ TogetherAI AI",
+        "placeholder": "TogetherAI AI API Key",
+        "title": "مفتاح API"
+      }
+    },
+    "waitingForMore": "يتم <1>التخطيط لتوفير</1> المزيد من النماذج، ترقبوا المزيد ✨",
+    "zeroone": {
+      "title": "01.AI الأشياء الصغرى",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ 01.AI الأشياء الصغرى",
+        "placeholder": "01.AI الأشياء الصغرى API Key",
+        "title": "مفتاح API"
+      }
+    },
+    "zhipu": {
+      "title": "Zhipu",
+      "token": {
+        "desc": "أدخل مفتاح API الخاص بـ Zhipu",
+        "placeholder": "Zhipu API Key",
+        "title": "مفتاح API"
+      }
+    }
   },
   "ollama": {
     "download": {

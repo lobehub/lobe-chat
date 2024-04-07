@@ -31,7 +31,7 @@
     "sessionWithName": "세션 설정 · {{name}}"
   },
   "llm": {
-    "Anthropic": {
+    "anthropic": {
       "endpoint": {
         "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다",
         "placeholder": "https://api.anthropic.com",
@@ -39,199 +39,57 @@
       },
       "title": "Anthropic",
       "token": {
-        "desc": "Anthropic의 API 키를 입력하세요",
+        "desc": "Anthropic에서 제공한 API 키를 입력하세요",
         "placeholder": "Anthropic API 키",
         "title": "API 키"
       }
     },
-    "AzureOpenAI": {
+    "azure": {
       "azureApiVersion": {
-        "desc": "Azure의 API 버전은 YYYY-MM-DD 형식을 따르며, [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 확인하세요.",
+        "desc": "Azure의 API 버전을 YYYY-MM-DD 형식으로 입력하고, [최신 버전](https://learn.microsoft.com/ko-kr/azure/ai-services/openai/reference#chat-completions)을 확인하세요",
         "fetch": "목록 가져오기",
         "title": "Azure API 버전"
       },
       "deployments": {
-        "desc": "id=name 구문을 사용하여 배포 모델을 작성합니다(예: 배포 이름과 모델이 동일한 경우 모델 이름만 작성할 수 있습니다). 여러 모델은 쉼표(,)로 구분합니다.",
+        "desc": "id=name 형태로 사용할 모델을 입력하세요(배포 이름과 모델 이름이 같을 경우, 모델 이름만 입력해도 됩니다), 여러 모델을 입력할 때는 쉼표(,)로 구분",
         "title": "Azure 배포 모델 목록"
       },
       "endpoint": {
-        "desc": "Azure 포털에서 리소스를 확인할 때 이 값을“키 및 엔드포인트” 섹션에서 찾을 수 있습니다",
+        "desc": "Azure 포털에서 리소스를 확인할 때 '키 및 엔드포인트' 섹션에서 이 값을 찾을 수 있습니다",
         "placeholder": "https://docs-test-001.openai.azure.com",
         "title": "Azure API 주소"
       },
       "models": {
-        "desc": "지원되는 모델",
+        "desc": "지원하는 모델",
         "title": "모델 목록"
       },
-      "title": "Azure OpenAI 설정",
+      "title": "Azure OpenAI",
       "token": {
-        "desc": "Azure 포털에서 리소스를 확인할 때 이 값을“키 및 엔드포인트” 섹션에서 찾을 수 있습니다. KEY1 또는 KEY2를 사용할 수 있습니다",
+        "desc": "Azure 포털에서 리소스를 확인할 때 '키 및 엔드포인트' 섹션에서 이 값을 찾을 수 있습니다. KEY1 또는 KEY2를 사용할 수 있습니다",
         "placeholder": "Azure API 키",
         "title": "API 키"
       }
     },
-    "Bedrock": {
+    "bedrock": {
       "accessKeyId": {
-        "desc": "Aws Access Key Id를 입력하세요",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
+        "desc": "AWS Access Key Id를 입력하세요",
+        "placeholder": "AWS Access 키 Id",
+        "title": "AWS Access 키 Id"
       },
       "checker": {
-        "desc": "AccessKeyId / SecretAccessKey를 올바르게 입력했는지 테스트합니다"
+        "desc": "AccessKeyId / SecretAccessKey가 올바르게 입력되었는지 테스트합니다"
       },
       "region": {
-        "desc": "Aws 지역을 입력하세요",
-        "placeholder": "Aws Region",
-        "title": "Aws 지역"
+        "desc": "AWS Region을 입력하세요",
+        "placeholder": "AWS 리전",
+        "title": "AWS 리전"
       },
       "secretAccessKey": {
-        "desc": "Aws Secret Access Key를 입력하세요",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
+        "desc": "AWS Secret Access 키를 입력하세요",
+        "placeholder": "AWS Secret Access 키",
+        "title": "AWS Secret Access 키"
       },
       "title": "Bedrock"
-    },
-    "Google": {
-      "title": "Google",
-      "token": {
-        "desc": "Google의 API Key를 입력하세요",
-        "placeholder": "Google API Key",
-        "title": "API Key"
-      }
-    },
-    "Groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "Groq의 API 키를 입력하세요",
-        "placeholder": "Groq API 키",
-        "title": "API 키"
-      }
-    },
-    "Mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Mistral AI의 API 키를 입력하세요",
-        "placeholder": "Mistral AI API 키",
-        "title": "API 키"
-      }
-    },
-    "Moonshot": {
-      "title": "달의 그림자",
-      "token": {
-        "desc": "Moonshot AI에서 제공하는 API 키를 입력하세요",
-        "placeholder": "Moonshot AI API 키",
-        "title": "API 키"
-      }
-    },
-    "Ollama": {
-      "checker": {
-        "desc": "프록시 주소가 올바르게 입력되었는지 확인합니다."
-      },
-      "customModelName": {
-        "desc": "사용자 정의 모델을 추가하고, 여러 모델은 쉼표(,)로 구분합니다.",
-        "placeholder": "비쿠나, 람라, 코데람라, 람라2:13b-텍스트",
-        "title": "사용자 정의 모델 이름"
-      },
-      "endpoint": {
-        "desc": "Ollama 인터페이스 프록시 주소를 입력하고, 로컬에서 별도로 지정하지 않은 경우 비워 둡니다.",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "인터페이스 프록시 주소"
-      },
-      "title": "Ollama"
-    },
-    "OpenAI": {
-      "azureApiVersion": {
-        "desc": "Azure의 API 버전으로 YYYY-MM-DD 형식을 따르며 [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 확인하세요",
-        "fetch": "목록 가져오기",
-        "title": "Azure API 버전"
-      },
-      "customModelName": {
-        "desc": "사용자 정의 모델 추가, 여러 모델은 쉼표(,)로 구분합니다",
-        "placeholder": "모델1,모델2,모델3",
-        "title": "사용자 정의 모델 이름"
-      },
-      "endpoint": {
-        "desc": "기본 주소 이외에 반드시 http(s)://를 포함해야 합니다",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "인터페이스 프록시 주소"
-      },
-      "models": {
-        "count": "총 {{count}}개의 모델 지원",
-        "desc": "지원되는 모델",
-        "fetch": "모델 목록 가져오기",
-        "notSupport": "Azure OpenAI는 모델 목록 조회를 지원하지 않습니다",
-        "notSupportTip": "배포 이름과 모델 이름이 일치하는지 직접 확인해야 합니다",
-        "refetch": "모델 목록 다시 가져오기",
-        "title": "모델 목록"
-      },
-      "title": "OpenAI 설정",
-      "token": {
-        "desc": "자체 OpenAI 키 사용",
-        "placeholder": "OpenAI API 키",
-        "title": "API 키"
-      },
-      "useAzure": {
-        "desc": "Azure에서 제공하는 OpenAI 서비스 사용",
-        "fetch": "목록 가져오기",
-        "serverConfig": "관리자가 서버에서 Azure OpenAI를 구성했으므로 변경이 금지되었습니다",
-        "title": "Azure OpenAI"
-      }
-    },
-    "OpenRouter": {
-      "checker": {
-        "desc": "프록시 주소가 올바르게 입력되었는지 확인합니다."
-      },
-      "customModelName": {
-        "desc": "사용자 정의 모델을 추가하고, 여러 모델은 쉼표(,)로 구분합니다",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "사용자 정의 모델 이름"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "OpenRouter AI에서 받은 API 키를 입력합니다.",
-        "placeholder": "OpenRouter AI API 키",
-        "title": "API 키"
-      }
-    },
-    "TogetherAI": {
-      "checker": {
-        "desc": "프록시 주소가 올바르게 입력되었는지 확인합니다."
-      },
-      "customModelName": {
-        "desc": "사용자 정의 모델을 추가하고, 여러 모델은 쉼표(,)로 구분합니다",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "사용자 정의 모델 이름"
-      },
-      "title": "TogetherAI",
-      "token": {
-        "desc": "TogetherAI AI에서 받은 API 키를 입력합니다.",
-        "placeholder": "TogetherAI AI API 키",
-        "title": "API 키"
-      }
-    },
-    "Perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Perplexity AI 에서 제공하는 API 키를 입력하세요",
-        "placeholder": "Perplexity AI API 키",
-        "title": "API 키"
-      }
-    },
-    "ZeroOne": {
-      "title": "01.AI ZeroOne 만물",
-      "token": {
-        "desc": "01.AI ZeroOne의 API 키를 입력하세요",
-        "placeholder": "01.AI ZeroOne API 키",
-        "title": "API 키"
-      }
-    },
-    "Zhipu": {
-      "title": "智谱",
-      "token": {
-        "desc": "智谱의 API Key를 입력하세요",
-        "placeholder": "Zhipu API Key",
-        "title": "API Key"
-      }
     },
     "checker": {
       "button": "확인",
@@ -239,7 +97,149 @@
       "pass": "확인 통과",
       "title": "연결성 확인"
     },
-    "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요 ✨"
+    "google": {
+      "title": "Google",
+      "token": {
+        "desc": "Google에서 제공한 API 키를 입력하세요",
+        "placeholder": "Google API 키",
+        "title": "API 키"
+      }
+    },
+    "groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Groq에서 제공한 API 키를 입력하세요",
+        "placeholder": "Groq API 키",
+        "title": "API 키"
+      }
+    },
+    "mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Mistral AI에서 제공한 API 키를 입력하세요",
+        "placeholder": "Mistral AI API 키",
+        "title": "API 키"
+      }
+    },
+    "moonshot": {
+      "title": "달의 어두운 면",
+      "token": {
+        "desc": "Moonshot AI에서 제공한 API 키를 입력하세요",
+        "placeholder": "Moonshot AI API 키",
+        "title": "API 키"
+      }
+    },
+    "ollama": {
+      "checker": {
+        "desc": "프록시 주소가 올바로 입력되었는지 테스트합니다"
+      },
+      "customModelName": {
+        "desc": "사용자 정의 모델 추가, 여러 모델을 입력할 때는 쉼표(,)로 구분",
+        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+        "title": "사용자 정의 모델 이름"
+      },
+      "endpoint": {
+        "desc": "Ollama 인터페이스 프록시 주소를 입력하세요, 로컬에서 별도로 지정하지 않았으면 비워두면 됩니다",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "인터페이스 프록시 주소"
+      },
+      "title": "Ollama"
+    },
+    "openai": {
+      "azureApiVersion": {
+        "desc": "Azure의 API 버전을 YYYY-MM-DD 형식으로 입력하고, [최신 버전](https://learn.microsoft.com/ko-kr/azure/ai-services/openai/reference#chat-completions)을 확인하세요",
+        "fetch": "목록 가져오기",
+        "title": "Azure API 버전"
+      },
+      "customModelName": {
+        "desc": "사용자 정의 모델 추가, 여러 모델을 입력할 때는 쉼표(,)로 구분",
+        "placeholder": "model1,model2,model3",
+        "title": "사용자 정의 모델 이름"
+      },
+      "endpoint": {
+        "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "인터페이스 프록시 주소"
+      },
+      "models": {
+        "count": "{{count}} 개 모델 지원",
+        "desc": "지원하는 모델",
+        "fetch": "모델 목록 가져오기",
+        "notSupport": "Azure OpenAI는 현재 모델 목록 조회를 지원하지 않습니다",
+        "notSupportTip": "배포 이름과 모델 이름이 일치하는지 직접 확인해야 합니다",
+        "refetch": "모델 목록 다시 가져오기",
+        "title": "모델 목록"
+      },
+      "title": "OpenAI",
+      "token": {
+        "desc": "자신의 OpenAI 키를 사용하세요",
+        "placeholder": "OpenAI API 키",
+        "title": "OpenAI API 키"
+      },
+      "useAzure": {
+        "desc": "Azure에서 제공하는 OpenAI 서비스를 사용하세요",
+        "fetch": "목록 가져오기",
+        "serverConfig": "관리자가 서버 측에서 Azure OpenAI를 설정하여 활성화한 경우, 전환을 금지합니다",
+        "title": "Azure OpenAI"
+      }
+    },
+    "openrouter": {
+      "checker": {
+        "desc": "프록시 주소가 올바로 입력되었는지 테스트합니다"
+      },
+      "customModelName": {
+        "desc": "사용자 정의 모델 추가, 여러 모델을 입력할 때는 쉼표(,)로 구분",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "사용자 정의 모델 이름"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "OpenRouter AI에서 제공한 API 키를 입력하세요",
+        "placeholder": "OpenRouter AI API 키",
+        "title": "API 키"
+      }
+    },
+    "perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Perplexity AI에서 제공한 API 키를 입력하세요",
+        "placeholder": "Perplexity AI API 키",
+        "title": "API 키"
+      }
+    },
+    "togetherai": {
+      "checker": {
+        "desc": "프록시 주소가 올바로 입력되었는지 테스트합니다"
+      },
+      "customModelName": {
+        "desc": "사용자 정의 모델 추가, 여러 모델을 입력할 때는 쉼표(,)로 구분",
+        "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+        "title": "사용자 정의 모델 이름"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "TogetherAI AI에서 제공한 API 키를 입력하세요",
+        "placeholder": "TogetherAI AI API 키",
+        "title": "API 키"
+      }
+    },
+    "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요 ✨",
+    "zeroone": {
+      "title": "01.AI 제로원",
+      "token": {
+        "desc": "01.AI 제로원에서 제공한 API 키를 입력하세요",
+        "placeholder": "01.AI 제로원 API 키",
+        "title": "API 키"
+      }
+    },
+    "zhipu": {
+      "title": "지푸",
+      "token": {
+        "desc": "지푸에서 제공한 API 키를 입력하세요",
+        "placeholder": "Zhipu API 키",
+        "title": "API 키"
+      }
+    }
   },
   "ollama": {
     "download": {

@@ -49,8 +49,8 @@
     "InvalidMoonshotAPIKey": "The Moonshot AI API Key is incorrect or empty, please check the Moonshot API Key and try again.",
     "InvalidOllamaArgs": "Invalid Ollama configuration, please check Ollama configuration and try again",
     "InvalidOpenRouterAPIKey": "Invalid or empty OpenRouter API Key. Please check your OpenRouter API Key and try again.",
-    "InvalidTogetherAIAPIKey": "Invalid or empty TogetherAI API Key. Please check your TogetherAI API Key and try again.",
     "InvalidPerplexityAPIKey": "Perplexity API Key is incorrect or empty. Please check the Perplexity API Key and retry.",
+    "InvalidTogetherAIAPIKey": "Invalid or empty TogetherAI API Key. Please check your TogetherAI API Key and try again.",
     "InvalidZeroOneAPIKey": "01-AI API Key is incorrect or empty. Please check the 01-AI API Key and retry.",
     "InvalidZhipuAPIKey": "Zhipu API Key is incorrect or empty. Please check the Zhipu API Key and retry.",
     "LocationNotSupportError": "We're sorry, your current location does not support this model service. This may be due to regional restrictions or the service not being available. Please confirm if the current location supports using this service, or try using a different location.",
@@ -61,7 +61,6 @@
     "OllamaServiceUnavailable": "Ollama service not detected, please check if it is running properly",
     "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information.",
     "OpenRouterBizError": "Error requesting OpenRouter AI service. Please troubleshoot or retry based on the following information.",
-    "TogetherAIBizError": "Error requesting TogetherAI AI service. Please troubleshoot or retry based on the following information.",
     "PerplexityBizError": "Error requesting Perplexity AI service. Please troubleshoot or retry based on the following information.",
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
@@ -75,6 +74,7 @@
     "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct.",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
+    "TogetherAIBizError": "Error requesting TogetherAI AI service. Please troubleshoot or retry based on the following information.",
     "ZeroOneBizError": "Error requesting 01-AI service. Please troubleshoot or retry based on the following information.",
     "ZhipuBizError": "Error requesting Zhipu service. Please troubleshoot or retry based on the following information."
   },
@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "Custom service region",
-        "description": "Enter your Aws AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration.",
+        "description": "Enter your AWS AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration.",
         "title": "Use custom Bedrock authentication information"
       },
       "Google": {
@@ -120,13 +120,13 @@
         "description": "Enter your OpenRouter API Key to start the session. The application will not store your API Key.",
         "title": "Use Custom OpenRouter API Key"
       },
-      "TogetherAI": {
-        "description": "Enter your TogetherAI API Key to start the session. The application will not store your API Key.",
-        "title": "Use Custom TogetherAI API Key"
-      },
       "Perplexity": {
         "description": "Enter your Perplexity API Key to start the session. The app will not store your API Key.",
         "title": "Use custom Perplexity API Key"
+      },
+      "TogetherAI": {
+        "description": "Enter your TogetherAI API Key to start the session. The application will not store your API Key.",
+        "title": "Use Custom TogetherAI API Key"
       },
       "ZeroOne": {
         "description": "Enter your 01-AI API Key to start the session. The application will not store your API Key.",

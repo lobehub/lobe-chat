@@ -49,8 +49,8 @@
     "InvalidMoonshotAPIKey": "A chave da API Moonshot AI está incorreta ou vazia. Por favor, verifique a chave da API Moonshot e tente novamente.",
     "InvalidOllamaArgs": "Configuração Ollama inválida, verifique a configuração do Ollama e tente novamente",
     "InvalidOpenRouterAPIKey": "Chave da API do OpenRouter inválida ou em branco. Por favor, verifique a chave da API do OpenRouter e tente novamente.",
-    "InvalidTogetherAIAPIKey": "Chave da API do TogetherAI inválida ou em branco. Por favor, verifique a chave da API do TogetherAI e tente novamente.",
     "InvalidPerplexityAPIKey": "Chave da API Perplexity inválida ou em branco, verifique a chave da API Perplexity e tente novamente",
+    "InvalidTogetherAIAPIKey": "Chave da API do TogetherAI inválida ou em branco. Por favor, verifique a chave da API do TogetherAI e tente novamente.",
     "InvalidZeroOneAPIKey": "Chave de API ZeroOne inválida ou vazia, verifique a chave de API ZeroOne e tente novamente",
     "InvalidZhipuAPIKey": "Chave de API Zhipu incorreta ou vazia, por favor, verifique a chave de API Zhipu e tente novamente",
     "LocationNotSupportError": "Desculpe, sua localização atual não suporta este serviço de modelo, pode ser devido a restrições geográficas ou serviço não disponível. Por favor, verifique se a localização atual suporta o uso deste serviço ou tente usar outras informações de localização.",
@@ -61,7 +61,6 @@
     "OllamaServiceUnavailable": "O serviço Ollama não está disponível, verifique se está iniciado corretamente",
     "OpenAIBizError": "Erro ao solicitar o serviço OpenAI. Verifique ou tente novamente com base nas informações abaixo",
     "OpenRouterBizError": "Erro de negócios ao solicitar o serviço de IA do OpenRouter. Por favor, verifique as informações abaixo ou tente novamente.",
-    "TogetherAIBizError": "Erro de negócios ao solicitar o serviço de IA do TogetherAI. Por favor, verifique as informações abaixo ou tente novamente.",
     "PerplexityBizError": "Erro de negócios ao solicitar o serviço de IA Perplexity, verifique as informações a seguir ou tente novamente",
     "PluginApiNotFound": "Desculpe, o API especificado não existe no manifesto do plugin. Verifique se o método de solicitação corresponde ao API do manifesto do plugin",
     "PluginApiParamsError": "Desculpe, a validação dos parâmetros de entrada da solicitação do plugin falhou. Verifique se os parâmetros de entrada correspondem às informações de descrição do API",
@@ -75,6 +74,7 @@
     "PluginOpenApiInitError": "Desculpe, a inicialização do cliente OpenAPI falhou. Verifique se as informações de configuração do OpenAPI estão corretas",
     "PluginServerError": "Erro na resposta do servidor do plugin. Verifique o arquivo de descrição do plugin, a configuração do plugin ou a implementação do servidor de acordo com as informações de erro abaixo",
     "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta",
+    "TogetherAIBizError": "Erro de negócios ao solicitar o serviço de IA do TogetherAI. Por favor, verifique as informações abaixo ou tente novamente.",
     "ZeroOneBizError": "Erro no serviço ZeroOneBiz, verifique as informações abaixo e tente novamente",
     "ZhipuBizError": "Erro ao solicitar o serviço Zhipu, por favor, verifique as informações abaixo ou tente novamente"
   },
@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "Região de serviço personalizada",
-        "description": "Digite seu Aws AccessKeyId / SecretAccessKey para iniciar a sessão. O aplicativo não irá armazenar suas configurações de autenticação",
+        "description": "Digite seu AWS AccessKeyId / SecretAccessKey para iniciar a sessão. O aplicativo não irá armazenar suas configurações de autenticação",
         "title": "Usar informações de autenticação personalizadas do Bedrock"
       },
       "Google": {
@@ -120,13 +120,13 @@
         "description": "Insira sua chave da API do OpenRouter para iniciar a sessão. O aplicativo não irá armazenar sua chave da API.",
         "title": "Usar chave da API do OpenRouter personalizada"
       },
-      "TogetherAI": {
-        "description": "Insira sua chave da API do TogetherAI para iniciar a sessão. O aplicativo não irá armazenar sua chave da API.",
-        "title": "Usar chave da API do TogetherAI personalizada"
-      },
       "Perplexity": {
         "description": "Insira sua chave da API Perplexity para iniciar a sessão. O aplicativo não irá armazenar sua chave da API",
         "title": "Usar chave da API Perplexity personalizada"
+      },
+      "TogetherAI": {
+        "description": "Insira sua chave da API do TogetherAI para iniciar a sessão. O aplicativo não irá armazenar sua chave da API.",
+        "title": "Usar chave da API do TogetherAI personalizada"
       },
       "ZeroOne": {
         "description": "Insira sua chave de API ZeroOne para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
