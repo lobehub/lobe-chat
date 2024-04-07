@@ -33,6 +33,10 @@ export const normalizeLocale = (locale?: string) => {
       return 'de-DE';
     }
 
+    case 'ru': {
+      return 'ru-RU';
+    }
+
     case 'en': {
       return 'en-US';
     }
