@@ -51,7 +51,7 @@
     "InvalidOpenRouterAPIKey": "La clé d'API OpenRouter est incorrecte ou manquante. Veuillez vérifier la clé d'API OpenRouter et réessayer.",
     "InvalidPerplexityAPIKey": "La clé API Perplexity est incorrecte ou vide. Veuillez vérifier la clé API Perplexity et réessayer.",
     "InvalidTogetherAIAPIKey": "La clé d'API TogetherAI est incorrecte ou manquante. Veuillez vérifier la clé d'API TogetherAI et réessayer.",
-    "InvalidZeroOneAPIKey": "零一万物 API Key 不正确或为空，请检查零一万物 API Key 后重试",
+    "InvalidZeroOneAPIKey": "La clé d'API ZeroOne est incorrecte ou vide, veuillez vérifier la clé d'API ZeroOne et réessayer",
     "InvalidZhipuAPIKey": "Clé API Zhipu incorrecte ou vide, veuillez vérifier la clé API Zhipu et réessayer",
     "LocationNotSupportError": "Désolé, votre emplacement actuel ne prend pas en charge ce service de modèle, peut-être en raison de restrictions géographiques ou de services non disponibles. Veuillez vérifier si votre emplacement actuel prend en charge ce service ou essayer avec une autre localisation.",
     "MistralBizError": "Erreur de service Mistral AI. Veuillez vérifier les informations ci-dessous ou réessayer.",

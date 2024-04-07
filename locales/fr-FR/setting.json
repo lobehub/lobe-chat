@@ -1,18 +1,4 @@
 {
-  "Contacts": "Contacts",
-  "Hello": "Bonjour",
-  "Home": "Accueil",
-  "Messages": "Messages",
-  "Password": "Mot de passe",
-  "Please sign in to continue.": "Veuillez vous connecter pour continuer.",
-  "Profile": "Profil",
-  "Settings": "Paramètres",
-  "Sign In": "Se connecter",
-  "Sign Out": "Se déconnecter",
-  "Username": "Nom d'utilisateur",
-  "Welcome to our website!": "Bienvenue sur notre site web !",
-  "You have %s new notifications": "Vous avez %s nouvelles notifications",
-  "You need to keep the mdx component format, do not wrap the output text with any code block syntax": "Vous devez conserver le format du composant mdx, n'enrobez pas le texte de sortie avec une quelconque syntaxe de bloc de code",
   "about": {
     "title": "À propos"
   },
