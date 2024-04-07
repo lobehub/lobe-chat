@@ -15,6 +15,7 @@ import {
   TogetherAIProvider,
   ZeroOneProvider,
   ZhiPuProvider,
+  filterEnabledModels,
 } from '@/config/modelProviders';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import { parseModelString } from '@/utils/parseModels';
@@ -125,6 +126,17 @@ const providerModelList = (s: GlobalStore): ModelProviderCard[] => {
   ];
 };
 
+const providerCard = (provider: string) => (s: GlobalStore) =>
+  providerModelList(s).find((s) => s.id === provider);
+
+const defaultEnabledProviderModels = (provider: string) => (s: GlobalStore) => {
+  const modelProvider = providerCard(provider)(s);
+
+  if (modelProvider) return filterEnabledModels(modelProvider);
+
+  return undefined;
+};
+
 const modelCardById = (id: string) => (s: GlobalStore) => {
   const list = providerModelList(s);
 
@@ -152,6 +164,8 @@ const modelMaxToken = (id: string) => (s: GlobalStore) => modelCardById(id)(s)?.
 /* eslint-disable sort-keys-fix/sort-keys-fix,  */
 export const modelProviderSelectors = {
   providerModelList,
+  providerCard,
+  defaultEnabledProviderModels,
 
   modelCardById,
   modelMaxToken,

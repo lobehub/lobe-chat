@@ -9,7 +9,7 @@ export interface GeneralModelProviderConfig {
   /**
    * enabled models id
    */
-  enabledModels: string[];
+  enabledModels: string[] | null;
   endpoint?: string;
 }
 

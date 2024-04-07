@@ -1,4 +1,6 @@
-import { ModelProviderCard } from '@/types/llm';
+import { uniqBy } from 'lodash-es';
+
+import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import { GeneralModelProviderConfig, GlobalLLMProviderKey } from '@/types/settings';
 
 import { GlobalStore } from '../../../store';
@@ -20,8 +22,11 @@ const providerEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) => 
   return currentSettings(s).languageModel[provider]?.enabled || false;
 };
 
-const providerEnableModels = (provider: string) => (s: GlobalStore) =>
-  providerConfig(provider)(s)?.enabledModels;
+const providerEnableModels = (provider: string) => (s: GlobalStore) => {
+  if (!providerConfig(provider)(s)?.enabledModels) return;
+
+  return providerConfig(provider)(s)?.enabledModels?.filter(Boolean);
+};
 
 const openAIConfig = (s: GlobalStore) => modelProvider(s).openAI;
 
@@ -103,10 +108,29 @@ const enabledModelProviderList = (s: GlobalStore): ModelProviderCard[] =>
       chatModels: provider.chatModels.filter((model) => !model.hidden),
     }));
 
+const providerCard = (provider: string) => (s: GlobalStore) =>
+  modelProviderSelectors.providerModelList(s).find((s) => s.id === provider);
+
+const providerModelCards =
+  (provider: string) =>
+  (s: GlobalStore): ChatModelCard[] => {
+    const builtinCards = providerCard(provider)(s)?.chatModels || [];
+
+    const userCards = (providerConfig(provider)(s)?.customModelCards || []).map((model) => ({
+      ...model,
+      isCustom: true,
+    }));
+
+    return uniqBy([...builtinCards, ...userCards], 'id');
+  };
+
 /* eslint-disable sort-keys-fix/sort-keys-fix,  */
 export const modelConfigSelectors = {
   providerEnabled,
+  providerEnableModels,
   providerConfig,
+  providerModelCards,
+
   modelSelectList,
   enabledModelProviderList,
 

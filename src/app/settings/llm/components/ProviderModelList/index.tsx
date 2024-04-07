@@ -1,73 +1,122 @@
+import { ActionIcon } from '@lobehub/ui';
 import { Select } from 'antd';
 import { css, cx } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import { RotateCwIcon } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
-import { filterEnabledModels } from '@/config/modelProviders';
 import { useGlobalStore } from '@/store/global';
 import { modelConfigSelectors, modelProviderSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
-import CustomModelOption from './CustomModelOption';
 import OptionRender from './Option';
 
-const popup = css`
-  &.ant-select-dropdown {
-    .ant-select-item-option-selected {
-      font-weight: normal;
+const styles = {
+  popup: css`
+    &.ant-select-dropdown {
+      .ant-select-item-option-selected {
+        font-weight: normal;
+      }
     }
-  }
-`;
+  `,
+  reset: css`
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    inset-inline-end: 28px;
+  `,
+};
 
 interface CustomModelSelectProps {
-  onChange?: (value: string[]) => void;
   placeholder?: string;
-  provider: string;
-  value?: string[];
+  provider: GlobalLLMProviderKey;
 }
 
-const ProviderModelListSelect = memo<CustomModelSelectProps>(
-  ({ provider, placeholder, onChange }) => {
-    const providerCard = useGlobalStore(
-      (s) => modelProviderSelectors.providerModelList(s).find((s) => s.id === provider),
-      isEqual,
-    );
-    const providerConfig = useGlobalStore((s) =>
-      modelConfigSelectors.providerConfig(provider as GlobalLLMProviderKey)(s),
-    );
+const ProviderModelListSelect = memo<CustomModelSelectProps>(({ provider, placeholder }) => {
+  const { t } = useTranslation('common');
+  const { t: transSetting } = useTranslation('setting');
+  const chatModelCards = useGlobalStore(modelConfigSelectors.providerModelCards(provider), isEqual);
+  const [setModelProviderConfig, dispatchCustomModelCards] = useGlobalStore((s) => [
+    s.setModelProviderConfig,
+    s.dispatchCustomModelCards,
+  ]);
+  const defaultEnableModel = useGlobalStore(
+    modelProviderSelectors.defaultEnabledProviderModels(provider),
+    isEqual,
+  );
+  const enabledModels = useGlobalStore(
+    modelConfigSelectors.providerEnableModels(provider),
+    isEqual,
+  );
+  const showReset = !!enabledModels && !isEqual(defaultEnableModel, enabledModels);
 
-    const defaultEnableModel = providerCard ? filterEnabledModels(providerCard) : [];
-
-    const chatModels = providerCard?.chatModels || [];
-
-    return (
+  return (
+    <div style={{ position: 'relative' }}>
+      <div className={cx(styles.reset)}>
+        {showReset && (
+          <ActionIcon
+            icon={RotateCwIcon}
+            onClick={() => {
+              setModelProviderConfig(provider, { enabledModels: null });
+            }}
+            size={'small'}
+            title={t('reset')}
+          />
+        )}
+      </div>
       <Select<string[]>
         allowClear
-        defaultValue={defaultEnableModel}
         mode="tags"
-        onChange={(value) => {
-          onChange?.(value.filter(Boolean));
+        onChange={(value, options) => {
+          setModelProviderConfig(provider, { enabledModels: value.filter(Boolean) });
+
+          // if there is a new model, add it to `customModelCards`
+          options.forEach((option: { label?: string; value?: string }, index: number) => {
+            // if is a known model, it should have value
+            // if is an unknown model, the option will be {}
+            if (option.value) return;
+
+            const modelId = value[index];
+
+            dispatchCustomModelCards(provider, {
+              modelCard: { id: modelId },
+              type: 'add',
+            });
+          });
         }}
+        open
         optionFilterProp="label"
         optionRender={({ label, value }) => {
-          console.log(value);
           // model is in the chatModels
-          if (chatModels.some((c) => c.id === value))
-            return <OptionRender displayName={label as string} id={value as string} />;
+          if (chatModelCards.some((c) => c.id === value))
+            return (
+              <OptionRender
+                displayName={label as string}
+                id={value as string}
+                provider={provider}
+              />
+            );
 
-          // model is user defined in client
-          return <CustomModelOption displayName={label as string} id={value as string} />;
+          // model is defined by user in client
+          return (
+            <Flexbox align={'center'} gap={8} horizontal>
+              {transSetting('llm.customModelCards.addNew', { id: value })}
+            </Flexbox>
+          );
         }}
-        options={chatModels.map((model) => ({
+        options={chatModelCards.map((model) => ({
           label: model.displayName || model.id,
           value: model.id,
         }))}
         placeholder={placeholder}
-        popupClassName={cx(popup)}
-        value={providerConfig?.enabledModels.filter(Boolean)}
+        popupClassName={cx(styles.popup)}
+        value={enabledModels ?? defaultEnableModel}
       />
-    );
-  },
-);
+    </div>
+  );
+});
 
 export default ProviderModelListSelect;

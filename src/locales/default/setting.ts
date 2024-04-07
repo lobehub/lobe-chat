@@ -98,6 +98,38 @@ export default {
       pass: '检查通过',
       title: '连通性检查',
     },
+    customModelCards: {
+      addNew: '创建并添加 {{id}} 模型',
+      config: '配置模型',
+      confirmDelete: '即将删除该自定义模型，删除后将不可恢复，请谨慎操作。',
+      modelConfig: {
+        displayName: {
+          placeholder: '请输入模型的展示名称，例如 ChatGPT、GPT-4 等',
+          title: '模型展示名称',
+        },
+        files: {
+          extra:
+            '当前 LobeChat 的文件上传实现仅为一种 Hack 方案，仅限自行尝试。完整文件上传能力请等待后续实现',
+          title: '支持文件上传',
+        },
+        functionCall: {
+          extra:
+            '此配置将仅开启 LobeChat 中的函数调用能力，是否支持函数调用完全取决于模型本身，请自行测试该模型的函数调用能力可用性',
+          title: '支持函数调用',
+        },
+        id: {
+          placeholder: '请输入模型id，例如 gpt-4-turbo-preview 或 claude-2.1',
+          title: '模型 ID',
+        },
+        modalTitle: '自定义模型配置',
+        tokens: { title: '最大 token 数' },
+        vision: {
+          extra:
+            '此配置将仅开启 LobeChat 中的图片上传配置，是否支持识别完全取决于模型本身，请自行测试该模型的视觉识别能力可用性',
+          title: '支持视觉识别',
+        },
+      },
+    },
     google: {
       title: 'Google',
       token: {

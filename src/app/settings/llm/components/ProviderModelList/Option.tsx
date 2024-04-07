@@ -7,24 +7,32 @@ import ModelIcon from '@/components/ModelIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
+import { GlobalLLMProviderKey } from '@/types/settings';
 
-const OptionRender = memo<{ displayName: string; id: string }>(({ displayName, id: id }) => {
-  const model = useGlobalStore((s) => modelProviderSelectors.modelCardById(id)(s), isEqual);
+import CustomModelOption from './CustomModelOption';
 
-  return (
-    <Flexbox align={'center'} gap={8} horizontal>
-      <ModelIcon model={id} size={32} />
-      <Flexbox>
-        <Flexbox align={'center'} gap={8} horizontal>
-          {displayName}
-          <ModelInfoTags directionReverse placement={'top'} {...model!} />
+const OptionRender = memo<{ displayName: string; id: string; provider: GlobalLLMProviderKey }>(
+  ({ displayName, id, provider }) => {
+    const model = useGlobalStore((s) => modelProviderSelectors.modelCardById(id)(s), isEqual);
+
+    // if there is no model, it means it is a user custom model
+    if (!model) return <CustomModelOption id={id} provider={provider} />;
+
+    return (
+      <Flexbox align={'center'} gap={8} horizontal>
+        <ModelIcon model={id} size={32} />
+        <Flexbox>
+          <Flexbox align={'center'} gap={8} horizontal>
+            {displayName}
+            <ModelInfoTags directionReverse placement={'top'} {...model!} />
+          </Flexbox>
+          <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+            {id}
+          </Typography.Text>
         </Flexbox>
-        <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
-          {id}
-        </Typography.Text>
       </Flexbox>
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export default OptionRender;

@@ -10,10 +10,17 @@ import { GlobalLLMConfig, GlobalLLMProviderKey, GlobalSettings } from '@/types/s
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
+import { CustomModelCardDispatch, customModelCardsReducer } from './reducers/customModelCard';
+import { modelConfigSelectors } from './selectors/modelConfig';
+
 /**
  * 设置操作
  */
 export interface SettingsAction {
+  dispatchCustomModelCards: (
+    provider: GlobalLLMProviderKey,
+    payload: CustomModelCardDispatch,
+  ) => Promise<void>;
   importAppSettings: (settings: GlobalSettings) => Promise<void>;
   resetSettings: () => Promise<void>;
   setModelProviderConfig: <T extends GlobalLLMProviderKey>(
@@ -32,6 +39,15 @@ export const createSettingsSlice: StateCreator<
   [],
   SettingsAction
 > = (set, get) => ({
+  dispatchCustomModelCards: async (provider, payload) => {
+    const prevState = modelConfigSelectors.providerConfig(provider)(get());
+
+    if (!prevState) return;
+
+    const nextState = customModelCardsReducer(prevState.customModelCards, payload);
+
+    await get().setModelProviderConfig(provider, { customModelCards: nextState });
+  },
   importAppSettings: async (importAppSettings) => {
     const { setSettings } = get();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -54,6 +70,7 @@ export const createSettingsSlice: StateCreator<
     if (isEqual(prevSetting, nextSettings)) return;
 
     const diffs = difference(nextSettings, defaultSettings);
+    console.log(diffs);
 
     await userService.updateUserSettings(diffs);
     await get().refreshUserConfig();
