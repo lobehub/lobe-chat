@@ -11,3 +11,9 @@ export const LLMProviderApiTokenKey = 'apiKey';
  * equal OPENAI_PROXY_URL
  */
 export const LLMProviderBaseUrlKey = 'endpoint';
+
+/**
+ * we use this key to define the custom model name
+ * equal CUSTOM_MODELS
+ */
+export const LLMProviderCustomModelKey = 'customModelName';

@@ -31,67 +31,73 @@
     "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}"
   },
   "llm": {
-    "Anthropic": {
+    "anthropic": {
       "endpoint": {
         "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
         "placeholder": "https://api.anthropic.com",
-        "title": "Địa chỉ Proxy API"
+        "title": "Địa chỉ API proxy"
       },
       "title": "Anthropic",
       "token": {
         "desc": "Nhập API Key từ Anthropic",
-        "placeholder": "Khóa API Anthropic",
-        "title": "Khóa API"
+        "placeholder": "Anthropic API Key",
+        "title": "API Key"
       }
     },
-    "AzureOpenAI": {
+    "azure": {
       "azureApiVersion": {
-        "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, xem chi tiết [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "desc": "Phiên bản API của Azure, tuân theo định dạng YYYY-MM-DD, tham khảo [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Lấy danh sách",
-        "title": "Phiên bản API của Azure"
+        "title": "Phiên bản API Azure"
       },
       "deployments": {
-        "desc": "Sử dụng cú pháp id=name để điền tên triển khai của bạn (ví dụ: nếu tên triển khai và tên mô hình giống nhau, bạn chỉ cần điền tên mô hình), nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
-        "title": "Danh sách triển khai của Azure"
+        "desc": "Sử dụng cú pháp id=name để điền mô hình triển khai của bạn (nếu tên triển khai và mô hình giống nhau, bạn chỉ cần điền tên mô hình), sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
+        "title": "Danh sách mô hình triển khai Azure"
       },
       "endpoint": {
-        "desc": "Giá trị này có thể được tìm thấy trong phần “Khóa và Điểm cuối” khi kiểm tra tài nguyên trên Cổng thông tin Azure",
+        "desc": "Kiểm tra tài nguyên từ cổng Azure, bạn có thể tìm thấy giá trị này trong phần 'Khóa và điểm cuối'",
         "placeholder": "https://docs-test-001.openai.azure.com",
         "title": "Địa chỉ API Azure"
       },
       "models": {
-        "desc": "Các mô hình được hỗ trợ",
+        "desc": "Mô hình được hỗ trợ",
         "title": "Danh sách mô hình"
       },
-      "title": "Cài đặt Azure OpenAI",
+      "title": "Azure OpenAI",
       "token": {
-        "desc": "Giá trị này có thể được tìm thấy trong phần “Khóa và Điểm cuối” khi kiểm tra tài nguyên trên Cổng thông tin Azure. Có thể sử dụng KEY1 hoặc KEY2",
-        "placeholder": "Khóa API Azure",
-        "title": "Khóa API"
+        "desc": "Kiểm tra tài nguyên từ cổng Azure, bạn có thể tìm thấy giá trị này trong phần 'Khóa và điểm cuối'. Có thể sử dụng KEY1 hoặc KEY2",
+        "placeholder": "Azure API Key",
+        "title": "API Key"
       }
     },
-    "Bedrock": {
+    "bedrock": {
       "accessKeyId": {
-        "desc": "Nhập Aws Access Key Id",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
+        "desc": "Nhập AWS Access Key Id",
+        "placeholder": "AWS Access Key Id",
+        "title": "AWS Access Key Id"
       },
       "checker": {
-        "desc": "Kiểm tra xem AccessKeyId / SecretAccessKey đã được điền đúng chưa"
+        "desc": "Kiểm tra AccessKeyId / SecretAccessKey có được nhập chính xác không"
       },
       "region": {
-        "desc": "Nhập Aws Region",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
+        "desc": "Nhập AWS Region",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
       },
       "secretAccessKey": {
-        "desc": "Nhập Aws Secret Access Key",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
+        "desc": "Nhập AWS Secret Access Key",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"
     },
-    "Google": {
+    "checker": {
+      "button": "Kiểm tra",
+      "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
+      "pass": "Kiểm tra thành công",
+      "title": "Kiểm tra kết nối"
+    },
+    "google": {
       "title": "Google",
       "token": {
         "desc": "Nhập API Key từ Google",
@@ -99,7 +105,7 @@
         "title": "API Key"
       }
     },
-    "Groq": {
+    "groq": {
       "title": "Groq",
       "token": {
         "desc": "Nhập API Key từ Groq",
@@ -107,7 +113,7 @@
         "title": "API Key"
       }
     },
-    "Mistral": {
+    "mistral": {
       "title": "Mistral AI",
       "token": {
         "desc": "Nhập API Key từ Mistral AI",
@@ -115,74 +121,74 @@
         "title": "API Key"
       }
     },
-    "Moonshot": {
-      "title": "Mặt trăng",
+    "moonshot": {
+      "title": "Mặt Trăng Tối",
       "token": {
         "desc": "Nhập API Key từ Moonshot AI",
-        "placeholder": "Khóa API Moonshot AI",
-        "title": "Khóa API"
+        "placeholder": "Moonshot AI API Key",
+        "title": "API Key"
       }
     },
-    "Ollama": {
+    "ollama": {
       "checker": {
-        "desc": "Kiểm tra xem địa chỉ proxy có được điền đúng không"
+        "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không"
       },
       "customModelName": {
-        "desc": "Thêm mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
+        "desc": "Thêm mô hình tùy chỉnh, sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
         "placeholder": "vicuna,llava,codellama,llama2:13b-text",
         "title": "Tên mô hình tùy chỉnh"
       },
       "endpoint": {
-        "desc": "Nhập địa chỉ proxy giao diện Ollama, để trống nếu không được chỉ định cụ thể",
+        "desc": "Nhập địa chỉ proxy API của Ollama, có thể để trống nếu không chỉ định cụ thể",
         "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Địa chỉ proxy giao diện"
+        "title": "Địa chỉ proxy API"
       },
       "title": "Ollama"
     },
-    "OpenAI": {
+    "openai": {
       "azureApiVersion": {
-        "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, xem chi tiết tại [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+        "desc": "Phiên bản API của Azure, tuân theo định dạng YYYY-MM-DD, tham khảo [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
         "fetch": "Lấy danh sách",
         "title": "Phiên bản API Azure"
       },
       "customModelName": {
-        "desc": "Thêm mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,)",
-        "placeholder": "mô hình1, mô hình2, mô hình3",
+        "desc": "Thêm mô hình tùy chỉnh, sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
+        "placeholder": "model1,model2,model3",
         "title": "Tên mô hình tùy chỉnh"
       },
       "endpoint": {
         "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
         "placeholder": "https://api.openai.com/v1",
-        "title": "Địa chỉ proxy giao diện"
+        "title": "Địa chỉ proxy API"
       },
       "models": {
-        "count": "Tổng cộng có {{count}} mô hình",
-        "desc": "Các mô hình được hỗ trợ",
+        "count": "Tổng cộng hỗ trợ {{count}} mô hình",
+        "desc": "Mô hình được hỗ trợ",
         "fetch": "Lấy danh sách mô hình",
         "notSupport": "Azure OpenAI tạm thời không hỗ trợ xem danh sách mô hình",
-        "notSupportTip": "Bạn cần tự đảm bảo rằng tên triển khai và tên mô hình phù hợp nhau",
+        "notSupportTip": "Bạn cần tự đảm bảo tên triển khai và tên mô hình phải giống nhau",
         "refetch": "Lấy lại danh sách mô hình",
         "title": "Danh sách mô hình"
       },
-      "title": "Cài đặt OpenAI",
+      "title": "OpenAI",
       "token": {
-        "desc": "Sử dụng Khóa OpenAI của riêng bạn",
-        "placeholder": "Khóa API OpenAI",
-        "title": "Khóa API"
+        "desc": "Sử dụng OpenAI Key của riêng bạn",
+        "placeholder": "OpenAI API Key",
+        "title": "API Key"
       },
       "useAzure": {
         "desc": "Sử dụng dịch vụ OpenAI do Azure cung cấp",
         "fetch": "Lấy danh sách",
-        "serverConfig": "Quản trị viên đã cấu hình mở Azure OpenAI trên máy chủ, không cho phép chuyển đổi",
-        "title": "Sử dụng Azure OpenAI"
+        "serverConfig": "Quản trị viên đã cấu hình kích hoạt Azure OpenAI ở phía máy chủ, không được phép chuyển đổi",
+        "title": "Azure OpenAI"
       }
     },
-    "OpenRouter": {
+    "openrouter": {
       "checker": {
-        "desc": "Kiểm tra xem địa chỉ proxy đã được điền đúng chưa"
+        "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không"
       },
       "customModelName": {
-        "desc": "Thêm tên mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
+        "desc": "Thêm mô hình tùy chỉnh, sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
         "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
         "title": "Tên mô hình tùy chỉnh"
       },
@@ -193,13 +199,21 @@
         "title": "API Key"
       }
     },
-    "TogetherAI": {
+    "perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Nhập API Key từ Perplexity AI",
+        "placeholder": "Perplexity AI API Key",
+        "title": "API Key"
+      }
+    },
+    "togetherai": {
       "checker": {
-        "desc": "Kiểm tra xem địa chỉ proxy đã được điền đúng chưa"
+        "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không"
       },
       "customModelName": {
-        "desc": "Thêm tên mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "desc": "Thêm mô hình tùy chỉnh, sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
+        "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
         "title": "Tên mô hình tùy chỉnh"
       },
       "title": "TogetherAI",
@@ -209,37 +223,23 @@
         "title": "API Key"
       }
     },
-    "Perplexity": {
-      "title": "Perplexity AI",
+    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨",
+    "zeroone": {
+      "title": "01.AI Zero One",
       "token": {
-        "desc": "Nhập API Key từ Perplexity AI",
-        "placeholder": "Khóa API Perplexity AI",
+        "desc": "Nhập API Key từ 01.AI Zero One",
+        "placeholder": "01.AI Zero One API Key",
         "title": "API Key"
       }
     },
-    "ZeroOne": {
-      "title": "01.AI ZeroOne",
-      "token": {
-        "desc": "Nhập API Key từ 01.AI ZeroOne",
-        "placeholder": "01.AI ZeroOne API Key",
-        "title": "API Key"
-      }
-    },
-    "Zhipu": {
-      "title": "Zhipu AI",
+    "zhipu": {
+      "title": "Zhipu",
       "token": {
         "desc": "Nhập API Key từ Zhipu",
         "placeholder": "Zhipu API Key",
         "title": "API Key"
       }
-    },
-    "checker": {
-      "button": "Kiểm tra",
-      "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
-      "pass": "Kiểm tra thành công",
-      "title": "Kiểm tra kết nối"
-    },
-    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
+    }
   },
   "ollama": {
     "download": {

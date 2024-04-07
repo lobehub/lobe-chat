@@ -219,7 +219,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [日历助手](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-03-13**</sup>            | 一个用于管理日历事件的插件 # 将自动生成工作流程中的 i18n<br/>`日历` `日程安排` `将自动生成工作流程中的-i-18-n` |
 | [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br/>`加密货币` `btc` `eth` `bnb`      |
 
-> 📊 Total plugins: [<kbd>**56**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**55**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 

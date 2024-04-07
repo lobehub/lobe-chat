@@ -31,207 +31,65 @@
     "sessionWithName": "Sessie-instellingen · {{name}}"
   },
   "llm": {
-    "Anthropic": {
+    "anthropic": {
       "endpoint": {
-        "desc": "除默认地址外，必须包含 http(s)://",
+        "desc": "Naast het standaardadres moet http(s):// worden opgenomen",
         "placeholder": "https://api.anthropic.com",
-        "title": "API 代理地址"
+        "title": "API Proxy Adres"
       },
       "title": "Anthropic",
       "token": {
-        "desc": "Voer de API-sleutel van Anthropic in",
-        "placeholder": "Anthropic API-sleutel",
-        "title": "API-sleutel"
+        "desc": "Voer de API Key van Anthropic in",
+        "placeholder": "Anthropic API Key",
+        "title": "API Key"
       }
     },
-    "AzureOpenAI": {
+    "azure": {
       "azureApiVersion": {
-        "desc": "Azure API-versie, in het formaat YYYY-MM-DD, raadpleeg de [laatste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Ophalen van lijst",
-        "title": "Azure API-versie"
+        "desc": "De API-versie van Azure, volgt het formaat YYYY-MM-DD, raadpleeg [de nieuwste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Lijst ophalen",
+        "title": "Azure Api Versie"
       },
       "deployments": {
-        "desc": "Vul de syntaxis id=naam in voor uw implementatiemodellen (bijv. als de implementatienaam en het model dezelfde naam hebben, kunt u alleen de modelnaam invullen), meerdere modellen worden gescheiden door een komma (,)",
-        "title": "Azure implementatiemodellen"
+        "desc": "Vul je deploymentmodellen in met de syntax id=name (als de deploymentnaam en modelnaam hetzelfde zijn, kun je alleen de modelnaam invullen), gebruik een komma (,) om meerdere modellen te scheiden",
+        "title": "Azure Deployment Modellenlijst"
       },
       "endpoint": {
-        "desc": "Deze waarde is te vinden in het gedeelte 'Sleutels en eindpunten' wanneer u de bron controleert in het Azure-portal",
+        "desc": "Dit waarde kan gevonden worden in de 'Sleutels en eindpunt' sectie wanneer je een bron in Azure Portal controleert",
         "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure API-adres"
+        "title": "Azure API Adres"
       },
       "models": {
         "desc": "Ondersteunde modellen",
-        "title": "Modellijst"
+        "title": "Modellenlijst"
       },
-      "title": "Azure OpenAI-instellingen",
+      "title": "Azure OpenAI",
       "token": {
-        "desc": "Deze waarde is te vinden in het gedeelte 'Sleutels en eindpunten' wanneer u de bron controleert in het Azure-portal. U kunt KEY1 of KEY2 gebruiken",
-        "placeholder": "Azure API-sleutel",
-        "title": "API-sleutel"
+        "desc": "Dit waarde kan gevonden worden in de 'Sleutels en eindpunt' sectie wanneer je een bron in Azure Portal controleert. Je kunt KEY1 of KEY2 gebruiken",
+        "placeholder": "Azure API Key",
+        "title": "API Key"
       }
     },
-    "Bedrock": {
+    "bedrock": {
       "accessKeyId": {
-        "desc": "Vul de AWS Access Key ID in",
-        "placeholder": "AWS Access Key ID",
-        "title": "AWS Access Key ID"
+        "desc": "Voer AWS Access Key Id in",
+        "placeholder": "AWS Access Key Id",
+        "title": "AWS Access Key Id"
       },
       "checker": {
         "desc": "Test of AccessKeyId / SecretAccessKey correct zijn ingevuld"
       },
       "region": {
-        "desc": "Vul de AWS-regio in",
-        "placeholder": "AWS-regio",
-        "title": "AWS-regio"
+        "desc": "Voer AWS Region in",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
       },
       "secretAccessKey": {
-        "desc": "Vul de AWS Secret Access Key in",
+        "desc": "Voer AWS Secret Access Key in",
         "placeholder": "AWS Secret Access Key",
         "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"
-    },
-    "Google": {
-      "title": "Google",
-      "token": {
-        "desc": "Vul de API-sleutel van Google in",
-        "placeholder": "Google API-sleutel",
-        "title": "API-sleutel"
-      }
-    },
-    "Groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "Voer de API-sleutel van Groq in",
-        "placeholder": "Groq API-sleutel",
-        "title": "API-sleutel"
-      }
-    },
-    "Mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Voer de API-sleutel van Mistral AI in",
-        "placeholder": "Mistral AI API-sleutel",
-        "title": "API-sleutel"
-      }
-    },
-    "Moonshot": {
-      "title": "月球计划",
-      "token": {
-        "desc": "请输入来自 Moonshot AI 的 API 密钥",
-        "placeholder": "Moonshot AI API 密钥",
-        "title": "API 密钥"
-      }
-    },
-    "Ollama": {
-      "checker": {
-        "desc": "Check of de proxy-adres correct is ingevuld"
-      },
-      "customModelName": {
-        "desc": "Voeg aangepast model toe, gebruik komma's (,) om meerdere modellen te scheiden",
-        "placeholder": "vicuna,llama,codellama,llama2:13b-text",
-        "title": "Aangepaste modelnaam"
-      },
-      "endpoint": {
-        "desc": "Vul het Ollama-interface proxy-adres in, laat leeg als lokaal niet apart is gespecificeerd",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Interface proxy-adres"
-      },
-      "title": "Ollama"
-    },
-    "OpenAI": {
-      "azureApiVersion": {
-        "desc": "API-versie van Azure, in het formaat YYYY-MM-DD, zie [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Lijst ophalen",
-        "title": "Azure API-versie"
-      },
-      "customModelName": {
-        "desc": "Voeg aangepaste modellen toe, gescheiden door een komma (,)",
-        "placeholder": "model1,model2,model3",
-        "title": "Naam aangepast model"
-      },
-      "endpoint": {
-        "desc": "Moet http(s):// bevatten, naast het standaardadres",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "Proxy-adres"
-      },
-      "models": {
-        "count": "In totaal {{count}} modellen ondersteund",
-        "desc": "Ondersteunde modellen",
-        "fetch": "Modellen ophalen",
-        "notSupport": "Azure OpenAI ondersteunt momenteel geen weergave van modellijsten",
-        "notSupportTip": "U moet ervoor zorgen dat de implementatienaam overeenkomt met de modelnaam",
-        "refetch": "Modellijst opnieuw ophalen",
-        "title": "Modellijst"
-      },
-      "title": "OpenAI-instellingen",
-      "token": {
-        "desc": "Gebruik uw eigen OpenAI-sleutel",
-        "placeholder": "OpenAI API-sleutel",
-        "title": "API-sleutel"
-      },
-      "useAzure": {
-        "desc": "Gebruik OpenAI-service van Azure",
-        "fetch": "Lijst ophalen",
-        "serverConfig": "Beheerder heeft Azure OpenAI aan de serverzijde geconfigureerd, overschakelen is niet toegestaan",
-        "title": "Azure OpenAI gebruiken"
-      }
-    },
-    "OpenRouter": {
-      "checker": {
-        "desc": "Check of de proxy-adres correct is ingevuld"
-      },
-      "customModelName": {
-        "desc": "Voeg aangepast model toe, gebruik een komma (,) om meerdere modellen te scheiden",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "Aangepaste modelnaam"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "Voer de API-sleutel in van OpenRouter AI",
-        "placeholder": "OpenRouter AI API-sleutel",
-        "title": "API-sleutel"
-      }
-    },
-    "TogetherAI": {
-      "checker": {
-        "desc": "Check of de proxy-adres correct is ingevuld"
-      },
-      "customModelName": {
-        "desc": "Voeg aangepast model toe, gebruik een komma (,) om meerdere modellen te scheiden",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "Aangepaste modelnaam"
-      },
-      "title": "TogetherAI",
-      "token": {
-        "desc": "Voer de API-sleutel in van TogetherAI AI",
-        "placeholder": "TogetherAI AI API-sleutel",
-        "title": "API-sleutel"
-      }
-    },
-    "Perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Voer de API-sleutel in van Perplexity AI",
-        "placeholder": "Perplexity AI API-sleutel",
-        "title": "API-sleutel"
-      }
-    },
-    "ZeroOne": {
-      "title": "01.AI 零一万物",
-      "token": {
-        "desc": "填入来自 01.AI 零一万物的 API 密钥",
-        "placeholder": "01.AI 零一万物 API 密钥",
-        "title": "API 密钥"
-      }
-    },
-    "Zhipu": {
-      "title": "智谱",
-      "token": {
-        "desc": "Vul de API-sleutel van Zhipu in",
-        "placeholder": "Zhipu API-sleutel",
-        "title": "API-sleutel"
-      }
     },
     "checker": {
       "button": "Controleren",
@@ -239,7 +97,149 @@
       "pass": "Succesvol gecontroleerd",
       "title": "Connectiviteitscontrole"
     },
-    "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨"
+    "google": {
+      "title": "Google",
+      "token": {
+        "desc": "Voer de API Key van Google in",
+        "placeholder": "Google API Key",
+        "title": "API Key"
+      }
+    },
+    "groq": {
+      "title": "Groq",
+      "token": {
+        "desc": "Voer de API Key van Groq in",
+        "placeholder": "Groq API Key",
+        "title": "API Key"
+      }
+    },
+    "mistral": {
+      "title": "Mistral AI",
+      "token": {
+        "desc": "Voer de API Key van Mistral AI in",
+        "placeholder": "Mistral AI API Key",
+        "title": "API Key"
+      }
+    },
+    "moonshot": {
+      "title": "De Donkere Kant van de Maan",
+      "token": {
+        "desc": "Voer de API Key van Moonshot AI in",
+        "placeholder": "Moonshot AI API Key",
+        "title": "API Key"
+      }
+    },
+    "ollama": {
+      "checker": {
+        "desc": "Test of het proxyadres correct is ingevuld"
+      },
+      "customModelName": {
+        "desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
+        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+        "title": "Aangepaste Modelnamen"
+      },
+      "endpoint": {
+        "desc": "Voer het Ollama interface proxyadres in, laat leeg indien niet specifiek aangegeven",
+        "placeholder": "http://127.0.0.1:11434/v1",
+        "title": "Interface Proxyadres"
+      },
+      "title": "Ollama"
+    },
+    "openai": {
+      "azureApiVersion": {
+        "desc": "De API-versie van Azure, volgt het formaat YYYY-MM-DD, raadpleeg [de nieuwste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
+        "fetch": "Lijst ophalen",
+        "title": "Azure Api Versie"
+      },
+      "customModelName": {
+        "desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
+        "placeholder": "model1,model2,model3",
+        "title": "Aangepaste Modelnamen"
+      },
+      "endpoint": {
+        "desc": "Naast het standaardadres moet http(s):// worden opgenomen",
+        "placeholder": "https://api.openai.com/v1",
+        "title": "Interface Proxyadres"
+      },
+      "models": {
+        "count": "Ondersteunt {{count}} modellen",
+        "desc": "Ondersteunde modellen",
+        "fetch": "Modellenlijst ophalen",
+        "notSupport": "Azure OpenAI ondersteunt het bekijken van modellenlijsten momenteel niet",
+        "notSupportTip": "Je moet zelf zorgen dat de deploymentnaam overeenkomt met de modelnaam",
+        "refetch": "Modellenlijst opnieuw ophalen",
+        "title": "Modellenlijst"
+      },
+      "title": "OpenAI",
+      "token": {
+        "desc": "Gebruik je eigen OpenAI Key",
+        "placeholder": "OpenAI API Key",
+        "title": "OpenAI API Key"
+      },
+      "useAzure": {
+        "desc": "Gebruik de OpenAI dienst aangeboden door Azure",
+        "fetch": "Lijst ophalen",
+        "serverConfig": "De beheerder heeft Azure OpenAI ingeschakeld op de server, schakelen is niet toegestaan",
+        "title": "Azure OpenAI"
+      }
+    },
+    "openrouter": {
+      "checker": {
+        "desc": "Test of het proxyadres correct is ingevuld"
+      },
+      "customModelName": {
+        "desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
+        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+        "title": "Aangepaste Modelnamen"
+      },
+      "title": "OpenRouter",
+      "token": {
+        "desc": "Voer de API Key van OpenRouter AI in",
+        "placeholder": "OpenRouter AI API Key",
+        "title": "API Key"
+      }
+    },
+    "perplexity": {
+      "title": "Perplexity",
+      "token": {
+        "desc": "Voer de API Key van Perplexity AI in",
+        "placeholder": "Perplexity AI API Key",
+        "title": "API Key"
+      }
+    },
+    "togetherai": {
+      "checker": {
+        "desc": "Test of het proxyadres correct is ingevuld"
+      },
+      "customModelName": {
+        "desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
+        "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+        "title": "Aangepaste Modelnamen"
+      },
+      "title": "TogetherAI",
+      "token": {
+        "desc": "Voer de API Key van TogetherAI AI in",
+        "placeholder": "TogetherAI AI API Key",
+        "title": "API Key"
+      }
+    },
+    "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨",
+    "zeroone": {
+      "title": "01.AI Nul Een Alles",
+      "token": {
+        "desc": "Voer de API Key van 01.AI Nul Een Alles in",
+        "placeholder": "01.AI Nul Een Alles API Key",
+        "title": "API Key"
+      }
+    },
+    "zhipu": {
+      "title": "Intelligent Spectrum",
+      "token": {
+        "desc": "Voer de API Key van Intelligent Spectrum in",
+        "placeholder": "Zhipu API Key",
+        "title": "API Key"
+      }
+    }
   },
   "ollama": {
     "download": {

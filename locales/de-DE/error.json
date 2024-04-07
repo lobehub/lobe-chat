@@ -49,8 +49,8 @@
     "InvalidMoonshotAPIKey": "Ungültiger oder leerer Moonshot AI API-Schlüssel. Bitte überprüfen Sie den Moonshot API-Schlüssel und versuchen Sie es erneut.",
     "InvalidOllamaArgs": "Ollama-Konfiguration ist ungültig. Bitte überprüfen Sie die Ollama-Konfiguration und versuchen Sie es erneut.",
     "InvalidOpenRouterAPIKey": "OpenRouter API-Schlüssel ungültig oder leer. Bitte überprüfen Sie den OpenRouter API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidTogetherAIAPIKey": "TogetherAI API-Schlüssel ungültig oder leer. Bitte überprüfen Sie den TogetherAI API-Schlüssel und versuchen Sie es erneut.",
     "InvalidPerplexityAPIKey": "Perplexity API Key ist ungültig oder leer. Bitte überprüfen Sie den Perplexity API Key und versuchen Sie es erneut.",
+    "InvalidTogetherAIAPIKey": "TogetherAI API-Schlüssel ungültig oder leer. Bitte überprüfen Sie den TogetherAI API-Schlüssel und versuchen Sie es erneut.",
     "InvalidZeroOneAPIKey": "Ungültiger oder leerer ZeroOne-API-Schlüssel. Bitte überprüfen Sie den ZeroOne-API-Schlüssel und versuchen Sie es erneut.",
     "InvalidZhipuAPIKey": "Der Zhipu API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Zhipu API-Schlüssel und versuchen Sie es erneut.",
     "LocationNotSupportError": "Entschuldigung, Ihr Standort unterstützt diesen Modellservice möglicherweise aufgrund von regionalen Einschränkungen oder nicht aktivierten Diensten nicht. Bitte überprüfen Sie, ob der aktuelle Standort die Verwendung dieses Dienstes unterstützt, oder versuchen Sie, andere Standortinformationen zu verwenden.",
@@ -61,7 +61,6 @@
     "OllamaServiceUnavailable": "Ollama-Dienst nicht verfügbar. Bitte überprüfen Sie, ob er ordnungsgemäß gestartet wurde.",
     "OpenAIBizError": "Fehler bei der OpenAI-Serviceanfrage. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut",
     "OpenRouterBizError": "Fehler bei der Anforderung des OpenRouter AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "TogetherAIBizError": "Fehler bei der Anforderung des TogetherAI AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PerplexityBizError": "Fehler bei der Anforderung des Perplexity AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
@@ -75,6 +74,7 @@
     "PluginOpenApiInitError": "Entschuldigung, die Initialisierung des OpenAPI-Clients ist fehlgeschlagen. Bitte überprüfen Sie die Konfigurationsinformationen des OpenAPI auf Richtigkeit",
     "PluginServerError": "Fehler bei der Serveranfrage des Plugins. Bitte überprüfen Sie die Fehlerinformationen unten in Ihrer Plugin-Beschreibungsdatei, Plugin-Konfiguration oder Serverimplementierung",
     "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit",
+    "TogetherAIBizError": "Fehler bei der Anforderung des TogetherAI AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "ZeroOneBizError": "Anfrage an ZeroOneBiz-Dienst fehlgeschlagen. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "ZhipuBizError": "Es ist ein Fehler bei der Anforderung des Zhipu-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
   },
@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "Benutzerdefinierte Region",
-        "description": "Geben Sie Ihre Aws AccessKeyId / SecretAccessKey ein, um die Sitzung zu starten. Die Anwendung speichert Ihre Authentifizierungsinformationen nicht.",
+        "description": "Geben Sie Ihre AWS AccessKeyId / SecretAccessKey ein, um die Sitzung zu starten. Die Anwendung speichert Ihre Authentifizierungsinformationen nicht.",
         "title": "Verwenden von benutzerdefinierten Bedrock-Authentifizierungsinformationen"
       },
       "Google": {
@@ -120,13 +120,13 @@
         "description": "Geben Sie Ihren OpenRouter API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
         "title": "Verwenden Sie einen benutzerdefinierten OpenRouter API-Schlüssel"
       },
-      "TogetherAI": {
-        "description": "Geben Sie Ihren TogetherAI API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden Sie einen benutzerdefinierten TogetherAI API-Schlüssel"
-      },
       "Perplexity": {
         "description": "Geben Sie Ihren eigenen Perplexity API Key ein, um das Gespräch zu beginnen. Die App speichert Ihren API Key nicht.",
         "title": "Verwenden Sie einen benutzerdefinierten Perplexity API Key"
+      },
+      "TogetherAI": {
+        "description": "Geben Sie Ihren TogetherAI API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
+        "title": "Verwenden Sie einen benutzerdefinierten TogetherAI API-Schlüssel"
       },
       "ZeroOne": {
         "description": "Geben Sie Ihren benutzerdefinierten ZeroOne-API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
