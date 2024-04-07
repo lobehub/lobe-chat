@@ -10,10 +10,11 @@ import {
   LLMProviderBaseUrlKey,
   LLMProviderConfigKey,
   LLMProviderCustomModelKey,
+  LLMProviderModelListKey,
 } from '@/app/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
@@ -34,7 +35,7 @@ interface ProviderConfigProps {
 const ProviderConfig = memo<ProviderConfigProps>(
   ({
     provider,
-    showCustomModelName = true,
+    showCustomModelName = false,
     showEndpoint,
     showApiKey = true,
     checkModel,
@@ -48,7 +49,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     const [toggleProviderEnabled, setSettings, enabled] = useGlobalStore((s) => [
       s.toggleProviderEnabled,
       s.setSettings,
-      modelProviderSelectors.providerEnabled(provider)(s),
+      modelConfigSelectors.providerEnabled(provider)(s),
     ]);
 
     useSyncSettings(form);
@@ -75,14 +76,23 @@ const ProviderConfig = memo<ProviderConfigProps>(
       },
       showCustomModelName && {
         children: (
-          <CustomModelSelect
+          <Input.TextArea
+            allowClear
             placeholder={t(`llm.${provider}.customModelName.placeholder` as any)}
-            provider={provider}
+            style={{ height: 100 }}
           />
+        ),
+        desc: t(`llm.${provider}.customModelName.desc` as any),
+        label: t(`llm.${provider}.customModelName.title` as any),
+        name: [LLMProviderConfigKey, provider, LLMProviderCustomModelKey],
+      },
+      {
+        children: (
+          <CustomModelSelect placeholder={t('llm.modelList.placeholder')} provider={provider} />
         ),
         desc: t('llm.modelList.desc'),
         label: t('llm.modelList.title'),
-        name: [LLMProviderConfigKey, provider, LLMProviderCustomModelKey],
+        name: [LLMProviderConfigKey, provider, LLMProviderModelListKey],
       },
       checkerItem ?? {
         children: <Checker model={checkModel!} provider={provider} />,

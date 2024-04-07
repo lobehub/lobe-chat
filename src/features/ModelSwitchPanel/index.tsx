@@ -5,7 +5,7 @@ import { PropsWithChildren, memo, useMemo } from 'react';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ModelProviderCard } from '@/types/llm';
@@ -36,7 +36,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   const model = useSessionStore(agentSelectors.currentAgentModel);
   const updateAgentConfig = useSessionStore((s) => s.updateAgentConfig);
 
-  const select = useGlobalStore(modelProviderSelectors.modelSelectList, isEqual);
+  const select = useGlobalStore(modelConfigSelectors.modelSelectList, isEqual);
   const enabledList = select.filter((s) => s.enabled);
 
   const items = useMemo(() => {

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 
 import Checker from '../components/Checker';
 import CustomModelSelect from '../components/CustomModelList';
@@ -31,7 +31,7 @@ const LLM = memo(() => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
 
-  const [useAzure] = useGlobalStore((s) => [modelProviderSelectors.enableAzure(s)]);
+  const [useAzure] = useGlobalStore((s) => [modelConfigSelectors.enableAzure(s)]);
 
   return (
     <ProviderConfig

@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import ModelIcon from '@/components/ModelIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/slices/settings/selectors';
+import { modelProviderSelectors } from '@/store/global/selectors';
 
 export const OptionRender = memo<{ displayName: string; id: string }>(({ displayName, id: id }) => {
   const model = useGlobalStore((s) => modelProviderSelectors.modelCardById(id)(s), isEqual);

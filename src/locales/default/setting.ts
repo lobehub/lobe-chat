@@ -123,7 +123,8 @@ export default {
       },
     },
     modelList: {
-      desc: '选择在会话中展示的模型，多个模型使用逗号（,） 隔开',
+      desc: '选择在会话中展示的模型，选择的模型会在模型列表中展示',
+      placeholder: '请从列表中选择模型',
       title: '模型列表',
     },
     moonshot: {

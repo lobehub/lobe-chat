@@ -7,7 +7,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 
 import { FormAction } from '../style';
 
@@ -16,8 +16,8 @@ const OpenAIForm = memo(() => {
   const [showProxy, setShow] = useState(false);
 
   const [apiKey, proxyUrl, setConfig] = useGlobalStore((s) => [
-    modelProviderSelectors.openAIAPIKey(s),
-    modelProviderSelectors.openAIProxyUrl(s),
+    modelConfigSelectors.openAIAPIKey(s),
+    modelConfigSelectors.openAIProxyUrl(s),
     s.setModelProviderConfig,
   ]);
   const theme = useTheme();

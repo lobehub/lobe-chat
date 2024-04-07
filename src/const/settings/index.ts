@@ -1,3 +1,19 @@
+import {
+  AnthropicProvider,
+  BedrockProvider,
+  GoogleProvider,
+  GroqProvider,
+  MistralProvider,
+  MoonshotProvider,
+  OllamaProvider,
+  OpenAIProvider,
+  OpenRouterProvider,
+  PerplexityProvider,
+  TogetherAIProvider,
+  ZeroOneProvider,
+  ZhiPuProvider,
+  filterEnabledModels,
+} from '@/config/modelProviders';
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
@@ -50,6 +66,7 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   anthropic: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(AnthropicProvider),
   },
   azure: {
     apiKey: '',
@@ -60,53 +77,64 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   bedrock: {
     accessKeyId: '',
     enabled: false,
+    models: filterEnabledModels(BedrockProvider),
     region: 'us-east-1',
     secretAccessKey: '',
   },
   google: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(GoogleProvider),
   },
   groq: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(GroqProvider),
   },
   mistral: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(MistralProvider),
   },
   moonshot: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(MoonshotProvider),
   },
   ollama: {
     enabled: false,
     endpoint: '',
+    models: filterEnabledModels(OllamaProvider),
   },
   openAI: {
     OPENAI_API_KEY: '',
     enabled: true,
-    models: [],
+    models: filterEnabledModels(OpenAIProvider),
   },
   openrouter: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(OpenRouterProvider),
   },
   perplexity: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(PerplexityProvider),
   },
   togetherai: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(TogetherAIProvider),
   },
   zeroone: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(ZeroOneProvider),
   },
   zhipu: {
     apiKey: '',
     enabled: false,
+    models: filterEnabledModels(ZhiPuProvider),
   },
 };
 

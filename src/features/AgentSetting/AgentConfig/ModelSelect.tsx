@@ -5,7 +5,7 @@ import { memo, useMemo } from 'react';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 import { ModelProviderCard } from '@/types/llm';
 
 import { useStore } from '../store';
@@ -25,7 +25,7 @@ interface ModelOption {
 
 const ModelSelect = memo(() => {
   const [model, updateConfig] = useStore((s) => [s.config.model, s.setAgentConfig]);
-  const select = useGlobalStore(modelProviderSelectors.modelSelectList, isEqual);
+  const select = useGlobalStore(modelConfigSelectors.modelSelectList, isEqual);
   const { styles } = useStyles();
 
   const enabledList = select.filter((s) => s.enabled);

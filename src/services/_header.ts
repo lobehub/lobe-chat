@@ -6,7 +6,7 @@ import {
   USE_AZURE_OPENAI,
 } from '@/const/fetch';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors, settingsSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors, settingsSelectors } from '@/store/global/selectors';
 
 /**
  * TODO: Need to be removed after tts refactor
@@ -14,7 +14,7 @@ import { modelProviderSelectors, settingsSelectors } from '@/store/global/select
  */
 // eslint-disable-next-line no-undef
 export const createHeaderWithOpenAI = (header?: HeadersInit): HeadersInit => {
-  const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());
+  const openai = modelConfigSelectors.openAIConfig(useGlobalStore.getState());
 
   const apiKey = openai.OPENAI_API_KEY || '';
   const endpoint = openai.endpoint || '';

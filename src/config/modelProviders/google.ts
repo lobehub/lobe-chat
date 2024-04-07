@@ -43,14 +43,6 @@ const Google: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'The best model for scaling across a wide range of tasks',
-      displayName: 'Gemini 1.0 Pro',
-      hidden: true,
-      id: '1.0-pro',
-      maxOutput: 2048,
-      tokens: 32_768,
-    },
-    {
       description:
         'The best model for scaling across a wide range of tasks. This is a stable model that supports tuning.',
       displayName: 'Gemini 1.0 Pro 001 (Tuning)',

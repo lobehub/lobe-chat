@@ -1,4 +1,4 @@
-import { ChatModelCard } from '@/types/llm';
+import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
 import AnthropicProvider from './anthropic';
 import BedrockProvider from './bedrock';
@@ -29,6 +29,10 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   AnthropicProvider.chatModels,
   ZeroOneProvider.chatModels,
 ].flat();
+
+export const filterEnabledModels = (provider: ModelProviderCard) => {
+  return provider.chatModels.filter((v) => !v.hidden).map((m) => m.id);
+};
 
 export { default as AnthropicProvider } from './anthropic';
 export { default as BedrockProvider } from './bedrock';

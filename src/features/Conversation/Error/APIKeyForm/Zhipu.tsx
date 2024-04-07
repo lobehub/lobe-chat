@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 
 import { FormAction } from '../style';
 
@@ -14,7 +14,7 @@ const ZhipuForm = memo(() => {
   const { t } = useTranslation('error');
 
   const [apiKey, setConfig] = useGlobalStore((s) => [
-    modelProviderSelectors.zhipuAPIKey(s),
+    modelConfigSelectors.zhipuAPIKey(s),
     s.setModelProviderConfig,
     // modelProviderSelectors.zhipuAPIKey(s),
   ]);

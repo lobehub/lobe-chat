@@ -3,8 +3,9 @@ import { css, cx } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 
+import { filterEnabledModels } from '@/config/modelProviders';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 
 import { OptionRender } from './Option';
 
@@ -23,10 +24,10 @@ interface CustomModelSelectProps {
 
 const CustomModelSelect = memo<CustomModelSelectProps>(({ provider, placeholder }) => {
   const providerCard = useGlobalStore(
-    (s) => modelProviderSelectors.modelSelectList(s).find((s) => s.id === provider),
+    (s) => modelConfigSelectors.modelSelectList(s).find((s) => s.id === provider),
     isEqual,
   );
-  const defaultEnableModel = providerCard?.chatModels.filter((v) => !v.hidden).map((m) => m.id);
+  const defaultEnableModel = providerCard ? filterEnabledModels(providerCard) : [];
 
   return (
     <Select

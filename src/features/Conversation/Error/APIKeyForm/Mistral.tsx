@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 
 import { FormAction } from '../style';
 
@@ -14,7 +14,7 @@ const MistralForm = memo(() => {
   // const [showProxy, setShow] = useState(false);
 
   const [apiKey, setConfig] = useGlobalStore((s) => [
-    modelProviderSelectors.mistralAPIKey(s),
+    modelConfigSelectors.mistralAPIKey(s),
     s.setModelProviderConfig,
   ]);
 

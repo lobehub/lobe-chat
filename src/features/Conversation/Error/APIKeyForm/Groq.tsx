@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 
 import { FormAction } from '../style';
 
@@ -14,7 +14,7 @@ const GroqForm = memo(() => {
   // const [showProxy, setShow] = useState(false);
 
   const [apiKey, setConfig] = useGlobalStore((s) => [
-    modelProviderSelectors.groqAPIKey(s),
+    modelConfigSelectors.groqAPIKey(s),
     s.setModelProviderConfig,
   ]);
 
