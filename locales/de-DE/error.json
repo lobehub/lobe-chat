@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "Benutzerdefinierte Region",
-        "description": "Geben Sie Ihre Aws AccessKeyId / SecretAccessKey ein, um die Sitzung zu starten. Die Anwendung speichert Ihre Authentifizierungsinformationen nicht.",
+        "description": "Geben Sie Ihre AWS AccessKeyId / SecretAccessKey ein, um die Sitzung zu starten. Die Anwendung speichert Ihre Authentifizierungsinformationen nicht.",
         "title": "Verwenden von benutzerdefinierten Bedrock-Authentifizierungsinformationen"
       },
       "Google": {

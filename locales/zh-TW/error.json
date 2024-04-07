@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "自定義服務區域",
-        "description": "輸入你的 Aws AccessKeyId / SecretAccessKey 即可開始會話。應用不會記錄你的驗證配置",
+        "description": "輸入你的 AWS AccessKeyId / SecretAccessKey 即可開始會話。應用不會記錄你的驗證配置",
         "title": "使用自定義 Bedrock 驗證信息"
       },
       "Google": {

@@ -80,9 +80,9 @@
         "desc": "測試 AccessKeyId / SecretAccessKey 是否填寫正確"
       },
       "region": {
-        "desc": "填入 Aws Region",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
+        "desc": "填入 AWS Region",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
       },
       "secretAccessKey": {
         "desc": "填入 AWS Secret Access Key",

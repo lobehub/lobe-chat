@@ -73,22 +73,22 @@
     },
     "bedrock": {
       "accessKeyId": {
-        "desc": "Inserisci il tuo Aws Access Key Id",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
+        "desc": "Inserisci il tuo AWS Access Key Id",
+        "placeholder": "AWS Access Key Id",
+        "title": "AWS Access Key Id"
       },
       "checker": {
         "desc": "Testa se AccessKeyId / SecretAccessKey sono inseriti correttamente"
       },
       "region": {
-        "desc": "Inserisci la tua Aws Region",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
+        "desc": "Inserisci la tua AWS Region",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
       },
       "secretAccessKey": {
-        "desc": "Inserisci il tuo Aws Secret Access Key",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
+        "desc": "Inserisci il tuo AWS Secret Access Key",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"
     },

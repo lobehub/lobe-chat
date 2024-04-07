@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "Vùng dịch vụ tùy chỉnh",
-        "description": "Nhập Aws AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
+        "description": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
         "title": "Sử dụng thông tin xác thực tùy chỉnh của Bedrock"
       },
       "Google": {

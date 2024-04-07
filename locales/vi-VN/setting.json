@@ -72,22 +72,22 @@
     },
     "bedrock": {
       "accessKeyId": {
-        "desc": "Nhập Aws Access Key Id",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
+        "desc": "Nhập AWS Access Key Id",
+        "placeholder": "AWS Access Key Id",
+        "title": "AWS Access Key Id"
       },
       "checker": {
         "desc": "Kiểm tra AccessKeyId / SecretAccessKey có được nhập chính xác không"
       },
       "region": {
-        "desc": "Nhập Aws Region",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
+        "desc": "Nhập AWS Region",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
       },
       "secretAccessKey": {
-        "desc": "Nhập Aws Secret Access Key",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
+        "desc": "Nhập AWS Secret Access Key",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"
     },

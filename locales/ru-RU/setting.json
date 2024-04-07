@@ -73,7 +73,7 @@
     "bedrock": {
       "accessKeyId": {
         "desc": "Введите ваш AWS Access Key ID",
-        "placeholder": "Aws Access Key Id",
+        "placeholder": "AWS Access Key Id",
         "title": "AWS Access Key ID"
       },
       "checker": {
@@ -81,12 +81,12 @@
       },
       "region": {
         "desc": "Введите ваш AWS Region",
-        "placeholder": "Aws Region",
+        "placeholder": "AWS Region",
         "title": "AWS Region"
       },
       "secretAccessKey": {
         "desc": "Введите ваш AWS Secret Access Key",
-        "placeholder": "Aws Secret Access Key",
+        "placeholder": "AWS Secret Access Key",
         "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"

@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "Custom service region",
-        "description": "Enter your Aws AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration.",
+        "description": "Enter your AWS AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration.",
         "title": "Use custom Bedrock authentication information"
       },
       "Google": {

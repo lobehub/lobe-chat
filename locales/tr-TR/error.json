@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "Özel bölgeyi kullan",
-        "description": "Aws AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama yapılandırmanızı kaydetmez",
+        "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama yapılandırmanızı kaydetmez",
         "title": "Özel Bedrock kimlik bilgilerini kullan"
       },
       "Google": {

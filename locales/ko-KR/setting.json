@@ -160,22 +160,22 @@
     },
     "bedrock": {
       "accessKeyId": {
-        "desc": "Aws Access Key Id를 입력하세요",
-        "placeholder": "Aws Access 키 Id",
-        "title": "Aws Access 키 Id"
+        "desc": "AWS Access Key Id를 입력하세요",
+        "placeholder": "AWS Access 키 Id",
+        "title": "AWS Access 키 Id"
       },
       "checker": {
         "desc": "AccessKeyId / SecretAccessKey가 올바르게 입력되었는지 테스트합니다"
       },
       "region": {
-        "desc": "Aws Region을 입력하세요",
-        "placeholder": "Aws 리전",
-        "title": "Aws 리전"
+        "desc": "AWS Region을 입력하세요",
+        "placeholder": "AWS 리전",
+        "title": "AWS 리전"
       },
       "secretAccessKey": {
-        "desc": "Aws Secret Access 키를 입력하세요",
-        "placeholder": "Aws Secret Access 키",
-        "title": "Aws Secret Access 키"
+        "desc": "AWS Secret Access 키를 입력하세요",
+        "placeholder": "AWS Secret Access 키",
+        "title": "AWS Secret Access 키"
       },
       "title": "Bedrock"
     },

@@ -72,22 +72,22 @@
     },
     "bedrock": {
       "accessKeyId": {
-        "desc": "填入Aws Access Key Id",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
+        "desc": "填入AWS Access Key Id",
+        "placeholder": "AWS Access Key Id",
+        "title": "AWS Access Key Id"
       },
       "checker": {
         "desc": "测试 AccessKeyId / SecretAccessKey 是否填写正确"
       },
       "region": {
-        "desc": "填入 Aws Region",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
+        "desc": "填入 AWS Region",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
       },
       "secretAccessKey": {
-        "desc": "填入 Aws Secret Access Key",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
+        "desc": "填入 AWS Secret Access Key",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"
     },

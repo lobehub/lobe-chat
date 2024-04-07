@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "Własny obszar usług",
-        "description": "Wprowadź swój Aws AccessKeyId / SecretAccessKey, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojej konfiguracji uwierzytelniania.",
+        "description": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojej konfiguracji uwierzytelniania.",
         "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
       },
       "Google": {

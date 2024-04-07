@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "自定义服务区域",
-        "description": "Aws AccessKeyId / SecretAccessKeyを入力してセッションを開始します。アプリは認証構成を記録しません。",
+        "description": "AWS AccessKeyId / SecretAccessKeyを入力してセッションを開始します。アプリは認証構成を記録しません。",
         "title": "カスタムBedrock認証情報を使用"
       },
       "Google": {

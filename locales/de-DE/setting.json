@@ -1,7 +1,4 @@
 {
-  "NO_CONTENT": "Kein Inhalt",
-  "PLEASE_WAIT": "Bitte warten",
-  "TRY_LATER": "Versuchen Sie es später noch einmal",
   "about": {
     "title": "Über"
   },
@@ -75,22 +72,22 @@
     },
     "bedrock": {
       "accessKeyId": {
-        "desc": "Geben Sie Ihre Aws Access Key Id ein",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
+        "desc": "Geben Sie Ihre AWS Access Key Id ein",
+        "placeholder": "AWS Access Key Id",
+        "title": "AWS Access Key Id"
       },
       "checker": {
         "desc": "Testen Sie, ob AccessKeyId / SecretAccessKey korrekt eingegeben wurden"
       },
       "region": {
-        "desc": "Geben Sie Ihre Aws Region ein",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
+        "desc": "Geben Sie Ihre AWS Region ein",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
       },
       "secretAccessKey": {
-        "desc": "Geben Sie Ihren Aws Secret Access Key ein",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
+        "desc": "Geben Sie Ihren AWS Secret Access Key ein",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"
     },
@@ -125,7 +122,7 @@
       }
     },
     "moonshot": {
-      "title": "Dunkle Seite des Mondes",
+      "title": "Moonshot AI",
       "token": {
         "desc": "Geben Sie Ihren API-Key von Moonshot AI ein",
         "placeholder": "Moonshot AI API Key",

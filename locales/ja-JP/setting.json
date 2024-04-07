@@ -73,22 +73,22 @@
     },
     "bedrock": {
       "accessKeyId": {
-        "desc": "Aws Access Key Idを入力してください",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
+        "desc": "AWS Access Key Idを入力してください",
+        "placeholder": "AWS Access Key Id",
+        "title": "AWS Access Key Id"
       },
       "checker": {
         "desc": "AccessKeyId / SecretAccessKeyが正しく入力されているかテストします"
       },
       "region": {
-        "desc": "Aws Regionを入力してください",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
+        "desc": "AWS Regionを入力してください",
+        "placeholder": "AWS Region",
+        "title": "AWS Region"
       },
       "secretAccessKey": {
-        "desc": "Aws Secret Access Keyを入力してください",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
+        "desc": "AWS Secret Access Keyを入力してください",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"
     },

@@ -72,22 +72,22 @@
     },
     "bedrock": {
       "accessKeyId": {
-        "desc": "Aws Access Key Id girin",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
+        "desc": "AWS Access Key Id girin",
+        "placeholder": "AWS Access Key Id",
+        "title": "AWS Access Key Id"
       },
       "checker": {
         "desc": "AccessKeyId / SecretAccessKey'in doğru girilip girilmediğini test edin"
       },
       "region": {
-        "desc": "Aws Bölgesi girin",
-        "placeholder": "Aws Region",
-        "title": "Aws Bölgesi"
+        "desc": "AWS Bölgesi girin",
+        "placeholder": "AWS Region",
+        "title": "AWS Bölgesi"
       },
       "secretAccessKey": {
-        "desc": "Aws Secret Access Key girin",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
+        "desc": "AWS Secret Access Key girin",
+        "placeholder": "AWS Secret Access Key",
+        "title": "AWS Secret Access Key"
       },
       "title": "Bedrock"
     },

@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "사용자 정의 서비스 지역",
-        "description": "Aws AccessKeyId / SecretAccessKey를 입력하여 세션을 시작합니다. 앱은 귀하의 인증 구성을 기록하지 않습니다.",
+        "description": "AWS AccessKeyId / SecretAccessKey를 입력하여 세션을 시작합니다. 앱은 귀하의 인증 구성을 기록하지 않습니다.",
         "title": "사용자 정의 Bedrock 인증 정보 사용"
       },
       "Google": {

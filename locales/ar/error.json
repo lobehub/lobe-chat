@@ -92,7 +92,7 @@
       },
       "Bedrock": {
         "customRegion": "منطقة خدمة مخصصة",
-        "description": "أدخل مفتاح الوصول الخاص بك لـ Aws AccessKeyId / SecretAccessKey لبدء الجلسة. لن يقوم التطبيق بتسجيل تكوين المصادقة الخاص بك",
+        "description": "أدخل مفتاح الوصول الخاص بك لـ AWS AccessKeyId / SecretAccessKey لبدء الجلسة. لن يقوم التطبيق بتسجيل تكوين المصادقة الخاص بك",
         "title": "استخدام معلومات مصادقة Bedrock المخصصة"
       },
       "Google": {
