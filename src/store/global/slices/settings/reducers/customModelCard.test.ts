@@ -106,8 +106,7 @@ describe('customModelCardsReducer', () => {
     const action: UpdateCustomModelCard = {
       type: 'update',
       id: 'model1',
-      key: 'displayName',
-      value: 'Updated Model 1',
+      value: { displayName: 'Updated Model 1' },
     };
 
     const newState = customModelCardsReducer(initialState, action);
@@ -130,8 +129,7 @@ describe('customModelCardsReducer', () => {
     const action: UpdateCustomModelCard = {
       type: 'update',
       id: 'nonexistent',
-      key: 'displayName',
-      value: 'Updated Nonexistent Model',
+      value: { displayName: 'Updated Nonexistent Model' },
     };
 
     const newState = customModelCardsReducer(initialState, action);

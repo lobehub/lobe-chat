@@ -124,12 +124,31 @@ const providerModelCards =
     return uniqBy([...builtinCards, ...userCards], 'id');
   };
 
+const getCustomModelCardById =
+  ({ id, provider }: { id?: string; provider?: string }) =>
+  (s: GlobalStore) => {
+    if (!provider) return;
+
+    const config = providerConfig(provider)(s);
+
+    return config?.customModelCards?.find((m) => m.id === id);
+  };
+
+const currentEditingCustomModelCard = (s: GlobalStore) => {
+  if (!s.editingCustomCardModel) return;
+  const { id, provider } = s.editingCustomCardModel;
+
+  return getCustomModelCardById({ id, provider });
+};
+
 /* eslint-disable sort-keys-fix/sort-keys-fix,  */
 export const modelConfigSelectors = {
   providerEnabled,
   providerEnableModels,
   providerConfig,
   providerModelCards,
+  currentEditingCustomModelCard,
+  getCustomModelCardById,
 
   modelSelectList,
   enabledModelProviderList,

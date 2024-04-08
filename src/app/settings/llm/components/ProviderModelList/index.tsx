@@ -7,6 +7,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import ModelConfigModal from '@/app/settings/llm/components/ProviderModelList/ModelConfigModal';
 import { useGlobalStore } from '@/store/global';
 import { modelConfigSelectors, modelProviderSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
@@ -23,10 +24,10 @@ const styles = {
   `,
   reset: css`
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     z-index: 20;
+    top: 50%;
     inset-inline-end: 28px;
+    transform: translateY(-50%);
   `,
 };
 
@@ -87,7 +88,6 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(({ provider, placeh
             });
           });
         }}
-        open
         optionFilterProp="label"
         optionRender={({ label, value }) => {
           // model is in the chatModels
@@ -115,6 +115,7 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(({ provider, placeh
         popupClassName={cx(styles.popup)}
         value={enabledModels ?? defaultEnableModel}
       />
+      <ModelConfigModal />
     </div>
   );
 });

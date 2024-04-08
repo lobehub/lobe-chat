@@ -14,9 +14,8 @@ export interface DeleteCustomModelCard {
 
 export interface UpdateCustomModelCard {
   id: string;
-  key: keyof ChatModelCard;
   type: 'update';
-  value: ChatModelCard[keyof ChatModelCard];
+  value: Partial<ChatModelCard>;
 }
 
 export type CustomModelCardDispatch =
@@ -51,11 +50,10 @@ export const customModelCardsReducer = (
     case 'update': {
       return produce(state || [], (draftState) => {
         const index = draftState.findIndex((card) => card.id === payload.id);
-        if (index === -1) return;
-
-        const card = draftState[index];
-        // @ts-ignore
-        card[payload.key] = payload.value;
+        if (index !== -1) {
+          const card = draftState[index];
+          Object.assign(card, payload.value);
+        }
       });
     }
 

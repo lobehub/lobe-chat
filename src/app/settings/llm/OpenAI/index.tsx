@@ -69,7 +69,7 @@ const LLM = memo(() => {
           children: (
             <ProviderModelListSelect
               placeholder={t('llm.openai.customModelName.placeholder')}
-              provider={'openai'}
+              provider={'openAI'}
             />
           ),
           desc: t('llm.openai.customModelName.desc'),

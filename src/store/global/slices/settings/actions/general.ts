@@ -6,48 +6,24 @@ import type { StateCreator } from 'zustand/vanilla';
 import { userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
 import { LobeAgentSettings } from '@/types/session';
-import { GlobalLLMConfig, GlobalLLMProviderKey, GlobalSettings } from '@/types/settings';
+import { GlobalSettings } from '@/types/settings';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
-import { CustomModelCardDispatch, customModelCardsReducer } from './reducers/customModelCard';
-import { modelConfigSelectors } from './selectors/modelConfig';
-
-/**
- * 设置操作
- */
-export interface SettingsAction {
-  dispatchCustomModelCards: (
-    provider: GlobalLLMProviderKey,
-    payload: CustomModelCardDispatch,
-  ) => Promise<void>;
+export interface GeneralSettingsAction {
   importAppSettings: (settings: GlobalSettings) => Promise<void>;
   resetSettings: () => Promise<void>;
-  setModelProviderConfig: <T extends GlobalLLMProviderKey>(
-    provider: T,
-    config: Partial<GlobalLLMConfig[T]>,
-  ) => Promise<void>;
   setSettings: (settings: DeepPartial<GlobalSettings>) => Promise<void>;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
-  toggleProviderEnabled: (provider: GlobalLLMProviderKey, enabled: boolean) => Promise<void>;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
 }
 
-export const createSettingsSlice: StateCreator<
+export const generalSettingsSlice: StateCreator<
   GlobalStore,
   [['zustand/devtools', never]],
   [],
-  SettingsAction
+  GeneralSettingsAction
 > = (set, get) => ({
-  dispatchCustomModelCards: async (provider, payload) => {
-    const prevState = modelConfigSelectors.providerConfig(provider)(get());
-
-    if (!prevState) return;
-
-    const nextState = customModelCardsReducer(prevState.customModelCards, payload);
-
-    await get().setModelProviderConfig(provider, { customModelCards: nextState });
-  },
   importAppSettings: async (importAppSettings) => {
     const { setSettings } = get();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,9 +35,6 @@ export const createSettingsSlice: StateCreator<
     await userService.resetUserSettings();
     await get().refreshUserConfig();
   },
-  setModelProviderConfig: async (provider, config) => {
-    await get().setSettings({ languageModel: { [provider]: config } });
-  },
   setSettings: async (settings) => {
     const { settings: prevSetting, defaultSettings } = get();
 
@@ -70,17 +43,12 @@ export const createSettingsSlice: StateCreator<
     if (isEqual(prevSetting, nextSettings)) return;
 
     const diffs = difference(nextSettings, defaultSettings);
-    console.log(diffs);
 
     await userService.updateUserSettings(diffs);
     await get().refreshUserConfig();
   },
-
   switchThemeMode: async (themeMode) => {
     await get().setSettings({ themeMode });
-  },
-  toggleProviderEnabled: async (provider, enabled) => {
-    await get().setSettings({ languageModel: { [provider]: { enabled } } });
   },
   updateDefaultAgent: async (defaultAgent) => {
     await get().setSettings({ defaultAgent });

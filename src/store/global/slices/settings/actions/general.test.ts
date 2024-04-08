@@ -66,24 +66,6 @@ describe('SettingsAction', () => {
     });
   });
 
-  describe('setModelProviderConfig', () => {
-    it('should set OpenAI configuration', async () => {
-      const { result } = renderHook(() => useGlobalStore());
-      const openAIConfig: Partial<OpenAIConfig> = { OPENAI_API_KEY: 'test-key' };
-
-      // Perform the action
-      await act(async () => {
-        await result.current.setModelProviderConfig('openAI', openAIConfig);
-      });
-
-      // Assert that updateUserSettings was called with the correct OpenAI configuration
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({
-        languageModel: {
-          openAI: openAIConfig,
-        },
-      });
-    });
-  });
   describe('setSettings', () => {
     it('should set partial settings', async () => {
       const { result } = renderHook(() => useGlobalStore());
