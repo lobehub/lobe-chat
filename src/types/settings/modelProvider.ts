@@ -72,7 +72,7 @@ export interface GlobalLLMConfig {
   mistral: GeneralModelProviderConfig;
   moonshot: GeneralModelProviderConfig;
   ollama: OllamaConfig;
-  openAI: OpenAIConfig;
+  openai: GeneralModelProviderConfig;
   openrouter: OpenRouterConfig;
   perplexity: GeneralModelProviderConfig;
   togetherai: TogetherAIConfig;

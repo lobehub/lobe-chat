@@ -6,18 +6,6 @@ import { createJWT } from '@/utils/jwt';
 
 export const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
-    case ModelProvider.ZhiPu: {
-      return { apiKey: modelConfigSelectors.zhipuAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.Moonshot: {
-      return { apiKey: modelConfigSelectors.moonshotAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.Google: {
-      return { apiKey: modelConfigSelectors.googleAPIKey(useGlobalStore.getState()) };
-    }
-
     case ModelProvider.Bedrock: {
       const { accessKeyId, region, secretAccessKey } = modelConfigSelectors.bedrockConfig(
         useGlobalStore.getState(),
@@ -43,53 +31,13 @@ export const getProviderAuthPayload = (provider: string) => {
     case ModelProvider.Ollama: {
       const endpoint = modelConfigSelectors.ollamaProxyUrl(useGlobalStore.getState());
 
-      return {
-        endpoint,
-      };
+      return { endpoint };
     }
 
-    case ModelProvider.Perplexity: {
-      return { apiKey: modelConfigSelectors.perplexityAPIKey(useGlobalStore.getState()) };
-    }
+    default: {
+      const config = modelConfigSelectors.providerConfig(provider)(useGlobalStore.getState());
 
-    case ModelProvider.Anthropic: {
-      const apiKey = modelConfigSelectors.anthropicAPIKey(useGlobalStore.getState());
-      const endpoint = modelConfigSelectors.anthropicProxyUrl(useGlobalStore.getState());
-      return { apiKey, endpoint };
-    }
-
-    case ModelProvider.Mistral: {
-      return { apiKey: modelConfigSelectors.mistralAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.Groq: {
-      return { apiKey: modelConfigSelectors.groqAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.OpenRouter: {
-      return { apiKey: modelConfigSelectors.openrouterAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.TogetherAI: {
-      return { apiKey: modelConfigSelectors.togetheraiAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.ZeroOne: {
-      return { apiKey: modelConfigSelectors.zerooneAPIKey(useGlobalStore.getState()) };
-    }
-
-    default:
-    case ModelProvider.OpenAI: {
-      const openai = modelConfigSelectors.openAIConfig(useGlobalStore.getState());
-      const apiKey = openai.OPENAI_API_KEY || '';
-      const endpoint = openai.endpoint || '';
-
-      return {
-        apiKey,
-        azureApiVersion: openai.azureApiVersion,
-        endpoint,
-        useAzure: openai.useAzure,
-      };
+      return { apiKey: config?.apiKey, endpoint: config?.endpoint };
     }
   }
 };

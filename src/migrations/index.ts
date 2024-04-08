@@ -5,11 +5,18 @@ import { ConfigStateAll } from '@/types/exportConfig';
 import { MigrationV0ToV1 } from './FromV0ToV1';
 import { MigrationV1ToV2 } from './FromV1ToV2';
 
-// 当前最新的版本号
+// Current latest version
 export const CURRENT_CONFIG_VERSION = 3;
 
-// 历史记录版本升级模块
+// Version migrations module
 const ConfigMigrations = [
+  /**
+   * 2024.04.09
+   * settings migrate the `languageModel`
+   * - from `openAI` to `openai`, `azure`
+   * - from customModelName to `enabledModels` and `customModelCards`
+   */
+  // MigrationV3ToV4,
   /**
    * 2024.01.22
    * from `group = pinned` to `pinned:true`

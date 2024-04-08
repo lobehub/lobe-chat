@@ -28,20 +28,18 @@ const providerEnableModels = (provider: string) => (s: GlobalStore) => {
   return providerConfig(provider)(s)?.enabledModels?.filter(Boolean);
 };
 
-const openAIConfig = (s: GlobalStore) => modelProvider(s).openAI;
+const openAIConfig = (s: GlobalStore) => modelProvider(s).openai;
 
-const openAIAPIKey = (s: GlobalStore) => openAIConfig(s).OPENAI_API_KEY;
-const openAIProxyUrl = (s: GlobalStore) => openAIConfig(s).endpoint;
+const openAIAPIKey = (s: GlobalStore) => modelProvider(s).openai.apiKey;
+const openAIProxyUrl = (s: GlobalStore) => modelProvider(s).openai.endpoint;
 
 const zhipuAPIKey = (s: GlobalStore) => modelProvider(s).zhipu.apiKey;
-const zhipuProxyUrl = (s: GlobalStore) => modelProvider(s).zhipu.endpoint;
 
 const bedrockConfig = (s: GlobalStore) => modelProvider(s).bedrock;
 
 const googleAPIKey = (s: GlobalStore) => modelProvider(s).google.apiKey;
-const googleProxyUrl = (s: GlobalStore) => modelProvider(s).google.endpoint;
 
-const enableAzure = (s: GlobalStore) => modelProvider(s).openAI.useAzure;
+const enableAzure = (s: GlobalStore) => modelProvider(s).azure.enabled;
 const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
 
 const mistralAPIKey = (s: GlobalStore) => modelProvider(s).mistral.apiKey;
@@ -62,14 +60,6 @@ const openrouterAPIKey = (s: GlobalStore) => modelProvider(s).openrouter.apiKey;
 const togetheraiAPIKey = (s: GlobalStore) => modelProvider(s).togetherai.apiKey;
 
 const zerooneAPIKey = (s: GlobalStore) => modelProvider(s).zeroone.apiKey;
-
-// const azureModelList = (s: GlobalStore): ModelProviderCard => {
-//   const azure = azureConfig(s);
-//   return {
-//     chatModels: parseModelString(azure.deployments),
-//     id: 'azure',
-//   };
-// };
 
 const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
   return modelProviderSelectors.providerModelList(s).map((list) => ({
@@ -151,10 +141,9 @@ export const modelConfigSelectors = {
   azureConfig,
   // Zhipu
   zhipuAPIKey,
-  zhipuProxyUrl,
   // Google
   googleAPIKey,
-  googleProxyUrl,
+
   // Bedrock
   bedrockConfig,
 

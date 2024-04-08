@@ -77,6 +77,14 @@ const processChatModels = (
   });
 };
 
+// const azureModelList = (s: GlobalStore): ModelProviderCard => {
+//   const azure = azureConfig(s);
+//   return {
+//     chatModels: parseModelString(azure.deployments),
+//     id: 'azure',
+//   };
+// };
+
 /**
  * define all the model list of providers
  * @param s

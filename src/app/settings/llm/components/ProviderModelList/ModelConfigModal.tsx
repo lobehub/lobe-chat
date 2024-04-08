@@ -9,13 +9,17 @@ import { modelConfigSelectors } from '@/store/global/slices/settings/selectors';
 
 import MaxTokenSlider from './MaxTokenSlider';
 
-const ModelConfigModal = memo(() => {
+interface ModelConfigModalProps {
+  provider?: string;
+  showAzureDeployName?: boolean;
+}
+const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, provider }) => {
   const [formInstance] = Form.useForm();
   const { t } = useTranslation('setting');
 
-  const [open, id, provider, dispatchCustomModelCards, toggleEditingCustomModelCard] =
+  const [open, id, editingProvider, dispatchCustomModelCards, toggleEditingCustomModelCard] =
     useGlobalStore((s) => [
-      !!s.editingCustomCardModel,
+      !!s.editingCustomCardModel && provider === s.editingCustomCardModel?.provider,
       s.editingCustomCardModel?.id,
       s.editingCustomCardModel?.provider,
       s.dispatchCustomModelCards,
@@ -23,7 +27,7 @@ const ModelConfigModal = memo(() => {
     ]);
 
   const modelCard = useGlobalStore(
-    modelConfigSelectors.getCustomModelCardById({ id, provider }),
+    modelConfigSelectors.getCustomModelCardById({ id, provider: editingProvider }),
     isEqual,
   );
 
@@ -39,10 +43,10 @@ const ModelConfigModal = memo(() => {
         closeModal();
       }}
       onOk={() => {
-        if (!provider || !id) return;
+        if (!editingProvider || !id) return;
         const data = formInstance.getFieldsValue();
 
-        dispatchCustomModelCards(provider as any, { id, type: 'update', value: data });
+        dispatchCustomModelCards(editingProvider as any, { id, type: 'update', value: data });
 
         closeModal();
       }}
@@ -68,6 +72,16 @@ const ModelConfigModal = memo(() => {
           <Form.Item label={t('llm.customModelCards.modelConfig.id.title')} name={'id'}>
             <Input placeholder={t('llm.customModelCards.modelConfig.id.placeholder')} />
           </Form.Item>
+          {showAzureDeployName && (
+            <Form.Item
+              label={t('llm.customModelCards.modelConfig.azureDeployName.title')}
+              name={'deployName'}
+            >
+              <Input
+                placeholder={t('llm.customModelCards.modelConfig.azureDeployName.placeholder')}
+              />
+            </Form.Item>
+          )}
           <Form.Item
             label={t('llm.customModelCards.modelConfig.displayName.title')}
             name={'displayName'}

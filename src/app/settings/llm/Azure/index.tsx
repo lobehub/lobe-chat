@@ -8,7 +8,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 
-import Checker from '../components/Checker';
 import ProviderConfig from '../components/ProviderConfig';
 import { LLMProviderApiTokenKey, LLMProviderBaseUrlKey, LLMProviderConfigKey } from '../const';
 
@@ -24,7 +23,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const providerKey = 'azure';
+const providerKey = ModelProvider.Azure;
 
 const AzureOpenAIProvider = memo(() => {
   const { t } = useTranslation('setting');
@@ -33,7 +32,7 @@ const AzureOpenAIProvider = memo(() => {
 
   return (
     <ProviderConfig
-      configItems={[
+      apiKeyItems={[
         {
           children: (
             <Input.Password
@@ -55,15 +54,13 @@ const AzureOpenAIProvider = memo(() => {
           children: (
             <AutoComplete
               options={[
-                '2023-12-01-preview',
-                '2023-08-01-preview',
-                '2023-07-01-preview',
+                '2024-02-01',
+                '2024-03-01-preview',
+                '2024-02-15-preview',
+                '2023-10-01-preview',
                 '2023-06-01-preview',
-                '2023-03-15-preview',
-              ].map((i) => ({
-                label: i,
-                value: i,
-              }))}
+                '2023-05-15',
+              ].map((i) => ({ label: i, value: i }))}
               placeholder={'20XX-XX-XX'}
             />
           ),
@@ -75,30 +72,12 @@ const AzureOpenAIProvider = memo(() => {
           label: t('llm.azure.azureApiVersion.title'),
           name: [LLMProviderConfigKey, providerKey, 'apiVersion'],
         },
-        {
-          children: (
-            <Input.TextArea
-              allowClear
-              placeholder={'gpt-35-16k,my-gpt=gpt-35-turbo'}
-              style={{ height: 100 }}
-            />
-          ),
-          desc: (
-            <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
-              {t('llm.azure.deployments.desc')}
-            </Markdown>
-          ),
-
-          label: t('llm.azure.deployments.title'),
-          name: [LLMProviderConfigKey, providerKey, 'deployments'],
-        },
-        {
-          children: <Checker model={'gpt-3.5-turbo'} provider={ModelProvider.Azure} />,
-          desc: t('llm.checker.desc'),
-          label: t('llm.checker.title'),
-          minWidth: undefined,
-        },
       ]}
+      checkModel={'gpt-3.5-turbo'}
+      modelList={{
+        azureDeployName: true,
+        placeholder: t('llm.azure.modelListPlaceholder'),
+      }}
       provider={providerKey}
       title={
         <Flexbox align={'center'} gap={8} horizontal>

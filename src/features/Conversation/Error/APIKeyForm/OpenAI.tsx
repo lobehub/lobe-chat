@@ -30,7 +30,7 @@ const OpenAIForm = memo(() => {
       <Input.Password
         autoComplete={'new-password'}
         onChange={(e) => {
-          setConfig('openAI', { OPENAI_API_KEY: e.target.value });
+          setConfig('openai', { apiKey: e.target.value });
         }}
         placeholder={'sk-*****************************************'}
         type={'block'}
@@ -39,7 +39,7 @@ const OpenAIForm = memo(() => {
       {showProxy ? (
         <Input
           onChange={(e) => {
-            setConfig('openAI', { endpoint: e.target.value });
+            setConfig('openai', { endpoint: e.target.value });
           }}
           placeholder={'https://api.openai.com/v1'}
           type={'block'}

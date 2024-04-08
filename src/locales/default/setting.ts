@@ -50,20 +50,12 @@ export default {
         fetch: '获取列表',
         title: 'Azure Api Version',
       },
-      deployments: {
-        desc: '使用 id=name 的语法填写你的部署模型（如部署名和模型同名，可以只填写模型名称），多个模型使用逗号（,） 隔开',
-        title: 'Azure 部署模型列表',
-      },
-
       endpoint: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值',
         placeholder: 'https://docs-test-001.openai.azure.com',
         title: 'Azure API 地址',
       },
-      models: {
-        desc: '支持的模型',
-        title: '模型列表',
-      },
+      modelListPlaceholder: '请选择或添加你的部署模型',
       title: 'Azure OpenAI',
       token: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值。 可以使用 KEY1 或 KEY2',
@@ -103,6 +95,10 @@ export default {
       config: '配置模型',
       confirmDelete: '即将删除该自定义模型，删除后将不可恢复，请谨慎操作。',
       modelConfig: {
+        azureDeployName: {
+          placeholder: '请输入 Azure 中的模型部署名称',
+          title: '模型部署名称',
+        },
         displayName: {
           placeholder: '请输入模型的展示名称，例如 ChatGPT、GPT-4 等',
           title: '模型展示名称',

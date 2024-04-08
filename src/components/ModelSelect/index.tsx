@@ -104,15 +104,15 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
             <Center className={styles.token}>{Math.floor(model.tokens / 1000)}K</Center>
           </Tooltip>
         )}
-        {model.isCustom && (
-          <Tooltip
-            overlayStyle={{ maxWidth: 300 }}
-            placement={placement}
-            title={t('ModelSelect.featureTag.custom')}
-          >
-            <Center className={styles.custom}>DIY</Center>
-          </Tooltip>
-        )}
+        {/*{model.isCustom && (*/}
+        {/*  <Tooltip*/}
+        {/*    overlayStyle={{ maxWidth: 300 }}*/}
+        {/*    placement={placement}*/}
+        {/*    title={t('ModelSelect.featureTag.custom')}*/}
+        {/*  >*/}
+        {/*    <Center className={styles.custom}>DIY</Center>*/}
+        {/*  </Tooltip>*/}
+        {/*)}*/}
       </Flexbox>
     );
   },

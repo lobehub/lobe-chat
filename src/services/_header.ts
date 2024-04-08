@@ -1,10 +1,4 @@
-import {
-  AZURE_OPENAI_API_VERSION,
-  LOBE_CHAT_ACCESS_CODE,
-  OPENAI_API_KEY_HEADER_KEY,
-  OPENAI_END_POINT,
-  USE_AZURE_OPENAI,
-} from '@/const/fetch';
+import { LOBE_CHAT_ACCESS_CODE, OPENAI_API_KEY_HEADER_KEY, OPENAI_END_POINT } from '@/const/fetch';
 import { useGlobalStore } from '@/store/global';
 import { modelConfigSelectors, settingsSelectors } from '@/store/global/selectors';
 
@@ -14,25 +8,14 @@ import { modelConfigSelectors, settingsSelectors } from '@/store/global/selector
  */
 // eslint-disable-next-line no-undef
 export const createHeaderWithOpenAI = (header?: HeadersInit): HeadersInit => {
-  const openai = modelConfigSelectors.openAIConfig(useGlobalStore.getState());
-
-  const apiKey = openai.OPENAI_API_KEY || '';
-  const endpoint = openai.endpoint || '';
+  const apiKey = modelConfigSelectors.openAIAPIKey(useGlobalStore.getState()) || '';
+  const endpoint = modelConfigSelectors.openAIProxyUrl(useGlobalStore.getState()) || '';
 
   // eslint-disable-next-line no-undef
-  const result: HeadersInit = {
+  return {
     ...header,
     [LOBE_CHAT_ACCESS_CODE]: settingsSelectors.password(useGlobalStore.getState()),
     [OPENAI_API_KEY_HEADER_KEY]: apiKey,
     [OPENAI_END_POINT]: endpoint,
   };
-
-  if (openai.useAzure) {
-    Object.assign(result, {
-      [AZURE_OPENAI_API_VERSION]: openai.azureApiVersion || '',
-      [USE_AZURE_OPENAI]: '1',
-    });
-  }
-
-  return result;
 };

@@ -1,5 +1,8 @@
 import { CustomModels } from '@/types/settings';
 
+/**
+ * Parse model string to add or remove models.
+ */
 export const parseModelString = (modelString: string = '') => {
   let models: CustomModels = [];
   let removeAll = false;

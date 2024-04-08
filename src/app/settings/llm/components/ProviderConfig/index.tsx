@@ -9,7 +9,6 @@ import {
   LLMProviderApiTokenKey,
   LLMProviderBaseUrlKey,
   LLMProviderConfigKey,
-  LLMProviderCustomModelKey,
   LLMProviderModelListKey,
 } from '@/app/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
@@ -21,28 +20,32 @@ import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
 
 interface ProviderConfigProps {
+  apiKeyItems?: FormItemProps[];
   canDeactivate?: boolean;
   checkModel?: string;
   checkerItem?: FormItemProps;
-  configItems?: FormItemProps[];
+  modelList?: {
+    azureDeployName?: boolean;
+    notFoundContent?: ReactNode;
+    placeholder?: string;
+  };
   provider: GlobalLLMProviderKey;
   showApiKey?: boolean;
-  showCustomModelName?: boolean;
   showEndpoint?: boolean;
   title: ReactNode;
 }
 
 const ProviderConfig = memo<ProviderConfigProps>(
   ({
+    apiKeyItems,
     provider,
-    showCustomModelName = false,
     showEndpoint,
     showApiKey = true,
     checkModel,
     canDeactivate = true,
     title,
-    configItems,
     checkerItem,
+    modelList,
   }) => {
     const { t } = useTranslation('setting');
     const [form] = AntForm.useForm();
@@ -54,18 +57,24 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     useSyncSettings(form);
 
-    const defaultFormItems = [
-      showApiKey && {
-        children: (
-          <Input.Password
-            autoComplete={'new-password'}
-            placeholder={t(`llm.${provider}.token.placeholder` as any)}
-          />
-        ),
-        desc: t(`llm.${provider}.token.desc` as any),
-        label: t(`llm.${provider}.token.title` as any),
-        name: [LLMProviderConfigKey, provider, LLMProviderApiTokenKey],
-      },
+    const apiKeyItem: FormItemProps[] = !showApiKey
+      ? []
+      : apiKeyItems ?? [
+          {
+            children: (
+              <Input.Password
+                autoComplete={'new-password'}
+                placeholder={t(`llm.${provider}.token.placeholder` as any)}
+              />
+            ),
+            desc: t(`llm.${provider}.token.desc` as any),
+            label: t(`llm.${provider}.token.title` as any),
+            name: [LLMProviderConfigKey, provider, LLMProviderApiTokenKey],
+          },
+        ];
+
+    const formItems = [
+      ...apiKeyItem,
       showEndpoint && {
         children: (
           <Input allowClear placeholder={t(`llm.${provider}.endpoint.placeholder` as any)} />
@@ -74,23 +83,13 @@ const ProviderConfig = memo<ProviderConfigProps>(
         label: t(`llm.${provider}.endpoint.title` as any),
         name: [LLMProviderConfigKey, provider, LLMProviderBaseUrlKey],
       },
-      showCustomModelName && {
-        children: (
-          <Input.TextArea
-            allowClear
-            placeholder={t(`llm.${provider}.customModelName.placeholder` as any)}
-            style={{ height: 100 }}
-          />
-        ),
-        desc: t(`llm.${provider}.customModelName.desc` as any),
-        label: t(`llm.${provider}.customModelName.title` as any),
-        name: [LLMProviderConfigKey, provider, LLMProviderCustomModelKey],
-      },
       {
         children: (
           <ProviderModelListSelect
-            placeholder={t('llm.modelList.placeholder')}
+            notFoundContent={modelList?.notFoundContent}
+            placeholder={modelList?.placeholder ?? t('llm.modelList.placeholder')}
             provider={provider}
+            showAzureDeployName={modelList?.azureDeployName}
           />
         ),
         desc: t('llm.modelList.desc'),
@@ -101,12 +100,12 @@ const ProviderConfig = memo<ProviderConfigProps>(
         children: <Checker model={checkModel!} provider={provider} />,
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
-        minWidth: '100%',
+        minWidth: undefined,
       },
     ].filter(Boolean) as FormItemProps[];
 
     const model: ItemGroup = {
-      children: configItems ?? defaultFormItems,
+      children: formItems,
 
       defaultActive: canDeactivate ? enabled : undefined,
       extra: canDeactivate ? (

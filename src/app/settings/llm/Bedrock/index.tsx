@@ -7,7 +7,6 @@ import { Flexbox } from 'react-layout-kit';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
-import Checker from '../components/Checker';
 import ProviderConfig from '../components/ProviderConfig';
 import { LLMProviderConfigKey } from '../const';
 
@@ -18,7 +17,7 @@ const BedrockProvider = memo(() => {
 
   return (
     <ProviderConfig
-      configItems={[
+      apiKeyItems={[
         {
           children: (
             <Input.Password
@@ -56,16 +55,9 @@ const BedrockProvider = memo(() => {
           label: t(`llm.${providerKey}.region.title`),
           name: [LLMProviderConfigKey, providerKey, 'region'],
         },
-        {
-          children: (
-            <Checker model={'anthropic.claude-instant-v1'} provider={ModelProvider.Bedrock} />
-          ),
-          desc: t(`llm.${providerKey}.checker.desc`),
-          label: t('llm.checker.title'),
-          minWidth: '100%',
-        },
       ]}
-      provider={providerKey}
+      checkModel={'anthropic.claude-instant-v1'}
+      provider={ModelProvider.Bedrock}
       title={
         <Flexbox align={'center'} gap={8} horizontal>
           <Aws.Color size={32} />

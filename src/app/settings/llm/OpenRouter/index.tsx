@@ -13,7 +13,6 @@ const OpenRouterProvider = memo(() => {
     <ProviderConfig
       checkModel={'mistralai/mistral-7b-instruct:free'}
       provider={ModelProvider.OpenRouter}
-      showCustomModelName
       title={
         <OpenRouter.Combine
           color={theme.isDarkMode ? theme.colorText : OpenRouter.colorPrimary}

@@ -16,10 +16,4 @@ export const LLMProviderBaseUrlKey = 'endpoint';
  * we use this key to define the custom model name
  * equal CUSTOM_MODELS
  */
-export const LLMProviderCustomModelKey = 'customModelName';
-
-/**
- * we use this key to define the custom model name
- * equal CUSTOM_MODELS
- */
 export const LLMProviderModelListKey = 'enabledModels';

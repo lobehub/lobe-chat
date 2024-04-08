@@ -1,6 +1,14 @@
 export interface ChatModelCard {
+  /**
+   * only used in azure
+   */
+  deploymentName?: string;
   description?: string;
+  /**
+   * the name show for end user
+   */
   displayName?: string;
+
   /**
    * whether model is enabled by default
    */
