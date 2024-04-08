@@ -116,7 +116,7 @@ export default {
       Bedrock: {
         customRegion: '自定义服务区域',
         description:
-          '输入你的 Aws AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
+          '输入你的 AWS AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
         title: '使用自定义 Bedrock 鉴权信息',
       },
       Google: {

@@ -23,22 +23,22 @@ const BedrockProvider = memo(() => {
           children: (
             <Input.Password
               autoComplete={'new-password'}
-              placeholder={t('llm.Bedrock.accessKeyId.placeholder')}
+              placeholder={t(`llm.${providerKey}.accessKeyId.placeholder`)}
             />
           ),
-          desc: t('llm.Bedrock.accessKeyId.desc'),
-          label: t('llm.Bedrock.accessKeyId.title'),
+          desc: t(`llm.${providerKey}.accessKeyId.desc`),
+          label: t(`llm.${providerKey}.accessKeyId.title`),
           name: [LLMProviderConfigKey, providerKey, 'accessKeyId'],
         },
         {
           children: (
             <Input.Password
               autoComplete={'new-password'}
-              placeholder={t('llm.Bedrock.secretAccessKey.placeholder')}
+              placeholder={t(`llm.${providerKey}.secretAccessKey.placeholder`)}
             />
           ),
-          desc: t('llm.Bedrock.secretAccessKey.desc'),
-          label: t('llm.Bedrock.secretAccessKey.title'),
+          desc: t(`llm.${providerKey}.secretAccessKey.desc`),
+          label: t(`llm.${providerKey}.secretAccessKey.title`),
           name: [LLMProviderConfigKey, providerKey, 'secretAccessKey'],
         },
         {
@@ -52,15 +52,15 @@ const BedrockProvider = memo(() => {
               placeholder={'us-east-1'}
             />
           ),
-          desc: t('llm.Bedrock.region.desc'),
-          label: t('llm.Bedrock.region.title'),
+          desc: t(`llm.${providerKey}.region.desc`),
+          label: t(`llm.${providerKey}.region.title`),
           name: [LLMProviderConfigKey, providerKey, 'region'],
         },
         {
           children: (
             <Checker model={'anthropic.claude-instant-v1'} provider={ModelProvider.Bedrock} />
           ),
-          desc: t('llm.Bedrock.checker.desc'),
+          desc: t(`llm.${providerKey}.checker.desc`),
           label: t('llm.checker.title'),
           minWidth: '100%',
         },
