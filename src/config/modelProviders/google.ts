@@ -8,7 +8,6 @@ const Google: ModelProviderCard = {
       hidden: true,
       id: 'chat-bison-001',
       maxOutput: 1024,
-      tokens: 5120,
     },
     {
       description: 'A legacy model that understands text and generates text as an output',

@@ -129,6 +129,11 @@ const providerModelList = (s: GlobalStore): ModelProviderCard[] => {
 const providerCard = (provider: string) => (s: GlobalStore) =>
   providerModelList(s).find((s) => s.id === provider);
 
+/**
+ * get the default enabled models for a provider
+ * it's a default enabled model list by Lobe Chat
+ * e.g. openai is ['gpt-3.5-turbo','gpt-4-turbo-preview','gpt-4-vision-preview']
+ */
 const defaultEnabledProviderModels = (provider: string) => (s: GlobalStore) => {
   const modelProvider = providerCard(provider)(s);
 
