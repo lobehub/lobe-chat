@@ -31,7 +31,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
 ].flat();
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
-  return provider.chatModels.filter((v) => !v.hidden).map((m) => m.id);
+  return provider.chatModels.filter((v) => v.enabled).map((m) => m.id);
 };
 
 export { default as AnthropicProvider } from './anthropic';

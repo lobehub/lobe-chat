@@ -27,7 +27,7 @@ describe('modelConfigSelectors', () => {
       expect(ollamaList?.chatModels.find((c) => c.id === 'llava')).toEqual({
         displayName: 'LLaVA 7B',
         functionCall: false,
-        hidden: false,
+        enabled: true,
         id: 'llava',
         tokens: 4000,
         vision: true,

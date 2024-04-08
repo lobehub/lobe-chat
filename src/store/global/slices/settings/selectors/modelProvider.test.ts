@@ -65,15 +65,10 @@ describe('modelProviderSelectors', () => {
 
       expect(result[0].chatModels).toMatchSnapshot();
     });
-    it.skip('duplicate naming model', () => {
+    it('duplicate naming model', () => {
       const s = merge(initialSettingsState, {
-        serverConfig: {},
-        settings: {
-          languageModel: {
-            openAI: {
-              customModelName: 'gpt-4-0125-preview=gpt-4-turbo，gpt-4-0125-preview=gpt-4-32k',
-            },
-          },
+        serverConfig: {
+          customModelName: 'gpt-4-0125-preview=gpt-4-turbo，gpt-4-0125-preview=gpt-4-32k',
         },
       }) as unknown as GlobalStore;
 
@@ -94,15 +89,10 @@ describe('modelProviderSelectors', () => {
       expect(result.find((r) => r.id === 'gpt-4')).toBeUndefined();
     });
 
-    it.skip('show the hidden model', () => {
+    it('show the hidden model', () => {
       const s = merge(initialSettingsState, {
-        serverConfig: {},
-        settings: {
-          languageModel: {
-            openAI: {
-              customModelName: '+gpt-4-1106-preview',
-            },
-          },
+        serverConfig: {
+          customModelName: '+gpt-4-1106-preview',
         },
       }) as unknown as GlobalStore;
 
@@ -111,20 +101,16 @@ describe('modelProviderSelectors', () => {
       expect(result[0].chatModels.find((o) => o.id === 'gpt-4-1106-preview')).toEqual({
         displayName: 'GPT-4 Turbo Preview (1106)',
         functionCall: true,
+        enabled: true,
         id: 'gpt-4-1106-preview',
         tokens: 128000,
       });
     });
 
-    it.skip('only add the model', () => {
+    it('only add the model', () => {
       const s = merge(initialSettingsState, {
-        serverConfig: {},
-        settings: {
-          languageModel: {
-            openAI: {
-              customModelName: 'model1,model2,model3，model4',
-            },
-          },
+        serverConfig: {
+          customModelName: 'model1,model2,model3，model4',
         },
       }) as unknown as GlobalStore;
 
@@ -134,33 +120,34 @@ describe('modelProviderSelectors', () => {
         displayName: 'model1',
         functionCall: true,
         id: 'model1',
-        isCustom: true,
+        enabled: true,
         vision: true,
       });
       expect(result[0].chatModels).toContainEqual({
         displayName: 'model2',
         functionCall: true,
+        enabled: true,
         id: 'model2',
-        isCustom: true,
         vision: true,
       });
       expect(result[0].chatModels).toContainEqual({
         displayName: 'model3',
+        enabled: true,
         functionCall: true,
         id: 'model3',
-        isCustom: true,
         vision: true,
       });
       expect(result[0].chatModels).toContainEqual({
         displayName: 'model4',
         functionCall: true,
+        enabled: true,
         id: 'model4',
-        isCustom: true,
         vision: true,
       });
     });
   });
 
+  // TODO: need to be fixed
   describe('OPENROUTER_CUSTOM_MODELS', () => {
     it.skip('custom deletion, addition, and renaming of models', () => {
       const s = merge(initialSettingsState, {

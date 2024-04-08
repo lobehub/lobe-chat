@@ -2,6 +2,10 @@ export interface ChatModelCard {
   description?: string;
   displayName?: string;
   /**
+   * whether model is enabled by default
+   */
+  enabled?: boolean;
+  /**
    * whether model supports file upload
    */
   files?: boolean;
@@ -9,10 +13,6 @@ export interface ChatModelCard {
    * whether model supports function call
    */
   functionCall?: boolean;
-  /**
-   * whether the model is visible or hidden
-   */
-  hidden?: boolean;
   id: string;
   /**
    * whether model is custom

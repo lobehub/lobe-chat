@@ -51,14 +51,15 @@ const processChatModels = (
 
         // if the model is already in chatModels, update it
         if (modelInList) {
-          if (modelInList.hidden) delete modelInList.hidden;
+          // if (modelInList.hidden) delete modelInList.hidden;
+          modelInList.enabled = true;
           if (toAddModel.displayName) modelInList.displayName = toAddModel.displayName;
         } else {
           // if the model is not in chatModels, add it
           draft.push({
             ...knownModel,
             displayName: toAddModel.displayName || knownModel.displayName || knownModel.id,
-            hidden: undefined,
+            enabled: true,
           });
         }
       } else {
@@ -66,8 +67,9 @@ const processChatModels = (
         draft.push({
           ...toAddModel,
           displayName: toAddModel.displayName || toAddModel.id,
+          enabled: true,
           functionCall: true,
-          isCustom: true,
+          // isCustom: true,
           vision: true,
         });
       }

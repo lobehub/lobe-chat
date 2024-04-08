@@ -81,7 +81,7 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
 
       return {
         ...model,
-        hidden: !models?.some((m) => m === model.id),
+        enabled: models?.some((m) => m === model.id),
       };
     }),
     enabled: providerEnabled(list.id as any)(s),
@@ -93,7 +93,7 @@ const enabledModelProviderList = (s: GlobalStore): ModelProviderCard[] =>
     .filter((s) => s.enabled)
     .map((provider) => ({
       ...provider,
-      chatModels: provider.chatModels.filter((model) => !model.hidden),
+      chatModels: provider.chatModels.filter((model) => model.enabled),
     }));
 
 const providerCard = (provider: string) => (s: GlobalStore) =>
