@@ -16,7 +16,7 @@ describe('modelConfigSelectors', () => {
         settings: {
           languageModel: {
             ollama: {
-              models: ['llava'],
+              enabledModels: ['llava'],
             },
           },
         },
@@ -24,7 +24,14 @@ describe('modelConfigSelectors', () => {
 
       const ollamaList = modelConfigSelectors.modelSelectList(s).find((r) => r.id === 'ollama');
 
-      expect(ollamaList?.chatModels).toEqual([]);
+      expect(ollamaList?.chatModels.find((c) => c.id === 'llava')).toEqual({
+        displayName: 'LLaVA 7B',
+        functionCall: false,
+        hidden: false,
+        id: 'llava',
+        tokens: 4000,
+        vision: true,
+      });
     });
   });
 });

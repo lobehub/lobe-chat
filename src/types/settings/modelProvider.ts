@@ -21,8 +21,8 @@ export interface OpenAIConfig {
    */
   customModelName?: string;
   enabled: boolean;
+  enabledModels?: string[];
   endpoint?: string;
-  models?: string[];
   useAzure?: boolean;
 }
 
@@ -45,15 +45,15 @@ export interface AWSBedrockConfig {
 export interface OllamaConfig {
   customModelName?: string;
   enabled?: boolean;
+  enabledModels: string[];
   endpoint?: string;
-  models: string[];
 }
 
 export interface OpenRouterConfig {
   apiKey?: string;
   customModelName?: string;
   enabled?: boolean;
-  models: string[];
+  enabledModels: string[];
 }
 
 export interface TogetherAIConfig {

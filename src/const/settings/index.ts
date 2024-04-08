@@ -103,18 +103,18 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   },
   ollama: {
     enabled: false,
+    enabledModels: filterEnabledModels(OllamaProvider),
     endpoint: '',
-    models: filterEnabledModels(OllamaProvider),
   },
   openAI: {
     OPENAI_API_KEY: '',
     enabled: true,
-    models: filterEnabledModels(OpenAIProvider),
+    enabledModels: filterEnabledModels(OpenAIProvider),
   },
   openrouter: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(OpenRouterProvider),
+    enabledModels: filterEnabledModels(OpenRouterProvider),
   },
   perplexity: {
     apiKey: '',
