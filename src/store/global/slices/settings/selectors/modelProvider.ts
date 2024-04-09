@@ -16,23 +16,19 @@ import {
   filterEnabledModels,
 } from '@/config/modelProviders';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
-import { GeneralModelProviderConfig, GlobalLLMProviderKey } from '@/types/settings';
+import { ServerModelProviderConfig } from '@/types/serverConfig';
+import { GlobalLLMProviderKey } from '@/types/settings';
 
 import { GlobalStore } from '../../../store';
 
-// const azureModelList = (s: GlobalStore): ModelProviderCard => {
-//   const azure = azureConfig(s);
-//   return {
-//     chatModels: parseModelString(azure.deployments),
-//     id: 'azure',
-//   };
-// };
-
+/**
+ * get the server side model cards
+ */
 const serverProviderModelCards =
   (provider: GlobalLLMProviderKey) =>
   (s: GlobalStore): ChatModelCard[] | undefined => {
     const config = s.serverConfig.languageModel?.[provider] as
-      | GeneralModelProviderConfig
+      | ServerModelProviderConfig
       | undefined;
 
     if (!config) return;
@@ -40,32 +36,54 @@ const serverProviderModelCards =
     return config.serverModelCards;
   };
 
+const remoteProviderModelCards =
+  (provider: GlobalLLMProviderKey) =>
+  (s: GlobalStore): ChatModelCard[] | undefined => {
+    const cards = s.settings.languageModel?.[provider]?.remoteModelCards as
+      | ChatModelCard[]
+      | undefined;
+
+    if (!cards) return;
+
+    return cards;
+  };
+
 /**
  * define all the model list of providers
  */
 const providerModelList = (s: GlobalStore): ModelProviderCard[] => {
-  // if the chat model is config in the server side, use the server side model cards
-  const openaiChatModels = serverProviderModelCards('openai')(s);
-  const ollamaChatModels = serverProviderModelCards('ollama')(s);
-  const openrouterChatModels = serverProviderModelCards('openrouter')(s);
-  const togetheraiChatModels = serverProviderModelCards('openrouter')(s);
+  /**
+   * Because we have several model cards sources, we need to merge the model cards
+   * the priority is below:
+   * 1 - server side model cards
+   * 2 - remote model cards
+   * 3 - default model cards
+   */
+
+  const mergeModels = (provider: GlobalLLMProviderKey, defaultChatModels: ChatModelCard[]) => {
+    // if the chat model is config in the server side, use the server side model cards
+    const serverChatModels = serverProviderModelCards(provider)(s);
+    const remoteChatModels = remoteProviderModelCards(provider)(s);
+
+    return serverChatModels ?? remoteChatModels ?? defaultChatModels;
+  };
 
   return [
     {
       ...OpenAIProviderCard,
-      chatModels: openaiChatModels ?? OpenAIProviderCard.chatModels,
+      chatModels: mergeModels('openai', OpenAIProviderCard.chatModels),
     },
     { ...AzureProviderCard, chatModels: [] },
-    { ...OllamaProviderCard, chatModels: ollamaChatModels ?? OllamaProviderCard.chatModels },
+    { ...OllamaProviderCard, chatModels: mergeModels('ollama', OllamaProviderCard.chatModels) },
     AnthropicProviderCard,
     GoogleProviderCard,
     {
       ...OpenRouterProviderCard,
-      chatModels: openrouterChatModels ?? OpenRouterProviderCard.chatModels,
+      chatModels: mergeModels('openrouter', OpenRouterProviderCard.chatModels),
     },
     {
       ...TogetherAIProviderCard,
-      chatModels: togetheraiChatModels ?? TogetherAIProviderCard.chatModels,
+      chatModels: mergeModels('togetherai', TogetherAIProviderCard.chatModels),
     },
     BedrockProviderCard,
     PerplexityProviderCard,

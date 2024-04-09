@@ -1,6 +1,9 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI, { ClientOptions } from 'openai';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
+import { ChatModelCard } from '@/types/llm';
+
 import { LobeRuntimeAI } from '../../BaseAI';
 import { ILobeAgentRuntimeErrorType } from '../../error';
 import { ChatCompetitionOptions, ChatStreamPayload } from '../../types';
@@ -99,5 +102,21 @@ export const LobeOpenAICompatibleFactory = ({
           provider: provider as any,
         });
       }
+    }
+
+    async models() {
+      const list = await this.client.models.list();
+
+      const modelIds = list.data.map((i) => i.id);
+
+      return modelIds
+        .map((id) => {
+          const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === id);
+
+          if (knownModel) return knownModel;
+
+          return { id: id };
+        })
+        .filter(Boolean) as ChatModelCard[];
     }
   };

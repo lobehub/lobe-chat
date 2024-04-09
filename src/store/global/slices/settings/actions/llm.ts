@@ -1,6 +1,9 @@
+import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { globalService } from '@/services/global';
 import { GlobalStore } from '@/store/global';
+import { ChatModelCard } from '@/types/llm';
 import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
 
 import { CustomModelCardDispatch, customModelCardsReducer } from '../reducers/customModelCard';
@@ -21,6 +24,11 @@ export interface LLMSettingsAction {
   ) => Promise<void>;
   toggleEditingCustomModelCard: (params?: { id: string; provider: GlobalLLMProviderKey }) => void;
   toggleProviderEnabled: (provider: GlobalLLMProviderKey, enabled: boolean) => Promise<void>;
+
+  useFetchProviderModelList: (
+    provider: GlobalLLMProviderKey,
+    enabledAutoFetch: boolean,
+  ) => SWRResponse;
 }
 
 export const llmSettingsSlice: StateCreator<
@@ -38,6 +46,7 @@ export const llmSettingsSlice: StateCreator<
 
     await get().setModelProviderConfig(provider, { customModelCards: nextState });
   },
+
   removeEnabledModels: async (provider, model) => {
     const config = modelConfigSelectors.providerConfig(provider)(get());
 
@@ -45,6 +54,7 @@ export const llmSettingsSlice: StateCreator<
       enabledModels: config?.enabledModels?.filter((s) => s !== model).filter(Boolean),
     });
   },
+
   setModelProviderConfig: async (provider, config) => {
     await get().setSettings({ languageModel: { [provider]: config } });
   },
@@ -54,4 +64,22 @@ export const llmSettingsSlice: StateCreator<
   toggleProviderEnabled: async (provider, enabled) => {
     await get().setSettings({ languageModel: { [provider]: { enabled } } });
   },
+
+  useFetchProviderModelList: (provider, enabledAutoFetch) =>
+    useSWR<ChatModelCard[] | undefined>(
+      [provider, enabledAutoFetch],
+      ([p]) => globalService.getChatModels(p),
+      {
+        onSuccess: async (data) => {
+          if (data) {
+            await get().setModelProviderConfig(provider, {
+              latestFetchTime: Date.now(),
+              remoteModelCards: data,
+            });
+          }
+        },
+        revalidateOnFocus: false,
+        revalidateOnMount: enabledAutoFetch,
+      },
+    ),
 });

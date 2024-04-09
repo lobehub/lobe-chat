@@ -114,6 +114,12 @@ const currentEditingCustomModelCard = (s: GlobalStore) => {
   return getCustomModelCardById({ id, provider })(s);
 };
 
+const enabledAutoFetchModels =
+  (provider: GlobalLLMProviderKey) =>
+  (s: GlobalStore): boolean => {
+    return providerConfig(provider)(s)?.autoFetchModelLists || false;
+  };
+
 /* eslint-disable sort-keys-fix/sort-keys-fix,  */
 export const modelConfigSelectors = {
   providerEnabled,
@@ -125,6 +131,7 @@ export const modelConfigSelectors = {
 
   modelSelectList,
   enabledModelProviderList,
+  enabledAutoFetchModels,
 
   // OpenAI
   openAIConfig,

@@ -67,6 +67,12 @@ const OpenAI: ModelProviderCard = {
       vision: true,
     },
     {
+      displayName: 'GPT-4 Turbo Vision Preview (1106)',
+      id: 'gpt-4-1106-vision-preview',
+      tokens: 128_000,
+      vision: true,
+    },
+    {
       displayName: 'GPT-4 Turbo Preview (1106)',
       functionCall: true,
       id: 'gpt-4-1106-preview',

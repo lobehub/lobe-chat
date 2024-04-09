@@ -20,6 +20,7 @@ const OllamaProvider = memo(() => {
         label: t('llm.checker.title'),
         minWidth: undefined,
       }}
+      modelList={{ showModelFetcher: true }}
       provider={ModelProvider.Ollama}
       showApiKey={false}
       showEndpoint

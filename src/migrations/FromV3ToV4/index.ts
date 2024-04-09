@@ -67,7 +67,8 @@ export class MigrationV3ToV4 implements Migration {
       },
       openai: {
         apiKey: openai.OPENAI_API_KEY,
-        customModelCards: customModelCards.length > 0 ? customModelCards : undefined,
+        customModelCards:
+          customModelCards && customModelCards.length > 0 ? customModelCards : undefined,
         enabled: true,
         endpoint: openai.endpoint,
       },
@@ -76,9 +77,11 @@ export class MigrationV3ToV4 implements Migration {
 
   static migrateProvider = (provider: V3LegacyConfig): V4ProviderConfig => {
     const customModelCards = transformToChatModelCards(provider.customModelName, []);
+
     return {
       apiKey: provider.apiKey,
-      customModelCards: customModelCards.length > 0 ? customModelCards : undefined,
+      customModelCards:
+        customModelCards && customModelCards.length > 0 ? customModelCards : undefined,
       enabled: provider.enabled,
       endpoint: provider.endpoint,
     };

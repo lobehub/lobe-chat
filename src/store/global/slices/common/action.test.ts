@@ -6,7 +6,7 @@ import { withSWR } from '~test-utils';
 import { globalService } from '@/services/global';
 import { userService } from '@/services/user';
 import { useGlobalStore } from '@/store/global';
-import { GlobalServerConfig } from '@/types/settings';
+import { GlobalServerConfig } from '@/types/serverConfig';
 import { switchLang } from '@/utils/client/switchLang';
 
 vi.mock('zustand/traditional');

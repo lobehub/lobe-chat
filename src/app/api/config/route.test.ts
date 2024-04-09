@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { GlobalServerConfig } from '@/types/settings';
+import { GlobalServerConfig } from '@/types/serverConfig';
 
 import { GET } from './route';
 

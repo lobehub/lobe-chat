@@ -4,6 +4,13 @@ export type CustomModels = { displayName: string; id: string }[];
 
 export interface GeneralModelProviderConfig {
   apiKey?: string;
+  /**
+   * whether to auto fetch model lists
+   */
+  autoFetchModelLists?: boolean;
+  /**
+   * user defined model cards
+   */
   customModelCards?: ChatModelCard[];
   enabled: boolean;
   /**
@@ -11,11 +18,14 @@ export interface GeneralModelProviderConfig {
    */
   enabledModels?: string[] | null;
   endpoint?: string;
-
   /**
-   * the model cards defined in server
+   * the latest fetch model list time
    */
-  serverModelCards?: ChatModelCard[];
+  latestFetchTime?: number;
+  /**
+   * fetched models from provider side
+   */
+  remoteModelCards?: ChatModelCard[];
 }
 
 export interface AzureOpenAIConfig extends GeneralModelProviderConfig {

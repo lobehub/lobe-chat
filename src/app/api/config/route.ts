@@ -4,7 +4,7 @@ import {
   TogetherAIProviderCard,
 } from '@/config/modelProviders';
 import { getServerConfig } from '@/config/server';
-import { GlobalServerConfig } from '@/types/settings';
+import { GlobalServerConfig } from '@/types/serverConfig';
 import { transformToChatModelCards } from '@/utils/parseModels';
 
 import { parseAgentConfig } from './parseDefaultAgent';

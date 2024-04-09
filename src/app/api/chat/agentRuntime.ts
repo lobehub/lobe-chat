@@ -106,6 +106,10 @@ class AgentRuntime {
     });
   }
 
+  async models() {
+    return this._runtime.models?.();
+  }
+
   static async initializeWithUserPayload(provider: string, payload: JWTPayload) {
     let runtimeModel: LobeRuntimeAI;
 

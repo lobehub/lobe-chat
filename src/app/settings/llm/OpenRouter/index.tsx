@@ -12,6 +12,7 @@ const OpenRouterProvider = memo(() => {
   return (
     <ProviderConfig
       checkModel={'mistralai/mistral-7b-instruct:free'}
+      modelList={{ showModelFetcher: true }}
       provider={ModelProvider.OpenRouter}
       title={
         <OpenRouter.Combine

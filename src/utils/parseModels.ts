@@ -49,7 +49,9 @@ export const parseModelString = (modelString: string = '') => {
 export const transformToChatModelCards = (
   modelString: string = '',
   defaultChartModels = OpenAIProviderCard.chatModels,
-): ChatModelCard[] => {
+): ChatModelCard[] | undefined => {
+  if (!modelString) return undefined;
+
   const modelConfig = parseModelString(modelString);
   let chatModels = modelConfig.removeAll ? [] : defaultChartModels;
 

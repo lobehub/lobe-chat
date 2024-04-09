@@ -6,6 +6,7 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
+import officalOpenAIModels from './fixtures/openai-models.json';
 import { LobeOpenAI } from './index';
 
 // Mock the console.error to avoid polluting test output
@@ -21,6 +22,7 @@ describe('LobeOpenAI', () => {
     vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
       new ReadableStream() as any,
     );
+    vi.spyOn(instance['client'].models, 'list').mockResolvedValue({ data: [] } as any);
   });
 
   afterEach(() => {
@@ -280,6 +282,17 @@ describe('LobeOpenAI', () => {
         // 恢复原始环境变量值
         process.env.DEBUG_OPENAI_CHAT_COMPLETION = originalDebugValue;
       });
+    });
+  });
+
+  describe('models', () => {
+    it('should get models', async () => {
+      // mock the models.list method
+      (instance['client'].models.list as Mock).mockResolvedValue({ data: officalOpenAIModels });
+
+      const list = await instance.models();
+
+      expect(list).toMatchSnapshot();
     });
   });
 });

@@ -28,6 +28,7 @@ interface ProviderConfigProps {
     azureDeployName?: boolean;
     notFoundContent?: ReactNode;
     placeholder?: string;
+    showModelFetcher?: boolean;
   };
   provider: GlobalLLMProviderKey;
   showApiKey?: boolean;
@@ -90,6 +91,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             placeholder={modelList?.placeholder ?? t('llm.modelList.placeholder')}
             provider={provider}
             showAzureDeployName={modelList?.azureDeployName}
+            showModelFetcher={modelList?.showModelFetcher}
           />
         ),
         desc: t('llm.modelList.desc'),
