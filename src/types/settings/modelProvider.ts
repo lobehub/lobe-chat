@@ -9,21 +9,8 @@ export interface GeneralModelProviderConfig {
   /**
    * enabled models id
    */
-  enabledModels: string[] | null;
+  enabledModels?: string[] | null;
   endpoint?: string;
-}
-
-export interface OpenAIConfig {
-  OPENAI_API_KEY: string;
-  azureApiVersion?: string;
-  /**
-   * custom mode name for fine-tuning or openai like model
-   */
-  customModelName?: string;
-  enabled: boolean;
-  enabledModels?: string[];
-  endpoint?: string;
-  useAzure?: boolean;
 }
 
 export interface AzureOpenAIConfig {
@@ -34,33 +21,10 @@ export interface AzureOpenAIConfig {
   endpoint?: string;
 }
 
-export interface AWSBedrockConfig {
+export interface AWSBedrockConfig extends Omit<GeneralModelProviderConfig, 'apiKey' | 'endpoint'> {
   accessKeyId?: string;
-  enabled: boolean;
-  models: string[];
   region?: string;
   secretAccessKey?: string;
-}
-
-export interface OllamaConfig {
-  customModelName?: string;
-  enabled?: boolean;
-  enabledModels: string[];
-  endpoint?: string;
-}
-
-export interface OpenRouterConfig {
-  apiKey?: string;
-  customModelName?: string;
-  enabled?: boolean;
-  enabledModels: string[];
-}
-
-export interface TogetherAIConfig {
-  apiKey?: string;
-  customModelName?: string;
-  enabled?: boolean;
-  models: string[];
 }
 
 export interface GlobalLLMConfig {
@@ -71,11 +35,11 @@ export interface GlobalLLMConfig {
   groq: GeneralModelProviderConfig;
   mistral: GeneralModelProviderConfig;
   moonshot: GeneralModelProviderConfig;
-  ollama: OllamaConfig;
+  ollama: GeneralModelProviderConfig;
   openai: GeneralModelProviderConfig;
-  openrouter: OpenRouterConfig;
+  openrouter: GeneralModelProviderConfig;
   perplexity: GeneralModelProviderConfig;
-  togetherai: TogetherAIConfig;
+  togetherai: GeneralModelProviderConfig;
   zeroone: GeneralModelProviderConfig;
   zhipu: GeneralModelProviderConfig;
 }

@@ -55,5 +55,5 @@ export interface V3Settings {
 }
 
 export interface V3ConfigState {
-  settings: V3Settings;
+  settings?: V3Settings;
 }

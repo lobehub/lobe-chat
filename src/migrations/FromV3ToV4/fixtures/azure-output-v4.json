@@ -29,7 +29,12 @@
       },
       "languageModel": {
         "anthropic": { "apiKey": "", "enabled": false },
-        "azure": { "apiKey": "", "enabled": false, "endpoint": "" },
+        "azure": {
+          "apiKey": "asbdasd",
+          "apiVersion": "2024-02-15-preview",
+          "enabled": true,
+          "endpoint": "https://api.chatanywhere.com.cn"
+        },
         "bedrock": {
           "accessKeyId": "",
           "enabled": false,
@@ -47,18 +52,9 @@
         "zeroone": { "apiKey": "", "enabled": false },
         "zhipu": { "apiKey": "", "enabled": false },
         "openai": {
-          "enabled": true,
-          "apiKey": "asbdasd",
-          "endpoint": "https://api.chatanywhere.com.cn",
-          "customModelCards": [
-            {
-              "displayName": "deerercsds",
-              "enabled": true,
-              "functionCall": true,
-              "id": "deerercsds",
-              "vision": true
-            }
-          ]
+          "apiKey": "",
+          "endpoint": "",
+          "enabled": true
         }
       },
       "sync": { "webrtc": { "enabled": false } },

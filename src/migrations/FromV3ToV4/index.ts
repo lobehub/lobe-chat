@@ -1,4 +1,5 @@
 import type { Migration, MigrationData } from '@/migrations/VersionController';
+import { transformToChatModelCards } from '@/utils/parseModels';
 
 import { V3ConfigState, V3LegacyConfig, V3OpenAIConfig, V3Settings } from './types/v3';
 import { V4ConfigState, V4ProviderConfig, V4Settings } from './types/v4';
@@ -14,7 +15,7 @@ export class MigrationV3ToV4 implements Migration {
       ...data,
       state: {
         ...data.state,
-        settings: this.migrateSettings(settings),
+        settings: !settings ? undefined : this.migrateSettings(settings),
       },
     };
   }
@@ -44,36 +45,43 @@ export class MigrationV3ToV4 implements Migration {
       return {
         azure: {
           apiKey: openai.OPENAI_API_KEY,
+          // TODO: 要确认下 azure 的 api version 是放到 customModelCard 里还是怎么样
+          // @ts-ignore
+          apiVersion: openai.azureApiVersion,
           enabled: true,
-          enabledModels: null,
           endpoint: openai.endpoint,
         },
         openai: {
+          apiKey: '',
           enabled: true,
-          enabledModels: null,
+          endpoint: '',
         },
       };
     }
 
+    const customModelCards = transformToChatModelCards(openai.customModelName, []);
+
     return {
       azure: {
-        enabledModels: null,
+        apiKey: '',
+        enabled: false,
+        endpoint: '',
       },
       openai: {
         apiKey: openai.OPENAI_API_KEY,
+        customModelCards: customModelCards.length > 0 ? customModelCards : undefined,
         enabled: true,
-        enabledModels: null,
         endpoint: openai.endpoint,
-        // customModelCards:openai.customModelName
       },
     };
   };
 
   migrateProvider = (provider: V3LegacyConfig): V4ProviderConfig => {
+    const customModelCards = transformToChatModelCards(provider.customModelName, []);
     return {
       apiKey: provider.apiKey,
+      customModelCards: customModelCards.length > 0 ? customModelCards : undefined,
       enabled: provider.enabled,
-      enabledModels: [],
       endpoint: provider.endpoint,
     };
   };

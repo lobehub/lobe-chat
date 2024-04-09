@@ -7,7 +7,7 @@ import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
 import { userService } from '@/services/user';
 import { useGlobalStore } from '@/store/global';
 import { LobeAgentSettings } from '@/types/session';
-import { GlobalSettings, OpenAIConfig } from '@/types/settings';
+import { GlobalSettings } from '@/types/settings';
 
 // Mock userService
 vi.mock('@/services/user', () => ({

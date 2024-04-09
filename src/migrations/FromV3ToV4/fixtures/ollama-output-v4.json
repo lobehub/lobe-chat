@@ -40,25 +40,32 @@
         "groq": { "apiKey": "", "enabled": false },
         "mistral": { "apiKey": "", "enabled": false },
         "moonshot": { "apiKey": "", "enabled": false },
-        "ollama": { "enabled": false, "endpoint": "" },
-        "openrouter": { "apiKey": "", "enabled": false },
+        "ollama": {
+          "enabled": false,
+          "endpoint": "",
+          "customModelCards": [
+            {
+              "displayName": "LLaVA 7B",
+              "enabled": true,
+              "functionCall": false,
+              "id": "llava",
+              "tokens": 4000,
+              "vision": true
+            }
+          ]
+        },
+        "openrouter": {
+          "apiKey": "",
+          "enabled": true
+        },
         "perplexity": { "apiKey": "", "enabled": false },
         "togetherai": { "apiKey": "", "enabled": false },
         "zeroone": { "apiKey": "", "enabled": false },
         "zhipu": { "apiKey": "", "enabled": false },
         "openai": {
+          "apiKey": "",
           "enabled": true,
-          "apiKey": "asbdasd",
-          "endpoint": "https://api.chatanywhere.com.cn",
-          "customModelCards": [
-            {
-              "displayName": "deerercsds",
-              "enabled": true,
-              "functionCall": true,
-              "id": "deerercsds",
-              "vision": true
-            }
-          ]
+          "endpoint": ""
         }
       },
       "sync": { "webrtc": { "enabled": false } },

@@ -41,24 +41,34 @@
         "mistral": { "apiKey": "", "enabled": false },
         "moonshot": { "apiKey": "", "enabled": false },
         "ollama": { "enabled": false, "endpoint": "" },
-        "openrouter": { "apiKey": "", "enabled": false },
+        "openrouter": {
+          "apiKey": "",
+          "enabled": true,
+          "customModelCards": [
+            {
+              "displayName": "01-ai/yi-34b-chat",
+              "enabled": true,
+              "functionCall": true,
+              "id": "01-ai/yi-34b-chat",
+              "vision": true
+            },
+            {
+              "displayName": "huggingfaceh4/zephyr-7b-beta",
+              "enabled": true,
+              "functionCall": true,
+              "id": "huggingfaceh4/zephyr-7b-beta",
+              "vision": true
+            }
+          ]
+        },
         "perplexity": { "apiKey": "", "enabled": false },
         "togetherai": { "apiKey": "", "enabled": false },
         "zeroone": { "apiKey": "", "enabled": false },
         "zhipu": { "apiKey": "", "enabled": false },
         "openai": {
+          "apiKey": "",
           "enabled": true,
-          "apiKey": "asbdasd",
-          "endpoint": "https://api.chatanywhere.com.cn",
-          "customModelCards": [
-            {
-              "displayName": "deerercsds",
-              "enabled": true,
-              "functionCall": true,
-              "id": "deerercsds",
-              "vision": true
-            }
-          ]
+          "endpoint": ""
         }
       },
       "sync": { "webrtc": { "enabled": false } },

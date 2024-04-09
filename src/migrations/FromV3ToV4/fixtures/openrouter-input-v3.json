@@ -42,15 +42,18 @@
         "moonshot": { "apiKey": "", "enabled": false },
         "ollama": { "enabled": false, "endpoint": "" },
         "openAI": {
-          "OPENAI_API_KEY": "asbdasd",
+          "OPENAI_API_KEY": "",
           "enabled": true,
           "models": [],
           "endpoint": "",
           "customModelName": "",
-          "useAzure": false,
-          "azureApiVersion": "2024-02-15-preview"
+          "useAzure": false
         },
-        "openrouter": { "apiKey": "", "enabled": true, "customModelName": "cohere/command-r-plus" },
+        "openrouter": {
+          "apiKey": "",
+          "enabled": true,
+          "customModelName": "-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta"
+        },
         "perplexity": { "apiKey": "", "enabled": false },
         "togetherai": { "apiKey": "", "enabled": false },
         "zeroone": { "apiKey": "", "enabled": false },

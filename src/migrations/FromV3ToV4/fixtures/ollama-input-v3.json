@@ -29,7 +29,7 @@
       },
       "languageModel": {
         "anthropic": { "apiKey": "", "enabled": false },
-        "azure": { "apiKey": "", "enabled": false, "endpoint": "" },
+        "azure": { "apiKey": "", "deployments": "", "enabled": false, "endpoint": "" },
         "bedrock": {
           "accessKeyId": "",
           "enabled": false,
@@ -40,25 +40,31 @@
         "groq": { "apiKey": "", "enabled": false },
         "mistral": { "apiKey": "", "enabled": false },
         "moonshot": { "apiKey": "", "enabled": false },
-        "ollama": { "enabled": false, "endpoint": "" },
-        "openrouter": { "apiKey": "", "enabled": false },
+        "ollama": {
+          "enabled": false,
+          "endpoint": "",
+          "customModelName": "-all,+llava"
+        },
+        "openAI": {
+          "OPENAI_API_KEY": "",
+          "enabled": true,
+          "models": [],
+          "endpoint": "",
+          "customModelName": "",
+          "useAzure": false
+        },
+        "openrouter": {
+          "apiKey": "",
+          "enabled": true
+        },
         "perplexity": { "apiKey": "", "enabled": false },
         "togetherai": { "apiKey": "", "enabled": false },
         "zeroone": { "apiKey": "", "enabled": false },
         "zhipu": { "apiKey": "", "enabled": false },
         "openai": {
-          "enabled": true,
-          "apiKey": "asbdasd",
-          "endpoint": "https://api.chatanywhere.com.cn",
-          "customModelCards": [
-            {
-              "displayName": "deerercsds",
-              "enabled": true,
-              "functionCall": true,
-              "id": "deerercsds",
-              "vision": true
-            }
-          ]
+          "OPENAI_API_KEY": "",
+          "models": ["gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-4"],
+          "endpoint": ""
         }
       },
       "sync": { "webrtc": { "enabled": false } },
@@ -75,5 +81,5 @@
       "neutralColor": ""
     }
   },
-  "version": 4
+  "version": 3
 }

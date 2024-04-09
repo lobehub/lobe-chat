@@ -9,7 +9,7 @@ export interface V4ProviderConfig {
   /**
    * enabled models id
    */
-  enabledModels: string[] | null;
+  enabledModels?: string[] | null;
   endpoint?: string;
 }
 
@@ -30,5 +30,5 @@ export interface V4Settings extends Omit<V3Settings, 'languageModel'> {
 }
 
 export interface V4ConfigState {
-  settings: V4Settings;
+  settings?: V4Settings;
 }
