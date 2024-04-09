@@ -6,6 +6,7 @@ module.exports = defineConfig({
   output: 'locales',
   outputLocales: [
     'ar',
+    'bg-BG',
     'zh-TW',
     'en-US',
     'ru-RU',
