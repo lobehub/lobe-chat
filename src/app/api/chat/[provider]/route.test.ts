@@ -42,7 +42,6 @@ describe('POST handler', () => {
         accessCode: 'test-access-code',
         apiKey: 'test-api-key',
         azureApiVersion: 'v1',
-        useAzure: true,
       });
 
       const mockRuntime: LobeRuntimeAI = { baseURL: 'abc', chat: vi.fn() };
@@ -56,11 +55,7 @@ describe('POST handler', () => {
 
       // 验证是否正确调用了模拟函数
       expect(getJWTPayload).toHaveBeenCalledWith('Bearer some-valid-token');
-      expect(spy).toHaveBeenCalledWith('test-provider', expect.anything(), {
-        apiVersion: 'v1',
-        model: 'test-model',
-        useAzure: true,
-      });
+      expect(spy).toHaveBeenCalledWith('test-provider', expect.anything());
     });
 
     it('should return Unauthorized error when LOBE_CHAT_AUTH_HEADER is missing', async () => {

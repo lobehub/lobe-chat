@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // 引入模块以便于对函数进行spy
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeOpenAI } from './index';
@@ -12,7 +12,7 @@ import { LobeOpenAI } from './index';
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
 describe('LobeOpenAI', () => {
-  let instance: LobeOpenAI;
+  let instance: LobeOpenAICompatibleRuntime;
 
   beforeEach(() => {
     instance = new LobeOpenAI({ apiKey: 'test' });
@@ -25,54 +25,6 @@ describe('LobeOpenAI', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
-  });
-
-  describe('init', () => {
-    it('should correctly initialize with Azure options', () => {
-      const baseURL = 'https://abc.com';
-      const modelName = 'abc';
-      const client = new LobeOpenAI({
-        apiKey: 'test',
-        useAzure: true,
-        baseURL,
-        azureOptions: {
-          apiVersion: '2023-08-01-preview',
-          model: 'abc',
-        },
-      });
-
-      expect(client.baseURL).toEqual(baseURL + '/openai/deployments/' + modelName);
-    });
-
-    describe('initWithAzureOpenAI', () => {
-      it('should correctly initialize with Azure options', () => {
-        const baseURL = 'https://abc.com';
-        const modelName = 'abc';
-        const client = LobeOpenAI.initWithAzureOpenAI({
-          apiKey: 'test',
-          useAzure: true,
-          baseURL,
-          azureOptions: {
-            apiVersion: '2023-08-01-preview',
-            model: 'abc',
-          },
-        });
-
-        expect(client.baseURL).toEqual(baseURL + '/openai/deployments/' + modelName);
-      });
-
-      it('should use default Azure options when not explicitly provided', () => {
-        const baseURL = 'https://abc.com';
-
-        const client = LobeOpenAI.initWithAzureOpenAI({
-          apiKey: 'test',
-          useAzure: true,
-          baseURL,
-        });
-
-        expect(client.baseURL).toEqual(baseURL + '/openai/deployments/');
-      });
-    });
   });
 
   describe('chat', () => {

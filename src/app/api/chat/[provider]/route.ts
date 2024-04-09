@@ -29,12 +29,7 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
     const jwtPayload = await getJWTPayload(authorization);
     checkAuthMethod(jwtPayload.accessCode, jwtPayload.apiKey, oauthAuthorized);
 
-    const body = await req.clone().json();
-    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, jwtPayload, {
-      apiVersion: jwtPayload.azureApiVersion,
-      model: body.model,
-      useAzure: jwtPayload.useAzure,
-    });
+    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, jwtPayload);
 
     // ============  2. create chat completion   ============ //
 

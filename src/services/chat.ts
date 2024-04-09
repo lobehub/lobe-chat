@@ -146,8 +146,8 @@ class ChatService {
     }
 
     const payload = merge(
-      { stream: true, ...DEFAULT_AGENT_CONFIG.params },
-      { ...res, model: res.model },
+      { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
+      { ...res, model },
     );
 
     const traceHeader = createTraceHeader({ ...options?.trace });

@@ -75,14 +75,17 @@ describe('LobeMistralAI', () => {
       });
 
       // Assert
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'open-mistral-7b',
-        stream: true,
-        temperature: 0.7,
-        top_p: 1,
-      });
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'open-mistral-7b',
+          stream: true,
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -105,14 +108,17 @@ describe('LobeMistralAI', () => {
       });
 
       // Assert
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'open-mistral-7b',
-        stream: true,
-        temperature: 0.7,
-        top_p: 1,
-      });
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'open-mistral-7b',
+          stream: true,
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
       expect(result).toBeInstanceOf(Response);
     });
 

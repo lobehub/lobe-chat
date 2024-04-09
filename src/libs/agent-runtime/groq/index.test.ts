@@ -75,13 +75,16 @@ describe('LobeGroqAI', () => {
       });
 
       // Assert
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'mistralai/mistral-7b-instruct:free',
-        temperature: 0.7,
-        top_p: 1,
-      });
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
       expect(result).toBeInstanceOf(Response);
     });
 

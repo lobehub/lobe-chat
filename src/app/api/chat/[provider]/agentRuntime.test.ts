@@ -18,6 +18,7 @@ import {
   LobeOpenAI,
   LobeOpenRouterAI,
   LobePerplexityAI,
+  LobeRuntimeAI,
   LobeTogetherAI,
   LobeZhipuAI,
   ModelProvider,
@@ -70,33 +71,32 @@ describe('AgentRuntime', () => {
         const jwtPayload: JWTPayload = {
           apiKey: 'user-azure-key',
           endpoint: 'user-azure-endpoint',
-          useAzure: true,
+          azureApiVersion: '2024-02-01',
         };
         const runtime = await AgentRuntime.initializeWithUserPayload(
-          ModelProvider.OpenAI,
+          ModelProvider.Azure,
           jwtPayload,
         );
 
         expect(runtime).toBeInstanceOf(AgentRuntime);
-        expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
         expect(runtime['_runtime'].baseURL).toBe('user-azure-endpoint');
       });
       it('should initialize with azureOpenAIParams correctly', async () => {
-        const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
-        const azureOpenAIParams = {
-          apiVersion: 'custom-version',
-          model: 'custom-model',
-          useAzure: true,
+        const jwtPayload: JWTPayload = {
+          apiKey: 'user-openai-key',
+          endpoint: 'user-endpoint',
+          azureApiVersion: 'custom-version',
         };
+
         const runtime = await AgentRuntime.initializeWithUserPayload(
-          ModelProvider.OpenAI,
+          ModelProvider.Azure,
           jwtPayload,
-          azureOpenAIParams,
         );
 
         expect(runtime).toBeInstanceOf(AgentRuntime);
-        const openAIRuntime = runtime['_runtime'] as LobeOpenAI;
-        expect(openAIRuntime).toBeInstanceOf(LobeOpenAI);
+        const openAIRuntime = runtime['_runtime'] as LobeRuntimeAI;
+        expect(openAIRuntime).toBeInstanceOf(LobeAzureOpenAI);
       });
 
       it('should initialize with AzureAI correctly', async () => {
