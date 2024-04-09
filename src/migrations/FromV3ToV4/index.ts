@@ -84,3 +84,5 @@ export class MigrationV3ToV4 implements Migration {
     };
   };
 }
+
+export const MigrationLLMSettings = MigrationV3ToV4;

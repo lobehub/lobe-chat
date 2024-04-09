@@ -7,6 +7,7 @@ import { DB_Session } from '@/database/schemas/session';
 import { DB_SessionGroup } from '@/database/schemas/sessionGroup';
 import { DB_Topic } from '@/database/schemas/topic';
 import { DB_User } from '@/database/schemas/user';
+import { MigrationLLMSettings } from '@/migrations/FromV3ToV4';
 import { uuid } from '@/utils/uuid';
 
 import { migrateSettingsToUser } from './migrations/migrateSettingsToUser';
@@ -61,6 +62,10 @@ export class LocalDB extends Dexie {
     this.version(7)
       .stores(dbSchemaV7)
       .upgrade((trans) => this.upgradeToV7(trans));
+
+    this.version(8)
+      .stores(dbSchemaV7)
+      .upgrade((trans) => this.upgradeToV8(trans));
 
     this.files = this.table('files');
     this.sessions = this.table('sessions');
@@ -137,6 +142,13 @@ export class LocalDB extends Dexie {
 
     await plugins.toCollection().modify((plugin: DB_Plugin) => {
       plugin.id = plugin.identifier;
+    });
+  };
+
+  upgradeToV8 = async (trans: Transaction) => {
+    const users = trans.table('users');
+    users.toCollection().modify((user: DB_User) => {
+      user.settings = MigrationLLMSettings.migrateSettings(user.settings as any);
     });
   };
 }
