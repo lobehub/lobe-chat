@@ -28,7 +28,7 @@ import {
 } from '@/libs/agent-runtime';
 import { TraceClient } from '@/libs/traces';
 
-import apiKeyManager from '../apiKeyManager';
+import apiKeyManager from './apiKeyManager';
 
 export interface AgentChatOptions {
   enableTrace?: boolean;

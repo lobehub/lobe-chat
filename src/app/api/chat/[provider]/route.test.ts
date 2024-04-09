@@ -5,11 +5,11 @@ import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
 import { LobeRuntimeAI } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
-import { getJWTPayload } from '../auth';
-import AgentRuntime from './agentRuntime';
+import AgentRuntime from '../agentRuntime';
+import { getJWTPayload } from '../auth/utils';
 import { POST } from './route';
 
-vi.mock('../auth', () => ({
+vi.mock('../auth/utils', () => ({
   getJWTPayload: vi.fn(),
   checkAuthMethod: vi.fn(),
 }));
