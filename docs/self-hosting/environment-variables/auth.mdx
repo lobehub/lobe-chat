@@ -117,6 +117,29 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Default: `-`
 - Example: `dd262976ac0931d947e104891586a053f3d3750b`
 
+## ZITADEL
+
+### `ZITADEL_CLIENT_ID`
+
+- Type: Required
+- Description: Client ID of the ZITADEL application. This can be found under your application in the ZITADEL console.
+- Default: `-`
+- Example: `123456789012345678@your-project`
+
+### `ZITADEL_CLIENT_SECRET`
+
+- Type: Required
+- Description: Client Secret of the ZITADEL application.
+- Default: `-`
+- Example: `9QF1n5ATzU7Z3mHp2Iw4gKX8kY6oR7uW1DnKcV3LqX2jF6iG3fBmJ1kV7nS5zE6A`
+
+### `ZITADEL_ISSUER`
+
+- Type: Required
+- Description: Issuer of the ZITADEL application. This is usually the URL of the ZITADEL instance, and can be found in `URLs` tab of your application in the console.
+- Default: `-`
+- Example: `https://your-instance-abc123.zitadel.cloud`
+
 <Callout>
   Currently, we only support providers above. If you need to use other identity verification service
   providers, you can submit a [feature
