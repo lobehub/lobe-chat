@@ -70,6 +70,9 @@ export const getAppConfig = () => {
     AUTHENTIK_CLIENT_ID: process.env.AUTHENTIK_CLIENT_ID || '',
     AUTHENTIK_CLIENT_SECRET: process.env.AUTHENTIK_CLIENT_SECRET || '',
     AUTHENTIK_ISSUER: process.env.AUTHENTIK_ISSUER || '',
+    ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID || '',
+    ZITADEL_CLIENT_SECRET: process.env.ZITADEL_CLIENT_SECRET || '',
+    ZITADEL_ISSUER: process.env.ZITADEL_ISSUER || '',
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || '',
 
     ENABLE_LANGFUSE: process.env.ENABLE_LANGFUSE === '1',
