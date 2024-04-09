@@ -43,6 +43,7 @@ const serverProviderModelCards =
  * define all the model list of providers
  */
 const providerModelList = (s: GlobalStore): ModelProviderCard[] => {
+  // if the chat model is config in the server side, use the server side model cards
   const openaiChatModels = serverProviderModelCards('openai')(s);
   const ollamaChatModels = serverProviderModelCards('ollama')(s);
   const openrouterChatModels = serverProviderModelCards('openrouter')(s);

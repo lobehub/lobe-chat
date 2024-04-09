@@ -14,13 +14,8 @@ const providerConfig = (provider: string) => (s: GlobalStore) =>
     | GeneralModelProviderConfig
     | undefined;
 
-const providerEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) => {
-  // TODO: we need to migrate the 'openAI' key to 'openai'
-  // @ts-ignore
-  if (provider === 'openai') return true;
-
-  return currentSettings(s).languageModel[provider]?.enabled || false;
-};
+const providerEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) =>
+  currentSettings(s).languageModel[provider]?.enabled || false;
 
 const providerEnableModels = (provider: string) => (s: GlobalStore) => {
   if (!providerConfig(provider)(s)?.enabledModels) return;

@@ -83,6 +83,10 @@ declare global {
        * @deprecated
        */
       OLLAMA_CUSTOM_MODELS?: string;
+      /**
+       * @deprecated
+       */
+      OPENROUTER_CUSTOM_MODELS?: string;
     }
   }
 }
@@ -117,6 +121,24 @@ export const getProviderConfig = () => {
   let regions: string[] = [];
   if (process.env.OPENAI_FUNCTION_REGIONS) {
     regions = process.env.OPENAI_FUNCTION_REGIONS.split(',');
+  }
+
+  if (process.env.CUSTOM_MODELS) {
+    console.warn(
+      'DEPRECATED: `CUSTOM_MODELS` is deprecated, please use `OPENAI_MODEL_LIST` instead, we will remove `CUSTOM_MODELS` in the LobeChat 1.0',
+    );
+  }
+
+  if (process.env.OLLAMA_CUSTOM_MODELS) {
+    console.warn(
+      'DEPRECATED: `OLLAMA_CUSTOM_MODELS` is deprecated, please use `OLLAMA_MODEL_LIST` instead, we will remove `OLLAMA_CUSTOM_MODELS` in the LobeChat 1.0',
+    );
+  }
+
+  if (process.env.OPENROUTER_CUSTOM_MODELS) {
+    console.warn(
+      'DEPRECATED: `OPENROUTER_CUSTOM_MODELS` is deprecated, please use `OPENROUTER_MODEL_LIST` instead, we will remove `OPENROUTER_CUSTOM_MODELS` in the LobeChat 1.0',
+    );
   }
 
   return {
