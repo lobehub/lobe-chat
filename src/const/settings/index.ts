@@ -77,7 +77,7 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   bedrock: {
     accessKeyId: '',
     enabled: false,
-    models: filterEnabledModels(BedrockProvider),
+    enabledModels: filterEnabledModels(BedrockProvider),
     region: 'us-east-1',
     secretAccessKey: '',
   },
@@ -124,7 +124,7 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   togetherai: {
     apiKey: '',
     enabled: false,
-    models: filterEnabledModels(TogetherAIProvider),
+    enabledModels: filterEnabledModels(TogetherAIProvider),
   },
   zeroone: {
     apiKey: '',

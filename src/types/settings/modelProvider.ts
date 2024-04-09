@@ -11,6 +11,11 @@ export interface GeneralModelProviderConfig {
    */
   enabledModels?: string[] | null;
   endpoint?: string;
+
+  /**
+   * the model cards defined in server config
+   */
+  serverModelCards?: ChatModelCard[];
 }
 
 export interface AzureOpenAIConfig {

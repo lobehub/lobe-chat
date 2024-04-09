@@ -14,11 +14,10 @@ import {
   ZhiPuProvider,
   filterEnabledModels,
 } from '@/config/modelProviders';
-import { ModelProviderCard } from '@/types/llm';
-import { transformToChatModelCards } from '@/utils/parseModels';
+import { ChatModelCard, ModelProviderCard } from '@/types/llm';
+import { GeneralModelProviderConfig, GlobalLLMProviderKey } from '@/types/settings';
 
 import { GlobalStore } from '../../../store';
-import { currentSettings } from './settings';
 
 // const azureModelList = (s: GlobalStore): ModelProviderCard => {
 //   const azure = azureConfig(s);
@@ -28,38 +27,38 @@ import { currentSettings } from './settings';
 //   };
 // };
 
+const serverProviderModelCards =
+  (provider: GlobalLLMProviderKey) =>
+  (s: GlobalStore): ChatModelCard[] | undefined => {
+    const config = s.serverConfig.languageModel?.[provider] as
+      | GeneralModelProviderConfig
+      | undefined;
+
+    if (!config) return;
+
+    return config.serverModelCards;
+  };
+
 /**
  * define all the model list of providers
  */
 const providerModelList = (s: GlobalStore): ModelProviderCard[] => {
-  const openaiChatModels = transformToChatModelCards(s.serverConfig.customModelName);
-
-  const ollamaChatModels = transformToChatModelCards(
-    s.serverConfig.languageModel?.ollama?.customModelName,
-    OllamaProvider.chatModels,
-  );
-
-  const openrouterChatModels = transformToChatModelCards(
-    s.serverConfig.languageModel?.openrouter?.customModelName,
-    OpenRouterProvider.chatModels,
-  );
-
-  const togetheraiChatModels = transformToChatModelCards(
-    currentSettings(s).languageModel.togetherai.customModelName,
-    TogetherAIProvider.chatModels,
-  );
+  const openaiChatModels = serverProviderModelCards('openai')(s);
+  const ollamaChatModels = serverProviderModelCards('ollama')(s);
+  const openrouterChatModels = serverProviderModelCards('openrouter')(s);
+  const togetheraiChatModels = serverProviderModelCards('openrouter')(s);
 
   return [
     {
       ...OpenAIProvider,
-      chatModels: openaiChatModels,
+      chatModels: openaiChatModels ?? OpenAIProvider.chatModels,
     },
     // { ...azureModelList(s), enabled: enableAzure(s) },
-    { ...OllamaProvider, chatModels: ollamaChatModels },
+    { ...OllamaProvider, chatModels: ollamaChatModels ?? OllamaProvider.chatModels },
     AnthropicProvider,
     GoogleProvider,
-    { ...OpenRouterProvider, chatModels: openrouterChatModels },
-    { ...TogetherAIProvider, chatModels: togetheraiChatModels },
+    { ...OpenRouterProvider, chatModels: openrouterChatModels ?? OpenRouterProvider.chatModels },
+    { ...TogetherAIProvider, chatModels: togetheraiChatModels ?? TogetherAIProvider.chatModels },
     BedrockProvider,
     PerplexityProvider,
     MistralProvider,

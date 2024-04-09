@@ -15,12 +15,12 @@ export class MigrationV3ToV4 implements Migration {
       ...data,
       state: {
         ...data.state,
-        settings: !settings ? undefined : this.migrateSettings(settings),
+        settings: !settings ? undefined : MigrationV3ToV4.migrateSettings(settings),
       },
     };
   }
 
-  migrateSettings = (settings: V3Settings): V4Settings => {
+  static migrateSettings = (settings: V3Settings): V4Settings => {
     const { languageModel } = settings;
     const { openAI, togetherai, openrouter, ollama, ...res } = languageModel;
     const { openai, azure } = this.migrateOpenAI(openAI);
@@ -38,7 +38,7 @@ export class MigrationV3ToV4 implements Migration {
     };
   };
 
-  migrateOpenAI = (
+  static migrateOpenAI = (
     openai: V3OpenAIConfig,
   ): { azure: V4ProviderConfig; openai: V4ProviderConfig } => {
     if (openai.useAzure) {
@@ -76,7 +76,7 @@ export class MigrationV3ToV4 implements Migration {
     };
   };
 
-  migrateProvider = (provider: V3LegacyConfig): V4ProviderConfig => {
+  static migrateProvider = (provider: V3LegacyConfig): V4ProviderConfig => {
     const customModelCards = transformToChatModelCards(provider.customModelName, []);
     return {
       apiKey: provider.apiKey,

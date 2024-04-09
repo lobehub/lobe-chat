@@ -4,9 +4,10 @@ import { ConfigStateAll } from '@/types/exportConfig';
 
 import { MigrationV0ToV1 } from './FromV0ToV1';
 import { MigrationV1ToV2 } from './FromV1ToV2';
+import { MigrationV3ToV4 } from './FromV3ToV4';
 
 // Current latest version
-export const CURRENT_CONFIG_VERSION = 3;
+export const CURRENT_CONFIG_VERSION = 4;
 
 // Version migrations module
 const ConfigMigrations = [
@@ -16,7 +17,7 @@ const ConfigMigrations = [
    * - from `openAI` to `openai`, `azure`
    * - from customModelName to `enabledModels` and `customModelCards`
    */
-  // MigrationV3ToV4,
+  MigrationV3ToV4,
   /**
    * 2024.01.22
    * from `group = pinned` to `pinned:true`

@@ -1,5 +1,7 @@
+import { OllamaProvider, OpenRouterProvider, TogetherAIProvider } from '@/config/modelProviders';
 import { getServerConfig } from '@/config/server';
 import { GlobalServerConfig } from '@/types/settings';
+import { transformToChatModelCards } from '@/utils/parseModels';
 
 import { parseAgentConfig } from './parseDefaultAgent';
 
@@ -11,27 +13,32 @@ export const runtime = 'edge';
 export const GET = async () => {
   const {
     ENABLE_LANGFUSE,
-    CUSTOM_MODELS,
+    ENABLE_OAUTH_SSO,
+
+    DEFAULT_AGENT_CONFIG,
+    OPENAI_MODEL_LIST,
+
     ENABLED_MOONSHOT,
     ENABLED_ZHIPU,
     ENABLED_AWS_BEDROCK,
     ENABLED_GOOGLE,
     ENABLED_GROQ,
-    ENABLE_OAUTH_SSO,
-    ENABLE_OLLAMA,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
     ENABLED_MISTRAL,
+
+    ENABLE_OLLAMA,
+    OLLAMA_MODEL_LIST,
+
     ENABLED_OPENROUTER,
+    OPENROUTER_MODEL_LIST,
+
     ENABLED_ZEROONE,
     ENABLED_TOGETHERAI,
-    DEFAULT_AGENT_CONFIG,
-    OLLAMA_CUSTOM_MODELS,
-    OPENROUTER_CUSTOM_MODELS,
+    TOGETHERAI_MODEL_LIST,
   } = getServerConfig();
 
   const config: GlobalServerConfig = {
-    customModelName: CUSTOM_MODELS,
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
@@ -44,10 +51,31 @@ export const GET = async () => {
       groq: { enabled: ENABLED_GROQ },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
-      ollama: { customModelName: OLLAMA_CUSTOM_MODELS, enabled: ENABLE_OLLAMA },
-      openrouter: { customModelName: OPENROUTER_CUSTOM_MODELS, enabled: ENABLED_OPENROUTER },
+
+      ollama: {
+        enabled: ENABLE_OLLAMA,
+        serverModelCards: transformToChatModelCards(OLLAMA_MODEL_LIST, OllamaProvider.chatModels),
+      },
+      openai: {
+        serverModelCards: transformToChatModelCards(OPENAI_MODEL_LIST),
+      },
+      openrouter: {
+        enabled: ENABLED_OPENROUTER,
+        serverModelCards: transformToChatModelCards(
+          OPENROUTER_MODEL_LIST,
+          OpenRouterProvider.chatModels,
+        ),
+      },
       perplexity: { enabled: ENABLED_PERPLEXITY },
-      togetherai: { enabled: ENABLED_TOGETHERAI },
+
+      togetherai: {
+        enabled: ENABLED_TOGETHERAI,
+        serverModelCards: transformToChatModelCards(
+          TOGETHERAI_MODEL_LIST,
+          TogetherAIProvider.chatModels,
+        ),
+      },
+
       zeroone: { enabled: ENABLED_ZEROONE },
       zhipu: { enabled: ENABLED_ZHIPU },
     },
