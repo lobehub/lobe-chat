@@ -50,12 +50,13 @@ export default {
         fetch: '获取列表',
         title: 'Azure Api Version',
       },
+      empty: '请输入模型 ID 添加第一个模型',
       endpoint: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值',
         placeholder: 'https://docs-test-001.openai.azure.com',
         title: 'Azure API 地址',
       },
-      modelListPlaceholder: '请选择或添加你的部署模型',
+      modelListPlaceholder: '请选择或添加你部署的 OpenAI 模型',
       title: 'Azure OpenAI',
       token: {
         desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值。 可以使用 KEY1 或 KEY2',
@@ -96,6 +97,7 @@ export default {
       confirmDelete: '即将删除该自定义模型，删除后将不可恢复，请谨慎操作。',
       modelConfig: {
         azureDeployName: {
+          extra: '在 Azure OpenAI 中实际请求的字段',
           placeholder: '请输入 Azure 中的模型部署名称',
           title: '模型部署名称',
         },
@@ -114,6 +116,7 @@ export default {
           title: '支持函数调用',
         },
         id: {
+          extra: '将作为模型标签进行展示',
           placeholder: '请输入模型id，例如 gpt-4-turbo-preview 或 claude-2.1',
           title: '模型 ID',
         },

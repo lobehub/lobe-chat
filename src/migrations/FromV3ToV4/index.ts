@@ -2,7 +2,7 @@ import type { Migration, MigrationData } from '@/migrations/VersionController';
 import { transformToChatModelCards } from '@/utils/parseModels';
 
 import { V3ConfigState, V3LegacyConfig, V3OpenAIConfig, V3Settings } from './types/v3';
-import { V4ConfigState, V4ProviderConfig, V4Settings } from './types/v4';
+import { V4AzureOpenAIConfig, V4ConfigState, V4ProviderConfig, V4Settings } from './types/v4';
 
 export class MigrationV3ToV4 implements Migration {
   // from this version to start migration
@@ -40,13 +40,11 @@ export class MigrationV3ToV4 implements Migration {
 
   static migrateOpenAI = (
     openai: V3OpenAIConfig,
-  ): { azure: V4ProviderConfig; openai: V4ProviderConfig } => {
+  ): { azure: V4AzureOpenAIConfig; openai: V4ProviderConfig } => {
     if (openai.useAzure) {
       return {
         azure: {
           apiKey: openai.OPENAI_API_KEY,
-          // TODO: 要确认下 azure 的 api version 是放到 customModelCard 里还是怎么样
-          // @ts-ignore
           apiVersion: openai.azureApiVersion,
           enabled: true,
           endpoint: openai.endpoint,

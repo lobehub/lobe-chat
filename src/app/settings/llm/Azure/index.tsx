@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelProvider } from '@/libs/agent-runtime';
+import { useGlobalStore } from '@/store/global';
+import { modelConfigSelectors } from '@/store/global/selectors';
 
 import ProviderConfig from '../components/ProviderConfig';
 import { LLMProviderApiTokenKey, LLMProviderBaseUrlKey, LLMProviderConfigKey } from '../const';
@@ -29,6 +31,17 @@ const AzureOpenAIProvider = memo(() => {
   const { t } = useTranslation('setting');
 
   const { styles } = useStyles();
+
+  // Get the first model card's deployment name as the check model
+  const checkModel = useGlobalStore((s) => {
+    const chatModelCards = modelConfigSelectors.providerModelCards(providerKey)(s);
+
+    if (chatModelCards.length > 0) {
+      return chatModelCards[0].deploymentName;
+    }
+
+    return 'gpt-35-turbo';
+  });
 
   return (
     <ProviderConfig
@@ -73,9 +86,10 @@ const AzureOpenAIProvider = memo(() => {
           name: [LLMProviderConfigKey, providerKey, 'apiVersion'],
         },
       ]}
-      checkModel={'gpt-3.5-turbo'}
+      checkModel={checkModel}
       modelList={{
         azureDeployName: true,
+        notFoundContent: t('llm.azure.empty'),
         placeholder: t('llm.azure.modelListPlaceholder'),
       }}
       provider={providerKey}

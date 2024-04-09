@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 
-import { LOBE_DEFAULT_MODEL_LIST, OpenAIProvider } from '@/config/modelProviders';
+import { LOBE_DEFAULT_MODEL_LIST, OpenAIProviderCard } from '@/config/modelProviders';
 import { ChatModelCard } from '@/types/llm';
 import { CustomModels } from '@/types/settings';
 
@@ -48,7 +48,7 @@ export const parseModelString = (modelString: string = '') => {
  */
 export const transformToChatModelCards = (
   modelString: string = '',
-  defaultChartModels = OpenAIProvider.chatModels,
+  defaultChartModels = OpenAIProviderCard.chatModels,
 ): ChatModelCard[] => {
   const modelConfig = parseModelString(modelString);
   let chatModels = modelConfig.removeAll ? [] : defaultChartModels;

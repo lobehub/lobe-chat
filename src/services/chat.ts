@@ -9,6 +9,7 @@ import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import {
   commonSelectors,
+  modelConfigSelectors,
   modelProviderSelectors,
   preferenceSelectors,
 } from '@/store/global/selectors';
@@ -131,13 +132,22 @@ class ChatService {
     const { signal } = options ?? {};
 
     const { provider = ModelProvider.OpenAI, ...res } = params;
+
+    let model = res.model || DEFAULT_AGENT_CONFIG.model;
+
+    // if the provider is Azure, get the deployment name as the request model
+    if (provider === ModelProvider.Azure) {
+      const chatModelCards = modelConfigSelectors.providerModelCards(provider)(
+        useGlobalStore.getState(),
+      );
+
+      const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
+      if (deploymentName) model = deploymentName;
+    }
+
     const payload = merge(
-      {
-        model: DEFAULT_AGENT_CONFIG.model,
-        stream: true,
-        ...DEFAULT_AGENT_CONFIG.params,
-      },
-      res,
+      { stream: true, ...DEFAULT_AGENT_CONFIG.params },
+      { ...res, model: res.model },
     );
 
     const traceHeader = createTraceHeader({ ...options?.trace });

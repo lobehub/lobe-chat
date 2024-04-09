@@ -12,10 +12,13 @@ export interface V4ProviderConfig {
   enabledModels?: string[] | null;
   endpoint?: string;
 }
+export interface V4AzureOpenAIConfig extends V4ProviderConfig {
+  apiVersion?: string;
+}
 
 export interface V4lLLMConfig
   extends Omit<V3LLMConfig, 'ollama' | 'openAI' | 'openrouter' | 'togetherai'> {
-  azure: V4ProviderConfig;
+  azure: V4AzureOpenAIConfig;
   ollama: V4ProviderConfig;
   openai: V4ProviderConfig;
   openrouter: V4ProviderConfig;

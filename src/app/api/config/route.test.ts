@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { OllamaProvider, OpenRouterProvider, TogetherAIProvider } from '@/config/modelProviders';
-import { getServerConfig } from '@/config/server';
 import { GlobalServerConfig } from '@/types/settings';
 
 import { GET } from './route';

@@ -1,4 +1,8 @@
-import { OllamaProvider, OpenRouterProvider, TogetherAIProvider } from '@/config/modelProviders';
+import {
+  OllamaProviderCard,
+  OpenRouterProviderCard,
+  TogetherAIProviderCard,
+} from '@/config/modelProviders';
 import { getServerConfig } from '@/config/server';
 import { GlobalServerConfig } from '@/types/settings';
 import { transformToChatModelCards } from '@/utils/parseModels';
@@ -54,7 +58,10 @@ export const GET = async () => {
 
       ollama: {
         enabled: ENABLE_OLLAMA,
-        serverModelCards: transformToChatModelCards(OLLAMA_MODEL_LIST, OllamaProvider.chatModels),
+        serverModelCards: transformToChatModelCards(
+          OLLAMA_MODEL_LIST,
+          OllamaProviderCard.chatModels,
+        ),
       },
       openai: {
         serverModelCards: transformToChatModelCards(OPENAI_MODEL_LIST),
@@ -63,7 +70,7 @@ export const GET = async () => {
         enabled: ENABLED_OPENROUTER,
         serverModelCards: transformToChatModelCards(
           OPENROUTER_MODEL_LIST,
-          OpenRouterProvider.chatModels,
+          OpenRouterProviderCard.chatModels,
         ),
       },
       perplexity: { enabled: ENABLED_PERPLEXITY },
@@ -72,7 +79,7 @@ export const GET = async () => {
         enabled: ENABLED_TOGETHERAI,
         serverModelCards: transformToChatModelCards(
           TOGETHERAI_MODEL_LIST,
-          TogetherAIProvider.chatModels,
+          TogetherAIProviderCard.chatModels,
         ),
       },
 

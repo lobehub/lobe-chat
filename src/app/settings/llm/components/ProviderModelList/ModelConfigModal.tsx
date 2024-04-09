@@ -69,13 +69,18 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
           style={{ marginTop: 16 }}
           wrapperCol={{ offset: 1, span: 18 }}
         >
-          <Form.Item label={t('llm.customModelCards.modelConfig.id.title')} name={'id'}>
+          <Form.Item
+            extra={t('llm.customModelCards.modelConfig.id.extra')}
+            label={t('llm.customModelCards.modelConfig.id.title')}
+            name={'id'}
+          >
             <Input placeholder={t('llm.customModelCards.modelConfig.id.placeholder')} />
           </Form.Item>
           {showAzureDeployName && (
             <Form.Item
+              extra={t('llm.customModelCards.modelConfig.azureDeployName.extra')}
               label={t('llm.customModelCards.modelConfig.azureDeployName.title')}
-              name={'deployName'}
+              name={'deploymentName'}
             >
               <Input
                 placeholder={t('llm.customModelCards.modelConfig.azureDeployName.placeholder')}

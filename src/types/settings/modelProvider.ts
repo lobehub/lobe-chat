@@ -13,17 +13,13 @@ export interface GeneralModelProviderConfig {
   endpoint?: string;
 
   /**
-   * the model cards defined in server config
+   * the model cards defined in server
    */
   serverModelCards?: ChatModelCard[];
 }
 
-export interface AzureOpenAIConfig {
-  apiKey: string;
+export interface AzureOpenAIConfig extends GeneralModelProviderConfig {
   apiVersion?: string;
-  deployments: string;
-  enabled: boolean;
-  endpoint?: string;
 }
 
 export interface AWSBedrockConfig extends Omit<GeneralModelProviderConfig, 'apiKey' | 'endpoint'> {

@@ -1,7 +1,7 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Icon } from '@lobehub/ui';
 import { App, Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { LucideSettings, LucideTrash2 } from 'lucide-react';
+import { LucideArrowRight, LucideSettings, LucideTrash2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -43,7 +43,15 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
             <ModelInfoTags id={id} {...modelCard} isCustom />
           </Flexbox>
           <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
-            {id}
+            <Flexbox gap={2} horizontal>
+              {id}
+              {!!modelCard?.deploymentName && (
+                <>
+                  <Icon icon={LucideArrowRight} />
+                  {modelCard?.deploymentName}
+                </>
+              )}
+            </Flexbox>
           </Typography.Text>
         </Flexbox>
       </Flexbox>

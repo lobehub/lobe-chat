@@ -94,7 +94,7 @@ const providerModelCards =
       isCustom: true,
     }));
 
-    return uniqBy([...builtinCards, ...userCards], 'id');
+    return uniqBy([...userCards, ...builtinCards], 'id');
   };
 
 const getCustomModelCardById =
