@@ -161,7 +161,7 @@ describe('GET /api/config', () => {
         const res = await GET();
         const data: GlobalServerConfig = await res.json();
 
-        const result = data.languageModel?.openai?.serverModelCards;
+        const result = data.languageModel?.openrouter?.serverModelCards;
 
         expect(result).toMatchSnapshot();
 
