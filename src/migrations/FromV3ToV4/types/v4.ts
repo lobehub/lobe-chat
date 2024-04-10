@@ -29,7 +29,7 @@ export interface V4lLLMConfig
  * 配置设置
  */
 export interface V4Settings extends Omit<V3Settings, 'languageModel'> {
-  languageModel: V4lLLMConfig;
+  languageModel?: V4lLLMConfig;
 }
 
 export interface V4ConfigState {

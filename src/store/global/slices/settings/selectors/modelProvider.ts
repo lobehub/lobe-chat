@@ -20,6 +20,7 @@ import { ServerModelProviderConfig } from '@/types/serverConfig';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import { GlobalStore } from '../../../store';
+import { currentSettings } from './settings';
 
 /**
  * get the server side model cards
@@ -39,7 +40,7 @@ const serverProviderModelCards =
 const remoteProviderModelCards =
   (provider: GlobalLLMProviderKey) =>
   (s: GlobalStore): ChatModelCard[] | undefined => {
-    const cards = s.settings.languageModel?.[provider]?.remoteModelCards as
+    const cards = currentSettings(s).languageModel?.[provider]?.remoteModelCards as
       | ChatModelCard[]
       | undefined;
 

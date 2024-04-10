@@ -22,6 +22,9 @@ export class MigrationV3ToV4 implements Migration {
 
   static migrateSettings = (settings: V3Settings): V4Settings => {
     const { languageModel } = settings;
+
+    if (!languageModel) return { ...settings, languageModel: undefined };
+
     const { openAI, togetherai, openrouter, ollama, ...res } = languageModel;
     const { openai, azure } = this.migrateOpenAI(openAI);
 
