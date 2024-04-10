@@ -3,7 +3,10 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { userService } from '@/services/user';
 import { useGlobalStore } from '@/store/global';
+import { modelConfigSelectors } from '@/store/global/slices/settings/selectors';
 import { GeneralModelProviderConfig } from '@/types/settings';
+
+import { CustomModelCardDispatch, customModelCardsReducer } from '../reducers/customModelCard';
 
 // Mock userService
 vi.mock('@/services/user', () => ({
@@ -12,8 +15,11 @@ vi.mock('@/services/user', () => ({
     resetUserSettings: vi.fn(),
   },
 }));
+vi.mock('../reducers/customModelCard', () => ({
+  customModelCardsReducer: vi.fn().mockReturnValue([]),
+}));
 
-describe('SettingsAction', () => {
+describe('LLMSettingsSliceAction', () => {
   describe('setModelProviderConfig', () => {
     it('should set OpenAI configuration', async () => {
       const { result } = renderHook(() => useGlobalStore());
@@ -30,6 +36,25 @@ describe('SettingsAction', () => {
           openai: openAIConfig,
         },
       });
+    });
+  });
+
+  describe('dispatchCustomModelCards', () => {
+    it('should return early when prevState does not exist', async () => {
+      const { result } = renderHook(() => useGlobalStore());
+      const provider = 'openai';
+      const payload: CustomModelCardDispatch = { type: 'add', modelCard: { id: 'test-id' } };
+
+      // Mock the selector to return undefined
+      vi.spyOn(modelConfigSelectors, 'providerConfig').mockReturnValue(() => undefined);
+      vi.spyOn(result.current, 'setModelProviderConfig');
+
+      await act(async () => {
+        await result.current.dispatchCustomModelCards(provider, payload);
+      });
+
+      // Assert that setModelProviderConfig was not called
+      expect(result.current.setModelProviderConfig).not.toHaveBeenCalled();
     });
   });
 });
