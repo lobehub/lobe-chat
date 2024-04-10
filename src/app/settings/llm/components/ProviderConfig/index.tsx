@@ -49,6 +49,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     modelList,
   }) => {
     const { t } = useTranslation('setting');
+    const { t: modelT } = useTranslation('modelProvider');
     const [form] = AntForm.useForm();
     const [toggleProviderEnabled, setSettings, enabled] = useGlobalStore((s) => [
       s.toggleProviderEnabled,
@@ -65,11 +66,11 @@ const ProviderConfig = memo<ProviderConfigProps>(
             children: (
               <Input.Password
                 autoComplete={'new-password'}
-                placeholder={t(`llm.${provider}.token.placeholder` as any)}
+                placeholder={modelT(`${provider}.token.placeholder` as any)}
               />
             ),
-            desc: t(`llm.${provider}.token.desc` as any),
-            label: t(`llm.${provider}.token.title` as any),
+            desc: modelT(`${provider}.token.desc` as any),
+            label: modelT(`${provider}.token.title` as any),
             name: [LLMProviderConfigKey, provider, LLMProviderApiTokenKey],
           },
         ];
@@ -78,10 +79,10 @@ const ProviderConfig = memo<ProviderConfigProps>(
       ...apiKeyItem,
       showEndpoint && {
         children: (
-          <Input allowClear placeholder={t(`llm.${provider}.endpoint.placeholder` as any)} />
+          <Input allowClear placeholder={modelT(`${provider}.endpoint.placeholder` as any)} />
         ),
-        desc: t(`llm.${provider}.endpoint.desc` as any),
-        label: t(`llm.${provider}.endpoint.title` as any),
+        desc: modelT(`${provider}.endpoint.desc` as any),
+        label: modelT(`${provider}.endpoint.title` as any),
         name: [LLMProviderConfigKey, provider, LLMProviderBaseUrlKey],
       },
       {

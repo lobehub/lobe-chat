@@ -28,7 +28,7 @@ const useStyles = createStyles(({ css, token }) => ({
 const providerKey = ModelProvider.Azure;
 
 const AzureOpenAIProvider = memo(() => {
-  const { t } = useTranslation('setting');
+  const { t } = useTranslation('modelProvider');
 
   const { styles } = useStyles();
 
@@ -50,17 +50,17 @@ const AzureOpenAIProvider = memo(() => {
           children: (
             <Input.Password
               autoComplete={'new-password'}
-              placeholder={t('llm.azure.token.placeholder')}
+              placeholder={t('azure.token.placeholder')}
             />
           ),
-          desc: t('llm.azure.token.desc'),
-          label: t('llm.azure.token.title'),
+          desc: t('azure.token.desc'),
+          label: t('azure.token.title'),
           name: [LLMProviderConfigKey, providerKey, LLMProviderApiTokenKey],
         },
         {
-          children: <Input allowClear placeholder={t('llm.azure.endpoint.placeholder')} />,
-          desc: t('llm.azure.endpoint.desc'),
-          label: t('llm.azure.endpoint.title'),
+          children: <Input allowClear placeholder={t('azure.endpoint.placeholder')} />,
+          desc: t('azure.endpoint.desc'),
+          label: t('azure.endpoint.title'),
           name: [LLMProviderConfigKey, providerKey, LLMProviderBaseUrlKey],
         },
         {
@@ -79,18 +79,18 @@ const AzureOpenAIProvider = memo(() => {
           ),
           desc: (
             <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
-              {t('llm.azure.azureApiVersion.desc')}
+              {t('azure.azureApiVersion.desc')}
             </Markdown>
           ),
-          label: t('llm.azure.azureApiVersion.title'),
+          label: t('azure.azureApiVersion.title'),
           name: [LLMProviderConfigKey, providerKey, 'apiVersion'],
         },
       ]}
       checkModel={checkModel}
       modelList={{
         azureDeployName: true,
-        notFoundContent: t('llm.azure.empty'),
-        placeholder: t('llm.azure.modelListPlaceholder'),
+        notFoundContent: t('azure.empty'),
+        placeholder: t('azure.modelListPlaceholder'),
       }}
       provider={providerKey}
       title={

@@ -16,7 +16,7 @@ const OllamaProvider = memo(() => {
     <ProviderConfig
       checkerItem={{
         children: <Checker />,
-        desc: t('llm.ollama.checker.desc'),
+        desc: t('llm.checker.ollamaDesc'),
         label: t('llm.checker.title'),
         minWidth: undefined,
       }}

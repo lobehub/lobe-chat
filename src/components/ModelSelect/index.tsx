@@ -139,12 +139,12 @@ interface ProviderItemRenderProps {
 }
 
 export const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('modelProvider');
 
   return (
     <Flexbox align={'center'} gap={4} horizontal>
       <ModelProviderIcon provider={provider} />
-      {t(`modelProvider.${provider}` as any)}
+      {t(`${provider}.title` as any)}
     </Flexbox>
   );
 });

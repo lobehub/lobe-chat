@@ -13,7 +13,7 @@ import { modelConfigSelectors } from '@/store/global/selectors';
 import { FormAction } from '../style';
 
 const BedrockForm = memo(() => {
-  const { t } = useTranslation('error');
+  const { t } = useTranslation('modelProvider');
   const [showRegion, setShow] = useState(false);
 
   const [accessKeyId, secretAccessKey, region, setConfig] = useGlobalStore((s) => [
@@ -27,8 +27,8 @@ const BedrockForm = memo(() => {
   return (
     <FormAction
       avatar={<Aws.Color color={theme.colorText} size={56} />}
-      description={t('unlock.apikey.Bedrock.description')}
-      title={t('unlock.apikey.Bedrock.title')}
+      description={t('bedrock.unlock.description')}
+      title={t('bedrock.unlock.title')}
     >
       <Input.Password
         autoComplete={'new-password'}
@@ -70,7 +70,7 @@ const BedrockForm = memo(() => {
           }}
           type={'text'}
         >
-          {t('unlock.apikey.Bedrock.customRegion')}
+          {t('bedrock.unlock.customRegion')}
         </Button>
       )}
     </FormAction>

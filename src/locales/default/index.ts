@@ -5,6 +5,7 @@ import components from './components';
 import error from './error';
 import market from './market';
 import migration from './migration';
+import modelProvider from './modelProvider';
 import plugin from './plugin';
 import setting from './setting';
 import welcome from './welcome';
@@ -16,6 +17,7 @@ const resources = {
   error,
   market,
   migration,
+  modelProvider,
   plugin,
   setting,
   tool,
