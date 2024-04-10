@@ -31,215 +31,63 @@
     "sessionWithName": "對話設定 · {{name}}"
   },
   "llm": {
-    "anthropic": {
-      "endpoint": {
-        "desc": "除了預設地址外，必須包含 http(s)://",
-        "placeholder": "https://api.anthropic.com",
-        "title": "API 代理地址"
-      },
-      "title": "Anthropic",
-      "token": {
-        "desc": "填入來自 Anthropics 的 API Key",
-        "placeholder": "Anthropic API Key",
-        "title": "API Key"
-      }
-    },
-    "azure": {
-      "azureApiVersion": {
-        "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "獲取列表",
-        "title": "Azure API 版本"
-      },
-      "deployments": {
-        "desc": "使用 id=name 的語法填寫你的部署模型（如部署名和模型同名，可以只填寫模型名稱），多個模型使用逗號（,） 隔開",
-        "title": "Azure 部署模型列表"
-      },
-      "endpoint": {
-        "desc": "從 Azure 門戶檢查資源時，可在「密鑰和終端點」部分中找到此值",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure API 地址"
-      },
-      "models": {
-        "desc": "支援的模型",
-        "title": "模型列表"
-      },
-      "title": "Azure OpenAI",
-      "token": {
-        "desc": "從 Azure 門戶檢查資源時，可在「密鑰和終端點」部分中找到此值。 可以使用 KEY1 或 KEY2",
-        "placeholder": "Azure API Key",
-        "title": "API Key"
-      }
-    },
-    "bedrock": {
-      "accessKeyId": {
-        "desc": "填入 AWS Access Key ID",
-        "placeholder": "AWS Access Key ID",
-        "title": "AWS Access Key ID"
-      },
-      "checker": {
-        "desc": "測試 AccessKeyId / SecretAccessKey 是否填寫正確"
-      },
-      "region": {
-        "desc": "填入 AWS Region",
-        "placeholder": "AWS Region",
-        "title": "AWS Region"
-      },
-      "secretAccessKey": {
-        "desc": "填入 AWS Secret Access Key",
-        "placeholder": "AWS Secret Access Key",
-        "title": "AWS Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
     "checker": {
       "button": "檢查",
       "desc": "測試 API 金鑰與代理地址是否正確填寫",
+      "ollamaDesc": "測試代理地址是否正確填寫",
       "pass": "檢查通過",
       "title": "連通性檢查"
     },
-    "google": {
-      "title": "Google",
-      "token": {
-        "desc": "填入來自 Google 的 API Key",
-        "placeholder": "Google API Key",
-        "title": "API Key"
+    "customModelCards": {
+      "addNew": "創建並添加 {{id}} 模型",
+      "config": "配置模型",
+      "confirmDelete": "即將刪除該自定義模型，刪除後將不可恢復，請謹慎操作。",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "在 Azure OpenAI 中實際請求的字段",
+          "placeholder": "請輸入 Azure 中的模型部署名稱",
+          "title": "模型部署名稱"
+        },
+        "displayName": {
+          "placeholder": "請輸入模型的展示名稱，例如 ChatGPT、GPT-4 等",
+          "title": "模型展示名稱"
+        },
+        "files": {
+          "extra": "當前 LobeChat 的文件上傳實現僅為一種 Hack 方案，僅限自行嘗試。完整文件上傳能力請等待後續實現",
+          "title": "支援文件上傳"
+        },
+        "functionCall": {
+          "extra": "此配置將僅開啟 LobeChat 中的函數調用能力，是否支持函數調用完全取決於模型本身，請自行測試該模型的函數調用能力可用性",
+          "title": "支援函數調用"
+        },
+        "id": {
+          "extra": "將作為模型標籤進行展示",
+          "placeholder": "請輸入模型id，例如 gpt-4-turbo-preview 或 claude-2.1",
+          "title": "模型 ID"
+        },
+        "modalTitle": "自定義模型配置",
+        "tokens": {
+          "title": "最大 token 數"
+        },
+        "vision": {
+          "extra": "此配置將僅開啟 LobeChat 中的圖片上傳配置，是否支持識別完全取決於模型本身，請自行測試該模型的視覺識別能力可用性",
+          "title": "支援視覺識別"
+        }
       }
     },
-    "groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "填入來自 Groq 的 API Key",
-        "placeholder": "Groq API Key",
-        "title": "API Key"
-      }
+    "fetcher": {
+      "fetch": "獲取模型列表",
+      "fetching": "正在獲取模型列表...",
+      "latestTime": "上次更新時間：{{time}}",
+      "noLatestTime": "暫未獲取列表"
     },
-    "mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "填入來自 Mistral AI 的 API Key",
-        "placeholder": "Mistral AI API Key",
-        "title": "API Key"
-      }
+    "modelList": {
+      "desc": "選擇在會話中展示的模型，選擇的模型會在模型列表中展示",
+      "placeholder": "請從列表中選擇模型",
+      "title": "模型列表",
+      "total": "共 {{count}} 個模型可用"
     },
-    "moonshot": {
-      "title": "月之暗面",
-      "token": {
-        "desc": "填入來自 Moonshot AI 的 API Key",
-        "placeholder": "Moonshot AI API Key",
-        "title": "API Key"
-      }
-    },
-    "ollama": {
-      "checker": {
-        "desc": "檢查代理地址是否正確填寫"
-      },
-      "customModelName": {
-        "desc": "新增自定義模型，多個模型使用逗號（,）隔開",
-        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
-        "title": "自定義模型名稱"
-      },
-      "endpoint": {
-        "desc": "填入 Ollama 接口代理地址，本地未額外指定可留空",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "接口代理地址"
-      },
-      "title": "Ollama"
-    },
-    "openai": {
-      "azureApiVersion": {
-        "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "獲取列表",
-        "title": "Azure Api 版本"
-      },
-      "customModelName": {
-        "desc": "增加自訂模型，多個模型使用逗號（,） 隔開",
-        "placeholder": "model1,model2,model3",
-        "title": "自訂模型名稱"
-      },
-      "endpoint": {
-        "desc": "除預設地址外，必須包含 http(s)://",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "接口代理地址"
-      },
-      "models": {
-        "count": "共支援 {{count}} 個模型",
-        "desc": "支援的模型",
-        "fetch": "獲取模型列表",
-        "notSupport": "Azure OpenAI 暫不支援查看模型列表",
-        "notSupportTip": "你需要自行確保部署名稱與模型名稱一致",
-        "refetch": "重新獲取模型列表",
-        "title": "模型列表"
-      },
-      "title": "OpenAI",
-      "token": {
-        "desc": "使用自己的 OpenAI Key",
-        "placeholder": "OpenAI API Key",
-        "title": "OpenAI API Key"
-      },
-      "useAzure": {
-        "desc": "使用 Azure 提供的 OpenAI 服務",
-        "fetch": "獲取列表",
-        "serverConfig": "管理員在服務端配置開啟了 Azure OpenAI，禁止切換",
-        "title": "Azure OpenAI"
-      }
-    },
-    "openrouter": {
-      "checker": {
-        "desc": "測試代理地址是否正確填寫"
-      },
-      "customModelName": {
-        "desc": "增加自定義模型，多個模型使用逗號（,）隔開",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "自定義模型名稱"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "填入來自 OpenRouter AI 的 API Key",
-        "placeholder": "OpenRouter AI API Key",
-        "title": "API Key"
-      }
-    },
-    "perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "填入來自 Perplexity AI 的 API Key",
-        "placeholder": "Perplexity AI API Key",
-        "title": "API Key"
-      }
-    },
-    "togetherai": {
-      "checker": {
-        "desc": "測試代理地址是否正確填寫"
-      },
-      "customModelName": {
-        "desc": "增加自定義模型，多個模型使用逗號（,）隔開",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "自定義模型名稱"
-      },
-      "title": "TogetherAI",
-      "token": {
-        "desc": "填入來自 TogetherAI AI 的 API Key",
-        "placeholder": "TogetherAI AI API Key",
-        "title": "API Key"
-      }
-    },
-    "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨",
-    "zeroone": {
-      "title": "01.AI 零一萬物",
-      "token": {
-        "desc": "填入來自 01.AI 零一萬物的 API Key",
-        "placeholder": "01.AI 零一萬物 API Key",
-        "title": "API Key"
-      }
-    },
-    "zhipu": {
-      "title": "智譜",
-      "token": {
-        "desc": "填入來自智譜的 API Key",
-        "placeholder": "Zhipu API Key",
-        "title": "API Key"
-      }
-    }
+    "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨"
   },
   "ollama": {
     "download": {
@@ -395,6 +243,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "OpenAI 語音識別模型",
+      "title": "OpenAI",
       "ttsModel": "OpenAI 語音合成模型"
     },
     "showAllLocaleVoice": {

@@ -1,7 +1,7 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
-import { getJWTPayload } from '@/app/api/chat/auth';
+import { getJWTPayload } from '@/app/api/chat/auth/utils';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { getServerConfig } from '@/config/server';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';

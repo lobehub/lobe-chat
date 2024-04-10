@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Modelo personalizado, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",
-      "file": "Este modelo suporta o carregamento de arquivos para leitura e reconhecimento",
-      "functionCall": "Este modelo suporta chamadas de função (Function Call)",
-      "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão",
-      "vision": "Este modelo suporta reconhecimento visual"
-    }
-  },
   "about": "Sobre",
   "advanceSettings": "Configurações avançadas",
   "appInitializing": "LobeChat inicializando, por favor aguarde...",
@@ -95,23 +86,6 @@
     "zh-TW": "Chinês tradicional"
   },
   "layoutInitializing": "Inicializando layout...",
-  "modelProvider": {
-    "anthropic": "Antropogênico",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot IA",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01. IA ZeroOne",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Sem descrição",
   "oauth": "Login SSO",
   "ok": "OK",

@@ -31,215 +31,63 @@
     "sessionWithName": "Oturum Ayarları · {{name}}"
   },
   "llm": {
-    "anthropic": {
-      "endpoint": {
-        "desc": "Varsayılan adres dışında, http(s):// içermelidir",
-        "placeholder": "https://api.anthropic.com",
-        "title": "API Proxy Adresi"
-      },
-      "title": "Anthropic",
-      "token": {
-        "desc": "Anthropic'ten gelen API Key'i girin",
-        "placeholder": "Anthropic API Key",
-        "title": "API Key"
-      }
-    },
-    "azure": {
-      "azureApiVersion": {
-        "desc": "Azure'un API versiyonu, YYYY-AA-GG formatına uygun, [en son versiyonu](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions) kontrol edin",
-        "fetch": "Listeyi al",
-        "title": "Azure Api Versiyonu"
-      },
-      "deployments": {
-        "desc": "id=name sözdizimini kullanarak dağıtım modellerinizi girin (eğer dağıtım adı ve model adı aynıysa, sadece model adını yazabilirsiniz), birden fazla model için virgül (,) kullanın",
-        "title": "Azure Dağıtım Modelleri Listesi"
-      },
-      "endpoint": {
-        "desc": "Azure portalından kaynağı kontrol ederken, bu değeri \"Anahtarlar ve uç noktalar\" bölümünde bulabilirsiniz",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure API Adresi"
-      },
-      "models": {
-        "desc": "Desteklenen modeller",
-        "title": "Model Listesi"
-      },
-      "title": "Azure OpenAI",
-      "token": {
-        "desc": "Azure portalından kaynağı kontrol ederken, bu değeri \"Anahtarlar ve uç noktalar\" bölümünde bulabilirsiniz. KEY1 veya KEY2 kullanabilirsiniz",
-        "placeholder": "Azure API Key",
-        "title": "API Key"
-      }
-    },
-    "bedrock": {
-      "accessKeyId": {
-        "desc": "AWS Access Key Id girin",
-        "placeholder": "AWS Access Key Id",
-        "title": "AWS Access Key Id"
-      },
-      "checker": {
-        "desc": "AccessKeyId / SecretAccessKey'in doğru girilip girilmediğini test edin"
-      },
-      "region": {
-        "desc": "AWS Bölgesi girin",
-        "placeholder": "AWS Region",
-        "title": "AWS Bölgesi"
-      },
-      "secretAccessKey": {
-        "desc": "AWS Secret Access Key girin",
-        "placeholder": "AWS Secret Access Key",
-        "title": "AWS Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
     "checker": {
       "button": "Kontrol Et",
       "desc": "Api Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
+      "ollamaDesc": "Proxy adresinin doğru şekilde doldurulup doldurulmadığını test edin",
       "pass": "Kontrol Başarılı",
       "title": "Bağlantı Kontrolü"
     },
-    "google": {
-      "title": "Google",
-      "token": {
-        "desc": "Google'dan gelen API Key'i girin",
-        "placeholder": "Google API Key",
-        "title": "API Key"
+    "customModelCards": {
+      "addNew": "{{id}} modelini oluştur ve ekle",
+      "config": "Modeli Yapılandır",
+      "confirmDelete": "Özel modeli silmek üzeresiniz, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Azure OpenAI'da gerçekleştirilen istek alanı",
+          "placeholder": "Azure'daki model dağıtım adını girin",
+          "title": "Model Dağıtım Adı"
+        },
+        "displayName": {
+          "placeholder": "ChatGPT, GPT-4 vb. gibi modelin görüntü adını girin",
+          "title": "Model Görüntü Adı"
+        },
+        "files": {
+          "extra": "Mevcut LobeChat dosya yükleme uygulaması sadece bir hile çözümüdür, tam dosya yükleme yeteneği için gelecek uygulamaları bekleyin",
+          "title": "Dosya Yükleme Desteği"
+        },
+        "functionCall": {
+          "extra": "Bu yapılandırma yalnızca LobeChat'teki işlev çağrısı yeteneğini etkinleştirir, işlev çağrısının desteklenip desteklenmediği tamamen modelin kendisine bağlıdır, bu modelin işlev çağrısı yeteneğini test etmek size kalmıştır",
+          "title": "Fonksiyon Çağrısını Destekle"
+        },
+        "id": {
+          "extra": "Model etiketi olarak görüntülenecektir",
+          "placeholder": "Örneğin gpt-4-turbo-preview veya claude-2.1 gibi bir model kimliği girin",
+          "title": "Model Kimliği"
+        },
+        "modalTitle": "Özel Model Yapılandırması",
+        "tokens": {
+          "title": "Maksimum token sayısı"
+        },
+        "vision": {
+          "extra": "Bu yapılandırma yalnızca LobeChat'teki görüntü yükleme yapılandırmasını etkinleştirir, tanıma desteğinin olup olmadığı tamamen modelin kendisine bağlıdır, bu modelin görüntü tanıma yeteneğini test etmek size kalmıştır",
+          "title": "Görüntü Tanımayı Destekle"
+        }
       }
     },
-    "groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "Groq'tan gelen API Key'i girin",
-        "placeholder": "Groq API Key",
-        "title": "API Key"
-      }
+    "fetcher": {
+      "fetch": "Modelleri Al",
+      "fetching": "Modelleri alınıyor...",
+      "latestTime": "Son güncelleme zamanı: {{time}}",
+      "noLatestTime": "Liste henüz alınamadı"
     },
-    "mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Mistral AI'dan gelen API Key'i girin",
-        "placeholder": "Mistral AI API Key",
-        "title": "API Key"
-      }
+    "modelList": {
+      "desc": "Görüntülenecek modeli seçin, seçilen model model listesinde görüntülenecektir",
+      "placeholder": "Lütfen listeden bir model seçin",
+      "title": "Model Listesi",
+      "total": "Toplam {{count}} model kullanılabilir"
     },
-    "moonshot": {
-      "title": "Ay'ın Karanlık Yüzü",
-      "token": {
-        "desc": "Moonshot AI'dan gelen API Key'i girin",
-        "placeholder": "Moonshot AI API Key",
-        "title": "API Key"
-      }
-    },
-    "ollama": {
-      "checker": {
-        "desc": "Proxy adresinin doğru girilip girilmediğini test edin"
-      },
-      "customModelName": {
-        "desc": "Özel modeller ekleyin, birden fazla model için virgül (,) kullanın",
-        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
-        "title": "Özel Model Adları"
-      },
-      "endpoint": {
-        "desc": "Ollama arayüz proxy adresini girin, yerel olarak belirtilmemişse boş bırakılabilir",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Arayüz Proxy Adresi"
-      },
-      "title": "Ollama"
-    },
-    "openai": {
-      "azureApiVersion": {
-        "desc": "Azure'un API versiyonu, YYYY-AA-GG formatına uygun, [en son versiyonu](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions) kontrol edin",
-        "fetch": "Listeyi al",
-        "title": "Azure Api Versiyonu"
-      },
-      "customModelName": {
-        "desc": "Özel modeller ekleyin, birden fazla model için virgül (,) kullanın",
-        "placeholder": "model1,model2,model3",
-        "title": "Özel Model Adları"
-      },
-      "endpoint": {
-        "desc": "Varsayılan adres dışında, http(s):// içermelidir",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "Arayüz Proxy Adresi"
-      },
-      "models": {
-        "count": "Toplam {{count}} model desteklenmektedir",
-        "desc": "Desteklenen modeller",
-        "fetch": "Model listesini al",
-        "notSupport": "Azure OpenAI model listesini görüntülemeyi desteklemiyor",
-        "notSupportTip": "Dağıtım adının model adıyla aynı olduğundan emin olmanız gerekmektedir",
-        "refetch": "Model listesini yeniden al",
-        "title": "Model Listesi"
-      },
-      "title": "OpenAI",
-      "token": {
-        "desc": "Kendi OpenAI Key'inizi kullanın",
-        "placeholder": "OpenAI API Key",
-        "title": "OpenAI API Key"
-      },
-      "useAzure": {
-        "desc": "Azure tarafından sağlanan OpenAI hizmetini kullanın",
-        "fetch": "Listeyi al",
-        "serverConfig": "Yönetici, sunucu tarafında Azure OpenAI'yi etkinleştirdi, geçiş yapılması yasaktır",
-        "title": "Azure OpenAI"
-      }
-    },
-    "openrouter": {
-      "checker": {
-        "desc": "Proxy adresinin doğru girilip girilmediğini test edin"
-      },
-      "customModelName": {
-        "desc": "Özel modeller ekleyin, birden fazla model için virgül (,) kullanın",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "Özel Model Adları"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "OpenRouter AI'dan gelen API Key'i girin",
-        "placeholder": "OpenRouter AI API Key",
-        "title": "API Key"
-      }
-    },
-    "perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Perplexity AI'dan gelen API Key'i girin",
-        "placeholder": "Perplexity AI API Key",
-        "title": "API Key"
-      }
-    },
-    "togetherai": {
-      "checker": {
-        "desc": "Proxy adresinin doğru girilip girilmediğini test edin"
-      },
-      "customModelName": {
-        "desc": "Özel modeller ekleyin, birden fazla model için virgül (,) kullanın",
-        "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-        "title": "Özel Model Adları"
-      },
-      "title": "TogetherAI",
-      "token": {
-        "desc": "TogetherAI AI'dan gelen API Key'i girin",
-        "placeholder": "TogetherAI AI API Key",
-        "title": "API Key"
-      }
-    },
-    "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨",
-    "zeroone": {
-      "title": "01.AI Sıfır Bir",
-      "token": {
-        "desc": "01.AI Sıfır Bir'den gelen API Key'i girin",
-        "placeholder": "01.AI Sıfır Bir API Key",
-        "title": "API Key"
-      }
-    },
-    "zhipu": {
-      "title": "Zeka Haritası",
-      "token": {
-        "desc": "Zeka Haritası'ndan gelen API Key'i girin",
-        "placeholder": "Zhipu API Key",
-        "title": "API Key"
-      }
-    }
+    "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
   },
   "ollama": {
     "download": {
@@ -395,6 +243,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "OpenAI Konuşmadan Metne Modeli",
+      "title": "OpenAI",
       "ttsModel": "OpenAI Metin Seslendirme Modeli"
     },
     "showAllLocaleVoice": {

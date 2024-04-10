@@ -85,58 +85,7 @@
     "responseError": "サービスリクエストが失敗しました。設定を確認するか、もう一度お試しください"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Anthropic APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
-        "title": "カスタムAnthropic APIキーを使用"
-      },
-      "Bedrock": {
-        "customRegion": "自定义服务区域",
-        "description": "AWS AccessKeyId / SecretAccessKeyを入力してセッションを開始します。アプリは認証構成を記録しません。",
-        "title": "カスタムBedrock認証情報を使用"
-      },
-      "Google": {
-        "description": "Google APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
-        "title": "カスタムGoogle APIキーを使用"
-      },
-      "Groq": {
-        "description": "Groq APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
-        "title": "カスタムGroq APIキーを使用"
-      },
-      "Mistral": {
-        "description": "Mistral AI API キーを入力してセッションを開始できます。アプリは API キーを記録しません。",
-        "title": "カスタム Mistral AI API キーの使用"
-      },
-      "Moonshot": {
-        "description": "Moonshot AI APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
-        "title": "カスタムMoonshot AI APIキーを使用"
-      },
-      "OpenAI": {
-        "addProxyUrl": "OpenAIプロキシアドレスを追加（オプション）",
-        "description": "OpenAI APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
-        "title": "カスタムOpenAI APIキーを使用"
-      },
-      "OpenRouter": {
-        "description": "OpenRouter API キーを入力するとセッションが開始されます。アプリは API キーを記録しません。",
-        "title": "カスタム OpenRouter API キーを使用する"
-      },
-      "Perplexity": {
-        "description": "Perplexity APIキーを入力して会話を開始します。アプリはAPIキーを記録しません",
-        "title": "カスタムPerplexity APIキーを使用"
-      },
-      "TogetherAI": {
-        "description": "TogetherAI API キーを入力するとセッションが開始されます。アプリは API キーを記録しません。",
-        "title": "カスタム TogetherAI API キーを使用する"
-      },
-      "ZeroOne": {
-        "description": "カスタムのZeroOne APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
-        "title": "カスタムZeroOne APIキーの使用"
-      },
-      "Zhipu": {
-        "description": "Zhipu APIキーを入力してセッションを開始します。アプリはAPIキーを記録しません。",
-        "title": "カスタムZhipu APIキーを使用"
-      }
-    },
+    "addProxyUrl": "OpenAI 代理アドレスを追加する（オプション）",
     "closeMessage": "ヒントを閉じる",
     "confirm": "確認して再試行",
     "model": {
