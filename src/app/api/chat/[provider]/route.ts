@@ -1,40 +1,23 @@
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
-import { AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
+import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { getTracePayload } from '@/utils/trace';
 
-import { checkAuthMethod, getJWTPayload } from '../auth';
-import AgentRuntime from './agentRuntime';
+import AgentRuntime from '../agentRuntime';
+import { checkAuth } from '../auth';
 
 export const runtime = 'edge';
 
 export const preferredRegion = getPreferredRegion();
 
-export const POST = async (req: Request, { params }: { params: { provider: string } }) => {
+export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
   const { provider } = params;
 
   try {
     // ============  1. init chat model   ============ //
-
-    // get Authorization from header
-    const authorization = req.headers.get(LOBE_CHAT_AUTH_HEADER);
-    const oauthAuthorized = !!req.headers.get(OAUTH_AUTHORIZED);
-
-    if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
-
-    // check the Auth With payload
-    const jwtPayload = await getJWTPayload(authorization);
-    checkAuthMethod(jwtPayload.accessCode, jwtPayload.apiKey, oauthAuthorized);
-
-    const body = await req.clone().json();
-    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, jwtPayload, {
-      apiVersion: jwtPayload.azureApiVersion,
-      model: body.model,
-      useAzure: jwtPayload.useAzure,
-    });
+    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, jwtPayload);
 
     // ============  2. create chat completion   ============ //
 
@@ -60,4 +43,4 @@ export const POST = async (req: Request, { params }: { params: { provider: strin
 
     return createErrorResponse(errorType, { error, ...res, provider });
   }
-};
+});

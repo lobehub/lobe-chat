@@ -4,9 +4,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { withSWR } from '~test-utils';
 
 import { globalService } from '@/services/global';
+import { messageService } from '@/services/message';
 import { userService } from '@/services/user';
 import { useGlobalStore } from '@/store/global';
-import { GlobalServerConfig } from '@/types/settings';
+import { commonSelectors } from '@/store/global/slices/common/selectors';
+import { preferenceSelectors } from '@/store/global/slices/preference/selectors';
+import { syncSettingsSelectors } from '@/store/global/slices/settings/selectors';
+import { GlobalServerConfig } from '@/types/serverConfig';
 import { switchLang } from '@/utils/client/switchLang';
 
 vi.mock('zustand/traditional');
@@ -198,6 +202,167 @@ describe('createCommonSlice', () => {
       // 验证状态未被错误更新
       expect(useGlobalStore.getState().avatar).toBeUndefined();
       expect(useGlobalStore.getState().settings).toEqual({});
+    });
+  });
+
+  describe('refreshConnection', () => {
+    it('should not call triggerEnableSync when userId is empty', async () => {
+      const { result } = renderHook(() => useGlobalStore());
+      const onEvent = vi.fn();
+
+      vi.spyOn(commonSelectors, 'userId').mockReturnValueOnce(undefined);
+      const triggerEnableSyncSpy = vi.spyOn(result.current, 'triggerEnableSync');
+
+      await act(async () => {
+        await result.current.refreshConnection(onEvent);
+      });
+
+      expect(triggerEnableSyncSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call triggerEnableSync when userId exists', async () => {
+      const { result } = renderHook(() => useGlobalStore());
+      const onEvent = vi.fn();
+      const userId = 'user-id';
+
+      vi.spyOn(commonSelectors, 'userId').mockReturnValueOnce(userId);
+      const triggerEnableSyncSpy = vi.spyOn(result.current, 'triggerEnableSync');
+
+      await act(async () => {
+        await result.current.refreshConnection(onEvent);
+      });
+
+      expect(triggerEnableSyncSpy).toHaveBeenCalledWith(userId, onEvent);
+    });
+  });
+
+  describe('triggerEnableSync', () => {
+    it('should return false when sync.channelName is empty', async () => {
+      const { result } = renderHook(() => useGlobalStore());
+      const userId = 'user-id';
+      const onEvent = vi.fn();
+
+      vi.spyOn(syncSettingsSelectors, 'webrtcConfig').mockReturnValueOnce({
+        channelName: '',
+        enabled: true,
+      });
+
+      const data = await act(async () => {
+        return result.current.triggerEnableSync(userId, onEvent);
+      });
+
+      expect(data).toBe(false);
+    });
+
+    it('should call globalService.enabledSync when sync.channelName exists', async () => {
+      const userId = 'user-id';
+      const onEvent = vi.fn();
+      const channelName = 'channel-name';
+      const channelPassword = 'channel-password';
+      const deviceName = 'device-name';
+      const signaling = 'signaling';
+
+      vi.spyOn(syncSettingsSelectors, 'webrtcConfig').mockReturnValueOnce({
+        channelName,
+        channelPassword,
+        signaling,
+        enabled: true,
+      });
+      vi.spyOn(syncSettingsSelectors, 'deviceName').mockReturnValueOnce(deviceName);
+      const enabledSyncSpy = vi.spyOn(globalService, 'enabledSync').mockResolvedValueOnce(true);
+      const { result } = renderHook(() => useGlobalStore());
+
+      const data = await act(async () => {
+        return result.current.triggerEnableSync(userId, onEvent);
+      });
+
+      expect(enabledSyncSpy).toHaveBeenCalledWith({
+        channel: { name: channelName, password: channelPassword },
+        onAwarenessChange: expect.any(Function),
+        onSyncEvent: onEvent,
+        onSyncStatusChange: expect.any(Function),
+        signaling,
+        user: expect.objectContaining({ id: userId, name: deviceName }),
+      });
+      expect(data).toBe(true);
+    });
+  });
+
+  describe('useCheckTrace', () => {
+    it('should return false when shouldFetch is false', async () => {
+      const { result } = renderHook(() => useGlobalStore().useCheckTrace(false), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => expect(result.current.data).toBe(false));
+    });
+
+    it('should return false when userAllowTrace is already set', async () => {
+      vi.spyOn(preferenceSelectors, 'userAllowTrace').mockReturnValueOnce(true);
+
+      const { result } = renderHook(() => useGlobalStore().useCheckTrace(true), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => expect(result.current.data).toBe(false));
+    });
+
+    it('should call messageService.messageCountToCheckTrace when needed', async () => {
+      vi.spyOn(preferenceSelectors, 'userAllowTrace').mockReturnValueOnce(null);
+      const messageCountToCheckTraceSpy = vi
+        .spyOn(messageService, 'messageCountToCheckTrace')
+        .mockResolvedValueOnce(true);
+
+      const { result } = renderHook(() => useGlobalStore().useCheckTrace(true), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => expect(result.current.data).toBe(true));
+      expect(messageCountToCheckTraceSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('useEnabledSync', () => {
+    it('should return false when userId is empty', async () => {
+      const { result } = renderHook(
+        () => useGlobalStore().useEnabledSync(true, undefined, vi.fn()),
+        { wrapper: withSWR },
+      );
+
+      await waitFor(() => expect(result.current.data).toBe(false));
+    });
+
+    it('should call globalService.disableSync when userEnableSync is false', async () => {
+      const disableSyncSpy = vi.spyOn(globalService, 'disableSync').mockResolvedValueOnce(false);
+
+      const { result } = renderHook(
+        () => useGlobalStore().useEnabledSync(false, 'user-id', vi.fn()),
+        { wrapper: withSWR },
+      );
+
+      await waitFor(() => expect(result.current.data).toBeUndefined());
+      expect(disableSyncSpy).toHaveBeenCalled();
+    });
+
+    it('should call triggerEnableSync when userEnableSync and userId exist', async () => {
+      const userId = 'user-id';
+      const onEvent = vi.fn();
+      const triggerEnableSyncSpy = vi.fn().mockResolvedValueOnce(true);
+
+      const { result } = renderHook(() => useGlobalStore());
+
+      // replace triggerEnableSync as a mock
+      result.current.triggerEnableSync = triggerEnableSyncSpy;
+
+      const { result: swrResult } = renderHook(
+        () => result.current.useEnabledSync(true, userId, onEvent),
+        {
+          wrapper: withSWR,
+        },
+      );
+
+      await waitFor(() => expect(swrResult.current.data).toBe(true));
+      expect(triggerEnableSyncSpy).toHaveBeenCalledWith(userId, onEvent);
     });
   });
 });

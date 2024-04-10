@@ -2,6 +2,79 @@
 
 # Changelog
 
+## [Version 0.147.0](https://github.com/lobehub/lobe-chat/compare/v0.146.2...v0.147.0)
+
+<sup>Released on **2024-04-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add db migration, add migrations from v3 to v4, clean openai azure code, refactor agent runtime with openai compatible factory, refactor api key form locale, refactor openAI to openai and azure, refactor the hidden to enabled, refactor the key, refactor the model config selector, refactor the route auth as a middleware, refactor the server config to migrate model provider env, refactor the server config to migrate model provider env, rename the key to enabledModels.
+
+#### ✨ Features
+
+- **misc**: Refactor to support azure openai provider, support close openai, support display model list, support model config modal, support model list with model providers, support open router auto model list, support openai model fetcher, support update model config, support user config model.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix db migration, fix db migration.
+
+#### 💄 Styles
+
+- **misc**: Fix i18n of model list fetcher, improve detail design, improve logo style, update locale.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add db migration ([6ceb818](https://github.com/lobehub/lobe-chat/commit/6ceb818))
+- **misc**: Add migrations from v3 to v4 ([199ded2](https://github.com/lobehub/lobe-chat/commit/199ded2))
+- **misc**: Clean openai azure code ([be4bcca](https://github.com/lobehub/lobe-chat/commit/be4bcca))
+- **misc**: Refactor agent runtime with openai compatible factory ([89adf9d](https://github.com/lobehub/lobe-chat/commit/89adf9d))
+- **misc**: Refactor api key form locale ([a069169](https://github.com/lobehub/lobe-chat/commit/a069169))
+- **misc**: Refactor openAI to openai and azure ([2190a95](https://github.com/lobehub/lobe-chat/commit/2190a95))
+- **misc**: Refactor the hidden to enabled ([78a1aac](https://github.com/lobehub/lobe-chat/commit/78a1aac))
+- **misc**: Refactor the key ([d5c82f6](https://github.com/lobehub/lobe-chat/commit/d5c82f6))
+- **misc**: Refactor the model config selector ([d865ca1](https://github.com/lobehub/lobe-chat/commit/d865ca1))
+- **misc**: Refactor the route auth as a middleware ([ef5ee2a](https://github.com/lobehub/lobe-chat/commit/ef5ee2a))
+- **misc**: Refactor the server config to migrate model provider env ([e4f110e](https://github.com/lobehub/lobe-chat/commit/e4f110e))
+- **misc**: Refactor the server config to migrate model provider env ([c398063](https://github.com/lobehub/lobe-chat/commit/c398063))
+- **misc**: Rename the key to enabledModels ([ebfa0aa](https://github.com/lobehub/lobe-chat/commit/ebfa0aa))
+
+#### What's improved
+
+- **misc**: Refactor to support azure openai provider ([d737afe](https://github.com/lobehub/lobe-chat/commit/d737afe))
+- **misc**: Support close openai ([1ff1aef](https://github.com/lobehub/lobe-chat/commit/1ff1aef))
+- **misc**: Support display model list ([e59635f](https://github.com/lobehub/lobe-chat/commit/e59635f))
+- **misc**: Support model config modal ([62d6bb7](https://github.com/lobehub/lobe-chat/commit/62d6bb7))
+- **misc**: Support model list with model providers, closes [#1916](https://github.com/lobehub/lobe-chat/issues/1916) ([0895dd2](https://github.com/lobehub/lobe-chat/commit/0895dd2))
+- **misc**: Support open router auto model list ([1ba90d3](https://github.com/lobehub/lobe-chat/commit/1ba90d3))
+- **misc**: Support openai model fetcher ([56032e6](https://github.com/lobehub/lobe-chat/commit/56032e6))
+- **misc**: Support update model config ([e8ed847](https://github.com/lobehub/lobe-chat/commit/e8ed847))
+- **misc**: Support user config model ([72fd873](https://github.com/lobehub/lobe-chat/commit/72fd873))
+
+#### What's fixed
+
+- **misc**: Fix db migration ([4e75074](https://github.com/lobehub/lobe-chat/commit/4e75074))
+- **misc**: Fix db migration ([571b6dd](https://github.com/lobehub/lobe-chat/commit/571b6dd))
+
+#### Styles
+
+- **misc**: Fix i18n of model list fetcher ([67ed8c2](https://github.com/lobehub/lobe-chat/commit/67ed8c2))
+- **misc**: Improve detail design ([adcce07](https://github.com/lobehub/lobe-chat/commit/adcce07))
+- **misc**: Improve logo style ([c5826ce](https://github.com/lobehub/lobe-chat/commit/c5826ce))
+- **misc**: Update locale ([021bf91](https://github.com/lobehub/lobe-chat/commit/021bf91))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.146.2](https://github.com/lobehub/lobe-chat/compare/v0.146.1...v0.146.2)
 
 <sup>Released on **2024-04-10**</sup>

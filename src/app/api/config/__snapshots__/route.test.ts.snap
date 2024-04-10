@@ -1,0 +1,127 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GET /api/config > Model Provider env > CUSTOM_MODELS > custom deletion, addition, and renaming of models 1`] = `
+[
+  {
+    "displayName": "llama",
+    "enabled": true,
+    "functionCall": true,
+    "id": "llama",
+    "vision": true,
+  },
+  {
+    "displayName": "claude-2",
+    "enabled": true,
+    "functionCall": true,
+    "id": "claude-2",
+    "vision": true,
+  },
+  {
+    "displayName": "gpt-4-32k",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-4-0125-preview",
+    "tokens": 128000,
+  },
+]
+`;
+
+exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
+[
+  {
+    "displayName": "llama",
+    "enabled": true,
+    "functionCall": true,
+    "id": "llama",
+    "vision": true,
+  },
+  {
+    "displayName": "claude-2",
+    "enabled": true,
+    "functionCall": true,
+    "id": "claude-2",
+    "vision": true,
+  },
+  {
+    "displayName": "gpt-4-32k",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-4-0125-preview",
+    "tokens": 128000,
+  },
+]
+`;
+
+exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > should work correct with gpt-4 1`] = `
+[
+  {
+    "displayName": "GPT-3.5 Turbo (1106)",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-3.5-turbo-1106",
+    "tokens": 16385,
+  },
+  {
+    "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务",
+    "displayName": "GPT-3.5 Turbo",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-3.5-turbo",
+    "tokens": 16385,
+  },
+  {
+    "displayName": "GPT-3.5 Turbo 16K",
+    "enabled": true,
+    "id": "gpt-3.5-turbo-16k",
+    "tokens": 16385,
+  },
+  {
+    "displayName": "GPT-4",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-4",
+    "tokens": 8192,
+  },
+  {
+    "displayName": "GPT-4 32K",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-4-32k",
+    "tokens": 32768,
+  },
+  {
+    "displayName": "GPT-4 Turbo Preview (1106)",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-4-1106-preview",
+    "tokens": 128000,
+  },
+  {
+    "description": "GPT-4 视觉预览版，支持视觉任务",
+    "displayName": "GPT-4 Turbo Vision Preview",
+    "enabled": true,
+    "id": "gpt-4-vision-preview",
+    "tokens": 128000,
+    "vision": true,
+  },
+]
+`;
+
+exports[`GET /api/config > Model Provider env > OPENROUTER_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
+[
+  {
+    "displayName": "google/gemma-7b-it",
+    "enabled": true,
+    "functionCall": true,
+    "id": "google/gemma-7b-it",
+    "vision": true,
+  },
+  {
+    "displayName": "Mistral-7B-Instruct",
+    "enabled": true,
+    "functionCall": true,
+    "id": "mistralai/mistral-7b-instruct",
+    "vision": true,
+  },
+]
+`;

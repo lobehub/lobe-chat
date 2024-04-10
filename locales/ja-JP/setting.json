@@ -31,215 +31,63 @@
     "sessionWithName": "セッション設定 · {{name}}"
   },
   "llm": {
-    "anthropic": {
-      "endpoint": {
-        "desc": "デフォルトアドレス以外は、http(s)://を含む必要があります",
-        "placeholder": "https://api.anthropic.com",
-        "title": "APIプロキシアドレス"
-      },
-      "title": "Anthropic",
-      "token": {
-        "desc": "AnthropicからのAPIキーを入力してください",
-        "placeholder": "Anthropic API Key",
-        "title": "APIキー"
-      }
-    },
-    "azure": {
-      "azureApiVersion": {
-        "desc": "AzureのAPIバージョンは、YYYY-MM-DD形式で、[最新バージョン](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/reference#chat-completions)を参照してください",
-        "fetch": "リストの取得",
-        "title": "Azure Apiバージョン"
-      },
-      "deployments": {
-        "desc": "使用するデプロイメントモデルには、id=nameの構文で入力してください（デプロイメント名とモデル名が同じ場合は、モデル名のみでよい）。複数のモデルをリストする場合はカンマ（,）で区切ります",
-        "title": "Azure デプロイメントモデルリスト"
-      },
-      "endpoint": {
-        "desc": "Azure ポータルでリソースをチェックする際に、「キーとエンドポイント」セクションでこの値を見つけることができます",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure APIアドレス"
-      },
-      "models": {
-        "desc": "サポートされるモデル",
-        "title": "モデルリスト"
-      },
-      "title": "Azure OpenAI",
-      "token": {
-        "desc": "Azure ポータルでリソースをチェックする際に、「キーとエンドポイント」セクションでこの値を見つけることができます。KEY1もしくはKEY2を使用することができます",
-        "placeholder": "Azure API Key",
-        "title": "APIキー"
-      }
-    },
-    "bedrock": {
-      "accessKeyId": {
-        "desc": "AWS Access Key Idを入力してください",
-        "placeholder": "AWS Access Key Id",
-        "title": "AWS Access Key Id"
-      },
-      "checker": {
-        "desc": "AccessKeyId / SecretAccessKeyが正しく入力されているかテストします"
-      },
-      "region": {
-        "desc": "AWS Regionを入力してください",
-        "placeholder": "AWS Region",
-        "title": "AWS Region"
-      },
-      "secretAccessKey": {
-        "desc": "AWS Secret Access Keyを入力してください",
-        "placeholder": "AWS Secret Access Key",
-        "title": "AWS Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
     "checker": {
       "button": "チェック",
       "desc": "APIキーとプロキシアドレスが正しく記入されているかをテスト",
+      "ollamaDesc": "代理アドレスが正しく入力されているかをテストします",
       "pass": "チェック合格",
       "title": "接続性チェック"
     },
-    "google": {
-      "title": "Google",
-      "token": {
-        "desc": "GoogleからのAPIキーを入力してください",
-        "placeholder": "Google API Key",
-        "title": "APIキー"
+    "customModelCards": {
+      "addNew": "{{id}} モデルを作成して追加する",
+      "config": "モデルの設定",
+      "confirmDelete": "このカスタムモデルを削除しようとしています。削除した後は元に戻すことはできませんので、慎重に操作してください。",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Azure OpenAI で実際にリクエストされるフィールド",
+          "placeholder": "Azure でのモデル展開名を入力してください",
+          "title": "モデル展開名"
+        },
+        "displayName": {
+          "placeholder": "ChatGPT、GPT-4 などのモデルの表示名を入力してください",
+          "title": "モデル表示名"
+        },
+        "files": {
+          "extra": "現在の LobeChat のファイルアップロード実装は一種のハック方法にすぎず、自己責任でのみ試用できます。完全なファイルアップロード機能は今後の実装をお待ちください",
+          "title": "ファイルアップロードのサポート"
+        },
+        "functionCall": {
+          "extra": "この設定は LobeChat での関数呼び出し機能のみを有効にします。関数呼び出しのサポートは完全にモデル自体に依存するため、モデルの関数呼び出し機能の可用性を自己でテストしてください",
+          "title": "関数呼び出しのサポート"
+        },
+        "id": {
+          "extra": "モデルのラベルとして表示されます",
+          "placeholder": "gpt-4-turbo-preview または claude-2.1 などのモデルIDを入力してください",
+          "title": "モデルID"
+        },
+        "modalTitle": "カスタムモデルの設定",
+        "tokens": {
+          "title": "最大トークン数"
+        },
+        "vision": {
+          "extra": "この設定は LobeChat での画像アップロード構成のみを有効にします。認識のサポートは完全にモデル自体に依存するため、モデルの視覚認識機能の可用性を自己でテストしてください",
+          "title": "視覚認識のサポート"
+        }
       }
     },
-    "groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "GroqからのAPIキーを入力してください",
-        "placeholder": "Groq API Key",
-        "title": "APIキー"
-      }
+    "fetcher": {
+      "fetch": "モデルリストを取得する",
+      "fetching": "モデルリストを取得中...",
+      "latestTime": "最終更新時間：{{time}}",
+      "noLatestTime": "リストを取得していません"
     },
-    "mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Mistral AIからのAPIキーを入力してください",
-        "placeholder": "Mistral AI API Key",
-        "title": "APIキー"
-      }
+    "modelList": {
+      "desc": "セッションで表示するモデルを選択します。選択したモデルはモデルリストに表示されます",
+      "placeholder": "モデルをリストから選択してください",
+      "title": "モデルリスト",
+      "total": "合計 {{count}} 個のモデルが利用可能です"
     },
-    "moonshot": {
-      "title": "ムーンショット",
-      "token": {
-        "desc": "Moonshot AIからのAPIキーを入力してください",
-        "placeholder": "Moonshot AI API Key",
-        "title": "APIキー"
-      }
-    },
-    "ollama": {
-      "checker": {
-        "desc": "プロキシアドレスが正しく入力されたかテストします"
-      },
-      "customModelName": {
-        "desc": "カスタムモデルを追加する場合、複数のモデルをリストする際はカンマ（,）で区切ってください",
-        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
-        "title": "カスタムモデル名"
-      },
-      "endpoint": {
-        "desc": "Ollamaのインターフェースプロキシアドレスを入力してください。特に指定がなければ空欄でも構いません",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "インターフェースプロキシアドレス"
-      },
-      "title": "Ollama"
-    },
-    "openai": {
-      "azureApiVersion": {
-        "desc": "AzureのAPIバージョンには、YYYY-MM-DD形式で指定し、[最新バージョン](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/reference#chat-completions)を参照してください",
-        "fetch": "リストの取得",
-        "title": "Azure Apiバージョン"
-      },
-      "customModelName": {
-        "desc": "カスタムモデルを追加する場合、複数のモデルをリストする際はカンマ（,）で区切ってください",
-        "placeholder": "model1,model2,model3",
-        "title": "カスタムモデル名"
-      },
-      "endpoint": {
-        "desc": "デフォルトアドレス以外を指定する場合は、http(s)://を含む必要があります",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "インターフェースプロキシアドレス"
-      },
-      "models": {
-        "count": "計{{count}}個のモデルがサポートされています",
-        "desc": "サポートされるモデル",
-        "fetch": "モデルリストの取得",
-        "notSupport": "Azure OpenAIは現在、モデルリストの表示をサポートしていません",
-        "notSupportTip": "デプロイメント名とモデル名が一致していることを自身で確認する必要があります",
-        "refetch": "モデルリストの再取得",
-        "title": "モデルリスト"
-      },
-      "title": "OpenAI",
-      "token": {
-        "desc": "自分のOpenAIキーを使用してください",
-        "placeholder": "OpenAI API Key",
-        "title": "OpenAI APIキー"
-      },
-      "useAzure": {
-        "desc": "Azureが提供するOpenAIサービスを使用する",
-        "fetch": "リストの取得",
-        "serverConfig": "管理者はサーバーサイドでAzure OpenAIを構成しており、切り替えが禁止されています",
-        "title": "Azure OpenAI"
-      }
-    },
-    "openrouter": {
-      "checker": {
-        "desc": "プロキシアドレスが正しく入力されたかテストします"
-      },
-      "customModelName": {
-        "desc": "カスタムモデルを追加する場合、複数のモデルをリストする際はカンマ（,）で区切ってください",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "カスタムモデル名"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "OpenRouter AIからのAPIキーを入力してください",
-        "placeholder": "OpenRouter AI API Key",
-        "title": "APIキー"
-      }
-    },
-    "perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Perplexity AIからのAPIキーを入力してください",
-        "placeholder": "Perplexity AI API Key",
-        "title": "APIキー"
-      }
-    },
-    "togetherai": {
-      "checker": {
-        "desc": "プロキシアドレスが正しく入力されたかテストします"
-      },
-      "customModelName": {
-        "desc": "カスタムモデルを追加する場合、複数のモデルをリストする際はカンマ（,）で区切ってください",
-        "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-        "title": "カスタムモデル名"
-      },
-      "title": "TogetherAI",
-      "token": {
-        "desc": "TogetherAI AIからのAPIキーを入力してください",
-        "placeholder": "TogetherAI AI API Key",
-        "title": "APIキー"
-      }
-    },
-    "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに ✨",
-    "zeroone": {
-      "title": "01.AI 零一万物",
-      "token": {
-        "desc": "01.AI 零一万物からのAPIキーを入力してください",
-        "placeholder": "01.AI 零一万物 API Key",
-        "title": "APIキー"
-      }
-    },
-    "zhipu": {
-      "title": "智谱",
-      "token": {
-        "desc": "智谱からのAPIキーを入力してください",
-        "placeholder": "Zhipu API Key",
-        "title": "APIキー"
-      }
-    }
+    "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに ✨"
   },
   "ollama": {
     "download": {
@@ -395,6 +243,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "OpenAI 音声認識モデル",
+      "title": "OpenAI",
       "ttsModel": "OpenAI 音声合成モデル"
     },
     "showAllLocaleVoice": {
@@ -480,22 +329,22 @@
     },
     "webrtc": {
       "channelName": {
-        "desc": "WebRTC 将使用此名创建同步频道，确保频道名称唯一",
-        "placeholder": "请输入同步频道名称",
-        "shuffle": "随机生成",
-        "title": "同步频道名称"
+        "desc": "WebRTC はこの名前で同期チャネルを作成し、チャネル名が一意であることを確認します",
+        "placeholder": "同期チャネル名を入力してください",
+        "shuffle": "ランダム生成",
+        "title": "同期チャネル名"
       },
       "channelPassword": {
-        "desc": "添加密码确保频道私密性，只有密码正确时，设备才可加入频道",
-        "placeholder": "请输入同步频道密码",
-        "title": "同步频道密码"
+        "desc": "パスワードを追加してチャネルをプライベートに保ち、パスワードが正しい場合のみデバイスがチャネルに参加できます",
+        "placeholder": "同期チャネルのパスワードを入力してください",
+        "title": "同期チャネルのパスワード"
       },
-      "desc": "实时、点对点的数据通信，需设备同时在线才可同步",
+      "desc": "リアルタイムでピアツーピアのデータ通信を行い、デバイスが同時にオンラインである必要があります",
       "enabled": {
-        "invalid": "请填写同步频道名称后再开启",
-        "title": "开启同步"
+        "invalid": "同期チャネル名を入力してから有効にしてください",
+        "title": "同期を有効にする"
       },
-      "title": "WebRTC 同步"
+      "title": "WebRTC 同期"
     }
   },
   "tab": {
