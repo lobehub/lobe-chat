@@ -1,6 +1,4 @@
 import { dataSync } from '@/database/core';
-import { createHeaderWithAuth } from '@/services/_auth';
-import { ChatModelCard } from '@/types/llm';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { StartDataSyncParams } from '@/types/sync';
 
@@ -36,21 +34,6 @@ class GlobalService {
     await dataSync.disconnect();
 
     return false;
-  };
-
-  getChatModels = async (provider: string): Promise<ChatModelCard[] | undefined> => {
-    const headers = await createHeaderWithAuth({
-      headers: { 'Content-Type': 'application/json' },
-      provider,
-    });
-
-    try {
-      const res = await fetch(API_ENDPOINTS.chatModels(provider), { headers });
-
-      return res.json();
-    } catch {
-      return;
-    }
   };
 }
 

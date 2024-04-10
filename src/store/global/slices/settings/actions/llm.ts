@@ -1,7 +1,6 @@
 import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { globalService } from '@/services/global';
 import { GlobalStore } from '@/store/global';
 import { ChatModelCard } from '@/types/llm';
 import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
@@ -68,7 +67,11 @@ export const llmSettingsSlice: StateCreator<
   useFetchProviderModelList: (provider, enabledAutoFetch) =>
     useSWR<ChatModelCard[] | undefined>(
       [provider, enabledAutoFetch],
-      ([p]) => globalService.getChatModels(p),
+      async ([p]) => {
+        const { modelsService } = await import('@/services/models');
+
+        return modelsService.getChatModels(p);
+      },
       {
         onSuccess: async (data) => {
           if (data) {
