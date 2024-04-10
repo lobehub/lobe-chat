@@ -3,6 +3,12 @@
 exports[`LobeOpenAI > models > should get models 1`] = `
 [
   {
+    "id": "whisper-1",
+  },
+  {
+    "id": "davinci-002",
+  },
+  {
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务",
     "displayName": "GPT-3.5 Turbo",
     "enabled": true,
@@ -11,9 +17,18 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 16385,
   },
   {
+    "id": "dall-e-2",
+  },
+  {
     "displayName": "GPT-3.5 Turbo 16K",
     "id": "gpt-3.5-turbo-16k",
     "tokens": 16385,
+  },
+  {
+    "id": "tts-1-hd-1106",
+  },
+  {
+    "id": "tts-1-hd",
   },
   {
     "displayName": "GPT-3.5 Turbo 16K (0613)",
@@ -22,10 +37,16 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 4096,
   },
   {
+    "id": "text-embedding-3-large",
+  },
+  {
     "displayName": "GPT-4 Turbo Vision Preview (1106)",
     "id": "gpt-4-1106-vision-preview",
     "tokens": 128000,
     "vision": true,
+  },
+  {
+    "id": "gpt-3.5-turbo-instruct-0914",
   },
   {
     "displayName": "GPT-4 Turbo Preview (0125)",
@@ -46,10 +67,19 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 4096,
   },
   {
+    "id": "gpt-3.5-turbo-0301",
+  },
+  {
     "displayName": "GPT-3.5 Turbo (0613)",
     "id": "gpt-3.5-turbo-0613",
     "legacy": true,
     "tokens": 4096,
+  },
+  {
+    "id": "tts-1",
+  },
+  {
+    "id": "dall-e-3",
   },
   {
     "displayName": "GPT-3.5 Turbo (1106)",
@@ -64,6 +94,12 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 128000,
   },
   {
+    "id": "babbage-002",
+  },
+  {
+    "id": "tts-1-1106",
+  },
+  {
     "description": "GPT-4 视觉预览版，支持视觉任务",
     "displayName": "GPT-4 Turbo Vision Preview",
     "enabled": true,
@@ -72,10 +108,16 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "vision": true,
   },
   {
+    "id": "text-embedding-3-small",
+  },
+  {
     "displayName": "GPT-4",
     "functionCall": true,
     "id": "gpt-4",
     "tokens": 8192,
+  },
+  {
+    "id": "text-embedding-ada-002",
   },
   {
     "displayName": "GPT-3.5 Turbo (0125)",
