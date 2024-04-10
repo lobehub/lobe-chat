@@ -11,7 +11,6 @@ const TogetherAIProvider = memo(() => {
     <ProviderConfig
       checkModel={'togethercomputer/alpaca-7b'}
       provider={'togetherai'}
-      showCustomModelName
       title={
         <Together.Combine
           color={theme.isDarkMode ? theme.colorText : Together.colorPrimary}

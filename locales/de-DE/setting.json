@@ -31,215 +31,63 @@
     "sessionWithName": "Sitzungseinstellungen · {{name}}"
   },
   "llm": {
-    "anthropic": {
-      "endpoint": {
-        "desc": "Muss neben der Standardadresse auch http(s):// enthalten",
-        "placeholder": "https://api.anthropic.com",
-        "title": "API-Proxy-Adresse"
-      },
-      "title": "Anthropic",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von Anthropic ein",
-        "placeholder": "Anthropic API Key",
-        "title": "API Key"
-      }
-    },
-    "azure": {
-      "azureApiVersion": {
-        "desc": "Die API-Version von Azure im Format JJJJ-MM-TT, siehe [neueste Version](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Liste abrufen",
-        "title": "Azure-API-Version"
-      },
-      "deployments": {
-        "desc": "Füllen Sie Ihre Bereitstellungsmodelle mit der Syntax id=name aus (wenn der Bereitstellungsname und der Modellname gleich sind, können Sie nur den Modellnamen angeben), verwenden Sie Kommas (,) um mehrere Modelle zu trennen",
-        "title": "Liste der Azure-Bereitstellungsmodelle"
-      },
-      "endpoint": {
-        "desc": "Diesen Wert finden Sie im Abschnitt 'Schlüssel und Endpunkte', wenn Sie in Azure Portal Ihre Ressource überprüfen",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure-API-Adresse"
-      },
-      "models": {
-        "desc": "Unterstützte Modelle",
-        "title": "Modellliste"
-      },
-      "title": "Azure OpenAI",
-      "token": {
-        "desc": "Diesen Wert finden Sie im Abschnitt 'Schlüssel und Endpunkte', wenn Sie in Azure Portal Ihre Ressource überprüfen. Sie können KEY1 oder KEY2 verwenden",
-        "placeholder": "Azure API Key",
-        "title": "API Key"
-      }
-    },
-    "bedrock": {
-      "accessKeyId": {
-        "desc": "Geben Sie Ihre AWS Access Key Id ein",
-        "placeholder": "AWS Access Key Id",
-        "title": "AWS Access Key Id"
-      },
-      "checker": {
-        "desc": "Testen Sie, ob AccessKeyId / SecretAccessKey korrekt eingegeben wurden"
-      },
-      "region": {
-        "desc": "Geben Sie Ihre AWS Region ein",
-        "placeholder": "AWS Region",
-        "title": "AWS Region"
-      },
-      "secretAccessKey": {
-        "desc": "Geben Sie Ihren AWS Secret Access Key ein",
-        "placeholder": "AWS Secret Access Key",
-        "title": "AWS Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
     "checker": {
       "button": "Überprüfen",
       "desc": "Überprüfen Sie, ob der API-Schlüssel und die Proxy-Adresse korrekt eingegeben wurden",
+      "ollamaDesc": "Testen Sie, ob die Proxy-Adresse korrekt eingegeben wurde",
       "pass": "Überprüfung bestanden",
       "title": "Konnektivitätsprüfung"
     },
-    "google": {
-      "title": "Google",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von Google ein",
-        "placeholder": "Google API Key",
-        "title": "API Key"
+    "customModelCards": {
+      "addNew": "Erstellen und Hinzufügen von {{id}} Modell",
+      "config": "Modell konfigurieren",
+      "confirmDelete": "Das benutzerdefinierte Modell wird gelöscht und kann nicht wiederhergestellt werden. Bitte seien Sie vorsichtig.",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Das Feld, das tatsächlich in Azure OpenAI angefordert wird",
+          "placeholder": "Geben Sie den Bereitstellungsnamen des Modells in Azure ein",
+          "title": "Modellbereitstellungsname"
+        },
+        "displayName": {
+          "placeholder": "Geben Sie den Anzeigenamen des Modells ein, z. B. ChatGPT, GPT-4 usw.",
+          "title": "Modellanzeigename"
+        },
+        "files": {
+          "extra": "Die aktuelle Implementierung des Datei-Uploads in LobeChat ist nur eine Hack-Lösung und nur für eigene Versuche gedacht. Die vollständige Datei-Upload-Funktion wird in zukünftigen Versionen implementiert.",
+          "title": "Datei-Upload unterstützen"
+        },
+        "functionCall": {
+          "extra": "Diese Konfiguration aktiviert nur die Funktion zum Aufrufen von Funktionen in LobeChat. Die Unterstützung von Funktionsaufrufen hängt vollständig von dem Modell selbst ab. Bitte testen Sie die Verfügbarkeit der Funktionsaufrufe des Modells selbst.",
+          "title": "Funktionsaufrufe unterstützen"
+        },
+        "id": {
+          "extra": "Wird als Modell-Tag angezeigt",
+          "placeholder": "Geben Sie die Modell-ID ein, z. B. gpt-4-turbo-preview oder claude-2.1",
+          "title": "Modell-ID"
+        },
+        "modalTitle": "Benutzerdefinierte Modellkonfiguration",
+        "tokens": {
+          "title": "Maximale Token-Anzahl"
+        },
+        "vision": {
+          "extra": "Diese Konfiguration aktiviert nur die Bild-Upload-Konfiguration in LobeChat. Die Unterstützung der Erkennung hängt vollständig von dem Modell selbst ab. Bitte testen Sie die Verfügbarkeit der visuellen Erkennungsfähigkeiten des Modells selbst.",
+          "title": "Visuelle Erkennung unterstützen"
+        }
       }
     },
-    "groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von Groq ein",
-        "placeholder": "Groq API Key",
-        "title": "API Key"
-      }
+    "fetcher": {
+      "fetch": "Modelle abrufen",
+      "fetching": "Modelle werden abgerufen...",
+      "latestTime": "Letzte Aktualisierung: {{time}}",
+      "noLatestTime": "Liste noch nicht abgerufen"
     },
-    "mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von Mistral AI ein",
-        "placeholder": "Mistral AI API Key",
-        "title": "API Key"
-      }
+    "modelList": {
+      "desc": "Wählen Sie die Modelle aus, die in der Sitzung angezeigt werden sollen. Die ausgewählten Modelle werden in der Modellliste angezeigt.",
+      "placeholder": "Wählen Sie ein Modell aus der Liste aus",
+      "title": "Modellliste",
+      "total": "Insgesamt {{count}} Modelle verfügbar"
     },
-    "moonshot": {
-      "title": "Moonshot AI",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von Moonshot AI ein",
-        "placeholder": "Moonshot AI API Key",
-        "title": "API Key"
-      }
-    },
-    "ollama": {
-      "checker": {
-        "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"
-      },
-      "customModelName": {
-        "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
-        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
-        "title": "Benutzerdefinierte Modellnamen"
-      },
-      "endpoint": {
-        "desc": "Geben Sie die Proxy-Adresse der Ollama-Schnittstelle ein, leer lassen, wenn lokal nicht spezifiziert",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Schnittstellen-Proxy-Adresse"
-      },
-      "title": "Ollama"
-    },
-    "openai": {
-      "azureApiVersion": {
-        "desc": "Die API-Version von Azure im Format JJJJ-MM-TT, siehe [neueste Version](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Liste abrufen",
-        "title": "Azure-API-Version"
-      },
-      "customModelName": {
-        "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
-        "placeholder": "model1,model2,model3",
-        "title": "Benutzerdefinierte Modellnamen"
-      },
-      "endpoint": {
-        "desc": "Muss neben der Standardadresse auch http(s):// enthalten",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "Schnittstellen-Proxy-Adresse"
-      },
-      "models": {
-        "count": "Unterstützt insgesamt {{count}} Modelle",
-        "desc": "Unterstützte Modelle",
-        "fetch": "Modellliste abrufen",
-        "notSupport": "Azure OpenAI unterstützt das Anzeigen der Modellliste derzeit nicht",
-        "notSupportTip": "Sie müssen selbst sicherstellen, dass der Bereitstellungsname mit dem Modellnamen übereinstimmt",
-        "refetch": "Modellliste erneut abrufen",
-        "title": "Modellliste"
-      },
-      "title": "OpenAI",
-      "token": {
-        "desc": "Verwenden Sie Ihren eigenen OpenAI-Key",
-        "placeholder": "OpenAI API Key",
-        "title": "OpenAI API Key"
-      },
-      "useAzure": {
-        "desc": "Verwenden Sie den OpenAI-Dienst bereitgestellt von Azure",
-        "fetch": "Liste abrufen",
-        "serverConfig": "Der Administrator hat auf dem Server Azure OpenAI konfiguriert, das Umschalten ist verboten",
-        "title": "Azure OpenAI"
-      }
-    },
-    "openrouter": {
-      "checker": {
-        "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"
-      },
-      "customModelName": {
-        "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "Benutzerdefinierte Modellnamen"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von OpenRouter AI ein",
-        "placeholder": "OpenRouter AI API Key",
-        "title": "API Key"
-      }
-    },
-    "perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von Perplexity AI ein",
-        "placeholder": "Perplexity AI API Key",
-        "title": "API Key"
-      }
-    },
-    "togetherai": {
-      "checker": {
-        "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"
-      },
-      "customModelName": {
-        "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
-        "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-        "title": "Benutzerdefinierte Modellnamen"
-      },
-      "title": "TogetherAI",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von TogetherAI AI ein",
-        "placeholder": "TogetherAI AI API Key",
-        "title": "API Key"
-      }
-    },
-    "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates ✨",
-    "zeroone": {
-      "title": "01.AI Alles und Nichts",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von 01.AI Alles und Nichts ein",
-        "placeholder": "01.AI Alles und Nichts API Key",
-        "title": "API Key"
-      }
-    },
-    "zhipu": {
-      "title": "Zhipu",
-      "token": {
-        "desc": "Geben Sie Ihren API-Key von Zhipu ein",
-        "placeholder": "Zhipu API Key",
-        "title": "API Key"
-      }
-    }
+    "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates ✨"
   },
   "ollama": {
     "download": {
@@ -395,6 +243,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "OpenAI Spracherkennungsmodell",
+      "title": "OpenAI",
       "ttsModel": "OpenAI Sprachsynthesemodell"
     },
     "showAllLocaleVoice": {

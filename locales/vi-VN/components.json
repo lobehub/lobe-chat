@@ -1,0 +1,15 @@
+{
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện hình ảnh, vui lòng xác minh khả năng sử dụng của chúng theo tình hình cụ thể",
+      "file": "Mô hình này hỗ trợ tải lên và nhận diện tệp",
+      "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
+      "tokens": "Mỗi phiên của mô hình này hỗ trợ tối đa {{tokens}} Tokens",
+      "vision": "Mô hình này hỗ trợ nhận diện hình ảnh"
+    }
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "Không có mô hình nào được kích hoạt, vui lòng điều chỉnh trong cài đặt",
+    "provider": "Nhà cung cấp"
+  }
+}

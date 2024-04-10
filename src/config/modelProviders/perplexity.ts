@@ -9,6 +9,7 @@ const Perplexity: ModelProviderCard = {
     },
     {
       displayName: 'Perplexity 70B Chat',
+      enabled: true,
       id: 'pplx-70b-chat',
       tokens: 8192,
     },
@@ -19,6 +20,7 @@ const Perplexity: ModelProviderCard = {
     },
     {
       displayName: 'Perplexity 70B Online',
+      enabled: true,
       id: 'pplx-70b-online',
       tokens: 8192,
     },

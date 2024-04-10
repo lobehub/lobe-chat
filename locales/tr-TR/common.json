@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, lütfen yukarıdaki yeteneklerin kullanılabilirliğini doğrulayın",
-      "file": "Bu model dosya yükleme ve tanıma desteği sağlar",
-      "functionCall": "Bu model fonksiyon çağrısını destekler (Function Call)",
-      "tokens": "Bu model, tek bir oturumda en fazla {{tokens}} Token'ı destekler",
-      "vision": "Bu model görüntü tanımı destekler"
-    }
-  },
   "about": "Hakkında",
   "advanceSettings": "Gelişmiş Ayarlar",
   "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
@@ -95,23 +86,6 @@
     "zh-TW": "Geleneksel Çince"
   },
   "layoutInitializing": "Başlatılıyor...",
-  "modelProvider": {
-    "anthropic": "Antropik",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "AçıkYönlendirici",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01.AI SıfırBir",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Açıklama yok",
   "oauth": "SSO Girişi",
   "ok": "Tamam",

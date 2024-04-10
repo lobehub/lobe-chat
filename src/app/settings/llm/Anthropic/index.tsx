@@ -11,7 +11,7 @@ const AnthropicProvider = memo(() => {
 
   return (
     <ProviderConfig
-      checkModel={'claude-2.1'}
+      checkModel={'claude-3-haiku-20240307'}
       provider={ModelProvider.Anthropic}
       showEndpoint
       title={

@@ -85,58 +85,7 @@
     "responseError": "서비스 요청이 실패했습니다. 구성을 확인하거나 다시 시도해주세요."
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "사용자 정의 Anthropic API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
-        "title": "사용자 정의 Anthropic API 키 사용"
-      },
-      "Bedrock": {
-        "customRegion": "사용자 정의 서비스 지역",
-        "description": "AWS AccessKeyId / SecretAccessKey를 입력하여 세션을 시작합니다. 앱은 귀하의 인증 구성을 기록하지 않습니다.",
-        "title": "사용자 정의 Bedrock 인증 정보 사용"
-      },
-      "Google": {
-        "description": "Google API Key를 입력하여 세션을 시작합니다. 앱은 귀하의 API Key를 기록하지 않습니다.",
-        "title": "사용자 정의 Google API Key 사용"
-      },
-      "Groq": {
-        "description": "Groq API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
-        "title": "사용자 지정 Groq API 키 사용"
-      },
-      "Mistral": {
-        "description": "Mistral AI API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
-        "title": "사용자 지정 Mistral AI API 키 사용"
-      },
-      "Moonshot": {
-        "description": "Moonshot AI API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
-        "title": "사용자 정의 Moonshot AI API 키 사용"
-      },
-      "OpenAI": {
-        "addProxyUrl": "OpenAI 프록시 주소 추가(선택 사항)",
-        "description": "OpenAI API Key를 입력하여 세션을 시작합니다. 앱은 귀하의 API Key를 기록하지 않습니다.",
-        "title": "사용자 정의 OpenAI API Key 사용"
-      },
-      "OpenRouter": {
-        "description": "OpenRouter API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
-        "title": "사용자 지정 OpenRouter API 키 사용"
-      },
-      "Perplexity": {
-        "description": "Perplexity API 키를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
-        "title": "사용자 지정 Perplexity API 키 사용"
-      },
-      "TogetherAI": {
-        "description": "TogetherAI API Key를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 API Key를 기록하지 않습니다",
-        "title": "사용자 정의 TogetherAI API Key 사용"
-      },
-      "ZeroOne": {
-        "description": "제로원물 API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
-        "title": "사용자 지정 제로원물 API 키 사용"
-      },
-      "Zhipu": {
-        "description": "Zhipu API Key를 입력하여 세션을 시작합니다. 앱은 귀하의 API Key를 기록하지 않습니다.",
-        "title": "사용자 정의 Zhipu API Key 사용"
-      }
-    },
+    "addProxyUrl": "OpenAI 프록시 주소 추가(선택 사항)",
     "closeMessage": "알림 닫기",
     "confirm": "확인 및 다시 시도",
     "model": {

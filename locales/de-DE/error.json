@@ -85,58 +85,7 @@
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Geben Sie Ihren Anthropic API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden Sie einen benutzerdefinierten Anthropic API-Schlüssel"
-      },
-      "Bedrock": {
-        "customRegion": "Benutzerdefinierte Region",
-        "description": "Geben Sie Ihre AWS AccessKeyId / SecretAccessKey ein, um die Sitzung zu starten. Die Anwendung speichert Ihre Authentifizierungsinformationen nicht.",
-        "title": "Verwenden von benutzerdefinierten Bedrock-Authentifizierungsinformationen"
-      },
-      "Google": {
-        "description": "Geben Sie Ihren Google API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden von benutzerdefinierten Google API-Schlüssel"
-      },
-      "Groq": {
-        "description": "Geben Sie Ihren individuellen Groq-API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden Sie einen benutzerdefinierten Groq-API-Schlüssel"
-      },
-      "Mistral": {
-        "description": "Geben Sie Ihren eigenen Mistral AI-API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden Sie einen benutzerdefinierten Mistral AI-API-Schlüssel"
-      },
-      "Moonshot": {
-        "description": "Geben Sie Ihren individuellen Moonshot AI API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden Sie einen benutzerdefinierten Moonshot AI API-Schlüssel"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Proxy-URL hinzufügen (optional)",
-        "description": "Geben Sie Ihren OpenAI API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden von benutzerdefinierten OpenAI API-Schlüssel"
-      },
-      "OpenRouter": {
-        "description": "Geben Sie Ihren OpenRouter API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden Sie einen benutzerdefinierten OpenRouter API-Schlüssel"
-      },
-      "Perplexity": {
-        "description": "Geben Sie Ihren eigenen Perplexity API Key ein, um das Gespräch zu beginnen. Die App speichert Ihren API Key nicht.",
-        "title": "Verwenden Sie einen benutzerdefinierten Perplexity API Key"
-      },
-      "TogetherAI": {
-        "description": "Geben Sie Ihren TogetherAI API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden Sie einen benutzerdefinierten TogetherAI API-Schlüssel"
-      },
-      "ZeroOne": {
-        "description": "Geben Sie Ihren benutzerdefinierten ZeroOne-API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden Sie einen benutzerdefinierten ZeroOne-API-Schlüssel"
-      },
-      "Zhipu": {
-        "description": "Geben Sie Ihren Zhipu API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
-        "title": "Verwenden von benutzerdefinierten Zhipu API-Schlüssel"
-      }
-    },
+    "addProxyUrl": "Fügen Sie die OpenAI-Proxy-URL hinzu (optional)",
     "closeMessage": "Hinweis schließen",
     "confirm": "Bestätigen und erneut versuchen",
     "model": {
