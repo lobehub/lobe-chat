@@ -15,7 +15,7 @@ export const CHANGELOG = urlJoin(GITHUB, 'blob/main/CHANGELOG.md');
 
 const { LOBE_CHAT_DOCS } = getClientConfig();
 
-export const DOCUMENTS = !!LOBE_CHAT_DOCS ? '/docs' : 'https://chat-docs.lobehub.com';
+export const DOCUMENTS = !!LOBE_CHAT_DOCS ? '/docs' : 'https://lobehub.com/docs';
 
 export const WIKI_PLUGIN_GUIDE = urlJoin(GITHUB, 'wiki', 'Plugin-Development');
 
