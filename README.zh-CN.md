@@ -247,14 +247,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                      | 助手说明                                                                     |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [脏话学习助手](https://chat-preview.lobehub.com/market?agent=profanity-assistant)<br/><sup>By **[cokice](https://github.com/cokice)** on **2024-04-10**</sup>                 | 我只会骂人 别的都不会<br/>`回答` `脏话`                                      |
-| [设计理念分析](https://chat-preview.lobehub.com/market?agent=sixin-design-analysis)<br/><sup>By **[YuJiaoChiu](https://github.com/YuJiaoChiu)** on **2024-04-09**</sup>       | 帮助你识图并分析建筑设计理念<br/>`arch`                                      |
-| [YouTue 摘要](https://chat-preview.lobehub.com/market?agent=epoch-ai)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-04-08**</sup>                     | 擅长 YouTube 脚本分析和总结<br/>`you-tube` `脚本分析` `总结`                 |
-| [Shell 脚本开发助手](https://chat-preview.lobehub.com/market?agent=linux-shell-assistant)<br/><sup>By **[etnperlong](https://github.com/etnperlong)** on **2024-04-06**</sup> | 一个协助你编写高质量 Shell 脚本的 AI 助手<br/>`shell` `开发` `计算机` `运维` |
+| 最近新增                                                                                                                                                                | 助手说明                                                                                                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [脏话学习助手](https://chat-preview.lobehub.com/market?agent=profanity-assistant)<br/><sup>By **[cokice](https://github.com/cokice)** on **2024-04-10**</sup>           | 我只会骂人 别的都不会<br/>`回答` `脏话`                                                                                                                                                   |
+| [TadzGenius](https://chat-preview.lobehub.com/market?agent=tadz-genius)<br/><sup>By **[infoaitek24](https://github.com/infoaitek24)** on **2024-04-10**</sup>           | Expert in business development and development practices in the Philippine market<br/>`business-development` `ai-assistant` `market-analysis` `strategic-planning` `customer-acquisition` |
+| [设计理念分析](https://chat-preview.lobehub.com/market?agent=sixin-design-analysis)<br/><sup>By **[YuJiaoChiu](https://github.com/YuJiaoChiu)** on **2024-04-09**</sup> | 帮助你识图并分析建筑设计理念<br/>`arch`                                                                                                                                                   |
+| [YouTue 摘要](https://chat-preview.lobehub.com/market?agent=epoch-ai)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-04-08**</sup>               | 擅长 YouTube 脚本分析和总结<br/>`you-tube` `脚本分析` `总结`                                                                                                                              |
 
-> 📊 Total agents: [<kbd>**232**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**233**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
