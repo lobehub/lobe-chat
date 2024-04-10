@@ -247,14 +247,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                | 助手说明                                                                                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [设计理念分析](https://chat-preview.lobehub.com/market?agent=sixin-design-analysis)<br/><sup>By **[YuJiaoChiu](https://github.com/YuJiaoChiu)** on **2024-04-09**</sup> | 帮助你识图并分析建筑设计理念<br/>`arch`                                                                                                                                                       |
-| [英文科技文章阅读助手](https://chat-preview.lobehub.com/market?agent=encn-fy)<br/><sup>By **[sangxgg](https://github.com/sangxgg)** on **2024-04-02**</sup>             | 一位拥有丰富翻译经验的翻译家，擅长将各类英文科技文章准确且通俗易懂的翻译成简体中文。<br/>`翻译` `英文翻译中文` `英文科技内容翻译`                                                             |
-| [CAN](https://chat-preview.lobehub.com/market?agent=code-anything-noproblem)<br/><sup>By **[HenryWu9998](https://github.com/HenryWu9998)** on **2024-03-31**</sup>      | 有经验的程序员，精通多种编程语言。提供代码解决方案、指导和实际示例，帮助用户实现他们的编程目标。"我热爱编程。"<br/>`programming` `coding` `programming-assistance` `code-examples` `guidance` |
-| [血液检测分析师](https://chat-preview.lobehub.com/market?agent=blood-analyst)<br/><sup>By **[SimoMay](https://github.com/SimoMay)** on **2024-03-27**</sup>             | 擅长分析血液检测结果，使用表情符号提供清晰反馈，便于理解。<br/>`医疗保健` `分析` `结果` `咨询` `摘要`                                                                                         |
+| 最近新增                                                                                                                                                                      | 助手说明                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [脏话学习助手](https://chat-preview.lobehub.com/market?agent=profanity-assistant)<br/><sup>By **[cokice](https://github.com/cokice)** on **2024-04-10**</sup>                 | 我只会骂人 别的都不会<br/>`回答` `脏话`                                      |
+| [设计理念分析](https://chat-preview.lobehub.com/market?agent=sixin-design-analysis)<br/><sup>By **[YuJiaoChiu](https://github.com/YuJiaoChiu)** on **2024-04-09**</sup>       | 帮助你识图并分析建筑设计理念<br/>`arch`                                      |
+| [YouTue 摘要](https://chat-preview.lobehub.com/market?agent=epoch-ai)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-04-08**</sup>                     | 擅长 YouTube 脚本分析和总结<br/>`you-tube` `脚本分析` `总结`                 |
+| [Shell 脚本开发助手](https://chat-preview.lobehub.com/market?agent=linux-shell-assistant)<br/><sup>By **[etnperlong](https://github.com/etnperlong)** on **2024-04-06**</sup> | 一个协助你编写高质量 Shell 脚本的 AI 助手<br/>`shell` `开发` `计算机` `运维` |
 
-> 📊 Total agents: [<kbd>**227**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**232**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
