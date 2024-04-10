@@ -259,14 +259,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Design Philosophy Analysis](https://chat-preview.lobehub.com/market?agent=sixin-design-analysis)<br/><sup>By **[YuJiaoChiu](https://github.com/YuJiaoChiu)** on **2024-04-09**</sup> | Helps you identify and analyze architectural design philosophies<br/>`arch`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| [English Technology Article Reading Assistant](https://chat-preview.lobehub.com/market?agent=encn-fy)<br/><sup>By **[sangxgg](https://github.com/sangxgg)** on **2024-04-02**</sup>   | A translator with rich translation experience, specializing in accurately and clearly translating various English technology articles into Simplified Chinese. Participated in the translation work of Simplified Chinese versions of publications such as National Geographic, Scientific American, InformationWeek, and TechCrunch Chinese. Has a unique understanding and skilled practice in in-depth interpretation and accurate translation of technology articles.<br/>`translation` `english-to-chinese-translation` `translation-of-english-technology-content` |
-| [CAN](https://chat-preview.lobehub.com/market?agent=code-anything-noproblem)<br/><sup>By **[HenryWu9998](https://github.com/HenryWu9998)** on **2024-03-31**</sup>                    | Experienced programmer skilled in multiple languages. Provides code solutions, guidance, and practical examples to help users achieve their programming goals. "I adore coding."<br/>`programming` `coding` `programming-assistance` `code-examples` `guidance`                                                                                                                                                                                                                                                                                                          |
-| [Blood Test Analyst](https://chat-preview.lobehub.com/market?agent=blood-analyst)<br/><sup>By **[SimoMay](https://github.com/SimoMay)** on **2024-03-27**</sup>                       | Skilled in analysing blood test results, providing clear feedback using emojis for easy understanding.<br/>`healthcare` `analysis` `results` `consulting` `summary`                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Recent Submits                                                                                                                                                                                | Description                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [Dirty Talk Learning Assistant](https://chat-preview.lobehub.com/market?agent=profanity-assistant)<br/><sup>By **[cokice](https://github.com/cokice)** on **2024-04-10**</sup>                | I only know how to curse, nothing else.<br/>`answer` `dirty-talk`                                              |
+| [Design Philosophy Analysis](https://chat-preview.lobehub.com/market?agent=sixin-design-analysis)<br/><sup>By **[YuJiaoChiu](https://github.com/YuJiaoChiu)** on **2024-04-09**</sup>         | Helps you identify and analyze architectural design philosophies<br/>`arch`                                    |
+| [YouTube Summary](https://chat-preview.lobehub.com/market?agent=epoch-ai)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-04-08**</sup>                                 | Specializes in YouTube script analysis and summarization<br/>`you-tube` `script-analysis` `summarization`      |
+| [Shell Script Development Assistant](https://chat-preview.lobehub.com/market?agent=linux-shell-assistant)<br/><sup>By **[etnperlong](https://github.com/etnperlong)** on **2024-04-06**</sup> | An AI assistant to help you write high-quality Shell scripts<br/>`shell` `development` `computer` `operations` |
 
-> 📊 Total agents: [<kbd>**227**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**232**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -656,27 +656,27 @@ This project is [MIT](./LICENSE) licensed.
 [docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
 [docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
-[docs]: https://chat-docs.lobehub.com/en
+[docs]: https://lobehub.com/docs
 [docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
-[docs-docker]: https://chat-docs.lobehub.com/en/self-hosting/platform/docker
-[docs-env-var]: https://chat-docs.lobehub.com/en/self-hosting/environment-variables
-[docs-feat-agent]: https://chat-docs.lobehub.com/en/usage/features/agent-market
-[docs-feat-local]: https://chat-docs.lobehub.com/en/usage/features/local-llm
-[docs-feat-mobile]: https://chat-docs.lobehub.com/en/usage/features/mobile
-[docs-feat-plugin]: https://chat-docs.lobehub.com/en/usage/features/plugin-system
-[docs-feat-provider]: https://chat-docs.lobehub.com/en/usage/features/multi-ai-providers
-[docs-feat-pwa]: https://chat-docs.lobehub.com/en/usage/features/pwa
-[docs-feat-t2i]: https://chat-docs.lobehub.com/en/usage/features/text-to-image
-[docs-feat-theme]: https://chat-docs.lobehub.com/en/usage/features/theme
-[docs-feat-tts]: https://chat-docs.lobehub.com/en/usage/features/tts
-[docs-feat-vision]: https://chat-docs.lobehub.com/en/usage/features/vision
+[docs-docker]: https://lobehub.com/docs/self-hosting/platform/docker
+[docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
+[docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
+[docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
+[docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
+[docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
+[docs-feat-provider]: https://lobehub.com/docs/usage/features/multi-ai-providers
+[docs-feat-pwa]: https://lobehub.com/docs/usage/features/pwa
+[docs-feat-t2i]: https://lobehub.com/docs/usage/features/text-to-image
+[docs-feat-theme]: https://lobehub.com/docs/usage/features/theme
+[docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
+[docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
 [docs-functionc-call]: https://platform.openai.com/docs/guides/function-calling
 [docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse
-[docs-plugin-dev]: https://chat-docs.lobehub.com/en/usage/plugins/development
-[docs-self-hosting]: https://chat-docs.lobehub.com/en/self-hosting/start
-[docs-upstream-sync]: https://chat-docs.lobehub.com/en/self-hosting/advanced/upstream-sync
-[docs-usage-ollama]: https://chat-docs.lobehub.com/en/usage/providers/ollama
-[docs-usage-plugin]: https://chat-docs.lobehub.com/en/usage/plugins/basic
+[docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
+[docs-self-hosting]: https://lobehub.com/docs/self-hosting/start
+[docs-upstream-sync]: https://lobehub.com/docs/self-hosting/advanced/upstream-sync
+[docs-usage-ollama]: https://lobehub.com/docs/usage/providers/ollama
+[docs-usage-plugin]: https://lobehub.com/docs/usage/plugins/basic
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
 [github-action-release-link]: https://github.com/actions/workflows/lobehub/lobe-chat/release.yml
