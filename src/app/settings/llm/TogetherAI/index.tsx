@@ -10,7 +10,6 @@ const TogetherAIProvider = memo(() => {
   return (
     <ProviderConfig
       checkModel={'togethercomputer/alpaca-7b'}
-      modelList={{ showModelFetcher: true }}
       provider={'togetherai'}
       title={
         <Together.Combine

@@ -12,6 +12,19 @@ import { debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
 
+// the model contains the following keywords is not a chat model, so we should filter them out
+const CHAT_MODELS_BLOCK_LIST = [
+  'embedding',
+  'davinci',
+  'cuire',
+  'moderation',
+  'ada',
+  'babbage',
+  'tts',
+  'whisper',
+  'dall-e',
+];
+
 interface OpenAICompatibleFactoryOptions {
   baseURL?: string;
   chatCompletion?: {
@@ -112,6 +125,11 @@ export const LobeOpenAICompatibleFactory = ({
       const list = await this.client.models.list();
 
       return list.data
+        .filter((model) => {
+          return CHAT_MODELS_BLOCK_LIST.every(
+            (keyword) => !model.id.toLowerCase().includes(keyword),
+          );
+        })
         .map((item) => {
           if (models?.transformModel) {
             return models.transformModel(item);
@@ -123,6 +141,7 @@ export const LobeOpenAICompatibleFactory = ({
 
           return { id: item.id };
         })
+
         .filter(Boolean) as ChatModelCard[];
     }
   };
