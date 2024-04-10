@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
+import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
 import AgentRuntime from '../../agentRuntime';
@@ -16,7 +16,12 @@ export const GET = checkAuth(async (req, { params, jwtPayload }) => {
   const { provider } = params;
 
   try {
-    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, jwtPayload);
+    const openRouterKey = jwtPayload.apiKey || 'openrouter-dont-need-api-key-for-model-list';
+
+    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, {
+      ...jwtPayload,
+      apiKey: provider === ModelProvider.OpenRouter ? openRouterKey : jwtPayload.apiKey,
+    });
 
     const list = await agentRuntime.models();
 

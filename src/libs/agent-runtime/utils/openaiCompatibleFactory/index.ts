@@ -25,6 +25,9 @@ interface OpenAICompatibleFactoryOptions {
     bizError: ILobeAgentRuntimeErrorType;
     invalidAPIKey: ILobeAgentRuntimeErrorType;
   };
+  models?: {
+    transformModel?: (model: OpenAI.Model) => ChatModelCard;
+  };
   provider: string;
 }
 
@@ -35,6 +38,7 @@ export const LobeOpenAICompatibleFactory = ({
   debug,
   constructorOptions,
   chatCompletion,
+  models,
 }: OpenAICompatibleFactoryOptions) =>
   class LobeOpenAICompatibleAI implements LobeRuntimeAI {
     client: OpenAI;
@@ -107,15 +111,17 @@ export const LobeOpenAICompatibleFactory = ({
     async models() {
       const list = await this.client.models.list();
 
-      const modelIds = list.data.map((i) => i.id);
+      return list.data
+        .map((item) => {
+          if (models?.transformModel) {
+            return models.transformModel(item);
+          }
 
-      return modelIds
-        .map((id) => {
-          const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === id);
+          const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === item.id);
 
           if (knownModel) return knownModel;
 
-          return { id: id };
+          return { id: item.id };
         })
         .filter(Boolean) as ChatModelCard[];
     }

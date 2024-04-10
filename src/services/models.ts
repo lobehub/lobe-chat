@@ -9,9 +9,9 @@ class ModelsService {
       headers: { 'Content-Type': 'application/json' },
       provider,
     });
-
     try {
       const res = await fetch(API_ENDPOINTS.chatModels(provider), { headers });
+      if (!res.ok) return;
 
       return res.json();
     } catch {
