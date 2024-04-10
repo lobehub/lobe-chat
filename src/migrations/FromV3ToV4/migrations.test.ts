@@ -86,4 +86,110 @@ describe('MigrationV3ToV4', () => {
     // expect(migratedData.state.topics).toEqual(outputV3DataFromV1.state.topics);
     // expect(migratedData.state.messages).toEqual(outputV3DataFromV1.state.messages);
   });
+
+  describe('Edge Case', () => {
+    it('should handle undefined settings or languageModel', () => {
+      const data: MigrationData = {
+        version: 3,
+        state: {
+          // settings undefined
+        },
+      };
+
+      const migratedData = versionController.migrate(data);
+
+      expect(migratedData.version).toEqual(4);
+      expect(migratedData.state.settings).toBeUndefined();
+    });
+
+    it('should handle undefined languageModel', () => {
+      const data: MigrationData = {
+        version: 3,
+        state: {
+          settings: {
+            // languageModel undefined
+          },
+        },
+      };
+
+      const migratedData = versionController.migrate(data);
+
+      expect(migratedData.version).toEqual(4);
+      expect(migratedData.state.settings.languageModel).toBeUndefined();
+    });
+
+    it('should handle missing provider configurations', () => {
+      const data: MigrationData = {
+        version: 3,
+        state: {
+          settings: {
+            languageModel: {
+              // missing togetherai、openrouter 、 ollama
+              openAI: {
+                // openAI
+              },
+            },
+          },
+        },
+      };
+
+      const migratedData = versionController.migrate(data);
+
+      expect(migratedData.version).toEqual(4);
+      expect(migratedData.state.settings.languageModel.togetherai).toBeUndefined();
+      expect(migratedData.state.settings.languageModel.openrouter).toBeUndefined();
+      expect(migratedData.state.settings.languageModel.ollama).toBeUndefined();
+    });
+
+    it('should success for invalid data format', () => {
+      const data: MigrationData = {
+        version: 3,
+        state: {
+          settings: {
+            languageModel: {
+              openAI: 'invalid-config', // 错误的配置格式
+            },
+          },
+        },
+      };
+
+      const migratedData = versionController.migrate(data);
+
+      expect(migratedData.version).toEqual(4);
+      expect(migratedData.state.settings.languageModel.openai).toEqual({ enabled: true });
+      expect(migratedData.state.settings.languageModel.togetherai).toBeUndefined();
+      expect(migratedData.state.settings.languageModel.openrouter).toBeUndefined();
+      expect(migratedData.state.settings.languageModel.ollama).toBeUndefined();
+    });
+
+    it('should handle empty strings and empty objects', () => {
+      const data: MigrationData = {
+        version: 3,
+        state: {
+          settings: {
+            languageModel: {
+              openAI: undefined,
+              togetherai: {
+                apiKey: '',
+                endpoint: '',
+                customModelName: '',
+              },
+            },
+          },
+        },
+      };
+
+      const migratedData = versionController.migrate(data);
+
+      expect(migratedData.version).toEqual(4);
+      expect(migratedData.state.settings.languageModel.openai).toEqual({
+        apiKey: '',
+        enabled: true,
+      });
+
+      expect(migratedData.state.settings.languageModel.togetherai.apiKey).toEqual('');
+      expect(migratedData.state.settings.languageModel.togetherai.endpoint).toEqual('');
+      expect(migratedData.state.settings.languageModel.togetherai.customModelCards).toBeUndefined();
+    });
+  });
 });
