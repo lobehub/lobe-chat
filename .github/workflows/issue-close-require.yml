@@ -20,7 +20,7 @@ jobs:
           actions: 'check-inactive'
           token: ${{ secrets.GH_TOKEN }}
           inactive-label: 'Inactive'
-          inactive-day: 30
+          inactive-day: 60
 
   issue-close-require:
     permissions:
