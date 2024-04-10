@@ -85,58 +85,7 @@
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Ingresa tu clave de API de Anthropic para comenzar la sesión. La aplicación no almacenará tu clave de API.",
-        "title": "Usar una clave de API personalizada de Anthropic"
-      },
-      "Bedrock": {
-        "customRegion": "Región de servicio personalizada",
-        "description": "Ingresa tu AccessKeyId/SecretAccessKey de AWS para comenzar la sesión. La aplicación no guardará tu configuración de autenticación",
-        "title": "Usar información de autenticación personalizada de Bedrock"
-      },
-      "Google": {
-        "description": "Ingresa tu clave de API de Google para comenzar la sesión. La aplicación no guardará tu clave de API",
-        "title": "Usar clave de API personalizada de Google"
-      },
-      "Groq": {
-        "description": "Ingresa tu clave de API de Groq para comenzar la sesión. La aplicación no almacenará tu clave de API",
-        "title": "Usar clave de API personalizada de Groq"
-      },
-      "Mistral": {
-        "description": "Ingrese su clave de API de Mistral AI para comenzar la sesión. La aplicación no almacenará su clave de API.",
-        "title": "Usar clave de API personalizada de Mistral AI"
-      },
-      "Moonshot": {
-        "description": "Ingrese su clave de API de Moonshot AI personalizada para comenzar la sesión. La aplicación no almacenará su clave de API.",
-        "title": "Usar una clave de API personalizada de Moonshot AI"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Agregar dirección de proxy de OpenAI (opcional)",
-        "description": "Ingresa tu clave de API de OpenAI para comenzar la sesión. La aplicación no guardará tu clave de API",
-        "title": "Usar clave de API personalizada de OpenAI"
-      },
-      "OpenRouter": {
-        "description": "Ingresa tu clave de API de OpenRouter para comenzar la sesión. La aplicación no almacenará tu clave de API",
-        "title": "Usar una clave de API personalizada de OpenRouter"
-      },
-      "Perplexity": {
-        "description": "Ingresa tu clave de API de Perplexity para comenzar la sesión. La aplicación no guardará tu clave de API",
-        "title": "Usar tu propia clave de API de Perplexity"
-      },
-      "TogetherAI": {
-        "description": "Ingresa tu clave de API de TogetherAI para comenzar la sesión. La aplicación no almacenará tu clave de API",
-        "title": "Usar una clave de API personalizada de TogetherAI"
-      },
-      "ZeroOne": {
-        "description": "Ingrese su clave de API de ZeroOneBiz para comenzar la sesión. La aplicación no almacenará su clave de API.",
-        "title": "Usar clave de API personalizada de ZeroOneBiz"
-      },
-      "Zhipu": {
-        "description": "Ingresa tu clave de API de Zhipu para comenzar la sesión. La aplicación no guardará tu clave de API",
-        "title": "Usar clave de API personalizada de Zhipu"
-      }
-    },
+    "addProxyUrl": "Agregar URL de proxy de OpenAI (opcional)",
     "closeMessage": "Cerrar mensaje",
     "confirm": "Confirmar y volver a intentar",
     "model": {

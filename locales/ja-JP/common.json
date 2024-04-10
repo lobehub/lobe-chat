@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "カスタムモデル、デフォルトでは関数呼び出しとビジョン認識の両方をサポートしています。上記の機能の有効性を実際の状況で検証してください。",
-      "file": "このモデルはファイルのアップロードと認識をサポートしています",
-      "functionCall": "このモデルは関数呼び出し（Function Call）をサポートしています。",
-      "tokens": "このモデルは1つのセッションあたり最大{{tokens}}トークンをサポートしています。",
-      "vision": "このモデルはビジョン認識をサポートしています。"
-    }
-  },
   "about": "概要",
   "advanceSettings": "高度な設定",
   "appInitializing": "LobeChatを初期化中です。しばらくお待ちください...",
@@ -95,23 +86,6 @@
     "zh-TW": "繁体字中国語"
   },
   "layoutInitializing": "レイアウトを初期化中...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWSベッドロック",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "オラマ",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity AI",
-    "togetherai": "TogetherAI",
-    "zeroone": "01.AI ゼロワン万物",
-    "zhipu": "智譜AI"
-  },
   "noDescription": "説明はありません",
   "oauth": "SSO ログイン",
   "ok": "OK",

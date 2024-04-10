@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "사용자 정의 모델, 기본적으로 함수 호출 및 시각 인식을 모두 지원하며, 상기 기능의 가용성을 실제로 확인하십시오",
-      "file": "이 모델은 파일 업로드를 지원하여 인식할 수 있습니다.",
-      "functionCall": "이 모델은 함수 호출을 지원합니다",
-      "tokens": "이 모델은 단일 세션당 최대 {{tokens}} 토큰을 지원합니다",
-      "vision": "이 모델은 시각 인식을 지원합니다"
-    }
-  },
   "about": "소개",
   "advanceSettings": "고급 설정",
   "appInitializing": "LobeChat이 초기화 중입니다. 잠시 기다려주세요...",
@@ -95,23 +86,6 @@
     "zh-TW": "중국어(번체)"
   },
   "layoutInitializing": "레이아웃을 불러오는 중...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "문샷 AI",
-    "ollama": "올라마",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "오픈 라우터",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01.AI 제로원",
-    "zhipu": "지푸 AI"
-  },
   "noDescription": "설명 없음",
   "oauth": "SSO 로그인",
   "ok": "확인",
