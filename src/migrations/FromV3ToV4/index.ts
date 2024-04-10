@@ -58,11 +58,7 @@ export class MigrationV3ToV4 implements Migration {
           enabled: true,
           endpoint: openai.endpoint,
         },
-        openai: {
-          apiKey: '',
-          enabled: true,
-          endpoint: '',
-        },
+        openai: { apiKey: '', enabled: true, endpoint: '' },
       };
     }
 
