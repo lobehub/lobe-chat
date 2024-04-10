@@ -75,10 +75,17 @@
         }
       }
     },
+    "fetcher": {
+      "fetch": "Modelle abrufen",
+      "fetching": "Modelle werden abgerufen...",
+      "latestTime": "Letzte Aktualisierung: {{time}}",
+      "noLatestTime": "Liste noch nicht abgerufen"
+    },
     "modelList": {
       "desc": "Wählen Sie die Modelle aus, die in der Sitzung angezeigt werden sollen. Die ausgewählten Modelle werden in der Modellliste angezeigt.",
       "placeholder": "Wählen Sie ein Modell aus der Liste aus",
-      "title": "Modellliste"
+      "title": "Modellliste",
+      "total": "Insgesamt {{count}} Modelle verfügbar"
     },
     "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates ✨"
   },

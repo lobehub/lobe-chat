@@ -75,10 +75,17 @@
         }
       }
     },
+    "fetcher": {
+      "fetch": "Pobierz listę modeli",
+      "fetching": "Trwa pobieranie listy modeli...",
+      "latestTime": "Ostatnia aktualizacja: {{time}}",
+      "noLatestTime": "Brak dostępnej listy"
+    },
     "modelList": {
       "desc": "Wybierz modele do wyświetlenia w sesji. Wybrane modele będą widoczne na liście modeli",
       "placeholder": "Wybierz model z listy",
-      "title": "Lista modeli"
+      "title": "Lista modeli",
+      "total": "Razem dostępne są {{count}} modele"
     },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
   },

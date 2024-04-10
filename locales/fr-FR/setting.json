@@ -75,10 +75,17 @@
         }
       }
     },
+    "fetcher": {
+      "fetch": "Obtenir la liste des modèles",
+      "fetching": "Récupération de la liste des modèles en cours...",
+      "latestTime": "Dernière mise à jour : {{time}}",
+      "noLatestTime": "Aucune mise à jour disponible"
+    },
     "modelList": {
       "desc": "Sélectionnez les modèles à afficher dans la session. Les modèles sélectionnés seront affichés dans la liste des modèles.",
       "placeholder": "Veuillez sélectionner un modèle dans la liste",
-      "title": "Liste des modèles"
+      "title": "Liste des modèles",
+      "total": "{{count}} modèles disponibles au total"
     },
     "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute ✨"
   },

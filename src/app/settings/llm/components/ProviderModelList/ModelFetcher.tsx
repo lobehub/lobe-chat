@@ -4,6 +4,7 @@ import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { LucideLoaderCircle, LucideRefreshCcwDot } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
@@ -30,6 +31,7 @@ interface ModelFetcherProps {
 
 const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
   const { styles } = useStyles();
+  const { t } = useTranslation('setting');
   const [useFetchProviderModelList] = useGlobalStore((s) => [
     s.useFetchProviderModelList,
     s.setModelProviderConfig,
@@ -47,8 +49,16 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
   return (
     <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
       <Flexbox align={'center'} gap={0} horizontal justify={'space-between'}>
-        <div>共 {totalModels} 个模型可用</div>
-        <Tooltip title={`上次更新时间：${dayjs(latestFetchTime).format('MM-DD HH:mm:ss')}`}>
+        <div>{t('llm.modelList.total', { count: totalModels })}</div>
+        <Tooltip
+          title={
+            latestFetchTime
+              ? t('llm.fetcher.latestTime', {
+                  time: dayjs(latestFetchTime).format('YYYY-MM-DD HH:mm:ss'),
+                })
+              : t('llm.fetcher.noLatestTime')
+          }
+        >
           <Flexbox
             align={'center'}
             className={styles.hover}
@@ -61,7 +71,7 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
               size={'small'}
               spin={isValidating}
             />
-            <div>{isValidating ? '正在获取模型列表...' : '获取模型列表'}</div>
+            <div>{isValidating ? t('llm.fetcher.fetching') : t('llm.fetcher.fetch')}</div>
           </Flexbox>
         </Tooltip>
       </Flexbox>

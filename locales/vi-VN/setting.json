@@ -75,10 +75,17 @@
         }
       }
     },
+    "fetcher": {
+      "fetch": "Lấy danh sách mô hình",
+      "fetching": "Đang lấy danh sách mô hình...",
+      "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
+      "noLatestTime": "Chưa có danh sách nào được lấy"
+    },
     "modelList": {
       "desc": "Chọn mô hình hiển thị trong cuộc trò chuyện, mô hình đã chọn sẽ được hiển thị trong danh sách mô hình",
       "placeholder": "Vui lòng chọn mô hình từ danh sách",
-      "title": "Danh sách mô hình"
+      "title": "Danh sách mô hình",
+      "total": "Tổng cộng có {{count}} mô hình có sẵn"
     },
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
   },

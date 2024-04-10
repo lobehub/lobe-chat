@@ -75,10 +75,17 @@
         }
       }
     },
+    "fetcher": {
+      "fetch": "Haal model lijst op",
+      "fetching": "Model lijst wordt opgehaald...",
+      "latestTime": "Laatst bijgewerkt: {{time}}",
+      "noLatestTime": "Geen lijst beschikbaar op dit moment"
+    },
     "modelList": {
       "desc": "Selecteer het model dat in de sessie moet worden weergegeven. Het geselecteerde model wordt weergegeven in de modellijst.",
       "placeholder": "Selecteer een model uit de lijst",
-      "title": "Modellijst"
+      "title": "Modellijst",
+      "total": "In totaal {{count}} modellen beschikbaar"
     },
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨"
   },

@@ -75,10 +75,17 @@
         }
       }
     },
+    "fetcher": {
+      "fetch": "Get Model List",
+      "fetching": "Fetching Model List...",
+      "latestTime": "Last Updated: {{time}}",
+      "noLatestTime": "No list available yet"
+    },
     "modelList": {
       "desc": "Select the models to display in the session. The selected models will be displayed in the model list.",
       "placeholder": "Please select a model from the list",
-      "title": "Model List"
+      "title": "Model List",
+      "total": "{{count}} models available in total"
     },
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned ✨"
   },

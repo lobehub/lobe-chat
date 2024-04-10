@@ -75,10 +75,17 @@
         }
       }
     },
+    "fetcher": {
+      "fetch": "Modelleri Al",
+      "fetching": "Modelleri alınıyor...",
+      "latestTime": "Son güncelleme zamanı: {{time}}",
+      "noLatestTime": "Liste henüz alınamadı"
+    },
     "modelList": {
       "desc": "Görüntülenecek modeli seçin, seçilen model model listesinde görüntülenecektir",
       "placeholder": "Lütfen listeden bir model seçin",
-      "title": "Model Listesi"
+      "title": "Model Listesi",
+      "total": "Toplam {{count}} model kullanılabilir"
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
   },

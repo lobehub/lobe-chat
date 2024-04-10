@@ -76,10 +76,17 @@ export default {
         },
       },
     },
+    fetcher: {
+      fetch: '获取模型列表',
+      fetching: '正在获取模型列表...',
+      latestTime: '上次更新时间：{{time}}',
+      noLatestTime: '暂未获取列表',
+    },
     modelList: {
       desc: '选择在会话中展示的模型，选择的模型会在模型列表中展示',
       placeholder: '请从列表中选择模型',
       title: '模型列表',
+      total: '共 {{count}} 个模型可用',
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
   },
