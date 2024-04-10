@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.146.2](https://github.com/lobehub/lobe-chat/compare/v0.146.1...v0.146.2)
+
+<sup>Released on **2024-04-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `ai@3.0.19` to fix error with chat stream output.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin `ai@3.0.19` to fix error with chat stream output, closes [#1946](https://github.com/lobehub/lobe-chat/issues/1946) ([07d4419](https://github.com/lobehub/lobe-chat/commit/07d4419))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.146.1](https://github.com/lobehub/lobe-chat/compare/v0.146.0...v0.146.1)
 
 <sup>Released on **2024-04-10**</sup>
