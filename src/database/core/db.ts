@@ -147,7 +147,7 @@ export class LocalDB extends Dexie {
 
   upgradeToV8 = async (trans: Transaction) => {
     const users = trans.table('users');
-    users.toCollection().modify((user: DB_User) => {
+    await users.toCollection().modify((user: DB_User) => {
       if (user.settings) {
         user.settings = MigrationLLMSettings.migrateSettings(user.settings as any);
       }

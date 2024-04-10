@@ -44,7 +44,7 @@ export interface V3Settings {
   defaultAgent: any;
   fontSize: number;
   language: string;
-  languageModel: V3LLMConfig;
+  languageModel?: Partial<V3LLMConfig>;
   neutralColor?: string;
   password: string;
   primaryColor?: string;

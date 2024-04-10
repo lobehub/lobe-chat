@@ -17,12 +17,12 @@ export interface V4AzureOpenAIConfig extends V4ProviderConfig {
 }
 
 export interface V4lLLMConfig
-  extends Omit<V3LLMConfig, 'ollama' | 'openAI' | 'openrouter' | 'togetherai'> {
-  azure: V4AzureOpenAIConfig;
-  ollama: V4ProviderConfig;
+  extends Omit<Partial<V3LLMConfig>, 'ollama' | 'openAI' | 'openrouter' | 'togetherai'> {
+  azure?: V4AzureOpenAIConfig;
+  ollama?: V4ProviderConfig;
   openai: V4ProviderConfig;
-  openrouter: V4ProviderConfig;
-  togetherai: V4ProviderConfig;
+  openrouter?: V4ProviderConfig;
+  togetherai?: V4ProviderConfig;
 }
 
 /**
