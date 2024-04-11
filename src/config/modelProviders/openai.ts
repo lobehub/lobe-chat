@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// refs to: https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
+// refs to: https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4
 const OpenAI: ModelProviderCard = {
   chatModels: [
     {
@@ -101,6 +101,23 @@ const OpenAI: ModelProviderCard = {
       functionCall: true,
       id: 'gpt-4-32k-0613',
       tokens: 32_768,
+    },
+    {
+      description: 'GPT-4 Turbo 视觉版',
+      displayName: 'GPT-4 Turbo with Preview',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-4-turbo',
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description: 'GPT-4 Turbo 视觉版 (240409)',
+      displayName: 'GPT-4 Turbo Vision (240409)',
+      functionCall: true,
+      id: 'gpt-4-turbo-2024-04-09',
+      tokens: 128_000,
+      vision: true,
     },
     {
       displayName: 'GPT-4 ALL',
