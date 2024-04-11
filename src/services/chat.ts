@@ -137,7 +137,7 @@ class ChatService {
 
     // if the provider is Azure, get the deployment name as the request model
     if (provider === ModelProvider.Azure) {
-      const chatModelCards = modelConfigSelectors.providerModelCards(provider)(
+      const chatModelCards = modelConfigSelectors.getModelCardsByProviderId(provider)(
         useGlobalStore.getState(),
       );
 

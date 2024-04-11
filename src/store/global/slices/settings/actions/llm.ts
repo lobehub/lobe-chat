@@ -37,7 +37,7 @@ export const llmSettingsSlice: StateCreator<
   LLMSettingsAction
 > = (set, get) => ({
   dispatchCustomModelCards: async (provider, payload) => {
-    const prevState = modelConfigSelectors.providerConfig(provider)(get());
+    const prevState = modelConfigSelectors.getConfigByProviderId(provider)(get());
 
     if (!prevState) return;
 
@@ -47,7 +47,7 @@ export const llmSettingsSlice: StateCreator<
   },
 
   removeEnabledModels: async (provider, model) => {
-    const config = modelConfigSelectors.providerConfig(provider)(get());
+    const config = modelConfigSelectors.getConfigByProviderId(provider)(get());
 
     await get().setModelProviderConfig(provider, {
       enabledModels: config?.enabledModels?.filter((s) => s !== model).filter(Boolean),

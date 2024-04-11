@@ -8,14 +8,13 @@ import { modelConfigSelectors, settingsSelectors } from '@/store/global/selector
  */
 // eslint-disable-next-line no-undef
 export const createHeaderWithOpenAI = (header?: HeadersInit): HeadersInit => {
-  const apiKey = modelConfigSelectors.openAIAPIKey(useGlobalStore.getState()) || '';
-  const endpoint = modelConfigSelectors.openAIProxyUrl(useGlobalStore.getState()) || '';
+  const openAIConfig = modelConfigSelectors.openAIConfig(useGlobalStore.getState());
 
   // eslint-disable-next-line no-undef
   return {
     ...header,
     [LOBE_CHAT_ACCESS_CODE]: settingsSelectors.password(useGlobalStore.getState()),
-    [OPENAI_API_KEY_HEADER_KEY]: apiKey,
-    [OPENAI_END_POINT]: endpoint,
+    [OPENAI_API_KEY_HEADER_KEY]: openAIConfig.apiKey || '',
+    [OPENAI_END_POINT]: openAIConfig.endpoint || '',
   };
 };

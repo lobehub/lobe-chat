@@ -29,13 +29,15 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Ollama: {
-      const endpoint = modelConfigSelectors.ollamaProxyUrl(useGlobalStore.getState());
+      const config = modelConfigSelectors.ollamaConfig(useGlobalStore.getState());
 
-      return { endpoint };
+      return { endpoint: config?.endpoint };
     }
 
     default: {
-      const config = modelConfigSelectors.providerConfig(provider)(useGlobalStore.getState());
+      const config = modelConfigSelectors.getConfigByProviderId(provider)(
+        useGlobalStore.getState(),
+      );
 
       return { apiKey: config?.apiKey, endpoint: config?.endpoint };
     }
