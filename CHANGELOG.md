@@ -2,6 +2,64 @@
 
 # Changelog
 
+### [Version 0.147.4](https://github.com/lobehub/lobe-chat/compare/v0.147.3...v0.147.4)
+
+<sup>Released on **2024-04-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add more builtin OpenRouter models.
+
+#### 💄 Styles
+
+- **misc**: Adjust minimum width value for DraggablePanel component.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add more builtin OpenRouter models, closes [#1973](https://github.com/lobehub/lobe-chat/issues/1973) ([0000b1a](https://github.com/lobehub/lobe-chat/commit/0000b1a))
+
+#### Styles
+
+- **misc**: Adjust minimum width value for DraggablePanel component, closes [#1901](https://github.com/lobehub/lobe-chat/issues/1901) ([a696d37](https://github.com/lobehub/lobe-chat/commit/a696d37))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.147.3](https://github.com/lobehub/lobe-chat/compare/v0.147.2...v0.147.3)
+
+<sup>Released on **2024-04-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support Google Proxy URL.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support Google Proxy URL, closes [#1979](https://github.com/lobehub/lobe-chat/issues/1979) ([fbf2c24](https://github.com/lobehub/lobe-chat/commit/fbf2c24))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.147.2](https://github.com/lobehub/lobe-chat/compare/v0.147.1...v0.147.2)
 
 <sup>Released on **2024-04-11**</sup>

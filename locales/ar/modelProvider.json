@@ -67,6 +67,11 @@
     }
   },
   "google": {
+    "endpoint": {
+      "desc": "بالإضافة إلى العنوان الافتراضي، يجب أن يتضمن http(s)://",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "عنوان وكيل API"
+    },
     "title": "Google",
     "token": {
       "desc": "أدخل مفتاح API الخاص بـ Google",

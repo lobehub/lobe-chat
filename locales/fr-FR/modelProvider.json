@@ -67,6 +67,11 @@
     }
   },
   "google": {
+    "endpoint": {
+      "desc": "Incluez http(s):// en plus de l'adresse par défaut",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "Adresse du proxy API"
+    },
     "title": "Google",
     "token": {
       "desc": "Saisissez la clé API de Google",
