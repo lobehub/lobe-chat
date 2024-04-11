@@ -85,65 +85,14 @@
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Voer uw eigen Anthropic API Key in om een sessie te starten. De app zal uw API Key niet opslaan.",
-        "title": "Gebruik een aangepaste Anthropic API Key"
-      },
-      "Bedrock": {
-        "customRegion": "Custom service region",
-        "description": "Enter your AWS AccessKeyId / SecretAccessKey to start the session. The app will not record your authentication configuration",
-        "title": "Use custom Bedrock authentication information"
-      },
-      "Google": {
-        "description": "Enter your Google API Key to start the session. The app will not record your API Key",
-        "title": "Use custom Google API Key"
-      },
-      "Groq": {
-        "description": "Voer je Groq API-sleutel in om te beginnen met de sessie. De app zal je API-sleutel niet opslaan.",
-        "title": "Gebruik een aangepaste Groq API-sleutel"
-      },
-      "Mistral": {
-        "description": "Voer je Mistral AI API-sleutel in om een sessie te starten. De app slaat je API-sleutel niet op.",
-        "title": "Gebruik aangepaste Mistral AI API-sleutel"
-      },
-      "Moonshot": {
-        "description": "输入您的Moonshot AI API密钥即可开始会话。应用不会记录您的API密钥",
-        "title": "使用自定义Moonshot AI API密钥"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Add OpenAI proxy address (optional)",
-        "description": "Enter your OpenAI API Key to start the session. The app will not record your API Key",
-        "title": "Use custom OpenAI API Key"
-      },
-      "OpenRouter": {
-        "description": "Voer uw OpenRouter API Key in om de sessie te starten. De app zal uw API Key niet opslaan.",
-        "title": "Gebruik aangepaste OpenRouter API Key"
-      },
-      "Perplexity": {
-        "description": "Voer uw eigen Perplexity API Key in om het gesprek te starten. De app zal uw API Key niet opslaan.",
-        "title": "Gebruik een aangepaste Perplexity API Key"
-      },
-      "TogetherAI": {
-        "description": "Voer uw TogetherAI API Key in om de sessie te starten. De app zal uw API Key niet opslaan.",
-        "title": "Gebruik aangepaste TogetherAI API Key"
-      },
-      "ZeroOne": {
-        "description": "输入你的零一万物 API Key 即可开始会话。应用不会记录你的 API Key",
-        "title": "使用自定义零一万物 API Key"
-      },
-      "Zhipu": {
-        "description": "Enter your Zhipu API Key to start the session. The app will not record your API Key",
-        "title": "Use custom Zhipu API Key"
-      }
-    },
+    "addProxyUrl": "Voeg een optionele OpenAI-proxy-URL toe",
     "closeMessage": "Sluit bericht",
     "confirm": "Bevestigen en opnieuw proberen",
     "model": {
       "Ollama": {
-        "confirm": "下载",
-        "description": "输入您的 Ollama 模型标签，完成后即可继续会话",
-        "title": "下载指定的 Ollama 模型"
+        "confirm": "Downloaden",
+        "description": "Voer je Ollama model tag in, voltooi om het gesprek voort te zetten",
+        "title": "Download het gespecificeerde Ollama model"
       }
     },
     "oauth": {

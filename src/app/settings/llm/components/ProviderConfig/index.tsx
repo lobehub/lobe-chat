@@ -9,91 +9,106 @@ import {
   LLMProviderApiTokenKey,
   LLMProviderBaseUrlKey,
   LLMProviderConfigKey,
-  LLMProviderCustomModelKey,
+  LLMProviderModelListKey,
 } from '@/app/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
+import ProviderModelListSelect from '../ProviderModelList';
 
 interface ProviderConfigProps {
+  apiKeyItems?: FormItemProps[];
   canDeactivate?: boolean;
   checkModel?: string;
   checkerItem?: FormItemProps;
-  configItems?: FormItemProps[];
+  modelList?: {
+    azureDeployName?: boolean;
+    notFoundContent?: ReactNode;
+    placeholder?: string;
+    showModelFetcher?: boolean;
+  };
   provider: GlobalLLMProviderKey;
   showApiKey?: boolean;
-  showCustomModelName?: boolean;
   showEndpoint?: boolean;
   title: ReactNode;
 }
 
 const ProviderConfig = memo<ProviderConfigProps>(
   ({
+    apiKeyItems,
     provider,
-    showCustomModelName,
     showEndpoint,
     showApiKey = true,
     checkModel,
     canDeactivate = true,
     title,
-    configItems,
     checkerItem,
+    modelList,
   }) => {
     const { t } = useTranslation('setting');
+    const { t: modelT } = useTranslation('modelProvider');
     const [form] = AntForm.useForm();
     const [toggleProviderEnabled, setSettings, enabled] = useGlobalStore((s) => [
       s.toggleProviderEnabled,
       s.setSettings,
-      modelProviderSelectors.providerEnabled(provider)(s),
+      modelConfigSelectors.isProviderEnabled(provider)(s),
     ]);
 
     useSyncSettings(form);
 
-    const defaultFormItems = [
-      showApiKey && {
-        children: (
-          <Input.Password
-            autoComplete={'new-password'}
-            placeholder={t(`llm.${provider}.token.placeholder` as any)}
-          />
-        ),
-        desc: t(`llm.${provider}.token.desc` as any),
-        label: t(`llm.${provider}.token.title` as any),
-        name: [LLMProviderConfigKey, provider, LLMProviderApiTokenKey],
-      },
+    const apiKeyItem: FormItemProps[] = !showApiKey
+      ? []
+      : apiKeyItems ?? [
+          {
+            children: (
+              <Input.Password
+                autoComplete={'new-password'}
+                placeholder={modelT(`${provider}.token.placeholder` as any)}
+              />
+            ),
+            desc: modelT(`${provider}.token.desc` as any),
+            label: modelT(`${provider}.token.title` as any),
+            name: [LLMProviderConfigKey, provider, LLMProviderApiTokenKey],
+          },
+        ];
+
+    const formItems = [
+      ...apiKeyItem,
       showEndpoint && {
         children: (
-          <Input allowClear placeholder={t(`llm.${provider}.endpoint.placeholder` as any)} />
+          <Input allowClear placeholder={modelT(`${provider}.endpoint.placeholder` as any)} />
         ),
-        desc: t(`llm.${provider}.endpoint.desc` as any),
-        label: t(`llm.${provider}.endpoint.title` as any),
+        desc: modelT(`${provider}.endpoint.desc` as any),
+        label: modelT(`${provider}.endpoint.title` as any),
         name: [LLMProviderConfigKey, provider, LLMProviderBaseUrlKey],
       },
-      showCustomModelName && {
+      {
         children: (
-          <Input.TextArea
-            allowClear
-            placeholder={t(`llm.${provider}.customModelName.placeholder` as any)}
-            style={{ height: 100 }}
+          <ProviderModelListSelect
+            notFoundContent={modelList?.notFoundContent}
+            placeholder={modelList?.placeholder ?? t('llm.modelList.placeholder')}
+            provider={provider}
+            showAzureDeployName={modelList?.azureDeployName}
+            showModelFetcher={modelList?.showModelFetcher}
           />
         ),
-        desc: t(`llm.${provider}.customModelName.desc` as any),
-        label: t(`llm.${provider}.customModelName.title` as any),
-        name: [LLMProviderConfigKey, provider, LLMProviderCustomModelKey],
+        desc: t('llm.modelList.desc'),
+        label: t('llm.modelList.title'),
+        name: [LLMProviderConfigKey, provider, LLMProviderModelListKey],
       },
       checkerItem ?? {
         children: <Checker model={checkModel!} provider={provider} />,
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
-        minWidth: '100%',
+        minWidth: undefined,
       },
     ].filter(Boolean) as FormItemProps[];
 
     const model: ItemGroup = {
-      children: configItems ?? defaultFormItems,
+      children: formItems,
 
       defaultActive: canDeactivate ? enabled : undefined,
       extra: canDeactivate ? (
@@ -113,6 +128,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         items={[model]}
         onValuesChange={debounce(setSettings, 100)}
         {...FORM_STYLE}
+        itemMinWidth={'max(50%,400px)'}
       />
     );
   },

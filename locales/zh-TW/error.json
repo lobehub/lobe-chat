@@ -85,58 +85,7 @@
     "responseError": "服務請求失敗，請檢查配置或重試"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "輸入你的 Anthropic API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-        "title": "使用自定義 Anthropic API 金鑰"
-      },
-      "Bedrock": {
-        "customRegion": "自定義服務區域",
-        "description": "輸入你的 AWS AccessKeyId / SecretAccessKey 即可開始會話。應用不會記錄你的驗證配置",
-        "title": "使用自定義 Bedrock 驗證信息"
-      },
-      "Google": {
-        "description": "輸入你的 Google API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 Google API Key"
-      },
-      "Groq": {
-        "description": "輸入你的 Groq API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-        "title": "使用自定義 Groq API 金鑰"
-      },
-      "Mistral": {
-        "description": "輸入你的 Mistral AI API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 Mistral AI API Key"
-      },
-      "Moonshot": {
-        "description": "輸入你的 Moonshot AI API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-        "title": "使用自定義 Moonshot AI API 金鑰"
-      },
-      "OpenAI": {
-        "addProxyUrl": "添加 OpenAI 代理地址（可選）",
-        "description": "輸入你的 OpenAI API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 OpenAI API Key"
-      },
-      "OpenRouter": {
-        "description": "輸入你的 OpenRouter API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-        "title": "使用自定義 OpenRouter API 金鑰"
-      },
-      "Perplexity": {
-        "description": "輸入你的 Perplexity API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 Perplexity API Key"
-      },
-      "TogetherAI": {
-        "description": "輸入你的 TogetherAI API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-        "title": "使用自定義 TogetherAI API 金鑰"
-      },
-      "ZeroOne": {
-        "description": "輸入你的零一萬物 API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義零一萬物 API Key"
-      },
-      "Zhipu": {
-        "description": "輸入你的 Zhipu API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 Zhipu API Key"
-      }
-    },
+    "addProxyUrl": "新增 OpenAI 代理網址（選填）",
     "closeMessage": "關閉提示",
     "confirm": "確認並重試",
     "model": {

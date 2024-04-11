@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Niestandardowy model, domyślnie obsługujący zarówno wywołania funkcji, jak i rozpoznawanie wizualne. Proszę zweryfikować możliwość użycia tych funkcji w praktyce.",
-      "file": "Ten model obsługuje wczytywanie plików i rozpoznawanie",
-      "functionCall": "Ten model obsługuje wywołania funkcji (Function Call).",
-      "tokens": "Ten model obsługuje maksymalnie {{tokens}} tokenów w pojedynczej sesji.",
-      "vision": "Ten model obsługuje rozpoznawanie wizualne."
-    }
-  },
   "about": "O nas",
   "advanceSettings": "Zaawansowane ustawienia",
   "appInitializing": "LobeChat inicjuje, proszę czekać...",
@@ -95,23 +86,6 @@
     "zh-TW": "Chiński tradycyjny"
   },
   "layoutInitializing": "Inicjowanie układu...",
-  "modelProvider": {
-    "anthropic": "Antropiczny",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01. Sztuczna inteligencja ZeroOne",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Brak opisu",
   "oauth": "Logowanie SSO",
   "ok": "OK",

@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Modèle personnalisé, par défaut prend en charge à la fois l'appel de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités selon les besoins réels.",
-      "file": "Ce modèle prend en charge la lecture et la reconnaissance de fichiers",
-      "functionCall": "Ce modèle prend en charge l'appel de fonction (Function Call).",
-      "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
-      "vision": "Ce modèle prend en charge la reconnaissance visuelle."
-    }
-  },
   "about": "À propos",
   "advanceSettings": "Paramètres avancés",
   "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
@@ -95,23 +86,6 @@
     "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot IA",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01. Intelligence Artificielle ZeroOne",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Aucune description disponible",
   "oauth": "Connexion SSO",
   "ok": "OK",
