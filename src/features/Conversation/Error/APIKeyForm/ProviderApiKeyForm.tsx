@@ -24,8 +24,8 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
     const [showProxy, setShow] = useState(false);
 
     const [apiKey, proxyUrl, setConfig] = useGlobalStore((s) => [
-      modelConfigSelectors.providerConfig(provider)(s)?.apiKey,
-      modelConfigSelectors.providerConfig(provider)(s)?.endpoint,
+      modelConfigSelectors.getConfigByProviderId(provider)(s)?.apiKey,
+      modelConfigSelectors.getConfigByProviderId(provider)(s)?.endpoint,
       s.setModelProviderConfig,
     ]);
 

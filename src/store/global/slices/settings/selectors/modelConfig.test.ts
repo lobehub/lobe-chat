@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_SETTINGS } from '@/const/settings';
-import { modelProviderSelectors } from '@/store/global/slices/settings/selectors/modelProvider';
-import { agentSelectors } from '@/store/session/slices/agent';
 import { merge } from '@/utils/merge';
 
 import { GlobalStore, useGlobalStore } from '../../../store';
@@ -10,7 +7,7 @@ import { GlobalSettingsState, initialSettingsState } from '../initialState';
 import { modelConfigSelectors } from './modelConfig';
 
 describe('modelConfigSelectors', () => {
-  describe('modelSelectList', () => {
+  describe('providerListWithConfig', () => {
     it('visible', () => {
       const s = merge(initialSettingsState, {
         settings: {
@@ -22,7 +19,9 @@ describe('modelConfigSelectors', () => {
         },
       } as GlobalSettingsState) as unknown as GlobalStore;
 
-      const ollamaList = modelConfigSelectors.modelSelectList(s).find((r) => r.id === 'ollama');
+      const ollamaList = modelConfigSelectors
+        .providerListWithConfig(s)
+        .find((r) => r.id === 'ollama');
 
       expect(ollamaList?.chatModels.find((c) => c.id === 'llava')).toEqual({
         displayName: 'LLaVA 7B',
@@ -33,9 +32,31 @@ describe('modelConfigSelectors', () => {
         vision: true,
       });
     });
+    it('with user custom models', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            perplexity: {
+              customModelCards: [{ id: 'sonar-online', displayName: 'Sonar Online' }],
+            },
+          },
+        },
+      } as GlobalSettingsState) as unknown as GlobalStore;
+
+      const providerList = modelConfigSelectors
+        .providerListWithConfig(s)
+        .find((r) => r.id === 'perplexity');
+
+      expect(providerList?.chatModels.find((c) => c.id === 'sonar-online')).toEqual({
+        id: 'sonar-online',
+        displayName: 'Sonar Online',
+        enabled: false,
+        isCustom: true,
+      });
+    });
   });
 
-  describe('providerEnabled', () => {
+  describe('isProviderEnabled', () => {
     it('should return true if provider is enabled', () => {
       const s = merge(initialSettingsState, {
         settings: {
@@ -45,7 +66,7 @@ describe('modelConfigSelectors', () => {
         },
       } as GlobalSettingsState) as unknown as GlobalStore;
 
-      expect(modelConfigSelectors.providerEnabled('ollama')(s)).toBe(true);
+      expect(modelConfigSelectors.isProviderEnabled('ollama')(s)).toBe(true);
     });
 
     it('should return false if provider is not enabled', () => {
@@ -57,11 +78,11 @@ describe('modelConfigSelectors', () => {
         },
       } as GlobalSettingsState) as unknown as GlobalStore;
 
-      expect(modelConfigSelectors.providerEnabled('perplexity')(s)).toBe(false);
+      expect(modelConfigSelectors.isProviderEnabled('perplexity')(s)).toBe(false);
     });
   });
 
-  describe('providerModelCards', () => {
+  describe('getModelCardsByProviderId', () => {
     it('should return model cards including custom model cards', () => {
       const s = merge(initialSettingsState, {
         settings: {
@@ -73,7 +94,7 @@ describe('modelConfigSelectors', () => {
         },
       } as GlobalSettingsState) as unknown as GlobalStore;
 
-      const modelCards = modelConfigSelectors.providerModelCards('perplexity')(s);
+      const modelCards = modelConfigSelectors.getModelCardsByProviderId('perplexity')(s);
 
       expect(modelCards).toContainEqual({
         id: 'custom-model',
@@ -83,7 +104,7 @@ describe('modelConfigSelectors', () => {
     });
   });
 
-  describe('enabledModelProviderList', () => {
+  describe('providerListForModelSelect', () => {
     it('should return only enabled providers', () => {
       const s = merge(initialSettingsState, {
         settings: {
@@ -94,7 +115,7 @@ describe('modelConfigSelectors', () => {
         },
       } as GlobalSettingsState) as unknown as GlobalStore;
 
-      const enabledProviders = modelConfigSelectors.enabledModelProviderList(s);
+      const enabledProviders = modelConfigSelectors.providerListForModelSelect(s);
       expect(enabledProviders).toHaveLength(2);
       expect(enabledProviders[1].id).toBe('perplexity');
     });
@@ -115,7 +136,7 @@ describe('modelConfigSelectors', () => {
         },
       } as GlobalSettingsState) as unknown as GlobalStore;
 
-      const customModelCard = modelConfigSelectors.getCustomModelCardById({
+      const customModelCard = modelConfigSelectors.getCustomModelCard({
         id: 'custom-model-2',
         provider: 'perplexity',
       })(s);
@@ -134,7 +155,7 @@ describe('modelConfigSelectors', () => {
         },
       } as GlobalSettingsState) as unknown as GlobalStore;
 
-      const customModelCard = modelConfigSelectors.getCustomModelCardById({
+      const customModelCard = modelConfigSelectors.getCustomModelCard({
         id: 'nonexistent-model',
         provider: 'perplexity',
       })(s);

@@ -7,60 +7,51 @@ import { GlobalStore } from '../../../store';
 import { modelProviderSelectors } from './modelProvider';
 import { currentSettings } from './settings';
 
-const modelProvider = (s: GlobalStore) => currentSettings(s).languageModel;
-
-const providerConfig = (provider: string) => (s: GlobalStore) =>
+const getConfigByProviderId = (provider: string) => (s: GlobalStore) =>
   currentSettings(s).languageModel[provider as GlobalLLMProviderKey] as
     | GeneralModelProviderConfig
     | undefined;
 
-const providerEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) =>
+const getModeProviderById = (provider: string) => (s: GlobalStore) =>
+  modelProviderSelectors.providerModelList(s).find((s) => s.id === provider);
+
+const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) =>
   currentSettings(s).languageModel[provider]?.enabled || false;
 
-const providerEnableModels = (provider: string) => (s: GlobalStore) => {
-  if (!providerConfig(provider)(s)?.enabledModels) return;
+const getEnableModelsByProviderId = (provider: string) => (s: GlobalStore) => {
+  if (!getConfigByProviderId(provider)(s)?.enabledModels) return;
 
-  return providerConfig(provider)(s)?.enabledModels?.filter(Boolean);
+  return getConfigByProviderId(provider)(s)?.enabledModels?.filter(Boolean);
 };
 
-const openAIConfig = (s: GlobalStore) => modelProvider(s).openai;
+const getModelCardsByProviderId =
+  (provider: string) =>
+  (s: GlobalStore): ChatModelCard[] => {
+    const builtinCards = getModeProviderById(provider)(s)?.chatModels || [];
 
-const openAIAPIKey = (s: GlobalStore) => modelProvider(s).openai.apiKey;
-const openAIProxyUrl = (s: GlobalStore) => modelProvider(s).openai.endpoint;
+    const userCards = (getConfigByProviderId(provider)(s)?.customModelCards || []).map((model) => ({
+      ...model,
+      isCustom: true,
+    }));
 
-const zhipuAPIKey = (s: GlobalStore) => modelProvider(s).zhipu.apiKey;
+    return uniqBy([...userCards, ...builtinCards], 'id');
+  };
 
-const bedrockConfig = (s: GlobalStore) => modelProvider(s).bedrock;
+const getCustomModelCard =
+  ({ id, provider }: { id?: string; provider?: string }) =>
+  (s: GlobalStore) => {
+    if (!provider) return;
 
-const googleAPIKey = (s: GlobalStore) => modelProvider(s).google.apiKey;
+    const config = getConfigByProviderId(provider)(s);
 
-const enableAzure = (s: GlobalStore) => modelProvider(s).azure.enabled;
-const azureConfig = (s: GlobalStore) => modelProvider(s).azure;
+    return config?.customModelCards?.find((m) => m.id === id);
+  };
 
-const mistralAPIKey = (s: GlobalStore) => modelProvider(s).mistral.apiKey;
-
-const moonshotAPIKey = (s: GlobalStore) => modelProvider(s).moonshot.apiKey;
-
-const ollamaProxyUrl = (s: GlobalStore) => modelProvider(s).ollama.endpoint;
-
-const perplexityAPIKey = (s: GlobalStore) => modelProvider(s).perplexity.apiKey;
-
-const anthropicAPIKey = (s: GlobalStore) => modelProvider(s).anthropic.apiKey;
-const anthropicProxyUrl = (s: GlobalStore) => modelProvider(s).anthropic.endpoint;
-
-const groqAPIKey = (s: GlobalStore) => modelProvider(s).groq.apiKey;
-
-const openrouterAPIKey = (s: GlobalStore) => modelProvider(s).openrouter.apiKey;
-
-const togetheraiAPIKey = (s: GlobalStore) => modelProvider(s).togetherai.apiKey;
-
-const zerooneAPIKey = (s: GlobalStore) => modelProvider(s).zeroone.apiKey;
-
-const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
-  return modelProviderSelectors.providerModelList(s).map((list) => ({
+const providerListWithConfig = (s: GlobalStore): ModelProviderCard[] =>
+  modelProviderSelectors.providerModelList(s).map((list) => ({
     ...list,
-    chatModels: list.chatModels.map((model) => {
-      const models = providerEnableModels(list.id)(s);
+    chatModels: getModelCardsByProviderId(list.id)(s)?.map((model) => {
+      const models = getEnableModelsByProviderId(list.id)(s);
 
       if (!models) return model;
 
@@ -69,111 +60,57 @@ const modelSelectList = (s: GlobalStore): ModelProviderCard[] => {
         enabled: models?.some((m) => m === model.id),
       };
     }),
-    enabled: providerEnabled(list.id as any)(s),
+    enabled: isProviderEnabled(list.id as any)(s),
   }));
-};
 
-const enabledModelProviderList = (s: GlobalStore): ModelProviderCard[] =>
-  modelSelectList(s)
+const providerListForModelSelect = (s: GlobalStore): ModelProviderCard[] =>
+  providerListWithConfig(s)
     .filter((s) => s.enabled)
     .map((provider) => ({
       ...provider,
       chatModels: provider.chatModels.filter((model) => model.enabled),
     }));
 
-const providerCard = (provider: string) => (s: GlobalStore) =>
-  modelProviderSelectors.providerModelList(s).find((s) => s.id === provider);
-
-const providerModelCards =
-  (provider: string) =>
-  (s: GlobalStore): ChatModelCard[] => {
-    const builtinCards = providerCard(provider)(s)?.chatModels || [];
-
-    const userCards = (providerConfig(provider)(s)?.customModelCards || []).map((model) => ({
-      ...model,
-      isCustom: true,
-    }));
-
-    return uniqBy([...userCards, ...builtinCards], 'id');
-  };
-
-const getCustomModelCardById =
-  ({ id, provider }: { id?: string; provider?: string }) =>
-  (s: GlobalStore) => {
-    if (!provider) return;
-
-    const config = providerConfig(provider)(s);
-
-    return config?.customModelCards?.find((m) => m.id === id);
-  };
-
 const currentEditingCustomModelCard = (s: GlobalStore) => {
   if (!s.editingCustomCardModel) return;
   const { id, provider } = s.editingCustomCardModel;
 
-  return getCustomModelCardById({ id, provider })(s);
+  return getCustomModelCard({ id, provider })(s);
 };
 
-const enabledAutoFetchModels =
+const isAutoFetchModelsEnabled =
   (provider: GlobalLLMProviderKey) =>
   (s: GlobalStore): boolean => {
-    return providerConfig(provider)(s)?.autoFetchModelLists || false;
+    return getConfigByProviderId(provider)(s)?.autoFetchModelLists || false;
   };
+
+const llmSettings = (s: GlobalStore) => currentSettings(s).languageModel;
+
+const openAIConfig = (s: GlobalStore) => llmSettings(s).openai;
+const bedrockConfig = (s: GlobalStore) => llmSettings(s).bedrock;
+const ollamaConfig = (s: GlobalStore) => llmSettings(s).ollama;
+const azureConfig = (s: GlobalStore) => llmSettings(s).azure;
+
+const isAzureEnabled = (s: GlobalStore) => llmSettings(s).azure.enabled;
 
 /* eslint-disable sort-keys-fix/sort-keys-fix,  */
 export const modelConfigSelectors = {
-  providerEnabled,
-  providerEnableModels,
-  providerConfig,
-  providerModelCards,
+  isAutoFetchModelsEnabled,
+  isProviderEnabled,
   currentEditingCustomModelCard,
-  getCustomModelCardById,
 
-  modelSelectList,
-  enabledModelProviderList,
-  enabledAutoFetchModels,
+  getConfigByProviderId,
+  getEnableModelsByProviderId,
+  getModelCardsByProviderId,
+  getCustomModelCard,
 
-  // OpenAI
+  providerListWithConfig,
+  providerListForModelSelect,
+
   openAIConfig,
-  openAIAPIKey,
-  openAIProxyUrl,
-
-  // Azure OpenAI
-  enableAzure,
   azureConfig,
-  // Zhipu
-  zhipuAPIKey,
-  // Google
-  googleAPIKey,
-
-  // Bedrock
   bedrockConfig,
+  ollamaConfig,
 
-  // Moonshot
-  moonshotAPIKey,
-
-  // Ollama
-  ollamaProxyUrl,
-
-  // Perplexity
-  perplexityAPIKey,
-
-  // Anthropic
-  anthropicAPIKey,
-  anthropicProxyUrl,
-
-  // Mistral
-  mistralAPIKey,
-
-  // Groq
-  groqAPIKey,
-
-  // OpenRouter
-  openrouterAPIKey,
-
-  // ZeroOne 零一万物
-  zerooneAPIKey,
-
-  // TogetherAI
-  togetheraiAPIKey,
+  isAzureEnabled,
 };

@@ -51,7 +51,7 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
     ]);
 
     const chatModelCards = useGlobalStore(
-      modelConfigSelectors.providerModelCards(provider),
+      modelConfigSelectors.getModelCardsByProviderId(provider),
       isEqual,
     );
 
@@ -60,7 +60,7 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
       isEqual,
     );
     const enabledModels = useGlobalStore(
-      modelConfigSelectors.providerEnableModels(provider),
+      modelConfigSelectors.getEnableModelsByProviderId(provider),
       isEqual,
     );
 

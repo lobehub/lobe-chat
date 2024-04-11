@@ -25,7 +25,7 @@ interface ModelOption {
 
 const ModelSelect = memo(() => {
   const [model, updateConfig] = useStore((s) => [s.config.model, s.setAgentConfig]);
-  const enabledList = useGlobalStore(modelConfigSelectors.enabledModelProviderList, isEqual);
+  const enabledList = useGlobalStore(modelConfigSelectors.providerListForModelSelect, isEqual);
   const { styles } = useStyles();
 
   const options = useMemo<SelectProps['options']>(() => {

@@ -36,12 +36,12 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
     s.useFetchProviderModelList,
     s.setModelProviderConfig,
   ]);
-  const enabledAutoFetch = useGlobalStore(modelConfigSelectors.enabledAutoFetchModels(provider));
+  const enabledAutoFetch = useGlobalStore(modelConfigSelectors.isAutoFetchModelsEnabled(provider));
   const latestFetchTime = useGlobalStore(
-    (s) => modelConfigSelectors.providerConfig(provider)(s)?.latestFetchTime,
+    (s) => modelConfigSelectors.getConfigByProviderId(provider)(s)?.latestFetchTime,
   );
   const totalModels = useGlobalStore(
-    (s) => modelConfigSelectors.providerModelCards(provider)(s).length,
+    (s) => modelConfigSelectors.getModelCardsByProviderId(provider)(s).length,
   );
 
   const { mutate, isValidating } = useFetchProviderModelList(provider, enabledAutoFetch);
