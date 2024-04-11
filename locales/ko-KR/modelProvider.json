@@ -67,6 +67,11 @@
     }
   },
   "google": {
+    "endpoint": {
+      "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다.",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "API 프록시 주소"
+    },
     "title": "Google",
     "token": {
       "desc": "Google에서 제공하는 API 키를 입력하세요.",
