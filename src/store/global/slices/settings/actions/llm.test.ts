@@ -46,7 +46,7 @@ describe('LLMSettingsSliceAction', () => {
       const payload: CustomModelCardDispatch = { type: 'add', modelCard: { id: 'test-id' } };
 
       // Mock the selector to return undefined
-      vi.spyOn(modelConfigSelectors, 'providerConfig').mockReturnValue(() => undefined);
+      vi.spyOn(modelConfigSelectors, 'getConfigByProviderId').mockReturnValue(() => undefined);
       vi.spyOn(result.current, 'setModelProviderConfig');
 
       await act(async () => {

@@ -44,7 +44,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   const updateAgentConfig = useSessionStore((s) => s.updateAgentConfig);
 
   const router = useRouter();
-  const enabledList = useGlobalStore(modelConfigSelectors.enabledModelProviderList, isEqual);
+  const enabledList = useGlobalStore(modelConfigSelectors.providerListForModelSelect, isEqual);
 
   const items = useMemo(() => {
     const getModelItems = (provider: ModelProviderCard) => {
