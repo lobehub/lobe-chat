@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.147.6](https://github.com/lobehub/lobe-chat/compare/v0.147.5...v0.147.6)
+
+<sup>Released on **2024-04-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add GPT-4-turbo and 2024-04-09 Turbo Vision model and mistral new model name.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add GPT-4-turbo and 2024-04-09 Turbo Vision model and mistral new model name, closes [#1984](https://github.com/lobehub/lobe-chat/issues/1984) ([f1795b1](https://github.com/lobehub/lobe-chat/commit/f1795b1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.147.5](https://github.com/lobehub/lobe-chat/compare/v0.147.4...v0.147.5)
 
 <sup>Released on **2024-04-11**</sup>
