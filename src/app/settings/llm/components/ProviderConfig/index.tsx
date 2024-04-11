@@ -1,36 +1,115 @@
-import { Form, type ItemGroup } from '@lobehub/ui';
-import type { FormItemProps } from '@lobehub/ui/es/Form/components/FormItem';
-import { Form as AntForm, Switch } from 'antd';
+import { Form, type FormItemProps, type ItemGroup } from '@lobehub/ui';
+import { Form as AntForm, Input, Switch } from 'antd';
 import { debounce } from 'lodash-es';
 import { ReactNode, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useSyncSettings } from '@/app/settings/hooks/useSyncSettings';
+import {
+  LLMProviderApiTokenKey,
+  LLMProviderBaseUrlKey,
+  LLMProviderConfigKey,
+  LLMProviderModelListKey,
+} from '@/app/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
+import Checker from '../Checker';
+import ProviderModelListSelect from '../ProviderModelList';
+
 interface ProviderConfigProps {
+  apiKeyItems?: FormItemProps[];
   canDeactivate?: boolean;
-  configItems: FormItemProps[];
+  checkModel?: string;
+  checkerItem?: FormItemProps;
+  modelList?: {
+    azureDeployName?: boolean;
+    notFoundContent?: ReactNode;
+    placeholder?: string;
+    showModelFetcher?: boolean;
+  };
   provider: GlobalLLMProviderKey;
+  showApiKey?: boolean;
+  showEndpoint?: boolean;
   title: ReactNode;
 }
 
 const ProviderConfig = memo<ProviderConfigProps>(
-  ({ provider, canDeactivate = true, title, configItems }) => {
+  ({
+    apiKeyItems,
+    provider,
+    showEndpoint,
+    showApiKey = true,
+    checkModel,
+    canDeactivate = true,
+    title,
+    checkerItem,
+    modelList,
+  }) => {
+    const { t } = useTranslation('setting');
+    const { t: modelT } = useTranslation('modelProvider');
     const [form] = AntForm.useForm();
-    const [toggleProviderEnabled, setSettings] = useGlobalStore((s) => [
+    const [toggleProviderEnabled, setSettings, enabled] = useGlobalStore((s) => [
       s.toggleProviderEnabled,
       s.setSettings,
+      modelConfigSelectors.isProviderEnabled(provider)(s),
     ]);
-
-    const enabled = useGlobalStore(modelProviderSelectors.providerEnabled(provider));
 
     useSyncSettings(form);
 
+    const apiKeyItem: FormItemProps[] = !showApiKey
+      ? []
+      : apiKeyItems ?? [
+          {
+            children: (
+              <Input.Password
+                autoComplete={'new-password'}
+                placeholder={modelT(`${provider}.token.placeholder` as any)}
+              />
+            ),
+            desc: modelT(`${provider}.token.desc` as any),
+            label: modelT(`${provider}.token.title` as any),
+            name: [LLMProviderConfigKey, provider, LLMProviderApiTokenKey],
+          },
+        ];
+
+    const formItems = [
+      ...apiKeyItem,
+      showEndpoint && {
+        children: (
+          <Input allowClear placeholder={modelT(`${provider}.endpoint.placeholder` as any)} />
+        ),
+        desc: modelT(`${provider}.endpoint.desc` as any),
+        label: modelT(`${provider}.endpoint.title` as any),
+        name: [LLMProviderConfigKey, provider, LLMProviderBaseUrlKey],
+      },
+      {
+        children: (
+          <ProviderModelListSelect
+            notFoundContent={modelList?.notFoundContent}
+            placeholder={modelList?.placeholder ?? t('llm.modelList.placeholder')}
+            provider={provider}
+            showAzureDeployName={modelList?.azureDeployName}
+            showModelFetcher={modelList?.showModelFetcher}
+          />
+        ),
+        desc: t('llm.modelList.desc'),
+        label: t('llm.modelList.title'),
+        name: [LLMProviderConfigKey, provider, LLMProviderModelListKey],
+      },
+      checkerItem ?? {
+        children: <Checker model={checkModel!} provider={provider} />,
+        desc: t('llm.checker.desc'),
+        label: t('llm.checker.title'),
+        minWidth: undefined,
+      },
+    ].filter(Boolean) as FormItemProps[];
+
     const model: ItemGroup = {
-      children: configItems,
+      children: formItems,
+
       defaultActive: canDeactivate ? enabled : undefined,
       extra: canDeactivate ? (
         <Switch
@@ -49,6 +128,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         items={[model]}
         onValuesChange={debounce(setSettings, 100)}
         {...FORM_STYLE}
+        itemMinWidth={'max(50%,400px)'}
       />
     );
   },

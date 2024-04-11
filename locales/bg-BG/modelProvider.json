@@ -1,0 +1,231 @@
+{
+  "anthropic": {
+    "endpoint": {
+      "desc": "Освен адреса по подразбиране, задължително трябва да включва http(s)://",
+      "placeholder": "https://api.anthropic.com",
+      "title": "Адрес на API прокси"
+    },
+    "title": "Anthropic",
+    "token": {
+      "desc": "Въведете API Key, получен от Anthropic",
+      "placeholder": "Anthropic API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете своя Anthropic API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран Anthropic API ключ"
+    }
+  },
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Версия на Azure API, в формат YYYY-MM-DD, вижте [най-новата версия](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Извличане на списък",
+      "title": "Версия на Azure Api"
+    },
+    "empty": "Моля, въведете идентификатор на модела, за да добавите първия модел",
+    "endpoint": {
+      "desc": "Тази стойност може да бъде намерена в раздела „Ключове и крайни точки“ при проверка на ресурсите от портала на Azure",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Адрес на Azure API"
+    },
+    "modelListPlaceholder": "Изберете или добавете моделите на OpenAI, които сте разгърнали",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Тази стойност може да бъде намерена в раздела „Ключове и крайни точки“ при проверка на ресурсите от портала на Azure. Можете да използвате KEY1 или KEY2",
+      "placeholder": "Azure API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете своя Azure OpenAI API ключ, за да започнете сесия",
+      "title": "Използване на персонализиран Azure OpenAI API ключ"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Въведете AWS Access Key Id",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "Тестване дали AccessKeyId / SecretAccessKey са попълнени правилно"
+    },
+    "region": {
+      "desc": "Въведете AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "Въведете AWS Secret Access Key",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Персонализиран регион за услуги",
+      "description": "Въведете вашия AWS AccessKeyId / SecretAccessKey, за да започнете сесия. Приложението няма да запази вашата удостоверителна конфигурация",
+      "title": "Използване на персонализирана информация за удостоверяване на Bedrock"
+    }
+  },
+  "google": {
+    "endpoint": {
+      "desc": "Изисква се адрес, включително http(s)://, освен ако не е по подразбиране",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "Адрес на API прокси"
+    },
+    "title": "Google",
+    "token": {
+      "desc": "Въведете API Key, получен от Google",
+      "placeholder": "Google API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете своя Google API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран Google API ключ"
+    }
+  },
+  "groq": {
+    "title": "Groq",
+    "token": {
+      "desc": "Въведете API Key, получен от Groq",
+      "placeholder": "Groq API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете своя Groq API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран Groq API ключ"
+    }
+  },
+  "mistral": {
+    "title": "Mistral AI",
+    "token": {
+      "desc": "Въведете API Key, получен от Mistral AI",
+      "placeholder": "Mistral AI API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете своя Mistral AI API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран Mistral AI API ключ"
+    }
+  },
+  "moonshot": {
+    "title": "Тъмната страна на Луната",
+    "token": {
+      "desc": "Въведете API Key, получен от Moonshot AI",
+      "placeholder": "Moonshot AI API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете своя Moonshot AI API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран Moonshot AI API ключ"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Тестване дали адресът на прокси е попълнен правилно"
+    },
+    "customModelName": {
+      "desc": "Добавяне на персонализирани модели, използвайте запетая (,) за разделяне на множество модели",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Имена на персонализирани модели"
+    },
+    "endpoint": {
+      "desc": "Въведете адрес на Ollama интерфейсния прокси, оставете празно, ако локално не е указано специално",
+      "placeholder": "http://127.0.0.1:11434/v1",
+      "title": "Адрес на прокси интерфейс"
+    },
+    "title": "Ollama"
+  },
+  "openai": {
+    "endpoint": {
+      "desc": "Освен адреса по подразбиране, задължително трябва да включва http(s)://",
+      "placeholder": "https://api.openai.com/v1",
+      "title": "Адрес на прокси интерфейс"
+    },
+    "title": "OpenAI",
+    "token": {
+      "desc": "Използвайте собствения си OpenAI Key",
+      "placeholder": "OpenAI API Key",
+      "title": "OpenAI API ключ"
+    },
+    "unlock": {
+      "description": "Въведете своя OpenAI API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран OpenAI API ключ"
+    }
+  },
+  "openrouter": {
+    "checker": {
+      "desc": "Тестване дали адресът на прокси е попълнен правилно"
+    },
+    "customModelName": {
+      "desc": "Добавяне на персонализирани модели, използвайте запетая (,) за разделяне на множество модели",
+      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+      "title": "Имена на персонализирани модели"
+    },
+    "title": "OpenRouter",
+    "token": {
+      "desc": "Въведете API Key, получен от OpenRouter AI",
+      "placeholder": "OpenRouter AI API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете своя OpenRouter API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран OpenRouter API ключ"
+    }
+  },
+  "perplexity": {
+    "title": "Perplexity",
+    "token": {
+      "desc": "Въведете API Key, получен от Perplexity AI",
+      "placeholder": "Perplexity AI API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете вашия Perplexity API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран Perplexity API ключ"
+    }
+  },
+  "togetherai": {
+    "checker": {
+      "desc": "Тестване дали адресът на прокси е попълнен правилно"
+    },
+    "customModelName": {
+      "desc": "Добавяне на персонализирани модели, използвайте запетая (,) за разделяне на множество модели",
+      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+      "title": "Имена на персонализирани модели"
+    },
+    "title": "TogetherAI",
+    "token": {
+      "desc": "Въведете API Key, получен от TogetherAI AI",
+      "placeholder": "TogetherAI AI API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете вашия TogetherAI API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран TogetherAI API ключ"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Зероуан Всичко",
+    "token": {
+      "desc": "Въведете API Key, получен от 01.AI Зероуан Всичко",
+      "placeholder": "01.AI Зероуан Всичко API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете вашия ZeroOne API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран ZeroOne API ключ"
+    }
+  },
+  "zhipu": {
+    "title": "Интелигентен албум",
+    "token": {
+      "desc": "Въведете API Key, получен от Интелигентен албум",
+      "placeholder": "Zhipu API Key",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Въведете вашия Zhipu API ключ, за да започнете сесия. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран Zhipu API ключ"
+    }
+  }
+}

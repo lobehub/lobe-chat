@@ -7,9 +7,9 @@ import LazyLoad from 'react-lazy-load';
 
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 
+import Loading from '../../components/Loading';
 import TagList from '../TagList';
 import AgentCardItem from './AgentCardItem';
-import Loading from './Loading';
 import { useStyles } from './style';
 
 export interface AgentCardProps {
@@ -52,11 +52,7 @@ const AgentCard = memo<AgentCardProps>(({ CardRender, mobile }) => {
           <div className={styles.subTitle}>{t('title.recentSubmits')}</div>
           <CardRender items={agentList.slice(0, 3)} renderItem={GridRender} />
           <div className={styles.subTitle}>{t('title.allAgents')}</div>
-          <CardRender
-            items={agentList.slice(3)}
-            renderItem={GridRender}
-            spotlight={mobile ? undefined : false}
-          />
+          <CardRender items={agentList.slice(3)} renderItem={GridRender} />
         </>
       )}
     </Flexbox>

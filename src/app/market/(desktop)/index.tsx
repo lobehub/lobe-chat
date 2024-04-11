@@ -7,7 +7,6 @@ import ClientResponsiveContent from '@/components/client/ClientResponsiveContent
 import { useMarketStore } from '@/store/market';
 
 import AgentCard from '../features/AgentCard';
-import AgentSearchBar from '../features/AgentSearchBar';
 
 const Desktop = memo(() => {
   useEffect(() => {
@@ -15,12 +14,7 @@ const Desktop = memo(() => {
     useMarketStore.persist.rehydrate();
   }, []);
 
-  return (
-    <>
-      <AgentSearchBar />
-      <AgentCard CardRender={SpotlightCard as FC<SpotlightCardProps>} />
-    </>
-  );
+  return <AgentCard CardRender={SpotlightCard as FC<SpotlightCardProps>} />;
 });
 
 export default ClientResponsiveContent({ Desktop, Mobile: () => import('../(mobile)') });

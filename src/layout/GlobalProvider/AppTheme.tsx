@@ -7,6 +7,7 @@ import 'antd/dist/reset.css';
 import Image from 'next/image';
 import { PropsWithChildren, ReactNode, memo, useEffect } from 'react';
 
+import AntdStaticMethods from '@/components/AntdStaticMethods';
 import {
   LOBE_THEME_APPEARANCE,
   LOBE_THEME_NEUTRAL_COLOR,
@@ -19,21 +20,55 @@ import { setCookie } from '@/utils/cookie';
 
 const useStyles = createStyles(({ css, token }) => ({
   bg: css`
+    position: relative;
+
     overflow-y: hidden;
+    overscroll-behavior: none;
     display: flex;
     flex-direction: column;
     align-items: center;
 
     height: 100%;
+    max-height: 100dvh !important;
 
     background: ${token.colorBgLayout};
+  `,
+  // scrollbar-width and scrollbar-color are supported from Chrome 121
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-color
+  scrollbar: css`
+    scrollbar-color: ${token.colorFill} transparent;
+    scrollbar-width: thin;
+  `,
+
+  // so this is a polyfill for older browsers
+  scrollbarPolyfill: css`
+    ::-webkit-scrollbar {
+      width: 0.75em;
+      height: 0.75em;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+    }
+
+    :hover::-webkit-scrollbar-thumb {
+      background-color: ${token.colorText};
+      background-clip: content-box;
+      border: 3px solid transparent;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
   `,
 }));
 
 const Container = memo<PropsWithChildren>(({ children }) => {
-  const { styles } = useStyles();
+  const { styles, cx } = useStyles();
 
-  return <App className={styles.bg}>{children}</App>;
+  return (
+    <App className={cx(styles.bg, styles.scrollbar, styles.scrollbarPolyfill)}>{children}</App>
+  );
 });
 
 export interface AppThemeProps {
@@ -76,6 +111,7 @@ const AppTheme = memo<AppThemeProps>(
         themeMode={themeMode}
       >
         <GlobalStyle />
+        <AntdStaticMethods />
         <ConfigProvider config={{ imgAs: Image, imgUnoptimized: true }}>
           <Container>{children}</Container>
         </ConfigProvider>
