@@ -64,7 +64,7 @@ Related discussions:
 - [Reasons for errors when using third-party interfaces](https://github.com/lobehub/lobe-chat/discussions/734)
 - [No response in chat after filling in the proxy server address](https://github.com/lobehub/lobe-chat/discussions/1065)
 
-### `CUSTOM_MODELS`
+### `OPENAI_MODEL_LIST`
 
 - Type: Optional
 - Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas.
@@ -170,6 +170,13 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Default: -
 - Example: `http://127.0.0.1:11434/v1`
 
+### `OLLAMA_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to customize your own language models
+- Default: -
+- Example: `llama2:7B`
+
 ## Perplexity AI
 
 ### `PERPLEXITY_API_KEY`
@@ -215,7 +222,7 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Default: -
 - Example: `sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`
 
-### `OPENROUTER_CUSTOM_MODELS`
+### `OPENROUTER_MODEL_LIST`
 
 - Type: Optional
 - Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas.
