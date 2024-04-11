@@ -67,6 +67,11 @@
     }
   },
   "google": {
+    "endpoint": {
+      "desc": "Помимо адреса по умолчанию, должен включать http(s)://",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "Адрес прокси-API"
+    },
     "title": "Google",
     "token": {
       "desc": "Введите свой API Key от Google",
