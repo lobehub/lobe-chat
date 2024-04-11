@@ -48,8 +48,8 @@ class TopicService {
     return TopicModel.queryAll();
   }
 
-  async searchTopics(keyword: string) {
-    return TopicModel.queryByKeyword(keyword);
+  async searchTopics(keyword: string, sessionId?: string) {
+    return TopicModel.queryByKeyword(keyword, sessionId);
   }
 
   async duplicateTopic(id: string, newTitle?: string) {

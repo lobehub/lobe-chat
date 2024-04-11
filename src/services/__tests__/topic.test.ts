@@ -204,16 +204,16 @@ describe('TopicService', () => {
   });
 
   describe('searchTopics', () => {
-    it('should return topics that match the keyword', async () => {
+    it('should return all topics that match the keyword', async () => {
       // Setup
       const keyword = 'search';
       (TopicModel.queryByKeyword as Mock).mockResolvedValue(mockTopics);
 
       // Execute
-      const result = await topicService.searchTopics(keyword);
+      const result = await topicService.searchTopics(keyword, undefined);
 
       // Assert
-      expect(TopicModel.queryByKeyword).toHaveBeenCalledWith(keyword);
+      expect(TopicModel.queryByKeyword).toHaveBeenCalledWith(keyword, undefined);
       expect(result).toBe(mockTopics);
     });
   });
