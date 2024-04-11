@@ -11,11 +11,11 @@ import { CreateTopicParams, QueryTopicParams, TopicModel } from '../topic';
 
 describe('TopicModel', () => {
   let topicData: CreateTopicParams;
-
+  const currentSessionId = 'session1';
   beforeEach(() => {
     // Set up topic data with the correct structure
     topicData = {
-      sessionId: 'session1',
+      sessionId: currentSessionId,
       title: 'Test Topic',
       favorite: false,
     };
@@ -484,7 +484,7 @@ describe('TopicModel', () => {
   });
 
   describe('queryByKeyword', () => {
-    it('should query topics by keyword', async () => {
+    it('should query global topics by keyword', async () => {
       // Create a topic with a unique title
       const uniqueTitle = 'Unique Title';
       await TopicModel.create({ ...topicData, title: uniqueTitle });
@@ -495,6 +495,29 @@ describe('TopicModel', () => {
       // Verify the correct topic is queried
       expect(topics).toHaveLength(1);
       expect(topics[0].title).toBe(uniqueTitle);
+    });
+    it('should query topics in current session by keyword', async () => {
+      // Create a topic with a unique title
+      const uniqueTitle = 'Unique Title';
+      await TopicModel.create({ ...topicData, title: uniqueTitle });
+
+      // Query topics by the unique title
+      const topics = await TopicModel.queryByKeyword(uniqueTitle, currentSessionId);
+
+      // Verify the correct topic is queried
+      expect(topics).toHaveLength(1);
+      expect(topics[0].title).toBe(uniqueTitle);
+    });
+    it('should not query any topic in other session by keyword', async () => {
+      // Create a topic with a unique title
+      const uniqueTitle = 'Unique Title';
+      await TopicModel.create({ ...topicData, title: uniqueTitle });
+
+      // Query topics by the unique title
+      const topics = await TopicModel.queryByKeyword(uniqueTitle, 'session-id-2');
+
+      // Verify the correct topic is queried
+      expect(topics).toHaveLength(0);
     });
   });
 });

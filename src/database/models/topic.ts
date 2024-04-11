@@ -53,20 +53,25 @@ class _TopicModel extends BaseModel {
   /**
    * Query topics by keyword in title, message content, or translated content
    * @param keyword The keyword to search for
+   * @param sessionId The currently activated session id.
    */
-  async queryByKeyword(keyword: string): Promise<ChatTopic[]> {
+  async queryByKeyword(keyword: string, sessionId?: string): Promise<ChatTopic[]> {
     if (!keyword) return [];
 
     console.time('queryTopicsByKeyword');
     const keywordLowerCase = keyword.toLowerCase();
 
     // Find topics with matching title
-    const matchingTopicsPromise = this.table
+    const queryTable = sessionId ? this.table.where('sessionId').equals(sessionId) : this.table;
+    const matchingTopicsPromise = queryTable
       .filter((topic) => topic.title.toLowerCase().includes(keywordLowerCase))
       .toArray();
 
     // Find messages with matching content or translate.content
-    const matchingMessagesPromise = this.db.messages
+    const queryMessages = sessionId
+      ? this.db.messages.where('sessionId').equals(sessionId)
+      : this.db.messages;
+    const matchingMessagesPromise = queryMessages
       .filter((message) => {
         // check content
         if (message.content.toLowerCase().includes(keywordLowerCase)) return true;
