@@ -1,14 +1,19 @@
 import { LobeChatPluginManifest, LobeChatPluginMeta } from '@lobehub/chat-plugin-sdk';
 import { act, renderHook } from '@testing-library/react';
-import { notification } from 'antd';
 import useSWR from 'swr';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { notification } from '@/components/AntdStaticMethods';
 import { pluginService } from '@/services/plugin';
-import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { useToolStore } from '../../store';
 
+// Mock necessary modules and functions
+vi.mock('@/components/AntdStaticMethods', () => ({
+  notification: {
+    error: vi.fn(),
+  },
+}));
 // Mock the pluginService.getPluginList method
 vi.mock('@/services/plugin', () => ({
   pluginService: {
@@ -173,8 +178,6 @@ describe('useToolStore:pluginStore', () => {
 
   describe('installPlugin', () => {
     it('should install a plugin with valid manifest', async () => {
-      vi.spyOn(notification, 'error');
-
       const pluginIdentifier = 'plugin1';
 
       const originalUpdateInstallLoadingState = useToolStore.getState().updateInstallLoadingState;
@@ -250,7 +253,6 @@ describe('useToolStore:pluginStore', () => {
       const error = new TypeError('noManifest');
 
       // Mock necessary modules and functions
-      vi.spyOn(notification, 'error');
       (pluginService.getPluginManifest as Mock).mockRejectedValue(error);
 
       useToolStore.setState({

@@ -50,6 +50,8 @@
     "InvalidOllamaArgs": "La configuration d'Ollama n'est pas valide, veuillez vérifier la configuration d'Ollama et réessayer",
     "InvalidOpenRouterAPIKey": "La clé d'API OpenRouter est incorrecte ou manquante. Veuillez vérifier la clé d'API OpenRouter et réessayer.",
     "InvalidPerplexityAPIKey": "La clé API Perplexity est incorrecte ou vide. Veuillez vérifier la clé API Perplexity et réessayer.",
+    "InvalidTogetherAIAPIKey": "La clé d'API TogetherAI est incorrecte ou manquante. Veuillez vérifier la clé d'API TogetherAI et réessayer.",
+    "InvalidZeroOneAPIKey": "La clé d'API ZeroOne est incorrecte ou vide, veuillez vérifier la clé d'API ZeroOne et réessayer",
     "InvalidZhipuAPIKey": "Clé API Zhipu incorrecte ou vide, veuillez vérifier la clé API Zhipu et réessayer",
     "LocationNotSupportError": "Désolé, votre emplacement actuel ne prend pas en charge ce service de modèle, peut-être en raison de restrictions géographiques ou de services non disponibles. Veuillez vérifier si votre emplacement actuel prend en charge ce service ou essayer avec une autre localisation.",
     "MistralBizError": "Erreur de service Mistral AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
@@ -72,6 +74,8 @@
     "PluginOpenApiInitError": "Désolé, l'initialisation du client OpenAPI a échoué. Veuillez vérifier les informations de configuration d'OpenAPI.",
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
+    "TogetherAIBizError": "Erreur commerciale lors de la demande de service TogetherAI AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
+    "ZeroOneBizError": "请求零一万物服务出错，请根据以下信息排查或重试",
     "ZhipuBizError": "Erreur lors de la demande de service Zhipu, veuillez vérifier les informations ci-dessous ou réessayer"
   },
   "stt": {
@@ -81,50 +85,7 @@
     "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Entrez votre clé API Anthropic pour commencer la session. L'application ne stockera pas votre clé API.",
-        "title": "Utiliser une clé API Anthropic personnalisée"
-      },
-      "Bedrock": {
-        "customRegion": "Région de service personnalisée",
-        "description": "Entrez votre AccessKeyId/SecretAccessKey AWS pour commencer la session. L'application ne conservera pas votre configuration d'authentification",
-        "title": "Utiliser des informations d'authentification personnalisées Bedrock"
-      },
-      "Google": {
-        "description": "Entrez votre clé API Google pour commencer la session. L'application ne conservera pas votre clé API",
-        "title": "Utiliser une clé API Google personnalisée"
-      },
-      "Groq": {
-        "description": "Entrez votre clé d'API Groq pour commencer la session. L'application ne stockera pas votre clé d'API.",
-        "title": "Utiliser une clé d'API Groq personnalisée"
-      },
-      "Mistral": {
-        "description": "Entrez votre clé API Mistral AI pour commencer la session. L'application ne stockera pas votre clé API.",
-        "title": "Utiliser une clé API Mistral AI personnalisée"
-      },
-      "Moonshot": {
-        "description": "Entrez votre clé API Moonshot AI personnalisée pour commencer la session. L'application ne conservera pas votre clé API.",
-        "title": "Utiliser une clé API Moonshot AI personnalisée"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Ajouter une adresse proxy OpenAI (facultatif)",
-        "description": "Entrez votre clé API OpenAI pour commencer la session. L'application ne conservera pas votre clé API",
-        "title": "Utiliser une clé API OpenAI personnalisée"
-      },
-      "OpenRouter": {
-        "description": "Entrez votre clé d'API OpenRouter pour commencer la session. L'application ne stockera pas votre clé d'API.",
-        "title": "Utiliser une clé d'API OpenRouter personnalisée"
-      },
-      "Perplexity": {
-        "description": "Entrez votre clé API Perplexity pour commencer la session. L'application ne conservera pas votre clé API.",
-        "title": "Utiliser une clé API Perplexity personnalisée"
-      },
-      "Zhipu": {
-        "description": "Entrez votre clé API Zhipu pour commencer la session. L'application ne conservera pas votre clé API",
-        "title": "Utiliser une clé API Zhipu personnalisée"
-      }
-    },
+    "addProxyUrl": "Ajouter une adresse de proxy OpenAI (facultatif)",
     "closeMessage": "Fermer le message",
     "confirm": "Confirmer et réessayer",
     "model": {

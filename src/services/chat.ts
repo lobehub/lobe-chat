@@ -7,7 +7,12 @@ import { TracePayload, TraceTagMap } from '@/const/trace';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors, preferenceSelectors } from '@/store/global/selectors';
+import {
+  commonSelectors,
+  modelConfigSelectors,
+  modelProviderSelectors,
+  preferenceSelectors,
+} from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -127,13 +132,22 @@ class ChatService {
     const { signal } = options ?? {};
 
     const { provider = ModelProvider.OpenAI, ...res } = params;
+
+    let model = res.model || DEFAULT_AGENT_CONFIG.model;
+
+    // if the provider is Azure, get the deployment name as the request model
+    if (provider === ModelProvider.Azure) {
+      const chatModelCards = modelConfigSelectors.getModelCardsByProviderId(provider)(
+        useGlobalStore.getState(),
+      );
+
+      const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
+      if (deploymentName) model = deploymentName;
+    }
+
     const payload = merge(
-      {
-        model: DEFAULT_AGENT_CONFIG.model,
-        stream: true,
-        ...DEFAULT_AGENT_CONFIG.params,
-      },
-      res,
+      { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
+      { ...res, model },
     );
 
     const traceHeader = createTraceHeader({ ...options?.trace });
@@ -310,7 +324,7 @@ class ChatService {
       ...trace,
       enabled: true,
       tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
-      userId: useGlobalStore.getState().userId,
+      userId: commonSelectors.userId(useGlobalStore.getState()),
     };
   }
 }

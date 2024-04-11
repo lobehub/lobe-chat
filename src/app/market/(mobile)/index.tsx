@@ -1,16 +1,25 @@
 'use client';
 
-import { memo } from 'react';
+import dynamic from 'next/dynamic';
+import { memo, useEffect } from 'react';
 
-import AgentCard from '@/app/market/features/AgentCard';
+import { useMarketStore } from '@/store/market';
 
-import Index from '../index';
+import AgentCard from '../features/AgentCard';
 import CardRender from './features/AgentCard';
-import Layout from './layout.mobile';
 
-export default memo(() => (
-  <Layout>
-    <Index />
-    <AgentCard CardRender={CardRender} mobile />
-  </Layout>
-));
+const DetailModal = dynamic(() => import('./features/AgentDetail'), { ssr: false });
+
+export default memo(() => {
+  useEffect(() => {
+    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
+    useMarketStore.persist.rehydrate();
+  }, []);
+
+  return (
+    <>
+      <AgentCard CardRender={CardRender} mobile />
+      <DetailModal />
+    </>
+  );
+});

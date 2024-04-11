@@ -31,189 +31,61 @@
     "sessionWithName": "Impostazioni della sessione · {{name}}"
   },
   "llm": {
-    "Anthropic": {
-      "endpoint": {
-        "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
-        "placeholder": "https://api.anthropic.com",
-        "title": "Indirizzo dell'API proxy"
-      },
-      "title": "Anthropic",
-      "token": {
-        "desc": "Inserisci la chiave API di Anthropic",
-        "placeholder": "Chiave API di Anthropic",
-        "title": "Chiave API"
-      }
-    },
-    "AzureOpenAI": {
-      "azureApiVersion": {
-        "desc": "Versione dell'API di Azure, nel formato YYYY-MM-DD, consulta la [versione più recente](https://learn.microsoft.com/it-it/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Ottieni elenco",
-        "title": "Versione dell'API di Azure"
-      },
-      "deployments": {
-        "desc": "Inserisci i tuoi modelli di distribuzione utilizzando la sintassi id=nome (ad esempio, se il nome del modello e della distribuzione sono gli stessi, è possibile inserire solo il nome del modello). Per più modelli, separali con virgola (,)",
-        "title": "Elenco dei modelli di distribuzione di Azure"
-      },
-      "endpoint": {
-        "desc": "Puoi trovarlo nella sezione 'Chiavi e endpoint' quando controlli le risorse su Azure Portal",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Indirizzo API di Azure"
-      },
-      "models": {
-        "desc": "Modelli supportati",
-        "title": "Elenco dei modelli"
-      },
-      "title": "Impostazioni di Azure OpenAI",
-      "token": {
-        "desc": "Puoi trovarlo nella sezione 'Chiavi e endpoint' quando controlli le risorse su Azure Portal. Puoi usare KEY1 o KEY2",
-        "placeholder": "Chiave API di Azure",
-        "title": "Chiave API"
-      }
-    },
-    "Bedrock": {
-      "accessKeyId": {
-        "desc": "Inserisci Aws Access Key Id",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
-      },
-      "checker": {
-        "desc": "Verifica se AccessKeyId / SecretAccessKey sono stati inseriti correttamente"
-      },
-      "region": {
-        "desc": "Inserisci Aws Region",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
-      },
-      "secretAccessKey": {
-        "desc": "Inserisci Aws Secret Access Key",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
-    "Google": {
-      "title": "Google",
-      "token": {
-        "desc": "Inserisci la chiave API da Google",
-        "placeholder": "Chiave API Google",
-        "title": "Chiave API"
-      }
-    },
-    "Groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "Inserisci la chiave API da Groq",
-        "placeholder": "Chiave API Groq",
-        "title": "Chiave API"
-      }
-    },
-    "Mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Inserisci la chiave API da Mistral AI",
-        "placeholder": "Chiave API Mistral AI",
-        "title": "Chiave API"
-      }
-    },
-    "Moonshot": {
-      "title": "Lato Oscuro della Luna",
-      "token": {
-        "desc": "Inserisci la chiave API da Moonshot AI",
-        "placeholder": "Chiave API Moonshot AI",
-        "title": "Chiave API"
-      }
-    },
-    "Ollama": {
-      "checker": {
-        "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"
-      },
-      "customModelName": {
-        "desc": "Aggiungi un modello personalizzato, separando i modelli multipli con una virgola (,)",
-        "placeholder": "vicuna,llama,codellama,llama2:13b-text",
-        "title": "Nome del modello personalizzato"
-      },
-      "endpoint": {
-        "desc": "Inserisci l'indirizzo del proxy dell'interfaccia Ollama, lascialo vuoto se non è stato specificato localmente",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Indirizzo del proxy dell'interfaccia"
-      },
-      "title": "Ollama"
-    },
-    "OpenAI": {
-      "azureApiVersion": {
-        "desc": "Versione dell'API di Azure, nel formato YYYY-MM-DD, consulta [ultima versione](https://learn.microsoft.com/it-it/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Ottieni elenco",
-        "title": "Versione API di Azure"
-      },
-      "customModelName": {
-        "desc": "Aggiungi modelli personalizzati, separati da virgola (,)",
-        "placeholder": "modello1, modello2, modello3",
-        "title": "Nome del modello personalizzato"
-      },
-      "endpoint": {
-        "desc": "Oltre all'indirizzo predefinito, deve includere http(s)://",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "Indirizzo del proxy dell'interfaccia"
-      },
-      "models": {
-        "count": "Supporta {{count}} modelli in totale",
-        "desc": "Modelli supportati",
-        "fetch": "Ottieni elenco dei modelli",
-        "notSupport": "Azure OpenAI non supporta attualmente la visualizzazione dell'elenco dei modelli",
-        "notSupportTip": "Devi assicurarti che il nome del deployment corrisponda al nome del modello",
-        "refetch": "Ottieni nuovamente l'elenco dei modelli",
-        "title": "Elenco dei modelli"
-      },
-      "title": "Impostazioni di OpenAI",
-      "token": {
-        "desc": "Usa la tua chiave API di OpenAI",
-        "placeholder": "Chiave API di OpenAI",
-        "title": "Chiave API"
-      },
-      "useAzure": {
-        "desc": "Utilizza il servizio OpenAI fornito da Azure",
-        "fetch": "Ottieni elenco",
-        "serverConfig": "L'amministratore ha configurato il servizio per abilitare Azure OpenAI, il cambio è disabilitato",
-        "title": "Usa Azure OpenAI"
-      }
-    },
-    "OpenRouter": {
-      "checker": {
-        "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"
-      },
-      "customModelName": {
-        "desc": "Aggiungi un modello personalizzato, separando più modelli con virgola (,)",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "Nome del modello personalizzato"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "Inserisci la chiave API da OpenRouter AI",
-        "placeholder": "Chiave API OpenRouter AI",
-        "title": "Chiave API"
-      }
-    },
-    "Perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Inserisci la chiave API di Perplexity AI",
-        "placeholder": "Chiave API di Perplexity AI",
-        "title": "Chiave API"
-      }
-    },
-    "Zhipu": {
-      "title": "智谱",
-      "token": {
-        "desc": "Inserisci la chiave API da Zhipu",
-        "placeholder": "Chiave API Zhipu",
-        "title": "Chiave API"
-      }
-    },
     "checker": {
       "button": "Verifica",
       "desc": "Verifica se la chiave API e l'indirizzo del proxy sono stati inseriti correttamente",
+      "ollamaDesc": "Verifica se l'indirizzo del proxy è stato compilato correttamente",
       "pass": "Verifica superata",
       "title": "Verifica di connettività"
+    },
+    "customModelCards": {
+      "addNew": "Crea e aggiungi il modello {{id}}",
+      "config": "Configura il modello",
+      "confirmDelete": "Stai per eliminare questo modello personalizzato, l'eliminazione non potrà essere annullata, procedere con cautela.",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Campo effettivo richiesto in Azure OpenAI",
+          "placeholder": "Inserisci il nome del deployment del modello in Azure",
+          "title": "Nome del deployment del modello"
+        },
+        "displayName": {
+          "placeholder": "Inserisci il nome di visualizzazione del modello, ad esempio ChatGPT, GPT-4, ecc.",
+          "title": "Nome di visualizzazione del modello"
+        },
+        "files": {
+          "extra": "L'attuale implementazione del caricamento dei file in LobeChat è solo un hack temporaneo, da utilizzare a proprio rischio. Per un'implementazione completa del caricamento dei file, attendere futuri aggiornamenti.",
+          "title": "Supporto per il caricamento dei file"
+        },
+        "functionCall": {
+          "extra": "Questa configurazione abiliterà solo la capacità di chiamata di funzione in LobeChat. La reale disponibilità del supporto alle chiamate di funzione dipende interamente dal modello stesso, si consiglia di testare autonomamente la disponibilità di questa funzionalità nel modello.",
+          "title": "Supporto per la chiamata di funzione"
+        },
+        "id": {
+          "extra": "Sarà visualizzato come etichetta del modello",
+          "placeholder": "Inserisci l'ID del modello, ad esempio gpt-4-turbo-preview o claude-2.1",
+          "title": "ID del modello"
+        },
+        "modalTitle": "Configurazione del modello personalizzato",
+        "tokens": {
+          "title": "Numero massimo di token"
+        },
+        "vision": {
+          "extra": "Questa configurazione abiliterà solo la funzionalità di caricamento delle immagini in LobeChat. La reale capacità di riconoscimento dipende interamente dal modello stesso, si consiglia di testare autonomamente la disponibilità di questa funzionalità nel modello.",
+          "title": "Supporto per il riconoscimento visivo"
+        }
+      }
+    },
+    "fetcher": {
+      "fetch": "Ottenere l'elenco dei modelli",
+      "fetching": "Recupero dell'elenco dei modelli in corso...",
+      "latestTime": "Ultimo aggiornamento: {{time}}",
+      "noLatestTime": "Nessun elenco disponibile al momento"
+    },
+    "modelList": {
+      "desc": "Seleziona i modelli da visualizzare durante la sessione, i modelli selezionati verranno mostrati nell'elenco dei modelli",
+      "placeholder": "Seleziona un modello dall'elenco",
+      "title": "Elenco dei modelli",
+      "total": "Totale modelli disponibili: {{count}}"
     },
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
   },
@@ -371,6 +243,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "Modello di riconoscimento vocale OpenAI",
+      "title": "OpenAI",
       "ttsModel": "Modello di sintesi vocale OpenAI"
     },
     "showAllLocaleVoice": {
@@ -440,11 +313,47 @@
     "placeholder": "Inserisci l'identificatore dell'assistente, deve essere univoco, ad esempio sviluppo-web",
     "tooltips": "Condividi sul mercato degli assistenti"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Aggiungi un nome per identificare il dispositivo",
+        "placeholder": "Inserisci il nome del dispositivo",
+        "title": "Nome del dispositivo"
+      },
+      "title": "Informazioni sul dispositivo",
+      "unknownBrowser": "Browser sconosciuto",
+      "unknownOS": "Sistema operativo sconosciuto"
+    },
+    "warning": {
+      "message": "Questa funzione è attualmente sperimentale e potrebbe comportare comportamenti imprevisti o instabili. In caso di problemi, invia tempestivamente un feedback."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC utilizzerà questo nome per creare un canale di sincronizzazione, assicurati che il nome del canale sia univoco",
+        "placeholder": "Inserisci il nome del canale di sincronizzazione",
+        "shuffle": "Genera casualmente",
+        "title": "Nome del canale di sincronizzazione"
+      },
+      "channelPassword": {
+        "desc": "Aggiungi una password per garantire la privacy del canale, solo con la password corretta i dispositivi potranno unirsi al canale",
+        "placeholder": "Inserisci la password del canale di sincronizzazione",
+        "title": "Password del canale di sincronizzazione"
+      },
+      "desc": "Comunicazione dati in tempo reale punto a punto, entrambi i dispositivi devono essere online per sincronizzarsi",
+      "enabled": {
+        "invalid": "Per favore, inserisci un nome per il canale di sincronizzazione prima di abilitarlo",
+        "title": "Abilita la sincronizzazione"
+      },
+      "title": "Sincronizzazione WebRTC"
+    }
+  },
   "tab": {
     "about": "Informazioni",
     "agent": "Assistente predefinito",
     "common": "Impostazioni comuni",
+    "experiment": "实验",
     "llm": "Modello linguistico",
+    "sync": "云端同步",
     "tts": "Servizio vocale"
   },
   "tools": {
