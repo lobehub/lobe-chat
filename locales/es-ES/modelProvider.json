@@ -67,6 +67,11 @@
     }
   },
   "google": {
+    "endpoint": {
+      "desc": "Aparte de la dirección predeterminada, debe incluir http(s)://",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "Dirección del proxy de la API"
+    },
     "title": "Google",
     "token": {
       "desc": "Introduce la clave API proporcionada por Google",

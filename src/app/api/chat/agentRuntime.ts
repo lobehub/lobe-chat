@@ -224,10 +224,11 @@ class AgentRuntime {
   }
 
   private static initGoogle(payload: JWTPayload) {
-    const { GOOGLE_API_KEY } = getServerConfig();
+    const { GOOGLE_API_KEY, GOOGLE_PROXY_URL } = getServerConfig();
     const apiKey = apiKeyManager.pick(payload?.apiKey || GOOGLE_API_KEY);
+    const baseURL = payload?.endpoint || GOOGLE_PROXY_URL;
 
-    return new LobeGoogleAI({ apiKey });
+    return new LobeGoogleAI({ apiKey, baseURL });
   }
 
   private static initBedrock(payload: JWTPayload) {

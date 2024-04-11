@@ -16,7 +16,7 @@ import { handleOpenAIError } from '../handleOpenAIError';
 const CHAT_MODELS_BLOCK_LIST = [
   'embedding',
   'davinci',
-  'cuire',
+  'curie',
   'moderation',
   'ada',
   'babbage',

@@ -12,7 +12,8 @@ tags:
 # Docker Compose 部署指引
 
 <div style={{display:"flex", gap: 4}}>
-  [![][docker-release-shield]][docker-release-link]
+
+[![][docker-release-shield]][docker-release-link]
 
 [![][docker-size-shield]][docker-size-link]
 
@@ -23,7 +24,8 @@ tags:
 我们提供了 [Docker 镜像][docker-release-link]，供你在自己的私有设备上部署 LobeChat 服务。
 
 <Steps>
-  ### 安装 Docker 容器环境
+
+### 安装 Docker 容器环境
 
 （如果已安装，请跳过此步）
 
@@ -55,16 +57,16 @@ $ yum install docker
 version: '3.8'
 
 services:
-  lobe-chat:
-    image: lobehub/lobe-chat
-    container_name: lobe-chat
-    restart: always
-    ports:
-      - '3210:3210'
-    environment:
-      OPENAI_API_KEY: sk-xxxx
-      OPENAI_PROXY_URL: https://api-proxy.com/v1
-      ACCESS_CODE: lobe66
+lobe-chat:
+image: lobehub/lobe-chat
+container_name: lobe-chat
+restart: always
+ports:
+- '3210:3210'
+environment:
+OPENAI_API_KEY: sk-xxxx
+OPENAI_PROXY_URL: https://api-proxy.com/v1
+ACCESS_CODE: lobe66
 ```
 
 运行以下命令启动 Lobe Chat 服务：
@@ -81,48 +83,48 @@ $ docker-compose up -d
 #!/bin/bash
 # auto-update-lobe-chat.sh
 
-# 设置代理（可选）
+# Set proxy (optional)
 export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
 
-# 拉取最新的镜像并将输出存储在变量中
+# Pull the latest image and store the output in a variable
 output=$(docker pull lobehub/lobe-chat:latest 2>&1)
 
-# 检查拉取命令是否成功执行
+# Check if the pull command was executed successfully
 if [ $? -ne 0 ]; then
-  exit 1
+exit 1
 fi
 
-# 检查输出中是否包含特定的字符串
+# Check if the output contains a specific string
 echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
 
-# 如果镜像已经是最新的，则不执行任何操作
+# If the image is already up to date, do nothing
 if [ $? -eq 0 ]; then
-  exit 0
+exit 0
 fi
 
 echo "Detected Lobe-Chat update"
 
-# 删除旧的容器
+# Remove the old container
 echo "Removed: $(docker rm -f Lobe-Chat)"
 
-# 也许需要先进入 `docker-compose.yml` 所在的目录
+# You may need to navigate to the directory where `docker-compose.yml` is located first
 # cd /path/to/docker-compose-folder
 
-# 运行新的容器
+# Run the new container
 echo "Started: $(docker-compose up)"
 
-# 打印更新的时间和版本
+# Print the update time and version
 echo "Update time: $(date)"
 echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
 
-# 清理不再使用的镜像
+# Clean up unused images
 docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
 echo "Removed old images."
 ```
 
-此脚本亦可以在 Crontab 中使用，但请确认你的 Crontab 可以找到正确的 Docker 命令。建议使用绝对路径。
+This script can also be used in Crontab, but ensure that your Crontab can find the correct Docker command. It is recommended to use absolute paths.
 
-配置 Crontab，每 5 分钟执行一次脚本：
+Configure Crontab to execute the script every 5 minutes:
 
 ```bash
 */5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1

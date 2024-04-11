@@ -43,7 +43,7 @@ export interface ChatTopicAction {
   updateTopicLoading: (id?: string) => void;
   updateTopicTitle: (id: string, title: string) => Promise<void>;
   useFetchTopics: (sessionId: string) => SWRResponse<ChatTopic[]>;
-  useSearchTopics: (keywords?: string) => SWRResponse<ChatTopic[]>;
+  useSearchTopics: (keywords?: string, sessionId?: string) => SWRResponse<ChatTopic[]>;
 }
 
 export const chatTopic: StateCreator<
@@ -154,10 +154,11 @@ export const chatTopic: StateCreator<
         },
       },
     ),
-  useSearchTopics: (keywords) =>
+  useSearchTopics: (keywords, sessionId) =>
     useSWR<ChatTopic[]>(
-      [SWR_USE_SEARCH_TOPIC, keywords],
-      ([, keywords]: [string, string]) => topicService.searchTopics(keywords),
+      [SWR_USE_SEARCH_TOPIC, keywords, sessionId],
+      ([, keywords, sessionId]: [string, string, string]) =>
+        topicService.searchTopics(keywords, sessionId),
       {
         onSuccess: (data) => {
           set({ searchTopics: data }, false, n('useSearchTopics(success)', { keywords }));

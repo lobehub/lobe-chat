@@ -67,6 +67,11 @@
     }
   },
   "google": {
+    "endpoint": {
+      "desc": "Изисква се адрес, включително http(s)://, освен ако не е по подразбиране",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "Адрес на API прокси"
+    },
     "title": "Google",
     "token": {
       "desc": "Въведете API Key, получен от Google",

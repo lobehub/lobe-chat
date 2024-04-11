@@ -47,7 +47,7 @@ Updated by OpenAI to point to the [latest version of GPT-3.5](/models?q=openai/g
 
 #multimodal",
     "displayName": "OpenAI: GPT-4 Vision",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "openai/gpt-4-vision-preview",
     "maxTokens": 4096,

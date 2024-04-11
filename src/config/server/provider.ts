@@ -28,6 +28,7 @@ declare global {
       // Google Provider
       ENABLED_GOOGLE?: string;
       GOOGLE_API_KEY?: string;
+      GOOGLE_PROXY_URL?: string;
 
       // Moonshot Provider
       ENABLED_MOONSHOT?: string;
@@ -154,6 +155,7 @@ export const getProviderConfig = () => {
 
     ENABLED_GOOGLE: !!GOOGLE_API_KEY,
     GOOGLE_API_KEY,
+    GOOGLE_PROXY_URL: process.env.GOOGLE_PROXY_URL,
 
     ENABLED_PERPLEXITY: !!PERPLEXITY_API_KEY,
     PERPLEXITY_API_KEY,
