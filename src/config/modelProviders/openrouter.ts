@@ -3,6 +3,14 @@ import { ModelProviderCard } from '@/types/llm';
 const OpenRouter: ModelProviderCard = {
   chatModels: [
     {
+      displayName: 'Auto (best for prompt)',
+      enabled: true,
+      functionCall: false,
+      id: 'openrouter/auto',
+      tokens: 128_000,
+      vision: false,
+    },
+    {
       displayName: 'Mistral 7B Instruct (free)',
       enabled: true,
       functionCall: false,
@@ -67,7 +75,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
-      displayName: 'RWKV v5 World 3B',
+      displayName: 'RWKV v5 World 3B (free)',
       enabled: true,
       functionCall: false,
       id: 'rwkv/rwkv-5-world-3b',
@@ -75,7 +83,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
-      displayName: 'RWKV v5 3B AI Town',
+      displayName: 'RWKV v5 3B AI Town (free)',
       enabled: true,
       functionCall: false,
       id: 'recursal/rwkv-5-3b-ai-town',
@@ -83,7 +91,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
-      displayName: 'RWKV v5: Eagle 7B',
+      displayName: 'RWKV v5: Eagle 7B (free)',
       enabled: true,
       functionCall: false,
       id: 'recursal/eagle-7b',
@@ -91,7 +99,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
-      displayName: 'Mistral: Mixtral 8x22B (base)',
+      displayName: 'Mistral: Mixtral 8x22B (base) (free)',
       enabled: true,
       functionCall: false,
       id: 'mistralai/mixtral-8x22b',
