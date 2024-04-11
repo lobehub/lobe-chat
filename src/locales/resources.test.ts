@@ -24,6 +24,7 @@ describe('normalizeLocale', () => {
   });
 
   it('should return "ar" when locale is "ar-EG"', () => {
+    expect(normalizeLocale('ar')).toBe('ar');
     expect(normalizeLocale('ar-EG')).toBe('ar');
   });
 
