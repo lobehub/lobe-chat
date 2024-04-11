@@ -47,7 +47,7 @@ export interface ShareAction {
     avatar?: string;
     withPluginInfo?: boolean;
     withSystemRole?: boolean;
-  }) => void;
+  }) => Promise<void>;
 }
 
 export const chatShare: StateCreator<ChatStore, [['zustand/devtools', never]], [], ShareAction> = (

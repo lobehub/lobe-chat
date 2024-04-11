@@ -1,3 +1,18 @@
+---
+title: LobeChat Authentication Service Environment Variables
+description: >-
+  Explore the essential environment variables for configuring authentication
+  services in LobeChat, including OAuth SSO, NextAuth settings, and
+  provider-specific details.
+tags:
+  - LobeChat
+  - Authentication Service
+  - Environment Variables
+  - OAuth SSO
+  - NextAuth
+  - Provider Details
+---
+
 ## Authentication Service
 
 LobeChat provides a complete authentication service capability when deployed. The following are the relevant environment variables. You can use these environment variables to easily define the identity verification services that need to be enabled in LobeChat.
@@ -116,6 +131,29 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Description: Client Secret of the Github application.
 - Default: `-`
 - Example: `dd262976ac0931d947e104891586a053f3d3750b`
+
+## ZITADEL
+
+### `ZITADEL_CLIENT_ID`
+
+- Type: Required
+- Description: Client ID of the ZITADEL application. This can be found under your application in the ZITADEL console.
+- Default: `-`
+- Example: `123456789012345678@your-project`
+
+### `ZITADEL_CLIENT_SECRET`
+
+- Type: Required
+- Description: Client Secret of the ZITADEL application.
+- Default: `-`
+- Example: `9QF1n5ATzU7Z3mHp2Iw4gKX8kY6oR7uW1DnKcV3LqX2jF6iG3fBmJ1kV7nS5zE6A`
+
+### `ZITADEL_ISSUER`
+
+- Type: Required
+- Description: Issuer of the ZITADEL application. This is usually the URL of the ZITADEL instance, and can be found in `URLs` tab of your application in the console.
+- Default: `-`
+- Example: `https://your-instance-abc123.zitadel.cloud`
 
 <Callout>
   Currently, we only support providers above. If you need to use other identity verification service
