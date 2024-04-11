@@ -74,7 +74,7 @@ const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) =>
             maximum={item.maximum}
             minimum={item.minimum}
             onChange={(value) => {
-              updatePluginSettings(id, { [item.name]: value });
+              updatePluginSettings(id, { ...pluginSetting, [item.name]: value });
             }}
             type={item.type as any}
           />
