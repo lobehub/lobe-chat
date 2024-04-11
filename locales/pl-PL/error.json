@@ -85,58 +85,7 @@
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Wprowadź swój klucz API Anthropic, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API Anthropic"
-      },
-      "Bedrock": {
-        "customRegion": "Własny obszar usług",
-        "description": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojej konfiguracji uwierzytelniania.",
-        "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
-      },
-      "Google": {
-        "description": "Wprowadź swój klucz API Google, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API Google"
-      },
-      "Groq": {
-        "description": "Wprowadź swój klucz API Groq, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API Groq"
-      },
-      "Mistral": {
-        "description": "输入你的 Mistral AI API Key 即可开始会话。应用不会记录你的 API Key",
-        "title": "使用自定义 Mistral AI API Key"
-      },
-      "Moonshot": {
-        "description": "输入您的Moonshot AI API密钥即可开始会话。应用不会记录您的API密钥",
-        "title": "使用自定义Moonshot AI API密钥"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Dodaj adres proxy OpenAI (opcjonalnie)",
-        "description": "Wprowadź swój klucz API OpenAI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API OpenAI"
-      },
-      "OpenRouter": {
-        "description": "Wprowadź swój klucz API OpenRouter, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API OpenRouter"
-      },
-      "Perplexity": {
-        "description": "Wprowadź swój klucz API Perplexity, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API Perplexity"
-      },
-      "TogetherAI": {
-        "description": "Wprowadź swój klucz API TogetherAI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API TogetherAI"
-      },
-      "ZeroOne": {
-        "description": "输入你的零一万物 API Key 即可开始会话。应用不会记录你的 API Key",
-        "title": "使用自定义零一万物 API Key"
-      },
-      "Zhipu": {
-        "description": "Wprowadź swój klucz API Zhipu, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API Zhipu"
-      }
-    },
+    "addProxyUrl": "Dodaj adres proxy OpenAI (opcjonalnie)",
     "closeMessage": "Zamknij komunikat",
     "confirm": "Potwierdź i spróbuj ponownie",
     "model": {

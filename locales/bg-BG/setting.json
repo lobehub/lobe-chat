@@ -31,215 +31,63 @@
     "sessionWithName": "Настройки на сесията · {{name}}"
   },
   "llm": {
-    "anthropic": {
-      "endpoint": {
-        "desc": "Освен адреса по подразбиране, задължително трябва да включва http(s)://",
-        "placeholder": "https://api.anthropic.com",
-        "title": "Адрес на API прокси"
-      },
-      "title": "Anthropic",
-      "token": {
-        "desc": "Въведете API Key, получен от Anthropic",
-        "placeholder": "Anthropic API Key",
-        "title": "API ключ"
-      }
-    },
-    "azure": {
-      "azureApiVersion": {
-        "desc": "Версия на Azure API, в формат YYYY-MM-DD, вижте [най-новата версия](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Извличане на списък",
-        "title": "Версия на Azure Api"
-      },
-      "deployments": {
-        "desc": "Използвайте синтаксиса id=name за попълване на вашите модели на разположение (ако името на разположението и модела съвпадат, може да въведете само името на модела), използвайте запетая (,) за разделяне на множество модели",
-        "title": "Списък с модели на разположение на Azure"
-      },
-      "endpoint": {
-        "desc": "Тази стойност може да бъде намерена в раздела „Ключове и крайни точки“ при проверка на ресурсите от портала на Azure",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Адрес на Azure API"
-      },
-      "models": {
-        "desc": "Поддържани модели",
-        "title": "Списък с модели"
-      },
-      "title": "Azure OpenAI",
-      "token": {
-        "desc": "Тази стойност може да бъде намерена в раздела „Ключове и крайни точки“ при проверка на ресурсите от портала на Azure. Можете да използвате KEY1 или KEY2",
-        "placeholder": "Azure API Key",
-        "title": "API ключ"
-      }
-    },
-    "bedrock": {
-      "accessKeyId": {
-        "desc": "Въведете AWS Access Key Id",
-        "placeholder": "AWS Access Key Id",
-        "title": "AWS Access Key Id"
-      },
-      "checker": {
-        "desc": "Тестване дали AccessKeyId / SecretAccessKey са попълнени правилно"
-      },
-      "region": {
-        "desc": "Въведете AWS Region",
-        "placeholder": "AWS Region",
-        "title": "AWS Region"
-      },
-      "secretAccessKey": {
-        "desc": "Въведете AWS Secret Access Key",
-        "placeholder": "AWS Secret Access Key",
-        "title": "AWS Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
     "checker": {
       "button": "Провери",
       "desc": "Проверете дали API ключът и адресът на прокси сървъра са попълнени правилно",
+      "ollamaDesc": "Проверете дали адресът на прокси се попълва правилно",
       "pass": "Проверката е успешна",
       "title": "Проверка на свързаността"
     },
-    "google": {
-      "title": "Google",
-      "token": {
-        "desc": "Въведете API Key, получен от Google",
-        "placeholder": "Google API Key",
-        "title": "API ключ"
+    "customModelCards": {
+      "addNew": "Създайте и добавете модел {{id}}",
+      "config": "Конфигуриране на модела",
+      "confirmDelete": "Ще бъде изтрит този персонализиран модел и няма да може да бъде възстановен. Моля, бъдете внимателни.",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Полето, използвано за искане на реално име на разгърнатия модел в Azure OpenAI",
+          "placeholder": "Моля, въведете името на разгърнатия модел в Azure",
+          "title": "Име на разгърнатия модел"
+        },
+        "displayName": {
+          "placeholder": "Моля, въведете името за показване на модела, като например ChatGPT, GPT-4 и други",
+          "title": "Име за показване на модела"
+        },
+        "files": {
+          "extra": "Текущата имплементация за качване на файлове в LobeChat е само временно решение и е предназначена само за експериментиране. Пълната функционалност за качване на файлове ще бъде добавена в бъдещи версии.",
+          "title": "Поддръжка на качване на файлове"
+        },
+        "functionCall": {
+          "extra": "Тази конфигурация ще активира само възможността за извикване на функции в LobeChat. Възможността за извикване на функции зависи изцяло от самия модел. Моля, тествайте функционалността за извикване на функции на модела.",
+          "title": "Поддръжка на извикване на функции"
+        },
+        "id": {
+          "extra": "Ще бъде използван като етикет на модела",
+          "placeholder": "Моля, въведете идентификатор на модела, като например gpt-4-turbo-preview или claude-2.1",
+          "title": "Идентификатор на модела"
+        },
+        "modalTitle": "Конфигурация на персонализиран модел",
+        "tokens": {
+          "title": "Максимален брой токени"
+        },
+        "vision": {
+          "extra": "Тази конфигурация ще активира само възможността за качване на изображения в LobeChat. Възможността за разпознаване на изображения зависи изцяло от самия модел. Моля, тествайте функционалността за разпознаване на изображения на модела.",
+          "title": "Поддръжка на разпознаване на изображения"
+        }
       }
     },
-    "groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "Въведете API Key, получен от Groq",
-        "placeholder": "Groq API Key",
-        "title": "API ключ"
-      }
+    "fetcher": {
+      "fetch": "Изтегляне на списъка с модели",
+      "fetching": "Изтегляне на списъка с модели...",
+      "latestTime": "Последно актуализирано: {{time}}",
+      "noLatestTime": "В момента няма наличен списък"
     },
-    "mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Въведете API Key, получен от Mistral AI",
-        "placeholder": "Mistral AI API Key",
-        "title": "API ключ"
-      }
+    "modelList": {
+      "desc": "Изберете модел, който да се показва по време на разговор. Избраният модел ще бъде показан в списъка с модели.",
+      "placeholder": "Моля, изберете модел от списъка",
+      "title": "Списък с модели",
+      "total": "Общо {{count}} налични модела"
     },
-    "moonshot": {
-      "title": "Тъмната страна на Луната",
-      "token": {
-        "desc": "Въведете API Key, получен от Moonshot AI",
-        "placeholder": "Moonshot AI API Key",
-        "title": "API ключ"
-      }
-    },
-    "ollama": {
-      "checker": {
-        "desc": "Тестване дали адресът на прокси е попълнен правилно"
-      },
-      "customModelName": {
-        "desc": "Добавяне на персонализирани модели, използвайте запетая (,) за разделяне на множество модели",
-        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
-        "title": "Имена на персонализирани модели"
-      },
-      "endpoint": {
-        "desc": "Въведете адрес на Ollama интерфейсния прокси, оставете празно, ако локално не е указано специално",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Адрес на прокси интерфейс"
-      },
-      "title": "Ollama"
-    },
-    "openai": {
-      "azureApiVersion": {
-        "desc": "Версия на Azure API, в формат YYYY-MM-DD, вижте [най-новата версия](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Извличане на списък",
-        "title": "Версия на Azure Api"
-      },
-      "customModelName": {
-        "desc": "Добавяне на персонализирани модели, използвайте запетая (,) за разделяне на множество модели",
-        "placeholder": "model1,model2,model3",
-        "title": "Имена на персонализирани модели"
-      },
-      "endpoint": {
-        "desc": "Освен адреса по подразбиране, задължително трябва да включва http(s)://",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "Адрес на прокси интерфейс"
-      },
-      "models": {
-        "count": "Общо поддържани {{count}} модели",
-        "desc": "Поддържани модели",
-        "fetch": "Извличане на списък с модели",
-        "notSupport": "Azure OpenAI временно не поддържа преглед на списъка с модели",
-        "notSupportTip": "Трябва сами да се уверите, че имената на разположението и модела съвпадат",
-        "refetch": "Повторно извличане на списъка с модели",
-        "title": "Списък с модели"
-      },
-      "title": "OpenAI",
-      "token": {
-        "desc": "Използвайте собствения си OpenAI Key",
-        "placeholder": "OpenAI API Key",
-        "title": "OpenAI API ключ"
-      },
-      "useAzure": {
-        "desc": "Използване на OpenAI услуги, предоставени от Azure",
-        "fetch": "Извличане на списък",
-        "serverConfig": "Администраторът е конфигурирал активиране на Azure OpenAI на сървъра, превключването е забранено",
-        "title": "Azure OpenAI"
-      }
-    },
-    "openrouter": {
-      "checker": {
-        "desc": "Тестване дали адресът на прокси е попълнен правилно"
-      },
-      "customModelName": {
-        "desc": "Добавяне на персонализирани модели, използвайте запетая (,) за разделяне на множество модели",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "Имена на персонализирани модели"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "Въведете API Key, получен от OpenRouter AI",
-        "placeholder": "OpenRouter AI API Key",
-        "title": "API ключ"
-      }
-    },
-    "perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Въведете API Key, получен от Perplexity AI",
-        "placeholder": "Perplexity AI API Key",
-        "title": "API ключ"
-      }
-    },
-    "togetherai": {
-      "checker": {
-        "desc": "Тестване дали адресът на прокси е попълнен правилно"
-      },
-      "customModelName": {
-        "desc": "Добавяне на персонализирани модели, използвайте запетая (,) за разделяне на множество модели",
-        "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-        "title": "Имена на персонализирани модели"
-      },
-      "title": "TogetherAI",
-      "token": {
-        "desc": "Въведете API Key, получен от TogetherAI AI",
-        "placeholder": "TogetherAI AI API Key",
-        "title": "API ключ"
-      }
-    },
-    "waitingForMore": "Още модели са <1>планирани да бъдат добавени</1>, очаквайте ✨",
-    "zeroone": {
-      "title": "01.AI Зероуан Всичко",
-      "token": {
-        "desc": "Въведете API Key, получен от 01.AI Зероуан Всичко",
-        "placeholder": "01.AI Зероуан Всичко API Key",
-        "title": "API ключ"
-      }
-    },
-    "zhipu": {
-      "title": "Интелигентен албум",
-      "token": {
-        "desc": "Въведете API Key, получен от Интелигентен албум",
-        "placeholder": "Zhipu API Key",
-        "title": "API ключ"
-      }
-    }
+    "waitingForMore": "Още модели са <1>планирани да бъдат добавени</1>, очаквайте ✨"
   },
   "ollama": {
     "download": {
@@ -395,6 +243,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "Модел за преобразуване на реч в текст на OpenAI",
+      "title": "OpenAI",
       "ttsModel": "Модел за преобразуване на текст в реч на OpenAI"
     },
     "showAllLocaleVoice": {

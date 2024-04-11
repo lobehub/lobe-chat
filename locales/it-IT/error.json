@@ -85,58 +85,7 @@
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Inserisci la tua chiave API Anthropic per avviare la sessione. L'applicazione non memorizzerà la tua chiave API.",
-        "title": "Utilizza una chiave API Anthropic personalizzata"
-      },
-      "Bedrock": {
-        "customRegion": "Regione del servizio personalizzata",
-        "description": "Inserisci il tuo AWS AccessKeyId / SecretAccessKey per iniziare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
-        "title": "Utilizza le informazioni di autenticazione personalizzate di Bedrock"
-      },
-      "Google": {
-        "description": "Inserisci la tua chiave API Google per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Utilizza la chiave API Google personalizzata"
-      },
-      "Groq": {
-        "description": "Inserisci la tua chiave API Groq per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Usa una chiave API Groq personalizzata"
-      },
-      "Mistral": {
-        "description": "Inserisci la tua chiave API Mistral AI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API.",
-        "title": "Utilizza una chiave API personalizzata per Mistral AI"
-      },
-      "Moonshot": {
-        "description": "Inserisci la tua chiave API di Moonshot AI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Utilizza una chiave API personalizzata per Moonshot AI"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Aggiungi l'indirizzo del proxy OpenAI (opzionale)",
-        "description": "Inserisci la tua chiave API OpenAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Utilizza la chiave API OpenAI personalizzata"
-      },
-      "OpenRouter": {
-        "description": "Inserisci la tua chiave API di OpenRouter per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API.",
-        "title": "Utilizza la tua chiave API personalizzata di OpenRouter"
-      },
-      "Perplexity": {
-        "description": "Inserisci la tua chiave API Perplexity per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Utilizza la tua chiave API Perplexity personalizzata"
-      },
-      "TogetherAI": {
-        "description": "Inserisci la tua chiave API di TogetherAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API.",
-        "title": "Utilizza la tua chiave API personalizzata di TogetherAI"
-      },
-      "ZeroOne": {
-        "description": "Inserisci la tua chiave API ZeroOne per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Usa una chiave API ZeroOne personalizzata"
-      },
-      "Zhipu": {
-        "description": "Inserisci la tua chiave API Zhipu per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Utilizza la chiave API Zhipu personalizzata"
-      }
-    },
+    "addProxyUrl": "Aggiungi URL del proxy OpenAI (opzionale)",
     "closeMessage": "Chiudi messaggio",
     "confirm": "Conferma e riprova",
     "model": {

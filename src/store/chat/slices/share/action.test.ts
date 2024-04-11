@@ -3,6 +3,7 @@ import { act, renderHook } from '@testing-library/react';
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { shareGPTService } from '@/services/share';
 import { useChatStore } from '@/store/chat';
+import { ChatMessage } from '@/types/message';
 
 describe('shareSlice actions', () => {
   let shareGPTServiceSpy: any;
@@ -81,6 +82,118 @@ describe('shareSlice actions', () => {
       });
       expect(result.current.shareLoading).toBe(false);
       // 注意：这里的验证可能需要你根据实际的状态管理逻辑进行调整
+    });
+
+    it('should include plugin information when withPluginInfo is true', async () => {
+      // 模拟带有插件信息的消息
+      const pluginMessage = {
+        role: 'function',
+        content: 'plugin content',
+        plugin: {
+          type: 'default',
+          arguments: '{}',
+          apiName: 'test-api',
+          identifier: 'test-identifier',
+        },
+        id: 'abc',
+      } as ChatMessage;
+
+      act(() => {
+        useChatStore.setState({ messages: [pluginMessage] });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      await act(async () => {
+        result.current.shareToShareGPT({ withPluginInfo: true });
+      });
+      expect(shareGPTServiceSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              from: 'gpt',
+              value: expect.stringContaining('Function Calling Plugin'),
+            }),
+          ]),
+        }),
+      );
+    });
+
+    it('should not include plugin information when withPluginInfo is false', async () => {
+      const pluginMessage = {
+        role: 'function',
+        content: 'plugin content',
+        plugin: {
+          type: 'default',
+          arguments: '{}',
+          apiName: 'test-api',
+          identifier: 'test-identifier',
+        },
+        id: 'abc',
+      } as ChatMessage;
+
+      act(() => {
+        useChatStore.setState({ messages: [pluginMessage] });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      await act(async () => {
+        result.current.shareToShareGPT({ withPluginInfo: false });
+      });
+      expect(shareGPTServiceSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          items: expect.not.arrayContaining([
+            expect.objectContaining({
+              from: 'gpt',
+              value: expect.stringContaining('Function Calling Plugin'),
+            }),
+          ]),
+        }),
+      );
+    });
+
+    it('should handle messages from different roles correctly', async () => {
+      const messages = [
+        { role: 'user', content: 'user message', id: '1' },
+        { role: 'assistant', content: 'assistant message', id: '2' },
+        {
+          role: 'function',
+          content: 'plugin content',
+          plugin: {
+            type: 'default',
+            arguments: '{}',
+            apiName: 'test-api',
+            identifier: 'test-identifier',
+          },
+          id: '3',
+        },
+      ] as ChatMessage[];
+
+      act(() => {
+        useChatStore.setState({ messages });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      await act(async () => {
+        await result.current.shareToShareGPT({
+          withPluginInfo: true,
+          withSystemRole: true,
+        });
+      });
+
+      expect(shareGPTServiceSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          items: [
+            expect.objectContaining({ from: 'gpt' }), // Agent meta info
+            expect.objectContaining({ from: 'human', value: 'user message' }),
+            expect.objectContaining({ from: 'gpt', value: 'assistant message' }),
+            expect.objectContaining({
+              from: 'gpt',
+              value: expect.stringContaining('Function Calling Plugin'),
+            }),
+            expect.objectContaining({ from: 'gpt', value: expect.stringContaining('Share from') }), // Footer
+          ],
+        }),
+      );
     });
   });
 });

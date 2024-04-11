@@ -24,7 +24,6 @@ export interface JWTPayload {
   endpoint?: string;
 
   azureApiVersion?: string;
-  useAzure?: boolean;
 
   awsAccessKeyId?: string;
   awsRegion?: string;
