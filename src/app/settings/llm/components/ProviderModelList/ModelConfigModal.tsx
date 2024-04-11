@@ -27,7 +27,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
     ]);
 
   const modelCard = useGlobalStore(
-    modelConfigSelectors.getCustomModelCardById({ id, provider: editingProvider }),
+    modelConfigSelectors.getCustomModelCard({ id, provider: editingProvider }),
     isEqual,
   );
 

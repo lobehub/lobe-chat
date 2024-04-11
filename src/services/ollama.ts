@@ -11,8 +11,9 @@ const DEFAULT_BASE_URL = 'http://127.0.0.1:11434/v1';
 
 class OllamaService {
   getHost = (): string => {
-    const endpoint = modelConfigSelectors.ollamaProxyUrl(useGlobalStore.getState());
-    const url = new URL(endpoint || DEFAULT_BASE_URL);
+    const config = modelConfigSelectors.ollamaConfig(useGlobalStore.getState());
+
+    const url = new URL(config.endpoint || DEFAULT_BASE_URL);
     return url.host;
   };
 
