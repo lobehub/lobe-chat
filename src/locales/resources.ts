@@ -26,6 +26,7 @@ export const normalizeLocale = (locale?: string) => {
   for (const l of locales) {
     if (l.startsWith(locale)) {
       return l;
+    }
   }
 
   return 'en-US';
