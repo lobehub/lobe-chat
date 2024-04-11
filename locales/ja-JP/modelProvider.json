@@ -67,6 +67,11 @@
     }
   },
   "google": {
+    "endpoint": {
+      "desc": "デフォルトのアドレスに加えて、http(s)://を含める必要があります",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "APIプロキシアドレス"
+    },
     "title": "Google",
     "token": {
       "desc": "Google の API Key を入力してください",

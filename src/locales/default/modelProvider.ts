@@ -69,6 +69,11 @@ export default {
     },
   },
   google: {
+    endpoint: {
+      desc: '除默认地址外，必须包含 http(s)://',
+      placeholder: 'https://generativelanguage.googleapis.com',
+      title: 'API 代理地址',
+    },
     title: 'Google',
     token: {
       desc: '填入来自 Google 的 API Key',

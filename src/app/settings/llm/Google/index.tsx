@@ -12,6 +12,7 @@ const GoogleProvider = memo(() => {
     <ProviderConfig
       checkModel={'gemini-pro'}
       provider={ModelProvider.Google}
+      showEndpoint
       title={
         <Flexbox align={'center'} gap={8} horizontal>
           <Google.BrandColor size={28} />

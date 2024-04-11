@@ -27,11 +27,13 @@ enum HarmBlockThreshold {
 
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
+  baseURL?: string;
 
-  constructor({ apiKey }: { apiKey?: string }) {
+  constructor({ apiKey, baseURL }: { apiKey?: string; baseURL?: string }) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidGoogleAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
+    this.baseURL = baseURL;
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -70,7 +72,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               },
             ],
           },
-          { apiVersion: 'v1beta' },
+          { apiVersion: 'v1beta', baseUrl: this.baseURL },
         )
         .generateContentStream({ contents });
 
