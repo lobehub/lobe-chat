@@ -20,7 +20,7 @@ export const locales = [
 export type DefaultResources = typeof resources;
 export type Locales = (typeof locales)[number];
 
-export const normalizeLocale = (locale?: string) => {
+export const normalizeLocale = (locale?: string): string => {
   if (!locale) return 'en-US';
 
   if (locale.startsWith('ar')) return 'ar';
