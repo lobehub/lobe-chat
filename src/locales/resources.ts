@@ -2,6 +2,7 @@ import resources from './default';
 
 export const locales = [
   'ar',
+  'bg-BG',
   'de-DE',
   'en-US',
   'es-ES',
@@ -25,7 +26,6 @@ export const normalizeLocale = (locale?: string) => {
   for (const l of locales) {
     if (l.startsWith(locale)) {
       return l;
-    }
   }
 
   return 'en-US';
@@ -100,6 +100,10 @@ export const localeOptions: LocaleOptions = [
   {
     label: 'Tiếng Việt',
     value: 'vi-VN',
+  },
+  {
+    label: 'Български',
+    value: 'bg-BG',
   },
 ] as LocaleOptions;
 

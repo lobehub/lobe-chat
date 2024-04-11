@@ -6,6 +6,7 @@ module.exports = defineConfig({
   output: 'locales',
   outputLocales: [
     'ar',
+    'bg-BG',
     'zh-TW',
     'en-US',
     'ru-RU',
@@ -22,20 +23,25 @@ module.exports = defineConfig({
     'vi-VN',
   ],
   temperature: 0,
-  modelName: 'gpt-3.5-turbo-1106',
-  splitToken: 1024,
+  modelName: 'gpt-3.5-turbo-0125',
+  splitToken: 2048,
   experimental: {
     jsonMode: true,
   },
-  reference: '你需要保持 mdx 的组件格式，输出文本不需要在最外层包裹任何代码块语法',
   markdown: {
-    entry: ['./README.zh-CN.md', './docs/**/*.zh-CN.md', './docs/**/*.zh-CN.mdx'],
+    // reference: '你需要保持 mdx 的组件格式，输出文本不需要在最外层包裹任何代码块语法',
+    entry: ['./README.zh-CN.md', './contributing/**/*.zh-CN.md', './docs/**/*.zh-CN.mdx'],
     entryLocale: 'zh-CN',
-    entryExtension: '.zh-CN.md',
     outputLocales: ['en-US'],
-    outputExtensions: (locale, { getDefaultExtension }) => {
-      if (locale === 'en-US') return '.md';
-      return getDefaultExtension(locale);
+    exclude: ['./contributing/_Sidebar.md', './contributing/_Footer.md', './contributing/Home.md'],
+    outputExtensions: (locale, { filePath }) => {
+      if (filePath.includes('.mdx')) {
+        if (locale === 'en-US') return '.mdx';
+        return `.${locale}.mdx`;
+      } else {
+        if (locale === 'en-US') return '.md';
+        return `.${locale}.md`;
+      }
     },
   },
 });

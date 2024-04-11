@@ -5,7 +5,7 @@ import { memo, useMemo } from 'react';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors } from '@/store/global/selectors';
 import { ModelProviderCard } from '@/types/llm';
 
 import { useStore } from '../store';
@@ -25,20 +25,16 @@ interface ModelOption {
 
 const ModelSelect = memo(() => {
   const [model, updateConfig] = useStore((s) => [s.config.model, s.setAgentConfig]);
-  const select = useGlobalStore(modelProviderSelectors.modelSelectList, isEqual);
+  const enabledList = useGlobalStore(modelConfigSelectors.enabledModelProviderList, isEqual);
   const { styles } = useStyles();
-
-  const enabledList = select.filter((s) => s.enabled);
 
   const options = useMemo<SelectProps['options']>(() => {
     const getChatModels = (provider: ModelProviderCard) =>
-      provider.chatModels
-        .filter((c) => !c.hidden)
-        .map((model) => ({
-          label: <ModelItemRender {...model} />,
-          provider: provider.id,
-          value: model.id,
-        }));
+      provider.chatModels.map((model) => ({
+        label: <ModelItemRender {...model} />,
+        provider: provider.id,
+        value: model.id,
+      }));
 
     if (enabledList.length === 1) {
       const provider = enabledList[0];
