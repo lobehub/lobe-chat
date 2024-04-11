@@ -54,7 +54,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     const [toggleProviderEnabled, setSettings, enabled] = useGlobalStore((s) => [
       s.toggleProviderEnabled,
       s.setSettings,
-      modelConfigSelectors.providerEnabled(provider)(s),
+      modelConfigSelectors.isProviderEnabled(provider)(s),
     ]);
 
     useSyncSettings(form);

@@ -29,7 +29,7 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
       s.removeEnabledModels,
     ]);
   const modelCard = useGlobalStore(
-    modelConfigSelectors.getCustomModelCardById({ id, provider }),
+    modelConfigSelectors.getCustomModelCard({ id, provider }),
     isEqual,
   );
 

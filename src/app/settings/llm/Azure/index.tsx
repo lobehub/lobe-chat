@@ -34,7 +34,7 @@ const AzureOpenAIProvider = memo(() => {
 
   // Get the first model card's deployment name as the check model
   const checkModel = useGlobalStore((s) => {
-    const chatModelCards = modelConfigSelectors.providerModelCards(providerKey)(s);
+    const chatModelCards = modelConfigSelectors.getModelCardsByProviderId(providerKey)(s);
 
     if (chatModelCards.length > 0) {
       return chatModelCards[0].deploymentName;
