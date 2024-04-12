@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.147.7](https://github.com/lobehub/lobe-chat/compare/v0.147.6...v0.147.7)
+
+<sup>Released on **2024-04-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin next to `14.1.4` to fix deployment.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin next to `14.1.4` to fix deployment, closes [#1998](https://github.com/lobehub/lobe-chat/issues/1998) ([dfa1872](https://github.com/lobehub/lobe-chat/commit/dfa1872))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.147.6](https://github.com/lobehub/lobe-chat/compare/v0.147.5...v0.147.6)
 
 <sup>Released on **2024-04-11**</sup>
