@@ -23,6 +23,17 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 默认值：-
 - 示例：`awCTe)re_r74` or `rtrt_ewee3@09!`
 
+### `API_KEY_SELECT_MODE`
+
+- 类型：可选
+- 描述：用于控制多个 API Keys 时，选择 Key 的模式，当前支持 `random` 和 `turn`
+- 默认值：`random`
+- 示例：`random` 或 `turn`
+
+使用 `random` 模式下，将在多个 API Keys 中随机获取一个 API Key。
+
+使用 `turn` 模式下，将按照填写的顺序，轮训获取得到 API Key。
+
 ### `ENABLE_OAUTH_SSO`
 
 - 类型：可选
