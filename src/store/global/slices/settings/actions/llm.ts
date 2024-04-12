@@ -6,7 +6,7 @@ import { ChatModelCard } from '@/types/llm';
 import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
 
 import { CustomModelCardDispatch, customModelCardsReducer } from '../reducers/customModelCard';
-import { modelConfigSelectors } from '../selectors/modelConfig';
+import { settingsSelectors } from '../selectors/settings';
 
 /**
  * 设置操作
@@ -37,7 +37,7 @@ export const llmSettingsSlice: StateCreator<
   LLMSettingsAction
 > = (set, get) => ({
   dispatchCustomModelCards: async (provider, payload) => {
-    const prevState = modelConfigSelectors.getConfigByProviderId(provider)(get());
+    const prevState = settingsSelectors.providerConfig(provider)(get());
 
     if (!prevState) return;
 
@@ -47,7 +47,7 @@ export const llmSettingsSlice: StateCreator<
   },
 
   removeEnabledModels: async (provider, model) => {
-    const config = modelConfigSelectors.getConfigByProviderId(provider)(get());
+    const config = settingsSelectors.providerConfig(provider)(get());
 
     await get().setModelProviderConfig(provider, {
       enabledModels: config?.enabledModels?.filter((s) => s !== model).filter(Boolean),

@@ -1,7 +1,5 @@
 import { ChatModelCard } from '@/types/llm';
 
-export type CustomModels = { displayName: string; id: string }[];
-
 export interface GeneralModelProviderConfig {
   apiKey?: string;
   /**

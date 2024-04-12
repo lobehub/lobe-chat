@@ -62,7 +62,10 @@ export class MigrationV3ToV4 implements Migration {
       };
     }
 
-    const customModelCards = transformToChatModelCards(openai.customModelName, []);
+    const customModelCards = transformToChatModelCards({
+      defaultChatModels: [],
+      modelString: openai.customModelName,
+    });
 
     return {
       azure: {
@@ -81,7 +84,10 @@ export class MigrationV3ToV4 implements Migration {
   };
 
   static migrateProvider = (provider: V3LegacyConfig): V4ProviderConfig => {
-    const customModelCards = transformToChatModelCards(provider.customModelName, []);
+    const customModelCards = transformToChatModelCards({
+      defaultChatModels: [],
+      modelString: provider.customModelName,
+    });
 
     return {
       apiKey: provider.apiKey,

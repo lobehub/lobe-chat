@@ -13,7 +13,10 @@ import CustomModelOption from './CustomModelOption';
 
 const OptionRender = memo<{ displayName: string; id: string; provider: GlobalLLMProviderKey }>(
   ({ displayName, id, provider }) => {
-    const model = useGlobalStore((s) => modelProviderSelectors.modelCardById(id)(s), isEqual);
+    const model = useGlobalStore(
+      (s) => modelProviderSelectors.getDefaultModelCardById(id)(s),
+      isEqual,
+    );
 
     // if there is no model, it means it is a user custom model
     if (!model) return <CustomModelOption id={id} provider={provider} />;
