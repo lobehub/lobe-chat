@@ -147,4 +147,24 @@ describe('parseModelString', () => {
       expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024 });
     });
   });
+
+  describe('deployment name', () => {
+    it('should have same deployment name as id', () => {
+      const result = parseModelString('model1=Model 1', true);
+      expect(result.add[0]).toEqual({
+        id: 'model1',
+        displayName: 'Model 1',
+        deploymentName: 'model1',
+      });
+    });
+
+    it('should have diff deployment name as id', () => {
+      const result = parseModelString('gpt-35-turbo->my-deploy=GPT 3.5 Turbo', true);
+      expect(result.add[0]).toEqual({
+        id: 'gpt-35-turbo',
+        displayName: 'GPT 3.5 Turbo',
+        deploymentName: 'my-deploy',
+      });
+    });
+  });
 });

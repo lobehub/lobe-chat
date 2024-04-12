@@ -5,16 +5,12 @@ exports[`GET /api/config > Model Provider env > CUSTOM_MODELS > custom deletion,
   {
     "displayName": "llama",
     "enabled": true,
-    "functionCall": true,
     "id": "llama",
-    "vision": true,
   },
   {
     "displayName": "claude-2",
     "enabled": true,
-    "functionCall": true,
     "id": "claude-2",
-    "vision": true,
   },
   {
     "displayName": "gpt-4-32k",
@@ -37,16 +33,12 @@ exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > custom delet
     {
       "displayName": "llama",
       "enabled": true,
-      "functionCall": true,
       "id": "llama",
-      "vision": true,
     },
     {
       "displayName": "claude-2",
       "enabled": true,
-      "functionCall": true,
       "id": "claude-2",
-      "vision": true,
     },
     {
       "displayName": "gpt-4-32k",
@@ -125,16 +117,12 @@ exports[`GET /api/config > Model Provider env > OPENROUTER_MODEL_LIST > custom d
     {
       "displayName": "google/gemma-7b-it",
       "enabled": true,
-      "functionCall": true,
       "id": "google/gemma-7b-it",
-      "vision": true,
     },
     {
       "displayName": "Mistral-7B-Instruct",
       "enabled": true,
-      "functionCall": true,
       "id": "mistralai/mistral-7b-instruct",
-      "vision": true,
     },
   ],
 }

@@ -157,6 +157,7 @@ export const getProviderConfig = () => {
     AZURE_API_KEY,
     AZURE_API_VERSION: process.env.AZURE_API_VERSION,
     AZURE_ENDPOINT: process.env.AZURE_ENDPOINT,
+    AZURE_MODEL_LIST: process.env.AZURE_MODEL_LIST,
 
     ENABLED_ZHIPU: !!ZHIPU_API_KEY,
     ZHIPU_API_KEY,

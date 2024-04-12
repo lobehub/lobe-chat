@@ -81,7 +81,7 @@ const defaultModelProviderList = (s: GlobalStore): ModelProviderCard[] => {
       ...OpenAIProviderCard,
       chatModels: mergeModels('openai', OpenAIProviderCard.chatModels),
     },
-    { ...AzureProviderCard, chatModels: [] },
+    { ...AzureProviderCard, chatModels: mergeModels('azure', []) },
     { ...OllamaProviderCard, chatModels: mergeModels('ollama', OllamaProviderCard.chatModels) },
     AnthropicProviderCard,
     GoogleProviderCard,

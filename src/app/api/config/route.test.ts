@@ -101,31 +101,23 @@ describe('GET /api/config', () => {
 
         expect(result).toContainEqual({
           displayName: 'model1',
-          functionCall: true,
           id: 'model1',
           enabled: true,
-          vision: true,
         });
         expect(result).toContainEqual({
           displayName: 'model2',
-          functionCall: true,
           enabled: true,
           id: 'model2',
-          vision: true,
         });
         expect(result).toContainEqual({
           displayName: 'model3',
           enabled: true,
-          functionCall: true,
           id: 'model3',
-          vision: true,
         });
         expect(result).toContainEqual({
           displayName: 'model4',
-          functionCall: true,
           enabled: true,
           id: 'model4',
-          vision: true,
         });
 
         process.env.OPENAI_MODEL_LIST = '';
