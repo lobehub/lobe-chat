@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.147.9](https://github.com/lobehub/lobe-chat/compare/v0.147.8...v0.147.9)
+
+<sup>Released on **2024-04-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix custom model list not display correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix custom model list not display correctly, closes [#2009](https://github.com/lobehub/lobe-chat/issues/2009) ([7d0e220](https://github.com/lobehub/lobe-chat/commit/7d0e220))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.147.8](https://github.com/lobehub/lobe-chat/compare/v0.147.7...v0.147.8)
 
 <sup>Released on **2024-04-12**</sup>
