@@ -2,13 +2,12 @@ import { produce } from 'immer';
 
 import { LOBE_DEFAULT_MODEL_LIST, OpenAIProviderCard } from '@/config/modelProviders';
 import { ChatModelCard } from '@/types/llm';
-import { CustomModels } from '@/types/settings';
 
 /**
  * Parse model string to add or remove models.
  */
 export const parseModelString = (modelString: string = '') => {
-  let models: CustomModels = [];
+  let models: ChatModelCard[] = [];
   let removeAll = false;
   const removedModels: string[] = [];
   const modelNames = modelString.split(/[,，]/).filter(Boolean);
@@ -16,7 +15,8 @@ export const parseModelString = (modelString: string = '') => {
   for (const item of modelNames) {
     const disable = item.startsWith('-');
     const nameConfig = item.startsWith('+') || item.startsWith('-') ? item.slice(1) : item;
-    const [id, displayName] = nameConfig.split('=');
+    const [idAndDisplayName, ...capabilities] = nameConfig.split('<');
+    const [id, displayName] = idAndDisplayName.split('=');
 
     if (disable) {
       // Disable all models.
@@ -33,7 +33,37 @@ export const parseModelString = (modelString: string = '') => {
       models.splice(existingIndex, 1);
     }
 
-    models.push({ displayName, id: id });
+    const model: ChatModelCard = {
+      displayName: displayName || undefined,
+      id,
+    };
+
+    if (capabilities.length > 0) {
+      const [maxTokenStr, ...capabilityList] = capabilities[0].replace('>', '').split(':');
+      model.tokens = parseInt(maxTokenStr, 10) || undefined;
+
+      for (const capability of capabilityList) {
+        switch (capability) {
+          case 'vision': {
+            model.vision = true;
+            break;
+          }
+          case 'fc': {
+            model.functionCall = true;
+            break;
+          }
+          case 'file': {
+            model.files = true;
+            break;
+          }
+          default: {
+            console.warn(`Unknown capability: ${capability}`);
+          }
+        }
+      }
+    }
+
+    models.push(model);
   }
 
   return {
