@@ -67,6 +67,11 @@
     }
   },
   "google": {
+    "endpoint": {
+      "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "Địa chỉ Proxy API"
+    },
     "title": "Google",
     "token": {
       "desc": "Nhập API Key từ Google",

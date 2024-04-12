@@ -2,30 +2,14 @@
 title: LobeChat Model Service Providers - Environment Variables and Configuration
 description: >-
   Learn about the environment variables and configuration settings for various
-  model service providers like OpenAI, Azure OpenAI, ZHIPU AI, Moonshot AI,
-  Google AI, AWS Bedrock, Ollama, Perplexity AI, Anthropic AI, Mistral AI, Groq
-  AI, OpenRouter AI, 01.AI, and TogetherAI.
+  model service providers like OpenAI, Google AI, AWS Bedrock, Ollama,
+  Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
 tags:
   - Model Service Providers
   - Environment Variables
-  - Configuration
-  - OpenAI
-  - Azure OpenAI
-  - ZHIPU AI
-  - Moonshot AI
-  - Google AI
-  - AWS Bedrock
-  - Ollama
-  - Perplexity AI
-  - Anthropic AI
-  - Mistral AI
-  - Groq AI
-  - OpenRouter AI
-  - 01.AI
-  - TogetherAI
 ---
 
-# Model Service Providers
+# Model Providers
 
 When deploying LobeChat, a rich set of environment variables related to model service providers is provided, allowing you to easily define the model service providers to be enabled in LobeChat.
 
@@ -137,6 +121,13 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Description: This is the API key you applied for in the Google AI Platform to access Google AI services
 - Default: -
 - Example: `AIraDyDwcw254kwJaGjI9wwaHcdDCS__Vt3xQE`
+
+### `GOOGLE_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Google interface proxy, you can use this configuration item to override the default Google API request base URL
+- Default: `https://generativelanguage.googleapis.com`
+- Example: `https://api.genai.gd.edu.kg/google`
 
 ## AWS Bedrock
 
