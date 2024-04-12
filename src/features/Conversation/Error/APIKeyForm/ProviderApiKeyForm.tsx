@@ -5,7 +5,7 @@ import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/selectors';
+import { settingsSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import { FormAction } from '../style';
@@ -24,8 +24,8 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
     const [showProxy, setShow] = useState(false);
 
     const [apiKey, proxyUrl, setConfig] = useGlobalStore((s) => [
-      modelConfigSelectors.getConfigByProviderId(provider)(s)?.apiKey,
-      modelConfigSelectors.getConfigByProviderId(provider)(s)?.endpoint,
+      settingsSelectors.providerConfig(provider)(s)?.apiKey,
+      settingsSelectors.providerConfig(provider)(s)?.endpoint,
       s.setModelProviderConfig,
     ]);
 
