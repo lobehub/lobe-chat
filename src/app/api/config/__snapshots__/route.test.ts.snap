@@ -5,16 +5,12 @@ exports[`GET /api/config > Model Provider env > CUSTOM_MODELS > custom deletion,
   {
     "displayName": "llama",
     "enabled": true,
-    "functionCall": true,
     "id": "llama",
-    "vision": true,
   },
   {
     "displayName": "claude-2",
     "enabled": true,
-    "functionCall": true,
     "id": "claude-2",
-    "vision": true,
   },
   {
     "displayName": "gpt-4-32k",
@@ -27,29 +23,32 @@ exports[`GET /api/config > Model Provider env > CUSTOM_MODELS > custom deletion,
 `;
 
 exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
-[
-  {
-    "displayName": "llama",
-    "enabled": true,
-    "functionCall": true,
-    "id": "llama",
-    "vision": true,
-  },
-  {
-    "displayName": "claude-2",
-    "enabled": true,
-    "functionCall": true,
-    "id": "claude-2",
-    "vision": true,
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "enabled": true,
-    "functionCall": true,
-    "id": "gpt-4-0125-preview",
-    "tokens": 128000,
-  },
-]
+{
+  "enabledModels": [
+    "llama",
+    "claude-2",
+    "gpt-4-0125-preview",
+  ],
+  "serverModelCards": [
+    {
+      "displayName": "llama",
+      "enabled": true,
+      "id": "llama",
+    },
+    {
+      "displayName": "claude-2",
+      "enabled": true,
+      "id": "claude-2",
+    },
+    {
+      "displayName": "gpt-4-32k",
+      "enabled": true,
+      "functionCall": true,
+      "id": "gpt-4-0125-preview",
+      "tokens": 128000,
+    },
+  ],
+}
 `;
 
 exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > should work correct with gpt-4 1`] = `
@@ -108,20 +107,23 @@ exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > should work 
 `;
 
 exports[`GET /api/config > Model Provider env > OPENROUTER_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
-[
-  {
-    "displayName": "google/gemma-7b-it",
-    "enabled": true,
-    "functionCall": true,
-    "id": "google/gemma-7b-it",
-    "vision": true,
-  },
-  {
-    "displayName": "Mistral-7B-Instruct",
-    "enabled": true,
-    "functionCall": true,
-    "id": "mistralai/mistral-7b-instruct",
-    "vision": true,
-  },
-]
+{
+  "enabled": false,
+  "enabledModels": [
+    "google/gemma-7b-it",
+    "mistralai/mistral-7b-instruct",
+  ],
+  "serverModelCards": [
+    {
+      "displayName": "google/gemma-7b-it",
+      "enabled": true,
+      "id": "google/gemma-7b-it",
+    },
+    {
+      "displayName": "Mistral-7B-Instruct",
+      "enabled": true,
+      "id": "mistralai/mistral-7b-instruct",
+    },
+  ],
+}
 `;

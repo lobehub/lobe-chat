@@ -87,7 +87,7 @@ describe('parseAgentConfig', () => {
   });
 
   describe('complex environment', () => {
-    it.skip('parses a complete environment variable string correctly', () => {
+    it('parses environment variable string correctly', () => {
       const envStr =
         'model=gpt-4-1106-preview;params.max_tokens=300;plugins=search-engine,lobe-image-designer';
       const expected = {

@@ -23,7 +23,7 @@ describe('GET /api/config', () => {
 
         const jsonResponse: GlobalServerConfig = await response.json();
 
-        const result = jsonResponse.languageModel?.openai?.serverModelCards;
+        const result = jsonResponse.languageModel?.openai;
 
         expect(result).toMatchSnapshot();
         process.env.OPENAI_MODEL_LIST = '';
@@ -101,31 +101,23 @@ describe('GET /api/config', () => {
 
         expect(result).toContainEqual({
           displayName: 'model1',
-          functionCall: true,
           id: 'model1',
           enabled: true,
-          vision: true,
         });
         expect(result).toContainEqual({
           displayName: 'model2',
-          functionCall: true,
           enabled: true,
           id: 'model2',
-          vision: true,
         });
         expect(result).toContainEqual({
           displayName: 'model3',
           enabled: true,
-          functionCall: true,
           id: 'model3',
-          vision: true,
         });
         expect(result).toContainEqual({
           displayName: 'model4',
-          functionCall: true,
           enabled: true,
           id: 'model4',
-          vision: true,
         });
 
         process.env.OPENAI_MODEL_LIST = '';
@@ -159,7 +151,7 @@ describe('GET /api/config', () => {
         const res = await GET();
         const data: GlobalServerConfig = await res.json();
 
-        const result = data.languageModel?.openrouter?.serverModelCards;
+        const result = data.languageModel?.openrouter;
 
         expect(result).toMatchSnapshot();
 
