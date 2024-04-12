@@ -18,11 +18,11 @@ import {
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
 import { GlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/slices/settings/selectors';
 import { ChatModelCard } from '@/types/llm';
 import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
 
 import { CustomModelCardDispatch, customModelCardsReducer } from '../reducers/customModelCard';
+import { modelProviderSelectors } from '../selectors/modelProvider';
 import { settingsSelectors } from '../selectors/settings';
 
 /**
