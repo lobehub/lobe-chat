@@ -23,7 +23,7 @@ describe('GET /api/config', () => {
 
         const jsonResponse: GlobalServerConfig = await response.json();
 
-        const result = jsonResponse.languageModel?.openai?.serverModelCards;
+        const result = jsonResponse.languageModel?.openai;
 
         expect(result).toMatchSnapshot();
         process.env.OPENAI_MODEL_LIST = '';
@@ -159,7 +159,7 @@ describe('GET /api/config', () => {
         const res = await GET();
         const data: GlobalServerConfig = await res.json();
 
-        const result = data.languageModel?.openrouter?.serverModelCards;
+        const result = data.languageModel?.openrouter;
 
         expect(result).toMatchSnapshot();
 

@@ -6,6 +6,7 @@ import { GlobalDefaultAgent, GlobalLLMProviderKey } from '@/types/settings';
 export interface ServerModelProviderConfig {
   enabled?: boolean;
 
+  enabledModels?: string[];
   /**
    * the model cards defined in server
    */

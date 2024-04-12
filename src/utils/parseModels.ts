@@ -97,3 +97,12 @@ export const transformToChatModelCards = (
     }
   });
 };
+
+export const extractEnabledModels = (modelString: string = '') => {
+  const modelConfig = parseModelString(modelString);
+  const list = modelConfig.add.map((m) => m.id);
+
+  if (list.length === 0) return;
+
+  return list;
+};

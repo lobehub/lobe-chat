@@ -5,7 +5,7 @@ import {
 } from '@/config/modelProviders';
 import { getServerConfig } from '@/config/server';
 import { GlobalServerConfig } from '@/types/serverConfig';
-import { transformToChatModelCards } from '@/utils/parseModels';
+import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseModels';
 
 import { parseAgentConfig } from './parseDefaultAgent';
 
@@ -65,11 +65,13 @@ export const GET = async () => {
         ),
       },
       openai: {
+        enabledModels: extractEnabledModels(OPENAI_MODEL_LIST),
         serverModelCards: transformToChatModelCards(OPENAI_MODEL_LIST),
       },
 
       openrouter: {
         enabled: ENABLED_OPENROUTER,
+        enabledModels: extractEnabledModels(OPENROUTER_MODEL_LIST),
         serverModelCards: transformToChatModelCards(
           OPENROUTER_MODEL_LIST,
           OpenRouterProviderCard.chatModels,
@@ -79,6 +81,7 @@ export const GET = async () => {
 
       togetherai: {
         enabled: ENABLED_TOGETHERAI,
+        enabledModels: extractEnabledModels(TOGETHERAI_MODEL_LIST),
         serverModelCards: transformToChatModelCards(
           TOGETHERAI_MODEL_LIST,
           TogetherAIProviderCard.chatModels,
