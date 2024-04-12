@@ -30,6 +30,7 @@ export const GET = async () => {
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
     ENABLED_MISTRAL,
+    ENABLED_AZURE_OPENAI,
 
     ENABLE_OLLAMA,
     OLLAMA_MODEL_LIST,
@@ -50,12 +51,12 @@ export const GET = async () => {
     enabledOAuthSSO: ENABLE_OAUTH_SSO,
     languageModel: {
       anthropic: { enabled: ENABLED_ANTHROPIC },
+      azure: { enabled: ENABLED_AZURE_OPENAI },
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       google: { enabled: ENABLED_GOOGLE },
       groq: { enabled: ENABLED_GROQ },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
-
       ollama: {
         enabled: ENABLE_OLLAMA,
         serverModelCards: transformToChatModelCards(
@@ -66,6 +67,7 @@ export const GET = async () => {
       openai: {
         serverModelCards: transformToChatModelCards(OPENAI_MODEL_LIST),
       },
+
       openrouter: {
         enabled: ENABLED_OPENROUTER,
         serverModelCards: transformToChatModelCards(

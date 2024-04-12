@@ -10,7 +10,7 @@ export const preferredRegion = getPreferredRegion();
 export const POST = async (req: Request) => {
   const payload = (await req.json()) as OpenAITTSPayload;
 
-  const openaiOrErrResponse = createBizOpenAI(req, payload.options.model);
+  const openaiOrErrResponse = createBizOpenAI(req);
 
   // if resOrOpenAI is a Response, it means there is an error,just return it
   if (openaiOrErrResponse instanceof Response) return openaiOrErrResponse;
