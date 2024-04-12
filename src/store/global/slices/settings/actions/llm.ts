@@ -114,6 +114,8 @@ export const llmSettingsSlice: StateCreator<
     ];
 
     set({ defaultModelProviderList }, false, 'refreshDefaultModelProviderList');
+
+    get().refreshModelProviderList();
   },
 
   refreshModelProviderList: () => {
@@ -171,6 +173,8 @@ export const llmSettingsSlice: StateCreator<
               latestFetchTime: Date.now(),
               remoteModelCards: data,
             });
+
+            get().refreshDefaultModelProviderList();
           }
         },
         revalidateOnFocus: false,
