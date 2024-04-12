@@ -1,6 +1,7 @@
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
 import AnthropicProvider from './anthropic';
+import AzureProvider from './azure';
 import BedrockProvider from './bedrock';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
@@ -29,6 +30,23 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   AnthropicProvider.chatModels,
   ZeroOneProvider.chatModels,
 ].flat();
+
+export const DEFAULT_MODEL_PROVIDER_LIST = [
+  OpenAIProvider,
+  { ...AzureProvider, chatModels: [] },
+  OllamaProvider,
+  AnthropicProvider,
+  GoogleProvider,
+  OpenRouterProvider,
+  TogetherAIProvider,
+  BedrockProvider,
+  PerplexityProvider,
+  MistralProvider,
+  GroqProvider,
+  MoonshotProvider,
+  ZeroOneProvider,
+  ZhiPuProvider,
+];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
   return provider.chatModels.filter((v) => v.enabled).map((m) => m.id);
