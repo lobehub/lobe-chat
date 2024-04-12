@@ -66,6 +66,7 @@ describe('parseModelString', () => {
         },
       ]);
     });
+
     it('should handle empty extension capability value', () => {
       const result = parseModelString('model1<1024:>');
       expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024 });
