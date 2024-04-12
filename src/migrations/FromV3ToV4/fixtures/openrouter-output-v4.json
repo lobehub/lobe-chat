@@ -48,16 +48,12 @@
             {
               "displayName": "01-ai/yi-34b-chat",
               "enabled": true,
-              "functionCall": true,
-              "id": "01-ai/yi-34b-chat",
-              "vision": true
+              "id": "01-ai/yi-34b-chat"
             },
             {
               "displayName": "huggingfaceh4/zephyr-7b-beta",
               "enabled": true,
-              "functionCall": true,
-              "id": "huggingfaceh4/zephyr-7b-beta",
-              "vision": true
+              "id": "huggingfaceh4/zephyr-7b-beta"
             }
           ]
         },
