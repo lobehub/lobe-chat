@@ -2,9 +2,18 @@ import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { userService } from '@/services/user';
-import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors, settingsSelectors } from '@/store/global/slices/settings/selectors';
+import { GlobalStore, useGlobalStore } from '@/store/global';
+import {
+  GlobalSettingsState,
+  initialSettingsState,
+} from '@/store/global/slices/settings/initialState';
+import {
+  modelConfigSelectors,
+  modelProviderSelectors,
+  settingsSelectors,
+} from '@/store/global/slices/settings/selectors';
 import { GeneralModelProviderConfig } from '@/types/settings';
+import { merge } from '@/utils/merge';
 
 import { CustomModelCardDispatch, customModelCardsReducer } from '../reducers/customModelCard';
 
@@ -14,9 +23,6 @@ vi.mock('@/services/user', () => ({
     updateUserSettings: vi.fn(),
     resetUserSettings: vi.fn(),
   },
-}));
-vi.mock('../reducers/customModelCard', () => ({
-  customModelCardsReducer: vi.fn().mockReturnValue([]),
 }));
 
 describe('LLMSettingsSliceAction', () => {
@@ -55,6 +61,86 @@ describe('LLMSettingsSliceAction', () => {
 
       // Assert that setModelProviderConfig was not called
       expect(result.current.setModelProviderConfig).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('refreshDefaultModelProviderList', () => {
+    it('default', async () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        useGlobalStore.setState({
+          serverConfig: {
+            languageModel: {
+              azure: { serverModelCards: [{ id: 'abc', deploymentName: 'abc' }] },
+            },
+            telemetry: {},
+          },
+        });
+      });
+
+      act(() => {
+        result.current.refreshDefaultModelProviderList();
+      });
+
+      // Assert that setModelProviderConfig was not called
+      const azure = result.current.defaultModelProviderList.find((m) => m.id === 'azure');
+      expect(azure?.chatModels).toEqual([{ id: 'abc', deploymentName: 'abc' }]);
+    });
+  });
+
+  describe('refreshModelProviderList', () => {
+    it('visible', async () => {
+      const { result } = renderHook(() => useGlobalStore());
+      act(() => {
+        useGlobalStore.setState({
+          settings: {
+            languageModel: {
+              ollama: { enabledModels: ['llava'] },
+            },
+          },
+        });
+      });
+
+      act(() => {
+        result.current.refreshModelProviderList();
+      });
+
+      const ollamaList = result.current.modelProviderList.find((r) => r.id === 'ollama');
+      // Assert that setModelProviderConfig was not called
+      expect(ollamaList?.chatModels.find((c) => c.id === 'llava')).toEqual({
+        displayName: 'LLaVA 7B',
+        functionCall: false,
+        enabled: true,
+        id: 'llava',
+        tokens: 4000,
+        vision: true,
+      });
+    });
+
+    it('modelProviderListForModelSelect should return only enabled providers', () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        useGlobalStore.setState({
+          settings: {
+            languageModel: {
+              perplexity: { enabled: true },
+              azure: { enabled: false },
+            },
+          },
+        });
+      });
+
+      act(() => {
+        result.current.refreshModelProviderList();
+      });
+
+      const enabledProviders = modelProviderSelectors.modelProviderListForModelSelect(
+        result.current,
+      );
+      expect(enabledProviders).toHaveLength(2);
+      expect(enabledProviders[1].id).toBe('perplexity');
     });
   });
 });
