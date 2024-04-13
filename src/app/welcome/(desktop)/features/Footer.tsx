@@ -18,7 +18,7 @@ const Footer = memo(() => {
       <span style={{ color: theme.colorTextDescription }}>
         ©{new Date().getFullYear()} EDUGPT
       </span>
-      <Flexbox horizontal>
+      {/*<Flexbox horizontal>
         <ActionIcon
           icon={DiscordIcon}
           onClick={() => window.open(DISCORD, '__blank')}
@@ -37,7 +37,7 @@ const Footer = memo(() => {
           size={'site'}
           title={'GitHub'}
         />
-      </Flexbox>
+      </Flexbox>*/}
     </Flexbox>
   );
 });
