@@ -29,6 +29,7 @@ const ModelSelect = memo(() => {
     modelProviderSelectors.modelProviderListForModelSelect,
     isEqual,
   );
+
   const { styles } = useStyles();
 
   const options = useMemo<SelectProps['options']>(() => {

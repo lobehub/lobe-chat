@@ -1,22 +1,6 @@
 import { uniqBy } from 'lodash-es';
 
-import {
-  AnthropicProviderCard,
-  AzureProviderCard,
-  BedrockProviderCard,
-  GoogleProviderCard,
-  GroqProviderCard,
-  MistralProviderCard,
-  MoonshotProviderCard,
-  OllamaProviderCard,
-  OpenAIProviderCard,
-  OpenRouterProviderCard,
-  PerplexityProviderCard,
-  TogetherAIProviderCard,
-  ZeroOneProviderCard,
-  ZhiPuProviderCard,
-  filterEnabledModels,
-} from '@/config/modelProviders';
+import { filterEnabledModels } from '@/config/modelProviders';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import { ServerModelProviderConfig } from '@/types/serverConfig';
 import { GlobalLLMProviderKey } from '@/types/settings';
@@ -59,49 +43,8 @@ const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) =
 /**
  * define all the model list of providers
  */
-const defaultModelProviderList = (s: GlobalStore): ModelProviderCard[] => {
-  /**
-   * Because we have several model cards sources, we need to merge the model cards
-   * the priority is below:
-   * 1 - server side model cards
-   * 2 - remote model cards
-   * 3 - default model cards
-   */
-
-  const mergeModels = (provider: GlobalLLMProviderKey, defaultChatModels: ChatModelCard[]) => {
-    // if the chat model is config in the server side, use the server side model cards
-    const serverChatModels = serverProviderModelCards(provider)(s);
-    const remoteChatModels = remoteProviderModelCards(provider)(s);
-
-    return serverChatModels ?? remoteChatModels ?? defaultChatModels;
-  };
-
-  return [
-    {
-      ...OpenAIProviderCard,
-      chatModels: mergeModels('openai', OpenAIProviderCard.chatModels),
-    },
-    { ...AzureProviderCard, chatModels: mergeModels('azure', []) },
-    { ...OllamaProviderCard, chatModels: mergeModels('ollama', OllamaProviderCard.chatModels) },
-    AnthropicProviderCard,
-    GoogleProviderCard,
-    {
-      ...OpenRouterProviderCard,
-      chatModels: mergeModels('openrouter', OpenRouterProviderCard.chatModels),
-    },
-    {
-      ...TogetherAIProviderCard,
-      chatModels: mergeModels('togetherai', TogetherAIProviderCard.chatModels),
-    },
-    BedrockProviderCard,
-    PerplexityProviderCard,
-    MistralProviderCard,
-    GroqProviderCard,
-    MoonshotProviderCard,
-    ZeroOneProviderCard,
-    ZhiPuProviderCard,
-  ];
-};
+const defaultModelProviderList = (s: GlobalStore): ModelProviderCard[] =>
+  s.defaultModelProviderList;
 
 export const getDefaultModeProviderById = (provider: string) => (s: GlobalStore) =>
   defaultModelProviderList(s).find((s) => s.id === provider);
@@ -146,21 +89,7 @@ const getEnableModelsById = (provider: string) => (s: GlobalStore) => {
   return getProviderConfigById(provider)(s)?.enabledModels?.filter(Boolean);
 };
 
-const modelProviderList = (s: GlobalStore): ModelProviderCard[] =>
-  defaultModelProviderList(s).map((list) => ({
-    ...list,
-    chatModels: getModelCardsById(list.id)(s)?.map((model) => {
-      const models = getEnableModelsById(list.id)(s);
-
-      if (!models) return model;
-
-      return {
-        ...model,
-        enabled: models?.some((m) => m === model.id),
-      };
-    }),
-    enabled: isProviderEnabled(list.id as any)(s),
-  }));
+const modelProviderList = (s: GlobalStore): ModelProviderCard[] => s.modelProviderList;
 
 const modelProviderListForModelSelect = (s: GlobalStore): ModelProviderCard[] =>
   modelProviderList(s)
@@ -196,22 +125,26 @@ const modelMaxToken = (id: string) => (s: GlobalStore) => getModelCardById(id)(s
 
 export const modelProviderSelectors = {
   defaultModelProviderList,
-
   getDefaultEnabledModelsById,
   getDefaultModelCardById,
 
   getEnableModelsById,
   getModelCardById,
-  getModelCardsById,
 
+  getModelCardsById,
   isModelEnabledFiles,
   isModelEnabledFunctionCall,
   isModelEnabledUpload,
   isModelEnabledVision,
   isModelHasMaxToken,
 
-  modelMaxToken,
+  isProviderEnabled,
 
+  modelMaxToken,
   modelProviderList,
+
   modelProviderListForModelSelect,
+
+  remoteProviderModelCards,
+  serverProviderModelCards,
 };
