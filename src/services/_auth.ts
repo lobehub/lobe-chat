@@ -35,9 +35,7 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     default: {
-      const config = modelConfigSelectors.getConfigByProviderId(provider)(
-        useGlobalStore.getState(),
-      );
+      const config = settingsSelectors.providerConfig(provider)(useGlobalStore.getState());
 
       return { apiKey: config?.apiKey, endpoint: config?.endpoint };
     }

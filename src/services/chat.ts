@@ -9,7 +9,6 @@ import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import {
   commonSelectors,
-  modelConfigSelectors,
   modelProviderSelectors,
   preferenceSelectors,
 } from '@/store/global/selectors';
@@ -91,7 +90,7 @@ class ChatService {
     const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
     // check this model can use function call
-    const canUseFC = modelProviderSelectors.modelEnabledFunctionCall(payload.model)(
+    const canUseFC = modelProviderSelectors.isModelEnabledFunctionCall(payload.model)(
       useGlobalStore.getState(),
     );
     // the rule that model can use tools:
@@ -137,7 +136,7 @@ class ChatService {
 
     // if the provider is Azure, get the deployment name as the request model
     if (provider === ModelProvider.Azure) {
-      const chatModelCards = modelConfigSelectors.getModelCardsByProviderId(provider)(
+      const chatModelCards = modelProviderSelectors.getModelCardsById(provider)(
         useGlobalStore.getState(),
       );
 
@@ -257,7 +256,7 @@ class ChatService {
 
       if (imageList.length === 0) return m.content;
 
-      const canUploadFile = modelProviderSelectors.modelEnabledUpload(model)(
+      const canUploadFile = modelProviderSelectors.isModelEnabledUpload(model)(
         useGlobalStore.getState(),
       );
 
@@ -292,7 +291,7 @@ class ChatService {
 
     return produce(postMessages, (draft) => {
       if (!tools || tools.length === 0) return;
-      const hasFC = modelProviderSelectors.modelEnabledFunctionCall(model)(
+      const hasFC = modelProviderSelectors.isModelEnabledFunctionCall(model)(
         useGlobalStore.getState(),
       );
       if (!hasFC) return;
