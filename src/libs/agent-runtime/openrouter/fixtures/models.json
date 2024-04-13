@@ -1,0 +1,62 @@
+[
+  {
+    "id": "haotian-liu/llava-13b",
+    "name": "Llava 13B",
+    "description": "LLaVA is a large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding, achieving impressive chat capabilities mimicking [GPT-4](/models/openai/gpt-4-vision-preview) and setting a new state-of-the-art accuracy on Science QA\n\n#multimodal",
+    "pricing": { "prompt": "0.000005", "completion": "0.000005", "image": "0", "request": "0" },
+    "context_length": 2048,
+    "architecture": { "modality": "multimodal", "tokenizer": "Llama2", "instruct_type": null },
+    "top_provider": { "max_completion_tokens": null, "is_moderated": false },
+    "per_request_limits": { "prompt_tokens": "891204", "completion_tokens": "891204" }
+  },
+  {
+    "id": "nousresearch/nous-hermes-2-vision-7b",
+    "name": "Nous: Hermes 2 Vision 7B (alpha)",
+    "description": "This vision-language model builds on innovations from the popular [OpenHermes-2.5](/models/teknium/openhermes-2.5-mistral-7b) model, by Teknium. It adds vision support, and is trained on a custom dataset enriched with function calling\n\nThis project is led by [qnguyen3](https://twitter.com/stablequan) and [teknium](https://twitter.com/Teknium1).\n\n#multimodal",
+    "pricing": { "prompt": "0.000005", "completion": "0.000005", "image": "0", "request": "0" },
+    "context_length": 4096,
+    "architecture": { "modality": "multimodal", "tokenizer": "Mistral", "instruct_type": null },
+    "top_provider": { "max_completion_tokens": null, "is_moderated": false },
+    "per_request_limits": { "prompt_tokens": "891204", "completion_tokens": "891204" }
+  },
+  {
+    "id": "openai/gpt-3.5-turbo",
+    "name": "OpenAI: GPT-3.5 Turbo",
+    "description": "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.\n\nUpdated by OpenAI to point to the [latest version of GPT-3.5](/models?q=openai/gpt-3.5). Training data up to Sep 2021.",
+    "pricing": { "prompt": "0.0000005", "completion": "0.0000015", "image": "0", "request": "0" },
+    "context_length": 16385,
+    "architecture": { "modality": "text", "tokenizer": "GPT", "instruct_type": null },
+    "top_provider": { "max_completion_tokens": 4096, "is_moderated": true },
+    "per_request_limits": { "prompt_tokens": "8912044", "completion_tokens": "2970681" }
+  },
+  {
+    "id": "openai/gpt-4-vision-preview",
+    "name": "OpenAI: GPT-4 Vision",
+    "description": "Ability to understand images, in addition to all other [GPT-4 Turbo capabilties](/models/openai/gpt-4-turbo). Training data: up to Apr 2023.\n\n**Note:** heavily rate limited by OpenAI while in preview.\n\n#multimodal",
+    "pricing": { "prompt": "0.00001", "completion": "0.00003", "image": "0.01445", "request": "0" },
+    "context_length": 128000,
+    "architecture": { "modality": "multimodal", "tokenizer": "GPT", "instruct_type": null },
+    "top_provider": { "max_completion_tokens": 4096, "is_moderated": true },
+    "per_request_limits": { "prompt_tokens": "445602", "completion_tokens": "148534" }
+  },
+  {
+    "id": "google/gemma-7b-it",
+    "name": "Google: Gemma 7B",
+    "description": "Gemma by Google is an advanced, open-source language model family, leveraging the latest in decoder-only, text-to-text technology. It offers English language capabilities across text generation tasks like question answering, summarization, and reasoning. The Gemma 7B variant is comparable in performance to leading open source models.\n\nUsage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).",
+    "pricing": { "prompt": "0.00000013", "completion": "0.00000013", "image": "0", "request": "0" },
+    "context_length": 8192,
+    "architecture": { "modality": "text", "tokenizer": "Llama2", "instruct_type": "gemma" },
+    "top_provider": { "max_completion_tokens": null, "is_moderated": false },
+    "per_request_limits": { "prompt_tokens": "34277093", "completion_tokens": "34277093" }
+  },
+  {
+    "id": "gryphe/mythomax-l2-13b:nitro",
+    "name": "MythoMax 13B (nitro)",
+    "description": "One of the highest performing and most popular fine-tunes of Llama 2 13B, with rich descriptions and roleplay. #merge\n\nNote: this is a higher-throughput version of [this model](/models/gryphe/mythomax-l2-13b), and may have higher prices and slightly different outputs.",
+    "pricing": { "prompt": "0.0000002", "completion": "0.0000002", "image": "0", "request": "0" },
+    "context_length": 4096,
+    "architecture": { "modality": "text", "tokenizer": "Llama2", "instruct_type": "alpaca" },
+    "top_provider": { "max_completion_tokens": null, "is_moderated": false },
+    "per_request_limits": { "prompt_tokens": "22280110", "completion_tokens": "22280110" }
+  }
+]

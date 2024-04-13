@@ -147,26 +147,24 @@ describe('getProviderAuthPayload', () => {
   it('should return correct payload for OpenAI provider', () => {
     // 假设的 OpenAI 配置
     const mockOpenAIConfig = {
-      OPENAI_API_KEY: 'openai-api-key',
+      apiKey: 'openai-api-key',
       endpoint: 'openai-endpoint',
       useAzure: true,
       azureApiVersion: 'openai-azure-api-version',
     };
     act(() => {
-      setModelProviderConfig('openAI', mockOpenAIConfig);
+      setModelProviderConfig('openai', mockOpenAIConfig);
     });
 
     const payload = getProviderAuthPayload(ModelProvider.OpenAI);
     expect(payload).toEqual({
-      apiKey: mockOpenAIConfig.OPENAI_API_KEY,
-      azureApiVersion: mockOpenAIConfig.azureApiVersion,
+      apiKey: mockOpenAIConfig.apiKey,
       endpoint: mockOpenAIConfig.endpoint,
-      useAzure: mockOpenAIConfig.useAzure,
     });
   });
 
   it('should return an empty object or throw an error for an unknown provider', () => {
     const payload = getProviderAuthPayload('UnknownProvider');
-    expect(payload).toEqual({ apiKey: '', endpoint: '' });
+    expect(payload).toEqual({});
   });
 });

@@ -90,7 +90,7 @@ class ChatService {
     const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
     // check this model can use function call
-    const canUseFC = modelProviderSelectors.modelEnabledFunctionCall(payload.model)(
+    const canUseFC = modelProviderSelectors.isModelEnabledFunctionCall(payload.model)(
       useGlobalStore.getState(),
     );
     // the rule that model can use tools:
@@ -131,13 +131,22 @@ class ChatService {
     const { signal } = options ?? {};
 
     const { provider = ModelProvider.OpenAI, ...res } = params;
+
+    let model = res.model || DEFAULT_AGENT_CONFIG.model;
+
+    // if the provider is Azure, get the deployment name as the request model
+    if (provider === ModelProvider.Azure) {
+      const chatModelCards = modelProviderSelectors.getModelCardsById(provider)(
+        useGlobalStore.getState(),
+      );
+
+      const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
+      if (deploymentName) model = deploymentName;
+    }
+
     const payload = merge(
-      {
-        model: DEFAULT_AGENT_CONFIG.model,
-        stream: true,
-        ...DEFAULT_AGENT_CONFIG.params,
-      },
-      res,
+      { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
+      { ...res, model },
     );
 
     const traceHeader = createTraceHeader({ ...options?.trace });
@@ -247,7 +256,7 @@ class ChatService {
 
       if (imageList.length === 0) return m.content;
 
-      const canUploadFile = modelProviderSelectors.modelEnabledUpload(model)(
+      const canUploadFile = modelProviderSelectors.isModelEnabledUpload(model)(
         useGlobalStore.getState(),
       );
 
@@ -282,7 +291,7 @@ class ChatService {
 
     return produce(postMessages, (draft) => {
       if (!tools || tools.length === 0) return;
-      const hasFC = modelProviderSelectors.modelEnabledFunctionCall(model)(
+      const hasFC = modelProviderSelectors.isModelEnabledFunctionCall(model)(
         useGlobalStore.getState(),
       );
       if (!hasFC) return;

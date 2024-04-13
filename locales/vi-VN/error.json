@@ -85,58 +85,7 @@
     "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Nhập Khóa API Anthropic của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
-        "title": "Sử dụng Khóa API Anthropic tùy chỉnh"
-      },
-      "Bedrock": {
-        "customRegion": "Vùng dịch vụ tùy chỉnh",
-        "description": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
-        "title": "Sử dụng thông tin xác thực tùy chỉnh của Bedrock"
-      },
-      "Google": {
-        "description": "Nhập Google API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
-        "title": "Sử dụng thông tin xác thực tùy chỉnh của Google"
-      },
-      "Groq": {
-        "description": "Nhập Groq API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
-        "title": "Sử dụng Groq API Key tùy chỉnh"
-      },
-      "Mistral": {
-        "description": "Nhập Mistral AI API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
-        "title": "Sử dụng Mistral AI API Key tùy chỉnh"
-      },
-      "Moonshot": {
-        "description": "Nhập Khóa API Moonshot AI của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
-        "title": "Sử dụng Khóa API Moonshot AI tùy chỉnh"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Thêm địa chỉ proxy OpenAI (tùy chọn)",
-        "description": "Nhập OpenAI API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
-        "title": "Sử dụng thông tin xác thực tùy chỉnh của OpenAI"
-      },
-      "OpenRouter": {
-        "description": "Nhập OpenRouter API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
-        "title": "Sử dụng OpenRouter API Key tùy chỉnh"
-      },
-      "Perplexity": {
-        "description": "Nhập Khóa API Perplexity của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không ghi lại Khóa API của bạn",
-        "title": "Sử dụng Khóa API Perplexity tùy chỉnh"
-      },
-      "TogetherAI": {
-        "description": "Nhập TogetherAI API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
-        "title": "Sử dụng TogetherAI API Key tùy chỉnh"
-      },
-      "ZeroOne": {
-        "description": "Nhập khóa API ZeroOne của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ khóa API của bạn",
-        "title": "Sử dụng khóa API ZeroOne tùy chỉnh"
-      },
-      "Zhipu": {
-        "description": "Nhập Zhipu API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
-        "title": "Sử dụng thông tin xác thực tùy chỉnh của Zhipu"
-      }
-    },
+    "addProxyUrl": "Thêm URL proxy OpenAI (tùy chọn)",
     "closeMessage": "Đóng thông báo",
     "confirm": "Xác nhận và thử lại",
     "model": {

@@ -46,7 +46,7 @@ const Tools = memo(() => {
   const { styles } = useStyles();
 
   const model = useSessionStore(agentSelectors.currentAgentModel);
-  const enableFC = useGlobalStore(modelProviderSelectors.modelEnabledFunctionCall(model));
+  const enableFC = useGlobalStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
 
   return (
     <>

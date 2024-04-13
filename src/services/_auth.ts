@@ -1,25 +1,13 @@
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors, settingsSelectors } from '@/store/global/selectors';
+import { modelConfigSelectors, settingsSelectors } from '@/store/global/selectors';
 import { createJWT } from '@/utils/jwt';
 
 export const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
-    case ModelProvider.ZhiPu: {
-      return { apiKey: modelProviderSelectors.zhipuAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.Moonshot: {
-      return { apiKey: modelProviderSelectors.moonshotAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.Google: {
-      return { apiKey: modelProviderSelectors.googleAPIKey(useGlobalStore.getState()) };
-    }
-
     case ModelProvider.Bedrock: {
-      const { accessKeyId, region, secretAccessKey } = modelProviderSelectors.bedrockConfig(
+      const { accessKeyId, region, secretAccessKey } = modelConfigSelectors.bedrockConfig(
         useGlobalStore.getState(),
       );
       const awsSecretAccessKey = secretAccessKey;
@@ -31,7 +19,7 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Azure: {
-      const azure = modelProviderSelectors.azureConfig(useGlobalStore.getState());
+      const azure = modelConfigSelectors.azureConfig(useGlobalStore.getState());
 
       return {
         apiKey: azure.apiKey,
@@ -41,55 +29,15 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Ollama: {
-      const endpoint = modelProviderSelectors.ollamaProxyUrl(useGlobalStore.getState());
+      const config = modelConfigSelectors.ollamaConfig(useGlobalStore.getState());
 
-      return {
-        endpoint,
-      };
+      return { endpoint: config?.endpoint };
     }
 
-    case ModelProvider.Perplexity: {
-      return { apiKey: modelProviderSelectors.perplexityAPIKey(useGlobalStore.getState()) };
-    }
+    default: {
+      const config = settingsSelectors.providerConfig(provider)(useGlobalStore.getState());
 
-    case ModelProvider.Anthropic: {
-      const apiKey = modelProviderSelectors.anthropicAPIKey(useGlobalStore.getState());
-      const endpoint = modelProviderSelectors.anthropicProxyUrl(useGlobalStore.getState());
-      return { apiKey, endpoint };
-    }
-
-    case ModelProvider.Mistral: {
-      return { apiKey: modelProviderSelectors.mistralAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.Groq: {
-      return { apiKey: modelProviderSelectors.groqAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.OpenRouter: {
-      return { apiKey: modelProviderSelectors.openrouterAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.TogetherAI: {
-      return { apiKey: modelProviderSelectors.togetheraiAPIKey(useGlobalStore.getState()) };
-    }
-
-    case ModelProvider.ZeroOne: {
-      return { apiKey: modelProviderSelectors.zerooneAPIKey(useGlobalStore.getState()) };
-    }
-
-    default:
-    case ModelProvider.OpenAI: {
-      const openai = modelProviderSelectors.openAIConfig(useGlobalStore.getState());
-      const apiKey = openai.OPENAI_API_KEY || '';
-      const endpoint = openai.endpoint || '';
-
-      return {
-        apiKey,
-        azureApiVersion: openai.azureApiVersion,
-        endpoint,
-        useAzure: openai.useAzure,
-      };
+      return { apiKey: config?.apiKey, endpoint: config?.endpoint };
     }
   }
 };
