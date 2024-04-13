@@ -1,34 +1,32 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { getServerConfig } from '@/config/server';
+const PASSWORD = 'wx1313611';  // 将your-password替换为你想设置的密码
 
-import { auth } from './app/api/auth/next-auth';
-import { OAUTH_AUTHORIZED } from './const/auth';
+export function middleware(req: NextRequest) {
+  const url = req.nextUrl;
+
+  if (url.pathname === '/api/auth') {
+    return NextResponse.next();
+  }
+
+  const password = req.headers.get('x-password');
+
+  if (password === PASSWORD) {
+    return NextResponse.next();
+  } else {
+    url.pathname = '/api/auth';
+    return NextResponse.redirect(url);
+  }
+}
 
 export const config = {
-  matcher: '/api/:path*',
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - static (static files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|static|favicon.ico).*)',
+  ],
 };
-const defaultMiddleware = () => NextResponse.next();
-
-const withAuthMiddleware = auth((req) => {
-  // Just check if session exists
-  const session = req.auth;
-
-  // Check if next-auth throws errors
-  // refs: https://github.com/lobehub/lobe-chat/pull/1323
-  const isLoggedIn = !!session?.expires;
-
-  // Remove & amend OAuth authorized header
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.delete(OAUTH_AUTHORIZED);
-  if (isLoggedIn) requestHeaders.set(OAUTH_AUTHORIZED, 'true');
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-});
-
-const { ENABLE_OAUTH_SSO } = getServerConfig();
-
-export default !ENABLE_OAUTH_SSO ? defaultMiddleware : withAuthMiddleware;
