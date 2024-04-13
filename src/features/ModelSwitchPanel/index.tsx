@@ -10,7 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/selectors';
+import { modelProviderSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ModelProviderCard } from '@/types/llm';
@@ -44,7 +44,10 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   const updateAgentConfig = useSessionStore((s) => s.updateAgentConfig);
 
   const router = useRouter();
-  const enabledList = useGlobalStore(modelConfigSelectors.providerListForModelSelect, isEqual);
+  const enabledList = useGlobalStore(
+    modelProviderSelectors.modelProviderListForModelSelect,
+    isEqual,
+  );
 
   const items = useMemo(() => {
     const getModelItems = (provider: ModelProviderCard) => {

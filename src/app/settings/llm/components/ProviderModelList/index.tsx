@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors, modelProviderSelectors } from '@/store/global/selectors';
+import { modelProviderSelectors } from '@/store/global/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import ModelConfigModal from './ModelConfigModal';
@@ -51,16 +51,16 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
     ]);
 
     const chatModelCards = useGlobalStore(
-      modelConfigSelectors.getModelCardsByProviderId(provider),
+      modelProviderSelectors.getModelCardsById(provider),
       isEqual,
     );
 
     const defaultEnableModel = useGlobalStore(
-      modelProviderSelectors.defaultEnabledProviderModels(provider),
+      modelProviderSelectors.getDefaultEnabledModelsById(provider),
       isEqual,
     );
     const enabledModels = useGlobalStore(
-      modelConfigSelectors.getEnableModelsByProviderId(provider),
+      modelProviderSelectors.getEnableModelsById(provider),
       isEqual,
     );
 

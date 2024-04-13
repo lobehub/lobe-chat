@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { userService } from '@/services/user';
 import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/slices/settings/selectors';
+import { modelConfigSelectors, settingsSelectors } from '@/store/global/slices/settings/selectors';
 import { GeneralModelProviderConfig } from '@/types/settings';
 
 import { CustomModelCardDispatch, customModelCardsReducer } from '../reducers/customModelCard';
@@ -46,7 +46,7 @@ describe('LLMSettingsSliceAction', () => {
       const payload: CustomModelCardDispatch = { type: 'add', modelCard: { id: 'test-id' } };
 
       // Mock the selector to return undefined
-      vi.spyOn(modelConfigSelectors, 'getConfigByProviderId').mockReturnValue(() => undefined);
+      vi.spyOn(settingsSelectors, 'providerConfig').mockReturnValue(() => undefined);
       vi.spyOn(result.current, 'setModelProviderConfig');
 
       await act(async () => {

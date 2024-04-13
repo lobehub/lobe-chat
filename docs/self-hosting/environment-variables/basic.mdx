@@ -27,6 +27,17 @@ LobeChat provides some additional configuration options during deployment, which
 - Default: -
 - Example: `awCTe)re_r74` or `rtrt_ewee3@09!`
 
+### `API_KEY_SELECT_MODE`
+
+- Type：Optional
+- Description：Controls the mode for selecting the API Key when multiple API Keys are available. Currently supports `random` and `turn`.
+- Default：`random`
+- Example：`random` or `turn`
+
+When using the `random` mode, a random API Key will be selected from the available multiple API Keys.
+
+When using the `turn` mode, the API Keys will be retrieved in a round-robin manner according to the specified order.
+
 ### `ENABLE_OAUTH_SSO`
 
 - Type: Optional

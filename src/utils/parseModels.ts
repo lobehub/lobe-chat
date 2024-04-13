@@ -1,14 +1,13 @@
 import { produce } from 'immer';
 
-import { LOBE_DEFAULT_MODEL_LIST, OpenAIProviderCard } from '@/config/modelProviders';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 import { ChatModelCard } from '@/types/llm';
-import { CustomModels } from '@/types/settings';
 
 /**
  * Parse model string to add or remove models.
  */
-export const parseModelString = (modelString: string = '') => {
-  let models: CustomModels = [];
+export const parseModelString = (modelString: string = '', withDeploymentName = false) => {
+  let models: ChatModelCard[] = [];
   let removeAll = false;
   const removedModels: string[] = [];
   const modelNames = modelString.split(/[,，]/).filter(Boolean);
@@ -16,7 +15,15 @@ export const parseModelString = (modelString: string = '') => {
   for (const item of modelNames) {
     const disable = item.startsWith('-');
     const nameConfig = item.startsWith('+') || item.startsWith('-') ? item.slice(1) : item;
-    const [id, displayName] = nameConfig.split('=');
+    const [idAndDisplayName, ...capabilities] = nameConfig.split('<');
+    let [id, displayName] = idAndDisplayName.split('=');
+
+    let deploymentName: string | undefined;
+
+    if (withDeploymentName) {
+      [id, deploymentName] = id.split('->');
+      if (!deploymentName) deploymentName = id;
+    }
 
     if (disable) {
       // Disable all models.
@@ -33,7 +40,41 @@ export const parseModelString = (modelString: string = '') => {
       models.splice(existingIndex, 1);
     }
 
-    models.push({ displayName, id: id });
+    const model: ChatModelCard = {
+      displayName: displayName || undefined,
+      id,
+    };
+
+    if (deploymentName) {
+      model.deploymentName = deploymentName;
+    }
+
+    if (capabilities.length > 0) {
+      const [maxTokenStr, ...capabilityList] = capabilities[0].replace('>', '').split(':');
+      model.tokens = parseInt(maxTokenStr, 10) || undefined;
+
+      for (const capability of capabilityList) {
+        switch (capability) {
+          case 'vision': {
+            model.vision = true;
+            break;
+          }
+          case 'fc': {
+            model.functionCall = true;
+            break;
+          }
+          case 'file': {
+            model.files = true;
+            break;
+          }
+          default: {
+            console.warn(`Unknown capability: ${capability}`);
+          }
+        }
+      }
+    }
+
+    models.push(model);
   }
 
   return {
@@ -46,14 +87,19 @@ export const parseModelString = (modelString: string = '') => {
 /**
  * Extract a special method to process chatModels
  */
-export const transformToChatModelCards = (
-  modelString: string = '',
-  defaultChartModels = OpenAIProviderCard.chatModels,
-): ChatModelCard[] | undefined => {
+export const transformToChatModelCards = ({
+  modelString = '',
+  defaultChatModels,
+  withDeploymentName = false,
+}: {
+  defaultChatModels: ChatModelCard[];
+  modelString?: string;
+  withDeploymentName?: boolean;
+}): ChatModelCard[] | undefined => {
   if (!modelString) return undefined;
 
-  const modelConfig = parseModelString(modelString);
-  let chatModels = modelConfig.removeAll ? [] : defaultChartModels;
+  const modelConfig = parseModelString(modelString, withDeploymentName);
+  let chatModels = modelConfig.removeAll ? [] : defaultChatModels;
 
   // 处理移除逻辑
   if (!modelConfig.removeAll) {
@@ -89,11 +135,17 @@ export const transformToChatModelCards = (
           ...toAddModel,
           displayName: toAddModel.displayName || toAddModel.id,
           enabled: true,
-          functionCall: true,
-          // isCustom: true,
-          vision: true,
         });
       }
     }
   });
+};
+
+export const extractEnabledModels = (modelString: string = '', withDeploymentName = false) => {
+  const modelConfig = parseModelString(modelString, withDeploymentName);
+  const list = modelConfig.add.map((m) => m.id);
+
+  if (list.length === 0) return;
+
+  return list;
 };
