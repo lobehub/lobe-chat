@@ -97,7 +97,7 @@
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
     "ahooks": "^3.7.11",
-    "ai": "3.0.19",
+    "ai": "3.0.22",
     "antd": "^5.16.1",
     "antd-style": "^3.6.2",
     "brotli-wasm": "^2.0.1",
