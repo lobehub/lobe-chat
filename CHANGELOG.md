@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.147.16](https://github.com/lobehub/lobe-chat/compare/v0.147.15...v0.147.16)
+
+<sup>Released on **2024-04-14**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the auth.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the auth, closes [#2043](https://github.com/lobehub/lobe-chat/issues/2043) ([37ecb41](https://github.com/lobehub/lobe-chat/commit/37ecb41))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.147.15](https://github.com/lobehub/lobe-chat/compare/v0.147.14...v0.147.15)
 
 <sup>Released on **2024-04-14**</sup>
