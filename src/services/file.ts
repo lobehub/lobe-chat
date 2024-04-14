@@ -1,5 +1,5 @@
-import { FileModel } from '@/database/models/file';
-import { DB_File } from '@/database/schemas/files';
+import { FileModel } from '@/database/client/models/file';
+import { DB_File } from '@/database/client/schemas/files';
 import { FilePreview } from '@/types/files';
 import compressImage from '@/utils/compressImage';
 

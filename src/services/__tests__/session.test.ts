@@ -1,14 +1,14 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { SessionModel } from '@/database/models/session';
-import { SessionGroupModel } from '@/database/models/sessionGroup';
+import { SessionModel } from '@/database/client/models/session';
+import { SessionGroupModel } from '@/database/client/models/sessionGroup';
 import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/session';
 
 import { sessionService } from '../session';
 
 // Mock the SessionModel
-vi.mock('@/database/models/session', () => {
+vi.mock('@/database/client/models/session', () => {
   return {
     SessionModel: {
       create: vi.fn(),
@@ -29,7 +29,7 @@ vi.mock('@/database/models/session', () => {
 });
 
 // Mock the SessionGroupModel
-vi.mock('@/database/models/sessionGroup', () => {
+vi.mock('@/database/client/models/sessionGroup', () => {
   return {
     SessionGroupModel: {
       create: vi.fn(),

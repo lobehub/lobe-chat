@@ -4,7 +4,7 @@ import {
   pluginManifestSchema,
 } from '@lobehub/chat-plugin-sdk';
 
-import { PluginModel } from '@/database/models/plugin';
+import { PluginModel } from '@/database/client/models/plugin';
 import { globalHelpers } from '@/store/global/helpers';
 import { OpenAIPluginManifest } from '@/types/openai/plugin';
 import { LobeTool } from '@/types/tool';

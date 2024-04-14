@@ -1,5 +1,5 @@
-import { BaseModel } from '@/database/core';
-import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/schemas/sessionGroup';
+import { BaseModel } from '@/database/client/core';
+import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/client/schemas/sessionGroup';
 import { SessionGroups } from '@/types/session';
 import { nanoid } from '@/utils/uuid';
 
