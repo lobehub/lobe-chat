@@ -1,6 +1,6 @@
 import { DeepPartial } from 'utility-types';
 
-import { BaseModel } from '@/database/core';
+import { BaseModel } from '@/database/client/core';
 import { GlobalSettings } from '@/types/settings';
 import { uuid } from '@/utils/uuid';
 

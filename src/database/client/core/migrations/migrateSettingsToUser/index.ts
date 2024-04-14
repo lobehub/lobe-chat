@@ -1,4 +1,4 @@
-import { DB_Settings } from '@/database/schemas/user';
+import { DB_Settings } from '@/database/client/schemas/user';
 
 import { V4Settings } from './type';
 

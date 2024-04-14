@@ -1,7 +1,7 @@
 import { DeepPartial } from 'utility-types';
 
-import { SessionModel } from '@/database/models/session';
-import { SessionGroupModel } from '@/database/models/sessionGroup';
+import { SessionModel } from '@/database/client/models/session';
+import { SessionGroupModel } from '@/database/client/models/sessionGroup';
 import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
 import {

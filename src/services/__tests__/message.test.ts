@@ -1,6 +1,6 @@
 import { Mock, describe, expect, it, vi } from 'vitest';
 
-import { CreateMessageParams, MessageModel } from '@/database/models/message';
+import { CreateMessageParams, MessageModel } from '@/database/client/models/message';
 import {
   ChatMessage,
   ChatMessageError,
@@ -12,7 +12,7 @@ import {
 import { messageService } from '../message';
 
 // Mock the MessageModel
-vi.mock('@/database/models/message', () => {
+vi.mock('@/database/client/models/message', () => {
   return {
     MessageModel: {
       create: vi.fn(),

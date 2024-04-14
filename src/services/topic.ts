@@ -1,4 +1,4 @@
-import { CreateTopicParams, QueryTopicParams, TopicModel } from '@/database/models/topic';
+import { CreateTopicParams, QueryTopicParams, TopicModel } from '@/database/client/models/topic';
 import { ChatTopic } from '@/types/topic';
 
 class TopicService {

@@ -1,6 +1,15 @@
-import { CreateMessageParams, MessageModel } from '@/database/models/message';
-import { DB_Message } from '@/database/schemas/message';
+import { MessageModel } from '@/database/client/models/message';
+import { DB_Message } from '@/database/client/schemas/message';
 import { ChatMessage, ChatMessageError, ChatPluginPayload } from '@/types/message';
+
+export interface CreateMessageParams
+  extends Partial<Omit<ChatMessage, 'content' | 'role'>>,
+    Pick<ChatMessage, 'content' | 'role'> {
+  fromModel?: string;
+  fromProvider?: string;
+  sessionId: string;
+  traceId?: string;
+}
 
 export class MessageService {
   async create(data: CreateMessageParams) {

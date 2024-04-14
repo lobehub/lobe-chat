@@ -128,8 +128,8 @@ When building the LobeChat application, the Model is responsible for interacting
 In `src/database/model/sessionGroup.ts`, the `SessionGroupModel` is defined as follows:
 
 ```typescript
-import { BaseModel } from '@/database/core';
-import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/schemas/sessionGroup';
+import { BaseModel } from '@/database/client/core';
+import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/client/schemas/sessionGroup';
 import { nanoid } from '@/utils/uuid';
 
 class _SessionGroupModel extends BaseModel {

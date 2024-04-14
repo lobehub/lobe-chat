@@ -1,15 +1,15 @@
 import Dexie, { Transaction } from 'dexie';
 
-import { DB_File } from '@/database/schemas/files';
-import { DB_Message } from '@/database/schemas/message';
-import { DB_Plugin } from '@/database/schemas/plugin';
-import { DB_Session } from '@/database/schemas/session';
-import { DB_SessionGroup } from '@/database/schemas/sessionGroup';
-import { DB_Topic } from '@/database/schemas/topic';
-import { DB_User } from '@/database/schemas/user';
 import { MigrationLLMSettings } from '@/migrations/FromV3ToV4';
 import { uuid } from '@/utils/uuid';
 
+import { DB_File } from '../schemas/files';
+import { DB_Message } from '../schemas/message';
+import { DB_Plugin } from '../schemas/plugin';
+import { DB_Session } from '../schemas/session';
+import { DB_SessionGroup } from '../schemas/sessionGroup';
+import { DB_Topic } from '../schemas/topic';
+import { DB_User } from '../schemas/user';
 import { migrateSettingsToUser } from './migrations/migrateSettingsToUser';
 import {
   dbSchemaV1,
@@ -33,14 +33,14 @@ export interface LobeDBSchemaMap {
 }
 
 // Define a local DB
-export class LocalDB extends Dexie {
-  public files: LobeDBTable<'files'>;
-  public sessions: LobeDBTable<'sessions'>;
-  public messages: LobeDBTable<'messages'>;
-  public topics: LobeDBTable<'topics'>;
-  public plugins: LobeDBTable<'plugins'>;
-  public sessionGroups: LobeDBTable<'sessionGroups'>;
-  public users: LobeDBTable<'users'>;
+export class BrowserDB extends Dexie {
+  public files: BrowserDBTable<'files'>;
+  public sessions: BrowserDBTable<'sessions'>;
+  public messages: BrowserDBTable<'messages'>;
+  public topics: BrowserDBTable<'topics'>;
+  public plugins: BrowserDBTable<'plugins'>;
+  public sessionGroups: BrowserDBTable<'sessionGroups'>;
+  public users: BrowserDBTable<'users'>;
 
   constructor() {
     super(LOBE_CHAT_LOCAL_DB_NAME);
@@ -155,7 +155,7 @@ export class LocalDB extends Dexie {
   };
 }
 
-export const LocalDBInstance = new LocalDB();
+export const browserDB = new BrowserDB();
 
 // ================================================ //
 // ================================================ //
@@ -164,10 +164,10 @@ export const LocalDBInstance = new LocalDB();
 // ================================================ //
 
 // types helper
-export type LocalDBSchema = {
+export type BrowserDBSchema = {
   [t in keyof LobeDBSchemaMap]: {
     model: LobeDBSchemaMap[t];
     table: Dexie.Table<DBModel<LobeDBSchemaMap[t]>, string>;
   };
 };
-type LobeDBTable<T extends keyof LobeDBSchemaMap> = LocalDBSchema[T]['table'];
+type BrowserDBTable<T extends keyof LobeDBSchemaMap> = BrowserDBSchema[T]['table'];

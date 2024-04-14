@@ -1,15 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { DBModel } from '@/database/core/types/db';
-import { DB_File } from '@/database/schemas/files';
-
-import { LocalDB } from '../db';
+import { DB_File } from '../../schemas/files';
+import { BrowserDB } from '../db';
+import { DBModel } from '../types/db';
 
 describe('LocalDB', () => {
-  let db: LocalDB;
+  let db: BrowserDB;
 
   beforeEach(() => {
-    db = new LocalDB();
+    db = new BrowserDB();
   });
 
   afterEach(async () => {

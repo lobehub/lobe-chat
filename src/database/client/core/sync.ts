@@ -11,7 +11,7 @@ import {
   StartDataSyncParams,
 } from '@/types/sync';
 
-import { LobeDBSchemaMap, LocalDBInstance } from './db';
+import { LobeDBSchemaMap, browserDB } from './db';
 
 const LOG_NAME_SPACE = 'DataSync';
 
@@ -201,7 +201,7 @@ class DataSync {
     onEvent: OnSyncEvent,
     onSyncStatusChange: OnSyncStatusChange,
   ) => {
-    const table = LocalDBInstance[tableKey];
+    const table = browserDB[tableKey];
     const yItemMap = this.getYMap(tableKey);
     const updateSyncEvent = throttle(onEvent, 1000);
 
@@ -249,7 +249,7 @@ class DataSync {
   };
 
   private loadDataFromDBtoYjs = async (tableKey: keyof LobeDBSchemaMap) => {
-    const table = LocalDBInstance[tableKey];
+    const table = browserDB[tableKey];
     const items = await table.toArray();
     const yItemMap = this.getYMap(tableKey);
 

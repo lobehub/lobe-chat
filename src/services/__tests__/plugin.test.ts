@@ -1,8 +1,8 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { PluginModel } from '@/database/models/plugin';
-import { DB_Plugin } from '@/database/schemas/plugin';
+import { PluginModel } from '@/database/client/models/plugin';
+import { DB_Plugin } from '@/database/client/schemas/plugin';
 import { globalHelpers } from '@/store/global/helpers';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
@@ -18,7 +18,7 @@ vi.mock('@/store/global/helpers', () => ({
     getCurrentLanguage: vi.fn(),
   },
 }));
-vi.mock('@/database/models/plugin', () => ({
+vi.mock('@/database/client/models/plugin', () => ({
   PluginModel: {
     getList: vi.fn(),
     create: vi.fn(),

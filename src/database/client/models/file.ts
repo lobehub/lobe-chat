@@ -1,4 +1,4 @@
-import { DB_File, DB_FileSchema } from '@/database/schemas/files';
+import { DB_File, DB_FileSchema } from '@/database/client/schemas/files';
 import { nanoid } from '@/utils/uuid';
 
 import { BaseModel } from '../core';

@@ -1,9 +1,9 @@
 import { DeepPartial } from 'utility-types';
 
 import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
-import { BaseModel } from '@/database/core';
-import { DBModel } from '@/database/core/types/db';
-import { DB_Session, DB_SessionSchema } from '@/database/schemas/session';
+import { BaseModel } from '@/database/client/core';
+import { DBModel } from '@/database/client/core/types/db';
+import { DB_Session, DB_SessionSchema } from '@/database/client/schemas/session';
 import { LobeAgentConfig } from '@/types/agent';
 import {
   ChatSessionList,
