@@ -61,7 +61,13 @@ export const LobeOpenAICompatibleFactory = ({
     constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
       if (!apiKey) throw AgentRuntimeError.createError(ErrorType.invalidAPIKey);
 
-      this.client = new OpenAI({ apiKey, baseURL, ...constructorOptions, ...res });
+      this.client = new OpenAI({
+        apiKey,
+        baseURL,
+        ...constructorOptions,
+        ...res,
+        dangerouslyAllowBrowser: true, // enable use sdk in browser
+      });
       this.baseURL = this.client.baseURL;
     }
 

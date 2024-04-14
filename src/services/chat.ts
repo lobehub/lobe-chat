@@ -2,9 +2,12 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
+import AgentRuntime from '@/app/api/chat/agentRuntime';
+import { getJWTPayload } from '@/app/api/chat/auth/utils';
+import { createErrorResponse } from '@/app/api/errorResponse';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import {
@@ -16,13 +19,14 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
+import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
-import { createHeaderWithAuth } from './_auth';
+import { createAuthTokenWithPayload, createHeaderPayload, createHeaderWithAuth } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
@@ -155,6 +159,47 @@ class ChatService {
       headers: { 'Content-Type': 'application/json', ...traceHeader },
       provider,
     });
+
+    /**
+     * Use browser agent runtime
+     */
+    const headerPayload = createHeaderPayload({ provider });
+    // If user specify the endpoint, use the browser agent runtime directly
+    /**
+     * Notes:
+     * 1. Broswer agent runtime will skip auth if a key and endpoint provided by user
+     *    which will cause abuse of plugins
+     * 2. This condition will need to change if a change apply to function located at
+     *    `src/services/_auth.ts:L7`: `getProviderAuthPayload`
+     */
+    if (headerPayload['endpoint']) {
+      try {
+        const authorization = await createAuthTokenWithPayload(headerPayload);
+        const agentRuntime = await AgentRuntime.initializeWithUserPayload(
+          provider,
+          await getJWTPayload(authorization),
+        );
+        const data = payload as ChatStreamPayload;
+        const tracePayload = options?.trace;
+        return agentRuntime.chat(data, {
+          enableTrace: tracePayload?.enabled,
+          provider,
+          trace: tracePayload,
+        });
+      } catch (e) {
+        const {
+          errorType = ChatErrorType.BadRequest,
+          error: errorContent,
+          ...res
+        } = e as ChatCompletionErrorPayload;
+
+        const error = errorContent || e;
+        // track the error at server side
+        console.error(`Route: [${provider}] ${errorType}:`, error);
+
+        return createErrorResponse(errorType, { error, ...res, provider });
+      }
+    }
 
     return fetch(API_ENDPOINTS.chat(provider), {
       body: JSON.stringify(payload),
