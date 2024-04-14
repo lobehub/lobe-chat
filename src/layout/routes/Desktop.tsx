@@ -3,14 +3,16 @@
 import { usePathname } from 'next/navigation';
 import { PropsWithChildren, memo } from 'react';
 
-import Client from './Client';
+import { DefaultLayoutDesktop } from '@/layout/DefaultLayout';
+
+const defaultLayoutRoutes = new Set(['/']);
 
 const DesktopLayout = memo<PropsWithChildren>(({ children }) => {
   const pathname = usePathname();
 
-  if (pathname === '/') return children;
+  if (defaultLayoutRoutes.has(pathname)) return children;
 
-  return <Client>{children}</Client>;
+  return <DefaultLayoutDesktop>{children}</DefaultLayoutDesktop>;
 });
 
 export default DesktopLayout;
