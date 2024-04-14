@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.147.14](https://github.com/lobehub/lobe-chat/compare/v0.147.13...v0.147.14)
+
+<sup>Released on **2024-04-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Enable `gemini-1.5-pro-latest` model by default.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Enable `gemini-1.5-pro-latest` model by default, closes [#2034](https://github.com/lobehub/lobe-chat/issues/2034) ([e8c65a9](https://github.com/lobehub/lobe-chat/commit/e8c65a9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.147.13](https://github.com/lobehub/lobe-chat/compare/v0.147.12...v0.147.13)
 
 <sup>Released on **2024-04-14**</sup>
