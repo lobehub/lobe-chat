@@ -5,8 +5,9 @@ import { rgba } from 'polished';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-import { useGlobalStore } from '@/store/global';
+
 import { useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
@@ -84,6 +85,7 @@ const DragUpload = memo(() => {
     if (!fileList || fileList.length === 0) return;
 
     const pools = Array.from(fileList).map(async (file) => {
+      // skip none-file items
       if (!file.type.startsWith('image') && !enabledFiles) return;
       await uploadFile(file);
     });
