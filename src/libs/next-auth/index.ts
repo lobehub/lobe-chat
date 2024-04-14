@@ -32,7 +32,7 @@ const nextAuth = NextAuth({
     async session({ session, token }) {
       // Pick userid from token
       if (session.user) {
-        session.user.id = token.userId ?? session.user.id;
+        session.user.id = (token.userId ?? session.user.id) as string;
       }
       return session;
     },
