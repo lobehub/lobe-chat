@@ -9,7 +9,6 @@ import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
-import { FetchSSEOptions, fetchSSE } from '@/utils/fetch';
 
 import { chatService } from '../chat';
 

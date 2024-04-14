@@ -76,5 +76,3 @@ export class MessageService {
     return MessageModel.queryAll();
   }
 }
-
-export const messageService = new MessageService();

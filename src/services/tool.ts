@@ -4,20 +4,12 @@ import {
   pluginManifestSchema,
 } from '@lobehub/chat-plugin-sdk';
 
-import { PluginModel } from '@/database/client/models/plugin';
 import { globalHelpers } from '@/store/global/helpers';
 import { OpenAIPluginManifest } from '@/types/openai/plugin';
-import { LobeTool } from '@/types/tool';
-import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { API_ENDPOINTS } from './_url';
 
-export interface InstallPluginParams {
-  identifier: string;
-  manifest: LobeChatPluginManifest;
-  type: 'plugin' | 'customPlugin';
-}
-class PluginService {
+class ToolService {
   private _fetchJSON = async <T = any>(url: string, proxy = false): Promise<T> => {
     // 2. 发送请求
     let res: Response;
@@ -107,37 +99,6 @@ class PluginService {
     return data;
   };
 
-  installPlugin = async (plugin: InstallPluginParams) => {
-    return PluginModel.create(plugin);
-  };
-
-  getInstalledPlugins = () => {
-    return PluginModel.getList() as Promise<LobeTool[]>;
-  };
-
-  uninstallPlugin(identifier: string) {
-    return PluginModel.delete(identifier);
-  }
-
-  async createCustomPlugin(customPlugin: LobeToolCustomPlugin) {
-    return PluginModel.create({ ...customPlugin, type: 'customPlugin' });
-  }
-
-  async updatePlugin(id: string, value: LobeToolCustomPlugin) {
-    return PluginModel.update(id, value);
-  }
-  async updatePluginManifest(id: string, manifest: LobeChatPluginManifest) {
-    return PluginModel.update(id, { manifest });
-  }
-
-  async removeAllPlugins() {
-    return PluginModel.clear();
-  }
-
-  async updatePluginSettings(id: string, settings: any) {
-    return PluginModel.update(id, { settings });
-  }
-
   private convertOpenAIManifestToLobeManifest = (
     data: OpenAIPluginManifest,
   ): LobeChatPluginManifest => {
@@ -180,4 +141,4 @@ class PluginService {
   };
 }
 
-export const pluginService = new PluginService();
+export const toolService = new ToolService();
