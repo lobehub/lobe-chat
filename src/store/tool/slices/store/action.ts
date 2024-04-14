@@ -6,6 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { notification } from '@/components/AntdStaticMethods';
 import { pluginService } from '@/services/plugin';
+import { toolService } from '@/services/tool';
 import { pluginStoreSelectors } from '@/store/tool/selectors';
 import { LobeTool } from '@/types/tool';
 import { PluginInstallError } from '@/types/tool/plugin';
@@ -43,7 +44,7 @@ export const createPluginStoreSlice: StateCreator<
     const { updateInstallLoadingState, refreshPlugins } = get();
     try {
       updateInstallLoadingState(name, true);
-      const data = await pluginService.getPluginManifest(plugin.manifest);
+      const data = await toolService.getPluginManifest(plugin.manifest);
       updateInstallLoadingState(name, undefined);
 
       // 4. 存储 manifest 信息
@@ -66,7 +67,7 @@ export const createPluginStoreSlice: StateCreator<
     await Promise.all(plugins.map((identifier) => installPlugin(identifier)));
   },
   loadPluginStore: async () => {
-    const pluginMarketIndex = await pluginService.getPluginList();
+    const pluginMarketIndex = await toolService.getPluginList();
 
     set({ pluginStoreList: pluginMarketIndex.plugins }, false, n('loadPluginList'));
 

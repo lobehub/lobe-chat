@@ -5,7 +5,9 @@ import { SessionGroupModel } from '@/database/client/models/sessionGroup';
 import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/session';
 
-import { sessionService } from '../session';
+import { SessionService } from './client';
+
+const sessionService = new SessionService();
 
 // Mock the SessionModel
 vi.mock('@/database/client/models/session', () => {

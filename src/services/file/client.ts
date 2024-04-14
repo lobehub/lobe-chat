@@ -3,9 +3,9 @@ import { DB_File } from '@/database/client/schemas/files';
 import { FilePreview } from '@/types/files';
 import compressImage from '@/utils/compressImage';
 
-import { API_ENDPOINTS } from './_url';
+import { API_ENDPOINTS } from '../_url';
 
-class FileService {
+export class FileService {
   private isImage(fileType: string) {
     const imageRegex = /^image\//;
     return imageRegex.test(fileType);
@@ -84,5 +84,3 @@ class FileService {
     };
   }
 }
-
-export const fileService = new FileService();

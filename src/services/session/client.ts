@@ -14,7 +14,7 @@ import {
   SessionGroups,
 } from '@/types/session';
 
-class SessionService {
+export class SessionService {
   async createNewSession(
     type: LobeSessionType,
     defaultValue: Partial<LobeAgentSession>,
@@ -118,5 +118,3 @@ class SessionService {
     return SessionGroupModel.clear();
   }
 }
-
-export const sessionService = new SessionService();
