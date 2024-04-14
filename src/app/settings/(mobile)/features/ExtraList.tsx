@@ -1,6 +1,6 @@
 import { Upload } from 'antd';
 import { useResponsive } from 'antd-style';
-import { Feather, FileClock, HardDriveDownload, HardDriveUpload } from 'lucide-react';
+import { HardDriveDownload, HardDriveUpload } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useImportConfig } from '@/hooks/useImportConfig';
