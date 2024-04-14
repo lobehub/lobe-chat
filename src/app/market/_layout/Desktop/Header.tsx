@@ -3,8 +3,6 @@ import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 
-import ShareAgentButton from '../../features/ShareAgentButton';
-
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
     color: ${token.colorText};
@@ -22,7 +20,6 @@ const Header = memo(() => {
           <Logo className={styles.logo} extra={'Discover'} size={36} type={'text'} />
         </Link>
       }
-      right={<ShareAgentButton />}
     />
   );
 });
