@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.147.11](https://github.com/lobehub/lobe-chat/compare/v0.147.10...v0.147.11)
+
+<sup>Released on **2024-04-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Support drag or copy to upload file by model ability.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Support drag or copy to upload file by model ability, closes [#2016](https://github.com/lobehub/lobe-chat/issues/2016) ([2abe37e](https://github.com/lobehub/lobe-chat/commit/2abe37e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.147.10](https://github.com/lobehub/lobe-chat/compare/v0.147.9...v0.147.10)
 
 <sup>Released on **2024-04-13**</sup>
