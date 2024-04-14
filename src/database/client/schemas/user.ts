@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { AgentSchema } from '@/database/schemas/session';
+import { AgentSchema } from '@/database/client/schemas/session';
 import { LobeMetaDataSchema } from '@/types/meta';
 
 const settingsSchema = z.object({

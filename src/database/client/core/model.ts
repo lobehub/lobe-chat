@@ -3,16 +3,16 @@ import { ZodObject } from 'zod';
 
 import { nanoid } from '@/utils/uuid';
 
-import { LocalDB, LocalDBInstance, LocalDBSchema } from './db';
+import { BrowserDB, BrowserDBSchema, browserDB } from './db';
 import { dataSync } from './sync';
 import { DBBaseFieldsSchema } from './types/db';
 
-export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]['table']> {
-  protected readonly db: LocalDB;
+export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchema[N]['table']> {
+  protected readonly db: BrowserDB;
   private readonly schema: ZodObject<any>;
-  private readonly _tableName: keyof LocalDBSchema;
+  private readonly _tableName: keyof BrowserDBSchema;
 
-  constructor(table: N, schema: ZodObject<any>, db = LocalDBInstance) {
+  constructor(table: N, schema: ZodObject<any>, db = browserDB) {
     this.db = db;
     this.schema = schema;
     this._tableName = table;
@@ -31,7 +31,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
   /**
    * create a new record
    */
-  protected async _addWithSync<T = LocalDBSchema[N]['model']>(
+  protected async _addWithSync<T = BrowserDBSchema[N]['model']>(
     data: T,
     id: string | number = nanoid(),
     primaryKey: string = 'id',
@@ -71,7 +71,7 @@ export class BaseModel<N extends keyof LocalDBSchema = any, T = LocalDBSchema[N]
    * @param options.generateId
    * @param options.createWithNewId
    */
-  protected async _batchAdd<T = LocalDBSchema[N]['model']>(
+  protected async _batchAdd<T = BrowserDBSchema[N]['model']>(
     dataArray: T[],
     options: {
       /**

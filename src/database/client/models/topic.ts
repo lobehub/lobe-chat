@@ -1,7 +1,7 @@
-import { BaseModel } from '@/database/core';
-import { DBModel } from '@/database/core/types/db';
-import { MessageModel } from '@/database/models/message';
-import { DB_Topic, DB_TopicSchema } from '@/database/schemas/topic';
+import { BaseModel } from '@/database/client/core';
+import { DBModel } from '@/database/client/core/types/db';
+import { MessageModel } from '@/database/client/models/message';
+import { DB_Topic, DB_TopicSchema } from '@/database/client/schemas/topic';
 import { ChatTopic } from '@/types/topic';
 import { nanoid } from '@/utils/uuid';
 

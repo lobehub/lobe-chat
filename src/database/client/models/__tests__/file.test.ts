@@ -1,8 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { DB_File } from '@/database/schemas/files';
-
-import { LocalDB } from '../../core/db';
+import { BrowserDB } from '../../core/db';
+import { DB_File } from '../../schemas/files';
 import { FileModel } from '../file';
 
 // Assuming LocalDB is already mocked or using an in-memory database
@@ -25,7 +24,7 @@ describe('_FileModel', () => {
 
   afterEach(async () => {
     // Clean up the database after each test
-    const db = new LocalDB();
+    const db = new BrowserDB();
     await db.files.clear();
     db.close();
   });

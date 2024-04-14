@@ -1,6 +1,6 @@
 import { DeepPartial } from 'utility-types';
 
-import { UserModel } from '@/database/models/user';
+import { UserModel } from '@/database/client/models/user';
 import { GlobalSettings } from '@/types/settings';
 
 export interface UserConfig {

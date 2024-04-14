@@ -7,10 +7,9 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
-import { CreateMessageParams } from '@/database/models/message';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
-import { messageService } from '@/services/message';
+import { CreateMessageParams, messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
 import { chatHelpers } from '@/store/chat/helpers';

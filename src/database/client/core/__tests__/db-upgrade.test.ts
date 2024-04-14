@@ -1,7 +1,7 @@
 import Dexie from 'dexie';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { LocalDB } from '../db';
+import { BrowserDB } from '../db';
 import { dbSchemaV3 } from '../schemas';
 import { LOBE_CHAT_LOCAL_DB_NAME } from '../types/db';
 
@@ -28,7 +28,7 @@ describe('LocalDB migration', () => {
     dbV3.close();
 
     // 创建新的数据库实例，包含版本4的迁移逻辑
-    const dbV4 = new LocalDB();
+    const dbV4 = new BrowserDB();
     await dbV4.open();
 
     // 验证迁移后的数据
