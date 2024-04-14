@@ -1,3 +1,5 @@
+'use client';
+
 import { type MobileNavBarTitleProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dynamic from 'next/dynamic';
