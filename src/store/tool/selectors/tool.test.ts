@@ -34,7 +34,14 @@ const mockState = {
       identifier: 'plugin-3',
       manifest: {
         identifier: 'plugin-3',
-        api: [{ name: 'api-3' }],
+        api: [
+          {
+            name: 'api-3',
+            url: 'bac',
+            description: '123123',
+            parameters: { type: 'object', properties: { a: { type: 'string' } } },
+          },
+        ],
       },
       type: 'customPlugin',
     },
@@ -131,6 +138,25 @@ describe('toolSelectors', () => {
     it('enabledSchema should return empty', () => {
       const result = toolSelectors.enabledSchema([])(mockState);
       expect(result).toEqual([]);
+    });
+
+    // fix https://github.com/lobehub/lobe-chat/issues/2036
+    it('should not contain url', () => {
+      const result = toolSelectors.enabledSchema(['plugin-3'])(mockState);
+      expect(result[0].function).toEqual({
+        description: '123123',
+        name: 'plugin-3____api-3',
+        parameters: {
+          properties: {
+            a: {
+              type: 'string',
+            },
+          },
+          type: 'object',
+        },
+      });
+
+      expect(result[0].function).not.toHaveProperty('url');
     });
   });
 
