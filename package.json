@@ -172,7 +172,7 @@
     "@next/eslint-plugin-next": "^14.1.4",
     "@peculiar/webcrypto": "^1.4.6",
     "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.3.0",
+    "@testing-library/react": "^15.0.0",
     "@types/chroma-js": "^2.4.4",
     "@types/debug": "^4.1.12",
     "@types/diff": "^5.0.9",
