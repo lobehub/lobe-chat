@@ -84,7 +84,6 @@ const BottomActions = memo<BottomActionProps>(({ tab }) => {
   ];
 
   return (
-    <>
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
         {hasNewVersion ? (
           <Flexbox>
@@ -98,7 +97,6 @@ const BottomActions = memo<BottomActionProps>(({ tab }) => {
           <ActionIcon active={tab === SidebarTabKey.Setting} icon={Settings2} />
         )}
       </Dropdown>
-    </>
   );
 });
 
