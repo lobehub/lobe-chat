@@ -167,12 +167,12 @@ class ChatService {
     // If user specify the endpoint, use the browser agent runtime directly
     /**
      * Notes:
-     * 1. Broswer agent runtime will skip auth if a key and endpoint provided by user
-     *    which will cause abuse of plugins
-     * 2. This condition will need to change if a change apply to function located at
-     *    `src/services/_auth.ts:L7`: `getProviderAuthPayload`
+     * 1. Broswer agent runtime will skip auth check if a key and endpoint provided by
+     *    user which will cause abuse of plugins services
+     * 2. This feature will need to control by user llm settings after, but set it enable
+     *    when user use it's own key and endpoint temporary
      */
-    if (headerPayload['endpoint']) {
+    if (headerPayload['endpoint'] && headerPayload['apiKey']) {
       try {
         const authorization = await createAuthTokenWithPayload(headerPayload);
         const agentRuntime = await AgentRuntime.initializeWithUserPayload(
