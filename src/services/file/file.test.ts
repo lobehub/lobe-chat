@@ -3,7 +3,9 @@ import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FileModel } from '@/database/client/models/file';
 import { DB_File } from '@/database/client/schemas/files';
 
-import { fileService } from '../file';
+import { FileService } from './client';
+
+const fileService = new FileService();
 
 // Mocks for the FileModel
 vi.mock('@/database/client/models/file', () => ({

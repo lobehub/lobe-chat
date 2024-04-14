@@ -9,7 +9,7 @@ export interface UserConfig {
   uuid: string;
 }
 
-class UserService {
+export class UserService {
   getUserConfig = async () => {
     const user = await UserModel.getUser();
     return user as unknown as UserConfig;
@@ -27,5 +27,3 @@ class UserService {
     return UserModel.updateAvatar(avatar);
   }
 }
-
-export const userService = new UserService();
