@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { DB_File } from '@/database/schemas/files';
+import { DB_File } from '@/database/client/schemas/files';
 
 import { LocalDB } from '../../core/db';
 import { FileModel } from '../file';

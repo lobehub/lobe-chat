@@ -1,15 +1,15 @@
 import Dexie, { Transaction } from 'dexie';
 
-import { DB_File } from '@/database/schemas/files';
-import { DB_Message } from '@/database/schemas/message';
-import { DB_Plugin } from '@/database/schemas/plugin';
-import { DB_Session } from '@/database/schemas/session';
-import { DB_SessionGroup } from '@/database/schemas/sessionGroup';
-import { DB_Topic } from '@/database/schemas/topic';
-import { DB_User } from '@/database/schemas/user';
+import { DB_Session } from '@/database/client/schemas/session';
+import { DB_SessionGroup } from '@/database/client/schemas/sessionGroup';
+import { DB_Topic } from '@/database/client/schemas/topic';
+import { DB_User } from '@/database/client/schemas/user';
 import { MigrationLLMSettings } from '@/migrations/FromV3ToV4';
 import { uuid } from '@/utils/uuid';
 
+import { DB_File } from '../schemas/files';
+import { DB_Message } from '../schemas/message';
+import { DB_Plugin } from '../schemas/plugin';
 import { migrateSettingsToUser } from './migrations/migrateSettingsToUser';
 import {
   dbSchemaV1,
