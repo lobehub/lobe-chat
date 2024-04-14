@@ -1,14 +1,11 @@
-import { ActionIcon, DiscordIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, Icon } from '@lobehub/ui';
 import { Badge, ConfigProvider, Dropdown, MenuProps } from 'antd';
 import {
-  Feather,
-  FileClock,
   HardDriveDownload,
   HardDriveUpload,
   Settings,
   Settings2,
 } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
