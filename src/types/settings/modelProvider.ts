@@ -46,6 +46,7 @@ export interface GlobalLLMConfig {
   bedrock: AWSBedrockConfig;
   google: GeneralModelProviderConfig;
   groq: GeneralModelProviderConfig;
+  minimax: GeneralModelProviderConfig;
   mistral: GeneralModelProviderConfig;
   moonshot: GeneralModelProviderConfig;
   ollama: GeneralModelProviderConfig;

@@ -13,6 +13,7 @@ import Azure from './Azure';
 import Bedrock from './Bedrock';
 import Google from './Google';
 import Groq from './Groq';
+import Minimax from './Minimax';
 import Mistral from './Mistral';
 import Moonshot from './Moonshot';
 import Ollama from './Ollama';
@@ -39,6 +40,7 @@ export default memo(() => {
       <TogetherAI />
       <Groq />
       <Perplexity />
+      <Minimax />
       <Mistral />
       <Moonshot />
       <Zhipu />
