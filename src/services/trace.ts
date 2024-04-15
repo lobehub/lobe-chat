@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '@/services/_url';
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/slices/preference/selectors';
+import { preferenceSelectors } from '@/store/global/selectors';
 import { TraceEventBasePayload, TraceEventPayloads } from '@/types/trace';
 
 class TraceService {
@@ -8,9 +8,7 @@ class TraceService {
     try {
       return fetch(API_ENDPOINTS.trace, {
         body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         method: 'POST',
       });
     } catch (e) {

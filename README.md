@@ -6,7 +6,7 @@
 
 An open-source, modern-design ChatGPT/LLMs UI/Framework.<br/>
 Supports speech-synthesis, multi-modal, and extensible ([function call][docs-functionc-call]) plugin system.<br/>
-One-click **FREE** deployment of your private ChatGPT/Gemini/Ollama chat application.
+One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/Ollama chat application.
 
 **English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Documents][docs] · [Report Bug][github-issues-link] · [Request Feature][github-issues-link]
 
@@ -121,7 +121,12 @@ In this way, LobeChat can more flexibly adapt to the needs of different users, w
 We have implemented support for the following model service providers:
 
 - **AWS Bedrock**: Integrated with AWS Bedrock service, supporting models such as **Claude / LLama2**, providing powerful natural language processing capabilities. [Learn more](https://aws.amazon.com/cn/bedrock)
+- **Anthropic (Claude)**: Accessed Anthropic's **Claude** series models, including Claude 3 and Claude 2, with breakthroughs in multi-modal capabilities and extended context, setting a new industry benchmark. [Learn more](https://www.anthropic.com/claude)
 - **Google AI (Gemini Pro, Gemini Vision)**: Access to Google's **Gemini** series models, including Gemini and Gemini Pro, to support advanced language understanding and generation. [Learn more](https://deepmind.google/technologies/gemini/)
+- **Groq**: Accessed Groq's AI models, efficiently processing message sequences and generating responses, capable of multi-turn dialogues and single-interaction tasks. [Learn more](https://groq.com/)
+- **OpenRouter**: Supports routing of models including **Claude 3**, **Gemma**, **Mistral**, **Llama2** and **Cohere**, with intelligent routing optimization to improve usage efficiency, open and flexible. [Learn more](https://openrouter.ai/)
+- **01.AI (Yi Model)**: Integrated the 01.AI models, with series of APIs featuring fast inference speed, which not only shortened the processing time, but also maintained excellent model performance. [Learn more](https://01.ai/)
+- **Together.ai**: Over 100 leading open-source Chat, Language, Image, Code, and Embedding models are available through the Together Inference API. For these models you pay just for what you use. [Learn more](https://www.together.ai/)
 - **ChatGLM**: Added the **ChatGLM** series models from Zhipuai (GLM-4/GLM-4-vision/GLM-3-turbo), providing users with another efficient conversation model choice. [Learn more](https://www.zhipuai.cn/)
 - **Moonshot AI (Dark Side of the Moon)**: Integrated with the Moonshot series models, an innovative AI startup from China, aiming to provide deeper conversation understanding. [Learn more](https://www.moonshot.cn/)
 
@@ -218,12 +223,12 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 | Recent Submits                                                                                                    | Description                                                                                                                                      |
 | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [NFT Guru](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **swap** on **2024-04-03**</sup>          | Discover current prices of NFTs across major platforms and keep track of the rapidly changing marketplace with real-time<br/>`crypto` `nft`      |
+| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-04-02**</sup> | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                       |
 | [Calendar Assistant](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-03-13**</sup>  | A plugin to manage your calendar events # will auto generate i18n in workflow<br/>`calendar` `schedule` `will-auto-generate-i-18-n-in-workflow`  |
-| [Charts & Diagrams](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **pyxl** on **2024-02-05**</sup> | Mermaid Diagrams, Schemes for Presentations, Analysis, research websites, pie charts.<br/>`chart` `diagram`                                      |
-| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-02-02**</sup> | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                       |
 | [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | Get realtime crypto price, BTC, ETH, BNB, and the latest insights.The latest coin news and airdrop opportunities.<br/>`crypto` `btc` `eth` `bnb` |
 
-> 📊 Total plugins: [<kbd>**59**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**55**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -255,14 +260,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Amazon Seller Support Agent](https://chat-preview.lobehub.com/market?agent=amazon-seller-support-agent)<br/><sup>By **[etnperlong](https://github.com/etnperlong)** on **2024-03-15**</sup> | AI assistant that assists Amazon sellers in responding to customer service replies, providing detailed and cogent responses towards a satisfactory resolution.<br/>`amazon` `seller` `writing`                                                                                                                                                                                                                                                                                                                                |
-| [TikTok Script Writer](https://chat-preview.lobehub.com/market?agent=tiktok-script-writer)<br/><sup>By **[sdhjn19dj1m](https://github.com/sdhjn19dj1m)** on **2024-03-12**</sup>             | This script is tailored for TikTok's short video format, designed to engage and entertain the specified target audience. It incorporates trending elements and best practices for content virality, ensuring the video captures attention from the start. The script is structured to include a captivating opening, concise and impactful message body, and a compelling call-to-action, all while reflecting the user's desired tone and theme.<br/>`tik-tok` `short-video` `viral-content` `trending-hashtag` `engagement` |
-| [Gen Z Engagement Specialist](https://chat-preview.lobehub.com/market?agent=gen-z)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-03-09**</sup>                             | Specializes in engaging Gen Z users with tailored interactions reflecting their preferences and values.<br/>`engagement` `gen-z` `communication` `advice` `interaction`                                                                                                                                                                                                                                                                                                                                                       |
-| [Schedule Management Assistant](https://chat-preview.lobehub.com/market?agent=calendar-manager)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2024-03-07**</sup>            | Schedule Management Assistant, calls the time plugin to handle requests for adding, querying, and deleting schedules, supports multiple operations and reminders.<br/>`schedule-management` `time-plugin` `add-schedule` `query-schedule` `delete-schedule`                                                                                                                                                                                                                                                                   |
+| Recent Submits                                                                                                                                                                       | Description                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Biology Professor](https://chat-preview.lobehub.com/market?agent=bio-professor)<br/><sup>By **[luxiangze](https://github.com/luxiangze)** on **2024-04-13**</sup>                   | As a biology professor, you will receive questions and concepts about biology. Please explain these questions and concepts in specific and concise language, and try to use practical examples to illustrate them to help your audience better understand. Please ensure that your explanations are accurate and clear, and try to encourage creative and flexible answers. Respond in Chinese.<br/>`biology` |
+| [Master of Fortune Telling](https://chat-preview.lobehub.com/market?agent=fortune-teller)<br/><sup>By **[kamilkenrich](https://github.com/kamilkenrich)** on **2024-04-13**</sup>    | Specializes in numerology, divination, astrology, and blood type analysis<br/>`numerology` `divination` `astrology` `psychology` `blood-type` `constellation`                                                                                                                                                                                                                                                 |
+| [Healthy Recipe Recommender](https://chat-preview.lobehub.com/market?agent=healthy-recipe-recommender)<br/><sup>By **[Greasen](https://github.com/Greasen)** on **2024-04-11**</sup> | Customized nutrition meals, scientific combinations, healthy eating, your personal nutritionist.<br/>`recipes` `fitness-meals` `nutrition-meals`                                                                                                                                                                                                                                                              |
+| [SmartWeather Assistant](https://chat-preview.lobehub.com/market?agent=personal-weather-consultant)<br/><sup>By **[Greasen](https://github.com/Greasen)** on **2024-04-11**</sup>    | SmartWeather Assistant, your personal weather advisor, fashion guide, and positive energy booster!<br/>`weather` `assistant` `fashion`                                                                                                                                                                                                                                                                        |
 
-> 📊 Total agents: [<kbd>**202**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**238**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -455,7 +460,7 @@ This project provides some additional configuration items set with environment v
 | `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                                                  | `sk-xxxxxx...xxxxxx`                                                                                                 |
 | `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL                             | `https://api.chatanywhere.cn` or `https://aihubmix.com/v1` <br/>The default value is<br/>`https://api.openai.com/v1` |
 | `ACCESS_CODE`        | No       | Add a password to access this service; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                                            |
-| `CUSTOM_MODELS`      | No       | Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas. | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                                |
+| `OPENAI_MODEL_LIST`  | No       | Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas. | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                                |
 
 > \[!NOTE]
 >
@@ -652,27 +657,27 @@ This project is [MIT](./LICENSE) licensed.
 [docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
 [docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
-[docs]: https://chat-docs.lobehub.com/en
+[docs]: https://lobehub.com/docs
 [docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
-[docs-docker]: https://chat-docs.lobehub.com/en/self-hosting/platform/docker
-[docs-env-var]: https://chat-docs.lobehub.com/en/self-hosting/environment-variables
-[docs-feat-agent]: https://chat-docs.lobehub.com/en/usage/features/agent-market
-[docs-feat-local]: https://chat-docs.lobehub.com/en/usage/features/local-llm
-[docs-feat-mobile]: https://chat-docs.lobehub.com/en/usage/features/mobile
-[docs-feat-plugin]: https://chat-docs.lobehub.com/en/usage/features/plugin-system
-[docs-feat-provider]: https://chat-docs.lobehub.com/en/usage/features/multi-ai-providers
-[docs-feat-pwa]: https://chat-docs.lobehub.com/en/usage/features/pwa
-[docs-feat-t2i]: https://chat-docs.lobehub.com/en/usage/features/text-to-image
-[docs-feat-theme]: https://chat-docs.lobehub.com/en/usage/features/theme
-[docs-feat-tts]: https://chat-docs.lobehub.com/en/usage/features/tts
-[docs-feat-vision]: https://chat-docs.lobehub.com/en/usage/features/vision
+[docs-docker]: https://lobehub.com/docs/self-hosting/platform/docker
+[docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
+[docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
+[docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
+[docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
+[docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
+[docs-feat-provider]: https://lobehub.com/docs/usage/features/multi-ai-providers
+[docs-feat-pwa]: https://lobehub.com/docs/usage/features/pwa
+[docs-feat-t2i]: https://lobehub.com/docs/usage/features/text-to-image
+[docs-feat-theme]: https://lobehub.com/docs/usage/features/theme
+[docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
+[docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
 [docs-functionc-call]: https://platform.openai.com/docs/guides/function-calling
 [docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse
-[docs-plugin-dev]: https://chat-docs.lobehub.com/en/usage/plugins/development
-[docs-self-hosting]: https://chat-docs.lobehub.com/en/self-hosting/start
-[docs-upstream-sync]: https://chat-docs.lobehub.com/en/self-hosting/advanced/upstream-sync
-[docs-usage-ollama]: https://chat-docs.lobehub.com/en/usage/providers/ollama
-[docs-usage-plugin]: https://chat-docs.lobehub.com/en/usage/plugins/basic
+[docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
+[docs-self-hosting]: https://lobehub.com/docs/self-hosting/start
+[docs-upstream-sync]: https://lobehub.com/docs/self-hosting/advanced/upstream-sync
+[docs-usage-ollama]: https://lobehub.com/docs/usage/providers/ollama
+[docs-usage-plugin]: https://lobehub.com/docs/usage/plugins/basic
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
 [github-action-release-link]: https://github.com/actions/workflows/lobehub/lobe-chat/release.yml

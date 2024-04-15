@@ -31,189 +31,61 @@
     "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}"
   },
   "llm": {
-    "Anthropic": {
-      "endpoint": {
-        "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
-        "placeholder": "https://api.anthropic.com",
-        "title": "Địa chỉ Proxy API"
-      },
-      "title": "Anthropic",
-      "token": {
-        "desc": "Nhập API Key từ Anthropic",
-        "placeholder": "Khóa API Anthropic",
-        "title": "Khóa API"
-      }
-    },
-    "AzureOpenAI": {
-      "azureApiVersion": {
-        "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, xem chi tiết [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Lấy danh sách",
-        "title": "Phiên bản API của Azure"
-      },
-      "deployments": {
-        "desc": "Sử dụng cú pháp id=name để điền tên triển khai của bạn (ví dụ: nếu tên triển khai và tên mô hình giống nhau, bạn chỉ cần điền tên mô hình), nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
-        "title": "Danh sách triển khai của Azure"
-      },
-      "endpoint": {
-        "desc": "Giá trị này có thể được tìm thấy trong phần “Khóa và Điểm cuối” khi kiểm tra tài nguyên trên Cổng thông tin Azure",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Địa chỉ API Azure"
-      },
-      "models": {
-        "desc": "Các mô hình được hỗ trợ",
-        "title": "Danh sách mô hình"
-      },
-      "title": "Cài đặt Azure OpenAI",
-      "token": {
-        "desc": "Giá trị này có thể được tìm thấy trong phần “Khóa và Điểm cuối” khi kiểm tra tài nguyên trên Cổng thông tin Azure. Có thể sử dụng KEY1 hoặc KEY2",
-        "placeholder": "Khóa API Azure",
-        "title": "Khóa API"
-      }
-    },
-    "Bedrock": {
-      "accessKeyId": {
-        "desc": "Nhập Aws Access Key Id",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
-      },
-      "checker": {
-        "desc": "Kiểm tra xem AccessKeyId / SecretAccessKey đã được điền đúng chưa"
-      },
-      "region": {
-        "desc": "Nhập Aws Region",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
-      },
-      "secretAccessKey": {
-        "desc": "Nhập Aws Secret Access Key",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
-    "Google": {
-      "title": "Google",
-      "token": {
-        "desc": "Nhập API Key từ Google",
-        "placeholder": "Google API Key",
-        "title": "API Key"
-      }
-    },
-    "Groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "Nhập API Key từ Groq",
-        "placeholder": "Groq API Key",
-        "title": "API Key"
-      }
-    },
-    "Mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Nhập API Key từ Mistral AI",
-        "placeholder": "Mistral AI API Key",
-        "title": "API Key"
-      }
-    },
-    "Moonshot": {
-      "title": "Mặt trăng",
-      "token": {
-        "desc": "Nhập API Key từ Moonshot AI",
-        "placeholder": "Khóa API Moonshot AI",
-        "title": "Khóa API"
-      }
-    },
-    "Ollama": {
-      "checker": {
-        "desc": "Kiểm tra xem địa chỉ proxy có được điền đúng không"
-      },
-      "customModelName": {
-        "desc": "Thêm mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
-        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
-        "title": "Tên mô hình tùy chỉnh"
-      },
-      "endpoint": {
-        "desc": "Nhập địa chỉ proxy giao diện Ollama, để trống nếu không được chỉ định cụ thể",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Địa chỉ proxy giao diện"
-      },
-      "title": "Ollama"
-    },
-    "OpenAI": {
-      "azureApiVersion": {
-        "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, xem chi tiết tại [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Lấy danh sách",
-        "title": "Phiên bản API Azure"
-      },
-      "customModelName": {
-        "desc": "Thêm mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,)",
-        "placeholder": "mô hình1, mô hình2, mô hình3",
-        "title": "Tên mô hình tùy chỉnh"
-      },
-      "endpoint": {
-        "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "Địa chỉ proxy giao diện"
-      },
-      "models": {
-        "count": "Tổng cộng có {{count}} mô hình",
-        "desc": "Các mô hình được hỗ trợ",
-        "fetch": "Lấy danh sách mô hình",
-        "notSupport": "Azure OpenAI tạm thời không hỗ trợ xem danh sách mô hình",
-        "notSupportTip": "Bạn cần tự đảm bảo rằng tên triển khai và tên mô hình phù hợp nhau",
-        "refetch": "Lấy lại danh sách mô hình",
-        "title": "Danh sách mô hình"
-      },
-      "title": "Cài đặt OpenAI",
-      "token": {
-        "desc": "Sử dụng Khóa OpenAI của riêng bạn",
-        "placeholder": "Khóa API OpenAI",
-        "title": "Khóa API"
-      },
-      "useAzure": {
-        "desc": "Sử dụng dịch vụ OpenAI do Azure cung cấp",
-        "fetch": "Lấy danh sách",
-        "serverConfig": "Quản trị viên đã cấu hình mở Azure OpenAI trên máy chủ, không cho phép chuyển đổi",
-        "title": "Sử dụng Azure OpenAI"
-      }
-    },
-    "OpenRouter": {
-      "checker": {
-        "desc": "Kiểm tra xem địa chỉ proxy đã được điền đúng chưa"
-      },
-      "customModelName": {
-        "desc": "Thêm tên mô hình tùy chỉnh, nhiều mô hình sử dụng dấu phẩy (,) để ngăn cách",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "Tên mô hình tùy chỉnh"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "Nhập API Key từ OpenRouter AI",
-        "placeholder": "OpenRouter AI API Key",
-        "title": "API Key"
-      }
-    },
-    "Perplexity": {
-      "title": "Perplexity AI",
-      "token": {
-        "desc": "Nhập API Key từ Perplexity AI",
-        "placeholder": "Khóa API Perplexity AI",
-        "title": "API Key"
-      }
-    },
-    "Zhipu": {
-      "title": "Zhipu AI",
-      "token": {
-        "desc": "Nhập API Key từ Zhipu",
-        "placeholder": "Zhipu API Key",
-        "title": "API Key"
-      }
-    },
     "checker": {
       "button": "Kiểm tra",
       "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
+      "ollamaDesc": "Kiểm tra xem địa chỉ proxy đã được điền đúng chưa",
       "pass": "Kiểm tra thành công",
       "title": "Kiểm tra kết nối"
+    },
+    "customModelCards": {
+      "addNew": "Tạo và thêm mô hình {{id}}",
+      "config": "Cấu hình mô hình",
+      "confirmDelete": "Bạn sắp xóa mô hình tùy chỉnh này, sau khi xóa sẽ không thể khôi phục, hãy thận trọng.",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Trường thực tế được yêu cầu trong Azure OpenAI",
+          "placeholder": "Nhập tên triển khai mô hình trong Azure",
+          "title": "Tên triển khai mô hình"
+        },
+        "displayName": {
+          "placeholder": "Nhập tên hiển thị của mô hình, ví dụ ChatGPT, GPT-4, v.v.",
+          "title": "Tên hiển thị mô hình"
+        },
+        "files": {
+          "extra": "Hiện tại, việc tải lên tệp trong LobeChat chỉ là một phương pháp tạm thời, chỉ dành cho mục đích thử nghiệm. Chờ đợi tính năng tải lên tệp đầy đủ trong tương lai",
+          "title": "Hỗ trợ tải lên tệp"
+        },
+        "functionCall": {
+          "extra": "Cấu hình này chỉ mở khả năng gọi hàm trong LobeChat, việc hỗ trợ gọi hàm hoàn toàn phụ thuộc vào mô hình chính mình, hãy tự kiểm tra tính khả dụng của khả năng gọi hàm của mô hình",
+          "title": "Hỗ trợ gọi hàm"
+        },
+        "id": {
+          "extra": "Sẽ được hiển thị như một nhãn mô hình",
+          "placeholder": "Nhập ID mô hình, ví dụ gpt-4-turbo-preview hoặc claude-2.1",
+          "title": "ID mô hình"
+        },
+        "modalTitle": "Cấu hình mô hình tùy chỉnh",
+        "tokens": {
+          "title": "Số lượng token tối đa"
+        },
+        "vision": {
+          "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong LobeChat, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào mô hình chính mình, hãy tự kiểm tra tính khả dụng của khả năng nhận diện hình ảnh của mô hình",
+          "title": "Hỗ trợ nhận diện hình ảnh"
+        }
+      }
+    },
+    "fetcher": {
+      "fetch": "Lấy danh sách mô hình",
+      "fetching": "Đang lấy danh sách mô hình...",
+      "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
+      "noLatestTime": "Chưa có danh sách nào được lấy"
+    },
+    "modelList": {
+      "desc": "Chọn mô hình hiển thị trong cuộc trò chuyện, mô hình đã chọn sẽ được hiển thị trong danh sách mô hình",
+      "placeholder": "Vui lòng chọn mô hình từ danh sách",
+      "title": "Danh sách mô hình",
+      "total": "Tổng cộng có {{count}} mô hình có sẵn"
     },
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
   },
@@ -371,6 +243,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "Mô hình nhận dạng giọng nói OpenAI",
+      "title": "OpenAI",
       "ttsModel": "Mô hình tổng hợp giọng nói OpenAI"
     },
     "showAllLocaleVoice": {
@@ -440,11 +313,47 @@
     "placeholder": "Vui lòng nhập nhận dạng trợ lý, cần phải duy nhất, ví dụ như phát triển web",
     "tooltips": "Chia sẻ lên thị trường trợ lý"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Thêm tên để dễ nhận biết",
+        "placeholder": "Nhập tên thiết bị",
+        "title": "Tên thiết bị"
+      },
+      "title": "Thông tin thiết bị",
+      "unknownBrowser": "Trình duyệt không xác định",
+      "unknownOS": "Hệ điều hành không xác định"
+    },
+    "warning": {
+      "message": "Chức năng này hiện vẫn đang trong thử nghiệm, có thể gặp phải tình huống ngoài dự kiến hoặc không ổn định, nếu gặp vấn đề vui lòng gửi phản hồi ngay lập tức."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC sẽ sử dụng tên này để tạo kênh đồng bộ, đảm bảo tên kênh là duy nhất",
+        "placeholder": "Nhập tên kênh đồng bộ",
+        "shuffle": "Tạo ngẫu nhiên",
+        "title": "Tên kênh đồng bộ"
+      },
+      "channelPassword": {
+        "desc": "Thêm mật khẩu để đảm bảo tính riêng tư của kênh, chỉ khi mật khẩu đúng, thiết bị mới có thể tham gia kênh",
+        "placeholder": "Nhập mật khẩu kênh đồng bộ",
+        "title": "Mật khẩu kênh đồng bộ"
+      },
+      "desc": "Truyền thông dữ liệu thời gian thực, điểm-điểm, cần thiết bị cùng online mới có thể đồng bộ",
+      "enabled": {
+        "invalid": "Vui lòng nhập tên kênh đồng bộ trước khi bật",
+        "title": "Bật đồng bộ"
+      },
+      "title": "WebRTC Đồng bộ"
+    }
+  },
   "tab": {
     "about": "Về chúng tôi",
     "agent": "Trợ lý mặc định",
     "common": "Cài đặt chung",
+    "experiment": "Thử nghiệm",
     "llm": "Mô hình ngôn ngữ",
+    "sync": "Đồng bộ trên đám mây",
     "tts": "Dịch vụ giọng nói"
   },
   "tools": {

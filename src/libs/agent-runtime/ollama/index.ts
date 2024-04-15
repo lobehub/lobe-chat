@@ -1,6 +1,8 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI, { ClientOptions } from 'openai';
 
+import { OllamaChatMessage, OpenAIChatMessage } from '@/libs/agent-runtime';
+
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
@@ -8,6 +10,7 @@ import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
 import { handleOpenAIError } from '../utils/handleOpenAIError';
+import { parseDataUri } from '../utils/uriParser';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:11434/v1';
 
@@ -25,6 +28,8 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
+      payload.messages = this.buildOllamaMessages(payload.messages);
+
       const response = await this.client.chat.completions.create(
         payload as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       );
@@ -73,6 +78,41 @@ export class LobeOllamaAI implements LobeRuntimeAI {
       });
     }
   }
+
+  private buildOllamaMessages(messages: OpenAIChatMessage[]) {
+    return messages.map((message) => this.convertContentToOllamaMessage(message));
+  }
+
+  private convertContentToOllamaMessage = (message: OpenAIChatMessage) => {
+    if (typeof message.content === 'string') {
+      return message;
+    }
+
+    const ollamaMessage: OllamaChatMessage = {
+      content: '',
+      role: message.role,
+    };
+
+    for (const content of message.content) {
+      switch (content.type) {
+        case 'text': {
+          // keep latest text input
+          ollamaMessage.content = content.text;
+          break;
+        }
+        case 'image_url': {
+          const { base64 } = parseDataUri(content.image_url.url);
+          if (base64) {
+            ollamaMessage.images ??= [];
+            ollamaMessage.images.push(base64);
+          }
+          break;
+        }
+      }
+    }
+
+    return ollamaMessage;
+  };
 }
 
 export default LobeOllamaAI;

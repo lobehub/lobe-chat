@@ -8,19 +8,6 @@ const buildWithDocker = process.env.DOCKER === 'true';
 const API_PROXY_ENDPOINT = process.env.API_PROXY_ENDPOINT || '';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
-const docsBasePath = process.env.NEXT_PUBLIC_LOBE_CHAT_DOCS || '';
-
-const withBundleAnalyzer = analyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
-
-const withPWA = nextPWA({
-  dest: 'public',
-  register: true,
-  workboxOptions: {
-    skipWaiting: true,
-  },
-});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -38,27 +25,13 @@ const nextConfig = {
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
-  images: {
-    remotePatterns: [
-      {
-        hostname: 'registry.npmmirror.com',
-        pathname: '/@lobehub/**',
-        port: '',
-        protocol: 'https',
-      },
-    ],
-    unoptimized: !isProd,
-  },
+
   output: buildWithDocker ? 'standalone' : undefined,
 
   rewrites: async () => [
     // due to google api not work correct in some countries
     // we need a proxy to bypass the restriction
     { source: '/api/chat/google', destination: `${API_PROXY_ENDPOINT}/api/chat/google` },
-    { source: '/docs', destination: `${docsBasePath}/docs` },
-    { source: '/docs/zh', destination: `${docsBasePath}/docs/zh` },
-    { source: '/docs/en', destination: `${docsBasePath}/docs/en` },
-    { source: '/docs/:path*', destination: `${docsBasePath}/docs/:path*` },
   ],
   reactStrictMode: true,
 
@@ -82,4 +55,18 @@ const nextConfig = {
   },
 };
 
-export default isProd ? withBundleAnalyzer(withPWA(nextConfig)) : nextConfig;
+const noWrapper = (config) => config;
+
+const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
+
+const withPWA = isProd
+  ? nextPWA({
+      dest: 'public',
+      register: true,
+      workboxOptions: {
+        skipWaiting: true,
+      },
+    })
+  : noWrapper;
+
+export default withBundleAnalyzer(withPWA(nextConfig));

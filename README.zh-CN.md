@@ -4,9 +4,9 @@
 
 <h1>Lobe Chat</h1>
 
-开源、现代化设计的 ChatGPT/LLMs 聊天应用与开发框架<br/>
+现代化设计的开源 ChatGPT/LLMs 聊天应用与开发框架<br/>
 支持语音合成、多模态、可扩展的（[function call][docs-functionc-call]）插件系统<br/>
-一键**免费**拥有你自己的 ChatGPT/Gemini/Ollama 应用
+一键**免费**拥有你自己的 ChatGPT/Gemini/Claude/Ollama 应用
 
 [English](./README.md) · **简体中文** · [更新日志](./CHANGELOG.md) · [文档][github-document-link] · [报告问题][github-issues-link] · [请求功能][github-issues-link]
 
@@ -121,8 +121,13 @@
 
 - **AWS Bedrock**：集成了 AWS Bedrock 服务，支持了 **Claude / LLama2** 等模型，提供了强大的自然语言处理能力。[了解更多](https://aws.amazon.com/cn/bedrock)
 - **Google AI (Gemini Pro、Gemini Vision)**：接入了 Google 的 **Gemini** 系列模型，包括 Gemini 和 Gemini Pro，以支持更高级的语言理解和生成。[了解更多](https://deepmind.google/technologies/gemini/)
+- **Anthropic (Claude)**：接入了 Anthropic 的 **Claude** 系列模型，包括 Claude 3 和 Claude 2，多模态突破，超长上下文，树立行业新基准。[了解更多](https://www.anthropic.com/claude)
 - **ChatGLM**：加入了智谱的 **ChatGLM** 系列模型（GLM-4/GLM-4-vision/GLM-3-turbo），为用户提供了另一种高效的会话模型选择。[了解更多](https://www.zhipuai.cn/)
 - **Moonshot AI (月之暗面)**：集成了 Moonshot 系列模型，这是一家来自中国的创新性 AI 创业公司，旨在提供更深层次的会话理解。[了解更多](https://www.moonshot.cn/)
+- **Together.ai**：集成部署了数百种开源模型和向量模型，无需本地部署即可随时访问这些模型。[了解更多](https://www.together.ai/)
+- **01.AI (零一万物)**：集成了零一万物模型，系列 API 具备较快的推理速度，这不仅缩短了处理时间，同时也保持了出色的模型效果。[了解更多](https://www.lingyiwanwu.com/)
+- **Groq**：接入了 Groq 的 AI 模型，高效处理消息序列，生成回应，胜任多轮对话及单次交互任务。[了解更多](https://groq.com/)
+- **OpenRouter**：其支持包括 **Claude 3**，**Gemma**，**Mistral**，**Llama2**和**Cohere**等模型路由，支持智能路由优化，提升使用效率，开放且灵活。[了解更多](https://openrouter.ai/)
 
 同时，我们也在计划支持更多的模型服务商，如 Replicate 和 Perplexity 等，以进一步丰富我们的服务商库。如果你希望让 LobeChat 支持你喜爱的服务商，欢迎加入我们的[社区讨论](https://github.com/lobehub/lobe-chat/discussions/1284)。
 
@@ -210,12 +215,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                          | 插件描述                                                                                                       |
 | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [NFT Guru](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **swap** on **2024-04-03**</sup>          | 发现主要平台上 NFT 的当前价格，并通过实时跟踪快速变化的市场了解情况<br/>`加密货币` `nft`                       |
+| [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-04-02**</sup>      | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br/>`社交` `推特` `x` `搜索`                            |
 | [日历助手](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-03-13**</sup>            | 一个用于管理日历事件的插件 # 将自动生成工作流程中的 i18n<br/>`日历` `日程安排` `将自动生成工作流程中的-i-18-n` |
-| [图表和图示](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **pyxl** on **2024-02-05**</sup>        | 美人鱼图表，演示文稿方案，分析，研究网站，饼图。<br/>`图表` `图示`                                             |
-| [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-02-02**</sup>      | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br/>`社交` `推特` `x` `搜索`                            |
 | [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br/>`加密货币` `btc` `eth` `bnb`      |
 
-> 📊 Total plugins: [<kbd>**59**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**55**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -243,14 +248,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                            | 助手说明                                                                                                                                                                                                                                                                                                                         |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [亚马逊卖家支持代理](https://chat-preview.lobehub.com/market?agent=amazon-seller-support-agent)<br/><sup>By **[etnperlong](https://github.com/etnperlong)** on **2024-03-15**</sup> | AI 助手，协助亚马逊卖家回复客户服务回复，提供详细和有力的回复，以达到令人满意的解决方案。<br/>`亚马逊` `卖家` `写作`                                                                                                                                                                                                             |
-| [TikTok 脚本撰写器](https://chat-preview.lobehub.com/market?agent=tiktok-script-writer)<br/><sup>By **[sdhjn19dj1m](https://github.com/sdhjn19dj1m)** on **2024-03-12**</sup>       | 此脚本专为 TikTok 的短视频格式量身定制，旨在吸引和娱乐特定目标受众。它融入了流行元素和内容病毒传播的最佳实践，确保视频从一开始就吸引注意力。脚本结构包括引人入胜的开场、简洁而有影响力的主体信息和引人注目的行动号召，同时反映用户期望的语气和主题。<br/>`tik-tok` `short-video` `viral-content` `trending-hashtag` `engagement` |
-| [Gen Z Engagement Specialist](https://chat-preview.lobehub.com/market?agent=gen-z)<br/><sup>By **[MYSeaIT](https://github.com/MYSeaIT)** on **2024-03-09**</sup>                    | 专注于通过定制互动反映他们的偏好和价值观，与 Gen Z 用户进行互动。<br/>`engagement` `gen-z` `communication` `advice` `interaction`                                                                                                                                                                                                |
-| [日程管理助手](https://chat-preview.lobehub.com/market?agent=calendar-manager)<br/><sup>By **[ccdanpian](https://github.com/ccdanpian)** on **2024-03-07**</sup>                    | 日程管理助手，调用时间插件，处理新增、查询、删除日程请求，支持多种操作和提醒。<br/>`日程管理` `时间插件` `新增日程` `查询日程` `删除日程`                                                                                                                                                                                        |
+| 最近新增                                                                                                                                                                 | 助手说明                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [生物学教授](https://chat-preview.lobehub.com/market?agent=bio-professor)<br/><sup>By **[luxiangze](https://github.com/luxiangze)** on **2024-04-13**</sup>              | 作为一位生物学教授，您将收到关于生物学的问题和概念，请用具体而简明的语言解释这些问题和概念，并尽量使用实际例子进行说明，以帮助您的听众更好地理解。请确保您的解释准确而清晰，并试图鼓励创造性和灵活性的答案。用中文回答<br/>`生物` |
+| [命理大师](https://chat-preview.lobehub.com/market?agent=fortune-teller)<br/><sup>By **[kamilkenrich](https://github.com/kamilkenrich)** on **2024-04-13**</sup>         | 擅长命理学、占卜预测、占星术和血型学分析<br/>`命理学、占卜、占星学、心理学、血型、星座`                                                                                                                                           |
+| [健康食谱推荐师](https://chat-preview.lobehub.com/market?agent=healthy-recipe-recommender)<br/><sup>By **[Greasen](https://github.com/Greasen)** on **2024-04-11**</sup> | 精准定制营养餐，科学搭配，健康饮食，你的私人营养师。<br/>`食谱、健身餐、营养餐`                                                                                                                                                   |
+| [智预小助手](https://chat-preview.lobehub.com/market?agent=personal-weather-consultant)<br/><sup>By **[Greasen](https://github.com/Greasen)** on **2024-04-11**</sup>    | 智预小助手，您的私人天气顾问，穿搭指南，正能量加油器！<br/>`天气` `助理、穿搭`                                                                                                                                                    |
 
-> 📊 Total agents: [<kbd>**202**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**238**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -431,12 +436,12 @@ $ docker run -d -p 3210:3210 \
 
 本项目提供了一些额外的配置项，使用环境变量进行设置：
 
-| 环境变量           | 类型 | 描述                                                                                                                          | 示例                                                                                                   |
-| ------------------ | ---- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `OPENAI_API_KEY`   | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                                                       | `sk-xxxxxx...xxxxxx`                                                                                   |
-| `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL                                        | `https://api.chatanywhere.cn` 或 `https://aihubmix.com/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
-| `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，你可以设置一个长密码以防被爆破，该值用逗号分隔时为密码数组                                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                              |
-| `CUSTOM_MODELS`    | 可选 | 用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。 | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                  |
+| 环境变量            | 类型 | 描述                                                                                                                          | 示例                                                                                                   |
+| ------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `OPENAI_API_KEY`    | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                                                       | `sk-xxxxxx...xxxxxx`                                                                                   |
+| `OPENAI_PROXY_URL`  | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL                                        | `https://api.chatanywhere.cn` 或 `https://aihubmix.com/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
+| `ACCESS_CODE`       | 可选 | 添加访问此服务的密码，你可以设置一个长密码以防被爆破，该值用逗号分隔时为密码数组                                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                              |
+| `OPENAI_MODEL_LIST` | 可选 | 用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。 | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                  |
 
 > \[!NOTE]
 >
@@ -674,25 +679,25 @@ This project is [MIT](./LICENSE) licensed.
 [docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
 [docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
-[docs-docker]: https://chat-docs.lobehub.com/zh/self-hosting/platform/docker
-[docs-env-var]: https://chat-docs.lobehub.com/zh/self-hosting/environment-variables
-[docs-feat-agent]: https://chat-docs.lobehub.com/zh/usage/features/agent-market
-[docs-feat-local]: https://chat-docs.lobehub.com/zh/usage/features/local-llm
-[docs-feat-mobile]: https://chat-docs.lobehub.com/zh/usage/features/mobile
-[docs-feat-plugin]: https://chat-docs.lobehub.com/zh/usage/features/plugin-system
-[docs-feat-provider]: https://chat-docs.lobehub.com/zh/usage/features/multi-ai-providers
-[docs-feat-pwa]: https://chat-docs.lobehub.com/zh/usage/features/pwa
-[docs-feat-t2i]: https://chat-docs.lobehub.com/zh/usage/features/text-to-image
-[docs-feat-theme]: https://chat-docs.lobehub.com/zh/usage/features/theme
-[docs-feat-tts]: https://chat-docs.lobehub.com/zh/usage/features/tts
-[docs-feat-vision]: https://chat-docs.lobehub.com/zh/usage/features/vision
+[docs-docker]: https://lobehub.com/docs/self-hosting/platform/docker
+[docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
+[docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
+[docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
+[docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
+[docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
+[docs-feat-provider]: https://lobehub.com/docs/usage/features/multi-ai-providers
+[docs-feat-pwa]: https://lobehub.com/docs/usage/features/pwa
+[docs-feat-t2i]: https://lobehub.com/docs/usage/features/text-to-image
+[docs-feat-theme]: https://lobehub.com/docs/usage/features/theme
+[docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
+[docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
 [docs-functionc-call]: https://platform.openai.com/docs/guides/function-calling
 [docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse.zh-CN
-[docs-plugin-dev]: https://chat-docs.lobehub.com/zh/usage/plugins/development
-[docs-self-hosting]: https://chat-docs.lobehub.com/zh/self-hosting/start
-[docs-upstream-sync]: https://chat-docs.lobehub.com/zh/self-hosting/advanced/upstream-sync
-[docs-usage-ollama]: https://chat-docs.lobehub.com/zh/usage/providers/ollama
-[docs-usage-plugin]: https://chat-docs.lobehub.com/zh/usage/plugins/basic
+[docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
+[docs-self-hosting]: https://lobehub.com/docs/self-hosting/start
+[docs-upstream-sync]: https://lobehub.com/docs/self-hosting/advanced/upstream-sync
+[docs-usage-ollama]: https://lobehub.com/docs/usage/providers/ollama
+[docs-usage-plugin]: https://lobehub.com/docs/usage/plugins/basic
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
 [github-action-release-link]: https://github.com/lobehub/lobe-chat/actions/workflows/release.yml
@@ -701,7 +706,7 @@ This project is [MIT](./LICENSE) licensed.
 [github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
 [github-contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
 [github-contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat?color=c4f042&labelColor=black&style=flat-square
-[github-document-link]: https://chat-docs.lobehub.com/zh
+[github-document-link]: https://lobehub.com/docs
 [github-forks-link]: https://github.com/lobehub/lobe-chat/network/members
 [github-forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat?color=8ae8ff&labelColor=black&style=flat-square
 [github-issues-link]: https://github.com/lobehub/lobe-chat/issues

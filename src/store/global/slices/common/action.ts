@@ -10,13 +10,17 @@ import { globalService } from '@/services/global';
 import { messageService } from '@/services/message';
 import { UserConfig, userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
-import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
+import type { GlobalServerConfig } from '@/types/serverConfig';
+import type { GlobalSettings } from '@/types/settings';
+import { OnSyncEvent, PeerSyncStatus } from '@/types/sync';
+import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
+import { browserInfo } from '@/utils/platform';
 import { setNamespace } from '@/utils/storeDebug';
-import { switchLang } from '@/utils/switchLang';
 
 import { preferenceSelectors } from '../preference/selectors';
-import { settingsSelectors } from '../settings/selectors';
+import { settingsSelectors, syncSettingsSelectors } from '../settings/selectors';
+import { commonSelectors } from './selectors';
 
 const n = setNamespace('common');
 
@@ -24,11 +28,18 @@ const n = setNamespace('common');
  * 设置操作
  */
 export interface CommonAction {
+  refreshConnection: (onEvent: OnSyncEvent) => Promise<void>;
   refreshUserConfig: () => Promise<void>;
   switchBackToChat: (sessionId?: string) => void;
+  triggerEnableSync: (userId: string, onEvent: OnSyncEvent) => Promise<boolean>;
   updateAvatar: (avatar: string) => Promise<void>;
   useCheckLatestVersion: () => SWRResponse<string>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
+  useEnabledSync: (
+    userEnableSync: boolean,
+    userId: string | undefined,
+    onEvent: OnSyncEvent,
+  ) => SWRResponse;
   useFetchServerConfig: () => SWRResponse;
   useFetchUserConfig: (initServer: boolean) => SWRResponse<UserConfig | undefined>;
 }
@@ -41,13 +52,56 @@ export const createCommonSlice: StateCreator<
   [],
   CommonAction
 > = (set, get) => ({
+  refreshConnection: async (onEvent) => {
+    const userId = commonSelectors.userId(get());
+
+    if (!userId) return;
+
+    await get().triggerEnableSync(userId, onEvent);
+  },
+
   refreshUserConfig: async () => {
     await mutate([USER_CONFIG_FETCH_KEY, true]);
+
+    // when get the user config ,refresh the model provider list to the latest
+    get().refreshModelProviderList();
   },
+
   switchBackToChat: (sessionId) => {
     get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
   },
+  triggerEnableSync: async (userId: string, onEvent: OnSyncEvent) => {
+    // double-check the sync ability
+    // if there is no channelName, don't start sync
+    const sync = syncSettingsSelectors.webrtcConfig(get());
+    if (!sync.channelName) return false;
 
+    const name = syncSettingsSelectors.deviceName(get());
+
+    const defaultUserName = `My ${browserInfo.browser} (${browserInfo.os})`;
+
+    set({ syncStatus: PeerSyncStatus.Connecting });
+    return globalService.enabledSync({
+      channel: {
+        name: sync.channelName,
+        password: sync.channelPassword,
+      },
+      onAwarenessChange(state) {
+        set({ syncAwareness: state });
+      },
+      onSyncEvent: onEvent,
+      onSyncStatusChange: (status) => {
+        set({ syncStatus: status });
+      },
+      signaling: sync.signaling,
+      user: {
+        id: userId,
+        // if user don't set the name, use default name
+        name: name || defaultUserName,
+        ...browserInfo,
+      },
+    });
+  },
   updateAvatar: async (avatar) => {
     await userService.updateAvatar(avatar);
     await get().refreshUserConfig();
@@ -78,6 +132,26 @@ export const createCommonSlice: StateCreator<
         revalidateOnFocus: false,
       },
     ),
+
+  useEnabledSync: (userEnableSync, userId, onEvent) =>
+    useSWR<boolean>(
+      ['enableSync', userEnableSync, userId],
+      async () => {
+        // if user don't enable sync or no userId ,don't start sync
+        if (!userId) return false;
+
+        // if user don't enable sync, stop sync
+        if (!userEnableSync) return globalService.disableSync();
+
+        return get().triggerEnableSync(userId, onEvent);
+      },
+      {
+        onSuccess: (syncEnabled) => {
+          set({ syncEnabled });
+        },
+        revalidateOnFocus: false,
+      },
+    ),
   useFetchServerConfig: () =>
     useSWR<GlobalServerConfig>('fetchGlobalConfig', globalService.getGlobalConfig, {
       onSuccess: (data) => {
@@ -88,7 +162,10 @@ export const createCommonSlice: StateCreator<
           };
 
           const defaultSettings = merge(get().defaultSettings, serverSettings);
+
           set({ defaultSettings, serverConfig: data }, false, n('initGlobalConfig'));
+
+          get().refreshDefaultModelProviderList();
         }
       },
       revalidateOnFocus: false,
@@ -109,6 +186,9 @@ export const createCommonSlice: StateCreator<
             false,
             n('fetchUserConfig', data),
           );
+
+          // when get the user config ,refresh the model provider list to the latest
+          get().refreshModelProviderList();
 
           const { language } = settingsSelectors.currentSettings(get());
           if (language === 'auto') {

@@ -1,0 +1,231 @@
+{
+  "anthropic": {
+    "endpoint": {
+      "desc": "Varsayılan adres dışında, http(s):// içermelidir",
+      "placeholder": "https://api.anthropic.com",
+      "title": "API Proxy Adresi"
+    },
+    "title": "Anthropic",
+    "token": {
+      "desc": "Anthropic'ten gelen API Key'i girin",
+      "placeholder": "Anthropic API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Anthropic API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel Anthropic API Anahtarı Kullan"
+    }
+  },
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Azure'un API versiyonu, YYYY-AA-GG formatına uygun, [en son versiyonu](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions) kontrol edin",
+      "fetch": "Listeyi al",
+      "title": "Azure Api Versiyonu"
+    },
+    "empty": "İlk modeli eklemek için model kimliğini girin",
+    "endpoint": {
+      "desc": "Azure portalından kaynağı kontrol ederken, bu değeri \"Anahtarlar ve uç noktalar\" bölümünde bulabilirsiniz",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Azure API Adresi"
+    },
+    "modelListPlaceholder": "Dağıttığınız OpenAI modelini seçin veya ekleyin",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Azure portalından kaynağı kontrol ederken, bu değeri \"Anahtarlar ve uç noktalar\" bölümünde bulabilirsiniz. KEY1 veya KEY2 kullanabilirsiniz",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Azure OpenAI API Anahtarınızı girerek oturumu başlatabilirsiniz",
+      "title": "Özel Azure OpenAI API Anahtarı Kullan"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "AWS Access Key Id girin",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "AccessKeyId / SecretAccessKey'in doğru girilip girilmediğini test edin"
+    },
+    "region": {
+      "desc": "AWS Bölgesi girin",
+      "placeholder": "AWS Region",
+      "title": "AWS Bölgesi"
+    },
+    "secretAccessKey": {
+      "desc": "AWS Secret Access Key girin",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Özel Bölge",
+      "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama bilgilerinizi kaydetmez.",
+      "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
+    }
+  },
+  "google": {
+    "endpoint": {
+      "desc": "除默认地址外，必须包含 http(s)://",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "API 代理地址"
+    },
+    "title": "Google",
+    "token": {
+      "desc": "Google'dan gelen API Key'i girin",
+      "placeholder": "Google API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Google API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel Google API Anahtarı Kullan"
+    }
+  },
+  "groq": {
+    "title": "Groq",
+    "token": {
+      "desc": "Groq'tan gelen API Key'i girin",
+      "placeholder": "Groq API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Groq API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel Groq API Anahtarı Kullan"
+    }
+  },
+  "mistral": {
+    "title": "Mistral AI",
+    "token": {
+      "desc": "Mistral AI'dan gelen API Key'i girin",
+      "placeholder": "Mistral AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Mistral AI API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel Mistral AI API Anahtarı Kullan"
+    }
+  },
+  "moonshot": {
+    "title": "Ay'ın Karanlık Yüzü",
+    "token": {
+      "desc": "Moonshot AI'dan gelen API Key'i girin",
+      "placeholder": "Moonshot AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Moonshot AI API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel Moonshot AI API Anahtarı Kullan"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Proxy adresinin doğru girilip girilmediğini test edin"
+    },
+    "customModelName": {
+      "desc": "Özel modeller ekleyin, birden fazla model için virgül (,) kullanın",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Özel Model Adları"
+    },
+    "endpoint": {
+      "desc": "Ollama arayüz proxy adresini girin, yerel olarak belirtilmemişse boş bırakılabilir",
+      "placeholder": "http://127.0.0.1:11434/v1",
+      "title": "Arayüz Proxy Adresi"
+    },
+    "title": "Ollama"
+  },
+  "openai": {
+    "endpoint": {
+      "desc": "Varsayılan adres dışında, http(s):// içermelidir",
+      "placeholder": "https://api.openai.com/v1",
+      "title": "Arayüz Proxy Adresi"
+    },
+    "title": "OpenAI",
+    "token": {
+      "desc": "Kendi OpenAI Key'inizi kullanın",
+      "placeholder": "OpenAI API Key",
+      "title": "OpenAI API Key"
+    },
+    "unlock": {
+      "description": "OpenAI API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel OpenAI API Anahtarı Kullan"
+    }
+  },
+  "openrouter": {
+    "checker": {
+      "desc": "Proxy adresinin doğru girilip girilmediğini test edin"
+    },
+    "customModelName": {
+      "desc": "Özel modeller ekleyin, birden fazla model için virgül (,) kullanın",
+      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+      "title": "Özel Model Adları"
+    },
+    "title": "OpenRouter",
+    "token": {
+      "desc": "OpenRouter AI'dan gelen API Key'i girin",
+      "placeholder": "OpenRouter AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "OpenRouter API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel OpenRouter API Anahtarı Kullan"
+    }
+  },
+  "perplexity": {
+    "title": "Perplexity",
+    "token": {
+      "desc": "Perplexity AI'dan gelen API Key'i girin",
+      "placeholder": "Perplexity AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Perplexity API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel Perplexity API Anahtarı Kullan"
+    }
+  },
+  "togetherai": {
+    "checker": {
+      "desc": "Proxy adresinin doğru girilip girilmediğini test edin"
+    },
+    "customModelName": {
+      "desc": "Özel modeller ekleyin, birden fazla model için virgül (,) kullanın",
+      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+      "title": "Özel Model Adları"
+    },
+    "title": "TogetherAI",
+    "token": {
+      "desc": "TogetherAI AI'dan gelen API Key'i girin",
+      "placeholder": "TogetherAI AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "TogetherAI API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel TogetherAI API Anahtarı Kullan"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Sıfır Bir",
+    "token": {
+      "desc": "01.AI Sıfır Bir'den gelen API Key'i girin",
+      "placeholder": "01.AI Sıfır Bir API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "ZeroOne API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel ZeroOne API Anahtarı Kullan"
+    }
+  },
+  "zhipu": {
+    "title": "Zeka Haritası",
+    "token": {
+      "desc": "Zeka Haritası'ndan gelen API Key'i girin",
+      "placeholder": "Zhipu API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Zhipu API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel Zhipu API Anahtarı Kullan"
+    }
+  }
+}

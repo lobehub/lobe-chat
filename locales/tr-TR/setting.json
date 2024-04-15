@@ -31,189 +31,61 @@
     "sessionWithName": "Oturum Ayarları · {{name}}"
   },
   "llm": {
-    "Anthropic": {
-      "endpoint": {
-        "desc": "默认地址以外，必须包含 http(s)://",
-        "placeholder": "https://api.anthropic.com",
-        "title": "API Proxy Adresi"
-      },
-      "title": "Anthropic",
-      "token": {
-        "desc": "Anthropic 的 API 密钥",
-        "placeholder": "Anthropic API 密钥",
-        "title": "API 密钥"
-      }
-    },
-    "AzureOpenAI": {
-      "azureApiVersion": {
-        "desc": "Azure'nin API sürümü, YYYY-MM-DD biçimini takip eder, [en son sürümü buradan bulabilirsiniz](https://learn.microsoft.com/tr-tr/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Listeyi Al",
-        "title": "Azure API Sürümü"
-      },
-      "deployments": {
-        "desc": "id=name sözdizimini kullanarak dağıtım modelinizi doldurun (örneğin, dağıtım adı ve model aynıysa, yalnızca model adını doldurabilirsiniz), birden fazla model için virgül (,) kullanın",
-        "title": "Azure Dağıtımları"
-      },
-      "endpoint": {
-        "desc": "Bu değer, Azure portalındaki kaynağı kontrol ederken 'Keys and Endpoints' bölümünde bulunabilir",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure API Adresi"
-      },
-      "models": {
-        "desc": "Desteklenen modeller",
-        "title": "Model Listesi"
-      },
-      "title": "Azure OpenAI Ayarları",
-      "token": {
-        "desc": "Bu değer, Azure portalındaki kaynağı kontrol ederken 'Keys and Endpoints' bölümünde bulunabilir. KEY1 veya KEY2'yi kullanabilirsiniz",
-        "placeholder": "Azure API Anahtarı",
-        "title": "API Anahtarı"
-      }
-    },
-    "Bedrock": {
-      "accessKeyId": {
-        "desc": "Aws Access Key Id'sini girin",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
-      },
-      "checker": {
-        "desc": "AccessKeyId / SecretAccessKey'in doğru şekilde doldurulup doldurulmadığını test eder"
-      },
-      "region": {
-        "desc": "Aws Bölgesini girin",
-        "placeholder": "Aws Bölgesi",
-        "title": "Aws Bölgesi"
-      },
-      "secretAccessKey": {
-        "desc": "Aws Secret Access Key'i girin",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
-    "Google": {
-      "title": "Google",
-      "token": {
-        "desc": "Google'dan alınan API Anahtarını girin",
-        "placeholder": "Google API Anahtarı",
-        "title": "API Anahtarı"
-      }
-    },
-    "Groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "Groq'dan alınan API Anahtarını girin",
-        "placeholder": "Groq API Anahtarı",
-        "title": "API Anahtarı"
-      }
-    },
-    "Mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Mistral AI 的 API 密钥",
-        "placeholder": "Mistral AI API 密钥",
-        "title": "API 密钥"
-      }
-    },
-    "Moonshot": {
-      "title": "月球背面",
-      "token": {
-        "desc": "Moonshot AI 的 API 密钥",
-        "placeholder": "Moonshot AI API 密钥",
-        "title": "API 密钥"
-      }
-    },
-    "Ollama": {
-      "checker": {
-        "desc": "Proxy adresinin doğru şekilde doldurulup doldurulmadığını test edin"
-      },
-      "customModelName": {
-        "desc": "Özel model ekleyin, birden fazla model virgül (,) ile ayrılır",
-        "placeholder": "vicuna,llama,codellama,llama2:13b-text",
-        "title": "Özel Model Adı"
-      },
-      "endpoint": {
-        "desc": "Ollama arayüzü proxy adresini girin, yerel olarak özel bir adres belirtilmemişse boş bırakın",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Proxy Adresi"
-      },
-      "title": "Ollama"
-    },
-    "OpenAI": {
-      "azureApiVersion": {
-        "desc": "Azure için API sürümü, YYYY-MM-DD formatını takip eder, [en son sürümü kontrol edin](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Listeyi Al",
-        "title": "Azure API Sürümü"
-      },
-      "customModelName": {
-        "desc": "Özel modeller ekleyin, birden fazla modeli virgülle (,) ayırarak yazın",
-        "placeholder": "model1,model2,model3",
-        "title": "Özel Model Adı"
-      },
-      "endpoint": {
-        "desc": "Varsayılan adresin yanı sıra http(s):// içermelidir",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "API Proxy Adresi"
-      },
-      "models": {
-        "count": "Toplam {{count}} modeli destekler",
-        "desc": "Desteklenen modeller",
-        "fetch": "Model Listesini Al",
-        "notSupport": "Azure OpenAI şu anda model listesini görüntülemeyi desteklemiyor",
-        "notSupportTip": "Dağıtım adının model adıyla eşleştiğinden emin olmalısınız",
-        "refetch": "Model Listesini Yeniden Al",
-        "title": "Model Listesi"
-      },
-      "title": "OpenAI Ayarları",
-      "token": {
-        "desc": "Kendi OpenAI Anahtarınızı kullanın",
-        "placeholder": "OpenAI API Anahtarı",
-        "title": "API Anahtarı"
-      },
-      "useAzure": {
-        "desc": "Azure tarafından sağlanan OpenAI hizmetlerini kullanın",
-        "fetch": "Listeyi Al",
-        "serverConfig": "Yönetici, sunucu tarafında Azure OpenAI'yi etkinleştirdi ve değiştirme yasağı getirdi",
-        "title": "Azure OpenAI"
-      }
-    },
-    "OpenRouter": {
-      "checker": {
-        "desc": "测试代理地址是否正确填写"
-      },
-      "customModelName": {
-        "desc": "增加自定义模型，多个模型使用逗号（,）隔开",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "自定义模型名称"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "填入来自 OpenRouter AI 的 API Key",
-        "placeholder": "OpenRouter AI API Key",
-        "title": "API Key"
-      }
-    },
-    "Perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Perplexity AI'dan gelen API Anahtarı'nı girin",
-        "placeholder": "Perplexity AI API Anahtarı",
-        "title": "API Anahtarı"
-      }
-    },
-    "Zhipu": {
-      "title": "Zhipu AI",
-      "token": {
-        "desc": "Zhipu'dan alınan API Anahtarını girin",
-        "placeholder": "Zhipu API Anahtarı",
-        "title": "API Anahtarı"
-      }
-    },
     "checker": {
       "button": "Kontrol Et",
       "desc": "Api Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
+      "ollamaDesc": "Proxy adresinin doğru şekilde doldurulup doldurulmadığını test edin",
       "pass": "Kontrol Başarılı",
       "title": "Bağlantı Kontrolü"
+    },
+    "customModelCards": {
+      "addNew": "{{id}} modelini oluştur ve ekle",
+      "config": "Modeli Yapılandır",
+      "confirmDelete": "Özel modeli silmek üzeresiniz, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Azure OpenAI'da gerçekleştirilen istek alanı",
+          "placeholder": "Azure'daki model dağıtım adını girin",
+          "title": "Model Dağıtım Adı"
+        },
+        "displayName": {
+          "placeholder": "ChatGPT, GPT-4 vb. gibi modelin görüntü adını girin",
+          "title": "Model Görüntü Adı"
+        },
+        "files": {
+          "extra": "Mevcut LobeChat dosya yükleme uygulaması sadece bir hile çözümüdür, tam dosya yükleme yeteneği için gelecek uygulamaları bekleyin",
+          "title": "Dosya Yükleme Desteği"
+        },
+        "functionCall": {
+          "extra": "Bu yapılandırma yalnızca LobeChat'teki işlev çağrısı yeteneğini etkinleştirir, işlev çağrısının desteklenip desteklenmediği tamamen modelin kendisine bağlıdır, bu modelin işlev çağrısı yeteneğini test etmek size kalmıştır",
+          "title": "Fonksiyon Çağrısını Destekle"
+        },
+        "id": {
+          "extra": "Model etiketi olarak görüntülenecektir",
+          "placeholder": "Örneğin gpt-4-turbo-preview veya claude-2.1 gibi bir model kimliği girin",
+          "title": "Model Kimliği"
+        },
+        "modalTitle": "Özel Model Yapılandırması",
+        "tokens": {
+          "title": "Maksimum token sayısı"
+        },
+        "vision": {
+          "extra": "Bu yapılandırma yalnızca LobeChat'teki görüntü yükleme yapılandırmasını etkinleştirir, tanıma desteğinin olup olmadığı tamamen modelin kendisine bağlıdır, bu modelin görüntü tanıma yeteneğini test etmek size kalmıştır",
+          "title": "Görüntü Tanımayı Destekle"
+        }
+      }
+    },
+    "fetcher": {
+      "fetch": "Modelleri Al",
+      "fetching": "Modelleri alınıyor...",
+      "latestTime": "Son güncelleme zamanı: {{time}}",
+      "noLatestTime": "Liste henüz alınamadı"
+    },
+    "modelList": {
+      "desc": "Görüntülenecek modeli seçin, seçilen model model listesinde görüntülenecektir",
+      "placeholder": "Lütfen listeden bir model seçin",
+      "title": "Model Listesi",
+      "total": "Toplam {{count}} model kullanılabilir"
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
   },
@@ -371,6 +243,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "OpenAI Konuşmadan Metne Modeli",
+      "title": "OpenAI",
       "ttsModel": "OpenAI Metin Seslendirme Modeli"
     },
     "showAllLocaleVoice": {
@@ -440,11 +313,47 @@
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
     "tooltips": "Asistan pazarına paylaşın"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "添加名称以便于识别",
+        "placeholder": "请输入设备名称",
+        "title": "设备名称"
+      },
+      "title": "设备信息",
+      "unknownBrowser": "未知浏览器",
+      "unknownOS": "未知系统"
+    },
+    "warning": {
+      "message": "本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。"
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC 将使用此名创建同步频道，确保频道名称唯一",
+        "placeholder": "请输入同步频道名称",
+        "shuffle": "随机生成",
+        "title": "同步频道名称"
+      },
+      "channelPassword": {
+        "desc": "添加密码确保频道私密性，只有密码正确时，设备才可加入频道",
+        "placeholder": "请输入同步频道密码",
+        "title": "同步频道密码"
+      },
+      "desc": "实时、点对点的数据通信，需设备同时在线才可同步",
+      "enabled": {
+        "invalid": "请填写同步频道名称后再开启",
+        "title": "开启同步"
+      },
+      "title": "WebRTC 同步"
+    }
+  },
   "tab": {
     "about": "Hakkında",
     "agent": "Varsayılan Asistan",
     "common": "Genel Ayarlar",
+    "experiment": "实验",
     "llm": "Modeller",
+    "sync": "云端同步",
     "tts": "Metin Seslendirme"
   },
   "tools": {
