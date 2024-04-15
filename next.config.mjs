@@ -9,18 +9,6 @@ const API_PROXY_ENDPOINT = process.env.API_PROXY_ENDPOINT || '';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
 
-const withBundleAnalyzer = analyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
-
-const withPWA = nextPWA({
-  dest: 'public',
-  register: true,
-  workboxOptions: {
-    skipWaiting: true,
-  },
-});
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   compress: isProd,
@@ -67,4 +55,18 @@ const nextConfig = {
   },
 };
 
-export default isProd ? withBundleAnalyzer(withPWA(nextConfig)) : nextConfig;
+const noWrapper = (config) => config;
+
+const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
+
+const withPWA = isProd
+  ? nextPWA({
+      dest: 'public',
+      register: true,
+      workboxOptions: {
+        skipWaiting: true,
+      },
+    })
+  : noWrapper;
+
+export default withBundleAnalyzer(withPWA(nextConfig));
