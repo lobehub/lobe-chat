@@ -2,12 +2,11 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
-import AgentRuntime from '@/app/api/chat/agentRuntime';
-import { getJWTPayload } from '@/app/api/chat/auth/utils';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
+import { AgentRuntime as AgentRuntimeLib } from '@/libs/agent-runtime/';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import {
@@ -26,7 +25,7 @@ import { UserMessageContentPart } from '@/types/openai/chat';
 import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
-import { createAuthTokenWithPayload, createHeaderPayload, createHeaderWithAuth } from './_auth';
+import { createHeaderPayload, createHeaderWithAuth } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
@@ -174,11 +173,10 @@ class ChatService {
      */
     if (headerPayload['endpoint'] && headerPayload['apiKey']) {
       try {
-        const authorization = await createAuthTokenWithPayload(headerPayload);
-        const agentRuntime = await AgentRuntime.initializeWithUserPayload(
-          provider,
-          await getJWTPayload(authorization),
-        );
+        const agentRuntime = await AgentRuntimeLib.initializeWithProviderOptions(provider, {
+          [provider]: payload,
+        });
+
         const data = payload as ChatStreamPayload;
         const tracePayload = options?.trace;
         return agentRuntime.chat(data, {

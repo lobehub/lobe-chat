@@ -5,7 +5,7 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { getTracePayload } from '@/utils/trace';
 
-import AgentRuntime from '../agentRuntime';
+import { initializeWithUserPayload } from '../agentRuntime';
 import { checkAuth } from '../auth';
 
 export const runtime = 'edge';
@@ -17,7 +17,7 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
 
   try {
     // ============  1. init chat model   ============ //
-    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, jwtPayload);
+    const agentRuntime = await initializeWithUserPayload(provider, jwtPayload);
 
     // ============  2. create chat completion   ============ //
 
