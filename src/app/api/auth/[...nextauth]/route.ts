@@ -1,3 +1,3 @@
-export { GET, POST } from '../next-auth';
+export { GET, POST } from '@/libs/next-auth';
 
 export const runtime = 'edge'; // optional

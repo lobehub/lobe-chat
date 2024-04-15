@@ -128,8 +128,8 @@ export class LocalDB extends Dexie {
 在 `src/database/model/sessionGroup.ts` 中定义 `SessionGroupModel`：
 
 ```typescript
-import { BaseModel } from '@/database/core';
-import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/schemas/sessionGroup';
+import { BaseModel } from '@/database/client/core';
+import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/client/schemas/sessionGroup';
 import { nanoid } from '@/utils/uuid';
 
 class _SessionGroupModel extends BaseModel {

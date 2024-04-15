@@ -1,4 +1,4 @@
-import { dataSync } from '@/database/core';
+import { dataSync } from '@/database/client/core';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { StartDataSyncParams } from '@/types/sync';
 
