@@ -21,7 +21,7 @@ WORKDIR /app
 COPY package.json ./
 
 # If you want to build docker in China
-# RUN npm config set registry https://registry.npmmirror.com/
+RUN npm config set registry https://registry.npmmirror.com/
 RUN pnpm i
 
 COPY . .
