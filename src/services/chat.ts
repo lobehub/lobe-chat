@@ -25,7 +25,7 @@ import { UserMessageContentPart } from '@/types/openai/chat';
 import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
-import { createHeaderPayload, createHeaderWithAuth } from './_auth';
+import { createHeaderPayload, createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
@@ -65,6 +65,102 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
+}
+
+async function fetchOnClient(
+  provider: string,
+  payload: Partial<ChatStreamPayload>,
+  options?: FetchOptions,
+) {
+  // add auth payload
+  const providerAuthPayload = getProviderAuthPayload(provider);
+  let providerOptions;
+
+  switch (provider) {
+    case ModelProvider.OpenAI: {
+      // if provider is openai, enable browser agent runtime and set baseurl
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+        dangerouslyAllowBrowser: true,
+      };
+      break;
+    }
+    case ModelProvider.Azure: {
+      providerOptions = {
+        apiVersion: providerAuthPayload?.azureApiVersion,
+      };
+      break;
+    }
+    case ModelProvider.ZhiPu: {
+      break;
+    }
+    case ModelProvider.Google: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Moonshot: {
+      // no moonshot env for client side
+      break;
+    }
+    case ModelProvider.Bedrock: {
+      if (providerAuthPayload?.apiKey) {
+        providerOptions = {
+          accessKeyId: providerAuthPayload?.awsAccessKeyId,
+          accessKeySecret: providerAuthPayload?.awsSecretAccessKey,
+          region: providerAuthPayload?.awsRegion,
+        };
+      }
+      break;
+    }
+    case ModelProvider.Ollama: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Perplexity: {
+      break;
+    }
+    case ModelProvider.Anthropic: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Mistral: {
+      break;
+    }
+    case ModelProvider.Groq: {
+      break;
+    }
+    case ModelProvider.OpenRouter: {
+      break;
+    }
+    case ModelProvider.TogetherAI: {
+      break;
+    }
+    case ModelProvider.ZeroOne: {
+      break;
+    }
+  }
+
+  const agentRuntime = await AgentRuntimeLib.initializeWithProviderOptions(provider, {
+    [provider]: {
+      ...payload,
+      ...providerAuthPayload,
+      ...providerOptions,
+    },
+  });
+
+  const data = payload as ChatStreamPayload;
+  const tracePayload = options?.trace;
+  return agentRuntime.chat(data, {
+    enableTrace: tracePayload?.enabled,
+    provider,
+    trace: tracePayload,
+  });
 }
 
 class ChatService {
@@ -173,17 +269,7 @@ class ChatService {
      */
     if (headerPayload['endpoint'] && headerPayload['apiKey']) {
       try {
-        const agentRuntime = await AgentRuntimeLib.initializeWithProviderOptions(provider, {
-          [provider]: payload,
-        });
-
-        const data = payload as ChatStreamPayload;
-        const tracePayload = options?.trace;
-        return agentRuntime.chat(data, {
-          enableTrace: tracePayload?.enabled,
-          provider,
-          trace: tracePayload,
-        });
+        return await fetchOnClient(provider, payload, options);
       } catch (e) {
         const {
           errorType = ChatErrorType.BadRequest,
