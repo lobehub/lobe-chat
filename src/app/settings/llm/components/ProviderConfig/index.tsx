@@ -98,7 +98,6 @@ const ProviderConfig = memo<ProviderConfigProps>(
         desc: t('llm.fetchOnClient.desc'),
         label: t('llm.fetchOnClient.title'),
         minWidth: undefined,
-        tag: t('tab.experiment'),
       },
       {
         children: (
