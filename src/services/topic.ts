@@ -40,7 +40,7 @@ class TopicService {
     return TopicModel.batchCreate(importTopics as any);
   }
 
-  updateTitle(topicId: string, text: string) {
+  async updateTitle(topicId: string, text: string) {
     return TopicModel.update(topicId, { title: text });
   }
 

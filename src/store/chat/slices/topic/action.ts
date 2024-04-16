@@ -109,7 +109,8 @@ export const chatTopic: StateCreator<
         updateTopicTitleInSummary(topicId, topic.title);
       },
       onFinish: async (text) => {
-        topicService.updateTitle(topicId, text);
+        await topicService.updateTitle(topicId, text);
+        await refreshTopic();
       },
       onLoadingChange: (loading) => {
         updateTopicLoading(loading ? topicId : undefined);
@@ -120,7 +121,6 @@ export const chatTopic: StateCreator<
       },
       params: await chainSummaryTitle(messages),
     });
-    await refreshTopic();
   },
   favoriteTopic: async (id, favState) => {
     await topicService.updateFavorite(id, favState);
