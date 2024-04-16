@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
@@ -31,6 +33,7 @@ export interface ChatListItemProps {
 }
 
 const Item = memo<ChatListItemProps>(({ index, id }) => {
+  const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const [editing, setEditing] = useState(false);
@@ -50,9 +53,9 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
   const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
 
-  const [loading, onMessageChange] = useChatStore((s) => [
+  const [loading, updateMessageContent] = useChatStore((s) => [
     s.chatLoadingId === id,
-    s.updateMessageContent,
+    s.modifyMessageContent,
   ]);
 
   const onAvatarsClick = useAvatarsClick();
@@ -81,13 +84,14 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     [item?.role],
   );
 
+  const { t: errorT } = useTranslation('error');
   const error = useMemo<AlertProps | undefined>(() => {
     if (!item?.error) return;
     const messageError = item.error;
 
     const alertConfig = getErrorAlertConfig(messageError.type);
 
-    return { message: t(`response.${messageError.type}` as any, { ns: 'error' }), ...alertConfig };
+    return { message: errorT(`response.${messageError.type}` as any), ...alertConfig };
   }, [item?.error]);
 
   const enableHistoryDivider = useSessionStore((s) => {
@@ -110,11 +114,12 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           editing={editing}
           error={error}
           errorMessage={<ErrorMessageExtra data={item} />}
+          fontSize={fontSize}
           loading={loading}
           message={item.content}
           messageExtra={<MessageExtra data={item} />}
           onAvatarClick={onAvatarsClick?.(item.role)}
-          onChange={(value) => onMessageChange(item.id, value)}
+          onChange={(value) => updateMessageContent(item.id, value)}
           onDoubleClick={(e) => {
             if (item.id === 'default' || item.error) return;
             if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {

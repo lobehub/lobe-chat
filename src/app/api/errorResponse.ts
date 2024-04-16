@@ -1,16 +1,13 @@
-import { consola } from 'consola';
-
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
 
 const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
+  // InvalidAccessCode / InvalidAzureAPIKey / InvalidOpenAIAPIKey / InvalidZhipuAPIKey ....
+  if (errorType.toString().includes('Invalid')) return 401;
+
   switch (errorType) {
-    case ChatErrorType.InvalidAccessCode:
-    case AgentRuntimeErrorType.NoOpenAIAPIKey:
-    case AgentRuntimeErrorType.InvalidAzureAPIKey:
-    case AgentRuntimeErrorType.InvalidBedrockCredentials:
-    case AgentRuntimeErrorType.InvalidZhipuAPIKey:
-    case AgentRuntimeErrorType.InvalidGoogleAPIKey: {
+    // TODO: Need to refactor to Invalid OpenAI API Key
+    case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return 401;
     }
 
@@ -37,8 +34,36 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.GoogleBizError: {
       return 475;
     }
+    case AgentRuntimeErrorType.MoonshotBizError: {
+      return 476;
+    }
+    case AgentRuntimeErrorType.OpenRouterBizError: {
+      return 477;
+    }
+    case ChatErrorType.OllamaServiceUnavailable:
+    case AgentRuntimeErrorType.OllamaBizError: {
+      return 478;
+    }
+    case AgentRuntimeErrorType.PerplexityBizError: {
+      return 479;
+    }
+    case AgentRuntimeErrorType.AnthropicBizError: {
+      return 480;
+    }
+    case AgentRuntimeErrorType.MistralBizError: {
+      return 481;
+    }
+    case AgentRuntimeErrorType.GroqBizError: {
+      return 482;
+    }
+    case AgentRuntimeErrorType.ZeroOneBizError: {
+      return 483;
+    }
+    case AgentRuntimeErrorType.TogetherAIBizError: {
+      return 484;
+    }
   }
-  return errorType;
+  return errorType as number;
 };
 
 export const createErrorResponse = (
@@ -50,7 +75,7 @@ export const createErrorResponse = (
   const data: ErrorResponse = { body, errorType };
 
   if (typeof statusCode !== 'number' || statusCode < 200 || statusCode > 599) {
-    consola.error(
+    console.error(
       `current StatusCode: \`${statusCode}\` .`,
       'Please go to `./src/app/api/errorResponse.ts` to defined the statusCode.',
     );

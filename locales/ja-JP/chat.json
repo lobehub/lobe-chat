@@ -19,6 +19,7 @@
     "title": "気軽におしゃべり"
   },
   "input": {
+    "more": "もっと",
     "onlyAdd": "メッセージのみ追加",
     "send": "送信",
     "sendWithCmdEnter": "{{meta}} + Enter キーで送信",

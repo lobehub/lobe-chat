@@ -148,7 +148,7 @@ describe('topic action', () => {
       });
 
       // Check if mutate has been called with the active session ID
-      expect(mutate).toHaveBeenCalledWith(activeId);
+      expect(mutate).toHaveBeenCalledWith(['SWR_USE_FETCH_TOPIC', activeId]);
     });
 
     it('should handle errors during refreshing topics', async () => {
@@ -380,7 +380,7 @@ describe('topic action', () => {
       // Mock the `chatService.fetchPresetTaskResult` to simulate the AI response
       vi.spyOn(chatService, 'fetchPresetTaskResult').mockImplementation((params) => {
         if (params) {
-          params.onFinish?.('Summarized Title');
+          params.onFinish?.('Summarized Title', { type: 'done' });
         }
         return Promise.resolve(undefined);
       });

@@ -1,5 +1,6 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
+import { PeerSyncStatus, SyncAwarenessState } from '@/types/sync';
 
 export enum SidebarTabKey {
   Chat = 'chat',
@@ -8,9 +9,11 @@ export enum SidebarTabKey {
 }
 
 export enum SettingsTabs {
+  About = 'about',
   Agent = 'agent',
   Common = 'common',
   LLM = 'llm',
+  Sync = 'sync',
   TTS = 'tts',
 }
 
@@ -24,12 +27,16 @@ export interface GlobalCommonState {
   isMobile?: boolean;
   latestVersion?: string;
   router?: AppRouterInstance;
-  settingsTab: SettingsTabs;
   sidebarKey: SidebarTabKey;
+  syncAwareness: SyncAwarenessState[];
+  syncEnabled: boolean;
+  syncStatus: PeerSyncStatus;
 }
 
 export const initialCommonState: GlobalCommonState = {
   isMobile: false,
-  settingsTab: SettingsTabs.Common,
   sidebarKey: SidebarTabKey.Chat,
+  syncAwareness: [],
+  syncEnabled: false,
+  syncStatus: PeerSyncStatus.Disabled,
 };

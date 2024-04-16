@@ -1,4 +1,14 @@
 {
+  "about": {
+    "title": "Over"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "Door te kiezen om telemetrische gegevens te verzenden, kun je ons helpen om de algehele gebruikerservaring van LobeChat te verbeteren",
+      "title": "Anonieme gebruiksgegevens verzenden"
+    },
+    "title": "Analytics"
+  },
   "danger": {
     "clear": {
       "action": "Direct verwijderen",
@@ -21,114 +31,71 @@
     "sessionWithName": "Sessie-instellingen · {{name}}"
   },
   "llm": {
-    "AzureOpenAI": {
-      "azureApiVersion": {
-        "desc": "Azure API-versie, in het formaat YYYY-MM-DD, raadpleeg de [laatste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Ophalen van lijst",
-        "title": "Azure API-versie"
-      },
-      "deployments": {
-        "desc": "Vul de syntaxis id=naam in voor uw implementatiemodellen (bijv. als de implementatienaam en het model dezelfde naam hebben, kunt u alleen de modelnaam invullen), meerdere modellen worden gescheiden door een komma (,)",
-        "title": "Azure implementatiemodellen"
-      },
-      "endpoint": {
-        "desc": "Deze waarde is te vinden in het gedeelte 'Sleutels en eindpunten' wanneer u de bron controleert in het Azure-portal",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure API-adres"
-      },
-      "models": {
-        "desc": "Ondersteunde modellen",
-        "title": "Modellijst"
-      },
-      "title": "Azure OpenAI-instellingen",
-      "token": {
-        "desc": "Deze waarde is te vinden in het gedeelte 'Sleutels en eindpunten' wanneer u de bron controleert in het Azure-portal. U kunt KEY1 of KEY2 gebruiken",
-        "placeholder": "Azure API-sleutel",
-        "title": "API-sleutel"
-      }
-    },
-    "Bedrock": {
-      "accessKeyId": {
-        "desc": "Vul de AWS Access Key ID in",
-        "placeholder": "AWS Access Key ID",
-        "title": "AWS Access Key ID"
-      },
-      "checker": {
-        "desc": "Test of AccessKeyId / SecretAccessKey correct zijn ingevuld"
-      },
-      "region": {
-        "desc": "Vul de AWS-regio in",
-        "placeholder": "AWS-regio",
-        "title": "AWS-regio"
-      },
-      "secretAccessKey": {
-        "desc": "Vul de AWS Secret Access Key in",
-        "placeholder": "AWS Secret Access Key",
-        "title": "AWS Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
-    "Google": {
-      "title": "Google",
-      "token": {
-        "desc": "Vul de API-sleutel van Google in",
-        "placeholder": "Google API-sleutel",
-        "title": "API-sleutel"
-      }
-    },
-    "OpenAI": {
-      "azureApiVersion": {
-        "desc": "API-versie van Azure, in het formaat YYYY-MM-DD, zie [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Lijst ophalen",
-        "title": "Azure API-versie"
-      },
-      "customModelName": {
-        "desc": "Voeg aangepaste modellen toe, gescheiden door een komma (,)",
-        "placeholder": "model1,model2,model3",
-        "title": "Naam aangepast model"
-      },
-      "endpoint": {
-        "desc": "Moet http(s):// bevatten, naast het standaardadres",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "Proxy-adres"
-      },
-      "models": {
-        "count": "In totaal {{count}} modellen ondersteund",
-        "desc": "Ondersteunde modellen",
-        "fetch": "Modellen ophalen",
-        "notSupport": "Azure OpenAI ondersteunt momenteel geen weergave van modellijsten",
-        "notSupportTip": "U moet ervoor zorgen dat de implementatienaam overeenkomt met de modelnaam",
-        "refetch": "Modellijst opnieuw ophalen",
-        "title": "Modellijst"
-      },
-      "title": "OpenAI-instellingen",
-      "token": {
-        "desc": "Gebruik uw eigen OpenAI-sleutel",
-        "placeholder": "OpenAI API-sleutel",
-        "title": "API-sleutel"
-      },
-      "useAzure": {
-        "desc": "Gebruik OpenAI-service van Azure",
-        "fetch": "Lijst ophalen",
-        "serverConfig": "Beheerder heeft Azure OpenAI aan de serverzijde geconfigureerd, overschakelen is niet toegestaan",
-        "title": "Azure OpenAI gebruiken"
-      }
-    },
-    "Zhipu": {
-      "title": "智谱",
-      "token": {
-        "desc": "Vul de API-sleutel van Zhipu in",
-        "placeholder": "Zhipu API-sleutel",
-        "title": "API-sleutel"
-      }
-    },
     "checker": {
       "button": "Controleren",
       "desc": "Test of de API-sleutel en proxyadres correct zijn ingevuld",
+      "ollamaDesc": "Controleer of het proxy-adres correct is ingevuld",
       "pass": "Succesvol gecontroleerd",
       "title": "Connectiviteitscontrole"
     },
+    "customModelCards": {
+      "addNew": "Maak en voeg het {{id}} model toe",
+      "config": "Model configureren",
+      "confirmDelete": "U staat op het punt om dit aangepaste model te verwijderen. Deze actie kan niet ongedaan worden gemaakt. Wees voorzichtig.",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Het veld dat daadwerkelijk wordt aangevraagd in Azure OpenAI",
+          "placeholder": "Voer de modelimplementatienaam in Azure in",
+          "title": "Naam van modelimplementatie"
+        },
+        "displayName": {
+          "placeholder": "Voer de weergavenaam van het model in, bijv. ChatGPT, GPT-4, enz.",
+          "title": "Model weergavenaam"
+        },
+        "files": {
+          "extra": "Currently, the file upload implementation in LobeChat is just a temporary solution and is for self-exploration only. Please wait for the full file upload capability in the future.",
+          "title": "Support File Upload"
+        },
+        "functionCall": {
+          "extra": "This configuration will only enable the function call capability in LobeChat. Whether function calls are supported depends entirely on the model itself. Please test the availability of function calls of this model on your own.",
+          "title": "Support Function Call"
+        },
+        "id": {
+          "extra": "Will be displayed as the model tag",
+          "placeholder": "Please enter the model ID, for example gpt-4-turbo-preview or claude-2.1",
+          "title": "Model ID"
+        },
+        "modalTitle": "Custom Model Configuration",
+        "tokens": {
+          "title": "Maximum Token Count"
+        },
+        "vision": {
+          "extra": "This configuration will only enable the image upload feature in LobeChat. Whether image recognition is supported depends entirely on the model itself. Please test the availability of visual recognition capability of this model on your own.",
+          "title": "Support Visual Recognition"
+        }
+      }
+    },
+    "fetcher": {
+      "fetch": "Haal model lijst op",
+      "fetching": "Model lijst wordt opgehaald...",
+      "latestTime": "Laatst bijgewerkt: {{time}}",
+      "noLatestTime": "Geen lijst beschikbaar op dit moment"
+    },
+    "modelList": {
+      "desc": "Selecteer het model dat in de sessie moet worden weergegeven. Het geselecteerde model wordt weergegeven in de modellijst.",
+      "placeholder": "Selecteer een model uit de lijst",
+      "title": "Modellijst",
+      "total": "In totaal {{count}} modellen beschikbaar"
+    },
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨"
+  },
+  "ollama": {
+    "download": {
+      "desc": "Ollama is bezig met het downloaden van dit model. Gelieve deze pagina niet te sluiten. Het downloaden zal worden hervat vanaf het onderbroken punt als u opnieuw begint te downloaden.",
+      "remainingTime": "Resterende tijd",
+      "speed": "Downloadsnelheid",
+      "title": "Model {{model}} wordt gedownload"
+    }
   },
   "plugin": {
     "addTooltip": "Voeg aangepaste plug-in toe",
@@ -255,11 +222,28 @@
       "placeholder": "Voer toegangswachtwoord in",
       "title": "Toegangswachtwoord"
     },
+    "oauth": {
+      "info": {
+        "desc": "已登录",
+        "title": "Account Information"
+      },
+      "signin": {
+        "action": "Sign In",
+        "desc": "Sign in using SSO to unlock the app",
+        "title": "Sign In to Your Account"
+      },
+      "signout": {
+        "action": "Sign Out",
+        "confirm": "Confirm sign out?",
+        "success": "Sign out successful"
+      }
+    },
     "title": "Systeeminstellingen"
   },
   "settingTTS": {
     "openai": {
       "sttModel": "OpenAI spraakherkenningsmodel",
+      "title": "OpenAI",
       "ttsModel": "OpenAI spraaksynthesemodel"
     },
     "showAllLocaleVoice": {
@@ -329,10 +313,47 @@
     "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
     "tooltips": "Delen op de assistentenmarkt"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "Voeg een naam toe om het apparaat te identificeren",
+        "placeholder": "Voer de apparaatnaam in",
+        "title": "Apparaatnaam"
+      },
+      "title": "Apparaatinformatie",
+      "unknownBrowser": "Onbekende browser",
+      "unknownOS": "Onbekend besturingssysteem"
+    },
+    "warning": {
+      "message": "Deze functie is momenteel experimenteel en kan onverwachte of onstabiele situaties veroorzaken. Als u problemen ondervindt, geef dan tijdig feedback."
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC zal deze naam gebruiken om een synchronisatiekanaal te maken, zorg ervoor dat de kanaalnaam uniek is",
+        "placeholder": "Voer de synchronisatiekanaalnaam in",
+        "shuffle": "Willekeurig genereren",
+        "title": "Synchronisatiekanaalnaam"
+      },
+      "channelPassword": {
+        "desc": "Voeg een wachtwoord toe om de privacy van het kanaal te waarborgen, alleen apparaten met het juiste wachtwoord kunnen het kanaal betreden",
+        "placeholder": "Voer het synchronisatiekanaalwachtwoord in",
+        "title": "Synchronisatiekanaalwachtwoord"
+      },
+      "desc": "Realtime, point-to-point datacommunicatie, apparaten moeten tegelijkertijd online zijn om te synchroniseren",
+      "enabled": {
+        "invalid": "Schakel de synchronisatie in nadat u de synchronisatiekanaalnaam heeft ingevuld",
+        "title": "Synchronisatie inschakelen"
+      },
+      "title": "WebRTC Synchronisatie"
+    }
+  },
   "tab": {
+    "about": "Over",
     "agent": "Standaardassistent",
     "common": "Algemene instellingen",
+    "experiment": "Experiment",
     "llm": "Taalmodel",
+    "sync": "Cloudsynchronisatie",
     "tts": "Spraakdienst"
   },
   "tools": {

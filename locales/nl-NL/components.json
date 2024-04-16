@@ -1,0 +1,15 @@
+{
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual needs.",
+      "file": "This model supports file upload for reading and recognition.",
+      "functionCall": "This model supports function call.",
+      "tokens": "This model supports up to {{tokens}} tokens in a single session.",
+      "vision": "This model supports visual recognition."
+    }
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "No enabled model, please go to settings to enable.",
+    "provider": "Provider"
+  }
+}

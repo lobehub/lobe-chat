@@ -7,6 +7,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { imageUrl } from '@/const/url';
 
 import { useStore } from '../store';
 import ModelSelect from './ModelSelect';
@@ -21,8 +22,8 @@ const AgentConfig = memo(() => {
     displayMode,
     enableAutoCreateTopic,
     enableHistoryCount,
-    enableMaxTokens,
     enableCompressThreshold,
+    enableMaxTokens,
     updateConfig,
   ] = useStore((s) => [
     s.config.displayMode,
@@ -46,17 +47,18 @@ const AgentConfig = memo(() => {
               options={[
                 {
                   icon: MessagesSquare,
-                  img: `/images/chatmode_chat_${isDarkMode ? 'dark' : 'light'}.webp`,
+                  img: imageUrl(`chatmode_chat_${isDarkMode ? 'dark' : 'light'}.webp`),
                   label: t('settingChat.chatStyleType.type.chat'),
                   value: 'chat',
                 },
                 {
                   icon: LayoutList,
-                  img: `/images/chatmode_docs_${isDarkMode ? 'dark' : 'light'}.webp`,
+                  img: imageUrl(`chatmode_docs_${isDarkMode ? 'dark' : 'light'}.webp`),
                   label: t('settingChat.chatStyleType.type.docs'),
                   value: 'docs',
                 },
               ]}
+              unoptimized={false}
               value={displayMode}
               width={144}
             />

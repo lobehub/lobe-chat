@@ -61,6 +61,12 @@ export default {
     ZhipuBizError: '请求智谱服务出错，请根据以下信息排查或重试',
     InvalidZhipuAPIKey: 'Zhipu API Key 不正确或为空，请检查 Zhipu API Key 后重试',
 
+    MistralBizError: '请求 Mistral AI 服务出错，请根据以下信息排查或重试',
+    InvalidMistralAPIKey: 'Mistral AI API Key 不正确或为空，请检查 Mistral API Key 后重试',
+
+    MoonshotBizError: '请求月之暗面服务出错，请根据以下信息排查或重试',
+    InvalidMoonshotAPIKey: 'Moonshot AI API Key 不正确或为空，请检查 Moonshot API Key 后重试',
+
     GoogleBizError: '请求 Google 服务出错，请根据以下信息排查或重试',
     InvalidGoogleAPIKey: 'Google API Key 不正确或为空，请检查 Google API Key 后重试',
 
@@ -70,7 +76,29 @@ export default {
     InvalidAzureAPIKey: 'Azure API Key 不正确或为空，请检查 Azure API Key 后重试',
     AzureBizError: '请求 Azure AI 服务出错，请根据以下信息排查或重试',
 
-    AgentRuntimeError: 'Lobe 语言模型运行时执行出错，请根据以下信息排查或重试',
+    InvalidPerplexityAPIKey: 'Perplexity API Key 不正确或为空，请检查 Perplexity API Key 后重试',
+    PerplexityBizError: '请求 Perplexity AI 服务出错，请根据以下信息排查或重试',
+
+    InvalidAnthropicAPIKey: 'Anthropic API Key 不正确或为空，请检查 Anthropic API Key 后重试',
+    AnthropicBizError: '请求 Anthropic AI 服务出错，请根据以下信息排查或重试',
+
+    InvalidGroqAPIKey: 'Groq API Key 不正确或为空，请检查 Groq API Key 后重试',
+    GroqBizError: '请求 Groq 服务出错，请根据以下信息排查或重试',
+
+    InvalidOpenRouterAPIKey: 'OpenRouter API Key 不正确或为空，请检查 OpenRouter API Key 后重试',
+    OpenRouterBizError: '请求 OpenRouter AI 服务出错，请根据以下信息排查或重试',
+
+    InvalidTogetherAIAPIKey: 'TogetherAI API Key 不正确或为空，请检查 TogetherAI API Key 后重试',
+    TogetherAIBizError: '请求 TogetherAI AI 服务出错，请根据以下信息排查或重试',
+
+    ZeroOneBizError: '请求零一万物服务出错，请根据以下信息排查或重试',
+    InvalidZeroOneAPIKey: '零一万物 API Key 不正确或为空，请检查零一万物 API Key 后重试',
+
+    InvalidOllamaArgs: 'Ollama 配置不正确，请检查 Ollama 配置后重试',
+    OllamaBizError: '请求 Ollama 服务出错，请根据以下信息排查或重试',
+    OllamaServiceUnavailable: '未检测到 Ollama 服务，请检查是否正常启动',
+
+    AgentRuntimeError: 'Lobe AI Runtime 执行出错，请根据以下信息排查或重试',
     /* eslint-enable */
   },
   stt: {
@@ -80,29 +108,22 @@ export default {
     responseError: '服务请求失败，请检查配置或重试',
   },
   unlock: {
-    apikey: {
-      Bedrock: {
-        customRegion: '自定义服务区域',
-        description:
-          '输入你的 Aws AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
-        title: '使用自定义 Bedrock 鉴权信息',
-      },
-      Google: {
-        description: '输入你的 Google API Key 即可开始会话。应用不会记录你的 API Key',
-        title: '使用自定义 Google API Key',
-      },
-      OpenAI: {
-        addProxyUrl: '添加 OpenAI 代理地址（可选）',
-        description: '输入你的 OpenAI API Key 即可开始会话。应用不会记录你的 API Key',
-        title: '使用自定义 OpenAI API Key',
-      },
-      Zhipu: {
-        description: '输入你的 Zhipu API Key 即可开始会话。应用不会记录你的 API Key',
-        title: '使用自定义 Zhipu API Key',
-      },
-    },
+    addProxyUrl: '添加 OpenAI 代理地址（可选）',
     closeMessage: '关闭提示',
     confirm: '确认并重试',
+    model: {
+      Ollama: {
+        confirm: '下载',
+        description: '输入你的 Ollama 模型标签，完成即可继续会话',
+        title: '下载指定的 Ollama 模型',
+      },
+    },
+    oauth: {
+      description: '管理员已开启统一登录认证，点击下方按钮登录，即可解锁应用',
+      success: '登录成功',
+      title: '登录账号',
+      welcome: '欢迎你！',
+    },
     password: {
       description: '管理员已开启应用加密，输入应用密码后即可解锁应用。密码只需填写一次',
       placeholder: '请输入密码',

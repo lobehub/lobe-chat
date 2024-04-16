@@ -13,7 +13,6 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
-import { LanguageModel } from '@/types/llm';
 
 const format = (number: number) => numeral(number).format('0,0');
 
@@ -27,13 +26,14 @@ const Token = memo(() => {
 
   const [systemRole, model] = useSessionStore((s) => [
     agentSelectors.currentAgentSystemRole(s),
-    agentSelectors.currentAgentModel(s) as LanguageModel,
+    agentSelectors.currentAgentModel(s) as string,
   ]);
 
-  const tokens = useGlobalStore(modelProviderSelectors.modelMaxToken(model));
+  const maxTokens = useGlobalStore(modelProviderSelectors.modelMaxToken(model));
 
+  // Tool usage token
+  const canUseTool = useGlobalStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
   const plugins = useSessionStore(agentSelectors.currentAgentPlugins);
-
   const toolsString = useToolStore((s) => {
     const pluginSystemRoles = toolSelectors.enabledSystemRoles(plugins)(s);
     const schemaNumber = toolSelectors
@@ -43,13 +43,17 @@ const Token = memo(() => {
 
     return pluginSystemRoles + schemaNumber;
   });
+  const toolsToken = useTokenCount(canUseTool ? toolsString : '');
 
+  // Chat usage token
   const inputTokenCount = useTokenCount(input);
+
   const chatsToken = useTokenCount(messageString) + inputTokenCount;
 
-  const toolsToken = useTokenCount(toolsString);
+  // SystemRole token
   const systemRoleToken = useTokenCount(systemRole);
 
+  // Total token
   const totalToken = systemRoleToken + toolsToken + chatsToken;
   return (
     <Tooltip
@@ -74,18 +78,18 @@ const Token = memo(() => {
           </Flexbox>
           <Flexbox horizontal justify={'space-between'} style={{ marginTop: 8 }}>
             <span>{t('tokenDetails.total')}</span>
-            <span>{format(tokens)}</span>
+            <span>{format(maxTokens)}</span>
           </Flexbox>
           <Flexbox horizontal justify={'space-between'}>
             <span>{t('tokenDetails.rest')}</span>
-            <span>{format(tokens - totalToken)}</span>
+            <span>{format(maxTokens - totalToken)}</span>
           </Flexbox>
         </Flexbox>
       }
     >
       <TokenTag
         displayMode={'used'}
-        maxValue={tokens}
+        maxValue={maxTokens}
         style={{ marginLeft: 8 }}
         text={{
           overload: t('tokenTag.overload'),

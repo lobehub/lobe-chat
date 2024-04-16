@@ -1,9 +1,12 @@
+import { OpenAIStreamCallbacks } from 'ai';
+
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function';
 
 interface UserMessageContentPartText {
   text: string;
   type: 'text';
 }
+
 interface UserMessageContentPartImage {
   image_url: {
     detail?: 'auto' | 'low' | 'high';
@@ -86,6 +89,11 @@ export interface ChatStreamPayload {
   top_p?: number;
 }
 
+export interface ChatCompetitionOptions {
+  callback: ChatStreamCallbacks;
+  headers?: Record<string, any>;
+}
+
 export interface ChatCompletionFunctions {
   /**
    * The description of what the function does.
@@ -116,4 +124,13 @@ export interface ChatCompletionTool {
    * The type of the tool. Currently, only `function` is supported.
    */
   type: 'function';
+}
+
+export type ChatStreamCallbacks = OpenAIStreamCallbacks;
+
+export interface OllamaChatMessage extends OpenAIChatMessage {
+  /**
+   * @description images for ollama vision models (https://ollama.com/blog/vision-models)
+   */
+  images?: string[];
 }

@@ -1,0 +1,231 @@
+{
+  "anthropic": {
+    "endpoint": {
+      "desc": "Must include http(s):// in addition to the default address",
+      "placeholder": "https://api.anthropic.com",
+      "title": "API Proxy Address"
+    },
+    "title": "Anthropic",
+    "token": {
+      "desc": "Enter the API Key from Anthropic",
+      "placeholder": "Anthropic API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your Anthropic API Key to start the session. The app will not store your API Key",
+      "title": "Use Custom Anthropic API Key"
+    }
+  },
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Azure API version, follow the format YYYY-MM-DD, check the [latest version](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Fetch List",
+      "title": "Azure API Version"
+    },
+    "empty": "Please enter a model ID to add the first model",
+    "endpoint": {
+      "desc": "When checking resources from the Azure portal, you can find this value in the 'Keys and Endpoints' section",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Azure API Address"
+    },
+    "modelListPlaceholder": "Select or add the OpenAI model you deployed",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "When checking resources from the Azure portal, you can find this value in the 'Keys and Endpoints' section. You can use KEY1 or KEY2",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your Azure OpenAI API Key to start the session",
+      "title": "Use Custom Azure OpenAI API Key"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Enter AWS Access Key Id",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "Test if AccessKeyId / SecretAccessKey are filled in correctly"
+    },
+    "region": {
+      "desc": "Enter AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "Enter AWS Secret Access Key",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration",
+      "title": "Use Custom Bedrock Authentication Information"
+    }
+  },
+  "google": {
+    "endpoint": {
+      "desc": "Must include http(s):// besides the default address",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "API Proxy Address"
+    },
+    "title": "Google",
+    "token": {
+      "desc": "Enter the API Key from Google",
+      "placeholder": "Google API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your Google API Key to start the session. The app will not store your API Key",
+      "title": "Use Custom Google API Key"
+    }
+  },
+  "groq": {
+    "title": "Groq",
+    "token": {
+      "desc": "Enter the API Key from Groq",
+      "placeholder": "Groq API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your Groq API Key to start the session. The app will not store your API Key",
+      "title": "Use Custom Groq API Key"
+    }
+  },
+  "mistral": {
+    "title": "Mistral AI",
+    "token": {
+      "desc": "Enter the API Key from Mistral AI",
+      "placeholder": "Mistral AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your Mistral AI API Key to start the session. The app will not store your API Key",
+      "title": "Use Custom Mistral AI API Key"
+    }
+  },
+  "moonshot": {
+    "title": "Moonshot AI",
+    "token": {
+      "desc": "Enter your API Key from Moonshot AI",
+      "placeholder": "Moonshot AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your Moonshot AI API Key to start the session. The app will not store your API Key",
+      "title": "Use custom Moonshot AI API Key"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Test if the proxy address is correctly filled in"
+    },
+    "customModelName": {
+      "desc": "Add custom models, separate multiple models with commas",
+      "placeholder": "vicuna, llava, codellama, llama2:13b-text",
+      "title": "Custom model name"
+    },
+    "endpoint": {
+      "desc": "Enter the Ollama interface proxy address, leave blank if not specified locally",
+      "placeholder": "http://127.0.0.1:11434/v1",
+      "title": "Interface proxy address"
+    },
+    "title": "Ollama"
+  },
+  "openai": {
+    "endpoint": {
+      "desc": "Must include http(s):// besides the default address",
+      "placeholder": "https://api.openai.com/v1",
+      "title": "Interface proxy address"
+    },
+    "title": "OpenAI",
+    "token": {
+      "desc": "Use your own OpenAI Key",
+      "placeholder": "OpenAI API Key",
+      "title": "OpenAI API Key"
+    },
+    "unlock": {
+      "description": "Enter your OpenAI API Key to start the session. The app will not store your API Key",
+      "title": "Use custom OpenAI API Key"
+    }
+  },
+  "openrouter": {
+    "checker": {
+      "desc": "Test if the proxy address is correctly filled in"
+    },
+    "customModelName": {
+      "desc": "Add custom models, separate multiple models with commas",
+      "placeholder": "mistralai/mistral-7b-instruct:free, openchat/openchat-7b:free",
+      "title": "Custom model name"
+    },
+    "title": "OpenRouter",
+    "token": {
+      "desc": "Enter your API Key from OpenRouter AI",
+      "placeholder": "OpenRouter AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your OpenRouter API Key to start the session. The app will not store your API Key",
+      "title": "Use custom OpenRouter API Key"
+    }
+  },
+  "perplexity": {
+    "title": "Perplexity",
+    "token": {
+      "desc": "Enter your API Key from Perplexity AI",
+      "placeholder": "Perplexity AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your Perplexity API Key to start the session. The app will not store your API Key",
+      "title": "Use custom Perplexity API Key"
+    }
+  },
+  "togetherai": {
+    "checker": {
+      "desc": "Test if the proxy address is correctly filled in"
+    },
+    "customModelName": {
+      "desc": "Add custom models, separate multiple models with commas",
+      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct, teknium/OpenHermes-2-Mistral-7B",
+      "title": "Custom model name"
+    },
+    "title": "TogetherAI",
+    "token": {
+      "desc": "Enter your API Key from TogetherAI AI",
+      "placeholder": "TogetherAI AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your TogetherAI API Key to start the session. The app will not store your API Key",
+      "title": "Use custom TogetherAI API Key"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Zero One Everything",
+    "token": {
+      "desc": "Enter the API Key from 01.AI Zero One Everything",
+      "placeholder": "01.AI Zero One Everything API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your 01.AI Zero One Everything API Key to start the session. The app will not store your API Key.",
+      "title": "Use Custom 01.AI Zero One Everything API Key"
+    }
+  },
+  "zhipu": {
+    "title": "Zhipu",
+    "token": {
+      "desc": "Enter the API Key from Zhipu",
+      "placeholder": "Zhipu API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your Zhipu API Key to start the session. The app will not store your API Key.",
+      "title": "Use Custom Zhipu API Key"
+    }
+  }
+}

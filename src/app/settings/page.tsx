@@ -7,11 +7,13 @@ import MobilePage from './(mobile)';
 const Page = () => {
   const mobile = isMobileDevice();
 
-  const Page = mobile ? MobilePage : DesktopPage;
+  if (mobile) return <MobilePage />;
 
-  const { SHOW_ACCESS_CODE_CONFIG } = getServerConfig();
+  const { SHOW_ACCESS_CODE_CONFIG, ENABLE_OAUTH_SSO } = getServerConfig();
 
-  return <Page showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG} />;
+  return (
+    <DesktopPage showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG} showOAuthLogin={ENABLE_OAUTH_SSO} />
+  );
 };
 
 export default Page;

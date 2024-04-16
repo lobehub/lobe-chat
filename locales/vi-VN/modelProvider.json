@@ -1,0 +1,231 @@
+{
+  "anthropic": {
+    "endpoint": {
+      "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
+      "placeholder": "https://api.anthropic.com",
+      "title": "Địa chỉ API proxy"
+    },
+    "title": "Anthropic",
+    "token": {
+      "desc": "Nhập API Key từ Anthropic",
+      "placeholder": "Anthropic API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API Anthropic của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API Anthropic tùy chỉnh"
+    }
+  },
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Phiên bản API của Azure, tuân theo định dạng YYYY-MM-DD, tham khảo [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Lấy danh sách",
+      "title": "Phiên bản API Azure"
+    },
+    "empty": "Vui lòng nhập ID mô hình để thêm mô hình đầu tiên",
+    "endpoint": {
+      "desc": "Kiểm tra tài nguyên từ cổng Azure, bạn có thể tìm thấy giá trị này trong phần 'Khóa và điểm cuối'",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Địa chỉ API Azure"
+    },
+    "modelListPlaceholder": "Chọn hoặc thêm mô hình OpenAI bạn đã triển khai",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Kiểm tra tài nguyên từ cổng Azure, bạn có thể tìm thấy giá trị này trong phần 'Khóa và điểm cuối'. Có thể sử dụng KEY1 hoặc KEY2",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API Azure OpenAI của bạn để bắt đầu phiên làm việc",
+      "title": "Sử dụng Khóa API Azure OpenAI tùy chỉnh"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Nhập AWS Access Key Id",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "Kiểm tra AccessKeyId / SecretAccessKey có được nhập chính xác không"
+    },
+    "region": {
+      "desc": "Nhập AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "Nhập AWS Secret Access Key",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Vùng Dịch vụ Tùy chỉnh",
+      "description": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
+      "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
+    }
+  },
+  "google": {
+    "endpoint": {
+      "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "Địa chỉ Proxy API"
+    },
+    "title": "Google",
+    "token": {
+      "desc": "Nhập API Key từ Google",
+      "placeholder": "Google API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API Google của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API Google tùy chỉnh"
+    }
+  },
+  "groq": {
+    "title": "Groq",
+    "token": {
+      "desc": "Nhập API Key từ Groq",
+      "placeholder": "Groq API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API Groq của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API Groq tùy chỉnh"
+    }
+  },
+  "mistral": {
+    "title": "Mistral AI",
+    "token": {
+      "desc": "Nhập API Key từ Mistral AI",
+      "placeholder": "Mistral AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API Mistral AI của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API Mistral AI tùy chỉnh"
+    }
+  },
+  "moonshot": {
+    "title": "Mặt Trăng Tối",
+    "token": {
+      "desc": "Nhập API Key từ Moonshot AI",
+      "placeholder": "Moonshot AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API Moonshot AI của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API Moonshot AI tùy chỉnh"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không"
+    },
+    "customModelName": {
+      "desc": "Thêm mô hình tùy chỉnh, sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Tên mô hình tùy chỉnh"
+    },
+    "endpoint": {
+      "desc": "Nhập địa chỉ proxy API của Ollama, có thể để trống nếu không chỉ định cụ thể",
+      "placeholder": "http://127.0.0.1:11434/v1",
+      "title": "Địa chỉ proxy API"
+    },
+    "title": "Ollama"
+  },
+  "openai": {
+    "endpoint": {
+      "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
+      "placeholder": "https://api.openai.com/v1",
+      "title": "Địa chỉ proxy API"
+    },
+    "title": "OpenAI",
+    "token": {
+      "desc": "Sử dụng OpenAI Key của riêng bạn",
+      "placeholder": "OpenAI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API OpenAI của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API OpenAI tùy chỉnh"
+    }
+  },
+  "openrouter": {
+    "checker": {
+      "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không"
+    },
+    "customModelName": {
+      "desc": "Thêm mô hình tùy chỉnh, sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
+      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+      "title": "Tên mô hình tùy chỉnh"
+    },
+    "title": "OpenRouter",
+    "token": {
+      "desc": "Nhập API Key từ OpenRouter AI",
+      "placeholder": "OpenRouter AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API OpenRouter của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API OpenRouter tùy chỉnh"
+    }
+  },
+  "perplexity": {
+    "title": "Perplexity",
+    "token": {
+      "desc": "Nhập API Key từ Perplexity AI",
+      "placeholder": "Perplexity AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API Perplexity của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API Perplexity tùy chỉnh"
+    }
+  },
+  "togetherai": {
+    "checker": {
+      "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không"
+    },
+    "customModelName": {
+      "desc": "Thêm mô hình tùy chỉnh, sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
+      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+      "title": "Tên mô hình tùy chỉnh"
+    },
+    "title": "TogetherAI",
+    "token": {
+      "desc": "Nhập API Key từ TogetherAI AI",
+      "placeholder": "TogetherAI AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API TogetherAI của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API TogetherAI tùy chỉnh"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Zero One",
+    "token": {
+      "desc": "Nhập API Key từ 01.AI Zero One",
+      "placeholder": "01.AI Zero One API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API ZeroOne của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API ZeroOne tùy chỉnh"
+    }
+  },
+  "zhipu": {
+    "title": "Zhipu",
+    "token": {
+      "desc": "Nhập API Key từ Zhipu",
+      "placeholder": "Zhipu API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API Zhipu của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API Zhipu tùy chỉnh"
+    }
+  }
+}

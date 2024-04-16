@@ -1,13 +1,17 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
-import OpenAI from 'openai';
+import OpenAI, { ClientOptions } from 'openai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatStreamPayload, ModelProvider, OpenAIChatMessage } from '../types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  ModelProvider,
+  OpenAIChatMessage,
+} from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
-import { DEBUG_CHAT_COMPLETION } from '../utils/env';
 import { handleOpenAIError } from '../utils/handleOpenAIError';
 import { parseDataUri } from '../utils/uriParser';
 import { generateApiToken } from './authToken';
@@ -15,19 +19,21 @@ import { generateApiToken } from './authToken';
 const DEFAULT_BASE_URL = 'https://open.bigmodel.cn/api/paas/v4';
 
 export class LobeZhipuAI implements LobeRuntimeAI {
-  private _llm: OpenAI;
+  private client: OpenAI;
 
   baseURL: string;
 
   constructor(oai: OpenAI) {
-    this._llm = oai;
-    this.baseURL = this._llm.baseURL;
+    this.client = oai;
+    this.baseURL = this.client.baseURL;
   }
 
-  static async fromAPIKey(apiKey?: string, baseURL: string = DEFAULT_BASE_URL) {
+  static async fromAPIKey({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
     const invalidZhipuAPIKey = AgentRuntimeError.createError(
       AgentRuntimeErrorType.InvalidZhipuAPIKey,
     );
+
+    if (!apiKey) throw invalidZhipuAPIKey;
 
     let token: string;
 
@@ -38,34 +44,32 @@ export class LobeZhipuAI implements LobeRuntimeAI {
     }
 
     const header = { Authorization: `Bearer ${token}` };
-
-    const llm = new OpenAI({ apiKey, baseURL, defaultHeaders: header });
+    const llm = new OpenAI({ apiKey, baseURL, defaultHeaders: header, ...res });
 
     return new LobeZhipuAI(llm);
   }
 
-  async chat(payload: ChatStreamPayload) {
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
       const params = this.buildCompletionsParams(payload);
 
-      const response = await this._llm.chat.completions.create(
+      const response = await this.client.chat.completions.create(
         params as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       );
 
-      const stream = OpenAIStream(response);
+      const [prod, debug] = response.tee();
 
-      const [debug, returnStream] = stream.tee();
-
-      if (DEBUG_CHAT_COMPLETION) {
-        debugStream(debug).catch(console.error);
+      if (process.env.DEBUG_ZHIPU_CHAT_COMPLETION === '1') {
+        debugStream(debug.toReadableStream()).catch(console.error);
       }
 
-      return new StreamingTextResponse(returnStream);
+      return new StreamingTextResponse(OpenAIStream(prod, options?.callback), {
+        headers: options?.headers,
+      });
     } catch (error) {
       const { errorResult, RuntimeError } = handleOpenAIError(error);
 
       const errorType = RuntimeError || AgentRuntimeErrorType.ZhipuBizError;
-
       let desensitizedEndpoint = this.baseURL;
 
       if (this.baseURL !== DEFAULT_BASE_URL) {

@@ -3,27 +3,65 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { TracePayload, TraceTagMap } from '@/const/trace';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import {
+  commonSelectors,
+  modelProviderSelectors,
+  preferenceSelectors,
+} from '@/store/global/selectors';
+import { useSessionStore } from '@/store/session';
+import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
-import { fetchAIFactory, getMessageError } from '@/utils/fetch';
+import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
+import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth } from './_auth';
-import { createHeaderWithOpenAI } from './_header';
-import { PLUGINS_URLS } from './_url';
+import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
   signal?: AbortSignal | undefined;
+  trace?: TracePayload;
 }
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
   messages: ChatMessage[];
+}
+
+interface FetchAITaskResultParams {
+  abortController?: AbortController;
+  /**
+   * 错误处理函数
+   */
+  onError?: (e: Error, rawError?: any) => void;
+  onFinish?: OnFinishHandler;
+  /**
+   * 加载状态变化处理函数
+   * @param loading - 是否处于加载状态
+   */
+  onLoadingChange?: (loading: boolean) => void;
+  /**
+   * 消息处理函数
+   * @param text - 消息内容
+   */
+  onMessageHandle?: (text: string) => void;
+  /**
+   * 请求对象
+   */
+  params: Partial<ChatStreamPayload>;
+  trace?: TracePayload;
+}
+
+interface CreateAssistantMessageStream extends FetchSSEOptions {
+  abortController?: AbortController;
+  params: GetChatCompletionPayload;
+  trace?: TracePayload;
 }
 
 class ChatService {
@@ -52,7 +90,7 @@ class ChatService {
     const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
     // check this model can use function call
-    const canUseFC = modelProviderSelectors.modelEnabledFunctionCall(payload.model)(
+    const canUseFC = modelProviderSelectors.isModelEnabledFunctionCall(payload.model)(
       useGlobalStore.getState(),
     );
     // the rule that model can use tools:
@@ -65,27 +103,64 @@ class ChatService {
     return this.getChatCompletion({ ...params, messages: oaiMessages, tools }, options);
   };
 
-  getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
-    const { provider = ModelProvider.OpenAI, ...res } = params;
-    const payload = merge(
+  createAssistantMessageStream = async ({
+    params,
+    abortController,
+    onAbort,
+    onMessageHandle,
+    onErrorHandle,
+    onFinish,
+    trace,
+  }: CreateAssistantMessageStream) => {
+    await fetchSSE(
+      () =>
+        this.createAssistantMessage(params, {
+          signal: abortController?.signal,
+          trace: this.mapTrace(trace, TraceTagMap.Chat),
+        }),
       {
-        model: DEFAULT_AGENT_CONFIG.model,
-        stream: true,
-        ...DEFAULT_AGENT_CONFIG.params,
+        onAbort,
+        onErrorHandle,
+        onFinish,
+        onMessageHandle,
       },
-      res,
+    );
+  };
+
+  getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
+    const { signal } = options ?? {};
+
+    const { provider = ModelProvider.OpenAI, ...res } = params;
+
+    let model = res.model || DEFAULT_AGENT_CONFIG.model;
+
+    // if the provider is Azure, get the deployment name as the request model
+    if (provider === ModelProvider.Azure) {
+      const chatModelCards = modelProviderSelectors.getModelCardsById(provider)(
+        useGlobalStore.getState(),
+      );
+
+      const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
+      if (deploymentName) model = deploymentName;
+    }
+
+    const payload = merge(
+      { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
+      { ...res, model },
     );
 
+    const traceHeader = createTraceHeader({ ...options?.trace });
+
     const headers = await createHeaderWithAuth({
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...traceHeader },
       provider,
     });
 
-    return fetch(`/api/chat/${provider}`, {
+    return fetch(API_ENDPOINTS.chat(provider), {
       body: JSON.stringify(payload),
       headers,
       method: 'POST',
-      signal: options?.signal,
+      signal,
     });
   };
 
@@ -100,12 +175,17 @@ class ChatService {
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
     const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
 
-    const gatewayURL = manifest?.gateway;
+    const traceHeader = createTraceHeader(this.mapTrace(options?.trace, TraceTagMap.ToolCalling));
 
-    const res = await fetch(gatewayURL ?? PLUGINS_URLS.gateway, {
+    const headers = await createHeaderWithAuth({
+      headers: { ...createHeadersWithPluginSettings(settings), ...traceHeader },
+    });
+
+    const gatewayURL = manifest?.gateway ?? API_ENDPOINTS.gateway;
+
+    const res = await fetch(gatewayURL, {
       body: JSON.stringify({ ...params, manifest }),
-      // TODO: we can have a better auth way
-      headers: createHeadersWithPluginSettings(settings, createHeaderWithOpenAI()),
+      headers,
       method: 'POST',
       signal: options?.signal,
     });
@@ -114,10 +194,48 @@ class ChatService {
       throw await getMessageError(res);
     }
 
-    return await res.text();
+    const text = await res.text();
+    return { text, traceId: getTraceId(res) };
   };
 
-  fetchPresetTaskResult = fetchAIFactory(this.getChatCompletion);
+  fetchPresetTaskResult = async ({
+    params,
+    onMessageHandle,
+    onFinish,
+    onError,
+    onLoadingChange,
+    abortController,
+    trace,
+  }: FetchAITaskResultParams) => {
+    const errorHandle = (error: Error, errorContent?: any) => {
+      onLoadingChange?.(false);
+      if (abortController?.signal.aborted) {
+        return;
+      }
+      onError?.(error, errorContent);
+    };
+
+    onLoadingChange?.(true);
+
+    const data = await fetchSSE(
+      () =>
+        this.getChatCompletion(params, {
+          signal: abortController?.signal,
+          trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+        }),
+      {
+        onErrorHandle: (error) => {
+          errorHandle(new Error(error.message), error);
+        },
+        onFinish,
+        onMessageHandle,
+      },
+    ).catch(errorHandle);
+
+    onLoadingChange?.(false);
+
+    return await data?.text();
+  };
 
   private processMessages = ({
     messages,
@@ -138,7 +256,7 @@ class ChatService {
 
       if (imageList.length === 0) return m.content;
 
-      const canUploadFile = modelProviderSelectors.modelEnabledUpload(model)(
+      const canUploadFile = modelProviderSelectors.isModelEnabledUpload(model)(
         useGlobalStore.getState(),
       );
 
@@ -173,7 +291,7 @@ class ChatService {
 
     return produce(postMessages, (draft) => {
       if (!tools || tools.length === 0) return;
-      const hasFC = modelProviderSelectors.modelEnabledFunctionCall(model)(
+      const hasFC = modelProviderSelectors.isModelEnabledFunctionCall(model)(
         useGlobalStore.getState(),
       );
       if (!hasFC) return;
@@ -193,6 +311,21 @@ class ChatService {
       }
     });
   };
+
+  private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
+    const tags = agentSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
+
+    const enabled = preferenceSelectors.userAllowTrace(useGlobalStore.getState());
+
+    if (!enabled) return { enabled: false };
+
+    return {
+      ...trace,
+      enabled: true,
+      tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
+      userId: commonSelectors.userId(useGlobalStore.getState()),
+    };
+  }
 }
 
 export const chatService = new ChatService();

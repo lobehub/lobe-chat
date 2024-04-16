@@ -1,9 +1,9 @@
-import { Logo } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
-import Avatar from 'next/image';
-import { CSSProperties, memo } from 'react';
+import NextImage from 'next/image';
+import { CSSProperties, memo, useCallback } from 'react';
 
+import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { useGlobalStore } from '@/store/global';
 import { commonSelectors } from '@/store/global/selectors';
 import { imageToBase64 } from '@/utils/imageToBase64';
@@ -43,23 +43,28 @@ const AvatarWithUpload = memo<AvatarWithUploadProps>(
       s.updateAvatar,
     ]);
 
-    const handleUploadAvatar = createUploadImageHandler((avatar) => {
-      const img = new Image();
-      img.src = avatar;
-      img.addEventListener('load', () => {
-        const webpBase64 = imageToBase64({ img, size: compressSize });
-        updateAvatar(webpBase64);
-      });
-    });
+    const handleUploadAvatar = useCallback(
+      createUploadImageHandler((avatar) => {
+        const img = new Image();
+        img.src = avatar;
+        img.addEventListener('load', () => {
+          const webpBase64 = imageToBase64({ img, size: compressSize });
+          updateAvatar(webpBase64);
+        });
+      }),
+      [],
+    );
 
     return (
       <div className={styles} id={id} style={{ maxHeight: size, maxWidth: size, ...style }}>
         <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
-          {avatar ? (
-            <Avatar alt={'avatar'} height={size} src={avatar} width={size} />
-          ) : (
-            <Logo size={size} />
-          )}
+          <NextImage
+            alt={avatar ? 'userAvatar' : 'LobeChat'}
+            height={size}
+            src={!!avatar ? avatar : DEFAULT_USER_AVATAR_URL}
+            unoptimized
+            width={size}
+          />
         </Upload>
       </div>
     );

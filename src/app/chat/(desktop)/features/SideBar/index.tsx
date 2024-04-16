@@ -47,6 +47,7 @@ const Desktop = memo(() => {
       mode={'fixed'}
       onExpandChange={toggleConfig}
       placement={'right'}
+      showHandlerWideArea={false}
     >
       <DraggablePanelContainer
         style={{
@@ -54,7 +55,6 @@ const Desktop = memo(() => {
           height: '100%',
           maxHeight: '100vh',
           minWidth: CHAT_SIDEBAR_WIDTH,
-          overflow: 'auto',
         }}
       >
         <SafeSpacing />

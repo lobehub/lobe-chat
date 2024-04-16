@@ -1,0 +1,231 @@
+{
+  "anthropic": {
+    "endpoint": {
+      "desc": "デフォルトアドレス以外は、http(s)://を含む必要があります",
+      "placeholder": "https://api.anthropic.com",
+      "title": "APIプロキシアドレス"
+    },
+    "title": "Anthropic",
+    "token": {
+      "desc": "AnthropicからのAPIキーを入力してください",
+      "placeholder": "Anthropic API Key",
+      "title": "APIキー"
+    },
+    "unlock": {
+      "description": "あなたのAnthropic APIキーを入力すると、セッションを開始できます。アプリはあなたのAPIキーを記録しません。",
+      "title": "カスタムAnthropic APIキーを使用する"
+    }
+  },
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Azure の API バージョン、YYYY-MM-DD 形式に従う、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照",
+      "fetch": "リストを取得",
+      "title": "Azure Api Version"
+    },
+    "empty": "モデル ID を入力して最初のモデルを追加してください",
+    "endpoint": {
+      "desc": "Azure ポータルでリソースを確認する際に、「キーとエンドポイント」セクションでこの値を見つけることができます",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Azure API アドレス"
+    },
+    "modelListPlaceholder": "展開したい OpenAI モデルを選択または追加してください",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Azure ポータルでリソースを確認する際に、「キーとエンドポイント」セクションでこの値を見つけることができます。KEY1 または KEY2 を使用できます",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Azure OpenAI API Key を入力するとセッションを開始できます",
+      "title": "使用カスタム Azure OpenAI API Key"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "AWS Access Key Id を入力してください",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "AccessKeyId / SecretAccessKey が正しく入力されているかをテストします"
+    },
+    "region": {
+      "desc": "AWS リージョンを入力してください",
+      "placeholder": "AWS リージョン",
+      "title": "AWS リージョン"
+    },
+    "secretAccessKey": {
+      "desc": "AWS Secret Access Key を入力してください",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "カスタムサービスリージョン",
+      "description": "AWS AccessKeyId / SecretAccessKey を入力するとセッションを開始できます。アプリは認証情報を記録しません",
+      "title": "使用カスタム Bedrock 認証情報"
+    }
+  },
+  "google": {
+    "endpoint": {
+      "desc": "デフォルトのアドレスに加えて、http(s)://を含める必要があります",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "APIプロキシアドレス"
+    },
+    "title": "Google",
+    "token": {
+      "desc": "Google の API Key を入力してください",
+      "placeholder": "Google API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Google API Key を入力するとセッションを開始できます。アプリは API Key を記録しません",
+      "title": "使用カスタム Google API Key"
+    }
+  },
+  "groq": {
+    "title": "Groq",
+    "token": {
+      "desc": "Groq の API Key を入力してください",
+      "placeholder": "Groq API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Groq API Key を入力するとセッションを開始できます。アプリは API Key を記録しません",
+      "title": "使用カスタム Groq API Key"
+    }
+  },
+  "mistral": {
+    "title": "Mistral AI",
+    "token": {
+      "desc": "Mistral AI の API Key を入力してください",
+      "placeholder": "Mistral AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Mistral AI API Key を入力するとセッションを開始できます。アプリは API Key を記録しません",
+      "title": "使用カスタム Mistral AI API Key"
+    }
+  },
+  "moonshot": {
+    "title": "Moonshot AI",
+    "token": {
+      "desc": "Moonshot AIのAPIキーを入力してください",
+      "placeholder": "Moonshot AI APIキー",
+      "title": "APIキー"
+    },
+    "unlock": {
+      "description": "Moonshot AIのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
+      "title": "カスタムMoonshot AI APIキーを使用する"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "プロキシアドレスが正しく入力されているかをテストします"
+    },
+    "customModelName": {
+      "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ります",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "カスタムモデル名"
+    },
+    "endpoint": {
+      "desc": "Ollamaプロキシインターフェースアドレスを入力してください。ローカルで追加の指定がない場合は空白のままにしてください",
+      "placeholder": "http://127.0.0.1:11434/v1",
+      "title": "プロキシインターフェースアドレス"
+    },
+    "title": "Ollama"
+  },
+  "openai": {
+    "endpoint": {
+      "desc": "デフォルト以外のアドレスは、http(s)://を含める必要があります",
+      "placeholder": "https://api.openai.com/v1",
+      "title": "プロキシインターフェースアドレス"
+    },
+    "title": "OpenAI",
+    "token": {
+      "desc": "独自のOpenAIキーを使用します",
+      "placeholder": "OpenAI APIキー",
+      "title": "OpenAI APIキー"
+    },
+    "unlock": {
+      "description": "OpenAIのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
+      "title": "カスタムOpenAI APIキーを使用する"
+    }
+  },
+  "openrouter": {
+    "checker": {
+      "desc": "プロキシアドレスが正しく入力されているかをテストします"
+    },
+    "customModelName": {
+      "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ります",
+      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+      "title": "カスタムモデル名"
+    },
+    "title": "OpenRouter",
+    "token": {
+      "desc": "OpenRouter AIのAPIキーを入力してください",
+      "placeholder": "OpenRouter AI APIキー",
+      "title": "APIキー"
+    },
+    "unlock": {
+      "description": "OpenRouterのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
+      "title": "カスタムOpenRouter APIキーを使用する"
+    }
+  },
+  "perplexity": {
+    "title": "Perplexity",
+    "token": {
+      "desc": "Perplexity AIのAPIキーを入力してください",
+      "placeholder": "Perplexity AI APIキー",
+      "title": "APIキー"
+    },
+    "unlock": {
+      "description": "PerplexityのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
+      "title": "カスタムPerplexity APIキーを使用する"
+    }
+  },
+  "togetherai": {
+    "checker": {
+      "desc": "プロキシアドレスが正しく入力されているかをテストします"
+    },
+    "customModelName": {
+      "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ります",
+      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+      "title": "カスタムモデル名"
+    },
+    "title": "TogetherAI",
+    "token": {
+      "desc": "TogetherAI AIのAPIキーを入力してください",
+      "placeholder": "TogetherAI AI APIキー",
+      "title": "APIキー"
+    },
+    "unlock": {
+      "description": "TogetherAIのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
+      "title": "カスタムTogetherAI APIキーを使用する"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI 零一万物",
+    "token": {
+      "desc": "01.AI 零一万物からのAPIキーを入力してください",
+      "placeholder": "01.AI 零一万物 API Key",
+      "title": "APIキー"
+    },
+    "unlock": {
+      "description": "あなたのZeroOne APIキーを入力すると、セッションを開始できます。アプリはあなたのAPIキーを記録しません。",
+      "title": "カスタムZeroOne APIキーを使用する"
+    }
+  },
+  "zhipu": {
+    "title": "智谱",
+    "token": {
+      "desc": "智谱からのAPIキーを入力してください",
+      "placeholder": "Zhipu API Key",
+      "title": "APIキー"
+    },
+    "unlock": {
+      "description": "あなたのZhipu APIキーを入力すると、セッションを開始できます。アプリはあなたのAPIキーを記録しません。",
+      "title": "カスタムZhipu APIキーを使用する"
+    }
+  }
+}

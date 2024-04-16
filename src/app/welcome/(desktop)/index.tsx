@@ -1,21 +1,17 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { FC, memo } from 'react';
+import { memo } from 'react';
 
-import ResponsiveIndex from '@/components/ResponsiveIndex';
+import ClientResponsiveContent from '@/components/client/ClientResponsiveContent';
 
 import Footer from './features/Footer';
 import Showcase from './features/Showcase';
-import Layout from './layout.desktop';
 
-const Mobile: FC = dynamic(() => import('../(mobile)'), { ssr: false }) as FC;
-
-export default memo(() => (
-  <ResponsiveIndex Mobile={Mobile}>
-    <Layout>
-      <Showcase />
-      <Footer />
-    </Layout>
-  </ResponsiveIndex>
+const Desktop = memo(() => (
+  <>
+    <Showcase />
+    <Footer />
+  </>
 ));
+
+export default ClientResponsiveContent({ Desktop, Mobile: () => import('../(mobile)') });

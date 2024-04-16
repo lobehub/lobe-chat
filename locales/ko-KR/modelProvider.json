@@ -1,0 +1,231 @@
+{
+  "anthropic": {
+    "endpoint": {
+      "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다.",
+      "placeholder": "https://api.anthropic.com",
+      "title": "API 프록시 주소"
+    },
+    "title": "Anthropic",
+    "token": {
+      "desc": "Anthropic에서 제공하는 API 키를 입력하세요.",
+      "placeholder": "Anthropic API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "Anthropic API 키를 입력하면 세션이 시작됩니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+      "title": "사용자 정의 Anthropic API 키 사용"
+    }
+  },
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Azure의 API 버전은 YYYY-MM-DD 형식을 따릅니다. [최신 버전 확인](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "목록 가져오기",
+      "title": "Azure API 버전"
+    },
+    "empty": "모델 ID를 입력하여 첫 번째 모델을 추가하세요.",
+    "endpoint": {
+      "desc": "Azure 포털에서 리소스를 확인할 때 '키 및 엔드포인트' 섹션에서 이 값을 찾을 수 있습니다.",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Azure API 주소"
+    },
+    "modelListPlaceholder": "배포한 OpenAI 모델을 선택하거나 추가하세요.",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Azure 포털에서 리소스를 확인할 때 '키 및 엔드포인트' 섹션에서 이 값을 찾을 수 있습니다. KEY1 또는 KEY2를 사용할 수 있습니다.",
+      "placeholder": "Azure API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "Azure OpenAI API 키를 입력하면 세션이 시작됩니다.",
+      "title": "사용자 정의 Azure OpenAI API 키 사용"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "AWS 액세스 키 ID를 입력하세요.",
+      "placeholder": "AWS 액세스 키 ID",
+      "title": "AWS 액세스 키 ID"
+    },
+    "checker": {
+      "desc": "AccessKeyId / SecretAccessKey를 올바르게 입력했는지 테스트합니다."
+    },
+    "region": {
+      "desc": "AWS 지역을 입력하세요.",
+      "placeholder": "AWS 지역",
+      "title": "AWS 지역"
+    },
+    "secretAccessKey": {
+      "desc": "AWS 비밀 액세스 키를 입력하세요.",
+      "placeholder": "AWS 비밀 액세스 키",
+      "title": "AWS 비밀 액세스 키"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "사용자 정의 서비스 지역",
+      "description": "AWS AccessKeyId / SecretAccessKey를 입력하면 세션이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
+      "title": "사용자 정의 Bedrock 인증 정보 사용"
+    }
+  },
+  "google": {
+    "endpoint": {
+      "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다.",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "API 프록시 주소"
+    },
+    "title": "Google",
+    "token": {
+      "desc": "Google에서 제공하는 API 키를 입력하세요.",
+      "placeholder": "Google API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "Google API 키를 입력하면 세션이 시작됩니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+      "title": "사용자 정의 Google API 키 사용"
+    }
+  },
+  "groq": {
+    "title": "Groq",
+    "token": {
+      "desc": "Groq에서 제공하는 API 키를 입력하세요.",
+      "placeholder": "Groq API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "Groq API 키를 입력하면 세션이 시작됩니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+      "title": "사용자 정의 Groq API 키 사용"
+    }
+  },
+  "mistral": {
+    "title": "Mistral AI",
+    "token": {
+      "desc": "Mistral AI에서 제공하는 API 키를 입력하세요.",
+      "placeholder": "Mistral AI API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "Mistral AI API 키를 입력하면 세션이 시작됩니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+      "title": "사용자 정의 Mistral AI API 키 사용"
+    }
+  },
+  "moonshot": {
+    "title": "Moonshot AI",
+    "token": {
+      "desc": "Moonshot AI의 API 키를 입력하세요",
+      "placeholder": "Moonshot AI API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "Moonshot AI API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다",
+      "title": "사용자 정의 Moonshot AI API 키 사용"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다"
+    },
+    "customModelName": {
+      "desc": "사용자 정의 모델을 추가하려면 쉼표(,)로 구분하여 여러 모델을 입력하세요",
+      "placeholder": "비쿠나,야마,코델라마,야마2:13b-텍스트",
+      "title": "사용자 정의 모델 이름"
+    },
+    "endpoint": {
+      "desc": "Ollama 인터페이스 프록시 주소를 입력하세요. 로컬에서 별도로 지정하지 않은 경우 비워둘 수 있습니다",
+      "placeholder": "http://127.0.0.1:11434/v1",
+      "title": "인터페이스 프록시 주소"
+    },
+    "title": "Ollama"
+  },
+  "openai": {
+    "endpoint": {
+      "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다",
+      "placeholder": "https://api.openai.com/v1",
+      "title": "인터페이스 프록시 주소"
+    },
+    "title": "OpenAI",
+    "token": {
+      "desc": "자체 OpenAI 키를 사용하세요",
+      "placeholder": "OpenAI API 키",
+      "title": "OpenAI API 키"
+    },
+    "unlock": {
+      "description": "OpenAI API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다",
+      "title": "사용자 정의 OpenAI API 키 사용"
+    }
+  },
+  "openrouter": {
+    "checker": {
+      "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다"
+    },
+    "customModelName": {
+      "desc": "사용자 정의 모델을 추가하려면 쉼표(,)로 구분하여 여러 모델을 입력하세요",
+      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+      "title": "사용자 정의 모델 이름"
+    },
+    "title": "OpenRouter",
+    "token": {
+      "desc": "OpenRouter AI의 API 키를 입력하세요",
+      "placeholder": "OpenRouter AI API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "OpenRouter API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다",
+      "title": "사용자 정의 OpenRouter API 키 사용"
+    }
+  },
+  "perplexity": {
+    "title": "Perplexity",
+    "token": {
+      "desc": "Perplexity AI의 API 키를 입력하세요",
+      "placeholder": "Perplexity AI API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "Perplexity API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다",
+      "title": "사용자 정의 Perplexity API 키 사용"
+    }
+  },
+  "togetherai": {
+    "checker": {
+      "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다"
+    },
+    "customModelName": {
+      "desc": "사용자 정의 모델을 추가하려면 쉼표(,)로 구분하여 여러 모델을 입력하세요",
+      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+      "title": "사용자 정의 모델 이름"
+    },
+    "title": "TogetherAI",
+    "token": {
+      "desc": "TogetherAI AI의 API 키를 입력하세요",
+      "placeholder": "TogetherAI AI API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "TogetherAI API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다",
+      "title": "사용자 정의 TogetherAI API 키 사용"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Zero One All Things",
+    "token": {
+      "desc": "01.AI Zero One All Things의 API 키를 입력하세요",
+      "placeholder": "01.AI Zero One All Things API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "귀하의 Zero One All Things API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 귀하의 API 키를 기록하지 않습니다",
+      "title": "사용자 정의 Zero One All Things API 키 사용"
+    }
+  },
+  "zhipu": {
+    "title": "지푸",
+    "token": {
+      "desc": "지푸의 API 키를 입력하세요",
+      "placeholder": "지푸 API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "귀하의 지푸 API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 귀하의 API 키를 기록하지 않습니다",
+      "title": "사용자 정의 지푸 API 키 사용"
+    }
+  }
+}

@@ -9,7 +9,7 @@ import { createHyperStorage } from '../middleware/createHyperStorage';
 import { type GlobalState, initialState } from './initialState';
 import { type CommonAction, createCommonSlice } from './slices/common/action';
 import { type PreferenceAction, createPreferenceSlice } from './slices/preference/action';
-import { type SettingsAction, createSettingsSlice } from './slices/settings/action';
+import { type SettingsAction, createSettingsSlice } from './slices/settings/actions';
 
 //  ===============  聚合 createStoreFn ============ //
 

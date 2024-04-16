@@ -14,7 +14,7 @@ const Tokens = memo(() => {
   const [systemRole, model] = useStore((s) => [s.config.systemRole, s.config.model]);
   const systemTokenCount = useTokenCount(systemRole);
 
-  const showTag = useGlobalStore(modelProviderSelectors.modelHasMaxToken(model));
+  const showTag = useGlobalStore(modelProviderSelectors.isModelHasMaxToken(model));
   const modelMaxTokens = useGlobalStore(modelProviderSelectors.modelMaxToken(model));
 
   return (

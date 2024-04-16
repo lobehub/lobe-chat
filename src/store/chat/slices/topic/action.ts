@@ -8,6 +8,8 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT } from '@/const/message';
+import { TraceNameMap } from '@/const/trace';
+import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -20,6 +22,9 @@ import { chatSelectors } from '../message/selectors';
 import { topicSelectors } from './selectors';
 
 const n = setNamespace('topic');
+
+const SWR_USE_FETCH_TOPIC = 'SWR_USE_FETCH_TOPIC';
+const SWR_USE_SEARCH_TOPIC = 'SWR_USE_SEARCH_TOPIC';
 
 export interface ChatTopicAction {
   favoriteTopic: (id: string, favState: boolean) => Promise<void>;
@@ -38,7 +43,7 @@ export interface ChatTopicAction {
   updateTopicLoading: (id?: string) => void;
   updateTopicTitle: (id: string, title: string) => Promise<void>;
   useFetchTopics: (sessionId: string) => SWRResponse<ChatTopic[]>;
-  useSearchTopics: (keywords?: string) => SWRResponse<ChatTopic[]>;
+  useSearchTopics: (keywords?: string, sessionId?: string) => SWRResponse<ChatTopic[]>;
 }
 
 export const chatTopic: StateCreator<
@@ -120,6 +125,7 @@ export const chatTopic: StateCreator<
         updateTopicTitleInSummary(topicId, output);
       },
       params: await chainSummaryTitle(messages),
+      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryTopicTitle, topicId }),
     });
   },
   favoriteTopic: async (id, favState) => {
@@ -139,18 +145,26 @@ export const chatTopic: StateCreator<
   },
   // query
   useFetchTopics: (sessionId) =>
-    useSWR<ChatTopic[]>(sessionId, async (sessionId) => topicService.getTopics({ sessionId }), {
-      onSuccess: (topics) => {
-        set({ topics, topicsInit: true }, false, n('useFetchTopics(success)', { sessionId }));
+    useClientDataSWR<ChatTopic[]>(
+      [SWR_USE_FETCH_TOPIC, sessionId],
+      async ([, sessionId]: [string, string]) => topicService.getTopics({ sessionId }),
+      {
+        onSuccess: (topics) => {
+          set({ topics, topicsInit: true }, false, n('useFetchTopics(success)', { sessionId }));
+        },
       },
-      dedupingInterval: 0,
-    }),
-  useSearchTopics: (keywords) =>
-    useSWR<ChatTopic[]>(keywords, topicService.searchTopics, {
-      onSuccess: (data) => {
-        set({ searchTopics: data }, false, n('useSearchTopics(success)', { keywords }));
+    ),
+  useSearchTopics: (keywords, sessionId) =>
+    useSWR<ChatTopic[]>(
+      [SWR_USE_SEARCH_TOPIC, keywords, sessionId],
+      ([, keywords, sessionId]: [string, string, string]) =>
+        topicService.searchTopics(keywords, sessionId),
+      {
+        onSuccess: (data) => {
+          set({ searchTopics: data }, false, n('useSearchTopics(success)', { keywords }));
+        },
       },
-    }),
+    ),
   switchTopic: async (id) => {
     set({ activeTopicId: id }, false, n('toggleTopic'));
 
@@ -211,6 +225,6 @@ export const chatTopic: StateCreator<
     set({ topicLoadingId: id }, false, n('updateTopicLoading'));
   },
   refreshTopic: async () => {
-    await mutate(get().activeId);
+    await mutate([SWR_USE_FETCH_TOPIC, get().activeId]);
   },
 });

@@ -8,12 +8,19 @@ declare global {
 
       IMGUR_CLIENT_ID?: string;
 
-      METADATA_BASE_URL?: string;
+      SITE_URL?: string;
 
       AGENTS_INDEX_URL?: string;
 
       PLUGINS_INDEX_URL?: string;
       PLUGIN_SETTINGS?: string;
+
+      DEFAULT_AGENT_CONFIG?: string;
+
+      ENABLE_LANGFUSE?: string;
+      LANGFUSE_PUBLIC_KEY?: string;
+      LANGFUSE_SECRET_KEY?: string;
+      LANGFUSE_HOST?: string;
     }
   }
 }
@@ -32,9 +39,11 @@ export const getAppConfig = () => {
   return {
     ACCESS_CODES,
 
+    DEFAULT_AGENT_CONFIG: process.env.DEFAULT_AGENT_CONFIG || '',
+
     SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODES.length,
 
-    METADATA_BASE_URL: process.env.METADATA_BASE_URL,
+    SITE_URL: process.env.SITE_URL,
 
     IMGUR_CLIENT_ID: process.env.IMGUR_CLIENT_ID || DEFAULT_IMAGUR_CLIENT_ID,
 
@@ -47,5 +56,10 @@ export const getAppConfig = () => {
       : 'https://chat-plugins.lobehub.com',
 
     PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
+
+    ENABLE_LANGFUSE: process.env.ENABLE_LANGFUSE === '1',
+    LANGFUSE_SECRET_KEY: process.env.LANGFUSE_SECRET_KEY || '',
+    LANGFUSE_PUBLIC_KEY: process.env.LANGFUSE_PUBLIC_KEY || '',
+    LANGFUSE_HOST: process.env.LANGFUSE_HOST || 'https://cloud.langfuse.com',
   };
 };

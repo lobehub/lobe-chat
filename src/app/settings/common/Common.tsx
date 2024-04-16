@@ -1,33 +1,34 @@
-import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
-import { Form as AntForm, App, Button, Input, Select } from 'antd';
+import { Form, type ItemGroup } from '@lobehub/ui';
+import { Form as AntForm, App, Button, Input } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { AppWindow, Monitor, Moon, Palette, Sun } from 'lucide-react';
-import { memo, useCallback, useEffect } from 'react';
+import { AppWindow } from 'lucide-react';
+import { signIn, signOut } from 'next-auth/react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSyncSettings } from '@/app/settings/hooks/useSyncSettings';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
-import AvatarWithUpload from '@/features/AvatarWithUpload';
-import { localeOptions } from '@/locales/resources';
+import { useOAuthSession } from '@/hooks/useOAuthSession';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { useToolStore } from '@/store/tool';
-import { switchLang } from '@/utils/switchLang';
-
-import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../features/ThemeSwatches';
 
 type SettingItemGroup = ItemGroup;
 
 export interface SettingsCommonProps {
   showAccessCodeConfig: boolean;
+  showOAuthLogin: boolean;
 }
 
-const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
+const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin }) => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
+
+  const { user, isOAuthLoggedIn } = useOAuthSession();
 
   const [clearSessions, clearSessionGroups] = useSessionStore((s) => [
     s.clearSessions,
@@ -39,15 +40,26 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
   ]);
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
   const removeAllPlugins = useToolStore((s) => s.removeAllPlugins);
-
   const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
-  const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [
-    s.switchThemeMode,
-    s.setSettings,
-    s.resetSettings,
-  ]);
+  const [setSettings, resetSettings] = useGlobalStore((s) => [s.setSettings, s.resetSettings]);
 
   const { message, modal } = App.useApp();
+
+  const handleSignOut = useCallback(() => {
+    modal.confirm({
+      centered: true,
+      okButtonProps: { danger: true },
+      onOk: () => {
+        signOut();
+        message.success(t('settingSystem.oauth.signout.success'));
+      },
+      title: t('settingSystem.oauth.signout.confirm'),
+    });
+  }, []);
+
+  const handleSignIn = useCallback(() => {
+    signIn();
+  }, []);
 
   const handleReset = useCallback(() => {
     modal.confirm({
@@ -81,107 +93,6 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
     });
   }, []);
 
-  const theme: SettingItemGroup = {
-    children: [
-      {
-        children: <AvatarWithUpload />,
-        label: t('settingTheme.avatar.title'),
-        minWidth: undefined,
-      },
-      {
-        children: (
-          <SelectWithImg
-            defaultValue={settings.themeMode}
-            height={60}
-            onChange={setThemeMode}
-            options={[
-              {
-                icon: Sun,
-                img: '/images/theme_light.webp',
-                label: t('settingTheme.themeMode.light'),
-                value: 'light',
-              },
-              {
-                icon: Moon,
-                img: '/images/theme_dark.webp',
-                label: t('settingTheme.themeMode.dark'),
-                value: 'dark',
-              },
-              {
-                icon: Monitor,
-                img: '/images/theme_auto.webp',
-                label: t('settingTheme.themeMode.auto'),
-                value: 'auto',
-              },
-            ]}
-            width={100}
-          />
-        ),
-        label: t('settingTheme.themeMode.title'),
-        minWidth: undefined,
-      },
-      {
-        children: (
-          <Select
-            onChange={switchLang}
-            options={[{ label: t('settingTheme.lang.autoMode'), value: 'auto' }, ...localeOptions]}
-          />
-        ),
-        label: t('settingTheme.lang.title'),
-        name: 'language',
-      },
-      {
-        children: (
-          <SliderWithInput
-            marks={{
-              12: {
-                label: 'A',
-                style: {
-                  fontSize: 12,
-                  marginTop: 4,
-                },
-              },
-              14: {
-                label: t('settingTheme.fontSize.marks.normal'),
-                style: {
-                  fontSize: 14,
-                  marginTop: 4,
-                },
-              },
-              18: {
-                label: 'A',
-                style: {
-                  fontSize: 18,
-                  marginTop: 4,
-                },
-              },
-            }}
-            max={18}
-            min={12}
-            step={1}
-          />
-        ),
-        desc: t('settingTheme.fontSize.desc'),
-        label: t('settingTheme.fontSize.title'),
-        name: 'fontSize',
-      },
-      {
-        children: <ThemeSwatchesPrimary />,
-        desc: t('settingTheme.primaryColor.desc'),
-        label: t('settingTheme.primaryColor.title'),
-        minWidth: undefined,
-      },
-      {
-        children: <ThemeSwatchesNeutral />,
-        desc: t('settingTheme.neutralColor.desc'),
-        label: t('settingTheme.neutralColor.title'),
-        minWidth: undefined,
-      },
-    ],
-    icon: Palette,
-    title: t('settingTheme.title'),
-  };
-
   const system: SettingItemGroup = {
     children: [
       {
@@ -195,6 +106,23 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
         hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),
         name: 'password',
+      },
+      {
+        children: isOAuthLoggedIn ? (
+          <Button onClick={handleSignOut}>{t('settingSystem.oauth.signout.action')}</Button>
+        ) : (
+          <Button onClick={handleSignIn} type="primary">
+            {t('settingSystem.oauth.signin.action')}
+          </Button>
+        ),
+        desc: isOAuthLoggedIn
+          ? `${user?.email} ${t('settingSystem.oauth.info.desc')}`
+          : t('settingSystem.oauth.signin.desc'),
+        hidden: !showOAuthLogin,
+        label: isOAuthLoggedIn
+          ? t('settingSystem.oauth.info.title')
+          : t('settingSystem.oauth.signin.title'),
+        minWidth: undefined,
       },
       {
         children: (
@@ -221,23 +149,13 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
     title: t('settingSystem.title'),
   };
 
-  useEffect(() => {
-    const unsubscribe = useGlobalStore.subscribe(
-      (s) => s.settings,
-      (settings) => {
-        form.setFieldsValue(settings);
-      },
-    );
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  useSyncSettings(form);
 
   return (
     <Form
       form={form}
       initialValues={settings}
-      items={[theme, system]}
+      items={[system]}
       onValuesChange={setSettings}
       {...FORM_STYLE}
     />

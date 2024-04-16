@@ -1,0 +1,47 @@
+---
+title: LobeChat 外部身份验证服务配置指南
+description: >-
+  了解如何配置外部身份验证服务以统一管理用户授权。支持的身份验证服务包括 Auth0, Microsoft Entra ID, Authentik,
+  Github, 和 ZITADEL。
+tags:
+  - 身份验证服务
+  - LobeChat
+  - SSO
+  - Auth0
+  - Microsoft Entra ID
+  - Authentik
+  - Github
+  - ZITADEL
+---
+
+# 身份验证服务
+
+LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用，统一管理用户授权。
+
+目前支持的身份验证服务有：
+
+- [Auth0](/docs/self-hosting/advanced/sso-providers/auth0)
+- [Microsoft Entra ID](/docs/self-hosting/advanced/sso-providers/microsoft-entra-id)
+- [Authentik](/docs/self-hosting/advanced/sso-providers/authentik)
+- [Github](/docs/self-hosting/advanced/sso-providers/github)
+- [ZITADEL](/docs/self-hosting/advanced/sso-providers/zitadel)
+
+点击链接可以查看对应平台的配置文档。
+
+## 进阶配置
+
+同时启用多个身份验证源请设置 `SSO_PROVIDERS` 环境变量，以逗号 `,` 分割，例如 `auth0,azure-ad,authentik`。
+
+顺序为 SSO 提供商的显示顺序。
+
+| SSO 提供商         | 值          |
+| ------------------ | ----------- |
+| Auth0              | `auth0`     |
+| Microsoft Entra ID | `azure-ad`  |
+| Authentik          | `authentik` |
+| Github             | `github`    |
+| ZITADEL            | `zitadel`   |
+
+## 其他 SSO 提供商
+
+请参考 [NextAuth.js](https://next-auth.js.org/providers) 文档，欢迎提交 Pull Request。

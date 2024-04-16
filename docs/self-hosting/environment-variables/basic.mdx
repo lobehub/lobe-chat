@@ -1,0 +1,116 @@
+---
+title: Customize LobeChat Deployment with Environment Variables
+description: >-
+  Learn about the common environment variables used to customize LobeChat
+  deployment, including access code, OAuth SSO, base path, and default agent
+  configuration.
+tags:
+  - LobeChat
+  - environment variables
+  - deployment
+  - access code
+  - OAuth SSO
+  - base path
+  - default agent configuration
+---
+
+# Environment Variables
+
+LobeChat provides some additional configuration options during deployment, which can be customized using environment variables.
+
+## Common Variables
+
+### `ACCESS_CODE`
+
+- Type: Optional
+- Description: Add a password to access the LobeChat service. You can set a long password to prevent brute force attacks.
+- Default: -
+- Example: `awCTe)re_r74` or `rtrt_ewee3@09!`
+
+### `API_KEY_SELECT_MODE`
+
+- Type：Optional
+- Description：Controls the mode for selecting the API Key when multiple API Keys are available. Currently supports `random` and `turn`.
+- Default：`random`
+- Example：`random` or `turn`
+
+When using the `random` mode, a random API Key will be selected from the available multiple API Keys.
+
+When using the `turn` mode, the API Keys will be retrieved in a round-robin manner according to the specified order.
+
+### `ENABLE_OAUTH_SSO`
+
+- Type: Optional
+- Description: Enable Single Sign-On (SSO) for LobeChat. Set to `1` to enable SSO. For more information, see [Authentication Services](#authentication-services).
+- Default: -
+- Example: `1`
+
+### `NEXT_PUBLIC_BASE_PATH`
+
+- Type: Optional
+- Description: Add a `basePath` for LobeChat.
+- Default: -
+- Example: `/test`
+
+### `DEFAULT_AGENT_CONFIG`
+
+- Type: Optional
+- Description: Used to configure the default settings for the LobeChat default agent. It supports various data types and structures, including key-value pairs, nested fields, array values, and more.
+- Default: -
+- Example: `'model=gpt-4-1106-preview;params.max_tokens=300;plugins=search-engine,lobe-image-designer`
+
+The `DEFAULT_AGENT_CONFIG` is used to configure the default settings for the LobeChat default agent. It supports various data types and structures, including key-value pairs, nested fields, array values, and more. The table below provides detailed information on the configuration options, examples, and corresponding explanations for the `DEFAULT_AGENT_CONFIG` environment variable:
+
+| Configuration Type | Example | Explanation |
+| --- | --- | --- |
+| Basic Key-Value Pair | `model=gpt-4` | Set the model to `gpt-4`. |
+| Nested Field | `tts.sttLocale=en-US` | Set the language locale for the text-to-speech service to `en-US`. |
+| Array | `plugins=search-engine,lobe-image-designer` | Enable the `search-engine` and `lobe-image-designer` plugins. |
+| Chinese Comma | `plugins=search-engine，lobe-image-designer` | Same as above, demonstrating support for Chinese comma separation. |
+| Multiple Configurations | `model=glm-4;provider=zhipu` | Set the model to `glm-4` and the model provider to `zhipu`. |
+| Numeric Value | `params.max_tokens=300` | Set the maximum tokens to `300`. |
+| Boolean Value | `enableAutoCreateTopic=true` | Enable automatic topic creation. |
+| Special Characters | `inputTemplate="Hello; I am a bot;"` | Set the input template to `Hello; I am a bot;`. |
+| Error Handling | `model=gpt-4;maxToken` | Ignore invalid entry `maxToken` and only parse `model=gpt-4`. |
+| Value Override | `model=gpt-4;model=gpt-4-1106-preview` | If a key is repeated, use the value that appears last; in this case, the value of `model` is `gpt-4-1106-preview`. |
+
+Further reading:
+
+- [[RFC] 022 - Default Assistant Parameters Configuration via Environment Variables](https://github.com/lobehub/lobe-chat/discussions/913)
+
+## Plugin Service
+
+### `PLUGINS_INDEX_URL`
+
+- Type: Optional
+- Description: Index address of the LobeChat plugin market. If you have deployed the plugin market service on your own, you can use this variable to override the default plugin market address.
+- Default: `https://chat-plugins.lobehub.com`
+
+### `PLUGIN_SETTINGS`
+
+- Type: Optional
+- Description: Used to configure plugin settings. Use the format `plugin-name:setting-field=setting-value` to configure the settings of the plugin. Separate multiple setting fields with a semicolon `;`, and separate multiple plugin settings with a comma `,`.
+- Default: `-`
+- Example: `search-engine:SERPAPI_API_KEY=xxxxx,plugin-2:key1=value1;key2=value2`
+
+The above example sets the `SERPAPI_API_KEY` of the `search-engine` plugin to `xxxxx`, and sets `key1` of `plugin-2` to `value1`, and `key2` to `value2`. The generated plugin settings configuration is as follows:
+
+```json
+{
+  "plugin-2": {
+    "key1": "value1",
+    "key2": "value2"
+  },
+  "search-engine": {
+    "SERPAPI_API_KEY": "xxxxx"
+  }
+}
+```
+
+## Assistant Market
+
+### `AGENTS_INDEX_URL`
+
+- Type: Optional
+- Description: Index address of the LobeChat assistant market. If you have deployed the assistant market service on your own, you can use this variable to override the default market address.
+- Default: `https://chat-agents.lobehub.com`

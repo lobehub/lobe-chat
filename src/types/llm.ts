@@ -1,25 +1,18 @@
-/**
- * LLM 模型
- */
-export enum LanguageModel {
-  /**
-   * GPT 3.5 Turbo
-   */
-  GPT3_5 = 'gpt-3.5-turbo',
-  GPT3_5_1106 = 'gpt-3.5-turbo-1106',
-  GPT3_5_16K = 'gpt-3.5-turbo-16k',
-  /**
-   * GPT 4
-   */
-  GPT4 = 'gpt-4',
-  GPT4_32K = 'gpt-4-32k',
-  GPT4_PREVIEW = 'gpt-4-0125-preview',
-  GPT4_VISION_PREVIEW = 'gpt-4-vision-preview',
-}
-
 export interface ChatModelCard {
+  /**
+   * only used in azure
+   */
+  deploymentName?: string;
   description?: string;
+  /**
+   * the name show for end user
+   */
   displayName?: string;
+
+  /**
+   * whether model is enabled by default
+   */
+  enabled?: boolean;
   /**
    * whether model supports file upload
    */
@@ -28,7 +21,6 @@ export interface ChatModelCard {
    * whether model supports function call
    */
   functionCall?: boolean;
-  hidden?: boolean;
   id: string;
   /**
    * whether model is custom
@@ -38,6 +30,10 @@ export interface ChatModelCard {
    * whether model is legacy (deprecated but not removed yet)
    */
   legacy?: boolean;
+  maxOutput?: number;
+  /**
+   * the context window
+   */
   tokens?: number;
   /**
    *  whether model supports vision

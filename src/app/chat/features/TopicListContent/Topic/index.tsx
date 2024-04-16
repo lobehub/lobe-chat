@@ -1,11 +1,12 @@
 import { EmptyCard } from '@lobehub/ui';
-import { useThemeMode } from 'antd-style';
+import { css, cx, useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import React, { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
+import { imageUrl } from '@/const/url';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -13,6 +14,12 @@ import { ChatTopic } from '@/types/topic';
 
 import { Placeholder, SkeletonList } from './SkeletonList';
 import TopicItem from './TopicItem';
+
+const container = css`
+  > div {
+    padding-inline: 8px;
+  }
+`;
 
 export const Topic = memo(() => {
   const { t } = useTranslation('chat');
@@ -60,9 +67,12 @@ export const Topic = memo(() => {
         <Flexbox flex={1}>
           <EmptyCard
             alt={t('topic.guide.desc')}
-            cover={`/images/empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`}
+            cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
             desc={t('topic.guide.desc')}
             height={120}
+            imageProps={{
+              priority: true,
+            }}
             onVisibleChange={(visible) => {
               updateGuideState({ topic: visible });
             }}
@@ -74,6 +84,7 @@ export const Topic = memo(() => {
         </Flexbox>
       )}
       <Virtuoso
+        className={cx(container)}
         components={{ ScrollSeekPlaceholder: Placeholder }}
         computeItemKey={(_, item) => item.id}
         data={topics}

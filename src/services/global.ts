@@ -1,5 +1,8 @@
-import { URLS } from '@/services/_url';
-import { GlobalServerConfig } from '@/types/settings';
+import { dataSync } from '@/database/client/core';
+import { GlobalServerConfig } from '@/types/serverConfig';
+import { StartDataSyncParams } from '@/types/sync';
+
+import { API_ENDPOINTS } from './_url';
 
 const VERSION_URL = 'https://registry.npmmirror.com/@lobehub/chat';
 
@@ -15,9 +18,22 @@ class GlobalService {
   };
 
   getGlobalConfig = async (): Promise<GlobalServerConfig> => {
-    const res = await fetch(URLS.config);
+    const res = await fetch(API_ENDPOINTS.config);
 
     return res.json();
+  };
+
+  enabledSync = async (params: StartDataSyncParams) => {
+    if (typeof window === 'undefined') return false;
+
+    await dataSync.startDataSync(params);
+    return true;
+  };
+
+  disableSync = async () => {
+    await dataSync.disconnect();
+
+    return false;
   };
 }
 
