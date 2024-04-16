@@ -42,7 +42,7 @@ export const getProviderAuthPayload = (provider: string) => {
   }
 };
 
-export const createAuthTokenWithPayload = async (payload = {}) => {
+const createAuthTokenWithPayload = async (payload = {}) => {
   const accessCode = settingsSelectors.password(useGlobalStore.getState());
 
   return await createJWT<JWTPayload>({ accessCode, ...payload });
