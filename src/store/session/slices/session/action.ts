@@ -91,7 +91,7 @@ export const createSessionSlice: StateCreator<
 
     const newSession: LobeAgentSession = merge(defaultAgent, agent);
 
-    const id = await sessionService.createNewSession(LobeSessionType.Agent, newSession);
+    const id = await sessionService.createSession(LobeSessionType.Agent, newSession);
     await refreshSessions();
 
     // Whether to goto  to the new session after creation, the default is to switch to
@@ -109,7 +109,7 @@ export const createSessionSlice: StateCreator<
 
     const newTitle = t('duplicateTitle', { ns: 'chat', title: title });
 
-    const newId = await sessionService.duplicateSession(id, newTitle);
+    const newId = await sessionService.cloneSession(id, newTitle);
 
     // duplicate Session Error
     if (!newId) {
@@ -122,7 +122,7 @@ export const createSessionSlice: StateCreator<
   },
 
   pinSession: async (sessionId, pinned) => {
-    await sessionService.updateSessionPinned(sessionId, pinned);
+    await sessionService.updateSession(sessionId, { pinned });
 
     await get().refreshSessions();
   },
@@ -142,7 +142,7 @@ export const createSessionSlice: StateCreator<
   },
 
   useFetchSessions: () =>
-    useClientDataSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getSessionsWithGroup, {
+    useClientDataSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getGroupedSessions, {
       onSuccess: (data) => {
         // 由于 https://github.com/lobehub/lobe-chat/pull/541 的关系
         // 只有触发了 refreshSessions 才会更新 sessions，进而触发页面 rerender

@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.147.17](https://github.com/lobehub/lobe-chat/compare/v0.147.16...v0.147.17)
+
+<sup>Released on **2024-04-16**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor service to a uniform interface.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor service to a uniform interface, closes [#2062](https://github.com/lobehub/lobe-chat/issues/2062) ([86779e2](https://github.com/lobehub/lobe-chat/commit/86779e2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.147.16](https://github.com/lobehub/lobe-chat/compare/v0.147.15...v0.147.16)
 
 <sup>Released on **2024-04-14**</sup>

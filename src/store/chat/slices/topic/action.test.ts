@@ -18,8 +18,9 @@ vi.mock('@/services/topic', () => ({
     removeAllTopic: vi.fn(),
     removeTopic: vi.fn(),
     createTopic: vi.fn(),
-    updateTitle: vi.fn(),
-    updateFavorite: vi.fn(),
+    updateTopicFavorite: vi.fn(),
+    updateTopicTitle: vi.fn(),
+    updateTopic: vi.fn(),
     batchRemoveTopics: vi.fn(),
     getTopics: vi.fn(),
     searchTopics: vi.fn(),
@@ -180,7 +181,9 @@ describe('topic action', () => {
       const topicId = 'topic-id';
       const favState = true;
 
-      const updateFavoriteSpy = vi.spyOn(topicService, 'updateFavorite').mockResolvedValue(true);
+      const updateFavoriteSpy = vi
+        .spyOn(topicService, 'updateTopic')
+        .mockResolvedValue({ success: 1 });
 
       const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
 
@@ -188,7 +191,7 @@ describe('topic action', () => {
         await result.current.favoriteTopic(topicId, favState);
       });
 
-      expect(updateFavoriteSpy).toHaveBeenCalledWith(topicId, favState);
+      expect(updateFavoriteSpy).toHaveBeenCalledWith(topicId, { favorite: favState });
       expect(refreshTopicSpy).toHaveBeenCalled();
     });
   });
@@ -233,7 +236,7 @@ describe('topic action', () => {
       const topicId = 'topic-id';
       const newTitle = 'Updated Topic Title';
       // Mock the topicService.updateTitle to resolve immediately
-      (topicService.updateTitle as Mock).mockResolvedValue(undefined);
+      (topicService.updateTopic as Mock).mockResolvedValue(undefined);
 
       const { result } = renderHook(() => useChatStore());
 
@@ -245,7 +248,9 @@ describe('topic action', () => {
       });
 
       // Verify that the topicService.updateTitle was called with correct parameters
-      expect(topicService.updateTitle).toHaveBeenCalledWith(topicId, newTitle);
+      expect(topicService.updateTopic).toHaveBeenCalledWith(topicId, {
+        title: 'Updated Topic Title',
+      });
 
       // Verify that the refreshTopic was called to update the state
       expect(refreshTopicSpy).toHaveBeenCalled();
