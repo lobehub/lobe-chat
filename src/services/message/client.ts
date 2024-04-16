@@ -11,7 +11,7 @@ export interface CreateMessageParams
   traceId?: string;
 }
 
-export class MessageService {
+export class ClientService {
   async create(data: CreateMessageParams) {
     const { id } = await MessageModel.create(data);
 

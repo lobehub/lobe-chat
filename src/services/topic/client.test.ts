@@ -3,9 +3,9 @@ import { Mock, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CreateTopicParams, TopicModel } from '@/database/client/models/topic';
 import { ChatTopic } from '@/types/topic';
 
-import { TopicService } from './client';
+import { ClientService } from './client';
 
-const topicService = new TopicService();
+const topicService = new ClientService();
 // Mock the TopicModel
 vi.mock('@/database/client/models/topic', () => {
   return {

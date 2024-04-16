@@ -3,9 +3,9 @@ import { Mock, describe, expect, it, vi } from 'vitest';
 import { CreateMessageParams, MessageModel } from '@/database/client/models/message';
 import { ChatMessage, ChatMessageError, ChatPluginPayload } from '@/types/message';
 
-import { MessageService } from './client';
+import { ClientService } from './client';
 
-const messageService = new MessageService();
+const messageService = new ClientService();
 
 // Mock the MessageModel
 vi.mock('@/database/client/models/message', () => {

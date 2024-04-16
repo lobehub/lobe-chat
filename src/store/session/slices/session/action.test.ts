@@ -11,12 +11,13 @@ import { LobeSessionType } from '@/types/session';
 // Mock sessionService 和其他依赖项
 vi.mock('@/services/session', () => ({
   sessionService: {
-    removeAllSessions: vi.fn(),
-    createNewSession: vi.fn(),
-    duplicateSession: vi.fn(),
+    removeSessions: vi.fn(),
+    createSession: vi.fn(),
+    cloneSession: vi.fn(),
     updateSessionGroup: vi.fn(),
     removeSession: vi.fn(),
-    getSessions: vi.fn(),
+    getAllSessions: vi.fn(),
+    updateSession: vi.fn(),
     updateSessionGroupId: vi.fn(),
     searchSessions: vi.fn(),
     updateSessionPinned: vi.fn(),
@@ -47,8 +48,8 @@ describe('SessionAction', () => {
         await result.current.clearSessions();
       });
 
-      expect(sessionService.removeAllSessions).toHaveBeenCalled();
-      expect(mockRefresh).toHaveBeenCalled(); // 假设 refreshSessions 调用了 getSessions
+      expect(sessionService.removeSessions).toHaveBeenCalled();
+      expect(mockRefresh).toHaveBeenCalled(); // 假设 refreshSessions 调用了 getAllSessions
     });
   });
 
@@ -56,7 +57,7 @@ describe('SessionAction', () => {
     it('should create a new session and switch to it', async () => {
       const { result } = renderHook(() => useSessionStore());
       const newSessionId = 'new-session-id';
-      vi.mocked(sessionService.createNewSession).mockResolvedValue(newSessionId);
+      vi.mocked(sessionService.createSession).mockResolvedValue(newSessionId);
 
       let createdSessionId;
 
@@ -64,7 +65,7 @@ describe('SessionAction', () => {
         createdSessionId = await result.current.createSession({ config: { displayMode: 'docs' } });
       });
 
-      const call = vi.mocked(sessionService.createNewSession).mock.calls[0];
+      const call = vi.mocked(sessionService.createSession).mock.calls[0];
       expect(call[0]).toEqual(LobeSessionType.Agent);
       expect(call[1]).toMatchObject({ config: { displayMode: 'docs' } });
 
@@ -74,7 +75,7 @@ describe('SessionAction', () => {
     it('should create a new session but not switch to it if isSwitchSession is false', async () => {
       const { result } = renderHook(() => useSessionStore());
       const newSessionId = 'new-session-id';
-      vi.mocked(sessionService.createNewSession).mockResolvedValue(newSessionId);
+      vi.mocked(sessionService.createSession).mockResolvedValue(newSessionId);
 
       let createdSessionId;
 
@@ -85,7 +86,7 @@ describe('SessionAction', () => {
         );
       });
 
-      const call = vi.mocked(sessionService.createNewSession).mock.calls[0];
+      const call = vi.mocked(sessionService.createSession).mock.calls[0];
       expect(call[0]).toEqual(LobeSessionType.Agent);
       expect(call[1]).toMatchObject({ config: { displayMode: 'docs' } });
 
@@ -96,18 +97,18 @@ describe('SessionAction', () => {
     });
   });
 
-  describe('duplicateSession', () => {
+  describe('cloneSession', () => {
     it('should duplicate a session and switch to the new one', async () => {
       const { result } = renderHook(() => useSessionStore());
       const sessionId = 'session-id';
       const duplicatedSessionId = 'duplicated-session-id';
-      vi.mocked(sessionService.duplicateSession).mockResolvedValue(duplicatedSessionId);
+      vi.mocked(sessionService.cloneSession).mockResolvedValue(duplicatedSessionId);
 
       await act(async () => {
         await result.current.duplicateSession(sessionId);
       });
 
-      expect(sessionService.duplicateSession).toHaveBeenCalledWith(sessionId, undefined);
+      expect(sessionService.cloneSession).toHaveBeenCalledWith(sessionId, undefined);
     });
   });
 
@@ -120,7 +121,7 @@ describe('SessionAction', () => {
         await result.current.removeSession(sessionId);
       });
 
-      expect(sessionService.removeSession).toHaveBeenCalledWith(sessionId);
+      expect(sessionService.removeSessions).toHaveBeenCalledWith(sessionId);
       expect(mockRefresh).toHaveBeenCalled();
     });
   });
@@ -147,7 +148,7 @@ describe('SessionAction', () => {
         await result.current.pinSession(sessionId, true);
       });
 
-      expect(sessionService.updateSessionPinned).toHaveBeenCalledWith(sessionId, true);
+      expect(sessionService.updateSession).toHaveBeenCalledWith(sessionId, { pinned: true });
       expect(mockRefresh).toHaveBeenCalled();
     });
 
@@ -159,7 +160,7 @@ describe('SessionAction', () => {
         await result.current.pinSession(sessionId, false);
       });
 
-      expect(sessionService.updateSessionPinned).toHaveBeenCalledWith(sessionId, false);
+      expect(sessionService.updateSession).toHaveBeenCalledWith(sessionId, { pinned: false });
       expect(mockRefresh).toHaveBeenCalled();
     });
   });
@@ -174,7 +175,7 @@ describe('SessionAction', () => {
         await result.current.updateSessionGroupId(sessionId, groupId);
       });
 
-      expect(sessionService.updateSessionGroupId).toHaveBeenCalledWith(sessionId, groupId);
+      expect(sessionService.updateSession).toHaveBeenCalledWith(sessionId, { group: groupId });
       expect(mockRefresh).toHaveBeenCalled();
     });
   });

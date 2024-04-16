@@ -5,7 +5,7 @@ import compressImage from '@/utils/compressImage';
 
 import { API_ENDPOINTS } from '../_url';
 
-export class FileService {
+export class ClientService {
   private isImage(fileType: string) {
     const imageRegex = /^image\//;
     return imageRegex.test(fileType);

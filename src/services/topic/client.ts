@@ -1,7 +1,7 @@
 import { CreateTopicParams, QueryTopicParams, TopicModel } from '@/database/client/models/topic';
 import { ChatTopic } from '@/types/topic';
 
-export class TopicService {
+export class ClientService {
   async createTopic(params: CreateTopicParams): Promise<string> {
     const item = await TopicModel.create(params);
 
