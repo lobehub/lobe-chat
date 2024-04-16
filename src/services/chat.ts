@@ -68,16 +68,13 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
   trace?: TracePayload;
 }
 
-async function fetchOnClient(
-  provider: string,
-  payload: Partial<ChatStreamPayload>,
-  options?: FetchOptions,
-) {
+export function initializeWithClientStore(provider: string, payload: any) {
   // add auth payload
   const providerAuthPayload = getProviderAuthPayload(provider);
-  let providerOptions;
+  let providerOptions = {};
 
   switch (provider) {
+    default:
     case ModelProvider.OpenAI: {
       // if provider is openai, enable browser agent runtime and set baseurl
       providerOptions = {
@@ -89,6 +86,7 @@ async function fetchOnClient(
     case ModelProvider.Azure: {
       providerOptions = {
         apiVersion: providerAuthPayload?.azureApiVersion,
+        apikey: providerAuthPayload?.apiKey,
       };
       break;
     }
@@ -147,14 +145,21 @@ async function fetchOnClient(
     }
   }
 
-  const agentRuntime = await AgentRuntimeLib.initializeWithProviderOptions(provider, {
+  return AgentRuntimeLib.initializeWithProviderOptions(provider, {
     [provider]: {
       ...payload,
       ...providerAuthPayload,
       ...providerOptions,
     },
   });
+}
 
+export async function fetchOnClient(
+  provider: string,
+  payload: Partial<ChatStreamPayload>,
+  options?: FetchOptions,
+) {
+  const agentRuntime = await initializeWithClientStore(provider, payload);
   const data = payload as ChatStreamPayload;
   const tracePayload = options?.trace;
   return agentRuntime.chat(data, {
