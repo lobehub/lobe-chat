@@ -2,15 +2,34 @@ import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { JWTPayload } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import {
+  LobeAnthropicAI,
+  LobeAzureOpenAI,
+  LobeBedrockAI,
+  LobeGoogleAI,
+  LobeMistralAI,
+  LobeMoonshotAI,
+  LobeOllamaAI,
+  LobeOpenAI,
+  LobeOpenRouterAI,
+  LobePerplexityAI,
+  LobeTogetherAI,
+  LobeZhipuAI,
+  ModelProvider,
+} from '@/libs/agent-runtime';
+import AgentRuntimeLib from '@/libs/agent-runtime/AgentRuntime';
 import { useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
 import { useToolStore } from '@/store/tool';
 import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload } from '@/types/openai/chat';
+import { GlobalLLMConfig } from '@/types/settings';
 import { LobeTool } from '@/types/tool';
 
-import { chatService } from '../chat';
+import { chatService, initializeWithClientStore } from '../chat';
 
 // Mocking external dependencies
 vi.mock('i18next', () => ({
@@ -31,6 +50,7 @@ vi.mock('@/utils/fetch', async (importOriginal) => {
 // mock auth
 vi.mock('../_auth', () => ({
   createHeaderWithAuth: vi.fn().mockResolvedValue({}),
+  getProviderAuthPayload: vi.fn((_) => {}),
 }));
 
 describe('ChatService', () => {
@@ -646,6 +666,32 @@ Get data from users`,
         type: 404,
       });
       expect(onLoadingChange).toHaveBeenCalledWith(false); // 确认加载状态已经被设置为 false
+    });
+  });
+});
+
+/**
+ * Tests for AgentRuntime on client side, aim to test the
+ * initialization of AgentRuntime with different providers
+ */
+describe('AgentRuntimeOnClient', () => {
+  describe('initializeWithClientStore', () => {
+    describe('should initialize with options correctly', () => {
+      it('OpenAI provider: with apikey and endpoint', async () => {
+        const runtime = await initializeWithClientStore(ModelProvider.OpenAI, {
+          apiKey: 'user-openai-key',
+        });
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
+      });
+
+      /**
+       * Need more cases to cover different providers, but function
+       * `getProviderAuthPayload` which call by `initializeWithClientStore`
+       * would use GlobalStore to load config and the process is complicated,
+       * so I haven't covered all the provders, wellcome to contribute more
+       * cases.
+       */
     });
   });
 });
