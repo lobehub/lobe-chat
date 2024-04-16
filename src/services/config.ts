@@ -33,7 +33,7 @@ class ConfigService {
     return await sessionService.batchCreateSessions(sessions);
   };
   importMessages = async (messages: ChatMessage[]) => {
-    return messageService.batchCreate(messages);
+    return messageService.batchCreateMessages(messages);
   };
   importSettings = async (settings: GlobalSettings) => {
     useGlobalStore.getState().importAppSettings(settings);
