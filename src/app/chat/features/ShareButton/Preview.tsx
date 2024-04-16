@@ -1,4 +1,5 @@
-import { Avatar, ChatHeaderTitle, Logo, Markdown } from '@lobehub/ui';
+import { Avatar, ChatHeaderTitle, Markdown } from '@lobehub/ui';
+import { Logo } from '@/app/ui/es';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
