@@ -1,0 +1,16 @@
+import _taggedTemplateLiteral from "@babel/runtime/helpers/esm/taggedTemplateLiteral";
+var _templateObject, _templateObject2, _templateObject3;
+import { createStyles } from 'antd-style';
+export var useStyles = createStyles(function (_ref) {
+  var css = _ref.css,
+    token = _ref.token,
+    cx = _ref.cx,
+    prefixCls = _ref.prefixCls,
+    stylish = _ref.stylish;
+  var prefix = "".concat(prefixCls, "-highlighter");
+  return {
+    loading: cx(stylish.blur, css(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n        position: absolute;\n        z-index: 10;\n        inset-block-start: 0;\n        inset-inline-end: 0;\n\n        height: 34px;\n        padding-block: 0;\n        padding-inline: 8px;\n\n        font-family: ", ";\n        color: ", ";\n\n        border-radius: ", ";\n      "])), token.fontFamilyCode, token.colorTextTertiary, token.borderRadius)),
+    shiki: cx("".concat(prefix, "-shiki"), css(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n        margin: 0;\n        padding: 0;\n\n        .shiki {\n          overflow-x: auto;\n\n          margin: 0;\n          padding: 0;\n\n          text-wrap: wrap;\n          word-break: break-word;\n\n          background: none !important;\n\n          code {\n            display: block;\n\n            .line {\n              display: inline-block;\n\n              width: calc(100% + 32px);\n              margin-block: 0;\n              margin-inline: -16px;\n              padding-block: 0;\n              padding-inline: 16px;\n            }\n          }\n\n          &.has-focused {\n            .line:not(.focused) {\n              opacity: 0.5;\n            }\n          }\n\n          .highlighted {\n            background: ", ";\n\n            &.warning {\n              background: ", ";\n            }\n\n            &.error {\n              background: ", ";\n            }\n          }\n\n          .highlighted-word {\n            padding-block: 0.1em;\n            padding-inline: 0.2em;\n\n            background: ", ";\n            border: 1px solid ", ";\n            border-radius: ", "px;\n          }\n\n          .diff {\n            &.remove {\n              background: ", ";\n\n              &::before {\n                content: '-';\n\n                position: absolute;\n                inset-inline-start: 4px;\n\n                display: inline-block;\n\n                color: ", ";\n              }\n            }\n\n            &.add {\n              background: ", ";\n\n              &::before {\n                content: '+';\n\n                position: absolute;\n                inset-inline-start: 4px;\n\n                display: inline-block;\n\n                color: ", ";\n              }\n            }\n          }\n        }\n      "])), token.colorFillTertiary, token.colorWarningBg, token.colorErrorBg, token.colorFillTertiary, token.colorBorderSecondary, token.borderRadius, token.colorErrorBg, token.colorErrorText, token.colorSuccessBg, token.colorSuccessText)),
+    unshiki: css(_templateObject3 || (_templateObject3 = _taggedTemplateLiteral(["\n      color: ", ";\n    "])), token.colorTextDescription)
+  };
+});

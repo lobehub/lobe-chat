@@ -1,0 +1,34 @@
+import { type TextAreaRef } from 'antd/es/input/TextArea';
+import { type CSSProperties, type FocusEventHandler, type KeyboardEventHandler, type MouseEventHandler } from 'react';
+import { SyntaxHighlighterProps } from "../Highlighter/SyntaxHighlighter";
+export interface CodeEditorProps {
+    autoFocus?: boolean;
+    className?: string;
+    disabled?: boolean;
+    form?: string;
+    ignoreTabKey?: boolean;
+    insertSpaces?: boolean;
+    language: SyntaxHighlighterProps['language'];
+    maxLength?: number;
+    minLength?: number;
+    name?: string;
+    onBlur?: FocusEventHandler<HTMLTextAreaElement>;
+    onClick?: MouseEventHandler<HTMLTextAreaElement>;
+    onFocus?: FocusEventHandler<HTMLTextAreaElement>;
+    onKeyDown?: KeyboardEventHandler<HTMLTextAreaElement>;
+    onKeyUp?: KeyboardEventHandler<HTMLTextAreaElement>;
+    onValueChange: (value: string) => void;
+    placeholder?: string;
+    preClassName?: string;
+    readOnly?: boolean;
+    required?: boolean;
+    resize?: boolean;
+    style?: CSSProperties;
+    tabSize?: number;
+    textareaClassName?: string;
+    textareaId?: string;
+    type?: 'ghost' | 'block' | 'pure';
+    value: string;
+}
+declare const CodeEditor: import("react").ForwardRefExoticComponent<CodeEditorProps & import("react").RefAttributes<TextAreaRef>>;
+export default CodeEditor;
