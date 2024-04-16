@@ -322,6 +322,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       }> = {};
 
   switch (provider) {
+    default:
     case ModelProvider.OpenAI: {
       const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
       const openaiApiKey = payload?.apiKey || OPENAI_API_KEY;
@@ -456,15 +457,12 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       };
       break;
     }
-    default: {
-      throw new Error(`Provider ${provider} not supported`);
-    }
   }
   return options;
 };
 
-export const initializeWithUserPayload = async (provider: string, payload: JWTPayload) => {
-  return await AgentRuntimeLib.initializeWithProviderOptions(provider, {
+export const initializeWithUserPayload = (provider: string, payload: JWTPayload) => {
+  return AgentRuntimeLib.initializeWithProviderOptions(provider, {
     [provider]: getLlmOptionsFromPayload(provider, payload),
   });
 };

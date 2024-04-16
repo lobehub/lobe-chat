@@ -3,9 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
 import { LobeRuntimeAI } from '@/libs/agent-runtime';
+import AgentRuntime from '@/libs/agent-runtime/AgentRuntime';
 import { ChatErrorType } from '@/types/fetch';
 
-import AgentRuntime from '../agentRuntime';
 import { getJWTPayload } from '../auth/utils';
 import { POST } from './route';
 
@@ -46,8 +46,9 @@ describe('POST handler', () => {
 
       const mockRuntime: LobeRuntimeAI = { baseURL: 'abc', chat: vi.fn() };
 
+      // migrate to new AgentRuntime init api
       const spy = vi
-        .spyOn(AgentRuntime, 'initializeWithUserPayload')
+        .spyOn(AgentRuntime, 'initializeWithProviderOptions')
         .mockResolvedValue(new AgentRuntime(mockRuntime));
 
       // 调用 POST 函数

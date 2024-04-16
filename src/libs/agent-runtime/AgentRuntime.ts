@@ -142,6 +142,7 @@ class AgentRuntime {
     let runtimeModel: LobeRuntimeAI;
 
     switch (provider) {
+      default:
       case ModelProvider.OpenAI: {
         runtimeModel = new LobeOpenAI(params.openai ?? {});
         break;
@@ -214,10 +215,6 @@ class AgentRuntime {
       case ModelProvider.ZeroOne: {
         runtimeModel = new LobeZeroOneAI(params.zeroone ?? {});
         break;
-      }
-
-      default: {
-        throw new Error(`Provider ${provider} not supported`);
       }
     }
 
