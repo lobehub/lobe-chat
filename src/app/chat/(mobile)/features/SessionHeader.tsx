@@ -1,4 +1,5 @@
-import { ActionIcon, Avatar, Logo, MobileNavBar } from '@lobehub/ui';
+import { ActionIcon, Avatar, MobileNavBar } from '@lobehub/ui';
+import { Logo } from '@/app/ui/es';
 import { createStyles } from 'antd-style';
 import { MessageSquarePlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';

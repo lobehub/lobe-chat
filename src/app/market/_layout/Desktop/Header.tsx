@@ -1,4 +1,5 @@
-import { ChatHeader, Logo } from '@lobehub/ui';
+import { ChatHeader } from '@lobehub/ui';
+import { Logo } from '@/app/ui/es';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';

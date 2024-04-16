@@ -1,6 +1,6 @@
 'use client';
 
-import { Logo } from '@lobehub/ui';
+import { Logo } from '@/app/ui/es';
 import { PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
