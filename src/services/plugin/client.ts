@@ -10,7 +10,7 @@ export interface InstallPluginParams {
   type: 'plugin' | 'customPlugin';
 }
 
-export class PluginService {
+export class ClientService {
   installPlugin = async (plugin: InstallPluginParams) => {
     return PluginModel.create(plugin);
   };

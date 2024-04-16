@@ -3,9 +3,9 @@ import { Mock, describe, expect, it, vi } from 'vitest';
 import { CreateMessageParams, MessageModel } from '@/database/client/models/message';
 import { ChatMessage, ChatMessageError, ChatPluginPayload } from '@/types/message';
 
-import { MessageService } from './client';
+import { ClientService } from './client';
 
-const messageService = new MessageService();
+const messageService = new ClientService();
 
 // Mock the MessageModel
 vi.mock('@/database/client/models/message', () => {
@@ -27,7 +27,7 @@ vi.mock('@/database/client/models/message', () => {
   };
 });
 
-describe('MessageService', () => {
+describe('MessageClientService', () => {
   // Mock data
   const mockMessageId = 'mock-message-id';
   const mockMessage = {
@@ -57,7 +57,7 @@ describe('MessageService', () => {
       (MessageModel.create as Mock).mockResolvedValue({ id: mockMessageId });
 
       // Execute
-      const messageId = await messageService.create(createParams);
+      const messageId = await messageService.createMessage(createParams);
 
       // Assert
       expect(MessageModel.create).toHaveBeenCalledWith(createParams);
@@ -71,37 +71,11 @@ describe('MessageService', () => {
       (MessageModel.batchCreate as Mock).mockResolvedValue(mockMessages);
 
       // Execute
-      const result = await messageService.batchCreate(mockMessages);
+      const result = await messageService.batchCreateMessages(mockMessages);
 
       // Assert
       expect(MessageModel.batchCreate).toHaveBeenCalledWith(mockMessages);
       expect(result).toBe(mockMessages);
-    });
-  });
-
-  describe('hasMessages', () => {
-    it('should return true if there are messages', async () => {
-      // Setup
-      (MessageModel.count as Mock).mockResolvedValue(1);
-
-      // Execute
-      const hasMessages = await messageService.hasMessages();
-
-      // Assert
-      expect(MessageModel.count).toHaveBeenCalled();
-      expect(hasMessages).toBe(true);
-    });
-
-    it('should return false if there are no messages', async () => {
-      // Setup
-      (MessageModel.count as Mock).mockResolvedValue(0);
-
-      // Execute
-      const hasMessages = await messageService.hasMessages();
-
-      // Assert
-      expect(MessageModel.count).toHaveBeenCalled();
-      expect(hasMessages).toBe(false);
     });
   });
 
@@ -172,7 +146,7 @@ describe('MessageService', () => {
       (MessageModel.clearTable as Mock).mockResolvedValue(true);
 
       // Execute
-      const result = await messageService.clearAllMessage();
+      const result = await messageService.removeAllMessages();
 
       // Assert
       expect(MessageModel.clearTable).toHaveBeenCalled();

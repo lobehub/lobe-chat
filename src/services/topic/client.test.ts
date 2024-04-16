@@ -3,9 +3,9 @@ import { Mock, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CreateTopicParams, TopicModel } from '@/database/client/models/topic';
 import { ChatTopic } from '@/types/topic';
 
-import { TopicService } from './client';
+import { ClientService } from './client';
 
-const topicService = new TopicService();
+const topicService = new ClientService();
 // Mock the TopicModel
 vi.mock('@/database/client/models/topic', () => {
   return {
@@ -87,19 +87,30 @@ describe('TopicService', () => {
     });
   });
 
-  describe('updateFavorite', () => {
+  describe('updateTopic', () => {
     // Example for updateFavorite
     it('should toggle favorite status of a topic', async () => {
       // Setup
       const newState = true;
-      (TopicModel.toggleFavorite as Mock).mockResolvedValue({ ...mockTopic, favorite: newState });
 
       // Execute
-      const result = await topicService.updateFavorite(mockTopicId, newState);
+      await topicService.updateTopic(mockTopicId, { favorite: newState });
 
       // Assert
-      expect(TopicModel.toggleFavorite).toHaveBeenCalledWith(mockTopicId, newState);
-      expect(result).toEqual({ ...mockTopic, favorite: newState });
+      expect(TopicModel.update).toHaveBeenCalledWith(mockTopicId, { favorite: 1 });
+    });
+
+    it('should update the title of a topic', async () => {
+      // Setup
+      const newTitle = 'Updated Topic Title';
+      (TopicModel.update as Mock).mockResolvedValue({ ...mockTopic, title: newTitle });
+
+      // Execute
+      const result = await topicService.updateTopic(mockTopicId, { title: newTitle });
+
+      // Assert
+      expect(TopicModel.update).toHaveBeenCalledWith(mockTopicId, { title: newTitle });
+      expect(result).toEqual({ ...mockTopic, title: newTitle });
     });
   });
 
@@ -172,21 +183,6 @@ describe('TopicService', () => {
       // Assert
       expect(TopicModel.batchCreate).toHaveBeenCalledWith(mockTopics);
       expect(result).toBe(mockTopics);
-    });
-  });
-
-  describe('updateTitle', () => {
-    it('should update the title of a topic', async () => {
-      // Setup
-      const newTitle = 'Updated Topic Title';
-      (TopicModel.update as Mock).mockResolvedValue({ ...mockTopic, title: newTitle });
-
-      // Execute
-      const result = await topicService.updateTitle(mockTopicId, newTitle);
-
-      // Assert
-      expect(TopicModel.update).toHaveBeenCalledWith(mockTopicId, { title: newTitle });
-      expect(result).toEqual({ ...mockTopic, title: newTitle });
     });
   });
 

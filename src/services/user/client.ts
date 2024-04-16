@@ -9,7 +9,7 @@ export interface UserConfig {
   uuid: string;
 }
 
-export class UserService {
+export class ClientService {
   getUserConfig = async () => {
     const user = await UserModel.getUser();
     return user as unknown as UserConfig;
