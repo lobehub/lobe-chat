@@ -4,12 +4,9 @@ import { FilePreview } from '@/types/files';
 import compressImage from '@/utils/compressImage';
 
 import { API_ENDPOINTS } from '../_url';
+import { IFileService } from './type';
 
-export class FileService {
-  private isImage(fileType: string) {
-    const imageRegex = /^image\//;
-    return imageRegex.test(fileType);
-  }
+export class ClientService implements IFileService {
   async uploadFile(file: DB_File) {
     // 跳过图片上传测试
     const isTestData = file.size === 1;
@@ -19,26 +16,6 @@ export class FileService {
 
     // save to local storage
     // we may want to save to a remote server later
-    return FileModel.create(file);
-  }
-
-  async uploadImageFile(file: DB_File) {
-    // 加载图片
-    const url = file.url || URL.createObjectURL(new Blob([file.data]));
-
-    const img = new Image();
-    img.src = url;
-    await (() =>
-      new Promise((resolve) => {
-        img.addEventListener('load', resolve);
-      }))();
-
-    // 压缩图片
-    const base64String = compressImage({ img, type: file.fileType });
-    const binaryString = atob(base64String.split('base64,')[1]);
-    const uint8Array = Uint8Array.from(binaryString, (char) => char.charCodeAt(0));
-    file.data = uint8Array.buffer;
-
     return FileModel.create(file);
   }
 
@@ -55,14 +32,6 @@ export class FileService {
       saveMode: 'local',
       size: data.byteLength,
     });
-  }
-
-  async removeFile(id: string) {
-    return FileModel.delete(id);
-  }
-
-  async removeAllFiles() {
-    return FileModel.clear();
   }
 
   async getFile(id: string): Promise<FilePreview> {
@@ -82,5 +51,38 @@ export class FileService {
       saveMode: 'local',
       url,
     };
+  }
+
+  async removeFile(id: string) {
+    return FileModel.delete(id);
+  }
+
+  async removeAllFiles() {
+    return FileModel.clear();
+  }
+
+  private isImage(fileType: string) {
+    const imageRegex = /^image\//;
+    return imageRegex.test(fileType);
+  }
+
+  private async uploadImageFile(file: DB_File) {
+    // 加载图片
+    const url = file.url || URL.createObjectURL(new Blob([file.data]));
+
+    const img = new Image();
+    img.src = url;
+    await (() =>
+      new Promise((resolve) => {
+        img.addEventListener('load', resolve);
+      }))();
+
+    // 压缩图片
+    const base64String = compressImage({ img, type: file.fileType });
+    const binaryString = atob(base64String.split('base64,')[1]);
+    const uint8Array = Uint8Array.from(binaryString, (char) => char.charCodeAt(0));
+    file.data = uint8Array.buffer;
+
+    return FileModel.create(file);
   }
 }

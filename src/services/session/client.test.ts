@@ -5,9 +5,9 @@ import { SessionGroupModel } from '@/database/client/models/sessionGroup';
 import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/session';
 
-import { SessionService } from './client';
+import { ClientService } from './client';
 
-const sessionService = new SessionService();
+const sessionService = new ClientService();
 
 // Mock the SessionModel
 vi.mock('@/database/client/models/session', () => {
@@ -18,6 +18,7 @@ vi.mock('@/database/client/models/session', () => {
       delete: vi.fn(),
       clearTable: vi.fn(),
       update: vi.fn(),
+      count: vi.fn(),
       batchCreate: vi.fn(),
       isEmpty: vi.fn(),
       queryByKeyword: vi.fn(),
@@ -63,7 +64,7 @@ describe('SessionService', () => {
     vi.resetAllMocks();
   });
 
-  describe('createNewSession', () => {
+  describe('createSession', () => {
     it('should create a new session and return its id', async () => {
       // Setup
       const sessionType = LobeSessionType.Agent;
@@ -71,7 +72,7 @@ describe('SessionService', () => {
       (SessionModel.create as Mock).mockResolvedValue(mockSession);
 
       // Execute
-      const sessionId = await sessionService.createNewSession(sessionType, defaultValue);
+      const sessionId = await sessionService.createSession(sessionType, defaultValue);
 
       // Assert
       expect(SessionModel.create).toHaveBeenCalledWith(sessionType, defaultValue);
@@ -85,7 +86,7 @@ describe('SessionService', () => {
       (SessionModel.create as Mock).mockResolvedValue(null);
 
       // Execute & Assert
-      await expect(sessionService.createNewSession(sessionType, defaultValue)).rejects.toThrow(
+      await expect(sessionService.createSession(sessionType, defaultValue)).rejects.toThrow(
         'session create Error',
       );
     });
@@ -105,21 +106,19 @@ describe('SessionService', () => {
     });
   });
 
-  describe('getSessions', () => {
+  describe('getSessionsByType', () => {
     it('should retrieve sessions with their group ids', async () => {
       // Setup
       (SessionModel.query as Mock).mockResolvedValue(mockSessions);
 
       // Execute
-      const sessions = await sessionService.getSessions();
+      const sessions = await sessionService.getSessionsByType();
 
       // Assert
       expect(SessionModel.query).toHaveBeenCalled();
       expect(sessions).toBe(mockSessions);
     });
-  });
 
-  describe('getAllAgents', () => {
     it('should retrieve all agent sessions', async () => {
       // Setup
       // Assuming that SessionModel.query has been modified to accept filters
@@ -127,7 +126,7 @@ describe('SessionService', () => {
       (SessionModel.query as Mock).mockResolvedValue(agentSessions);
 
       // Execute
-      const result = await sessionService.getAllAgents();
+      const result = await sessionService.getSessionsByType('agent');
 
       // Assert
       // Assuming that SessionModel.query would be called with a filter for agents
@@ -164,33 +163,42 @@ describe('SessionService', () => {
     });
   });
 
-  describe('updateSessionGroupId', () => {
+  describe('updateSession', () => {
     it('should update the group of a session', async () => {
       // Setup
       const groupId = 'new-group';
       (SessionModel.update as Mock).mockResolvedValue({ ...mockSession, group: groupId });
 
       // Execute
-      const result = await sessionService.updateSessionGroupId(mockSessionId, groupId);
+      const result = await sessionService.updateSession(mockSessionId, { group: groupId });
 
       // Assert
       expect(SessionModel.update).toHaveBeenCalledWith(mockSessionId, { group: groupId });
       expect(result).toEqual({ ...mockSession, group: groupId });
     });
-  });
 
-  describe('updateSessionMeta', () => {
     it('should update the meta of a session', async () => {
       // Setup
       const newMeta = { description: 'Updated description' };
       (SessionModel.update as Mock).mockResolvedValue({ ...mockSession, meta: newMeta });
 
       // Execute
-      const result = await sessionService.updateSessionMeta(mockSessionId, newMeta);
+      const result = await sessionService.updateSession(mockSessionId, { meta: newMeta });
 
       // Assert
       expect(SessionModel.update).toHaveBeenCalledWith(mockSessionId, { meta: newMeta });
       expect(result).toEqual({ ...mockSession, meta: newMeta });
+    });
+
+    it('should update the pinned status of a session', async () => {
+      // Setup
+      const pinned = true;
+
+      // Execute
+      await sessionService.updateSession(mockSessionId, { pinned });
+
+      // Assert
+      expect(SessionModel.update).toHaveBeenCalledWith(mockSessionId, { pinned: 1 });
     });
   });
 
@@ -209,29 +217,29 @@ describe('SessionService', () => {
     });
   });
 
-  describe('hasSessions', () => {
+  describe('countSessions', () => {
     it('should return false if no sessions exist', async () => {
       // Setup
-      (SessionModel.isEmpty as Mock).mockResolvedValue(true);
+      (SessionModel.count as Mock).mockResolvedValue(0);
 
       // Execute
-      const result = await sessionService.hasSessions();
+      const result = await sessionService.countSessions();
 
       // Assert
-      expect(SessionModel.isEmpty).toHaveBeenCalled();
-      expect(result).toBe(false);
+      expect(SessionModel.count).toHaveBeenCalled();
+      expect(result).toBe(0);
     });
 
     it('should return true if sessions exist', async () => {
       // Setup
-      (SessionModel.isEmpty as Mock).mockResolvedValue(false);
+      (SessionModel.count as Mock).mockResolvedValue(1);
 
       // Execute
-      const result = await sessionService.hasSessions();
+      const result = await sessionService.countSessions();
 
       // Assert
-      expect(SessionModel.isEmpty).toHaveBeenCalled();
-      expect(result).toBe(true);
+      expect(SessionModel.count).toHaveBeenCalled();
+      expect(result).toBe(1);
     });
   });
 
@@ -250,7 +258,7 @@ describe('SessionService', () => {
     });
   });
 
-  describe('duplicateSession', () => {
+  describe('cloneSession', () => {
     it('should duplicate a session and return its id', async () => {
       // Setup
       const newTitle = 'Duplicated Session';
@@ -260,7 +268,7 @@ describe('SessionService', () => {
       });
 
       // Execute
-      const duplicatedSessionId = await sessionService.duplicateSession(mockSessionId, newTitle);
+      const duplicatedSessionId = await sessionService.cloneSession(mockSessionId, newTitle);
 
       // Assert
       expect(SessionModel.duplicate).toHaveBeenCalledWith(mockSessionId, newTitle);
@@ -268,32 +276,17 @@ describe('SessionService', () => {
     });
   });
 
-  describe('getSessionsWithGroup', () => {
+  describe('getGroupedSessions', () => {
     it('should retrieve sessions with their group', async () => {
       // Setup
       (SessionModel.queryWithGroups as Mock).mockResolvedValue(mockSessions);
 
       // Execute
-      const sessionsWithGroup = await sessionService.getSessionsWithGroup();
+      const sessionsWithGroup = await sessionService.getGroupedSessions();
 
       // Assert
       expect(SessionModel.queryWithGroups).toHaveBeenCalled();
       expect(sessionsWithGroup).toBe(mockSessions);
-    });
-  });
-
-  describe('updateSessionPinned', () => {
-    it('should update the pinned status of a session', async () => {
-      // Setup
-      const pinned = true;
-      (SessionModel.updatePinned as Mock).mockResolvedValue({ ...mockSession, pinned });
-
-      // Execute
-      const result = await sessionService.updateSessionPinned(mockSessionId, pinned);
-
-      // Assert
-      expect(SessionModel.updatePinned).toHaveBeenCalledWith(mockSessionId, pinned);
-      expect(result).toEqual({ ...mockSession, pinned });
     });
   });
 
@@ -358,7 +351,7 @@ describe('SessionService', () => {
       (SessionGroupModel.clear as Mock).mockResolvedValue(true);
 
       // Execute
-      const result = await sessionService.clearSessionGroups();
+      const result = await sessionService.removeSessionGroups();
 
       // Assert
       expect(SessionGroupModel.clear).toHaveBeenCalled();

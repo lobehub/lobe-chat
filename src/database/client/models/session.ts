@@ -171,6 +171,10 @@ class _SessionModel extends BaseModel {
     return (await this.table.count()) === 0;
   }
 
+  async count() {
+    return this.table.count();
+  }
+
   // **************** Create *************** //
 
   async create(type: 'agent' | 'group', defaultValue: Partial<LobeAgentSession>, id = uuid()) {
@@ -236,10 +240,6 @@ class _SessionModel extends BaseModel {
 
   async update(id: string, data: Partial<DB_Session>) {
     return super._updateWithSync(id, data);
-  }
-
-  async updatePinned(id: string, pinned: boolean) {
-    return this.update(id, { pinned: pinned ? 1 : 0 });
   }
 
   async updateConfig(id: string, data: DeepPartial<LobeAgentConfig>) {

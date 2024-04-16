@@ -111,12 +111,10 @@ describe('SessionModel', () => {
 
       expect(updatedSession).toHaveProperty('group', 'newGroup');
     });
-  });
 
-  describe('updatePinned', () => {
     it('should update pinned status of a session', async () => {
       const createdSession = await SessionModel.create('agent', sessionData);
-      await SessionModel.updatePinned(createdSession.id, true);
+      await SessionModel.update(createdSession.id, { pinned: 1 });
       const updatedSession = await SessionModel.findById(createdSession.id);
       expect(updatedSession).toHaveProperty('pinned', 1);
     });
