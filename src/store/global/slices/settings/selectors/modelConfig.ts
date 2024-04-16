@@ -6,6 +6,9 @@ import { currentLLMSettings, getProviderConfigById } from './settings';
 const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) =>
   getProviderConfigById(provider)(s)?.enabled || false;
 
+const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s: GlobalStore) =>
+  getProviderConfigById(provider)(s)?.fetchOnClient || false;
+
 const getCustomModelCard =
   ({ id, provider }: { id?: string; provider?: string }) =>
   (s: GlobalStore) => {
@@ -46,6 +49,7 @@ export const modelConfigSelectors = {
   isAutoFetchModelsEnabled,
   isAzureEnabled,
   isProviderEnabled,
+  isProviderFetchOnClient,
   ollamaConfig,
 
   openAIConfig,

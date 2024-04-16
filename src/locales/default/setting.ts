@@ -76,6 +76,10 @@ export default {
         },
       },
     },
+    fetchOnClient: {
+      desc: '从浏览器直接发起会话请求',
+      title: '客户端请求',
+    },
     fetcher: {
       fetch: '获取模型列表',
       fetching: '正在获取模型列表...',

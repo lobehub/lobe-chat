@@ -11,6 +11,7 @@ import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import {
   commonSelectors,
+  modelConfigSelectors,
   modelProviderSelectors,
   preferenceSelectors,
 } from '@/store/global/selectors';
@@ -25,7 +26,7 @@ import { UserMessageContentPart } from '@/types/openai/chat';
 import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
-import { createHeaderPayload, createHeaderWithAuth, getProviderAuthPayload } from './_auth';
+import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
@@ -258,16 +259,16 @@ class ChatService {
     /**
      * Use browser agent runtime
      */
-    const headerPayload = createHeaderPayload({ provider });
-    // If user specify the endpoint, use the browser agent runtime directly
+    const enableFetchOnClient = modelConfigSelectors.isProviderFetchOnClient(provider)(
+      useGlobalStore.getState(),
+    );
     /**
      * Notes:
      * 1. Broswer agent runtime will skip auth check if a key and endpoint provided by
      *    user which will cause abuse of plugins services
-     * 2. This feature will need to control by user llm settings after, but set it enable
-     *    when user use it's own key and endpoint temporary
+     * 2. This feature will disabled by default
      */
-    if (headerPayload['endpoint'] && headerPayload['apiKey']) {
+    if (enableFetchOnClient) {
       try {
         return await fetchOnClient(provider, payload, options);
       } catch (e) {

@@ -55,18 +55,13 @@ interface AuthParams {
   provider?: string;
 }
 
-export const createHeaderPayload = (params?: AuthParams) => {
+// eslint-disable-next-line no-undef
+export const createHeaderWithAuth = async (params?: AuthParams): Promise<HeadersInit> => {
   let payload = params?.payload || {};
 
   if (params?.provider) {
     payload = { ...payload, ...getProviderAuthPayload(params?.provider) };
   }
-  return payload;
-};
-
-// eslint-disable-next-line no-undef
-export const createHeaderWithAuth = async (params?: AuthParams): Promise<HeadersInit> => {
-  const payload = createHeaderPayload(params);
 
   const token = await createAuthTokenWithPayload(payload);
 
