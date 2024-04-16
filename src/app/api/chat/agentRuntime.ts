@@ -28,7 +28,7 @@ import {
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
-import { AgentRuntime as AgentRuntimeLib } from '@/libs/agent-runtime/';
+import AgentRuntimeLib from '@/libs/agent-runtime/AgentRuntime';
 import { TraceClient } from '@/libs/traces';
 
 import apiKeyManager from './apiKeyManager';

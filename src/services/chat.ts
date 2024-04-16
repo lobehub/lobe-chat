@@ -6,7 +6,7 @@ import { createErrorResponse } from '@/app/api/errorResponse';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
-import { AgentRuntime as AgentRuntimeLib } from '@/libs/agent-runtime/';
+import AgentRuntimeLib from '@/libs/agent-runtime/AgentRuntime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import {
