@@ -135,25 +135,27 @@ describe('SessionService', () => {
     });
   });
 
-  describe('removeSessions', () => {
+  describe('removeSession', () => {
     it('should remove a session by its id', async () => {
       // Setup
       (SessionModel.delete as Mock).mockResolvedValue(true);
 
       // Execute
-      const result = await sessionService.removeSessions(mockSessionId);
+      const result = await sessionService.removeSession(mockSessionId);
 
       // Assert
       expect(SessionModel.delete).toHaveBeenCalledWith(mockSessionId);
       expect(result).toBe(true);
     });
+  });
 
+  describe('removeAllSessions', () => {
     it('should clear all sessions from the table', async () => {
       // Setup
       (SessionModel.clearTable as Mock).mockResolvedValue(true);
 
       // Execute
-      const result = await sessionService.removeSessions();
+      const result = await sessionService.removeAllSessions();
 
       // Assert
       expect(SessionModel.clearTable).toHaveBeenCalled();

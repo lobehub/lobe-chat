@@ -11,7 +11,7 @@ import { LobeSessionType } from '@/types/session';
 // Mock sessionService 和其他依赖项
 vi.mock('@/services/session', () => ({
   sessionService: {
-    removeSessions: vi.fn(),
+    removeAllSessions: vi.fn(),
     createSession: vi.fn(),
     cloneSession: vi.fn(),
     updateSessionGroup: vi.fn(),
@@ -48,8 +48,8 @@ describe('SessionAction', () => {
         await result.current.clearSessions();
       });
 
-      expect(sessionService.removeSessions).toHaveBeenCalled();
-      expect(mockRefresh).toHaveBeenCalled(); // 假设 refreshSessions 调用了 getAllSessions
+      expect(sessionService.removeAllSessions).toHaveBeenCalled();
+      expect(mockRefresh).toHaveBeenCalled(); // 假设 refreshSessions 调用了 getSessions
     });
   });
 
@@ -121,7 +121,7 @@ describe('SessionAction', () => {
         await result.current.removeSession(sessionId);
       });
 
-      expect(sessionService.removeSessions).toHaveBeenCalledWith(sessionId);
+      expect(sessionService.removeSession).toHaveBeenCalledWith(sessionId);
       expect(mockRefresh).toHaveBeenCalled();
     });
   });

@@ -24,7 +24,8 @@ export interface ISessionService {
   updateSession(id: string, data: Partial<Pick<LobeAgentSession, 'group' | 'meta'>>): Promise<any>;
   updateSessionConfig(id: string, config: DeepPartial<LobeAgentConfig>): Promise<any>;
 
-  removeSessions(id?: string): Promise<any>;
+  removeSession(id: string): Promise<any>;
+  removeAllSessions(): Promise<any>;
 
   // ************************************** //
   // ***********  SessionGroup  *********** //

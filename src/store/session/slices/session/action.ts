@@ -75,7 +75,7 @@ export const createSessionSlice: StateCreator<
   },
 
   clearSessions: async () => {
-    await sessionService.removeSessions();
+    await sessionService.removeAllSessions();
 
     get().refreshSessions();
   },
@@ -132,7 +132,7 @@ export const createSessionSlice: StateCreator<
   },
 
   removeSession: async (sessionId) => {
-    await sessionService.removeSessions(sessionId);
+    await sessionService.removeSession(sessionId);
     await get().refreshSessions();
 
     // If the active session deleted, switch to the inbox session

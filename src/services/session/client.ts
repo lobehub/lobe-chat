@@ -81,11 +81,11 @@ export class ClientService implements ISessionService {
     return SessionModel.updateConfig(activeId, config);
   }
 
-  async removeSessions(id?: string) {
-    if (typeof id === 'string') {
-      return SessionModel.delete(id);
-    }
+  async removeSession(id: string) {
+    return SessionModel.delete(id);
+  }
 
+  async removeAllSessions() {
     return SessionModel.clearTable();
   }
 
