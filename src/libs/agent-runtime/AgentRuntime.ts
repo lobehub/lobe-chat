@@ -144,7 +144,8 @@ class AgentRuntime {
     switch (provider) {
       default:
       case ModelProvider.OpenAI: {
-        runtimeModel = new LobeOpenAI(params.openai ?? {});
+        // Will use the openai as default provider
+        runtimeModel = new LobeOpenAI(params.openai ?? (params as any)[provider]);
         break;
       }
 

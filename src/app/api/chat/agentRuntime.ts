@@ -317,12 +317,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
         accessKeyId: string;
         accessKeySecret: string;
         apiVersion: string;
+        apikey: string;
         endpoint: string;
         region: string;
       }> = {};
 
   switch (provider) {
-    default:
+    default: // Use Openai options as default
     case ModelProvider.OpenAI: {
       const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
       const openaiApiKey = payload?.apiKey || OPENAI_API_KEY;
@@ -340,8 +341,8 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const endpoint = payload?.endpoint || AZURE_ENDPOINT;
       const apiVersion = payload?.azureApiVersion || AZURE_API_VERSION;
       options = {
-        apiKey,
         apiVersion,
+        apikey: apiKey,
         endpoint,
       };
       break;
@@ -458,6 +459,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       break;
     }
   }
+  console.log('provider:', provider, options);
   return options;
 };
 
