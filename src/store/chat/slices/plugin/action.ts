@@ -49,7 +49,7 @@ export const chatPlugin: StateCreator<
       topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
     };
 
-    await messageService.create(newMessage);
+    await messageService.createMessage(newMessage);
     await get().refreshMessages();
   },
 

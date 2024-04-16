@@ -1,7 +1,9 @@
-import { CreateTopicParams, QueryTopicParams, TopicModel } from '@/database/client/models/topic';
+import { TopicModel } from '@/database/client/models/topic';
 import { ChatTopic } from '@/types/topic';
 
-export class TopicService {
+import { CreateTopicParams, ITopicService, QueryTopicParams } from './type';
+
+export class ClientService implements ITopicService {
   async createTopic(params: CreateTopicParams): Promise<string> {
     const item = await TopicModel.create(params);
 
@@ -12,8 +14,38 @@ export class TopicService {
     return item.id;
   }
 
+  async batchCreateTopics(importTopics: ChatTopic[]) {
+    return TopicModel.batchCreate(importTopics as any);
+  }
+
+  async cloneTopic(id: string, newTitle?: string) {
+    return TopicModel.duplicateTopic(id, newTitle);
+  }
+
   async getTopics(params: QueryTopicParams): Promise<ChatTopic[]> {
     return TopicModel.query(params);
+  }
+
+  async searchTopics(keyword: string, sessionId?: string) {
+    return TopicModel.queryByKeyword(keyword, sessionId);
+  }
+
+  async getAllTopics() {
+    return TopicModel.queryAll();
+  }
+
+  async updateTopicFavorite(id: string, favorite?: boolean) {
+    return this.updateTopic(id, { favorite });
+  }
+
+  async updateTopicTitle(id: string, text: string) {
+    return this.updateTopic(id, { title: text });
+  }
+
+  async updateTopic(id: string, data: Partial<ChatTopic>) {
+    const favorite = typeof data.favorite !== 'undefined' ? (data.favorite ? 1 : 0) : undefined;
+
+    return TopicModel.update(id, { ...data, favorite });
   }
 
   async removeTopic(id: string) {
@@ -30,29 +62,5 @@ export class TopicService {
 
   async removeAllTopic() {
     return TopicModel.clearTable();
-  }
-
-  async updateFavorite(id: string, newState?: boolean) {
-    return TopicModel.toggleFavorite(id, newState);
-  }
-
-  async batchCreateTopics(importTopics: ChatTopic[]) {
-    return TopicModel.batchCreate(importTopics as any);
-  }
-
-  updateTitle(topicId: string, text: string) {
-    return TopicModel.update(topicId, { title: text });
-  }
-
-  async getAllTopics() {
-    return TopicModel.queryAll();
-  }
-
-  async searchTopics(keyword: string, sessionId?: string) {
-    return TopicModel.queryByKeyword(keyword, sessionId);
-  }
-
-  async duplicateTopic(id: string, newTitle?: string) {
-    return TopicModel.duplicateTopic(id, newTitle);
   }
 }

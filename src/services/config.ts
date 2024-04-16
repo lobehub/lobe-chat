@@ -33,7 +33,7 @@ class ConfigService {
     return await sessionService.batchCreateSessions(sessions);
   };
   importMessages = async (messages: ChatMessage[]) => {
-    return messageService.batchCreate(messages);
+    return messageService.batchCreateMessages(messages);
   };
   importSettings = async (settings: GlobalSettings) => {
     useGlobalStore.getState().importAppSettings(settings);
@@ -105,7 +105,7 @@ class ConfigService {
    * export all agents
    */
   exportAgents = async () => {
-    const agents = await sessionService.getAllAgents();
+    const agents = await sessionService.getSessionsByType('agent');
     const sessionGroups = await sessionService.getSessionGroups();
 
     const config = createConfigFile('agents', { sessionGroups, sessions: agents });
@@ -117,7 +117,7 @@ class ConfigService {
    * export all sessions
    */
   exportSessions = async () => {
-    const sessions = await sessionService.getSessions();
+    const sessions = await sessionService.getSessionsByType();
     const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();
@@ -188,7 +188,7 @@ class ConfigService {
    * export all data
    */
   exportAll = async () => {
-    const sessions = await sessionService.getSessions();
+    const sessions = await sessionService.getSessionsByType();
     const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();

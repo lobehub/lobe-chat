@@ -16,11 +16,10 @@ const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypeP
 // Mock messageService
 vi.mock('@/services/message', () => ({
   messageService: {
-    internalUpdateMessageContent: vi.fn(),
     updateMessage: vi.fn(),
     updateMessageError: vi.fn(),
     updateMessagePluginState: vi.fn(),
-    create: vi.fn(),
+    createMessage: vi.fn(),
   },
 }));
 
@@ -428,7 +427,7 @@ describe('ChatPluginAction', () => {
   describe('createAssistantMessageByPlugin', () => {
     it('should create an assistant message and refresh messages', async () => {
       // 模拟 messageService.create 方法的实现
-      (messageService.create as Mock).mockResolvedValue({});
+      (messageService.createMessage as Mock).mockResolvedValue({});
 
       // 设置初始状态并模拟 refreshMessages 方法
       const initialState = {
@@ -448,7 +447,7 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 messageService.create 是否被带有正确参数调用
-      expect(messageService.create).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content,
         parentId,
         role: 'assistant',
@@ -463,7 +462,7 @@ describe('ChatPluginAction', () => {
     it('should handle errors when message creation fails', async () => {
       // 模拟 messageService.create 方法，使其抛出错误
       const errorMessage = 'Failed to create message';
-      (messageService.create as Mock).mockRejectedValue(new Error(errorMessage));
+      (messageService.createMessage as Mock).mockRejectedValue(new Error(errorMessage));
 
       // 设置初始状态并模拟 refreshMessages 方法
       const initialState = {
@@ -485,7 +484,7 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 messageService.create 是否被带有正确参数调用
-      expect(messageService.create).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content,
         parentId,
         role: 'assistant',

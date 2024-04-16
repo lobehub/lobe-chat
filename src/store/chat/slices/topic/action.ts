@@ -93,7 +93,7 @@ export const chatTopic: StateCreator<
 
     const newTitle = t('duplicateTitle', { ns: 'chat', title: topic?.title });
 
-    const newTopicId = await topicService.duplicateTopic(id, newTitle);
+    const newTopicId = await topicService.cloneTopic(id, newTitle);
     await refreshTopic();
 
     switchTopic(newTopicId);
@@ -114,7 +114,7 @@ export const chatTopic: StateCreator<
         updateTopicTitleInSummary(topicId, topic.title);
       },
       onFinish: async (text) => {
-        topicService.updateTitle(topicId, text);
+        topicService.updateTopic(topicId, { title: text });
       },
       onLoadingChange: (loading) => {
         updateTopicLoading(loading ? topicId : undefined);
@@ -128,12 +128,13 @@ export const chatTopic: StateCreator<
     });
     await refreshTopic();
   },
-  favoriteTopic: async (id, favState) => {
-    await topicService.updateFavorite(id, favState);
+  favoriteTopic: async (id, favorite) => {
+    await topicService.updateTopic(id, { favorite });
     await get().refreshTopic();
   },
+
   updateTopicTitle: async (id, title) => {
-    await topicService.updateTitle(id, title);
+    await topicService.updateTopic(id, { title });
     await get().refreshTopic();
   },
 
@@ -143,6 +144,7 @@ export const chatTopic: StateCreator<
 
     await summaryTopicTitle(id, messages);
   },
+
   // query
   useFetchTopics: (sessionId) =>
     useClientDataSWR<ChatTopic[]>(
