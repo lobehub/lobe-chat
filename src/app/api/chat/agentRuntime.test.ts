@@ -12,6 +12,7 @@ import {
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
+  LobeGroq,
   LobeMistralAI,
   LobeMoonshotAI,
   LobeOllamaAI,
@@ -20,6 +21,7 @@ import {
   LobePerplexityAI,
   LobeRuntimeAI,
   LobeTogetherAI,
+  LobeZeroOneAI,
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
@@ -58,7 +60,6 @@ vi.mock('@/config/server', () => ({
  * with user payload. Test case below will test both the methods
  */
 describe('initializeWithUserPayload method', () => {
-  // todo: 补充正常入参的测试用例
   describe('should initialize with options correctly', () => {
     it('OpenAI provider: with apikey and endpoint', async () => {
       const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
@@ -153,6 +154,20 @@ describe('initializeWithUserPayload method', () => {
       const runtime = await initializeWithUserPayload(ModelProvider.TogetherAI, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntimeLib);
       expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
+    });
+
+    it('ZeroOne AI provider: with apikey', async () => {
+      const jwtPayload = { apiKey: 'user-zeroone-key' };
+      const runtime = await initializeWithUserPayload(ModelProvider.ZeroOne, jwtPayload);
+      expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeZeroOneAI);
+    });
+
+    it('Groq AI provider: with apikey', async () => {
+      const jwtPayload = { apiKey: 'user-zeroone-key' };
+      const runtime = await initializeWithUserPayload(ModelProvider.Groq, jwtPayload);
+      expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeGroq);
     });
 
     it('Unknown Provider: with apikey and endpoint, should initialize to OpenAi', async () => {

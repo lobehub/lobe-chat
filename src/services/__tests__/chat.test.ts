@@ -9,6 +9,7 @@ import {
   LobeAzureOpenAI,
   LobeBedrockAI,
   LobeGoogleAI,
+  LobeGroq,
   LobeMistralAI,
   LobeMoonshotAI,
   LobeOllamaAI,
@@ -16,6 +17,7 @@ import {
   LobeOpenRouterAI,
   LobePerplexityAI,
   LobeTogetherAI,
+  LobeZeroOneAI,
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
@@ -852,6 +854,36 @@ describe('AgentRuntimeOnClient', () => {
         const runtime = await initializeWithClientStore(ModelProvider.TogetherAI, {});
         expect(runtime).toBeInstanceOf(AgentRuntimeLib);
         expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
+      });
+
+      it('ZeroOneAI provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              zeroone: {
+                apiKey: 'user-zeroone-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.ZeroOne, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeZeroOneAI);
+      });
+
+      it('Groq provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              groq: {
+                apiKey: 'user-groq-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Groq, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeGroq);
       });
 
       /**
