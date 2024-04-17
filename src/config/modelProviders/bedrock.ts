@@ -11,6 +11,15 @@ const Bedrock: ModelProviderCard = {
     },
     {
       description:
+        'Claude 3 Opus 是 Anthropic 最强大的人工智能模型，在处理高度复杂的任务方面具备顶尖性能。该模型能够以非凡的流畅性和类似人类的理解能力引导开放式的提示和未可见的场景。Claude 3 Opus 向我们展示生成式人工智能的美好前景。 Claude 3 Opus 可以处理图像和返回文本输出，并且提供 200K 上下文窗口。',
+      displayName: 'Claude 3 Opus',
+      enabled: true,
+      id: 'anthropic.claude-3-opus-20240229-v1:0',
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
         'Anthropic 推出的 Claude 3 Sonnet 模型在智能和速度之间取得理想的平衡，尤其是在处理企业工作负载方面。该模型提供最大的效用，同时价格低于竞争产品，并且其经过精心设计，是大规模部署人工智能的可信赖、高耐久性骨干模型。 Claude 3 Sonnet 可以处理图像和返回文本输出，并且提供 200K 上下文窗口。',
       displayName: 'Claude 3 Sonnet',
       enabled: true,
