@@ -20,13 +20,6 @@ const Moonshot: ModelProviderCard = {
       id: 'moonshot-v1-128k',
       tokens: 128_000,
     },
-    {
-      displayName: 'Moonshot Kimi Reverse',
-      files: true,
-      id: 'moonshot-v1',
-      tokens: 200_000,
-      vision: true,
-    },
   ],
   id: 'moonshot',
 };

@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://docs.anthropic.com/claude/docs/models-overview
 const Anthropic: ModelProviderCard = {
   chatModels: [
     {

@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html
 const Bedrock: ModelProviderCard = {
   chatModels: [
     {
@@ -8,6 +9,15 @@ const Bedrock: ModelProviderCard = {
       displayName: 'Titan Text G1 - Express',
       id: 'amazon.titan-text-express-v1:0:8k',
       tokens: 8000,
+    },
+    {
+      description:
+        'Claude 3 Opus 是 Anthropic 最强大的人工智能模型，在处理高度复杂的任务方面具备顶尖性能。该模型能够以非凡的流畅性和类似人类的理解能力引导开放式的提示和未可见的场景。Claude 3 Opus 向我们展示生成式人工智能的美好前景。 Claude 3 Opus 可以处理图像和返回文本输出，并且提供 200K 上下文窗口。',
+      displayName: 'Claude 3 Opus',
+      enabled: true,
+      id: 'anthropic.claude-3-opus-20240229-v1:0',
+      tokens: 200_000,
+      vision: true,
     },
     {
       description:
