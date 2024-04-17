@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://console.groq.com/docs/models
 const Groq: ModelProviderCard = {
   chatModels: [
     {
