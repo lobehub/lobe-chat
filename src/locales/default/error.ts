@@ -98,6 +98,9 @@ export default {
     OllamaBizError: '请求 Ollama 服务出错，请根据以下信息排查或重试',
     OllamaServiceUnavailable: '未检测到 Ollama 服务，请检查是否正常启动',
 
+    MinimaxBizError: '请求 Minimax 服务出错，请根据以下信息排查或重试',
+    InvalidMinimaxAPIKey: 'Minimax API Key 不正确或为空，请检查 Mistral API Key 后重试',
+
     AgentRuntimeError: 'Lobe AI Runtime 执行出错，请根据以下信息排查或重试',
     /* eslint-enable */
   },
