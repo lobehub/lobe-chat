@@ -57,18 +57,9 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 const formatTokenNumber = (num: number): string => {
-  const tokenSuffixes = [
-    { symbol: "B", value: 1e9 },
-    { symbol: "M", value: 1e6 },
-    { symbol: "K", value: 1e3 },
-  ];
-
-  return num >= Number.MAX_SAFE_INTEGER
-    ? "∞"
-    : (() => {
-      const { value, symbol } = tokenSuffixes.find(s => num >= s.value) || { symbol: "", value: 1 };
-      return Math.floor(num / value) + symbol;
-    })();
+  if (num < 1000) return '1K';
+  const kiloToken = Math.floor(num / 1000);
+  return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`;
 }
 
 interface ModelInfoTagsProps extends ChatModelCard {
