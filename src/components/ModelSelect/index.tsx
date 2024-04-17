@@ -63,8 +63,12 @@ const formatTokenNumber = (num: number): string => {
     { symbol: "K", value: 1e3 },
   ];
 
-  const { value, symbol } = tokenSuffixes.find(s => num >= s.value) || { symbol: "", value: 1 };
-  return Math.floor(num / value) + symbol;
+  return num >= Number.MAX_SAFE_INTEGER
+    ? "∞"
+    : (() => {
+      const { value, symbol } = tokenSuffixes.find(s => num >= s.value) || { symbol: "", value: 1 };
+      return Math.floor(num / value) + symbol;
+    })();
 }
 
 interface ModelInfoTagsProps extends ChatModelCard {
