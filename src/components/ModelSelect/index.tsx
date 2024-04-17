@@ -61,6 +61,18 @@ interface ModelInfoTagsProps extends ChatModelCard {
   directionReverse?: boolean;
   placement?: 'top' | 'right';
 }
+
+function formatTokenNumber(num: number): string {
+  const tokenSuffixes = [
+    { symbol: "B", value: 1e9 },
+    { symbol: "M", value: 1e6 },
+    { symbol: "K", value: 1e3 },
+  ];
+
+  const { value, symbol } = tokenSuffixes.find(s => num >= s.value) || { symbol: "", value: 1 };
+  return (num / value).toFixed(2) + symbol;
+}
+
 export const ModelInfoTags = memo<ModelInfoTagsProps>(
   ({ directionReverse, placement = 'right', ...model }) => {
     const { t } = useTranslation('components');
@@ -101,7 +113,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
               tokens: numeral(model.tokens).format('0,0'),
             })}
           >
-            <Center className={styles.token}>{Math.floor(model.tokens / 1000)}K</Center>
+            <Center className={styles.token}>{formatTokenNumber(model.tokens)}</Center>
           </Tooltip>
         )}
         {/*{model.isCustom && (*/}
@@ -148,3 +160,5 @@ export const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider }) =
     </Flexbox>
   );
 });
+
+
