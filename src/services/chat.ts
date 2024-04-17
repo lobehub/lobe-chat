@@ -261,13 +261,6 @@ class ChatService {
       { ...res, model },
     );
 
-    const traceHeader = createTraceHeader({ ...options?.trace });
-
-    const headers = await createHeaderWithAuth({
-      headers: { 'Content-Type': 'application/json', ...traceHeader },
-      provider,
-    });
-
     /**
      * Use browser agent runtime
      */
@@ -297,6 +290,13 @@ class ChatService {
         return createErrorResponse(errorType, { error, ...res, provider });
       }
     }
+
+    const traceHeader = createTraceHeader({ ...options?.trace });
+
+    const headers = await createHeaderWithAuth({
+      headers: { 'Content-Type': 'application/json', ...traceHeader },
+      provider,
+    });
 
     return fetch(API_ENDPOINTS.chat(provider), {
       body: JSON.stringify(payload),
