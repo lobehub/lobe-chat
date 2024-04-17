@@ -459,7 +459,6 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       break;
     }
   }
-  console.log('provider:', provider, options);
   return options;
 };
 

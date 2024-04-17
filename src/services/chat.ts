@@ -71,21 +71,24 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
 export function initializeWithClientStore(provider: string, payload: any) {
   // add auth payload
   const providerAuthPayload = getProviderAuthPayload(provider);
+  const commonOptions = {
+    // Some provider base openai sdk, so enable it run on browser
+    dangerouslyAllowBrowser: true,
+  };
   let providerOptions = {};
 
   switch (provider) {
     default:
     case ModelProvider.OpenAI: {
-      // if provider is openai, enable browser agent runtime and set baseurl
       providerOptions = {
         baseURL: providerAuthPayload?.endpoint,
-        dangerouslyAllowBrowser: true,
       };
       break;
     }
     case ModelProvider.Azure: {
       providerOptions = {
         apiVersion: providerAuthPayload?.azureApiVersion,
+        // That's a wired properity, but just remapped it
         apikey: providerAuthPayload?.apiKey,
       };
       break;
@@ -100,7 +103,6 @@ export function initializeWithClientStore(provider: string, payload: any) {
       break;
     }
     case ModelProvider.Moonshot: {
-      // no moonshot env for client side
       break;
     }
     case ModelProvider.Bedrock: {
@@ -145,11 +147,16 @@ export function initializeWithClientStore(provider: string, payload: any) {
     }
   }
 
+  /**
+   * Configuration override order:
+   * payload -> providerOptions -> providerAuthPayload -> commonOptions
+   */
   return AgentRuntimeLib.initializeWithProviderOptions(provider, {
     [provider]: {
-      ...payload,
+      ...commonOptions,
       ...providerAuthPayload,
       ...providerOptions,
+      ...payload,
     },
   });
 }
