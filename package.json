@@ -94,6 +94,7 @@
     "@lobehub/tts": "latest",
     "@lobehub/ui": "^1.137.7",
     "@next/third-parties": "^14.1.4",
+    "@sentry/nextjs": "^7.105.0",
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
     "ahooks": "^3.7.11",
