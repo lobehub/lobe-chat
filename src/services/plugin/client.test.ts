@@ -6,9 +6,9 @@ import { DB_Plugin } from '@/database/client/schemas/plugin';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-import { InstallPluginParams, PluginService } from './client';
+import { ClientService, InstallPluginParams } from './client';
 
-const pluginService = new PluginService();
+const pluginService = new ClientService();
 
 // Mocking modules and functions
 

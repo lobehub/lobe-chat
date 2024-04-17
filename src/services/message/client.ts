@@ -2,42 +2,29 @@ import { MessageModel } from '@/database/client/models/message';
 import { DB_Message } from '@/database/client/schemas/message';
 import { ChatMessage, ChatMessageError, ChatPluginPayload } from '@/types/message';
 
-export interface CreateMessageParams
-  extends Partial<Omit<ChatMessage, 'content' | 'role'>>,
-    Pick<ChatMessage, 'content' | 'role'> {
-  fromModel?: string;
-  fromProvider?: string;
-  sessionId: string;
-  traceId?: string;
-}
+import { CreateMessageParams, IMessageService } from './type';
 
-export class MessageService {
-  async create(data: CreateMessageParams) {
+export class ClientService implements IMessageService {
+  async createMessage(data: CreateMessageParams) {
     const { id } = await MessageModel.create(data);
 
     return id;
   }
 
-  async batchCreate(messages: ChatMessage[]) {
+  async batchCreateMessages(messages: ChatMessage[]) {
     return MessageModel.batchCreate(messages);
-  }
-
-  async hasMessages() {
-    const number = await MessageModel.count();
-    return number > 0;
-  }
-
-  async messageCountToCheckTrace() {
-    const number = await MessageModel.count();
-    return number >= 4;
   }
 
   async getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]> {
     return MessageModel.query({ sessionId, topicId });
   }
 
-  async removeMessage(id: string) {
-    return MessageModel.delete(id);
+  async getAllMessages() {
+    return MessageModel.queryAll();
+  }
+
+  async countMessages() {
+    return MessageModel.count();
   }
 
   async getAllMessagesInSession(sessionId: string) {
@@ -46,18 +33,6 @@ export class MessageService {
 
   async updateMessageError(id: string, error: ChatMessageError) {
     return MessageModel.update(id, { error });
-  }
-
-  async removeMessages(assistantId: string, topicId?: string) {
-    return MessageModel.batchDelete(assistantId, topicId);
-  }
-
-  async clearAllMessage() {
-    return MessageModel.clearTable();
-  }
-
-  async bindMessagesToTopic(topicId: string, messageIds: string[]) {
-    return MessageModel.batchUpdate(messageIds, { topicId });
   }
 
   async updateMessage(id: string, message: Partial<DB_Message>) {
@@ -72,7 +47,19 @@ export class MessageService {
     return MessageModel.updatePluginState(id, key, value);
   }
 
-  async getAllMessages() {
-    return MessageModel.queryAll();
+  async bindMessagesToTopic(topicId: string, messageIds: string[]) {
+    return MessageModel.batchUpdate(messageIds, { topicId });
+  }
+
+  async removeMessage(id: string) {
+    return MessageModel.delete(id);
+  }
+
+  async removeMessages(assistantId: string, topicId?: string) {
+    return MessageModel.batchDelete(assistantId, topicId);
+  }
+
+  async removeAllMessages() {
+    return MessageModel.clearTable();
   }
 }
