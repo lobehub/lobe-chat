@@ -1,5 +1,5 @@
-import { dataSync } from '@/database/core';
-import { GlobalServerConfig } from '@/types/settings';
+import { dataSync } from '@/database/client/core';
+import { GlobalServerConfig } from '@/types/serverConfig';
 import { StartDataSyncParams } from '@/types/sync';
 
 import { API_ENDPOINTS } from './_url';

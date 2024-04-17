@@ -8,6 +8,7 @@ tags:
   - AI模型
   - 配置指南
 ---
+
 # 模型服务商
 
 LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，你可以使用这些环境变量轻松定义需要在 LobeChat 中开启的模型服务商。
@@ -17,7 +18,7 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 ### `OPENAI_API_KEY`
 
 - 类型：必选
-- 描述：这是你在 OpenAI 账户页面申请的 API 密钥，可以前往 \[这里]\[openai-api-page] 查看
+- 描述：这是你在 OpenAI 账户页面申请的 API 密钥，可以前往 [这里](https://platform.openai.com/api-keys) 查看
 - 默认值：-
 - 示例：`sk-xxxxxx...xxxxxx`
 
@@ -45,10 +46,10 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - [使用第三方接口报错的原因](https://github.com/lobehub/lobe-chat/discussions/734)
 - [代理服务器地址填了聊天没任何反应](https://github.com/lobehub/lobe-chat/discussions/1065)
 
-### `CUSTOM_MODELS`
+### `OPENAI_MODEL_LIST`
 
 - 类型：可选
-- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
 - 默认值：`-`
 - 示例：`+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
 
@@ -56,59 +57,37 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 
 你可以在 [modelProviders](https://github.com/lobehub/lobe-chat/tree/main/src/config/modelProviders) 查找到当前的所有模型名。
 
-### `API_KEY_SELECT_MODE`
-
-- 类型：可选
-- 描述：用于控制多个 API Keys 时，选择 Key 的模式，当前支持 `random` 和 `turn`
-- 默认值：`random`
-- 示例：`random` 或 `turn`
-
-使用 `random` 模式下，将在多个 API Keys 中随机获取一个 API Key。
-
-使用 `turn` 模式下，将按照填写的顺序，轮训获取得到 API Key。
-
 ## Azure OpenAI
 
-如果你需要使用 Azure OpenAI 来提供模型服务，可以查阅 [使用 Azure OpenAI 部署](../Deployment/Deploy-with-Azure-OpenAI.zh-CN.md) 章节查看详细步骤，这里将列举和 Azure OpenAI 相关的环境变量。
-
-### `USE_AZURE_OPENAI`
-
-- 类型：可选
-- 描述：设置该值为 `1` 开启 Azure OpenAI 配置
-- 默认值：-
-- 示例：`1`
+如果你需要使用 Azure OpenAI 来提供模型服务，可以查阅 [使用 Azure OpenAI 部署](/docs/self-hosting/examples/azure-openai) 章节查看详细步骤，这里将列举和 Azure OpenAI 相关的环境变量。
 
 ### `AZURE_API_KEY`
 
-- 类型：可选
+- 类型：必选
 - 描述：这是你在 Azure OpenAI 账户页面申请的 API 密钥
 - 默认值：-
 - 示例：`c55168be3874490ef0565d9779ecd5a6`
 
+### `AZURE_ENDPOINT`
+
+- 类型：必选
+- 描述：Azure API 地址，从 Azure 门户检查资源时，可在 “密钥和终结点” 部分中找到此值
+- 默认值：`-`
+- 示例：`https://docs-test-001.openai.azure.com`
+
 ### `AZURE_API_VERSION`
 
-- 类型：可选
+- 类型：必选
 - 描述：Azure 的 API 版本，遵循 YYYY-MM-DD 格式
-- 默认值：`2023-08-01-preview`
-- 示例：`2023-05-15`，查阅 [最新版本][azure-api-verion-url]
+- 默认值：`-`
+- 示例：`2024-02-01`，查阅 [最新版本](https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version)
 
-## 智谱 AI
-
-### `ZHIPU_API_KEY`
+### `AZURE_MODEL_LIST`
 
 - 类型：必选
-- 描述：这是你在 智谱 AI 服务中申请的 API 密钥
-- 默认值：-
-- 示例：`4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
-
-## Moonshot AI
-
-### `MOONSHOT_API_KEY`
-
-- 类型：必选
-- 描述：这是你在 Moonshot AI 服务中申请的 API 密钥
-- 默认值：-
-- 示例：`Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
+- 描述：用来控制模型列表，使用 `模型名->部署名=展示名` 来自定义模型的展示名，用英文逗号隔开。支持扩展能力，其余语法规则详见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`gpt-35-turbo->my-deploy=GPT 3.5 Turbo` 或 `gpt-4-turbo->my-gpt4=GPT 4 Turbo<128000:vision:fc>`
 
 ## Google AI
 
@@ -118,6 +97,29 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 描述：这是你在 Google AI Platform 申请的 API 密钥，用于访问 Google AI 服务
 - 默认值：-
 - 示例：`AIraDyDwcw254kwJaGjI9wwaHcdDCS__Vt3xQE`
+
+### `GOOGLE_PROXY_URL`
+
+- 类型：可选
+- 描述：如果你手动配置了 Google 接口代理，可以使用此配置项来覆盖默认的 Google API 请求基础 URL
+- 默认值：`https://generativelanguage.googleapis.com`
+- 示例：`https://api.genai.gd.edu.kg/google`
+
+## Anthropic AI
+
+### `ANTHROPIC_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Anthropic AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`sk-ant-apixx-xxxxxxxxx-xxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx`
+
+### `ANTHROPIC_PROXY_URL`
+
+- 类型：可选
+- 描述：如果你手动配置了 Anthropic 接口代理，可以使用此配置项来覆盖默认的 Anthropic API 请求基础 URL
+- 默认值：`https://api.anthropic.com`
+- 示例：`https://my-anthropic-proxy.com`
 
 ## AWS Bedrock
 
@@ -142,14 +144,62 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 默认值：`us-east-1`
 - 示例：`us-east-1`
 
+## OpenRouter AI
+
+### `OPENROUTER_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 OpenRouter AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`
+
+### `OPENROUTER_MODEL_LIST`
+
+- 类型：可选
+- 描述：用于指定自定义 OpenRouter 模型列表。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
+
+## TogetherAI
+
+### `TOGETHERAI_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 TogetherAI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### `TOGETHERAI_MODEL_LIST`
+
+- 类型：可选
+- 描述：用于指定自定义 Together AI 的模型列表。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`01-ai/yi-34b-chat`
+
 ## Ollama
 
 ### `OLLAMA_PROXY_URL`
 
-- 类型：可选
+- 类型：必选
 - 描述：用于启用 Ollama 服务，设置后可在语言模型列表内展示可选开源语言模型，也可以指定自定义语言模型
 - 默认值：-
 - 示例：`http://127.0.0.1:11434/v1`
+
+### `OLLAMA_MODEL_LIST`
+
+- 类型：可选
+- 描述：用于指定自定义 Ollama 语言模型。模型定义语法规则见 [模型列表][model-list]
+- 默认值：-
+- 示例：`qwen:32B`
+
+## Moonshot AI
+
+### `MOONSHOT_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Moonshot AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
 
 ## Perplexity AI
 
@@ -159,15 +209,6 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 描述：这是你在 Perplexity AI 服务中申请的 API 密钥
 - 默认值：-
 - 示例：`pplx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-
-## Anthropic AI
-
-### `ANTHROPIC_API_KEY`
-
-- 类型：必选
-- 描述：这是你在 Anthropic AI 服务中申请的 API 密钥
-- 默认值：-
-- 示例：`sk-ant-apixx-xxxxxxxxx-xxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx`
 
 ## Mistral AI
 
@@ -187,21 +228,14 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 默认值：-
 - 示例：`gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-## OpenRouter AI
+## 智谱 AI
 
-### `OPENROUTER_API_KEY`
+### `ZHIPU_API_KEY`
 
 - 类型：必选
-- 描述：这是你在 OpenRouter AI 服务中申请的 API 密钥
+- 描述：这是你在 智谱 AI 服务中申请的 API 密钥
 - 默认值：-
-- 示例：`sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`
-
-### `OPENROUTER_CUSTOM_MODELS`
-
-- 类型：可选
-- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。
-- 默认值：`-`
-- 示例：`-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
+- 示例：`4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
 
 ## 01 AI
 
@@ -212,13 +246,4 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 默认值：-
 - 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-## TogetherAI
-
-### `TOGETHERAI_API_KEY`
-
-- 类型：必选
-- 描述：这是你在 TogetherAI 服务中申请的 API 密钥
-- 默认值：-
-- 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-
-[azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
+[model-list]: /docs/self-hosting/advanced/model-list

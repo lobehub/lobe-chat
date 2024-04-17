@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 import { getServerConfig } from '@/config/server';
+import { auth } from '@/libs/next-auth';
 
-import { auth } from './app/api/auth/next-auth';
 import { OAUTH_AUTHORIZED } from './const/auth';
 
 export const config = {

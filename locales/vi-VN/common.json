@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Chọn mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện thị giác, vui lòng xác minh khả năng sử dụng của các tính năng trên dựa trên tình hình thực tế",
-      "file": "Mô hình này hỗ trợ tải lên tệp để đọc và nhận dạng",
-      "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
-      "tokens": "Mô hình này hỗ trợ tối đa {{tokens}} Tokens cho mỗi phiên",
-      "vision": "Mô hình này hỗ trợ nhận diện thị giác"
-    }
-  },
   "about": "Giới thiệu",
   "advanceSettings": "Cài đặt nâng cao",
   "appInitializing": "LobeChat đang khởi động, vui lòng chờ...",
@@ -95,23 +86,6 @@
     "zh-TW": "Tiếng Trung (phồn thể)"
   },
   "layoutInitializing": "Đang tải bố cục...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity AI",
-    "togetherai": "TogetherAI",
-    "zeroone": "01.AI ZeroOne",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Chưa có mô tả",
   "oauth": "Đăng nhập SSO",
   "ok": "Đồng ý",

@@ -85,58 +85,7 @@
     "responseError": "Service request failed, please check the configuration or try again"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Enter your Anthropic API Key to start the session. The application will not store your API Key.",
-        "title": "Use Custom Anthropic API Key"
-      },
-      "Bedrock": {
-        "customRegion": "Custom service region",
-        "description": "Enter your AWS AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration.",
-        "title": "Use custom Bedrock authentication information"
-      },
-      "Google": {
-        "description": "Enter your Google API Key to start the session. The app will not store your API Key.",
-        "title": "Use custom Google API Key"
-      },
-      "Groq": {
-        "description": "Enter your Groq API Key to start the session. The application will not store your API Key.",
-        "title": "Use Custom Groq API Key"
-      },
-      "Mistral": {
-        "description": "Enter your Mistral AI API Key to start the session. The application will not store your API Key.",
-        "title": "Use Custom Mistral AI API Key"
-      },
-      "Moonshot": {
-        "description": "Enter your Moonshot AI API Key to start the session. The app will not store your API Key.",
-        "title": "Use Custom Moonshot AI API Key"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Add OpenAI proxy address (optional)",
-        "description": "Enter your OpenAI API Key to start the session. The app will not store your API Key.",
-        "title": "Use custom OpenAI API Key"
-      },
-      "OpenRouter": {
-        "description": "Enter your OpenRouter API Key to start the session. The application will not store your API Key.",
-        "title": "Use Custom OpenRouter API Key"
-      },
-      "Perplexity": {
-        "description": "Enter your Perplexity API Key to start the session. The app will not store your API Key.",
-        "title": "Use custom Perplexity API Key"
-      },
-      "TogetherAI": {
-        "description": "Enter your TogetherAI API Key to start the session. The application will not store your API Key.",
-        "title": "Use Custom TogetherAI API Key"
-      },
-      "ZeroOne": {
-        "description": "Enter your 01-AI API Key to start the session. The application will not store your API Key.",
-        "title": "Use Custom 01-AI API Key"
-      },
-      "Zhipu": {
-        "description": "Enter your Zhipu API Key to start the session. The app will not store your API Key.",
-        "title": "Use custom Zhipu API Key"
-      }
-    },
+    "addProxyUrl": "Add OpenAI proxy URL (optional)",
     "closeMessage": "Close message",
     "confirm": "Confirm and Retry",
     "model": {

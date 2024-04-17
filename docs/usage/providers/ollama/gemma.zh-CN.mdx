@@ -13,7 +13,12 @@ tags:
 
 # 使用 Google Gemma 模型
 
-<Image alt={'在 LobeChat 中使用 Gemma'} cover rounded src={'https://github.com/lobehub/lobe-chat/assets/28616219/e636cb41-5b7f-4949-a236-1cc1633bd223'} />
+<Image
+  alt={'在 LobeChat 中使用 Gemma'}
+  cover
+  rounded
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/e636cb41-5b7f-4949-a236-1cc1633bd223'}
+/>
 
 [Gemma](https://blog.google/technology/developers/gemma-open-models/) 是 Google 开源的一款大语言模型（LLM），旨在提供一个更加通用、灵活的模型用于各种自然语言处理任务。现在，通过 LobeChat 与 [Ollama](https://ollama.com/) 的集成，你可以轻松地在 LobeChat 中使用 Google Gemma。
 
@@ -22,28 +27,40 @@ tags:
 <Steps>
   ### 本地安装 Ollama
 
-  首先，你需要安装 Ollama，安装过程请查阅 [Ollama 使用文件](/zh/usage/providers/ollama)。
+首先，你需要安装 Ollama，安装过程请查阅 [Ollama 使用文件](/docs/usage/providers/ollama)。
 
-  ### 用 Ollama 拉取 Google Gemma 模型到本地
+### 用 Ollama 拉取 Google Gemma 模型到本地
 
-  在安装完成 Ollama 后，你可以通过以下命令安装 Google Gemma 模型，以 7b 模型为例：
+在安装完成 Ollama 后，你可以通过以下命令安装 Google Gemma 模型，以 7b 模型为例：
 
-  ```bash
-  ollama pull gemma
-  ```
+```bash
+ollama pull gemma
+```
 
-  <Image alt={'使用 Ollama 拉取 Gemma 模型'} height={473} inStep src={'https://github.com/lobehub/lobe-chat/assets/28616219/7049a811-a08b-45d3-8491-970f579c2ebd'} width={791} />
+<Image
+  alt={'使用 Ollama 拉取 Gemma 模型'}
+  height={473}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/7049a811-a08b-45d3-8491-970f579c2ebd'}
+  width={791}
+/>
 
-  ### 选择 Gemma 模型
+### 选择 Gemma 模型
 
-  在会话页面中，选择模型面板打开，然后选择 Gemma 模型。
+在会话页面中，选择模型面板打开，然后选择 Gemma 模型。
 
-  <Image alt={'模型选择面板中选择 Gemma 模型'} height={629} inStep src={'https://github.com/lobehub/lobe-chat/assets/28616219/69414c79-642e-4323-9641-bfa43a74fcc8'} width={791} />
+<Image
+  alt={'模型选择面板中选择 Gemma 模型'}
+  height={629}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/69414c79-642e-4323-9641-bfa43a74fcc8'}
+  width={791}
+/>
 
   <Callout type={'info'}>
     如果你没有在模型选择面板中看到 Ollama 服务商，请查阅 [与 Ollama
-    集成](/zh/self-hosting/examples/ollama) 了解如何在 LobeChat 中开启 Ollama 服务商。
- 
+    集成](/docs/self-hosting/examples/ollama) 了解如何在 LobeChat 中开启 Ollama 服务商。
+
 </Callout>
 </Steps>
 

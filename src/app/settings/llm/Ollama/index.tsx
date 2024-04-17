@@ -16,13 +16,13 @@ const OllamaProvider = memo(() => {
     <ProviderConfig
       checkerItem={{
         children: <Checker />,
-        desc: t('llm.ollama.checker.desc'),
+        desc: t('llm.checker.ollamaDesc'),
         label: t('llm.checker.title'),
         minWidth: undefined,
       }}
+      modelList={{ showModelFetcher: true }}
       provider={ModelProvider.Ollama}
       showApiKey={false}
-      showCustomModelName
       showEndpoint
       title={
         <Ollama.Combine color={theme.isDarkMode ? theme.colorText : theme.colorPrimary} size={24} />

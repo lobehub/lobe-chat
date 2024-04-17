@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Персонализираният модел по подразбиране поддържа както извикване на функции, така и визуално разпознаване. Моля, проверете наличността на горните възможности въз основа на реални ситуации.",
-      "file": "Този модел поддържа качване на файлове за четене и разпознаване",
-      "functionCall": "Този модел поддържа извикване на функции.",
-      "tokens": "Този модел поддържа максимум {{tokens}} токена на сесия.",
-      "vision": "Този модел поддържа визуално разпознаване."
-    }
-  },
   "about": "Относно",
   "advanceSettings": "Разширени настройки",
   "appInitializing": "LobeChat се инициализира, моля изчакайте...",
@@ -95,23 +86,6 @@
     "zh-TW": "Традиционен китайски"
   },
   "layoutInitializing": "Инициализиране на оформлението...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "togetherai": "Together AI",
-    "zeroone": "01-AI",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Няма налично описание",
   "oauth": "SSO Вход",
   "ok": "Добре",

@@ -13,17 +13,18 @@ tags:
   - Github
   - ZITADEL
 ---
+
 # 身份验证服务
 
 LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用，统一管理用户授权。
 
 目前支持的身份验证服务有：
 
-- [Auth0](/zh/self-hosting/advanced/sso-providers/auth0)
-- [Microsoft Entra ID](/zh/self-hosting/advanced/sso-providers/microsoft-entra-id)
-- [Authentik](/zh/self-hosting/advanced/sso-providers/authentik)
-- [Github](/zh/self-hosting/advanced/sso-providers/github)
-- [ZITADEL](/zh/self-hosting/advanced/sso-providers/zitadel)
+- [Auth0](/docs/self-hosting/advanced/sso-providers/auth0)
+- [Microsoft Entra ID](/docs/self-hosting/advanced/sso-providers/microsoft-entra-id)
+- [Authentik](/docs/self-hosting/advanced/sso-providers/authentik)
+- [Github](/docs/self-hosting/advanced/sso-providers/github)
+- [ZITADEL](/docs/self-hosting/advanced/sso-providers/zitadel)
 
 点击链接可以查看对应平台的配置文档。
 
@@ -33,16 +34,14 @@ LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用�
 
 顺序为 SSO 提供商的显示顺序。
 
-| SSO 提供商            | 值          |
-| ------------------ | ---------- |
-| Auth0              | `auth0`    |
-| Microsoft Entra ID | `azure-ad` |
+| SSO 提供商         | 值          |
+| ------------------ | ----------- |
+| Auth0              | `auth0`     |
+| Microsoft Entra ID | `azure-ad`  |
 | Authentik          | `authentik` |
-| Github             |  `github`  |
-| ZITADEL            | `zitadel`  |
+| Github             | `github`    |
+| ZITADEL            | `zitadel`   |
 
 ## 其他 SSO 提供商
 
-请参考 [NextAuth.js][next-auth-js] 文档，欢迎提交 Pull Request。
-
-[next-auth-js]: https://next-auth.js.org/providers
+请参考 [NextAuth.js](https://next-auth.js.org/providers) 文档，欢迎提交 Pull Request。

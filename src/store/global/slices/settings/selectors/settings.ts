@@ -2,7 +2,7 @@ import { DEFAULT_LANG } from '@/const/locale';
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { DEFAULT_AGENT, DEFAULT_AGENT_CONFIG, DEFAULT_TTS_CONFIG } from '@/const/settings';
 import { Locales } from '@/locales/resources';
-import { GlobalSettings } from '@/types/settings';
+import { GeneralModelProviderConfig, GlobalLLMProviderKey, GlobalSettings } from '@/types/settings';
 import { isOnServerSide } from '@/utils/env';
 import { merge } from '@/utils/merge';
 
@@ -10,6 +10,11 @@ import { GlobalStore } from '../../../store';
 
 export const currentSettings = (s: GlobalStore): GlobalSettings =>
   merge(s.defaultSettings, s.settings);
+
+export const currentLLMSettings = (s: GlobalStore) => currentSettings(s).languageModel;
+
+export const getProviderConfigById = (provider: string) => (s: GlobalStore) =>
+  currentLLMSettings(s)[provider as GlobalLLMProviderKey] as GeneralModelProviderConfig | undefined;
 
 const password = (s: GlobalStore) => currentSettings(s).password;
 
@@ -55,4 +60,5 @@ export const settingsSelectors = {
   exportSettings,
   isDalleAutoGenerating,
   password,
+  providerConfig: getProviderConfigById,
 };

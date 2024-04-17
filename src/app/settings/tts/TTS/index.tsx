@@ -57,7 +57,7 @@ const TTS = memo(() => {
       },
     ],
     icon: Webhook,
-    title: t('llm.openai.title'),
+    title: t('settingTTS.openai.title'),
   };
 
   return (

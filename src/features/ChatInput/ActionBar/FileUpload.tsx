@@ -20,8 +20,8 @@ const FileUpload = memo(() => {
 
   const model = useSessionStore(agentSelectors.currentAgentModel);
   const [canUpload, enabledFiles] = useGlobalStore((s) => [
-    modelProviderSelectors.modelEnabledUpload(model)(s),
-    modelProviderSelectors.modelEnabledFiles(model)(s),
+    modelProviderSelectors.isModelEnabledUpload(model)(s),
+    modelProviderSelectors.isModelEnabledFiles(model)(s),
   ]);
 
   return (

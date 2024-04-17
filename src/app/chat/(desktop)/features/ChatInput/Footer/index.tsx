@@ -56,7 +56,11 @@ const useStyles = createStyles(({ css, prefixCls, token }) => {
 
 const isMac = isMacOS();
 
-const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) => {
+interface FooterProps {
+  setExpand?: (expand: boolean) => void;
+}
+
+const Footer = memo<FooterProps>(({ setExpand }) => {
   const { t } = useTranslation('chat');
 
   const { theme, styles } = useStyles();
@@ -71,7 +75,7 @@ const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) =
   ]);
 
   const model = useSessionStore(agentSelectors.currentAgentModel);
-  const canUpload = useGlobalStore(modelProviderSelectors.modelEnabledUpload(model));
+  const canUpload = useGlobalStore(modelProviderSelectors.isModelEnabledUpload(model));
 
   const sendMessage = useSendMessage();
 
@@ -192,5 +196,7 @@ const Footer = memo<{ setExpand?: (expand: boolean) => void }>(({ setExpand }) =
     </Flexbox>
   );
 });
+
+Footer.displayName = 'Footer';
 
 export default Footer;

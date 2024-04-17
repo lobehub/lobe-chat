@@ -1,0 +1,231 @@
+{
+  "anthropic": {
+    "endpoint": {
+      "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
+      "placeholder": "https://api.anthropic.com",
+      "title": "Indirizzo API Proxy"
+    },
+    "title": "Anthropic",
+    "token": {
+      "desc": "Inserisci la chiave API da Anthropic",
+      "placeholder": "Chiave API Anthropic",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API Anthropic per avviare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API Anthropic personalizzata"
+    }
+  },
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Versione dell'API di Azure, nel formato YYYY-MM-DD, consulta [ultima versione](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Ottieni elenco",
+      "title": "Versione API Azure"
+    },
+    "empty": "Inserisci l'ID del modello per aggiungere il primo modello",
+    "endpoint": {
+      "desc": "Quando si controllano le risorse dal portale di Azure, questo valore si trova nella sezione 'Chiavi e endpoint'",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Indirizzo API Azure"
+    },
+    "modelListPlaceholder": "Seleziona o aggiungi il modello OpenAI che hai distribuito",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Quando si controllano le risorse dal portale di Azure, questo valore si trova nella sezione 'Chiavi e endpoint'. Puoi usare KEY1 o KEY2",
+      "placeholder": "Chiave API Azure",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API Azure OpenAI per avviare la sessione",
+      "title": "Usa una chiave API Azure OpenAI personalizzata"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Inserisci l'ID chiave di accesso AWS",
+      "placeholder": "ID chiave di accesso AWS",
+      "title": "ID chiave di accesso AWS"
+    },
+    "checker": {
+      "desc": "Verifica se AccessKeyId / SecretAccessKey sono stati inseriti correttamente"
+    },
+    "region": {
+      "desc": "Inserisci la regione AWS",
+      "placeholder": "Regione AWS",
+      "title": "Regione AWS"
+    },
+    "secretAccessKey": {
+      "desc": "Inserisci la chiave di accesso segreta AWS",
+      "placeholder": "Chiave di accesso segreta AWS",
+      "title": "Chiave di accesso segreta AWS"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Regione del servizio personalizzata",
+      "description": "Inserisci la tua chiave di accesso AWS AccessKeyId / SecretAccessKey per avviare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
+      "title": "Usa le informazioni di autenticazione Bedrock personalizzate"
+    }
+  },
+  "google": {
+    "endpoint": {
+      "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "Indirizzo dell'API Proxy"
+    },
+    "title": "Google",
+    "token": {
+      "desc": "Inserisci la chiave API da Google",
+      "placeholder": "Chiave API Google",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API Google per avviare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API Google personalizzata"
+    }
+  },
+  "groq": {
+    "title": "Groq",
+    "token": {
+      "desc": "Inserisci la chiave API da Groq",
+      "placeholder": "Chiave API Groq",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API Groq per avviare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API Groq personalizzata"
+    }
+  },
+  "mistral": {
+    "title": "Mistral AI",
+    "token": {
+      "desc": "Inserisci la chiave API da Mistral AI",
+      "placeholder": "Chiave API Mistral AI",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API Mistral AI per avviare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API Mistral AI personalizzata"
+    }
+  },
+  "moonshot": {
+    "title": "Moonshot AI",
+    "token": {
+      "desc": "Inserisci la tua chiave API da Moonshot AI",
+      "placeholder": "Chiave API Moonshot AI",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API da Moonshot AI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API personalizzata da Moonshot AI"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"
+    },
+    "customModelName": {
+      "desc": "Aggiungi modelli personalizzati, separati da virgola (,)",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Nome del modello personalizzato"
+    },
+    "endpoint": {
+      "desc": "Inserisci l'indirizzo del proxy dell'interfaccia Ollama. Lascia vuoto se non specificato localmente",
+      "placeholder": "http://127.0.0.1:11434/v1",
+      "title": "Indirizzo del proxy dell'interfaccia"
+    },
+    "title": "Ollama"
+  },
+  "openai": {
+    "endpoint": {
+      "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
+      "placeholder": "https://api.openai.com/v1",
+      "title": "Indirizzo del proxy dell'interfaccia"
+    },
+    "title": "OpenAI",
+    "token": {
+      "desc": "Utilizza la tua chiave OpenAI",
+      "placeholder": "Chiave API OpenAI",
+      "title": "Chiave API OpenAI"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API da OpenAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API personalizzata da OpenAI"
+    }
+  },
+  "openrouter": {
+    "checker": {
+      "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"
+    },
+    "customModelName": {
+      "desc": "Aggiungi modelli personalizzati, separati da virgola (,)",
+      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+      "title": "Nome del modello personalizzato"
+    },
+    "title": "OpenRouter",
+    "token": {
+      "desc": "Inserisci la tua chiave API da OpenRouter AI",
+      "placeholder": "Chiave API OpenRouter AI",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API da OpenRouter per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API personalizzata da OpenRouter"
+    }
+  },
+  "perplexity": {
+    "title": "Perplexity",
+    "token": {
+      "desc": "Inserisci la tua chiave API da Perplexity AI",
+      "placeholder": "Chiave API Perplexity AI",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API da Perplexity per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API personalizzata da Perplexity"
+    }
+  },
+  "togetherai": {
+    "checker": {
+      "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"
+    },
+    "customModelName": {
+      "desc": "Aggiungi modelli personalizzati, separati da virgola (,)",
+      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+      "title": "Nome del modello personalizzato"
+    },
+    "title": "TogetherAI",
+    "token": {
+      "desc": "Inserisci la tua chiave API da TogetherAI AI",
+      "placeholder": "Chiave API TogetherAI AI",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API da TogetherAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API personalizzata da TogetherAI"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI ZeroOne",
+    "token": {
+      "desc": "Inserisci la tua chiave API da 01.AI ZeroOne",
+      "placeholder": "Chiave API 01.AI ZeroOne",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API da 01.AI ZeroOne per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API personalizzata da 01.AI ZeroOne"
+    }
+  },
+  "zhipu": {
+    "title": "Zhipu",
+    "token": {
+      "desc": "Inserisci la tua chiave API da Zhipu",
+      "placeholder": "Chiave API Zhipu",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API da Zhipu per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API personalizzata da Zhipu"
+    }
+  }
+}
