@@ -40,7 +40,7 @@ export interface AgentChatOptions {
 }
 
 /**
- * @deprecated
+ * @deprecated This module is deprecated. Read more at: https://github.com/lobehub/lobe-chat/pull/2041
  */
 class AgentRuntime {
   private _runtime: LobeRuntimeAI;
@@ -310,6 +310,14 @@ class AgentRuntime {
   }
 }
 
+/**
+ * Retrieves the options object from environment and apikeymanager
+ * based on the provider and payload.
+ *
+ * @param provider - The model provider.
+ * @param payload - The JWT payload.
+ * @returns The options object.
+ */
 const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
   let options:
     | Partial<ClientOptions>
@@ -462,6 +470,12 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
   return options;
 };
 
+/**
+ * Initializes the agent runtime with the user payload in backend
+ * @param provider - The provider name.
+ * @param payload - The JWT payload.
+ * @returns A promise that resolves when the agent runtime is initialized.
+ */
 export const initializeWithUserPayload = (provider: string, payload: JWTPayload) => {
   return AgentRuntimeLib.initializeWithProviderOptions(provider, {
     [provider]: getLlmOptionsFromPayload(provider, payload),

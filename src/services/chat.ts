@@ -68,6 +68,14 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
   trace?: TracePayload;
 }
 
+/**
+ * Initializes the AgentRuntime with the client store.
+ * @param provider - The provider name.
+ * @param payload - Init options
+ * @returns The initialized AgentRuntime instance
+ *
+ * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
+ */
 export function initializeWithClientStore(provider: string, payload: any) {
   // add auth payload
   const providerAuthPayload = getProviderAuthPayload(provider);
@@ -161,6 +169,13 @@ export function initializeWithClientStore(provider: string, payload: any) {
   });
 }
 
+/**
+ * Fetch chat completion on the client side.
+ * @param provider - The provider name.
+ * @param payload - The payload data for the chat stream.
+ * @param options - The fetch options.
+ * @returns A promise that resolves to the chat response.
+ */
 export async function fetchOnClient(
   provider: string,
   payload: Partial<ChatStreamPayload>,

@@ -113,12 +113,18 @@ class AgentRuntime {
    * @description Initialize the runtime with the provider and the options
    * @param provider choose a model provider
    * @param params options of the choosed provider
-   *
+   * @returns the runtime instance
+   * Try to initialize the runtime with the provider and the options.
+   * @example
    * ```ts
    * const runtime = await AgentRuntime.initializeWithProviderOptions(provider, {
    *    [provider]: {...options},
    * })
    * ```
+   * **Note**: If you try to get a AgentRuntime instance from client or server,
+   * you should use the methods to get the runtime instance at first.
+   * - `src/app/api/chat/agentRuntime.ts: initializeWithUserPayload` on server
+   * - `src/services/chat.ts: initializeWithClientStore` on client
    */
   static async initializeWithProviderOptions(
     provider: string,
