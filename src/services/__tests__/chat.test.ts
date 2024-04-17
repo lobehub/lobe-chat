@@ -1,8 +1,8 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
+import { merge } from 'lodash';
 import { describe, expect, it, vi } from 'vitest';
 
-import { JWTPayload } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
   LobeAnthropicAI,
@@ -21,12 +21,15 @@ import {
 } from '@/libs/agent-runtime';
 import AgentRuntimeLib from '@/libs/agent-runtime/AgentRuntime';
 import { useFileStore } from '@/store/file';
-import { useGlobalStore } from '@/store/global';
+import { GlobalStore } from '@/store/global';
+import {
+  GlobalSettingsState,
+  initialSettingsState,
+} from '@/store/global/slices/settings/initialState';
 import { useToolStore } from '@/store/tool';
 import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload } from '@/types/openai/chat';
-import { GlobalLLMConfig } from '@/types/settings';
 import { LobeTool } from '@/types/tool';
 
 import { chatService, initializeWithClientStore } from '../chat';
@@ -50,7 +53,6 @@ vi.mock('@/utils/fetch', async (importOriginal) => {
 // mock auth
 vi.mock('../_auth', () => ({
   createHeaderWithAuth: vi.fn().mockResolvedValue({}),
-  getProviderAuthPayload: vi.fn((_) => {}),
 }));
 
 describe('ChatService', () => {
@@ -674,24 +676,230 @@ Get data from users`,
  * Tests for AgentRuntime on client side, aim to test the
  * initialization of AgentRuntime with different providers
  */
+vi.mock('../_auth', async (importOriginal) => {
+  return await importOriginal();
+});
 describe('AgentRuntimeOnClient', () => {
   describe('initializeWithClientStore', () => {
     describe('should initialize with options correctly', () => {
       it('OpenAI provider: with apikey and endpoint', async () => {
-        const runtime = await initializeWithClientStore(ModelProvider.OpenAI, {
-          apiKey: 'user-openai-key',
-        });
+        // Mock the global store to return the user's OpenAI API key and endpoint
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              openai: {
+                apiKey: 'user-openai-key',
+                endpoint: 'user-openai-endpoint',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.OpenAI, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
+        expect(runtime['_runtime'].baseURL).toBe('user-openai-endpoint');
+      });
+
+      it('Azure provider: with apiKey, apiVersion, endpoint', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              azure: {
+                apiKey: 'user-azure-key',
+                endpoint: 'user-azure-endpoint',
+                apiVersion: '2024-02-01',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Azure, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
+      });
+
+      it('Google provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              google: {
+                apiKey: 'user-google-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Google, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeGoogleAI);
+      });
+
+      it('Moonshot AI provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              moonshot: {
+                apiKey: 'user-moonshot-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Moonshot, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
+      });
+
+      it('Bedrock provider: with accessKeyId, region, secretAccessKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              bedrock: {
+                accessKeyId: 'user-bedrock-access-key',
+                region: 'user-bedrock-region',
+                secretAccessKey: 'user-bedrock-secret',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Bedrock, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
+      });
+
+      it('Ollama provider: with endpoint', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              ollama: {
+                endpoint: 'user-ollama-endpoint',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Ollama, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);
+      });
+
+      it('Perplexity provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              perplexity: {
+                apiKey: 'user-perplexity-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Perplexity, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobePerplexityAI);
+      });
+
+      it('Anthropic provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              anthropic: {
+                apiKey: 'user-anthropic-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Anthropic, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
+      });
+
+      it('Mistral provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              mistral: {
+                apiKey: 'user-mistral-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Mistral, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
+      });
+
+      it('OpenRouter provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              openrouter: {
+                apiKey: 'user-openrouter-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.OpenRouter, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
+      });
+
+      it('TogetherAI provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              togetherai: {
+                apiKey: 'user-togetherai-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.TogetherAI, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
+      });
+
+      /**
+       * Should not have a unknown provider in client, but has
+       * similar cases in server side
+       */
+      it('Unknown provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              unknown: {
+                apiKey: 'user-unknown-key',
+                endpoint: 'user-unknown-endpoint',
+              },
+            },
+          },
+        } as any as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore('unknown' as ModelProvider, {});
         expect(runtime).toBeInstanceOf(AgentRuntimeLib);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
       });
 
       /**
-       * Need more cases to cover different providers, but function
-       * `getProviderAuthPayload` which call by `initializeWithClientStore`
-       * would use GlobalStore to load config and the process is complicated,
-       * so I haven't covered all the provders, wellcome to contribute more
-       * cases.
+       * The following test cases need to be enforce
        */
+
+      it('ZhiPu AI provider: with apiKey', async () => {
+        // Mock the generateApiToken function
+        vi.mock('@/libs/agent-runtime/zhipu/authToken', () => ({
+          generateApiToken: vi
+            .fn()
+            .mockResolvedValue(
+              'eyJhbGciOiJIUzI1NiIsInNpZ25fdHlwZSI6IlNJR04iLCJ0eXAiOiJKV1QifQ.eyJhcGlfa2V5IjoiemhpcHUiLCJleHAiOjE3MTU5MTc2NzMsImlhdCI6MTcxMzMyNTY3M30.gt8o-hUDvJFPJLYcH4EhrT1LAmTXI8YnybHeQjpD9oM',
+            ),
+        }));
+        merge(initialSettingsState, {
+          settings: {
+            languageModel: {
+              zhipu: {
+                apiKey: 'zhipu.user-key',
+              },
+            },
+          },
+        } as GlobalSettingsState) as unknown as GlobalStore;
+        const runtime = await initializeWithClientStore(ModelProvider.ZhiPu, {});
+        expect(runtime).toBeInstanceOf(AgentRuntimeLib);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeZhipuAI);
+      });
     });
   });
 });
