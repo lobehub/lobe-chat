@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://ai.google.dev/models/gemini
 const Google: ModelProviderCard = {
   chatModels: [
     {

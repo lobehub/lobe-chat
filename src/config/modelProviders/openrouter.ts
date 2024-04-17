@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://openrouter.ai/docs#models
 const OpenRouter: ModelProviderCard = {
   chatModels: [
     {

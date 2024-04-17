@@ -33,11 +33,6 @@ const Mistral: ModelProviderCard = {
       id: 'mistral-large-latest',
       tokens: 32_768,
     },
-    {
-      displayName: 'Mixtral 8x22B',
-      id: 'mixtral-8x22b',
-      tokens: 32_768,
-    },
   ],
   id: 'mistral',
 };

@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html
 const Bedrock: ModelProviderCard = {
   chatModels: [
     {
