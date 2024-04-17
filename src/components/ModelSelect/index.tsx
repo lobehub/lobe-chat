@@ -56,13 +56,7 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: 4px;
   `,
 }));
-
-interface ModelInfoTagsProps extends ChatModelCard {
-  directionReverse?: boolean;
-  placement?: 'top' | 'right';
-}
-
-function formatTokenNumber(num: number): string {
+const formatTokenNumber = (num: number): string => {
   const tokenSuffixes = [
     { symbol: "B", value: 1e9 },
     { symbol: "M", value: 1e6 },
@@ -70,7 +64,12 @@ function formatTokenNumber(num: number): string {
   ];
 
   const { value, symbol } = tokenSuffixes.find(s => num >= s.value) || { symbol: "", value: 1 };
-  return (num / value).toFixed(2) + symbol;
+  return Math.floor(num / value) + symbol;
+}
+
+interface ModelInfoTagsProps extends ChatModelCard {
+  directionReverse?: boolean;
+  placement?: 'top' | 'right';
 }
 
 export const ModelInfoTags = memo<ModelInfoTagsProps>(
@@ -133,6 +132,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
 interface ModelItemRenderProps extends ChatModelCard {
   showInfoTag?: boolean;
 }
+
 export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true, ...model }) => {
   return (
     <Flexbox align={'center'} gap={32} horizontal justify={'space-between'}>
@@ -160,5 +160,3 @@ export const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider }) =
     </Flexbox>
   );
 });
-
-
