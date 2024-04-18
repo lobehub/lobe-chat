@@ -13,6 +13,11 @@ export default {
   defaultAgent: '自定义助手',
   defaultList: '默认列表',
   defaultSession: '自定义助手',
+  duplicateSession: {
+    loading: '复制中...',
+    success: '复制成功',
+    title: '{{title}} 副本',
+  },
   duplicateTitle: '{{title}} 副本',
   historyRange: '历史范围',
   inbox: {
