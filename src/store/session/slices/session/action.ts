@@ -22,6 +22,7 @@ import { sessionSelectors } from './selectors';
 const n = setNamespace('session');
 
 const FETCH_SESSIONS_KEY = 'fetchSessions';
+const SEARCH_SESSIONS_KEY = 'searchSessions';
 
 export interface SessionAction {
   /**
@@ -232,10 +233,13 @@ export const createSessionSlice: StateCreator<
     }),
 
   useSearchSessions: (keyword) =>
-    useSWR<LobeSessions>(keyword, sessionService.searchSessions, {
-      onSuccess: (data) => {
-        set({ searchSessions: data }, false, n('useSearchSessions(success)', data));
+    useSWR<LobeSessions>(
+      [SEARCH_SESSIONS_KEY, keyword],
+      async () => {
+        if (!keyword) return [];
+
+        return sessionService.searchSessions(keyword);
       },
-      revalidateOnFocus: false,
-    }),
+      { revalidateOnFocus: false },
+    ),
 });

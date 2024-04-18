@@ -1,5 +1,6 @@
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css }) => ({
@@ -22,12 +23,15 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-//  从 3~10 随机取一个整数
+interface SkeletonListProps {
+  count?: number;
+}
 
-const SkeletonList = () => {
+const SkeletonList = memo<SkeletonListProps>(({ count = 4 }) => {
   const { styles } = useStyles();
 
-  const list = Array.from({ length: 4 }).fill('');
+  const list = Array.from({ length: count }).fill('');
+
   return (
     <Flexbox gap={8} paddingInline={16}>
       {list.map((_, index) => (
@@ -41,5 +45,5 @@ const SkeletonList = () => {
       ))}
     </Flexbox>
   );
-};
+});
 export default SkeletonList;

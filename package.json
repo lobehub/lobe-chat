@@ -92,7 +92,7 @@
     "@lobehub/chat-plugins-gateway": "latest",
     "@lobehub/icons": "latest",
     "@lobehub/tts": "latest",
-    "@lobehub/ui": "^1.137.7",
+    "@lobehub/ui": "^1.138.5",
     "@next/third-parties": "^14.1.4",
     "@sentry/nextjs": "^7.105.0",
     "@vercel/analytics": "^1.2.2",
