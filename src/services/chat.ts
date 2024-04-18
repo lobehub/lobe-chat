@@ -184,7 +184,7 @@ export async function fetchOnClient(
   const agentRuntime = await initializeWithClientStore(provider, payload);
   const data = payload as ChatStreamPayload;
   const tracePayload = options?.trace;
-  return agentRuntime.chat(data, {
+  return await agentRuntime.chat(data, {
     enableTrace: tracePayload?.enabled,
     provider,
     trace: tracePayload,
