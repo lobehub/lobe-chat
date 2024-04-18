@@ -98,13 +98,13 @@
   "minimax": {
     "title": "Minimax",
     "token": {
-      "desc": "填入来自 Minimax 的 API Key",
+      "desc": "Voer de API Key van Minimax AI in",
       "placeholder": "Minimax API Key",
       "title": "API Key"
     },
     "unlock": {
-      "description": "输入你的 Minimax API Key 即可开始会话。应用不会记录你的 API Key",
-      "title": "使用自定义 Minimax API Key"
+      "description": "Voer uw Minimax AI API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
+      "title": "Gebruik aangepaste Minimax AI API-sleutel"
     }
   },
   "mistral": {
