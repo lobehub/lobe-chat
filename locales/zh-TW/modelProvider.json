@@ -95,18 +95,6 @@
       "title": "使用自定義 Groq API 金鑰"
     }
   },
-  "minimax": {
-    "title": "極小化",
-    "token": {
-      "desc": "輸入來自極小化的 API 金鑰",
-      "placeholder": "極小化 API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入您的極小化 API 金鑰即可開始會話。應用程式不會記錄您的 API 金鑰",
-      "title": "使用自訂極小化 API 金鑰"
-    }
-  },
   "mistral": {
     "title": "Mistral AI",
     "token": {

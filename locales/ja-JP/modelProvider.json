@@ -95,18 +95,6 @@
       "title": "使用カスタム Groq API Key"
     }
   },
-  "minimax": {
-    "title": "Minimax",
-    "token": {
-      "desc": "Minimax からの API キーを入力してください",
-      "placeholder": "Minimax API キー",
-      "title": "API キー"
-    },
-    "unlock": {
-      "description": "Minimax API キーを入力するとセッションが開始されます。アプリは API キーを記録しません",
-      "title": "カスタム Minimax API キーを使用"
-    }
-  },
   "mistral": {
     "title": "Mistral AI",
     "token": {
