@@ -9,9 +9,15 @@ export default {
   clearCurrentMessages: '清空当前会话消息',
   confirmClearCurrentMessages: '即将清空当前会话消息，清空后将无法找回，请确认你的操作',
   confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
+  confirmRemoveSessionSuccess: '助手删除成功',
   defaultAgent: '自定义助手',
   defaultList: '默认列表',
   defaultSession: '自定义助手',
+  duplicateSession: {
+    loading: '复制中...',
+    success: '复制成功',
+    title: '{{title}} 副本',
+  },
   duplicateTitle: '{{title}} 副本',
   historyRange: '历史范围',
   inbox: {

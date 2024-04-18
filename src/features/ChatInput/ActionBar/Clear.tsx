@@ -16,8 +16,8 @@ const Clear = memo(() => {
   const hotkeys = [META_KEY, PREFIX_KEY, CLEAN_MESSAGE_KEY].join('+');
   const [confirmOpened, updateConfirmOpened] = useState(false);
 
-  const resetConversation = useCallback(() => {
-    clearMessage();
+  const resetConversation = useCallback(async () => {
+    await clearMessage();
     clearImageList();
   }, []);
 
