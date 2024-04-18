@@ -240,6 +240,6 @@ export const createSessionSlice: StateCreator<
 
         return sessionService.searchSessions(keyword);
       },
-      { revalidateOnFocus: false },
+      { revalidateOnFocus: false, revalidateOnMount: false },
     ),
 });
