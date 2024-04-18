@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://openrouter.ai/docs#models
 const OpenRouter: ModelProviderCard = {
   chatModels: [
     {
@@ -99,11 +100,19 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
-      displayName: 'Mistral: Mixtral 8x22B (base) (free)',
+      displayName: 'Mistral: Mixtral 8x22B (base)',
       enabled: true,
       functionCall: false,
       id: 'mistralai/mixtral-8x22b',
       tokens: 64_000,
+      vision: false,
+    },
+    {
+      displayName: 'Microsoft: WizardLM-2 8x22B',
+      enabled: true,
+      functionCall: false,
+      id: 'microsoft/wizardlm-2-8x22b',
+      tokens: 65_536,
       vision: false,
     },
   ],
