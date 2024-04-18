@@ -56,11 +56,17 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: 4px;
   `,
 }));
+const formatTokenNumber = (num: number): string => {
+  if (num < 1000) return '1K';
+  const kiloToken = Math.floor(num / 1000);
+  return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`;
+}
 
 interface ModelInfoTagsProps extends ChatModelCard {
   directionReverse?: boolean;
   placement?: 'top' | 'right';
 }
+
 export const ModelInfoTags = memo<ModelInfoTagsProps>(
   ({ directionReverse, placement = 'right', ...model }) => {
     const { t } = useTranslation('components');
@@ -101,7 +107,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
               tokens: numeral(model.tokens).format('0,0'),
             })}
           >
-            <Center className={styles.token}>{Math.floor(model.tokens / 1000)}K</Center>
+            <Center className={styles.token}>{formatTokenNumber(model.tokens)}</Center>
           </Tooltip>
         )}
         {/*{model.isCustom && (*/}
@@ -121,6 +127,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
 interface ModelItemRenderProps extends ChatModelCard {
   showInfoTag?: boolean;
 }
+
 export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true, ...model }) => {
   return (
     <Flexbox align={'center'} gap={32} horizontal justify={'space-between'}>
