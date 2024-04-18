@@ -4,6 +4,7 @@ import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { ClientOptions } from 'openai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { createTraceOptions } from '@/app/api/chat/agentRuntime';
 import { getServerConfig } from '@/config/server';
 import { JWTPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
@@ -253,7 +254,7 @@ describe('AgentRuntime', () => {
 
       vi.spyOn(LobeOpenAI.prototype, 'chat').mockResolvedValue(new Response(''));
 
-      await runtime.chat(payload, { provider: 'openai' });
+      await runtime.chat(payload);
     });
     it('should handle options correctly', async () => {
       const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
@@ -281,7 +282,7 @@ describe('AgentRuntime', () => {
 
       vi.spyOn(LobeOpenAI.prototype, 'chat').mockResolvedValue(new Response(''));
 
-      await runtime.chat(payload, options);
+      await runtime.chat(payload, createTraceOptions(payload, options));
     });
 
     describe('callback', async () => {
@@ -331,7 +332,7 @@ describe('AgentRuntime', () => {
         );
         vi.spyOn(LangfuseTraceClient.prototype, 'update').mockImplementation(updateMock);
 
-        await runtime.chat(payload, options);
+        await runtime.chat(payload, createTraceOptions(payload, options));
 
         expect(updateMock).toHaveBeenCalledWith({ tags: ['Tools Call'] });
       });
@@ -346,7 +347,7 @@ describe('AgentRuntime', () => {
           },
         );
 
-        await runtime.chat(payload, options);
+        await runtime.chat(payload, createTraceOptions(payload, options));
 
         // Verify onStart was called
         expect(updateMock).toHaveBeenCalledWith({ completionStartTime: expect.any(Date) });
@@ -364,7 +365,7 @@ describe('AgentRuntime', () => {
           },
         );
 
-        await runtime.chat(payload, options);
+        await runtime.chat(payload, createTraceOptions(payload, options));
 
         // Verify onCompletion was called with expected output
         expect(updateMock).toHaveBeenCalledWith({
@@ -388,7 +389,7 @@ describe('AgentRuntime', () => {
         const shutdownAsyncMock = vi.fn();
         vi.spyOn(Langfuse.prototype, 'shutdownAsync').mockImplementation(shutdownAsyncMock);
 
-        await runtime.chat(payload, options);
+        await runtime.chat(payload, createTraceOptions(payload, options));
 
         // Verify onCompletion was called with expected output
         expect(shutdownAsyncMock).toHaveBeenCalled();
