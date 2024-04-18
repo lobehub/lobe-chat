@@ -8,9 +8,15 @@
   "clearCurrentMessages": "Cancella messaggi attuali",
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
+  "confirmRemoveSessionSuccess": "Session eliminata con successo",
   "defaultAgent": "Assistente predefinito",
   "defaultList": "Lista predefinita",
   "defaultSession": "Sessione predefinita",
+  "duplicateSession": {
+    "loading": "In corso di duplicazione...",
+    "success": "Duplicazione riuscita",
+    "title": "{{title}} Copia"
+  },
   "duplicateTitle": "{{title}} Copia",
   "historyRange": "Intervallo cronologico",
   "inbox": {

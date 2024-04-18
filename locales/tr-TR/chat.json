@@ -8,9 +8,15 @@
   "clearCurrentMessages": "Mevcut oturum mesajlarını temizle",
   "confirmClearCurrentMessages": "Mevcut oturum mesajlarını temizlemek üzeresiniz. Temizlendikten sonra geri alınamazlar. Lütfen eyleminizi onaylayın.",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
+  "confirmRemoveSessionSuccess": "Oturum başarıyla kaldırıldı",
   "defaultAgent": "Varsayılan Asistan",
   "defaultList": "Varsayılan Liste",
   "defaultSession": "Varsayılan Asistan",
+  "duplicateSession": {
+    "loading": "Kopyalanıyor...",
+    "success": "Kopyalama başarılı",
+    "title": "{{title}} Kopyası"
+  },
   "duplicateTitle": "{{title}} Kopya",
   "historyRange": "Geçmiş Aralığı",
   "inbox": {
