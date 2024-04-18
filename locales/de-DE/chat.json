@@ -8,9 +8,15 @@
   "clearCurrentMessages": "Aktuelle Nachrichten löschen",
   "confirmClearCurrentMessages": "Möchtest du wirklich die aktuellen Nachrichten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
   "confirmRemoveSessionItemAlert": "Möchtest du diesen Assistenten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "confirmRemoveSessionSuccess": "Hilfe wurde erfolgreich entfernt",
   "defaultAgent": "Standardassistent",
   "defaultList": "Standardliste",
   "defaultSession": "Standardassistent",
+  "duplicateSession": {
+    "loading": "Kopieren läuft...",
+    "success": "Kopieren erfolgreich",
+    "title": "{{title}} Kopie"
+  },
   "duplicateTitle": "{{title}} Kopie",
   "historyRange": "Verlaufsbereich",
   "inbox": {
