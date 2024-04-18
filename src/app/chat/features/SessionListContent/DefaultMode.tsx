@@ -1,12 +1,10 @@
 import { CollapseProps } from 'antd';
-import isEqual from 'fast-deep-equal';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
 import { preferenceSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 import { SessionDefaultGroup } from '@/types/session';
 
 import Actions from '../SessionListContent/CollapseGroup/Actions';
@@ -24,11 +22,11 @@ const SessionListContent = memo(() => {
   const [configGroupModalOpen, setConfigGroupModalOpen] = useState(false);
 
   const [useFetchSessions] = useSessionStore((s) => [s.useFetchSessions]);
-  useFetchSessions();
+  const { data } = useFetchSessions();
 
-  const pinnedSessions = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
-  const defaultSessions = useSessionStore(sessionSelectors.defaultSessions, isEqual);
-  const customSessionGroups = useSessionStore(sessionSelectors.customSessionGroups, isEqual);
+  const pinnedSessions = data?.pinned;
+  const defaultSessions = data?.default;
+  const customSessionGroups = data?.customGroup;
 
   const [sessionGroupKeys, updatePreference] = useGlobalStore((s) => [
     preferenceSelectors.sessionGroupKeys(s),
@@ -38,13 +36,14 @@ const SessionListContent = memo(() => {
   const items = useMemo(
     () =>
       [
-        pinnedSessions.length > 0 && {
-          children: <SessionList dataSource={pinnedSessions} />,
-          extra: <Actions isPinned openConfigModal={() => setConfigGroupModalOpen(true)} />,
-          key: SessionDefaultGroup.Pinned,
-          label: t('pin'),
-        },
-        ...customSessionGroups.map(({ id, name, children }) => ({
+        pinnedSessions &&
+          pinnedSessions.length > 0 && {
+            children: <SessionList dataSource={pinnedSessions} />,
+            extra: <Actions isPinned openConfigModal={() => setConfigGroupModalOpen(true)} />,
+            key: SessionDefaultGroup.Pinned,
+            label: t('pin'),
+          },
+        ...(customSessionGroups || []).map(({ id, name, children }) => ({
           children: <SessionList dataSource={children} groupId={id} />,
           extra: (
             <Actions
@@ -61,7 +60,7 @@ const SessionListContent = memo(() => {
           label: name,
         })),
         {
-          children: <SessionList dataSource={defaultSessions} />,
+          children: <SessionList dataSource={defaultSessions || []} />,
           extra: <Actions openConfigModal={() => setConfigGroupModalOpen(true)} />,
           key: SessionDefaultGroup.Default,
           label: t('defaultList'),
