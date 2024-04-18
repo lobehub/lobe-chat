@@ -80,9 +80,8 @@ export const createSessionSlice: StateCreator<
   },
 
   clearSessions: async () => {
-    await get().refreshSessions({
-      action: sessionService.removeAllSessions,
-    });
+    await sessionService.removeAllSessions();
+    await get().refreshSessions();
   },
 
   createSession: async (agent, isSwitchSession = true) => {
