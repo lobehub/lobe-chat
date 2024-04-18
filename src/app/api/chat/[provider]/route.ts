@@ -35,7 +35,6 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
         }),
       );
     }
-
     return await agentRuntime.chat(data);
   } catch (e) {
     const {
