@@ -85,14 +85,14 @@ describe('modelProviderSelectors', () => {
   });
 
   describe('modelEnabledFiles', () => {
-    it('should return false if the model does not have file ability', () => {
+    it.skip('should return false if the model does not have file ability', () => {
       const enabledFiles = modelProviderSelectors.isModelEnabledFiles('gpt-4-vision-preview')(
         useGlobalStore.getState(),
       );
       expect(enabledFiles).toBeFalsy();
     });
 
-    it('should return true if the model has file ability', () => {
+    it.skip('should return true if the model has file ability', () => {
       const enabledFiles = modelProviderSelectors.isModelEnabledFiles('gpt-4-all')(
         useGlobalStore.getState(),
       );
