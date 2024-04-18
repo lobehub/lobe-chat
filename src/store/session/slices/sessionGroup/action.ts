@@ -28,7 +28,7 @@ export const createSessionGroupSlice: StateCreator<
   },
 
   clearSessionGroups: async () => {
-    await sessionService.clearSessionGroups();
+    await sessionService.removeSessionGroups();
     await get().refreshSessions();
   },
 
@@ -36,8 +36,8 @@ export const createSessionGroupSlice: StateCreator<
     await sessionService.removeSessionGroup(id);
     await get().refreshSessions();
   },
-  updateSessionGroupId: async (sessionId, groupId) => {
-    await sessionService.updateSessionGroupId(sessionId, groupId);
+  updateSessionGroupId: async (sessionId, group) => {
+    await sessionService.updateSession(sessionId, { group });
 
     await get().refreshSessions();
   },

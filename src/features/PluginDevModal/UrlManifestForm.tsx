@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
-import { pluginService } from '@/services/plugin';
+import { toolService } from '@/services/tool';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { PluginInstallError } from '@/types/tool/plugin';
@@ -77,7 +77,7 @@ const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
 
                 try {
                   const useProxy = form.getFieldValue(proxyKey);
-                  const data = await pluginService.getPluginManifest(value, useProxy);
+                  const data = await toolService.getPluginManifest(value, useProxy);
                   setManifest(data);
 
                   form.setFieldsValue({ identifier: data.identifier, manifest: data });

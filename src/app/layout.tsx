@@ -7,8 +7,8 @@ import { isRtlLang } from 'rtl-detect';
 import Analytics from '@/components/Analytics';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import AuthProvider from '@/layout/AuthProvider';
-import GlobalLayout from '@/layout/GlobalLayout';
 import GlobalProvider from '@/layout/GlobalProvider';
+import LayoutRoutes from '@/layout/routes';
 import { isMobileDevice } from '@/utils/responsive';
 
 const RootLayout = async ({ children }: PropsWithChildren) => {
@@ -22,7 +22,7 @@ const RootLayout = async ({ children }: PropsWithChildren) => {
       <body>
         <GlobalProvider>
           <AuthProvider>
-            <GlobalLayout>{children}</GlobalLayout>
+            <LayoutRoutes>{children}</LayoutRoutes>
           </AuthProvider>
         </GlobalProvider>
         <Analytics />

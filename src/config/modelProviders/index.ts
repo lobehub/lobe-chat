@@ -1,6 +1,7 @@
-import { ChatModelCard } from '@/types/llm';
+import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
 import AnthropicProvider from './anthropic';
+import AzureProvider from './azure';
 import BedrockProvider from './bedrock';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
@@ -30,16 +31,38 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   ZeroOneProvider.chatModels,
 ].flat();
 
-export { default as AnthropicProvider } from './anthropic';
-export { default as BedrockProvider } from './bedrock';
-export { default as GoogleProvider } from './google';
-export { default as GroqProvider } from './groq';
-export { default as MistralProvider } from './mistral';
-export { default as MoonshotProvider } from './moonshot';
-export { default as OllamaProvider } from './ollama';
-export { default as OpenAIProvider } from './openai';
-export { default as OpenRouterProvider } from './openrouter';
-export { default as PerplexityProvider } from './perplexity';
-export { default as TogetherAIProvider } from './togetherai';
-export { default as ZeroOneProvider } from './zeroone';
-export { default as ZhiPuProvider } from './zhipu';
+export const DEFAULT_MODEL_PROVIDER_LIST = [
+  OpenAIProvider,
+  { ...AzureProvider, chatModels: [] },
+  OllamaProvider,
+  AnthropicProvider,
+  GoogleProvider,
+  OpenRouterProvider,
+  TogetherAIProvider,
+  BedrockProvider,
+  PerplexityProvider,
+  MistralProvider,
+  GroqProvider,
+  MoonshotProvider,
+  ZeroOneProvider,
+  ZhiPuProvider,
+];
+
+export const filterEnabledModels = (provider: ModelProviderCard) => {
+  return provider.chatModels.filter((v) => v.enabled).map((m) => m.id);
+};
+
+export { default as AnthropicProviderCard } from './anthropic';
+export { default as AzureProviderCard } from './azure';
+export { default as BedrockProviderCard } from './bedrock';
+export { default as GoogleProviderCard } from './google';
+export { default as GroqProviderCard } from './groq';
+export { default as MistralProviderCard } from './mistral';
+export { default as MoonshotProviderCard } from './moonshot';
+export { default as OllamaProviderCard } from './ollama';
+export { default as OpenAIProviderCard } from './openai';
+export { default as OpenRouterProviderCard } from './openrouter';
+export { default as PerplexityProviderCard } from './perplexity';
+export { default as TogetherAIProviderCard } from './togetherai';
+export { default as ZeroOneProviderCard } from './zeroone';
+export { default as ZhiPuProviderCard } from './zhipu';

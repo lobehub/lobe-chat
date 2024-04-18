@@ -2,9 +2,10 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
+import models from './fixtures/models.json';
 import { LobeOpenRouterAI } from './index';
 
 const provider = 'openrouter';
@@ -15,7 +16,7 @@ const invalidErrorType = 'InvalidOpenRouterAPIKey';
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
-let instance: LobeOpenRouterAI;
+let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
   instance = new LobeOpenRouterAI({ apiKey: 'test' });
@@ -24,6 +25,7 @@ beforeEach(() => {
   vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
     new ReadableStream() as any,
   );
+  vi.spyOn(instance['client'].models, 'list').mockResolvedValue({ data: [] } as any);
 });
 
 afterEach(() => {
@@ -75,13 +77,16 @@ describe('LobeOpenRouterAI', () => {
       });
 
       // Assert
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'mistralai/mistral-7b-instruct:free',
-        temperature: 0.7,
-        top_p: 1,
-      })
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -342,6 +347,17 @@ describe('LobeOpenRouterAI', () => {
         // 恢复原始环境变量值
         process.env.DEBUG_OPENROUTER_CHAT_COMPLETION = originalDebugValue;
       });
+    });
+  });
+
+  describe('models', () => {
+    it('should get models', async () => {
+      // mock the models.list method
+      (instance['client'].models.list as Mock).mockResolvedValue({ data: models });
+
+      const list = await instance.models();
+
+      expect(list).toMatchSnapshot();
     });
   });
 });

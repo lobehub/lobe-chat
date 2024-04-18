@@ -1,0 +1,231 @@
+{
+  "anthropic": {
+    "endpoint": {
+      "desc": "Además de la dirección predeterminada, debe incluir http(s)://",
+      "placeholder": "https://api.anthropic.com",
+      "title": "Dirección del proxy de API"
+    },
+    "title": "Anthropic",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por Anthropic",
+      "placeholder": "Clave API de Anthropic",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de Anthropic personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de Anthropic personalizada"
+    }
+  },
+  "azure": {
+    "azureApiVersion": {
+      "desc": "La versión de la API de Azure, siguiendo el formato AAAA-MM-DD, consulta la [última versión](https://learn.microsoft.com/es-es/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Obtener lista",
+      "title": "Versión de la API de Azure"
+    },
+    "empty": "Introduce el ID del modelo para agregar el primer modelo",
+    "endpoint": {
+      "desc": "Puedes encontrar este valor en la sección 'Claves y endpoint' al revisar tus recursos en el portal de Azure",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Dirección de la API de Azure"
+    },
+    "modelListPlaceholder": "Selecciona o agrega el modelo de OpenAI que has implementado",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Puedes encontrar este valor en la sección 'Claves y endpoint' al revisar tus recursos en el portal de Azure. Puedes usar KEY1 o KEY2",
+      "placeholder": "Clave API de Azure",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de Azure OpenAI personalizada para comenzar la sesión",
+      "title": "Usar clave de API de Azure OpenAI personalizada"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Introduce tu AWS Access Key Id",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "Prueba si el AccessKeyId / SecretAccessKey se ha introducido correctamente"
+    },
+    "region": {
+      "desc": "Introduce tu región de AWS",
+      "placeholder": "Región de AWS",
+      "title": "Región de AWS"
+    },
+    "secretAccessKey": {
+      "desc": "Introduce tu AWS Secret Access Key",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Región de servicio personalizada",
+      "description": "Introduce tu AWS AccessKeyId / SecretAccessKey para comenzar la sesión. La aplicación no guardará tu configuración de autenticación.",
+      "title": "Usar información de autenticación de Bedrock personalizada"
+    }
+  },
+  "google": {
+    "endpoint": {
+      "desc": "Aparte de la dirección predeterminada, debe incluir http(s)://",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "Dirección del proxy de la API"
+    },
+    "title": "Google",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por Google",
+      "placeholder": "Clave API de Google",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de Google personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de Google personalizada"
+    }
+  },
+  "groq": {
+    "title": "Groq",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por Groq",
+      "placeholder": "Clave API de Groq",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de Groq personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de Groq personalizada"
+    }
+  },
+  "mistral": {
+    "title": "Mistral AI",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por Mistral AI",
+      "placeholder": "Clave API de Mistral AI",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de Mistral AI personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de Mistral AI personalizada"
+    }
+  },
+  "moonshot": {
+    "title": "El lado oscuro de la luna",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por Moonshot AI",
+      "placeholder": "Clave API de Moonshot AI",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de Moonshot AI personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de Moonshot AI personalizada"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Prueba si la dirección del proxy de la interfaz se ha introducido correctamente"
+    },
+    "customModelName": {
+      "desc": "Añade modelos personalizados, separa múltiples modelos con comas (,)",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Nombre de modelos personalizados"
+    },
+    "endpoint": {
+      "desc": "Introduce la dirección del proxy de la interfaz de Ollama, déjalo en blanco si no se ha especificado localmente",
+      "placeholder": "http://127.0.0.1:11434/v1",
+      "title": "Dirección del proxy de la interfaz"
+    },
+    "title": "Ollama"
+  },
+  "openai": {
+    "endpoint": {
+      "desc": "Además de la dirección predeterminada, debe incluir http(s)://",
+      "placeholder": "https://api.openai.com/v1",
+      "title": "Dirección del proxy de la interfaz"
+    },
+    "title": "OpenAI",
+    "token": {
+      "desc": "Usa tu propia clave de OpenAI",
+      "placeholder": "Clave API de OpenAI",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de OpenAI personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de OpenAI personalizada"
+    }
+  },
+  "openrouter": {
+    "checker": {
+      "desc": "Prueba si la dirección del proxy de la interfaz se ha introducido correctamente"
+    },
+    "customModelName": {
+      "desc": "Añade modelos personalizados, separa múltiples modelos con comas (,)",
+      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+      "title": "Nombre de modelos personalizados"
+    },
+    "title": "OpenRouter",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por OpenRouter AI",
+      "placeholder": "Clave API de OpenRouter AI",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de OpenRouter personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de OpenRouter personalizada"
+    }
+  },
+  "perplexity": {
+    "title": "Perplexity",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por Perplexity AI",
+      "placeholder": "Clave API de Perplexity AI",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de Perplexity personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de Perplexity personalizada"
+    }
+  },
+  "togetherai": {
+    "checker": {
+      "desc": "Prueba si la dirección del proxy de la interfaz se ha introducido correctamente"
+    },
+    "customModelName": {
+      "desc": "Añade modelos personalizados, separa múltiples modelos con comas (,)",
+      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+      "title": "Nombre de modelos personalizados"
+    },
+    "title": "TogetherAI",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por TogetherAI AI",
+      "placeholder": "Clave API de TogetherAI AI",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de TogetherAI personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de TogetherAI personalizada"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Cero Uno Todo",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por 01.AI Cero Uno Todo",
+      "placeholder": "Clave API de 01.AI Cero Uno Todo",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de ZeroOne personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de ZeroOne personalizada"
+    }
+  },
+  "zhipu": {
+    "title": "Inteligencia de Mapa",
+    "token": {
+      "desc": "Introduce la clave API proporcionada por Inteligencia de Mapa",
+      "placeholder": "Clave API de Inteligencia de Mapa",
+      "title": "Clave API"
+    },
+    "unlock": {
+      "description": "Introduce tu clave de API de Zhipu personalizada para comenzar la sesión. La aplicación no guardará tu clave de API.",
+      "title": "Usar clave de API de Zhipu personalizada"
+    }
+  }
+}

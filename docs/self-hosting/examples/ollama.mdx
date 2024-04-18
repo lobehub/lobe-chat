@@ -11,6 +11,7 @@ tags:
   - Language models
   - Ollama usage
 ---
+
 # Integrating with Ollama
 
 Ollama is a powerful framework for running large language models (LLMs) locally, supporting various language models including Llama 2, Mistral, and more. Now, LobeChat supports integration with Ollama, meaning you can easily use the language models provided by Ollama to enhance your application within LobeChat.
@@ -31,4 +32,13 @@ docker run -d -p 3210:3210 -e OLLAMA_PROXY_URL=http://host.docker.internal:11434
 
 Now, you can use LobeChat to converse with the local LLM.
 
-For more information on using Ollama in LobeChat, please refer to [Ollama Usage](/en/usage/providers/ollama).
+For more information on using Ollama in LobeChat, please refer to [Ollama Usage](/docs/usage/providers/ollama).
+
+## Accessing Ollama from Non-Local Locations
+
+When you first initiate Ollama, it is configured to allow access only from the local machine. To enable access from other domains and set up port listening, you will need to adjust the environment variables `OLLAMA_ORIGINS` and `OLLAMA_HOST` accordingly.
+```
+set OLLAMA_ORIGINS=*
+set OLLAMA_HOST=:11434
+```
+For further guidance on configuration, consult the [Ollama Official Documentation](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server).

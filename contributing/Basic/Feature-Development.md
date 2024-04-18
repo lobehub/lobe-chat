@@ -128,8 +128,8 @@ When building the LobeChat application, the Model is responsible for interacting
 In `src/database/model/sessionGroup.ts`, the `SessionGroupModel` is defined as follows:
 
 ```typescript
-import { BaseModel } from '@/database/core';
-import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/schemas/sessionGroup';
+import { BaseModel } from '@/database/client/core';
+import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/client/schemas/sessionGroup';
 import { nanoid } from '@/utils/uuid';
 
 class _SessionGroupModel extends BaseModel {
@@ -231,7 +231,7 @@ This requirement involves upgrading the Sessions feature to transform it from a 
 
 To handle these groups, we need to refactor the implementation logic of `useFetchSessions`. Here are the key changes:
 
-1. Use the `sessionService.getSessionsWithGroup` method to call the backend API and retrieve the grouped session data.
+1. Use the `sessionService.getGroupedSessions` method to call the backend API and retrieve the grouped session data.
 2. Save the retrieved data into three different state fields: `pinnedSessions`, `customSessionGroups`, and `defaultSessions`.
 
 #### `useFetchSessions` Method
@@ -247,7 +247,7 @@ export const createSessionSlice: StateCreator<
 > = (set, get) => ({
   // ... other methods
   useFetchSessions: () =>
-    useSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getSessionsWithGroup, {
+    useSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getGroupedSessions, {
       onSuccess: (data) => {
         set(
           {
@@ -267,15 +267,15 @@ export const createSessionSlice: StateCreator<
 
 After successfully retrieving the data, we use the `set` method to update the `customSessionGroups`, `defaultSessions`, `pinnedSessions`, and `sessions` states. This ensures that the states are synchronized with the latest session data.
 
-#### `sessionService.getSessionsWithGroup` Method
+#### `sessionService.getGroupedSessions` Method
 
-The `sessionService.getSessionsWithGroup` method is responsible for calling the backend API `SessionModel.queryWithGroups()`.
+The `sessionService.getGroupedSessions` method is responsible for calling the backend API `SessionModel.queryWithGroups()`.
 
 ```typescript
 class SessionService {
   // ... other SessionGroup related implementations
 
-  async getSessionsWithGroup(): Promise<ChatSessionList> {
+  async getGroupedSessions(): Promise<ChatSessionList> {
     return SessionModel.queryWithGroups();
   }
 }
@@ -283,7 +283,7 @@ class SessionService {
 
 #### `SessionModel.queryWithGroups` Method
 
-This method is the core method called by `sessionService.getSessionsWithGroup`, and it is responsible for querying and organizing session data. The code is as follows:
+This method is the core method called by `sessionService.getGroupedSessions`, and it is responsible for querying and organizing session data. The code is as follows:
 
 ```typescript
 class _SessionModel extends BaseModel {
@@ -617,7 +617,7 @@ class ConfigService {
   // ... Other code omitted
 
   exportSessions = async () => {
-    const sessions = await sessionService.getSessions();
+    const sessions = await sessionService.getAllSessions();
 +   const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();

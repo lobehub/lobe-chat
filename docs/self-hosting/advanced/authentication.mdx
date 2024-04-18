@@ -17,17 +17,18 @@ tags:
   - Github
   - ZITADEL
 ---
+
 # Identity Verification Service
 
 LobeChat supports the configuration of external identity verification services for internal use within enterprises/organizations to centrally manage user authorization.
 
 Currently supported identity verification services include:
 
-- [Auth0](/en/self-hosting/advanced/sso-providers/auth0)
-- [Microsoft Entra ID](/en/self-hosting/advanced/sso-providers/microsoft-entra-id)
-- [Authentik](/en/self-hosting/advanced/sso-providers/authentik)
-- [Github](/en/self-hosting/advanced/sso-providers/github)
-- [ZITADEL](/en/self-hosting/advanced/sso-providers/zitadel)
+- [Auth0](/docs/self-hosting/advanced/sso-providers/auth0)
+- [Microsoft Entra ID](/docs/self-hosting/advanced/sso-providers/microsoft-entra-id)
+- [Authentik](/docs/self-hosting/advanced/sso-providers/authentik)
+- [Github](/docs/self-hosting/advanced/sso-providers/github)
+- [ZITADEL](/docs/self-hosting/advanced/sso-providers/zitadel)
 
 Click on the links to view the corresponding platform's configuration documentation.
 
@@ -37,16 +38,14 @@ To simultaneously enable multiple identity verification sources, please set the 
 
 The order corresponds to the display order of the SSO providers.
 
-| SSO Provider       | Value      |
-| ------------------ | ---------- |
-| Auth0              | `auth0`    |
-| Microsoft Entra ID | `azure-ad` |
+| SSO Provider       | Value       |
+| ------------------ | ----------- |
+| Auth0              | `auth0`     |
+| Microsoft Entra ID | `azure-ad`  |
 | Authentik          | `authentik` |
-| Github             |  `github`  |
-| ZITADEL            | `zitadel`  |
+| Github             | `github`    |
+| ZITADEL            | `zitadel`   |
 
 ## Other SSO Providers
 
-Please refer to the [NextAuth.js][next-auth-js] documentation and feel free to submit a Pull Request.
-
-[next-auth-js]: https://next-auth.js.org/providers
+Please refer to the [NextAuth.js](https://next-auth.js.org/providers) documentation and feel free to submit a Pull Request.

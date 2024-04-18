@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Пользовательская модель. По умолчанию поддерживает как вызов функций, так и визуальное распознавание. Пожалуйста, проверьте возможность использования указанных функций в вашем конкретном случае.",
-      "file": "Эта модель поддерживает загрузку файлов для чтения и распознавания",
-      "functionCall": "Эта модель поддерживает вызов функций (Function Call).",
-      "tokens": "Эта модель поддерживает до {{tokens}} токенов в одной сессии.",
-      "vision": "Эта модель поддерживает визуальное распознавание."
-    }
-  },
   "about": "О нас",
   "advanceSettings": "Расширенные настройки",
   "appInitializing": "LobeChat запускается, пожалуйста, подождите…",
@@ -95,23 +86,6 @@
     "zh-TW": "Традиционный китайский"
   },
   "layoutInitializing": "Инициализация макета...",
-  "modelProvider": {
-    "anthropic": "Антропный",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Искусственный интеллект Moonshot",
-    "ollama": "Оллама",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity AI",
-    "togetherai": "TogetherAI",
-    "zeroone": "01. ИИ ZeroOne",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Нет описания",
   "oauth": "Вход через единую учетную запись (SSO)",
   "ok": "ОК",

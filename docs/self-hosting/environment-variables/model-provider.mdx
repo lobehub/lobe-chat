@@ -2,29 +2,14 @@
 title: LobeChat Model Service Providers - Environment Variables and Configuration
 description: >-
   Learn about the environment variables and configuration settings for various
-  model service providers like OpenAI, Azure OpenAI, ZHIPU AI, Moonshot AI,
-  Google AI, AWS Bedrock, Ollama, Perplexity AI, Anthropic AI, Mistral AI, Groq
-  AI, OpenRouter AI, 01.AI, and TogetherAI.
+  model service providers like OpenAI, Google AI, AWS Bedrock, Ollama,
+  Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
 tags:
   - Model Service Providers
   - Environment Variables
-  - Configuration
-  - OpenAI
-  - Azure OpenAI
-  - ZHIPU AI
-  - Moonshot AI
-  - Google AI
-  - AWS Bedrock
-  - Ollama
-  - Perplexity AI
-  - Anthropic AI
-  - Mistral AI
-  - Groq AI
-  - OpenRouter AI
-  - 01.AI
-  - TogetherAI
 ---
-# Model Service Providers
+
+# Model Providers
 
 When deploying LobeChat, a rich set of environment variables related to model service providers is provided, allowing you to easily define the model service providers to be enabled in LobeChat.
 
@@ -33,7 +18,7 @@ When deploying LobeChat, a rich set of environment variables related to model se
 ### `OPENAI_API_KEY`
 
 - Type: Required
-- Description: This is the API key you applied for on the OpenAI account page, you can check it out [here](openai-api-page)
+- Description: This is the API key you applied for on the OpenAI account page, you can check it out [here](https://platform.openai.com/api-keys)
 - Default: -
 - Example: `sk-xxxxxx...xxxxxx`
 
@@ -63,10 +48,10 @@ Related discussions:
 - [Reasons for errors when using third-party interfaces](https://github.com/lobehub/lobe-chat/discussions/734)
 - [No response in chat after filling in the proxy server address](https://github.com/lobehub/lobe-chat/discussions/1065)
 
-### `CUSTOM_MODELS`
+### `OPENAI_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas.
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
 
@@ -76,57 +61,35 @@ You can find all current model names in [modelProviders](https://github.com/lobe
 
 ## Azure OpenAI
 
-If you need to use Azure OpenAI to provide model services, you can refer to the [Deploying with Azure OpenAI](../Deployment/Deploy-with-Azure-OpenAI.en-US.md) section for detailed steps. Here, we will list the environment variables related to Azure OpenAI.
-
-### `API_KEY_SELECT_MODE`
-
-- Type：Optional
-- Description：Controls the mode for selecting the API Key when multiple API Keys are available. Currently supports `random` and `turn`.
-- Default：`random`
-- Example：`random` or `turn`
-
-When using the `random` mode, a random API Key will be selected from the available multiple API Keys.
-
-When using the `turn` mode, the API Keys will be retrieved in a round-robin manner according to the specified order.
-
-### `USE_AZURE_OPENAI`
-
-- Type: Optional
-- Description: Set this value to `1` to enable Azure OpenAI configuration
-- Default: -
-- Example: `1`
+If you need to use Azure OpenAI to provide model services, you can refer to the [Deploying with Azure OpenAI](/docs/self-hosting/examples/azure-openai) section for detailed steps. Here, we will list the environment variables related to Azure OpenAI.
 
 ### `AZURE_API_KEY`
 
-- Type: Optional
+- Type: Required
 - Description: This is the API key you applied for on the Azure OpenAI account page
 - Default: -
 - Example: `c55168be3874490ef0565d9779ecd5a6`
 
+### `AZURE_ENDPOINT`
+
+- Type: Required
+- Description: The endpoint of Azure OpenAI, you can find it in the Azure OpenAI account page
+- Default: `-`
+- Example: `https://docs-test-001.openai.azure.com`
+
 ### `AZURE_API_VERSION`
 
-- Type: Optional
+- Type: Required
 - Description: The API version of Azure, following the format YYYY-MM-DD
-- Default: `2023-08-01-preview`
-- Example: `2023-05-15`, refer to [latest version](https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version)
+- Default: `-`
+- Example: `2023-02-01`, refer to [latest version](https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version)
 
-## ZHIPU AI
+### `AZURE_MODEL_LIST`
 
-### `ZHIPU_API_KEY`
-
-- Type: Required
-- Description: This is the API key you applied for in the ZHIPU AI service
-- Default: -
-- Example: `4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
-
-## Moonshot AI
-
-### `MOONSHOT_API_KEY`
-
-- Type: Required
-- Description: This is the API key you applied for in the Moonshot AI service
-- Default: -
-- Example: `Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `id->deplymentName=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `gpt-35-turbo->my-deploy=GPT 3.5 Turbo` 或 `gpt-4-turbo->my-gpt4=GPT 4 Turbo<128000:vision:fc>`
 
 ## Google AI
 
@@ -136,6 +99,29 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Description: This is the API key you applied for in the Google AI Platform to access Google AI services
 - Default: -
 - Example: `AIraDyDwcw254kwJaGjI9wwaHcdDCS__Vt3xQE`
+
+### `GOOGLE_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Google API proxy, you can use this configuration item to override the default Google API request base URL
+- Default: `https://generativelanguage.googleapis.com`
+- Example: `https://api.genai.gd.edu.kg/google`
+
+## Anthropic AI
+
+### `ANTHROPIC_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from Anthropic AI
+- Default: -
+- Example: `sk-ant-apixx-xxxxxxxxx-xxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx`
+
+### `ANTHROPIC_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Anthropic API proxy, you can use this configuration item to override the default Anthropic API request base URL
+- Default: `https://api.anthropic.com`
+- Example: `https://my-anthropic-proxy.com`
 
 ## AWS Bedrock
 
@@ -160,14 +146,62 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Default: `us-east-1`
 - Example: `us-east-1`
 
+## OpenRouter AI
+
+### `OPENROUTER_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the OpenRouter AI service
+- Default: -
+- Example: `sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`
+
+### `OPENROUTER_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to specify a custom OpenRouter model list. Model definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
+
+## TogetherAI
+
+### `TOGETHERAI_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the TogetherAI service
+- Default: -
+- Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### `TOGETHERAI_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to specify a custom TogetherAI model list. Model definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `01-ai/yi-34b-chat`
+
 ## Ollama
 
 ### `OLLAMA_PROXY_URL`
 
-- Type: Optional
+- Type: Required
 - Description: Used to enable the Ollama service, setting this will display optional open-source language models in the language model list and can also specify custom language models
 - Default: -
 - Example: `http://127.0.0.1:11434/v1`
+
+### `OLLAMA_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to specify a custom Ollama language model. Model definition syntax rules see [model-list][model-list]
+- Default: -
+- Example: `llama2:7B`
+
+## Moonshot AI
+
+### `MOONSHOT_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Moonshot AI service
+- Default: -
+- Example: `Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
 
 ## Perplexity AI
 
@@ -177,15 +211,6 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Description: This is the API key you applied from Perplexity AI
 - Default: -
 - Example: `pplx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-
-## Anthropic AI
-
-### `ANTHROPIC_API_KEY`
-
-- Type: Required
-- Description: This is the API key you applied from Anthropic AI
-- Default: -
-- Example: `sk-ant-apixx-xxxxxxxxx-xxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx`
 
 ## Mistral AI
 
@@ -205,21 +230,14 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Default: -
 - Example: `gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-## OpenRouter AI
+## ZHIPU AI
 
-### `OPENROUTER_API_KEY`
+### `ZHIPU_API_KEY`
 
 - Type: Required
-- Description: This is the API key you applied for in the OpenRouter AI service
+- Description: This is the API key you applied for in the ZHIPU AI service
 - Default: -
-- Example: `sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`
-
-### `OPENROUTER_CUSTOM_MODELS`
-
-- Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas.
-- Default: `-`
-- Example: `-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
+- Example: `4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
 
 ## 01.AI
 
@@ -230,11 +248,4 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Default: -
 - 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-## TogetherAI
-
-### `TOGETHERAI_API_KEY`
-
-- Type: Required
-- Description: This is the API key you applied for in the TogetherAI service
-- Default: -
-- Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+[model-list]: /docs/self-hosting/advanced/model-list

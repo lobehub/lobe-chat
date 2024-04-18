@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Aangepast model, standaard ingesteld om zowel functieoproep als visuele herkenning te ondersteunen. Verifieer de beschikbaarheid van deze mogelijkheden op basis van de werkelijke situatie.",
-      "file": "Dit model ondersteunt het uploaden van bestanden voor lezen en herkenning",
-      "functionCall": "Dit model ondersteunt functieoproep (Function Call).",
-      "tokens": "Dit model ondersteunt maximaal {{tokens}} tokens per sessie.",
-      "vision": "Dit model ondersteunt visuele herkenning."
-    }
-  },
   "about": "Over",
   "advanceSettings": "Geavanceerde instellingen",
   "appInitializing": "LobeChat wordt geïnitialiseerd, even geduld a.u.b...",
@@ -95,23 +86,6 @@
     "zh-TW": "Traditioneel Chinees"
   },
   "layoutInitializing": "Lay-out wordt geladen...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01.AI ZeroOne",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Geen beschrijving beschikbaar",
   "oauth": "SSO inloggen",
   "ok": "Oké",

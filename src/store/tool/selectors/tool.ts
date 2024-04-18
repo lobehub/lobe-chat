@@ -40,8 +40,9 @@ const enabledSchema =
       .filter((m) => tools.includes(m?.identifier))
       .flatMap((manifest) =>
         manifest.api.map((m) => ({
-          ...m,
+          description: m.description,
           name: getAPIName(manifest.identifier, m.name, manifest.type),
+          parameters: m.parameters,
         })),
       );
 

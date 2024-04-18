@@ -24,13 +24,12 @@ module.exports = defineConfig({
   ],
   temperature: 0,
   modelName: 'gpt-3.5-turbo-0125',
-  splitToken: 1024,
+  splitToken: 2048,
   experimental: {
     jsonMode: true,
   },
-  reference:
-    'You need to maintain the component format of MDX, and the output text does not need to be wrapped in any code block syntax at the outermost level.',
   markdown: {
+    // reference: '你需要保持 mdx 的组件格式，输出文本不需要在最外层包裹任何代码块语法',
     entry: ['./README.zh-CN.md', './contributing/**/*.zh-CN.md', './docs/**/*.zh-CN.mdx'],
     entryLocale: 'zh-CN',
     outputLocales: ['en-US'],

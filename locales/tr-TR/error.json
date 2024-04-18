@@ -85,58 +85,7 @@
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Oturumu başlatmak için Anthropic API Key'inizi girin. Uygulama API Key'inizi kaydetmez",
-        "title": "Özel Anthropic API Key'i Kullan"
-      },
-      "Bedrock": {
-        "customRegion": "Özel bölgeyi kullan",
-        "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama yapılandırmanızı kaydetmez",
-        "title": "Özel Bedrock kimlik bilgilerini kullan"
-      },
-      "Google": {
-        "description": "Google API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel Google API Anahtarını kullan"
-      },
-      "Groq": {
-        "description": "Oturumu başlatmak için Groq API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel Groq API Anahtarını Kullan"
-      },
-      "Mistral": {
-        "description": "Mistral AI API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel Mistral AI API Anahtarı Kullan"
-      },
-      "Moonshot": {
-        "description": "Oturumu başlatmak için Moonshot AI API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel Moonshot AI API Anahtarını Kullan"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Proxy adresi ekle (isteğe bağlı)",
-        "description": "OpenAI API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel OpenAI API Anahtarını kullan"
-      },
-      "OpenRouter": {
-        "description": "Oturuma başlamak için OpenRouter API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel OpenRouter API Anahtarını Kullan"
-      },
-      "Perplexity": {
-        "description": "Sohbeti başlatmak için Perplexity API Key'inizi girin. Uygulama API Key'inizi kaydetmez",
-        "title": "Özel Perplexity API Key'i Kullan"
-      },
-      "TogetherAI": {
-        "description": "Oturuma başlamak için TogetherAI API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel TogetherAI API Anahtarını Kullan"
-      },
-      "ZeroOne": {
-        "description": "Oturumu başlatmak için SıfırBirIoT API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel SıfırBirIoT API Anahtarı Kullan"
-      },
-      "Zhipu": {
-        "description": "Zhipu API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez",
-        "title": "Özel Zhipu API Anahtarını kullan"
-      }
-    },
+    "addProxyUrl": "OpenAI vekil adresi ekle (isteğe bağlı)",
     "closeMessage": "Mesajı kapat",
     "confirm": "Onayla ve Yeniden Dene",
     "model": {

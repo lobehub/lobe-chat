@@ -1,13 +1,4 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "نموذج مخصص، يدعم الوظائف والتعرف على الرؤية، يرجى التحقق من قدرة النموذج على القيام بذلك وفقًا للحالة الفعلية",
-      "file": "يدعم هذا النموذج قراءة وتعرف على الملفات المرفقة",
-      "functionCall": "يدعم هذا النموذج استدعاء الوظائف",
-      "tokens": "هذا النموذج يدعم حتى {{tokens}} رموز في جلسة واحدة",
-      "vision": "يدعم هذا النموذج التعرف على الرؤية"
-    }
-  },
   "about": "حول",
   "advanceSettings": "إعدادات متقدمة",
   "appInitializing": "جاري تهيئة LobeChat، يرجى الانتظار ...",
@@ -95,23 +86,6 @@
     "zh-TW": "الصينية التقليدية"
   },
   "layoutInitializing": "جاري تحميل التخطيط...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "أزور",
-    "bedrock": "بيدروك لأمازون ويب سيرفيس",
-    "google": "جوجل",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "مونشوت الذكاء الاصطناعي",
-    "ollama": "أولاما",
-    "oneapi": "وان آبي آي",
-    "openai": "أوبن إيه آي",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01.AI الصفر والواحد",
-    "zhipu": "Zhipu"
-  },
   "noDescription": "لا توجد وصف",
   "oauth": "تسجيل الدخول SSO",
   "ok": "موافق",

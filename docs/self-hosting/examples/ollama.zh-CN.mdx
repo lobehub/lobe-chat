@@ -9,6 +9,7 @@ tags:
   - 配置
   - 部署
 ---
+
 # 与 Ollama 集成
 
 Ollama 是一款强大的本地运行大型语言模型（LLM）的框架，支持多种语言模型，包括 Llama 2, Mistral 等。现在，LobeChat 已经支持与 Ollama 的集成，这意味着你可以在 LobeChat 中轻松使用 Ollama 提供的语言模型来增强你的应用。
@@ -29,4 +30,13 @@ docker run -d -p 3210:3210 -e OLLAMA_PROXY_URL=http://host.docker.internal:11434
 
 接下来，你就可以使用 LobeChat 与本地 LLM 对话了。
 
-关于在 LobeChat 中使用 Ollama 的更多信息，请查阅 [Ollama 使用](/zh/usage/providers/ollama)。
+关于在 LobeChat 中使用 Ollama 的更多信息，请查阅 [Ollama 使用](/docs/usage/providers/ollama)。
+
+## 非本地访问 Ollama
+
+由于 Ollama 默认参数在启动时设置了仅本地访问，所以跨域访问以及端口监听需要进行额外的环境变量设置 `OLLAMA_ORIGINS` 和 `OLLAMA_HOST`。
+```
+set OLLAMA_ORIGINS=*
+set OLLAMA_HOST=:11434
+```
+详细配置方法可以参考 [Ollama 官方文档](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server)。

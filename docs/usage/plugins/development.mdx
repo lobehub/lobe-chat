@@ -16,6 +16,7 @@ tags:
   - Deployment
   - Release
 ---
+
 # Plugin Development Guide
 
 ## Plugin Composition
@@ -35,52 +36,88 @@ This section will introduce how to add and use a custom plugin in LobeChat.
 <Steps>
   ### Create and Launch Plugin Project
 
-  You need to first create a plugin project locally, you can use the template we have prepared [lobe-chat-plugin-template][lobe-chat-plugin-template-url]
+You need to first create a plugin project locally, you can use the template we have prepared [lobe-chat-plugin-template][lobe-chat-plugin-template-url]
 
-  ```bash
-  $ git clone https://github.com/lobehub/chat-plugin-template.git
-  $ cd chat-plugin-template
-  $ npm i
-  $ npm run dev
-  ```
+```bash
+$ git clone https://github.com/lobehub/chat-plugin-template.git
+$ cd chat-plugin-template
+$ npm i
+$ npm run dev
+```
 
-  When you see `ready started server on 0.0.0.0:3400, url: http://localhost:3400`, it means the plugin service has been successfully launched locally.
+When you see `ready started server on 0.0.0.0:3400, url: http://localhost:3400`, it means the plugin service has been successfully launched locally.
 
-  <Image alt="Create and Launch Plugin Project" height={483} inStep src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259526-9ef25272-4312-429b-93bc-a95515727ed3.png" />
+<Image
+  alt="Create and Launch Plugin Project"
+  height={483}
+  inStep
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259526-9ef25272-4312-429b-93bc-a95515727ed3.png"
+/>
 
-  ### Add Local Plugin in LobeChat Role Settings
+### Add Local Plugin in LobeChat Role Settings
 
-  Next, go to LobeChat, create a new assistant, and go to its session settings page:
+Next, go to LobeChat, create a new assistant, and go to its session settings page:
 
-  <Image alt="Add Local Plugin in LobeChat Role Settings S1" height={483} inStep src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259643-1a9cc34a-76f3-4ccf-928b-129654670efd.png" />
+<Image
+  alt="Add Local Plugin in LobeChat Role Settings S1"
+  height={483}
+  inStep
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259643-1a9cc34a-76f3-4ccf-928b-129654670efd.png"
+/>
 
-  Click the <kbd>Add</kbd> button on the right of the plugin list to open the custom plugin adding popup:
+Click the <kbd>Add</kbd> button on the right of the plugin list to open the custom plugin adding popup:
 
-  <Image alt="Add Local Plugin in LobeChat Role Settings S2" height={483} inStep src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259748-2ef6a244-39bb-483c-b359-f156ffcbe1a4.png" />
+<Image
+  alt="Add Local Plugin in LobeChat Role Settings S2"
+  height={483}
+  inStep
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259748-2ef6a244-39bb-483c-b359-f156ffcbe1a4.png"
+/>
 
-  Fill in the **Plugin Description File Url** with `http://localhost:3400/manifest-dev.json`, which is the manifest address of the plugin we started locally.
+Fill in the **Plugin Description File Url** with `http://localhost:3400/manifest-dev.json`, which is the manifest address of the plugin we started locally.
 
-  At this point, you should see that the identifier of the plugin has been automatically recognized as `chat-plugin-template`. Next, you need to fill in the remaining form fields (only the title is required), and then click the <kbd>Save</kbd> button to complete the custom plugin addition.
+At this point, you should see that the identifier of the plugin has been automatically recognized as `chat-plugin-template`. Next, you need to fill in the remaining form fields (only the title is required), and then click the <kbd>Save</kbd> button to complete the custom plugin addition.
 
-  <Image alt="Add Local Plugin in LobeChat Role Settings S3" height={483} inStep src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259964-59f4906d-ae2e-4ec0-8b43-db36871d0869.png" />
+<Image
+  alt="Add Local Plugin in LobeChat Role Settings S3"
+  height={483}
+  inStep
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265259964-59f4906d-ae2e-4ec0-8b43-db36871d0869.png"
+/>
 
-  After adding, you can see the newly added plugin in the plugin list. If you need to modify the plugin configuration, you can click the <kbd>Settings</kbd> button on the far right to make changes.
+After adding, you can see the newly added plugin in the plugin list. If you need to modify the plugin configuration, you can click the <kbd>Settings</kbd> button on the far right to make changes.
 
-  <Image alt="Add Local Plugin in LobeChat Role Settings S4" height={483} inStep src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260093-a0363c74-0b5b-48dd-b103-2db6b4a8262e.png" />
+<Image
+  alt="Add Local Plugin in LobeChat Role Settings S4"
+  height={483}
+  inStep
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260093-a0363c74-0b5b-48dd-b103-2db6b4a8262e.png"
+/>
 
-  ### Test Plugin Function in Session
+### Test Plugin Function in Session
 
-  Next, we need to test whether the plugin's function is working properly.
+Next, we need to test whether the plugin's function is working properly.
 
-  Click the <kbd>Back</kbd> button to return to the session area, and then send a message to the assistant: "What should I wear?" At this point, the assistant will try to ask you about your gender and current mood.
+Click the <kbd>Back</kbd> button to return to the session area, and then send a message to the assistant: "What should I wear?" At this point, the assistant will try to ask you about your gender and current mood.
 
-  <Image alt="Test Plugin Function in Session S1" height={483} inStep src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260291-f0aa0e7c-0ffb-486c-a834-08e73d49896f.png" />
+<Image
+  alt="Test Plugin Function in Session S1"
+  height={483}
+  inStep
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260291-f0aa0e7c-0ffb-486c-a834-08e73d49896f.png"
+/>
 
-  After answering, the assistant will initiate the plugin call, retrieve recommended clothing data from the server based on your gender and mood, and push it to you. Finally, it will provide a text summary based on this information.
+After answering, the assistant will initiate the plugin call, retrieve recommended clothing data from the server based on your gender and mood, and push it to you. Finally, it will provide a text summary based on this information.
 
-  <Image alt="Test Plugin Function in Session S2" height={483} inStep src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260461-c22ae797-2809-464b-96fc-d0c020f4807b.png" />
+<Image
+  alt="Test Plugin Function in Session S2"
+  height={483}
+  inStep
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265260461-c22ae797-2809-464b-96fc-d0c020f4807b.png"
+/>
 
-  After completing these operations, you have understood the basic process of adding custom plugins and using them in LobeChat.
+After completing these operations, you have understood the basic process of adding custom plugins and using them in LobeChat.
+
 </Steps>
 
 ## Local Plugin Development
@@ -210,17 +247,29 @@ export default createLobeChatPluginGateway();
 
 The custom UI interface for plugins is optional. For example, the official plugin [Web Content Extraction](https://github.com/lobehub/chat-plugin-web-crawler) does not have a corresponding user interface.
 
-<Image alt="Plugin UI Interface S1" height={483} src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263241-0e765fdc-3463-4c36-a398-aef177a30df9.png" />
+<Image
+  alt="Plugin UI Interface S1"
+  height={483}
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263241-0e765fdc-3463-4c36-a398-aef177a30df9.png"
+/>
 
 If you want to display richer information in plugin messages or include some interactive operations, you can customize a user interface for the plugin. For example, the following image shows the user interface for the [Search Engine](https://github.com/lobehub/chat-plugin-search-engine) plugin.
 
-<Image alt="Plugin UI Interface S2" height={483} src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263427-9bdc03d5-aa61-4f62-a2ce-88683f3308d8.png" />
+<Image
+  alt="Plugin UI Interface S2"
+  height={483}
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263427-9bdc03d5-aa61-4f62-a2ce-88683f3308d8.png"
+/>
 
 #### Implementation of Plugin UI Interface
 
 LobeChat implements the loading of plugin UI through `iframe` and uses `postMessage` to communicate with the plugin. Therefore, the implementation of the plugin UI is consistent with regular web development. You can use any frontend framework and development language you are familiar with.
 
-<Image alt="Implementation of Plugin UI Interface" height={483} src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263653-4ea87abc-249a-49f3-a241-7ed93ddb1ddf.png" />
+<Image
+  alt="Implementation of Plugin UI Interface"
+  height={483}
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/265263653-4ea87abc-249a-49f3-a241-7ed93ddb1ddf.png"
+/>
 
 In the template we provide, we use React + Next.js + [antd](https://ant.design/) as the frontend interface framework. You can find the implementation of the user interface in [`src/pages/index.tsx`](https://github.com/lobehub/chat-plugin-template/blob/main/src/pages/index.tsx).
 
@@ -258,7 +307,7 @@ If you want more people to use your plugin, feel free to [submit it for listing]
 
 ### Plugin Shield
 
-[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF%20%26%20%F0%9F%A7%A9%20LobeHub-Plugin-95f3d9?labelColor=black\&style=flat-square)](https://github.com/lobehub/lobe-chat-plugins)
+[![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF%20%26%20%F0%9F%A7%A9%20LobeHub-Plugin-95f3d9?labelColor=black&style=flat-square)](https://github.com/lobehub/lobe-chat-plugins)
 
 ```md
 [![lobe-chat-plugin](https://img.shields.io/badge/%F0%9F%A4%AF%20%26%20%F0%9F%A7%A9%20LobeHub-Plugin-95f3d9?labelColor=black&style=flat-square)](https://github.com/lobehub/lobe-chat-plugins)

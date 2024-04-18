@@ -10,7 +10,8 @@ import { globalService } from '@/services/global';
 import { messageService } from '@/services/message';
 import { UserConfig, userService } from '@/services/user';
 import type { GlobalStore } from '@/store/global';
-import type { GlobalServerConfig, GlobalSettings } from '@/types/settings';
+import type { GlobalServerConfig } from '@/types/serverConfig';
+import type { GlobalSettings } from '@/types/settings';
 import { OnSyncEvent, PeerSyncStatus } from '@/types/sync';
 import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
@@ -61,6 +62,9 @@ export const createCommonSlice: StateCreator<
 
   refreshUserConfig: async () => {
     await mutate([USER_CONFIG_FETCH_KEY, true]);
+
+    // when get the user config ,refresh the model provider list to the latest
+    get().refreshModelProviderList();
   },
 
   switchBackToChat: (sessionId) => {
@@ -158,7 +162,10 @@ export const createCommonSlice: StateCreator<
           };
 
           const defaultSettings = merge(get().defaultSettings, serverSettings);
+
           set({ defaultSettings, serverConfig: data }, false, n('initGlobalConfig'));
+
+          get().refreshDefaultModelProviderList();
         }
       },
       revalidateOnFocus: false,
@@ -179,6 +186,9 @@ export const createCommonSlice: StateCreator<
             false,
             n('fetchUserConfig', data),
           );
+
+          // when get the user config ,refresh the model provider list to the latest
+          get().refreshModelProviderList();
 
           const { language } = settingsSelectors.currentSettings(get());
           if (language === 'auto') {

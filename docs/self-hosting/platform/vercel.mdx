@@ -10,6 +10,7 @@ tags:
   - OpenAI API Key
   - Custom Domain Binding
 ---
+
 # Deploy LobeChat with Vercel
 
 If you want to deploy LobeChat on Vercel, you can follow the steps below:
@@ -19,19 +20,20 @@ If you want to deploy LobeChat on Vercel, you can follow the steps below:
 <Steps>
   ### Prepare your OpenAI API Key
 
-  Go to [OpenAI API Key](https://platform.openai.com/account/api-keys) to get your OpenAI API Key.
+Go to [OpenAI API Key](https://platform.openai.com/account/api-keys) to get your OpenAI API Key.
 
-  ### Click the button below to deploy
+### Click the button below to deploy
 
-  [![][deploy-button-image]][deploy-link]
+[![][deploy-button-image]][deploy-link]
 
-  Simply log in with your GitHub account, and remember to fill in `OPENAI_API_KEY` (required) and `ACCESS_CODE` (recommended) in the environment variables page.
+Simply log in with your GitHub account, and remember to fill in `OPENAI_API_KEY` (required) and `ACCESS_CODE` (recommended) in the environment variables page.
 
-  ### After deployment, you can start using it
+### After deployment, you can start using it
 
-  ### Bind a custom domain (optional)
+### Bind a custom domain (optional)
 
-  Vercel's assigned domain DNS may be polluted in some regions, so binding a custom domain can establish a direct connection.
+Vercel's assigned domain DNS may be polluted in some regions, so binding a custom domain can establish a direct connection.
+
 </Steps>
 
 ## Automatic Synchronization of Updates
@@ -39,7 +41,7 @@ If you want to deploy LobeChat on Vercel, you can follow the steps below:
 If you have deployed your project using the one-click deployment steps mentioned above, you may find that you are always prompted with "updates available." This is because Vercel creates a new project for you by default instead of forking this project, which causes the inability to accurately detect updates.
 
 <Callout>
-  We recommend following the [Self-Hosting Upstream Sync](/zh/self-hosting/upstream-sync) steps to
+  We recommend following the [Self-Hosting Upstream Sync](/docs/self-hosting/upstream-sync) steps to
   Redeploy.
 </Callout>
 

@@ -1,0 +1,231 @@
+{
+  "anthropic": {
+    "endpoint": {
+      "desc": "Muss neben der Standardadresse auch http(s):// enthalten",
+      "placeholder": "https://api.anthropic.com",
+      "title": "API-Proxy-Adresse"
+    },
+    "title": "Anthropic",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von Anthropic ein",
+      "placeholder": "Anthropic API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen Anthropic-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen Anthropic-API-Schlüssel"
+    }
+  },
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Die API-Version von Azure im Format JJJJ-MM-TT, siehe [neueste Version](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Liste abrufen",
+      "title": "Azure-API-Version"
+    },
+    "empty": "Geben Sie eine Modell-ID ein, um das erste Modell hinzuzufügen",
+    "endpoint": {
+      "desc": "Diesen Wert finden Sie im Abschnitt 'Schlüssel und Endpunkte', wenn Sie in Azure Portal Ihre Ressource überprüfen",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Azure-API-Adresse"
+    },
+    "modelListPlaceholder": "Wählen Sie ein bereitgestelltes OpenAI-Modell aus oder fügen Sie eines hinzu",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Diesen Wert finden Sie im Abschnitt 'Schlüssel und Endpunkte', wenn Sie in Azure Portal Ihre Ressource überprüfen. Sie können KEY1 oder KEY2 verwenden",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen Azure OpenAI-API-Schlüssel ein, um das Gespräch zu beginnen",
+      "title": "Verwenden Sie einen individuellen Azure OpenAI-API-Schlüssel"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Geben Sie Ihre AWS Access Key Id ein",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "Testen Sie, ob AccessKeyId / SecretAccessKey korrekt eingegeben wurden"
+    },
+    "region": {
+      "desc": "Geben Sie Ihre AWS Region ein",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "Geben Sie Ihren AWS Secret Access Key ein",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Benutzerdefinierter Regionsservice",
+      "description": "Geben Sie Ihren AWS AccessKeyId / SecretAccessKey ein, um das Gespräch zu beginnen. Die App speichert Ihre Authentifizierungsinformationen nicht.",
+      "title": "Verwenden Sie benutzerdefinierte Bedrock-Authentifizierungsinformationen"
+    }
+  },
+  "google": {
+    "endpoint": {
+      "desc": "除默认地址外，必须包含 http(s)://",
+      "placeholder": "https://generativelanguage.googleapis.com",
+      "title": "API 代理地址"
+    },
+    "title": "Google",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von Google ein",
+      "placeholder": "Google API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen Google-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen Google-API-Schlüssel"
+    }
+  },
+  "groq": {
+    "title": "Groq",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von Groq ein",
+      "placeholder": "Groq API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen Groq-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen Groq-API-Schlüssel"
+    }
+  },
+  "mistral": {
+    "title": "Mistral AI",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von Mistral AI ein",
+      "placeholder": "Mistral AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen Mistral AI-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen Mistral AI-API-Schlüssel"
+    }
+  },
+  "moonshot": {
+    "title": "Moonshot AI",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von Moonshot AI ein",
+      "placeholder": "Moonshot AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen Moonshot AI-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen Moonshot AI-API-Schlüssel"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"
+    },
+    "customModelName": {
+      "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Benutzerdefinierte Modellnamen"
+    },
+    "endpoint": {
+      "desc": "Geben Sie die Proxy-Adresse der Ollama-Schnittstelle ein, leer lassen, wenn lokal nicht spezifiziert",
+      "placeholder": "http://127.0.0.1:11434/v1",
+      "title": "Schnittstellen-Proxy-Adresse"
+    },
+    "title": "Ollama"
+  },
+  "openai": {
+    "endpoint": {
+      "desc": "Muss neben der Standardadresse auch http(s):// enthalten",
+      "placeholder": "https://api.openai.com/v1",
+      "title": "Schnittstellen-Proxy-Adresse"
+    },
+    "title": "OpenAI",
+    "token": {
+      "desc": "Verwenden Sie Ihren eigenen OpenAI-Key",
+      "placeholder": "OpenAI API Key",
+      "title": "OpenAI API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen OpenAI-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen OpenAI-API-Schlüssel"
+    }
+  },
+  "openrouter": {
+    "checker": {
+      "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"
+    },
+    "customModelName": {
+      "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
+      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
+      "title": "Benutzerdefinierte Modellnamen"
+    },
+    "title": "OpenRouter",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von OpenRouter AI ein",
+      "placeholder": "OpenRouter AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen OpenRouter-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen OpenRouter-API-Schlüssel"
+    }
+  },
+  "perplexity": {
+    "title": "Perplexity",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von Perplexity AI ein",
+      "placeholder": "Perplexity AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen Perplexity-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen Perplexity-API-Schlüssel"
+    }
+  },
+  "togetherai": {
+    "checker": {
+      "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"
+    },
+    "customModelName": {
+      "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
+      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
+      "title": "Benutzerdefinierte Modellnamen"
+    },
+    "title": "TogetherAI",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von TogetherAI AI ein",
+      "placeholder": "TogetherAI AI API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen TogetherAI-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen TogetherAI-API-Schlüssel"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Alles und Nichts",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von 01.AI Alles und Nichts ein",
+      "placeholder": "01.AI Alles und Nichts API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen ZeroOne-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen ZeroOne-API-Schlüssel"
+    }
+  },
+  "zhipu": {
+    "title": "Zhipu",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von Zhipu ein",
+      "placeholder": "Zhipu API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen Zhipu-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen Zhipu-API-Schlüssel"
+    }
+  }
+}
