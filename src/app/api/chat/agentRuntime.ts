@@ -482,4 +482,62 @@ export const initializeWithUserPayload = (provider: string, payload: JWTPayload)
   });
 };
 
+export const createTraceOptions = (
+  payload: ChatStreamPayload,
+  { trace: tracePayload, provider }: AgentChatOptions,
+) => {
+  const { messages, model, tools, ...parameters } = payload;
+  // create a trace to monitor the completion
+  const traceClient = new TraceClient();
+  const trace = traceClient.createTrace({
+    id: tracePayload?.traceId,
+    input: messages,
+    metadata: { provider },
+    name: tracePayload?.traceName,
+    sessionId: `${tracePayload?.sessionId || INBOX_SESSION_ID}@${tracePayload?.topicId || 'start'}`,
+    tags: tracePayload?.tags,
+    userId: tracePayload?.userId,
+  });
+
+  const generation = trace?.generation({
+    input: messages,
+    metadata: { provider },
+    model,
+    modelParameters: parameters as any,
+    name: `Chat Completion (${provider})`,
+    startTime: new Date(),
+  });
+
+  return {
+    callback: {
+      experimental_onToolCall: async () => {
+        trace?.update({
+          tags: [...(tracePayload?.tags || []), TraceTagMap.ToolsCall],
+        });
+      },
+
+      onCompletion: async (completion: string) => {
+        generation?.update({
+          endTime: new Date(),
+          metadata: { provider, tools },
+          output: completion,
+        });
+
+        trace?.update({ output: completion });
+      },
+
+      onFinal: async () => {
+        await traceClient.shutdownAsync();
+      },
+
+      onStart: () => {
+        generation?.update({ completionStartTime: new Date() });
+      },
+    },
+    headers: {
+      [LOBE_CHAT_OBSERVATION_ID]: generation?.id,
+      [LOBE_CHAT_TRACE_ID]: trace?.id,
+    },
+  };
+};
 export default AgentRuntime;

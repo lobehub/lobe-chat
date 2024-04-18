@@ -173,22 +173,12 @@ export function initializeWithClientStore(provider: string, payload: any) {
  * Fetch chat completion on the client side.
  * @param provider - The provider name.
  * @param payload - The payload data for the chat stream.
- * @param options - The fetch options.
  * @returns A promise that resolves to the chat response.
  */
-export async function fetchOnClient(
-  provider: string,
-  payload: Partial<ChatStreamPayload>,
-  options?: FetchOptions,
-) {
+export async function fetchOnClient(provider: string, payload: Partial<ChatStreamPayload>) {
   const agentRuntime = await initializeWithClientStore(provider, payload);
   const data = payload as ChatStreamPayload;
-  const tracePayload = options?.trace;
-  return await agentRuntime.chat(data, {
-    enableTrace: tracePayload?.enabled,
-    provider,
-    trace: tracePayload,
-  });
+  return await agentRuntime.chat(data);
 }
 
 class ChatService {
@@ -290,7 +280,7 @@ class ChatService {
      */
     if (enableFetchOnClient) {
       try {
-        return await fetchOnClient(provider, payload, options);
+        return await fetchOnClient(provider, payload);
       } catch (e) {
         const {
           errorType = ChatErrorType.BadRequest,
