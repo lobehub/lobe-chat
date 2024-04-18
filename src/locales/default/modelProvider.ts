@@ -97,6 +97,18 @@ export default {
       title: '使用自定义 Groq API Key',
     },
   },
+  minimax: {
+    title: 'Minimax',
+    token: {
+      desc: '填入来自 Minimax 的 API Key',
+      placeholder: 'Minimax API Key',
+      title: 'API Key',
+    },
+    unlock: {
+      description: '输入你的 Minimax API Key 即可开始会话。应用不会记录你的 API Key',
+      title: '使用自定义 Minimax API Key',
+    },
+  },
   mistral: {
     title: 'Mistral AI',
     token: {

@@ -95,6 +95,18 @@
       "title": "Użyj niestandardowego klucza API Groq"
     }
   },
+  "minimax": {
+    "title": "Minimax",
+    "token": {
+      "desc": "Wprowadź klucz API Minimax",
+      "placeholder": "Klucz API Minimax",
+      "title": "Klucz API"
+    },
+    "unlock": {
+      "description": "Wprowadź swój klucz API Minimax, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
+      "title": "Użyj niestandardowego klucza API Minimax"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {

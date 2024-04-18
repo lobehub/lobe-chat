@@ -95,6 +95,18 @@
       "title": "Verwenden Sie einen individuellen Groq-API-Schlüssel"
     }
   },
+  "minimax": {
+    "title": "Minimax",
+    "token": {
+      "desc": "Geben Sie Ihren API-Schlüssel von Minimax ein",
+      "placeholder": "Minimax API-Schlüssel",
+      "title": "API-Schlüssel"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren Minimax API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen benutzerdefinierten Minimax API-Schlüssel"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {

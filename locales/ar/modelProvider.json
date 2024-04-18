@@ -95,6 +95,18 @@
       "title": "استخدام مفتاح API الخاص بـ Groq المخصص"
     }
   },
+  "minimax": {
+    "title": "Minimax",
+    "token": {
+      "desc": "أدخل مفتاح API الخاص بـ Minimax",
+      "placeholder": "مفتاح API Minimax",
+      "title": "مفتاح API"
+    },
+    "unlock": {
+      "description": "قم بإدخال مفتاح API Minimax الخاص بك لبدء الجلسة. لن يتم تسجيل مفتاح الـ API الخاص بك من قبل التطبيق",
+      "title": "استخدام مفتاح API Minimax المخصص"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {
