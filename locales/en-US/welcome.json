@@ -4,6 +4,40 @@
     "market": "Visit Market",
     "start": "Start Now"
   },
+  "guide": {
+    "agents": {
+      "replaceBtn": "Replace Batch",
+      "title": "New Assistant Recommendations:"
+    },
+    "defaultMessage": "I'm LobeChat, your personal intelligent assistant. How can I assist you today?\nIf you need a more professional or customized assistant, click on `+` to create a custom assistant.",
+    "qa": {
+      "q01": "What is LobeHub?",
+      "q02": "What is LobeChat?",
+      "q03": "Does LobeChat have community support?",
+      "q04": "What functions does LobeChat support?",
+      "q05": "How to deploy and use LobeChat?",
+      "q06": "What is the pricing of LobeChat?",
+      "q07": "Is LobeChat free?",
+      "q08": "Is there a cloud service version?",
+      "q09": "Does LobeChat support local language models?",
+      "q10": "Does LobeChat support image recognition and generation?",
+      "q11": "Does LobeChat support speech synthesis and speech recognition?",
+      "q12": "Does LobeChat support a plugin system?",
+      "q13": "Is there a marketplace to obtain GPTs?",
+      "q14": "Does LobeChat support multiple AI service providers?",
+      "q15": "What should I do if I encounter problems while using it?"
+    },
+    "questions": {
+      "moreBtn": "Learn More",
+      "title": "Frequently Asked Questions:"
+    },
+    "welcome": {
+      "afternoon": "Good Afternoon",
+      "morning": "Good Morning",
+      "night": "Good Evening",
+      "noon": "Good Noon"
+    }
+  },
   "header": "Welcome",
   "pickAgent": "Or choose from the following agent templates",
   "skip": "Skip Creation",
