@@ -8,9 +8,15 @@
   "clearCurrentMessages": "Очистить текущий разговор",
   "confirmClearCurrentMessages": "Вы уверены, что хотите очистить текущий разговор? После этого его нельзя будет восстановить.",
   "confirmRemoveSessionItemAlert": "Вы уверены, что хотите удалить этого помощника? После этого его нельзя будет восстановить.",
+  "confirmRemoveSessionSuccess": "Сеанс удален успешно",
   "defaultAgent": "Пользовательский помощник",
   "defaultList": "Список по умолчанию",
   "defaultSession": "Пользовательский помощник",
+  "duplicateSession": {
+    "loading": "Копирование...",
+    "success": "Копирование завершено",
+    "title": "{{title}} Копия"
+  },
   "duplicateTitle": "{{title}} Копия",
   "historyRange": "История сообщений",
   "inbox": {

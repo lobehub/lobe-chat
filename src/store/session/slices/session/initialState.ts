@@ -24,7 +24,7 @@ export interface SessionState {
   isSessionsFirstFetchFinished: boolean;
   pinnedSessions: LobeAgentSession[];
   searchKeywords: string;
-  searchSessions: LobeAgentSession[];
+  sessionSearchKeywords?: string;
   /**
    * it means defaultSessions
    */
@@ -40,6 +40,5 @@ export const initialSessionState: SessionState = {
   isSessionsFirstFetchFinished: false,
   pinnedSessions: [],
   searchKeywords: '',
-  searchSessions: [],
   sessions: [],
 };

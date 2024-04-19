@@ -8,9 +8,15 @@
   "clearCurrentMessages": "Huidige berichten wissen",
   "confirmClearCurrentMessages": "Huidige berichten worden gewist en kunnen niet worden hersteld. Bevestig je actie.",
   "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan niet worden hersteld. Bevestig je actie.",
+  "confirmRemoveSessionSuccess": "Sessie succesvol verwijderd",
   "defaultAgent": "Standaard assistent",
   "defaultList": "Standaardlijst",
   "defaultSession": "Standaard assistent",
+  "duplicateSession": {
+    "loading": "Bezig met kopiëren...",
+    "success": "Kopiëren gelukt",
+    "title": "{{title}} Kopie"
+  },
   "duplicateTitle": "{{title}} Kopie",
   "historyRange": "Geschiedenisbereik",
   "inbox": {

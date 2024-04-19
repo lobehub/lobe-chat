@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import SyncStatusTag from '@/features/SyncStatusInspector';
+import { useActionSWR } from '@/libs/swr';
 import { useSessionStore } from '@/store/session';
 
 import SessionSearchBar from '../../features/SessionSearchBar';
@@ -26,6 +27,8 @@ const Header = memo(() => {
   const { t } = useTranslation('chat');
   const [createSession] = useSessionStore((s) => [s.createSession]);
 
+  const { mutate, isValidating } = useActionSWR('session.createSession', () => createSession());
+
   return (
     <Flexbox className={styles.top} gap={16} padding={16}>
       <Flexbox distribution={'space-between'} horizontal>
@@ -35,7 +38,8 @@ const Header = memo(() => {
         </Flexbox>
         <ActionIcon
           icon={MessageSquarePlus}
-          onClick={() => createSession()}
+          loading={isValidating}
+          onClick={() => mutate()}
           size={DESKTOP_HEADER_ICON_SIZE}
           style={{ flex: 'none' }}
           title={t('newAgent')}
