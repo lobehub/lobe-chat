@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
 import { LobeRuntimeAI } from '@/libs/agent-runtime';
-import AgentRuntime from '@/libs/agent-runtime/AgentRuntime';
+import { AgentRuntime } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
 import { getJWTPayload } from '../auth/utils';

@@ -9,6 +9,7 @@ import { getServerConfig } from '@/config/server';
 import { JWTPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
 import {
+  AgentRuntime,
   ChatStreamPayload,
   LobeAnthropicAI,
   LobeAzureOpenAI,
@@ -26,7 +27,7 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 
-import AgentRuntime, { AgentChatOptions } from './AgentRuntime';
+import { AgentChatOptions } from './AgentRuntime';
 import { LobeBedrockAIParams } from './bedrock';
 
 // 模拟依赖项

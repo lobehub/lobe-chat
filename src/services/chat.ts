@@ -5,8 +5,7 @@ import { merge } from 'lodash-es';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
-import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
-import AgentRuntimeLib from '@/libs/agent-runtime/AgentRuntime';
+import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import {
@@ -159,7 +158,7 @@ export function initializeWithClientStore(provider: string, payload: any) {
    * Configuration override order:
    * payload -> providerOptions -> providerAuthPayload -> commonOptions
    */
-  return AgentRuntimeLib.initializeWithProviderOptions(provider, {
+  return AgentRuntime.initializeWithProviderOptions(provider, {
     [provider]: {
       ...commonOptions,
       ...providerAuthPayload,
