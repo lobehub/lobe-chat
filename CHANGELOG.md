@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.147.21](https://github.com/lobehub/lobe-chat/compare/v0.147.20...v0.147.21)
+
+<sup>Released on **2024-04-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Optimized file upload buttons and prompts.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Optimized file upload buttons and prompts, closes [#2050](https://github.com/lobehub/lobe-chat/issues/2050) ([c23087e](https://github.com/lobehub/lobe-chat/commit/c23087e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.147.20](https://github.com/lobehub/lobe-chat/compare/v0.147.19...v0.147.20)
 
 <sup>Released on **2024-04-18**</sup>
