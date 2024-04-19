@@ -69,7 +69,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
     'skylark': <ByteDance.Avatar size={size} />,
     'sonar': <Perplexity.Avatar size={size} />,
     'spark': <Spark.Avatar size={size} />,
-    'stable-cascade': <Stability.Avatar background={Stability.colorPrimary} size={size} />,
+    'stable-': <Stability.Avatar background={Stability.colorPrimary} size={size} />,
     'stable-diffusion': <Stability.Avatar background={Stability.colorPrimary} size={size} />,
     'stable-video': <Stability.Avatar background={Stability.colorPrimary} size={size} />,
     'stablelm': <Stability.Avatar background={Stability.colorPrimary} size={size} />,

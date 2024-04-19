@@ -69,7 +69,6 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (
     model.includes('stable-diffusion') ||
     model.includes('stable-video') ||
-    model.includes('stable-cascade') ||
     model.includes('sdxl') ||
     model.includes('stablelm') ||
     model.startsWith('stable-') ||
