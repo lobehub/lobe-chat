@@ -4,7 +4,6 @@ import { produce } from 'immer';
 import { CreateMessageParams } from '@/services/message';
 import { ChatMessage } from '@/types/message';
 import { merge } from '@/utils/merge';
-import { nanoid } from '@/utils/uuid';
 
 interface UpdateMessage {
   id: string;

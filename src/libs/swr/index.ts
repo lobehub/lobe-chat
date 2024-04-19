@@ -33,7 +33,11 @@ export const useActionSWR: SWRHook = (key, fetch, config) =>
     ...config,
   });
 
-export interface SWRRefreshParams<T, A = Function> {
+export interface SWRRefreshParams<T, A = (...args: any[]) => any> {
   action: A;
   optimisticData?: (data: T | undefined) => T;
 }
+
+export type SWRefreshMethod<T> = <A extends (...args: any[]) => Promise<any>>(
+  params?: SWRRefreshParams<T, A>,
+) => ReturnType<A>;
