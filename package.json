@@ -207,6 +207,7 @@
     "lodash": "^4.17.21",
     "markdown-table": "^3.0.3",
     "node-fetch": "^3.3.2",
+    "node-gyp": "^10.1.0",
     "p-map": "^7.0.2",
     "prettier": "^3.2.5",
     "remark-cli": "^11.0.0",
