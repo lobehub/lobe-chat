@@ -22,11 +22,9 @@ const metadata: Metadata = {
   },
   description,
   icons: {
-    apple:
-      'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/apple-touch-icon.png',
-    icon: 'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon-32x32.png',
-    shortcut:
-      'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/favicon.ico',
+    apple:'public/icons/apple-touch-icon.png',
+    icon:'public/favicon.ico',
+    shortcut:'public/favicon-32x32.ico',
   },
   manifest: noManifest ? undefined : '/manifest.json',
   metadataBase: new URL(SITE_URL),
