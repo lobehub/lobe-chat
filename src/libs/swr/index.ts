@@ -32,3 +32,12 @@ export const useActionSWR: SWRHook = (key, fetch, config) =>
     revalidateOnReconnect: false,
     ...config,
   });
+
+export interface SWRRefreshParams<T, A = (...args: any[]) => any> {
+  action: A;
+  optimisticData?: (data: T | undefined) => T;
+}
+
+export type SWRefreshMethod<T> = <A extends (...args: any[]) => Promise<any>>(
+  params?: SWRRefreshParams<T, A>,
+) => ReturnType<A>;

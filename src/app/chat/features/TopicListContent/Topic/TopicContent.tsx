@@ -114,8 +114,8 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           modal.confirm({
             centered: true,
             okButtonProps: { danger: true },
-            onOk: () => {
-              removeTopic(id);
+            onOk: async () => {
+              await removeTopic(id);
             },
             title: t('topic.confirmRemoveTopic', { ns: 'chat' }),
           });
