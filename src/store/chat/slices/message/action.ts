@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { copyToClipboard } from '@lobehub/ui';
+import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
@@ -19,6 +20,7 @@ import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
+import { nanoid } from '@/utils/uuid';
 
 import { chatSelectors } from '../../selectors';
 import { MessageDispatch, messagesReducer } from './reducer';
@@ -97,6 +99,7 @@ export interface ChatMessageAction {
     id?: string,
     action?: string,
   ) => AbortController | undefined;
+  toggleMessageLoading: (loading: boolean, id: string) => void;
   refreshMessages: () => Promise<void>;
   // TODO: 后续 smoothMessage 实现考虑落到 sse 这一层
   createSmoothMessage: (id: string) => {
@@ -111,6 +114,7 @@ export interface ChatMessageAction {
    * @param content
    */
   internalUpdateMessageContent: (id: string, content: string) => Promise<void>;
+  internalCreateMessage: (params: CreateMessageParams) => Promise<string>;
   internalResendMessage: (id: string, traceId?: string) => Promise<void>;
   internalTraceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
 }
@@ -130,6 +134,7 @@ export const chatMessage: StateCreator<
   ChatMessageAction
 > = (set, get) => ({
   deleteMessage: async (id) => {
+    get().dispatchMessage({ type: 'deleteMessage', id });
     await messageService.removeMessage(id);
     await get().refreshMessages();
   },
@@ -167,43 +172,6 @@ export const chatMessage: StateCreator<
     await messageService.removeAllMessages();
     await refreshMessages();
   },
-  internalResendMessage: async (messageId, traceId) => {
-    // 1. 构造所有相关的历史记录
-    const chats = chatSelectors.currentChats(get());
-
-    const currentIndex = chats.findIndex((c) => c.id === messageId);
-    if (currentIndex < 0) return;
-
-    const currentMessage = chats[currentIndex];
-
-    let contextMessages: ChatMessage[] = [];
-
-    switch (currentMessage.role) {
-      case 'function':
-      case 'user': {
-        contextMessages = chats.slice(0, currentIndex + 1);
-        break;
-      }
-      case 'assistant': {
-        // 消息是 AI 发出的因此需要找到它的 user 消息
-        const userId = currentMessage.parentId;
-        const userIndex = chats.findIndex((c) => c.id === userId);
-        // 如果消息没有 parentId，那么同 user/function 模式
-        contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
-        break;
-      }
-    }
-
-    if (contextMessages.length <= 0) return;
-
-    const { coreProcessMessage } = get();
-
-    const latestMsg = contextMessages.filter((s) => s.role === 'user').at(-1);
-
-    if (!latestMsg) return;
-
-    await coreProcessMessage(contextMessages, latestMsg.id, traceId);
-  },
   sendMessage: async ({ message, files, onlyAddUserMessage }) => {
     const { coreProcessMessage, activeTopicId, activeId } = get();
     if (!activeId) return;
@@ -223,8 +191,7 @@ export const chatMessage: StateCreator<
       topicId: activeTopicId,
     };
 
-    const id = await messageService.createMessage(newMessage);
-    await get().refreshMessages();
+    const id = await get().internalCreateMessage(newMessage);
 
     // if only add user message, then stop
     if (onlyAddUserMessage) return;
@@ -315,8 +282,7 @@ export const chatMessage: StateCreator<
       topicId: activeTopicId, // if there is activeTopicId，then add it to topicId
     };
 
-    const mid = await messageService.createMessage(assistantMessage);
-    await refreshMessages();
+    const mid = await get().internalCreateMessage(assistantMessage);
 
     // 2. fetch the AI response
     const { isFunctionCall, content, functionCallAtEnd, functionCallContent, traceId } =
@@ -344,7 +310,7 @@ export const chatMessage: StateCreator<
           traceId,
         };
 
-        functionId = await messageService.createMessage(functionMessage);
+        functionId = await get().internalCreateMessage(functionMessage);
       }
 
       await refreshMessages();
@@ -533,6 +499,62 @@ export const chatMessage: StateCreator<
       window.removeEventListener('beforeunload', preventLeavingFn);
     }
   },
+  toggleMessageLoading: (loading, id) => {
+    set(
+      {
+        messageLoadingIds: produce(get().messageLoadingIds, (draft) => {
+          if (loading) {
+            draft.push(id);
+          } else {
+            const index = draft.indexOf(id);
+
+            if (index >= 0) draft.splice(index, 1);
+          }
+        }),
+      },
+      false,
+      'toggleMessageLoading',
+    );
+  },
+
+  internalResendMessage: async (messageId, traceId) => {
+    // 1. 构造所有相关的历史记录
+    const chats = chatSelectors.currentChats(get());
+
+    const currentIndex = chats.findIndex((c) => c.id === messageId);
+    if (currentIndex < 0) return;
+
+    const currentMessage = chats[currentIndex];
+
+    let contextMessages: ChatMessage[] = [];
+
+    switch (currentMessage.role) {
+      case 'function':
+      case 'user': {
+        contextMessages = chats.slice(0, currentIndex + 1);
+        break;
+      }
+      case 'assistant': {
+        // 消息是 AI 发出的因此需要找到它的 user 消息
+        const userId = currentMessage.parentId;
+        const userIndex = chats.findIndex((c) => c.id === userId);
+        // 如果消息没有 parentId，那么同 user/function 模式
+        contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
+        break;
+      }
+    }
+
+    if (contextMessages.length <= 0) return;
+
+    const { coreProcessMessage } = get();
+
+    const latestMsg = contextMessages.filter((s) => s.role === 'user').at(-1);
+
+    if (!latestMsg) return;
+
+    await coreProcessMessage(contextMessages, latestMsg.id, traceId);
+  },
+
   internalUpdateMessageContent: async (id, content) => {
     const { dispatchMessage, refreshMessages } = get();
 
@@ -543,6 +565,22 @@ export const chatMessage: StateCreator<
 
     await messageService.updateMessage(id, { content });
     await refreshMessages();
+  },
+
+  internalCreateMessage: async (message) => {
+    const { dispatchMessage, refreshMessages, toggleMessageLoading } = get();
+
+    // use optimistic update to avoid the slow waiting
+    const tempId = 'tmp_' + nanoid();
+    dispatchMessage({ type: 'createMessage', id: tempId, value: message });
+
+    toggleMessageLoading(true, tempId);
+    const id = await messageService.createMessage(message);
+
+    await refreshMessages();
+    toggleMessageLoading(false, tempId);
+
+    return id;
   },
 
   createSmoothMessage: (id) => {
