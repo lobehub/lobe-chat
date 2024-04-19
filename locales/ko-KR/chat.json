@@ -8,9 +8,15 @@
   "clearCurrentMessages": "현재 대화 지우기",
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
+  "confirmRemoveSessionSuccess": "도우미가 성공적으로 삭제되었습니다",
   "defaultAgent": "기본 도우미",
   "defaultList": "기본 목록",
   "defaultSession": "기본 도우미",
+  "duplicateSession": {
+    "loading": "복사 중...",
+    "success": "복사 성공",
+    "title": "{{title}} 복사본"
+  },
   "duplicateTitle": "{{title}} 복사본",
   "historyRange": "대화 기록 범위",
   "inbox": {

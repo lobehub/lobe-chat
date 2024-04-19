@@ -64,7 +64,7 @@ export const Topic = memo(() => {
   ) : (
     <Flexbox gap={2} height={'100%'} style={{ marginBottom: 12 }}>
       {topicLength === 0 && (
-        <Flexbox flex={1}>
+        <Flexbox flex={1} paddingInline={8}>
           <EmptyCard
             alt={t('topic.guide.desc')}
             cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}

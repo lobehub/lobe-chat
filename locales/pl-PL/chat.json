@@ -8,9 +8,15 @@
   "clearCurrentMessages": "Wyczyść bieżącą rozmowę",
   "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
+  "confirmRemoveSessionSuccess": "Sesja usunięta pomyślnie",
   "defaultAgent": "Domyślny asystent",
   "defaultList": "Domyślna lista",
   "defaultSession": "Domyślna sesja",
+  "duplicateSession": {
+    "loading": "Kopiowanie...",
+    "success": "Kopiowanie zakończone powodzeniem",
+    "title": "{{title}} - kopia"
+  },
   "duplicateTitle": "{{title}} kopia",
   "historyRange": "Zakres historii",
   "inbox": {

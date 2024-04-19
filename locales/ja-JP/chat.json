@@ -8,9 +8,15 @@
   "clearCurrentMessages": "現在の会話をクリア",
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
+  "confirmRemoveSessionSuccess": "セッションが正常に削除されました",
   "defaultAgent": "デフォルトエージェント",
   "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
+  "duplicateSession": {
+    "loading": "複製中...",
+    "success": "複製に成功しました",
+    "title": "{{title}} のコピー"
+  },
   "duplicateTitle": "{{title}} のコピー",
   "historyRange": "履歴範囲",
   "inbox": {

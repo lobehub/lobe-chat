@@ -8,9 +8,15 @@
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
+  "confirmRemoveSessionSuccess": "Xóa trợ lý thành công",
   "defaultAgent": "Trợ lý mặc định",
   "defaultList": "Danh sách mặc định",
   "defaultSession": "Trợ lý mặc định",
+  "duplicateSession": {
+    "loading": "Đang sao chép...",
+    "success": "Sao chép thành công",
+    "title": "{{title}} Bản sao"
+  },
   "duplicateTitle": "{{title}} Bản sao",
   "historyRange": "Phạm vi lịch sử",
   "inbox": {

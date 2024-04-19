@@ -8,9 +8,15 @@
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
   "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be retrieved. Please confirm your action.",
+  "confirmRemoveSessionSuccess": "Assistant removed successfully",
   "defaultAgent": "Default Agent",
   "defaultList": "Default List",
   "defaultSession": "Default Agent",
+  "duplicateSession": {
+    "loading": "Copying...",
+    "success": "Copy successful",
+    "title": "{{title}} Copy"
+  },
   "duplicateTitle": "{{title}} Copy",
   "historyRange": "History Range",
   "inbox": {

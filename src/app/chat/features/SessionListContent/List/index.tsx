@@ -8,9 +8,9 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession } from '@/types/session';
 
+import SkeletonList from '../SkeletonList';
 import AddButton from './AddButton';
 import SessionItem from './Item';
-import SkeletonList from './SkeletonList';
 
 const useStyles = createStyles(
   ({ css }) => css`
@@ -19,7 +19,7 @@ const useStyles = createStyles(
 );
 
 interface SessionListProps {
-  dataSource: LobeAgentSession[];
+  dataSource?: LobeAgentSession[];
   groupId?: string;
   showAddButton?: boolean;
 }
@@ -29,9 +29,10 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
 
   const { mobile } = useResponsive();
 
+  const isEmpty = !dataSource || dataSource.length === 0;
   return !isInit ? (
     <SkeletonList />
-  ) : dataSource.length > 0 ? (
+  ) : !isEmpty ? (
     dataSource.map(({ id }) => (
       <LazyLoad className={styles} key={id}>
         <Link aria-label={id} href={SESSION_CHAT_URL(id, mobile)}>

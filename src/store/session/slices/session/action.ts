@@ -1,4 +1,5 @@
 import { t } from 'i18next';
+import { produce } from 'immer';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
@@ -21,6 +22,7 @@ import { sessionSelectors } from './selectors';
 const n = setNamespace('session');
 
 const FETCH_SESSIONS_KEY = 'fetchSessions';
+const SEARCH_SESSIONS_KEY = 'searchSessions';
 
 export interface SessionAction {
   /**
@@ -49,7 +51,11 @@ export interface SessionAction {
   /**
    * re-fetch the data
    */
-  refreshSessions: () => Promise<void>;
+  refreshSessions: (params?: {
+    action: () => Promise<void>;
+    optimisticData?: (data: ChatSessionList) => ChatSessionList;
+  }) => Promise<void>;
+
   /**
    * remove session
    * @param id - sessionId
@@ -58,7 +64,7 @@ export interface SessionAction {
   /**
    * A custom hook that uses SWR to fetch sessions data.
    */
-  useFetchSessions: () => SWRResponse<any>;
+  useFetchSessions: () => SWRResponse<ChatSessionList>;
   useSearchSessions: (keyword?: string) => SWRResponse<any>;
 }
 
@@ -76,8 +82,7 @@ export const createSessionSlice: StateCreator<
 
   clearSessions: async () => {
     await sessionService.removeAllSessions();
-
-    get().refreshSessions();
+    await get().refreshSessions();
   },
 
   createSession: async (agent, isSwitchSession = true) => {
@@ -107,28 +112,87 @@ export const createSessionSlice: StateCreator<
     if (!session) return;
     const title = agentSelectors.getTitle(session.meta);
 
-    const newTitle = t('duplicateTitle', { ns: 'chat', title: title });
+    const newTitle = t('duplicateSession.title', { ns: 'chat', title: title });
+
+    const messageLoadingKey = 'duplicateSession.loading';
+
+    message.loading({
+      content: t('duplicateSession.loading', { ns: 'chat' }),
+      duration: 0,
+      key: messageLoadingKey,
+    });
 
     const newId = await sessionService.cloneSession(id, newTitle);
 
     // duplicate Session Error
     if (!newId) {
+      message.destroy(messageLoadingKey);
       message.error(t('copyFail', { ns: 'common' }));
       return;
     }
 
     await refreshSessions();
+    message.destroy(messageLoadingKey);
+    message.success(t('duplicateSession.success', { ns: 'chat' }));
+
     activeSession(newId);
   },
 
   pinSession: async (sessionId, pinned) => {
-    await sessionService.updateSession(sessionId, { pinned });
+    await get().refreshSessions({
+      action: async () => {
+        await sessionService.updateSession(sessionId, { pinned });
+      },
+      // 乐观更新
+      optimisticData: produce((draft) => {
+        const session = draft.all.find((i) => i.id === sessionId);
+        if (!session) return;
 
-    await get().refreshSessions();
+        session.pinned = pinned;
+
+        if (pinned) {
+          draft.pinned.unshift(session);
+
+          if (session.group === 'default') {
+            const index = draft.default.findIndex((i) => i.id === sessionId);
+            draft.default.splice(index, 1);
+          } else {
+            const customGroup = draft.customGroup.find((group) => group.id === session.group);
+
+            if (customGroup) {
+              const index = customGroup.children.findIndex((i) => i.id === sessionId);
+              customGroup.children.splice(index, 1);
+            }
+          }
+        } else {
+          const index = draft.pinned.findIndex((i) => i.id === sessionId);
+          if (index !== -1) {
+            draft.pinned.splice(index, 1);
+          }
+
+          if (session.group === 'default') {
+            draft.default.push(session);
+          } else {
+            const customGroup = draft.customGroup.find((group) => group.id === session.group);
+            if (customGroup) {
+              customGroup.children.push(session);
+            }
+          }
+        }
+      }),
+    });
   },
 
-  refreshSessions: async () => {
-    await mutate(FETCH_SESSIONS_KEY);
+  refreshSessions: async (params) => {
+    if (params) {
+      // @ts-ignore
+      await mutate(FETCH_SESSIONS_KEY, params.action, {
+        optimisticData: params.optimisticData,
+        // we won't need to make the action's data go into cache ,or the display will be
+        // old -> optimistic -> undefined -> new
+        populateCache: false,
+      });
+    } else await mutate(FETCH_SESSIONS_KEY);
   },
 
   removeSession: async (sessionId) => {
@@ -141,6 +205,8 @@ export const createSessionSlice: StateCreator<
     }
   },
 
+  // TODO: 这里的逻辑需要优化，后续不应该是直接请求一个大的 sessions 数据
+  // 最好拆成一个 all 请求，然后在前端完成 groupBy 的分组逻辑
   useFetchSessions: () =>
     useClientDataSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getGroupedSessions, {
       onSuccess: (data) => {
@@ -167,10 +233,13 @@ export const createSessionSlice: StateCreator<
     }),
 
   useSearchSessions: (keyword) =>
-    useSWR<LobeSessions>(keyword, sessionService.searchSessions, {
-      onSuccess: (data) => {
-        set({ searchSessions: data }, false, n('useSearchSessions(success)', data));
+    useSWR<LobeSessions>(
+      [SEARCH_SESSIONS_KEY, keyword],
+      async () => {
+        if (!keyword) return [];
+
+        return sessionService.searchSessions(keyword);
       },
-      revalidateOnFocus: false,
-    }),
+      { revalidateOnFocus: false, revalidateOnMount: false },
+    ),
 });
