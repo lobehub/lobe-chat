@@ -118,9 +118,12 @@
   },
   "updateAgent": "Update Agent Information",
   "upload": {
+    "actionFiletip": "Update File",
     "actionTooltip": "Upload Image",
     "disabled": "The current model does not support visual recognition. Please switch models to use this feature.",
     "dragDesc": "Drag and drop files here, support uploading multiple images. Hold down Shift to send images directly.",
+    "dragFileDesc": "Drag pictures and files here to support uploading multiple pictures and files. Hold down Shift to send an image or file directly.",
+    "dragFileTitle": "Update File",
     "dragTitle": "Upload Image"
   }
 }
