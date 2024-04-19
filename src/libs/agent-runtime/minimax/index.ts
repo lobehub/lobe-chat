@@ -1,4 +1,5 @@
 import { StreamingTextResponse } from 'ai';
+import { isEmpty } from 'lodash-es';
 import OpenAI from 'openai';
 
 import { fetchSSE } from '@/utils/fetch';
@@ -64,9 +65,12 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
             if (body.startsWith('data:')) {
               body = body.slice(5).trim();
             }
+            if (isEmpty(body)) {
+              return;
+            }
             const data = JSON.parse(body) as MinimaxResponse;
             dataResponse = data;
-            if (data.choices?.at(0)?.delta.content) {
+            if (data.choices?.at(0)?.delta?.content) {
               streamController.enqueue(data.choices.at(0)?.delta.content);
             }
           },
