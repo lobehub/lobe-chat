@@ -1,23 +1,23 @@
 import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/const/trace';
-import { LobeAnthropicAI } from '@/libs/agent-runtime/anthropic';
-import { LobeAzureOpenAI } from '@/libs/agent-runtime/azureOpenai';
-import { LobeBedrockAI, LobeBedrockAIParams } from '@/libs/agent-runtime/bedrock';
-import { LobeGoogleAI } from '@/libs/agent-runtime/google';
-import { LobeGroq } from '@/libs/agent-runtime/groq';
-import { LobeMistralAI } from '@/libs/agent-runtime/mistral';
-import { LobeMoonshotAI } from '@/libs/agent-runtime/moonshot';
-import { LobeOllamaAI } from '@/libs/agent-runtime/ollama';
-import { LobeOpenAI } from '@/libs/agent-runtime/openai';
-import { LobeOpenRouterAI } from '@/libs/agent-runtime/openrouter';
-import { LobePerplexityAI } from '@/libs/agent-runtime/perplexity';
-import { LobeTogetherAI } from '@/libs/agent-runtime/togetherai';
-import { LobeZeroOneAI } from '@/libs/agent-runtime/zeroone';
-import { LobeZhipuAI } from '@/libs/agent-runtime/zhipu';
 
 import { LobeRuntimeAI } from './BaseAI';
+import { LobeAnthropicAI } from './anthropic';
+import { LobeAzureOpenAI } from './azureOpenai';
+import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
+import { LobeGoogleAI } from './google';
+import { LobeGroq } from './groq';
+import { LobeMistralAI } from './mistral';
+import { LobeMoonshotAI } from './moonshot';
+import { LobeOllamaAI } from './ollama';
+import { LobeOpenAI } from './openai';
+import { LobeOpenRouterAI } from './openrouter';
+import { LobePerplexityAI } from './perplexity';
+import { LobeTogetherAI } from './togetherai';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from './types';
+import { LobeZeroOneAI } from './zeroone';
+import { LobeZhipuAI } from './zhipu';
 
 export interface AgentChatOptions {
   enableTrace?: boolean;
