@@ -49,7 +49,7 @@ class AgentRuntime {
    * @example - Use Langfuse trace
    * ```ts
    * // ============  1. init chat model   ============ //
-   * const agentRuntime = await initializeWithUserPayload(provider, jwtPayload);
+   * const agentRuntime = await initAgentRuntimeWithUserPayload(provider, jwtPayload);
    * // ============  2. create chat completion   ============ //
    * const data = {
    * // your trace options here
@@ -83,7 +83,7 @@ class AgentRuntime {
    * ```
    * **Note**: If you try to get a AgentRuntime instance from client or server,
    * you should use the methods to get the runtime instance at first.
-   * - `src/app/api/chat/agentRuntime.ts: initializeWithUserPayload` on server
+   * - `src/app/api/chat/agentRuntime.ts: initAgentRuntimeWithUserPayload` on server
    * - `src/services/chat.ts: initializeWithClientStore` on client
    */
   static async initializeWithProviderOptions(

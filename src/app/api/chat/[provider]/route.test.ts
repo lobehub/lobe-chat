@@ -2,8 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
-import { LobeRuntimeAI } from '@/libs/agent-runtime';
-import { AgentRuntime } from '@/libs/agent-runtime';
+import { AgentRuntime, LobeRuntimeAI } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
 import { getJWTPayload } from '../auth/utils';
@@ -37,7 +36,7 @@ describe('POST handler', () => {
     it('should initialize AgentRuntime correctly with valid authorization', async () => {
       const mockParams = { provider: 'test-provider' };
 
-      // 设置 getJWTPayload 和 initializeWithUserPayload 的模拟返回值
+      // 设置 getJWTPayload 和 initAgentRuntimeWithUserPayload 的模拟返回值
       vi.mocked(getJWTPayload).mockResolvedValue({
         accessCode: 'test-access-code',
         apiKey: 'test-api-key',

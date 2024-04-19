@@ -158,7 +158,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
  * @param payload - The JWT payload.
  * @returns A promise that resolves when the agent runtime is initialized.
  */
-export const initializeWithUserPayload = (provider: string, payload: JWTPayload) => {
+export const initAgentRuntimeWithUserPayload = (provider: string, payload: JWTPayload) => {
   return AgentRuntime.initializeWithProviderOptions(provider, {
     [provider]: getLlmOptionsFromPayload(provider, payload),
   });
