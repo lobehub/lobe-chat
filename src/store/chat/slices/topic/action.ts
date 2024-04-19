@@ -9,11 +9,11 @@ import { StateCreator } from 'zustand/vanilla';
 import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT } from '@/const/message';
 import { TraceNameMap } from '@/const/trace';
-import { useClientDataSWR } from '@/libs/swr';
+import { SWRefreshMethod, useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
-import { ChatStore } from '@/store/chat';
+import type { ChatStore } from '@/store/chat';
 import { ChatMessage } from '@/types/message';
 import { ChatTopic } from '@/types/topic';
 import { setNamespace } from '@/utils/storeDebug';
@@ -29,7 +29,7 @@ const SWR_USE_SEARCH_TOPIC = 'SWR_USE_SEARCH_TOPIC';
 export interface ChatTopicAction {
   favoriteTopic: (id: string, favState: boolean) => Promise<void>;
   openNewTopicOrSaveTopic: () => Promise<void>;
-  refreshTopic: () => Promise<void>;
+  refreshTopic: SWRefreshMethod<ChatTopic[]>;
   removeAllTopics: () => Promise<void>;
   removeSessionTopics: () => Promise<void>;
   removeTopic: (id: string) => Promise<void>;
@@ -78,6 +78,17 @@ export const chatTopic: StateCreator<
       messages: messages.map((m) => m.id),
     });
     await refreshTopic();
+    // TODO: 优化为乐观更新
+    // const params: CreateTopicParams = {
+    //   sessionId: activeId,
+    //   title: t('topic.defaultTitle', { ns: 'chat' }),
+    //   messages: messages.map((m) => m.id),
+    // };
+
+    // const topicId = await refreshTopic({
+    //   action: async () => topicService.createTopic(params),
+    //   optimisticData: (data) => topicReducer(data, { type: 'addTopic', value: params }),
+    // });
 
     // 2. auto summary topic Title
     // we don't need to wait for summary, just let it run async
@@ -189,9 +200,10 @@ export const chatTopic: StateCreator<
     await refreshTopic();
   },
   removeTopic: async (id) => {
-    const { activeId, switchTopic, refreshTopic } = get();
+    const { activeId, activeTopicId, switchTopic, refreshTopic } = get();
 
     // remove messages in the topic
+    // TODO: Need to remove because server service don't need to call it
     await messageService.removeMessages(activeId, id);
 
     // remove topic
@@ -199,7 +211,7 @@ export const chatTopic: StateCreator<
     await refreshTopic();
 
     // switch bach to default topic
-    switchTopic();
+    if (activeTopicId === id) switchTopic();
   },
   removeUnstarredTopic: async () => {
     const { refreshTopic, switchTopic } = get();
@@ -226,7 +238,12 @@ export const chatTopic: StateCreator<
   updateTopicLoading: (id) => {
     set({ topicLoadingId: id }, false, n('updateTopicLoading'));
   },
-  refreshTopic: async () => {
-    await mutate([SWR_USE_FETCH_TOPIC, get().activeId]);
+  // TODO: I don't know why this ts error, so have to ignore it
+  // @ts-ignore
+  refreshTopic: async (params) => {
+    return mutate([SWR_USE_FETCH_TOPIC, get().activeId], params?.action, {
+      optimisticData: params?.optimisticData,
+      populateCache: false,
+    });
   },
 });
