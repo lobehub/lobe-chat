@@ -8,9 +8,15 @@
   "clearCurrentMessages": "清空當前對話",
   "confirmClearCurrentMessages": "即將清空當前對話，清空後將無法找回，請確認你的操作",
   "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",
+  "confirmRemoveSessionSuccess": "助手刪除成功",
   "defaultAgent": "自定義助手",
   "defaultList": "預設清單",
   "defaultSession": "自定義助手",
+  "duplicateSession": {
+    "loading": "複製中...",
+    "success": "複製成功",
+    "title": "{{title}} 副本"
+  },
   "duplicateTitle": "{{title}} 副本",
   "historyRange": "歷史範圍",
   "inbox": {

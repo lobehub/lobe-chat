@@ -8,9 +8,15 @@
   "clearCurrentMessages": "Effacer les messages actuels",
   "confirmClearCurrentMessages": "Vous êtes sur le point d'effacer les messages de cette session. Cette action est irréversible. Veuillez confirmer.",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Cette action est irréversible. Veuillez confirmer.",
+  "confirmRemoveSessionSuccess": "Assistant supprimé avec succès",
   "defaultAgent": "Agent par défaut",
   "defaultList": "Liste par défaut",
   "defaultSession": "Session par défaut",
+  "duplicateSession": {
+    "loading": "Copie en cours...",
+    "success": "Copie réussie",
+    "title": "{{title}} Copie"
+  },
   "duplicateTitle": "{{title}} Copie",
   "historyRange": "Plage d'historique",
   "inbox": {
