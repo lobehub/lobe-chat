@@ -118,9 +118,12 @@
   },
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upload": {
+    "actionFiletip": "Dosyayı Yükle",
     "actionTooltip": "Resim Yükle",
     "disabled": "Geçerli model görüntü tanıma desteğini desteklemiyor, lütfen modeli değiştirerek kullanın",
     "dragDesc": "Dosyaları buraya sürükleyip bırakın, birden fazla resim yüklemeyi destekler. Resimleri doğrudan göndermek için Shift tuşunu basılı tutun.",
+    "dragFileDesc": "Birden fazla resim ve dosya yüklemeyi desteklemek için resimleri ve dosyaları buraya sürükleyin. Bir görüntüyü veya dosyayı doğrudan göndermek için Shift tuşunu basılı tutun.",
+    "dragFileTitle": "Dosyayı Yükle",
     "dragTitle": "Resim Yükle"
   }
 }

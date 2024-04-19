@@ -118,9 +118,12 @@
   },
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upload": {
+    "actionFiletip": "Tải lên tập tin",
     "actionTooltip": "Tải lên hình ảnh",
     "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình trước khi sử dụng",
     "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh. Giữ phím Shift để gửi hình ảnh trực tiếp",
+    "dragFileDesc": "Kéo ảnh và tệp vào đây để hỗ trợ tải lên nhiều ảnh và tệp. Giữ phím Shift để gửi hình ảnh hoặc tập tin trực tiếp",
+    "dragFileTitle": "Tải lên tập tin",
     "dragTitle": "Tải lên hình ảnh"
   }
 }
