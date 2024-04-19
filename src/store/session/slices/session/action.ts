@@ -6,7 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
 import { INBOX_SESSION_ID } from '@/const/session';
-import { useClientDataSWR } from '@/libs/swr';
+import { SWRRefreshParams, useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
@@ -51,10 +51,7 @@ export interface SessionAction {
   /**
    * re-fetch the data
    */
-  refreshSessions: (params?: {
-    action: () => Promise<void>;
-    optimisticData?: (data: ChatSessionList) => ChatSessionList;
-  }) => Promise<void>;
+  refreshSessions: (params?: SWRRefreshParams<ChatSessionList>) => Promise<void>;
 
   /**
    * remove session
@@ -145,6 +142,8 @@ export const createSessionSlice: StateCreator<
       },
       // 乐观更新
       optimisticData: produce((draft) => {
+        if (!draft) return;
+
         const session = draft.all.find((i) => i.id === sessionId);
         if (!session) return;
 

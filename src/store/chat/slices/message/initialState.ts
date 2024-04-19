@@ -9,7 +9,7 @@ export interface ChatMessageState {
   activeId: string;
   chatLoadingId?: string;
   inputMessage: string;
-  messageLoadingIds: [];
+  messageLoadingIds: string[];
   messages: ChatMessage[];
   /**
    * whether messages have fetched

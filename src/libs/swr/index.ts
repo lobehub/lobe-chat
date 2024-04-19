@@ -32,3 +32,8 @@ export const useActionSWR: SWRHook = (key, fetch, config) =>
     revalidateOnReconnect: false,
     ...config,
   });
+
+export interface SWRRefreshParams<T, A = Function> {
+  action: A;
+  optimisticData?: (data: T | undefined) => T;
+}
