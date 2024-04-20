@@ -75,6 +75,10 @@
         }
       }
     },
+    "fetchOnClient": {
+      "desc": "Le mode de requête client lancera directement une session à partir du navigateur, améliorant ainsi la vitesse de réponse",
+      "title": "Utiliser le mode de requête client"
+    },
     "fetcher": {
       "fetch": "Obtenir la liste des modèles",
       "fetching": "Récupération de la liste des modèles en cours...",

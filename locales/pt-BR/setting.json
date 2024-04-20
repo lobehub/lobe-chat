@@ -75,6 +75,10 @@
         }
       }
     },
+    "fetchOnClient": {
+      "desc": "O modo de solicitação do cliente iniciará diretamente a solicitação da sessão a partir do navegador, melhorando a velocidade de resposta",
+      "title": "Usar o modo de solicitação do cliente"
+    },
     "fetcher": {
       "fetch": "Obter lista de modelos",
       "fetching": "Obtendo lista de modelos...",
