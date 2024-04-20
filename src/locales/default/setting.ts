@@ -77,8 +77,8 @@ export default {
       },
     },
     fetchOnClient: {
-      desc: '从浏览器直接发起会话请求',
-      title: '客户端请求',
+      desc: '客户端请求模式将从浏览器直接发起会话请求，可提升响应速度',
+      title: '使用客户端请求模式',
     },
     fetcher: {
       fetch: '获取模型列表',

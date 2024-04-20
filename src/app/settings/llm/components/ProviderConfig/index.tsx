@@ -51,11 +51,18 @@ const ProviderConfig = memo<ProviderConfigProps>(
     const { t } = useTranslation('setting');
     const { t: modelT } = useTranslation('modelProvider');
     const [form] = AntForm.useForm();
-    const [toggleProviderEnabled, setSettings, enabled, isFetchOnClient] = useGlobalStore((s) => [
+    const [
+      toggleProviderEnabled,
+      setSettings,
+      enabled,
+      isFetchOnClient,
+      isProviderEndpointNotEmpty,
+    ] = useGlobalStore((s) => [
       s.toggleProviderEnabled,
       s.setSettings,
       modelConfigSelectors.isProviderEnabled(provider)(s),
       modelConfigSelectors.isProviderFetchOnClient(provider)(s),
+      modelConfigSelectors.isProviderEndpointNotEmpty(provider)(s),
     ]);
 
     useSyncSettings(form);
@@ -86,19 +93,6 @@ const ProviderConfig = memo<ProviderConfigProps>(
         label: modelT(`${provider}.endpoint.title` as any),
         name: [LLMProviderConfigKey, provider, LLMProviderBaseUrlKey],
       },
-      showEndpoint && {
-        children: (
-          <Switch
-            onChange={(enabled) => {
-              setSettings({ [LLMProviderConfigKey]: { [provider]: { fetchOnClient: enabled } } });
-            }}
-            value={isFetchOnClient}
-          />
-        ),
-        desc: t('llm.fetchOnClient.desc'),
-        label: t('llm.fetchOnClient.title'),
-        minWidth: undefined,
-      },
       {
         children: (
           <ProviderModelListSelect
@@ -113,6 +107,20 @@ const ProviderConfig = memo<ProviderConfigProps>(
         label: t('llm.modelList.title'),
         name: [LLMProviderConfigKey, provider, LLMProviderModelListKey],
       },
+      showEndpoint &&
+        isProviderEndpointNotEmpty && {
+          children: (
+            <Switch
+              onChange={(enabled) => {
+                setSettings({ [LLMProviderConfigKey]: { [provider]: { fetchOnClient: enabled } } });
+              }}
+              value={isFetchOnClient}
+            />
+          ),
+          desc: t('llm.fetchOnClient.desc'),
+          label: t('llm.fetchOnClient.title'),
+          minWidth: undefined,
+        },
       checkerItem ?? {
         children: <Checker model={checkModel!} provider={provider} />,
         desc: t('llm.checker.desc'),
