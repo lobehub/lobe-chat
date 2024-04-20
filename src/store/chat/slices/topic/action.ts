@@ -238,8 +238,6 @@ export const chatTopic: StateCreator<
   updateTopicLoading: (id) => {
     set({ topicLoadingId: id }, false, n('updateTopicLoading'));
   },
-  // TODO: I don't know why this ts error, so have to ignore it
-  // @ts-ignore
   refreshTopic: async () => {
     return mutate([SWR_USE_FETCH_TOPIC, get().activeId]);
   },
