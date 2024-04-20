@@ -63,7 +63,16 @@ const useStyles = createStyles(({ css, token, stylish }) => {
 
 
 const handleDragOver = (e: DragEvent) => {
-  e.preventDefault();
+  if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
+    const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
+      (item) => item.kind === 'file',
+    );
+    const htmlData = e.dataTransfer.getData("text/html"); // web image support
+    const isImg = htmlData && htmlData.startsWith("<img");
+    if (allItemsAreFiles || isImg) {
+      e.preventDefault();
+    }
+  }
 };
 
 const DragUpload = memo(() => {
@@ -94,38 +103,63 @@ const DragUpload = memo(() => {
   };
 
   const handleDragEnter = (e: DragEvent) => {
-    e.preventDefault();
-
     dragCounter.current += 1;
+
     if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      setIsDragging(true);
+      const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
+        (item) => item.kind === 'file',
+      );
+      const htmlData = e.dataTransfer.getData("text/html");
+      const isImg = htmlData && htmlData.startsWith("<img");
+      if (allItemsAreFiles || isImg) {
+        e.preventDefault();
+        setIsDragging(true);
+      }
     }
   };
 
   const handleDragLeave = (e: DragEvent) => {
-    e.preventDefault();
+    if (e.dataTransfer && e.dataTransfer.items) {
+      const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
+        (item) => item.kind === 'file',
+      );
+      const htmlData = e.dataTransfer.getData("text/html");
+      const isImg = htmlData && htmlData.startsWith("<img");
+      if (allItemsAreFiles || isImg) {
+        e.preventDefault();
 
-    // reset counter
-    dragCounter.current -= 1;
+        // reset counter
+        dragCounter.current -= 1;
 
-    if (dragCounter.current === 0) {
-      setIsDragging(false);
+        if (dragCounter.current === 0) {
+          setIsDragging(false);
+        }
+      }
     }
   };
 
   const handleDrop = async (e: DragEvent) => {
-    e.preventDefault();
-    // reset counter
-    dragCounter.current = 0;
+    if (e.dataTransfer && e.dataTransfer.items) {
+      const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
+        (item) => item.kind === 'file',
+      );
+      const htmlData = e.dataTransfer.getData("text/html");
+      const isImg = htmlData && htmlData.startsWith("<img");
+      if (allItemsAreFiles || isImg) {
+        e.preventDefault();
+        // reset counter
+        dragCounter.current = 0;
 
-    setIsDragging(false);
+        setIsDragging(false);
 
-    // get filesList
-    // TODO: support folder files upload
-    const files = e.dataTransfer?.files;
+        // get filesList
+        // TODO: support folder files upload
+        const files = e.dataTransfer?.files;
 
-    // upload files
-    uploadImages(files);
+        // upload files
+        uploadImages(files);
+      }
+    }
   };
 
   const handlePaste = (event: ClipboardEvent) => {
