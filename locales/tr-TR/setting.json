@@ -75,6 +75,10 @@
         }
       }
     },
+    "fetchOnClient": {
+      "desc": "İstemci tarafından alınan veri: Tarayıcı, doğrudan oturum isteği gönderir ve yanıt hızını artırabilir.",
+      "title": "İstemci Tarafından Veri Alımı"
+    },
     "fetcher": {
       "fetch": "Modelleri Al",
       "fetching": "Modelleri alınıyor...",

@@ -5,7 +5,7 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { getTracePayload } from '@/utils/trace';
 
-import AgentRuntime from '../agentRuntime';
+import { createTraceOptions, initAgentRuntimeWithUserPayload } from '../agentRuntime';
 import { checkAuth } from '../auth';
 
 export const runtime = 'edge';
@@ -17,7 +17,7 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
 
   try {
     // ============  1. init chat model   ============ //
-    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, jwtPayload);
+    const agentRuntime = await initAgentRuntimeWithUserPayload(provider, jwtPayload);
 
     // ============  2. create chat completion   ============ //
 
@@ -25,11 +25,17 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
 
     const tracePayload = getTracePayload(req);
 
-    return await agentRuntime.chat(data, {
-      enableTrace: tracePayload?.enabled,
-      provider,
-      trace: tracePayload,
-    });
+    // If user enable trace
+    if (tracePayload?.enabled) {
+      return await agentRuntime.chat(
+        data,
+        createTraceOptions(data, {
+          provider,
+          trace: tracePayload,
+        }),
+      );
+    }
+    return await agentRuntime.chat(data);
   } catch (e) {
     const {
       errorType = ChatErrorType.InternalServerError,

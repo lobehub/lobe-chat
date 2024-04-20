@@ -17,6 +17,10 @@ export interface GeneralModelProviderConfig {
   enabledModels?: string[] | null;
   endpoint?: string;
   /**
+   * whether fetch on client
+   */
+  fetchOnClient?: boolean;
+  /**
    * the latest fetch model list time
    */
   latestFetchTime?: number;
