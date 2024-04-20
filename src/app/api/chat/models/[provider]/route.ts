@@ -5,7 +5,7 @@ import { createErrorResponse } from '@/app/api/errorResponse';
 import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
-import AgentRuntime from '../../agentRuntime';
+import { initAgentRuntimeWithUserPayload } from '../../agentRuntime';
 import { checkAuth } from '../../auth';
 
 export const runtime = 'edge';
@@ -21,7 +21,7 @@ export const GET = checkAuth(async (req, { params, jwtPayload }) => {
   try {
     const hasDefaultApiKey = jwtPayload.apiKey || 'dont-need-api-key-for-model-list';
 
-    const agentRuntime = await AgentRuntime.initializeWithUserPayload(provider, {
+    const agentRuntime = await initAgentRuntimeWithUserPayload(provider, {
       ...jwtPayload,
       apiKey: noNeedAPIKey(provider) ? hasDefaultApiKey : jwtPayload.apiKey,
     });

@@ -23,7 +23,7 @@ import TogetherAI from './TogetherAI';
 import ZeroOne from './ZeroOne';
 import Zhipu from './Zhipu';
 
-export default memo<{ showOllama: boolean }>(({ showOllama }) => {
+export default memo(() => {
   const { t } = useTranslation('setting');
 
   return (
@@ -31,7 +31,7 @@ export default memo<{ showOllama: boolean }>(({ showOllama }) => {
       <PageTitle title={t('tab.llm')} />
       <OpenAI />
       <Azure />
-      {showOllama && <Ollama />}
+      <Ollama />
       <Google />
       <Anthropic />
       <Bedrock />

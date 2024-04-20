@@ -75,6 +75,10 @@
         }
       }
     },
+    "fetchOnClient": {
+      "desc": "El modo de solicitud en el cliente iniciará directamente la solicitud de sesión desde el navegador, lo que puede mejorar la velocidad de respuesta",
+      "title": "Usar el modo de solicitud en el cliente"
+    },
     "fetcher": {
       "fetch": "Obtener lista de modelos",
       "fetching": "Obteniendo lista de modelos...",
