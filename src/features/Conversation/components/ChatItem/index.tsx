@@ -19,6 +19,9 @@ import ActionsBar from './ActionsBar';
 import HistoryDivider from './HistoryDivider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
+  loading: css`
+    opacity: 0.6;
+  `,
   message: css`
     // prevent the textarea too long
     .${prefixCls}-input {
@@ -35,7 +38,7 @@ export interface ChatListItemProps {
 const Item = memo<ChatListItemProps>(({ index, id }) => {
   const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
   const { t } = useTranslation('common');
-  const { styles } = useStyles();
+  const { styles, cx } = useStyles();
   const [editing, setEditing] = useState(false);
   const [type = 'chat'] = useSessionStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
@@ -54,9 +57,11 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
   const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
 
   const [loading, updateMessageContent] = useChatStore((s) => [
-    s.chatLoadingId === id,
+    s.chatLoadingId === id || s.messageLoadingIds.includes(id),
     s.modifyMessageContent,
   ]);
+
+  const [isMessageLoading] = useChatStore((s) => [s.messageLoadingIds.includes(id)]);
 
   const onAvatarsClick = useAvatarsClick();
 
@@ -110,7 +115,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
         <ChatItem
           actions={<ActionsBar index={index} setEditing={setEditing} />}
           avatar={item.meta}
-          className={styles.message}
+          className={cx(styles.message, isMessageLoading && styles.loading)}
           editing={editing}
           error={error}
           errorMessage={<ErrorMessageExtra data={item} />}
