@@ -1,6 +1,7 @@
 import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/const/trace';
+import LobeMinimaxAI from '@/libs/agent-runtime/minimax';
 
 import { LobeRuntimeAI } from './BaseAI';
 import { LobeAnthropicAI } from './anthropic';
@@ -94,6 +95,7 @@ class AgentRuntime {
       bedrock: Partial<LobeBedrockAIParams>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
+      minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
       moonshot: Partial<ClientOptions>;
       ollama: Partial<ClientOptions>;
@@ -156,6 +158,11 @@ class AgentRuntime {
 
       case ModelProvider.Anthropic: {
         runtimeModel = new LobeAnthropicAI(params.anthropic ?? {});
+        break;
+      }
+
+      case ModelProvider.Minimax: {
+        runtimeModel = new LobeMinimaxAI(params.minimax ?? {});
         break;
       }
 
