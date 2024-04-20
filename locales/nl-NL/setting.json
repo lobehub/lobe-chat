@@ -75,6 +75,10 @@
         }
       }
     },
+    "fetchOnClient": {
+      "desc": "使用客户端请求模式将直接从浏览器发起会话请求，可提升响应速度",
+      "title": "使用客户端请求模式"
+    },
     "fetcher": {
       "fetch": "Haal model lijst op",
       "fetching": "Model lijst wordt opgehaald...",

@@ -75,6 +75,10 @@
         }
       }
     },
+    "fetchOnClient": {
+      "desc": "使用客户端请求模式，浏览器将直接发起会话请求，以提升响应速度",
+      "title": "使用客户端请求模式"
+    },
     "fetcher": {
       "fetch": "Pobierz listę modeli",
       "fetching": "Trwa pobieranie listy modeli...",
