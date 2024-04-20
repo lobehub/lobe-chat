@@ -75,6 +75,10 @@
         }
       }
     },
+    "fetchOnClient": {
+      "desc": "Client-side fetching mode initiates session requests directly from the browser, improving response speed.",
+      "title": "Use Client-Side Fetching Mode"
+    },
     "fetcher": {
       "fetch": "Get Model List",
       "fetching": "Fetching Model List...",
