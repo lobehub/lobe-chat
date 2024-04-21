@@ -65,7 +65,8 @@ const handleDragOver = (e: DragEvent) => {
     const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
       (item) => item.kind === 'file',
     );
-    if (allItemsAreFiles) {
+    const isImg = e.dataTransfer.types.includes("Files"); // Webpage image drag
+    if (allItemsAreFiles || isImg) {
       e.preventDefault();
     }
   }
@@ -103,7 +104,8 @@ const DragUpload = memo(() => {
       const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
         (item) => item.kind === 'file',
       );
-      if (allItemsAreFiles) {
+      const isImg = e.dataTransfer.types.includes("Files");
+      if (allItemsAreFiles || isImg) {
         dragCounter.current += 1;
         e.preventDefault();
         setIsDragging(true);
@@ -116,7 +118,8 @@ const DragUpload = memo(() => {
       const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
         (item) => item.kind === 'file',
       );
-      if (allItemsAreFiles) {
+      const isImg = e.dataTransfer.types.includes("Files");
+      if (allItemsAreFiles || isImg) {
         e.preventDefault();
 
         // reset counter
