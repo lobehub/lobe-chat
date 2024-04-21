@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.148.1](https://github.com/lobehub/lobe-chat/compare/v0.148.0...v0.148.1)
+
+<sup>Released on **2024-04-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix topic title not auto generate.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix topic title not auto generate, closes [#2114](https://github.com/lobehub/lobe-chat/issues/2114) ([5979de3](https://github.com/lobehub/lobe-chat/commit/5979de3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.148.0](https://github.com/lobehub/lobe-chat/compare/v0.147.22...v0.148.0)
 
 <sup>Released on **2024-04-20**</sup>
