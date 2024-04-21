@@ -1,5 +1,6 @@
 import {
   AdobeFirefly,
+  Ai21,
   Aws,
   Azure,
   Baichuan,
@@ -18,6 +19,7 @@ import {
   Mistral,
   Moonshot,
   OpenAI,
+  OpenChat,
   OpenRouter,
   Perplexity,
   Rwkv,
@@ -53,9 +55,9 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.includes('pplx') || model.includes('sonar')) return <Perplexity size={size} />;
   if (model.startsWith('yi-')) return <ZeroOne size={size} />;
   if (model.startsWith('openrouter')) return <OpenRouter size={size} />; // only for Cinematika and Auto
+  if (model.startsWith('openchat')) return <OpenChat size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
-  if (model.includes('openchat')) return <Dbrx size={size} />;
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan')) return <Baichuan size={size} />;
@@ -78,6 +80,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
     return <Stability size={size} />;
   if (model.includes('wizardlm')) return <Azure size={size} />;
   if (model.includes('firefly')) return <AdobeFirefly size={size} />;
+  if (model.includes('jamba') || model.includes('j2-')) return <Ai21 size={size} />;
 });
 
 export default ModelIcon;
