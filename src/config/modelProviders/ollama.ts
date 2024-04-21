@@ -3,6 +3,21 @@ import { ModelProviderCard } from '@/types/llm';
 const Ollama: ModelProviderCard = {
   chatModels: [
     {
+      displayName: 'Command R 35B',
+      enabled: true,
+      functionCall: false,
+      id: 'command-r',
+      tokens: 128_000,
+      vision: false,
+    },
+    {
+      displayName: 'Command R+ 104B (Q2_K)',
+      functionCall: false,
+      id: 'command-r-plus:104b-q2_K',
+      tokens: 128_000,
+      vision: false,
+    },
+    {
       displayName: 'Gemma 7B',
       enabled: true,
       functionCall: false,
@@ -49,9 +64,40 @@ const Ollama: ModelProviderCard = {
     },
     {
       displayName: 'Llama2 CN 7B',
+      enabled: true,
       functionCall: false,
       id: 'llama2-chinese',
       tokens: 4000,
+      vision: false,
+    },
+    {
+      displayName: 'Llama3 8B',
+      enabled: true,
+      functionCall: false,
+      id: 'llama3',
+      tokens: 8000,
+      vision: false,
+    },
+    {
+      displayName: 'Llama3 70B',
+      functionCall: false,
+      id: 'llama3:70b',
+      tokens: 8000,
+      vision: false,
+    },
+    {
+      displayName: 'WizardLM 2 7B',
+      enabled: true,
+      functionCall: false,
+      id: 'wizardlm2',
+      tokens: 65_536,
+      vision: false,
+    },
+    {
+      displayName: 'WizardLM 2 8x22B',
+      functionCall: false,
+      id: 'wizardlm2:8x22b',
+      tokens: 65_536,
       vision: false,
     },
     {
@@ -96,6 +142,13 @@ const Ollama: ModelProviderCard = {
       functionCall: false,
       id: 'mixtral',
       tokens: 32_000,
+      vision: false,
+    },
+    {
+      displayName: 'Mixtral 8x22B',
+      functionCall: false,
+      id: 'mixtral:8x22b',
+      tokens: 64_000,
       vision: false,
     },
     {
