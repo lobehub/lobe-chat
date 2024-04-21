@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.148.2](https://github.com/lobehub/lobe-chat/compare/v0.148.1...v0.148.2)
+
+<sup>Released on **2024-04-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add LLaMA 3 in groq + Mixtral 8x22B model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add LLaMA 3 in groq + Mixtral 8x22B model, closes [#2128](https://github.com/lobehub/lobe-chat/issues/2128) ([6144448](https://github.com/lobehub/lobe-chat/commit/6144448))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.148.1](https://github.com/lobehub/lobe-chat/compare/v0.148.0...v0.148.1)
 
 <sup>Released on **2024-04-20**</sup>
