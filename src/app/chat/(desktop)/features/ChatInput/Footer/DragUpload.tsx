@@ -103,8 +103,6 @@ const DragUpload = memo(() => {
   };
 
   const handleDragEnter = (e: DragEvent) => {
-    dragCounter.current += 1;
-
     if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
       const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
         (item) => item.kind === 'file',
@@ -112,21 +110,22 @@ const DragUpload = memo(() => {
       const htmlData = e.dataTransfer.getData("text/html");
       const isImg = htmlData && htmlData.startsWith("<img");
       if (allItemsAreFiles || isImg) {
-        e.preventDefault();
+        dragCounter.current += 1;
+        // e.preventDefault();
         setIsDragging(true);
       }
     }
   };
 
   const handleDragLeave = (e: DragEvent) => {
-    if (e.dataTransfer && e.dataTransfer.items) {
+    if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
       const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
         (item) => item.kind === 'file',
       );
       const htmlData = e.dataTransfer.getData("text/html");
       const isImg = htmlData && htmlData.startsWith("<img");
       if (allItemsAreFiles || isImg) {
-        e.preventDefault();
+        // e.preventDefault();
 
         // reset counter
         dragCounter.current -= 1;
@@ -139,7 +138,7 @@ const DragUpload = memo(() => {
   };
 
   const handleDrop = async (e: DragEvent) => {
-    if (e.dataTransfer && e.dataTransfer.items) {
+    if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
       const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
         (item) => item.kind === 'file',
       );
