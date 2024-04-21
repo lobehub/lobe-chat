@@ -2,13 +2,15 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
+import { createErrorResponse } from '@/app/api/errorResponse';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import {
   commonSelectors,
+  modelConfigSelectors,
   modelProviderSelectors,
   preferenceSelectors,
 } from '@/store/global/selectors';
@@ -16,13 +18,14 @@ import { useSessionStore } from '@/store/session';
 import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
+import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
-import { createHeaderWithAuth } from './_auth';
+import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
@@ -62,6 +65,119 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
+}
+
+/**
+ * Initializes the AgentRuntime with the client store.
+ * @param provider - The provider name.
+ * @param payload - Init options
+ * @returns The initialized AgentRuntime instance
+ *
+ * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
+ */
+export function initializeWithClientStore(provider: string, payload: any) {
+  // add auth payload
+  const providerAuthPayload = getProviderAuthPayload(provider);
+  const commonOptions = {
+    // Some provider base openai sdk, so enable it run on browser
+    dangerouslyAllowBrowser: true,
+  };
+  let providerOptions = {};
+
+  switch (provider) {
+    default:
+    case ModelProvider.OpenAI: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Azure: {
+      providerOptions = {
+        apiVersion: providerAuthPayload?.azureApiVersion,
+        // That's a wired properity, but just remapped it
+        apikey: providerAuthPayload?.apiKey,
+      };
+      break;
+    }
+    case ModelProvider.ZhiPu: {
+      break;
+    }
+    case ModelProvider.Google: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Moonshot: {
+      break;
+    }
+    case ModelProvider.Bedrock: {
+      if (providerAuthPayload?.apiKey) {
+        providerOptions = {
+          accessKeyId: providerAuthPayload?.awsAccessKeyId,
+          accessKeySecret: providerAuthPayload?.awsSecretAccessKey,
+          region: providerAuthPayload?.awsRegion,
+        };
+      }
+      break;
+    }
+    case ModelProvider.Ollama: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Perplexity: {
+      break;
+    }
+    case ModelProvider.Anthropic: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Mistral: {
+      break;
+    }
+    case ModelProvider.Groq: {
+      break;
+    }
+    case ModelProvider.OpenRouter: {
+      break;
+    }
+    case ModelProvider.TogetherAI: {
+      break;
+    }
+    case ModelProvider.ZeroOne: {
+      break;
+    }
+  }
+
+  /**
+   * Configuration override order:
+   * payload -> providerOptions -> providerAuthPayload -> commonOptions
+   */
+  return AgentRuntime.initializeWithProviderOptions(provider, {
+    [provider]: {
+      ...commonOptions,
+      ...providerAuthPayload,
+      ...providerOptions,
+      ...payload,
+    },
+  });
+}
+
+/**
+ * Fetch chat completion on the client side.
+ * @param provider - The provider name.
+ * @param payload - The payload data for the chat stream.
+ * @returns A promise that resolves to the chat response.
+ */
+export async function fetchOnClient(provider: string, payload: Partial<ChatStreamPayload>) {
+  const agentRuntime = await initializeWithClientStore(provider, payload);
+  const data = payload as ChatStreamPayload;
+  return await agentRuntime.chat(data);
 }
 
 class ChatService {
@@ -148,6 +264,36 @@ class ChatService {
       { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
       { ...res, model },
     );
+
+    /**
+     * Use browser agent runtime
+     */
+    const enableFetchOnClient = modelConfigSelectors.isProviderFetchOnClient(provider)(
+      useGlobalStore.getState(),
+    );
+    /**
+     * Notes:
+     * 1. Broswer agent runtime will skip auth check if a key and endpoint provided by
+     *    user which will cause abuse of plugins services
+     * 2. This feature will disabled by default
+     */
+    if (enableFetchOnClient) {
+      try {
+        return await fetchOnClient(provider, payload);
+      } catch (e) {
+        const {
+          errorType = ChatErrorType.BadRequest,
+          error: errorContent,
+          ...res
+        } = e as ChatCompletionErrorPayload;
+
+        const error = errorContent || e;
+        // track the error at server side
+        console.error(`Route: [${provider}] ${errorType}:`, error);
+
+        return createErrorResponse(errorType, { error, ...res, provider });
+      }
+    }
 
     const traceHeader = createTraceHeader({ ...options?.trace });
 

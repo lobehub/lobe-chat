@@ -9,7 +9,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT } from '@/const/message';
 import { TraceNameMap } from '@/const/trace';
-import { SWRefreshMethod, useClientDataSWR } from '@/libs/swr';
+import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -29,7 +29,7 @@ const SWR_USE_SEARCH_TOPIC = 'SWR_USE_SEARCH_TOPIC';
 export interface ChatTopicAction {
   favoriteTopic: (id: string, favState: boolean) => Promise<void>;
   openNewTopicOrSaveTopic: () => Promise<void>;
-  refreshTopic: SWRefreshMethod<ChatTopic[]>;
+  refreshTopic: () => Promise<void>;
   removeAllTopics: () => Promise<void>;
   removeSessionTopics: () => Promise<void>;
   removeTopic: (id: string) => Promise<void>;
@@ -125,7 +125,7 @@ export const chatTopic: StateCreator<
         updateTopicTitleInSummary(topicId, topic.title);
       },
       onFinish: async (text) => {
-        topicService.updateTopic(topicId, { title: text });
+        await topicService.updateTopic(topicId, { title: text });
       },
       onLoadingChange: (loading) => {
         updateTopicLoading(loading ? topicId : undefined);
@@ -238,12 +238,7 @@ export const chatTopic: StateCreator<
   updateTopicLoading: (id) => {
     set({ topicLoadingId: id }, false, n('updateTopicLoading'));
   },
-  // TODO: I don't know why this ts error, so have to ignore it
-  // @ts-ignore
-  refreshTopic: async (params) => {
-    return mutate([SWR_USE_FETCH_TOPIC, get().activeId], params?.action, {
-      optimisticData: params?.optimisticData,
-      populateCache: false,
-    });
+  refreshTopic: async () => {
+    return mutate([SWR_USE_FETCH_TOPIC, get().activeId]);
   },
 });
