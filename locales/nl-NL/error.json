@@ -88,18 +88,19 @@
     "addProxyUrl": "Voeg een optionele OpenAI-proxy-URL toe",
     "closeMessage": "Sluit bericht",
     "confirm": "Bevestigen en opnieuw proberen",
-    "model": {
-      "Ollama": {
-        "confirm": "Downloaden",
-        "description": "Voer je Ollama model tag in, voltooi om het gesprek voort te zetten",
-        "title": "Download het gespecificeerde Ollama model"
-      }
-    },
     "oauth": {
       "description": "De beheerder heeft een uniforme aanmeldingsverificatie ingeschakeld. Klik op de onderstaande knop om in te loggen en de app te ontgrendelen.",
       "success": "Succesvol ingelogd",
       "title": "Account inloggen",
       "welcome": "Welkom!"
+    },
+    "ollama": {
+      "cancel": "Annuleren",
+      "confirm": "Bevestigen",
+      "description": "Voer uw Ollama-modeltag in om door te gaan met de sessie",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Downloaden begint...",
+      "title": "Specifiek Ollama-model downloaden"
     },
     "password": {
       "description": "De beheerder heeft app-encryptie ingeschakeld. Voer het app-wachtwoord in om de app te ontgrendelen. Het wachtwoord hoeft slechts één keer te worden ingevoerd.",

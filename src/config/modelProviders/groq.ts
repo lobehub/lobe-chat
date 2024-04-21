@@ -16,6 +16,18 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
+      displayName: 'LLaMA3-3-8B',
+      enabled: true,
+      id: 'llama3-8b-8192',
+      tokens: 8192,
+    },
+    {
+      displayName: 'LLaMA3-3-70B',
+      enabled: true,
+      id: 'llama3-70b-8192',
+      tokens: 8192,
+    },
+    {
       displayName: 'LLaMA2-70b-chat',
       enabled: true,
       id: 'llama2-70b-4096',

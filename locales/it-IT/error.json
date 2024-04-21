@@ -88,18 +88,19 @@
     "addProxyUrl": "Aggiungi URL del proxy OpenAI (opzionale)",
     "closeMessage": "Chiudi messaggio",
     "confirm": "Conferma e riprova",
-    "model": {
-      "Ollama": {
-        "confirm": "Scarica",
-        "description": "Inserisci l'etichetta del tuo modello Ollama per continuare la sessione",
-        "title": "Scarica il modello Ollama specificato"
-      }
-    },
     "oauth": {
       "description": "L'amministratore ha abilitato l'autenticazione di accesso unificata. Fai clic sul pulsante sottostante per accedere e sbloccare l'applicazione.",
       "success": "Accesso riuscito",
       "title": "Accedi all'account",
       "welcome": "Benvenuto!"
+    },
+    "ollama": {
+      "cancel": "Annulla il download",
+      "confirm": "Scarica",
+      "description": "Inserisci l'etichetta del tuo modello Ollama per continuare la sessione",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Inizio download...",
+      "title": "Scarica il modello Ollama specificato"
     },
     "password": {
       "description": "L'amministratore ha attivato la crittografia dell'applicazione. Inserisci la password dell'applicazione per sbloccarla. La password va inserita solo una volta.",
