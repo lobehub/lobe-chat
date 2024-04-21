@@ -9,7 +9,21 @@ import { getMessageError } from '@/utils/fetch';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:11434/v1';
 
-class OllamaService {
+interface OllamaServiceParams {
+  fetch?: typeof fetch;
+}
+
+export class OllamaService {
+  private _host: string;
+  private _client: OllamaBrowser;
+  private _fetch?: typeof fetch;
+
+  constructor(params: OllamaServiceParams = {}) {
+    this._host = this.getHost();
+    this._fetch = params.fetch;
+    this._client = new OllamaBrowser({ fetch: params?.fetch, host: this._host });
+  }
+
   getHost = (): string => {
     const config = modelConfigSelectors.ollamaConfig(useGlobalStore.getState());
 
@@ -18,7 +32,15 @@ class OllamaService {
   };
 
   getOllamaClient = () => {
-    return new OllamaBrowser({ host: this.getHost() });
+    if (this.getHost() !== this._host) {
+      this._host = this.getHost();
+      this._client = new OllamaBrowser({ fetch: this._fetch, host: this.getHost() });
+    }
+    return this._client;
+  };
+
+  abort = () => {
+    this._client.abort();
   };
 
   pullModel = async (model: string): Promise<AsyncGenerator<ProgressResponse>> => {
