@@ -2,6 +2,7 @@ import { StreamingTextResponse } from 'ai';
 import { isEmpty } from 'lodash-es';
 import OpenAI from 'openai';
 
+import { debugStream } from '@/libs/agent-runtime/utils/debugStream';
 import { fetchSSE } from '@/utils/fetch';
 
 import { LobeRuntimeAI } from '../BaseAI';
@@ -37,6 +38,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
     options?: ChatCompetitionOptions,
   ): Promise<StreamingTextResponse> {
     try {
+      const encoder = new TextEncoder();
       let dataResponse: MinimaxResponse;
       let streamController: ReadableStreamDefaultController;
       const readableStream = new ReadableStream({
@@ -45,7 +47,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
         },
       });
 
-      await fetchSSE(
+      const response = await fetchSSE(
         () =>
           fetch('https://api.minimax.chat/v1/text/chatcompletion_v2', {
             body: JSON.stringify(this.buildCompletionsParams(payload)),
@@ -56,11 +58,17 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
             method: 'POST',
           }),
         {
-          onFinish: async () => {
+          onFinish: async (text, context) => {
+            if (process.env.DEBUG_MINIMAX_CHAT_COMPLETION === '1') {
+              console.log(`[minimax finish]\ntext: ${text} \ncontext: ${JSON.stringify(context)}`);
+            }
             streamController.close();
             this.throwIfErrorResponse(dataResponse);
           },
           onMessageHandle: (text) => {
+            if (process.env.DEBUG_MINIMAX_CHAT_COMPLETION === '1') {
+              console.log(`[minimax] ${text}`);
+            }
             let body = text;
             if (body.startsWith('data:')) {
               body = body.slice(5).trim();
@@ -68,14 +76,24 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
             if (isEmpty(body)) {
               return;
             }
-            const data = JSON.parse(body) as MinimaxResponse;
-            dataResponse = data;
-            if (data.choices?.at(0)?.delta?.content) {
-              streamController.enqueue(data.choices.at(0)?.delta.content);
+            try {
+              const data = JSON.parse(body) as MinimaxResponse;
+              dataResponse = data;
+              if (data.choices?.at(0)?.delta?.content) {
+                streamController.enqueue(
+                  encoder.encode(data.choices.at(0)?.delta.content || undefined),
+                );
+              }
+            } catch (e) {
+              console.error(e);
             }
           },
         },
       );
+
+      if (process.env.DEBUG_MINIMAX_CHAT_COMPLETION === '1' && response?.body) {
+        debugStream(response.body).catch(console.error);
+      }
 
       return new StreamingTextResponse(readableStream, { headers: options?.headers });
     } catch (error) {
