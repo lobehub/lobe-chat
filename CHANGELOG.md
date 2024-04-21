@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.148.4](https://github.com/lobehub/lobe-chat/compare/v0.148.3...v0.148.4)
+
+<sup>Released on **2024-04-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model list menu not display correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model list menu not display correctly, closes [#2133](https://github.com/lobehub/lobe-chat/issues/2133) ([98c844b](https://github.com/lobehub/lobe-chat/commit/98c844b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.148.3](https://github.com/lobehub/lobe-chat/compare/v0.148.2...v0.148.3)
 
 <sup>Released on **2024-04-21**</sup>
