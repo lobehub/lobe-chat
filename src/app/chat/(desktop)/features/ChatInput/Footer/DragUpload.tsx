@@ -62,11 +62,8 @@ const useStyles = createStyles(({ css, token, stylish }) => {
 
 const handleDragOver = (e: DragEvent) => {
   if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-    const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
-      (item) => item.kind === 'file',
-    );
-    const isImg = e.dataTransfer.types.includes("Files"); // Webpage image drag
-    if (allItemsAreFiles || isImg) {
+    const isFile = e.dataTransfer.types.includes("Files"); // Webpage image drag
+    if (isFile) {
       e.preventDefault();
     }
   }
@@ -101,11 +98,8 @@ const DragUpload = memo(() => {
 
   const handleDragEnter = (e: DragEvent) => {
     if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
-        (item) => item.kind === 'file',
-      );
-      const isImg = e.dataTransfer.types.includes("Files");
-      if (allItemsAreFiles || isImg) {
+      const isFile = e.dataTransfer.types.includes("Files");
+      if (isFile) {
         dragCounter.current += 1;
         e.preventDefault();
         setIsDragging(true);
@@ -115,11 +109,8 @@ const DragUpload = memo(() => {
 
   const handleDragLeave = (e: DragEvent) => {
     if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
-        (item) => item.kind === 'file',
-      );
-      const isImg = e.dataTransfer.types.includes("Files");
-      if (allItemsAreFiles || isImg) {
+      const isFile = e.dataTransfer.types.includes("Files");
+      if (isFile) {
         e.preventDefault();
 
         // reset counter
@@ -134,12 +125,8 @@ const DragUpload = memo(() => {
 
   const handleDrop = async (e: DragEvent) => {
     if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
-        (item) => item.kind === 'file',
-      );
-      const htmlData = e.dataTransfer.getData("text/html");
-      const isImg = htmlData && htmlData.startsWith("<img");
-      if (allItemsAreFiles || isImg) {
+      const isFile = e.dataTransfer.types.includes("Files");
+      if (isFile) {
         e.preventDefault();
 
         // reset counter
