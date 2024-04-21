@@ -75,6 +75,10 @@
         }
       }
     },
+    "fetchOnClient": {
+      "desc": "Client Fetch-Modus initiiert direkte Sitzungsanfragen vom Browser aus und verbessert die Reaktionsgeschwindigkeit.",
+      "title": "Client Fetch-Modus verwenden"
+    },
     "fetcher": {
       "fetch": "Modelle abrufen",
       "fetching": "Modelle werden abgerufen...",
