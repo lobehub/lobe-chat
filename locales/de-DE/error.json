@@ -88,18 +88,19 @@
     "addProxyUrl": "Fügen Sie die OpenAI-Proxy-URL hinzu (optional)",
     "closeMessage": "Hinweis schließen",
     "confirm": "Bestätigen und erneut versuchen",
-    "model": {
-      "Ollama": {
-        "confirm": "Herunterladen",
-        "description": "Geben Sie Ihre Ollama-Modellbezeichnung ein, um fortzufahren",
-        "title": "Bestimmtes Ollama-Modell herunterladen"
-      }
-    },
     "oauth": {
       "description": "Der Administrator hat die einheitliche Anmeldeauthentifizierung aktiviert. Klicken Sie unten auf die Schaltfläche, um sich anzumelden und die App zu entsperren.",
       "success": "Anmeldung erfolgreich",
       "title": "Anmelden",
       "welcome": "Willkommen!"
+    },
+    "ollama": {
+      "cancel": "Abbrechen",
+      "confirm": "Herunterladen",
+      "description": "Geben Sie Ihre Ollama-Modellkennung ein, um fortzufahren",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Download startet...",
+      "title": "Bestimmtes Ollama-Modell herunterladen"
     },
     "password": {
       "description": "Der Administrator hat die App-Verschlüsselung aktiviert. Gib das App-Passwort ein, um die App zu entsperren. Das Passwort muss nur einmal eingegeben werden.",
