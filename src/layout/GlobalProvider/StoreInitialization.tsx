@@ -8,7 +8,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useGlobalStore } from '@/store/global';
 
-const StoreHydration = memo(() => {
+const StoreInitialization = memo(() => {
   const [useFetchServerConfig, useFetchUserConfig, useInitPreference] = useGlobalStore((s) => [
     s.useFetchServerConfig,
     s.useFetchUserConfig,
@@ -42,4 +42,4 @@ const StoreHydration = memo(() => {
   return null;
 });
 
-export default StoreHydration;
+export default StoreInitialization;
