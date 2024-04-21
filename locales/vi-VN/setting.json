@@ -75,6 +75,10 @@
         }
       }
     },
+    "fetchOnClient": {
+      "desc": "Chế độ yêu cầu từ khách hàng sẽ khởi động yêu cầu phiên trực tiếp từ trình duyệt, có thể cải thiện tốc độ phản hồi",
+      "title": "Sử dụng chế độ yêu cầu từ khách hàng"
+    },
     "fetcher": {
       "fetch": "Lấy danh sách mô hình",
       "fetching": "Đang lấy danh sách mô hình...",
