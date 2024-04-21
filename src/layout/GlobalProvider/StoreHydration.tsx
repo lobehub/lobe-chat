@@ -1,50 +1,34 @@
 'use client';
 
-import { useResponsive } from 'antd-style';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
+import { createStoreUpdater } from 'zustand-utils';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useGlobalStore } from '@/store/global';
-import { useEffectAfterGlobalHydrated } from '@/store/global/hooks/useEffectAfterHydrated';
 
 const StoreHydration = memo(() => {
-  const [useFetchServerConfig, useFetchUserConfig] = useGlobalStore((s) => [
+  const [useFetchServerConfig, useFetchUserConfig, useInitPreference] = useGlobalStore((s) => [
     s.useFetchServerConfig,
     s.useFetchUserConfig,
+    s.useInitPreference,
   ]);
+  // init the system preference
+  useInitPreference();
 
   const { isLoading } = useFetchServerConfig();
-
   useFetchUserConfig(!isLoading);
 
   useEnabledDataSync();
 
-  useEffect(() => {
-    // refs: https://github.com/pmndrs/zustand/blob/main/docs/integrations/persisting-store-data.md#hashydrated
-    useGlobalStore.persist.rehydrate();
-  }, []);
+  const useStoreUpdater = createStoreUpdater(useGlobalStore);
 
-  const { mobile } = useResponsive();
-  useEffectAfterGlobalHydrated(
-    (store) => {
-      const prevState = store.getState().isMobile;
-
-      if (prevState !== mobile) {
-        store.setState({ isMobile: mobile });
-      }
-    },
-    [mobile],
-  );
-
+  const mobile = useIsMobile();
   const router = useRouter();
 
-  useEffectAfterGlobalHydrated(
-    (store) => {
-      store.setState({ router });
-    },
-    [router],
-  );
+  useStoreUpdater('isMobile', mobile);
+  useStoreUpdater('router', router);
 
   useEffect(() => {
     router.prefetch('/chat');

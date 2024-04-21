@@ -147,7 +147,7 @@ export const createCommonSlice: StateCreator<
       },
       {
         onSuccess: (syncEnabled) => {
-          set({ syncEnabled });
+          set({ syncEnabled }, false, n('useEnabledSync'));
         },
         revalidateOnFocus: false,
       },
