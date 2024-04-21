@@ -88,18 +88,19 @@
     "addProxyUrl": "Thêm URL proxy OpenAI (tùy chọn)",
     "closeMessage": "Đóng thông báo",
     "confirm": "Xác nhận và thử lại",
-    "model": {
-      "Ollama": {
-        "confirm": "Tải xuống",
-        "description": "Nhập nhãn mô hình Ollama của bạn để tiếp tục cuộc trò chuyện",
-        "title": "Tải xuống mô hình Ollama cụ thể"
-      }
-    },
     "oauth": {
       "description": "Quản trị viên đã mở tính năng xác thực đăng nhập thống nhất. Nhấn vào nút bên dưới để đăng nhập và mở khóa ứng dụng",
       "success": "Đăng nhập thành công",
       "title": "Đăng nhập tài khoản",
       "welcome": "Chào mừng bạn!"
+    },
+    "ollama": {
+      "cancel": "Hủy bỏ",
+      "confirm": "Tải xuống",
+      "description": "Nhập nhãn mô hình Ollama của bạn để tiếp tục cuộc trò chuyện",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Bắt đầu tải xuống...",
+      "title": "Tải xuống mô hình Ollama cụ thể"
     },
     "password": {
       "description": "Quản trị viên đã kích hoạt mã hóa ứng dụng. Nhập mật khẩu ứng dụng để mở khóa. Chỉ cần nhập mật khẩu một lần",
