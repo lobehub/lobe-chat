@@ -60,16 +60,12 @@ const useStyles = createStyles(({ css, token, stylish }) => {
   };
 });
 
-
-
 const handleDragOver = (e: DragEvent) => {
   if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
     const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
       (item) => item.kind === 'file',
     );
-    const htmlData = e.dataTransfer.getData("text/html"); // web image support
-    const isImg = htmlData && htmlData.startsWith("<img");
-    if (allItemsAreFiles || isImg) {
+    if (allItemsAreFiles) {
       e.preventDefault();
     }
   }
@@ -107,11 +103,9 @@ const DragUpload = memo(() => {
       const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
         (item) => item.kind === 'file',
       );
-      const htmlData = e.dataTransfer.getData("text/html");
-      const isImg = htmlData && htmlData.startsWith("<img");
-      if (allItemsAreFiles || isImg) {
+      if (allItemsAreFiles) {
         dragCounter.current += 1;
-        // e.preventDefault();
+        e.preventDefault();
         setIsDragging(true);
       }
     }
@@ -122,10 +116,8 @@ const DragUpload = memo(() => {
       const allItemsAreFiles = Array.from(e.dataTransfer.items).every(
         (item) => item.kind === 'file',
       );
-      const htmlData = e.dataTransfer.getData("text/html");
-      const isImg = htmlData && htmlData.startsWith("<img");
-      if (allItemsAreFiles || isImg) {
-        // e.preventDefault();
+      if (allItemsAreFiles) {
+        e.preventDefault();
 
         // reset counter
         dragCounter.current -= 1;
@@ -146,6 +138,7 @@ const DragUpload = memo(() => {
       const isImg = htmlData && htmlData.startsWith("<img");
       if (allItemsAreFiles || isImg) {
         e.preventDefault();
+
         // reset counter
         dragCounter.current = 0;
 
@@ -168,7 +161,6 @@ const DragUpload = memo(() => {
 
     uploadImages(files);
   };
-
 
   useEffect(() => {
     window.addEventListener('dragenter', handleDragEnter);
