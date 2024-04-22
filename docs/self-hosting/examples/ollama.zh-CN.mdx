@@ -35,8 +35,69 @@ docker run -d -p 3210:3210 -e OLLAMA_PROXY_URL=http://host.docker.internal:11434
 ## 非本地访问 Ollama
 
 由于 Ollama 默认参数在启动时设置了仅本地访问，所以跨域访问以及端口监听需要进行额外的环境变量设置 `OLLAMA_ORIGINS` 和 `OLLAMA_HOST`。
-```
-set OLLAMA_ORIGINS=*
-set OLLAMA_HOST=:11434
-```
+
+### Ollama 环境变量
+
+    `OLLAMA_HOST`         绑定的主机:端口 (默认 "127.0.0.1:11434")
+    `OLLAMA_ORIGINS`      允许的源的逗号分隔列表。
+    `OLLAMA_MODELS`       模型目录的路径 (默认是 "~/.ollama/models")
+    `OLLAMA_KEEP_ALIVE`   模型在内存中保持加载的持续时间 (默认是 "5m")
+    `OLLAMA_DEBUG`        设置为 1 以启用额外的调试日志
+
+### 在 Windows 上设置环境变量
+
+在 Windows 上，Ollama 继承了您的用户和系统环境变量。
+
+1. 首先通过 Windows 任务栏点击 Ollama 退出程序。
+2. 从控制面板编辑系统环境变量。
+3. 为您的用户账户编辑或新建 Ollama 的环境变量，比如`OLLAMA_HOST`、`OLLAMA_ORIGINS`等。
+4. 点击`OK/应用`保存。
+5. 重新运行`Ollama`。
+
+
+### 在 Mac 上设置环境变量
+
+如果 Ollama 作为 macOS 应用程序运行，你需要使用 `launchctl` 设置环境变量：
+
+1. 对于每个环境变量，调用 `launchctl setenv`。
+
+    ```bash
+    launchctl setenv OLLAMA_HOST "0.0.0.0"
+    launchctl setenv OLLAMA_ORIGINS "*"
+    ```
+
+2. 重启 Ollama 应用程序。
+
+
+### 在 Linux 上设置环境变量
+
+如果 Ollama 作为 systemd 服务运行，应该使用`systemctl`设置环境变量：
+
+1. 通过调用`sudo systemctl edit ollama.service`编辑 systemd 服务。
+
+    ```bash
+    sudo systemctl edit ollama.service
+    ```
+
+2. 对于每个环境变量，在`[Service]`部分下添加`Environment`：
+
+    ```bash
+    [Service]
+    Environment="OLLAMA_HOST=0.0.0.0"
+    Environment="OLLAMA_ORIGINS=*"
+    ```
+
+3. 保存并退出。
+4. 重载`systemd`并重启 Ollama：
+
+    ```bash
+    sudo systemctl daemon-reload
+    sudo systemctl restart ollama
+    ```
+
+### 在 Docker 上设置环境变量
+
+如果 Ollama 作为 Docker 容器运行，你可以将环境变量添加到 `docker run` 命令中。
+
 详细配置方法可以参考 [Ollama 官方文档](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server)。
+
