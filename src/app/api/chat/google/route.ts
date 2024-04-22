@@ -20,7 +20,7 @@ export const preferredRegion = [
   'hnd1', 
   'kix1',
   'bom1', 
-  'cgd1',
+  'cdg1',
   'lhr1', 
   'cpt1',
   'pdx1', 
