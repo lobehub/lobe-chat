@@ -3,7 +3,6 @@ import { isEmpty } from 'lodash-es';
 import OpenAI from 'openai';
 
 import { debugStream } from '@/libs/agent-runtime/utils/debugStream';
-import { fetchSSE } from '@/utils/fetch';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -24,6 +23,47 @@ interface MinimaxBaseResponse {
 
 type MinimaxResponse = Partial<OpenAI.ChatCompletionChunk> & MinimaxBaseResponse;
 
+function throwIfErrorResponse(data: MinimaxResponse) {
+  // error status code
+  // https://www.minimaxi.com/document/guides/chat-model/pro/api?id=6569c85948bc7b684b30377e#3.1.3%20%E8%BF%94%E5%9B%9E(response)%E5%8F%82%E6%95%B0
+  if (!data.base_resp?.status_code || data.base_resp?.status_code < 1000) {
+    return;
+  }
+  if (data.base_resp?.status_code === 1004) {
+    throw AgentRuntimeError.chat({
+      error: {
+        code: data.base_resp.status_code,
+        message: data.base_resp.status_msg,
+      },
+      errorType: AgentRuntimeErrorType.InvalidMinimaxAPIKey,
+      provider: ModelProvider.Minimax,
+    });
+  }
+  throw AgentRuntimeError.chat({
+    error: {
+      code: data.base_resp.status_code,
+      message: data.base_resp.status_msg,
+    },
+    errorType: AgentRuntimeErrorType.MinimaxBizError,
+    provider: ModelProvider.Minimax,
+  });
+}
+
+function parseMinimaxResponse(chunk: string): string | undefined {
+  let body = chunk;
+  if (body.startsWith('data:')) {
+    body = body.slice(5).trim();
+  }
+  if (isEmpty(body)) {
+    return;
+  }
+  const data = JSON.parse(body) as MinimaxResponse;
+  throwIfErrorResponse(data);
+  if (data.choices?.at(0)?.delta?.content) {
+    return data.choices.at(0)?.delta.content || undefined;
+  }
+}
+
 export class LobeMinimaxAI implements LobeRuntimeAI {
   apiKey: string;
 
@@ -39,60 +79,54 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
   ): Promise<StreamingTextResponse> {
     try {
       const encoder = new TextEncoder();
-      let dataResponse: MinimaxResponse;
-      let streamController: ReadableStreamDefaultController;
+      const decoder = new TextDecoder();
+      let dataResponse: MinimaxResponse | undefined;
+      let streamController: ReadableStreamDefaultController | undefined;
       const readableStream = new ReadableStream({
         start(controller) {
           streamController = controller;
         },
       });
 
-      const response = await fetchSSE(
-        () =>
-          fetch('https://api.minimax.chat/v1/text/chatcompletion_v2', {
-            body: JSON.stringify(this.buildCompletionsParams(payload)),
-            headers: {
-              'Authorization': `Bearer ${this.apiKey}`,
-              'Content-Type': 'application/json',
-            },
-            method: 'POST',
-          }),
-        {
-          onFinish: async (text, context) => {
-            if (process.env.DEBUG_MINIMAX_CHAT_COMPLETION === '1') {
-              console.log(`[minimax finish]\ntext: ${text} \ncontext: ${JSON.stringify(context)}`);
-            }
-            streamController.close();
-            this.throwIfErrorResponse(dataResponse);
-          },
-          onMessageHandle: (text) => {
-            if (process.env.DEBUG_MINIMAX_CHAT_COMPLETION === '1') {
-              console.log(`[minimax] ${text}`);
-            }
-            let body = text;
-            if (body.startsWith('data:')) {
-              body = body.slice(5).trim();
-            }
-            if (isEmpty(body)) {
-              return;
-            }
-            try {
-              const data = JSON.parse(body) as MinimaxResponse;
-              dataResponse = data;
-              if (data.choices?.at(0)?.delta?.content) {
-                streamController.enqueue(
-                  encoder.encode(data.choices.at(0)?.delta.content || undefined),
-                );
-              }
-            } catch (e) {
-              console.error(e);
-            }
-          },
+      const response = await fetch('https://api.minimax.chat/v1/text/chatcompletion_v2', {
+        body: JSON.stringify(this.buildCompletionsParams(payload)),
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
         },
-      );
+        method: 'POST',
+      });
+      if (!response.body || !response.ok) {
+        throw AgentRuntimeError.chat({
+          error: {
+            status: response.status,
+            statusText: response.statusText,
+          },
+          errorType: AgentRuntimeErrorType.MinimaxBizError,
+          provider: ModelProvider.Minimax,
+        });
+      }
 
-      if (process.env.DEBUG_MINIMAX_CHAT_COMPLETION === '1' && response?.body) {
-        debugStream(response.body).catch(console.error);
+      const [prod, debug] = response.body.tee();
+
+      if (process.env.DEBUG_MINIMAX_CHAT_COMPLETION === '1') {
+        debugStream(debug).catch(console.error);
+      }
+
+      const reader = prod.getReader();
+      let done = false;
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        const chunkValue = decoder.decode(value, { stream: true });
+        const text = parseMinimaxResponse(chunkValue);
+        streamController?.enqueue(encoder.encode(text));
+      }
+
+      streamController?.close();
+      if (dataResponse) {
+        throwIfErrorResponse(dataResponse);
       }
 
       return new StreamingTextResponse(readableStream, { headers: options?.headers });
@@ -124,32 +158,6 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
       temperature: temperature === 0 ? undefined : temperature,
       top_p: top_p === 0 ? undefined : top_p,
     };
-  }
-
-  private throwIfErrorResponse(data: MinimaxResponse) {
-    // error status code
-    // https://www.minimaxi.com/document/guides/chat-model/pro/api?id=6569c85948bc7b684b30377e#3.1.3%20%E8%BF%94%E5%9B%9E(response)%E5%8F%82%E6%95%B0
-    if (!data.base_resp?.status_code || data.base_resp?.status_code < 1000) {
-      return;
-    }
-    if (data.base_resp?.status_code === 1004) {
-      throw AgentRuntimeError.chat({
-        error: {
-          code: data.base_resp.status_code,
-          message: data.base_resp.status_msg,
-        },
-        errorType: AgentRuntimeErrorType.InvalidMinimaxAPIKey,
-        provider: ModelProvider.Minimax,
-      });
-    }
-    throw AgentRuntimeError.chat({
-      error: {
-        code: data.base_resp.status_code,
-        message: data.base_resp.status_msg,
-      },
-      errorType: AgentRuntimeErrorType.MinimaxBizError,
-      provider: ModelProvider.Minimax,
-    });
   }
 }
 

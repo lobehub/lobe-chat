@@ -1,14 +1,16 @@
 // @vitest-environment edge-runtime
+import { StreamingTextResponse } from 'ai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ChatStreamPayload, ModelProvider } from '@/libs/agent-runtime';
-import * as fetchSSEModule from '@/utils/fetch';
+import * as debugStreamModule from '@/libs/agent-runtime/utils/debugStream';
 
 import { LobeMinimaxAI } from './index';
 
 const provider = ModelProvider.Minimax;
 const bizErrorType = 'MinimaxBizError';
 const invalidErrorType = 'InvalidMinimaxAPIKey';
+const encoder = new TextEncoder();
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -17,9 +19,6 @@ let instance: LobeMinimaxAI;
 
 beforeEach(() => {
   instance = new LobeMinimaxAI({ apiKey: 'test' });
-
-  // 使用 vi.spyOn 来模拟 fetchSSE 方法
-  vi.spyOn(fetchSSEModule, 'fetchSSE').mockResolvedValue(new Response());
 });
 
 afterEach(() => {
@@ -32,17 +31,30 @@ describe('LobeMinimaxAI', () => {
       const instance = new LobeMinimaxAI({ apiKey: 'test_api_key' });
       expect(instance).toBeInstanceOf(LobeMinimaxAI);
     });
+
+    it('should throw AgentRuntimeError with InvalidMinimaxAPIKey if no apiKey is provided', async () => {
+      try {
+        new LobeMinimaxAI({});
+      } catch (e) {
+        expect(e).toEqual({ errorType: invalidErrorType });
+      }
+    });
   });
 
   describe('chat', () => {
     it('should return a StreamingTextResponse on successful API call', async () => {
-      const mockStream = new ReadableStream({
-        start(controller) {
-          controller.enqueue('Hello, world!');
-          controller.close();
-        },
-      });
-      vi.spyOn(fetchSSEModule, 'fetchSSE').mockResolvedValue(new Response(mockStream));
+      const mockResponseData = {
+        choices: [{ delta: { content: 'Hello, world!' } }],
+      };
+      const mockResponse = new Response(
+        new ReadableStream({
+          start(controller) {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(mockResponseData)}`));
+            controller.close();
+          },
+        }),
+      );
+      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(mockResponse);
 
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
@@ -50,23 +62,22 @@ describe('LobeMinimaxAI', () => {
         temperature: 0,
       });
 
-      expect(result).toBeInstanceOf(Response);
+      expect(result).toBeInstanceOf(StreamingTextResponse);
     });
 
     it('should handle text messages correctly', async () => {
       const mockResponseData = {
         choices: [{ delta: { content: 'Hello, world!' } }],
       };
-      vi.spyOn(fetchSSEModule, 'fetchSSE').mockResolvedValue(
-        new Response(
-          new ReadableStream({
-            start(controller) {
-              controller.enqueue(JSON.stringify(mockResponseData));
-              controller.close();
-            },
-          }),
-        ),
+      const mockResponse = new Response(
+        new ReadableStream({
+          start(controller) {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(mockResponseData)}`));
+            controller.close();
+          },
+        }),
       );
+      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(mockResponse);
 
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
@@ -74,11 +85,35 @@ describe('LobeMinimaxAI', () => {
         temperature: 0,
       });
 
-      expect(fetchSSEModule.fetchSSE).toHaveBeenCalledWith(expect.any(Function), {
-        onFinish: expect.any(Function),
-        onMessageHandle: expect.any(Function),
+      expect(result).toBeInstanceOf(StreamingTextResponse);
+    });
+
+    it('should call debugStream in DEBUG mode', async () => {
+      process.env.DEBUG_MINIMAX_CHAT_COMPLETION = '1';
+
+      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+        new Response(
+          new ReadableStream({
+            start(controller) {
+              controller.enqueue(encoder.encode(JSON.stringify('Hello, world!')));
+              controller.close();
+            },
+          }),
+        ),
+      );
+
+      vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
+
+      await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'text-davinci-003',
+        temperature: 0,
       });
-      expect(result).toBeInstanceOf(Response);
+
+      // Assert
+      expect(debugStreamModule.debugStream).toHaveBeenCalled();
+
+      delete process.env.DEBUG_MINIMAX_CHAT_COMPLETION;
     });
 
     describe('Error', () => {
@@ -89,11 +124,11 @@ describe('LobeMinimaxAI', () => {
             status_msg: 'API key not valid',
           },
         };
-        vi.spyOn(fetchSSEModule, 'fetchSSE').mockResolvedValue(
+        vi.spyOn(globalThis, 'fetch').mockResolvedValue(
           new Response(
             new ReadableStream({
               start(controller) {
-                controller.enqueue(JSON.stringify(mockErrorResponse));
+                controller.enqueue(encoder.encode(JSON.stringify(mockErrorResponse)));
                 controller.close();
               },
             }),
@@ -125,11 +160,11 @@ describe('LobeMinimaxAI', () => {
             status_msg: 'Some error occurred',
           },
         };
-        vi.spyOn(fetchSSEModule, 'fetchSSE').mockResolvedValue(
+        vi.spyOn(globalThis, 'fetch').mockResolvedValue(
           new Response(
             new ReadableStream({
               start(controller) {
-                controller.enqueue(JSON.stringify(mockErrorResponse));
+                controller.enqueue(encoder.encode(JSON.stringify(mockErrorResponse)));
                 controller.close();
               },
             }),
@@ -156,7 +191,7 @@ describe('LobeMinimaxAI', () => {
 
       it('should throw MinimaxBizError error on generic errors', async () => {
         const mockError = new Error('Something went wrong');
-        vi.spyOn(fetchSSEModule, 'fetchSSE').mockRejectedValue(mockError);
+        vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(mockError);
 
         try {
           await instance.chat({
