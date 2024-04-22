@@ -111,6 +111,7 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
                     <OptionRender
                       displayName={label as string}
                       id={value as string}
+                      isAzure={showAzureDeployName}
                       provider={provider}
                     />
                   );
