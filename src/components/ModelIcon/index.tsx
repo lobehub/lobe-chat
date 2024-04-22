@@ -28,7 +28,6 @@ import {
   Tongyi,
   Wenxin,
   Yi,
-  Zhipu,
 } from '@lobehub/icons';
 import { memo } from 'react';
 
