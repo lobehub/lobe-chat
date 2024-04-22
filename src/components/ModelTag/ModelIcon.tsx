@@ -65,9 +65,11 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.includes('ernie')) return <Wenxin size={size} />;
   if (model.includes('spark')) return <Spark size={size} />;
   if (model.includes('hunyuan')) return <Hunyuan size={size} />;
+  // ref https://github.com/fishaudio/Bert-VITS2/blob/master/train_ms.py#L702
   if (model.startsWith('d_') || model.startsWith('g_') || model.startsWith('wd_'))
-    return <FishAudio size={size} />; // ref https://github.com/fishaudio/Bert-VITS2/blob/master/train_ms.py#L702
+    return <FishAudio size={size} />;
   if (model.includes('skylark')) return <ByteDance size={size} />;
+
   if (
     model.includes('stable-diffusion') ||
     model.includes('stable-video') ||
@@ -78,6 +80,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
     model.startsWith('sd3')
   )
     return <Stability size={size} />;
+
   if (model.includes('wizardlm')) return <Azure size={size} />;
   if (model.includes('firefly')) return <AdobeFirefly size={size} />;
   if (model.includes('jamba') || model.includes('j2-')) return <Ai21 size={size} />;
