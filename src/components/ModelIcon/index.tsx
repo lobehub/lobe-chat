@@ -63,7 +63,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('pplx') ||
     model.includes('sonar'))
     return <Perplexity.Avatar size={size} />;
-  if (model.startsWith('yi-')) return <Yi.Avatar size={size} />;
+  if (model.includes('yi-')) return <Yi.Avatar size={size} />;
   if (model.startsWith('openrouter')) return <OpenRouter.Avatar size={size} />; // only for Cinematika and Auto
   if (model.startsWith('openchat')) return <OpenChat.Avatar size={size} />;
   if (model.includes('command')) return <Cohere.Avatar size={size} />;

@@ -53,7 +53,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.includes('minmax')) return <Minimax size={size} />;
   if (model.includes('mistral') || model.includes('mixtral')) return <Mistral size={size} />;
   if (model.includes('pplx') || model.includes('sonar')) return <Perplexity size={size} />;
-  if (model.startsWith('yi-')) return <ZeroOne size={size} />;
+  if (model.includes('yi-')) return <ZeroOne size={size} />;
   if (model.startsWith('openrouter')) return <OpenRouter size={size} />; // only for Cinematika and Auto
   if (model.startsWith('openchat')) return <OpenChat size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
