@@ -88,18 +88,19 @@
     "addProxyUrl": "Adicionar URL de proxy OpenAI (opcional)",
     "closeMessage": "Fechar mensagem",
     "confirm": "Confirmar e tentar novamente",
-    "model": {
-      "Ollama": {
-        "confirm": "Baixar",
-        "description": "Digite as tags do seu modelo Ollama para continuar a sessão",
-        "title": "Baixar o modelo Ollama especificado"
-      }
-    },
     "oauth": {
       "description": "O administrador ativou a autenticação de login unificado. Clique no botão abaixo para fazer login e desbloquear o aplicativo.",
       "success": "Login bem-sucedido",
       "title": "Faça login na sua conta",
       "welcome": "Bem-vindo!"
+    },
+    "ollama": {
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "description": "Digite suas tags de modelo Ollama para continuar a sessão",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Iniciando download...",
+      "title": "Baixar modelo Ollama específico"
     },
     "password": {
       "description": "O administrador ativou a criptografia do aplicativo. Insira a senha do aplicativo para desbloqueá-lo. A senha só precisa ser inserida uma vez.",

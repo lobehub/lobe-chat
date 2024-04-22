@@ -10,7 +10,7 @@ import { ollamaService } from '@/services/ollama';
 import { useChatStore } from '@/store/chat';
 
 import { ErrorActionContainer, FormAction } from '../style';
-import { useDownloadMonitor } from './useDownloadMonitor';
+import { formatSize, useDownloadMonitor } from './useDownloadMonitor';
 
 interface OllamaModelFormProps {
   id: string;
@@ -61,12 +61,12 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
       <FormAction
         avatar={<Ollama color={theme.colorPrimary} size={64} />}
         description={
-          isDownloading ? settingT('ollama.download.desc') : t('unlock.model.Ollama.description')
+          isDownloading ? settingT('ollama.download.desc') : t('unlock.ollama.description')
         }
         title={
           isDownloading
             ? settingT('ollama.download.title', { model: modelToPull })
-            : t('unlock.model.Ollama.title')
+            : t('unlock.ollama.title')
         }
       >
         {!isDownloading && (
@@ -110,15 +110,33 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
           style={{ marginTop: 8 }}
           type={'primary'}
         >
-          {t('unlock.model.Ollama.confirm')}
+          {!isDownloading
+            ? t('unlock.ollama.confirm')
+            : // if total is 0, show starting, else show downloaded
+              !total
+              ? t('unlock.ollama.starting')
+              : t('unlock.ollama.downloaded', {
+                  completed: formatSize(completed),
+                  total: formatSize(total),
+                })}
         </Button>
-        <Button
-          onClick={() => {
-            deleteMessage(id);
-          }}
-        >
-          {t('unlock.closeMessage')}
-        </Button>
+        {isDownloading ? (
+          <Button
+            onClick={() => {
+              ollamaService.abort();
+            }}
+          >
+            {t('unlock.ollama.cancel')}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              deleteMessage(id);
+            }}
+          >
+            {t('unlock.closeMessage')}
+          </Button>
+        )}
       </Flexbox>
     </Center>
   );

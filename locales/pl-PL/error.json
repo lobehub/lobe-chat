@@ -88,18 +88,19 @@
     "addProxyUrl": "Dodaj adres proxy OpenAI (opcjonalnie)",
     "closeMessage": "Zamknij komunikat",
     "confirm": "Potwierdź i spróbuj ponownie",
-    "model": {
-      "Ollama": {
-        "confirm": "Pobierz",
-        "description": "Wprowadź etykietę modelu Ollama, aby kontynuować sesję.",
-        "title": "Pobierz określony model Ollama"
-      }
-    },
     "oauth": {
       "description": "Administrator włączył jednolite uwierzytelnianie logowania. Kliknij poniższy przycisk, aby się zalogować i odblokować aplikację.",
       "success": "Zalogowano pomyślnie",
       "title": "Zaloguj się",
       "welcome": "Witaj!"
+    },
+    "ollama": {
+      "cancel": "Anuluj",
+      "confirm": "Potwierdź",
+      "description": "Wprowadź etykietę modelu Ollama, aby kontynuować sesję",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Rozpoczynanie pobierania...",
+      "title": "Pobierz określony model Ollama"
     },
     "password": {
       "description": "Administrator włączył szyfrowanie aplikacji. Po wprowadzeniu hasła aplikacja zostanie odblokowana. Hasło należy wprowadzić tylko raz.",
