@@ -32,18 +32,20 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
 
     const models: TogetherAIModel[] = await data.json();
 
-    return models.map((model) => {
-      return {
-        description: model.description,
-        displayName: model.display_name,
-        enabled: true,
-        functionCall: model.description?.includes('function calling'),
-        id: model.name,
-        maxOutput: model.context_length,
-        tokens: model.context_length,
-        vision: model.description?.includes('vision') || model.name?.includes('vision'),
-      };
-    });
+    return models
+      .filter((m) => m.display_type === 'chat')
+      .map((model) => {
+        return {
+          description: model.description,
+          displayName: model.display_name,
+          enabled: true,
+          functionCall: model.description?.includes('function calling'),
+          id: model.name,
+          maxOutput: model.context_length,
+          tokens: model.context_length,
+          vision: model.description?.includes('vision') || model.name?.includes('vision'),
+        };
+      });
   },
   provider: ModelProvider.TogetherAI,
 });
