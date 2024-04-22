@@ -37,11 +37,11 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
         description: model.description,
         displayName: model.display_name,
         enabled: true,
-        functionCall: model.description.includes('function calling'),
+        functionCall: model.description?.includes('function calling'),
         id: model.name,
         maxOutput: model.context_length,
         tokens: model.context_length,
-        vision: model.description.includes('vision') || model.name.includes('vision'),
+        vision: model.description?.includes('vision') || model.name?.includes('vision'),
       };
     });
   },
