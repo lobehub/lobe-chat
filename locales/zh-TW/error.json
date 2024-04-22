@@ -88,18 +88,19 @@
     "addProxyUrl": "新增 OpenAI 代理網址（選填）",
     "closeMessage": "關閉提示",
     "confirm": "確認並重試",
-    "model": {
-      "Ollama": {
-        "confirm": "下載",
-        "description": "輸入你的 Ollama 模型標籤，完成即可繼續會話",
-        "title": "下載指定的 Ollama 模型"
-      }
-    },
     "oauth": {
       "description": "管理員已開啟統一登錄認證，點擊下方按鈕登錄，即可解鎖應用",
       "success": "登錄成功",
       "title": "登錄帳號",
       "welcome": "歡迎你！"
+    },
+    "ollama": {
+      "cancel": "取消下載",
+      "confirm": "下載",
+      "description": "輸入您的 Ollama 模型標籤，完成後即可繼續會話",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "開始下載...",
+      "title": "下載指定的 Ollama 模型"
     },
     "password": {
       "description": "管理員已啟用應用程式加密，輸入應用程式密碼後即可解鎖應用程式。密碼只需填寫一次。",

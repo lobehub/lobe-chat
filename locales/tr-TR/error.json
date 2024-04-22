@@ -88,18 +88,19 @@
     "addProxyUrl": "OpenAI vekil adresi ekle (isteğe bağlı)",
     "closeMessage": "Mesajı kapat",
     "confirm": "Onayla ve Yeniden Dene",
-    "model": {
-      "Ollama": {
-        "confirm": "下载",
-        "description": "Ollama model etiketinizi girin ve devam etmek için tamamlayın",
-        "title": "Belirli Ollama modelini indir"
-      }
-    },
     "oauth": {
       "description": "Yönetici, tek oturum açma kimlik doğrulamasını etkinleştirdi. Aşağıdaki düğmeye tıklayarak giriş yapabilir ve uygulamayı kilidini açabilirsiniz.",
       "success": "Giriş başarılı",
       "title": "Hesaba giriş yap",
       "welcome": "Hoş geldiniz!"
+    },
+    "ollama": {
+      "cancel": "İptal",
+      "confirm": "Onayla",
+      "description": "Ollama model etiketinizi girin ve sohbeti devam ettirmek için tamamlayın",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "İndirme başlıyor...",
+      "title": "Belirtilen Ollama modelini indir"
     },
     "password": {
       "description": "Uygulama şifrelemesi yönetici tarafından etkinleştirilmiştir. Uygulamayı açmak için uygulama şifresini girin. Şifre sadece bir kez doldurulmalıdır.",
