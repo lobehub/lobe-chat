@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.148.6](https://github.com/lobehub/lobe-chat/compare/v0.148.5...v0.148.6)
+
+<sup>Released on **2024-04-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add Windows Phone, iPadOS, BlackBerry OS, Linux OS and Chrome OS sync icons.
+
+#### 💄 Styles
+
+- **misc**: Support more model Icons: dbrx, command-r, openchat, rwkv, Bert-vits2, Stable Diffusion, WizardLM, adobe firefly, skylark.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add Windows Phone, iPadOS, BlackBerry OS, Linux OS and Chrome OS sync icons, closes [#2139](https://github.com/lobehub/lobe-chat/issues/2139) ([8ed1f07](https://github.com/lobehub/lobe-chat/commit/8ed1f07))
+
+#### Styles
+
+- **misc**: Support more model Icons: dbrx, command-r, openchat, rwkv, Bert-vits2, Stable Diffusion, WizardLM, adobe firefly, skylark, closes [#2107](https://github.com/lobehub/lobe-chat/issues/2107) ([4268d8b](https://github.com/lobehub/lobe-chat/commit/4268d8b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.148.5](https://github.com/lobehub/lobe-chat/compare/v0.148.4...v0.148.5)
 
 <sup>Released on **2024-04-22**</sup>
