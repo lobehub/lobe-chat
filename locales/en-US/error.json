@@ -88,18 +88,19 @@
     "addProxyUrl": "Add OpenAI proxy URL (optional)",
     "closeMessage": "Close message",
     "confirm": "Confirm and Retry",
-    "model": {
-      "Ollama": {
-        "confirm": "Download",
-        "description": "Enter your Ollama model label to proceed with the conversation",
-        "title": "Download specified Ollama model"
-      }
-    },
     "oauth": {
       "description": "The administrator has enabled unified login authentication. Click the button below to log in and unlock the application.",
       "success": "Login successful",
       "title": "Log in to your account",
       "welcome": "Welcome!"
+    },
+    "ollama": {
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to proceed with the conversation",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download Specific Ollama Model"
     },
     "password": {
       "description": "The application encryption has been enabled by the administrator. Enter the application password to unlock the application. The password only needs to be filled in once.",
