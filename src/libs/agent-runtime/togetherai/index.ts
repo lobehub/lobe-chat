@@ -1,8 +1,9 @@
-import { TogetherAIModel } from '@/libs/agent-runtime/togetherai/type';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 
 import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { TogetherAIModel } from './type';
 
 const baseURL = 'https://api.together.xyz';
 export const LobeTogetherAI = LobeOpenAICompatibleFactory({
@@ -38,7 +39,7 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
         return {
           description: model.description,
           displayName: model.display_name,
-          enabled: true,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.enabled || false,
           functionCall: model.description?.includes('function calling'),
           id: model.name,
           maxOutput: model.context_length,
