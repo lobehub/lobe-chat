@@ -1,11 +1,13 @@
 import { produce } from 'immer';
+import { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { useClientDataSWR } from '@/libs/swr';
 import type { GlobalStore } from '@/store/global';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import type { GlobalPreference, GlobalPreferenceState, Guide } from './initialState';
+import type { GlobalPreference, Guide } from './initialState';
 
 const n = setNamespace('preference');
 
@@ -18,7 +20,8 @@ export interface PreferenceAction {
   toggleMobileTopic: (visible?: boolean) => void;
   toggleSystemRole: (visible?: boolean) => void;
   updateGuideState: (guide: Partial<Guide>) => void;
-  updatePreference: (preference: Partial<GlobalPreference>, action?: string) => void;
+  updatePreference: (preference: Partial<GlobalPreference>, action?: any) => void;
+  useInitPreference: () => SWRResponse;
 }
 
 export const createPreferenceSlice: StateCreator<
@@ -31,7 +34,7 @@ export const createPreferenceSlice: StateCreator<
     const showChatSideBar =
       typeof newValue === 'boolean' ? newValue : !get().preference.showChatSideBar;
 
-    get().updatePreference({ showChatSideBar }, n('toggleAgentPanel', newValue) as string);
+    get().updatePreference({ showChatSideBar }, n('toggleAgentPanel', newValue));
   },
   toggleExpandSessionGroup: (id, expand) => {
     const { preference } = get();
@@ -50,13 +53,13 @@ export const createPreferenceSlice: StateCreator<
     const mobileShowTopic =
       typeof newValue === 'boolean' ? newValue : !get().preference.mobileShowTopic;
 
-    get().updatePreference({ mobileShowTopic }, n('toggleMobileTopic', newValue) as string);
+    get().updatePreference({ mobileShowTopic }, n('toggleMobileTopic', newValue));
   },
   toggleSystemRole: (newValue) => {
     const showSystemRole =
       typeof newValue === 'boolean' ? newValue : !get().preference.mobileShowTopic;
 
-    get().updatePreference({ showSystemRole }, n('toggleMobileTopic', newValue) as string);
+    get().updatePreference({ showSystemRole }, n('toggleMobileTopic', newValue));
   },
   updateGuideState: (guide) => {
     const { updatePreference } = get();
@@ -64,12 +67,23 @@ export const createPreferenceSlice: StateCreator<
     updatePreference({ guide: nextGuide });
   },
   updatePreference: (preference, action) => {
-    set(
-      produce((draft: GlobalPreferenceState) => {
-        draft.preference = merge(draft.preference, preference);
-      }),
-      false,
-      action,
-    );
+    const nextPreference = merge(get().preference, preference);
+
+    set({ preference: nextPreference }, false, action || n('updatePreference'));
+
+    get().preferenceStorage.saveToLocalStorage(nextPreference);
   },
+
+  useInitPreference: () =>
+    useClientDataSWR<GlobalPreference>(
+      'preference',
+      () => get().preferenceStorage.getFromLocalStorage(),
+      {
+        onSuccess: (preference) => {
+          if (preference) {
+            set({ preference }, false, n('initPreference'));
+          }
+        },
+      },
+    ),
 });
