@@ -38,9 +38,11 @@ interface OpenAICompatibleFactoryOptions {
     bizError: ILobeAgentRuntimeErrorType;
     invalidAPIKey: ILobeAgentRuntimeErrorType;
   };
-  models?: {
-    transformModel?: (model: OpenAI.Model) => ChatModelCard;
-  };
+  models?:
+    | ((params: { apiKey: string }) => Promise<ChatModelCard[]>)
+    | {
+        transformModel?: (model: OpenAI.Model) => ChatModelCard;
+      };
   provider: string;
 }
 
@@ -122,6 +124,8 @@ export const LobeOpenAICompatibleFactory = ({
     }
 
     async models() {
+      if (typeof models === 'function') return models({ apiKey: this.client.apiKey });
+
       const list = await this.client.models.list();
 
       return list.data
