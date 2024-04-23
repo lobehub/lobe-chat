@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Plus } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -35,6 +35,7 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
     s.addSessionGroup,
     s.updateSessionGroupSort,
   ]);
+  const [loading, setLoading] = useState(false);
 
   return (
     <Modal
@@ -67,7 +68,12 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
         <Button
           block
           icon={<Icon icon={Plus} />}
-          onClick={() => addSessionGroup(t('sessionGroup.newGroup'))}
+          loading={loading}
+          onClick={async () => {
+            setLoading(true);
+            await addSessionGroup(t('sessionGroup.newGroup'));
+            setLoading(false);
+          }}
         >
           {t('sessionGroup.createGroup')}
         </Button>
