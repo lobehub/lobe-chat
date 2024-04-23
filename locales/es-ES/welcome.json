@@ -1,6 +1,7 @@
 {
   "button": {
     "import": "Importar configuración",
+    "market": "Explorar el mercado",
     "start": "Comenzar ahora"
   },
   "header": "Bienvenido/a",

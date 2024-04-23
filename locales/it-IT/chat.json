@@ -48,13 +48,17 @@
   "sessionGroup": {
     "config": "Gestione gruppi",
     "confirmRemoveGroupAlert": "Stai per rimuovere questo gruppo. Dopo la rimozione, gli assistenti di questo gruppo verranno spostati nella lista predefinita. Confermi l'operazione?",
+    "createAgentSuccess": "Assistente creato con successo",
     "createGroup": "Aggiungi nuovo gruppo",
     "createSuccess": "Creazione riuscita",
+    "creatingAgent": "Creazione dell'assistente in corso...",
     "inputPlaceholder": "Inserisci il nome del gruppo...",
     "moveGroup": "Sposta nel gruppo",
     "newGroup": "Nuovo gruppo",
     "rename": "Rinomina gruppo",
     "renameSuccess": "Rinominazione riuscita",
+    "sortSuccess": "Riordinamento riuscito",
+    "sorting": "Aggiornamento dell'ordinamento del gruppo in corso...",
     "tooLong": "Il nome del gruppo deve essere lungo 1-20 caratteri"
   },
   "shareModal": {
