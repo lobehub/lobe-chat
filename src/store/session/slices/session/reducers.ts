@@ -19,13 +19,7 @@ interface UpdateSession {
   value: Partial<LobeAgentSession>;
 }
 
-interface UpdateSessionAgentConfig {
-  config: Partial<LobeAgentConfig>;
-  id: string;
-  type: 'updateSessionConfig';
-}
-
-export type SessionDispatch = AddSession | RemoveSession | UpdateSession | UpdateSessionAgentConfig;
+export type SessionDispatch = AddSession | RemoveSession | UpdateSession;
 
 export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): LobeSessions => {
   switch (payload.type) {
