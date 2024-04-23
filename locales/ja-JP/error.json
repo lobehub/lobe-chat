@@ -88,18 +88,19 @@
     "addProxyUrl": "OpenAI 代理アドレスを追加する（オプション）",
     "closeMessage": "ヒントを閉じる",
     "confirm": "確認して再試行",
-    "model": {
-      "Ollama": {
-        "confirm": "ダウンロード",
-        "description": "Ollamaモデルのラベルを入力して、会話を続行してください",
-        "title": "指定のOllamaモデルをダウンロード"
-      }
-    },
     "oauth": {
       "description": "管理者が統一ログイン認証を有効にしました。下のボタンをクリックしてログインすると、アプリがロック解除されます。",
       "success": "ログインに成功しました",
       "title": "アカウントにログイン",
       "welcome": "ようこそ！"
+    },
+    "ollama": {
+      "cancel": "キャンセル",
+      "confirm": "ダウンロード",
+      "description": "Ollamaモデルのタグを入力して、会話を続行してください",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "ダウンロードを開始しています...",
+      "title": "指定のOllamaモデルをダウンロード"
     },
     "password": {
       "description": "管理者によってアプリが暗号化されました。アプリをロック解除するには、アプリのパスワードを入力してください。パスワードは1回だけ入力すればよいです",

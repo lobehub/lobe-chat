@@ -88,18 +88,19 @@
     "addProxyUrl": "Ajouter une adresse de proxy OpenAI (facultatif)",
     "closeMessage": "Fermer le message",
     "confirm": "Confirmer et réessayer",
-    "model": {
-      "Ollama": {
-        "confirm": "Télécharger",
-        "description": "Saisissez l'étiquette de votre modèle Ollama pour continuer la session",
-        "title": "Télécharger le modèle Ollama spécifié"
-      }
-    },
     "oauth": {
       "description": "L'administrateur a activé l'authentification de connexion unique. Cliquez sur le bouton ci-dessous pour vous connecter et déverrouiller l'application.",
       "success": "Connexion réussie",
       "title": "Se connecter",
       "welcome": "Bienvenue !"
+    },
+    "ollama": {
+      "cancel": "Annuler le téléchargement",
+      "confirm": "Télécharger",
+      "description": "Entrez vos balises de modèle Ollama pour continuer la session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Début du téléchargement...",
+      "title": "Télécharger le modèle Ollama spécifié"
     },
     "password": {
       "description": "L'administrateur a activé le cryptage de l'application. Entrez le mot de passe de l'application pour déverrouiller. Le mot de passe ne doit être saisi qu'une seule fois.",
