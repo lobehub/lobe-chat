@@ -4,11 +4,9 @@ import { StateCreator } from 'zustand/vanilla';
 import { message } from '@/components/AntdStaticMethods';
 import { sessionService } from '@/services/session';
 import { SessionStore } from '@/store/session';
-import {
-  SessionGroupsDispatch,
-  sessionGroupsReducer,
-} from '@/store/session/slices/sessionGroup/reducer';
 import { SessionGroupItem } from '@/types/session';
+
+import { SessionGroupsDispatch, sessionGroupsReducer } from './reducer';
 
 /* eslint-disable typescript-sort-keys/interface */
 export interface SessionGroupAction {
@@ -46,14 +44,12 @@ export const createSessionGroupSlice: StateCreator<
   },
 
   updateSessionGroupName: async (id, name) => {
-    // get().internal_dispatchSessionGroups({ id, item: { name }, type: 'updateSessionGroupItem' });
     await sessionService.updateSessionGroup(id, { name });
     await get().refreshSessions();
   },
   updateSessionGroupSort: async (items) => {
     const sortMap = items.map((item, index) => ({ id: item.id, sort: index }));
 
-    console.log('new sort:', sortMap);
     get().internal_dispatchSessionGroups({ sortMap, type: 'updateSessionGroupOrder' });
 
     message.loading({
@@ -72,7 +68,6 @@ export const createSessionGroupSlice: StateCreator<
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   internal_dispatchSessionGroups: (payload) => {
     const nextSessionGroups = sessionGroupsReducer(get().sessionGroups, payload);
-    console.log('next:', nextSessionGroups);
-    get().internal_processSessions(get().sessions, nextSessionGroups);
+    get().internal_processSessions(get().sessions, nextSessionGroups, 'updateSessionGroups');
   },
 });

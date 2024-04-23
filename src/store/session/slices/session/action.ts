@@ -76,7 +76,11 @@ export interface SessionAction {
     id: string,
     data: Partial<{ group?: SessionGroupId; meta?: any; pinned?: boolean }>,
   ) => Promise<void>;
-  internal_processSessions: (sessions: LobeSessions, customGroups: LobeSessionGroups) => void;
+  internal_processSessions: (
+    sessions: LobeSessions,
+    customGroups: LobeSessionGroups,
+    actions?: string,
+  ) => void;
   /* eslint-enable */
 }
 
@@ -182,7 +186,11 @@ export const createSessionSlice: StateCreator<
         // TODO：后续的根本解法应该是解除 inbox 和 session 的数据耦合
         // 避免互相依赖的情况出现
 
-        get().internal_processSessions(data.all, data.customGroups || data.customGroup);
+        get().internal_processSessions(
+          data.sessions,
+          data.sessionGroups,
+          n('useFetchSessions/updateData') as any,
+        );
         set({ isSessionsFirstFetchFinished: true }, false, n('useFetchSessions/onSuccess', data));
       },
     }),

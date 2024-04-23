@@ -51,9 +51,6 @@ export interface CustomSessionGroup extends SessionGroupItem {
 export type LobeSessionGroups = SessionGroupItem[];
 
 export interface ChatSessionList {
-  all: LobeSessions;
-  customGroup: CustomSessionGroup[];
-  customGroups?: LobeSessionGroups;
-  default: LobeSessions;
-  pinned: LobeSessions;
+  sessionGroups: LobeSessionGroups;
+  sessions: LobeSessions;
 }
