@@ -3,12 +3,12 @@
 import { Icon } from '@lobehub/ui';
 import { Button } from 'antd';
 import { SendHorizonal } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import DataImporter from '@/features/DataImporter';
 import { useGlobalStore } from '@/store/global';
 
 import Hero from './Hero';
@@ -32,15 +32,11 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
         justify={'center'}
         width={'100%'}
       >
-        <DataImporter
-          onFinishImport={() => {
-            router.push('/chat');
-          }}
-        >
-          <Button block={mobile} size={'large'}>
-            {t('button.import')}
+        <Link href={'/market'}>
+          <Button block={mobile} size={'large'} type={'default'}>
+            {t('button.market')}
           </Button>
-        </DataImporter>
+        </Link>
         <Button
           block={mobile}
           onClick={() => (isMobile ? router.push('/chat') : switchBackToChat())}
