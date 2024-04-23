@@ -1,6 +1,5 @@
 import { produce } from 'immer';
 
-import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, LobeSessions } from '@/types/session';
 
 interface AddSession {
