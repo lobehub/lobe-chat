@@ -18,18 +18,27 @@ const RenameGroupModal = memo<RenameGroupModalProps>(({ id, open, onCancel }) =>
   const group = useSessionStore((s) => sessionGroupSelectors.getGroupById(id)(s), isEqual);
 
   const [input, setInput] = useState<string>();
+  const [loading, setLoading] = useState(false);
 
   const { message } = App.useApp();
   return (
     <Modal
       allowFullscreen
-      onCancel={onCancel}
-      onOk={(e) => {
+      destroyOnClose
+      okButtonProps={{ loading }}
+      onCancel={(e) => {
+        setInput(group?.name);
+        onCancel?.(e);
+      }}
+      onOk={async (e) => {
         if (!input) return;
         if (input.length === 0 || input.length > 20)
           return message.warning(t('sessionGroup.tooLong'));
-        updateSessionGroupName(id, input);
+        setLoading(true);
+        await updateSessionGroupName(id, input);
         message.success(t('sessionGroup.renameSuccess'));
+        setLoading(false);
+
         onCancel?.(e);
       }}
       open={open}
