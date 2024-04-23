@@ -2,11 +2,13 @@
 import { DeepPartial } from 'utility-types';
 
 import { LobeAgentConfig } from '@/types/agent';
+import { BatchTaskResult } from '@/types/service';
 import {
   ChatSessionList,
   LobeAgentSession,
   LobeSessionType,
   LobeSessions,
+  SessionGroupId,
   SessionGroupItem,
   SessionGroups,
 } from '@/types/session';
@@ -19,9 +21,13 @@ export interface ISessionService {
   getGroupedSessions(): Promise<ChatSessionList>;
   getSessionsByType(type: 'agent' | 'group' | 'all'): Promise<LobeSessions>;
   countSessions(): Promise<number>;
+  hasSessions(): Promise<boolean>;
   searchSessions(keyword: string): Promise<LobeSessions>;
 
-  updateSession(id: string, data: Partial<Pick<LobeAgentSession, 'group' | 'meta'>>): Promise<any>;
+  updateSession(
+    id: string,
+    data: Partial<{ group?: SessionGroupId; pinned?: boolean }>,
+  ): Promise<any>;
   updateSessionConfig(id: string, config: DeepPartial<LobeAgentConfig>): Promise<any>;
 
   removeSession(id: string): Promise<any>;
@@ -32,7 +38,7 @@ export interface ISessionService {
   // ************************************** //
 
   createSessionGroup(name: string, sort?: number): Promise<string>;
-  batchCreateSessionGroups(groups: SessionGroups): Promise<any>;
+  batchCreateSessionGroups(groups: SessionGroups): Promise<BatchTaskResult>;
 
   getSessionGroups(): Promise<SessionGroupItem[]>;
 

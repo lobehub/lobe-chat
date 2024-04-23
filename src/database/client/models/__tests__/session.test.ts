@@ -179,8 +179,8 @@ describe('SessionModel', () => {
       await SessionModel.create('agent', sessionData);
 
       const sessionsWithGroups = await SessionModel.queryWithGroups();
-      expect(sessionsWithGroups.all).toHaveLength(1);
-      expect(sessionsWithGroups.all[0]).toEqual(expect.objectContaining(sessionData));
+      expect(sessionsWithGroups.sessions).toHaveLength(1);
+      expect(sessionsWithGroups.sessions[0]).toEqual(expect.objectContaining(sessionData));
     });
   });
 

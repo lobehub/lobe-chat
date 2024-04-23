@@ -65,31 +65,15 @@ class ConfigService {
 
       case 'all': {
         await this.importSettings(config.state.settings);
-
-        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
-
-        const [sessions, messages, topics] = await Promise.all([
-          this.importSessions(config.state.sessions),
-          this.importMessages(config.state.messages),
-          this.importTopics(config.state.topics),
-        ]);
-
-        return {
-          messages: this.mapImportResult(messages),
-          sessionGroups: this.mapImportResult(sessionGroups),
-          sessions: this.mapImportResult(sessions),
-          topics: this.mapImportResult(topics),
-        };
       }
+      // all and sessions have the same data process, so we can fall through
 
+      // eslint-disable-next-line no-fallthrough
       case 'sessions': {
         const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
-
-        const [sessions, messages, topics] = await Promise.all([
-          this.importSessions(config.state.sessions),
-          this.importMessages(config.state.messages),
-          this.importTopics(config.state.topics),
-        ]);
+        const sessions = await this.importSessions(config.state.sessions);
+        const topics = await this.importTopics(config.state.topics);
+        const messages = await this.importMessages(config.state.messages);
 
         return {
           messages: this.mapImportResult(messages),
