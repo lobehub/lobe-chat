@@ -43,21 +43,11 @@ class _SessionModel extends BaseModel {
   }
 
   async queryWithGroups(): Promise<ChatSessionList> {
-    const groups = await SessionGroupModel.query();
-    const customGroups = await this.queryByGroupIds(groups.map((item) => item.id));
-    const defaultItems = await this.querySessionsByGroupId(SessionDefaultGroup.Default);
-    const pinnedItems = await this.getPinnedSessions();
+    const sessionGroups = await SessionGroupModel.query();
 
-    const all = await this.query();
-    return {
-      all,
-      customGroup: groups.map((group) => ({
-        ...group,
-        children: customGroups[group.id],
-      })),
-      default: defaultItems,
-      pinned: pinnedItems,
-    };
+    const sessions = await this.query();
+
+    return { sessionGroups, sessions };
   }
 
   /**
