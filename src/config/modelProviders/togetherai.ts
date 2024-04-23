@@ -88,7 +88,7 @@ const TogetherAI: ModelProviderCard = {
       enabled: true,
       functionCall: false,
       id: 'Qwen/Qwen1.5-72B-Chat',
-      tokens: 4096,
+      tokens: 32_768,
       vision: false,
     },
   ],
