@@ -14,6 +14,7 @@ import { POST as UniverseRoute } from '../[provider]/route';
 export const runtime = 'edge';
 
 // due to Gemini-1.5-pro is not available in Hong Kong and Ireland, we need to set the preferred region to exclude "Hong Kong" or "Ireland".
+// refs: https://github.com/lobehub/lobe-chat/pull/2149
 export const preferredRegion = [
   'icn1', 
   'sin1', 
