@@ -12,18 +12,21 @@ import { AgentRuntimeError } from '../utils/createError';
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
 
-const DEFAULT_BASE_URL = 'http://127.0.0.1:11434';
-
 export class LobeOllamaAI implements LobeRuntimeAI {
   private client: Ollama;
 
-  baseURL: string;
+  baseURL?: string;
 
-  constructor({ baseURL = DEFAULT_BASE_URL }: ClientOptions) {
-    if (!baseURL) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs);
-    this.client = new Ollama({ host: new URL(baseURL).host });
+  constructor({ baseURL }: ClientOptions) {
+    try {
+      if (baseURL) new URL(baseURL);
+    } catch {
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs);
+    }
 
-    this.baseURL = baseURL;
+    this.client = new Ollama(!baseURL ? undefined : { host: new URL(baseURL).host });
+
+    if (baseURL) this.baseURL = baseURL;
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -41,10 +44,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
       });
 
       return new StreamingTextResponse(OllamaStream(response, options?.callback), {
-        headers: {
-          ...options?.headers,
-          'content-type': 'text/event-stream',
-        },
+        headers: options?.headers,
       });
     } catch (error) {
       const e = error as { message: string; name: string; status_code: number };
