@@ -8,7 +8,7 @@
   "clearCurrentMessages": "Effacer les messages actuels",
   "confirmClearCurrentMessages": "Vous êtes sur le point d'effacer les messages de cette session. Cette action est irréversible. Veuillez confirmer.",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Cette action est irréversible. Veuillez confirmer.",
-  "confirmRemoveSessionSuccess": "Assistant supprimé avec succès",
+  "confirmRemoveSessionSuccess": "Agent supprimé avec succès",
   "defaultAgent": "Agent par défaut",
   "defaultList": "Liste par défaut",
   "defaultSession": "Session par défaut",
@@ -25,8 +25,9 @@
     "title": "Discutons un peu"
   },
   "input": {
+    "addAi": "Ajouter un message AI",
+    "addUser": "Ajouter un message utilisateur",
     "more": "Plus",
-    "onlyAdd": "Ajouter uniquement",
     "send": "Envoyer",
     "sendWithCmdEnter": "Envoyer avec {{meta}} + Entrée",
     "sendWithEnter": "Envoyer avec Entrée",
@@ -48,10 +49,10 @@
   "sessionGroup": {
     "config": "Gestion des groupes",
     "confirmRemoveGroupAlert": "Vous êtes sur le point de supprimer ce groupe. Une fois supprimé, les agents de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
-    "createAgentSuccess": "Création de l'assistant réussie",
+    "createAgentSuccess": "Création de l'agent réussie",
     "createGroup": "Créer un nouveau groupe",
     "createSuccess": "Création réussie",
-    "creatingAgent": "Création de l'assistant en cours...",
+    "creatingAgent": "Création de l'agent en cours...",
     "inputPlaceholder": "Veuillez saisir le nom du groupe...",
     "moveGroup": "Déplacer vers un groupe",
     "newGroup": "Nouveau groupe",
