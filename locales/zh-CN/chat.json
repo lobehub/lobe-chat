@@ -25,8 +25,9 @@
     "title": "随便聊聊"
   },
   "input": {
+    "addAi": "添加一条 AI 消息",
+    "addUser": "添加一条用户消息",
     "more": "更多",
-    "onlyAdd": "仅添加消息",
     "send": "发送",
     "sendWithCmdEnter": "按 {{meta}} + Enter 键发送",
     "sendWithEnter": "按 Enter 键发送",
