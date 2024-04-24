@@ -216,7 +216,8 @@ export const chatMessage: StateCreator<
     }
   },
   addAIMessage: async () => {
-    const { internalCreateMessage, activeTopicId, activeId, inputMessage } = get();
+    const { internalCreateMessage, updateInputMessage, activeTopicId, activeId, inputMessage } =
+      get();
     if (!activeId) return;
 
     await internalCreateMessage({
@@ -226,6 +227,8 @@ export const chatMessage: StateCreator<
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
     });
+
+    updateInputMessage('');
   },
   copyMessage: async (id, content) => {
     await copyToClipboard(content);
