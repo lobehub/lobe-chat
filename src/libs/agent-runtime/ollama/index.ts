@@ -1,94 +1,79 @@
-import { OpenAIStream, StreamingTextResponse } from 'ai';
-import OpenAI, { ClientOptions } from 'openai';
+import { StreamingTextResponse } from 'ai';
+import { Ollama } from 'ollama/browser';
+import { ClientOptions } from 'openai';
 
-import { OllamaChatMessage, OpenAIChatMessage } from '@/libs/agent-runtime';
+import { OpenAIChatMessage } from '@/libs/agent-runtime';
+import { OllamaStream } from '@/libs/agent-runtime/ollama/stream';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
-import { debugStream } from '../utils/debugStream';
-import { desensitizeUrl } from '../utils/desensitizeUrl';
-import { handleOpenAIError } from '../utils/handleOpenAIError';
 import { parseDataUri } from '../utils/uriParser';
-
-const DEFAULT_BASE_URL = 'http://127.0.0.1:11434/v1';
+import { OllamaMessage } from './type';
 
 export class LobeOllamaAI implements LobeRuntimeAI {
-  private client: OpenAI;
+  private client: Ollama;
 
-  baseURL: string;
+  baseURL?: string;
 
-  constructor({ apiKey = 'ollama', baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
-    if (!baseURL) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs);
+  constructor({ baseURL }: ClientOptions) {
+    try {
+      if (baseURL) new URL(baseURL);
+    } catch {
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs);
+    }
 
-    this.client = new OpenAI({ apiKey, baseURL, ...res });
-    this.baseURL = baseURL;
+    this.client = new Ollama(!baseURL ? undefined : { host: new URL(baseURL).host });
+
+    if (baseURL) this.baseURL = baseURL;
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
-      payload.messages = this.buildOllamaMessages(payload.messages);
+      const response = await this.client.chat({
+        messages: this.buildOllamaMessages(payload.messages),
+        model: payload.model,
+        options: {
+          frequency_penalty: payload.frequency_penalty,
+          presence_penalty: payload.presence_penalty,
+          temperature: payload.temperature,
+          top_p: payload.top_p,
+        },
+        stream: true,
+      });
 
-      const response = await this.client.chat.completions.create(
-        payload as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
-      );
-      const [prod, debug] = response.tee();
-
-      if (process.env.DEBUG_OLLAMA_CHAT_COMPLETION === '1') {
-        debugStream(debug.toReadableStream()).catch(console.error);
-      }
-
-      return new StreamingTextResponse(OpenAIStream(prod, options?.callback), {
+      return new StreamingTextResponse(OllamaStream(response, options?.callback), {
         headers: options?.headers,
       });
     } catch (error) {
-      let desensitizedEndpoint = this.baseURL;
-
-      if (this.baseURL !== DEFAULT_BASE_URL) {
-        desensitizedEndpoint = desensitizeUrl(this.baseURL);
-      }
-
-      if ('status' in (error as any)) {
-        switch ((error as Response).status) {
-          case 401: {
-            throw AgentRuntimeError.chat({
-              endpoint: desensitizedEndpoint,
-              error: error as any,
-              errorType: AgentRuntimeErrorType.InvalidOllamaArgs,
-              provider: ModelProvider.Ollama,
-            });
-          }
-
-          default: {
-            break;
-          }
-        }
-      }
-
-      const { errorResult, RuntimeError } = handleOpenAIError(error);
-
-      const errorType = RuntimeError || AgentRuntimeErrorType.OllamaBizError;
+      const e = error as { message: string; name: string; status_code: number };
 
       throw AgentRuntimeError.chat({
-        endpoint: desensitizedEndpoint,
-        error: errorResult,
-        errorType,
+        error: { message: e.message, name: e.name, status_code: e.status_code },
+        errorType: AgentRuntimeErrorType.OllamaBizError,
         provider: ModelProvider.Ollama,
       });
     }
   }
 
+  // async models(): Promise<ChatModelCard[]> {
+  //   const list = await this.client.list();
+  //   return list.models.map((model) => ({
+  //     id: model.name,
+  //   }));
+  // }
+
   private buildOllamaMessages(messages: OpenAIChatMessage[]) {
     return messages.map((message) => this.convertContentToOllamaMessage(message));
   }
 
-  private convertContentToOllamaMessage = (message: OpenAIChatMessage) => {
+  private convertContentToOllamaMessage = (message: OpenAIChatMessage): OllamaMessage => {
     if (typeof message.content === 'string') {
-      return message;
+      return { content: message.content, role: message.role };
     }
 
-    const ollamaMessage: OllamaChatMessage = {
+    const ollamaMessage: OllamaMessage = {
       content: '',
       role: message.role,
     };
