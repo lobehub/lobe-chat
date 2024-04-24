@@ -48,13 +48,17 @@
   "sessionGroup": {
     "config": "Groepsbeheer",
     "confirmRemoveGroupAlert": "Je staat op het punt deze groep te verwijderen. Na verwijdering zullen de assistenten van deze groep worden verplaatst naar de standaardlijst. Bevestig je actie.",
+    "createAgentSuccess": "Agent succesvol aangemaakt",
     "createGroup": "Nieuwe groep toevoegen",
     "createSuccess": "Succesvol aangemaakt",
+    "creatingAgent": "Agent wordt aangemaakt...",
     "inputPlaceholder": "Voer de naam van de groep in...",
     "moveGroup": "Verplaatsen naar groep",
     "newGroup": "Nieuwe groep",
     "rename": "Groepsnaam wijzigen",
     "renameSuccess": "Naam succesvol gewijzigd",
+    "sortSuccess": "Sorteren succesvol voltooid",
+    "sorting": "Groepsortering wordt bijgewerkt...",
     "tooLong": "De groepsnaam moet tussen 1 en 20 tekens lang zijn"
   },
   "shareModal": {

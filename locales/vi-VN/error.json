@@ -58,7 +58,7 @@
     "MoonshotBizError": "Yêu cầu dịch vụ Mặt Trăng Tối gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "NoOpenAIAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
     "OllamaBizError": "Yêu cầu dịch vụ Ollama gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "OllamaServiceUnavailable": "Dịch vụ Ollama không khả dụng, vui lòng kiểm tra xem nó đã được khởi động chưa",
+    "OllamaServiceUnavailable": "Dịch vụ Ollama không khả dụng, vui lòng kiểm tra xem Ollama có hoạt động bình thường không, hoặc xem xét cấu hình chéo đúng của Ollama",
     "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp lỗi, vui lòng xác minh hoặc thử lại dựa trên thông tin dưới đây",
     "OpenRouterBizError": "Yêu cầu dịch vụ OpenRouter AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "PerplexityBizError": "Yêu cầu dịch vụ AI Perplexity gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại sau",

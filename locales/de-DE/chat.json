@@ -48,13 +48,17 @@
   "sessionGroup": {
     "config": "Gruppenkonfiguration",
     "confirmRemoveGroupAlert": "Die Gruppe wird bald gelöscht. Nach dem Löschen werden die Assistenten in die Standardliste verschoben. Bitte bestätigen Sie Ihre Aktion.",
+    "createAgentSuccess": "Assistent erfolgreich erstellt",
     "createGroup": "Neue Gruppe erstellen",
     "createSuccess": "Erstellung erfolgreich",
+    "creatingAgent": "Assistent wird erstellt...",
     "inputPlaceholder": "Geben Sie den Gruppennamen ein...",
     "moveGroup": "In Gruppe verschieben",
     "newGroup": "Neue Gruppe",
     "rename": "Gruppe umbenennen",
     "renameSuccess": "Umbenennung erfolgreich",
+    "sortSuccess": "Sortierung erfolgreich aktualisiert",
+    "sorting": "Gruppensortierung wird aktualisiert...",
     "tooLong": "Gruppenname muss zwischen 1 und 20 Zeichen lang sein"
   },
   "shareModal": {

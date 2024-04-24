@@ -130,8 +130,34 @@
     },
     "endpoint": {
       "desc": "Introduce la dirección del proxy de la interfaz de Ollama, déjalo en blanco si no se ha especificado localmente",
-      "placeholder": "http://127.0.0.1:11434/v1",
+      "placeholder": "http://127.0.0.1:11434",
       "title": "Dirección del proxy de la interfaz"
+    },
+    "setup": {
+      "cors": {
+        "description": "Debido a restricciones de seguridad del navegador, es necesario configurar Ollama para permitir el acceso entre dominios.",
+        "linux": {
+          "env": "En la sección [Service], agrega `Environment` y añade la variable de entorno OLLAMA_ORIGINS:",
+          "reboot": "Recarga systemd y reinicia Ollama.",
+          "systemd": "Edita el servicio ollama llamando a systemd:"
+        },
+        "macos": "Abre la aplicación 'Terminal', pega y ejecuta el siguiente comando, luego presiona Enter.",
+        "reboot": "Reinicia el servicio de Ollama una vez completada la ejecución.",
+        "title": "Configuración para permitir el acceso entre dominios en Ollama",
+        "windows": "En Windows, ve a 'Panel de control', edita las variables de entorno del sistema. Crea una nueva variable de entorno llamada 'OLLAMA_ORIGINS' para tu cuenta de usuario, con el valor '*', y haz clic en 'OK/Aplicar' para guardar los cambios."
+      },
+      "install": {
+        "description": "Asegúrate de haber iniciado Ollama. Si no has descargado Ollama, visita el sitio web oficial.",
+        "docker": "Si prefieres usar Docker, Ollama también ofrece una imagen oficial en Docker. Puedes obtenerla con el siguiente comando:",
+        "linux": {
+          "command": "Instala con el siguiente comando:",
+          "manual": "O también puedes consultar la <1>Guía de instalación manual en Linux</1> para instalarlo por tu cuenta."
+        },
+        "macos": "Descarga <0>la versión de Ollama para macOS</0>, descomprímela e instálala.",
+        "title": "Instalación local y activación de la aplicación Ollama",
+        "windows": "Descarga <0>la versión de Ollama para Windows</0>, descomprímela e instálala.",
+        "windowsTab": "Windows (Versión de vista previa)"
+      }
     },
     "title": "Ollama"
   },
