@@ -25,8 +25,9 @@
     "title": "Sohbet Et"
   },
   "input": {
+    "addAi": "Bir AI mesajı ekleyin",
+    "addUser": "Bir kullanıcı mesajı ekleyin",
     "more": "Daha fazla",
-    "onlyAdd": "Sadece mesaj ekle",
     "send": "Gönder",
     "sendWithCmdEnter": "{{meta}} + Enter tuşuna basarak gönder",
     "sendWithEnter": "Enter tuşuna basarak gönder",

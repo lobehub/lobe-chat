@@ -25,8 +25,9 @@
     "title": "気軽におしゃべり"
   },
   "input": {
+    "addAi": "AIメッセージを追加",
+    "addUser": "ユーザーメッセージを追加",
     "more": "もっと",
-    "onlyAdd": "メッセージのみ追加",
     "send": "送信",
     "sendWithCmdEnter": "{{meta}} + Enter キーで送信",
     "sendWithEnter": "Enter キーで送信",
