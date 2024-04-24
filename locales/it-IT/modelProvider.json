@@ -130,8 +130,33 @@
     },
     "endpoint": {
       "desc": "Inserisci l'indirizzo del proxy dell'interfaccia Ollama. Lascia vuoto se non specificato localmente",
-      "placeholder": "http://127.0.0.1:11434/v1",
+      "placeholder": "http://127.0.0.1:11434",
       "title": "Indirizzo del proxy dell'interfaccia"
+    },
+    "setup": {
+      "cors": {
+        "description": "A causa delle restrizioni di sicurezza del browser, è necessario configurare il cross-origin resource sharing (CORS) per consentire l'utilizzo di Ollama.",
+        "install": {
+          "description": "Assicurati di aver avviato Ollama. Se non hai ancora scaricato Ollama, visita il sito ufficiale per il download.",
+          "docker": "Se preferisci utilizzare Docker, Ollama fornisce un'immagine Docker ufficiale che puoi scaricare tramite il seguente comando:",
+          "linux": {
+            "command": "Per installare, esegui il seguente comando:",
+            "manual": "In alternativa, puoi consultare la <1>Guida all'installazione manuale di Linux</1> per installare manualmente."
+          },
+          "macos": "Scarica la versione di Ollama per macOS, estraila e installala.",
+          "title": "Installa e avvia l'applicazione Ollama localmente.",
+          "windows": "Scarica la versione di Ollama per Windows, estraila e installala.",
+          "windowsTab": "Windows (Versione di anteprima)"
+        },
+        "linux": {
+          "env": "Nella sezione [Service], aggiungi `Environment` e inserisci la variabile di ambiente OLLAMA_ORIGINS:",
+          "macos": "Apri l'applicazione 'Terminale', incolla il comando seguente e premi Invio.",
+          "reboot": "Dopo aver completato l'esecuzione, riavvia il servizio Ollama.",
+          "systemd": "Per modificare il servizio ollama, chiama systemd:",
+          "title": "Configura Ollama per consentire l'accesso cross-origin.",
+          "windows": "Su Windows, vai su 'Pannello di controllo' e modifica le variabili di ambiente di sistema. Crea una nuova variabile di ambiente chiamata 'OLLAMA_ORIGINS' con valore '*', quindi clicca su 'OK/Applica' per salvare."
+        }
+      }
     },
     "title": "Ollama"
   },

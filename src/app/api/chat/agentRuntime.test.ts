@@ -39,7 +39,7 @@ vi.mock('@/config/server', () => ({
     AWS_SECRET_ACCESS_KEY: 'test-aws-secret',
     AWS_ACCESS_KEY_ID: 'test-aws-id',
     AWS_REGION: 'test-aws-region',
-    OLLAMA_PROXY_URL: 'test-ollama-url',
+    OLLAMA_PROXY_URL: 'https://test-ollama-url.local',
     PERPLEXITY_API_KEY: 'test-perplexity-key',
     ANTHROPIC_API_KEY: 'test-anthropic-key',
     MISTRAL_API_KEY: 'test-mistral-key',
@@ -110,7 +110,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
     });
 
     it('Ollama provider: with endpoint', async () => {
-      const jwtPayload: JWTPayload = { endpoint: 'user-ollama-url' };
+      const jwtPayload: JWTPayload = { endpoint: 'http://user-ollama-url' };
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Ollama, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);

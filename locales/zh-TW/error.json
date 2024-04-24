@@ -58,7 +58,7 @@
     "MoonshotBizError": "請求月球背面服務出錯，請根據以下信息排查或重試",
     "NoOpenAIAPIKey": "OpenAI API 金鑰為空，請添加自訂 OpenAI API 金鑰",
     "OllamaBizError": "請求 Ollama 服務出錯，請根據以下資訊排查或重試",
-    "OllamaServiceUnavailable": "未偵測到 Ollama 服務，請檢查是否正常啟動",
+    "OllamaServiceUnavailable": "Ollama 服務暫時無法使用，請檢查 Ollama 是否運作正常，或是否正確設定 Ollama 的跨域配置",
     "OpenAIBizError": "請求 OpenAI 服務出錯。請根據以下資訊進行排查或重試。",
     "OpenRouterBizError": "請求 OpenRouter AI 服務出錯，請根據以下信息排查或重試",
     "PerplexityBizError": "請求 Perplexity AI 服務出錯，請根據以下信息排查或重試",
