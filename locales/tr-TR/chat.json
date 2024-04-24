@@ -101,6 +101,8 @@
     "confirmRemoveTopic": "Bu konuyu silmek üzeresiniz. Bir kere silindiğinde, geri alınamaz. Lütfen dikkatli bir şekilde devam edin.",
     "confirmRemoveUnstarred": "Yıldızlanmamış konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
     "defaultTitle": "Konu",
+    "duplicateLoading": "Konu kopyalanıyor...",
+    "duplicateSuccess": "Konu başarıyla kopyalandı",
     "guide": {
       "desc": "Mevcut oturumu geçmiş konu olarak kaydetmek ve yeni bir oturum başlatmak için sol taraftaki düğmeye tıklayın",
       "title": "Konu Listesi"

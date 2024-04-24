@@ -101,6 +101,8 @@
     "confirmRemoveTopic": "Vous êtes sur le point de supprimer ce sujet. Cette action est irréversible. Veuillez confirmer.",
     "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible. Veuillez confirmer.",
     "defaultTitle": "Sujet par défaut",
+    "duplicateLoading": "Duplication du sujet en cours...",
+    "duplicateSuccess": "Sujet dupliqué avec succès",
     "guide": {
       "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle comme un sujet historique et démarrer une nouvelle session.",
       "title": "Liste des sujets"
