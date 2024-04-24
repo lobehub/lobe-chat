@@ -101,7 +101,7 @@
     "ai": "3.0.19",
     "antd": "^5.16.2",
     "antd-style": "^3.6.2",
-    "brotli-wasm": "^2.0.1",
+    "brotli-wasm": "^3.0.0",
     "chroma-js": "^2.4.2",
     "dayjs": "^1.11.10",
     "debug": "^4.3.4",
