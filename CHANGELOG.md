@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 0.148.9](https://github.com/lobehub/lobe-chat/compare/v0.148.8...v0.148.9)
+
+<sup>Released on **2024-04-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor for session server mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor for session server mode, closes [#2163](https://github.com/lobehub/lobe-chat/issues/2163) ([e012597](https://github.com/lobehub/lobe-chat/commit/e012597))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.148.8](https://github.com/lobehub/lobe-chat/compare/v0.148.7...v0.148.8)
+
+<sup>Released on **2024-04-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: update some `gemini` deployment restrictions.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: update some `gemini` deployment restrictions, closes [#2149](https://github.com/lobehub/lobe-chat/issues/2149) ([6d36863](https://github.com/lobehub/lobe-chat/commit/6d36863))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.148.7](https://github.com/lobehub/lobe-chat/compare/v0.148.6...v0.148.7)
+
+<sup>Released on **2024-04-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix qwen-1.5-chat-72B context window in togetherai.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix qwen-1.5-chat-72B context window in togetherai, closes [#2142](https://github.com/lobehub/lobe-chat/issues/2142) ([d0753cf](https://github.com/lobehub/lobe-chat/commit/d0753cf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.148.6](https://github.com/lobehub/lobe-chat/compare/v0.148.5...v0.148.6)
 
 <sup>Released on **2024-04-22**</sup>
