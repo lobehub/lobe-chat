@@ -1,14 +1,7 @@
 import { Icon } from '@lobehub/ui';
-import { Button, Dropdown, Space } from 'antd';
+import { Button, Space } from 'antd';
 import { createStyles } from 'antd-style';
-import {
-  ChevronUp,
-  CornerDownLeft,
-  LucideCheck,
-  LucideChevronDown,
-  LucideCommand,
-  LucidePlus,
-} from 'lucide-react';
+import { ChevronUp, CornerDownLeft, LucideCommand } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +19,7 @@ import { isMacOS } from '@/utils/platform';
 
 import DragUpload from './DragUpload';
 import { LocalFiles } from './LocalFiles';
+import SendMore from './SendMore';
 
 const useStyles = createStyles(({ css, prefixCls, token }) => {
   return {
@@ -69,13 +63,13 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
     !!s.chatLoadingId,
     s.stopGenerateMessage,
   ]);
-  const [useCmdEnterToSend, updatePreference] = useGlobalStore((s) => [
-    preferenceSelectors.useCmdEnterToSend(s),
-    s.updatePreference,
-  ]);
 
   const model = useSessionStore(agentSelectors.currentAgentModel);
-  const canUpload = useGlobalStore(modelProviderSelectors.isModelEnabledUpload(model));
+
+  const [useCmdEnterToSend, canUpload] = useGlobalStore((s) => [
+    preferenceSelectors.useCmdEnterToSend(s),
+    modelProviderSelectors.isModelEnabledUpload(model)(s),
+  ]);
 
   const sendMessage = useSendMessage();
 
@@ -147,48 +141,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
               >
                 {t('input.send')}
               </Button>
-              <Dropdown
-                menu={{
-                  items: [
-                    {
-                      icon: !useCmdEnterToSend ? <Icon icon={LucideCheck} /> : <div />,
-                      key: 'sendWithEnter',
-                      label: t('input.sendWithEnter'),
-                      onClick: () => {
-                        updatePreference({ useCmdEnterToSend: false });
-                      },
-                    },
-                    {
-                      icon: useCmdEnterToSend ? <Icon icon={LucideCheck} /> : <div />,
-                      key: 'sendWithCmdEnter',
-                      label: t('input.sendWithCmdEnter', {
-                        meta: isMac ? 'Cmd' : 'Ctrl',
-                      }),
-                      onClick: () => {
-                        updatePreference({ useCmdEnterToSend: true });
-                      },
-                    },
-                    { type: 'divider' },
-                    {
-                      icon: <Icon icon={LucidePlus} />,
-                      key: 'onlyAdd',
-                      label: t('input.onlyAdd'),
-                      onClick: () => {
-                        sendMessage(true);
-                      },
-                    },
-                  ],
-                }}
-                placement={'topRight'}
-                trigger={['hover']}
-              >
-                <Button
-                  aria-label={t('input.more')}
-                  className={styles.arrow}
-                  icon={<Icon icon={LucideChevronDown} />}
-                  type={'primary'}
-                />
-              </Dropdown>
+              <SendMore />
             </Space.Compact>
           )}
         </Flexbox>
