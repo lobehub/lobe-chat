@@ -88,7 +88,7 @@ const InputArea = memo<InputAreaProps>(({ setExpand }) => {
           isChineseInput.current = true;
         }}
         onPressEnter={(e) => {
-          if (loading || e.shiftKey || isChineseInput.current) return;
+          if (loading || e.altKey || e.shiftKey || isChineseInput.current) return;
 
           // eslint-disable-next-line unicorn/consistent-function-scoping
           const send = () => {

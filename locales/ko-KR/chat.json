@@ -25,8 +25,9 @@
     "title": "무작위 대화"
   },
   "input": {
+    "addAi": "AI 메시지 추가",
+    "addUser": "사용자 메시지 추가",
     "more": "더 많은",
-    "onlyAdd": "메시지만 추가",
     "send": "전송",
     "sendWithCmdEnter": "{{meta}} + Enter 키로 전송",
     "sendWithEnter": "Enter 키로 전송",
