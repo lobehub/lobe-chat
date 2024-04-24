@@ -130,7 +130,7 @@
     },
     "endpoint": {
       "desc": "Ollama arayüz proxy adresini girin, yerel olarak belirtilmemişse boş bırakılabilir",
-      "placeholder": "http://127.0.0.1:11434/v1",
+      "placeholder": "http://127.0.0.1:11434",
       "title": "Arayüz Proxy Adresi"
     },
     "setup": {

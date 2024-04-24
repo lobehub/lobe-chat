@@ -130,7 +130,7 @@
     },
     "endpoint": {
       "desc": "Enter the Ollama interface proxy address, leave blank if not specified locally",
-      "placeholder": "http://127.0.0.1:11434/v1",
+      "placeholder": "http://127.0.0.1:11434",
       "title": "Interface proxy address"
     },
     "setup": {

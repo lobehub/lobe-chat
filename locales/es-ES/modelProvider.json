@@ -130,7 +130,7 @@
     },
     "endpoint": {
       "desc": "Introduce la dirección del proxy de la interfaz de Ollama, déjalo en blanco si no se ha especificado localmente",
-      "placeholder": "http://127.0.0.1:11434/v1",
+      "placeholder": "http://127.0.0.1:11434",
       "title": "Dirección del proxy de la interfaz"
     },
     "setup": {

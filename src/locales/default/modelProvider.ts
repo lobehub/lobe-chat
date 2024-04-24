@@ -132,7 +132,7 @@ export default {
     },
     endpoint: {
       desc: '填入 Ollama 接口代理地址，本地未额外指定可留空',
-      placeholder: 'http://127.0.0.1:11434/v1',
+      placeholder: 'http://127.0.0.1:11434',
       title: '接口代理地址',
     },
     setup: {

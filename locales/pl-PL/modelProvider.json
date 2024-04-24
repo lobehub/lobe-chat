@@ -130,7 +130,7 @@
     },
     "endpoint": {
       "desc": "Wprowadź adres rest API Ollama, jeśli lokalnie nie określono, pozostaw puste",
-      "placeholder": "http://127.0.0.1:11434/v1",
+      "placeholder": "http://127.0.0.1:11434",
       "title": "Adres proxy API"
     },
     "setup": {

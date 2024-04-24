@@ -130,7 +130,7 @@
     },
     "endpoint": {
       "desc": "Geben Sie die Proxy-Adresse der Ollama-Schnittstelle ein, leer lassen, wenn lokal nicht spezifiziert",
-      "placeholder": "http://127.0.0.1:11434/v1",
+      "placeholder": "http://127.0.0.1:11434",
       "title": "Schnittstellen-Proxy-Adresse"
     },
     "setup": {

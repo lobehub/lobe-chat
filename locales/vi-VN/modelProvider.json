@@ -130,7 +130,7 @@
     },
     "endpoint": {
       "desc": "Nhập địa chỉ proxy API của Ollama, có thể để trống nếu không chỉ định cụ thể",
-      "placeholder": "http://127.0.0.1:11434/v1",
+      "placeholder": "http://127.0.0.1:11434",
       "title": "Địa chỉ proxy API"
     },
     "setup": {
