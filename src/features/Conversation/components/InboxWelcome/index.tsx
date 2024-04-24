@@ -68,7 +68,6 @@ const InboxWelcome = memo(() => {
         </Markdown>
         <AgentsSuggest />
         <QuestionSuggest />
-        {/*{t('inbox.defaultMessage')}*/}
       </Flexbox>
     </Center>
   );

@@ -225,7 +225,7 @@ describe('chatSelectors', () => {
 
       const chats = chatSelectors.currentChatsWithGuideMessage(metaData)(state);
 
-      expect(chats[0].content).toEqual('inbox.defaultMessage'); // Assuming translation returns a string containing this
+      expect(chats[0].content).toEqual(''); // Assuming translation returns a string containing this
     });
 
     it('should use agent default message for non-inbox sessions', () => {
@@ -258,6 +258,32 @@ describe('chatSelectors', () => {
 
       // Restore the mocks after the test
       vi.restoreAllMocks();
+    });
+  });
+
+  describe('showInboxWelcome', () => {
+    it('should return false if the active session is not the inbox session', () => {
+      const state = merge(initialStore, { activeId: 'someActiveId' });
+      const result = chatSelectors.showInboxWelcome(state);
+      expect(result).toBe(false);
+    });
+
+    it('should return false if there are existing messages in the inbox session', () => {
+      const state = merge(initialStore, {
+        activeId: INBOX_SESSION_ID,
+        messages: mockMessages,
+      });
+      const result = chatSelectors.showInboxWelcome(state);
+      expect(result).toBe(false);
+    });
+
+    it('should return true if the active session is the inbox session and there are no existing messages', () => {
+      const state = merge(initialStore, {
+        activeId: INBOX_SESSION_ID,
+        messages: [],
+      });
+      const result = chatSelectors.showInboxWelcome(state);
+      expect(result).toBe(true);
     });
   });
 });
