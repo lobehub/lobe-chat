@@ -771,7 +771,7 @@ describe('AgentRuntimeOnClient', () => {
           settings: {
             languageModel: {
               ollama: {
-                endpoint: 'user-ollama-endpoint',
+                endpoint: 'http://127.0.0.1:1234',
               },
             },
           },

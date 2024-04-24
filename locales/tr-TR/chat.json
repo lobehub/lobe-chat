@@ -48,13 +48,17 @@
   "sessionGroup": {
     "config": "Grup Yönetimi",
     "confirmRemoveGroupAlert": "Bu grup silinecek, silindikten sonra bu grubun yardımcıları varsayılan listeye taşınacak, işleminizi onaylıyor musunuz?",
+    "createAgentSuccess": "Yardımcı başarıyla oluşturuldu",
     "createGroup": "Yeni Grup Ekle",
     "createSuccess": "Oluşturma Başarılı",
+    "creatingAgent": "Yardımcı oluşturuluyor...",
     "inputPlaceholder": "Grup adını girin...",
     "moveGroup": "Gruba Taşı",
     "newGroup": "Yeni Grup",
     "rename": "Grup Adını Değiştir",
     "renameSuccess": "Yeniden Adlandırma Başarılı",
+    "sortSuccess": "Yeniden sıralama başarılı",
+    "sorting": "Grup sıralaması güncelleniyor...",
     "tooLong": "Grup adı 1-20 karakter arasında olmalıdır"
   },
   "shareModal": {

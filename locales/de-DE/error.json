@@ -58,7 +58,7 @@
     "MoonshotBizError": "Fehler beim Abrufen des Dark Side of the Moon-Services. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OllamaBizError": "Fehler bei der Anforderung des Ollama-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "OllamaServiceUnavailable": "Ollama-Dienst nicht verfügbar. Bitte überprüfen Sie, ob er ordnungsgemäß gestartet wurde.",
+    "OllamaServiceUnavailable": "Der Ollama-Dienst ist nicht verfügbar. Bitte überprüfen Sie, ob Ollama ordnungsgemäß ausgeführt wird und ob die CORS-Konfiguration von Ollama korrekt ist.",
     "OpenAIBizError": "Fehler bei der OpenAI-Serviceanfrage. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut",
     "OpenRouterBizError": "Fehler bei der Anforderung des OpenRouter AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PerplexityBizError": "Fehler bei der Anforderung des Perplexity AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",

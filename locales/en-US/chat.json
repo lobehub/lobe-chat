@@ -48,13 +48,17 @@
   "sessionGroup": {
     "config": "Group Management",
     "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the agents in this group will be moved to the default list. Please confirm your operation.",
+    "createAgentSuccess": "Assistant created successfully",
     "createGroup": "Add New Group",
     "createSuccess": "Created successfully",
+    "creatingAgent": "Creating assistant...",
     "inputPlaceholder": "Please enter group name...",
     "moveGroup": "Move to Group",
     "newGroup": "New Group",
     "rename": "Rename Group",
     "renameSuccess": "Renamed successfully",
+    "sortSuccess": "Reorder successful",
+    "sorting": "Group sorting updating...",
     "tooLong": "Group name length should be between 1-20"
   },
   "shareModal": {
