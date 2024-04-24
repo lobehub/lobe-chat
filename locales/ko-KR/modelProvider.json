@@ -147,15 +147,13 @@
         "windows": "Windows에서는 '제어판'을 클릭하여 시스템 환경 변수를 편집하십시오. 사용자 계정에 'OLLAMA_ORIGINS'이라는 환경 변수를 만들고 값으로 *을 입력한 후 '확인/적용'을 클릭하여 저장하십시오."
       },
       "install": {
-        "description": "Ollama를 시작했는지 확인하고, 아직 다운로드하지 않았다면 공식 웹 사이트에서 다운로드하십시오.",
+        "description": "Ollama가 활성화되어 있는지 확인하고, Ollama를 다운로드하지 않았다면 공식 웹사이트<1>에서 다운로드</1>하십시오.",
         "docker": "Docker를 사용하는 것을 선호하는 경우 Ollama는 공식 Docker 이미지도 제공하며 다음 명령을 사용하여 가져올 수 있습니다:",
         "linux": {
           "command": "다음 명령을 사용하여 설치하십시오:",
           "manual": "또는 <1>Linux 수동 설치 안내</1>를 참조하여 직접 설치할 수도 있습니다."
         },
-        "macos": "<0>macOS 버전 Ollama 다운로드</0> 후 압축을 풀고 설치하십시오.",
         "title": "로컬에서 Ollama 애플리케이션을 설치하고 시작하십시오",
-        "windows": "<0>Windows 버전 Ollama 다운로드</0> 후 압축을 풀고 설치하십시오.",
         "windowsTab": "Windows (미리보기판)"
       }
     },

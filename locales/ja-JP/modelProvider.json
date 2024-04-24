@@ -135,28 +135,26 @@
     },
     "setup": {
       "cors": {
-        "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
+        "description": "ブラウザのセキュリティ制限により、Ollama を正常に使用するにはクロスオリジンリクエストを許可する必要があります。",
         "linux": {
-          "env": "Add `Environment` under [Service] section, and set the OLLAMA_ORIGINS environment variable:",
-          "reboot": "Reload systemd and restart Ollama.",
-          "systemd": "Invoke systemd to edit the ollama service:"
+          "env": "[Service] セクションに `Environment` を追加し、OLLAMA_ORIGINS 環境変数を設定してください：",
+          "reboot": "systemd を再読み込みして Ollama を再起動します。",
+          "systemd": "systemd を呼び出して ollama サービスを編集します："
         },
-        "macos": "Open the Terminal application, paste the following command, and press Enter.",
-        "reboot": "Please restart the Ollama service after completion.",
-        "title": "Configure Ollama for Cross-Origin Access",
-        "windows": "On Windows, go to 'Control Panel' and edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, set the value to '*', and click 'OK/Apply' to save."
+        "macos": "「ターミナル」アプリを開き、以下のコマンドを貼り付けて実行し、Enter キーを押してください",
+        "reboot": "Ollama サービスを再起動するには、実行後に再起動してください",
+        "title": "Ollama の CORS アクセスを許可する設定",
+        "windows": "Windows 上では、「コントロールパネル」をクリックしてシステム環境変数を編集します。ユーザーアカウントに「OLLAMA_ORIGINS」という名前の環境変数を作成し、値を * に設定し、「OK/適用」をクリックして保存します"
       },
       "install": {
-        "description": "Make sure you have Ollama running. If you haven't downloaded Ollama yet, please visit the official website to download.",
-        "docker": "If you prefer using Docker, Ollama also provides official Docker images. You can pull the image using the following command:",
+        "description": "Ollamaを有効にしていることを確認してください。Ollamaをまだダウンロードしていない場合は、公式サイト<1>からダウンロード</1>してください。",
+        "docker": "もしDockerを使用することを好む場合、Ollamaは公式Dockerイメージも提供しています。以下のコマンドを使用して取得できます：",
         "linux": {
-          "command": "Install using the following command:",
-          "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for manual installation."
+          "command": "以下のコマンドを使用してインストール：",
+          "manual": "または、<1>Linuxマニュアルインストールガイド</1>を参照して手動でインストールすることもできます"
         },
-        "macos": "Download the macOS version of Ollama, unzip, and install.",
-        "title": "Install and Start Ollama Locally",
-        "windows": "Download the Windows version of Ollama, unzip, and install.",
-        "windowsTab": "Windows (Preview)"
+        "title": "ローカルでOllamaアプリをインストールして起動する",
+        "windowsTab": "Windows（プレビュー版）"
       }
     },
     "title": "Ollama"
