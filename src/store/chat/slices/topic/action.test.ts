@@ -379,6 +379,10 @@ describe('topic action', () => {
   describe('updateTopicLoading', () => {
     it('should call update topicLoadingId', async () => {
       const { result } = renderHook(() => useChatStore());
+      act(() => {
+        useChatStore.setState({ topicLoadingIds: [] });
+      });
+
       expect(result.current.topicLoadingIds).toHaveLength(0);
 
       // Call the action with the topicId and newTitle

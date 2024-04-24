@@ -68,7 +68,7 @@ describe('topicReducer', () => {
 
       const newState = topicReducer(state, payload);
 
-      expect(newState[0].updatedAt).toBeGreaterThan(topic.updatedAt);
+      expect((newState[0].updatedAt as unknown as Date).valueOf()).toBeGreaterThan(topic.updatedAt);
     });
   });
 
