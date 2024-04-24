@@ -48,13 +48,17 @@
   "sessionGroup": {
     "config": "グループ設定",
     "confirmRemoveGroupAlert": "このグループを削除します。削除後、このグループのアシスタントはデフォルトリストに移動されます。操作を確認してください。",
+    "createAgentSuccess": "エージェントの作成に成功しました",
     "createGroup": "新しいグループを作成",
     "createSuccess": "作成が成功しました",
+    "creatingAgent": "エージェントの作成中...",
     "inputPlaceholder": "グループ名を入力してください...",
     "moveGroup": "グループに移動",
     "newGroup": "新しいグループ",
     "rename": "グループ名を変更",
     "renameSuccess": "名前の変更が成功しました",
+    "sortSuccess": "並び替えに成功しました",
+    "sorting": "グループの並び替えを更新中...",
     "tooLong": "グループ名は1〜20文字で入力してください"
   },
   "shareModal": {

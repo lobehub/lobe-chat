@@ -58,7 +58,7 @@
     "MoonshotBizError": "There was an error with the Moonshot service, please troubleshoot or retry based on the following information.",
     "NoOpenAIAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
     "OllamaBizError": "Error requesting Ollama service, please troubleshoot or retry based on the following information",
-    "OllamaServiceUnavailable": "Ollama service not detected, please check if it is running properly",
+    "OllamaServiceUnavailable": "Ollama service is unavailable. Please check if Ollama is running properly or if the cross-origin configuration of Ollama is set correctly.",
     "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information.",
     "OpenRouterBizError": "Error requesting OpenRouter AI service. Please troubleshoot or retry based on the following information.",
     "PerplexityBizError": "Error requesting Perplexity AI service. Please troubleshoot or retry based on the following information.",

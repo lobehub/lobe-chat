@@ -48,13 +48,17 @@
   "sessionGroup": {
     "config": "分組管理",
     "confirmRemoveGroupAlert": "即將刪除該分組，刪除後該分組的助手將移動到預設清單，請確認你的操作",
+    "createAgentSuccess": "助手建立成功",
     "createGroup": "新增新分組",
     "createSuccess": "創建成功",
+    "creatingAgent": "助手建立中...",
     "inputPlaceholder": "請輸入分組名稱...",
     "moveGroup": "移動到分組",
     "newGroup": "新分組",
     "rename": "重新命名分組",
     "renameSuccess": "重新命名成功",
+    "sortSuccess": "重新排序成功",
+    "sorting": "分組排序更新中...",
     "tooLong": "分組名稱長度需在 1-20 之內"
   },
   "shareModal": {
