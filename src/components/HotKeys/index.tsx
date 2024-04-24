@@ -11,9 +11,8 @@ import { Flexbox } from 'react-layout-kit';
 import { ALT_KEY, CLEAN_MESSAGE_KEY, META_KEY } from '@/const/hotkeys';
 import { usePlatform } from '@/hooks/usePlatform';
 
-const useStyles = createStyles(({ css, token }, inverseTheme: boolean) => {
-  const background = inverseTheme ? rgba(token.colorTextTertiary, 0.15) : token.colorFillTertiary;
-  return css`
+const useStyles = createStyles(
+  ({ css, token }, inverseTheme: boolean) => css`
     font-size: 12px;
 
     kbd {
@@ -25,11 +24,11 @@ const useStyles = createStyles(({ css, token }, inverseTheme: boolean) => {
       color: ${inverseTheme ? token.colorTextTertiary : token.colorTextSecondary};
       text-align: center;
 
-      background: ${background};
+      background: ${inverseTheme ? rgba(token.colorTextTertiary, 0.15) : token.colorFillTertiary};
       border-radius: ${token.borderRadius}px;
     }
-  `;
-});
+  `,
+);
 
 export interface HotKeysProps {
   desc?: string;
