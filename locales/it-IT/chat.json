@@ -25,8 +25,9 @@
     "title": "Chiacchierata casuale"
   },
   "input": {
+    "addAi": "Aggiungi un messaggio AI",
+    "addUser": "Aggiungi un messaggio utente",
     "more": "Ulteriori",
-    "onlyAdd": "Solo aggiungi messaggio",
     "send": "Invia",
     "sendWithCmdEnter": "Invia premendo {{meta}} + Invio",
     "sendWithEnter": "Invia premendo Invio",
