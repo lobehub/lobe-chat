@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.149.2](https://github.com/lobehub/lobe-chat/compare/v0.149.1...v0.149.2)
+
+<sup>Released on **2024-04-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support to create ai message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support to create ai message, closes [#2185](https://github.com/lobehub/lobe-chat/issues/2185) ([ba3ba6a](https://github.com/lobehub/lobe-chat/commit/ba3ba6a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.149.1](https://github.com/lobehub/lobe-chat/compare/v0.149.0...v0.149.1)
 
 <sup>Released on **2024-04-24**</sup>
