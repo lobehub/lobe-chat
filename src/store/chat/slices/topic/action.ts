@@ -7,6 +7,7 @@ import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainSummaryTitle } from '@/chains/summaryTitle';
+import { message } from '@/components/AntdStaticMethods';
 import { LOADING_FLAT } from '@/const/message';
 import { TraceNameMap } from '@/const/trace';
 import { useClientDataSWR } from '@/libs/swr';
@@ -99,11 +100,18 @@ export const chatTopic: StateCreator<
 
     const newTitle = t('duplicateTitle', { ns: 'chat', title: topic?.title });
 
-    get().internal_dispatchTopic({ type: 'addTopic', value: { ...topic, title: newTitle } });
+    message.loading({
+      content: t('topic.duplicateLoading', { ns: 'chat' }),
+      key: 'duplicateTopic',
+      duration: 0,
+    });
+
     const newTopicId = await topicService.cloneTopic(id, newTitle);
     await refreshTopic();
+    message.destroy('duplicateTopic');
+    message.success(t('topic.duplicateSuccess', { ns: 'chat' }));
 
-    switchTopic(newTopicId);
+    await switchTopic(newTopicId);
   },
   // update
   summaryTopicTitle: async (topicId, messages) => {
