@@ -1,18 +1,27 @@
-import { Highlighter, Snippet } from '@lobehub/ui';
-import { Tab, Tabs } from '@lobehub/ui/mdx';
+import { Highlighter, Snippet, TabsNav } from '@lobehub/ui';
 import { Steps } from 'antd';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
+import { readableColor } from 'polished';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, prefixCls }) => ({
+const useStyles = createStyles(({ css, prefixCls, token }) => ({
   steps: css`
+    margin-top: 32px;
     &.${prefixCls}-steps-small .${prefixCls}-steps-item-title {
       margin-bottom: 16px;
       font-size: 16px;
       font-weight: bold;
+    }
+
+    .${prefixCls}-steps-item-description {
+      margin-bottom: 24px;
+    }
+
+    .${prefixCls}-steps-icon {
+      color: ${readableColor(token.colorPrimary)} !important;
     }
   `,
 }));
@@ -21,29 +30,91 @@ const SetupGuide = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('modelProvider');
   return (
-    <Flexbox paddingBlock={8}>
-      <Steps
-        className={styles.steps}
-        direction={'vertical'}
-        items={[
-          {
-            description: (
-              <Flexbox>
-                {t('ollama.setup.install.description')}
-                <Tabs items={['macOS', t('ollama.setup.install.windowsTab'), 'Linux', 'Docker']}>
-                  <Tab>
-                    <Trans i18nKey={'ollama.setup.install.macos'} ns={'modelProvider'}>
-                      <Link href={'https://ollama.com/download'}>下载 Ollama for macOS</Link>
-                      并解压。
+    <TabsNav
+      items={[
+        {
+          children: (
+            <Steps
+              className={styles.steps}
+              direction={'vertical'}
+              items={[
+                {
+                  description: (
+                    <Trans i18nKey={'ollama.setup.install.description'} ns={'modelProvider'}>
+                      请确认你已经开启 Ollama ，如果没有安装 Ollama ，请前往官网
+                      <Link href={'https://ollama.com/download'}>下载</Link>
                     </Trans>
-                  </Tab>
-                  <Tab>
-                    <Trans i18nKey={'ollama.setup.install.windows'} ns={'modelProvider'}>
-                      <Link href={'https://ollama.com/download'}>下载 Ollama for macOS</Link>
-                      并解压。
+                  ),
+                  status: 'process',
+                  title: t('ollama.setup.install.title'),
+                },
+                {
+                  description: (
+                    <Flexbox gap={8}>
+                      {t('ollama.setup.cors.description')}
+
+                      <Flexbox gap={8}>
+                        {t('ollama.setup.cors.macos')}
+                        <Snippet language={'bash'}>
+                          {/* eslint-disable-next-line react/no-unescaped-entities */}
+                          launchctl setenv OLLAMA_ORIGINS "*"
+                        </Snippet>
+                        {t('ollama.setup.cors.reboot')}
+                      </Flexbox>
+                    </Flexbox>
+                  ),
+                  status: 'process',
+                  title: t('ollama.setup.cors.title'),
+                },
+              ]}
+              size={'small'}
+            />
+          ),
+          key: 'macos',
+          label: 'macOS',
+        },
+        {
+          children: (
+            <Steps
+              className={styles.steps}
+              direction={'vertical'}
+              items={[
+                {
+                  description: (
+                    <Trans i18nKey={'ollama.setup.install.description'} ns={'modelProvider'}>
+                      请确认你已经开启 Ollama ，如果没有安装 Ollama ，请前往官网
+                      <Link href={'https://ollama.com/download'}>下载</Link>
                     </Trans>
-                  </Tab>
-                  <Tab>
+                  ),
+                  status: 'process',
+                  title: t('ollama.setup.install.title'),
+                },
+                {
+                  description: (
+                    <Flexbox gap={8}>
+                      {t('ollama.setup.cors.description')}
+                      <div>{t('ollama.setup.cors.windows')}</div>
+                      <div>{t('ollama.setup.cors.reboot')}</div>
+                    </Flexbox>
+                  ),
+                  status: 'process',
+                  title: t('ollama.setup.cors.title'),
+                },
+              ]}
+              size={'small'}
+            />
+          ),
+          key: 'windows',
+          label: t('ollama.setup.install.windowsTab'),
+        },
+        {
+          children: (
+            <Steps
+              className={styles.steps}
+              direction={'vertical'}
+              items={[
+                {
+                  description: (
                     <Flexbox gap={8}>
                       {t('ollama.setup.install.linux.command')}
                       <Snippet language={'bash'}>
@@ -59,43 +130,16 @@ const SetupGuide = memo(() => {
                         </Trans>
                       </div>
                     </Flexbox>
-                  </Tab>
-                  <Tab>
+                  ),
+                  status: 'process',
+                  title: t('ollama.setup.install.title'),
+                },
+                {
+                  description: (
                     <Flexbox gap={8}>
-                      {t('ollama.setup.install.docker')}
-                      <Snippet language={'bash'}>docker pull ollama/ollama</Snippet>
-                    </Flexbox>
-                  </Tab>
-                </Tabs>
-              </Flexbox>
-            ),
-            status: 'process',
-            title: t('ollama.setup.install.title'),
-          },
-          {
-            description: (
-              <Flexbox>
-                {t('ollama.setup.cors.description')}
+                      <div>{t('ollama.setup.cors.description')}</div>
 
-                <Tabs items={['macOS', t('ollama.setup.install.windowsTab'), 'Linux']}>
-                  <Tab>
-                    <Flexbox gap={8}>
-                      {t('ollama.setup.cors.macos')}
-                      {/* eslint-disable-next-line react/no-unescaped-entities */}
-                      <Snippet language={'bash'}>launchctl setenv OLLAMA_ORIGINS "*"</Snippet>
-                      {t('ollama.setup.cors.reboot')}
-                    </Flexbox>
-                  </Tab>
-                  <Tab>
-                    <Flexbox gap={8}>
-                      <div>{t('ollama.setup.cors.windows')}</div>
-                      <div>{t('ollama.setup.cors.reboot')}</div>
-                    </Flexbox>
-                  </Tab>
-                  <Tab>
-                    {' '}
-                    <Flexbox gap={8}>
-                      {t('ollama.setup.cors.linux.systemd')}
+                      <div>{t('ollama.setup.cors.linux.systemd')}</div>
                       {/* eslint-disable-next-line react/no-unescaped-entities */}
                       <Snippet language={'bash'}> sudo systemctl edit ollama.service</Snippet>
                       {t('ollama.setup.cors.linux.env')}
@@ -111,17 +155,62 @@ Environment="OLLAMA_ORIGINS=*"`}
                       />
                       {t('ollama.setup.cors.linux.reboot')}
                     </Flexbox>
-                  </Tab>
-                </Tabs>
-              </Flexbox>
-            ),
-            status: 'process',
-            title: t('ollama.setup.cors.title'),
-          },
-        ]}
-        size={'small'}
-      />
-    </Flexbox>
+                  ),
+                  status: 'process',
+                  title: t('ollama.setup.cors.title'),
+                },
+              ]}
+              size={'small'}
+            />
+          ),
+          key: 'linux',
+          label: 'Linux',
+        },
+        {
+          children: (
+            <Steps
+              className={styles.steps}
+              direction={'vertical'}
+              items={[
+                {
+                  description: (
+                    <Flexbox gap={8}>
+                      {t('ollama.setup.install.description')}
+                      <div>{t('ollama.setup.install.docker')}</div>
+                      <Snippet language={'bash'}>docker pull ollama/ollama</Snippet>
+                    </Flexbox>
+                  ),
+                  status: 'process',
+                  title: t('ollama.setup.install.title'),
+                },
+                {
+                  description: (
+                    <Flexbox gap={8}>
+                      {t('ollama.setup.cors.description')}
+                      <Highlighter
+                        fileName={'ollama.service'}
+                        fullFeatured
+                        language={'bash'}
+                        showLanguage
+                      >
+                        {/* eslint-disable-next-line react/no-unescaped-entities */}
+                        docker run -d --gpus=all -v ollama:/root/.ollama -e OLLAMA_ORIGINS="*" -p
+                        11434:11434 --name ollama ollama/ollama
+                      </Highlighter>
+                    </Flexbox>
+                  ),
+                  status: 'process',
+                  title: t('ollama.setup.cors.title'),
+                },
+              ]}
+              size={'small'}
+            />
+          ),
+          key: 'docker',
+          label: 'Docker',
+        },
+      ]}
+    />
   );
 });
 

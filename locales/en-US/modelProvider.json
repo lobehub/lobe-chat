@@ -147,15 +147,13 @@
         "windows": "On Windows, go to 'Control Panel' and edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, set the value to '*', and click 'OK/Apply' to save."
       },
       "install": {
-        "description": "Please ensure that you have Ollama running. If you haven't downloaded Ollama yet, please visit the official website.",
+        "description": "Please make sure you have enabled Ollama. If you haven't downloaded Ollama yet, please visit the official website <1>to download</1>.",
         "docker": "If you prefer using Docker, Ollama also provides an official Docker image. You can pull it using the following command:",
         "linux": {
           "command": "Install using the following command:",
           "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for manual installation."
         },
-        "macos": "Download the macOS version of Ollama, unzip, and install it.",
         "title": "Install and Start Ollama Locally",
-        "windows": "Download the Windows version of Ollama, unzip, and install it.",
         "windowsTab": "Windows (Preview)"
       }
     },

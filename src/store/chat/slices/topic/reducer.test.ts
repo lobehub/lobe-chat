@@ -42,8 +42,7 @@ describe('topicReducer', () => {
       const payload: ChatTopicDispatch = {
         type: 'updateTopic',
         id: '1',
-        key: 'title',
-        value: 'Updated Topic',
+        value: { title: 'Updated Topic' },
       };
 
       const newState = topicReducer(state, payload);
@@ -64,13 +63,12 @@ describe('topicReducer', () => {
       const payload: ChatTopicDispatch = {
         type: 'updateTopic',
         id: '1',
-        key: 'title',
-        value: 'Updated Topic',
+        value: { title: 'Updated Topic' },
       };
 
       const newState = topicReducer(state, payload);
 
-      expect(newState[0].updatedAt).toBeGreaterThan(topic.updatedAt);
+      expect((newState[0].updatedAt as unknown as Date).valueOf()).toBeGreaterThan(topic.updatedAt);
     });
   });
 
