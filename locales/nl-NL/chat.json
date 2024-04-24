@@ -25,8 +25,9 @@
     "title": "Praat maar raak"
   },
   "input": {
+    "addAi": "Voeg een AI-bericht toe",
+    "addUser": "Voeg een gebruikersbericht toe",
     "more": "Meer",
-    "onlyAdd": "Alleen bericht toevoegen",
     "send": "Verzenden",
     "sendWithCmdEnter": "Verzenden met {{meta}} + Enter",
     "sendWithEnter": "Verzenden met Enter",
