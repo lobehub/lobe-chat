@@ -25,8 +25,9 @@
     "title": "Chuyện phiếm"
   },
   "input": {
+    "addAi": "Thêm một tin nhắn AI",
+    "addUser": "Thêm một tin nhắn người dùng",
     "more": "Thêm",
-    "onlyAdd": "Chỉ thêm tin nhắn",
     "send": "Gửi",
     "sendWithCmdEnter": "Nhấn {{meta}} + Enter để gửi",
     "sendWithEnter": "Nhấn Enter để gửi",
