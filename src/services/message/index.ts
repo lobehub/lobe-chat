@@ -9,16 +9,4 @@ import { ClientService } from './client';
 
 export type { CreateMessageParams } from './type';
 
-class MessageService extends ClientService {
-  async hasMessages() {
-    const number = await this.countMessages();
-    return number > 0;
-  }
-
-  async messageCountToCheckTrace() {
-    const number = await this.countMessages();
-    return number >= 4;
-  }
-}
-
-export const messageService = new MessageService();
+export const messageService = new ClientService();

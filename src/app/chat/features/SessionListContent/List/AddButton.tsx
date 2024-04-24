@@ -12,18 +12,13 @@ const AddButton = memo<{ groupId?: string }>(({ groupId }) => {
   const { t } = useTranslation('chat');
   const createSession = useSessionStore((s) => s.createSession);
 
-  const { mutate, isValidating } = useActionSWR('session.createSession', (groupId) =>
-    createSession({ group: groupId }),
-  );
+  const { mutate, isValidating } = useActionSWR(['session.createSession', groupId], () => {
+    return createSession({ group: groupId });
+  });
 
   return (
     <Flexbox style={{ margin: '12px 16px' }}>
-      <Button
-        block
-        icon={<Icon icon={Plus} />}
-        loading={isValidating}
-        onClick={() => mutate(groupId)}
-      >
+      <Button block icon={<Icon icon={Plus} />} loading={isValidating} onClick={() => mutate()}>
         {t('newAgent')}
       </Button>
     </Flexbox>

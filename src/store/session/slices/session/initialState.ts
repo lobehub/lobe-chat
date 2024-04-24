@@ -1,6 +1,11 @@
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { CustomSessionGroup, LobeAgentSession, LobeSessionType } from '@/types/session';
+import {
+  CustomSessionGroup,
+  LobeAgentSession,
+  LobeSessionGroups,
+  LobeSessionType,
+} from '@/types/session';
 
 export const initLobeSession: LobeAgentSession = {
   config: DEFAULT_AGENT_CONFIG,
@@ -24,6 +29,7 @@ export interface SessionState {
   isSessionsFirstFetchFinished: boolean;
   pinnedSessions: LobeAgentSession[];
   searchKeywords: string;
+  sessionGroups: LobeSessionGroups;
   sessionSearchKeywords?: string;
   /**
    * it means defaultSessions
@@ -40,5 +46,6 @@ export const initialSessionState: SessionState = {
   isSessionsFirstFetchFinished: false,
   pinnedSessions: [],
   searchKeywords: '',
+  sessionGroups: [],
   sessions: [],
 };
