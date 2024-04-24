@@ -101,6 +101,8 @@
     "confirmRemoveTopic": "Möchtest du dieses Thema wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "confirmRemoveUnstarred": "Möchtest du die nicht markierten Themen wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "defaultTitle": "Standardthema",
+    "duplicateLoading": "Thema wird kopiert...",
+    "duplicateSuccess": "Thema erfolgreich kopiert",
     "guide": {
       "desc": "Klicken Sie auf die Schaltfläche links, um das aktuelle Gespräch als historisches Thema zu speichern und eine neue Gesprächsrunde zu starten",
       "title": "Themenliste"

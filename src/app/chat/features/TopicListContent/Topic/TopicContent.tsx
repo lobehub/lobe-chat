@@ -1,7 +1,15 @@
 import { ActionIcon, EditableText, Icon } from '@lobehub/ui';
 import { App, Dropdown, type MenuProps, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { LucideCopy, MoreVertical, PencilLine, Star, Trash, Wand2 } from 'lucide-react';
+import {
+  LucideCopy,
+  LucideLoader2,
+  MoreVertical,
+  PencilLine,
+  Star,
+  Trash,
+  Wand2,
+} from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -40,7 +48,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
     removeTopic,
     autoRenameTopicTitle,
     duplicateTopic,
-    // sessionId,
+    isLoading,
   ] = useChatStore((s) => [
     s.topicRenamingId === id,
     s.favoriteTopic,
@@ -48,7 +56,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
     s.removeTopic,
     s.autoRenameTopicTitle,
     s.duplicateTopic,
-    s.activeId,
+    s.topicLoadingIds.includes(id),
   ]);
   const { styles, theme } = useStyles();
 
@@ -137,15 +145,16 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       }}
     >
       <ActionIcon
-        color={fav ? theme.colorWarning : undefined}
-        fill={fav ? theme.colorWarning : 'transparent'}
-        icon={Star}
+        color={fav && !isLoading ? theme.colorWarning : undefined}
+        fill={fav && !isLoading ? theme.colorWarning : 'transparent'}
+        icon={isLoading ? LucideLoader2 : Star}
         onClick={(e) => {
           e.stopPropagation();
           if (!id) return;
           favoriteTopic(id, !fav);
         }}
         size={'small'}
+        spin={isLoading}
       />
       {!editing ? (
         <Paragraph

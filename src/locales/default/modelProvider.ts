@@ -150,16 +150,14 @@ export default {
           '在 Windows 上，点击「控制面板」，进入编辑系统环境变量。为您的用户账户新建名为 「OLLAMA_ORIGINS」 的环境变量，值为 * ，点击 「OK/应用」 保存',
       },
       install: {
-        description: '请确认你已经开启 Ollama ，如果没有下载 Ollama ，请前往官网下载',
+        description: '请确认你已经开启 Ollama ，如果没有下载 Ollama ，请前往官网<1>下载</1>',
         docker:
           '如果你更倾向于使用 Docker，Ollama 也提供了官方 Docker 镜像，你可以通过以下命令拉取：',
         linux: {
           command: '通过以下命令安装：',
           manual: '或者，你也可以参考 <1>Linux 手动安装指南</1> 自行安装',
         },
-        macos: '<0>下载 macOS 版 Ollama</0>，解压并安装',
         title: '在本地安装并开启 Ollama 应用',
-        windows: '<0>下载 Windows 版 Ollama</0>，解压并安装',
         windowsTab: 'Windows (预览版)',
       },
     },
