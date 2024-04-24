@@ -42,8 +42,7 @@ describe('topicReducer', () => {
       const payload: ChatTopicDispatch = {
         type: 'updateTopic',
         id: '1',
-        key: 'title',
-        value: 'Updated Topic',
+        value: { title: 'Updated Topic' },
       };
 
       const newState = topicReducer(state, payload);
@@ -64,8 +63,7 @@ describe('topicReducer', () => {
       const payload: ChatTopicDispatch = {
         type: 'updateTopic',
         id: '1',
-        key: 'title',
-        value: 'Updated Topic',
+        value: { title: 'Updated Topic' },
       };
 
       const newState = topicReducer(state, payload);
