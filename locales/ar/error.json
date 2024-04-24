@@ -58,7 +58,7 @@
     "MoonshotBizError": "حدث خطأ في خدمة جانب القمر، يرجى التحقق من المعلومات أدناه أو إعادة المحاولة",
     "NoOpenAIAPIKey": "مفتاح API الخاص بـ OpenAI فارغ، يرجى إضافة مفتاح API الخاص بـ OpenAI",
     "OllamaBizError": "خطأ في طلب خدمة Ollama، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
-    "OllamaServiceUnavailable": "خدمة Ollama غير متوفرة، يرجى التحقق مما إذا كانت قد تم تشغيلها بشكل صحيح",
+    "OllamaServiceUnavailable": "خدمة Ollama غير متوفرة، يرجى التحقق من تشغيل Ollama بشكل صحيح أو إعدادات الـ Ollama للاتصال عبر النطاقات",
     "OpenAIBizError": "حدث خطأ في طلب خدمة OpenAI، يرجى التحقق من المعلومات أدناه وإعادة المحاولة",
     "OpenRouterBizError": "خطأ في طلب خدمة OpenRouter AI، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
     "PerplexityBizError": "خطأ في طلب خدمة Perplexity AI، يرجى التحقق من المعلومات التالية أو إعادة المحاولة",
