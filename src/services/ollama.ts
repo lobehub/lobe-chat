@@ -51,14 +51,13 @@ export class OllamaService {
     } catch {
       response = createErrorResponse(ChatErrorType.OllamaServiceUnavailable, {
         host: this.getHost(),
-        message: 'please check whether your ollama service is available',
+        message: 'please check whether your ollama service is available or set the CORS rules',
         provider: ModelProvider.Ollama,
       });
     }
 
     if (!response.ok) {
-      const messageError = await getMessageError(response);
-      throw messageError;
+      throw await getMessageError(response);
     }
     return response.json();
   };
@@ -66,19 +65,17 @@ export class OllamaService {
   getModels = async (): Promise<ListResponse> => {
     let response: Response | ListResponse;
     try {
-      const response = await this.getOllamaClient().list();
-      return response;
+      return await this.getOllamaClient().list();
     } catch {
       response = createErrorResponse(ChatErrorType.OllamaServiceUnavailable, {
         host: this.getHost(),
-        message: 'please check whether your ollama service is available',
+        message: 'please check whether your ollama service is available or set the CORS rules',
         provider: ModelProvider.Ollama,
       });
     }
 
     if (!response.ok) {
-      const messageError = await getMessageError(response);
-      throw messageError;
+      throw await getMessageError(response);
     }
     return response.json();
   };

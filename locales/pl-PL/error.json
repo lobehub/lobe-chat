@@ -58,7 +58,7 @@
     "MoonshotBizError": "Wystąpił błąd żądania usługi Moonshot AI. Proszę sprawdzić poniższe informacje lub spróbować ponownie.",
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
-    "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy została poprawnie uruchomiona.",
+    "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy Ollama działa poprawnie, lub czy poprawnie skonfigurowano ustawienia przekraczania domeny Ollama",
     "OpenAIBizError": "Błąd żądania usługi OpenAI. Proszę sprawdź poniższe informacje i spróbuj ponownie",
     "OpenRouterBizError": "Wystąpił błąd biznesowy podczas żądania usługi OpenRouter AI. Sprawdź poniższe informacje lub spróbuj ponownie.",
     "PerplexityBizError": "Błąd biznesowy podczas żądania usługi Perplexity AI. Sprawdź poniższe informacje lub spróbuj ponownie.",
