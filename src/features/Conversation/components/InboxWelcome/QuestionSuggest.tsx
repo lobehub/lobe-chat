@@ -8,11 +8,9 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import urlJoin from 'url-join';
 
+import { USAGE_DOCUMENTS } from '@/const/url';
 import { useChatInput } from '@/features/ChatInput/useChatInput';
-
-const BASE_DOC_URL = 'https://lobehub.com/docs/usage/features';
 
 const useStyles = createStyles(({ css, token }) => ({
   card: css`
@@ -69,7 +67,7 @@ const QuestionSuggest = memo(() => {
     <Flexbox gap={8} width={'100%'}>
       <Flexbox align={'center'} horizontal justify={'space-between'}>
         <div className={styles.title}>{t('guide.questions.title')}</div>
-        <Link href={urlJoin(BASE_DOC_URL, 'start')} target={'_blank'}>
+        <Link href={USAGE_DOCUMENTS} target={'_blank'}>
           <ActionIcon
             icon={ArrowRight}
             size={{ blockSize: 24, fontSize: 16 }}

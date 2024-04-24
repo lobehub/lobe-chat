@@ -3,7 +3,8 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { INBOX_GUIDE_SYSTEMROLE, INBOX_SESSION_ID } from '@/const/session';
+import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
@@ -433,7 +434,7 @@ class ChatService {
     return produce(postMessages, (draft) => {
       // Inject InboxGuide SystemRole
       const inboxGuideSystemRole =
-        options?.trace?.sessionId === INBOX_SESSION_ID && INBOX_GUIDE_SYSTEMROLE();
+        options?.trace?.sessionId === INBOX_SESSION_ID && INBOX_GUIDE_SYSTEMROLE;
 
       // Inject Tool SystemRole
       const hasTools = tools && tools?.length > 0;

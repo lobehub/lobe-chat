@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { OFFICIAL_SITE } from '@/const/url';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { useToolStore } from '@/store/tool';
@@ -63,7 +64,7 @@ const LocalForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form
       name: ['manifest', 'author'],
     },
     {
-      children: <Input placeholder={'https://www.lobehub.com'} />,
+      children: <Input placeholder={OFFICIAL_SITE} />,
       desc: t('dev.meta.homepage.desc'),
       label: t('dev.meta.homepage.label'),
       name: ['manifest', 'homepage'],
