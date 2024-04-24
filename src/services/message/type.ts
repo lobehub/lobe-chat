@@ -30,4 +30,7 @@ export interface IMessageService {
   removeMessage(id: string): Promise<any>;
   removeMessages(assistantId: string, topicId?: string): Promise<any>;
   removeAllMessages(): Promise<any>;
+
+  hasMessages(): Promise<boolean>;
+  messageCountToCheckTrace(): Promise<boolean>;
 }

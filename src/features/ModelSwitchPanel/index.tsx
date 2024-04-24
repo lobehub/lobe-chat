@@ -79,12 +79,6 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
       return items;
     };
 
-    // If there is only one provider, just remove the group, show model directly
-    if (enabledList.length === 1) {
-      const provider = enabledList[0];
-      return getModelItems(provider);
-    }
-
     // otherwise show with provider group
     return enabledList.map((provider) => ({
       children: getModelItems(provider),

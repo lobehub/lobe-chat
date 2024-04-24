@@ -38,6 +38,7 @@ export const GET = async () => {
 
     ENABLE_OLLAMA,
     OLLAMA_MODEL_LIST,
+    OLLAMA_PROXY_URL,
 
     ENABLED_OPENROUTER,
     OPENROUTER_MODEL_LIST,
@@ -74,6 +75,7 @@ export const GET = async () => {
       moonshot: { enabled: ENABLED_MOONSHOT },
       ollama: {
         enabled: ENABLE_OLLAMA,
+        fetchOnClient: !OLLAMA_PROXY_URL,
         serverModelCards: transformToChatModelCards({
           defaultChatModels: OllamaProviderCard.chatModels,
           modelString: OLLAMA_MODEL_LIST,

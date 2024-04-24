@@ -50,13 +50,17 @@ export default {
   sessionGroup: {
     config: '分组管理',
     confirmRemoveGroupAlert: '即将删除该分组，删除后该分组的助手将移动到默认列表，请确认你的操作',
+    createAgentSuccess: '助手创建成功',
     createGroup: '添加新分组',
-    createSuccess: '创建成功',
+    createSuccess: '分组创建成功',
+    creatingAgent: '助手创建中...',
     inputPlaceholder: '请输入分组名称...',
     moveGroup: '移动到分组',
     newGroup: '新分组',
     rename: '重命名分组',
     renameSuccess: '重命名成功',
+    sortSuccess: '重新排序成功',
+    sorting: '分组排序更新中...',
     tooLong: '分组名称长度需在 1-20 之内',
   },
   shareModal: {
@@ -126,6 +130,6 @@ export default {
     dragDesc: '拖拽文件到这里，支持上传多个图片。按住 Shift 直接发送图片',
     dragFileDesc: '拖拽图片和文件到这里，支持上传多个图片和文件。按住 Shift 直接发送图片或文件',
     dragFileTitle: '上传文件',
-    dragTitle: '上传图片'
+    dragTitle: '上传图片',
   },
 };

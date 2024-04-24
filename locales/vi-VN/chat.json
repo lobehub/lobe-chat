@@ -48,13 +48,17 @@
   "sessionGroup": {
     "config": "Quản lý nhóm",
     "confirmRemoveGroupAlert": "Bạn sẽ xóa nhóm này, sau khi xóa, trợ lý của nhóm sẽ được di chuyển vào danh sách mặc định, vui lòng xác nhận hành động của bạn",
+    "createAgentSuccess": "Tạo trợ lý thành công",
     "createGroup": "Thêm nhóm mới",
     "createSuccess": "Tạo thành công",
+    "creatingAgent": "Đang tạo trợ lý...",
     "inputPlaceholder": "Vui lòng nhập tên nhóm...",
     "moveGroup": "Di chuyển vào nhóm",
     "newGroup": "Nhóm mới",
     "rename": "Đổi tên nhóm",
     "renameSuccess": "Đổi tên thành công",
+    "sortSuccess": "Sắp xếp lại thành công",
+    "sorting": "Đang cập nhật sắp xếp nhóm...",
     "tooLong": "Tên nhóm phải có độ dài từ 1-20 ký tự"
   },
   "shareModal": {
