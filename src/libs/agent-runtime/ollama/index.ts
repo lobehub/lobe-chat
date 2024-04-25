@@ -31,6 +31,13 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
+      const abort = () => {
+        this.client.abort();
+        options?.signal?.removeEventListener('abort', abort);
+      };
+
+      options?.signal?.addEventListener('abort', abort);
+
       const response = await this.client.chat({
         messages: this.buildOllamaMessages(payload.messages),
         model: payload.model,

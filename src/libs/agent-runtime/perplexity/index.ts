@@ -33,6 +33,7 @@ export class LobePerplexityAI implements LobeRuntimeAI {
       };
       const response = await this.client.chat.completions.create(
         chatPayload as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
+        { signal: options?.signal },
       );
       const [prod, debug] = response.tee();
 
