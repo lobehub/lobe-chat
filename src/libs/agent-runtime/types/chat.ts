@@ -90,8 +90,9 @@ export interface ChatStreamPayload {
 }
 
 export interface ChatCompetitionOptions {
-  callback: ChatStreamCallbacks;
+  callback?: ChatStreamCallbacks;
   headers?: Record<string, any>;
+  signal?: AbortSignal;
 }
 
 export interface ChatCompletionFunctions {

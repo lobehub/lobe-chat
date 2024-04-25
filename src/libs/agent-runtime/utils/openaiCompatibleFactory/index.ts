@@ -29,7 +29,6 @@ interface OpenAICompatibleFactoryOptions {
   baseURL?: string;
   chatCompletion?: {
     handlePayload?: (payload: ChatStreamPayload) => OpenAI.ChatCompletionCreateParamsStreaming;
-    options?: OpenAI.RequestOptions;
   };
   constructorOptions?: ClientOptions;
   debug?: {
@@ -77,7 +76,7 @@ export const LobeOpenAICompatibleFactory = ({
         const response = await this.client.chat.completions.create(postPayload, {
           // https://github.com/lobehub/lobe-chat/pull/318
           headers: { Accept: '*/*' },
-          ...chatCompletion?.options,
+          signal: options?.signal,
         });
 
         const [prod, useForDebug] = response.tee();
