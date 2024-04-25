@@ -25,8 +25,9 @@
     "title": "Lass uns plaudern"
   },
   "input": {
+    "addAi": "Fügen Sie eine AI-Nachricht hinzu",
+    "addUser": "Fügen Sie eine Benutzer-Nachricht hinzu",
     "more": "Mehr",
-    "onlyAdd": "Nur Nachricht hinzufügen",
     "send": "Senden",
     "sendWithCmdEnter": "Mit {{meta}} + Eingabetaste senden",
     "sendWithEnter": "Mit Eingabetaste senden",
@@ -48,13 +49,17 @@
   "sessionGroup": {
     "config": "Gruppenkonfiguration",
     "confirmRemoveGroupAlert": "Die Gruppe wird bald gelöscht. Nach dem Löschen werden die Assistenten in die Standardliste verschoben. Bitte bestätigen Sie Ihre Aktion.",
+    "createAgentSuccess": "Assistent erfolgreich erstellt",
     "createGroup": "Neue Gruppe erstellen",
     "createSuccess": "Erstellung erfolgreich",
+    "creatingAgent": "Assistent wird erstellt...",
     "inputPlaceholder": "Geben Sie den Gruppennamen ein...",
     "moveGroup": "In Gruppe verschieben",
     "newGroup": "Neue Gruppe",
     "rename": "Gruppe umbenennen",
     "renameSuccess": "Umbenennung erfolgreich",
+    "sortSuccess": "Sortierung erfolgreich aktualisiert",
+    "sorting": "Gruppensortierung wird aktualisiert...",
     "tooLong": "Gruppenname muss zwischen 1 und 20 Zeichen lang sein"
   },
   "shareModal": {
@@ -97,6 +102,8 @@
     "confirmRemoveTopic": "Möchtest du dieses Thema wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "confirmRemoveUnstarred": "Möchtest du die nicht markierten Themen wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "defaultTitle": "Standardthema",
+    "duplicateLoading": "Thema wird kopiert...",
+    "duplicateSuccess": "Thema erfolgreich kopiert",
     "guide": {
       "desc": "Klicken Sie auf die Schaltfläche links, um das aktuelle Gespräch als historisches Thema zu speichern und eine neue Gesprächsrunde zu starten",
       "title": "Themenliste"

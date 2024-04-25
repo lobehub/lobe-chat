@@ -58,7 +58,7 @@
     "MoonshotBizError": "Si è verificato un errore nel servizio Moonshot, si prega di controllare le informazioni seguenti o riprovare",
     "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
     "OllamaBizError": "Errore di servizio Ollama, controllare le informazioni seguenti o riprovare",
-    "OllamaServiceUnavailable": "Servizio Ollama non disponibile: controlla se è avviato correttamente",
+    "OllamaServiceUnavailable": "Servizio Ollama non disponibile: controllare che Ollama sia in esecuzione correttamente o che la configurazione di cross-origin di Ollama sia corretta",
     "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
     "OpenRouterBizError": "Errore di richiesta del servizio OpenRouter AI. Si prega di controllare le informazioni seguenti o riprovare.",
     "PerplexityBizError": "Errore di business nella richiesta del servizio Perplexity AI, controlla le informazioni seguenti o riprova",

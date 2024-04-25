@@ -130,8 +130,32 @@
     },
     "endpoint": {
       "desc": "Saisissez l'adresse du proxy Ollama, laissez vide si non spécifié localement",
-      "placeholder": "http://127.0.0.1:11434/v1",
+      "placeholder": "http://127.0.0.1:11434",
       "title": "Adresse du proxy"
+    },
+    "setup": {
+      "cors": {
+        "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
+        "linux": {
+          "env": "Add `Environment` under [Service] section, and set the OLLAMA_ORIGINS environment variable:",
+          "reboot": "Reload systemd and restart Ollama.",
+          "systemd": "Invoke systemd to edit the ollama service:"
+        },
+        "macos": "Open the Terminal application, paste the following command, and press Enter.",
+        "reboot": "Restart the Ollama service after the execution is complete.",
+        "title": "Configure Ollama for Cross-Origin Access",
+        "windows": "On Windows, go to 'Control Panel' and edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, set the value to '*', and click 'OK/Apply' to save."
+      },
+      "install": {
+        "description": "Veuillez vous assurer que vous avez activé Ollama. Si vous n'avez pas encore téléchargé Ollama, veuillez vous rendre sur le site officiel pour le <1>télécharger</1>.",
+        "docker": "If you prefer using Docker, Ollama also provides an official Docker image. You can pull it using the following command:",
+        "linux": {
+          "command": "Install using the following command:",
+          "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for manual installation."
+        },
+        "title": "Install and Start Ollama Locally",
+        "windowsTab": "Windows (Preview)"
+      }
     },
     "title": "Ollama"
   },

@@ -47,7 +47,6 @@
             {
               "displayName": "LLaVA 7B",
               "enabled": true,
-              "functionCall": false,
               "id": "llava",
               "tokens": 4000,
               "vision": true

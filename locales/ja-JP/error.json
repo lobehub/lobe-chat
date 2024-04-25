@@ -58,7 +58,7 @@
     "MoonshotBizError": "月の裏側サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "NoOpenAIAPIKey": "OpenAI APIキーが空です。カスタムOpenAI APIキーを追加してください。",
     "OllamaBizError": "Ollamaサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再度お試しください",
-    "OllamaServiceUnavailable": "Ollamaサービスが利用できません。正常に起動しているかどうかを確認してください",
+    "OllamaServiceUnavailable": "Ollamaサービスが利用できません。Ollamaが正常に動作しているか、またはOllamaのクロスオリジン設定が正しく行われているかを確認してください",
     "OpenAIBizError": "OpenAIサービスのリクエストエラーが発生しました。以下の情報に基づいて問題を解決したり、再試行したりしてください",
     "OpenRouterBizError": "OpenRouter AI サービスのリクエスト中にエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、もう一度お試しください。",
     "PerplexityBizError": "Perplexity AIサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングするか、再度お試しください",

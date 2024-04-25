@@ -58,7 +58,7 @@
     "MoonshotBizError": "Er is een fout opgetreden bij het aanroepen van de Moonshot-service. Controleer de volgende informatie of probeer het opnieuw.",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
-    "OllamaServiceUnavailable": "De Ollama-service is niet beschikbaar. Controleer of deze correct is gestart.",
+    "OllamaServiceUnavailable": "Ollama-service niet beschikbaar. Controleer of Ollama correct werkt en of de cross-origin configuratie van Ollama juist is ingesteld.",
     "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
     "OpenRouterBizError": "Fout bij het aanvragen van OpenRouter AI-service. Controleer de onderstaande informatie en probeer opnieuw.",
     "PerplexityBizError": "Er is een fout opgetreden bij het aanvragen van de Perplexity AI-service. Controleer de onderstaande informatie en probeer het opnieuw.",

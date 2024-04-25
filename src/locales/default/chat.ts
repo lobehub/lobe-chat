@@ -27,8 +27,9 @@ export default {
     title: '随便聊聊',
   },
   input: {
+    addAi: '添加一条 AI 消息',
+    addUser: '添加一条用户消息',
     more: '更多',
-    onlyAdd: '仅添加消息',
     send: '发送',
     sendWithCmdEnter: '按 {{meta}} + Enter 键发送',
     sendWithEnter: '按 Enter 键发送',
@@ -103,6 +104,8 @@ export default {
     confirmRemoveTopic: '即将删除该话题，删除后将不可恢复，请谨慎操作。',
     confirmRemoveUnstarred: '即将删除未收藏话题，删除后将不可恢复，请谨慎操作。',
     defaultTitle: '默认话题',
+    duplicateLoading: '话题复制中...',
+    duplicateSuccess: '话题复制成功',
     guide: {
       desc: '点击发送左侧按钮可将当前会话保存为历史话题，并开启新一轮会话',
       title: '话题列表',
