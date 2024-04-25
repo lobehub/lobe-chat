@@ -22,6 +22,7 @@
       "confirm": "Xác nhận đặt lại tất cả cài đặt?",
       "currentVersion": "Phiên bản hiện tại",
       "desc": "Đặt lại tất cả cài đặt về giá trị mặc định",
+      "success": "Đã đặt lại tất cả cài đặt",
       "title": "Đặt lại tất cả cài đặt"
     }
   },
