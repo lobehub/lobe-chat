@@ -28,6 +28,8 @@ export interface ISessionService {
     id: string,
     data: Partial<{ group?: SessionGroupId; pinned?: boolean }>,
   ): Promise<any>;
+
+  getSessionConfig(id: string): Promise<LobeAgentConfig>;
   updateSessionConfig(id: string, config: DeepPartial<LobeAgentConfig>): Promise<any>;
 
   removeSession(id: string): Promise<any>;

@@ -10,6 +10,7 @@ import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 import { SessionStore } from '@/store/session';
+import { MetaData } from '@/types/meta';
 import {
   ChatSessionList,
   LobeAgentSession,
@@ -21,10 +22,10 @@ import {
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { agentSelectors } from '../agent/selectors';
 import { initLobeSession } from './initialState';
 import { SessionDispatch, sessionsReducer } from './reducers';
 import { sessionSelectors } from './selectors';
+import { sessionMetaSelectors } from './selectors/meta';
 
 const n = setNamespace('session');
 
@@ -53,6 +54,7 @@ export interface SessionAction {
   ) => Promise<string>;
   duplicateSession: (id: string) => Promise<void>;
   updateSessionGroupId: (sessionId: string, groupId: string) => Promise<void>;
+  updateSessionMeta: (meta: Partial<MetaData>) => void;
 
   /**
    * Pins or unpins a session.
@@ -125,7 +127,7 @@ export const createSessionSlice: StateCreator<
     const session = sessionSelectors.getSessionById(id)(get());
 
     if (!session) return;
-    const title = agentSelectors.getTitle(session.meta);
+    const title = sessionMetaSelectors.getTitle(session.meta);
 
     const newTitle = t('duplicateSession.title', { ns: 'chat', title: title });
 
@@ -157,10 +159,6 @@ export const createSessionSlice: StateCreator<
     await get().internal_updateSession(id, { pinned });
   },
 
-  refreshSessions: async () => {
-    await mutate(FETCH_SESSIONS_KEY);
-  },
-
   removeSession: async (sessionId) => {
     await sessionService.removeSession(sessionId);
     await get().refreshSessions();
@@ -173,6 +171,16 @@ export const createSessionSlice: StateCreator<
 
   updateSessionGroupId: async (sessionId, group) => {
     await get().internal_updateSession(sessionId, { group });
+  },
+
+  updateSessionMeta: async (meta) => {
+    const session = sessionSelectors.currentSession(get());
+    if (!session) return;
+
+    const { activeId, refreshSessions } = get();
+
+    await sessionService.updateSession(activeId, { meta });
+    await refreshSessions();
   },
 
   useFetchSessions: () =>
@@ -238,5 +246,8 @@ export const createSessionSlice: StateCreator<
       false,
       n('processSessions'),
     );
+  },
+  refreshSessions: async () => {
+    await mutate(FETCH_SESSIONS_KEY);
   },
 });

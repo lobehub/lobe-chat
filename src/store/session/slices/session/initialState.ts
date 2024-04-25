@@ -1,5 +1,6 @@
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { LobeAgentConfig } from '@/types/agent';
 import {
   CustomSessionGroup,
   LobeAgentSession,
@@ -22,8 +23,10 @@ export interface SessionState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string;
+  agentConfig: LobeAgentConfig;
   customSessionGroups: CustomSessionGroup[];
   defaultSessions: LobeAgentSession[];
+  isAgentConfigInit: boolean;
   isMobile?: boolean;
   isSearching: boolean;
   isSessionsFirstFetchFinished: boolean;
@@ -39,8 +42,10 @@ export interface SessionState {
 
 export const initialSessionState: SessionState = {
   activeId: 'inbox',
+  agentConfig: DEFAULT_AGENT_CONFIG,
   customSessionGroups: [],
   defaultSessions: [],
+  isAgentConfigInit: false,
   isMobile: false,
   isSearching: false,
   isSessionsFirstFetchFinished: false,

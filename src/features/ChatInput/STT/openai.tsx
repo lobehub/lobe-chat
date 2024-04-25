@@ -7,11 +7,11 @@ import { SWRConfiguration } from 'swr';
 
 import { createHeaderWithOpenAI } from '@/services/_header';
 import { API_ENDPOINTS } from '@/services/_url';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessageError } from '@/types/message';
 import { getMessageError } from '@/utils/fetch';
 
@@ -23,7 +23,7 @@ interface STTConfig extends SWRConfiguration {
 
 const useOpenaiSTT = (config: STTConfig) => {
   const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
-  const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
+  const ttsAgentSettings = useAgentStore(agentSelectors.currentAgentTTS, isEqual);
   const locale = useGlobalStore(settingsSelectors.currentLanguage);
 
   const autoStop = ttsSettings.sttAutoStop;

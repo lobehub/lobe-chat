@@ -40,6 +40,13 @@ export class ClientService implements ISessionService {
     return SessionModel.queryWithGroups();
   }
 
+  async getSessionConfig(id: string): Promise<LobeAgentConfig> {
+    const res = await SessionModel.findById(id);
+    if (!res) throw new Error('Session not found');
+
+    return res.config as LobeAgentConfig;
+  }
+
   async getSessionsByType(type: 'agent' | 'group' | 'all' = 'all'): Promise<LobeSessions> {
     switch (type) {
       // TODO: add a filter to get only agents or agents
