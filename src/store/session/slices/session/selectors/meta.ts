@@ -1,15 +1,11 @@
 import { t } from 'i18next';
 
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { SessionStore } from '@/store/session';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
 import { sessionSelectors } from './list';
-
-// ==========   Config   ============== //
-const currentAgentConfig = (s: SessionStore) => merge(DEFAULT_AGENT_CONFIG, s.agentConfig);
 
 // ==========   Meta   ============== //
 const currentAgentMeta = (s: SessionStore): MetaData => {
@@ -40,7 +36,6 @@ export const getDescription = (s: MetaData) =>
 export const sessionMetaSelectors = {
   currentAgentAvatar,
   currentAgentBackgroundColor,
-  currentAgentConfig,
   currentAgentDescription,
   currentAgentMeta,
   currentAgentTitle,

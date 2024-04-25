@@ -254,6 +254,7 @@ class _SessionModel extends BaseModel {
   private DB_SessionToAgentSession(session: DBModel<DB_Session>) {
     return {
       ...session,
+      model: session.config.model,
       pinned: !!session.pinned,
     } as LobeAgentSession;
   }

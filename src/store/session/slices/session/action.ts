@@ -4,7 +4,7 @@ import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
-import { INBOX_SESSION_ID } from '@/const/session';
+import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
 import { SWRRefreshParams, useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
@@ -22,7 +22,6 @@ import {
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { initLobeSession } from './initialState';
 import { SessionDispatch, sessionsReducer } from './reducers';
 import { sessionSelectors } from './selectors';
 import { sessionMetaSelectors } from './selectors/meta';
@@ -108,7 +107,7 @@ export const createSessionSlice: StateCreator<
 
     // merge the defaultAgent in settings
     const defaultAgent = merge(
-      initLobeSession,
+      DEFAULT_AGENT_LOBE_SESSION,
       settingsSelectors.defaultAgent(useGlobalStore.getState()),
     );
 

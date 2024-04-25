@@ -1,12 +1,9 @@
 import { VoiceList } from '@lobehub/tts';
-import { t } from 'i18next';
 
-import { DEFAULT_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { AgentStore } from '@/store/agent';
 import { LobeAgentTTSConfig } from '@/types/agent';
-import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
 const isInboxSession = (s: AgentStore) => s.activeId === INBOX_SESSION_ID;
@@ -65,13 +62,6 @@ const currentAgentTTSVoice =
     return currentVoice || 'alloy';
   };
 
-// ==========   Meta   ============== //
-
-const getAvatar = (s: MetaData) => s.avatar || DEFAULT_AVATAR;
-const getTitle = (s: MetaData) => s.title || t('defaultSession', { ns: 'common' });
-export const getDescription = (s: MetaData) =>
-  s.description || t('noDescription', { ns: 'common' });
-
 const hasSystemRole = (s: AgentStore) => {
   const config = currentAgentConfig(s);
 
@@ -86,9 +76,6 @@ export const agentSelectors = {
   currentAgentSystemRole,
   currentAgentTTS,
   currentAgentTTSVoice,
-  getAvatar,
-  getDescription,
-  getTitle,
   hasSystemRole,
   isInboxSession,
 };
