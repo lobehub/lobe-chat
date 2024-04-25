@@ -25,8 +25,9 @@
     "title": "気軽におしゃべり"
   },
   "input": {
+    "addAi": "AIメッセージを追加",
+    "addUser": "ユーザーメッセージを追加",
     "more": "もっと",
-    "onlyAdd": "メッセージのみ追加",
     "send": "送信",
     "sendWithCmdEnter": "{{meta}} + Enter キーで送信",
     "sendWithEnter": "Enter キーで送信",
@@ -101,6 +102,8 @@
     "confirmRemoveTopic": "このトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "defaultTitle": "デフォルトトピック",
+    "duplicateLoading": "トピックを複製中...",
+    "duplicateSuccess": "トピックの複製に成功しました",
     "guide": {
       "desc": "左側のボタンをクリックして、現在の会話を保存し、新しい会話を開始できます",
       "title": "トピックリスト"

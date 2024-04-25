@@ -25,8 +25,9 @@
     "title": "隨便聊聊"
   },
   "input": {
+    "addAi": "新增一條 AI 訊息",
+    "addUser": "新增一條使用者訊息",
     "more": "更多",
-    "onlyAdd": "僅新增訊息",
     "send": "發送",
     "sendWithCmdEnter": "按 {{meta}} + Enter 鍵發送",
     "sendWithEnter": "按 Enter 鍵發送",
@@ -101,6 +102,8 @@
     "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",
     "defaultTitle": "默認話題",
+    "duplicateLoading": "話題複製中...",
+    "duplicateSuccess": "話題複製成功",
     "guide": {
       "desc": "點擊發送左側按鈕可將當前對話保存為歷史話題，並開啟新一輪對話",
       "title": "話題列表"

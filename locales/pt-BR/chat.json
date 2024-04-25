@@ -25,8 +25,9 @@
     "title": "Conversa Aleatória"
   },
   "input": {
+    "addAi": "Adicionar uma mensagem de IA",
+    "addUser": "Adicionar uma mensagem de usuário",
     "more": "mais",
-    "onlyAdd": "Apenas adicionar mensagem",
     "send": "Enviar",
     "sendWithCmdEnter": "Pressione {{meta}} + Enter para enviar",
     "sendWithEnter": "Pressione Enter para enviar",
@@ -101,6 +102,8 @@
     "confirmRemoveTopic": "Você está prestes a remover este tópico. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
     "confirmRemoveUnstarred": "Você está prestes a remover os tópicos não favoritados. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
     "defaultTitle": "Tópico Padrão",
+    "duplicateLoading": "Tópico sendo duplicado...",
+    "duplicateSuccess": "Tópico duplicado com sucesso",
     "guide": {
       "desc": "Clique em enviar no botão esquerdo para salvar a conversa atual como um tópico histórico e iniciar uma nova rodada de conversa",
       "title": "Lista de Tópicos"
