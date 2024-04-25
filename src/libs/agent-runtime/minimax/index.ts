@@ -58,7 +58,6 @@ function parseMinimaxResponse(chunk: string): string | undefined {
     return;
   }
   const data = JSON.parse(body) as MinimaxResponse;
-  throwIfErrorResponse(data);
   if (data.choices?.at(0)?.delta?.content) {
     return data.choices.at(0)?.delta.content || undefined;
   }
