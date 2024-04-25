@@ -26,7 +26,7 @@ class _UserModel extends BaseModel {
   getAgentConfig = async () => {
     const user = await this.getUser();
 
-    return user.settings.defaultAgent?.config as LobeAgentConfig;
+    return user.settings?.defaultAgent?.config as LobeAgentConfig;
   };
   // **************** Create *************** //
 
