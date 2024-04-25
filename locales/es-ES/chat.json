@@ -25,8 +25,9 @@
     "title": "Charla casual"
   },
   "input": {
+    "addAi": "Agregar un mensaje de IA",
+    "addUser": "Agregar un mensaje de usuario",
     "more": "más",
-    "onlyAdd": "Añadir solo",
     "send": "Enviar",
     "sendWithCmdEnter": "Enviar con {{meta}} + Enter",
     "sendWithEnter": "Enviar con Enter",
@@ -48,13 +49,17 @@
   "sessionGroup": {
     "config": "Gestión de grupos",
     "confirmRemoveGroupAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción.",
+    "createAgentSuccess": "Asistente creado con éxito",
     "createGroup": "Crear nuevo grupo",
     "createSuccess": "Grupo creado con éxito",
+    "creatingAgent": "Creando asistente...",
     "inputPlaceholder": "Introduce el nombre del grupo...",
     "moveGroup": "Mover al grupo",
     "newGroup": "Nuevo grupo",
     "rename": "Renombrar grupo",
     "renameSuccess": "Grupo renombrado con éxito",
+    "sortSuccess": "Reordenación exitosa",
+    "sorting": "Actualizando orden de grupos...",
     "tooLong": "El nombre del grupo debe tener entre 1 y 20 caracteres"
   },
   "shareModal": {
@@ -97,6 +102,8 @@
     "confirmRemoveTopic": "Estás a punto de eliminar este tema. Una vez eliminado, no se podrá recuperar. Por favor, procede con precaución.",
     "confirmRemoveUnstarred": "Estás a punto de eliminar los temas no marcados como favoritos. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",
     "defaultTitle": "Tema predeterminado",
+    "duplicateLoading": "Duplicando tema...",
+    "duplicateSuccess": "Tema duplicado exitosamente",
     "guide": {
       "desc": "Haz clic en el botón izquierdo para guardar la conversación actual como un tema histórico y comenzar una nueva sesión",
       "title": "Lista de temas"

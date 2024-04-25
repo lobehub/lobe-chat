@@ -379,14 +379,18 @@ describe('topic action', () => {
   describe('updateTopicLoading', () => {
     it('should call update topicLoadingId', async () => {
       const { result } = renderHook(() => useChatStore());
-      expect(result.current.topicLoadingId).toBeUndefined();
-
-      // Call the action with the topicId and newTitle
-      await act(async () => {
-        await result.current.updateTopicLoading('loading-id');
+      act(() => {
+        useChatStore.setState({ topicLoadingIds: [] });
       });
 
-      expect(result.current.topicLoadingId).toEqual('loading-id');
+      expect(result.current.topicLoadingIds).toHaveLength(0);
+
+      // Call the action with the topicId and newTitle
+      act(() => {
+        result.current.internal_updateTopicLoading('loading-id', true);
+      });
+
+      expect(result.current.topicLoadingIds).toEqual(['loading-id']);
     });
   });
   describe('summaryTopicTitle', () => {

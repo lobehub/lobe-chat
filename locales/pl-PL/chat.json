@@ -25,8 +25,9 @@
     "title": "Pogadajmy sobie"
   },
   "input": {
+    "addAi": "Dodaj wiadomość AI",
+    "addUser": "Dodaj wiadomość użytkownika",
     "more": "więcej",
-    "onlyAdd": "Tylko dodaj wiadomość",
     "send": "Wyślij",
     "sendWithCmdEnter": "Wyślij za pomocą klawisza {{meta}} + Enter",
     "sendWithEnter": "Wyślij za pomocą klawisza Enter",
@@ -48,13 +49,17 @@
   "sessionGroup": {
     "config": "Zarządzanie grupami",
     "confirmRemoveGroupAlert": "Czy na pewno chcesz usunąć tę grupę? Po usunięciu asystenci z tej grupy zostaną przeniesieni do domyślnej listy. Potwierdź swoje działanie.",
+    "createAgentSuccess": "Utworzono asystenta pomyślnie",
     "createGroup": "Dodaj nową grupę",
     "createSuccess": "Utworzono pomyślnie",
+    "creatingAgent": "Tworzenie asystenta...",
     "inputPlaceholder": "Wprowadź nazwę grupy...",
     "moveGroup": "Przenieś do grupy",
     "newGroup": "Nowa grupa",
     "rename": "Zmień nazwę grupy",
     "renameSuccess": "Zmiana nazwy pomyślna",
+    "sortSuccess": "Pomyślnie posortowano ponownie",
+    "sorting": "Aktualizacja sortowania grupy...",
     "tooLong": "Nazwa grupy musi mieć od 1 do 20 znaków"
   },
   "shareModal": {
@@ -97,6 +102,8 @@
     "confirmRemoveTopic": "Czy na pewno chcesz usunąć ten temat? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveUnstarred": "Czy na pewno chcesz usunąć nieoznaczone tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "defaultTitle": "Domyślne tematy",
+    "duplicateLoading": "Kopiowanie tematu...",
+    "duplicateSuccess": "Temat został skopiowany pomyślnie",
     "guide": {
       "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako historię tematu i rozpocząć nową rundę rozmowy",
       "title": "Lista tematów"

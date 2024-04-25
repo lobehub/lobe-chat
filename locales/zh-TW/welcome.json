@@ -1,6 +1,7 @@
 {
   "button": {
     "import": "匯入設定檔",
+    "market": "逛逛市場",
     "start": "馬上開始"
   },
   "header": "歡迎",

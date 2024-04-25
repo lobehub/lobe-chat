@@ -58,7 +58,7 @@
     "MoonshotBizError": "Se produjo un error al solicitar el servicio de Moonshot en el lado oscuro de la luna. Por favor, revise la siguiente información o inténtelo de nuevo.",
     "NoOpenAIAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
     "OllamaBizError": "Error al solicitar el servicio de Ollama, por favor verifica la siguiente información o inténtalo de nuevo",
-    "OllamaServiceUnavailable": "Servicio Ollama no disponible: Ollama no detectado. Por favor, verifica si está iniciado correctamente.",
+    "OllamaServiceUnavailable": "El servicio Ollama no está disponible. Por favor, verifica si Ollama está funcionando correctamente o si la configuración de Ollama para el acceso entre dominios está configurada correctamente.",
     "OpenAIBizError": "Error al solicitar el servicio OpenAI. Depure o reintente según la siguiente información",
     "OpenRouterBizError": "Error al solicitar el servicio de IA de OpenRouter. Por favor, revisa la siguiente información o inténtalo de nuevo",
     "PerplexityBizError": "Error comercial al solicitar el servicio de IA de Perplexity. Por favor, revisa la siguiente información o inténtalo de nuevo",

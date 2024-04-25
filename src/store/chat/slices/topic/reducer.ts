@@ -5,14 +5,13 @@ import { ChatTopic } from '@/types/topic';
 
 interface AddChatTopicAction {
   type: 'addTopic';
-  value: CreateTopicParams;
+  value: CreateTopicParams & { id?: string };
 }
 
 interface UpdateChatTopicAction {
   id: string;
-  key: keyof ChatTopic;
   type: 'updateTopic';
-  value: any;
+  value: Partial<ChatTopic>;
 }
 
 interface DeleteChatTopicAction {
@@ -29,24 +28,25 @@ export const topicReducer = (state: ChatTopic[] = [], payload: ChatTopicDispatch
         draftState.unshift({
           ...payload.value,
           createdAt: Date.now(),
-          id: Date.now().toString(),
+          favorite: false,
+          id: payload.value.id ?? Date.now().toString(),
           sessionId: payload.value.sessionId ? payload.value.sessionId : undefined,
           updatedAt: Date.now(),
         });
+
+        return draftState.sort((a, b) => Number(b.favorite) - Number(a.favorite));
       });
     }
 
     case 'updateTopic': {
       return produce(state, (draftState) => {
-        const { key, value, id } = payload;
+        const { value, id } = payload;
         const topicIndex = draftState.findIndex((topic) => topic.id === id);
 
         if (topicIndex !== -1) {
-          const updatedTopic = { ...draftState[topicIndex] };
+          // TODO: updatedAt 类型后续需要修改为 Date
           // @ts-ignore
-          updatedTopic[key] = value;
-          draftState[topicIndex] = updatedTopic;
-          updatedTopic.updatedAt = Date.now();
+          draftState[topicIndex] = { ...draftState[topicIndex], ...value, updatedAt: new Date() };
         }
       });
     }

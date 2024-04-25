@@ -1,6 +1,7 @@
 {
   "button": {
     "import": "Importeer configuratie",
+    "market": "Verken de markt",
     "start": "Nu beginnen"
   },
   "header": "Welkom",

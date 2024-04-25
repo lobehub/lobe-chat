@@ -25,8 +25,9 @@
     "title": "Conversa Aleatória"
   },
   "input": {
+    "addAi": "Adicionar uma mensagem de IA",
+    "addUser": "Adicionar uma mensagem de usuário",
     "more": "mais",
-    "onlyAdd": "Apenas adicionar mensagem",
     "send": "Enviar",
     "sendWithCmdEnter": "Pressione {{meta}} + Enter para enviar",
     "sendWithEnter": "Pressione Enter para enviar",
@@ -48,13 +49,17 @@
   "sessionGroup": {
     "config": "Gerenciar grupos",
     "confirmRemoveGroupAlert": "Você está prestes a excluir este grupo. Após a exclusão, os assistentes deste grupo serão movidos para a lista padrão. Por favor, confirme sua operação.",
+    "createAgentSuccess": "Assistente criado com sucesso",
     "createGroup": "Criar novo grupo",
     "createSuccess": "Criado com sucesso",
+    "creatingAgent": "Criando assistente...",
     "inputPlaceholder": "Digite o nome do grupo...",
     "moveGroup": "Mover para o grupo",
     "newGroup": "Novo grupo",
     "rename": "Renomear grupo",
     "renameSuccess": "Renomeado com sucesso",
+    "sortSuccess": "Reordenação bem-sucedida",
+    "sorting": "Atualizando ordenação do grupo...",
     "tooLong": "O nome do grupo deve ter entre 1 e 20 caracteres"
   },
   "shareModal": {
@@ -97,6 +102,8 @@
     "confirmRemoveTopic": "Você está prestes a remover este tópico. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
     "confirmRemoveUnstarred": "Você está prestes a remover os tópicos não favoritados. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
     "defaultTitle": "Tópico Padrão",
+    "duplicateLoading": "Tópico sendo duplicado...",
+    "duplicateSuccess": "Tópico duplicado com sucesso",
     "guide": {
       "desc": "Clique em enviar no botão esquerdo para salvar a conversa atual como um tópico histórico e iniciar uma nova rodada de conversa",
       "title": "Lista de Tópicos"

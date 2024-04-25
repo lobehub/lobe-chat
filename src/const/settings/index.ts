@@ -104,6 +104,7 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     enabled: false,
     enabledModels: filterEnabledModels(OllamaProviderCard),
     endpoint: '',
+    fetchOnClient: true,
   },
   openai: {
     apiKey: '',
