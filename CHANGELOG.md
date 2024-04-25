@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.149.4](https://github.com/lobehub/lobe-chat/compare/v0.149.3...v0.149.4)
+
+<sup>Released on **2024-04-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix chat client request not support abort.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix chat client request not support abort, closes [#2193](https://github.com/lobehub/lobe-chat/issues/2193) ([d22ef2c](https://github.com/lobehub/lobe-chat/commit/d22ef2c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.149.3](https://github.com/lobehub/lobe-chat/compare/v0.149.2...v0.149.3)
 
 <sup>Released on **2024-04-25**</sup>

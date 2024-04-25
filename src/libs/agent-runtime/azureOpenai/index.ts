@@ -8,7 +8,7 @@ import { OpenAIStream, StreamingTextResponse } from 'ai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatStreamPayload, ModelProvider } from '../types';
+import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 
@@ -26,7 +26,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
   baseURL: string;
 
-  async chat(payload: ChatStreamPayload) {
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     // ============  1. preprocess messages   ============ //
     const { messages, model, ...params } = payload;
 
@@ -36,10 +36,9 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       const response = await this.client.streamChatCompletions(
         model,
         messages as ChatRequestMessage[],
-        params as GetChatCompletionsOptions,
+        { ...params, abortSignal: options?.signal } as GetChatCompletionsOptions,
       );
 
-      // TODO: we need to refactor this part in the future
       const stream = OpenAIStream(response as any);
 
       const [debug, prod] = stream.tee();
