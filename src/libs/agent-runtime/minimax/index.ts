@@ -78,9 +78,6 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
     options?: ChatCompetitionOptions,
   ): Promise<StreamingTextResponse> {
     try {
-      const encoder = new TextEncoder();
-      const decoder = new TextDecoder();
-      let dataResponse: MinimaxResponse | undefined;
       let streamController: ReadableStreamDefaultController | undefined;
       const readableStream = new ReadableStream({
         start(controller) {
@@ -107,30 +104,21 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
         });
       }
 
-      const [prod, debug] = response.body.tee();
+      const [prod, body2] = response.body.tee();
+      const [prod2, debug] = body2.tee();
 
       if (process.env.DEBUG_MINIMAX_CHAT_COMPLETION === '1') {
         debugStream(debug).catch(console.error);
       }
 
-      const reader = prod.getReader();
-      let done = false;
+      this.parseResponse(prod.getReader(), streamController);
 
-      while (!done) {
-        const { value, done: doneReading } = await reader.read();
-        done = doneReading;
-        const chunkValue = decoder.decode(value, { stream: true });
-        const text = parseMinimaxResponse(chunkValue);
-        streamController?.enqueue(encoder.encode(text));
-      }
-
-      streamController?.close();
-      if (dataResponse) {
-        throwIfErrorResponse(dataResponse);
-      }
+      // wait for the first response, and throw error if minix returns an error
+      await this.parseFirstResponse(prod2.getReader());
 
       return new StreamingTextResponse(readableStream, { headers: options?.headers });
     } catch (error) {
+      console.log('error', error);
       const err = error as Error | ChatCompletionErrorPayload;
       if ('provider' in err) {
         throw error;
@@ -158,6 +146,40 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
       temperature: temperature === 0 ? undefined : temperature,
       top_p: top_p === 0 ? undefined : top_p,
     };
+  }
+
+  private async parseResponse(
+    reader: ReadableStreamDefaultReader<Uint8Array>,
+    streamController: ReadableStreamDefaultController | undefined,
+  ) {
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+    let done = false;
+
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value, { stream: true });
+      const text = parseMinimaxResponse(chunkValue);
+      streamController?.enqueue(encoder.encode(text));
+    }
+
+    streamController?.close();
+  }
+
+  private async parseFirstResponse(reader: ReadableStreamDefaultReader<Uint8Array>) {
+    const decoder = new TextDecoder();
+
+    const { value } = await reader.read();
+    const chunkValue = decoder.decode(value, { stream: true });
+    let data;
+    try {
+      data = JSON.parse(chunkValue) as MinimaxResponse;
+    } catch {
+      // parse error, skip it
+      return;
+    }
+    throwIfErrorResponse(data);
   }
 }
 
