@@ -35,7 +35,8 @@ export const useInitConversation = () => {
       (s) => s.activeId,
       (activeId) => {
         switchTopic();
-        useAgentStore.setState({ activeId });
+
+        useAgentStore.setState({ activeId }, false, 'updateActiveId');
       },
     );
 

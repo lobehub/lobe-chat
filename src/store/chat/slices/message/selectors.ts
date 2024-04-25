@@ -98,7 +98,6 @@ const currentChatIDsWithGuideMessage = (s: ChatStore) => {
 const currentChatsWithHistoryConfig = (s: ChatStore): ChatMessage[] => {
   const chats = currentChats(s);
   const config = agentSelectors.currentAgentConfig(useAgentStore.getState());
-  console.log(config);
 
   return chatHelpers.getSlicedMessagesWithConfig(chats, config);
 };

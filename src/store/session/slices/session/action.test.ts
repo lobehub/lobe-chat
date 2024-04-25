@@ -5,8 +5,9 @@ import { message } from '@/components/AntdStaticMethods';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { sessionService } from '@/services/session';
 import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/slices/session/selectors';
 import { LobeSessionType } from '@/types/session';
+
+import { sessionSelectors } from './selectors';
 
 // Mock sessionService 和其他依赖项
 vi.mock('@/services/session', () => ({

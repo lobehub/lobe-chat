@@ -1,4 +1,4 @@
-import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
@@ -20,10 +20,8 @@ const createStore: StateCreator<AgentStore, [['zustand/devtools', never]]> = (..
 //  ===============  implement useStore ============ //
 
 export const useAgentStore = createWithEqualityFn<AgentStore>()(
-  subscribeWithSelector(
-    devtools(createStore, {
-      name: 'LobeChat_Agent' + (isDev ? '_DEV' : ''),
-    }),
-  ),
+  devtools(createStore, {
+    name: 'LobeChat_Agent' + (isDev ? '_DEV' : ''),
+  }),
   shallow,
 );

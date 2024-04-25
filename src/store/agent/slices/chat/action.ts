@@ -1,3 +1,4 @@
+import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
@@ -5,6 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
+import { useSessionStore } from '@/store/session';
 import { LobeAgentConfig } from '@/types/agent';
 import { merge } from '@/utils/merge';
 
@@ -78,6 +80,8 @@ export const createChatSlice: StateCreator<
       ([, id]: string[]) => sessionService.getSessionConfig(id),
       {
         onSuccess: (data) => {
+          if (get().isAgentConfigInit && isEqual(get().agentConfig, data)) return;
+
           set({ agentConfig: data, isAgentConfigInit: true }, false, 'fetchAgentConfig');
         },
       },
@@ -86,12 +90,15 @@ export const createChatSlice: StateCreator<
   /* eslint-disable sort-keys-fix/sort-keys-fix */
 
   internal_updateAgentConfig: async (id, data) => {
+    const prevModel = agentSelectors.currentAgentModel(get());
     // optimistic update at frontend
-    set({ agentConfig: merge(get().agentConfig, data) }, false, 'temp_updateAgentConfig');
+    set({ agentConfig: merge(get().agentConfig, data) }, false, 'optimistic_updateAgentConfig');
 
     await sessionService.updateSessionConfig(id, data);
     await get().internal_refreshAgentConfig(id);
-    // await get().refreshSessions();
+
+    // refresh sessions to update the agent config if the model has changed
+    if (prevModel !== data.model) await useSessionStore.getState().refreshSessions();
   },
 
   internal_refreshAgentConfig: async (id) => {

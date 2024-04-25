@@ -1,11 +1,12 @@
 import { t } from 'i18next';
+import { isEqual } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
 import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
-import { SWRRefreshParams, useClientDataSWR } from '@/libs/swr';
+import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
@@ -62,7 +63,7 @@ export interface SessionAction {
   /**
    * re-fetch the data
    */
-  refreshSessions: (params?: SWRRefreshParams<ChatSessionList>) => Promise<void>;
+  refreshSessions: () => Promise<void>;
   /**
    * remove session
    * @param id - sessionId
@@ -185,13 +186,12 @@ export const createSessionSlice: StateCreator<
   useFetchSessions: () =>
     useClientDataSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getGroupedSessions, {
       onSuccess: (data) => {
-        // 由于 https://github.com/lobehub/lobe-chat/pull/541 的关系
-        // 只有触发了 refreshSessions 才会更新 sessions，进而触发页面 rerender
-        // 因此这里不能补充 equal 判断，否则会导致页面不更新
-        // if (get().isSessionsFirstFetchFinished && isEqual(get().sessions, data)) return;
-
-        // TODO：后续的根本解法应该是解除 inbox 和 session 的数据耦合
-        // 避免互相依赖的情况出现
+        if (
+          get().isSessionsFirstFetchFinished &&
+          isEqual(get().sessions, data.sessions) &&
+          isEqual(get().sessionGroups, data.sessionGroups)
+        )
+          return;
 
         get().internal_processSessions(
           data.sessions,
