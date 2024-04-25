@@ -38,6 +38,7 @@ interface SendMessageParams {
 export interface ChatMessageAction {
   // create
   sendMessage: (params: SendMessageParams) => Promise<void>;
+  addAIMessage: () => Promise<void>;
   /**
    * regenerate message
    * trace enabled
@@ -214,7 +215,21 @@ export const chatMessage: StateCreator<
       if (id) switchTopic(id);
     }
   },
+  addAIMessage: async () => {
+    const { internalCreateMessage, updateInputMessage, activeTopicId, activeId, inputMessage } =
+      get();
+    if (!activeId) return;
 
+    await internalCreateMessage({
+      content: inputMessage,
+      role: 'assistant',
+      sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    });
+
+    updateInputMessage('');
+  },
   copyMessage: async (id, content) => {
     await copyToClipboard(content);
 

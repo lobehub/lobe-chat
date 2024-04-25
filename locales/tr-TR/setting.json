@@ -22,6 +22,7 @@
       "confirm": "Tüm ayarları sıfırlamayı onaylıyor musunuz?",
       "currentVersion": "Geçerli Sürüm",
       "desc": "Tüm ayarları varsayılan değerlere sıfırlar",
+      "success": "Tüm ayarlar sıfırlandı",
       "title": "Tüm Ayarları Sıfırla"
     }
   },

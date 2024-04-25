@@ -25,8 +25,9 @@
     "title": "Sohbet Et"
   },
   "input": {
+    "addAi": "Bir AI mesajı ekleyin",
+    "addUser": "Bir kullanıcı mesajı ekleyin",
     "more": "Daha fazla",
-    "onlyAdd": "Sadece mesaj ekle",
     "send": "Gönder",
     "sendWithCmdEnter": "{{meta}} + Enter tuşuna basarak gönder",
     "sendWithEnter": "Enter tuşuna basarak gönder",
@@ -48,13 +49,17 @@
   "sessionGroup": {
     "config": "Grup Yönetimi",
     "confirmRemoveGroupAlert": "Bu grup silinecek, silindikten sonra bu grubun yardımcıları varsayılan listeye taşınacak, işleminizi onaylıyor musunuz?",
+    "createAgentSuccess": "Yardımcı başarıyla oluşturuldu",
     "createGroup": "Yeni Grup Ekle",
     "createSuccess": "Oluşturma Başarılı",
+    "creatingAgent": "Yardımcı oluşturuluyor...",
     "inputPlaceholder": "Grup adını girin...",
     "moveGroup": "Gruba Taşı",
     "newGroup": "Yeni Grup",
     "rename": "Grup Adını Değiştir",
     "renameSuccess": "Yeniden Adlandırma Başarılı",
+    "sortSuccess": "Yeniden sıralama başarılı",
+    "sorting": "Grup sıralaması güncelleniyor...",
     "tooLong": "Grup adı 1-20 karakter arasında olmalıdır"
   },
   "shareModal": {
@@ -97,6 +102,8 @@
     "confirmRemoveTopic": "Bu konuyu silmek üzeresiniz. Bir kere silindiğinde, geri alınamaz. Lütfen dikkatli bir şekilde devam edin.",
     "confirmRemoveUnstarred": "Yıldızlanmamış konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
     "defaultTitle": "Konu",
+    "duplicateLoading": "Konu kopyalanıyor...",
+    "duplicateSuccess": "Konu başarıyla kopyalandı",
     "guide": {
       "desc": "Mevcut oturumu geçmiş konu olarak kaydetmek ve yeni bir oturum başlatmak için sol taraftaki düğmeye tıklayın",
       "title": "Konu Listesi"

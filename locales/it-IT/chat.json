@@ -25,8 +25,9 @@
     "title": "Chiacchierata casuale"
   },
   "input": {
+    "addAi": "Aggiungi un messaggio AI",
+    "addUser": "Aggiungi un messaggio utente",
     "more": "Ulteriori",
-    "onlyAdd": "Solo aggiungi messaggio",
     "send": "Invia",
     "sendWithCmdEnter": "Invia premendo {{meta}} + Invio",
     "sendWithEnter": "Invia premendo Invio",
@@ -48,13 +49,17 @@
   "sessionGroup": {
     "config": "Gestione gruppi",
     "confirmRemoveGroupAlert": "Stai per rimuovere questo gruppo. Dopo la rimozione, gli assistenti di questo gruppo verranno spostati nella lista predefinita. Confermi l'operazione?",
+    "createAgentSuccess": "Assistente creato con successo",
     "createGroup": "Aggiungi nuovo gruppo",
     "createSuccess": "Creazione riuscita",
+    "creatingAgent": "Creazione dell'assistente in corso...",
     "inputPlaceholder": "Inserisci il nome del gruppo...",
     "moveGroup": "Sposta nel gruppo",
     "newGroup": "Nuovo gruppo",
     "rename": "Rinomina gruppo",
     "renameSuccess": "Rinominazione riuscita",
+    "sortSuccess": "Riordinamento riuscito",
+    "sorting": "Aggiornamento dell'ordinamento del gruppo in corso...",
     "tooLong": "Il nome del gruppo deve essere lungo 1-20 caratteri"
   },
   "shareModal": {
@@ -97,6 +102,8 @@
     "confirmRemoveTopic": "Stai per rimuovere questo argomento, l'operazione non potrà essere annullata. Procedere con cautela.",
     "confirmRemoveUnstarred": "Stai per rimuovere gli argomenti non contrassegnati, questa operazione non potrà essere annullata. Procedere con cautela.",
     "defaultTitle": "Argomento predefinito",
+    "duplicateLoading": "Duplicazione dell'argomento in corso...",
+    "duplicateSuccess": "Argomento duplicato con successo",
     "guide": {
       "desc": "Fare clic sul pulsante a sinistra per salvare l'attuale sessione come argomento storico e avviare una nuova sessione",
       "title": "Elenco argomenti"

@@ -5,7 +5,7 @@ import { CreateTopicParams, ITopicService, QueryTopicParams } from './type';
 
 export class ClientService implements ITopicService {
   async createTopic(params: CreateTopicParams): Promise<string> {
-    const item = await TopicModel.create(params);
+    const item = await TopicModel.create(params as any);
 
     if (!item) {
       throw new Error('topic create Error');

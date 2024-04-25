@@ -8,8 +8,8 @@ import { sessionService } from '@/services/session';
 
 const checkHasConversation = async () => {
   const hasMessages = await messageService.hasMessages();
-  const hasAgents = await sessionService.countSessions();
-  return hasMessages || hasAgents === 0;
+  const hasAgents = await sessionService.hasSessions();
+  return hasMessages || hasAgents;
 };
 
 const Redirect = memo(() => {

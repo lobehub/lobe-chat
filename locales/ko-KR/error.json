@@ -58,7 +58,7 @@
     "MoonshotBizError": "요청한 문샷 비즈니스에 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "NoOpenAIAPIKey": "OpenAI API 키가 비어 있습니다. 사용자 정의 OpenAI API 키를 추가해주세요.",
     "OllamaBizError": "Ollama 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
-    "OllamaServiceUnavailable": "Ollama 서비스를 찾을 수 없습니다. 정상적으로 시작되었는지 확인하십시오.",
+    "OllamaServiceUnavailable": "Ollama 서비스를 사용할 수 없습니다. Ollama가 올바르게 작동하는지 또는 Ollama의 교차 도메인 구성이 올바르게 설정되었는지 확인하십시오.",
     "OpenAIBizError": "OpenAI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 문제를 해결하거나 다시 시도해주세요.",
     "OpenRouterBizError": "OpenRouter AI 서비스 요청 중 오류가 발생했습니다. 다음 정보를 확인하고 다시 시도하십시오.",
     "PerplexityBizError": "Perplexity AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
