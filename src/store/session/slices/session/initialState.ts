@@ -1,8 +1,11 @@
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { CustomSessionGroup, LobeAgentSession, LobeSessionType } from '@/types/session';
+import {
+  CustomSessionGroup,
+  LobeAgentSession,
+  LobeSessionGroups,
+  LobeSessionType,
+} from '@/types/session';
 
 export const initLobeSession: LobeAgentSession = {
   config: DEFAULT_AGENT_CONFIG,
@@ -25,13 +28,9 @@ export interface SessionState {
   isSearching: boolean;
   isSessionsFirstFetchFinished: boolean;
   pinnedSessions: LobeAgentSession[];
-  /**
-   * 后续看看是否可以将 router 部分的逻辑移出去
-   * @deprecated
-   */
-  router?: AppRouterInstance;
   searchKeywords: string;
-  searchSessions: LobeAgentSession[];
+  sessionGroups: LobeSessionGroups;
+  sessionSearchKeywords?: string;
   /**
    * it means defaultSessions
    */
@@ -47,6 +46,6 @@ export const initialSessionState: SessionState = {
   isSessionsFirstFetchFinished: false,
   pinnedSessions: [],
   searchKeywords: '',
-  searchSessions: [],
+  sessionGroups: [],
   sessions: [],
 };

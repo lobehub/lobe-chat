@@ -50,13 +50,15 @@
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",
     "InvalidOpenRouterAPIKey": "OpenRouter API 金鑰不正確或為空，請檢查 OpenRouter API 金鑰後重試",
     "InvalidPerplexityAPIKey": "Perplexity API Key 不正確或為空，請檢查 Perplexity API Key 後重試",
+    "InvalidTogetherAIAPIKey": "TogetherAI API 金鑰不正確或為空，請檢查 TogetherAI API 金鑰後重試",
+    "InvalidZeroOneAPIKey": "零一萬物 API Key 不正確或為空，請檢查零一萬物 API Key 後重試",
     "InvalidZhipuAPIKey": "Zhipu API Key 不正確或為空，請檢查 Zhipu API Key 後重試",
     "LocationNotSupportError": "很抱歉，你的所在位置不支持此模型服務，可能是由於地區限制或服務未開通。請確認當前位置是否支持使用此服務，或嘗試使用其他位置信息。",
     "MistralBizError": "請求 Mistral AI 服務出錯，請根據以下信息排查或重試",
     "MoonshotBizError": "請求月球背面服務出錯，請根據以下信息排查或重試",
     "NoOpenAIAPIKey": "OpenAI API 金鑰為空，請添加自訂 OpenAI API 金鑰",
     "OllamaBizError": "請求 Ollama 服務出錯，請根據以下資訊排查或重試",
-    "OllamaServiceUnavailable": "未偵測到 Ollama 服務，請檢查是否正常啟動",
+    "OllamaServiceUnavailable": "Ollama 服務暫時無法使用，請檢查 Ollama 是否運作正常，或是否正確設定 Ollama 的跨域配置",
     "OpenAIBizError": "請求 OpenAI 服務出錯。請根據以下資訊進行排查或重試。",
     "OpenRouterBizError": "請求 OpenRouter AI 服務出錯，請根據以下信息排查或重試",
     "PerplexityBizError": "請求 Perplexity AI 服務出錯，請根據以下信息排查或重試",
@@ -72,6 +74,8 @@
     "PluginOpenApiInitError": "很抱歉，OpenAPI 客戶端初始化失敗，請檢查 OpenAPI 的配置信息是否正確",
     "PluginServerError": "外掛伺服器請求回傳錯誤。請根據下面的錯誤資訊檢查您的外掛描述檔案、外掛設定或伺服器實作",
     "PluginSettingsInvalid": "該外掛需要正確設定後才可以使用。請檢查您的設定是否正確",
+    "TogetherAIBizError": "請求 TogetherAI AI 服務出錯，請根據以下信息排查或重試",
+    "ZeroOneBizError": "請求零一萬物服務出錯，請根據以下信息排查或重試",
     "ZhipuBizError": "請求智譜服務出錯，請根據以下信息排查或重試"
   },
   "stt": {
@@ -81,64 +85,22 @@
     "responseError": "服務請求失敗，請檢查配置或重試"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "輸入你的 Anthropic API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-        "title": "使用自定義 Anthropic API 金鑰"
-      },
-      "Bedrock": {
-        "customRegion": "自定義服務區域",
-        "description": "輸入你的 Aws AccessKeyId / SecretAccessKey 即可開始會話。應用不會記錄你的驗證配置",
-        "title": "使用自定義 Bedrock 驗證信息"
-      },
-      "Google": {
-        "description": "輸入你的 Google API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 Google API Key"
-      },
-      "Groq": {
-        "description": "輸入你的 Groq API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-        "title": "使用自定義 Groq API 金鑰"
-      },
-      "Mistral": {
-        "description": "輸入你的 Mistral AI API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 Mistral AI API Key"
-      },
-      "Moonshot": {
-        "description": "輸入你的 Moonshot AI API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-        "title": "使用自定義 Moonshot AI API 金鑰"
-      },
-      "OpenAI": {
-        "addProxyUrl": "添加 OpenAI 代理地址（可選）",
-        "description": "輸入你的 OpenAI API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 OpenAI API Key"
-      },
-      "OpenRouter": {
-        "description": "輸入你的 OpenRouter API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-        "title": "使用自定義 OpenRouter API 金鑰"
-      },
-      "Perplexity": {
-        "description": "輸入你的 Perplexity API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 Perplexity API Key"
-      },
-      "Zhipu": {
-        "description": "輸入你的 Zhipu API Key 即可開始會話。應用不會記錄你的 API Key",
-        "title": "使用自定義 Zhipu API Key"
-      }
-    },
+    "addProxyUrl": "新增 OpenAI 代理網址（選填）",
     "closeMessage": "關閉提示",
     "confirm": "確認並重試",
-    "model": {
-      "Ollama": {
-        "confirm": "下載",
-        "description": "輸入你的 Ollama 模型標籤，完成即可繼續會話",
-        "title": "下載指定的 Ollama 模型"
-      }
-    },
     "oauth": {
       "description": "管理員已開啟統一登錄認證，點擊下方按鈕登錄，即可解鎖應用",
       "success": "登錄成功",
       "title": "登錄帳號",
       "welcome": "歡迎你！"
+    },
+    "ollama": {
+      "cancel": "取消下載",
+      "confirm": "下載",
+      "description": "輸入您的 Ollama 模型標籤，完成後即可繼續會話",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "開始下載...",
+      "title": "下載指定的 Ollama 模型"
     },
     "password": {
       "description": "管理員已啟用應用程式加密，輸入應用程式密碼後即可解鎖應用程式。密碼只需填寫一次。",

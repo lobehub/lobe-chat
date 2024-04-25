@@ -2,14 +2,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
-import { LobeRuntimeAI } from '@/libs/agent-runtime';
+import { AgentRuntime, LobeRuntimeAI } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
-import { getJWTPayload } from '../auth';
-import AgentRuntime from './agentRuntime';
+import { getJWTPayload } from '../auth/utils';
 import { POST } from './route';
 
-vi.mock('../auth', () => ({
+vi.mock('../auth/utils', () => ({
   getJWTPayload: vi.fn(),
   checkAuthMethod: vi.fn(),
 }));
@@ -37,18 +36,18 @@ describe('POST handler', () => {
     it('should initialize AgentRuntime correctly with valid authorization', async () => {
       const mockParams = { provider: 'test-provider' };
 
-      // 设置 getJWTPayload 和 initializeWithUserPayload 的模拟返回值
+      // 设置 getJWTPayload 和 initAgentRuntimeWithUserPayload 的模拟返回值
       vi.mocked(getJWTPayload).mockResolvedValue({
         accessCode: 'test-access-code',
         apiKey: 'test-api-key',
         azureApiVersion: 'v1',
-        useAzure: true,
       });
 
       const mockRuntime: LobeRuntimeAI = { baseURL: 'abc', chat: vi.fn() };
 
+      // migrate to new AgentRuntime init api
       const spy = vi
-        .spyOn(AgentRuntime, 'initializeWithUserPayload')
+        .spyOn(AgentRuntime, 'initializeWithProviderOptions')
         .mockResolvedValue(new AgentRuntime(mockRuntime));
 
       // 调用 POST 函数
@@ -56,11 +55,7 @@ describe('POST handler', () => {
 
       // 验证是否正确调用了模拟函数
       expect(getJWTPayload).toHaveBeenCalledWith('Bearer some-valid-token');
-      expect(spy).toHaveBeenCalledWith('test-provider', expect.anything(), {
-        apiVersion: 'v1',
-        model: 'test-model',
-        useAzure: true,
-      });
+      expect(spy).toHaveBeenCalledWith('test-provider', expect.anything());
     });
 
     it('should return Unauthorized error when LOBE_CHAT_AUTH_HEADER is missing', async () => {
@@ -115,9 +110,7 @@ describe('POST handler', () => {
       const response = await POST(request as unknown as Request, { params: mockParams });
 
       expect(response).toEqual(mockChatResponse);
-      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, {
-        provider: 'test-provider',
-      });
+      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload);
     });
 
     it('should return an error response when chat completion fails', async () => {

@@ -50,13 +50,15 @@
     "InvalidOllamaArgs": "Configuração Ollama inválida, verifique a configuração do Ollama e tente novamente",
     "InvalidOpenRouterAPIKey": "Chave da API do OpenRouter inválida ou em branco. Por favor, verifique a chave da API do OpenRouter e tente novamente.",
     "InvalidPerplexityAPIKey": "Chave da API Perplexity inválida ou em branco, verifique a chave da API Perplexity e tente novamente",
+    "InvalidTogetherAIAPIKey": "Chave da API do TogetherAI inválida ou em branco. Por favor, verifique a chave da API do TogetherAI e tente novamente.",
+    "InvalidZeroOneAPIKey": "Chave de API ZeroOne inválida ou vazia, verifique a chave de API ZeroOne e tente novamente",
     "InvalidZhipuAPIKey": "Chave de API Zhipu incorreta ou vazia, por favor, verifique a chave de API Zhipu e tente novamente",
     "LocationNotSupportError": "Desculpe, sua localização atual não suporta este serviço de modelo, pode ser devido a restrições geográficas ou serviço não disponível. Por favor, verifique se a localização atual suporta o uso deste serviço ou tente usar outras informações de localização.",
     "MistralBizError": "Ocorreu um erro ao solicitar o serviço Mistral AI. Por favor, verifique as informações abaixo ou tente novamente.",
     "MoonshotBizError": "O serviço Moonshot na face oculta da lua encontrou um erro. Por favor, verifique as informações abaixo ou tente novamente.",
     "NoOpenAIAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
     "OllamaBizError": "Erro de negócio ao solicitar o serviço Ollama, verifique as informações a seguir ou tente novamente",
-    "OllamaServiceUnavailable": "O serviço Ollama não está disponível, verifique se está iniciado corretamente",
+    "OllamaServiceUnavailable": "O serviço Ollama não está disponível. Verifique se o Ollama está em execução corretamente ou se a configuração de CORS do Ollama está correta",
     "OpenAIBizError": "Erro ao solicitar o serviço OpenAI. Verifique ou tente novamente com base nas informações abaixo",
     "OpenRouterBizError": "Erro de negócios ao solicitar o serviço de IA do OpenRouter. Por favor, verifique as informações abaixo ou tente novamente.",
     "PerplexityBizError": "Erro de negócios ao solicitar o serviço de IA Perplexity, verifique as informações a seguir ou tente novamente",
@@ -72,6 +74,8 @@
     "PluginOpenApiInitError": "Desculpe, a inicialização do cliente OpenAPI falhou. Verifique se as informações de configuração do OpenAPI estão corretas",
     "PluginServerError": "Erro na resposta do servidor do plugin. Verifique o arquivo de descrição do plugin, a configuração do plugin ou a implementação do servidor de acordo com as informações de erro abaixo",
     "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta",
+    "TogetherAIBizError": "Erro de negócios ao solicitar o serviço de IA do TogetherAI. Por favor, verifique as informações abaixo ou tente novamente.",
+    "ZeroOneBizError": "Erro no serviço ZeroOneBiz, verifique as informações abaixo e tente novamente",
     "ZhipuBizError": "Erro ao solicitar o serviço Zhipu, por favor, verifique as informações abaixo ou tente novamente"
   },
   "stt": {
@@ -81,64 +85,22 @@
     "responseError": "Falha na solicitação de serviço. Verifique a configuração ou tente novamente"
   },
   "unlock": {
-    "apikey": {
-      "Anthropic": {
-        "description": "Insira sua chave da API Anthropic para iniciar a sessão. O aplicativo não irá armazenar sua chave da API.",
-        "title": "Usar chave da API Anthropic personalizada"
-      },
-      "Bedrock": {
-        "customRegion": "Região de serviço personalizada",
-        "description": "Digite seu Aws AccessKeyId / SecretAccessKey para iniciar a sessão. O aplicativo não irá armazenar suas configurações de autenticação",
-        "title": "Usar informações de autenticação personalizadas do Bedrock"
-      },
-      "Google": {
-        "description": "Digite sua chave de API Google para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
-        "title": "Usar chave de API Google personalizada"
-      },
-      "Groq": {
-        "description": "Insira sua chave de API Groq para iniciar a sessão. O aplicativo não irá armazenar sua chave de API.",
-        "title": "Usar chave de API Groq personalizada"
-      },
-      "Mistral": {
-        "description": "Insira sua chave de API Mistral AI para iniciar a sessão. O aplicativo não irá armazenar sua chave de API.",
-        "title": "Usar chave de API Mistral AI personalizada"
-      },
-      "Moonshot": {
-        "description": "Insira a sua chave de API Moonshot AI para iniciar a sessão. O aplicativo não irá armazenar a sua chave de API.",
-        "title": "Usar chave de API personalizada Moonshot AI"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Adicionar endereço do proxy OpenAI (opcional)",
-        "description": "Digite sua chave de API OpenAI para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
-        "title": "Usar chave de API OpenAI personalizada"
-      },
-      "OpenRouter": {
-        "description": "Insira sua chave da API do OpenRouter para iniciar a sessão. O aplicativo não irá armazenar sua chave da API.",
-        "title": "Usar chave da API do OpenRouter personalizada"
-      },
-      "Perplexity": {
-        "description": "Insira sua chave da API Perplexity para iniciar a sessão. O aplicativo não irá armazenar sua chave da API",
-        "title": "Usar chave da API Perplexity personalizada"
-      },
-      "Zhipu": {
-        "description": "Digite sua chave de API Zhipu para iniciar a sessão. O aplicativo não irá armazenar sua chave de API",
-        "title": "Usar chave de API Zhipu personalizada"
-      }
-    },
+    "addProxyUrl": "Adicionar URL de proxy OpenAI (opcional)",
     "closeMessage": "Fechar mensagem",
     "confirm": "Confirmar e tentar novamente",
-    "model": {
-      "Ollama": {
-        "confirm": "Baixar",
-        "description": "Digite as tags do seu modelo Ollama para continuar a sessão",
-        "title": "Baixar o modelo Ollama especificado"
-      }
-    },
     "oauth": {
       "description": "O administrador ativou a autenticação de login unificado. Clique no botão abaixo para fazer login e desbloquear o aplicativo.",
       "success": "Login bem-sucedido",
       "title": "Faça login na sua conta",
       "welcome": "Bem-vindo!"
+    },
+    "ollama": {
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "description": "Digite suas tags de modelo Ollama para continuar a sessão",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Iniciando download...",
+      "title": "Baixar modelo Ollama específico"
     },
     "password": {
       "description": "O administrador ativou a criptografia do aplicativo. Insira a senha do aplicativo para desbloqueá-lo. A senha só precisa ser inserida uma vez.",

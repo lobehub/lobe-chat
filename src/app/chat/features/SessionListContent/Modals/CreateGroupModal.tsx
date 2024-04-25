@@ -22,21 +22,29 @@ const CreateGroupModal = memo<CreateGroupModalProps>(
       s.addSessionGroup,
     ]);
     const [input, setInput] = useState('');
+    const [loading, setLoading] = useState(false);
 
     return (
       <div onClick={(e) => e.stopPropagation()}>
         <Modal
           allowFullscreen
-          onCancel={onCancel}
+          destroyOnClose
+          okButtonProps={{ loading }}
+          onCancel={(e) => {
+            setInput('');
+            onCancel?.(e);
+          }}
           onOk={async (e: MouseEvent<HTMLButtonElement>) => {
             if (!input) return;
 
             if (input.length === 0 || input.length > 20)
               return message.warning(t('sessionGroup.tooLong'));
 
+            setLoading(true);
             const groupId = await addCustomGroup(input);
             await updateSessionGroup(id, groupId);
             toggleExpandSessionGroup(groupId, true);
+            setLoading(false);
 
             message.success(t('sessionGroup.createSuccess'));
             onCancel?.(e);

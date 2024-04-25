@@ -8,6 +8,15 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+vi.mock('@/components/AntdStaticMethods', () => ({
+  message: {
+    loading: vi.fn(),
+    success: vi.fn(),
+    error: vi.fn(),
+    destroy: vi.fn(),
+  },
+}));
+
 describe('createSessionGroupSlice', () => {
   describe('addSessionGroup', () => {
     it('should add a session group and refresh sessions', async () => {
@@ -31,7 +40,7 @@ describe('createSessionGroupSlice', () => {
 
   describe('clearSessionGroups', () => {
     it('should clear session groups and refresh sessions', async () => {
-      vi.spyOn(sessionService, 'clearSessionGroups');
+      vi.spyOn(sessionService, 'removeSessionGroups');
       const spyOnRefreshSessions = vi.spyOn(useSessionStore.getState(), 'refreshSessions');
 
       const { result } = renderHook(() => useSessionStore());
@@ -40,7 +49,7 @@ describe('createSessionGroupSlice', () => {
         await result.current.clearSessionGroups();
       });
 
-      expect(sessionService.clearSessionGroups).toHaveBeenCalled();
+      expect(sessionService.removeSessionGroups).toHaveBeenCalled();
       expect(spyOnRefreshSessions).toHaveBeenCalled();
     });
   });
@@ -66,7 +75,7 @@ describe('createSessionGroupSlice', () => {
     it('should update a session group id and refresh sessions', async () => {
       const mockSessionId = 'session-id';
       const mockGroupId = 'group-id';
-      vi.spyOn(sessionService, 'updateSessionGroupId');
+      vi.spyOn(sessionService, 'updateSession');
       const spyOnRefreshSessions = vi.spyOn(useSessionStore.getState(), 'refreshSessions');
 
       const { result } = renderHook(() => useSessionStore());
@@ -75,7 +84,9 @@ describe('createSessionGroupSlice', () => {
         await result.current.updateSessionGroupId(mockSessionId, mockGroupId);
       });
 
-      expect(sessionService.updateSessionGroupId).toHaveBeenCalledWith(mockSessionId, mockGroupId);
+      expect(sessionService.updateSession).toHaveBeenCalledWith(mockSessionId, {
+        group: mockGroupId,
+      });
       expect(spyOnRefreshSessions).toHaveBeenCalled();
     });
   });

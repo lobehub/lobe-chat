@@ -1,7 +1,7 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { useTheme } from 'antd-style';
-import { LucideImage, LucideLoader2 } from 'lucide-react';
+import { LucideImage, FileUp, LucideLoader2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
@@ -20,8 +20,8 @@ const FileUpload = memo(() => {
 
   const model = useSessionStore(agentSelectors.currentAgentModel);
   const [canUpload, enabledFiles] = useGlobalStore((s) => [
-    modelProviderSelectors.modelEnabledUpload(model)(s),
-    modelProviderSelectors.modelEnabledFiles(model)(s),
+    modelProviderSelectors.isModelEnabledUpload(model)(s),
+    modelProviderSelectors.isModelEnabledFiles(model)(s),
   ]);
 
   return (
@@ -51,9 +51,9 @@ const FileUpload = memo(() => {
       ) : (
         <ActionIcon
           disable={!canUpload}
-          icon={LucideImage}
+          icon={enabledFiles ? FileUp : LucideImage}
           placement={'bottom'}
-          title={t(canUpload ? 'upload.actionTooltip' : 'upload.disabled')}
+          title={t(canUpload ? (enabledFiles ? 'upload.actionFiletip' : 'upload.actionTooltip') : 'upload.disabled')}
         />
       )}
     </Upload>

@@ -26,9 +26,9 @@ const SessionListContent = memo(() => {
   const [useFetchSessions] = useSessionStore((s) => [s.useFetchSessions]);
   useFetchSessions();
 
-  const pinnedSessions = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
   const defaultSessions = useSessionStore(sessionSelectors.defaultSessions, isEqual);
   const customSessionGroups = useSessionStore(sessionSelectors.customSessionGroups, isEqual);
+  const pinnedSessions = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
 
   const [sessionGroupKeys, updatePreference] = useGlobalStore((s) => [
     preferenceSelectors.sessionGroupKeys(s),
@@ -38,13 +38,14 @@ const SessionListContent = memo(() => {
   const items = useMemo(
     () =>
       [
-        pinnedSessions.length > 0 && {
-          children: <SessionList dataSource={pinnedSessions} />,
-          extra: <Actions isPinned openConfigModal={() => setConfigGroupModalOpen(true)} />,
-          key: SessionDefaultGroup.Pinned,
-          label: t('pin'),
-        },
-        ...customSessionGroups.map(({ id, name, children }) => ({
+        pinnedSessions &&
+          pinnedSessions.length > 0 && {
+            children: <SessionList dataSource={pinnedSessions} />,
+            extra: <Actions isPinned openConfigModal={() => setConfigGroupModalOpen(true)} />,
+            key: SessionDefaultGroup.Pinned,
+            label: t('pin'),
+          },
+        ...(customSessionGroups || []).map(({ id, name, children }) => ({
           children: <SessionList dataSource={children} groupId={id} />,
           extra: (
             <Actions
@@ -61,7 +62,7 @@ const SessionListContent = memo(() => {
           label: name,
         })),
         {
-          children: <SessionList dataSource={defaultSessions} />,
+          children: <SessionList dataSource={defaultSessions || []} />,
           extra: <Actions openConfigModal={() => setConfigGroupModalOpen(true)} />,
           key: SessionDefaultGroup.Default,
           label: t('defaultList'),
