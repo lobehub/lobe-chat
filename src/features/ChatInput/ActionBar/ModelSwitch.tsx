@@ -15,4 +15,6 @@ const ModelSwitch = memo(() => {
   );
 });
 
+ModelSwitch.displayName = 'ModelSwitch';
+
 export default ModelSwitch;

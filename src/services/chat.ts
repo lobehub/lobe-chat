@@ -15,7 +15,7 @@ import {
   preferenceSelectors,
 } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { ChatErrorType } from '@/types/fetch';
@@ -267,7 +267,7 @@ class ChatService {
      */
     if (enableFetchOnClient) {
       try {
-        return this.fetchOnClient({ payload, provider, signal });
+        return await this.fetchOnClient({ payload, provider, signal });
       } catch (e) {
         const {
           errorType = ChatErrorType.BadRequest,
@@ -447,7 +447,7 @@ class ChatService {
   };
 
   private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
-    const tags = agentSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
+    const tags = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
 
     const enabled = preferenceSelectors.userAllowTrace(useGlobalStore.getState());
 

@@ -6,11 +6,11 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
 
 const useStyles = createStyles(({ css, token, stylish }) => {
   return {
@@ -60,8 +60,6 @@ const useStyles = createStyles(({ css, token, stylish }) => {
   };
 });
 
-
-
 const handleDragOver = (e: DragEvent) => {
   e.preventDefault();
 };
@@ -77,7 +75,7 @@ const DragUpload = memo(() => {
 
   const uploadFile = useFileStore((s) => s.uploadFile);
 
-  const model = useSessionStore(agentSelectors.currentAgentModel);
+  const model = useAgentStore(agentSelectors.currentAgentModel);
 
   const enabledFiles = useGlobalStore(modelProviderSelectors.isModelEnabledFiles(model));
 
@@ -136,7 +134,6 @@ const DragUpload = memo(() => {
     uploadImages(files);
   };
 
-
   useEffect(() => {
     window.addEventListener('dragenter', handleDragEnter);
     window.addEventListener('dragover', handleDragOver);
@@ -164,8 +161,12 @@ const DragUpload = memo(() => {
               <Icon icon={FileText} size={{ fontSize: 64, strokeWidth: 1 }} />
             </Flexbox>
             <Flexbox align={'center'} gap={8} style={{ textAlign: 'center' }}>
-              <Flexbox className={styles.title}>{t(enabledFiles ? 'upload.dragFileTitle' : 'upload.dragTitle')}</Flexbox>
-              <Flexbox className={styles.desc}>{t(enabledFiles ? 'upload.dragFileDesc' : 'upload.dragDesc')}</Flexbox>
+              <Flexbox className={styles.title}>
+                {t(enabledFiles ? 'upload.dragFileTitle' : 'upload.dragTitle')}
+              </Flexbox>
+              <Flexbox className={styles.desc}>
+                {t(enabledFiles ? 'upload.dragFileDesc' : 'upload.dragDesc')}
+              </Flexbox>
             </Flexbox>
           </Center>
         </div>
@@ -175,4 +176,3 @@ const DragUpload = memo(() => {
 });
 
 export default DragUpload;
-

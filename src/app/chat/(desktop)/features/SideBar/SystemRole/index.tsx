@@ -8,9 +8,11 @@ import { Flexbox } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
 import AgentInfo from '@/features/AgentInfo';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 import { pathString } from '@/utils/url';
 
 import SidebarHeader from '../../../../components/SidebarHeader';
@@ -21,10 +23,13 @@ const SystemRole = memo(() => {
   const [editing, setEditing] = useState(false);
   const { styles } = useStyles();
 
-  const [init, systemRole, meta, updateAgentConfig] = useSessionStore((s) => [
+  const [init, meta] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
+    sessionMetaSelectors.currentAgentMeta(s),
+  ]);
+
+  const [systemRole, updateAgentConfig] = useAgentStore((s) => [
     agentSelectors.currentAgentSystemRole(s),
-    agentSelectors.currentAgentMeta(s),
     s.updateAgentConfig,
   ]);
 
