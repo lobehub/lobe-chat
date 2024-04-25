@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
-import { useSessionStore } from '@/store/session';
+import { useAgentStore } from '@/store/agent';
 import { useToolStore } from '@/store/tool';
 import { customPluginSelectors, toolSelectors } from '@/store/tool/selectors';
 
@@ -26,7 +26,7 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
 
   const manifest = useToolStore(toolSelectors.getManifestById(id), isEqual);
 
-  const removePlugin = useSessionStore((s) => s.removePlugin);
+  const removePlugin = useAgentStore((s) => s.removePlugin);
 
   const renderStatus = useMemo(() => {
     switch (status) {

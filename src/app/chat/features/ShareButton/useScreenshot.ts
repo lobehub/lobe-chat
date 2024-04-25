@@ -3,13 +3,13 @@ import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 import { useCallback, useState } from 'react';
 
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import { ImageType } from './type';
 
 export const useScreenshot = (imageType: ImageType) => {
   const [loading, setLoading] = useState(false);
-  const title = useSessionStore(agentSelectors.currentAgentTitle);
+  const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
 
   const handleDownload = useCallback(async () => {
     setLoading(true);

@@ -9,7 +9,7 @@ import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 const ChatHeaderTitle = memo(() => {
   const { t } = useTranslation('chat');
@@ -20,7 +20,7 @@ const ChatHeaderTitle = memo(() => {
   ]);
   const [isInbox, title] = useSessionStore((s) => [
     sessionSelectors.isInboxSession(s),
-    agentSelectors.currentAgentTitle(s),
+    sessionMetaSelectors.currentAgentTitle(s),
   ]);
   const theme = useTheme();
 

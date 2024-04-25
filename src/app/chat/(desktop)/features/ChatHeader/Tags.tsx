@@ -3,15 +3,15 @@ import { Flexbox } from 'react-layout-kit';
 
 import ModelTag from '@/components/ModelTag';
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
 
 import PluginTag from '../../../features/PluginTag';
 
 const TitleTags = memo(() => {
-  const [model, plugins] = useSessionStore((s) => [
+  const [model, plugins] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentPlugins(s),
   ]);
