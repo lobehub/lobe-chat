@@ -22,6 +22,7 @@
       "confirm": "¿Confirmar el restablecimiento de todas las configuraciones?",
       "currentVersion": "Versión actual",
       "desc": "Restablecer todas las opciones de configuración a sus valores predeterminados",
+      "success": "Se han restablecido todas las configuraciones",
       "title": "Restablecer todas las configuraciones"
     }
   },
