@@ -1,10 +1,9 @@
-import { INBOX_SESSION_ID } from '@/const/session';
+import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
 import { sessionHelpers } from '@/store/session/slices/session/helpers';
 import { MetaData } from '@/types/meta';
 import { CustomSessionGroup, LobeAgentSession, LobeSessions } from '@/types/session';
 
 import { SessionStore } from '../../../store';
-import { initLobeSession } from '../initialState';
 
 const defaultSessions = (s: SessionStore): LobeSessions => s.defaultSessions;
 const pinnedSessions = (s: SessionStore): LobeSessions => s.pinnedSessions;
@@ -33,7 +32,7 @@ const currentSession = (s: SessionStore): LobeAgentSession | undefined => {
 };
 
 const currentSessionSafe = (s: SessionStore): LobeAgentSession => {
-  return currentSession(s) || initLobeSession;
+  return currentSession(s) || DEFAULT_AGENT_LOBE_SESSION;
 };
 
 const hasCustomAgents = (s: SessionStore) => defaultSessions(s).length > 0;

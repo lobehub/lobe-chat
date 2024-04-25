@@ -3,10 +3,12 @@ import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { useAgentStore } from '@/store/agent';
 import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
+import { LobeAgentConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
@@ -158,8 +160,13 @@ describe('chatSelectors', () => {
     it('should slice the messages according to config, assuming historyCount is mocked to 2', async () => {
       const state = merge(initialStore, { messages: mockMessages });
       act(() => {
-        useGlobalStore.setState({
-          settings: { defaultAgent: { config: { historyCount: 2, enableHistoryCount: true } } },
+        useAgentStore.setState({
+          activeId: 'inbox',
+          agentConfig: {
+            historyCount: 2,
+            enableHistoryCount: true,
+            model: 'abc',
+          } as LobeAgentConfig,
         });
       });
 

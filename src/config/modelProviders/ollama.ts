@@ -3,6 +3,17 @@ import { ModelProviderCard } from '@/types/llm';
 const Ollama: ModelProviderCard = {
   chatModels: [
     {
+      displayName: 'Llama3 8B',
+      enabled: true,
+      id: 'llama3',
+      tokens: 8000,
+    },
+    {
+      displayName: 'Llama3 70B',
+      id: 'llama3:70b',
+      tokens: 8000,
+    },
+    {
       displayName: 'Command R 35B',
       enabled: true,
       id: 'command-r',
@@ -21,7 +32,6 @@ const Ollama: ModelProviderCard = {
     },
     {
       displayName: 'Gemma 2B',
-      enabled: true,
       id: 'gemma:2b',
       tokens: 4000,
     },
@@ -49,17 +59,6 @@ const Ollama: ModelProviderCard = {
       displayName: 'Llama2 CN 7B',
       id: 'llama2-chinese',
       tokens: 4000,
-    },
-    {
-      displayName: 'Llama3 8B',
-      enabled: true,
-      id: 'llama3',
-      tokens: 8000,
-    },
-    {
-      displayName: 'Llama3 70B',
-      id: 'llama3:70b',
-      tokens: 8000,
     },
     {
       displayName: 'WizardLM 2 7B',

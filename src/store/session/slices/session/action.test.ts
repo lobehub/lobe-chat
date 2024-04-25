@@ -7,6 +7,8 @@ import { sessionService } from '@/services/session';
 import { useSessionStore } from '@/store/session';
 import { LobeSessionType } from '@/types/session';
 
+import { sessionSelectors } from './selectors';
+
 // Mock sessionService 和其他依赖项
 vi.mock('@/services/session', () => ({
   sessionService: {
@@ -187,6 +189,47 @@ describe('SessionAction', () => {
 
       expect(sessionService.updateSession).toHaveBeenCalledWith(sessionId, { group: groupId });
       expect(mockRefresh).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateAgentMeta', () => {
+    it('should not update meta if there is no current session', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const meta = { title: 'Test Agent' };
+      const updateSessionMock = vi.spyOn(sessionService, 'updateSession');
+      const refreshSessionsMock = vi.spyOn(result.current, 'refreshSessions');
+
+      // 模拟没有当前会话
+      vi.spyOn(sessionSelectors, 'currentSession').mockReturnValue(null as any);
+
+      await act(async () => {
+        await result.current.updateSessionMeta(meta as any);
+      });
+
+      expect(updateSessionMock).not.toHaveBeenCalled();
+      expect(refreshSessionsMock).not.toHaveBeenCalled();
+      updateSessionMock.mockRestore();
+      refreshSessionsMock.mockRestore();
+    });
+
+    it('should update session meta and refresh sessions', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const meta = { title: 'Test Agent' };
+      const updateSessionMock = vi.spyOn(sessionService, 'updateSession');
+      const refreshSessionsMock = vi.spyOn(result.current, 'refreshSessions');
+
+      // 模拟有当前会话
+      vi.spyOn(sessionSelectors, 'currentSession').mockReturnValue({ id: 'session-id' } as any);
+      vi.spyOn(result.current, 'activeId', 'get').mockReturnValue('session-id');
+
+      await act(async () => {
+        await result.current.updateSessionMeta(meta);
+      });
+
+      expect(updateSessionMock).toHaveBeenCalledWith('session-id', { meta });
+      expect(refreshSessionsMock).toHaveBeenCalled();
+      updateSessionMock.mockRestore();
+      refreshSessionsMock.mockRestore();
     });
   });
 });

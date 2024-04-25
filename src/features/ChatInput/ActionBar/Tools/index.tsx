@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginStore from '@/features/PluginStore';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { builtinToolSelectors, pluginSelectors } from '@/store/tool/selectors';
 
@@ -35,7 +35,7 @@ const Tools = memo(() => {
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const builtinList = useToolStore(builtinToolSelectors.metaList, isEqual);
 
-  const enablePluginCount = useSessionStore(
+  const enablePluginCount = useAgentStore(
     (s) =>
       agentSelectors
         .currentAgentPlugins(s)
@@ -45,7 +45,7 @@ const Tools = memo(() => {
   const [open, setOpen] = useState(false);
   const { styles } = useStyles();
 
-  const model = useSessionStore(agentSelectors.currentAgentModel);
+  const model = useAgentStore(agentSelectors.currentAgentModel);
   const enableFC = useGlobalStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
 
   return (
