@@ -68,7 +68,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
     try {
       // Ask Claude for a streaming chat completion given the prompt
-      const bedrockResponse = await this.client.send(command);
+      const bedrockResponse = await this.client.send(command, { abortSignal: options?.signal });
 
       // Convert the response into a friendly text-stream
       const stream = AWSBedrockStream(

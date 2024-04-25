@@ -76,6 +76,7 @@ export const LobeOpenAICompatibleFactory = ({
         const response = await this.client.chat.completions.create(postPayload, {
           // https://github.com/lobehub/lobe-chat/pull/318
           headers: { Accept: '*/*' },
+          signal: options?.signal,
         });
 
         const [prod, useForDebug] = response.tee();
