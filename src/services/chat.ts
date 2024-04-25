@@ -168,18 +168,6 @@ export function initializeWithClientStore(provider: string, payload: any) {
   });
 }
 
-/**
- * Fetch chat completion on the client side.
- * @param provider - The provider name.
- * @param payload - The payload data for the chat stream.
- * @returns A promise that resolves to the chat response.
- */
-export async function fetchOnClient(provider: string, payload: Partial<ChatStreamPayload>) {
-  const agentRuntime = await initializeWithClientStore(provider, payload);
-  const data = payload as ChatStreamPayload;
-  return await agentRuntime.chat(data);
-}
-
 class ChatService {
   createAssistantMessage = async (
     { plugins: enabledPlugins, messages, ...params }: GetChatCompletionPayload,
@@ -279,7 +267,7 @@ class ChatService {
      */
     if (enableFetchOnClient) {
       try {
-        return await fetchOnClient(provider, payload);
+        return this.fetchOnClient({ payload, provider, signal });
       } catch (e) {
         const {
           errorType = ChatErrorType.BadRequest,
@@ -472,6 +460,21 @@ class ChatService {
       userId: commonSelectors.userId(useGlobalStore.getState()),
     };
   }
+
+  /**
+   * Fetch chat completion on the client side.
+
+   */
+  private fetchOnClient = async (params: {
+    payload: Partial<ChatStreamPayload>;
+    provider: string;
+    signal?: AbortSignal;
+  }) => {
+    const agentRuntime = await initializeWithClientStore(params.provider, params.payload);
+    const data = params.payload as ChatStreamPayload;
+
+    return agentRuntime.chat(data, { signal: params.signal });
+  };
 }
 
 export const chatService = new ChatService();
