@@ -6,8 +6,10 @@ import { Flexbox } from 'react-layout-kit';
 import pkg from '@/../package.json';
 import ModelTag from '@/components/ModelTag';
 import ChatList from '@/features/Conversation/components/ChatList';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import PluginTag from '../PluginTag';
 import { useStyles } from './style';
@@ -15,16 +17,18 @@ import { FieldType } from './type';
 
 const Preview = memo<FieldType & { title?: string }>(
   ({ title, withSystemRole, withBackground, withFooter }) => {
-    const [isInbox, description, avatar, backgroundColor, model, plugins, systemRole] =
-      useSessionStore((s) => [
-        sessionSelectors.isInboxSession(s),
-        agentSelectors.currentAgentDescription(s),
-        agentSelectors.currentAgentAvatar(s),
-        agentSelectors.currentAgentBackgroundColor(s),
-        agentSelectors.currentAgentModel(s),
-        agentSelectors.currentAgentPlugins(s),
-        agentSelectors.currentAgentSystemRole(s),
-      ]);
+    const [model, plugins, systemRole] = useAgentStore((s) => [
+      agentSelectors.currentAgentModel(s),
+      agentSelectors.currentAgentPlugins(s),
+      agentSelectors.currentAgentSystemRole(s),
+    ]);
+    const [isInbox, description, avatar, backgroundColor] = useSessionStore((s) => [
+      sessionSelectors.isInboxSession(s),
+      sessionMetaSelectors.currentAgentDescription(s),
+      sessionMetaSelectors.currentAgentAvatar(s),
+      sessionMetaSelectors.currentAgentBackgroundColor(s),
+    ]);
+
     const { t } = useTranslation('chat');
     const { styles } = useStyles(withBackground);
 

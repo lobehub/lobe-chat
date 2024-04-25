@@ -22,9 +22,9 @@ const metadata: Metadata = {
   },
   description,
   icons: {
-    apple:'icons/apple-touch-icon.png',
-    icon:'favicon.ico',
-    shortcut:'favicon-32x32.ico',
+    apple: '/icons/apple-touch-icon.png',
+    icon: '/favicon.ico',
+    shortcut: '/favicon-32x32.ico',
   },
   manifest: noManifest ? undefined : '/manifest.json',
   metadataBase: new URL(SITE_URL),

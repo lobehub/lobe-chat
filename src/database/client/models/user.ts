@@ -1,6 +1,7 @@
 import { DeepPartial } from 'utility-types';
 
 import { BaseModel } from '@/database/client/core';
+import { LobeAgentConfig } from '@/types/agent';
 import { GlobalSettings } from '@/types/settings';
 import { uuid } from '@/utils/uuid';
 
@@ -22,6 +23,11 @@ class _UserModel extends BaseModel {
     return list[0];
   };
 
+  getAgentConfig = async () => {
+    const user = await this.getUser();
+
+    return user.settings?.defaultAgent?.config as LobeAgentConfig;
+  };
   // **************** Create *************** //
 
   create = async (user: DB_User) => {

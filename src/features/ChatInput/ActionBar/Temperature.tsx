@@ -4,13 +4,13 @@ import { Thermometer } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 const Temperature = memo(() => {
   const { t } = useTranslation('setting');
 
-  const [temperature, updateAgentConfig] = useSessionStore((s) => {
+  const [temperature, updateAgentConfig] = useAgentStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
     return [config.params.temperature, s.updateAgentConfig];
   });
