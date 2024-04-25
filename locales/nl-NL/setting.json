@@ -22,6 +22,7 @@
       "confirm": "Alle instellingen resetten bevestigen?",
       "currentVersion": "Huidige versie",
       "desc": "Alle instellingen worden teruggezet naar de standaardwaarden",
+      "success": "Alle instellingen zijn succesvol gereset",
       "title": "Alle instellingen resetten"
     }
   },
