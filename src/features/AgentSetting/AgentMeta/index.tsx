@@ -61,6 +61,8 @@ const AgentMeta = memo(() => {
     return {
       children: (
         <AutoGenerate
+          canAutoGenerate={hasSystemRole}
+          disabled={!hasSystemRole}
           loading={loading[item.key as keyof SessionLoadingState]}
           onChange={item.onChange}
           onGenerate={() => {
