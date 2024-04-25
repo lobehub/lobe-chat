@@ -5,13 +5,13 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 const History = memo(() => {
   const { t } = useTranslation('setting');
 
-  const [historyCount, unlimited, updateAgentConfig] = useSessionStore((s) => {
+  const [historyCount, unlimited, updateAgentConfig] = useAgentStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
     return [config.historyCount, !config.enableHistoryCount, s.updateAgentConfig];
   });

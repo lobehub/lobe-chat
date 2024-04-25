@@ -5,7 +5,7 @@ import { memo, useCallback } from 'react';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import { renderActions, useActionsClick } from '../../Actions';
 import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
@@ -29,7 +29,7 @@ interface ActionsProps {
   setEditing: (edit: boolean) => void;
 }
 const Actions = memo<ActionsProps>(({ index, setEditing }) => {
-  const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
+  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
 
   const item = useChatStore(
     (s) => chatSelectors.currentChatsWithGuideMessage(meta)(s)[index],
