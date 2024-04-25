@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.149.5](https://github.com/lobehub/lobe-chat/compare/v0.149.4...v0.149.5)
+
+<sup>Released on **2024-04-25**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Sperate SessionStore to a new AgentStore.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix not handle ollama error correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Sperate SessionStore to a new AgentStore, closes [#2197](https://github.com/lobehub/lobe-chat/issues/2197) ([49c0ba6](https://github.com/lobehub/lobe-chat/commit/49c0ba6))
+
+#### What's fixed
+
+- **misc**: Fix not handle ollama error correctly ([efdf174](https://github.com/lobehub/lobe-chat/commit/efdf174))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.149.4](https://github.com/lobehub/lobe-chat/compare/v0.149.3...v0.149.4)
 
 <sup>Released on **2024-04-25**</sup>
