@@ -34,10 +34,10 @@ const StoreInitialization = memo(() => {
 
   // Import settings from the url
   const { importSettings } = useImportConfig();
-  const settings = useSearchParams().get(LOBE_URL_IMPORT_NAME);
+  const searchParam = useSearchParams().get(LOBE_URL_IMPORT_NAME);
   useEffect(() => {
-    importSettings(settings);
-  }, [router, importSettings]);
+    importSettings(searchParam);
+  }, [searchParam]);
 
   useEffect(() => {
     router.prefetch('/chat');
