@@ -1,32 +1,19 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Benutzerdefiniertes Modell, das standardmäßig sowohl Funktionsaufrufe als auch visuelle Erkennung unterstützt. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Anforderungen.",
-      "file": "Dieses Modell unterstützt das Hochladen von Dateien zur Erkennung.",
-      "functionCall": "Dieses Modell unterstützt Funktionsaufrufe (Function Call).",
-      "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro einzelner Sitzung.",
-      "vision": "Dieses Modell unterstützt visuelle Erkennung."
-    }
-  },
   "about": "Über",
   "advanceSettings": "Erweiterte Einstellungen",
-  "agentMaxToken": "Maximale Sitzungslänge",
-  "agentModel": "Modell",
-  "agentProfile": "Assistentenprofil",
   "appInitializing": "LobeChat wird initialisiert. Bitte haben Sie einen Moment Geduld...",
-  "archive": "Archiv",
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
   "close": "Schließen",
-  "confirmRemoveSessionItemAlert": "Möchten Sie diesen Assistenten wirklich löschen? Nach dem Löschen kann er nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
   "copy": "Kopieren",
   "copyFail": "Kopieren fehlgeschlagen",
   "copySuccess": "Kopieren erfolgreich",
   "defaultAgent": "Standardassistent",
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
+  "document": "Dokumentation",
   "duplicate": "Duplikat erstellen",
   "edit": "Bearbeiten",
   "export": "Exportieren",
@@ -63,6 +50,7 @@
   },
   "lang": {
     "ar": "Arabisch",
+    "bg-BG": "Bulgarisch",
     "bn": "Bengalisch",
     "cs-CZ": "Tschechisch",
     "da-DK": "Dänisch",
@@ -98,16 +86,6 @@
     "zh-TW": "Chinesisch (traditionell)"
   },
   "layoutInitializing": "Layout wird geladen...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "moonshot": "Moonshot KI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Keine Beschreibung vorhanden",
   "oauth": "SSO-Anmeldung",
   "ok": "OK",
@@ -122,10 +100,50 @@
   "setting": "Einstellung",
   "share": "Teilen",
   "stop": "Stoppen",
+  "sync": {
+    "actions": {
+      "settings": "Sync Einstellungen",
+      "sync": "Jetzt Syncen"
+    },
+    "awareness": {
+      "current": "Aktuelles Gerät"
+    },
+    "channel": "Kanal",
+    "disabled": {
+      "actions": {
+        "enable": "Cloud Sync Aktivieren",
+        "settings": "Sync Einstellungen"
+      },
+      "desc": "Momentane Session Daten ist nur im Brwoser gespeichert. Wenn Sie Daten über mehrere Geräte syncen möchten, konfigurieren und aktivieren Sie bitte cloud sync.",
+      "title": "Daten Sync Deaktiviert"
+    },
+    "enabled": {
+      "title": "Daten Sync Aktiviert"
+    },
+    "status": {
+      "connecting": "Verbinden",
+      "disabled": "Sync Deaktiviert",
+      "ready": "Verbunden",
+      "synced": "Synchronisiert",
+      "syncing": "Synchronisierung",
+      "unconnected": "Verbindung gescheitert"
+    },
+    "title": "Sync Status",
+    "unconnected": {
+      "tip": "Die Verbindung zum Signalisierungsserver ist fehlgeschlagen, und der Peer-to-Peer-Kommunikationskanal kann nicht hergestellt werden. Bitte überprüfen Sie das Netzwerk und versuchen Sie es erneut."
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Entdecken",
     "setting": "Einstellung"
+  },
+  "telemetry": {
+    "allow": "Erlauben",
+    "deny": "Verweigern",
+    "desc": "Wir möchten anonyme Nutzungsdaten sammeln, um uns bei der Verbesserung von LobeChat zu helfen und dir ein besseres Produkterlebnis zu bieten. Du kannst dies jederzeit in den „Einstellungen“ - „Über“ deaktivieren.",
+    "learnMore": "Mehr erfahren",
+    "title": "Hilf LobeChat, besser zu werden"
   },
   "temp": "Temporär",
   "updateAgent": "Assistentenprofil aktualisieren",

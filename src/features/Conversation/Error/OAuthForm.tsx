@@ -16,7 +16,7 @@ const OAuthForm = memo<{ id: string }>(({ id }) => {
 
   const { user, isOAuthLoggedIn } = useOAuthSession();
 
-  const [resend, deleteMessage] = useChatStore((s) => [s.resendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.internalResendMessage, s.deleteMessage]);
 
   const { message, modal } = App.useApp();
 
@@ -57,7 +57,7 @@ const OAuthForm = memo<{ id: string }>(({ id }) => {
             block
             icon={<Icon icon={ScanFace} />}
             loading={status === 'loading'}
-            onClick={() => signIn('auth0')}
+            onClick={() => signIn()}
             style={{ marginTop: 8 }}
             type={'primary'}
           >

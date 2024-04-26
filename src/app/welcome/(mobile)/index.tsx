@@ -1,10 +1,16 @@
 import { memo } from 'react';
+import { Center, Flexbox } from 'react-layout-kit';
 
-import Showcase from './features/Showcase';
-import Layout from './layout.mobile';
+import Banner from '@/app/welcome/features/Banner';
 
-export default memo(() => (
-  <Layout>
-    <Showcase />
-  </Layout>
+const Showcase = memo(() => (
+  <Flexbox align={'center'} justify={'center'} style={{ height: 'calc(100% - 44px)' }}>
+    <Center gap={16}>
+      <Banner mobile />
+    </Center>
+    {/*TODO：暂时隐藏，待模板完成后再补回*/}
+    {/*<AgentTemplate width={width} />*/}
+  </Flexbox>
 ));
+
+export default Showcase;

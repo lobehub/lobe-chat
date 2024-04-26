@@ -8,7 +8,7 @@ declare global {
 
       IMGUR_CLIENT_ID?: string;
 
-      METADATA_BASE_URL?: string;
+      SITE_URL?: string;
 
       AGENTS_INDEX_URL?: string;
 
@@ -16,6 +16,11 @@ declare global {
       PLUGIN_SETTINGS?: string;
 
       DEFAULT_AGENT_CONFIG?: string;
+
+      ENABLE_LANGFUSE?: string;
+      LANGFUSE_PUBLIC_KEY?: string;
+      LANGFUSE_SECRET_KEY?: string;
+      LANGFUSE_HOST?: string;
     }
   }
 }
@@ -38,7 +43,7 @@ export const getAppConfig = () => {
 
     SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODES.length,
 
-    METADATA_BASE_URL: process.env.METADATA_BASE_URL,
+    SITE_URL: process.env.SITE_URL,
 
     IMGUR_CLIENT_ID: process.env.IMGUR_CLIENT_ID || DEFAULT_IMAGUR_CLIENT_ID,
 
@@ -52,10 +57,9 @@ export const getAppConfig = () => {
 
     PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
 
-    ENABLE_OAUTH_SSO: !!process.env.ENABLE_OAUTH_SSO,
-    AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID || '',
-    AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET || '',
-    AUTH0_ISSUER: process.env.AUTH0_ISSUER || '',
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || '',
+    ENABLE_LANGFUSE: process.env.ENABLE_LANGFUSE === '1',
+    LANGFUSE_SECRET_KEY: process.env.LANGFUSE_SECRET_KEY || '',
+    LANGFUSE_PUBLIC_KEY: process.env.LANGFUSE_PUBLIC_KEY || '',
+    LANGFUSE_HOST: process.env.LANGFUSE_HOST || 'https://cloud.langfuse.com',
   };
 };

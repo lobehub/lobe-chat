@@ -1,8 +1,7 @@
+import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
 import type { SessionStore } from '@/store/session';
-import { LanguageModel } from '@/types/llm';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
-import { initLobeSession } from '../initialState';
 import { sessionSelectors } from './list';
 
 describe('currentSession', () => {
@@ -12,7 +11,7 @@ describe('currentSession', () => {
       {
         id: '1',
         config: {
-          model: LanguageModel.GPT3_5,
+          model: 'gpt-3.5-turbo',
           params: {},
           systemRole: 'system-role',
         },
@@ -21,7 +20,7 @@ describe('currentSession', () => {
       {
         id: '2',
         config: {
-          model: LanguageModel.GPT3_5,
+          model: 'gpt-3.5-turbo',
           params: {},
           systemRole: 'system-role',
         },
@@ -46,7 +45,7 @@ describe('currentSessionSafe', () => {
       {
         id: '1',
         config: {
-          model: LanguageModel.GPT3_5,
+          model: 'gpt-3.5-turbo',
           params: {},
           systemRole: 'system-role',
         },
@@ -55,7 +54,7 @@ describe('currentSessionSafe', () => {
       {
         id: '2',
         config: {
-          model: LanguageModel.GPT3_5,
+          model: 'gpt-3.5-turbo',
           params: {},
           systemRole: 'system-role',
         },
@@ -65,7 +64,9 @@ describe('currentSessionSafe', () => {
   } as unknown as SessionStore;
 
   it('should return initLobeSession when currentSession(s) returns undefined', () => {
-    expect(sessionSelectors.currentSessionSafe({ sessions: {} } as any)).toEqual(initLobeSession);
+    expect(sessionSelectors.currentSessionSafe({ sessions: {} } as any)).toEqual(
+      DEFAULT_AGENT_LOBE_SESSION,
+    );
   });
 
   it('should return the result of currentSession(s) when it returns a non-undefined value', () => {
@@ -80,7 +81,7 @@ describe('getSessionById', () => {
       {
         id: '1',
         config: {
-          model: LanguageModel.GPT3_5,
+          model: 'gpt-3.5-turbo',
           params: {},
           systemRole: 'system-role',
         },
@@ -89,7 +90,7 @@ describe('getSessionById', () => {
       {
         id: '2',
         config: {
-          model: LanguageModel.GPT3_5,
+          model: 'gpt-3.5-turbo',
           params: {},
           systemRole: 'system-role',
         },
@@ -103,7 +104,7 @@ describe('getSessionById', () => {
   });
 
   it('should return initLobeSession when the session with the specified id does not exist', () => {
-    expect(sessionSelectors.getSessionById('3')(s)).toEqual(initLobeSession);
+    expect(sessionSelectors.getSessionById('3')(s)).toEqual(DEFAULT_AGENT_LOBE_SESSION);
   });
 });
 

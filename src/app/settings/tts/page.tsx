@@ -11,7 +11,7 @@ export default memo(() => {
   const { t } = useTranslation('setting');
   return (
     <>
-      <PageTitle title={t('tab.llm')} />
+      <PageTitle title={t('tab.tts')} />
       <TTS />
     </>
   );

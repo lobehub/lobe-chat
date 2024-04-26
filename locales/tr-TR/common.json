@@ -1,32 +1,19 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, lütfen yukarıdaki yeteneklerin kullanılabilirliğini doğrulayın",
-      "file": "Bu model dosya yükleme ve tanıma desteği sağlar",
-      "functionCall": "Bu model fonksiyon çağrısını destekler (Function Call)",
-      "tokens": "Bu model, tek bir oturumda en fazla {{tokens}} Token'ı destekler",
-      "vision": "Bu model görüntü tanımı destekler"
-    }
-  },
   "about": "Hakkında",
   "advanceSettings": "Gelişmiş Ayarlar",
-  "agentMaxToken": "Maksimum Oturum Süresi",
-  "agentModel": "Model",
-  "agentProfile": "Asistan Profili",
   "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
-  "archive": "Arşiv",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "cancel": "İptal",
   "changelog": "Changelog",
   "close": "Kapat",
-  "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "copy": "Kopyala",
   "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
+  "document": "Belge",
   "duplicate": "Kopya oluştur",
   "edit": "Düzenle",
   "export": "Dışa Aktar",
@@ -63,6 +50,7 @@
   },
   "lang": {
     "ar": "Arapça",
+    "bg-BG": "Bulgarca",
     "bn": "Bengalce",
     "cs-CZ": "Çekçe",
     "da-DK": "Danca",
@@ -98,16 +86,6 @@
     "zh-TW": "Geleneksel Çince"
   },
   "layoutInitializing": "Başlatılıyor...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Açıklama yok",
   "oauth": "SSO Girişi",
   "ok": "Tamam",
@@ -122,10 +100,50 @@
   "setting": "Ayarlar",
   "share": "Paylaş",
   "stop": "Dur",
+  "sync": {
+    "actions": {
+      "settings": "Senkronizasyon Ayarları",
+      "sync": "Hemen Senkronize Et"
+    },
+    "awareness": {
+      "current": "Mevcut Cihaz"
+    },
+    "channel": "Kanal",
+    "disabled": {
+      "actions": {
+        "enable": "Bulut Senkronizasyonunu Etkinleştir",
+        "settings": "Senkronizasyon Ayarlarını Yapılandır"
+      },
+      "desc": "Mevcut oturum verileri sadece bu tarayıcıda depolanır. Verilerinizi birden fazla cihaz arasında senkronize etmeniz gerekiyorsa bulut senkronizasyonunu yapılandırın ve etkinleştirin.",
+      "title": "Veri Senkronizasyonu Devre Dışı"
+    },
+    "enabled": {
+      "title": "Veri Senkronizasyonu"
+    },
+    "status": {
+      "connecting": "Bağlanılıyor",
+      "disabled": "Senkronizasyon Devre Dışı",
+      "ready": "Bağlandı",
+      "synced": "Senkronize Edildi",
+      "syncing": "Senkronize Ediliyor",
+      "unconnected": "Bağlantı Başarısız"
+    },
+    "title": "Senkronizasyon Durumu",
+    "unconnected": {
+      "tip": "Sinyal sunucusuna bağlantı başarısız oldu, noktadan noktaya iletişim kanalı kurulamayabilir, lütfen ağı kontrol edip tekrar deneyin"
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Keşfet",
     "setting": "Ayarlar"
+  },
+  "telemetry": {
+    "allow": "İzin ver",
+    "deny": "Reddet",
+    "desc": "Anonim kullanım bilgilerinizi toplamamıza izin vererek LobeChat'i geliştirmemize ve size daha iyi bir ürün deneyimi sunmamıza yardımcı olabilirsiniz. Dilediğiniz zaman 'Ayarlar' - 'Hakkında' bölümünden devre dışı bırakabilirsiniz.",
+    "learnMore": "Daha Fazla Bilgi",
+    "title": "LobeChat'i Geliştirmemize Yardımcı Olun"
   },
   "temp": "Geçici",
   "updateAgent": "Asistan Bilgilerini Güncelle",

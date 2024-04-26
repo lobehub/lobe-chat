@@ -1,9 +1,12 @@
+import { OpenAIStreamCallbacks } from 'ai';
+
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function';
 
 interface UserMessageContentPartText {
   text: string;
   type: 'text';
 }
+
 interface UserMessageContentPartImage {
   image_url: {
     detail?: 'auto' | 'low' | 'high';
@@ -86,6 +89,12 @@ export interface ChatStreamPayload {
   top_p?: number;
 }
 
+export interface ChatCompetitionOptions {
+  callback?: ChatStreamCallbacks;
+  headers?: Record<string, any>;
+  signal?: AbortSignal;
+}
+
 export interface ChatCompletionFunctions {
   /**
    * The description of what the function does.
@@ -117,3 +126,5 @@ export interface ChatCompletionTool {
    */
   type: 'function';
 }
+
+export type ChatStreamCallbacks = OpenAIStreamCallbacks;

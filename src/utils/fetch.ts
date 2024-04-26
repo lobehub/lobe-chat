@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 
+import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
 import { ErrorResponse, ErrorType } from '@/types/fetch';
 import { ChatMessageError } from '@/types/message';
 
@@ -27,17 +28,24 @@ export const getMessageError = async (response: Response) => {
 
 type SSEFinishType = 'done' | 'error' | 'abort';
 
+export type OnFinishHandler = (
+  text: string,
+  context: {
+    observationId?: string | null;
+    traceId?: string | null;
+    type?: SSEFinishType;
+  },
+) => Promise<void>;
+
 export interface FetchSSEOptions {
   onAbort?: (text: string) => Promise<void>;
   onErrorHandle?: (error: ChatMessageError) => void;
-  onFinish?: (text: string, type: SSEFinishType) => Promise<void>;
+  onFinish?: OnFinishHandler;
   onMessageHandle?: (text: string) => void;
 }
 
 /**
- * 使用流式方法获取数据
- * @param fetchFn
- * @param options
+ * Fetch data using stream method
  */
 export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchSSEOptions = {}) => {
   const response = await fetchFn();
@@ -83,63 +91,9 @@ export const fetchSSE = async (fetchFn: () => Promise<Response>, options: FetchS
     }
   }
 
-  await options?.onFinish?.(output, finishedType);
+  const traceId = response.headers.get(LOBE_CHAT_TRACE_ID);
+  const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
+  await options?.onFinish?.(output, { observationId, traceId, type: finishedType });
 
   return returnRes;
 };
-
-interface FetchAITaskResultParams<T> {
-  abortController?: AbortController;
-  /**
-   * 错误处理函数
-   */
-  onError?: (e: Error, rawError?: any) => void;
-  onFinish?: (text: string) => Promise<void>;
-  /**
-   * 加载状态变化处理函数
-   * @param loading - 是否处于加载状态
-   */
-  onLoadingChange?: (loading: boolean) => void;
-  /**
-   * 消息处理函数
-   * @param text - 消息内容
-   */
-  onMessageHandle?: (text: string) => void;
-  /**
-   * 请求对象
-   */
-  params: T;
-}
-
-export const fetchAIFactory =
-  <T>(fetcher: (params: T, options: { signal?: AbortSignal }) => Promise<Response>) =>
-  async ({
-    params,
-    onMessageHandle,
-    onFinish,
-    onError,
-    onLoadingChange,
-    abortController,
-  }: FetchAITaskResultParams<T>) => {
-    const errorHandle = (error: Error, errorContent?: any) => {
-      onLoadingChange?.(false);
-      if (abortController?.signal.aborted) {
-        return;
-      }
-      onError?.(error, errorContent);
-    };
-
-    onLoadingChange?.(true);
-
-    const data = await fetchSSE(() => fetcher(params, { signal: abortController?.signal }), {
-      onErrorHandle: (error) => {
-        errorHandle(new Error(error.message), error);
-      },
-      onFinish,
-      onMessageHandle,
-    }).catch(errorHandle);
-
-    onLoadingChange?.(false);
-
-    return await data?.text();
-  };

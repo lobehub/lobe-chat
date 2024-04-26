@@ -1,32 +1,19 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Modelo personalizado, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",
-      "file": "Este modelo suporta o carregamento de arquivos para leitura e reconhecimento",
-      "functionCall": "Este modelo suporta chamadas de função (Function Call)",
-      "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão",
-      "vision": "Este modelo suporta reconhecimento visual"
-    }
-  },
   "about": "Sobre",
   "advanceSettings": "Configurações avançadas",
-  "agentMaxToken": "Máximo de tokens da sessão",
-  "agentModel": "Modelo",
-  "agentProfile": "Perfil do assistente",
   "appInitializing": "LobeChat inicializando, por favor aguarde...",
-  "archive": "Arquivar",
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
   "close": "Fechar",
-  "confirmRemoveSessionItemAlert": "Você está prestes a excluir este assistente. Após a exclusão, não será possível recuperá-lo. Por favor, confirme sua ação.",
   "copy": "Copiar",
   "copyFail": "Falha ao copiar",
   "copySuccess": "Cópia bem-sucedida",
   "defaultAgent": "Assistente padrão",
   "defaultSession": "Sessão padrão",
   "delete": "Excluir",
+  "document": "Documento de Uso",
   "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuração",
@@ -63,6 +50,7 @@
   },
   "lang": {
     "ar": "árabe",
+    "bg-BG": "Búlgaro",
     "bn": "Bengali",
     "cs-CZ": "Tcheco",
     "da-DK": "Dinamarquês",
@@ -98,16 +86,6 @@
     "zh-TW": "Chinês tradicional"
   },
   "layoutInitializing": "Inicializando layout...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "moonshot": "Moonshot IA",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Sem descrição",
   "oauth": "Login SSO",
   "ok": "OK",
@@ -122,10 +100,50 @@
   "setting": "Configuração",
   "share": "Compartilhar",
   "stop": "Parar",
+  "sync": {
+    "actions": {
+      "settings": "Configurações de Sincronização",
+      "sync": "Sincronizar Agora"
+    },
+    "awareness": {
+      "current": "Dispositivo Atual"
+    },
+    "channel": "Canal",
+    "disabled": {
+      "actions": {
+        "enable": "Habilitar Sincronização na Nuvem",
+        "settings": "Configurar Parâmetros de Sincronização"
+      },
+      "desc": "Os dados da sessão atual são armazenados apenas neste navegador. Se você precisa sincronizar os dados entre vários dispositivos, configure e habilite a sincronização na nuvem.",
+      "title": "Sincronização de Dados Desativada"
+    },
+    "enabled": {
+      "title": "Sincronização de Dados"
+    },
+    "status": {
+      "connecting": "Conectando",
+      "disabled": "Sincronização Desativada",
+      "ready": "Conectado",
+      "synced": "Sincronizado",
+      "syncing": "Sincronizando",
+      "unconnected": "Falha na Conexão"
+    },
+    "title": "Status de Sincronização",
+    "unconnected": {
+      "tip": "Falha na conexão com o servidor de sinalização. Não será possível estabelecer um canal de comunicação ponto a ponto. Verifique a rede e tente novamente."
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Descobrir",
     "setting": "Configuração"
+  },
+  "telemetry": {
+    "allow": "Permitir",
+    "deny": "Negar",
+    "desc": "Queremos coletar anonimamente suas informações de uso para nos ajudar a melhorar o LobeChat e oferecer uma experiência de produto melhor para você. Você pode desativar a qualquer momento em Configurações - Sobre.",
+    "learnMore": "Saiba mais",
+    "title": "Ajude o LobeChat a melhorar"
   },
   "temp": "Temporário",
   "updateAgent": "Atualizar informações do assistente",

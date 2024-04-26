@@ -1,32 +1,19 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "カスタムモデル、デフォルトでは関数呼び出しとビジョン認識の両方をサポートしています。上記の機能の有効性を実際の状況で検証してください。",
-      "file": "このモデルはファイルのアップロードと認識をサポートしています",
-      "functionCall": "このモデルは関数呼び出し（Function Call）をサポートしています。",
-      "tokens": "このモデルは1つのセッションあたり最大{{tokens}}トークンをサポートしています。",
-      "vision": "このモデルはビジョン認識をサポートしています。"
-    }
-  },
   "about": "概要",
   "advanceSettings": "高度な設定",
-  "agentMaxToken": "エージェントの最大トークン数",
-  "agentModel": "モデル",
-  "agentProfile": "エージェントプロフィール",
   "appInitializing": "LobeChatを初期化中です。しばらくお待ちください...",
-  "archive": "アーカイブ",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントに基づいてエージェントの説明を自動生成します",
   "cancel": "キャンセル",
   "changelog": "変更履歴",
   "close": "閉じる",
-  "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除後は元に戻すことはできません。操作を確認してください。",
   "copy": "コピー",
   "copyFail": "コピーに失敗しました",
   "copySuccess": "コピーが成功しました",
   "defaultAgent": "デフォルトエージェント",
   "defaultSession": "デフォルトセッション",
   "delete": "削除",
+  "document": "ドキュメント",
   "duplicate": "コピーを作成する",
   "edit": "編集",
   "export": "エクスポート",
@@ -63,6 +50,7 @@
   },
   "lang": {
     "ar": "アラビア語",
+    "bg-BG": "ブルガリア語",
     "bn": "ベンガル語",
     "cs-CZ": "チェコ語",
     "da-DK": "デンマーク語",
@@ -98,16 +86,6 @@
     "zh-TW": "繁体字中国語"
   },
   "layoutInitializing": "レイアウトを初期化中...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWSベッドロック",
-    "google": "Google",
-    "moonshot": "Moonshot AI",
-    "ollama": "オラマ",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "智譜AI"
-  },
   "noDescription": "説明はありません",
   "oauth": "SSO ログイン",
   "ok": "OK",
@@ -122,10 +100,50 @@
   "setting": "設定",
   "share": "共有",
   "stop": "停止",
+  "sync": {
+    "actions": {
+      "settings": "同期設定",
+      "sync": "即時同期"
+    },
+    "awareness": {
+      "current": "現在のデバイス"
+    },
+    "channel": "チャンネル",
+    "disabled": {
+      "actions": {
+        "enable": "クラウド同期を有効にする",
+        "settings": "同期設定"
+      },
+      "desc": "現在のセッションデータはこのブラウザにのみ保存されます。複数のデバイス間でデータを同期するには、クラウド同期を設定して有効にしてください。",
+      "title": "データ同期が無効です"
+    },
+    "enabled": {
+      "title": "データ同期"
+    },
+    "status": {
+      "connecting": "接続中",
+      "disabled": "同期が無効です",
+      "ready": "接続済み",
+      "synced": "同期済み",
+      "syncing": "同期中",
+      "unconnected": "接続失敗"
+    },
+    "title": "同期状態",
+    "unconnected": {
+      "tip": "シグナリングサーバーに接続できません。ピア間通信チャンネルを確立できません。ネットワークを確認して再試行してください。"
+    }
+  },
   "tab": {
     "chat": "チャット",
     "market": "探す",
     "setting": "設定"
+  },
+  "telemetry": {
+    "allow": "許可する",
+    "deny": "拒否する",
+    "desc": "匿名の使用情報を収集し、LobeChat の改善やより良い製品体験を提供するためにご協力いただけると嬉しいです。いつでも「設定」-「情報」から無効にできます。",
+    "learnMore": "詳細を見る",
+    "title": "LobeChat の改善にご協力ください"
   },
   "temp": "一時的",
   "updateAgent": "エージェント情報を更新",

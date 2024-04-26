@@ -3,10 +3,12 @@ import { t } from 'i18next';
 
 import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { commonSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
@@ -27,7 +29,7 @@ const getMeta = (message: ChatMessage) => {
     }
 
     case 'assistant': {
-      return agentSelectors.currentAgentMeta(useSessionStore.getState());
+      return sessionMetaSelectors.currentAgentMeta(useSessionStore.getState());
     }
 
     case 'function': {
@@ -88,14 +90,14 @@ const currentChatsWithGuideMessage =
   };
 
 const currentChatIDsWithGuideMessage = (s: ChatStore) => {
-  const meta = agentSelectors.currentAgentMeta(useSessionStore.getState());
+  const meta = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState());
 
   return currentChatsWithGuideMessage(meta)(s).map((s) => s.id);
 };
 
 const currentChatsWithHistoryConfig = (s: ChatStore): ChatMessage[] => {
   const chats = currentChats(s);
-  const config = agentSelectors.currentAgentConfig(useSessionStore.getState());
+  const config = agentSelectors.currentAgentConfig(useAgentStore.getState());
 
   return chatHelpers.getSlicedMessagesWithConfig(chats, config);
 };
@@ -117,6 +119,7 @@ const getFunctionMessageProps =
   });
 
 const getMessageById = (id: string) => (s: ChatStore) => chatHelpers.getMessageById(s.messages, id);
+const getTraceIdByMessageId = (id: string) => (s: ChatStore) => getMessageById(id)(s)?.traceId;
 
 const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
 
@@ -132,5 +135,6 @@ export const chatSelectors = {
   currentChatsWithHistoryConfig,
   getFunctionMessageProps,
   getMessageById,
+  getTraceIdByMessageId,
   latestMessage,
 };

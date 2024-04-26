@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import ImageFileItem from '@/components/FileList/ImageFileItem';
 import { useChatStore } from '@/store/chat';
-import { chatEnhanceSelectors } from '@/store/chat/selectors';
+import { chatToolSelectors } from '@/store/chat/selectors';
 import { DallEImageItem } from '@/types/tool/dalle';
 
 import EditMode from './EditMode';
@@ -38,7 +38,7 @@ const ImageItem = memo<DallEImageItem & { messageId: string }>(
     const { styles } = useStyles();
 
     const [edit, setEdit] = useState(false);
-    const loading = useChatStore(chatEnhanceSelectors.isDallEImageGenerating(messageId + prompt));
+    const loading = useChatStore(chatToolSelectors.isDallEImageGenerating(messageId + prompt));
 
     if (edit)
       return (

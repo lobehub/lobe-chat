@@ -1,32 +1,19 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
-      "file": "This model supports file upload for reading and recognition",
-      "functionCall": "This model supports function call.",
-      "tokens": "This model supports a maximum of {{tokens}} tokens per session.",
-      "vision": "This model supports visual recognition."
-    }
-  },
   "about": "About",
   "advanceSettings": "Advanced Settings",
-  "agentMaxToken": "Max Session Length",
-  "agentModel": "Model",
-  "agentProfile": "Agent Profile",
   "appInitializing": "LobeChat is initializing, please wait...",
-  "archive": "Archive",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "close": "Close",
-  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be recovered. Please confirm your action.",
   "copy": "Copy",
   "copyFail": "Copy failed",
   "copySuccess": "Copied successfully",
   "defaultAgent": "Default Agent",
   "defaultSession": "Default Agent",
   "delete": "Delete",
+  "document": "User Manual",
   "duplicate": "Create Duplicate",
   "edit": "Edit",
   "export": "Export Configuration",
@@ -63,6 +50,7 @@
   },
   "lang": {
     "ar": "Arabic",
+    "bg-BG": "Bulgarian",
     "bn": "Bengali",
     "cs-CZ": "Czech",
     "da-DK": "Danish",
@@ -98,16 +86,6 @@
     "zh-TW": "Traditional Chinese"
   },
   "layoutInitializing": "Initializing layout...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "No description available",
   "oauth": "SSO Login",
   "ok": "OK",
@@ -122,10 +100,50 @@
   "setting": "Settings",
   "share": "Share",
   "stop": "Stop",
+  "sync": {
+    "actions": {
+      "settings": "Sync Settings",
+      "sync": "Sync Now"
+    },
+    "awareness": {
+      "current": "Current Device"
+    },
+    "channel": "Channel",
+    "disabled": {
+      "actions": {
+        "enable": "Enable Cloud Sync",
+        "settings": "Sync Settings"
+      },
+      "desc": "Current session data is only stored in this browser. If you need to sync data across multiple devices, please configure and enable cloud sync.",
+      "title": "Data Sync Disabled"
+    },
+    "enabled": {
+      "title": "Data Sync Enabled"
+    },
+    "status": {
+      "connecting": "Connecting",
+      "disabled": "Sync Disabled",
+      "ready": "Connected",
+      "synced": "Synced",
+      "syncing": "Syncing",
+      "unconnected": "Connection Failed"
+    },
+    "title": "Sync Status",
+    "unconnected": {
+      "tip": "Signaling server connection failed, and peer-to-peer communication channel cannot be established. Please check the network and try again."
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Discover",
     "setting": "Settings"
+  },
+  "telemetry": {
+    "allow": "Allow",
+    "deny": "Deny",
+    "desc": "We would like to anonymously collect usage information to help us improve LobeChat and provide you with a better product experience. You can disable this at any time in Settings - About.",
+    "learnMore": "Learn More",
+    "title": "Help LobeChat be better"
   },
   "temp": "Temporary",
   "updateAgent": "Update Agent Information",

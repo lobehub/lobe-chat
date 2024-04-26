@@ -1,5 +1,5 @@
 import { EmptyCard } from '@lobehub/ui';
-import { useThemeMode } from 'antd-style';
+import { css, cx, useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import React, { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,12 @@ import { ChatTopic } from '@/types/topic';
 
 import { Placeholder, SkeletonList } from './SkeletonList';
 import TopicItem from './TopicItem';
+
+const container = css`
+  > div {
+    padding-inline: 8px;
+  }
+`;
 
 export const Topic = memo(() => {
   const { t } = useTranslation('chat');
@@ -58,12 +64,15 @@ export const Topic = memo(() => {
   ) : (
     <Flexbox gap={2} height={'100%'} style={{ marginBottom: 12 }}>
       {topicLength === 0 && (
-        <Flexbox flex={1}>
+        <Flexbox flex={1} paddingInline={8}>
           <EmptyCard
             alt={t('topic.guide.desc')}
             cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
             desc={t('topic.guide.desc')}
             height={120}
+            imageProps={{
+              priority: true,
+            }}
             onVisibleChange={(visible) => {
               updateGuideState({ topic: visible });
             }}
@@ -75,6 +84,7 @@ export const Topic = memo(() => {
         </Flexbox>
       )}
       <Virtuoso
+        className={cx(container)}
         components={{ ScrollSeekPlaceholder: Placeholder }}
         computeItemKey={(_, item) => item.id}
         data={topics}

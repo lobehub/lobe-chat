@@ -27,18 +27,6 @@ describe('getServerConfig', () => {
     global.process = originalProcess; // Restore the original process object
   });
 
-  it('correctly reflects boolean value for USE_AZURE_OPENAI', () => {
-    process.env.USE_AZURE_OPENAI = '1';
-    const config = getServerConfig();
-    expect(config.USE_AZURE_OPENAI).toBe(true);
-  });
-
-  it('correctly handles falsy values for USE_AZURE_OPENAI', () => {
-    process.env.USE_AZURE_OPENAI = '0';
-    const config = getServerConfig();
-    expect(config.USE_AZURE_OPENAI).toBe(false);
-  });
-
   it('correctly handles values for OPENAI_FUNCTION_REGIONS', () => {
     process.env.OPENAI_FUNCTION_REGIONS = 'iad1,sfo1';
     const config = getServerConfig();

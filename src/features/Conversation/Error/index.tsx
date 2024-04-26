@@ -9,6 +9,7 @@ import { ChatMessage, ChatMessageError } from '@/types/message';
 import ErrorJsonViewer from './ErrorJsonViewer';
 import InvalidAPIKey from './InvalidAPIKey';
 import InvalidAccessCode from './InvalidAccessCode';
+import OllamaBizError from './OllamaBizError';
 import OpenAiBizError from './OpenAiBizError';
 import PluginSettings from './PluginSettings';
 
@@ -58,14 +59,25 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
       return <OpenAiBizError {...data} />;
     }
 
+    case AgentRuntimeErrorType.OllamaBizError: {
+      return <OllamaBizError {...data} />;
+    }
+
     case ChatErrorType.InvalidAccessCode: {
       return <InvalidAccessCode id={data.id} provider={data.error?.body?.provider} />;
     }
 
     case AgentRuntimeErrorType.InvalidBedrockCredentials:
     case AgentRuntimeErrorType.InvalidZhipuAPIKey:
+    case AgentRuntimeErrorType.InvalidMistralAPIKey:
     case AgentRuntimeErrorType.InvalidMoonshotAPIKey:
     case AgentRuntimeErrorType.InvalidGoogleAPIKey:
+    case AgentRuntimeErrorType.InvalidPerplexityAPIKey:
+    case AgentRuntimeErrorType.InvalidAnthropicAPIKey:
+    case AgentRuntimeErrorType.InvalidGroqAPIKey:
+    case AgentRuntimeErrorType.InvalidOpenRouterAPIKey:
+    case AgentRuntimeErrorType.InvalidTogetherAIAPIKey:
+    case AgentRuntimeErrorType.InvalidZeroOneAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
     }
