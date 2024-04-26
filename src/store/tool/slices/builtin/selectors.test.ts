@@ -1,6 +1,8 @@
 import { LobeChatPluginManifest, LobeChatPluginMeta } from '@lobehub/chat-plugin-sdk';
 import { describe, expect, it } from 'vitest';
 
+import { DalleManifest } from '@/tools/dalle';
+
 import { ToolStoreState, initialState } from '../../initialState';
 import { builtinToolSelectors } from './selectors';
 
@@ -48,23 +50,49 @@ const mockState = {
   ],
 } as ToolStoreState;
 
-describe('pluginSelectors', () => {
-  describe('isCustomPlugin', () => {
-    it('should return false for a non-custom plugin', () => {
-      const result = builtinToolSelectors.isBuiltinTool('plugin-1')(mockState);
-      expect(result).toBe(false);
-    });
-
-    it('should return true for a custom plugin', () => {
-      const stateWithCustomPlugin = {
-        ...mockState,
-        installedPlugins: [
-          ...mockState.installedPlugins,
-          { identifier: 'custom-plugin', type: 'customPlugin' },
+describe('builtinToolSelectors', () => {
+  describe('metaList', () => {
+    it('should return meta list excluding Dalle when showDalle is false', () => {
+      const state = {
+        ...initialState,
+        builtinTools: [
+          { identifier: 'tool-1', manifest: { meta: { title: 'Tool 1' } } },
+          { identifier: DalleManifest.identifier, manifest: { meta: { title: 'Dalle' } } },
         ],
       } as ToolStoreState;
-      const result = builtinToolSelectors.isBuiltinTool('custom-plugin')(stateWithCustomPlugin);
-      expect(result).toBe(true);
+      const result = builtinToolSelectors.metaList(false)(state);
+      expect(result).toEqual([
+        { author: 'LobeHub', identifier: 'tool-1', meta: { title: 'Tool 1' }, type: 'builtin' },
+      ]);
+    });
+
+    it('should include Dalle when showDalle is true', () => {
+      const state = {
+        ...initialState,
+        builtinTools: [
+          { identifier: 'tool-1', manifest: { meta: { title: 'Tool 1' } } },
+          { identifier: DalleManifest.identifier, manifest: { meta: { title: 'Dalle' } } },
+        ],
+      } as ToolStoreState;
+      const result = builtinToolSelectors.metaList(true)(state);
+      expect(result).toEqual([
+        { author: 'LobeHub', identifier: 'tool-1', meta: { title: 'Tool 1' }, type: 'builtin' },
+        {
+          author: 'LobeHub',
+          identifier: DalleManifest.identifier,
+          meta: { title: 'Dalle' },
+          type: 'builtin',
+        },
+      ]);
+    });
+
+    it('should return an empty list if no builtin tools are available', () => {
+      const state: ToolStoreState = {
+        ...initialState,
+        builtinTools: [],
+      };
+      const result = builtinToolSelectors.metaList(false)(state);
+      expect(result).toEqual([]);
     });
   });
 });
