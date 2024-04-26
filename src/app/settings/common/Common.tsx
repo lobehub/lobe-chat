@@ -68,6 +68,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
       onOk: () => {
         resetSettings();
         form.setFieldsValue(DEFAULT_SETTINGS);
+        message.success(t('danger.reset.success'));
       },
       title: t('danger.reset.confirm'),
     });
