@@ -30,6 +30,7 @@ export type SessionGroups = SessionGroupItem[];
 export interface LobeAgentSession extends BaseDataModel {
   config: LobeAgentConfig;
   group?: SessionGroupId;
+  model: string;
   pinned?: boolean;
   type: LobeSessionType.Agent;
 }
