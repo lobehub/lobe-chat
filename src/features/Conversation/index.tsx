@@ -3,6 +3,7 @@ import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ChatHydration from '@/components/StoreHydration/ChatHydration';
+import { useChatStore } from '@/store/chat';
 
 import SkeletonList from './components/SkeletonList';
 import ChatList from './components/VirtualizedList';
@@ -29,16 +30,18 @@ interface ConversationProps {
 const Conversation = memo<ConversationProps>(({ chatInput, mobile }) => {
   const { styles } = useStyles();
 
-  const init = useInitConversation();
+  useInitConversation();
+
+  const [messagesInit] = useChatStore((s) => [s.messagesInit]);
 
   return (
     <Flexbox
       flex={1}
-      //  position: 'relative' is required, ChatInput's absolute position needs it
+      // `relative` is required, ChatInput's absolute position needs it
       style={{ position: 'relative' }}
     >
       <div className={styles}>
-        {init ? <ChatList mobile={mobile} /> : <SkeletonList mobile={mobile} />}
+        {messagesInit ? <ChatList mobile={mobile} /> : <SkeletonList mobile={mobile} />}
       </div>
       {chatInput}
       <ChatHydration />

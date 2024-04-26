@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useTokenCount } from '@/hooks/useTokenCount';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
@@ -24,7 +24,7 @@ const Token = memo(() => {
     chatSelectors.chatsMessageString(s),
   ]);
 
-  const [systemRole, model] = useSessionStore((s) => [
+  const [systemRole, model] = useAgentStore((s) => [
     agentSelectors.currentAgentSystemRole(s),
     agentSelectors.currentAgentModel(s) as string,
   ]);
@@ -33,7 +33,7 @@ const Token = memo(() => {
 
   // Tool usage token
   const canUseTool = useGlobalStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
-  const plugins = useSessionStore(agentSelectors.currentAgentPlugins);
+  const plugins = useAgentStore(agentSelectors.currentAgentPlugins);
   const toolsString = useToolStore((s) => {
     const pluginSystemRoles = toolSelectors.enabledSystemRoles(plugins)(s);
     const schemaNumber = toolSelectors
