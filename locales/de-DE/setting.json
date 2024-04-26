@@ -22,6 +22,7 @@
       "confirm": "Alle Einstellungen zurücksetzen?",
       "currentVersion": "Aktuelle Version",
       "desc": "Alle Einstellungen auf Standardwerte zurücksetzen",
+      "success": "Alle Einstellungen wurden zurückgesetzt",
       "title": "Alle Einstellungen zurücksetzen"
     }
   },

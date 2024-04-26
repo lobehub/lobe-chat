@@ -55,6 +55,7 @@ const AvatarBanner = memo<AgentCardBannerProps>(
             className={styles.bannerImg}
             height={size}
             src={avatar || DEFAULT_USER_AVATAR_URL}
+            unoptimized
             width={size}
           />
         </Flexbox>

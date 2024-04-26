@@ -13,10 +13,10 @@ import { chatService } from '@/services/chat';
 import { CreateMessageParams, messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
@@ -120,7 +120,7 @@ export interface ChatMessageAction {
   internalTraceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
 }
 
-const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
+const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
 
 const preventLeavingFn = (e: BeforeUnloadEvent) => {
   // set returnValue to trigger alert modal
