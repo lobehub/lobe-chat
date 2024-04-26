@@ -18,6 +18,7 @@
     "title": "{{title}} Copy"
   },
   "duplicateTitle": "{{title}} Copy",
+  "emptyAgent": "No assistant available",
   "historyRange": "History Range",
   "inbox": {
     "defaultMessage": "Hello, I'm your virtual agent. You can ask me anything, and I'll do my best to answer you. If you need a more professional or customized agent, click on `+` to create a custom agent.",
