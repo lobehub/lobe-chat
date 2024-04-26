@@ -1,6 +1,6 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
-import { FEATURE_FLAGS } from '@/const/featureFlags';
+import { DEFAULT_FEATURE_FLAGS, FeatureFlags } from '@/const/featureFlags';
 import { PeerSyncStatus, SyncAwarenessState } from '@/types/sync';
 
 export enum SidebarTabKey {
@@ -24,7 +24,7 @@ export interface Guide {
 }
 
 export interface GlobalCommonState {
-  featureFlags: typeof FEATURE_FLAGS;
+  featureFlags: FeatureFlags;
   hasNewVersion?: boolean;
   isMobile?: boolean;
   latestVersion?: string;
@@ -36,7 +36,7 @@ export interface GlobalCommonState {
 }
 
 export const initialCommonState: GlobalCommonState = {
-  featureFlags: FEATURE_FLAGS,
+  featureFlags: DEFAULT_FEATURE_FLAGS,
   isMobile: false,
   sidebarKey: SidebarTabKey.Chat,
   syncAwareness: [],

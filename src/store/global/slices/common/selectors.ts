@@ -8,12 +8,12 @@ export const commonSelectors = {
 };
 
 export const featureFlagsSelectors = {
-  enableWebrtc: (s: GlobalStore) => s.featureFlags.webrtcSync,
-  isAgentEditable: (s: GlobalStore) => s.featureFlags.isAgentEditable,
+  enableWebrtc: (s: GlobalStore) => s.featureFlags.webrtc_sync,
+  isAgentEditable: (s: GlobalStore) => s.featureFlags.edit_agent,
 
-  showCreateSession: (s: GlobalStore) => s.featureFlags.showCreateSession,
-  showLLM: (s: GlobalStore) => s.featureFlags.languageModel,
+  showCreateSession: (s: GlobalStore) => s.featureFlags.create_session,
+  showLLM: (s: GlobalStore) => s.featureFlags.language_model_settings,
 
-  showOpenAIApiKey: (s: GlobalStore) => s.featureFlags.openaiApiKey,
-  showOpenAIProxyUrl: (s: GlobalStore) => s.featureFlags.openaiProxyUrl,
+  showOpenAIApiKey: (s: GlobalStore) => s.featureFlags.openai_api_key,
+  showOpenAIProxyUrl: (s: GlobalStore) => s.featureFlags.openai_proxy_url,
 };

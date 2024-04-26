@@ -1,13 +1,29 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
+import { z } from 'zod';
 
-export const FEATURE_FLAGS = {
-  webrtcSync: false,
+export const FeatureFlagsSchema = z.object({
+  webrtc_sync: z.boolean().optional(),
 
-  languageModel: true,
+  language_model_settings: z.boolean().optional(),
 
-  openaiApiKey: false,
-  openaiProxyUrl: false,
+  openai_api_key: z.boolean().optional(),
+  openai_proxy_url: z.boolean().optional(),
 
-  showCreateSession: false,
-  isAgentEditable: false,
+  create_session: z.boolean().optional(),
+  edit_agent: z.boolean().optional(),
+});
+
+// TypeScript 类型，从 Zod schema 生成
+export type FeatureFlags = z.infer<typeof FeatureFlagsSchema>;
+
+export const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
+  webrtc_sync: false,
+
+  language_model_settings: true,
+
+  openai_api_key: false,
+  openai_proxy_url: false,
+
+  create_session: false,
+  edit_agent: false,
 };
