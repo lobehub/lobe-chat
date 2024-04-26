@@ -20,10 +20,7 @@ const itemContent = (index: number, id: string) => {
   );
 };
 
-interface VirtualizedListProps {
-  mobile?: boolean;
-}
-const VirtualizedList = memo<VirtualizedListProps>(() => {
+const VirtualizedList = memo(() => {
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
