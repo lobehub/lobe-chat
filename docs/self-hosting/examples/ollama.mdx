@@ -40,11 +40,13 @@ When you first initiate Ollama, it is configured to allow access only from the l
 
 ### Ollama Environment Variables
 
-    `OLLAMA_HOST`         The host:port to bind to (default "127.0.0.1:11434")
-    `OLLAMA_ORIGINS`      A comma separated list of allowed origins.
-    `OLLAMA_MODELS`       The path to the models directory (default is "~/.ollama/models")
-    `OLLAMA_KEEP_ALIVE`   The duration that models stay loaded in memory (default is "5m")
-    `OLLAMA_DEBUG`        Set to 1 to enable additional debug logging
+| Environment Variable | Description                         | Default Value                                      | Additional Information                               |
+| -------------------- | ----------------------------------- | --------------------------------------------------- | ---------------------------------------------------- |
+| `OLLAMA_HOST`       | Specifies the host and port for binding | "127.0.0.1:11434"                                 | Use "0.0.0.0:port" to make the service accessible from any machine |
+| `OLLAMA_ORIGINS`    | Comma-separated list of permitted cross-origin sources | Restricted to local access                       | Set to "*" to avoid CORS, please set on demand          |
+| `OLLAMA_MODELS`     | Path to the directory where models are located | "~/.ollama/models" or "/usr/share/ollama/.ollama/models" | Can be customized based on requirements              |
+| `OLLAMA_KEEP_ALIVE` | Duration that the model stays loaded in GPU memory | "5m"                                              | Dynamically loading and unloading models can reduce GPU load but may increase disk I/O |
+| `OLLAMA_DEBUG`      | Enable additional debugging logs by setting to 1 | Typically disabled                                 |                                                        |
 
 ### Setting environment variables on Windows
 
