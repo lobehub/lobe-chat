@@ -23,7 +23,7 @@ const itemContent = (index: number, id: string) => {
 interface VirtualizedListProps {
   mobile?: boolean;
 }
-const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
+const VirtualizedList = memo<VirtualizedListProps>(() => {
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -50,7 +50,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     <Flexbox height={'100%'}>
       <Virtuoso
         atBottomStateChange={setAtBottom}
-        atBottomThreshold={60 * (mobile ? 2 : 1)}
+        atBottomThreshold={30}
         computeItemKey={(_, item) => item}
         data={data}
         followOutput={'auto'}
