@@ -148,6 +148,7 @@ const Ollama: ModelProviderCard = {
       vision: true,
     },
   ],
+  enabled: true,
   id: 'ollama',
 };
 
