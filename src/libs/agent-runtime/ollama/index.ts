@@ -24,7 +24,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs);
     }
 
-    this.client = new Ollama(!baseURL ? undefined : { host: new URL(baseURL).host });
+    this.client = new Ollama(!baseURL ? undefined : { host: baseURL });
 
     if (baseURL) this.baseURL = baseURL;
   }
