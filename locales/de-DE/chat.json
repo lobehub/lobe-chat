@@ -18,6 +18,7 @@
     "title": "{{title}} Kopie"
   },
   "duplicateTitle": "{{title}} Kopie",
+  "emptyAgent": "Kein Assistent verfügbar",
   "historyRange": "Verlaufsbereich",
   "inbox": {
     "defaultMessage": "Hallo, ich bin dein intelligenter Assistent. Du kannst mir jede Frage stellen, und ich werde mein Bestes tun, um sie zu beantworten. Wenn du einen professionelleren oder maßgeschneiderten Assistenten benötigst, klicke auf das `+`, um einen benutzerdefinierten Assistenten zu erstellen.",

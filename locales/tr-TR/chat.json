@@ -18,6 +18,7 @@
     "title": "{{title}} Kopyası"
   },
   "duplicateTitle": "{{title}} Kopya",
+  "emptyAgent": "Asistan yok",
   "historyRange": "Geçmiş Aralığı",
   "inbox": {
     "defaultMessage": "Merhaba, ben sanal asistanınızım. Bana herhangi bir şey sorabilirsiniz ve size cevap vermek için elimden geleni yapacağım. Daha profesyonel veya özelleştirilmiş bir asistana ihtiyacınız varsa, özel bir asistan oluşturmak için `+` simgesine tıklayabilirsiniz.",

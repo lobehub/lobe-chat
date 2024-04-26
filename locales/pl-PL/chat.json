@@ -18,6 +18,7 @@
     "title": "{{title}} - kopia"
   },
   "duplicateTitle": "{{title}} kopia",
+  "emptyAgent": "Brak asystenta",
   "historyRange": "Zakres historii",
   "inbox": {
     "defaultMessage": "Cześć, jestem twoim inteligentnym asystentem, możesz zadać mi dowolne pytanie, postaram się na nie odpowiedzieć. Jeśli potrzebujesz bardziej profesjonalnego lub spersonalizowanego asystenta, kliknij `+`, aby utworzyć niestandardowego asystenta.",

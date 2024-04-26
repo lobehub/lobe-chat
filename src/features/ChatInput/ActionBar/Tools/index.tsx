@@ -1,6 +1,7 @@
 import { ActionIcon, Avatar, Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
+import type { ItemType } from 'antd/es/menu/hooks/useItems';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, Blocks, Store, ToyBrick } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -10,6 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import PluginStore from '@/features/PluginStore';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
@@ -33,7 +35,8 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
-  const builtinList = useToolStore(builtinToolSelectors.metaList, isEqual);
+  const { showDalle } = useFeatureFlagStore(featureFlagsSelectors);
+  const builtinList = useToolStore(builtinToolSelectors.metaList(showDalle), isEqual);
 
   const enablePluginCount = useAgentStore(
     (s) =>
@@ -48,74 +51,73 @@ const Tools = memo(() => {
   const model = useAgentStore(agentSelectors.currentAgentModel);
   const enableFC = useGlobalStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
 
+  const items: ItemType[] = [
+    (builtinList.length !== 0 && {
+      children: builtinList.map((item) => ({
+        icon: <Avatar avatar={item.meta.avatar} size={24} />,
+        key: item.identifier,
+        label: (
+          <ToolItem identifier={item.identifier} label={item.meta?.title || item.identifier} />
+        ),
+      })),
+
+      key: 'builtins',
+      label: t('tools.builtins.groupName'),
+      type: 'group',
+    }) as ItemType,
+    {
+      children: [
+        ...list.map((item) => ({
+          icon: item.meta?.avatar ? (
+            <Avatar avatar={pluginHelpers.getPluginAvatar(item.meta)} size={24} />
+          ) : (
+            <Icon icon={ToyBrick} size={{ fontSize: 16 }} style={{ padding: 4 }} />
+          ),
+          key: item.identifier,
+          label: (
+            <ToolItem
+              identifier={item.identifier}
+              label={pluginHelpers.getPluginTitle(item?.meta) || item.identifier}
+            />
+          ),
+        })),
+        {
+          icon: <Icon icon={Store} size={{ fontSize: 16 }} style={{ padding: 4 }} />,
+
+          key: 'plugin-store',
+          label: (
+            <Flexbox gap={40} horizontal justify={'space-between'} padding={'8px 12px'}>
+              {t('tools.plugins.store')} <Icon icon={ArrowRight} />
+            </Flexbox>
+          ),
+          onClick: (e) => {
+            e.domEvent.stopPropagation();
+            setOpen(true);
+          },
+        },
+      ],
+      key: 'plugins',
+      label: (
+        <Flexbox align={'center'} gap={40} horizontal justify={'space-between'}>
+          {t('tools.plugins.groupName')}
+          {enablePluginCount === 0 ? null : (
+            <div style={{ fontSize: 12, marginInlineEnd: 4 }}>
+              {t('tools.plugins.enabled', { num: enablePluginCount })}
+            </div>
+          )}
+        </Flexbox>
+      ),
+      type: 'group',
+    } as ItemType,
+  ].filter(Boolean);
+
   return (
     <>
       <Dropdown
         arrow={false}
         menu={{
           className: styles.menu,
-          items: [
-            {
-              children: builtinList.map((item) => ({
-                icon: <Avatar avatar={item.meta.avatar} size={24} />,
-                key: item.identifier,
-                label: (
-                  <ToolItem
-                    identifier={item.identifier}
-                    label={item.meta?.title || item.identifier}
-                  />
-                ),
-              })),
-
-              key: 'builtins',
-              label: t('tools.builtins.groupName'),
-              type: 'group',
-            },
-            {
-              children: [
-                ...list.map((item) => ({
-                  icon: item.meta?.avatar ? (
-                    <Avatar avatar={pluginHelpers.getPluginAvatar(item.meta)} size={24} />
-                  ) : (
-                    <Icon icon={ToyBrick} size={{ fontSize: 16 }} style={{ padding: 4 }} />
-                  ),
-                  key: item.identifier,
-                  label: (
-                    <ToolItem
-                      identifier={item.identifier}
-                      label={pluginHelpers.getPluginTitle(item?.meta) || item.identifier}
-                    />
-                  ),
-                })),
-                {
-                  icon: <Icon icon={Store} size={{ fontSize: 16 }} style={{ padding: 4 }} />,
-
-                  key: 'plugin-store',
-                  label: (
-                    <Flexbox gap={40} horizontal justify={'space-between'} padding={'8px 12px'}>
-                      {t('tools.plugins.store')} <Icon icon={ArrowRight} />
-                    </Flexbox>
-                  ),
-                  onClick: (e) => {
-                    e.domEvent.stopPropagation();
-                    setOpen(true);
-                  },
-                },
-              ],
-              key: 'plugins',
-              label: (
-                <Flexbox align={'center'} gap={40} horizontal justify={'space-between'}>
-                  {t('tools.plugins.groupName')}
-                  {enablePluginCount === 0 ? null : (
-                    <div style={{ fontSize: 12, marginInlineEnd: 4 }}>
-                      {t('tools.plugins.enabled', { num: enablePluginCount })}
-                    </div>
-                  )}
-                </Flexbox>
-              ),
-              type: 'group',
-            },
-          ],
+          items,
           onClick: (e) => {
             e.domEvent.preventDefault();
           },
