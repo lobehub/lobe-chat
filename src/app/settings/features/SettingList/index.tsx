@@ -23,12 +23,12 @@ export interface SettingListProps {
 const SettingList = memo<SettingListProps>(({ activeTab, mobile }) => {
   const { t } = useTranslation('setting');
   const enableWebrtc = useGlobalStore(featureFlagsSelectors.enableWebrtc);
-  const hideLLM = useGlobalStore(featureFlagsSelectors.hideLLM);
+  const showLLM = useGlobalStore(featureFlagsSelectors.showLLM);
 
   const items = [
     { icon: Settings2, label: t('tab.common'), value: SettingsTabs.Common },
     enableWebrtc && { icon: Cloudy, label: t('tab.sync'), value: SettingsTabs.Sync },
-    !hideLLM && { icon: Webhook, label: t('tab.llm'), value: SettingsTabs.LLM },
+    showLLM && { icon: Webhook, label: t('tab.llm'), value: SettingsTabs.LLM },
     { icon: Mic2, label: t('tab.tts'), value: SettingsTabs.TTS },
     { icon: Bot, label: t('tab.agent'), value: SettingsTabs.Agent },
     { icon: Info, label: t('tab.about'), value: SettingsTabs.About },

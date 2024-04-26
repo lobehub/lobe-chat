@@ -28,7 +28,10 @@ const Header = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
   const [createSession] = useSessionStore((s) => [s.createSession]);
-  const enableWebrtc = useGlobalStore(featureFlagsSelectors.enableWebrtc);
+  const [enableWebrtc, showCreateSession] = useGlobalStore((s) => [
+    featureFlagsSelectors.enableWebrtc(s),
+    featureFlagsSelectors.showCreateSession(s),
+  ]);
 
   const { mutate, isValidating } = useActionSWR('session.createSession', () => createSession());
 
@@ -39,14 +42,16 @@ const Header = memo(() => {
           <Logo className={styles.logo} size={36} type={'text'} />
           {enableWebrtc && <SyncStatusTag />}
         </Flexbox>
-        <ActionIcon
-          icon={MessageSquarePlus}
-          loading={isValidating}
-          onClick={() => mutate()}
-          size={DESKTOP_HEADER_ICON_SIZE}
-          style={{ flex: 'none' }}
-          title={t('newAgent')}
-        />
+        {showCreateSession && (
+          <ActionIcon
+            icon={MessageSquarePlus}
+            loading={isValidating}
+            onClick={() => mutate()}
+            size={DESKTOP_HEADER_ICON_SIZE}
+            style={{ flex: 'none' }}
+            title={t('newAgent')}
+          />
+        )}
       </Flexbox>
       <SessionSearchBar />
     </Flexbox>

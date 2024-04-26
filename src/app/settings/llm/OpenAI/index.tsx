@@ -7,15 +7,15 @@ import { featureFlagsSelectors } from '@/store/global/selectors';
 import ProviderConfig from '../components/ProviderConfig';
 
 const OpenAIProvider = memo(() => {
-  const hideOpenAIProxyUrl = useGlobalStore(featureFlagsSelectors.hideOpenAIProxyUrl);
-  const hideOpenAIApiKey = useGlobalStore(featureFlagsSelectors.hideOpenAIApiKey);
+  const showOpenAIProxyUrl = useGlobalStore(featureFlagsSelectors.showOpenAIProxyUrl);
+  const showOpenAIApiKey = useGlobalStore(featureFlagsSelectors.showOpenAIApiKey);
 
   return (
     <ProviderConfig
       modelList={{ showModelFetcher: true }}
       provider={'openai'}
-      showApiKey={!hideOpenAIApiKey}
-      showEndpoint={!hideOpenAIProxyUrl}
+      showApiKey={showOpenAIApiKey}
+      showEndpoint={showOpenAIProxyUrl}
       title={<OpenAI.Combine size={24} />}
     />
   );

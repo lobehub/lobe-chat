@@ -4,8 +4,8 @@ import { PropsWithChildren } from 'react';
 import { serverFeatureFlags } from '@/config/server/featureFlags';
 
 export default ({ children }: PropsWithChildren) => {
-  const hideLLM = serverFeatureFlags().hideLLM;
-  if (hideLLM) return notFound();
+  const showLLM = serverFeatureFlags().showLLM;
+  if (!showLLM) return notFound();
 
   return children;
 };

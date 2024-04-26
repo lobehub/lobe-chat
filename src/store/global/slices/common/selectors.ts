@@ -9,8 +9,10 @@ export const commonSelectors = {
 
 export const featureFlagsSelectors = {
   enableWebrtc: (s: GlobalStore) => s.featureFlags.webrtcSync,
-  hideLLM: (s: GlobalStore) => !s.featureFlags.languageModel,
 
-  hideOpenAIApiKey: (s: GlobalStore) => !s.featureFlags.openaiApiKey,
-  hideOpenAIProxyUrl: (s: GlobalStore) => !s.featureFlags.openaiProxyUrl,
+  showCreateSession: (s: GlobalStore) => s.featureFlags.showCreateSession,
+  showLLM: (s: GlobalStore) => s.featureFlags.languageModel,
+
+  showOpenAIApiKey: (s: GlobalStore) => s.featureFlags.openaiApiKey,
+  showOpenAIProxyUrl: (s: GlobalStore) => s.featureFlags.openaiProxyUrl,
 };
