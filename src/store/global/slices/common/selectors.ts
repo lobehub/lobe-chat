@@ -9,6 +9,7 @@ export const commonSelectors = {
 
 export const featureFlagsSelectors = {
   enableWebrtc: (s: GlobalStore) => s.featureFlags.webrtcSync,
+  isAgentEditable: (s: GlobalStore) => s.featureFlags.isAgentEditable,
 
   showCreateSession: (s: GlobalStore) => s.featureFlags.showCreateSession,
   showLLM: (s: GlobalStore) => s.featureFlags.languageModel,
