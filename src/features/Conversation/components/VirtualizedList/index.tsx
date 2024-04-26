@@ -26,6 +26,7 @@ interface VirtualizedListProps {
 const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const data = useChatStore(
     (s) => ['empty', ...chatSelectors.currentChatIDsWithGuideMessage(s)],
@@ -54,12 +55,14 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
         data={data}
         followOutput={'auto'}
         initialTopMostItemIndex={data?.length - 1}
+        isScrolling={setIsScrolling}
         itemContent={itemContent}
         overscan={overscan}
         ref={virtuosoRef}
       />
       <AutoScroll
         atBottom={atBottom}
+        isScrolling={isScrolling}
         onScrollToBottom={(type) => {
           const virtuoso = virtuosoRef.current;
           switch (type) {
