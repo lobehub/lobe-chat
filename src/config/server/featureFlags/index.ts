@@ -12,7 +12,7 @@ const env = createEnv({
   },
 
   server: {
-    FEATURE_FLAGS: z.string().url(),
+    FEATURE_FLAGS: z.string().optional(),
   },
 });
 

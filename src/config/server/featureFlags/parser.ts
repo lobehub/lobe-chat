@@ -5,8 +5,10 @@ import { FeatureFlags, FeatureFlagsSchema } from '@/const/featureFlags';
  * @param flagString 从环境变量中读取的特性标志字符串。
  * @returns 解析后的特性标志对象。
  */
-export function parseFeatureFlag(flagString: string): Partial<FeatureFlags> {
+export function parseFeatureFlag(flagString?: string): Partial<FeatureFlags> {
   const flags: Partial<FeatureFlags> = {};
+
+  if (!flagString) return flags;
 
   // 将中文逗号替换为英文逗号,并按逗号分割字符串
   const flagArray = flagString.trim().replaceAll('，', ',').split(',');
