@@ -1,5 +1,8 @@
+import { DeepPartial } from 'utility-types';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { LOBE_URL_IMPORT_NAME } from '@/const/url';
+import { GlobalSettings } from '@/types/settings';
 import { ShareGPTConversation } from '@/types/share';
 import { parseMarkdown } from '@/utils/parseMarkdown';
 
@@ -82,5 +85,47 @@ describe('ShareGPTService', () => {
 
     // Act & Assert
     await expect(shareGPTService.createShareGPTUrl(conversation)).rejects.toThrow();
+  });
+});
+
+describe('ShareViaUrl', () => {
+  describe('createShareSettingsUrl', () => {
+    it('should create a share settings URL with the provided settings', () => {
+      const settings: DeepPartial<GlobalSettings> = {
+        languageModel: {
+          openai: {
+            apiKey: 'user-key',
+          },
+        },
+      };
+      const url = shareGPTService.createShareSettingsUrl(settings);
+      expect(url).toBe(
+        `/?${LOBE_URL_IMPORT_NAME}=%7B%22languageModel%22:%7B%22openai%22:%7B%22apiKey%22:%22user-key%22%7D%7D%7D`,
+      );
+    });
+  });
+
+  describe('decodeShareSettings', () => {
+    it('should decode share settings from search params', () => {
+      const settings = '{"languageModel":{"openai":{"apiKey":"user-key"}}}';
+      const decodedSettings = shareGPTService.decodeShareSettings(settings);
+      expect(decodedSettings).toEqual({
+        data: {
+          languageModel: {
+            openai: {
+              apiKey: 'user-key',
+            },
+          },
+        },
+      });
+    });
+
+    it('should return an error message if decoding fails', () => {
+      const settings = '%7B%22theme%22%3A%22dark%22%2C%22fontSize%22%3A16%';
+      const decodedSettings = shareGPTService.decodeShareSettings(settings);
+      expect(decodedSettings).toEqual({
+        message: expect.any(String),
+      });
+    });
   });
 });
