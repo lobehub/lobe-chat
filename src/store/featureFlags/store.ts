@@ -5,7 +5,7 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { DEFAULT_FEATURE_FLAGS, IFeatureFlags } from '@/const/featureFlags';
+import { DEFAULT_FEATURE_FLAGS, IFeatureFlags } from '@/config/featureFlags';
 import { isDev } from '@/utils/env';
 import { StoreApiWithSelector } from '@/utils/zustand';
 

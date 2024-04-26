@@ -6,8 +6,7 @@ import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags
 import ProviderConfig from '../components/ProviderConfig';
 
 const OpenAIProvider = memo(() => {
-  const showOpenAIProxyUrl = useFeatureFlagStore(featureFlagsSelectors.showOpenAIProxyUrl);
-  const showOpenAIApiKey = useFeatureFlagStore(featureFlagsSelectors.showOpenAIApiKey);
+  const { showOpenAIProxyUrl, showOpenAIApiKey } = useFeatureFlagStore(featureFlagsSelectors);
 
   return (
     <ProviderConfig

@@ -21,8 +21,7 @@ export interface SettingListProps {
 
 const SettingList = memo<SettingListProps>(({ activeTab, mobile }) => {
   const { t } = useTranslation('setting');
-  const enableWebrtc = useFeatureFlagStore(featureFlagsSelectors.enableWebrtc);
-  const showLLM = useFeatureFlagStore(featureFlagsSelectors.showLLM);
+  const { enableWebrtc, showLLM } = useFeatureFlagStore(featureFlagsSelectors);
 
   const items = [
     { icon: Settings2, label: t('tab.common'), value: SettingsTabs.Common },

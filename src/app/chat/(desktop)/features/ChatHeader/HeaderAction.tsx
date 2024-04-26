@@ -18,7 +18,7 @@ const HeaderAction = memo(() => {
     s.toggleChatSideBar,
   ]);
 
-  const isAgentEditable = useFeatureFlagStore(featureFlagsSelectors.isAgentEditable);
+  const { isAgentEditable } = useFeatureFlagStore(featureFlagsSelectors);
 
   return (
     <>

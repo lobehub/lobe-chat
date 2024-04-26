@@ -2,7 +2,7 @@
 
 import { ReactNode, memo } from 'react';
 
-import { IFeatureFlags } from '@/const/featureFlags';
+import { IFeatureFlags } from '@/config/featureFlags';
 
 import { Provider, createFeatureFlagsStore } from './store';
 

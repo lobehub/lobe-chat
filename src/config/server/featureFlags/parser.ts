@@ -1,4 +1,4 @@
-import { FeatureFlagsSchema, IFeatureFlags } from '@/const/featureFlags';
+import { FeatureFlagsSchema, IFeatureFlags } from '@/config/featureFlags';
 
 /**
  * 解析环境变量中的特性标志字符串。

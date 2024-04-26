@@ -12,7 +12,7 @@ const MobileHeader = memo(() => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  const isAgentEditable = useFeatureFlagStore(featureFlagsSelectors.isAgentEditable);
+  const { isAgentEditable } = useFeatureFlagStore(featureFlagsSelectors);
 
   // const items: MenuProps['items'] = [
   //   {

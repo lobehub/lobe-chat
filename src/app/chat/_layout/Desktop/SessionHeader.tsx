@@ -27,10 +27,7 @@ const Header = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
   const [createSession] = useSessionStore((s) => [s.createSession]);
-  const [enableWebrtc, showCreateSession] = useFeatureFlagStore((s) => [
-    featureFlagsSelectors.enableWebrtc(s),
-    featureFlagsSelectors.showCreateSession(s),
-  ]);
+  const { enableWebrtc, showCreateSession } = useFeatureFlagStore(featureFlagsSelectors);
 
   const { mutate, isValidating } = useActionSWR('session.createSession', () => createSession());
 

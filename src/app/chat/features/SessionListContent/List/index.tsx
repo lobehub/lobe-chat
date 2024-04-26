@@ -30,7 +30,7 @@ interface SessionListProps {
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
   const { t } = useTranslation('chat');
   const isInit = useSessionStore((s) => sessionSelectors.isSessionListInit(s));
-  const showCreateSession = useFeatureFlagStore(featureFlagsSelectors.showCreateSession);
+  const { showCreateSession } = useFeatureFlagStore(featureFlagsSelectors);
   const { styles } = useStyles();
 
   const { mobile } = useResponsive();

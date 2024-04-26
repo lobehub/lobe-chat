@@ -27,7 +27,7 @@ const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
   const router = useRouter();
   const avatar = useGlobalStore(commonSelectors.userAvatar);
-  const showCreateSession = useFeatureFlagStore(featureFlagsSelectors.showCreateSession);
+  const { showCreateSession } = useFeatureFlagStore(featureFlagsSelectors);
 
   return (
     <MobileNavBar

@@ -35,7 +35,7 @@ const Desktop = memo(() => {
     s.toggleChatSideBar,
   ]);
 
-  const showSystemRole = useFeatureFlagStore(featureFlagsSelectors.isAgentEditable);
+  const { isAgentEditable: showSystemRole } = useFeatureFlagStore(featureFlagsSelectors);
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
 
   return (

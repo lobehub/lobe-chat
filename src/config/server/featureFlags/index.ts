@@ -1,7 +1,7 @@
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
-import { DEFAULT_FEATURE_FLAGS } from '@/const/featureFlags';
+import { DEFAULT_FEATURE_FLAGS, mapFeatureFlagsEnvToState } from '@/config/featureFlags';
 import { merge } from '@/utils/merge';
 
 import { parseFeatureFlag } from './parser';
@@ -25,14 +25,5 @@ export const getServerFeatureFlagsValue = () => {
 export const serverFeatureFlags = () => {
   const serverConfig = getServerFeatureFlagsValue();
 
-  return {
-    enableWebrtc: serverConfig.webrtc_sync,
-    isAgentEditable: serverConfig.edit_agent,
-
-    showCreateSession: serverConfig.create_session,
-    showLLM: serverConfig.language_model_settings,
-
-    showOpenAIApiKey: serverConfig.openai_api_key,
-    showOpenAIProxyUrl: serverConfig.openai_proxy_url,
-  };
+  return mapFeatureFlagsEnvToState(serverConfig);
 };
