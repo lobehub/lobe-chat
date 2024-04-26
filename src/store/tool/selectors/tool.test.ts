@@ -7,27 +7,22 @@ import { toolSelectors } from './tool';
 
 const mockState = {
   ...initialState,
-  pluginInstallLoading: {
-    'plugin-1': false,
-    'plugin-2': true,
-  },
   installedPlugins: [
     {
       identifier: 'plugin-1',
-      type: 'plugin',
       manifest: {
         identifier: 'plugin-1',
         api: [{ name: 'api-1' }],
-        type: 'default',
+        meta: { title: 'Plugin 1', description: 'Plugin 1 description' },
       } as LobeChatPluginManifest,
-      settings: { setting1: 'value1' },
+      type: 'plugin',
     },
     {
       identifier: 'plugin-2',
       manifest: {
         identifier: 'plugin-2',
         api: [{ name: 'api-2' }],
-      },
+      } as LobeChatPluginManifest,
       type: 'plugin',
     },
     {
@@ -46,22 +41,21 @@ const mockState = {
       type: 'customPlugin',
     },
   ],
-  pluginStoreList: [
+  builtinTools: [
     {
-      identifier: 'plugin-1',
-      author: 'Author 1',
-      createdAt: '2021-01-01',
-      meta: { avatar: 'avatar-url-1', title: 'Plugin 1' },
-      homepage: 'http://homepage-1.com',
-    } as LobeChatPluginMeta,
-    {
-      identifier: 'plugin-2',
-      author: 'Author 2',
-      createdAt: '2022-02-02',
-      meta: { avatar: 'avatar-url-2', title: 'Plugin 2' },
-      homepage: 'http://homepage-2.com',
+      type: 'builtin',
+      identifier: 'builtin-1',
+      manifest: {
+        identifier: 'builtin-1',
+        api: [{ name: 'builtin-api-1' }],
+        meta: { title: 'Builtin 1', description: 'Builtin 1 description' },
+      } as LobeChatPluginManifest,
     },
   ],
+  pluginInstallLoading: {
+    'plugin-1': false,
+    'plugin-2': true,
+  },
 } as ToolStoreState;
 
 describe('toolSelectors', () => {
@@ -174,6 +168,66 @@ describe('toolSelectors', () => {
     it('should return "success" if the plugin manifest is loaded', () => {
       const result = toolSelectors.getManifestLoadingStatus('plugin-1')(mockState);
       expect(result).toBe('success');
+    });
+  });
+
+  describe('metaList and getMetaById', () => {
+    it('should return the correct list of tool metadata', () => {
+      const result = toolSelectors.metaList()(mockState);
+      expect(result).toEqual([
+        {
+          type: 'builtin',
+          author: 'LobeHub',
+          identifier: 'builtin-1',
+          meta: { title: 'Builtin 1', description: 'Builtin 1 description' },
+        },
+        {
+          identifier: 'plugin-1',
+          type: 'plugin',
+          meta: { title: 'Plugin 1', description: 'Plugin 1 description' },
+        },
+        {
+          type: 'plugin',
+          identifier: 'plugin-2',
+          meta: undefined,
+        },
+        {
+          identifier: 'plugin-3',
+          type: 'customPlugin',
+        },
+      ]);
+    });
+
+    it('should return the correct metadata by identifier', () => {
+      const result = toolSelectors.getMetaById('plugin-1')(mockState);
+      expect(result).toEqual({ title: 'Plugin 1', description: 'Plugin 1 description' });
+    });
+
+    it('should return undefined for non-existent identifier', () => {
+      const result = toolSelectors.getMetaById('non-existent')(mockState);
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getManifestById and getManifestLoadingStatus', () => {
+    it('should return the correct manifest by identifier', () => {
+      const result = toolSelectors.getManifestById('plugin-1')(mockState);
+      expect(result).toEqual({
+        identifier: 'plugin-1',
+        api: [{ name: 'api-1' }],
+        meta: { title: 'Plugin 1', description: 'Plugin 1 description' },
+      });
+    });
+
+    it('should return undefined for non-existent identifier', () => {
+      const result = toolSelectors.getManifestById('non-existent')(mockState);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return the correct loading status for a plugin', () => {
+      expect(toolSelectors.getManifestLoadingStatus('plugin-1')(mockState)).toBe('success');
+      expect(toolSelectors.getManifestLoadingStatus('plugin-2')(mockState)).toBe('loading');
+      expect(toolSelectors.getManifestLoadingStatus('non-existent')(mockState)).toBe('error');
     });
   });
 });
