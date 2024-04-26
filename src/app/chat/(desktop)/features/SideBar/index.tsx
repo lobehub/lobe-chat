@@ -6,8 +6,8 @@ import { memo } from 'react';
 import TopicListContent from '@/app/chat/features/TopicListContent';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
+import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { useGlobalStore } from '@/store/global';
-import { featureFlagsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -35,7 +35,7 @@ const Desktop = memo(() => {
     s.toggleChatSideBar,
   ]);
 
-  const showSystemRole = useGlobalStore(featureFlagsSelectors.isAgentEditable);
+  const showSystemRole = useFeatureFlagStore(featureFlagsSelectors.isAgentEditable);
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
 
   return (

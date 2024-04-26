@@ -6,8 +6,7 @@ import { Center } from 'react-layout-kit';
 import LazyLoad from 'react-lazy-load';
 
 import { SESSION_CHAT_URL } from '@/const/url';
-import { useGlobalStore } from '@/store/global';
-import { featureFlagsSelectors } from '@/store/global/slices/common/selectors';
+import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession } from '@/types/session';
@@ -29,7 +28,7 @@ interface SessionListProps {
 }
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
   const isInit = useSessionStore((s) => sessionSelectors.isSessionListInit(s));
-  const [showCreateSession] = useGlobalStore((s) => [featureFlagsSelectors.showCreateSession(s)]);
+  const showCreateSession = useFeatureFlagStore(featureFlagsSelectors.showCreateSession);
   const { styles } = useStyles();
 
   const { mobile } = useResponsive();

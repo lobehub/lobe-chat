@@ -3,9 +3,8 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
+import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { SettingsTabs } from '@/store/global/initialState';
-import { featureFlagsSelectors } from '@/store/global/selectors';
 
 import Item from './Item';
 
@@ -22,8 +21,8 @@ export interface SettingListProps {
 
 const SettingList = memo<SettingListProps>(({ activeTab, mobile }) => {
   const { t } = useTranslation('setting');
-  const enableWebrtc = useGlobalStore(featureFlagsSelectors.enableWebrtc);
-  const showLLM = useGlobalStore(featureFlagsSelectors.showLLM);
+  const enableWebrtc = useFeatureFlagStore(featureFlagsSelectors.enableWebrtc);
+  const showLLM = useFeatureFlagStore(featureFlagsSelectors.showLLM);
 
   const items = [
     { icon: Settings2, label: t('tab.common'), value: SettingsTabs.Common },

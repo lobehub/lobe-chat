@@ -1,4 +1,4 @@
-export { commonSelectors, featureFlagsSelectors } from './slices/common/selectors';
+export { commonSelectors } from './slices/common/selectors';
 export { preferenceSelectors } from './slices/preference/selectors';
 export {
   modelConfigSelectors,

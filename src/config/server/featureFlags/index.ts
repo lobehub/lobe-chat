@@ -16,10 +16,14 @@ const env = createEnv({
   },
 });
 
-export const serverFeatureFlags = () => {
+export const getServerFeatureFlagsValue = () => {
   const flags = parseFeatureFlag(env.FEATURE_FLAGS);
 
-  const serverConfig = merge(DEFAULT_FEATURE_FLAGS, flags);
+  return merge(DEFAULT_FEATURE_FLAGS, flags);
+};
+
+export const serverFeatureFlags = () => {
+  const serverConfig = getServerFeatureFlagsValue();
 
   return {
     enableWebrtc: serverConfig.webrtc_sync,

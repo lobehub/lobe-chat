@@ -7,8 +7,9 @@ import { Flexbox } from 'react-layout-kit';
 
 import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import SyncStatusInspector from '@/features/SyncStatusInspector';
+import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { useGlobalStore } from '@/store/global';
-import { commonSelectors, featureFlagsSelectors } from '@/store/global/selectors';
+import { commonSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
@@ -26,7 +27,7 @@ const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
   const router = useRouter();
   const avatar = useGlobalStore(commonSelectors.userAvatar);
-  const showCreateSession = useGlobalStore(featureFlagsSelectors.showCreateSession);
+  const showCreateSession = useFeatureFlagStore(featureFlagsSelectors.showCreateSession);
 
   return (
     <MobileNavBar

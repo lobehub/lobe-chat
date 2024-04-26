@@ -14,16 +14,16 @@ export const FeatureFlagsSchema = z.object({
 });
 
 // TypeScript 类型，从 Zod schema 生成
-export type FeatureFlags = z.infer<typeof FeatureFlagsSchema>;
+export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
-export const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
-  webrtc_sync: false,
+export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
+  webrtc_sync: true,
 
   language_model_settings: true,
 
-  openai_api_key: false,
-  openai_proxy_url: false,
+  openai_api_key: true,
+  openai_proxy_url: true,
 
-  create_session: false,
-  edit_agent: false,
+  create_session: true,
+  edit_agent: true,
 };

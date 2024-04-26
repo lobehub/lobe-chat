@@ -1,14 +1,13 @@
 import { OpenAI } from '@lobehub/icons';
 import { memo } from 'react';
 
-import { useGlobalStore } from '@/store/global';
-import { featureFlagsSelectors } from '@/store/global/selectors';
+import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 
 import ProviderConfig from '../components/ProviderConfig';
 
 const OpenAIProvider = memo(() => {
-  const showOpenAIProxyUrl = useGlobalStore(featureFlagsSelectors.showOpenAIProxyUrl);
-  const showOpenAIApiKey = useGlobalStore(featureFlagsSelectors.showOpenAIApiKey);
+  const showOpenAIProxyUrl = useFeatureFlagStore(featureFlagsSelectors.showOpenAIProxyUrl);
+  const showOpenAIApiKey = useFeatureFlagStore(featureFlagsSelectors.showOpenAIApiKey);
 
   return (
     <ProviderConfig
