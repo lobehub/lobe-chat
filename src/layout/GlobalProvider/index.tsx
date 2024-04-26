@@ -47,21 +47,21 @@ const GlobalLayout = async ({ children }: GlobalLayoutProps) => {
   // get default feature flags to use with ssr
   const serverFeatureFlags = getServerFeatureFlagsValue();
   return (
-    <FeatureFlagStoreProvider featureFlags={serverFeatureFlags}>
-      <StyleRegistry>
-        <Locale antdLocale={antdLocale} defaultLang={defaultLang?.value}>
-          <AppTheme
-            defaultAppearance={appearance?.value}
-            defaultNeutralColor={neutralColor?.value as any}
-            defaultPrimaryColor={primaryColor?.value as any}
-          >
-            <StoreInitialization />
+    <StyleRegistry>
+      <Locale antdLocale={antdLocale} defaultLang={defaultLang?.value}>
+        <AppTheme
+          defaultAppearance={appearance?.value}
+          defaultNeutralColor={neutralColor?.value as any}
+          defaultPrimaryColor={primaryColor?.value as any}
+        >
+          <StoreInitialization />
+          <FeatureFlagStoreProvider featureFlags={serverFeatureFlags}>
             {children}
-            <DebugUI />
-          </AppTheme>
-        </Locale>
-      </StyleRegistry>
-    </FeatureFlagStoreProvider>
+          </FeatureFlagStoreProvider>
+          <DebugUI />
+        </AppTheme>
+      </Locale>
+    </StyleRegistry>
   );
 };
 

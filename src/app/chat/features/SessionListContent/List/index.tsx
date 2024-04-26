@@ -2,6 +2,7 @@ import { Empty } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 import LazyLoad from 'react-lazy-load';
 
@@ -27,6 +28,7 @@ interface SessionListProps {
   showAddButton?: boolean;
 }
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
+  const { t } = useTranslation('chat');
   const isInit = useSessionStore((s) => sessionSelectors.isSessionListInit(s));
   const showCreateSession = useFeatureFlagStore(featureFlagsSelectors.showCreateSession);
   const { styles } = useStyles();
@@ -48,7 +50,7 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
     showAddButton && <AddButton groupId={groupId} />
   ) : (
     <Center>
-      <Empty description={'暂无助手'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      <Empty description={t('emptyAgent')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
     </Center>
   );
 });
