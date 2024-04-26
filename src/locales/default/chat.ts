@@ -19,6 +19,7 @@ export default {
     title: '{{title}} 副本',
   },
   duplicateTitle: '{{title}} 副本',
+  emptyAgent: '暂无助手',
   historyRange: '历史范围',
   inbox: {
     defaultMessage:

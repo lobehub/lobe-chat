@@ -95,6 +95,7 @@
     "@lobehub/ui": "^1.138.8",
     "@next/third-parties": "^14.2.2",
     "@sentry/nextjs": "^7.111.0",
+    "@t3-oss/env-nextjs": "^0.10.1",
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
     "ahooks": "^3.7.11",
