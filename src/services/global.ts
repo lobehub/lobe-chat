@@ -1,8 +1,10 @@
+import { DeepPartial } from 'utility-types';
+
 import { dataSync } from '@/database/client/core';
+import { trpcClient } from '@/libs/trpc/client';
+import { LobeAgentConfig } from '@/types/agent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { StartDataSyncParams } from '@/types/sync';
-
-import { API_ENDPOINTS } from './_url';
 
 const VERSION_URL = 'https://registry.npmmirror.com/@lobehub/chat';
 
@@ -18,9 +20,11 @@ class GlobalService {
   };
 
   getGlobalConfig = async (): Promise<GlobalServerConfig> => {
-    const res = await fetch(API_ENDPOINTS.config);
+    return trpcClient.config.getGlobalConfig.query();
+  };
 
-    return res.json();
+  getDefaultAgentConfig = async (): Promise<DeepPartial<LobeAgentConfig>> => {
+    return trpcClient.config.getDefaultAgentConfig.query();
   };
 
   enabledSync = async (params: StartDataSyncParams) => {
