@@ -71,8 +71,8 @@ declare global {
       AWS_SECRET_ACCESS_KEY?: string;
 
       // Ollama Provider;
+      ENABLE_OLLAMA?: string;
       OLLAMA_PROXY_URL?: string;
-
       OLLAMA_MODEL_LIST?: string;
 
       /**
@@ -118,8 +118,6 @@ export const getProviderConfig = () => {
   const ZEROONE_API_KEY = process.env.ZEROONE_API_KEY || '';
 
   const TOGETHERAI_API_KEY = process.env.TOGETHERAI_API_KEY || '';
-
-  const OLLAMA_PROXY_URL = process.env.OLLAMA_PROXY_URL || '';
 
   // region format: iad1,sfo1
   let regions: string[] = [];
@@ -200,8 +198,8 @@ export const getProviderConfig = () => {
     AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || '',
 
-    ENABLE_OLLAMA: !!OLLAMA_PROXY_URL,
-    OLLAMA_PROXY_URL: OLLAMA_PROXY_URL,
+    ENABLE_OLLAMA: process.env.ENABLE_OLLAMA as unknown as boolean,
+    OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
     OLLAMA_MODEL_LIST: process.env.OLLAMA_MODEL_LIST || process.env.OLLAMA_CUSTOM_MODELS,
   };
 };
