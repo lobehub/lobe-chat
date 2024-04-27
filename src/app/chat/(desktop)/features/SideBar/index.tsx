@@ -6,6 +6,7 @@ import { memo } from 'react';
 import TopicListContent from '@/app/chat/features/TopicListContent';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
+import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -34,6 +35,7 @@ const Desktop = memo(() => {
     s.toggleChatSideBar,
   ]);
 
+  const { isAgentEditable: showSystemRole } = useFeatureFlagStore(featureFlagsSelectors);
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
 
   return (
@@ -58,7 +60,7 @@ const Desktop = memo(() => {
         }}
       >
         <SafeSpacing />
-        {!isInbox && <SystemRole />}
+        {showSystemRole && !isInbox && <SystemRole />}
         <TopicListContent />
       </DraggablePanelContainer>
     </DraggablePanel>
