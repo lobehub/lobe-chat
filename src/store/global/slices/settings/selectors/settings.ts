@@ -1,6 +1,6 @@
 import { DEFAULT_LANG } from '@/const/locale';
 import { DEFAULT_AGENT_META } from '@/const/meta';
-import { DEFAULT_AGENT, DEFAULT_AGENT_CONFIG, DEFAULT_TTS_CONFIG } from '@/const/settings';
+import { DEFAULT_AGENT, DEFAULT_TTS_CONFIG } from '@/const/settings';
 import { Locales } from '@/locales/resources';
 import { GeneralModelProviderConfig, GlobalLLMProviderKey, GlobalSettings } from '@/types/settings';
 import { isOnServerSide } from '@/utils/env';
@@ -21,8 +21,6 @@ const password = (s: GlobalStore) => currentSettings(s).password;
 const currentTTS = (s: GlobalStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
 
 const defaultAgent = (s: GlobalStore) => merge(DEFAULT_AGENT, currentSettings(s).defaultAgent);
-
-const defaultAgentConfig = (s: GlobalStore) => merge(DEFAULT_AGENT_CONFIG, defaultAgent(s).config);
 
 const defaultAgentMeta = (s: GlobalStore) => merge(DEFAULT_AGENT_META, defaultAgent(s).meta);
 
@@ -55,7 +53,6 @@ export const settingsSelectors = {
   currentTTS,
   dalleConfig,
   defaultAgent,
-  defaultAgentConfig,
   defaultAgentMeta,
   exportSettings,
   isDalleAutoGenerating,

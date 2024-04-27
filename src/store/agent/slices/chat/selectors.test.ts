@@ -3,6 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { AgentStore } from '@/store/agent';
+import { GlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/slices/settings/selectors';
+import { LobeAgentConfig } from '@/types/agent';
 
 import { agentSelectors } from './selectors';
 
@@ -16,6 +19,24 @@ const mockSessionStore = {
 } as AgentStore;
 
 describe('agentSelectors', () => {
+  describe('defaultAgentConfig', () => {
+    it('should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly', () => {
+      const s = {
+        defaultAgentConfig: {
+          systemRole: 'user',
+          model: 'gpt-3.5-turbo',
+          params: {
+            temperature: 0.7,
+          },
+        },
+      } as unknown as AgentStore;
+
+      const result = agentSelectors.defaultAgentConfig(s);
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
   describe('currentAgentConfig', () => {
     it('should return the merged default and session-specific agent config', () => {
       const config = agentSelectors.currentAgentConfig(mockSessionStore);
