@@ -1,11 +1,22 @@
-import { act, renderHook } from '@testing-library/react';
-import * as immer from 'immer';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { mutate } from 'swr';
 import { describe, expect, it, vi } from 'vitest';
 
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { globalService } from '@/services/global';
 import { sessionService } from '@/services/session';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
+
+vi.mock('zustand/traditional');
+vi.mock('swr', async (importOriginal) => {
+  const origin = await importOriginal();
+  return {
+    ...(origin as any),
+    mutate: vi.fn(),
+  };
+});
 
 describe('AgentSlice', () => {
   describe('removePlugin', () => {
@@ -133,6 +144,148 @@ describe('AgentSlice', () => {
 
       expect(updateSessionConfigMock).not.toHaveBeenCalled();
       updateSessionConfigMock.mockRestore();
+    });
+  });
+
+  describe('useFetchAgentConfig', () => {
+    it('should update agentConfig and isAgentConfigInit when data changes and isAgentConfigInit is false', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      act(() => {
+        result.current.isAgentConfigInit = false;
+        result.current.agentConfig = { model: 'gpt-3.5-turbo' };
+      });
+
+      vi.spyOn(sessionService, 'getSessionConfig').mockResolvedValueOnce({ model: 'gpt-4' } as any);
+
+      renderHook(() => result.current.useFetchAgentConfig('test-session-id'));
+
+      await waitFor(() => {
+        expect(result.current.agentConfig).toEqual({ model: 'gpt-4' });
+        expect(result.current.isAgentConfigInit).toBe(true);
+      });
+    });
+
+    it('should not update state when data is the same and isAgentConfigInit is true', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      act(() => {
+        useAgentStore.setState({ isAgentConfigInit: true });
+      });
+
+      vi.spyOn(useSessionStore, 'setState');
+      vi.spyOn(sessionService, 'getSessionConfig').mockResolvedValueOnce({
+        model: 'gpt-3.5-turbo',
+      } as any);
+
+      renderHook(() => result.current.useFetchAgentConfig('test-session-id'));
+
+      await waitFor(() => {
+        expect(result.current.agentConfig).toEqual({ model: 'gpt-3.5-turbo' });
+        expect(result.current.isAgentConfigInit).toBe(true);
+
+        expect(useSessionStore.setState).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('useFetchDefaultAgentConfig', () => {
+    it('should merge DEFAULT_AGENT_CONFIG and update defaultAgentConfig and isDefaultAgentConfigInit on success', async () => {
+      const { result } = renderHook(() => useAgentStore());
+      vi.spyOn(globalService, 'getDefaultAgentConfig').mockResolvedValue({ model: 'gemini-pro' });
+
+      renderHook(() => result.current.useFetchDefaultAgentConfig());
+
+      await waitFor(async () => {
+        expect(result.current.defaultAgentConfig).toEqual({
+          ...DEFAULT_AGENT_CONFIG,
+          model: 'gemini-pro',
+        });
+        expect(result.current.isDefaultAgentConfigInit).toBe(true);
+      });
+    });
+
+    it('should not modify state on failure', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      vi.spyOn(globalService, 'getDefaultAgentConfig').mockRejectedValueOnce(new Error());
+
+      renderHook(() => result.current.useFetchDefaultAgentConfig());
+
+      await waitFor(async () => {
+        expect(result.current.defaultAgentConfig).toEqual(DEFAULT_AGENT_CONFIG);
+        expect(result.current.isDefaultAgentConfigInit).toBe(false);
+      });
+    });
+  });
+
+  describe('internal_updateAgentConfig', () => {
+    it('should call sessionService.updateSessionConfig', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      const updateSessionConfigMock = vi.spyOn(sessionService, 'updateSessionConfig');
+
+      await act(async () => {
+        await result.current.internal_updateAgentConfig('test-session-id', { foo: 'bar' } as any);
+      });
+
+      expect(updateSessionConfigMock).toHaveBeenCalledWith('test-session-id', { foo: 'bar' });
+    });
+
+    it('should trigger internal_refreshAgentConfig', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      const refreshMock = vi.spyOn(result.current, 'internal_refreshAgentConfig');
+
+      await act(async () => {
+        await result.current.internal_updateAgentConfig('test-session-id', {});
+      });
+
+      expect(refreshMock).toHaveBeenCalledWith('test-session-id');
+    });
+
+    it('should trigger useSessionStore.refreshSessions when model changes', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      vi.spyOn(agentSelectors, 'currentAgentModel').mockReturnValueOnce('gpt-3.5-turbo');
+
+      const refreshSessionsMock = vi.spyOn(useSessionStore.getState(), 'refreshSessions');
+
+      await act(async () => {
+        await result.current.internal_updateAgentConfig('test-session-id', { model: 'gpt-4' });
+      });
+
+      expect(refreshSessionsMock).toHaveBeenCalled();
+    });
+  });
+
+  describe('internal_refreshAgentConfig', () => {
+    it('should call mutate with correct key', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      await act(async () => {
+        await result.current.internal_refreshAgentConfig('test-session-id');
+      });
+
+      expect(mutate).toHaveBeenCalledWith(['FETCH_AGENT_CONFIG', 'test-session-id']);
+    });
+  });
+
+  describe('edge cases', () => {
+    it('should not update config if activeId is null', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      act(() => {
+        useAgentStore.setState({ activeId: null } as any);
+      });
+
+      const updateMock = vi.spyOn(result.current, 'internal_updateAgentConfig');
+
+      await act(async () => {
+        await result.current.updateAgentConfig({});
+      });
+
+      expect(updateMock).not.toHaveBeenCalled();
     });
   });
 });
