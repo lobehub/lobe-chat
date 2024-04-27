@@ -47,7 +47,7 @@ const VirtualizedList = memo(() => {
     <Flexbox height={'100%'}>
       <Virtuoso
         atBottomStateChange={setAtBottom}
-        atBottomThreshold={30}
+        atBottomThreshold={50}
         computeItemKey={(_, item) => item}
         data={data}
         // followOutput={'auto'}
