@@ -1,8 +1,9 @@
 ---
 title: 在 LobeChat 中使用 Ollama
 description: >-
-  Learn how to use Ollama in LobeChat, run LLM locally, and experience
-  cutting-edge AI usage.
+Learn how to use Ollama in LobeChat, run LLM locally, and experience cutting-edge AI usage.
+
+
 tags:
   - Ollama
   - LobeChat
@@ -24,27 +25,28 @@ Ollama 是一款强大的本地运行大型语言模型（LLM）的框架，支�
 本文档将指导你如何在 LobeChat 中使用 Ollama：
 
 <Video
+  alt={'在 LobeChat 中使用 Ollama的完整演示'}
   height={524}
   src="https://github.com/lobehub/lobe-chat/assets/28616219/c32b56db-c6a1-4876-9bc3-acbd37ec0c0c"
 />
 
 ## 在 macOS 下使用 Ollama
 
-  <Steps>
+<Steps>
 
 ### 本地安装 Ollama
 
-    [下载 Ollama for macOS](https://ollama.com/download?utm_source=lobehub&utm_medium=docs&utm_campaign=download-macos) 并解压、安装。
+[下载 Ollama for macOS](https://ollama.com/download?utm_source=lobehub&utm_medium=docs&utm_campaign=download-macos) 并解压、安装。
 
 ### 配置 Ollama 允许跨域访问
 
 由于 Ollama 的默认参数配置，启动时设置了仅本地访问，所以跨域访问以及端口监听需要进行额外的环境变量设置 `OLLAMA_ORIGINS`。使用 `launchctl` 设置环境变量：
 
-    ```bash
-    launchctl setenv OLLAMA_ORIGINS "*"
-    ```
+```bash
+launchctl setenv OLLAMA_ORIGINS "*"
+```
 
-    完成设置后，需要重启 Ollama 应用程序。
+完成设置后，需要重启 Ollama 应用程序。
 
 ### 在 LobeChat 中与本地大模型对话
 
@@ -54,27 +56,33 @@ Ollama 是一款强大的本地运行大型语言模型（LLM）的框架，支�
 
 ## 在 windows 下使用 Ollama
 
-  <Steps>
+<Steps>
 
-    ### 本地安装 Ollama
+### 本地安装 Ollama
 
-    [下载 Ollama for Windows](https://ollama.com/download?utm_source=lobehub&utm_medium=docs&utm_campaign=download-windows) 并安装。
+[下载 Ollama for Windows](https://ollama.com/download?utm_source=lobehub&utm_medium=docs&utm_campaign=download-windows) 并安装。
 
-    ### 配置 Ollama 允许跨域访问
+### 配置 Ollama 允许跨域访问
 
-    由于 Ollama 的默认参数配置，启动时设置了仅本地访问，所以跨域访问以及端口监听需要进行额外的环境变量设置 `OLLAMA_ORIGINS`。
+由于 Ollama 的默认参数配置，启动时设置了仅本地访问，所以跨域访问以及端口监听需要进行额外的环境变量设置 `OLLAMA_ORIGINS`。
 
-    在 Windows 上，Ollama 继承了您的用户和系统环境变量。
+在 Windows 上，Ollama 继承了您的用户和系统环境变量。
 
-    1. 首先通过 Windows 任务栏点击 Ollama 退出程序。
-    2. 从控制面板编辑系统环境变量。
-    3. 为您的用户账户编辑或新建 Ollama 的环境变量 `OLLAMA_ORIGINS`，值设为 `*` 。
-    4. 点击`OK/应用`保存后重启系统。
-    5. 重新运行`Ollama`。
+1. 首先通过 Windows 任务栏点击 Ollama 退出程序。
+2. 从控制面板编辑系统环境变量。
+3. 为您的用户账户编辑或新建 Ollama 的环境变量 `OLLAMA_ORIGINS`，值设为 `*` 。
+4. 点击`OK/应用`保存后重启系统。
+5. 重新运行`Ollama`。
 
-    ### 在 LobeChat 中与本地大模型对话
+### 在 LobeChat 中与本地大模型对话
 
-    接下来，你就可以使用 LobeChat 与本地 LLM 对话了。
+接下来，你就可以使用 LobeChat 与本地 LLM 对话了。
+
+<Image
+  alt="在 LobeChat 中与 llama3 对话"
+  height="400"
+  src="https://github.com/lobehub/lobe-chat/assets/28616219/7f9a9a9f-fd91-4f59-aac9-3f26c6d49a1e"
+/>
 
 </Steps>
 
@@ -94,7 +102,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 ### 配置 Ollama 允许跨域访问
 
-由于 Ollama 的默认参数配置，启动时设置了仅本地访问，所以跨域访问以及端口监听需要进行额外的环境变量设置 `OLLAMA_ORIGINS`。 如果 Ollama 作为 systemd 服务运行，应该使用`systemctl`设置环境变量：
+由于 Ollama 的默认参数配置，启动时设置了仅本地访问，所以跨域访问以及端口监听需要进行额外的环境变量设置 `OLLAMA_ORIGINS`。如果 Ollama 作为 systemd 服务运行，应该使用`systemctl`设置环境变量：
 
 1. 通过调用`sudo systemctl edit ollama.service`编辑 systemd 服务。
 
