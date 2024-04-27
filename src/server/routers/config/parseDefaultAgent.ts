@@ -35,6 +35,11 @@ export const parseAgentConfig = (envStr: string) => {
       finalValue = array.map((item) => (isNaN(item as any) ? item : Number(item)));
     }
 
+    // handle plugins if it's a string
+    if (key === 'plugins') {
+      finalValue = typeof finalValue === 'string' ? [finalValue] : finalValue;
+    }
+
     set(config, key, finalValue);
   }
 
