@@ -1,15 +1,16 @@
 import { VoiceList } from '@lobehub/tts';
 
 import { INBOX_SESSION_ID } from '@/const/session';
-import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
+import { DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { AgentStore } from '@/store/agent';
-import { LobeAgentTTSConfig } from '@/types/agent';
+import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
 import { merge } from '@/utils/merge';
 
 const isInboxSession = (s: AgentStore) => s.activeId === INBOX_SESSION_ID;
 
 // ==========   Config   ============== //
-const currentAgentConfig = (s: AgentStore) => merge(DEFAULT_AGENT_CONFIG, s.agentConfig);
+const currentAgentConfig = (s: AgentStore): LobeAgentConfig =>
+  merge(s.defaultAgentConfig, s.agentConfig);
 
 const currentAgentSystemRole = (s: AgentStore) => {
   return currentAgentConfig(s).systemRole;
