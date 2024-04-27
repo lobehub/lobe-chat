@@ -38,7 +38,7 @@ const VirtualizedList = memo(() => {
     if (virtuosoRef.current) {
       virtuosoRef.current.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
     }
-  }, [id]);
+  }, [id, data.length]);
 
   // overscan should be 1.5 times the height of the window
   const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
@@ -50,11 +50,12 @@ const VirtualizedList = memo(() => {
         atBottomThreshold={30}
         computeItemKey={(_, item) => item}
         data={data}
-        followOutput={'auto'}
+        // followOutput={'auto'}
+        // increaseViewportBy={overscan}
         initialTopMostItemIndex={data?.length - 1}
         isScrolling={setIsScrolling}
         itemContent={itemContent}
-        overscan={overscan}
+        overscan={{ main: overscan, reverse: overscan / 2 }}
         ref={virtuosoRef}
       />
       <AutoScroll
