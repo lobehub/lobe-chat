@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { AgentStore } from '@/store/agent';
 
@@ -76,7 +77,129 @@ describe('agentSelectors', () => {
     it('should return the appropriate TTS voice based on the service and language', () => {
       const lang = 'en';
       const ttsVoice = agentSelectors.currentAgentTTSVoice(lang)(mockSessionStore);
-      expect(ttsVoice).toBe(mockSessionStore.agentConfig.tts.voice.openai);
+      expect(ttsVoice).toBe(mockSessionStore.agentConfig.tts?.voice?.openai);
+    });
+
+    it('should return the default voice for edge TTS service', () => {
+      const modifiedStore = {
+        ...mockSessionStore,
+        agentConfig: {
+          ...mockSessionStore.agentConfig,
+          tts: {
+            ...DEFAUTT_AGENT_TTS_CONFIG,
+            ttsService: 'edge',
+          },
+        },
+      } as AgentStore;
+      const ttsVoice = agentSelectors.currentAgentTTSVoice('en')(modifiedStore);
+      expect(ttsVoice).toBe('ar-SA-HamedNeural');
+    });
+
+    it('should return the default voice for microsoft TTS service', () => {
+      const modifiedStore = {
+        ...mockSessionStore,
+        agentConfig: {
+          ...mockSessionStore.agentConfig,
+          tts: {
+            ...DEFAUTT_AGENT_TTS_CONFIG,
+            ttsService: 'microsoft',
+          },
+        },
+      } as AgentStore;
+      const ttsVoice = agentSelectors.currentAgentTTSVoice('en')(modifiedStore);
+      expect(ttsVoice).toBe('ar-SA-HamedNeural');
+    });
+
+    it('should return the first voice if the specified voice does not exist', () => {
+      const lang = 'en';
+      const modifiedStore = {
+        ...mockSessionStore,
+        agentConfig: {
+          ...mockSessionStore.agentConfig,
+          tts: {
+            ...DEFAUTT_AGENT_TTS_CONFIG,
+            ttsService: 'avc',
+            voice: {
+              openai: 'non-existent-voice',
+            },
+          },
+        },
+      };
+      const ttsVoice = agentSelectors.currentAgentTTSVoice(lang)(modifiedStore as any);
+      expect(ttsVoice).toBe('alloy');
+    });
+  });
+
+  describe('currentAgentModelProvider', () => {
+    it('should return the provider from the agent config', () => {
+      const provider = agentSelectors.currentAgentModelProvider(mockSessionStore);
+      expect(provider).toBe(mockSessionStore.agentConfig.provider);
+    });
+
+    it('should return undefined if provider is not defined in the agent config', () => {
+      const modifiedStore = {
+        ...mockSessionStore,
+        agentConfig: {
+          ...mockSessionStore.agentConfig,
+          provider: undefined,
+        },
+      };
+      const provider = agentSelectors.currentAgentModelProvider(modifiedStore);
+      expect(provider).toBeUndefined();
+    });
+  });
+
+  describe('currentAgentPlugins', () => {
+    it('should return the plugins array from the agent config', () => {
+      const plugins = agentSelectors.currentAgentPlugins(mockSessionStore);
+      expect(plugins).toEqual(mockSessionStore.agentConfig.plugins);
+    });
+
+    it('should return an empty array if plugins are not defined in the agent config', () => {
+      const modifiedStore = {
+        ...mockSessionStore,
+        agentConfig: {
+          ...mockSessionStore.agentConfig,
+          plugins: undefined,
+        },
+      };
+      const plugins = agentSelectors.currentAgentPlugins(modifiedStore);
+      expect(plugins).toEqual([]);
+    });
+  });
+
+  describe('currentAgentSystemRole', () => {
+    it('should return the system role from the agent config', () => {
+      const systemRole = agentSelectors.currentAgentSystemRole(mockSessionStore);
+      expect(systemRole).toBe(mockSessionStore.agentConfig.systemRole);
+    });
+
+    it('should return undefined if system role is not defined in the agent config', () => {
+      const modifiedStore = {
+        ...mockSessionStore,
+        agentConfig: {
+          ...mockSessionStore.agentConfig,
+          systemRole: undefined,
+        },
+      };
+      const systemRole = agentSelectors.currentAgentSystemRole(modifiedStore);
+      expect(systemRole).toBeUndefined();
+    });
+  });
+
+  describe('isInboxSession', () => {
+    it('should return true if activeId is INBOX_SESSION_ID', () => {
+      const modifiedStore = {
+        ...mockSessionStore,
+        activeId: INBOX_SESSION_ID,
+      };
+      const isInbox = agentSelectors.isInboxSession(modifiedStore);
+      expect(isInbox).toBe(true);
+    });
+
+    it('should return false if activeId is not INBOX_SESSION_ID', () => {
+      const isInbox = agentSelectors.isInboxSession(mockSessionStore);
+      expect(isInbox).toBe(false);
     });
   });
 });
