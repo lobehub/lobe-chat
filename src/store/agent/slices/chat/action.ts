@@ -1,12 +1,10 @@
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
-import useSWR, { SWRResponse, mutate } from 'swr';
+import { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { useClientDataSWR } from '@/libs/swr';
-import { globalService } from '@/services/global';
 import { sessionService } from '@/services/session';
 import { useSessionStore } from '@/store/session';
 import { LobeAgentConfig } from '@/types/agent';
@@ -24,7 +22,6 @@ export interface AgentChatAction {
   updateAgentConfig: (config: Partial<LobeAgentConfig>) => Promise<void>;
 
   useFetchAgentConfig: (id: string) => SWRResponse<LobeAgentConfig>;
-  useFetchDefaultAgentConfig: () => SWRResponse<DeepPartial<LobeAgentConfig>>;
 
   /* eslint-disable typescript-sort-keys/interface */
 
@@ -76,6 +73,7 @@ export const createChatSlice: StateCreator<
 
     await get().internal_updateAgentConfig(activeId, config);
   },
+
   useFetchAgentConfig: (sessionId) =>
     useClientDataSWR<LobeAgentConfig>(
       [FETCH_AGENT_CONFIG_KEY, sessionId],
@@ -86,26 +84,6 @@ export const createChatSlice: StateCreator<
 
           set({ agentConfig: data, isAgentConfigInit: true }, false, 'fetchAgentConfig');
         },
-      },
-    ),
-  useFetchDefaultAgentConfig: () =>
-    useSWR<DeepPartial<LobeAgentConfig>>(
-      'fetchDefaultAgentConfig',
-      globalService.getDefaultAgentConfig,
-      {
-        onSuccess: (data) => {
-          if (data) {
-            set(
-              {
-                defaultAgentConfig: merge(DEFAULT_AGENT_CONFIG, data),
-                isDefaultAgentConfigInit: true,
-              },
-              false,
-              'fetchDefaultAgentConfig',
-            );
-          }
-        },
-        revalidateOnFocus: false,
       },
     ),
 

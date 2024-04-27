@@ -76,7 +76,7 @@ describe('agentSelectors', () => {
     it('should return the appropriate TTS voice based on the service and language', () => {
       const lang = 'en';
       const ttsVoice = agentSelectors.currentAgentTTSVoice(lang)(mockSessionStore);
-      expect(ttsVoice).toBe(mockSessionStore.agentConfig.tts?.voice?.openai);
+      expect(ttsVoice).toBe(mockSessionStore.agentConfig.tts.voice.openai);
     });
   });
 });

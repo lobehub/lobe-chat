@@ -1,25 +1,11 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { trpcClient } from '@/libs/trpc/client';
-import { GlobalServerConfig } from '@/types/serverConfig';
-
 import { globalService } from '../global';
 
 global.fetch = vi.fn();
 
 beforeEach(() => {
   vi.clearAllMocks();
-});
-
-vi.mock('@/libs/trpc/client', () => {
-  return {
-    trpcClient: {
-      config: {
-        getGlobalConfig: { query: vi.fn() },
-        getDefaultAgentConfig: { query: vi.fn() },
-      },
-    },
-  };
 });
 
 describe('GlobalService', () => {
@@ -74,14 +60,15 @@ describe('GlobalService', () => {
   describe('ServerConfig', () => {
     it('should return the serverConfig when fetch is successful', async () => {
       // Arrange
-      const mockConfig = { enabledOAuthSSO: true } as GlobalServerConfig;
+      (fetch as Mock).mockResolvedValue({
+        json: () => Promise.resolve({ customModelName: 'abc' }),
+      });
 
-      vi.spyOn(trpcClient.config.getGlobalConfig, 'query').mockResolvedValue(mockConfig);
       // Act
       const config = await globalService.getGlobalConfig();
 
       // Assert
-      expect(config).toEqual({ enabledOAuthSSO: true });
+      expect(config).toEqual({ customModelName: 'abc' });
     });
   });
 });

@@ -1,22 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-/**
- * This file contains the root router of your tRPC-backend
- */
-import { createCallerFactory } from '@/libs/trpc';
-import { AuthContext, createContextInner } from '@/server/context';
 import { GlobalServerConfig } from '@/types/serverConfig';
 
-import { configRouter } from './index';
+import { GET } from './route';
 
-const createCaller = createCallerFactory(configRouter);
-let ctx: AuthContext;
-let router: ReturnType<typeof createCaller>;
-
-beforeEach(async () => {
+beforeEach(() => {
   vi.resetAllMocks();
-  ctx = await createContextInner();
-  router = createCaller(ctx);
 });
 
 describe('GET /api/config', () => {
@@ -26,10 +15,15 @@ describe('GET /api/config', () => {
         process.env.OPENAI_MODEL_LIST =
           '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo,gpt-4-0125-preview=gpt-4-32k';
 
-        const response = await router.getGlobalConfig();
+        const response = await GET();
 
         // Assert
-        const result = response.languageModel?.openai;
+        expect(response).toBeInstanceOf(Response);
+        expect(response.status).toBe(200);
+
+        const jsonResponse: GlobalServerConfig = await response.json();
+
+        const result = jsonResponse.languageModel?.openai;
 
         expect(result).toMatchSnapshot();
         process.env.OPENAI_MODEL_LIST = '';
@@ -39,9 +33,10 @@ describe('GET /api/config', () => {
         process.env.OPENAI_MODEL_LIST =
           '-all,+gpt-3.5-turbo-1106,+gpt-3.5-turbo,+gpt-3.5-turbo-16k,+gpt-4,+gpt-4-32k,+gpt-4-1106-preview,+gpt-4-vision-preview';
 
-        const response = await router.getGlobalConfig();
+        const response = await GET();
+        const jsonResponse: GlobalServerConfig = await response.json();
 
-        const result = response.languageModel?.openai?.serverModelCards;
+        const result = jsonResponse.languageModel?.openai?.serverModelCards;
 
         expect(result).toMatchSnapshot();
 
@@ -52,9 +47,10 @@ describe('GET /api/config', () => {
         process.env.OPENAI_MODEL_LIST =
           'gpt-4-0125-preview=gpt-4-turbo，gpt-4-0125-preview=gpt-4-32k';
 
-        const response = await router.getGlobalConfig();
+        const response = await GET();
+        const jsonResponse: GlobalServerConfig = await response.json();
 
-        const result = response.languageModel?.openai?.serverModelCards;
+        const result = jsonResponse.languageModel?.openai?.serverModelCards;
 
         expect(result?.find((s) => s.id === 'gpt-4-0125-preview')?.displayName).toEqual(
           'gpt-4-32k',
@@ -66,9 +62,10 @@ describe('GET /api/config', () => {
       it('should delete model', async () => {
         process.env.OPENAI_MODEL_LIST = '-gpt-4';
 
-        const response = await router.getGlobalConfig();
+        const res = await GET();
+        const data: GlobalServerConfig = await res.json();
 
-        const result = response.languageModel?.openai?.serverModelCards;
+        const result = data.languageModel?.openai?.serverModelCards;
 
         expect(result?.find((r) => r.id === 'gpt-4')).toBeUndefined();
 
@@ -78,9 +75,10 @@ describe('GET /api/config', () => {
       it('show the hidden model', async () => {
         process.env.OPENAI_MODEL_LIST = '+gpt-4-1106-preview';
 
-        const response = await router.getGlobalConfig();
+        const res = await GET();
+        const data: GlobalServerConfig = await res.json();
 
-        const result = response.languageModel?.openai?.serverModelCards;
+        const result = data.languageModel?.openai?.serverModelCards;
 
         expect(result?.find((o) => o.id === 'gpt-4-1106-preview')).toEqual({
           displayName: 'GPT-4 Turbo Preview (1106)',
@@ -96,9 +94,10 @@ describe('GET /api/config', () => {
       it('only add the model', async () => {
         process.env.OPENAI_MODEL_LIST = 'model1,model2,model3，model4';
 
-        const response = await router.getGlobalConfig();
+        const res = await GET();
+        const data: GlobalServerConfig = await res.json();
 
-        const result = response.languageModel?.openai?.serverModelCards;
+        const result = data.languageModel?.openai?.serverModelCards;
 
         expect(result).toContainEqual({
           displayName: 'model1',
@@ -130,10 +129,15 @@ describe('GET /api/config', () => {
         process.env.CUSTOM_MODELS =
           '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo,gpt-4-0125-preview=gpt-4-32k';
 
-        const response = await router.getGlobalConfig();
+        const response = await GET();
 
         // Assert
-        const result = response.languageModel?.openai?.serverModelCards;
+        expect(response).toBeInstanceOf(Response);
+        expect(response.status).toBe(200);
+
+        const jsonResponse: GlobalServerConfig = await response.json();
+
+        const result = jsonResponse.languageModel?.openai?.serverModelCards;
 
         expect(result).toMatchSnapshot();
       });
@@ -144,10 +148,10 @@ describe('GET /api/config', () => {
         process.env.OPENROUTER_MODEL_LIST =
           '-all,+google/gemma-7b-it,+mistralai/mistral-7b-instruct=Mistral-7B-Instruct';
 
-        const response = await router.getGlobalConfig();
+        const res = await GET();
+        const data: GlobalServerConfig = await res.json();
 
-        // Assert
-        const result = response.languageModel?.openrouter;
+        const result = data.languageModel?.openrouter;
 
         expect(result).toMatchSnapshot();
 
