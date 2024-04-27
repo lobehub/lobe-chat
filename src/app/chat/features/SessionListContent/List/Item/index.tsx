@@ -3,6 +3,7 @@ import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import ModelTag from '@/components/ModelTag';
+import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
@@ -19,6 +20,7 @@ interface SessionItemProps {
 const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
+  const [defaultModel] = useAgentStore((s) => [s.defaultAgentConfig.model]);
 
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [!!s.chatLoadingId && id === s.activeId]);
@@ -40,6 +42,8 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
       ];
     });
 
+  const showModel = model !== defaultModel;
+
   const actions = useMemo(
     () => (
       <Actions
@@ -54,12 +58,12 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
 
   const addon = useMemo(
     () =>
-      model && (
+      !showModel ? undefined : (
         <Flexbox gap={4} horizontal style={{ flexWrap: 'wrap' }}>
           <ModelTag model={model} />
         </Flexbox>
       ),
-    [model],
+    [showModel, model],
   );
 
   return (

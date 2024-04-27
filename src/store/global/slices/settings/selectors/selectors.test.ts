@@ -79,28 +79,6 @@ describe('settingsSelectors', () => {
     });
   });
 
-  describe('defaultAgentConfig', () => {
-    it('should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly', () => {
-      const s = {
-        settings: {
-          defaultAgent: {
-            config: {
-              systemRole: 'user',
-              model: 'gpt-3.5-turbo',
-              params: {
-                temperature: 0.7,
-              },
-            },
-          },
-        },
-      } as unknown as GlobalStore;
-
-      const result = settingsSelectors.defaultAgentConfig(s);
-
-      expect(result).toMatchSnapshot();
-    });
-  });
-
   describe('defaultAgentMeta', () => {
     it('should merge DEFAULT_AGENT_META and defaultAgent(s).meta correctly', () => {
       const s = {

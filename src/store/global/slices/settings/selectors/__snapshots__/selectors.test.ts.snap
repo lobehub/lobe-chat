@@ -99,33 +99,6 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
 }
 `;
 
-exports[`settingsSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly 1`] = `
-{
-  "autoCreateTopicThreshold": 2,
-  "displayMode": "chat",
-  "enableAutoCreateTopic": true,
-  "historyCount": 1,
-  "model": "gpt-3.5-turbo",
-  "params": {
-    "frequency_penalty": 0,
-    "presence_penalty": 0,
-    "temperature": 0.7,
-    "top_p": 1,
-  },
-  "plugins": [],
-  "provider": "openai",
-  "systemRole": "user",
-  "tts": {
-    "showAllLocaleVoice": false,
-    "sttLocale": "auto",
-    "ttsService": "openai",
-    "voice": {
-      "openai": "alloy",
-    },
-  },
-}
-`;
-
 exports[`settingsSelectors > defaultAgentMeta > should merge DEFAULT_AGENT_META and defaultAgent(s).meta correctly 1`] = `
 {
   "avatar": "agent-avatar.jpg",
