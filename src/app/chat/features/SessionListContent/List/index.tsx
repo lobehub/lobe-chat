@@ -1,9 +1,13 @@
+import { Empty } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Center } from 'react-layout-kit';
 import LazyLoad from 'react-lazy-load';
 
 import { SESSION_CHAT_URL } from '@/const/url';
+import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession } from '@/types/session';
@@ -24,7 +28,9 @@ interface SessionListProps {
   showAddButton?: boolean;
 }
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
+  const { t } = useTranslation('chat');
   const isInit = useSessionStore((s) => sessionSelectors.isSessionListInit(s));
+  const { showCreateSession } = useFeatureFlagStore(featureFlagsSelectors);
   const { styles } = useStyles();
 
   const { mobile } = useResponsive();
@@ -40,8 +46,12 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
         </Link>
       </LazyLoad>
     ))
-  ) : (
+  ) : showCreateSession ? (
     showAddButton && <AddButton groupId={groupId} />
+  ) : (
+    <Center>
+      <Empty description={t('emptyAgent')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+    </Center>
   );
 });
 

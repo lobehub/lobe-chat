@@ -2,6 +2,56 @@
 
 # Changelog
 
+## [Version 0.150.0](https://github.com/lobehub/lobe-chat/compare/v0.149.6...v0.150.0)
+
+<sup>Released on **2024-04-26**</sup>
+
+#### ✨ Features
+
+- **misc**: Support feature flags.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support feature flags, closes [#2213](https://github.com/lobehub/lobe-chat/issues/2213) ([4532be5](https://github.com/lobehub/lobe-chat/commit/4532be5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.149.6](https://github.com/lobehub/lobe-chat/compare/v0.149.5...v0.149.6)
+
+<sup>Released on **2024-04-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix ollama host issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix ollama host issue, closes [#2210](https://github.com/lobehub/lobe-chat/issues/2210) ([c49d4c7](https://github.com/lobehub/lobe-chat/commit/c49d4c7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.149.5](https://github.com/lobehub/lobe-chat/compare/v0.149.4...v0.149.5)
 
 <sup>Released on **2024-04-25**</sup>
