@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest } from 'next/server';
 
-interface AuthContext {
+export interface AuthContext {
   userId?: string | null;
 }
 
@@ -9,11 +9,9 @@ interface AuthContext {
  * Inner function for `createContext` where we create the context.
  * This is useful for testing when we don't want to mock Next.js' request/response
  */
-export function createContextInner(): AuthContext {
-  return {
-    userId: null,
-  };
-}
+export const createContextInner = async (): Promise<AuthContext> => ({
+  userId: null,
+});
 
 export type Context = Awaited<ReturnType<typeof createContextInner>>;
 
