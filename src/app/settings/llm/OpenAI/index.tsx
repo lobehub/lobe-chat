@@ -13,6 +13,7 @@ const OpenAIProvider = memo(() => {
       modelList={{ showModelFetcher: true }}
       provider={'openai'}
       showApiKey={showOpenAIApiKey}
+      showBrowserRequest
       showEndpoint={showOpenAIProxyUrl}
       title={<OpenAI.Combine size={24} />}
     />
