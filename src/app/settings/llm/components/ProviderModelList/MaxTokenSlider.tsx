@@ -8,14 +8,14 @@ const getRealValue = (num: number) => Math.round(Math.pow(2, num));
 
 const marks: SliderSingleProps['marks'] = {
   [exponent(1)]: '0',
-  [exponent(2)]: '2k',
-  [exponent(4)]: '4k',
-  [exponent(8)]: '8k',
-  [exponent(16)]: '16k',
-  [exponent(32)]: '32k',
-  [exponent(64)]: '64k',
-  [exponent(128)]: '128k',
-  [exponent(256)]: '256k',
+  [exponent(2)]: '2K',
+  [exponent(4)]: '4K',
+  [exponent(8)]: '8K',
+  [exponent(16)]: '16K',
+  [exponent(32)]: '32K',
+  [exponent(64)]: '64K',
+  [exponent(128)]: '128K',
+  [exponent(256)]: '256K',
   [exponent(1024)]: '1M',
 };
 
