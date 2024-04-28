@@ -2,6 +2,131 @@
 
 # Changelog
 
+### [Version 0.150.5](https://github.com/lobehub/lobe-chat/compare/v0.150.4...v0.150.5)
+
+<sup>Released on **2024-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the plugin string env and search error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the plugin string env and search error, closes [#2239](https://github.com/lobehub/lobe-chat/issues/2239) ([74b1ae0](https://github.com/lobehub/lobe-chat/commit/74b1ae0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.150.4](https://github.com/lobehub/lobe-chat/compare/v0.150.3...v0.150.4)
+
+<sup>Released on **2024-04-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Hide default model tag and show ollama provider by default.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Hide default model tag and show ollama provider by default, closes [#2238](https://github.com/lobehub/lobe-chat/issues/2238) ([baa4780](https://github.com/lobehub/lobe-chat/commit/baa4780))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.150.3](https://github.com/lobehub/lobe-chat/compare/v0.150.2...v0.150.3)
+
+<sup>Released on **2024-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix docker build.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix docker build, closes [#2236](https://github.com/lobehub/lobe-chat/issues/2236) ([749a843](https://github.com/lobehub/lobe-chat/commit/749a843))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.150.2](https://github.com/lobehub/lobe-chat/compare/v0.150.1...v0.150.2)
+
+<sup>Released on **2024-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix display error when using `DEFAULT_AGENT_CONFIG` env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix display error when using `DEFAULT_AGENT_CONFIG` env, closes [#2231](https://github.com/lobehub/lobe-chat/issues/2231) ([42bc734](https://github.com/lobehub/lobe-chat/commit/42bc734))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.150.1](https://github.com/lobehub/lobe-chat/compare/v0.150.0...v0.150.1)
+
+<sup>Released on **2024-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix display error when using DEFAULT_AGENT_CONFIG env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix display error when using DEFAULT_AGENT_CONFIG env ([e46215c](https://github.com/lobehub/lobe-chat/commit/e46215c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.150.0](https://github.com/lobehub/lobe-chat/compare/v0.149.6...v0.150.0)
 
 <sup>Released on **2024-04-26**</sup>

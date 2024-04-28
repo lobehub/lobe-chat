@@ -81,15 +81,15 @@ class _SessionModel extends BaseModel {
   async queryByKeyword(keyword: string): Promise<LobeSessions> {
     if (!keyword) return [];
 
-    console.time('queryByKeyword');
+    const startTime = Date.now();
     const keywordLowerCase = keyword.toLowerCase();
 
     // First, filter sessions by title and description
     const matchingSessionsPromise = this.table
       .filter((session) => {
         return (
-          session.meta.title.toLowerCase().includes(keywordLowerCase) ||
-          session.meta.description.toLowerCase().includes(keywordLowerCase)
+          session.meta.title?.toLowerCase().includes(keywordLowerCase) ||
+          session.meta.description?.toLowerCase().includes(keywordLowerCase)
         );
       })
       .toArray();
@@ -112,7 +112,7 @@ class _SessionModel extends BaseModel {
     //  match topics
     const matchingTopicsPromise = this.db.topics
       .filter((topic) => {
-        return topic.title.toLowerCase().includes(keywordLowerCase);
+        return topic.title?.toLowerCase().includes(keywordLowerCase);
       })
       .toArray();
 
@@ -139,7 +139,7 @@ class _SessionModel extends BaseModel {
       .anyOf([...combinedSessionIds])
       .toArray();
 
-    console.timeEnd('queryByKeyword');
+    console.log(`检索到 ${items.length} 项，耗时 ${Date.now() - startTime}ms`);
     return this.mapToAgentSessions(items);
   }
 
