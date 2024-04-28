@@ -7,7 +7,7 @@ import { OpenAIChatMessage } from '@/types/openai/chat';
 import { chainSummaryTitle } from '../summaryTitle';
 
 // Mock the getCurrentLanguage function
-vi.mock('@/store/global/helpers', () => ({
+vi.mock('@/store/user/helpers', () => ({
   globalHelpers: {
     getCurrentLanguage: vi.fn(),
   },

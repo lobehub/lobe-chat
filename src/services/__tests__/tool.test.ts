@@ -8,7 +8,7 @@ import OpenAIPlugin from './openai/plugin.json';
 
 // Mocking modules and functions
 
-vi.mock('@/store/global/helpers', () => ({
+vi.mock('@/store/user/helpers', () => ({
   globalHelpers: {
     getCurrentLanguage: vi.fn(),
   },

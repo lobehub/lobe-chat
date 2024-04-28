@@ -2,12 +2,12 @@ import { Modal } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useUserStore } from '@/store/user';
+import { useGlobalStore } from '@/store/global';
 
 import TopicListContent from '../../features/TopicListContent';
 
 const Topics = memo(() => {
-  const [showAgentSettings, toggleConfig] = useUserStore((s) => [
+  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     s.preference.mobileShowTopic,
     s.toggleMobileTopic,
   ]);

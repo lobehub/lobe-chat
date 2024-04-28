@@ -14,56 +14,6 @@ afterEach(() => {
 });
 
 describe('createPreferenceSlice', () => {
-  describe('toggleChatSideBar', () => {
-    it('should toggle chat sidebar', () => {
-      const { result } = renderHook(() => useUserStore());
-
-      act(() => {
-        useUserStore.getState().updatePreference({ showChatSideBar: false });
-        result.current.toggleChatSideBar();
-      });
-
-      expect(result.current.preference.showChatSideBar).toBe(true);
-    });
-  });
-
-  describe('toggleExpandSessionGroup', () => {
-    it('should toggle expand session group', () => {
-      const { result } = renderHook(() => useUserStore());
-      const groupId = 'group-id';
-
-      act(() => {
-        result.current.toggleExpandSessionGroup(groupId, true);
-      });
-
-      expect(result.current.preference.expandSessionGroupKeys).toContain(groupId);
-    });
-  });
-
-  describe('toggleMobileTopic', () => {
-    it('should toggle mobile topic', () => {
-      const { result } = renderHook(() => useUserStore());
-
-      act(() => {
-        result.current.toggleMobileTopic();
-      });
-
-      expect(result.current.preference.mobileShowTopic).toBe(true);
-    });
-  });
-
-  describe('toggleSystemRole', () => {
-    it('should toggle system role', () => {
-      const { result } = renderHook(() => useUserStore());
-
-      act(() => {
-        result.current.toggleSystemRole(true);
-      });
-
-      expect(result.current.preference.showSystemRole).toBe(true);
-    });
-  });
-
   describe('updateGuideState', () => {
     it('should update guide state', () => {
       const { result } = renderHook(() => useUserStore());

@@ -3,7 +3,7 @@ import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { useUserStore } from '@/store/user';
+import { useGlobalStore } from '@/store/global';
 
 import DefaultContent from './DefaultContent';
 import TopicContent from './TopicContent';
@@ -40,7 +40,7 @@ export interface ConfigCellProps {
 
 const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
   const { styles, cx } = useStyles();
-  const toggleConfig = useUserStore((s) => s.toggleMobileTopic);
+  const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
   const [toggleTopic] = useChatStore((s) => [s.switchTopic]);
   const [isHover, setHovering] = useState(false);
 
