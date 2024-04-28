@@ -90,7 +90,7 @@ export const globalActionSlice: StateCreator<
 
   useInitPreference: () =>
     useClientDataSWR<GlobalPreference>(
-      'preference',
+      'initGlobalPreference',
       () => get().preferenceStorage.getFromLocalStorage(),
       {
         onSuccess: (preference) => {

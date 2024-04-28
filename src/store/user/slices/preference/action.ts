@@ -37,7 +37,7 @@ export const createPreferenceSlice: StateCreator<
 
   useInitPreference: () =>
     useClientDataSWR<UserPreference>(
-      'preference',
+      'initUserPreference',
       () => get().preferenceStorage.getFromLocalStorage(),
       {
         onSuccess: (preference) => {
