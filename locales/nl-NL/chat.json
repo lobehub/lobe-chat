@@ -18,6 +18,7 @@
     "title": "{{title}} Kopie"
   },
   "duplicateTitle": "{{title}} Kopie",
+  "emptyAgent": "Geen assistent beschikbaar",
   "historyRange": "Geschiedenisbereik",
   "inbox": {
     "defaultMessage": "Hallo, ik ben je slimme assistent. Je kunt me alles vragen en ik zal mijn best doen om je te antwoorden. Als je een meer professionele of op maat gemaakte assistent nodig hebt, klik dan op het `+`-teken om een aangepaste assistent te maken.",

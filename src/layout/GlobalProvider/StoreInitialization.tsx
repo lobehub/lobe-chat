@@ -6,6 +6,7 @@ import { createStoreUpdater } from 'zustand-utils';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
+import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
 
 const StoreInitialization = memo(() => {
@@ -14,8 +15,10 @@ const StoreInitialization = memo(() => {
     s.useFetchUserConfig,
     s.useInitPreference,
   ]);
+  const useFetchDefaultAgentConfig = useAgentStore((s) => s.useFetchDefaultAgentConfig);
   // init the system preference
   useInitPreference();
+  useFetchDefaultAgentConfig();
 
   const { isLoading } = useFetchServerConfig();
   useFetchUserConfig(!isLoading);

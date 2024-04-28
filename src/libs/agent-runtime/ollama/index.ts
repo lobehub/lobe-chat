@@ -24,13 +24,20 @@ export class LobeOllamaAI implements LobeRuntimeAI {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs);
     }
 
-    this.client = new Ollama(!baseURL ? undefined : { host: new URL(baseURL).host });
+    this.client = new Ollama(!baseURL ? undefined : { host: baseURL });
 
     if (baseURL) this.baseURL = baseURL;
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
+      const abort = () => {
+        this.client.abort();
+        options?.signal?.removeEventListener('abort', abort);
+      };
+
+      options?.signal?.addEventListener('abort', abort);
+
       const response = await this.client.chat({
         messages: this.buildOllamaMessages(payload.messages),
         model: payload.model,

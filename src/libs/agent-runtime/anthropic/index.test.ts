@@ -72,14 +72,17 @@ describe('LobeAnthropicAI', () => {
       });
 
       // Assert
-      expect(instance['client'].messages.create).toHaveBeenCalledWith({
-        max_tokens: 4096,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'claude-3-haiku-20240307',
-        stream: true,
-        temperature: 0,
-        top_p: 1,
-      });
+      expect(instance['client'].messages.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 4096,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'claude-3-haiku-20240307',
+          stream: true,
+          temperature: 0,
+          top_p: 1,
+        },
+        {},
+      );
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -105,14 +108,17 @@ describe('LobeAnthropicAI', () => {
       });
 
       // Assert
-      expect(instance['client'].messages.create).toHaveBeenCalledWith({
-        max_tokens: 4096,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'claude-3-haiku-20240307',
-        stream: true,
-        system: 'You are an awesome greeter',
-        temperature: 0,
-      });
+      expect(instance['client'].messages.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 4096,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'claude-3-haiku-20240307',
+          stream: true,
+          system: 'You are an awesome greeter',
+          temperature: 0,
+        },
+        {},
+      );
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -137,14 +143,17 @@ describe('LobeAnthropicAI', () => {
       });
 
       // Assert
-      expect(instance['client'].messages.create).toHaveBeenCalledWith({
-        max_tokens: 2048,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'claude-3-haiku-20240307',
-        stream: true,
-        temperature: 0.5,
-        top_p: 1,
-      });
+      expect(instance['client'].messages.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 2048,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'claude-3-haiku-20240307',
+          stream: true,
+          temperature: 0.5,
+          top_p: 1,
+        },
+        {},
+      );
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -171,14 +180,17 @@ describe('LobeAnthropicAI', () => {
       });
 
       // Assert
-      expect(instance['client'].messages.create).toHaveBeenCalledWith({
-        max_tokens: 2048,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'claude-3-haiku-20240307',
-        stream: true,
-        temperature: 0.5,
-        top_p: 1,
-      });
+      expect(instance['client'].messages.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 2048,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'claude-3-haiku-20240307',
+          stream: true,
+          temperature: 0.5,
+          top_p: 1,
+        },
+        {},
+      );
       expect(result).toBeInstanceOf(Response);
     });
 

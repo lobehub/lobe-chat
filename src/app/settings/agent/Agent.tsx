@@ -3,11 +3,13 @@ import { memo } from 'react';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import AgentSetting from '@/features/AgentSetting';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { settingsSelectors } from '@/store/global/selectors';
 
 const Agent = memo(() => {
-  const config = useGlobalStore(settingsSelectors.defaultAgentConfig, isEqual);
+  const config = useAgentStore(agentSelectors.defaultAgentConfig, isEqual);
   const meta = useGlobalStore(settingsSelectors.defaultAgentMeta, isEqual);
   const [updateAgent] = useGlobalStore((s) => [s.updateDefaultAgent]);
 
