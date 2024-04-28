@@ -6,18 +6,21 @@ import { useTranslation } from 'react-i18next';
 
 import PageTitle from '@/components/PageTitle';
 import AgentSetting from '@/features/AgentSetting';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 
 const EditPage = memo(() => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
-  const config = useSessionStore(agentSelectors.currentAgentConfig, isEqual);
-  const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
-  const [updateAgentConfig, updateAgentMeta, title] = useSessionStore((s) => [
-    s.updateAgentConfig,
-    s.updateAgentMeta,
-    agentSelectors.currentAgentTitle(s),
+  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
+  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+  const [updateAgentConfig] = useAgentStore((s) => [s.updateAgentConfig]);
+
+  const [updateAgentMeta, title] = useSessionStore((s) => [
+    s.updateSessionMeta,
+    sessionMetaSelectors.currentAgentTitle(s),
   ]);
 
   return (

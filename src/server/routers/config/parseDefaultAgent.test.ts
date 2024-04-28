@@ -110,6 +110,20 @@ describe('parseAgentConfig', () => {
       };
       expect(parseAgentConfig(envStr)).toEqual(expected);
     });
+
+    it('should parsers plugins correctly', () => {
+      const envStr =
+        'enableAutoCreateTopic=true;model=gemini-pro;provider=google;plugins=lobe-image-designer';
+
+      const expected = {
+        enableAutoCreateTopic: true,
+        model: 'gemini-pro',
+        plugins: ['lobe-image-designer'],
+        provider: 'google',
+      };
+
+      expect(parseAgentConfig(envStr)).toEqual(expected);
+    });
   });
 
   describe('Error Boundary', () => {

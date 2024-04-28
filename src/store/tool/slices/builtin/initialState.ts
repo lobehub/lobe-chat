@@ -1,6 +1,5 @@
+import { builtinTools } from '@/tools';
 import { LobeBuiltinTool } from '@/types/tool';
-
-import { builtinTools } from '../../../../tools';
 
 export interface BuiltinToolState {
   builtinToolLoading: Record<string, boolean>;

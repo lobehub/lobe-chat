@@ -31,8 +31,8 @@ export default memo(() => {
     <>
       <PageTitle title={t('tab.llm')} />
       <OpenAI />
-      <Azure />
       <Ollama />
+      <Azure />
       <Google />
       <Anthropic />
       <Bedrock />

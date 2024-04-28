@@ -13,15 +13,15 @@ tags:
 
 <div style={{display:"flex", gap: 4}}>
 
-[![][docker-release-shield]][docker-release-link]
+[![](https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square)](https://hub.docker.com/r/lobehub/lobe-chat)
 
-[![][docker-size-shield]][docker-size-link]
+[![](https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square)](https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square)
 
-[![][docker-pulls-shield]][docker-pulls-link]
+[![](https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square)](https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square)
 
 </div>
 
-我们提供了 [Docker 镜像][docker-release-link]，供你在自己的私有设备上部署 LobeChat 服务。
+我们提供了 [Docker 镜像](https://hub.docker.com/r/lobehub/lobe-chat) ，供你在自己的私有设备上部署 LobeChat 服务。
 
 <Steps>
 
@@ -57,16 +57,17 @@ $ yum install docker
 version: '3.8'
 
 services:
-lobe-chat:
-image: lobehub/lobe-chat
-container_name: lobe-chat
-restart: always
-ports:
-- '3210:3210'
-environment:
-OPENAI_API_KEY: sk-xxxx
-OPENAI_PROXY_URL: https://api-proxy.com/v1
-ACCESS_CODE: lobe66
+  lobe-chat:
+    image: lobehub/lobe-chat
+    container_name: lobe-chat
+    restart: always
+    ports:
+      - '3210:3210'
+    environment:
+      OPENAI_API_KEY: sk-xxxx
+      OPENAI_PROXY_URL: https://api-proxy.com/v1
+      ACCESS_CODE: lobe66
+
 ```
 
 运行以下命令启动 Lobe Chat 服务：
@@ -131,10 +132,3 @@ Configure Crontab to execute the script every 5 minutes:
 ```
 
 </Steps>
-
-[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
-[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
-[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square

@@ -16,7 +16,7 @@ import SessionList from './List';
 import ConfigGroupModal from './Modals/ConfigGroupModal';
 import RenameGroupModal from './Modals/RenameGroupModal';
 
-const SessionListContent = memo(() => {
+const SessionDefaultMode = memo(() => {
   const { t } = useTranslation('chat');
 
   const [activeGroupId, setActiveGroupId] = useState<string>();
@@ -98,4 +98,6 @@ const SessionListContent = memo(() => {
   );
 });
 
-export default SessionListContent;
+SessionDefaultMode.displayName = 'SessionDefaultMode';
+
+export default SessionDefaultMode;
