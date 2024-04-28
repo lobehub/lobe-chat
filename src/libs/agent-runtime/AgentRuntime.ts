@@ -1,7 +1,6 @@
 import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/const/trace';
-import LobeMinimaxAI from '@/libs/agent-runtime/minimax';
 
 import { LobeRuntimeAI } from './BaseAI';
 import { LobeAnthropicAI } from './anthropic';
@@ -9,6 +8,7 @@ import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
+import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
 import { LobeMoonshotAI } from './moonshot';
 import { LobeOllamaAI } from './ollama';
