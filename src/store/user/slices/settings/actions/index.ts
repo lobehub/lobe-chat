@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand/vanilla';
 
-import type { GlobalStore } from '@/store/global';
+import type { UserStore } from '@/store/user';
 
 import { GeneralSettingsAction, generalSettingsSlice } from './general';
 import { LLMSettingsAction, llmSettingsSlice } from './llm';
@@ -8,7 +8,7 @@ import { LLMSettingsAction, llmSettingsSlice } from './llm';
 export interface SettingsAction extends LLMSettingsAction, GeneralSettingsAction {}
 
 export const createSettingsSlice: StateCreator<
-  GlobalStore,
+  UserStore,
   [['zustand/devtools', never]],
   [],
   SettingsAction

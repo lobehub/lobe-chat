@@ -8,8 +8,8 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
 import { useStore } from '../store';
 import { SessionLoadingState } from '../store/initialState';
@@ -28,7 +28,7 @@ const AgentMeta = memo(() => {
     s.autocompleteMeta,
     s.autocompleteAllMeta,
   ]);
-  const locale = useGlobalStore(settingsSelectors.currentLanguage);
+  const locale = useUserStore(settingsSelectors.currentLanguage);
   const loading = useStore((s) => s.autocompleteLoading);
   const meta = useStore((s) => s.meta, isEqual);
 

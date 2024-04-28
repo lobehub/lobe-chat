@@ -2,8 +2,8 @@ import { ListResponse, Ollama as OllamaBrowser, ProgressResponse } from 'ollama/
 
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelConfigSelectors } from '@/store/user/selectors';
 import { ChatErrorType } from '@/types/fetch';
 import { getMessageError } from '@/utils/fetch';
 
@@ -25,7 +25,7 @@ export class OllamaService {
   }
 
   getHost = (): string => {
-    const config = modelConfigSelectors.ollamaConfig(useGlobalStore.getState());
+    const config = modelConfigSelectors.ollamaConfig(useUserStore.getState());
 
     return config.endpoint || DEFAULT_BASE_URL;
   };

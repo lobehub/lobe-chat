@@ -7,8 +7,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
 import { opeanaiSTTOptions, opeanaiTTSOptions, sttOptions } from './options';
 
@@ -19,8 +19,8 @@ const TTS_SETTING_KEY = 'tts';
 const TTS = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
-  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings] = useGlobalStore((s) => [s.setSettings]);
+  const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
+  const [setSettings] = useUserStore((s) => [s.setSettings]);
 
   const stt: SettingItemGroup = {
     children: [

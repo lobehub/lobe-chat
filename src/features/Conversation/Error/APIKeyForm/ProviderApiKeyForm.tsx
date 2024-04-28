@@ -4,8 +4,8 @@ import { Network } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import { FormAction } from '../style';
@@ -23,7 +23,7 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
     const { t: errorT } = useTranslation('error');
     const [showProxy, setShow] = useState(false);
 
-    const [apiKey, proxyUrl, setConfig] = useGlobalStore((s) => [
+    const [apiKey, proxyUrl, setConfig] = useUserStore((s) => [
       settingsSelectors.providerConfig(provider)(s)?.apiKey,
       settingsSelectors.providerConfig(provider)(s)?.endpoint,
       s.setModelProviderConfig,

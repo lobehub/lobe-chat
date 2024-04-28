@@ -1,6 +1,8 @@
 const PREV_KEY = 'LOBE_GLOBAL';
 
-type StorageKey = 'LOBE_PREFERENCE';
+// LOBE_PREFERENCE for userStore
+// LOBE_GLOBAL_PREFERENCE for globalStore
+type StorageKey = 'LOBE_PREFERENCE' | 'LOBE_GLOBAL_PREFERENCE';
 
 export class AsyncLocalStorage<State> {
   private storageKey: StorageKey;

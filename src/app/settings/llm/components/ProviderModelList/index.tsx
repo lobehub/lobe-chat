@@ -7,8 +7,8 @@ import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import ModelConfigModal from './ModelConfigModal';
@@ -44,22 +44,22 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
   ({ showModelFetcher = false, provider, showAzureDeployName, notFoundContent, placeholder }) => {
     const { t } = useTranslation('common');
     const { t: transSetting } = useTranslation('setting');
-    const [setModelProviderConfig, dispatchCustomModelCards] = useGlobalStore((s) => [
+    const [setModelProviderConfig, dispatchCustomModelCards] = useUserStore((s) => [
       s.setModelProviderConfig,
       s.dispatchCustomModelCards,
       s.useFetchProviderModelList,
     ]);
 
-    const chatModelCards = useGlobalStore(
+    const chatModelCards = useUserStore(
       modelProviderSelectors.getModelCardsById(provider),
       isEqual,
     );
 
-    const defaultEnableModel = useGlobalStore(
+    const defaultEnableModel = useUserStore(
       modelProviderSelectors.getDefaultEnabledModelsById(provider),
       isEqual,
     );
-    const enabledModels = useGlobalStore(
+    const enabledModels = useUserStore(
       modelProviderSelectors.getEnableModelsById(provider),
       isEqual,
     );

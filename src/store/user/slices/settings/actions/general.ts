@@ -4,7 +4,7 @@ import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { userService } from '@/services/user';
-import type { GlobalStore } from '@/store/global';
+import type { UserStore } from '@/store/user';
 import { LobeAgentSettings } from '@/types/session';
 import { GlobalSettings } from '@/types/settings';
 import { difference } from '@/utils/difference';
@@ -19,7 +19,7 @@ export interface GeneralSettingsAction {
 }
 
 export const generalSettingsSlice: StateCreator<
-  GlobalStore,
+  UserStore,
   [['zustand/devtools', never]],
   [],
   GeneralSettingsAction
