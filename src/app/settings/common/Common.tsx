@@ -12,10 +12,10 @@ import { DEFAULT_SETTINGS } from '@/const/settings';
 import { useOAuthSession } from '@/hooks/useOAuthSession';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { useToolStore } from '@/store/tool';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
 type SettingItemGroup = ItemGroup;
 
@@ -40,8 +40,8 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
   ]);
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
   const removeAllPlugins = useToolStore((s) => s.removeAllPlugins);
-  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings, resetSettings] = useGlobalStore((s) => [s.setSettings, s.resetSettings]);
+  const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
+  const [setSettings, resetSettings] = useUserStore((s) => [s.setSettings, s.resetSettings]);
 
   const { message, modal } = App.useApp();
 

@@ -6,13 +6,13 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
-import { syncSettingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { syncSettingsSelectors } from '@/store/user/selectors';
 
 const DeviceName = memo(() => {
   const { t } = useTranslation('setting');
 
-  const [deviceName, setSettings] = useGlobalStore((s) => [
+  const [deviceName, setSettings] = useUserStore((s) => [
     syncSettingsSelectors.deviceName(s),
     s.setSettings,
   ]);

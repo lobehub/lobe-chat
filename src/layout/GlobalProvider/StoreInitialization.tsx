@@ -8,16 +8,24 @@ import { LOBE_URL_IMPORT_NAME } from '@/const/url';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
+import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 
 const StoreInitialization = memo(() => {
-  const [useFetchServerConfig, useFetchUserConfig, useInitPreference] = useGlobalStore((s) => [
+  const [useFetchServerConfig, useFetchUserConfig, useInitPreference] = useUserStore((s) => [
     s.useFetchServerConfig,
     s.useFetchUserConfig,
     s.useInitPreference,
   ]);
+  const useInitGlobalPreference = useGlobalStore((s) => s.useInitGlobalPreference);
+
+  const useFetchDefaultAgentConfig = useAgentStore((s) => s.useFetchDefaultAgentConfig);
   // init the system preference
   useInitPreference();
+  useInitGlobalPreference();
+
+  useFetchDefaultAgentConfig();
 
   const { isLoading } = useFetchServerConfig();
   useFetchUserConfig(!isLoading);

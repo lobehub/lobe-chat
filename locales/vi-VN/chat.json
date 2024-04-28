@@ -18,6 +18,7 @@
     "title": "{{title}} Bản sao"
   },
   "duplicateTitle": "{{title}} Bản sao",
+  "emptyAgent": "Không có trợ lý",
   "historyRange": "Phạm vi lịch sử",
   "inbox": {
     "defaultMessage": "Xin chào, tôi là trợ lý thông minh của bạn, bạn có thể hỏi tôi bất kỳ câu hỏi nào và tôi sẽ cố gắng trả lời. Nếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn `+` để tạo trợ lý tùy chỉnh.",

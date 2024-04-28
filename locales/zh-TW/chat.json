@@ -18,6 +18,7 @@
     "title": "{{title}} 副本"
   },
   "duplicateTitle": "{{title}} 副本",
+  "emptyAgent": "暫無助手",
   "historyRange": "歷史範圍",
   "inbox": {
     "defaultMessage": "你好，我是你的智能助手，你可以問我任何問題，我會盡力回答你。如果需要獲得更專業或定制的助手，可以點擊`+`創建自定義助手",

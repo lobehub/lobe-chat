@@ -11,8 +11,8 @@ import { Flexbox } from 'react-layout-kit';
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 import { ModelProviderCard } from '@/types/llm';
 import { withBasePath } from '@/utils/basePath';
 
@@ -46,10 +46,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   ]);
 
   const router = useRouter();
-  const enabledList = useGlobalStore(
-    modelProviderSelectors.modelProviderListForModelSelect,
-    isEqual,
-  );
+  const enabledList = useUserStore(modelProviderSelectors.modelProviderListForModelSelect, isEqual);
 
   const items = useMemo(() => {
     const getModelItems = (provider: ModelProviderCard) => {
