@@ -7,17 +7,19 @@ import useMergeState from 'use-merge-value';
 const exponent = (num: number) => Math.log2(num);
 const getRealValue = (num: number) => Math.round(Math.pow(2, num));
 
+const isSmallScreen = typeof window !== 'undefined' ? window.innerWidth < 475 : false;
+
 const marks: SliderSingleProps['marks'] = {
   [exponent(1)]: '0',
-  [exponent(2)]: '2K',
-  [exponent(4)]: '4K',
-  [exponent(8)]: '8K',
-  [exponent(16)]: '16K',
-  [exponent(32)]: '32K',
-  [exponent(64)]: '64K',
-  [exponent(128)]: '128K',
-  [exponent(256)]: '256K',
-  [exponent(1024)]: '1M',
+  [exponent(2)]: isSmallScreen ? '2' : '2K',
+  [exponent(4)]: isSmallScreen ? '4' : '4K',
+  [exponent(8)]: isSmallScreen ? '8' : '8K',
+  [exponent(16)]: isSmallScreen ? '16' : '16K',
+  [exponent(32)]: isSmallScreen ? '32' : '32K',
+  [exponent(64)]: isSmallScreen ? '64' : '64K',
+  [exponent(128)]: isSmallScreen ? '128' : '128K',
+  [exponent(256)]: isSmallScreen ? '256' : '256K',
+  [exponent(1024)]: isSmallScreen ? '1024' : '1M',
 };
 
 interface MaxTokenSliderProps {
