@@ -57,10 +57,11 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 const formatTokenNumber = (num: number): string => {
+  if (num === 0) return 'Inf';
   if (num < 1000) return '1K';
   const kiloToken = Math.floor(num / 1000);
   return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`;
-}
+};
 
 interface ModelInfoTagsProps extends ChatModelCard {
   directionReverse?: boolean;
@@ -94,20 +95,22 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
             placement={placement}
             title={t('ModelSelect.featureTag.functionCall')}
           >
-            <div className={cx(styles.tag, styles.tagBlue)}>
+            <div className={cx(styles.tag, styles.tagBlue)} style={{ cursor: 'pointer' }} title="">
               <Icon icon={ToyBrick} />
             </div>
           </Tooltip>
         )}
-        {model.tokens && (
+        {model.tokens !== undefined && (
           <Tooltip
             overlayStyle={{ maxWidth: 'unset' }}
             placement={placement}
             title={t('ModelSelect.featureTag.tokens', {
-              tokens: numeral(model.tokens).format('0,0'),
+              tokens: model.tokens === 0 ? '∞' : numeral(model.tokens).format('0,0'),
             })}
           >
-            <Center className={styles.token}>{formatTokenNumber(model.tokens)}</Center>
+            <Center className={styles.token} title="">
+              {formatTokenNumber(model.tokens)}
+            </Center>
           </Tooltip>
         )}
         {/*{model.isCustom && (*/}
