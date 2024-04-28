@@ -92,6 +92,12 @@ const Ollama: ModelProviderCard = {
       tokens: 16_000,
     },
     {
+      displayName: 'Phi3-Instruct 3.8B',
+      enabled: true,
+      id: 'phi3:instruct',
+      tokens: 128_000,
+    },
+    {
       displayName: 'Mistral',
       enabled: true,
       id: 'mistral',
