@@ -32,21 +32,6 @@ afterEach(() => {
 });
 
 describe('createCommonSlice', () => {
-  describe('switchBackToChat', () => {
-    it('should switch back to chat', () => {
-      const { result } = renderHook(() => useUserStore());
-      const sessionId = 'session-id';
-      const router = { push: vi.fn() } as any;
-
-      act(() => {
-        useUserStore.setState({ router });
-        result.current.switchBackToChat(sessionId);
-      });
-
-      expect(router.push).toHaveBeenCalledWith('/chat?session=session-id');
-    });
-  });
-
   describe('refreshUserConfig', () => {
     it('should refresh user config', async () => {
       const { result } = renderHook(() => useUserStore());
@@ -73,42 +58,6 @@ describe('createCommonSlice', () => {
 
       expect(updateAvatarSpy).toHaveBeenCalledWith(avatar);
       expect(spyOn).toHaveBeenCalled();
-    });
-  });
-
-  describe('useCheckLatestVersion', () => {
-    it('should set hasNewVersion to false if there is no new version', async () => {
-      const latestVersion = '0.0.1';
-
-      vi.spyOn(globalService, 'getLatestVersion').mockResolvedValueOnce(latestVersion);
-
-      const { result } = renderHook(() => useUserStore().useCheckLatestVersion(), {
-        wrapper: withSWR,
-      });
-
-      await waitFor(() => {
-        expect(result.current.data).toBe(latestVersion);
-      });
-
-      expect(useUserStore.getState().hasNewVersion).toBeUndefined();
-      expect(useUserStore.getState().latestVersion).toBeUndefined();
-    });
-
-    it('should set hasNewVersion to true if there is a new version', async () => {
-      const latestVersion = '10000000.0.0';
-
-      vi.spyOn(globalService, 'getLatestVersion').mockResolvedValueOnce(latestVersion);
-
-      const { result } = renderHook(() => useUserStore().useCheckLatestVersion(), {
-        wrapper: withSWR,
-      });
-
-      await waitFor(() => {
-        expect(result.current.data).toBe(latestVersion);
-      });
-
-      expect(useUserStore.getState().hasNewVersion).toBe(true);
-      expect(useUserStore.getState().latestVersion).toBe(latestVersion);
     });
   });
 

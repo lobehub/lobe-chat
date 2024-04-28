@@ -2,8 +2,6 @@ import { UserCommonState, initialCommonState } from './slices/common/initialStat
 import { UserPreferenceState, initialPreferenceState } from './slices/preference/initialState';
 import { UserSettingsState, initialSettingsState } from './slices/settings/initialState';
 
-export { SettingsTabs, SidebarTabKey } from './slices/common/initialState';
-
 export type UserState = UserCommonState & UserSettingsState & UserPreferenceState;
 
 export const initialState: UserState = {

@@ -1,6 +1,6 @@
 import { usePathname } from 'next/navigation';
 
-import { SidebarTabKey } from '@/store/user/initialState';
+import { SidebarTabKey } from '@/store/global/initialState';
 
 /**
  * Returns the active tab key (chat/market/settings/...)

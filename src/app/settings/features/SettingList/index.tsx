@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SettingsTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { SettingsTabs } from '@/store/user/initialState';
 
 import Item from './Item';
 

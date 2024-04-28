@@ -9,7 +9,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useUserStore } from '@/store/user';
+import { useGlobalStore } from '@/store/global';
 
 import Hero from './Hero';
 import { useStyles } from './style';
@@ -18,7 +18,7 @@ const Banner = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('welcome');
   const router = useRouter();
   const { styles } = useStyles();
-  const [switchBackToChat, isMobile] = useUserStore((s) => [s.switchBackToChat, s.isMobile]);
+  const [switchBackToChat, isMobile] = useGlobalStore((s) => [s.switchBackToChat, s.isMobile]);
 
   return (
     <>

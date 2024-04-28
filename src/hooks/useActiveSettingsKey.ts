@@ -1,6 +1,6 @@
 import { usePathname } from 'next/navigation';
 
-import { SettingsTabs } from '@/store/user/initialState';
+import { SettingsTabs } from '@/store/global/initialState';
 
 /**
  * Returns the active setting page key (common/sync/agent/...)

@@ -27,7 +27,7 @@ export interface GlobalStoreAction {
   toggleSystemRole: (visible?: boolean) => void;
   updatePreference: (preference: Partial<GlobalPreference>, action?: any) => void;
   useCheckLatestVersion: () => SWRResponse<string>;
-  useInitPreference: () => SWRResponse;
+  useInitGlobalPreference: () => SWRResponse;
 }
 
 export const globalActionSlice: StateCreator<
@@ -88,7 +88,7 @@ export const globalActionSlice: StateCreator<
       },
     }),
 
-  useInitPreference: () =>
+  useInitGlobalPreference: () =>
     useClientDataSWR<GlobalPreference>(
       'initGlobalPreference',
       () => get().preferenceStorage.getFromLocalStorage(),
