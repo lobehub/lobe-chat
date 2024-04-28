@@ -10,7 +10,8 @@ import {
   LOBE_THEME_NEUTRAL_COLOR,
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
-import { FeatureFlagStoreProvider } from '@/store/featureFlags';
+import { getServerGlobalConfig } from '@/server/globalConfig';
+import { ServerConfigStoreProvider } from '@/store/serverConfig';
 import { getAntdLocale } from '@/utils/locale';
 
 import AppTheme from './AppTheme';
@@ -46,6 +47,7 @@ const GlobalLayout = async ({ children }: GlobalLayoutProps) => {
 
   // get default feature flags to use with ssr
   const serverFeatureFlags = getServerFeatureFlagsValue();
+  const serverConfig = getServerGlobalConfig();
   return (
     <StyleRegistry>
       <Locale antdLocale={antdLocale} defaultLang={defaultLang?.value}>
@@ -55,9 +57,9 @@ const GlobalLayout = async ({ children }: GlobalLayoutProps) => {
           defaultPrimaryColor={primaryColor?.value as any}
         >
           <StoreInitialization />
-          <FeatureFlagStoreProvider featureFlags={serverFeatureFlags}>
+          <ServerConfigStoreProvider featureFlags={serverFeatureFlags} serverConfig={serverConfig}>
             {children}
-          </FeatureFlagStoreProvider>
+          </ServerConfigStoreProvider>
           <DebugUI />
         </AppTheme>
       </Locale>

@@ -11,9 +11,9 @@ import { Flexbox } from 'react-layout-kit';
 import PluginStore from '@/features/PluginStore';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { builtinToolSelectors, pluginSelectors } from '@/store/tool/selectors';
 
@@ -35,7 +35,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
-  const { showDalle } = useFeatureFlagStore(featureFlagsSelectors);
+  const { showDalle } = useServerConfigStore(featureFlagsSelectors);
   const builtinList = useToolStore(builtinToolSelectors.metaList(showDalle), isEqual);
 
   const enablePluginCount = useAgentStore(
