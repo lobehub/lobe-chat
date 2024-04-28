@@ -36,6 +36,17 @@ const nextConfig = {
   ],
   reactStrictMode: true,
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'registry.npmmirror.com',
+        port: '',
+        pathname: '/@lobehub/**',
+      },
+    ],
+  },
+
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
