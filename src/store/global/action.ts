@@ -1,35 +1,44 @@
 import { produce } from 'immer';
-import { SWRResponse } from 'swr';
+import { gt } from 'semver';
+import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { INBOX_SESSION_ID } from '@/const/session';
+import { SESSION_CHAT_URL } from '@/const/url';
+import { CURRENT_VERSION } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
-import type { GlobalStore } from '@/store/global';
+import { globalService } from '@/services/global';
+import type { GlobalStore } from '@/store/global/index';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import type { GlobalPreference, Guide } from './initialState';
+import type { GlobalPreference } from './initialState';
 
 const n = setNamespace('preference');
 
 /**
  * 设置操作
  */
-export interface PreferenceAction {
+export interface GlobalStoreAction {
+  switchBackToChat: (sessionId?: string) => void;
   toggleChatSideBar: (visible?: boolean) => void;
   toggleExpandSessionGroup: (id: string, expand: boolean) => void;
   toggleMobileTopic: (visible?: boolean) => void;
   toggleSystemRole: (visible?: boolean) => void;
-  updateGuideState: (guide: Partial<Guide>) => void;
   updatePreference: (preference: Partial<GlobalPreference>, action?: any) => void;
-  useInitPreference: () => SWRResponse;
+  useCheckLatestVersion: () => SWRResponse<string>;
+  useInitGlobalPreference: () => SWRResponse;
 }
 
-export const createPreferenceSlice: StateCreator<
+export const globalActionSlice: StateCreator<
   GlobalStore,
   [['zustand/devtools', never]],
   [],
-  PreferenceAction
+  GlobalStoreAction
 > = (set, get) => ({
+  switchBackToChat: (sessionId) => {
+    get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
+  },
   toggleChatSideBar: (newValue) => {
     const showChatSideBar =
       typeof newValue === 'boolean' ? newValue : !get().preference.showChatSideBar;
@@ -38,7 +47,7 @@ export const createPreferenceSlice: StateCreator<
   },
   toggleExpandSessionGroup: (id, expand) => {
     const { preference } = get();
-    const nextExpandSessionGroup = produce(preference.expandSessionGroupKeys, (draft) => {
+    const nextExpandSessionGroup = produce(preference.expandSessionGroupKeys, (draft: string[]) => {
       if (expand) {
         if (draft.includes(id)) return;
         draft.push(id);
@@ -61,11 +70,6 @@ export const createPreferenceSlice: StateCreator<
 
     get().updatePreference({ showSystemRole }, n('toggleMobileTopic', newValue));
   },
-  updateGuideState: (guide) => {
-    const { updatePreference } = get();
-    const nextGuide = merge(get().preference.guide, guide);
-    updatePreference({ guide: nextGuide });
-  },
   updatePreference: (preference, action) => {
     const nextPreference = merge(get().preference, preference);
 
@@ -74,9 +78,19 @@ export const createPreferenceSlice: StateCreator<
     get().preferenceStorage.saveToLocalStorage(nextPreference);
   },
 
-  useInitPreference: () =>
+  useCheckLatestVersion: () =>
+    useSWR('checkLatestVersion', globalService.getLatestVersion, {
+      // check latest version every 30 minutes
+      focusThrottleInterval: 1000 * 60 * 30,
+      onSuccess: (data: string) => {
+        if (gt(data, CURRENT_VERSION))
+          set({ hasNewVersion: true, latestVersion: data }, false, n('checkLatestVersion'));
+      },
+    }),
+
+  useInitGlobalPreference: () =>
     useClientDataSWR<GlobalPreference>(
-      'preference',
+      'initGlobalPreference',
       () => get().preferenceStorage.getFromLocalStorage(),
       {
         onSuccess: (preference) => {

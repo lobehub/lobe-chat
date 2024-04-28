@@ -4,7 +4,7 @@ import {
   pluginManifestSchema,
 } from '@lobehub/chat-plugin-sdk';
 
-import { globalHelpers } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/user/helpers';
 import { OpenAIPluginManifest } from '@/types/openai/plugin';
 
 import { API_ENDPOINTS } from './_url';

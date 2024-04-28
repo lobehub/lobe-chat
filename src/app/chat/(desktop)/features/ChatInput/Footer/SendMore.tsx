@@ -11,8 +11,8 @@ import HotKeys from '@/components/HotKeys';
 import { ALT_KEY } from '@/const/hotkeys';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { preferenceSelectors } from '@/store/user/selectors';
 import { isMacOS } from '@/utils/platform';
 
 const useStyles = createStyles(({ css, prefixCls }) => {
@@ -32,7 +32,7 @@ const SendMore = memo(() => {
 
   const { styles } = useStyles();
 
-  const [useCmdEnterToSend, updatePreference] = useGlobalStore((s) => [
+  const [useCmdEnterToSend, updatePreference] = useUserStore((s) => [
     preferenceSelectors.useCmdEnterToSend(s),
     s.updatePreference,
   ]);

@@ -3,7 +3,7 @@ import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 
 import InputArea from './TextArea';
 
@@ -232,7 +232,7 @@ describe('<InputArea />', () => {
             inputMessage: '123',
             sendMessage: sendMessageMock,
           });
-          useGlobalStore.getState().updatePreference({ useCmdEnterToSend: true });
+          useUserStore.getState().updatePreference({ useCmdEnterToSend: true });
         });
 
         render(<InputArea setExpand={setExpandMock} />);
@@ -252,7 +252,7 @@ describe('<InputArea />', () => {
             sendMessage: sendMessageMock,
             updateInputMessage: updateInputMessageMock,
           });
-          useGlobalStore.getState().updatePreference({ useCmdEnterToSend: false });
+          useUserStore.getState().updatePreference({ useCmdEnterToSend: false });
         });
 
         render(<InputArea setExpand={setExpandMock} />);
@@ -275,7 +275,7 @@ describe('<InputArea />', () => {
             inputMessage: '123',
             sendMessage: sendMessageMock,
           });
-          useGlobalStore.getState().updatePreference({ useCmdEnterToSend: true });
+          useUserStore.getState().updatePreference({ useCmdEnterToSend: true });
         });
 
         render(<InputArea setExpand={setExpandMock} />);
@@ -300,7 +300,7 @@ describe('<InputArea />', () => {
             sendMessage: sendMessageMock,
             updateInputMessage: updateInputMessageMock,
           });
-          useGlobalStore.getState().updatePreference({ useCmdEnterToSend: false });
+          useUserStore.getState().updatePreference({ useCmdEnterToSend: false });
         });
 
         render(<InputArea setExpand={setExpandMock} />);

@@ -7,17 +7,17 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
-import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
+import { sessionMetaSelectors } from '@/store/session/selectors';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
+import { useUserStore } from '@/store/user';
 import {
   commonSelectors,
   modelConfigSelectors,
   modelProviderSelectors,
   preferenceSelectors,
-} from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
-import { useToolStore } from '@/store/tool';
-import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
+} from '@/store/user/selectors';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
@@ -195,7 +195,7 @@ class ChatService {
 
     // check this model can use function call
     const canUseFC = modelProviderSelectors.isModelEnabledFunctionCall(payload.model)(
-      useGlobalStore.getState(),
+      useUserStore.getState(),
     );
     // the rule that model can use tools:
     // 1. tools is not empty
@@ -241,7 +241,7 @@ class ChatService {
     // if the provider is Azure, get the deployment name as the request model
     if (provider === ModelProvider.Azure) {
       const chatModelCards = modelProviderSelectors.getModelCardsById(provider)(
-        useGlobalStore.getState(),
+        useUserStore.getState(),
       );
 
       const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
@@ -257,7 +257,7 @@ class ChatService {
      * Use browser agent runtime
      */
     const enableFetchOnClient = modelConfigSelectors.isProviderFetchOnClient(provider)(
-      useGlobalStore.getState(),
+      useUserStore.getState(),
     );
     /**
      * Notes:
@@ -391,7 +391,7 @@ class ChatService {
       if (imageList.length === 0) return m.content;
 
       const canUploadFile = modelProviderSelectors.isModelEnabledUpload(model)(
-        useGlobalStore.getState(),
+        useUserStore.getState(),
       );
 
       if (!canUploadFile) {
@@ -426,7 +426,7 @@ class ChatService {
     return produce(postMessages, (draft) => {
       if (!tools || tools.length === 0) return;
       const hasFC = modelProviderSelectors.isModelEnabledFunctionCall(model)(
-        useGlobalStore.getState(),
+        useUserStore.getState(),
       );
       if (!hasFC) return;
 
@@ -449,7 +449,7 @@ class ChatService {
   private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
     const tags = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
 
-    const enabled = preferenceSelectors.userAllowTrace(useGlobalStore.getState());
+    const enabled = preferenceSelectors.userAllowTrace(useUserStore.getState());
 
     if (!enabled) return { enabled: false };
 
@@ -457,7 +457,7 @@ class ChatService {
       ...trace,
       enabled: true,
       tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
-      userId: commonSelectors.userId(useGlobalStore.getState()),
+      userId: commonSelectors.userId(useUserStore.getState()),
     };
   }
 

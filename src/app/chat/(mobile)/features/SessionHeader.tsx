@@ -7,10 +7,10 @@ import { Flexbox } from 'react-layout-kit';
 
 import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import SyncStatusInspector from '@/features/SyncStatusInspector';
-import { useGlobalStore } from '@/store/global';
-import { commonSelectors } from '@/store/global/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
+import { useUserStore } from '@/store/user';
+import { commonSelectors } from '@/store/user/selectors';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -26,7 +26,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
   const router = useRouter();
-  const avatar = useGlobalStore(commonSelectors.userAvatar);
+  const avatar = useUserStore(commonSelectors.userAvatar);
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   return (

@@ -1,6 +1,6 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { globalHelpers } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/user/helpers';
 
 import { toolService } from '../tool';
 import openAPIV3 from './openai/OpenAPI_V3.json';
@@ -8,7 +8,7 @@ import OpenAIPlugin from './openai/plugin.json';
 
 // Mocking modules and functions
 
-vi.mock('@/store/global/helpers', () => ({
+vi.mock('@/store/user/helpers', () => ({
   globalHelpers: {
     getCurrentLanguage: vi.fn(),
   },

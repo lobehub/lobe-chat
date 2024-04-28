@@ -2,16 +2,13 @@ import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { userService } from '@/services/user';
-import { GlobalStore, useGlobalStore } from '@/store/global';
-import {
-  GlobalSettingsState,
-  initialSettingsState,
-} from '@/store/global/slices/settings/initialState';
+import { UserStore, useUserStore } from '@/store/user';
+import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
 import {
   modelConfigSelectors,
   modelProviderSelectors,
   settingsSelectors,
-} from '@/store/global/slices/settings/selectors';
+} from '@/store/user/slices/settings/selectors';
 import { GeneralModelProviderConfig } from '@/types/settings';
 import { merge } from '@/utils/merge';
 
@@ -28,7 +25,7 @@ vi.mock('@/services/user', () => ({
 describe('LLMSettingsSliceAction', () => {
   describe('setModelProviderConfig', () => {
     it('should set OpenAI configuration', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const openAIConfig: Partial<GeneralModelProviderConfig> = { apiKey: 'test-key' };
 
       // Perform the action
@@ -47,7 +44,7 @@ describe('LLMSettingsSliceAction', () => {
 
   describe('dispatchCustomModelCards', () => {
     it('should return early when prevState does not exist', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const provider = 'openai';
       const payload: CustomModelCardDispatch = { type: 'add', modelCard: { id: 'test-id' } };
 
@@ -66,10 +63,10 @@ describe('LLMSettingsSliceAction', () => {
 
   describe('refreshDefaultModelProviderList', () => {
     it('default', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
 
       act(() => {
-        useGlobalStore.setState({
+        useUserStore.setState({
           serverConfig: {
             languageModel: {
               azure: { serverModelCards: [{ id: 'abc', deploymentName: 'abc' }] },
@@ -91,9 +88,9 @@ describe('LLMSettingsSliceAction', () => {
 
   describe('refreshModelProviderList', () => {
     it('visible', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       act(() => {
-        useGlobalStore.setState({
+        useUserStore.setState({
           settings: {
             languageModel: {
               ollama: { enabledModels: ['llava'] },
@@ -118,10 +115,10 @@ describe('LLMSettingsSliceAction', () => {
     });
 
     it('modelProviderListForModelSelect should return only enabled providers', () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
 
       act(() => {
-        useGlobalStore.setState({
+        useUserStore.setState({
           settings: {
             languageModel: {
               perplexity: { enabled: true },
