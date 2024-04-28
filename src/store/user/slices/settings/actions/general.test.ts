@@ -5,7 +5,7 @@ import { withSWR } from '~test-utils';
 
 import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
 import { userService } from '@/services/user';
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 import { LobeAgentSettings } from '@/types/session';
 import { GlobalSettings } from '@/types/settings';
 
@@ -20,7 +20,7 @@ vi.mock('@/services/user', () => ({
 describe('SettingsAction', () => {
   describe('importAppSettings', () => {
     it('should import app settings', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const newSettings: GlobalSettings = {
         ...DEFAULT_SETTINGS,
         themeMode: 'dark',
@@ -51,7 +51,7 @@ describe('SettingsAction', () => {
 
   describe('resetSettings', () => {
     it('should reset settings to default', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
 
       // Perform the action
       await act(async () => {
@@ -68,7 +68,7 @@ describe('SettingsAction', () => {
 
   describe('setSettings', () => {
     it('should set partial settings', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const partialSettings: Partial<GlobalSettings> = { themeMode: 'dark' };
 
       // Perform the action
@@ -83,7 +83,7 @@ describe('SettingsAction', () => {
 
   describe('switchThemeMode', () => {
     it('should switch theme mode', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const themeMode = 'light';
 
       // Perform the action
@@ -98,7 +98,7 @@ describe('SettingsAction', () => {
 
   describe('updateDefaultAgent', () => {
     it('should update default agent settings', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const updatedAgent: Partial<LobeAgentSettings> = {
         meta: { title: 'docs' },
       };

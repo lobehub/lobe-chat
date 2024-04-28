@@ -12,8 +12,8 @@ import {
   LLMProviderModelListKey,
 } from '@/app/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelConfigSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
@@ -59,7 +59,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       enabled,
       isFetchOnClient,
       isProviderEndpointNotEmpty,
-    ] = useGlobalStore((s) => [
+    ] = useUserStore((s) => [
       s.toggleProviderEnabled,
       s.setSettings,
       modelConfigSelectors.isProviderEnabled(provider)(s),
