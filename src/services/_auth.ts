@@ -1,14 +1,14 @@
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors, settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelConfigSelectors, settingsSelectors } from '@/store/user/selectors';
 import { createJWT } from '@/utils/jwt';
 
 export const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
     case ModelProvider.Bedrock: {
       const { accessKeyId, region, secretAccessKey } = modelConfigSelectors.bedrockConfig(
-        useGlobalStore.getState(),
+        useUserStore.getState(),
       );
       const awsSecretAccessKey = secretAccessKey;
       const awsAccessKeyId = accessKeyId;
@@ -19,7 +19,7 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Azure: {
-      const azure = modelConfigSelectors.azureConfig(useGlobalStore.getState());
+      const azure = modelConfigSelectors.azureConfig(useUserStore.getState());
 
       return {
         apiKey: azure.apiKey,
@@ -29,13 +29,13 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Ollama: {
-      const config = modelConfigSelectors.ollamaConfig(useGlobalStore.getState());
+      const config = modelConfigSelectors.ollamaConfig(useUserStore.getState());
 
       return { endpoint: config?.endpoint };
     }
 
     default: {
-      const config = settingsSelectors.providerConfig(provider)(useGlobalStore.getState());
+      const config = settingsSelectors.providerConfig(provider)(useUserStore.getState());
 
       return { apiKey: config?.apiKey, endpoint: config?.endpoint };
     }
@@ -43,7 +43,7 @@ export const getProviderAuthPayload = (provider: string) => {
 };
 
 const createAuthTokenWithPayload = async (payload = {}) => {
-  const accessCode = settingsSelectors.password(useGlobalStore.getState());
+  const accessCode = settingsSelectors.password(useUserStore.getState());
 
   return await createJWT<JWTPayload>({ accessCode, ...payload });
 };

@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '@/services/_url';
-import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { preferenceSelectors } from '@/store/user/selectors';
 import { TraceEventBasePayload, TraceEventPayloads } from '@/types/trace';
 
 class TraceService {
@@ -17,7 +17,7 @@ class TraceService {
   }
 
   async traceEvent(data: TraceEventPayloads & TraceEventBasePayload) {
-    const enabled = preferenceSelectors.userAllowTrace(useGlobalStore.getState());
+    const enabled = preferenceSelectors.userAllowTrace(useUserStore.getState());
 
     if (!enabled) return;
 

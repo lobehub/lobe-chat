@@ -8,8 +8,8 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
 import { useStore } from '../store';
 import SelectWithTTSPreview from './SelectWithTTSPreview';
@@ -22,7 +22,7 @@ const AgentTTS = memo(() => {
   const { t } = useTranslation('setting');
   const updateConfig = useStore((s) => s.setAgentConfig);
   const [form] = AFrom.useForm();
-  const voiceList = useGlobalStore((s) => {
+  const voiceList = useUserStore((s) => {
     const locale = settingsSelectors.currentLanguage(s);
     return (all?: boolean) => new VoiceList(all ? undefined : locale);
   });

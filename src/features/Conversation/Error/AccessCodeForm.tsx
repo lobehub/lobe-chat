@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
 import { FormAction } from './style';
 
@@ -15,7 +15,7 @@ interface AccessCodeFormProps {
 
 const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
   const { t } = useTranslation('error');
-  const [password, setSettings] = useGlobalStore((s) => [
+  const [password, setSettings] = useUserStore((s) => [
     settingsSelectors.currentSettings(s).password,
     s.setSettings,
   ]);

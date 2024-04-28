@@ -10,8 +10,8 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { localeOptions } from '@/locales/resources';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 import { switchLang } from '@/utils/client/switchLang';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../features/ThemeSwatches';
@@ -22,8 +22,8 @@ const Theme = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
-  const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
-  const [setThemeMode, setSettings] = useGlobalStore((s) => [s.switchThemeMode, s.setSettings]);
+  const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
+  const [setThemeMode, setSettings] = useUserStore((s) => [s.switchThemeMode, s.setSettings]);
 
   useSyncSettings(form);
 
