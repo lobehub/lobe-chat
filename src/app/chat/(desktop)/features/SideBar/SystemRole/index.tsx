@@ -10,9 +10,9 @@ import useMergeState from 'use-merge-value';
 import AgentInfo from '@/features/AgentInfo';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
 import { pathString } from '@/utils/url';
 
 import SidebarHeader from '../../../../components/SidebarHeader';
@@ -33,7 +33,7 @@ const SystemRole = memo(() => {
     s.updateAgentConfig,
   ]);
 
-  const [showSystemRole, toggleSystemRole] = useGlobalStore((s) => [
+  const [showSystemRole, toggleSystemRole] = useUserStore((s) => [
     s.preference.showSystemRole,
     s.toggleSystemRole,
   ]);

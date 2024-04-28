@@ -5,13 +5,13 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import AgentSetting from '@/features/AgentSetting';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
 const Agent = memo(() => {
   const config = useAgentStore(agentSelectors.defaultAgentConfig, isEqual);
-  const meta = useGlobalStore(settingsSelectors.defaultAgentMeta, isEqual);
-  const [updateAgent] = useGlobalStore((s) => [s.updateDefaultAgent]);
+  const meta = useUserStore(settingsSelectors.defaultAgentMeta, isEqual);
+  const [updateAgent] = useUserStore((s) => [s.updateDefaultAgent]);
 
   return (
     <AgentSetting

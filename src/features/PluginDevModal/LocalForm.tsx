@@ -4,16 +4,16 @@ import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
 const LocalForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form, mode }) => {
   const isEditMode = mode === 'edit';
-  const locale = useGlobalStore(settingsSelectors.currentLanguage);
+  const locale = useUserStore(settingsSelectors.currentLanguage);
   const { t } = useTranslation('plugin');
 
   const pluginIds = useToolStore(pluginSelectors.storeAndInstallPluginsIdList);

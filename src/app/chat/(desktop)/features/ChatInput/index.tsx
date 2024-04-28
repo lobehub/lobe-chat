@@ -7,7 +7,7 @@ import {
   CHAT_TEXTAREA_MAX_HEIGHT,
   HEADER_HEIGHT,
 } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 
 import Footer from './Footer';
 import Head from './Header';
@@ -16,7 +16,7 @@ import TextArea from './TextArea';
 const ChatInput = memo(() => {
   const [expand, setExpand] = useState<boolean>(false);
 
-  const [inputHeight, updatePreference] = useGlobalStore((s) => [
+  const [inputHeight, updatePreference] = useUserStore((s) => [
     s.preference.inputHeight,
     s.updatePreference,
   ]);

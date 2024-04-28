@@ -4,8 +4,8 @@ import { MouseEvent, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
+import { useUserStore } from '@/store/user';
 
 interface CreateGroupModalProps extends ModalProps {
   id: string;
@@ -15,7 +15,7 @@ const CreateGroupModal = memo<CreateGroupModalProps>(
   ({ id, open, onCancel }: CreateGroupModalProps) => {
     const { t } = useTranslation('chat');
 
-    const toggleExpandSessionGroup = useGlobalStore((s) => s.toggleExpandSessionGroup);
+    const toggleExpandSessionGroup = useUserStore((s) => s.toggleExpandSessionGroup);
     const { message } = App.useApp();
     const [updateSessionGroup, addCustomGroup] = useSessionStore((s) => [
       s.updateSessionGroupId,

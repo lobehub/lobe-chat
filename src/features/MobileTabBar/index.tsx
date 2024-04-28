@@ -6,7 +6,7 @@ import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { SidebarTabKey } from '@/store/global/initialState';
+import { SidebarTabKey } from '@/store/user/initialState';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`

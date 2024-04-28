@@ -23,12 +23,9 @@ import {
 } from '@/libs/agent-runtime';
 import { AgentRuntime } from '@/libs/agent-runtime';
 import { useFileStore } from '@/store/file';
-import { GlobalStore } from '@/store/global';
-import {
-  GlobalSettingsState,
-  initialSettingsState,
-} from '@/store/global/slices/settings/initialState';
 import { useToolStore } from '@/store/tool';
+import { UserStore } from '@/store/user';
+import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
 import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload } from '@/types/openai/chat';
@@ -695,7 +692,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.OpenAI, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
@@ -713,7 +710,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Azure, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
@@ -728,7 +725,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Google, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeGoogleAI);
@@ -743,7 +740,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Moonshot, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
@@ -760,7 +757,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Bedrock, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
@@ -775,7 +772,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Ollama, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);
@@ -790,7 +787,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Perplexity, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobePerplexityAI);
@@ -805,7 +802,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Anthropic, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
@@ -820,7 +817,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Mistral, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
@@ -835,7 +832,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.OpenRouter, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
@@ -850,7 +847,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.TogetherAI, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
@@ -865,7 +862,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.ZeroOne, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeZeroOneAI);
@@ -880,7 +877,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Groq, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeGroq);
@@ -900,7 +897,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as any as GlobalSettingsState) as unknown as GlobalStore;
+        } as any as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore('unknown' as ModelProvider, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
@@ -927,7 +924,7 @@ describe('AgentRuntimeOnClient', () => {
               },
             },
           },
-        } as GlobalSettingsState) as unknown as GlobalStore;
+        } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.ZhiPu, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeZhipuAI);

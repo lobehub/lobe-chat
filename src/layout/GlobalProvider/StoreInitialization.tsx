@@ -7,10 +7,10 @@ import { createStoreUpdater } from 'zustand-utils';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 
 const StoreInitialization = memo(() => {
-  const [useFetchServerConfig, useFetchUserConfig, useInitPreference] = useGlobalStore((s) => [
+  const [useFetchServerConfig, useFetchUserConfig, useInitPreference] = useUserStore((s) => [
     s.useFetchServerConfig,
     s.useFetchUserConfig,
     s.useInitPreference,
@@ -25,7 +25,7 @@ const StoreInitialization = memo(() => {
 
   useEnabledDataSync();
 
-  const useStoreUpdater = createStoreUpdater(useGlobalStore);
+  const useStoreUpdater = createStoreUpdater(useUserStore);
 
   const mobile = useIsMobile();
   const router = useRouter();

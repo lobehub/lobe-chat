@@ -6,10 +6,10 @@ import { memo } from 'react';
 import TopicListContent from '@/app/chat/features/TopicListContent';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
 
 const SystemRole = dynamic(() => import('./SystemRole'));
 
@@ -30,7 +30,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const Desktop = memo(() => {
   const { styles } = useStyles();
-  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
+  const [showAgentSettings, toggleConfig] = useUserStore((s) => [
     s.preference.showChatSideBar,
     s.toggleChatSideBar,
   ]);

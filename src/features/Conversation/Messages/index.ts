@@ -1,9 +1,9 @@
 import { useResponsive } from 'antd-style';
 import { useRouter } from 'next/navigation';
 
-import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
 import { pathString } from '@/utils/url';
 
 import { OnAvatarsClick, RenderMessage } from '../types';
@@ -21,7 +21,7 @@ export const renderMessages: Record<string, RenderMessage> = {
 
 export const useAvatarsClick = (): OnAvatarsClick => {
   const [isInbox] = useSessionStore((s) => [sessionSelectors.isInboxSession(s)]);
-  const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
+  const [toggleSystemRole] = useUserStore((s) => [s.toggleSystemRole]);
   const { mobile } = useResponsive();
   const router = useRouter();
 

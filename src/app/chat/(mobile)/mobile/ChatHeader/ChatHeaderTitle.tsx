@@ -7,13 +7,13 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
-import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
 
 const ChatHeaderTitle = memo(() => {
   const { t } = useTranslation('chat');
-  const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
+  const toggleConfig = useUserStore((s) => s.toggleMobileTopic);
   const [topicLength, topic] = useChatStore((s) => [
     topicSelectors.currentTopicLength(s),
     topicSelectors.currentActiveTopic(s),

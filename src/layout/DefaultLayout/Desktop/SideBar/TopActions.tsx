@@ -4,17 +4,17 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { GlobalStore, useGlobalStore } from '@/store/global';
-import { SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
+import { UserStore, useUserStore } from '@/store/user';
+import { SidebarTabKey } from '@/store/user/initialState';
 
 export interface TopActionProps {
-  tab?: GlobalStore['sidebarKey'];
+  tab?: UserStore['sidebarKey'];
 }
 
 const TopActions = memo<TopActionProps>(({ tab }) => {
   const { t } = useTranslation('common');
-  const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
+  const switchBackToChat = useUserStore((s) => s.switchBackToChat);
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { Mock, describe, expect, it, vi } from 'vitest';
 
 import { chatHelpers } from '@/store/chat/helpers';
-import { globalHelpers } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/user/helpers';
 import { OpenAIChatMessage } from '@/types/openai/chat';
 
 import { chainSummaryTitle } from '../summaryTitle';

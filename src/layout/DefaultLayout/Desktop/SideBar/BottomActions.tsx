@@ -20,18 +20,18 @@ import { Flexbox } from 'react-layout-kit';
 import { ABOUT, CHANGELOG, DISCORD, DOCUMENTS, FEEDBACK, GITHUB } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
 import { configService } from '@/services/config';
-import { GlobalStore, useGlobalStore } from '@/store/global';
-import { SidebarTabKey } from '@/store/global/initialState';
+import { UserStore, useUserStore } from '@/store/user';
+import { SidebarTabKey } from '@/store/user/initialState';
 
 export interface BottomActionProps {
-  tab?: GlobalStore['sidebarKey'];
+  tab?: UserStore['sidebarKey'];
 }
 
 const BottomActions = memo<BottomActionProps>(({ tab }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
 
-  const [hasNewVersion, useCheckLatestVersion] = useGlobalStore((s) => [
+  const [hasNewVersion, useCheckLatestVersion] = useUserStore((s) => [
     s.hasNewVersion,
     s.useCheckLatestVersion,
   ]);

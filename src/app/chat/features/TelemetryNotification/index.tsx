@@ -9,9 +9,9 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { PRIVACY_URL } from '@/const/url';
-import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
+import { useUserStore } from '@/store/user';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
@@ -58,7 +58,7 @@ const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('common');
   const shouldCheck = useServerConfigStore(serverConfigSelectors.enabledTelemetryChat);
 
-  const [useCheckTrace, updatePreference] = useGlobalStore((s) => [
+  const [useCheckTrace, updatePreference] = useUserStore((s) => [
     s.useCheckTrace,
     s.updatePreference,
   ]);

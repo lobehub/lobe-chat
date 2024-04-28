@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { CHANGELOG, FEEDBACK } from '@/const/url';
 import { useImportConfig } from '@/hooks/useImportConfig';
 import { configService } from '@/services/config';
-import { SettingsTabs } from '@/store/global/initialState';
+import { SettingsTabs } from '@/store/user/initialState';
 
 import Item from '../../features/SettingList/Item';
 
