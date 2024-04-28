@@ -95,6 +95,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
     return <Stability.Avatar size={size} />;
 
   if (model.includes('wizardlm')) return <Azure.Avatar size={size} />;
+  if (model.includes('phi3')) return <Azure.Avatar size={size} />;
   if (model.includes('firefly')) return <Adobe.Avatar size={size} />;
   if (model.includes('jamba') ||
     model.includes('j2-'))
