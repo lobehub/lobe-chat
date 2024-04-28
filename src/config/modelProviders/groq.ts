@@ -29,7 +29,7 @@ const Groq: ModelProviderCard = {
     },
     {
       displayName: 'LLaMA2-70b-chat',
-      enabled: true,
+      enabled: false,
       id: 'llama2-70b-4096',
       tokens: 4096,
     },
