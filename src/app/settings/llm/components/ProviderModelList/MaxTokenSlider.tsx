@@ -1,5 +1,6 @@
 import { InputNumber, Slider, SliderSingleProps } from 'antd';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
@@ -26,6 +27,8 @@ interface MaxTokenSliderProps {
 }
 
 const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValue }) => {
+  const { t } = useTranslation('setting');
+
   const [token, setTokens] = useMergeState(0, {
     defaultValue,
     onChange,
@@ -62,7 +65,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
             formatter: (x) => {
               if (typeof x === 'undefined') return;
 
-              if (x === 0) return '无限制';
+              if (x === 0) return t('llm.customModelCards.modelConfig.tokens.unlimited');
 
               const value = getRealValue(x);
 
