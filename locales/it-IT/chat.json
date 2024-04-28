@@ -18,6 +18,7 @@
     "title": "{{title}} Copia"
   },
   "duplicateTitle": "{{title}} Copia",
+  "emptyAgent": "Nessun assistente disponibile",
   "historyRange": "Intervallo cronologico",
   "inbox": {
     "defaultMessage": "Ciao, sono il tuo assistente virtuale, puoi chiedermi qualsiasi cosa e farò del mio meglio per risponderti. Se hai bisogno di un assistente più professionale o personalizzato, clicca su `+` per creare un assistente personalizzato.",
@@ -25,8 +26,9 @@
     "title": "Chiacchierata casuale"
   },
   "input": {
+    "addAi": "Aggiungi un messaggio AI",
+    "addUser": "Aggiungi un messaggio utente",
     "more": "Ulteriori",
-    "onlyAdd": "Solo aggiungi messaggio",
     "send": "Invia",
     "sendWithCmdEnter": "Invia premendo {{meta}} + Invio",
     "sendWithEnter": "Invia premendo Invio",
@@ -101,6 +103,8 @@
     "confirmRemoveTopic": "Stai per rimuovere questo argomento, l'operazione non potrà essere annullata. Procedere con cautela.",
     "confirmRemoveUnstarred": "Stai per rimuovere gli argomenti non contrassegnati, questa operazione non potrà essere annullata. Procedere con cautela.",
     "defaultTitle": "Argomento predefinito",
+    "duplicateLoading": "Duplicazione dell'argomento in corso...",
+    "duplicateSuccess": "Argomento duplicato con successo",
     "guide": {
       "desc": "Fare clic sul pulsante a sinistra per salvare l'attuale sessione come argomento storico e avviare una nuova sessione",
       "title": "Elenco argomenti"

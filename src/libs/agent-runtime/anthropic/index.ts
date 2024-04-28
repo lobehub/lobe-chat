@@ -32,15 +32,18 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     const user_messages = messages.filter((m) => m.role !== 'system');
 
     try {
-      const response = await this.client.messages.create({
-        max_tokens: max_tokens || 4096,
-        messages: buildAnthropicMessages(user_messages),
-        model: model,
-        stream: true,
-        system: system_message?.content as string,
-        temperature: temperature,
-        top_p: top_p,
-      });
+      const response = await this.client.messages.create(
+        {
+          max_tokens: max_tokens || 4096,
+          messages: buildAnthropicMessages(user_messages),
+          model: model,
+          stream: true,
+          system: system_message?.content as string,
+          temperature: temperature,
+          top_p: top_p,
+        },
+        { signal: options?.signal },
+      );
 
       const [prod, debug] = response.tee();
 

@@ -22,6 +22,7 @@
       "confirm": "Potwierdź zresetowanie wszystkich ustawień?",
       "currentVersion": "Aktualna wersja",
       "desc": "Zresetuj wszystkie ustawienia do wartości domyślnych",
+      "success": "Wszystkie ustawienia zostały zresetowane",
       "title": "Zresetuj wszystkie ustawienia"
     }
   },

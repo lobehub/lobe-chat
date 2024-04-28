@@ -18,6 +18,7 @@
     "title": "{{title}} - kopia"
   },
   "duplicateTitle": "{{title}} kopia",
+  "emptyAgent": "Brak asystenta",
   "historyRange": "Zakres historii",
   "inbox": {
     "defaultMessage": "Cześć, jestem twoim inteligentnym asystentem, możesz zadać mi dowolne pytanie, postaram się na nie odpowiedzieć. Jeśli potrzebujesz bardziej profesjonalnego lub spersonalizowanego asystenta, kliknij `+`, aby utworzyć niestandardowego asystenta.",
@@ -25,8 +26,9 @@
     "title": "Pogadajmy sobie"
   },
   "input": {
+    "addAi": "Dodaj wiadomość AI",
+    "addUser": "Dodaj wiadomość użytkownika",
     "more": "więcej",
-    "onlyAdd": "Tylko dodaj wiadomość",
     "send": "Wyślij",
     "sendWithCmdEnter": "Wyślij za pomocą klawisza {{meta}} + Enter",
     "sendWithEnter": "Wyślij za pomocą klawisza Enter",
@@ -101,6 +103,8 @@
     "confirmRemoveTopic": "Czy na pewno chcesz usunąć ten temat? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveUnstarred": "Czy na pewno chcesz usunąć nieoznaczone tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "defaultTitle": "Domyślne tematy",
+    "duplicateLoading": "Kopiowanie tematu...",
+    "duplicateSuccess": "Temat został skopiowany pomyślnie",
     "guide": {
       "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako historię tematu i rozpocząć nową rundę rozmowy",
       "title": "Lista tematów"

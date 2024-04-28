@@ -11,4 +11,6 @@ const SessionListContent = memo(() => {
   return isSearching ? <SearchMode /> : <DefaultMode />;
 });
 
+SessionListContent.displayName = 'SessionListContent';
+
 export default SessionListContent;

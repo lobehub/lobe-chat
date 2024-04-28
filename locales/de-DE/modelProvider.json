@@ -147,15 +147,13 @@
         "windows": "Klicken Sie auf Windows auf 'Systemsteuerung', um die Systemumgebungsvariablen zu bearbeiten. Erstellen Sie eine Umgebungsvariable namens 'OLLAMA_ORIGINS' für Ihr Benutzerkonto mit dem Wert '*', und klicken Sie auf 'OK/Anwenden', um zu speichern."
       },
       "install": {
-        "description": "Stellen Sie sicher, dass Ollama gestartet ist. Wenn Sie Ollama noch nicht heruntergeladen haben, besuchen Sie die offizielle Website, um es herunterzuladen.",
+        "description": "Stelle sicher, dass du Ollama aktiviert hast. Wenn du Ollama noch nicht heruntergeladen hast, besuche die offizielle Website, um es <1>herunterzuladen</1>.",
         "docker": "Wenn Sie Docker bevorzugen, bietet Ollama auch offizielle Docker-Images an. Sie können sie mit dem folgenden Befehl abrufen:",
         "linux": {
           "command": "Installieren Sie mit dem folgenden Befehl:",
           "manual": "Alternativ können Sie die <1>Linux-Installationsanleitung</1> für die manuelle Installation verwenden."
         },
-        "macos": "<0>macOS-Version von Ollama herunterladen</0>, entpacken und installieren.",
         "title": "Installieren und starten Sie die lokale Ollama-Anwendung",
-        "windows": "<0>Windows-Version von Ollama herunterladen</0>, entpacken und installieren.",
         "windowsTab": "Windows (Vorschau)"
       }
     },

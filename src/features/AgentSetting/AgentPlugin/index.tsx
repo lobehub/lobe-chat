@@ -9,6 +9,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import PluginStore from '@/features/PluginStore';
 import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
+import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
@@ -28,7 +29,8 @@ const AgentPlugin = memo(() => {
     s.toggleAgentPlugin,
   ]);
 
-  const installedPlugins = useToolStore(toolSelectors.metaList, isEqual);
+  const { showDalle } = useFeatureFlagStore(featureFlagsSelectors);
+  const installedPlugins = useToolStore(toolSelectors.metaList(showDalle), isEqual);
   const useFetchInstalledPlugins = useToolStore((s) => s.useFetchInstalledPlugins);
 
   const { isLoading } = useFetchInstalledPlugins();

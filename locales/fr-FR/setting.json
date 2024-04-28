@@ -22,6 +22,7 @@
       "confirm": "Confirmer la réinitialisation de tous les paramètres ?",
       "currentVersion": "Version actuelle",
       "desc": "Réinitialiser tous les paramètres aux valeurs par défaut",
+      "success": "Toutes les configurations ont été réinitialisées avec succès",
       "title": "Réinitialiser tous les paramètres"
     }
   },

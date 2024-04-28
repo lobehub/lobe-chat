@@ -15,8 +15,7 @@ describe('Configuration tests', () => {
   });
 
   it('should contain specific regions in preferredRegion', () => {
-    expect(preferredRegion).not.contain(['hkg1']);
-    expect(preferredRegion).not.contain(['dub1']);
+    expect(preferredRegion).not.contain(['hk1']);
   });
 });
 

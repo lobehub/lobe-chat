@@ -18,6 +18,7 @@
     "title": "{{title}} Kopyası"
   },
   "duplicateTitle": "{{title}} Kopya",
+  "emptyAgent": "Asistan yok",
   "historyRange": "Geçmiş Aralığı",
   "inbox": {
     "defaultMessage": "Merhaba, ben sanal asistanınızım. Bana herhangi bir şey sorabilirsiniz ve size cevap vermek için elimden geleni yapacağım. Daha profesyonel veya özelleştirilmiş bir asistana ihtiyacınız varsa, özel bir asistan oluşturmak için `+` simgesine tıklayabilirsiniz.",
@@ -25,8 +26,9 @@
     "title": "Sohbet Et"
   },
   "input": {
+    "addAi": "Bir AI mesajı ekleyin",
+    "addUser": "Bir kullanıcı mesajı ekleyin",
     "more": "Daha fazla",
-    "onlyAdd": "Sadece mesaj ekle",
     "send": "Gönder",
     "sendWithCmdEnter": "{{meta}} + Enter tuşuna basarak gönder",
     "sendWithEnter": "Enter tuşuna basarak gönder",
@@ -101,6 +103,8 @@
     "confirmRemoveTopic": "Bu konuyu silmek üzeresiniz. Bir kere silindiğinde, geri alınamaz. Lütfen dikkatli bir şekilde devam edin.",
     "confirmRemoveUnstarred": "Yıldızlanmamış konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
     "defaultTitle": "Konu",
+    "duplicateLoading": "Konu kopyalanıyor...",
+    "duplicateSuccess": "Konu başarıyla kopyalandı",
     "guide": {
       "desc": "Mevcut oturumu geçmiş konu olarak kaydetmek ve yeni bir oturum başlatmak için sol taraftaki düğmeye tıklayın",
       "title": "Konu Listesi"

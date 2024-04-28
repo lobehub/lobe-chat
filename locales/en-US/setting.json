@@ -22,6 +22,7 @@
       "confirm": "Confirm to reset all settings?",
       "currentVersion": "Current Version",
       "desc": "Reset all settings to default values",
+      "success": "All settings have been reset",
       "title": "Reset All Settings"
     }
   },

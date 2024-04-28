@@ -147,15 +147,13 @@
         "windows": "No Windows, acesse o 'Painel de Controle' e edite as variáveis de ambiente do sistema. Crie uma nova variável de ambiente chamada 'OLLAMA_ORIGINS' para sua conta de usuário, com o valor '*', e clique em 'OK/Aplicar' para salvar."
       },
       "install": {
-        "description": "Certifique-se de que o Ollama esteja em execução. Se ainda não o fez, baixe o Ollama no site oficial.",
+        "description": "Certifique-se de que você ativou o Ollama. Se ainda não o fez, baixe o Ollama no site oficial <1>aqui</1>.",
         "docker": "Se preferir usar o Docker, o Ollama também oferece uma imagem oficial. Você pode puxá-la com o comando:",
         "linux": {
           "command": "Instale com o comando a seguir:",
           "manual": "Ou, se preferir, consulte o <1>Guia de Instalação Manual do Linux</1> para instalar manualmente."
         },
-        "macos": "Baixe o Ollama para macOS, descompacte e instale:",
         "title": "Instale e inicie o aplicativo Ollama localmente",
-        "windows": "Baixe o Ollama para Windows, descompacte e instale:",
         "windowsTab": "Windows (Versão de Visualização)"
       }
     },

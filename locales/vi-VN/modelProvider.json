@@ -147,15 +147,13 @@
         "windows": "Trên Windows, nhấp vào «Control Panel», vào chỉnh sửa biến môi trường hệ thống. Tạo biến môi trường tên là «OLLAMA_ORIGINS» cho tài khoản người dùng của bạn, giá trị là * , nhấp vào «OK/Áp dụng» để lưu lại"
       },
       "install": {
-        "description": "Vui lòng xác nhận rằng bạn đã mở Ollama, nếu chưa tải Ollama, vui lòng truy cập trang web chính thức để tải xuống",
+        "description": "Vui lòng xác nhận rằng bạn đã bật Ollama. Nếu chưa tải Ollama, vui lòng truy cập trang web chính thức để <1>tải xuống</1>",
         "docker": "Nếu bạn muốn sử dụng Docker, Ollama cũng cung cấp hình ảnh Docker chính thức, bạn có thể kéo theo lệnh sau:",
         "linux": {
           "command": "Cài đặt bằng lệnh sau:",
           "manual": "Hoặc bạn cũng có thể tham khảo <1>Hướng dẫn cài đặt thủ công trên Linux</1> để tự cài đặt"
         },
-        "macos": "<0>Tải xuống phiên bản Ollama cho macOS</0>, giải nén và cài đặt",
         "title": "Cài đặt và mở Ollama ứng dụng trên máy cục bộ",
-        "windows": "<0>Tải xuống phiên bản Ollama cho Windows</0>, giải nén và cài đặt",
         "windowsTab": "Windows (Bản xem trước)"
       }
     },

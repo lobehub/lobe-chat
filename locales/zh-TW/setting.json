@@ -22,6 +22,7 @@
       "confirm": "確認重置所有設定？",
       "currentVersion": "當前版本",
       "desc": "重置所有設定項回預設值",
+      "success": "已重設所有設定",
       "title": "重置所有設定"
     }
   },

@@ -22,6 +22,7 @@
       "confirm": "Confirmar a redefinição de todas as configurações?",
       "currentVersion": "Versão Atual",
       "desc": "Redefinir todas as configurações para os valores padrão",
+      "success": "Todas as configurações foram redefinidas com sucesso",
       "title": "Redefinir Todas as Configurações"
     }
   },

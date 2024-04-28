@@ -13,10 +13,10 @@ import { chatService } from '@/services/chat';
 import { CreateMessageParams, messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
@@ -38,6 +38,7 @@ interface SendMessageParams {
 export interface ChatMessageAction {
   // create
   sendMessage: (params: SendMessageParams) => Promise<void>;
+  addAIMessage: () => Promise<void>;
   /**
    * regenerate message
    * trace enabled
@@ -119,7 +120,7 @@ export interface ChatMessageAction {
   internalTraceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
 }
 
-const getAgentConfig = () => agentSelectors.currentAgentConfig(useSessionStore.getState());
+const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
 
 const preventLeavingFn = (e: BeforeUnloadEvent) => {
   // set returnValue to trigger alert modal
@@ -214,7 +215,21 @@ export const chatMessage: StateCreator<
       if (id) switchTopic(id);
     }
   },
+  addAIMessage: async () => {
+    const { internalCreateMessage, updateInputMessage, activeTopicId, activeId, inputMessage } =
+      get();
+    if (!activeId) return;
 
+    await internalCreateMessage({
+      content: inputMessage,
+      role: 'assistant',
+      sessionId: activeId,
+      // if there is activeTopicId，then add topicId to message
+      topicId: activeTopicId,
+    });
+
+    updateInputMessage('');
+  },
   copyMessage: async (id, content) => {
     await copyToClipboard(content);
 

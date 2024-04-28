@@ -147,15 +147,13 @@
         "windows": "Windows'ta, 'Control Panel'ı tıklayarak sistem ortam değişkenlerini düzenleyin. Kullanıcı hesabınıza * değerinde 'OLLAMA_ORIGINS' adında bir ortam değişkeni oluşturun ve 'OK/Apply' düğmesine tıklayarak kaydedin"
       },
       "install": {
-        "description": "Ollama'yı açtığınızdan emin olun. Eğer Ollama'yı indirmediyseniz, resmi web sitesine giderek indirin",
+        "description": "Ollama'nın açık olduğundan emin olun. Ollama'yı indirmediyseniz, lütfen resmi web sitesine giderek <1>indirin</1>.",
         "docker": "Docker kullanmayı tercih ediyorsanız, Ollama resmi Docker görüntüsünü aşağıdaki komutla çekebilirsiniz:",
         "linux": {
           "command": "Aşağıdaki komutları kullanarak yükleyin:",
           "manual": "Ya da, <1>Linux için el ile kurulum kılavuzuna</1> bakarak kendiniz kurabilirsiniz"
         },
-        "macos": "<0>macOS sürümü Ollama'yı indirin</0>, açın ve kurun",
         "title": "Yerel olarak Ollama uygulamasını kurun ve başlatın",
-        "windows": "<0>Windows sürümü Ollama'yı indirin</0>, açın ve kurun",
         "windowsTab": "Windows (Önizleme)"
       }
     },
