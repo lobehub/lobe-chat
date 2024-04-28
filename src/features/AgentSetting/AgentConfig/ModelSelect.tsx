@@ -4,8 +4,8 @@ import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 import { ModelProviderCard } from '@/types/llm';
 
 import { useStore } from '../store';
@@ -25,10 +25,7 @@ interface ModelOption {
 
 const ModelSelect = memo(() => {
   const [model, updateConfig] = useStore((s) => [s.config.model, s.setAgentConfig]);
-  const enabledList = useGlobalStore(
-    modelProviderSelectors.modelProviderListForModelSelect,
-    isEqual,
-  );
+  const enabledList = useUserStore(modelProviderSelectors.modelProviderListForModelSelect, isEqual);
 
   const { styles } = useStyles();
 

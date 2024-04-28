@@ -5,8 +5,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import ModelIcon from '@/components/ModelIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import CustomModelOption from './CustomModelOption';
@@ -18,7 +18,7 @@ interface OptionRenderProps {
   provider: GlobalLLMProviderKey;
 }
 const OptionRender = memo<OptionRenderProps>(({ displayName, id, provider, isAzure }) => {
-  const model = useGlobalStore((s) => modelProviderSelectors.getModelCardById(id)(s), isEqual);
+  const model = useUserStore((s) => modelProviderSelectors.getModelCardById(id)(s), isEqual);
 
   // if there is isCustom, it means it is a user defined custom model
   if (model?.isCustom || isAzure) return <CustomModelOption id={id} provider={provider} />;
