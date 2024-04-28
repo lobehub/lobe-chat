@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.150.7](https://github.com/lobehub/lobe-chat/compare/v0.150.6...v0.150.7)
+
+<sup>Released on **2024-04-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Suport to fetch model list on client.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Suport to fetch model list on client, closes [#2252](https://github.com/lobehub/lobe-chat/issues/2252) ([76310a8](https://github.com/lobehub/lobe-chat/commit/76310a8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.150.6](https://github.com/lobehub/lobe-chat/compare/v0.150.5...v0.150.6)
 
 <sup>Released on **2024-04-28**</sup>
