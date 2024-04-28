@@ -8,8 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import ModelIcon from '@/components/ModelIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';
-import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelConfigSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 interface CustomModelOptionProps {
@@ -23,12 +23,12 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
   const { modal } = App.useApp();
 
   const [dispatchCustomModelCards, toggleEditingCustomModelCard, removeEnabledModels] =
-    useGlobalStore((s) => [
+    useUserStore((s) => [
       s.dispatchCustomModelCards,
       s.toggleEditingCustomModelCard,
       s.removeEnabledModels,
     ]);
-  const modelCard = useGlobalStore(
+  const modelCard = useUserStore(
     modelConfigSelectors.getCustomModelCard({ id, provider }),
     isEqual,
   );

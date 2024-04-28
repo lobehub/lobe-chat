@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import SyncStatusInspector from '@/features/SyncStatusInspector';
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 
 import { useSyncSettings } from '../../hooks/useSyncSettings';
 import ChannelNameInput from './ChannelNameInput';
@@ -20,7 +20,7 @@ const WebRTC = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
-  const [setSettings] = useGlobalStore((s) => [s.setSettings]);
+  const [setSettings] = useUserStore((s) => [s.setSettings]);
 
   useSyncSettings(form);
 

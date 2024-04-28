@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.150.10](https://github.com/lobehub/lobe-chat/compare/v0.150.9...v0.150.10)
+
+<sup>Released on **2024-04-28**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Rename globalStore to userStore.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Rename globalStore to userStore, closes [#2264](https://github.com/lobehub/lobe-chat/issues/2264) ([a3cb538](https://github.com/lobehub/lobe-chat/commit/a3cb538))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.150.9](https://github.com/lobehub/lobe-chat/compare/v0.150.8...v0.150.9)
 
 <sup>Released on **2024-04-28**</sup>

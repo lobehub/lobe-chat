@@ -1,15 +1,11 @@
-import { gt } from 'semver';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { INBOX_SESSION_ID } from '@/const/session';
-import { SESSION_CHAT_URL } from '@/const/url';
-import { CURRENT_VERSION } from '@/const/version';
 import { globalService } from '@/services/global';
 import { messageService } from '@/services/message';
 import { UserConfig, userService } from '@/services/user';
-import type { GlobalStore } from '@/store/global';
+import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
 import type { GlobalSettings } from '@/types/settings';
 import { OnSyncEvent, PeerSyncStatus } from '@/types/sync';
@@ -30,10 +26,8 @@ const n = setNamespace('common');
 export interface CommonAction {
   refreshConnection: (onEvent: OnSyncEvent) => Promise<void>;
   refreshUserConfig: () => Promise<void>;
-  switchBackToChat: (sessionId?: string) => void;
   triggerEnableSync: (userId: string, onEvent: OnSyncEvent) => Promise<boolean>;
   updateAvatar: (avatar: string) => Promise<void>;
-  useCheckLatestVersion: () => SWRResponse<string>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
   useEnabledSync: (
     userEnableSync: boolean,
@@ -47,7 +41,7 @@ export interface CommonAction {
 const USER_CONFIG_FETCH_KEY = 'fetchUserConfig';
 
 export const createCommonSlice: StateCreator<
-  GlobalStore,
+  UserStore,
   [['zustand/devtools', never]],
   [],
   CommonAction
@@ -67,9 +61,6 @@ export const createCommonSlice: StateCreator<
     get().refreshModelProviderList();
   },
 
-  switchBackToChat: (sessionId) => {
-    get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
-  },
   triggerEnableSync: async (userId: string, onEvent: OnSyncEvent) => {
     // double-check the sync ability
     // if there is no channelName, don't start sync
@@ -106,15 +97,6 @@ export const createCommonSlice: StateCreator<
     await userService.updateAvatar(avatar);
     await get().refreshUserConfig();
   },
-  useCheckLatestVersion: () =>
-    useSWR('checkLatestVersion', globalService.getLatestVersion, {
-      // check latest version every 30 minutes
-      focusThrottleInterval: 1000 * 60 * 30,
-      onSuccess: (data: string) => {
-        if (gt(data, CURRENT_VERSION))
-          set({ hasNewVersion: true, latestVersion: data }, false, n('checkLatestVersion'));
-      },
-    }),
   useCheckTrace: (shouldFetch) =>
     useSWR<boolean>(
       ['checkTrace', shouldFetch],
