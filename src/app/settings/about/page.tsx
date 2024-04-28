@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PageTitle from '@/components/PageTitle';
-import { useGlobalStore } from '@/store/global';
-import { commonSelectors } from '@/store/global/selectors';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 import AboutList from './AboutList';
 import Analytics from './Analytics';
@@ -23,7 +23,7 @@ export default memo(() => {
   const { t } = useTranslation('setting');
 
   const { styles } = useStyles();
-  const enabledTelemetryChat = useGlobalStore(commonSelectors.enabledTelemetryChat);
+  const enabledTelemetryChat = useServerConfigStore(serverConfigSelectors.enabledTelemetryChat);
 
   return (
     <>
