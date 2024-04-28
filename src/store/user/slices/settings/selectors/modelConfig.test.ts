@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { merge } from '@/utils/merge';
 
-import { GlobalStore, useGlobalStore } from '../../../store';
-import { GlobalSettingsState, initialSettingsState } from '../initialState';
+import { UserStore, useUserStore } from '../../../store';
+import { UserSettingsState, initialSettingsState } from '../initialState';
 import { modelConfigSelectors } from './modelConfig';
 
 describe('modelConfigSelectors', () => {
@@ -15,7 +15,7 @@ describe('modelConfigSelectors', () => {
             ollama: { enabled: true },
           },
         },
-      } as GlobalSettingsState) as unknown as GlobalStore;
+      } as UserSettingsState) as unknown as UserStore;
 
       expect(modelConfigSelectors.isProviderEnabled('ollama')(s)).toBe(true);
     });
@@ -27,7 +27,7 @@ describe('modelConfigSelectors', () => {
             perplexity: { enabled: false },
           },
         },
-      } as GlobalSettingsState) as unknown as GlobalStore;
+      } as UserSettingsState) as unknown as UserStore;
 
       expect(modelConfigSelectors.isProviderEnabled('perplexity')(s)).toBe(false);
     });
@@ -46,7 +46,7 @@ describe('modelConfigSelectors', () => {
             },
           },
         },
-      } as GlobalSettingsState) as unknown as GlobalStore;
+      } as UserSettingsState) as unknown as UserStore;
 
       const customModelCard = modelConfigSelectors.getCustomModelCard({
         id: 'custom-model-2',
@@ -65,7 +65,7 @@ describe('modelConfigSelectors', () => {
             },
           },
         },
-      } as GlobalSettingsState) as unknown as GlobalStore;
+      } as UserSettingsState) as unknown as UserStore;
 
       const customModelCard = modelConfigSelectors.getCustomModelCard({
         id: 'nonexistent-model',
@@ -93,7 +93,7 @@ describe('modelConfigSelectors', () => {
           id: 'custom-model-2',
           provider: 'perplexity',
         },
-      } as GlobalSettingsState) as unknown as GlobalStore;
+      } as UserSettingsState) as unknown as UserStore;
 
       const currentEditingModelCard = modelConfigSelectors.currentEditingCustomModelCard(s);
 
@@ -112,7 +112,7 @@ describe('modelConfigSelectors', () => {
             },
           },
         },
-      } as GlobalSettingsState) as unknown as GlobalStore;
+      } as UserSettingsState) as unknown as UserStore;
 
       const currentEditingModelCard = modelConfigSelectors.currentEditingCustomModelCard(s);
 

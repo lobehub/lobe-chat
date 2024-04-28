@@ -7,12 +7,12 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 import {
   modelConfigSelectors,
   modelProviderSelectors,
   settingsSelectors,
-} from '@/store/global/selectors';
+} from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -36,15 +36,15 @@ interface ModelFetcherProps {
 const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('setting');
-  const [useFetchProviderModelList] = useGlobalStore((s) => [
+  const [useFetchProviderModelList] = useUserStore((s) => [
     s.useFetchProviderModelList,
     s.setModelProviderConfig,
   ]);
-  const enabledAutoFetch = useGlobalStore(modelConfigSelectors.isAutoFetchModelsEnabled(provider));
-  const latestFetchTime = useGlobalStore(
+  const enabledAutoFetch = useUserStore(modelConfigSelectors.isAutoFetchModelsEnabled(provider));
+  const latestFetchTime = useUserStore(
     (s) => settingsSelectors.providerConfig(provider)(s)?.latestFetchTime,
   );
-  const totalModels = useGlobalStore(
+  const totalModels = useUserStore(
     (s) => modelProviderSelectors.getModelCardsById(provider)(s).length,
   );
 

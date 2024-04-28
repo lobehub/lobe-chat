@@ -6,15 +6,15 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { MAX_WIDTH } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { preferenceSelectors } from '@/store/user/selectors';
 
 interface ExperimentAlertProps {
   mobile?: boolean;
 }
 const ExperimentAlert = memo<ExperimentAlertProps>(({ mobile }) => {
   const { t } = useTranslation('setting');
-  const [hideSyncAlert, updatePreference] = useGlobalStore((s) => [
+  const [hideSyncAlert, updatePreference] = useUserStore((s) => [
     preferenceSelectors.hideSyncAlert(s),
     s.updatePreference,
   ]);

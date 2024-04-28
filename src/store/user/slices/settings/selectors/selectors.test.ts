@@ -1,4 +1,4 @@
-import { GlobalStore } from '../../../store';
+import { UserStore } from '../../../store';
 import { settingsSelectors } from './settings';
 
 describe('settingsSelectors', () => {
@@ -48,7 +48,7 @@ describe('settingsSelectors', () => {
             },
           },
         },
-      } as unknown as GlobalStore;
+      } as unknown as UserStore;
 
       const result = settingsSelectors.currentSettings(s);
 
@@ -71,7 +71,7 @@ describe('settingsSelectors', () => {
             },
           },
         },
-      } as unknown as GlobalStore;
+      } as unknown as UserStore;
 
       const result = settingsSelectors.defaultAgent(s);
 
@@ -90,7 +90,7 @@ describe('settingsSelectors', () => {
             },
           },
         },
-      } as unknown as GlobalStore;
+      } as unknown as UserStore;
 
       const result = settingsSelectors.defaultAgentMeta(s);
 
@@ -109,7 +109,7 @@ describe('settingsSelectors', () => {
             },
           },
         },
-      } as unknown as GlobalStore;
+      } as unknown as UserStore;
 
       const result = settingsSelectors.currentTTS(s);
 
@@ -123,7 +123,7 @@ describe('settingsSelectors', () => {
         settings: {
           language: 'fr',
         },
-      } as unknown as GlobalStore;
+      } as unknown as UserStore;
 
       const result = settingsSelectors.currentLanguage(s);
 
@@ -142,7 +142,7 @@ describe('settingsSelectors', () => {
             },
           },
         },
-      } as unknown as GlobalStore;
+      } as unknown as UserStore;
 
       const result = settingsSelectors.dalleConfig(s);
 
@@ -160,7 +160,7 @@ describe('settingsSelectors', () => {
             },
           },
         },
-      } as unknown as GlobalStore;
+      } as unknown as UserStore;
 
       const result = settingsSelectors.isDalleAutoGenerating(s);
 

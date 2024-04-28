@@ -6,10 +6,10 @@ import { withSWR } from '~test-utils';
 import { globalService } from '@/services/global';
 import { messageService } from '@/services/message';
 import { userService } from '@/services/user';
-import { useGlobalStore } from '@/store/global';
-import { commonSelectors } from '@/store/global/slices/common/selectors';
-import { preferenceSelectors } from '@/store/global/slices/preference/selectors';
-import { syncSettingsSelectors } from '@/store/global/slices/settings/selectors';
+import { useUserStore } from '@/store/user';
+import { commonSelectors } from '@/store/user/slices/common/selectors';
+import { preferenceSelectors } from '@/store/user/slices/preference/selectors';
+import { syncSettingsSelectors } from '@/store/user/slices/settings/selectors';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { switchLang } from '@/utils/client/switchLang';
 
@@ -32,24 +32,9 @@ afterEach(() => {
 });
 
 describe('createCommonSlice', () => {
-  describe('switchBackToChat', () => {
-    it('should switch back to chat', () => {
-      const { result } = renderHook(() => useGlobalStore());
-      const sessionId = 'session-id';
-      const router = { push: vi.fn() } as any;
-
-      act(() => {
-        useGlobalStore.setState({ router });
-        result.current.switchBackToChat(sessionId);
-      });
-
-      expect(router.push).toHaveBeenCalledWith('/chat?session=session-id');
-    });
-  });
-
   describe('refreshUserConfig', () => {
     it('should refresh user config', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
 
       await act(async () => {
         await result.current.refreshUserConfig();
@@ -61,7 +46,7 @@ describe('createCommonSlice', () => {
 
   describe('updateAvatar', () => {
     it('should update avatar', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const avatar = 'new-avatar';
 
       const spyOn = vi.spyOn(result.current, 'refreshUserConfig');
@@ -76,42 +61,6 @@ describe('createCommonSlice', () => {
     });
   });
 
-  describe('useCheckLatestVersion', () => {
-    it('should set hasNewVersion to false if there is no new version', async () => {
-      const latestVersion = '0.0.1';
-
-      vi.spyOn(globalService, 'getLatestVersion').mockResolvedValueOnce(latestVersion);
-
-      const { result } = renderHook(() => useGlobalStore().useCheckLatestVersion(), {
-        wrapper: withSWR,
-      });
-
-      await waitFor(() => {
-        expect(result.current.data).toBe(latestVersion);
-      });
-
-      expect(useGlobalStore.getState().hasNewVersion).toBeUndefined();
-      expect(useGlobalStore.getState().latestVersion).toBeUndefined();
-    });
-
-    it('should set hasNewVersion to true if there is a new version', async () => {
-      const latestVersion = '10000000.0.0';
-
-      vi.spyOn(globalService, 'getLatestVersion').mockResolvedValueOnce(latestVersion);
-
-      const { result } = renderHook(() => useGlobalStore().useCheckLatestVersion(), {
-        wrapper: withSWR,
-      });
-
-      await waitFor(() => {
-        expect(result.current.data).toBe(latestVersion);
-      });
-
-      expect(useGlobalStore.getState().hasNewVersion).toBe(true);
-      expect(useGlobalStore.getState().latestVersion).toBe(latestVersion);
-    });
-  });
-
   describe('useFetchServerConfig', () => {
     it('should fetch server config correctly', async () => {
       const mockServerConfig = {
@@ -121,7 +70,7 @@ describe('createCommonSlice', () => {
       } as GlobalServerConfig;
       vi.spyOn(globalService, 'getGlobalConfig').mockResolvedValueOnce(mockServerConfig);
 
-      const { result } = renderHook(() => useGlobalStore().useFetchServerConfig());
+      const { result } = renderHook(() => useUserStore().useFetchServerConfig());
 
       await waitFor(() => expect(result.current.data).toEqual(mockServerConfig));
     });
@@ -132,7 +81,7 @@ describe('createCommonSlice', () => {
       const mockUserConfig: any = undefined; // 模拟未初始化服务器的情况
       vi.spyOn(userService, 'getUserConfig').mockResolvedValueOnce(mockUserConfig);
 
-      const { result } = renderHook(() => useGlobalStore().useFetchUserConfig(false), {
+      const { result } = renderHook(() => useUserStore().useFetchUserConfig(false), {
         wrapper: withSWR,
       });
 
@@ -151,7 +100,7 @@ describe('createCommonSlice', () => {
       };
       vi.spyOn(userService, 'getUserConfig').mockResolvedValueOnce(mockUserConfig);
 
-      const { result } = renderHook(() => useGlobalStore().useFetchUserConfig(true), {
+      const { result } = renderHook(() => useUserStore().useFetchUserConfig(true), {
         wrapper: withSWR,
       });
 
@@ -159,8 +108,8 @@ describe('createCommonSlice', () => {
       await waitFor(() => expect(result.current.data).toEqual(mockUserConfig));
 
       // 验证状态是否正确更新
-      expect(useGlobalStore.getState().avatar).toBe(mockUserConfig.avatar);
-      expect(useGlobalStore.getState().settings).toEqual(mockUserConfig.settings);
+      expect(useUserStore.getState().avatar).toBe(mockUserConfig.avatar);
+      expect(useUserStore.getState().settings).toEqual(mockUserConfig.settings);
 
       // 验证是否正确处理了语言设置
       expect(switchLang).not.toHaveBeenCalledWith('auto');
@@ -174,7 +123,7 @@ describe('createCommonSlice', () => {
       };
       vi.spyOn(userService, 'getUserConfig').mockResolvedValueOnce(mockUserConfig);
 
-      const { result } = renderHook(() => useGlobalStore().useFetchUserConfig(true), {
+      const { result } = renderHook(() => useUserStore().useFetchUserConfig(true), {
         wrapper: withSWR,
       });
 
@@ -182,8 +131,8 @@ describe('createCommonSlice', () => {
       await waitFor(() => expect(result.current.data).toEqual(mockUserConfig));
 
       // 验证状态是否正确更新
-      expect(useGlobalStore.getState().avatar).toBe(mockUserConfig.avatar);
-      expect(useGlobalStore.getState().settings).toEqual(mockUserConfig.settings);
+      expect(useUserStore.getState().avatar).toBe(mockUserConfig.avatar);
+      expect(useUserStore.getState().settings).toEqual(mockUserConfig.settings);
 
       // 验证是否正确处理了语言设置
       expect(switchLang).toHaveBeenCalledWith('auto');
@@ -192,7 +141,7 @@ describe('createCommonSlice', () => {
     it('should handle the case when user config is null', async () => {
       vi.spyOn(userService, 'getUserConfig').mockResolvedValueOnce(null as any);
 
-      const { result } = renderHook(() => useGlobalStore().useFetchUserConfig(true), {
+      const { result } = renderHook(() => useUserStore().useFetchUserConfig(true), {
         wrapper: withSWR,
       });
 
@@ -200,14 +149,14 @@ describe('createCommonSlice', () => {
       await waitFor(() => expect(result.current.data).toBeNull());
 
       // 验证状态未被错误更新
-      expect(useGlobalStore.getState().avatar).toBeUndefined();
-      expect(useGlobalStore.getState().settings).toEqual({});
+      expect(useUserStore.getState().avatar).toBeUndefined();
+      expect(useUserStore.getState().settings).toEqual({});
     });
   });
 
   describe('refreshConnection', () => {
     it('should not call triggerEnableSync when userId is empty', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const onEvent = vi.fn();
 
       vi.spyOn(commonSelectors, 'userId').mockReturnValueOnce(undefined);
@@ -221,7 +170,7 @@ describe('createCommonSlice', () => {
     });
 
     it('should call triggerEnableSync when userId exists', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const onEvent = vi.fn();
       const userId = 'user-id';
 
@@ -238,7 +187,7 @@ describe('createCommonSlice', () => {
 
   describe('triggerEnableSync', () => {
     it('should return false when sync.channelName is empty', async () => {
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
       const userId = 'user-id';
       const onEvent = vi.fn();
 
@@ -270,7 +219,7 @@ describe('createCommonSlice', () => {
       });
       vi.spyOn(syncSettingsSelectors, 'deviceName').mockReturnValueOnce(deviceName);
       const enabledSyncSpy = vi.spyOn(globalService, 'enabledSync').mockResolvedValueOnce(true);
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
 
       const data = await act(async () => {
         return result.current.triggerEnableSync(userId, onEvent);
@@ -290,7 +239,7 @@ describe('createCommonSlice', () => {
 
   describe('useCheckTrace', () => {
     it('should return false when shouldFetch is false', async () => {
-      const { result } = renderHook(() => useGlobalStore().useCheckTrace(false), {
+      const { result } = renderHook(() => useUserStore().useCheckTrace(false), {
         wrapper: withSWR,
       });
 
@@ -300,7 +249,7 @@ describe('createCommonSlice', () => {
     it('should return false when userAllowTrace is already set', async () => {
       vi.spyOn(preferenceSelectors, 'userAllowTrace').mockReturnValueOnce(true);
 
-      const { result } = renderHook(() => useGlobalStore().useCheckTrace(true), {
+      const { result } = renderHook(() => useUserStore().useCheckTrace(true), {
         wrapper: withSWR,
       });
 
@@ -313,7 +262,7 @@ describe('createCommonSlice', () => {
         .spyOn(messageService, 'messageCountToCheckTrace')
         .mockResolvedValueOnce(true);
 
-      const { result } = renderHook(() => useGlobalStore().useCheckTrace(true), {
+      const { result } = renderHook(() => useUserStore().useCheckTrace(true), {
         wrapper: withSWR,
       });
 
@@ -324,10 +273,9 @@ describe('createCommonSlice', () => {
 
   describe('useEnabledSync', () => {
     it('should return false when userId is empty', async () => {
-      const { result } = renderHook(
-        () => useGlobalStore().useEnabledSync(true, undefined, vi.fn()),
-        { wrapper: withSWR },
-      );
+      const { result } = renderHook(() => useUserStore().useEnabledSync(true, undefined, vi.fn()), {
+        wrapper: withSWR,
+      });
 
       await waitFor(() => expect(result.current.data).toBe(false));
     });
@@ -336,7 +284,7 @@ describe('createCommonSlice', () => {
       const disableSyncSpy = vi.spyOn(globalService, 'disableSync').mockResolvedValueOnce(false);
 
       const { result } = renderHook(
-        () => useGlobalStore().useEnabledSync(false, 'user-id', vi.fn()),
+        () => useUserStore().useEnabledSync(false, 'user-id', vi.fn()),
         { wrapper: withSWR },
       );
 
@@ -349,7 +297,7 @@ describe('createCommonSlice', () => {
       const onEvent = vi.fn();
       const triggerEnableSyncSpy = vi.fn().mockResolvedValueOnce(true);
 
-      const { result } = renderHook(() => useGlobalStore());
+      const { result } = renderHook(() => useUserStore());
 
       // replace triggerEnableSync as a mock
       result.current.triggerEnableSync = triggerEnableSyncSpy;

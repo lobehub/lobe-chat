@@ -1,15 +1,15 @@
 import { GlobalLLMProviderKey } from '@/types/settings';
 
-import { GlobalStore } from '../../../store';
+import { UserStore } from '../../../store';
 import { currentLLMSettings, getProviderConfigById } from './settings';
 
-const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: GlobalStore) =>
+const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
   getProviderConfigById(provider)(s)?.enabled || false;
 
-const isProviderEndpointNotEmpty = (provider: GlobalLLMProviderKey | string) => (s: GlobalStore) =>
+const isProviderEndpointNotEmpty = (provider: GlobalLLMProviderKey | string) => (s: UserStore) =>
   !!getProviderConfigById(provider)(s)?.endpoint;
 
-const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s: GlobalStore) => {
+const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s: UserStore) => {
   const config = getProviderConfigById(provider)(s);
   if (typeof config?.fetchOnClient !== 'undefined') return config?.fetchOnClient;
 
@@ -18,7 +18,7 @@ const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s:
 
 const getCustomModelCard =
   ({ id, provider }: { id?: string; provider?: string }) =>
-  (s: GlobalStore) => {
+  (s: UserStore) => {
     if (!provider) return;
 
     const config = getProviderConfigById(provider)(s);
@@ -26,7 +26,7 @@ const getCustomModelCard =
     return config?.customModelCards?.find((m) => m.id === id);
   };
 
-const currentEditingCustomModelCard = (s: GlobalStore) => {
+const currentEditingCustomModelCard = (s: UserStore) => {
   if (!s.editingCustomCardModel) return;
   const { id, provider } = s.editingCustomCardModel;
 
@@ -35,16 +35,16 @@ const currentEditingCustomModelCard = (s: GlobalStore) => {
 
 const isAutoFetchModelsEnabled =
   (provider: GlobalLLMProviderKey) =>
-  (s: GlobalStore): boolean => {
+  (s: UserStore): boolean => {
     return getProviderConfigById(provider)(s)?.autoFetchModelLists || false;
   };
 
-const openAIConfig = (s: GlobalStore) => currentLLMSettings(s).openai;
-const bedrockConfig = (s: GlobalStore) => currentLLMSettings(s).bedrock;
-const ollamaConfig = (s: GlobalStore) => currentLLMSettings(s).ollama;
-const azureConfig = (s: GlobalStore) => currentLLMSettings(s).azure;
+const openAIConfig = (s: UserStore) => currentLLMSettings(s).openai;
+const bedrockConfig = (s: UserStore) => currentLLMSettings(s).bedrock;
+const ollamaConfig = (s: UserStore) => currentLLMSettings(s).ollama;
+const azureConfig = (s: UserStore) => currentLLMSettings(s).azure;
 
-const isAzureEnabled = (s: GlobalStore) => currentLLMSettings(s).azure.enabled;
+const isAzureEnabled = (s: UserStore) => currentLLMSettings(s).azure.enabled;
 
 export const modelConfigSelectors = {
   azureConfig,

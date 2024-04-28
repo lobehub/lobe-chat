@@ -6,33 +6,33 @@ import { GeneralModelProviderConfig, GlobalLLMProviderKey, GlobalSettings } from
 import { isOnServerSide } from '@/utils/env';
 import { merge } from '@/utils/merge';
 
-import { GlobalStore } from '../../../store';
+import { UserStore } from '../../../store';
 
-export const currentSettings = (s: GlobalStore): GlobalSettings =>
+export const currentSettings = (s: UserStore): GlobalSettings =>
   merge(s.defaultSettings, s.settings);
 
-export const currentLLMSettings = (s: GlobalStore) => currentSettings(s).languageModel;
+export const currentLLMSettings = (s: UserStore) => currentSettings(s).languageModel;
 
-export const getProviderConfigById = (provider: string) => (s: GlobalStore) =>
+export const getProviderConfigById = (provider: string) => (s: UserStore) =>
   currentLLMSettings(s)[provider as GlobalLLMProviderKey] as GeneralModelProviderConfig | undefined;
 
-const password = (s: GlobalStore) => currentSettings(s).password;
+const password = (s: UserStore) => currentSettings(s).password;
 
-const currentTTS = (s: GlobalStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
+const currentTTS = (s: UserStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
 
-const defaultAgent = (s: GlobalStore) => merge(DEFAULT_AGENT, currentSettings(s).defaultAgent);
+const defaultAgent = (s: UserStore) => merge(DEFAULT_AGENT, currentSettings(s).defaultAgent);
 
-const defaultAgentMeta = (s: GlobalStore) => merge(DEFAULT_AGENT_META, defaultAgent(s).meta);
+const defaultAgentMeta = (s: UserStore) => merge(DEFAULT_AGENT_META, defaultAgent(s).meta);
 
 // TODO: Maybe we can also export settings difference
-const exportSettings = (s: GlobalStore) => {
+const exportSettings = (s: UserStore) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _, ...settings } = currentSettings(s);
 
   return settings as GlobalSettings;
 };
 
-const currentLanguage = (s: GlobalStore) => {
+const currentLanguage = (s: UserStore) => {
   const locale = currentSettings(s).language;
 
   if (locale === 'auto') {
@@ -44,8 +44,8 @@ const currentLanguage = (s: GlobalStore) => {
   return locale;
 };
 
-const dalleConfig = (s: GlobalStore) => currentSettings(s).tool?.dalle || {};
-const isDalleAutoGenerating = (s: GlobalStore) => currentSettings(s).tool?.dalle?.autoGenerate;
+const dalleConfig = (s: UserStore) => currentSettings(s).tool?.dalle || {};
+const isDalleAutoGenerating = (s: UserStore) => currentSettings(s).tool?.dalle?.autoGenerate;
 
 export const settingsSelectors = {
   currentLanguage,
