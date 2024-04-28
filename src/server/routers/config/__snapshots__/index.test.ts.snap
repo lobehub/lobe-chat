@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`GET /api/config > Model Provider env > CUSTOM_MODELS > custom deletion, addition, and renaming of models 1`] = `
+exports[`configRouter > getGlobalConfig > Model Provider env > CUSTOM_MODELS > custom deletion, addition, and renaming of models 1`] = `
 [
   {
     "displayName": "llama",
@@ -22,7 +22,7 @@ exports[`GET /api/config > Model Provider env > CUSTOM_MODELS > custom deletion,
 ]
 `;
 
-exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
+exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
 {
   "enabledModels": [
     "llama",
@@ -51,7 +51,7 @@ exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > custom delet
 }
 `;
 
-exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > should work correct with gpt-4 1`] = `
+exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST > should work correct with gpt-4 1`] = `
 [
   {
     "displayName": "GPT-3.5 Turbo (1106)",
@@ -106,7 +106,7 @@ exports[`GET /api/config > Model Provider env > OPENAI_MODEL_LIST > should work 
 ]
 `;
 
-exports[`GET /api/config > Model Provider env > OPENROUTER_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
+exports[`configRouter > getGlobalConfig > Model Provider env > OPENROUTER_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
 {
   "enabled": false,
   "enabledModels": [

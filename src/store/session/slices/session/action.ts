@@ -70,6 +70,8 @@ export interface SessionAction {
    */
   removeSession: (id: string) => Promise<void>;
 
+  updateSearchKeywords: (keywords: string) => void;
+
   useFetchSessions: () => SWRResponse<ChatSessionList>;
   useSearchSessions: (keyword?: string) => SWRResponse<any>;
 
@@ -169,6 +171,13 @@ export const createSessionSlice: StateCreator<
     }
   },
 
+  updateSearchKeywords: (keywords) => {
+    set(
+      { isSearching: !!keywords, sessionSearchKeywords: keywords },
+      false,
+      n('updateSearchKeywords'),
+    );
+  },
   updateSessionGroupId: async (sessionId, group) => {
     await get().internal_updateSession(sessionId, { group });
   },
