@@ -4,7 +4,7 @@ import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useState } from 'react';
 
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
-import { useUserStore } from '@/store/user';
+import { useGlobalStore } from '@/store/global';
 
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
@@ -16,7 +16,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const FolderPanel = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
-  const [sessionsWidth, sessionExpandable, updatePreference] = useUserStore((s) => [
+  const [sessionsWidth, sessionExpandable, updatePreference] = useGlobalStore((s) => [
     s.preference.sessionsWidth,
     s.preference.showSessionPanel,
     s.updatePreference,

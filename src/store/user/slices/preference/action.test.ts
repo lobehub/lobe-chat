@@ -30,13 +30,12 @@ describe('createPreferenceSlice', () => {
   describe('updatePreference', () => {
     it('should update preference', () => {
       const { result } = renderHook(() => useUserStore());
-      const preference = { inputHeight: 200 };
 
       act(() => {
-        result.current.updatePreference(preference);
+        result.current.updatePreference({ hideSyncAlert: true });
       });
 
-      expect(result.current.preference.inputHeight).toEqual(200);
+      expect(result.current.preference.hideSyncAlert).toEqual(true);
     });
   });
 });

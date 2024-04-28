@@ -6,13 +6,13 @@ import type { UserStore } from '@/store/user';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import type { GlobalPreference, Guide } from './initialState';
+import type { Guide, UserPreference } from './initialState';
 
 const n = setNamespace('preference');
 
 export interface PreferenceAction {
   updateGuideState: (guide: Partial<Guide>) => void;
-  updatePreference: (preference: Partial<GlobalPreference>, action?: any) => void;
+  updatePreference: (preference: Partial<UserPreference>, action?: any) => void;
   useInitPreference: () => SWRResponse;
 }
 
@@ -36,7 +36,7 @@ export const createPreferenceSlice: StateCreator<
   },
 
   useInitPreference: () =>
-    useClientDataSWR<GlobalPreference>(
+    useClientDataSWR<UserPreference>(
       'preference',
       () => get().preferenceStorage.getFromLocalStorage(),
       {
