@@ -85,3 +85,77 @@ Ensure that you have sufficient permissions to stop and remove the container bef
 No need to worry, you won't. All of LobeChat's chat records are stored in your local browser. Therefore, when redeploying LobeChat using Docker, your chat records will not be lost.
 
 </Callout>
+
+If you wish to automate the above steps, you can follow the method below and use Crontab scheduling to complete it. The specific steps are as follows.
+
+<Steps>
+
+### Write automatic update scripts and configuration files
+
+First, create a `lobe.env` configuration file with various environment variables, for example:
+
+```env
+OPENAI_API_KEY=sk-xxxx
+OPENAI_PROXY_URL=https://api-proxy.com/v1
+ACCESS_CODE=arthals2333
+OPENAI_MODEL_LIST=-gpt-4,-gpt-4-32k,-gpt-3.5-turbo-16k,gpt-3.5-turbo-1106=gpt-3.5-turbo-16k,gpt-4-0125-preview=gpt-4-turbo,gpt-4-vision-preview=gpt-4-vision
+```
+
+Then, you can use the following script to automate the update:
+
+```bash
+#!/bin/bash
+# auto-update-lobe-chat.sh
+
+# Set up proxy (optional)
+export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+
+# Pull the latest image and store the output in a variable
+output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+
+# Check if the pull command was executed successfully
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+# Check if the output contains a specific string
+echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+
+# If the image is already up to date, do nothing
+if [ $? -eq 0 ]; then
+  exit 0
+fi
+
+echo "Detected Lobe-Chat update"
+
+# Remove the old container
+echo "Removed: $(docker rm -f Lobe-Chat)"
+
+# Run the new container
+echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=Lobe-Chat --restart=always lobehub/lobe-chat)"
+
+# Print the update time and version
+echo "Update time: $(date)"
+echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+
+# Clean up unused images
+docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+echo "Removed old images."
+```
+
+<Callout type={'warning'}>
+  This script can be used in Crontab, but please ensure that your Crontab can find the correct
+  Docker command. It is recommended to use absolute paths.
+</Callout>
+
+Configure Crontab to execute the script every 5 minutes:
+
+### Configure Crontab to automatically execute scripts
+
+The following command configures Crontab to execute scripts every 5 minutes, or as often as you like:
+
+```bash
+*/5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
+```
+
+</Steps>
