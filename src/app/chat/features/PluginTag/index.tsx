@@ -4,8 +4,8 @@ import { Dropdown } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
-import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
 
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 

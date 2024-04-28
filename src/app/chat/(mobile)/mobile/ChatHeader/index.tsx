@@ -1,7 +1,8 @@
 import { MobileNavBar } from '@lobehub/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
-import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
+
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import SettingButton from '../../../features/SettingButton';
 import ShareButton from '../../../features/ShareButton';

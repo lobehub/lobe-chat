@@ -5,9 +5,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 import LazyLoad from 'react-lazy-load';
-import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
 
 import { SESSION_CHAT_URL } from '@/const/url';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession } from '@/types/session';

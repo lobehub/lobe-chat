@@ -2,9 +2,9 @@ import { Bot, Cloudy, Info, Mic2, Settings2, Webhook } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
 
 import { SettingsTabs } from '@/store/global/initialState';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import Item from './Item';
 

@@ -1,6 +1,7 @@
 import { OpenAI } from '@lobehub/icons';
 import { memo } from 'react';
-import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
+
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import ProviderConfig from '../components/ProviderConfig';
 
