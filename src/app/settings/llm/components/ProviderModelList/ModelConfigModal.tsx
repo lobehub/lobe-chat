@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/slices/settings/selectors';
+import { modelConfigSelectors } from '@/store/user/selectors';
 
 import MaxTokenSlider from './MaxTokenSlider';
 
