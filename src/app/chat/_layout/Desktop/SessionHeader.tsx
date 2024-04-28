@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import SyncStatusTag from '@/features/SyncStatusInspector';
 import { useActionSWR } from '@/libs/swr';
-import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 import SessionSearchBar from '../../features/SessionSearchBar';
@@ -27,7 +27,7 @@ const Header = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
   const [createSession] = useSessionStore((s) => [s.createSession]);
-  const { enableWebrtc, showCreateSession } = useFeatureFlagStore(featureFlagsSelectors);
+  const { enableWebrtc, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   const { mutate, isValidating } = useActionSWR('session.createSession', () => createSession());
 
