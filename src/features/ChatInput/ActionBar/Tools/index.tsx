@@ -7,11 +7,11 @@ import { ArrowRight, Blocks, Store, ToyBrick } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
 
 import PluginStore from '@/features/PluginStore';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
@@ -35,7 +35,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
-  const { showDalle } = useFeatureFlagStore(featureFlagsSelectors);
+  const { showDalle } = useServerConfigStore(featureFlagsSelectors);
   const builtinList = useToolStore(builtinToolSelectors.metaList(showDalle), isEqual);
 
   const enablePluginCount = useAgentStore(

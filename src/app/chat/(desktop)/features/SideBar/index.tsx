@@ -2,11 +2,11 @@ import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
+import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
 
 import TopicListContent from '@/app/chat/features/TopicListContent';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
-import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -35,7 +35,7 @@ const Desktop = memo(() => {
     s.toggleChatSideBar,
   ]);
 
-  const { isAgentEditable: showSystemRole } = useFeatureFlagStore(featureFlagsSelectors);
+  const { isAgentEditable: showSystemRole } = useServerConfigStore(featureFlagsSelectors);
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
 
   return (

@@ -1,8 +1,7 @@
 import { MobileNavBar } from '@lobehub/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
-
-import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
+import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
 
 import SettingButton from '../../../features/SettingButton';
 import ShareButton from '../../../features/ShareButton';
@@ -12,7 +11,7 @@ const MobileHeader = memo(() => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  const { isAgentEditable } = useFeatureFlagStore(featureFlagsSelectors);
+  const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
 
   // const items: MenuProps['items'] = [
   //   {

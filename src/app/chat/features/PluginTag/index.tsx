@@ -4,8 +4,8 @@ import { Dropdown } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
+import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
 
-import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
@@ -16,7 +16,7 @@ export interface PluginTagProps {
 }
 
 const PluginTag = memo<PluginTagProps>(({ plugins }) => {
-  const { showDalle } = useFeatureFlagStore(featureFlagsSelectors);
+  const { showDalle } = useServerConfigStore(featureFlagsSelectors);
   const list = useToolStore(toolSelectors.metaList(showDalle), isEqual);
   const displayPlugin = useToolStore(toolSelectors.getMetaById(plugins[0]), isEqual);
 

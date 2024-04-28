@@ -2,8 +2,8 @@ import { Bot, Cloudy, Info, Mic2, Settings2, Webhook } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { featureFlagsSelectors, useServerConfigStore } from 'src/store/serverConfig';
 
-import { featureFlagsSelectors, useFeatureFlagStore } from '@/store/featureFlags';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import Item from './Item';
@@ -21,7 +21,7 @@ export interface SettingListProps {
 
 const SettingList = memo<SettingListProps>(({ activeTab, mobile }) => {
   const { t } = useTranslation('setting');
-  const { enableWebrtc, showLLM } = useFeatureFlagStore(featureFlagsSelectors);
+  const { enableWebrtc, showLLM } = useServerConfigStore(featureFlagsSelectors);
 
   const items = [
     { icon: Settings2, label: t('tab.common'), value: SettingsTabs.Common },

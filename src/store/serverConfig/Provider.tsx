@@ -11,7 +11,7 @@ interface GlobalStoreProviderProps {
   featureFlags?: Partial<IFeatureFlags>;
 }
 
-export const FeatureFlagStoreProvider = memo<GlobalStoreProviderProps>(
+export const ServerConfigStoreProvider = memo<GlobalStoreProviderProps>(
   ({ children, featureFlags }) => (
     <Provider createStore={() => createFeatureFlagsStore(featureFlags)}>{children}</Provider>
   ),

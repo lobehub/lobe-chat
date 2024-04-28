@@ -38,5 +38,5 @@ export const createFeatureFlagsStore = (initState?: Partial<FeatureFlagStore>) =
   return store;
 };
 
-export const { useStore: useFeatureFlagStore, Provider } =
+export const { useStore: useServerConfigStore, Provider } =
   createContext<StoreApiWithSelector<FeatureFlagStore>>();
