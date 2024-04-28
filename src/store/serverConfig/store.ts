@@ -6,30 +6,49 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_FEATURE_FLAGS, IFeatureFlags } from '@/config/featureFlags';
+import { GlobalServerConfig } from '@/types/serverConfig';
 import { isDev } from '@/utils/env';
+import { merge } from '@/utils/merge';
 import { StoreApiWithSelector } from '@/utils/zustand';
+
+const initialState: ServerConfigStore = {
+  featureFlags: DEFAULT_FEATURE_FLAGS,
+  serverConfig: { telemetry: {} },
+};
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type FeatureFlagStore = IFeatureFlags;
+export interface ServerConfigStore {
+  featureFlags: IFeatureFlags;
+  serverConfig: GlobalServerConfig;
+}
 
-const createStore: (
-  initState: Partial<FeatureFlagStore>,
-) => StateCreator<FeatureFlagStore, [['zustand/devtools', never]]> = (runtimeState) => () => ({
-  ...DEFAULT_FEATURE_FLAGS,
-  ...runtimeState,
+type CreateStore = (
+  initState: Partial<ServerConfigStore>,
+) => StateCreator<ServerConfigStore, [['zustand/devtools', never]]>;
+
+const createStore: CreateStore = (runtimeState) => () => ({
+  ...merge(initialState, runtimeState),
 });
 
 //  ===============  实装 useStore ============ //
 
-let store: StoreApi<FeatureFlagStore>;
+let store: StoreApi<ServerConfigStore>;
 
-export const createFeatureFlagsStore = (initState?: Partial<FeatureFlagStore>) => {
+export const initServerConfigStore = (initState: Partial<ServerConfigStore>) =>
+  createWithEqualityFn<ServerConfigStore>()(
+    devtools(createStore(initState || {}), {
+      name: 'LobeChat_ServerConfig' + (isDev ? '_DEV' : ''),
+    }),
+    shallow,
+  );
+
+export const createServerConfigStore = (initState?: Partial<ServerConfigStore>) => {
   // make sure there is only one store
   if (!store) {
-    store = createWithEqualityFn<FeatureFlagStore>()(
+    store = createWithEqualityFn<ServerConfigStore>()(
       devtools(createStore(initState || {}), {
-        name: 'LobeChat_FeatureFlags' + (isDev ? '_DEV' : ''),
+        name: 'LobeChat_ServerConfig' + (isDev ? '_DEV' : ''),
       }),
       shallow,
     );
@@ -39,4 +58,4 @@ export const createFeatureFlagsStore = (initState?: Partial<FeatureFlagStore>) =
 };
 
 export const { useStore: useServerConfigStore, Provider } =
-  createContext<StoreApiWithSelector<FeatureFlagStore>>();
+  createContext<StoreApiWithSelector<ServerConfigStore>>();

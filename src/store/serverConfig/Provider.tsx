@@ -3,16 +3,20 @@
 import { ReactNode, memo } from 'react';
 
 import { IFeatureFlags } from '@/config/featureFlags';
+import { GlobalServerConfig } from '@/types/serverConfig';
 
-import { Provider, createFeatureFlagsStore } from './store';
+import { Provider, createServerConfigStore } from './store';
 
 interface GlobalStoreProviderProps {
   children: ReactNode;
   featureFlags?: Partial<IFeatureFlags>;
+  serverConfig?: GlobalServerConfig;
 }
 
 export const ServerConfigStoreProvider = memo<GlobalStoreProviderProps>(
-  ({ children, featureFlags }) => (
-    <Provider createStore={() => createFeatureFlagsStore(featureFlags)}>{children}</Provider>
+  ({ children, featureFlags, serverConfig }) => (
+    <Provider createStore={() => createServerConfigStore({ featureFlags, serverConfig })}>
+      {children}
+    </Provider>
   ),
 );
