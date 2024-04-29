@@ -62,7 +62,7 @@ const VirtualizedList = memo(() => {
         initialTopMostItemIndex={data?.length - 1}
         isScrolling={setIsScrolling}
         itemContent={itemContent}
-        overscan={{ main: overscan, reverse: overscan / 2 }}
+        overscan={overscan}
         ref={virtuosoRef}
       />
       <AutoScroll
