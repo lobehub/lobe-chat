@@ -440,7 +440,7 @@ class ChatService {
       const hasTools = tools && tools?.length > 0;
       const hasFC =
         hasTools &&
-        modelProviderSelectors.isModelEnabledFunctionCall(model)(useGlobalStore.getState());
+        modelProviderSelectors.isModelEnabledFunctionCall(model)(useUserStore.getState());
       const toolsSystemRoles =
         hasFC && toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
 

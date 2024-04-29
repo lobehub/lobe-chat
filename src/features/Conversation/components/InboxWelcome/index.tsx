@@ -45,9 +45,9 @@ const InboxWelcome = memo(() => {
     const now = new Date();
     const hours = now.getHours();
 
-    if (hours < 12) {
+    if (hours >= 4 && hours < 11) {
       setGreeting('morning');
-    } else if (hours >= 12 && hours < 14) {
+    } else if (hours >= 11 && hours < 14) {
       setGreeting('noon');
     } else if (hours >= 14 && hours < 18) {
       setGreeting('afternoon');

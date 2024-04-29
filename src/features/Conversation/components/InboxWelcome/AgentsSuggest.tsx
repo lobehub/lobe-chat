@@ -19,6 +19,7 @@ const useStyles = createStyles(({ css, token }) => ({
     position: relative;
 
     height: 100%;
+    min-height: 110px;
     padding: 16px;
 
     color: ${token.colorText};
@@ -89,12 +90,12 @@ const AgentsSuggest = memo(() => {
   return (
     <Flexbox gap={8} width={'100%'}>
       <Flexbox align={'center'} horizontal justify={'space-between'}>
-        <div className={styles.title}>{t('guide.questions.title')}</div>
+        <div className={styles.title}>{t('guide.agents.title')}</div>
         <ActionIcon
           icon={RefreshCw}
           onClick={handleRefresh}
           size={{ blockSize: 24, fontSize: 14 }}
-          title={t('guide.questions.moreBtn')}
+          title={t('guide.agents.replaceBtn')}
         />
       </Flexbox>
       <Grid gap={8} rows={2}>
