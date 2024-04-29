@@ -9,8 +9,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 import { allowTextDrag } from '@/utils/platform';
 
 const useStyles = createStyles(({ css, token, stylish }) => {
