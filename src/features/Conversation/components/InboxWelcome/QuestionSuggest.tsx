@@ -10,7 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { USAGE_DOCUMENTS } from '@/const/url';
-import { useChatInput } from '@/features/ChatInput/useChatInput';
+import { useSendMessage } from '@/features/ChatInput/useSend';
+import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token }) => ({
   card: css`
@@ -54,14 +55,10 @@ const qa = shuffle([
 ]).slice(0, 5);
 
 const QuestionSuggest = memo(() => {
-  const { onInput, onSend } = useChatInput();
+  const [updateInputMessage] = useChatStore((s) => [s.updateInputMessage]);
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
-
-  const handoleSend = (qa: string) => {
-    onInput(qa);
-    onSend();
-  };
+  const sendMessage = useSendMessage();
 
   return (
     <Flexbox gap={8} width={'100%'}>
@@ -85,7 +82,10 @@ const QuestionSuggest = memo(() => {
               gap={8}
               horizontal
               key={item}
-              onClick={() => handoleSend(text)}
+              onClick={() => {
+                updateInputMessage(text);
+                sendMessage({ isWelcomeQuestion: true });
+              }}
             >
               {t(text)}
             </Flexbox>
