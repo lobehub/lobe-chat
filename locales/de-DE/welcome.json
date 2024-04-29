@@ -9,7 +9,7 @@
       "replaceBtn": "Ersetzen",
       "title": "Neue Assistentenempfehlung:"
     },
-    "defaultMessage": "Ich bin LobeChat, dein persönlicher intelligenter Assistent. Wie kann ich dir heute helfen?\nWenn du einen professionelleren oder maßgeschneiderten Assistenten benötigst, klicke auf `+`, um einen benutzerdefinierten Assistenten zu erstellen.",
+    "defaultMessage": "Ich bin Ihr persönlicher intelligenter Assistent LobeChat. Wie kann ich Ihnen jetzt helfen?\nWenn Sie einen professionelleren oder maßgeschneiderten Assistenten benötigen, klicken Sie auf `+`, um einen benutzerdefinierten Assistenten zu erstellen.",
     "qa": {
       "q01": "Was ist LobeHub?",
       "q02": "Was ist LobeChat?",
