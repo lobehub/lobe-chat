@@ -263,6 +263,8 @@ export const chatMessage: StateCreator<
       async ([, sessionId, topicId]: [string, string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),
       {
+        suspense: true,
+        fallbackData: [],
         onSuccess: (messages, key) => {
           set(
             { activeId: sessionId, messages, messagesInit: true },
