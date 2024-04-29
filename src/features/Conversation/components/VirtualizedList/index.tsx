@@ -25,19 +25,13 @@ const itemContent = (index: number, id: string) => {
   );
 };
 
-const VirtualizedList = memo(() => {
+interface VirtualizedListProps {
+  mobile?: boolean;
+}
+const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
-  const [isScrolling, setIsScrolling] = useState(false);
 
-  interface VirtualizedListProps {
-    mobile?: boolean;
-  }
-  const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
-  const data = useChatStore(
-    (s) => ['empty', ...chatSelectors.currentChatIDsWithGuideMessage(s)],
-    isEqual,
-  );
   const [id, chatLoading] = useChatStore((s) => [
     chatSelectors.currentChatKey(s),
     chatSelectors.currentChatLoadingState(s),
@@ -50,12 +44,14 @@ const VirtualizedList = memo(() => {
   }, isEqual);
 
   const prevDataLengthRef = useRef(data.length);
+  const prevIdRef = useRef(id);
   
   useEffect(() => {
-    if (virtuosoRef.current && data.length > prevDataLengthRef.current) {
+    if (virtuosoRef.current && (id !== prevIdRef.current || data.length > prevDataLengthRef.current)) {
       virtuosoRef.current.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
     }
     prevDataLengthRef.current = data.length;
+    prevIdRef.current = id;
   }, [id, data.length]);
 
   // overscan should be 1.5 times the height of the window
