@@ -9,7 +9,7 @@
       "replaceBtn": "Replace Batch",
       "title": "New Assistant Recommendations:"
     },
-    "defaultMessage": "I'm LobeChat, your personal intelligent assistant. How can I assist you today?\nIf you need a more professional or customized assistant, click on `+` to create a custom assistant.",
+    "defaultMessage": "I am your personal intelligent assistant LobeChat, how can I help you now?\nIf you need a more professional or customized assistant, you can click on `+` to create a custom assistant",
     "qa": {
       "q01": "What is LobeHub?",
       "q02": "What is LobeChat?",
