@@ -95,6 +95,18 @@
       "title": "Utiliser une clé API Groq personnalisée"
     }
   },
+  "minimax": {
+    "title": "Minimax",
+    "token": {
+      "desc": "Entrez la clé API de Minimax",
+      "placeholder": "Clé API Minimax",
+      "title": "Clé API"
+    },
+    "unlock": {
+      "description": "Entrez votre clé API Minimax pour commencer la session. L'application ne stockera pas votre clé API.",
+      "title": "Utiliser une clé API Minimax personnalisée"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {
