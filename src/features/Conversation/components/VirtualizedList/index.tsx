@@ -25,6 +25,10 @@ const VirtualizedList = memo(() => {
   const [atBottom, setAtBottom] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
 
+  interface VirtualizedListProps {
+    mobile?: boolean;
+  }
+  const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   const data = useChatStore(
     (s) => ['empty', ...chatSelectors.currentChatIDsWithGuideMessage(s)],
     isEqual,
@@ -50,7 +54,7 @@ const VirtualizedList = memo(() => {
     <Flexbox height={'100%'}>
       <Virtuoso
         atBottomStateChange={setAtBottom}
-        atBottomThreshold={50}
+        atBottomThreshold={50 * (mobile ? 2 : 1)}
         computeItemKey={(_, item) => item}
         data={data}
         // followOutput={'auto'}
