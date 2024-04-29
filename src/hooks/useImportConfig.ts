@@ -3,15 +3,14 @@ import { useMemo } from 'react';
 import { ImportResults, configService } from '@/services/config';
 import { shareGPTService } from '@/services/share';
 import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { importConfigFile } from '@/utils/config';
-import { merge } from '@/utils/merge';
+import { useUserStore } from '@/store/user';
 
 export const useImportConfig = () => {
   const refreshSessions = useSessionStore((s) => s.refreshSessions);
   const [refreshMessages, refreshTopics] = useChatStore((s) => [s.refreshMessages, s.refreshTopic]);
-  const [settings, setSettings] = useGlobalStore((s) => [s.settings, s.setSettings]);
+  const [setSettings] = useUserStore((s)=>[s.setSettings]);
 
   const importConfig = async (file: File) =>
     new Promise<ImportResults | undefined>((resolve) => {
@@ -38,8 +37,7 @@ export const useImportConfig = () => {
         // handle some error
         return;
       }
-      const mergedState = merge(settings, importSettings.data);
-      setSettings(mergedState);
+      setSettings(importSettings.data);
     }
   };
 
