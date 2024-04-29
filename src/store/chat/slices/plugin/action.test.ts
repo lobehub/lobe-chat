@@ -61,7 +61,7 @@ describe('ChatPluginAction', () => {
       expect(result.current.coreProcessMessage).toHaveBeenCalledWith(
         mockCurrentChats,
         messageId,
-        undefined,
+        {},
       );
     });
     it('should update message content and not trigger ai message', async () => {
