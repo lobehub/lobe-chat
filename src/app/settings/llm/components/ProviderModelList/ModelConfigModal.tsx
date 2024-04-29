@@ -4,8 +4,8 @@ import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/slices/settings/selectors';
+import { useUserStore } from '@/store/user';
+import { modelConfigSelectors } from '@/store/user/selectors';
 
 import MaxTokenSlider from './MaxTokenSlider';
 
@@ -18,7 +18,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
   const { t } = useTranslation('setting');
 
   const [open, id, editingProvider, dispatchCustomModelCards, toggleEditingCustomModelCard] =
-    useGlobalStore((s) => [
+    useUserStore((s) => [
       !!s.editingCustomCardModel && provider === s.editingCustomCardModel?.provider,
       s.editingCustomCardModel?.id,
       s.editingCustomCardModel?.provider,
@@ -26,7 +26,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
       s.toggleEditingCustomModelCard,
     ]);
 
-  const modelCard = useGlobalStore(
+  const modelCard = useUserStore(
     modelConfigSelectors.getCustomModelCard({ id, provider: editingProvider }),
     isEqual,
   );

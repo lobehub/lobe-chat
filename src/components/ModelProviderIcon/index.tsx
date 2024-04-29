@@ -4,6 +4,7 @@ import {
   Bedrock,
   Google,
   Groq,
+  Minimax,
   Mistral,
   Moonshot,
   Ollama,
@@ -63,6 +64,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Perplexity: {
       return <Perplexity size={20} />;
+    }
+
+    case ModelProvider.Minimax: {
+      return <Minimax size={20} />;
     }
 
     case ModelProvider.Mistral: {
