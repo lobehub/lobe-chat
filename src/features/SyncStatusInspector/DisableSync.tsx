@@ -7,8 +7,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
-import { syncSettingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { syncSettingsSelectors } from '@/store/user/selectors';
 
 interface DisableSyncProps {
   noPopover?: boolean;
@@ -17,7 +17,7 @@ interface DisableSyncProps {
 
 const DisableSync = memo<DisableSyncProps>(({ noPopover, placement = 'bottomLeft' }) => {
   const { t } = useTranslation('common');
-  const [haveConfig, setSettings] = useGlobalStore((s) => [
+  const [haveConfig, setSettings] = useUserStore((s) => [
     !!syncSettingsSelectors.webrtcConfig(s).channelName,
     s.setSettings,
   ]);

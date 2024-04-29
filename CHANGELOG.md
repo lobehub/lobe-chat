@@ -2,6 +2,81 @@
 
 # Changelog
 
+## [Version 0.151.0](https://github.com/lobehub/lobe-chat/compare/v0.150.10...v0.151.0)
+
+<sup>Released on **2024-04-29**</sup>
+
+#### ✨ Features
+
+- **misc**: Support minimax as a new provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support minimax as a new provider, closes [#2087](https://github.com/lobehub/lobe-chat/issues/2087) ([00abd82](https://github.com/lobehub/lobe-chat/commit/00abd82))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.150.10](https://github.com/lobehub/lobe-chat/compare/v0.150.9...v0.150.10)
+
+<sup>Released on **2024-04-28**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Rename globalStore to userStore.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Rename globalStore to userStore, closes [#2264](https://github.com/lobehub/lobe-chat/issues/2264) ([a3cb538](https://github.com/lobehub/lobe-chat/commit/a3cb538))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.150.9](https://github.com/lobehub/lobe-chat/compare/v0.150.8...v0.150.9)
+
+<sup>Released on **2024-04-28**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor feature flags store to server config store.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor feature flags store to server config store, closes [#2263](https://github.com/lobehub/lobe-chat/issues/2263) ([2e991d7](https://github.com/lobehub/lobe-chat/commit/2e991d7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.150.8](https://github.com/lobehub/lobe-chat/compare/v0.150.7...v0.150.8)
 
 <sup>Released on **2024-04-28**</sup>

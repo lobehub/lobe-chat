@@ -5,10 +5,10 @@ import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useGlobalStore } from '@/store/global';
-import { commonSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { commonSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
@@ -20,7 +20,7 @@ const getMeta = (message: ChatMessage) => {
   switch (message.role) {
     case 'user': {
       return {
-        avatar: commonSelectors.userAvatar(useGlobalStore.getState()) || DEFAULT_USER_AVATAR,
+        avatar: commonSelectors.userAvatar(useUserStore.getState()) || DEFAULT_USER_AVATAR,
       };
     }
 

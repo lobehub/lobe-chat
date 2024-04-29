@@ -1,6 +1,6 @@
 import { createHeaderWithAuth } from '@/services/_auth';
-import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelConfigSelectors } from '@/store/user/selectors';
 import { ChatModelCard } from '@/types/llm';
 
 import { API_ENDPOINTS } from './_url';
@@ -17,7 +17,7 @@ class ModelsService {
        * Use browser agent runtime
        */
       const enableFetchOnClient = modelConfigSelectors.isProviderFetchOnClient(provider)(
-        useGlobalStore.getState(),
+        useUserStore.getState(),
       );
       if (enableFetchOnClient) {
         const agentRuntime = await initializeWithClientStore(provider, {});
