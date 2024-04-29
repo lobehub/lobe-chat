@@ -5,7 +5,7 @@ import { LucideDices } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { generateRandomRoomName } from '@/app/(main)/settings/sync/util';
+import { generateRandomRoomName } from '../util';
 
 interface ChannelNameInputProps extends Omit<InputProps, 'form'> {
   form: FormInstance;

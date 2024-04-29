@@ -3,9 +3,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useStyles } from '@/app/(main)/settings/about/style';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
+
+import { useStyles } from './style';
 
 const Analytics = memo(() => {
   const { t } = useTranslation('setting');

@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import Banner from '@/app/(main)/welcome/features/Banner';
+import Banner from '../features/Banner';
 
 const Showcase = memo(() => (
   <Flexbox align={'center'} justify={'center'} style={{ height: 'calc(100% - 44px)' }}>
