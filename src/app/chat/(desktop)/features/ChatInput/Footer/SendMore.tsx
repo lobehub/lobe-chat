@@ -45,7 +45,7 @@ const SendMore = memo(() => {
     hotKey,
     (keyboardEvent, hotkeysEvent) => {
       console.log(keyboardEvent, hotkeysEvent);
-      sendMessage(true);
+      sendMessage({ onlyAddUserMessage: true });
     },
     {
       enableOnFormTags: true,
@@ -94,7 +94,7 @@ const SendMore = memo(() => {
               </Flexbox>
             ),
             onClick: () => {
-              sendMessage(true);
+              sendMessage({ onlyAddUserMessage: true });
             },
           },
         ],
