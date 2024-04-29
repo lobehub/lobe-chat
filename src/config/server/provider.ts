@@ -43,6 +43,10 @@ declare global {
       ANTHROPIC_API_KEY?: string;
       ANTHROPIC_PROXY_URL?: string;
 
+      // Minimax Provider
+      ENABLED_MINIMAX?: string;
+      MINIMAX_API_KEY?: string;
+
       // Mistral Provider
       ENABLED_MISTRAL?: string;
       MISTRAL_API_KEY?: string;
@@ -109,6 +113,8 @@ export const getProviderConfig = () => {
 
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
 
+  const MINIMAX_API_KEY = process.env.MINIMAX_API_KEY || '';
+
   const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || '';
 
   const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
@@ -170,6 +176,9 @@ export const getProviderConfig = () => {
     ENABLED_ANTHROPIC: !!ANTHROPIC_API_KEY,
     ANTHROPIC_API_KEY,
     ANTHROPIC_PROXY_URL: process.env.ANTHROPIC_PROXY_URL,
+
+    ENABLED_MINIMAX: !!MINIMAX_API_KEY,
+    MINIMAX_API_KEY,
 
     ENABLED_MISTRAL: !!MISTRAL_API_KEY,
     MISTRAL_API_KEY,
