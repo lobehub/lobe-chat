@@ -11,7 +11,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
-import { allowTextDrag } from '@/utils/platform';
+import { getPlatform, getEngine } from '@/utils/platform';
 
 const useStyles = createStyles(({ css, token, stylish }) => {
   return {
@@ -61,7 +61,10 @@ const useStyles = createStyles(({ css, token, stylish }) => {
   };
 });
 
-const disallowTextDrag = !allowTextDrag();
+// 文字拖拽仅支持 Windows/Linux - Chromium 系浏览器 (#2111)
+const platform = getPlatform();
+const allowTextDrag = platform && /Linux|Windows/.test(platform) && getEngine() === 'Blink';
+const disallowTextDrag = !allowTextDrag;
 
 const handleDragOver = (e: DragEvent) => {
   if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {

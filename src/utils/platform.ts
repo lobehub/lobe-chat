@@ -26,9 +26,3 @@ export const browserInfo = {
 };
 
 export const isMacOS = () => getPlatform() === 'Mac OS';
-
-// 文字拖拽仅支持 Windows/Linux - Chromium 系浏览器 (#2111)
-export const allowTextDrag = () => {
-  const platform = getPlatform();
-  return platform && /Linux|Windows/.test(platform) && getEngine() === 'Blink';
-}
