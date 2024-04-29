@@ -21,7 +21,6 @@
   "emptyAgent": "Kein Assistent verfügbar",
   "historyRange": "Verlaufsbereich",
   "inbox": {
-    "defaultMessage": "Hallo, ich bin dein intelligenter Assistent. Du kannst mir jede Frage stellen, und ich werde mein Bestes tun, um sie zu beantworten. Wenn du einen professionelleren oder maßgeschneiderten Assistenten benötigst, klicke auf das `+`, um einen benutzerdefinierten Assistenten zu erstellen.",
     "desc": "Aktiviere das Gehirncluster und entfache den Funken des Denkens. Dein intelligenter Assistent, der mit dir über alles kommuniziert.",
     "title": "Lass uns plaudern"
   },
