@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.151.4](https://github.com/lobehub/lobe-chat/compare/v0.151.3...v0.151.4)
+
+<sup>Released on **2024-04-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move app page to the `(main)` layout group.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move app page to the `(main)` layout group, closes [#2297](https://github.com/lobehub/lobe-chat/issues/2297) ([6cc2c38](https://github.com/lobehub/lobe-chat/commit/6cc2c38))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.151.3](https://github.com/lobehub/lobe-chat/compare/v0.151.2...v0.151.3)
 
 <sup>Released on **2024-04-29**</sup>
