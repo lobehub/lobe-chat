@@ -3,6 +3,7 @@ import {
   BedrockProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  MinimaxProviderCard,
   MistralProviderCard,
   MoonshotProviderCard,
   OllamaProviderCard,
@@ -89,6 +90,11 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     apiKey: '',
     enabled: false,
     enabledModels: filterEnabledModels(GroqProviderCard),
+  },
+  minimax: {
+    apiKey: '',
+    enabled: false,
+    enabledModels: filterEnabledModels(MinimaxProviderCard),
   },
   mistral: {
     apiKey: '',

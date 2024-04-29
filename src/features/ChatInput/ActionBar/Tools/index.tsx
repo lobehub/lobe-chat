@@ -11,11 +11,11 @@ import { Flexbox } from 'react-layout-kit';
 import PluginStore from '@/features/PluginStore';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { builtinToolSelectors, pluginSelectors } from '@/store/tool/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 
 import ToolItem from './ToolItem';
 
@@ -49,7 +49,7 @@ const Tools = memo(() => {
   const { styles } = useStyles();
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
-  const enableFC = useGlobalStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
+  const enableFC = useUserStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
 
   const items: ItemType[] = [
     (builtinList.length !== 0 && {

@@ -9,8 +9,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 
 const useStyles = createStyles(({ css, token, stylish }) => {
   return {
@@ -77,7 +77,7 @@ const DragUpload = memo(() => {
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
 
-  const enabledFiles = useGlobalStore(modelProviderSelectors.isModelEnabledFiles(model));
+  const enabledFiles = useUserStore(modelProviderSelectors.isModelEnabledFiles(model));
 
   const uploadImages = async (fileList: FileList | undefined) => {
     if (!fileList || fileList.length === 0) return;
