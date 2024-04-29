@@ -109,7 +109,7 @@ describe('LLMSettingsSliceAction', () => {
         displayName: 'LLaVA 7B',
         enabled: true,
         id: 'llava',
-        tokens: 4000,
+        tokens: 4096,
         vision: true,
       });
     });
