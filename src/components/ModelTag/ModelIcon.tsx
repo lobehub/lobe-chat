@@ -51,6 +51,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.includes('moonshot')) return <Moonshot size={size} />;
   if (model.includes('qwen')) return <Tongyi size={size} />;
   if (model.includes('minmax')) return <Minimax size={size} />;
+  if (model.includes('abab')) return <Minimax size={size} />;
   if (model.includes('mistral') || model.includes('mixtral')) return <Mistral size={size} />;
   if (model.includes('pplx') || model.includes('sonar')) return <Perplexity size={size} />;
   if (model.includes('yi-')) return <ZeroOne size={size} />;

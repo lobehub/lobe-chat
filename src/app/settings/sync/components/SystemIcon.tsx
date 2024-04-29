@@ -8,7 +8,6 @@ import {
 } from '@icons-pack/react-simple-icons';
 import { memo } from 'react';
 
-
 // TODO: 等 simple icons 修复类型，移除 ignore
 
 const SystemIcon = memo<{ title?: string }>(({ title }) => {
