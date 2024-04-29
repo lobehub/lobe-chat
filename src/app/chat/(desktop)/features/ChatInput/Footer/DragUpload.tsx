@@ -11,6 +11,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { modelProviderSelectors } from '@/store/global/selectors';
+import { allowTextDrag } from '@/utils/platform';
 
 const useStyles = createStyles(({ css, token, stylish }) => {
   return {
@@ -60,8 +61,7 @@ const useStyles = createStyles(({ css, token, stylish }) => {
   };
 });
 
-// 文字拖拽仅支持 Windows/Linux - Chromium 系浏览器 (#2111)
-const os = !(/Linux|Windows/.test(navigator.userAgentData?.platform || ''))
+const os = allowTextDrag();
 
 const handleDragOver = (e: DragEvent) => {
   if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {

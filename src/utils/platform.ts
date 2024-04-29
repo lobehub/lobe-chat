@@ -15,6 +15,10 @@ export const getBrowser = () => {
   return getParser().getResult().browser.name;
 };
 
+export const getEngine = () => {
+  return getParser().getEngine().name;
+}
+
 export const browserInfo = {
   browser: getBrowser(),
   isMobile: getParser().getDevice().type === 'mobile',
@@ -22,3 +26,6 @@ export const browserInfo = {
 };
 
 export const isMacOS = () => getPlatform() === 'Mac OS';
+
+// 文字拖拽仅支持 Windows/Linux - Chromium 系浏览器 (#2111)
+export const allowTextDrag = () => /Linux|Windows/.test(getPlatform()) && getEngine() === 'Blink';
