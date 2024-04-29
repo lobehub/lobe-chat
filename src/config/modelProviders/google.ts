@@ -9,7 +9,7 @@ const Google: ModelProviderCard = {
       displayName: 'PaLM 2 Chat (Legacy)',
       id: 'chat-bison-001',
       maxOutput: 1024,
-      tokens: 4096 + 1024,
+      // tokens: 4096 + 1024, // none tokens test
     },
     {
       description: 'A legacy model that understands text and generates text as an output',
