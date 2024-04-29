@@ -114,6 +114,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
         baseURL,
       };
     }
+    case ModelProvider.Minimax: {
+      const { MINIMAX_API_KEY } = getServerConfig();
+      const apiKey = apiKeyManager.pick(payload?.apiKey || MINIMAX_API_KEY);
+      return {
+        apiKey,
+      };
+    }
     case ModelProvider.Mistral: {
       const { MISTRAL_API_KEY } = getServerConfig();
       const apiKey = apiKeyManager.pick(payload?.apiKey || MISTRAL_API_KEY);

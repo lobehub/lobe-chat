@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useStyles } from '@/app/settings/about/style';
-import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { preferenceSelectors } from '@/store/user/selectors';
 
 const Analytics = memo(() => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
-  const checked = useGlobalStore(preferenceSelectors.userAllowTrace);
-  const [updatePreference] = useGlobalStore((s) => [s.updatePreference]);
+  const checked = useUserStore(preferenceSelectors.userAllowTrace);
+  const [updatePreference] = useUserStore((s) => [s.updatePreference]);
 
   return (
     <div className={styles.wrapper}>
