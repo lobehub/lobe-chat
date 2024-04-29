@@ -5,6 +5,7 @@ import { App } from 'antd';
 import { ThemeAppearance, createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
 import Image from 'next/image';
+import Link from 'next/link';
 import { PropsWithChildren, ReactNode, memo, useEffect } from 'react';
 
 import AntdStaticMethods from '@/components/AntdStaticMethods';
@@ -112,7 +113,7 @@ const AppTheme = memo<AppThemeProps>(
       >
         <GlobalStyle />
         <AntdStaticMethods />
-        <ConfigProvider config={{ imgAs: Image, imgUnoptimized: true }}>
+        <ConfigProvider config={{ aAs: Link, imgAs: Image, imgUnoptimized: true }}>
           <Container>{children}</Container>
         </ConfigProvider>
       </ThemeProvider>
