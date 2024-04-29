@@ -9,9 +9,14 @@ import { isMobileScreen } from '@/utils/screen';
 
 import AutoScroll from '../AutoScroll';
 import Item from '../ChatItem';
+import InboxWelcome from '../InboxWelcome';
+
+const WELCOME_ID = 'welcome';
 
 const itemContent = (index: number, id: string) => {
   const isMobile = isMobileScreen();
+
+  if (id === WELCOME_ID) return <InboxWelcome />;
 
   return index === 0 ? (
     <div style={{ height: 24 + (isMobile ? 0 : 64) }} />
@@ -37,6 +42,12 @@ const VirtualizedList = memo(() => {
     chatSelectors.currentChatKey(s),
     chatSelectors.currentChatLoadingState(s),
   ]);
+
+  const data = useChatStore((s) => {
+    const showInboxWelcome = chatSelectors.showInboxWelcome(s);
+    const ids = showInboxWelcome ? [WELCOME_ID] : chatSelectors.currentChatIDsWithGuideMessage(s);
+    return ['empty', ...ids];
+  }, isEqual);
 
   const prevDataLengthRef = useRef(data.length);
   
