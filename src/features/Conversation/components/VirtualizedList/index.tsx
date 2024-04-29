@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
@@ -44,16 +44,19 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     return ['empty', ...ids];
   }, isEqual);
 
-  const prevDataLengthRef = useRef(data.length);
-  const prevIdRef = useRef(id);
-  
   useEffect(() => {
-    if (virtuosoRef.current && (id !== prevIdRef.current || data.length > prevDataLengthRef.current)) {
+    if (virtuosoRef.current) {
       virtuosoRef.current.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
     }
+  }, [id]);
+
+  const prevDataLengthRef = useRef(data.length);
+
+  const getFollowOutput = useCallback(() => {
+    const newFollowOutput = data.length > prevDataLengthRef.current ? 'auto' : false;
     prevDataLengthRef.current = data.length;
-    prevIdRef.current = id;
-  }, [id, data.length]);
+    return newFollowOutput;
+  }, [data.length]);
 
   // overscan should be 1.5 times the height of the window
   const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
@@ -65,7 +68,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
         atBottomThreshold={50 * (mobile ? 2 : 1)}
         computeItemKey={(_, item) => item}
         data={data}
-        // followOutput={'auto'}
+        followOutput={getFollowOutput}
         // increaseViewportBy={overscan}
         initialTopMostItemIndex={data?.length - 1}
         isScrolling={setIsScrolling}
