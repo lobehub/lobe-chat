@@ -20,7 +20,7 @@ const marks: SliderSingleProps['marks'] = {
   [exponent(64)]: isSmallScreen ? '64' : '64K',
   // [exponent(128)]: isSmallScreen ? '128' : '128K',
   // [exponent(256)]: isSmallScreen ? '256' : '256K',
-  [exponent((128 / 1024) * 1000)]: ' ',
+  [exponent((128 / 1024) * 1000)]: ' ', // hide tick mark
   [exponent((200 / 1024) * 1000)]: isSmallScreen ? '200' : '200k', // 200,000
   [exponent(1024)]: isSmallScreen ? '1024' : '1M',
 };

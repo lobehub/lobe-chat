@@ -57,7 +57,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 const formatTokenNumber = (num: number): string => {
-  if (num === 0) return 'Inf';
+  if (num === 0) return '∞';
   if (num < 1024) return '1K';
 
   let kiloToken = Math.floor(num / 1024);
