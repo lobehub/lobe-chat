@@ -21,7 +21,6 @@
   "emptyAgent": "No hay asistente disponible",
   "historyRange": "Rango de historial",
   "inbox": {
-    "defaultMessage": "Hola, soy tu asistente virtual, puedes preguntarme cualquier cosa y haré todo lo posible para responderte. Si necesitas un asistente más profesional o personalizado, haz clic en `+` para crear un asistente personalizado.",
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
     "title": "Charla casual"
   },
