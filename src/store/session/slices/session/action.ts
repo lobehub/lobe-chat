@@ -8,9 +8,9 @@ import { message } from '@/components/AntdStaticMethods';
 import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
 import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 import { SessionStore } from '@/store/session';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 import { MetaData } from '@/types/meta';
 import {
   ChatSessionList,
@@ -70,6 +70,8 @@ export interface SessionAction {
    */
   removeSession: (id: string) => Promise<void>;
 
+  updateSearchKeywords: (keywords: string) => void;
+
   useFetchSessions: () => SWRResponse<ChatSessionList>;
   useSearchSessions: (keyword?: string) => SWRResponse<any>;
 
@@ -109,7 +111,7 @@ export const createSessionSlice: StateCreator<
     // merge the defaultAgent in settings
     const defaultAgent = merge(
       DEFAULT_AGENT_LOBE_SESSION,
-      settingsSelectors.defaultAgent(useGlobalStore.getState()),
+      settingsSelectors.defaultAgent(useUserStore.getState()),
     );
 
     const newSession: LobeAgentSession = merge(defaultAgent, agent);
@@ -169,6 +171,13 @@ export const createSessionSlice: StateCreator<
     }
   },
 
+  updateSearchKeywords: (keywords) => {
+    set(
+      { isSearching: !!keywords, sessionSearchKeywords: keywords },
+      false,
+      n('updateSearchKeywords'),
+    );
+  },
   updateSessionGroupId: async (sessionId, group) => {
     await get().internal_updateSession(sessionId, { group });
   },

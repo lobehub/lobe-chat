@@ -1,10 +1,10 @@
 import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 import { ConfigFile } from '@/types/exportConfig';
 import { ChatMessage } from '@/types/message';
 import { LobeSessions, SessionGroupItem } from '@/types/session';
@@ -36,7 +36,7 @@ class ConfigService {
     return messageService.batchCreateMessages(messages);
   };
   importSettings = async (settings: GlobalSettings) => {
-    useGlobalStore.getState().importAppSettings(settings);
+    useUserStore.getState().importAppSettings(settings);
   };
   importTopics = async (topics: ChatTopic[]) => {
     return topicService.batchCreateTopics(topics);
@@ -183,7 +183,7 @@ class ConfigService {
     exportConfigFile(config, 'config');
   };
 
-  private getSettings = () => settingsSelectors.exportSettings(useGlobalStore.getState());
+  private getSettings = () => settingsSelectors.exportSettings(useUserStore.getState());
 
   private getSession = (id: string) =>
     sessionSelectors.getSessionById(id)(useSessionStore.getState());

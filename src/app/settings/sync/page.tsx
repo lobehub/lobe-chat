@@ -1,5 +1,6 @@
-import { memo } from 'react';
+import { notFound } from 'next/navigation';
 
+import { serverFeatureFlags } from '@/config/server/featureFlags';
 import { gerServerDeviceInfo, isMobileDevice } from '@/utils/responsive';
 
 import Alert from './Alert';
@@ -7,7 +8,11 @@ import DeviceCard from './DeviceInfo';
 import PageTitle from './PageTitle';
 import WebRTC from './WebRTC';
 
-export default memo(() => {
+export default () => {
+  const enableWebrtc = serverFeatureFlags().enableWebrtc;
+
+  if (!enableWebrtc) return notFound();
+
   const { os, browser } = gerServerDeviceInfo();
   const isMobile = isMobileDevice();
 
@@ -20,4 +25,4 @@ export default memo(() => {
       {!isMobile && <Alert />}
     </>
   );
-});
+};

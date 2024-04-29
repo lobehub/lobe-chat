@@ -1,5 +1,5 @@
 import { chatHelpers } from '@/store/chat/helpers';
-import { globalHelpers } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/user/helpers';
 import { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 
 export const chainSummaryTitle = async (

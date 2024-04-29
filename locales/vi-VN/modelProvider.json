@@ -95,6 +95,18 @@
       "title": "Sử dụng Khóa API Groq tùy chỉnh"
     }
   },
+  "minimax": {
+    "title": "Minimax",
+    "token": {
+      "desc": "Nhập API Key từ Minimax",
+      "placeholder": "Minimax API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Minimax API Key của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
+      "title": "Sử dụng Minimax API Key tùy chỉnh"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {

@@ -7,8 +7,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { CURRENT_VERSION } from '@/const/version';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
-import { useGlobalStore } from '@/store/global';
-import { commonSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { commonSelectors } from '@/store/user/selectors';
 
 import SettingList from '../features/SettingList';
 import AvatarBanner from './features/AvatarBanner';
@@ -26,7 +26,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const Setting = memo(() => {
-  const avatar = useGlobalStore(commonSelectors.userAvatar);
+  const avatar = useUserStore(commonSelectors.userAvatar);
   const { styles } = useStyles();
 
   return (

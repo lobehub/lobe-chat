@@ -8,9 +8,10 @@ import { useSessionStore } from '@/store/session';
 const SessionSearchBar = memo<{ mobile?: boolean }>(({ mobile: controlledMobile }) => {
   const { t } = useTranslation('chat');
 
-  const [keywords, useSearchSessions] = useSessionStore((s) => [
+  const [keywords, useSearchSessions, updateSearchKeywords] = useSessionStore((s) => [
     s.sessionSearchKeywords,
     s.useSearchSessions,
+    s.updateSearchKeywords,
   ]);
 
   const { isValidating } = useSearchSessions(keywords);
@@ -24,12 +25,7 @@ const SessionSearchBar = memo<{ mobile?: boolean }>(({ mobile: controlledMobile 
       enableShortKey={!mobile}
       loading={isValidating}
       onChange={(e) => {
-        const newKeywords = e.target.value;
-
-        useSessionStore.setState({
-          isSearching: !!newKeywords,
-          sessionSearchKeywords: newKeywords,
-        });
+        updateSearchKeywords(e.target.value);
       }}
       placeholder={t('searchAgentPlaceholder')}
       shortKey={'k'}
