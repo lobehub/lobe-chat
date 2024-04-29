@@ -32,7 +32,7 @@ export interface ChatModelCard {
   legacy?: boolean;
   maxOutput?: number;
   /**
-   * the context window (or input tokens limit)
+   * the context window
    */
   tokens?: number;
   /**
