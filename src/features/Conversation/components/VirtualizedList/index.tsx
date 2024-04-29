@@ -31,6 +31,7 @@ interface VirtualizedListProps {
 const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const [id, chatLoading] = useChatStore((s) => [
     chatSelectors.currentChatKey(s),
