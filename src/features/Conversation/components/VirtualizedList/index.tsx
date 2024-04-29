@@ -34,10 +34,13 @@ const VirtualizedList = memo(() => {
     chatSelectors.currentChatLoadingState(s),
   ]);
 
+  const prevDataLengthRef = useRef(data.length);
+  
   useEffect(() => {
-    if (virtuosoRef.current) {
+    if (virtuosoRef.current && data.length > prevDataLengthRef.current) {
       virtuosoRef.current.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
     }
+    prevDataLengthRef.current = data.length;
   }, [id, data.length]);
 
   // overscan should be 1.5 times the height of the window
