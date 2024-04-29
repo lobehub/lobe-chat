@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://platform.lingyiwanwu.com/
 const ZeroOne: ModelProviderCard = {
   chatModels: [
     {
@@ -7,7 +8,7 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'YI 34B Chat',
       enabled: true,
       id: 'yi-34b-chat-0205',
-      tokens: 4000,
+      tokens: 4096, // https://huggingface.co/01-ai/Yi-34B-Chat/blob/main/config.json
     },
     {
       description:
@@ -15,7 +16,7 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'YI Vision Plus',
       enabled: true,
       id: 'yi-vl-plus',
-      tokens: 4000,
+      tokens: 4096,
       vision: true,
     },
     {
@@ -23,7 +24,7 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'YI 34B Chat 200k',
       enabled: true,
       id: 'yi-34b-chat-200k',
-      tokens: 200_000,
+      tokens: 200_000, // https://huggingface.co/01-ai/Yi-34B-200K/blob/main/config.json
     },
   ],
   id: 'zeroone',

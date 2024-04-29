@@ -1,8 +1,10 @@
 import { ModelProviderCard } from '@/types/llm';
 
 // TODO: 等待 ZhiPu 修复 API 问题后开启 functionCall
-// refs: https://github.com/lobehub/lobe-chat/discussions/737#discussioncomment-8315815
 // 暂时不透出 GLM 系列的 function_call 功能
+// refs https://github.com/lobehub/lobe-chat/discussions/737#discussioncomment-8315815
+
+// ref https://open.bigmodel.cn/dev/howuse/model
 const ZhiPu: ModelProviderCard = {
   chatModels: [
     {
@@ -19,7 +21,7 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4 Vision',
       enabled: true,
       id: 'glm-4v',
-      tokens: 128_000,
+      tokens: 2000,
       vision: true,
     },
     {
