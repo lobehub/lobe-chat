@@ -7,7 +7,7 @@ import { CSSProperties, PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
-import { SidebarTabKey } from '@/store/global/slices/common/initialState';
+import { SidebarTabKey } from '@/store/global/initialState';
 
 const MobileTabBar = dynamic(() => import('@/features/MobileTabBar'));
 

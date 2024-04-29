@@ -9,10 +9,10 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 
 const format = (number: number) => numeral(number).format('0,0');
 
@@ -29,10 +29,10 @@ const Token = memo(() => {
     agentSelectors.currentAgentModel(s) as string,
   ]);
 
-  const maxTokens = useGlobalStore(modelProviderSelectors.modelMaxToken(model));
+  const maxTokens = useUserStore(modelProviderSelectors.modelMaxToken(model));
 
   // Tool usage token
-  const canUseTool = useGlobalStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
+  const canUseTool = useUserStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins);
   const toolsString = useToolStore((s) => {
     const pluginSystemRoles = toolSelectors.enabledSystemRoles(plugins)(s);

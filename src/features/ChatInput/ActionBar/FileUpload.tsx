@@ -9,8 +9,8 @@ import { Center } from 'react-layout-kit';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useFileStore } from '@/store/file';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 
 const FileUpload = memo(() => {
   const { t } = useTranslation('chat');
@@ -19,7 +19,7 @@ const FileUpload = memo(() => {
   const upload = useFileStore((s) => s.uploadFile);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
-  const [canUpload, enabledFiles] = useGlobalStore((s) => [
+  const [canUpload, enabledFiles] = useUserStore((s) => [
     modelProviderSelectors.isModelEnabledUpload(model)(s),
     modelProviderSelectors.isModelEnabledFiles(model)(s),
   ]);
