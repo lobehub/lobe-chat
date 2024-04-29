@@ -5,10 +5,10 @@ import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useGlobalStore } from '@/store/global';
-import { commonSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { commonSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
@@ -20,7 +20,7 @@ const getMeta = (message: ChatMessage) => {
   switch (message.role) {
     case 'user': {
       return {
-        avatar: commonSelectors.userAvatar(useGlobalStore.getState()) || DEFAULT_USER_AVATAR,
+        avatar: commonSelectors.userAvatar(useUserStore.getState()) || DEFAULT_USER_AVATAR,
       };
     }
 
@@ -52,6 +52,15 @@ const currentChats = (s: ChatStore): ChatMessage[] => {
 };
 
 const initTime = Date.now();
+
+const showInboxWelcome = (s: ChatStore): boolean => {
+  const isInbox = s.activeId === INBOX_SESSION_ID;
+  if (!isInbox) return false;
+  const data = currentChats(s);
+  const isBrandNewChat = data.length === 0;
+  return isBrandNewChat;
+};
+
 // 针对新助手添加初始化时的自定义消息
 const currentChatsWithGuideMessage =
   (meta: MetaData) =>
@@ -64,7 +73,7 @@ const currentChatsWithGuideMessage =
 
     const [activeId, isInbox] = [s.activeId, s.activeId === INBOX_SESSION_ID];
 
-    const inboxMsg = t('inbox.defaultMessage', { ns: 'chat' });
+    const inboxMsg = '';
     const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
       name: meta.title || t('defaultAgent'),
       ns: 'chat',
@@ -137,4 +146,5 @@ export const chatSelectors = {
   getMessageById,
   getTraceIdByMessageId,
   latestMessage,
+  showInboxWelcome,
 };

@@ -95,6 +95,18 @@
       "title": "Gebruik aangepaste Groq API-sleutel"
     }
   },
+  "minimax": {
+    "title": "Minimax",
+    "token": {
+      "desc": "Voer de API Key van Minimax AI in",
+      "placeholder": "Minimax API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Voer uw Minimax AI API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
+      "title": "Gebruik aangepaste Minimax AI API-sleutel"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {

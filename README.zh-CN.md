@@ -128,6 +128,7 @@
 - **01.AI (零一万物)**：集成了零一万物模型，系列 API 具备较快的推理速度，这不仅缩短了处理时间，同时也保持了出色的模型效果。[了解更多](https://www.lingyiwanwu.com/)
 - **Groq**：接入了 Groq 的 AI 模型，高效处理消息序列，生成回应，胜任多轮对话及单次交互任务。[了解更多](https://groq.com/)
 - **OpenRouter**：其支持包括 **Claude 3**，**Gemma**，**Mistral**，**Llama2**和**Cohere**等模型路由，支持智能路由优化，提升使用效率，开放且灵活。[了解更多](https://openrouter.ai/)
+- **Minimax**: 接入了 Minimax 的 AI 模型，包括 MoE 模型 **abab6**，提供了更多的选择空间。[了解更多](https://www.minimaxi.com/)
 
 同时，我们也在计划支持更多的模型服务商，如 Replicate 和 Perplexity 等，以进一步丰富我们的服务商库。如果你希望让 LobeChat 支持你喜爱的服务商，欢迎加入我们的[社区讨论](https://github.com/lobehub/lobe-chat/discussions/1284)。
 
@@ -248,14 +249,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                | 助手说明                                                                                                                                                                                                                                                                                                               |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [中文论文编辑师](https://chat-preview.lobehub.com/market?agent=chinese-paper-polishing)<br/><sup>By **[y22emc2](https://github.com/y22emc2)** on **2024-04-15**</sup>   | 作为一名中文学术论文写作改进助理，你的任务是改进所提供文本的拼写、语法、清晰、简洁和整体可读性，提高文本的学术规范性、文学性，同时分解长句，减少重复，并提供改进建议。请先提供文本的更正版本，然后在 markdown 表格中列出修改的内容，并给出修改的理由。<br/>`学术论文写作` `校对` `文本编辑`                            |
-| [生物学教授](https://chat-preview.lobehub.com/market?agent=bio-professor)<br/><sup>By **[luxiangze](https://github.com/luxiangze)** on **2024-04-13**</sup>             | 作为一位生物学教授，您将收到关于生物学的问题和概念，请用具体而简明的语言解释这些问题和概念，并尽量使用实际例子进行说明，以帮助您的听众更好地理解。请确保您的解释准确而清晰，并试图鼓励创造性和灵活性的答案。用中文回答<br/>`生物`                                                                                      |
-| [命理大师](https://chat-preview.lobehub.com/market?agent=fortune-teller)<br/><sup>By **[kamilkenrich](https://github.com/kamilkenrich)** on **2024-04-13**</sup>        | 擅长命理学、占卜预测、占星术和血型学分析<br/>`命理学、占卜、占星学、心理学、血型、星座`                                                                                                                                                                                                                                |
-| [高中理科学习助手](https://chat-preview.lobehub.com/market?agent=highschool-master)<br/><sup>By **[cnliucheng](https://github.com/cnliucheng)** on **2024-04-13**</sup> | 我是一个专门为中国高中生设计的学习辅助 AI。无论你在物理、化学、数学还是生物上遇到难题，我都能为你提供详细的解答和解析。不仅如此，我还能根据你的学习进度，推荐合适的练习题，帮助我巩固知识，提升学习效率。同时，我会尽可能使用 LaTeX 格式来呈现解题过程和公式<br/>`高中学习` `理科辅助` `题目解答` `学习进度` `la-te-x` |
+| 最近新增                                                                                                                                                                     | 助手说明                                                                                                                                                                                                                                                                                                 |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [越狱助手 DAN](https://chat-preview.lobehub.com/market?agent=gpt-4-dan-assistant)<br/><sup>By **[MapleEve](https://github.com/MapleEve)** on **2024-04-26**</sup>            | 突破 OpenAI 审核机制，越狱之后的 ChatGPT<br/>`创意` `人工智能` `对话` `越狱`                                                                                                                                                                                                                             |
+| [TailwindHelper](https://chat-preview.lobehub.com/market?agent=tailwind-helper)<br/><sup>By **[aototo](https://github.com/aototo)** on **2024-04-26**</sup>                  | TailwindHelper 是一位专业的前端设计师，拥有深厚的设计理论基础和丰富的实践经验。它由一家领先的软件开发公司创建，旨在帮助开发者和设计师加速 Web 界面的开发过程。TailwindHelper 精通 Tailwind CSS 框架，并能够理解复杂的设计要求，转化为高效且响应式的 CSS 类名。<br/>`tailwindcss` `css` `tailwind-helper` |
+| [yapi JSON-SCHEMA to Typescript](https://chat-preview.lobehub.com/market?agent=yapi-ts-helper)<br/><sup>By **[zcf0508](https://github.com/zcf0508)** on **2024-04-26**</sup> | 擅长将 JSON schema 转换为 TypeScript 类型。<br/>`typescript` `开发`                                                                                                                                                                                                                                      |
+| [中文论文编辑师](https://chat-preview.lobehub.com/market?agent=chinese-paper-polishing)<br/><sup>By **[y22emc2](https://github.com/y22emc2)** on **2024-04-15**</sup>        | 作为一名中文学术论文写作改进助理，你的任务是改进所提供文本的拼写、语法、清晰、简洁和整体可读性，提高文本的学术规范性、文学性，同时分解长句，减少重复，并提供改进建议。请先提供文本的更正版本，然后在 markdown 表格中列出修改的内容，并给出修改的理由。<br/>`学术论文写作` `校对` `文本编辑`              |
 
-> 📊 Total agents: [<kbd>**240**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**243**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

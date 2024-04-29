@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 
 import ProviderConfig from '../components/ProviderConfig';
 import { LLMProviderApiTokenKey, LLMProviderBaseUrlKey, LLMProviderConfigKey } from '../const';
@@ -33,7 +33,7 @@ const AzureOpenAIProvider = memo(() => {
   const { styles } = useStyles();
 
   // Get the first model card's deployment name as the check model
-  const checkModel = useGlobalStore((s) => {
+  const checkModel = useUserStore((s) => {
     const chatModelCards = modelProviderSelectors.getModelCardsById(providerKey)(s);
 
     if (chatModelCards.length > 0) {

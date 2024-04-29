@@ -7,11 +7,11 @@ import {
 } from '@lobehub/ui';
 import { memo } from 'react';
 
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
 const ThemeSwatchesNeutral = memo(() => {
-  const [neutralColor, setSettings] = useGlobalStore((s) => [
+  const [neutralColor, setSettings] = useUserStore((s) => [
     settingsSelectors.currentSettings(s).neutralColor,
     s.setSettings,
   ]);

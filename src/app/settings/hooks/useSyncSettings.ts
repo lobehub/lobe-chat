@@ -1,15 +1,15 @@
 import { FormInstance } from 'antd/es/form/hooks/useForm';
 import { useEffect } from 'react';
 
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 
 export const useSyncSettings = (form: FormInstance) => {
   useEffect(() => {
     // set the first time
-    form.setFieldsValue(useGlobalStore.getState().settings);
+    form.setFieldsValue(useUserStore.getState().settings);
 
     // sync with later updated settings
-    const unsubscribe = useGlobalStore.subscribe(
+    const unsubscribe = useUserStore.subscribe(
       (s) => s.settings,
       (settings) => {
         form.setFieldsValue(settings);
