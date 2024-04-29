@@ -1,7 +1,13 @@
 import { useCallback } from 'react';
 
 import { useChatStore } from '@/store/chat';
+import { SendMessageParams } from '@/store/chat/slices/message/action';
 import { filesSelectors, useFileStore } from '@/store/file';
+
+export type UseSendMessageParams = Pick<
+  SendMessageParams,
+  'onlyAddUserMessage' | 'isWelcomeQuestion'
+>;
 
 export const useSendMessage = () => {
   const [sendMessage, updateInputMessage] = useChatStore((s) => [
@@ -9,7 +15,7 @@ export const useSendMessage = () => {
     s.updateInputMessage,
   ]);
 
-  return useCallback((onlyAddUserMessage?: boolean) => {
+  return useCallback((params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
     if (!!store.chatLoadingId) return;
     if (!store.inputMessage) return;
@@ -19,7 +25,7 @@ export const useSendMessage = () => {
     sendMessage({
       files: imageList,
       message: store.inputMessage,
-      onlyAddUserMessage: onlyAddUserMessage,
+      ...params,
     });
 
     updateInputMessage('');
