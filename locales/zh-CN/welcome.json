@@ -9,7 +9,7 @@
       "replaceBtn": "换一批",
       "title": "新增助理推荐："
     },
-    "defaultMessage": "我是 LobeChat 你的私人智能助理，我今天能帮你做什么？\n如果需要获得更加专业或定制的助手，可以点击 `+` 创建自定义助手",
+    "defaultMessage": "我是您的私人智能助理 LobeChat ，请问现在能帮您做什么？\n如果需要获得更加专业或定制的助手，可以点击 `+` 创建自定义助手",
     "qa": {
       "q01": "LobeHub 是什么？",
       "q02": "LobeChat 是什么？",
