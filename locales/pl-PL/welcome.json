@@ -9,7 +9,7 @@
       "replaceBtn": "Zmień",
       "title": "Nowe zalecenia asystenta:"
     },
-    "defaultMessage": "Jestem LobeChat, Twoim osobistym inteligentnym asystentem. Jak mogę Ci dzisiaj pomóc?\nJeśli potrzebujesz bardziej profesjonalnej lub spersonalizowanej pomocy, kliknij `+` aby stworzyć niestandardowego asystenta.",
+    "defaultMessage": "Jestem Twoim prywatnym asystentem LobeChat. W czym mogę pomóc?\nJeśli potrzebujesz bardziej profesjonalnej lub spersonalizowanej pomocy, kliknij `+` aby stworzyć niestandardowego asystenta",
     "qa": {
       "q01": "Czym jest LobeHub?",
       "q02": "Czym jest LobeChat?",
