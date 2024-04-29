@@ -10,6 +10,7 @@ export const DEFAULT_AGENT_LOBE_SESSION: LobeAgentSession = {
   createdAt: Date.now(),
   id: '',
   meta: DEFAULT_AGENT_META,
+  model: DEFAULT_AGENT_CONFIG.model,
   type: LobeSessionType.Agent,
   updatedAt: Date.now(),
 };

@@ -16,6 +16,12 @@ const Mistral: ModelProviderCard = {
       tokens: 32_768,
     },
     {
+      displayName: 'Mixtral 8x22B',
+      enabled: true,
+      id: 'open-mixtral-8x22b',
+      tokens: 65_536,
+    },
+    {
       displayName: 'Mistral Small',
       enabled: true,
       id: 'mistral-small-latest',
@@ -31,11 +37,6 @@ const Mistral: ModelProviderCard = {
       displayName: 'Mistral Large',
       enabled: true,
       id: 'mistral-large-latest',
-      tokens: 32_768,
-    },
-    {
-      displayName: 'Mixtral 8x22B',
-      id: 'mixtral-8x22b',
       tokens: 32_768,
     },
   ],

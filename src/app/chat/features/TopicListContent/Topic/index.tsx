@@ -9,7 +9,7 @@ import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { imageUrl } from '@/const/url';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 import { ChatTopic } from '@/types/topic';
 
 import { Placeholder, SkeletonList } from './SkeletonList';
@@ -30,7 +30,7 @@ export const Topic = memo(() => {
     s.activeTopicId,
     topicSelectors.currentTopicLength(s),
   ]);
-  const [visible, updateGuideState] = useGlobalStore((s) => [
+  const [visible, updateGuideState] = useUserStore((s) => [
     s.preference.guide?.topic,
     s.updateGuideState,
   ]);
@@ -64,7 +64,7 @@ export const Topic = memo(() => {
   ) : (
     <Flexbox gap={2} height={'100%'} style={{ marginBottom: 12 }}>
       {topicLength === 0 && (
-        <Flexbox flex={1}>
+        <Flexbox flex={1} paddingInline={8}>
           <EmptyCard
             alt={t('topic.guide.desc')}
             cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}

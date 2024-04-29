@@ -10,18 +10,20 @@ import { Flexbox } from 'react-layout-kit';
 
 import { AGENTS_INDEX_GITHUB_ISSUE } from '@/const/url';
 import AgentInfo from '@/features/AgentInfo';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
 const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const { t } = useTranslation('setting');
   const [identifier, setIdentifier] = useState('');
-  const systemRole = useSessionStore(agentSelectors.currentAgentSystemRole);
+  const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
   const theme = useTheme();
-  const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
-  const language = useGlobalStore((s) => settingsSelectors.currentSettings(s).language);
+  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+  const language = useUserStore((s) => settingsSelectors.currentSettings(s).language);
 
   const isMetaPass = Boolean(
     meta && meta.title && meta.description && (meta.tags as string[])?.length > 0 && meta.avatar,

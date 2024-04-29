@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://ai.google.dev/models/gemini
 const Google: ModelProviderCard = {
   chatModels: [
     {
@@ -26,7 +27,6 @@ const Google: ModelProviderCard = {
     {
       description: 'The best image understanding model to handle a broad range of applications',
       displayName: 'Gemini 1.0 Pro Vision',
-      enabled: true,
       id: 'gemini-1.0-pro-vision-latest',
       maxOutput: 4096,
       tokens: 16_384,
@@ -35,6 +35,7 @@ const Google: ModelProviderCard = {
     {
       description: 'The best image understanding model to handle a broad range of applications',
       displayName: 'Gemini 1.0 Pro Vision',
+      enabled: true,
       id: 'gemini-pro-vision',
       maxOutput: 4096,
       tokens: 16_384,
@@ -59,6 +60,7 @@ const Google: ModelProviderCard = {
     {
       description: 'Mid-size multimodal model that supports up to 1 million tokens',
       displayName: 'Gemini 1.5 Pro',
+      enabled: true,
       id: 'gemini-1.5-pro-latest',
       maxOutput: 8192,
       tokens: 1_056_768,

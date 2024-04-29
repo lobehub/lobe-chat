@@ -9,8 +9,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
-import { syncSettingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { syncSettingsSelectors } from '@/store/user/selectors';
 import { pathString } from '@/utils/url';
 
 import EnableTag from './EnableTag';
@@ -39,7 +39,7 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLe
   const { t } = useTranslation('common');
 
   const { styles, theme } = useStyles();
-  const [syncStatus, isSyncing, channelName, enableWebRTC, setSettings] = useGlobalStore((s) => [
+  const [syncStatus, isSyncing, channelName, enableWebRTC, setSettings] = useUserStore((s) => [
     s.syncStatus,
     s.syncStatus === 'syncing',
     syncSettingsSelectors.webrtcChannelName(s),
@@ -47,7 +47,7 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLe
     s.setSettings,
   ]);
 
-  const users = useGlobalStore((s) => s.syncAwareness, isEqual);
+  const users = useUserStore((s) => s.syncAwareness, isEqual);
 
   const switchSync = (enabled: boolean) => {
     setSettings({ sync: { webrtc: { enabled } } });

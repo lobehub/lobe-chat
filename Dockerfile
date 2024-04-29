@@ -103,4 +103,7 @@ ENV ZEROONE_API_KEY ""
 # TogetherAI
 ENV TOGETHERAI_API_KEY ""
 
+# Minimax
+ENV MINIMAX_API_KEY ""
+
 CMD ["node", "server.js"]

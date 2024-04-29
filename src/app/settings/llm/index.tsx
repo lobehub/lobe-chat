@@ -13,6 +13,7 @@ import Azure from './Azure';
 import Bedrock from './Bedrock';
 import Google from './Google';
 import Groq from './Groq';
+import Minimax from './Minimax';
 import Mistral from './Mistral';
 import Moonshot from './Moonshot';
 import Ollama from './Ollama';
@@ -23,15 +24,15 @@ import TogetherAI from './TogetherAI';
 import ZeroOne from './ZeroOne';
 import Zhipu from './Zhipu';
 
-export default memo<{ showOllama: boolean }>(({ showOllama }) => {
+export default memo(() => {
   const { t } = useTranslation('setting');
 
   return (
     <>
       <PageTitle title={t('tab.llm')} />
       <OpenAI />
+      <Ollama />
       <Azure />
-      {showOllama && <Ollama />}
       <Google />
       <Anthropic />
       <Bedrock />
@@ -39,6 +40,7 @@ export default memo<{ showOllama: boolean }>(({ showOllama }) => {
       <TogetherAI />
       <Groq />
       <Perplexity />
+      <Minimax />
       <Mistral />
       <Moonshot />
       <Zhipu />

@@ -102,7 +102,7 @@ const OpenAI: ModelProviderCard = {
     },
     {
       description: 'GPT-4 Turbo 视觉版',
-      displayName: 'GPT-4 Turbo Vision',
+      displayName: 'GPT-4 Turbo',
       enabled: true,
       functionCall: true,
       id: 'gpt-4-turbo',
@@ -115,14 +115,6 @@ const OpenAI: ModelProviderCard = {
       functionCall: true,
       id: 'gpt-4-turbo-2024-04-09',
       tokens: 128_000,
-      vision: true,
-    },
-    {
-      displayName: 'GPT-4 ALL',
-      files: true,
-      functionCall: true,
-      id: 'gpt-4-all',
-      tokens: 32_768,
       vision: true,
     },
   ],

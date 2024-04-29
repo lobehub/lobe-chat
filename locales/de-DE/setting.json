@@ -22,6 +22,7 @@
       "confirm": "Alle Einstellungen zurücksetzen?",
       "currentVersion": "Aktuelle Version",
       "desc": "Alle Einstellungen auf Standardwerte zurücksetzen",
+      "success": "Alle Einstellungen wurden zurückgesetzt",
       "title": "Alle Einstellungen zurücksetzen"
     }
   },
@@ -74,6 +75,10 @@
           "title": "Visuelle Erkennung unterstützen"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "Client Fetch-Modus initiiert direkte Sitzungsanfragen vom Browser aus und verbessert die Reaktionsgeschwindigkeit.",
+      "title": "Client Fetch-Modus verwenden"
     },
     "fetcher": {
       "fetch": "Modelle abrufen",

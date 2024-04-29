@@ -22,6 +22,7 @@
       "confirm": "Tüm ayarları sıfırlamayı onaylıyor musunuz?",
       "currentVersion": "Geçerli Sürüm",
       "desc": "Tüm ayarları varsayılan değerlere sıfırlar",
+      "success": "Tüm ayarlar sıfırlandı",
       "title": "Tüm Ayarları Sıfırla"
     }
   },
@@ -74,6 +75,10 @@
           "title": "Görüntü Tanımayı Destekle"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "İstemci tarafından alınan veri: Tarayıcı, doğrudan oturum isteği gönderir ve yanıt hızını artırabilir.",
+      "title": "İstemci Tarafından Veri Alımı"
     },
     "fetcher": {
       "fetch": "Modelleri Al",

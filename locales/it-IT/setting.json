@@ -22,6 +22,7 @@
       "confirm": "Confermi di ripristinare tutte le impostazioni?",
       "currentVersion": "Versione corrente",
       "desc": "Ripristina tutte le impostazioni ai valori predefiniti",
+      "success": "Tutte le impostazioni sono state ripristinate con successo",
       "title": "Ripristina tutte le impostazioni"
     }
   },
@@ -74,6 +75,10 @@
           "title": "Supporto per il riconoscimento visivo"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "Il modo di richiesta del client consente di avviare direttamente una richiesta di sessione dal browser, migliorando i tempi di risposta",
+      "title": "Utilizzo del modo di richiesta del client"
     },
     "fetcher": {
       "fetch": "Ottenere l'elenco dei modelli",

@@ -3,10 +3,12 @@ import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { useAgentStore } from '@/store/agent';
 import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
-import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
+import { useUserStore } from '@/store/user';
+import { LobeAgentConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
@@ -158,8 +160,13 @@ describe('chatSelectors', () => {
     it('should slice the messages according to config, assuming historyCount is mocked to 2', async () => {
       const state = merge(initialStore, { messages: mockMessages });
       act(() => {
-        useGlobalStore.setState({
-          settings: { defaultAgent: { config: { historyCount: 2, enableHistoryCount: true } } },
+        useAgentStore.setState({
+          activeId: 'inbox',
+          agentConfig: {
+            historyCount: 2,
+            enableHistoryCount: true,
+            model: 'abc',
+          } as LobeAgentConfig,
         });
       });
 
@@ -218,7 +225,7 @@ describe('chatSelectors', () => {
 
       const chats = chatSelectors.currentChatsWithGuideMessage(metaData)(state);
 
-      expect(chats[0].content).toEqual('inbox.defaultMessage'); // Assuming translation returns a string containing this
+      expect(chats[0].content).toEqual(''); // Assuming translation returns a string containing this
     });
 
     it('should use agent default message for non-inbox sessions', () => {
@@ -251,6 +258,32 @@ describe('chatSelectors', () => {
 
       // Restore the mocks after the test
       vi.restoreAllMocks();
+    });
+  });
+
+  describe('showInboxWelcome', () => {
+    it('should return false if the active session is not the inbox session', () => {
+      const state = merge(initialStore, { activeId: 'someActiveId' });
+      const result = chatSelectors.showInboxWelcome(state);
+      expect(result).toBe(false);
+    });
+
+    it('should return false if there are existing messages in the inbox session', () => {
+      const state = merge(initialStore, {
+        activeId: INBOX_SESSION_ID,
+        messages: mockMessages,
+      });
+      const result = chatSelectors.showInboxWelcome(state);
+      expect(result).toBe(false);
+    });
+
+    it('should return true if the active session is the inbox session and there are no existing messages', () => {
+      const state = merge(initialStore, {
+        activeId: INBOX_SESSION_ID,
+        messages: [],
+      });
+      const result = chatSelectors.showInboxWelcome(state);
+      expect(result).toBe(true);
     });
   });
 });

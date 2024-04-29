@@ -7,8 +7,9 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
+import { agentSelectors } from '@/store/agent/selectors';
 import { chatSelectors } from '@/store/chat/selectors';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../store';
@@ -25,9 +26,9 @@ vi.mock('@/services/message', () => ({
     updateMessageError: vi.fn(),
     removeMessage: vi.fn(),
     removeMessages: vi.fn(() => Promise.resolve()),
-    create: vi.fn(() => Promise.resolve('new-message-id')),
+    createMessage: vi.fn(() => Promise.resolve('new-message-id')),
     updateMessage: vi.fn(),
-    clearAllMessage: vi.fn(() => Promise.resolve()),
+    removeAllMessages: vi.fn(() => Promise.resolve()),
   },
 }));
 vi.mock('@/services/topic', () => ({
@@ -69,7 +70,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   useChatStore.setState(mockState, false);
   vi.spyOn(agentSelectors, 'currentAgentConfig').mockImplementation(() => DEFAULT_AGENT_CONFIG);
-  vi.spyOn(agentSelectors, 'currentAgentMeta').mockImplementation(() => ({ tags: [] }));
+  vi.spyOn(sessionMetaSelectors, 'currentAgentMeta').mockImplementation(() => ({ tags: [] }));
 });
 
 afterEach(() => {
@@ -188,7 +189,7 @@ describe('chatMessage actions', () => {
         await result.current.sendMessage({ message });
       });
 
-      expect(messageService.create).not.toHaveBeenCalled();
+      expect(messageService.createMessage).not.toHaveBeenCalled();
       expect(result.current.refreshMessages).not.toHaveBeenCalled();
       expect(result.current.coreProcessMessage).not.toHaveBeenCalled();
     });
@@ -201,7 +202,7 @@ describe('chatMessage actions', () => {
         await result.current.sendMessage({ message });
       });
 
-      expect(messageService.create).not.toHaveBeenCalled();
+      expect(messageService.createMessage).not.toHaveBeenCalled();
       expect(result.current.refreshMessages).not.toHaveBeenCalled();
       expect(result.current.coreProcessMessage).not.toHaveBeenCalled();
     });
@@ -214,7 +215,7 @@ describe('chatMessage actions', () => {
         await result.current.sendMessage({ message, files: [] });
       });
 
-      expect(messageService.create).not.toHaveBeenCalled();
+      expect(messageService.createMessage).not.toHaveBeenCalled();
       expect(result.current.refreshMessages).not.toHaveBeenCalled();
       expect(result.current.coreProcessMessage).not.toHaveBeenCalled();
     });
@@ -225,13 +226,13 @@ describe('chatMessage actions', () => {
       const files = [{ id: 'file-id', url: 'file-url' }];
 
       // Mock messageService.create to resolve with a message id
-      (messageService.create as Mock).mockResolvedValue('new-message-id');
+      (messageService.createMessage as Mock).mockResolvedValue('new-message-id');
 
       await act(async () => {
         await result.current.sendMessage({ message, files });
       });
 
-      expect(messageService.create).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content: message,
         files: files.map((f) => f.id),
         role: 'user',
@@ -250,7 +251,7 @@ describe('chatMessage actions', () => {
         const enableAutoCreateTopic = false;
 
         // Mock messageService.create to resolve with a message id
-        (messageService.create as Mock).mockResolvedValue('new-message-id');
+        (messageService.createMessage as Mock).mockResolvedValue('new-message-id');
 
         // Mock agent config to simulate auto-create topic behavior
         (agentSelectors.currentAgentConfig as Mock).mockImplementation(() => ({
@@ -295,7 +296,7 @@ describe('chatMessage actions', () => {
         }));
 
         // Mock messageService.create to resolve with a message id
-        (messageService.create as Mock).mockResolvedValue('new-message-id');
+        (messageService.createMessage as Mock).mockResolvedValue('new-message-id');
 
         // Mock the currentChats selector to return a list that reaches the threshold
         (chatSelectors.currentChats as Mock).mockReturnValue(
@@ -330,7 +331,7 @@ describe('chatMessage actions', () => {
         const enableAutoCreateTopic = true;
 
         // Mock messageService.create to resolve with a message id
-        (messageService.create as Mock).mockResolvedValue('new-message-id');
+        (messageService.createMessage as Mock).mockResolvedValue('new-message-id');
 
         // Mock agent config to simulate auto-create topic behavior
         (agentSelectors.currentAgentConfig as Mock).mockImplementation(() => ({
@@ -473,14 +474,14 @@ describe('chatMessage actions', () => {
       (chatService.createAssistantMessage as Mock).mockResolvedValue(aiResponse);
       const spy = vi.spyOn(chatService, 'createAssistantMessageStream');
       // 模拟消息创建
-      (messageService.create as Mock).mockResolvedValue('assistant-message-id');
+      (messageService.createMessage as Mock).mockResolvedValue('assistant-message-id');
 
       await act(async () => {
         await result.current.coreProcessMessage(messages, userMessage.id);
       });
 
       // 验证是否创建了代表 AI 响应的消息
-      expect(messageService.create).toHaveBeenCalledWith(
+      expect(messageService.createMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           role: 'assistant',
           content: LOADING_FLAT,

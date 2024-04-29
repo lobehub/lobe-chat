@@ -34,4 +34,6 @@ const Sessions = memo(() => {
   );
 });
 
+Sessions.displayName = 'SessionsList';
+
 export default Sessions;

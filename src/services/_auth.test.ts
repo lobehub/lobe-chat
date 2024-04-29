@@ -2,7 +2,7 @@ import { act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
 
 import { getProviderAuthPayload } from './_auth';
@@ -23,7 +23,7 @@ const setModelProviderConfig = <T extends GlobalLLMProviderKey>(
   provider: T,
   config: Partial<GlobalLLMConfig[T]>,
 ) => {
-  useGlobalStore.setState({
+  useUserStore.setState({
     settings: { languageModel: { [provider]: config } },
   });
 };

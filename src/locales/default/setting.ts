@@ -21,7 +21,8 @@ export default {
       action: '立即重置',
       confirm: '确认重置所有设置？',
       currentVersion: '当前版本',
-      desc: '重置所有设置项回默认值',
+      desc: '重置所有设置，使用默认值',
+      success: '已重置所有设置',
       title: '重置所有设置',
     },
   },
@@ -75,6 +76,10 @@ export default {
           title: '支持视觉识别',
         },
       },
+    },
+    fetchOnClient: {
+      desc: '客户端请求模式将从浏览器直接发起会话请求，可提升响应速度',
+      title: '使用客户端请求模式',
     },
     fetcher: {
       fetch: '获取模型列表',
