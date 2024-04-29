@@ -95,6 +95,18 @@
       "title": "Özel Groq API Anahtarı Kullan"
     }
   },
+  "minimax": {
+    "title": "Minimax",
+    "token": {
+      "desc": "Minimax'den API Anahtarınızı girin",
+      "placeholder": "Minimax API Anahtarı",
+      "title": "API Anahtarı"
+    },
+    "unlock": {
+      "description": "Minimax API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez",
+      "title": "Özel Minimax API Anahtarını Kullan"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {

@@ -95,6 +95,18 @@
       "title": "사용자 정의 Groq API 키 사용"
     }
   },
+  "minimax": {
+    "title": "최소화",
+    "token": {
+      "desc": "Minimax에서 가져온 API 키를 입력하십시오",
+      "placeholder": "Minimax API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "Minimax API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다",
+      "title": "사용자 정의 Minimax API 키 사용"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {
