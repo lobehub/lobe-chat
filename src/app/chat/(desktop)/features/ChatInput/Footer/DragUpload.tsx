@@ -61,12 +61,12 @@ const useStyles = createStyles(({ css, token, stylish }) => {
   };
 });
 
-const os = allowTextDrag();
+const disallowTextDrag = !allowTextDrag();
 
 const handleDragOver = (e: DragEvent) => {
   if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-    const isFile = e.dataTransfer.types.includes("Files"); // Webpage image drag
-    if (os || isFile) {
+    const isFile = e.dataTransfer.types.includes('Files'); // Webpage image drag
+    if (disallowTextDrag || isFile) {
       e.preventDefault();
     }
   }
@@ -101,8 +101,8 @@ const DragUpload = memo(() => {
 
   const handleDragEnter = (e: DragEvent) => {
     if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      const isFile = e.dataTransfer.types.includes("Files");
-      if (os || isFile) {
+      const isFile = e.dataTransfer.types.includes('Files');
+      if (disallowTextDrag || isFile) {
         dragCounter.current += 1;
         e.preventDefault();
         setIsDragging(true);
@@ -112,8 +112,8 @@ const DragUpload = memo(() => {
 
   const handleDragLeave = (e: DragEvent) => {
     if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      const isFile = e.dataTransfer.types.includes("Files");
-      if (os || isFile) {
+      const isFile = e.dataTransfer.types.includes('Files');
+      if (disallowTextDrag || isFile) {
         e.preventDefault();
 
         // reset counter
@@ -128,8 +128,8 @@ const DragUpload = memo(() => {
 
   const handleDrop = async (e: DragEvent) => {
     if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      const isFile = e.dataTransfer.types.includes("Files");
-      if (os || isFile) {
+      const isFile = e.dataTransfer.types.includes('Files');
+      if (disallowTextDrag || isFile) {
         e.preventDefault();
 
         // reset counter
@@ -148,7 +148,6 @@ const DragUpload = memo(() => {
   };
 
   const handlePaste = (event: ClipboardEvent) => {
-
     // get files from clipboard
     const files = event.clipboardData?.files;
 
