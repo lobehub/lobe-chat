@@ -21,7 +21,6 @@
   "emptyAgent": "Không có trợ lý",
   "historyRange": "Phạm vi lịch sử",
   "inbox": {
-    "defaultMessage": "Xin chào, tôi là trợ lý thông minh của bạn, bạn có thể hỏi tôi bất kỳ câu hỏi nào và tôi sẽ cố gắng trả lời. Nếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn `+` để tạo trợ lý tùy chỉnh.",
     "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
     "title": "Chuyện phiếm"
   },
