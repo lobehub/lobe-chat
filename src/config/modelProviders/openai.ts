@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// refs to: https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4
+// ref https://platform.openai.com/docs/models
 const OpenAI: ModelProviderCard = {
   chatModels: [
     {
