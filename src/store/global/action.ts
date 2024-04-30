@@ -94,9 +94,7 @@ export const globalActionSlice: StateCreator<
       () => get().preferenceStorage.getFromLocalStorage(),
       {
         onSuccess: (preference) => {
-          if (preference) {
-            set({ preference }, false, n('initPreference'));
-          }
+          set({ preference: merge(get().preference, preference) }, false, n('initPreference'));
         },
       },
     ),
