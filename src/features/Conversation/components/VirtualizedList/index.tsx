@@ -7,11 +7,18 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { isMobileScreen } from '@/utils/screen';
 
+import { useInitConversation } from '../../hooks/useInitConversation';
 import AutoScroll from '../AutoScroll';
 import Item from '../ChatItem';
+import InboxWelcome from '../InboxWelcome';
+import SkeletonList from '../SkeletonList';
+
+const WELCOME_ID = 'welcome';
 
 const itemContent = (index: number, id: string) => {
   const isMobile = isMobileScreen();
+
+  if (id === WELCOME_ID) return <InboxWelcome />;
 
   return index === 0 ? (
     <div style={{ height: 24 + (isMobile ? 0 : 64) }} />
@@ -24,17 +31,21 @@ interface VirtualizedListProps {
   mobile?: boolean;
 }
 const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
+  useInitConversation();
+
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
 
-  const data = useChatStore(
-    (s) => ['empty', ...chatSelectors.currentChatIDsWithGuideMessage(s)],
-    isEqual,
-  );
   const [id, chatLoading] = useChatStore((s) => [
     chatSelectors.currentChatKey(s),
     chatSelectors.currentChatLoadingState(s),
   ]);
+
+  const data = useChatStore((s) => {
+    const showInboxWelcome = chatSelectors.showInboxWelcome(s);
+    const ids = showInboxWelcome ? [WELCOME_ID] : chatSelectors.currentChatIDsWithGuideMessage(s);
+    return ['empty', ...ids];
+  }, isEqual);
 
   useEffect(() => {
     if (virtuosoRef.current) {
@@ -45,7 +56,9 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   // overscan should be 1.5 times the height of the window
   const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
 
-  return chatLoading && data.length === 2 ? null : (
+  return chatLoading ? (
+    <SkeletonList mobile={mobile} />
+  ) : (
     <Flexbox height={'100%'}>
       <Virtuoso
         atBottomStateChange={setAtBottom}

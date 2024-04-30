@@ -95,6 +95,18 @@
       "title": "Использовать пользовательский ключ API Groq"
     }
   },
+  "minimax": {
+    "title": "Минимакс",
+    "token": {
+      "desc": "Введите ключ API от Minimax",
+      "placeholder": "Ключ API Minimax",
+      "title": "API-ключ"
+    },
+    "unlock": {
+      "description": "Просто введите свой ключ API от Minimax, чтобы начать сеанс. Приложение не сохраняет ваш ключ API.",
+      "title": "Использовать пользовательский ключ API Minimax"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {

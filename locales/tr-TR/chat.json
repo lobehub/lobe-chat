@@ -21,7 +21,6 @@
   "emptyAgent": "Asistan yok",
   "historyRange": "Geçmiş Aralığı",
   "inbox": {
-    "defaultMessage": "Merhaba, ben sanal asistanınızım. Bana herhangi bir şey sorabilirsiniz ve size cevap vermek için elimden geleni yapacağım. Daha profesyonel veya özelleştirilmiş bir asistana ihtiyacınız varsa, özel bir asistan oluşturmak için `+` simgesine tıklayabilirsiniz.",
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
   },
@@ -50,7 +49,7 @@
   "sessionGroup": {
     "config": "Grup Yönetimi",
     "confirmRemoveGroupAlert": "Bu grup silinecek, silindikten sonra bu grubun yardımcıları varsayılan listeye taşınacak, işleminizi onaylıyor musunuz?",
-    "createAgentSuccess": "Yardımcı başarıyla oluşturuldu",
+    "createAgentSuccess": "Yardımcı oluşturuldu",
     "createGroup": "Yeni Grup Ekle",
     "createSuccess": "Oluşturma Başarılı",
     "creatingAgent": "Yardımcı oluşturuluyor...",

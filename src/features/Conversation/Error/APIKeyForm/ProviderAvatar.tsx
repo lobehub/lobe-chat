@@ -2,6 +2,7 @@ import {
   Anthropic,
   Google,
   Groq,
+  Minimax,
   Mistral,
   Moonshot,
   OpenAI,
@@ -30,6 +31,10 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.ZhiPu: {
       return <Zhipu.Color size={64} />;
+    }
+
+    case ModelProvider.Minimax: {
+      return <Minimax.Color size={56} />;
     }
 
     case ModelProvider.Mistral: {

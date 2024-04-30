@@ -21,7 +21,6 @@
   "emptyAgent": "Sem assistente disponível",
   "historyRange": "Intervalo de Histórico",
   "inbox": {
-    "defaultMessage": "Olá, eu sou seu assistente virtual, você pode me perguntar qualquer coisa e eu farei o meu melhor para responder. Se precisar de um assistente mais profissional ou personalizado, clique em `+` para criar um assistente personalizado.",
     "desc": "Ative o cluster cerebral, inspire faíscas de pensamento. Seu assistente inteligente, aqui para conversar sobre tudo.",
     "title": "Conversa Aleatória"
   },

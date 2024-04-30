@@ -29,10 +29,20 @@ const n = setNamespace('message');
 
 const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 
-interface SendMessageParams {
+export interface SendMessageParams {
   message: string;
   files?: { id: string; url: string }[];
   onlyAddUserMessage?: boolean;
+  /**
+   *
+   * https://github.com/lobehub/lobe-chat/pull/2086
+   */
+  isWelcomeQuestion?: boolean;
+}
+
+interface ProcessMessageParams {
+  traceId?: string;
+  isWelcomeQuestion?: boolean;
 }
 
 export interface ChatMessageAction {
@@ -77,7 +87,7 @@ export interface ChatMessageAction {
   coreProcessMessage: (
     messages: ChatMessage[],
     parentId: string,
-    traceId?: string,
+    params?: ProcessMessageParams,
   ) => Promise<void>;
   /**
    * 实际获取 AI 响应
@@ -87,7 +97,7 @@ export interface ChatMessageAction {
   fetchAIChatMessage: (
     messages: ChatMessage[],
     assistantMessageId: string,
-    traceId?: string,
+    params?: ProcessMessageParams,
   ) => Promise<{
     content: string;
     functionCallAtEnd: boolean;
@@ -173,7 +183,7 @@ export const chatMessage: StateCreator<
     await messageService.removeAllMessages();
     await refreshMessages();
   },
-  sendMessage: async ({ message, files, onlyAddUserMessage }) => {
+  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
     const { coreProcessMessage, activeTopicId, activeId } = get();
     if (!activeId) return;
 
@@ -200,7 +210,7 @@ export const chatMessage: StateCreator<
     // Get the current messages to generate AI response
     const messages = chatSelectors.currentChats(get());
 
-    await coreProcessMessage(messages, id);
+    await coreProcessMessage(messages, id, { isWelcomeQuestion });
 
     // check activeTopic and then auto create topic
     const chats = chatSelectors.currentChats(get());
@@ -263,6 +273,8 @@ export const chatMessage: StateCreator<
       async ([, sessionId, topicId]: [string, string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),
       {
+        suspense: true,
+        fallbackData: [],
         onSuccess: (messages, key) => {
           set(
             { activeId: sessionId, messages, messagesInit: true },
@@ -280,7 +292,7 @@ export const chatMessage: StateCreator<
   },
 
   // the internal process method of the AI message
-  coreProcessMessage: async (messages, userMessageId, trace) => {
+  coreProcessMessage: async (messages, userMessageId, params) => {
     const { fetchAIChatMessage, triggerFunctionCall, refreshMessages, activeTopicId } = get();
 
     const { model, provider } = getAgentConfig();
@@ -301,7 +313,7 @@ export const chatMessage: StateCreator<
 
     // 2. fetch the AI response
     const { isFunctionCall, content, functionCallAtEnd, functionCallContent, traceId } =
-      await fetchAIChatMessage(messages, mid, trace);
+      await fetchAIChatMessage(messages, mid, params);
 
     // 3. if it's the function call message, trigger the function method
     if (isFunctionCall) {
@@ -341,7 +353,7 @@ export const chatMessage: StateCreator<
 
     set({ messages }, false, n(`dispatchMessage/${payload.type}`, payload));
   },
-  fetchAIChatMessage: async (messages, assistantId, traceId) => {
+  fetchAIChatMessage: async (messages, assistantId, params) => {
     const {
       toggleChatLoading,
       refreshMessages,
@@ -421,11 +433,12 @@ export const chatMessage: StateCreator<
         plugins: config.plugins,
       },
       trace: {
-        traceId,
+        traceId: params?.traceId,
         sessionId: get().activeId,
         topicId: get().activeTopicId,
         traceName: TraceNameMap.Conversation,
       },
+      isWelcomeQuestion: params?.isWelcomeQuestion,
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(assistantId, error);
         await refreshMessages();
@@ -567,7 +580,7 @@ export const chatMessage: StateCreator<
 
     if (!latestMsg) return;
 
-    await coreProcessMessage(contextMessages, latestMsg.id, traceId);
+    await coreProcessMessage(contextMessages, latestMsg.id, { traceId });
   },
 
   internalUpdateMessageContent: async (id, content) => {
