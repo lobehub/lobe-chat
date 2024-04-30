@@ -5,4 +5,6 @@ import Mobile from './_layout/Mobile';
 
 const WelcomeLayout = ServerLayout({ Desktop, Mobile });
 
+WelcomeLayout.displayName = 'WelcomeLayout';
+
 export default WelcomeLayout;
