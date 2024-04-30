@@ -1,8 +1,8 @@
 'use client';
 
 import { PropsWithChildren } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
+import MobileContentLayout from '@/components/server/MobileNavLayout';
 import { useIsSubSlug } from '@/hooks/useIsSubSlug';
 
 import SubSettingHeader from './SubSettingHeader';
@@ -12,10 +12,9 @@ const MobileLayout = ({ children }: PropsWithChildren) => {
 
   if (isSubPath)
     return (
-      <Flexbox height={'100%'} style={{ overflowX: 'hidden', overflowY: 'auto' }} width={'100%'}>
-        <SubSettingHeader />
+      <MobileContentLayout header={<SubSettingHeader />} withNav={false}>
         {children}
-      </Flexbox>
+      </MobileContentLayout>
     );
 
   return children;

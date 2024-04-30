@@ -49,10 +49,7 @@ const Header = memo(() => {
           />
         )
       }
-      style={{
-        width: '100%',
-        ...mobileHeaderSticky,
-      }}
+      style={mobileHeaderSticky}
     />
   );
 });
