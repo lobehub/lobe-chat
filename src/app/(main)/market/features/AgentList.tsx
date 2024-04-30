@@ -56,21 +56,15 @@ const AgentList = memo<AgentListProps>(({ mobile, keywords }) => {
 
   if (keywords) {
     if (agentList.length === 0) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
-    return (
-      <SpotlightCard
-        items={agentList}
-        renderItem={GridRender}
-        spotlight={mobile ? undefined : false}
-      />
-    );
+    return <SpotlightCard items={agentList} renderItem={GridRender} spotlight={!mobile} />;
   }
 
   return (
     <>
       <h2 className={styles.title}>{t('title.recentSubmits')}</h2>
-      <SpotlightCard items={agentList.slice(0, 3)} renderItem={GridRender} />
+      <SpotlightCard items={agentList.slice(0, 3)} renderItem={GridRender} spotlight={!mobile} />
       <h2 className={styles.title}>{t('title.allAgents')}</h2>
-      <SpotlightCard items={agentList.slice(3)} renderItem={GridRender} />
+      <SpotlightCard items={agentList.slice(3)} renderItem={GridRender} spotlight={false} />
     </>
   );
 });
