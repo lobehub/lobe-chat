@@ -12,7 +12,7 @@ const Temperature = memo(() => {
 
   const [temperature, updateAgentConfig] = useAgentStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
-    return [config.params.temperature, s.updateAgentConfig];
+    return [config.params?.temperature, s.updateAgentConfig];
   });
 
   return (
