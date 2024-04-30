@@ -48,6 +48,7 @@ const MobileHeader = memo(() => {
         </>
       }
       showBackButton
+      style={{ width: '100%' }}
     />
   );
 });

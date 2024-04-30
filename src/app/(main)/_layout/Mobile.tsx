@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { LayoutProps } from './type';
 
-const MOBILE_IGNORE_NAV_ROUTES = ['/settings', '/me/', '/profile', '/chat/'];
+const MOBILE_IGNORE_NAV_ROUTES = ['/settings/', '/chat/'];
 
 const Layout = memo(({ children, nav }: LayoutProps) => {
   const pathname = usePathname();

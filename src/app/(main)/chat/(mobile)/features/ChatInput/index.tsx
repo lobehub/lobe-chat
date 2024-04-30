@@ -27,7 +27,7 @@ const ChatInputMobileLayout = memo(() => {
       setExpand={setExpand}
       style={{
         background: `linear-gradient(to bottom, ${theme.colorFillQuaternary}, transparent)`,
-        width: '100vw',
+        width: '100%',
       }}
       textAreaLeftAddons={<STT mobile />}
       textAreaRightAddons={

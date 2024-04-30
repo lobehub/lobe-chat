@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Conversation from '@/features/Conversation';
 
@@ -17,11 +16,9 @@ const Chat = memo(() => {
   return (
     <>
       <ChatHeader />
-      <Flexbox height={'calc(100% - 44px)'} horizontal>
-        <Conversation chatInput={<ChatInput />} mobile />
-        <TopicList />
-        <TelemetryNotification mobile />
-      </Flexbox>
+      <Conversation chatInput={<ChatInput />} mobile />
+      <TopicList />
+      <TelemetryNotification mobile />
       <SessionHydration />
     </>
   );
