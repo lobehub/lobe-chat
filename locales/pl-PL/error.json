@@ -1,4 +1,15 @@
 {
+  "error": {
+    "backHome": "Powrót do strony głównej",
+    "desc": "Spróbuj ponownie później lub wróć do znanego świata",
+    "retry": "Ponów próbę",
+    "title": "Napotkano problem na stronie.."
+  },
+  "notFound": {
+    "backHome": "Powrót do strony głównej",
+    "desc": "Nie możemy odnaleźć strony, której szukasz. Sprawdź, czy link jest poprawny.",
+    "title": "Wkraczasz w nieznane terytorium?"
+  },
   "pluginSettings": {
     "desc": "Wykonaj poniższą konfigurację, aby rozpocząć korzystanie z tego wtyczki",
     "title": "Konfiguracja wtyczki {{name}}"

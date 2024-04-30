@@ -1,4 +1,15 @@
 {
+  "error": {
+    "backHome": "Quay về Trang chủ",
+    "desc": "Hãy thử lại sau, hoặc quay về thế giới đã biết",
+    "retry": "Thử lại",
+    "title": "Trang gặp một chút vấn đề.."
+  },
+  "notFound": {
+    "backHome": "Quay về Trang chủ",
+    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm, vui lòng kiểm tra xem liên kết có đúng không",
+    "title": "Bước vào vùng đất chưa biết?"
+  },
   "pluginSettings": {
     "desc": "Hoàn thành cấu hình sau để bắt đầu sử dụng plugin này",
     "title": "Cấu hình Plugin {{name}}"
