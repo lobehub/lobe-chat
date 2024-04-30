@@ -33,4 +33,6 @@ const Page = ({ searchParams }: Props) => {
   );
 };
 
+Page.DisplayName = 'Market';
+
 export default Page;
