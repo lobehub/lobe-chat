@@ -1,17 +1,16 @@
+'use client';
+
 import { SideNav } from '@lobehub/ui';
 import { memo } from 'react';
 
-import { SidebarTabKey } from '@/store/global/initialState';
+import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 
 import Avatar from './Avatar';
 import BottomActions from './BottomActions';
 import TopActions from './TopActions';
 
-interface Props {
-  sidebarKey?: SidebarTabKey;
-}
-
-export default memo<Props>(({ sidebarKey }) => {
+const Nav = memo(() => {
+  const sidebarKey = useActiveTabKey();
   return (
     <SideNav
       avatar={<Avatar />}
@@ -21,3 +20,7 @@ export default memo<Props>(({ sidebarKey }) => {
     />
   );
 });
+
+Nav.displayName = 'DesktopNav';
+
+export default Nav;

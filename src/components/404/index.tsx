@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { MAX_WIDTH } from '@/const/layoutTokens';
 
-const Page404 = memo(() => {
+const NotFound = memo(() => {
   const { t } = useTranslation('error');
   return (
     <Flexbox align={'center'} justify={'center'} style={{ height: '100%', width: '100%' }}>
@@ -38,4 +38,6 @@ const Page404 = memo(() => {
   );
 });
 
-export default Page404;
+NotFound.displayName = 'NotFound';
+
+export default NotFound;
