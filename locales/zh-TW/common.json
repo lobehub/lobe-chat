@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat 初始化中，請耐心等候...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
+  "blog": "產品部落格",
   "cancel": "取消",
   "changelog": "變更日誌",
   "close": "關閉",
@@ -26,6 +27,7 @@
     "globalSetting": "匯出全域設定"
   },
   "feedback": "回饋與建議",
+  "follow": "在 {{name}} 上關注我們",
   "historyRange": "歷史範圍",
   "import": "匯入設定",
   "importModal": {
@@ -88,10 +90,12 @@
   "layoutInitializing": "正在載入版面配置...",
   "noDescription": "暫無描述",
   "oauth": "單一登錄（SSO）",
+  "officialSite": "官方網站",
   "ok": "確定",
   "password": "密碼",
   "pin": "置頂",
   "pinOff": "取消置頂",
+  "privacy": "隱私政策",
   "regenerate": "重新生成",
   "rename": "重新命名",
   "reset": "重置",
@@ -146,6 +150,7 @@
     "title": "幫助 LobeChat 做得更好"
   },
   "temp": "臨時",
+  "terms": "服務條款",
   "updateAgent": "更新助理資訊",
   "upgradeVersion": {
     "action": "升級",
