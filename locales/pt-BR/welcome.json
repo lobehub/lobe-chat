@@ -9,7 +9,7 @@
       "replaceBtn": "Trocar",
       "title": "Recomendação de assistentes adicionais:"
     },
-    "defaultMessage": "Eu sou o LobeChat, seu assistente de inteligência artificial pessoal. Como posso ajudar hoje?\nSe precisar de assistência mais profissional ou personalizada, clique em `+` para criar um assistente personalizado.",
+    "defaultMessage": "Eu sou o seu assistente de IA pessoal, LobeChat. Como posso ajudar você agora?\nSe precisar de assistência mais profissional ou personalizada, clique em `+` para criar um assistente personalizado",
     "qa": {
       "q01": "O que é o LobeHub?",
       "q02": "O que é o LobeChat?",

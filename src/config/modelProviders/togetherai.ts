@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://api.together.xyz/models
+// ref https://docs.together.ai/docs/inference-models
 const TogetherAI: ModelProviderCard = {
   chatModels: [
     {

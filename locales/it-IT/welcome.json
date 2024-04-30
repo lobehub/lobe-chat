@@ -9,7 +9,7 @@
       "replaceBtn": "Cambia gruppo",
       "title": "Nuova raccomandazione assistente:"
     },
-    "defaultMessage": "Sono LobeChat, il tuo assistente intelligente personale. Come posso aiutarti oggi?\nSe hai bisogno di un assistente più professionale o personalizzato, clicca su `+` per creare un assistente personalizzato.",
+    "defaultMessage": "Sono il tuo assistente intelligente personale LobeChat, in che modo posso aiutarti ora?\nSe hai bisogno di un'assistenza più professionale o personalizzata, clicca su `+` per creare un assistente personalizzato",
     "qa": {
       "q01": "Cos'è LobeHub?",
       "q02": "Cos'è LobeChat?",

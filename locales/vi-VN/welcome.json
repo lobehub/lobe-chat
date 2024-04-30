@@ -9,7 +9,7 @@
       "replaceBtn": "Thay đổi",
       "title": "Đề xuất trợ lý mới: "
     },
-    "defaultMessage": "Tôi là LobeChat, trợ lý thông minh cá nhân của bạn. Hôm nay tôi có thể giúp gì cho bạn?\nNếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn vào `+` để tạo trợ lý cá nhân của bạn",
+    "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn, LobeChat. Bạn cần giúp đỡ gì bây giờ?\nNếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn vào dấu `+` để tạo trợ lý cá nhân",
     "qa": {
       "q01": "LobeHub là gì?",
       "q02": "LobeChat là gì?",
