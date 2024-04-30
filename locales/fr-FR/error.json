@@ -1,4 +1,15 @@
 {
+  "error": {
+    "backHome": "Retour à la page d'accueil",
+    "desc": "Réessayez plus tard, ou retournez au monde connu",
+    "retry": "Recharger",
+    "title": "Un problème est survenu sur la page.."
+  },
+  "notFound": {
+    "backHome": "Retour à la page d'accueil",
+    "desc": "La page que vous recherchez est introuvable. Veuillez vérifier si le lien est correct.",
+    "title": "Êtes-vous entré dans un domaine inconnu ?"
+  },
   "pluginSettings": {
     "desc": "Completez la configuration suivante pour commencer à utiliser ce plugin",
     "title": "Configuration du plugin {{name}}"

@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://docs.mistral.ai/platform/pricing/#chat-completions-api
+// ref https://docs.mistral.ai/getting-started/models/
 const Mistral: ModelProviderCard = {
   chatModels: [
     {
