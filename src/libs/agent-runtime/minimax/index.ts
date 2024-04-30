@@ -133,11 +133,25 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
     }
   }
 
+  // the document gives the default value of max tokens, but abab6.5 and abab6.5s
+  // will meet length finished error, and output is truncationed
+  // so here fill the max tokens number to fix it
+  // https://www.minimaxi.com/document/guides/chat-model/V2
+  private getMaxTokens(model: string): number | undefined {
+    switch (model) {
+      case 'abab6.5-chat':
+      case 'abab6.5s-chat': {
+        return 2048;
+      }
+    }
+  }
+
   private buildCompletionsParams(payload: ChatStreamPayload) {
     const { temperature, top_p, ...params } = payload;
 
     return {
       ...params,
+      max_tokens: this.getMaxTokens(payload.model),
       stream: true,
       temperature: temperature === 0 ? undefined : temperature,
       top_p: top_p === 0 ? undefined : top_p,
@@ -157,7 +171,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
       done = doneReading;
       const chunkValue = decoder.decode(value, { stream: true });
       const data = parseMinimaxResponse(chunkValue);
-      const text = data?.choices?.at(0)?.delta.content || undefined;
+      const text = data?.choices?.at(0)?.delta?.content || undefined;
       streamController?.enqueue(encoder.encode(text));
     }
 
