@@ -8,7 +8,7 @@ import { parseMarkdown } from '@/utils/parseMarkdown';
 
 export const SHARE_GPT_URL = 'https://sharegpt.com/api/conversations';
 
-class ShareGPTService {
+class ShareService {
   public async createShareGPTUrl(conversation: ShareGPTConversation) {
     const items = [];
 
@@ -58,4 +58,4 @@ class ShareGPTService {
   }
 }
 
-export const shareGPTService = new ShareGPTService();
+export const shareService = new ShareService();

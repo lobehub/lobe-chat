@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 
 import { ImportResults, configService } from '@/services/config';
-import { shareGPTService } from '@/services/share';
+import { shareService } from '@/services/share';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
-import { importConfigFile } from '@/utils/config';
 import { useUserStore } from '@/store/user';
+import { importConfigFile } from '@/utils/config';
 
 export const useImportConfig = () => {
   const refreshSessions = useSessionStore((s) => s.refreshSessions);
   const [refreshMessages, refreshTopics] = useChatStore((s) => [s.refreshMessages, s.refreshTopic]);
-  const [setSettings] = useUserStore((s)=>[s.setSettings]);
+  const [setSettings] = useUserStore((s) => [s.setSettings]);
 
   const importConfig = async (file: File) =>
     new Promise<ImportResults | undefined>((resolve) => {
@@ -32,7 +32,7 @@ export const useImportConfig = () => {
    */
   const importSettings = (settingsParams: string | null) => {
     if (settingsParams) {
-      const importSettings = shareGPTService.decodeShareSettings(settingsParams);
+      const importSettings = shareService.decodeShareSettings(settingsParams);
       if (importSettings?.message || !importSettings?.data) {
         // handle some error
         return;

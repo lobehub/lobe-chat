@@ -6,7 +6,7 @@ import { GlobalSettings } from '@/types/settings';
 import { ShareGPTConversation } from '@/types/share';
 import { parseMarkdown } from '@/utils/parseMarkdown';
 
-import { SHARE_GPT_URL, shareGPTService } from '../share';
+import { SHARE_GPT_URL, shareService } from '../share';
 
 // Mock dependencies
 vi.mock('@/utils/parseMarkdown', () => ({
@@ -35,7 +35,7 @@ describe('ShareGPTService', () => {
     });
 
     // Act
-    const url = await shareGPTService.createShareGPTUrl(conversation);
+    const url = await shareService.createShareGPTUrl(conversation);
 
     // Assert
     expect(parseMarkdown).toHaveBeenCalledWith('Hi there!');
@@ -51,7 +51,7 @@ describe('ShareGPTService', () => {
     (fetch as Mock).mockRejectedValue(new Error('Network error'));
 
     // Act & Assert
-    await expect(shareGPTService.createShareGPTUrl(conversation)).rejects.toThrow('Network error');
+    await expect(shareService.createShareGPTUrl(conversation)).rejects.toThrow('Network error');
   });
 
   it('should not parse markdown for items not from gpt', async () => {
@@ -68,7 +68,7 @@ describe('ShareGPTService', () => {
     });
 
     // Act
-    await shareGPTService.createShareGPTUrl(conversation);
+    await shareService.createShareGPTUrl(conversation);
 
     // Assert
     expect(parseMarkdown).not.toHaveBeenCalled();
@@ -84,7 +84,7 @@ describe('ShareGPTService', () => {
     });
 
     // Act & Assert
-    await expect(shareGPTService.createShareGPTUrl(conversation)).rejects.toThrow();
+    await expect(shareService.createShareGPTUrl(conversation)).rejects.toThrow();
   });
 });
 
@@ -98,7 +98,7 @@ describe('ShareViaUrl', () => {
           },
         },
       };
-      const url = shareGPTService.createShareSettingsUrl(settings);
+      const url = shareService.createShareSettingsUrl(settings);
       expect(url).toBe(
         `/?${LOBE_URL_IMPORT_NAME}=%7B%22languageModel%22:%7B%22openai%22:%7B%22apiKey%22:%22user-key%22%7D%7D%7D`,
       );
@@ -108,7 +108,7 @@ describe('ShareViaUrl', () => {
   describe('decodeShareSettings', () => {
     it('should decode share settings from search params', () => {
       const settings = '{"languageModel":{"openai":{"apiKey":"user-key"}}}';
-      const decodedSettings = shareGPTService.decodeShareSettings(settings);
+      const decodedSettings = shareService.decodeShareSettings(settings);
       expect(decodedSettings).toEqual({
         data: {
           languageModel: {
@@ -122,7 +122,7 @@ describe('ShareViaUrl', () => {
 
     it('should return an error message if decoding fails', () => {
       const settings = '%7B%22theme%22%3A%22dark%22%2C%22fontSize%22%3A16%';
-      const decodedSettings = shareGPTService.decodeShareSettings(settings);
+      const decodedSettings = shareService.decodeShareSettings(settings);
       expect(decodedSettings).toEqual({
         message: expect.any(String),
       });
