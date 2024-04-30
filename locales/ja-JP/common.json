@@ -4,6 +4,7 @@
   "appInitializing": "LobeChatを初期化中です。しばらくお待ちください...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントに基づいてエージェントの説明を自動生成します",
+  "blog": "製品ブログ",
   "cancel": "キャンセル",
   "changelog": "変更履歴",
   "close": "閉じる",
@@ -26,6 +27,7 @@
     "globalSetting": "グローバル設定のエクスポート"
   },
   "feedback": "フィードバック",
+  "follow": " {{name}} で私たちをフォローする",
   "historyRange": "履歴範囲",
   "import": "インポート",
   "importModal": {
@@ -88,10 +90,12 @@
   "layoutInitializing": "レイアウトを初期化中...",
   "noDescription": "説明はありません",
   "oauth": "SSO ログイン",
+  "officialSite": "公式サイト",
   "ok": "OK",
   "password": "パスワード",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
+  "privacy": "プライバシーポリシー",
   "regenerate": "再生成",
   "rename": "名前を変更",
   "reset": "リセット",
@@ -146,6 +150,7 @@
     "title": "LobeChat の改善にご協力ください"
   },
   "temp": "一時的",
+  "terms": "利用規約",
   "updateAgent": "エージェント情報を更新",
   "upgradeVersion": {
     "action": "アップグレード",

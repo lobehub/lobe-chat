@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat이 초기화 중입니다. 잠시 기다려주세요...",
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
+  "blog": "제품 블로그",
   "cancel": "취소",
   "changelog": "변경 로그",
   "close": "닫기",
@@ -26,6 +27,7 @@
     "globalSetting": "전역 설정 내보내기"
   },
   "feedback": "피드백 및 제안",
+  "follow": "{{name}}에서 우리를 팔로우하세요",
   "historyRange": "기록 범위",
   "import": "가져오기",
   "importModal": {
@@ -88,10 +90,12 @@
   "layoutInitializing": "레이아웃을 불러오는 중...",
   "noDescription": "설명 없음",
   "oauth": "SSO 로그인",
+  "officialSite": "공식 사이트",
   "ok": "확인",
   "password": "비밀번호",
   "pin": "고정",
   "pinOff": "고정 해제",
+  "privacy": "개인정보 보호 정책",
   "regenerate": "재생성",
   "rename": "이름 바꾸기",
   "reset": "재설정",
@@ -146,6 +150,7 @@
     "title": "LobeChat을 더 나아지게 하는 데 도와주세요"
   },
   "temp": "임시",
+  "terms": "이용 약관",
   "updateAgent": "에이전트 정보 업데이트",
   "upgradeVersion": {
     "action": "업그레이드",
