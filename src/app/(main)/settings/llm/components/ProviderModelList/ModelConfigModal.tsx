@@ -1,5 +1,5 @@
 import { Modal } from '@lobehub/ui';
-import { Checkbox, Form, Input } from 'antd';
+import { Checkbox, Form, Input, Button } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,7 @@ interface ModelConfigModalProps {
 const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, provider }) => {
   const [formInstance] = Form.useForm();
   const { t } = useTranslation('setting');
+  const { t: tc } = useTranslation('common');
 
   const [open, id, editingProvider, dispatchCustomModelCards, toggleEditingCustomModelCard] =
     useUserStore((s) => [
@@ -38,18 +39,23 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
   return (
     <Modal
       destroyOnClose
+      footer={[
+        <Button key="cancel" onClick={closeModal}>
+          {tc('cancel')}
+        </Button>,
+        
+        <Button key="ok" type="primary" onClick={() => {
+          if (!editingProvider || !id) return;
+          const data = formInstance.getFieldsValue();
+
+          dispatchCustomModelCards(editingProvider as any, { id, type: 'update', value: data });
+
+          closeModal();
+        }}>
+          {tc('ok')}
+        </Button>
+      ]}
       maskClosable
-      onCancel={() => {
-        closeModal();
-      }}
-      onOk={() => {
-        if (!editingProvider || !id) return;
-        const data = formInstance.getFieldsValue();
-
-        dispatchCustomModelCards(editingProvider as any, { id, type: 'update', value: data });
-
-        closeModal();
-      }}
       open={open}
       title={t('llm.customModelCards.modelConfig.modalTitle')}
     >
