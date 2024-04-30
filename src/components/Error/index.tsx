@@ -11,12 +11,12 @@ import { MAX_WIDTH } from '@/const/layoutTokens';
 
 import { type ErrorType, sentryCaptureException } from './sentryCaptureException';
 
-interface PageErrorProps {
+interface ErrorCaptureProps {
   error: ErrorType;
   reset: () => void;
 }
 
-const ErrorPage = memo<PageErrorProps>(({ reset, error }) => {
+const ErrorCapture = memo<ErrorCaptureProps>(({ reset, error }) => {
   const { t } = useTranslation('error');
 
   useLayoutEffect(() => {
@@ -53,6 +53,6 @@ const ErrorPage = memo<PageErrorProps>(({ reset, error }) => {
   );
 });
 
-ErrorPage.displayName = 'ErrorPage';
+ErrorCapture.displayName = 'ErrorCapture';
 
-export default ErrorPage;
+export default ErrorCapture;

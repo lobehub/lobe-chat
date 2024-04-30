@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { MAX_WIDTH } from '@/const/layoutTokens';
 
-const NotFoundPage = memo(() => {
+const NotFound = memo(() => {
   const { t } = useTranslation('error');
   return (
     <Flexbox align={'center'} justify={'center'} style={{ height: '100%', width: '100%' }}>
@@ -38,6 +38,6 @@ const NotFoundPage = memo(() => {
   );
 });
 
-NotFoundPage.displayName = 'NotFoundPage';
+NotFound.displayName = 'NotFound';
 
-export default NotFoundPage;
+export default NotFound;

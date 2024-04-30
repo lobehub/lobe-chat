@@ -55,4 +55,6 @@ const MobileContentLayout = ({
   );
 };
 
+MobileContentLayout.displayName = 'MobileContentLayout';
+
 export default MobileContentLayout;
