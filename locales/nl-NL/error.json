@@ -1,4 +1,15 @@
 {
+  "error": {
+    "backHome": "Terug naar startpagina",
+    "desc": "Probeer het later opnieuw of keer terug naar de bekende wereld",
+    "retry": "Opnieuw proberen",
+    "title": "Er is een probleem opgetreden op de pagina.."
+  },
+  "notFound": {
+    "backHome": "Terug naar startpagina",
+    "desc": "We kunnen de pagina die je zoekt niet vinden, controleer of de link juist is",
+    "title": "Betreden onbekend terrein?"
+  },
   "pluginSettings": {
     "desc": "Voltooi de volgende instellingen om de plugin te gebruiken",
     "title": "{{name}} Plugin Instellingen"
