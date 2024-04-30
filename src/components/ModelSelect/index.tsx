@@ -88,7 +88,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.vision && (
           <Tooltip placement={placement} title={t('ModelSelect.featureTag.vision')}>
-            <div className={cx(styles.tag, styles.tagGreen)}>
+            <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
               <Icon icon={LucideEye} />
             </div>
           </Tooltip>
