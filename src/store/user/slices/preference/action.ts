@@ -42,7 +42,7 @@ export const createPreferenceSlice: StateCreator<
       {
         onSuccess: (preference) => {
           if (preference) {
-            set({ preference }, false, n('initPreference'));
+            set({ isPreferenceInit: true, preference }, false, n('initPreference'));
           }
         },
       },

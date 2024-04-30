@@ -16,6 +16,7 @@ export interface UserPreference {
 }
 
 export interface UserPreferenceState {
+  isPreferenceInit: boolean;
   /**
    * the user preference, which only store in local storage
    */
@@ -24,6 +25,7 @@ export interface UserPreferenceState {
 }
 
 export const initialPreferenceState: UserPreferenceState = {
+  isPreferenceInit: false,
   preference: {
     guide: {},
     telemetry: null,
