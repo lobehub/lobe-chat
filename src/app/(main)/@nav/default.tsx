@@ -1,16 +1,10 @@
-import { isMobileDevice } from '@/utils/responsive';
+import ServerLayout from '@/components/server/ServerLayout';
 
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';
 
-const Default = () => {
-  const mobile = isMobileDevice();
+const Nav = ServerLayout({ Desktop, Mobile });
 
-  const Nav = mobile ? Mobile : Desktop;
+Nav.displayName = 'Nav';
 
-  return <Nav />;
-};
-
-Default.displayName = 'Nav';
-
-export default Default;
+export default Nav;

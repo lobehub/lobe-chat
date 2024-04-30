@@ -16,7 +16,7 @@ interface PageErrorProps {
   reset: () => void;
 }
 
-const PageError = memo<PageErrorProps>(({ reset, error }) => {
+const ErrorPage = memo<PageErrorProps>(({ reset, error }) => {
   const { t } = useTranslation('error');
 
   useLayoutEffect(() => {
@@ -53,4 +53,6 @@ const PageError = memo<PageErrorProps>(({ reset, error }) => {
   );
 });
 
-export default PageError;
+ErrorPage.displayName = 'ErrorPage';
+
+export default ErrorPage;

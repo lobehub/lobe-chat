@@ -99,6 +99,21 @@ describe('SessionGroupModel', () => {
       const updatedSession = await SessionModel.findById(sessionId.id);
       expect(updatedSession.group).toEqual('default');
     });
+    it('should delete all sessions associated with the session group', async () => {
+      const createdGroup = await SessionGroupModel.create(
+        sessionGroupData.name,
+        sessionGroupData.sort,
+      );
+      await SessionModel.create('agent', {
+        group: createdGroup.id,
+      });
+      await SessionModel.create('agent', {
+        group: createdGroup.id,
+      });
+      await SessionGroupModel.delete(createdGroup.id, true);
+      const remainingSessions = await SessionModel.query();
+      expect(remainingSessions).toHaveLength(0);
+    });
   });
 
   describe('query', () => {
