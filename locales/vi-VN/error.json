@@ -7,7 +7,7 @@
   },
   "notFound": {
     "backHome": "Quay về Trang chủ",
-    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm kiếm!",
+    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm, vui lòng kiểm tra xem liên kết có đúng không",
     "title": "Bước vào vùng đất chưa biết?"
   },
   "pluginSettings": {

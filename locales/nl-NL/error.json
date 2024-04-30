@@ -7,7 +7,7 @@
   },
   "notFound": {
     "backHome": "Terug naar startpagina",
-    "desc": "We kunnen de pagina die je zoekt niet vinden!",
+    "desc": "We kunnen de pagina die je zoekt niet vinden, controleer of de link juist is",
     "title": "Betreden onbekend terrein?"
   },
   "pluginSettings": {

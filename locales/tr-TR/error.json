@@ -7,7 +7,7 @@
   },
   "notFound": {
     "backHome": "Ana Sayfaya Dön",
-    "desc": "Aranan sayfayı bulamıyoruz!",
+    "desc": "Aradığınız sayfayı bulamadık, lütfen bağlantının doğru olduğundan emin olun",
     "title": "Bilinmeyen bir alana mı girdiniz?"
   },
   "pluginSettings": {

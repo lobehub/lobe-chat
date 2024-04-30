@@ -7,7 +7,7 @@
   },
   "notFound": {
     "backHome": "Back to Home",
-    "desc": "We couldn't find the page you're looking for!",
+    "desc": "We couldn't find the page you're looking for, please check if the link is correct",
     "title": "Entered Unknown Territory?"
   },
   "pluginSettings": {

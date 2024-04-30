@@ -7,7 +7,7 @@
   },
   "notFound": {
     "backHome": "Retour à la page d'accueil",
-    "desc": "Nous ne trouvons pas la page que vous recherchez !",
+    "desc": "La page que vous recherchez est introuvable. Veuillez vérifier si le lien est correct.",
     "title": "Êtes-vous entré dans un domaine inconnu ?"
   },
   "pluginSettings": {

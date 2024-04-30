@@ -7,7 +7,7 @@
   },
   "notFound": {
     "backHome": "Powrót do strony głównej",
-    "desc": "Nie możemy odnaleźć strony, której szukasz!",
+    "desc": "Nie możemy odnaleźć strony, której szukasz. Sprawdź, czy link jest poprawny.",
     "title": "Wkraczasz w nieznane terytorium?"
   },
   "pluginSettings": {

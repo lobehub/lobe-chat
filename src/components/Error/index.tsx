@@ -1,29 +1,26 @@
 'use client';
 
 import { FluentEmoji } from '@lobehub/ui';
-import * as Sentry from '@sentry/nextjs';
 import { Button } from 'antd';
 import Link from 'next/link';
-import { memo, useEffect } from 'react';
+import { memo, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { getClientConfig } from '@/config/client';
 import { MAX_WIDTH } from '@/const/layoutTokens';
 
-const { ENABLE_SENTRY } = getClientConfig();
+import { type ErrorType, sentryCaptureException } from './sentryCaptureException';
 
 interface PageErrorProps {
-  error: Error & { digest?: string };
+  error: ErrorType;
   reset: () => void;
 }
 
 const PageError = memo<PageErrorProps>(({ reset, error }) => {
   const { t } = useTranslation('error');
 
-  useEffect(() => {
-    if (!ENABLE_SENTRY) return;
-    Sentry.captureException(error);
+  useLayoutEffect(() => {
+    sentryCaptureException(error);
   }, [error]);
 
   return (

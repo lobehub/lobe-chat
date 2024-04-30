@@ -7,7 +7,7 @@
   },
   "notFound": {
     "backHome": "Torna alla homepage",
-    "desc": "Non riusciamo a trovare la pagina che stai cercando!",
+    "desc": "Non riusciamo a trovare la pagina che stai cercando, controlla che il link sia corretto",
     "title": "Hai raggiunto un territorio sconosciuto?"
   },
   "pluginSettings": {

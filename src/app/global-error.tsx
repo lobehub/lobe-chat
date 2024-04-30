@@ -1,22 +1,13 @@
 'use client';
 
-import * as Sentry from '@sentry/nextjs';
 import Error from 'next/error';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
-import { getClientConfig } from '@/config/client';
+import { type ErrorType, sentryCaptureException } from '@/components/Error/sentryCaptureException';
 
-const { ENABLE_SENTRY } = getClientConfig();
-
-export default function GlobalError({
-  error,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  useEffect(() => {
-    if (!ENABLE_SENTRY) return;
-    Sentry.captureException(error);
+export default function GlobalError({ error }: { error: ErrorType; reset: () => void }) {
+  useLayoutEffect(() => {
+    sentryCaptureException(error);
   }, [error]);
 
   return (
