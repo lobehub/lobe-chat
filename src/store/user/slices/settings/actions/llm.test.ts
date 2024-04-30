@@ -2,17 +2,11 @@ import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { userService } from '@/services/user';
-import { UserStore, useUserStore } from '@/store/user';
-import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
-import {
-  modelConfigSelectors,
-  modelProviderSelectors,
-  settingsSelectors,
-} from '@/store/user/slices/settings/selectors';
+import { useUserStore } from '@/store/user';
 import { GeneralModelProviderConfig } from '@/types/settings';
-import { merge } from '@/utils/merge';
 
-import { CustomModelCardDispatch, customModelCardsReducer } from '../reducers/customModelCard';
+import { CustomModelCardDispatch } from '../reducers/customModelCard';
+import { modelProviderSelectors, settingsSelectors } from '../selectors';
 
 // Mock userService
 vi.mock('@/services/user', () => ({
