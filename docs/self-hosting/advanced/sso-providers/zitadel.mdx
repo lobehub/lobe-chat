@@ -55,8 +55,9 @@ http(s)://your-domain/api/auth/callback/zitadel
 
 <Callout type={'important'}>
   - You can fill in or modify redirect URIs after creating the application, but make sure the filled
-  URL is consistent with the deployed URL. - Replace `http(s)://your-domain` with the actual URL
-  that LobeChat is deployed to.
+  URL is consistent with the deployed URL.
+
+  - Replace `http(s)://your-domain` with the actual URL that LobeChat is deployed to.
 </Callout>
 
 Confirm the configuration and click **Create**.
@@ -75,10 +76,19 @@ Save the **ClientId** and **ClientSecret** for later use.
   src="https://github.com/lobehub/lobe-chat/assets/8692892/407b4eed-7f21-4aa6-b68f-9bae2faf09d0"
 />
 
-In the application settings page, navigate to the **URLs** tab, and save the **issuer** URL.
+In the application settings page, navigate to the **Token Settings** tab, enable **User Info inside
+ID Token** option, and click **Save**.
 
 <Image
   alt="Create ZITADEL Application S7"
+  inStep
+  src="https://github.com/lobehub/lobe-chat/assets/8692892/d84235b1-45f6-447d-bdd9-58ab9527dc9b"
+/>
+
+Navigate to the **URLs** tab, and save the **issuer** URL.
+
+<Image
+  alt="Create ZITADEL Application S8"
   inStep
   src="https://github.com/lobehub/lobe-chat/assets/8692892/d12a2661-7b98-484f-8f3d-07e84d42ae08"
 />

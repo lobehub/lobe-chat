@@ -31,6 +31,7 @@ import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
+  isWelcomeQuestion?: boolean;
   signal?: AbortSignal | undefined;
   trace?: TracePayload;
 }
@@ -65,6 +66,7 @@ interface FetchAITaskResultParams {
 
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
+  isWelcomeQuestion?: boolean;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
 }
@@ -220,10 +222,12 @@ class ChatService {
     onErrorHandle,
     onFinish,
     trace,
+    isWelcomeQuestion,
   }: CreateAssistantMessageStream) => {
     await fetchSSE(
       () =>
         this.createAssistantMessage(params, {
+          isWelcomeQuestion,
           signal: abortController?.signal,
           trace: this.mapTrace(trace, TraceTagMap.Chat),
         }),
@@ -432,9 +436,11 @@ class ChatService {
     });
 
     return produce(postMessages, (draft) => {
-      // Inject InboxGuide SystemRole
+      // if it's a welcome question, inject InboxGuide SystemRole
       const inboxGuideSystemRole =
-        options?.trace?.sessionId === INBOX_SESSION_ID && INBOX_GUIDE_SYSTEMROLE;
+        options?.isWelcomeQuestion &&
+        options?.trace?.sessionId === INBOX_SESSION_ID &&
+        INBOX_GUIDE_SYSTEMROLE;
 
       // Inject Tool SystemRole
       const hasTools = tools && tools?.length > 0;

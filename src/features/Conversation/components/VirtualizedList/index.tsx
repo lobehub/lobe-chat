@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
@@ -7,9 +7,11 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { isMobileScreen } from '@/utils/screen';
 
+import { useInitConversation } from '../../hooks/useInitConversation';
 import AutoScroll from '../AutoScroll';
 import Item from '../ChatItem';
 import InboxWelcome from '../InboxWelcome';
+import SkeletonList from '../SkeletonList';
 
 const WELCOME_ID = 'welcome';
 
@@ -29,8 +31,11 @@ interface VirtualizedListProps {
   mobile?: boolean;
 }
 const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
+  useInitConversation();
+
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const [id, chatLoading] = useChatStore((s) => [
     chatSelectors.currentChatKey(s),
@@ -49,24 +54,37 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     }
   }, [id]);
 
+  const prevDataLengthRef = useRef(data.length);
+
+  const getFollowOutput = useCallback(() => {
+    const newFollowOutput = data.length > prevDataLengthRef.current ? 'auto' : false;
+    prevDataLengthRef.current = data.length;
+    return newFollowOutput;
+  }, [data.length]);
+
   // overscan should be 1.5 times the height of the window
   const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
 
-  return chatLoading && data.length === 2 ? null : (
+  return chatLoading ? (
+    <SkeletonList mobile={mobile} />
+  ) : (
     <Flexbox height={'100%'}>
       <Virtuoso
         atBottomStateChange={setAtBottom}
-        atBottomThreshold={60 * (mobile ? 2 : 1)}
+        atBottomThreshold={50 * (mobile ? 2 : 1)}
         computeItemKey={(_, item) => item}
         data={data}
-        followOutput={'auto'}
+        followOutput={getFollowOutput}
+        // increaseViewportBy={overscan}
         initialTopMostItemIndex={data?.length - 1}
+        isScrolling={setIsScrolling}
         itemContent={itemContent}
         overscan={overscan}
         ref={virtuosoRef}
       />
       <AutoScroll
         atBottom={atBottom}
+        isScrolling={isScrolling}
         onScrollToBottom={(type) => {
           const virtuoso = virtuosoRef.current;
           switch (type) {
