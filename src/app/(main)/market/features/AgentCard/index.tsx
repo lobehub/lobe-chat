@@ -1,62 +1,81 @@
-import { SpotlightCardProps } from '@lobehub/ui';
-import isEqual from 'fast-deep-equal';
-import { FC, memo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Avatar, Tag } from '@lobehub/ui';
+import { Typography } from 'antd';
+import { createStyles } from 'antd-style';
+import { startCase } from 'lodash-es';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import LazyLoad from 'react-lazy-load';
 
-import { agentMarketSelectors, useMarketStore } from '@/store/market';
+import { useMarketStore } from '@/store/market';
+import { AgentsMarketIndexItem } from '@/types/market';
 
-import Loading from '../../components/Loading';
-import TagList from '../TagList';
-import AgentCardItem from './AgentCardItem';
-import { useStyles } from './style';
+import AgentCardBanner from './AgentCardBanner';
 
-export interface AgentCardProps {
-  CardRender: FC<SpotlightCardProps>;
-  mobile?: boolean;
-}
+const { Paragraph } = Typography;
 
-const AgentCard = memo<AgentCardProps>(({ CardRender, mobile }) => {
-  const { t } = useTranslation('market');
-  const [useFetchAgentList, keywords] = useMarketStore((s) => [
-    s.useFetchAgentList,
-    s.searchKeywords,
-  ]);
-  const { isLoading } = useFetchAgentList();
-  const agentList = useMarketStore(agentMarketSelectors.getAgentList, isEqual);
-  const { styles } = useStyles();
+const useStyles = createStyles(({ css, token, responsive, isDarkMode }) => ({
+  banner: css`
+    opacity: ${isDarkMode ? 0.9 : 0.4};
+  `,
+  container: css`
+    position: relative;
+    overflow: hidden;
+    border-radius: 11px;
+    ${responsive.mobile} {
+      border-radius: unset;
+    }
+  `,
+  desc: css`
+    color: ${token.colorTextDescription};
+  `,
+  inner: css`
+    padding: 16px;
+  `,
+  title: css`
+    margin-bottom: 0 !important;
+    font-size: 16px;
+    font-weight: 600;
+  `,
+}));
 
-  const GridRender: SpotlightCardProps['renderItem'] = useCallback(
-    (props: any) => (
-      <LazyLoad className={styles.lazy}>
-        <AgentCardItem {...props} />
-      </LazyLoad>
-    ),
-    [styles.lazy],
-  );
+const AgentCard = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
+  const { avatar, title, description, tags, backgroundColor } = meta;
 
-  if (isLoading) return <Loading />;
+  const onAgentCardClick = useMarketStore((s) => s.activateAgent);
+  const { styles, theme } = useStyles();
 
   return (
-    <Flexbox gap={mobile ? 16 : 24}>
-      <TagList />
-      {keywords ? (
-        <CardRender
-          items={agentList}
-          renderItem={GridRender}
-          spotlight={mobile ? undefined : false}
+    <Flexbox
+      className={styles.container}
+      key={identifier}
+      onClick={() => onAgentCardClick(identifier)}
+    >
+      <AgentCardBanner className={styles.banner} meta={meta} />
+      <Flexbox className={styles.inner} gap={8}>
+        <Avatar
+          alt={title}
+          avatar={avatar}
+          background={backgroundColor || theme.colorFillTertiary}
+          size={56}
+          title={title}
         />
-      ) : (
-        <>
-          <div className={styles.subTitle}>{t('title.recentSubmits')}</div>
-          <CardRender items={agentList.slice(0, 3)} renderItem={GridRender} />
-          <div className={styles.subTitle}>{t('title.allAgents')}</div>
-          <CardRender items={agentList.slice(3)} renderItem={GridRender} />
-        </>
-      )}
+        <Paragraph className={styles.title} ellipsis={{ rows: 1, tooltip: title }}>
+          {title}
+        </Paragraph>
+        <Paragraph className={styles.desc} ellipsis={{ rows: 2, tooltip: description }}>
+          {description}
+        </Paragraph>
+        <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
+          {(tags as string[]).filter(Boolean).map((tag: string, index) => (
+            <Tag key={index} style={{ margin: 0 }}>
+              {startCase(tag).trim()}
+            </Tag>
+          ))}
+        </Flexbox>
+      </Flexbox>
     </Flexbox>
   );
 });
+
+AgentCard.displayName = 'AgentCard';
 
 export default AgentCard;

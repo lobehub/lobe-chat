@@ -1,11 +1,12 @@
 import { Avatar, Tag } from '@lobehub/ui';
 import { App, Button, Typography } from 'antd';
-import { startCase } from 'lodash-es';
+import { isEqual, startCase } from 'lodash-es';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
+import { useSearch } from '@/app/(main)/market/hooks/useSearch';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
@@ -16,11 +17,13 @@ import { useStyles } from './style';
 const { Link } = Typography;
 
 const Header = memo(() => {
+  const search = useSearch();
   const router = useRouter();
   const { t } = useTranslation('market');
   const { styles, theme } = useStyles();
   const createSession = useSessionStore((s) => s.createSession);
-  const agentItem = useMarketStore(agentMarketSelectors.currentAgentItem);
+  const agentItem = useMarketStore(agentMarketSelectors.currentAgentItem, isEqual);
+
   const { message } = App.useApp();
 
   const { meta, createAt, author, homepage, config } = agentItem;
@@ -38,7 +41,6 @@ const Header = memo(() => {
 
   const handleAddAgent = () => {
     if (!agentItem) return;
-
     createSession({ config, meta }, false);
     message.success(t('addAgentSuccess'));
   };
@@ -55,11 +57,7 @@ const Header = memo(() => {
       <div className={styles.title}>{title}</div>
       <Center gap={6} horizontal style={{ flexWrap: 'wrap' }}>
         {(tags as string[]).map((tag: string, index) => (
-          <Tag
-            key={index}
-            onClick={() => useMarketStore.setState({ searchKeywords: tag })}
-            style={{ margin: 0 }}
-          >
+          <Tag key={index} onClick={() => search(tag)} style={{ margin: 0 }}>
             {startCase(tag).trim()}
           </Tag>
         ))}
