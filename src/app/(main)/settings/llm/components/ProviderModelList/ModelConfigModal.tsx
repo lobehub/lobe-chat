@@ -1,7 +1,7 @@
 import { Modal } from '@lobehub/ui';
 import { Checkbox, Form, Input } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
@@ -30,10 +30,6 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
     modelConfigSelectors.getCustomModelCard({ id, provider: editingProvider }),
     isEqual,
   );
-
-  useEffect(() => {
-    formInstance.setFieldsValue(modelCard);
-  }, [modelCard, formInstance]);
 
   const closeModal = () => {
     toggleEditingCustomModelCard(undefined);
@@ -70,6 +66,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
           form={formInstance}
           initialValues={modelCard}
           labelCol={{ span: 4 }}
+          preserve={false}
           style={{ marginTop: 16 }}
           wrapperCol={{ offset: 1, span: 18 }}
         >
