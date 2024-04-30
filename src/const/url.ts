@@ -43,6 +43,7 @@ export const SESSION_CHAT_URL = (id: string = INBOX_SESSION_ID, mobile?: boolean
 
 export const imageUrl = (filename: string) => withBasePath(`/images/${filename}`);
 
+export const LOBE_URL_IMPORT_NAME = 'settings';
 export const EMAIL_SUPPORT = 'support@lobehub.com';
 export const EMAIL_BUSINESS = 'hello@lobehub.com';
 
