@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
@@ -8,12 +7,22 @@ import { LayoutProps } from '../type';
 import Header from './Header';
 import Hero from './Hero';
 
-const Layout = memo<LayoutProps>(({ children, detail }) => {
+const Layout = ({ children, detail }: LayoutProps) => {
   return (
-    <Flexbox flex={1} height={'100%'} id={'lobe-market-container'} style={{ position: 'relative' }}>
+    <Flexbox
+      height={'100%'}
+      id={'lobe-market-container'}
+      style={{ position: 'relative' }}
+      width={'100%'}
+    >
       <Header />
-      <Flexbox flex={1} height={'calc(100% - 64px)'} horizontal>
-        <Flexbox align={'center'} flex={1} style={{ overflowY: 'scroll', padding: 16 }}>
+      <Flexbox height={'100%'} horizontal style={{ position: 'relative' }} width={'100%'}>
+        <Flexbox
+          align={'center'}
+          flex={1}
+          paddingInline={16}
+          style={{ overflowX: 'hidden', overflowY: 'scroll', position: 'relative' }}
+        >
           <SafeSpacing />
           <Flexbox gap={16} style={{ maxWidth: MAX_WIDTH, position: 'relative', width: '100%' }}>
             <Hero />
@@ -24,7 +33,7 @@ const Layout = memo<LayoutProps>(({ children, detail }) => {
       </Flexbox>
     </Flexbox>
   );
-});
+};
 
 Layout.displayName = 'DesktopMarketLayout';
 

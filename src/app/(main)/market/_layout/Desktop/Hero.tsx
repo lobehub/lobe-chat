@@ -19,7 +19,7 @@ const useStyles = createStyles(({ css, responsive }) => ({
 
     margin-top: 24px;
 
-    font-size: min(56px, 6vw);
+    font-size: min(56px, 5vw);
     font-weight: 800;
     line-height: 1.2;
     text-align: center;
