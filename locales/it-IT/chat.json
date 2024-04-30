@@ -21,7 +21,6 @@
   "emptyAgent": "Nessun assistente disponibile",
   "historyRange": "Intervallo cronologico",
   "inbox": {
-    "defaultMessage": "Ciao, sono il tuo assistente virtuale, puoi chiedermi qualsiasi cosa e farò del mio meglio per risponderti. Se hai bisogno di un assistente più professionale o personalizzato, clicca su `+` per creare un assistente personalizzato.",
     "desc": "Attiva il cluster cerebrale, accendi la scintilla del pensiero. Il tuo assistente intelligente, qui per comunicare con te su tutto.",
     "title": "Chiacchierata casuale"
   },

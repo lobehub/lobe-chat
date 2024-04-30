@@ -385,11 +385,7 @@ describe('chatMessage actions', () => {
       });
 
       expect(messageService.removeMessage).not.toHaveBeenCalledWith(messageId);
-      expect(mockState.coreProcessMessage).toHaveBeenCalledWith(
-        expect.any(Array),
-        messageId,
-        undefined,
-      );
+      expect(mockState.coreProcessMessage).toHaveBeenCalledWith(expect.any(Array), messageId, {});
     });
 
     it('should not perform any action if the message id does not exist', async () => {

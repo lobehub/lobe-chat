@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useTokenCount } from '@/hooks/useTokenCount';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 
 import { useStore } from '../store';
 
@@ -14,8 +14,8 @@ const Tokens = memo(() => {
   const [systemRole, model] = useStore((s) => [s.config.systemRole, s.config.model]);
   const systemTokenCount = useTokenCount(systemRole);
 
-  const showTag = useGlobalStore(modelProviderSelectors.isModelHasMaxToken(model));
-  const modelMaxTokens = useGlobalStore(modelProviderSelectors.modelMaxToken(model));
+  const showTag = useUserStore(modelProviderSelectors.isModelHasMaxToken(model));
+  const modelMaxTokens = useUserStore(modelProviderSelectors.modelMaxToken(model));
 
   return (
     <Flexbox align={'center'} gap={8} horizontal>

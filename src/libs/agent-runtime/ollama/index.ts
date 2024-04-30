@@ -4,6 +4,7 @@ import { ClientOptions } from 'openai';
 
 import { OpenAIChatMessage } from '@/libs/agent-runtime';
 import { OllamaStream } from '@/libs/agent-runtime/ollama/stream';
+import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -64,12 +65,12 @@ export class LobeOllamaAI implements LobeRuntimeAI {
     }
   }
 
-  // async models(): Promise<ChatModelCard[]> {
-  //   const list = await this.client.list();
-  //   return list.models.map((model) => ({
-  //     id: model.name,
-  //   }));
-  // }
+  async models(): Promise<ChatModelCard[]> {
+    const list = await this.client.list();
+    return list.models.map((model) => ({
+      id: model.name,
+    }));
+  }
 
   private buildOllamaMessages(messages: OpenAIChatMessage[]) {
     return messages.map((message) => this.convertContentToOllamaMessage(message));
