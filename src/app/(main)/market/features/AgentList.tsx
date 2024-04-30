@@ -3,7 +3,7 @@
 import { SpotlightCard, SpotlightCardProps } from '@lobehub/ui';
 import { Empty, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import { isEqual } from 'lodash-es';
+import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import LazyLoad from 'react-lazy-load';

@@ -1,6 +1,7 @@
 import { Avatar, Tag } from '@lobehub/ui';
 import { App, Button, Typography } from 'antd';
-import { isEqual, startCase } from 'lodash-es';
+import isEqual from 'fast-deep-equal';
+import { startCase } from 'lodash-es';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
