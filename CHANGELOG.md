@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.151.9](https://github.com/lobehub/lobe-chat/compare/v0.151.8...v0.151.9)
+
+<sup>Released on **2024-04-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Minimax truncationed output.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Minimax truncationed output, closes [#2308](https://github.com/lobehub/lobe-chat/issues/2308) ([488f319](https://github.com/lobehub/lobe-chat/commit/488f319))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.151.8](https://github.com/lobehub/lobe-chat/compare/v0.151.7...v0.151.8)
 
 <sup>Released on **2024-04-30**</sup>
