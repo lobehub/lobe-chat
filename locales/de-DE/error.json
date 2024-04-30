@@ -1,4 +1,15 @@
 {
+  "error": {
+    "backHome": "Zurück zur Startseite",
+    "desc": "Versuchen Sie es später erneut oder kehren Sie in die bekannte Welt zurück",
+    "retry": "Erneut laden",
+    "title": "Ein Problem ist aufgetreten auf der Seite.."
+  },
+  "notFound": {
+    "backHome": "Zurück zur Startseite",
+    "desc": "Die von Ihnen gesuchte Seite konnte nicht gefunden werden. Bitte überprüfen Sie, ob der Link korrekt ist.",
+    "title": "In unbekanntes Gebiet geraten?"
+  },
   "pluginSettings": {
     "desc": "Führen Sie die folgende Konfiguration durch, um das Plugin zu verwenden",
     "title": "{{name}} Plugin-Konfiguration"

@@ -1,4 +1,15 @@
 {
+  "error": {
+    "backHome": "Torna alla homepage",
+    "desc": "Prova di nuovo più tardi, o torna al mondo conosciuto",
+    "retry": "Ricarica",
+    "title": "La pagina ha riscontrato un problema.."
+  },
+  "notFound": {
+    "backHome": "Torna alla homepage",
+    "desc": "Non riusciamo a trovare la pagina che stai cercando, controlla che il link sia corretto",
+    "title": "Hai raggiunto un territorio sconosciuto?"
+  },
   "pluginSettings": {
     "desc": "Completa la seguente configurazione per iniziare a utilizzare il plugin",
     "title": "Configurazione del plugin {{name}}"

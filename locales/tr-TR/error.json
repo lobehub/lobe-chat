@@ -1,4 +1,15 @@
 {
+  "error": {
+    "backHome": "Ana Sayfaya Dön",
+    "desc": "Biraz sonra tekrar deneyin veya bilinen dünyaya geri dönün",
+    "retry": "Yeniden Yükle",
+    "title": "Sayfa bir sorunla karşılaştı.."
+  },
+  "notFound": {
+    "backHome": "Ana Sayfaya Dön",
+    "desc": "Aradığınız sayfayı bulamadık, lütfen bağlantının doğru olduğundan emin olun",
+    "title": "Bilinmeyen bir alana mı girdiniz?"
+  },
   "pluginSettings": {
     "desc": "Bu eklentiyi kullanmaya başlamak için aşağıdaki yapılandırmayı tamamlayın",
     "title": "{{name}} Eklenti Ayarları"
