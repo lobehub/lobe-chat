@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat is initializing, please wait...",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "blog": "Product Blog",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "close": "Close",
@@ -26,6 +27,7 @@
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
+  "follow": "Follow us on {{name}}",
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {
@@ -88,10 +90,12 @@
   "layoutInitializing": "Initializing layout...",
   "noDescription": "No description available",
   "oauth": "SSO Login",
+  "officialSite": "Official Website",
   "ok": "OK",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "privacy": "Privacy Policy",
   "regenerate": "Regenerate",
   "rename": "Rename",
   "reset": "Reset",
@@ -146,6 +150,7 @@
     "title": "Help LobeChat be better"
   },
   "temp": "Temporary",
+  "terms": "Terms of Service",
   "updateAgent": "Update Agent Information",
   "upgradeVersion": {
     "action": "Upgrade",

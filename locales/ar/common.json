@@ -4,6 +4,7 @@
   "appInitializing": "جاري تهيئة LobeChat، يرجى الانتظار ...",
   "autoGenerate": "توليد تلقائي",
   "autoGenerateTooltip": "إكمال تلقائي بناءً على الكلمات المقترحة لوصف المساعد",
+  "blog": "مدونة المنتجات",
   "cancel": "إلغاء",
   "changelog": "سجل التغييرات",
   "close": "إغلاق",
@@ -26,6 +27,7 @@
     "globalSetting": "تصدير الإعدادات العامة"
   },
   "feedback": "تقديم ملاحظات",
+  "follow": "تابعنا على {{name}}",
   "historyRange": "نطاق التاريخ",
   "import": "استيراد الإعدادات",
   "importModal": {
@@ -88,10 +90,12 @@
   "layoutInitializing": "جاري تحميل التخطيط...",
   "noDescription": "لا توجد وصف",
   "oauth": "تسجيل الدخول SSO",
+  "officialSite": "الموقع الرسمي",
   "ok": "موافق",
   "password": "كلمة المرور",
   "pin": "تثبيت في الأعلى",
   "pinOff": "إلغاء التثبيت",
+  "privacy": "سياسة الخصوصية",
   "regenerate": "إعادة توليد",
   "rename": "إعادة تسمية",
   "reset": "إعادة تعيين",
@@ -146,6 +150,7 @@
     "title": "مساعدة LobeChat في التحسن"
   },
   "temp": "مؤقت",
+  "terms": "شروط الخدمة",
   "updateAgent": "تحديث معلومات الوكيل",
   "upgradeVersion": {
     "action": "ترقية",

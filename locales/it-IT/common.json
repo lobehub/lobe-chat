@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat inizializzazione in corso, attendere prego...",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
+  "blog": "Blog sui prodotti",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
   "close": "Chiudi",
@@ -26,6 +27,7 @@
     "globalSetting": "Esporta impostazioni globali"
   },
   "feedback": "Feedback e suggerimenti",
+  "follow": "Seguici su {{name}}",
   "historyRange": "Intervallo cronologico",
   "import": "Importa configurazione",
   "importModal": {
@@ -88,10 +90,12 @@
   "layoutInitializing": "Inizializzazione layout in corso...",
   "noDescription": "Nessuna descrizione disponibile",
   "oauth": "Accesso SSO",
+  "officialSite": "Sito ufficiale",
   "ok": "OK",
   "password": "Password",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio",
+  "privacy": "Informativa sulla privacy",
   "regenerate": "Rigenera",
   "rename": "Rinomina",
   "reset": "Ripristina",
@@ -146,6 +150,7 @@
     "title": "Aiuta LobeChat a migliorare"
   },
   "temp": "Temporaneo",
+  "terms": "Termini di servizio",
   "updateAgent": "Aggiorna informazioni agente",
   "upgradeVersion": {
     "action": "Aggiorna",

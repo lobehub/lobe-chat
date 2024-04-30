@@ -243,6 +243,32 @@ describe('SessionService', () => {
     });
   });
 
+  describe('hasSessions', () => {
+    it('should return false if no sessions exist', async () => {
+      // Setup
+      (SessionModel.count as Mock).mockResolvedValue(0);
+
+      // Execute
+      const result = await sessionService.hasSessions();
+
+      // Assert
+      expect(SessionModel.count).toHaveBeenCalled();
+      expect(result).toBe(false);
+    });
+
+    it('should return true if sessions exist', async () => {
+      // Setup
+      (SessionModel.count as Mock).mockResolvedValue(1);
+
+      // Execute
+      const result = await sessionService.hasSessions();
+
+      // Assert
+      expect(SessionModel.count).toHaveBeenCalled();
+      expect(result).toBe(true);
+    });
+  });
+
   describe('searchSessions', () => {
     it('should return sessions that match the keyword', async () => {
       // Setup
