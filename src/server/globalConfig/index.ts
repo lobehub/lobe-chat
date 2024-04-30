@@ -25,6 +25,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_GROQ,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
+    ENABLED_MINIMAX,
     ENABLED_MISTRAL,
 
     ENABLED_AZURE_OPENAI,
@@ -64,6 +65,7 @@ export const getServerGlobalConfig = () => {
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       google: { enabled: ENABLED_GOOGLE },
       groq: { enabled: ENABLED_GROQ },
+      minimax: { enabled: ENABLED_MINIMAX },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
       ollama: {
