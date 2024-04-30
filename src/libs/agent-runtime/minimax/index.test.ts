@@ -252,6 +252,24 @@ describe('LobeMinimaxAI', () => {
           stream: true,
         });
       });
+
+      it('should include max tokens when model is abab6.5-chat', () => {
+        const payload: ChatStreamPayload = {
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'abab6.5-chat',
+          temperature: 0,
+          top_p: 0,
+        };
+
+        const result = instance['buildCompletionsParams'](payload);
+
+        expect(result).toEqual({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'abab6.5-chat',
+          stream: true,
+          max_tokens: 2048,
+        });
+      });
     });
   });
 });
