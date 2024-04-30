@@ -67,11 +67,11 @@ const allowTextDrag = platform && /Linux|Windows/.test(platform) && getEngine() 
 const disallowTextDrag = !allowTextDrag;
 
 const handleDragOver = (e: DragEvent) => {
-  if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-    const isFile = e.dataTransfer.types.includes('Files'); // Webpage image drag
-    if (disallowTextDrag || isFile) {
-      e.preventDefault();
-    }
+  if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
+  
+  const isFile = e.dataTransfer.types.includes('Files');
+  if (disallowTextDrag || isFile) {
+    e.preventDefault();
   }
 };
 
@@ -103,50 +103,50 @@ const DragUpload = memo(() => {
   };
 
   const handleDragEnter = (e: DragEvent) => {
-    if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      const isFile = e.dataTransfer.types.includes('Files');
-      if (disallowTextDrag || isFile) {
-        dragCounter.current += 1;
-        e.preventDefault();
-        setIsDragging(true);
-      }
+    if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
+
+    const isFile = e.dataTransfer.types.includes('Files');
+    if (disallowTextDrag || isFile) {
+      dragCounter.current += 1;
+      e.preventDefault();
+      setIsDragging(true);
     }
   };
 
   const handleDragLeave = (e: DragEvent) => {
-    if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      const isFile = e.dataTransfer.types.includes('Files');
-      if (disallowTextDrag || isFile) {
-        e.preventDefault();
+    if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
 
-        // reset counter
-        dragCounter.current -= 1;
+    const isFile = e.dataTransfer.types.includes('Files');
+    if (disallowTextDrag || isFile) {
+      e.preventDefault();
 
-        if (dragCounter.current === 0) {
-          setIsDragging(false);
-        }
+      // reset counter
+      dragCounter.current -= 1;
+
+      if (dragCounter.current === 0) {
+        setIsDragging(false);
       }
     }
   };
 
   const handleDrop = async (e: DragEvent) => {
-    if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
-      const isFile = e.dataTransfer.types.includes('Files');
-      if (disallowTextDrag || isFile) {
-        e.preventDefault();
+    if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
 
-        // reset counter
-        dragCounter.current = 0;
+    const isFile = e.dataTransfer.types.includes('Files');
+    if (disallowTextDrag || isFile) {
+      e.preventDefault();
 
-        setIsDragging(false);
+      // reset counter
+      dragCounter.current = 0;
 
-        // get filesList
-        // TODO: support folder files upload
-        const files = e.dataTransfer?.files;
+      setIsDragging(false);
 
-        // upload files
-        uploadImages(files);
-      }
+      // get filesList
+      // TODO: support folder files upload
+      const files = e.dataTransfer?.files;
+
+      // upload files
+      uploadImages(files);
     }
   };
 
