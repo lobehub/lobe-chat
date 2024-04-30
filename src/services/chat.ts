@@ -3,6 +3,8 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
 import { createErrorResponse } from '@/app/api/errorResponse';
+import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
@@ -29,6 +31,7 @@ import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions {
+  isWelcomeQuestion?: boolean;
   signal?: AbortSignal | undefined;
   trace?: TracePayload;
 }
@@ -63,6 +66,7 @@ interface FetchAITaskResultParams {
 
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
+  isWelcomeQuestion?: boolean;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
 }
@@ -183,11 +187,14 @@ class ChatService {
     );
     // ============  1. preprocess messages   ============ //
 
-    const oaiMessages = this.processMessages({
-      messages,
-      model: payload.model,
-      tools: enabledPlugins,
-    });
+    const oaiMessages = this.processMessages(
+      {
+        messages,
+        model: payload.model,
+        tools: enabledPlugins,
+      },
+      options,
+    );
 
     // ============  2. preprocess tools   ============ //
 
@@ -215,10 +222,12 @@ class ChatService {
     onErrorHandle,
     onFinish,
     trace,
+    isWelcomeQuestion,
   }: CreateAssistantMessageStream) => {
     await fetchSSE(
       () =>
         this.createAssistantMessage(params, {
+          isWelcomeQuestion,
           signal: abortController?.signal,
           trace: this.mapTrace(trace, TraceTagMap.Chat),
         }),
@@ -371,15 +380,18 @@ class ChatService {
     return await data?.text();
   };
 
-  private processMessages = ({
-    messages,
-    tools,
-    model,
-  }: {
-    messages: ChatMessage[];
-    model: string;
-    tools?: string[];
-  }): OpenAIChatMessage[] => {
+  private processMessages = (
+    {
+      messages,
+      tools,
+      model,
+    }: {
+      messages: ChatMessage[];
+      model: string;
+      tools?: string[];
+    },
+    options?: FetchOptions,
+  ): OpenAIChatMessage[] => {
     // handle content type for vision model
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
@@ -424,22 +436,35 @@ class ChatService {
     });
 
     return produce(postMessages, (draft) => {
-      if (!tools || tools.length === 0) return;
-      const hasFC = modelProviderSelectors.isModelEnabledFunctionCall(model)(
-        useUserStore.getState(),
-      );
-      if (!hasFC) return;
+      // if it's a welcome question, inject InboxGuide SystemRole
+      const inboxGuideSystemRole =
+        options?.isWelcomeQuestion &&
+        options?.trace?.sessionId === INBOX_SESSION_ID &&
+        INBOX_GUIDE_SYSTEMROLE;
+
+      // Inject Tool SystemRole
+      const hasTools = tools && tools?.length > 0;
+      const hasFC =
+        hasTools &&
+        modelProviderSelectors.isModelEnabledFunctionCall(model)(useUserStore.getState());
+      const toolsSystemRoles =
+        hasFC && toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
+
+      const injectSystemRoles = [inboxGuideSystemRole, toolsSystemRoles]
+        .filter(Boolean)
+        .join('\n\n');
+
+      if (!injectSystemRoles) return;
 
       const systemMessage = draft.find((i) => i.role === 'system');
 
-      const toolsSystemRoles = toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
-      if (!toolsSystemRoles) return;
-
       if (systemMessage) {
-        systemMessage.content = systemMessage.content + '\n\n' + toolsSystemRoles;
+        systemMessage.content = [systemMessage.content, injectSystemRoles]
+          .filter(Boolean)
+          .join('\n\n');
       } else {
         draft.unshift({
-          content: toolsSystemRoles,
+          content: injectSystemRoles,
           role: 'system',
         });
       }
@@ -451,7 +476,7 @@ class ChatService {
 
     const enabled = preferenceSelectors.userAllowTrace(useUserStore.getState());
 
-    if (!enabled) return { enabled: false };
+    if (!enabled) return { ...trace, enabled: false };
 
     return {
       ...trace,

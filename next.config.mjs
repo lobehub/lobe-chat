@@ -23,6 +23,7 @@ const nextConfig = {
       '@lobehub/ui',
       'gpt-tokenizer',
       'chroma-js',
+      'shiki',
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
