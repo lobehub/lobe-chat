@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
+import MobileContentLayout from '@/components/server/MobileNavLayout';
 import Conversation from '@/features/Conversation';
 
 import SessionHydration from '../../components/SessionHydration';
@@ -15,15 +15,12 @@ const TopicList = dynamic(() => import('../features/TopicList'));
 
 const Chat = memo(() => {
   return (
-    <>
-      <ChatHeader />
-      <Flexbox height={'calc(100% - 44px)'} horizontal>
-        <Conversation chatInput={<ChatInput />} mobile />
-        <TopicList />
-        <TelemetryNotification mobile />
-      </Flexbox>
+    <MobileContentLayout header={<ChatHeader />}>
+      <Conversation chatInput={<ChatInput />} mobile />
+      <TopicList />
+      <TelemetryNotification mobile />
       <SessionHydration />
-    </>
+    </MobileContentLayout>
   );
 });
 export default Chat;
