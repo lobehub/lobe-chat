@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
@@ -35,6 +35,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const [id, chatLoading] = useChatStore((s) => [
     chatSelectors.currentChatKey(s),
@@ -53,6 +54,14 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     }
   }, [id]);
 
+  const prevDataLengthRef = useRef(data.length);
+
+  const getFollowOutput = useCallback(() => {
+    const newFollowOutput = data.length > prevDataLengthRef.current ? 'auto' : false;
+    prevDataLengthRef.current = data.length;
+    return newFollowOutput;
+  }, [data.length]);
+
   // overscan should be 1.5 times the height of the window
   const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
 
@@ -62,17 +71,20 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     <Flexbox height={'100%'}>
       <Virtuoso
         atBottomStateChange={setAtBottom}
-        atBottomThreshold={60 * (mobile ? 2 : 1)}
+        atBottomThreshold={50 * (mobile ? 2 : 1)}
         computeItemKey={(_, item) => item}
         data={data}
-        followOutput={'auto'}
+        followOutput={getFollowOutput}
+        // increaseViewportBy={overscan}
         initialTopMostItemIndex={data?.length - 1}
+        isScrolling={setIsScrolling}
         itemContent={itemContent}
         overscan={overscan}
         ref={virtuosoRef}
       />
       <AutoScroll
         atBottom={atBottom}
+        isScrolling={isScrolling}
         onScrollToBottom={(type) => {
           const virtuoso = virtuosoRef.current;
           switch (type) {
