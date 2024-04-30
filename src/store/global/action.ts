@@ -1,3 +1,4 @@
+import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { gt } from 'semver';
 import useSWR, { SWRResponse } from 'swr';
@@ -94,7 +95,11 @@ export const globalActionSlice: StateCreator<
       () => get().preferenceStorage.getFromLocalStorage(),
       {
         onSuccess: (preference) => {
-          set({ preference: merge(get().preference, preference) }, false, n('initPreference'));
+          const nextPreference = merge(get().preference, preference);
+
+          if (isEqual(get().preference, nextPreference)) return;
+
+          set({ preference: nextPreference }, false, n('initPreference'));
         },
       },
     ),
