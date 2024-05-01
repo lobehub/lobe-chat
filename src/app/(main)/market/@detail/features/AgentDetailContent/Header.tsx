@@ -5,9 +5,8 @@ import { startCase } from 'lodash-es';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
-import { useSearch } from '@/app/(main)/market/hooks/useSearch';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
@@ -17,8 +16,8 @@ import { useStyles } from './style';
 
 const { Link } = Typography;
 
-const Header = memo(() => {
-  const search = useSearch();
+const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
+  const setSearchKeywords = useMarketStore((s) => s.setSearchKeywords);
   const router = useRouter();
   const { t } = useTranslation('market');
   const { styles, theme } = useStyles();
@@ -48,32 +47,43 @@ const Header = memo(() => {
 
   return (
     <Center className={styles.container} gap={16}>
-      <Avatar
-        animation
-        avatar={avatar}
-        background={backgroundColor || theme.colorFillTertiary}
-        className={styles.avatar}
-        size={100}
-      />
-      <div className={styles.title}>{title}</div>
+      <Center
+        flex={'none'}
+        height={120}
+        style={{
+          backgroundColor:
+            backgroundColor || mobile ? theme.colorBgElevated : theme.colorBgContainer,
+          borderRadius: '50%',
+          overflow: 'hidden',
+          zIndex: 2,
+        }}
+        width={120}
+      >
+        <Avatar animation avatar={avatar} size={100} />
+      </Center>
+      <h2 className={styles.title}>{title}</h2>
       <Center gap={6} horizontal style={{ flexWrap: 'wrap' }}>
         {(tags as string[]).map((tag: string, index) => (
-          <Tag key={index} onClick={() => search(tag)} style={{ margin: 0 }}>
+          <Tag key={index} onClick={() => setSearchKeywords(tag)} style={{ margin: 0 }}>
             {startCase(tag).trim()}
           </Tag>
         ))}
       </Center>
       <div className={styles.desc}>{description}</div>
-      <Link aria-label={author} className={styles.author} href={homepage} target={'_blank'}>
-        @{author}
-      </Link>
       <Button block onClick={handleAddAgentAndConverse} type={'primary'}>
         {t('addAgentAndConverse')}
       </Button>
       <Button block onClick={handleAddAgent}>
         {t('addAgent')}
       </Button>
-      <div className={styles.date}>{createAt}</div>
+      <Flexbox align={'center'} gap={12} horizontal>
+        <Link aria-label={author} className={styles.author} href={homepage} target={'_blank'}>
+          @{author}
+        </Link>
+        <time className={styles.time} dateTime={new Date(createAt).toISOString()}>
+          {createAt}
+        </time>
+      </Flexbox>
     </Center>
   );
 });

@@ -20,7 +20,7 @@ const Layout = ({ children, detail }: LayoutProps) => {
         <Flexbox
           align={'center'}
           flex={1}
-          paddingInline={16}
+          padding={16}
           style={{ overflowX: 'hidden', overflowY: 'scroll', position: 'relative' }}
         >
           <SafeSpacing />

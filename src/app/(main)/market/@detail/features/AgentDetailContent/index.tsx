@@ -19,7 +19,7 @@ enum InfoTabs {
   prompt = 'prompt',
 }
 
-const AgentModalInner = memo(() => {
+const AgentModalInner = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [useFetchAgent, currentIdentifier] = useMarketStore((s) => [
     s.useFetchAgent,
     s.currentIdentifier,
@@ -36,8 +36,12 @@ const AgentModalInner = memo(() => {
 
   return (
     <>
-      <AgentCardBanner meta={meta} size={400} style={{ height: 120, marginBottom: -60 }} />
-      <Header />
+      <AgentCardBanner
+        avatar={meta?.avatar}
+        size={800}
+        style={{ height: 120, marginBottom: -60 }}
+      />
+      <Header mobile={mobile} />
       <Flexbox align={'center'}>
         <TabsNav
           activeKey={tab}

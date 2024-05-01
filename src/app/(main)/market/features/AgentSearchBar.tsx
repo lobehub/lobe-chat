@@ -1,46 +1,35 @@
 'use client';
 
 import { SearchBar } from '@lobehub/ui';
-import { useQueryState } from 'nuqs';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import useControlledState from 'use-merge-value';
 
-import { useSearch } from '@/app/(main)/market/hooks/useSearch';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useMarketStore } from '@/store/market';
 
 interface AgentSearchBarProps {
-  defaultKeyword?: string;
   mobile?: boolean;
 }
 
-const AgentSearchBar = memo<AgentSearchBarProps>(({ mobile: controlledMobile, defaultKeyword }) => {
-  const search = useSearch();
-  const [keyword, setKeyword] = useQueryState<string | null>('q', {
-    // @ts-ignore
-    defaultValue: defaultKeyword,
-    history: 'replace',
-    throttleMs: 500,
-  });
-
+const AgentSearchBar = memo<AgentSearchBarProps>(({ mobile }) => {
   const { t } = useTranslation('market');
+  const [searchKeywords, setSearchKeywords] = useMarketStore((s) => [
+    s.searchKeywords,
+    s.setSearchKeywords,
+  ]);
 
-  const isMobile = useIsMobile();
-  const mobile = controlledMobile ?? isMobile;
-
-  const handleSearch = () => {
-    search(keyword || '');
-  };
+  const [keyword, setKeyword] = useControlledState(searchKeywords, {
+    onChange: setSearchKeywords,
+    value: searchKeywords,
+  });
 
   return (
     <SearchBar
       allowClear
       enableShortKey={!mobile}
-      onBlur={handleSearch}
       onChange={(e) => {
         setKeyword(e.target.value);
       }}
-      onPressEnter={handleSearch}
-      onSubmit={handleSearch}
       placeholder={t('search.placeholder')}
       shortKey={'k'}
       spotlight={!mobile}

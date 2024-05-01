@@ -3,8 +3,8 @@ import { AgentsMarketItem } from '@/types/market';
 
 import type { Store } from './store';
 
-const getAgentList = (searchKeywords?: string) => (s: Store) => {
-  const { agentList } = s;
+const getAgentList = (s: Store) => {
+  const { searchKeywords, agentList } = s;
   if (!searchKeywords) return agentList;
   return agentList.filter(({ meta }) => {
     const checkMeta: string = [meta.tags, meta.title, meta.description, meta.avatar]
@@ -13,7 +13,6 @@ const getAgentList = (searchKeywords?: string) => (s: Store) => {
     return checkMeta.toLowerCase().includes(searchKeywords.toLowerCase());
   });
 };
-
 const getAgentTagList = (s: Store) => s.tagList;
 
 const getAgentItemById = (d: string) => (s: Store) => s.agentMap[d];

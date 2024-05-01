@@ -16,7 +16,7 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
     height: 100% !important;
   `,
   drawer: css`
-    background: ${token.colorBgLayout};
+    background: ${token.colorBgContainer};
   `,
   header: css`
     border-bottom: 1px solid ${token.colorBorder};
