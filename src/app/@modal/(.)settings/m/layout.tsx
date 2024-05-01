@@ -2,7 +2,7 @@ import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
 import { PropsWithChildren } from 'react';
 
-import SettingModalLayout from '../_layout/SettingModalLayout';
+import SettingModalLayout from '../../_layout/SettingModalLayout';
 
 const CategoryContent = dynamic(
   () => import('@/app/(main)/settings/@category/features/CategoryContent'),

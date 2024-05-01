@@ -1,6 +1,7 @@
 'use client';
 
 import { useTheme } from 'antd-style';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
@@ -8,11 +9,11 @@ import urlJoin from 'url-join';
 import { useCategory } from '@/app/(main)/settings//hooks/useCategory';
 import Cell from '@/components/Cell';
 import Divider from '@/components/Cell/Divider';
-import redirectHard from '@/server/redirectHard';
 
 const SettingCate = memo(() => {
   const theme = useTheme();
   const settingItems = useCategory({ mobile: true });
+  const router = useRouter();
 
   return (
     <Flexbox style={{ background: theme.colorBgContainer }} width={'100%'}>
@@ -23,7 +24,7 @@ const SettingCate = memo(() => {
             icon={icon}
             key={key}
             label={label}
-            onClick={() => redirectHard(urlJoin('/settings', key))}
+            onClick={() => router.replace(urlJoin('/settings', key))}
           />
         );
       })}

@@ -13,7 +13,7 @@ import { agentSelectors } from '@/store/agent/slices/chat';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
-import SettingModalLayout from '../../_layout/SettingModalLayout';
+import SettingModalLayout from '../../../_layout/SettingModalLayout';
 
 const CategoryContent = dynamic(() => import('./features/CategoryContent'), {
   loading: () => <Skeleton paragraph={{ rows: 6 }} title={false} />,
