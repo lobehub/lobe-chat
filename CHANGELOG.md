@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.152.4](https://github.com/lobehub/lobe-chat/compare/v0.152.3...v0.152.4)
+
+<sup>Released on **2024-05-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix router path in UserPanel.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix router path in UserPanel ([c779e02](https://github.com/lobehub/lobe-chat/commit/c779e02))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.152.3](https://github.com/lobehub/lobe-chat/compare/v0.152.2...v0.152.3)
 
 <sup>Released on **2024-05-01**</sup>
