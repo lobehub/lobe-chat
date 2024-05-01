@@ -4,6 +4,7 @@ import { withSWR } from '~test-utils';
 
 import { globalService } from '@/services/global';
 import { useGlobalStore } from '@/store/global/index';
+import { initialState } from '@/store/global/initialState';
 
 vi.mock('zustand/traditional');
 
@@ -139,6 +140,43 @@ describe('createPreferenceSlice', () => {
 
       expect(useGlobalStore.getState().hasNewVersion).toBe(true);
       expect(useGlobalStore.getState().latestVersion).toBe(latestVersion);
+    });
+  });
+
+  describe('useInitGlobalPreference', () => {
+    it('should init global preference if there is empty object', async () => {
+      vi.spyOn(
+        useGlobalStore.getState().preferenceStorage,
+        'getFromLocalStorage',
+      ).mockReturnValueOnce({} as any);
+
+      const { result } = renderHook(() => useGlobalStore().useInitGlobalPreference(), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => {
+        expect(result.current.data).toEqual({});
+      });
+
+      expect(useGlobalStore.getState().preference).toEqual(initialState.preference);
+    });
+
+    it('should update with data', async () => {
+      const { result } = renderHook(() => useGlobalStore());
+      vi.spyOn(
+        useGlobalStore.getState().preferenceStorage,
+        'getFromLocalStorage',
+      ).mockReturnValueOnce({ inputHeight: 300 } as any);
+
+      const { result: hooks } = renderHook(() => result.current.useInitGlobalPreference(), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => {
+        expect(hooks.current.data).toEqual({ inputHeight: 300 });
+      });
+
+      expect(result.current.preference.inputHeight).toEqual(300);
     });
   });
 });
