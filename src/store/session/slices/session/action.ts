@@ -1,5 +1,5 @@
+import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
-import { isEqual } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
