@@ -20,7 +20,7 @@ const CategoryContent = memo(() => {
       <Menu
         items={cateItems}
         onClick={({ key }) => {
-          router.replace('/chat/settings', { tab: key });
+          router.replace('/chat/settings/m', { tab: key });
         }}
         selectable
         selectedKeys={[tab as any]}
