@@ -1,23 +1,19 @@
 import { ActionIcon } from '@lobehub/ui';
 import { AlignJustify } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import redirectHard from '@/server/redirectHard';
+import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
-import { pathString } from '@/utils/url';
 
 const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const { t } = useTranslation('common');
-  const router = useRouter();
-
-  const push = mobile ? redirectHard : router.push;
+  const router = useQueryRoute();
 
   return (
     <ActionIcon
@@ -27,9 +23,9 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
           useGlobalStore.setState({
             sidebarKey: SidebarTabKey.Setting,
           });
-          push('/settings/agent');
+          router.push(mobile ? '/settings/agent' : '/settings/m', mobile ? {} : { tab: 'agent' });
         } else {
-          push(pathString('/chat/settings', { search: location.search }));
+          router.push(mobile ? '/chat/settings' : '/chat/settings/m');
         }
       }}
       size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}
