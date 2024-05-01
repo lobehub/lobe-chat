@@ -1,10 +1,10 @@
 import { FormInstance } from 'antd/es/form/hooks/useForm';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 import { useUserStore } from '@/store/user';
 
 export const useSyncSettings = (form: FormInstance) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     // set the first time
     form.setFieldsValue(useUserStore.getState().settings);
 

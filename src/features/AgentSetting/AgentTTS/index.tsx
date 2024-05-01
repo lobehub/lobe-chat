@@ -1,3 +1,5 @@
+'use client';
+
 import { VoiceList } from '@lobehub/tts';
 import { Form, ItemGroup } from '@lobehub/ui';
 import { Form as AFrom, Select, Switch } from 'antd';
@@ -107,7 +109,9 @@ const AgentTTS = memo(() => {
         },
       }}
       items={[tts]}
+      itemsType={'group'}
       onValuesChange={debounce(updateConfig, 100)}
+      variant={'pure'}
       {...FORM_STYLE}
     />
   );

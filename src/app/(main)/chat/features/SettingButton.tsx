@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import redirectHard from '@/server/redirectHard';
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
@@ -16,6 +17,8 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('common');
   const router = useRouter();
 
+  const push = mobile ? redirectHard : router.push;
+
   return (
     <ActionIcon
       icon={AlignJustify}
@@ -24,9 +27,9 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
           useGlobalStore.setState({
             sidebarKey: SidebarTabKey.Setting,
           });
-          router.push('/settings/agent');
+          push('/settings/agent');
         } else {
-          router.push(pathString('/chat/settings', { search: location.search }));
+          push(pathString('/chat/settings', { search: location.search }));
         }
       }}
       size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}
