@@ -1,9 +1,12 @@
-'use client';
+import { PropsWithChildren } from 'react';
+import { Center } from 'react-layout-kit';
 
-import { PropsWithChildren, memo } from 'react';
-
-const MobileLayout = memo<PropsWithChildren>(({ children }) => {
-  return <div style={{ height: '100%', paddingInline: 16 }}>{children}</div>;
-});
+const MobileLayout = ({ children }: PropsWithChildren) => {
+  return (
+    <Center gap={16} style={{ height: '100%', paddingInline: 16 }}>
+      {children}
+    </Center>
+  );
+};
 
 export default MobileLayout;

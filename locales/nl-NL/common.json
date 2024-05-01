@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat wordt geïnitialiseerd, even geduld a.u.b...",
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
+  "blog": "Product Blog",
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
   "close": "Sluiten",
@@ -26,6 +27,7 @@
     "globalSetting": "Algemene instellingen exporteren"
   },
   "feedback": "Feedback en suggesties",
+  "follow": "Volg ons op {{name}}",
   "historyRange": "Geschiedenisbereik",
   "import": "Importeren",
   "importModal": {
@@ -88,10 +90,12 @@
   "layoutInitializing": "Lay-out wordt geladen...",
   "noDescription": "Geen beschrijving beschikbaar",
   "oauth": "SSO inloggen",
+  "officialSite": "Officiële website",
   "ok": "Oké",
   "password": "Wachtwoord",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
+  "privacy": "Privacybeleid",
   "regenerate": "重新生成",
   "rename": "重命名",
   "reset": "重置",
@@ -146,6 +150,7 @@
     "title": "Help LobeChat verbeteren"
   },
   "temp": "临时",
+  "terms": "Algemene voorwaarden",
   "updateAgent": "更新助理信息",
   "upgradeVersion": {
     "action": "升级",

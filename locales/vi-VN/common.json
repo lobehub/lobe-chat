@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat đang khởi động, vui lòng chờ...",
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
+  "blog": "Blog sản phẩm",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
   "close": "Đóng",
@@ -26,6 +27,7 @@
     "globalSetting": "Xuất cài đặt toàn cầu"
   },
   "feedback": "Phản hồi và đề xuất",
+  "follow": "Theo dõi chúng tôi trên {{name}}",
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập cấu hình",
   "importModal": {
@@ -88,10 +90,12 @@
   "layoutInitializing": "Đang tải bố cục...",
   "noDescription": "Chưa có mô tả",
   "oauth": "Đăng nhập SSO",
+  "officialSite": "Trang web chính thức",
   "ok": "Đồng ý",
   "password": "Mật khẩu",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
+  "privacy": "Chính sách bảo mật",
   "regenerate": "Tạo lại",
   "rename": "Đổi tên",
   "reset": "Đặt lại",
@@ -146,6 +150,7 @@
     "title": "Hỗ trợ LobeChat hoạt động tốt hơn"
   },
   "temp": "Tạm thời",
+  "terms": "Điều khoản dịch vụ",
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upgradeVersion": {
     "action": "Nâng cấp",

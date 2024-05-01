@@ -9,14 +9,13 @@ import SkeletonList from './components/SkeletonList';
 const ChatList = lazy(() => import('./components/VirtualizedList'));
 
 const useStyles = createStyles(
-  ({ css, responsive, stylish }) => css`
+  ({ css, responsive }) => css`
     position: relative;
     overflow-y: auto;
     height: 100%;
 
     ${responsive.mobile} {
-      ${stylish.noScrollbar}
-      width: 100vw;
+      width: 100%;
     }
   `,
 );
@@ -32,6 +31,7 @@ const Conversation = memo<ConversationProps>(({ chatInput, mobile }) => {
   return (
     <Flexbox
       flex={1}
+      height={'100%'}
       // `relative` is required, ChatInput's absolute position needs it
       style={{ position: 'relative' }}
     >
