@@ -1,15 +1,21 @@
 'use client';
 
 import isEqual from 'fast-deep-equal';
-import { PropsWithChildren, memo } from 'react';
+import { memo } from 'react';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import AgentChat from '@/features/AgentSetting/AgentChat';
+import AgentMeta from '@/features/AgentSetting/AgentMeta';
+import AgentModal from '@/features/AgentSetting/AgentModal';
+import AgentPlugin from '@/features/AgentSetting/AgentPlugin';
+import AgentPrompt from '@/features/AgentSetting/AgentPrompt';
+import AgentTTS from '@/features/AgentSetting/AgentTTS';
 import StoreUpdater from '@/features/AgentSetting/StoreUpdater';
 import { Provider, createStore } from '@/features/AgentSetting/store';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
-const Layout = memo(({ children }: PropsWithChildren) => {
+const Page = memo(() => {
   const config = useUserStore(settingsSelectors.defaultAgentConfig, isEqual);
   const meta = useUserStore(settingsSelectors.defaultAgentMeta, isEqual);
   const [updateAgent] = useUserStore((s) => [s.updateDefaultAgent]);
@@ -27,9 +33,16 @@ const Layout = memo(({ children }: PropsWithChildren) => {
           updateAgent({ meta });
         }}
       />
-      {children}
+      <AgentPrompt />
+      <AgentMeta />
+      <AgentChat />
+      <AgentModal />
+      <AgentTTS />
+      <AgentPlugin />
     </Provider>
   );
 });
 
-export default Layout;
+Page.displayName = 'AgentSetting';
+
+export default Page;
