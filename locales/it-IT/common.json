@@ -140,6 +140,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Scopri",
+    "me": "io",
     "setting": "Impostazioni"
   },
   "telemetry": {
@@ -156,5 +157,18 @@
     "action": "Aggiorna",
     "hasNew": "Nuovo aggiornamento disponibile",
     "newVersion": "Nuova versione disponibile: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Gestione fatturazione",
+    "discord": "Supporto comunità",
+    "docs": "Documentazione",
+    "email": "Supporto email",
+    "feedback": "Feedback e suggerimenti",
+    "help": "Centro assistenza",
+    "plans": "Piani di abbonamento",
+    "profile": "Gestione account",
+    "setting": "Impostazioni app",
+    "usages": "Statistiche utilizzo",
+    "warn": "Questa voce verrà presto rimossa, successivamente accedi a questo menu dall'icona in alto a sinistra"
   }
 }

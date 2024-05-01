@@ -1,28 +1,36 @@
 import { notFound } from 'next/navigation';
 
 import { serverFeatureFlags } from '@/config/server/featureFlags';
+import { translation } from '@/server/translation';
 import { gerServerDeviceInfo, isMobileDevice } from '@/utils/responsive';
 
-import Alert from './Alert';
-import DeviceCard from './DeviceInfo';
-import PageTitle from './PageTitle';
-import WebRTC from './WebRTC';
+import Alert from './features/Alert';
+import DeviceInfo from './features/DeviceInfo';
+import WebRTC from './features/WebRTC';
 
-export default () => {
+export const generateMetadata = async () => {
+  const { t } = await translation('setting');
+  return {
+    title: t('tab.sync'),
+  };
+};
+
+const Page = () => {
   const enableWebrtc = serverFeatureFlags().enableWebrtc;
-
   if (!enableWebrtc) return notFound();
 
-  const { os, browser } = gerServerDeviceInfo();
   const isMobile = isMobileDevice();
+  const { os, browser } = gerServerDeviceInfo();
 
   return (
     <>
-      {isMobile && <Alert mobile />}
-      <PageTitle />
-      <DeviceCard browser={browser} os={os} />
+      <DeviceInfo browser={browser} os={os} />
       <WebRTC />
-      {!isMobile && <Alert />}
+      <Alert mobile={isMobile} />
     </>
   );
 };
+
+Page.displayName = 'SyncSetting';
+
+export default Page;

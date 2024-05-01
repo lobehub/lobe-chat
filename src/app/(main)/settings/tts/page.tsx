@@ -1,18 +1,24 @@
-'use client';
+import { translation } from '@/server/translation';
 
-import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import OpenAI from './features/OpenAI';
+import STT from './features/STT';
 
-import PageTitle from '@/components/PageTitle';
+export const generateMetadata = async () => {
+  const { t } = await translation('setting');
+  return {
+    title: t('tab.tts'),
+  };
+};
 
-import TTS from './TTS';
-
-export default memo(() => {
-  const { t } = useTranslation('setting');
+const Page = () => {
   return (
     <>
-      <PageTitle title={t('tab.tts')} />
-      <TTS />
+      <STT />
+      <OpenAI />
     </>
   );
-});
+};
+
+Page.displayName = 'TtsSetting';
+
+export default Page;
