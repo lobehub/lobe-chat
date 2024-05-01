@@ -1,12 +1,7 @@
-import { Flexbox } from 'react-layout-kit';
-
-import Follow from '@//features/Follow';
-import AboutList from '@/app/(main)/settings//about/features/AboutList';
-import Analytics from '@/app/(main)/settings/about/features/Analytics';
-import { getServerConfig } from '@/config/server';
 import { translation } from '@/server/translation';
+import { isMobileDevice } from '@/utils/responsive';
 
-const enabledTelemetryChat = getServerConfig().ENABLE_LANGFUSE;
+import Page from './index';
 
 export const generateMetadata = async () => {
   const { t } = await translation('setting');
@@ -15,18 +10,8 @@ export const generateMetadata = async () => {
   };
 };
 
-const Page = () => {
-  return (
-    <>
-      <Flexbox gap={24} style={{ marginBlock: 48 }} width={'100%'}>
-        <AboutList />
-        {enabledTelemetryChat && <Analytics />}
-      </Flexbox>
-      <Follow />
-    </>
-  );
+export default () => {
+  const isMobile = isMobileDevice();
+
+  return <Page mobile={isMobile} />;
 };
-
-Page.displayName = 'AboutSetting';
-
-export default Page;
