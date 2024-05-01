@@ -108,7 +108,7 @@ const AboutList = memo(() => {
   ];
 
   return (
-    <Grid className={styles.container} maxItemWidth={160} width={'100%'}>
+    <Grid className={styles.container} maxItemWidth={144} width={'100%'}>
       {items.map(({ value, icon, label, onClick }) => (
         <Flexbox className={styles.card} gap={8} horizontal key={value} onClick={onClick}>
           <Icon icon={icon} size={{ fontSize: 20 }} />

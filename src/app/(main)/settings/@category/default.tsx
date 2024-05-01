@@ -1,6 +1,6 @@
 import UpgradeAlert from '@/app/(main)/settings//features/UpgradeAlert';
 
-import CategoryContent from './features/Category';
+import CategoryContent from './features/CategoryContent';
 
 const Category = () => {
   return (

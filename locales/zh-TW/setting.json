@@ -30,6 +30,7 @@
     "desc": "偏好與模型設定。",
     "global": "全域設定",
     "session": "對話設定",
+    "sessionDesc": "角色設定與會話偏好。",
     "sessionWithName": "對話設定 · {{name}}",
     "title": "設定"
   },

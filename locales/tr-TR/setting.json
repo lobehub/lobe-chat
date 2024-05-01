@@ -30,6 +30,7 @@
     "desc": "Tercihler ve model ayarları.",
     "global": "Genel Ayarlar",
     "session": "Oturum Ayarları",
+    "sessionDesc": "Karakter ayarları ve oturum tercihleri.",
     "sessionWithName": "Oturum Ayarları · {{name}}",
     "title": "Ayarlar"
   },

@@ -4,7 +4,7 @@ import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehu
 import { Button } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { isString } from 'lodash-es';
-import { UserCircle, Wand2 } from 'lucide-react';
+import { Wand2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -120,7 +120,6 @@ const AgentMeta = memo(() => {
           </Button>
         </Tooltip>
       ),
-      icon: UserCircle,
       title: t('settingAgent.title'),
     }),
     [autocompleteItems, meta],

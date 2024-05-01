@@ -10,7 +10,7 @@ const COPYRIGHT = `© 2023-${new Date().getFullYear()} LobeHub, LLC`;
 const Layout = ({ children }: PropsWithChildren) => {
   const isMobile = isMobileDevice();
   return (
-    <Flexbox align={'center'} gap={12} paddingBlock={36}>
+    <Flexbox align={'center'} gap={12} paddingBlock={36} width={'100%'}>
       <Logo size={isMobile ? 100 : 120} />
       <h1 style={{ fontSize: isMobile ? 32 : 36, fontWeight: 900, lineHeight: 1, marginBottom: 0 }}>
         LobeChat

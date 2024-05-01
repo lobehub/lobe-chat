@@ -9,16 +9,23 @@ import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 
 import { useCategory } from '../../hooks/useCategory';
 
-const SettingList = memo(() => {
+const CategoryContent = memo<{ modal?: boolean }>(({ modal }) => {
   const activeTab = useActiveSettingsKey();
-  const { cateItems } = useCategory();
+  const cateItems = useCategory();
 
   const router = useRouter();
 
   return (
     <Menu
       items={cateItems}
-      onClick={({ key }) => router.push(urlJoin('/settings', key))}
+      onClick={({ key }) => {
+        const path = urlJoin('/settings', key);
+        if (modal) {
+          router.replace(path);
+        } else {
+          router.push(path);
+        }
+      }}
       selectable
       selectedKeys={[activeTab as any]}
       variant={'compact'}
@@ -26,4 +33,4 @@ const SettingList = memo(() => {
   );
 });
 
-export default SettingList;
+export default CategoryContent;
