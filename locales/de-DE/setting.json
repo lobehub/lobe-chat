@@ -27,9 +27,11 @@
     }
   },
   "header": {
+    "desc": "Präferenzen und Modellkonfigurationen.",
     "global": "Global Einstellungen",
     "session": "Sitzungseinstellungen",
-    "sessionWithName": "Sitzungseinstellungen · {{name}}"
+    "sessionWithName": "Sitzungseinstellungen · {{name}}",
+    "title": "Einstellungen"
   },
   "llm": {
     "checker": {

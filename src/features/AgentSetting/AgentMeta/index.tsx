@@ -1,3 +1,5 @@
+'use client';
+
 import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Button } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -124,7 +126,7 @@ const AgentMeta = memo(() => {
     [autocompleteItems, meta],
   );
 
-  return <Form items={[metaData]} {...FORM_STYLE} />;
+  return <Form items={[metaData]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />;
 });
 
 export default AgentMeta;

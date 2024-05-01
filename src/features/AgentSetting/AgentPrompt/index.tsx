@@ -1,22 +1,35 @@
-import { EditableMessage, FormGroup } from '@lobehub/ui';
+'use client';
+
+import { EditableMessage } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
-import { Bot } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { FORM_STYLE } from '@/const/layoutTokens';
-
 import { useStore } from '../store';
-import TokenTag from './TokenTag';
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const useStyles = createStyles(({ css, token, responsive }) => ({
+  container: css`
+    position: relative;
+    width: 100%;
+    background: ${token.colorFillSecondary};
+    border-radius: ${token.borderRadiusLG}px;
+  `,
+  content: css`
+    z-index: 2;
+    padding: 8px;
+    background: ${token.colorBgContainer};
+    border-radius: ${token.borderRadiusLG - 1}px;
+  `,
   markdown: css`
     border: unset;
   `,
-  textarea: css`
-    background: ${token.colorFillTertiary};
+  wrapper: css`
+    ${responsive.mobile} {
+      padding-block: 8px;
+      padding-inline: 4px;
+    }
   `,
 }));
 
@@ -27,33 +40,13 @@ const AgentPrompt = memo(() => {
   const [systemRole, updateConfig] = useStore((s) => [s.config.systemRole, s.setAgentConfig]);
 
   return (
-    <FormGroup
-      extra={<TokenTag />}
-      icon={Bot}
-      style={FORM_STYLE.style}
-      title={t('settingAgent.prompt.title')}
-    >
-      <Flexbox gap={16} paddingBlock={16}>
-        <EditableMessage
-          classNames={styles}
-          editButtonSize={'small'}
-          editing={editing}
-          height={'auto'}
-          inputType={'ghost'}
-          onChange={(e) => {
-            updateConfig({ systemRole: e });
-          }}
-          onEditingChange={setEditing}
-          placeholder={t('settingAgent.prompt.placeholder')}
-          showEditWhenEmpty
-          text={{
-            cancel: t('cancel', { ns: 'common' }),
-            confirm: t('ok', { ns: 'common' }),
-          }}
-          value={systemRole}
-        />
-        {!editing && !!systemRole && (
-          <Flexbox direction={'horizontal-reverse'}>
+    <div className={styles.wrapper}>
+      <Flexbox className={styles.container} padding={4}>
+        <Flexbox horizontal justify={'space-between'} paddingBlock={8} paddingInline={12}>
+          <h1 style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 4 }}>
+            {t('settingAgent.prompt.title')}
+          </h1>
+          {!editing && !!systemRole && (
             <Button
               onClick={(e) => {
                 e.stopPropagation();
@@ -64,10 +57,41 @@ const AgentPrompt = memo(() => {
             >
               {t('edit', { ns: 'common' })}
             </Button>
-          </Flexbox>
-        )}
+          )}
+        </Flexbox>
+        <Flexbox
+          align={'center'}
+          className={styles.content}
+          flex={1}
+          gap={16}
+          horizontal
+          justify={'space-between'}
+          padding={12}
+          wrap={'wrap'}
+        >
+          <EditableMessage
+            classNames={{
+              markdown: styles.markdown,
+            }}
+            editButtonSize={'small'}
+            editing={editing}
+            height={'auto'}
+            inputType={'pure'}
+            onChange={(e) => {
+              updateConfig({ systemRole: e });
+            }}
+            onEditingChange={setEditing}
+            placeholder={t('settingAgent.prompt.placeholder')}
+            showEditWhenEmpty
+            text={{
+              cancel: t('cancel', { ns: 'common' }),
+              confirm: t('ok', { ns: 'common' }),
+            }}
+            value={systemRole}
+          />
+        </Flexbox>
       </Flexbox>
-    </FormGroup>
+    </div>
   );
 });
 

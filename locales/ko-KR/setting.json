@@ -27,9 +27,11 @@
     }
   },
   "header": {
+    "desc": "설정 및 모델 설정.",
     "global": "전역 설정",
     "session": "세션 설정",
-    "sessionWithName": "세션 설정 · {{name}}"
+    "sessionWithName": "세션 설정 · {{name}}",
+    "title": "설정"
   },
   "llm": {
     "checker": {

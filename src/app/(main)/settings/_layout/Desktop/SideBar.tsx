@@ -1,47 +1,49 @@
 'use client';
 
-import { createStyles, useResponsive } from 'antd-style';
-import { memo } from 'react';
+import { createStyles } from 'antd-style';
+import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
+import BrandWatermark from '@/components/BrandWatermark';
 
-import SettingList from '../../features/SettingList';
-import UpgradeAlert from '../../features/UpgradeAlert';
-
-const useStyles = createStyles(({ stylish, token, css }) => ({
-  body: stylish.noScrollbar,
+const useStyles = createStyles(({ token, css }) => ({
   container: css`
+    padding: 24px 12px 16px;
+    background: ${token.colorBgContainer};
     border-inline-end: 1px solid ${token.colorBorder};
+  `,
+  desc: css`
+    line-height: 1.4;
+    color: ${token.colorTextDescription};
+  `,
+  header: css`
+    padding: 0 0.75rem;
   `,
   logo: css`
     fill: ${token.colorText};
   `,
-  top: css`
-    font-size: 20px;
-    font-weight: bold;
+  title: css`
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.3;
   `,
 }));
 
-const SideBar = memo(() => {
+const SidebarLayout = ({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
-  const activeKey = useActiveSettingsKey();
-
-  const { t } = useTranslation('common');
-  const { mobile } = useResponsive();
-
+  const { t } = useTranslation('setting');
   return (
-    <Flexbox className={styles.container} width={280}>
-      <Flexbox className={styles.top} padding={16}>
-        {t('setting')}
+    <Flexbox className={styles.container} flex={'none'} gap={20} width={280}>
+      <Flexbox className={styles.header} gap={'0.125rem'}>
+        <h1 className={styles.title}>{t('header.title')}</h1>
+        <p className={styles.desc}>{t('header.desc')}</p>
       </Flexbox>
-      <Flexbox gap={8} style={{ paddingInline: 8 }}>
-        <UpgradeAlert />
-        <SettingList activeTab={activeKey} mobile={mobile} />
-      </Flexbox>
+      {children}
+      <BrandWatermark paddingInline={12} />
     </Flexbox>
   );
-});
+};
 
-export default SideBar;
+export default SidebarLayout;

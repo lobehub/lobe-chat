@@ -27,9 +27,11 @@
     }
   },
   "header": {
+    "desc": "Préférences et paramètres du modèle.",
     "global": "Paramètres globaux",
     "session": "Paramètres de session",
-    "sessionWithName": "Paramètres de session · {{name}}"
+    "sessionWithName": "Paramètres de session · {{name}}",
+    "title": "Paramètres"
   },
   "llm": {
     "checker": {

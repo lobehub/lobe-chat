@@ -27,9 +27,11 @@
     }
   },
   "header": {
+    "desc": "Tercihler ve model ayarları.",
     "global": "Genel Ayarlar",
     "session": "Oturum Ayarları",
-    "sessionWithName": "Oturum Ayarları · {{name}}"
+    "sessionWithName": "Oturum Ayarları · {{name}}",
+    "title": "Ayarlar"
   },
   "llm": {
     "checker": {

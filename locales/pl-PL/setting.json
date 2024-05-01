@@ -27,9 +27,11 @@
     }
   },
   "header": {
+    "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
     "session": "Ustawienia sesji",
-    "sessionWithName": "Ustawienia sesji · {{name}}"
+    "sessionWithName": "Ustawienia sesji · {{name}}",
+    "title": "Ustawienia"
   },
   "llm": {
     "checker": {
