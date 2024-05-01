@@ -1,19 +1,18 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import urlJoin from 'url-join';
 
 import Menu from '@/components/Menu';
 import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
+import { useQueryRoute } from '@/hooks/useQueryRoute';
 
 import { useCategory } from '../../hooks/useCategory';
 
 const CategoryContent = memo<{ modal?: boolean }>(({ modal }) => {
   const activeTab = useActiveSettingsKey();
   const cateItems = useCategory();
-
-  const router = useRouter();
+  const router = useQueryRoute();
 
   return (
     <Menu

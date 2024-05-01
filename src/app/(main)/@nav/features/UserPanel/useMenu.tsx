@@ -9,7 +9,6 @@ import {
   Mail,
   Settings2,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -17,13 +16,15 @@ import { Flexbox } from 'react-layout-kit';
 import { type MenuProps } from '@/components/Menu';
 import { AGENTS_INDEX_GITHUB_ISSUE, DISCORD, DOCUMENTS, EMAIL_SUPPORT } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
+import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { configService } from '@/services/config';
 
 import { useNewVersion } from './useNewVersion';
 
 export const useMenu = () => {
+  const router = useQueryRoute();
   const hasNewVersion = useNewVersion();
-  const router = useRouter();
+
   const { t } = useTranslation(['common', 'setting']);
 
   const NewVersionBadge = useCallback(
