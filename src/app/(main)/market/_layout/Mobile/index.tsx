@@ -1,17 +1,23 @@
-import { PropsWithChildren } from 'react';
-
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 
-import AgentSearchBar from '../../features/AgentSearchBar';
+import { LayoutProps } from '../type';
 import Header from './Header';
 
-const MobileLayout = ({ children }: PropsWithChildren) => {
+const Layout = ({ children, detail }: LayoutProps) => {
   return (
-    <MobileContentLayout gap={16} header={<Header />} style={{ paddingInline: 16 }} withNav>
-      <AgentSearchBar mobile />
-      {children}
-    </MobileContentLayout>
+    <>
+      <MobileContentLayout
+        gap={16}
+        header={<Header />}
+        style={{ paddingInline: 16, paddingTop: 8 }}
+      >
+        {children}
+      </MobileContentLayout>
+      {detail}
+    </>
   );
 };
 
-export default MobileLayout;
+Layout.displayName = 'MobileMarketLayout';
+
+export default Layout;

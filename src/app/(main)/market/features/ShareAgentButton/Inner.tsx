@@ -1,4 +1,4 @@
-import { Icon } from '@lobehub/ui';
+import { Icon, Typography } from '@lobehub/ui';
 import { Button, Divider, Tag } from 'antd';
 import { Github, Settings, Share2 } from 'lucide-react';
 import Image from 'next/image';
@@ -10,7 +10,7 @@ import { AGENTS_INDEX_GITHUB, imageUrl } from '@/const/url';
 const Inner = memo(() => {
   const { t } = useTranslation('market');
   return (
-    <>
+    <Typography fontSize={14} headerMultiple={0.5} marginMultiple={0.4}>
       <Image
         alt={'banner'}
         height={602}
@@ -23,12 +23,14 @@ const Inner = memo(() => {
         <span>{t('guide.func1.title')}</span>
       </h3>
       <p>
-        <Icon icon={Settings} />
-        {' - '}
+        <kbd>
+          <Icon icon={Settings} />
+        </kbd>
         {t('guide.func1.desc1')}
         <br />
-        <Icon icon={Share2} />
-        {' - '}
+        <kbd>
+          <Icon icon={Share2} />
+        </kbd>
         {t('guide.func1.desc2')}
       </p>
       <Divider />
@@ -45,7 +47,7 @@ const Inner = memo(() => {
       >
         {t('guide.func2.button')}
       </Button>
-    </>
+    </Typography>
   );
 });
 

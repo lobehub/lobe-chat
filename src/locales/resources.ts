@@ -18,6 +18,7 @@ export const locales = [
 ] as const;
 
 export type DefaultResources = typeof resources;
+export type NS = keyof DefaultResources;
 export type Locales = (typeof locales)[number];
 
 export const normalizeLocale = (locale?: string): string => {
