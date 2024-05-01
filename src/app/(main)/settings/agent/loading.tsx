@@ -1,3 +1,5 @@
-import { Skeleton } from 'antd';
+import SkeletonLoading from '@/components/SkeletonLoading';
 
-export default () => <Skeleton paragraph={{ rows: 8 }} />;
+export default () => {
+  return <SkeletonLoading paragraph={{ rows: 8 }} />;
+};

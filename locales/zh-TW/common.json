@@ -140,6 +140,7 @@
   "tab": {
     "chat": "對話",
     "market": "發現",
+    "me": "我",
     "setting": "設定"
   },
   "telemetry": {
@@ -156,5 +157,18 @@
     "action": "升級",
     "hasNew": "有可用更新",
     "newVersion": "有新版本可用：{{version}}"
+  },
+  "userPanel": {
+    "billing": "帳單管理",
+    "discord": "社群支援",
+    "docs": "使用文件",
+    "email": "郵件支援",
+    "feedback": "意見回饋",
+    "help": "幫助中心",
+    "plans": "訂閱方案",
+    "profile": "帳戶管理",
+    "setting": "應用設定",
+    "usages": "用量統計",
+    "warn": "此入口即將下線，後續請從左上角頭像喚起本選單"
   }
 }
