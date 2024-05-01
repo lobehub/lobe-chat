@@ -1,3 +1,3 @@
-import Load from './components/Loading';
+import { Skeleton } from 'antd';
 
-export default () => <Load />;
+export default () => <Skeleton paragraph={{ rows: 8 }} style={{ marginBlock: 24 }} title={false} />;

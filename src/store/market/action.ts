@@ -28,7 +28,7 @@ export const createMarketAction: StateCreator<
     set({ currentIdentifier: identifier });
   },
   deactivateAgent: () => {
-    set({ currentIdentifier: undefined }, false, 'deactivateAgent');
+    set({ currentIdentifier: '' }, false, 'deactivateAgent');
   },
   setSearchKeywords: (keywords) => {
     set({ searchKeywords: keywords });
