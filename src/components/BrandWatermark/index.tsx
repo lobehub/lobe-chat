@@ -1,3 +1,5 @@
+'use client';
+
 import { Logo } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';

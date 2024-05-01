@@ -30,7 +30,7 @@ const Header = memo(() => {
           }
         />
       }
-      onBackClick={() => router.push('/me/settings')}
+      onBackClick={() => router.push('/me')}
       showBackButton
       style={mobileHeaderSticky}
     />

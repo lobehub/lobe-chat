@@ -24,7 +24,7 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
   noScrollbar: stylish.noScrollbar,
 }));
 
-const SideBar = memo<PropsWithChildren>(({ children }) => {
+const DetailSidebar = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   const { md = true } = useResponsive();
   const [tempId, setTempId] = useState<string>('');
@@ -81,4 +81,4 @@ const SideBar = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default SideBar;
+export default DetailSidebar;

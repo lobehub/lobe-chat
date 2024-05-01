@@ -140,6 +140,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Discover",
+    "me": "Me",
     "setting": "Settings"
   },
   "telemetry": {
@@ -156,5 +157,18 @@
     "action": "Upgrade",
     "hasNew": "New update available",
     "newVersion": "New version available: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Billing",
+    "discord": "Community Support",
+    "docs": "Documentation",
+    "email": "Email Support",
+    "feedback": "Feedback & Suggestions",
+    "help": "Help Center",
+    "plans": "Subscription Plans",
+    "profile": "Account Management",
+    "setting": "App Settings",
+    "usages": "Usage Statistics",
+    "warn": "This entry will be deprecated soon. Please access this menu from the profile icon on the top left corner."
   }
 }

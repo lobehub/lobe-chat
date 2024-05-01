@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 
-const AgentDetail = memo<PropsWithChildren>(({ children }) => {
+const DetailModal = memo<PropsWithChildren>(({ children }) => {
   const [showAgentSidebar, deactivateAgent] = useMarketStore((s) => [
     agentMarketSelectors.showSideBar(s),
     s.deactivateAgent,
@@ -29,4 +29,4 @@ const AgentDetail = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default AgentDetail;
+export default DetailModal;

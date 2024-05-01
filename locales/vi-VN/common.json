@@ -140,6 +140,7 @@
   "tab": {
     "chat": "Trò chuyện",
     "market": "Thị trường",
+    "me": "我",
     "setting": "Cài đặt"
   },
   "telemetry": {
@@ -156,5 +157,18 @@
     "action": "Nâng cấp",
     "hasNew": "Có bản cập nhật mới",
     "newVersion": "Có phiên bản mới: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Quản lý thanh toán",
+    "discord": "Hỗ trợ cộng đồng",
+    "docs": "Tài liệu sử dụng",
+    "email": "Hỗ trợ qua email",
+    "feedback": "Phản hồi và đề xuất",
+    "help": "Trung tâm trợ giúp",
+    "plans": "Kế hoạch đăng ký",
+    "profile": "Quản lý tài khoản",
+    "setting": "Cài đặt ứng dụng",
+    "usages": "Thống kê sử dụng",
+    "warn": "Mục này sẽ sớm bị loại bỏ, vui lòng mở menu từ biểu tượng ở góc trên bên trái"
   }
 }
