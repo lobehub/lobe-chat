@@ -140,6 +140,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Descubrir",
+    "me": "Yo",
     "setting": "Configuración"
   },
   "telemetry": {
@@ -156,5 +157,18 @@
     "action": "Actualizar",
     "hasNew": "Hay una nueva actualización disponible",
     "newVersion": "Nueva versión disponible: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Gestión de facturación",
+    "discord": "Soporte comunitario",
+    "docs": "Documentación de uso",
+    "email": "Soporte por correo electrónico",
+    "feedback": "Comentarios y sugerencias",
+    "help": "Centro de ayuda",
+    "plans": "Planes de suscripción",
+    "profile": "Gestión de cuenta",
+    "setting": "Configuración de la aplicación",
+    "usages": "Estadísticas de uso",
+    "warn": "Esta entrada pronto se eliminará, por favor, acceda a este menú desde la imagen de perfil en la esquina superior izquierda"
   }
 }
