@@ -10,7 +10,7 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { agentMarketSelectors, useMarketStore } from '@/store/market';
+import { useMarketStore } from '@/store/market';
 
 const { Paragraph } = Typography;
 
@@ -53,7 +53,7 @@ const AgentsSuggest = memo(() => {
   const [sliceStart, setSliceStart] = useState(0);
   const useFetchAgentList = useMarketStore((s) => s.useFetchAgentList);
   const { isLoading } = useFetchAgentList();
-  const agentList = useMarketStore((s) => agentMarketSelectors.getAgentList(s), isEqual);
+  const agentList = useMarketStore((s) => s.agentList, isEqual);
   const { styles } = useStyles();
 
   const loadingCards = Array.from({ length: 4 }).map((_, index) => (

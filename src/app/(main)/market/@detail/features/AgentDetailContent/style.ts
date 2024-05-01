@@ -4,21 +4,13 @@ export const useStyles = createStyles(({ css, token, prefixCls }) => ({
   author: css`
     font-size: 12px;
   `,
-
-  avatar: css`
-    flex: none;
-  `,
   container: css`
     position: relative;
     padding: 16px 16px 24px;
     border-bottom: 1px solid ${token.colorBorderSecondary};
   `,
-  date: css`
-    font-size: 12px;
-    color: ${token.colorTextDescription};
-  `,
   desc: css`
-    color: ${token.colorTextDescription};
+    color: ${token.colorTextSecondary};
     text-align: center;
   `,
   loading: css`
@@ -30,9 +22,13 @@ export const useStyles = createStyles(({ css, token, prefixCls }) => ({
   nav: css`
     padding-top: 8px;
   `,
+  time: css`
+    font-size: 12px;
+    color: ${token.colorTextDescription};
+  `,
   title: css`
-    font-size: 20px;
-    font-weight: 600;
+    margin-bottom: 0;
+    font-weight: bold;
     text-align: center;
   `,
 }));
