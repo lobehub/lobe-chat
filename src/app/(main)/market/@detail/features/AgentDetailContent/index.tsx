@@ -1,11 +1,13 @@
+'use client';
+
 import { Markdown, TabsNav } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import AgentCardBanner from '@/app/(main)/market/features/AgentCard/AgentCardBanner';
 import { useMarketStore } from '@/store/market';
 
-import AgentCardBanner from '../../../features/AgentCard/AgentCardBanner';
 import Comment from './Comment';
 import Header from './Header';
 import Loading from './Loading';
@@ -17,7 +19,7 @@ enum InfoTabs {
   prompt = 'prompt',
 }
 
-const AgentModalInner = memo(() => {
+const AgentModalInner = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [useFetchAgent, currentIdentifier] = useMarketStore((s) => [
     s.useFetchAgent,
     s.currentIdentifier,
@@ -34,8 +36,12 @@ const AgentModalInner = memo(() => {
 
   return (
     <>
-      <AgentCardBanner meta={meta} size={400} style={{ height: 120, marginBottom: -60 }} />
-      <Header />
+      <AgentCardBanner
+        avatar={meta?.avatar}
+        size={800}
+        style={{ height: 120, marginBottom: -60 }}
+      />
+      <Header mobile={mobile} />
       <Flexbox align={'center'}>
         <TabsNav
           activeKey={tab}

@@ -1,12 +1,13 @@
+'use client';
+
 import { DraggablePanel, DraggablePanelBody, DraggablePanelContainer } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import { memo, useCallback, useState } from 'react';
+import { createStyles, useResponsive } from 'antd-style';
+import { PropsWithChildren, memo, useCallback, useState } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { MARKET_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
-
-import AgentDetailContent from '../../features/AgentDetailContent';
 
 const useStyles = createStyles(({ css, token, stylish }) => ({
   content: css`
@@ -15,7 +16,7 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
     height: 100% !important;
   `,
   drawer: css`
-    background: ${token.colorBgLayout};
+    background: ${token.colorBgContainer};
   `,
   header: css`
     border-bottom: 1px solid ${token.colorBorder};
@@ -23,8 +24,9 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
   noScrollbar: stylish.noScrollbar,
 }));
 
-const SideBar = memo(() => {
+const SideBar = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
+  const { md = true } = useResponsive();
   const [tempId, setTempId] = useState<string>('');
   const [showAgentSidebar, deactivateAgent, activateAgent] = useMarketStore((s) => [
     agentMarketSelectors.showSideBar(s),
@@ -44,6 +46,8 @@ const SideBar = memo(() => {
     [deactivateAgent, activateAgent, tempId],
   );
 
+  const minWidth = md ? MARKET_SIDEBAR_WIDTH : 350;
+
   return (
     <DraggablePanel
       className={styles.drawer}
@@ -51,8 +55,9 @@ const SideBar = memo(() => {
         content: styles.content,
       }}
       expand={showAgentSidebar}
-      minWidth={MARKET_SIDEBAR_WIDTH}
-      mode={'fixed'}
+      maxWidth={'80vw' as any}
+      minWidth={minWidth}
+      mode={md ? 'fixed' : 'float'}
       onExpandChange={handleExpandChange}
       placement={'right'}
       showHandlerWideArea={false}
@@ -61,15 +66,15 @@ const SideBar = memo(() => {
         style={{
           flex: 'none',
           height: '100%',
-          minWidth: MARKET_SIDEBAR_WIDTH,
+          minWidth: minWidth,
         }}
       >
-        <SafeSpacing />
+        {md && <SafeSpacing />}
         <DraggablePanelBody
           className={styles.noScrollbar}
           style={{ padding: 0, position: 'relative' }}
         >
-          <AgentDetailContent />
+          <Flexbox>{children}</Flexbox>
         </DraggablePanelBody>
       </DraggablePanelContainer>
     </DraggablePanel>
