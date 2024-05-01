@@ -44,14 +44,16 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
           {tc('cancel')}
         </Button>,
         
-        <Button key="ok" type="primary" onClick={() => {
+        <Button key="ok" onClick={() => {
           if (!editingProvider || !id) return;
           const data = formInstance.getFieldsValue();
 
           dispatchCustomModelCards(editingProvider as any, { id, type: 'update', value: data });
 
           closeModal();
-        }}>
+          }}
+          type="primary" 
+        >
           {tc('ok')}
         </Button>
       ]}
