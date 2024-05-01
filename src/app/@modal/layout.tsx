@@ -17,7 +17,7 @@ const SessionSettingsModal = ({ children }: PropsWithChildren) => {
       }}
       open={open}
       styles={{
-        body: { display: 'flex', overflow: 'hidden', padding: 0 },
+        body: { display: 'flex', minHeight: 'min(75vh, 750px)', overflow: 'hidden', padding: 0 },
       }}
       title={false}
       width={1024}
