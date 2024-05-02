@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext } from 'zustand-utils';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
