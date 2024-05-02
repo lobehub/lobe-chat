@@ -1,31 +1,18 @@
+'use client';
+
 import isEqual from 'fast-deep-equal';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
+import { WELCOME_GUIDE_CHAT_ID } from '@/const/session';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { isMobileScreen } from '@/utils/screen';
 
 import { useInitConversation } from '../../hooks/useInitConversation';
 import AutoScroll from '../AutoScroll';
-import Item from '../ChatItem';
-import InboxWelcome from '../InboxWelcome';
 import SkeletonList from '../SkeletonList';
-
-const WELCOME_ID = 'welcome';
-
-const itemContent = (index: number, id: string) => {
-  const isMobile = isMobileScreen();
-
-  if (id === WELCOME_ID) return <InboxWelcome />;
-
-  return index === 0 ? (
-    <div style={{ height: 24 + (isMobile ? 0 : 64) }} />
-  ) : (
-    <Item id={id} index={index - 1} />
-  );
-};
+import ItemContent from './ItemContent';
 
 interface VirtualizedListProps {
   mobile?: boolean;
@@ -44,7 +31,9 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
 
   const data = useChatStore((s) => {
     const showInboxWelcome = chatSelectors.showInboxWelcome(s);
-    const ids = showInboxWelcome ? [WELCOME_ID] : chatSelectors.currentChatIDsWithGuideMessage(s);
+    const ids = showInboxWelcome
+      ? [WELCOME_GUIDE_CHAT_ID]
+      : chatSelectors.currentChatIDsWithGuideMessage(s);
     return ['empty', ...ids];
   }, isEqual);
 
@@ -78,7 +67,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
         // increaseViewportBy={overscan}
         initialTopMostItemIndex={data?.length - 1}
         isScrolling={setIsScrolling}
-        itemContent={itemContent}
+        itemContent={(index, id) => <ItemContent id={id} index={index} mobile={mobile} />}
         overscan={overscan}
         ref={virtuosoRef}
       />

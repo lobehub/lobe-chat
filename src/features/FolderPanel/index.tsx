@@ -1,7 +1,9 @@
+'use client';
+
 import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { PropsWithChildren, memo, useState } from 'react';
+import { PropsWithChildren, memo, useLayoutEffect, useState } from 'react';
 
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
@@ -15,6 +17,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const FolderPanel = memo<PropsWithChildren>(({ children }) => {
+  const { md = true } = useResponsive();
   const { styles } = useStyles();
   const [sessionsWidth, sessionExpandable, updatePreference] = useGlobalStore((s) => [
     s.preference.sessionsWidth,
@@ -24,6 +27,17 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
   const [tmpWidth, setWidth] = useState(sessionsWidth);
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
 
+  const handleExpand = (expand: boolean) => {
+    updatePreference({
+      sessionsWidth: expand ? 320 : 0,
+      showSessionPanel: expand,
+    });
+  };
+
+  useLayoutEffect(() => {
+    handleExpand(md);
+  }, [md]);
+
   return (
     <DraggablePanel
       className={styles.panel}
@@ -31,12 +45,8 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
       expand={sessionExpandable}
       maxWidth={400}
       minWidth={FOLDER_WIDTH}
-      onExpandChange={(expand) => {
-        updatePreference({
-          sessionsWidth: expand ? 320 : 0,
-          showSessionPanel: expand,
-        });
-      }}
+      mode={md ? 'fixed' : 'float'}
+      onExpandChange={handleExpand}
       onSizeChange={(_, size) => {
         if (!size) return;
 
