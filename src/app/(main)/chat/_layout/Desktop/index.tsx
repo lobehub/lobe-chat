@@ -1,9 +1,13 @@
+'use client';
+
+import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { LayoutProps } from '../type';
+import ClientResponsiveLayout from '@/components/client/ClientResponsiveLayout';
+
 import ResponsiveSessionList from './SessionList';
 
-const Layout = ({ children }: LayoutProps) => {
+const Desktop = memo(({ children }: PropsWithChildren) => {
   return (
     <>
       <ResponsiveSessionList />
@@ -17,8 +21,6 @@ const Layout = ({ children }: LayoutProps) => {
       </Flexbox>
     </>
   );
-};
+});
 
-Layout.displayName = 'DesktopChatLayout';
-
-export default Layout;
+export default ClientResponsiveLayout({ Desktop, Mobile: () => import('../Mobile') });

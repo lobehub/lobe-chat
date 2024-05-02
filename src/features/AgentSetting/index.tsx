@@ -1,6 +1,7 @@
-import AgentChat from './AgentChat';
+import { memo } from 'react';
+
+import AgentConfig from './AgentConfig';
 import AgentMeta from './AgentMeta';
-import AgentModal from './AgentModal';
 import AgentPlugin from './AgentPlugin';
 import AgentPrompt from './AgentPrompt';
 import AgentTTS from './AgentTTS';
@@ -9,18 +10,17 @@ import { Provider, createStore } from './store';
 
 type AgentSettingsProps = StoreUpdaterProps;
 
-const AgentSettings = (props: AgentSettingsProps) => {
+const AgentSettings = memo<AgentSettingsProps>((props) => {
   return (
     <Provider createStore={createStore}>
       <StoreUpdater {...props} />
       <AgentPrompt />
       <AgentMeta />
-      <AgentChat />
-      <AgentModal />
+      <AgentConfig />
       <AgentTTS />
       <AgentPlugin />
     </Provider>
   );
-};
+});
 
 export default AgentSettings;

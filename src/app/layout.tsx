@@ -1,7 +1,7 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ResolvingViewport } from 'next';
 import { cookies } from 'next/headers';
-import { ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
@@ -10,12 +10,7 @@ import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
 import { isMobileDevice } from '@/utils/responsive';
 
-type RootLayoutProps = {
-  children: ReactNode;
-  modal: ReactNode;
-};
-
-const RootLayout = async ({ children, modal }: RootLayoutProps) => {
+const RootLayout = async ({ children }: PropsWithChildren) => {
   const cookieStore = cookies();
 
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
@@ -25,10 +20,7 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
     <html dir={direction} lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
       <body>
         <GlobalProvider>
-          <AuthProvider>
-            {children}
-            {modal}
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </GlobalProvider>
         <Analytics />
         <SpeedInsights />

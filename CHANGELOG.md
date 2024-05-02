@@ -2,13 +2,13 @@
 
 # Changelog
 
-### [Version 0.152.4](https://github.com/lobehub/lobe-chat/compare/v0.152.3...v0.152.4)
+### [Version 0.152.5](https://github.com/lobehub/lobe-chat/compare/v0.152.4...v0.152.5)
 
-<sup>Released on **2024-05-01**</sup>
+<sup>Released on **2024-05-02**</sup>
 
 #### 🐛 Bug Fixes
 
-- **misc**: Fix router path in UserPanel.
+- **misc**: Fix Setings Layout.
 
 <br/>
 
@@ -17,57 +17,7 @@
 
 #### What's fixed
 
-- **misc**: Fix router path in UserPanel ([c779e02](https://github.com/lobehub/lobe-chat/commit/c779e02))
-
-</details>
-
-<div align="right">
-
-[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
-
-</div>
-
-### [Version 0.152.3](https://github.com/lobehub/lobe-chat/compare/v0.152.2...v0.152.3)
-
-<sup>Released on **2024-05-01**</sup>
-
-#### 🐛 Bug Fixes
-
-- **misc**: Fix intercepting-routes on mobile.
-
-<br/>
-
-<details>
-<summary><kbd>Improvements and Fixes</kbd></summary>
-
-#### What's fixed
-
-- **misc**: Fix intercepting-routes on mobile ([abe228c](https://github.com/lobehub/lobe-chat/commit/abe228c))
-
-</details>
-
-<div align="right">
-
-[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
-
-</div>
-
-### [Version 0.152.2](https://github.com/lobehub/lobe-chat/compare/v0.152.1...v0.152.2)
-
-<sup>Released on **2024-05-01**</sup>
-
-#### ♻ Code Refactoring
-
-- **misc**: Refactor Setting Layout.
-
-<br/>
-
-<details>
-<summary><kbd>Improvements and Fixes</kbd></summary>
-
-#### Code refactoring
-
-- **misc**: Refactor Setting Layout, closes [#2336](https://github.com/lobehub/lobe-chat/issues/2336) ([282082e](https://github.com/lobehub/lobe-chat/commit/282082e))
+- **misc**: Fix Setings Layout, closes [#2340](https://github.com/lobehub/lobe-chat/issues/2340) ([6a2e9a9](https://github.com/lobehub/lobe-chat/commit/6a2e9a9))
 
 </details>
 

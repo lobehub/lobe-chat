@@ -140,7 +140,6 @@
   "tab": {
     "chat": "Chat",
     "market": "Keşfet",
-    "me": "我",
     "setting": "Ayarlar"
   },
   "telemetry": {
@@ -157,18 +156,5 @@
     "action": "Güncelle",
     "hasNew": "Yeni güncelleme mevcut",
     "newVersion": "Yeni sürüm mevcut: {{version}}"
-  },
-  "userPanel": {
-    "billing": "Fatura Yönetimi",
-    "discord": "Topluluk Destek",
-    "docs": "Belgeler",
-    "email": "E-posta Destek",
-    "feedback": "Geribildirim ve Öneriler",
-    "help": "Yardım Merkezi",
-    "plans": "Abonelik Planları",
-    "profile": "Hesap Yönetimi",
-    "setting": "Uygulama Ayarları",
-    "usages": "Kullanım İstatistikleri",
-    "warn": "Bu giriş yakında kaldırılacak, ileride bu menüyü sol üst köşedeki profil resminizden açabilirsiniz"
   }
 }
