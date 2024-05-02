@@ -53,11 +53,11 @@ const Nav = memo(() => {
       },
       {
         icon: (active) => <Icon className={active ? styles.active : undefined} icon={User} />,
-        key: SidebarTabKey.Setting,
+        key: SidebarTabKey.Me,
         onClick: () => {
-          router.push('/settings');
+          router.push('/me');
         },
-        title: t('tab.setting'),
+        title: t('tab.me'),
       },
     ],
     [t],

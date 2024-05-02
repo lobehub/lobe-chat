@@ -1,19 +1,11 @@
-import { getServerConfig } from '@/config/server';
-import { isMobileDevice } from '@/utils/responsive';
+import { redirect } from 'next/navigation';
 
-import DesktopPage from './(desktop)';
-import MobilePage from './(mobile)';
+import Common from './common';
 
 const Page = () => {
-  const mobile = isMobileDevice();
+  redirect('/settings/common');
 
-  if (mobile) return <MobilePage />;
-
-  const { SHOW_ACCESS_CODE_CONFIG, ENABLE_OAUTH_SSO } = getServerConfig();
-
-  return (
-    <DesktopPage showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG} showOAuthLogin={ENABLE_OAUTH_SSO} />
-  );
+  return <Common />;
 };
 
 export default Page;

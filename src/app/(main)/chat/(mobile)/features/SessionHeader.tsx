@@ -33,7 +33,7 @@ const Header = memo(() => {
     <MobileNavBar
       left={
         <Flexbox align={'center'} gap={8} horizontal style={{ marginLeft: 8 }}>
-          <div onClick={() => router.push('/settings')}>
+          <div onClick={() => router.push('/me')}>
             {avatar ? <Avatar avatar={avatar} size={28} /> : <Logo size={28} />}
           </div>
           <Logo type={'text'} />
