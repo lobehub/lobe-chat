@@ -1,5 +1,3 @@
-'use client';
-
 import { OpenAI } from '@lobehub/icons';
 import { memo } from 'react';
 

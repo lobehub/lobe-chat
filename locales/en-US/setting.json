@@ -27,12 +27,9 @@
     }
   },
   "header": {
-    "desc": "Preferences and model settings.",
     "global": "Global Settings",
     "session": "Session Settings",
-    "sessionDesc": "Role settings and session preferences.",
-    "sessionWithName": "Session Settings · {{name}}",
-    "title": "Settings"
+    "sessionWithName": "Session Settings · {{name}}"
   },
   "llm": {
     "checker": {

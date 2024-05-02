@@ -1,5 +1,3 @@
-'use client';
-
 import { memo } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 

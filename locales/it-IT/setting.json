@@ -27,12 +27,9 @@
     }
   },
   "header": {
-    "desc": "Preferenze e impostazioni del modello.",
     "global": "Impostazioni globali",
     "session": "Impostazioni della sessione",
-    "sessionDesc": "Impostazioni del personaggio e preferenze di sessione.",
-    "sessionWithName": "Impostazioni della sessione · {{name}}",
-    "title": "Impostazioni"
+    "sessionWithName": "Impostazioni della sessione · {{name}}"
   },
   "llm": {
     "checker": {
