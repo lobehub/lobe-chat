@@ -1,8 +1,12 @@
+'use client';
+
 import { Form, type FormItemProps, type ItemGroup } from '@lobehub/ui';
-import { Form as AntForm, Input, Switch } from 'antd';
+import { Input, Switch } from 'antd';
+import { createStyles, css } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import {
@@ -18,6 +22,14 @@ import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
+
+const useStyles = createStyles(() => ({
+  safariIconWidthFix: css`
+    svg {
+      width: unset !important;
+    }
+  `,
+}));
 
 interface ProviderConfigProps {
   apiKeyItems?: FormItemProps[];
@@ -52,7 +64,8 @@ const ProviderConfig = memo<ProviderConfigProps>(
   }) => {
     const { t } = useTranslation('setting');
     const { t: modelT } = useTranslation('modelProvider');
-    const [form] = AntForm.useForm();
+    const [form] = Form.useForm();
+    const { styles } = useStyles();
     const [
       toggleProviderEnabled,
       setSettings,
@@ -142,7 +155,20 @@ const ProviderConfig = memo<ProviderConfigProps>(
           value={enabled}
         />
       ) : undefined,
-      title,
+      title: (
+        <Flexbox
+          align={'center'}
+          className={styles.safariIconWidthFix}
+          horizontal
+          style={{
+            height: 24,
+            maxHeight: 24,
+            ...(enabled ? {} : { filter: 'grayscale(100%)', maxHeight: 24, opacity: 0.66 }),
+          }}
+        >
+          {title}
+        </Flexbox>
+      ),
     };
 
     return (
