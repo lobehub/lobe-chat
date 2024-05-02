@@ -1,5 +1,6 @@
 import { Avatar, List, ListItemProps } from '@lobehub/ui';
 import { useHover } from 'ahooks';
+import { Dropdown } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import { memo, useMemo, useRef } from 'react';
 
@@ -53,7 +54,28 @@ const ListItem = memo<ListItemProps & { avatar: string; avatarBackground?: strin
         ref={ref}
         showAction={actions && (isHovering || showAction || mobile)}
         {...(props as any)}
-      />
+      >
+        <Dropdown
+          arrow={false}
+          // menu={{
+          //   items,
+          //   onClick: ({ domEvent }) => {
+          //     domEvent.stopPropagation();
+          //   },
+          // }}
+          // onOpenChange={setOpen}
+          // trigger={['contextMenu']}
+          trigger={['click']}
+        >
+          <div style={{ 
+            width: '100%', 
+            height: '100%', 
+            top: 0,
+            left: 0,
+            position: 'absolute',
+          }}/>
+        </Dropdown>
+      </Item>
     );
   },
 );
