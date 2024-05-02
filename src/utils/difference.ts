@@ -1,4 +1,5 @@
-import { isArray, isEqual, isObject, transform } from 'lodash-es';
+import isEqual from 'fast-deep-equal';
+import { isArray, isObject, transform } from 'lodash-es';
 
 /**
  * Compare two objects and return the difference.

@@ -1,27 +1,51 @@
 'use client';
 
-import { PropsWithChildren, memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
+import { useResponsive } from 'antd-style';
+import { memo, useRef } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
-import SafeSpacing from '@/components/SafeSpacing';
-import ClientResponsiveLayout from '@/components/client/ClientResponsiveLayout';
-
+import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
 
-const Desktop = memo<PropsWithChildren>(({ children }) => (
-  <>
-    <SideBar />
-    <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>
-      <Header />
-      <Flexbox align={'center'} flex={1} padding={24} style={{ overflowY: 'scroll' }}>
-        <SafeSpacing />
-        <Center gap={16} width={'100%'}>
+const Layout = memo<LayoutProps>(({ children, category }) => {
+  const ref = useRef<any>(null);
+  const { md = true, mobile = false } = useResponsive();
+
+  return (
+    <Flexbox
+      height={'100%'}
+      horizontal={md}
+      ref={ref}
+      style={{ position: 'relative' }}
+      width={'100%'}
+    >
+      {md ? (
+        <SideBar>{category}</SideBar>
+      ) : (
+        <Header getContainer={() => ref.current}>{category}</Header>
+      )}
+      <Flexbox
+        align={'center'}
+        height={'100%'}
+        style={{ overflowX: 'hidden', overflowY: 'auto' }}
+        width={'100%'}
+      >
+        <Flexbox
+          gap={64}
+          style={{
+            maxWidth: 1024,
+            padding: mobile ? undefined : '1.75rem 1.5rem 1.75rem 2rem',
+          }}
+          width={'100%'}
+        >
           {children}
-        </Center>
+        </Flexbox>
       </Flexbox>
     </Flexbox>
-  </>
-));
+  );
+});
 
-export default ClientResponsiveLayout({ Desktop, Mobile: () => import('../Mobile') });
+Layout.displayName = 'DesktopSettingsLayout';
+
+export default Layout;

@@ -1,5 +1,5 @@
 import { SpeechRecognitionOptions, useSpeechRecognition } from '@lobehub/tts/react';
-import { isEqual } from 'lodash';
+import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SWRConfiguration } from 'swr';
