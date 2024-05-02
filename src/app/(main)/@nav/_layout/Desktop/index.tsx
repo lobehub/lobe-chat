@@ -4,9 +4,9 @@ import { SideNav } from '@lobehub/ui';
 import { memo } from 'react';
 
 import UserPanel from '@/app/(main)/@nav/features/UserPanel';
+import UserAvatar from '@/features/User/UserAvatar';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 
-import Avatar from '../../features/UserAvatar';
 import BottomActions from './BottomActions';
 import TopActions from './TopActions';
 
@@ -16,7 +16,7 @@ const Nav = memo(() => {
     <SideNav
       avatar={
         <UserPanel>
-          <Avatar />
+          <UserAvatar />
         </UserPanel>
       }
       bottomActions={<BottomActions tab={sidebarKey} />}

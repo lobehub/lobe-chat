@@ -2,7 +2,7 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import UserAvatar from '@/features/User/UserAvatar';
+import UserAvatar from './UserAvatar';
 
 const useStyles = createStyles(({ css, token }) => ({
   nickname: css`
