@@ -43,7 +43,7 @@ const SettingModalLayout = ({ children, category, desc, title }: SettingLayoutPr
           background: isDarkMode ? theme.colorFillQuaternary : theme.colorBgElevated,
           overflowX: 'hidden',
           overflowY: 'auto',
-          paddingBlock: 32,
+          paddingBlock: 40,
           paddingInline: 56,
         }}
         width={'100%'}

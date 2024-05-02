@@ -10,6 +10,7 @@ import { SettingsTabs } from '@/store/global/initialState';
 /**
  * @description: Settings Modal (intercepting routes fallback when hard refresh)
  * @example: /settings/modal?tab=common => /settings/common
+ * @refs: https://github.com/lobehub/lobe-chat/discussions/2295#discussioncomment-9290942
  */
 
 const SettingsModalFallback = () => {

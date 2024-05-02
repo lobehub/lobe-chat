@@ -22,7 +22,7 @@ const Main = memo(() => {
     sessionMetaSelectors.currentAgentBackgroundColor(s),
   ]);
 
-  const openChatSettings = useOpenChatSettings(isInbox);
+  const openChatSettings = useOpenChatSettings();
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const displayDesc = isInbox ? t('inbox.desc') : description;

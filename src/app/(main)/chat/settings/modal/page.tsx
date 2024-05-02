@@ -7,6 +7,7 @@ import { useQueryRoute } from '@/hooks/useQueryRoute';
 /**
  * @description: Chat Settings Modal (intercepting routes fallback when hard refresh)
  * @example: /chat/settings/modal?tab=prompt => /chat/settings
+ * @refs: https://github.com/lobehub/lobe-chat/discussions/2295#discussioncomment-9290942
  */
 
 const ChatSettingsModalFallback = () => {

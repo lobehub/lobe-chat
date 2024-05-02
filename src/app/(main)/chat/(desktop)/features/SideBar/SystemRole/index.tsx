@@ -21,7 +21,7 @@ import { useStyles } from './style';
 const SystemRole = memo(() => {
   const [editing, setEditing] = useState(false);
   const { styles } = useStyles();
-  const openChatSettings = useOpenChatSettings(false, ChatSettingsTabs.Prompt);
+  const openChatSettings = useOpenChatSettings(ChatSettingsTabs.Prompt);
   const [init, meta] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
     sessionMetaSelectors.currentAgentMeta(s),
