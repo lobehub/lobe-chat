@@ -8,8 +8,6 @@ import { messageService } from '@/services/message';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
-import { commonSelectors } from '@/store/user/slices/common/selectors';
-import { syncSettingsSelectors } from '@/store/user/slices/settings/selectors';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { switchLang } from '@/utils/client/switchLang';
 
@@ -159,7 +157,7 @@ describe('createCommonSlice', () => {
       const { result } = renderHook(() => useUserStore());
       const onEvent = vi.fn();
 
-      vi.spyOn(commonSelectors, 'userId').mockReturnValueOnce(undefined);
+      vi.spyOn(userProfileSelectors, 'userId').mockReturnValueOnce(undefined);
       const triggerEnableSyncSpy = vi.spyOn(result.current, 'triggerEnableSync');
 
       await act(async () => {
@@ -174,7 +172,7 @@ describe('createCommonSlice', () => {
       const onEvent = vi.fn();
       const userId = 'user-id';
 
-      vi.spyOn(commonSelectors, 'userId').mockReturnValueOnce(userId);
+      vi.spyOn(userProfileSelectors, 'userId').mockReturnValueOnce(userId);
       const triggerEnableSyncSpy = vi.spyOn(result.current, 'triggerEnableSync');
 
       await act(async () => {

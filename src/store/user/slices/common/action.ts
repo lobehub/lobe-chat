@@ -16,7 +16,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { preferenceSelectors } from '../preference/selectors';
 import { settingsSelectors, syncSettingsSelectors } from '../settings/selectors';
-import { commonSelectors } from './selectors';
+import { userProfileSelectors } from './selectors';
 
 const n = setNamespace('common');
 
@@ -47,7 +47,7 @@ export const createCommonSlice: StateCreator<
   CommonAction
 > = (set, get) => ({
   refreshConnection: async (onEvent) => {
-    const userId = commonSelectors.userId(get());
+    const userId = userProfileSelectors.userId(get());
 
     if (!userId) return;
 
