@@ -1,5 +1,3 @@
-'use client';
-
 import { Aws, Bedrock } from '@lobehub/icons';
 import { Divider, Input, Select } from 'antd';
 import { memo } from 'react';
@@ -64,7 +62,7 @@ const BedrockProvider = memo(() => {
         <Flexbox align={'center'} gap={8} horizontal>
           <Aws.Color size={32} />
           <Divider style={{ margin: '0 4px' }} type={'vertical'} />
-          <Bedrock.Combine size={26} type={'color'} />
+          <Bedrock.Combine size={24} type={'color'} />
         </Flexbox>
       }
     />

@@ -1,59 +1,47 @@
 'use client';
 
-import { createStyles } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
-import BrandWatermark from '@/components/BrandWatermark';
+import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 
-const useStyles = createStyles(({ token, css }) => ({
+import SettingList from '../../features/SettingList';
+import UpgradeAlert from '../../features/UpgradeAlert';
+
+const useStyles = createStyles(({ stylish, token, css }) => ({
+  body: stylish.noScrollbar,
   container: css`
-    padding: 24px 12px 16px;
-    background: ${token.colorBgContainer};
     border-inline-end: 1px solid ${token.colorBorder};
-  `,
-  desc: css`
-    line-height: 1.4;
-    color: ${token.colorTextDescription};
-  `,
-  header: css`
-    padding: 0 0.75rem;
   `,
   logo: css`
     fill: ${token.colorText};
   `,
-  title: css`
-    margin: 0;
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.3;
+  top: css`
+    font-size: 20px;
+    font-weight: bold;
   `,
 }));
 
-interface SidebarLayoutProps extends FlexboxProps {
-  desc?: string;
-  title?: string;
-}
+const SideBar = memo(() => {
+  const { styles } = useStyles();
+  const activeKey = useActiveSettingsKey();
 
-const SidebarLayout = ({ children, className, title, desc, ...rest }: SidebarLayoutProps) => {
-  const { cx, styles } = useStyles();
-  const { t } = useTranslation('setting');
+  const { t } = useTranslation('common');
+  const { mobile } = useResponsive();
+
   return (
-    <Flexbox
-      className={cx(styles.container, className)}
-      flex={'none'}
-      gap={20}
-      width={280}
-      {...rest}
-    >
-      <Flexbox className={styles.header} gap={4}>
-        <h1 className={styles.title}>{title || t('header.title')}</h1>
-        <p className={styles.desc}>{desc || t('header.desc')}</p>
+    <Flexbox className={styles.container} width={280}>
+      <Flexbox className={styles.top} padding={16}>
+        {t('setting')}
       </Flexbox>
-      {children}
-      <BrandWatermark paddingInline={12} />
+      <Flexbox gap={8} style={{ paddingInline: 8 }}>
+        <UpgradeAlert />
+        <SettingList activeTab={activeKey} mobile={mobile} />
+      </Flexbox>
     </Flexbox>
   );
-};
+});
 
-export default SidebarLayout;
+export default SideBar;

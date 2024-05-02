@@ -1,5 +1,3 @@
-'use client';
-
 import { Alert, Modal, type ModalProps } from '@lobehub/ui';
 import { Button, Divider, Input } from 'antd';
 import { useTheme } from 'antd-style';

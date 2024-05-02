@@ -4,7 +4,6 @@ import SafeSpacing from '@/components/SafeSpacing';
 import { MAX_WIDTH } from '@/const/layoutTokens';
 
 import { LayoutProps } from '../type';
-import DetailSidebar from './DetailSidebar';
 import Header from './Header';
 import Hero from './Hero';
 
@@ -30,7 +29,7 @@ const Layout = ({ children, detail }: LayoutProps) => {
             {children}
           </Flexbox>
         </Flexbox>
-        <DetailSidebar>{detail}</DetailSidebar>
+        {detail}
       </Flexbox>
     </Flexbox>
   );

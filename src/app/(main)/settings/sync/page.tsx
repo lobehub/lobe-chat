@@ -1,24 +1,28 @@
 import { notFound } from 'next/navigation';
 
 import { serverFeatureFlags } from '@/config/server/featureFlags';
-import { translation } from '@/server/translation';
 import { gerServerDeviceInfo, isMobileDevice } from '@/utils/responsive';
 
-import Page from './index';
-
-export const generateMetadata = async () => {
-  const { t } = await translation('setting');
-  return {
-    title: t('tab.sync'),
-  };
-};
+import Alert from './Alert';
+import DeviceCard from './DeviceInfo';
+import PageTitle from './PageTitle';
+import WebRTC from './WebRTC';
 
 export default () => {
   const enableWebrtc = serverFeatureFlags().enableWebrtc;
+
   if (!enableWebrtc) return notFound();
 
-  const isMobile = isMobileDevice();
   const { os, browser } = gerServerDeviceInfo();
+  const isMobile = isMobileDevice();
 
-  return <Page browser={browser} mobile={isMobile} os={os} />;
+  return (
+    <>
+      {isMobile && <Alert mobile />}
+      <PageTitle />
+      <DeviceCard browser={browser} os={os} />
+      <WebRTC />
+      {!isMobile && <Alert />}
+    </>
+  );
 };

@@ -1,5 +1,3 @@
-'use client';
-
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import NextImage from 'next/image';

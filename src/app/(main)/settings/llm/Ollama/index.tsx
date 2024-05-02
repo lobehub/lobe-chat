@@ -1,5 +1,3 @@
-'use client';
-
 import { Ollama } from '@lobehub/icons';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +23,7 @@ const OllamaProvider = memo(() => {
       showApiKey={false}
       showBrowserRequest
       showEndpoint
-      title={<Ollama.Combine size={28} />}
+      title={<Ollama.Combine size={24} />}
     />
   );
 });
