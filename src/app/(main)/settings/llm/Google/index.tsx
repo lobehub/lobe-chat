@@ -1,3 +1,5 @@
+'use client';
+
 import { Gemini, Google } from '@lobehub/icons';
 import { Divider } from 'antd';
 import { memo } from 'react';
@@ -15,9 +17,9 @@ const GoogleProvider = memo(() => {
       showEndpoint
       title={
         <Flexbox align={'center'} gap={8} horizontal>
-          <Google.BrandColor size={28} />
+          <Google.BrandColor size={22} />
           <Divider style={{ margin: '0 4px' }} type={'vertical'} />
-          <Gemini.Combine size={24} type={'color'} />
+          <Gemini.Combine size={22} type={'color'} />
         </Flexbox>
       }
     />

@@ -1,14 +1,7 @@
-import { isMobileDevice } from '@/utils/responsive';
-
-import DesktopPage from './(desktop)';
-import MobilePage from './(mobile)';
+import EditPage from './features/EditPage';
 
 const Page = () => {
-  const mobile = isMobileDevice();
-
-  const Page = mobile ? MobilePage : DesktopPage;
-
-  return <Page />;
+  return <EditPage />;
 };
 
 export default Page;
