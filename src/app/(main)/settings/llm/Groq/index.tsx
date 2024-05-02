@@ -1,3 +1,5 @@
+'use client';
+
 import { Groq } from '@lobehub/icons';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
@@ -13,7 +15,7 @@ const GroqProvider = memo(() => {
     <ProviderConfig
       checkModel={'gemma-7b-it'}
       provider={ModelProvider.Groq}
-      title={<Groq.Text color={theme.isDarkMode ? theme.colorText : Groq.colorPrimary} size={24} />}
+      title={<Groq.Text color={theme.isDarkMode ? theme.colorText : Groq.colorPrimary} size={20} />}
     />
   );
 });
