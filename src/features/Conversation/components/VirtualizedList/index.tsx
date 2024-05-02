@@ -50,7 +50,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
 
   useEffect(() => {
     if (virtuosoRef.current) {
-      virtuosoRef.current.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
+      virtuosoRef.current.scrollToIndex({ align: 'center', behavior: 'auto', index: 'LAST' });
     }
   }, [id]);
 
@@ -89,11 +89,11 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
           const virtuoso = virtuosoRef.current;
           switch (type) {
             case 'auto': {
-              virtuoso?.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
+              virtuoso?.scrollToIndex({ align: 'center', behavior: 'auto', index: 'LAST' });
               break;
             }
             case 'click': {
-              virtuoso?.scrollToIndex({ align: 'end', behavior: 'smooth', index: 'LAST' });
+              virtuoso?.scrollToIndex({ align: 'center', behavior: 'smooth', index: 'LAST' });
               break;
             }
           }
