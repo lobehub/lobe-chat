@@ -27,9 +27,12 @@
     }
   },
   "header": {
+    "desc": "Thiết lập Ưu tiên và Mô hình.",
     "global": "Cài đặt toàn cầu",
     "session": "Cài đặt cuộc trò chuyện",
-    "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}"
+    "sessionDesc": "Thiết lập nhân vật và ưu tiên phiên hội thoại.",
+    "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}",
+    "title": "Cài đặt"
   },
   "llm": {
     "checker": {

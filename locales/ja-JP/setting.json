@@ -27,9 +27,12 @@
     }
   },
   "header": {
+    "desc": "設定優先順位和模型設置。",
     "global": "グローバル設定",
     "session": "セッション設定",
-    "sessionWithName": "セッション設定 · {{name}}"
+    "sessionDesc": "キャラクター設定とセッションの好み。",
+    "sessionWithName": "セッション設定 · {{name}}",
+    "title": "設定"
   },
   "llm": {
     "checker": {

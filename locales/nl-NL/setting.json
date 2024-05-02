@@ -27,9 +27,12 @@
     }
   },
   "header": {
+    "desc": "Voorkeuren en modelinstellingen.",
     "global": "Algemene instellingen",
     "session": "Sessie-instellingen",
-    "sessionWithName": "Sessie-instellingen · {{name}}"
+    "sessionDesc": "Rolinstellingen en sessievoorkeuren.",
+    "sessionWithName": "Sessie-instellingen · {{name}}",
+    "title": "Instellingen"
   },
   "llm": {
     "checker": {
