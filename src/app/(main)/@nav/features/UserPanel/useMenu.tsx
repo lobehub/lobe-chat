@@ -86,7 +86,9 @@ export const useMenu = () => {
       icon: <Icon icon={Settings2} />,
       key: 'setting',
       label: <NewVersionBadge showBadge={hasNewVersion}>{t('userPanel.setting')}</NewVersionBadge>,
-      onClick: () => router.push('/settings/m', { tab: 'common' }),
+      onClick: () => {
+        router.push('/settings/common');
+      },
     },
     {
       type: 'divider',
