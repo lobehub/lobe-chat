@@ -143,6 +143,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         if (!id) return;
         if (e.altKey) toggleEditing(true);
       }}
+      style={{ position: 'relative' }}
     >
       <ActionIcon
         color={fav && !isLoading ? theme.colorWarning : undefined}
@@ -184,25 +185,39 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         />
       )}
       {showMore && !editing && (
-        <Dropdown
-          arrow={false}
-          menu={{
-            items: items,
-            onClick: ({ domEvent }) => {
-              domEvent.stopPropagation();
-            },
-          }}
-          trigger={['click']}
-        >
-          <ActionIcon
-            className="topic-more"
-            icon={MoreVertical}
-            onClick={(e) => {
-              e.stopPropagation();
+        <>
+          <Dropdown
+            arrow={false}
+            menu={{
+              items: items,
+              onClick: ({ domEvent }) => {
+                domEvent.stopPropagation();
+              },
             }}
-            size={'small'}
-          />
-        </Dropdown>
+            trigger={['contextMenu']}
+          >
+            <div style={{ width: '100%', height: '100%', position: 'absolute'}}></div>
+          </Dropdown>
+
+          <Dropdown
+            arrow={false}
+            menu={{
+              items: items,
+              onClick: ({ domEvent }) => {
+                domEvent.stopPropagation();
+              },
+            }}
+            trigger={['click']}
+          >
+            <ActionIcon
+              className="topic-more"
+              icon={MoreVertical}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              size={'small'} />
+          </Dropdown>
+        </>
       )}
     </Flexbox>
   );
