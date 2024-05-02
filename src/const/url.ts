@@ -41,7 +41,10 @@ export const AGENTS_INDEX_GITHUB = 'https://github.com/lobehub/lobe-chat-agents'
 export const AGENTS_INDEX_GITHUB_ISSUE = urlJoin(AGENTS_INDEX_GITHUB, 'issues/new');
 
 export const SESSION_CHAT_URL = (id: string = INBOX_SESSION_ID, mobile?: boolean) =>
-  qs.stringifyUrl({ query: { active: mobile, session: id }, url: '/chat' });
+  qs.stringifyUrl({
+    query: mobile ? { active: mobile, session: id } : { session: id },
+    url: '/chat',
+  });
 
 export const imageUrl = (filename: string) => withBasePath(`/images/${filename}`);
 
