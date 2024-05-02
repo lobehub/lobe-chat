@@ -1,5 +1,3 @@
-'use client';
-
 import { Azure, OpenAI } from '@lobehub/icons';
 import { Markdown } from '@lobehub/ui';
 import { AutoComplete, Divider, Input } from 'antd';
@@ -97,7 +95,7 @@ const AzureOpenAIProvider = memo(() => {
       provider={providerKey}
       title={
         <Flexbox align={'center'} gap={8} horizontal>
-          <Azure.Combine size={22} type={'color'}></Azure.Combine>
+          <Azure.Combine size={24} type={'color'}></Azure.Combine>
           <Divider style={{ margin: '0 4px' }} type={'vertical'} />
           <OpenAI.Combine size={24}></OpenAI.Combine>
         </Flexbox>

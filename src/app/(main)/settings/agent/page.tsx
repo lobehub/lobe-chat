@@ -1,10 +1,18 @@
-import { translation } from '@/server/translation';
+'use client';
 
-export const generateMetadata = async () => {
-  const { t } = await translation('setting');
-  return {
-    title: t('tab.agent'),
-  };
-};
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
-export { default } from './index';
+import PageTitle from '@/components/PageTitle';
+
+import Agent from './Agent';
+
+export default memo(() => {
+  const { t } = useTranslation('setting');
+  return (
+    <>
+      <PageTitle title={t('tab.agent')} />
+      <Agent />
+    </>
+  );
+});
