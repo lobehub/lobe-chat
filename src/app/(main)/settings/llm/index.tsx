@@ -23,8 +23,8 @@ const Page = () => {
   return (
     <Flexbox gap={24}>
       <OpenAI />
-      <Azure />
       <Ollama />
+      <Azure />
       <Google />
       <Anthropic />
       <Bedrock />

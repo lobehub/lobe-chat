@@ -24,7 +24,7 @@ const SettingCate = memo(() => {
             icon={icon}
             key={key}
             label={label}
-            onClick={() => router.replace(urlJoin('/settings', key))}
+            onClick={() => router.push(urlJoin('/settings', key))}
           />
         );
       })}
