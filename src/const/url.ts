@@ -29,7 +29,6 @@ export const ABOUT = OFFICIAL_SITE;
 export const FEEDBACK = pkg.bugs.url;
 export const DISCORD = 'https://discord.gg/AYFPHvv2jT';
 export const PRIVACY_URL = urlJoin(OFFICIAL_SITE, '/privacy');
-export const TERMS_URL = urlJoin(OFFICIAL_SITE, '/terms');
 
 export const PLUGINS_INDEX_URL = 'https://chat-plugins.lobehub.com';
 

@@ -140,7 +140,6 @@
   "tab": {
     "chat": "Conversation",
     "market": "Découvrir",
-    "me": "我",
     "setting": "Paramètre"
   },
   "telemetry": {
@@ -157,18 +156,5 @@
     "action": "Mettre à jour",
     "hasNew": "Nouvelle mise à jour disponible",
     "newVersion": "Nouvelle version disponible : {{version}}"
-  },
-  "userPanel": {
-    "billing": "Gestion de la facturation",
-    "discord": "Support communautaire",
-    "docs": "Documentation d'utilisation",
-    "email": "Support par e-mail",
-    "feedback": "Retours et suggestions",
-    "help": "Centre d'aide",
-    "plans": "Forfaits d'abonnement",
-    "profile": "Gestion du compte",
-    "setting": "Paramètres de l'application",
-    "usages": "Statistiques d'utilisation",
-    "warn": "Cette entrée sera bientôt supprimée. Veuillez accéder à ce menu en cliquant sur l'avatar en haut à gauche."
   }
 }

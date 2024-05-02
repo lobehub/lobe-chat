@@ -1,5 +1,5 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Button, Dropdown, MenuProps } from 'antd';
+import { ActionIcon } from '@lobehub/ui';
+import { Dropdown, MenuProps } from 'antd';
 import { useResponsive } from 'antd-style';
 import { HardDriveDownload } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -11,7 +11,7 @@ import { useSessionStore } from '@/store/session';
 
 import SubmitAgentButton from './SubmitAgentButton';
 
-export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ modal }) => {
+export const HeaderContent = memo<{ mobile?: boolean }>(() => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
 
@@ -43,19 +43,13 @@ export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ moda
 
   return (
     <>
-      <SubmitAgentButton modal={modal} />
+      <SubmitAgentButton />
       <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
-        {modal ? (
-          <Button block icon={<Icon icon={HardDriveDownload} />}>
-            {t('export', { ns: 'common' })}
-          </Button>
-        ) : (
-          <ActionIcon
-            icon={HardDriveDownload}
-            size={HEADER_ICON_SIZE(mobile)}
-            title={t('export', { ns: 'common' })}
-          />
-        )}
+        <ActionIcon
+          icon={HardDriveDownload}
+          size={HEADER_ICON_SIZE(mobile)}
+          title={t('export', { ns: 'common' })}
+        />
       </Dropdown>
     </>
   );

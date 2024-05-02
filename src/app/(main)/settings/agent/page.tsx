@@ -1,31 +1,18 @@
-import AgentChat from '@/features/AgentSetting/AgentChat';
-import AgentMeta from '@/features/AgentSetting/AgentMeta';
-import AgentModal from '@/features/AgentSetting/AgentModal';
-import AgentPlugin from '@/features/AgentSetting/AgentPlugin';
-import AgentPrompt from '@/features/AgentSetting/AgentPrompt';
-import AgentTTS from '@/features/AgentSetting/AgentTTS';
-import { translation } from '@/server/translation';
+'use client';
 
-export const generateMetadata = async () => {
-  const { t } = await translation('setting');
-  return {
-    title: t('tab.agent'),
-  };
-};
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
-const Page = () => {
+import PageTitle from '@/components/PageTitle';
+
+import Agent from './Agent';
+
+export default memo(() => {
+  const { t } = useTranslation('setting');
   return (
     <>
-      <AgentPrompt />
-      <AgentMeta />
-      <AgentChat />
-      <AgentModal />
-      <AgentTTS />
-      <AgentPlugin />
+      <PageTitle title={t('tab.agent')} />
+      <Agent />
     </>
   );
-};
-
-Page.displayName = 'AgentSetting';
-
-export default Page;
+});

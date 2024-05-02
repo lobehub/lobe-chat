@@ -1,5 +1,3 @@
-'use client';
-
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';

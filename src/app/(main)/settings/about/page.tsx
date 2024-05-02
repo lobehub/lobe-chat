@@ -1,32 +1,37 @@
+'use client';
+
+import { createStyles } from 'antd-style';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Follow from '@//features/Follow';
-import AboutList from '@/app/(main)/settings//about/features/AboutList';
-import Analytics from '@/app/(main)/settings/about/features/Analytics';
-import { getServerConfig } from '@/config/server';
-import { translation } from '@/server/translation';
+import PageTitle from '@/components/PageTitle';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
-const enabledTelemetryChat = getServerConfig().ENABLE_LANGFUSE;
+import AboutList from './AboutList';
+import Analytics from './Analytics';
 
-export const generateMetadata = async () => {
-  const { t } = await translation('setting');
-  return {
-    title: t('tab.about'),
-  };
-};
+const useStyles = createStyles(({ css }) => ({
+  container: css`
+    width: 100%;
+    max-width: 1024px;
+  `,
+}));
 
-const Page = () => {
+export default memo(() => {
+  const { t } = useTranslation('setting');
+
+  const { styles } = useStyles();
+  const enabledTelemetryChat = useServerConfigStore(serverConfigSelectors.enabledTelemetryChat);
+
   return (
     <>
-      <Flexbox gap={24} style={{ marginBlock: 48 }} width={'100%'}>
+      <PageTitle title={t('tab.tts')} />
+      <Flexbox align={'center'} className={styles.container} gap={12}>
         <AboutList />
         {enabledTelemetryChat && <Analytics />}
       </Flexbox>
-      <Follow />
     </>
   );
-};
-
-Page.displayName = 'AboutSetting';
-
-export default Page;
+});

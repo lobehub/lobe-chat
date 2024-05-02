@@ -27,12 +27,9 @@
     }
   },
   "header": {
-    "desc": "Präferenzen und Modellkonfigurationen.",
     "global": "Global Einstellungen",
     "session": "Sitzungseinstellungen",
-    "sessionDesc": "Rollenkonfiguration und Sitzungspräferenzen.",
-    "sessionWithName": "Sitzungseinstellungen · {{name}}",
-    "title": "Einstellungen"
+    "sessionWithName": "Sitzungseinstellungen · {{name}}"
   },
   "llm": {
     "checker": {
