@@ -18,13 +18,7 @@ interface GenHrefOptions extends QueryRouteOptions {
   url: string;
 }
 
-export const genHref = ({
-  hash,
-  replace,
-  url,
-  prevQuery = {},
-  query = {},
-}: GenHrefOptions): string => {
+const genHref = ({ hash, replace, url, prevQuery = {}, query = {} }: GenHrefOptions): string => {
   let href = qs.stringifyUrl({ query: replace ? query : { ...prevQuery, ...query }, url });
 
   if (!isOnServerSide && hash) {
