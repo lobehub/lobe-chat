@@ -160,6 +160,10 @@
   },
   "userPanel": {
     "billing": "Abrechnung",
+    "default": {
+      "nickname": "Community-Benutzer",
+      "username": "Community-Vorschauversion"
+    },
     "discord": "Community-Support",
     "docs": "Dokumentation",
     "email": "E-Mail-Support",

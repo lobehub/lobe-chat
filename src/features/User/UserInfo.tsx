@@ -1,5 +1,8 @@
+'use client';
+
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import UserAvatar from './UserAvatar';
@@ -16,17 +19,19 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-// TODO
-
 const UserInfo = memo<{ onClick?: () => void }>(({ onClick }) => {
+  const { t } = useTranslation('common');
   const { styles, theme } = useStyles();
+
+  const DEFAULT_NICKNAME = t('userPanel.default.nickname');
+  const DEFAULT_USERNAME = t('userPanel.default.username');
 
   return (
     <Flexbox align={'center'} gap={12} horizontal paddingBlock={12} paddingInline={16}>
       <UserAvatar background={theme.colorFill} onClick={onClick} size={48} />
       <Flexbox flex={1} gap={6}>
-        <div className={styles.nickname}>{'社区版用户'}</div>
-        <div className={styles.username}> {'Community Edition'}</div>
+        <div className={styles.nickname}>{DEFAULT_NICKNAME}</div>
+        <div className={styles.username}>{DEFAULT_USERNAME}</div>
       </Flexbox>
     </Flexbox>
   );

@@ -160,6 +160,10 @@
   },
   "userPanel": {
     "billing": "請求管理",
+    "default": {
+      "nickname": "コミュニティユーザー",
+      "username": "コミュニティプレビュー"
+    },
     "discord": "コミュニティサポート",
     "docs": "ドキュメント",
     "email": "メールサポート",
