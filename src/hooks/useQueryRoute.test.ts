@@ -1,66 +1,86 @@
-// @vitest-environment edge-runtime
+import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { genHref } from './useQueryRoute';
+import { useQueryRoute } from './useQueryRoute';
 
-describe('genHref', () => {
+// Mocks
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(() => ({
+    push: vi.fn((href) => href),
+    replace: vi.fn((href) => href),
+  })),
+}));
+vi.mock('@/hooks/useQuery', () => ({
+  useQuery: vi.fn(() => ({ foo: 'bar' })),
+}));
+vi.mock('@/utils/env', () => ({
+  isOnServerSide: false,
+}));
+
+describe('useQueryRoute', () => {
   it('should generate correct href without hash and replace', () => {
-    const result = genHref({
-      url: '/example',
-      prevQuery: { foo: 'bar' },
-      query: { baz: 'qux' },
-    });
+    const { result } = renderHook(() =>
+      useQueryRoute().push('/example', {
+        query: { baz: 'qux' },
+      }),
+    );
 
-    expect(result).toBe('/example?baz=qux&foo=bar');
+    expect(result.current).toBe('/example?baz=qux&foo=bar');
   });
 
   it('should replace entire query string when replace is true', () => {
-    const result = genHref({
-      url: '/example',
-      prevQuery: { a: 'test' },
-      replace: true,
-      query: { baz: 'qux' },
-    });
+    const { result } = renderHook(() =>
+      useQueryRoute().push('/example', {
+        replace: true,
+        query: { baz: 'qux' },
+      }),
+    );
 
-    expect(result).toBe('/example?baz=qux');
+    expect(result.current).toBe('/example?baz=qux');
   });
 
   it('should append hash to the URL', () => {
-    const result = genHref({
-      url: '/example',
-      query: { foo: 'bar' },
-      hash: 'section1',
-    });
+    const { result } = renderHook(() =>
+      useQueryRoute().push('/example', {
+        replace: true,
+        query: { foo: 'bar' },
+        hash: 'section1',
+      }),
+    );
 
-    expect(result).toBe('/example?foo=bar#section1');
+    expect(result.current).toBe('/example?foo=bar#section1');
   });
 
   it('should handle scenarios when on server side', () => {
-    const result = genHref({
-      url: '/example',
-      query: { foo: 'bar' },
-      hash: 'section1',
-    });
+    const { result } = renderHook(() =>
+      useQueryRoute().push('/example', {
+        query: { foo: 'bar' },
+        hash: 'section1',
+      }),
+    );
 
-    expect(result).toBe('/example?foo=bar#section1');
+    expect(result.current).toBe('/example?foo=bar#section1');
   });
 
   it('should handle cases with empty query and hash', () => {
-    const result = genHref({
-      url: '/example',
-      query: {},
-      hash: '',
-    });
+    const { result } = renderHook(() =>
+      useQueryRoute().replace('/example', {
+        replace: true,
+        query: {},
+        hash: '',
+      }),
+    );
 
-    expect(result).toBe('/example');
+    expect(result.current).toBe('/example');
   });
 
   it('should handle cases without hash when on server side', () => {
-    const result = genHref({
-      url: '/example',
-      query: { foo: 'bar' },
-    });
+    const { result } = renderHook(() =>
+      useQueryRoute().replace('/example', {
+        query: { foo: 'bar' },
+      }),
+    );
 
-    expect(result).toBe('/example?foo=bar');
+    expect(result.current).toBe('/example?foo=bar');
   });
 });
