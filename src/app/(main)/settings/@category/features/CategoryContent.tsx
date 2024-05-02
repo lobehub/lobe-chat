@@ -5,15 +5,12 @@ import urlJoin from 'url-join';
 
 import Menu from '@/components/Menu';
 import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
-import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
-import { SettingsTabs } from '@/store/global/initialState';
 
 import { useCategory } from '../../hooks/useCategory';
 
 const CategoryContent = memo<{ modal?: boolean }>(({ modal }) => {
   const activeTab = useActiveSettingsKey();
-  const { tab = SettingsTabs.Common } = useQuery();
   const cateItems = useCategory();
   const router = useQueryRoute();
 
@@ -21,14 +18,15 @@ const CategoryContent = memo<{ modal?: boolean }>(({ modal }) => {
     <Menu
       items={cateItems}
       onClick={({ key }) => {
+        const path = urlJoin('/settings', key);
         if (modal) {
-          router.replace('/settings/m', { tab: key });
+          router.replace(path);
         } else {
-          router.push(urlJoin('/settings', key));
+          router.push(path);
         }
       }}
       selectable
-      selectedKeys={[modal ? tab : (activeTab as any)]}
+      selectedKeys={[activeTab as any]}
       variant={'compact'}
     />
   );
