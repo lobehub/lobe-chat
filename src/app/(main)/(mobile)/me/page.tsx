@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
 import { Center } from 'react-layout-kit';
 
+import Avatar from '@/app/(main)/@nav/features/UserAvatar';
 import BrandWatermark from '@/components/BrandWatermark';
-import Avatar from '@/features/User/UserAvatar';
 import { isMobileDevice } from '@/utils/responsive';
 
 import AvatarBanner from './features/AvatarBanner';

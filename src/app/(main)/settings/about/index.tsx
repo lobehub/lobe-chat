@@ -1,22 +1,17 @@
-'use client';
-
 import { Logo, Tag } from '@lobehub/ui';
-import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Follow from '@//features/Follow';
+import AboutList from '@/app/(main)/settings//about/features/AboutList';
+import Analytics from '@/app/(main)/settings/about/features/Analytics';
+import { getServerConfig } from '@/config/server';
 import { CURRENT_VERSION } from '@/const/version';
-import Follow from '@/features/Follow';
-import { useServerConfigStore } from '@/store/serverConfig';
-import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
-import AboutList from './features/AboutList';
-import Analytics from './features/Analytics';
+const enabledTelemetryChat = getServerConfig().ENABLE_LANGFUSE;
 
 const COPYRIGHT = `© 2023-${new Date().getFullYear()} LobeHub, LLC`;
 
-const Page = memo(({ mobile }: { mobile?: boolean }) => {
-  const enabledTelemetryChat = useServerConfigStore(serverConfigSelectors.enabledTelemetryChat);
-
+const Page = ({ mobile }: { mobile?: boolean }) => {
   return (
     <Flexbox align={'center'} gap={12} paddingBlock={36} width={'100%'}>
       <Logo size={mobile ? 100 : 120} />
@@ -33,7 +28,7 @@ const Page = memo(({ mobile }: { mobile?: boolean }) => {
       <div style={{ fontWeight: 400, opacity: 0.33 }}>{COPYRIGHT}</div>
     </Flexbox>
   );
-});
+};
 
 Page.displayName = 'AboutSetting';
 

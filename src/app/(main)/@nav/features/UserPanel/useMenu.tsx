@@ -128,9 +128,6 @@ export const useMenu = () => {
   ];
 
   const mainItems = [
-    {
-      type: 'divider',
-    },
     ...settings,
     ...exports,
     ...helps,

@@ -160,10 +160,6 @@
   },
   "userPanel": {
     "billing": "Fatura Yönetimi",
-    "default": {
-      "nickname": "Topluluk Kullanıcısı",
-      "username": "Topluluk Önizlemesi"
-    },
     "discord": "Topluluk Destek",
     "docs": "Belgeler",
     "email": "E-posta Destek",

@@ -1,11 +1,7 @@
 import { redirect } from 'next/navigation';
 
-import Common from './common';
-
 const Page = () => {
-  redirect('/settings/common');
-
-  return <Common />;
+  return redirect('/settings/common');
 };
 
 export default Page;

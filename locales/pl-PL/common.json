@@ -160,10 +160,6 @@
   },
   "userPanel": {
     "billing": "Zarządzanie rachunkiem",
-    "default": {
-      "nickname": "Użytkownik społeczności",
-      "username": "Podgląd społeczności"
-    },
     "discord": "Wsparcie społeczności",
     "docs": "Dokumentacja",
     "email": "Wsparcie mailowe",

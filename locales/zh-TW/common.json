@@ -160,10 +160,6 @@
   },
   "userPanel": {
     "billing": "帳單管理",
-    "default": {
-      "nickname": "社群使用者",
-      "username": "社群預覽版"
-    },
     "discord": "社群支援",
     "docs": "使用文件",
     "email": "郵件支援",
