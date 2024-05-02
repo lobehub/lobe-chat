@@ -12,13 +12,13 @@ import {
   Settings2,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ABOUT, CHANGELOG, DISCORD, DOCUMENTS, FEEDBACK, GITHUB } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
+import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
 import { configService } from '@/services/config';
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
@@ -28,9 +28,8 @@ export interface BottomActionProps {
 }
 
 const BottomActions = memo<BottomActionProps>(({ tab }) => {
-  const router = useRouter();
   const { t } = useTranslation('common');
-
+  const openSettings = useOpenSettings();
   const [hasNewVersion, useCheckLatestVersion] = useGlobalStore((s) => [
     s.hasNewVersion,
     s.useCheckLatestVersion,
@@ -112,9 +111,7 @@ const BottomActions = memo<BottomActionProps>(({ tab }) => {
           {t('setting')} {hasNewVersion && <Badge count={t('upgradeVersion.hasNew')} />}
         </Flexbox>
       ),
-      onClick: () => {
-        router.push('/settings/common');
-      },
+      onClick: openSettings,
     },
   ];
 

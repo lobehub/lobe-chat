@@ -49,12 +49,19 @@ const StoreInitialization = memo(() => {
 
   useEffect(() => {
     router.prefetch('/chat');
-    router.prefetch('/chat/settings');
     router.prefetch('/market');
-    router.prefetch('/settings/common');
-    router.prefetch('/settings/agent');
-    router.prefetch('/settings/sync');
-  }, [router]);
+
+    if (mobile) {
+      router.prefetch('/me');
+      router.prefetch('/chat/settings');
+      router.prefetch('/settings/common');
+      router.prefetch('/settings/agent');
+      router.prefetch('/settings/sync');
+    } else {
+      router.prefetch('/chat/settings/modal');
+      router.prefetch('/settings/modal');
+    }
+  }, [router, mobile]);
 
   return null;
 });
