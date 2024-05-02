@@ -160,6 +160,10 @@
   },
   "userPanel": {
     "billing": "Gestione fatturazione",
+    "default": {
+      "nickname": "Utente della community",
+      "username": "Anteprima della community"
+    },
     "discord": "Supporto comunità",
     "docs": "Documentazione",
     "email": "Supporto email",

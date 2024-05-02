@@ -1,4 +1,4 @@
-import UpgradeAlert from '@/app/(main)/settings//features/UpgradeAlert';
+import UpgradeAlert from '@/app/(main)/settings/features/UpgradeAlert';
 
 import CategoryContent from './features/CategoryContent';
 

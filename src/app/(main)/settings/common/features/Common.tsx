@@ -7,7 +7,7 @@ import { signIn, signOut } from 'next-auth/react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSyncSettings } from '@/app/(main)/settings//hooks/useSyncSettings';
+import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import { useOAuthSession } from '@/hooks/useOAuthSession';

@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useCategory } from '@/app/(main)/settings//hooks/useCategory';
+import { useCategory } from '@/app/(main)/settings/hooks/useCategory';
 import Cell from '@/components/Cell';
 import Divider from '@/components/Cell/Divider';
 

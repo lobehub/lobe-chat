@@ -160,6 +160,10 @@
   },
   "userPanel": {
     "billing": "账单管理",
+    "default": {
+      "nickname": "Gemeenschapsgebruiker",
+      "username": "Gemeenschapsvoorbeeld"
+    },
     "discord": "社区支持",
     "docs": "使用文档",
     "email": "邮件支持",
