@@ -10,7 +10,7 @@ import {
   Trash,
   Wand2,
 } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -133,6 +133,8 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
     [],
   );
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   return (
     <Flexbox
       align={'center'}
@@ -184,7 +186,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           value={title}
         />
       )}
-      {showMore && !editing && (
+      {(showMore || dropdownOpen) && !editing && (
         <>
           <Dropdown
             arrow={false}
@@ -194,9 +196,10 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
                 domEvent.stopPropagation();
               },
             }}
+            onOpenChange={setDropdownOpen}
             trigger={['contextMenu']}
           >
-            <div style={{ width: '100%', height: '100%', position: 'absolute'}}></div>
+            <div style={{ height: '100%', position: 'absolute', width: '100%' }}></div>
           </Dropdown>
 
           <Dropdown
@@ -207,6 +210,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
                 domEvent.stopPropagation();
               },
             }}
+            onOpenChange={setDropdownOpen}
             trigger={['click']}
           >
             <ActionIcon
@@ -215,7 +219,8 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              size={'small'} />
+              size={'small'}
+            />
           </Dropdown>
         </>
       )}

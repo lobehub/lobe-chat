@@ -64,16 +64,18 @@ const ListItem = memo<ListItemProps & { avatar: string; avatarBackground?: strin
           //   },
           // }}
           // onOpenChange={setOpen}
-          // trigger={['contextMenu']}
-          trigger={['click']}
+          trigger={['contextMenu']}
+          // trigger={['click']}
         >
-          <div style={{ 
-            width: '100%', 
-            height: '100%', 
-            top: 0,
-            left: 0,
-            position: 'absolute',
-          }}/>
+          <div
+            style={{
+              height: '100%',
+              left: 0,
+              position: 'absolute',
+              top: 0,
+              width: '100%',
+            }}
+          />
         </Dropdown>
       </Item>
     );
