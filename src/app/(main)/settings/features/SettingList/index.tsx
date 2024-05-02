@@ -1,3 +1,4 @@
+import { createStyles } from 'antd-style';
 import { Bot, Cloudy, Info, Mic2, Settings2, Webhook } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -19,9 +20,16 @@ export interface SettingListProps {
   mobile?: boolean;
 }
 
+const useStyles = createStyles(({ css }) => ({
+  label: css`
+    line-height: 1.2;
+  `,
+}));
+
 const SettingList = memo<SettingListProps>(({ activeTab, mobile }) => {
   const { t } = useTranslation('setting');
   const { enableWebrtc, showLLM } = useServerConfigStore(featureFlagsSelectors);
+  const { cx, styles } = useStyles();
 
   const items = [
     { icon: Settings2, label: t('tab.common'), value: SettingsTabs.Common },
@@ -38,7 +46,7 @@ const SettingList = memo<SettingListProps>(({ activeTab, mobile }) => {
         active={mobile ? false : activeTab === value}
         hoverable={!mobile}
         icon={icon}
-        label={label}
+        label={<span className={cx(styles.label)}>{label}</span>}
       />
     </Link>
   ));
