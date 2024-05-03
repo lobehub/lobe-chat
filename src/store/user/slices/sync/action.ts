@@ -1,4 +1,4 @@
-import useSWR, { SWRResponse, mutate } from 'swr';
+import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { globalService } from '@/services/global';
@@ -25,8 +25,6 @@ export interface SyncAction {
   ) => SWRResponse;
 }
 
-const USER_CONFIG_FETCH_KEY = 'fetchUserConfig';
-
 export const createSyncSlice: StateCreator<
   UserStore,
   [['zustand/devtools', never]],
@@ -39,13 +37,6 @@ export const createSyncSlice: StateCreator<
     if (!userId) return;
 
     await get().triggerEnableSync(userId, onEvent);
-  },
-
-  refreshUserConfig: async () => {
-    await mutate([USER_CONFIG_FETCH_KEY, true]);
-
-    // when get the user config ,refresh the model provider list to the latest
-    get().refreshModelProviderList();
   },
 
   triggerEnableSync: async (userId: string, onEvent: OnSyncEvent) => {
