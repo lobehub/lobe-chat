@@ -4,20 +4,24 @@ import { createStyles } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const AVATAR_SIZE = 80;
+
+export const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   avatar: css`
-    position: absolute;
     z-index: 10;
 
     flex: none;
 
-    background: ${token.colorBgContainer};
-    border: 6px solid ${token.colorBgContainer};
+    margin-top: -${AVATAR_SIZE / 2 + 6}px;
+
+    background: ${isDarkMode ? token.colorBgLayout : token.colorBgContainer};
+    border: 6px solid ${isDarkMode ? token.colorBgLayout : token.colorBgContainer};
     border-radius: 50%;
   `,
   banner: css`
     position: relative;
     flex: none;
+    background: ${isDarkMode ? token.colorBgLayout : token.colorBgContainer};
   `,
   bannerBox: css`
     position: relative;
@@ -25,7 +29,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     overflow: hidden;
 
     width: 100%;
-    height: 180px;
+    height: 100px;
 
     background: ${token.colorBgLayout};
   `,
